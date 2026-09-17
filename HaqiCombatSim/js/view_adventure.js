@@ -129,13 +129,13 @@ function spellFace(assets,card,artCard=card) {
     // kids pe_item.DrawCardMask: 151×230, pips (120,5), cooldown (7,115), description (18,142).
     // Shared background + generated subject; title/numbers/description stay dynamic.
     const canvas=el('canvas','spell-art');canvas.width=302;canvas.height=460;
-    assets.skillArt.drawCard(canvas.getContext('2d'),card,{name:artCard.name,details:false});
     const cost=card.pipcost===114||card.pipcost==='X'?'X':String(card.pipcost);
-    const pip=el('span','spell-cost',cost);pip.setAttribute('aria-label',`消耗 ${cost} 点魔力`);
-    pip.title=`消耗 ${cost} 点魔力。本系法术：1个超级魔力抵2点；其他系抵1点。`;
     const rounds=assets.content.items[artCard.itemId]?.stats?.[186]??0;
-    const cooldown=el('span','spell-cooldown',rounds);cooldown.setAttribute('aria-label',`冷却 ${rounds} 回合`);cooldown.title=`冷却 ${rounds} 回合（左中数字）`;
-    return el('span','spell-face',canvas,el('span','sr-only',artCard.name),pip,cooldown,el('span','spell-description',spellHint(card,assets.dataset)));
+    const description=spellHint(card,assets.dataset);
+    assets.skillArt.drawCard(canvas.getContext('2d'),card,{name:artCard.name,cooldown:rounds,description});
+    canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`${artCard.name}，消耗 ${cost} 点魔力，冷却 ${rounds} 回合。${description}`);
+    canvas.title=`${description}。本系法术：1个超级魔力抵2点；其他系抵1点。`;
+    return el('span','spell-face',canvas);
 }
 export function renderPanel(root,kind,model,cb) {
     const {assets,save}=model,c=assets.content,d=assets.dataset;

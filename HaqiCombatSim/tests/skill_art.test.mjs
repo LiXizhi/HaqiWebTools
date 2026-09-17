@@ -53,7 +53,7 @@ test('browser IO deduplicates atlas requests and renders every actual card defin
         await Promise.all([library.preload(cards),library.preload(cards)]);
         assert.ok([...counts.values()].every(count=>count===1));
         let depth=0,draws=0;
-        const c=new Proxy({}, {get:(_,key)=>key==='save'?()=>depth++:key==='restore'?()=>depth--:key==='measureText'?text=>({width:text.length*10}):key==='drawImage'?()=>draws++:(...args)=>{for(const value of args)if(typeof value==='number')assert.ok(Number.isFinite(value),key);},set:()=>true});
+        const c=new Proxy({}, {get:(_,key)=>key==='save'?()=>depth++:key==='restore'?()=>depth--:key==='createRadialGradient'?()=>({addColorStop(){}}):key==='measureText'?text=>({width:text.length*10}):key==='drawImage'?()=>draws++:(...args)=>{for(const value of args)if(typeof value==='number')assert.ok(Number.isFinite(value),key);},set:()=>true});
         for(const card of Object.values(cards)){assert.equal(library.drawCard(c,card),true);assert.equal(depth,0);}
         assert.ok(draws>=Object.keys(cards).length*2);
     }finally{globalThis.fetch=oldFetch;globalThis.Image=oldImage;}

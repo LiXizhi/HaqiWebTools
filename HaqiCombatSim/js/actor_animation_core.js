@@ -22,7 +22,21 @@ export function actorPose(action='idle',progress=0,direction=1,reduced=false) {
 
 export function battleActorAction(id,hp,event,progress=0) {
     if(hp<=0)return {action:'death',progress:event?.type==='damage'&&event.target===id?progress:1};
-    if(event?.type==='damage'&&event.target===id&&event.amount>0)return {action:'hit',progress};
+    if(event?.type==='damage'&&event.target===id&&event.amount>0&&!event.recoilPlayed)return {action:'hit',progress};
     if(['cast','fizzle'].includes(event?.type)&&event.caster===id)return {action:'cast',progress:Math.min(1,progress/.45)};
     return {action:'idle',progress:0};
+}
+
+// Read only actual queued damage: healing, misses and fully absorbed hits do not recoil.
+export function castHitReactions(events,index,progress,duration,impact) {
+    if(events[index]?.type!=='cast')return [];
+    const hitProgress=(progress-impact)*duration/HIT_DURATION_MS;
+    if(hitProgress<0||hitProgress>=1)return [];
+    const reactions=[];
+    for(let i=index+1;i<events.length;i++) {
+        const event=events[i];
+        if(event.periodic||['cast','fizzle','pass','speak'].includes(event.type))break;
+        if(event.type==='damage'&&event.amount>0)reactions.push({eventIndex:i,target:event.target,progress:hitProgress});
+    }
+    return reactions;
 }

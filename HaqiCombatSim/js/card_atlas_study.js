@@ -3,6 +3,9 @@ import {loadSkillArt} from './skill_art.js';
 import {createSpellEffects} from './spell_effects.js';
 import {skillFrame} from './skill_art_core.js';
 import {createSpellSound} from './spell_sound.js';
+import {drawAnimatedActor} from './actor_animation.js';
+import {HIT_DURATION_MS} from './actor_animation_core.js';
+import {expectedBaseDamage} from './combat_cards_core.js';
 const $=id=>document.getElementById(id),mode=assetMode(location.hostname,location.search);
 const names={ice:'寒冰',fire:'烈火',storm:'风暴',life:'生命',death:'死亡',balance:'通用'};
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
@@ -25,6 +28,16 @@ function drawEffect(){
  const from={x:180,y:300},to=spec.friendly?from:{x:800,y:300};
  const targets=spec.area?[{x:690,y:230},to,{x:850,y:340}]:[to];
  if(spec.area&&spec.friendly)targets.splice(0,targets.length,{x:140,y:250},from,{x:300,y:340});
+ const impact=spec.kind==='summon'?effects.timeline.summonImpact:effects.timeline.impact;
+ const hitProgress=(progress-impact)*3000/HIT_DURATION_MS;
+ const struck=!spec.friendly&&expectedBaseDamage(c)>0&&hitProgress>=0&&hitProgress<1;
+ // Visible training targets make the moment of impact readable beneath the particles.
+ for(const at of spec.friendly?[{x:800,y:300}]:targets)drawAnimatedActor(ctx,at,struck?'hit':'idle',struck?hitProgress:0,-1,reduced.matches,()=>{
+  ctx.fillStyle='#809da5';ctx.strokeStyle='#d6ebda';ctx.lineWidth=3;
+  ctx.beginPath();ctx.roundRect(-22,-72,44,54,12);ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.arc(0,-88,13,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.moveTo(-12,-18);ctx.lineTo(-17,0);ctx.moveTo(12,-18);ctx.lineTo(17,0);ctx.stroke();
+ });
  fx.draw(ctx,{card:c,progress,from,to,targets,center:{x:490,y:300},width:1000,height:440,seed:7,reducedMotion:reduced.matches});
  sound.track(effects,c,progress,{active:playing&&!document.hidden,reducedMotion:reduced.matches});
 }

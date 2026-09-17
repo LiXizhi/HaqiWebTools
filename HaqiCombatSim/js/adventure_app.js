@@ -1,7 +1,7 @@
 // Browser controller: input, rendering, audio and persistence live outside the pure rules.
 import { effectDuration } from './spell_effects_core.js';
 import { createSpellSound } from './spell_sound.js';
-import { HIT_DURATION_MS } from './actor_animation_core.js';
+import { HIT_DURATION_MS,castHitReactions } from './actor_animation_core.js';
 import * as A from './adventure_core.js';
 import * as W from './adventure_world_core.js';
 import * as P from './combat_pve_core.js';
@@ -189,7 +189,7 @@ function playRound(decision) {
         const start=battle.events.length,hp=Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,u.hp]));
         P.playPveRound(battle,decision);A.recordDecision(save,decision);persist();selected=null;discarded=[];
         const events=battle.events.slice(start).filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','pass'].includes(e.type));
-        animation={events:events.map(e=>({...e,type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),index:0,start:performance.now(),hp,entered:-1};paintBattle();
+        animation={events:events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),index:0,start:performance.now(),hp,entered:-1};paintBattle();
     });
 }
 function tickAnimation(now) {
@@ -203,10 +203,15 @@ function tickAnimation(now) {
     }
     const duration=e.type==='speak'?1300:e.type==='cast'?effectDuration(assets.effects,battle.resolved.cards[e.card],matchMedia('(prefers-reduced-motion: reduce)').matches):e.type==='pass'?300:e.type==='damage'&&a.hp[e.target]>0?HIT_DURATION_MS:600;
     const progress=Math.min(1,(now-a.start)/duration);
+    const card=battle.resolved.cards[e.card],spec=card&&assets.effects.bases[assets.effects.cards[card.key]?.base];
+    const impact=spec?.kind==='summon'?assets.effects.timeline.summonImpact:assets.effects.timeline.impact;
+    const reactions=castHitReactions(a.events,a.index,progress,duration,impact);
+    a.recoiledEvents??=new Set();for(const reaction of reactions)a.recoiledEvents.add(reaction.eventIndex);
+    const recoilPlayed=a.recoiledEvents.has(a.index);
     if(e.type==='cast'||e.type==='fizzle')spellSound.track(assets.effects,battle.resolved.cards[e.card],progress,{active:!document.hidden,failed:e.type==='fizzle',reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,instance:String(a.index)});
     else spellSound.stop();
     if(progress===1){a.index++;a.start=now;}
-    return{event:{...e,school:e.school||battle.resolved.cards[e.card]?.spellSchool},progress,hp:a.hp};
+    return{event:{...e,recoilPlayed,school:e.school||battle.resolved.cards[e.card]?.spellSchool},progress,hp:a.hp,reactions};
 }
 const directionKeys={w:'up',arrowup:'up',s:'down',arrowdown:'down',a:'left',arrowleft:'left',d:'right',arrowright:'right'};
 window.addEventListener('keydown',e=>{

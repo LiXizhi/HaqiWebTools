@@ -126,7 +126,8 @@ export function createRenderer(canvas,assets) {
         const ev=presentation?.event,p=presentation?.progress||0,positions={hero,mob0:enemy};
         for(const id of ['hero','mob0']) {
             const hp=presentation?.hp?.[id]??battle.unitsById[id].hp;
-            const pose=battleActorAction(id,hp,ev,p);
+            const hit=presentation?.reactions?.find(reaction=>reaction.target===id);
+            const pose=hp>0&&hit?{action:'hit',progress:hit.progress}:battleActorAction(id,hp,ev,p);
             drawAnimatedActor(c,positions[id],pose.action,pose.progress,id==='hero'?1:-1,reducedMotion.matches,()=>{
                 if(id==='hero')avatar(c,{...save,facing:2},0,0,t,false,1.4);
                 else creature(c,battle.monsterTemplates[0].id,0,0,t,1.55);

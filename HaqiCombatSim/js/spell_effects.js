@@ -1,5 +1,5 @@
 // Canvas presentation. All card choices/timing/art references live in spell-effects.json.
-import { effectParticles, spellEffect } from './spell_effects_core.js';
+import { effectParticles, spellEffect, centeredSpellSubject } from './spell_effects_core.js';
 const TAU=Math.PI*2,clamp=v=>Math.max(0,Math.min(1,v));
 function disc(c,x,y,r,color){c.fillStyle=color;c.beginPath();c.arc(x,y,Math.max(.1,r),0,TAU);c.fill();}
 function line(c,points,color,width=2){c.strokeStyle=color;c.lineWidth=width;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();}
@@ -82,13 +82,13 @@ function elementalParticles(c,school,{a,b,radius:r,scale,p,flight,hit,particles,
 }
 export function createSpellEffects(assets) {
     const config=assets.effects,cache=new Map();
-    function atlasEffect(c,spec,{a,b,origin,to,center,radius,scale,p,flight,hit,particles}) {
+    function atlasEffect(c,spec,{a,b,origin,to,center,radius,scale,p,flight,hit,particles,centered,echo}) {
         const art=assets.skillArt,entry=art?.manifest.bases[spec.base];if(!entry)return false;
-        const hero=!!entry.effectAtlas,kind=spec.kind,color=spec.palette[0];
+        const kind=spec.kind,color=spec.palette[0];
         let x=b.x,y=b.y,size=radius*2.9,angle=0;
-        if(hero||kind==='summon'){
-            const at=center||a;x=at.x;y=at.y-radius*.8;
-            if(!spec.friendly){x+=(b.x-x)*flight*.5;y-=Math.sin(flight*Math.PI)*radius*.25;}
+        if(centered){
+            if(echo)return true; // One summon, even when its attack hits several targets.
+            x=origin.x;y=origin.y-radius*.8;
             size=radius*3.6*(.8+.2*clamp(p/.2));
         }else if(['bolt','swords','drain','vortex','steal'].includes(kind)){
             const q=kind==='steal'?1-flight:flight;
@@ -104,8 +104,9 @@ export function createSpellEffects(assets) {
         c.save();c.shadowBlur=0;c.translate(x,y);c.rotate(angle);
         const drawn=art.drawSubject(c,spec.base,-size/2,-size/2,size,size,p);
         c.restore();if(!drawn)return false;
-        rune(c,x,to.y,radius*(.7+hit*.4),p,color);
-        if(spec.variantAura.color){c.save();c.globalAlpha*=.5;for(let i=0;i<spec.variantAura.rings;i++)rune(c,x,to.y,radius*(1+i*.15),p,spec.variantAura.color);c.restore();}
+        const groundY=centered?origin.y:to.y;
+        rune(c,x,groundY,radius*(.7+hit*.4),p,color);
+        if(spec.variantAura.color){c.save();c.globalAlpha*=.5;for(let i=0;i<spec.variantAura.rings;i++)rune(c,x,groundY,radius*(1+i*.15),p,spec.variantAura.color);c.restore();}
         for(const v of particles.slice(0,24)){
             const q=(p+v.phase)%1,spread=radius*(.5+q*.8);
             disc(c,x+Math.cos(v.angle+p)*spread,y+Math.sin(v.angle+p)*spread*.5-q*radius*.4,v.size*scale*(1-q),color);
@@ -117,13 +118,14 @@ export function createSpellEffects(assets) {
         const spec=spellEffect(config,card);if(!spec||!from||!to)return;
         const p=clamp(progress),col=spec.palette,[primary,light,dark]=col;
         const scale=Math.min(1,width/650,height/330),radius=70*scale*spec.scale;
-        const origin=spec.kind==='summon'&&!failed?(center||{x:(from.x+to.x)/2,y:(from.y+to.y)/2}):from;
+        const centered=centeredSpellSubject(spec)||!!assets.skillArt?.manifest.bases[spec.base]?.effectAtlas;
+        const origin=centered&&!failed?(center||{x:(from.x+to.x)/2,y:(from.y+to.y)/2}):from;
         const a={x:origin.x,y:origin.y-52*scale},b={x:to.x,y:to.y-52*scale};
         const cacheKey=spec.base+':'+seed;
         if(!cache.has(cacheKey)){if(cache.size>128)cache.clear();cache.set(cacheKey,effectParticles(spec.base,spec.count,seed));}
         const particles=cache.get(cacheKey);
         c.save();c.lineCap='round';
-        if(reducedMotion){c.globalAlpha=Math.sin(p*Math.PI)*.65;rune(c,b.x,b.y+40*scale,radius,0,primary);if(!failed)assets.skillArt?.drawSubject(c,spec.base,b.x-radius,b.y-radius,radius*2,radius*2);c.restore();return;}
+        if(reducedMotion){const at=centered?a:b;c.globalAlpha=Math.sin(p*Math.PI)*.65;if(!centered||!echo){rune(c,at.x,at.y+40*scale,radius,0,primary);if(!failed)assets.skillArt?.drawSubject(c,spec.base,at.x-radius,at.y-radius,radius*2,radius*2);}c.restore();return;}
         // A soft darkening gives particles contrast without white screen flashes.
         if(!echo){c.fillStyle=`rgba(10,14,35,${Math.sin(p*Math.PI)*.22})`;c.fillRect(0,0,width,height);}
         c.shadowColor=primary;c.shadowBlur=12*scale;c.globalAlpha=Math.min(1,p*8,(1-p)*7);
@@ -132,7 +134,7 @@ export function createSpellEffects(assets) {
         const flight=clamp((p-attackStart)/(impact-attackStart)),hit=clamp((p-impact)/(1-impact));
         if(failed){c.globalAlpha*=1-p;for(const v of particles.slice(0,20))disc(c,a.x+Math.cos(v.angle)*radius*p,a.y-Math.sin(v.angle)*radius*p,2*scale,'#9aa1af');c.restore();return;}
         // The atlas is one layer, never a replacement for semantic spell choreography.
-        const hasSubject=atlasEffect(c,spec,{a,b,origin,to,center,radius,scale,p,flight,hit,particles});
+        const hasSubject=atlasEffect(c,spec,{a,b,origin,to,center,radius,scale,p,flight,hit,particles,centered,echo});
         elementalParticles(c,card.spellSchool,{a,b,radius,scale,p,flight,hit,particles,palette:col,friendly:spec.friendly});
         // Original illustration manifests above the arena as a magical projection.
         // It is deliberately a card-art apparition, not a fabricated animated NPC.
@@ -152,7 +154,7 @@ export function createSpellEffects(assets) {
         }
         if(!hasSubject&&summon&&!echo) {
             const def=spec.summonDef,emerge=clamp(p/.26),fade=clamp((1-p)/.15),dir=b.x>=a.x?1:-1;
-            const sx=a.x+dir*Math.sin(flight*Math.PI)*radius*.45,sy=origin.y;
+            const sx=a.x,sy=origin.y;
             c.save();c.globalAlpha*=emerge*fade;rune(c,sx,sy,radius*1.1,p,light);
             for(const v of particles.slice(0,24)){const phase=(p*1.4+v.phase)%1;disc(c,sx+Math.cos(v.angle+p*5)*radius*(1-phase),sy-phase*170*scale,v.size*scale,primary);}
             c.shadowBlur=0;c.translate(sx,sy);c.scale(dir,1);c.rotate(Math.sin(flight*TAU)*.065);
@@ -248,6 +250,7 @@ export function createSpellEffects(assets) {
     }
     return {draw(c,options){
         const spec=spellEffect(config,options.card),targets=spec?.area&&options.targets?.length?options.targets:[options.to];
-        for(let i=0;i<targets.length;i++)draw(c,{...options,to:targets[i],echo:i>0});
+        const center=options.center||(options.from&&options.to?{x:(options.from.x+options.to.x)/2,y:(options.from.y+options.to.y)/2}:undefined);
+        for(let i=0;i<targets.length;i++)draw(c,{...options,center,to:targets[i],echo:i>0});
     }};
 }

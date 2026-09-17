@@ -71,8 +71,14 @@ export function validDeck(save, content, deck) {
     assert(total <= limits.capacity, '卡包已满'); return true;
 }
 export function canEquip(save, item, content) {
-    return !!item && owns(save,item.id) && (item.kind === 1 || item.slot === 24) && Number(item.stats[138] || 0) <= save.level &&
-        (!item.stats[137] || Number(item.stats[137]) === content.schools[save.school]);
+    return !equipmentBlockReason(save, item, content);
+}
+export function equipmentBlockReason(save, item, content) {
+    if (!item || !(item.kind === 1 || item.slot === 24) || !Number.isInteger(item.slot) || item.slot <= 0) return '这不是可穿戴的装备';
+    if (!owns(save,item.id)) return '尚未获得这件装备';
+    if (Number(item.stats[138] || 0) > save.level) return `需要等级 ${item.stats[138]}`;
+    if (item.stats[137] && Number(item.stats[137]) !== content.schools[save.school]) return '不符合学系要求';
+    return '';
 }
 export function playerSpec(save, content) {
     const stats = normalizeStats(), fixed = [];
@@ -156,10 +162,17 @@ export function applyAction(save, content, action) {
     }
     case 'equip': {
         const item = content.items[action.itemId];
-        assert(canEquip(save,item,content), '等级、学系或物品数量不符合装备条件');
+        assert(canEquip(save,item,content), equipmentBlockReason(save,item,content));
         save.equipment[item.slot] = item.id;
         save.deck = clampDeck(save.deck, { ...deckLimits(save,content), version:'kids' }).deck;
         syncGoals(save,content); break;
+    }
+    case 'unequip': {
+        const slot = Number(action.slot);
+        assert(Number.isInteger(slot) && save.equipment[slot], '这个部位没有装备');
+        delete save.equipment[slot];
+        save.deck = clampDeck(save.deck, { ...deckLimits(save,content), version:'kids' }).deck;
+        break;
     }
     case 'upgrade': {
         const iid = Number(action.itemId), level = save.upgrades[iid] || 0;

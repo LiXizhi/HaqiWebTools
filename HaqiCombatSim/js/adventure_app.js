@@ -21,7 +21,8 @@ const cloud={owner:null,busy:'',error:'',message:'',paths:[],preview:null};
 const keys=new Set();
 let joystick={x:0,y:0},heldPointer=null;
 function resetMovementInput(){keys.clear();joystick={x:0,y:0};heldPointer=null;document.querySelector('.touch-joystick')?.resetInput();}
-const model=()=>({assets,save,battle,selected,discarded,animating:!!animation});
+const equipmentView={tab:'gear',slot:0,item:null,query:''};
+const model=()=>({assets,save,battle,selected,discarded,animating:!!animation,equipmentView});
 function toast(message) {nodes.toast.textContent=message;nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);}
 function safely(fn) {try{return fn();}catch(e){toast(e.message);return false;}}
 function persist() {
@@ -32,8 +33,22 @@ function persist() {
 }
 function close() {panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,cloud:openCloud,track,interact:interactNearest,steer:(x,y)=>{joystick={x,y};path=[];destination=null;heldPointer=null;}});}
-function paintPanel() {if(panel==='cloud'){paintCloud();return;}if(panel)V.renderPanel(nodes.overlay,panel,model(),{close,action,track,cloud:openCloud,music:toggleMusic,export:()=>downloadSave(save),import:importFile,title:showTitle});}
-function openPanel(kind) {if(stage!=='world')return;close();path=[];destination=null;panel=kind;paintPanel();}
+function paintPanel() {
+    if(panel==='cloud'){paintCloud();return;}
+    if(!panel)return;
+    const equipment=panel==='equipment'||panel==='inventory';
+    const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
+    const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
+    V.renderPanel(nodes.overlay,panel,model(),{close,action,track,panel:openPanel,cloud:openCloud,music:toggleMusic,export:()=>downloadSave(save),import:importFile,title:showTitle});
+    if(equipment){
+        nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
+        if(focusLabel){
+            const buttons=[...nodes.overlay.querySelectorAll('button')];
+            (buttons.find(b=>(b.getAttribute('aria-label')||b.textContent)===focusLabel)||nodes.overlay.querySelector('.equipment-detail button:not(:disabled)'))?.focus({preventScroll:true});
+        }
+    }
+}
+function openPanel(kind) {if(stage!=='world')return;close();path=[];destination=null;panel=kind;if(kind==='equipment'||kind==='inventory'){equipmentView.tab=kind==='equipment'?'gear':'all';equipmentView.slot=0;equipmentView.query='';equipmentView.item=null;}paintPanel();}
 function cloudLocal() {if(stage!=='title')return save;try{const raw=readLocal();return raw?A.parseSave(raw,assets.content):null;}catch{return null;}}
 function openCloud() {persist();close();path=[];destination=null;if(!cloud.busy){cloud.preview=null;cloud.error='';cloud.message=cloud.owner?'请选择一份记录查看，或保存当前旅程。':'';}panel='cloud';paintCloud();}
 function paintCloud() {
@@ -56,7 +71,7 @@ async function cloudAction(label,fn) {
     cloud.busy=label;cloud.error='';cloud.message='';cloud.preview=null;paintCloud();
     try{await fn();}catch(e){cloud.error=e.message;}finally{cloud.busy='';cloud.owner=cloudClient.owner;paintCloud();}
 }
-function action(value) {safely(()=>{A.applyAction(save,assets.content,value);persist();paintHud();paintPanel();const text={equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'晶石法杖强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(text[value.type]||'进度已保存');});}
+function action(value) {safely(()=>{A.applyAction(save,assets.content,value);persist();paintHud();paintPanel();const text={unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'晶石法杖强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(text[value.type]||'进度已保存');});}
 function enterWorld(newSave,restoredBattle=null) {
     save=newSave;world=W.createWorld(save.zone,assets.content);stage='world';path=[];destination=null;animation=null;close();
     if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};
@@ -193,7 +208,7 @@ window.addEventListener('keydown',e=>{
     if(key==='escape'){if(panel||dialog)close();else if(stage==='world')openPanel('settings');}
     if(stage!=='world'||panel||dialog)return;
     if(key==='e'){e.preventDefault();interactNearest();}
-    if(key==='j')openPanel('quests');if(key==='b'||key==='i')openPanel('inventory');if(key==='c')openPanel('deck');if(key==='p')openPanel('pet');
+    if(key==='r')openPanel('equipment');if(key==='j')openPanel('quests');if(key==='b'||key==='i')openPanel('inventory');if(key==='c')openPanel('deck');if(key==='p')openPanel('pet');
 });
 window.addEventListener('keyup',e=>{keys.delete(directionKeys[e.key.toLowerCase()]);});
 window.addEventListener('blur',()=>{resetMovementInput();path=[];destination=null;persist();});

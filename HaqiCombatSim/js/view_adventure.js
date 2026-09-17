@@ -1,7 +1,8 @@
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
-import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,canEquip,recommendedDeck } from './adventure_core.js';
+import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck } from './adventure_core.js';
 import * as U from './combat_unit_core.js';
 import { expectedBaseDamage,expectedBaseHeal,cardTargetKind } from './combat_cards_core.js';
+import { renderEquipment } from './view_adventure_equipment.js';
 import { COLORS } from './adventure_renderer.js';
 export function el(tag,cls,...children) {
     const n=document.createElement(tag);if(cls)n.className=cls;
@@ -69,7 +70,8 @@ export function renderHud(root,model,cb) {
     const {assets,save}=model,c=assets.content,q=currentQuest(save,c);root.replaceChildren();
     const portrait=tile(assets,'sprites',save.appearance==='girl'?12:8,60,65),next=c.progression.xpThresholds[save.level]||save.xp,previous=c.progression.xpThresholds[save.level-1];
     const xp=el('div','xp-bar',el('i'));xp.firstChild.style.width=`${save.level===10?100:Math.max(0,(save.xp-previous)/(next-previous)*100)}%`;
-    const status=button([portrait,el('div','hero-text',el('strong','',save.name),el('span','',`${SCHOOL_NAMES[save.school]}学徒 · 等级 ${save.level}`),xp)],()=>cb.panel('inventory'),'hero-status');
+    const status=button([portrait,el('div','hero-text',el('strong','',save.name),el('span','',`${SCHOOL_NAMES[save.school]}学徒 · 等级 ${save.level}`),xp)],()=>cb.panel('equipment'),'hero-status');
+    status.title='角色与装备（R）';
     status.querySelector('.hero-text').append(el('div','hero-wallet',badge(`仙豆 ${save.inventory[17213]||0}`),el('span','save-indicator','已存档')));
     root.append(status,el('div','location-label',el('span','',save.zone==='camp'?'魔 法 营 地':'哈 奇 小 镇'),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
     const utilities=el('nav','utility-nav');utilities.setAttribute('aria-label','其他功能');
@@ -135,17 +137,10 @@ function spellFace(assets,card,artCard=card) {
     const cooldown=el('span','spell-cooldown',rounds);cooldown.setAttribute('aria-label',`冷却 ${rounds} 回合`);cooldown.title=`冷却 ${rounds} 回合（左中数字）`;
     return el('span','spell-face',canvas,el('span','sr-only',artCard.name),pip,cooldown,el('span','spell-description',spellHint(card,assets.dataset)));
 }
-function itemStats(item) {
-    const names={101:'生命',102:'超级魔力率',111:'全系攻击',112:'烈火攻击',113:'寒冰攻击',114:'风暴攻击',116:'生命攻击',117:'死亡攻击',119:'全系防御',167:'卡包容量',170:'单卡上限',184:'起始普通魔力',185:'起始超级魔力'};
-    return Object.entries(item.stats||{}).filter(([id])=>names[id]).map(([id,n])=>`${names[id]} +${n}${Number(id)>=102&&Number(id)<=126?'%':''}`).join(' · ');
-}
-function itemCard(assets,item,count,actions=[]) {
-    return el('div','inventory-item',item.art?art(assets,item.art,56,56):el('span','item-placeholder','◆'),el('div','item-info',el('strong','',item.name),el('small','muted',`拥有 ${count} 件`),el('p','',String(itemStats(item)||item.description||'').split('|').join(' · ').split('#').join(' ').slice(0,130))),el('div','item-actions',actions));
-}
 export function renderPanel(root,kind,model,cb) {
     const {assets,save}=model,c=assets.content,d=assets.dataset;
-    const titles={quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包','装备与旅途收藏'],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
-    const body=modal(root,...titles[kind],cb,kind==='deck'||kind==='quests');
+    const titles={equipment:['角色与装备','魔法学徒 · 旅途行装'],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包','装备与旅途收藏'],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
+    const body=modal(root,...titles[kind],cb,kind==='deck'||kind==='quests'||kind==='inventory'||kind==='equipment');
     if(kind==='quests') {
         const current=currentQuest(save,c);
         for(const q of c.quests){const state=questState(save,q.id);const block=el('article',`journal-quest ${state.claimed?'done':''} ${current?.id===q.id?'current':''}`,el('div','journal-title',el('span','quest-number',String(q.id-62999).padStart(2,'0')),el('h3','',q.title),badge(state.claimed?'已完成':state.accepted?'进行中':current?.id===q.id?'可接取':'未开启')));
@@ -153,18 +148,17 @@ export function renderPanel(root,kind,model,cb) {
             body.append(block);
         }
     }
-    if(kind==='inventory') {
-        body.append(el('div','wallet',badge(`仙豆 ${save.inventory[17213]||0}`),badge(`奇豆 ${save.inventory[100]||0}`),badge(`等级 ${save.level}`)));
-        const items=Object.entries(save.inventory).filter(([id,n])=>n>0&&!['100','113','17213'].includes(id));
-        if(!items.length)body.append(el('div','empty-state','背包里还空空的。去找青龙导师，领取你的第一个任务吧。'));
-        for(const [id,n]of items){const item=c.items[id];if(!item)continue;const actions=[];
-            if(item.kind===1||item.slot===24){const equipped=Number(save.equipment[item.slot])===Number(id);const b=button(equipped?'已装备':'装备',()=>cb.action({type:'equip',itemId:id}),'secondary small');b.disabled=equipped||!canEquip(save,item,c);actions.push(b);}
-            if(Number(id)===1912){const lv=save.upgrades[id]||0;actions.push(el('small','muted',`强化 +${lv}`));if(lv<c.upgrade.length)actions.push(button(`强化 · ${c.upgrade.find(u=>u.level===lv+1)?.cost[1]}仙豆`,()=>cb.action({type:'upgrade',itemId:id}),'secondary small'));}
-            if(Number(id)===17307&&!save.pet)actions.push(button('打开出奇蛋',()=>cb.action({type:'hatch'}),'primary small'));
-            if(Number(id)===17172)actions.push(button('喂养宠物',()=>cb.action({type:'feed'}),'secondary small'));
-            if(!actions.length)actions.push(el('small','muted','旅途收藏'));
-            body.append(itemCard(assets,item,n,actions));
-        }
+    if(kind==='inventory'||kind==='equipment') {
+        const box=body.closest('.modal');box.classList.add('equipment-modal');
+        renderEquipment(body,model,cb,{el,button,art,tile,spellFace});
+        box.querySelector('.close-button').focus({preventScroll:true});
+        box.addEventListener('keydown',event=>{
+            if(event.key!=='Tab')return;
+            const controls=[...box.querySelectorAll('button:not(:disabled),input:not(:disabled),summary')].filter(node=>node.getClientRects().length);
+            const first=controls[0],last=controls.at(-1);
+            if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
+            else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+        });
     }
     if(kind==='deck') {
         let draft=save.deck.map(x=>({...x}));const limits=deckLimits(save,c);

@@ -173,3 +173,7 @@
 ### 2026-09-17：技能演出层
 
 新增45张冒险卡的2D粒子/召唤演出，card key与`combat.json`中原XML `datafile`保持对应，并记录在`spell-effects.json`。使用现有cast/fizzle/damage/heal事件，不移植或修改Lua伤害、命中、魔力、AI公式；生成召唤图集是卡面意象改编，不是原3D演员/动画导出。
+
+### 2026-09-18：装备查看与卸下
+
+角色面板生命与超级魔力率直接复用 combat_formulas_core 的 baseMaxHp / applyHpStats / powerPipChanceByLevel，来源仍为 player_server.lua GetUpdatedMaxHP L1742起与 GetPowerPipChance L2137–2146。属性聚合和装备附加牌继续走 adventure_core::playerSpec，无新公式。新增卸下、对比与 UI 筛选属于浏览器交互补全；卸下卡包按现有 clampDeck 顺序裁剪，和原浏览器穿戴行为一致。

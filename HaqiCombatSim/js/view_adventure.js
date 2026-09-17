@@ -10,6 +10,8 @@ export function el(tag,cls,...children) {
 }
 export function button(label,fn,cls='') {const b=el('button',cls,label);b.type='button';b.onclick=fn;return b;}
 const paths={book:'M4 4h6q2 0 2 2q0-2 2-2h6v15h-6q-2 0-2 2q0-2-2-2H4z M12 6v15',cards:'M5 5h12v15H5z M8 2h12v15',bag:'M5 8h14v12H5z M8 8V5a4 4 0 0 1 8 0v3',pet:'M8 13q4-5 8 0q6 7-4 6q-10 1-4-6 M5 6v3 M10 3v4 M15 3v4 M20 6v3',settings:'M12 3v3 M12 18v3 M3 12h3 M18 12h3 M5 5l2 2 M17 17l2 2 M5 19l2-2 M17 7l2-2 M16 12a4 4 0 1 1-8 0a4 4 0 1 1 8 0',map:'M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2z M9 3v16 M15 5v16',sound:'M4 10h4l5-5v14l-5-5H4z M17 8q5 4 0 8',arrow:'M5 12h14 M13 6l6 6-6 6'};
+paths.gourd='M10 2h4v3c4 1 4 6 1 8 7 3 6 9-3 9S2 16 9 13C6 11 6 6 10 5z M8 13h8 M14 12l5 4';
+paths.cloud='M6 18a4 4 0 0 1-1-8 7 7 0 0 1 13-2 5 5 0 0 1 0 10 M12 20V10 M8 14l4-4 4 4';
 function icon(kind) {const span=el('span','icon');span.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[kind]||paths.book}"/></svg>`;return span;}
 function art(assets,ref,w=76,h=90,cls='') {const c=el('canvas',`art ${cls}`);c.width=w*2;c.height=h*2;c.style.width=`${w}px`;c.style.height=`${h}px`;assets.draw(c.getContext('2d'),ref,0,0,c.width,c.height);return c;}
 function tile(assets,sheet,index,w=90,h=95) {const c=el('canvas','art');c.width=w*2;c.height=h*2;c.style.width=`${w}px`;c.style.height=`${h}px`;assets.tile(c.getContext('2d'),sheet,index,0,0,c.width,c.height);return c;}
@@ -68,10 +70,14 @@ export function renderHud(root,model,cb) {
     const portrait=tile(assets,'sprites',save.appearance==='girl'?12:8,60,65),next=c.progression.xpThresholds[save.level]||save.xp,previous=c.progression.xpThresholds[save.level-1];
     const xp=el('div','xp-bar',el('i'));xp.firstChild.style.width=`${save.level===10?100:Math.max(0,(save.xp-previous)/(next-previous)*100)}%`;
     const status=button([portrait,el('div','hero-text',el('strong','',save.name),el('span','',`${SCHOOL_NAMES[save.school]}学徒 · 等级 ${save.level}`),xp)],()=>cb.panel('inventory'),'hero-status');
+    status.querySelector('.hero-text').append(el('div','hero-wallet',badge(`仙豆 ${save.inventory[17213]||0}`),el('span','save-indicator','已存档')));
     root.append(status,el('div','location-label',el('span','',save.zone==='camp'?'魔 法 营 地':'哈 奇 小 镇'),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
-    const map=el('canvas');map.id='minimap';map.width=240;map.height=170;
-    const mapBox=el('div','minimap-box',el('div','minimap-head',el('span','',save.zone==='camp'?'魔法营地':'哈奇小镇'),button([icon('map'),el('span','sr-only','打开地图')],()=>cb.panel('map'),'icon-button')),map,el('div','minimap-foot',badge(`仙豆 ${save.inventory[17213]||0}`),el('span','save-indicator','已存档')));
-    root.append(mapBox);
+    const utilities=el('nav','utility-nav');utilities.setAttribute('aria-label','其他功能');
+    const checkin=button([icon('gourd'),el('span','','签到'),el('small','','未开放')],null,'utility-button checkin-button');
+    checkin.disabled=true;checkin.title='米酒葫芦 · 签到暂未开放';checkin.setAttribute('aria-label',checkin.title);
+    utilities.append(checkin);
+    for(const [label,key,action]of [['地图','map',()=>cb.panel('map')],['云存档','cloud',cb.cloud],['设置','settings',()=>cb.panel('settings')]])utilities.append(button([icon(key),el('span','',label)],action,'utility-button'));
+    root.append(utilities);
     const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),el('span','chapter-count',`${Object.values(save.quests).filter(x=>x.claimed).length} / 14`)));
     if(q){
         const state=questState(save,q.id),ready=questReady(save,q);
@@ -83,7 +89,7 @@ export function renderHud(root,model,cb) {
     }else tracker.append(el('h3','','新的魔法旅程'),el('p','',save.visitedTown?'你已完成第一章。和镇上的居民聊聊，或到郊外练习魔法吧。':'你通过了毕业考核！前往营地南边的传送阵，探索哈奇小镇。'),button('前往传送阵',cb.track,'track-button'));
     root.append(tracker);
     const nav=el('nav','game-nav');nav.setAttribute('aria-label','游戏菜单');
-    for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['settings','设置','settings']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
+    for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
     root.append(nav,el('div','movement-hint','WASD / 方向键移动 · 点击寻路 / 按住跟随 · E 交谈'));
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
     const pad=el('div','touch-joystick'),stick=el('span','joystick-stick');

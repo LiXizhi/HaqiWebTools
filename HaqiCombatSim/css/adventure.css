@@ -37,3 +37,9 @@
 
 /* Saved journey and character creation are separate entry states. */
 .saved-journey{text-align:center}.saved-journey>.art{margin:22px auto 14px}.saved-hero-name{overflow-wrap:anywhere;margin-bottom:6px}.new-journey-button{width:100%;margin-top:12px}.character-form>.text-button{display:block;margin:10px auto 0}
+
+/* Currency stays with the hero; secondary functions replace the minimap. */
+.hero-text{min-width:0}.hero-text strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hero-wallet{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:7px}.hero-wallet .badge{padding:2px 6px;font-size:10px;color:#876b30;background:#fff7d9}.hero-wallet .save-indicator{white-space:nowrap}
+.utility-nav{position:absolute;top:24px;right:25px;display:grid;grid-template-columns:repeat(4,52px);gap:4px;padding:7px;border:1px solid #dacf9e;border-radius:10px;background:linear-gradient(120deg,#fff9eaef,#eaf0dded);box-shadow:0 5px 25px #183e3c26}.utility-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:60px;background:none;color:#416e58;border-radius:6px;font-size:10px}.utility-button:hover:not(:disabled){background:#dbe1c99e}.utility-button .icon{width:23px;height:23px}.utility-button:disabled{cursor:default;color:#918263}.utility-button small{font-size:8px;line-height:1}.checkin-button .icon{color:#a77a37}.quest-tracker{top:116px}
+@media(max-width:1050px){.utility-nav{right:18px;grid-template-columns:repeat(4,46px)}.location-label{top:130px}}
+@media(max-width:650px){.hero-wallet{margin-top:5px}.hero-wallet .badge{font-size:9px;padding:2px 4px}.utility-nav{top:12px;right:12px;grid-template-columns:repeat(2,48px);gap:2px;padding:4px}.utility-button{min-height:48px;gap:2px;font-size:9px}.utility-button .icon{width:20px;height:20px}.utility-button small{font-size:8px}.location-label{top:116px}.quest-tracker{top:155px}}

@@ -14,7 +14,7 @@ import { renderCloud } from './view_adventure_cloud.js';
 const $=id=>document.getElementById(id);
 const nodes={world:$('world'),hud:$('hud'),entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer'),toast:$('toast')};
 let assets,renderer,save,world,battle,stage='loading',panel=null,dialog=null,dialogDone=null;
-let path=[],destination=null,moving=false,lastFrame=0,lastMap=0,lastSave=0,toastTimer=0;
+let path=[],destination=null,moving=false,lastFrame=0,lastSave=0,toastTimer=0;
 let selected=null,discarded=[],animation=null,music=null,storageWarning=false;
 let cloudClient;
 const cloud={owner:null,busy:'',error:'',message:'',paths:[],preview:null};
@@ -31,7 +31,7 @@ function persist() {
     lastSave=performance.now();
 }
 function close() {panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
-function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,track,interact:interactNearest,steer:(x,y)=>{joystick={x,y};path=[];destination=null;heldPointer=null;}});}
+function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,cloud:openCloud,track,interact:interactNearest,steer:(x,y)=>{joystick={x,y};path=[];destination=null;heldPointer=null;}});}
 function paintPanel() {if(panel==='cloud'){paintCloud();return;}if(panel)V.renderPanel(nodes.overlay,panel,model(),{close,action,track,cloud:openCloud,music:toggleMusic,export:()=>downloadSave(save),import:importFile,title:showTitle});}
 function openPanel(kind) {if(stage!=='world')return;close();path=[];destination=null;panel=kind;paintPanel();}
 function cloudLocal() {if(stage!=='title')return save;try{const raw=readLocal();return raw?A.parseSave(raw,assets.content):null;}catch{return null;}}
@@ -237,7 +237,6 @@ function frame(now) {
         if((wasMoving&&!moving)||(moving&&now-lastSave>3000))persist();
     }
     renderer.render(world,save,now,{moving,path,title:stage==='title'});
-    if(stage==='world'&&now-lastMap>200){const mini=$('minimap');if(mini)renderer.minimap(mini,world,save);lastMap=now;}
     if(stage==='battle'){const presentation=tickAnimation(now),canvas=$('battle-canvas');if(canvas)renderer.renderBattle(canvas,battle,save,now,presentation);}
 }
 async function boot(){

@@ -42,6 +42,6 @@ export function stepCompanion(pet,world,hero,dt) {
     const dx=pet.position.x-previous.x,travel=distance(previous,pet.position);
     pet.moving=travel>.01;
     if(Math.abs(dx)>.05)pet.facing=dx<0?-1:1;
-    pet.phase+=travel*.14;
+    pet.phase+=travel*.10;
     return pet;
 }

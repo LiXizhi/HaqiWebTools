@@ -1,0 +1,115 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {game,hasAsset} from '../fixtures/game.mjs';
+import {createProfile,itemCount} from '../../js/game/progression.js';
+import {questSupported,questAvailable,questsAtNPC,markerFor,acceptQuest,recordKill,recordDialog,goalProgress,goalsMet,finishQuest,rewardChoices,abandonQuest,skipUnplayableTutorial,playableWorlds,questWorld} from '../../js/game/quest/quests.js';
+import {createDialogRun,currentPage,chooseButton,npcMenu} from '../../js/game/quest/dialog.js';
+import {CURRENCY} from '../../js/game/data.js';
+const fresh=(level=1,school='fire')=>{const p=createProfile({name:'测试',school,gender:'boy'});p.level=level;return p;};
+const q=id=>game.questById[id];
+test('data: quests reference existing NPCs, goals and worlds',()=>{
+  const npcIds=new Set(Object.values(game.npcs).flat().map(n=>n.id));
+  let placed=0,supported=0,doable=0;
+  for(const quest of game.quests){if(npcIds.has(quest.startNPC))placed++;if(questSupported(quest))supported++;if(questSupported(quest,game))doable++;for(const g of quest.goals)assert.ok(game.goals[g.goalId],`quest ${quest.id} goal ${g.goalId}`);}
+  assert.ok(placed/game.quests.length>0.9,`${placed}/${game.quests.length} quests start at a placed NPC`);
+  assert.ok(supported>300&&doable>250&&doable<=supported,`${supported} supported, ${doable} with placed mobs`);
+  const missing=Object.values(game.goals).filter(g=>g.template&&!game.mobByTemplate[g.template]);
+  assert.ok(missing.length<=3,`goals with missing templates: ${missing.map(g=>g.id)}`);
+  for(const quest of game.quests)for(const g of quest.goals)assert.ok(!missing.includes(game.goals[g.goalId]),`quest ${quest.id} uses a goal without a template`);
+});
+test('quests whose mobs never stand in an arena are not offered',()=>{
+  const goal=Object.values(game.goals).find(g=>g.template&&game.mobByTemplate[g.template]&&!game.placedTemplates.has(g.template));
+  const quest=game.quests.find(q=>q.goals.some(g=>g.goalId===goal.id));
+  if(!quest)return;
+  const p=fresh(quest.level?.min??1);p.quests.finished=Object.fromEntries(quest.requestQuests.map(id=>[id,1]));
+  assert.equal(questSupported(quest),true);assert.equal(questAvailable(p,quest,game),false);
+});
+test('tutorial skip: only the unplayable camp chain is marked finished, once',()=>{
+  const p=fresh();
+  const skipped=skipUnplayableTutorial(p,game,hasAsset);
+  assert.ok(skipped.length>=10);
+  assert.ok(skipped.every(id=>questWorld(game,q(id))==='NewUserIsland'));
+  assert.deepEqual(skipUnplayableTutorial(p,game,hasAsset),[]);
+  assert.deepEqual(playableWorlds(game,hasAsset).map(w=>w.name),['61HaqiTown','FlamingPhoenixIsland']);
+});
+test('kill quest: accept, progress by template, finish with fixed + chosen rewards',()=>{
+  const p=fresh(11,'life'),quest=q(61076);
+  assert.equal(questAvailable(fresh(5),quest,game),false,'level gate');
+  assert.equal(markerFor(p,game,quest.startNPC),'available');
+  acceptQuest(p,quest,game);
+  assert.throws(()=>acceptQuest(p,quest,game),/不可接取/);
+  assert.equal(markerFor(p,game,quest.startNPC),'progress');
+  assert.deepEqual(goalProgress(p,quest,game).map(r=>[r.have,r.need]),[[0,1]]);
+  recordKill(p,game,'config/Aries/Mob/StormLand/MobTemplate_GhostOctopus.xml');
+  assert.equal(goalsMet(p,quest,game),false,'same stem in another folder does not count');
+  recordKill(p,game,game.goals[40016].template);
+  assert.equal(goalsMet(p,quest,game),true);
+  assert.equal(markerFor(p,game,quest.endNPC),'completable');
+  const choices=rewardChoices(p,quest);assert.equal(choices.length,2);assert.equal(choices[0].fixed,true);
+  const exp=p.exp,beans=itemCount(p,17213);
+  const out=finishQuest(p,quest,game,{1:0});
+  assert.equal(out.exp,1200);assert.equal(itemCount(p,17213),beans+300);assert.ok(p.exp>exp||out.levels>0);
+  assert.equal(p.quests.finished[61076],1);assert.equal(p.quests.active[61076],undefined);
+  assert.equal(questAvailable(p,quest,game),false,'non-repeatable');
+  assert.equal(p.stats.questsDone,1);
+});
+test('item quest chain: producer odds with seeded rolls, prerequisite gating, quest items consumed',()=>{
+  const p=fresh(12,'ice'),first=q(62102),second=q(62103);
+  assert.equal(questAvailable(p,second,game),false,'chain blocked before the first quest');
+  acceptQuest(p,first,game);
+  const producer=game.goals[first.goalItems[0].producerId].template;
+  // Source data uses producer_odds="1" (certain). Exercise fractional and percentage odds on a copy.
+  const withOdds=odds=>({...game,questById:{...game.questById,[first.id]:{...first,goalItems:[{...first.goalItems[0],odds}]}}});
+  assert.deepEqual(recordKill(p,withOdds(0.3),producer,()=>0.99),[],'roll above odds drops nothing');
+  assert.deepEqual(recordKill(p,withOdds(30),producer,()=>0.5),[],'percent odds');
+  assert.equal(recordKill(p,withOdds(30),producer,()=>0.2).length,1,'percent odds hit');
+  p.inventory[70008]=0;delete p.inventory[70008];
+  const drops=recordKill(p,game,producer,()=>0.999);
+  assert.equal(drops.length,1,'odds 1 always drops');assert.equal(itemCount(p,70008),1);
+  assert.deepEqual(recordKill(p,game,producer,()=>0.0),[],'no over-collection');
+  assert.ok(goalsMet(p,first,game));
+  finishQuest(p,first,game);
+  assert.equal(itemCount(p,70008),0,'quest item consumed');
+  assert.equal(questAvailable(p,second,game),true,'chain unlocked');
+});
+test('dialog quest: ClientDialogNPC progress and menu markers',()=>{
+  const p=fresh(12);p.quests.finished[63014]=1;
+  const quest=q(62101);
+  acceptQuest(p,quest,game);
+  assert.equal(questsAtNPC(p,game,30519).inProgress[0]?.id,quest.id,'talk target lists the quest');
+  assert.ok(['progress','available'].includes(markerFor(p,game,30519)),'available quests outrank progress markers');
+  assert.equal(goalsMet(p,quest,game),false);
+  assert.equal(recordDialog(p,game,30519).length,1);
+  assert.equal(recordDialog(p,game,30519).length,0);
+  assert.ok(goalsMet(p,quest,game));
+  assert.equal(markerFor(p,game,quest.endNPC),'completable');
+  const at=questsAtNPC(p,game,quest.endNPC);assert.equal(at.completable[0].id,quest.id);
+  const menu=npcMenu({id:quest.endNPC,name:'x'},{...at,shop:true,greeting:'你好'});
+  const actions=menu.buttons.map(b=>b.action);
+  assert.equal(actions[0],'quest-finish');assert.deepEqual(actions.slice(-2),['shop','close']);assert.ok(actions.slice(1,-2).every(a=>a==='quest-start'||a==='quest-progress'));
+  abandonQuest(p,quest.id);assert.equal(questsAtNPC(p,game,quest.endNPC).completable.length,0);
+});
+test('dialog runner: gotonext / doaccept / dofinished / donpcdialoged outcomes',()=>{
+  const quest=q(61076);
+  const run=createDialogRun(quest.startDialog,{kind:'start',quest});
+  assert.equal(currentPage(run).buttons[0].label,'需要我的帮忙吗？');
+  assert.deepEqual(chooseButton(run,0),{type:'next'});
+  assert.deepEqual(chooseButton(run,0),{type:'next'});
+  assert.deepEqual(chooseButton(run,0),{type:'accept',quest});
+  assert.ok(run.done);
+  const end=createDialogRun(quest.endDialog,{kind:'end',quest});
+  assert.equal(chooseButton(end,0).type,'finish');
+  const talk=createDialogRun(q(62101).dialogNPCs[0].dialog,{kind:'talk',npcId:30519});
+  chooseButton(talk,0);assert.equal(chooseButton(talk,0).type,'talked');
+  assert.throws(()=>chooseButton(talk,5),/无效/);
+  const plain=createDialogRun([{npcId:1,content:'a',buttons:[]},{npcId:1,content:'b',buttons:[]}],{kind:'info'});
+  assert.equal(currentPage(plain).buttons[0].action,'gotonext');chooseButton(plain,0);assert.equal(currentPage(plain).buttons[0].action,'close');assert.equal(chooseButton(plain,0).type,'close');
+});
+test('rewards: experience currency goes to exp, other gsids to the inventory',()=>{
+  const p=fresh(40,'storm'),quest=q(61099);
+  acceptQuest(p,quest,game);
+  for(const g of quest.goals)recordKill(p,game,game.goals[g.goalId].template);
+  const out=finishQuest(p,quest,game,{1:1});
+  assert.equal(out.exp,53132);assert.equal(itemCount(p,17213),1000);assert.equal(itemCount(p,16084),0);
+  assert.equal(itemCount(p,CURRENCY.exp),0);
+});

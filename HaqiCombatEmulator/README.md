@@ -14,6 +14,10 @@ python3 -m http.server 8765 --bind 127.0.0.1
 
 打开 <http://127.0.0.1:8765/HaqiCombatEmulator.html>。也可直接用编辑器 Live Server 打开 HTML。不要用 `file://`（ES Modules、fetch 和 Worker 需要 HTTP）。数据包已随项目提供，运行时无需 npm 安装。首次使用 AI 功能才加载 Keepwork SDK。
 
+### Haqi.html · 2D 俯视角游戏（实验）
+
+同目录第二个入口 <http://127.0.0.1:8765/Haqi.html>：像素风俯视角魔法哈奇儿童版切片——真实哈奇小镇/火鸟岛地图（Keepwork CDN）、真实 NPC 摆放与任务文本、真实怪物模板与商店，战斗复用本目录的确定性内核（PvE 剧本）。WASD 行走、E 交谈、走近怪物开战；J/I/B/M 打开任务/背包/卡组/地图。首次进入需要联网拉取地图与卡面并缓存。经验曲线与卡牌解锁等级是占位（仓库无服务端表），见 [docs/game.md](docs/game.md)。
+
 ## 开发验证
 
 ```sh
@@ -25,6 +29,8 @@ npm run benchmark    # 固定儿童版 4v4、10,000 场
 HAQI_VERSION=teen npm run benchmark
 npm run data:import  # 需要仓库 config/Aries 和 Database 的真实快照
 npm run data:audit
+npm run game:import  # Haqi.html 世界/NPC/任务/怪物/商店 → data/game/kids
+npm run game:sprites # 重新生成 assets/sprites 像素图
 ```
 
 运行时代码在 `js/`，数据转换 Python 和测试 Lua VM 只用于开发。所有实验数据保存在浏览器 IndexedDB；清除站点数据将删除本机保存，建议导出 JSON。
@@ -34,5 +40,6 @@ npm run data:audit
 - [入门](docs/getting_started.md) · [接口](docs/interfaces.md)
 - [覆盖状态与原规则](docs/combat-rules.md) · [数据管线](docs/data-pipeline.md)
 - [测试及实测证据](docs/testing.md)
+- [Haqi.html 2D 游戏设计与数据映射](docs/game.md)
 
 本项目不包含 MMO 世界、真人联网房间、正式服写入或部署发布。

@@ -12,5 +12,6 @@
 | [experiments-and-ai.md](experiments-and-ai.md) | 采样、统计、机器人、Keepwork 与复测 |
 | [testing.md](testing.md) | 测试命令、证据边界、性能实测 |
 | [code-plan.md](code-plan.md) | 路线图、阶段状态、下一步 |
+| [game.md](game.md) | `Haqi.html` 2D 俯视角游戏：玩法边界、数据映射、资源规则、数值占位 |
 
 上游：[仓库 Wiki](../../../docs/README.md) · [开发规则](../AGENTS.md)。

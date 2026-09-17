@@ -57,3 +57,7 @@ HAQI_VERSION=teen npm run benchmark
 ## 2026-09-17 v0.2.2 容量、副本与魔力
 
 32 项 Node 测试、8 项 Chrome 用例通过。新增双版本默认 40 容量但不填满、6 张合法/7 张拒绝、统一无界面校验、精简卡组首轮抽中概率、加牌按钮上限、普通/超级魔力数量和不同颜色验证。`test-results/energy-colors.png` 已查看；语法与核心依赖检查、git diff --check 通过。
+
+## 2026-09-17 v0.3 Haqi.html 2D 游戏
+
+56 项 Node 测试、10 项 Chrome 用例通过；`npm run check` 70 模块。新增 `tests/engine/pve.test.mjs`（不等阵容、`kind` 标签、校验失败关闭、确定性/回放/牌库循环）、`tests/game/world.test.mjs`（五个岛的锚点残差与像素比、出生点与 95% 实体落图、陈旧副本页面清空、碰撞分类/开凿/分轴滑行）、`tests/game/quests.test.mjs`（数据引用、教程链跳过、击杀/掉落链/对话任务全流程、对话运行器、奖励归类、未摆放怪物不提供）、`tests/game/combat.test.mjs`（16 个小镇模板编译、317 个已摆放模板可开战性、权重牌库、基因确定性、遭遇战闭环与奖励、四怪复现、进阶规则、卡牌文案）。`tests/browser/haqi.spec.mjs` 用 Playwright 路由把 CDN 替换为纯色 PNG 离线运行：建号→行走→镇怪战斗→乘船→接任务→击杀→交任务→刷新恢复；商店购买、背包、卡组、日志、地图、系统、390px 布局与战斗时隐藏菜单栏。截图 `test-results/haqi-town.png`、`haqi-battle.png`、`haqi-mobile.png`、`haqi-mobile-battle.png` 已查看。真实 CDN 的手动试玩另见 game.md 的平衡抽样；2D 游戏不改变 P1/P2 原版一致性的未完成状态。

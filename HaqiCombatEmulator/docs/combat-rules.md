@@ -43,3 +43,7 @@
 核对 `player_server.lua:PrepareCard` 附近（803 行起）的最多 8 张手牌逻辑，以及 `DiscardCard` / `RestoreDiscardedCard` / `ValidateDiscardedCards`。默认保留手牌并在己方回合补到 8 张；卡包容量、手牌上限和每轮补牌上限可以显式覆盖，用于实验，覆盖值不宣称是原版装备的合法容量。
 
 使用与弃置永久消耗该副本；未施放成功的 fizzle 卡按已有原版路径回到牌库末尾。没有牌可抽也没有手牌时，不生成兜底卡。手牌中暂时能量不足与卡包耗尽是两个不同状态。
+
+## PvE 剧本（v0.3）
+
+`createBattle` 接受 `scenario.pve=true`：双方各 1–4 人可不相等，`size` 必须等于较大一方人数并决定竞技场；角色 `kind:'player'|'mob'`，`mob` 只允许出现在 PvE。怪物默认 `recycleDeck`（牌库耗尽洗回，对应 `mob_server.lua` 无限牌库），玩家仅在剧本显式 `recycleDeck:true` 时开启；PvP 校验与结果不变。`getObservation` 与 `result.units` 增加 `kind`。怪物属性来自 `MobTemplate` 的 `hp`、五系 `damage_*_percent`/`resist_*_percent`、`power_pip_percent`、`startup_pips_*`，牌库来自 `available_cards`/`cardsets`（见 [game.md](game.md)）。经验的儿童版 `global_exp_bonus=2` 在遭遇战结算层实现，不进入内核。

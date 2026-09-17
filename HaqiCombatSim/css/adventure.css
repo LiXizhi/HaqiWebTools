@@ -39,7 +39,7 @@
 .saved-journey{text-align:center}.saved-journey>.art{margin:22px auto 14px}.saved-hero-name{overflow-wrap:anywhere;margin-bottom:6px}.new-journey-button{width:100%;margin-top:12px}.character-form>.text-button{display:block;margin:10px auto 0}
 
 /* Currency stays with the hero; secondary functions replace the minimap. */
-.hero-text{min-width:0}.hero-text strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hero-wallet{display:flex;align-items:center;justify-content:space-between;gap:5px;margin-top:7px}.hero-wallet .badge{padding:2px 6px;font-size:10px;color:#876b30;background:#fff7d9}.hero-wallet .save-indicator{white-space:nowrap}
+.hero-status .art{flex-shrink:0}.hero-text{min-width:0}.hero-text strong{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hero-health{position:relative;height:17px;margin-top:6px;overflow:hidden;border-radius:4px;background:#b95249;box-shadow:inset 0 0 0 1px #365b4533}.hero-health i{display:block;width:var(--health,100%);height:100%;background:#57944c}.hero-health-label{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:600;white-space:nowrap;text-shadow:0 1px 2px #203723;font-variant-numeric:tabular-nums}.hero-wallet{display:flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:5px}.hero-wallet .badge{max-width:100%;overflow:hidden;text-overflow:ellipsis;padding:2px 6px;font-size:10px;color:#876b30;background:#fff7d9}.hero-wallet .save-indicator{white-space:nowrap}
 .utility-nav{position:absolute;top:24px;right:25px;display:grid;grid-template-columns:repeat(4,52px);gap:4px;padding:7px;border:1px solid #dacf9e;border-radius:10px;background:linear-gradient(120deg,#fff9eaef,#eaf0dded);box-shadow:0 5px 25px #183e3c26}.utility-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:60px;background:none;color:#416e58;border-radius:6px;font-size:10px}.utility-button:hover:not(:disabled){background:#dbe1c99e}.utility-button .icon{width:23px;height:23px}.utility-button:disabled{cursor:default;color:#918263}.utility-button small{font-size:8px;line-height:1}.checkin-button .icon{color:#a77a37}.quest-tracker{top:116px}
 @media(max-width:1050px){.utility-nav{right:18px;grid-template-columns:repeat(4,46px)}.location-label{top:130px}}
 @media(max-width:650px){.hero-wallet{margin-top:5px}.hero-wallet .badge{font-size:9px;padding:2px 4px}.utility-nav{top:12px;right:12px;grid-template-columns:repeat(2,48px);gap:2px;padding:4px}.utility-button{min-height:48px;gap:2px;font-size:9px}.utility-button .icon{width:20px;height:20px}.utility-button small{font-size:8px}.location-label{top:116px}.quest-tracker{top:155px}}
@@ -70,6 +70,48 @@
 @media(prefers-reduced-motion:reduce){.equipment-detail{scroll-behavior:auto}}
 .equipment-stat-details{margin-top:16px}.equipment-stat-details summary{cursor:pointer;min-height:44px;padding:12px 0;font-weight:700;font-size:15px;color:var(--green)}
 
+/* Collection, formation and level-gated shop use the existing parchment palette. */
+.pet-sheet{display:inline-block;flex-shrink:0;background-repeat:no-repeat;vertical-align:middle;}
+.starter-choices,.pet-formation,.shop-filters,.shop-pager{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0;}
+.starter-choices button{display:flex;flex-direction:column;align-items:center;}
+.starter-choices .selected{outline:3px solid #b48a3d;}
+.pet-formation label{display:flex;flex-direction:column;gap:6px;flex:1;min-width:120px;}
+.pet-formation select,.shop-filters select,.shop-filters input,.pet-detail input{font:inherit;border:1px solid #b9b49b;border-radius:8px;padding:8px;background:#fffaf0;max-width:100%;}
+.pet-detail{margin:18px 0;padding:16px;background:#f5eedf;border-radius:14px;}
+.pet-card-list{display:grid;gap:8px;margin:12px 0;}.pet-card-list label{display:flex;align-items:center;justify-content:space-between;gap:12px;}.pet-card-list input{width:65px;}
+.shop-tree{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;}.shop-tier{grid-column:1/-1;border-bottom:1px solid #c7b78f;padding:10px 0;}
+.shop-card{display:flex;flex-direction:column;gap:8px;padding:14px;border:1px solid #cbbd9b;background:#fff9eb;border-radius:12px;overflow-wrap:anywhere;}.shop-card .pet-sheet{align-self:center;}.shop-card small{line-height:1.5;}
+.shop-card button{margin-top:auto;}.shop-filters>*{min-width:100px;flex:1;}.shop-pager{justify-content:center;}
+@media(max-width:600px){.starter-choices{gap:5px;}.starter-choices button{padding:5px;font-size:12px;}.shop-tree{grid-template-columns:repeat(2,minmax(0,1fr));}.shop-card{padding:9px;font-size:13px;}.pet-formation{display:grid;grid-template-columns:1fr 1fr;}}
 /* Settings debug editor. */
 .debug-modal.wide{width:min(860px,100%)}.debug-intro{font-size:13px;margin-bottom:16px}.debug-toolbar{display:flex;gap:10px;margin-bottom:16px}.debug-toolbar input{flex:1;min-width:0}.debug-toolbar input,.debug-toolbar select,.debug-field input{background:#fffdf5;color:var(--ink);border:1px solid var(--line);border-radius:6px;min-height:44px;padding:9px;font:inherit}.debug-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-height:42dvh;overflow:auto;padding:3px;margin-bottom:14px}.debug-field{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border:1px solid var(--line);border-radius:7px}.debug-field>span{min-width:0}.debug-field strong{display:block;font-size:12px;overflow-wrap:anywhere}.debug-field small{display:block;font-size:10px}.debug-field input{width:112px;flex-shrink:0;font-size:13px}.debug-preview{margin:16px 0;padding:13px;background:#eaf0e0;border-radius:7px;max-height:220px;overflow:auto;font-size:12px}.debug-preview p{font-size:12px}.debug-note{color:#88622e}.debug-actions{display:flex;flex-wrap:wrap;gap:8px}.debug-actions button{min-height:44px}.debug-derived{margin-top:20px}.debug-derived summary{cursor:pointer;min-height:44px;font-size:13px}.debug-result{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;margin-bottom:12px}
 @media(max-width:600px){.debug-fields{grid-template-columns:1fr;max-height:40dvh}.debug-field input{width:125px}.debug-toolbar{gap:6px}.debug-toolbar select{max-width:95px}.debug-intro{font-size:12px}.debug-actions{display:grid;grid-template-columns:1fr 1fr}.debug-actions .primary{grid-column:1/-1}}
+
+.pet-formation{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));}.pet-formation label{min-width:0;}.modal-body select{font:inherit;border:1px solid #b9b49b;border-radius:8px;padding:8px;background:#fffaf0;max-width:100%;}.pet-detail .starter-choices{justify-content:space-between;}.shop-card small{display:block;}.modal-body>.primary{margin:8px;}
+@media(max-width:600px){.pet-formation{grid-template-columns:1fr 1fr;}.nav-button{min-width:54px;}.game-nav{gap:4px;}}
+
+/* Shop artwork and the independent pet growth dialog share the parchment palette. */
+.shop-gear-icon{align-self:center;flex-shrink:0;}
+.shop-card .pet-details-button{margin-top:0;padding:8px 4px;font-size:12px;min-height:40px;}
+.pet-growth-modal{color:var(--ink);background:var(--paper);width:min(760px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 24px);padding:0;margin:auto;border:1px solid var(--gold);border-radius:14px;box-shadow:var(--shadow);}
+.pet-growth-modal::backdrop{background:#102e3c88;}
+.pet-growth-modal[open]{display:flex;flex-direction:column;}
+.pet-growth-modal .modal-body{min-height:0;overflow:auto;overscroll-behavior:contain;}
+.pet-growth-modal .modal-header{flex-shrink:0;}
+.pet-growth-stages{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:24px;}
+.pet-growth-stage{text-align:center;border:1px solid var(--line);border-radius:10px;padding:12px 4px;background:#fff9eb;}
+.pet-growth-stage h3{font-size:16px;margin:8px 0;}
+.pet-growth-lessons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:14px;}
+.pet-growth-lesson{display:flex;align-items:center;gap:10px;padding:8px;border-bottom:1px solid var(--line);font-size:13px;}
+@media(max-width:600px){.pet-growth-stages{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}.pet-growth-modal .modal-header{padding:16px;}.pet-growth-modal .modal-body{padding:14px;}.pet-growth-lessons{grid-template-columns:1fr;}}
+
+/* Persistent shop categories in the modal title bar. */
+.shop-header{gap:20px;flex-wrap:wrap;}
+.shop-category-tabs{display:flex;gap:10px;flex:1;align-self:flex-end;}
+.shop-category-tab{min-width:80px;min-height:44px;background:transparent;border:1px solid var(--line);color:var(--ink);}
+.shop-category-tab.active{background:var(--green);color:#fff8df;border-color:var(--green);box-shadow:0 3px 10px #24483f20;}
+.shop-header>.close-button{flex-shrink:0;margin-left:auto;}
+@media(max-width:600px){.shop-header{gap:12px;}.shop-header>.close-button{align-self:flex-start;}.shop-category-tabs{order:3;flex:0 0 100%;gap:8px;}.shop-category-tab{flex:1;min-width:0;padding:9px 12px;}}
+/* Compact hero heading: equipment and membership are separate controls. */
+.hero-heading{display:flex;align-items:center;gap:7px;min-width:0}.hero-name{flex:1;min-width:0;padding:0;background:none;color:inherit;text-align:left}.hero-name strong{font-size:inherit}.hero-membership{flex:none;padding:3px 6px;border:1px solid #d8bf7b;border-radius:4px;background:#fff3cc;color:#876528;font-size:10px;white-space:nowrap}.hero-text>.save-indicator:not([hidden]){display:block;color:#a34a36}.hero-text>.save-indicator[hidden]{display:none}
+.checkin-reward{font-size:36px;font-weight:600;text-align:center;color:#9a712c;margin:12px 0 20px}.checkin-rules{line-height:1.8}.checkin-countdown{text-align:center;font-size:20px;margin:24px 0;font-variant-numeric:tabular-nums}.checkin-claim{display:block;min-width:160px;margin:0 auto}.checkin-balance{text-align:center;margin-top:18px}.checkin-button.reward-ready{color:#966919}.checkin-button.reward-ready small{color:#94630e;font-weight:600}

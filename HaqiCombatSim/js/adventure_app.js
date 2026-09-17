@@ -1,5 +1,6 @@
 import { prepareDebugEdit } from './adventure_debug_core.js';
 import { hasDebugBackup, storeDebugEdit, restoreDebugBackup } from './adventure_debug.js';
+import { tickCare } from './adventure_pets_core.js';
 // Browser controller: input, rendering, audio and persistence live outside the pure rules.
 import { effectDuration } from './spell_effects_core.js';
 import { createSpellSound } from './spell_sound.js';
@@ -26,27 +27,29 @@ const spellSound=createSpellSound({defaultEnabled:true});
 document.addEventListener('pointerdown',()=>spellSound.unlock());
 document.addEventListener('keydown',()=>spellSound.unlock());
 async function toggleSound(){const requested=!spellSound.enabled,ok=await spellSound.setEnabled(requested);if(requested&&!ok)toast('浏览器暂时无法启用音效，请重试。');paintPanel();if(stage==='battle')paintBattle();}
+let lastCare=0;
 let joystick={x:0,y:0},heldPointer=null;
 function resetMovementInput(){keys.clear();joystick={x:0,y:0};heldPointer=null;document.querySelector('.touch-joystick')?.resetInput();}
+const shopView={category:'pet',query:'',school:'',slot:'',ownership:'',page:0},petView={selected:null};
 const equipmentView={tab:'gear',slot:0,item:null,query:''};
-const model=()=>({assets,save,battle,selected,discarded,animating:!!animation,equipmentView,debugBackup:hasDebugBackup(),soundEnabled:spellSound.enabled});
+const model=()=>({assets,save,now:Date.now(),storageWarning,battle,selected,discarded,animating:!!animation,equipmentView,shopView,petView,debugBackup:hasDebugBackup(),soundEnabled:spellSound.enabled});
 function toast(message) {nodes.toast.textContent=message;nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);}
 function safely(fn) {try{return fn();}catch(e){toast(e.message);return false;}}
 function persist() {
     if(!save||stage==='title')return;
     try {saveLocal(save);storageWarning=false;}catch {if(!storageWarning)toast('浏览器无法保存进度，请在设置中导出存档。');storageWarning=true;}
-    const indicator=document.querySelector('.save-indicator');if(indicator)indicator.textContent=storageWarning?'请导出备份':'已存档';
+    const indicator=document.querySelector('.save-indicator');if(indicator){indicator.textContent=storageWarning?'请导出备份':'';indicator.hidden=!storageWarning;}
     lastSave=performance.now();
 }
 function close() {panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
-function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,cloud:openCloud,track,interact:interactNearest,steer:(x,y)=>{joystick={x,y};path=[];destination=null;heldPointer=null;}});}
+function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>toast('会员升级暂未开放。'),cloud:openCloud,track,interact:interactNearest,steer:(x,y)=>{joystick={x,y};path=[];destination=null;heldPointer=null;}});}
 function paintPanel() {
     if(panel==='cloud'){paintCloud();return;}
     if(!panel)return;
-    const equipment=panel==='equipment'||panel==='inventory';
+    const equipment=['equipment','inventory','shop','pet'].includes(panel);
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
-    V.renderPanel(nodes.overlay,panel,model(),{close,action,track,panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,export:()=>downloadSave(save),import:importFile,title:showTitle});
+    V.renderPanel(nodes.overlay,panel,model(),{close,action,track,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,export:()=>downloadSave(save),import:importFile,title:showTitle});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
@@ -90,9 +93,9 @@ async function cloudAction(label,fn) {
     cloud.busy=label;cloud.error='';cloud.message='';cloud.preview=null;paintCloud();
     try{await fn();}catch(e){cloud.error=e.message;}finally{cloud.busy='';cloud.owner=cloudClient.owner;paintCloud();}
 }
-function action(value) {safely(()=>{A.applyAction(save,assets.content,value);persist();paintHud();paintPanel();const text={unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'晶石法杖强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(text[value.type]||'进度已保存');});}
+function action(value) {safely(()=>{A.applyAction(save,assets.content,value.type==='checkin'?{...value,now:Date.now()}:value);persist();paintHud();paintPanel();const text={checkin:'签到成功，奇豆已到账！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'晶石法杖强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(text[value.type]||'进度已保存');});}
 function enterWorld(newSave,restoredBattle=null) {
-    save=newSave;world=W.createWorld(save.zone,assets.content);stage='world';path=[];destination=null;animation=null;close();
+    save=newSave;if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content);stage='world';path=[];destination=null;animation=null;close();
     if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};
     nodes.entry.replaceChildren();nodes.entry.className='';nodes.entry.hidden=true;nodes.hud.hidden=false;
     nodes.battle.replaceChildren();nodes.battle.className='battle-layer';battle=null;paintHud();
@@ -194,15 +197,16 @@ function track() {
 }
 function paintBattle(){V.renderBattle(nodes.battle,model(),{sound:toggleSound,cloud:openCloud,export:()=>downloadSave(save),select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
     if(animation||battle.finished)return;discarded=discarded.includes(seq)?discarded.filter(x=>x!==seq):[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
-},target:id=>{if(!selected||animation||battle.finished)return;playRound({...selected,targetId:id,discardSeqs:discarded});},pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
-    A.applyAction(save,assets.content,{type:'retreat'});enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
-},finish:()=>safely(()=>{A.settleEncounter(save,assets.content,battle);enterWorld(save);})});}
+},target:id=>{if(!selected||animation||battle.finished)return;playRound({...selected,targetId:id,discardSeqs:discarded});},capture:id=>playRound({capture:true,targetId:id}),pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
+    if(assets.content.pets)A.settleParty(save,assets.content,battle,{retreat:true});
+    A.applyAction(save,assets.content,{type:'retreat'});save.careAt=Date.now();enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
+},finish:()=>safely(()=>{A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save);})});}
 function playRound(decision) {
     if(animation||battle.finished)return;
     safely(()=>{
         const start=battle.events.length,hp=Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,u.hp]));
         P.playPveRound(battle,decision);A.recordDecision(save,decision);persist();selected=null;discarded=[];
-        const events=battle.events.slice(start).filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','pass'].includes(e.type));
+        const events=battle.events.slice(start).filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','pass','capture'].includes(e.type));
         animation={events:events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),index:0,start:performance.now(),hp,entered:-1};paintBattle();
     });
 }
@@ -240,7 +244,7 @@ window.addEventListener('keydown',e=>{
 window.addEventListener('keyup',e=>{keys.delete(directionKeys[e.key.toLowerCase()]);});
 window.addEventListener('blur',()=>{resetMovementInput();path=[];destination=null;persist();});
 window.addEventListener('pagehide',persist);
-document.addEventListener('visibilitychange',()=>{spellSound.stop();if(document.hidden){resetMovementInput();path=[];destination=null;persist();music?.pause();}else updateMusic();});
+document.addEventListener('visibilitychange',()=>{spellSound.stop();if(document.hidden){resetMovementInput();path=[];destination=null;persist();music?.pause();}else{if(save?.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);updateMusic();}});
 window.addEventListener('pagehide',()=>spellSound.stop());
 nodes.world.addEventListener('pointerdown',e=>{
     if(stage!=='world'||panel||dialog||e.button!==0)return;e.preventDefault();nodes.world.focus({preventScroll:true});
@@ -255,6 +259,7 @@ function releaseWorldPointer(e){if(heldPointer?.id!==e.pointerId)return;if(heldP
 for(const event of ['pointerup','pointercancel','lostpointercapture'])nodes.world.addEventListener(event,releaseWorldPointer);
 function frame(now) {
     requestAnimationFrame(frame);if(!renderer||!save)return;
+    if(stage==='world'&&!document.hidden&&now-lastCare>1000){lastCare=now;tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),true);V.updateHeroHealth(nodes.hud,save,assets.content);V.updateCheckin(nodes.hud,model());if(panel==='checkin')V.updateCheckin(nodes.overlay,model());if(now-lastSave>10000)persist();}
     const dt=Math.min(.055,(now-lastFrame)/1000||0);lastFrame=now;const wasMoving=moving;moving=false;
     if(stage==='world'&&!panel&&!dialog) {
         let dx=Number(keys.has('right'))-Number(keys.has('left')),dy=Number(keys.has('down'))-Number(keys.has('up'));
@@ -280,7 +285,7 @@ function frame(now) {
         if((wasMoving&&!moving)||(moving&&now-lastSave>3000))persist();
     }
     renderer.render(world,save,now,{moving,path,title:stage==='title'});
-    if(stage==='battle'){const presentation=tickAnimation(now),canvas=$('battle-canvas');if(canvas)renderer.renderBattle(canvas,battle,save,now,presentation);}
+    if(stage==='battle'){const presentation=tickAnimation(now),canvas=$('battle-canvas');if(canvas)canvas.battlePositions=renderer.renderBattle(canvas,battle,save,now,presentation);}
 }
 async function boot(){
     try {

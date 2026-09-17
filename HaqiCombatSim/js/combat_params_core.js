@@ -36,6 +36,16 @@ export function defaultParams(version = 'teen') {
     const teen = version === 'teen';
     return {
         version,
+        checkin: { intervalMs: 300000, coins: 100 },
+        adventure: {
+            levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [8,12,16,20],
+            petCopies: 3, regenPerMinute: .05, hungerPerMinute: 1, feedThreshold: 30,
+            foodRestore: 40, defeatHp: .1, captureBase: .2, captureWounded: .65,
+            foodPrice: 10, capturePrice: 25, petPriceBase: 100, petPriceLevel: 40,
+            gearPriceBase: 30, gearPriceLevel: 15, duplicateXp: 50,
+            encounterXpBase: 25, encounterXpLevel: 12, encounterCoinsBase: 30, encounterCoinsLevel: 8,
+            xpGrowth: 300, petXpStep: 30,
+        },
         global: {
             maxPips: teen ? 14 : 7,
             maxRounds: teen ? 80 : 100,
@@ -180,6 +190,8 @@ export function resolveParams(dataset, params) {
     return {
         version,
         global: { ...params.global },
+        checkin: { ...defaultParams(version).checkin, ...params.checkin },
+        adventure: { ...defaultParams(version).adventure, ...params.adventure },
         perSchool: params.perSchool,
         fairPlay: params.fairPlay || null,
         cards,

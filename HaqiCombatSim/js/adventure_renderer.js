@@ -1,3 +1,4 @@
+import { petStage } from './adventure_pets_core.js';
 // Canvas presentation only. Visual motion uses time/seeded map decorations, never gameplay RNG.
 import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
@@ -78,7 +79,7 @@ export function createRenderer(canvas,assets) {
         if(path.length&&!title){ctx.strokeStyle='#fff6bc88';ctx.setLineDash([3,10]);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(save.position.x,save.position.y);for(const p of path)ctx.lineTo(p.x,p.y);ctx.stroke();ctx.setLineDash([]);const end=path[path.length-1];circleRune(ctx,end.x,end.y,15,t,'#fff3ae');}
         circleRune(ctx,world.portal.x,world.portal.y,45,t,save.graduated?'#e9e29a':'#a6bab0');
         const objects=[...world.trees.map(x=>({...x,kind:'tree'})),...world.buildings.map(x=>({...x,kind:'building'})),...world.npcs.map(x=>({...x,kind:'npc'})),...world.encounters.map(x=>({...x,kind:'mob'})),{...save.position,kind:'hero'}];
-        if(save.pet)objects.push({x:save.position.x-38,y:save.position.y+28,kind:'pet'});
+        if(save.formation?.[save.heroSlot]||(!save.pets&&save.pet))objects.push({x:save.position.x-38,y:save.position.y+28,kind:'pet'});
         objects.sort((a,b)=>a.y-b.y);
         for(const o of objects) {
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
@@ -97,7 +98,7 @@ export function createRenderer(canvas,assets) {
                 if(goal&&questState(save,q.id).accepted)text(ctx,'◇',o.x,o.y-90+Math.sin(t*3)*3,25,'#fff2a9');
             }
             if(o.kind==='hero'){circleRune(ctx,o.x,o.y+2,24,t,'#f7e6a088');avatar(ctx,save,o.x,o.y,t,moving);if(!title)plate(ctx,save.name,o.x,o.y+21);}
-            if(o.kind==='pet')creature(ctx,'pet',o.x,o.y,t,.36);
+            if(o.kind==='pet'){const id=save.formation?.[save.heroSlot],pet=save.pets?.[id];if(pet&&assets.content.pets[id]?.art)assets.drawPet(ctx,id,petStage(pet.level,assets.content),o.x-32,o.y-60,64,64);else creature(ctx,'pet',o.x,o.y,t,.36);}
         }
         plate(ctx,world.portal.name,world.portal.x,world.portal.y+48);
         // A few drifting motes. No random calls or dependence on combat seed.
@@ -124,19 +125,21 @@ export function createRenderer(canvas,assets) {
         const hero={x:cx-r*.56,y:cy+r*.15},enemy={x:cx+r*.54,y:cy-r*.08};
         for(let i=0;i<8;i++){const a=i*TAU/8;circleRune(c,cx+Math.cos(a)*r*.79,cy+Math.sin(a)*r*.4,19,t*.2,'#f2e6b677');}
         const ev=presentation?.event,p=presentation?.progress||0,positions={hero,mob0:enemy};
-        for(const id of ['hero','mob0']) {
+        for(const unit of battle.sides.near){const slot=unit.slot??0;positions[unit.id]={x:cx-r*(slot%2===0?.85:.25),y:h*(slot<2?.34:.72)};}
+        for(const [i,unit] of battle.sides.far.entries())positions[unit.id]={x:cx+r*.57,y:cy+r*(i*.3-.15)};
+        for(const id of Object.keys(battle.unitsById)) {
             const hp=presentation?.hp?.[id]??battle.unitsById[id].hp;
             const hit=presentation?.reactions?.find(reaction=>reaction.target===id);
             const pose=hp>0&&hit?{action:'hit',progress:hit.progress}:battleActorAction(id,hp,ev,p);
             drawAnimatedActor(c,positions[id],pose.action,pose.progress,id==='hero'?1:-1,reducedMotion.matches,()=>{
-                if(id==='hero')avatar(c,{...save,facing:2},0,0,t,false,1.4);
-                else creature(c,battle.monsterTemplates[0].id,0,0,t,1.55);
+                if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,.70);const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if(support&&assets.content.pets[supportId]?.art)assets.drawPet(c,supportId,petStage(support.level,assets.content),12,-48,48,48);}
+                else {const unit=battle.unitsById[id],species=unit.speciesId||unit.template?.speciesId;if(species&&assets.content.pets[species]?.art)assets.drawPet(c,species,petStage(unit.level,assets.content),-42,-84,84,84);else creature(c,unit.isMob?unit.template.id:'pet',0,0,t,.85);}
             });
         }
-        for(const u of [battle.sides.near[0],battle.sides.far[0]]) {
-            const at=positions[u.id],hp=presentation?.hp?.[u.id]??u.hp,bw=Math.min(160,w*.27);
-            plate(c,u.name,at.x,at.y+25);c.fillStyle='#173843';c.beginPath();c.roundRect(at.x-bw/2,at.y+38,bw,10,5);c.fill();
-            c.fillStyle=u.isMob?'#d39a7a':'#8ccc8a';c.beginPath();c.roundRect(at.x-bw/2+2,at.y+40,Math.max(0,(bw-4)*hp/u.maxHp),6,3);c.fill();text(c,`${hp} / ${u.maxHp}`,at.x,at.y+65,11,'#f8f5d9');
+        for(const u of [...battle.sides.near,...battle.sides.far]) {
+            const at=positions[u.id],hp=presentation?.hp?.[u.id]??u.hp,bw=Math.min(115,w*.20);
+            plate(c,w<650?u.name.slice(0,6):u.name,at.x,at.y+25);c.fillStyle='#173843';c.beginPath();c.roundRect(at.x-bw/2,at.y+38,bw,10,5);c.fill();
+            c.fillStyle=u.isMob?'#d39a7a':'#8ccc8a';c.beginPath();c.roundRect(at.x-bw/2+2,at.y+40,Math.max(0,(bw-4)*hp/u.maxHp),6,3);c.fill();text(c,`${Math.floor(hp)} / ${u.maxHp}`,at.x,at.y+65,11,'#f8f5d9');
             const total=u.pips.normal+u.pips.power;for(let i=0;i<total;i++)ellipse(c,at.x-(total-1)*7+i*14,at.y+82,4,4,i<u.pips.normal?'#78d6e8':'#f5d26d');
             const labels=[...u.standingWards.filter(x=>x.rounds>0).map(w=>`狂风印记 ${battle.resolved.global.stormChargingWardIds.indexOf(w.id)+1}阶 · ${w.rounds}回合`),...u.charms.filter(x=>x>0).map(id=>battle.resolved.charms[id]?.desc),...u.wards.filter(x=>x.id>0).map(w=>battle.resolved.wards[w.id]?.desc),u.dots.length?'持续伤害':'',u.hots.length?'持续治疗':''].filter(Boolean);
             for(let i=0;i<Math.min(2,labels.length);i++)text(c,labels[i]+(i===1&&labels.length>2?` 等${labels.length}项`:''),at.x,at.y+101+i*14,w<650?9:11,'#eedba2');

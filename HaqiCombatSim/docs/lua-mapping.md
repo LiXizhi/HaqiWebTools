@@ -177,3 +177,7 @@
 ### 2026-09-18：装备查看与卸下
 
 角色面板生命与超级魔力率直接复用 combat_formulas_core 的 baseMaxHp / applyHpStats / powerPipChanceByLevel，来源仍为 player_server.lua GetUpdatedMaxHP L1742起与 GetPowerPipChance L2137–2146。属性聚合和装备附加牌继续走 adventure_core::playerSpec，无新公式。新增卸下、对比与 UI 筛选属于浏览器交互补全；卸下卡包按现有 clampDeck 顺序裁剪，和原浏览器穿戴行为一致。
+
+### 2026-09-18：宠物四卡位与成长改编
+
+HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同系玩家基础HP，不复制MagicHaqi另一套战斗数值。四阶段、学习等级、捕获、共享卡位附卡、饱食、回血、商店价格与50级冒险经验表均为本次网页玩法改编，数值集中在BalanceParams.adventure，不声称1:1移植原战宠规则。新增怪物目标选择使用现有validTargets，主角倒下后仍可攻击存活伙伴。

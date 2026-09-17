@@ -1,3 +1,4 @@
+import { installExpansion } from './adventure_expansion_core.js';
 // Browser IO for the self-contained adventure package.
 import { validateSpellEffects } from './spell_effects_core.js';
 import { validateAdventureContent } from './adventure_content_core.js';
@@ -12,7 +13,7 @@ export async function loadResources(progress) {
     validateSpellEffects(effects,dataset.cards);
     const mode=assetMode(location.hostname,location.search);
     validateMediaManifest(media,manifest,mode);
-    const images=new Map(),bounds=new Map(),failures=[];
+    const images=new Map(),bounds=new Map(),failures=[],lazyImages=new Map(),imageLoading=new Map();
     const cardImages=new Set(Object.values(dataset.cards).map(card=>card.art?.id).filter(Boolean));
     const otherImages=new Set(Object.values(content.items).map(item=>item.art?.id).filter(Boolean));
     const rows=Object.entries(media.entries).filter(([id,a])=>a.local.endsWith('.webp')&&(!cardImages.has(id)||otherImages.has(id)));
@@ -36,7 +37,14 @@ export async function loadResources(progress) {
         const value=left>right?[sx,sy,sw,sh]:[sx+left,sy+top,right-left+1,bottom-top+1];bounds.set(cacheKey,value);return value;
     }
     function draw(ctx,ref,x,y,w,h,trim=true) {
-        const id=typeof ref==='string'?ref:ref?.id,img=images.get(id);if(!img)return false;
+        const id=typeof ref==='string'?ref:ref?.id,img=images.get(id);
+        if(!img){
+            if(lazyImages.has(id)){
+                if(!imageLoading.has(id))imageLoading.set(id,loadImage(assetUrl(lazyImages.get(id),mode)).then(image=>{images.set(id,image);return image;}).catch(()=>null));
+                imageLoading.get(id).then(image=>{if(image&&ctx.canvas.isConnected){ctx.clearRect(x,y,w,h);draw(ctx,ref,x,y,w,h,trim);}});
+            }
+            return false;
+        }
         const source=(typeof ref==='object'&&ref.crop)||null;
         const rect=trim?getBounds(id,source):(source||[0,0,img.width,img.height]);
         const ratio=Math.min(w/rect[2],h/rect[3]),dw=rect[2]*ratio,dh=rect[3]*ratio;
@@ -48,7 +56,15 @@ export async function loadResources(progress) {
         const row=Math.floor(index/4), cuts=sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height];
         return draw(ctx,{id:sheet,crop:[(index%4)*cw,cuts[row],cw,cuts[row+1]-cuts[row]]},x,y,w,h,true);
     }
-    return {content,dataset,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    const [catalog,candidates,kidsCards,kidsCharms,cardNames]=await Promise.all([json('data/adventure/pets.json'),json('data/adventure/shop-candidates.json'),json('data/kids/cards.json'),json('data/kids/charms.json'),json('data/kids/card_names.json')]);
+    installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames);
+    const shopIcons=await json('data/adventure/shop-icons.json');
+    for(const [id,entry] of Object.entries(shopIcons.entries))lazyImages.set(id,entry);
+    for(const [id,ref] of Object.entries(shopIcons.items))if(content.items[id]&&!content.items[id].art){content.items[id].art=ref;content.items[id].iconFallback=!!shopIcons.fallbacks[id];}
+    await skillArt.preload(dataset.cards);
+    const petLoading=new Set();
+    function drawPet(ctx,id,stage,x,y,w,h){const art=content.pets[id]?.art;if(!art)return false;const key='pet:'+id;const img=images.get(key);if(!img){if(!petLoading.has(id)){petLoading.add(id);loadImage(mode==='local'?art.local:art.cdn).then(image=>images.set(key,image)).catch(()=>petLoading.delete(id));}return false;}const sw=img.width/4,sh=img.height/4;ctx.drawImage(img,0,stage*sh,sw,sh,x,y,w,h);return true;}
+    return {drawPet,content,dataset,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

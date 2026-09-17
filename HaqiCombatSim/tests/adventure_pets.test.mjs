@@ -1,0 +1,134 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { createHash } from 'node:crypto';
+import { installExpansion } from '../js/adventure_expansion_core.js';
+import * as A from '../js/adventure_core.js';
+import * as P from '../js/adventure_pets_core.js';
+import * as B from '../js/combat_pve_core.js';
+import { SimpleBot } from '../js/combat_policy_core.js';
+import { checkedProgress,makeCloudSnapshot,parseCloudSnapshot } from '../js/adventure_cloud_core.js';
+const read=path=>JSON.parse(fs.readFileSync(new URL('../data/'+path,import.meta.url)));
+const catalog=read('adventure/pets.json');
+const {content:c,dataset:d}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),catalog,read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
+const fresh=starter=>A.createAdventure(c,{starter,seed:812});
+test('359 source pets have four-stage WebP resources, hashes and permanent CORS URLs',()=>{
+ assert.equal(Object.keys(catalog.pets).length,359);
+ for(const pet of Object.values(catalog.pets)){
+  const art=pet.art,bytes=fs.readFileSync(new URL('../'+art.local,import.meta.url));
+  assert.ok(bytes.length<=200000);assert.equal(createHash('sha256').update(bytes).digest('hex'),art.sha256);assert.match(art.cdn,/^https:\/\/cdn.keepwork.com\//);assert.ok(art.cors);assert.equal(art.rows,4);assert.equal(art.cols,4);
+  assert.ok(pet.lessons.length);for(const lesson of pet.lessons)assert.ok(d.cards[lesson.key]);
+ }
+});
+test('three starter colors, source schools, collection uniqueness and stage boundaries',()=>{
+ for(const id of P.STARTERS){const s=fresh(id);assert.equal(s.formation[0],id);assert.equal(Object.keys(s.pets).length,1);assert.equal(A.parseSave(s,c).schemaVersion,2);assert.equal(s.pet,null);}
+ assert.deepEqual(P.STARTERS.map(id=>c.pets[id].school),['life','ice','fire']);
+ assert.deepEqual([1,9,10,24,25,39,40,50].map(x=>P.petStage(x,c)),[0,0,1,1,2,2,3,3]);
+ const s=fresh();P.addPet(s,c,P.STARTERS[0]);assert.equal(Object.keys(s.pets).length,1);assert.equal(s.pets[P.STARTERS[0]].xp,50);
+});
+test('all 50 levels have repeatable rewards and all catalog species are reachable',()=>{
+ const s=fresh();s.xp=c.progression.xpThresholds[49];A.syncProgression(s,c);assert.equal(s.level,50);
+ for(let level=1;level<=50;level++){const e=A.specialEncounter(s,c,'trial:'+level);assert.ok(e.monster.xp>0&&e.monster.coins>0&&e.monster.pool.length);}
+ for(const id of Object.keys(catalog.pets)){assert.ok(c.shop.some(x=>x.petId===id&&x.level<=50));assert.equal(A.specialEncounter(s,c,'wild:'+id).monster.speciesId,id);}
+ assert.ok(c.shop.filter(x=>x.kind==='gear').length>100);
+});
+test('purchases fail atomically and preserve original equipment restrictions',()=>{
+ const s=fresh(),item=c.shop.find(x=>x.kind==='pet'&&x.level===1&&!s.pets[x.petId]);const snapshot=JSON.stringify(s);
+ assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:item.id}),/奇豆/);assert.equal(JSON.stringify(s),snapshot);
+ s.inventory[100]=10000;const cost=P.productPrice(item,c);A.applyAction(s,c,{type:'buy',productId:item.id});assert.equal(s.inventory[100],10000-cost);
+ assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:item.id}),/已经拥有/);assert.equal(s.transactions.length,1);
+ assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:c.shop.find(x=>x.level>1).id}),/等级/);
+});
+test('online auto-feed, offline regeneration, hunger zero and clock rollback',()=>{
+ const s=fresh(),pet=s.pets[s.formation[0]],hero=A.playerSpec(s,c);pet.hunger=29;pet.hp=10;s.heroHp=10;s.inventory[P.FOOD_ID]=2;
+ P.tickCare(s,c,hero,1000,false);P.tickCare(s,c,hero,61000,true);assert.equal(s.inventory[P.FOOD_ID],1);assert.equal(pet.hunger,68);assert.ok(s.heroHp>10);
+ const hunger=pet.hunger;P.tickCare(s,c,hero,121000,false);assert.equal(pet.hunger,hunger);assert.equal(s.inventory[P.FOOD_ID],1);
+ pet.hunger=0;const hp=pet.hp;P.tickCare(s,c,hero,181000,false);assert.equal(pet.hp,hp);P.tickCare(s,c,hero,1000,true);assert.equal(s.careAt,181000);
+});
+test('four hero slots, independent pet decks, replay and settlement',()=>{
+ for(let slot=0;slot<4;slot++){
+  const s=fresh();for(const id of P.STARTERS)if(!s.pets[id])P.addPet(s,c,id);const fourth=Object.keys(catalog.pets).find(id=>!s.pets[id]);P.addPet(s,c,fourth);
+  A.applyAction(s,c,{type:'formation',slots:Object.keys(s.pets),heroSlot:slot});
+  const {checkpoint}=A.beginEncounter(s,c,'trial:1');let b=B.restorePveBattle(d,c,checkpoint);assert.equal(b.sides.near.length,4);assert.equal(b.unitsById.hero.slot,slot);assert.equal(b.sides.near.filter(x=>x.speciesId).length,3);
+  const bot=new SimpleBot();while(!b.finished){const pick=b.unitsById.hero.hp>0?bot.pick(b,b.unitsById.hero):{pass:true};B.playPveRound(b,pick);A.recordDecision(s,pick);}
+  assert.deepEqual(B.restorePveBattle(d,c,A.parseSave(s,c).pendingEncounter).events,b.events);
+  A.settleEncounter(s,c,b);assert.equal(s.pendingEncounter,null);assert.ok(s.heroHp>=0);assert.doesNotThrow(()=>A.parseSave(s,c));
+ }
+});
+test('capture replay consumes crystal once and duplicate captures become experience',()=>{
+ const s=fresh();s.inventory[P.CAPTURE_ID]=20;
+ const id=P.STARTERS[0];A.beginEncounter(s,c,'wild:'+id);const b=B.restorePveBattle(d,c,s.pendingEncounter);
+ while(!b.finished){const pick=b.captureUsed<b.captureStock?{capture:true,targetId:'mob0'}:{pass:true};B.playPveRound(b,pick);A.recordDecision(s,pick);}
+ assert.ok(b.captureUsed>0);assert.deepEqual(B.restorePveBattle(d,c,s.pendingEncounter).events,b.events);
+ A.settleEncounter(s,c,b);assert.equal(s.inventory[P.CAPTURE_ID],20-b.captureUsed);assert.equal(Object.keys(s.pets).length,1);assert.throws(()=>A.settleEncounter(s,c,b));
+});
+test('legacy migration, linkage and invalid imported pet states',()=>{
+ const old=A.createAdventure(read('adventure/chapter.json'));old.schemaVersion=1;
+ old.pet={itemId:c.pet.itemId,name:c.pet.name,xp:300,level:3};
+ const s=A.parseSave(old,c);assert.equal(s.starterChosen,false);assert.equal(s.pets.legacy_gululu.xp,300);assert.equal(s.pet.xp,300);
+ A.applyAction(s,c,{type:'starter',petId:'dragon_orange'});assert.equal(s.pet.xp,300);
+ const link=P.exportPetLink(s,c);assert.deepEqual(P.validatePetLink(link,c),link);
+ const broken=structuredClone(s);broken.pets.dragon_orange.hunger=-1;assert.throws(()=>A.parseSave(broken,c),/状态/);
+ const dupe=structuredClone(s);dupe.formation=[P.STARTERS[2],P.STARTERS[2],null,null];assert.throws(()=>A.parseSave(dupe,c),/重复/);
+});
+test('zero to four carried pets, dead hero continues with allies and retreat keeps remaining HP',()=>{
+ for(let count=0;count<=4;count++){
+  const s=fresh();for(const id of Object.keys(catalog.pets).slice(0,4))P.addPet(s,c,id);
+  const ids=Object.keys(s.pets).slice(0,count);s.formation=Array.from({length:4},(_,i)=>ids[i]||null);
+  A.beginEncounter(s,c,'trial:1');const b=B.restorePveBattle(d,c,s.pendingEncounter);assert.equal(b.sides.near.length,Math.max(1,count));
+  if(count>=2){b.unitsById.hero.hp=0;B.playPveRound(b,{pass:true});assert.ok(b.events.some(x=>x.caster!==undefined&&x.caster!=='hero'&&x.caster!=='mob0'));}
+  const stock=s.inventory[P.CAPTURE_ID]||0;A.settleParty(s,c,b,{retreat:true});A.applyAction(s,c,{type:'retreat'});assert.ok(s.heroHp>0);assert.equal(s.inventory[P.CAPTURE_ID],stock);assert.doesNotThrow(()=>A.parseSave(s,c));
+ }
+});
+test('cloud checkpoint preserves expanded pets, inventory and battle replay; tampering is rejected',()=>{
+ const s=fresh();s.inventory[P.CAPTURE_ID]=5;A.beginEncounter(s,c,'wild:dragon_green');
+ const b=B.restorePveBattle(d,c,s.pendingEncounter);const decision={capture:true,targetId:'mob0'};B.playPveRound(b,decision);A.recordDecision(s,decision);
+ const snap=makeCloudSnapshot(s,c,d,'2026-09-18T08:00:00.000Z','12345678-1234-1234-1234-123456789abc');
+ const restored=parseCloudSnapshot(JSON.stringify(snap),c,d);assert.deepEqual(restored.battle.events,b.events);assert.deepEqual(restored.save.pets,s.pets);
+ const bad=structuredClone(s);bad.pendingEncounter.monster.hp=1;assert.throws(()=>checkedProgress(bad,c,d),/敌人/);
+ const badParty=structuredClone(s);badParty.pendingEncounter.party[0].hp=1;assert.throws(()=>checkedProgress(badParty,c,d),/阵容/);
+});
+test('level 10/25/40/50 formations have playable cards and deterministic victories',()=>{
+ for(const level of [10,25,40,50]){
+  const s=fresh();s.xp=c.progression.xpThresholds[level-1];A.syncProgression(s,c);s.deck=A.recommendedDeck(s,c);
+  const ids=Object.keys(catalog.pets).slice(0,4);for(const id of ids){const pet=P.addPet(s,c,id,P.petParams(c).petXpStep*level*(level-1)/2);pet.deck=P.recommendedPetDeck(pet,c);pet.hp=P.petMaxHp(pet,c);}
+  s.formation=ids;A.beginEncounter(s,c,'trial:'+level);const b=B.restorePveBattle(d,c,s.pendingEncounter),bot=new SimpleBot();
+  while(!b.finished){const pick=b.unitsById.hero.hp>0?bot.pick(b,b.unitsById.hero):{pass:true};B.playPveRound(b,pick);A.recordDecision(s,pick);}
+  assert.equal(b.winner,'near',`level ${level}`);assert.deepEqual(B.restorePveBattle(d,c,s.pendingEncounter).events,b.events);
+ }
+});
+test('original fourteen quests still complete with expansion and separate teaching pet',()=>{
+ for(const school of ['fire','ice','storm','life','death']){
+  const s=A.createAdventure(c,{school,seed:530});let now=1000;
+  const act=(type,props={})=>A.applyAction(s,c,{type,...props});
+  for(const q of c.quests){
+   act('accept',{questId:q.id,npcId:q.startNpc});for(const talk of q.talks)act('talk',{npcId:talk.npcId});
+   if(q.id===63007){act('equip',{itemId:1912});act('upgrade',{itemId:1912});}
+   if(q.id===63008)act('hatch');if(q.id===63009)act('feed');if(q.id===63012)act('equip',{itemId:24003});
+   act('deck',{deck:A.recommendedDeck(s,c)});
+   for(const goal of q.goals.filter(x=>x.kind==='defeat')){
+    P.tickCare(s,c,A.playerSpec(s,c),now,false);now+=1200000;P.tickCare(s,c,A.playerSpec(s,c),now,false);
+    const monster=Object.values(c.monsters).find(x=>x.goalId===goal.id);A.beginEncounter(s,c,monster.id);const b=B.restorePveBattle(d,c,s.pendingEncounter),bot=new SimpleBot();
+    while(!b.finished){const pick=bot.pick(b,b.unitsById.hero);B.playPveRound(b,pick);A.recordDecision(s,pick);}
+    assert.equal(b.winner,'near',`${school}/${q.id}`);A.settleEncounter(s,c,b);
+   }
+   assert.ok(A.questReady(s,q));act('claim',{questId:q.id,npcId:q.endNpc});for(const id of Object.keys(s.inventory))if(A.canEquip(s,c.items[id],c))act('equip',{itemId:id});A.parseSave(s,c);
+  }
+  assert.ok(s.graduated&&s.pets.legacy_gululu&&s.pet.xp>0);
+ }
+});
+test('capture resolves before companions even when the hero stands in the fourth slot',()=>{
+ const s=fresh();const ids=Object.keys(catalog.pets).slice(0,4);for(const id of ids)if(!s.pets[id])P.addPet(s,c,id);
+ s.formation=ids;s.heroSlot=3;s.inventory[P.CAPTURE_ID]=1;A.beginEncounter(s,c,'wild:dragon_green');
+ const b=B.restorePveBattle(d,c,s.pendingEncounter);B.playPveRound(b,{capture:true,targetId:'mob0'});assert.equal(b.captureUsed,1);
+ const capture=b.events.findIndex(e=>e.type==='capture'),ally=b.events.findIndex(e=>e.type==='cast'&&e.caster!=='hero'&&e.caster!=='mob0');assert.ok(capture>=0&&(ally<0||capture<ally));
+});
+test('capture tuning is snapshotted and reward roster tampering is rejected',()=>{
+ const configured=structuredClone(c);configured.balanceParams.adventure.captureBase=1;configured.balanceParams.adventure.captureWounded=0;
+ const s=A.createAdventure(configured,{starter:P.STARTERS[0],seed:17});s.inventory[P.CAPTURE_ID]=1;
+ A.beginEncounter(s,configured,'wild:dragon_purple');const b=B.restorePveBattle(d,configured,s.pendingEncounter);
+ const pick={capture:true,targetId:'mob0'};B.playPveRound(b,pick);A.recordDecision(s,pick);assert.deepEqual(b.captured,['dragon_purple']);
+ assert.deepEqual(B.restorePveBattle(d,configured,A.parseSave(s,configured).pendingEncounter).events,b.events);
+ const altered=structuredClone(s);altered.pendingEncounter.petIds.push(P.STARTERS[0]);assert.throws(()=>A.parseSave(altered,configured),/奖励阵容/);
+ A.settleEncounter(s,configured,b);assert.ok(s.pets.dragon_purple);assert.equal(s.inventory[P.CAPTURE_ID],0);
+});

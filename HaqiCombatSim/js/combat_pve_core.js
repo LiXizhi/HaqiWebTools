@@ -1,3 +1,4 @@
+import { SimpleBot } from './combat_policy_core.js';
 // Kids PvE port for the exported opening encounters. See docs/lua-mapping.md.
 // arena_server.lua StartCombat L4208; AdvanceOneTurn L4520; PlayOneTurn L5100–5270.
 import { createArena, validTargets } from './combat_arena_core.js';
@@ -7,8 +8,12 @@ import { useCard, tickDots, tickHots, cardTargetKind, isSupportedType } from './
 import * as U from './combat_unit_core.js';
 
 const emit = (a,e) => { a.events.push({ turn:a.turn,...e }); };
-export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide = 'near' }) {
+export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null }) {
+    if(party){
+        if(!Array.isArray(party)||party.length<1||party.length>4||party[0].id!==player.id||new Set(party.map(u=>u.id)).size!==party.length||new Set(party.map(u=>u.slot)).size!==party.length||party.some(u=>!Number.isInteger(u.slot)||u.slot<0||u.slot>3))throw Error('我方阵容必须使用四个不同卡位');
+    }
     const params = defaultParams('kids');
+    if(adventureParams)params.adventure={...params.adventure,...adventureParams};
     // PvE has neither the PvP escalating damage clock nor simulator balance overrides.
     params.global.arenaDamageBoostPerRound = 0;
     params.global.stormChargingWardIds = dataset.pve?.stormChargingWardIds || [];
@@ -24,9 +29,10 @@ export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide
         }
         return { id:`mob${i}`, name:m.name, school:m.school, level:m.level, stats, deck:[], deckCapacity:0, deckEachCapacity:0 };
     });
-    const arena = createArena({ resolved, near:[player], far, seed, firstSide });
+    const arena = createArena({ resolved, near:party||[player], far, seed, firstSide });
     arena.mode = 'pve'; arena.currentSide = 'near'; arena.firstActingSide = firstSide;
-    arena.monsterTemplates = monsters;
+    arena.monsterTemplates = monsters;arena.captureStock=captureStock;arena.captureUsed=0;arena.captured=[];arena.heroLevel=heroLevel;
+    for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];unit.slot=spec.slot??i;unit.speciesId=spec.speciesId;if(Number.isFinite(spec.hp))unit.hp=Math.max(0,Math.min(unit.maxHp,Math.floor(spec.hp)));}
     monsters.forEach((m,i) => {
         const u = arena.sides.far[i]; u.isMob = true; u.hp = u.maxHp = m.hp;
         u.template = m; u.aiMemory = { round:0, lastHp:m.hp };
@@ -35,10 +41,7 @@ export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide
             if (!resolved.cards[key] || !isSupportedType(resolved.cards[key].type)) throw new Error(`未支持的怪物卡牌：${key}`);
         }
     });
-    const hero = arena.sides.near[0]; U.shuffleDeck(hero,arena.rng);
-    for (const row of [...(player.fixedCards || [])].reverse()) {
-        hero.deckSeq.unshift(row.key); hero.deckMap.unshift(0);
-    }
+    for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];U.shuffleDeck(unit,arena.rng);for(const row of [...(spec.fixedCards||[])].reverse())for(let n=0;n<(row.count||1);n++){unit.deckSeq.unshift(row.key);unit.deckMap.unshift(0);}}
     emit(arena,{type:'combat_start',firstSide,mode:'pve'});
     advancePveRound(arena); return arena;
 }
@@ -145,7 +148,11 @@ export function playPveRound(a,decision) {
     if(a.finished)throw new Error('战斗已经结束');
     const u=a.sides.near[0], discarded=decision.discardSeqs || [];
     for(const seq of discarded) if(!Number.isInteger(seq)||u.deckMap[seq]!==1)throw new Error('无法弃掉这张牌');
-    if(!decision.pass) {
+    if(decision.capture){
+        const target=a.unitsById[decision.targetId];
+        if(!U.isAlive(u)||!target?.isMob||!U.isAlive(target)||!target.template.speciesId||target.template.unlockLevel>a.heroLevel||a.captureUsed>=a.captureStock)throw Error('无法捕获：需要晶球、存活的野生宠物和解锁等级');
+    }
+    if(!decision.pass&&!decision.capture&&U.isAlive(u)) {
         if(u.deckMap[decision.seq]!==1 || u.deckSeq[decision.seq]!==decision.key || discarded.includes(decision.seq))throw new Error('请选择手中的卡牌');
         const card=a.resolved.cards[decision.key];
         if(!U.canCast(u,card,a.resolved))throw new Error('魔力不足或技能尚在冷却');
@@ -155,17 +162,35 @@ export function playPveRound(a,decision) {
     for(const seq of discarded)U.discardCard(u,seq);
     monstersAct(a,'before');
     const playerAct=()=>{
-        if(finished(a)||!beforeAct(a,u))return;
+        if(finished(a)||!U.isAlive(u)||!beforeAct(a,u))return;
         u.turnsPlayed++;
-        if(decision.pass)emit(a,{type:'pass',caster:u.id,reason:'pass'});
+        if(decision.capture){
+            a.captureUsed++;const target=a.unitsById[decision.targetId],p=a.resolved.adventure;
+            const success=U.isAlive(target)&&a.rng.float()<p.captureBase+p.captureWounded*(1-target.hp/target.maxHp);
+            if(success){a.captured.push(target.template.speciesId);target.hp=0;}
+            emit(a,{type:'capture',caster:u.id,target:target.id,success});
+        }
+        else if(decision.pass)emit(a,{type:'pass',caster:u.id,reason:'pass'});
         else {
             const card=a.resolved.cards[decision.key],target=a.unitsById[decision.targetId];
             if(U.isAlive(target))useCard(a,u,card,target,decision.seq);
         }
         finished(a);
     };
-    if(a.firstActingSide==='far') {monstersAct(a,'normal');playerAct();}
-    else {playerAct();monstersAct(a,'normal');}
+    const partyAct=()=>{
+        // A capture order takes priority over automatic companions to avoid an unintended kill.
+        if(decision.capture)playerAct();
+        for(const unit of [...a.sides.near].sort((x,y)=>(x.slot??0)-(y.slot??0))){
+            if(finished(a))return;
+            if(unit.id===u.id){if(!decision.capture)playerAct();continue;}
+            if(!U.isAlive(unit)||!beforeAct(a,unit))continue;
+            const pick=new SimpleBot().pick(a,unit);unit.turnsPlayed++;
+            if(pick.pass)emit(a,{type:'pass',caster:unit.id,reason:'pass'});
+            else useCard(a,unit,a.resolved.cards[pick.key],a.unitsById[pick.targetId],pick.seq);
+        }
+    };
+    if(a.firstActingSide==='far') {monstersAct(a,'normal');partyAct();}
+    else {partyAct();monstersAct(a,'normal');}
     monstersAct(a,'after');
     if(!a.finished) {
         a.remainingRounds--;emit(a,{type:'turn_end'});
@@ -175,8 +200,8 @@ export function playPveRound(a,decision) {
 }
 export function restorePveBattle(dataset,content,checkpoint) {
     const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId);
-    if(!encounter)throw new Error('存档中的战斗地点不存在');
-    const a=createPveBattle({dataset,player:checkpoint.player,monsters:[content.monsters[encounter.monsterId]],seed:checkpoint.seed});
+    if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
+    const a=createPveBattle({dataset,player:checkpoint.player,monsters:[checkpoint.monster||content.monsters[encounter.monsterId]],seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams});
     for(const decision of checkpoint.decisions)playPveRound(a,decision);
     return a;
 }

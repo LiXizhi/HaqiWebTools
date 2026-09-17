@@ -3,8 +3,8 @@ import { playerSpec, applyAction, SCHOOL_NAMES } from './adventure_core.js';
 import { statIdToEntry } from './combat_unit_core.js';
 import { baseMaxHp, applyHpStats, powerPipChanceByLevel } from './combat_formulas_core.js';
 
-export const EQUIPMENT_SLOTS = [{id:2,name:'帽子'},{id:5,name:'法袍'},{id:7,name:'靴子'},{id:11,name:'法杖'},{id:24,name:'卡包'}];
-const STAT_NAMES = {hpFlat:'生命',hpPct:'生命加成',powerPipPct:'超级魔力率',damagePct:'攻击',resistPct:'防御',accuracyPct:'命中',critPct:'暴击',resiliencePct:'韧性',penetration:'穿透',startupNormal:'起始普通魔力',startupPower:'起始超级魔力'};
+export const EQUIPMENT_SLOTS = [{id:2,name:'帽子'},{id:5,name:'法袍'},{id:7,name:'靴子'},{id:11,name:'法杖'},{id:24,name:'卡包'},{id:4,name:'眼饰'},{id:6,name:'裤子'},{id:8,name:'背部'},{id:9,name:'手套'},{id:10,name:'左手'},{id:15,name:'手镯'},{id:16,name:'戒指'},{id:17,name:'项链'},{id:18,name:'炫彩头饰'},{id:19,name:'炫彩服装'},{id:70,name:'炫彩背饰'},{id:71,name:'炫彩鞋子'}];
+const STAT_NAMES = {hpFlat:'生命',hpPct:'生命加成',powerPipPct:'超级魔力率',damagePct:'攻击',resistPct:'防御',accuracyPct:'命中',critPct:'暴击',resiliencePct:'韧性',penetration:'穿透',startupNormal:'起始普通魔力',startupPower:'起始超级魔力',damageAbs:'固定攻击',resistAbs:'固定防御',hitPct:'命中率',dodgePct:'闪避率',penetrationReceive:'受穿透',outputHealPct:'治疗加成',inputHealPct:'受治疗加成',critRatioBonus:'暴击伤害加成'};
 const percent = stat => stat.endsWith('Pct');
 export function equipmentAttributes(item, save, content) {
     const rows=[];

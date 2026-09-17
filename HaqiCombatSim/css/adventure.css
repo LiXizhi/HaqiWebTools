@@ -28,3 +28,9 @@
 @media(max-height:600px) and (min-width:651px){.hand-card{width:96px}.battle-hand{bottom:52px;gap:9px}.battle-canvas{top:55px;bottom:246px;height:calc(100% - 301px)}}
 /* kids stats[186] is cooldown, not a second pip cost (pe_item.lua L1882–1894). */
 .spell-cooldown{left:14.2%;top:54.5%;width:15%;height:10%;font-size:clamp(11px,10cqw,15px)}
+
+/* Compact analogue control; the thumb follows the finger within a circular gate. */
+.touch-joystick{display:none;position:absolute;left:22px;bottom:112px;width:86px;height:86px;border:1px solid #fff2cc99;border-radius:50%;background:#e7eed633;box-shadow:inset 0 0 18px #183e3c25;touch-action:none;user-select:none}
+.joystick-stick{position:absolute;left:50%;top:50%;width:36px;height:36px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid #fff4d5bb;background:#edf1d7b8;box-shadow:0 3px 9px #173d4840;pointer-events:none}
+.touch-joystick.active{background:#e7eed64d}.touch-joystick.active .joystick-stick{background:#fff4d5e6}
+@media(pointer:coarse),(max-width:650px){.touch-joystick{display:block}}

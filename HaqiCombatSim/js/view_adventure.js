@@ -72,13 +72,23 @@ export function renderHud(root,model,cb) {
     root.append(tracker);
     const nav=el('nav','game-nav');nav.setAttribute('aria-label','游戏菜单');
     for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['settings','设置','settings']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
-    root.append(nav,el('div','movement-hint','WASD / 方向键移动 · 点击寻路 · E 交谈'));
+    root.append(nav,el('div','movement-hint','WASD / 方向键移动 · 点击寻路 / 按住跟随 · E 交谈'));
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
-    const pad=el('div','touch-pad');pad.setAttribute('aria-label','触摸方向控制');
-    for(const [key,label]of [['up','↑'],['left','←'],['down','↓'],['right','→']]){
-        const b=button(label,()=>{},`pad-${key}`);b.setAttribute('aria-label',`向${{up:'上',left:'左',down:'下',right:'右'}[key]}移动`);
-        b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture(e.pointerId);cb.direction(key,true);};b.onpointerup=b.onpointercancel=()=>cb.direction(key,false);pad.append(b);
-    }
+    const pad=el('div','touch-joystick'),stick=el('span','joystick-stick');
+    pad.setAttribute('role','group');pad.setAttribute('aria-label','移动摇杆，拖动控制方向，松开停止');
+    pad.append(stick);let pointer=null;
+    pad.resetInput=()=>{const id=pointer;pointer=null;stick.style.transform='translate(-50%,-50%)';pad.classList.remove('active');cb.steer(0,0);if(id!==null&&pad.hasPointerCapture(id))pad.releasePointerCapture(id);};
+    const steer=e=>{
+        const r=pad.getBoundingClientRect(),radius=r.width*.3;
+        let x=(e.clientX-r.left-r.width/2)/radius,y=(e.clientY-r.top-r.height/2)/radius;
+        const length=Math.hypot(x,y);if(length>1){x/=length;y/=length;}
+        stick.style.transform=`translate(-50%,-50%) translate(${x*radius}px,${y*radius}px)`;
+        const speed=Math.max(0,(Math.min(1,length)-.15)/.85);
+        cb.steer(length?x/Math.hypot(x,y)*speed:0,length?y/Math.hypot(x,y)*speed:0);
+    };
+    pad.onpointerdown=e=>{if(pointer!==null||e.button!==0)return;e.preventDefault();pointer=e.pointerId;pad.setPointerCapture(pointer);pad.classList.add('active');steer(e);};
+    pad.onpointermove=e=>{if(e.pointerId===pointer){e.preventDefault();steer(e);}};
+    pad.onpointerup=pad.onpointercancel=pad.onlostpointercapture=e=>{if(e.pointerId===pointer)pad.resetInput();};
     root.append(pad);
 }
 function modal(root,title,subtitle,cb,wide=false) {

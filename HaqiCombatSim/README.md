@@ -9,6 +9,12 @@
 
 战斗引擎与 UI 完全解耦（`js/*_core.js`），可在浏览器和 Node 中无 UI 运行。
 
+## 新入口：魔法哈奇单人冒险
+
+[`Haqi.html`](Haqi.html) 是可玩的 kids 开篇章节：魔法营地原任务63000–63013、五系角色、装备强化、宠物喂养、配卡、毕业战及哈奇小镇。键盘、点击与触摸操作；本地自动存档与JSON导入导出。包含原版卡面、立绘、图标和音乐，以及新绘制的场景精灵。
+
+使用下面同一个静态服务器，打开 `http://127.0.0.1:8791/Haqi.html`。资源已放在项目内，无运行时构建或外部服务。内容来源、准备命令、操作和改编边界见 [冒险说明](docs/adventure.md)。
+
 ## 运行
 
 用任意静态 http 服务打开 [`HaqiCombatSim.html`](HaqiCombatSim.html)（需要 `fetch` 同目录 JSON 与 Web Worker，`file://` 下不可用）。**不需要构建，零 npm 依赖。**
@@ -23,7 +29,7 @@ python3 -m http.server 8791 --bind 127.0.0.1      # 或 VS Code Live Preview
 
 ```bash
 npm run export       # scripts/export_data.mjs → data/kids/*.json 与 data/teen/*.json
-npm test             # node --test tests/*.test.mjs（34 例，用 data/sample）
+npm test             # node --test tests/*.test.mjs（包含原34例及冒险章节测试）
 npm run sim -- --data data/teen --mode 1v1 --games 1000 --level 60 --seed 1 [--params p.json] [--json out.json]
 ```
 
@@ -103,3 +109,11 @@ web/HaqiCombatSim/
 - 仓库 wiki：[docs/aries/combat-system.md](../../docs/aries/combat-system.md)、[docs/config/aries-haqi-data.md](../../docs/config/aries-haqi-data.md)
 - 仓库 wiki 入口：[docs/aries/haqi-combat-sim.md](../../docs/aries/haqi-combat-sim.md)
 - 本项目：[docs/plan.md](docs/plan.md) → [docs/architecture.md](docs/architecture.md) → [docs/lua-mapping.md](docs/lua-mapping.md) → [docs/qa-report.md](docs/qa-report.md)
+
+## Haqi.html：WebP / Keepwork 云端旅途
+
+独立单人入口运行方法见 [adventure.md](docs/adventure.md)。本机默认本地WebP；线上域名默认永久Keepwork CDN，可用 `Haqi.html?assets=cdn` 验收。开始画面、设置、战斗均可打开可选云端检查点，保留本地自动存档与导入导出。`npm test` 共75例，`npm run check:adventure` 验证章节和本地美术，`npm run verify:adventure-cdn` 验证发布资源。仅按需加载Keepwork CDN上的SDK core，无运行时构建或额外框架。
+
+技能粒子与召唤预览：[`HaqiEffects.html`](HaqiEffects.html)。完整本地kids卡库701条定义共享225套基础演出，统一在一个[特效配置](data/adventure/spell-effects.json)，可逐张播放和拖动时间轴；见[开发说明](docs/spell-effects.md)。
+
+工坊支持学派 → 基础技能 → 等级/品质变体选择。`npm run audit:effects`检查全卡库覆盖；`npm run prepare:effects`维护共享配置。特效库扩展不自动解锁开篇之外的玩法。

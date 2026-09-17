@@ -11,3 +11,4 @@ Read README.md, docs/code-plan.md, docs/architecture.md and the relevant stage p
 - README and docs/code-plan.md are the handoff entrypoints. Stage completion needs recorded evidence, not just implemented UI.
 - Run npm test, npm run check and git diff --check. Browser tests target this web application, not the native NPL browser console.
 - Preserve unrelated files and follow the repository dev branch workflow. Do not deploy as part of routine implementation.
+- Haqi.html (js/game/, js/bots/genes.js, data/game/, assets/sprites/) is the 2D top-down game on the same kernel; read docs/game.md and docs/plans/G0–G3 first. Game data comes only from scripts/import_game_data.py over config/Aries; CDN art is fetched by manifest line (.p PNG only, never .z). game/ may call engine public APIs but must not implement combat rules; quest and progression logic stays pure (tests/game). Do not import anything from ../HaqiCombatSim.

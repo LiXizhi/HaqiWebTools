@@ -1,6 +1,6 @@
 {
   "name": "haqi-combat-emulator",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,7 +9,9 @@
     "data:import": "python3 scripts/import_data.py",
     "benchmark": "node scripts/benchmark.mjs",
     "test:browser": "playwright test",
-    "data:audit": "node scripts/audit.mjs"
+    "data:audit": "node scripts/audit.mjs",
+    "game:import": "python3 scripts/import_game_data.py",
+    "game:sprites": "node scripts/build_sprites.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.63.0",

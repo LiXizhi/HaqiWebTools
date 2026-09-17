@@ -1,0 +1,13 @@
+{
+  "baseEffects": 225,
+  "variantReferences": 357,
+  "scope": "kids committed card definitions; variants are separate entries, not unique skills",
+  "kidsDefinitions": 701,
+  "kidsSpellNames": 239,
+  "adventureDefinitions": 45,
+  "adventureMissing": [],
+  "configuredKidsDefinitions": 701,
+  "missingDefinitions": 0,
+  "missingByType": {},
+  "missing": []
+}

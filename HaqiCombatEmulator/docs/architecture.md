@@ -31,6 +31,8 @@ flowchart LR
 | `simulation/pool.js` | 浏览器 Worker 调度、进度、取消；不写战斗规则 |
 | `ai/` | 懒加载 SDK、结构化建议校验、候选及独立种子复测 |
 | `render/arena.js` | Canvas 绘图与角色点击，不影响战斗状态 |
+| `bots/genes.js` | 怪物基因策略；仅读 observation 与模板，种子随机，受纯度检查 |
+| `game/` | `Haqi.html` 2D 游戏：`world/`（地图拟合、碰撞、相机、输入、实体）、`quest/`（纯任务状态机与对话运行器）、`combat/`（模板编译、遭遇战、卡牌文案）、`render/`（精灵、世界、HUD、战斗场景）、`ui/panels.js`、`main.js` 编排；只调用内核公共 API，不实现规则。见 [game.md](game.md) |
 
 内核、规则、机器人不访问 DOM、网络、时钟或 Math.random。内核随机源为显式种子 PRNG，机器人使用另一条由种子/回合/角色派生的随机流，避免策略调用改变结算随机序列。这个 PRNG 不宣称与 Lua math.random 相同；公式对照与 JS 平台一致性是不同的验收项。
 

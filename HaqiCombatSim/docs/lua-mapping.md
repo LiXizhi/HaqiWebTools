@@ -139,3 +139,37 @@
 | 2026-09-17 | teen 同名共享上限 | L8119：teen 同 `spell_name` 的卡共享单卡上限 | `clampDeck` 按 `spellName` 分组 |
 | 2026-09-17 | 弃牌时机 | Lua `DiscardCard` 在选牌阶段即可调用，与是否出牌无关 | `playTurn` 先处理 `pick.discardSeqs` 再判断 pass |
 | 2026-09-17 | 双方打空提前结束 | Lua 会一直跳过到 `nRemainingRounds` 归零 | 模拟器在双方存活单位全部打空且无 DOT 时直接判 timeout 平局（结果相同，省时） |
+
+## 8. Kids 开篇 PvE 与冒险（2026-09-17）
+
+| 原文件 / 位置 | 本章实现 |
+|---|---|
+| `arena_server.lua:4208` StartCombat；4515 AdvanceOneTurn；5100 PlayOneTurn，5248附近三阶段顺序 | `combat_pve_core.js` 的 createPveBattle / advancePveRound / playPveRound：kids玩家先手、双方生成魔力、前置额外回合/普通回合/后置额外回合 |
+| `mob_server.lua:1928` GetPowerPipChance | 怪物直接使用模板power_pip_percent，不叠加玩家等级曲线 |
+| `mob_server.lua:4474` PickFromCards；4759 bonus_round；4852 genes_attacker | 源闭区间权重抽取；分别记录before/normal/after脚本；脚本后HP阈值基因，再回退可重复AI卡池；不伪装为有限玩家卡包 |
+| `card_server.lua:3234` kids PvE伤害分支；1340 TryDoubleAttack | 公共卡牌伤害模块标记targetIsMob，PvE使用非PvP补偿分支；kids/teen双击原函数返回false，未增加额外双击 |
+| `config/Aries/Mob/NewIslandMonster/*.xml` 与 `WorldData/NewUserIsland.Arenas_Mobs.xml` | 五侦察兵原生命/等级/抗性/攻击修正/起始魔力/台词/卡池/奖励/场地ID；`1-`不是通配回合，而是前置额外动作 |
+| `config/Aries/Quests/quest_list.xml` 63000–63013 | ID、居民、对白、目标和按学系筛选的奖励；原文与浏览器替换文本均保留 |
+| `Database/globalstore.db.mem`；`combat_unit_core.js` 原stats映射 | 从已装备道具汇总HP/伤害/抗性/命中/暴击/起始魔力；139/140/141装备附加牌；167/170卡包容量/同卡上限 |
+| `config/Aries/Others/globalstore.addonlevel.kids.xml` 的1912所在itemset | 原三档70/140/280仙豆及累计1/2/3%全系攻击，由导出数据驱动 |
+| `config/Aries/Others/combatpet_levels.xml`；`CombatPet/CombatPetProvider.lua:439`、749 GetLevelInfo | 10136宠物原经验增量15/62/139/248、零基配置级别和满级显示；口粮17172的stat60提供300经验 |
+
+本章刻意改编：紧凑地图、按任务串联、累计经验阈值、学习时机、固定出奇蛋结果、毕业后镇区尾声、浏览器教程。原PvE服务端的组队、限时、季节暴怒、付费、捕捉/宠物战斗不移植。消耗符文/变身奖励只作为收藏保留。完整逐项说明见 [adventure.md](adventure.md)。
+
+补充效果：`card_server.lua:106` 的 `storm_charging_wards` 从Lua数据字面量导出，3138–3164的 `bCharging` 在PvE逐级替换93–97常驻印记并重置为2回合。模板文案虽称增加风暴受伤，其stats162是绝对抗性；原 `mob_server.lua:2096` 对kids怪物不读取该常驻stats，故本章不会自行增加3%伤害。效果状态、叠层、过期仍完整重现；PvP不启用此新增分支。
+
+## WebP / Keepwork 云存档迭代（2026-09-17）
+
+本轮未修改Lua对应的战斗、任务、奖励、装备、宠物、成长规则。新增 `adventure_media_core` 与 `adventure_cloud_core` 属于浏览器资源/存档协议，无原Lua公式映射。云端仍使用同一 `AdventureSave` 和 `restorePveBattle` 决定重演，时钟/UUID由IO层提供，不影响玩法随机流。SDK接口依据 `keepworkSDK/src/store/PersonalPageStore.{base,data,sync}.ts` 及 `src/core/keepworkSDK.{core,utils,pages}.ts` 核对；尤其避开store远端读失败时回退本地的行为。
+
+### Kids 卡面文字布局（2026-09-17）
+
+`script/kids/3DMapSystemApp/mcml/pe_item.lua` 的 `DrawCardMask` L1856–1902：以151×230卡面为基准，魔力点在(120,5)，描述在(18,142)。`view_adventure.js::spellFace` 与 `.spell-face` 按比例叠加文字，保留原图内印刷标题；去掉额外外框和重复卡名。HTML描述约束在卡面下方文字区以适应移动屏幕，文本仍使用本章效果摘要；未改战斗数值。
+
+### 两个数字的含义
+
+`pe_item.lua` L1873–1894：右上是stats[134]魔力消耗（114显示X），左中是stats[186]冷却回合，缺省0；不是两个不同单位的魔力消耗。`player_server.lua::CostPips` L2008–2095：kids本系超级魔力按2点扣费，异系按1点；卡面数字本身不按持有魔力球动态换算。UI补上左中冷却与悬停/卡包说明，未更改扣费逻辑。
+
+### 2026-09-17：技能演出层
+
+新增45张冒险卡的2D粒子/召唤演出，card key与`combat.json`中原XML `datafile`保持对应，并记录在`spell-effects.json`。使用现有cast/fizzle/damage/heal事件，不移植或修改Lua伤害、命中、魔力、AI公式；生成召唤图集是卡面意象改编，不是原3D演员/动画导出。

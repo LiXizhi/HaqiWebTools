@@ -7,7 +7,18 @@
     "scripts": {
         "export": "node scripts/export_data.mjs --config ../../config/Aries --out data --version both",
         "test": "node --test tests/*.test.mjs",
-        "sim": "node scripts/run_batch.mjs"
+        "sim": "node scripts/run_batch.mjs",
+        "export:adventure": "python3 scripts/export_adventure.py",
+        "assets:adventure": "node scripts/prepare_adventure_assets.mjs",
+        "check:adventure": "node scripts/check_adventure.mjs && node scripts/prepare_adventure_assets.mjs --check",
+        "plan:adventure-cdn": "node scripts/publish_adventure_media.mjs",
+        "verify:adventure-cdn": "node scripts/publish_adventure_media.mjs --verify",
+        "audit:effects": "node scripts/audit_spell_effects.mjs",
+        "prepare:effects": "node scripts/prepare_spell_effects.mjs",
+        "export:spell-names": "python3 scripts/export_spell_names.py",
+        "prepare:spell-art": "python3 scripts/prepare_spell_art.py && python3 scripts/draw_spell_fallbacks.py",
+        "plan:spell-art-cdn": "node scripts/publish_spell_art.mjs",
+        "verify:spell-art-cdn": "node scripts/publish_spell_art.mjs --verify"
     },
     "engines": {
         "node": ">=20"

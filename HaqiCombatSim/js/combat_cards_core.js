@@ -109,11 +109,12 @@ function applyDamage(arena, caster, target, card, opts) {
     const dodgeCtx = {
         baseHit: opts.baseHit ?? card.hitchance ?? 100,
         hitChance: U.getHitChance(caster), dodge: U.getDodge(target),
-        casterLevel: caster.level, targetLevel: target.level, targetIsMob: false,
+        casterLevel: caster.level, targetLevel: target.level, targetIsMob: !!target.isMob,
     };
     const crit = U.getCriticalStrike(caster, school, R);
     const resil = U.getResilience(target, school);
-    if (version !== 'kids') {
+    // card_server.lua L3234: kids PvE uses the normal dodge branch (no PvP remedy).
+    if (version !== 'kids' || arena.mode === 'pve') {
         if (tryDodge(rng, dodgeCtx, version)) {
             damage = Math.ceil(damage * R.global.dodgeDamageRatio);
             mark = 'd';
@@ -362,6 +363,18 @@ function singleAttack(arena, caster, card, target, realcost) {
     }
     if (type === 'SingleAttackWithTrap' && p.target_wards) {
         for (const w of splitList(p.target_wards)) U.appendWard(target, Number(w));
+    }
+    // card_server.lua L3138–3164: charging is an effect flag, not a separate card type.
+    // Scope this added port to PvE so the existing simulator's PvP behavior is unchanged.
+    if (arena.mode === 'pve' && (p.bCharging === true || p.bCharging === 'true')) {
+        const ids = R.global.stormChargingWardIds;
+        let rank = -1;
+        for (const ward of target.standingWards) if (ward.rounds > 0) rank = Math.max(rank, ids.indexOf(ward.id));
+        target.standingWards = target.standingWards.filter(ward => !ids.includes(ward.id));
+        const id = ids[Math.min(rank + 1, ids.length - 1)];
+        if (!id || !R.wards[id]) throw new Error('Missing storm charging ward');
+        U.appendStandingWard(target, id, 2);
+        emit(arena, { type: 'ward_applied', caster: caster.id, target: target.id, card: card.key, ward: id, rounds: 2 });
     }
     if (type === 'SingleAttackWithStun') applyStun(arena, caster, target, card);
 

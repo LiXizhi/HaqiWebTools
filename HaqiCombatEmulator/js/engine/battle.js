@@ -5,13 +5,18 @@ import {cardIssues} from './coverage.js';
 import {emit,resolveEffect,eligibleTargets,hit,heal,stat,consume,canRevive} from './effects.js';
 
 export function createBattle(scenario,ruleset,seed=1,{recordEvents=true}={}) {
-  const size=scenario.size;
-  if(!Number.isInteger(size)||size<1||size>4||scenario.teams?.length!==2||scenario.teams.some(t=>t.length!==size))throw new Error('阵容须为 1v1 至 4v4，且双方人数相等');
+  const size=scenario.size,pve=scenario.pve===true;
+  // PvP requires equal teams. PvE (scenario.pve) allows 1–4 per side with the arena chosen by the larger side.
+  if(!Number.isInteger(size)||size<1||size>4||scenario.teams?.length!==2||scenario.teams.some(t=>pve?(t.length<1||t.length>size):t.length!==size))throw new Error(pve?'PvE 阵容每方须为 1–4 人且不超过 size':'阵容须为 1v1 至 4v4，且双方人数相等');
+  if(pve&&Math.max(...scenario.teams.map(t=>t.length))!==size)throw new Error('PvE 的 size 须等于较大一方的人数');
   if(scenario.firstSide!=null&&![0,1].includes(scenario.firstSide))throw new Error('先手方无效');
-  const state={schemaVersion:1,engineVersion:ENGINE_VERSION,parityStatus:PARITY_STATUS,ruleset,configHash:ruleset.hash,scenario:structuredClone(scenario),seed,random:rng(seed),turn:0,side:scenario.firstSide??0,units:[],events:[],actions:[],recordEvents,finished:false,result:null,arena:ruleset.arenas[size],aura:null};
+  const state={schemaVersion:1,engineVersion:ENGINE_VERSION,parityStatus:PARITY_STATUS,ruleset,configHash:ruleset.hash,scenario:structuredClone(scenario),seed,random:rng(seed),turn:0,side:scenario.firstSide??0,units:[],events:[],actions:[],recordEvents,finished:false,result:null,arena:ruleset.arenas[size],aura:null,pve};
   if(!state.arena)throw new Error('缺失竞技场配置');
-  for(let side=0;side<2;side++)for(let slot=0;slot<size;slot++) {
+  for(let side=0;side<2;side++)for(let slot=0;slot<scenario.teams[side].length;slot++) {
     const b=scenario.teams[side][slot],c=compileCharacter(b,ruleset);
+    const kind=b.kind??'player';
+    if(!['player','mob'].includes(kind))throw new Error('角色 kind 须为 player 或 mob');
+    if(kind==='mob'&&!pve)throw new Error('怪物单位仅允许出现在 PvE 剧本中');
     if(c.pet)throw new Error('战宠切换尚未移植，不能静默忽略战宠');
     if(c.runes.length)throw new Error('独立符文栏尚未移植；不能将符文按普通卡牌替代');
     for(const key of new Set(c.deck)) {const issues=cardIssues(ruleset.cards[key],ruleset);if(issues.length)throw new Error(`${key}: ${issues.join('；')}`);}
@@ -19,7 +24,8 @@ export function createBattle(scenario,ruleset,seed=1,{recordEvents=true}={}) {
     if(ruleset.version==='teen'){pips+=powerPips*2;powerPips=0;if(side!==state.side)pips+=state.arena.bonus_pips_starting_defensive_units??0;}
     const cap=ruleset.version==='teen'?14:7;
     if(!Number.isInteger(pips)||!Number.isInteger(powerPips)||pips<0||powerPips<0||pips+powerPips>cap)throw new Error('初始能量超出版本范围');
-    state.units.push({...c,id:`${side}-${slot}`,side,slot,hp:c.attributes.maxHP,pips,powerPips,deck:shuffle(c.deck,state.random),hand:[],drawIndex:0,usedCount:0,discardedCount:0,cooldowns:{},charms:[],wards:[],absorbs:[],dots:[],hots:[],aura:null,stun:0,dodgeProtection:0,metrics:{damage:0,healing:0,control:0,received:0}});
+    // Mobs draw from an endless pool in the source (available_cards); recycleDeck appends a reshuffled copy of the compiled deck when exhausted. PvE only.
+    state.units.push({...c,id:`${side}-${slot}`,side,slot,kind,recycleDeck:kind==='mob'?b.recycleDeck!==false:(pve&&b.recycleDeck===true),deckSource:[...c.deck],hp:c.attributes.maxHP,pips,powerPips,deck:shuffle(c.deck,state.random),hand:[],drawIndex:0,usedCount:0,discardedCount:0,cooldowns:{},charms:[],wards:[],absorbs:[],dots:[],hots:[],aura:null,stun:0,dodgeProtection:0,metrics:{damage:0,healing:0,control:0,received:0}});
   }
   beginTurn(state);return state;
 }
@@ -45,6 +51,7 @@ function beginTurn(state) {
     u.hots=u.hots.filter(h=>h.values.length);
     // Player:PrepareCard retains old cards; draw from the seeded finite deck.
     let drawn=0;
+    if(u.recycleDeck&&u.drawIndex>=u.deck.length&&u.hand.length<u.handSize){u.deck.push(...shuffle(u.deckSource,state.random));emit(state,'recycle',{target:u.id});}
     while(u.hand.length<u.handSize&&drawn<u.drawPerRound&&u.drawIndex<u.deck.length) {const h={key:u.deck[u.drawIndex],seq:u.drawIndex};u.hand.push(h);u.drawIndex++;drawn++;emit(state,'draw',{target:u.id,card:h.key,seq:h.seq});}
   }
   emit(state,'turn',{side:state.side});checkEnd(state,false);
@@ -64,7 +71,7 @@ export function getLegalActions(state,unitId) {
 export function getObservation(state,unitId) {
   const own=state.units.find(x=>x.id===unitId);
   if(!own)throw new Error('未知角色');
-  return {turn:state.turn,side:state.side,version:state.ruleset.version,unitId,units:state.units.map(u=>({id:u.id,side:u.side,slot:u.slot,name:u.name,school:u.school,level:u.level,hp:u.hp,maxHP:u.attributes.maxHP,pips:u.pips,powerPips:u.powerPips,charms:u.charms.map(x=>({...x})),wards:u.wards.map(x=>({...x})),absorbs:u.absorbs.map(x=>({...x})),stun:u.stun,dots:u.dots.length,hots:u.hots.length,aura:u.aura?{...u.aura}:null})),deckRemaining:own.deck.length-own.drawIndex,handSize:own.handSize,drawPerRound:own.drawPerRound,usedCount:own.usedCount,discardedCount:own.discardedCount,hand:own.hand.map(x=>({...x})),legalActions:getLegalActions(state,unitId)};
+  return {turn:state.turn,side:state.side,version:state.ruleset.version,unitId,units:state.units.map(u=>({id:u.id,side:u.side,slot:u.slot,kind:u.kind,name:u.name,school:u.school,level:u.level,hp:u.hp,maxHP:u.attributes.maxHP,pips:u.pips,powerPips:u.powerPips,charms:u.charms.map(x=>({...x})),wards:u.wards.map(x=>({...x})),absorbs:u.absorbs.map(x=>({...x})),stun:u.stun,dots:u.dots.length,hots:u.hots.length,aura:u.aura?{...u.aura}:null})),deckRemaining:own.deck.length-own.drawIndex,handSize:own.handSize,drawPerRound:own.drawPerRound,usedCount:own.usedCount,discardedCount:own.discardedCount,hand:own.hand.map(x=>({...x})),legalActions:getLegalActions(state,unitId)};
 }
 function sameAction(a,b){return a.kind===b.kind&&a.unitId===b.unitId&&a.card===b.card&&a.seq===b.seq&&a.targetId===b.targetId;}
 export function stepBattle(state,actions) {
@@ -106,7 +113,7 @@ function checkEnd(state,checkLimit) {
   const weights=[0,1].map(s=>state.units.filter(u=>u.side===s&&u.hp>0).reduce((n,u)=>n+Math.ceil((10+u.hp/u.attributes.maxHP)*1000),0));
   const winner=weights[0]===weights[1]?(state.ruleset.version==='teen'&&weights[0]>0?1-(state.scenario.firstSide??0):null):weights[0]>weights[1]?0:1;
   state.finished=true;
-  state.result={schemaVersion:1,winner,reason:alive.every(Boolean)?'turn-limit':'elimination',turns:state.turn,seed:state.seed,engineVersion:ENGINE_VERSION,configHash:state.configHash,version:state.ruleset.version,parityStatus:PARITY_STATUS,units:state.units.map(u=>({id:u.id,side:u.side,school:u.school,hp:u.hp,maxHP:u.attributes.maxHP,...u.metrics}))};
+  state.result={schemaVersion:1,winner,reason:alive.every(Boolean)?'turn-limit':'elimination',turns:state.turn,seed:state.seed,engineVersion:ENGINE_VERSION,configHash:state.configHash,version:state.ruleset.version,parityStatus:PARITY_STATUS,units:state.units.map(u=>({id:u.id,side:u.side,kind:u.kind,school:u.school,hp:u.hp,maxHP:u.attributes.maxHP,...u.metrics}))};
   emit(state,'end',{winner,reason:state.result.reason});return true;
 }
 export function replayBattle(replay,ruleset) {

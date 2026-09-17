@@ -1,0 +1,726 @@
+{
+ "schemaVersion": 1,
+ "generator": "scripts/build_sprites.mjs",
+ "sprites": {
+  "player_boy_fire": {
+   "file": "player_boy_fire.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "player_girl_fire": {
+   "file": "player_girl_fire.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "player_boy_ice": {
+   "file": "player_boy_ice.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "player_girl_ice": {
+   "file": "player_girl_ice.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "player_boy_storm": {
+   "file": "player_boy_storm.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "player_girl_storm": {
+   "file": "player_girl_storm.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "player_boy_death": {
+   "file": "player_boy_death.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "player_girl_death": {
+   "file": "player_girl_death.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "player_boy_life": {
+   "file": "player_boy_life.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "player_girl_life": {
+   "file": "player_girl_life.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "villager_a": {
+   "file": "villager_a.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "villager_b": {
+   "file": "villager_b.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "villager_c": {
+   "file": "villager_c.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "villager_d": {
+   "file": "villager_d.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "villager_e": {
+   "file": "villager_e.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "villager_f": {
+   "file": "villager_f.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "mentor_fire": {
+   "file": "mentor_fire.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "mentor_ice": {
+   "file": "mentor_ice.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "mentor_storm": {
+   "file": "mentor_storm.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "mentor_death": {
+   "file": "mentor_death.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "mentor_life": {
+   "file": "mentor_life.png",
+   "frameWidth": 24,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    12,
+    30
+   ]
+  },
+  "mob_WaterBubble": {
+   "file": "mob_WaterBubble.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_DeathBubble": {
+   "file": "mob_DeathBubble.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_TreeMonster": {
+   "file": "mob_TreeMonster.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_DeadTreeMonster": {
+   "file": "mob_DeadTreeMonster.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_BlazeHairMonster": {
+   "file": "mob_BlazeHairMonster.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_OrangeBaby": {
+   "file": "mob_OrangeBaby.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_StrawberryGirl": {
+   "file": "mob_StrawberryGirl.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_Pineapple": {
+   "file": "mob_Pineapple.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_UndeadManekiNeko": {
+   "file": "mob_UndeadManekiNeko.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_IceManekiNeko": {
+   "file": "mob_IceManekiNeko.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_FireManekiNeko": {
+   "file": "mob_FireManekiNeko.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_ForestSpikyOgreLower": {
+   "file": "mob_ForestSpikyOgreLower.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_ForestSpikyOgre": {
+   "file": "mob_ForestSpikyOgre.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_FireRockyOgre": {
+   "file": "mob_FireRockyOgre.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_FireRockyOgre_01": {
+   "file": "mob_FireRockyOgre_01.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_SirBanana": {
+   "file": "mob_SirBanana.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_generic_fire": {
+   "file": "mob_generic_fire.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_generic_ice": {
+   "file": "mob_generic_ice.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_generic_storm": {
+   "file": "mob_generic_storm.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_generic_life": {
+   "file": "mob_generic_life.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_generic_death": {
+   "file": "mob_generic_death.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "mob_generic_bee": {
+   "file": "mob_generic_bee.png",
+   "frameWidth": 32,
+   "frameHeight": 32,
+   "frames": 4,
+   "rows": {
+    "down": 0,
+    "up": 1,
+    "left": 2,
+    "right": 3
+   },
+   "anchor": [
+    16,
+    30
+   ]
+  },
+  "prop_sign": {
+   "file": "prop_sign.png",
+   "frameWidth": 16,
+   "frameHeight": 16,
+   "frames": 1,
+   "rows": {
+    "down": 0,
+    "up": 0,
+    "left": 0,
+    "right": 0
+   },
+   "anchor": [
+    8,
+    15
+   ]
+  },
+  "prop_crate": {
+   "file": "prop_crate.png",
+   "frameWidth": 16,
+   "frameHeight": 16,
+   "frames": 1,
+   "rows": {
+    "down": 0,
+    "up": 0,
+    "left": 0,
+    "right": 0
+   },
+   "anchor": [
+    8,
+    15
+   ]
+  }
+ }
+}

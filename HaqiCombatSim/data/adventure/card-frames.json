@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "entries": {
+    "ice": {
+      "local": "assets/adventure/card-frames/ice-b6bc6f804f4e77ad521c5e172befd9b871745145f615c5068735d462ac8578ff.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/card-frames/ice-b6bc6f804f4e77ad521c5e172befd9b871745145f615c5068735d462ac8578ff.webp",
+      "sha256": "b6bc6f804f4e77ad521c5e172befd9b871745145f615c5068735d462ac8578ff",
+      "size": 148120,
+      "width": 604,
+      "height": 906,
+      "source": "AI-generated blank frame from original Haqi card reference; no baked text, badges or skill illustration"
+    },
+    "fire": {
+      "local": "assets/adventure/card-frames/fire-eb20b8c413309eba77c593cdf3d5cfa6bf43f2d0d6abe36e6e817791a953165e.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/card-frames/fire-eb20b8c413309eba77c593cdf3d5cfa6bf43f2d0d6abe36e6e817791a953165e.webp",
+      "sha256": "eb20b8c413309eba77c593cdf3d5cfa6bf43f2d0d6abe36e6e817791a953165e",
+      "size": 142806,
+      "width": 604,
+      "height": 906,
+      "source": "AI-generated blank frame from original Haqi card reference; no baked text, badges or skill illustration"
+    },
+    "storm": {
+      "local": "assets/adventure/card-frames/storm-35dbf6b5f3c085847d6afa2bc88d92c3ba4c09697df01fe7eaa19d456da9a73d.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/card-frames/storm-35dbf6b5f3c085847d6afa2bc88d92c3ba4c09697df01fe7eaa19d456da9a73d.webp",
+      "sha256": "35dbf6b5f3c085847d6afa2bc88d92c3ba4c09697df01fe7eaa19d456da9a73d",
+      "size": 146048,
+      "width": 604,
+      "height": 906,
+      "source": "AI-generated blank frame from original Haqi card reference; no baked text, badges or skill illustration"
+    },
+    "life": {
+      "local": "assets/adventure/card-frames/life-0fe5c33266dcb42c44513cf29dca8610503e5f24d7bfaead611a63f910f4aa32.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/card-frames/life-0fe5c33266dcb42c44513cf29dca8610503e5f24d7bfaead611a63f910f4aa32.webp",
+      "sha256": "0fe5c33266dcb42c44513cf29dca8610503e5f24d7bfaead611a63f910f4aa32",
+      "size": 149678,
+      "width": 604,
+      "height": 906,
+      "source": "AI-generated blank frame from original Haqi card reference; no baked text, badges or skill illustration"
+    },
+    "death": {
+      "local": "assets/adventure/card-frames/death-ad4309b47a9e6ecfaa5d8bd4ef4259308219be3a328f098763724b1e684adf87.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/card-frames/death-ad4309b47a9e6ecfaa5d8bd4ef4259308219be3a328f098763724b1e684adf87.webp",
+      "sha256": "ad4309b47a9e6ecfaa5d8bd4ef4259308219be3a328f098763724b1e684adf87",
+      "size": 138628,
+      "width": 604,
+      "height": 906,
+      "source": "AI-generated blank frame from original Haqi card reference; no baked text, badges or skill illustration"
+    }
+  }
+}

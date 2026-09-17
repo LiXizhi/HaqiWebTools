@@ -30,7 +30,7 @@
 ### Phase 0 — 项目骨架
 - [x] `HaqiCombatSim.html`（**实际**：自带 `css/style.css`，不引 Tailwind CDN，保证离线可用）
 - [x] `package.json`（`type: module`；scripts：`export`、`test`、`sim`；**实际**：零依赖，XML 用自写 `scripts/lib/xml_lite.mjs`）
-- [x] `.gitignore`（`data/kids/`、`data/teen/`、`node_modules/`）
+- [x] `.gitignore`（`node_modules/`；`data/kids/` 与 `data/teen/` 入库）
 - [x] `js/app.js`、`state.js`、`utils.js`（**实际**：`config`/`i18n` 并入 `state.js` 与 `combat_presets_core.js` 的 `SCHOOL_NAMES`，未单列）
 - [x] `data/sample/` 手写极小数据集（52 卡）：每系 6~8 张卡（单攻 / 群攻 / 治疗 / blade / shield / DOT）、1 个 stats 区间、1 份 AI 权重
 

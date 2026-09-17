@@ -1,0 +1,4915 @@
+{
+ "fire": [
+  {
+   "from": 0,
+   "to": 400,
+   "style": "AggressiveFire",
+   "cards": [
+    {
+     "gsid": 22113,
+     "count": 4
+    },
+    {
+     "gsid": 22331,
+     "count": 4
+    },
+    {
+     "gsid": 22115,
+     "count": 4
+    },
+    {
+     "gsid": 22116,
+     "count": 4
+    },
+    {
+     "gsid": 22102,
+     "count": 4
+    },
+    {
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "gsid": 22104,
+     "count": 4
+    },
+    {
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "gsid": 22108,
+     "count": 4
+    },
+    {
+     "gsid": 22109,
+     "count": 4
+    },
+    {
+     "gsid": 22106,
+     "count": 4
+    },
+    {
+     "gsid": 22107,
+     "count": 4
+    },
+    {
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "gsid": 22292,
+     "count": 4
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 22113,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22331,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22115,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22116,
+     "count": 4
+    },
+    {
+     "key": "Fire_SingleAttackWithDOT_Level2",
+     "gsid": 22102,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "key": "Fire_FireDamageTrap",
+     "gsid": 22104,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22108,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22109,
+     "count": 4
+    },
+    {
+     "key": "Fire_FireGlobalAura",
+     "gsid": 22106,
+     "count": 4
+    },
+    {
+     "key": "Fire_SingleAttack_Level5",
+     "gsid": 22107,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22292,
+     "count": 4
+    }
+   ],
+   "resolvedRatio": 0.29411764705882354
+  },
+  {
+   "from": 400,
+   "to": 600,
+   "style": "AggressiveFire",
+   "cards": [
+    {
+     "gsid": 22113,
+     "count": 4
+    },
+    {
+     "gsid": 22331,
+     "count": 4
+    },
+    {
+     "gsid": 22115,
+     "count": 4
+    },
+    {
+     "gsid": 22116,
+     "count": 4
+    },
+    {
+     "gsid": 22102,
+     "count": 4
+    },
+    {
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "gsid": 22104,
+     "count": 4
+    },
+    {
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "gsid": 22108,
+     "count": 4
+    },
+    {
+     "gsid": 22109,
+     "count": 4
+    },
+    {
+     "gsid": 22106,
+     "count": 4
+    },
+    {
+     "gsid": 22107,
+     "count": 4
+    },
+    {
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "gsid": 22292,
+     "count": 4
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 22113,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22331,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22115,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22116,
+     "count": 4
+    },
+    {
+     "key": "Fire_SingleAttackWithDOT_Level2",
+     "gsid": 22102,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "key": "Fire_FireDamageTrap",
+     "gsid": 22104,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22108,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22109,
+     "count": 4
+    },
+    {
+     "key": "Fire_FireGlobalAura",
+     "gsid": 22106,
+     "count": 4
+    },
+    {
+     "key": "Fire_SingleAttack_Level5",
+     "gsid": 22107,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22292,
+     "count": 4
+    }
+   ],
+   "resolvedRatio": 0.29411764705882354
+  },
+  {
+   "from": 600,
+   "to": 800,
+   "style": "AggressiveFire",
+   "cards": [
+    {
+     "gsid": 42113,
+     "count": 4
+    },
+    {
+     "gsid": 43331,
+     "count": 1
+    },
+    {
+     "gsid": 41331,
+     "count": 2
+    },
+    {
+     "gsid": 41116,
+     "count": 4
+    },
+    {
+     "gsid": 42180,
+     "count": 1
+    },
+    {
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "gsid": 42104,
+     "count": 2
+    },
+    {
+     "gsid": 22104,
+     "count": 2
+    },
+    {
+     "gsid": 22120,
+     "count": 3
+    },
+    {
+     "gsid": 41120,
+     "count": 2
+    },
+    {
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "gsid": 41106,
+     "count": 2
+    },
+    {
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "gsid": 22138,
+     "count": 2
+    },
+    {
+     "gsid": 42107,
+     "count": 3
+    },
+    {
+     "gsid": 42292,
+     "count": 4
+    },
+    {
+     "gsid": 41108,
+     "count": 1
+    },
+    {
+     "gsid": 42109,
+     "count": 3
+    },
+    {
+     "gsid": 41109,
+     "count": 1
+    },
+    {
+     "gsid": 42108,
+     "count": 2
+    },
+    {
+     "gsid": 42157,
+     "count": 3
+    },
+    {
+     "gsid": 22157,
+     "count": 2
+    },
+    {
+     "gsid": 22142,
+     "count": 2
+    },
+    {
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "gsid": 42111,
+     "count": 2
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 42113,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 43331,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 41331,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41116,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42180,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "key": "Fire_FireDamageTrap_Blue",
+     "gsid": 42104,
+     "count": 2
+    },
+    {
+     "key": "Fire_FireDamageTrap",
+     "gsid": 22104,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22120,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 41120,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "key": "Fire_FireGlobalAura_Green",
+     "gsid": 41106,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 2
+    },
+    {
+     "key": "Fire_SingleAttack_Level5_Blue",
+     "gsid": 42107,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42292,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 41108,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42109,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 41109,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42108,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42157,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42111,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "resolvedRatio": 0.23076923076923078
+  },
+  {
+   "from": 800,
+   "to": 1100,
+   "style": "AggressiveFire",
+   "cards": [
+    {
+     "gsid": 43113,
+     "count": 5
+    },
+    {
+     "gsid": 43331,
+     "count": 3
+    },
+    {
+     "gsid": 42331,
+     "count": 1
+    },
+    {
+     "gsid": 42116,
+     "count": 2
+    },
+    {
+     "gsid": 43180,
+     "count": 1
+    },
+    {
+     "gsid": 42180,
+     "count": 3
+    },
+    {
+     "gsid": 43104,
+     "count": 2
+    },
+    {
+     "gsid": 41104,
+     "count": 2
+    },
+    {
+     "gsid": 42120,
+     "count": 3
+    },
+    {
+     "gsid": 43120,
+     "count": 1
+    },
+    {
+     "gsid": 42199,
+     "count": 3
+    },
+    {
+     "gsid": 43106,
+     "count": 2
+    },
+    {
+     "gsid": 42138,
+     "count": 3
+    },
+    {
+     "gsid": 43138,
+     "count": 1
+    },
+    {
+     "gsid": 43107,
+     "count": 2
+    },
+    {
+     "gsid": 43292,
+     "count": 4
+    },
+    {
+     "gsid": 43108,
+     "count": 1
+    },
+    {
+     "gsid": 42109,
+     "count": 3
+    },
+    {
+     "gsid": 43109,
+     "count": 1
+    },
+    {
+     "gsid": 42108,
+     "count": 2
+    },
+    {
+     "gsid": 42157,
+     "count": 3
+    },
+    {
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "gsid": 42111,
+     "count": 2
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 43113,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43331,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42331,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42116,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43180,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42180,
+     "count": 3
+    },
+    {
+     "key": "Fire_FireDamageTrap_Purple",
+     "gsid": 43104,
+     "count": 2
+    },
+    {
+     "key": "Fire_FireDamageTrap_Green",
+     "gsid": 41104,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42120,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43120,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42199,
+     "count": 3
+    },
+    {
+     "key": "Fire_FireGlobalAura_Purple",
+     "gsid": 43106,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43138,
+     "count": 1
+    },
+    {
+     "key": "Fire_SingleAttack_Level5_Purple",
+     "gsid": 43107,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43292,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 43108,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42109,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43109,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42108,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42157,
+     "count": 3
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield_Purple",
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42111,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "resolvedRatio": 0.24
+  },
+  {
+   "from": 1100,
+   "to": 1000000,
+   "style": "AggressiveFire",
+   "cards": [
+    {
+     "gsid": 43113,
+     "count": 5
+    },
+    {
+     "gsid": 43331,
+     "count": 5
+    },
+    {
+     "gsid": 43116,
+     "count": 5
+    },
+    {
+     "gsid": 42116,
+     "count": 2
+    },
+    {
+     "gsid": 43180,
+     "count": 5
+    },
+    {
+     "gsid": 43104,
+     "count": 5
+    },
+    {
+     "gsid": 43120,
+     "count": 5
+    },
+    {
+     "gsid": 43199,
+     "count": 3
+    },
+    {
+     "gsid": 43106,
+     "count": 3
+    },
+    {
+     "gsid": 43138,
+     "count": 5
+    },
+    {
+     "gsid": 43107,
+     "count": 5
+    },
+    {
+     "gsid": 43292,
+     "count": 5
+    },
+    {
+     "gsid": 43109,
+     "count": 5
+    },
+    {
+     "gsid": 43108,
+     "count": 5
+    },
+    {
+     "gsid": 43157,
+     "count": 5
+    },
+    {
+     "gsid": 43142,
+     "count": 5
+    },
+    {
+     "gsid": 43111,
+     "count": 2
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 43113,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43331,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43116,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 42116,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43180,
+     "count": 5
+    },
+    {
+     "key": "Fire_FireDamageTrap_Purple",
+     "gsid": 43104,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43120,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43199,
+     "count": 3
+    },
+    {
+     "key": "Fire_FireGlobalAura_Purple",
+     "gsid": 43106,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43138,
+     "count": 5
+    },
+    {
+     "key": "Fire_SingleAttack_Level5_Purple",
+     "gsid": 43107,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43292,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43109,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43108,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43157,
+     "count": 5
+    },
+    {
+     "key": "Ice_GlobalShield_Purple",
+     "gsid": 43142,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43111,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "resolvedRatio": 0.2222222222222222
+  }
+ ],
+ "ice": [
+  {
+   "from": 0,
+   "to": 400,
+   "style": "AggressiveIce",
+   "cards": [
+    {
+     "gsid": 22143,
+     "count": 4
+    },
+    {
+     "gsid": 22144,
+     "count": 2
+    },
+    {
+     "gsid": 22145,
+     "count": 2
+    },
+    {
+     "gsid": 22332,
+     "count": 2
+    },
+    {
+     "gsid": 22148,
+     "count": 4
+    },
+    {
+     "gsid": 22257,
+     "count": 4
+    },
+    {
+     "gsid": 22180,
+     "count": 3
+    },
+    {
+     "gsid": 22150,
+     "count": 2
+    },
+    {
+     "gsid": 22152,
+     "count": 4
+    },
+    {
+     "gsid": 22199,
+     "count": 3
+    },
+    {
+     "gsid": 22153,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 3
+    },
+    {
+     "gsid": 22294,
+     "count": 4
+    },
+    {
+     "gsid": 22157,
+     "count": 3
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "gsid": 22146,
+     "count": 4
+    }
+   ],
+   "deck": [
+    {
+     "key": "Ice_SingleAttack_Level4",
+     "gsid": 22143,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22144,
+     "count": 2
+    },
+    {
+     "key": "Ice_IceGlobalAura",
+     "gsid": 22145,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22332,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22148,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22257,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22150,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22152,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22153,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22294,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 3
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22146,
+     "count": 4
+    }
+   ],
+   "resolvedRatio": 0.1875
+  },
+  {
+   "from": 400,
+   "to": 600,
+   "style": "AggressiveIce",
+   "cards": [
+    {
+     "gsid": 22143,
+     "count": 4
+    },
+    {
+     "gsid": 22144,
+     "count": 2
+    },
+    {
+     "gsid": 22145,
+     "count": 2
+    },
+    {
+     "gsid": 22332,
+     "count": 2
+    },
+    {
+     "gsid": 22148,
+     "count": 4
+    },
+    {
+     "gsid": 22257,
+     "count": 4
+    },
+    {
+     "gsid": 22180,
+     "count": 3
+    },
+    {
+     "gsid": 22150,
+     "count": 2
+    },
+    {
+     "gsid": 22152,
+     "count": 4
+    },
+    {
+     "gsid": 22199,
+     "count": 3
+    },
+    {
+     "gsid": 22153,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 3
+    },
+    {
+     "gsid": 22294,
+     "count": 4
+    },
+    {
+     "gsid": 22157,
+     "count": 3
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "gsid": 22146,
+     "count": 4
+    }
+   ],
+   "deck": [
+    {
+     "key": "Ice_SingleAttack_Level4",
+     "gsid": 22143,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22144,
+     "count": 2
+    },
+    {
+     "key": "Ice_IceGlobalAura",
+     "gsid": 22145,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22332,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22148,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22257,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22150,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22152,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22153,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22294,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 3
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22146,
+     "count": 4
+    }
+   ],
+   "resolvedRatio": 0.1875
+  },
+  {
+   "from": 600,
+   "to": 800,
+   "style": "AggressiveIce",
+   "cards": [
+    {
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "gsid": 42143,
+     "count": 3
+    },
+    {
+     "gsid": 22145,
+     "count": 2
+    },
+    {
+     "gsid": 42332,
+     "count": 1
+    },
+    {
+     "gsid": 41332,
+     "count": 1
+    },
+    {
+     "gsid": 22148,
+     "count": 2
+    },
+    {
+     "gsid": 41148,
+     "count": 2
+    },
+    {
+     "gsid": 22257,
+     "count": 1
+    },
+    {
+     "gsid": 41257,
+     "count": 2
+    },
+    {
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "gsid": 41150,
+     "count": 2
+    },
+    {
+     "gsid": 42152,
+     "count": 2
+    },
+    {
+     "gsid": 22152,
+     "count": 1
+    },
+    {
+     "gsid": 22199,
+     "count": 3
+    },
+    {
+     "gsid": 22153,
+     "count": 2
+    },
+    {
+     "gsid": 41153,
+     "count": 1
+    },
+    {
+     "gsid": 42153,
+     "count": 1
+    },
+    {
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "gsid": 41138,
+     "count": 1
+    },
+    {
+     "gsid": 22294,
+     "count": 4
+    },
+    {
+     "gsid": 42294,
+     "count": 1
+    },
+    {
+     "gsid": 43157,
+     "count": 1
+    },
+    {
+     "gsid": 42157,
+     "count": 2
+    },
+    {
+     "gsid": 22142,
+     "count": 3
+    },
+    {
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "gsid": 42292,
+     "count": 3
+    },
+    {
+     "gsid": 22292,
+     "count": 2
+    },
+    {
+     "gsid": 41146,
+     "count": 2
+    },
+    {
+     "gsid": 42146,
+     "count": 2
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "key": "Ice_SingleAttack_Level4_Blue",
+     "gsid": 42143,
+     "count": 3
+    },
+    {
+     "key": "Ice_IceGlobalAura",
+     "gsid": 22145,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42332,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 41332,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 22148,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41148,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22257,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 41257,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 41150,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42152,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22152,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22153,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41153,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42153,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41138,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 22294,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42294,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 43157,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42157,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 3
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42292,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22292,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41146,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42146,
+     "count": 2
+    }
+   ],
+   "resolvedRatio": 0.13793103448275862
+  },
+  {
+   "from": 800,
+   "to": 1100,
+   "style": "AggressiveIce",
+   "cards": [
+    {
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "gsid": 42143,
+     "count": 3
+    },
+    {
+     "gsid": 43145,
+     "count": 2
+    },
+    {
+     "gsid": 42332,
+     "count": 1
+    },
+    {
+     "gsid": 42332,
+     "count": 1
+    },
+    {
+     "gsid": 42148,
+     "count": 2
+    },
+    {
+     "gsid": 43148,
+     "count": 2
+    },
+    {
+     "gsid": 42257,
+     "count": 1
+    },
+    {
+     "gsid": 43257,
+     "count": 2
+    },
+    {
+     "gsid": 42180,
+     "count": 3
+    },
+    {
+     "gsid": 42150,
+     "count": 2
+    },
+    {
+     "gsid": 42152,
+     "count": 2
+    },
+    {
+     "gsid": 42152,
+     "count": 1
+    },
+    {
+     "gsid": 42199,
+     "count": 3
+    },
+    {
+     "gsid": 42153,
+     "count": 2
+    },
+    {
+     "gsid": 43153,
+     "count": 1
+    },
+    {
+     "gsid": 42153,
+     "count": 1
+    },
+    {
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "gsid": 43138,
+     "count": 1
+    },
+    {
+     "gsid": 43294,
+     "count": 4
+    },
+    {
+     "gsid": 42294,
+     "count": 1
+    },
+    {
+     "gsid": 43157,
+     "count": 1
+    },
+    {
+     "gsid": 42157,
+     "count": 2
+    },
+    {
+     "gsid": 42142,
+     "count": 3
+    },
+    {
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "gsid": 43292,
+     "count": 3
+    },
+    {
+     "gsid": 42292,
+     "count": 2
+    },
+    {
+     "gsid": 42146,
+     "count": 2
+    },
+    {
+     "gsid": 43146,
+     "count": 2
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "key": "Ice_SingleAttack_Level4_Blue",
+     "gsid": 42143,
+     "count": 3
+    },
+    {
+     "key": "Ice_IceGlobalAura_Purple",
+     "gsid": 43145,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42332,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42332,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42148,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43148,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42257,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 43257,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42180,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42150,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42152,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42152,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42199,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42153,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43153,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42153,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43138,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 43294,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42294,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 43157,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42157,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 3
+    },
+    {
+     "key": "Ice_GlobalShield_Purple",
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43292,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42292,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42146,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43146,
+     "count": 2
+    }
+   ],
+   "resolvedRatio": 0.13793103448275862
+  },
+  {
+   "from": 1100,
+   "to": 1000000,
+   "style": "AggressiveIce",
+   "cards": [
+    {
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "gsid": 42143,
+     "count": 3
+    },
+    {
+     "gsid": 43145,
+     "count": 2
+    },
+    {
+     "gsid": 42332,
+     "count": 1
+    },
+    {
+     "gsid": 42332,
+     "count": 1
+    },
+    {
+     "gsid": 42148,
+     "count": 2
+    },
+    {
+     "gsid": 43148,
+     "count": 2
+    },
+    {
+     "gsid": 42257,
+     "count": 1
+    },
+    {
+     "gsid": 43257,
+     "count": 2
+    },
+    {
+     "gsid": 42180,
+     "count": 3
+    },
+    {
+     "gsid": 42150,
+     "count": 2
+    },
+    {
+     "gsid": 42152,
+     "count": 2
+    },
+    {
+     "gsid": 42152,
+     "count": 1
+    },
+    {
+     "gsid": 42199,
+     "count": 3
+    },
+    {
+     "gsid": 42153,
+     "count": 2
+    },
+    {
+     "gsid": 43153,
+     "count": 1
+    },
+    {
+     "gsid": 42153,
+     "count": 1
+    },
+    {
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "gsid": 43138,
+     "count": 1
+    },
+    {
+     "gsid": 43294,
+     "count": 4
+    },
+    {
+     "gsid": 42294,
+     "count": 1
+    },
+    {
+     "gsid": 43157,
+     "count": 1
+    },
+    {
+     "gsid": 42157,
+     "count": 2
+    },
+    {
+     "gsid": 42142,
+     "count": 3
+    },
+    {
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "gsid": 43292,
+     "count": 3
+    },
+    {
+     "gsid": 42292,
+     "count": 2
+    },
+    {
+     "gsid": 42146,
+     "count": 2
+    },
+    {
+     "gsid": 43146,
+     "count": 2
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "key": "Ice_SingleAttack_Level4_Blue",
+     "gsid": 42143,
+     "count": 3
+    },
+    {
+     "key": "Ice_IceGlobalAura_Purple",
+     "gsid": 43145,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42332,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42332,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42148,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43148,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42257,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 43257,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42180,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42150,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42152,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42152,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42199,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42153,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43153,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42153,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43138,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 43294,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42294,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 43157,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42157,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 3
+    },
+    {
+     "key": "Ice_GlobalShield_Purple",
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43292,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42292,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42146,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43146,
+     "count": 2
+    }
+   ],
+   "resolvedRatio": 0.13793103448275862
+  }
+ ],
+ "storm": [
+  {
+   "from": 0,
+   "to": 400,
+   "style": "AggressiveStorm",
+   "cards": [
+    {
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "gsid": 22125,
+     "count": 4
+    },
+    {
+     "gsid": 22124,
+     "count": 3
+    },
+    {
+     "gsid": 22127,
+     "count": 3
+    },
+    {
+     "gsid": 22128,
+     "count": 3
+    },
+    {
+     "gsid": 22135,
+     "count": 4
+    },
+    {
+     "gsid": 22130,
+     "count": 4
+    },
+    {
+     "gsid": 22134,
+     "count": 4
+    },
+    {
+     "gsid": 22333,
+     "count": 4
+    },
+    {
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "gsid": 22293,
+     "count": 4
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "key": "Storm_SingleAttack_Level4",
+     "gsid": 22125,
+     "count": 4
+    },
+    {
+     "key": "Storm_StormDamageTrap",
+     "gsid": 22124,
+     "count": 3
+    },
+    {
+     "key": "Storm_StormGlobalAura",
+     "gsid": 22127,
+     "count": 3
+    },
+    {
+     "key": "Storm_SingleAttack_Level5",
+     "gsid": 22128,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22135,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22130,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22134,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22333,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22293,
+     "count": 4
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    }
+   ],
+   "resolvedRatio": 0.3333333333333333
+  },
+  {
+   "from": 400,
+   "to": 600,
+   "style": "AggressiveStorm",
+   "cards": [
+    {
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "gsid": 22125,
+     "count": 2
+    },
+    {
+     "gsid": 22124,
+     "count": 3
+    },
+    {
+     "gsid": 22127,
+     "count": 3
+    },
+    {
+     "gsid": 22128,
+     "count": 3
+    },
+    {
+     "gsid": 22135,
+     "count": 4
+    },
+    {
+     "gsid": 22130,
+     "count": 4
+    },
+    {
+     "gsid": 22134,
+     "count": 4
+    },
+    {
+     "gsid": 22333,
+     "count": 4
+    },
+    {
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "gsid": 22293,
+     "count": 4
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "key": "Storm_SingleAttack_Level4",
+     "gsid": 22125,
+     "count": 2
+    },
+    {
+     "key": "Storm_StormDamageTrap",
+     "gsid": 22124,
+     "count": 3
+    },
+    {
+     "key": "Storm_StormGlobalAura",
+     "gsid": 22127,
+     "count": 3
+    },
+    {
+     "key": "Storm_SingleAttack_Level5",
+     "gsid": 22128,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22135,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22130,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22134,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22333,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22293,
+     "count": 4
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    }
+   ],
+   "resolvedRatio": 0.3333333333333333
+  },
+  {
+   "from": 600,
+   "to": 800,
+   "style": "AggressiveStorm",
+   "cards": [
+    {
+     "gsid": 42128,
+     "count": 3
+    },
+    {
+     "gsid": 42130,
+     "count": 2
+    },
+    {
+     "gsid": 22130,
+     "count": 2
+    },
+    {
+     "gsid": 41333,
+     "count": 2
+    },
+    {
+     "gsid": 42180,
+     "count": 4
+    },
+    {
+     "gsid": 22134,
+     "count": 2
+    },
+    {
+     "gsid": 41135,
+     "count": 2
+    },
+    {
+     "gsid": 22135,
+     "count": 2
+    },
+    {
+     "gsid": 42120,
+     "count": 4
+    },
+    {
+     "gsid": 41120,
+     "count": 1
+    },
+    {
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "gsid": 22293,
+     "count": 4
+    },
+    {
+     "gsid": 42124,
+     "count": 3
+    },
+    {
+     "gsid": 41138,
+     "count": 2
+    },
+    {
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "gsid": 42125,
+     "count": 2
+    },
+    {
+     "gsid": 22296,
+     "count": 4
+    },
+    {
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "gsid": 22142,
+     "count": 2
+    },
+    {
+     "gsid": 42127,
+     "count": 2
+    },
+    {
+     "gsid": 22127,
+     "count": 1
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "deck": [
+    {
+     "key": "Storm_SingleAttack_Level5_Blue",
+     "gsid": 42128,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42130,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22130,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41333,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42180,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22134,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41135,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22135,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42120,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 41120,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22293,
+     "count": 4
+    },
+    {
+     "key": "Storm_StormDamageTrap_Blue",
+     "gsid": 42124,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 41138,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "key": "Storm_SingleAttack_Level4_Blue",
+     "gsid": 42125,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22296,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 2
+    },
+    {
+     "key": "Storm_StormGlobalAura_Blue",
+     "gsid": 42127,
+     "count": 2
+    },
+    {
+     "key": "Storm_StormGlobalAura",
+     "gsid": 22127,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "resolvedRatio": 0.30434782608695654
+  },
+  {
+   "from": 800,
+   "to": 1100,
+   "style": "AggressiveStorm",
+   "cards": [
+    {
+     "gsid": 42128,
+     "count": 3
+    },
+    {
+     "gsid": 42130,
+     "count": 2
+    },
+    {
+     "gsid": 43130,
+     "count": 2
+    },
+    {
+     "gsid": 41333,
+     "count": 2
+    },
+    {
+     "gsid": 42180,
+     "count": 4
+    },
+    {
+     "gsid": 42134,
+     "count": 2
+    },
+    {
+     "gsid": 43135,
+     "count": 2
+    },
+    {
+     "gsid": 42135,
+     "count": 2
+    },
+    {
+     "gsid": 42120,
+     "count": 4
+    },
+    {
+     "gsid": 41120,
+     "count": 1
+    },
+    {
+     "gsid": 42338,
+     "count": 1
+    },
+    {
+     "gsid": 42199,
+     "count": 4
+    },
+    {
+     "gsid": 43293,
+     "count": 4
+    },
+    {
+     "gsid": 43124,
+     "count": 3
+    },
+    {
+     "gsid": 43138,
+     "count": 2
+    },
+    {
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "gsid": 43125,
+     "count": 2
+    },
+    {
+     "gsid": 43296,
+     "count": 4
+    },
+    {
+     "gsid": 42157,
+     "count": 4
+    },
+    {
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "gsid": 42127,
+     "count": 2
+    },
+    {
+     "gsid": 43127,
+     "count": 1
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "deck": [
+    {
+     "key": "Storm_SingleAttack_Level5_Blue",
+     "gsid": 42128,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42130,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43130,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41333,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42180,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42134,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43135,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42135,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42120,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 41120,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42338,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42199,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 43293,
+     "count": 4
+    },
+    {
+     "key": "Storm_StormDamageTrap_Purple",
+     "gsid": 43124,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43138,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "key": "Storm_SingleAttack_Level4_Purple",
+     "gsid": 43125,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43296,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42157,
+     "count": 4
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield_Purple",
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "key": "Storm_StormGlobalAura_Blue",
+     "gsid": 42127,
+     "count": 2
+    },
+    {
+     "key": "Storm_StormGlobalAura_Purple",
+     "gsid": 43127,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "resolvedRatio": 0.2916666666666667
+  },
+  {
+   "from": 1100,
+   "to": 1000000,
+   "style": "AggressiveStorm",
+   "cards": [
+    {
+     "gsid": 42128,
+     "count": 3
+    },
+    {
+     "gsid": 42130,
+     "count": 2
+    },
+    {
+     "gsid": 43130,
+     "count": 2
+    },
+    {
+     "gsid": 41333,
+     "count": 2
+    },
+    {
+     "gsid": 42180,
+     "count": 4
+    },
+    {
+     "gsid": 42134,
+     "count": 2
+    },
+    {
+     "gsid": 43135,
+     "count": 2
+    },
+    {
+     "gsid": 42135,
+     "count": 2
+    },
+    {
+     "gsid": 42120,
+     "count": 4
+    },
+    {
+     "gsid": 41120,
+     "count": 1
+    },
+    {
+     "gsid": 42338,
+     "count": 1
+    },
+    {
+     "gsid": 42199,
+     "count": 4
+    },
+    {
+     "gsid": 43293,
+     "count": 4
+    },
+    {
+     "gsid": 43124,
+     "count": 3
+    },
+    {
+     "gsid": 43138,
+     "count": 2
+    },
+    {
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "gsid": 43125,
+     "count": 2
+    },
+    {
+     "gsid": 43296,
+     "count": 4
+    },
+    {
+     "gsid": 42157,
+     "count": 4
+    },
+    {
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "gsid": 42127,
+     "count": 2
+    },
+    {
+     "gsid": 43127,
+     "count": 1
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "deck": [
+    {
+     "key": "Storm_SingleAttack_Level5_Blue",
+     "gsid": 42128,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42130,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43130,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41333,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42180,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42134,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43135,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42135,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42120,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 41120,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42338,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42199,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 43293,
+     "count": 4
+    },
+    {
+     "key": "Storm_StormDamageTrap_Purple",
+     "gsid": 43124,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43138,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 2
+    },
+    {
+     "key": "Storm_SingleAttack_Level4_Purple",
+     "gsid": 43125,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43296,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42157,
+     "count": 4
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield_Purple",
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "key": "Storm_StormGlobalAura_Blue",
+     "gsid": 42127,
+     "count": 2
+    },
+    {
+     "key": "Storm_StormGlobalAura_Purple",
+     "gsid": 43127,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    }
+   ],
+   "resolvedRatio": 0.2916666666666667
+  }
+ ],
+ "life": [
+  {
+   "from": 0,
+   "to": 400,
+   "style": "AggressiveLife",
+   "cards": [
+    {
+     "gsid": 22160,
+     "count": 4
+    },
+    {
+     "gsid": 22177,
+     "count": 3
+    },
+    {
+     "gsid": 22162,
+     "count": 4
+    },
+    {
+     "gsid": 22178,
+     "count": 4
+    },
+    {
+     "gsid": 22163,
+     "count": 3
+    },
+    {
+     "gsid": 22164,
+     "count": 3
+    },
+    {
+     "gsid": 22180,
+     "count": 3
+    },
+    {
+     "gsid": 22165,
+     "count": 4
+    },
+    {
+     "gsid": 22166,
+     "count": 3
+    },
+    {
+     "gsid": 22120,
+     "count": 3
+    },
+    {
+     "gsid": 22170,
+     "count": 4
+    },
+    {
+     "gsid": 22295,
+     "count": 4
+    },
+    {
+     "gsid": 22172,
+     "count": 3
+    },
+    {
+     "gsid": 22157,
+     "count": 3
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 3
+    }
+   ],
+   "deck": [
+    {
+     "key": "Life_SingleAttack_Level3",
+     "gsid": 22160,
+     "count": 4
+    },
+    {
+     "key": "Life_SingleHeal_ForLife_Level2",
+     "gsid": 22177,
+     "count": 3
+    },
+    {
+     "key": "Life_Absorb_Level3",
+     "gsid": 22162,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22178,
+     "count": 4
+    },
+    {
+     "key": "Life_SingleAttack_Level4",
+     "gsid": 22163,
+     "count": 3
+    },
+    {
+     "key": "Life_SingleHeal_Level4",
+     "gsid": 22164,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22165,
+     "count": 4
+    },
+    {
+     "key": "Life_LifeGlobalAura",
+     "gsid": 22166,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22120,
+     "count": 3
+    },
+    {
+     "key": "Life_LifeDamageBlade",
+     "gsid": 22170,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22295,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22172,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 3
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 3
+    }
+   ],
+   "resolvedRatio": 0.5
+  },
+  {
+   "from": 400,
+   "to": 600,
+   "style": "AggressiveLife",
+   "cards": [
+    {
+     "gsid": 22160,
+     "count": 4
+    },
+    {
+     "gsid": 22177,
+     "count": 3
+    },
+    {
+     "gsid": 22162,
+     "count": 4
+    },
+    {
+     "gsid": 22178,
+     "count": 4
+    },
+    {
+     "gsid": 22163,
+     "count": 3
+    },
+    {
+     "gsid": 22164,
+     "count": 3
+    },
+    {
+     "gsid": 22180,
+     "count": 3
+    },
+    {
+     "gsid": 22165,
+     "count": 4
+    },
+    {
+     "gsid": 22166,
+     "count": 3
+    },
+    {
+     "gsid": 22120,
+     "count": 3
+    },
+    {
+     "gsid": 22170,
+     "count": 4
+    },
+    {
+     "gsid": 22295,
+     "count": 4
+    },
+    {
+     "gsid": 22172,
+     "count": 3
+    },
+    {
+     "gsid": 22157,
+     "count": 3
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 3
+    }
+   ],
+   "deck": [
+    {
+     "key": "Life_SingleAttack_Level3",
+     "gsid": 22160,
+     "count": 4
+    },
+    {
+     "key": "Life_SingleHeal_ForLife_Level2",
+     "gsid": 22177,
+     "count": 3
+    },
+    {
+     "key": "Life_Absorb_Level3",
+     "gsid": 22162,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22178,
+     "count": 4
+    },
+    {
+     "key": "Life_SingleAttack_Level4",
+     "gsid": 22163,
+     "count": 3
+    },
+    {
+     "key": "Life_SingleHeal_Level4",
+     "gsid": 22164,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22165,
+     "count": 4
+    },
+    {
+     "key": "Life_LifeGlobalAura",
+     "gsid": 22166,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22120,
+     "count": 3
+    },
+    {
+     "key": "Life_LifeDamageBlade",
+     "gsid": 22170,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22295,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22172,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 3
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 3
+    }
+   ],
+   "resolvedRatio": 0.5
+  },
+  {
+   "from": 600,
+   "to": 800,
+   "style": "AggressiveLife",
+   "cards": [
+    {
+     "gsid": 22170,
+     "count": 4
+    },
+    {
+     "gsid": 22295,
+     "count": 5
+    },
+    {
+     "gsid": 41173,
+     "count": 1
+    },
+    {
+     "gsid": 22174,
+     "count": 2
+    },
+    {
+     "gsid": 41177,
+     "count": 3
+    },
+    {
+     "gsid": 22178,
+     "count": 2
+    },
+    {
+     "gsid": 41178,
+     "count": 2
+    },
+    {
+     "gsid": 41120,
+     "count": 3
+    },
+    {
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "gsid": 41142,
+     "count": 2
+    },
+    {
+     "gsid": 22142,
+     "count": 3
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "gsid": 42163,
+     "count": 1
+    },
+    {
+     "gsid": 41163,
+     "count": 2
+    },
+    {
+     "gsid": 22164,
+     "count": 3
+    },
+    {
+     "gsid": 41296,
+     "count": 4
+    },
+    {
+     "gsid": 42166,
+     "count": 2
+    },
+    {
+     "gsid": 22165,
+     "count": 3
+    },
+    {
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "gsid": 42180,
+     "count": 2
+    }
+   ],
+   "deck": [
+    {
+     "key": "Life_LifeDamageBlade",
+     "gsid": 22170,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22295,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 41173,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 22174,
+     "count": 2
+    },
+    {
+     "key": "Life_SingleHeal_ForLife_Level2_Green",
+     "gsid": 41177,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22178,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41178,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41120,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "key": "Ice_GlobalShield_Green",
+     "gsid": 41142,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "key": "Life_SingleAttack_Level4_Blue",
+     "gsid": 42163,
+     "count": 1
+    },
+    {
+     "key": "Life_SingleAttack_Level4_Green",
+     "gsid": 41163,
+     "count": 2
+    },
+    {
+     "key": "Life_SingleHeal_Level4",
+     "gsid": 22164,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 41296,
+     "count": 4
+    },
+    {
+     "key": "Life_LifeGlobalAura_Blue",
+     "gsid": 42166,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22165,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42180,
+     "count": 2
+    }
+   ],
+   "resolvedRatio": 0.38095238095238093
+  },
+  {
+   "from": 800,
+   "to": 1100,
+   "style": "AggressiveLife",
+   "cards": [
+    {
+     "gsid": 42170,
+     "count": 4
+    },
+    {
+     "gsid": 43295,
+     "count": 5
+    },
+    {
+     "gsid": 42173,
+     "count": 1
+    },
+    {
+     "gsid": 42174,
+     "count": 2
+    },
+    {
+     "gsid": 43177,
+     "count": 3
+    },
+    {
+     "gsid": 42178,
+     "count": 2
+    },
+    {
+     "gsid": 43178,
+     "count": 2
+    },
+    {
+     "gsid": 43120,
+     "count": 3
+    },
+    {
+     "gsid": 42157,
+     "count": 4
+    },
+    {
+     "gsid": 42138,
+     "count": 4
+    },
+    {
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "gsid": 42142,
+     "count": 3
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "gsid": 43163,
+     "count": 1
+    },
+    {
+     "gsid": 42163,
+     "count": 2
+    },
+    {
+     "gsid": 42164,
+     "count": 3
+    },
+    {
+     "gsid": 43296,
+     "count": 4
+    },
+    {
+     "gsid": 43166,
+     "count": 2
+    },
+    {
+     "gsid": 42165,
+     "count": 3
+    },
+    {
+     "gsid": 43199,
+     "count": 4
+    },
+    {
+     "gsid": 43180,
+     "count": 2
+    }
+   ],
+   "deck": [
+    {
+     "key": "Life_LifeDamageBlade_Blue",
+     "gsid": 42170,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 43295,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 42173,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42174,
+     "count": 2
+    },
+    {
+     "key": "Life_SingleHeal_ForLife_Level2_Purple",
+     "gsid": 43177,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42178,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43178,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43120,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42157,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 4
+    },
+    {
+     "key": "Ice_GlobalShield_Purple",
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "key": "Life_SingleAttack_Level4_Purple",
+     "gsid": 43163,
+     "count": 1
+    },
+    {
+     "key": "Life_SingleAttack_Level4_Blue",
+     "gsid": 42163,
+     "count": 2
+    },
+    {
+     "key": "Life_SingleHeal_Level4_Blue",
+     "gsid": 42164,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43296,
+     "count": 4
+    },
+    {
+     "key": "Life_LifeGlobalAura_Purple",
+     "gsid": 43166,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42165,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43199,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 43180,
+     "count": 2
+    }
+   ],
+   "resolvedRatio": 0.38095238095238093
+  },
+  {
+   "from": 1100,
+   "to": 1000000,
+   "style": "AggressiveLife",
+   "cards": [
+    {
+     "gsid": 42170,
+     "count": 4
+    },
+    {
+     "gsid": 43295,
+     "count": 5
+    },
+    {
+     "gsid": 42173,
+     "count": 1
+    },
+    {
+     "gsid": 42174,
+     "count": 2
+    },
+    {
+     "gsid": 43177,
+     "count": 3
+    },
+    {
+     "gsid": 42178,
+     "count": 2
+    },
+    {
+     "gsid": 43178,
+     "count": 2
+    },
+    {
+     "gsid": 43120,
+     "count": 3
+    },
+    {
+     "gsid": 42157,
+     "count": 4
+    },
+    {
+     "gsid": 42138,
+     "count": 4
+    },
+    {
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "gsid": 42142,
+     "count": 3
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "gsid": 43163,
+     "count": 1
+    },
+    {
+     "gsid": 42163,
+     "count": 2
+    },
+    {
+     "gsid": 42164,
+     "count": 3
+    },
+    {
+     "gsid": 43296,
+     "count": 4
+    },
+    {
+     "gsid": 43166,
+     "count": 2
+    },
+    {
+     "gsid": 42165,
+     "count": 3
+    },
+    {
+     "gsid": 43199,
+     "count": 4
+    },
+    {
+     "gsid": 43180,
+     "count": 2
+    }
+   ],
+   "deck": [
+    {
+     "key": "Life_LifeDamageBlade_Blue",
+     "gsid": 42170,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 43295,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 42173,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42174,
+     "count": 2
+    },
+    {
+     "key": "Life_SingleHeal_ForLife_Level2_Purple",
+     "gsid": 43177,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42178,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43178,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43120,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42157,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 4
+    },
+    {
+     "key": "Ice_GlobalShield_Purple",
+     "gsid": 43142,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "key": "Life_SingleAttack_Level4_Purple",
+     "gsid": 43163,
+     "count": 1
+    },
+    {
+     "key": "Life_SingleAttack_Level4_Blue",
+     "gsid": 42163,
+     "count": 2
+    },
+    {
+     "key": "Life_SingleHeal_Level4_Blue",
+     "gsid": 42164,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43296,
+     "count": 4
+    },
+    {
+     "key": "Life_LifeGlobalAura_Purple",
+     "gsid": 43166,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42165,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43199,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 43180,
+     "count": 2
+    }
+   ],
+   "resolvedRatio": 0.38095238095238093
+  }
+ ],
+ "death": [
+  {
+   "from": 0,
+   "to": 400,
+   "style": "AggressiveDeath",
+   "cards": [
+    {
+     "gsid": 22190,
+     "count": 4
+    },
+    {
+     "gsid": 22192,
+     "count": 3
+    },
+    {
+     "gsid": 22194,
+     "count": 4
+    },
+    {
+     "gsid": 22334,
+     "count": 4
+    },
+    {
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "gsid": 22197,
+     "count": 2
+    },
+    {
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "gsid": 22184,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "gsid": 22185,
+     "count": 4
+    },
+    {
+     "gsid": 22186,
+     "count": 4
+    },
+    {
+     "gsid": 22295,
+     "count": 4
+    },
+    {
+     "gsid": 22187,
+     "count": 2
+    },
+    {
+     "gsid": 22296,
+     "count": 4
+    },
+    {
+     "gsid": 22188,
+     "count": 3
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "gsid": 22189,
+     "count": 4
+    },
+    {
+     "gsid": 22157,
+     "count": 4
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 22190,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22192,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22194,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22334,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22197,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "key": "Death_SingleAttackWithLifeTap_Level4",
+     "gsid": 22184,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "key": "Death_SingleAttack_Level5",
+     "gsid": 22185,
+     "count": 4
+    },
+    {
+     "key": "Death_SymmetryGlobalTrap",
+     "gsid": 22186,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22295,
+     "count": 4
+    },
+    {
+     "key": "Death_DeathGlobalAura",
+     "gsid": 22187,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22296,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22188,
+     "count": 3
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22189,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 4
+    }
+   ],
+   "resolvedRatio": 0.2631578947368421
+  },
+  {
+   "from": 400,
+   "to": 600,
+   "style": "AggressiveDeath",
+   "cards": [
+    {
+     "gsid": 22190,
+     "count": 4
+    },
+    {
+     "gsid": 22192,
+     "count": 3
+    },
+    {
+     "gsid": 22194,
+     "count": 4
+    },
+    {
+     "gsid": 22334,
+     "count": 4
+    },
+    {
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "gsid": 22197,
+     "count": 2
+    },
+    {
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "gsid": 22184,
+     "count": 4
+    },
+    {
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "gsid": 22185,
+     "count": 4
+    },
+    {
+     "gsid": 22186,
+     "count": 4
+    },
+    {
+     "gsid": 22295,
+     "count": 4
+    },
+    {
+     "gsid": 22187,
+     "count": 2
+    },
+    {
+     "gsid": 22296,
+     "count": 4
+    },
+    {
+     "gsid": 22188,
+     "count": 3
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "gsid": 22189,
+     "count": 4
+    },
+    {
+     "gsid": 22157,
+     "count": 4
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 22190,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22192,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22194,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22334,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22180,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22197,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22120,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 4
+    },
+    {
+     "key": "Death_SingleAttackWithLifeTap_Level4",
+     "gsid": 22184,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "key": "Death_SingleAttack_Level5",
+     "gsid": 22185,
+     "count": 4
+    },
+    {
+     "key": "Death_SymmetryGlobalTrap",
+     "gsid": 22186,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22295,
+     "count": 4
+    },
+    {
+     "key": "Death_DeathGlobalAura",
+     "gsid": 22187,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22296,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22188,
+     "count": 3
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22189,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22157,
+     "count": 4
+    }
+   ],
+   "resolvedRatio": 0.2631578947368421
+  },
+  {
+   "from": 600,
+   "to": 800,
+   "style": "AggressiveDeath",
+   "cards": [
+    {
+     "gsid": 41190,
+     "count": 2
+    },
+    {
+     "gsid": 41295,
+     "count": 5
+    },
+    {
+     "gsid": 41142,
+     "count": 1
+    },
+    {
+     "gsid": 41192,
+     "count": 3
+    },
+    {
+     "gsid": 41194,
+     "count": 2
+    },
+    {
+     "gsid": 22334,
+     "count": 2
+    },
+    {
+     "gsid": 22195,
+     "count": 2
+    },
+    {
+     "gsid": 41197,
+     "count": 2
+    },
+    {
+     "gsid": 22120,
+     "count": 3
+    },
+    {
+     "gsid": 22184,
+     "count": 2
+    },
+    {
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "gsid": 41185,
+     "count": 3
+    },
+    {
+     "gsid": 22199,
+     "count": 3
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "gsid": 41157,
+     "count": 3
+    },
+    {
+     "gsid": 22187,
+     "count": 3
+    },
+    {
+     "gsid": 22296,
+     "count": 4
+    },
+    {
+     "gsid": 42188,
+     "count": 2
+    },
+    {
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "gsid": 22189,
+     "count": 4
+    },
+    {
+     "gsid": 41180,
+     "count": 3
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 41190,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41295,
+     "count": 5
+    },
+    {
+     "key": "Ice_GlobalShield_Green",
+     "gsid": 41142,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 41192,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 41194,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22334,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22195,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 41197,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22120,
+     "count": 3
+    },
+    {
+     "key": "Death_SingleAttackWithLifeTap_Level4",
+     "gsid": 22184,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 22138,
+     "count": 4
+    },
+    {
+     "key": "Death_SingleAttack_Level5_Green",
+     "gsid": 41185,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22199,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 41157,
+     "count": 3
+    },
+    {
+     "key": "Death_DeathGlobalAura",
+     "gsid": 22187,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 22296,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42188,
+     "count": 2
+    },
+    {
+     "key": "Ice_GlobalShield",
+     "gsid": 22142,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 22189,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 41180,
+     "count": 3
+    }
+   ],
+   "resolvedRatio": 0.23809523809523808
+  },
+  {
+   "from": 800,
+   "to": 1100,
+   "style": "AggressiveDeath",
+   "cards": [
+    {
+     "gsid": 42190,
+     "count": 5
+    },
+    {
+     "gsid": 42295,
+     "count": 5
+    },
+    {
+     "gsid": 42142,
+     "count": 5
+    },
+    {
+     "gsid": 42192,
+     "count": 3
+    },
+    {
+     "gsid": 42194,
+     "count": 2
+    },
+    {
+     "gsid": 42334,
+     "count": 2
+    },
+    {
+     "gsid": 42195,
+     "count": 2
+    },
+    {
+     "gsid": 42197,
+     "count": 2
+    },
+    {
+     "gsid": 42120,
+     "count": 5
+    },
+    {
+     "gsid": 42184,
+     "count": 2
+    },
+    {
+     "gsid": 42138,
+     "count": 4
+    },
+    {
+     "gsid": 42185,
+     "count": 3
+    },
+    {
+     "gsid": 42199,
+     "count": 5
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "gsid": 42157,
+     "count": 3
+    },
+    {
+     "gsid": 42187,
+     "count": 3
+    },
+    {
+     "gsid": 42296,
+     "count": 4
+    },
+    {
+     "gsid": 42188,
+     "count": 2
+    },
+    {
+     "gsid": 42189,
+     "count": 4
+    },
+    {
+     "gsid": 42180,
+     "count": 4
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 42190,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 42295,
+     "count": 5
+    },
+    {
+     "key": "Ice_GlobalShield_Blue",
+     "gsid": 42142,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 42192,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42194,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42334,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42195,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42197,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42120,
+     "count": 5
+    },
+    {
+     "key": "Death_SingleAttackWithLifeTap_Level4_Blue",
+     "gsid": 42184,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42138,
+     "count": 4
+    },
+    {
+     "key": "Death_SingleAttack_Level5_Blue",
+     "gsid": 42185,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42199,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 42157,
+     "count": 3
+    },
+    {
+     "key": "Death_DeathGlobalAura_Blue",
+     "gsid": 42187,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 42296,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42188,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 42189,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 42180,
+     "count": 4
+    }
+   ],
+   "resolvedRatio": 0.2
+  },
+  {
+   "from": 1100,
+   "to": 1000000,
+   "style": "AggressiveDeath",
+   "cards": [
+    {
+     "gsid": 43190,
+     "count": 5
+    },
+    {
+     "gsid": 43295,
+     "count": 5
+    },
+    {
+     "gsid": 43142,
+     "count": 5
+    },
+    {
+     "gsid": 42192,
+     "count": 3
+    },
+    {
+     "gsid": 43194,
+     "count": 2
+    },
+    {
+     "gsid": 43334,
+     "count": 2
+    },
+    {
+     "gsid": 43195,
+     "count": 2
+    },
+    {
+     "gsid": 43197,
+     "count": 2
+    },
+    {
+     "gsid": 43120,
+     "count": 5
+    },
+    {
+     "gsid": 43184,
+     "count": 2
+    },
+    {
+     "gsid": 43138,
+     "count": 4
+    },
+    {
+     "gsid": 43185,
+     "count": 3
+    },
+    {
+     "gsid": 43199,
+     "count": 5
+    },
+    {
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "gsid": 43157,
+     "count": 3
+    },
+    {
+     "gsid": 43187,
+     "count": 3
+    },
+    {
+     "gsid": 43296,
+     "count": 4
+    },
+    {
+     "gsid": 43188,
+     "count": 2
+    },
+    {
+     "gsid": 43189,
+     "count": 4
+    },
+    {
+     "gsid": 43180,
+     "count": 4
+    }
+   ],
+   "deck": [
+    {
+     "key": null,
+     "gsid": 43190,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 43295,
+     "count": 5
+    },
+    {
+     "key": "Ice_GlobalShield_Purple",
+     "gsid": 43142,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 42192,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43194,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43334,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43195,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43197,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43120,
+     "count": 5
+    },
+    {
+     "key": "Death_SingleAttackWithLifeTap_Level4_Purple",
+     "gsid": 43184,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43138,
+     "count": 4
+    },
+    {
+     "key": "Death_SingleAttack_Level5_Purple",
+     "gsid": 43185,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43199,
+     "count": 5
+    },
+    {
+     "key": null,
+     "gsid": 42418,
+     "count": 1
+    },
+    {
+     "key": null,
+     "gsid": 43157,
+     "count": 3
+    },
+    {
+     "key": "Death_DeathGlobalAura_Purple",
+     "gsid": 43187,
+     "count": 3
+    },
+    {
+     "key": null,
+     "gsid": 43296,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 43188,
+     "count": 2
+    },
+    {
+     "key": null,
+     "gsid": 43189,
+     "count": 4
+    },
+    {
+     "key": null,
+     "gsid": 43180,
+     "count": 4
+    }
+   ],
+   "resolvedRatio": 0.2
+  }
+ ]
+}

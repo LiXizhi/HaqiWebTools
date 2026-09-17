@@ -1,0 +1,3138 @@
+{
+ "charm": {
+  "11": {
+   "id": 11,
+   "boost_damage": 60,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22109,
+   "desc": "烈火专注：+60%烈火攻击"
+  },
+  "12": {
+   "id": 12,
+   "boost_hitchance": -40,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22116,
+   "desc": "烟雾：-40%命中"
+  },
+  "13": {
+   "id": 13,
+   "dispel_school": "fire",
+   "positive": false,
+   "icon_gsid": 22119,
+   "desc": "烈火封锁：无法施放下一次烈火魔法"
+  },
+  "14": {
+   "id": 14,
+   "boost_accuracy": 50,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22129,
+   "desc": "风暴精准：+50%风暴命中"
+  },
+  "15": {
+   "id": 15,
+   "boost_damage": 60,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22130,
+   "desc": "风暴专注：+60%风暴攻击"
+  },
+  "16": {
+   "id": 16,
+   "dispel_school": "storm",
+   "positive": false,
+   "icon_gsid": 22137,
+   "desc": "风暴封锁：无法施放下一次风暴魔法"
+  },
+  "17": {
+   "id": 17,
+   "boost_damage": 60,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22153,
+   "desc": "寒冰专注：+60%寒冰攻击"
+  },
+  "18": {
+   "id": 18,
+   "dispel_school": "ice",
+   "positive": false,
+   "icon_gsid": 22155,
+   "desc": "寒冰封锁：无法施放下一次寒冰魔法"
+  },
+  "19": {
+   "id": 19,
+   "boost_damage": 60,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22170,
+   "desc": "生命专注：+60%生命攻击"
+  },
+  "20": {
+   "id": 20,
+   "boost_hitchance": 30,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22171,
+   "desc": "生命之礼：+30%命中"
+  },
+  "21": {
+   "id": 21,
+   "boost_heal": 20,
+   "positive": true,
+   "icon_gsid": 22172,
+   "desc": "治疗专注：提升20%治疗效果"
+  },
+  "22": {
+   "id": 22,
+   "dispel_school": "life",
+   "positive": false,
+   "icon_gsid": 22179,
+   "desc": "生命封锁：无法施放下一次生命魔法"
+  },
+  "23": {
+   "id": 23,
+   "boost_damage": 60,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22190,
+   "desc": "死亡专注：+60%死亡攻击"
+  },
+  "24": {
+   "id": 24,
+   "boost_damage": -40,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22195,
+   "desc": "群之羁绊：-40%任意攻击"
+  },
+  "25": {
+   "id": 25,
+   "boost_heal": -50,
+   "positive": false,
+   "icon_gsid": 22197,
+   "desc": "死亡巫术：-50%治疗效果"
+  },
+  "26": {
+   "id": 26,
+   "dispel_school": "death",
+   "positive": false,
+   "icon_gsid": 22198,
+   "desc": "死亡封锁：无法施放下一次死亡魔法"
+  },
+  "27": {
+   "id": 27,
+   "boost_heal": 25,
+   "positive": true,
+   "icon_gsid": 22256,
+   "desc": "治疗术：+25%治疗效果"
+  },
+  "28": {
+   "id": 28,
+   "boost_damage": 65,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22310,
+   "desc": "生命术：+65%生命攻击"
+  },
+  "29": {
+   "id": 29,
+   "boost_accuracy": -1000,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22116,
+   "desc": "烟雾：-100%法术命中"
+  },
+  "30": {
+   "id": 30,
+   "positive": true,
+   "icon_gsid": 22383,
+   "desc": "灵魂替身：死亡后复活并补血"
+  },
+  "31": {
+   "id": 31,
+   "boost_damage": 65,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22414,
+   "desc": "烈火术：+65%烈火攻击"
+  },
+  "32": {
+   "id": 32,
+   "boost_damage": 65,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22417,
+   "desc": "风暴术：+65%风暴攻击"
+  },
+  "33": {
+   "id": 33,
+   "boost_damage": 65,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22415,
+   "desc": "寒冰术：+65%寒冰攻击"
+  },
+  "34": {
+   "id": 34,
+   "boost_damage": 65,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22416,
+   "desc": "生命术：+65%生命攻击"
+  },
+  "35": {
+   "id": 35,
+   "boost_damage": 65,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22413,
+   "desc": "死亡术：+65%死亡攻击"
+  },
+  "36": {
+   "id": 36,
+   "positive": true,
+   "icon_gsid": 23412,
+   "desc": "威慑姿态"
+  },
+  "37": {
+   "id": 37,
+   "boost_damage": 200,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22429,
+   "desc": "元素之怒：下一次攻击伤害提升200%"
+  },
+  "38": {
+   "id": 38,
+   "boost_heal": 45,
+   "positive": true,
+   "icon_gsid": 22430,
+   "desc": "治疗神符：提升45%治疗效果"
+  },
+  "39": {
+   "id": 39,
+   "boost_damage": 65,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22450,
+   "desc": "灵魂术：+65%任意攻击"
+  },
+  "1011": {
+   "id": 1011,
+   "boost_damage": 65,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 41109,
+   "desc": "烈火专注：+65%烈火攻击"
+  },
+  "1012": {
+   "id": 1012,
+   "boost_hitchance": -45,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 41116,
+   "desc": "烟雾：-45%命中"
+  },
+  "1013": {
+   "id": 1013,
+   "dispel_school": "fire",
+   "positive": false,
+   "icon_gsid": 41119,
+   "desc": "烈火封锁：无法施放下一次烈火魔法"
+  },
+  "1014": {
+   "id": 1014,
+   "boost_accuracy": 55,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 41129,
+   "desc": "风暴精准：+55%风暴命中"
+  },
+  "1015": {
+   "id": 1015,
+   "boost_damage": 65,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 41130,
+   "desc": "风暴专注：+65%风暴攻击"
+  },
+  "1016": {
+   "id": 1016,
+   "dispel_school": "storm",
+   "positive": false,
+   "icon_gsid": 41137,
+   "desc": "风暴封锁：无法施放下一次风暴魔法"
+  },
+  "1017": {
+   "id": 1017,
+   "boost_damage": 65,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 41153,
+   "desc": "寒冰专注：+65%寒冰攻击"
+  },
+  "1018": {
+   "id": 1018,
+   "dispel_school": "ice",
+   "positive": false,
+   "icon_gsid": 41155,
+   "desc": "寒冰封锁：无法施放下一次寒冰魔法"
+  },
+  "1019": {
+   "id": 1019,
+   "boost_damage": 65,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 41170,
+   "desc": "生命专注：+65%生命攻击"
+  },
+  "1020": {
+   "id": 1020,
+   "boost_hitchance": 35,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 41171,
+   "desc": "生命之礼：+35%命中"
+  },
+  "1021": {
+   "id": 1021,
+   "boost_heal": 25,
+   "positive": true,
+   "icon_gsid": 41172,
+   "desc": "治疗专注：提升25%治疗效果"
+  },
+  "1022": {
+   "id": 1022,
+   "dispel_school": "life",
+   "positive": false,
+   "icon_gsid": 41179,
+   "desc": "生命封锁：无法施放下一次生命魔法"
+  },
+  "1023": {
+   "id": 1023,
+   "boost_damage": 65,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 41190,
+   "desc": "死亡专注：+65%死亡攻击"
+  },
+  "1024": {
+   "id": 1024,
+   "boost_damage": -45,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 41195,
+   "desc": "群之羁绊：-45%任意攻击"
+  },
+  "1025": {
+   "id": 1025,
+   "boost_heal": -55,
+   "positive": false,
+   "icon_gsid": 41197,
+   "desc": "死亡巫术：-55%治疗效果"
+  },
+  "1026": {
+   "id": 1026,
+   "dispel_school": "death",
+   "positive": false,
+   "icon_gsid": 41198,
+   "desc": "死亡封锁：无法施放下一次死亡魔法"
+  },
+  "1027": {
+   "id": 1027,
+   "boost_heal": 30,
+   "positive": true,
+   "icon_gsid": 41256,
+   "desc": "治疗术：+30%治疗效果"
+  },
+  "1028": {
+   "id": 1028,
+   "boost_damage": 70,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 41310,
+   "desc": "生命术：+70%生命攻击"
+  },
+  "1029": {
+   "id": 1029,
+   "boost_accuracy": -1000,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 41116,
+   "desc": "烟雾：-100%法术命中"
+  },
+  "1030": {
+   "id": 1030,
+   "positive": true,
+   "icon_gsid": 41383,
+   "desc": "灵魂替身：死亡后复活并补血"
+  },
+  "1031": {
+   "id": 1031,
+   "boost_damage": 70,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 41414,
+   "desc": "烈火术：+70%烈火攻击"
+  },
+  "1032": {
+   "id": 1032,
+   "boost_damage": 70,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 41417,
+   "desc": "风暴术：+70%风暴攻击"
+  },
+  "1033": {
+   "id": 1033,
+   "boost_damage": 70,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 41415,
+   "desc": "寒冰术：+70%寒冰攻击"
+  },
+  "1034": {
+   "id": 1034,
+   "boost_damage": 70,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 41416,
+   "desc": "生命术：+70%生命攻击"
+  },
+  "1035": {
+   "id": 1035,
+   "boost_damage": 70,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 41413,
+   "desc": "死亡术：+70%死亡攻击"
+  },
+  "1039": {
+   "id": 1039,
+   "boost_damage": 70,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 41450,
+   "desc": "灵魂术：+70%任意攻击"
+  },
+  "2011": {
+   "id": 2011,
+   "boost_damage": 70,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 42109,
+   "desc": "烈火专注：+70%烈火攻击"
+  },
+  "2012": {
+   "id": 2012,
+   "boost_hitchance": -50,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 42116,
+   "desc": "烟雾：-50%命中"
+  },
+  "2013": {
+   "id": 2013,
+   "dispel_school": "fire",
+   "positive": false,
+   "icon_gsid": 42119,
+   "desc": "烈火封锁：无法施放下一次烈火魔法"
+  },
+  "2014": {
+   "id": 2014,
+   "boost_accuracy": 60,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 42129,
+   "desc": "风暴精准：+60%风暴命中"
+  },
+  "2015": {
+   "id": 2015,
+   "boost_damage": 70,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 42130,
+   "desc": "风暴专注：+70%风暴攻击"
+  },
+  "2016": {
+   "id": 2016,
+   "dispel_school": "storm",
+   "positive": false,
+   "icon_gsid": 42137,
+   "desc": "风暴封锁：无法施放下一次风暴魔法"
+  },
+  "2017": {
+   "id": 2017,
+   "boost_damage": 70,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 42153,
+   "desc": "寒冰专注：+70%寒冰攻击"
+  },
+  "2018": {
+   "id": 2018,
+   "dispel_school": "ice",
+   "positive": false,
+   "icon_gsid": 42155,
+   "desc": "寒冰封锁：无法施放下一次寒冰魔法"
+  },
+  "2019": {
+   "id": 2019,
+   "boost_damage": 70,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 42170,
+   "desc": "生命专注：+70%生命攻击"
+  },
+  "2020": {
+   "id": 2020,
+   "boost_hitchance": 40,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 42171,
+   "desc": "生命之礼：+40%命中"
+  },
+  "2021": {
+   "id": 2021,
+   "boost_heal": 30,
+   "positive": true,
+   "icon_gsid": 42172,
+   "desc": "治疗专注：提升30%治疗效果"
+  },
+  "2022": {
+   "id": 2022,
+   "dispel_school": "life",
+   "positive": false,
+   "icon_gsid": 42179,
+   "desc": "生命封锁：无法施放下一次生命魔法"
+  },
+  "2023": {
+   "id": 2023,
+   "boost_damage": 70,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 42190,
+   "desc": "死亡专注：+70%死亡攻击"
+  },
+  "2024": {
+   "id": 2024,
+   "boost_damage": -50,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 42195,
+   "desc": "群之羁绊：-50%任意攻击"
+  },
+  "2025": {
+   "id": 2025,
+   "boost_heal": -60,
+   "positive": false,
+   "icon_gsid": 42197,
+   "desc": "死亡巫术：-60%治疗效果"
+  },
+  "2026": {
+   "id": 2026,
+   "dispel_school": "death",
+   "positive": false,
+   "icon_gsid": 42198,
+   "desc": "死亡封锁：无法施放下一次死亡魔法"
+  },
+  "2027": {
+   "id": 2027,
+   "boost_heal": 35,
+   "positive": true,
+   "icon_gsid": 42256,
+   "desc": "治疗术：+35%治疗效果"
+  },
+  "2028": {
+   "id": 2028,
+   "boost_damage": 75,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 42310,
+   "desc": "生命术：+75%生命攻击"
+  },
+  "2029": {
+   "id": 2029,
+   "boost_accuracy": -1000,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 42116,
+   "desc": "烟雾：-100%法术命中"
+  },
+  "2030": {
+   "id": 2030,
+   "positive": true,
+   "icon_gsid": 42383,
+   "desc": "灵魂替身：死亡后复活并补血"
+  },
+  "2031": {
+   "id": 2031,
+   "boost_damage": 75,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 42414,
+   "desc": "烈火术：+75%烈火攻击"
+  },
+  "2032": {
+   "id": 2032,
+   "boost_damage": 75,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 42417,
+   "desc": "风暴术：+75%风暴攻击"
+  },
+  "2033": {
+   "id": 2033,
+   "boost_damage": 75,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 42415,
+   "desc": "寒冰术：+75%寒冰攻击"
+  },
+  "2034": {
+   "id": 2034,
+   "boost_damage": 75,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 42416,
+   "desc": "生命术：+75%生命攻击"
+  },
+  "2035": {
+   "id": 2035,
+   "boost_damage": 75,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 42413,
+   "desc": "死亡术：+75%死亡攻击"
+  },
+  "2039": {
+   "id": 2039,
+   "boost_damage": 75,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 42450,
+   "desc": "灵魂术：+75%任意攻击"
+  },
+  "3011": {
+   "id": 3011,
+   "boost_damage": 75,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 43109,
+   "desc": "烈火专注：+75%烈火攻击"
+  },
+  "3012": {
+   "id": 3012,
+   "boost_hitchance": -55,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 43116,
+   "desc": "烟雾：-55%命中"
+  },
+  "3013": {
+   "id": 3013,
+   "dispel_school": "fire",
+   "positive": false,
+   "icon_gsid": 43119,
+   "desc": "烈火封锁：无法施放下一次烈火魔法"
+  },
+  "3014": {
+   "id": 3014,
+   "boost_accuracy": 65,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 43129,
+   "desc": "风暴精准：+65%风暴命中"
+  },
+  "3015": {
+   "id": 3015,
+   "boost_damage": 75,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 43130,
+   "desc": "风暴专注：+75%风暴攻击"
+  },
+  "3016": {
+   "id": 3016,
+   "dispel_school": "storm",
+   "positive": false,
+   "icon_gsid": 43137,
+   "desc": "风暴封锁：无法施放下一次风暴魔法"
+  },
+  "3017": {
+   "id": 3017,
+   "boost_damage": 75,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 43153,
+   "desc": "寒冰专注：+75%寒冰攻击"
+  },
+  "3018": {
+   "id": 3018,
+   "dispel_school": "ice",
+   "positive": false,
+   "icon_gsid": 43155,
+   "desc": "寒冰封锁：无法施放下一次寒冰魔法"
+  },
+  "3019": {
+   "id": 3019,
+   "boost_damage": 75,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 43170,
+   "desc": "生命专注：+75%生命攻击"
+  },
+  "3020": {
+   "id": 3020,
+   "boost_hitchance": 45,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 43171,
+   "desc": "生命之礼：+45%命中"
+  },
+  "3021": {
+   "id": 3021,
+   "boost_heal": 35,
+   "positive": true,
+   "icon_gsid": 43172,
+   "desc": "治疗专注：提升35%治疗效果"
+  },
+  "3022": {
+   "id": 3022,
+   "dispel_school": "life",
+   "positive": false,
+   "icon_gsid": 43179,
+   "desc": "生命封锁：无法施放下一次生命魔法"
+  },
+  "3023": {
+   "id": 3023,
+   "boost_damage": 75,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 43190,
+   "desc": "死亡专注：+75%死亡攻击"
+  },
+  "3024": {
+   "id": 3024,
+   "boost_damage": -55,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 43195,
+   "desc": "群之羁绊：-55%任意攻击"
+  },
+  "3025": {
+   "id": 3025,
+   "boost_heal": -65,
+   "positive": false,
+   "icon_gsid": 43197,
+   "desc": "死亡巫术：-65%治疗效果"
+  },
+  "3026": {
+   "id": 3026,
+   "dispel_school": "death",
+   "positive": false,
+   "icon_gsid": 43198,
+   "desc": "死亡封锁：无法施放下一次死亡魔法"
+  },
+  "3027": {
+   "id": 3027,
+   "boost_heal": 40,
+   "positive": true,
+   "icon_gsid": 43256,
+   "desc": "治疗术：+40%治疗效果"
+  },
+  "3028": {
+   "id": 3028,
+   "boost_damage": 80,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 43310,
+   "desc": "生命术：+80%生命攻击"
+  },
+  "3029": {
+   "id": 3029,
+   "boost_accuracy": -1000,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 43116,
+   "desc": "烟雾：-100%法术命中"
+  },
+  "3030": {
+   "id": 3030,
+   "positive": true,
+   "icon_gsid": 43383,
+   "desc": "灵魂替身：死亡后复活并补血"
+  },
+  "3031": {
+   "id": 3031,
+   "boost_damage": 80,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 43414,
+   "desc": "烈火术：+80%烈火攻击"
+  },
+  "3032": {
+   "id": 3032,
+   "boost_damage": 80,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 43417,
+   "desc": "风暴术：+80%风暴攻击"
+  },
+  "3033": {
+   "id": 3033,
+   "boost_damage": 80,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 43415,
+   "desc": "寒冰术：+80%寒冰攻击"
+  },
+  "3034": {
+   "id": 3034,
+   "boost_damage": 80,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 43416,
+   "desc": "生命术：+80%生命攻击"
+  },
+  "3035": {
+   "id": 3035,
+   "boost_damage": 80,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 43413,
+   "desc": "死亡术：+80%死亡攻击"
+  },
+  "3039": {
+   "id": 3039,
+   "boost_damage": 80,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 43450,
+   "desc": "灵魂术：+80%任意攻击"
+  },
+  "4011": {
+   "id": 4011,
+   "boost_damage": 80,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 44109,
+   "desc": "烈火专注：+80%烈火攻击"
+  },
+  "4012": {
+   "id": 4012,
+   "boost_hitchance": -60,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 44116,
+   "desc": "烟雾：-60%命中"
+  },
+  "4013": {
+   "id": 4013,
+   "dispel_school": "fire",
+   "positive": false,
+   "icon_gsid": 44119,
+   "desc": "烈火封锁：无法施放下一次烈火魔法"
+  },
+  "4014": {
+   "id": 4014,
+   "boost_accuracy": 70,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 44129,
+   "desc": "风暴精准：+70%风暴命中"
+  },
+  "4015": {
+   "id": 4015,
+   "boost_damage": 80,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 44130,
+   "desc": "风暴专注：+80%风暴攻击"
+  },
+  "4016": {
+   "id": 4016,
+   "dispel_school": "storm",
+   "positive": false,
+   "icon_gsid": 44137,
+   "desc": "风暴封锁：无法施放下一次风暴魔法"
+  },
+  "4017": {
+   "id": 4017,
+   "boost_damage": 80,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 44153,
+   "desc": "寒冰专注：+80%寒冰攻击"
+  },
+  "4018": {
+   "id": 4018,
+   "dispel_school": "ice",
+   "positive": false,
+   "icon_gsid": 44155,
+   "desc": "寒冰封锁：无法施放下一次寒冰魔法"
+  },
+  "4019": {
+   "id": 4019,
+   "boost_damage": 80,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 44170,
+   "desc": "生命专注：+80%生命攻击"
+  },
+  "4020": {
+   "id": 4020,
+   "boost_hitchance": 50,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 44171,
+   "desc": "生命之礼：+50%命中"
+  },
+  "4021": {
+   "id": 4021,
+   "boost_heal": 40,
+   "positive": true,
+   "icon_gsid": 44172,
+   "desc": "治疗专注：提升40%治疗效果"
+  },
+  "4022": {
+   "id": 4022,
+   "dispel_school": "life",
+   "positive": false,
+   "icon_gsid": 44179,
+   "desc": "生命封锁：无法施放下一次生命魔法"
+  },
+  "4023": {
+   "id": 4023,
+   "boost_damage": 80,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 44190,
+   "desc": "死亡专注：+80%死亡攻击"
+  },
+  "4024": {
+   "id": 4024,
+   "boost_damage": -60,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 44195,
+   "desc": "群之羁绊：-60%任意攻击"
+  },
+  "4025": {
+   "id": 4025,
+   "boost_heal": -70,
+   "positive": false,
+   "icon_gsid": 44197,
+   "desc": "死亡巫术：-70%治疗效果"
+  },
+  "4026": {
+   "id": 4026,
+   "dispel_school": "death",
+   "positive": false,
+   "icon_gsid": 44198,
+   "desc": "死亡封锁：无法施放下一次死亡魔法"
+  },
+  "4027": {
+   "id": 4027,
+   "boost_heal": 40,
+   "positive": true,
+   "icon_gsid": 44256,
+   "desc": "治疗术：+40%治疗效果"
+  },
+  "4028": {
+   "id": 4028,
+   "boost_damage": 85,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 44310,
+   "desc": "生命术：+85%生命攻击"
+  },
+  "4029": {
+   "id": 4029,
+   "boost_accuracy": -1000,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 44116,
+   "desc": "烟雾：-100%法术命中"
+  },
+  "4030": {
+   "id": 4030,
+   "positive": true,
+   "icon_gsid": 44383,
+   "desc": "灵魂替身：死亡后复活并补血"
+  },
+  "4031": {
+   "id": 4031,
+   "boost_damage": 85,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 44414,
+   "desc": "烈火术：+85%烈火攻击"
+  },
+  "4032": {
+   "id": 4032,
+   "boost_damage": 85,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 44417,
+   "desc": "风暴术：+85%风暴攻击"
+  },
+  "4033": {
+   "id": 4033,
+   "boost_damage": 85,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 44415,
+   "desc": "寒冰术：+85%寒冰攻击"
+  },
+  "4034": {
+   "id": 4034,
+   "boost_damage": 85,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 44416,
+   "desc": "生命术：+85%生命攻击"
+  },
+  "4035": {
+   "id": 4035,
+   "boost_damage": 85,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 44413,
+   "desc": "死亡术：+85%死亡攻击"
+  },
+  "4039": {
+   "id": 4039,
+   "boost_damage": 85,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 44450,
+   "desc": "灵魂术：+85%任意攻击"
+  }
+ },
+ "ward": {
+  "21": {
+   "id": 21,
+   "boost_damage": 80,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22104,
+   "desc": "烈火诅咒：+80%烈火伤害"
+  },
+  "22": {
+   "id": 22,
+   "prism_from": "fire",
+   "prism_to": "ice",
+   "positive": false,
+   "icon_gsid": 22110,
+   "desc": "烈火棱镜：受到的烈火伤害转为寒冰伤害"
+  },
+  "23": {
+   "id": 23,
+   "boost_damage": -70,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22120,
+   "desc": "烈火盾：-70%烈火伤害"
+  },
+  "24": {
+   "id": 24,
+   "boost_damage": 80,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22124,
+   "desc": "风暴诅咒：+80%风暴伤害"
+  },
+  "25": {
+   "id": 25,
+   "boost_damage": 30,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22126,
+   "desc": "暴风魔咒：+30%风暴伤害"
+  },
+  "26": {
+   "id": 26,
+   "boost_damage": -70,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22138,
+   "desc": "风暴盾：-70%风暴伤害"
+  },
+  "27": {
+   "id": 27,
+   "boost_damage": -40,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "结界守护：-40%任意伤害"
+  },
+  "28": {
+   "id": 28,
+   "boost_damage": 80,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22148,
+   "desc": "寒冰诅咒：+80%寒冰伤害"
+  },
+  "29": {
+   "id": 29,
+   "prism_from": "ice",
+   "prism_to": "fire",
+   "positive": false,
+   "icon_gsid": 22149,
+   "desc": "寒冰棱镜：受到的寒冰伤害转为烈火伤害"
+  },
+  "30": {
+   "id": 30,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 22150,
+   "desc": "坚固壁垒：吸收{param}点伤害，受寒冰攻击加成"
+  },
+  "31": {
+   "id": 31,
+   "stunabsorb": true,
+   "positive": true,
+   "icon_gsid": 22156,
+   "desc": "眩晕吸收：吸收一次眩晕魔法"
+  },
+  "32": {
+   "id": 32,
+   "boost_damage": -70,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22157,
+   "desc": "寒冰盾：-70%寒冰伤害"
+  },
+  "33": {
+   "id": 33,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 22162,
+   "desc": "吸收盾：吸收{param}点伤害，受生命攻击加成"
+  },
+  "34": {
+   "id": 34,
+   "prism_from": "life",
+   "prism_to": "death",
+   "positive": false,
+   "icon_gsid": 22169,
+   "desc": "生命棱镜：受到的生命伤害转为死亡伤害"
+  },
+  "36": {
+   "id": 36,
+   "boost_damage": 80,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22178,
+   "desc": "生命诅咒：+80%生命伤害"
+  },
+  "37": {
+   "id": 37,
+   "boost_damage": -70,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22180,
+   "desc": "生命盾：-70%生命伤害"
+  },
+  "38": {
+   "id": 38,
+   "boost_damage": 110,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "死亡绝：+110%任意伤害"
+  },
+  "39": {
+   "id": 39,
+   "boost_damage": 30,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "死亡绝：+30%任意伤害"
+  },
+  "40": {
+   "id": 40,
+   "boost_damage": 80,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22189,
+   "desc": "死亡诅咒：+80%死亡伤害"
+  },
+  "41": {
+   "id": 41,
+   "prism_from": "death",
+   "prism_to": "life",
+   "positive": false,
+   "icon_gsid": 22191,
+   "desc": "死亡棱镜：受到的死亡伤害转为生命伤害"
+  },
+  "42": {
+   "id": 42,
+   "boost_damage": 30,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22193,
+   "desc": "黑暗诅咒：+30%任意伤害"
+  },
+  "43": {
+   "id": 43,
+   "boost_damage": -70,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22199,
+   "desc": "死亡盾：-70%死亡伤害"
+  },
+  "44": {
+   "id": 44,
+   "boost_damage": -80,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22257,
+   "desc": "坚冰结界：-80%任意伤害"
+  },
+  "45": {
+   "id": 45,
+   "boost_damage": -100,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "结界守护：-100%任意伤害"
+  },
+  "46": {
+   "id": 46,
+   "boost_damage": 85,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22304,
+   "desc": "死亡陷阱：+85%死亡伤害"
+  },
+  "47": {
+   "id": 47,
+   "boost_damage": 85,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22303,
+   "desc": "烈火陷阱：+85%烈火伤害"
+  },
+  "48": {
+   "id": 48,
+   "boost_damage": 85,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22305,
+   "desc": "生命陷阱：+85%生命伤害"
+  },
+  "49": {
+   "id": 49,
+   "boost_damage": 85,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22302,
+   "desc": "风暴陷阱：+85%风暴伤害"
+  },
+  "50": {
+   "id": 50,
+   "boost_damage": -85,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22307,
+   "desc": "烈火护盾：-85%烈火伤害"
+  },
+  "51": {
+   "id": 51,
+   "boost_damage": 85,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22309,
+   "desc": "寒冰陷阱：+85%寒冰伤害"
+  },
+  "52": {
+   "id": 52,
+   "stats": "(237,-30)",
+   "positive": false,
+   "icon_gsid": 22333,
+   "desc": "惊雷裂隙：-30%当前风暴防御"
+  },
+  "53": {
+   "id": 53,
+   "boost_heal": -100,
+   "positive": false,
+   "force_overtime": "disabledheal",
+   "icon_gsid": 22334,
+   "desc": "天魔杀星：不能被治疗"
+  },
+  "54": {
+   "id": 54,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 22332,
+   "desc": "冰霜魔镜：反射任何伤害，吸收{param}后破裂"
+  },
+  "55": {
+   "id": 55,
+   "stats": "(183,-50)",
+   "positive": false,
+   "force_overtime": "cursedheal",
+   "icon_gsid": 22341,
+   "desc": "瘟神巫术：-50%治疗效果"
+  },
+  "56": {
+   "id": 56,
+   "stats": "(102,-100)",
+   "positive": false,
+   "force_overtime": "cursedpowerpip",
+   "icon_gsid": 22343,
+   "desc": "魔力抑制：-100%双倍魔力生成率"
+  },
+  "57": {
+   "id": 57,
+   "stats": "(102,50)",
+   "positive": true,
+   "force_overtime": "boostpowerpip",
+   "icon_gsid": 22389,
+   "desc": "魔力爆发：+50%双倍魔力生成率"
+  },
+  "58": {
+   "id": 58,
+   "positive": true,
+   "icon_gsid": 22380,
+   "desc": "坚冰形态：减少20%攻击，提升30%防御，加大仇恨吸引"
+  },
+  "59": {
+   "id": 59,
+   "positive": true,
+   "icon_gsid": 22381,
+   "desc": "风影斗篷：无法被单体魔法攻击"
+  },
+  "60": {
+   "id": 60,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "绝对零度：无法再次被冰封"
+  },
+  "61": {
+   "id": 61,
+   "positive": true,
+   "icon_gsid": 23421,
+   "desc": "威慑姿态"
+  },
+  "62": {
+   "id": 62,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "免疫任何封锁魔法"
+  },
+  "63": {
+   "id": 63,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "免疫眩晕"
+  },
+  "64": {
+   "id": 64,
+   "stats": "(188,1000)",
+   "positive": true,
+   "icon_gsid": 23423,
+   "desc": "+100%闪避"
+  },
+  "65": {
+   "id": 65,
+   "boost_damage": 85,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22451,
+   "desc": "灵魂陷阱：+85%任意伤害"
+  },
+  "66": {
+   "id": 66,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "免疫冰封"
+  },
+  "67": {
+   "id": 67,
+   "controlabsorb": true,
+   "icon_gsid": 23427,
+   "desc": "傀儡吸收盾"
+  },
+  "68": {
+   "id": 68,
+   "positive": false,
+   "icon_gsid": 23426,
+   "desc": "傀儡术：陷于混乱状态，强制自动战斗"
+  },
+  "69": {
+   "id": 69,
+   "positive": true,
+   "icon_gsid": 22452,
+   "desc": "天使形态：治疗能力提高30%"
+  },
+  "70": {
+   "id": 70,
+   "positive": true,
+   "icon_gsid": 22453,
+   "desc": "烈焰形态：你的持续伤害必然暴击。"
+  },
+  "71": {
+   "id": 71,
+   "positive": true,
+   "icon_gsid": 22454,
+   "desc": "怒风形态：提升风暴伤害22%"
+  },
+  "72": {
+   "id": 72,
+   "positive": true,
+   "icon_gsid": 22455,
+   "desc": "暗影形态：每失去2%生命值会提升1%攻击力"
+  },
+  "73": {
+   "id": 73,
+   "positive": true,
+   "icon_gsid": 22456,
+   "desc": "冰噬形态：每次攻击降低目标全系防御10%"
+  },
+  "74": {
+   "id": 74,
+   "positive": true,
+   "icon_gsid": 22454,
+   "desc": "怒风形态：下次使用奇数技能，则每次得到5%伤害叠加"
+  },
+  "75": {
+   "id": 75,
+   "positive": true,
+   "icon_gsid": 22454,
+   "desc": "怒风形态：下次使用偶数技能，则每次得到5%伤害叠加"
+  },
+  "76": {
+   "id": 76,
+   "positive": true,
+   "icon_gsid": 22456,
+   "desc": "冰噬：降低全系防御10%，持续3回合"
+  },
+  "1021": {
+   "id": 1021,
+   "boost_damage": 85,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22104,
+   "desc": "烈火诅咒：+85%烈火伤害"
+  },
+  "1022": {
+   "id": 1022,
+   "prism_from": "fire",
+   "prism_to": "ice",
+   "positive": false,
+   "icon_gsid": 22110,
+   "desc": "烈火棱镜：受到的烈火伤害转为寒冰伤害"
+  },
+  "1023": {
+   "id": 1023,
+   "boost_damage": -75,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22120,
+   "desc": "烈火盾：-75%烈火伤害"
+  },
+  "1024": {
+   "id": 1024,
+   "boost_damage": 85,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22124,
+   "desc": "风暴诅咒：+85%风暴伤害"
+  },
+  "1025": {
+   "id": 1025,
+   "boost_damage": 35,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22126,
+   "desc": "暴风魔咒：+35%风暴伤害"
+  },
+  "1026": {
+   "id": 1026,
+   "boost_damage": -75,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22138,
+   "desc": "风暴盾：-75%风暴伤害"
+  },
+  "1027": {
+   "id": 1027,
+   "boost_damage": -45,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "结界守护：-45%任意伤害"
+  },
+  "1028": {
+   "id": 1028,
+   "boost_damage": 85,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22148,
+   "desc": "寒冰诅咒：+85%寒冰伤害"
+  },
+  "1029": {
+   "id": 1029,
+   "prism_from": "ice",
+   "prism_to": "fire",
+   "positive": false,
+   "icon_gsid": 22149,
+   "desc": "寒冰棱镜：受到的寒冰伤害转为烈火伤害"
+  },
+  "1030": {
+   "id": 1030,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 41150,
+   "desc": "坚固壁垒：吸收{param}点伤害，受寒冰攻击加成"
+  },
+  "1031": {
+   "id": 1031,
+   "stunabsorb": true,
+   "positive": true,
+   "icon_gsid": 22156,
+   "desc": "眩晕吸收：吸收一次眩晕魔法"
+  },
+  "1032": {
+   "id": 1032,
+   "boost_damage": -75,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22157,
+   "desc": "寒冰盾：-75%寒冰伤害"
+  },
+  "1033": {
+   "id": 1033,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 41162,
+   "desc": "吸收盾：吸收{param}点伤害，受生命攻击加成"
+  },
+  "1034": {
+   "id": 1034,
+   "prism_from": "life",
+   "prism_to": "death",
+   "positive": false,
+   "icon_gsid": 22169,
+   "desc": "生命棱镜：受到的生命伤害转为死亡伤害"
+  },
+  "1036": {
+   "id": 1036,
+   "boost_damage": 85,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22178,
+   "desc": "生命诅咒：+85%生命伤害"
+  },
+  "1037": {
+   "id": 1037,
+   "boost_damage": -75,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22180,
+   "desc": "生命盾：-75%生命伤害"
+  },
+  "1038": {
+   "id": 1038,
+   "boost_damage": 115,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "死亡绝：+115%任意伤害"
+  },
+  "1039": {
+   "id": 1039,
+   "boost_damage": 30,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "死亡绝：+30%任意伤害"
+  },
+  "1040": {
+   "id": 1040,
+   "boost_damage": 85,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22189,
+   "desc": "死亡诅咒：+85%死亡伤害"
+  },
+  "1041": {
+   "id": 1041,
+   "prism_from": "death",
+   "prism_to": "life",
+   "positive": false,
+   "icon_gsid": 22191,
+   "desc": "死亡棱镜：受到的死亡伤害转为生命伤害"
+  },
+  "1042": {
+   "id": 1042,
+   "boost_damage": 35,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22193,
+   "desc": "黑暗诅咒：+35%任意伤害"
+  },
+  "1043": {
+   "id": 1043,
+   "boost_damage": -75,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22199,
+   "desc": "死亡盾：-75%死亡伤害"
+  },
+  "1044": {
+   "id": 1044,
+   "boost_damage": -85,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22257,
+   "desc": "坚冰结界：-85%任意伤害"
+  },
+  "1045": {
+   "id": 1045,
+   "boost_damage": -100,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "结界守护：-100%任意伤害"
+  },
+  "1046": {
+   "id": 1046,
+   "boost_damage": 90,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22304,
+   "desc": "死亡陷阱：+90%死亡伤害"
+  },
+  "1047": {
+   "id": 1047,
+   "boost_damage": 90,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22303,
+   "desc": "烈火陷阱：+90%烈火伤害"
+  },
+  "1048": {
+   "id": 1048,
+   "boost_damage": 90,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22305,
+   "desc": "生命陷阱：+90%生命伤害"
+  },
+  "1049": {
+   "id": 1049,
+   "boost_damage": 90,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22302,
+   "desc": "风暴陷阱：+90%风暴伤害"
+  },
+  "1050": {
+   "id": 1050,
+   "boost_damage": -85,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22307,
+   "desc": "烈火护盾：-85%烈火伤害"
+  },
+  "1051": {
+   "id": 1051,
+   "boost_damage": 90,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22309,
+   "desc": "寒冰陷阱：+90%寒冰伤害"
+  },
+  "1052": {
+   "id": 1052,
+   "stats": "(237,-30)",
+   "positive": false,
+   "icon_gsid": 22333,
+   "desc": "惊雷裂隙：-30%当前风暴防御"
+  },
+  "1053": {
+   "id": 1053,
+   "boost_heal": -100,
+   "positive": false,
+   "force_overtime": "disabledheal",
+   "icon_gsid": 22334,
+   "desc": "天魔杀星：不能被治疗"
+  },
+  "1054": {
+   "id": 1054,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 41332,
+   "desc": "冰霜魔镜：反射任何伤害，吸收{param}后破裂"
+  },
+  "1055": {
+   "id": 1055,
+   "stats": "(183,-50)",
+   "positive": false,
+   "force_overtime": "cursedheal",
+   "icon_gsid": 22341,
+   "desc": "瘟神巫术：-50%治疗效果"
+  },
+  "1056": {
+   "id": 1056,
+   "stats": "(102,-80)",
+   "positive": false,
+   "force_overtime": "cursedpowerpip",
+   "icon_gsid": 22343,
+   "desc": "魔力抑制：-80%双倍魔力生成率"
+  },
+  "1057": {
+   "id": 1057,
+   "stats": "(102,40)",
+   "positive": true,
+   "force_overtime": "boostpowerpip",
+   "icon_gsid": 22389,
+   "desc": "魔力爆发：+40%双倍魔力生成率"
+  },
+  "1058": {
+   "id": 1058,
+   "positive": true,
+   "icon_gsid": 22380,
+   "desc": "坚冰形态：减少20%攻击，提升30%防御，加大仇恨吸引"
+  },
+  "1059": {
+   "id": 1059,
+   "positive": true,
+   "icon_gsid": 22381,
+   "desc": "风影斗篷：无法被单体魔法攻击"
+  },
+  "1060": {
+   "id": 1060,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "绝对零度：无法再次被冰封"
+  },
+  "1065": {
+   "id": 1065,
+   "boost_damage": 90,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 41451,
+   "desc": "灵魂陷阱：+90%任意伤害"
+  },
+  "2021": {
+   "id": 2021,
+   "boost_damage": 90,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22104,
+   "desc": "烈火诅咒：+90%烈火伤害"
+  },
+  "2022": {
+   "id": 2022,
+   "prism_from": "fire",
+   "prism_to": "ice",
+   "positive": false,
+   "icon_gsid": 22110,
+   "desc": "烈火棱镜：受到的烈火伤害转为寒冰伤害"
+  },
+  "2023": {
+   "id": 2023,
+   "boost_damage": -80,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22120,
+   "desc": "烈火盾：-80%烈火伤害"
+  },
+  "2024": {
+   "id": 2024,
+   "boost_damage": 90,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22124,
+   "desc": "风暴诅咒：+90%风暴伤害"
+  },
+  "2025": {
+   "id": 2025,
+   "boost_damage": 40,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22126,
+   "desc": "暴风魔咒：+40%风暴伤害"
+  },
+  "2026": {
+   "id": 2026,
+   "boost_damage": -80,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22138,
+   "desc": "风暴盾：-80%风暴伤害"
+  },
+  "2027": {
+   "id": 2027,
+   "boost_damage": -50,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "结界守护：-50%任意伤害"
+  },
+  "2028": {
+   "id": 2028,
+   "boost_damage": 90,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22148,
+   "desc": "寒冰诅咒：+90%寒冰伤害"
+  },
+  "2029": {
+   "id": 2029,
+   "prism_from": "ice",
+   "prism_to": "fire",
+   "positive": false,
+   "icon_gsid": 22149,
+   "desc": "寒冰棱镜：受到的寒冰伤害转为烈火伤害"
+  },
+  "2030": {
+   "id": 2030,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 42150,
+   "desc": "坚固壁垒：吸收{param}点伤害，受寒冰攻击加成"
+  },
+  "2031": {
+   "id": 2031,
+   "stunabsorb": true,
+   "positive": true,
+   "icon_gsid": 22156,
+   "desc": "眩晕吸收：吸收一次眩晕魔法"
+  },
+  "2032": {
+   "id": 2032,
+   "boost_damage": -80,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22157,
+   "desc": "寒冰盾：-80%寒冰伤害"
+  },
+  "2033": {
+   "id": 2033,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 42162,
+   "desc": "吸收盾：吸收{param}点伤害，受生命攻击加成"
+  },
+  "2034": {
+   "id": 2034,
+   "prism_from": "life",
+   "prism_to": "death",
+   "positive": false,
+   "icon_gsid": 22169,
+   "desc": "生命棱镜：受到的生命伤害转为死亡伤害"
+  },
+  "2036": {
+   "id": 2036,
+   "boost_damage": 90,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22178,
+   "desc": "生命诅咒：+90%生命伤害"
+  },
+  "2037": {
+   "id": 2037,
+   "boost_damage": -80,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22180,
+   "desc": "生命盾：-80%生命伤害"
+  },
+  "2038": {
+   "id": 2038,
+   "boost_damage": 120,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "死亡绝：+120%任意伤害"
+  },
+  "2039": {
+   "id": 2039,
+   "boost_damage": 30,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "死亡绝：+30%任意伤害"
+  },
+  "2040": {
+   "id": 2040,
+   "boost_damage": 90,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22189,
+   "desc": "死亡诅咒：+90%死亡伤害"
+  },
+  "2041": {
+   "id": 2041,
+   "prism_from": "death",
+   "prism_to": "life",
+   "positive": false,
+   "icon_gsid": 22191,
+   "desc": "死亡棱镜：受到的死亡伤害转为生命伤害"
+  },
+  "2042": {
+   "id": 2042,
+   "boost_damage": 40,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22193,
+   "desc": "黑暗诅咒：+40%任意伤害"
+  },
+  "2043": {
+   "id": 2043,
+   "boost_damage": -80,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22199,
+   "desc": "死亡盾：-80%死亡伤害"
+  },
+  "2044": {
+   "id": 2044,
+   "boost_damage": -90,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22257,
+   "desc": "坚冰结界：-90%任意伤害"
+  },
+  "2045": {
+   "id": 2045,
+   "boost_damage": -100,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "结界守护：-100%任意伤害"
+  },
+  "2046": {
+   "id": 2046,
+   "boost_damage": 95,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22304,
+   "desc": "死亡陷阱：+95%死亡伤害"
+  },
+  "2047": {
+   "id": 2047,
+   "boost_damage": 95,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22303,
+   "desc": "烈火陷阱：+95%烈火伤害"
+  },
+  "2048": {
+   "id": 2048,
+   "boost_damage": 95,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22305,
+   "desc": "生命陷阱：+95%生命伤害"
+  },
+  "2049": {
+   "id": 2049,
+   "boost_damage": 95,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22302,
+   "desc": "风暴陷阱：+95%风暴伤害"
+  },
+  "2050": {
+   "id": 2050,
+   "boost_damage": -85,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22307,
+   "desc": "烈火护盾：-85%烈火伤害"
+  },
+  "2051": {
+   "id": 2051,
+   "boost_damage": 95,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22309,
+   "desc": "寒冰陷阱：+95%寒冰伤害"
+  },
+  "2052": {
+   "id": 2052,
+   "stats": "(237,-35)",
+   "positive": false,
+   "icon_gsid": 22333,
+   "desc": "惊雷裂隙：-35%当前风暴防御"
+  },
+  "2053": {
+   "id": 2053,
+   "boost_heal": -100,
+   "positive": false,
+   "force_overtime": "disabledheal",
+   "icon_gsid": 22334,
+   "desc": "天魔杀星：不能被治疗"
+  },
+  "2054": {
+   "id": 2054,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 42332,
+   "desc": "冰霜魔镜：反射任何伤害，吸收{param}后破裂"
+  },
+  "2055": {
+   "id": 2055,
+   "stats": "(183,-50)",
+   "positive": false,
+   "force_overtime": "cursedheal",
+   "icon_gsid": 22341,
+   "desc": "瘟神巫术：-50%治疗效果"
+  },
+  "2056": {
+   "id": 2056,
+   "stats": "(102,-80)",
+   "positive": false,
+   "force_overtime": "cursedpowerpip",
+   "icon_gsid": 22343,
+   "desc": "魔力抑制：-80%双倍魔力生成率"
+  },
+  "2057": {
+   "id": 2057,
+   "stats": "(102,40)",
+   "positive": true,
+   "force_overtime": "boostpowerpip",
+   "icon_gsid": 22389,
+   "desc": "魔力爆发：+40%双倍魔力生成率"
+  },
+  "2058": {
+   "id": 2058,
+   "positive": true,
+   "icon_gsid": 22380,
+   "desc": "坚冰形态：减少20%攻击，提升30%防御，加大仇恨吸引"
+  },
+  "2059": {
+   "id": 2059,
+   "positive": true,
+   "icon_gsid": 22381,
+   "desc": "风影斗篷：无法被单体魔法攻击"
+  },
+  "2060": {
+   "id": 2060,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "绝对零度：无法再次被冰封"
+  },
+  "2065": {
+   "id": 2065,
+   "boost_damage": 95,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 42451,
+   "desc": "灵魂陷阱：+95%任意伤害"
+  },
+  "3021": {
+   "id": 3021,
+   "boost_damage": 95,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22104,
+   "desc": "烈火诅咒：+95%烈火伤害"
+  },
+  "3022": {
+   "id": 3022,
+   "prism_from": "fire",
+   "prism_to": "ice",
+   "positive": false,
+   "icon_gsid": 22110,
+   "desc": "烈火棱镜：受到的烈火伤害转为寒冰伤害"
+  },
+  "3023": {
+   "id": 3023,
+   "boost_damage": -85,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22120,
+   "desc": "烈火盾：-85%烈火伤害"
+  },
+  "3024": {
+   "id": 3024,
+   "boost_damage": 95,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22124,
+   "desc": "风暴诅咒：+95%风暴伤害"
+  },
+  "3025": {
+   "id": 3025,
+   "boost_damage": 45,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22126,
+   "desc": "暴风魔咒：+45%风暴伤害"
+  },
+  "3026": {
+   "id": 3026,
+   "boost_damage": -85,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22138,
+   "desc": "风暴盾：-85%风暴伤害"
+  },
+  "3027": {
+   "id": 3027,
+   "boost_damage": -55,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "结界守护：-55%任意伤害"
+  },
+  "3028": {
+   "id": 3028,
+   "boost_damage": 95,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22148,
+   "desc": "寒冰诅咒：+95%寒冰伤害"
+  },
+  "3029": {
+   "id": 3029,
+   "prism_from": "ice",
+   "prism_to": "fire",
+   "positive": false,
+   "icon_gsid": 22149,
+   "desc": "寒冰棱镜：受到的寒冰伤害转为烈火伤害"
+  },
+  "3030": {
+   "id": 3030,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 43150,
+   "desc": "坚固壁垒：吸收{param}点伤害，受寒冰攻击加成"
+  },
+  "3031": {
+   "id": 3031,
+   "stunabsorb": true,
+   "positive": true,
+   "icon_gsid": 22156,
+   "desc": "眩晕吸收：吸收一次眩晕魔法"
+  },
+  "3032": {
+   "id": 3032,
+   "boost_damage": -85,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22157,
+   "desc": "寒冰盾：-85%寒冰伤害"
+  },
+  "3033": {
+   "id": 3033,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 43162,
+   "desc": "吸收盾：吸收{param}点伤害，受生命攻击加成"
+  },
+  "3034": {
+   "id": 3034,
+   "prism_from": "life",
+   "prism_to": "death",
+   "positive": false,
+   "icon_gsid": 22169,
+   "desc": "生命棱镜：受到的生命伤害转为死亡伤害"
+  },
+  "3036": {
+   "id": 3036,
+   "boost_damage": 95,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22178,
+   "desc": "生命诅咒：+95%生命伤害"
+  },
+  "3037": {
+   "id": 3037,
+   "boost_damage": -85,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22180,
+   "desc": "生命盾：-85%生命伤害"
+  },
+  "3038": {
+   "id": 3038,
+   "boost_damage": 125,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "死亡绝：+125%任意伤害"
+  },
+  "3039": {
+   "id": 3039,
+   "boost_damage": 30,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "死亡绝：+30%任意伤害"
+  },
+  "3040": {
+   "id": 3040,
+   "boost_damage": 95,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22189,
+   "desc": "死亡诅咒：+95%死亡伤害"
+  },
+  "3041": {
+   "id": 3041,
+   "prism_from": "death",
+   "prism_to": "life",
+   "positive": false,
+   "icon_gsid": 22191,
+   "desc": "死亡棱镜：受到的死亡伤害转为生命伤害"
+  },
+  "3042": {
+   "id": 3042,
+   "boost_damage": 45,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22193,
+   "desc": "黑暗诅咒：+45%任意伤害"
+  },
+  "3043": {
+   "id": 3043,
+   "boost_damage": -85,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22199,
+   "desc": "死亡盾：-85%死亡伤害"
+  },
+  "3044": {
+   "id": 3044,
+   "boost_damage": -95,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22257,
+   "desc": "坚冰结界：-95%任意伤害"
+  },
+  "3045": {
+   "id": 3045,
+   "boost_damage": -100,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "结界守护：-100%任意伤害"
+  },
+  "3046": {
+   "id": 3046,
+   "boost_damage": 100,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22304,
+   "desc": "死亡陷阱：+100%死亡伤害"
+  },
+  "3047": {
+   "id": 3047,
+   "boost_damage": 100,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22303,
+   "desc": "烈火陷阱：+100%烈火伤害"
+  },
+  "3048": {
+   "id": 3048,
+   "boost_damage": 100,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22305,
+   "desc": "生命陷阱：+100%生命伤害"
+  },
+  "3049": {
+   "id": 3049,
+   "boost_damage": 100,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22302,
+   "desc": "风暴陷阱：+100%风暴伤害"
+  },
+  "3050": {
+   "id": 3050,
+   "boost_damage": -85,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22307,
+   "desc": "烈火护盾：-85%烈火伤害"
+  },
+  "3051": {
+   "id": 3051,
+   "boost_damage": 100,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22309,
+   "desc": "寒冰陷阱：+100%寒冰伤害"
+  },
+  "3052": {
+   "id": 3052,
+   "stats": "(237,-40)",
+   "positive": false,
+   "icon_gsid": 22333,
+   "desc": "惊雷裂隙：-40%当前风暴防御"
+  },
+  "3053": {
+   "id": 3053,
+   "boost_heal": -100,
+   "positive": false,
+   "force_overtime": "disabledheal",
+   "icon_gsid": 22334,
+   "desc": "天魔杀星：不能被治疗"
+  },
+  "3054": {
+   "id": 3054,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 43332,
+   "desc": "冰霜魔镜：反射任何伤害，吸收{param}后破裂"
+  },
+  "3055": {
+   "id": 3055,
+   "stats": "(183,-50)",
+   "positive": false,
+   "force_overtime": "cursedheal",
+   "icon_gsid": 22341,
+   "desc": "瘟神巫术：-50%治疗效果"
+  },
+  "3056": {
+   "id": 3056,
+   "stats": "(102,-80)",
+   "positive": false,
+   "force_overtime": "cursedpowerpip",
+   "icon_gsid": 22343,
+   "desc": "魔力抑制：-80%双倍魔力生成率"
+  },
+  "3057": {
+   "id": 3057,
+   "stats": "(102,40)",
+   "positive": true,
+   "force_overtime": "boostpowerpip",
+   "icon_gsid": 22389,
+   "desc": "魔力爆发：+40%双倍魔力生成率"
+  },
+  "3058": {
+   "id": 3058,
+   "positive": true,
+   "icon_gsid": 22380,
+   "desc": "坚冰形态：减少20%攻击，提升30%防御，加大仇恨吸引"
+  },
+  "3059": {
+   "id": 3059,
+   "positive": true,
+   "icon_gsid": 22381,
+   "desc": "风影斗篷：无法被单体魔法攻击"
+  },
+  "3060": {
+   "id": 3060,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "绝对零度：无法再次被冰封"
+  },
+  "3065": {
+   "id": 3065,
+   "boost_damage": 100,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 43451,
+   "desc": "灵魂陷阱：+100%任意伤害"
+  },
+  "4021": {
+   "id": 4021,
+   "boost_damage": 100,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22104,
+   "desc": "烈火诅咒：+100%烈火伤害"
+  },
+  "4022": {
+   "id": 4022,
+   "prism_from": "fire",
+   "prism_to": "ice",
+   "positive": false,
+   "icon_gsid": 22110,
+   "desc": "烈火棱镜：受到的烈火伤害转为寒冰伤害"
+  },
+  "4023": {
+   "id": 4023,
+   "boost_damage": -90,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22120,
+   "desc": "烈火盾：-90%烈火伤害"
+  },
+  "4024": {
+   "id": 4024,
+   "boost_damage": 100,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22124,
+   "desc": "风暴诅咒：+100%风暴伤害"
+  },
+  "4025": {
+   "id": 4025,
+   "boost_damage": 50,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22126,
+   "desc": "暴风魔咒：+50%风暴伤害"
+  },
+  "4026": {
+   "id": 4026,
+   "boost_damage": -90,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22138,
+   "desc": "风暴盾：-90%风暴伤害"
+  },
+  "4027": {
+   "id": 4027,
+   "boost_damage": -60,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "结界守护：-60%任意伤害"
+  },
+  "4028": {
+   "id": 4028,
+   "boost_damage": 100,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22148,
+   "desc": "寒冰诅咒：+100%寒冰伤害"
+  },
+  "4029": {
+   "id": 4029,
+   "prism_from": "ice",
+   "prism_to": "fire",
+   "positive": false,
+   "icon_gsid": 22149,
+   "desc": "寒冰棱镜：受到的寒冰伤害转为烈火伤害"
+  },
+  "4030": {
+   "id": 4030,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 44150,
+   "desc": "坚固壁垒：吸收{param}点伤害，受寒冰攻击加成"
+  },
+  "4031": {
+   "id": 4031,
+   "stunabsorb": true,
+   "positive": true,
+   "icon_gsid": 22156,
+   "desc": "眩晕吸收：吸收一次眩晕魔法"
+  },
+  "4032": {
+   "id": 4032,
+   "boost_damage": -90,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22157,
+   "desc": "寒冰盾：-90%寒冰伤害"
+  },
+  "4033": {
+   "id": 4033,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 44162,
+   "desc": "吸收盾：吸收{param}点攻击，无法抵挡吸血"
+  },
+  "4034": {
+   "id": 4034,
+   "prism_from": "life",
+   "prism_to": "death",
+   "positive": false,
+   "icon_gsid": 22169,
+   "desc": "生命棱镜：受到的生命伤害转为死亡伤害"
+  },
+  "4036": {
+   "id": 4036,
+   "boost_damage": 100,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22178,
+   "desc": "生命诅咒：+100%生命伤害"
+  },
+  "4037": {
+   "id": 4037,
+   "boost_damage": -90,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22180,
+   "desc": "生命盾：-90%生命伤害"
+  },
+  "4038": {
+   "id": 4038,
+   "boost_damage": 80,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "死亡绝：+80%任意伤害"
+  },
+  "4039": {
+   "id": 4039,
+   "boost_damage": 50,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "死亡绝：+50%任意伤害"
+  },
+  "4040": {
+   "id": 4040,
+   "boost_damage": 100,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22189,
+   "desc": "死亡诅咒：+100%死亡伤害"
+  },
+  "4041": {
+   "id": 4041,
+   "prism_from": "death",
+   "prism_to": "life",
+   "positive": false,
+   "icon_gsid": 22191,
+   "desc": "死亡棱镜：受到的死亡伤害转为生命伤害"
+  },
+  "4042": {
+   "id": 4042,
+   "boost_damage": 50,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22193,
+   "desc": "黑暗诅咒：+50%任意伤害"
+  },
+  "4043": {
+   "id": 4043,
+   "boost_damage": -90,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22199,
+   "desc": "死亡盾：-90%死亡伤害"
+  },
+  "4044": {
+   "id": 4044,
+   "boost_damage": -100,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22257,
+   "desc": "坚冰结界：-100%任意伤害"
+  },
+  "4045": {
+   "id": 4045,
+   "boost_damage": -100,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "结界守护：-100%任意伤害"
+  },
+  "4046": {
+   "id": 4046,
+   "boost_damage": 105,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22304,
+   "desc": "死亡陷阱：+105%死亡伤害"
+  },
+  "4047": {
+   "id": 4047,
+   "boost_damage": 105,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22303,
+   "desc": "烈火陷阱：+105%烈火伤害"
+  },
+  "4048": {
+   "id": 4048,
+   "boost_damage": 105,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22305,
+   "desc": "生命陷阱：+105%生命伤害"
+  },
+  "4049": {
+   "id": 4049,
+   "boost_damage": 105,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22302,
+   "desc": "风暴陷阱：+105%风暴伤害"
+  },
+  "4050": {
+   "id": 4050,
+   "boost_damage": -85,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22307,
+   "desc": "烈火护盾：-85%烈火伤害"
+  },
+  "4051": {
+   "id": 4051,
+   "boost_damage": 105,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22309,
+   "desc": "寒冰陷阱：+105%寒冰伤害"
+  },
+  "4052": {
+   "id": 4052,
+   "stats": "(237,-30)",
+   "positive": false,
+   "icon_gsid": 22333,
+   "desc": "惊雷裂隙：-30%当前风暴防御"
+  },
+  "4053": {
+   "id": 4053,
+   "boost_heal": -100,
+   "positive": false,
+   "force_overtime": "disabledheal",
+   "icon_gsid": 22334,
+   "desc": "天魔杀星：不能被治疗"
+  },
+  "4054": {
+   "id": 4054,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 44332,
+   "desc": "冰霜魔镜：反射任何伤害，吸收{param}后破裂"
+  },
+  "4055": {
+   "id": 4055,
+   "stats": "(183,-50)",
+   "positive": false,
+   "force_overtime": "cursedheal",
+   "icon_gsid": 22341,
+   "desc": "瘟神巫术：-50%治疗效果"
+  },
+  "4056": {
+   "id": 4056,
+   "stats": "(102,-80)",
+   "positive": false,
+   "force_overtime": "cursedpowerpip",
+   "icon_gsid": 22343,
+   "desc": "魔力抑制：-80%双倍魔力生成率"
+  },
+  "4057": {
+   "id": 4057,
+   "stats": "(102,40)",
+   "positive": true,
+   "force_overtime": "boostpowerpip",
+   "icon_gsid": 22389,
+   "desc": "魔力爆发：+40%双倍魔力生成率"
+  },
+  "4058": {
+   "id": 4058,
+   "positive": true,
+   "icon_gsid": 22380,
+   "desc": "坚冰形态：减少20%攻击，提升30%防御，加大仇恨吸引"
+  },
+  "4059": {
+   "id": 4059,
+   "positive": true,
+   "icon_gsid": 22381,
+   "desc": "风影斗篷：无法被单体魔法攻击"
+  },
+  "4060": {
+   "id": 4060,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "绝对零度：无法再次被冰封"
+  },
+  "4065": {
+   "id": 4065,
+   "boost_damage": 105,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 44451,
+   "desc": "灵魂陷阱：+105%任意伤害"
+  }
+ },
+ "miniaura": {
+  "1": {
+   "id": 1,
+   "stats": "(120,70)",
+   "icon_gsid": 22314,
+   "desc": "烈火盾墙：-70%烈火伤害"
+  },
+  "2": {
+   "id": 2,
+   "stats": "(121,70)",
+   "icon_gsid": 22315,
+   "desc": "寒冰盾墙：-70%寒冰伤害"
+  },
+  "3": {
+   "id": 3,
+   "stats": "(122,70)",
+   "icon_gsid": 22316,
+   "desc": "风暴盾墙：-70%风暴伤害"
+  },
+  "4": {
+   "id": 4,
+   "stats": "(124,70)",
+   "icon_gsid": 22317,
+   "desc": "生命盾墙：-70%生命伤害"
+  },
+  "5": {
+   "id": 5,
+   "stats": "(125,70)",
+   "icon_gsid": 22318,
+   "desc": "死亡盾墙：-70%死亡伤害"
+  },
+  "6": {
+   "id": 6,
+   "stats": "(104,20)",
+   "icon_gsid": 22324,
+   "desc": "烈火专注：+20%烈火命中"
+  },
+  "7": {
+   "id": 7,
+   "stats": "(105,20)",
+   "icon_gsid": 22325,
+   "desc": "寒冰专注：+20%寒冰命中"
+  },
+  "8": {
+   "id": 8,
+   "stats": "(106,20)",
+   "icon_gsid": 22326,
+   "desc": "风暴专注：+20%风暴命中"
+  },
+  "9": {
+   "id": 9,
+   "stats": "(108,20)",
+   "icon_gsid": 22327,
+   "desc": "生命专注：+20%生命命中"
+  },
+  "10": {
+   "id": 10,
+   "stats": "(109,20)",
+   "icon_gsid": 22328,
+   "desc": "死亡专注：+20%死亡命中"
+  },
+  "11": {
+   "id": 11,
+   "stats": "(119,80)",
+   "icon_gsid": 23425,
+   "desc": "钢铁盾墙：-80%任意伤害"
+  },
+  "1001": {
+   "id": 1001,
+   "stats": "(120,60)",
+   "icon_gsid": 22314,
+   "desc": "烈火盾墙：-60%烈火伤害"
+  },
+  "1002": {
+   "id": 1002,
+   "stats": "(121,60)",
+   "icon_gsid": 22315,
+   "desc": "寒冰盾墙：-60%寒冰伤害"
+  },
+  "1003": {
+   "id": 1003,
+   "stats": "(122,60)",
+   "icon_gsid": 22316,
+   "desc": "风暴盾墙：-60%风暴伤害"
+  },
+  "1004": {
+   "id": 1004,
+   "stats": "(124,60)",
+   "icon_gsid": 22317,
+   "desc": "生命盾墙：-60%生命伤害"
+  },
+  "1005": {
+   "id": 1005,
+   "stats": "(125,60)",
+   "icon_gsid": 22318,
+   "desc": "死亡盾墙：-60%死亡伤害"
+  },
+  "1006": {
+   "id": 1006,
+   "stats": "(104,20)",
+   "icon_gsid": 22324,
+   "desc": "烈火专注：+20%烈火命中"
+  },
+  "1007": {
+   "id": 1007,
+   "stats": "(105,20)",
+   "icon_gsid": 22325,
+   "desc": "寒冰专注：+20%寒冰命中"
+  },
+  "1008": {
+   "id": 1008,
+   "stats": "(106,20)",
+   "icon_gsid": 22326,
+   "desc": "风暴专注：+20%风暴命中"
+  },
+  "1009": {
+   "id": 1009,
+   "stats": "(108,20)",
+   "icon_gsid": 22327,
+   "desc": "生命专注：+20%生命命中"
+  },
+  "1010": {
+   "id": 1010,
+   "stats": "(109,20)",
+   "icon_gsid": 22328,
+   "desc": "死亡专注：+20%死亡命中"
+  },
+  "2001": {
+   "id": 2001,
+   "stats": "(120,60)",
+   "icon_gsid": 22314,
+   "desc": "烈火盾墙：-60%烈火伤害"
+  },
+  "2002": {
+   "id": 2002,
+   "stats": "(121,60)",
+   "icon_gsid": 22315,
+   "desc": "寒冰盾墙：-60%寒冰伤害"
+  },
+  "2003": {
+   "id": 2003,
+   "stats": "(122,60)",
+   "icon_gsid": 22316,
+   "desc": "风暴盾墙：-60%风暴伤害"
+  },
+  "2004": {
+   "id": 2004,
+   "stats": "(124,60)",
+   "icon_gsid": 22317,
+   "desc": "生命盾墙：-60%生命伤害"
+  },
+  "2005": {
+   "id": 2005,
+   "stats": "(125,60)",
+   "icon_gsid": 22318,
+   "desc": "死亡盾墙：-60%死亡伤害"
+  },
+  "2006": {
+   "id": 2006,
+   "stats": "(104,20)",
+   "icon_gsid": 22324,
+   "desc": "烈火专注：+20%烈火命中"
+  },
+  "2007": {
+   "id": 2007,
+   "stats": "(105,20)",
+   "icon_gsid": 22325,
+   "desc": "寒冰专注：+20%寒冰命中"
+  },
+  "2008": {
+   "id": 2008,
+   "stats": "(106,20)",
+   "icon_gsid": 22326,
+   "desc": "风暴专注：+20%风暴命中"
+  },
+  "2009": {
+   "id": 2009,
+   "stats": "(108,20)",
+   "icon_gsid": 22327,
+   "desc": "生命专注：+20%生命命中"
+  },
+  "2010": {
+   "id": 2010,
+   "stats": "(109,20)",
+   "icon_gsid": 22328,
+   "desc": "死亡专注：+20%死亡命中"
+  },
+  "3001": {
+   "id": 3001,
+   "stats": "(120,60)",
+   "icon_gsid": 22314,
+   "desc": "烈火盾墙：-60%烈火伤害"
+  },
+  "3002": {
+   "id": 3002,
+   "stats": "(121,60)",
+   "icon_gsid": 22315,
+   "desc": "寒冰盾墙：-60%寒冰伤害"
+  },
+  "3003": {
+   "id": 3003,
+   "stats": "(122,60)",
+   "icon_gsid": 22316,
+   "desc": "风暴盾墙：-60%风暴伤害"
+  },
+  "3004": {
+   "id": 3004,
+   "stats": "(124,60)",
+   "icon_gsid": 22317,
+   "desc": "生命盾墙：-60%生命伤害"
+  },
+  "3005": {
+   "id": 3005,
+   "stats": "(125,60)",
+   "icon_gsid": 22318,
+   "desc": "死亡盾墙：-60%死亡伤害"
+  },
+  "3006": {
+   "id": 3006,
+   "stats": "(104,20)",
+   "icon_gsid": 22324,
+   "desc": "烈火专注：+20%烈火命中"
+  },
+  "3007": {
+   "id": 3007,
+   "stats": "(105,20)",
+   "icon_gsid": 22325,
+   "desc": "寒冰专注：+20%寒冰命中"
+  },
+  "3008": {
+   "id": 3008,
+   "stats": "(106,20)",
+   "icon_gsid": 22326,
+   "desc": "风暴专注：+20%风暴命中"
+  },
+  "3009": {
+   "id": 3009,
+   "stats": "(108,20)",
+   "icon_gsid": 22327,
+   "desc": "生命专注：+20%生命命中"
+  },
+  "3010": {
+   "id": 3010,
+   "stats": "(109,20)",
+   "icon_gsid": 22328,
+   "desc": "死亡专注：+20%死亡命中"
+  },
+  "4001": {
+   "id": 4001,
+   "stats": "(120,60)",
+   "icon_gsid": 22314,
+   "desc": "烈火盾墙：-60%烈火伤害"
+  },
+  "4002": {
+   "id": 4002,
+   "stats": "(121,60)",
+   "icon_gsid": 22315,
+   "desc": "寒冰盾墙：-60%寒冰伤害"
+  },
+  "4003": {
+   "id": 4003,
+   "stats": "(122,60)",
+   "icon_gsid": 22316,
+   "desc": "风暴盾墙：-60%风暴伤害"
+  },
+  "4004": {
+   "id": 4004,
+   "stats": "(124,60)",
+   "icon_gsid": 22317,
+   "desc": "生命盾墙：-60%生命伤害"
+  },
+  "4005": {
+   "id": 4005,
+   "stats": "(125,60)",
+   "icon_gsid": 22318,
+   "desc": "死亡盾墙：-60%死亡伤害"
+  },
+  "4006": {
+   "id": 4006,
+   "stats": "(104,20)",
+   "icon_gsid": 22324,
+   "desc": "烈火专注：+20%烈火命中"
+  },
+  "4007": {
+   "id": 4007,
+   "stats": "(105,20)",
+   "icon_gsid": 22325,
+   "desc": "寒冰专注：+20%寒冰命中"
+  },
+  "4008": {
+   "id": 4008,
+   "stats": "(106,20)",
+   "icon_gsid": 22326,
+   "desc": "风暴专注：+20%风暴命中"
+  },
+  "4009": {
+   "id": 4009,
+   "stats": "(108,20)",
+   "icon_gsid": 22327,
+   "desc": "生命专注：+20%生命命中"
+  },
+  "4010": {
+   "id": 4010,
+   "stats": "(109,20)",
+   "icon_gsid": 22328,
+   "desc": "死亡专注：+20%死亡命中"
+  }
+ },
+ "globalaura": {
+  "31": {
+   "id": 31,
+   "stats": "(125,15)",
+   "positive": true,
+   "icon_gsid": 22431,
+   "desc": "暗之护环:+15%死亡抗性"
+  },
+  "32": {
+   "id": 32,
+   "stats": "(120,15)",
+   "positive": true,
+   "icon_gsid": 22432,
+   "desc": "火之护环:+15%烈火抗性"
+  },
+  "33": {
+   "id": 33,
+   "stats": "(121,15)",
+   "positive": true,
+   "icon_gsid": 22433,
+   "desc": "冰之护环:+15%寒冰抗性"
+  },
+  "34": {
+   "id": 34,
+   "stats": "(122,15)",
+   "positive": true,
+   "icon_gsid": 22434,
+   "desc": "风之护环:+15%风暴抗性"
+  },
+  "35": {
+   "id": 35,
+   "stats": "(124,15)",
+   "positive": true,
+   "icon_gsid": 22435,
+   "desc": "神之护环:+15%生命抗性"
+  },
+  "1031": {
+   "id": 1031,
+   "stats": "(125,20)",
+   "positive": true,
+   "icon_gsid": 22431,
+   "desc": "暗之护环:+20%死亡抗性"
+  },
+  "1032": {
+   "id": 1032,
+   "stats": "(120,20)",
+   "positive": true,
+   "icon_gsid": 22432,
+   "desc": "火之护环:+20%烈火抗性"
+  },
+  "1033": {
+   "id": 1033,
+   "stats": "(121,20)",
+   "positive": true,
+   "icon_gsid": 22433,
+   "desc": "冰之护环:+20%寒冰抗性"
+  },
+  "1034": {
+   "id": 1034,
+   "stats": "(122,20)",
+   "positive": true,
+   "icon_gsid": 22434,
+   "desc": "风之护环:+20%风暴抗性"
+  },
+  "1035": {
+   "id": 1035,
+   "stats": "(124,20)",
+   "positive": true,
+   "icon_gsid": 22435,
+   "desc": "神之护环:+20%生命抗性"
+  },
+  "2031": {
+   "id": 2031,
+   "stats": "(125,25)",
+   "positive": true,
+   "icon_gsid": 22431,
+   "desc": "暗之护环:+25%死亡抗性"
+  },
+  "2032": {
+   "id": 2032,
+   "stats": "(120,25)",
+   "positive": true,
+   "icon_gsid": 22432,
+   "desc": "火之护环:+25%烈火抗性"
+  },
+  "2033": {
+   "id": 2033,
+   "stats": "(121,25)",
+   "positive": true,
+   "icon_gsid": 22433,
+   "desc": "冰之护环:+25%寒冰抗性"
+  },
+  "2034": {
+   "id": 2034,
+   "stats": "(122,25)",
+   "positive": true,
+   "icon_gsid": 22434,
+   "desc": "风之护环:+25%风暴抗性"
+  },
+  "2035": {
+   "id": 2035,
+   "stats": "(124,25)",
+   "positive": true,
+   "icon_gsid": 22435,
+   "desc": "神之护环:+25%生命抗性"
+  },
+  "3031": {
+   "id": 3031,
+   "stats": "(125,30)",
+   "positive": true,
+   "icon_gsid": 22431,
+   "desc": "暗之护环:+30%死亡抗性"
+  },
+  "3032": {
+   "id": 3032,
+   "stats": "(120,30)",
+   "positive": true,
+   "icon_gsid": 22432,
+   "desc": "火之护环:+30%烈火抗性"
+  },
+  "3033": {
+   "id": 3033,
+   "stats": "(121,30)",
+   "positive": true,
+   "icon_gsid": 22433,
+   "desc": "冰之护环:+30%寒冰抗性"
+  },
+  "3034": {
+   "id": 3034,
+   "stats": "(122,30)",
+   "positive": true,
+   "icon_gsid": 22434,
+   "desc": "风之护环:+30%风暴抗性"
+  },
+  "3035": {
+   "id": 3035,
+   "stats": "(124,30)",
+   "positive": true,
+   "icon_gsid": 22435,
+   "desc": "神之护环:+30%生命抗性"
+  },
+  "4031": {
+   "id": 4031,
+   "stats": "(125,35)",
+   "positive": true,
+   "icon_gsid": 22431,
+   "desc": "暗之护环:+35%死亡抗性"
+  },
+  "4032": {
+   "id": 4032,
+   "stats": "(120,35)",
+   "positive": true,
+   "icon_gsid": 22432,
+   "desc": "火之护环:+35%烈火抗性"
+  },
+  "4033": {
+   "id": 4033,
+   "stats": "(121,35)",
+   "positive": true,
+   "icon_gsid": 22433,
+   "desc": "冰之护环:+35%寒冰抗性"
+  },
+  "4034": {
+   "id": 4034,
+   "stats": "(122,35)",
+   "positive": true,
+   "icon_gsid": 22434,
+   "desc": "风之护环:+35%风暴抗性"
+  },
+  "4035": {
+   "id": 4035,
+   "stats": "(124,35)",
+   "positive": true,
+   "icon_gsid": 22435,
+   "desc": "神之护环:+35%生命抗性"
+  }
+ }
+}

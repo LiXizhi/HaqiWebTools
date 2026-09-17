@@ -15,7 +15,7 @@
 3. **公式 1:1 移植并标注来源。** `combat_formulas_core.js` 中每个函数头部注释写出 Lua 文件与行号（例如 `card_server.lua damage_expression L1473-1516`），kids / teen 分支用 `version` 参数区分，不得"顺手简化"。发现 Lua 行为与本地实现不一致时，以 Lua 为准并在 `docs/lua-mapping.md` 记录。
 4. **可复现。** 所有随机数走 `rng_core.js` 的实例，禁止直接 `Math.random()`；同一 seed + 同一参数必须得到同一结果（有测试守护）。
 5. **参数只走 BalanceParams。** 调参器、数值面板、LLM 建议都只改 `combat_params_core.js` 定义的覆盖层，引擎读取 `resolveParams(dataset, params)` 的结果，不得在引擎里散落魔法数字。
-6. **数据不入库。** `data/kids/`、`data/teen/` 由 `scripts/export_data.mjs` 从本机 `config/Aries/` 生成，已 gitignore；只提交 `data/sample/`。不要把真实卡牌数值复制进源码或文档。
+6. **运行时数据入库。** `data/kids/`、`data/teen/`、`data/sample/` 是应用实际加载的 JSON，提交到 git。`scripts/export_data.mjs` 可从本机 `paraworld/config/Aries/` 重新导出以刷新快照；不要把卡牌数值复制进源码。
 7. **未支持即透明。** 未实现的 `template.type` 必须计入 `unsupported` 统计并在批量报告中展示，不得静默忽略。
 8. **开发日志写 `docs/devlog/devlog_YYYY-MM-DD.md`**，不要在 `docs/` 根目录或别处新增日志。
 9. 用户可见文案为中文；代码标识符英文；不加 emoji。

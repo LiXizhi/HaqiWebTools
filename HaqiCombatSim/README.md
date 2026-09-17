@@ -19,15 +19,15 @@ python3 -m http.server 8791 --bind 127.0.0.1      # 或 VS Code Live Preview
 # 浏览器打开 http://127.0.0.1:8791/HaqiCombatSim.html
 ```
 
-首次使用前导出游戏数据（读取本机 `paraworld/config/Aries/`，该目录不在 git 中）：
+`data/kids/` 与 `data/teen/` 已随仓库提供，打开页面即可用。需要从本机 Haqi 根目录刷新快照时（读取 `paraworld/config/Aries/`）：
 
 ```bash
-npm run export       # scripts/export_data.mjs → data/kids/*.json 与 data/teen/*.json（gitignored）
+npm run export       # scripts/export_data.mjs → data/kids/*.json 与 data/teen/*.json
 npm test             # node --test tests/*.test.mjs（30 例，用 data/sample）
 npm run sim -- --data data/teen --mode 1v1 --games 1000 --level 60 --seed 1 [--params p.json] [--json out.json]
 ```
 
-没有本机数据时页面自动回退到 `data/sample/`（极小示例卡组，仅供演示与测试）。
+没有 kids/teen 数据时页面回退到 `data/sample/`（极小示例卡组，仅供演示与测试）。
 
 四个页面（hash 路由）：
 
@@ -68,7 +68,7 @@ web/HaqiCombatSim/
     view_advisor.js           # AI 建议页
   data/
     sample/                   # 已入库的极小示例数据集（52 卡）
-    kids/  teen/              # npm run export 生成，gitignored
+    kids/  teen/              # 应用运行时数据（可由 npm run export 从 config/Aries 刷新）
   scripts/
     export_data.mjs           # config/Aries XML/CSV → JSON 导出器
     run_batch.mjs             # CLI 批量模拟（与页面共用 sim_batch_core）

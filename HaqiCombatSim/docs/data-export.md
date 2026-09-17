@@ -9,7 +9,7 @@ node scripts/export_data.mjs --config /path/to/config/Aries --out data --version
 ```
 
 - Node ≥ 20；**零依赖**（XML 用 `scripts/lib/xml_lite.mjs`，CSV 手写切分）。
-- 输出 `data/kids/` 与 `data/teen/`（gitignored）。`data/sample/` 为手写示例，不由导出器覆盖。
+- 输出 `data/kids/` 与 `data/teen/`（入库，应用运行时加载）。`data/sample/` 为手写示例，不由导出器覆盖。
 - XML 解析放在可测试的 `scripts/lib/xml_lite.mjs`（`tests/xml_lite.test.mjs`），`export_data.mjs` 负责各文件的字段映射与 IO。
 
 ## 输入与输出

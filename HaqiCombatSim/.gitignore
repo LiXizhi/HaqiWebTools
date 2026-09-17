@@ -1,5 +1,2 @@
-# 真实游戏数据由 scripts/export_data.mjs 从本机 config/Aries 生成，不入库
-/data/kids/
-/data/teen/
 node_modules/
 .DS_Store

@@ -1,0 +1,1488 @@
+{
+ "charm": {
+  "1": {
+   "id": 1,
+   "boost_damage": 45,
+   "school": "water",
+   "positive": true
+  },
+  "2": {
+   "id": 2,
+   "boost_damage": 30,
+   "school": "fire",
+   "positive": true
+  },
+  "3": {
+   "id": 3,
+   "boost_damage": 30,
+   "school": "metal",
+   "positive": true
+  },
+  "4": {
+   "id": 4,
+   "boost_damage": 30,
+   "school": "wood",
+   "positive": true
+  },
+  "5": {
+   "id": 5,
+   "boost_damage": 40,
+   "school": "earth",
+   "positive": true
+  },
+  "6": {
+   "id": 6,
+   "boost_damage": -25,
+   "school": "all",
+   "positive": false
+  },
+  "7": {
+   "id": 7,
+   "boost_accuracy": 10,
+   "school": "metal",
+   "positive": true
+  },
+  "8": {
+   "id": 8,
+   "focus_prism": true,
+   "boost_damage": 30,
+   "school": "wood",
+   "positive": true
+  },
+  "9": {
+   "id": 9,
+   "boost_damage": -30,
+   "school": "all",
+   "positive": false
+  },
+  "11": {
+   "id": 11,
+   "boost_damage": 45,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22109,
+   "desc": "+45%烈火攻击"
+  },
+  "12": {
+   "id": 12,
+   "boost_accuracy": -50,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22116,
+   "desc": "-50%法术命中"
+  },
+  "13": {
+   "id": 13,
+   "dispel_school": "fire",
+   "positive": false,
+   "icon_gsid": 22119,
+   "desc": "烈火之敌"
+  },
+  "14": {
+   "id": 14,
+   "boost_accuracy": 30,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22129,
+   "desc": "+30%风暴命中"
+  },
+  "15": {
+   "id": 15,
+   "boost_damage": 45,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22130,
+   "desc": "+45%风暴攻击"
+  },
+  "16": {
+   "id": 16,
+   "dispel_school": "storm",
+   "positive": false,
+   "icon_gsid": 22137,
+   "desc": "风暴之敌"
+  },
+  "17": {
+   "id": 17,
+   "boost_damage": 55,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22153,
+   "desc": "+55%寒冰攻击"
+  },
+  "18": {
+   "id": 18,
+   "dispel_school": "ice",
+   "positive": false,
+   "icon_gsid": 22155,
+   "desc": "寒冰之敌"
+  },
+  "19": {
+   "id": 19,
+   "boost_damage": 55,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22170,
+   "desc": "+55%生命攻击"
+  },
+  "20": {
+   "id": 20,
+   "boost_accuracy": 10,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22171,
+   "desc": "+10%法术命中"
+  },
+  "21": {
+   "id": 21,
+   "boost_heal": 45,
+   "positive": true,
+   "icon_gsid": 22172,
+   "desc": "+45%治疗效果"
+  },
+  "22": {
+   "id": 22,
+   "dispel_school": "life",
+   "positive": false,
+   "icon_gsid": 22179,
+   "desc": "生命之敌"
+  },
+  "23": {
+   "id": 23,
+   "boost_damage": 55,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22190,
+   "desc": "+55%死亡攻击"
+  },
+  "24": {
+   "id": 24,
+   "boost_damage": -40,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22195,
+   "desc": "-40%任意攻击"
+  },
+  "25": {
+   "id": 25,
+   "boost_heal": -50,
+   "positive": false,
+   "icon_gsid": 22197,
+   "desc": "-50%治疗效果"
+  },
+  "26": {
+   "id": 26,
+   "dispel_school": "death",
+   "positive": false,
+   "icon_gsid": 22198,
+   "desc": "死亡之敌"
+  },
+  "27": {
+   "id": 27,
+   "boost_heal": 35,
+   "positive": true,
+   "icon_gsid": 22256,
+   "desc": "+35%治疗效果"
+  },
+  "28": {
+   "id": 28,
+   "boost_damage": 60,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22310,
+   "desc": "+60%生命攻击"
+  },
+  "29": {
+   "id": 29,
+   "boost_accuracy": -1000,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22116,
+   "desc": "-100%法术命中"
+  },
+  "30": {
+   "id": 30,
+   "positive": true,
+   "icon_gsid": 22383,
+   "desc": "灵魂替身:死亡后复活并补血"
+  },
+  "31": {
+   "id": 31,
+   "boost_damage": 45,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22394,
+   "desc": "+45%烈火攻击"
+  },
+  "32": {
+   "id": 32,
+   "boost_damage": 40,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22396,
+   "desc": "+40%风暴攻击"
+  },
+  "33": {
+   "id": 33,
+   "boost_damage": 45,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22395,
+   "desc": "+45%寒冰攻击"
+  },
+  "34": {
+   "id": 34,
+   "boost_damage": 60,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22397,
+   "desc": "+60%生命攻击"
+  },
+  "35": {
+   "id": 35,
+   "boost_damage": 55,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22398,
+   "desc": "+55%死亡攻击"
+  },
+  "1011": {
+   "id": 1011,
+   "boost_damage": 50,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22109,
+   "desc": "+50%烈火攻击"
+  },
+  "1012": {
+   "id": 1012,
+   "boost_accuracy": -55,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22116,
+   "desc": "-55%法术命中"
+  },
+  "1014": {
+   "id": 1014,
+   "boost_accuracy": 35,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22129,
+   "desc": "+35%风暴命中"
+  },
+  "1015": {
+   "id": 1015,
+   "boost_damage": 50,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22130,
+   "desc": "+50%风暴攻击"
+  },
+  "1017": {
+   "id": 1017,
+   "boost_damage": 60,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22153,
+   "desc": "+60%寒冰攻击"
+  },
+  "1019": {
+   "id": 1019,
+   "boost_damage": 60,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22170,
+   "desc": "+60%生命攻击"
+  },
+  "1020": {
+   "id": 1020,
+   "boost_accuracy": 15,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22171,
+   "desc": "+15%法术命中"
+  },
+  "1021": {
+   "id": 1021,
+   "boost_heal": 50,
+   "positive": true,
+   "icon_gsid": 22172,
+   "desc": "+50%治疗效果"
+  },
+  "1023": {
+   "id": 1023,
+   "boost_damage": 60,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22190,
+   "desc": "+60%死亡攻击"
+  },
+  "1024": {
+   "id": 1024,
+   "boost_damage": -45,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22195,
+   "desc": "-45%任意攻击"
+  },
+  "1025": {
+   "id": 1025,
+   "boost_heal": -55,
+   "positive": false,
+   "icon_gsid": 22197,
+   "desc": "-55%治疗效果"
+  },
+  "2011": {
+   "id": 2011,
+   "boost_damage": 55,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22109,
+   "desc": "+55%烈火攻击"
+  },
+  "2012": {
+   "id": 2012,
+   "boost_accuracy": -60,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22116,
+   "desc": "-60%法术命中"
+  },
+  "2014": {
+   "id": 2014,
+   "boost_accuracy": 40,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22129,
+   "desc": "+40%风暴命中"
+  },
+  "2015": {
+   "id": 2015,
+   "boost_damage": 55,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22130,
+   "desc": "+55%风暴攻击"
+  },
+  "2017": {
+   "id": 2017,
+   "boost_damage": 65,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22153,
+   "desc": "+65%寒冰攻击"
+  },
+  "2019": {
+   "id": 2019,
+   "boost_damage": 65,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22170,
+   "desc": "+65%生命攻击"
+  },
+  "2020": {
+   "id": 2020,
+   "boost_accuracy": 20,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22171,
+   "desc": "+20%法术命中"
+  },
+  "2021": {
+   "id": 2021,
+   "boost_heal": 55,
+   "positive": true,
+   "icon_gsid": 22172,
+   "desc": "+55%治疗效果"
+  },
+  "2023": {
+   "id": 2023,
+   "boost_damage": 65,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22190,
+   "desc": "+65%死亡攻击"
+  },
+  "2024": {
+   "id": 2024,
+   "boost_damage": -50,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22195,
+   "desc": "-50%任意攻击"
+  },
+  "2025": {
+   "id": 2025,
+   "boost_heal": -60,
+   "positive": false,
+   "icon_gsid": 22197,
+   "desc": "-60%治疗效果"
+  },
+  "3011": {
+   "id": 3011,
+   "boost_damage": 60,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22109,
+   "desc": "+60%烈火攻击"
+  },
+  "3012": {
+   "id": 3012,
+   "boost_accuracy": -65,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22116,
+   "desc": "-65%法术命中"
+  },
+  "3014": {
+   "id": 3014,
+   "boost_accuracy": 45,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22129,
+   "desc": "+45%风暴命中"
+  },
+  "3015": {
+   "id": 3015,
+   "boost_damage": 60,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22130,
+   "desc": "+60%风暴攻击"
+  },
+  "3017": {
+   "id": 3017,
+   "boost_damage": 70,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22153,
+   "desc": "+70%寒冰攻击"
+  },
+  "3019": {
+   "id": 3019,
+   "boost_damage": 70,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22170,
+   "desc": "+70%生命攻击"
+  },
+  "3020": {
+   "id": 3020,
+   "boost_accuracy": 25,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22171,
+   "desc": "+25%法术命中"
+  },
+  "3021": {
+   "id": 3021,
+   "boost_heal": 60,
+   "positive": true,
+   "icon_gsid": 22172,
+   "desc": "+60%治疗效果"
+  },
+  "3023": {
+   "id": 3023,
+   "boost_damage": 70,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22190,
+   "desc": "+70%死亡攻击"
+  },
+  "3024": {
+   "id": 3024,
+   "boost_damage": -55,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22195,
+   "desc": "-55%任意攻击"
+  },
+  "3025": {
+   "id": 3025,
+   "boost_heal": -65,
+   "positive": false,
+   "icon_gsid": 22197,
+   "desc": "-65%治疗效果"
+  }
+ },
+ "ward": {
+  "1": {
+   "id": 1,
+   "boost_damage": -40,
+   "school": "metal",
+   "positive": true
+  },
+  "2": {
+   "id": 2,
+   "boost_damage": -40,
+   "school": "wood",
+   "positive": true
+  },
+  "3": {
+   "id": 3,
+   "boost_damage": -40,
+   "school": "water",
+   "positive": true
+  },
+  "4": {
+   "id": 4,
+   "boost_damage": -40,
+   "school": "fire",
+   "positive": true
+  },
+  "5": {
+   "id": 5,
+   "boost_damage": -40,
+   "school": "earth",
+   "positive": true
+  },
+  "6": {
+   "id": 6,
+   "boost_damage": -50,
+   "school": "metal",
+   "positive": true
+  },
+  "7": {
+   "id": 7,
+   "boost_damage": -50,
+   "school": "wood",
+   "positive": true
+  },
+  "8": {
+   "id": 8,
+   "boost_damage": -50,
+   "school": "water",
+   "positive": true
+  },
+  "9": {
+   "id": 9,
+   "boost_damage": -50,
+   "school": "fire",
+   "positive": true
+  },
+  "10": {
+   "id": 10,
+   "boost_damage": -50,
+   "school": "earth",
+   "positive": true
+  },
+  "11": {
+   "id": 11,
+   "boost_damage": 25,
+   "school": "water",
+   "positive": false
+  },
+  "12": {
+   "id": 12,
+   "boost_damage": 25,
+   "school": "earth",
+   "positive": false
+  },
+  "13": {
+   "id": 13,
+   "boost_damage": -40,
+   "school": "all",
+   "positive": true
+  },
+  "21": {
+   "id": 21,
+   "boost_damage": 40,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22104,
+   "desc": "+40%烈火伤害"
+  },
+  "22": {
+   "id": 22,
+   "prism_from": "fire",
+   "prism_to": "ice",
+   "positive": false,
+   "icon_gsid": 22110,
+   "desc": "烈火棱镜"
+  },
+  "23": {
+   "id": 23,
+   "boost_damage": -80,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22120,
+   "desc": "-80%烈火伤害"
+  },
+  "24": {
+   "id": 24,
+   "boost_damage": 40,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22124,
+   "desc": "+40%风暴伤害"
+  },
+  "25": {
+   "id": 25,
+   "boost_damage": 30,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22126,
+   "desc": "+30%风暴伤害"
+  },
+  "26": {
+   "id": 26,
+   "boost_damage": -80,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22138,
+   "desc": "-80%风暴伤害"
+  },
+  "27": {
+   "id": 27,
+   "boost_damage": -50,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "-50%任意伤害"
+  },
+  "28": {
+   "id": 28,
+   "boost_damage": 55,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22148,
+   "desc": "+55%寒冰伤害"
+  },
+  "29": {
+   "id": 29,
+   "prism_from": "ice",
+   "prism_to": "fire",
+   "positive": false,
+   "icon_gsid": 22149,
+   "desc": "寒冰棱镜"
+  },
+  "30": {
+   "id": 30,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 22150,
+   "desc": "坚固壁垒"
+  },
+  "31": {
+   "id": 31,
+   "stunabsorb": true,
+   "positive": true,
+   "icon_gsid": 22156,
+   "desc": "眩晕吸收"
+  },
+  "32": {
+   "id": 32,
+   "boost_damage": -80,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22157,
+   "desc": "-80%寒冰伤害"
+  },
+  "33": {
+   "id": 33,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 22162,
+   "desc": "吸收盾"
+  },
+  "34": {
+   "id": 34,
+   "prism_from": "life",
+   "prism_to": "death",
+   "positive": false,
+   "icon_gsid": 22169,
+   "desc": "生命棱镜"
+  },
+  "35": {
+   "id": 35,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 22162,
+   "desc": "吸收盾"
+  },
+  "36": {
+   "id": 36,
+   "boost_damage": 55,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22178,
+   "desc": "+55%生命伤害"
+  },
+  "37": {
+   "id": 37,
+   "boost_damage": -80,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22180,
+   "desc": "-80%生命伤害"
+  },
+  "38": {
+   "id": 38,
+   "boost_damage": 80,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "+80%任意伤害"
+  },
+  "39": {
+   "id": 39,
+   "boost_damage": 20,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "+20%任意伤害"
+  },
+  "40": {
+   "id": 40,
+   "boost_damage": 55,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22189,
+   "desc": "+55%死亡伤害"
+  },
+  "41": {
+   "id": 41,
+   "prism_from": "death",
+   "prism_to": "life",
+   "positive": false,
+   "icon_gsid": 22191,
+   "desc": "死亡棱镜"
+  },
+  "42": {
+   "id": 42,
+   "boost_damage": 20,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22193,
+   "desc": "+20%任意伤害"
+  },
+  "43": {
+   "id": 43,
+   "boost_damage": -80,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22199,
+   "desc": "-80%死亡伤害"
+  },
+  "44": {
+   "id": 44,
+   "boost_damage": -55,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "-55%任意伤害"
+  },
+  "45": {
+   "id": 45,
+   "boost_damage": -100,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "-100%任意伤害"
+  },
+  "46": {
+   "id": 46,
+   "boost_damage": 55,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22304,
+   "desc": "+55%死亡伤害"
+  },
+  "47": {
+   "id": 47,
+   "boost_damage": 45,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22303,
+   "desc": "+45%烈火伤害"
+  },
+  "48": {
+   "id": 48,
+   "boost_damage": 60,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22305,
+   "desc": "+60%生命伤害"
+  },
+  "49": {
+   "id": 49,
+   "boost_damage": 40,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22302,
+   "desc": "+40%风暴伤害"
+  },
+  "50": {
+   "id": 50,
+   "boost_damage": -85,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22307,
+   "desc": "-85%烈火伤害"
+  },
+  "51": {
+   "id": 51,
+   "boost_damage": 45,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22309,
+   "desc": "+45%寒冰伤害"
+  },
+  "52": {
+   "id": 52,
+   "stats": "(247,50)",
+   "positive": false,
+   "icon_gsid": 22333,
+   "desc": "忽略50%风暴抗性"
+  },
+  "53": {
+   "id": 53,
+   "boost_heal": -100,
+   "positive": false,
+   "force_overtime": "disabledheal",
+   "icon_gsid": 22334,
+   "desc": "不能被治疗"
+  },
+  "54": {
+   "id": 54,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 22332,
+   "desc": "冰霜魔镜"
+  },
+  "55": {
+   "id": 55,
+   "stats": "(183,-50)",
+   "positive": false,
+   "force_overtime": "cursedheal",
+   "icon_gsid": 22341,
+   "desc": "-50%治疗效果"
+  },
+  "56": {
+   "id": 56,
+   "stats": "(102,-180)",
+   "positive": false,
+   "force_overtime": "cursedpowerpip",
+   "icon_gsid": 22343,
+   "desc": "-180%超级魔力点生成率"
+  },
+  "57": {
+   "id": 57,
+   "stats": "(102,60)",
+   "positive": true,
+   "force_overtime": "boostpowerpip",
+   "icon_gsid": 22377,
+   "desc": "+60%超级魔力点生成率"
+  },
+  "58": {
+   "id": 58,
+   "positive": true,
+   "icon_gsid": 22380,
+   "desc": "坚冰形态:防御增强，双倍仇恨"
+  },
+  "59": {
+   "id": 59,
+   "positive": true,
+   "icon_gsid": 22381,
+   "desc": "风影斗篷:无法被单体魔法影响，只能攻击敌方"
+  },
+  "60": {
+   "id": 60,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "绝对零度:无法再次被冰封"
+  },
+  "62": {
+   "id": 62,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "免疫xx之敌"
+  },
+  "63": {
+   "id": 63,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "免疫眩晕"
+  },
+  "66": {
+   "id": 66,
+   "positive": true,
+   "icon_gsid": 22337,
+   "desc": "极冰薄雾:保护期内不能被冰冻"
+  },
+  "77": {
+   "id": 77,
+   "boost_damage": -50,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22445,
+   "desc": "潘多拉的保护:-50%任意伤害"
+  },
+  "78": {
+   "id": 78,
+   "boost_damage": -55,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22446,
+   "desc": "潘多拉的保护:-55%任意伤害"
+  },
+  "79": {
+   "id": 79,
+   "boost_damage": -60,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22447,
+   "desc": "潘多拉的保护:-60%任意伤害"
+  },
+  "81": {
+   "id": 81,
+   "positive": true,
+   "icon_gsid": 22448,
+   "desc": "烈焰形态:自己受伤增加10%，队友伤害增加15%，不可叠加"
+  },
+  "82": {
+   "id": 82,
+   "positive": true,
+   "icon_gsid": 22380,
+   "desc": "坚冰形态:自己伤害减少10%，队友受伤降低15% ，不可叠加"
+  },
+  "83": {
+   "id": 83,
+   "positive": true,
+   "icon_gsid": 22449,
+   "desc": "狂风形态:自己受伤增加10%，队友暴击伤害30% ，不可叠加"
+  },
+  "84": {
+   "id": 84,
+   "positive": true,
+   "icon_gsid": 22450,
+   "desc": "光刃形态:自己受伤增加10%，队友穿透增加15% ，不可叠加"
+  },
+  "85": {
+   "id": 85,
+   "positive": true,
+   "icon_gsid": 22451,
+   "desc": "魔刃形态:自己受伤增加10%，队友致命一击增加30% ，不可叠加"
+  },
+  "86": {
+   "id": 86,
+   "positive": true,
+   "icon_gsid": 22451,
+   "desc": "一定回合内不会再次受到致命一击"
+  },
+  "87": {
+   "id": 87,
+   "positive": true,
+   "icon_gsid": 22398,
+   "desc": "保护期内不会再次触发绝对防御"
+  },
+  "88": {
+   "id": 88,
+   "boost_damage": 25,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22304,
+   "desc": "+25%死亡伤害"
+  },
+  "89": {
+   "id": 89,
+   "boost_damage": 20,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22303,
+   "desc": "+20%烈火伤害"
+  },
+  "90": {
+   "id": 90,
+   "boost_damage": 30,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22305,
+   "desc": "+30%生命伤害"
+  },
+  "91": {
+   "id": 91,
+   "boost_damage": 20,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22302,
+   "desc": "+20%风暴伤害"
+  },
+  "92": {
+   "id": 92,
+   "boost_damage": 25,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22309,
+   "desc": "+25%寒冰伤害"
+  },
+  "93": {
+   "id": 93,
+   "stats": "(162,-3)",
+   "positive": false,
+   "icon_gsid": 22412,
+   "desc": "1阶狂风印记:增加3%风暴受伤，下回合不叠加则消失"
+  },
+  "94": {
+   "id": 94,
+   "stats": "(162,-6)",
+   "positive": false,
+   "icon_gsid": 22413,
+   "desc": "2阶狂风印记:增加6%风暴受伤，下回合不叠加则消失"
+  },
+  "95": {
+   "id": 95,
+   "stats": "(162,-9)",
+   "positive": false,
+   "icon_gsid": 22414,
+   "desc": "3阶狂风印记:增加9%风暴受伤，下回合不叠加则消失"
+  },
+  "96": {
+   "id": 96,
+   "stats": "(162,-12)",
+   "positive": false,
+   "icon_gsid": 22415,
+   "desc": "4阶狂风印记:增加12%风暴受伤，下回合不叠加则消失"
+  },
+  "97": {
+   "id": 97,
+   "stats": "(162,-15)",
+   "positive": false,
+   "icon_gsid": 22416,
+   "desc": "终极狂风印记:增加15%风暴受伤，下回合不叠加则消失"
+  },
+  "98": {
+   "id": 98,
+   "absorb_scale": 30,
+   "can_manipulate": false,
+   "positive": true,
+   "icon_gsid": 22150,
+   "desc": "护卫壁垒:坚固壁垒的队友效果，享受原卡牌30%的护盾值。"
+  },
+  "1021": {
+   "id": 1021,
+   "boost_damage": 45,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22104,
+   "desc": "+45%烈火伤害"
+  },
+  "1023": {
+   "id": 1023,
+   "boost_damage": -85,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22120,
+   "desc": "-85%烈火伤害"
+  },
+  "1024": {
+   "id": 1024,
+   "boost_damage": 45,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22124,
+   "desc": "+45%风暴伤害"
+  },
+  "1025": {
+   "id": 1025,
+   "boost_damage": 35,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22126,
+   "desc": "+35%风暴伤害"
+  },
+  "1026": {
+   "id": 1026,
+   "boost_damage": -85,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22138,
+   "desc": "-85%风暴伤害"
+  },
+  "1027": {
+   "id": 1027,
+   "boost_damage": -55,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "-55%任意伤害"
+  },
+  "1028": {
+   "id": 1028,
+   "boost_damage": 60,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22148,
+   "desc": "+60%寒冰伤害"
+  },
+  "1032": {
+   "id": 1032,
+   "boost_damage": -85,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22157,
+   "desc": "-85%寒冰伤害"
+  },
+  "1036": {
+   "id": 1036,
+   "boost_damage": 60,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22178,
+   "desc": "+60%生命伤害"
+  },
+  "1037": {
+   "id": 1037,
+   "boost_damage": -85,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22180,
+   "desc": "-85%生命伤害"
+  },
+  "1038": {
+   "id": 1038,
+   "boost_damage": 85,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "+85%任意伤害"
+  },
+  "1040": {
+   "id": 1040,
+   "boost_damage": 60,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22189,
+   "desc": "+60%死亡伤害"
+  },
+  "1042": {
+   "id": 1042,
+   "boost_damage": 25,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22193,
+   "desc": "+25%任意伤害"
+  },
+  "1043": {
+   "id": 1043,
+   "boost_damage": -85,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22199,
+   "desc": "-85%死亡伤害"
+  },
+  "1052": {
+   "id": 1052,
+   "stats": "(247,55)",
+   "positive": false,
+   "icon_gsid": 22333,
+   "desc": "忽略55%风暴抗性"
+  },
+  "2021": {
+   "id": 2021,
+   "boost_damage": 50,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22104,
+   "desc": "+50%烈火伤害"
+  },
+  "2023": {
+   "id": 2023,
+   "boost_damage": -90,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22120,
+   "desc": "-90%烈火伤害"
+  },
+  "2024": {
+   "id": 2024,
+   "boost_damage": 50,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22124,
+   "desc": "+50%风暴伤害"
+  },
+  "2025": {
+   "id": 2025,
+   "boost_damage": 40,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22126,
+   "desc": "+40%风暴伤害"
+  },
+  "2026": {
+   "id": 2026,
+   "boost_damage": -90,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22138,
+   "desc": "-90%风暴伤害"
+  },
+  "2027": {
+   "id": 2027,
+   "boost_damage": -60,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "-60%任意伤害"
+  },
+  "2028": {
+   "id": 2028,
+   "boost_damage": 65,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22148,
+   "desc": "+65%寒冰伤害"
+  },
+  "2032": {
+   "id": 2032,
+   "boost_damage": -90,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22157,
+   "desc": "-90%寒冰伤害"
+  },
+  "2036": {
+   "id": 2036,
+   "boost_damage": 65,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22178,
+   "desc": "+65%生命伤害"
+  },
+  "2037": {
+   "id": 2037,
+   "boost_damage": -90,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22180,
+   "desc": "-90%生命伤害"
+  },
+  "2038": {
+   "id": 2038,
+   "boost_damage": 90,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "+90%任意伤害"
+  },
+  "2040": {
+   "id": 2040,
+   "boost_damage": 65,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22189,
+   "desc": "+65%死亡伤害"
+  },
+  "2042": {
+   "id": 2042,
+   "boost_damage": 30,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22193,
+   "desc": "+30%任意伤害"
+  },
+  "2043": {
+   "id": 2043,
+   "boost_damage": -90,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22199,
+   "desc": "-90%死亡伤害"
+  },
+  "2052": {
+   "id": 2052,
+   "stats": "(247,60)",
+   "positive": false,
+   "icon_gsid": 22333,
+   "desc": "忽略60%风暴抗性"
+  },
+  "3021": {
+   "id": 3021,
+   "boost_damage": 55,
+   "school": "fire",
+   "positive": false,
+   "icon_gsid": 22104,
+   "desc": "+55%烈火伤害"
+  },
+  "3023": {
+   "id": 3023,
+   "boost_damage": -95,
+   "school": "fire",
+   "positive": true,
+   "icon_gsid": 22120,
+   "desc": "-95%烈火伤害"
+  },
+  "3024": {
+   "id": 3024,
+   "boost_damage": 55,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22124,
+   "desc": "+55%风暴伤害"
+  },
+  "3025": {
+   "id": 3025,
+   "boost_damage": 45,
+   "school": "storm",
+   "positive": false,
+   "icon_gsid": 22126,
+   "desc": "+45%风暴伤害"
+  },
+  "3026": {
+   "id": 3026,
+   "boost_damage": -95,
+   "school": "storm",
+   "positive": true,
+   "icon_gsid": 22138,
+   "desc": "-95%风暴伤害"
+  },
+  "3027": {
+   "id": 3027,
+   "boost_damage": -65,
+   "school": "all",
+   "positive": true,
+   "icon_gsid": 22142,
+   "desc": "-65%任意伤害"
+  },
+  "3028": {
+   "id": 3028,
+   "boost_damage": 70,
+   "school": "ice",
+   "positive": false,
+   "icon_gsid": 22148,
+   "desc": "+70%寒冰伤害"
+  },
+  "3032": {
+   "id": 3032,
+   "boost_damage": -95,
+   "school": "ice",
+   "positive": true,
+   "icon_gsid": 22157,
+   "desc": "-95%寒冰伤害"
+  },
+  "3036": {
+   "id": 3036,
+   "boost_damage": 70,
+   "school": "life",
+   "positive": false,
+   "icon_gsid": 22178,
+   "desc": "+70%生命伤害"
+  },
+  "3037": {
+   "id": 3037,
+   "boost_damage": -95,
+   "school": "life",
+   "positive": true,
+   "icon_gsid": 22180,
+   "desc": "-95%生命伤害"
+  },
+  "3038": {
+   "id": 3038,
+   "boost_damage": 95,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22186,
+   "desc": "+95%任意伤害"
+  },
+  "3040": {
+   "id": 3040,
+   "boost_damage": 70,
+   "school": "death",
+   "positive": false,
+   "icon_gsid": 22189,
+   "desc": "+70%死亡伤害"
+  },
+  "3042": {
+   "id": 3042,
+   "boost_damage": 35,
+   "school": "all",
+   "positive": false,
+   "icon_gsid": 22193,
+   "desc": "+35%任意伤害"
+  },
+  "3043": {
+   "id": 3043,
+   "boost_damage": -95,
+   "school": "death",
+   "positive": true,
+   "icon_gsid": 22199,
+   "desc": "-95%死亡伤害"
+  },
+  "3052": {
+   "id": 3052,
+   "stats": "(247,65)",
+   "positive": false,
+   "icon_gsid": 22333,
+   "desc": "忽略65%风暴抗性"
+  }
+ },
+ "miniaura": {
+  "1": {
+   "id": 1,
+   "stats": "(120,70)",
+   "icon_gsid": 22314,
+   "desc": "-70%烈火伤害"
+  },
+  "2": {
+   "id": 2,
+   "stats": "(121,70)",
+   "icon_gsid": 22315,
+   "desc": "-70%寒冰伤害"
+  },
+  "3": {
+   "id": 3,
+   "stats": "(122,70)",
+   "icon_gsid": 22316,
+   "desc": "-70%风暴伤害"
+  },
+  "4": {
+   "id": 4,
+   "stats": "(124,70)",
+   "icon_gsid": 22317,
+   "desc": "-70%生命伤害"
+  },
+  "5": {
+   "id": 5,
+   "stats": "(125,70)",
+   "icon_gsid": 22318,
+   "desc": "-70%死亡伤害"
+  },
+  "6": {
+   "id": 6,
+   "stats": "(104,20)",
+   "icon_gsid": 22324,
+   "desc": "+20%烈火命中"
+  },
+  "7": {
+   "id": 7,
+   "stats": "(105,20)",
+   "icon_gsid": 22325,
+   "desc": "+20%寒冰命中"
+  },
+  "8": {
+   "id": 8,
+   "stats": "(106,20)",
+   "icon_gsid": 22326,
+   "desc": "+20%风暴命中"
+  },
+  "9": {
+   "id": 9,
+   "stats": "(108,20)",
+   "icon_gsid": 22327,
+   "desc": "+20%生命命中"
+  },
+  "10": {
+   "id": 10,
+   "stats": "(109,20)",
+   "icon_gsid": 22328,
+   "desc": "+20%死亡命中"
+  },
+  "11": {
+   "id": 11,
+   "stats": "(119,80)",
+   "icon_gsid": 22467,
+   "desc": "-80%所有伤害"
+  }
+ },
+ "globalaura": {}
+}

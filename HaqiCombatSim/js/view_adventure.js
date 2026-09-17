@@ -96,13 +96,16 @@ function spellHint(card,d) {
     return '辅助魔法';
 }
 function spellFace(assets,card,artCard=card) {
-    // kids pe_item.DrawCardMask: 151×230, pips (120,5), description (18,142).
+    // kids pe_item.DrawCardMask: 151×230, pips (120,5), cooldown (7,115), description (18,142).
     // The original title is already printed in the artwork; retain its accessible name.
     const canvas=el('canvas','spell-art');canvas.width=302;canvas.height=460;
     assets.draw(canvas.getContext('2d'),artCard.art,0,0,302,460,false);
     const cost=card.pipcost===114||card.pipcost==='X'?'X':String(card.pipcost);
-    const pip=el('span','spell-cost',cost);pip.setAttribute('aria-label',`魔力点 ${cost}`);
-    return el('span','spell-face',canvas,el('span','sr-only',artCard.name),pip,el('span','spell-description',spellHint(card,assets.dataset)));
+    const pip=el('span','spell-cost',cost);pip.setAttribute('aria-label',`消耗 ${cost} 点魔力`);
+    pip.title=`消耗 ${cost} 点魔力。本系法术：1个超级魔力抵2点；其他系抵1点。`;
+    const rounds=assets.content.items[artCard.itemId]?.stats?.[186]??0;
+    const cooldown=el('span','spell-cooldown',rounds);cooldown.setAttribute('aria-label',`冷却 ${rounds} 回合`);cooldown.title=`冷却 ${rounds} 回合（左中数字）`;
+    return el('span','spell-face',canvas,el('span','sr-only',artCard.name),pip,cooldown,el('span','spell-description',spellHint(card,assets.dataset)));
 }
 function itemStats(item) {
     const names={101:'生命',102:'超级魔力率',111:'全系攻击',112:'烈火攻击',113:'寒冰攻击',114:'风暴攻击',116:'生命攻击',117:'死亡攻击',119:'全系防御',167:'卡包容量',170:'单卡上限',184:'起始普通魔力',185:'起始超级魔力'};
@@ -145,7 +148,7 @@ export function renderPanel(root,kind,model,cb) {
             const cardNode=el('div',`deck-card ${owned?'':'locked'}`,spellFace(assets,card),el('small','muted',owned?`拥有 ${owned} 张`:`等级 ${lesson.level} 解锁`),el('div','stepper',button('−',()=>change(-1)),count,button('+',()=>change(1))));
             grid.append(cardNode);
         }};
-        body.append(el('div','deck-toolbar',counter,button('推荐配卡',()=>{draft=recommendedDeck(save,c);paint();update();},'secondary')),el('p','muted','精简卡组，更快抽到关键法术。装备提供的法术会额外加入战斗。'),grid,button('保存卡包',()=>cb.action({type:'deck',deck:draft}),'primary save-deck'));paint();update();
+        body.append(el('div','deck-toolbar',counter,button('推荐配卡',()=>{draft=recommendedDeck(save,c);paint();update();},'secondary')),el('p','muted','右上：魔力消耗；左中：冷却回合。本系法术的1个超级魔力抵2点，其他系抵1点。装备提供的法术会额外加入战斗。'),grid,button('保存卡包',()=>cb.action({type:'deck',deck:draft}),'primary save-deck'));paint();update();
     }
     if(kind==='pet'){
         body.append(el('div','pet-portrait',tile(assets,'creatures',save.pet?6:7,170,180)));

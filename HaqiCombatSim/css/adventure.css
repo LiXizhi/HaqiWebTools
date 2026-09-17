@@ -23,3 +23,5 @@
 @media(max-width:1050px){.battle-canvas{bottom:292px;height:calc(100% - 372px)}}
 @media(max-width:650px){.battle-hand{gap:10px;bottom:83px;padding:14px 14px 5px}.hand-card{width:116px;padding:0}.battle-canvas{bottom:313px;height:calc(100% - 407px)}.hand-card .discard-button{min-height:36px}.spell-description{font-size:clamp(11px,9.3cqw,14px)}}
 @media(max-height:600px) and (min-width:651px){.hand-card{width:96px}.battle-hand{bottom:52px;gap:9px}.battle-canvas{top:55px;bottom:246px;height:calc(100% - 301px)}}
+/* kids stats[186] is cooldown, not a second pip cost (pe_item.lua L1882–1894). */
+.spell-cooldown{position:absolute;left:4.64%;top:50%;width:21.19%;height:13.91%;display:flex;align-items:flex-start;padding-top:1.5%;justify-content:center;color:#203e22;font-family:system-ui,sans-serif;font-size:clamp(11px,10cqw,15px);font-weight:700;line-height:1;text-shadow:0 1px 1px #fff}

@@ -109,3 +109,7 @@ web/HaqiCombatSim/
 - 仓库 wiki：[docs/aries/combat-system.md](../../docs/aries/combat-system.md)、[docs/config/aries-haqi-data.md](../../docs/config/aries-haqi-data.md)
 - 仓库 wiki 入口：[docs/aries/haqi-combat-sim.md](../../docs/aries/haqi-combat-sim.md)
 - 本项目：[docs/plan.md](docs/plan.md) → [docs/architecture.md](docs/architecture.md) → [docs/lua-mapping.md](docs/lua-mapping.md) → [docs/qa-report.md](docs/qa-report.md)
+
+## Haqi.html：WebP / Keepwork 云端旅途
+
+独立单人入口运行方法见 [adventure.md](docs/adventure.md)。本机默认本地WebP；线上域名默认永久Keepwork CDN，可用 `Haqi.html?assets=cdn` 验收。开始画面、设置、战斗均可打开可选云端检查点，保留本地自动存档与导入导出。`npm test` 共69例，`npm run check:adventure` 验证章节和本地美术，`npm run verify:adventure-cdn` 验证发布资源。仅按需加载Keepwork CDN上的SDK core，无运行时构建或额外框架。

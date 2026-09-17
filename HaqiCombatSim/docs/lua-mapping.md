@@ -157,3 +157,7 @@
 本章刻意改编：紧凑地图、按任务串联、累计经验阈值、学习时机、固定出奇蛋结果、毕业后镇区尾声、浏览器教程。原PvE服务端的组队、限时、季节暴怒、付费、捕捉/宠物战斗不移植。消耗符文/变身奖励只作为收藏保留。完整逐项说明见 [adventure.md](adventure.md)。
 
 补充效果：`card_server.lua:106` 的 `storm_charging_wards` 从Lua数据字面量导出，3138–3164的 `bCharging` 在PvE逐级替换93–97常驻印记并重置为2回合。模板文案虽称增加风暴受伤，其stats162是绝对抗性；原 `mob_server.lua:2096` 对kids怪物不读取该常驻stats，故本章不会自行增加3%伤害。效果状态、叠层、过期仍完整重现；PvP不启用此新增分支。
+
+## WebP / Keepwork 云存档迭代（2026-09-17）
+
+本轮未修改Lua对应的战斗、任务、奖励、装备、宠物、成长规则。新增 `adventure_media_core` 与 `adventure_cloud_core` 属于浏览器资源/存档协议，无原Lua公式映射。云端仍使用同一 `AdventureSave` 和 `restorePveBattle` 决定重演，时钟/UUID由IO层提供，不影响玩法随机流。SDK接口依据 `keepworkSDK/src/store/PersonalPageStore.{base,data,sync}.ts` 及 `src/core/keepworkSDK.{core,utils,pages}.ts` 核对；尤其避开store远端读失败时回退本地的行为。

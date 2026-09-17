@@ -23,6 +23,7 @@ export function renderEntry(root,assets,hasSave,cb,error='') {
     const intro=el('div','entry-intro',eyebrow,el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','穿过晨光中的魔法营地，遇见熟悉的伙伴。\n选一门魔法，翻开属于你的第一张卡牌。'));
     intro.append(el('div','entry-tags',badge('原版任务与角色'),badge('五系卡牌战斗'),badge('本地自动存档')));
     if(hasSave)intro.append(button('继续我的冒险',cb.continue,'primary continue-button'));
+    intro.append(button('云端旅途',cb.cloud,'secondary cloud-entry-button'));
     intro.append(el('p','entry-note','键盘 / 鼠标 / 触摸均可游玩'),el('a','sim-link','战斗模拟器'));
     intro.querySelector('a').href='HaqiCombatSim.html';
     const name=el('input','name-input');name.id='hero-name';name.name='name';name.value='小哈奇';name.maxLength=16;name.autocomplete='off';name.required=true;
@@ -143,6 +144,7 @@ export function renderPanel(root,kind,model,cb) {
         else body.append(el('h3','center','等待与你相遇'),el('p','center muted','完成青龙的强化指导，即可获得一枚出奇蛋。'),ownsEgg(save)?button('打开出奇蛋',()=>cb.action({type:'hatch'}),'primary centered'):el('p','center','继续你的冒险吧。'));
     }
     if(kind==='settings') {
+        body.append(button('云端旅途 · 跨设备继续冒险',cb.cloud,'primary settings-button'));
         body.append(el('p','','进度自动保存在当前浏览器。你可以导出存档，在其他设备继续这段旅程。'),button(save.music?'背景音乐：开启':'背景音乐：关闭',cb.music,'secondary settings-button'),button('导出我的存档',cb.export,'secondary settings-button'));
         const input=el('input');input.type='file';input.accept='.json,application/json';input.id='import-save';input.onchange=()=>{if(input.files[0])cb.import(input.files[0]);};body.append(el('label','file-label','导入存档',input));
         body.append(button('回到开始画面',cb.title,'secondary settings-button'),el('hr'),el('h3','','关于这段旅程'),el('p','muted','本章保留魔法哈奇 kids 原版角色、任务对白和卡牌数据。地图、升级节奏和毕业后的镇区是适合单人游玩的二维改编。'),el('details','source-details',el('summary','','查看改编说明'),...c.adaptations.map(t=>el('p','muted',t))),el('a','sim-link','打开战斗模拟器'));
@@ -178,7 +180,7 @@ export function renderDialogue(root,model,dialog,cb) {
 }
 export function renderBattle(root,model,cb) {
     const {assets,save,battle,selected,discarded=[],animating}=model,hero=battle.sides.near[0];root.replaceChildren();root.className='battle-layer visible';
-    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','',badge(`第 ${battle.turn} 回合`),button('导出存档',cb.export,'secondary small'),button('撤退',cb.retreat,'secondary small')));
+    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','',badge(`第 ${battle.turn} 回合`),button('云端存档',cb.cloud,'secondary small'),button('导出存档',cb.export,'secondary small'),button('撤退',cb.retreat,'secondary small')));
     const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');canvas.onclick=e=>cb.target(e.offsetX<canvas.clientWidth/2?'hero':'mob0');
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');status.textContent=battle.finished?'对决结束':animating?'魔法正在生效…':selected?'点击法阵中的目标施法':'选择一张卡牌，再点击目标';
     const hand=el('div','battle-hand'),bottom=el('div','battle-controls');

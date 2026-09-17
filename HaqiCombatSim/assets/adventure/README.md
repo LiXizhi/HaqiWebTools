@@ -1,8 +1,8 @@
 # 冒险美术来源
 
-`cdn/` 是 `data/adventure/assets.json` 列出的89项原版资源（88张图、1段可选音乐）。由 `scripts/prepare_adventure_assets.mjs` 按用户提供的 `paraworld/assets_manifest.txt` 完整CDN条目准备；清单包含原路径、MD5、包长、裁剪引用、源URL和本地路径。保留原作品的角色与卡牌身份，没有将新绘制精灵标为原版提取物。
+`webp/` 包含88张原版图片的无损WebP与两张生成图集；`cdn/` 仅保留1段可选音乐。`data/adventure/assets.json` 保留89项原版来源记录（原本地PNG路径仅用于追溯），`media.json` 是当前本地/永久CDN资源清单。由 `scripts/prepare_adventure_assets.mjs` 按用户提供的 `paraworld/assets_manifest.txt` 完整CDN条目准备；清单包含原路径、MD5、包长、裁剪引用、源URL和本地路径。保留原作品的角色与卡牌身份，没有将新绘制精灵标为原版提取物。
 
-`sprites.png`与 `creatures.png` 由本次任务使用 **内置 image_gen 工具**生成，保留原始透明通道，复制进入本目录。没有使用CLI/API密钥或外部图标库。
+两张图集原始PNG由本次任务使用 **内置 image_gen 工具**生成，保留原始透明通道，初次复制进入本目录，随后无损转换为 `webp/sprites.webp` 与 `webp/creatures.webp`。没有使用CLI/API密钥或外部图标库。
 
 最终提示词组的内容概述：
 
@@ -15,3 +15,5 @@
 - `~/.codex/generated_images/01a0ae1e-25ab-7fb1-8491-d27bee39012b/exec-7d95d381-b763-40d7-81fb-9bc6da1d92bf.png` → `creatures.png`
 
 图集采用运行时Canvas裁切、alpha边界裁切、方向切换和轻微摆动/浮动，无图像后处理依赖。`sprites.png` 的行边界按实际图集留白校正为0/323/650/929/1254；原图片未破坏性修改。场景地面、路面、海水、法阵、魔法光束和UI小图标为代码绘制。
+
+2026-09-17后续迭代：90张图片经Pillow完整解码后无损编码，转换前后RGBA像素逐字节一致；宽高、透明通道和裁剪保持不变。91项资源按SHA-256命名上传至永久 `https://cdn.keepwork.com/keepwork/haqi-adventure/v1/`，实际完整URL见 `data/adventure/media.json`。本地WebP入Git，线上默认请求CDN，loopback默认本地。

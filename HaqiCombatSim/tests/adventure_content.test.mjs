@@ -12,8 +12,8 @@ test('chapter validator rejects missing references and unsupported effects, acti
     const bad=structuredClone(d);Object.values(bad.cards)[0].type='UnknownSpell';assert.throws(()=>validateAdventureContent(c,bad,assets));
     assert.throws(()=>validateAdventureContent(c,d,{}));
 });
-test('local PNG images decode and corrupted data fails validation',()=>{
-    const file=new URL('../assets/adventure/sprites.png',import.meta.url),data=fs.readFileSync(file);
-    assert.deepEqual(validateMedia('sprites.png',data),{width:1254,height:1254});
-    const corrupt=Buffer.from(data);corrupt[100]^=1;assert.throws(()=>validateMedia('sprites.png',corrupt));
+test('local WebP images decode and truncated data fails validation',()=>{
+    const file=new URL('../assets/adventure/webp/sprites.webp',import.meta.url),data=fs.readFileSync(file);
+    assert.deepEqual(validateMedia('sprites.webp',data),{width:1254,height:1254});
+    const corrupt=data.subarray(0,data.length-8);assert.throws(()=>validateMedia('sprites.webp',corrupt));
 });

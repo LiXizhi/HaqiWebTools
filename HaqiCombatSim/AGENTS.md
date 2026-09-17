@@ -23,7 +23,7 @@
 
 ## 美术、Keepwork SDK 与 CDN（用户约定，2026-09-17）
 
-以下是后续开发和上线必须遵守的约定；不表示现有本地 PNG 已转换、资源已上传或云存档已接入。
+以下是后续开发和上线必须遵守的约定。WebP/CDN 与可选云端检查点已接入；实际验证范围见 [docs/qa-report.md](docs/qa-report.md)。
 
 ### 可复用技能与源码
 
@@ -47,10 +47,11 @@ SDK 源码可在 `lxzsrc/keepworkSDK/`（本机 `/Users/mac/lxzsrc/keepworkSDK`�
 
 ### Keepwork SDK 存储
 
-- 需要登录或跨设备存储时，优先使用 **Keepwork SDK**，不另造后端。云端进度使用 `sdk.personalPageStore.withWorkspace('HaqiAdventure')` 的作用域实例，通过其 `createFile` / `readFile` 保存和读取版本化 JSON。
+- 需要登录或跨设备存储时，优先使用 **Keepwork SDK**，不另造后端。云端进度使用 `sdk.personalPageStore.withWorkspace('HaqiAdventure')` 的作用域实例，保存和读取版本化 JSON。通用接口为 `createFile` / `readFile`；本游戏需要持久化确认，使用下述无缓存写入及远端核验路径。
 - Keepwork 适配器放在浏览器 IO 层，保持 `*_core.js` 纯净。保留当前本地自动存档、JSON 导入/导出和访客体验；登录取消、网络失败不能阻断游戏。
+- `createFile` 硬编码开启后台 server pageCache 写入，可能抢先清除pending，返回值不代表持久化成功。游戏使用 `savePageData(path, 'content', text, false, false)` 显式暂存无缓存写入；`loadPageData(forceRemote=true)` 仍可能回退本地。先 `syncToGit(path, false)`，再通过 `sdk.getFileByFullPath(store.getRemotePagePath(path), undefined, false)` 读取实际远端内容并核验。
 - 同步记录存档版本与更新时间；加载云端存档仍走现有校验和战斗重演，处理本地/云端冲突后再替换进度，不能悄悄覆盖较新的进度。SDK token、密码和密钥不得进入游戏存档。
-- 按需加载 SDK，不为只使用本地存档的启动流程增加必需网络依赖。引入前核对登录和存储接口；不要把本文件的约定当作已完成云存储功能。
+- 按需加载 SDK，不为只使用本地存档的启动流程增加必需网络依赖。引入前核对登录和存储接口；实际账号的远端读写仍需按 QA 记录验证。
 
 ### 第三方依赖仅限 Keepwork CDN
 

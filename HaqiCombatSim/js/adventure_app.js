@@ -3,14 +3,19 @@ import * as A from './adventure_core.js';
 import * as W from './adventure_world_core.js';
 import * as P from './combat_pve_core.js';
 import * as V from './view_adventure.js';
-import { loadResources,saveLocal,readLocal,downloadSave } from './adventure_assets.js';
+import { loadResources,saveLocal,readLocal,downloadSave,localUpdatedAt,replaceLocalWithBackup,readBackup } from './adventure_assets.js';
 import { createRenderer } from './adventure_renderer.js';
+import { createCloudClient } from './adventure_cloud.js';
+import { checkedProgress } from './adventure_cloud_core.js';
+import { renderCloud } from './view_adventure_cloud.js';
 
 const $=id=>document.getElementById(id);
 const nodes={world:$('world'),hud:$('hud'),entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer'),toast:$('toast')};
 let assets,renderer,save,world,battle,stage='loading',panel=null,dialog=null,dialogDone=null;
 let path=[],destination=null,moving=false,lastFrame=0,lastMap=0,lastSave=0,toastTimer=0;
 let selected=null,discarded=[],animation=null,music=null,storageWarning=false;
+let cloudClient;
+const cloud={owner:null,busy:'',error:'',message:'',paths:[],preview:null};
 const keys=new Set();
 const model=()=>({assets,save,battle,selected,discarded,animating:!!animation});
 function toast(message) {nodes.toast.textContent=message;nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);}
@@ -23,8 +28,30 @@ function persist() {
 }
 function close() {panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';keys.clear();nodes.world.focus({preventScroll:true});}
 function paintHud() {V.renderHud(nodes.hud,model(),{panel:openPanel,track,interact:interactNearest,direction:(key,down)=>{if(down){keys.add(key);path=[];destination=null;}else keys.delete(key);}});}
-function paintPanel() {if(panel)V.renderPanel(nodes.overlay,panel,model(),{close,action,music:toggleMusic,export:()=>downloadSave(save),import:importFile,title:showTitle});}
+function paintPanel() {if(panel==='cloud'){paintCloud();return;}if(panel)V.renderPanel(nodes.overlay,panel,model(),{close,action,track,cloud:openCloud,music:toggleMusic,export:()=>downloadSave(save),import:importFile,title:showTitle});}
 function openPanel(kind) {if(stage!=='world')return;close();path=[];destination=null;panel=kind;paintPanel();}
+function cloudLocal() {if(stage!=='title')return save;try{const raw=readLocal();return raw?A.parseSave(raw,assets.content):null;}catch{return null;}}
+function openCloud() {persist();close();path=[];destination=null;if(!cloud.busy){cloud.preview=null;cloud.error='';cloud.message=cloud.owner?'请选择一份记录查看，或保存当前旅程。':'';}panel='cloud';paintCloud();}
+function paintCloud() {
+    if(panel!=='cloud')return;
+    renderCloud(nodes.overlay,{...cloud,local:cloudLocal(),localUpdatedAt:localUpdatedAt(),hasBackup:!!readBackup()},{close,
+        connect:()=>cloudAction('正在连接 Keepwork…',async()=>{cloud.owner=await cloudClient.connect();cloud.paths=await cloudClient.list();cloud.message=cloud.paths.length?'请选择一份记录查看。':'未找到云端记录。你可以保存当前进度，或刷新重试。';}),
+        refresh:()=>cloudAction('正在读取云端目录…',async()=>{cloud.paths=await cloudClient.list();cloud.message=cloud.paths.length?'云端目录已刷新。':'未找到云端记录，可刷新重试。';}),
+        upload:()=>cloudAction('正在保存并核验云端进度…',async()=>{const current=cloudLocal();if(!current)throw new Error('请先开始一段冒险。');const result=await cloudClient.upload(current);cloud.paths=[result.path,...cloud.paths.filter(p=>p!==result.path)].sort().reverse().slice(0,30);cloud.message='已保存到云端，并核验远端内容。';}),
+        preview:path=>cloudAction('正在校验存档与战斗记录…',async()=>{const localRaw=readLocal();const preview=await cloudClient.read(path);if(readLocal()!==localRaw)throw new Error('本地进度已变化，请重新查看这份记录。');cloud.preview={...preview,localRaw};cloud.message='请比较两份进度，确认后恢复。';}),
+        cancelPreview:()=>{cloud.preview=null;paintCloud();},restore:()=>safely(()=>{
+            cloudClient.assertPreview(cloud.preview);
+            const restored=checkedProgress(cloud.preview.save,assets.content,assets.dataset);
+            replaceLocalWithBackup(restored.save,localStorage,cloud.preview.localRaw);cloud.preview=null;
+            enterWorld(restored.save,restored.battle);toast('云端进度已恢复。原本地进度已保留为备份。');
+        }),backup:()=>safely(()=>{downloadSave(checkedProgress(readBackup(),assets.content,assets.dataset).save);}),
+    });
+}
+async function cloudAction(label,fn) {
+    if(cloud.busy)return;
+    cloud.busy=label;cloud.error='';cloud.message='';cloud.preview=null;paintCloud();
+    try{await fn();}catch(e){cloud.error=e.message;}finally{cloud.busy='';cloud.owner=cloudClient.owner;paintCloud();}
+}
 function action(value) {safely(()=>{A.applyAction(save,assets.content,value);persist();paintHud();paintPanel();const text={equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'晶石法杖强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(text[value.type]||'进度已保存');});}
 function enterWorld(newSave,restoredBattle=null) {
     save=newSave;world=W.createWorld(save.zone,assets.content);stage='world';path=[];destination=null;animation=null;close();
@@ -42,7 +69,7 @@ function showTitle() {
     V.renderEntry(nodes.entry,assets,!!stored,{create:options=>safely(()=>{enterWorld(A.createAdventure(assets.content,{...options,seed:Date.now()}));toast('欢迎来到魔法营地！点击右侧「追踪目标」，去见青龙导师。');}),continue:()=>safely(()=>{
         const restored=stored.pendingEncounter?P.restorePveBattle(assets.dataset,assets.content,stored.pendingEncounter):null;
         enterWorld(stored,restored);
-    })},error);
+    }),cloud:openCloud},error);
 }
 async function importFile(file) {
     try {
@@ -54,7 +81,7 @@ async function importFile(file) {
 }
 function updateMusic() {
     if(!assets||!save)return;
-    if(!music){const ref=assets.manifest[assets.content.extras.music.id];if(!ref)return;music=new Audio(ref.local);music.loop=true;music.volume=.24;music.onerror=()=>{if(save.music)toast('背景音乐暂时不可用，可以继续游玩。');};}
+    if(!music){music=new Audio(assets.urlFor(assets.content.extras.music.id));music.loop=true;music.volume=.24;music.onerror=()=>{if(save.music)toast('背景音乐暂时不可用，可以继续游玩。');};}
     if(save.music&&stage!=='title')music.play().catch(()=>{if(music.error)toast('背景音乐暂时不可用，可以继续游玩。');});else music.pause();
 }
 function toggleMusic(){save.music=!save.music;persist();updateMusic();paintPanel();}
@@ -107,7 +134,7 @@ function track() {
     }
     if(goal.kind==='action')openPanel(goal.id==='hatch-pet'||goal.id===79019?'pet':goal.id===79037&&save.equipment[24]===24003?'deck':'inventory');
 }
-function paintBattle(){V.renderBattle(nodes.battle,model(),{export:()=>downloadSave(save),select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
+function paintBattle(){V.renderBattle(nodes.battle,model(),{cloud:openCloud,export:()=>downloadSave(save),select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
     if(animation||battle.finished)return;discarded=discarded.includes(seq)?discarded.filter(x=>x!==seq):[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
 },target:id=>{if(!selected||animation||battle.finished)return;playRound({...selected,targetId:id,discardSeqs:discarded});},pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
     A.applyAction(save,assets.content,{type:'retreat'});enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
@@ -183,6 +210,7 @@ async function boot(){
     try {
         assets=await loadResources(p=>{const bar=$('load-progress');if(bar)bar.value=p;});
         if(assets.content.schemaVersion!==1||!assets.content.quests?.length||!assets.dataset.cards)throw new Error('章节数据格式不正确，请重新导出并检查资源。');
+        cloudClient=createCloudClient({content:assets.content,dataset:assets.dataset,onAccountChange:()=>{cloud.owner=null;cloud.paths=[];cloud.preview=null;cloud.message='登录状态已变化，请重新连接。';paintCloud();}});
         renderer=createRenderer(nodes.world,assets);showTitle();requestAnimationFrame(frame);
     }catch(e){stage='error';nodes.entry.replaceChildren(V.el('section','loading-card',V.el('h1','','冒险暂时无法开始'),V.el('p','',e.message),V.el('p','muted','请通过 HTTP 静态服务器打开游戏；恢复 data/adventure 中的章节文件，并运行 npm run assets:adventure 检查美术资源。'),V.button('重新尝试',()=>location.reload(),'primary')));}
 }

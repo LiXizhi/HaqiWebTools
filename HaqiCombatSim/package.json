@@ -10,7 +10,9 @@
         "sim": "node scripts/run_batch.mjs",
         "export:adventure": "python3 scripts/export_adventure.py",
         "assets:adventure": "node scripts/prepare_adventure_assets.mjs",
-        "check:adventure": "node scripts/check_adventure.mjs && node scripts/prepare_adventure_assets.mjs --check"
+        "check:adventure": "node scripts/check_adventure.mjs && node scripts/prepare_adventure_assets.mjs --check",
+        "plan:adventure-cdn": "node scripts/publish_adventure_media.mjs",
+        "verify:adventure-cdn": "node scripts/publish_adventure_media.mjs --verify"
     },
     "engines": {
         "node": ">=20"

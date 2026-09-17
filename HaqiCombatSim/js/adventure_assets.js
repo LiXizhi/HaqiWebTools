@@ -1,17 +1,19 @@
 // Browser IO for the self-contained adventure package.
 import { validateAdventureContent } from './adventure_content_core.js';
+import { assetMode, assetUrl, validateMediaManifest } from './adventure_media_core.js';
 export const SAVE_KEY = 'haqi.adventure.kids.v1';
 async function json(url) { const r=await fetch(url);if(!r.ok)throw new Error(`无法读取 ${url}（${r.status}）`);return r.json(); }
-function loadImage(url) { return new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(new Error(`无法加载图片 ${url}`));i.src=url;}); }
+function loadImage(url) { return new Promise((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=()=>reject(new Error(`无法加载图片 ${url}`));i.src=url;}); }
 export async function loadResources(progress) {
-    const [content,dataset,manifest]=await Promise.all(['chapter','combat','assets'].map(n=>json(`data/adventure/${n}.json`)));
+    const [content,dataset,manifest,media]=await Promise.all(['chapter','combat','assets','media'].map(n=>json(`data/adventure/${n}.json`)));
     validateAdventureContent(content,dataset,manifest);
+    const mode=assetMode(location.hostname,location.search);
+    validateMediaManifest(media,manifest,mode);
     const images=new Map(),bounds=new Map(),failures=[];
-    const rows=Object.entries(manifest).filter(([,a])=>/\.(png|jpg|jpeg)$/i.test(a.local));
+    const rows=Object.entries(media.entries).filter(([,a])=>a.local.endsWith('.webp'));
     let cursor=0,done=0;
-    const worker=async()=>{while(cursor<rows.length){const[id,a]=rows[cursor++];try{images.set(id,await loadImage(a.local));}catch(e){if(!a.optional)failures.push(e.message);}progress?.(++done/rows.length);}};
+    const worker=async()=>{while(cursor<rows.length){const[id,a]=rows[cursor++];try{images.set(id,await loadImage(assetUrl(a,mode)));}catch(e){if(!a.optional)failures.push(e.message);}progress?.(++done/rows.length);}};
     await Promise.all(Array.from({length:8},worker));
-    for(const name of ['sprites','creatures'])images.set(name,await loadImage(`assets/adventure/${name}.png`));
     if(failures.length)throw new Error(`冒险资源缺失，请重新准备资源后重试。${failures[0]}`);
     function getBounds(id,rect) {
         const img=images.get(id);if(!img)return null;
@@ -35,9 +37,22 @@ export async function loadResources(progress) {
         const row=Math.floor(index/4), cuts=sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height];
         return draw(ctx,{id:sheet,crop:[(index%4)*cw,cuts[row],cw,cuts[row+1]-cuts[row]]},x,y,w,h,true);
     }
-    return {content,dataset,manifest,images,draw,tile,getBounds};
+    return {content,dataset,manifest,images,draw,tile,getBounds,mode,media,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
-export function saveLocal(save) {localStorage.setItem(SAVE_KEY,JSON.stringify(save));}
+export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
+export function saveLocal(save, storage = localStorage) {
+    const text=JSON.stringify(save);
+    if(storage.getItem(SAVE_KEY)!==text){storage.setItem(SAVE_KEY,text);try{storage.setItem(`${SAVE_KEY}.updated`,new Date().toISOString());}catch{/* Metadata is optional; the checkpoint was saved. */}}
+}
+export function localUpdatedAt() {try{return localStorage.getItem(`${SAVE_KEY}.updated`);}catch{return null;}}
+export function replaceLocalWithBackup(save, storage = localStorage, expectedRaw = undefined) {
+    const previous=storage.getItem(SAVE_KEY);
+    if(expectedRaw!==undefined&&previous!==expectedRaw)throw new Error('本地进度已在其他页面变化，请重新查看云端记录后再恢复。');
+    // Quota/security failures abort before overwriting the existing progress.
+    if(previous)storage.setItem(BACKUP_KEY,previous);
+    saveLocal(save,storage);
+}
+export function readBackup() {try{return localStorage.getItem(BACKUP_KEY);}catch{return null;}}
 export function readLocal() {return localStorage.getItem(SAVE_KEY);}
 export function downloadSave(save) {
     const blob=new Blob([JSON.stringify(save,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');

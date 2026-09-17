@@ -10,20 +10,20 @@ python3 -m http.server 8791 --bind 127.0.0.1
 # http://127.0.0.1:8791/Haqi.html
 ```
 
-没有运行时构建，也不需要 npm install、ParaEngine、父目录、兄弟模拟器、账号或 CDN 网络。`data/adventure/` 与 `assets/adventure/` 是完整的运行时内容；音乐是可选资源。使用 HTTP，不能通过 file:// 运行 ES modules / fetch。
+没有运行时构建，也不需要 npm install、ParaEngine、父目录、兄弟模拟器或账号。本机 loopback 默认使用 Git 中的 WebP，不需要 CDN 网络；线上域名默认使用永久 Keepwork CDN。`data/adventure/` 与 `assets/adventure/` 是完整的运行时内容；音乐是可选资源。使用 HTTP，不能通过 file:// 运行 ES modules / fetch。
 
 开发者刷新内容时：
 
 ```bash
 npm run export:adventure       # Python 3 标准库；读取默认 ../../ 或 --root 指定的 paraworld
-npm run assets:adventure       # Node >=20；下载本章所需资源，校验并解包
-npm run check:adventure        # 纯引用检查 + 所有本地图片结构解码检查
-npm test                      # 原34例 + 冒险与内容测试
+npm run assets:adventure       # Node >=20 + Python/Pillow；准备、解码、无损转换 WebP
+npm run check:adventure        # 纯引用检查 + 本地文件哈希/尺寸/格式检查
+npm test                      # 69例，包含原34例、五系章节、资源与云端存档测试
 ```
 
 卡牌数值沿用本项目已经入库的 `data/kids/cards.json`、`charms.json`。要同步原始 Card XML 的改动，先运行已有的 `npm run export`，再导出本章。导出器用 ElementTree 解析 XML，用限制为数据字面量的 `scripts/lib/lua_data.py` 解析数据库表；不会执行 Lua、MCML、NPL 或嵌入脚本。
 
-资源清单保留原始路径大小写、`.p` / `.z` 后缀、MD5 和长度。查询采用小写及统一斜线，纹理的 `;x y width height` 裁剪矩形单独存储。CDN URL 以完整清单行构成，包含 `,md5,size`。`.p` 保存原图；`.z` 先验证下载容器再解压 ZIP/zlib。PNG 检查签名、块 CRC、IDAT 解压结果、扫描行和尺寸；浏览器进一步实际解码全部必需图片。
+资源清单保留原始路径大小写、`.p` / `.z` 后缀、MD5 和长度。查询采用小写及统一斜线，纹理的 `;x y width height` 裁剪矩形单独存储。CDN URL 以完整清单行构成，包含 `,md5,size`。`.p` 保存原图；`.z` 先验证下载容器再解压 ZIP/zlib。`media.json` 另外记录无损 WebP 的本地路径、实际 CDN URL、尺寸、SHA-256、源像素文件哈希及完整源清单行；不会混淆源 MD5 与转换后哈希。裁剪矩形继续来自章节引用，图集尺寸不变。Pillow 完整解码并比较 RGBA 像素；Node 检查 WebP 容器、尺寸、SHA-256；浏览器实际解码并执行 alpha 边界裁切。
 
 ## 操作
 
@@ -78,4 +78,40 @@ npm test                      # 原34例 + 冒险与内容测试
 
 战斗检查点只保存种子、起始角色规格和决定序列。加载时以相同种子重新执行决定，还原事件、魔力、生命和随机数状态。导入先验证所有数据并重演战斗，成功后才替换当前进度。奖励领取以任务claimed标志和遭遇ID账本去重；动画尚未结束时重载也不会重复发奖。失败、平局或撤退不删除任务和物品，回到安全地点。
 
-玩法随机使用遭遇种子；地图装饰使用单独的固定种子，动画仅使用时间。所有图片和音频从本地包加载，运行时不请求CDN。
+玩法随机使用遭遇种子；地图装饰使用单独的固定种子，动画仅使用时间。云端文件的时间和 UUID 由 IO 层生成，不消耗玩法随机数。
+
+
+## WebP 与永久 CDN
+
+- `http://127.0.0.1:8791/Haqi.html`：默认本地 WebP；`localhost` / IPv6 loopback 同样处理。
+- `Haqi.html?assets=cdn`：本机验收线上资源模式；其余域名（包括局域网 IP）默认 CDN。
+- `Haqi.html?assets=local`：明确使用 Git 资源，可用于无网的局域网开发。线上发布不加此参数。
+- 91项资源（90张 WebP、1段可选 Ogg）合计8,326,728字节；转换前10,823,856字节，减少23.1%。原PNG从当前工作树移除，历史仍在Git；原始完整条目可重新下载。
+- 图片加载在设置 `src` 前指定 `crossOrigin='anonymous'`；所有资源的HTTP、CORS、尺寸、内容哈希已经核验。可选音乐失败不影响游戏。
+
+准备环境只用于开发，游戏不加载 Pillow 或 npm 第三方库：
+
+```bash
+python3 -m venv .asset-cache/venv
+.asset-cache/venv/bin/pip install Pillow
+HAQI_ASSET_PYTHON=.asset-cache/venv/bin/python npm run assets:adventure
+.asset-cache/venv/bin/python scripts/prepare_adventure_media.py --verify
+npm run plan:adventure-cdn
+# 根据 AGENTS.md 的 Maisi 七牛上传技能上传 .asset-cache/publish 中计划列出的文件。
+# 文件名为 SHA-256；object key/完整URL在 data/adventure/cdn-publish-plan.json。
+npm run verify:adventure-cdn
+```
+
+发布脚本本身不存放凭据：先生成计划，使用 Maisi 的上传器上传，最后对每个实际URL重新GET、验证CORS与完整字节，全部成功才写入 `media.json` 的CDN地址。线上资源仅允许 `https://cdn.keepwork.com/`，不使用临时URL或其他CDN。修改原图后重新准备；`--prune-png` 只删除已经验证转换成功且源哈希匹配的PNG。原生成图集丢失时从Git恢复已准备的WebP，或重新提供原始图集。
+
+## Keepwork 云端旅途
+
+开始画面、设置和战斗中的「云端旅途 / 云端存档」提供可选手动检查点。点击连接后才加载已验证的 `https://cdn.keepwork.com/sdk/keepworkSDK.core.iife.js`，使用SDK的中文登录窗；普通本地游玩不加载SDK。
+
+每次保存会在 `sdk.personalPageStore.withWorkspace('HaqiAdventure')` 下新增 `checkpoints/<UTC时间>_<UUID>.json`。封装版本1包含 `app`、`id`、`updatedAt`、完整AdventureSave；不会上传SDK token、密码或密钥。无固定latest文件，不自动覆盖其他设备的记录，也没有后台自动云同步。
+
+`createFile` 硬编码开启后台 server pageCache 写入，可能抢先清除pending；不能据此证明持久化。适配器使用 `savePageData(path, 'content', text, false, false)` 暂存内容并关闭立即后台flush/远端缓存，再等待 `syncToGit(path,false)`，再通过SDK的 `getFileByFullPath(...,undefined,false)` 直接读取远端核验JSON内容。PersonalPageStore的普通读取、甚至 `forceRemote` 读取都可能在失败时回退本地，因此不能用它们证明云端成功。列表使用 `listDir('checkpoints',false,{remoteOnly:true})`；SDK会吞掉目录错误，所以空列表只提示刷新重试，不断言没有存档。
+
+恢复流程先读取实际远端记录，校验版本、角色、任务、装备及战斗重演，再显示本地/云端进度供玩家选择。点击「确认恢复」前不会修改本地存档；先备份到 `haqi.adventure.kids.v1.before-cloud`，再替换主存档。备份写入失败则中止恢复；菜单可导出上次备份。更新时间使用独立 `.updated` 键，不改变原存档兼容性。账号变化使旧预览失效。
+
+网络超时或未确认写入时，本地进度不受影响；SDK请求可能随后完成，因此应先刷新检查再重试。云端记录的可见性遵循用户Keepwork项目设置，不宣称其为加密或私密存储。真正登录账号后的服务端往返尚需验收；当前已验证真实SDK加载/中文登录/取消，以及模拟SDK上的保存、失败、预览、恢复与备份。

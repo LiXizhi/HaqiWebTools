@@ -19,7 +19,7 @@ test('sea lion summons then attacks with ice swords; visual randomness is isolat
 });
 test('all effects draw finite, balanced canvas commands at every stage and direction',()=>{
  let depth=0,draws=0;
- const ctx=new Proxy({}, {get:(_,key)=>key==='save'?()=>depth++:key==='restore'?()=>{assert.ok(depth>0);depth--;}: (...args)=>{for(const x of args)if(typeof x==='number')assert.ok(Number.isFinite(x),key);},set:()=>true});
+ const ctx=new Proxy({}, {get:(_,key)=>key==='createRadialGradient'?()=>({addColorStop(){}}):key==='save'?()=>depth++:key==='restore'?()=>{assert.ok(depth>0);depth--;}: (...args)=>{for(const x of args)if(typeof x==='number')assert.ok(Number.isFinite(x),key);},set:()=>true});
  const fx=createSpellEffects({effects:config,media:load('media'),draw:(...args)=>{draws++;for(const x of args.slice(2))assert.ok(Number.isFinite(x));}});
  for(const card of Object.values(cards))for(const width of [320,1200])for(const reverse of [false,true])for(const p of [0,.1,.3,.5,.7,.85,1])for(const reducedMotion of [false,true]){
  const from={x:width*(reverse?.8:.2),y:210},to={x:width*(reverse?.2:.8),y:160};fx.draw(ctx,{card,progress:p,from,to,width,height:360,reducedMotion});assert.equal(depth,0);

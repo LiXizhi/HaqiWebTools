@@ -12,7 +12,8 @@
         "assets:adventure": "node scripts/prepare_adventure_assets.mjs",
         "check:adventure": "node scripts/check_adventure.mjs && node scripts/prepare_adventure_assets.mjs --check",
         "plan:adventure-cdn": "node scripts/publish_adventure_media.mjs",
-        "verify:adventure-cdn": "node scripts/publish_adventure_media.mjs --verify"
+        "verify:adventure-cdn": "node scripts/publish_adventure_media.mjs --verify",
+        "audit:effects": "node scripts/audit_spell_effects.mjs"
     },
     "engines": {
         "node": ">=20"

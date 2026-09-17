@@ -5,6 +5,24 @@ function disc(c,x,y,r,color){c.fillStyle=color;c.beginPath();c.arc(x,y,Math.max(
 function line(c,points,color,width=2){c.strokeStyle=color;c.lineWidth=width;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();}
 function rune(c,x,y,r,t,color){c.save();c.translate(x,y);c.scale(1,.42);c.rotate(t*TAU*.3);c.strokeStyle=color;c.lineWidth=2;c.beginPath();c.arc(0,0,r,0,TAU);c.stroke();c.beginPath();c.arc(0,0,r*.8,0,TAU);c.stroke();for(let i=0;i<10;i++){const a=i*TAU/10;c.save();c.rotate(a);c.strokeRect(r*.87,-3,6,6);c.restore();}c.beginPath();for(let i=0;i<=5;i++){const a=i*TAU*2/5;c.lineTo(Math.cos(a)*r*.75,Math.sin(a)*r*.75);}c.stroke();c.restore();}
 function shard(c,x,y,size,angle,color){c.save();c.translate(x,y);c.rotate(angle);c.fillStyle=color;c.beginPath();c.moveTo(0,-size*2.4);c.lineTo(size*.5,0);c.lineTo(0,size*.65);c.lineTo(-size*.5,0);c.closePath();c.fill();c.strokeStyle='#ffffffb0';c.lineWidth=.8;c.stroke();c.restore();}
+// Faceted masses and blades are silhouettes, not oversized arrow-shaped particles.
+function rock(c,x,y,r,rotation,palette) {
+    const [primary,light,dark]=palette;c.save();c.translate(x,y);c.rotate(rotation);
+    const points=Array.from({length:9},(_,i)=>{const a=i*TAU/9,rr=r*(.82+.16*Math.sin(i*9+1));return [Math.cos(a)*rr,Math.sin(a)*rr];});
+    for(let i=0;i<points.length;i++){c.fillStyle=[dark,primary,light,primary,dark][i%5];c.beginPath();c.moveTo(-r*.18,-r*.22);c.lineTo(...points[i]);c.lineTo(...points[(i+1)%points.length]);c.closePath();c.fill();}
+    c.shadowBlur=0;line(c,[...points,points[0]],light,1.2);line(c,[points[6],[-r*.18,-r*.22],points[2]],light+'aa',1);c.restore();
+}
+function sword(c,x,y,size,angle,palette) {
+    const [primary,light,dark]=palette;c.save();c.translate(x,y);c.rotate(angle);
+    c.fillStyle=primary;c.beginPath();c.moveTo(size*1.6,0);c.lineTo(size*.65,-size*.20);c.lineTo(-size*.7,-size*.17);c.lineTo(-size*.7,size*.17);c.lineTo(size*.65,size*.20);c.closePath();c.fill();
+    c.fillStyle=light;c.beginPath();c.moveTo(size*1.6,0);c.lineTo(-size*.7,0);c.lineTo(-size*.7,-size*.17);c.lineTo(size*.65,-size*.20);c.closePath();c.fill();
+    line(c,[[-size*.8,-size*.42],[-size*.68,0],[-size*.8,size*.42]],light,2);
+    line(c,[[-size*.7,0],[-size*1.1,0]],dark,4);disc(c,-size*1.15,0,2,light);c.restore();
+}
+function mist(c,x,y,r,color,alpha) {
+    c.save();c.globalAlpha*=alpha;c.shadowBlur=0;
+    const g=c.createRadialGradient(x,y,0,x,y,Math.max(1,r));g.addColorStop(0,color);g.addColorStop(1,color+'00');disc(c,x,y,r,g);c.restore();
+}
 export function createSpellEffects(assets) {
     const config=assets.effects,cache=new Map();
     function draw(c,{card,progress,from,to,center,width,height,seed=0,reducedMotion=false,failed=false}) {
@@ -52,21 +70,55 @@ export function createSpellEffects(assets) {
                 if(kind==='lightning') {
                     for(let branch=0;branch<3;branch++){const pts=[];for(let i=0;i<=12;i++){const v=i/12;pts.push([a.x+(b.x-a.x)*v,a.y+(b.y-a.y)*v+Math.sin(i*17+Math.floor(p*24)+branch*7)*(i===0||i===12?0:23)*scale]);}line(c,pts,primary,7*scale);line(c,pts,light,2*scale);}
                 } else if(kind==='meteor') {
-                    const mx=b.x-110*scale*(1-flight),my=b.y-200*scale*(1-flight);
-                    line(c,[[mx-60*scale,my-110*scale],[mx,my]],primary,16*scale);shard(c,mx,my,30*scale,2.7,light);
+                    const q=flight*flight,dir=b.x>=a.x?1:-1;
+                    const point=v=>({x:b.x-dir*130*scale*(1-v),y:b.y-190*scale*(1-v)});
+                    const head=point(q);
+                    // Tapered vapor/embers follow the falling mass rather than a solid beam.
+                    for(let i=17;i>=0;i--){const v=Math.max(0,q-i*.014),at=point(v);c.save();c.globalAlpha*=1-i/19;mist(c,at.x,at.y,(24-i*.8)*scale,primary,.42);c.restore();}
+                    for(const v of particles.slice(0,38)){
+                        const tail=point(Math.max(0,q-v.phase*.25)),spread=(1+v.phase*22)*scale;
+                        c.save();c.globalAlpha*=1-v.phase;
+                        const px=tail.x+Math.cos(v.angle)*spread,py=tail.y+Math.sin(v.angle)*spread;
+                        if(card.spellSchool==='ice')rock(c,px,py,(2+v.size)*scale,v.spin+p*3,col);else disc(c,px,py,v.size*scale,light);c.restore();
+                    }
+                    c.save();c.globalAlpha*=.18+q*.35;c.strokeStyle=primary;c.lineWidth=2*scale;c.beginPath();c.ellipse(b.x,to.y,radius*(.35+q*.3),radius*(.12+q*.1),0,0,TAU);c.stroke();c.restore();
+                    rock(c,head.x,head.y,27*scale*spec.scale,p*3,col);
                 } else if(kind==='swords') {
-                    for(let i=0;i<5;i++){const q=clamp(flight*1.5-i*.11),sx=a.x+(b.x-a.x)*q,sy=a.y+(b.y-a.y)*q+(i-2)*18*scale*(1-q)-Math.sin(q*Math.PI)*60*scale;shard(c,sx,sy,18*scale,Math.atan2(b.y-a.y,b.x-a.x)+Math.PI/2,light);line(c,[[sx-(b.x>=a.x?40:-40)*scale,sy],[sx,sy]],primary,3*scale);}
+                    for(let i=0;i<5;i++){
+                        const q=clamp(flight*1.45-i*.10),point=v=>({x:a.x+(b.x-a.x)*v,y:a.y+(b.y-a.y)*v+(i-2)*21*scale*(1-v)-Math.sin(v*Math.PI)*70*scale});
+                        const head=point(q),prev=point(Math.max(0,q-.025));
+                        for(let j=1;j<=8;j++){const at=point(Math.max(0,q-j*.012));c.save();c.globalAlpha*=(1-j/9)*.5;disc(c,at.x,at.y,(4-j*.32)*scale,primary);c.restore();}
+                        sword(c,head.x,head.y,17*scale,Math.atan2(head.y-prev.y,head.x-prev.x),col);
+                    }
                 } else if(kind==='vines') {
                     for(let i=0;i<7;i++){const vx=b.x+(i-3)*17*scale;c.strokeStyle=i%2?light:primary;c.lineWidth=5*scale;c.beginPath();c.moveTo(vx,to.y);c.bezierCurveTo(vx-35*scale,to.y-40*scale*flight,vx+40*scale,to.y-80*scale*flight,vx,to.y-150*scale*flight);c.stroke();shard(c,vx,to.y-110*scale*flight,10*scale,.7,primary);}
                 } else if(kind==='vortex') {
-                    for(let i=0;i<16;i++){const ang=i*.8+p*22,rr=radius*(1-i/22);disc(c,b.x+Math.cos(ang)*rr,b.y+30*scale-i*5*scale+Math.sin(ang)*rr*.28,(3+i*.35)*scale,i%3?primary:light);}
+                    // Helical ribbons widen toward the top of a visible cyclone.
+                    const grow=Math.sin(flight*Math.PI)*.35+.65;
+                    for(let band=0;band<4;band++){
+                        const pts=[];for(let j=0;j<=40;j++){const v=j/40,ang=v*TAU*2.5+p*18+band*TAU/4,rr=radius*(.2+v*.8)*grow;pts.push([b.x+Math.cos(ang)*rr,to.y-v*150*scale+Math.sin(ang)*rr*.28]);}
+                        c.save();c.globalAlpha*=.28;line(c,pts,primary,7*scale);c.globalAlpha*=2;line(c,pts,light,1.4*scale);c.restore();
+                    }
+                    for(const v of particles.slice(0,32)){const lift=(p*1.7+v.phase)%1,ang=lift*12+p*15+v.angle,rr=radius*(.2+lift*.85);shard(c,b.x+Math.cos(ang)*rr,to.y-lift*150*scale+Math.sin(ang)*rr*.25,v.size*scale,ang,primary);}
                 } else {
-                    line(c,[[a.x,a.y],[x,y]],dark,9*scale);disc(c,x,y,13*scale,primary);disc(c,x,y,6*scale,light);
+                    const point=v=>({x:a.x+(b.x-a.x)*v,y:a.y+(b.y-a.y)*v-Math.sin(v*Math.PI)*55*scale});
+                    for(let j=16;j>=1;j--){const at=point(Math.max(0,flight-j*.014));c.save();c.globalAlpha*=(1-j/17)*.55;disc(c,at.x,at.y,(10-j*.45)*scale,primary);c.restore();}
+                    mist(c,x,y,30*scale,primary,.7);disc(c,x,y,9*scale,primary);disc(c,x,y,4*scale,light);
                 }
+                if(!['meteor','vortex','vines'].includes(kind))
                 for(const v of particles.slice(0,30)){const q=clamp(flight-v.phase*.2);disc(c,a.x+(b.x-a.x)*q+Math.cos(v.angle)*12*scale,a.y+(b.y-a.y)*q-Math.sin(q*Math.PI)*55*scale+Math.sin(v.angle)*12*scale,v.size*scale,primary);}
             }
             if(hit>0) {
                 c.globalAlpha=1-hit;c.strokeStyle=light;c.lineWidth=(1-hit)*5*scale;c.beginPath();c.ellipse(b.x,b.y,radius*hit*1.5,radius*hit,0,0,TAU);c.stroke();
+                if(kind==='meteor') {
+                    const spread=Math.sqrt(hit)*radius*1.35;
+                    for(let ring=0;ring<3;ring++){c.save();c.globalAlpha*=(1-hit)*(.65-ring*.16);c.strokeStyle=ring%2?primary:light;c.lineWidth=(3-ring*.6)*scale;c.beginPath();c.ellipse(b.x,to.y,spread*(1-ring*.2),spread*(.36-ring*.06),0,0,TAU);c.stroke();c.restore();}
+                    for(const v of particles.slice(0,22)){
+                        const px=b.x+Math.cos(v.angle)*spread*v.speed,py=to.y+Math.sin(v.angle)*spread*.3-Math.sin(hit*Math.PI)*(18+v.speed*60)*scale;
+                        rock(c,px,py,(2+v.size*1.6)*(1-hit*.7)*scale,v.spin+hit*6,col);
+                    }
+                    for(let i=0;i<7;i++)mist(c,b.x+Math.cos(i*2.4)*spread*.7,to.y+Math.sin(i*2.4)*spread*.2,25*scale*(1+hit),primary,(1-hit)*.18);
+                }
                 for(const v of particles){const travel=radius*(.2+hit*1.6)*v.speed,px=b.x+Math.cos(v.angle)*travel,py=b.y+Math.sin(v.angle)*travel+hit*hit*35*scale;
                     if(card.spellSchool==='ice')shard(c,px,py,v.size*scale*2,v.spin+hit*2,hit<.3?light:primary);else disc(c,px,py,v.size*scale*(1-hit*.6),v.phase>.5?primary:light);
                 }

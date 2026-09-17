@@ -170,7 +170,7 @@
     "Fire_SingleAttackWithDOT_Level2": {
       "name": "火神之怒",
       "kind": "meteor",
-      "duration": 1800,
+      "duration": 2100,
       "count": 64,
       "scale": 1.11,
       "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level2.xml"
@@ -264,7 +264,7 @@
     "Ice_SingleAttack_Level2": {
       "name": "陨落冰石",
       "kind": "meteor",
-      "duration": 1800,
+      "duration": 2100,
       "count": 64,
       "scale": 1.11,
       "source": "config/Aries/Cards/Ice_SingleAttack_Level2.xml"

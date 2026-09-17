@@ -268,3 +268,5 @@ tr:hover td { background: rgba(255,255,255,.02); }
     .disc { max-height: 320px; }
     .log { height: 260px; }
 }
+/* Card illustration shares the adventure atlas; numeric diagnostics remain below. */
+.shared-skill-card{display:block;width:100%;max-width:151px;height:auto;margin:0 auto 8px;border-radius:5px}

@@ -44,6 +44,8 @@
 @media(max-width:1050px){.utility-nav{right:18px;grid-template-columns:repeat(4,46px)}.location-label{top:130px}}
 @media(max-width:650px){.hero-wallet{margin-top:5px}.hero-wallet .badge{font-size:9px;padding:2px 4px}.utility-nav{top:12px;right:12px;grid-template-columns:repeat(2,48px);gap:2px;padding:4px}.utility-button{min-height:48px;gap:2px;font-size:9px}.utility-button .icon{width:20px;height:20px}.utility-button small{font-size:8px}.location-label{top:116px}.quest-tracker{top:155px}}
 
+/* Generated frame positions, shared by deck and battle cards. */
+.spell-cost{left:91.4%;top:6.1%}.spell-cooldown{left:11.9%;top:60.2%}.spell-description{top:66.7%;color:#173b4b;font-weight:600;text-shadow:none;height:27%}
 /* Character equipment: shared paper palette, original item art, touch-friendly controls. */
 .equipment-modal.wide{width:min(1060px,100%)}
 .equipment-tabs,.equipment-filters,.equipment-wallet,.equipment-actions{display:flex;gap:8px;flex-wrap:wrap}

@@ -2,6 +2,7 @@
 import { validateSpellEffects } from './spell_effects_core.js';
 import { validateAdventureContent } from './adventure_content_core.js';
 import { assetMode, assetUrl, validateMediaManifest } from './adventure_media_core.js';
+import { loadSkillArt } from './skill_art.js';
 export const SAVE_KEY = 'haqi.adventure.kids.v1';
 async function json(url) { const r=await fetch(url);if(!r.ok)throw new Error(`无法读取 ${url}（${r.status}）`);return r.json(); }
 function loadImage(url) { return new Promise((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=()=>reject(new Error(`无法加载图片 ${url}`));i.src=url;}); }
@@ -12,7 +13,11 @@ export async function loadResources(progress) {
     const mode=assetMode(location.hostname,location.search);
     validateMediaManifest(media,manifest,mode);
     const images=new Map(),bounds=new Map(),failures=[];
-    const rows=Object.entries(media.entries).filter(([,a])=>a.local.endsWith('.webp'));
+    const cardImages=new Set(Object.values(dataset.cards).map(card=>card.art?.id).filter(Boolean));
+    const otherImages=new Set(Object.values(content.items).map(item=>item.art?.id).filter(Boolean));
+    const rows=Object.entries(media.entries).filter(([id,a])=>a.local.endsWith('.webp')&&(!cardImages.has(id)||otherImages.has(id)));
+    const skillArt=await loadSkillArt(effects,mode);
+    await skillArt.preload(dataset.cards);
     let cursor=0,done=0;
     const worker=async()=>{while(cursor<rows.length){const[id,a]=rows[cursor++];try{images.set(id,await loadImage(assetUrl(a,mode)));}catch(e){if(!a.optional)failures.push(e.message);}progress?.(++done/rows.length);}};
     await Promise.all(Array.from({length:8},worker));
@@ -43,7 +48,7 @@ export async function loadResources(progress) {
         const row=Math.floor(index/4), cuts=sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height];
         return draw(ctx,{id:sheet,crop:[(index%4)*cw,cuts[row],cw,cuts[row+1]-cuts[row]]},x,y,w,h,true);
     }
-    return {content,dataset,manifest,effects,images,draw,tile,getBounds,mode,media,urlFor:id=>assetUrl(media.entries[id],mode)};
+    return {content,dataset,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

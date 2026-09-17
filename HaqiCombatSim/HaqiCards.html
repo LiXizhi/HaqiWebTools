@@ -2,22 +2,23 @@
 <html lang="zh-CN">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>魔法哈奇 · 卡牌与技能图集样张</title><link rel="stylesheet" href="css/card-study.css"></head>
 <body>
-<header><p class="eyebrow">魔法哈奇 · 美术实验</p><h1>一张图集，九种技能</h1><p>参考原版卡面重绘透明主体。选择卡牌，查看同一格 WebP 如何用于卡面插画与施法演出。</p></header>
+<header><p class="eyebrow">魔法哈奇 · 美术实验</p><h1>全卡图集与技能演出</h1><p>全卡库基础技能共用图集，精选高费技能使用专属九帧动作。卡牌插画与正式战斗演出使用同一套美术。</p></header>
 <main>
 <section class="atlas-workbench" aria-label="技能图集实验">
   <div class="effect-panel">
     <div class="effect-heading"><div><p class="eyebrow">同一图片 · 两种用途</p><h2 id="effect-name">正在准备样张</h2></div><span id="atlas-size" class="asset-tag">3 × 3 图集</span></div>
     <canvas id="atlas-effect" width="1000" height="440" aria-label="选中技能的施法动画"></canvas>
     <div class="effect-controls"><button id="effect-play" disabled>播放演出</button><button id="effect-replay" disabled>重新播放</button><label>进度 <input id="effect-progress" type="range" min="0" max="1000" value="0" aria-label="施法动画进度"></label><span id="effect-kind"></span></div>
-    <p class="demo-note">演出为同一静态主体的位移、缩放、旋转及粒子组合；九格是九种技能，并非九帧逐帧动画。此处仅验证美术复用，不改变游戏战斗。</p>
+    <p class="demo-note">普通技能使用主体配合弹道与粒子；专属技能播放九帧姿态。数值、标题与品质光环由程序绘制。</p>
   </div>
-  <p id="atlas-status" role="status">正在加载技能图集…</p>
-  <section id="atlas-cards" aria-label="九张技能卡牌样张"></section>
-  <details class="atlas-source"><summary>查看完整图集与裁剪方式</summary><p>固定 3 × 3 等分；卡牌插画和施法演出使用相同的裁剪矩形。透明发光边缘会随场景底色变化。</p><div class="atlas-sheet"><img id="atlas-sheet" alt="九种技能的透明三乘三图集"><div class="grid-guide" aria-hidden="true"></div></div><p id="atlas-source-info"></p></details>
+  <div class="controls library-controls"><label>学系 <select id="atlas-filter"><option value="all">全部</option><option value="ice">寒冰</option><option value="fire">烈火</option><option value="storm">风暴</option><option value="life">生命</option><option value="death">死亡</option><option value="balance">通用</option></select></label><label>搜索 <input id="atlas-search" type="search" placeholder="技能名称"></label><button id="atlas-prev">上一页</button><button id="atlas-next">下一页</button></div>
+  <p id="atlas-status" role="status">正在加载全卡库…</p>
+  <section id="atlas-cards" aria-label="全卡库技能卡牌"></section>
+  <details class="atlas-source"><summary>查看完整图集与裁剪方式</summary><p>普通图集按3×3或4×4等分；专属动作按3×3顺序播放。每张WebP不超过100KB，边缘带透明留白。</p><div class="atlas-sheet"><img id="atlas-sheet" alt="当前技能所在的透明图集"></div><p id="atlas-source-info"></p></details>
 </section>
 <details class="old-study"><summary>原五系底图与程序层对照</summary>
 <div class="controls"><label><input type="checkbox" id="content" checked>显示程序内容</label><label>魔力点 <input id="cost" type="number" min="0" max="14" value="2"></label><label>左侧数值 <input id="left" type="number" min="0" max="14" value="0"></label><button id="gold" aria-pressed="false">金卡光环：关</button></div><p id="status" role="status">正在加载五系底图…</p><section id="cards" aria-label="五系对照样张"></section>
 </details>
-<footer>设计样张：背景每张小于 24KB，九个主体合并为一张透明 WebP 图集。所有标题与说明均由程序绘制。尚未替换游戏现有卡牌。</footer>
+<footer>正式美术预览：图集每张不超过100KB，背景每张小于24KB。已接入冒险卡包、手牌与技能演出。</footer>
 </main><script type="module" src="js/card_study.js"></script><script type="module" src="js/card_atlas_study.js"></script>
 </body></html>

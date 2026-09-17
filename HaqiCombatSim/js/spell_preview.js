@@ -19,22 +19,12 @@ function select(){
     $('detail').textContent=`${spec.area?'群体 · ':''}${spec.kind==='summon'?'角色召唤':'基础演出'} · ${ranks[spec.variant.rank]}${spec.variant.level?' · '+spec.variant.level+'阶':''}${spec.variant.lowLevel?' · 入门版':''} · ${(spec.duration/1000).toFixed(1)} 秒`;
     const c=$('art').getContext('2d');c.clearRect(0,0,302,460);
     $('error').textContent='';
-    assets.ensureSpellArt(spec.base).then(image=>{
-        if(!image||assets.effects.cards[card.key].base!==spec.base)return;
-        c.clearRect(0,0,302,460);c.drawImage(image,0,0,302,460);
-        const row=assets.spellArt[spec.base];
-        $('art').setAttribute('aria-label',row.adaptation?'补绘基础卡面':'原版基础卡面（变体共用）');
-        if(row.adaptation){c.fillStyle='#fff4cc';c.textAlign='center';c.font='bold 25px sans-serif';c.fillText(row.name,151,60,260);c.font='16px sans-serif';c.fillText('原图缺失 · 符文补绘',151,418);}
+    assets.ensureSpellArt(spec.base).then(()=>{
+        if(assets.effects.cards[card.key].base!==spec.base)return;
+        assets.skillArt.drawCard(c,card);
+        $('art').setAttribute('aria-label',spec.name+' · 图集重绘卡面');
     }).catch(e=>{if(assets.effects.cards[card.key].base===spec.base)$('error').textContent=e.message;});
-    const art=card.art||Object.values(assets.dataset.cards).find(x=>assets.effects.cards[x.key].base===spec.base)?.art;
-    if(art){assets.draw(c,art,0,0,302,460,false);$('art').setAttribute('aria-label','原版基础卡面（变体共用）');}
-    else {
-        $('art').setAttribute('aria-label','技能演出示意');const col=spec.palette;
-        c.fillStyle='#193441';c.fillRect(0,0,302,460);c.strokeStyle=col[0];c.lineWidth=4;c.strokeRect(10,10,282,440);
-        c.textAlign='center';c.fillStyle=col[1];c.font='bold 30px sans-serif';c.fillText(names[card.spellSchool],151,70);
-        c.beginPath();c.arc(151,190,72,0,Math.PI*2);c.stroke();c.font='60px sans-serif';c.fillText('✧',151,210);
-        c.font='24px sans-serif';c.fillText(spec.name,151,320,260);c.font='18px sans-serif';c.fillText('演出示意 · 非原版卡面',151,410);
-    }
+
 }
 function selectBase(preferred){
     const list=families.get($('base').value)||[];$('card').replaceChildren();

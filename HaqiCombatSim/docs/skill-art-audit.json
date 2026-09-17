@@ -1,0 +1,247 @@
+{
+  "baseCount": 225,
+  "sheetCount": 24,
+  "totalBytes": 2185706,
+  "sheets": {
+    "ice-01": {
+      "size": 94404,
+      "width": 448,
+      "height": 448,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "ice-02": {
+      "size": 96040,
+      "width": 512,
+      "height": 512,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "ice-03": {
+      "size": 98684,
+      "width": 576,
+      "height": 576,
+      "usedCells": 7,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "fire-01": {
+      "size": 95124,
+      "width": 512,
+      "height": 512,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "fire-02": {
+      "size": 99084,
+      "width": 512,
+      "height": 512,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "fire-03": {
+      "size": 48286,
+      "width": 576,
+      "height": 576,
+      "usedCells": 4,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "storm-01": {
+      "size": 94094,
+      "width": 512,
+      "height": 512,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "storm-02": {
+      "size": 96424,
+      "width": 448,
+      "height": 448,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "storm-03": {
+      "size": 57174,
+      "width": 576,
+      "height": 576,
+      "usedCells": 2,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "life-01": {
+      "size": 95450,
+      "width": 448,
+      "height": 448,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "life-02": {
+      "size": 94172,
+      "width": 448,
+      "height": 448,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "life-03": {
+      "size": 99180,
+      "width": 576,
+      "height": 576,
+      "usedCells": 7,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "death-01": {
+      "size": 99812,
+      "width": 512,
+      "height": 512,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "death-02": {
+      "size": 95426,
+      "width": 576,
+      "height": 576,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "death-03": {
+      "size": 58562,
+      "width": 576,
+      "height": 576,
+      "usedCells": 4,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "balance-01": {
+      "size": 95384,
+      "width": 512,
+      "height": 512,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "balance-02": {
+      "size": 96426,
+      "width": 512,
+      "height": 512,
+      "usedCells": 16,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "balance-03": {
+      "size": 99038,
+      "width": 576,
+      "height": 576,
+      "usedCells": 9,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "hero-ice": {
+      "size": 93744,
+      "width": 480,
+      "height": 480,
+      "usedCells": 9,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "hero-fire": {
+      "size": 97488,
+      "width": 576,
+      "height": 576,
+      "usedCells": 9,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "hero-storm": {
+      "size": 96436,
+      "width": 480,
+      "height": 480,
+      "usedCells": 9,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "hero-life": {
+      "size": 95566,
+      "width": 528,
+      "height": 528,
+      "usedCells": 9,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "hero-death": {
+      "size": 93896,
+      "width": 576,
+      "height": 576,
+      "usedCells": 9,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    },
+    "hero-balance": {
+      "size": 95812,
+      "width": 576,
+      "height": 576,
+      "usedCells": 9,
+      "http": 200,
+      "cors": true,
+      "sha256": true,
+      "alphaAndGutters": true
+    }
+  }
+}

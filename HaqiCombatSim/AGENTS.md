@@ -74,6 +74,8 @@ Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 
 
 ## 验证
 
+- 卡牌美术约定（2026-09-18）：新技能主体和专属动作图集以100KB为预算，当前打包器严格限制为100,000字节；卡牌背景仍严格小于24,000字节。其他资源保持原200,000字节上限。使用 `scripts/prepare_skill_art.py` 准备共享格图，并核验 `data/adventure/skill-art.json` 的来源、哈希、格号和CDN。
+
 - `npm test`（`node --test tests/`）：公式回归、确定性、冒烟。
 - 浏览器打开 `HaqiCombatSim.html`：对战页能完整打完一场 1v1；批量页 1v1 × 五系 × 200 场能出矩阵。
 - 改动引擎后，在 `docs/qa-report.md` 追加一条验证记录。

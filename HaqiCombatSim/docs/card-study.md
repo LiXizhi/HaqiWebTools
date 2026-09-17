@@ -1,4 +1,18 @@
-# 五系卡牌底图样张
+# 卡牌与技能共享图集
+
+## 当前实现（2026-09-18）
+
+`HaqiCards.html?assets=cdn` 展示儿童版全部225个基础技能，覆盖701条卡牌定义；支持学系筛选、名称搜索、分页和原版卡面对照。`?assets=local` 使用仓库WebP。正式冒险的卡包、手牌、技能演出及特效工坊共用 `js/skill_art.js`；儿童版对战模拟器手牌也使用新卡面。
+
+18张普通3×3/4×4图集承载独立技能主体，6张专属3×3图集各承载一个高费技能的九帧动作：海狮冰剑、火魔掷石、旋风爆击、重生、蝠王吸魂、梦龙极光符文。每张新图集严格不超过100,000字节；五系背景仍小于24,000字节。标题、费用、说明、品质光环由程序绘制，等级/品质变体共享主体。普通技能使用主体配合位移、缩放、粒子，专属技能逐帧播放。
+
+`data/adventure/skill-art.json` 记录裁剪格号、九帧顺序、来源条目、本地WebP、永久CDN、输入/输出哈希；生成方案在 `skill-art-plan.json`，完整最终提示词在 [skill-art-prompts.json](skill-art-prompts.json)。内置imagegen参照原卡面生成新画作；系统技能按语义生成，非逐像素复原。
+
+开发准备：`python scripts/prepare_skill_art.py <source-records-directory>`，目录内每个图集ID的JSON提供 `source`（生成PNG绝对路径）和 `prompt`。脚本先无损，再调整质量及分辨率，保留alpha和等分格布局，增加透明留白。上传到 `keepwork/haqi-adventure/skill-atlases/` 后运行 `python scripts/verify_skill_art_cdn.py`，全部远端验证通过才记录CDN URL。审计结果见 [skill-art-audit.json](skill-art-audit.json)。不涉及数值规则改动；teen卡库未重绘。
+
+以下为早期样张记录，九格195KB图集仅保留归档，不再由当前卡牌页面加载。
+
+## 五系卡牌底图样张（历史）
 
 入口：`HaqiCards.html?assets=cdn`（Keepwork CDN），`?assets=local`使用Git中的WebP。此页独立于游戏和特效工坊，不替换现有卡牌或数值。
 

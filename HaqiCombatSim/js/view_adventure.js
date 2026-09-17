@@ -127,9 +127,9 @@ function spellHint(card,d) {
 }
 function spellFace(assets,card,artCard=card) {
     // kids pe_item.DrawCardMask: 151×230, pips (120,5), cooldown (7,115), description (18,142).
-    // The original title is already printed in the artwork; retain its accessible name.
+    // Shared background + generated subject; title/numbers/description stay dynamic.
     const canvas=el('canvas','spell-art');canvas.width=302;canvas.height=460;
-    assets.draw(canvas.getContext('2d'),artCard.art,0,0,302,460,false);
+    assets.skillArt.drawCard(canvas.getContext('2d'),card,{name:artCard.name,details:false});
     const cost=card.pipcost===114||card.pipcost==='X'?'X':String(card.pipcost);
     const pip=el('span','spell-cost',cost);pip.setAttribute('aria-label',`消耗 ${cost} 点魔力`);
     pip.title=`消耗 ${cost} 点魔力。本系法术：1个超级魔力抵2点；其他系抵1点。`;

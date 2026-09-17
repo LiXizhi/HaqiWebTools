@@ -8,6 +8,7 @@ import { unitSpec, presetDeck, aggregateDeck, schoolCardCatalog, SCHOOL_NAMES, S
 import { cardTargetKind, expectedBaseDamage, expectedBaseHeal, isSupportedType } from './combat_cards_core.js';
 import * as U from './combat_unit_core.js';
 import { h, svg, clear, select, numberInput, toast } from './utils.js';
+import { skillCardPreview } from './skill_card_preview.js';
 
 /** 动画速度倍率（0 = 不播放动画） */
 const SPEEDS = { slow: 1.8, normal: 1, fast: 0.45, off: 0 };
@@ -688,6 +689,8 @@ export function renderBattle(main) {
                     h('div.cinfo', `命中 ${card.accuracy}%${dmg ? ' · 伤害≈' + Math.round(dmg) : ''}${heal ? ' · 治疗≈' + Math.round(heal) : ''}${cd ? ' · 冷却 ' + cd : ''}${!isSupportedType(card.type) ? ' · 未支持' : ''}`),
                     discarding ? h('div.ribbon', '弃') : null,
                 );
+                const artwork=skillCardPreview(card,R.version);
+                if(artwork)el.prepend(artwork);
                 hand.appendChild(el);
             }
         }

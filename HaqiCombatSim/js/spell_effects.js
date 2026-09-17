@@ -61,6 +61,37 @@ function supportEffect(c,kind,{a,b,to,center,radius,scale,p,palette,particles,as
 }
 export function createSpellEffects(assets) {
     const config=assets.effects,cache=new Map();
+    function atlasEffect(c,spec,{a,b,origin,to,center,radius,scale,p,flight,hit,particles}) {
+        const art=assets.skillArt,entry=art?.manifest.bases[spec.base];if(!entry)return false;
+        const hero=!!entry.effectAtlas,kind=spec.kind,color=spec.palette[0];
+        let x=b.x,y=b.y,size=radius*2.9,angle=0;
+        if(hero||kind==='summon'){
+            const at=center||a;x=at.x;y=at.y-radius*.8;
+            if(!spec.friendly){x+=(b.x-x)*flight*.5;y-=Math.sin(flight*Math.PI)*radius*.25;}
+            size=radius*3.6*(.8+.2*clamp(p/.2));
+        }else if(['bolt','swords','drain','vortex','steal'].includes(kind)){
+            const q=kind==='steal'?1-flight:flight;
+            x=a.x+(b.x-a.x)*q;y=a.y+(b.y-a.y)*q-Math.sin(q*Math.PI)*radius*.5;
+            angle=Math.sin(flight*Math.PI)*.12;
+        }else if(kind==='meteor'){
+            x=b.x-radius*2*(1-flight);y=b.y-radius*3*(1-flight);angle=flight*.3;
+        }else if(kind==='aura'){
+            x=(center||b).x;y=(center||b).y-radius*.6;size=radius*3.3;
+        }else if(kind==='trap')y=to.y-radius*.4;
+        else if(['burst','lightning','vines'].includes(kind))size*=.65+.35*clamp(p/.3);
+        else if(['shield','absorb','reflect','heal','blade'].includes(kind))size*=.9+Math.sin(p*Math.PI)*.1;
+        c.save();c.shadowBlur=0;c.translate(x,y);c.rotate(angle);
+        const drawn=art.drawSubject(c,spec.base,-size/2,-size/2,size,size,p);
+        c.restore();if(!drawn)return false;
+        rune(c,x,to.y,radius*(.7+hit*.4),p,color);
+        if(spec.variantAura.color){c.save();c.globalAlpha*=.5;for(let i=0;i<spec.variantAura.rings;i++)rune(c,x,to.y,radius*(1+i*.15),p,spec.variantAura.color);c.restore();}
+        for(const v of particles.slice(0,24)){
+            const q=(p+v.phase)%1,spread=radius*(.5+q*.8);
+            disc(c,x+Math.cos(v.angle+p)*spread,y+Math.sin(v.angle+p)*spread*.5-q*radius*.4,v.size*scale*(1-q),color);
+        }
+        if(hit>0&&!spec.friendly){c.save();c.globalAlpha*=1-hit;c.strokeStyle=spec.palette[1];c.lineWidth=3*scale;c.beginPath();c.ellipse(b.x,to.y,radius*(.5+hit*1.5),radius*(.2+hit*.4),0,0,TAU);c.stroke();c.restore();}
+        return true;
+    }
     function draw(c,{card,progress,from,to,center,width,height,seed=0,reducedMotion=false,failed=false,echo=false}) {
         const spec=spellEffect(config,card);if(!spec||!from||!to)return;
         const p=clamp(progress),col=spec.palette,[primary,light,dark]=col;
@@ -71,7 +102,7 @@ export function createSpellEffects(assets) {
         if(!cache.has(cacheKey)){if(cache.size>128)cache.clear();cache.set(cacheKey,effectParticles(spec.base,spec.count,seed));}
         const particles=cache.get(cacheKey);
         c.save();c.lineCap='round';
-        if(reducedMotion){c.globalAlpha=Math.sin(p*Math.PI)*.65;rune(c,b.x,b.y+40*scale,radius,p*.1,primary);c.restore();return;}
+        if(reducedMotion){c.globalAlpha=Math.sin(p*Math.PI)*.65;rune(c,b.x,b.y+40*scale,radius,0,primary);if(!failed)assets.skillArt?.drawSubject(c,spec.base,b.x-radius,b.y-radius,radius*2,radius*2);c.restore();return;}
         // A soft darkening gives particles contrast without white screen flashes.
         if(!echo){c.fillStyle=`rgba(10,14,35,${Math.sin(p*Math.PI)*.22})`;c.fillRect(0,0,width,height);}
         c.shadowColor=primary;c.shadowBlur=12*scale;c.globalAlpha=Math.min(1,p*8,(1-p)*7);
@@ -79,6 +110,7 @@ export function createSpellEffects(assets) {
         const summon=spec.kind==='summon',attackStart=summon?config.timeline.summonAttack:config.timeline.attack,impact=summon?config.timeline.summonImpact:config.timeline.impact;
         const flight=clamp((p-attackStart)/(impact-attackStart)),hit=clamp((p-impact)/(1-impact));
         if(failed){c.globalAlpha*=1-p;for(const v of particles.slice(0,20))disc(c,a.x+Math.cos(v.angle)*radius*p,a.y-Math.sin(v.angle)*radius*p,2*scale,'#9aa1af');c.restore();return;}
+        if(atlasEffect(c,spec,{a,b,origin,to,center,radius,scale,p,flight,hit,particles})){c.restore();return;}
         // Original illustration manifests above the arena as a magical projection.
         // It is deliberately a card-art apparition, not a fabricated animated NPC.
         const illustration=assets.images?.get('spell:'+spec.base);

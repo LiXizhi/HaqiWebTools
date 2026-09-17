@@ -1,0 +1,4256 @@
+{
+  "version": 1,
+  "maxBytes": 100000,
+  "sheets": {
+    "ice-01": {
+      "local": "assets/adventure/skill-atlases/ice-01-cdea8de1b448e15c92d122728608b6575913737be569be1ecb676db973e6e4d3.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/ice-01-cdea8de1b448e15c92d122728608b6575913737be569be1ecb676db973e6e4d3.webp",
+      "sha256": "cdea8de1b448e15c92d122728608b6575913737be569be1ecb676db973e6e4d3",
+      "size": 94404,
+      "width": 448,
+      "height": 448,
+      "columns": 4,
+      "rows": 4,
+      "padding": 9,
+      "sourceSha256": "ac55cf2b6d8ca5652664fd9198e082973120068ba1273aa6a602cebf2939013c"
+    },
+    "ice-02": {
+      "local": "assets/adventure/skill-atlases/ice-02-e523fce7b1edadcbc55ecc22483b8d9e02ab6a39f9f2a5cf953f5f122effdc95.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/ice-02-e523fce7b1edadcbc55ecc22483b8d9e02ab6a39f9f2a5cf953f5f122effdc95.webp",
+      "sha256": "e523fce7b1edadcbc55ecc22483b8d9e02ab6a39f9f2a5cf953f5f122effdc95",
+      "size": 96040,
+      "width": 512,
+      "height": 512,
+      "columns": 4,
+      "rows": 4,
+      "padding": 10,
+      "sourceSha256": "70c26b8b578ebf969e2dd2a8e49a0dff218ff996c70aec3b6df3f2ff138fe944"
+    },
+    "ice-03": {
+      "local": "assets/adventure/skill-atlases/ice-03-cb0c4bc06dcb0babca8eef8f780bad3a5d42b63f6c0f02935d0783def43b9ef9.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/ice-03-cb0c4bc06dcb0babca8eef8f780bad3a5d42b63f6c0f02935d0783def43b9ef9.webp",
+      "sha256": "cb0c4bc06dcb0babca8eef8f780bad3a5d42b63f6c0f02935d0783def43b9ef9",
+      "size": 98684,
+      "width": 576,
+      "height": 576,
+      "columns": 3,
+      "rows": 3,
+      "padding": 15,
+      "sourceSha256": "3cdaf9e14b193bd9297e94f95224c19d3c9bfb8f661c823d7be424345067066c"
+    },
+    "fire-01": {
+      "local": "assets/adventure/skill-atlases/fire-01-92412c82c08211630d79f1063513a92d18885e83b4276d2f5a95f107e7f9a780.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/fire-01-92412c82c08211630d79f1063513a92d18885e83b4276d2f5a95f107e7f9a780.webp",
+      "sha256": "92412c82c08211630d79f1063513a92d18885e83b4276d2f5a95f107e7f9a780",
+      "size": 95124,
+      "width": 512,
+      "height": 512,
+      "columns": 4,
+      "rows": 4,
+      "padding": 10,
+      "sourceSha256": "2410942bcc6f46f7855adab17dff7b60ff453b34035c060c286130d0579d60f0"
+    },
+    "fire-02": {
+      "local": "assets/adventure/skill-atlases/fire-02-97e8adb34f48c31c8d102a384d720953edf34a0c6d5be590c89b0b88849d8b0c.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/fire-02-97e8adb34f48c31c8d102a384d720953edf34a0c6d5be590c89b0b88849d8b0c.webp",
+      "sha256": "97e8adb34f48c31c8d102a384d720953edf34a0c6d5be590c89b0b88849d8b0c",
+      "size": 99084,
+      "width": 512,
+      "height": 512,
+      "columns": 4,
+      "rows": 4,
+      "padding": 10,
+      "sourceSha256": "55c12b4b78503cbda46b076f738c78132f84231677c16b3b7e5a4a999fd95c9c"
+    },
+    "fire-03": {
+      "local": "assets/adventure/skill-atlases/fire-03-2a69b4eb77ad34e39965fe5d98bfd34fd1c47721a2cbc7d950a4e864147c7ecd.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/fire-03-2a69b4eb77ad34e39965fe5d98bfd34fd1c47721a2cbc7d950a4e864147c7ecd.webp",
+      "sha256": "2a69b4eb77ad34e39965fe5d98bfd34fd1c47721a2cbc7d950a4e864147c7ecd",
+      "size": 48286,
+      "width": 576,
+      "height": 576,
+      "columns": 3,
+      "rows": 3,
+      "padding": 15,
+      "sourceSha256": "99cd44da6054c80e7022f9021e40b4f072c7822d60b9878e114542986518a6ff"
+    },
+    "storm-01": {
+      "local": "assets/adventure/skill-atlases/storm-01-352f9045f36ba9b3b74e20fe807ff6a12be4dbb8c928ceea507f326db461ca70.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/storm-01-352f9045f36ba9b3b74e20fe807ff6a12be4dbb8c928ceea507f326db461ca70.webp",
+      "sha256": "352f9045f36ba9b3b74e20fe807ff6a12be4dbb8c928ceea507f326db461ca70",
+      "size": 94094,
+      "width": 512,
+      "height": 512,
+      "columns": 4,
+      "rows": 4,
+      "padding": 10,
+      "sourceSha256": "912cf34a563ac4e8bc21870a49c38b8fa1c03afdf93587c95732e99469610fad"
+    },
+    "storm-02": {
+      "local": "assets/adventure/skill-atlases/storm-02-626975dc58d3330f24ee701c1ac166aa27ab2f456095cf438b58dd459f4bf0db.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/storm-02-626975dc58d3330f24ee701c1ac166aa27ab2f456095cf438b58dd459f4bf0db.webp",
+      "sha256": "626975dc58d3330f24ee701c1ac166aa27ab2f456095cf438b58dd459f4bf0db",
+      "size": 96424,
+      "width": 448,
+      "height": 448,
+      "columns": 4,
+      "rows": 4,
+      "padding": 9,
+      "sourceSha256": "09bc92f43d6bfe5846a18efb762db5c2d3e207cc9916cb4c3b07b77ff1c60023"
+    },
+    "storm-03": {
+      "local": "assets/adventure/skill-atlases/storm-03-083c4c13d0a70c48d8d900237d66095de9f26bb8ad1c99c54d689d4de87e95d2.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/storm-03-083c4c13d0a70c48d8d900237d66095de9f26bb8ad1c99c54d689d4de87e95d2.webp",
+      "sha256": "083c4c13d0a70c48d8d900237d66095de9f26bb8ad1c99c54d689d4de87e95d2",
+      "size": 57174,
+      "width": 576,
+      "height": 576,
+      "columns": 3,
+      "rows": 3,
+      "padding": 15,
+      "sourceSha256": "0ca160e44c20183dd930a3d5d1ff51a04fb75aa34beb63171c515d484877b0f3"
+    },
+    "life-01": {
+      "local": "assets/adventure/skill-atlases/life-01-18f17c15ae93c445ba8f2c6f1c8ec730d9bbb46881b346b1c4d021094c9068a0.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/life-01-18f17c15ae93c445ba8f2c6f1c8ec730d9bbb46881b346b1c4d021094c9068a0.webp",
+      "sha256": "18f17c15ae93c445ba8f2c6f1c8ec730d9bbb46881b346b1c4d021094c9068a0",
+      "size": 95450,
+      "width": 448,
+      "height": 448,
+      "columns": 4,
+      "rows": 4,
+      "padding": 9,
+      "sourceSha256": "f5442afac8b8f097041b92bb9ec963d7eb994688aaca966c8c3add8f1cd47e55"
+    },
+    "life-02": {
+      "local": "assets/adventure/skill-atlases/life-02-9ba67fc95fce3a7b7acb1abdda7a8ca5183779cc4b85286cfa0fff6eae194527.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/life-02-9ba67fc95fce3a7b7acb1abdda7a8ca5183779cc4b85286cfa0fff6eae194527.webp",
+      "sha256": "9ba67fc95fce3a7b7acb1abdda7a8ca5183779cc4b85286cfa0fff6eae194527",
+      "size": 94172,
+      "width": 448,
+      "height": 448,
+      "columns": 4,
+      "rows": 4,
+      "padding": 9,
+      "sourceSha256": "c96363f14179c9b7b5a4ce554afa2f90b33d13552b93404a81ffd947319afe14"
+    },
+    "life-03": {
+      "local": "assets/adventure/skill-atlases/life-03-42ddb6766ddf87a4eccae6db38e164284f39776945e04848737dc43ed28549e9.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/life-03-42ddb6766ddf87a4eccae6db38e164284f39776945e04848737dc43ed28549e9.webp",
+      "sha256": "42ddb6766ddf87a4eccae6db38e164284f39776945e04848737dc43ed28549e9",
+      "size": 99180,
+      "width": 576,
+      "height": 576,
+      "columns": 3,
+      "rows": 3,
+      "padding": 15,
+      "sourceSha256": "770beb437f4b2085c1e5dc3e4f5e1f08626a3873a6e8c23ee9a62f5b5542e2ca"
+    },
+    "death-01": {
+      "local": "assets/adventure/skill-atlases/death-01-000eb35d6ffda0307e7435398b5b3e37b496f680670598e3eba84f6133d86f7c.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/death-01-000eb35d6ffda0307e7435398b5b3e37b496f680670598e3eba84f6133d86f7c.webp",
+      "sha256": "000eb35d6ffda0307e7435398b5b3e37b496f680670598e3eba84f6133d86f7c",
+      "size": 99812,
+      "width": 512,
+      "height": 512,
+      "columns": 4,
+      "rows": 4,
+      "padding": 10,
+      "sourceSha256": "2f06c0678c04d1b4cfd0e92245cab4dac4dc5a42e0d2b86f08b26b417b9e6d6c"
+    },
+    "death-02": {
+      "local": "assets/adventure/skill-atlases/death-02-40e63a17c19c3e9b461223138ca032eeb3a4ec3410a36ada31141b63951dd8aa.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/death-02-40e63a17c19c3e9b461223138ca032eeb3a4ec3410a36ada31141b63951dd8aa.webp",
+      "sha256": "40e63a17c19c3e9b461223138ca032eeb3a4ec3410a36ada31141b63951dd8aa",
+      "size": 95426,
+      "width": 576,
+      "height": 576,
+      "columns": 4,
+      "rows": 4,
+      "padding": 12,
+      "sourceSha256": "edaa261e81a65e754582ced874279b56d3184c3955c2b729446b0d936c61c006"
+    },
+    "death-03": {
+      "local": "assets/adventure/skill-atlases/death-03-bd5179a067bc88063ff5fbc438f5d1ba6ed3e9176f0e5d359b0c1dffac1f4439.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/death-03-bd5179a067bc88063ff5fbc438f5d1ba6ed3e9176f0e5d359b0c1dffac1f4439.webp",
+      "sha256": "bd5179a067bc88063ff5fbc438f5d1ba6ed3e9176f0e5d359b0c1dffac1f4439",
+      "size": 58562,
+      "width": 576,
+      "height": 576,
+      "columns": 3,
+      "rows": 3,
+      "padding": 15,
+      "sourceSha256": "cfb385949aba91e423d6df542a7888b36d49ab5a0b579b62fbae51f7cbb14bc5"
+    },
+    "balance-01": {
+      "local": "assets/adventure/skill-atlases/balance-01-b987880046a8a140f446f58727561a633786858df86853cdc19c3e5d1e3979b1.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/balance-01-b987880046a8a140f446f58727561a633786858df86853cdc19c3e5d1e3979b1.webp",
+      "sha256": "b987880046a8a140f446f58727561a633786858df86853cdc19c3e5d1e3979b1",
+      "size": 95384,
+      "width": 512,
+      "height": 512,
+      "columns": 4,
+      "rows": 4,
+      "padding": 10,
+      "sourceSha256": "5c2b06b1a62022dc709c9fe29b05180629a942facd22330a257b03d81c08387e"
+    },
+    "balance-02": {
+      "local": "assets/adventure/skill-atlases/balance-02-d73722514ef450eba3cbcdf27d3dfc0aa7750e3b8da35a4c6ecfc08cf5eaff8d.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/balance-02-d73722514ef450eba3cbcdf27d3dfc0aa7750e3b8da35a4c6ecfc08cf5eaff8d.webp",
+      "sha256": "d73722514ef450eba3cbcdf27d3dfc0aa7750e3b8da35a4c6ecfc08cf5eaff8d",
+      "size": 96426,
+      "width": 512,
+      "height": 512,
+      "columns": 4,
+      "rows": 4,
+      "padding": 10,
+      "sourceSha256": "a2ca364b1c518f81e99a10216916dc39608522a925f1aceb1cb4f6f1b9eab938"
+    },
+    "balance-03": {
+      "local": "assets/adventure/skill-atlases/balance-03-8b8ac2237f5fb05e531a023ef779cf84a787bc422ec775439e90aee9c98e88d1.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/balance-03-8b8ac2237f5fb05e531a023ef779cf84a787bc422ec775439e90aee9c98e88d1.webp",
+      "sha256": "8b8ac2237f5fb05e531a023ef779cf84a787bc422ec775439e90aee9c98e88d1",
+      "size": 99038,
+      "width": 576,
+      "height": 576,
+      "columns": 3,
+      "rows": 3,
+      "padding": 15,
+      "sourceSha256": "4d6c4cf0eeb0cc5592a5fc15920ef3d9d30d9163374ad406027858930192a25d"
+    },
+    "hero-ice": {
+      "local": "assets/adventure/skill-atlases/hero-ice-abd355e2f1efbe5b6d5d16422d65ece75d86e223f12e22b3c857be9c33a94bf4.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/hero-ice-abd355e2f1efbe5b6d5d16422d65ece75d86e223f12e22b3c857be9c33a94bf4.webp",
+      "sha256": "abd355e2f1efbe5b6d5d16422d65ece75d86e223f12e22b3c857be9c33a94bf4",
+      "size": 93744,
+      "width": 480,
+      "height": 480,
+      "columns": 3,
+      "rows": 3,
+      "padding": 13,
+      "sourceSha256": "705be5ee39875b0bfea41a0c197d75362b8f69f3271cdc10894622853cbf7fc3"
+    },
+    "hero-fire": {
+      "local": "assets/adventure/skill-atlases/hero-fire-83ed35d0dde1bba336fe83c74ae4c70a646c85b510bde96e4c8631629478f2fa.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/hero-fire-83ed35d0dde1bba336fe83c74ae4c70a646c85b510bde96e4c8631629478f2fa.webp",
+      "sha256": "83ed35d0dde1bba336fe83c74ae4c70a646c85b510bde96e4c8631629478f2fa",
+      "size": 97488,
+      "width": 576,
+      "height": 576,
+      "columns": 3,
+      "rows": 3,
+      "padding": 15,
+      "sourceSha256": "d86bb531ca0e4207b715cfebd994a710ff1d27643a3364d163df15e63653d4f1"
+    },
+    "hero-storm": {
+      "local": "assets/adventure/skill-atlases/hero-storm-50ed1a0dab87f8496bfff65e04116e3e744dae08fd16ad292a4fbe75243f3a2f.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/hero-storm-50ed1a0dab87f8496bfff65e04116e3e744dae08fd16ad292a4fbe75243f3a2f.webp",
+      "sha256": "50ed1a0dab87f8496bfff65e04116e3e744dae08fd16ad292a4fbe75243f3a2f",
+      "size": 96436,
+      "width": 480,
+      "height": 480,
+      "columns": 3,
+      "rows": 3,
+      "padding": 13,
+      "sourceSha256": "bfe9b322047b2b6abff23289e59cbd6b00e9c3e9d828e87c1f4e8f268c491bd2"
+    },
+    "hero-life": {
+      "local": "assets/adventure/skill-atlases/hero-life-1f77a24d41f3b29430fd28ee83d8d24de1625a23c9e91f607a4a2680a6680444.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/hero-life-1f77a24d41f3b29430fd28ee83d8d24de1625a23c9e91f607a4a2680a6680444.webp",
+      "sha256": "1f77a24d41f3b29430fd28ee83d8d24de1625a23c9e91f607a4a2680a6680444",
+      "size": 95566,
+      "width": 528,
+      "height": 528,
+      "columns": 3,
+      "rows": 3,
+      "padding": 14,
+      "sourceSha256": "d3e8f42d4f868716d195a1cc628068237ccaf13b0cea57c5aaa37ed5e8455a5b"
+    },
+    "hero-death": {
+      "local": "assets/adventure/skill-atlases/hero-death-b39b4e86160a910ddc9d44d9972c291206c2597a79e8e66b1ca232dfec38b108.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/hero-death-b39b4e86160a910ddc9d44d9972c291206c2597a79e8e66b1ca232dfec38b108.webp",
+      "sha256": "b39b4e86160a910ddc9d44d9972c291206c2597a79e8e66b1ca232dfec38b108",
+      "size": 93896,
+      "width": 576,
+      "height": 576,
+      "columns": 3,
+      "rows": 3,
+      "padding": 15,
+      "sourceSha256": "7263a1b0fc2817604e1aa3035d89a657614ef7213dee0b3fc361414da2875bd6"
+    },
+    "hero-balance": {
+      "local": "assets/adventure/skill-atlases/hero-balance-dc705ddc8f7957423aada128eb565042a6cd0fcadd3705461de8391d4ef2bf96.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/skill-atlases/skill-atlases/hero-balance-dc705ddc8f7957423aada128eb565042a6cd0fcadd3705461de8391d4ef2bf96.webp",
+      "sha256": "dc705ddc8f7957423aada128eb565042a6cd0fcadd3705461de8391d4ef2bf96",
+      "size": 95812,
+      "width": 576,
+      "height": 576,
+      "columns": 3,
+      "rows": 3,
+      "padding": 15,
+      "sourceSha256": "564acfc9b9deb6b8762fe5a051d4c9aa89d2dcd5126c8a48e26c309f51047069"
+    }
+  },
+  "bases": {
+    "Ice_SingleAttack_Level1": {
+      "atlas": "ice-01",
+      "cell": 0,
+      "name": "冰霜破",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/30532329f086ace24125b82628d59cec95426c172918801e33110a57e2fe1dda.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/30532329f086ace24125b82628d59cec95426c172918801e33110a57e2fe1dda.webp",
+        "sha256": "30532329f086ace24125b82628d59cec95426c172918801e33110a57e2fe1dda",
+        "size": 47176,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22139_ice_singleattack_level1.png.p,f31e5a16c88cdbe37055545d79990f52,68313",
+        "sourceIcon": "Texture/Aries/Item/22139_Ice_SingleAttack_Level1.png; 0 0 151 230",
+        "itemId": 23139,
+        "name": "冰霜破"
+      }
+    },
+    "Ice_SingleAttack_Level2": {
+      "atlas": "ice-01",
+      "cell": 1,
+      "name": "陨落冰石",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/75d7f8efab43f51c43f47818e831b9db56d44e13097bab76e38159d637dc7a9e.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/75d7f8efab43f51c43f47818e831b9db56d44e13097bab76e38159d637dc7a9e.webp",
+        "sha256": "75d7f8efab43f51c43f47818e831b9db56d44e13097bab76e38159d637dc7a9e",
+        "size": 41376,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22140_ice_singleattack_level2.png.p,f071d42b84a0ce14a9b44ada638f72c2,60663",
+        "sourceIcon": "Texture/Aries/Item/22140_Ice_SingleAttack_Level2.png; 0 0 151 230",
+        "itemId": 23140,
+        "name": "陨落冰石"
+      }
+    },
+    "Ice_SingleAttack_Level3": {
+      "atlas": "ice-01",
+      "cell": 2,
+      "name": "冰剑凛空",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/274f62a0e9e6563eb412564894c65000e91c24a732c1e7acde2d674d53f9617b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/274f62a0e9e6563eb412564894c65000e91c24a732c1e7acde2d674d53f9617b.webp",
+        "sha256": "274f62a0e9e6563eb412564894c65000e91c24a732c1e7acde2d674d53f9617b",
+        "size": 43090,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22141_ice_singleattack_level3.png.p,176981adb7271989613a05e4c3e68325,63183",
+        "sourceIcon": "Texture/Aries/Item/22141_Ice_SingleAttack_Level3.png; 0 0 151 230",
+        "itemId": 23141,
+        "name": "冰剑凛空"
+      }
+    },
+    "Ice_SingleAttack_Level4": {
+      "atlas": "ice-01",
+      "cell": 3,
+      "name": "破地冰钻",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/4ef4924132211d9791fed49cafe183d24d74630df42d525935a90d0fec48d878.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/4ef4924132211d9791fed49cafe183d24d74630df42d525935a90d0fec48d878.webp",
+        "sha256": "4ef4924132211d9791fed49cafe183d24d74630df42d525935a90d0fec48d878",
+        "size": 44424,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22143_ice_singleattack_level4.png.p,5d22edf5d03254db06bad6177b8e8565,64696",
+        "sourceIcon": "Texture/Aries/Item/22143_Ice_SingleAttack_Level4.png; 0 0 151 230",
+        "itemId": 23143,
+        "name": "破地冰钻"
+      }
+    },
+    "Ice_SingleAttack_Level6": {
+      "atlas": "ice-01",
+      "cell": 4,
+      "name": "海狮冰剑",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/574238003b4cd6d73165529796f56bcb238a65c84ad8df950ca50110c0821ab7.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/574238003b4cd6d73165529796f56bcb238a65c84ad8df950ca50110c0821ab7.webp",
+        "sha256": "574238003b4cd6d73165529796f56bcb238a65c84ad8df950ca50110c0821ab7",
+        "size": 47546,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22146_ice_singleattack_level6.png.p,37d373405b684cbec2f7b9e512d00aea,68452",
+        "sourceIcon": "Texture/Aries/Item/22146_Ice_SingleAttack_Level6.png; 0 0 151 230",
+        "itemId": 23146,
+        "name": "海狮冰剑"
+      },
+      "effectAtlas": "hero-ice",
+      "effectFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "heroCardFrame": 2
+    },
+    "Ice_AreaAttack_Level2": {
+      "atlas": "ice-01",
+      "cell": 5,
+      "name": "[炫彩]冰剑凛空",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/274f62a0e9e6563eb412564894c65000e91c24a732c1e7acde2d674d53f9617b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/274f62a0e9e6563eb412564894c65000e91c24a732c1e7acde2d674d53f9617b.webp",
+        "sha256": "274f62a0e9e6563eb412564894c65000e91c24a732c1e7acde2d674d53f9617b",
+        "size": 43090,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22141_ice_singleattack_level3.png.p,176981adb7271989613a05e4c3e68325,63183",
+        "sourceIcon": "Texture/Aries/Item/22141_Ice_SingleAttack_Level3.png; 0 0 151 230",
+        "itemId": 22375,
+        "name": "[炫彩]冰剑凛空"
+      }
+    },
+    "Ice_GlobalShield": {
+      "atlas": "ice-01",
+      "cell": 6,
+      "name": "结界守护",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/7cd3e22c71b74e5ae7078810d650ac4588f7acf52c3bdb01d83b5573d0fe7b33.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/7cd3e22c71b74e5ae7078810d650ac4588f7acf52c3bdb01d83b5573d0fe7b33.webp",
+        "sha256": "7cd3e22c71b74e5ae7078810d650ac4588f7acf52c3bdb01d83b5573d0fe7b33",
+        "size": 45516,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22142_ice_globalshield.png.p,901007e05a289ac9f65148bb98d2c4d1,66110",
+        "sourceIcon": "Texture/Aries/Item/22142_Ice_GlobalShield.png; 0 0 151 230",
+        "itemId": 23142,
+        "name": "结界守护"
+      }
+    },
+    "Ice_AreaAttack_Level4": {
+      "atlas": "ice-01",
+      "cell": 7,
+      "name": "冰魄漫天",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/328c04be1cf7d506d0a875a63a4205f35bf9cc40bf522cc506627d781936063d.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/328c04be1cf7d506d0a875a63a4205f35bf9cc40bf522cc506627d781936063d.webp",
+        "sha256": "328c04be1cf7d506d0a875a63a4205f35bf9cc40bf522cc506627d781936063d",
+        "size": 46486,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22144_ice_areaattack_level4.png.p,787648000e3e89f32ab3de5c4b9b950f,66907",
+        "sourceIcon": "Texture/Aries/Item/22144_Ice_AreaAttack_Level4.png; 0 0 151 230",
+        "itemId": 23144,
+        "name": "冰魄漫天"
+      }
+    },
+    "Ice_IceGlobalAura": {
+      "atlas": "ice-01",
+      "cell": 8,
+      "name": "冰极对抗",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/9f1c63b45765584ba67458c680a1b3378e86b05f38899911f569af23aaa233df.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/9f1c63b45765584ba67458c680a1b3378e86b05f38899911f569af23aaa233df.webp",
+        "sha256": "9f1c63b45765584ba67458c680a1b3378e86b05f38899911f569af23aaa233df",
+        "size": 40886,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22145_ice_iceglobalaura.png.p,db0a3ed3675ee72660c3cedc4305dda2,60176",
+        "sourceIcon": "Texture/Aries/Item/22145_Ice_IceGlobalAura.png; 0 0 151 230",
+        "itemId": 23145,
+        "name": "冰极对抗"
+      }
+    },
+    "Ice_SingleStun": {
+      "atlas": "ice-01",
+      "cell": 9,
+      "name": "寒冰眩晕",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/8f55d7f44605b47f9038edbe92d5154e5c7003569a5368e1ad3a6c6a17420570.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/8f55d7f44605b47f9038edbe92d5154e5c7003569a5368e1ad3a6c6a17420570.webp",
+        "sha256": "8f55d7f44605b47f9038edbe92d5154e5c7003569a5368e1ad3a6c6a17420570",
+        "size": 48132,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22147_ice_singlestun.png.p,9e18f0b0b712f87086891675d54bd57e,68123",
+        "sourceIcon": "Texture/Aries/Item/22147_Ice_SingleStun.png; 0 0 151 230",
+        "itemId": 23147,
+        "name": "寒冰眩晕"
+      }
+    },
+    "Ice_IceDamageTrap": {
+      "atlas": "ice-01",
+      "cell": 10,
+      "name": "寒冰陷阱",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/87d1d55068114fd5ada2979e31abc21b575505022c2d2718b203ca589f2ab729.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/87d1d55068114fd5ada2979e31abc21b575505022c2d2718b203ca589f2ab729.webp",
+        "sha256": "87d1d55068114fd5ada2979e31abc21b575505022c2d2718b203ca589f2ab729",
+        "size": 44942,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22148_ice_icedamagetrap.png.p,34bf01a04571acc9c08d3dfc5c8d9ad1,65537",
+        "sourceIcon": "Texture/Aries/Item/22148_Ice_IceDamageTrap.png; 0 0 151 230",
+        "itemId": 23148,
+        "name": "寒冰陷阱"
+      }
+    },
+    "Ice_IcePrism": {
+      "atlas": "ice-01",
+      "cell": 11,
+      "name": "寒冰棱镜",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/541cefdada7600a7641ecad82de3c960c09c8bd13bb860162a11fb59d9e92b34.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/541cefdada7600a7641ecad82de3c960c09c8bd13bb860162a11fb59d9e92b34.webp",
+        "sha256": "541cefdada7600a7641ecad82de3c960c09c8bd13bb860162a11fb59d9e92b34",
+        "size": 42444,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22149_ice_iceprism.png.p,f6b583e5510622dc6bb6c859ade598c3,63130",
+        "sourceIcon": "Texture/Aries/Item/22149_Ice_IcePrism.png; 0 0 151 230",
+        "itemId": 23149,
+        "name": "寒冰棱镜"
+      }
+    },
+    "Ice_Absorb_LevelX": {
+      "atlas": "ice-01",
+      "cell": 12,
+      "name": "坚固壁垒",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/8781e6f7b201bfc7c0662c679e19efbcd08ef898a7bf94290e215e16bfa21388.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/8781e6f7b201bfc7c0662c679e19efbcd08ef898a7bf94290e215e16bfa21388.webp",
+        "sha256": "8781e6f7b201bfc7c0662c679e19efbcd08ef898a7bf94290e215e16bfa21388",
+        "size": 46332,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22150_ice_absorb_levelx.png.p,8a4e690ca84a6379c031e61fff39eb93,67724",
+        "sourceIcon": "Texture/Aries/Item/22150_Ice_Absorb_LevelX.png; 0 0 151 230",
+        "itemId": 22150,
+        "name": "坚固壁垒"
+      }
+    },
+    "Ice_StealPositiveWard": {
+      "atlas": "ice-01",
+      "cell": 13,
+      "name": "神偷之手",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/7f97844cd1e8ca1641fdea3b64ec1f126da73177cc115439010fb293315b68ff.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/7f97844cd1e8ca1641fdea3b64ec1f126da73177cc115439010fb293315b68ff.webp",
+        "sha256": "7f97844cd1e8ca1641fdea3b64ec1f126da73177cc115439010fb293315b68ff",
+        "size": 43452,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22151_ice_stealpositiveward.png.p,32247ca7f035619741250a902e2bcd78,62335",
+        "sourceIcon": "Texture/Aries/Item/22151_Ice_StealPositiveWard.png; 0 0 151 230",
+        "itemId": 23151,
+        "name": "神偷之手"
+      }
+    },
+    "Ice_SingleAttackWithDOT_Level5": {
+      "atlas": "ice-01",
+      "cell": 14,
+      "name": "冰雹来袭",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/c5aff74f6597da529daa49327aff89cab30320f2cd9cbed535d926b501a25a0d.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/c5aff74f6597da529daa49327aff89cab30320f2cd9cbed535d926b501a25a0d.webp",
+        "sha256": "c5aff74f6597da529daa49327aff89cab30320f2cd9cbed535d926b501a25a0d",
+        "size": 45238,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22152_ice_singleattackwithdot_level5.png.p,9d2089edf2a20ac84ae356f43b60eee4,64335",
+        "sourceIcon": "Texture/Aries/Item/22152_Ice_SingleAttackWithDOT_Level5.png; 0 0 151 230",
+        "itemId": 22152,
+        "name": "冰雹来袭"
+      }
+    },
+    "Ice_IceDamageBlade": {
+      "atlas": "ice-01",
+      "cell": 15,
+      "name": "寒冰术",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/8319ad52f08015a89794ad0dbdd0fdcecb7fabef2f0fef15551de56034e03655.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/8319ad52f08015a89794ad0dbdd0fdcecb7fabef2f0fef15551de56034e03655.webp",
+        "sha256": "8319ad52f08015a89794ad0dbdd0fdcecb7fabef2f0fef15551de56034e03655",
+        "size": 41832,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22153_ice_icedamageblade.png.p,713a6c33b047bedd32edbc6d45d2c3b6,61241",
+        "sourceIcon": "Texture/Aries/Item/22153_Ice_IceDamageBlade.png; 0 0 151 230",
+        "itemId": 22153,
+        "name": "寒冰术"
+      }
+    },
+    "Ice_AreaAttackWithStun_Level7": {
+      "atlas": "ice-02",
+      "cell": 0,
+      "name": "冰攻7",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb.webp",
+        "sha256": "5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb",
+        "size": 558,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22154_ice_areaattackwithstun_level7.png.p,7960229dff20fd2e9a7f57c1950feeb5,4065",
+        "sourceIcon": "Texture/Aries/Item/22154_Ice_AreaAttackWithStun_Level7.png; 0 0 151 230",
+        "itemId": 22154,
+        "name": "冰攻7"
+      }
+    },
+    "Ice_IceDispellWeakness": {
+      "atlas": "ice-02",
+      "cell": 1,
+      "name": "寒冰之敌",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/5dd4eada5f3e2c8274d3c12a15a148c9783c64492d66fcf9dabe16221ff65104.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/5dd4eada5f3e2c8274d3c12a15a148c9783c64492d66fcf9dabe16221ff65104.webp",
+        "sha256": "5dd4eada5f3e2c8274d3c12a15a148c9783c64492d66fcf9dabe16221ff65104",
+        "size": 44118,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22155_ice_icedispellweakness.png.p,8e3f7f47658293da50429bd58604f2f9,63479",
+        "sourceIcon": "Texture/Aries/Item/22155_Ice_IceDispellWeakness.png; 0 0 151 230",
+        "itemId": 22155,
+        "name": "寒冰之敌"
+      }
+    },
+    "Ice_StunAbsorb": {
+      "atlas": "ice-02",
+      "cell": 2,
+      "name": "眩晕吸收",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/4483094fbd5426795c3b7585179b31523e0b211348cc819809d81c21dc194729.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/4483094fbd5426795c3b7585179b31523e0b211348cc819809d81c21dc194729.webp",
+        "sha256": "4483094fbd5426795c3b7585179b31523e0b211348cc819809d81c21dc194729",
+        "size": 44708,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22156_ice_stunabsorb.png.p,df60a92432707cc3e70ebd5b744f669d,65029",
+        "sourceIcon": "Texture/Aries/Item/22156_Ice_StunAbsorb.png; 0 0 151 230",
+        "itemId": 22156,
+        "name": "眩晕吸收"
+      }
+    },
+    "Ice_IceGreatShield": {
+      "atlas": "ice-02",
+      "cell": 3,
+      "name": "寒冰盾",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/804ea62881bbc74012ea00cab320999acd8f5d96caed902f5af8b1601fde78d4.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/804ea62881bbc74012ea00cab320999acd8f5d96caed902f5af8b1601fde78d4.webp",
+        "sha256": "804ea62881bbc74012ea00cab320999acd8f5d96caed902f5af8b1601fde78d4",
+        "size": 44918,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22157_ice_icegreatshield.png.p,e0ce2b23db84857c1aa40a8dfc92b066,64755",
+        "sourceIcon": "Texture/Aries/Item/22157_Ice_IceGreatShield.png; 0 0 151 230",
+        "itemId": 23157,
+        "name": "寒冰盾"
+      }
+    },
+    "Ice_SingleAttack_Level0": {
+      "atlas": "ice-02",
+      "cell": 4,
+      "name": "寒冰1",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/049db8ce800d338947d3da8c430d7fa53c6bec0a6a3f63ea85e2591202a1c601.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/049db8ce800d338947d3da8c430d7fa53c6bec0a6a3f63ea85e2591202a1c601.webp",
+        "sha256": "049db8ce800d338947d3da8c430d7fa53c6bec0a6a3f63ea85e2591202a1c601",
+        "size": 42314,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22220_ice_singleattack_level0_45.png.p,d7ef3ff228b159f0baeac6a42e07c61f,61968",
+        "sourceIcon": "Texture/Aries/Item/22220_Ice_SingleAttack_Level0_45.png; 0 0 151 230",
+        "itemId": 22220,
+        "name": "寒冰1"
+      }
+    },
+    "Ice_Rune_IceResist_MiniAura": {
+      "atlas": "ice-02",
+      "cell": 5,
+      "name": "寒冰盾墙符文",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/19f663fa9b76dc33ad29283c73233cf7f223df4a710a2cd9b088b4c2544cf9e8.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/19f663fa9b76dc33ad29283c73233cf7f223df4a710a2cd9b088b4c2544cf9e8.webp",
+        "sha256": "19f663fa9b76dc33ad29283c73233cf7f223df4a710a2cd9b088b4c2544cf9e8",
+        "size": 44290,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22315_ice_iceresist_miniaura.png.p,1cb8fb8b23122e49158851db2cdecd50,65877",
+        "sourceIcon": "Texture/Aries/Item/22315_Ice_IceResist_MiniAura.png; 0 0 151 230",
+        "itemId": 23315,
+        "name": "寒冰盾墙符文"
+      }
+    },
+    "Ice_Rune_AreaAttack_Level2": {
+      "atlas": "ice-02",
+      "cell": 6,
+      "name": "寒冰群击符文",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/1a6a8bb37e25121fda86788c01cae8bcff13f82ac9f49feec6f0823ee3dd1dc8.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/1a6a8bb37e25121fda86788c01cae8bcff13f82ac9f49feec6f0823ee3dd1dc8.webp",
+        "sha256": "1a6a8bb37e25121fda86788c01cae8bcff13f82ac9f49feec6f0823ee3dd1dc8",
+        "size": 41104,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22320_ice_rune_areaattack_level2.png.p,c9766cc7f06b14dcfa99b035468b378e,60713",
+        "sourceIcon": "Texture/Aries/Item/22320_Ice_Rune_AreaAttack_Level2.png; 0 0 151 230",
+        "itemId": 23320,
+        "name": "寒冰群击符文"
+      }
+    },
+    "Ice_Rune_IceAccuracy_MiniAura": {
+      "atlas": "ice-02",
+      "cell": 7,
+      "name": "寒冰专注",
+      "school": "ice",
+      "source": {
+        "missingSource": "texture/aries/item/22325_ice_rune_iceaccuracy_miniaura.png",
+        "itemId": 22325,
+        "name": "寒冰专注",
+        "local": "assets/adventure/spells/ebfa7c7347a2d1e08ac29a39bec189a66a809859845c00a10d106ecb11607596.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/ebfa7c7347a2d1e08ac29a39bec189a66a809859845c00a10d106ecb11607596.webp",
+        "sha256": "ebfa7c7347a2d1e08ac29a39bec189a66a809859845c00a10d106ecb11607596",
+        "size": 3990,
+        "width": 302,
+        "height": 460,
+        "adaptation": "Geometric rune card: original icon absent from assets_manifest.txt; name overlaid by browser"
+      }
+    },
+    "Ice_Pet_SingleAttack_WaterBubblesFury": {
+      "atlas": "ice-02",
+      "cell": 8,
+      "name": "咕噜大法",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/9680f01da043673df711eebf50aee87828042536f543a10c18d0ba9337dd64bc.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/9680f01da043673df711eebf50aee87828042536f543a10c18d0ba9337dd64bc.webp",
+        "sha256": "9680f01da043673df711eebf50aee87828042536f543a10c18d0ba9337dd64bc",
+        "size": 39448,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22258_ice_pet_singleattack_waterbubblesfury.png.p,b9486efe9aa4f3b8d7e0262b123392de,60143",
+        "sourceIcon": "Texture/Aries/Item/22258_Ice_Pet_SingleAttack_WaterBubblesFury.png; 0 0 151 230",
+        "itemId": 22258,
+        "name": "咕噜大法"
+      }
+    },
+    "Ice_Pet_SingleAttack_IcePangolinsFreeze": {
+      "atlas": "ice-02",
+      "cell": 9,
+      "name": "冰兽发威",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/d7afda4006fa41d3c55e286a7b1eae217a8c1855ccfea44564831ca5f333235d.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/d7afda4006fa41d3c55e286a7b1eae217a8c1855ccfea44564831ca5f333235d.webp",
+        "sha256": "d7afda4006fa41d3c55e286a7b1eae217a8c1855ccfea44564831ca5f333235d",
+        "size": 43402,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22297_ice_pet_singleattack_icepangolinsfreeze.png.p,caeaf3956d69124546245014744d9414,64797",
+        "sourceIcon": "Texture/Aries/Item/22297_Ice_Pet_SingleAttack_IcePangolinsFreeze.png; 0 0 151 230",
+        "itemId": 23297,
+        "name": "冰兽发威"
+      }
+    },
+    "Ice_Pet_SingleAttackWithDOT_FrostMonkey": {
+      "atlas": "ice-02",
+      "cell": 10,
+      "name": "冰刺魂体",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/411a73179dc7fe76c27fc8f9fb37b65664b185b91dcfe628c9a374781abbbeaa.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/411a73179dc7fe76c27fc8f9fb37b65664b185b91dcfe628c9a374781abbbeaa.webp",
+        "sha256": "411a73179dc7fe76c27fc8f9fb37b65664b185b91dcfe628c9a374781abbbeaa",
+        "size": 43464,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22300_ice_pet_singleattackwithdot_frostmonkey.png.p,867ca922bf1fb966f2eec9e77b3fb7c9,63117",
+        "sourceIcon": "Texture/Aries/Item/22300_Ice_Pet_SingleAttackWithDOT_FrostMonkey.png; 0 0 151 230",
+        "itemId": 23300,
+        "name": "冰刺魂体"
+      }
+    },
+    "Ice_Pet_AreaAttack_BananaAttack": {
+      "atlas": "ice-02",
+      "cell": 11,
+      "name": "帽子戏法",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/9ccb9c83605578230cf8977425d7e078b7c2753c0891d2b644e77c39a018f735.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/9ccb9c83605578230cf8977425d7e078b7c2753c0891d2b644e77c39a018f735.webp",
+        "sha256": "9ccb9c83605578230cf8977425d7e078b7c2753c0891d2b644e77c39a018f735",
+        "size": 42828,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22306_ice_pet_areaattack_bananaattack.png.p,a11db7c4754c819636a8c2aa47b84d8f,64469",
+        "sourceIcon": "Texture/Aries/Item/22306_Ice_Pet_AreaAttack_BananaAttack.png; 0 0 151 230",
+        "itemId": 23306,
+        "name": "帽子戏法"
+      }
+    },
+    "Ice_Pet_SingleAttackWithDOT_FrostScylla": {
+      "atlas": "ice-02",
+      "cell": 12,
+      "name": "冰魄神柱",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/6bbdc32d3d10748a2dab50bedf89379918619262dc9dbc627dbcde2d4e18b299.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/6bbdc32d3d10748a2dab50bedf89379918619262dc9dbc627dbcde2d4e18b299.webp",
+        "sha256": "6bbdc32d3d10748a2dab50bedf89379918619262dc9dbc627dbcde2d4e18b299",
+        "size": 43566,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22308_ice_pet_singleattackwithdot_frostscylla.png.p,12a2355d23ac4271140de5f8bc40ffea,66111",
+        "sourceIcon": "Texture/Aries/Item/22308_Ice_Pet_SingleAttackWithDOT_FrostScylla.png; 0 0 151 230",
+        "itemId": 23308,
+        "name": "冰魄神柱"
+      }
+    },
+    "Ice_Pet_IceSingleAttack_FrostFang_Boss": {
+      "atlas": "ice-02",
+      "cell": 13,
+      "name": "恶狼袭击",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/9b25bc28ab3af3411d1b16d79e18b0cc063bff7aee140df666ec1dbd6f709d74.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/9b25bc28ab3af3411d1b16d79e18b0cc063bff7aee140df666ec1dbd6f709d74.webp",
+        "sha256": "9b25bc28ab3af3411d1b16d79e18b0cc063bff7aee140df666ec1dbd6f709d74",
+        "size": 45166,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22311_ice_pet_icesingleattack_frostfang_boss.png.p,a73a5ead3378f7416e1dffd71bc5ceb6,65994",
+        "sourceIcon": "Texture/Aries/Item/22311_Ice_Pet_IceSingleAttack_FrostFang_Boss.png; 0 0 151 230",
+        "itemId": 23311,
+        "name": "恶狼袭击"
+      }
+    },
+    "Ice_Pet_AreaAttack_Level6": {
+      "atlas": "ice-02",
+      "cell": 14,
+      "name": "强化海狮冰剑",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/574238003b4cd6d73165529796f56bcb238a65c84ad8df950ca50110c0821ab7.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/574238003b4cd6d73165529796f56bcb238a65c84ad8df950ca50110c0821ab7.webp",
+        "sha256": "574238003b4cd6d73165529796f56bcb238a65c84ad8df950ca50110c0821ab7",
+        "size": 47546,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22146_ice_singleattack_level6.png.p,37d373405b684cbec2f7b9e512d00aea,68452",
+        "sourceIcon": "Texture/Aries/Item/22146_Ice_SingleAttack_Level6.png; 0 0 151 230",
+        "itemId": 22347,
+        "name": "强化海狮冰剑"
+      }
+    },
+    "Ice_ReflectionShield": {
+      "atlas": "ice-02",
+      "cell": 15,
+      "name": "冰霜魔镜",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/8c28310f43d6dc7b77220124a41bbc2c83423a3f74fbc8ed1a183753ae92f249.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/8c28310f43d6dc7b77220124a41bbc2c83423a3f74fbc8ed1a183753ae92f249.webp",
+        "sha256": "8c28310f43d6dc7b77220124a41bbc2c83423a3f74fbc8ed1a183753ae92f249",
+        "size": 48654,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22332_ice_reflectionshield.png.p,6f4dfa6a441361f1bcc82d88c807117e,69500",
+        "sourceIcon": "Texture/Aries/Item/22332_Ice_ReflectionShield.png; 0 0 151 230",
+        "itemId": 22332,
+        "name": "冰霜魔镜"
+      }
+    },
+    "Ice_SingleFreeze": {
+      "atlas": "ice-03",
+      "cell": 0,
+      "name": "冰封神符符文",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/8a0fad9da43825b9f1b3246f147c7312908f79768ac2885ee23f5cbf6c28fb5a.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/8a0fad9da43825b9f1b3246f147c7312908f79768ac2885ee23f5cbf6c28fb5a.webp",
+        "sha256": "8a0fad9da43825b9f1b3246f147c7312908f79768ac2885ee23f5cbf6c28fb5a",
+        "size": 45638,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22337_ice_rune_singlefreeze.png.p,b96e7181bf23b820a61316d98afcf0b8,66355",
+        "sourceIcon": "Texture/Aries/Item/22337_Ice_Rune_SingleFreeze.png; 0 0 151 230",
+        "itemId": 23337,
+        "name": "冰封神符符文"
+      }
+    },
+    "Ice_DefensiveStance": {
+      "atlas": "ice-03",
+      "cell": 1,
+      "name": "防御姿态",
+      "school": "ice",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "Ice_SingleAttack_Level1_Crazy": {
+      "atlas": "ice-03",
+      "cell": 2,
+      "name": "冰霜裂",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/30532329f086ace24125b82628d59cec95426c172918801e33110a57e2fe1dda.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/30532329f086ace24125b82628d59cec95426c172918801e33110a57e2fe1dda.webp",
+        "sha256": "30532329f086ace24125b82628d59cec95426c172918801e33110a57e2fe1dda",
+        "size": 47176,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22139_ice_singleattack_level1.png.p,f31e5a16c88cdbe37055545d79990f52,68313",
+        "sourceIcon": "Texture/Aries/Item/22139_Ice_SingleAttack_Level1.png; 0 0 151 230",
+        "itemId": 22402,
+        "name": "冰霜裂"
+      }
+    },
+    "Ice_SingleAttack_Level2_Crazy": {
+      "atlas": "ice-03",
+      "cell": 3,
+      "name": "陨落冰山",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/75d7f8efab43f51c43f47818e831b9db56d44e13097bab76e38159d637dc7a9e.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/75d7f8efab43f51c43f47818e831b9db56d44e13097bab76e38159d637dc7a9e.webp",
+        "sha256": "75d7f8efab43f51c43f47818e831b9db56d44e13097bab76e38159d637dc7a9e",
+        "size": 41376,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22140_ice_singleattack_level2.png.p,f071d42b84a0ce14a9b44ada638f72c2,60663",
+        "sourceIcon": "Texture/Aries/Item/22140_Ice_SingleAttack_Level2.png; 0 0 151 230",
+        "itemId": 22407,
+        "name": "陨落冰山"
+      }
+    },
+    "Ice_AreaAttack_Level6_OutStandingCard": {
+      "atlas": "ice-03",
+      "cell": 4,
+      "name": "海狮冰锥",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/b81d21a78b8012e2ef768bfa65ab296ad4e65bd016a328b13cc97d2cba89a3dc.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/b81d21a78b8012e2ef768bfa65ab296ad4e65bd016a328b13cc97d2cba89a3dc.webp",
+        "sha256": "b81d21a78b8012e2ef768bfa65ab296ad4e65bd016a328b13cc97d2cba89a3dc",
+        "size": 48226,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22435_ice_singleattack_level6_outstandingcard.png.p,0ac4378f8c39b2faf624d1dbd3e6c7a6,69190",
+        "sourceIcon": "Texture/Aries/Item/22435_Ice_SingleAttack_Level6_OutStandingCard.png; 0 0 151 230",
+        "itemId": 22435,
+        "name": "海狮冰锥"
+      }
+    },
+    "Ice_PierceStance": {
+      "atlas": "ice-03",
+      "cell": 5,
+      "name": "坚冰形态符文",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/b10d6f5dfb59d9dcf49c17ac00d4038cc75a59af93e34fca97019397e6fae04c.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/b10d6f5dfb59d9dcf49c17ac00d4038cc75a59af93e34fca97019397e6fae04c.webp",
+        "sha256": "b10d6f5dfb59d9dcf49c17ac00d4038cc75a59af93e34fca97019397e6fae04c",
+        "size": 40996,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22380_ice_piercestance.png.p,e10317419d74b4eab367515521431b8f,61384",
+        "sourceIcon": "Texture/Aries/Item/22380_Ice_PierceStance.png; 0 0 151 230",
+        "itemId": 23380,
+        "name": "坚冰形态符文"
+      }
+    },
+    "Ice_SingleAttackWith_Trap": {
+      "atlas": "ice-03",
+      "cell": 6,
+      "name": "寒冰反转",
+      "school": "ice",
+      "source": {
+        "local": "assets/adventure/spells/bbdcc9b31833158f1b9c74598c47958225bd799f7a937ba540150d57aef27819.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/bbdcc9b31833158f1b9c74598c47958225bd799f7a937ba540150d57aef27819.webp",
+        "sha256": "bbdcc9b31833158f1b9c74598c47958225bd799f7a937ba540150d57aef27819",
+        "size": 38304,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22463_ice_singleattackwith_trap.png.p,a24ccbb3320dd569e071e91c7fdcac3c,57052",
+        "sourceIcon": "Texture/Aries/Item/22463_Ice_SingleAttackWith_Trap.png; 0 0 151 230",
+        "itemId": 22463,
+        "name": "寒冰反转"
+      }
+    },
+    "Fire_SingleAttack_Level1": {
+      "atlas": "fire-01",
+      "cell": 0,
+      "name": "火焰爆",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/346e0a1387992126db7785446997527e8a92ca7ca82ae7afa5b66cf0379f0f39.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/346e0a1387992126db7785446997527e8a92ca7ca82ae7afa5b66cf0379f0f39.webp",
+        "sha256": "346e0a1387992126db7785446997527e8a92ca7ca82ae7afa5b66cf0379f0f39",
+        "size": 50832,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22101_fire_singleattack_level1.png.p,23fdef7fbccada43d0d6f239036482b2,68520",
+        "sourceIcon": "Texture/Aries/Item/22101_Fire_SingleAttack_Level1.png; 0 0 151 230",
+        "itemId": 22101,
+        "name": "火焰爆"
+      }
+    },
+    "Fire_SingleAttackWithDOT_Level2": {
+      "atlas": "fire-01",
+      "cell": 1,
+      "name": "火神之怒",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/93170ddd22a97535b14e1c4514e34cd472f96ef07e10e738169672501c5301b6.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/93170ddd22a97535b14e1c4514e34cd472f96ef07e10e738169672501c5301b6.webp",
+        "sha256": "93170ddd22a97535b14e1c4514e34cd472f96ef07e10e738169672501c5301b6",
+        "size": 44276,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22102_fire_singleattackwithdot_level2.png.p,3298162139b87151ef38890b2e9b92e4,64363",
+        "sourceIcon": "Texture/Aries/Item/22102_Fire_SingleAttackWithDOT_Level2.png; 0 0 151 230",
+        "itemId": 22102,
+        "name": "火神之怒"
+      }
+    },
+    "Fire_SingleAttack_Level3": {
+      "atlas": "fire-01",
+      "cell": 2,
+      "name": "火凤焚天",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/7669e2af8887ebea9659be9e5b7fa8262a7742d2dbbe640a136f12624e71aa3d.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/7669e2af8887ebea9659be9e5b7fa8262a7742d2dbbe640a136f12624e71aa3d.webp",
+        "sha256": "7669e2af8887ebea9659be9e5b7fa8262a7742d2dbbe640a136f12624e71aa3d",
+        "size": 51056,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22103_fire_singleattack_level3.png.p,c587c8a6d1eb004239ca68e99461c1fa,70320",
+        "sourceIcon": "Texture/Aries/Item/22103_Fire_SingleAttack_Level3.png; 0 0 151 230",
+        "itemId": 22103,
+        "name": "火凤焚天"
+      }
+    },
+    "Fire_FireDamageTrap": {
+      "atlas": "fire-01",
+      "cell": 3,
+      "name": "烈火陷阱",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/4e5e2a8243241f35d114bfe46095a3db294a9ff04a5d58bd2ff803dd7d93788a.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/4e5e2a8243241f35d114bfe46095a3db294a9ff04a5d58bd2ff803dd7d93788a.webp",
+        "sha256": "4e5e2a8243241f35d114bfe46095a3db294a9ff04a5d58bd2ff803dd7d93788a",
+        "size": 47474,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22104_fire_firedamagetrap.png.p,cdac3e45ad453f47b93c17911f256c20,67027",
+        "sourceIcon": "Texture/Aries/Item/22104_Fire_FireDamageTrap.png; 0 0 151 230",
+        "itemId": 23104,
+        "name": "烈火陷阱"
+      }
+    },
+    "Fire_AreaAttack_Level4": {
+      "atlas": "fire-01",
+      "cell": 4,
+      "name": "星火袭空",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/26835dfa1ec921b3b307890a42d18b2fbfba93965a71b5c4c9a75b8f3201d36a.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/26835dfa1ec921b3b307890a42d18b2fbfba93965a71b5c4c9a75b8f3201d36a.webp",
+        "sha256": "26835dfa1ec921b3b307890a42d18b2fbfba93965a71b5c4c9a75b8f3201d36a",
+        "size": 46482,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22105_fire_areaattack_level4.png.p,2cf4246dc17770ae49fd79f5807a2074,66179",
+        "sourceIcon": "Texture/Aries/Item/22105_Fire_AreaAttack_Level4.png; 0 0 151 230",
+        "itemId": 22105,
+        "name": "星火袭空"
+      }
+    },
+    "Fire_FireGlobalAura": {
+      "atlas": "fire-01",
+      "cell": 5,
+      "name": "火极对抗",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/b42a30afc293a319419beb4eeaeda706c188b1063a9f6cf241127db5887666b4.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/b42a30afc293a319419beb4eeaeda706c188b1063a9f6cf241127db5887666b4.webp",
+        "sha256": "b42a30afc293a319419beb4eeaeda706c188b1063a9f6cf241127db5887666b4",
+        "size": 44178,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22106_fire_fireglobalaura.png.p,c466e333d4b8719c335894c2909fb581,61408",
+        "sourceIcon": "Texture/Aries/Item/22106_Fire_FireGlobalAura.png; 0 0 151 230",
+        "itemId": 23106,
+        "name": "火极对抗"
+      }
+    },
+    "Fire_SingleAttack_Level5": {
+      "atlas": "fire-01",
+      "cell": 6,
+      "name": "火焰喷发",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/0fa4903d2e878f763f8cee24ab3eaa0bb228272e5f6dd02ea5d7d0ea15c16616.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/0fa4903d2e878f763f8cee24ab3eaa0bb228272e5f6dd02ea5d7d0ea15c16616.webp",
+        "sha256": "0fa4903d2e878f763f8cee24ab3eaa0bb228272e5f6dd02ea5d7d0ea15c16616",
+        "size": 44008,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22107_fire_singleattack_level5.png.p,563ca673edfe0a0bbf55a3f5b4b0da68,64086",
+        "sourceIcon": "Texture/Aries/Item/22107_Fire_SingleAttack_Level5.png; 0 0 151 230",
+        "itemId": 22107,
+        "name": "火焰喷发"
+      }
+    },
+    "Fire_SingleAttack_Level6": {
+      "atlas": "fire-01",
+      "cell": 7,
+      "name": "火魔掷石",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/23594fb589ed94a1d474f5ae246c2cefa4a966409b01d6d2da45b6146b3e1590.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/23594fb589ed94a1d474f5ae246c2cefa4a966409b01d6d2da45b6146b3e1590.webp",
+        "sha256": "23594fb589ed94a1d474f5ae246c2cefa4a966409b01d6d2da45b6146b3e1590",
+        "size": 46738,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22108_fire_singleattack_level6.png.p,2925d3687d3a01cb81e98bbaf2a013c1,66193",
+        "sourceIcon": "Texture/Aries/Item/22108_Fire_SingleAttack_Level6.png; 0 0 151 230",
+        "itemId": 22108,
+        "name": "火魔掷石"
+      },
+      "effectAtlas": "hero-fire",
+      "effectFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "heroCardFrame": 2
+    },
+    "Fire_FireDamageBlade": {
+      "atlas": "fire-01",
+      "cell": 8,
+      "name": "烈火术",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/2de55284b0f98e983dc8184d1df9ed7db702e9857e801c23b4863886fb943acb.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/2de55284b0f98e983dc8184d1df9ed7db702e9857e801c23b4863886fb943acb.webp",
+        "sha256": "2de55284b0f98e983dc8184d1df9ed7db702e9857e801c23b4863886fb943acb",
+        "size": 41918,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22109_fire_firedamageblade.png.p,7adc5fd5c7598032dc4e4d65c554b3ba,61068",
+        "sourceIcon": "Texture/Aries/Item/22109_Fire_FireDamageBlade.png; 0 0 151 230",
+        "itemId": 23109,
+        "name": "烈火术"
+      }
+    },
+    "Fire_FirePrism": {
+      "atlas": "fire-01",
+      "cell": 9,
+      "name": "烈火棱镜",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/0de3ae81590b6106df0f860a66c636d12f84ae13e2a550774ed1be4cec475fe6.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/0de3ae81590b6106df0f860a66c636d12f84ae13e2a550774ed1be4cec475fe6.webp",
+        "sha256": "0de3ae81590b6106df0f860a66c636d12f84ae13e2a550774ed1be4cec475fe6",
+        "size": 42984,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22110_fire_fireprism.png.p,00f52a1b73169e7d0320394ca9ed22a7,62517",
+        "sourceIcon": "Texture/Aries/Item/22110_Fire_FirePrism.png; 0 0 151 230",
+        "itemId": 23110,
+        "name": "烈火棱镜"
+      }
+    },
+    "Fire_DOTAttackWithHOT_Level2": {
+      "atlas": "fire-01",
+      "cell": 10,
+      "name": "烈火链",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/3ea7d0f492b6f29bc50021129b747ae1d12cb5f489a7242d6b45f6e86aa35f91.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/3ea7d0f492b6f29bc50021129b747ae1d12cb5f489a7242d6b45f6e86aa35f91.webp",
+        "sha256": "3ea7d0f492b6f29bc50021129b747ae1d12cb5f489a7242d6b45f6e86aa35f91",
+        "size": 46012,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22111_fire_dotattackwithhot_level2.png.p,a841be6b090af0afced9a94f012ea9a3,63665",
+        "sourceIcon": "Texture/Aries/Item/22111_Fire_DOTAttackWithHOT_Level2.png; 0 0 151 230",
+        "itemId": 23111,
+        "name": "烈火链"
+      }
+    },
+    "Fire_StealPositiveCharm": {
+      "atlas": "fire-01",
+      "cell": 11,
+      "name": "偷天换日",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/e76e5c63ecade95c94d201d5688f04f2512eea42f8b380562f36fd55c8fdf43e.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/e76e5c63ecade95c94d201d5688f04f2512eea42f8b380562f36fd55c8fdf43e.webp",
+        "sha256": "e76e5c63ecade95c94d201d5688f04f2512eea42f8b380562f36fd55c8fdf43e",
+        "size": 41962,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22112_fire_stealpositivecharm.png.p,1f2d9634e8259a1fce96b8c02afdd080,61137",
+        "sourceIcon": "Texture/Aries/Item/22112_Fire_StealPositiveCharm.png; 0 0 151 230",
+        "itemId": 23112,
+        "name": "偷天换日"
+      }
+    },
+    "Fire_DOTAttack_LevelX": {
+      "atlas": "fire-01",
+      "cell": 12,
+      "name": "火狼咆哮",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/25df1a502e40871c813e6a76f1cb4fbdf9013829151d2c24599b4df88fd538b0.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/25df1a502e40871c813e6a76f1cb4fbdf9013829151d2c24599b4df88fd538b0.webp",
+        "sha256": "25df1a502e40871c813e6a76f1cb4fbdf9013829151d2c24599b4df88fd538b0",
+        "size": 42110,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22113_fire_dotattack_levelx.png.p,05d80872f9721f4d037bf87d5d0ca8e9,61254",
+        "sourceIcon": "Texture/Aries/Item/22113_Fire_DOTAttack_LevelX.png; 0 0 151 230",
+        "itemId": 23113,
+        "name": "火狼咆哮"
+      }
+    },
+    "Fire_SingleAttackWithImmolate_Level4": {
+      "atlas": "fire-01",
+      "cell": 13,
+      "name": "灼伤之炎",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/10d92ff49443be7291347aec3e9ea273d4ce97a8514cc36a259ebd7ec2bf6243.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/10d92ff49443be7291347aec3e9ea273d4ce97a8514cc36a259ebd7ec2bf6243.webp",
+        "sha256": "10d92ff49443be7291347aec3e9ea273d4ce97a8514cc36a259ebd7ec2bf6243",
+        "size": 43204,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22114_fire_singleattackwithimmolate_level4.png.p,13b674aa6823e4245add994c92011600,62459",
+        "sourceIcon": "Texture/Aries/Item/22114_Fire_SingleAttackWithImmolate_Level4.png; 0 0 151 230",
+        "itemId": 23114,
+        "name": "灼伤之炎"
+      }
+    },
+    "Fire_AreaDOTAttack_Level5": {
+      "atlas": "fire-01",
+      "cell": 14,
+      "name": "烈火怒吼",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/f750250f29bb856d7c8624a22875da68bcb545e7627e460ccde55891ee2b5014.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f750250f29bb856d7c8624a22875da68bcb545e7627e460ccde55891ee2b5014.webp",
+        "sha256": "f750250f29bb856d7c8624a22875da68bcb545e7627e460ccde55891ee2b5014",
+        "size": 43428,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22115_fire_areadotattack_level5.png.p,807716bc7f0be9fcdab4ad160188b232,63830",
+        "sourceIcon": "Texture/Aries/Item/22115_Fire_AreaDOTAttack_Level5.png; 0 0 151 230",
+        "itemId": 22115,
+        "name": "烈火怒吼"
+      }
+    },
+    "Fire_AreaAccuracyWeakness": {
+      "atlas": "fire-01",
+      "cell": 15,
+      "name": "烟雾",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/7c4f82d0baf7e948b55bf037365302fde10e3b77e36a7b7ee58bd27c21392c3b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/7c4f82d0baf7e948b55bf037365302fde10e3b77e36a7b7ee58bd27c21392c3b.webp",
+        "sha256": "7c4f82d0baf7e948b55bf037365302fde10e3b77e36a7b7ee58bd27c21392c3b",
+        "size": 48872,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22116_fire_areaaccuracyweakness.png.p,5b04d66e27b639d010c3d9b6fd449e11,68067",
+        "sourceIcon": "Texture/Aries/Item/22116_Fire_AreaAccuracyWeakness.png; 0 0 151 230",
+        "itemId": 23116,
+        "name": "烟雾"
+      }
+    },
+    "Fire_AreaStun": {
+      "atlas": "fire-02",
+      "cell": 0,
+      "name": "烈火眩晕",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/edcd9de98887b41cbfc0fad1985280788773998f00629b64ac2cc5e0e8cf1655.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/edcd9de98887b41cbfc0fad1985280788773998f00629b64ac2cc5e0e8cf1655.webp",
+        "sha256": "edcd9de98887b41cbfc0fad1985280788773998f00629b64ac2cc5e0e8cf1655",
+        "size": 45004,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22117_fire_areastun.png.p,19fc679e59bb0c6cc7e30cf26332e685,65753",
+        "sourceIcon": "Texture/Aries/Item/22117_Fire_AreaStun.png; 0 0 151 230",
+        "itemId": 23117,
+        "name": "烈火眩晕"
+      }
+    },
+    "Fire_AreaSingleAttackWithDOT_Level7": {
+      "atlas": "fire-02",
+      "cell": 1,
+      "name": "火攻7",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/6d1d5d47bb0749df4fc2e4e0f92fcb53aa39914de319124d29e3ac756e9a4d3f.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/6d1d5d47bb0749df4fc2e4e0f92fcb53aa39914de319124d29e3ac756e9a4d3f.webp",
+        "sha256": "6d1d5d47bb0749df4fc2e4e0f92fcb53aa39914de319124d29e3ac756e9a4d3f",
+        "size": 43172,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22118_fire_areasingleattackwithdot_level7.png.p,799706ba47d076404abb95af052c7d22,63649",
+        "sourceIcon": "Texture/Aries/Item/22118_Fire_AreaSingleAttackWithDOT_Level7.png; 0 0 151 230",
+        "itemId": 23118,
+        "name": "火攻7"
+      }
+    },
+    "Fire_FireDispellWeakness": {
+      "atlas": "fire-02",
+      "cell": 2,
+      "name": "烈火之敌",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/c6916b3f9ee38aac4c800dfb870552240213b1305f82a3b8df7794bb7890930c.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/c6916b3f9ee38aac4c800dfb870552240213b1305f82a3b8df7794bb7890930c.webp",
+        "sha256": "c6916b3f9ee38aac4c800dfb870552240213b1305f82a3b8df7794bb7890930c",
+        "size": 43474,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22119_fire_firedispellweakness.png.p,231b2e92dc3e5f4b541946f6ac5df049,62712",
+        "sourceIcon": "Texture/Aries/Item/22119_Fire_FireDispellWeakness.png; 0 0 151 230",
+        "itemId": 23119,
+        "name": "烈火之敌"
+      }
+    },
+    "Fire_FireGreatShield": {
+      "atlas": "fire-02",
+      "cell": 3,
+      "name": "烈火盾",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/560b76c3b0f7f4e8e3913ab091c32bee468e115aa4991808000028b54567a12e.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/560b76c3b0f7f4e8e3913ab091c32bee468e115aa4991808000028b54567a12e.webp",
+        "sha256": "560b76c3b0f7f4e8e3913ab091c32bee468e115aa4991808000028b54567a12e",
+        "size": 48144,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22120_fire_firegreatshield.png.p,f2000185cda958b374f5f5c61b52ee9b,66443",
+        "sourceIcon": "Texture/Aries/Item/22120_Fire_FireGreatShield.png; 0 0 151 230",
+        "itemId": 23120,
+        "name": "烈火盾"
+      }
+    },
+    "Fire_SingleAttack_Level0": {
+      "atlas": "fire-02",
+      "cell": 4,
+      "name": "烈火1",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/e923e51c51782a6cbcb5dade43fc446fb868b5adb725550949f2428a87075cfa.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/e923e51c51782a6cbcb5dade43fc446fb868b5adb725550949f2428a87075cfa.webp",
+        "sha256": "e923e51c51782a6cbcb5dade43fc446fb868b5adb725550949f2428a87075cfa",
+        "size": 42548,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22200_fire_singleattack_level0_45.png.p,9295eaabc0bfb8bb27906e938c0608d3,62716",
+        "sourceIcon": "Texture/Aries/Item/22200_Fire_SingleAttack_Level0_45.png; 0 0 151 230",
+        "itemId": 23200,
+        "name": "烈火1"
+      }
+    },
+    "Fire_Rune_FireResist_MiniAura": {
+      "atlas": "fire-02",
+      "cell": 5,
+      "name": "烈火盾墙符文",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/f26bd2b861a8deb89bd4985bee38f637f781778dc08da2f43a1ffe8436ce9435.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f26bd2b861a8deb89bd4985bee38f637f781778dc08da2f43a1ffe8436ce9435.webp",
+        "sha256": "f26bd2b861a8deb89bd4985bee38f637f781778dc08da2f43a1ffe8436ce9435",
+        "size": 43988,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22314_fire_fireresist_miniaura.png.p,387bbfe088670cf03d29261b67c9cd04,63585",
+        "sourceIcon": "Texture/Aries/Item/22314_Fire_FireResist_MiniAura.png; 0 0 151 230",
+        "itemId": 23314,
+        "name": "烈火盾墙符文"
+      }
+    },
+    "Fire_Rune_AreaAttack_Level2": {
+      "atlas": "fire-02",
+      "cell": 6,
+      "name": "烈火群击符文",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/2e56d1f2eb5afbd8114cd4a605560522c7f40931177dcf515d6be7fa1929f146.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/2e56d1f2eb5afbd8114cd4a605560522c7f40931177dcf515d6be7fa1929f146.webp",
+        "sha256": "2e56d1f2eb5afbd8114cd4a605560522c7f40931177dcf515d6be7fa1929f146",
+        "size": 40736,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22319_fire_rune_areaattack_level2.png.p,2de0ae56a6098baff68021cb92548927,58204",
+        "sourceIcon": "Texture/Aries/Item/22319_Fire_Rune_AreaAttack_Level2.png; 0 0 151 230",
+        "itemId": 23319,
+        "name": "烈火群击符文"
+      }
+    },
+    "Fire_Rune_FireAccuracy_MiniAura": {
+      "atlas": "fire-02",
+      "cell": 7,
+      "name": "烈火专注",
+      "school": "fire",
+      "source": {
+        "missingSource": "texture/aries/item/22324_fire_rune_fireaccuracy_miniaura.png",
+        "itemId": 22324,
+        "name": "烈火专注",
+        "local": "assets/adventure/spells/4bda18d8e0a5f96011dcb1d219754ae86ac463a36a779cc50ddae5631ec333fb.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/4bda18d8e0a5f96011dcb1d219754ae86ac463a36a779cc50ddae5631ec333fb.webp",
+        "sha256": "4bda18d8e0a5f96011dcb1d219754ae86ac463a36a779cc50ddae5631ec333fb",
+        "size": 3448,
+        "width": 302,
+        "height": 460,
+        "adaptation": "Geometric rune card: original icon absent from assets_manifest.txt; name overlaid by browser"
+      }
+    },
+    "Fire_Pet_SingleAttack_FireRockyOgresDominance": {
+      "atlas": "fire-02",
+      "cell": 8,
+      "name": "暴怒鬃王",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/7308ea9a13f46d16a2f20afce2cb7f8cad543704ae2c66129a34ec8e71821f90.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/7308ea9a13f46d16a2f20afce2cb7f8cad543704ae2c66129a34ec8e71821f90.webp",
+        "sha256": "7308ea9a13f46d16a2f20afce2cb7f8cad543704ae2c66129a34ec8e71821f90",
+        "size": 46886,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22263_fire_pet_singleattack_firerockyogresdominance.png.p,1602122c9a609364c13d99663f045e06,64792",
+        "sourceIcon": "Texture/Aries/Item/22263_Fire_Pet_SingleAttack_FireRockyOgresDominance.png; 0 0 151 230",
+        "itemId": 22263,
+        "name": "暴怒鬃王"
+      }
+    },
+    "Fire_Pet_SingleAttack_FireRockyOgresFocus": {
+      "atlas": "fire-02",
+      "cell": 9,
+      "name": "火兽袭击",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/e475645bd04dfc35ed7071c821bd575403c0e66a400e8e1ba13e05151e6e715f.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/e475645bd04dfc35ed7071c821bd575403c0e66a400e8e1ba13e05151e6e715f.webp",
+        "sha256": "e475645bd04dfc35ed7071c821bd575403c0e66a400e8e1ba13e05151e6e715f",
+        "size": 45136,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22259_fire_pet_singleattack_firerockyogresfocus.png.p,2c729f96688c857517204170a6604672,65386",
+        "sourceIcon": "Texture/Aries/Item/22259_Fire_Pet_SingleAttack_FireRockyOgresFocus.png; 0 0 151 230",
+        "itemId": 23259,
+        "name": "火兽袭击"
+      }
+    },
+    "Fire_Pet_AreaAttack_ShadowOfPhoenixsBreath": {
+      "atlas": "fire-02",
+      "cell": 10,
+      "name": "凤凰涅磐",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/f31dc9d3560e8534c84b730bb5dbb134872360ec91497a2b82212b8078621440.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f31dc9d3560e8534c84b730bb5dbb134872360ec91497a2b82212b8078621440.webp",
+        "sha256": "f31dc9d3560e8534c84b730bb5dbb134872360ec91497a2b82212b8078621440",
+        "size": 45394,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22266_fire_pet_areaattack_shadowofphoenixsbreath.png.p,8f9358b93ba2ca01907ba292b60eb1e8,67003",
+        "sourceIcon": "Texture/Aries/Item/22266_Fire_Pet_AreaAttack_ShadowOfPhoenixsBreath.png; 0 0 151 230",
+        "itemId": 23266,
+        "name": "凤凰涅磐"
+      }
+    },
+    "Fire_Pet_SingleAttack_FireRockyOgresDominance_Power": {
+      "atlas": "fire-02",
+      "cell": 11,
+      "name": "火鬃王暴怒",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/7308ea9a13f46d16a2f20afce2cb7f8cad543704ae2c66129a34ec8e71821f90.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/7308ea9a13f46d16a2f20afce2cb7f8cad543704ae2c66129a34ec8e71821f90.webp",
+        "sha256": "7308ea9a13f46d16a2f20afce2cb7f8cad543704ae2c66129a34ec8e71821f90",
+        "size": 46886,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22263_fire_pet_singleattack_firerockyogresdominance.png.p,1602122c9a609364c13d99663f045e06,64792",
+        "sourceIcon": "Texture/Aries/Item/22263_Fire_Pet_SingleAttack_FireRockyOgresDominance.png; 0 0 151 230",
+        "itemId": 22346,
+        "name": "火鬃王暴怒"
+      }
+    },
+    "Fire_DOTAttackWithSplash_Level6": {
+      "atlas": "fire-02",
+      "cell": 12,
+      "name": "熔岩炸弹",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/64f8c05bb2ca4199f799054d308f66e4d3741da91680f78c1aea7925c90663bf.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/64f8c05bb2ca4199f799054d308f66e4d3741da91680f78c1aea7925c90663bf.webp",
+        "sha256": "64f8c05bb2ca4199f799054d308f66e4d3741da91680f78c1aea7925c90663bf",
+        "size": 48392,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22331_fire_dotattackwithsplash_level6.png.p,3b1f76f025d569599e688c8a88d9a1ca,68084",
+        "sourceIcon": "Texture/Aries/Item/22331_Fire_DOTAttackWithSplash_Level6.png; 0 0 151 230",
+        "itemId": 22331,
+        "name": "熔岩炸弹"
+      }
+    },
+    "Fire_SingleAttackWithExplode": {
+      "atlas": "fire-02",
+      "cell": 13,
+      "name": "急速点燃符文",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/0dc21ea4252178a6d2d91ec51fe3aeee5c9c50c1b867e19e8409f796d3537804.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/0dc21ea4252178a6d2d91ec51fe3aeee5c9c50c1b867e19e8409f796d3537804.webp",
+        "sha256": "0dc21ea4252178a6d2d91ec51fe3aeee5c9c50c1b867e19e8409f796d3537804",
+        "size": 45624,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22336_fire_rune_singleattackwithexplode.png.p,a23c221812ca9f3686545d9b661cdbdf,64871",
+        "sourceIcon": "Texture/Aries/Item/22336_Fire_Rune_SingleAttackWithExplode.png; 0 0 151 230",
+        "itemId": 23336,
+        "name": "急速点燃符文"
+      }
+    },
+    "Fire_ArenaAttack_Level8": {
+      "atlas": "fire-02",
+      "cell": 14,
+      "name": "地狱爆炎符文",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/968d84f5a0e31337a297dc9a3d736b3ef43fa6c28011aa4edc9a8b6b75917d6d.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/968d84f5a0e31337a297dc9a3d736b3ef43fa6c28011aa4edc9a8b6b75917d6d.webp",
+        "sha256": "968d84f5a0e31337a297dc9a3d736b3ef43fa6c28011aa4edc9a8b6b75917d6d",
+        "size": 39620,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22379_fire_arenaattack_level8.png.p,7736391bb778fea47e21232c8e84d2ac,56186",
+        "sourceIcon": "Texture/Aries/Item/22379_Fire_ArenaAttack_Level8.png; 0 0 151 230",
+        "itemId": 23379,
+        "name": "地狱爆炎符文"
+      }
+    },
+    "Fire_SingleAttack_Level1_Crazy": {
+      "atlas": "fire-02",
+      "cell": 15,
+      "name": "熔岩爆",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/346e0a1387992126db7785446997527e8a92ca7ca82ae7afa5b66cf0379f0f39.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/346e0a1387992126db7785446997527e8a92ca7ca82ae7afa5b66cf0379f0f39.webp",
+        "sha256": "346e0a1387992126db7785446997527e8a92ca7ca82ae7afa5b66cf0379f0f39",
+        "size": 50832,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22101_fire_singleattack_level1.png.p,23fdef7fbccada43d0d6f239036482b2,68520",
+        "sourceIcon": "Texture/Aries/Item/22101_Fire_SingleAttack_Level1.png; 0 0 151 230",
+        "itemId": 22401,
+        "name": "熔岩爆"
+      }
+    },
+    "Fire_SingleAttack_Level2_Crazy": {
+      "atlas": "fire-03",
+      "cell": 0,
+      "name": "火神天罚",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/93170ddd22a97535b14e1c4514e34cd472f96ef07e10e738169672501c5301b6.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/93170ddd22a97535b14e1c4514e34cd472f96ef07e10e738169672501c5301b6.webp",
+        "sha256": "93170ddd22a97535b14e1c4514e34cd472f96ef07e10e738169672501c5301b6",
+        "size": 44276,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22102_fire_singleattackwithdot_level2.png.p,3298162139b87151ef38890b2e9b92e4,64363",
+        "sourceIcon": "Texture/Aries/Item/22102_Fire_SingleAttackWithDOT_Level2.png; 0 0 151 230",
+        "itemId": 22406,
+        "name": "火神天罚"
+      }
+    },
+    "Fire_SingleAttack_Level6_OutStandingCard": {
+      "atlas": "fire-03",
+      "cell": 1,
+      "name": "火魔怒吼",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/80a30532e310a0fde89411303bcc5a79d0e45ea4b36ffb3b14d05cdf2740bc98.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/80a30532e310a0fde89411303bcc5a79d0e45ea4b36ffb3b14d05cdf2740bc98.webp",
+        "sha256": "80a30532e310a0fde89411303bcc5a79d0e45ea4b36ffb3b14d05cdf2740bc98",
+        "size": 46132,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22434_fire_singleattack_level6_outstandingcard.png.p,6a946fd9f344fb2a7a1f2a825e5434e6,67776",
+        "sourceIcon": "Texture/Aries/Item/22434_Fire_SingleAttack_Level6_OutStandingCard.png; 0 0 151 230",
+        "itemId": 22434,
+        "name": "火魔怒吼"
+      }
+    },
+    "Fire_BlazingStance": {
+      "atlas": "fire-03",
+      "cell": 2,
+      "name": "烈焰形态符文",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/171240f81236ed2f79720ca57235eeeed8295eb03ea949c4b481adf1286069b5.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/171240f81236ed2f79720ca57235eeeed8295eb03ea949c4b481adf1286069b5.webp",
+        "sha256": "171240f81236ed2f79720ca57235eeeed8295eb03ea949c4b481adf1286069b5",
+        "size": 40096,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22448_fire_blazingstance.png.p,534cdfd4b2b9b048c86ec5ca0dbda23d,59608",
+        "sourceIcon": "Texture/Aries/Item/22448_Fire_BlazingStance.png; 0 0 151 230",
+        "itemId": 23448,
+        "name": "烈焰形态符文"
+      }
+    },
+    "Fire_SingleAttackWith_Trap": {
+      "atlas": "fire-03",
+      "cell": 3,
+      "name": "烈火反转",
+      "school": "fire",
+      "source": {
+        "local": "assets/adventure/spells/c1742adcc88306d8a4a07c7f8db95da5a5611bfda22c15e554024ffb647c67e8.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/c1742adcc88306d8a4a07c7f8db95da5a5611bfda22c15e554024ffb647c67e8.webp",
+        "sha256": "c1742adcc88306d8a4a07c7f8db95da5a5611bfda22c15e554024ffb647c67e8",
+        "size": 39666,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22461_fire_singleattackwith_trap.png.p,f99d91805ffd469ad99822a216a057a7,57068",
+        "sourceIcon": "Texture/Aries/Item/22461_Fire_SingleAttackWith_Trap.png; 0 0 151 230",
+        "itemId": 22461,
+        "name": "烈火反转"
+      }
+    },
+    "Storm_SingleAttack_Level1": {
+      "atlas": "storm-01",
+      "cell": 0,
+      "name": "疾电术",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/cba1f1d458233a0254ba1b0dcff24fe43f5ee1332bb3936a561c3e6fc5bd23b2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/cba1f1d458233a0254ba1b0dcff24fe43f5ee1332bb3936a561c3e6fc5bd23b2.webp",
+        "sha256": "cba1f1d458233a0254ba1b0dcff24fe43f5ee1332bb3936a561c3e6fc5bd23b2",
+        "size": 40952,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22121_storm_singleattack_level1.png.p,38a2c3d7bb92f1d510168b3fccf669b8,60670",
+        "sourceIcon": "Texture/Aries/Item/22121_Storm_SingleAttack_Level1.png; 0 0 151 230",
+        "itemId": 22121,
+        "name": "疾电术"
+      }
+    },
+    "Storm_SingleAttack_Level2": {
+      "atlas": "storm-01",
+      "cell": 1,
+      "name": "金灵遁空",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/a30630ed314e7348972e9d833c101184f9d79165aa801c9695c9b8c7d85c0231.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/a30630ed314e7348972e9d833c101184f9d79165aa801c9695c9b8c7d85c0231.webp",
+        "sha256": "a30630ed314e7348972e9d833c101184f9d79165aa801c9695c9b8c7d85c0231",
+        "size": 38346,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22122_storm_singleattack_level2.png.p,5cc1dffa3e6083d7b450e9cd791f34e0,57078",
+        "sourceIcon": "Texture/Aries/Item/22122_Storm_SingleAttack_Level2.png; 0 0 151 230",
+        "itemId": 22122,
+        "name": "金灵遁空"
+      }
+    },
+    "Storm_SingleAttack_Level3": {
+      "atlas": "storm-01",
+      "cell": 2,
+      "name": "暗夜雷动",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/d995e7277200dd9ab380a3c55285424ed701b9c11dd5a621cd4e9edd21158d34.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/d995e7277200dd9ab380a3c55285424ed701b9c11dd5a621cd4e9edd21158d34.webp",
+        "sha256": "d995e7277200dd9ab380a3c55285424ed701b9c11dd5a621cd4e9edd21158d34",
+        "size": 37426,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22123_storm_singleattack_level3.png.p,aaaf184c3d6870bcdd5adad36e6e9b1e,56407",
+        "sourceIcon": "Texture/Aries/Item/22123_Storm_SingleAttack_Level3.png; 0 0 151 230",
+        "itemId": 22123,
+        "name": "暗夜雷动"
+      }
+    },
+    "Storm_StormDamageTrap": {
+      "atlas": "storm-01",
+      "cell": 3,
+      "name": "风暴陷阱",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/a1acdc8a670fa33ba8d0ed3a498ad2398efb2bfa17ec75abcfe465ac0f01fc00.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/a1acdc8a670fa33ba8d0ed3a498ad2398efb2bfa17ec75abcfe465ac0f01fc00.webp",
+        "sha256": "a1acdc8a670fa33ba8d0ed3a498ad2398efb2bfa17ec75abcfe465ac0f01fc00",
+        "size": 41268,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22124_storm_stormdamagetrap.png.p,1f60cc2fd4a480241fde0dd58d5e0ea5,60627",
+        "sourceIcon": "Texture/Aries/Item/22124_Storm_StormDamageTrap.png; 0 0 151 230",
+        "itemId": 22124,
+        "name": "风暴陷阱"
+      }
+    },
+    "Storm_SingleAttack_Level4": {
+      "atlas": "storm-01",
+      "cell": 4,
+      "name": "雷神之剑",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/22b6ab7fd33189d31d0e5879f3e09c18b7dcbbd6efd033de676d1b4e2a0ec330.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/22b6ab7fd33189d31d0e5879f3e09c18b7dcbbd6efd033de676d1b4e2a0ec330.webp",
+        "sha256": "22b6ab7fd33189d31d0e5879f3e09c18b7dcbbd6efd033de676d1b4e2a0ec330",
+        "size": 38672,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22125_storm_singleattack_level4.png.p,d7f0d08a9b93c8a0e7f9a2393fe5a242,59127",
+        "sourceIcon": "Texture/Aries/Item/22125_Storm_SingleAttack_Level4.png; 0 0 151 230",
+        "itemId": 23125,
+        "name": "雷神之剑"
+      }
+    },
+    "Storm_AreaDamageTrap": {
+      "atlas": "storm-01",
+      "cell": 5,
+      "name": "雷云风暴",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/2f75f4c7c8376cbbb05c59ab924453c1454c62149935759fca34ceb387888a41.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/2f75f4c7c8376cbbb05c59ab924453c1454c62149935759fca34ceb387888a41.webp",
+        "sha256": "2f75f4c7c8376cbbb05c59ab924453c1454c62149935759fca34ceb387888a41",
+        "size": 44772,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22126_storm_areadamagetrap.png.p,b23aacc0a2544004ecf13e349da09107,63910",
+        "sourceIcon": "Texture/Aries/Item/22126_Storm_AreaDamageTrap.png; 0 0 151 230",
+        "itemId": 23126,
+        "name": "雷云风暴"
+      }
+    },
+    "Storm_StormGlobalAura": {
+      "atlas": "storm-01",
+      "cell": 6,
+      "name": "风暴对抗",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/a00487c39ecda8f60b0d0ec3c9bc3c9adcb7e9b40f4e576c3dd92964a958bc50.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/a00487c39ecda8f60b0d0ec3c9bc3c9adcb7e9b40f4e576c3dd92964a958bc50.webp",
+        "sha256": "a00487c39ecda8f60b0d0ec3c9bc3c9adcb7e9b40f4e576c3dd92964a958bc50",
+        "size": 37444,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22127_storm_stormglobalaura.png.p,35e7a7699baeb9ce329c7bac66a48e2b,57299",
+        "sourceIcon": "Texture/Aries/Item/22127_Storm_StormGlobalAura.png; 0 0 151 230",
+        "itemId": 22127,
+        "name": "风暴对抗"
+      }
+    },
+    "Storm_SingleAttack_Level5": {
+      "atlas": "storm-01",
+      "cell": 7,
+      "name": "蛇女雷暴",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/a2a2a83bdfe08b42d8b3f077aa6d5352703c4f229d81db0e165cedc9b29116c8.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/a2a2a83bdfe08b42d8b3f077aa6d5352703c4f229d81db0e165cedc9b29116c8.webp",
+        "sha256": "a2a2a83bdfe08b42d8b3f077aa6d5352703c4f229d81db0e165cedc9b29116c8",
+        "size": 45792,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22128_storm_singleattack_level5.png.p,1bf4391a16ac83b232e112b326a87ed8,66334",
+        "sourceIcon": "Texture/Aries/Item/22128_Storm_SingleAttack_Level5.png; 0 0 151 230",
+        "itemId": 23128,
+        "name": "蛇女雷暴"
+      }
+    },
+    "Storm_StormAccuracyBlade": {
+      "atlas": "storm-01",
+      "cell": 8,
+      "name": "风暴神箭",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/2c9940faa3b255d4513e7714337c487da4173fb9df0c3f4b2d341f0810be4d40.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/2c9940faa3b255d4513e7714337c487da4173fb9df0c3f4b2d341f0810be4d40.webp",
+        "sha256": "2c9940faa3b255d4513e7714337c487da4173fb9df0c3f4b2d341f0810be4d40",
+        "size": 40674,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22129_storm_stormaccuracyblade.png.p,4cd69c6199dc5fee9530ace2ebd85b63,61078",
+        "sourceIcon": "Texture/Aries/Item/22129_Storm_StormAccuracyBlade.png; 0 0 151 230",
+        "itemId": 23129,
+        "name": "风暴神箭"
+      }
+    },
+    "Storm_StormDamageBlade": {
+      "atlas": "storm-01",
+      "cell": 9,
+      "name": "风暴术",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/30de8196edcad359d849b6f2be055c10f4e00c44d23010e91b7207e054624436.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/30de8196edcad359d849b6f2be055c10f4e00c44d23010e91b7207e054624436.webp",
+        "sha256": "30de8196edcad359d849b6f2be055c10f4e00c44d23010e91b7207e054624436",
+        "size": 36496,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22130_storm_stormdamageblade.png.p,c37276fb8abbb7c0efb1917d1d419df4,56820",
+        "sourceIcon": "Texture/Aries/Item/22130_Storm_StormDamageBlade.png; 0 0 151 230",
+        "itemId": 23130,
+        "name": "风暴术"
+      }
+    },
+    "Storm_RemovePositiveCharm": {
+      "atlas": "storm-01",
+      "cell": 10,
+      "name": "厉风破运",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/23ed5a400a9fb677ecc6030efc3a42d73c79be657aef5745583327a2569347f6.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/23ed5a400a9fb677ecc6030efc3a42d73c79be657aef5745583327a2569347f6.webp",
+        "sha256": "23ed5a400a9fb677ecc6030efc3a42d73c79be657aef5745583327a2569347f6",
+        "size": 42848,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22131_storm_removepositivecharm.png.p,5b44bf9103fd378f95f626e4d23b4efa,63655",
+        "sourceIcon": "Texture/Aries/Item/22131_Storm_RemovePositiveCharm.png; 0 0 151 230",
+        "itemId": 23131,
+        "name": "厉风破运"
+      }
+    },
+    "Storm_RemoveNegativeCharm": {
+      "atlas": "storm-01",
+      "cell": 11,
+      "name": "和风逐暗",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/bf5d14912019e3ef92ec67de5c758f43b0636cb779c35aa000c7170838981ded.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/bf5d14912019e3ef92ec67de5c758f43b0636cb779c35aa000c7170838981ded.webp",
+        "sha256": "bf5d14912019e3ef92ec67de5c758f43b0636cb779c35aa000c7170838981ded",
+        "size": 39818,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22132_storm_removenegativecharm.png.p,e15968f91acc36a8d0ac43f983e7c614,60580",
+        "sourceIcon": "Texture/Aries/Item/22132_Storm_RemoveNegativeCharm.png; 0 0 151 230",
+        "itemId": 23132,
+        "name": "和风逐暗"
+      }
+    },
+    "Storm_AreaAttack_LevelX": {
+      "atlas": "storm-01",
+      "cell": 12,
+      "name": "风鹰之眼",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/dc7ae22f1330029e307a6a460c107bd37438ae45a92d2b6b16530d909db9d91e.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/dc7ae22f1330029e307a6a460c107bd37438ae45a92d2b6b16530d909db9d91e.webp",
+        "sha256": "dc7ae22f1330029e307a6a460c107bd37438ae45a92d2b6b16530d909db9d91e",
+        "size": 42864,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22133_storm_areaattack_levelx.png.p,1f1ac03dc15ed0e06ee7ef1f1fad0fb6,63288",
+        "sourceIcon": "Texture/Aries/Item/22133_Storm_AreaAttack_LevelX.png; 0 0 151 230",
+        "itemId": 22133,
+        "name": "风鹰之眼"
+      }
+    },
+    "Storm_SingleAttack_WildBolt_Level2": {
+      "atlas": "storm-01",
+      "cell": 13,
+      "name": "极限暴熊",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/02a571806f26588da509930b1e784475803f41e8300fe8da81e53a6bc35bc29b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/02a571806f26588da509930b1e784475803f41e8300fe8da81e53a6bc35bc29b.webp",
+        "sha256": "02a571806f26588da509930b1e784475803f41e8300fe8da81e53a6bc35bc29b",
+        "size": 39488,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22134_storm_singleattack_wildbolt_level2.png.p,f31f650f019b5f649d92a4427d6f8d62,58312",
+        "sourceIcon": "Texture/Aries/Item/22134_Storm_SingleAttack_WildBolt_Level2.png; 0 0 151 230",
+        "itemId": 22134,
+        "name": "极限暴熊"
+      }
+    },
+    "Storm_SingleAttack_Level6": {
+      "atlas": "storm-01",
+      "cell": 14,
+      "name": "旋风爆击",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/d1ac15e55561605ab44ba983de166481f4c7dc810639c2e85fbcb10af3843cab.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/d1ac15e55561605ab44ba983de166481f4c7dc810639c2e85fbcb10af3843cab.webp",
+        "sha256": "d1ac15e55561605ab44ba983de166481f4c7dc810639c2e85fbcb10af3843cab",
+        "size": 42892,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22135_storm_singleattack_level6.png.p,cc56d1ec4fe2ffffa9e2b4a82223305c,62775",
+        "sourceIcon": "Texture/Aries/Item/22135_Storm_SingleAttack_Level6.png; 0 0 151 230",
+        "itemId": 23135,
+        "name": "旋风爆击"
+      },
+      "effectAtlas": "hero-storm",
+      "effectFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "heroCardFrame": 2
+    },
+    "Storm_AreaAttackWithStun_Level7": {
+      "atlas": "storm-01",
+      "cell": 15,
+      "name": "风暴攻7",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb.webp",
+        "sha256": "5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb",
+        "size": 558,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22136_storm_areaattackwithstun_level7.png.p,7960229dff20fd2e9a7f57c1950feeb5,4065",
+        "sourceIcon": "Texture/Aries/Item/22136_Storm_AreaAttackWithStun_Level7.png; 0 0 151 230",
+        "itemId": 22136,
+        "name": "风暴攻7"
+      }
+    },
+    "Storm_StormDispellWeakness": {
+      "atlas": "storm-02",
+      "cell": 0,
+      "name": "风暴之敌",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/37e261f58856b868c99e2cb90961d65232942eb5772f3b5b165f8df5599562bd.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/37e261f58856b868c99e2cb90961d65232942eb5772f3b5b165f8df5599562bd.webp",
+        "sha256": "37e261f58856b868c99e2cb90961d65232942eb5772f3b5b165f8df5599562bd",
+        "size": 40756,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22137_storm_stormdispellweakness.png.p,392a69260cfa3c6f5e242aa4d2b60eba,59565",
+        "sourceIcon": "Texture/Aries/Item/22137_Storm_StormDispellWeakness.png; 0 0 151 230",
+        "itemId": 23137,
+        "name": "风暴之敌"
+      }
+    },
+    "Storm_StormGreatShield": {
+      "atlas": "storm-02",
+      "cell": 1,
+      "name": "风暴盾",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/76bfdbc725eb1e602e7bd49493b85a02b1efb0ad661bc47f391023339e28345b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/76bfdbc725eb1e602e7bd49493b85a02b1efb0ad661bc47f391023339e28345b.webp",
+        "sha256": "76bfdbc725eb1e602e7bd49493b85a02b1efb0ad661bc47f391023339e28345b",
+        "size": 43084,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22138_storm_stormgreatshield.png.p,1ae9f89a8116caef993ab7b42d6b7561,60793",
+        "sourceIcon": "Texture/Aries/Item/22138_Storm_StormGreatShield.png; 0 0 151 230",
+        "itemId": 23138,
+        "name": "风暴盾"
+      }
+    },
+    "Storm_SingleAttack_Level0": {
+      "atlas": "storm-02",
+      "cell": 2,
+      "name": "风暴1",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/e16cdb8df71a5d500ac50c5abdde61b6f8afdec402e2c918a3aaf5dbe59fe207.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/e16cdb8df71a5d500ac50c5abdde61b6f8afdec402e2c918a3aaf5dbe59fe207.webp",
+        "sha256": "e16cdb8df71a5d500ac50c5abdde61b6f8afdec402e2c918a3aaf5dbe59fe207",
+        "size": 37510,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22210_storm_singleattack_level0_45.png.p,44ec48981646e2eb502b421d21eaea55,58016",
+        "sourceIcon": "Texture/Aries/Item/22210_Storm_SingleAttack_Level0_45.png; 0 0 151 230",
+        "itemId": 23210,
+        "name": "风暴1"
+      }
+    },
+    "Storm_Rune_StormResist_MiniAura": {
+      "atlas": "storm-02",
+      "cell": 3,
+      "name": "风暴盾墙符文",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/6a30536cbde0dfef185bf0109b76c4bbc67ee8311a6c6fff711f1d572ce39e74.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/6a30536cbde0dfef185bf0109b76c4bbc67ee8311a6c6fff711f1d572ce39e74.webp",
+        "sha256": "6a30536cbde0dfef185bf0109b76c4bbc67ee8311a6c6fff711f1d572ce39e74",
+        "size": 43644,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22316_storm_stormresist_miniaura.png.p,8b967cab44faf39362fa708731e84493,63849",
+        "sourceIcon": "Texture/Aries/Item/22316_Storm_StormResist_MiniAura.png; 0 0 151 230",
+        "itemId": 23316,
+        "name": "风暴盾墙符文"
+      }
+    },
+    "Storm_Rune_AreaAttack_Level2": {
+      "atlas": "storm-02",
+      "cell": 4,
+      "name": "风暴群击",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/f598c2f0664ea9d4bea455bfba357928195103a66a8e6e7d2ea4a03c324646e1.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f598c2f0664ea9d4bea455bfba357928195103a66a8e6e7d2ea4a03c324646e1.webp",
+        "sha256": "f598c2f0664ea9d4bea455bfba357928195103a66a8e6e7d2ea4a03c324646e1",
+        "size": 38070,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22321_storm_rune_areaattack_level2.png.p,2cfe16cab95d92208ea267dbbe4c4414,55681",
+        "sourceIcon": "Texture/Aries/Item/22321_Storm_Rune_AreaAttack_Level2.png; 0 0 151 230",
+        "itemId": 22321,
+        "name": "风暴群击"
+      }
+    },
+    "Storm_Rune_StormAccuracy_MiniAura": {
+      "atlas": "storm-02",
+      "cell": 5,
+      "name": "风暴专注",
+      "school": "storm",
+      "source": {
+        "missingSource": "texture/aries/item/22326_storm_rune_stormaccuracy_miniaura.png",
+        "itemId": 23326,
+        "name": "风暴专注",
+        "local": "assets/adventure/spells/c28f6d80ca35188069249f4d0560fa1b4556e589c2207debd084b66185a9bd02.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/c28f6d80ca35188069249f4d0560fa1b4556e589c2207debd084b66185a9bd02.webp",
+        "sha256": "c28f6d80ca35188069249f4d0560fa1b4556e589c2207debd084b66185a9bd02",
+        "size": 3874,
+        "width": 302,
+        "height": 460,
+        "adaptation": "Geometric rune card: original icon absent from assets_manifest.txt; name overlaid by browser"
+      }
+    },
+    "Storm_Pet_SingleAttack_IronBeeSting": {
+      "atlas": "storm-02",
+      "cell": 6,
+      "name": "苍蝇穿刺",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/67b648c5ad71ea1d9ed96c792ed9dd7568bf5d061c5d9e3bec3a5791b9fb595e.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/67b648c5ad71ea1d9ed96c792ed9dd7568bf5d061c5d9e3bec3a5791b9fb595e.webp",
+        "sha256": "67b648c5ad71ea1d9ed96c792ed9dd7568bf5d061c5d9e3bec3a5791b9fb595e",
+        "size": 1812,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22262_storm_pet_singleattack_ironbeesting.png.p,f84c23a8b521969b83218c5a81bd4a17,4845",
+        "sourceIcon": "Texture/Aries/Item/22262_Storm_Pet_SingleAttack_IronBeeSting.png; 0 0 151 230",
+        "itemId": 22262,
+        "name": "苍蝇穿刺"
+      }
+    },
+    "Storm_Pet_AreaAttack_LevelX_ShadowSmashBullsSmash": {
+      "atlas": "storm-02",
+      "cell": 7,
+      "name": "连环闪电",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/4018b4cb44a70ea15650ac3b962cbdce29f6136407911c3e4d8831246ac678a4.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/4018b4cb44a70ea15650ac3b962cbdce29f6136407911c3e4d8831246ac678a4.webp",
+        "sha256": "4018b4cb44a70ea15650ac3b962cbdce29f6136407911c3e4d8831246ac678a4",
+        "size": 41132,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22264_storm_pet_areaattack_levelx_shadowsmashbullssmash.png.p,7bb23e594f797e824922d1b9fff4cbc4,61749",
+        "sourceIcon": "Texture/Aries/Item/22264_Storm_Pet_AreaAttack_LevelX_ShadowSmashBullsSmash.png; 0 0 151 230",
+        "itemId": 22264,
+        "name": "连环闪电"
+      }
+    },
+    "Storm_Pet_SingleAttack_ManekiNeko": {
+      "atlas": "storm-02",
+      "cell": 8,
+      "name": "疾猫霹雳",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/557518329f607610a2d3b05e4ebb6f34c7b4bfd5b23764353fa06915bb24237b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/557518329f607610a2d3b05e4ebb6f34c7b4bfd5b23764353fa06915bb24237b.webp",
+        "sha256": "557518329f607610a2d3b05e4ebb6f34c7b4bfd5b23764353fa06915bb24237b",
+        "size": 40756,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22301_storm_pet_singleattack_manekineko.png.p,fa8859741072a8ffac41d38c9b544ecc,61197",
+        "sourceIcon": "Texture/Aries/Item/22301_Storm_Pet_SingleAttack_ManekiNeko.png; 0 0 151 230",
+        "itemId": 23301,
+        "name": "疾猫霹雳"
+      }
+    },
+    "Storm_Pet_SingleAttackWithDOT_Level2": {
+      "atlas": "storm-02",
+      "cell": 9,
+      "name": "雷神电轮",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/b7aea96589c5f22fa70d3a79107e16de8c17b1ee2b77558af678e542e208fb9b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/b7aea96589c5f22fa70d3a79107e16de8c17b1ee2b77558af678e542e208fb9b.webp",
+        "sha256": "b7aea96589c5f22fa70d3a79107e16de8c17b1ee2b77558af678e542e208fb9b",
+        "size": 41368,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22330_storm_pet_singleattackwithdot_level2.png.p,6b5cb8e4c75e0425d9d9a39e1765184f,61740",
+        "sourceIcon": "Texture/Aries/Item/22330_Storm_Pet_SingleAttackWithDOT_Level2.png; 0 0 151 230",
+        "itemId": 22330,
+        "name": "雷神电轮"
+      }
+    },
+    "Storm_StormDamageTrap_Standing": {
+      "atlas": "storm-02",
+      "cell": 10,
+      "name": "惊雷裂隙",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/0bd0cf8061c65ba68095a046ec0e5d1c729bec78b6ed3248181e21d1e0876968.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/0bd0cf8061c65ba68095a046ec0e5d1c729bec78b6ed3248181e21d1e0876968.webp",
+        "sha256": "0bd0cf8061c65ba68095a046ec0e5d1c729bec78b6ed3248181e21d1e0876968",
+        "size": 43368,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22333_storm_stormdamagetrap_standing.png.p,72d9fde75a46a3566246e4e385ffd798,63095",
+        "sourceIcon": "Texture/Aries/Item/22333_Storm_StormDamageTrap_Standing.png; 0 0 151 230",
+        "itemId": 22333,
+        "name": "惊雷裂隙"
+      }
+    },
+    "Storm_StormConversePositiveWard": {
+      "atlas": "storm-02",
+      "cell": 11,
+      "name": "怒风逆转符文",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/cbea553a04e63a5cf34d765c9ac40a3a766fff530deff9f39bd7f3ff4f8ff3b0.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/cbea553a04e63a5cf34d765c9ac40a3a766fff530deff9f39bd7f3ff4f8ff3b0.webp",
+        "sha256": "cbea553a04e63a5cf34d765c9ac40a3a766fff530deff9f39bd7f3ff4f8ff3b0",
+        "size": 44160,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22338_storm_rune_stormconversepositiveward.png.p,ee400c53be26f9fbadbcb44214292210,63833",
+        "sourceIcon": "Texture/Aries/Item/22338_Storm_Rune_StormConversePositiveWard.png; 0 0 151 230",
+        "itemId": 23338,
+        "name": "怒风逆转符文"
+      }
+    },
+    "Storm_SingleStealth": {
+      "atlas": "storm-02",
+      "cell": 12,
+      "name": "风影斗篷符文",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/f610f35dc0d6eeaa3dd06cbed68f2ce83e41c3d9e7b549b1b52f6bc8bc81e612.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f610f35dc0d6eeaa3dd06cbed68f2ce83e41c3d9e7b549b1b52f6bc8bc81e612.webp",
+        "sha256": "f610f35dc0d6eeaa3dd06cbed68f2ce83e41c3d9e7b549b1b52f6bc8bc81e612",
+        "size": 39794,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22381_storm_singlestealth.png.p,6e5981b343f611b0939875ca917bfc0d,58933",
+        "sourceIcon": "Texture/Aries/Item/22381_Storm_SingleStealth.png; 0 0 151 230",
+        "itemId": 23381,
+        "name": "风影斗篷符文"
+      }
+    },
+    "Storm_SingleAttack_Level1_Crazy": {
+      "atlas": "storm-02",
+      "cell": 13,
+      "name": "疾空破",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/cba1f1d458233a0254ba1b0dcff24fe43f5ee1332bb3936a561c3e6fc5bd23b2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/cba1f1d458233a0254ba1b0dcff24fe43f5ee1332bb3936a561c3e6fc5bd23b2.webp",
+        "sha256": "cba1f1d458233a0254ba1b0dcff24fe43f5ee1332bb3936a561c3e6fc5bd23b2",
+        "size": 40952,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22121_storm_singleattack_level1.png.p,38a2c3d7bb92f1d510168b3fccf669b8,60670",
+        "sourceIcon": "Texture/Aries/Item/22121_Storm_SingleAttack_Level1.png; 0 0 151 230",
+        "itemId": 22403,
+        "name": "疾空破"
+      }
+    },
+    "Storm_SingleAttack_Level2_Crazy": {
+      "atlas": "storm-02",
+      "cell": 14,
+      "name": "雷鸣遁空",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/a30630ed314e7348972e9d833c101184f9d79165aa801c9695c9b8c7d85c0231.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/a30630ed314e7348972e9d833c101184f9d79165aa801c9695c9b8c7d85c0231.webp",
+        "sha256": "a30630ed314e7348972e9d833c101184f9d79165aa801c9695c9b8c7d85c0231",
+        "size": 38346,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22122_storm_singleattack_level2.png.p,5cc1dffa3e6083d7b450e9cd791f34e0,57078",
+        "sourceIcon": "Texture/Aries/Item/22122_Storm_SingleAttack_Level2.png; 0 0 151 230",
+        "itemId": 22408,
+        "name": "雷鸣遁空"
+      }
+    },
+    "Storm_SingleAttack_Level6_OutStandingCard": {
+      "atlas": "storm-02",
+      "cell": 15,
+      "name": "狂风暴击",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/f12f89e863498ec9a7374a6048aa5660d881adc98068cca1d4e6fc229d80e1c5.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f12f89e863498ec9a7374a6048aa5660d881adc98068cca1d4e6fc229d80e1c5.webp",
+        "sha256": "f12f89e863498ec9a7374a6048aa5660d881adc98068cca1d4e6fc229d80e1c5",
+        "size": 47254,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22436_storm_singleattack_level6_outstandingcard.png.p,f8f2b3d5bb789a1b1d553f7711334272,68937",
+        "sourceIcon": "Texture/Aries/Item/22436_Storm_SingleAttack_Level6_OutStandingCard.png; 0 0 151 230",
+        "itemId": 22436,
+        "name": "狂风暴击"
+      }
+    },
+    "Storm_ElectricStance": {
+      "atlas": "storm-03",
+      "cell": 0,
+      "name": "狂风形态",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/04e68929fc0f0b24c52fb7c2e88334a67246a34e562998b6797382b31d4395b2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/04e68929fc0f0b24c52fb7c2e88334a67246a34e562998b6797382b31d4395b2.webp",
+        "sha256": "04e68929fc0f0b24c52fb7c2e88334a67246a34e562998b6797382b31d4395b2",
+        "size": 40848,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22449_storm_electricstance.png.p,3837d2e8935e18f57cbfca648bab7663,62148",
+        "sourceIcon": "Texture/Aries/Item/22449_Storm_ElectricStance.png; 0 0 151 230",
+        "itemId": 22449,
+        "name": "狂风形态"
+      }
+    },
+    "Storm_SingleAttackWith_Trap": {
+      "atlas": "storm-03",
+      "cell": 1,
+      "name": "风暴反转",
+      "school": "storm",
+      "source": {
+        "local": "assets/adventure/spells/09adcb84b21bf99b07ed1a26de4bc7a41aff867d55b1edab056cbe08f5889a07.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/09adcb84b21bf99b07ed1a26de4bc7a41aff867d55b1edab056cbe08f5889a07.webp",
+        "sha256": "09adcb84b21bf99b07ed1a26de4bc7a41aff867d55b1edab056cbe08f5889a07",
+        "size": 38006,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22462_storm_singleattackwith_trap.png.p,5f15298a96a5e51a101a322af45a0761,56184",
+        "sourceIcon": "Texture/Aries/Item/22462_Storm_SingleAttackWith_Trap.png; 0 0 151 230",
+        "itemId": 22462,
+        "name": "风暴反转"
+      }
+    },
+    "Life_SingleAttack_Level1": {
+      "atlas": "life-01",
+      "cell": 0,
+      "name": "生灵光弧",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/694bedbc7ff207e69aa36122039f6ea53a5fa753fcf8b39befb233515a9e09a4.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/694bedbc7ff207e69aa36122039f6ea53a5fa753fcf8b39befb233515a9e09a4.webp",
+        "sha256": "694bedbc7ff207e69aa36122039f6ea53a5fa753fcf8b39befb233515a9e09a4",
+        "size": 43706,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22158_life_singleattack_level1.png.p,2108bad0f4dc3176e05904bb355a556d,64078",
+        "sourceIcon": "Texture/Aries/Item/22158_Life_SingleAttack_Level1.png; 0 0 151 230",
+        "itemId": 23158,
+        "name": "生灵光弧"
+      }
+    },
+    "Life_SingleAttack_Level2": {
+      "atlas": "life-01",
+      "cell": 1,
+      "name": "灵木刺阵",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/de265b57c66814c3796796c5fa074e5ab8c9bcd7753f224ee939df075d735d02.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/de265b57c66814c3796796c5fa074e5ab8c9bcd7753f224ee939df075d735d02.webp",
+        "sha256": "de265b57c66814c3796796c5fa074e5ab8c9bcd7753f224ee939df075d735d02",
+        "size": 42846,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22159_life_singleattack_level2.png.p,3222a85bb4fb71295828d9f38f82e4a7,61094",
+        "sourceIcon": "Texture/Aries/Item/22159_Life_SingleAttack_Level2.png; 0 0 151 230",
+        "itemId": 23159,
+        "name": "灵木刺阵"
+      }
+    },
+    "Life_SingleAttack_Level3": {
+      "atlas": "life-01",
+      "cell": 2,
+      "name": "莽林狂舞",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/f08a522a0b70898d082586c52539ae5a353070e4e3d5916e8c539e610a3bad05.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f08a522a0b70898d082586c52539ae5a353070e4e3d5916e8c539e610a3bad05.webp",
+        "sha256": "f08a522a0b70898d082586c52539ae5a353070e4e3d5916e8c539e610a3bad05",
+        "size": 45754,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22160_life_singleattack_level3.png.p,93de7a999bcc5241067ce20b973c3375,66395",
+        "sourceIcon": "Texture/Aries/Item/22160_Life_SingleAttack_Level3.png; 0 0 151 230",
+        "itemId": 23160,
+        "name": "莽林狂舞"
+      }
+    },
+    "Life_SingleHealWithHOT_Level1": {
+      "atlas": "life-01",
+      "cell": 3,
+      "name": "生生不息",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/6c0926884c6e6ac1a497fb8da2b8d26e7a684f3a4486f13e5b02a6306aa2c6a7.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/6c0926884c6e6ac1a497fb8da2b8d26e7a684f3a4486f13e5b02a6306aa2c6a7.webp",
+        "sha256": "6c0926884c6e6ac1a497fb8da2b8d26e7a684f3a4486f13e5b02a6306aa2c6a7",
+        "size": 43774,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22161_life_singlehealwithhot_level1.png.p,048dbfadc605646e47ee0c2ad169a19b,64468",
+        "sourceIcon": "Texture/Aries/Item/22161_Life_SingleHealWithHOT_Level1.png; 0 0 151 230",
+        "itemId": 23161,
+        "name": "生生不息"
+      }
+    },
+    "Life_Absorb_Level3": {
+      "atlas": "life-01",
+      "cell": 4,
+      "name": "吸收盾",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/8d10b3a9ff09bd8100882a7d371337c1b1227146afc438de130f78ad489287d6.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/8d10b3a9ff09bd8100882a7d371337c1b1227146afc438de130f78ad489287d6.webp",
+        "sha256": "8d10b3a9ff09bd8100882a7d371337c1b1227146afc438de130f78ad489287d6",
+        "size": 42118,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22162_life_absorb_level3.png.p,42218fd7d996f16548509a0e1d43f6cf,61032",
+        "sourceIcon": "Texture/Aries/Item/22162_Life_Absorb_Level3.png; 0 0 151 230",
+        "itemId": 23162,
+        "name": "吸收盾"
+      }
+    },
+    "Life_SingleAttack_Level4": {
+      "atlas": "life-01",
+      "cell": 5,
+      "name": "噬草召唤",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/4717e2f93257d88b218d1a160bbe0494a7a8aab0e31cafe68a938b5f59f652a2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/4717e2f93257d88b218d1a160bbe0494a7a8aab0e31cafe68a938b5f59f652a2.webp",
+        "sha256": "4717e2f93257d88b218d1a160bbe0494a7a8aab0e31cafe68a938b5f59f652a2",
+        "size": 48704,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22163_life_singleattack_level4.png.p,9c15473f115e30d6622edace09093307,67938",
+        "sourceIcon": "Texture/Aries/Item/22163_Life_SingleAttack_Level4.png; 0 0 151 230",
+        "itemId": 23163,
+        "name": "噬草召唤"
+      }
+    },
+    "Life_SingleHeal_Level4": {
+      "atlas": "life-01",
+      "cell": 6,
+      "name": "生机勃发",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/08fe1edc614f5687d0cd2bb73a424228e7d7495eb2beb46c65a33dec46c01627.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/08fe1edc614f5687d0cd2bb73a424228e7d7495eb2beb46c65a33dec46c01627.webp",
+        "sha256": "08fe1edc614f5687d0cd2bb73a424228e7d7495eb2beb46c65a33dec46c01627",
+        "size": 45634,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22164_life_singleheal_level4.png.p,b7a67404ed9bfdb67bf34c3882a2fe03,64999",
+        "sourceIcon": "Texture/Aries/Item/22164_Life_SingleHeal_Level4.png; 0 0 151 230",
+        "itemId": 22164,
+        "name": "生机勃发"
+      }
+    },
+    "Life_SingleAttack_Level6": {
+      "atlas": "life-01",
+      "cell": 7,
+      "name": "大地之怒",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/dc99e38d8dae5115da5bb86a53718a81cc450a399bab7054d08de7bcb45924df.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/dc99e38d8dae5115da5bb86a53718a81cc450a399bab7054d08de7bcb45924df.webp",
+        "sha256": "dc99e38d8dae5115da5bb86a53718a81cc450a399bab7054d08de7bcb45924df",
+        "size": 46196,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22165_life_singleattack_level6.png.p,f4a919d0483383016fdc4a450b38283c,65513",
+        "sourceIcon": "Texture/Aries/Item/22165_Life_SingleAttack_Level6.png; 0 0 151 230",
+        "itemId": 22165,
+        "name": "大地之怒"
+      }
+    },
+    "Life_LifeGlobalAura": {
+      "atlas": "life-01",
+      "cell": 8,
+      "name": "生命对抗",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/8fd7778400be648b34e0d3463de339f3025e5f9a4470ec0034b374f338a66be8.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/8fd7778400be648b34e0d3463de339f3025e5f9a4470ec0034b374f338a66be8.webp",
+        "sha256": "8fd7778400be648b34e0d3463de339f3025e5f9a4470ec0034b374f338a66be8",
+        "size": 40670,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22166_life_lifeglobalaura.png.p,5d8ab5f541f3a99c30dff40543251dd9,60241",
+        "sourceIcon": "Texture/Aries/Item/22166_Life_LifeGlobalAura.png; 0 0 151 230",
+        "itemId": 22166,
+        "name": "生命对抗"
+      }
+    },
+    "Life_SingleHeal_Level0": {
+      "atlas": "life-01",
+      "cell": 9,
+      "name": "静水灵体",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/61d3ce305e56b941531d9bbc5a537b3080727c606816d7d939eb10c340a75280.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/61d3ce305e56b941531d9bbc5a537b3080727c606816d7d939eb10c340a75280.webp",
+        "sha256": "61d3ce305e56b941531d9bbc5a537b3080727c606816d7d939eb10c340a75280",
+        "size": 46686,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22167_life_singleheal_level0.png.p,824005d4380455c832d7c368c3e27211,69029",
+        "sourceIcon": "Texture/Aries/Item/22167_Life_SingleHeal_Level0.png; 0 0 151 230",
+        "itemId": 22167,
+        "name": "静水灵体"
+      }
+    },
+    "Life_AreaHeal_Level3": {
+      "atlas": "life-01",
+      "cell": 10,
+      "name": "生命庇护",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/c946f0275c584c23efa66ea6eec54e9430fb868879fab4ff653ccf1aca54b450.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/c946f0275c584c23efa66ea6eec54e9430fb868879fab4ff653ccf1aca54b450.webp",
+        "sha256": "c946f0275c584c23efa66ea6eec54e9430fb868879fab4ff653ccf1aca54b450",
+        "size": 43714,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22168_life_areaheal_level3.png.p,5d44c34d3cd8dff53f59b1a62d6caa04,64291",
+        "sourceIcon": "Texture/Aries/Item/22168_Life_AreaHeal_Level3.png; 0 0 151 230",
+        "itemId": 22168,
+        "name": "生命庇护"
+      }
+    },
+    "Life_LifePrism": {
+      "atlas": "life-01",
+      "cell": 11,
+      "name": "生命棱镜",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/1cced0d7d4075fef845ee11bc3e633e717b4d11254c98152a8ee506f06ebbd4a.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/1cced0d7d4075fef845ee11bc3e633e717b4d11254c98152a8ee506f06ebbd4a.webp",
+        "sha256": "1cced0d7d4075fef845ee11bc3e633e717b4d11254c98152a8ee506f06ebbd4a",
+        "size": 44920,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22169_life_lifeprism.png.p,9c3161ac6b5ca5b4822a4c3488d1c3e4,64338",
+        "sourceIcon": "Texture/Aries/Item/22169_Life_LifePrism.png; 0 0 151 230",
+        "itemId": 23169,
+        "name": "生命棱镜"
+      }
+    },
+    "Life_LifeDamageBlade": {
+      "atlas": "life-01",
+      "cell": 12,
+      "name": "生命术",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/d8eeb2bb07b1a7d89a73414cc64de0ed088467918cc3b9bcab433b964c28bf02.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/d8eeb2bb07b1a7d89a73414cc64de0ed088467918cc3b9bcab433b964c28bf02.webp",
+        "sha256": "d8eeb2bb07b1a7d89a73414cc64de0ed088467918cc3b9bcab433b964c28bf02",
+        "size": 44274,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22170_life_lifedamageblade.png.p,d49bcfa49963a22427680aeaeeaab2ac,62996",
+        "sourceIcon": "Texture/Aries/Item/22170_Life_LifeDamageBlade.png; 0 0 151 230",
+        "itemId": 22170,
+        "name": "生命术"
+      }
+    },
+    "Life_AreaAccuracyBlade": {
+      "atlas": "life-01",
+      "cell": 13,
+      "name": "生命之礼",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/354201181249d3a79e740405bfb26b153da8aab9c1b2cc04294c0a0e0e243819.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/354201181249d3a79e740405bfb26b153da8aab9c1b2cc04294c0a0e0e243819.webp",
+        "sha256": "354201181249d3a79e740405bfb26b153da8aab9c1b2cc04294c0a0e0e243819",
+        "size": 47790,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22171_life_areaaccuracyblade.png.p,1ef4bbcceb97e8b059d550e81c7e4a51,67243",
+        "sourceIcon": "Texture/Aries/Item/22171_Life_AreaAccuracyBlade.png; 0 0 151 230",
+        "itemId": 22171,
+        "name": "生命之礼"
+      }
+    },
+    "Life_HealBlade": {
+      "atlas": "life-01",
+      "cell": 14,
+      "name": "治疗术",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/acda893ccdcafe1243bf9cb6d41206041abdcc8df3524c68f4577c1bcefd1d73.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/acda893ccdcafe1243bf9cb6d41206041abdcc8df3524c68f4577c1bcefd1d73.webp",
+        "sha256": "acda893ccdcafe1243bf9cb6d41206041abdcc8df3524c68f4577c1bcefd1d73",
+        "size": 44536,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22172_life_healblade.png.p,7512b43a052fd64c69c2bede51b4f1be,63964",
+        "sourceIcon": "Texture/Aries/Item/22172_Life_HealBlade.png; 0 0 151 230",
+        "itemId": 23172,
+        "name": "治疗术"
+      }
+    },
+    "Life_SingleHealWithHOT_Level5": {
+      "atlas": "life-01",
+      "cell": 15,
+      "name": "生命圣光",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/378ee1f9fffa94f041f9e2cfcdd7f7ad3ef09db5e17d37e9311ec14405729105.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/378ee1f9fffa94f041f9e2cfcdd7f7ad3ef09db5e17d37e9311ec14405729105.webp",
+        "sha256": "378ee1f9fffa94f041f9e2cfcdd7f7ad3ef09db5e17d37e9311ec14405729105",
+        "size": 39498,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22173_life_singlehealwithhot_level5.png.p,eef6717055449a993f42d2f1ebc54838,59036",
+        "sourceIcon": "Texture/Aries/Item/22173_Life_SingleHealWithHOT_Level5.png; 0 0 151 230",
+        "itemId": 23173,
+        "name": "生命圣光"
+      }
+    },
+    "Life_SingleHeal_LevelX": {
+      "atlas": "life-02",
+      "cell": 0,
+      "name": "精灵之舞",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/6383386515e220203239874aa3c768472a2ac804ccca4d4aef5e59ce30e202ae.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/6383386515e220203239874aa3c768472a2ac804ccca4d4aef5e59ce30e202ae.webp",
+        "sha256": "6383386515e220203239874aa3c768472a2ac804ccca4d4aef5e59ce30e202ae",
+        "size": 47048,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22174_life_singleheal_levelx.png.p,389a86b573e1f9b51c4874295ca11a7c,68803",
+        "sourceIcon": "Texture/Aries/Item/22174_Life_SingleHeal_LevelX.png; 0 0 151 230",
+        "itemId": 23174,
+        "name": "精灵之舞"
+      }
+    },
+    "Life_AreaHealWithAbsorb_Level7": {
+      "atlas": "life-02",
+      "cell": 1,
+      "name": "重生",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb.webp",
+        "sha256": "5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb",
+        "size": 558,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22175_life_areahealwithabsorb_level7.png.p,7960229dff20fd2e9a7f57c1950feeb5,4065",
+        "sourceIcon": "Texture/Aries/Item/22175_Life_AreaHealWithAbsorb_Level7.png; 0 0 151 230",
+        "itemId": 23175,
+        "name": "重生"
+      },
+      "effectAtlas": "hero-life",
+      "effectFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "heroCardFrame": 2
+    },
+    "Life_SingleHeal_ForNonLife_Level2": {
+      "atlas": "life-02",
+      "cell": 2,
+      "name": "万象凝气",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/f3286d13992527656524ddc94fc51fb8772cbeed948f884077fd0ac8bab06639.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f3286d13992527656524ddc94fc51fb8772cbeed948f884077fd0ac8bab06639.webp",
+        "sha256": "f3286d13992527656524ddc94fc51fb8772cbeed948f884077fd0ac8bab06639",
+        "size": 41828,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22176_life_singleheal_fornonlife_level2.png.p,2572e29887101fee0f4170ce9b55bbd3,62501",
+        "sourceIcon": "Texture/Aries/Item/22176_Life_SingleHeal_ForNonLife_Level2.png; 0 0 151 230",
+        "itemId": 23176,
+        "name": "万象凝气"
+      }
+    },
+    "Life_SingleHeal_ForLife_Level2": {
+      "atlas": "life-02",
+      "cell": 3,
+      "name": "万象回春",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/1856951fdff89650d28bfcd279806c1bd471fd4efe72dd39d626ecf6e1eb5e76.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/1856951fdff89650d28bfcd279806c1bd471fd4efe72dd39d626ecf6e1eb5e76.webp",
+        "sha256": "1856951fdff89650d28bfcd279806c1bd471fd4efe72dd39d626ecf6e1eb5e76",
+        "size": 40920,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22177_life_singleheal_forlife_level2.png.p,9996b74338c1a478338ed5a08d2cfdae,61774",
+        "sourceIcon": "Texture/Aries/Item/22177_Life_SingleHeal_ForLife_Level2.png; 0 0 151 230",
+        "itemId": 22177,
+        "name": "万象回春"
+      }
+    },
+    "Life_LifeDamageTrap": {
+      "atlas": "life-02",
+      "cell": 4,
+      "name": "生命陷阱",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/f110d678fcca17c27720869eda9aeeba3652192106b60bccce6cfee4521f719c.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f110d678fcca17c27720869eda9aeeba3652192106b60bccce6cfee4521f719c.webp",
+        "sha256": "f110d678fcca17c27720869eda9aeeba3652192106b60bccce6cfee4521f719c",
+        "size": 45614,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22178_life_lifedamagetrap.png.p,c7251839e8aa34537082bf3228cd9f30,63973",
+        "sourceIcon": "Texture/Aries/Item/22178_Life_LifeDamageTrap.png; 0 0 151 230",
+        "itemId": 22178,
+        "name": "生命陷阱"
+      }
+    },
+    "Life_LifeDispellWeakness": {
+      "atlas": "life-02",
+      "cell": 5,
+      "name": "生命之敌",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/03d616d7105a836a4807e8215bf70669e0c834b918417f766fe64d616fd903a5.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/03d616d7105a836a4807e8215bf70669e0c834b918417f766fe64d616fd903a5.webp",
+        "sha256": "03d616d7105a836a4807e8215bf70669e0c834b918417f766fe64d616fd903a5",
+        "size": 44580,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22179_life_lifedispellweakness.png.p,232f065ecd592c117b20c9486cb5da34,63538",
+        "sourceIcon": "Texture/Aries/Item/22179_Life_LifeDispellWeakness.png; 0 0 151 230",
+        "itemId": 22179,
+        "name": "生命之敌"
+      }
+    },
+    "Life_LifeGreatShield": {
+      "atlas": "life-02",
+      "cell": 6,
+      "name": "生命盾",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/47bdd1934ce1c67196bac5f089fbf9a45ae8857960b3e6564d1777497781722c.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/47bdd1934ce1c67196bac5f089fbf9a45ae8857960b3e6564d1777497781722c.webp",
+        "sha256": "47bdd1934ce1c67196bac5f089fbf9a45ae8857960b3e6564d1777497781722c",
+        "size": 45602,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22180_life_lifegreatshield.png.p,0a1fed1a95a0ac81dae304f86daefb01,64975",
+        "sourceIcon": "Texture/Aries/Item/22180_Life_LifeGreatShield.png; 0 0 151 230",
+        "itemId": 23180,
+        "name": "生命盾"
+      }
+    },
+    "Life_SingleAttack_Level0": {
+      "atlas": "life-02",
+      "cell": 7,
+      "name": "生命1",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/f1d82367bd3010a937ab8070caf465da3579fe6f2e1c53a94448146ad6aa4f49.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f1d82367bd3010a937ab8070caf465da3579fe6f2e1c53a94448146ad6aa4f49.webp",
+        "sha256": "f1d82367bd3010a937ab8070caf465da3579fe6f2e1c53a94448146ad6aa4f49",
+        "size": 42788,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22230_life_singleattack_level0_45.png.p,5237a92493285fbcf0687b385107ab35,63809",
+        "sourceIcon": "Texture/Aries/Item/22230_Life_SingleAttack_Level0_45.png; 0 0 151 230",
+        "itemId": 22230,
+        "name": "生命1"
+      }
+    },
+    "Life_Rune_LifeResist_MiniAura": {
+      "atlas": "life-02",
+      "cell": 8,
+      "name": "生命盾墙符文",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/4130376ecc05d6b7d3e14856a3c6916cd1bf10e3b8fe6437be7eab2f2a37aac2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/4130376ecc05d6b7d3e14856a3c6916cd1bf10e3b8fe6437be7eab2f2a37aac2.webp",
+        "sha256": "4130376ecc05d6b7d3e14856a3c6916cd1bf10e3b8fe6437be7eab2f2a37aac2",
+        "size": 43772,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22317_life_liferesist_miniaura.png.p,2764820f7d7026442a40d636b7e798b5,64531",
+        "sourceIcon": "Texture/Aries/Item/22317_Life_LifeResist_MiniAura.png; 0 0 151 230",
+        "itemId": 23317,
+        "name": "生命盾墙符文"
+      }
+    },
+    "Life_Rune_AreaAttack_Level2": {
+      "atlas": "life-02",
+      "cell": 9,
+      "name": "生命群击",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/b0bc56fcde8e90ba1fe36b6ad6ae60a7274b98bfd6b684c45b0e03ee9373c392.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/b0bc56fcde8e90ba1fe36b6ad6ae60a7274b98bfd6b684c45b0e03ee9373c392.webp",
+        "sha256": "b0bc56fcde8e90ba1fe36b6ad6ae60a7274b98bfd6b684c45b0e03ee9373c392",
+        "size": 42100,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22322_life_rune_areaattack_level2.png.p,3608519dc1f3e2bec5bef28c443185cf,60354",
+        "sourceIcon": "Texture/Aries/Item/22322_Life_Rune_AreaAttack_Level2.png; 0 0 151 230",
+        "itemId": 22322,
+        "name": "生命群击"
+      }
+    },
+    "Life_Rune_LifeAccuracy_MiniAura": {
+      "atlas": "life-02",
+      "cell": 10,
+      "name": "生命专注",
+      "school": "life",
+      "source": {
+        "missingSource": "texture/aries/item/22327_life_rune_lifeaccuracy_miniaura.png",
+        "itemId": 22327,
+        "name": "生命专注",
+        "local": "assets/adventure/spells/f865bb4e54820d5d4adf750d3af4f2eb002689e8710c269d6a138d0001d7abe2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f865bb4e54820d5d4adf750d3af4f2eb002689e8710c269d6a138d0001d7abe2.webp",
+        "sha256": "f865bb4e54820d5d4adf750d3af4f2eb002689e8710c269d6a138d0001d7abe2",
+        "size": 3632,
+        "width": 302,
+        "height": 460,
+        "adaptation": "Geometric rune card: original icon absent from assets_manifest.txt; name overlaid by browser"
+      }
+    },
+    "Life_Pet_SingleAttack_ForestSpikyOgresPunch": {
+      "atlas": "life-02",
+      "cell": 11,
+      "name": "土猿猛击",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/f91340adb3464dde156054d00c00109e2da49de085517b66befcdef9892501fd.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f91340adb3464dde156054d00c00109e2da49de085517b66befcdef9892501fd.webp",
+        "sha256": "f91340adb3464dde156054d00c00109e2da49de085517b66befcdef9892501fd",
+        "size": 46868,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22260_life_pet_singleattack_forestspikyogrespunch.png.p,ff4d1c530ff86c54ab8bd94f80be5165,68810",
+        "sourceIcon": "Texture/Aries/Item/22260_Life_Pet_SingleAttack_ForestSpikyOgresPunch.png; 0 0 151 230",
+        "itemId": 22260,
+        "name": "土猿猛击"
+      }
+    },
+    "Life_Pet_AreaHeal_ZodiacRabbitsBlessing": {
+      "atlas": "life-02",
+      "cell": 12,
+      "name": "超能神兔",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/d15b5ab8c040e982d91fc73cfa1806aec864e9c94103a1c423220c5d56fda691.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/d15b5ab8c040e982d91fc73cfa1806aec864e9c94103a1c423220c5d56fda691.webp",
+        "sha256": "d15b5ab8c040e982d91fc73cfa1806aec864e9c94103a1c423220c5d56fda691",
+        "size": 44028,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22298_life_pet_areaheal_zodiacrabbitsblessing.png.p,553da4e53ccc6e471913bf5005ed0fd3,65827",
+        "sourceIcon": "Texture/Aries/Item/22298_Life_Pet_AreaHeal_ZodiacRabbitsBlessing.png; 0 0 151 230",
+        "itemId": 23298,
+        "name": "超能神兔"
+      }
+    },
+    "Life_Pet_SingleHeal_Nymphora": {
+      "atlas": "life-02",
+      "cell": 13,
+      "name": "圣灵复活",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/df2768470f06682c4498fcd5eca8480ca8256105a52c1aa4d2d5eeadff91b132.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/df2768470f06682c4498fcd5eca8480ca8256105a52c1aa4d2d5eeadff91b132.webp",
+        "sha256": "df2768470f06682c4498fcd5eca8480ca8256105a52c1aa4d2d5eeadff91b132",
+        "size": 46642,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22299_life_pet_singleheal_nymphora.png.p,a7d7ce1e2a75c1f7fbfd2083daab5416,67288",
+        "sourceIcon": "Texture/Aries/Item/22299_Life_Pet_SingleHeal_Nymphora.png; 0 0 151 230",
+        "itemId": 23299,
+        "name": "圣灵复活"
+      }
+    },
+    "Life_AreaCleanse": {
+      "atlas": "life-02",
+      "cell": 14,
+      "name": "圣灵净化",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/e9bcd42efc5edab7cb74c76104a26c3637d12221870eb4c4fa32d29a77ab19df.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/e9bcd42efc5edab7cb74c76104a26c3637d12221870eb4c4fa32d29a77ab19df.webp",
+        "sha256": "e9bcd42efc5edab7cb74c76104a26c3637d12221870eb4c4fa32d29a77ab19df",
+        "size": 46238,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22335_life_areacleanse.png.p,deda74e6c78cfc6bc2dc8c8b06742eb5,68148",
+        "sourceIcon": "Texture/Aries/Item/22335_Life_AreaCleanse.png; 0 0 151 230",
+        "itemId": 22335,
+        "name": "圣灵净化"
+      }
+    },
+    "Life_AreaPowerPipBoost": {
+      "atlas": "life-02",
+      "cell": 15,
+      "name": "希望之光符文",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/a6064d56f746dd64207bf85bb49c8532c5f68d45541925836cd02ad3c68ffb10.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/a6064d56f746dd64207bf85bb49c8532c5f68d45541925836cd02ad3c68ffb10.webp",
+        "sha256": "a6064d56f746dd64207bf85bb49c8532c5f68d45541925836cd02ad3c68ffb10",
+        "size": 44538,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22340_life_rune_areapowerpipboost.png.p,45b68e38b52902181d3e69ff79de10e6,67495",
+        "sourceIcon": "Texture/Aries/Item/22340_Life_Rune_AreaPowerPipBoost.png; 0 0 151 230",
+        "itemId": 23340,
+        "name": "希望之光符文"
+      }
+    },
+    "Life_Rune_PowerPipTrap_Standing": {
+      "atlas": "life-03",
+      "cell": 0,
+      "name": "超魔抑制符文",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/4ae90ecd00fbfff37935944e7fb3f8e0fd63979063bde7e1886ee0b7a0ef7326.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/4ae90ecd00fbfff37935944e7fb3f8e0fd63979063bde7e1886ee0b7a0ef7326.webp",
+        "sha256": "4ae90ecd00fbfff37935944e7fb3f8e0fd63979063bde7e1886ee0b7a0ef7326",
+        "size": 47242,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22343_life_rune_powerpiptrap_standing.png.p,b82005c0e11d76b822c2a3c24a108e27,67016",
+        "sourceIcon": "Texture/Aries/Item/22343_Life_Rune_PowerPipTrap_Standing.png; 0 0 151 230",
+        "itemId": 23343,
+        "name": "超魔抑制符文"
+      }
+    },
+    "Life_AreaHealWithHOT_Level8": {
+      "atlas": "life-03",
+      "cell": 1,
+      "name": "天使赐福符文",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/a07561c342d69873bdb241031903dd76efa9b2d6dd0ba8358ee0de9313dd1c0a.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/a07561c342d69873bdb241031903dd76efa9b2d6dd0ba8358ee0de9313dd1c0a.webp",
+        "sha256": "a07561c342d69873bdb241031903dd76efa9b2d6dd0ba8358ee0de9313dd1c0a",
+        "size": 43294,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22382_life_areahealwithhot_level8.png.p,852fd783e7bd4018ecb59a0a13a31b3d,62248",
+        "sourceIcon": "Texture/Aries/Item/22382_Life_AreaHealWithHOT_Level8.png; 0 0 151 230",
+        "itemId": 23382,
+        "name": "天使赐福符文"
+      }
+    },
+    "Life_SingleAttack_Level1_Crazy": {
+      "atlas": "life-03",
+      "cell": 2,
+      "name": "生灵光刃",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/694bedbc7ff207e69aa36122039f6ea53a5fa753fcf8b39befb233515a9e09a4.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/694bedbc7ff207e69aa36122039f6ea53a5fa753fcf8b39befb233515a9e09a4.webp",
+        "sha256": "694bedbc7ff207e69aa36122039f6ea53a5fa753fcf8b39befb233515a9e09a4",
+        "size": 43706,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22158_life_singleattack_level1.png.p,2108bad0f4dc3176e05904bb355a556d,64078",
+        "sourceIcon": "Texture/Aries/Item/22158_Life_SingleAttack_Level1.png; 0 0 151 230",
+        "itemId": 22404,
+        "name": "生灵光刃"
+      }
+    },
+    "Life_SingleAttack_Level2_Crazy": {
+      "atlas": "life-03",
+      "cell": 3,
+      "name": "荆棘刺尖",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/de265b57c66814c3796796c5fa074e5ab8c9bcd7753f224ee939df075d735d02.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/de265b57c66814c3796796c5fa074e5ab8c9bcd7753f224ee939df075d735d02.webp",
+        "sha256": "de265b57c66814c3796796c5fa074e5ab8c9bcd7753f224ee939df075d735d02",
+        "size": 42846,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22159_life_singleattack_level2.png.p,3222a85bb4fb71295828d9f38f82e4a7,61094",
+        "sourceIcon": "Texture/Aries/Item/22159_Life_SingleAttack_Level2.png; 0 0 151 230",
+        "itemId": 22409,
+        "name": "荆棘刺尖"
+      }
+    },
+    "Life_SingleAttack_Level6_OutStandingCard": {
+      "atlas": "life-03",
+      "cell": 4,
+      "name": "巨岩之怒",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/bd8dc4a13e92b01045afcde638c35001ac27ff4c0c510ffe80e9885b7b5e84b6.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/bd8dc4a13e92b01045afcde638c35001ac27ff4c0c510ffe80e9885b7b5e84b6.webp",
+        "sha256": "bd8dc4a13e92b01045afcde638c35001ac27ff4c0c510ffe80e9885b7b5e84b6",
+        "size": 47864,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22437_life_singleattack_level6_outstandingcard.png.p,1d3d3acde5f820c707904d4e51c9a3c3,69245",
+        "sourceIcon": "Texture/Aries/Item/22437_Life_SingleAttack_Level6_OutStandingCard.png; 0 0 151 230",
+        "itemId": 22437,
+        "name": "巨岩之怒"
+      }
+    },
+    "Life_HealingStance": {
+      "atlas": "life-03",
+      "cell": 5,
+      "name": "光刃形态符文",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/c641729482a74ff07fba9ae9a5bd3e11604e0875cd386134fd78270bbd7a60ba.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/c641729482a74ff07fba9ae9a5bd3e11604e0875cd386134fd78270bbd7a60ba.webp",
+        "sha256": "c641729482a74ff07fba9ae9a5bd3e11604e0875cd386134fd78270bbd7a60ba",
+        "size": 38658,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22450_life_healingstance.png.p,79774073fe06a8048ee7d1e616d66c23,59460",
+        "sourceIcon": "Texture/Aries/Item/22450_Life_HealingStance.png; 0 0 151 230",
+        "itemId": 23450,
+        "name": "光刃形态符文"
+      }
+    },
+    "Life_SingleAttackWith_Trap": {
+      "atlas": "life-03",
+      "cell": 6,
+      "name": "生命反转",
+      "school": "life",
+      "source": {
+        "local": "assets/adventure/spells/81a2a5825055486d4d339b22061a8ada91eb70528b54c7e2af7da95299b745cb.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/81a2a5825055486d4d339b22061a8ada91eb70528b54c7e2af7da95299b745cb.webp",
+        "sha256": "81a2a5825055486d4d339b22061a8ada91eb70528b54c7e2af7da95299b745cb",
+        "size": 38594,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22464_life_singleattackwith_trap.png.p,fe2327c9f86b860b1aebe80e2674c26a,56629",
+        "sourceIcon": "Texture/Aries/Item/22464_Life_SingleAttackWith_Trap.png; 0 0 151 230",
+        "itemId": 22464,
+        "name": "生命反转"
+      }
+    },
+    "Death_SingleAttack_Level1": {
+      "atlas": "death-01",
+      "cell": 0,
+      "name": "暗灵之咒",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/b739bbe80922975fc6f7982fa7c88093b6664aca70c4cd11b008c609843bff10.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/b739bbe80922975fc6f7982fa7c88093b6664aca70c4cd11b008c609843bff10.webp",
+        "sha256": "b739bbe80922975fc6f7982fa7c88093b6664aca70c4cd11b008c609843bff10",
+        "size": 42966,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22181_death_singleattack_level1.png.p,de0cf8bc25fdf323e0a244300bbb0f7b,63424",
+        "sourceIcon": "Texture/Aries/Item/22181_Death_SingleAttack_Level1.png; 0 0 151 230",
+        "itemId": 23181,
+        "name": "暗灵之咒"
+      }
+    },
+    "Death_SingleAttackWithLifeTap_Level2": {
+      "atlas": "death-01",
+      "cell": 1,
+      "name": "吸血幽灵",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/768c1a6b793f8657121352cf69e0d4899f81bdbbd4d581d01e4ee00847e0d3d4.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/768c1a6b793f8657121352cf69e0d4899f81bdbbd4d581d01e4ee00847e0d3d4.webp",
+        "sha256": "768c1a6b793f8657121352cf69e0d4899f81bdbbd4d581d01e4ee00847e0d3d4",
+        "size": 45512,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22182_death_singleattackwithlifetap_level2.png.p,dbacd04fb87806adaf8a5406ab91b99f,64728",
+        "sourceIcon": "Texture/Aries/Item/22182_Death_SingleAttackWithLifeTap_Level2.png; 0 0 151 230",
+        "itemId": 23182,
+        "name": "吸血幽灵"
+      }
+    },
+    "Death_SingleAttack_Level3": {
+      "atlas": "death-01",
+      "cell": 2,
+      "name": "幽灵突袭",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/4179c4bdee384a0d51d94458bb6d43b6890adbf3a01a338d1a9ae4aa652fd54e.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/4179c4bdee384a0d51d94458bb6d43b6890adbf3a01a338d1a9ae4aa652fd54e.webp",
+        "sha256": "4179c4bdee384a0d51d94458bb6d43b6890adbf3a01a338d1a9ae4aa652fd54e",
+        "size": 40832,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22183_death_singleattack_level3.png.p,25dc699506b89cdfbf8caed59819f654,61843",
+        "sourceIcon": "Texture/Aries/Item/22183_Death_SingleAttack_Level3.png; 0 0 151 230",
+        "itemId": 23183,
+        "name": "幽灵突袭"
+      }
+    },
+    "Death_SingleAttackWithLifeTap_Level4": {
+      "atlas": "death-01",
+      "cell": 3,
+      "name": "回光返照",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/79e0e6641d5e1ec1b402323ac77781654ad2c17248099db130c4eb84bfe1fafd.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/79e0e6641d5e1ec1b402323ac77781654ad2c17248099db130c4eb84bfe1fafd.webp",
+        "sha256": "79e0e6641d5e1ec1b402323ac77781654ad2c17248099db130c4eb84bfe1fafd",
+        "size": 39912,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22184_death_singleattackwithlifetap_level4.png.p,af4989fc9da79963c070d4f6028ab89c,63432",
+        "sourceIcon": "Texture/Aries/Item/22184_Death_SingleAttackWithLifeTap_Level4.png; 0 0 151 230",
+        "itemId": 23184,
+        "name": "回光返照"
+      }
+    },
+    "Death_SingleAttack_Level5": {
+      "atlas": "death-01",
+      "cell": 4,
+      "name": "墓地莽石",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/9fb8918143e322d5b19b31278509c3fc6a51f33f20a234bbd89c5c99356a8e78.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/9fb8918143e322d5b19b31278509c3fc6a51f33f20a234bbd89c5c99356a8e78.webp",
+        "sha256": "9fb8918143e322d5b19b31278509c3fc6a51f33f20a234bbd89c5c99356a8e78",
+        "size": 42240,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22185_death_singleattack_level5.png.p,1fa8d5ecb0f7eb8857dc6dde7e4abbcd,64104",
+        "sourceIcon": "Texture/Aries/Item/22185_Death_SingleAttack_Level5.png; 0 0 151 230",
+        "itemId": 22185,
+        "name": "墓地莽石"
+      }
+    },
+    "Death_SymmetryGlobalTrap": {
+      "atlas": "death-01",
+      "cell": 5,
+      "name": "死亡绝",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/8c5abb2d0046f1bb0b013d1d4810c4ccf8766377e828b4e39578fc0c5b7b12c4.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/8c5abb2d0046f1bb0b013d1d4810c4ccf8766377e828b4e39578fc0c5b7b12c4.webp",
+        "sha256": "8c5abb2d0046f1bb0b013d1d4810c4ccf8766377e828b4e39578fc0c5b7b12c4",
+        "size": 43038,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22186_death_symmetryglobaltrap.png.p,60331df5235ed2f7d99a347243c875a9,63737",
+        "sourceIcon": "Texture/Aries/Item/22186_Death_SymmetryGlobalTrap.png; 0 0 151 230",
+        "itemId": 23186,
+        "name": "死亡绝"
+      }
+    },
+    "Death_DeathGlobalAura": {
+      "atlas": "death-01",
+      "cell": 6,
+      "name": "死亡对抗",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/6f6f9e96052c82f63e43d14e9032d1a1b694af08e81e78e5fced979180e64c0f.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/6f6f9e96052c82f63e43d14e9032d1a1b694af08e81e78e5fced979180e64c0f.webp",
+        "sha256": "6f6f9e96052c82f63e43d14e9032d1a1b694af08e81e78e5fced979180e64c0f",
+        "size": 34076,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22187_death_deathglobalaura.png.p,0812681c711b09c6ea3187f6c29c3118,55881",
+        "sourceIcon": "Texture/Aries/Item/22187_Death_DeathGlobalAura.png; 0 0 151 230",
+        "itemId": 22187,
+        "name": "死亡对抗"
+      }
+    },
+    "Death_SingleAttackWithLifeTap_Level6": {
+      "atlas": "death-01",
+      "cell": 7,
+      "name": "蝠王吸魂",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/648c80afb65e6b850fd8192ac20f8df114c2b8c7045ee56745126bb8e47d61f0.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/648c80afb65e6b850fd8192ac20f8df114c2b8c7045ee56745126bb8e47d61f0.webp",
+        "sha256": "648c80afb65e6b850fd8192ac20f8df114c2b8c7045ee56745126bb8e47d61f0",
+        "size": 41858,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22188_death_singleattackwithlifetap_level6.png.p,ac2f51da71c06b2aa5859cb59dc25bd0,62197",
+        "sourceIcon": "Texture/Aries/Item/22188_Death_SingleAttackWithLifeTap_Level6.png; 0 0 151 230",
+        "itemId": 22188,
+        "name": "蝠王吸魂"
+      },
+      "effectAtlas": "hero-death",
+      "effectFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "heroCardFrame": 2
+    },
+    "Death_DeathDamageTrap": {
+      "atlas": "death-01",
+      "cell": 8,
+      "name": "死亡陷阱",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/9b7069e8e7b3154e5733ebda0951bdde617ef8f7236d775a41fb909ba68544c8.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/9b7069e8e7b3154e5733ebda0951bdde617ef8f7236d775a41fb909ba68544c8.webp",
+        "sha256": "9b7069e8e7b3154e5733ebda0951bdde617ef8f7236d775a41fb909ba68544c8",
+        "size": 39418,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22189_death_deathdamagetrap.png.p,2a2942388f029db9309a4c0e7a06adb9,63374",
+        "sourceIcon": "Texture/Aries/Item/22189_Death_DeathDamageTrap.png; 0 0 151 230",
+        "itemId": 23189,
+        "name": "死亡陷阱"
+      }
+    },
+    "Death_DeathDamageBlade": {
+      "atlas": "death-01",
+      "cell": 9,
+      "name": "死亡术",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/1881ba135050d96b26295289c03cc44135619fb719a17b2a49c1ee8111651b22.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/1881ba135050d96b26295289c03cc44135619fb719a17b2a49c1ee8111651b22.webp",
+        "sha256": "1881ba135050d96b26295289c03cc44135619fb719a17b2a49c1ee8111651b22",
+        "size": 37570,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22190_death_deathdamageblade.png.p,fa5b65ea2b5768b505347cfc1f30142d,59788",
+        "sourceIcon": "Texture/Aries/Item/22190_Death_DeathDamageBlade.png; 0 0 151 230",
+        "itemId": 23190,
+        "name": "死亡术"
+      }
+    },
+    "Death_DeathPrism": {
+      "atlas": "death-01",
+      "cell": 10,
+      "name": "死亡棱镜",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/62e59a625c863cab4bf79b6b3d8d45e96e23c4db46faa02278b939fdcad526a7.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/62e59a625c863cab4bf79b6b3d8d45e96e23c4db46faa02278b939fdcad526a7.webp",
+        "sha256": "62e59a625c863cab4bf79b6b3d8d45e96e23c4db46faa02278b939fdcad526a7",
+        "size": 40556,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22191_death_deathprism.png.p,d1db285785575f9a6d26cec9e42db0c0,61766",
+        "sourceIcon": "Texture/Aries/Item/22191_Death_DeathPrism.png; 0 0 151 230",
+        "itemId": 23191,
+        "name": "死亡棱镜"
+      }
+    },
+    "Death_SingleHealWithImmolate_Level3": {
+      "atlas": "death-01",
+      "cell": 11,
+      "name": "祭献",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/e653cd9280254f8ff6e694be52b5723fafac2d8c3df685df7bb9b4870d9d211a.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/e653cd9280254f8ff6e694be52b5723fafac2d8c3df685df7bb9b4870d9d211a.webp",
+        "sha256": "e653cd9280254f8ff6e694be52b5723fafac2d8c3df685df7bb9b4870d9d211a",
+        "size": 36974,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22192_death_singlehealwithimmolate_level3.png.p,af869fd78e1a35f1dceb2d7d01d5699c,56411",
+        "sourceIcon": "Texture/Aries/Item/22192_Death_SingleHealWithImmolate_Level3.png; 0 0 151 230",
+        "itemId": 23192,
+        "name": "祭献"
+      }
+    },
+    "Death_GlobalDamageTrap": {
+      "atlas": "death-01",
+      "cell": 12,
+      "name": "黑暗诅咒",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/6995c9aac469902d12fffd1be29d8a46b38cd04e589f20339f2b720d094d3e27.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/6995c9aac469902d12fffd1be29d8a46b38cd04e589f20339f2b720d094d3e27.webp",
+        "sha256": "6995c9aac469902d12fffd1be29d8a46b38cd04e589f20339f2b720d094d3e27",
+        "size": 37826,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22193_death_globaldamagetrap.png.p,941bdf29d67222c0308dcbe5c17ab89a,58237",
+        "sourceIcon": "Texture/Aries/Item/22193_Death_GlobalDamageTrap.png; 0 0 151 230",
+        "itemId": 23193,
+        "name": "黑暗诅咒"
+      }
+    },
+    "Death_SingleAttackWithDOT_Level4": {
+      "atlas": "death-01",
+      "cell": 13,
+      "name": "死亡毒",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/3b65a8b65858ee3bc4f520f2935f0f7142fb00edd8117d9b34b9425522ee501f.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/3b65a8b65858ee3bc4f520f2935f0f7142fb00edd8117d9b34b9425522ee501f.webp",
+        "sha256": "3b65a8b65858ee3bc4f520f2935f0f7142fb00edd8117d9b34b9425522ee501f",
+        "size": 43906,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22194_death_singleattackwithdot_level4.png.p,75ac17d6094c846d7cd58bc8747c5051,62310",
+        "sourceIcon": "Texture/Aries/Item/22194_Death_SingleAttackWithDOT_Level4.png; 0 0 151 230",
+        "itemId": 23194,
+        "name": "死亡毒"
+      }
+    },
+    "Death_AreaDamageWeakness": {
+      "atlas": "death-01",
+      "cell": 14,
+      "name": "群之羁绊",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/42e61d3894dbb89f5f777f2fb9990ae38c9e873a01b9f87162d54e71e52b1cb3.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/42e61d3894dbb89f5f777f2fb9990ae38c9e873a01b9f87162d54e71e52b1cb3.webp",
+        "sha256": "42e61d3894dbb89f5f777f2fb9990ae38c9e873a01b9f87162d54e71e52b1cb3",
+        "size": 44120,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22195_death_areadamageweakness.png.p,3938cef868f4eebd89b760ba7ade6758,66922",
+        "sourceIcon": "Texture/Aries/Item/22195_Death_AreaDamageWeakness.png; 0 0 151 230",
+        "itemId": 23195,
+        "name": "群之羁绊"
+      }
+    },
+    "Death_AreaAttackWithLifeTap_Level7": {
+      "atlas": "death-01",
+      "cell": 15,
+      "name": "死亡群攻",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb.webp",
+        "sha256": "5aa47456590902af049215c988571cd44eaf7f13be1de873e553d167f5d722bb",
+        "size": 558,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22196_death_areaattackwithlifetap_level7.png.p,7960229dff20fd2e9a7f57c1950feeb5,4065",
+        "sourceIcon": "Texture/Aries/Item/22196_Death_AreaAttackWithLifeTap_Level7.png; 0 0 151 230",
+        "itemId": 23196,
+        "name": "死亡群攻"
+      }
+    },
+    "Death_HealWeakness": {
+      "atlas": "death-02",
+      "cell": 0,
+      "name": "死亡巫术",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/f13d1d7353ea907579c2d089cae09178725718d06779e4c2856a42ad8329a9c2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f13d1d7353ea907579c2d089cae09178725718d06779e4c2856a42ad8329a9c2.webp",
+        "sha256": "f13d1d7353ea907579c2d089cae09178725718d06779e4c2856a42ad8329a9c2",
+        "size": 38158,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22197_death_healweakness.png.p,8b7069e9cd3eee21f6994348a0f4ee57,59405",
+        "sourceIcon": "Texture/Aries/Item/22197_Death_HealWeakness.png; 0 0 151 230",
+        "itemId": 22197,
+        "name": "死亡巫术"
+      }
+    },
+    "Death_DeathDispellWeakness": {
+      "atlas": "death-02",
+      "cell": 1,
+      "name": "死亡之敌",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/2e895ebc60ac1658f81a458d5e5bd68c9204b9284f63f43537d06fdff9c1269a.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/2e895ebc60ac1658f81a458d5e5bd68c9204b9284f63f43537d06fdff9c1269a.webp",
+        "sha256": "2e895ebc60ac1658f81a458d5e5bd68c9204b9284f63f43537d06fdff9c1269a",
+        "size": 40358,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22198_death_deathdispellweakness.png.p,0e47b9fa5f18edd9d62f55fed2de0f99,61755",
+        "sourceIcon": "Texture/Aries/Item/22198_Death_DeathDispellWeakness.png; 0 0 151 230",
+        "itemId": 22198,
+        "name": "死亡之敌"
+      }
+    },
+    "Death_DeathGreatShield": {
+      "atlas": "death-02",
+      "cell": 2,
+      "name": "死亡盾",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/2519d749ce07c320755a6129a22b59ee0ed4d71e0a1e75e702ab99eef84195cb.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/2519d749ce07c320755a6129a22b59ee0ed4d71e0a1e75e702ab99eef84195cb.webp",
+        "sha256": "2519d749ce07c320755a6129a22b59ee0ed4d71e0a1e75e702ab99eef84195cb",
+        "size": 41716,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22199_death_deathgreatshield.png.p,dacb65d53364c3a78e3f913fcb27231b,63664",
+        "sourceIcon": "Texture/Aries/Item/22199_Death_DeathGreatShield.png; 0 0 151 230",
+        "itemId": 22199,
+        "name": "死亡盾"
+      }
+    },
+    "Death_SingleAttack_Level0": {
+      "atlas": "death-02",
+      "cell": 3,
+      "name": "死亡1",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/0c0deebd367fd64f2616220428e07ba816c8ef550457dd13a08fd2fce6c58195.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/0c0deebd367fd64f2616220428e07ba816c8ef550457dd13a08fd2fce6c58195.webp",
+        "sha256": "0c0deebd367fd64f2616220428e07ba816c8ef550457dd13a08fd2fce6c58195",
+        "size": 38286,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22240_death_singleattack_level0_45.png.p,0e34fcf6512b12fbecd340fe39e7f58a,59930",
+        "sourceIcon": "Texture/Aries/Item/22240_Death_SingleAttack_Level0_45.png; 0 0 151 230",
+        "itemId": 23240,
+        "name": "死亡1"
+      }
+    },
+    "Death_Rune_DeathResist_MiniAura": {
+      "atlas": "death-02",
+      "cell": 4,
+      "name": "死亡盾墙符文",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/dbbcc01695c9d77baee8556a80d853b3f883425bbd3e8bc6011e4ae7f24df567.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/dbbcc01695c9d77baee8556a80d853b3f883425bbd3e8bc6011e4ae7f24df567.webp",
+        "sha256": "dbbcc01695c9d77baee8556a80d853b3f883425bbd3e8bc6011e4ae7f24df567",
+        "size": 40996,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22318_death_deathresist_miniaura.png.p,7bedfacc37c2240eaae509f99a3e1c88,65489",
+        "sourceIcon": "Texture/Aries/Item/22318_Death_DeathResist_MiniAura.png; 0 0 151 230",
+        "itemId": 23318,
+        "name": "死亡盾墙符文"
+      }
+    },
+    "Death_Rune_AreaAttack_Level2": {
+      "atlas": "death-02",
+      "cell": 5,
+      "name": "死亡群击",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/11a28470d8ccfcbcb4ae0f40c9bfeecfa239f22edcc74897fdf3bfeb2eca6210.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/11a28470d8ccfcbcb4ae0f40c9bfeecfa239f22edcc74897fdf3bfeb2eca6210.webp",
+        "sha256": "11a28470d8ccfcbcb4ae0f40c9bfeecfa239f22edcc74897fdf3bfeb2eca6210",
+        "size": 35106,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22323_death_rune_areaattack_level2.png.p,31431f9a77538d96dc6d2a6163c81a93,55418",
+        "sourceIcon": "Texture/Aries/Item/22323_Death_Rune_AreaAttack_Level2.png; 0 0 151 230",
+        "itemId": 22323,
+        "name": "死亡群击"
+      }
+    },
+    "Death_Rune_DeathAccuracy_MiniAura": {
+      "atlas": "death-02",
+      "cell": 6,
+      "name": "死亡专注",
+      "school": "death",
+      "source": {
+        "missingSource": "texture/aries/item/22328_death_rune_deathaccuracy_miniaura.png",
+        "itemId": 22328,
+        "name": "死亡专注",
+        "local": "assets/adventure/spells/98a9f5d198abf7544cd5e5aa66b9ca66efe75b3bac1ca8f6a87daa35ac08b97d.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/98a9f5d198abf7544cd5e5aa66b9ca66efe75b3bac1ca8f6a87daa35ac08b97d.webp",
+        "sha256": "98a9f5d198abf7544cd5e5aa66b9ca66efe75b3bac1ca8f6a87daa35ac08b97d",
+        "size": 3986,
+        "width": 302,
+        "height": 460,
+        "adaptation": "Geometric rune card: original icon absent from assets_manifest.txt; name overlaid by browser"
+      }
+    },
+    "Death_Pet_SingleAttackWithLifeTap_IronShellsPoison": {
+      "atlas": "death-02",
+      "cell": 7,
+      "name": "铁壳毒物",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/37d361ceb1dec09535fcbca5a416868a2b4492c12bb57a7ebef6d780b04570d9.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/37d361ceb1dec09535fcbca5a416868a2b4492c12bb57a7ebef6d780b04570d9.webp",
+        "sha256": "37d361ceb1dec09535fcbca5a416868a2b4492c12bb57a7ebef6d780b04570d9",
+        "size": 42706,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22261_death_pet_singleattackwithlifetap_ironshellspoison.png.p,2970dede711711237b110288ae7cd4e9,64878",
+        "sourceIcon": "Texture/Aries/Item/22261_Death_Pet_SingleAttackWithLifeTap_IronShellsPoison.png; 0 0 151 230",
+        "itemId": 22261,
+        "name": "铁壳毒物"
+      }
+    },
+    "Death_Pet_SingleAttack_GhostOctopusBossDoom": {
+      "atlas": "death-02",
+      "cell": 8,
+      "name": "死亡章鱼",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/e36e47001263d2493b556279cb5fe6904c5bfdffbedc86b040d8a624db8723fb.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/e36e47001263d2493b556279cb5fe6904c5bfdffbedc86b040d8a624db8723fb.webp",
+        "sha256": "e36e47001263d2493b556279cb5fe6904c5bfdffbedc86b040d8a624db8723fb",
+        "size": 43098,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22265_death_pet_singleattack_ghostoctopusbossdoom.png.p,83b2b7150dd7eeab04e1d2e9724c1dcd,64467",
+        "sourceIcon": "Texture/Aries/Item/22265_Death_Pet_SingleAttack_GhostOctopusBossDoom.png; 0 0 151 230",
+        "itemId": 23265,
+        "name": "死亡章鱼"
+      }
+    },
+    "Death_Pet_DeathSingleAttack_UndeadMonkey_Boss": {
+      "atlas": "death-02",
+      "cell": 9,
+      "name": "亡灵大军",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/f16f185ffc3f8832a8e7eed82a70460a2f0a0077fde1ea53fced542e25071a47.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f16f185ffc3f8832a8e7eed82a70460a2f0a0077fde1ea53fced542e25071a47.webp",
+        "sha256": "f16f185ffc3f8832a8e7eed82a70460a2f0a0077fde1ea53fced542e25071a47",
+        "size": 43806,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22312_death_pet_deathsingleattack_undeadmonkey_boss.png.p,888140f8763c8942625c703de5b839e4,64175",
+        "sourceIcon": "Texture/Aries/Item/22312_Death_Pet_DeathSingleAttack_UndeadMonkey_Boss.png; 0 0 151 230",
+        "itemId": 23312,
+        "name": "亡灵大军"
+      }
+    },
+    "Death_AreaAttack_DoomLordsWrath": {
+      "atlas": "death-02",
+      "cell": 10,
+      "name": "群之暗伤符文_屏蔽",
+      "school": "death",
+      "source": {
+        "missingSource": "texture/aries/item/23313_death_areaattack_doomlordswrath.png",
+        "itemId": 23313,
+        "name": "群之暗伤符文_屏蔽",
+        "local": "assets/adventure/spells/1a93f82be2f1c707379775127288a576a6c09a53c42813a62099ff7ab0b1c1e0.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/1a93f82be2f1c707379775127288a576a6c09a53c42813a62099ff7ab0b1c1e0.webp",
+        "sha256": "1a93f82be2f1c707379775127288a576a6c09a53c42813a62099ff7ab0b1c1e0",
+        "size": 3776,
+        "width": 302,
+        "height": 460,
+        "adaptation": "Geometric rune card: original icon absent from assets_manifest.txt; name overlaid by browser"
+      }
+    },
+    "Death_SingleAttackWithDisabledHeal": {
+      "atlas": "death-02",
+      "cell": 11,
+      "name": "天魔杀星",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/0b9416b981930921cd70098c0e72278b42cab57917ee8505dda2ac0b0dc233af.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/0b9416b981930921cd70098c0e72278b42cab57917ee8505dda2ac0b0dc233af.webp",
+        "sha256": "0b9416b981930921cd70098c0e72278b42cab57917ee8505dda2ac0b0dc233af",
+        "size": 41260,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22334_death_singleattackwithdisabledheal.png.p,3378bf83188e1a3b1121ffb6bd8829b2,64642",
+        "sourceIcon": "Texture/Aries/Item/22334_Death_SingleAttackWithDisabledHeal.png; 0 0 151 230",
+        "itemId": 22334,
+        "name": "天魔杀星"
+      }
+    },
+    "Death_Rune_HealTrap_Standing": {
+      "atlas": "death-02",
+      "cell": 12,
+      "name": "瘟神巫术符文",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/ccff219159169ca6806950ece07a58fe3c9b60f21e2834c9145e44659736e78e.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/ccff219159169ca6806950ece07a58fe3c9b60f21e2834c9145e44659736e78e.webp",
+        "sha256": "ccff219159169ca6806950ece07a58fe3c9b60f21e2834c9145e44659736e78e",
+        "size": 41598,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22341_death_rune_healtrap_standing.png.p,e90430039d77d41d06abd061f7dbcaf9,62858",
+        "sourceIcon": "Texture/Aries/Item/22341_Death_Rune_HealTrap_Standing.png; 0 0 151 230",
+        "itemId": 23341,
+        "name": "瘟神巫术符文"
+      }
+    },
+    "Death_Pet_DeathGlobalAuraDamage": {
+      "atlas": "death-02",
+      "cell": 13,
+      "name": "暗黑力场",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/dac615fce098196461ea15758cb16a3f5dfaa074680ed6b4ec8f9f0cd9147788.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/dac615fce098196461ea15758cb16a3f5dfaa074680ed6b4ec8f9f0cd9147788.webp",
+        "sha256": "dac615fce098196461ea15758cb16a3f5dfaa074680ed6b4ec8f9f0cd9147788",
+        "size": 41588,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22353_death_pet_deathglobalauradamage.png.p,30d23c3d2c6585f66df472958445361e,62946",
+        "sourceIcon": "Texture/Aries/Item/22353_Death_Pet_DeathGlobalAuraDamage.png; 0 0 151 230",
+        "itemId": 22353,
+        "name": "暗黑力场"
+      }
+    },
+    "Death_SingleGuardianWithImmolate_Level8": {
+      "atlas": "death-02",
+      "cell": 14,
+      "name": "灵魂替身符文",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/124168338f60883066d44625004faf6d68663ca7c3de50c7782c3a1e984d3fd0.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/124168338f60883066d44625004faf6d68663ca7c3de50c7782c3a1e984d3fd0.webp",
+        "sha256": "124168338f60883066d44625004faf6d68663ca7c3de50c7782c3a1e984d3fd0",
+        "size": 37950,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22383_death_singleguardianwithimmolate_level8.png.p,8e3e31d07478de909ec444146b11072b,57930",
+        "sourceIcon": "Texture/Aries/Item/22383_Death_SingleGuardianWithImmolate_Level8.png; 0 0 151 230",
+        "itemId": 23383,
+        "name": "灵魂替身符文"
+      }
+    },
+    "Death_SingleAttack_Level1_Crazy": {
+      "atlas": "death-02",
+      "cell": 15,
+      "name": "湮灭之咒",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/b739bbe80922975fc6f7982fa7c88093b6664aca70c4cd11b008c609843bff10.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/b739bbe80922975fc6f7982fa7c88093b6664aca70c4cd11b008c609843bff10.webp",
+        "sha256": "b739bbe80922975fc6f7982fa7c88093b6664aca70c4cd11b008c609843bff10",
+        "size": 42966,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22181_death_singleattack_level1.png.p,de0cf8bc25fdf323e0a244300bbb0f7b,63424",
+        "sourceIcon": "Texture/Aries/Item/22181_Death_SingleAttack_Level1.png; 0 0 151 230",
+        "itemId": 22405,
+        "name": "湮灭之咒"
+      }
+    },
+    "Death_SingleAttackWithLifeTap_Level2_Crazy": {
+      "atlas": "death-03",
+      "cell": 0,
+      "name": "吸星幽魂",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/768c1a6b793f8657121352cf69e0d4899f81bdbbd4d581d01e4ee00847e0d3d4.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/768c1a6b793f8657121352cf69e0d4899f81bdbbd4d581d01e4ee00847e0d3d4.webp",
+        "sha256": "768c1a6b793f8657121352cf69e0d4899f81bdbbd4d581d01e4ee00847e0d3d4",
+        "size": 45512,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22182_death_singleattackwithlifetap_level2.png.p,dbacd04fb87806adaf8a5406ab91b99f,64728",
+        "sourceIcon": "Texture/Aries/Item/22182_Death_SingleAttackWithLifeTap_Level2.png; 0 0 151 230",
+        "itemId": 22410,
+        "name": "吸星幽魂"
+      }
+    },
+    "Death_SingleAttackWithLifeTap_Level6_OutStandingCard": {
+      "atlas": "death-03",
+      "cell": 1,
+      "name": "恶灵夺魂",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/bf081c5ea684fb31413a477a4241a3ed35b1f79d920c5f6011be13c04cf3363b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/bf081c5ea684fb31413a477a4241a3ed35b1f79d920c5f6011be13c04cf3363b.webp",
+        "sha256": "bf081c5ea684fb31413a477a4241a3ed35b1f79d920c5f6011be13c04cf3363b",
+        "size": 44240,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22438_death_singleattackwithlifetap_level6_outstandingcard.png.p,27728a2b46a1b7259681b097f184b8b8,66019",
+        "sourceIcon": "Texture/Aries/Item/22438_Death_SingleAttackWithLifeTap_Level6_OutStandingCard.png; 0 0 151 230",
+        "itemId": 22438,
+        "name": "恶灵夺魂"
+      }
+    },
+    "Death_VampireStance": {
+      "atlas": "death-03",
+      "cell": 2,
+      "name": "魔刃形态",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/2f978a6ee74011bdd2d231171656261cd458f0e122d38e8ef86c4549ed1e7aa0.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/2f978a6ee74011bdd2d231171656261cd458f0e122d38e8ef86c4549ed1e7aa0.webp",
+        "sha256": "2f978a6ee74011bdd2d231171656261cd458f0e122d38e8ef86c4549ed1e7aa0",
+        "size": 39126,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22451_death_vampirestance.png.p,018535fcd10f2634021e1b2cca825e94,59685",
+        "sourceIcon": "Texture/Aries/Item/22451_Death_VampireStance.png; 0 0 151 230",
+        "itemId": 22451,
+        "name": "魔刃形态"
+      }
+    },
+    "Death_SingleAttackWith_Trap": {
+      "atlas": "death-03",
+      "cell": 3,
+      "name": "死亡反转",
+      "school": "death",
+      "source": {
+        "local": "assets/adventure/spells/6c12662004cd9b41cd34a0fdb9918a45f5dd912ae73a4b020564c9205cd3ad72.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/6c12662004cd9b41cd34a0fdb9918a45f5dd912ae73a4b020564c9205cd3ad72.webp",
+        "sha256": "6c12662004cd9b41cd34a0fdb9918a45f5dd912ae73a4b020564c9205cd3ad72",
+        "size": 36252,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22465_death_singleattackwith_trap.png.p,1aa293f5a10d301e208d70e4c74b8882,56069",
+        "sourceIcon": "Texture/Aries/Item/22465_Death_SingleAttackWith_Trap.png; 0 0 151 230",
+        "itemId": 23465,
+        "name": "死亡反转"
+      }
+    },
+    "Pass": {
+      "atlas": "balance-01",
+      "cell": 0,
+      "name": "跳过回合",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "Dead": {
+      "atlas": "balance-01",
+      "cell": 1,
+      "name": "倒下消散",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "PickPet": {
+      "atlas": "balance-01",
+      "cell": 2,
+      "name": "召唤宠物",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "HoT": {
+      "atlas": "balance-01",
+      "cell": 3,
+      "name": "持续恢复",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "DoT_Fire": {
+      "atlas": "balance-01",
+      "cell": 4,
+      "name": "持续伤害",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "DoT_Ice": {
+      "atlas": "balance-01",
+      "cell": 5,
+      "name": "持续伤害",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "DoT_Storm": {
+      "atlas": "balance-01",
+      "cell": 6,
+      "name": "持续伤害",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "DoT_Life": {
+      "atlas": "balance-01",
+      "cell": 7,
+      "name": "持续伤害",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "DoT_Death": {
+      "atlas": "balance-01",
+      "cell": 8,
+      "name": "持续伤害",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "DoT_Balance": {
+      "atlas": "balance-01",
+      "cell": 9,
+      "name": "持续伤害",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "Fizzle_Fire": {
+      "atlas": "balance-01",
+      "cell": 10,
+      "name": "施法失败",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "Fizzle_Ice": {
+      "atlas": "balance-01",
+      "cell": 11,
+      "name": "施法失败",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "Fizzle_Storm": {
+      "atlas": "balance-01",
+      "cell": 12,
+      "name": "施法失败",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "Fizzle_Life": {
+      "atlas": "balance-01",
+      "cell": 13,
+      "name": "施法失败",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "Fizzle_Death": {
+      "atlas": "balance-01",
+      "cell": 14,
+      "name": "施法失败",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "PickPet_Fire": {
+      "atlas": "balance-01",
+      "cell": 15,
+      "name": "召唤宠物",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "PickPet_Ice": {
+      "atlas": "balance-02",
+      "cell": 0,
+      "name": "召唤宠物",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "PickPet_Storm": {
+      "atlas": "balance-02",
+      "cell": 1,
+      "name": "召唤宠物",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "PickPet_Life": {
+      "atlas": "balance-02",
+      "cell": 2,
+      "name": "召唤宠物",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "PickPet_Death": {
+      "atlas": "balance-02",
+      "cell": 3,
+      "name": "召唤宠物",
+      "school": "balance",
+      "source": {
+        "system": true,
+        "reason": "Source control event; no inventory card face"
+      }
+    },
+    "Death_SingleAttackWithPercent": {
+      "atlas": "balance-02",
+      "cell": 4,
+      "name": "灵魂契约符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/4ebe2ce6572f15e519f144c7bc45774ed0dbeb8407ac211aa217d26669ae518c.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/4ebe2ce6572f15e519f144c7bc45774ed0dbeb8407ac211aa217d26669ae518c.webp",
+        "sha256": "4ebe2ce6572f15e519f144c7bc45774ed0dbeb8407ac211aa217d26669ae518c",
+        "size": 42308,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22339_death_rune_singleattackwithpercent.png.p,3699ea87aa9e555ee87625a24ae3acf0,63921",
+        "sourceIcon": "Texture/Aries/Item/22339_Death_Rune_SingleAttackWithPercent.png; 0 0 151 230",
+        "itemId": 23339,
+        "name": "灵魂契约符文"
+      }
+    },
+    "Balance_Rune_SingleHeal_LongCD": {
+      "atlas": "balance-02",
+      "cell": 5,
+      "name": "愈合符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/f12472a4dba2486dd3d2c8c4fbc7f93a519aa61b8e2777fc2e234595823e3c77.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f12472a4dba2486dd3d2c8c4fbc7f93a519aa61b8e2777fc2e234595823e3c77.webp",
+        "sha256": "f12472a4dba2486dd3d2c8c4fbc7f93a519aa61b8e2777fc2e234595823e3c77",
+        "size": 42308,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22378_balance_rune_singleheal_longcd.png.p,268063a1898f43b0a175a1ad47642534,64206",
+        "sourceIcon": "Texture/Aries/Item/22378_Balance_Rune_SingleHeal_LongCD.png; 0 0 151 230",
+        "itemId": 23378,
+        "name": "愈合符文"
+      }
+    },
+    "Balance_BoostPowerPipChance_Standing": {
+      "atlas": "balance-02",
+      "cell": 6,
+      "name": "超魔爆发符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/44471d7f8f04e6efe1093f7226d9c40eb3f56e45ddb4f0b85184b7ddd94e47d1.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/44471d7f8f04e6efe1093f7226d9c40eb3f56e45ddb4f0b85184b7ddd94e47d1.webp",
+        "sha256": "44471d7f8f04e6efe1093f7226d9c40eb3f56e45ddb4f0b85184b7ddd94e47d1",
+        "size": 38374,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22377_balance_boostpowerpipchance_standing.png.p,6cce6338674dfb445bb108628da49037,59200",
+        "sourceIcon": "Texture/Aries/Item/22377_Balance_BoostPowerPipChance_Standing.png; 0 0 151 230",
+        "itemId": 23377,
+        "name": "超魔爆发符文"
+      }
+    },
+    "Balance_Rune_AreaStunAbsorb": {
+      "atlas": "balance-02",
+      "cell": 7,
+      "name": "群晕吸收",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/652d3764c7e77848dc5cfae39e689d12dff8fc2946839a8788bb07c41260688b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/652d3764c7e77848dc5cfae39e689d12dff8fc2946839a8788bb07c41260688b.webp",
+        "sha256": "652d3764c7e77848dc5cfae39e689d12dff8fc2946839a8788bb07c41260688b",
+        "size": 43998,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22400_balance_rune_areastunabsorb.png.p,aff21ea491c1375c3667775e31ffe4ec,63973",
+        "sourceIcon": "Texture/Aries/Item/22400_Balance_Rune_AreaStunAbsorb.png; 0 0 151 230",
+        "itemId": 22400,
+        "name": "群晕吸收"
+      }
+    },
+    "Balance_Rune_Enrage_Level1": {
+      "atlas": "balance-02",
+      "cell": 8,
+      "name": "1级激怒符文卡",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/f44ef58e9e45ca265b7d5b99980cfaecfcd6b3959d5e0cecdd3db7938e412dab.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/f44ef58e9e45ca265b7d5b99980cfaecfcd6b3959d5e0cecdd3db7938e412dab.webp",
+        "sha256": "f44ef58e9e45ca265b7d5b99980cfaecfcd6b3959d5e0cecdd3db7938e412dab",
+        "size": 38238,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/23421_balance_rune_enrage_level1.png.p,59a7142805c027a1394d413ec9c10a53,57208",
+        "sourceIcon": "Texture/Aries/Item/23421_Balance_Rune_Enrage_Level1.png; 0 0 151 230",
+        "itemId": 23421,
+        "name": "1级激怒符文卡"
+      }
+    },
+    "Balance_Rune_CatchPetCard_General": {
+      "atlas": "balance-02",
+      "cell": 9,
+      "name": "普通抓宠卡",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/711af1ad3402ecab8bfc427776c09d8aec72a2ea6ba66510e10191f0d5b6c389.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/711af1ad3402ecab8bfc427776c09d8aec72a2ea6ba66510e10191f0d5b6c389.webp",
+        "sha256": "711af1ad3402ecab8bfc427776c09d8aec72a2ea6ba66510e10191f0d5b6c389",
+        "size": 42622,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/23439_balance_rune_catchpetcard_general.png.p,d744531d6422032ec84e16e922854a5a,63937",
+        "sourceIcon": "Texture/Aries/Item/23439_Balance_Rune_CatchPetCard_General.png; 0 0 151 230",
+        "itemId": 22439,
+        "name": "普通抓宠卡"
+      }
+    },
+    "Balance_Rune_CatchPetCard_High": {
+      "atlas": "balance-02",
+      "cell": 10,
+      "name": "高级抓宠符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/d2433e21afc3e924551faa0e59767fcedf9d2c05cdd7329e07997785610701ce.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/d2433e21afc3e924551faa0e59767fcedf9d2c05cdd7329e07997785610701ce.webp",
+        "sha256": "d2433e21afc3e924551faa0e59767fcedf9d2c05cdd7329e07997785610701ce",
+        "size": 43848,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/23440_balance_rune_catchpetcard_high.png.p,1b5ef05fec9deb302290cd776311a63f,65547",
+        "sourceIcon": "Texture/Aries/Item/23440_Balance_Rune_CatchPetCard_High.png; 0 0 151 230",
+        "itemId": 23440,
+        "name": "高级抓宠符文"
+      }
+    },
+    "Balance_Rune_CatchPetCard_Top": {
+      "atlas": "balance-02",
+      "cell": 11,
+      "name": "顶级抓宠符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/6788adbcd8a3c43c06bfa89e17aae6f7f17287ecbb2c05471503ef17c30fd240.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/6788adbcd8a3c43c06bfa89e17aae6f7f17287ecbb2c05471503ef17c30fd240.webp",
+        "sha256": "6788adbcd8a3c43c06bfa89e17aae6f7f17287ecbb2c05471503ef17c30fd240",
+        "size": 42942,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/23441_balance_rune_catchpetcard_top.png.p,03886bbfb4de992392cc9dc89251d7b3,64292",
+        "sourceIcon": "Texture/Aries/Item/23441_Balance_Rune_CatchPetCard_Top.png; 0 0 151 230",
+        "itemId": 23441,
+        "name": "顶级抓宠符文"
+      }
+    },
+    "Balance_Rune_AreaAttackCard_Elementary": {
+      "atlas": "balance-02",
+      "cell": 12,
+      "name": "能量脉冲符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/c620bff209fb948a108edffaa0cfdc29730869126a0b88a800a82c0a87627ab4.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/c620bff209fb948a108edffaa0cfdc29730869126a0b88a800a82c0a87627ab4.webp",
+        "sha256": "c620bff209fb948a108edffaa0cfdc29730869126a0b88a800a82c0a87627ab4",
+        "size": 42980,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22442_balance_rune_areaattackcard_elementary.png.p,03c3607085e1ed08d88bae4aeb3bd47d,62654",
+        "sourceIcon": "Texture/Aries/Item/22442_Balance_Rune_AreaAttackCard_Elementary.png; 0 0 151 230",
+        "itemId": 23442,
+        "name": "能量脉冲符文"
+      }
+    },
+    "Balance_Rune_AreaAttackCard_Middle": {
+      "atlas": "balance-02",
+      "cell": 13,
+      "name": "超能脉冲符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/ec88cf157217d6678991dcc77c072260055c1926b2191155f44b95b81870c5dd.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/ec88cf157217d6678991dcc77c072260055c1926b2191155f44b95b81870c5dd.webp",
+        "sha256": "ec88cf157217d6678991dcc77c072260055c1926b2191155f44b95b81870c5dd",
+        "size": 42588,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22443_balance_rune_areaattackcard_middle.png.p,2899504db8ab2400d576ecc866473c06,62955",
+        "sourceIcon": "Texture/Aries/Item/22443_Balance_Rune_AreaAttackCard_Middle.png; 0 0 151 230",
+        "itemId": 23443,
+        "name": "超能脉冲符文"
+      }
+    },
+    "Balance_Rune_AreaAttackCard_High": {
+      "atlas": "balance-02",
+      "cell": 14,
+      "name": "脉冲奥义符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/ec013a0c4b9daa1e3b6d9b83c2b4cb4c15bc79a447bb34d86ed98a026fa9ab6c.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/ec013a0c4b9daa1e3b6d9b83c2b4cb4c15bc79a447bb34d86ed98a026fa9ab6c.webp",
+        "sha256": "ec013a0c4b9daa1e3b6d9b83c2b4cb4c15bc79a447bb34d86ed98a026fa9ab6c",
+        "size": 43412,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22444_balance_rune_areaattackcard_high.png.p,eff03f7a306a448be73bd19ff2f4864a,63637",
+        "sourceIcon": "Texture/Aries/Item/22444_Balance_Rune_AreaAttackCard_High.png; 0 0 151 230",
+        "itemId": 23444,
+        "name": "脉冲奥义符文"
+      }
+    },
+    "Balance_GlobalShield": {
+      "atlas": "balance-02",
+      "cell": 15,
+      "name": "潘多拉结界守护",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/a20b975ebcffff777abf24edd2c4d548843a09a6fbb21cdd0114b020c91c57d7.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/a20b975ebcffff777abf24edd2c4d548843a09a6fbb21cdd0114b020c91c57d7.webp",
+        "sha256": "a20b975ebcffff777abf24edd2c4d548843a09a6fbb21cdd0114b020c91c57d7",
+        "size": 42822,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22445_balance_globalshield_pandora_01.png.p,a00eb8b45661fa90f4d3c53ecf42a8d0,63122",
+        "sourceIcon": "Texture/Aries/Item/22445_Balance_GlobalShield_Pandora_01.png; 0 0 151 230",
+        "itemId": 23445,
+        "name": "潘多拉结界守护"
+      }
+    },
+    "Balance_Rune_SingleHealWithCleanse_Lv4": {
+      "atlas": "balance-03",
+      "cell": 0,
+      "name": "愈合MAX",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/7825ef584d106f4c47d90de52c7f5d23c07444d4683c1306221505993d3f880b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/7825ef584d106f4c47d90de52c7f5d23c07444d4683c1306221505993d3f880b.webp",
+        "sha256": "7825ef584d106f4c47d90de52c7f5d23c07444d4683c1306221505993d3f880b",
+        "size": 45832,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22452_balance_rune_singlehealwithcleanse_lv4.png.p,89f2e88abc70b38efe18f9f0e8ee5975,66722",
+        "sourceIcon": "Texture/Aries/Item/22452_Balance_Rune_SingleHealWithCleanse_Lv4.png; 0 0 151 230",
+        "itemId": 22452,
+        "name": "愈合MAX"
+      }
+    },
+    "Balance_Rune_AreaAttackWithImmolate_Lv5": {
+      "atlas": "balance-03",
+      "cell": 1,
+      "name": "狰狞",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/a544f09cec0053773c124ed9c4bd844c82cf2c983fa22df51273e173fe36ddf7.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/a544f09cec0053773c124ed9c4bd844c82cf2c983fa22df51273e173fe36ddf7.webp",
+        "sha256": "a544f09cec0053773c124ed9c4bd844c82cf2c983fa22df51273e173fe36ddf7",
+        "size": 44562,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22455_balance_rune_areaattackwithimmolate_lv5.png.p,2a918f1017f935dddbddf4274015fc6f,65674",
+        "sourceIcon": "Texture/Aries/Item/22455_Balance_Rune_AreaAttackWithImmolate_Lv5.png; 0 0 151 230",
+        "itemId": 22455,
+        "name": "狰狞"
+      }
+    },
+    "Balance_Rune_SingleAttackWithStun_Lv5": {
+      "atlas": "balance-03",
+      "cell": 2,
+      "name": "先发制人符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/0a65d72d760c278eae29e247d6a8077e800b66c119719c2abd3a41620067c63b.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/0a65d72d760c278eae29e247d6a8077e800b66c119719c2abd3a41620067c63b.webp",
+        "sha256": "0a65d72d760c278eae29e247d6a8077e800b66c119719c2abd3a41620067c63b",
+        "size": 46562,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22454_balance_rune_singleattackwithstun_lv5.png.p,e5d1e32befded2ab0dd0f2be8c84a9f4,66879",
+        "sourceIcon": "Texture/Aries/Item/22454_Balance_Rune_SingleAttackWithStun_Lv5.png; 0 0 151 230",
+        "itemId": 23454,
+        "name": "先发制人符文"
+      }
+    },
+    "Balance_Rune_SingleAttackWithSelfStun_Lv5": {
+      "atlas": "balance-03",
+      "cell": 3,
+      "name": "弑神脉冲",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/8e4f122827912dcf1bc8741d87d40f3a6081c470c7fe78ef2735d3ba62218cdd.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/8e4f122827912dcf1bc8741d87d40f3a6081c470c7fe78ef2735d3ba62218cdd.webp",
+        "sha256": "8e4f122827912dcf1bc8741d87d40f3a6081c470c7fe78ef2735d3ba62218cdd",
+        "size": 45604,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22453_balance_rune_singleattackwithselfstun_lv5.png.p,b7e51d3eef38b2664e5633356ebef50a,65082",
+        "sourceIcon": "Texture/Aries/Item/22453_Balance_Rune_SingleAttackWithSelfStun_Lv5.png; 0 0 151 230",
+        "itemId": 22453,
+        "name": "弑神脉冲"
+      }
+    },
+    "Balance_Rune_GainPips": {
+      "atlas": "balance-03",
+      "cell": 4,
+      "name": "超魔祝福符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/34bb5c97e1347b26f3cde17b5348715660c2ae58d9d9dea70673e14eb731d348.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/34bb5c97e1347b26f3cde17b5348715660c2ae58d9d9dea70673e14eb731d348.webp",
+        "sha256": "34bb5c97e1347b26f3cde17b5348715660c2ae58d9d9dea70673e14eb731d348",
+        "size": 43998,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/23466_balance_rune_gainpips.png.z,db43d6c2450ec1ebbb1ae529e2b9f19c,70891",
+        "sourceIcon": "Texture/Aries/Item/23466_Balance_Rune_GainPips.png; 0 0 151 230",
+        "itemId": 23466,
+        "name": "超魔祝福符文"
+      }
+    },
+    "Balance_Rune_PandoraResist_MiniAura": {
+      "atlas": "balance-03",
+      "cell": 5,
+      "name": "潘多拉盾墙守护符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/a20b975ebcffff777abf24edd2c4d548843a09a6fbb21cdd0114b020c91c57d7.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/a20b975ebcffff777abf24edd2c4d548843a09a6fbb21cdd0114b020c91c57d7.webp",
+        "sha256": "a20b975ebcffff777abf24edd2c4d548843a09a6fbb21cdd0114b020c91c57d7",
+        "size": 42822,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22445_balance_globalshield_pandora_01.png.p,a00eb8b45661fa90f4d3c53ecf42a8d0,63122",
+        "sourceIcon": "Texture/Aries/Item/22445_Balance_GlobalShield_Pandora_01.png; 0 0 151 230",
+        "itemId": 23467,
+        "name": "潘多拉盾墙守护符文"
+      }
+    },
+    "Balance_AreaAttack_DragonLight": {
+      "atlas": "balance-03",
+      "cell": 6,
+      "name": "梦龙脉冲符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/e704b948270724c7b28b15f8032ee040f16f34f9e9dc8f14b5778779f9d79ba8.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/e704b948270724c7b28b15f8032ee040f16f34f9e9dc8f14b5778779f9d79ba8.webp",
+        "sha256": "e704b948270724c7b28b15f8032ee040f16f34f9e9dc8f14b5778779f9d79ba8",
+        "size": 41742,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22468_balance_rune_areaattackcard_dragon.png.p,14d3cf2ae78804ef8ecc49a26891b290,77355",
+        "sourceIcon": "Texture/Aries/Item/22468_Balance_Rune_AreaAttackCard_Dragon.png; 0 0 151 230",
+        "itemId": 23468,
+        "name": "梦龙脉冲符文"
+      }
+    },
+    "Balance_SingleHeal_DragonLight": {
+      "atlas": "balance-03",
+      "cell": 7,
+      "name": "梦龙之光符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/72bb7cd631be6a1ab42bd042a312e905cc7c15ed1131b1b9c9cae9150e04cd64.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/72bb7cd631be6a1ab42bd042a312e905cc7c15ed1131b1b9c9cae9150e04cd64.webp",
+        "sha256": "72bb7cd631be6a1ab42bd042a312e905cc7c15ed1131b1b9c9cae9150e04cd64",
+        "size": 42754,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22469_balance_rune_singleheal_dragon.png.z,2c0b467d34d28745a1b877a6b36c0330,69391",
+        "sourceIcon": "Texture/Aries/Item/22469_Balance_Rune_SingleHeal_Dragon.png; 0 0 151 230",
+        "itemId": 23469,
+        "name": "梦龙之光符文"
+      }
+    },
+    "Balance_SingleAttack_Level2_teen": {
+      "atlas": "balance-03",
+      "cell": 8,
+      "name": "梦龙极光符文",
+      "school": "balance",
+      "source": {
+        "local": "assets/adventure/spells/9d653f3e04ea1724962eb09361a44ffb3e994d90c344131f87ce362f81b4d1d2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/spells/spell-publish/9d653f3e04ea1724962eb09361a44ffb3e994d90c344131f87ce362f81b4d1d2.webp",
+        "sha256": "9d653f3e04ea1724962eb09361a44ffb3e994d90c344131f87ce362f81b4d1d2",
+        "size": 44328,
+        "width": 151,
+        "height": 230,
+        "sourceEntry": "texture/aries/item/22470_balance_rune_singleattack_dragon.png.p,5f23556fe001dcbed33204260b4269a2,78731",
+        "sourceIcon": "Texture/Aries/Item/22470_Balance_Rune_SingleAttack_Dragon.png; 0 0 151 230",
+        "itemId": 23470,
+        "name": "梦龙极光符文"
+      },
+      "effectAtlas": "hero-balance",
+      "effectFrames": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "heroCardFrame": 2
+    }
+  }
+}

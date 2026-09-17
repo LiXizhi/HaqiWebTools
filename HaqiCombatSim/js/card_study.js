@@ -11,11 +11,11 @@ function symbol(c,school,x,y,size,color){c.save();c.translate(x,y);c.scale(size/
  c.restore();}
 function badge(c,x,y,r,value){const g=c.createRadialGradient(x-4,y-5,2,x,y,r);g.addColorStop(0,'#fbffdc');g.addColorStop(.8,'#d9fca7');g.addColorStop(1,'#82cd3d');c.fillStyle=g;c.strokeStyle='#e3ef8c';c.lineWidth=2;c.beginPath();c.arc(x,y,r,0,TAU);c.fill();c.stroke();if(value!==null){c.fillStyle='#254a29';c.font='bold 23px sans-serif';c.textAlign='center';c.textBaseline='middle';c.fillText(value,x,y+1);}}
 function draw(row){const {c,image,school,color,title}=row;c.clearRect(0,0,302,460);c.drawImage(image,0,0,302,460);if(!$('content').checked)return;
- c.save();c.textAlign='center';c.textBaseline='middle';c.font='900 27px "PingFang SC",sans-serif';c.lineJoin='round';c.lineWidth=5;c.strokeStyle='#252528';c.strokeText(title,151,63,232);c.fillStyle='#fffef2';c.fillText(title,151,63,232);
- symbol(c,school,25,26,30,color);badge(c,277,28,15,$('cost').value);badge(c,36,276,19,$('left').value);
+ c.save();c.textAlign='center';c.textBaseline='middle';c.font='900 28px "PingFang SC",sans-serif';c.lineJoin='round';c.lineWidth=5;c.strokeStyle='#252528';c.strokeText(title,151,52,224);c.fillStyle='#fffef2';c.fillText(title,151,52,224);
+ c.save();c.shadowColor='#17324e';c.shadowBlur=2;c.shadowOffsetY=1;symbol(c,school,27,28,40,color);c.restore();badge(c,277,28,15,$('cost').value);badge(c,36,276,19,$('left').value);
  badge(c,267,276,16,null);path(c,[[267,266],[278,270],[275,282],[267,287],[259,282],[256,270]],'#19374d','#e9db83',1.5);
  // All central artwork is live Canvas geometry; no artwork is baked into the frame.
- c.save();c.translate(151,192);c.shadowColor=color;c.shadowBlur=20;path(c,[[0,-56],[48,-32],[40,24],[0,62],[-40,24],[-48,-32]],'#d7e5de','#fff5c2',3);c.shadowBlur=0;
+ c.save();c.translate(151,178);c.shadowColor=color;c.shadowBlur=20;path(c,[[0,-56],[48,-32],[40,24],[0,62],[-40,24],[-48,-32]],'#d7e5de','#fff5c2',3);c.shadowBlur=0;
  const g=c.createLinearGradient(-30,-35,30,45);g.addColorStop(0,color);g.addColorStop(.5,'#163a55');g.addColorStop(1,'#071e31');path(c,[[0,-46],[36,-26],[30,18],[0,47],[-30,18],[-36,-26]],g,'#77959c',2);symbol(c,school,0,-1,45,color);c.restore();
  c.fillStyle='#173b4b';c.textAlign='left';c.textBaseline='top';c.font='bold 19px "PingFang SC",sans-serif';c.fillText('抵挡下一次受到的',40,310);c.fillText(row.name+'伤害 50%',40,337);c.font='15px "PingFang SC",sans-serif';c.fillStyle='#315164';c.fillText('守护 · 单体',40,379);
  if(golden){c.shadowColor='#ffd65b';c.shadowBlur=12;c.strokeStyle='#ffe69a';c.lineWidth=3;c.strokeRect(5,5,292,450);}c.restore();}

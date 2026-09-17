@@ -1,3 +1,5 @@
+import { prepareDebugEdit } from './adventure_debug_core.js';
+import { hasDebugBackup, storeDebugEdit, restoreDebugBackup } from './adventure_debug.js';
 // Browser controller: input, rendering, audio and persistence live outside the pure rules.
 import { effectDuration } from './spell_effects_core.js';
 import { createSpellSound } from './spell_sound.js';
@@ -27,7 +29,7 @@ async function toggleSound(){const requested=!spellSound.enabled,ok=await spellS
 let joystick={x:0,y:0},heldPointer=null;
 function resetMovementInput(){keys.clear();joystick={x:0,y:0};heldPointer=null;document.querySelector('.touch-joystick')?.resetInput();}
 const equipmentView={tab:'gear',slot:0,item:null,query:''};
-const model=()=>({assets,save,battle,selected,discarded,animating:!!animation,equipmentView,soundEnabled:spellSound.enabled});
+const model=()=>({assets,save,battle,selected,discarded,animating:!!animation,equipmentView,debugBackup:hasDebugBackup(),soundEnabled:spellSound.enabled});
 function toast(message) {nodes.toast.textContent=message;nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);}
 function safely(fn) {try{return fn();}catch(e){toast(e.message);return false;}}
 function persist() {
@@ -44,7 +46,7 @@ function paintPanel() {
     const equipment=panel==='equipment'||panel==='inventory';
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
-    V.renderPanel(nodes.overlay,panel,model(),{close,action,track,panel:openPanel,cloud:openCloud,music:toggleMusic,sound:toggleSound,export:()=>downloadSave(save),import:importFile,title:showTitle});
+    V.renderPanel(nodes.overlay,panel,model(),{close,action,track,panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,export:()=>downloadSave(save),import:importFile,title:showTitle});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
@@ -54,6 +56,18 @@ function paintPanel() {
     }
 }
 function openPanel(kind) {if(stage!=='world')return;close();path=[];destination=null;panel=kind;if(kind==='equipment'||kind==='inventory'){equipmentView.tab=kind==='equipment'?'gear':'all';equipmentView.slot=0;equipmentView.query='';equipmentView.item=null;}paintPanel();}
+function applyDebug(patch) {safely(()=>{
+    if(stage!=='world')throw Error('请先完成当前战斗');
+    const result=prepareDebugEdit(save,assets.content,patch);
+    if(!result.changes.length)return;
+    storeDebugEdit(save,result.save);
+    save=result.save;paintHud();paintPanel();toast('调试属性已保存，修改前的备份已保留。');
+});}
+function restoreDebug() {safely(()=>{
+    if(stage!=='world')throw Error('请先完成当前战斗');
+    const restored=restoreDebugBackup(save,assets.content);
+    enterWorld(restored);openPanel('debug');toast('已恢复上次调试修改前的存档。');
+});}
 function cloudLocal() {if(stage!=='title')return save;try{const raw=readLocal();return raw?A.parseSave(raw,assets.content):null;}catch{return null;}}
 function openCloud() {persist();close();path=[];destination=null;if(!cloud.busy){cloud.preview=null;cloud.error='';cloud.message=cloud.owner?'请选择一份记录查看，或保存当前旅程。':'';}panel='cloud';paintCloud();}
 function paintCloud() {

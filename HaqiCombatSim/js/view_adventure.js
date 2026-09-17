@@ -1,3 +1,4 @@
+import { renderDebugEditor } from './view_adventure_debug.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck } from './adventure_core.js';
 import * as U from './combat_unit_core.js';
@@ -139,8 +140,8 @@ function spellFace(assets,card,artCard=card) {
 }
 export function renderPanel(root,kind,model,cb) {
     const {assets,save}=model,c=assets.content,d=assets.dataset;
-    const titles={equipment:['角色与装备','魔法学徒 · 旅途行装'],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包','装备与旅途收藏'],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
-    const body=modal(root,...titles[kind],cb,kind==='deck'||kind==='quests'||kind==='inventory'||kind==='equipment');
+    const titles={debug:['属性编辑器','调试工具 · 修改当前存档'],equipment:['角色与装备','魔法学徒 · 旅途行装'],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包','装备与旅途收藏'],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
+    const body=modal(root,...titles[kind],cb,kind==='deck'||kind==='quests'||kind==='inventory'||kind==='equipment'||kind==='debug');
     if(kind==='quests') {
         const current=currentQuest(save,c);
         for(const q of c.quests){const state=questState(save,q.id);const block=el('article',`journal-quest ${state.claimed?'done':''} ${current?.id===q.id?'current':''}`,el('div','journal-title',el('span','quest-number',String(q.id-62999).padStart(2,'0')),el('h3','',q.title),badge(state.claimed?'已完成':state.accepted?'进行中':current?.id===q.id?'可接取':'未开启')));
@@ -177,7 +178,9 @@ export function renderPanel(root,kind,model,cb) {
         if(save.pet)body.append(el('h3','center',save.pet.name),el('p','center muted',`等级 ${save.pet.level} · 经验 ${save.pet.xp} · 跟随中`),el('p','center','小小的咕噜噜，已经认定你是它最好的朋友。'),el('p','center muted',`战宠口粮 ${save.inventory[17172]||0} 包 · 每包增加 ${c.pet.foodXp} 经验`),button('喂养一包战宠口粮',()=>cb.action({type:'feed'}),'primary centered'));
         else body.append(el('h3','center','等待与你相遇'),el('p','center muted','完成青龙的强化指导，即可获得一枚出奇蛋。'),ownsEgg(save)?button('打开出奇蛋',()=>cb.action({type:'hatch'}),'primary centered'):el('p','center','继续你的冒险吧。'));
     }
+    if(kind==='debug'){body.closest('.modal').classList.add('debug-modal');renderDebugEditor(body,model,cb,{el,button});}
     if(kind==='settings') {
+        body.append(button('属性编辑器 · 调试',()=>cb.panel('debug'),'secondary settings-button'));
         body.append(button(model.soundEnabled?'技能音效：开启':'技能音效：关闭',cb.sound,'secondary settings-button'));
         body.append(button('云端旅途 · 跨设备继续冒险',cb.cloud,'primary settings-button'));
         body.append(el('p','','进度自动保存在当前浏览器。你可以导出存档，在其他设备继续这段旅程。'),button(save.music?'背景音乐：开启':'背景音乐：关闭',cb.music,'secondary settings-button'),button('导出我的存档',cb.export,'secondary settings-button'));

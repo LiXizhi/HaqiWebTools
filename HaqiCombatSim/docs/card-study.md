@@ -6,6 +6,6 @@
 
 `js/card_study.js`程序绘制标题、说明、学系标记、右上魔力点、左侧数值和右侧护盾图标；五系使用同一套中央护盾几何造型以比较风格。文字及两处数值可变，支持显示/隐藏程序层及金卡光环。样张中的护盾数值仅为排版演示。
 
-`data/adventure/card-frames.json`记录五张独立WebP及其CDN URL、SHA-256、尺寸和来源；总计725280字节，单张138628–149678字节。生成PNG保留在生成工具输出目录，项目使用压缩后WebP。开发准备：`python3 scripts/prepare_card_frames.py <school-to-png-paths.json>`，需要Pillow；线上运行不需要构建或父仓库。
+`data/adventure/card-frames.json`记录五张独立WebP及其CDN URL、SHA-256、尺寸和来源；总计116700字节，单张22832–23612字节，严格小于24,000字节（24KB）。背景按比例缩为208×312或232×348；Canvas文字、数字和图标仍按原分辨率绘制。生成PNG保留在生成工具输出目录，项目使用压缩后WebP。开发准备：`python3 scripts/prepare_card_frames.py <school-to-png-paths.json>`，需要Pillow；先尝试无损，再以90/85/80/75质量编码，仍超限则等比缩小后重试。压缩完成后才能上传，CDN远端字节核验后填写URL。sourceSha256保留本次输入图片哈希；线上运行不需要构建或父仓库。
 
 验证：JS语法检查通过，浏览器五系加载、纯底图切换、动态魔力点检查通过；五个CDN文件均验证HTTP、CORS和SHA-256。本次不修改战斗逻辑，不扩大到全卡库替换。

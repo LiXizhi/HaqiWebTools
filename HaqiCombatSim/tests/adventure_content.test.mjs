@@ -14,6 +14,6 @@ test('chapter validator rejects missing references and unsupported effects, acti
 });
 test('local WebP images decode and truncated data fails validation',()=>{
     const file=new URL('../assets/adventure/webp/sprites.webp',import.meta.url),data=fs.readFileSync(file);
-    assert.deepEqual(validateMedia('sprites.webp',data),{width:1254,height:1254});
+    const {width,height}=load('media').entries.sprites;assert.deepEqual(validateMedia('sprites.webp',data),{width,height});
     const corrupt=data.subarray(0,data.length-8);assert.throws(()=>validateMedia('sprites.webp',corrupt));
 });

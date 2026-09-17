@@ -3,6 +3,7 @@ import { createRng, hashSeed } from './rng_core.js';
 export const EFFECT_KINDS = ['bolt','burst','meteor','swords','lightning','vines','vortex','shield','blade','trap','heal','drain','summon'];
 export function validateSpellEffects(config, cards) {
     if(config?.version!==1)throw new Error('技能特效配置版本无效');
+    if(!Array.isArray(config.atlasSize)||config.atlasSize.length!==2||!config.atlasSize.every(v=>Number.isFinite(v)&&v>0))throw new Error('召唤图集坐标尺寸无效');
     const t=config.timeline;
     if(!t||!(0<t.attack&&t.attack<t.impact&&t.impact<1&&0<t.summonAttack&&t.summonAttack<t.summonImpact&&t.summonImpact<1))throw new Error('技能时间轴无效');
     for(const card of Object.values(cards)) {

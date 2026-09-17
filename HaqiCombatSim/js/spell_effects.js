@@ -32,7 +32,7 @@ export function createSpellEffects(assets) {
             for(const v of particles.slice(0,24)){const phase=(p*1.4+v.phase)%1;disc(c,sx+Math.cos(v.angle+p*5)*radius*(1-phase),sy-phase*170*scale,v.size*scale,primary);}
             c.shadowBlur=0;c.translate(sx,sy);c.scale(dir,1);c.rotate(Math.sin(flight*TAU)*.065);
             const size=def.size*scale*(.75+.25*emerge),tile=flight>.05?(def.attackTile??def.tile):def.tile;
-            assets.draw(c,{id:def.asset,crop:config.frames[tile]},-size/2,-size*emerge,size,size*emerge);c.restore();
+            assets.draw(c,{id:def.asset,crop:config.frames[tile].map((v,i)=>v*(i%2?assets.media.entries[def.asset].height/config.atlasSize[1]:assets.media.entries[def.asset].width/config.atlasSize[0]))},-size/2,-size*emerge,size,size*emerge);c.restore();
         }
         const kind=summon?spec.attack:spec.kind;
         const x=a.x+(b.x-a.x)*flight,y=a.y+(b.y-a.y)*flight-Math.sin(flight*Math.PI)*55*scale;

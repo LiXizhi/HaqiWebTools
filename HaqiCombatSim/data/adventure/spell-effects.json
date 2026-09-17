@@ -501,5 +501,9 @@
     "summonAttack": 0.43,
     "impact": 0.7,
     "summonImpact": 0.78
-  }
+  },
+  "atlasSize": [
+    1774,
+    887
+  ]
 }

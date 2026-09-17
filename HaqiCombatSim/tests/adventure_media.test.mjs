@@ -21,6 +21,6 @@ test('all prepared WebP/audio files match published hashes, sizes, dimensions an
     for(const [id,row]of Object.entries(media.entries)){
         const bytes=fs.readFileSync(new URL(`../${row.local}`,import.meta.url));
         assert.equal(bytes.length,row.size,id);assert.equal(createHash('sha256').update(bytes).digest('hex'),row.sha256,id);
-        const dimensions=validateMedia(row.local,bytes);if(dimensions)assert.deepEqual(dimensions,{width:row.width,height:row.height},id);
+        const dimensions=validateMedia(row.local,bytes);if(dimensions){assert.deepEqual(dimensions,{width:row.width,height:row.height},id);assert.ok(bytes.length<=200000,`${id} exceeds 200KB`);}
     }
 });

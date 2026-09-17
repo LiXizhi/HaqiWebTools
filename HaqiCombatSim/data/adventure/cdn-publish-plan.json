@@ -692,10 +692,10 @@
     {
       "id": "texture/aries/worldmaps/townmap/haqitownmap_bg.png",
       "local": "assets/adventure/webp/9cff554bdaf9f60338232c25bd9e46b8.webp",
-      "sha256": "1188c8acb96ffbf35cb35380ccfa7b9475118705cdb49b291d90f2645819324a",
-      "size": 626306,
-      "key": "keepwork/haqi-adventure/v1/1188c8acb96ffbf35cb35380ccfa7b9475118705cdb49b291d90f2645819324a.webp",
-      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/1188c8acb96ffbf35cb35380ccfa7b9475118705cdb49b291d90f2645819324a.webp"
+      "sha256": "9097395e33a9ab0f182defe1d3e7535dafb766ec1885dbe14d3d1e8fd4297a95",
+      "size": 87040,
+      "key": "keepwork/haqi-adventure/v1/9097395e33a9ab0f182defe1d3e7535dafb766ec1885dbe14d3d1e8fd4297a95.webp",
+      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/9097395e33a9ab0f182defe1d3e7535dafb766ec1885dbe14d3d1e8fd4297a95.webp"
     },
     {
       "id": "worlds/myworlds/newuserisland/minimap.png",
@@ -716,26 +716,26 @@
     {
       "id": "sprites",
       "local": "assets/adventure/webp/sprites.webp",
-      "sha256": "78bb4bc0edb0c77d842673eaf61e011ed0619056cd8866685475f3bd75b97079",
-      "size": 1432668,
-      "key": "keepwork/haqi-adventure/v1/78bb4bc0edb0c77d842673eaf61e011ed0619056cd8866685475f3bd75b97079.webp",
-      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/78bb4bc0edb0c77d842673eaf61e011ed0619056cd8866685475f3bd75b97079.webp"
+      "sha256": "46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891",
+      "size": 167752,
+      "key": "keepwork/haqi-adventure/v1/46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891.webp",
+      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891.webp"
     },
     {
       "id": "creatures",
       "local": "assets/adventure/webp/creatures.webp",
-      "sha256": "0bfe4678496013b7c9e19e5cd702710debb8593ccff8810b1cf61fbf5412e38b",
-      "size": 1479140,
-      "key": "keepwork/haqi-adventure/v1/0bfe4678496013b7c9e19e5cd702710debb8593ccff8810b1cf61fbf5412e38b.webp",
-      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/0bfe4678496013b7c9e19e5cd702710debb8593ccff8810b1cf61fbf5412e38b.webp"
+      "sha256": "2839e52cc7fdf3cfeaaa2878e50946fa965ed719b709195577eaa77d83ac0cee",
+      "size": 198030,
+      "key": "keepwork/haqi-adventure/v1/2839e52cc7fdf3cfeaaa2878e50946fa965ed719b709195577eaa77d83ac0cee.webp",
+      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/2839e52cc7fdf3cfeaaa2878e50946fa965ed719b709195577eaa77d83ac0cee.webp"
     },
     {
       "id": "summons",
       "local": "assets/adventure/webp/summons.webp",
-      "sha256": "fb206de31e46490215f0642ed067687bd3ade96ecef8d2732ace83bb6dd17f92",
-      "size": 1350494,
-      "key": "keepwork/haqi-adventure/v1/fb206de31e46490215f0642ed067687bd3ade96ecef8d2732ace83bb6dd17f92.webp",
-      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/fb206de31e46490215f0642ed067687bd3ade96ecef8d2732ace83bb6dd17f92.webp"
+      "sha256": "f9bee5d36f1ec36a304aab65559aa686f1d2645ebe4cdcf81b13dda6178e6548",
+      "size": 188324,
+      "key": "keepwork/haqi-adventure/v1/f9bee5d36f1ec36a304aab65559aa686f1d2645ebe4cdcf81b13dda6178e6548.webp",
+      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/f9bee5d36f1ec36a304aab65559aa686f1d2645ebe4cdcf81b13dda6178e6548.webp"
     }
   ]
 }

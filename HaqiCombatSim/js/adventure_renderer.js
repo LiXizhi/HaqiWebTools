@@ -1,5 +1,7 @@
 // Canvas presentation only. Visual motion uses time/seeded map decorations, never gameplay RNG.
 import { createSpellEffects } from './spell_effects.js';
+import { drawAnimatedActor } from './actor_animation.js';
+import { battleActorAction } from './actor_animation_core.js';
 import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES } from './adventure_core.js';
 import { onIsland,distance } from './adventure_world_core.js';
 export const COLORS={fire:'#e98f44',ice:'#6ecbdc',storm:'#b39aea',life:'#84bd59',death:'#a887c7'};
@@ -122,9 +124,14 @@ export function createRenderer(canvas,assets) {
         const hero={x:cx-r*.56,y:cy+r*.15},enemy={x:cx+r*.54,y:cy-r*.08};
         for(let i=0;i<8;i++){const a=i*TAU/8;circleRune(c,cx+Math.cos(a)*r*.79,cy+Math.sin(a)*r*.4,19,t*.2,'#f2e6b677');}
         const ev=presentation?.event,p=presentation?.progress||0,positions={hero,mob0:enemy};
-        const heroHit=ev?.type==='damage'&&ev.target==='hero'?Math.sin(p*30)*5:0,mobHit=ev?.type==='damage'&&ev.target==='mob0'?Math.sin(p*30)*5:0;
-        avatar(c,{...save,facing:2},hero.x+heroHit,hero.y,t,ev?.caster==='hero',1.4);
-        creature(c,battle.monsterTemplates[0].id,enemy.x+mobHit,enemy.y,t,1.55);
+        for(const id of ['hero','mob0']) {
+            const hp=presentation?.hp?.[id]??battle.unitsById[id].hp;
+            const pose=battleActorAction(id,hp,ev,p);
+            drawAnimatedActor(c,positions[id],pose.action,pose.progress,id==='hero'?1:-1,reducedMotion.matches,()=>{
+                if(id==='hero')avatar(c,{...save,facing:2},0,0,t,false,1.4);
+                else creature(c,battle.monsterTemplates[0].id,0,0,t,1.55);
+            });
+        }
         for(const u of [battle.sides.near[0],battle.sides.far[0]]) {
             const at=positions[u.id],hp=presentation?.hp?.[u.id]??u.hp,bw=Math.min(160,w*.27);
             plate(c,u.name,at.x,at.y+25);c.fillStyle='#173843';c.beginPath();c.roundRect(at.x-bw/2,at.y+38,bw,10,5);c.fill();

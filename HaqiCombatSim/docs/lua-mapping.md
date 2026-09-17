@@ -139,3 +139,21 @@
 | 2026-09-17 | teen 同名共享上限 | L8119：teen 同 `spell_name` 的卡共享单卡上限 | `clampDeck` 按 `spellName` 分组 |
 | 2026-09-17 | 弃牌时机 | Lua `DiscardCard` 在选牌阶段即可调用，与是否出牌无关 | `playTurn` 先处理 `pick.discardSeqs` 再判断 pass |
 | 2026-09-17 | 双方打空提前结束 | Lua 会一直跳过到 `nRemainingRounds` 归零 | 模拟器在双方存活单位全部打空且无 DOT 时直接判 timeout 平局（结果相同，省时） |
+
+## 8. Kids 开篇 PvE 与冒险（2026-09-17）
+
+| 原文件 / 位置 | 本章实现 |
+|---|---|
+| `arena_server.lua:4208` StartCombat；4515 AdvanceOneTurn；5100 PlayOneTurn，5248附近三阶段顺序 | `combat_pve_core.js` 的 createPveBattle / advancePveRound / playPveRound：kids玩家先手、双方生成魔力、前置额外回合/普通回合/后置额外回合 |
+| `mob_server.lua:1928` GetPowerPipChance | 怪物直接使用模板power_pip_percent，不叠加玩家等级曲线 |
+| `mob_server.lua:4474` PickFromCards；4759 bonus_round；4852 genes_attacker | 源闭区间权重抽取；分别记录before/normal/after脚本；脚本后HP阈值基因，再回退可重复AI卡池；不伪装为有限玩家卡包 |
+| `card_server.lua:3234` kids PvE伤害分支；1340 TryDoubleAttack | 公共卡牌伤害模块标记targetIsMob，PvE使用非PvP补偿分支；kids/teen双击原函数返回false，未增加额外双击 |
+| `config/Aries/Mob/NewIslandMonster/*.xml` 与 `WorldData/NewUserIsland.Arenas_Mobs.xml` | 五侦察兵原生命/等级/抗性/攻击修正/起始魔力/台词/卡池/奖励/场地ID；`1-`不是通配回合，而是前置额外动作 |
+| `config/Aries/Quests/quest_list.xml` 63000–63013 | ID、居民、对白、目标和按学系筛选的奖励；原文与浏览器替换文本均保留 |
+| `Database/globalstore.db.mem`；`combat_unit_core.js` 原stats映射 | 从已装备道具汇总HP/伤害/抗性/命中/暴击/起始魔力；139/140/141装备附加牌；167/170卡包容量/同卡上限 |
+| `config/Aries/Others/globalstore.addonlevel.kids.xml` 的1912所在itemset | 原三档70/140/280仙豆及累计1/2/3%全系攻击，由导出数据驱动 |
+| `config/Aries/Others/combatpet_levels.xml`；`CombatPet/CombatPetProvider.lua:439`、749 GetLevelInfo | 10136宠物原经验增量15/62/139/248、零基配置级别和满级显示；口粮17172的stat60提供300经验 |
+
+本章刻意改编：紧凑地图、按任务串联、累计经验阈值、学习时机、固定出奇蛋结果、毕业后镇区尾声、浏览器教程。原PvE服务端的组队、限时、季节暴怒、付费、捕捉/宠物战斗不移植。消耗符文/变身奖励只作为收藏保留。完整逐项说明见 [adventure.md](adventure.md)。
+
+补充效果：`card_server.lua:106` 的 `storm_charging_wards` 从Lua数据字面量导出，3138–3164的 `bCharging` 在PvE逐级替换93–97常驻印记并重置为2回合。模板文案虽称增加风暴受伤，其stats162是绝对抗性；原 `mob_server.lua:2096` 对kids怪物不读取该常驻stats，故本章不会自行增加3%伤害。效果状态、叠层、过期仍完整重现；PvP不启用此新增分支。

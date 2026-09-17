@@ -7,7 +7,10 @@
     "scripts": {
         "export": "node scripts/export_data.mjs --config ../../config/Aries --out data --version both",
         "test": "node --test tests/*.test.mjs",
-        "sim": "node scripts/run_batch.mjs"
+        "sim": "node scripts/run_batch.mjs",
+        "export:adventure": "python3 scripts/export_adventure.py",
+        "assets:adventure": "node scripts/prepare_adventure_assets.mjs",
+        "check:adventure": "node scripts/check_adventure.mjs && node scripts/prepare_adventure_assets.mjs --check"
     },
     "engines": {
         "node": ">=20"

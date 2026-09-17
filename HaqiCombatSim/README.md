@@ -9,6 +9,12 @@
 
 战斗引擎与 UI 完全解耦（`js/*_core.js`），可在浏览器和 Node 中无 UI 运行。
 
+## 新入口：魔法哈奇单人冒险
+
+[`Haqi.html`](Haqi.html) 是可玩的 kids 开篇章节：魔法营地原任务63000–63013、五系角色、装备强化、宠物喂养、配卡、毕业战及哈奇小镇。键盘、点击与触摸操作；本地自动存档与JSON导入导出。包含原版卡面、立绘、图标和音乐，以及新绘制的场景精灵。
+
+使用下面同一个静态服务器，打开 `http://127.0.0.1:8791/Haqi.html`。资源已放在项目内，无运行时构建或外部服务。内容来源、准备命令、操作和改编边界见 [冒险说明](docs/adventure.md)。
+
 ## 运行
 
 用任意静态 http 服务打开 [`HaqiCombatSim.html`](HaqiCombatSim.html)（需要 `fetch` 同目录 JSON 与 Web Worker，`file://` 下不可用）。**不需要构建，零 npm 依赖。**
@@ -23,7 +29,7 @@ python3 -m http.server 8791 --bind 127.0.0.1      # 或 VS Code Live Preview
 
 ```bash
 npm run export       # scripts/export_data.mjs → data/kids/*.json 与 data/teen/*.json
-npm test             # node --test tests/*.test.mjs（34 例，用 data/sample）
+npm test             # node --test tests/*.test.mjs（包含原34例及冒险章节测试）
 npm run sim -- --data data/teen --mode 1v1 --games 1000 --level 60 --seed 1 [--params p.json] [--json out.json]
 ```
 

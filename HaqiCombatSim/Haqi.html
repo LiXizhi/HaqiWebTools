@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#204d4d">
+  <meta name="description" content="魔法哈奇初心之旅：探索魔法营地、结识原版NPC、收集卡牌，开启一场二维魔法冒险。">
+  <title>魔法哈奇 · 初心之旅</title>
+  <link rel="stylesheet" href="css/adventure.css">
+</head>
+<body class="haqi-app">
+  <main id="game" aria-label="魔法哈奇冒险">
+    <canvas id="world" aria-label="魔法世界，点击地面移动，点击居民交谈" tabindex="0"></canvas>
+    <div id="hud"></div>
+    <div id="battle-layer"></div>
+    <div id="overlay"></div>
+    <div id="entry"><div class="loading-card"><span class="sigil">✧</span><h1>魔法哈奇</h1><p>正在准备你的魔法之旅…</p><progress id="load-progress" max="1" value="0"></progress></div></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </main>
+  <noscript>请开启 JavaScript 后开始冒险。</noscript>
+  <script type="module" src="js/adventure_app.js"></script>
+</body>
+</html>

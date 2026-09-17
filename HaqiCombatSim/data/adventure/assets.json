@@ -1,0 +1,803 @@
+{
+  "texture/aries/penote/npcs/susu_32bits.png": {
+    "path": "texture/aries/penote/npcs/susu_32bits.png.p",
+    "md5": "4f4fb098b5fd9d866c9c15625e39a158",
+    "size": 89682,
+    "entry": "texture/aries/penote/npcs/susu_32bits.png.p,4f4fb098b5fd9d866c9c15625e39a158,89682",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/susu_32bits.png.p,4f4fb098b5fd9d866c9c15625e39a158,89682",
+    "local": "assets/adventure/cdn/4f4fb098b5fd9d866c9c15625e39a158.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/moka_32bits.png": {
+    "path": "texture/aries/penote/npcs/moka_32bits.png.p",
+    "md5": "ed4e44f30eaf44b48fbcc277d51dd465",
+    "size": 109617,
+    "entry": "texture/aries/penote/npcs/moka_32bits.png.p,ed4e44f30eaf44b48fbcc277d51dd465,109617",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/moka_32bits.png.p,ed4e44f30eaf44b48fbcc277d51dd465,109617",
+    "local": "assets/adventure/cdn/ed4e44f30eaf44b48fbcc277d51dd465.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/tutu_32bits.png": {
+    "path": "texture/aries/penote/npcs/tutu_32bits.png.p",
+    "md5": "abaf4aaea44fb3e5c87fbb3298926544",
+    "size": 101193,
+    "entry": "texture/aries/penote/npcs/tutu_32bits.png.p,abaf4aaea44fb3e5c87fbb3298926544,101193",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/tutu_32bits.png.p,abaf4aaea44fb3e5c87fbb3298926544,101193",
+    "local": "assets/adventure/cdn/abaf4aaea44fb3e5c87fbb3298926544.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/gucci_32bits.png": {
+    "path": "texture/aries/penote/npcs/gucci_32bits.png.p",
+    "md5": "4436022001b06f9e4d0fac1b4fe153e7",
+    "size": 102176,
+    "entry": "texture/aries/penote/npcs/gucci_32bits.png.p,4436022001b06f9e4d0fac1b4fe153e7,102176",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/gucci_32bits.png.p,4436022001b06f9e4d0fac1b4fe153e7,102176",
+    "local": "assets/adventure/cdn/4436022001b06f9e4d0fac1b4fe153e7.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/barth_32bits.png": {
+    "path": "texture/aries/penote/npcs/barth_32bits.png.p",
+    "md5": "0667fd56ab96052107b30b0711e7d5af",
+    "size": 53690,
+    "entry": "texture/aries/penote/npcs/barth_32bits.png.p,0667fd56ab96052107b30b0711e7d5af,53690",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/barth_32bits.png.p,0667fd56ab96052107b30b0711e7d5af,53690",
+    "local": "assets/adventure/cdn/0667fd56ab96052107b30b0711e7d5af.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/faster_32bits.png": {
+    "path": "texture/aries/penote/npcs/faster_32bits.png.p",
+    "md5": "fc48c5ae469673968dd341652630d9b2",
+    "size": 89266,
+    "entry": "texture/aries/penote/npcs/faster_32bits.png.p,fc48c5ae469673968dd341652630d9b2,89266",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/faster_32bits.png.p,fc48c5ae469673968dd341652630d9b2,89266",
+    "local": "assets/adventure/cdn/fc48c5ae469673968dd341652630d9b2.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/fire_32bits.png": {
+    "path": "texture/aries/penote/npcs/fire_32bits.png.p",
+    "md5": "ac58661c21b9ddd39b9fdb0ef2859324",
+    "size": 56754,
+    "entry": "texture/aries/penote/npcs/fire_32bits.png.p,ac58661c21b9ddd39b9fdb0ef2859324,56754",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/fire_32bits.png.p,ac58661c21b9ddd39b9fdb0ef2859324,56754",
+    "local": "assets/adventure/cdn/ac58661c21b9ddd39b9fdb0ef2859324.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/ice_32bits.png": {
+    "path": "texture/aries/penote/npcs/ice_32bits.png.p",
+    "md5": "3c686c03ccd581759827764b052477c3",
+    "size": 73336,
+    "entry": "texture/aries/penote/npcs/ice_32bits.png.p,3c686c03ccd581759827764b052477c3,73336",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/ice_32bits.png.p,3c686c03ccd581759827764b052477c3,73336",
+    "local": "assets/adventure/cdn/3c686c03ccd581759827764b052477c3.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/storm_32bits.png": {
+    "path": "texture/aries/penote/npcs/storm_32bits.png.p",
+    "md5": "6a8e0fb320a406d0f17e9b703f1bfe3b",
+    "size": 73736,
+    "entry": "texture/aries/penote/npcs/storm_32bits.png.p,6a8e0fb320a406d0f17e9b703f1bfe3b,73736",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/storm_32bits.png.p,6a8e0fb320a406d0f17e9b703f1bfe3b,73736",
+    "local": "assets/adventure/cdn/6a8e0fb320a406d0f17e9b703f1bfe3b.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/life_32bits.png": {
+    "path": "texture/aries/penote/npcs/life_32bits.png.p",
+    "md5": "31f415ccc9214eec8731debe6e81b2b9",
+    "size": 73345,
+    "entry": "texture/aries/penote/npcs/life_32bits.png.p,31f415ccc9214eec8731debe6e81b2b9,73345",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/life_32bits.png.p,31f415ccc9214eec8731debe6e81b2b9,73345",
+    "local": "assets/adventure/cdn/31f415ccc9214eec8731debe6e81b2b9.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/death_32bits.png": {
+    "path": "texture/aries/penote/npcs/death_32bits.png.p",
+    "md5": "39345d31118c50aa0925f93c4dfd347e",
+    "size": 81296,
+    "entry": "texture/aries/penote/npcs/death_32bits.png.p,39345d31118c50aa0925f93c4dfd347e,81296",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/death_32bits.png.p,39345d31118c50aa0925f93c4dfd347e,81296",
+    "local": "assets/adventure/cdn/39345d31118c50aa0925f93c4dfd347e.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/qinglong_32bits.png": {
+    "path": "texture/aries/penote/npcs/qinglong_32bits.png.p",
+    "md5": "547d6259f466bb9486f873c8a98a6729",
+    "size": 60100,
+    "entry": "texture/aries/penote/npcs/qinglong_32bits.png.p,547d6259f466bb9486f873c8a98a6729,60100",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/qinglong_32bits.png.p,547d6259f466bb9486f873c8a98a6729,60100",
+    "local": "assets/adventure/cdn/547d6259f466bb9486f873c8a98a6729.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/sophie_32bits.png": {
+    "path": "texture/aries/penote/npcs/sophie_32bits.png.p",
+    "md5": "9be6f2f1ffa71c2b1fff761c3607dd6f",
+    "size": 95472,
+    "entry": "texture/aries/penote/npcs/sophie_32bits.png.p,9be6f2f1ffa71c2b1fff761c3607dd6f,95472",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/sophie_32bits.png.p,9be6f2f1ffa71c2b1fff761c3607dd6f,95472",
+    "local": "assets/adventure/cdn/9be6f2f1ffa71c2b1fff761c3607dd6f.png",
+    "optional": false
+  },
+  "texture/aries/penote/npcs/alcalde_32bits.png": {
+    "path": "texture/aries/penote/npcs/alcalde_32bits.png.p",
+    "md5": "f4aefe05dcedf8480b6d9638d056e02a",
+    "size": 67160,
+    "entry": "texture/aries/penote/npcs/alcalde_32bits.png.p,f4aefe05dcedf8480b6d9638d056e02a,67160",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/penote/npcs/alcalde_32bits.png.p,f4aefe05dcedf8480b6d9638d056e02a,67160",
+    "local": "assets/adventure/cdn/f4aefe05dcedf8480b6d9638d056e02a.png",
+    "optional": false
+  },
+  "texture/aries/item/22190_death_deathdamageblade.png": {
+    "path": "texture/aries/item/22190_death_deathdamageblade.png.p",
+    "md5": "fa5b65ea2b5768b505347cfc1f30142d",
+    "size": 59788,
+    "entry": "texture/aries/item/22190_death_deathdamageblade.png.p,fa5b65ea2b5768b505347cfc1f30142d,59788",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22190_death_deathdamageblade.png.p,fa5b65ea2b5768b505347cfc1f30142d,59788",
+    "local": "assets/adventure/cdn/fa5b65ea2b5768b505347cfc1f30142d.png",
+    "optional": false
+  },
+  "texture/aries/item/22189_death_deathdamagetrap.png": {
+    "path": "texture/aries/item/22189_death_deathdamagetrap.png.p",
+    "md5": "2a2942388f029db9309a4c0e7a06adb9",
+    "size": 63374,
+    "entry": "texture/aries/item/22189_death_deathdamagetrap.png.p,2a2942388f029db9309a4c0e7a06adb9,63374",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22189_death_deathdamagetrap.png.p,2a2942388f029db9309a4c0e7a06adb9,63374",
+    "local": "assets/adventure/cdn/2a2942388f029db9309a4c0e7a06adb9.png",
+    "optional": false
+  },
+  "texture/aries/item/22199_death_deathgreatshield.png": {
+    "path": "texture/aries/item/22199_death_deathgreatshield.png.p",
+    "md5": "dacb65d53364c3a78e3f913fcb27231b",
+    "size": 63664,
+    "entry": "texture/aries/item/22199_death_deathgreatshield.png.p,dacb65d53364c3a78e3f913fcb27231b,63664",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22199_death_deathgreatshield.png.p,dacb65d53364c3a78e3f913fcb27231b,63664",
+    "local": "assets/adventure/cdn/dacb65d53364c3a78e3f913fcb27231b.png",
+    "optional": false
+  },
+  "texture/aries/item/22334_death_singleattackwithdisabledheal.png": {
+    "path": "texture/aries/item/22334_death_singleattackwithdisabledheal.png.p",
+    "md5": "3378bf83188e1a3b1121ffb6bd8829b2",
+    "size": 64642,
+    "entry": "texture/aries/item/22334_death_singleattackwithdisabledheal.png.p,3378bf83188e1a3b1121ffb6bd8829b2,64642",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22334_death_singleattackwithdisabledheal.png.p,3378bf83188e1a3b1121ffb6bd8829b2,64642",
+    "local": "assets/adventure/cdn/3378bf83188e1a3b1121ffb6bd8829b2.png",
+    "optional": false
+  },
+  "texture/aries/item/22182_death_singleattackwithlifetap_level2.png": {
+    "path": "texture/aries/item/22182_death_singleattackwithlifetap_level2.png.p",
+    "md5": "dbacd04fb87806adaf8a5406ab91b99f",
+    "size": 64728,
+    "entry": "texture/aries/item/22182_death_singleattackwithlifetap_level2.png.p,dbacd04fb87806adaf8a5406ab91b99f,64728",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22182_death_singleattackwithlifetap_level2.png.p,dbacd04fb87806adaf8a5406ab91b99f,64728",
+    "local": "assets/adventure/cdn/dbacd04fb87806adaf8a5406ab91b99f.png",
+    "optional": false
+  },
+  "texture/aries/item/22366_death_singleattack_level0_120_adv.png": {
+    "path": "texture/aries/item/22366_death_singleattack_level0_120_adv.png.p",
+    "md5": "f69650a477d13ffd21f0e0539d03d671",
+    "size": 50871,
+    "entry": "texture/aries/item/22366_death_singleattack_level0_120_adv.png.p,f69650a477d13ffd21f0e0539d03d671,50871",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22366_death_singleattack_level0_120_adv.png.p,f69650a477d13ffd21f0e0539d03d671,50871",
+    "local": "assets/adventure/cdn/f69650a477d13ffd21f0e0539d03d671.png",
+    "optional": false
+  },
+  "texture/aries/item/22181_death_singleattack_level1.png": {
+    "path": "texture/aries/item/22181_death_singleattack_level1.png.p",
+    "md5": "de0cf8bc25fdf323e0a244300bbb0f7b",
+    "size": 63424,
+    "entry": "texture/aries/item/22181_death_singleattack_level1.png.p,de0cf8bc25fdf323e0a244300bbb0f7b,63424",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22181_death_singleattack_level1.png.p,de0cf8bc25fdf323e0a244300bbb0f7b,63424",
+    "local": "assets/adventure/cdn/de0cf8bc25fdf323e0a244300bbb0f7b.png",
+    "optional": false
+  },
+  "texture/aries/item/22183_death_singleattack_level3.png": {
+    "path": "texture/aries/item/22183_death_singleattack_level3.png.p",
+    "md5": "25dc699506b89cdfbf8caed59819f654",
+    "size": 61843,
+    "entry": "texture/aries/item/22183_death_singleattack_level3.png.p,25dc699506b89cdfbf8caed59819f654,61843",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22183_death_singleattack_level3.png.p,25dc699506b89cdfbf8caed59819f654,61843",
+    "local": "assets/adventure/cdn/25dc699506b89cdfbf8caed59819f654.png",
+    "optional": false
+  },
+  "texture/aries/item/22109_fire_firedamageblade.png": {
+    "path": "texture/aries/item/22109_fire_firedamageblade.png.p",
+    "md5": "7adc5fd5c7598032dc4e4d65c554b3ba",
+    "size": 61068,
+    "entry": "texture/aries/item/22109_fire_firedamageblade.png.p,7adc5fd5c7598032dc4e4d65c554b3ba,61068",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22109_fire_firedamageblade.png.p,7adc5fd5c7598032dc4e4d65c554b3ba,61068",
+    "local": "assets/adventure/cdn/7adc5fd5c7598032dc4e4d65c554b3ba.png",
+    "optional": false
+  },
+  "texture/aries/item/22104_fire_firedamagetrap.png": {
+    "path": "texture/aries/item/22104_fire_firedamagetrap.png.p",
+    "md5": "cdac3e45ad453f47b93c17911f256c20",
+    "size": 67027,
+    "entry": "texture/aries/item/22104_fire_firedamagetrap.png.p,cdac3e45ad453f47b93c17911f256c20,67027",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22104_fire_firedamagetrap.png.p,cdac3e45ad453f47b93c17911f256c20,67027",
+    "local": "assets/adventure/cdn/cdac3e45ad453f47b93c17911f256c20.png",
+    "optional": false
+  },
+  "texture/aries/item/22120_fire_firegreatshield.png": {
+    "path": "texture/aries/item/22120_fire_firegreatshield.png.p",
+    "md5": "f2000185cda958b374f5f5c61b52ee9b",
+    "size": 66443,
+    "entry": "texture/aries/item/22120_fire_firegreatshield.png.p,f2000185cda958b374f5f5c61b52ee9b,66443",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22120_fire_firegreatshield.png.p,f2000185cda958b374f5f5c61b52ee9b,66443",
+    "local": "assets/adventure/cdn/f2000185cda958b374f5f5c61b52ee9b.png",
+    "optional": false
+  },
+  "texture/aries/item/22101_fire_singleattack_level1.png": {
+    "path": "texture/aries/item/22101_fire_singleattack_level1.png.p",
+    "md5": "23fdef7fbccada43d0d6f239036482b2",
+    "size": 68520,
+    "entry": "texture/aries/item/22101_fire_singleattack_level1.png.p,23fdef7fbccada43d0d6f239036482b2,68520",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22101_fire_singleattack_level1.png.p,23fdef7fbccada43d0d6f239036482b2,68520",
+    "local": "assets/adventure/cdn/23fdef7fbccada43d0d6f239036482b2.png",
+    "optional": false
+  },
+  "texture/aries/item/22102_fire_singleattackwithdot_level2.png": {
+    "path": "texture/aries/item/22102_fire_singleattackwithdot_level2.png.p",
+    "md5": "3298162139b87151ef38890b2e9b92e4",
+    "size": 64363,
+    "entry": "texture/aries/item/22102_fire_singleattackwithdot_level2.png.p,3298162139b87151ef38890b2e9b92e4,64363",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22102_fire_singleattackwithdot_level2.png.p,3298162139b87151ef38890b2e9b92e4,64363",
+    "local": "assets/adventure/cdn/3298162139b87151ef38890b2e9b92e4.png",
+    "optional": false
+  },
+  "texture/aries/item/22103_fire_singleattack_level3.png": {
+    "path": "texture/aries/item/22103_fire_singleattack_level3.png.p",
+    "md5": "c587c8a6d1eb004239ca68e99461c1fa",
+    "size": 70320,
+    "entry": "texture/aries/item/22103_fire_singleattack_level3.png.p,c587c8a6d1eb004239ca68e99461c1fa,70320",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22103_fire_singleattack_level3.png.p,c587c8a6d1eb004239ca68e99461c1fa,70320",
+    "local": "assets/adventure/cdn/c587c8a6d1eb004239ca68e99461c1fa.png",
+    "optional": false
+  },
+  "texture/aries/item/22362_fire_singleattack_level0_120_adv.png": {
+    "path": "texture/aries/item/22362_fire_singleattack_level0_120_adv.png.p",
+    "md5": "826b89b8f4fa5c38b77cee75e74333ad",
+    "size": 55045,
+    "entry": "texture/aries/item/22362_fire_singleattack_level0_120_adv.png.p,826b89b8f4fa5c38b77cee75e74333ad,55045",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22362_fire_singleattack_level0_120_adv.png.p,826b89b8f4fa5c38b77cee75e74333ad,55045",
+    "local": "assets/adventure/cdn/826b89b8f4fa5c38b77cee75e74333ad.png",
+    "optional": false
+  },
+  "texture/aries/item/22108_fire_singleattack_level6.png": {
+    "path": "texture/aries/item/22108_fire_singleattack_level6.png.p",
+    "md5": "2925d3687d3a01cb81e98bbaf2a013c1",
+    "size": 66193,
+    "entry": "texture/aries/item/22108_fire_singleattack_level6.png.p,2925d3687d3a01cb81e98bbaf2a013c1,66193",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22108_fire_singleattack_level6.png.p,2925d3687d3a01cb81e98bbaf2a013c1,66193",
+    "local": "assets/adventure/cdn/2925d3687d3a01cb81e98bbaf2a013c1.png",
+    "optional": false
+  },
+  "texture/aries/item/22142_ice_globalshield.png": {
+    "path": "texture/aries/item/22142_ice_globalshield.png.p",
+    "md5": "901007e05a289ac9f65148bb98d2c4d1",
+    "size": 66110,
+    "entry": "texture/aries/item/22142_ice_globalshield.png.p,901007e05a289ac9f65148bb98d2c4d1,66110",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22142_ice_globalshield.png.p,901007e05a289ac9f65148bb98d2c4d1,66110",
+    "local": "assets/adventure/cdn/901007e05a289ac9f65148bb98d2c4d1.png",
+    "optional": false
+  },
+  "texture/aries/item/22153_ice_icedamageblade.png": {
+    "path": "texture/aries/item/22153_ice_icedamageblade.png.p",
+    "md5": "713a6c33b047bedd32edbc6d45d2c3b6",
+    "size": 61241,
+    "entry": "texture/aries/item/22153_ice_icedamageblade.png.p,713a6c33b047bedd32edbc6d45d2c3b6,61241",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22153_ice_icedamageblade.png.p,713a6c33b047bedd32edbc6d45d2c3b6,61241",
+    "local": "assets/adventure/cdn/713a6c33b047bedd32edbc6d45d2c3b6.png",
+    "optional": false
+  },
+  "texture/aries/item/22148_ice_icedamagetrap.png": {
+    "path": "texture/aries/item/22148_ice_icedamagetrap.png.p",
+    "md5": "34bf01a04571acc9c08d3dfc5c8d9ad1",
+    "size": 65537,
+    "entry": "texture/aries/item/22148_ice_icedamagetrap.png.p,34bf01a04571acc9c08d3dfc5c8d9ad1,65537",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22148_ice_icedamagetrap.png.p,34bf01a04571acc9c08d3dfc5c8d9ad1,65537",
+    "local": "assets/adventure/cdn/34bf01a04571acc9c08d3dfc5c8d9ad1.png",
+    "optional": false
+  },
+  "texture/aries/item/22157_ice_icegreatshield.png": {
+    "path": "texture/aries/item/22157_ice_icegreatshield.png.p",
+    "md5": "e0ce2b23db84857c1aa40a8dfc92b066",
+    "size": 64755,
+    "entry": "texture/aries/item/22157_ice_icegreatshield.png.p,e0ce2b23db84857c1aa40a8dfc92b066,64755",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22157_ice_icegreatshield.png.p,e0ce2b23db84857c1aa40a8dfc92b066,64755",
+    "local": "assets/adventure/cdn/e0ce2b23db84857c1aa40a8dfc92b066.png",
+    "optional": false
+  },
+  "texture/aries/item/22297_ice_pet_singleattack_icepangolinsfreeze.png": {
+    "path": "texture/aries/item/22297_ice_pet_singleattack_icepangolinsfreeze.png.p",
+    "md5": "caeaf3956d69124546245014744d9414",
+    "size": 64797,
+    "entry": "texture/aries/item/22297_ice_pet_singleattack_icepangolinsfreeze.png.p,caeaf3956d69124546245014744d9414,64797",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22297_ice_pet_singleattack_icepangolinsfreeze.png.p,caeaf3956d69124546245014744d9414,64797",
+    "local": "assets/adventure/cdn/caeaf3956d69124546245014744d9414.png",
+    "optional": false
+  },
+  "texture/aries/item/22364_ice_singleattack_level0_120_adv.png": {
+    "path": "texture/aries/item/22364_ice_singleattack_level0_120_adv.png.p",
+    "md5": "d820dbb0be65899bcf5d540dce98d17f",
+    "size": 54280,
+    "entry": "texture/aries/item/22364_ice_singleattack_level0_120_adv.png.p,d820dbb0be65899bcf5d540dce98d17f,54280",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22364_ice_singleattack_level0_120_adv.png.p,d820dbb0be65899bcf5d540dce98d17f,54280",
+    "local": "assets/adventure/cdn/d820dbb0be65899bcf5d540dce98d17f.png",
+    "optional": false
+  },
+  "texture/aries/item/22139_ice_singleattack_level1.png": {
+    "path": "texture/aries/item/22139_ice_singleattack_level1.png.p",
+    "md5": "f31e5a16c88cdbe37055545d79990f52",
+    "size": 68313,
+    "entry": "texture/aries/item/22139_ice_singleattack_level1.png.p,f31e5a16c88cdbe37055545d79990f52,68313",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22139_ice_singleattack_level1.png.p,f31e5a16c88cdbe37055545d79990f52,68313",
+    "local": "assets/adventure/cdn/f31e5a16c88cdbe37055545d79990f52.png",
+    "optional": false
+  },
+  "texture/aries/item/22140_ice_singleattack_level2.png": {
+    "path": "texture/aries/item/22140_ice_singleattack_level2.png.p",
+    "md5": "f071d42b84a0ce14a9b44ada638f72c2",
+    "size": 60663,
+    "entry": "texture/aries/item/22140_ice_singleattack_level2.png.p,f071d42b84a0ce14a9b44ada638f72c2,60663",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22140_ice_singleattack_level2.png.p,f071d42b84a0ce14a9b44ada638f72c2,60663",
+    "local": "assets/adventure/cdn/f071d42b84a0ce14a9b44ada638f72c2.png",
+    "optional": false
+  },
+  "texture/aries/item/22141_ice_singleattack_level3.png": {
+    "path": "texture/aries/item/22141_ice_singleattack_level3.png.p",
+    "md5": "176981adb7271989613a05e4c3e68325",
+    "size": 63183,
+    "entry": "texture/aries/item/22141_ice_singleattack_level3.png.p,176981adb7271989613a05e4c3e68325,63183",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22141_ice_singleattack_level3.png.p,176981adb7271989613a05e4c3e68325,63183",
+    "local": "assets/adventure/cdn/176981adb7271989613a05e4c3e68325.png",
+    "optional": false
+  },
+  "texture/aries/item/22146_ice_singleattack_level6.png": {
+    "path": "texture/aries/item/22146_ice_singleattack_level6.png.p",
+    "md5": "37d373405b684cbec2f7b9e512d00aea",
+    "size": 68452,
+    "entry": "texture/aries/item/22146_ice_singleattack_level6.png.p,37d373405b684cbec2f7b9e512d00aea,68452",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22146_ice_singleattack_level6.png.p,37d373405b684cbec2f7b9e512d00aea,68452",
+    "local": "assets/adventure/cdn/37d373405b684cbec2f7b9e512d00aea.png",
+    "optional": false
+  },
+  "texture/aries/item/22170_life_lifedamageblade.png": {
+    "path": "texture/aries/item/22170_life_lifedamageblade.png.p",
+    "md5": "d49bcfa49963a22427680aeaeeaab2ac",
+    "size": 62996,
+    "entry": "texture/aries/item/22170_life_lifedamageblade.png.p,d49bcfa49963a22427680aeaeeaab2ac,62996",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22170_life_lifedamageblade.png.p,d49bcfa49963a22427680aeaeeaab2ac,62996",
+    "local": "assets/adventure/cdn/d49bcfa49963a22427680aeaeeaab2ac.png",
+    "optional": false
+  },
+  "texture/aries/item/22178_life_lifedamagetrap.png": {
+    "path": "texture/aries/item/22178_life_lifedamagetrap.png.p",
+    "md5": "c7251839e8aa34537082bf3228cd9f30",
+    "size": 63973,
+    "entry": "texture/aries/item/22178_life_lifedamagetrap.png.p,c7251839e8aa34537082bf3228cd9f30,63973",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22178_life_lifedamagetrap.png.p,c7251839e8aa34537082bf3228cd9f30,63973",
+    "local": "assets/adventure/cdn/c7251839e8aa34537082bf3228cd9f30.png",
+    "optional": false
+  },
+  "texture/aries/item/22260_life_pet_singleattack_forestspikyogrespunch.png": {
+    "path": "texture/aries/item/22260_life_pet_singleattack_forestspikyogrespunch.png.p",
+    "md5": "ff4d1c530ff86c54ab8bd94f80be5165",
+    "size": 68810,
+    "entry": "texture/aries/item/22260_life_pet_singleattack_forestspikyogrespunch.png.p,ff4d1c530ff86c54ab8bd94f80be5165,68810",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22260_life_pet_singleattack_forestspikyogrespunch.png.p,ff4d1c530ff86c54ab8bd94f80be5165,68810",
+    "local": "assets/adventure/cdn/ff4d1c530ff86c54ab8bd94f80be5165.png",
+    "optional": false
+  },
+  "texture/aries/item/22365_life_singleattack_level0_120_adv.png": {
+    "path": "texture/aries/item/22365_life_singleattack_level0_120_adv.png.p",
+    "md5": "b0bc867d3654155d9b5b886807b61321",
+    "size": 55585,
+    "entry": "texture/aries/item/22365_life_singleattack_level0_120_adv.png.p,b0bc867d3654155d9b5b886807b61321,55585",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22365_life_singleattack_level0_120_adv.png.p,b0bc867d3654155d9b5b886807b61321,55585",
+    "local": "assets/adventure/cdn/b0bc867d3654155d9b5b886807b61321.png",
+    "optional": false
+  },
+  "texture/aries/item/22158_life_singleattack_level1.png": {
+    "path": "texture/aries/item/22158_life_singleattack_level1.png.p",
+    "md5": "2108bad0f4dc3176e05904bb355a556d",
+    "size": 64078,
+    "entry": "texture/aries/item/22158_life_singleattack_level1.png.p,2108bad0f4dc3176e05904bb355a556d,64078",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22158_life_singleattack_level1.png.p,2108bad0f4dc3176e05904bb355a556d,64078",
+    "local": "assets/adventure/cdn/2108bad0f4dc3176e05904bb355a556d.png",
+    "optional": false
+  },
+  "texture/aries/item/22159_life_singleattack_level2.png": {
+    "path": "texture/aries/item/22159_life_singleattack_level2.png.p",
+    "md5": "3222a85bb4fb71295828d9f38f82e4a7",
+    "size": 61094,
+    "entry": "texture/aries/item/22159_life_singleattack_level2.png.p,3222a85bb4fb71295828d9f38f82e4a7,61094",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22159_life_singleattack_level2.png.p,3222a85bb4fb71295828d9f38f82e4a7,61094",
+    "local": "assets/adventure/cdn/3222a85bb4fb71295828d9f38f82e4a7.png",
+    "optional": false
+  },
+  "texture/aries/item/22160_life_singleattack_level3.png": {
+    "path": "texture/aries/item/22160_life_singleattack_level3.png.p",
+    "md5": "93de7a999bcc5241067ce20b973c3375",
+    "size": 66395,
+    "entry": "texture/aries/item/22160_life_singleattack_level3.png.p,93de7a999bcc5241067ce20b973c3375,66395",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22160_life_singleattack_level3.png.p,93de7a999bcc5241067ce20b973c3375,66395",
+    "local": "assets/adventure/cdn/93de7a999bcc5241067ce20b973c3375.png",
+    "optional": false
+  },
+  "texture/aries/item/22165_life_singleattack_level6.png": {
+    "path": "texture/aries/item/22165_life_singleattack_level6.png.p",
+    "md5": "f4a919d0483383016fdc4a450b38283c",
+    "size": 65513,
+    "entry": "texture/aries/item/22165_life_singleattack_level6.png.p,f4a919d0483383016fdc4a450b38283c,65513",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22165_life_singleattack_level6.png.p,f4a919d0483383016fdc4a450b38283c,65513",
+    "local": "assets/adventure/cdn/f4a919d0483383016fdc4a450b38283c.png",
+    "optional": false
+  },
+  "texture/aries/item/22161_life_singlehealwithhot_level1.png": {
+    "path": "texture/aries/item/22161_life_singlehealwithhot_level1.png.p",
+    "md5": "048dbfadc605646e47ee0c2ad169a19b",
+    "size": 64468,
+    "entry": "texture/aries/item/22161_life_singlehealwithhot_level1.png.p,048dbfadc605646e47ee0c2ad169a19b,64468",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22161_life_singlehealwithhot_level1.png.p,048dbfadc605646e47ee0c2ad169a19b,64468",
+    "local": "assets/adventure/cdn/048dbfadc605646e47ee0c2ad169a19b.png",
+    "optional": false
+  },
+  "texture/aries/item/22167_life_singleheal_level0.png": {
+    "path": "texture/aries/item/22167_life_singleheal_level0.png.p",
+    "md5": "824005d4380455c832d7c368c3e27211",
+    "size": 69029,
+    "entry": "texture/aries/item/22167_life_singleheal_level0.png.p,824005d4380455c832d7c368c3e27211,69029",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22167_life_singleheal_level0.png.p,824005d4380455c832d7c368c3e27211,69029",
+    "local": "assets/adventure/cdn/824005d4380455c832d7c368c3e27211.png",
+    "optional": false
+  },
+  "texture/aries/item/22301_storm_pet_singleattack_manekineko.png": {
+    "path": "texture/aries/item/22301_storm_pet_singleattack_manekineko.png.p",
+    "md5": "fa8859741072a8ffac41d38c9b544ecc",
+    "size": 61197,
+    "entry": "texture/aries/item/22301_storm_pet_singleattack_manekineko.png.p,fa8859741072a8ffac41d38c9b544ecc,61197",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22301_storm_pet_singleattack_manekineko.png.p,fa8859741072a8ffac41d38c9b544ecc,61197",
+    "local": "assets/adventure/cdn/fa8859741072a8ffac41d38c9b544ecc.png",
+    "optional": false
+  },
+  "texture/aries/item/22363_storm_singleattack_level0_120_adv.png": {
+    "path": "texture/aries/item/22363_storm_singleattack_level0_120_adv.png.p",
+    "md5": "4863f3b353055089340df75481e9f1ab",
+    "size": 52728,
+    "entry": "texture/aries/item/22363_storm_singleattack_level0_120_adv.png.p,4863f3b353055089340df75481e9f1ab,52728",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22363_storm_singleattack_level0_120_adv.png.p,4863f3b353055089340df75481e9f1ab,52728",
+    "local": "assets/adventure/cdn/4863f3b353055089340df75481e9f1ab.png",
+    "optional": false
+  },
+  "texture/aries/item/22121_storm_singleattack_level1.png": {
+    "path": "texture/aries/item/22121_storm_singleattack_level1.png.p",
+    "md5": "38a2c3d7bb92f1d510168b3fccf669b8",
+    "size": 60670,
+    "entry": "texture/aries/item/22121_storm_singleattack_level1.png.p,38a2c3d7bb92f1d510168b3fccf669b8,60670",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22121_storm_singleattack_level1.png.p,38a2c3d7bb92f1d510168b3fccf669b8,60670",
+    "local": "assets/adventure/cdn/38a2c3d7bb92f1d510168b3fccf669b8.png",
+    "optional": false
+  },
+  "texture/aries/item/22122_storm_singleattack_level2.png": {
+    "path": "texture/aries/item/22122_storm_singleattack_level2.png.p",
+    "md5": "5cc1dffa3e6083d7b450e9cd791f34e0",
+    "size": 57078,
+    "entry": "texture/aries/item/22122_storm_singleattack_level2.png.p,5cc1dffa3e6083d7b450e9cd791f34e0,57078",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22122_storm_singleattack_level2.png.p,5cc1dffa3e6083d7b450e9cd791f34e0,57078",
+    "local": "assets/adventure/cdn/5cc1dffa3e6083d7b450e9cd791f34e0.png",
+    "optional": false
+  },
+  "texture/aries/item/22123_storm_singleattack_level3.png": {
+    "path": "texture/aries/item/22123_storm_singleattack_level3.png.p",
+    "md5": "aaaf184c3d6870bcdd5adad36e6e9b1e",
+    "size": 56407,
+    "entry": "texture/aries/item/22123_storm_singleattack_level3.png.p,aaaf184c3d6870bcdd5adad36e6e9b1e,56407",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22123_storm_singleattack_level3.png.p,aaaf184c3d6870bcdd5adad36e6e9b1e,56407",
+    "local": "assets/adventure/cdn/aaaf184c3d6870bcdd5adad36e6e9b1e.png",
+    "optional": false
+  },
+  "texture/aries/item/22135_storm_singleattack_level6.png": {
+    "path": "texture/aries/item/22135_storm_singleattack_level6.png.p",
+    "md5": "cc56d1ec4fe2ffffa9e2b4a82223305c",
+    "size": 62775,
+    "entry": "texture/aries/item/22135_storm_singleattack_level6.png.p,cc56d1ec4fe2ffffa9e2b4a82223305c,62775",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22135_storm_singleattack_level6.png.p,cc56d1ec4fe2ffffa9e2b4a82223305c,62775",
+    "local": "assets/adventure/cdn/cc56d1ec4fe2ffffa9e2b4a82223305c.png",
+    "optional": false
+  },
+  "texture/aries/item/22130_storm_stormdamageblade.png": {
+    "path": "texture/aries/item/22130_storm_stormdamageblade.png.p",
+    "md5": "c37276fb8abbb7c0efb1917d1d419df4",
+    "size": 56820,
+    "entry": "texture/aries/item/22130_storm_stormdamageblade.png.p,c37276fb8abbb7c0efb1917d1d419df4,56820",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22130_storm_stormdamageblade.png.p,c37276fb8abbb7c0efb1917d1d419df4,56820",
+    "local": "assets/adventure/cdn/c37276fb8abbb7c0efb1917d1d419df4.png",
+    "optional": false
+  },
+  "texture/aries/item/22124_storm_stormdamagetrap.png": {
+    "path": "texture/aries/item/22124_storm_stormdamagetrap.png.p",
+    "md5": "1f60cc2fd4a480241fde0dd58d5e0ea5",
+    "size": 60627,
+    "entry": "texture/aries/item/22124_storm_stormdamagetrap.png.p,1f60cc2fd4a480241fde0dd58d5e0ea5,60627",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22124_storm_stormdamagetrap.png.p,1f60cc2fd4a480241fde0dd58d5e0ea5,60627",
+    "local": "assets/adventure/cdn/1f60cc2fd4a480241fde0dd58d5e0ea5.png",
+    "optional": false
+  },
+  "texture/aries/item/22138_storm_stormgreatshield.png": {
+    "path": "texture/aries/item/22138_storm_stormgreatshield.png.p",
+    "md5": "1ae9f89a8116caef993ab7b42d6b7561",
+    "size": 60793,
+    "entry": "texture/aries/item/22138_storm_stormgreatshield.png.p,1ae9f89a8116caef993ab7b42d6b7561,60793",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/22138_storm_stormgreatshield.png.p,1ae9f89a8116caef993ab7b42d6b7561,60793",
+    "local": "assets/adventure/cdn/1ae9f89a8116caef993ab7b42d6b7561.png",
+    "optional": false
+  },
+  "texture/aries/item/1236_commonhat1.png": {
+    "path": "texture/aries/item/1236_commonhat1.png.p",
+    "md5": "ad539beb1de13740ba78db74d8edb122",
+    "size": 6979,
+    "entry": "texture/aries/item/1236_commonhat1.png.p,ad539beb1de13740ba78db74d8edb122,6979",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1236_commonhat1.png.p,ad539beb1de13740ba78db74d8edb122,6979",
+    "local": "assets/adventure/cdn/ad539beb1de13740ba78db74d8edb122.png",
+    "optional": false
+  },
+  "texture/aries/item/1237_commonhat2.png": {
+    "path": "texture/aries/item/1237_commonhat2.png.p",
+    "md5": "0484f03b5fd2e28e4226c5a9d23605f9",
+    "size": 6745,
+    "entry": "texture/aries/item/1237_commonhat2.png.p,0484f03b5fd2e28e4226c5a9d23605f9,6745",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1237_commonhat2.png.p,0484f03b5fd2e28e4226c5a9d23605f9,6745",
+    "local": "assets/adventure/cdn/0484f03b5fd2e28e4226c5a9d23605f9.png",
+    "optional": false
+  },
+  "texture/aries/item/1238_commonhat3.png": {
+    "path": "texture/aries/item/1238_commonhat3.png.p",
+    "md5": "d76189a8373501c67fce1561257d2380",
+    "size": 7034,
+    "entry": "texture/aries/item/1238_commonhat3.png.p,d76189a8373501c67fce1561257d2380,7034",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1238_commonhat3.png.p,d76189a8373501c67fce1561257d2380,7034",
+    "local": "assets/adventure/cdn/d76189a8373501c67fce1561257d2380.png",
+    "optional": false
+  },
+  "texture/aries/item/1239_commonhat4.png": {
+    "path": "texture/aries/item/1239_commonhat4.png.p",
+    "md5": "b536bc0fad20228c20b41ca0fa05dd6d",
+    "size": 6416,
+    "entry": "texture/aries/item/1239_commonhat4.png.p,b536bc0fad20228c20b41ca0fa05dd6d,6416",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1239_commonhat4.png.p,b536bc0fad20228c20b41ca0fa05dd6d,6416",
+    "local": "assets/adventure/cdn/b536bc0fad20228c20b41ca0fa05dd6d.png",
+    "optional": false
+  },
+  "texture/aries/item/1240_commonhat5.png": {
+    "path": "texture/aries/item/1240_commonhat5.png.p",
+    "md5": "24f0cced54341ce3961b7a920b42f0fb",
+    "size": 5976,
+    "entry": "texture/aries/item/1240_commonhat5.png.p,24f0cced54341ce3961b7a920b42f0fb,5976",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1240_commonhat5.png.p,24f0cced54341ce3961b7a920b42f0fb,5976",
+    "local": "assets/adventure/cdn/24f0cced54341ce3961b7a920b42f0fb.png",
+    "optional": false
+  },
+  "texture/aries/item/1246_commonsuit1.png": {
+    "path": "texture/aries/item/1246_commonsuit1.png.p",
+    "md5": "4c7c8ee66de8d0340f405bc41bd750d1",
+    "size": 9365,
+    "entry": "texture/aries/item/1246_commonsuit1.png.p,4c7c8ee66de8d0340f405bc41bd750d1,9365",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1246_commonsuit1.png.p,4c7c8ee66de8d0340f405bc41bd750d1,9365",
+    "local": "assets/adventure/cdn/4c7c8ee66de8d0340f405bc41bd750d1.png",
+    "optional": false
+  },
+  "texture/aries/item/1247_commonsuit2.png": {
+    "path": "texture/aries/item/1247_commonsuit2.png.p",
+    "md5": "9aa2ec632c2063e98ae4e7d331fb8cb1",
+    "size": 8977,
+    "entry": "texture/aries/item/1247_commonsuit2.png.p,9aa2ec632c2063e98ae4e7d331fb8cb1,8977",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1247_commonsuit2.png.p,9aa2ec632c2063e98ae4e7d331fb8cb1,8977",
+    "local": "assets/adventure/cdn/9aa2ec632c2063e98ae4e7d331fb8cb1.png",
+    "optional": false
+  },
+  "texture/aries/item/1248_commonsuit3.png": {
+    "path": "texture/aries/item/1248_commonsuit3.png.p",
+    "md5": "40872c7e514c2897816c34a4e24183e0",
+    "size": 9670,
+    "entry": "texture/aries/item/1248_commonsuit3.png.p,40872c7e514c2897816c34a4e24183e0,9670",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1248_commonsuit3.png.p,40872c7e514c2897816c34a4e24183e0,9670",
+    "local": "assets/adventure/cdn/40872c7e514c2897816c34a4e24183e0.png",
+    "optional": false
+  },
+  "texture/aries/item/1249_commonsuit4.png": {
+    "path": "texture/aries/item/1249_commonsuit4.png.p",
+    "md5": "265e404aa822072b36e1804504c95915",
+    "size": 9776,
+    "entry": "texture/aries/item/1249_commonsuit4.png.p,265e404aa822072b36e1804504c95915,9776",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1249_commonsuit4.png.p,265e404aa822072b36e1804504c95915,9776",
+    "local": "assets/adventure/cdn/265e404aa822072b36e1804504c95915.png",
+    "optional": false
+  },
+  "texture/aries/item/1250_commonsuit5.png": {
+    "path": "texture/aries/item/1250_commonsuit5.png.p",
+    "md5": "b5e7c5a7d1456839397a82aebcc0b73a",
+    "size": 8932,
+    "entry": "texture/aries/item/1250_commonsuit5.png.p,b5e7c5a7d1456839397a82aebcc0b73a,8932",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1250_commonsuit5.png.p,b5e7c5a7d1456839397a82aebcc0b73a,8932",
+    "local": "assets/adventure/cdn/b5e7c5a7d1456839397a82aebcc0b73a.png",
+    "optional": false
+  },
+  "texture/aries/item/1256_commonboot1.png": {
+    "path": "texture/aries/item/1256_commonboot1.png.p",
+    "md5": "9654a21f5f8a3ba84f49e568c4a28ffd",
+    "size": 7332,
+    "entry": "texture/aries/item/1256_commonboot1.png.p,9654a21f5f8a3ba84f49e568c4a28ffd,7332",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1256_commonboot1.png.p,9654a21f5f8a3ba84f49e568c4a28ffd,7332",
+    "local": "assets/adventure/cdn/9654a21f5f8a3ba84f49e568c4a28ffd.png",
+    "optional": false
+  },
+  "texture/aries/item/1257_commonboot2.png": {
+    "path": "texture/aries/item/1257_commonboot2.png.p",
+    "md5": "4aac78c913cfc4fba9fa3df0299521a5",
+    "size": 6947,
+    "entry": "texture/aries/item/1257_commonboot2.png.p,4aac78c913cfc4fba9fa3df0299521a5,6947",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1257_commonboot2.png.p,4aac78c913cfc4fba9fa3df0299521a5,6947",
+    "local": "assets/adventure/cdn/4aac78c913cfc4fba9fa3df0299521a5.png",
+    "optional": false
+  },
+  "texture/aries/item/1258_commonboot3.png": {
+    "path": "texture/aries/item/1258_commonboot3.png.p",
+    "md5": "4e52797a6528df9ec0d4bb90a5ad209e",
+    "size": 7465,
+    "entry": "texture/aries/item/1258_commonboot3.png.p,4e52797a6528df9ec0d4bb90a5ad209e,7465",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1258_commonboot3.png.p,4e52797a6528df9ec0d4bb90a5ad209e,7465",
+    "local": "assets/adventure/cdn/4e52797a6528df9ec0d4bb90a5ad209e.png",
+    "optional": false
+  },
+  "texture/aries/item/1259_commonboot4.png": {
+    "path": "texture/aries/item/1259_commonboot4.png.p",
+    "md5": "0821734ae9ae39db9536f2b18cc40238",
+    "size": 7072,
+    "entry": "texture/aries/item/1259_commonboot4.png.p,0821734ae9ae39db9536f2b18cc40238,7072",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1259_commonboot4.png.p,0821734ae9ae39db9536f2b18cc40238,7072",
+    "local": "assets/adventure/cdn/0821734ae9ae39db9536f2b18cc40238.png",
+    "optional": false
+  },
+  "texture/aries/item/1260_commonboot5.png": {
+    "path": "texture/aries/item/1260_commonboot5.png.p",
+    "md5": "242a1db516efd7fea02c7eb906277373",
+    "size": 6977,
+    "entry": "texture/aries/item/1260_commonboot5.png.p,242a1db516efd7fea02c7eb906277373,6977",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1260_commonboot5.png.p,242a1db516efd7fea02c7eb906277373,6977",
+    "local": "assets/adventure/cdn/242a1db516efd7fea02c7eb906277373.png",
+    "optional": false
+  },
+  "texture/aries/item/1912_righthand_legend_level10.png": {
+    "path": "texture/aries/item/1912_righthand_legend_level10.png.p",
+    "md5": "8dbc74dd7631eeb65e81654c29ff62f7",
+    "size": 9330,
+    "entry": "texture/aries/item/1912_righthand_legend_level10.png.p,8dbc74dd7631eeb65e81654c29ff62f7,9330",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/1912_righthand_legend_level10.png.p,8dbc74dd7631eeb65e81654c29ff62f7,9330",
+    "local": "assets/adventure/cdn/8dbc74dd7631eeb65e81654c29ff62f7.png",
+    "optional": false
+  },
+  "texture/aries/item/10136_followpetwaterbubble.png": {
+    "path": "texture/aries/item/10136_followpetwaterbubble.png.p",
+    "md5": "e7bf94799cd6f55139594ec17beaecb0",
+    "size": 8224,
+    "entry": "texture/aries/item/10136_followpetwaterbubble.png.p,e7bf94799cd6f55139594ec17beaecb0,8224",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/10136_followpetwaterbubble.png.p,e7bf94799cd6f55139594ec17beaecb0,8224",
+    "local": "assets/adventure/cdn/e7bf94799cd6f55139594ec17beaecb0.png",
+    "optional": false
+  },
+  "texture/aries/item/16071_transformpill_smilodon.png": {
+    "path": "texture/aries/item/16071_transformpill_smilodon.png.p",
+    "md5": "bbc998c1679d34c266c2360cb61ca470",
+    "size": 12898,
+    "entry": "texture/aries/item/16071_transformpill_smilodon.png.p,bbc998c1679d34c266c2360cb61ca470,12898",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/16071_transformpill_smilodon.png.p,bbc998c1679d34c266c2360cb61ca470,12898",
+    "local": "assets/adventure/cdn/bbc998c1679d34c266c2360cb61ca470.png",
+    "optional": false
+  },
+  "texture/aries/item/17114_bluewaterbubble.png": {
+    "path": "texture/aries/item/17114_bluewaterbubble.png.p",
+    "md5": "ba771059a4c79f9a1fbef00c8449e21e",
+    "size": 7497,
+    "entry": "texture/aries/item/17114_bluewaterbubble.png.p,ba771059a4c79f9a1fbef00c8449e21e,7497",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/17114_bluewaterbubble.png.p,ba771059a4c79f9a1fbef00c8449e21e,7497",
+    "local": "assets/adventure/cdn/ba771059a4c79f9a1fbef00c8449e21e.png",
+    "optional": false
+  },
+  "texture/aries/item/17172_petexppill.png": {
+    "path": "texture/aries/item/17172_petexppill.png.p",
+    "md5": "11f3acb6dcfe8582978cf9fb6758bd00",
+    "size": 9352,
+    "entry": "texture/aries/item/17172_petexppill.png.p,11f3acb6dcfe8582978cf9fb6758bd00,9352",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/17172_petexppill.png.p,11f3acb6dcfe8582978cf9fb6758bd00,9352",
+    "local": "assets/adventure/cdn/11f3acb6dcfe8582978cf9fb6758bd00.png",
+    "optional": false
+  },
+  "texture/aries/item/17213_godbean.png": {
+    "path": "texture/aries/item/17213_godbean.png.p",
+    "md5": "e993ffadaf9602a7b28e93d35daa6b6b",
+    "size": 8659,
+    "entry": "texture/aries/item/17213_godbean.png.p,e993ffadaf9602a7b28e93d35daa6b6b,8659",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/17213_godbean.png.p,e993ffadaf9602a7b28e93d35daa6b6b,8659",
+    "local": "assets/adventure/cdn/e993ffadaf9602a7b28e93d35daa6b6b.png",
+    "optional": false
+  },
+  "texture/aries/item/17307_egg_tab.png": {
+    "path": "texture/aries/item/17307_egg_tab.png.p",
+    "md5": "23d1b6345c583acbdd8bc32e717b9370",
+    "size": 5918,
+    "entry": "texture/aries/item/17307_egg_tab.png.p,23d1b6345c583acbdd8bc32e717b9370,5918",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/17307_egg_tab.png.p,23d1b6345c583acbdd8bc32e717b9370,5918",
+    "local": "assets/adventure/cdn/23d1b6345c583acbdd8bc32e717b9370.png",
+    "optional": false
+  },
+  "texture/aries/item/17593_vip_godbean_package.png": {
+    "path": "texture/aries/item/17593_vip_godbean_package.png.z",
+    "md5": "e2aca9279a5379609518e49babef4365",
+    "size": 10943,
+    "entry": "texture/aries/item/17593_vip_godbean_package.png.z,e2aca9279a5379609518e49babef4365,10943",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/17593_vip_godbean_package.png.z,e2aca9279a5379609518e49babef4365,10943",
+    "local": "assets/adventure/cdn/e2aca9279a5379609518e49babef4365.png",
+    "optional": false
+  },
+  "texture/aries/item/23439_balance_rune_catchpetcard_general.png": {
+    "path": "texture/aries/item/23439_balance_rune_catchpetcard_general.png.p",
+    "md5": "d744531d6422032ec84e16e922854a5a",
+    "size": 63937,
+    "entry": "texture/aries/item/23439_balance_rune_catchpetcard_general.png.p,d744531d6422032ec84e16e922854a5a,63937",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/23439_balance_rune_catchpetcard_general.png.p,d744531d6422032ec84e16e922854a5a,63937",
+    "local": "assets/adventure/cdn/d744531d6422032ec84e16e922854a5a.png",
+    "optional": false
+  },
+  "texture/aries/item/23440_balance_rune_catchpetcard_high.png": {
+    "path": "texture/aries/item/23440_balance_rune_catchpetcard_high.png.p",
+    "md5": "1b5ef05fec9deb302290cd776311a63f",
+    "size": 65547,
+    "entry": "texture/aries/item/23440_balance_rune_catchpetcard_high.png.p,1b5ef05fec9deb302290cd776311a63f,65547",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/23440_balance_rune_catchpetcard_high.png.p,1b5ef05fec9deb302290cd776311a63f,65547",
+    "local": "assets/adventure/cdn/1b5ef05fec9deb302290cd776311a63f.png",
+    "optional": false
+  },
+  "texture/aries/item/23441_balance_rune_catchpetcard_top.png": {
+    "path": "texture/aries/item/23441_balance_rune_catchpetcard_top.png.p",
+    "md5": "03886bbfb4de992392cc9dc89251d7b3",
+    "size": 64292,
+    "entry": "texture/aries/item/23441_balance_rune_catchpetcard_top.png.p,03886bbfb4de992392cc9dc89251d7b3,64292",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/23441_balance_rune_catchpetcard_top.png.p,03886bbfb4de992392cc9dc89251d7b3,64292",
+    "local": "assets/adventure/cdn/03886bbfb4de992392cc9dc89251d7b3.png",
+    "optional": false
+  },
+  "texture/aries/item/24003_combatdeck_level10.png": {
+    "path": "texture/aries/item/24003_combatdeck_level10.png.p",
+    "md5": "02b572b55fd8b9bbc5c552de41ba4cd6",
+    "size": 11595,
+    "entry": "texture/aries/item/24003_combatdeck_level10.png.p,02b572b55fd8b9bbc5c552de41ba4cd6,11595",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/item/24003_combatdeck_level10.png.p,02b572b55fd8b9bbc5c552de41ba4cd6,11595",
+    "local": "assets/adventure/cdn/02b572b55fd8b9bbc5c552de41ba4cd6.png",
+    "optional": false
+  },
+  "texture/aries/worldmaps/townmap/haqitownmap_bg.png": {
+    "path": "texture/aries/worldmaps/townmap/haqitownmap_bg.png.p",
+    "md5": "9cff554bdaf9f60338232c25bd9e46b8",
+    "size": 856931,
+    "entry": "texture/aries/worldmaps/townmap/haqitownmap_bg.png.p,9cff554bdaf9f60338232c25bd9e46b8,856931",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/townmap/haqitownmap_bg.png.p,9cff554bdaf9f60338232c25bd9e46b8,856931",
+    "local": "assets/adventure/cdn/9cff554bdaf9f60338232c25bd9e46b8.png",
+    "optional": false
+  },
+  "worlds/myworlds/newuserisland/minimap.png": {
+    "path": "worlds/myworlds/newuserisland/minimap.png.p",
+    "md5": "850b652aede636b5b221f035a0113008",
+    "size": 60133,
+    "entry": "worlds/myworlds/newuserisland/minimap.png.p,850b652aede636b5b221f035a0113008,60133",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/worlds/myworlds/newuserisland/minimap.png.p,850b652aede636b5b221f035a0113008,60133",
+    "local": "assets/adventure/cdn/850b652aede636b5b221f035a0113008.png",
+    "optional": false
+  },
+  "audio/haqi/ariesregionbgmusics/haqitownbg.ogg": {
+    "path": "audio/haqi/ariesregionbgmusics/haqitownbg.ogg.p",
+    "md5": "e7c97354c81931b22ebcb3a9cffa07d3",
+    "size": 1768024,
+    "entry": "audio/haqi/ariesregionbgmusics/haqitownbg.ogg.p,e7c97354c81931b22ebcb3a9cffa07d3,1768024",
+    "url": "https://cdn.keepwork.com/update61/assetdownload/update/audio/haqi/ariesregionbgmusics/haqitownbg.ogg.p,e7c97354c81931b22ebcb3a9cffa07d3,1768024",
+    "local": "assets/adventure/cdn/e7c97354c81931b22ebcb3a9cffa07d3.ogg",
+    "optional": true
+  }
+}

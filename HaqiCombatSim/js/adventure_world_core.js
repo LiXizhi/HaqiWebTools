@@ -79,6 +79,8 @@ export function followPath(world,position,path,budget) {
     return {position:p,path:remaining,blocked:false};
 }
 export function findPath(world,start,destination) {
+    // Start from the actual position, without a detour to the current grid center.
+    if(clearSegment(world,start,destination))return [{x:destination.x,y:destination.y}];
     const size=24,cols=Math.ceil(world.w/size),rows=Math.ceil(world.h/size);
     const cell=p=>({x:Math.floor(p.x/size),y:Math.floor(p.y/size)}),point=p=>({x:p.x*size+size/2,y:p.y*size+size/2});
     let from=cell(start);const target=cell(destination),key=p=>p.y*cols+p.x;
@@ -105,7 +107,10 @@ export function findPath(world,start,destination) {
         if(k===key(goal)) {
             const out=[];let n=p;
             while(key(n)!==key(from)) {out.push(point(n));n=parent.get(key(n));if(!n)return [];}
-            out.push(point(from));return out.reverse();
+            out.push(point(from));out.reverse();
+            // Skip only grid waypoints reachable directly from the real starting position.
+            while(out.length>1&&clearSegment(world,start,out[1]))out.shift();
+            return out;
         }
         for(const [dx,dy] of dirs) {
             const n={x:p.x+dx,y:p.y+dy},v=point(n),nk=key(n);

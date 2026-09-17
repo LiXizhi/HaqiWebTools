@@ -158,6 +158,20 @@ test('invalid battle snapshots, upgrades and pet values cannot replace a save',(
     assert.throws(()=>A.parseSave({...s,upgrades:{1912:99}},content));
     assert.throws(()=>A.parseSave({...s,pet:{itemId:10136,xp:Infinity}},content));
 });
+test('click walking starts toward clear targets without a grid-center camera jerk',()=>{
+    const world={w:1800,h:1600,buildings:[],trees:[]};
+    const start={x:865,y:815},budget=W.WALK_SPEED/60;
+    for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,-1]]){
+        const target={x:start.x+dx*120,y:start.y+dy*120};
+        const path=W.findPath(world,start,target);
+        const next=W.followPath(world,start,path,budget).position;
+        const length=Math.hypot(dx,dy);
+        assert.ok(Math.abs(next.x-start.x-dx/length*budget)<1e-9);
+        assert.ok(Math.abs(next.y-start.y-dy/length*budget)<1e-9);
+    }
+    const nearby={x:start.x+2,y:start.y};
+    assert.deepEqual(W.followPath(world,start,W.findPath(world,start,nearby),budget).position,nearby);
+});
 test('walking actual paths reaches every interaction without clipping tree corners',()=>{
     for(const zone of ['camp','town']){
         const w=W.createWorld(zone,content);let position={...w.center};

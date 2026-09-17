@@ -1,4 +1,5 @@
 import { petStage } from './adventure_pets_core.js';
+import { createCompanion, stepCompanion } from './adventure_companion_core.js';
 // Canvas presentation only. Visual motion uses time/seeded map decorations, never gameplay RNG.
 import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
@@ -29,6 +30,7 @@ export function questMarker(save,content,npcId) {
 export function createRenderer(canvas,assets) {
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const ctx=canvas.getContext('2d'),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
+    let companion=null,companionId=null,companionWorld=null,companionSave=null,lastPetTime=null;
     function size() {
         const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(2,window.devicePixelRatio||1);
         if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}
@@ -79,7 +81,16 @@ export function createRenderer(canvas,assets) {
         if(path.length&&!title){ctx.strokeStyle='#fff6bc88';ctx.setLineDash([3,10]);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(save.position.x,save.position.y);for(const p of path)ctx.lineTo(p.x,p.y);ctx.stroke();ctx.setLineDash([]);const end=path[path.length-1];circleRune(ctx,end.x,end.y,15,t,'#fff3ae');}
         circleRune(ctx,world.portal.x,world.portal.y,45,t,save.graduated?'#e9e29a':'#a6bab0');
         const objects=[...world.trees.map(x=>({...x,kind:'tree'})),...world.buildings.map(x=>({...x,kind:'building'})),...world.npcs.map(x=>({...x,kind:'npc'})),...world.encounters.map(x=>({...x,kind:'mob'})),{...save.position,kind:'hero'}];
-        if(save.formation?.[save.heroSlot]||(!save.pets&&save.pet))objects.push({x:save.position.x-38,y:save.position.y+28,kind:'pet'});
+        const petId=save.formation?.[save.heroSlot]||(!save.pets&&save.pet?'legacy':null);
+        if(petId){
+            if(!companion||companionId!==petId||companionWorld!==world||companionSave!==save){
+                companion=createCompanion(world,save.position,`${save.seed}:${world.zone}:${petId}`);
+                companionId=petId;companionWorld=world;companionSave=save;lastPetTime=time;
+            }
+            stepCompanion(companion,world,save.position,(time-lastPetTime)/1000);
+            objects.push({...companion.position,kind:'pet'});
+        }else companion=null;
+        lastPetTime=time;
         objects.sort((a,b)=>a.y-b.y);
         for(const o of objects) {
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
@@ -98,7 +109,14 @@ export function createRenderer(canvas,assets) {
                 if(goal&&questState(save,q.id).accepted)text(ctx,'◇',o.x,o.y-90+Math.sin(t*3)*3,25,'#fff2a9');
             }
             if(o.kind==='hero'){circleRune(ctx,o.x,o.y+2,24,t,'#f7e6a088');avatar(ctx,save,o.x,o.y,t,moving);if(!title)plate(ctx,save.name,o.x,o.y+21);}
-            if(o.kind==='pet'){const id=save.formation?.[save.heroSlot],pet=save.pets?.[id];if(pet&&assets.content.pets[id]?.art)assets.drawPet(ctx,id,petStage(pet.level,assets.content),o.x-32,o.y-60,64,64);else creature(ctx,'pet',o.x,o.y,t,.36);}
+            if(o.kind==='pet'){
+                const id=save.formation?.[save.heroSlot],pet=save.pets?.[id];
+                const hop=reducedMotion.matches?0:companion.moving?Math.abs(Math.sin(companion.phase))*5:Math.sin(t*2.5)*1.5;
+                shadow(ctx,o.x,o.y,18);ctx.save();ctx.translate(o.x,o.y);ctx.scale(companion.facing,1);
+                if(pet&&assets.content.pets[id]?.art)assets.drawPet(ctx,id,petStage(pet.level,assets.content),-32,-60-hop,64,64);
+                else creature(ctx,'pet',0,-hop,t,.36);
+                ctx.restore();
+            }
         }
         plate(ctx,world.portal.name,world.portal.x,world.portal.y+48);
         // A few drifting motes. No random calls or dependence on combat seed.

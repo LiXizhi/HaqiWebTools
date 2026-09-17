@@ -161,3 +161,7 @@
 ## WebP / Keepwork 云存档迭代（2026-09-17）
 
 本轮未修改Lua对应的战斗、任务、奖励、装备、宠物、成长规则。新增 `adventure_media_core` 与 `adventure_cloud_core` 属于浏览器资源/存档协议，无原Lua公式映射。云端仍使用同一 `AdventureSave` 和 `restorePveBattle` 决定重演，时钟/UUID由IO层提供，不影响玩法随机流。SDK接口依据 `keepworkSDK/src/store/PersonalPageStore.{base,data,sync}.ts` 及 `src/core/keepworkSDK.{core,utils,pages}.ts` 核对；尤其避开store远端读失败时回退本地的行为。
+
+### Kids 卡面文字布局（2026-09-17）
+
+`script/kids/3DMapSystemApp/mcml/pe_item.lua` 的 `DrawCardMask` L1856–1902：以151×230卡面为基准，魔力点在(120,5)，描述在(18,142)。`view_adventure.js::spellFace` 与 `.spell-face` 按比例叠加文字，保留原图内印刷标题；去掉额外外框和重复卡名。HTML描述约束在卡面下方文字区以适应移动屏幕，文本仍使用本章效果摘要；未改战斗数值。

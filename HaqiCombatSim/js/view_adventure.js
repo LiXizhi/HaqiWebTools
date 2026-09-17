@@ -95,6 +95,15 @@ function spellHint(card,d) {
     if(card.params.wards)return d.charms.ward[card.params.wards]?.desc||'护盾 / 陷阱';
     return '辅助魔法';
 }
+function spellFace(assets,card,artCard=card) {
+    // kids pe_item.DrawCardMask: 151×230, pips (120,5), description (18,142).
+    // The original title is already printed in the artwork; retain its accessible name.
+    const canvas=el('canvas','spell-art');canvas.width=302;canvas.height=460;
+    assets.draw(canvas.getContext('2d'),artCard.art,0,0,302,460,false);
+    const cost=card.pipcost===114||card.pipcost==='X'?'X':String(card.pipcost);
+    const pip=el('span','spell-cost',cost);pip.setAttribute('aria-label',`魔力点 ${cost}`);
+    return el('span','spell-face',canvas,el('span','sr-only',artCard.name),pip,el('span','spell-description',spellHint(card,assets.dataset)));
+}
 function itemStats(item) {
     const names={101:'生命',102:'超级魔力率',111:'全系攻击',112:'烈火攻击',113:'寒冰攻击',114:'风暴攻击',116:'生命攻击',117:'死亡攻击',119:'全系防御',167:'卡包容量',170:'单卡上限',184:'起始普通魔力',185:'起始超级魔力'};
     return Object.entries(item.stats||{}).filter(([id])=>names[id]).map(([id,n])=>`${names[id]} +${n}${Number(id)>=102&&Number(id)<=126?'%':''}`).join(' · ');
@@ -133,7 +142,7 @@ export function renderPanel(root,kind,model,cb) {
         const paint=()=>{grid.replaceChildren();for(const lesson of c.learn[save.school]){
             const card=d.cards[lesson.key],owned=save.cards[lesson.key]||0,n=draft.find(x=>x.key===lesson.key)?.count||0;
             const count=el('strong','',String(n));const change=delta=>{const value=n+delta;if(value<0||value>Math.min(owned,limits.eachCapacity))return;if(delta>0&&draft.reduce((a,x)=>a+x.count,0)>=limits.capacity)return;draft=draft.filter(x=>x.key!==lesson.key);if(value)draft.push({key:lesson.key,count:value});paint();update();};
-            const cardNode=el('div',`deck-card ${owned?'':'locked'}`,art(assets,card.art,106,146),el('strong','',card.name),el('small','muted',spellHint(card,d)),el('small','muted',owned?`魔力 ${card.pipcost} · 拥有 ${owned} 张`:`等级 ${lesson.level} 解锁`),el('div','stepper',button('−',()=>change(-1)),count,button('+',()=>change(1))));
+            const cardNode=el('div',`deck-card ${owned?'':'locked'}`,spellFace(assets,card),el('small','muted',owned?`拥有 ${owned} 张`:`等级 ${lesson.level} 解锁`),el('div','stepper',button('−',()=>change(-1)),count,button('+',()=>change(1))));
             grid.append(cardNode);
         }};
         body.append(el('div','deck-toolbar',counter,button('推荐配卡',()=>{draft=recommendedDeck(save,c);paint();update();},'secondary')),el('p','muted','精简卡组，更快抽到关键法术。装备提供的法术会额外加入战斗。'),grid,button('保存卡包',()=>cb.action({type:'deck',deck:draft}),'primary save-deck'));paint();update();
@@ -187,7 +196,7 @@ export function renderBattle(root,model,cb) {
     for(const h of U.cardsInHand(hero)) {
         const card=battle.resolved.cards[h.key],artCard=assets.dataset.cards[h.key],available=U.canCast(hero,card,battle.resolved),isSelected=selected?.seq===h.seq,isDiscard=discarded.includes(h.seq);
         const node=el('div',`hand-card ${isSelected?'selected':''} ${isDiscard?'discarded':''} ${available?'':'unavailable'}`);
-        const select=button([art(assets,artCard.art,92,128),el('strong','',artCard.name),el('small','',`魔力 ${card.pipcost} · ${spellHint(card,assets.dataset)}`)],()=>cb.select(h),'card-select');
+        const select=button(spellFace(assets,card,artCard),()=>cb.select(h),'card-select');
         select.disabled=animating||battle.finished||!available||isDiscard;select.setAttribute('aria-label',`选择${artCard.name}`);
         const drop=button(isDiscard?'撤销弃牌':'弃牌',()=>cb.discard(h.seq),'discard-button');drop.disabled=animating||battle.finished;
         node.title=`${artCard.name} · ${cardTargetKind(card)==='hostile'?'对敌人':'对友方'} · ${expectedBaseDamage(card)?'基础伤害 '+expectedBaseDamage(card):expectedBaseHeal(card)?'基础治疗 '+expectedBaseHeal(card):'增益 / 减益魔法'}`;

@@ -70,7 +70,7 @@ function showTitle() {
     music?.pause();nodes.hud.hidden=true;nodes.battle.replaceChildren();nodes.battle.className='battle-layer';nodes.entry.hidden=false;
     let stored=null,error='';try {const raw=readLocal();if(raw)stored=A.parseSave(raw,assets.content);}catch(e){error=`存档暂时无法读取：${e.message}。可开启新旅程，或在设置中导入备份。`;}
     save=stored||A.createAdventure(assets.content);world=W.createWorld(save.zone,assets.content);
-    V.renderEntry(nodes.entry,assets,!!stored,{create:options=>safely(()=>{enterWorld(A.createAdventure(assets.content,{...options,seed:Date.now()}));toast('欢迎来到魔法营地！点击右侧「追踪目标」，去见青龙导师。');}),continue:()=>safely(()=>{
+    V.renderEntry(nodes.entry,assets,stored,{create:options=>safely(()=>{enterWorld(A.createAdventure(assets.content,{...options,seed:Date.now()}));toast('欢迎来到魔法营地！点击右侧「追踪目标」，去见青龙导师。');}),continue:()=>safely(()=>{
         const restored=stored.pendingEncounter?P.restorePveBattle(assets.dataset,assets.content,stored.pendingEncounter):null;
         enterWorld(stored,restored);
     }),cloud:openCloud},error);
@@ -96,7 +96,13 @@ function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog
     const level=save.level;const rewards=A.rewardsFor(save,assets.content,q);
     A.applyAction(save,assets.content,{type:'claim',questId:q.id,npcId:q.endNpc});
     toast(`${rewards.map(r=>`${assets.content.items[r.id].name} ×${r.count}`).join(' · ')}${save.level>level?`　升到 ${save.level} 级！`:''}`);
-}),questTalk:(q,talk)=>startLines(talk.dialog,'谢谢你，我知道了',()=>A.applyAction(save,assets.content,{type:'talk',npcId:talk.npcId})),panel:openPanel,travel,track});}
+}),questTalk:(q,talk)=>startQuestTalk(talk),panel:openPanel,travel,track});}
+function startQuestTalk(talk) {
+    startLines(talk.dialog,'谢谢你，我知道了',()=>{
+        A.applyAction(save,assets.content,{type:'talk',npcId:talk.npcId});
+        return true;
+    });
+}
 function startLines(lines,finishLabel,done) {
     dialog.lines=lines;dialog.index=0;dialog.finishLabel=finishLabel;dialogDone=done;
     if(!lines.length)nextDialogue();else paintDialogue();
@@ -104,12 +110,25 @@ function startLines(lines,finishLabel,done) {
 function nextDialogue() {
     if(!dialog)return;
     if(dialog.index+1<dialog.lines.length){dialog.index++;paintDialogue();return;}
-    safely(()=>{const npcId=dialog.npcId;dialogDone?.();dialogDone=null;persist();paintHud();dialog={npcId};paintDialogue();});
+    safely(()=>{
+        const npcId=dialog.npcId,advance=dialogDone?.();dialogDone=null;persist();paintHud();
+        if(advance){
+            close();
+            const q=A.currentQuest(save,assets.content),goal=q&&A.questProgress(save,q).find(g=>g.value<g.count);
+            if(q&&(A.questReady(save,q)||goal?.kind==='talk'))track();
+            return;
+        }
+        dialog={npcId};paintDialogue();
+    });
 }
 function interact(target) {
     if(stage!=='world'||!target)return;
     path=[];destination=null;keys.clear();persist();
-    if(target.kind==='npc'){close();dialog={npcId:target.id};paintDialogue();}
+    if(target.kind==='npc'){
+        close();dialog={npcId:target.id};
+        const talk=target.questDialogue&&A.pendingQuestTalk(save,A.currentQuest(save,assets.content),target.id);
+        if(talk)startQuestTalk(talk);else paintDialogue();
+    }
     if(target.kind==='portal')travel(target.zone);
     if(target.kind==='encounter')safely(()=>{
         A.beginEncounter(save,assets.content,target.id);persist();
@@ -127,7 +146,7 @@ function track() {
     if(stage!=='world')return;close();
     const c=assets.content,q=A.currentQuest(save,c);
     if(!q){walkTo({...world.portal,kind:'portal'},true);return;}
-    const npc=id=>({...c.npcs[id],kind:'npc'}),state=A.questState(save,q.id);
+    const npc=id=>({...c.npcs[id],kind:'npc',questDialogue:true}),state=A.questState(save,q.id);
     if(!state.accepted){walkTo(npc(q.startNpc),true);return;}
     if(A.questReady(save,q)){walkTo(npc(q.endNpc),true);return;}
     const goal=A.questProgress(save,q).find(g=>g.value<g.count);

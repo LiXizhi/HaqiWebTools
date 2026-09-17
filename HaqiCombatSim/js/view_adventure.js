@@ -1,5 +1,5 @@
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
-import { currentQuest,questState,questReady,questProgress,SCHOOL_NAMES,rewardsFor,deckLimits,canEquip,recommendedDeck } from './adventure_core.js';
+import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,canEquip,recommendedDeck } from './adventure_core.js';
 import * as U from './combat_unit_core.js';
 import { expectedBaseDamage,expectedBaseHeal,cardTargetKind } from './combat_cards_core.js';
 import { COLORS } from './adventure_renderer.js';
@@ -15,17 +15,29 @@ function art(assets,ref,w=76,h=90,cls='') {const c=el('canvas',`art ${cls}`);c.w
 function tile(assets,sheet,index,w=90,h=95) {const c=el('canvas','art');c.width=w*2;c.height=h*2;c.style.width=`${w}px`;c.style.height=`${h}px`;assets.tile(c.getContext('2d'),sheet,index,0,0,c.width,c.height);return c;}
 function badge(text,cls=''){return el('span',`badge ${cls}`,text);}
 const schoolDescription={fire:'火焰与持续伤害，点燃你的热情。',ice:'坚固的护盾与寒冰魔法，稳步迎战。',storm:'强力的单体攻击，让雷霆为你而鸣。',life:'治疗与自然的力量，守护生命。',death:'吸取生命、布下陷阱，掌握幽暗魔法。'};
-export function renderEntry(root,assets,hasSave,cb,error='') {
+export function renderEntry(root,assets,stored,cb,error='',creating=false) {
+    const hasSave=!!stored;
     root.replaceChildren();root.className='entry-screen';
     let school='fire',appearance='boy';
     const form=el('form','character-form');
     const eyebrow=el('p','eyebrow','魔法哈奇 · 第一章');
     const intro=el('div','entry-intro',eyebrow,el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','穿过晨光中的魔法营地，遇见熟悉的伙伴。\n选一门魔法，翻开属于你的第一张卡牌。'));
     intro.append(el('div','entry-tags',badge('原版任务与角色'),badge('五系卡牌战斗'),badge('本地自动存档')));
-    if(hasSave)intro.append(button('继续我的冒险',cb.continue,'primary continue-button'));
     intro.append(button('云端旅途',cb.cloud,'secondary cloud-entry-button'));
     intro.append(el('p','entry-note','键盘 / 鼠标 / 触摸均可游玩'),el('a','sim-link','战斗模拟器'));
     intro.querySelector('a').href='HaqiCombatSim.html';
+    const footer=el('div','entry-footer','魔法营地 → 最后的考核 → 哈奇小镇');
+    if(hasSave&&!creating){
+        intro.querySelector('.entry-description').textContent='熟悉的伙伴，正在等你归来。\n带着你的魔法，继续未完的旅程。';
+        const portrait=tile(assets,'sprites',stored.appearance==='girl'?12:8,132,140);
+        portrait.setAttribute('role','img');portrait.setAttribute('aria-label',stored.appearance==='girl'?'已保存的角色：魔法少女':'已保存的角色：魔法少年');
+        const card=el('section','character-form saved-journey',el('p','eyebrow','欢迎回来'),el('h2','','继续旅程'),portrait,
+            el('h3','saved-hero-name',stored.name),el('p','muted',`${SCHOOL_NAMES[stored.school]}学徒 · 等级 ${stored.level}`),
+            button('继续旅程',cb.continue,'primary begin-button'),
+            button('新旅程',()=>{renderEntry(root,assets,stored,cb,error,true);root.querySelector('.name-input').focus();},'secondary new-journey-button'));
+        root.append(intro,card,footer);
+        return;
+    }
     const name=el('input','name-input');name.id='hero-name';name.name='name';name.value='小哈奇';name.maxLength=16;name.autocomplete='off';name.required=true;
     const nameLabel=el('label','field-label','你的名字');nameLabel.htmlFor='hero-name';
     const preview=el('div','avatar-choice');
@@ -41,10 +53,10 @@ export function renderEntry(root,assets,hasSave,cb,error='') {
     }
     const submit=el('button','primary begin-button',hasSave?'开始一段新旅程':'启程，前往魔法营地');submit.type='submit';
     form.append(el('p','eyebrow','开启你的魔法旅程'),el('h2','','成为魔法学徒'),preview,nameLabel,name,el('p','field-label','选择你的魔法学系'),schoolRow,desc,submit);
-    if(hasSave)form.append(el('small','muted','开启新旅程会替换本地存档，可先在设置中导出。'));
+    if(hasSave)form.append(el('small','muted','开启新旅程会替换本地存档，可先在设置中导出。'),button('返回继续旅程',()=>{renderEntry(root,assets,stored,cb,error);root.querySelector('.begin-button').focus();},'text-button'));
     if(error)form.append(el('p','error-text',error));
     form.onsubmit=e=>{e.preventDefault();cb.create({name:name.value,school,appearance});};
-    root.append(intro,form,el('div','entry-footer','魔法营地 → 最后的考核 → 哈奇小镇'));
+    root.append(intro,form,footer);
 }
 export function objectiveLabel(g,c) {
     if(g.kind==='talk')return `与${c.npcs[g.id]?.name||g.id}交谈`;
@@ -191,9 +203,9 @@ export function renderDialogue(root,model,dialog,cb) {
         const choices=el('div','dialogue-choices');
         if(q&&!state.accepted&&q.startNpc===npc.id)choices.append(button(`接取任务 · ${q.title}`,()=>cb.startQuest(q),'primary'));
         if(q&&ready&&q.endNpc===npc.id)choices.append(button(`完成任务 · ${q.title}`,()=>cb.finishQuest(q),'primary'));
-        const talk=q&&state.accepted&&q.talks.find(t=>t.npcId===npc.id);
+        const talk=pendingQuestTalk(save,q,npc.id);
         if(talk)choices.append(button(talk.label||'我想了解更多魔法',()=>cb.questTalk(q,talk),'primary'));
-        if(q&&state.accepted&&!ready&&q.startNpc===npc.id)choices.append(button('查看任务目标',()=>{cb.close();cb.track();},'secondary'));
+        if(q&&state.accepted&&!(ready&&q.endNpc===npc.id))choices.append(button(ready?'前往回报任务':'查看任务目标',()=>{cb.close();cb.track();},'secondary'));
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
         if(npc.id===36205)choices.append(button('去哈奇小镇',()=>cb.travel('town'),'secondary'));

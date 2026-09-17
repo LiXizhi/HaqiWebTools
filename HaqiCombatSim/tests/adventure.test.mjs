@@ -177,3 +177,20 @@ test('storm charging flags stack the source standing wards and expire after a mi
     attack();assert.equal(target.standingWards[0].id,93);attack();assert.equal(target.standingWards[0].id,94);
     P.playPveRound(b,{pass:true});assert.equal(target.standingWards.length,0);
 });
+
+test('quest dialogue advances from 茜茜 to 莫尼 and completed talks cannot reopen',()=>{
+    const s=A.createAdventure(content),intro=content.quests[0],q=content.quests[1];
+    act(s,'accept',{questId:intro.id,npcId:intro.startNpc});
+    act(s,'claim',{questId:intro.id,npcId:intro.endNpc});
+    assert.equal(A.pendingQuestTalk(s,q,36200),null);
+    act(s,'accept',{questId:q.id,npcId:q.startNpc});
+    assert.equal(A.pendingQuestTalk(s,q,36200)?.npcId,36200);
+    act(s,'talk',{npcId:36200});
+    const restored=A.parseSave(JSON.stringify(s),content);
+    assert.equal(A.pendingQuestTalk(restored,q,36200),null);
+    assert.equal(A.questProgress(restored,q).find(g=>g.value<g.count).id,36201);
+    assert.equal(A.pendingQuestTalk(restored,q,36201)?.npcId,36201);
+    act(restored,'talk',{npcId:36201});
+    assert.equal(A.pendingQuestTalk(restored,q,36201),null);
+    assert.equal(A.questReady(restored,q),true);
+});

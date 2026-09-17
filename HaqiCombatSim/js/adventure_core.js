@@ -16,6 +16,11 @@ export function questProgress(save, quest) {
     const state = questState(save, quest.id);
     return quest.goals.map(g => ({ ...g, value: Math.min(g.count, state.progress[`${g.kind}:${g.id}`] || 0) }));
 }
+export function pendingQuestTalk(save, quest, npcId) {
+    if (!quest || !questState(save, quest.id).accepted || questState(save, quest.id).claimed) return null;
+    const pending = questProgress(save, quest).some(g => g.kind === 'talk' && g.id === npcId && g.value < g.count);
+    return pending ? quest.talks.find(t => t.npcId === npcId) || null : null;
+}
 export function questReady(save, quest) {
     return !!quest && questState(save, quest.id).accepted && questProgress(save, quest).every(g => g.value >= g.count);
 }

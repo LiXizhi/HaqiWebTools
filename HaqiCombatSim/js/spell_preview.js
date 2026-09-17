@@ -1,6 +1,7 @@
 import { loadResources } from './adventure_assets.js';
 import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
+import { HIT_DURATION_MS } from './actor_animation_core.js';
 import { effectDuration,spellEffect,validateSpellEffects } from './spell_effects_core.js';
 const $=id=>document.getElementById(id),canvas=$('preview'),ctx=canvas.getContext('2d');
 const names={ice:'寒冰',fire:'烈火',storm:'风暴',life:'生命',death:'死亡',balance:'通用'};
@@ -9,7 +10,7 @@ let assets,fx,card,cards,families,playing=true,elapsed=0,last=0;
 $('reduced').onchange=()=>{elapsed=0;};
 $('actor-action').onchange=()=>{elapsed=0;playing=true;$('play').textContent='暂停';};
 $('reduced').checked=matchMedia('(prefers-reduced-motion: reduce)').matches;
-function previewDuration(){return $('actor-action').value==='auto'?effectDuration(assets.effects,card,$('reduced').checked):900;}
+function previewDuration(){return $('actor-action').value==='auto'?effectDuration(assets.effects,card,$('reduced').checked):$('actor-action').value==='hit'?HIT_DURATION_MS:900;}
 function option(select,value,label){const o=document.createElement('option');o.value=value;o.textContent=label;select.append(o);}
 function select(){
     card=cards[$('card').value];elapsed=0;const spec=spellEffect(assets.effects,card);
@@ -58,7 +59,7 @@ function frame(now){
         for(const at of spec.area?targets:[to]) {
             const friendly=spec.area&&spec.friendly;
             const action=mode==='auto'?(p>=impact&&!spec.friendly?'hit':'idle'):mode;
-            drawActor(at,friendly?'sprites':'creatures',friendly?10:1,action,mode==='auto'?Math.max(0,(p-impact)/(1-impact)):p,-1);
+            drawActor(at,friendly?'sprites':'creatures',friendly?10:1,action,mode==='auto'?Math.max(0,(elapsed-impact*duration)/HIT_DURATION_MS):p,-1);
         }
         if(mode==='auto')fx.draw(ctx,{card,progress:p,from,to:targets[0],targets,center:{x:w*.5,y:h*.62},width:w,height:h,seed:7,reducedMotion:reduced});
         $('seek').value=Math.round(p*1000);const timing=assets.effects.timeline,summon=spec.kind==='summon';

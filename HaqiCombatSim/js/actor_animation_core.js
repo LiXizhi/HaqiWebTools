@@ -1,4 +1,5 @@
 // Shared presentation poses, anchored at the feet; no gameplay state or RNG.
+export const HIT_DURATION_MS=220;
 export function actorPose(action='idle',progress=0,direction=1,reduced=false) {
     const p=Math.max(0,Math.min(1,progress)),wave=Math.sin(Math.PI*p);
     const pose={x:0,y:0,rotation:0,sx:1,sy:1,alpha:1,brightness:1};
@@ -6,8 +7,11 @@ export function actorPose(action='idle',progress=0,direction=1,reduced=false) {
         pose.y=reduced?0:-12*wave;pose.sx=1-.07*wave;pose.sy=1+.09*wave;
         pose.brightness=1+.3*wave;
     } else if(action==='hit') {
-        pose.x=reduced?0:-direction*12*wave;pose.rotation=reduced?0:-direction*.14*wave;
-        pose.sx=1+.1*wave;pose.sy=1-.12*wave;pose.brightness=1+2.4*Math.max(0,1-p*4);
+        // Reach recoil in 26ms, hold briefly, then spring back with a damped tremor.
+        const kick=p<.12?p/.12:p<.25?1:Math.pow((1-p)/.75,2);
+        const tremor=p>.25?Math.sin((p-.25)*Math.PI*6)*(1-p)*2.5:0;
+        pose.x=reduced?0:-direction*(18*kick+tremor);pose.rotation=reduced?0:-direction*.19*kick;
+        pose.sx=1+.14*kick;pose.sy=1-.17*kick;pose.brightness=1+2.4*Math.max(0,1-p/.22);
     } else if(action==='death') {
         const fall=p*p*(3-2*p);
         pose.y=reduced?0:20*fall;pose.rotation=reduced?0:-direction*.55*fall;

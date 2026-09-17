@@ -1,6 +1,18 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {actorPose,battleActorAction,castHitReactions,HIT_DURATION_MS} from '../js/actor_animation_core.js';
+import {actorPose,battleActorAction,castHitReactions,HIT_DURATION_MS,PREVIEW_HIT_DURATION_MS,previewTargetAction} from '../js/actor_animation_core.js';
+test('preview targets recoil at impact, recover, and respect friendly and manual modes',()=>{
+    const timeline={impact:.7,summonImpact:.78},duration=1800;
+    for(const kind of ['burst','summon']) {
+        const spec={kind},start=timeline[kind==='summon'?'summonImpact':'impact']*duration;
+        assert.equal(previewTargetAction(spec,timeline,start-1,duration).action,'idle');
+        const hit=previewTargetAction(spec,timeline,start+PREVIEW_HIT_DURATION_MS*.2,duration);
+        assert.equal(hit.action,'hit');assert.ok(actorPose(hit.action,hit.progress,-1).x>15);
+        assert.equal(previewTargetAction(spec,timeline,start+PREVIEW_HIT_DURATION_MS,duration).action,'idle');
+        assert.equal(previewTargetAction({...spec,friendly:true},timeline,start+40,duration).action,'idle');
+    }
+    assert.deepEqual(previewTargetAction({},timeline,180,360,'hit'),{action:'hit',progress:.5});
+});
 test('actor death persists after lethal damage and living units recover their idle pose',()=>{
     assert.deepEqual(battleActorAction('mob0',0,{type:'damage',target:'mob0'},.5),{action:'death',progress:.5});
     assert.deepEqual(battleActorAction('mob0',0,{type:'cast',caster:'hero'},0),{action:'death',progress:1});

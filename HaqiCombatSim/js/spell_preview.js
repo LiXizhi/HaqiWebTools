@@ -1,7 +1,7 @@
 import { loadResources } from './adventure_assets.js';
 import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
-import { HIT_DURATION_MS } from './actor_animation_core.js';
+import { PREVIEW_HIT_DURATION_MS, previewTargetAction } from './actor_animation_core.js';
 import { loadSpellArt } from './spell_art.js';
 import { createSpellSound } from './spell_sound.js';
 import { effectDuration,spellEffect,validateSpellEffects } from './spell_effects_core.js';
@@ -19,7 +19,7 @@ let assets,fx,card,cards,families,playing=true,elapsed=0,last=0;
 $('reduced').onchange=()=>{elapsed=0;};
 $('actor-action').onchange=()=>{elapsed=0;playing=true;$('play').textContent='暂停';};
 $('reduced').checked=matchMedia('(prefers-reduced-motion: reduce)').matches;
-function previewDuration(){return $('actor-action').value==='auto'?effectDuration(assets.effects,card,$('reduced').checked):$('actor-action').value==='hit'?HIT_DURATION_MS:900;}
+function previewDuration(){return $('actor-action').value==='auto'?effectDuration(assets.effects,card,$('reduced').checked):$('actor-action').value==='hit'?PREVIEW_HIT_DURATION_MS:900;}
 function option(select,value,label){const o=document.createElement('option');o.value=value;o.textContent=label;select.append(o);}
 function select(){
     sound.stop();
@@ -61,15 +61,18 @@ function frame(now){
         const p=Math.min(1,elapsed/duration),from={x:w*.23,y:h*.64},to={x:w*.76,y:h*.57};
         ctx.save();ctx.strokeStyle='#819d8966';ctx.lineWidth=2;for(const r of [1,.83,.51]){ctx.beginPath();ctx.ellipse(w*.5,h*.62,w*.4*r,h*.22*r,0,0,Math.PI*2);ctx.stroke();}ctx.restore();
         const size=Math.min(90,w*.18),targets=spec.area?[{x:w*.60,y:h*.47},to,{x:w*.82,y:h*.72}]:[spec.friendly?from:to];
-        const mode=$('actor-action').value,reduced=$('reduced').checked,impact=spec.kind==='summon'?assets.effects.timeline.summonImpact:assets.effects.timeline.impact;
+        const mode=$('actor-action').value,reduced=$('reduced').checked;
+        const reaction=previewTargetAction(spec,assets.effects.timeline,elapsed,duration,mode);
         const drawActor=(at,atlas,index,action,progress,direction)=>drawAnimatedActor(ctx,at,action,progress,direction,reduced,()=>assets.tile(ctx,atlas,index,-size/2,-size,size,size));
         drawActor(from,'sprites',10,mode==='auto'?'cast':'idle',Math.min(1,p/.45),1);
-        for(const at of spec.area?targets:[to]) {
+        const drawTargets=()=>{for(const at of spec.area?targets:[to]) {
             const friendly=spec.area&&spec.friendly;
-            const action=mode==='auto'?(p>=impact&&!spec.friendly?'hit':'idle'):mode;
-            drawActor(at,friendly?'sprites':'creatures',friendly?10:1,action,mode==='auto'?Math.max(0,(elapsed-impact*duration)/HIT_DURATION_MS):p,-1);
-        }
+            drawActor(at,friendly?'sprites':'creatures',friendly?10:1,reaction.action,reaction.progress,-1);
+        }};
+        // Keep the recoiling silhouette visible through dense impact particles.
+        if(reaction.action!=='hit')drawTargets();
         if(mode==='auto')fx.draw(ctx,{card,progress:p,from,to:targets[0],targets,center:{x:w*.5,y:h*.62},width:w,height:h,seed:7,reducedMotion:reduced});
+        if(reaction.action==='hit')drawTargets();
         sound.track(assets.effects,card,p,{active:mode==='auto'&&playing&&!document.hidden,reducedMotion:reduced});
         $('seek').value=Math.round(p*1000);const timing=assets.effects.timeline,summon=spec.kind==='summon';
         $('phase').textContent=p<.18?'凝聚魔力':p<(summon?timing.summonAttack:timing.attack)?'法术成形':p<(summon?timing.summonImpact:timing.impact)?(spec.friendly?'祝福与守护':'释放法术'):p<1?'命中与消散':'演出结束';

@@ -1,5 +1,13 @@
 // Shared presentation poses, anchored at the feet; no gameplay state or RNG.
 export const HIT_DURATION_MS=220;
+export const PREVIEW_HIT_DURATION_MS=360;
+// Preview targets have no damage events; synchronize their recoil with the spell impact.
+export function previewTargetAction(spec,timeline,elapsed,duration,mode='auto') {
+    if(mode!=='auto')return {action:mode,progress:Math.min(1,elapsed/duration)};
+    const impact=spec.kind==='summon'?timeline.summonImpact:timeline.impact;
+    const progress=(elapsed-impact*duration)/PREVIEW_HIT_DURATION_MS;
+    return !spec.friendly&&progress>=0&&progress<1?{action:'hit',progress}:{action:'idle',progress:0};
+}
 export function actorPose(action='idle',progress=0,direction=1,reduced=false) {
     const p=Math.max(0,Math.min(1,progress)),wave=Math.sin(Math.PI*p);
     const pose={x:0,y:0,rotation:0,sx:1,sy:1,alpha:1,brightness:1};

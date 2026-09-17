@@ -2,6 +2,7 @@ import { loadResources } from './adventure_assets.js';
 import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
 import { HIT_DURATION_MS } from './actor_animation_core.js';
+import { loadSpellArt } from './spell_art.js';
 import { effectDuration,spellEffect,validateSpellEffects } from './spell_effects_core.js';
 const $=id=>document.getElementById(id),canvas=$('preview'),ctx=canvas.getContext('2d');
 const names={ice:'寒冰',fire:'烈火',storm:'风暴',life:'生命',death:'死亡',balance:'通用'};
@@ -17,6 +18,14 @@ function select(){
     $('name').textContent=spec.name;$('school').textContent=names[card.spellSchool]+' / 技能演出';
     $('detail').textContent=`${spec.area?'群体 · ':''}${spec.kind==='summon'?'角色召唤':'基础演出'} · ${ranks[spec.variant.rank]}${spec.variant.level?' · '+spec.variant.level+'阶':''}${spec.variant.lowLevel?' · 入门版':''} · ${(spec.duration/1000).toFixed(1)} 秒`;
     const c=$('art').getContext('2d');c.clearRect(0,0,302,460);
+    $('error').textContent='';
+    assets.ensureSpellArt(spec.base).then(image=>{
+        if(!image||assets.effects.cards[card.key].base!==spec.base)return;
+        c.clearRect(0,0,302,460);c.drawImage(image,0,0,302,460);
+        const row=assets.spellArt[spec.base];
+        $('art').setAttribute('aria-label',row.adaptation?'补绘基础卡面':'原版基础卡面（变体共用）');
+        if(row.adaptation){c.fillStyle='#fff4cc';c.textAlign='center';c.font='bold 25px sans-serif';c.fillText(row.name,151,60,260);c.font='16px sans-serif';c.fillText('原图缺失 · 符文补绘',151,418);}
+    }).catch(e=>{if(assets.effects.cards[card.key].base===spec.base)$('error').textContent=e.message;});
     const art=card.art||Object.values(assets.dataset.cards).find(x=>assets.effects.cards[x.key].base===spec.base)?.art;
     if(art){assets.draw(c,art,0,0,302,460,false);$('art').setAttribute('aria-label','原版基础卡面（变体共用）');}
     else {
@@ -70,6 +79,7 @@ function frame(now){
 }
 try{
     assets=await loadResources();const response=await fetch('data/kids/cards.json');if(!response.ok)throw new Error('无法读取完整卡库');
+    await loadSpellArt(assets);
     cards={...await response.json(),...assets.dataset.cards};validateSpellEffects(assets.effects,cards);fx=createSpellEffects(assets);families=new Map();
     for(const c of Object.values(cards)){const id=assets.effects.cards[c.key].base;if(!families.has(id))families.set(id,[]);families.get(id).push(c);}
     filter('Ice_SingleAttack_Level6_low_level');requestAnimationFrame(frame);

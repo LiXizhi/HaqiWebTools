@@ -15,7 +15,10 @@
         "verify:adventure-cdn": "node scripts/publish_adventure_media.mjs --verify",
         "audit:effects": "node scripts/audit_spell_effects.mjs",
         "prepare:effects": "node scripts/prepare_spell_effects.mjs",
-        "export:spell-names": "python3 scripts/export_spell_names.py"
+        "export:spell-names": "python3 scripts/export_spell_names.py",
+        "prepare:spell-art": "python3 scripts/prepare_spell_art.py && python3 scripts/draw_spell_fallbacks.py",
+        "plan:spell-art-cdn": "node scripts/publish_spell_art.mjs",
+        "verify:spell-art-cdn": "node scripts/publish_spell_art.mjs --verify"
     },
     "engines": {
         "node": ">=20"

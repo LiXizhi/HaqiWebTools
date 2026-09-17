@@ -79,6 +79,22 @@ export function createSpellEffects(assets) {
         const summon=spec.kind==='summon',attackStart=summon?config.timeline.summonAttack:config.timeline.attack,impact=summon?config.timeline.summonImpact:config.timeline.impact;
         const flight=clamp((p-attackStart)/(impact-attackStart)),hit=clamp((p-impact)/(1-impact));
         if(failed){c.globalAlpha*=1-p;for(const v of particles.slice(0,20))disc(c,a.x+Math.cos(v.angle)*radius*p,a.y-Math.sin(v.angle)*radius*p,2*scale,'#9aa1af');c.restore();return;}
+        // Original illustration manifests above the arena as a magical projection.
+        // It is deliberately a card-art apparition, not a fabricated animated NPC.
+        const illustration=assets.images?.get('spell:'+spec.base);
+        if(!summon&&!echo&&illustration&&p<.72) {
+            const at=center||{x:(from.x+to.x)/2,y:(from.y+to.y)/2};
+            const grow=clamp(p/.18),fade=clamp((.72-p)/.18),orb=radius*.92;
+            c.save();c.globalAlpha*=grow*fade*.85;
+            rune(c,at.x,at.y,radius*1.18,p,primary);
+            c.translate(at.x,at.y-orb*(.7+grow*.25));
+            c.scale(.7+.3*grow,.7+.3*grow);
+            c.save();c.beginPath();c.arc(0,0,orb,0,TAU);c.clip();
+            c.drawImage(illustration,illustration.width*.16,illustration.height*.24,illustration.width*.68,illustration.height*.32,-orb,-orb,orb*2,orb*2);c.restore();
+            c.strokeStyle=light;c.lineWidth=2*scale;c.beginPath();c.arc(0,0,orb,0,TAU);c.stroke();
+            for(let i=0;i<8;i++){const angle=i*TAU/8+p*3;shard(c,Math.cos(angle)*orb*1.13,Math.sin(angle)*orb*1.13,3*scale,angle,primary);}
+            c.restore();
+        }
         if(summon&&!echo) {
             const def=spec.summonDef,emerge=clamp(p/.26),fade=clamp((1-p)/.15),dir=b.x>=a.x?1:-1;
             const sx=a.x+dir*Math.sin(flight*Math.PI)*radius*.45,sy=origin.y;

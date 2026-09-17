@@ -17,6 +17,10 @@ export async function loadResources(progress) {
     const worker=async()=>{while(cursor<rows.length){const[id,a]=rows[cursor++];try{images.set(id,await loadImage(assetUrl(a,mode)));}catch(e){if(!a.optional)failures.push(e.message);}progress?.(++done/rows.length);}};
     await Promise.all(Array.from({length:8},worker));
     if(failures.length)throw new Error(`冒险资源缺失，请重新准备资源后重试。${failures[0]}`);
+    for(const card of Object.values(dataset.cards)) {
+        const image=images.get(card.art?.id),base=effects.cards[card.key]?.base;
+        if(image&&base)images.set('spell:'+base,image);
+    }
     function getBounds(id,rect) {
         const img=images.get(id);if(!img)return null;
         const cacheKey=id+JSON.stringify(rect||null);if(bounds.has(cacheKey))return bounds.get(cacheKey);

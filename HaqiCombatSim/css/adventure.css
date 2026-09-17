@@ -115,3 +115,32 @@
 /* Compact hero heading: equipment and membership are separate controls. */
 .hero-heading{display:flex;align-items:center;gap:7px;min-width:0}.hero-name{flex:1;min-width:0;padding:0;background:none;color:inherit;text-align:left}.hero-name strong{font-size:inherit}.hero-membership{flex:none;padding:3px 6px;border:1px solid #d8bf7b;border-radius:4px;background:#fff3cc;color:#876528;font-size:10px;white-space:nowrap}.hero-text>.save-indicator:not([hidden]){display:block;color:#a34a36}.hero-text>.save-indicator[hidden]{display:none}
 .checkin-reward{font-size:36px;font-weight:600;text-align:center;color:#9a712c;margin:12px 0 20px}.checkin-rules{line-height:1.8}.checkin-countdown{text-align:center;font-size:20px;margin:24px 0;font-variant-numeric:tabular-nums}.checkin-claim{display:block;min-width:160px;margin:0 auto}.checkin-balance{text-align:center;margin-top:18px}.checkin-button.reward-ready{color:#966919}.checkin-button.reward-ready small{color:#94630e;font-weight:600}
+.checkin-modal{width:min(690px,100%)}.checkin-online{text-align:center;color:#63806a;margin-bottom:20px;font-size:13px;font-variant-numeric:tabular-nums}.checkin-gourds{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:22px}.gourd-reward{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:0;padding:12px 5px;background:#e9e7d8;border:1px solid #d9d5bf;border-radius:14px;color:#859181}.gourd-reward:disabled{opacity:1;cursor:default}.gourd-time{font-size:12px;color:#65715c}.gourd-art{display:block;width:70px;max-width:100%;height:108px;color:#b6b49b}.gourd-art svg{width:100%;height:100%}.gourd-coins{font-size:13px;color:#7c7154}.gourd-state{font-size:10px;white-space:nowrap;color:#7c806f;font-variant-numeric:tabular-nums}.gourd-reward.ready{background:linear-gradient(#fffbdf,#f6e7ad);border-color:#d4ac4e;box-shadow:0 3px 15px #d0a24630;cursor:pointer}.gourd-reward.ready .gourd-art{color:#efbd4f}.gourd-reward.ready .gourd-state{background:#386e50;color:#fff;padding:5px 9px;border-radius:12px}.gourd-reward.ready:hover{border-color:#8d6828;background:#fff0b7}.gourd-reward.claimed{background:#edf0e4}.gourd-reward.claimed .gourd-art{color:#a6b88a;opacity:.6}.gourd-reward.claimed .gourd-state{color:#527046}.checkin-rules{font-size:12px}.checkin-balance{font-size:12px;margin-top:12px}@media(max-width:520px){.checkin-gourds{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.gourd-reward{padding:9px 3px}.gourd-art{height:85px;width:60px}.checkin-modal .modal-body{padding:14px}.checkin-online{margin-bottom:14px}}
+/* Responsive battle hand: reserve complete faces for the selection and last card. */
+.battle-hand{overflow:visible;isolation:isolate}.hand-card{position:relative}.played-card{position:absolute;z-index:40;pointer-events:none;margin:0;filter:drop-shadow(0 0 14px #ffe7a8)}
+.card-arriving{animation:hand-deal .42s cubic-bezier(.2,.8,.2,1) var(--deal-delay,0ms) backwards}
+@keyframes hand-deal{from{opacity:0;translate:70px 90px;rotate:12deg;scale:.72}to{opacity:1;translate:0 0;rotate:0deg;scale:1}}
+@media(max-width:1350px){
+ .battle-hand{--hand-width:clamp(96px,23vw,128px);display:grid;gap:0;width:calc(100% - 36px);max-width:1000px;left:50%;transform:translateX(-50%);padding:18px 0 5px}
+ .hand-card{width:var(--hand-width);min-width:0;transition:transform .2s}
+ .hand-card:not(.selected) .discard-button{visibility:hidden;pointer-events:none}
+ .hand-card.selected{transform:translateY(-12px)}
+ .battle-controls{flex-wrap:wrap;gap:6px}.battle-controls>.battle-actions:last-child{flex-wrap:wrap}
+}
+@media(max-width:650px){
+ .battle-controls{bottom:max(10px,env(safe-area-inset-bottom));left:12px;right:12px;display:grid;grid-template-columns:auto 1fr;align-items:center}
+ .battle-controls>.battle-actions:last-child{grid-column:1/-1;justify-content:flex-end}
+ .battle-hand{bottom:112px}.battle-canvas{top:110px;bottom:340px;height:calc(100% - 450px)}
+}
+@media(max-height:600px){
+ .battle-hand{--hand-width:78px;bottom:64px}.hand-card{width:78px}
+ .battle-canvas{top:64px;bottom:218px;height:calc(100% - 282px)}
+ .battle-controls{bottom:6px}.battle-controls>.battle-actions:last-child{grid-column:auto}
+}
+@media(prefers-reduced-motion:reduce){.card-arriving{animation:none}.hand-card{transition:none}}
+@media(max-height:500px) and (min-width:651px){
+ #game{min-height:0}
+ .battle-canvas{width:53%}
+ .battle-hand{--hand-width:78px;display:grid;width:44%;left:auto;right:18px;transform:none;gap:0}
+ .hand-card:not(.selected) .discard-button{visibility:hidden;pointer-events:none}
+}

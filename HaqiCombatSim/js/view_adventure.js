@@ -79,17 +79,27 @@ export function updateHeroHealth(root,save,content) {
     bar.querySelector('.hero-health-label').textContent=`${hp} / ${maxHp}`;
     bar.setAttribute('aria-label',`生命 ${hp} / ${maxHp}`);
 }
+function checkinTime(ms){return `${Math.ceil(ms/60000)} 分钟`;}
+function gourdArt(){
+    const art=el('span','gourd-art');
+    art.innerHTML='<svg viewBox="0 0 80 112" aria-hidden="true"><ellipse cx="40" cy="104" rx="25" ry="5" fill="#685225" opacity=".15"/><path d="M35 8h10l-2 12c17 4 21 23 9 34 26 13 23 47-12 47S2 67 28 54C16 43 20 24 37 20z" fill="currentColor" stroke="#8f621f" stroke-width="2.5"/><path d="M29 33c-6 8-3 14 0 17M23 71c-6 11-1 19 5 22" fill="none" stroke="#fff4b6" stroke-width="5" stroke-linecap="round" opacity=".7"/><path d="M27 54q13 6 26 0l-1 7q-12 5-24 0z" fill="#af4e32"/><path d="m46 60 12 19-9-3-3 8-7-23" fill="#af4e32"/><path d="M33 8h14v7H33z" fill="#826035"/><circle cx="38" cy="79" r="10" fill="#fff0b5" opacity=".85"/><text x="38" y="83" text-anchor="middle" font-size="12" fill="#8f621f">福</text></svg>';
+    return art;
+}
 export function updateCheckin(root,model) {
     const status=checkinStatus(model.save,model.assets.content,model.now??Date.now());
-    const seconds=Math.ceil(status.remainingMs/1000),time=`${String(Math.floor(seconds/60)).padStart(2,'0')}:${String(seconds%60).padStart(2,'0')}`;
     const nav=root.querySelector('.checkin-button');
-    if(nav){nav.querySelector('small').textContent=status.ready?'可领取':time;nav.classList.toggle('reward-ready',status.ready);}
-    const claim=root.querySelector('.checkin-claim');if(!claim)return;
-    root.querySelector('.checkin-reward').textContent=`${status.coins} 奇豆`;
-    root.querySelector('.checkin-rules').textContent=`每 ${status.intervalMs/60000} 分钟可领取一次。离线也计时，最多保留一份奖励，领取后重新计时。`;
-    root.querySelector('.checkin-countdown').textContent=status.ready?'奖励已准备好':`距离下次领取 ${time}`;
+    if(nav){nav.querySelector('small').textContent=status.ready?'可领取':status.finished?'已领完':checkinTime(status.remainingMs);nav.classList.toggle('reward-ready',status.ready);}
+    const grid=root.querySelector('.checkin-gourds');if(!grid)return;
+    for(const g of status.gourds){
+        const b=grid.children[g.index],label=g.claimed?'已领取':g.ready?'点击领取':`还需 ${checkinTime(g.remainingMs)}`;
+        b.disabled=!g.ready;b.classList.toggle('ready',g.ready);b.classList.toggle('claimed',g.claimed);
+        b.querySelector('.gourd-time').textContent=`${g.minute} 分钟`;
+        b.querySelector('.gourd-coins').textContent=`${g.coins} 奇豆`;
+        b.querySelector('.gourd-state').textContent=label;
+        b.setAttribute('aria-label',`${g.minute}分钟葫芦，${g.coins}奇豆，${label}`);b.title=label;
+    }
+    root.querySelector('.checkin-online').textContent=`今日累计在线 ${Math.floor(status.onlineMs/60000)} 分钟`;
     root.querySelector('.checkin-balance').textContent=`当前拥有 ${model.save.inventory[100]||0} 奇豆`;
-    claim.disabled=!status.ready;claim.textContent=status.ready?'领取奖励':'等待奖励';
 }
 export function renderHud(root,model,cb) {
     const {assets,save}=model,c=assets.content,q=currentQuest(save,c);root.replaceChildren();
@@ -168,10 +178,13 @@ function spellFace(assets,card,artCard=card) {
 }
 export function renderPanel(root,kind,model,cb) {
     const {assets,save}=model,c=assets.content,d=assets.dataset;
-    const titles={checkin:['签到奖励','歇一歇，领取旅途补给'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['全局商店','等级科技树 · 装备、伙伴与补给'],equipment:['角色与装备','魔法学徒 · 旅途行装'],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包','装备与旅途收藏'],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
+    const titles={checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['全局商店','等级科技树 · 装备、伙伴与补给'],equipment:['角色与装备','魔法学徒 · 旅途行装'],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包','装备与旅途收藏'],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
     const body=modal(root,...titles[kind],cb,['deck','quests','inventory','equipment','pet','shop'].includes(kind)||kind==='debug');
     if(kind==='checkin'){
-        body.append(el('div','checkin-reward'),el('p','checkin-rules muted'),el('p','checkin-countdown'),button('领取奖励',()=>cb.action({type:'checkin'}),'primary checkin-claim'),el('p','checkin-balance muted'));
+        body.closest('.modal').classList.add('checkin-modal');
+        const grid=el('div','checkin-gourds');
+        for(let index=0;index<5;index++)grid.append(button([el('span','gourd-time'),gourdArt(),el('strong','gourd-coins'),el('span','gourd-state')],()=>cb.action({type:'checkin',index}),'gourd-reward'));
+        body.append(el('p','checkin-online'),grid,el('p','checkin-rules muted','亮起的葫芦可以直接领取。每天累计在线解锁，每个葫芦限领一次；每日零点（北京时间）重置。'),el('p','checkin-balance muted'));
         updateCheckin(root,model);
     }
     if(kind==='shop')renderShop(body,model,cb,{el,button,art});
@@ -253,35 +266,98 @@ export function renderDialogue(root,model,dialog,cb) {
     box.append(portrait,content,close);root.append(box);
 }
 export function renderBattle(root,model,cb) {
+    root.battleLayoutObserver?.disconnect();
+    const oldSelected=root.querySelector('.hand-card.selected')?.dataset.seq;
+    const switching=root.handBattle===model.battle&&!model.animating&&oldSelected!=null&&model.selected&&oldSelected!==String(model.selected.seq);
+    // Capture the current visual positions, including any unfinished shuffle, before rebuilding.
+    const oldHand=switching?new Map([...root.querySelectorAll('.hand-card')].map(node=>[node.dataset.seq,node.getBoundingClientRect()])):null;
+    const previous=root.handBattle===model.battle?root.handSeqs||new Set():new Set();
     const {assets,save,battle,selected,discarded=[],animating}=model,hero=battle.sides.near[0];root.replaceChildren();root.className='battle-layer visible';
     const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','',badge(`第 ${battle.turn} 回合`),button('云端存档',cb.cloud,'secondary small'),button('导出存档',cb.export,'secondary small'),button('撤退',cb.retreat,'secondary small')));
     top.lastChild.prepend(button(model.soundEnabled?'音效：开':'音效：关',cb.sound,'secondary small'));
     const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');canvas.onclick=e=>{const point=Object.entries(canvas.battlePositions||{}).sort((a,b)=>Math.hypot(a[1].x-e.offsetX,a[1].y-e.offsetY)-Math.hypot(b[1].x-e.offsetX,b[1].y-e.offsetY))[0];if(point)cb.target(point[0]);};
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');status.textContent=battle.finished?'对决结束':animating?'魔法正在生效…':selected?'点击法阵中的目标施法':'选择一张卡牌，再点击目标';
     const hand=el('div','battle-hand'),bottom=el('div','battle-controls');
-    for(const h of U.cardsInHand(hero)) {
+    const visibleHand=model.hand||U.cardsInHand(hero);
+    root.handBattle=battle;root.handSeqs=new Set(visibleHand.map(h=>h.seq));
+    hand.style.gridTemplateColumns=visibleHand.map((h,i)=>h.seq===selected?.seq||i===visibleHand.length-1?'var(--hand-width)':'minmax(0,1fr)').join(' ');
+    for(const h of visibleHand) {
         const card=battle.resolved.cards[h.key],artCard=assets.dataset.cards[h.key],available=U.isAlive(hero)&&U.canCast(hero,card,battle.resolved),isSelected=selected?.seq===h.seq,isDiscard=discarded.includes(h.seq);
         const node=el('div',`hand-card ${isSelected?'selected':''} ${isDiscard?'discarded':''} ${available?'':'unavailable'}`);
+        node.dataset.seq=h.seq;node.style.zIndex=isSelected?30:hand.children.length+1;
+        if(!animating&&!previous.has(h.seq)){node.classList.add('card-arriving');node.style.setProperty('--deal-delay',`${hand.children.length*65}ms`);}
         const select=button(spellFace(assets,card,artCard),()=>cb.select(h),'card-select');
-        select.disabled=animating||battle.finished||!available||isDiscard;select.setAttribute('aria-label',`选择${artCard.name}`);
+        select.disabled=animating||battle.finished;select.setAttribute('aria-label',`选择${artCard.name}${available?'':'（魔力不足或冷却中）'}`);select.setAttribute('aria-pressed',String(isSelected));
         const drop=button(isDiscard?'撤销弃牌':'弃牌',()=>cb.discard(h.seq),'discard-button');drop.disabled=animating||battle.finished;
         node.title=`${artCard.name} · ${cardTargetKind(card)==='hostile'?'对敌人':'对友方'} · ${expectedBaseDamage(card)?'基础伤害 '+expectedBaseDamage(card):expectedBaseHeal(card)?'基础治疗 '+expectedBaseHeal(card):'增益 / 减益魔法'}`;
         node.append(select,drop);hand.append(node);
     }
     const pass=button('跳过本回合',cb.pass,'secondary');pass.disabled=animating||battle.finished;
     const targetEnemy=button('对敌方施法',()=>cb.target('mob0'),'primary'),targetSelf=button('对自己施法',()=>cb.target('hero'),'primary');
-    const kind=selected&&cardTargetKind(battle.resolved.cards[selected.key]);targetEnemy.hidden=!selected||kind==='friendly'||kind==='self';targetSelf.hidden=!selected||kind==='hostile';targetEnemy.disabled=targetSelf.disabled=animating;
+    const kind=selected&&cardTargetKind(battle.resolved.cards[selected.key]),canPlay=selected&&!discarded.includes(selected.seq)&&U.isAlive(hero)&&U.canCast(hero,battle.resolved.cards[selected.key],battle.resolved);targetEnemy.hidden=!selected||kind==='friendly'||kind==='self';targetSelf.hidden=!selected||kind==='hostile';targetEnemy.disabled=targetSelf.disabled=animating||!canPlay;
     bottom.append(el('div','pip-legend',el('span','','蓝色：普通魔力'),el('span','','金色：超级魔力'),el('small','',`卡包剩余 ${U.deckRemaining(hero)} 张`)),el('div','battle-actions',targetEnemy,targetSelf,pass));
     const targets=el('div','battle-actions');
-    if(selected)for(const unit of [...battle.sides.near,...battle.sides.far]){const b=button(unit.name,()=>cb.target(unit.id),'secondary');b.disabled=animating||unit.hp<=0;targets.append(b);}
+    if(selected)for(const unit of [...battle.sides.near,...battle.sides.far]){const b=button(unit.name,()=>cb.target(unit.id),'secondary');b.disabled=animating||!canPlay||unit.hp<=0;targets.append(b);}
     if(battle.monsterTemplates[0].speciesId){const capture=button(`捕获（晶球 ${battle.captureStock-battle.captureUsed}）`,()=>cb.capture('mob0'),'secondary');capture.disabled=animating||battle.finished||hero.hp<=0||battle.captureStock<=battle.captureUsed;targets.append(capture);}
     bottom.append(targets);
     root.append(top,canvas,status,hand,bottom);
+    // Measure wrapped controls, including party targets, instead of assuming a fixed footer height.
+    const layout=()=>{
+        const footer=bottom.offsetHeight+(parseFloat(getComputedStyle(bottom).bottom)||0)+12;
+        hand.style.bottom=`${footer}px`;
+        const upper=Math.max(top.offsetTop+top.offsetHeight+20,status.offsetTop+status.offsetHeight+10);
+        const beside=matchMedia('(max-height:500px) and (min-width:651px)').matches;
+        const lower=footer+(beside?0:hand.offsetHeight+10);
+        canvas.style.top=`${upper}px`;canvas.style.bottom=`${lower}px`;
+        canvas.style.height=`${Math.max(1,root.clientHeight-upper-lower)}px`;
+    };
+    root.battleLayoutObserver=new ResizeObserver(layout);
+    for(const node of [root,top,hand,bottom])root.battleLayoutObserver.observe(node);
+    layout();
+    if(oldHand)animateHandSelection(hand,oldHand,oldSelected,String(selected.seq));
     const log=el('details','battle-log',el('summary','','战斗记录'),el('div','',...battle.events.filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','capture'].includes(e.type)).slice(-24).map(e=>el('p','',eventLabel(e,battle,assets)))));root.append(log);
     if(battle.finished&&!animating){
         const won=battle.winner==='near';const result=el('div','result-card',el('p','eyebrow',won?'对决胜利':'继续加油'),el('h2','',won?'魔法的力量，属于你！':'休息一下，再来挑战'),el('p','',won?`获得 ${battle.monsterTemplates[0].xp} 经验 · ${battle.monsterTemplates[0].coins} 奇豆`:'已保留你的物品与任务进度。调整卡包，再来试试吧。'),button(won?'收下奖励，继续冒险':'回到安全地点',cb.finish,'primary'));root.append(result);
         if(battle.captured?.length)result.insertBefore(el('p','',`捕获伙伴：${battle.captured.map(id=>assets.content.pets[id]?.name||id).join('、')}（已拥有的伙伴转为经验）`),result.lastChild);
     }
+}
+function animateHandSelection(hand,previous,oldSelected,selected) {
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    for(const node of hand.children) {
+        const before=previous.get(node.dataset.seq);if(!before)continue;
+        const after=node.getBoundingClientRect(),dx=before.left-after.left,dy=before.top-after.top;
+        const entering=node.dataset.seq===selected,returning=node.dataset.seq===oldSelected;
+        if(!dx&&!dy&&!entering&&!returning)continue;
+        const restingZ=node.style.zIndex;
+        if(returning)node.style.zIndex='30';
+        if(entering)node.style.zIndex='31';
+        // FLIP keeps every card continuous: the old card settles, the new one lifts out,
+        // and neighbours slide into their new spacing without replaying the deal animation.
+        const motion=node.animate([
+            {translate:`${dx}px ${dy}px`},
+            {translate:`${dx*.45}px ${dy*.45+(entering?-22:returning?8:0)}px`,offset:.5},
+            {translate:'0px 0px'},
+        ],{duration:entering||returning?340:300,easing:'cubic-bezier(.22,.7,.25,1)'});
+        motion.finished.then(()=>{node.style.zIndex=restingZ;},()=>{});
+    }
+}
+// Copy the painted face before a round redraw removes the old hand.
+export function capturePlayedCard(root,seq) {
+    const source=root.querySelector(`.hand-card[data-seq="${seq}"] .card-select`);
+    if(!source)return null;
+    const node=source.cloneNode(true),rect=source.getBoundingClientRect(),base=root.getBoundingClientRect();
+    const originals=source.querySelectorAll('canvas');
+    node.querySelectorAll('canvas').forEach((canvas,i)=>canvas.getContext('2d').drawImage(originals[i],0,0));
+    return {node,seq,x:rect.left-base.left,y:rect.top-base.top,width:rect.width,height:rect.height};
+}
+export function animatePlayedCard(root,card,duration) {
+    if(!duration)return;
+    const {node,x,y,width,height}=card;
+    node.classList.add('played-card');node.disabled=true;node.setAttribute('aria-hidden','true');
+    Object.assign(node.style,{left:`${x}px`,top:`${y}px`,width:`${width}px`,height:`${height}px`});root.append(node);
+    const arena=root.querySelector('.battle-canvas').getBoundingClientRect(),base=root.getBoundingClientRect();
+    const dx=arena.left-base.left+arena.width/2-x-width/2,dy=arena.top-base.top+arena.height*.53-y-height/2;
+    node.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.85)`,opacity:1,offset:.72},{transform:`translate(${dx}px,${dy-20}px) scale(.45)`,opacity:0}],{duration,easing:'ease-in-out',fill:'forwards'}).finished.then(()=>node.remove(),()=>node.remove());
 }
 export function eventLabel(e,battle,assets) {
     const caster=battle.unitsById[e.caster]?.name||'',target=battle.unitsById[e.target]?.name||'',card=assets.dataset.cards[e.card]?.name||'';

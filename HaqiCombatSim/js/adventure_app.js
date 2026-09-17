@@ -1,3 +1,4 @@
+import { tickCheckin } from './adventure_checkin_core.js';
 import { prepareDebugEdit } from './adventure_debug_core.js';
 import { hasDebugBackup, storeDebugEdit, restoreDebugBackup } from './adventure_debug.js';
 import { tickCare } from './adventure_pets_core.js';
@@ -8,6 +9,7 @@ import { HIT_DURATION_MS,castHitReactions } from './actor_animation_core.js';
 import * as A from './adventure_core.js';
 import * as W from './adventure_world_core.js';
 import * as P from './combat_pve_core.js';
+import { cardsInHand, canCast, isAlive } from './combat_unit_core.js';
 import * as V from './view_adventure.js';
 import { loadResources,saveLocal,readLocal,downloadSave,localUpdatedAt,replaceLocalWithBackup,readBackup } from './adventure_assets.js';
 import { createRenderer } from './adventure_renderer.js';
@@ -32,7 +34,7 @@ let joystick={x:0,y:0},heldPointer=null;
 function resetMovementInput(){keys.clear();joystick={x:0,y:0};heldPointer=null;document.querySelector('.touch-joystick')?.resetInput();}
 const shopView={category:'pet',query:'',school:'',slot:'',ownership:'',page:0},petView={selected:null};
 const equipmentView={tab:'gear',slot:0,item:null,query:''};
-const model=()=>({assets,save,now:Date.now(),storageWarning,battle,selected,discarded,animating:!!animation,equipmentView,shopView,petView,debugBackup:hasDebugBackup(),soundEnabled:spellSound.enabled});
+const model=()=>({assets,save,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,animating:!!animation,equipmentView,shopView,petView,debugBackup:hasDebugBackup(),soundEnabled:spellSound.enabled});
 function toast(message) {nodes.toast.textContent=message;nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);}
 function safely(fn) {try{return fn();}catch(e){toast(e.message);return false;}}
 function persist() {
@@ -195,9 +197,14 @@ function track() {
     }
     if(goal.kind==='action')openPanel(goal.id==='hatch-pet'||goal.id===79019?'pet':goal.id===79037&&save.equipment[24]===24003?'deck':'inventory');
 }
-function paintBattle(){V.renderBattle(nodes.battle,model(),{sound:toggleSound,cloud:openCloud,export:()=>downloadSave(save),select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
+function paintBattle(){
+    const hero=battle.sides.near[0],hand=cardsInHand(hero);
+    if(!animation&&!battle.finished&&(!selected||!hand.some(h=>h.seq===selected.seq))) {
+        selected=hand.find(h=>!discarded.includes(h.seq)&&isAlive(hero)&&canCast(hero,battle.resolved.cards[h.key],battle.resolved))||hand.find(h=>!discarded.includes(h.seq))||hand[0]||null;
+    }
+    V.renderBattle(nodes.battle,model(),{sound:toggleSound,cloud:openCloud,export:()=>downloadSave(save),select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
     if(animation||battle.finished)return;discarded=discarded.includes(seq)?discarded.filter(x=>x!==seq):[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
-},target:id=>{if(!selected||animation||battle.finished)return;playRound({...selected,targetId:id,discardSeqs:discarded});},capture:id=>playRound({capture:true,targetId:id}),pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
+},target:id=>{if(!selected||animation||battle.finished||discarded.includes(selected.seq)||!canCast(battle.sides.near[0],battle.resolved.cards[selected.key],battle.resolved))return;playRound({...selected,targetId:id,discardSeqs:discarded});},capture:id=>playRound({capture:true,targetId:id}),pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
     if(assets.content.pets)A.settleParty(save,assets.content,battle,{retreat:true});
     A.applyAction(save,assets.content,{type:'retreat'});save.careAt=Date.now();enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
 },finish:()=>safely(()=>{A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save);})});}
@@ -205,14 +212,18 @@ function playRound(decision) {
     if(animation||battle.finished)return;
     safely(()=>{
         const start=battle.events.length,hp=Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,u.hp]));
+        const hand=cardsInHand(battle.sides.near[0]),played=!decision.pass&&!decision.capture?V.capturePlayedCard(nodes.battle,decision.seq):null;
         P.playPveRound(battle,decision);A.recordDecision(save,decision);persist();selected=null;discarded=[];
         const events=battle.events.slice(start).filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','pass','capture'].includes(e.type));
-        animation={events:events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),index:0,start:performance.now(),hp,entered:-1};paintBattle();
+        const delay=played&&!matchMedia('(prefers-reduced-motion: reduce)').matches?420:0;
+        animation={events:events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),index:0,start:performance.now()+delay,hp,entered:-1,hand:hand.filter(h=>h.seq!==played?.seq&&!decision.discardSeqs?.includes(h.seq))};paintBattle();
+        if(played)V.animatePlayedCard(nodes.battle,played,delay);
     });
 }
 function tickAnimation(now) {
     if(!animation){spellSound.stop();return null;}
     const a=animation,e=a.events[a.index];
+    if(now<a.start)return {hp:a.hp};
     if(!e){spellSound.stop();animation=null;paintBattle();return null;}
     if(a.entered!==a.index){a.entered=a.index;
         if(e.type==='damage')a.hp[e.target]=Math.max(0,a.hp[e.target]-e.amount);
@@ -260,6 +271,7 @@ for(const event of ['pointerup','pointercancel','lostpointercapture'])nodes.worl
 function frame(now) {
     requestAnimationFrame(frame);if(!renderer||!save)return;
     if(stage==='world'&&!document.hidden&&now-lastCare>1000){lastCare=now;tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),true);V.updateHeroHealth(nodes.hud,save,assets.content);V.updateCheckin(nodes.hud,model());if(panel==='checkin')V.updateCheckin(nodes.overlay,model());if(now-lastSave>10000)persist();}
+    if((stage==='world'||stage==='battle')&&!document.hidden)tickCheckin(save,Date.now(),Math.min(1000,Math.max(0,now-lastFrame)));
     const dt=Math.min(.055,(now-lastFrame)/1000||0);lastFrame=now;const wasMoving=moving;moving=false;
     if(stage==='world'&&!panel&&!dialog) {
         let dx=Number(keys.has('right'))-Number(keys.has('left')),dy=Number(keys.has('down'))-Number(keys.has('up'));

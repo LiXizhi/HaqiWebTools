@@ -36,7 +36,7 @@ export function defaultParams(version = 'teen') {
     const teen = version === 'teen';
     return {
         version,
-        checkin: { intervalMs: 300000, coins: 100 },
+        checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
         adventure: {
             levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [8,12,16,20],
             petCopies: 3, regenPerMinute: .05, hungerPerMinute: 1, feedThreshold: 30,

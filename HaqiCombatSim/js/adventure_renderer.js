@@ -133,18 +133,20 @@ export function createRenderer(canvas,assets) {
     }
     function screenToWorld(x,y){return{x:x/cam.scale+cam.x,y:y/cam.scale+cam.y};}
     function renderBattle(target,battle,save,time,presentation) {
-        const c=target.getContext('2d'),w=target.clientWidth,h=target.clientHeight,dpr=Math.min(2,devicePixelRatio||1);
-        if(target.width!==Math.round(w*dpr)||target.height!==Math.round(h*dpr)){target.width=Math.round(w*dpr);target.height=Math.round(h*dpr);}
-        c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,w,h);
+        const c=target.getContext('2d'),pixelWidth=target.clientWidth,pixelHeight=target.clientHeight,dpr=Math.min(2,devicePixelRatio||1);
+        if(!pixelWidth||!pixelHeight)return {};
+        const scale=Math.min(1,pixelHeight/270),w=pixelWidth/scale,h=pixelHeight/scale;
+        if(target.width!==Math.round(pixelWidth*dpr)||target.height!==Math.round(pixelHeight*dpr)){target.width=Math.round(pixelWidth*dpr);target.height=Math.round(pixelHeight*dpr);}
+        c.setTransform(dpr*scale,0,0,dpr*scale,0,0);c.clearRect(0,0,w,h);
         const t=time/1000,cx=w/2,cy=h*.53,r=Math.min(w*.40,h*.62);
         const haze=c.createRadialGradient(cx,cy,20,cx,cy,r*1.5);haze.addColorStop(0,'#527e7166');haze.addColorStop(1,'transparent');c.fillStyle=haze;c.fillRect(0,0,w,h);
         ellipse(c,cx,cy+18,r+24,r*.56+10,'#112f3c99');ellipse(c,cx,cy,r,r*.54,'#809580');ellipse(c,cx,cy-4,r-9,r*.51,'#c5c4a4');
         circleRune(c,cx,cy-2,r-18,t,'#ebdfaf');circleRune(c,cx,cy-2,r*.62,-t,'#7e9a90');
-        const hero={x:cx-r*.56,y:cy+r*.15},enemy={x:cx+r*.54,y:cy-r*.08};
-        for(let i=0;i<8;i++){const a=i*TAU/8;circleRune(c,cx+Math.cos(a)*r*.79,cy+Math.sin(a)*r*.4,19,t*.2,'#f2e6b677');}
-        const ev=presentation?.event,p=presentation?.progress||0,positions={hero,mob0:enemy};
-        for(const unit of battle.sides.near){const slot=unit.slot??0;positions[unit.id]={x:cx-r*(slot%2===0?.85:.25),y:h*(slot<2?.34:.72)};}
-        for(const [i,unit] of battle.sides.far.entries())positions[unit.id]={x:cx+r*.57,y:cy+r*(i*.3-.15)};
+        // Runes, actor feet and targeting share the same ellipse coordinates.
+        const slotPoint=(side,slot)=>{const a=([-155,-110,155,110][slot%4])*Math.PI/180;return{x:cx+Math.cos(a)*r*.76*(side==='near'?1:-1),y:cy+Math.sin(a)*r*.39};};
+        for(const side of ['near','far'])for(let slot=0;slot<4;slot++){const at=slotPoint(side,slot);circleRune(c,at.x,at.y,19,t*.2,'#f2e6b677');}
+        const ev=presentation?.event,p=presentation?.progress||0,positions={};
+        for(const side of ['near','far'])for(const [i,unit] of battle.sides[side].entries())positions[unit.id]=slotPoint(side,unit.slot??i);
         for(const id of Object.keys(battle.unitsById)) {
             const hp=presentation?.hp?.[id]??battle.unitsById[id].hp;
             const hit=presentation?.reactions?.find(reaction=>reaction.target===id);
@@ -168,7 +170,7 @@ export function createRenderer(canvas,assets) {
         if(ev?.type==='damage'||ev?.type==='heal') {
             const at=positions[ev.target];if(at){c.save();c.globalAlpha=1-p*.65;text(c,`${ev.type==='heal'?'+':'−'}${ev.amount}${ev.mark==='c'?' 暴击':''}`,at.x,at.y-100-p*40,26,ev.type==='heal'?'#adf8a0':'#fff0b4');c.restore();}
         }
-        return positions;
+        return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:at.x*scale,y:at.y*scale}]));
     }
     return {render,minimap,screenToWorld,renderBattle};
 }

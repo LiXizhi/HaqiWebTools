@@ -143,7 +143,7 @@ export function applyAction(save, content, action) {
     if(content.pets&&Pets.petAction(save,content,action)){save.revision++;return {changed:true};}
     const q = currentQuest(save,content);
     switch (action.type) {
-    case 'checkin': claimCheckin(save, content, action.now); break;
+    case 'checkin': claimCheckin(save, content, action.now, action.index); break;
     case 'accept': {
         assert(q && q.id === Number(action.questId) && q.startNpc === Number(action.npcId), '当前没有可接取的任务');
         if (!save.quests[q.id]) save.quests[q.id] = { accepted: true, claimed: false, progress: {} };

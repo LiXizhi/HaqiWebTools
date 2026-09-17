@@ -7,11 +7,12 @@ function rune(c,x,y,r,t,color){c.save();c.translate(x,y);c.scale(1,.42);c.rotate
 function shard(c,x,y,size,angle,color){c.save();c.translate(x,y);c.rotate(angle);c.fillStyle=color;c.beginPath();c.moveTo(0,-size*2.4);c.lineTo(size*.5,0);c.lineTo(0,size*.65);c.lineTo(-size*.5,0);c.closePath();c.fill();c.strokeStyle='#ffffffb0';c.lineWidth=.8;c.stroke();c.restore();}
 export function createSpellEffects(assets) {
     const config=assets.effects,cache=new Map();
-    function draw(c,{card,progress,from,to,width,height,seed=0,reducedMotion=false,failed=false}) {
+    function draw(c,{card,progress,from,to,center,width,height,seed=0,reducedMotion=false,failed=false}) {
         const spec=spellEffect(config,card);if(!spec||!from||!to)return;
         const p=clamp(progress),col=spec.palette,[primary,light,dark]=col;
         const scale=Math.min(1,width/650,height/330),radius=70*scale*spec.scale;
-        const a={x:from.x,y:from.y-52*scale},b={x:to.x,y:to.y-52*scale};
+        const origin=spec.kind==='summon'&&!failed?(center||{x:(from.x+to.x)/2,y:(from.y+to.y)/2}):from;
+        const a={x:origin.x,y:origin.y-52*scale},b={x:to.x,y:to.y-52*scale};
         const cacheKey=card.key+':'+seed;
         if(!cache.has(cacheKey)){if(cache.size>128)cache.clear();cache.set(cacheKey,effectParticles(card.key,spec.count,seed));}
         const particles=cache.get(cacheKey);
@@ -20,13 +21,13 @@ export function createSpellEffects(assets) {
         // A soft darkening gives particles contrast without white screen flashes.
         c.fillStyle=`rgba(10,14,35,${Math.sin(p*Math.PI)*.22})`;c.fillRect(0,0,width,height);
         c.shadowColor=primary;c.shadowBlur=12*scale;c.globalAlpha=Math.min(1,p*8,(1-p)*7);
-        rune(c,a.x,from.y+4,radius*(.65+Math.sin(p*Math.PI)*.15),p,primary);
+        rune(c,a.x,origin.y+4,radius*(.65+Math.sin(p*Math.PI)*.15),p,primary);
         const summon=spec.kind==='summon',attackStart=summon?config.timeline.summonAttack:config.timeline.attack,impact=summon?config.timeline.summonImpact:config.timeline.impact;
         const flight=clamp((p-attackStart)/(impact-attackStart)),hit=clamp((p-impact)/(1-impact));
         if(failed){c.globalAlpha*=1-p;for(const v of particles.slice(0,20))disc(c,a.x+Math.cos(v.angle)*radius*p,a.y-Math.sin(v.angle)*radius*p,2*scale,'#9aa1af');c.restore();return;}
         if(summon) {
             const def=spec.summonDef,emerge=clamp(p/.26),fade=clamp((1-p)/.15),dir=b.x>=a.x?1:-1;
-            const sx=a.x+dir*radius*.8+dir*Math.sin(flight*Math.PI)*radius*.45,sy=from.y-10*scale;
+            const sx=a.x+dir*Math.sin(flight*Math.PI)*radius*.45,sy=origin.y;
             c.save();c.globalAlpha*=emerge*fade;rune(c,sx,sy,radius*1.1,p,light);
             for(const v of particles.slice(0,24)){const phase=(p*1.4+v.phase)%1;disc(c,sx+Math.cos(v.angle+p*5)*radius*(1-phase),sy-phase*170*scale,v.size*scale,primary);}
             c.shadowBlur=0;c.translate(sx,sy);c.scale(dir,1);c.rotate(Math.sin(flight*TAU)*.065);

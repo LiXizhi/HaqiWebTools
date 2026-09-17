@@ -134,7 +134,7 @@ export function createRenderer(canvas,assets) {
             for(let i=0;i<Math.min(2,labels.length);i++)text(c,labels[i]+(i===1&&labels.length>2?` 等${labels.length}项`:''),at.x,at.y+101+i*14,w<650?9:11,'#eedba2');
         }
         if(ev?.type==='cast'||ev?.type==='fizzle') {
-            effects.draw(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],width:w,height:h,seed:`${ev.round}:${ev.caster}:${ev.card}`,reducedMotion:reducedMotion.matches,failed:ev.type==='fizzle'});
+            effects.draw(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],center:{x:cx,y:cy-2},width:w,height:h,seed:`${ev.round}:${ev.caster}:${ev.card}`,reducedMotion:reducedMotion.matches,failed:ev.type==='fizzle'});
         }
         if(ev?.type==='damage'||ev?.type==='heal') {
             const at=positions[ev.target];if(at){c.save();c.globalAlpha=1-p*.65;text(c,`${ev.type==='heal'?'+':'−'}${ev.amount}${ev.mark==='c'?' 暴击':''}`,at.x,at.y-100-p*40,26,ev.type==='heal'?'#adf8a0':'#fff0b4');c.restore();}

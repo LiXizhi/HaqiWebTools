@@ -16,10 +16,10 @@ export function defaultBuild(school,ruleset) {
   for(const key of [`${prefix}_${prefix}DamageBlade`,school==='ice'?'Ice_GlobalShield':`${prefix}_${prefix}GreatShield`,`${prefix}_${prefix}DamageTrap`,...({fire:['Fire_AreaAccuracyWeakness'],death:['Death_AreaDamageWeakness'],life:['Life_HealBlade'],storm:['Storm_AreaDamageTrap'],ice:['Ice_SingleStun']}[school])]) {
     const c=ruleset.cards[key];if(!c||cardIssues(c,ruleset).length)throw new Error(`默认辅助技能缺失或不可执行：${key}`);keys.push(key);
   }
-  return {...build,deck:keys.flatMap(key=>Array(4).fill(key)),deckCapacity:64,handSize:8,drawPerRound:8,deckPreset:'balanced-v1'};
+  return {...build,deck:keys.flatMap(key=>Array(4).fill(key)),deckCapacity:40,handSize:8,drawPerRound:8,deckPreset:'balanced-v1'};
 }
 export function autoConfigureDeck(build,ruleset) {
-  const preset=defaultBuild(build.school,ruleset),capacity=build.deckCapacity??64;
+  const preset=defaultBuild(build.school,ruleset),capacity=build.deckCapacity??40;
   if(!Number.isInteger(capacity)||capacity<1||capacity>200)throw new Error('卡包容量须为 1–200');
   const keys=[...new Set(preset.deck)].filter(key=>ruleset.cards[key].requireLevel<=(build.level??50));
   // Round-robin copies preserve skill variety in smaller bags.

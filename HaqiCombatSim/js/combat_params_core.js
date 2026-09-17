@@ -20,9 +20,11 @@ function perSchoolDefaults() {
  *   maxPips            player_server.lua L58/L173/L186 (kids 7 / teen 14)
  *   maxRounds          player_server.lua L184/L188, arena_server.lua L96/L319 (kids 100 / teen 80)，单位为“半回合”（每边各出一次牌为 2）
  *   handSize           player_server.lua L295 (8)
- *   deckCapacity       卡包总容量：来自卡包道具 stats[167]（arena_server.lua L8011/L8154），本地无道具表，
- *                      默认取客户端初始卡包 CombatCardDeckSubPage.lua L38 (kids 14) / CombatCardManager.teen.lua L41 (teen 18)
- *   deckEachCapacity   单卡上限：stats[170]（arena_server.lua L8087-8107），默认 L40 (kids 3) / L43 (teen 5)；teen 同名 spell_name 共享上限（L8119）
+ *   deckCapacity       卡包总容量：来自卡包道具 stats[167]（arena_server.lua L8011/L8154），本地无道具表；
+ *                      初始卡包为 kids 14 / teen 18（CombatCardDeckSubPage.lua L38 / CombatCardManager.teen.lua L41），
+ *                      正常玩家卡包约 40 张，默认 40
+ *   deckEachCapacity   单卡上限：stats[170]（arena_server.lua L8087-8107），初始卡包 3 / 5，正常约 6，默认 6；teen 同名 spell_name 共享上限（L8119）
+ *   deckPresetCopies   模拟器项：未自定义配卡时，官方 Aggressive 卡组每种卡带几份（带满不一定最好——抽不到想要的牌）
  *   critDamageRatio    card_server.lua L96 (1.3)
  *   dodgeDamageRatio   card_server.lua L99, InitConstants L191-200 (teen 0.5 / kids 0.00001)
  *   maxSpellPenetration card_server.lua L69 (70)
@@ -38,8 +40,9 @@ export function defaultParams(version = 'teen') {
             maxPips: teen ? 14 : 7,
             maxRounds: teen ? 80 : 100,
             handSize: 8,
-            deckCapacity: teen ? 18 : 14,
-            deckEachCapacity: teen ? 5 : 3,
+            deckCapacity: 40,
+            deckEachCapacity: 6,
+            deckPresetCopies: 3,
             critDamageRatio: 1.3,
             dodgeDamageRatio: teen ? 0.5 : 0.00001,
             maxSpellPenetration: 70,

@@ -65,3 +65,9 @@ Patch 的 hash 根据父 hash 与改动生成；候选评估返回 `{baselineHas
 BattleState 角色新增 `usedCount`、`discardedCount`；剩余牌库为 `deck.length-drawIndex`。getObservation 仅向当前角色提供其牌库余量和上述计数。记录 draw/discard 事件，弃牌进入 actions，可确定性回放。牌库和手牌都耗尽时仅能等待；施法失败仍沿用原规则回到牌库末尾，不计成功使用。
 
 引擎版本升级为 0.2.0，旧引擎动作战报拒绝直接回放。动画只读取事件，不参与 Worker 或无界面结算。
+
+## v0.2.2 单卡上限与默认容量
+
+默认 deckCapacity 改为 40（仍可显式配置 1–200）；实际携带数量可以小于容量，空位不参与抽牌。每个 card key 最多携带 6 张，compileCharacter 对所有调用方统一校验；手动加牌同时受容量和副本数限制。非法旧自定义卡组不会被截断为其他卡组，导入/编译会报错；本机无效保存配置沿用启动时的提示及默认回退，原保存仍在 IndexedDB。
+
+`rules/deck.js:openingChance(total,copies,draws)` 给出均匀无放回首轮抽取至少一张的理论概率，使用实际携带张数而非容量，抽取量=min(handSize,drawPerRound,实际携带数)。固定种子的实战抽牌仍由内核负责，界面概率不改变抽牌。

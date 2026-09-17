@@ -9,6 +9,7 @@
     --ok: #4fc45a;
     --warn: #e8b04a;
     --bad: #e8562a;
+    --pip: #6fc3ff; --pip-power: #ffc94a;
     --fire: #e8562a; --ice: #3aa6e8; --storm: #8f5be8; --life: #4fc45a; --death: #9aa0ad; --balance: #d8b04a; --myth: #e8c13a;
     font-size: 14px;
 }
@@ -81,8 +82,8 @@ tr:hover td { background: rgba(255,255,255,.02); }
 .hptext { font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; }
 .pips { display: flex; gap: 3px; margin: 5px 0; flex-wrap: wrap; }
 .pip { width: 11px; height: 11px; border-radius: 50%; background: #3b4552; border: 1px solid #55616f; }
-.pip.normal { background: #f4f6fa; }
-.pip.power { background: var(--warn); border-color: #ffd57a; }
+.pip.normal { background: var(--pip); }
+.pip.power { background: var(--pip-power); border-color: #fff1c2; }
 .chips { display: flex; flex-wrap: wrap; gap: 3px; min-height: 16px; }
 .chip { font-size: 10px; padding: 0 5px; border-radius: 3px; border: 1px solid var(--border); background: var(--panel2); }
 .chip.pos { border-color: var(--ok); color: var(--ok); }
@@ -101,7 +102,7 @@ tr:hover td { background: rgba(255,255,255,.02); }
 .card.selected { border-color: var(--warn); box-shadow: 0 0 0 3px rgba(232,176,74,.25); }
 .card.disabled { opacity: .45; cursor: not-allowed; }
 .card .cost { position: absolute; right: 6px; top: 4px; background: #0f1216; border-radius: 10px; padding: 0 6px; font-weight: 700; }
-.card .ctype { color: var(--muted); font-size: 11px; }
+.card .ctype { color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 28px; }
 .card .cname { font-weight: 600; word-break: break-all; line-height: 1.2; margin-top: 12px; }
 .card .cinfo { color: var(--muted); font-size: 11px; margin-top: 4px; }
 .card.fire { border-left: 4px solid var(--fire); }
@@ -128,8 +129,17 @@ tr:hover td { background: rgba(255,255,255,.02); }
 .disc .tok-more { font-size: 10px; fill: var(--muted); }
 .disc .hp-fill { transition: width .35s ease-out; }
 .disc .pipdot.empty { fill: #3b4552; stroke: #55616f; stroke-width: .8; }
-.disc .pipdot.normal { fill: #f4f6fa; }
-.disc .pipdot.power { fill: var(--warn); stroke: #ffd57a; stroke-width: .8; }
+.disc .pipdot.normal { fill: var(--pip); stroke: #d6f0ff; stroke-width: .6; }
+.disc .pipdot.power { fill: var(--pip-power); stroke: #fff1c2; stroke-width: 1; filter: drop-shadow(0 0 3px var(--pip-power)); }
+.disc .tok-pips { font-size: 11px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.disc .tok-pips .n { fill: var(--pip); }
+.disc .tok-pips .sep { fill: var(--muted); font-weight: 400; }
+.disc .tok-pips .p { fill: var(--pip-power); }
+.disc .legend text { font-size: 10.5px; fill: var(--muted); }
+.piptag { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; }
+.piptag i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+.piptag .pip-n { background: var(--pip); }
+.piptag .pip-p { background: var(--pip-power); box-shadow: 0 0 4px var(--pip-power); }
 .disc .schip rect { fill: var(--panel2); stroke: var(--border); stroke-width: 1; }
 .disc .schip text { font-size: 9.5px; fill: var(--text); }
 .disc .schip.pos rect { stroke: var(--ok); } .disc .schip.pos text { fill: var(--ok); }

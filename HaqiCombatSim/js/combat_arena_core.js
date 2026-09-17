@@ -195,12 +195,29 @@ export function checkFinish(arena) {
         arena.finished = true;
         arena.timeout = true;
         arena.winner = null;
+    } else if (allDecksExhausted(arena)) {
+        // 模拟器加速：双方存活单位卡包全部打空且无 DOT 在身 → 之后只剩跳过，结果必然是回合耗尽平局，提前判定
+        arena.finished = true;
+        arena.timeout = true;
+        arena.decksExhausted = true;
+        arena.winner = null;
     }
     if (arena.finished) {
         arena.phase = 'done';
-        emit(arena, { type: 'combat_end', winner: arena.winner, timeout: arena.timeout, turn: arena.turn, hp: hpSnapshot(arena) });
+        emit(arena, { type: 'combat_end', winner: arena.winner, timeout: arena.timeout, decksExhausted: !!arena.decksExhausted, turn: arena.turn, hp: hpSnapshot(arena) });
     }
     return arena.finished;
+}
+
+/** 双方存活单位是否都已打空卡包（手牌为空、无可抽）且身上没有 DOT（DOT 仍可能改变结果） */
+export function allDecksExhausted(arena) {
+    const alive = allUnits(arena).filter(U.isAlive);
+    if (!alive.length) return false;
+    for (const u of alive) {
+        if (!U.isDeckExhausted(u)) return false;
+        if (u.dots.some(d => d.ticks.length)) return false;
+    }
+    return true;
 }
 
 export function hpSnapshot(arena) {
@@ -243,6 +260,7 @@ export function summarizeResult(arena) {
     return {
         winner: arena.winner,
         timeout: arena.timeout,
+        decksExhausted: !!arena.decksExhausted,
         firstSide: arena.firstActingSide || null,
         turns: arena.turn,
         rounds: Math.ceil(arena.turn / 2),

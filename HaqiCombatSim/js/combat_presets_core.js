@@ -10,38 +10,53 @@ function styleOf(school) {
     return `Aggressive${school.charAt(0).toUpperCase()}${school.slice(1)}`;
 }
 
+/** 官方 CSV 里同一法术的染色副本（_Green/_Blue/_Purple，teen 与本体共享单卡上限） */
+const COLOR_VARIANT = /_(Green|Blue|Purple)$/;
+
 /**
- * 从官方 AI CSV 派生某系预设卡组：CSV 中出现且数据集含有的卡。
+ * 从官方 AI CSV 派生某系“玩家会带的”预设卡组：CSV 中出现且数据集含有的卡，去掉染色副本。
  * 无 CSV 时回退：该系 + balance 的受支持卡中按类型抽样。
  *
- * 输出按“轮询”顺序展开（A,B,C,A,B,C,…），每张最多 copies 份、总数不超过 maxCards；
- * 真正的卡包容量 / 单卡上限在 createUnit → setDeck 时按 BalanceParams.global.deckCapacity /
- * deckEachCapacity 裁剪（保留前面的条目），因此轮询顺序能让小卡包保持卡种多样。
+ * 份数：攻击 / 治疗牌每种 copies 份（默认 3），护盾 / 符咒 / 光环等功能牌每种 ceil(copies/2) 份；
+ * 输出按“轮询”顺序展开（第 1 轮每种 1 张，第 2 轮…），攻击牌按 requireLevel 降序排在前面，
+ * 因此 createUnit → setDeck 按 BalanceParams.global.deckCapacity / deckEachCapacity 裁剪时，
+ * 先被裁掉的是低级攻击牌的多余副本，小卡包仍保持卡种多样。
+ * 带满不一定最好——卡越多越抽不到关键牌，正式结论应在配卡面板为各系配出实际卡组。
+ * @param opts { copies, maxCards, maxLevel, keepVariants }
  * @return [{key, count}]（同 key 可能出现多次，交给 clampDeck 合并）
  */
 export function presetDeck(dataset, school, opts = {}) {
-    const copies = opts.copies ?? 6;
+    const copies = Math.max(1, opts.copies ?? 3);
+    const utilCopies = Math.max(1, Math.ceil(copies / 2));
     const maxCards = opts.maxCards ?? 120;
     const cards = dataset.cards || {};
     const table = (dataset.aiDecks || {})[styleOf(school)];
     let keys = [];
     if (table && table.cards) {
-        keys = Object.keys(table.cards).filter(k => cards[k] && isSupportedType(cards[k].type) && !/Pet|Rune|Crazy|VIP|1000Accuracy|_adv$/i.test(k));
+        keys = Object.keys(table.cards).filter(k => cards[k] && isSupportedType(cards[k].type) && !/Pet|Rune|Crazy|VIP|1000Accuracy|_adv/i.test(k));
+        if (!opts.keepVariants) keys = keys.filter(k => !COLOR_VARIANT.test(k));
         if (opts.maxLevel !== undefined) keys = keys.filter(k => (cards[k].requireLevel || 0) <= opts.maxLevel);
     }
     if (!keys.length) {
         keys = Object.values(cards)
             .filter(c => (c.spellSchool === school || c.spellSchool === 'balance') && isSupportedType(c.type) && c.type !== 'Pass')
-            .filter(c => !/Pet|Rune|Crazy|VIP|1000Accuracy|Deleted|_adv$/i.test(c.key))
+            .filter(c => !/Pet|Rune|Crazy|VIP|1000Accuracy|Deleted|_adv/i.test(c.key))
+            .filter(c => opts.keepVariants || !COLOR_VARIANT.test(c.key))
             .filter(c => opts.maxLevel === undefined || (c.requireLevel || 0) <= opts.maxLevel)
             .sort((a, b) => a.pipcost - b.pipcost)
             .map(c => c.key);
     }
+    const isCore = k => isAttackCard(cards[k]) || isHealCard(cards[k]);
+    const core = keys.filter(isCore).sort((a, b) => ((cards[b].requireLevel || 0) - (cards[a].requireLevel || 0)) || (cards[b].pipcost - cards[a].pipcost));
+    const util = keys.filter(k => !isCore(k));
+    const ordered = core.concat(util);
+    const limit = k => (isCore(k) ? copies : utilCopies);
     const deck = [];
     let total = 0;
-    for (let round = 0; round < copies && total < maxCards && keys.length; round++) {
-        for (const key of keys) {
+    for (let round = 0; round < copies && total < maxCards && ordered.length; round++) {
+        for (const key of ordered) {
             if (total >= maxCards) break;
+            if (round >= limit(key)) continue;
             deck.push({ key, count: 1 });
             total++;
         }
@@ -86,7 +101,7 @@ export function gearStats(dataset, school, gearScore) {
 
 /**
  * 单位模板
- * @param opts { level, policy:'deck_attacker'|'simple'|'random'|'human', stats, deck, gearScore, name }
+ * @param opts { level, policy:'deck_attacker'|'simple'|'random'|'human', stats, deck, gearScore, name, presetCopies }
  */
 export function unitSpec(dataset, school, opts = {}) {
     const level = opts.level ?? 50;
@@ -97,7 +112,7 @@ export function unitSpec(dataset, school, opts = {}) {
         level,
         name: opts.name || `${SCHOOL_NAMES[school] || school} Lv${level}`,
         stats,
-        deck: opts.deck || presetDeck(dataset, school, { maxLevel: level }),
+        deck: opts.deck || presetDeck(dataset, school, { maxLevel: level, copies: opts.presetCopies }),
         policyName: opts.policy || 'deck_attacker',
         isBot: opts.policy !== 'human',
     };

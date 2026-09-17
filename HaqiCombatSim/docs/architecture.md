@@ -45,8 +45,10 @@ dataset = {
 ```js
 params = {
   version: 'kids' | 'teen',
-  global: { maxPips, maxRounds, handSize, critDamageRatio, dodgeDamageRatio,
-            maxSpellPenetration, areaSiblingRatio, healPenalty },
+  global: { maxPips, maxRounds, handSize, deckCapacity, deckEachCapacity, deckPresetCopies,
+            critDamageRatio, dodgeDamageRatio, maxSpellPenetration, areaSiblingRatio, healPenalty },
+  //   deckCapacity / deckEachCapacity：卡包总容量 / 单卡上限（Lua 卡包道具 stats[167] / [170]），默认 40 / 6，0 = 不限
+  //   deckPresetCopies：未自定义配卡时官方卡组每卡份数（默认 3；模拟器项）
   perSchool: { fire: { hp: 1, damage: 1, heal: 1, accuracy: 0, powerPip: 0, resist: 0, crit: 0 }, ice: {...}, ... },
   //   hp/damage/heal 为乘子；accuracy/powerPip/resist/crit 为加法百分点
   cardOverrides: { [cardKey]: { pipcost?, accuracy?, params?: { damageMin?, damageMax?, ... } } },
@@ -71,10 +73,14 @@ unit = {
   absorbs: [ { remaining, school } ],
   dots: [ { school, perRound, rounds, casterId } ], hots: [...],
   miniaura: null | { id, rounds }, stun: 0, stances: [...],
-  deck: [ cardKey... ], hand: [ cardKey... ], discard: [ ... ],
+  deckSpec: [ {key, count} ],            // setDeck → clampDeck 按 deckCapacity / deckEachCapacity 裁剪，deckTrimmed 记录裁掉张数
+  deckSeq: [ cardKey... ], deckMap: [ 0|1|-1|-2|-3 ],  // 洗牌后的序列与状态：未抽 / 手牌 / 待弃 / 已用 / 失误补入
   cooldowns: { [spellName]: rounds },
+  totals: { damageDealt, healDone, damageTaken, casts, fizzles, passes, noCardPasses },
 }
 ```
+
+卡包相关纯函数：`clampDeck(deck, {capacity, eachCapacity, cards, version})`、`deckCounts(unit)`（手牌 / 待弃 / 未抽 / 已用 / 失误 / 剩余 / 总数）、`isDeckExhausted(unit)`、`restoreDiscardedCard`。`playTurn` 对 `pick.discardSeqs` 的处理与是否出牌无关（Lua 允许弃牌 + 跳过）；无手牌时 `pass.reason` 为 `no_cards` / `deck_empty`。`checkFinish` 在双方存活单位全部打空且无 DOT 时提前判 `timeout` 平局（`decksExhausted=true`，纯加速，不改变结果）。
 
 ### 3.4 竞技场与事件（`combat_arena_core.js`）
 

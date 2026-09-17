@@ -27,6 +27,7 @@ const cfg = {
     policy: args.policy || 'deck_attacker',
     seed: args.seed ? Number(args.seed) : 1,
     chunk: 100000,
+    presetCopies: resolved.global.deckPresetCopies,
 };
 const jobs = buildJobs(dataset, cfg);
 const t0 = Date.now();

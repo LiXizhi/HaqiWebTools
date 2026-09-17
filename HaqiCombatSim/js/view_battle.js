@@ -79,7 +79,7 @@ function describeEvent(arena, ev) {
     switch (ev.type) {
         case 'combat_start': return { cls: 'turn', text: `战斗开始（${ev.firstSide === 'near' ? '我方' : '敌方'}先手）` };
         case 'turn_begin': return { cls: 'turn', text: `—— 第 ${Math.ceil(ev.turn / 2)} 回合 · ${ev.side === 'near' ? '我方' : '敌方'}行动（剩余 ${ev.remainingRounds}）——` };
-        case 'pip': return { cls: 'info', text: `${n(ev.unit)} 获得${ev.kind === 'power' ? '强力' : ''}能量 → ${ev.pips.normal}+${ev.pips.power}★` };
+        case 'pip': return { cls: 'info', text: `${n(ev.unit)} 获得${ev.kind === 'power' ? (R.version === 'teen' ? '强力判定（+2 魔力点）' : '超级魔力点') : '魔力点'} → 魔力 ${ev.pips.normal}${R.version === 'teen' ? '' : ` · 超级 ${ev.pips.power}`}（可用 ${ev.pips.normal + ev.pips.power * 2}）` };
         case 'cast': return { cls: '', text: `${n(ev.caster)} 使用 ${card(ev.card)}${ev.target && ev.target !== ev.caster ? ' → ' + n(ev.target) : ''}（${ev.pipcost < 0 ? 'X=' + ev.realcost : ev.pipcost}费）` };
         case 'fizzle': return { cls: 'info', text: `${n(ev.caster)} 施放 ${card(ev.card)} 失误（命中 ${ev.accuracy}%）` };
         case 'damage': return { cls: 'dmg', text: `  ${n(ev.target)} 受到 ${ev.amount} ${SCHOOL_NAMES[ev.school] || ev.school}伤害${ev.mark === 'c' ? '（暴击）' : ev.mark === 'd' ? '（闪避）' : ''}${ev.label ? ' [' + ev.label + ']' : ''}` };
@@ -104,7 +104,7 @@ function describeEvent(arena, ev) {
         case 'pass': return { cls: 'info', text: `${n(ev.caster)} 跳过${{ stunned: '（眩晕）', invalid_pick: '（无效出牌）', deck_empty: '（卡包已打空）', no_cards: '（无手牌）', no_target: '（无目标）' }[ev.reason] || ''}` };
         case 'unsupported': return { cls: 'info', text: `${n(ev.caster)} 的 ${card(ev.card)}（${ev.cardType}）未支持，按跳过处理` };
         case 'turn_end': return null;
-        case 'combat_end': return { cls: 'end', text: ev.timeout ? '回合耗尽，平局' : ev.winner ? `${ev.winner === 'near' ? '我方' : '敌方'}胜利！` : '同归于尽，平局' };
+        case 'combat_end': return { cls: 'end', text: ev.decksExhausted ? '双方卡包全部打空，判平局' : ev.timeout ? '回合耗尽，平局' : ev.winner ? `${ev.winner === 'near' ? '我方' : '敌方'}胜利！` : '同归于尽，平局' };
         default: return { cls: 'info', text: JSON.stringify(ev) };
     }
 }
@@ -189,7 +189,7 @@ export function renderBattle(main) {
     const customDeck = (school) => (st.decks[ds.version] || {})[school] || null;
     /** 该系将实际带入战斗的卡组（自定义优先，否则官方预设），已按容量裁剪 */
     function deckFor(school) {
-        const raw = customDeck(school) || presetDeck(ds, school, { maxLevel: st.level });
+        const raw = customDeck(school) || presetDeck(ds, school, { maxLevel: st.level, copies: state.params.global.deckPresetCopies });
         return U.clampDeck(aggregateDeck(raw), { capacity: capacity(), eachCapacity: eachCapacity(), cards: ds.cards, version: ds.version });
     }
     function saveDeck(school, deck) {
@@ -222,7 +222,7 @@ export function renderBattle(main) {
         setup.appendChild(teamRow('我方（近端）', st.near, 'near'));
         setup.appendChild(teamRow('敌方（远端）', st.far, 'far'));
         setup.appendChild(h('div.muted.small',
-            `卡包容量 ${capacity() || '不限'} 张 · 单卡上限 ${eachCapacity() || '不限'}（数值面板 deckCapacity / deckEachCapacity）。每次轮到自己时从卡包按洗牌顺序补到 ${state.params.global.handSize} 张手牌；可标记弃牌，弃掉的牌下回合被新牌替换；卡包打空后只能跳过。`,
+            `卡包容量 ${capacity() || '不限'} 张 · 单卡上限 ${eachCapacity() || '不限'} · 未配卡时官方卡组每卡 ${state.params.global.deckPresetCopies} 份（数值面板 deckCapacity / deckEachCapacity / deckPresetCopies）。每次轮到自己时从卡包按洗牌顺序补到 ${state.params.global.handSize} 张手牌，带满不一定最好——抽不到关键牌；可标记弃牌，弃掉的牌下回合被新牌替换；卡包打空后只能跳过。`,
         ));
     }
 
@@ -255,7 +255,7 @@ export function renderBattle(main) {
                 h('h2', { style: { margin: 0 } }, `配卡 · ${SCHOOL_NAMES[school]}`),
                 h('span.tag', { class: cap && t > cap ? 'warn' : '' }, `已配 ${t} / ${cap || '∞'}`),
                 h('span.muted.small', `单卡上限 ${each || '∞'}${ds.version === 'teen' ? '（同名技能共享）' : ''} · 仅列出 Lv≤${st.level} 且引擎支持的卡`),
-                h('button', { onClick: () => { working.clear(); for (const { key, count } of U.clampDeck(aggregateDeck(presetDeck(ds, school, { maxLevel: st.level })), { capacity: cap, eachCapacity: each, cards: ds.cards, version: ds.version }).deck) working.set(key, count); draw(); } }, '官方预设'),
+                h('button', { onClick: () => { working.clear(); for (const { key, count } of U.clampDeck(presetDeck(ds, school, { maxLevel: st.level, copies: state.params.global.deckPresetCopies }), { capacity: cap, eachCapacity: each, cards: ds.cards, version: ds.version }).deck) working.set(key, count); draw(); } }, `官方预设（每卡 ${state.params.global.deckPresetCopies} 份）`),
                 h('button', { onClick: () => { working.clear(); draw(); } }, '清空'),
                 h('button.primary', { onClick: () => { saveDeck(school, Array.from(working, ([key, count]) => ({ key, count }))); toast(`已保存 ${SCHOOL_NAMES[school]} 卡组（${total()} 张）`); clear(deckBox); renderSetup(); } }, '保存'),
                 customDeck(school) ? h('button', { onClick: () => { saveDeck(school, null); toast('已恢复官方预设'); clear(deckBox); renderSetup(); } }, '恢复预设') : null,
@@ -413,7 +413,7 @@ export function renderBattle(main) {
             game.discards.clear();
             game.busy = false;
             game.ui.animateTurn(pre, game.pending.splice(0), () => game.ui.proceed());
-        }, humans.length ? 120 : 200);
+        }, SPEEDS[st.animSpeed] ? (humans.length ? 120 : 200) : 30);
     }
 
     function humanUnit() {
@@ -445,6 +445,18 @@ export function renderBattle(main) {
         root.appendChild(svg('line', { x1: DISC.cx - DISC.rx - 40, y1: DISC.cy, x2: DISC.cx + DISC.rx + 40, y2: DISC.cy, stroke: '#2c3a4d', 'stroke-width': 1 }));
         root.appendChild(svg('text', { x: 14, y: 22, class: 'side-caption', fill: snap.currentSide === 'far' ? '#e8b04a' : '#8892a0' }, `敌方${snap.currentSide === 'far' && !snap.finished ? ' · 行动中' : ''}`));
         root.appendChild(svg('text', { x: 14, y: VB.h - 10, class: 'side-caption', fill: snap.currentSide === 'near' ? '#e8b04a' : '#8892a0' }, `我方${snap.currentSide === 'near' && !snap.finished ? ' · 行动中' : ''}`));
+        // 图例：魔力点 / 超级魔力点
+        const legend = svg('g', { transform: `translate(${VB.w - 14},22)`, class: 'legend' });
+        if (R.version === 'teen') {
+            legend.appendChild(svg('circle', { cx: -118, cy: -4, r: 4, class: 'pipdot normal' }));
+            legend.appendChild(svg('text', { x: -110, y: 0 }, '魔力点（teen 强力判定直接 +2）'));
+        } else {
+            legend.appendChild(svg('circle', { cx: -196, cy: -4, r: 4, class: 'pipdot normal' }));
+            legend.appendChild(svg('text', { x: -188, y: 0 }, '魔力点'));
+            legend.appendChild(svg('circle', { cx: -136, cy: -4, r: 4.5, class: 'pipdot power' }));
+            legend.appendChild(svg('text', { x: -128, y: 0 }, '超级魔力点（本系抵 2 点）'));
+        }
+        root.appendChild(legend);
 
         // 站位点
         for (const u of units) {
@@ -479,7 +491,7 @@ export function renderBattle(main) {
             const dead = hp <= 0;
             const far = u.side === 'far';
             const g = svg('g', { transform: `translate(${p.x},${p.y})`, class: ['tok', dead ? 'dead' : '', targetIds.has(u.id) ? 'targetable' : ''].join(' '), onClick: () => { if (targetIds.has(u.id)) confirmPick(u.id); } });
-            g.appendChild(svg('title', `${u.name} Lv${u.level}\nHP ${hp}/${u.maxHp}\n能量 ${u.pips.normal} + ${u.pips.power}★\n卡包剩余 ${u.deck.remaining}/${u.deck.total}`));
+            g.appendChild(svg('title', `${u.name} Lv${u.level}\nHP ${hp}/${u.maxHp}\n魔力点 ${u.pips.normal} · 超级魔力点 ${u.pips.power}（可用 ${u.pips.normal + u.pips.power * 2}）\n卡包剩余 ${u.deck.remaining}/${u.deck.total}`));
             if (targetIds.has(u.id)) g.appendChild(svg('circle', { r: 40, fill: 'rgba(79,163,255,.12)', stroke: '#4fa3ff', 'stroke-width': 2, 'stroke-dasharray': '5 4', class: 'target-ring' }));
             if (snap.currentSide === u.side && !dead && !snap.finished) g.appendChild(svg('circle', { r: 33, fill: 'none', stroke: '#e8b04a', 'stroke-width': 2, opacity: .9 }));
             if (opts.meId === u.id) g.appendChild(svg('circle', { r: 37, fill: 'none', stroke: '#e8b04a', 'stroke-width': 1, 'stroke-dasharray': '3 3' }));
@@ -501,8 +513,13 @@ export function renderBattle(main) {
             const pipStep = Math.min(9, 110 / maxPips);
             for (let i = 0; i < maxPips; i++) {
                 const cls = i < u.pips.power ? 'power' : (i < u.pips.power + u.pips.normal ? 'normal' : 'empty');
-                g.appendChild(svg('circle', { cx: (i - (maxPips - 1) / 2) * pipStep, cy: pipY, r: 3.2, class: `pipdot ${cls}` }));
+                g.appendChild(svg('circle', { cx: (i - (maxPips - 1) / 2) * pipStep, cy: pipY, r: cls === 'power' ? 3.8 : 3.2, class: `pipdot ${cls}` }));
             }
+            // 魔力点数字：普通（蓝）/ 超级（金）
+            const pipText = svg('text', { x: 60, y: pipY + 4, class: 'tok-pips' });
+            pipText.appendChild(svg('tspan', { class: 'n' }, String(u.pips.normal)));
+            if (R.version !== 'teen') { pipText.appendChild(svg('tspan', { class: 'sep' }, '+')); pipText.appendChild(svg('tspan', { class: 'p' }, String(u.pips.power))); }
+            g.appendChild(pipText);
             // 卡包计数
             g.appendChild(svg('text', { x: 56, y: barY + 8, class: 'tok-deck', fill: u.deck.remaining === 0 ? '#ff7a5a' : '#8892a0' }, `牌${u.deck.remaining}`));
             // 状态徽标（最多两行）
@@ -635,6 +652,7 @@ export function renderBattle(main) {
         if (me) {
             const dc = U.deckCounts(me);
             deckBar.appendChild(h('span.tag', `卡包 剩余 ${dc.remaining} / ${dc.total}`));
+            deckBar.appendChild(h('span.piptag', h('i.pip-n'), ` 魔力点 ${me.pips.normal}`, R.version !== 'teen' ? [' · ', h('i.pip-p'), ` 超级魔力点 ${me.pips.power}`] : null, h('span.muted.small', `（可用 ${U.pipValue(me)}${R.version !== 'teen' ? '，超级点只对本系抵 2' : ''}）`)));
             deckBar.appendChild(h('span.muted.small', `手牌 ${dc.inHand} · 未抽 ${dc.unused} · 已用 ${dc.used}${dc.fizzled ? ` · 失误重抽 ${dc.fizzled}` : ''}${game.discards.size ? ` · 待弃 ${game.discards.size}` : ''}${me.deckTrimmed ? ` · 配卡超容量已裁 ${me.deckTrimmed} 张` : ''}`));
             const castable = new Set(castableCards(arena, me).map(c => c.seq));
             for (const { seq, key } of U.cardsInHand(me)) {

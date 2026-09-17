@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { loadDataset } from '../js/data_core.js';
 import { defaultParams, resolveParams, mergeParams, diffParams, SCHOOLS } from '../js/combat_params_core.js';
 import { createArena, runToEnd, startCombat, advanceTurn, castableCards, snapshot, playTurn } from '../js/combat_arena_core.js';
-import { cardsInHand } from '../js/combat_unit_core.js';
+import { cardsInHand, clampDeck, deckCounts, isDeckExhausted, deckSize } from '../js/combat_unit_core.js';
 import { createPolicy } from '../js/combat_policy_core.js';
 import { unitSpec, presetDeck, matchupMatrix, SCHOOL_NAMES } from '../js/combat_presets_core.js';
 import { buildJobs, runJob, mergeStats, aggregateMatrix, aggregateGlobal, wilson } from '../js/sim_batch_core.js';
@@ -210,5 +210,98 @@ test('LLM 建议：提示词含矩阵、参数块解析、启发式补丁', () =
     assert.equal(parseParamPatch('没有参数块'), null);
     const ha = heuristicAdvice(batch);
     assert.ok(ha.text.length > 10);
-    for (const s of SCHOOLS) assert.ok(typeof ha.patch.perSchool[s].hp === 'number');
+    // 胜率在 50%±5% 内的系不出补丁；其余系给 HP 乘子
+    for (const s of SCHOOLS) {
+        const r = batch.matrix.summary[s].winRate;
+        if (Math.abs(r - 0.5) < 0.05) assert.equal(ha.patch.perSchool[s], undefined);
+        else assert.ok(typeof ha.patch.perSchool[s].hp === 'number');
+    }
+});
+
+// ---------------------------------------------------------------------------
+// 卡包容量 / 配卡 / 弃牌 / 打空
+// ---------------------------------------------------------------------------
+
+test('clampDeck：单卡上限、总容量、teen 同名共享、同 key 合并', () => {
+    const deck = [{ key: 'A', count: 5 }, { key: 'B', count: 2 }, { key: 'A', count: 1 }, { key: 'C', count: 9 }];
+    const r = clampDeck(deck, { capacity: 8, eachCapacity: 3 });
+    assert.deepEqual(r.deck, [{ key: 'A', count: 3 }, { key: 'B', count: 2 }, { key: 'C', count: 3 }]);
+    assert.equal(r.total, 8);
+    assert.equal(r.trimmed, 2 + 1 + 6);
+    // 0 = 不限制
+    const free = clampDeck(deck, { capacity: 0, eachCapacity: 0 });
+    assert.equal(free.total, 17);
+    assert.equal(free.trimmed, 0);
+    // teen：同 spellName 共享单卡上限
+    const cards = { X1: { spellName: 'Blade' }, X2: { spellName: 'Blade' }, Y: { spellName: 'Trap' } };
+    const teen = clampDeck([{ key: 'X1', count: 2 }, { key: 'X2', count: 2 }, { key: 'Y', count: 2 }], { capacity: 0, eachCapacity: 3, cards, version: 'teen' });
+    assert.deepEqual(teen.deck, [{ key: 'X1', count: 2 }, { key: 'X2', count: 1 }, { key: 'Y', count: 2 }]);
+    const kids = clampDeck([{ key: 'X1', count: 2 }, { key: 'X2', count: 2 }], { capacity: 0, eachCapacity: 3, cards, version: 'kids' });
+    assert.equal(kids.total, 4);
+});
+
+test('createUnit 按 BalanceParams.global.deckCapacity 裁剪预设卡组；预设为轮询顺序保证多样性', () => {
+    const P = mergeParams(params, { global: { deckCapacity: 6, deckEachCapacity: 2 } });
+    const R = resolveParams(ds, P);
+    const arena = createArena({ resolved: R, near: [unitSpec(ds, 'fire', { level: 50 })], far: [unitSpec(ds, 'ice', { level: 50 })], seed: 3 });
+    const u = arena.sides.near[0];
+    assert.equal(deckSize(u), 6);
+    assert.ok(u.deckSpec.every(e => e.count <= 2));
+    assert.ok(u.deckSpec.length >= 3, '轮询应至少 3 种卡');
+    assert.ok(u.deckTrimmed > 0);
+    // 默认容量 40 / 单卡 6 / 预设每卡 3 份：预设不一定带满
+    const base = createArena({ resolved, near: [unitSpec(ds, 'fire', { level: 50 })], far: [unitSpec(ds, 'ice', { level: 50 })], seed: 3 });
+    const b = base.sides.near[0];
+    assert.ok(deckSize(b) > 0 && deckSize(b) <= resolved.global.deckCapacity);
+    assert.ok(b.deckSpec.every(e => e.count <= resolved.global.deckPresetCopies));
+    // presetCopies 覆盖
+    const six = createArena({ resolved, near: [unitSpec(ds, 'fire', { level: 50, presetCopies: 6 })], far: [unitSpec(ds, 'ice', { level: 50 })], seed: 3 });
+    assert.ok(deckSize(six.sides.near[0]) > deckSize(b));
+});
+
+test('卡包打空后只能跳过（pass.reason=deck_empty），双方全部打空提前判平局', () => {
+    const P = mergeParams(params, { global: { deckCapacity: 5, deckEachCapacity: 5 } });
+    const R = resolveParams(ds, P);
+    // 我方 3 张、敌方 5 张：我方先打空，至少会有一次 deck_empty 跳过
+    const near = [unitSpec(ds, 'fire', { level: 50, deck: [{ key: 'Fire_SingleAttack_Level1', count: 3 }] })];
+    const far = [unitSpec(ds, 'ice', { level: 50, deck: [{ key: 'Ice_SingleAttack_Level1', count: 5 }] })];
+    const arena = createArena({ resolved: R, near, far, seed: 11, keepEvents: true });
+    const pols = {};
+    for (const u of [...arena.sides.near, ...arena.sides.far]) pols[u.id] = createPolicy('simple');
+    const r = runToEnd(arena, pols);
+    assert.ok(r.timeout && r.decksExhausted, `应因双方打空判平：${JSON.stringify({ t: r.timeout, d: r.decksExhausted, w: r.winner })}`);
+    assert.ok(r.turns < resolved.global.maxRounds, '提前结束，不等回合耗尽');
+    for (const u of Object.values(r.units)) {
+        assert.equal(u.deckRemaining, 0);
+        assert.ok(u.casts <= u.deckSize);
+    }
+    assert.equal(r.units[arena.sides.near[0].id].deckSize, 3);
+    assert.ok(r.units[arena.sides.near[0].id].noCardPasses >= 1);
+    const passes = arena.events.filter(e => e.type === 'pass');
+    assert.ok(passes.some(e => e.reason === 'deck_empty'));
+    for (const u of [...arena.sides.near, ...arena.sides.far]) assert.ok(isDeckExhausted(u));
+});
+
+test('弃牌：标记的手牌在下次轮到自己时变为已用并补新牌；跳过时也可弃牌', () => {
+    const near = [unitSpec(ds, 'fire', { level: 50, policy: 'human' })];
+    const far = [unitSpec(ds, 'ice', { level: 50, deck: ['Pass'] })];
+    const arena = createArena({ resolved, near, far, seed: 5, firstSide: 'near', keepEvents: true });
+    startCombat(arena);
+    const me = arena.sides.near[0];
+    const hand0 = cardsInHand(me);
+    assert.equal(hand0.length, resolved.global.handSize);
+    const toDiscard = hand0.slice(0, 2).map(c => c.seq);
+    playTurn(arena, { [me.id]: { pass: true, discardSeqs: toDiscard } });
+    let dc = deckCounts(me);
+    assert.equal(dc.discarding, 2);
+    assert.equal(dc.inHand, resolved.global.handSize - 2);
+    // 敌方回合
+    playTurn(arena, { [arena.sides.far[0].id]: { pass: true } });
+    // 轮回我方：弃牌变已用、补满手牌
+    dc = deckCounts(me);
+    assert.equal(dc.discarding, 0);
+    assert.equal(dc.used, 2);
+    assert.equal(dc.inHand, Math.min(resolved.global.handSize, dc.total - 2));
+    const hand1 = cardsInHand(me).map(c => c.seq);
+    for (const s of toDiscard) assert.ok(!hand1.includes(s));
 });

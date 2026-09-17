@@ -36,7 +36,7 @@ export function renderBatch(main) {
     const changes = diffParams(defaultParams(ds.version), state.params);
     const customDecks = ((state.settings.battle || {}).decks || {})[ds.version] || {};
     const G = state.params.global;
-    cfgPanel.appendChild(h('div.muted.small', `数据集 ${ds.name}（${ds.version}）· 5 系两两对战含镜像 = 25 组 · 当前参数相对默认有 ${changes.length} 处修改 · 胜率合并 A→B 与 B→A 两向以抵消先手影响 · 卡包容量 ${G.deckCapacity || '不限'} / 单卡 ${G.deckEachCapacity || '不限'}${Object.keys(customDecks).length ? ` · 已自定义卡组：${Object.keys(customDecks).join(', ')}` : ''}`));
+    cfgPanel.appendChild(h('div.muted.small', `数据集 ${ds.name}（${ds.version}）· 5 系两两对战含镜像 = 25 组 · 当前参数相对默认有 ${changes.length} 处修改 · 胜率合并 A→B 与 B→A 两向以抵消先手影响 · 卡包容量 ${G.deckCapacity || '不限'} / 单卡 ${G.deckEachCapacity || '不限'} / 预设每卡 ${G.deckPresetCopies} 份${Object.keys(customDecks).length ? ` · 已自定义卡组：${Object.keys(customDecks).join(', ')}` : ''}`));
 
     async function run() {
         if (running) return;
@@ -48,6 +48,7 @@ export function renderBatch(main) {
         const txt = h('div.small.muted', '准备…');
         progressPanel.append(h('h2', '进度'), bar, txt);
         const cfg = { mode: st.mode, games: st.games, level: st.level, policy: st.policy, seed: st.seed, chunk: Math.max(25, Math.ceil(st.games / 4)) };
+        cfg.presetCopies = state.params.global.deckPresetCopies;
         if (st.useCustomDecks && Object.keys(customDecks).length) cfg.decks = JSON.parse(JSON.stringify(customDecks));
         const jobs = buildJobs(ds, cfg);
         const byMatchup = {};
@@ -121,7 +122,7 @@ export function renderBatch(main) {
                 h('div', h('h3', '胜率矩阵（行方胜率）'), table),
                 h('div', h('h3', '各系对外胜率（含 95% 置信区间）'), bars,
                     h('h3', '平衡度'),
-                    h('div.small', `极差 ${pct(bal.spread)} · 标准差 ${pct(bal.std, 2)} · 判定：${verdict} · 先手胜率（有胜负局）${pct(bal.firstMoveWinRate)} · 平均 ${fmt(glob.avgTurns / 2)} 回合 · 失误率 ${pct(glob.fizzleRate)} · 跳过率 ${pct(glob.passRate)}（其中无牌 ${pct(glob.noCardPassRate)}）· 卡包打空 ${pct(glob.deckExhaustedRate)}`),
+                    h('div.small', `极差 ${pct(bal.spread)} · 标准差 ${pct(bal.std, 2)} · 判定：${verdict} · 先手胜率（有胜负局）${pct(bal.firstMoveWinRate)} · 平均 ${fmt(glob.avgTurns / 2)} 回合 · 失误率 ${pct(glob.fizzleRate)} · 跳过率 ${pct(glob.passRate)}（其中无牌 ${pct(glob.noCardPassRate)}）· 单位打空卡包 ${pct(glob.deckExhaustedRate)} · 双方打空判平 ${glob.total.games ? pct(glob.total.deckDraws / glob.total.games) : '-'}`),
                 ),
             ),
             h('div.row', { style: { marginTop: '10px' } },

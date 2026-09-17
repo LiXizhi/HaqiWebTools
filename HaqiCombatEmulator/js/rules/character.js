@@ -1,3 +1,4 @@
+import {DEFAULT_DECK_CAPACITY,MAX_CARD_COPIES} from './deck.js';
 import {SCHOOLS,baseHP,clamp} from './formulas.js';
 const offsets={fire:1,ice:2,storm:3,myth:4,life:5,death:6,balance:7};
 export const STAT_FIELDS={damage:111,resist:119,accuracy:103,damageAbsolute:151,resistAbsolute:159,critical:196,resilience:204,penetration:212};
@@ -68,12 +69,14 @@ export function compileCharacter(build, ruleset) {
   if(a.maxHP<=0||a.maxHP>1e8)throw new Error('血量须大于 0 且不超过一亿');
   a.powerPip=clamp(a.powerPip,0,100);
   const deck=[...(build.deck??[])];
-  const deckCapacity=build.deckCapacity??Math.max(64,deck.length),handSize=build.handSize??8,drawPerRound=build.drawPerRound??handSize;
+  const deckCapacity=build.deckCapacity??DEFAULT_DECK_CAPACITY,handSize=build.handSize??8,drawPerRound=build.drawPerRound??handSize;
   for(const [key,value,max] of [['卡包容量',deckCapacity,200],['手牌容量',handSize,20],['每轮补牌',drawPerRound,20]])if(!Number.isInteger(value)||value<1||value>max)throw new Error(`${key}须为 1–${max} 的整数`);
   if(deck.length>deckCapacity)throw new Error('配卡数量超过卡包容量');
   if(drawPerRound>handSize)throw new Error('每轮补牌数量不能超过手牌容量');
   if(!deck.length||deck.length>200)throw new Error('卡组须包含 1–200 张卡');
+  const copies=new Map();
   for(const key of deck) {
+    copies.set(key,(copies.get(key)??0)+1);if(copies.get(key)>MAX_CARD_COPIES)throw new Error(`每张卡最多 ${MAX_CARD_COPIES} 张：${key}`);
     const card=ruleset.cards[key];
     if(!card)throw new Error(`缺失卡牌 ${key}`);
     if(card.requireLevel>level)throw new Error(`卡牌 ${key} 等级不足`);

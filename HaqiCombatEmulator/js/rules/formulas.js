@@ -2,7 +2,7 @@
 export const SCHOOLS = ['ice', 'fire', 'storm', 'death', 'life'];
 export const SCHOOL_NAMES = {ice:'寒冰',fire:'烈火',storm:'风暴',death:'死亡',life:'生命',balance:'平衡'};
 export const SCHOOL_COLORS = {ice:'#66d2ff',fire:'#ff977a',storm:'#bd9bff',death:'#84ceab',life:'#edca78',balance:'#a5b2c5'};
-export const ENGINE_VERSION = '0.2.1';
+export const ENGINE_VERSION = '0.2.2';
 export const PARITY_STATUS = 'experimental';
 export const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
 export function baseHP(version, school, level, hpPercent=0, hpFlat=0, vip=-1) {

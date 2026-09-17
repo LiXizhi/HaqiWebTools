@@ -81,6 +81,16 @@
 - [x] 填写 `architecture.md` 的"意图 vs 现实"小节
 - [x] 仓库 wiki 收口：新增 `docs/aries/haqi-combat-sim.md`，并在 `docs/CODEMAP.md`、`docs/TOPIC-INDEX.md` 各加一行（按根 AGENTS.md 要求）
 
+### Phase 7 — 卡包 / 配卡 / 决斗圆盘演示（2026-09-17 追加需求）
+- [x] `BalanceParams.global.deckCapacity` / `deckEachCapacity` / `deckPresetCopies`（Lua 卡包道具 stats[167]/[170]；默认 40 / 6 / 3，初始卡包 kids 14/3、teen 18/5 可手动改回）
+- [x] `clampDeck` 裁剪 + teen 同名技能共享上限；预设卡组改为轮询填充，随容量自动缩放
+- [x] 弃牌与出牌解耦（可弃牌 + 跳过）；无手牌跳过区分 `no_cards` / `deck_empty`；双方打空提前判平
+- [x] 批量统计：无牌跳过率、单位打空卡包比例、双方打空判平比例；批量页可复用对战页配卡
+- [x] 对战页配卡面板（搜索 / 份数 / 预设 / 保存 per version+school）
+- [x] SVG 决斗圆盘：站位点、头像 / HP / 魔力点（普通蓝 / 超级金 + 图例）/ 卡包剩余 / 状态徽标；中央卡牌面板 + 施法者→目标能量束 + 飘字；状态明细板
+- [x] 事件流分步动画（慢 / 正常 / 快 / 无），跳过动画，跨页切换接回对局
+- [x] 测试：`clampDeck`、容量裁剪、打空 → `deck_empty` → 提前平局、弃牌生效时机
+
 ## 关键设计决策
 
 1. **纯 JS 移植而非桥接 NPL**：`combat_server.lua` 依赖 GSL 与 PowerItemManager，桩掉成本高且不利于浏览器内批量模拟；移植时以行号对照保证可审计。

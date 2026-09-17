@@ -7,7 +7,7 @@ import { hashSeed } from './rng_core.js';
 
 /**
  * 生成任务列表：每个 matchup 一个 job（可再按 chunk 拆分给多个 worker）
- * @param cfg { mode:'1v1'.., schools, games, level, policy, seed, chunk, mixed, decks?: {school: deck}, stats?: {school: stats}, gearScore? }
+ * @param cfg { mode:'1v1'.., schools, games, level, policy, seed, chunk, mixed, decks?: {school: deck}, stats?: {school: stats}, gearScore?, presetCopies? }
  */
 export function buildJobs(dataset, cfg) {
     const teamSize = MODES[cfg.mode] || 1;
@@ -23,6 +23,7 @@ export function buildJobs(dataset, cfg) {
             deck: cfg.decks && cfg.decks[school] ? cfg.decks[school] : undefined,
             stats: cfg.stats && cfg.stats[school] ? cfg.stats[school] : undefined,
             gearScore: cfg.gearScore,
+            presetCopies: cfg.presetCopies,
             name: `${school}#${side}${i + 1}`,
         });
         const near = m.nearSchools.map((s, i) => mk(s, 'N', i));
@@ -47,7 +48,7 @@ export function buildJobs(dataset, cfg) {
 
 export function emptyStats() {
     return {
-        games: 0, nearWins: 0, farWins: 0, draws: 0, timeouts: 0,
+        games: 0, nearWins: 0, farWins: 0, draws: 0, timeouts: 0, deckDraws: 0,
         firstMoverWins: 0, decisive: 0,
         turnsSum: 0, turnsSq: 0, turnsMin: Infinity, turnsMax: 0,
         casts: 0, fizzles: 0, passes: 0, noCardPasses: 0,
@@ -85,7 +86,7 @@ export function accumulate(st, r) {
     st.games++;
     if (r.winner === 'near') st.nearWins++;
     else if (r.winner === 'far') st.farWins++;
-    else { st.draws++; if (r.timeout) st.timeouts++; }
+    else { st.draws++; if (r.timeout) st.timeouts++; if (r.decksExhausted) st.deckDraws++; }
     if (r.winner) { st.decisive++; if (r.firstSide && r.winner === r.firstSide) st.firstMoverWins++; }
     st.turnsSum += r.turns;
     st.turnsSq += r.turns * r.turns;
@@ -114,7 +115,7 @@ export function mergeStats(a, b) {
     out.matchup = out.matchup || b.matchup;
     out.nearSchools = out.nearSchools || b.nearSchools;
     out.farSchools = out.farSchools || b.farSchools;
-    for (const k of ['games', 'nearWins', 'farWins', 'draws', 'timeouts', 'firstMoverWins', 'decisive', 'turnsSum', 'turnsSq', 'casts', 'fizzles', 'passes', 'noCardPasses', 'unitGames', 'deckExhausted', 'nearHpSum', 'farHpSum']) out[k] += b[k];
+    for (const k of ['games', 'nearWins', 'farWins', 'draws', 'timeouts', 'deckDraws', 'firstMoverWins', 'decisive', 'turnsSum', 'turnsSq', 'casts', 'fizzles', 'passes', 'noCardPasses', 'unitGames', 'deckExhausted', 'nearHpSum', 'farHpSum']) out[k] += b[k];
     out.turnsMin = Math.min(out.turnsMin, b.turnsMin);
     out.turnsMax = Math.max(out.turnsMax, b.turnsMax);
     for (const m of ['damageBySchool', 'healBySchool', 'cardStats']) for (const [k, v] of Object.entries(b[m])) out[m][k] = (out[m][k] || 0) + v;

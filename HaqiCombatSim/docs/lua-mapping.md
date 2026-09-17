@@ -135,3 +135,7 @@
 | 2026-09-16 | 先手统计 | 引擎 `firstSide='random'`；聚合层原按“近端胜率”统计会被平局稀释 | `summarizeResult.firstSide` + `stats.firstMoverWins/decisive`，只在有胜负局统计 |
 | 2026-09-16 | teen accuracy | 线上 teen 强制 accuracy=100（用 hit / dodge 代替失误） | `global.forceAccuracy100` 默认 teen=true、kids=false，可在数值面板切换 |
 | 2026-09-16 | `perSchool.damage` | Lua 无此项，为模拟器附加乘子 | 在 `getDamageBoost` 按施法者本系换算为百分比加成（1 = 原版） |
+| 2026-09-17 | 卡包容量 | Lua 由卡包道具 `stats[167]`（总容量）/ `[170]`（单卡上限）在进入战斗时校验（arena_server.lua L8011-8166），超总容量直接清空卡组；道具表不在本地 | `global.deckCapacity` / `deckEachCapacity`，默认 40 / 6（正常玩家卡包；客户端初始卡包为 CombatCardDeckSubPage.lua L38-40 kids 14/3、CombatCardManager.teen.lua L41-43 teen 18/5，可在面板改回）；超容量改为按顺序裁剪并记录 `deckTrimmed`。`deckPresetCopies`（默认 3）为模拟器项，Lua 无对应 |
+| 2026-09-17 | teen 同名共享上限 | L8119：teen 同 `spell_name` 的卡共享单卡上限 | `clampDeck` 按 `spellName` 分组 |
+| 2026-09-17 | 弃牌时机 | Lua `DiscardCard` 在选牌阶段即可调用，与是否出牌无关 | `playTurn` 先处理 `pick.discardSeqs` 再判断 pass |
+| 2026-09-17 | 双方打空提前结束 | Lua 会一直跳过到 `nRemainingRounds` 归零 | 模拟器在双方存活单位全部打空且无 DOT 时直接判 timeout 平局（结果相同，省时） |

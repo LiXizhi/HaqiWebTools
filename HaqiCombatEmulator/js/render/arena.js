@@ -1,3 +1,4 @@
+import {PIP_COLORS} from './energy.js';
 import {SCHOOL_COLORS,SCHOOL_NAMES} from '../rules/formulas.js';
 export function drawArena(canvas,battle,selected,onSelect,focus=null) {
   const width=canvas.clientWidth||700,height=canvas.clientHeight||325,dpr=window.devicePixelRatio||1;
@@ -32,7 +33,7 @@ export function drawArena(canvas,battle,selected,onSelect,focus=null) {
     const compact=width<500,labelX=x+(u.side===0?(compact?32:-37):(compact?-32:37));c.textAlign=u.side===0?(compact?'left':'right'):(compact?'right':'left');c.fillStyle='#d5dee2';c.font='11px system-ui';c.fillText(SCHOOL_NAMES[u.school],labelX,y-12);
     c.font='9px ui-monospace';c.fillStyle='#8d9ea9';c.fillText(compact?`${Math.ceil(u.hp)} HP`:`${Math.ceil(u.hp)} / ${u.attributes.maxHP}`,labelX,y+3);
     const barX=c.textAlign==='right'?labelX-58:labelX;c.fillStyle='#30404a';c.fillRect(barX,y+11,58,3);c.fillStyle=color;c.fillRect(barX,y+11,58*Math.max(0,u.hp/u.attributes.maxHP),3);
-    c.fillStyle='#cfbd89';c.fillText('●'.repeat(Math.min(7,u.pips))+'◆'.repeat(u.powerPips)+(u.pips>7?` +${u.pips-7}`:''),labelX,y+28);
+    const normal='●'.repeat(Math.min(7,u.pips))+(u.pips>7?`+${u.pips-7}`:''),power='◆'.repeat(u.powerPips);const align=c.textAlign,nw=c.measureText(normal).width,pw=c.measureText(power).width,gap=normal&&power?4:0,left=align==='right'?labelX-nw-pw-gap:labelX;c.textAlign='left';c.fillStyle=PIP_COLORS.normal;c.fillText(normal,left,y+28);c.fillStyle=PIP_COLORS.power;c.fillText(power,left+nw+gap,y+28);c.textAlign=align;
     c.globalAlpha=1;
   }
   const last=focus??[...battle.events].reverse().find(e=>e.type==='cast'||e.type==='damage'||e.type==='heal');

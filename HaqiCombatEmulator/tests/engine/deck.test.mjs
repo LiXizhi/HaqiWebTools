@@ -20,3 +20,7 @@ test('successful casts permanently consume finite cards',()=>{
  const r=structuredClone(rules.kids),s=defaultScenario(r,1),key=s.teams[0][0].deck[0];r.cards[key]={...r.cards[key],pipcost:0,accuracy:100,params:{damage_min:1,damage_max:1,cooldown:0}};
  for(const team of s.teams)team[0].deck=[key];const b=createBattle(s,r,1);stepBattle(b,[getLegalActions(b,'0-0').find(a=>a.kind==='cast')]);stepBattle(b,pass(b));assert.equal(b.units[0].usedCount,1);assert.equal(b.units[0].hand.length,0);assert.equal(getLegalActions(b,'0-0').length,1);
 });
+
+test('six-copy limit applies to compilation and battle, without padding short decks',()=>{
+ for(const r of Object.values(rules)){const s=defaultScenario(r,1),build=s.teams[0][0],key=build.deck[0];assert.equal(build.deckCapacity,40);assert.ok(build.deck.length<40);const six={...build,deck:Array(6).fill(key)};assert.equal(compileCharacter(six,r).deck.length,6);const seven={...six,deck:Array(7).fill(key)};assert.throws(()=>compileCharacter(seven,r),/最多 6/);s.teams[0][0]=seven;assert.throws(()=>createBattle(s,r),/最多 6/);}
+});

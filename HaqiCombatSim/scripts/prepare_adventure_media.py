@@ -16,7 +16,7 @@ entries = {}
 def digest(data): return hashlib.sha256(data).hexdigest()
 def decode(data):
     image = Image.open(io.BytesIO(data)); image.load(); return image
-for key, source in {**manifest, **{name: {'local': f'assets/adventure/{name}.png', 'optional': False} for name in ['sprites','creatures']}}.items():
+for key, source in {**manifest, **{name: {'local': f'assets/adventure/{name}.png', 'optional': False} for name in ['sprites','creatures','summons']}}.items():
     old = previous['entries'].get(key)
     source_file = ROOT/source['local']
     source_unchanged = not source_file.exists() or (old and digest(source_file.read_bytes()) == old.get('sourceSha256'))

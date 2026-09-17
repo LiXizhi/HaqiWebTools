@@ -1,4 +1,5 @@
 // Canvas presentation only. Visual motion uses time/seeded map decorations, never gameplay RNG.
+import { createSpellEffects } from './spell_effects.js';
 import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES } from './adventure_core.js';
 import { onIsland,distance } from './adventure_world_core.js';
 export const COLORS={fire:'#e98f44',ice:'#6ecbdc',storm:'#b39aea',life:'#84bd59',death:'#a887c7'};
@@ -23,6 +24,7 @@ export function questMarker(save,content,npcId) {
     return null;
 }
 export function createRenderer(canvas,assets) {
+    const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const ctx=canvas.getContext('2d'),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
     function size() {
         const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(2,window.devicePixelRatio||1);
@@ -131,9 +133,8 @@ export function createRenderer(canvas,assets) {
             const labels=[...u.standingWards.filter(x=>x.rounds>0).map(w=>`狂风印记 ${battle.resolved.global.stormChargingWardIds.indexOf(w.id)+1}阶 · ${w.rounds}回合`),...u.charms.filter(x=>x>0).map(id=>battle.resolved.charms[id]?.desc),...u.wards.filter(x=>x.id>0).map(w=>battle.resolved.wards[w.id]?.desc),u.dots.length?'持续伤害':'',u.hots.length?'持续治疗':''].filter(Boolean);
             for(let i=0;i<Math.min(2,labels.length);i++)text(c,labels[i]+(i===1&&labels.length>2?` 等${labels.length}项`:''),at.x,at.y+101+i*14,w<650?9:11,'#eedba2');
         }
-        if(ev?.type==='cast') {
-            const from=positions[ev.caster],to=positions[ev.target]||from,col=COLORS[ev.school]||'#b5e1dc';
-            if(from&&to){c.save();c.strokeStyle=col;c.shadowColor=col;c.shadowBlur=18;c.lineWidth=3+Math.sin(p*Math.PI)*6;c.beginPath();c.moveTo(from.x,from.y-60);c.quadraticCurveTo(cx,cy-160,to.x,to.y-50);c.stroke();for(let i=0;i<8;i++){const v=(p+i*.03)%1;ellipse(c,from.x+(to.x-from.x)*v,from.y-55+(to.y-from.y)*v-Math.sin(v*Math.PI)*90,4,4,col);}c.restore();}
+        if(ev?.type==='cast'||ev?.type==='fizzle') {
+            effects.draw(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],width:w,height:h,seed:`${ev.round}:${ev.caster}:${ev.card}`,reducedMotion:reducedMotion.matches,failed:ev.type==='fizzle'});
         }
         if(ev?.type==='damage'||ev?.type==='heal') {
             const at=positions[ev.target];if(at){c.save();c.globalAlpha=1-p*.65;text(c,`${ev.type==='heal'?'+':'−'}${ev.amount}${ev.mark==='c'?' 暴击':''}`,at.x,at.y-100-p*40,26,ev.type==='heal'?'#adf8a0':'#fff0b4');c.restore();}

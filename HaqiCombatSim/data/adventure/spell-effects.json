@@ -1,0 +1,505 @@
+{
+  "version": 1,
+  "description": "开篇全部45张技能卡的2D演出配置；卡面意象改编，非原版3D技能资源。时间单位毫秒。",
+  "palettes": {
+    "ice": [
+      "#76ddff",
+      "#d6faff",
+      "#2385db"
+    ],
+    "fire": [
+      "#ff873e",
+      "#fff0a5",
+      "#d62e45"
+    ],
+    "storm": [
+      "#c08aff",
+      "#fff5ac",
+      "#6b4de5"
+    ],
+    "life": [
+      "#8be777",
+      "#f8ffd2",
+      "#2aac8e"
+    ],
+    "death": [
+      "#b991fa",
+      "#e7d7ff",
+      "#682d9c"
+    ]
+  },
+  "summons": {
+    "seaLion": {
+      "asset": "summons",
+      "tile": 0,
+      "attackTile": 1,
+      "size": 210
+    },
+    "phoenix": {
+      "asset": "summons",
+      "tile": 2,
+      "size": 210
+    },
+    "golem": {
+      "asset": "summons",
+      "tile": 3,
+      "size": 180
+    },
+    "ghost": {
+      "asset": "summons",
+      "tile": 4,
+      "size": 155
+    },
+    "gorilla": {
+      "asset": "summons",
+      "tile": 5,
+      "size": 190
+    },
+    "cat": {
+      "asset": "summons",
+      "tile": 6,
+      "size": 155
+    },
+    "pangolin": {
+      "asset": "summons",
+      "tile": 7,
+      "size": 170
+    }
+  },
+  "cards": {
+    "Death_DeathDamageBlade": {
+      "name": "死亡术",
+      "kind": "blade",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Death_DeathDamageBlade.xml"
+    },
+    "Death_DeathDamageTrap": {
+      "name": "死亡陷阱",
+      "kind": "trap",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Death_DeathDamageTrap.xml"
+    },
+    "Death_DeathGreatShield": {
+      "name": "死亡盾",
+      "kind": "shield",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Death_DeathGreatShield.xml"
+    },
+    "Death_SingleAttackWithDisabledHeal_low_level": {
+      "name": "天魔杀星",
+      "kind": "burst",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.11,
+      "source": "config/Aries/Cards/Death_SingleAttackWithDisabledHeal_low_level.xml"
+    },
+    "Death_SingleAttackWithLifeTap_Level2": {
+      "name": "吸血幽灵",
+      "kind": "summon",
+      "duration": 2600,
+      "count": 100,
+      "scale": 1.11,
+      "summon": "ghost",
+      "attack": "drain",
+      "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level2.xml"
+    },
+    "Death_SingleAttack_Level0_120_adv": {
+      "name": "死亡魔光",
+      "kind": "bolt",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Death_SingleAttack_Level0_120_adv.xml"
+    },
+    "Death_SingleAttack_Level1": {
+      "name": "暗灵之咒",
+      "kind": "vortex",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.055,
+      "source": "config/Aries/Cards/Death_SingleAttack_Level1.xml"
+    },
+    "Death_SingleAttack_Level3": {
+      "name": "幽灵突袭",
+      "kind": "summon",
+      "duration": 2600,
+      "count": 100,
+      "scale": 1.165,
+      "summon": "ghost",
+      "attack": "burst",
+      "source": "config/Aries/Cards/Death_SingleAttack_Level3.xml"
+    },
+    "Fire_FireDamageBlade": {
+      "name": "烈火术",
+      "kind": "blade",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Fire_FireDamageBlade.xml"
+    },
+    "Fire_FireDamageTrap": {
+      "name": "烈火陷阱",
+      "kind": "trap",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Fire_FireDamageTrap.xml"
+    },
+    "Fire_FireGreatShield": {
+      "name": "烈火盾",
+      "kind": "shield",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Fire_FireGreatShield.xml"
+    },
+    "Fire_SingleAttackWithDOT_Level1": {
+      "name": "火焰爆",
+      "kind": "burst",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.055,
+      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level1.xml"
+    },
+    "Fire_SingleAttackWithDOT_Level2": {
+      "name": "火神之怒",
+      "kind": "meteor",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.11,
+      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level2.xml"
+    },
+    "Fire_SingleAttackWithDOT_Level3": {
+      "name": "火凤焚天",
+      "kind": "summon",
+      "duration": 2600,
+      "count": 100,
+      "scale": 1.165,
+      "summon": "phoenix",
+      "attack": "vortex",
+      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level3.xml"
+    },
+    "Fire_SingleAttack_Level0_120_adv": {
+      "name": "烈火魔光",
+      "kind": "bolt",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Fire_SingleAttack_Level0_120_adv.xml"
+    },
+    "Fire_SingleAttack_Level6_low_level": {
+      "name": "火魔掷石",
+      "kind": "summon",
+      "duration": 2600,
+      "count": 100,
+      "scale": 1.11,
+      "summon": "golem",
+      "attack": "meteor",
+      "source": "config/Aries/Cards/Fire_SingleAttack_Level6_low_level.xml"
+    },
+    "Ice_GlobalShield": {
+      "name": "结界守护",
+      "kind": "shield",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Ice_GlobalShield.xml"
+    },
+    "Ice_IceDamageBlade": {
+      "name": "寒冰术",
+      "kind": "blade",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Ice_IceDamageBlade.xml"
+    },
+    "Ice_IceDamageTrap": {
+      "name": "寒冰陷阱",
+      "kind": "trap",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Ice_IceDamageTrap.xml"
+    },
+    "Ice_IceGreatShield": {
+      "name": "寒冰盾",
+      "kind": "shield",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Ice_IceGreatShield.xml"
+    },
+    "Ice_Pet_SingleAttack_IcePangolinsFreeze": {
+      "name": "冰兽发威",
+      "kind": "summon",
+      "duration": 2600,
+      "count": 100,
+      "scale": 1.22,
+      "summon": "pangolin",
+      "attack": "swords",
+      "source": "config/Aries/Cards/Ice_Pet_SingleAttack_IcePangolinsFreeze.xml"
+    },
+    "Ice_SingleAttack_Level0_120_adv": {
+      "name": "寒冰魔光",
+      "kind": "bolt",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level0_120_adv.xml"
+    },
+    "Ice_SingleAttack_Level1": {
+      "name": "冰霜破",
+      "kind": "burst",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.055,
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level1.xml"
+    },
+    "Ice_SingleAttack_Level2": {
+      "name": "陨落冰石",
+      "kind": "meteor",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.11,
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level2.xml"
+    },
+    "Ice_SingleAttack_Level3": {
+      "name": "冰剑凛空",
+      "kind": "swords",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.165,
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level3.xml"
+    },
+    "Ice_SingleAttack_Level6_low_level": {
+      "name": "海狮冰剑",
+      "kind": "summon",
+      "duration": 2600,
+      "count": 100,
+      "scale": 1.11,
+      "summon": "seaLion",
+      "attack": "swords",
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level6_low_level.xml"
+    },
+    "Life_LifeDamageBlade": {
+      "name": "生命术",
+      "kind": "blade",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Life_LifeDamageBlade.xml"
+    },
+    "Life_LifeDamageTrap": {
+      "name": "生命陷阱",
+      "kind": "trap",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Life_LifeDamageTrap.xml"
+    },
+    "Life_Pet_SingleAttack_ForestSpikyOgresPunch": {
+      "name": "土猿猛击",
+      "kind": "summon",
+      "duration": 2600,
+      "count": 100,
+      "scale": 1.11,
+      "summon": "gorilla",
+      "attack": "burst",
+      "source": "config/Aries/Cards/Life_Pet_SingleAttack_ForestSpikyOgresPunch.xml"
+    },
+    "Life_SingleAttack_Level0_120_adv": {
+      "name": "生命魔光",
+      "kind": "bolt",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Life_SingleAttack_Level0_120_adv.xml"
+    },
+    "Life_SingleAttack_Level1": {
+      "name": "生灵光弧",
+      "kind": "bolt",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.055,
+      "source": "config/Aries/Cards/Life_SingleAttack_Level1.xml"
+    },
+    "Life_SingleAttack_Level2": {
+      "name": "灵木刺阵",
+      "kind": "vines",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.11,
+      "source": "config/Aries/Cards/Life_SingleAttack_Level2.xml"
+    },
+    "Life_SingleAttack_Level3": {
+      "name": "莽林狂舞",
+      "kind": "vortex",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.165,
+      "source": "config/Aries/Cards/Life_SingleAttack_Level3.xml"
+    },
+    "Life_SingleAttack_Level6_low_level": {
+      "name": "大地之怒",
+      "kind": "summon",
+      "duration": 2600,
+      "count": 100,
+      "scale": 1.11,
+      "summon": "gorilla",
+      "attack": "vines",
+      "source": "config/Aries/Cards/Life_SingleAttack_Level6_low_level.xml"
+    },
+    "Life_SingleHealWithHOT_Level1": {
+      "name": "生生不息",
+      "kind": "heal",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1.055,
+      "source": "config/Aries/Cards/Life_SingleHealWithHOT_Level1.xml"
+    },
+    "Life_SingleHeal_Level0": {
+      "name": "静水灵体",
+      "kind": "heal",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1.055,
+      "source": "config/Aries/Cards/Life_SingleHeal_Level0.xml"
+    },
+    "Storm_Pet_SingleAttack_ManekiNeko": {
+      "name": "疾猫霹雳",
+      "kind": "summon",
+      "duration": 2600,
+      "count": 100,
+      "scale": 1.165,
+      "summon": "cat",
+      "attack": "lightning",
+      "source": "config/Aries/Cards/Storm_Pet_SingleAttack_ManekiNeko.xml"
+    },
+    "Storm_SingleAttack_Level0_120_adv": {
+      "name": "风暴魔光",
+      "kind": "bolt",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level0_120_adv.xml"
+    },
+    "Storm_SingleAttack_Level1": {
+      "name": "疾电术",
+      "kind": "lightning",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.055,
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level1.xml"
+    },
+    "Storm_SingleAttack_Level2": {
+      "name": "金灵遁空",
+      "kind": "bolt",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.11,
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level2.xml"
+    },
+    "Storm_SingleAttack_Level3": {
+      "name": "暗夜雷动",
+      "kind": "lightning",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.165,
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level3.xml"
+    },
+    "Storm_SingleAttack_Level6_low_level": {
+      "name": "旋风爆击",
+      "kind": "vortex",
+      "duration": 1800,
+      "count": 64,
+      "scale": 1.11,
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level6_low_level.xml"
+    },
+    "Storm_StormDamageBlade": {
+      "name": "风暴术",
+      "kind": "blade",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Storm_StormDamageBlade.xml"
+    },
+    "Storm_StormDamageTrap": {
+      "name": "风暴陷阱",
+      "kind": "trap",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Storm_StormDamageTrap.xml"
+    },
+    "Storm_StormGreatShield": {
+      "name": "风暴盾",
+      "kind": "shield",
+      "duration": 1400,
+      "count": 64,
+      "scale": 1,
+      "source": "config/Aries/Cards/Storm_StormGreatShield.xml"
+    }
+  },
+  "frames": [
+    [
+      0,
+      0,
+      460,
+      465
+    ],
+    [
+      465,
+      0,
+      445,
+      465
+    ],
+    [
+      917,
+      0,
+      468,
+      490
+    ],
+    [
+      1390,
+      0,
+      384,
+      455
+    ],
+    [
+      0,
+      475,
+      460,
+      412
+    ],
+    [
+      465,
+      475,
+      438,
+      390
+    ],
+    [
+      910,
+      500,
+      470,
+      365
+    ],
+    [
+      1383,
+      500,
+      391,
+      365
+    ]
+  ],
+  "timeline": {
+    "attack": 0.24,
+    "summonAttack": 0.43,
+    "impact": 0.7,
+    "summonImpact": 0.78
+  }
+}

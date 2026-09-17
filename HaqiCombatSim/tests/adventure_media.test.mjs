@@ -11,7 +11,7 @@ test('online uses permanent Keepwork CDN; local art mode is explicit or loopback
     assert.equal(assetMode('localhost','?assets=cdn'),'cdn');assert.equal(assetMode('192.168.1.8','?assets=local'),'local');assert.throws(()=>assetMode('localhost','?assets=wrong'));
 });
 test('asset policy rejects temporary/offsite URLs, traversal and missing required references',()=>{
-    const media=load('media'),source=load('assets');assert.equal(validateMediaManifest(media,source,'cdn'),91);
+    const media=load('media'),source=load('assets');assert.equal(validateMediaManifest(media,source,'cdn'),92);
     for(const cdn of ['https://unpkg.com/image.webp','https://cdn.keepwork.com/image.webp?token=x','http://cdn.keepwork.com/x.webp',null])assert.throws(()=>assetUrl({cdn},'cdn'));
     assert.throws(()=>assetUrl({local:'assets/adventure/../private.webp'},'local'));
     const broken=structuredClone(media);delete broken.entries.sprites;assert.throws(()=>validateMediaManifest(broken,source));

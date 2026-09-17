@@ -1,4 +1,5 @@
 // Browser controller: input, rendering, audio and persistence live outside the pure rules.
+import { effectDuration } from './spell_effects_core.js';
 import * as A from './adventure_core.js';
 import * as W from './adventure_world_core.js';
 import * as P from './combat_pve_core.js';
@@ -154,7 +155,7 @@ function tickAnimation(now) {
     if(!animation)return null;
     const a=animation,e=a.events[a.index];
     if(!e){animation=null;paintBattle();return null;}
-    const duration=e.type==='speak'?1300:e.type==='cast'?650:e.type==='pass'?300:600;
+    const duration=e.type==='speak'?1300:e.type==='cast'?effectDuration(assets.effects,battle.resolved.cards[e.card],matchMedia('(prefers-reduced-motion: reduce)').matches):e.type==='pass'?300:600;
     if(a.entered!==a.index){a.entered=a.index;
         if(e.type==='damage')a.hp[e.target]=Math.max(0,a.hp[e.target]-e.amount);
         if(e.type==='heal')a.hp[e.target]=Math.min(battle.unitsById[e.target].maxHp,a.hp[e.target]+e.amount);

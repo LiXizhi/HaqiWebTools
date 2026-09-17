@@ -169,3 +169,7 @@
 ### 两个数字的含义
 
 `pe_item.lua` L1873–1894：右上是stats[134]魔力消耗（114显示X），左中是stats[186]冷却回合，缺省0；不是两个不同单位的魔力消耗。`player_server.lua::CostPips` L2008–2095：kids本系超级魔力按2点扣费，异系按1点；卡面数字本身不按持有魔力球动态换算。UI补上左中冷却与悬停/卡包说明，未更改扣费逻辑。
+
+### 2026-09-17：技能演出层
+
+新增45张冒险卡的2D粒子/召唤演出，card key与`combat.json`中原XML `datafile`保持对应，并记录在`spell-effects.json`。使用现有cast/fizzle/damage/heal事件，不移植或修改Lua伤害、命中、魔力、AI公式；生成召唤图集是卡面意象改编，不是原3D演员/动画导出。

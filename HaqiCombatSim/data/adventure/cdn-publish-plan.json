@@ -728,6 +728,14 @@
       "size": 1479140,
       "key": "keepwork/haqi-adventure/v1/0bfe4678496013b7c9e19e5cd702710debb8593ccff8810b1cf61fbf5412e38b.webp",
       "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/0bfe4678496013b7c9e19e5cd702710debb8593ccff8810b1cf61fbf5412e38b.webp"
+    },
+    {
+      "id": "summons",
+      "local": "assets/adventure/webp/summons.webp",
+      "sha256": "fb206de31e46490215f0642ed067687bd3ade96ecef8d2732ace83bb6dd17f92",
+      "size": 1350494,
+      "key": "keepwork/haqi-adventure/v1/fb206de31e46490215f0642ed067687bd3ade96ecef8d2732ace83bb6dd17f92.webp",
+      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/fb206de31e46490215f0642ed067687bd3ade96ecef8d2732ace83bb6dd17f92.webp"
     }
   ]
 }

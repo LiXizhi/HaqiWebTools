@@ -1,12 +1,14 @@
 // Browser IO for the self-contained adventure package.
+import { validateSpellEffects } from './spell_effects_core.js';
 import { validateAdventureContent } from './adventure_content_core.js';
 import { assetMode, assetUrl, validateMediaManifest } from './adventure_media_core.js';
 export const SAVE_KEY = 'haqi.adventure.kids.v1';
 async function json(url) { const r=await fetch(url);if(!r.ok)throw new Error(`无法读取 ${url}（${r.status}）`);return r.json(); }
 function loadImage(url) { return new Promise((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=()=>reject(new Error(`无法加载图片 ${url}`));i.src=url;}); }
 export async function loadResources(progress) {
-    const [content,dataset,manifest,media]=await Promise.all(['chapter','combat','assets','media'].map(n=>json(`data/adventure/${n}.json`)));
+    const [content,dataset,manifest,media,effects]=await Promise.all(['chapter','combat','assets','media','spell-effects'].map(n=>json(`data/adventure/${n}.json`)));
     validateAdventureContent(content,dataset,manifest);
+    validateSpellEffects(effects,dataset.cards);
     const mode=assetMode(location.hostname,location.search);
     validateMediaManifest(media,manifest,mode);
     const images=new Map(),bounds=new Map(),failures=[];
@@ -37,7 +39,7 @@ export async function loadResources(progress) {
         const row=Math.floor(index/4), cuts=sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height];
         return draw(ctx,{id:sheet,crop:[(index%4)*cw,cuts[row],cw,cuts[row+1]-cuts[row]]},x,y,w,h,true);
     }
-    return {content,dataset,manifest,images,draw,tile,getBounds,mode,media,urlFor:id=>assetUrl(media.entries[id],mode)};
+    return {content,dataset,manifest,effects,images,draw,tile,getBounds,mode,media,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

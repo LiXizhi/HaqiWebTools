@@ -171,6 +171,7 @@ export function renderPanel(root,kind,model,cb) {
         const input=el('input');input.type='file';input.accept='.json,application/json';input.id='import-save';input.onchange=()=>{if(input.files[0])cb.import(input.files[0]);};body.append(el('label','file-label','导入存档',input));
         body.append(button('回到开始画面',cb.title,'secondary settings-button'),el('hr'),el('h3','','关于这段旅程'),el('p','muted','本章保留魔法哈奇 kids 原版角色、任务对白和卡牌数据。地图、升级节奏和毕业后的镇区是适合单人游玩的二维改编。'),el('details','source-details',el('summary','','查看改编说明'),...c.adaptations.map(t=>el('p','muted',t))),el('a','sim-link','打开战斗模拟器'));
         body.querySelector('a').href='HaqiCombatSim.html';
+        const effectsLink=el('a','sim-link','技能特效工坊');effectsLink.href='HaqiEffects.html';effectsLink.target='_blank';effectsLink.rel='noopener';body.append(effectsLink);
     }
     if(kind==='map') {
         body.append(art(assets,save.zone==='camp'?c.extras.campMap:c.extras.townMap,Math.min(520,window.innerWidth-80),300),el('p','muted','原版地图参考 · 当前二维地图压缩了步行距离'),button('追踪当前任务',()=>{cb.close();cb.track();},'primary'));

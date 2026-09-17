@@ -1180,6 +1180,20 @@
       "width": 1774,
       "height": 887,
       "encoder": "Pillow 11.3.0; lossless WebP; exact alpha"
+    },
+    "summons": {
+      "local": "assets/adventure/webp/summons.webp",
+      "sha256": "fb206de31e46490215f0642ed067687bd3ade96ecef8d2732ace83bb6dd17f92",
+      "size": 1350494,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/fb206de31e46490215f0642ed067687bd3ade96ecef8d2732ace83bb6dd17f92.webp",
+      "optional": false,
+      "sourceEntry": null,
+      "sourceSha256": "0aeb4bd771de177a3ed6b50cade5ed1c69d233833cd01ee04451a150b03b11fe",
+      "sourceBytes": 1727403,
+      "width": 1774,
+      "height": 887,
+      "encoder": "Pillow; lossless WebP; exact alpha",
+      "provenance": "Generated summon atlas, 2026-09-17; card-inspired 2D adaptation"
     }
   }
 }

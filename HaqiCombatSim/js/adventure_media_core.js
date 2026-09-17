@@ -17,7 +17,7 @@ export function assetUrl(row, mode) {
 }
 export function validateMediaManifest(media, sourceManifest, mode = 'local') {
     if (media?.schemaVersion !== 1 || !media.entries) throw new Error('美术清单版本无效');
-    for (const key of [...Object.keys(sourceManifest), 'sprites', 'creatures']) {
+    for (const key of [...Object.keys(sourceManifest), 'sprites', 'creatures', 'summons']) {
         const row = media.entries[key];
         assetUrl(row, mode);
         if (!/^[a-f0-9]{64}$/.test(row.sha256) || !Number.isInteger(row.size) || row.size <= 0) throw new Error(`资源校验信息无效：${key}`);

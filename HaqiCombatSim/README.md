@@ -112,4 +112,6 @@ web/HaqiCombatSim/
 
 ## Haqi.html：WebP / Keepwork 云端旅途
 
-独立单人入口运行方法见 [adventure.md](docs/adventure.md)。本机默认本地WebP；线上域名默认永久Keepwork CDN，可用 `Haqi.html?assets=cdn` 验收。开始画面、设置、战斗均可打开可选云端检查点，保留本地自动存档与导入导出。`npm test` 共69例，`npm run check:adventure` 验证章节和本地美术，`npm run verify:adventure-cdn` 验证发布资源。仅按需加载Keepwork CDN上的SDK core，无运行时构建或额外框架。
+独立单人入口运行方法见 [adventure.md](docs/adventure.md)。本机默认本地WebP；线上域名默认永久Keepwork CDN，可用 `Haqi.html?assets=cdn` 验收。开始画面、设置、战斗均可打开可选云端检查点，保留本地自动存档与导入导出。`npm test` 共72例，`npm run check:adventure` 验证章节和本地美术，`npm run verify:adventure-cdn` 验证发布资源。仅按需加载Keepwork CDN上的SDK core，无运行时构建或额外框架。
+
+技能粒子与召唤预览：[`HaqiEffects.html`](HaqiEffects.html)。当前冒险全部45张卡牌共用一个[特效配置](data/adventure/spell-effects.json)，可逐张播放和拖动时间轴；见[开发说明](docs/spell-effects.md)。

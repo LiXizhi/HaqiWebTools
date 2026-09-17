@@ -42,7 +42,13 @@ export class CardRenderer {
     drawTypeIcon(c,card,x,y){
         c.save();c.translate(x,y);c.strokeStyle='#19374d';c.fillStyle='#19374d';c.lineWidth=3;c.lineCap='round';
         if(expectedBaseHeal(card)){c.fillRect(-3,-10,6,20);c.fillRect(-10,-3,20,6);}
-        else if(expectedBaseDamage(card)){path(c,[[-8,9],[7,-10],[11,-12],[10,-7],[-6,11]],'#19374d','#e9db83',1);c.beginPath();c.moveTo(-10,2);c.lineTo(-2,10);c.stroke();}
+        else if(expectedBaseDamage(card)){
+            // Closed fist: four knuckles, folded thumb and a short wrist.
+            path(c,[[-8,-3],[-8,-8],[-5,-10],[-2,-10],[0,-9],[3,-10],[6,-9],[9,-7],[10,-2],[9,3],[5,7],[5,11],[-5,11],[-6,6],[-11,1],[-11,-3],[-9,-5],[-6,-3],[-3,1]],'#19374d','#e9db83',1.2);
+            c.strokeStyle='#e9db83';c.lineWidth=1.2;c.beginPath();
+            for(const x of [-4,0,4]){c.moveTo(x,-7);c.lineTo(x,-3);}
+            c.moveTo(-6,-1);c.lineTo(-2,3);c.lineTo(4,3);c.moveTo(-4,8);c.lineTo(4,8);c.stroke();
+        }
         else if(/Ward|Shield|Absorb|Guardian/.test(card.type)){path(c,[[0,-10],[11,-6],[8,6],[0,11],[-8,6],[-11,-6]],'#19374d','#e9db83',1.5);}
         else path(c,[[0,-11],[3,-3],[11,0],[3,3],[0,11],[-3,3],[-11,0],[-3,-3]],'#19374d','#e9db83',1);
         c.restore();

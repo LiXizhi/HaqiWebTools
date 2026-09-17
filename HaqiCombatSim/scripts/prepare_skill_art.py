@@ -8,13 +8,26 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def read(path): return json.loads(path.read_text(encoding='utf-8-sig'))
 
-def prepare(job, sources):
+def prepare(job, sources, previous=None, prompts=None):
+    if not (sources/(job['id']+'.json')).exists() and previous:
+        sid=job['id'];row=previous['sheets'][sid]
+        if [row['columns'],row['rows']]!=[job['columns'],job['rows']]:
+            raise ValueError('Layout changed; generate a new source: '+sid)
+        for i,cell in enumerate(job['cells']):
+            old=previous['bases'][cell['base']]
+            if job.get('hero'):
+                assert old.get('effectAtlas')==sid, 'Changed hero mapping: '+sid
+            else:
+                assert old['atlas']==sid and old['cell']==i and old['name']==cell['name'] and old['source']==cell['original'], 'Changed cell; regenerate '+sid
+        data=(ROOT/row['local']).read_bytes()
+        assert len(data)==row['size']<=100000 and hashlib.sha256(data).hexdigest()==row['sha256']
+        return job,row,prompts[sid]
     record=read(sources/(job['id']+'.json'))
     source=Path(record['source']); source_hash=hashlib.sha256(source.read_bytes()).hexdigest()
     cached=sources/('packed-'+job['id']+'.json')
     if cached.exists():
         row=read(cached); target=ROOT/row['local']
-        if row['sourceSha256']==source_hash and target.exists() and hashlib.sha256(target.read_bytes()).hexdigest()==row['sha256']:
+        if row['sourceSha256']==source_hash and [row['columns'],row['rows']]==[job['columns'],job['rows']] and target.exists() and hashlib.sha256(target.read_bytes()).hexdigest()==row['sha256']:
             return job,row,record['prompt']
     original=Image.open(source).convert('RGBA')
     if original.width!=original.height or original.getchannel('A').getextrema()[0]!=0:
@@ -47,11 +60,13 @@ def prepare(job, sources):
     return job,row,record['prompt']
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('sources',type=Path);parser.add_argument('--available',action='store_true');args=parser.parse_args()
+    parser=argparse.ArgumentParser();parser.add_argument('sources',type=Path);parser.add_argument('--available',action='store_true');parser.add_argument('--reuse-existing',action='store_true');args=parser.parse_args()
     plan=read(ROOT/'data/adventure/skill-art-plan.json');sheets={};bases={};prompts={}
+    previous=read(ROOT/'data/adventure/skill-art.json') if args.reuse_existing else None
+    prior_prompts=read(ROOT/'docs/skill-art-prompts.json')['prompts'] if args.reuse_existing else None
     jobs=[j for j in plan['sheets'] if not args.available or (args.sources/(j['id']+'.json')).exists()]
     with ThreadPoolExecutor(max_workers=4) as pool:
-        for job,row,prompt in pool.map(lambda j:prepare(j,args.sources),jobs):
+        for job,row,prompt in pool.map(lambda j:prepare(j,args.sources,previous,prior_prompts),jobs):
             sid=job['id'];sheets[sid]=row;prompts[sid]=prompt
             if job.get('hero'):
                 bases[job['cells'][0]['base']].update({'effectAtlas':sid,'effectFrames':list(range(9)),'heroCardFrame':2})

@@ -3,10 +3,18 @@ import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
 import { HIT_DURATION_MS } from './actor_animation_core.js';
 import { loadSpellArt } from './spell_art.js';
+import { createSpellSound } from './spell_sound.js';
 import { effectDuration,spellEffect,validateSpellEffects } from './spell_effects_core.js';
 const $=id=>document.getElementById(id),canvas=$('preview'),ctx=canvas.getContext('2d');
 const names={ice:'寒冰',fire:'烈火',storm:'风暴',life:'生命',death:'死亡',balance:'通用'};
 const ranks={normal:'普通',green:'绿卡',blue:'蓝卡',purple:'紫卡',gold:'金卡'};
+const sound=createSpellSound();
+const soundButton=document.createElement('button');soundButton.type='button';
+function soundLabel(){soundButton.textContent=sound.enabled?'音效：开启':'音效：关闭';soundButton.setAttribute('aria-pressed',String(sound.enabled));}
+soundLabel();document.querySelector('.controls').append(soundButton);
+soundButton.onclick=async()=>{const requested=!sound.enabled,ok=await sound.setEnabled(requested);soundLabel();if(requested&&!ok)$('error').textContent='浏览器暂时无法启用音效，请重试。';};
+document.addEventListener('pointerdown',()=>sound.unlock());document.addEventListener('keydown',()=>sound.unlock());
+document.addEventListener('visibilitychange',()=>{sound.stop();last=0;});window.addEventListener('pagehide',()=>sound.stop());
 let assets,fx,card,cards,families,playing=true,elapsed=0,last=0;
 $('reduced').onchange=()=>{elapsed=0;};
 $('actor-action').onchange=()=>{elapsed=0;playing=true;$('play').textContent='暂停';};
@@ -14,6 +22,7 @@ $('reduced').checked=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function previewDuration(){return $('actor-action').value==='auto'?effectDuration(assets.effects,card,$('reduced').checked):$('actor-action').value==='hit'?HIT_DURATION_MS:900;}
 function option(select,value,label){const o=document.createElement('option');o.value=value;o.textContent=label;select.append(o);}
 function select(){
+    sound.stop();
     card=cards[$('card').value];elapsed=0;const spec=spellEffect(assets.effects,card);
     $('name').textContent=spec.name;$('school').textContent=names[card.spellSchool]+' / 技能演出';
     $('detail').textContent=`${spec.area?'群体 · ':''}${spec.kind==='summon'?'角色召唤':'基础演出'} · ${ranks[spec.variant.rank]}${spec.variant.level?' · '+spec.variant.level+'阶':''}${spec.variant.lowLevel?' · 入门版':''} · ${(spec.duration/1000).toFixed(1)} 秒`;
@@ -39,16 +48,16 @@ function filter(preferred){
     $('base').disabled=false;selectBase(preferred);
 }
 $('school-filter').onchange=()=>filter();$('base').onchange=()=>selectBase();$('card').onchange=select;
-$('play').onclick=()=>{playing=!playing;$('play').textContent=playing?'暂停':'播放';};
-$('restart').onclick=()=>{elapsed=0;playing=true;$('play').textContent='暂停';};
-$('seek').oninput=()=>{if(!card)return;elapsed=Number($('seek').value)/1000*previewDuration();playing=false;$('play').textContent='播放';};
+$('play').onclick=()=>{playing=!playing;if(!playing)sound.stop();$('play').textContent=playing?'暂停':'播放';};
+$('restart').onclick=()=>{sound.stop();elapsed=0;playing=true;$('play').textContent='暂停';};
+$('seek').oninput=()=>{sound.stop();if(!card)return;elapsed=Number($('seek').value)/1000*previewDuration();playing=false;$('play').textContent='播放';};
 function frame(now){
     const dt=Math.min(60,now-(last||now));last=now;const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(2,devicePixelRatio||1);
     if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
     if(card){
         const spec=spellEffect(assets.effects,card),duration=previewDuration();
-        if(playing){elapsed+=dt;if(elapsed>duration+650&&$('loop').checked)elapsed=0;}
+        if(playing&&!document.hidden){elapsed+=dt;if(elapsed>duration+650&&$('loop').checked)elapsed=0;}
         const p=Math.min(1,elapsed/duration),from={x:w*.23,y:h*.64},to={x:w*.76,y:h*.57};
         ctx.save();ctx.strokeStyle='#819d8966';ctx.lineWidth=2;for(const r of [1,.83,.51]){ctx.beginPath();ctx.ellipse(w*.5,h*.62,w*.4*r,h*.22*r,0,0,Math.PI*2);ctx.stroke();}ctx.restore();
         const size=Math.min(90,w*.18),targets=spec.area?[{x:w*.60,y:h*.47},to,{x:w*.82,y:h*.72}]:[spec.friendly?from:to];
@@ -61,6 +70,7 @@ function frame(now){
             drawActor(at,friendly?'sprites':'creatures',friendly?10:1,action,mode==='auto'?Math.max(0,(elapsed-impact*duration)/HIT_DURATION_MS):p,-1);
         }
         if(mode==='auto')fx.draw(ctx,{card,progress:p,from,to:targets[0],targets,center:{x:w*.5,y:h*.62},width:w,height:h,seed:7,reducedMotion:reduced});
+        sound.track(assets.effects,card,p,{active:mode==='auto'&&playing&&!document.hidden,reducedMotion:reduced});
         $('seek').value=Math.round(p*1000);const timing=assets.effects.timeline,summon=spec.kind==='summon';
         $('phase').textContent=p<.18?'凝聚魔力':p<(summon?timing.summonAttack:timing.attack)?'法术成形':p<(summon?timing.summonImpact:timing.impact)?(spec.friendly?'祝福与守护':'释放法术'):p<1?'命中与消散':'演出结束';
         if(mode!=='auto')$('phase').textContent={cast:'宠物施法 · 蓄力跃动',hit:'宠物受击 · 闪白后仰',death:'宠物死亡 · 下沉消散'}[mode];

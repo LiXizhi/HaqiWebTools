@@ -178,6 +178,7 @@ export function renderPanel(root,kind,model,cb) {
         else body.append(el('h3','center','等待与你相遇'),el('p','center muted','完成青龙的强化指导，即可获得一枚出奇蛋。'),ownsEgg(save)?button('打开出奇蛋',()=>cb.action({type:'hatch'}),'primary centered'):el('p','center','继续你的冒险吧。'));
     }
     if(kind==='settings') {
+        body.append(button(model.soundEnabled?'技能音效：开启':'技能音效：关闭',cb.sound,'secondary settings-button'));
         body.append(button('云端旅途 · 跨设备继续冒险',cb.cloud,'primary settings-button'));
         body.append(el('p','','进度自动保存在当前浏览器。你可以导出存档，在其他设备继续这段旅程。'),button(save.music?'背景音乐：开启':'背景音乐：关闭',cb.music,'secondary settings-button'),button('导出我的存档',cb.export,'secondary settings-button'));
         const input=el('input');input.type='file';input.accept='.json,application/json';input.id='import-save';input.onchange=()=>{if(input.files[0])cb.import(input.files[0]);};body.append(el('label','file-label','导入存档',input));
@@ -216,6 +217,7 @@ export function renderDialogue(root,model,dialog,cb) {
 export function renderBattle(root,model,cb) {
     const {assets,save,battle,selected,discarded=[],animating}=model,hero=battle.sides.near[0];root.replaceChildren();root.className='battle-layer visible';
     const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','',badge(`第 ${battle.turn} 回合`),button('云端存档',cb.cloud,'secondary small'),button('导出存档',cb.export,'secondary small'),button('撤退',cb.retreat,'secondary small')));
+    top.lastChild.prepend(button(model.soundEnabled?'音效：开':'音效：关',cb.sound,'secondary small'));
     const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');canvas.onclick=e=>cb.target(e.offsetX<canvas.clientWidth/2?'hero':'mob0');
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');status.textContent=battle.finished?'对决结束':animating?'魔法正在生效…':selected?'点击法阵中的目标施法':'选择一张卡牌，再点击目标';
     const hand=el('div','battle-hand'),bottom=el('div','battle-controls');

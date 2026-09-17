@@ -1,5 +1,6 @@
 // Browser controller: input, rendering, audio and persistence live outside the pure rules.
 import { effectDuration } from './spell_effects_core.js';
+import { createSpellSound } from './spell_sound.js';
 import { HIT_DURATION_MS } from './actor_animation_core.js';
 import * as A from './adventure_core.js';
 import * as W from './adventure_world_core.js';
@@ -19,10 +20,14 @@ let selected=null,discarded=[],animation=null,music=null,storageWarning=false;
 let cloudClient;
 const cloud={owner:null,busy:'',error:'',message:'',paths:[],preview:null};
 const keys=new Set();
+const spellSound=createSpellSound({defaultEnabled:true});
+document.addEventListener('pointerdown',()=>spellSound.unlock());
+document.addEventListener('keydown',()=>spellSound.unlock());
+async function toggleSound(){const requested=!spellSound.enabled,ok=await spellSound.setEnabled(requested);if(requested&&!ok)toast('浏览器暂时无法启用音效，请重试。');paintPanel();if(stage==='battle')paintBattle();}
 let joystick={x:0,y:0},heldPointer=null;
 function resetMovementInput(){keys.clear();joystick={x:0,y:0};heldPointer=null;document.querySelector('.touch-joystick')?.resetInput();}
 const equipmentView={tab:'gear',slot:0,item:null,query:''};
-const model=()=>({assets,save,battle,selected,discarded,animating:!!animation,equipmentView});
+const model=()=>({assets,save,battle,selected,discarded,animating:!!animation,equipmentView,soundEnabled:spellSound.enabled});
 function toast(message) {nodes.toast.textContent=message;nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);}
 function safely(fn) {try{return fn();}catch(e){toast(e.message);return false;}}
 function persist() {
@@ -39,7 +44,7 @@ function paintPanel() {
     const equipment=panel==='equipment'||panel==='inventory';
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
-    V.renderPanel(nodes.overlay,panel,model(),{close,action,track,panel:openPanel,cloud:openCloud,music:toggleMusic,export:()=>downloadSave(save),import:importFile,title:showTitle});
+    V.renderPanel(nodes.overlay,panel,model(),{close,action,track,panel:openPanel,cloud:openCloud,music:toggleMusic,sound:toggleSound,export:()=>downloadSave(save),import:importFile,title:showTitle});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
@@ -81,6 +86,7 @@ function enterWorld(newSave,restoredBattle=null) {
     persist();updateMusic();
 }
 function showTitle() {
+    spellSound.stop();
     persist();close();stage='title';keys.clear();path=[];destination=null;animation=null;battle=null;
     music?.pause();nodes.hud.hidden=true;nodes.battle.replaceChildren();nodes.battle.className='battle-layer';nodes.entry.hidden=false;
     let stored=null,error='';try {const raw=readLocal();if(raw)stored=A.parseSave(raw,assets.content);}catch(e){error=`存档暂时无法读取：${e.message}。可开启新旅程，或在设置中导入备份。`;}
@@ -172,7 +178,7 @@ function track() {
     }
     if(goal.kind==='action')openPanel(goal.id==='hatch-pet'||goal.id===79019?'pet':goal.id===79037&&save.equipment[24]===24003?'deck':'inventory');
 }
-function paintBattle(){V.renderBattle(nodes.battle,model(),{cloud:openCloud,export:()=>downloadSave(save),select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
+function paintBattle(){V.renderBattle(nodes.battle,model(),{sound:toggleSound,cloud:openCloud,export:()=>downloadSave(save),select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
     if(animation||battle.finished)return;discarded=discarded.includes(seq)?discarded.filter(x=>x!==seq):[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
 },target:id=>{if(!selected||animation||battle.finished)return;playRound({...selected,targetId:id,discardSeqs:discarded});},pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
     A.applyAction(save,assets.content,{type:'retreat'});enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
@@ -187,9 +193,9 @@ function playRound(decision) {
     });
 }
 function tickAnimation(now) {
-    if(!animation)return null;
+    if(!animation){spellSound.stop();return null;}
     const a=animation,e=a.events[a.index];
-    if(!e){animation=null;paintBattle();return null;}
+    if(!e){spellSound.stop();animation=null;paintBattle();return null;}
     if(a.entered!==a.index){a.entered=a.index;
         if(e.type==='damage')a.hp[e.target]=Math.max(0,a.hp[e.target]-e.amount);
         if(e.type==='heal')a.hp[e.target]=Math.min(battle.unitsById[e.target].maxHp,a.hp[e.target]+e.amount);
@@ -197,6 +203,8 @@ function tickAnimation(now) {
     }
     const duration=e.type==='speak'?1300:e.type==='cast'?effectDuration(assets.effects,battle.resolved.cards[e.card],matchMedia('(prefers-reduced-motion: reduce)').matches):e.type==='pass'?300:e.type==='damage'&&a.hp[e.target]>0?HIT_DURATION_MS:600;
     const progress=Math.min(1,(now-a.start)/duration);
+    if(e.type==='cast'||e.type==='fizzle')spellSound.track(assets.effects,battle.resolved.cards[e.card],progress,{active:!document.hidden,failed:e.type==='fizzle',reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches,instance:String(a.index)});
+    else spellSound.stop();
     if(progress===1){a.index++;a.start=now;}
     return{event:{...e,school:e.school||battle.resolved.cards[e.card]?.spellSchool},progress,hp:a.hp};
 }
@@ -213,7 +221,8 @@ window.addEventListener('keydown',e=>{
 window.addEventListener('keyup',e=>{keys.delete(directionKeys[e.key.toLowerCase()]);});
 window.addEventListener('blur',()=>{resetMovementInput();path=[];destination=null;persist();});
 window.addEventListener('pagehide',persist);
-document.addEventListener('visibilitychange',()=>{if(document.hidden){resetMovementInput();path=[];destination=null;persist();music?.pause();}else updateMusic();});
+document.addEventListener('visibilitychange',()=>{spellSound.stop();if(document.hidden){resetMovementInput();path=[];destination=null;persist();music?.pause();}else updateMusic();});
+window.addEventListener('pagehide',()=>spellSound.stop());
 nodes.world.addEventListener('pointerdown',e=>{
     if(stage!=='world'||panel||dialog||e.button!==0)return;e.preventDefault();nodes.world.focus({preventScroll:true});
     const rect=nodes.world.getBoundingClientRect(),p=renderer.screenToWorld(e.clientX-rect.left,e.clientY-rect.top);

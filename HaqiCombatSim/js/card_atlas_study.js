@@ -2,9 +2,16 @@ import {assetMode,assetUrl} from './adventure_media_core.js';
 import {loadSkillArt} from './skill_art.js';
 import {createSpellEffects} from './spell_effects.js';
 import {skillFrame} from './skill_art_core.js';
+import {createSpellSound} from './spell_sound.js';
 const $=id=>document.getElementById(id),mode=assetMode(location.hostname,location.search);
 const names={ice:'寒冰',fire:'烈火',storm:'风暴',life:'生命',death:'死亡',balance:'通用'};
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+const sound=createSpellSound();
+const soundButton=document.createElement('button');soundButton.type='button';
+function soundLabel(){soundButton.textContent=sound.enabled?'音效：开启':'音效：关闭';soundButton.setAttribute('aria-pressed',String(sound.enabled));}
+soundLabel();document.querySelector('.effect-controls').append(soundButton);
+soundButton.onclick=async()=>{const requested=!sound.enabled,ok=await sound.setEnabled(requested);soundLabel();if(requested&&!ok)$('atlas-status').textContent='浏览器暂时无法启用音效，请重试。';};
+document.addEventListener('pointerdown',()=>sound.unlock());document.addEventListener('keydown',()=>sound.unlock());
 let effects,cards,art,fx,representatives=[],selected,progress=.35,playing=false,last=0,frame=0,page=0,revision=0,selectionRevision=0;
 const ctx=$('atlas-effect').getContext('2d');
 async function read(url){const r=await fetch(url);if(!r.ok)throw new Error('卡库加载失败');return r.json();}
@@ -19,11 +26,13 @@ function drawEffect(){
  const targets=spec.area?[{x:690,y:230},to,{x:850,y:340}]:[to];
  if(spec.area&&spec.friendly)targets.splice(0,targets.length,{x:140,y:250},from,{x:300,y:340});
  fx.draw(ctx,{card:c,progress,from,to,targets,center:{x:490,y:300},width:1000,height:440,seed:7,reducedMotion:reduced.matches});
+ sound.track(effects,c,progress,{active:playing&&!document.hidden,reducedMotion:reduced.matches});
 }
 function updatePlay(){$('effect-play').textContent=playing?'暂停演出':'播放演出';}
 function tick(now){if(!playing||document.hidden){frame=0;return;}if(last)progress=(progress+Math.min(now-last,100)/3000)%1;last=now;$('effect-progress').value=Math.round(progress*1000);drawEffect();frame=requestAnimationFrame(tick);}
 function run(){last=0;if(!frame&&playing&&!document.hidden)frame=requestAnimationFrame(tick);updatePlay();}
 async function choose(item){
+ sound.stop();
  const token=++selectionRevision;await art.ensure(item.base);if(token!==selectionRevision)return;
  selected=item;progress=.35;$('effect-progress').value=350;
  document.querySelectorAll('.atlas-select').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.base===item.base)));
@@ -53,9 +62,10 @@ async function render(){
  if(current.length&&!selected)await choose(current[0]);
 }
 function showError(e){$('atlas-status').textContent=e.message;}
-$('effect-play').onclick=()=>{playing=!playing;run();};$('effect-replay').onclick=()=>{progress=0;playing=true;run();};
-$('effect-progress').oninput=e=>{playing=false;progress=Number(e.target.value)/1000;updatePlay();drawEffect();};
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)run();});reduced.addEventListener('change',()=>{playing=false;updatePlay();drawEffect();});
+$('effect-play').onclick=()=>{playing=!playing;if(!playing)sound.stop();run();};$('effect-replay').onclick=()=>{sound.stop();progress=0;playing=true;run();};
+$('effect-progress').oninput=e=>{sound.stop();playing=false;progress=Number(e.target.value)/1000;updatePlay();drawEffect();};
+document.addEventListener('visibilitychange',()=>{sound.stop();if(!document.hidden)run();});reduced.addEventListener('change',()=>{sound.stop();playing=false;updatePlay();drawEffect();});
+window.addEventListener('pagehide',()=>sound.stop());
 $('atlas-filter').onchange=()=>{page=0;render().catch(showError);};$('atlas-search').oninput=()=>{page=0;render().catch(showError);};
 $('atlas-prev').onclick=()=>{page--;render().catch(showError);};$('atlas-next').onclick=()=>{page++;render().catch(showError);};
 try{

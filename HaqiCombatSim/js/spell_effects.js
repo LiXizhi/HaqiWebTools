@@ -59,6 +59,27 @@ function supportEffect(c,kind,{a,b,to,center,radius,scale,p,palette,particles,as
     }
     c.restore();
 }
+// Seeded elemental accents: gathering at the caster, then dispersal at the target.
+function elementalParticles(c,school,{a,b,radius:r,scale,p,flight,hit,particles,palette:[primary,light],friendly}) {
+    const gather=clamp(p/.3),at=p<.3?a:b;
+    c.save();c.globalCompositeOperation='lighter';c.shadowBlur=0;
+    for(const v of particles.slice(0,48)) {
+        const q=(v.phase+p*1.3)%1,angle=v.angle+p*(school==='storm'?9:3);
+        const spread=r*(p<.3?1.4-gather: .45+q*.9),x=at.x+Math.cos(angle)*spread*v.speed,y=at.y+Math.sin(angle)*spread*.55-q*r*.6;
+        c.save();c.globalAlpha*=Math.sin(q*Math.PI)*.7;const size=(v.size+1)*scale;
+        if(school==='ice') {shard(c,x,y,size,angle,light);if(v.phase<.18)mist(c,x,y,14*scale,primary,.12);}
+        else if(school==='fire') {line(c,[[x,y+size*4],[x+Math.sin(angle)*size,y]],primary,size);disc(c,x,y,size*.7,light);}
+        else if(school==='storm') {line(c,[[x-size*2,y+size],[x,y-size],[x+size,y+size*.5],[x+size*3,y-size*2]],v.phase>.5?light:primary,1.2*scale);}
+        else if(school==='life') {c.translate(x,y);c.rotate(angle);c.fillStyle=v.phase>.5?light:primary;c.beginPath();c.ellipse(0,0,size*2,size*.65,0,0,TAU);c.fill();}
+        else if(school==='death') {c.strokeStyle=primary;c.lineWidth=size;c.beginPath();c.arc(x,y,size*2,angle,angle+Math.PI*1.4);c.stroke();disc(c,x,y,size*.6,light);}
+        else {shard(c,x,y,size,angle,light);}
+        c.restore();
+    }
+    // Arc-shaped charge filaments keep the image connected to the spell's source.
+    if(p<.32)for(let i=0;i<3;i++){c.strokeStyle=i%2?light:primary;c.lineWidth=1.2*scale;c.beginPath();c.ellipse(a.x,a.y,r*(1.3-gather*.5),r*.5,i*.7,p*12+i*2,p*12+i*2+1.7);c.stroke();}
+    if(hit>0&&!friendly){c.globalAlpha*=1-hit;for(let i=0;i<8;i++){const angle=i*TAU/8,inner=r*(.2+hit),outer=inner+r*.32*(1-hit);line(c,[[b.x+Math.cos(angle)*inner,b.y+Math.sin(angle)*inner*.6],[b.x+Math.cos(angle)*outer,b.y+Math.sin(angle)*outer*.6]],light,2*scale);}}
+    c.restore();
+}
 export function createSpellEffects(assets) {
     const config=assets.effects,cache=new Map();
     function atlasEffect(c,spec,{a,b,origin,to,center,radius,scale,p,flight,hit,particles}) {
@@ -110,11 +131,13 @@ export function createSpellEffects(assets) {
         const summon=spec.kind==='summon',attackStart=summon?config.timeline.summonAttack:config.timeline.attack,impact=summon?config.timeline.summonImpact:config.timeline.impact;
         const flight=clamp((p-attackStart)/(impact-attackStart)),hit=clamp((p-impact)/(1-impact));
         if(failed){c.globalAlpha*=1-p;for(const v of particles.slice(0,20))disc(c,a.x+Math.cos(v.angle)*radius*p,a.y-Math.sin(v.angle)*radius*p,2*scale,'#9aa1af');c.restore();return;}
-        if(atlasEffect(c,spec,{a,b,origin,to,center,radius,scale,p,flight,hit,particles})){c.restore();return;}
+        // The atlas is one layer, never a replacement for semantic spell choreography.
+        const hasSubject=atlasEffect(c,spec,{a,b,origin,to,center,radius,scale,p,flight,hit,particles});
+        elementalParticles(c,card.spellSchool,{a,b,radius,scale,p,flight,hit,particles,palette:col,friendly:spec.friendly});
         // Original illustration manifests above the arena as a magical projection.
         // It is deliberately a card-art apparition, not a fabricated animated NPC.
         const illustration=assets.images?.get('spell:'+spec.base);
-        if(!summon&&!echo&&illustration&&p<.72) {
+        if(!hasSubject&&!summon&&!echo&&illustration&&p<.72) {
             const at=center||{x:(from.x+to.x)/2,y:(from.y+to.y)/2};
             const grow=clamp(p/.18),fade=clamp((.72-p)/.18),orb=radius*.92;
             c.save();c.globalAlpha*=grow*fade*.85;
@@ -127,7 +150,7 @@ export function createSpellEffects(assets) {
             for(let i=0;i<8;i++){const angle=i*TAU/8+p*3;shard(c,Math.cos(angle)*orb*1.13,Math.sin(angle)*orb*1.13,3*scale,angle,primary);}
             c.restore();
         }
-        if(summon&&!echo) {
+        if(!hasSubject&&summon&&!echo) {
             const def=spec.summonDef,emerge=clamp(p/.26),fade=clamp((1-p)/.15),dir=b.x>=a.x?1:-1;
             const sx=a.x+dir*Math.sin(flight*Math.PI)*radius*.45,sy=origin.y;
             c.save();c.globalAlpha*=emerge*fade;rune(c,sx,sy,radius*1.1,p,light);
@@ -144,10 +167,10 @@ export function createSpellEffects(assets) {
             if(spec.variant.rank==='gold')for(let i=0;i<12;i++){const ang=i*TAU/12+p*2;shard(c,a.x+Math.cos(ang)*radius*1.3,origin.y+Math.sin(ang)*radius*.5,3*scale,ang,ac);}
             c.restore();
         }
+        if(spec.secondary&&p>.65)supportEffect(c,spec.secondary==='dot'?'enrage':spec.secondary,{a,b,to,center,radius:radius*.6,scale,p:clamp((p-.65)/.35),palette:col,particles,assets});
         if(['absorb','reflect','aura','cleanse','steal','stun','freeze','stealth','enrage','pips','capture','pet','dissolve','pass'].includes(kind)){
             supportEffect(c,kind,{a,b,to,center,radius,scale,p,palette:col,particles,assets});c.restore();return;
         }
-        if(spec.secondary&&p>.65)supportEffect(c,spec.secondary==='dot'?'enrage':spec.secondary,{a,b,to,center,radius:radius*.6,scale,p:clamp((p-.65)/.35),palette:col,particles,assets});
 
         const x=a.x+(b.x-a.x)*flight,y=a.y+(b.y-a.y)*flight-Math.sin(flight*Math.PI)*55*scale;
         if(['shield','blade','trap','heal'].includes(kind)) {

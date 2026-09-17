@@ -1,0 +1,6 @@
+import fs from 'node:fs';import os from 'node:os';import {defaultScenario} from '../js/data/presets.js';import {runBatch,createReport} from '../js/simulation/runner.js';
+const version=process.env.HAQI_VERSION??'kids',count=Number(process.env.HAQI_COUNT??10000),rules=JSON.parse(fs.readFileSync(new URL(`../data/${version}/ruleset.json`,import.meta.url)));
+const e={schemaVersion:1,population:'fixed',count,seed:20260916,strategy:'tactical',scenario:defaultScenario(rules,4)};
+runBatch({...e,count:20},rules);const start=performance.now(),records=runBatch(e,rules),report=createReport(e,rules,records),elapsedMs=performance.now()-start;
+const result={date:new Date().toISOString(),engineVersion:report.engineVersion,configHash:rules.hash,version,scenario:'4v4 fixed default snapshot, tactical, paired',seed:e.seed,count,elapsedMs,perSecond:count*1000/elapsedMs,maxRssMB:process.resourceUsage().maxRSS/1024,heapMB:process.memoryUsage().heapUsed/1024/1024,cpu:os.cpus()[0].model,node:process.version,under60Seconds:elapsedMs<60000,parityStatus:'experimental'};
+console.log(JSON.stringify(result,null,2));fs.mkdirSync(new URL('../test-results/',import.meta.url),{recursive:true});fs.writeFileSync(new URL(`../test-results/benchmark-${version}.json`,import.meta.url),JSON.stringify(result,null,2));

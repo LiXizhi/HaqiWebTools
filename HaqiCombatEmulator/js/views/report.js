@@ -1,0 +1,21 @@
+import {section,esc,pct,guard} from './dom.js';
+import {SCHOOLS,SCHOOL_NAMES,SCHOOL_COLORS} from '../rules/formulas.js';
+import {download,readJSON} from '../storage.js';
+import {matchAt,runBattle} from '../simulation/runner.js';
+export function reportView(host,state,navigate) {
+  const r=state.report;
+  if(!r){host.innerHTML=section('分析报告','每个结论都有对应的配置、样本与随机种子。','<div class="panel empty"><h3>还没有实验报告</h3><p>先运行一次批量实验，或导入已有报告。</p><button id="go-experiments" class="primary">创建实验</button></div>');host.querySelector('#go-experiments').onclick=()=>navigate('experiments');return ()=>{};}
+  const tiles=[['已完成场数',r.completed.toLocaleString(),r.partial?'部分结果':'完整实验'],['A 队得分率',pct(r.summary.score),'胜=1 / 平=0.5 / 负=0'],['平均行动回合',r.averageTurns.toFixed(1),'单方行动计一回合'],['计算耗时',r.elapsedMs?`${(r.elapsedMs/1000).toFixed(1)}s`:'—',`${r.version} · ${r.experiment.scenario.size}v${r.experiment.scenario.size}`]];
+  host.innerHTML=section('实验结果','在固定条件下理解差异，再验证一个小改动。',`<div class="row spread" style="margin-bottom:18px"><span class="pill">${esc(r.parityStatus)} · ${esc(r.configHash.slice(0,12))}</span><div class="row"><button id="report-export">导出报告</button><button id="go-ai" class="primary">交给 AI 分析 ↗</button></div></div><div class="report-kpis">${tiles.map(([label,value,sub])=>`<div class="stat-tile"><span class="label">${label}</span><div class="number">${value}</div><small>${esc(sub)}</small></div>`).join('')}</div>
+  <div class="panel" style="margin-top:20px"><h3>五系参与表现</h3><p style="font-size:12px">统计“含该系的队伍”的胜负，同一队内重复职业只计一次。区间按配对实验聚类估计；不足 30 组时不作精度判断。</p><div class="scroll"><table><thead><tr><th>学系</th><th>参与场次</th><th>胜 / 负 / 平</th><th>胜率</th><th>得分率</th><th>95% 区间</th><th>人均伤害 / 治疗 / 控制</th></tr></thead><tbody>${SCHOOLS.map(s=>{const x=r.schools[s];return `<tr style="--school:${SCHOOL_COLORS[s]}"><td class="school-cell"><span class="school-dot"></span>${SCHOOL_NAMES[s]}</td><td>${x.samples}</td><td>${x.wins} / ${x.losses} / ${x.draws}</td><td>${pct(x.winRate)}</td><td>${pct(x.score)}<div class="rate-bar"><span style="width:${100*x.score}%"></span></div></td><td>${pct(x.interval[0])}–${pct(x.interval[1])}</td><td>${['damage','healing','control'].map(k=>(r.metrics?.[s]?.[k]??0).toFixed(1)).join(' / ')}</td></tr>`;}).join('')}</tbody></table></div></div>
+  ${r.replacement?`<div class="panel" style="margin-top:18px"><h3>单席位替换</h3><p>换为 ${SCHOOL_NAMES[r.experiment.replacementSchool]} 后，A 队平均得分率变化：<b>${(r.replacement.meanDelta*100).toFixed(2)} 个百分点</b>（${r.replacement.pairs} 组完整对照）。</p></div>`:''}
+  <div class="two-col" style="margin-top:18px"><div class="panel"><h3>阵容明细</h3><div class="catalog scroll"><table><thead><tr><th>阵容 A / B</th><th>场次</th><th>A 得分率</th></tr></thead><tbody>${Object.entries(r.matrix).slice(0,100).map(([key,x])=>`<tr><td>${esc(key.replace(/ice|fire|storm|death|life/g,s=>SCHOOL_NAMES[s]))}</td><td>${x.samples}</td><td>${pct(x.score)}</td></tr>`).join('')}</tbody></table></div></div><div class="panel"><h3>复现一场对局</h3><p>从已完成样本中选择场次，按原始种子重新运行并查看战报。</p><div class="row"><input id="sample-index" type="number" min="0" max="${r.completed-1}" value="0" style="width:110px"><button id="sample-replay">载入回放</button></div><div class="divider"></div><div class="warning">当前完整战斗的 Lua 一致性验收尚未完成。此报告用于实验室自身验证，不能据此直接推断正式服平衡。</div><details style="margin-top:16px"><summary>实验与版本元数据</summary><pre style="white-space:pre-wrap;font-size:11px">${esc(JSON.stringify({...r.experiment,profiles:undefined,scenario:{size:r.experiment.scenario.size}},null,2))}</pre></details></div></div>`);
+  host.querySelector('#report-export').onclick=()=>download(`haqi-${r.version}-report.json`,r);
+  host.querySelector('#go-ai').onclick=()=>navigate('tuning');
+  host.querySelector('#sample-replay').onclick=guard(()=>{
+    if(r.configHash!==state.ruleset.hash)throw new Error('需先载入报告对应的数值版本');
+    const record=r.records[Number(host.querySelector('#sample-index').value)];if(!record)throw new Error('场次不存在');
+    state.manual={};const m=matchAt(r.experiment,state.ruleset,record.index);state.battle=runBattle(m.scenario,state.ruleset,m.seed,{strategy:r.experiment.strategy,recordEvents:true});state.scenario=m.scenario;state.seed=m.seed;navigate('battle');
+  });
+  return ()=>{};
+}

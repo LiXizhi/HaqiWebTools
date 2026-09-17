@@ -1,0 +1,17 @@
+{
+  "date": "2026-09-16T12:30:34.534Z",
+  "engineVersion": "0.1.0",
+  "configHash": "921508d81310d1a34d9c94d1ba6c1c95158b9fee3a598e13854ddcc336af9b04",
+  "version": "teen",
+  "scenario": "4v4 fixed default snapshot, tactical, paired",
+  "seed": 20260916,
+  "count": 10000,
+  "elapsedMs": 7014.395834000001,
+  "perSecond": 1425.6395328487529,
+  "maxRssMB": 238.375,
+  "heapMB": 62.59685516357422,
+  "cpu": "Apple M3 Pro",
+  "node": "v24.19.0",
+  "under60Seconds": true,
+  "parityStatus": "experimental"
+}

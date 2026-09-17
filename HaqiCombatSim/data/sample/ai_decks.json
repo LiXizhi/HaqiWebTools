@@ -1,0 +1,16 @@
+{
+  "AggressiveFire": {
+    "heads": ["AggressiveFire", "target", "base_weight", "no_aura", "caster_school_damage_aura", "caster_low_hp", "target_low_hp", "caster_with_1_damageboost", "caster_with_2+_damageboost", "target_with_1_damagetrap", "target_with_caster_shield", "caster_with_target_shield", "target_with_1+_damageweakness"],
+    "cards": {
+      "Fire_SingleAttack_Level1":        ["hostile", 950, null, null, null, 1450, -300, -300, null, -1000, null, null],
+      "Fire_SingleAttack_Level3":        ["hostile", 960, null, null, null, 1400, 300, 500, 500, -1000, null, null],
+      "Fire_SingleAttackWithDOT_Level3": ["hostile", 970, null, null, null, 1350, 300, 500, 500, -1000, null, null],
+      "Fire_SingleAttack_Level5":        ["hostile", 990, null, null, null, 1500, 800, 1200, 800, -1000, null, null],
+      "Fire_AreaAttack_Level4":          ["hostile", 980, null, null, null, 900, 600, 900, 600, -1000, null, null],
+      "Fire_FireDamageBlade":            ["self", 1200, null, null, null, null, -2000, -2000, null, null, null, null],
+      "Fire_FireDamageTrap":             ["hostile", 1150, null, null, null, null, null, null, -2000, null, null, null],
+      "Fire_FireGreatShield":            ["self", 900, null, null, 600, null, null, null, null, null, -2000, null],
+      "Fire_FireGlobalAura":             ["self", 1100, 300, -3000, null, null, null, null, null, null, null, null]
+    }
+  }
+}

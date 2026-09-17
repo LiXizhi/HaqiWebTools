@@ -1,0 +1,717 @@
+// combat_cards_core.js — 卡牌效果处理器（对应 card_server.lua Card.UseCard 内各 template.type 分支）。
+// 入口 useCard(arena, caster, card, target)；每个分支的 Lua 行号见 docs/lua-mapping.md。
+// 未实现的 type 通过 registerUnsupported 记录到 arena.unsupported，并按 Pass 处理。
+import {
+    damageExpression, healExpression, applyHealPenalty, tryCriticalStrike, tryDodge, rollFizzle, critDamageRatio,
+} from './combat_formulas_core.js';
+import * as U from './combat_unit_core.js';
+
+/** card_server.lua L1246-1263 GetNumericalValueFromSection：数字或 "600p"（每费） */
+export function numericFromSection(section, realcost) {
+    if (section === undefined || section === null || section === '') return 0;
+    const n = Number(section);
+    if (!Number.isNaN(n)) return n;
+    const m = /^(\d+)p$/.exec(String(section).trim());
+    if (m) return Number(m[1]) * (realcost || 0);
+    return 0;
+}
+
+function splitList(str) {
+    if (str === undefined || str === null) return [];
+    return String(str).split(',').map(s => s.trim()).filter(s => s !== '');
+}
+
+function emit(arena, ev) {
+    ev.turn = arena.turn;
+    arena.events.push(ev);
+    if (arena.onEvent) arena.onEvent(ev);
+}
+
+// ---------------------------------------------------------------------------
+// 目标选择
+// ---------------------------------------------------------------------------
+
+/** 卡牌目标类型：hostile（默认） / friendly / self / all */
+export function cardTargetKind(card) {
+    const t = card.type;
+    if (card.target) return card.target;
+    if (/^Single(Heal|Cleanse|Stealth|Guardian)|^Area(Heal|Cleanse|Ward|Absorb|Charm|PowerPipBoost)|^Absorb|^Charms$|^Wards$|^StandingWards$|^ReflectionShield$|^GainPips$|^Revive$|^HoT$|^SymmetryWards$/.test(t)) {
+        // AreaCharm 在数据中实际是敌方减益（weakness），特殊处理
+        if (t === 'AreaCharm') return 'hostile';
+        return 'friendly';
+    }
+    if (/^(Global|Stance|MiniAura|Pass|Enrage|Fizzle|PickPet|CatchPet)$/.test(t)) return 'self';
+    if (t === 'ArenaAttack') return 'all';
+    return 'hostile';
+}
+
+export function isAreaCard(card) {
+    return /^Area|^Arena|^DoT$/.test(card.type) || card.type === 'Global';
+}
+
+export function isAttackCard(card) {
+    return /Attack|^DoT$|^DOTAttack/.test(card.type) && card.type !== 'Fizzle';
+}
+export function isHealCard(card) {
+    return /Heal|^HoT$|^Revive$/.test(card.type);
+}
+
+/** 期望伤害（不含目标属性），用于 UI/简单 Bot 排序 */
+export function expectedBaseDamage(card) {
+    const p = card.params || {};
+    let v = 0;
+    if (p.damage_min !== undefined) v += (numericFromSection(p.damage_min, Math.abs(card.pipcost)) + numericFromSection(p.damage_max, Math.abs(card.pipcost))) / 2;
+    if (p.times) v *= Number(p.times) || 1;
+    for (const d of splitList(p.dots)) v += Number(d) || 0;
+    return v;
+}
+export function expectedBaseHeal(card) {
+    const p = card.params || {};
+    let v = 0;
+    if (p.heal_min !== undefined) v += (numericFromSection(p.heal_min, Math.abs(card.pipcost)) + numericFromSection(p.heal_max, Math.abs(card.pipcost))) / 2;
+    for (const h of splitList(p.hots)) v += Number(h) || 0;
+    if (p.absorb_pts !== undefined) v += numericFromSection(p.absorb_pts, Math.abs(card.pipcost));
+    return v;
+}
+
+// ---------------------------------------------------------------------------
+// 伤害管线（card_server.lua L2998-3330 SingleAttack 分支，L4205-4480 AreaAttack 分支）
+// ---------------------------------------------------------------------------
+
+/**
+ * 计算并施加一次伤害。
+ * @param opts { baseDamage, damageSchool, baseCrit, baseHit, baseSpellPen, skipResist, buffsTargetList(共享 charm 列表), damagePercent, boostAbs, label }
+ * @return { damage, mark, school }
+ */
+function applyDamage(arena, caster, target, card, opts) {
+    const R = arena.resolved;
+    const rng = arena.rng;
+    const version = R.version;
+    let damage = opts.baseDamage;
+    let school = opts.damageSchool;
+    const buffs = { list: [...(opts.buffsTargetList || [])], damagePercent: opts.damagePercent || 0 };
+    let boostAbs = opts.boostAbs || 0;
+
+    // 目标 shield / trap / prism
+    school = U.processDamageAgainstWards(target, R, buffs.list, school);
+    if (!opts.skipResist) {
+        buffs.resistPercent = U.getResist(target, school, R);
+        buffs.spellPenetration = U.getSpellPenetration(caster, school) + (Number(opts.baseSpellPen) || 0);
+        buffs.spellPenetrationReceive = U.getSpellPenetrationReceive(target);
+        boostAbs += U.getResistAbs(target, school);
+    }
+    // 全局光环
+    if (arena.aura && arena.aura.boostSchool === school && arena.aura.boostDamage) buffs.list.push(arena.aura.boostDamage);
+
+    damage = damageExpression(damage, boostAbs, buffs, version, R.global.maxSpellPenetration);
+
+    let mark = '';
+    const dodgeCtx = {
+        baseHit: opts.baseHit ?? card.hitchance ?? 100,
+        hitChance: U.getHitChance(caster), dodge: U.getDodge(target),
+        casterLevel: caster.level, targetLevel: target.level, targetIsMob: false,
+    };
+    const crit = U.getCriticalStrike(caster, school, R);
+    const resil = U.getResilience(target, school);
+    if (version !== 'kids') {
+        if (tryDodge(rng, dodgeCtx, version)) {
+            damage = Math.ceil(damage * R.global.dodgeDamageRatio);
+            mark = 'd';
+        } else if (tryCriticalStrike(rng, crit, resil, opts.baseCrit || 0)) {
+            damage = Math.ceil(damage * critDamageRatio(R.global.critDamageRatio, caster.stats.critRatioBonus));
+            if (card.params.extra_damage_if_critical) damage = damage * (1 + Number(card.params.extra_damage_if_critical));
+            mark = 'c';
+        }
+    } else {
+        // kids free_pvp：绝对防御（伤害=1，保护 6 回合）
+        if (target.remedy.absoluteDefense <= 0 && tryDodge(rng, dodgeCtx, version)) {
+            damage = 1;
+            mark = 'd';
+            target.remedy.absoluteDefense = R.global.protectRounds;
+        } else if (tryCriticalStrike(rng, crit, resil, opts.baseCrit || 0)) {
+            damage = Math.ceil(damage * critDamageRatio(R.global.critDamageRatio, caster.stats.critRatioBonus));
+            if (card.params.extra_damage_if_critical) damage = damage * (1 + Number(card.params.extra_damage_if_critical));
+            mark = 'c';
+        }
+    }
+
+    damage = Math.ceil(damage * U.getOutputDamageFinalWeight(caster, arena, R));
+    damage = Math.ceil(damage * U.getReceiveDamageFinalWeight(target, school, R));
+    if (opts.maxDamage !== undefined && damage > opts.maxDamage) damage = opts.maxDamage;
+    if (opts.halve) damage = Math.ceil(damage / 2);
+
+    damage = U.absorbUnitDamage(target, damage);
+    U.takeDamage(target, damage);
+    caster.totals.damageDealt += damage;
+    emit(arena, { type: 'damage', caster: caster.id, target: target.id, card: card.key, school, amount: damage, mark, label: opts.label || '' });
+    return { damage, mark, school };
+}
+
+/** 施法者对某系的加成，含弹出 blade/weakness charm（card_server.lua L3045-3056） */
+function casterDamageBuffs(arena, caster, school) {
+    const R = arena.resolved;
+    const list = [];
+    const damagePercent = U.getDamageBoost(caster, school, arena, R);
+    const boostAbs = U.getDamageBoostAbs(caster, school);
+    U.processStatAgainstCharms(caster, R, list, 'boost_damage', school);
+    return { list, damagePercent, boostAbs };
+}
+
+/** DOT 序列生成（card_server.lua L3062-3119 / L4041-4140） */
+function buildDotSequence(arena, caster, target, card, dotsStr, buffsList, siblingRatio = 1, realcost = 0) {
+    const R = arena.resolved;
+    const school = card.params.damage_school || card.spellSchool;
+    const schools = splitList(card.params.dots_damage_school);
+    const seq = {
+        cardKey: card.key, casterId: caster.id, damageSchool: school,
+        buffsTarget: [...buffsList],
+        damageBoostAbs: U.getDamageBoostAbs(caster, school),
+        spellPenetration: U.getSpellPenetration(caster, school),
+        outputWeight: U.getOutputDamageFinalWeight(caster, arena, R),
+        ticks: [],
+    };
+    const crit = U.getCriticalStrike(caster, school, R);
+    const resil = U.getResilience(target, school);
+    let round = 0;
+    for (const d of splitList(dotsStr)) {
+        // card_server.lua L4100 / L4342：每段可为 "42p"（X 费卡按实际消耗能量倍乘）
+        let dmg = numericFromSection(d, realcost);
+        dmg = dmg * siblingRatio;
+        const tickSchool = schools[round] || school;
+        let critical = false;
+        if (tryCriticalStrike(arena.rng, crit, resil, 0)) {
+            dmg = Math.ceil(dmg * critDamageRatio(R.global.critDamageRatio, caster.stats.critRatioBonus));
+            critical = true;
+        }
+        seq.ticks.push({ dmg, critical, damageSchool: tickSchool, damageBoostAbs: U.getDamageBoostAbs(caster, tickSchool), spellPenetration: U.getSpellPenetration(caster, tickSchool) });
+        round++;
+    }
+    // Lua 从尾部取值：反转使第一回合先跳 dots[0]
+    seq.ticks.reverse();
+    return seq;
+}
+
+/** card_server.lua L1841-1930：单位行动前结算自身 DOT */
+export function tickDots(arena, unit) {
+    const R = arena.resolved;
+    const applyTick = (victim, baseDamage, dot, label) => {
+        const buffs = { list: [...(dot.buffsTarget || [])], damagePercent: 0 };
+        let school = U.processDamageAgainstWards(victim, R, buffs.list, dot.damageSchool);
+        buffs.resistPercent = U.getResist(victim, school, R);
+        buffs.spellPenetration = dot.spellPenetration;
+        buffs.spellPenetrationReceive = U.getSpellPenetrationReceive(victim);
+        if (arena.aura && arena.aura.boostSchool === school && arena.aura.boostDamage) buffs.list.push(arena.aura.boostDamage);
+        let dmg = damageExpression(baseDamage, (dot.damageBoostAbs || 0) + U.getResistAbs(victim, school), buffs, R.version, R.global.maxSpellPenetration);
+        dmg = Math.ceil(dmg * (dot.outputWeight || 1));
+        dmg = Math.ceil(dmg * U.getReceiveDamageFinalWeight(victim, school, R));
+        dmg = U.absorbUnitDamage(victim, dmg);
+        U.takeDamage(victim, dmg);
+        const caster = arena.unitsById[dot.casterId];
+        if (caster) caster.totals.damageDealt += dmg;
+        emit(arena, { type: 'dot', caster: dot.casterId, target: victim.id, card: dot.cardKey, school, amount: dmg, mark: dot.critical ? 'c' : '', label });
+    };
+    for (const dot of U.popDoT(unit)) {
+        if (dot.damage === 0) continue;
+        if (dot.damage < 0) {
+            // card_server.lua L1978-2060 splash：负值段为“溅射”，以绝对值打在持有者及其相邻（站位 ±1）存活队友身上
+            const side = arena.sides[unit.side];
+            const victims = [unit, ...side.filter(v => v !== unit && U.isAlive(v) && Math.abs(v.slot - unit.slot) === 1)];
+            for (const v of victims) applyTick(v, Math.abs(dot.damage), dot, 'splash');
+        } else {
+            applyTick(unit, dot.damage, dot, '');
+        }
+        if (!U.isAlive(unit)) break;
+    }
+}
+
+/** card_server.lua L2173+：单位行动前结算自身 HOT */
+export function tickHots(arena, unit) {
+    if (!U.isAlive(unit)) return;
+    for (const hot of U.popHoT(unit)) {
+        const buffs = [U.getInputHealBoost(unit)];
+        if (arena.aura && arena.aura.boostHeal) buffs.push(arena.aura.boostHeal);
+        let heal = healExpression(hot.heal, buffs, arena.resolved.version);
+        heal = applyHealPenalty(Math.ceil(heal), arena.resolved.global.healPenalty);
+        const done = U.takeHeal(unit, heal);
+        const caster = arena.unitsById[hot.casterId];
+        if (caster) caster.totals.healDone += done;
+        emit(arena, { type: 'hot', caster: hot.casterId, target: unit.id, card: hot.cardKey, amount: heal });
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 治疗管线（card_server.lua L3711-3900 SingleHeal, L4985-5100 AreaHeal）
+// ---------------------------------------------------------------------------
+
+function applyHeal(arena, caster, target, card, baseHeal, casterBuffs, label) {
+    const R = arena.resolved;
+    const buffs = [...casterBuffs];
+    U.processHealAgainstWards(target, R, buffs);
+    if (arena.aura && arena.aura.boostHeal) buffs.push(arena.aura.boostHeal);
+    buffs.push(U.getInputHealBoost(target));
+    let heal = healExpression(baseHeal, buffs, R.version);
+    heal = applyHealPenalty(Math.ceil(heal), R.global.healPenalty);
+    const done = U.takeHeal(target, heal);
+    caster.totals.healDone += done;
+    emit(arena, { type: 'heal', caster: caster.id, target: target.id, card: card.key, amount: heal, label: label || '' });
+    return heal;
+}
+
+function casterHealBuffs(arena, caster) {
+    const R = arena.resolved;
+    const buffs = [];
+    U.processStatAgainstCharms(caster, R, buffs, 'boost_heal', 'skipschool');
+    buffs.push(U.getOutputHealBoost(caster, R));
+    return buffs;
+}
+
+function buildHotSequence(arena, caster, card, hotsStr, casterBuffs, realcost = 0) {
+    const seq = { cardKey: card.key, casterId: caster.id, ticks: [] };
+    for (const h of splitList(hotsStr)) {
+        let heal = healExpression(numericFromSection(h, realcost), casterBuffs, arena.resolved.version);
+        seq.ticks.push(Math.ceil(heal));
+    }
+    seq.ticks.reverse();
+    return seq;
+}
+
+// ---------------------------------------------------------------------------
+// 目标集合
+// ---------------------------------------------------------------------------
+
+function aliveEnemies(arena, caster) {
+    return arena.sides[caster.side === 'near' ? 'far' : 'near'].filter(U.isAlive);
+}
+function aliveAllies(arena, caster) {
+    return arena.sides[caster.side].filter(U.isAlive);
+}
+
+/** 眩晕：card_server.lua L3167-3200（stun absorb ward 31） */
+export const STUN_ABSORB_WARD_ID = 31;
+function applyStun(arena, caster, target, card) {
+    const R = arena.resolved;
+    let absorbed = false;
+    for (const w of target.wards) {
+        if (w.id > 0 && !w.absorb) {
+            const tpl = R.wards[w.id];
+            if (tpl && (tpl.stunabsorb === true || tpl.stunabsorb === 'true')) { w.id = 0; absorbed = true; break; }
+        }
+    }
+    if (absorbed) {
+        emit(arena, { type: 'stun_absorbed', caster: caster.id, target: target.id, card: card.key });
+        return false;
+    }
+    target.stunned = true;
+    if (!(card.params.do_not_generate_absorb === true || card.params.do_not_generate_absorb === 'true')) {
+        const n = R.version === 'teen' ? 2 : 4;
+        for (let i = 0; i < n; i++) U.appendWard(target, STUN_ABSORB_WARD_ID);
+    }
+    emit(arena, { type: 'stun', caster: caster.id, target: target.id, card: card.key });
+    return true;
+}
+
+// ---------------------------------------------------------------------------
+// 分支处理器
+// ---------------------------------------------------------------------------
+
+const handlers = {};
+
+const SINGLE_ATTACK_TYPES = [
+    'SingleAttack', 'SingleAttackWithDOT', 'SingleAttackWithStandingWards', 'SingleAttackWithTrap',
+    'SingleAttackWithExplode', 'SingleAttackWithLifeTap', 'SingleAttackWithImmolate', 'SingleAttackWithPercent',
+    'SingleAttackWithStun', 'SingleAttackWithSelfStun', 'SingleAttackWithLifeTapAndStandingWards', 'SingleAttackHP',
+];
+
+/** card_server.lua L2998-3330 */
+function singleAttack(arena, caster, card, target, realcost) {
+    const R = arena.resolved;
+    const p = card.params;
+    const type = card.type;
+    let dmin = numericFromSection(p.damage_min, realcost);
+    let dmax = numericFromSection(p.damage_max, realcost);
+    if (type === 'SingleAttackWithPercent') {
+        const real = Math.ceil(target.hp * Number(p.damage_percent || 0) / 100);
+        dmin = real; dmax = real;
+    }
+    if (type === 'SingleAttackWithExplode') {
+        const exists = target.dots.some(s => s.ticks.some(t => t.dmg < 0));
+        if (exists) {
+            target.dots = target.dots.filter(s => !s.ticks.some(t => t.dmg < 0));
+            dmin = numericFromSection(p.damage_min_explode, realcost);
+            dmax = numericFromSection(p.damage_max_explode, realcost);
+        }
+    }
+    const baseDamage = arena.rng.int(dmin, dmax);
+    const school = p.damage_school || card.spellSchool;
+    const cb = casterDamageBuffs(arena, caster, school);
+    const skipResist = type === 'SingleAttackWithPercent';
+
+    // immolate：施法者自伤（card_server.lua L3036-3043 + L3360+）
+    if (type === 'SingleAttackWithImmolate' && p.immolate_damage_min !== undefined) {
+        const iSchool = p.immolate_damage_school || school;
+        const base = arena.rng.int(numericFromSection(p.immolate_damage_min, realcost), numericFromSection(p.immolate_damage_max, realcost));
+        applyDamage(arena, caster, caster, card, { baseDamage: base, damageSchool: iSchool, buffsTargetList: [], damagePercent: U.getDamageBoost(caster, iSchool, arena, R), boostAbs: U.getDamageBoostAbs(caster, iSchool), label: 'immolate' });
+    }
+
+    if (type === 'SingleAttackWithDOT' && p.dots) {
+        U.appendDoT(target, buildDotSequence(arena, caster, target, card, p.dots, cb.list, 1, realcost));
+        emit(arena, { type: 'dot_applied', caster: caster.id, target: target.id, card: card.key, ticks: splitList(p.dots).length });
+    }
+    if ((type === 'SingleAttackWithStandingWards' || type === 'SingleAttackWithLifeTapAndStandingWards') && p.wards) {
+        for (const w of splitList(p.wards)) U.appendStandingWard(target, Number(w), Number(p.rounds || 1));
+    }
+    if (type === 'SingleAttackWithTrap' && p.target_wards) {
+        for (const w of splitList(p.target_wards)) U.appendWard(target, Number(w));
+    }
+    if (type === 'SingleAttackWithStun') applyStun(arena, caster, target, card);
+
+    const res = applyDamage(arena, caster, target, card, {
+        baseDamage, damageSchool: school, buffsTargetList: skipResist ? [] : cb.list,
+        damagePercent: skipResist ? 0 : cb.damagePercent, boostAbs: skipResist ? 0 : cb.boostAbs,
+        baseCrit: Number(p.base_criticalstrike || 0), baseSpellPen: p.base_spellpenetration, skipResist,
+        maxDamage: type === 'SingleAttackWithPercent' ? Number(p.damage_max_player || p.damage_max || Infinity) : undefined,
+    });
+
+    if ((type === 'SingleAttackWithLifeTap' || type === 'SingleAttackWithLifeTapAndStandingWards') && U.isAlive(caster)) {
+        // card_server.lua L3496-3497 吸血：damage * convert_rate / 100
+        const conv = Math.ceil(res.damage * Number(p.convert_rate || 0) / 100);
+        if (conv > 0) {
+            const done = U.takeHeal(caster, conv);
+            caster.totals.healDone += done;
+            emit(arena, { type: 'heal', caster: caster.id, target: caster.id, card: card.key, amount: conv, label: 'lifetap' });
+        }
+    }
+    if (type === 'SingleAttackWithSelfStun') { caster.stunned = true; emit(arena, { type: 'stun', caster: caster.id, target: caster.id, card: card.key }); }
+}
+for (const t of SINGLE_ATTACK_TYPES) handlers[t] = singleAttack;
+
+/** card_server.lua L2620-2760 SingleAttackWithMultipleDamage（times 次） */
+handlers.SingleAttackWithMultipleDamage = function (arena, caster, card, target, realcost) {
+    const p = card.params;
+    const school = p.damage_school || card.spellSchool;
+    const cb = casterDamageBuffs(arena, caster, school);
+    let times = Number(p.times || 1);
+    if (p.random_times) {
+        const m = /(\d+)\s*,\s*(\d+)/.exec(String(p.random_times));
+        if (m) times = arena.rng.int(Number(m[1]), Number(m[2]));
+    }
+    const equal = p.damage_equal === true || p.damage_equal === 'true' || p.everyround_damage_equal === 'true';
+    let base = arena.rng.int(numericFromSection(p.damage_min, realcost), numericFromSection(p.damage_max, realcost));
+    for (let i = 1; i <= times; i++) {
+        if (!U.isAlive(target)) break;
+        let dmin, dmax, tSchool = school, baseCrit = Number(p.base_criticalstrike || 0);
+        if (!equal && p[`damage_min_${i}`] !== undefined) {
+            dmin = numericFromSection(p[`damage_min_${i}`], realcost);
+            dmax = numericFromSection(p[`damage_max_${i}`], realcost);
+            tSchool = p[`damage_school_${i}`] || school;
+            baseCrit = Number(p[`base_criticalstrike_${i}`] || 0);
+            base = arena.rng.int(dmin, dmax);
+        } else if (!equal) {
+            base = arena.rng.int(numericFromSection(p.damage_min, realcost), numericFromSection(p.damage_max, realcost));
+        }
+        applyDamage(arena, caster, target, card, { baseDamage: base, damageSchool: tSchool, buffsTargetList: cb.list, damagePercent: cb.damagePercent, boostAbs: cb.boostAbs, baseCrit, baseSpellPen: p.base_spellpenetration, label: `hit${i}` });
+    }
+};
+
+/** card_server.lua L4041-4140 DOTAttack / DOTAttackWithHOT / DoT */
+function dotAttack(arena, caster, card, target, realcost) {
+    const p = card.params;
+    const school = p.damage_school || card.spellSchool;
+    const cb = casterDamageBuffs(arena, caster, school);
+    U.appendDoT(target, buildDotSequence(arena, caster, target, card, p.dots, cb.list, 1, realcost));
+    emit(arena, { type: 'dot_applied', caster: caster.id, target: target.id, card: card.key, ticks: splitList(p.dots).length });
+    if (card.type === 'DOTAttackWithHOT' && p.hots) {
+        U.appendHoT(caster, buildHotSequence(arena, caster, card, p.hots, casterHealBuffs(arena, caster), realcost));
+        emit(arena, { type: 'hot_applied', caster: caster.id, target: caster.id, card: card.key, ticks: splitList(p.hots).length });
+    }
+}
+handlers.DOTAttack = dotAttack;
+handlers.DOTAttackWithHOT = dotAttack;
+handlers.DoT = dotAttack;
+
+/** card_server.lua L4205-4480 AreaAttack 家族；ArenaAttack 打全场（友方半伤） */
+function areaAttack(arena, caster, card, target, realcost) {
+    const R = arena.resolved;
+    const p = card.params;
+    const type = card.type;
+    const school = p.damage_school || card.spellSchool;
+    const cb = casterDamageBuffs(arena, caster, school);
+    let targets = aliveEnemies(arena, caster);
+    if (type === 'ArenaAttack') targets = [...aliveEnemies(arena, caster), ...aliveAllies(arena, caster)];
+    const hasDirect = p.damage_min !== undefined;
+    const base = hasDirect ? arena.rng.int(numericFromSection(p.damage_min, realcost), numericFromSection(p.damage_max, realcost)) : 0;
+    let total = 0;
+    for (const t of targets) {
+        const sibling = t !== target;
+        if (type === 'AreaAttackWithStun' || type === 'AreaStun') applyStun(arena, caster, t, card);
+        if ((type === 'AreaAttackWithDOT' || type === 'AreaDOTAttack') && p.dots) {
+            const ratio = sibling && R.version === 'kids' ? 0.83 : 1; // card_server.lua L66/L198 splash_damage_siblin_ratio
+            U.appendDoT(t, buildDotSequence(arena, caster, t, card, p.dots, cb.list, ratio, realcost));
+        }
+        if (hasDirect) {
+            const res = applyDamage(arena, caster, t, card, {
+                baseDamage: base, damageSchool: school, buffsTargetList: cb.list, damagePercent: cb.damagePercent, boostAbs: cb.boostAbs,
+                baseCrit: Number(p.base_criticalstrike || 0), baseSpellPen: p.base_spellpenetration,
+                halve: type === 'ArenaAttack' && t.side === caster.side,
+            });
+            total += res.damage;
+        }
+    }
+    if (type === 'AreaAttackWithLifeTap' && U.isAlive(caster)) {
+        const conv = Math.ceil(total * Number(p.convert_rate || 0) / 100);
+        if (conv > 0) { caster.totals.healDone += U.takeHeal(caster, conv); emit(arena, { type: 'heal', caster: caster.id, target: caster.id, card: card.key, amount: conv, label: 'lifetap' }); }
+    }
+    if (type === 'AreaAttackWithImmolate' && p.immolate_damage_min !== undefined) {
+        const iSchool = p.immolate_damage_school || school;
+        const b = arena.rng.int(numericFromSection(p.immolate_damage_min, realcost), numericFromSection(p.immolate_damage_max, realcost));
+        applyDamage(arena, caster, caster, card, { baseDamage: b, damageSchool: iSchool, buffsTargetList: [], damagePercent: U.getDamageBoost(caster, iSchool, arena, R), boostAbs: 0, label: 'immolate' });
+    }
+}
+for (const t of ['AreaAttack', 'AreaAttackWithDOT', 'AreaDOTAttack', 'AreaAttackWithStun', 'ArenaAttack', 'AreaAttackWithLifeTap', 'AreaAttackWithExtraThreat', 'AreaAttackWithImmolate']) handlers[t] = areaAttack;
+
+/** card_server.lua L5614+ SingleStun / AreaStun */
+handlers.SingleStun = (arena, caster, card, target) => { applyStun(arena, caster, target, card); };
+handlers.AreaStun = (arena, caster, card) => { for (const t of aliveEnemies(arena, caster)) applyStun(arena, caster, t, card); };
+
+/** card_server.lua L3711-3900 SingleHeal 家族 */
+function singleHeal(arena, caster, card, target, realcost) {
+    const R = arena.resolved;
+    const p = card.params;
+    const base = arena.rng.int(numericFromSection(p.heal_min, realcost), numericFromSection(p.heal_max, realcost));
+    const cbuffs = casterHealBuffs(arena, caster);
+    if (card.type === 'SingleHealWithImmolate' && p.immolate_damage_min !== undefined) {
+        const iSchool = p.immolate_damage_school || card.spellSchool;
+        const b = arena.rng.int(numericFromSection(p.immolate_damage_min, realcost), numericFromSection(p.immolate_damage_max, realcost));
+        applyDamage(arena, caster, caster, card, { baseDamage: b, damageSchool: iSchool, buffsTargetList: [], damagePercent: U.getDamageBoost(caster, iSchool, arena, R), boostAbs: 0, label: 'immolate' });
+    }
+    if (card.type === 'SingleHealWithHOT' && p.hots) {
+        U.appendHoT(target, buildHotSequence(arena, caster, card, p.hots, cbuffs, realcost));
+        emit(arena, { type: 'hot_applied', caster: caster.id, target: target.id, card: card.key, ticks: splitList(p.hots).length });
+    }
+    if (card.type === 'SingleHealWithCleanse') U.popAllNegativeEffects(target, R);
+    applyHeal(arena, caster, target, card, base, cbuffs);
+}
+for (const t of ['SingleHeal', 'SingleHealWithHOT', 'SingleHealWithImmolate', 'SingleHealWithCleanse']) handlers[t] = singleHeal;
+
+/** card_server.lua L4985-5100 AreaHeal 家族（基础值只 roll 一次，逐目标结算） */
+function areaHeal(arena, caster, card, target, realcost) {
+    const R = arena.resolved;
+    const p = card.params;
+    const base = arena.rng.int(numericFromSection(p.heal_min, realcost), numericFromSection(p.heal_max, realcost));
+    const cbuffs = casterHealBuffs(arena, caster);
+    for (const t of aliveAllies(arena, caster)) {
+        if (card.type === 'AreaHealWithHOT' && p.hots) U.appendHoT(t, buildHotSequence(arena, caster, card, p.hots, cbuffs, realcost));
+        if (card.type === 'AreaHealWithAbsorb' && p.absorb_pts !== undefined) U.appendAbsorb(t, numericFromSection(p.absorb_pts, realcost), Number(p.ward || 0));
+        applyHeal(arena, caster, t, card, base, cbuffs);
+    }
+    if (card.type === 'AreaCleanse') for (const t of aliveAllies(arena, caster)) U.popAllNegativeEffects(t, R);
+}
+for (const t of ['AreaHeal', 'AreaHealWithHOT', 'AreaHealWithAbsorb']) handlers[t] = areaHeal;
+
+handlers.HoT = (arena, caster, card, target, realcost) => {
+    U.appendHoT(target, buildHotSequence(arena, caster, card, card.params.hots, casterHealBuffs(arena, caster), realcost));
+    emit(arena, { type: 'hot_applied', caster: caster.id, target: target.id, card: card.key, ticks: splitList(card.params.hots).length });
+};
+
+/** card_server.lua L6305 Charms（含 charms="11,11"）/ L6354 AreaCharm（对敌方全体 charm=） */
+handlers.Charms = (arena, caster, card, target) => {
+    for (const c of splitList(card.params.charms ?? card.params.charm)) U.appendCharm(target, Number(c));
+    emit(arena, { type: 'charm', caster: caster.id, target: target.id, card: card.key, ids: splitList(card.params.charms ?? card.params.charm) });
+};
+handlers.AreaCharm = (arena, caster, card) => {
+    const ids = splitList(card.params.charm ?? card.params.charms);
+    const R = arena.resolved;
+    const positive = ids.length && R.charms[Number(ids[0])] && (R.charms[Number(ids[0])].positive === true || R.charms[Number(ids[0])].positive === 'true');
+    const targets = positive ? aliveAllies(arena, caster) : aliveEnemies(arena, caster);
+    for (const t of targets) { for (const c of ids) U.appendCharm(t, Number(c)); emit(arena, { type: 'charm', caster: caster.id, target: t.id, card: card.key, ids }); }
+};
+
+/** card_server.lua L6482 Wards / L6700 AreaWard, AreaAbsorb / L6531 StandingWards / L5516 Absorb */
+handlers.Wards = (arena, caster, card, target) => {
+    const ids = splitList(card.params.wards ?? card.params.ward);
+    for (const w of ids) U.appendWard(target, Number(w));
+    emit(arena, { type: 'ward', caster: caster.id, target: target.id, card: card.key, ids });
+};
+/** card_server.lua SymmetryWards：target_wards 贴敌方目标，caster_wards 贴施法者自身 */
+handlers.SymmetryWards = (arena, caster, card, target) => {
+    const p = card.params;
+    const tids = splitList(p.target_wards ?? p.wards ?? p.ward);
+    const cids = splitList(p.caster_wards);
+    for (const w of tids) U.appendWard(target, Number(w));
+    for (const w of cids) U.appendWard(caster, Number(w));
+    emit(arena, { type: 'ward', caster: caster.id, target: target.id, card: card.key, ids: tids });
+    if (cids.length) emit(arena, { type: 'ward', caster: caster.id, target: caster.id, card: card.key, ids: cids });
+};
+handlers.AreaWard = (arena, caster, card) => {
+    const ids = splitList(card.params.ward ?? card.params.wards);
+    const R = arena.resolved;
+    const tpl = ids.length ? R.wards[Number(ids[0])] : null;
+    const negative = tpl && (tpl.positive === false || tpl.positive === 'false');
+    const targets = negative ? aliveEnemies(arena, caster) : aliveAllies(arena, caster);
+    for (const t of targets) { for (const w of ids) U.appendWard(t, Number(w)); emit(arena, { type: 'ward', caster: caster.id, target: t.id, card: card.key, ids }); }
+};
+handlers.StandingWards = (arena, caster, card, target) => {
+    const rounds = Number(card.params.rounds || 1);
+    for (const w of splitList(card.params.wards ?? card.params.ward)) U.appendStandingWard(target, Number(w), rounds);
+    emit(arena, { type: 'standing_ward', caster: caster.id, target: target.id, card: card.key, rounds });
+};
+function absorbCard(arena, caster, card, target, realcost) {
+    const p = card.params;
+    let pts = numericFromSection(p.absorb_pts, realcost);
+    if (card.type === 'Absorb_Adv') {
+        // Teen Absorb_Adv：base + scale * 等级（近似：base_absorb_pts * (1 + boost%)），受生命攻击加成
+        pts = Math.ceil(Number(p.base_absorb_pts || 0) * (1 + U.getDamageBoost(caster, card.spellSchool, null, arena.resolved) / 100));
+    }
+    const targets = card.type === 'AreaAbsorb' ? aliveAllies(arena, caster) : [target];
+    for (const t of targets) {
+        U.appendAbsorb(t, pts, Number(p.ward || 0));
+        emit(arena, { type: 'absorb', caster: caster.id, target: t.id, card: card.key, amount: pts });
+    }
+}
+handlers.Absorb = absorbCard;
+handlers.Absorb_Adv = absorbCard;
+handlers.AreaAbsorb = absorbCard;
+
+/** ReflectionShield：以吸收层近似（反弹部分忽略，记入 unsupported 提示） */
+handlers.ReflectionShield = (arena, caster, card, target) => {
+    U.appendAbsorb(target, Number(card.params.reflect_amount || 0), 0);
+    emit(arena, { type: 'absorb', caster: caster.id, target: target.id, card: card.key, amount: Number(card.params.reflect_amount || 0), label: 'reflect≈absorb' });
+};
+
+/** card_server.lua L5213 Global */
+handlers.Global = (arena, caster, card) => {
+    const p = card.params;
+    arena.aura = {
+        name: card.spellSchool === 'death' && p.boost_damage !== undefined ? 'death_damage' : card.spellSchool,
+        boostDamage: p.boost_damage !== undefined ? Number(p.boost_damage) : null,
+        boostSchool: p.school ? String(p.school).toLowerCase() : null,
+        boostHeal: p.boost_heal !== undefined ? Number(p.boost_heal) : null,
+        boostPowerPip: p.boost_powerpip !== undefined ? Number(p.boost_powerpip) : null,
+        cardKey: card.key,
+    };
+    emit(arena, { type: 'aura', caster: caster.id, card: card.key, aura: { ...arena.aura } });
+};
+
+/** Global2（teen）：全场属性光环，stats 通过 GetStatsSum 计入所有单位（player_server.lua L3579-3595） */
+handlers.Global2 = (arena, caster, card) => {
+    arena.aura2 = { id: Number(card.params.globalaura), school: card.params.school, cardKey: card.key };
+    emit(arena, { type: 'aura2', caster: caster.id, card: card.key, id: arena.aura2.id });
+};
+
+/** MiniAura：自身小光环（rounds） */
+handlers.MiniAura = (arena, caster, card) => {
+    caster.miniaura = { id: Number(card.params.miniaura), rounds: Number(card.params.rounds || 3) };
+    emit(arena, { type: 'miniaura', caster: caster.id, card: card.key, id: caster.miniaura.id, rounds: caster.miniaura.rounds });
+};
+
+/** Stance：姿态（fire_kids/ice_kids/defensive/vampire/electric...） */
+handlers.Stance = (arena, caster, card) => {
+    caster.stance = { name: String(card.params.stance), rounds: Number(card.params.rounds || 5) };
+    emit(arena, { type: 'stance', caster: caster.id, card: card.key, stance: caster.stance.name, rounds: caster.stance.rounds });
+};
+
+/** GainPips / AreaPowerPipBoost */
+handlers.GainPips = (arena, caster, card, target) => {
+    const n = Number(card.params.pips || 1);
+    const max = arena.resolved.global.maxPips;
+    target.pips.normal = Math.min(max - target.pips.power, target.pips.normal + n);
+    emit(arena, { type: 'pips', caster: caster.id, target: target.id, card: card.key, amount: n });
+};
+handlers.AreaPowerPipBoost = (arena, caster, card) => {
+    const n = Number(card.params.powerpips || 1);
+    const max = arena.resolved.global.maxPips;
+    for (const t of aliveAllies(arena, caster)) {
+        if (arena.resolved.version === 'teen') t.pips.normal = Math.min(max - t.pips.power, t.pips.normal + n * 2);
+        else t.pips.power = Math.min(max - t.pips.normal, t.pips.power + n);
+        emit(arena, { type: 'pips', caster: caster.id, target: t.id, card: card.key, amount: n });
+    }
+};
+
+/** Cleanse / Remove / Steal（card_server.lua L5300-5600 区间） */
+handlers.SingleCleanse = (arena, caster, card, target) => { U.popAllNegativeEffects(target, arena.resolved); emit(arena, { type: 'cleanse', caster: caster.id, target: target.id, card: card.key }); };
+handlers.AreaCleanse = (arena, caster, card) => { for (const t of aliveAllies(arena, caster)) { U.popAllNegativeEffects(t, arena.resolved); emit(arena, { type: 'cleanse', caster: caster.id, target: t.id, card: card.key }); } };
+handlers.RemovePositiveCharm = (arena, caster, card, target) => {
+    const n = Number(card.params.remove_count || 1);
+    for (let i = 0; i < n; i++) { const id = U.popRandomCharm(target, arena.resolved, arena.rng, true); if (id == null) break; emit(arena, { type: 'remove_charm', caster: caster.id, target: target.id, card: card.key, id }); }
+};
+handlers.RemoveNegativeCharm = (arena, caster, card, target) => {
+    const n = Number(card.params.remove_count || 1);
+    for (let i = 0; i < n; i++) { const id = U.popRandomCharm(target, arena.resolved, arena.rng, false); if (id == null) break; emit(arena, { type: 'remove_charm', caster: caster.id, target: target.id, card: card.key, id }); }
+};
+handlers.RemovePositiveWard = (arena, caster, card, target) => {
+    const n = Number(card.params.remove_count || 1);
+    for (let i = 0; i < n; i++) { const id = U.popRandomWard(target, arena.resolved, arena.rng, true); if (id == null) break; emit(arena, { type: 'remove_ward', caster: caster.id, target: target.id, card: card.key, id }); }
+};
+handlers.StealCharm = (arena, caster, card, target) => {
+    const n = Number(card.params.steal_count || 1);
+    for (let i = 0; i < n; i++) { const id = U.popRandomCharm(target, arena.resolved, arena.rng, true); if (id == null) break; U.appendCharm(caster, id); emit(arena, { type: 'steal_charm', caster: caster.id, target: target.id, card: card.key, id }); }
+};
+handlers.StealWard = (arena, caster, card, target) => {
+    const n = Number(card.params.steal_count || 1);
+    for (let i = 0; i < n; i++) { const id = U.popRandomWard(target, arena.resolved, arena.rng, true); if (id == null) break; U.appendWard(caster, id); emit(arena, { type: 'steal_ward', caster: caster.id, target: target.id, card: card.key, id }); }
+};
+
+handlers.Pass = () => {};
+
+/** 未实现列表（透明记录） */
+export const UNSUPPORTED_TYPES = [
+    'Random', 'Enrage', 'Fizzle', 'PickPet', 'CatchPet', 'SingleFreeze', 'SingleStealth', 'SingleGuardianWithImmolate',
+    'ConversePositiveWard', 'Revive', 'Dead', 'AreaControl', 'SingleTaunt', 'AreaTaunt',
+];
+
+export function isSupportedType(type) {
+    return Boolean(handlers[type]);
+}
+
+export function supportedTypes() {
+    return Object.keys(handlers);
+}
+
+function registerUnsupported(arena, card) {
+    const rec = arena.unsupported[card.type] || (arena.unsupported[card.type] = { count: 0, cards: {} });
+    rec.count++;
+    rec.cards[card.key] = (rec.cards[card.key] || 0) + 1;
+}
+
+// ---------------------------------------------------------------------------
+// 入口
+// ---------------------------------------------------------------------------
+
+/**
+ * 施放一张卡：命中判定 → 扣费 → 分支处理。
+ * 施法者行动前的 DOT/HOT 结算由 arena 调用 tickDots/tickHots。
+ * @return { ok, fizzled, unsupported }
+ */
+export function useCard(arena, caster, card, target, seq) {
+    const R = arena.resolved;
+    if (!handlers[card.type]) {
+        registerUnsupported(arena, card);
+        emit(arena, { type: 'unsupported', caster: caster.id, card: card.key, cardType: card.type });
+        return { ok: false, unsupported: true };
+    }
+    // Stance 校验（card_server.lua L1812-1823）
+    if (card.type === 'Stance' && card.spellSchool !== caster.school && card.spellSchool !== 'balance') {
+        emit(arena, { type: 'pass', caster: caster.id, reason: 'stance_school' });
+        return { ok: false };
+    }
+    // 命中（card_server.lua L2514-2560）：accuracy + accuracy charms + caster boost
+    const accBuffs = [];
+    U.processStatAgainstCharms(caster, R, accBuffs, 'boost_accuracy', card.spellSchool);
+    let accuracy = Number(card.accuracy) + accBuffs.reduce((a, b) => a + b, 0) + U.getAccuracyBoost(caster, card.spellSchool, R);
+    if (R.fairPlay && R.fairPlay.forceAccuracy !== undefined && R.fairPlay.forceAccuracy !== null) accuracy = R.fairPlay.forceAccuracy;
+    caster.totals.casts++;
+    // 失误发生在扣费之前（card_server.lua L2560-2578）
+    if (rollFizzle(arena.rng, accuracy)) {
+        caster.totals.fizzles++;
+        if (seq !== undefined) U.markCardFizzled(caster, seq);
+        emit(arena, { type: 'fizzle', caster: caster.id, card: card.key, target: target ? target.id : null, accuracy });
+        return { ok: false, fizzled: true };
+    }
+    const realcost = U.payCard(caster, card, R);
+    if (card.params.cooldown) U.setCooldown(caster, card.spellName, Number(card.params.cooldown));
+    if (seq !== undefined) U.markCardUsed(caster, seq);
+    emit(arena, { type: 'cast', caster: caster.id, card: card.key, cardType: card.type, target: target ? target.id : null, school: card.spellSchool, pipcost: card.pipcost, realcost });
+    arena.cardStats[card.key] = (arena.cardStats[card.key] || 0) + 1;
+    handlers[card.type](arena, caster, card, target || caster, realcost);
+    return { ok: true };
+}

@@ -1,0 +1,12 @@
+{
+  "version": "kids",
+  "name": "sample",
+  "generatedAt": "2026-09-16T00:00:00Z",
+  "source": "handwritten (values borrowed from config/Aries/Cards kids)",
+  "files": {
+    "cards": "cards.json",
+    "charms": "charms.json",
+    "aiDecks": "ai_decks.json"
+  },
+  "counts": { "cards": 52, "charms": 10, "wards": 13 }
+}

@@ -1,0 +1,34 @@
+{
+  "charm": {
+    "11": { "id": 11, "boost_damage": 45, "school": "fire", "positive": true, "desc": "+45%烈火攻击" },
+    "12": { "id": 12, "boost_accuracy": -50, "school": "all", "positive": false, "desc": "-50%法术命中" },
+    "14": { "id": 14, "boost_accuracy": 30, "school": "storm", "positive": true, "desc": "+30%风暴命中" },
+    "15": { "id": 15, "boost_damage": 45, "school": "storm", "positive": true, "desc": "+45%风暴攻击" },
+    "17": { "id": 17, "boost_damage": 55, "school": "ice", "positive": true, "desc": "+55%寒冰攻击" },
+    "19": { "id": 19, "boost_damage": 55, "school": "life", "positive": true, "desc": "+55%生命攻击" },
+    "20": { "id": 20, "boost_accuracy": 10, "school": "all", "positive": true, "desc": "+10%法术命中" },
+    "23": { "id": 23, "boost_damage": 50, "school": "death", "positive": true, "desc": "+50%死亡攻击" },
+    "24": { "id": 24, "boost_damage": -35, "school": "all", "positive": false, "desc": "-35%所有攻击" },
+    "25": { "id": 25, "boost_heal": 40, "school": "all", "positive": true, "desc": "+40%治疗" }
+  },
+  "ward": {
+    "13": { "id": 13, "boost_damage": -40, "school": "all", "positive": true, "desc": "-40%所有伤害" },
+    "21": { "id": 21, "boost_damage": 40, "school": "fire", "positive": false, "desc": "+40%烈火伤害" },
+    "23": { "id": 23, "boost_damage": -80, "school": "fire", "positive": true, "desc": "-80%烈火伤害" },
+    "24": { "id": 24, "boost_damage": 40, "school": "storm", "positive": false, "desc": "+40%风暴伤害" },
+    "26": { "id": 26, "boost_damage": -80, "school": "storm", "positive": true, "desc": "-80%风暴伤害" },
+    "28": { "id": 28, "boost_damage": 40, "school": "ice", "positive": false, "desc": "+40%寒冰伤害" },
+    "31": { "id": 31, "stunabsorb": true, "school": "all", "positive": true, "desc": "眩晕免疫", "can_manipulate": false },
+    "32": { "id": 32, "boost_damage": -80, "school": "ice", "positive": true, "desc": "-80%寒冰伤害" },
+    "33": { "id": 33, "absorb": true, "school": "all", "positive": true, "desc": "吸收伤害", "can_manipulate": false },
+    "36": { "id": 36, "boost_damage": 40, "school": "life", "positive": false, "desc": "+40%生命伤害" },
+    "37": { "id": 37, "boost_damage": -80, "school": "life", "positive": true, "desc": "-80%生命伤害" },
+    "40": { "id": 40, "boost_damage": 40, "school": "death", "positive": false, "desc": "+40%死亡伤害" },
+    "43": { "id": 43, "boost_damage": -80, "school": "death", "positive": true, "desc": "-80%死亡伤害" }
+  },
+  "miniaura": {
+    "1": { "id": 1, "stats": "(120,70)", "desc": "-70%烈火伤害" },
+    "6": { "id": 6, "stats": "(104,20)", "desc": "+20%烈火命中" }
+  },
+  "globalaura": {}
+}

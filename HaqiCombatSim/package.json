@@ -1,0 +1,15 @@
+{
+    "name": "haqi-combat-sim",
+    "private": true,
+    "version": "0.1.0",
+    "description": "魔法哈奇 2D 网页战斗模拟器：无 UI 战斗引擎 + 人机对战 + 批量胜率模拟 + 数值建议",
+    "type": "module",
+    "scripts": {
+        "export": "node scripts/export_data.mjs --config ../../config/Aries --out data --version both",
+        "test": "node --test tests/*.test.mjs",
+        "sim": "node scripts/run_batch.mjs"
+    },
+    "engines": {
+        "node": ">=20"
+    }
+}

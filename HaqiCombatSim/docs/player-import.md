@@ -133,4 +133,4 @@ gsid 映射是「尽力」而不是完备表。导入实现必须把未映射 GS
 4. 对战页增加「从快照开战」，与现有手工配卡并存；未登录 / 拉取失败不得打断本地 Bot 对战。
 5. 字段与缓存策略写进本文件后再写代码。
 
-相关计划入口见 [plan.md](plan.md)「计划需求」；异步对战见 [async-pvp.md](async-pvp.md)。
+相关计划入口见 [plan.md](plan.md)「计划需求」；异步对战见 [async-pvp.md](async-pvp.md)。会员口粮/治疗与帕鲁式宠物见 [pets-vip-innovation.md](pets-vip-innovation.md)，与本文件的 VIP 字段导入相关但玩法独立。

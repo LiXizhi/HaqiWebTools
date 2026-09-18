@@ -6,7 +6,7 @@
 - **开发者**：想在不启动 GameServer 的前提下验证某张卡、某条公式的实际效果，并把结论对照回 Lua。
 - **测试**：想手动打几局，感受节奏（回合数、pips 积累、blade + 大招的爆发）。
 
-计划中的玩家向场景（2026-09-18，未实现）：用线上角色的真实卡包/装备/VIP 在模拟器里开战；以及双方不必同时在线的异步 PVP。规格与仓库对照见 [player-import.md](player-import.md)、[async-pvp.md](async-pvp.md)。当前对战页仍是本机配卡 + Bot。
+计划中的玩家向场景（2026-09-18，未实现）：用线上角色的真实卡包/装备/VIP 在模拟器里开战；双方不必同时在线的异步 PVP；帕鲁式宠物深化及 VIP 口粮/治疗；卡面多语言以便海外先上。规格与仓库对照见 [player-import.md](player-import.md)、[async-pvp.md](async-pvp.md)、[pets-vip-innovation.md](pets-vip-innovation.md)、[card-i18n.md](card-i18n.md)。当前对战页仍是本机配卡 + Bot；冒险宠物已可捕获养成但无会员门槛；卡面说明由程序生成，界面仍为中文。
 
 ## 页面
 

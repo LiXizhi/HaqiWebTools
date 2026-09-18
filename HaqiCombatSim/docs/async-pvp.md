@@ -122,7 +122,21 @@ PvE 宠物4卡位  是（冒险）            无关，不要当成 4v4 PvP
 3. **回放**：对局记录的权威格式、保存位置、是否对观众隐藏手牌。
 4. **身份**：与 [player-import.md](player-import.md) 共用哪套登录；未导入真实卡组时，异步局是否仍允许用本地配卡 / 官方预设。
 5. **存储与网络**：Keepwork `PersonalPageStore` 现用于冒险检查点，没有对局房间语义。是否另做服务，本仓库无结论。禁止把凭据写入客户端。
-6. **结算**：胜负是否回写原服或网页排行。Lua 排位分未移植，网页也无 ELO。
+6. **结算与排行榜**：胜负是否回写原服或网页排行。Lua `CalculateWinningAndLosingRankingPoint` 未移植（[lua-mapping.md](lua-mapping.md) 非本期）；网页也无 ELO、无排行榜 UI。钉钉补充把「排行榜」单独点名——它可以是异步 PVP 的积分榜、网页访客榜，或只是运营展示，与原服排位分不必同一套。产品未选。
+
+## 运营备注：网页包先测新技能 / 参数
+
+钉钉同时提到：用网页构建试验新技能和参数，确认后再上线。这与本项目原目标一致，不是新引擎：
+
+| 已有能力 | 位置 |
+|----------|------|
+| 单卡覆盖 pipcost / accuracy / 数值 params | `#params`，`BalanceParams.cardOverrides` |
+| 各系 HP/伤害等乘子、公平竞技 | 同一数值面板；`params.fairPlay` |
+| 几秒内几千场五系矩阵 | `#batch` / `npm run sim` |
+| 人机打一局看手感 | `#battle`；冒险 `Haqi.html` 看 PvE |
+| Vite 网页包 | [deployment.md](deployment.md)；与原服 Lua 配置仍是两份，结论需人工回移 |
+
+尚未决定：谁把网页结论写回 `config/Aries` 或线上 Lua、异步局是否必须用「已在网页测过」的参数哈希（Emulator replay 有 `configHash`，本目录没有）、排行榜是否只统计网页异步局。
 
 ## 建议的落地顺序（非实现承诺）
 
@@ -130,6 +144,6 @@ PvE 宠物4卡位  是（冒险）            无关，不要当成 4v4 PvP
 2. 用现有 seed + `unitSpec` + 每步 picks 做可导入导出的 PvP 检查点（可参考 Emulator replay 字段，不引入其代码）。
 3. 匹配与超时作为独立 IO 层，核心文件继续禁止 `fetch` / `document`。
 4. 4v4（及 2v2/3v3）在 1v1 检查点稳定后再加多人提交与补位规则。
-5. 真实卡组接入见 [player-import.md](player-import.md)；两需求都依赖身份，但战斗结算互相独立。
+5. 真实卡组接入见 [player-import.md](player-import.md)；两需求都依赖身份，但战斗结算互相独立。排行榜与「网页先测再上线」只作运营备注，不阻塞 1v1 检查点。
 
 相关计划入口见 [plan.md](plan.md)「计划需求」。

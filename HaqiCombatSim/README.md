@@ -86,6 +86,8 @@ web/HaqiCombatSim/
     architecture.md           # 技术架构：模块、数据流、引擎细节、意图 vs 现实
     player-import.md          # 计划需求：线上卡包/装备/VIP 导入（尚未实现）
     async-pvp.md              # 计划需求：异步 PVP（尚未实现）
+    pets-vip-innovation.md    # 计划需求：帕鲁式宠物与 VIP 口粮/治疗（尚未实现）
+    card-i18n.md              # 计划需求：卡牌多语言与海外运营（尚未实现）
     lua-mapping.md            # 公式/常量 ↔ Lua 源码行号对照表
     data-export.md            # 数据导出器规格
     qa-report.md              # 验收记录：真实数据五系胜率基线、引擎修正、性能
@@ -108,19 +110,21 @@ web/HaqiCombatSim/
 
 ## 计划需求（尚未实现）
 
-2026-09-18 产品负责人李西峙提出两项后续能力，文档已入库，**代码未做**：
+2026-09-18 产品负责人李西峙提出四项后续能力，文档已入库，**代码未做**：
 
 1. [拉取真实用户数据](docs/player-import.md) — 卡包、装备、VIP 与成长字段；对照现有导出/存档/Keepwork 登录，标出接口与鉴权等开放问题。
-2. [异步 PVP](docs/async-pvp.md) — 非实时对战的匹配、超时、回放，以及与现有 1v1–4v4 人机 `free_pvp` 的关系。
+2. [异步 PVP](docs/async-pvp.md) — 非实时对战的匹配、超时、回放，以及与现有 1v1–4v4 人机 `free_pvp` 的关系；附排行榜与「网页包先测新技能/参数」的运营备注。
+3. [帕鲁式宠物与 VIP 口粮](docs/pets-vip-innovation.md) — 在已有捕获/四卡位/饱食上对照帕鲁世界方向；治疗与口粮是否 VIP 化仍为开放问题。
+4. [卡牌多语言 / 海外](docs/card-i18n.md) — 卡面说明由程序生成；记录现有中文名表与本地化选项，不在本仓库做完整 i18n。
 
-当前对战仍是本机 Bot；现有 Keepwork 登录只服务 `Haqi.html` 云端检查点，不读取魔法哈奇角色。
+当前对战仍是本机 Bot；现有 Keepwork 登录只服务 `Haqi.html` 云端检查点，不读取魔法哈奇角色。冒险宠物已可捕获养成，但无会员门槛、无多语言卡面。
 
 ## 相关文档
 
 - 仓库 wiki：[docs/aries/combat-system.md](../../docs/aries/combat-system.md)、[docs/config/aries-haqi-data.md](../../docs/config/aries-haqi-data.md)
 - 仓库 wiki 入口：[docs/aries/haqi-combat-sim.md](../../docs/aries/haqi-combat-sim.md)
 - 本项目：[docs/plan.md](docs/plan.md) → [docs/architecture.md](docs/architecture.md) → [docs/lua-mapping.md](docs/lua-mapping.md) → [docs/qa-report.md](docs/qa-report.md)
-- 计划需求：[docs/player-import.md](docs/player-import.md)、[docs/async-pvp.md](docs/async-pvp.md)
+- 计划需求：[docs/player-import.md](docs/player-import.md)、[docs/async-pvp.md](docs/async-pvp.md)、[docs/pets-vip-innovation.md](docs/pets-vip-innovation.md)、[docs/card-i18n.md](docs/card-i18n.md)
 
 ## Haqi.html：WebP / Keepwork 云端旅途
 

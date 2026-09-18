@@ -1,13 +1,25 @@
 import {deckLimits,recommendedDeck,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
 const SCHOOL_LABELS={...SCHOOL_NAMES,balance:'平衡'};
 const PAGE_SIZE=36;
+const HOVER_DELAY=350;
+
+// Keep the full card above/below the icon row, shrinking proportionally on short screens.
+export function hoverPreviewPosition(rect,viewportWidth,viewportHeight) {
+    const gap=8,above=Math.max(0,rect.top-gap*2),below=Math.max(0,viewportHeight-rect.bottom-gap*2);
+    const desiredHeight=230;
+    const useBelow=below>=desiredHeight||below>=above;
+    const height=Math.min(desiredHeight,useBelow?below:above,Math.max(0,viewportWidth-gap*2)*230/151);
+    const width=height*151/230;
+    return {width,height,left:Math.max(gap,Math.min((rect.left+rect.right-width)/2,viewportWidth-width-gap)),
+        top:useBelow?rect.bottom+gap:rect.top-gap-height};
+}
 
 // Original bag / collection split, with a transient full-card preview instead of a third column.
 export function renderDeckEditor(body,{assets,save},cb,{el,button,spellFace}) {
     body.closest?.('.modal')?.classList.add('deck-editor-modal');
     const content=assets.content,cards=assets.dataset.cards,limits=deckLimits(save,content);
     const layouts=JSON.parse(JSON.stringify(save.deckLayouts||[{name:'卡包一',deck:save.deck}]));
-    let active=save.activeDeckLayout||0,school=save.school,page=0,query='',ownedOnly=false,previewPinned=false,hideTimer;
+    let active=save.activeDeckLayout||0,school=save.school,page=0,query='',ownedOnly=false,previewPinned=false,hoverTimer;
     const owned={...save.cards},learned=new Set(),lessons=availableCardLessons(save,content),lessonMap=new Map(lessons.map(row=>[row.key,row]));
     layouts[active].deck=save.deck.map(row=>({...row}));
     const tabs=el('div','bag-tabs'),slots=el('div','bag-slots'),library=el('div','bag-library'),detail=el('div','bag-detail');
@@ -26,9 +38,22 @@ export function renderDeckEditor(body,{assets,save},cb,{el,button,spellFace}) {
         }
         canvas.setAttribute('aria-hidden','true');return canvas;
     }
-    function closePreview(){clearTimeout(hideTimer);detail.hidden=true;previewPinned=false;}
+    function closePreview(){clearTimeout(hoverTimer);detail.hidden=true;previewPinned=false;}
     function inspect(key,removable=false,anchor=null,pinned=true) {
-        clearTimeout(hideTimer);previewPinned=pinned;
+        clearTimeout(hoverTimer);previewPinned=pinned;
+        detail.dataset.previewMode=pinned?'click':'hover';
+        detail.setAttribute('role',pinned?'dialog':'tooltip');
+        detail.style.width='';detail.style.height='';
+        if(!pinned){
+            detail.replaceChildren(spellFace(assets,cards[key]));
+            const rect=anchor?.getBoundingClientRect?.();
+            if(rect&&typeof window!=='undefined'){
+                const position=hoverPreviewPosition(rect,window.innerWidth,window.innerHeight);
+                for(const [property,value]of Object.entries(position))detail.style[property]=`${value}px`;
+                detail.style.setProperty('--hover-left',`${position.left}px`);detail.style.setProperty('--hover-top',`${position.top}px`);
+            }
+            detail.hidden=false;return;
+        }
         const card=cards[key],lesson=lessonMap.get(key);
         const close=button('×',closePreview,'bag-preview-close');close.setAttribute('aria-label','关闭卡牌预览');
         detail.replaceChildren(close,spellFace(assets,card));
@@ -47,13 +72,20 @@ export function renderDeckEditor(body,{assets,save},cb,{el,button,spellFace}) {
         }
     }
     function previewEvents(node,key,removable=false){
-        node.onpointerenter=e=>{if(e.pointerType==='mouse'&&!previewPinned)inspect(key,removable,node,false);};
-        node.onpointerleave=()=>{if(!previewPinned)hideTimer=setTimeout(closePreview,130);};
-        node.onfocus=()=>{if(!previewPinned)inspect(key,removable,node,false);};
+        const schedule=()=>{
+            if(previewPinned)return;
+            closePreview();
+            hoverTimer=setTimeout(()=>{if(node.isConnected&&!previewPinned)inspect(key,removable,node,false);},HOVER_DELAY);
+        };
+        node.onpointerenter=e=>{if(e.pointerType==='mouse')schedule();};
+        node.onpointerleave=()=>{if(!previewPinned)closePreview();};
+        node.onpointerdown=()=>{if(!previewPinned)closePreview();};
+        node.onfocus=schedule;
+        node.onblur=()=>{if(!previewPinned)closePreview();};
         node.onkeydown=e=>{if(e.key==='Escape')closePreview();};
     }
-    detail.onpointerenter=()=>clearTimeout(hideTimer);
-    detail.onpointerleave=()=>{if(!previewPinned)closePreview();};
+    // Scrolling changes the anchor position; never leave a floating preview over another row.
+    body.addEventListener?.('scroll',()=>{if(!previewPinned)closePreview();},true);
     function remove(key) {
         const row=layouts[active].deck.find(row=>row.key===key);if(!row)return;
         if(total()===1){say('卡包至少保留一张');return;}
@@ -74,6 +106,7 @@ export function renderDeckEditor(body,{assets,save},cb,{el,button,spellFace}) {
         const cancel=()=>{clearTimeout(timer);timer=null;node.classList.remove('holding');};
         const end=()=>{cancel();start=null;dragging=false;slots.classList.remove('dragging');node.classList.remove('dragging');};
         node.onpointerdown=e=>{
+            if(!previewPinned)closePreview();
             if(e.button!==0)return;cancel();held=false;dragging=false;pointerId=e.pointerId;start={x:e.clientX,y:e.clientY};
             node.setPointerCapture?.(pointerId);node.classList.add('holding');
             timer=setTimeout(()=>{cancel();if(!node.isConnected||dragging)return;held=true;end();remove(key);},550);

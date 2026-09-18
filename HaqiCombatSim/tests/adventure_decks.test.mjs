@@ -36,7 +36,7 @@ test('capacity changes and debug ownership changes reconcile every saved layout'
     for(const layout of next.deckLayouts)A.validDeck(next,content,layout.deck);
     assert.deepEqual(next.deckLayouts[next.activeDeckLayout].deck,next.deck);
 });
-import {renderDeckEditor} from '../js/view_adventure_deck.js';
+import {renderDeckEditor,hoverPreviewPosition} from '../js/view_adventure_deck.js';
 function domHelpers(){
     class Element {
         constructor(tag,cls='',...children){this.tag=tag;this.className=cls;this.children=[];this.attributes={};this.dataset={};this.style={};this.isConnected=true;this.classList={add(){},remove(){}};this.append(...children);}
@@ -64,7 +64,8 @@ test('30 cards render as 30 icons; hold removes exactly one and scrolling cancel
     slot.onpointerdown({button:0,clientX:0,clientY:0});t.mock.timers.tick(549);assert.equal(slots.children.filter(x=>x.tag==='button').length,30);
     t.mock.timers.tick(1);assert.equal(slots.children.filter(x=>x.tag==='button').length,29);
     t.mock.timers.tick(1000);assert.equal(slots.children.filter(x=>x.tag==='button').length,29);
-    const preview=find(body,'bag-detail');slots.children[0].onpointerenter({pointerType:'mouse'});assert.equal(preview.hidden,false);slots.children[0].onpointerleave();t.mock.timers.tick(130);assert.equal(preview.hidden,true);
+    const preview=find(body,'bag-detail');slots.children[0].onpointerenter({pointerType:'mouse'});t.mock.timers.tick(349);assert.equal(preview.hidden,true);t.mock.timers.tick(1);assert.equal(preview.hidden,false);assert.equal(preview.children.length,1);assert.equal(preview.children[0].tag,'canvas');assert.equal(preview.attributes.role,'tooltip');slots.children[0].onpointerleave();t.mock.timers.tick(130);assert.equal(preview.hidden,true);
+    slots.children[0].onpointerenter({pointerType:'mouse'});t.mock.timers.tick(100);slots.children[0].onpointerleave();t.mock.timers.tick(400);assert.equal(preview.hidden,true,'passing over an icon does not show a preview');
     slots.children[0].onclick();assert.equal(preview.hidden,false);slots.children[0].onpointerleave();t.mock.timers.tick(130);assert.equal(preview.hidden,false,'clicked preview stays open');
     const next=slots.children[0];next.onpointerdown({button:0,clientX:0,clientY:0});next.onpointermove({clientX:0,clientY:20});t.mock.timers.tick(600);
     assert.equal(slots.children.filter(x=>x.tag==='button').length,29);
@@ -99,4 +100,18 @@ test('learning and deck changes commit atomically, respecting required levels an
     const lesson=c.cardLibrary.find(row=>row.school==='balance'&&row.supported&&row.level===1);
     assert.throws(()=>A.applyAction(s,c,{type:'deck-layouts',learnedKeys:[lesson.key],layouts:[{name:'无效',deck:[{key:lesson.key,count:99}]}],active:0}));
     assert.deepEqual(s,before);
+});
+
+test('hover card is fully visible above/below the icon row, including viewport edges and short screens',()=>{
+    for(const [rect,w,h]of [
+        [{left:10,right:54,top:100,bottom:144},1280,720],
+        [{left:1200,right:1244,top:600,bottom:644},1280,720],
+        [{left:4,right:48,top:160,bottom:204},390,320],
+        [{left:350,right:394,top:100,bottom:144},400,260],
+    ]){
+        const p=hoverPreviewPosition(rect,w,h);
+        assert.ok(p.top+p.height<=rect.top-7.99||p.top>=rect.bottom+7.99);
+        assert.ok(p.left>=0&&p.left+p.width<=w&&p.top>=0&&p.top+p.height<=h);
+        assert.ok(Math.abs(p.width/p.height-151/230)<.0001);
+    }
 });

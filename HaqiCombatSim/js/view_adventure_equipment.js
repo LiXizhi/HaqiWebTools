@@ -1,4 +1,5 @@
 import { equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
+import { equipmentRequirements } from './adventure_item_rules_core.js';
 import { EQUIPMENT_SLOTS, equipmentAttributes, equipmentCards, equipmentSummary, previewEquipment } from './adventure_equipment_core.js';
 
 // DOM only; mutations are dispatched through the adventure controller.
@@ -65,8 +66,8 @@ export function renderEquipment(body,model,cb,ui) {
         const equipped=Number(save.equipment[item.slot])===item.id,gear=isGear(item),level=save.upgrades[item.id]||0;
         detail.append(el('div','equipment-detail-heading',art(assets,item.art,64,64),el('div','',el('p','eyebrow',equipped?'正在装备':gear?'装备详情':'物品详情'),el('h3','',item.name),el('p','muted',`拥有 ${save.inventory[item.id]} 件${level?` · 强化 +${level}`:''}`))));
         if(gear){
-            const school=Object.keys(c.schools).find(key=>c.schools[key]===Number(item.stats[137]));
-            detail.append(el('p','muted',`${EQUIPMENT_SLOTS.find(s=>s.id===item.slot)?.name||'装备'} · 等级 ${item.stats[138]||1} · ${school?SCHOOL_NAMES[school]+'系':'全学系通用'}`));
+            const requirements=equipmentRequirements(item),school=Object.keys(c.schools).find(key=>c.schools[key]===requirements.school);
+            detail.append(el('p','muted',`${EQUIPMENT_SLOTS.find(s=>s.id===item.slot)?.name||'装备'} · 等级 ${requirements.level} · ${school?SCHOOL_NAMES[school]+'系':'全学系通用'}`));
             const attrs=el('div','equipment-attributes');
             for(const row of equipmentAttributes(item,save,c))attrs.append(el('span','',`${row.label} +${row.value}${row.unit}`));
             detail.append(attrs);

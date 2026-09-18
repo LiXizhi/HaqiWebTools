@@ -32,6 +32,7 @@ export function equipmentSummary(save,content) {
         {key:'normal',label:'起始普通魔力',value:s.startupNormal,unit:''},
         {key:'power',label:'起始超级魔力',value:s.startupPower,unit:''},
         {key:'capacity',label:'卡包容量',value:spec.deckCapacity,unit:'张'},
+        {key:'eachCapacity',label:'单卡上限',value:spec.deckEachCapacity,unit:'张'},
         {key:'fixed',label:'装备附加牌',value:spec.fixedCards.length,unit:'张'},
     ];
 }

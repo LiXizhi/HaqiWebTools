@@ -2,6 +2,7 @@ import { defaultParams } from './combat_params_core.js';
 import { statIdToEntry } from './combat_unit_core.js';
 import { isSupportedType } from './combat_cards_core.js';
 import { FOOD_ID,CAPTURE_ID,petParams } from './adventure_pets_core.js';
+import { equipmentRequirements } from './adventure_item_rules_core.js';
 // Pure merge used by the browser and tests, after validating the original chapter.
 export function installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames={}){
  content.pets=structuredClone(catalog.pets);content.homeUrl='https://keepwork.com/api/raw/maisi/maisi/webgames/MagicHaqi/MagicHaqi.html';content.balanceParams=defaultParams('kids');content.shop=[];
@@ -14,12 +15,13 @@ export function installExpansion(content,dataset,catalog,candidates,kidsCards,ki
  }
  for(const item of Object.values(candidates)){
   const fixed=[139,140,141].filter(id=>item.stats[id]).map(id=>content.cardItems[item.stats[id]]);
-  const validSchool=!item.stats[137]||Object.values(content.schools).includes(Number(item.stats[137]));
+  const requirements=equipmentRequirements(item);
+  const validSchool=!requirements.school||Object.values(content.schools).includes(requirements.school);
   if(!validSchool||fixed.some(key=>!key||!kidsCards[key]||!isSupportedType(kidsCards[key].type))){content.equipmentExportReport.push({id:item.id,reason:validSchool?'附加卡未支持':'学系不适用'});continue;}
-  item.unsupportedStats=Object.keys(item.stats).filter(id=>!statIdToEntry(id)&&![137,138,139,140,141,167,170].includes(Number(id)));
+  item.unsupportedStats=Object.keys(item.stats).filter(id=>!statIdToEntry(id)&&![137,138,139,140,141,167,168,169,170].includes(Number(id)));
   if(!Object.keys(item.stats).some(id=>statIdToEntry(id)||[139,140,141,167,170].includes(Number(id)))){content.equipmentExportReport.push({id:item.id,reason:'无可生效属性'});continue;}
   fixed.forEach(addCard);content.items[item.id]??=item;
-  content.shop.push({id:'gear:'+item.id,kind:'gear',itemId:item.id,name:item.name,level:Math.max(1,Number(item.stats[138]||1)),slot:item.slot,school:Object.keys(content.schools).find(s=>content.schools[s]===Number(item.stats[137]))||'all'});
+  content.shop.push({id:'gear:'+item.id,kind:'gear',itemId:item.id,name:item.name,level:requirements.level,slot:item.slot,school:Object.keys(content.schools).find(s=>content.schools[s]===requirements.school)||'all'});
  }
  for(const [id,name] of [[FOOD_ID,'宠物营养餐'],[CAPTURE_ID,'捕获晶球']]){content.items[id]={id,name,kind:0,stats:{}};content.shop.push({id:'supply:'+id,kind:'supply',itemId:id,name,level:1});}
  const p=petParams(content);content.progression.levelCap=p.levelCap;

@@ -187,3 +187,10 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 - 来源（相对 paraworld）：`script/apps/Aries/Desktop/MiJiuHuLu.lua` L326–389（GetObtainAwardState：1/15/30/60/90 分钟、严格大于时限、每日独立领取），L394–428（领取索引及在线时长核对）；`MiJiuHuLu.html` L332–482（五葫芦与可领取/未达到/已领取显示）。
 - 对应 `adventure_checkin_core.js`：五档在线时长及每档每日领取，领取不重置其他葫芦的时间；原版 UpdataTime L159 有不足 120 秒直接返回的刷新门槛，网页每秒刷新，不移植该刷新门槛。
 - 明确改编：奖励均简化为 100 奇豆，不提供会员奖或抽奖；网页只计可见游玩时间，北京时间零点重置，以本地存档记录。替代上一版“离线五分钟重复领取”设计。未接入服务器防作弊。
+
+### 2026-09-19 卡包装备
+
+- Item_CombatDeck.lua L89–124：卡包使用等级/学系为 stats[168]/[169]，不同于衣物137/138。对应 adventure_item_rules_core::equipmentRequirements，商城与穿戴共用。
+- CombatCardDeckSubPage.lua L1163–1171：167总容量、170单卡容量；Database/globalstore.db.mem已导出21种口袋至shop-candidates.json。
+- arena_server.lua L8080–8137：儿童版先检查法术拥有资格，再按口袋限制重复张数；网页全卡模式不再把保存的3份许可当成高级卡包最大张数。现有源卡包的学系上限均等于通用上限；不同值的学系额外上限仍未扩展。
+- 保留网页未装备14/3兼容行为、顺序裁剪及奇豆商城价格，不将其描述为原服商店价格复刻。

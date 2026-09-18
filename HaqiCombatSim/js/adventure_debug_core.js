@@ -1,5 +1,5 @@
 // Debug save editing only. Combat formulae and runtime balance parameters are unchanged.
-import { parseSave, availableCardLessons, syncDeckLayouts, syncProgression, canEquip, deckLimits, recommendedDeck, petLevel } from './adventure_core.js';
+import { parseSave, availableCardLessons, syncDeckLayouts, syncProgression, canEquip, deckLimits, deckCardCopies, recommendedDeck, petLevel } from './adventure_core.js';
 import { clampDeck } from './combat_unit_core.js';
 
 const check=(ok,message)=>{if(!ok)throw new Error(message);};
@@ -50,7 +50,7 @@ export function prepareDebugEdit(save,content,patch) {
         delete next.equipment[slot];notes.push(`自动卸下：${content.items[id].name}`);
     }
     for(const id of Object.keys(next.upgrades))if(!(next.inventory[id]>0)){delete next.upgrades[id];notes.push('已清除未持有装备的强化记录');}
-    const ownedDeck=next.deck.map(row=>({...row,count:Math.min(row.count,next.cards[row.key]||0)})).filter(row=>row.count>0);
+    const ownedDeck=next.deck.map(row=>({...row,count:Math.min(row.count,deckCardCopies(next,content,row.key))})).filter(row=>row.count>0);
     next.deck=clampDeck(ownedDeck,{...deckLimits(next,content),version:'kids'}).deck;
     if(!next.deck.length)next.deck=recommendedDeck(next,content);
     if(JSON.stringify(next.deck)!==JSON.stringify(save.deck))notes.push('配卡已按持有数量及卡包容量调整');

@@ -1,4 +1,5 @@
 import { equipmentAttributes,EQUIPMENT_SLOTS } from './adventure_equipment_core.js';
+import { canEquip, equipmentBlockReason } from './adventure_core.js';
 import { showPetDetails } from './view_adventure_pet_details.js';
 import { STARTERS,STAGE_NAMES,petStage,petCapacity,petLessons,productPrice,petParams,FOOD_ID } from './adventure_pets_core.js';
 export function petPortrait(assets,id,stage=0,size=96){
@@ -49,7 +50,7 @@ export function renderShop(body,model,cb,{el,button,art}){
  let category=state.category;
  const filters=el('div','shop-filters'),query=el('input',''),school=el('select',''),ownership=el('select',''),slot=el('select','');
  const tabs=el('nav','shop-category-tabs');tabs.setAttribute('aria-label','商品分类');
- for(const [value,label] of [['gear','装备'],['pet','宠物'],['supply','补给']]){
+ for(const [value,label] of [['gear','装备'],['bag','卡包'],['pet','宠物'],['supply','补给']]){
   const tab=button(label,()=>{category=value;state.category=value;slot.value='';if(value==='supply')school.value='';updateFilters();body.scrollTop=0;},'secondary shop-category-tab');
   tab.dataset.category=value;tabs.append(tab);
  }
@@ -67,7 +68,7 @@ export function renderShop(body,model,cb,{el,button,art}){
   for(const tab of tabs.children){const selected=tab.dataset.category===category;tab.classList.toggle('active',selected);tab.setAttribute('aria-pressed',String(selected));}
   slot.hidden=category!=='gear';school.hidden=category==='supply';
   tree.replaceChildren();pager.replaceChildren();
-  const rows=c.shop.filter(x=>x.kind===category&&x.name.includes(query.value)&&(!school.value||x.school===school.value)&&(!slot.value||String(x.slot)===slot.value)&&(!ownership.value||owned(x)===(ownership.value==='owned'))).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'zh'));
+  const rows=c.shop.filter(x=>(category==='bag'?x.kind==='gear'&&x.slot===24:x.kind===category)&&x.name.includes(query.value)&&(!school.value||x.school===school.value)&&(!slot.value||String(x.slot)===slot.value)&&(!ownership.value||owned(x)===(ownership.value==='owned'))).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'zh'));
   page=Math.min(page,Math.max(0,Math.ceil(rows.length/24)-1));state.page=page;let last=-1;
   for(const item of rows.slice(page*24,page*24+24)){
    if(last!==item.level){tree.append(el('h3','shop-tier',`${item.level}级解锁 ${save.level>=item.level?'· 已解锁':'· 待成长'}`));last=item.level;}
@@ -80,6 +81,16 @@ export function renderShop(body,model,cb,{el,button,art}){
    card.append(el('strong','',item.name),el('p','muted',`${cost} 奇豆${owned(item)?' · 已拥有':''}`));
    if(item.kind==='gear'){const gear=c.items[item.itemId];card.append(el('p','',gear.description||''),el('small','',`属性：${equipmentAttributes(gear,save,c).map(x=>`${x.label} ${x.value}${x.unit}`).join(' · ')}`));if(gear.unsupportedStats?.length)card.append(el('small','muted',`当前未生效属性：${gear.unsupportedStats.join('、')}`));}
    const buy=button('购买',()=>cb.action({type:'buy',productId:item.id}),'primary');buy.disabled=save.level<item.level||(save.inventory[100]||0)<cost||item.kind==='pet'&&owned(item);card.append(buy);
+   if(item.slot===24){
+    buy.disabled ||= owned(item);
+    card.append(el('small','muted',`${item.school==='all'?'全学系通用':{fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡'}[item.school]+'系专用'} · ${item.level}级可装备`));
+    if(owned(item)){
+     const gear=c.items[item.itemId],equipped=save.equipment[24]===item.itemId;
+     const equip=button(equipped?'已装备':'前往卡包配卡',()=>cb.panel('deck'),'secondary');
+     equip.disabled=equipped||!canEquip(save,gear,c);card.append(equip);
+     if(!canEquip(save,gear,c))card.append(el('small','muted',equipmentBlockReason(save,gear,c)));
+    }
+   }
    if(item.kind==='pet'){const capture=button('寻找并捕获',()=>cb.encounter('wild:'+item.petId),'secondary');capture.disabled=save.level<item.level;card.append(capture);}
    tree.append(card);
   }

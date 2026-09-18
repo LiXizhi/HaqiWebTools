@@ -3,6 +3,7 @@ import { SCHOOLS } from './combat_params_core.js';
 import { normalizeStats, statIdToEntry, clampDeck } from './combat_unit_core.js';
 import * as Pets from './adventure_pets_core.js';
 import { hashSeed } from './rng_core.js';
+import { equipmentRequirements } from './adventure_item_rules_core.js';
 import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
 import { resolvePetReward, migrateQuestPetRewards } from './adventure_rewards_core.js';
 export { rewardLabel } from './adventure_rewards_core.js';
@@ -35,7 +36,7 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
         xp: 0, level: 1, inventory: {}, equipment: {}, upgrades: {}, cards: {}, deck: [], quests: {},
         pet: null, zone: 'camp', position: { x: 860, y: 850 }, facing: 3,
         encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
-        visitedTown: false, music: false, tips: {}, revision: 0 };
+        visitedTown: false, music: false, tips: {}, revision: 0, bagRulesVersion: 1 };
     syncProgression(save, content);
     save.deck = recommendedDeck(save, content);
     syncDeckLayouts(save,content);
@@ -45,6 +46,12 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
 export function deckLimits(save, content) {
     const bag = content.items[save.equipment[24]];
     return { capacity: Number(bag?.stats[167] || 14), eachCapacity: Number(bag?.stats[170] || 3), handSize: 8 };
+}
+// arena_server.lua L8080-8086: learned spells are qualifications, not consumed copies.
+// Preserve the original chapter-only inventory mode for its standalone fixtures.
+export function deckCardCopies(save, content, key) {
+    if (!save.cards[key]) return 0;
+    return content.cardLibrary ? deckLimits(save,content).eachCapacity : save.cards[key];
 }
 export function syncProgression(save, content) {
     save.level = Math.min(content.progression.levelCap, content.progression.xpThresholds.filter(x => save.xp >= x).length);
@@ -72,7 +79,7 @@ export function recommendedDeck(save, content) {
     const limits = deckLimits(save, content), result = [];
     let n = 0;
     for (const lesson of priority) {
-        const count = Math.min(save.cards[lesson.key], limits.eachCapacity, limits.capacity - n);
+        const count = Math.min(deckCardCopies(save,content,lesson.key), limits.eachCapacity, limits.capacity - n);
         if (count) result.push({ key: lesson.key, count });
         n += count;
     }
@@ -85,7 +92,7 @@ export function validDeck(save, content, deck) {
     for (const entry of deck) {
         assert(!seen.has(entry.key) && Number.isInteger(entry.count) && entry.count > 0, '卡牌份数无效'); seen.add(entry.key);
         assert(!content.cardLibrary||content.cardLibrary.some(row=>row.key===entry.key&&row.supported!==false),'此卡牌效果暂未开放');
-        assert(entry.count <= (save.cards[entry.key] || 0) && entry.count <= limits.eachCapacity, '超过拥有数量或单卡上限');
+        assert(entry.count <= deckCardCopies(save,content,entry.key) && entry.count <= limits.eachCapacity, '超过拥有数量或单卡上限');
         total += entry.count;
     }
     assert(total <= limits.capacity, '卡包已满'); return true;
@@ -97,7 +104,7 @@ export function syncDeckLayouts(save, content) {
     const limits = {...deckLimits(save,content),version:'kids'};
     for (let i=0;i<save.deckLayouts.length;i++) {
         const layout=save.deckLayouts[i],source=i===save.activeDeckLayout?save.deck:layout.deck;
-        layout.deck=clampDeck(source.map(row=>({...row,count:Math.min(row.count,save.cards[row.key]||0)})).filter(row=>row.count>0),limits).deck;
+        layout.deck=clampDeck(source.map(row=>({...row,count:Math.min(row.count,deckCardCopies(save,content,row.key))})).filter(row=>row.count>0),limits).deck;
         if(!layout.deck.length)layout.deck=recommendedDeck(save,content);
     }
     save.deck=clone(save.deckLayouts[save.activeDeckLayout].deck);
@@ -116,9 +123,22 @@ export function canEquip(save, item, content) {
 export function equipmentBlockReason(save, item, content) {
     if (!item || !(item.kind === 1 || item.slot === 24) || !Number.isInteger(item.slot) || item.slot <= 0) return '这不是可穿戴的装备';
     if (!owns(save,item.id)) return '尚未获得这件装备';
-    if (Number(item.stats[138] || 0) > save.level) return `需要等级 ${item.stats[138]}`;
-    if (item.stats[137] && Number(item.stats[137]) !== content.schools[save.school]) return '不符合学系要求';
+    // Old in-flight checkpoints must replay with the rules used to snapshot them.
+    const requirements=item.slot===24&&save.pendingEncounter&&save.bagRulesVersion===undefined
+        ? {level:Number(item.stats[138]||1),school:Number(item.stats[137]||0)} : equipmentRequirements(item);
+    if (requirements.level > save.level) return `需要等级 ${requirements.level}`;
+    if (requirements.school && requirements.school !== content.schools[save.school]) return '不符合学系要求';
     return '';
+}
+function migrateBagRules(save,content) {
+    if(save.bagRulesVersion===1||save.pendingEncounter)return;
+    const bag=content.items[save.equipment[24]];
+    if(bag&&!canEquip(save,bag,content)){
+        delete save.equipment[24];
+        save.tips.bagRulesAdjusted=true;
+        syncDeckLayouts(save,content);
+    }
+    save.bagRulesVersion=1;
 }
 export function playerSpec(save, content) {
     const stats = normalizeStats(), fixed = [];
@@ -243,10 +263,16 @@ export function applyAction(save, content, action) {
         save.pet.level = petLevel(save.pet.xp,content); if(save.pets?.legacy_gululu){save.pets.legacy_gululu.xp+=content.pet.foodXp;save.pets.legacy_gululu.level=Pets.petXpLevel(save.pets.legacy_gululu.xp,content);} syncGoals(save,content); break;
     }
     case 'deck-layouts': {
-        const next={...save,cards:{...save.cards}};
+        const next={...save,cards:{...save.cards},equipment:{...save.equipment}};
+        if(action.bagItemId!==undefined){
+            const bag=content.items[action.bagItemId];
+            assert(bag?.slot===24&&canEquip(save,bag,content),'卡包尚未拥有或不符合使用条件');
+            next.equipment[24]=bag.id;
+        }
         if(action.learnedKeys?.length)learnDeckCards(next,content,action.learnedKeys);
         validateDeckLayouts(next,content,action.layouts,action.active);
         save.cards=next.cards;
+        save.equipment=next.equipment;
         save.deckLayouts=clone(action.layouts);save.activeDeckLayout=action.active;
         save.deck=clone(save.deckLayouts[action.active].deck);
         save.tips.deckEdited=true;save.tips.deckEditedWithBag=save.equipment[24]===24003;syncGoals(save,content);break;
@@ -263,6 +289,7 @@ export function applyAction(save, content, action) {
         save.pendingEncounter = null; save.position = save.zone === 'camp' ? {x:860,y:850} : {x:800,y:810}; break;
     default: throw new Error('未知操作');
     }
+    migrateBagRules(save,content);
     syncDeckLayouts(save,content);
     save.revision++;
     return { changed: true, quest: currentQuest(save,content), level: save.level };
@@ -302,7 +329,7 @@ export function settleEncounter(save,content,battle) {
         if (monster.id === 'water-bubble' && battle.rng.int(1,100) <= 20) save.inventory[17114] = (save.inventory[17114] || 0) + 1;
         syncProgression(save,content);
     } else save.position = save.zone === 'camp' ? {x:860,y:850} : {x:800,y:810};
-    save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; save.revision++; return true;
+    save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; migrateBagRules(save,content); save.revision++; return true;
 }
 export function parseSave(raw,content) {
     const s = typeof raw === 'string' ? JSON.parse(raw) : clone(raw);
@@ -321,6 +348,8 @@ export function parseSave(raw,content) {
     assert(new Set(s.rewardedEncounters).size === s.rewardedEncounters.length && s.rewardedEncounters.every(x=>typeof x==='string'), '存档奖励记录无效');
     for(const [id,n] of Object.entries(s.upgrades))assert(Number(id)===1912 && owns(s,id) && Number.isInteger(n) && n>=0 && n<=content.upgrade.length,'存档强化记录无效');
     syncProgression(s,content);
+    assert(s.bagRulesVersion===undefined||s.bagRulesVersion===1,'卡包规则版本无效');
+    migrateBagRules(s,content);
     for(const id of Object.values(s.equipment))assert(canEquip(s,content.items[id],content),'存档装备条件无效');
     let previous = true;
     for (const q of content.quests) {

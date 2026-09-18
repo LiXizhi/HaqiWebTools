@@ -78,6 +78,23 @@ test('30 cards render as 30 icons; hold removes exactly one and scrolling cancel
 import {installExpansion} from '../js/adventure_expansion_core.js';
 const readData=name=>JSON.parse(fs.readFileSync(new URL('../data/'+name+'.json',import.meta.url)));
 function expanded(){return installExpansion(...['adventure/chapter','adventure/combat','adventure/pets','adventure/shop-candidates','kids/cards','kids/charms','kids/card_names'].map(readData));}
+
+test('bag selector stages real equipment and five-copy decks until save, shop opens bag category',()=>{
+    const {content:c,dataset}=expanded(),s=A.createAdventure(c);
+    s.xp=c.progression.xpThresholds[29];A.syncProgression(s,c);s.inventory[24014]=1;
+    const h=domHelpers(),body=h.el('section'),shopView={};let action,panel;
+    renderDeckEditor(body,{save:s,shopView,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action:value=>action=value,panel:value=>panel=value},h);
+    const all=node=>[node,...(node?.children||[]).flatMap(child=>typeof child==='object'?all(child):[])];
+    const selector=all(body).find(node=>node.attributes?.['aria-label']==='选择已拥有的卡包装备');
+    selector.value='24014';selector.onchange();
+    const recommend=all(body).find(node=>node.tag==='button'&&node.children[0]==='推荐');recommend.onclick();
+    assert.equal(s.equipment[24],undefined,'changing equipment is only a draft');
+    all(body).find(node=>node.tag==='button'&&node.children[0]==='保存并使用').onclick();
+    assert.equal(action.bagItemId,24014);assert.ok(action.layouts[0].deck.some(row=>row.count===5));
+    A.applyAction(s,c,action);assert.equal(s.equipment[24],24014);
+    all(body).find(node=>node.tag==='button'&&node.children[0]==='购买卡包').onclick();
+    assert.equal(panel,'shop');assert.equal(shopView.category,'bag');
+});
 test('all six schools are searchable lessons; cross-school and balance learning persist without changing the character school',()=>{
     const {content:c,dataset}=expanded(),s=A.createAdventure(c);
     assert.deepEqual(new Set(c.cardLibrary.map(row=>row.school)),new Set(['fire','ice','storm','life','death','balance']));

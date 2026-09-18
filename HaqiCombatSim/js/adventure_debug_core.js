@@ -1,5 +1,5 @@
 // Debug save editing only. Combat formulae and runtime balance parameters are unchanged.
-import { parseSave, syncProgression, canEquip, deckLimits, recommendedDeck, petLevel } from './adventure_core.js';
+import { parseSave, syncDeckLayouts, syncProgression, canEquip, deckLimits, recommendedDeck, petLevel } from './adventure_core.js';
 import { clampDeck } from './combat_unit_core.js';
 
 const check=(ok,message)=>{if(!ok)throw new Error(message);};
@@ -54,6 +54,7 @@ export function prepareDebugEdit(save,content,patch) {
     next.deck=clampDeck(ownedDeck,{...deckLimits(next,content),version:'kids'}).deck;
     if(!next.deck.length)next.deck=recommendedDeck(next,content);
     if(JSON.stringify(next.deck)!==JSON.stringify(save.deck))notes.push('配卡已按持有数量及卡包容量调整');
+    syncDeckLayouts(next,content);
     const rows=debugFields(next,content),changes=rows.filter(row=>row.value!==byId.get(row.id)?.value).map(row=>({...row,before:byId.get(row.id)?.value||0}));
     next.revision=(save.revision||0)+1;
     return {save:parseSave(next,content),changes,notes};

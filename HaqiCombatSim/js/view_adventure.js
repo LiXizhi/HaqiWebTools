@@ -1,3 +1,4 @@
+import { renderDeckEditor } from './view_adventure_deck.js';
 import { specMaxHp } from './adventure_pets_core.js';
 import { checkinStatus } from './adventure_checkin_core.js';
 import { playerSpec } from './adventure_core.js';
@@ -208,18 +209,7 @@ export function renderPanel(root,kind,model,cb) {
             else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
         });
     }
-    if(kind==='deck') {
-        let draft=save.deck.map(x=>({...x}));const limits=deckLimits(save,c);
-        const counter=el('span','deck-counter'),grid=el('div','deck-grid');
-        const update=()=>{counter.textContent=`${draft.reduce((n,x)=>n+x.count,0)} / ${limits.capacity} 张 · 同一张最多 ${limits.eachCapacity} 份`;};
-        const paint=()=>{grid.replaceChildren();for(const lesson of c.learn[save.school]){
-            const card=d.cards[lesson.key],owned=save.cards[lesson.key]||0,n=draft.find(x=>x.key===lesson.key)?.count||0;
-            const count=el('strong','',String(n));const change=delta=>{const value=n+delta;if(value<0||value>Math.min(owned,limits.eachCapacity))return;if(delta>0&&draft.reduce((a,x)=>a+x.count,0)>=limits.capacity)return;draft=draft.filter(x=>x.key!==lesson.key);if(value)draft.push({key:lesson.key,count:value});paint();update();};
-            const cardNode=el('div',`deck-card ${owned?'':'locked'}`,spellFace(assets,card),el('small','muted',owned?`拥有 ${owned} 张`:`等级 ${lesson.level} 解锁`),el('div','stepper',button('−',()=>change(-1)),count,button('+',()=>change(1))));
-            grid.append(cardNode);
-        }};
-        body.append(el('div','deck-toolbar',counter,button('推荐配卡',()=>{draft=recommendedDeck(save,c);paint();update();},'secondary')),el('p','muted','右上：魔力消耗；左中：冷却回合。本系法术的1个超级魔力抵2点，其他系抵1点。装备提供的法术会额外加入战斗。'),grid,button('保存卡包',()=>cb.action({type:'deck',deck:draft}),'primary save-deck'));paint();update();
-    }
+    if(kind==='deck') renderDeckEditor(body,model,cb,{el,button,spellFace});
     if(kind==='pet'){
         body.append(el('h3','','初心之旅 · 咕噜噜教学'));
         body.append(el('div','pet-portrait',tile(assets,'creatures',save.pet?6:7,170,180)));

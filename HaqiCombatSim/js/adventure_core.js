@@ -36,6 +36,7 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
         visitedTown: false, music: false, tips: {}, revision: 0 };
     syncProgression(save, content);
     save.deck = recommendedDeck(save, content);
+    syncDeckLayouts(save,content);
     if(content.pets)Pets.initializePets(save,content,starter);
     return save;
 }
@@ -72,6 +73,26 @@ export function validDeck(save, content, deck) {
         total += entry.count;
     }
     assert(total <= limits.capacity, '卡包已满'); return true;
+}
+// Original CombatCardDeckSubPage: named bag tabs and one icon per card copy.
+// The active deck remains the battle/legacy-save source of truth.
+export function syncDeckLayouts(save, content) {
+    if (!save.deckLayouts) { save.deckLayouts = [{name:'卡包一',deck:clone(save.deck)}]; save.activeDeckLayout = 0; }
+    const limits = {...deckLimits(save,content),version:'kids'};
+    for (let i=0;i<save.deckLayouts.length;i++) {
+        const layout=save.deckLayouts[i],source=i===save.activeDeckLayout?save.deck:layout.deck;
+        layout.deck=clampDeck(source.map(row=>({...row,count:Math.min(row.count,save.cards[row.key]||0)})).filter(row=>row.count>0),limits).deck;
+        if(!layout.deck.length)layout.deck=recommendedDeck(save,content);
+    }
+    save.deck=clone(save.deckLayouts[save.activeDeckLayout].deck);
+}
+function validateDeckLayouts(save,content,layouts,active) {
+    assert(Array.isArray(layouts)&&layouts.length>=1&&layouts.length<=6,'请保留一至六个卡包');
+    assert(Number.isInteger(active)&&active>=0&&active<layouts.length,'请选择有效卡包');
+    for(const row of layouts){
+        assert(row&&typeof row.name==='string'&&row.name.trim().length>0&&row.name.length<=16,'卡包名称需为一至十六字');
+        validDeck(save,content,row.deck);
+    }
 }
 export function canEquip(save, item, content) {
     return !equipmentBlockReason(save, item, content);
@@ -198,6 +219,11 @@ export function applyAction(save, content, action) {
         save.inventory[content.pet.foodId]--; save.pet.xp = Math.min(content.pet.levels.max_exp, save.pet.xp + content.pet.foodXp);
         save.pet.level = petLevel(save.pet.xp,content); if(save.pets?.legacy_gululu){save.pets.legacy_gululu.xp+=content.pet.foodXp;save.pets.legacy_gululu.level=Pets.petXpLevel(save.pets.legacy_gululu.xp,content);} syncGoals(save,content); break;
     }
+    case 'deck-layouts':
+        validateDeckLayouts(save,content,action.layouts,action.active);
+        save.deckLayouts=clone(action.layouts);save.activeDeckLayout=action.active;
+        save.deck=clone(save.deckLayouts[action.active].deck);
+        save.tips.deckEdited=true;save.tips.deckEditedWithBag=save.equipment[24]===24003;syncGoals(save,content);break;
     case 'deck':
         validDeck(save,content,action.deck); save.deck = clone(action.deck); save.tips.deckEdited = true; save.tips.deckEditedWithBag = save.equipment[24] === 24003; syncGoals(save,content); break;
     case 'travel':
@@ -210,6 +236,7 @@ export function applyAction(save, content, action) {
         save.pendingEncounter = null; save.position = save.zone === 'camp' ? {x:860,y:850} : {x:800,y:810}; break;
     default: throw new Error('未知操作');
     }
+    syncDeckLayouts(save,content);
     save.revision++;
     return { changed: true, quest: currentQuest(save,content), level: save.level };
 }
@@ -291,7 +318,9 @@ export function parseSave(raw,content) {
         assert(JSON.stringify(s.pendingEncounter.petIds)===JSON.stringify(s.formation.filter(Boolean)),'存档宠物奖励阵容无效');
         if(s.pendingEncounter.adventureParams)assert(JSON.stringify(s.pendingEncounter.adventureParams)===JSON.stringify(Pets.petParams(content)),'存档养成参数无效');
     }
-    syncProgression(s,content); validDeck(s,content,s.deck); return s;
+    syncProgression(s,content); validDeck(s,content,s.deck);
+    if(s.deckLayouts!==undefined)validateDeckLayouts(s,content,s.deckLayouts,s.activeDeckLayout);
+    syncDeckLayouts(s,content); return s;
 }
 
 export function specialEncounter(save,content,id){

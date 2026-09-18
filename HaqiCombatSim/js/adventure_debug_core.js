@@ -1,5 +1,5 @@
 // Debug save editing only. Combat formulae and runtime balance parameters are unchanged.
-import { parseSave, syncDeckLayouts, syncProgression, canEquip, deckLimits, recommendedDeck, petLevel } from './adventure_core.js';
+import { parseSave, availableCardLessons, syncDeckLayouts, syncProgression, canEquip, deckLimits, recommendedDeck, petLevel } from './adventure_core.js';
 import { clampDeck } from './combat_unit_core.js';
 
 const check=(ok,message)=>{if(!ok)throw new Error(message);};
@@ -13,7 +13,7 @@ export function debugFields(save,content) {
         add(`inventory:${item.id}`,`${item.name} · ${item.id}`,'物品',save.inventory[item.id]||0);
     }
     if(content.items[1912])add('upgrade:1912','晶石法杖强化等级','强化',save.upgrades[1912]||0,0,Math.max(0,...content.upgrade.map(row=>row.level)));
-    for(const lesson of content.learn[save.school])add(`card:${lesson.key}`,`${content.items[lesson.itemId]?.name||lesson.name||'法术卡牌 '+(lesson.itemId||content.learn[save.school].indexOf(lesson)+1)}`,'卡牌',save.cards[lesson.key]||0,save.cards[lesson.key]?1:0,lesson.copies);
+    for(const lesson of availableCardLessons(save,content).filter(row=>row.supported!==false))add(`card:${lesson.key}`,`${content.items[lesson.itemId]?.name||lesson.name||'法术卡牌 '+(lesson.itemId||content.learn[save.school].indexOf(lesson)+1)}`,'卡牌',save.cards[lesson.key]||0,save.cards[lesson.key]?1:0,lesson.copies);
     // Legacy pet uses chapter XP. Expanded party pets own a separate progression protocol.
     if(save.pet&&!content.pets)add('petXp','宠物累计经验','宠物',save.pet.xp,0,content.pet.levels.max_exp);
     return fields;

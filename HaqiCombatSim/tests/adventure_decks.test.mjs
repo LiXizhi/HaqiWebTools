@@ -39,11 +39,12 @@ test('capacity changes and debug ownership changes reconcile every saved layout'
 import {renderDeckEditor} from '../js/view_adventure_deck.js';
 function domHelpers(){
     class Element {
-        constructor(tag,cls='',...children){this.tag=tag;this.className=cls;this.children=[];this.attributes={};this.isConnected=true;this.classList={add(){},remove(){}};this.append(...children);}
+        constructor(tag,cls='',...children){this.tag=tag;this.className=cls;this.children=[];this.attributes={};this.dataset={};this.style={};this.isConnected=true;this.classList={add(){},remove(){}};this.append(...children);}
         append(...children){this.children.push(...children.flat().filter(x=>x!==null&&x!==undefined));}
         replaceChildren(...children){this.children=[];this.append(...children);}
         setAttribute(k,v){this.attributes[k]=v;}
         getContext(){return {};}
+        getBoundingClientRect(){return {left:0,top:0,right:300,bottom:200};}
     }
     const el=(...args)=>new Element(...args),button=(label,fn,cls='')=>{const b=el('button',cls,label);b.onclick=fn;return b;};
     return {el,button,spellFace:()=>el('canvas')};
@@ -63,8 +64,39 @@ test('30 cards render as 30 icons; hold removes exactly one and scrolling cancel
     slot.onpointerdown({button:0,clientX:0,clientY:0});t.mock.timers.tick(549);assert.equal(slots.children.filter(x=>x.tag==='button').length,30);
     t.mock.timers.tick(1);assert.equal(slots.children.filter(x=>x.tag==='button').length,29);
     t.mock.timers.tick(1000);assert.equal(slots.children.filter(x=>x.tag==='button').length,29);
+    const preview=find(body,'bag-detail');slots.children[0].onpointerenter({pointerType:'mouse'});assert.equal(preview.hidden,false);slots.children[0].onpointerleave();t.mock.timers.tick(130);assert.equal(preview.hidden,true);
+    slots.children[0].onclick();assert.equal(preview.hidden,false);slots.children[0].onpointerleave();t.mock.timers.tick(130);assert.equal(preview.hidden,false,'clicked preview stays open');
     const next=slots.children[0];next.onpointerdown({button:0,clientX:0,clientY:0});next.onpointermove({clientX:0,clientY:20});t.mock.timers.tick(600);
     assert.equal(slots.children.filter(x=>x.tag==='button').length,29);
     next.onpointerdown({button:0,clientX:0,clientY:0});next.onpointercancel();t.mock.timers.tick(600);assert.equal(slots.children.filter(x=>x.tag==='button').length,29);
+    next.onpointerdown({button:0,clientX:20,clientY:20});next.onpointermove({clientX:350,clientY:20});next.onpointerup({clientX:350,clientY:20});assert.equal(slots.children.filter(x=>x.tag==='button').length,28);
+    const inside=slots.children[0];inside.onpointerdown({button:0,clientX:20,clientY:20});inside.onpointermove({clientX:80,clientY:20});inside.onpointerup({clientX:80,clientY:20});assert.equal(slots.children.filter(x=>x.tag==='button').length,28,'drop inside retains card');
+    slots.children[1].oncontextmenu({preventDefault(){}});assert.equal(slots.children.filter(x=>x.tag==='button').length,27);
     assert.equal(s.deck.reduce((n,row)=>n+row.count,0),30,'unsaved draft does not change character');
+});
+import {installExpansion} from '../js/adventure_expansion_core.js';
+const readData=name=>JSON.parse(fs.readFileSync(new URL('../data/'+name+'.json',import.meta.url)));
+function expanded(){return installExpansion(...['adventure/chapter','adventure/combat','adventure/pets','adventure/shop-candidates','kids/cards','kids/charms','kids/card_names'].map(readData));}
+test('all six schools are searchable lessons; cross-school and balance learning persist without changing the character school',()=>{
+    const {content:c,dataset}=expanded(),s=A.createAdventure(c);
+    assert.deepEqual(new Set(c.cardLibrary.map(row=>row.school)),new Set(['fire','ice','storm','life','death','balance']));
+    assert.ok(c.cardLibrary.length>600);
+    assert.ok(c.cardLibrary.every(row=>dataset.cards[row.key]));
+    assert.ok(!c.cardLibrary.some(row=>row.key==='Pass'||row.key==='Dead'));
+    const rows=['ice','balance'].map(school=>c.cardLibrary.find(row=>row.school===school&&row.level<=1&&row.supported&&!s.cards[row.key]));
+    assert.ok(rows.every(Boolean));
+    A.applyAction(s,c,{type:'deck-layouts',learnedKeys:rows.map(row=>row.key),layouts:[{name:'混合系',deck:rows.map(row=>({key:row.key,count:3}))}],active:0});
+    const restored=A.parseSave(JSON.stringify(s),c);
+    assert.equal(restored.school,'fire');assert.equal(restored.deck.reduce((n,row)=>n+row.count,0),6);
+    for(const row of rows)assert.equal(restored.cards[row.key],3);
+    assert.deepEqual(A.playerSpec(restored,c).deck,s.deck);
+});
+test('learning and deck changes commit atomically, respecting required levels and unsupported effects',()=>{
+    const {content:c}=expanded(),s=A.createAdventure(c),before=copy(s);
+    for(const lesson of [c.cardLibrary.find(row=>row.level>1),c.cardLibrary.find(row=>!row.supported)]){
+        assert.throws(()=>A.applyAction(s,c,{type:'deck-layouts',learnedKeys:[lesson.key],layouts:s.deckLayouts,active:0}));assert.deepEqual(s,before);
+    }
+    const lesson=c.cardLibrary.find(row=>row.school==='balance'&&row.supported&&row.level===1);
+    assert.throws(()=>A.applyAction(s,c,{type:'deck-layouts',learnedKeys:[lesson.key],layouts:[{name:'无效',deck:[{key:lesson.key,count:99}]}],active:0}));
+    assert.deepEqual(s,before);
 });

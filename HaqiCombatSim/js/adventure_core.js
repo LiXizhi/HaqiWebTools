@@ -52,6 +52,19 @@ export function syncProgression(save, content) {
         if (lesson.level <= save.level && !save.cards[lesson.key]) save.cards[lesson.key] = lesson.copies;
     }
 }
+export function availableCardLessons(save,content) {
+    return content.cardLibrary || content.learn[save.school].map(row=>({...row,school:save.school,supported:true}));
+}
+export function learnDeckCards(save,content,keys=[]) {
+    assert(Array.isArray(keys)&&keys.length<=Object.keys(content.cardLibrary||{}).length,'学习卡牌列表无效');
+    const lessons=new Map(availableCardLessons(save,content).map(row=>[row.key,row]));
+    for(const key of keys){
+        const lesson=lessons.get(key);
+        assert(lesson&&lesson.supported!==false,'此卡牌效果暂未开放');
+        assert(save.level>=lesson.level,'尚未达到学习等级');
+        save.cards[key]=Math.max(save.cards[key]||0,lesson.copies);
+    }
+}
 export function recommendedDeck(save, content) {
     // The chapter unlock order introduces wand, attacks, blade, trap, healing and shield.
     const lessons = content.learn[save.school].filter(x => save.cards[x.key]);
@@ -71,6 +84,7 @@ export function validDeck(save, content, deck) {
     const seen = new Set(); let total = 0;
     for (const entry of deck) {
         assert(!seen.has(entry.key) && Number.isInteger(entry.count) && entry.count > 0, '卡牌份数无效'); seen.add(entry.key);
+        assert(!content.cardLibrary||content.cardLibrary.some(row=>row.key===entry.key&&row.supported!==false),'此卡牌效果暂未开放');
         assert(entry.count <= (save.cards[entry.key] || 0) && entry.count <= limits.eachCapacity, '超过拥有数量或单卡上限');
         total += entry.count;
     }
@@ -228,11 +242,15 @@ export function applyAction(save, content, action) {
         save.inventory[content.pet.foodId]--; save.pet.xp = Math.min(content.pet.levels.max_exp, save.pet.xp + content.pet.foodXp);
         save.pet.level = petLevel(save.pet.xp,content); if(save.pets?.legacy_gululu){save.pets.legacy_gululu.xp+=content.pet.foodXp;save.pets.legacy_gululu.level=Pets.petXpLevel(save.pets.legacy_gululu.xp,content);} syncGoals(save,content); break;
     }
-    case 'deck-layouts':
-        validateDeckLayouts(save,content,action.layouts,action.active);
+    case 'deck-layouts': {
+        const next={...save,cards:{...save.cards}};
+        if(action.learnedKeys?.length)learnDeckCards(next,content,action.learnedKeys);
+        validateDeckLayouts(next,content,action.layouts,action.active);
+        save.cards=next.cards;
         save.deckLayouts=clone(action.layouts);save.activeDeckLayout=action.active;
         save.deck=clone(save.deckLayouts[action.active].deck);
         save.tips.deckEdited=true;save.tips.deckEditedWithBag=save.equipment[24]===24003;syncGoals(save,content);break;
+    }
     case 'deck':
         validDeck(save,content,action.deck); save.deck = clone(action.deck); save.tips.deckEdited = true; save.tips.deckEditedWithBag = save.equipment[24] === 24003; syncGoals(save,content); break;
     case 'travel':
@@ -298,7 +316,7 @@ export function parseSave(raw,content) {
     for (const field of ['inventory','equipment','upgrades','cards','quests','tips']) assert(s[field] && typeof s[field] === 'object' && !Array.isArray(s[field]),'存档数据不完整');
     for (const [id,n] of Object.entries(s.inventory)) assert(content.items[id] && Number.isInteger(n) && n >= 0,'存档物品无效');
     for (const [slot,id] of Object.entries(s.equipment)) assert(content.items[id]?.slot === Number(slot) && owns(s,id),'存档装备无效');
-    for (const [key,n] of Object.entries(s.cards)) assert(content.learn[s.school].some(x => x.key === key) && Number.isInteger(n) && n >= 1 && n <= 3,'存档卡牌无效');
+    for (const [key,n] of Object.entries(s.cards)) assert(availableCardLessons(s,content).some(x => x.key === key) && Number.isInteger(n) && n >= 1 && n <= 3,'存档卡牌无效');
     assert(Array.isArray(s.rewardedEncounters) && Number.isInteger(s.encounterSerial) && s.encounterSerial >= 0,'存档战斗记录无效');
     assert(new Set(s.rewardedEncounters).size === s.rewardedEncounters.length && s.rewardedEncounters.every(x=>typeof x==='string'), '存档奖励记录无效');
     for(const [id,n] of Object.entries(s.upgrades))assert(Number(id)===1912 && owns(s,id) && Number.isInteger(n) && n>=0 && n<=content.upgrade.length,'存档强化记录无效');

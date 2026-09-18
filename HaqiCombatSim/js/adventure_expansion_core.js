@@ -28,6 +28,19 @@ export function installExpansion(content,dataset,catalog,candidates,kidsCards,ki
   const seen=new Set(content.learn[school].map(x=>x.key));
   for(const pet of Object.values(content.pets).filter(x=>x.school===school))for(const lesson of pet.lessons)if(!seen.has(lesson.key)){content.learn[school].push({...lesson});seen.add(lesson.key);}
  }
+ // Full player catalogue: exclude internal turn/status commands, retain unsupported spells visibly.
+ const internalTypes=new Set(['Pass','Dead','PickPet','HoT','DoT','Fizzle']);
+ const existingLessons=new Map(Object.values(content.learn).flat().map(row=>[row.key,row]));
+ content.cardLibrary=[];
+ for(const card of Object.values(kidsCards)){
+  if(internalTypes.has(card.type))continue;
+  const base=card.key.replace(/_(Binding|1000Accuracy)$/,'');
+  const schoolName={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡',balance:'平衡'}[card.spellSchool];
+  const name=cardNames[card.key]||cardNames[base]||dataset.cards[card.key]?.name||`${schoolName}法术（${card.pipcost}魔力）`;
+  dataset.cards[card.key]??={...card,name};
+  const lesson=existingLessons.get(card.key)||[...existingLessons.values()].find(row=>card.key.startsWith(row.key+'_'));
+  content.cardLibrary.push({key:card.key,name,school:card.spellSchool,level:Math.max(1,Number(card.requireLevel||lesson?.level||1)),copies:3,supported:isSupportedType(card.type)});
+ }
  content.pets.legacy_gululu={id:'legacy_gululu',sourceId:'legacy_gululu',name:content.pet.name,school:'life',traits:{elementalAttribute:'生命'},unlockLevel:1,lessons:content.learn.life.slice(0,7),legacy:true};
  return {content,dataset};
 }

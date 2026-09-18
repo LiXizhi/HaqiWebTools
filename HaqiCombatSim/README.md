@@ -81,9 +81,11 @@ web/HaqiCombatSim/
     lib/xml_lite.mjs          # 零依赖 XML 解析器
   tests/                      # node:test，*.test.mjs
   docs/
-    plan.md                   # 总体计划与阶段任务（已全部完成，含「实际」偏差标注）
+    plan.md                   # 总体计划与阶段任务（已全部完成，含「实际」偏差标注）；文末为 2026-09-18 计划需求
     design.md                 # 产品设计：页面、交互、统计口径
     architecture.md           # 技术架构：模块、数据流、引擎细节、意图 vs 现实
+    player-import.md          # 计划需求：线上卡包/装备/VIP 导入（尚未实现）
+    async-pvp.md              # 计划需求：异步 PVP（尚未实现）
     lua-mapping.md            # 公式/常量 ↔ Lua 源码行号对照表
     data-export.md            # 数据导出器规格
     qa-report.md              # 验收记录：真实数据五系胜率基线、引擎修正、性能
@@ -104,11 +106,21 @@ web/HaqiCombatSim/
 | `Combat/MobAIDeckByGearScore(.teen).xml` | 按装备分数的 AI 卡组（gsid 形式，尽力映射） |
 | `HP/HP_level_mapping.xml` | 旧 HP 表（参考） |
 
+## 计划需求（尚未实现）
+
+2026-09-18 产品负责人李西峙提出两项后续能力，文档已入库，**代码未做**：
+
+1. [拉取真实用户数据](docs/player-import.md) — 卡包、装备、VIP 与成长字段；对照现有导出/存档/Keepwork 登录，标出接口与鉴权等开放问题。
+2. [异步 PVP](docs/async-pvp.md) — 非实时对战的匹配、超时、回放，以及与现有 1v1–4v4 人机 `free_pvp` 的关系。
+
+当前对战仍是本机 Bot；现有 Keepwork 登录只服务 `Haqi.html` 云端检查点，不读取魔法哈奇角色。
+
 ## 相关文档
 
 - 仓库 wiki：[docs/aries/combat-system.md](../../docs/aries/combat-system.md)、[docs/config/aries-haqi-data.md](../../docs/config/aries-haqi-data.md)
 - 仓库 wiki 入口：[docs/aries/haqi-combat-sim.md](../../docs/aries/haqi-combat-sim.md)
 - 本项目：[docs/plan.md](docs/plan.md) → [docs/architecture.md](docs/architecture.md) → [docs/lua-mapping.md](docs/lua-mapping.md) → [docs/qa-report.md](docs/qa-report.md)
+- 计划需求：[docs/player-import.md](docs/player-import.md)、[docs/async-pvp.md](docs/async-pvp.md)
 
 ## Haqi.html：WebP / Keepwork 云端旅途
 

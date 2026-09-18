@@ -180,6 +180,7 @@ Policy = { pick(arena, unit, rng) => { cardKey, targetId } | null | Promise<...>
 - 只读引用 `script/apps/Aries/Combat/ServerObject/*.lua` 作为规范来源，不修改。
 - 只读读取 `config/Aries/`（gitignored）生成数据。
 - 已在 `docs/aries/haqi-combat-sim.md`、`docs/CODEMAP.md`、`docs/TOPIC-INDEX.md` 登记。
+- 计划中的「线上角色导入」与「异步 PVP」不改变本节模块边界：玩家 IO 只能放在浏览器适配层，`*_core.js` 仍禁止 `fetch`。对照 [player-import.md](player-import.md)、[async-pvp.md](async-pvp.md)。
 
 ## 11. Haqi.html 单人冒险（2026-09-17）
 

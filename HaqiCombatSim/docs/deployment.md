@@ -35,3 +35,9 @@ npm run verify:release # 对当前dist重新核验，不上传
 批量模拟Worker在生产构建时由Vite打包为内联Blob Worker，支持“HTML在Keepwork、脚本在CDN”的跨域组合。发布HTML把页内链接解析到实际宿主页面，避免base把模拟器页签导航带到CDN目录。开发源码保留标准module Worker，调用方自定义workerUrl保持有效。localhost验证发布HTML无需添加资源参数，默认即为CDN。
 
 发布不会自动同步 `digitalhuman-resource` Git镜像；该可选副本按Maisi上传技能另行征询。美术清单预算、原图来源与独立哈希仍按现有资源准备测试维护。
+
+## 同步到本机Maisi
+
+`upload`或`verify:release`远端核验成功并生成正式入口后，自动查找祖先目录下的 `maisi` checkout（例如 `lxzsrc/maisi`），优先使用 `MAISI_ROOT`。确认仓库Git标记及MagicHaqi入口存在后，将本次四个 `release/Haqi*_v1.html` 复制到 `<maisi>/maisi/maisi/webgames/MagicHaqi/release/`，更新同名文件并逐字节核验。其他文件保持原样；不复制美术、预览HTML或manifest，不替Maisi执行Git提交/推送。
+
+未找到Maisi时打印跳过信息，不影响CDN发布；`plan:release`和失败的上传/核验不会复制。若复制发生IO错误则命令报错，可修复后运行 `verify:release`重新核验并复制。

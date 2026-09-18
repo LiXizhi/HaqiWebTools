@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
+import { maisiCandidates, syncMaisiRelease } from './scripts/sync_maisi_release.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const dist = path.join(root, 'dist');
@@ -43,11 +44,7 @@ if (!args.has('--dry-run')) {
     if (!args.has('--verify-only')) {
         const skill = '.github/skills/upload-deploy-cdn-files/qiniu_upload_local_files.py';
         const candidates = [process.env.HAQI_CDN_UPLOADER];
-        if (process.env.MAISI_ROOT) candidates.push(path.join(process.env.MAISI_ROOT, skill));
-        for (let dir = root; ; dir = path.dirname(dir)) {
-            candidates.push(path.join(dir, 'maisi', skill));
-            if (path.dirname(dir) === dir) break;
-        }
+        candidates.push(...maisiCandidates(root).map(candidate => path.join(candidate, skill)));
         const uploader = candidates.find(candidate => candidate && fs.existsSync(candidate));
         if (!uploader) throw new Error('找不到Maisi上传器，请设置 MAISI_ROOT 或 HAQI_CDN_UPLOADER。');
         // Build an exact allowlisted payload; passing dist/assets to the uploader
@@ -97,4 +94,9 @@ if (manifest.verified || args.has('--dry-run')) {
         fs.writeFileSync(path.join(release, `${page}${suffix}.html`), output);
         console.log(`${manifest.verified ? '已验证' : '仅预览，尚未上传'}：${base}${page}.html`);
     }
+}
+
+if (manifest.verified) {
+    const destination = syncMaisiRelease({ projectRoot: root, releaseDir: release, pages, verified: true });
+    console.log(destination ? `已同步发布入口到：${destination}` : '未找到本机Maisi仓库，跳过发布入口复制。');
 }

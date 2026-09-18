@@ -152,3 +152,226 @@
     .storybook-ui .movement-hint { display:none; }
 }
 @media(prefers-reduced-motion:reduce) { .storybook-ui button { transition:none; } }
+/* Compact storybook composition: free-standing emblems and quiet parchment.
+   No ornamental corner blocks around HUD or dialogue content. */
+.storybook-ui :is(.hero-status,.utility-nav,.game-nav)::before { content:none; }
+.storybook-ui :is(.quest-tracker,.dialogue-box,.modal)::before {
+    border:1px solid #b69048; border-image:none; border-radius:inherit;
+    background:#f7e8bb var(--ui-parchment) center / cover;
+    box-shadow:inset 0 0 0 2px #fff0bd99,inset 0 0 14px #c3984c38,0 3px 10px #261b1140;
+    filter:none;
+}
+.storybook-ui .hero-status { top:max(10px,env(safe-area-inset-top)); left:max(12px,env(safe-area-inset-left)); width:216px; padding:0; border-radius:0; }
+.storybook-ui .hero-heading { gap:8px; padding:3px 8px; min-height:30px; border:1px solid #b68f46; border-radius:15px 9px 9px 5px; background:linear-gradient(100deg,#3b291bed,#514122bb); box-shadow:inset 0 1px #efd59655,0 2px 5px #2e201844; }
+.storybook-ui .hero-text strong { color:#fff0c7; font-size:14px; }
+.storybook-ui .hero-membership { min-height:24px; padding:2px 5px; background:none; color:#ecd393; border:0; border-radius:0; }
+.storybook-ui .hero-text>span { margin:3px 7px 0; color:#fff0c7; text-shadow:0 1px 3px #211c12,0 0 4px #302819; font-size:10px; }
+.storybook-ui .hero-health { height:15px; margin-top:4px; border-color:#d2ad5c; }
+.storybook-ui .xp-bar { height:3px; margin:4px 5px 0; background:#4b43279c; }
+.storybook-ui .location-label { top:15px; }
+.storybook-ui .location-label>span { font-size:19px; }
+.storybook-ui .location-label small { margin-top:3px; font-size:9px; }
+.storybook-ui .utility-nav { top:max(7px,env(safe-area-inset-top)); right:max(10px,env(safe-area-inset-right)); grid-template-columns:repeat(4,46px); gap:4px; padding:0; }
+.storybook-ui .utility-button { min-height:58px; padding:0; gap:0; color:#fff3cd; text-shadow:0 1px 3px #211807,0 0 4px #35230d; }
+.storybook-ui .utility-button .icon { width:36px; height:36px; }
+.storybook-ui .utility-button small { min-height:0; font-size:8px; }
+.storybook-ui .utility-button:hover:not(:disabled),.storybook-ui .nav-button:hover { background:none; }
+.storybook-ui :is(.utility-button,.nav-button):hover .icon { filter:brightness(1.12) drop-shadow(0 2px 4px #bd923b); }
+.storybook-ui .quest-tracker { top:82px; right:12px; width:238px; padding:8px 10px; min-height:69px; border-radius:5px 9px 7px 4px; }
+.storybook-ui .tracker-top { position:absolute; right:10px; top:10px; margin:0; }
+.storybook-ui .tracker-top .eyebrow { display:none; }
+.storybook-ui .chapter-count { font-size:9px; }
+.storybook-ui .quest-tracker h3 { font-size:14px; margin:0 34px 3px 0; line-height:1.4; }
+.storybook-ui .quest-tracker>p,.storybook-ui .tracker-goal { font-size:11px; line-height:1.55; margin:2px 58px 0 0; }
+.storybook-ui .track-button { position:absolute; right:5px; bottom:0; width:auto; min-height:40px; padding:0 4px; margin:0; border:0; gap:1px; font-size:11px; }
+.storybook-ui .track-button .icon { width:19px; height:19px; }
+.storybook-ui .game-nav { bottom:max(6px,env(safe-area-inset-bottom)); padding:0; gap:8px; width:auto; }
+.storybook-ui .nav-button { position:relative; isolation:isolate; min-width:0; width:64px; height:65px; padding:0; gap:0; color:#fff1c8; font-size:11px; overflow:visible; }
+.storybook-ui .nav-button::before { content:""; position:absolute; z-index:-1; width:43px; height:43px; left:50%; top:2px; transform:translateX(-50%); border-radius:50%; border:1px solid #d4ab58; background:radial-gradient(circle at 40% 30%,#416346ed,#203c2feb); box-shadow:0 0 0 2px #61431b,0 0 0 3px #c7a35a,0 2px 6px #211707; }
+.storybook-ui .nav-button .icon { width:48px; height:48px; margin-top:0; }
+.storybook-ui .nav-button>span:last-child { position:relative; isolation:isolate; min-width:58px; line-height:20px; padding:0 8px; margin-top:-3px; }
+.storybook-ui .nav-button>span:last-child::before { content:""; position:absolute; inset:0; z-index:-1; border:6px solid transparent; border-image:var(--ui-wood) var(--ui-wood-slice) fill / 6px / 0 stretch; }
+.storybook-ui .movement-hint { bottom:14px; }
+.storybook-ui .interact-button { bottom:83px; min-height:40px; padding:6px 14px; }
+.storybook-ui :is(.primary,.secondary) { padding:8px 15px; }
+.storybook-ui :is(.primary,.secondary)::before { border-image-width:8px; }
+.storybook-ui .dialogue-layer { padding:40px 18px max(84px,calc(env(safe-area-inset-bottom) + 76px)); }
+.storybook-ui .dialogue-box { display:block; width:min(900px,100%); min-height:0; padding:0 22px 0 174px; max-height:calc(100dvh - 142px); border-radius:11px 16px 16px 7px; overflow:visible; }
+.storybook-ui .dialogue-box::before { left:156px; }
+.storybook-ui .dialogue-portrait { position:absolute; left:0; bottom:-7px; width:185px!important; height:245px!important; margin:0; float:none; }
+.storybook-ui .dialogue-content { display:grid; grid-template-columns:minmax(0,1fr) 196px; gap:5px 18px; padding:26px 0 13px; max-height:calc(100dvh - 155px); overflow-y:auto; align-items:center; }
+.storybook-ui .dialogue-content>.eyebrow { display:none; }
+.storybook-ui .dialogue-content h2 { position:absolute; left:174px; top:-16px; min-width:92px; padding:5px 20px; margin:0; font-size:19px; line-height:24px; }
+.storybook-ui .dialogue-content h2::before { border-image-width:8px; }
+.storybook-ui .dialogue-text { grid-column:1; margin:0; min-height:0; font-size:14px; line-height:1.8; clear:none; }
+.storybook-ui .dialogue-content>.muted { grid-column:1; font-size:10px; line-height:1.5; }
+.storybook-ui .dialogue-choices { grid-column:2; grid-row:1 / span 3; display:flex; flex-direction:column; flex-wrap:nowrap; gap:4px; margin:0; }
+.storybook-ui .dialogue-choices button { font-size:12px; padding:8px 12px; min-height:40px; }
+.storybook-ui .dialogue-choices .text-button { min-height:28px; padding:3px 8px; }
+.storybook-ui .dialogue-bottom { grid-column:2; grid-row:1 / span 3; display:flex; flex-direction:column-reverse; align-items:stretch; justify-content:center; gap:4px; margin:0; }
+.storybook-ui .dialogue-bottom .primary { max-width:100%; text-align:center; padding:8px 15px; }
+.storybook-ui .dialogue-bottom .muted { text-align:center; }
+.storybook-ui .dialogue-box>.close-button { right:-7px; top:-18px; }
+.storybook-ui .close-button .icon { width:27px; height:27px; }
+.storybook-ui .modal { padding:2px; border-radius:9px; }
+.storybook-ui .modal-header { padding:10px 15px; }
+.storybook-ui .modal-body { padding:14px; }
+@media(max-width:1050px) {
+ .storybook-ui .location-label { left:50%; top:15px; width:auto; }
+}
+@media(max-width:650px) {
+ .storybook-ui .hero-status { top:max(8px,env(safe-area-inset-top)); left:8px; width:169px; padding:0; }
+ .storybook-ui .hero-heading { padding:2px 7px; min-height:27px; }
+ .storybook-ui .hero-text strong { font-size:12px; }
+ .storybook-ui .hero-membership { font-size:9px; }
+ .storybook-ui .hero-text>span { font-size:9px; }
+ .storybook-ui .hero-health { height:14px; }
+ .storybook-ui .utility-nav { top:max(7px,env(safe-area-inset-top)); right:7px; grid-template-columns:repeat(2,43px); gap:2px 4px; padding:0; }
+ .storybook-ui .utility-button { min-height:48px; font-size:9px; }
+ .storybook-ui .utility-button .icon { width:29px; height:29px; }
+ .storybook-ui .location-label { left:91px; top:88px; width:165px; }
+ .storybook-ui .location-label>span { font-size:15px; }
+ .storybook-ui .quest-tracker { top:118px; right:7px; width:173px; min-height:64px; padding:7px 9px; }
+ .storybook-ui .quest-tracker h3 { margin-right:0; font-size:12px; }
+ .storybook-ui .chapter-count { display:none; }
+ .storybook-ui .quest-tracker>p,.storybook-ui .tracker-goal { font-size:10px; margin-right:51px; }
+ .storybook-ui .track-button { min-height:44px; font-size:10px; right:2px; }
+ .storybook-ui .game-nav { bottom:max(5px,env(safe-area-inset-bottom)); width:auto; max-width:calc(100% - 12px); padding:0; gap:3px; }
+ .storybook-ui .nav-button { width:57px; height:60px; flex:none; font-size:10px; padding:0; }
+ .storybook-ui .nav-button::before { width:37px; height:37px; top:3px; }
+ .storybook-ui .nav-button .icon { width:44px; height:44px; }
+ .storybook-ui .nav-button>span:last-child { min-width:51px; line-height:19px; }
+ .storybook-ui .interact-button { bottom:80px; min-height:44px; }
+ .storybook-ui .dialogue-layer { padding:80px 8px max(75px,calc(env(safe-area-inset-bottom) + 69px)); }
+ .storybook-ui .dialogue-box { width:100%; padding:0 13px; min-height:0; max-height:calc(100dvh - 175px); overflow:visible; }
+ .storybook-ui .dialogue-box::before { left:0; }
+ .storybook-ui .dialogue-portrait { left:2px; top:-86px; bottom:auto; width:90px!important; height:112px!important; margin:0; }
+ .storybook-ui .dialogue-content { display:flex; flex-direction:column; align-items:stretch; gap:5px; padding:24px 0 9px; max-height:calc(100dvh - 190px); overflow:auto; }
+ .storybook-ui .dialogue-content h2 { left:89px; top:-17px; min-width:82px; font-size:17px; padding:5px 17px; margin:0; }
+ .storybook-ui .dialogue-text { font-size:13px; line-height:1.75; margin:0; }
+ .storybook-ui .dialogue-choices { display:flex; flex-direction:row; flex-wrap:wrap; gap:4px 8px; margin:3px 0 0; }
+ .storybook-ui .dialogue-choices button { flex:1 1 130px; font-size:11px; min-height:44px; padding:8px 11px; }
+ .storybook-ui .dialogue-choices .text-button { flex:0 0 auto; padding:4px 8px; min-height:44px; }
+ .storybook-ui .dialogue-bottom { display:flex; flex-direction:row; justify-content:space-between; align-items:center; gap:10px; margin:3px 0 0; }
+ .storybook-ui .dialogue-bottom .primary { min-width:85px; font-size:12px; padding:8px 16px; }
+ .storybook-ui .dialogue-box>.close-button { top:-19px; right:-6px; }
+ .storybook-ui .modal { padding:2px; }
+ .storybook-ui .modal-header { padding:9px 12px; }
+ .storybook-ui .modal-body { padding:11px; }
+}
+@media(max-height:540px) and (min-width:651px) {
+ .storybook-ui .hero-status { top:7px; left:8px; width:190px; padding:0; }
+ .storybook-ui .utility-nav { top:5px; right:8px; padding:0; grid-template-columns:repeat(4,42px); }
+ .storybook-ui .utility-button { min-height:48px; }
+ .storybook-ui .utility-button .icon { width:29px; height:29px; }
+ .storybook-ui .quest-tracker { top:67px; width:204px; padding:7px 9px; max-height:calc(100dvh - 147px); }
+ .storybook-ui .quest-tracker h3 { font-size:12px; }
+ .storybook-ui .game-nav { bottom:3px; padding:0; gap:4px; }
+ .storybook-ui .nav-button { width:56px; height:58px; }
+ .storybook-ui .nav-button .icon { width:42px; height:42px; }
+ .storybook-ui .nav-button::before { width:36px; height:36px; }
+ .storybook-ui .nav-button>span:last-child { min-width:49px; line-height:18px; }
+ .storybook-ui .interact-button { bottom:69px; }
+ .storybook-ui .dialogue-layer { padding:20px 12px 70px; }
+ .storybook-ui .dialogue-box { min-height:0; padding:0 20px 0 125px; max-height:calc(100dvh - 110px); }
+ .storybook-ui .dialogue-box::before { left:113px; }
+ .storybook-ui .dialogue-portrait { width:136px!important; height:177px!important; margin:0; }
+ .storybook-ui .dialogue-content { grid-template-columns:minmax(0,1fr) 175px; padding:22px 0 10px; gap:4px 14px; max-height:calc(100dvh - 126px); }
+ .storybook-ui .dialogue-content h2 { left:127px; font-size:17px; margin:0; padding:4px 15px; }
+ .storybook-ui .dialogue-text { font-size:12px; }
+ .storybook-ui .dialogue-choices,.storybook-ui .dialogue-bottom { margin:0; }
+}
+/* Continuous surfaces: compact framing without transparent holes between content. */
+.storybook-ui .hero-status { width:226px; padding:7px 10px 8px; border-radius:9px; }
+.storybook-ui .hero-status::before { content:""; border:7px solid transparent; border-image:var(--ui-wood) var(--ui-wood-slice) fill / 7px / 0 stretch; filter:drop-shadow(0 3px 5px #251a1540); }
+.storybook-ui .hero-heading { padding:0; min-height:25px; border:0; border-radius:0; background:none; box-shadow:none; }
+.storybook-ui .hero-text>span { margin:1px 0 0; color:#eddfbb; text-shadow:none; }
+.storybook-ui .hero-health { margin-top:4px; }
+.storybook-ui .xp-bar { margin:4px 0 0; }
+.storybook-ui .utility-nav { padding:4px 5px; border-radius:9px; }
+.storybook-ui .utility-nav::before { content:""; border:1px solid #a98b51; border-image:none; border-radius:9px; background:linear-gradient(#3e3828f5,#302c21f5); box-shadow:inset 0 0 0 1px #f2d48833,0 2px 6px #21180744; filter:none; }
+.storybook-ui .game-nav { padding:0 8px 4px; }
+.storybook-ui .game-nav::before { content:""; top:22px; border:6px solid transparent; border-image:var(--ui-wood) var(--ui-wood-slice) fill / 6px / 0 stretch; filter:drop-shadow(0 2px 4px #21180744); }
+.storybook-ui .dialogue-box { min-height:146px; padding-left:176px; }
+.storybook-ui .dialogue-box::before { left:0; }
+.storybook-ui .dialogue-portrait { left:10px; bottom:8px; width:154px!important; height:178px!important; }
+.storybook-ui .dialogue-content { min-height:146px; padding-top:25px; }
+.storybook-ui .dialogue-content h2 { left:176px; }
+@media(max-width:650px) {
+ .storybook-ui .hero-status { width:177px; padding:6px 8px 7px; }
+ .storybook-ui .hero-heading { padding:0; min-height:24px; }
+ .storybook-ui .location-label { top:101px; }
+ .storybook-ui .utility-nav { padding:3px 4px; }
+ .storybook-ui .game-nav { padding:0 5px 3px; }
+ .storybook-ui .dialogue-box { padding:0 12px; min-height:150px; }
+ .storybook-ui .dialogue-portrait { left:7px; top:-18px; bottom:auto; width:86px!important; height:114px!important; }
+ .storybook-ui .dialogue-content { display:grid; grid-template-columns:79px minmax(0,1fr); min-height:150px; padding:24px 0 10px; gap:5px 8px; }
+ .storybook-ui .dialogue-content h2 { left:103px; }
+ .storybook-ui .dialogue-text,.storybook-ui .dialogue-content>.muted { grid-column:2; }
+ .storybook-ui .dialogue-choices,.storybook-ui .dialogue-bottom { grid-column:1 / -1; grid-row:auto; margin-top:6px; }
+}
+@media(max-height:540px) and (min-width:651px) {
+ .storybook-ui .hero-status { width:204px; padding:5px 8px 6px; }
+ .storybook-ui .utility-nav { padding:3px 4px; }
+ .storybook-ui .game-nav { padding:0 6px 3px; }
+ .storybook-ui .dialogue-box { min-height:125px; padding-left:128px; }
+ .storybook-ui .dialogue-box::before { left:0; }
+ .storybook-ui .dialogue-portrait { left:7px; bottom:6px; width:112px!important; height:148px!important; }
+ .storybook-ui .dialogue-content { min-height:125px; padding-top:23px; }
+ .storybook-ui .dialogue-content h2 { left:128px; }
+}
+/* Readable, unified HUD surfaces and stable dialogue controls. */
+.haqi-app,.haqi-app * { -webkit-user-select:none; user-select:none; }
+.haqi-app :is(input,textarea,[contenteditable=true]) { -webkit-user-select:text; user-select:text; }
+.haqi-app :is(img,canvas) { -webkit-user-drag:none; }
+.haqi-app :is(.close-button,.bag-preview-close),.haqi-app .modal.deck-editor-modal .modal-header .close-button { display:grid; place-items:center; width:48px; height:48px; min-width:48px; min-height:48px; padding:0; font-size:32px; line-height:1; flex-shrink:0; }
+.storybook-ui .close-button .icon { width:40px; height:40px; }
+.storybook-ui .dialogue-box>.close-button { right:8px; top:8px; z-index:1; }
+.haqi-app .bag-preview-close { position:static; align-self:flex-end; }
+.haqi-app .bag-detail:not([data-preview-mode="hover"]) { max-height:calc(100dvh - 16px); overflow-y:auto; }
+.storybook-ui .modal-header { gap:10px; }
+.storybook-ui :is(.hero-status,.utility-nav)::before {
+ content:""; border:1px solid #b69048; border-image:none; border-radius:9px;
+ background:#f7e8bb var(--ui-parchment) center / cover;
+ box-shadow:inset 0 0 0 2px #fff0bd99,inset 0 0 12px #c3984c25,0 3px 8px #261b1140; filter:none;
+}
+.storybook-ui .hero-text strong { color:#51391f; text-shadow:none; }
+.storybook-ui .hero-text>span { color:#80613c; text-shadow:none; }
+.storybook-ui .hero-membership { color:#745629; }
+.storybook-ui .utility-button,.storybook-ui .checkin-button.reward-ready { color:#604323; text-shadow:none; }
+.storybook-ui .utility-button small,.storybook-ui .checkin-button.reward-ready small { color:#82602c; }
+.storybook-ui .utility-button:hover:not(:disabled) { color:#3d5e39; }
+.storybook-ui .quest-track-title { display:flex; align-items:center; gap:6px; width:100%; min-height:36px; padding:0; text-align:left; color:#674723; background:none; font:inherit; }
+.storybook-ui .quest-track-title:hover .quest-title { color:#345a35; text-decoration:underline; text-underline-offset:3px; }
+.storybook-ui .quest-state { flex:none; display:grid; place-items:center; width:23px; height:27px; color:#b88019; font:bold 25px Georgia,serif; text-shadow:0 1px #fff9d4; }
+.storybook-ui .quest-state.active { color:#877b54; }
+.storybook-ui .quest-state.ready { color:#407746; }
+.storybook-ui .quest-tracker h3 { margin-bottom:0; }
+.storybook-ui .quest-tracker>p,.storybook-ui .tracker-goal { margin-right:64px; }
+.storybook-ui .quest-tracker { min-height:94px; }
+.storybook-ui .track-button { right:7px; bottom:6px; justify-content:center; min-width:58px; min-height:36px; padding:5px 10px; color:#fff2cf; background:linear-gradient(#557a48,#31553b); border:1px solid #a77f3c; border-radius:18px; box-shadow:inset 0 0 0 1px #ead19a88; white-space:nowrap; }
+.storybook-ui .dialogue-box { width:min(740px,100%); }
+.storybook-ui .dialogue-content { grid-template-columns:minmax(0,1fr) 168px; column-gap:14px; padding-right:44px; }
+.storybook-ui .dialogue-sequence { height:164px; min-height:164px; }
+.storybook-ui .dialogue-sequence .dialogue-content { height:100%; min-height:0; align-content:center; padding-bottom:72px; }
+.storybook-ui .dialogue-sequence .dialogue-text { grid-column:1 / -1; max-height:70px; overflow-y:auto; overscroll-behavior:contain; }
+.storybook-ui .dialogue-sequence .dialogue-bottom { position:absolute; right:22px; bottom:14px; width:min(var(--dialogue-action-width,150px),calc(100% - 44px)); margin:0; gap:4px; }
+.storybook-ui .dialogue-sequence .dialogue-bottom .primary { width:100%; height:auto; min-height:46px; max-height:none; overflow:visible; white-space:normal; padding:6px 12px; line-height:16px; transform:none; }
+@media(max-width:650px) {
+ .storybook-ui .dialogue-box { width:100%; }
+ .storybook-ui .dialogue-content { grid-template-columns:79px minmax(0,1fr); column-gap:8px; }
+ .storybook-ui .quest-track-title { min-height:40px; gap:4px; }
+ .storybook-ui .quest-state { width:19px; font-size:23px; }
+ .storybook-ui .dialogue-box>.close-button { right:6px; top:6px; }
+ .storybook-ui .dialogue-content h2 { max-width:calc(100% - 153px); min-width:0; }
+ .storybook-ui .dialogue-sequence { height:190px; min-height:190px; }
+ .storybook-ui .dialogue-sequence .dialogue-content { align-content:start; padding-bottom:65px; }
+ .storybook-ui .dialogue-sequence .dialogue-text { grid-column:2; max-height:93px; }
+ .storybook-ui .dialogue-sequence .dialogue-bottom { left:auto; right:12px; bottom:10px; width:min(var(--dialogue-action-width,150px),calc(100% - 24px)); }
+ .storybook-ui .dialogue-sequence .dialogue-bottom .primary { width:100%; min-width:0; }
+}
+@media(max-height:540px) and (min-width:651px) {
+ .storybook-ui .dialogue-sequence { height:145px; min-height:145px; }
+ .storybook-ui .dialogue-sequence .dialogue-text { max-height:96px; }
+ .storybook-ui .dialogue-sequence .dialogue-bottom { right:20px; bottom:10px; }
+}

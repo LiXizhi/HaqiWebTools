@@ -39,7 +39,7 @@ export function defaultParams(version = 'teen') {
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
         adventure: {
             levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [8,12,16,20],
-            petCopies: 3, regenPerMinute: .05, hungerPerMinute: 1, feedThreshold: 30,
+            petCopies: 3, heroRegenPerSecond: .02, regenPerMinute: .05, hungerPerMinute: 1, feedThreshold: 30,
             foodRestore: 40, defeatHp: .1, captureBase: .2, captureWounded: .65,
             foodPrice: 10, capturePrice: 25, petPriceBase: 100, petPriceLevel: 40,
             gearPriceBase: 30, gearPriceLevel: 15, duplicateXp: 50,

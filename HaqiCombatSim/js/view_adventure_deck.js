@@ -73,7 +73,7 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
         const rect=anchor?.getBoundingClientRect?.();
         if(rect&&typeof window!=='undefined'){
             const x=rect.right+190<window.innerWidth?rect.right+8:Math.max(8,rect.left-190);
-            detail.style.left=`${x}px`;detail.style.top=`${Math.max(8,Math.min(rect.top,window.innerHeight-350))}px`;
+            detail.style.left=`${x}px`;detail.style.top=`${Math.max(8,Math.min(rect.top,window.innerHeight-detail.offsetHeight-8))}px`;
         }
     }
     function previewEvents(node,key,removable=false){

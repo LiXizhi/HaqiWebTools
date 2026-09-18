@@ -1,3 +1,4 @@
+import { castBlockedMessage } from './adventure_cast_feedback_core.js';
 import { tickCheckin } from './adventure_checkin_core.js';
 import { prepareDebugEdit } from './adventure_debug_core.js';
 import { hasDebugBackup, storeDebugEdit, restoreDebugBackup } from './adventure_debug.js';
@@ -10,7 +11,9 @@ import {presentedEnvironment} from './spell_environment_core.js';
 import * as A from './adventure_core.js';
 import * as W from './adventure_world_core.js';
 import * as P from './combat_pve_core.js';
-import { cardsInHand, canCast, isAlive } from './combat_unit_core.js';
+import { cardsInHand } from './combat_unit_core.js';
+import { validTargets } from './combat_arena_core.js';
+import { resolveHandSwipe } from './adventure_hand_core.js';
 import * as V from './view_adventure.js';
 import { bindTouchMovement } from './view_adventure_movement.js';
 import { loadResources,saveLocal,readLocal,localUpdatedAt,replaceLocalWithBackup,readBackup } from './adventure_assets.js';
@@ -47,7 +50,7 @@ touchIndicator.hidden=true;touchIndicator.setAttribute('aria-hidden','true');nod
 const touchMovement=bindTouchMovement(nodes.world,touchIndicator,{enabled:()=>stage==='world'&&!panel&&!dialog,steer:(x,y)=>{joystick={x,y};path=[];destination=null;heldPointer=null;},zoom:factor=>renderer?.zoomBy(factor)});
 const shopView={category:'pet',query:'',school:'',slot:'',ownership:'',page:0},petView={selected:null};
 const equipmentView={tab:'gear',slot:0,item:null,query:''};
-const model=()=>({assets,save,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,animating:!!animation,equipmentView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
+const model=()=>({assets,save,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
 function toast(message) {nodes.toast.textContent=message;nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);}
 function safely(fn) {try{return fn();}catch(e){toast(e.message);return false;}}
 function persist() {
@@ -56,7 +59,7 @@ function persist() {
     const indicator=document.querySelector('.save-indicator');if(indicator){indicator.textContent=storageWarning?'存档未保存':'';indicator.hidden=!storageWarning;}
     lastSave=performance.now();
 }
-function close() {panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
+function close() {nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>toast('会员升级暂未开放。'),cloud:openCloud,track,interact:interactNearest});}
 function paintPanel() {
     if(panel==='cloud'){paintCloud();return;}
@@ -114,17 +117,17 @@ function enterWorld(newSave,restoredBattle=null) {
     save=newSave;if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content);stage='world';path=[];destination=null;animation=null;close();
     if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};
     nodes.entry.replaceChildren();nodes.entry.className='';nodes.entry.hidden=true;nodes.hud.hidden=false;
-    nodes.battle.replaceChildren();nodes.battle.className='battle-layer';battle=null;paintHud();
+    nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';battle=null;paintHud();
     if(save.pendingEncounter){battle=restoredBattle||P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';nodes.hud.hidden=true;paintBattle();}
     persist();updateMusic();
 }
 function showTitle(manage=false) {
     spellSound.stop();
     persist();if(storageWarning&&stage!=='title'){toast('当前进度尚未保存，请勿关闭页面。请检查浏览器存储或重试。');return;}close();stage='title';keys.clear();path=[];destination=null;animation=null;battle=null;
-    music?.pause();nodes.hud.hidden=true;nodes.battle.replaceChildren();nodes.battle.className='battle-layer';nodes.entry.hidden=false;
+    music?.pause();nodes.hud.hidden=true;nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';nodes.entry.hidden=false;
     save=roleStore.catalog.roles.find(row=>row.id===roleStore.catalog.activeId)?.save||A.createAdventure(assets.content);
     world=W.createWorld(save.zone,assets.content);
-    if(manage!==true&&roleStore.catalog.roles.length===1&&!roles.busy){
+    if(manage!==true&&roleStore.catalog.roles.length===1&&!roles.busy&&!roles.conflict){
         try{activateRole(roleStore.catalog.roles[0].id);return;}catch(error){roles.error=error.message;}
     }
     titleView=roleStore.catalog.roles.length?'roles':'create';
@@ -306,12 +309,24 @@ function track() {
 }
 function paintBattle(){
     const hero=battle.sides.near[0],hand=cardsInHand(hero);
-    if(!animation&&!battle.finished&&(!selected||!hand.some(h=>h.seq===selected.seq))) {
-        selected=hand.find(h=>!discarded.includes(h.seq)&&isAlive(hero)&&canCast(hero,battle.resolved.cards[h.key],battle.resolved))||hand.find(h=>!discarded.includes(h.seq))||hand[0]||null;
-    }
-    V.renderBattle(nodes.battle,model(),{sound:toggleSound,cloud:openCloud,select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
+    if(selected&&!hand.some(h=>h.seq===selected.seq&&h.key===selected.key))selected=null;
+    V.renderBattle(nodes.battle,model(),{sound:toggleSound,cloud:openCloud,swipePlay:h=>{
+        if(animation)return;
+        const intent=resolveHandSwipe(battle,h,discarded);
+        if(!intent)return;
+        selected=h;
+        if(intent.decision)playRound(intent.decision);
+        else {paintBattle();toast(intent.message);}
+    },reselect:()=>{if(animation||battle.finished)return;selected=null;paintBattle();},select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
     if(animation||battle.finished)return;discarded=discarded.includes(seq)?discarded.filter(x=>x!==seq):[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
-},target:id=>{if(!selected||animation||battle.finished||discarded.includes(selected.seq)||!canCast(battle.sides.near[0],battle.resolved.cards[selected.key],battle.resolved))return;playRound({...selected,targetId:id,discardSeqs:discarded});},capture:id=>playRound({capture:true,targetId:id}),pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
+},target:id=>{
+    if(!selected||animation||battle.finished)return;
+    const card=battle.resolved.cards[selected.key];
+    const message=discarded.includes(selected.seq)?'请先撤销弃牌':castBlockedMessage(hero,card,battle.resolved);
+    if(message){toast(message);return;}
+    if(!validTargets(battle,hero,card).some(t=>t.id===id)){toast('请选择这张卡牌可施放的目标。');return;}
+    playRound({...selected,targetId:id,discardSeqs:discarded});
+},capture:id=>playRound({capture:true,targetId:id}),pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
     if(assets.content.pets)A.settleParty(save,assets.content,battle,{retreat:true});
     A.applyAction(save,assets.content,{type:'retreat'});save.careAt=Date.now();enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
 },finish:()=>safely(()=>{A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save);})});}
@@ -319,12 +334,11 @@ function playRound(decision) {
     if(animation||battle.finished)return;
     safely(()=>{
         const start=battle.events.length,hp=Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,u.hp])),aura=battle.aura?{...battle.aura}:null;
-        const hand=cardsInHand(battle.sides.near[0]),played=!decision.pass&&!decision.capture?V.capturePlayedCard(nodes.battle,decision.seq):null;
+        const hand=cardsInHand(battle.sides.near[0]);
         P.playPveRound(battle,decision);A.recordDecision(save,decision);persist();selected=null;discarded=[];
         const events=battle.events.slice(start).filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','pass','capture','aura'].includes(e.type));
-        const delay=played&&!matchMedia('(prefers-reduced-motion: reduce)').matches?420:0;
-        animation={events:events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),index:0,start:performance.now()+delay,hp,aura,entered:-1,hand:hand.filter(h=>h.seq!==played?.seq&&!decision.discardSeqs?.includes(h.seq))};paintBattle();
-        if(played)V.animatePlayedCard(nodes.battle,played,delay);
+        // Preserve surviving hand IDs while hidden, so only new cards deal in after ALL events.
+        animation={events:events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),index:0,start:performance.now(),hp,aura,entered:-1,hand:hand.filter(h=>(decision.pass||decision.capture||h.seq!==decision.seq)&&!decision.discardSeqs?.includes(h.seq))};paintBattle();
     });
 }
 function tickAnimation(now) {
@@ -407,7 +421,7 @@ function frame(now) {
         if((wasMoving&&!moving)||(moving&&now-lastSave>3000))persist();
     }
     renderer.render(world,save,now,{moving,path,title:stage==='title'});
-    if(stage==='battle'){const presentation=tickAnimation(now),canvas=$('battle-canvas');if(canvas)canvas.battlePositions=renderer.renderBattle(canvas,battle,save,now,presentation);}
+    if(stage==='battle'){const presentation=tickAnimation(now),canvas=$('battle-canvas');V.updateBattleRoster(nodes.battle.battleStatusEntries,presentation);if(canvas)canvas.battlePositions=renderer.renderBattle(canvas,battle,save,now,presentation);}
 }
 async function boot(){
     try {
@@ -417,8 +431,14 @@ async function boot(){
         roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
         cloudClient=createCloudClient({content:assets.content,dataset:assets.dataset,onAccountChange:()=>{resetRoleAccount();cloud.message='登录状态已变化，请重新连接。';}});
         creationPreview=createCreationPreview(assets);
-        renderer=createRenderer(nodes.world,assets);showTitle();requestAnimationFrame(frame);
-        if(localStorage.getItem(LAST_ACCOUNT_KEY))connectRoles(false);
+        renderer=createRenderer(nodes.world,assets);requestAnimationFrame(frame);
+        // Keep the loading screen until session restoration chooses the final screen.
+        // Rendering the guest title first briefly exposes creation/role selection.
+        if(localStorage.getItem(LAST_ACCOUNT_KEY)){
+            nodes.entry.querySelector('p').textContent='正在恢复账号与角色…';
+            await connectRoles(false);
+        }
+        if(stage==='loading')showTitle(!!roles.conflict||!!(roleStore.owner&&roles.error));
     }catch(e){stage='error';nodes.entry.replaceChildren(V.el('section','loading-card',V.el('h1','','冒险暂时无法开始'),V.el('p','',e.message),V.el('p','muted','请通过 HTTP 静态服务器打开游戏；恢复 data/adventure 中的章节文件，并运行 npm run assets:adventure 检查美术资源。'),V.button('重新尝试',()=>location.reload(),'primary')));}
 }
 boot();

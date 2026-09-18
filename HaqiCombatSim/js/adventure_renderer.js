@@ -134,7 +134,7 @@ export function createRenderer(canvas,assets) {
         const scale=Math.min(1,pixelHeight/270),w=pixelWidth/scale,h=pixelHeight/scale;
         if(target.width!==Math.round(pixelWidth*dpr)||target.height!==Math.round(pixelHeight*dpr)){target.width=Math.round(pixelWidth*dpr);target.height=Math.round(pixelHeight*dpr);}
         c.setTransform(dpr*scale,0,0,dpr*scale,0,0);c.clearRect(0,0,w,h);
-        const t=time/1000,cx=w/2,cy=h*.53,r=Math.min(w*.40,h*.62);
+        const t=time/1000,cx=w/2,cy=h*.52,r=Math.min(w*.46,h*.76);
         const haze=c.createRadialGradient(cx,cy,20,cx,cy,r*1.5);haze.addColorStop(0,'#527e7166');haze.addColorStop(1,'transparent');c.fillStyle=haze;c.fillRect(0,0,w,h);
         ellipse(c,cx,cy+18,r+24,r*.56+10,'#112f3c99');ellipse(c,cx,cy,r,r*.54,'#809580');ellipse(c,cx,cy-4,r-9,r*.51,'#c5c4a4');
         circleRune(c,cx,cy-2,r-18,t,'#ebdfaf');circleRune(c,cx,cy-2,r*.62,-t,'#7e9a90');
@@ -157,10 +157,7 @@ export function createRenderer(canvas,assets) {
         for(const u of [...battle.sides.near,...battle.sides.far]) {
             const at=positions[u.id],hp=presentation?.hp?.[u.id]??u.hp,bw=Math.min(115,w*.20);
             plate(c,w<650?u.name.slice(0,6):u.name,at.x,at.y+25);c.fillStyle='#173843';c.beginPath();c.roundRect(at.x-bw/2,at.y+38,bw,10,5);c.fill();
-            c.fillStyle=u.isMob?'#d39a7a':'#8ccc8a';c.beginPath();c.roundRect(at.x-bw/2+2,at.y+40,Math.max(0,(bw-4)*hp/u.maxHp),6,3);c.fill();text(c,`${Math.floor(hp)} / ${u.maxHp}`,at.x,at.y+65,11,'#f8f5d9');
-            const total=u.pips.normal+u.pips.power;for(let i=0;i<total;i++)ellipse(c,at.x-(total-1)*7+i*14,at.y+82,4,4,i<u.pips.normal?'#78d6e8':'#f5d26d');
-            const labels=[...u.standingWards.filter(x=>x.rounds>0).map(w=>`狂风印记 ${battle.resolved.global.stormChargingWardIds.indexOf(w.id)+1}阶 · ${w.rounds}回合`),...u.charms.filter(x=>x>0).map(id=>battle.resolved.charms[id]?.desc),...u.wards.filter(x=>x.id>0).map(w=>battle.resolved.wards[w.id]?.desc),u.dots.length?'持续伤害':'',u.hots.length?'持续治疗':''].filter(Boolean);
-            for(let i=0;i<Math.min(2,labels.length);i++)text(c,labels[i]+(i===1&&labels.length>2?` 等${labels.length}项`:''),at.x,at.y+101+i*14,w<650?9:11,'#eedba2');
+            c.fillStyle=u.isMob?'#d39a7a':'#8ccc8a';c.beginPath();c.roundRect(at.x-bw/2+2,at.y+40,Math.max(0,(bw-4)*hp/u.maxHp),6,3);c.fill();
         }
         if(ev?.type==='cast'||ev?.type==='fizzle') {
             effects.draw(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],center:{x:cx,y:cy-2},width:w,height:h,seed:`${ev.round}:${ev.caster}:${ev.card}`,reducedMotion:reducedMotion.matches,failed:ev.type==='fizzle',environmentManaged:true});

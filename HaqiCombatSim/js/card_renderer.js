@@ -36,7 +36,12 @@ export class CardRenderer {
             c.textAlign='left';c.textBaseline='top';lines.slice(0,5).forEach((value,i)=>c.fillText(value,41,307+i*23));
         }
         const aura=effects.variantAuras[reference.variant.rank];
-        if(golden||aura?.color){c.strokeStyle=golden?'#ffe69a':aura.color;c.lineWidth=3;c.shadowColor=golden?'#ffd65b':aura.color;c.shadowBlur=8;c.strokeRect(5,5,292,450);}
+        if(golden||aura?.color){
+            // Broad quality strip at the foot of the card, independent of selection chrome.
+            c.fillStyle='#19303d';c.fillRect(5,439,292,19);
+            c.fillStyle=golden?'#ffe69a':aura.color;c.fillRect(7,441,288,15);
+            c.fillStyle='#ffffff66';c.fillRect(7,441,288,3);
+        }
         c.restore();return true;
     }
     drawTypeIcon(c,card,x,y){

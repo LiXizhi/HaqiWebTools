@@ -28,12 +28,23 @@ export async function loadUiArt(mode) {
             canvas.height = height;
             canvas.getContext('2d').drawImage(image, x, y, width, height, 0, 0, width, height);
             rules.push(`--ui-${name}:url("${canvas.toDataURL()}");--ui-${name}-slice:${frame.slice.join(' ')};`);
+            if (name === 'paper') {
+                // Use only the quiet parchment center for content surfaces;
+                // the generated oversized corner scrolls do not belong on HUDs.
+                const [top, right, bottom, left] = frame.slice;
+                const center = document.createElement('canvas');
+                center.width = width - left - right;
+                center.height = height - top - bottom;
+                center.getContext('2d').drawImage(canvas, left, top, center.width, center.height, 0, 0, center.width, center.height);
+                rules.push(`--ui-parchment:url("${center.toDataURL()}");`);
+            }
         }
     }
     const style = document.createElement('style');
     style.id = 'storybook-atlas';
     // The atlas URI is manifest data, never user-authored markup.
-    style.textContent = `.storybook-ui{--ui-atlas:url(${JSON.stringify(url)});${rules.join('')}}`;
+    const absoluteUrl = new URL(url, document.baseURI).href;
+    style.textContent = `.storybook-ui{--ui-atlas:url(${JSON.stringify(absoluteUrl)});${rules.join('')}}`;
     for (const [name, frame] of Object.entries(manifest.frames)) {
         if (frame.slice) continue;
         const [column, row] = frame.cell;

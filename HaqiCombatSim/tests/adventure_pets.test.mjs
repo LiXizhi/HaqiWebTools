@@ -45,6 +45,17 @@ test('online auto-feed, offline regeneration, hunger zero and clock rollback',()
  const hunger=pet.hunger;P.tickCare(s,c,hero,121000,false);assert.equal(pet.hunger,hunger);assert.equal(s.inventory[P.FOOD_ID],1);
  pet.hunger=0;const hp=pet.hp;P.tickCare(s,c,hero,181000,false);assert.equal(pet.hp,hp);P.tickCare(s,c,hero,1000,true);assert.equal(s.careAt,181000);
 });
+test('hero regenerates 2% maximum HP per second and fills within 50 seconds outside combat',()=>{
+ for(const online of [false,true]){
+  const s=fresh(),hero=A.playerSpec(s,c),maxHp=P.specMaxHp(hero);s.heroHp=0;
+  P.tickCare(s,c,hero,1000,online);
+  P.tickCare(s,c,hero,2000,online);assert.ok(Math.abs(s.heroHp-maxHp*.02)<1e-9);
+  P.tickCare(s,c,hero,50000,online);assert.ok(Math.abs(s.heroHp-maxHp*.98)<1e-9);
+  P.tickCare(s,c,hero,51000,online);assert.equal(s.heroHp,maxHp);
+  P.tickCare(s,c,hero,61000,online);assert.equal(s.heroHp,maxHp);
+  s.heroHp=0;s.pendingEncounter={};P.tickCare(s,c,hero,71000,online);assert.equal(s.heroHp,0);
+ }
+});
 test('four hero slots, independent pet decks, replay and settlement',()=>{
  for(let slot=0;slot<4;slot++){
   const s=fresh();for(const id of P.STARTERS)if(!s.pets[id])P.addPet(s,c,id);const fourth=Object.keys(catalog.pets).find(id=>!s.pets[id]);P.addPet(s,c,fourth);

@@ -1,0 +1,53 @@
+/* NPC conversation: a quiet reading area and a separate response rail. */
+.storybook-ui .rpg-dialogue-layer { padding:40px 24px max(88px,calc(env(safe-area-inset-bottom) + 76px)); background:linear-gradient(180deg,#10292510 15%,#10251f66 75%,#091c20b3); }
+.storybook-ui .rpg-dialogue {
+ width:min(960px,100%); height:auto; min-height:260px; max-height:calc(100dvh - 140px);
+ padding:0 30px 0 208px; border-radius:9px 25px 9px 25px;
+ box-shadow:0 22px 65px #071b2366; animation:dialogue-arrive .28s ease-out; outline:none;
+}
+.storybook-ui .rpg-dialogue::before { inset:0; border:1px solid #c99c51; border-image:none; border-radius:inherit; background:radial-gradient(ellipse at 12% 65%,#dfc38266,transparent 40%),linear-gradient(115deg,#f1dfb5,#fff4d9 50%,#f0ddb0); box-shadow:inset 0 0 0 3px #fff4d09c,inset 0 0 0 5px #be965833; filter:none; }
+.storybook-ui .rpg-dialogue::after { content:""; position:absolute; left:193px; top:34px; bottom:30px; width:1px; background:linear-gradient(transparent,#b48b4766,transparent); pointer-events:none; }
+.storybook-ui .rpg-dialogue .dialogue-portrait { left:12px; bottom:26px; top:auto; width:184px!important; height:240px!important; filter:drop-shadow(0 10px 7px #664b3340); }
+.storybook-ui .rpg-dialogue .dialogue-content { display:flex; flex-direction:column; align-items:stretch; gap:0; height:auto; min-height:260px; max-height:calc(100dvh - 145px); padding:25px 4px 16px 12px; overflow:auto; }
+.storybook-ui .rpg-dialogue .dialogue-content>.eyebrow { display:block; order:0; margin:0 52px 4px 0; padding:0; font-size:10px; letter-spacing:3px; color:#88734f; }
+.storybook-ui .rpg-dialogue .dialogue-content h2 { position:static; order:1; align-self:flex-start; min-width:0; max-width:calc(100% - 52px); margin:0 0 14px; padding:0; font-family:"STKaiti","KaiTi",serif; font-size:27px; line-height:1.3; letter-spacing:3px; color:#275e4d; }
+.storybook-ui .rpg-dialogue .dialogue-content h2::before { display:none; }
+.storybook-ui .rpg-dialogue .dialogue-text { order:2; flex:1 0 auto; margin:0; min-height:64px; max-height:none; overflow:visible; font-size:16px; line-height:1.95; letter-spacing:.5px; color:#503d29; }
+.rpg-dialogue.is-speaking .dialogue-text>span:first-child::after { content:""; display:inline-block; width:5px; height:14px; margin-left:5px; background:#ad894d; vertical-align:-1px; animation:dialogue-caret .8s steps(2,end) infinite; }
+.dialogue-sr { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+.dialogue-rewards { order:3; display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:12px 0 4px; font-size:11px; line-height:1.7; }
+.dialogue-reward-label { color:#89724d; margin-right:3px; }
+.dialogue-reward { padding:3px 8px; border:1px solid #ba95483b; border-radius:4px; background:#fff8e16b; color:#71572e; }
+.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) { position:static; order:4; display:flex; flex-direction:row; flex-wrap:wrap; align-items:center; justify-content:flex-end; gap:8px; width:100%; margin:16px 0 0; padding:12px 0 0; border-top:1px solid #b99a5550; }
+.storybook-ui .rpg-dialogue .dialogue-bottom>.muted { margin-right:auto; font-size:11px; letter-spacing:2px; }
+.storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) button { width:auto; max-width:100%; height:auto; min-height:42px; padding:10px 20px; font-size:13px; line-height:1.5; white-space:normal; }
+.storybook-ui .rpg-dialogue .dialogue-choices .text-button { order:-1; margin-right:auto; padding:8px 2px; color:#8b7755; }
+.storybook-ui .rpg-dialogue .dialogue-default { box-shadow:0 3px 8px #285b3826; }
+.storybook-ui .rpg-dialogue .dialogue-default:focus-visible { outline:2px solid #936f31; outline-offset:4px; }
+.dialogue-hint { order:5; margin:10px 0 0; text-align:right; font-size:10px; line-height:1.5; color:#937d55; }
+.storybook-ui .rpg-dialogue>.close-button { right:13px; top:13px; }
+@keyframes dialogue-arrive { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+@keyframes dialogue-caret { 50% { opacity:0; } }
+@media(max-width:650px) {
+ .storybook-ui .rpg-dialogue-layer { padding:22px 10px max(78px,calc(env(safe-area-inset-bottom) + 68px)); }
+ .storybook-ui .rpg-dialogue { padding:0 18px; min-height:260px; max-height:calc(100dvh - 110px); }
+ .storybook-ui .rpg-dialogue::after { display:none; }
+ .storybook-ui .rpg-dialogue .dialogue-portrait { left:9px; top:-16px; bottom:auto; width:90px!important; height:118px!important; }
+ .storybook-ui .rpg-dialogue .dialogue-content { min-height:260px; max-height:calc(100dvh - 116px); padding:20px 0 13px; }
+ .storybook-ui .rpg-dialogue .dialogue-content>.eyebrow { margin-left:88px; font-size:9px; letter-spacing:2px; }
+ .storybook-ui .rpg-dialogue .dialogue-content h2 { margin:2px 42px 30px 88px; font-size:23px; max-width:calc(100% - 130px); }
+ .storybook-ui .rpg-dialogue .dialogue-text { font-size:14px; min-height:76px; }
+ .storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) button { flex:0 1 auto; min-height:44px; padding:9px 12px; font-size:12px; }
+ .dialogue-hint { font-size:9px; }
+}
+@media(max-height:540px) and (min-width:651px) {
+ .storybook-ui .rpg-dialogue-layer { padding:12px 20px 65px; }
+ .storybook-ui .rpg-dialogue { min-height:0; padding-left:146px; max-height:calc(100dvh - 85px); }
+ .storybook-ui .rpg-dialogue::after { left:140px; }
+ .storybook-ui .rpg-dialogue .dialogue-portrait { width:126px!important; height:169px!important; bottom:16px; }
+ .storybook-ui .rpg-dialogue .dialogue-content { min-height:0; max-height:calc(100dvh - 90px); padding-top:15px; }
+ .storybook-ui .rpg-dialogue .dialogue-content h2 { font-size:22px; margin-bottom:8px; }
+ .storybook-ui .rpg-dialogue .dialogue-text { min-height:40px; font-size:14px; }
+ .storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) { margin-top:9px; padding-top:8px; }
+}
+@media(prefers-reduced-motion:reduce) { .storybook-ui .rpg-dialogue,.rpg-dialogue.is-speaking .dialogue-text>span:first-child::after { animation:none; } }

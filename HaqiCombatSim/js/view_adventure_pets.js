@@ -13,7 +13,7 @@ export function starterPicker(assets,onSelect,{el,button}){
 }
 export function renderPetCollection(body,model,cb,{el,button}){
  const {save,assets}=model,c=assets.content,p=petParams(c);
- body.append(el('p','muted',`非战斗每分钟恢复 ${p.regenPerMinute*100}% 生命；携带宠物每分钟减少 ${p.hungerPerMinute} 饱食。低于 ${p.feedThreshold} 时自动进食，每份恢复 ${p.foodRestore}。离线只恢复生命。`));
+ body.append(el('p','muted',`非战斗时，角色每秒恢复最大生命的 ${p.heroRegenPerSecond*100}%，宠物每分钟恢复最大生命的 ${p.regenPerMinute*100}%；携带宠物每分钟减少 ${p.hungerPerMinute} 饱食。低于 ${p.feedThreshold} 时自动进食，每份恢复 ${p.foodRestore}。离线只恢复生命。`));
  if(Object.values(save.pets).some(pet=>pet.hunger===0))body.append(el('p','pet-supply-notice','有伙伴饱食为 0，已暂停自然回血。请到商店购买营养餐并喂食。'));
  if(!save.starterChosen)body.append(el('h3','','领取初始抱抱龙（选择后立即领取）'),starterPicker(assets,id=>cb.action({type:'starter',petId:id}),{el,button}));
  const formation=el('div','pet-formation'),slots=[...save.formation];let heroSlot=save.heroSlot;

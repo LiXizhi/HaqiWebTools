@@ -70,7 +70,8 @@ export function tickCare(save,content,hero,now,online=false){
  if(!save.careAt){save.careAt=now;return;}
  const elapsed=Math.max(0,now-save.careAt);save.careAt=Math.max(now,save.careAt);if(save.pendingEncounter)return;
  const minutes=Math.min(1440,elapsed/60000),p=petParams(content),maxHp=specMaxHp(hero);
- save.heroHp=Math.min(maxHp,(save.heroHp??maxHp)+maxHp*p.regenPerMinute*minutes);
+ // Adventure adaptation (2026-09-19): hero recovers 2% of maximum HP per second outside combat.
+ save.heroHp=Math.min(maxHp,(save.heroHp??maxHp)+maxHp*p.heroRegenPerSecond*minutes*60);
  for(const id of save.formation.filter(Boolean)){
   const pet=save.pets[id];if(online){pet.hunger=Math.max(0,pet.hunger-minutes*p.hungerPerMinute);
    while(pet.hunger<p.feedThreshold&&(save.inventory[FOOD_ID]||0)>0){save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+p.foodRestore);save.careLog.push(`${content.pets[id].name}自动进食，饱食 +${p.foodRestore}`);}

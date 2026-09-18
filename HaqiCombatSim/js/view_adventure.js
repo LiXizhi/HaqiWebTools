@@ -1,4 +1,10 @@
+import { castBlockedMessage } from './adventure_cast_feedback_core.js';
 import { renderDeckEditor } from './view_adventure_deck.js';
+import { bindDialogue } from './view_adventure_dialogue.js';
+import { bindHandGesture } from './view_adventure_hand.js';
+import { validTargets } from './combat_arena_core.js';
+import { createBattleRoster,updateBattleRoster } from './view_adventure_battle_status.js';
+export { updateBattleRoster } from './view_adventure_battle_status.js';
 import { specMaxHp } from './adventure_pets_core.js';
 import { checkinStatus } from './adventure_checkin_core.js';
 import { playerSpec } from './adventure_core.js';
@@ -159,11 +165,14 @@ export function renderHud(root,model,cb) {
     const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),el('span','chapter-count',`${Object.values(save.quests).filter(x=>x.claimed).length} / 14`)));
     if(q){
         const state=questState(save,q.id),ready=questReady(save,q);
-        tracker.append(el('h3','',q.title));
+        const statusLabel=ready?'可以交付':state.accepted?'进行中':'可接取';
+        const marker=el('span',`quest-state ${ready?'ready':state.accepted?'active':'available'}`,ready?'?':'!');marker.setAttribute('aria-hidden','true');
+        const questLink=button([marker,el('span','quest-title',q.title)],cb.track,'quest-track-title');questLink.title=`${statusLabel}，点击自动追踪`;questLink.setAttribute('aria-label',`${q.title}，${statusLabel}，自动追踪`);
+        tracker.append(el('h3','',questLink));
         if(!state.accepted)tracker.append(el('p','',`去找${c.npcs[q.startNpc].name}，接取新的任务。`));
         else if(ready)tracker.append(el('p','',`任务已完成，向${c.npcs[q.endNpc].name}回报。`));
         else for(const g of questProgress(save,q))tracker.append(el('div',`tracker-goal ${g.value>=g.count?'complete':''}`,el('span','',g.value>=g.count?'✓':'◇'),el('span','',objectiveLabel(g,c))));
-        tracker.append(button([ready?'回报任务':'追踪目标',icon('arrow')],cb.track,'track-button'));
+        tracker.append(button('追踪',cb.track,'track-button'));
     }else tracker.append(el('h3','','新的魔法旅程'),el('p','',save.visitedTown?'你已完成第一章。和镇上的居民聊聊，或到郊外练习魔法吧。':'你通过了毕业考核！前往营地南边的传送阵，探索哈奇小镇。'),button('前往传送阵',cb.track,'track-button'));
     root.append(tracker);
     const nav=el('nav','game-nav');nav.setAttribute('aria-label','游戏菜单');
@@ -254,17 +263,27 @@ export function renderPanel(root,kind,model,cb) {
 }
 function ownsEgg(save){return (save.inventory[17307]||0)>0;}
 export function renderDialogue(root,model,dialog,cb) {
-    const {assets,save}=model,c=assets.content,npc=c.npcs[dialog.npcId];root.replaceChildren();root.className='overlay dialogue-layer visible';
-    const box=el('section','dialogue-box');box.setAttribute('role','dialog');box.setAttribute('aria-label',`与${npc.name}交谈`);
+    root.disposeDialogue?.();
+    const {assets,save}=model,c=assets.content,npc=c.npcs[dialog.lines?.[dialog.index]?.npcId]||c.npcs[dialog.npcId];root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
+    const box=el('section','dialogue-box rpg-dialogue');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',`与${npc.name}交谈`);
+    box.classList.toggle('dialogue-sequence',!!dialog.lines);
     const portrait=art(assets,npc.portrait,150,190,'dialogue-portrait');
     const content=el('div','dialogue-content',el('p','eyebrow',npc.zone==='camp'?'魔法营地':'哈奇小镇'),el('h2','',npc.name));
     const close=button(icon('close'),cb.close,'close-button');close.setAttribute('aria-label','关闭');
-    if(dialog.lines){const line=dialog.lines[dialog.index];content.append(el('p','dialogue-text',line.text),el('div','dialogue-bottom',el('span','muted',`${dialog.index+1} / ${dialog.lines.length}`),button(dialog.index===dialog.lines.length-1?dialog.finishLabel:(line.buttons?.[0]?.label?.includes('NEXT')?'继续':line.buttons?.[0]?.label||'继续'),cb.next,'primary')));}
+    if(dialog.lines){
+        const line=dialog.lines[dialog.index],last=dialog.index===dialog.lines.length-1;
+        const replyLabel=entry=>entry.buttons?.[0]?.label&&!entry.buttons[0].label.includes('NEXT')?entry.buttons[0].label:'继续';
+        const labels=dialog.lines.map((entry,index)=>index===dialog.lines.length-1?dialog.finishLabel:replyLabel(entry));
+        // Reserve the same width for every step, including the longest reply.
+        box.style.setProperty('--dialogue-action-width',`${Math.max(150,...labels.map(label=>Array.from(label||'继续').length*14+36))}px`);
+        const next=button(last?dialog.finishLabel:replyLabel(line),cb.next,'primary');
+        content.append(el('p','dialogue-text',line.text),el('div','dialogue-bottom',el('span','muted',`${dialog.index+1} / ${dialog.lines.length}`),next));
+    }
     else {
         const q=currentQuest(save,c),state=q&&questState(save,q.id),ready=q&&questReady(save,q);
         content.append(el('p','dialogue-text',npc.description||'欢迎来到这里，年轻的魔法师。愿你的旅程充满惊喜。'));
         const choices=el('div','dialogue-choices');
-        if(q&&(q.startNpc===npc.id||q.endNpc===npc.id))content.append(el('p','muted',`任务奖励：${rewardsFor(save,c,q).map(r=>rewardLabel(c,r)).join(' · ')}`));
+        if(q&&(q.startNpc===npc.id||q.endNpc===npc.id))content.append(el('div','dialogue-rewards',el('span','dialogue-reward-label','任务奖励'),...rewardsFor(save,c,q).map(r=>el('span','dialogue-reward',rewardLabel(c,r)))));
         if(q&&!state.accepted&&q.startNpc===npc.id)choices.append(button(`接取任务 · ${q.title}`,()=>cb.startQuest(q),'primary'));
         if(q&&ready&&q.endNpc===npc.id)choices.append(button(`完成任务 · ${q.title}`,()=>cb.finishQuest(q),'primary'));
         const talk=pendingQuestTalk(save,q,npc.id);
@@ -275,56 +294,90 @@ export function renderDialogue(root,model,dialog,cb) {
         if(npc.id===36205)choices.append(button('去哈奇小镇',()=>cb.travel('town'),'secondary'));
         choices.append(button('下次再聊',cb.close,'text-button'));content.append(choices);
     }
+    const hint=el('p','dialogue-hint');
+    content.append(hint);
     box.append(portrait,content,close);root.append(box);
+    bindDialogue(root,box,content.querySelector('.dialogue-text'),hint,content.querySelector('button.primary')||content.querySelector('button'));
 }
 export function renderBattle(root,model,cb) {
+    root.disposeHandGesture?.();
     root.battleLayoutObserver?.disconnect();
     const oldSelected=root.querySelector('.hand-card.selected')?.dataset.seq;
-    const switching=root.handBattle===model.battle&&!model.animating&&oldSelected!=null&&model.selected&&oldSelected!==String(model.selected.seq);
+    const switching=root.handBattle===model.battle&&!model.animating&&model.selected&&oldSelected!==String(model.selected.seq);
     // Capture the current visual positions, including any unfinished shuffle, before rebuilding.
     const oldHand=switching?new Map([...root.querySelectorAll('.hand-card')].map(node=>[node.dataset.seq,node.getBoundingClientRect()])):null;
     const previous=root.handBattle===model.battle?root.handSeqs||new Set():new Set();
-    const {assets,save,battle,selected,discarded=[],animating}=model,hero=battle.sides.near[0];root.replaceChildren();root.className='battle-layer visible';
-    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','',badge(`第 ${battle.turn} 回合`),button('云端存档',cb.cloud,'secondary small'),button('撤退',cb.retreat,'secondary small')));
-    top.lastChild.prepend(button(model.soundEnabled?'音效：开':'音效：关',cb.sound,'secondary small'));
+    const {assets,save,battle,selected,discarded=[],animating}=model,hero=battle.sides.near[0];root.replaceChildren();root.className=`battle-layer visible${animating?' battle-playing':''}`;
+    const soundIcon=icon('sound');
+    // The storybook atlas has no sound frame; keep the small speaker SVG.
+    delete soundIcon.dataset.uiIcon;
+    const sound=button(soundIcon,cb.sound,'battle-sound');
+    sound.title=model.soundEnabled?'关闭音效':'开启音效';
+    sound.setAttribute('aria-label',sound.title);
+    sound.setAttribute('aria-pressed',String(!!model.soundEnabled));
+    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,badge(`第 ${battle.turn} 回合`),button('撤退',cb.retreat,'secondary small')));
     const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');canvas.onclick=e=>{const point=Object.entries(canvas.battlePositions||{}).sort((a,b)=>Math.hypot(a[1].x-e.offsetX,a[1].y-e.offsetY)-Math.hypot(b[1].x-e.offsetX,b[1].y-e.offsetY))[0];if(point)cb.target(point[0]);};
-    const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');status.textContent=battle.finished?'对决结束':animating?'魔法正在生效…':selected?'点击法阵中的目标施法':'选择一张卡牌，再点击目标';
+    const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
+    const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');status.textContent=battle.finished?'对决结束':animating?'魔法正在生效…':selected?(blockedMessage||'点击法阵中的目标施法'):'选择一张卡牌，再点击目标';
+    status.classList.toggle('cast-blocked',!!blockedMessage&&!animating&&!battle.finished);
     const hand=el('div','battle-hand'),bottom=el('div','battle-controls');
+    hand.classList.toggle('hand-focused',!!selected);
+    hand.hidden=animating||battle.finished;
     const visibleHand=model.hand||U.cardsInHand(hero);
     root.handBattle=battle;root.handSeqs=new Set(visibleHand.map(h=>h.seq));
     hand.style.gridTemplateColumns=visibleHand.map((h,i)=>h.seq===selected?.seq||i===visibleHand.length-1?'var(--hand-width)':'minmax(0,1fr)').join(' ');
-    for(const h of visibleHand) {
+    for(const h of hand.hidden?[]:visibleHand) {
         const card=battle.resolved.cards[h.key],artCard=assets.dataset.cards[h.key],available=U.isAlive(hero)&&U.canCast(hero,card,battle.resolved),isSelected=selected?.seq===h.seq,isDiscard=discarded.includes(h.seq);
         const node=el('div',`hand-card ${isSelected?'selected':''} ${isDiscard?'discarded':''} ${available?'':'unavailable'}`);
         node.dataset.seq=h.seq;node.style.zIndex=isSelected?30:hand.children.length+1;
+        node.hidden=!!selected&&!isSelected;
         if(!animating&&!previous.has(h.seq)){node.classList.add('card-arriving');node.style.setProperty('--deal-delay',`${hand.children.length*65}ms`);}
         const select=button(spellFace(assets,card,artCard),()=>cb.select(h),'card-select');
         select.disabled=animating||battle.finished;select.setAttribute('aria-label',`选择${artCard.name}${available?'':'（魔力不足或冷却中）'}`);select.setAttribute('aria-pressed',String(isSelected));
         const drop=button(isDiscard?'撤销弃牌':'弃牌',()=>cb.discard(h.seq),'discard-button');drop.disabled=animating||battle.finished;
         node.title=`${artCard.name} · ${cardTargetKind(card)==='hostile'?'对敌人':'对友方'} · ${expectedBaseDamage(card)?'基础伤害 '+expectedBaseDamage(card):expectedBaseHeal(card)?'基础治疗 '+expectedBaseHeal(card):'增益 / 减益魔法'}`;
-        node.append(select,drop);hand.append(node);
+        node.title+=isDiscard?' · 右键撤销弃牌':' · 右键弃牌';
+        if(isSelected)node.append(select,el('div','hand-focus-actions',drop,button('重新选择',cb.reselect,'secondary small')));
+        else node.append(select,drop);
+        hand.append(node);
     }
     const pass=button('跳过本回合',cb.pass,'secondary');pass.disabled=animating||battle.finished;
-    const targetEnemy=button('对敌方施法',()=>cb.target('mob0'),'primary'),targetSelf=button('对自己施法',()=>cb.target('hero'),'primary');
-    const kind=selected&&cardTargetKind(battle.resolved.cards[selected.key]),canPlay=selected&&!discarded.includes(selected.seq)&&U.isAlive(hero)&&U.canCast(hero,battle.resolved.cards[selected.key],battle.resolved);targetEnemy.hidden=!selected||kind==='friendly'||kind==='self';targetSelf.hidden=!selected||kind==='hostile';targetEnemy.disabled=targetSelf.disabled=animating||!canPlay;
+    const legalTargets=selected?validTargets(battle,hero,battle.resolved.cards[selected.key]):[];
+    const targetEnemy=button('对敌方施法',()=>cb.target(legalTargets[0]?.id),'primary'),targetSelf=button(legalTargets[0]?.id===hero.id?'对自己施法':'对友方施法',()=>cb.target(legalTargets[0]?.id),'primary');
+    const kind=selected&&cardTargetKind(battle.resolved.cards[selected.key]),canPlay=selected&&!discarded.includes(selected.seq)&&U.isAlive(hero);targetEnemy.hidden=legalTargets.length!==1||kind==='friendly'||kind==='self';targetSelf.hidden=legalTargets.length!==1||kind==='hostile'||kind==='all';targetEnemy.disabled=targetSelf.disabled=animating||battle.finished||!canPlay;
     bottom.append(el('div','pip-legend',el('span','','蓝色：普通魔力'),el('span','','金色：超级魔力'),el('small','',`卡包剩余 ${U.deckRemaining(hero)} 张`)),el('div','battle-actions',targetEnemy,targetSelf,pass));
-    const targets=el('div','battle-actions');
-    if(selected)for(const unit of [...battle.sides.near,...battle.sides.far]){const b=button(unit.name,()=>cb.target(unit.id),'secondary');b.disabled=animating||!canPlay||unit.hp<=0;targets.append(b);}
+    const rosterOptions={heroId:hero.id,canTarget:unit=>!animating&&!battle.finished&&canPlay&&legalTargets.includes(unit),target:cb.target,el,button,schoolNames:SCHOOL_NAMES,colors:COLORS};
+    const foes=createBattleRoster(battle,'far',rosterOptions),allies=createBattleRoster(battle,'near',rosterOptions);
+    root.battleStatusEntries=[...foes.entries,...allies.entries];updateBattleRoster(root.battleStatusEntries,model.presentation);
+    top.firstChild.replaceChildren(foes.roster);
+    top.classList.add('battle-roster-heading');bottom.classList.add('battle-roster-controls');
+    const targets=el('div','battle-party-controls',allies.roster);
     if(battle.monsterTemplates[0].speciesId){const capture=button(`捕获（晶球 ${battle.captureStock-battle.captureUsed}）`,()=>cb.capture('mob0'),'secondary');capture.disabled=animating||battle.finished||hero.hp<=0||battle.captureStock<=battle.captureUsed;targets.append(capture);}
     bottom.append(targets);
     root.append(top,canvas,status,hand,bottom);
+    // The centred face passes left clicks to the arena; resolve its right click by bounds.
+    root.oncontextmenu=e=>{
+        if(animating||battle.finished||e.pointerType==='touch'||!matchMedia('(pointer:fine)').matches)return;
+        const node=e.target.closest('.hand-card')||(selected?hand.querySelector('.hand-card.selected'):null);
+        const face=node?.querySelector('.card-select');if(!face||node.hidden)return;
+        const rect=face.getBoundingClientRect();
+        if(e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom)return;
+        e.preventDefault();e.stopPropagation();cb.discard(Number(node.dataset.seq));
+    };
+    root.disposeHandGesture=selected?null:bindHandGesture(hand,{
+        select:seq=>cb.select(visibleHand.find(h=>h.seq===seq)),
+        play:seq=>cb.swipePlay(visibleHand.find(h=>h.seq===seq)),
+        hint:status,
+    });
     // Measure wrapped controls, including party targets, instead of assuming a fixed footer height.
     const layout=()=>{
         const footer=bottom.offsetHeight+(parseFloat(getComputedStyle(bottom).bottom)||0)+12;
-        hand.style.bottom=`${footer}px`;
-        const upper=Math.max(top.offsetTop+top.offsetHeight+20,status.offsetTop+status.offsetHeight+10);
-        const beside=matchMedia('(max-height:500px) and (min-width:651px)').matches;
-        const lower=footer+(beside?0:hand.offsetHeight+10);
-        canvas.style.top=`${upper}px`;canvas.style.bottom=`${lower}px`;
-        canvas.style.height=`${Math.max(1,root.clientHeight-upper-lower)}px`;
+        if(!selected)hand.style.bottom=`${footer}px`;
+        status.style.top=`${top.offsetTop+top.offsetHeight+8}px`;
+        // The arena fills the viewport. Cards and HUD float above it without resizing it.
     };
     root.battleLayoutObserver=new ResizeObserver(layout);
-    for(const node of [root,top,hand,bottom])root.battleLayoutObserver.observe(node);
+    for(const node of [root,top,hand,bottom,status])root.battleLayoutObserver.observe(node);
     layout();
     if(oldHand)animateHandSelection(hand,oldHand,oldSelected,String(selected.seq));
     const log=el('details','battle-log',el('summary','','战斗记录'),el('div','',...battle.events.filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','capture'].includes(e.type)).slice(-24).map(e=>el('p','',eventLabel(e,battle,assets)))));root.append(log);
@@ -336,6 +389,7 @@ export function renderBattle(root,model,cb) {
 function animateHandSelection(hand,previous,oldSelected,selected) {
     if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
     for(const node of hand.children) {
+        if(node.hidden)continue;
         const before=previous.get(node.dataset.seq);if(!before)continue;
         const after=node.getBoundingClientRect(),dx=before.left-after.left,dy=before.top-after.top;
         const entering=node.dataset.seq===selected,returning=node.dataset.seq===oldSelected;

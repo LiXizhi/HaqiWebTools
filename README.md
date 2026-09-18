@@ -24,3 +24,32 @@ git clone https://github.com/lixizhi/HaqiWebTools.git web
 | [HaqiCombatSim](HaqiCombatSim/README.md) | 1:1 JS port of server combat rules, 2D vs-bot play, win-rate matrices, `BalanceParams` editor, heuristic/LLM advisor |
 
 Each app is a no-build static HTML + ES module project. Serve that folder over HTTP (not `file://`). App datasets used at runtime are in git under each app’s `data/` folder. Haqi Lua combat source remains in paraworld: `script/apps/Aries/Combat/`.
+
+## Vite Build + Keepwork CDN Publish (HaqiCombatSim)
+
+To publish a static release package for `HaqiCombatSim`, use the standalone tooling under `vite-magic-haqi/`.
+This does not change the app architecture: runtime is still static HTML + ES modules.
+
+```sh
+cd vite-magic-haqi
+npm install
+npm run build
+```
+
+Build output is `vite-magic-haqi/dist/` and includes `HaqiCombatSim` static runtime files.
+
+Prepare a Keepwork CDN upload plan:
+
+```sh
+npm run prepare:cdn -- --prefix keepwork/magic-haqi/v1/
+```
+
+This generates:
+- staged files in `vite-magic-haqi/.asset-cache/publish/` (named by SHA-256)
+- publish plan in `vite-magic-haqi/cdn-publish-plan.json`
+
+After uploading those staged files to Keepwork CDN, verify remote integrity (HTTP/CORS/hash/size):
+
+```sh
+npm run verify:cdn
+```

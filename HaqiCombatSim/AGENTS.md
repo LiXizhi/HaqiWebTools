@@ -11,7 +11,7 @@
 
 ## 硬规则
 
-1. **不需要构建。** 纯 ES Module + Vanilla JS，直接打开 `HaqiCombatSim.html` 验证。不要引入 TypeScript、打包器、前端框架。`package.json` 仅用于 `npm run export`（数据导出）和 `npm test`。
+1. **源码保持原生 ES Module + Vanilla JS。** 用户于2026-09-18明确要求参考Maisi/MagicHaqi，允许Vite作为开发与发布工具；`npm run build`生成`dist/`，`npm run upload`发布到Keepwork CDN。源码仍支持普通HTTP静态服务，不引入TypeScript或前端框架。详见`docs/deployment.md`。
 2. **引擎与 UI 分层。** 所有战斗逻辑放在 `js/*_core.js`，只能依赖其他 `*_core.js`，不得引用 `document`/`window`/`fetch`；这些模块必须能在 Node 里被 `tests/*.test.mjs` 直接 import。`view_*.js` 只渲染 DOM 和绑定事件，通过回调把意图交给 `app.js`。
 3. **公式 1:1 移植并标注来源。** `combat_formulas_core.js` 中每个函数头部注释写出 Lua 文件与行号（例如 `card_server.lua damage_expression L1473-1516`），kids / teen 分支用 `version` 参数区分，不得"顺手简化"。发现 Lua 行为与本地实现不一致时，以 Lua 为准并在 `docs/lua-mapping.md` 记录。
 4. **可复现。** 所有随机数走 `rng_core.js` 的实例，禁止直接 `Math.random()`；同一 seed + 同一参数必须得到同一结果（有测试守护）。
@@ -39,6 +39,8 @@
 SDK 源码可在 `lxzsrc/keepworkSDK/`（本机 `/Users/mac/lxzsrc/keepworkSDK`）核对；重点看 `src/store/PersonalPageStore*.ts`、`src/store/CloudDrive.ts`。技能和源码中的现有接口是依据，不猜接口或 CDN 地址。凭据按工具既有安全流程使用，不写进仓库、客户端代码、存档或日志。遵守所用技能的上传预览、确认和结果核验流程。
 
 ### 游戏图片与本地副本
+
+- **网站构建和发布仅包含HTML、JS、CSS和配置JSON（2026-09-18）。** `dist`禁止包含WebP等静态美术或音频，发布时不重复上传；它们在平时资源准备流程中上传。所有入口和域名（包括localhost）默认使用清单既有CDN地址，源码归档副本仅供明确的离线模式使用。`upload`必须通过白名单暂存隔离。
 
 - **每张运行时 WebP 不超过 200,000 字节（200KB）。** 先尝试无损，超限则使用高质量有损编码并按需等比缩小；保留透明通道，同步校正图集裁剪坐标。资源准备与测试必须检查上限。
 - **Git 中可以保留本地美术副本，图片使用 WebP 格式。** 后续新增/转换图片按此准备，保留透明通道、图集帧布局和必要清晰度；在浏览器中核验解码、裁剪和动画。

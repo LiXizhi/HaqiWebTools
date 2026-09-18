@@ -83,9 +83,9 @@ npm test                      # 69例，包含原34例、五系章节、资源�
 
 ## WebP 与永久 CDN
 
-- `http://127.0.0.1:8791/Haqi.html`：默认本地 WebP；`localhost` / IPv6 loopback 同样处理。
+- `http://127.0.0.1:8791/Haqi.html`：默认永久Keepwork CDN；`localhost` / IPv6 loopback与所有线上域名同样处理（2026-09-18更新）。
 - `Haqi.html?assets=cdn`：本机验收线上资源模式；其余域名（包括局域网 IP）默认 CDN。
-- `Haqi.html?assets=local`：明确使用 Git 资源，可用于无网的局域网开发。线上发布不加此参数。
+- `Haqi.html?assets=local`：仅源码HTTP服务中明确使用 Git 资源，可用于无网开发。dist与CDN发布不包含美术，不使用此参数。
 - 91项资源（90张 WebP、1段可选 Ogg）合计8,326,728字节；转换前10,823,856字节，减少23.1%。原PNG从当前工作树移除，历史仍在Git；原始完整条目可重新下载。
 - 图片加载在设置 `src` 前指定 `crossOrigin='anonymous'`；所有资源的HTTP、CORS、尺寸、内容哈希已经核验。可选音乐失败不影响游戏。
 

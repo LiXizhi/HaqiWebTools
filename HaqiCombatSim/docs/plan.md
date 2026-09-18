@@ -152,3 +152,11 @@
 - [x] 359张原CDN WebP本地归档、CORS/哈希/体积核验
 
 具体规则及验收范围见[pets-and-shop.md](pets-and-shop.md)及QA报告。
+
+## 2026-09-18：Vite发布流程
+
+- [x] 参考Maisi/MagicHaqi加入四入口Vite构建，保留原生源码运行。
+- [x] 内容哈希发布计划、复用Maisi七牛上传器、逐文件CDN哈希与CORS核验。
+- [x] 打包批量Worker支持跨域HTML/CDN部署；新增发布回归测试。
+
+操作见[部署说明](deployment.md)，实际首次发布结果见qa-report。

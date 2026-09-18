@@ -6,7 +6,7 @@ import { runJob } from './sim_batch_core.js';
 export class SimPool {
     constructor(opts = {}) {
         this.size = opts.size || Math.max(1, Math.min(8, (typeof navigator !== 'undefined' && navigator.hardwareConcurrency ? navigator.hardwareConcurrency - 1 : 2)));
-        this.workerUrl = opts.workerUrl || new URL('./sim_worker.js', import.meta.url);
+        this.workerUrl = opts.workerUrl;
         this.workers = [];
         this.cancelled = false;
         this.useWorkers = typeof Worker !== 'undefined' && opts.useWorkers !== false;
@@ -19,7 +19,9 @@ export class SimPool {
         const plain = JSON.parse(JSON.stringify(dataset));
         const readies = [];
         for (let i = 0; i < this.size; i++) {
-            const w = new Worker(this.workerUrl, { type: 'module' });
+            const w = this.workerUrl
+                ? new Worker(this.workerUrl, { type: 'module' })
+                : new Worker(new URL('./sim_worker.js', import.meta.url), { type: 'module' });
             this.workers.push(w);
             readies.push(new Promise((res, rej) => {
                 const onMsg = (e) => { if (e.data.type === 'ready') { w.removeEventListener('message', onMsg); res(); } };

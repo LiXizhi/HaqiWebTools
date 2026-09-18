@@ -6,6 +6,7 @@ import { drawAnimatedActor } from './actor_animation.js';
 import { battleActorAction } from './actor_animation_core.js';
 import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES } from './adventure_core.js';
 import { onIsland,distance } from './adventure_world_core.js';
+import { OCEAN_COLOR, paintTerrain } from './adventure_terrain.js';
 export const COLORS={fire:'#e98f44',ice:'#6ecbdc',storm:'#b39aea',life:'#84bd59',death:'#a887c7'};
 const TAU=Math.PI*2;
 function ellipse(c,x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);c.fill();}
@@ -40,18 +41,7 @@ export function createRenderer(canvas,assets) {
         if(backingZone===world.zone)return backing;
         backingZone=world.zone;backing=document.createElement('canvas');backing.width=world.w;backing.height=world.h;
         const c=backing.getContext('2d');
-        const ocean=c.createLinearGradient(0,0,world.w,world.h);ocean.addColorStop(0,'#528f9e');ocean.addColorStop(.6,'#6abbb7');ocean.addColorStop(1,'#326a84');c.fillStyle=ocean;c.fillRect(0,0,world.w,world.h);
-        ellipse(c,900,817,818,720,'#bad9ba');ellipse(c,900,808,803,714,'#dfdba4');ellipse(c,900,790,779,682,'#759e55');
-        const grass=c.createRadialGradient(850,680,60,900,800,840);grass.addColorStop(0,world.zone==='camp'?'#acc778':'#bad394');grass.addColorStop(.6,'#87b769');grass.addColorStop(1,'#416e51');
-        ellipse(c,900,785,771,671,grass);
-        for(const d of world.decorations)if(onIsland(d.x,d.y,48)) {
-            ellipse(c,d.x,d.y,d.size*2,d.size,'#bad78633');
-            if(d.kind<2){c.strokeStyle=d.kind?'#dce49477':'#346c4244';c.lineWidth=1;c.beginPath();c.moveTo(d.x,d.y);c.lineTo(d.x-2,d.y-5);c.moveTo(d.x,d.y);c.lineTo(d.x+3,d.y-4);c.stroke();}
-        }
-        for(const p of world.paths) {
-            c.lineCap='round';c.lineJoin='round';c.strokeStyle='#719b58';c.lineWidth=p.width+9;c.beginPath();c.moveTo(p.a.x,p.a.y);c.lineTo(p.b.x,p.b.y);c.stroke();
-            c.strokeStyle='#d4c698';c.lineWidth=p.width;c.stroke();c.strokeStyle='#dfd4aa';c.lineWidth=p.width-10;c.stroke();
-        }
+        paintTerrain(c,world);
         // Inlaid stone plaza and school learning circle.
         ellipse(c,world.center.x,world.center.y-30,133,86,'#aaac85');ellipse(c,world.center.x,world.center.y-34,125,81,'#d9d5b1');
         c.strokeStyle='#b7b58f';c.lineWidth=1.4;for(let y=-65;y<65;y+=22){c.beginPath();c.moveTo(world.center.x-90,world.center.y-30+y);c.lineTo(world.center.x+90,world.center.y-30+y);c.stroke();}
@@ -71,7 +61,7 @@ export function createRenderer(canvas,assets) {
         const bob=Math.sin(t*2.8+x)*3;shadow(c,x,y,27*scale);assets.tile(c,'creatures',index,x-45*scale,y-84*scale+bob,90*scale,88*scale);
     }
     function render(world,save,time,{moving=false,path=[],title=false}={}) {
-        const {w,h}=size(),t=time/1000;ctx.clearRect(0,0,w,h);
+        const {w,h}=size(),t=time/1000;ctx.fillStyle=OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         cam.scale=w<650?.82:1;const center=title?{x:875+Math.sin(t*.04)*60,y:770}:save.position;
         cam.x=center.x-w/(2*cam.scale);cam.y=center.y-h/(2*cam.scale)+(w<650?50:25);
         ctx.save();ctx.scale(cam.scale,cam.scale);ctx.translate(-cam.x,-cam.y);ctx.drawImage(ground(world),0,0);

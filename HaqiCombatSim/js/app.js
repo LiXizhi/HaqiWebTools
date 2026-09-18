@@ -1,6 +1,7 @@
 // app.js — 入口：数据集发现/加载、hash 路由、顶部栏。
 import { state, restoreSettings, initParamsForDataset, persist, notify } from './state.js';
-import { loadDataset, discoverDatasets, fetchJson } from './data_core.js';
+import { loadDataset, discoverDatasets } from './data_core.js';
+import { fetchJson } from './runtime_data.js';
 import { h, clear, select, toast } from './utils.js';
 import { renderBattle } from './view_battle.js';
 import { renderBatch } from './view_batch.js';

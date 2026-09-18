@@ -10,7 +10,9 @@ npm run build
 npm run preview
 ```
 
-开发和预览默认打开 `HaqiCombatSim.html`；同目录另有 `Haqi.html`、`HaqiCards.html`、`HaqiEffects.html`。打包输出在 `dist/`，JS/CSS使用内容哈希文件名，共享模块自动拆分，`data/` JSON按原路径复制。**dist不包含任何WebP或音频。所有入口在所有域名（含localhost）默认使用清单已登记的永久Keepwork CDN地址。** 发布不包含开发脚本、文档、凭据、源码映射或第三方运行时库。
+开发和预览默认打开 `HaqiCombatSim.html`；同目录另有 `Haqi.html`、`HaqiCards.html`、`HaqiEffects.html`。打包输出在 `dist/`，JS/CSS使用内容哈希文件名，共享模块自动拆分，运行时JSON合并为5个数据包。**dist不包含任何WebP或音频。所有入口在所有域名（含localhost）默认使用清单已登记的永久Keepwork CDN地址。** 发布不包含开发脚本、文档、凭据、源码映射或第三方运行时库。
+
+`data/datasets.json`只含三个模拟数据集的manifest索引；`adventure.json`、`kids.json`、`teen.json`、`sample.json`按用途容纳其余数据，格式为 `{schemaVersion:1,files:{原路径:数据}}`。统一浏览器加载器 `js/runtime_data.js` 在Vite生产构建中按需请求数据包，并合并并发请求；每次返回独立数据副本，防止章节扩展和数据规范化污染缓存。下载失败可重试；源码静态服务及Vite dev继续读取原始分文件JSON。新增数据读取应使用该加载器，避免发布时请求已不存在的小JSON。
 
 ## 上传
 

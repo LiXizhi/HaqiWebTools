@@ -6,10 +6,11 @@ import { defineConfig } from 'vite';
 const root = path.dirname(fileURLToPath(import.meta.url));
 const entries = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects'];
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
     root,
     base: './',
     publicDir: false,
+    define: { __HAQI_PACKED_DATA__: JSON.stringify(command === 'build') },
     plugins: [{
         name: 'inline-cdn-worker',
         apply: 'build',
@@ -43,4 +44,4 @@ export default defineConfig({
             input: Object.fromEntries(entries.map(name => [name, path.join(root, `${name}.html`)])),
         },
     },
-});
+}));

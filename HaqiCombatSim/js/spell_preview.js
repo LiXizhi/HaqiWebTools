@@ -1,4 +1,5 @@
 import { loadResources } from './adventure_assets.js';
+import { fetchJson } from './runtime_data.js';
 import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
 import { PREVIEW_HIT_DURATION_MS, previewTargetAction } from './actor_animation_core.js';
@@ -81,9 +82,9 @@ function frame(now){
     requestAnimationFrame(frame);
 }
 try{
-    assets=await loadResources();const response=await fetch('data/kids/cards.json');if(!response.ok)throw new Error('无法读取完整卡库');
+    assets=await loadResources();const fullCards=await fetchJson('data/kids/cards.json');
     await loadSpellArt(assets);
-    cards={...await response.json(),...assets.dataset.cards};validateSpellEffects(assets.effects,cards);fx=createSpellEffects(assets);families=new Map();
+    cards={...fullCards,...assets.dataset.cards};validateSpellEffects(assets.effects,cards);fx=createSpellEffects(assets);families=new Map();
     for(const c of Object.values(cards)){const id=assets.effects.cards[c.key].base;if(!families.has(id))families.set(id,[]);families.get(id).push(c);}
     filter('Ice_SingleAttack_Level6_low_level');requestAnimationFrame(frame);
 }catch(e){$('error').textContent=`特效加载失败：${e.message}。请检查资源后刷新。`;}

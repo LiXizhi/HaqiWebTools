@@ -1,5 +1,6 @@
 import {CardRenderer} from './card_renderer.js';
 import {assetMode,assetUrl} from './adventure_media_core.js';
+import {fetchJson} from './runtime_data.js';
 const schools=[['ice','寒冰','#4ecfff','坚固壁垒'],['fire','烈火','#ff743b','烈火护盾'],['storm','风暴','#ffdf52','风暴护盾'],['life','生命','#82df67','生命护盾'],['death','死亡','#c094ff','死亡护盾']];
 const $=id=>document.getElementById(id),cards=[],TAU=Math.PI*2;let golden=false;
 function polygon(c,points,fill,stroke='#fcf3bf',width=2){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fillStyle=fill;c.fill();c.lineWidth=width;c.strokeStyle=stroke;c.stroke();}
@@ -14,7 +15,7 @@ function draw(row){const {c,image,school,color,title}=row;
  }});}
 function redraw(){cards.forEach(draw);}
 $('content').onchange=redraw;$('cost').oninput=redraw;$('left').oninput=redraw;$('gold').onclick=()=>{golden=!golden;$('gold').setAttribute('aria-pressed',golden);$('gold').textContent='金卡光环：'+(golden?'开':'关');redraw();};
-try{const r=await fetch('data/adventure/card-frames.json');if(!r.ok)throw new Error('底图尚未准备');const manifest=await r.json(),mode=assetMode(location.hostname,location.search);
+try{const manifest=await fetchJson('data/adventure/card-frames.json'),mode=assetMode(location.hostname,location.search);
  await Promise.all(schools.map(async([school,name,color,title])=>{const article=document.createElement('article'),canvas=document.createElement('canvas');canvas.width=604;canvas.height=920;canvas.setAttribute('aria-label',name+'卡牌样张');const c=canvas.getContext('2d');c.scale(2,2);const h=document.createElement('h2');h.textContent=name;h.style.color=color;const meta=document.createElement('p');meta.className='meta';meta.textContent='AI 底图 + 程序内容';article.append(canvas,h,meta);$('cards').append(article);const image=new Image();image.crossOrigin='anonymous';await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=()=>reject(new Error(name+'底图加载失败'));image.src=assetUrl(manifest.entries[school],mode);});const row={c,image,school,name,color,title};cards.push(row);draw(row);}));
  $('status').textContent='五系样张已加载。可切换纯底图，或修改数字检查程序分层。';
 }catch(e){$('status').textContent=e.message;}

@@ -1,12 +1,11 @@
 // Optional simulator presentation: async artwork never blocks headless combat.
 import {loadSkillArt} from './skill_art.js';
 import {assetMode} from './adventure_media_core.js';
+import {fetchJson} from './runtime_data.js';
 let library;
 async function load(){
     if(!library)library=(async()=>{
-        const response=await fetch('data/adventure/spell-effects.json');
-        if(!response.ok)throw new Error('技能配置加载失败');
-        const effects=await response.json();
+        const effects=await fetchJson('data/adventure/spell-effects.json');
         return {effects,art:await loadSkillArt(effects,assetMode(location.hostname,location.search))};
     })().catch(error=>{library=null;throw error;});
     return library;

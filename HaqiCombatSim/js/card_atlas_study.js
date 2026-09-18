@@ -17,7 +17,7 @@ soundButton.onclick=async()=>{const requested=!sound.enabled,ok=await sound.setE
 document.addEventListener('pointerdown',()=>sound.unlock());document.addEventListener('keydown',()=>sound.unlock());
 let effects,cards,art,fx,representatives=[],selected,progress=.35,playing=false,last=0,frame=0,page=0,revision=0,selectionRevision=0;
 const ctx=$('atlas-effect').getContext('2d');
-async function read(url){const r=await fetch(url);if(!r.ok)throw new Error('卡库加载失败');return r.json();}
+import { fetchJson as read } from './runtime_data.js';
 function drawEffect(){
  if(!selected)return;
  const c=selected.card,base=selected.base,spec=effects.bases[base];

@@ -36,14 +36,6 @@ export function normalizeDataset(dataset) {
     return dataset;
 }
 
-/** 浏览器 readJson */
-export function fetchJson(url) {
-    return fetch(url, { cache: 'no-cache' }).then(r => {
-        if (!r.ok) throw new Error(`${url}: ${r.status}`);
-        return r.json();
-    });
-}
-
 /** 列出可用数据集（浏览器：探测 manifest） */
 export async function discoverDatasets(readJson, candidates = ['data/kids', 'data/teen', 'data/sample']) {
     const out = [];

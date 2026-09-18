@@ -41,16 +41,29 @@ export function projectRuntimeData(relativePath, value) {
     }
 }
 
-export function packageRuntimeData(source, destination, prefix = '') {
+function collectRuntimeData(source, files, prefix = '') {
     for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
-        const from = path.join(source, entry.name), to = path.join(destination, entry.name);
+        const from = path.join(source, entry.name);
         if (entry.isDirectory()) {
-            packageRuntimeData(from, to, `${prefix}${entry.name}/`);
+            collectRuntimeData(from, files, `${prefix}${entry.name}/`);
         } else if (entry.name.endsWith('.json')) {
             const value = projectRuntimeData(`${prefix}${entry.name}`, JSON.parse(fs.readFileSync(from, 'utf8')));
             if (value === null) continue;
-            fs.mkdirSync(destination, { recursive: true });
-            fs.writeFileSync(to, JSON.stringify(value));
+            files[`data/${prefix}${entry.name}`] = value;
         }
     }
+}
+
+export function packageRuntimeData(source, destination) {
+    const files = {};
+    collectRuntimeData(source, files);
+    const packs = Object.fromEntries(['datasets', 'adventure', 'kids', 'teen', 'sample'].map(group => [group, { schemaVersion: 1, files: {} }]));
+    for (const [key, value] of Object.entries(files)) {
+        const [, directory, name] = key.split('/');
+        const group = name === 'manifest.json' && directory !== 'adventure' ? 'datasets' : directory;
+        if (!packs[group]) throw new Error(`未配置的数据包：${key}`);
+        packs[group].files[key] = value;
+    }
+    fs.mkdirSync(destination, { recursive: true });
+    for (const [group, pack] of Object.entries(packs)) fs.writeFileSync(path.join(destination, `${group}.json`), JSON.stringify(pack));
 }

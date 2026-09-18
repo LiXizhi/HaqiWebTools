@@ -8,6 +8,8 @@ import { packageRuntimeData, projectRuntimeData } from '../scripts/package_runti
 import { validateAdventureContent } from '../js/adventure_content_core.js';
 import { validateMediaManifest, assetUrl } from '../js/adventure_media_core.js';
 import { validateSkillArt, skillFrame } from '../js/skill_art_core.js';
+import { createJsonReader } from '../js/runtime_data.js';
+import { loadDataset, discoverDatasets } from '../js/data_core.js';
 
 const read = name => JSON.parse(fs.readFileSync(new URL(`../data/adventure/${name}.json`, import.meta.url)));
 const compact = name => projectRuntimeData(`adventure/${name}.json`, read(name));
@@ -41,19 +43,35 @@ test('compact art retains validation, every animation crop, CDN URL and comparis
 });
 const compactPets = compact('pets');
 
-test('data packaging minifies output, omits development plans and preserves source files', () => {
+test('five compact packs load all datasets, retain projected content and preserve sources', async () => {
     const source = new URL('../data/', import.meta.url);
     const destination = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-runtime-data-'));
     const original = fs.readFileSync(new URL('adventure/skill-art.json', source), 'utf8');
     try {
         packageRuntimeData(fileURLToPath(source), destination);
+        assert.deepEqual(fs.readdirSync(destination).sort(), ['adventure.json', 'datasets.json', 'kids.json', 'sample.json', 'teen.json']);
+        const calls = [];
+        const reader = createJsonReader({ packed: true, request: async url => {
+            calls.push(url);
+            return { ok: true, json: async () => JSON.parse(fs.readFileSync(path.join(destination, url.slice(5)))) };
+        } });
         for (const name of ['card-atlas', 'cdn-publish-plan', 'skill-art-plan', 'expansion-report']) {
-            assert.equal(fs.existsSync(path.join(destination, `adventure/${name}.json`)), false);
+            await assert.rejects(reader(`data/adventure/${name}.json`), /数据包缺少/);
         }
-        const output = fs.readFileSync(path.join(destination, 'adventure/skill-art.json'), 'utf8');
-        assert.equal(output, JSON.stringify(compact('skill-art')));
+        const output = fs.readFileSync(path.join(destination, 'adventure.json'), 'utf8');
+        assert.equal(output, JSON.stringify(JSON.parse(output)));
+        assert.deepEqual(await reader('data/adventure/skill-art.json'), compact('skill-art'));
         assert.equal(fs.readFileSync(new URL('adventure/skill-art.json', source), 'utf8'), original);
-        assert.deepEqual(JSON.parse(fs.readFileSync(path.join(destination, 'kids/cards.json'))), JSON.parse(fs.readFileSync(new URL('kids/cards.json', source))));
+        assert.equal((await discoverDatasets(reader)).length, 3);
+        assert.deepEqual(calls, ['data/adventure.json', 'data/datasets.json']);
+        for (const version of ['kids', 'teen', 'sample']) {
+            const baseline = await loadDataset(`data/${version}`, async url => JSON.parse(fs.readFileSync(new URL('../' + url, import.meta.url))));
+            assert.deepEqual(await loadDataset(`data/${version}`, reader), baseline);
+        }
+        assert.equal(calls.length, 5);
+        const cards = await reader('data/kids/cards.json');
+        cards.changed = true;
+        assert.equal((await reader('data/kids/cards.json')).changed, undefined);
     } finally {
         assert.ok(path.resolve(destination).startsWith(path.resolve(os.tmpdir()) + path.sep));
         fs.rmSync(destination, { recursive: true, force: true });

@@ -32,6 +32,11 @@ export function createRenderer(canvas,assets) {
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const ctx=canvas.getContext('2d'),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
     let companion=null,companionId=null,companionWorld=null,companionSave=null,lastPetTime=null;
+    let zoom=1;
+    function zoomBy(factor) {
+        if(Number.isFinite(factor)&&factor>0)zoom=Math.max(.75,Math.min(1.4,zoom*factor));
+        return zoom;
+    }
     function size() {
         const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(2,window.devicePixelRatio||1);
         if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}
@@ -62,8 +67,9 @@ export function createRenderer(canvas,assets) {
     }
     function render(world,save,time,{moving=false,path=[],title=false}={}) {
         const {w,h}=size(),t=time/1000;ctx.fillStyle=OCEAN_COLOR;ctx.fillRect(0,0,w,h);
-        cam.scale=w<650?.82:1;const center=title?{x:875+Math.sin(t*.04)*60,y:770}:save.position;
-        cam.x=center.x-w/(2*cam.scale);cam.y=center.y-h/(2*cam.scale)+(w<650?50:25);
+        const baseScale=w<650?.82:1,sceneZoom=title?1:zoom;
+        cam.scale=baseScale*sceneZoom;const center=title?{x:875+Math.sin(t*.04)*60,y:770}:save.position;
+        cam.x=center.x-w/(2*cam.scale);cam.y=center.y-h/(2*cam.scale)+(w<650?50:25)/sceneZoom;
         ctx.save();ctx.scale(cam.scale,cam.scale);ctx.translate(-cam.x,-cam.y);ctx.drawImage(ground(world),0,0);
         // Moving water highlights, grounded visual-only ambient animation.
         ctx.strokeStyle='#e3f3da33';ctx.lineWidth=2;
@@ -164,5 +170,5 @@ export function createRenderer(canvas,assets) {
         }
         return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:at.x*scale,y:at.y*scale}]));
     }
-    return {render,minimap,screenToWorld,renderBattle};
+    return {render,minimap,screenToWorld,renderBattle,zoomBy};
 }

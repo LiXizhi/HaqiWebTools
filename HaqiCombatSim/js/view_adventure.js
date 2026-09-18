@@ -168,9 +168,9 @@ export function renderHud(root,model,cb) {
     root.append(tracker);
     const nav=el('nav','game-nav');nav.setAttribute('aria-label','游戏菜单');
     for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['shop','商店','shop']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
-    root.append(nav,el('div','movement-hint','WASD / 方向键移动 · 点击寻路 / 按住跟随 · E 交谈'));
+    root.append(nav,el('div','movement-hint','WASD / 方向键移动 · 点击寻路 / 按住跟随 · 滚轮缩放 · E 交谈'));
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
-    root.append(el('div','touch-movement-hint','拖动地图移动 · 松手停止 · 靠近后点交谈或挑战'));
+    root.append(el('div','touch-movement-hint','单指拖动移动 · 双指缩放 · 靠近后交谈或挑战'));
 }
 function modal(root,title,subtitle,cb,wide=false) {
     root.replaceChildren();root.className='overlay visible';

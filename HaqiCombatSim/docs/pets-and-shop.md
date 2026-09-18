@@ -41,3 +41,7 @@ npm run check:adventure
 运行时不需要源项目。宠物图集来自已发布永久Keepwork CDN，全部保留本地WebP和来源/本地SHA256、尺寸、4×4裁剪及CORS核验值，不重新生成或上传。准备脚本拒绝非WebP、超200,000字节及缺少CORS的源文件。明确`?assets=local`和`?assets=cdn`两种模式。
 
 装备数据来自原globalstore候选，实际可购买1008件，排除301件；详细原因、成长表、卡牌数量见`data/adventure/expansion-report.json`。额外特殊属性在商品页标明未生效，装备保留原图标来源路径，供美术映射使用。
+
+## 计划需求（2026-09-18，未实现）
+
+产品希望在上述已交付规则之上，朝《帕鲁世界》方向继续创新宠物，并把治疗 / 口粮做成 VIP 相关。现有捕获、四卡位、饱食、营养餐、空的「升级会员」按钮都不是会员门槛，也不是据点劳动。对照与开放问题见 [pets-vip-innovation.md](pets-vip-innovation.md)，不要在未确认身份源前编造 VIP 商店接口。

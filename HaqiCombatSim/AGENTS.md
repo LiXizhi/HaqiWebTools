@@ -8,6 +8,7 @@
 2. [docs/architecture.md](docs/architecture.md) — 模块分层与数据流
 3. [docs/lua-mapping.md](docs/lua-mapping.md) — 任何数值公式改动前必须对照的 Lua 源码表
 4. [docs/adventure.md](docs/adventure.md) — `Haqi.html` 的内容、存档、资源与已实施范围
+5. [docs/player-import.md](docs/player-import.md)、[docs/async-pvp.md](docs/async-pvp.md)、[docs/pets-vip-innovation.md](docs/pets-vip-innovation.md)、[docs/card-i18n.md](docs/card-i18n.md) — 2026-09-18 计划需求（真实用户数据、异步 PVP、帕鲁式宠物/VIP 口粮、卡牌多语言）；实现前先读，不要编造生产接口、VIP 网关、翻译服务或凭据
 
 ## 硬规则
 

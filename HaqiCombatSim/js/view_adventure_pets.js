@@ -8,7 +8,7 @@ export function petPortrait(assets,id,stage=0,size=96){
  box.style.backgroundSize='400% 400%';box.style.backgroundPosition=`0% ${stage*100/3}%`;box.setAttribute('role','img');box.setAttribute('aria-label',assets.content.pets[id].name);return box;
 }
 export function starterPicker(assets,onSelect,{el,button}){
- const row=el('div','starter-choices');for(const id of STARTERS){const b=button([petPortrait(assets,id,0,72),el('span','',assets.content.pets[id].name)],()=>{for(const child of row.children)child.classList.remove('selected');b.classList.add('selected');onSelect(id);},'secondary');if(id===STARTERS[0])b.classList.add('selected');row.append(b);}return row;
+ const row=el('div','starter-choices');for(const id of STARTERS){const b=button([petPortrait(assets,id,0,72),el('span','',assets.content.pets[id].name)],()=>{for(const child of row.children){child.classList.remove('selected');child.setAttribute('aria-pressed','false');}b.classList.add('selected');b.setAttribute('aria-pressed','true');onSelect(id);},'secondary');b.dataset.petId=id;b.setAttribute('aria-pressed',String(id===STARTERS[0]));if(id===STARTERS[0])b.classList.add('selected');row.append(b);}return row;
 }
 export function renderPetCollection(body,model,cb,{el,button}){
  const {save,assets}=model,c=assets.content,p=petParams(c);

@@ -6472,7 +6472,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "Pass",
-      "source": "config/Aries/Cards/Pass.xml"
+      "source": "config/Aries/Cards/Pass.xml",
+      "choreography": {
+        "placement": "caster",
+        "motion": "dissolve",
+        "attack": "pass",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Dead": {
       "kind": "dissolve",
@@ -6480,7 +6487,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "Dead",
-      "source": "config/Aries/Cards/Dead.xml"
+      "source": "config/Aries/Cards/Dead.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "dissolve",
+        "attack": "dissolve",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "PickPet": {
       "kind": "pet",
@@ -6489,7 +6503,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "PickPet",
-      "source": "config/Aries/Cards/PickPet.xml"
+      "source": "config/Aries/Cards/PickPet.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "pet",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "HoT": {
       "kind": "heal",
@@ -6498,7 +6519,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "HoT",
-      "source": "config/Aries/Cards/HoT.xml"
+      "source": "config/Aries/Cards/HoT.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "DoT_Fire": {
       "kind": "burst",
@@ -6507,7 +6535,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "DoT_Fire",
-      "source": "config/Aries/Cards/DoT_Fire.xml"
+      "source": "config/Aries/Cards/DoT_Fire.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "DoT_Ice": {
       "kind": "burst",
@@ -6516,7 +6551,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "DoT_Ice",
-      "source": "config/Aries/Cards/DoT_Ice.xml"
+      "source": "config/Aries/Cards/DoT_Ice.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "DoT_Storm": {
       "kind": "burst",
@@ -6525,7 +6567,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "DoT_Storm",
-      "source": "config/Aries/Cards/DoT_Storm.xml"
+      "source": "config/Aries/Cards/DoT_Storm.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "DoT_Life": {
       "kind": "burst",
@@ -6534,7 +6583,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "DoT_Life",
-      "source": "config/Aries/Cards/DoT_Life.xml"
+      "source": "config/Aries/Cards/DoT_Life.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "DoT_Death": {
       "kind": "burst",
@@ -6543,7 +6599,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "DoT_Death",
-      "source": "config/Aries/Cards/DoT_Death.xml"
+      "source": "config/Aries/Cards/DoT_Death.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "DoT_Balance": {
       "kind": "burst",
@@ -6552,7 +6615,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "DoT_Balance",
-      "source": "config/Aries/Cards/DoT_Balance.xml"
+      "source": "config/Aries/Cards/DoT_Balance.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fizzle_Fire": {
       "kind": "dissolve",
@@ -6560,7 +6630,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "Fizzle_Fire",
-      "source": "config/Aries/Cards/Fizzle_Fire.xml"
+      "source": "config/Aries/Cards/Fizzle_Fire.xml",
+      "choreography": {
+        "placement": "caster",
+        "motion": "dissolve",
+        "attack": "dissolve",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fizzle_Ice": {
       "kind": "dissolve",
@@ -6568,7 +6645,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "Fizzle_Ice",
-      "source": "config/Aries/Cards/Fizzle_Ice.xml"
+      "source": "config/Aries/Cards/Fizzle_Ice.xml",
+      "choreography": {
+        "placement": "caster",
+        "motion": "dissolve",
+        "attack": "dissolve",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fizzle_Storm": {
       "kind": "dissolve",
@@ -6576,7 +6660,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "Fizzle_Storm",
-      "source": "config/Aries/Cards/Fizzle_Storm.xml"
+      "source": "config/Aries/Cards/Fizzle_Storm.xml",
+      "choreography": {
+        "placement": "caster",
+        "motion": "dissolve",
+        "attack": "dissolve",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fizzle_Life": {
       "kind": "dissolve",
@@ -6584,7 +6675,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "Fizzle_Life",
-      "source": "config/Aries/Cards/Fizzle_Life.xml"
+      "source": "config/Aries/Cards/Fizzle_Life.xml",
+      "choreography": {
+        "placement": "caster",
+        "motion": "dissolve",
+        "attack": "dissolve",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fizzle_Death": {
       "kind": "dissolve",
@@ -6592,7 +6690,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "Fizzle_Death",
-      "source": "config/Aries/Cards/Fizzle_Death.xml"
+      "source": "config/Aries/Cards/Fizzle_Death.xml",
+      "choreography": {
+        "placement": "caster",
+        "motion": "dissolve",
+        "attack": "dissolve",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "PickPet_Fire": {
       "kind": "pet",
@@ -6601,7 +6706,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "PickPet_Fire",
-      "source": "config/Aries/Cards/PickPet_Fire.xml"
+      "source": "config/Aries/Cards/PickPet_Fire.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "pet",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "PickPet_Ice": {
       "kind": "pet",
@@ -6610,7 +6722,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "PickPet_Ice",
-      "source": "config/Aries/Cards/PickPet_Ice.xml"
+      "source": "config/Aries/Cards/PickPet_Ice.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "pet",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "PickPet_Storm": {
       "kind": "pet",
@@ -6619,7 +6738,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "PickPet_Storm",
-      "source": "config/Aries/Cards/PickPet_Storm.xml"
+      "source": "config/Aries/Cards/PickPet_Storm.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "pet",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "PickPet_Life": {
       "kind": "pet",
@@ -6628,7 +6754,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "PickPet_Life",
-      "source": "config/Aries/Cards/PickPet_Life.xml"
+      "source": "config/Aries/Cards/PickPet_Life.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "pet",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "PickPet_Death": {
       "kind": "pet",
@@ -6637,7 +6770,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "PickPet_Death",
-      "source": "config/Aries/Cards/PickPet_Death.xml"
+      "source": "config/Aries/Cards/PickPet_Death.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "pet",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttack_Level1": {
       "name": "火焰爆",
@@ -6647,7 +6787,14 @@
       "scale": 1.055,
       "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level1.xml",
       "friendly": false,
-      "secondary": "dot"
+      "secondary": "dot",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttackWithDOT_Level2": {
       "name": "火神之怒",
@@ -6657,7 +6804,14 @@
       "scale": 1.11,
       "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level2.xml",
       "friendly": false,
-      "secondary": "dot"
+      "secondary": "dot",
+      "choreography": {
+        "placement": "target",
+        "motion": "fall",
+        "attack": "meteor",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttack_Level3": {
       "name": "火凤焚天",
@@ -6669,7 +6823,14 @@
       "attack": "vortex",
       "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level3.xml",
       "friendly": false,
-      "secondary": "dot"
+      "secondary": "dot",
+      "choreography": {
+        "placement": "center",
+        "motion": "fly",
+        "attack": "vortex",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_FireDamageTrap": {
       "name": "烈火陷阱",
@@ -6678,7 +6839,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Fire_FireDamageTrap.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_AreaAttack_Level4": {
       "kind": "burst",
@@ -6688,7 +6856,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "星火袭空",
-      "source": "config/Aries/Cards/Fire_AreaAttackWithDOT_Level4.xml"
+      "source": "config/Aries/Cards/Fire_AreaAttackWithDOT_Level4.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_FireGlobalAura": {
       "kind": "aura",
@@ -6697,7 +6872,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "火极对抗",
-      "source": "config/Aries/Cards/Fire_FireGlobalAura.xml"
+      "source": "config/Aries/Cards/Fire_FireGlobalAura.xml",
+      "choreography": {
+        "placement": "field",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttack_Level5": {
       "kind": "burst",
@@ -6706,7 +6888,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "火焰喷发",
-      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level5.xml"
+      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level5.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttack_Level6": {
       "name": "火魔掷石",
@@ -6718,7 +6907,14 @@
       "attack": "meteor",
       "source": "config/Aries/Cards/Fire_SingleAttack_Level6_low_level.xml",
       "friendly": false,
-      "secondary": "dot"
+      "secondary": "dot",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "meteor",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_FireDamageBlade": {
       "name": "烈火术",
@@ -6727,7 +6923,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Fire_FireDamageBlade.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "blade",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_FirePrism": {
       "kind": "trap",
@@ -6736,17 +6939,31 @@
       "count": 64,
       "scale": 1.1,
       "name": "烈火棱镜",
-      "source": "config/Aries/Cards/Fire_FirePrism.xml"
+      "source": "config/Aries/Cards/Fire_FirePrism.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_DOTAttackWithHOT_Level2": {
       "kind": "heal",
-      "friendly": true,
+      "friendly": false,
       "duration": 1800,
       "count": 64,
       "scale": 1.1,
       "name": "烈火链",
       "source": "config/Aries/Cards/Fire_DOTAttackWithHOT_Level2.xml",
-      "secondary": "dot"
+      "secondary": "dot",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "drain",
+        "returnToCaster": true,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_StealPositiveCharm": {
       "kind": "steal",
@@ -6754,7 +6971,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "偷天换日",
-      "source": "config/Aries/Cards/Fire_StealPositiveCharm.xml"
+      "source": "config/Aries/Cards/Fire_StealPositiveCharm.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "return",
+        "attack": "steal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_DOTAttack_LevelX": {
       "kind": "burst",
@@ -6764,7 +6988,14 @@
       "scale": 1.1,
       "name": "火狼咆哮",
       "source": "config/Aries/Cards/Fire_DOTAttack_LevelX.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttackWithImmolate_Level4": {
       "kind": "burst",
@@ -6773,7 +7004,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "灼伤之炎",
-      "source": "config/Aries/Cards/Fire_SingleAttackWithImmolate_Level4.xml"
+      "source": "config/Aries/Cards/Fire_SingleAttackWithImmolate_Level4.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_AreaDOTAttack_Level5": {
       "kind": "burst",
@@ -6783,7 +7021,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "烈火怒吼",
-      "source": "config/Aries/Cards/Fire_AreaDOTAttack_Level5.xml"
+      "source": "config/Aries/Cards/Fire_AreaDOTAttack_Level5.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_AreaAccuracyWeakness": {
       "kind": "trap",
@@ -6793,7 +7038,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "烟雾",
-      "source": "config/Aries/Cards/Fire_AreaAccuracyWeakness.xml"
+      "source": "config/Aries/Cards/Fire_AreaAccuracyWeakness.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_AreaStun": {
       "kind": "stun",
@@ -6802,7 +7054,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "烈火眩晕",
-      "source": "config/Aries/Cards/Fire_AreaStun.xml"
+      "source": "config/Aries/Cards/Fire_AreaStun.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "stun",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_AreaSingleAttackWithDOT_Level7": {
       "kind": "burst",
@@ -6812,7 +7071,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "火攻7",
-      "source": "config/Aries/Cards/Fire_AreaSingleAttackWithDOT_Level7.xml"
+      "source": "config/Aries/Cards/Fire_AreaSingleAttackWithDOT_Level7.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_FireDispellWeakness": {
       "kind": "trap",
@@ -6821,7 +7087,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "烈火之敌",
-      "source": "config/Aries/Cards/Fire_FireDispellWeakness.xml"
+      "source": "config/Aries/Cards/Fire_FireDispellWeakness.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_FireGreatShield": {
       "name": "烈火盾",
@@ -6830,7 +7103,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Fire_FireGreatShield.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "shield",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttack_Level0": {
       "name": "烈火魔光",
@@ -6839,7 +7119,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Fire_SingleAttack_Level0_120_adv.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_Level1": {
       "name": "疾电术",
@@ -6848,7 +7135,14 @@
       "count": 64,
       "scale": 1.055,
       "source": "config/Aries/Cards/Storm_SingleAttack_Level1.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_Level2": {
       "name": "金灵遁空",
@@ -6857,7 +7151,14 @@
       "count": 64,
       "scale": 1.11,
       "source": "config/Aries/Cards/Storm_SingleAttack_Level2.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_Level3": {
       "name": "暗夜雷动",
@@ -6866,7 +7167,14 @@
       "count": 64,
       "scale": 1.165,
       "source": "config/Aries/Cards/Storm_SingleAttack_Level3.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_StormDamageTrap": {
       "name": "风暴陷阱",
@@ -6875,7 +7183,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Storm_StormDamageTrap.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_Level4": {
       "kind": "lightning",
@@ -6883,7 +7198,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "雷神之剑",
-      "source": "config/Aries/Cards/Storm_SingleAttack_Level4.xml"
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level4.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_AreaDamageTrap": {
       "kind": "trap",
@@ -6893,7 +7215,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "雷云风暴",
-      "source": "config/Aries/Cards/Storm_AreaDamageTrap.xml"
+      "source": "config/Aries/Cards/Storm_AreaDamageTrap.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_StormGlobalAura": {
       "kind": "aura",
@@ -6902,7 +7231,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "风暴对抗",
-      "source": "config/Aries/Cards/Storm_StormGlobalAura.xml"
+      "source": "config/Aries/Cards/Storm_StormGlobalAura.xml",
+      "choreography": {
+        "placement": "field",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_Level5": {
       "kind": "lightning",
@@ -6911,7 +7247,14 @@
       "scale": 1.1,
       "name": "蛇女雷暴",
       "source": "config/Aries/Cards/Storm_SingleAttack_Level5.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_StormAccuracyBlade": {
       "kind": "blade",
@@ -6920,7 +7263,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "风暴神箭",
-      "source": "config/Aries/Cards/Storm_StormAccuracyBlade.xml"
+      "source": "config/Aries/Cards/Storm_StormAccuracyBlade.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "blade",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_StormDamageBlade": {
       "name": "风暴术",
@@ -6929,7 +7279,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Storm_StormDamageBlade.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "blade",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_RemovePositiveCharm": {
       "kind": "cleanse",
@@ -6937,7 +7294,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "厉风破运",
-      "source": "config/Aries/Cards/Storm_RemovePositiveCharm.xml"
+      "source": "config/Aries/Cards/Storm_RemovePositiveCharm.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "cleanse",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_RemoveNegativeCharm": {
       "kind": "cleanse",
@@ -6946,7 +7310,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "和风逐暗",
-      "source": "config/Aries/Cards/Storm_RemoveNegativeCharm.xml"
+      "source": "config/Aries/Cards/Storm_RemoveNegativeCharm.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "cleanse",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_AreaAttack_LevelX": {
       "kind": "burst",
@@ -6955,7 +7326,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "风鹰之眼",
-      "source": "config/Aries/Cards/Storm_AreaAttack_LevelX.xml"
+      "source": "config/Aries/Cards/Storm_AreaAttack_LevelX.xml",
+      "choreography": {
+        "placement": "center",
+        "motion": "fly",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_WildBolt_Level2": {
       "kind": "lightning",
@@ -6964,7 +7342,14 @@
       "scale": 1.1,
       "name": "极限暴熊",
       "source": "config/Aries/Cards/Storm_SingleAttack_WildBolt_Level2.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_Level6": {
       "name": "旋风爆击",
@@ -6973,7 +7358,14 @@
       "count": 64,
       "scale": 1.11,
       "source": "config/Aries/Cards/Storm_SingleAttack_Level6_low_level.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "spiral",
+        "attack": "vortex",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_AreaAttackWithStun_Level7": {
       "kind": "lightning",
@@ -6983,7 +7375,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "风暴攻7",
-      "source": "config/Aries/Cards/Storm_AreaAttackWithStun_Level7.xml"
+      "source": "config/Aries/Cards/Storm_AreaAttackWithStun_Level7.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_StormDispellWeakness": {
       "kind": "trap",
@@ -6992,7 +7391,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "风暴之敌",
-      "source": "config/Aries/Cards/Storm_StormDispellWeakness.xml"
+      "source": "config/Aries/Cards/Storm_StormDispellWeakness.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_StormGreatShield": {
       "name": "风暴盾",
@@ -7001,7 +7407,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Storm_StormGreatShield.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "shield",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_Level0": {
       "name": "风暴魔光",
@@ -7010,7 +7423,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Storm_SingleAttack_Level0_120_adv.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleAttack_Level1": {
       "name": "冰霜破",
@@ -7019,7 +7439,14 @@
       "count": 64,
       "scale": 1.055,
       "source": "config/Aries/Cards/Ice_SingleAttack_Level1.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleAttack_Level2": {
       "name": "陨落冰石",
@@ -7028,7 +7455,14 @@
       "count": 64,
       "scale": 1.11,
       "source": "config/Aries/Cards/Ice_SingleAttack_Level2.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "fall",
+        "attack": "meteor",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleAttack_Level3": {
       "name": "冰剑凛空",
@@ -7037,7 +7471,14 @@
       "count": 64,
       "scale": 1.165,
       "source": "config/Aries/Cards/Ice_SingleAttack_Level3.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "swords",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleAttack_Level4": {
       "kind": "swords",
@@ -7045,7 +7486,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "破地冰钻",
-      "source": "config/Aries/Cards/Ice_SingleAttack_Level4.xml"
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level4.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleAttack_Level6": {
       "name": "海狮冰剑",
@@ -7056,7 +7504,14 @@
       "summon": "seaLion",
       "attack": "swords",
       "source": "config/Aries/Cards/Ice_SingleAttack_Level6_low_level.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "swords",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_AreaAttack_Level2": {
       "kind": "burst",
@@ -7065,7 +7520,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "[炫彩]冰剑凛空",
-      "source": "config/Aries/Cards/Ice_AreaAttack_Level2_gold.xml"
+      "source": "config/Aries/Cards/Ice_AreaAttack_Level2_gold.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "swords",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_GlobalShield": {
       "name": "结界守护",
@@ -7074,7 +7536,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Ice_GlobalShield.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "shield",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_AreaAttack_Level4": {
       "kind": "burst",
@@ -7083,7 +7552,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "[炫彩]破地冰钻",
-      "source": "config/Aries/Cards/Ice_AreaAttack_Level4_gold.xml"
+      "source": "config/Aries/Cards/Ice_AreaAttack_Level4_gold.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_IceGlobalAura": {
       "kind": "aura",
@@ -7092,7 +7568,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "冰极对抗",
-      "source": "config/Aries/Cards/Ice_IceGlobalAura.xml"
+      "source": "config/Aries/Cards/Ice_IceGlobalAura.xml",
+      "choreography": {
+        "placement": "field",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleStun": {
       "kind": "stun",
@@ -7100,7 +7583,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "寒冰眩晕",
-      "source": "config/Aries/Cards/Ice_SingleStun.xml"
+      "source": "config/Aries/Cards/Ice_SingleStun.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "stun",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_IceDamageTrap": {
       "name": "寒冰陷阱",
@@ -7109,7 +7599,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Ice_IceDamageTrap.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_IcePrism": {
       "kind": "trap",
@@ -7118,7 +7615,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "寒冰棱镜",
-      "source": "config/Aries/Cards/Ice_IcePrism.xml"
+      "source": "config/Aries/Cards/Ice_IcePrism.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Absorb_LevelX": {
       "kind": "absorb",
@@ -7128,7 +7632,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "坚固壁垒",
-      "source": "config/Aries/Cards/Ice_AreaAbsorb_LevelX.xml"
+      "source": "config/Aries/Cards/Ice_AreaAbsorb_LevelX.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "absorb",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_StealPositiveWard": {
       "kind": "steal",
@@ -7136,7 +7647,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "神偷之手",
-      "source": "config/Aries/Cards/Ice_StealPositiveWard.xml"
+      "source": "config/Aries/Cards/Ice_StealPositiveWard.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "return",
+        "attack": "steal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleAttackWithDOT_Level5": {
       "kind": "burst",
@@ -7145,7 +7663,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "冰雹来袭",
-      "source": "config/Aries/Cards/Ice_SingleAttackWithDOT_Level5.xml"
+      "source": "config/Aries/Cards/Ice_SingleAttackWithDOT_Level5.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "fall",
+        "attack": "meteor",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_IceDamageBlade": {
       "name": "寒冰术",
@@ -7154,7 +7679,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Ice_IceDamageBlade.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "blade",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_AreaAttackWithStun_Level7": {
       "kind": "lightning",
@@ -7164,7 +7696,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "冰攻7",
-      "source": "config/Aries/Cards/Ice_AreaAttackWithStun_Level7.xml"
+      "source": "config/Aries/Cards/Ice_AreaAttackWithStun_Level7.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_IceDispellWeakness": {
       "kind": "trap",
@@ -7173,7 +7712,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "寒冰之敌",
-      "source": "config/Aries/Cards/Ice_IceDispellWeakness.xml"
+      "source": "config/Aries/Cards/Ice_IceDispellWeakness.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_StunAbsorb": {
       "kind": "shield",
@@ -7182,7 +7728,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "眩晕吸收",
-      "source": "config/Aries/Cards/Ice_StunAbsorb.xml"
+      "source": "config/Aries/Cards/Ice_StunAbsorb.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "shield",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_IceGreatShield": {
       "name": "寒冰盾",
@@ -7191,7 +7744,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Ice_IceGreatShield.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "shield",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleAttack_Level0": {
       "name": "寒冰魔光",
@@ -7200,7 +7760,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Ice_SingleAttack_Level0_120_adv.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleAttack_Level1": {
       "name": "生灵光弧",
@@ -7209,7 +7776,14 @@
       "count": 64,
       "scale": 1.055,
       "source": "config/Aries/Cards/Life_SingleAttack_Level1.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleAttack_Level2": {
       "name": "灵木刺阵",
@@ -7218,7 +7792,14 @@
       "count": 64,
       "scale": 1.11,
       "source": "config/Aries/Cards/Life_SingleAttack_Level2.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "vines",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleAttack_Level3": {
       "name": "莽林狂舞",
@@ -7227,7 +7808,14 @@
       "count": 64,
       "scale": 1.165,
       "source": "config/Aries/Cards/Life_SingleAttack_Level3.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "spiral",
+        "attack": "vortex",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleHealWithHOT_Level1": {
       "name": "生生不息",
@@ -7236,7 +7824,14 @@
       "count": 64,
       "scale": 1.055,
       "source": "config/Aries/Cards/Life_SingleHealWithHOT_Level1.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_Absorb_Level3": {
       "kind": "absorb",
@@ -7245,7 +7840,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "吸收盾",
-      "source": "config/Aries/Cards/Life_Absorb_Level3.xml"
+      "source": "config/Aries/Cards/Life_Absorb_Level3.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "absorb",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleAttack_Level4": {
       "kind": "burst",
@@ -7255,7 +7857,14 @@
       "scale": 1.1,
       "name": "噬草召唤",
       "source": "config/Aries/Cards/Life_SingleAttack_Level4.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleHeal_Level4": {
       "kind": "heal",
@@ -7265,7 +7874,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生机勃发",
-      "source": "config/Aries/Cards/Life_AreaHeal_Level4.xml"
+      "source": "config/Aries/Cards/Life_AreaHeal_Level4.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleAttack_Level6": {
       "name": "大地之怒",
@@ -7276,7 +7892,14 @@
       "summon": "gorilla",
       "attack": "vines",
       "source": "config/Aries/Cards/Life_SingleAttack_Level6_low_level.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "vines",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_LifeGlobalAura": {
       "kind": "aura",
@@ -7285,7 +7908,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命对抗",
-      "source": "config/Aries/Cards/Life_LifeGlobalAura.xml"
+      "source": "config/Aries/Cards/Life_LifeGlobalAura.xml",
+      "choreography": {
+        "placement": "field",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleHeal_Level0": {
       "name": "静水灵体",
@@ -7295,7 +7925,14 @@
       "scale": 1.055,
       "source": "config/Aries/Cards/Life_SingleHeal_Level0.xml",
       "friendly": true,
-      "secondary": "cleanse"
+      "secondary": "cleanse",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_AreaHeal_Level3": {
       "kind": "heal",
@@ -7305,7 +7942,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命庇护",
-      "source": "config/Aries/Cards/Life_AreaHeal_Level3.xml"
+      "source": "config/Aries/Cards/Life_AreaHeal_Level3.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_LifePrism": {
       "kind": "trap",
@@ -7314,7 +7958,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命棱镜",
-      "source": "config/Aries/Cards/Life_LifePrism.xml"
+      "source": "config/Aries/Cards/Life_LifePrism.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_LifeDamageBlade": {
       "name": "生命术",
@@ -7323,7 +7974,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Life_LifeDamageBlade.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "blade",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_AreaAccuracyBlade": {
       "kind": "blade",
@@ -7333,7 +7991,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命之礼",
-      "source": "config/Aries/Cards/Life_AreaAccuracyBlade.xml"
+      "source": "config/Aries/Cards/Life_AreaAccuracyBlade.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "blade",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_HealBlade": {
       "kind": "blade",
@@ -7342,7 +8007,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "治疗术",
-      "source": "config/Aries/Cards/Life_HealBlade.xml"
+      "source": "config/Aries/Cards/Life_HealBlade.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "blade",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleHealWithHOT_Level5": {
       "kind": "heal",
@@ -7351,7 +8023,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命圣光",
-      "source": "config/Aries/Cards/Life_SingleHealWithHOT_Level5.xml"
+      "source": "config/Aries/Cards/Life_SingleHealWithHOT_Level5.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleHeal_LevelX": {
       "kind": "heal",
@@ -7361,7 +8040,14 @@
       "scale": 1.1,
       "name": "精灵之舞",
       "source": "config/Aries/Cards/Life_SingleHeal_LevelX.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_AreaHealWithAbsorb_Level7": {
       "kind": "heal",
@@ -7373,7 +8059,14 @@
       "name": "重生",
       "source": "config/Aries/Cards/Life_AreaHealWithAbsorb_Level7.xml",
       "secondary": "absorb",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleHeal_ForNonLife_Level2": {
       "kind": "heal",
@@ -7382,7 +8075,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "万象凝气",
-      "source": "config/Aries/Cards/Life_SingleHeal_ForNonLife_Level2.xml"
+      "source": "config/Aries/Cards/Life_SingleHeal_ForNonLife_Level2.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleHeal_ForLife_Level2": {
       "kind": "heal",
@@ -7391,7 +8091,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "万象回春",
-      "source": "config/Aries/Cards/Life_SingleHeal_ForLife_Level2.xml"
+      "source": "config/Aries/Cards/Life_SingleHeal_ForLife_Level2.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_LifeDamageTrap": {
       "name": "生命陷阱",
@@ -7400,7 +8107,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Life_LifeDamageTrap.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_LifeDispellWeakness": {
       "kind": "trap",
@@ -7409,7 +8123,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命之敌",
-      "source": "config/Aries/Cards/Life_LifeDispellWeakness.xml"
+      "source": "config/Aries/Cards/Life_LifeDispellWeakness.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_LifeGreatShield": {
       "kind": "shield",
@@ -7418,7 +8139,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命盾",
-      "source": "config/Aries/Cards/Life_LifeGreatShield.xml"
+      "source": "config/Aries/Cards/Life_LifeGreatShield.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "shield",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleAttack_Level0": {
       "name": "生命魔光",
@@ -7427,7 +8155,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Life_SingleAttack_Level0_120_adv.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttack_Level1": {
       "name": "暗灵之咒",
@@ -7436,7 +8171,14 @@
       "count": 64,
       "scale": 1.055,
       "source": "config/Aries/Cards/Death_SingleAttack_Level1.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "spiral",
+        "attack": "vortex",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttackWithLifeTap_Level2": {
       "name": "吸血幽灵",
@@ -7447,7 +8189,14 @@
       "summon": "ghost",
       "attack": "drain",
       "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level2.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "drain",
+        "returnToCaster": true,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttack_Level3": {
       "name": "幽灵突袭",
@@ -7458,7 +8207,14 @@
       "summon": "ghost",
       "attack": "burst",
       "source": "config/Aries/Cards/Death_SingleAttack_Level3.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttackWithLifeTap_Level4": {
       "kind": "drain",
@@ -7466,7 +8222,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "回光返照",
-      "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level4.xml"
+      "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level4.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "pulse",
+        "attack": "drain",
+        "returnToCaster": true,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttack_Level5": {
       "kind": "vortex",
@@ -7475,7 +8238,14 @@
       "scale": 1.1,
       "name": "墓地莽石",
       "source": "config/Aries/Cards/Death_SingleAttack_Level5.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "vortex",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SymmetryGlobalTrap": {
       "kind": "trap",
@@ -7484,7 +8254,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡绝",
-      "source": "config/Aries/Cards/Death_SymmetryGlobalTrap.xml"
+      "source": "config/Aries/Cards/Death_SymmetryGlobalTrap.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_DeathGlobalAura": {
       "kind": "aura",
@@ -7493,7 +8270,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡对抗",
-      "source": "config/Aries/Cards/Death_DeathGlobalAura.xml"
+      "source": "config/Aries/Cards/Death_DeathGlobalAura.xml",
+      "choreography": {
+        "placement": "field",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttackWithLifeTap_Level6": {
       "kind": "drain",
@@ -7502,7 +8286,14 @@
       "scale": 1.1,
       "name": "蝠王吸魂",
       "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level6.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "drain",
+        "returnToCaster": true,
+        "secondaryTarget": "target"
+      }
     },
     "Death_DeathDamageTrap": {
       "name": "死亡陷阱",
@@ -7511,7 +8302,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Death_DeathDamageTrap.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_DeathDamageBlade": {
       "name": "死亡术",
@@ -7520,7 +8318,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Death_DeathDamageBlade.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "blade",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_DeathPrism": {
       "kind": "trap",
@@ -7529,7 +8334,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡棱镜",
-      "source": "config/Aries/Cards/Death_DeathPrism.xml"
+      "source": "config/Aries/Cards/Death_DeathPrism.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleHealWithImmolate_Level3": {
       "kind": "heal",
@@ -7538,7 +8350,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "祭献",
-      "source": "config/Aries/Cards/Death_SingleHealWithImmolate_Level3.xml"
+      "source": "config/Aries/Cards/Death_SingleHealWithImmolate_Level3.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_GlobalDamageTrap": {
       "kind": "trap",
@@ -7547,7 +8366,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "黑暗诅咒",
-      "source": "config/Aries/Cards/Death_GlobalDamageTrap.xml"
+      "source": "config/Aries/Cards/Death_GlobalDamageTrap.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttackWithDOT_Level4": {
       "kind": "burst",
@@ -7556,7 +8382,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡毒",
-      "source": "config/Aries/Cards/Death_SingleAttackWithDOT_Level4.xml"
+      "source": "config/Aries/Cards/Death_SingleAttackWithDOT_Level4.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_AreaDamageWeakness": {
       "kind": "trap",
@@ -7566,7 +8399,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "群之羁绊",
-      "source": "config/Aries/Cards/Death_AreaDamageWeakness.xml"
+      "source": "config/Aries/Cards/Death_AreaDamageWeakness.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_AreaAttackWithLifeTap_Level7": {
       "kind": "drain",
@@ -7575,7 +8415,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡群攻",
-      "source": "config/Aries/Cards/Death_AreaAttackWithLifeTap_Level7.xml"
+      "source": "config/Aries/Cards/Death_AreaAttackWithLifeTap_Level7.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "pulse",
+        "attack": "drain",
+        "returnToCaster": true,
+        "secondaryTarget": "target"
+      }
     },
     "Death_HealWeakness": {
       "kind": "trap",
@@ -7584,7 +8431,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡巫术",
-      "source": "config/Aries/Cards/Death_HealWeakness.xml"
+      "source": "config/Aries/Cards/Death_HealWeakness.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_DeathDispellWeakness": {
       "kind": "trap",
@@ -7593,7 +8447,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡之敌",
-      "source": "config/Aries/Cards/Death_DeathDispellWeakness.xml"
+      "source": "config/Aries/Cards/Death_DeathDispellWeakness.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_DeathGreatShield": {
       "name": "死亡盾",
@@ -7602,7 +8463,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Death_DeathGreatShield.xml",
-      "friendly": true
+      "friendly": true,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "shield",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttack_Level0": {
       "name": "死亡魔光",
@@ -7611,7 +8479,14 @@
       "count": 64,
       "scale": 1,
       "source": "config/Aries/Cards/Death_SingleAttack_Level0_120_adv.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_Rune_FireResist_MiniAura": {
       "kind": "aura",
@@ -7620,7 +8495,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "烈火盾墙符文",
-      "source": "config/Aries/Cards/Fire_Rune_FireResist_MiniAura.xml"
+      "source": "config/Aries/Cards/Fire_Rune_FireResist_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Rune_IceResist_MiniAura": {
       "kind": "aura",
@@ -7629,7 +8511,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "寒冰盾墙符文",
-      "source": "config/Aries/Cards/Ice_Rune_IceResist_MiniAura.xml"
+      "source": "config/Aries/Cards/Ice_Rune_IceResist_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_Rune_StormResist_MiniAura": {
       "kind": "aura",
@@ -7638,7 +8527,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "风暴盾墙符文",
-      "source": "config/Aries/Cards/Storm_Rune_StormResist_MiniAura.xml"
+      "source": "config/Aries/Cards/Storm_Rune_StormResist_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_Rune_LifeResist_MiniAura": {
       "kind": "aura",
@@ -7647,7 +8543,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命盾墙符文",
-      "source": "config/Aries/Cards/Life_Rune_LifeResist_MiniAura.xml"
+      "source": "config/Aries/Cards/Life_Rune_LifeResist_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_Rune_DeathResist_MiniAura": {
       "kind": "aura",
@@ -7656,7 +8559,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡盾墙符文",
-      "source": "config/Aries/Cards/Death_Rune_DeathResist_MiniAura.xml"
+      "source": "config/Aries/Cards/Death_Rune_DeathResist_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_Rune_AreaAttack_Level2": {
       "kind": "burst",
@@ -7665,7 +8575,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "烈火群击符文",
-      "source": "config/Aries/Cards/Fire_Rune_AreaAttack_Level2.xml"
+      "source": "config/Aries/Cards/Fire_Rune_AreaAttack_Level2.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Rune_AreaAttack_Level2": {
       "kind": "burst",
@@ -7674,7 +8591,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "寒冰群击符文",
-      "source": "config/Aries/Cards/Ice_Rune_AreaAttack_Level2.xml"
+      "source": "config/Aries/Cards/Ice_Rune_AreaAttack_Level2.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_Rune_AreaAttack_Level2": {
       "kind": "burst",
@@ -7683,7 +8607,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "风暴群击",
-      "source": "config/Aries/Cards/Storm_Rune_AreaAttack_Level2.xml"
+      "source": "config/Aries/Cards/Storm_Rune_AreaAttack_Level2.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_Rune_AreaAttack_Level2": {
       "kind": "burst",
@@ -7692,7 +8623,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命群击",
-      "source": "config/Aries/Cards/Life_Rune_AreaAttack_Level2.xml"
+      "source": "config/Aries/Cards/Life_Rune_AreaAttack_Level2.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_Rune_AreaAttack_Level2": {
       "kind": "burst",
@@ -7701,7 +8639,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡群击",
-      "source": "config/Aries/Cards/Death_Rune_AreaAttack_Level2.xml"
+      "source": "config/Aries/Cards/Death_Rune_AreaAttack_Level2.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_Rune_FireAccuracy_MiniAura": {
       "kind": "aura",
@@ -7710,7 +8655,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "烈火专注",
-      "source": "config/Aries/Cards/Fire_Rune_FireAccuracy_MiniAura.xml"
+      "source": "config/Aries/Cards/Fire_Rune_FireAccuracy_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Rune_IceAccuracy_MiniAura": {
       "kind": "aura",
@@ -7719,7 +8671,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "寒冰专注",
-      "source": "config/Aries/Cards/Ice_Rune_IceAccuracy_MiniAura.xml"
+      "source": "config/Aries/Cards/Ice_Rune_IceAccuracy_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_Rune_StormAccuracy_MiniAura": {
       "kind": "aura",
@@ -7728,7 +8687,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "风暴专注",
-      "source": "config/Aries/Cards/Storm_Rune_StormAccuracy_MiniAura.xml"
+      "source": "config/Aries/Cards/Storm_Rune_StormAccuracy_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_Rune_LifeAccuracy_MiniAura": {
       "kind": "aura",
@@ -7737,7 +8703,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命专注",
-      "source": "config/Aries/Cards/Life_Rune_LifeAccuracy_MiniAura.xml"
+      "source": "config/Aries/Cards/Life_Rune_LifeAccuracy_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_Rune_DeathAccuracy_MiniAura": {
       "kind": "aura",
@@ -7746,7 +8719,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡专注",
-      "source": "config/Aries/Cards/Death_Rune_DeathAccuracy_MiniAura.xml"
+      "source": "config/Aries/Cards/Death_Rune_DeathAccuracy_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_Pet_SingleAttackWithLifeTap_IronShellsPoison": {
       "kind": "drain",
@@ -7754,7 +8734,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "铁壳毒物",
-      "source": "config/Aries/Cards/Death_Pet_SingleAttackWithLifeTap_IronShellsPoison.xml"
+      "source": "config/Aries/Cards/Death_Pet_SingleAttackWithLifeTap_IronShellsPoison.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "pulse",
+        "attack": "drain",
+        "returnToCaster": true,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_Pet_SingleAttack_FireRockyOgresDominance": {
       "kind": "burst",
@@ -7763,7 +8750,14 @@
       "scale": 1.1,
       "name": "暴怒鬃王",
       "source": "config/Aries/Cards/Fire_Pet_SingleAttack_FireRockyOgresDominance.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_Pet_SingleAttack_FireRockyOgresFocus": {
       "kind": "burst",
@@ -7772,7 +8766,14 @@
       "scale": 1.1,
       "name": "火兽袭击",
       "source": "config/Aries/Cards/Fire_Pet_SingleAttack_FireRockyOgresFocus.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Pet_SingleAttack_WaterBubblesFury": {
       "kind": "swords",
@@ -7780,7 +8781,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "咕噜大法",
-      "source": "config/Aries/Cards/Ice_Pet_SingleAttack_WaterBubblesFury.xml"
+      "source": "config/Aries/Cards/Ice_Pet_SingleAttack_WaterBubblesFury.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "swords",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_Pet_SingleAttack_ForestSpikyOgresPunch": {
       "name": "土猿猛击",
@@ -7791,7 +8799,14 @@
       "summon": "gorilla",
       "attack": "burst",
       "source": "config/Aries/Cards/Life_Pet_SingleAttack_ForestSpikyOgresPunch.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_Pet_SingleAttack_IronBeeSting": {
       "kind": "lightning",
@@ -7799,7 +8814,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "苍蝇穿刺",
-      "source": "config/Aries/Cards/Storm_Pet_SingleAttack_IronBeeSting.xml"
+      "source": "config/Aries/Cards/Storm_Pet_SingleAttack_IronBeeSting.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_Pet_AreaAttack_LevelX_ShadowSmashBullsSmash": {
       "kind": "burst",
@@ -7808,7 +8830,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "连环闪电",
-      "source": "config/Aries/Cards/Storm_Pet_AreaAttack_LevelX_ShadowSmashBullsSmash.xml"
+      "source": "config/Aries/Cards/Storm_Pet_AreaAttack_LevelX_ShadowSmashBullsSmash.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_Pet_SingleAttack_GhostOctopusBossDoom": {
       "kind": "vortex",
@@ -7817,7 +8846,14 @@
       "scale": 1.1,
       "name": "死亡章鱼",
       "source": "config/Aries/Cards/Death_Pet_SingleAttack_GhostOctopusBossDoom.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "vortex",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_Pet_AreaAttack_ShadowOfPhoenixsBreath": {
       "kind": "burst",
@@ -7827,7 +8863,14 @@
       "scale": 1.1,
       "name": "凤凰涅磐",
       "source": "config/Aries/Cards/Fire_Pet_AreaAttack_ShadowOfPhoenixsBreath.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "fly",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Pet_SingleAttack_IcePangolinsFreeze": {
       "name": "冰兽发威",
@@ -7838,7 +8881,14 @@
       "summon": "pangolin",
       "attack": "swords",
       "source": "config/Aries/Cards/Ice_Pet_SingleAttack_IcePangolinsFreeze.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "swords",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_Pet_AreaHeal_ZodiacRabbitsBlessing": {
       "kind": "heal",
@@ -7849,7 +8899,14 @@
       "scale": 1.1,
       "name": "超能神兔",
       "source": "config/Aries/Cards/Life_Pet_AreaHeal_ZodiacRabbitsBlessing.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_Pet_SingleHeal_Nymphora": {
       "kind": "heal",
@@ -7859,7 +8916,14 @@
       "scale": 1.1,
       "name": "圣灵复活",
       "source": "config/Aries/Cards/Life_Pet_SingleHeal_Nymphora.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Pet_SingleAttackWithDOT_FrostMonkey": {
       "kind": "burst",
@@ -7868,7 +8932,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "冰刺魂体",
-      "source": "config/Aries/Cards/Ice_Pet_SingleAttackWithDOT_FrostMonkey.xml"
+      "source": "config/Aries/Cards/Ice_Pet_SingleAttackWithDOT_FrostMonkey.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_Pet_SingleAttack_ManekiNeko": {
       "name": "疾猫霹雳",
@@ -7879,7 +8950,14 @@
       "summon": "cat",
       "attack": "lightning",
       "source": "config/Aries/Cards/Storm_Pet_SingleAttack_ManekiNeko.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Pet_AreaAttack_BananaAttack": {
       "kind": "burst",
@@ -7888,7 +8966,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "帽子戏法",
-      "source": "config/Aries/Cards/Ice_Pet_AreaAttack_BananaAttack.xml"
+      "source": "config/Aries/Cards/Ice_Pet_AreaAttack_BananaAttack.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Pet_SingleAttackWithDOT_FrostScylla": {
       "kind": "burst",
@@ -7897,7 +8982,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "冰魄神柱",
-      "source": "config/Aries/Cards/Ice_Pet_SingleAttackWithDOT_FrostScylla.xml"
+      "source": "config/Aries/Cards/Ice_Pet_SingleAttackWithDOT_FrostScylla.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Pet_IceSingleAttack_FrostFang_Boss": {
       "kind": "swords",
@@ -7906,7 +8998,14 @@
       "scale": 1.1,
       "name": "恶狼袭击",
       "source": "config/Aries/Cards/Ice_Pet_IceSingleAttack_FrostFang_Boss.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "swords",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_Pet_DeathSingleAttack_UndeadMonkey_Boss": {
       "kind": "vortex",
@@ -7915,7 +9014,14 @@
       "scale": 1.1,
       "name": "亡灵大军",
       "source": "config/Aries/Cards/Death_Pet_DeathSingleAttack_UndeadMonkey_Boss.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "vortex",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_Pet_SingleAttackWithDOT_Level2": {
       "kind": "burst",
@@ -7924,7 +9030,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "雷神电轮",
-      "source": "config/Aries/Cards/Storm_Pet_SingleAttackWithDOT_Level2.xml"
+      "source": "config/Aries/Cards/Storm_Pet_SingleAttackWithDOT_Level2.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_Pet_SingleAttack_FireRockyOgresDominance_Power": {
       "kind": "burst",
@@ -7934,7 +9047,14 @@
       "scale": 1.1,
       "name": "火鬃王暴怒",
       "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_FireRockyOgresDominance_Power.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_Pet_AreaAttack_Level6": {
       "kind": "burst",
@@ -7944,7 +9064,14 @@
       "scale": 1.1,
       "name": "强化海狮冰剑",
       "source": "config/Aries/Cards/Ice_Pet_AreaAttack_Level6.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "swords",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_AreaAttack_DoomLordsWrath": {
       "kind": "burst",
@@ -7953,7 +9080,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "群之暗伤符文_屏蔽",
-      "source": "config/Aries/Cards/Death_AreaAttack_DoomLordsWrath.xml"
+      "source": "config/Aries/Cards/Death_AreaAttack_DoomLordsWrath.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttackWithDisabledHeal": {
       "name": "天魔杀星",
@@ -7962,7 +9096,14 @@
       "count": 64,
       "scale": 1.11,
       "source": "config/Aries/Cards/Death_SingleAttackWithDisabledHeal_low_level.xml",
-      "friendly": false
+      "friendly": false,
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "drain",
+        "returnToCaster": true,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_DOTAttackWithSplash_Level6": {
       "kind": "burst",
@@ -7971,7 +9112,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "熔岩炸弹",
-      "source": "config/Aries/Cards/Fire_DOTAttackWithSplash_Level6.xml"
+      "source": "config/Aries/Cards/Fire_DOTAttackWithSplash_Level6.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_ReflectionShield": {
       "kind": "reflect",
@@ -7980,7 +9128,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "冰霜魔镜",
-      "source": "config/Aries/Cards/Ice_ReflectionShield.xml"
+      "source": "config/Aries/Cards/Ice_ReflectionShield.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "reflect",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_AreaCleanse": {
       "kind": "cleanse",
@@ -7990,7 +9145,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "圣灵净化",
-      "source": "config/Aries/Cards/Life_AreaCleanse.xml"
+      "source": "config/Aries/Cards/Life_AreaCleanse.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "cleanse",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_StormDamageTrap_Standing": {
       "kind": "lightning",
@@ -7999,7 +9161,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "惊雷裂隙",
-      "source": "config/Aries/Cards/Storm_StormDamageTrap_Standing.xml"
+      "source": "config/Aries/Cards/Storm_StormDamageTrap_Standing.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttackWithPercent": {
       "kind": "bolt",
@@ -8007,7 +9176,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "灵魂契约符文",
-      "source": "config/Aries/Cards/Death_Rune_SingleAttackWithPercent.xml"
+      "source": "config/Aries/Cards/Death_Rune_SingleAttackWithPercent.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttackWithExplode": {
       "kind": "burst",
@@ -8016,7 +9192,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "急速点燃符文",
-      "source": "config/Aries/Cards/Fire_Rune_SingleAttackWithExplode.xml"
+      "source": "config/Aries/Cards/Fire_Rune_SingleAttackWithExplode.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleFreeze": {
       "kind": "freeze",
@@ -8024,7 +9207,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "冰封神符符文",
-      "source": "config/Aries/Cards/Ice_Rune_SingleFreeze.xml"
+      "source": "config/Aries/Cards/Ice_Rune_SingleFreeze.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "freeze",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_AreaPowerPipBoost": {
       "kind": "pips",
@@ -8034,7 +9224,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "希望之光符文",
-      "source": "config/Aries/Cards/Life_Rune_AreaPowerPipBoost.xml"
+      "source": "config/Aries/Cards/Life_Rune_AreaPowerPipBoost.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "pips",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_StormConversePositiveWard": {
       "kind": "cleanse",
@@ -8042,7 +9239,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "怒风逆转符文",
-      "source": "config/Aries/Cards/Storm_Rune_StormConversePositiveWard.xml"
+      "source": "config/Aries/Cards/Storm_Rune_StormConversePositiveWard.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "cleanse",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_Rune_HealTrap_Standing": {
       "kind": "trap",
@@ -8051,7 +9255,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "瘟神巫术符文",
-      "source": "config/Aries/Cards/Death_Rune_HealTrap_Standing.xml"
+      "source": "config/Aries/Cards/Death_Rune_HealTrap_Standing.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_Rune_PowerPipTrap_Standing": {
       "kind": "trap",
@@ -8060,7 +9271,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "超魔抑制符文",
-      "source": "config/Aries/Cards/Life_Rune_PowerPipTrap_Standing.xml"
+      "source": "config/Aries/Cards/Life_Rune_PowerPipTrap_Standing.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "trap",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_Pet_DeathGlobalAuraDamage": {
       "kind": "aura",
@@ -8069,7 +9287,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "暗黑力场",
-      "source": "config/Aries/Cards/Death_Pet_DeathGlobalAuraDamage.xml"
+      "source": "config/Aries/Cards/Death_Pet_DeathGlobalAuraDamage.xml",
+      "choreography": {
+        "placement": "field",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_SingleHeal_LongCD": {
       "kind": "heal",
@@ -8079,7 +9304,14 @@
       "scale": 1.1,
       "name": "愈合符文",
       "source": "config/Aries/Cards/Balance_Rune_SingleHeal_LongCD.xml",
-      "secondary": "cleanse"
+      "secondary": "cleanse",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_BoostPowerPipChance_Standing": {
       "kind": "shield",
@@ -8088,7 +9320,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "超魔爆发符文",
-      "source": "config/Aries/Cards/Balance_BoostPowerPipChance_Standing.xml"
+      "source": "config/Aries/Cards/Balance_BoostPowerPipChance_Standing.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "shield",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_ArenaAttack_Level8": {
       "kind": "burst",
@@ -8097,7 +9336,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "地狱爆炎符文",
-      "source": "config/Aries/Cards/Fire_ArenaAttack_Level8.xml"
+      "source": "config/Aries/Cards/Fire_ArenaAttack_Level8.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_DefensiveStance": {
       "kind": "aura",
@@ -8106,7 +9352,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "Ice_DefensiveStance",
-      "source": "config/Aries/Cards/Ice_DefensiveStance.xml"
+      "source": "config/Aries/Cards/Ice_DefensiveStance.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_AreaHealWithHOT_Level8": {
       "kind": "heal",
@@ -8116,7 +9369,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "天使赐福符文",
-      "source": "config/Aries/Cards/Life_AreaHealWithHOT_Level8.xml"
+      "source": "config/Aries/Cards/Life_AreaHealWithHOT_Level8.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleStealth": {
       "kind": "stealth",
@@ -8125,7 +9385,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "风影斗篷符文",
-      "source": "config/Aries/Cards/Storm_SingleStealth.xml"
+      "source": "config/Aries/Cards/Storm_SingleStealth.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "stealth",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleGuardianWithImmolate_Level8": {
       "kind": "absorb",
@@ -8134,7 +9401,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "灵魂替身符文",
-      "source": "config/Aries/Cards/Death_SingleGuardianWithImmolate_Level8.xml"
+      "source": "config/Aries/Cards/Death_SingleGuardianWithImmolate_Level8.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "absorb",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_AreaStunAbsorb": {
       "kind": "shield",
@@ -8144,7 +9418,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "群晕吸收",
-      "source": "config/Aries/Cards/Balance_Rune_AreaStunAbsorb.xml"
+      "source": "config/Aries/Cards/Balance_Rune_AreaStunAbsorb.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "shield",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttack_Level1_Crazy": {
       "kind": "burst",
@@ -8152,7 +9433,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "熔岩爆",
-      "source": "config/Aries/Cards/Fire_SingleAttack_Level1_Crazy.xml"
+      "source": "config/Aries/Cards/Fire_SingleAttack_Level1_Crazy.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleAttack_Level1_Crazy": {
       "kind": "swords",
@@ -8160,7 +9448,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "冰霜裂",
-      "source": "config/Aries/Cards/Ice_SingleAttack_Level1_Crazy.xml"
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level1_Crazy.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "swords",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_Level1_Crazy": {
       "kind": "lightning",
@@ -8168,7 +9463,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "疾空破",
-      "source": "config/Aries/Cards/Storm_SingleAttack_Level1_Crazy.xml"
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level1_Crazy.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleAttack_Level1_Crazy": {
       "kind": "vines",
@@ -8176,7 +9478,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生灵光刃",
-      "source": "config/Aries/Cards/Life_SingleAttack_Level1_Crazy.xml"
+      "source": "config/Aries/Cards/Life_SingleAttack_Level1_Crazy.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "vines",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttack_Level1_Crazy": {
       "kind": "vortex",
@@ -8184,7 +9493,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "湮灭之咒",
-      "source": "config/Aries/Cards/Death_SingleAttack_Level1_Crazy.xml"
+      "source": "config/Aries/Cards/Death_SingleAttack_Level1_Crazy.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "spiral",
+        "attack": "vortex",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttack_Level2_Crazy": {
       "kind": "burst",
@@ -8192,7 +9508,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "火神天罚",
-      "source": "config/Aries/Cards/Fire_SingleAttack_Level2_Crazy.xml"
+      "source": "config/Aries/Cards/Fire_SingleAttack_Level2_Crazy.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "fall",
+        "attack": "meteor",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleAttack_Level2_Crazy": {
       "kind": "swords",
@@ -8200,7 +9523,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "陨落冰山",
-      "source": "config/Aries/Cards/Ice_SingleAttack_Level2_Crazy.xml"
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level2_Crazy.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "fall",
+        "attack": "meteor",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_Level2_Crazy": {
       "kind": "lightning",
@@ -8208,7 +9538,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "雷鸣遁空",
-      "source": "config/Aries/Cards/Storm_SingleAttack_Level2_Crazy.xml"
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level2_Crazy.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleAttack_Level2_Crazy": {
       "kind": "vines",
@@ -8216,7 +9553,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "荆棘刺尖",
-      "source": "config/Aries/Cards/Life_SingleAttack_Level2_Crazy.xml"
+      "source": "config/Aries/Cards/Life_SingleAttack_Level2_Crazy.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "vines",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttackWithLifeTap_Level2_Crazy": {
       "kind": "drain",
@@ -8225,7 +9569,14 @@
       "scale": 1.1,
       "name": "吸星幽魂",
       "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level2_Crazy.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "drain",
+        "returnToCaster": true,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_Enrage_Level1": {
       "kind": "enrage",
@@ -8234,7 +9585,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "1级激怒符文卡",
-      "source": "config/Aries/Cards/Balance_Rune_Enrage_Level1.xml"
+      "source": "config/Aries/Cards/Balance_Rune_Enrage_Level1.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "enrage",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_SingleAttack_Level6_OutStandingCard": {
       "kind": "burst",
@@ -8244,7 +9602,14 @@
       "scale": 1.1,
       "name": "火魔怒吼",
       "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level6_OutStandingCard.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_AreaAttack_Level6_OutStandingCard": {
       "kind": "burst",
@@ -8254,7 +9619,14 @@
       "scale": 1.1,
       "name": "海狮冰锥",
       "source": "config/Aries/Cards/Ice_AreaAttack_Level6_OutStandingCard.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "swords",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttack_Level6_OutStandingCard": {
       "kind": "lightning",
@@ -8263,7 +9635,14 @@
       "scale": 1.1,
       "name": "狂风暴击",
       "source": "config/Aries/Cards/Storm_SingleAttack_Level6_OutStandingCard.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "target",
+        "motion": "spiral",
+        "attack": "vortex",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleAttack_Level6_OutStandingCard": {
       "kind": "vines",
@@ -8272,7 +9651,14 @@
       "scale": 1.1,
       "name": "巨岩之怒",
       "source": "config/Aries/Cards/Life_SingleAttack_Level6_OutStandingCard.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "lunge",
+        "attack": "vines",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttackWithLifeTap_Level6_OutStandingCard": {
       "kind": "drain",
@@ -8281,7 +9667,14 @@
       "scale": 1.1,
       "name": "恶灵夺魂",
       "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level6_OutStandingCard.xml",
-      "subjectPlacement": "center"
+      "subjectPlacement": "center",
+      "choreography": {
+        "placement": "center",
+        "motion": "hover",
+        "attack": "drain",
+        "returnToCaster": true,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_CatchPetCard_General": {
       "kind": "capture",
@@ -8289,7 +9682,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "普通抓宠卡",
-      "source": "config/Aries/Cards/Balance_Rune_CatchPetCard_General.xml"
+      "source": "config/Aries/Cards/Balance_Rune_CatchPetCard_General.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "capture",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_CatchPetCard_High": {
       "kind": "capture",
@@ -8297,7 +9697,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "高级抓宠符文",
-      "source": "config/Aries/Cards/Balance_Rune_CatchPetCard_High.xml"
+      "source": "config/Aries/Cards/Balance_Rune_CatchPetCard_High.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "capture",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_CatchPetCard_Top": {
       "kind": "capture",
@@ -8305,7 +9712,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "顶级抓宠符文",
-      "source": "config/Aries/Cards/Balance_Rune_CatchPetCard_Top.xml"
+      "source": "config/Aries/Cards/Balance_Rune_CatchPetCard_Top.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "capture",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_AreaAttackCard_Elementary": {
       "kind": "burst",
@@ -8314,7 +9728,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "能量脉冲符文",
-      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_Elementary.xml"
+      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_Elementary.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_AreaAttackCard_Middle": {
       "kind": "burst",
@@ -8323,7 +9744,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "超能脉冲符文",
-      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_Middle.xml"
+      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_Middle.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_AreaAttackCard_High": {
       "kind": "burst",
@@ -8332,7 +9760,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "脉冲奥义符文",
-      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_High.xml"
+      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_High.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_GlobalShield": {
       "kind": "shield",
@@ -8342,7 +9777,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "潘多拉结界守护",
-      "source": "config/Aries/Cards/Balance_AreaGlobalShield_Pandora_01.xml"
+      "source": "config/Aries/Cards/Balance_AreaGlobalShield_Pandora_01.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "shield",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Fire_BlazingStance": {
       "kind": "aura",
@@ -8351,7 +9793,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "烈焰形态符文",
-      "source": "config/Aries/Cards/Fire_BlazingStance.xml"
+      "source": "config/Aries/Cards/Fire_BlazingStance.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_PierceStance": {
       "kind": "aura",
@@ -8360,7 +9809,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "坚冰形态符文",
-      "source": "config/Aries/Cards/Ice_PierceStance.xml"
+      "source": "config/Aries/Cards/Ice_PierceStance.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_ElectricStance": {
       "kind": "aura",
@@ -8369,7 +9825,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "狂风形态",
-      "source": "config/Aries/Cards/Storm_ElectricStance.xml"
+      "source": "config/Aries/Cards/Storm_ElectricStance.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_HealingStance": {
       "kind": "aura",
@@ -8378,7 +9841,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "光刃形态符文",
-      "source": "config/Aries/Cards/Life_HealingStance.xml"
+      "source": "config/Aries/Cards/Life_HealingStance.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_VampireStance": {
       "kind": "aura",
@@ -8387,7 +9857,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "魔刃形态",
-      "source": "config/Aries/Cards/Death_VampireStance.xml"
+      "source": "config/Aries/Cards/Death_VampireStance.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_SingleHealWithCleanse_Lv4": {
       "kind": "heal",
@@ -8397,7 +9874,14 @@
       "scale": 1.1,
       "name": "愈合MAX",
       "source": "config/Aries/Cards/Balance_Rune_SingleHealWithCleanse_Lv4.xml",
-      "secondary": "cleanse"
+      "secondary": "cleanse",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_AreaAttackWithImmolate_Lv5": {
       "kind": "burst",
@@ -8407,7 +9891,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "狰狞",
-      "source": "config/Aries/Cards/Balance_Rune_AreaAttackWithImmolate_Lv5.xml"
+      "source": "config/Aries/Cards/Balance_Rune_AreaAttackWithImmolate_Lv5.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_SingleAttackWithStun_Lv5": {
       "kind": "bolt",
@@ -8416,7 +9907,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "先发制人符文",
-      "source": "config/Aries/Cards/Balance_Rune_SingleAttackWithStun_Lv5.xml"
+      "source": "config/Aries/Cards/Balance_Rune_SingleAttackWithStun_Lv5.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_SingleAttackWithSelfStun_Lv5": {
       "kind": "bolt",
@@ -8425,7 +9923,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "弑神脉冲",
-      "source": "config/Aries/Cards/Balance_Rune_SingleAttackWithSelfStun_Lv5.xml"
+      "source": "config/Aries/Cards/Balance_Rune_SingleAttackWithSelfStun_Lv5.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "caster"
+      }
     },
     "Fire_SingleAttackWith_Trap": {
       "kind": "burst",
@@ -8434,7 +9939,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "烈火反转",
-      "source": "config/Aries/Cards/Fire_SingleAttackWith_Trap.xml"
+      "source": "config/Aries/Cards/Fire_SingleAttackWith_Trap.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Ice_SingleAttackWith_Trap": {
       "kind": "swords",
@@ -8443,7 +9955,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "寒冰反转",
-      "source": "config/Aries/Cards/Ice_SingleAttackWith_Trap.xml"
+      "source": "config/Aries/Cards/Ice_SingleAttackWith_Trap.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "swords",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Storm_SingleAttackWith_Trap": {
       "kind": "lightning",
@@ -8452,7 +9971,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "风暴反转",
-      "source": "config/Aries/Cards/Storm_SingleAttackWith_Trap.xml"
+      "source": "config/Aries/Cards/Storm_SingleAttackWith_Trap.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "lightning",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Life_SingleAttackWith_Trap": {
       "kind": "vines",
@@ -8461,7 +9987,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "生命反转",
-      "source": "config/Aries/Cards/Life_SingleAttackWith_Trap.xml"
+      "source": "config/Aries/Cards/Life_SingleAttackWith_Trap.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "vines",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Death_SingleAttackWith_Trap": {
       "kind": "vortex",
@@ -8470,7 +10003,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "死亡反转",
-      "source": "config/Aries/Cards/Death_SingleAttackWith_Trap.xml"
+      "source": "config/Aries/Cards/Death_SingleAttackWith_Trap.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "spiral",
+        "attack": "vortex",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_GainPips": {
       "kind": "pips",
@@ -8479,7 +10019,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "超魔祝福符文",
-      "source": "config/Aries/Cards/Balance_Rune_GainPips.xml"
+      "source": "config/Aries/Cards/Balance_Rune_GainPips.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "pips",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_Rune_PandoraResist_MiniAura": {
       "kind": "aura",
@@ -8488,7 +10035,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "潘多拉盾墙守护符文",
-      "source": "config/Aries/Cards/Balance_Rune_PandoraResist_MiniAura.xml"
+      "source": "config/Aries/Cards/Balance_Rune_PandoraResist_MiniAura.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "orbit",
+        "attack": "aura",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_AreaAttack_DragonLight": {
       "kind": "burst",
@@ -8497,7 +10051,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "梦龙脉冲符文",
-      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_Dragon.xml"
+      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_Dragon.xml",
+      "choreography": {
+        "placement": "target",
+        "motion": "pulse",
+        "attack": "burst",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_SingleHeal_DragonLight": {
       "kind": "heal",
@@ -8507,7 +10068,14 @@
       "scale": 1.1,
       "name": "梦龙之光符文",
       "source": "config/Aries/Cards/Balance_Rune_SingleHeal_Dragon.xml",
-      "secondary": "cleanse"
+      "secondary": "cleanse",
+      "choreography": {
+        "placement": "target",
+        "motion": "rise",
+        "attack": "heal",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     },
     "Balance_SingleAttack_Level2_teen": {
       "kind": "bolt",
@@ -8515,7 +10083,14 @@
       "count": 64,
       "scale": 1.1,
       "name": "梦龙极光符文",
-      "source": "config/Aries/Cards/Balance_Rune_SingleAttack_Dragon.xml"
+      "source": "config/Aries/Cards/Balance_Rune_SingleAttack_Dragon.xml",
+      "choreography": {
+        "placement": "projectile",
+        "motion": "fly",
+        "attack": "bolt",
+        "returnToCaster": false,
+        "secondaryTarget": "target"
+      }
     }
   }
 }

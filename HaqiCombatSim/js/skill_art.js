@@ -7,7 +7,10 @@ import { fetchJson as read } from './runtime_data.js';
 export async function loadSkillArt(effects, mode) {
     const [manifest,frames]=await Promise.all([read('data/adventure/skill-art.json'),read('data/adventure/card-frames.json')]);
     validateSkillArt(manifest,effects);
-    const images=new Map(),pending=new Map();
+    const images=new Map(),pending=new Map(),subjectFrames=new Map();
+    for(const [base,entry]of Object.entries(manifest.bases)){
+        subjectFrames.set(base,{card:skillFrame(manifest,base),animation:entry.effectAtlas?entry.effectFrames.map((_,i)=>skillFrame(manifest,base,(i+.5)/entry.effectFrames.length)):null});
+    }
     function load(id,row){
         if(!pending.has(id))pending.set(id,new Promise((resolve,reject)=>{
             const image=new Image();image.crossOrigin='anonymous';
@@ -24,7 +27,10 @@ export async function loadSkillArt(effects, mode) {
         return load(id,manifest.sheets[id]);
     }
     function drawSubject(c,base,x,y,w,h,progress=null){
-        const frame=skillFrame(manifest,base,progress),image=images.get(frame.atlas);
+        const cached=subjectFrames.get(base);
+        if(!cached)throw new Error('缺少技能主体：'+base);
+        const frames=cached.animation;
+        const frame=progress===null||!frames?cached.card:frames[Math.min(frames.length-1,Math.floor(Math.max(0,Math.min(1,progress))*frames.length))],image=images.get(frame.atlas);
         if(!image)return false;
         const size=Math.min(w,h);c.drawImage(image,...frame.rect,x+(w-size)/2,y+(h-size)/2,size,size);return true;
     }

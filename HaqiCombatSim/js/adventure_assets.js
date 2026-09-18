@@ -4,6 +4,7 @@ import { validateSpellEffects } from './spell_effects_core.js';
 import { validateAdventureContent } from './adventure_content_core.js';
 import { assetMode, assetUrl, validateMediaManifest } from './adventure_media_core.js';
 import { loadSkillArt } from './skill_art.js';
+import { loadUiArt } from './adventure_ui_art.js';
 export const SAVE_KEY = 'haqi.adventure.kids.v1';
 import { fetchJson as json } from './runtime_data.js';
 function loadImage(url) { return new Promise((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=()=>reject(new Error(`无法加载图片 ${url}`));i.src=url;}); }
@@ -12,6 +13,8 @@ export async function loadResources(progress) {
     validateAdventureContent(content,dataset,manifest);
     validateSpellEffects(effects,dataset.cards);
     const mode=assetMode(location.hostname,location.search);
+    // A failed cosmetic download must not block local saves or gameplay.
+    const uiArtReady=loadUiArt(mode).catch(error=>console.warn('使用基础界面：',error.message));
     validateMediaManifest(media,manifest,mode);
     const images=new Map(),bounds=new Map(),failures=[],lazyImages=new Map(),imageLoading=new Map();
     const cardImages=new Set(Object.values(dataset.cards).map(card=>card.art?.id).filter(Boolean));
@@ -64,14 +67,15 @@ export async function loadResources(progress) {
     await skillArt.preload(dataset.cards);
     const petLoading=new Set();
     function drawPet(ctx,id,stage,x,y,w,h){const art=content.pets[id]?.art;if(!art)return false;const key='pet:'+id;const img=images.get(key);if(!img){if(!petLoading.has(id)){petLoading.add(id);loadImage(mode==='local'?art.local:art.cdn).then(image=>images.set(key,image)).catch(()=>petLoading.delete(id));}return false;}const sw=img.width/4,sh=img.height/4;ctx.drawImage(img,0,stage*sh,sw,sh,x,y,w,h);return true;}
-    return {drawPet,content,dataset,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    await uiArtReady;
+    return {drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {
     const text=JSON.stringify(save);
     if(storage.getItem(SAVE_KEY)!==text){storage.setItem(SAVE_KEY,text);try{storage.setItem(`${SAVE_KEY}.updated`,new Date().toISOString());}catch{/* Metadata is optional; the checkpoint was saved. */}}
 }
-export function localUpdatedAt() {try{return localStorage.getItem(`${SAVE_KEY}.updated`);}catch{return null;}}
+export function localUpdatedAt(storage = localStorage) {try{return storage.getItem(`${SAVE_KEY}.updated`);}catch{return null;}}
 export function replaceLocalWithBackup(save, storage = localStorage, expectedRaw = undefined) {
     const previous=storage.getItem(SAVE_KEY);
     if(expectedRaw!==undefined&&previous!==expectedRaw)throw new Error('本地进度已在其他页面变化，请重新查看云端记录后再恢复。');
@@ -79,8 +83,8 @@ export function replaceLocalWithBackup(save, storage = localStorage, expectedRaw
     if(previous)storage.setItem(BACKUP_KEY,previous);
     saveLocal(save,storage);
 }
-export function readBackup() {try{return localStorage.getItem(BACKUP_KEY);}catch{return null;}}
-export function readLocal() {return localStorage.getItem(SAVE_KEY);}
+export function readBackup(storage = localStorage) {try{return storage.getItem(BACKUP_KEY);}catch{return null;}}
+export function readLocal(storage = localStorage) {return storage.getItem(SAVE_KEY);}
 export function downloadSave(save) {
     const blob=new Blob([JSON.stringify(save,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');
     a.href=url;a.download='魔法哈奇-冒险存档.json';a.hidden=true;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);

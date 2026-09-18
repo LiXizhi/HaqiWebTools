@@ -3,9 +3,10 @@ import { specMaxHp } from './adventure_pets_core.js';
 import { checkinStatus } from './adventure_checkin_core.js';
 import { playerSpec } from './adventure_core.js';
 import { renderDebugEditor } from './view_adventure_debug.js';
-import { renderPetCollection,renderShop,starterPicker } from './view_adventure_pets.js';
+import { renderPetCollection,renderShop,starterPicker,petPortrait } from './view_adventure_pets.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck } from './adventure_core.js';
+import { rewardLabel } from './adventure_rewards_core.js';
 import * as U from './combat_unit_core.js';
 import { expectedBaseDamage,expectedBaseHeal,cardTargetKind } from './combat_cards_core.js';
 import { renderEquipment } from './view_adventure_equipment.js';
@@ -19,54 +20,89 @@ export function button(label,fn,cls='') {const b=el('button',cls,label);b.type='
 const paths={book:'M4 4h6q2 0 2 2q0-2 2-2h6v15h-6q-2 0-2 2q0-2-2-2H4z M12 6v15',cards:'M5 5h12v15H5z M8 2h12v15',bag:'M5 8h14v12H5z M8 8V5a4 4 0 0 1 8 0v3',pet:'M8 13q4-5 8 0q6 7-4 6q-10 1-4-6 M5 6v3 M10 3v4 M15 3v4 M20 6v3',settings:'M12 3v3 M12 18v3 M3 12h3 M18 12h3 M5 5l2 2 M17 17l2 2 M5 19l2-2 M17 7l2-2 M16 12a4 4 0 1 1-8 0a4 4 0 1 1 8 0',map:'M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2z M9 3v16 M15 5v16',sound:'M4 10h4l5-5v14l-5-5H4z M17 8q5 4 0 8',arrow:'M5 12h14 M13 6l6 6-6 6'};
 paths.gourd='M10 2h4v3c4 1 4 6 1 8 7 3 6 9-3 9S2 16 9 13C6 11 6 6 10 5z M8 13h8 M14 12l5 4';
 paths.cloud='M6 18a4 4 0 0 1-1-8 7 7 0 0 1 13-2 5 5 0 0 1 0 10 M12 20V10 M8 14l4-4 4 4';
-function icon(kind) {const span=el('span','icon');span.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[kind]||paths.book}"/></svg>`;return span;}
+paths.close='M6 6l12 12 M18 6L6 18';
+paths.shop='M3 9l2-6h14l2 6 M3 9v3h18V9 M5 12v9h14v-9 M9 21v-6h6v6';
+function icon(kind) {const span=el('span','icon');span.dataset.uiIcon=kind;span.setAttribute('aria-hidden','true');span.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[kind]||paths.book}"/></svg>`;return span;}
 function art(assets,ref,w=76,h=90,cls='') {const c=el('canvas',`art ${cls}`);c.width=w*2;c.height=h*2;c.style.width=`${w}px`;c.style.height=`${h}px`;assets.draw(c.getContext('2d'),ref,0,0,c.width,c.height);return c;}
 function tile(assets,sheet,index,w=90,h=95) {const c=el('canvas','art');c.width=w*2;c.height=h*2;c.style.width=`${w}px`;c.style.height=`${h}px`;assets.tile(c.getContext('2d'),sheet,index,0,0,c.width,c.height);return c;}
 function badge(text,cls=''){return el('span',`badge ${cls}`,text);}
 const schoolDescription={fire:'火焰与持续伤害，点燃你的热情。',ice:'坚固的护盾与寒冰魔法，稳步迎战。',storm:'强力的单体攻击，让雷霆为你而鸣。',life:'治疗与自然的力量，守护生命。',death:'吸取生命、布下陷阱，掌握幽暗魔法。'};
-export function renderEntry(root,assets,stored,cb,error='',creating=false) {
-    const hasSave=!!stored;
-    root.replaceChildren();root.className='entry-screen';
-    let school='fire',appearance='boy',starter='dragon_green';
-    const form=el('form','character-form');
-    const eyebrow=el('p','eyebrow','魔法哈奇 · 第一章');
-    const intro=el('div','entry-intro',eyebrow,el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','穿过晨光中的魔法营地，遇见熟悉的伙伴。\n选一门魔法，翻开属于你的第一张卡牌。'));
-    intro.append(el('div','entry-tags',badge('原版任务与角色'),badge('五系卡牌战斗'),badge('本地自动存档')));
-    intro.append(button('云端旅途',cb.cloud,'secondary cloud-entry-button'));
-    intro.append(el('p','entry-note','键盘 / 鼠标 / 触摸均可游玩'),el('a','sim-link','战斗模拟器'));
-    intro.querySelector('a').href='HaqiCombatSim.html';
-    const footer=el('div','entry-footer','魔法营地 → 最后的考核 → 哈奇小镇');
-    if(hasSave&&!creating){
-        intro.querySelector('.entry-description').textContent='熟悉的伙伴，正在等你归来。\n带着你的魔法，继续未完的旅程。';
-        const portrait=tile(assets,'sprites',stored.appearance==='girl'?12:8,132,140);
-        portrait.setAttribute('role','img');portrait.setAttribute('aria-label',stored.appearance==='girl'?'已保存的角色：魔法少女':'已保存的角色：魔法少年');
-        const card=el('section','character-form saved-journey',el('p','eyebrow','欢迎回来'),el('h2','','继续旅程'),portrait,
-            el('h3','saved-hero-name',stored.name),el('p','muted',`${SCHOOL_NAMES[stored.school]}学徒 · 等级 ${stored.level}`),
-            button('继续旅程',cb.continue,'primary begin-button'),
-            button('新旅程',()=>{renderEntry(root,assets,stored,cb,error,true);root.querySelector('.name-input').focus();},'secondary new-journey-button'));
-        root.append(intro,card,footer);
-        return;
+export function renderEntry(root,assets,stored,cb,error='') {
+    const draft=cb.draft||{name:'小哈奇',school:'fire',appearance:'boy',starter:'dragon_green',step:1};
+    root.replaceChildren();root.className='entry-screen entry-wizard';
+    const intro=el('div','entry-intro',el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','选一门魔法，遇见你的伙伴。\n从这里，开始一段新的旅程。'));
+    intro.append(button(cb.owner?'我的云端旅途':'登录 Keepwork',cb.login||cb.cloud,'secondary cloud-entry-button'));
+    const form=el('form','character-form creation-form');
+    root.append(el('div','entry-layout',intro,form));
+    function paint() {
+        cb.stopPreview?.();form.replaceChildren();root.classList.toggle('school-step',draft.step===3);root.classList.toggle('companion-step',draft.step===2);
+        const steps=el('div','creation-steps');
+        for(const [index,label]of ['起名字','选择抱抱龙','选择系别'].entries()){
+            if(index)steps.append(el('i',''));
+            const item=el('span',draft.step===index+1?'current':draft.step>index+1?'done':'',`0${index+1} ${label}`);
+            if(draft.step===index+1)item.setAttribute('aria-current','step');steps.append(item);
+        }
+        const titles=['你的冒险，从名字开始','选择你的抱抱龙','找到属于你的魔法'];
+        const captions=['先选一个模样，再告诉我们你的名字。','选一位伙伴，陪你踏上魔法旅程。','点击系别，看看它的代表技能。喜欢的话，就选它吧。'];
+        form.append(steps,el('h2','',titles[draft.step-1]),el('p','creation-caption',captions[draft.step-1]));
+        if(draft.step===1) {
+            const preview=el('div','avatar-choice');
+            for(const [value,label,index]of [['boy','魔法少年',8],['girl','魔法少女',12]]){
+                const b=button([tile(assets,'sprites',index),el('span','',label)],()=>{draft.appearance=value;for(const n of preview.children){const on=n.dataset.appearance===value;n.classList.toggle('selected',on);n.setAttribute('aria-pressed',String(on));}},`avatar-option ${draft.appearance===value?'selected':''}`);
+                b.dataset.appearance=value;b.setAttribute('aria-pressed',String(draft.appearance===value));preview.append(b);
+            }
+            const name=el('input','name-input');name.id='hero-name';name.name='name';name.value=draft.name;name.maxLength=16;name.autocomplete='off';name.required=true;name.oninput=()=>{draft.name=name.value;};
+            const label=el('label','field-label','你的名字');label.htmlFor=name.id;
+            form.append(preview,label,name);
+        } else if(draft.step===2) {
+            const scene=el('div','companion-scene');
+            const hero=el('div','companion-hero',tile(assets,'sprites',draft.appearance==='girl'?12:8,100,120),el('span','companion-name',draft.name));
+            const companion=el('div','companion-position');
+            const greeting=el('p','companion-greeting');greeting.setAttribute('role','status');
+            scene.append(el('span','companion-scene-label','魔法营地 · 初次相遇'),el('div','companion-clearing'),hero,companion);
+            const meet=(id,animate)=>{
+                const pet=petPortrait(assets,id,0,82),runner=el('div',`companion-runner${animate?' arriving':''}`,pet);
+                companion.replaceChildren(runner);
+                greeting.textContent=`${assets.content.pets[id].name}，以后就一起冒险吧。`;
+                scene.setAttribute('aria-label',`${draft.name}和${assets.content.pets[id].name}站在一起`);
+            };
+            const picker=starterPicker(assets,id=>{draft.starter=id;meet(id,true);},{el,button});
+            for(const b of picker.children){const selected=b.dataset.petId===draft.starter;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',String(selected));}
+            meet(draft.starter,false);
+            form.append(scene,greeting,el('p','companion-invitation','点一点，让喜欢的伙伴来到你身边。'),picker);
+        } else {
+            const schools=el('div','school-choices');
+            for(const [key,label]of Object.entries(SCHOOL_NAMES)){
+                const b=button([el('i','school-gem'),el('span','',label)],()=>{draft.school=key;draft.previewKey=null;paint();},`school-choice ${draft.school===key?'selected':''}`);
+                b.dataset.school=key;b.style.setProperty('--school',COLORS[key]);b.setAttribute('aria-pressed',String(draft.school===key));schools.append(b);
+            }
+            const canvas=el('canvas','creation-preview');canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`${SCHOOL_NAMES[draft.school]}系技能动画预览`);
+            const status=el('p','preview-status','正在准备技能演出…');status.setAttribute('role','status');
+            const choices=cb.previewChoices(draft.school),cards=el('div','creation-skill-choices');
+            if(!choices.some(c=>c.key===draft.previewKey))draft.previewKey=choices[0]?.key;
+            let pause;
+            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}pause.textContent='暂停';if(!cb.busy)cb.preview(canvas,key,draft.appearance,text=>{status.textContent=text;},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
+            for(const choice of choices){
+                const face=el('canvas','creation-skill-card');face.width=112;face.height=112;face.setAttribute('aria-hidden','true');
+                const base=assets.effects.cards[choice.key]?.base;
+                if(base)assets.skillArt.ensure(base).then(()=>{if(face.isConnected)assets.skillArt.drawSubject(face.getContext('2d'),base,0,0,112,112);}).catch(()=>{});
+                const b=button([face,el('span','',choice.name)],()=>play(choice.key),'creation-skill-option');b.dataset.key=choice.key;cards.append(b);
+            }
+            pause=button('暂停',()=>{pause.textContent=cb.pausePreview()?'继续播放':'暂停';},'text-button');
+            form.append(schools,el('p','school-description',schoolDescription[draft.school]),canvas,
+                el('div','preview-controls',status,button('重播',()=>play(draft.previewKey),'text-button'),pause),cards,
+                el('p','creation-preview-note','代表技能演示，需在冒险中逐步学习。'));
+            if(draft.previewKey)play(draft.previewKey,true);
+        }
+        const submit=el('button','primary begin-button',cb.busy|| (draft.step===1?'下一步 · 选择抱抱龙':draft.step===2?'下一步 · 选择系别':`确认选择${SCHOOL_NAMES[draft.school]} · 开始冒险`));submit.type='submit';form.append(submit);
+        if(draft.step===2)form.append(button('导入魔法哈奇角色',cb.importOriginal,'text-button creation-import'));
+        if(draft.step>1)form.append(button('上一步',()=>{draft.step--;paint();root.scrollTop=0;},'text-button creation-back'));
+        if(cb.roles)form.append(button('返回我的角色',cb.roles,'text-button creation-back'));
+        if(error){const status=el('p','error-text',error);status.setAttribute('role','alert');form.append(status);}
+        if(cb.busy)for(const node of root.querySelectorAll('button,input'))node.disabled=true;
     }
-    const name=el('input','name-input');name.id='hero-name';name.name='name';name.value='小哈奇';name.maxLength=16;name.autocomplete='off';name.required=true;
-    const nameLabel=el('label','field-label','你的名字');nameLabel.htmlFor='hero-name';
-    const preview=el('div','avatar-choice');
-    const boys=button([tile(assets,'sprites',8),el('span','','魔法少年')],()=>chooseAppearance('boy'),'avatar-option selected');
-    const girls=button([tile(assets,'sprites',12),el('span','','魔法少女')],()=>chooseAppearance('girl'),'avatar-option');
-    boys.setAttribute('aria-pressed','true');girls.setAttribute('aria-pressed','false');
-    function chooseAppearance(value){appearance=value;boys.classList.toggle('selected',value==='boy');girls.classList.toggle('selected',value==='girl');boys.setAttribute('aria-pressed',String(value==='boy'));girls.setAttribute('aria-pressed',String(value==='girl'));}
-    preview.append(boys,girls);
-    const schoolRow=el('div','school-choices'),desc=el('p','school-description',schoolDescription.fire);
-    for(const [key,label]of Object.entries(SCHOOL_NAMES)){
-        const b=button([el('i','school-gem'),el('span','',label)],()=>{school=key;for(const btn of schoolRow.children){const selected=btn.dataset.school===key;btn.classList.toggle('selected',selected);btn.setAttribute('aria-pressed',String(selected));}desc.textContent=schoolDescription[key];},`school-choice ${key==='fire'?'selected':''}`);
-        b.dataset.school=key;b.style.setProperty('--school',COLORS[key]);b.setAttribute('aria-pressed',String(key==='fire'));schoolRow.append(b);
-    }
-    const submit=el('button','primary begin-button',hasSave?'开始一段新旅程':'启程，前往魔法营地');submit.type='submit';
-    form.append(el('p','eyebrow','开启你的魔法旅程'),el('h2','','成为魔法学徒'),preview,nameLabel,name,el('p','field-label','选择你的魔法学系'),schoolRow,desc,submit);
-    if(assets.content.pets)form.insertBefore(el('section','',el('p','field-label','选择你的初始抱抱龙'),starterPicker(assets,id=>{starter=id;},{el,button})),submit);
-    if(hasSave)form.append(el('small','muted','开启新旅程会替换本地存档，可先在设置中导出。'),button('返回继续旅程',()=>{renderEntry(root,assets,stored,cb,error);root.querySelector('.begin-button').focus();},'text-button'));
-    if(error)form.append(el('p','error-text',error));
-    form.onsubmit=e=>{e.preventDefault();cb.create({name:name.value,school,appearance,starter});};
-    root.append(intro,form,footer);
+    form.onsubmit=e=>{e.preventDefault();if(cb.busy)return;if(draft.step<3){draft.name=draft.name.trim()||'小哈奇';draft.step++;paint();root.scrollTop=0;}else cb.create({name:draft.name,school:draft.school,appearance:draft.appearance,starter:draft.starter});};
+    paint();
 }
 export function objectiveLabel(g,c) {
     if(g.kind==='talk')return `与${c.npcs[g.id]?.name||g.id}交谈`;
@@ -109,7 +145,7 @@ export function renderHud(root,model,cb) {
     const name=button(el('strong','',save.name),()=>cb.panel('equipment'),'hero-name');name.title='角色与装备（R）';
     const membership=button('升级会员',cb.membership,'hero-membership');
     const status=el('section','hero-status',el('div','hero-text',el('div','hero-heading',name,membership),el('span','',`${SCHOOL_NAMES[save.school]}学徒 · 等级 ${save.level}`),xp));
-    const warning=el('span','save-indicator',model.storageWarning?'请导出备份':'');warning.hidden=!model.storageWarning;
+    const warning=el('span','save-indicator',model.storageWarning?'存档未保存':'');warning.hidden=!model.storageWarning;
     status.querySelector('.hero-text').append(el('div','hero-health',el('i'),el('span','hero-health-label')),warning);
     updateHeroHealth(status,save,c);
     root.append(status,el('div','location-label',el('span','',save.zone==='camp'?'魔 法 营 地':'哈 奇 小 镇'),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
@@ -131,30 +167,15 @@ export function renderHud(root,model,cb) {
     }else tracker.append(el('h3','','新的魔法旅程'),el('p','',save.visitedTown?'你已完成第一章。和镇上的居民聊聊，或到郊外练习魔法吧。':'你通过了毕业考核！前往营地南边的传送阵，探索哈奇小镇。'),button('前往传送阵',cb.track,'track-button'));
     root.append(tracker);
     const nav=el('nav','game-nav');nav.setAttribute('aria-label','游戏菜单');
-    for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['shop','商店','bag']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
+    for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['shop','商店','shop']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
     root.append(nav,el('div','movement-hint','WASD / 方向键移动 · 点击寻路 / 按住跟随 · E 交谈'));
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
-    const pad=el('div','touch-joystick'),stick=el('span','joystick-stick');
-    pad.setAttribute('role','group');pad.setAttribute('aria-label','移动摇杆，拖动控制方向，松开停止');
-    pad.append(stick);let pointer=null;
-    pad.resetInput=()=>{const id=pointer;pointer=null;stick.style.transform='translate(-50%,-50%)';pad.classList.remove('active');cb.steer(0,0);if(id!==null&&pad.hasPointerCapture(id))pad.releasePointerCapture(id);};
-    const steer=e=>{
-        const r=pad.getBoundingClientRect(),radius=r.width*.3;
-        let x=(e.clientX-r.left-r.width/2)/radius,y=(e.clientY-r.top-r.height/2)/radius;
-        const length=Math.hypot(x,y);if(length>1){x/=length;y/=length;}
-        stick.style.transform=`translate(-50%,-50%) translate(${x*radius}px,${y*radius}px)`;
-        const speed=Math.max(0,(Math.min(1,length)-.15)/.85);
-        cb.steer(length?x/Math.hypot(x,y)*speed:0,length?y/Math.hypot(x,y)*speed:0);
-    };
-    pad.onpointerdown=e=>{if(pointer!==null||e.button!==0)return;e.preventDefault();pointer=e.pointerId;pad.setPointerCapture(pointer);pad.classList.add('active');steer(e);};
-    pad.onpointermove=e=>{if(e.pointerId===pointer){e.preventDefault();steer(e);}};
-    pad.onpointerup=pad.onpointercancel=pad.onlostpointercapture=e=>{if(e.pointerId===pointer)pad.resetInput();};
-    root.append(pad);
+    root.append(el('div','touch-movement-hint','拖动地图移动 · 松手停止 · 靠近后点交谈或挑战'));
 }
 function modal(root,title,subtitle,cb,wide=false) {
     root.replaceChildren();root.className='overlay visible';
     const box=el('section',`modal ${wide?'wide':''}`);box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',title);
-    const close=button('×',cb.close,'close-button');close.setAttribute('aria-label','关闭');
+    const close=button(icon('close'),cb.close,'close-button');close.setAttribute('aria-label','关闭');
     box.append(el('header','modal-header',el('div','',el('p','eyebrow',subtitle),el('h2','',title)),close));const body=el('div','modal-body');box.append(body);root.append(box);
     return body;
 }
@@ -218,11 +239,11 @@ export function renderPanel(root,kind,model,cb) {
     }
     if(kind==='debug'){body.closest('.modal').classList.add('debug-modal');renderDebugEditor(body,model,cb,{el,button});}
     if(kind==='settings') {
+        body.append(button('切换 / 新建角色',cb.roles,'primary settings-button'));
         body.append(button('属性编辑器 · 调试',()=>cb.panel('debug'),'secondary settings-button'));
         body.append(button(model.soundEnabled?'技能音效：开启':'技能音效：关闭',cb.sound,'secondary settings-button'));
         body.append(button('云端旅途 · 跨设备继续冒险',cb.cloud,'primary settings-button'));
-        body.append(el('p','','进度自动保存在当前浏览器。你可以导出存档，在其他设备继续这段旅程。'),button(save.music?'背景音乐：开启':'背景音乐：关闭',cb.music,'secondary settings-button'),button('导出我的存档',cb.export,'secondary settings-button'));
-        const input=el('input');input.type='file';input.accept='.json,application/json';input.id='import-save';input.onchange=()=>{if(input.files[0])cb.import(input.files[0]);};body.append(el('label','file-label','导入存档',input));
+        body.append(el('p','','进度自动保存在当前浏览器。登录 Keepwork 后可同步角色，在其他设备继续旅程。'),button(save.music?'背景音乐：开启':'背景音乐：关闭',cb.music,'secondary settings-button'));
         body.append(button('回到开始画面',cb.title,'secondary settings-button'),el('hr'),el('h3','','关于这段旅程'),el('p','muted','本章保留魔法哈奇 kids 原版角色、任务对白和卡牌数据。地图、升级节奏和毕业后的镇区是适合单人游玩的二维改编。'),el('details','source-details',el('summary','','查看改编说明'),...c.adaptations.map(t=>el('p','muted',t))),el('a','sim-link','打开战斗模拟器'));
         body.querySelector('a').href='HaqiCombatSim.html';
         const effectsLink=el('a','sim-link','技能特效工坊');effectsLink.href='HaqiEffects.html';effectsLink.target='_blank';effectsLink.rel='noopener';body.append(effectsLink);
@@ -237,12 +258,13 @@ export function renderDialogue(root,model,dialog,cb) {
     const box=el('section','dialogue-box');box.setAttribute('role','dialog');box.setAttribute('aria-label',`与${npc.name}交谈`);
     const portrait=art(assets,npc.portrait,150,190,'dialogue-portrait');
     const content=el('div','dialogue-content',el('p','eyebrow',npc.zone==='camp'?'魔法营地':'哈奇小镇'),el('h2','',npc.name));
-    const close=button('×',cb.close,'close-button');close.setAttribute('aria-label','关闭');
+    const close=button(icon('close'),cb.close,'close-button');close.setAttribute('aria-label','关闭');
     if(dialog.lines){const line=dialog.lines[dialog.index];content.append(el('p','dialogue-text',line.text),el('div','dialogue-bottom',el('span','muted',`${dialog.index+1} / ${dialog.lines.length}`),button(dialog.index===dialog.lines.length-1?dialog.finishLabel:(line.buttons?.[0]?.label?.includes('NEXT')?'继续':line.buttons?.[0]?.label||'继续'),cb.next,'primary')));}
     else {
         const q=currentQuest(save,c),state=q&&questState(save,q.id),ready=q&&questReady(save,q);
         content.append(el('p','dialogue-text',npc.description||'欢迎来到这里，年轻的魔法师。愿你的旅程充满惊喜。'));
         const choices=el('div','dialogue-choices');
+        if(q&&(q.startNpc===npc.id||q.endNpc===npc.id))content.append(el('p','muted',`任务奖励：${rewardsFor(save,c,q).map(r=>rewardLabel(c,r)).join(' · ')}`));
         if(q&&!state.accepted&&q.startNpc===npc.id)choices.append(button(`接取任务 · ${q.title}`,()=>cb.startQuest(q),'primary'));
         if(q&&ready&&q.endNpc===npc.id)choices.append(button(`完成任务 · ${q.title}`,()=>cb.finishQuest(q),'primary'));
         const talk=pendingQuestTalk(save,q,npc.id);
@@ -263,7 +285,7 @@ export function renderBattle(root,model,cb) {
     const oldHand=switching?new Map([...root.querySelectorAll('.hand-card')].map(node=>[node.dataset.seq,node.getBoundingClientRect()])):null;
     const previous=root.handBattle===model.battle?root.handSeqs||new Set():new Set();
     const {assets,save,battle,selected,discarded=[],animating}=model,hero=battle.sides.near[0];root.replaceChildren();root.className='battle-layer visible';
-    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','',badge(`第 ${battle.turn} 回合`),button('云端存档',cb.cloud,'secondary small'),button('导出存档',cb.export,'secondary small'),button('撤退',cb.retreat,'secondary small')));
+    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','',badge(`第 ${battle.turn} 回合`),button('云端存档',cb.cloud,'secondary small'),button('撤退',cb.retreat,'secondary small')));
     top.lastChild.prepend(button(model.soundEnabled?'音效：开':'音效：关',cb.sound,'secondary small'));
     const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');canvas.onclick=e=>{const point=Object.entries(canvas.battlePositions||{}).sort((a,b)=>Math.hypot(a[1].x-e.offsetX,a[1].y-e.offsetY)-Math.hypot(b[1].x-e.offsetX,b[1].y-e.offsetY))[0];if(point)cb.target(point[0]);};
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');status.textContent=battle.finished?'对决结束':animating?'魔法正在生效…':selected?'点击法阵中的目标施法':'选择一张卡牌，再点击目标';

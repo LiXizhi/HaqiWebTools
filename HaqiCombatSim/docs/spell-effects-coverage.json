@@ -9,5 +9,2257 @@
   "configuredKidsDefinitions": 701,
   "missingDefinitions": 0,
   "missingByType": {},
-  "missing": []
+  "missing": [],
+  "choreography": [
+    {
+      "base": "Pass",
+      "name": "Pass",
+      "source": "config/Aries/Cards/Pass.xml",
+      "placement": "caster",
+      "motion": "dissolve",
+      "attack": "pass",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Dead",
+      "name": "Dead",
+      "source": "config/Aries/Cards/Dead.xml",
+      "placement": "target",
+      "motion": "dissolve",
+      "attack": "dissolve",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "PickPet",
+      "name": "PickPet",
+      "source": "config/Aries/Cards/PickPet.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "pet",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "HoT",
+      "name": "HoT",
+      "source": "config/Aries/Cards/HoT.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "DoT_Fire",
+      "name": "DoT_Fire",
+      "source": "config/Aries/Cards/DoT_Fire.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "DoT_Ice",
+      "name": "DoT_Ice",
+      "source": "config/Aries/Cards/DoT_Ice.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "DoT_Storm",
+      "name": "DoT_Storm",
+      "source": "config/Aries/Cards/DoT_Storm.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "DoT_Life",
+      "name": "DoT_Life",
+      "source": "config/Aries/Cards/DoT_Life.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "DoT_Death",
+      "name": "DoT_Death",
+      "source": "config/Aries/Cards/DoT_Death.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "DoT_Balance",
+      "name": "DoT_Balance",
+      "source": "config/Aries/Cards/DoT_Balance.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fizzle_Fire",
+      "name": "Fizzle_Fire",
+      "source": "config/Aries/Cards/Fizzle_Fire.xml",
+      "placement": "caster",
+      "motion": "dissolve",
+      "attack": "dissolve",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fizzle_Ice",
+      "name": "Fizzle_Ice",
+      "source": "config/Aries/Cards/Fizzle_Ice.xml",
+      "placement": "caster",
+      "motion": "dissolve",
+      "attack": "dissolve",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fizzle_Storm",
+      "name": "Fizzle_Storm",
+      "source": "config/Aries/Cards/Fizzle_Storm.xml",
+      "placement": "caster",
+      "motion": "dissolve",
+      "attack": "dissolve",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fizzle_Life",
+      "name": "Fizzle_Life",
+      "source": "config/Aries/Cards/Fizzle_Life.xml",
+      "placement": "caster",
+      "motion": "dissolve",
+      "attack": "dissolve",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fizzle_Death",
+      "name": "Fizzle_Death",
+      "source": "config/Aries/Cards/Fizzle_Death.xml",
+      "placement": "caster",
+      "motion": "dissolve",
+      "attack": "dissolve",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "PickPet_Fire",
+      "name": "PickPet_Fire",
+      "source": "config/Aries/Cards/PickPet_Fire.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "pet",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "PickPet_Ice",
+      "name": "PickPet_Ice",
+      "source": "config/Aries/Cards/PickPet_Ice.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "pet",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "PickPet_Storm",
+      "name": "PickPet_Storm",
+      "source": "config/Aries/Cards/PickPet_Storm.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "pet",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "PickPet_Life",
+      "name": "PickPet_Life",
+      "source": "config/Aries/Cards/PickPet_Life.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "pet",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "PickPet_Death",
+      "name": "PickPet_Death",
+      "source": "config/Aries/Cards/PickPet_Death.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "pet",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttack_Level1",
+      "name": "火焰爆",
+      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level1.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttackWithDOT_Level2",
+      "name": "火神之怒",
+      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level2.xml",
+      "placement": "target",
+      "motion": "fall",
+      "attack": "meteor",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttack_Level3",
+      "name": "火凤焚天",
+      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level3.xml",
+      "placement": "center",
+      "motion": "fly",
+      "attack": "vortex",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_FireDamageTrap",
+      "name": "烈火陷阱",
+      "source": "config/Aries/Cards/Fire_FireDamageTrap.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_AreaAttack_Level4",
+      "name": "星火袭空",
+      "source": "config/Aries/Cards/Fire_AreaAttackWithDOT_Level4.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_FireGlobalAura",
+      "name": "火极对抗",
+      "source": "config/Aries/Cards/Fire_FireGlobalAura.xml",
+      "placement": "field",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttack_Level5",
+      "name": "火焰喷发",
+      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level5.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttack_Level6",
+      "name": "火魔掷石",
+      "source": "config/Aries/Cards/Fire_SingleAttack_Level6_low_level.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "meteor",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_FireDamageBlade",
+      "name": "烈火术",
+      "source": "config/Aries/Cards/Fire_FireDamageBlade.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "blade",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_FirePrism",
+      "name": "烈火棱镜",
+      "source": "config/Aries/Cards/Fire_FirePrism.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_DOTAttackWithHOT_Level2",
+      "name": "烈火链",
+      "source": "config/Aries/Cards/Fire_DOTAttackWithHOT_Level2.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "drain",
+      "returnToCaster": true,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_StealPositiveCharm",
+      "name": "偷天换日",
+      "source": "config/Aries/Cards/Fire_StealPositiveCharm.xml",
+      "placement": "projectile",
+      "motion": "return",
+      "attack": "steal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_DOTAttack_LevelX",
+      "name": "火狼咆哮",
+      "source": "config/Aries/Cards/Fire_DOTAttack_LevelX.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttackWithImmolate_Level4",
+      "name": "灼伤之炎",
+      "source": "config/Aries/Cards/Fire_SingleAttackWithImmolate_Level4.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_AreaDOTAttack_Level5",
+      "name": "烈火怒吼",
+      "source": "config/Aries/Cards/Fire_AreaDOTAttack_Level5.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_AreaAccuracyWeakness",
+      "name": "烟雾",
+      "source": "config/Aries/Cards/Fire_AreaAccuracyWeakness.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_AreaStun",
+      "name": "烈火眩晕",
+      "source": "config/Aries/Cards/Fire_AreaStun.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "stun",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_AreaSingleAttackWithDOT_Level7",
+      "name": "火攻7",
+      "source": "config/Aries/Cards/Fire_AreaSingleAttackWithDOT_Level7.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_FireDispellWeakness",
+      "name": "烈火之敌",
+      "source": "config/Aries/Cards/Fire_FireDispellWeakness.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_FireGreatShield",
+      "name": "烈火盾",
+      "source": "config/Aries/Cards/Fire_FireGreatShield.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "shield",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttack_Level0",
+      "name": "烈火魔光",
+      "source": "config/Aries/Cards/Fire_SingleAttack_Level0_120_adv.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_Level1",
+      "name": "疾电术",
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level1.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_Level2",
+      "name": "金灵遁空",
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level2.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_Level3",
+      "name": "暗夜雷动",
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level3.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_StormDamageTrap",
+      "name": "风暴陷阱",
+      "source": "config/Aries/Cards/Storm_StormDamageTrap.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_Level4",
+      "name": "雷神之剑",
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level4.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_AreaDamageTrap",
+      "name": "雷云风暴",
+      "source": "config/Aries/Cards/Storm_AreaDamageTrap.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_StormGlobalAura",
+      "name": "风暴对抗",
+      "source": "config/Aries/Cards/Storm_StormGlobalAura.xml",
+      "placement": "field",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_Level5",
+      "name": "蛇女雷暴",
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level5.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_StormAccuracyBlade",
+      "name": "风暴神箭",
+      "source": "config/Aries/Cards/Storm_StormAccuracyBlade.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "blade",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_StormDamageBlade",
+      "name": "风暴术",
+      "source": "config/Aries/Cards/Storm_StormDamageBlade.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "blade",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_RemovePositiveCharm",
+      "name": "厉风破运",
+      "source": "config/Aries/Cards/Storm_RemovePositiveCharm.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "cleanse",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_RemoveNegativeCharm",
+      "name": "和风逐暗",
+      "source": "config/Aries/Cards/Storm_RemoveNegativeCharm.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "cleanse",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_AreaAttack_LevelX",
+      "name": "风鹰之眼",
+      "source": "config/Aries/Cards/Storm_AreaAttack_LevelX.xml",
+      "placement": "center",
+      "motion": "fly",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_WildBolt_Level2",
+      "name": "极限暴熊",
+      "source": "config/Aries/Cards/Storm_SingleAttack_WildBolt_Level2.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_Level6",
+      "name": "旋风爆击",
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level6_low_level.xml",
+      "placement": "target",
+      "motion": "spiral",
+      "attack": "vortex",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_AreaAttackWithStun_Level7",
+      "name": "风暴攻7",
+      "source": "config/Aries/Cards/Storm_AreaAttackWithStun_Level7.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_StormDispellWeakness",
+      "name": "风暴之敌",
+      "source": "config/Aries/Cards/Storm_StormDispellWeakness.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_StormGreatShield",
+      "name": "风暴盾",
+      "source": "config/Aries/Cards/Storm_StormGreatShield.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "shield",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_Level0",
+      "name": "风暴魔光",
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level0_120_adv.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleAttack_Level1",
+      "name": "冰霜破",
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level1.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleAttack_Level2",
+      "name": "陨落冰石",
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level2.xml",
+      "placement": "target",
+      "motion": "fall",
+      "attack": "meteor",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleAttack_Level3",
+      "name": "冰剑凛空",
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level3.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "swords",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleAttack_Level4",
+      "name": "破地冰钻",
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level4.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleAttack_Level6",
+      "name": "海狮冰剑",
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level6_low_level.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "swords",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_AreaAttack_Level2",
+      "name": "[炫彩]冰剑凛空",
+      "source": "config/Aries/Cards/Ice_AreaAttack_Level2_gold.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "swords",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_GlobalShield",
+      "name": "结界守护",
+      "source": "config/Aries/Cards/Ice_GlobalShield.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "shield",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_AreaAttack_Level4",
+      "name": "[炫彩]破地冰钻",
+      "source": "config/Aries/Cards/Ice_AreaAttack_Level4_gold.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_IceGlobalAura",
+      "name": "冰极对抗",
+      "source": "config/Aries/Cards/Ice_IceGlobalAura.xml",
+      "placement": "field",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleStun",
+      "name": "寒冰眩晕",
+      "source": "config/Aries/Cards/Ice_SingleStun.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "stun",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_IceDamageTrap",
+      "name": "寒冰陷阱",
+      "source": "config/Aries/Cards/Ice_IceDamageTrap.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_IcePrism",
+      "name": "寒冰棱镜",
+      "source": "config/Aries/Cards/Ice_IcePrism.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Absorb_LevelX",
+      "name": "坚固壁垒",
+      "source": "config/Aries/Cards/Ice_AreaAbsorb_LevelX.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "absorb",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_StealPositiveWard",
+      "name": "神偷之手",
+      "source": "config/Aries/Cards/Ice_StealPositiveWard.xml",
+      "placement": "projectile",
+      "motion": "return",
+      "attack": "steal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleAttackWithDOT_Level5",
+      "name": "冰雹来袭",
+      "source": "config/Aries/Cards/Ice_SingleAttackWithDOT_Level5.xml",
+      "placement": "target",
+      "motion": "fall",
+      "attack": "meteor",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_IceDamageBlade",
+      "name": "寒冰术",
+      "source": "config/Aries/Cards/Ice_IceDamageBlade.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "blade",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_AreaAttackWithStun_Level7",
+      "name": "冰攻7",
+      "source": "config/Aries/Cards/Ice_AreaAttackWithStun_Level7.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_IceDispellWeakness",
+      "name": "寒冰之敌",
+      "source": "config/Aries/Cards/Ice_IceDispellWeakness.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_StunAbsorb",
+      "name": "眩晕吸收",
+      "source": "config/Aries/Cards/Ice_StunAbsorb.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "shield",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_IceGreatShield",
+      "name": "寒冰盾",
+      "source": "config/Aries/Cards/Ice_IceGreatShield.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "shield",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleAttack_Level0",
+      "name": "寒冰魔光",
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level0_120_adv.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleAttack_Level1",
+      "name": "生灵光弧",
+      "source": "config/Aries/Cards/Life_SingleAttack_Level1.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleAttack_Level2",
+      "name": "灵木刺阵",
+      "source": "config/Aries/Cards/Life_SingleAttack_Level2.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "vines",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleAttack_Level3",
+      "name": "莽林狂舞",
+      "source": "config/Aries/Cards/Life_SingleAttack_Level3.xml",
+      "placement": "target",
+      "motion": "spiral",
+      "attack": "vortex",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleHealWithHOT_Level1",
+      "name": "生生不息",
+      "source": "config/Aries/Cards/Life_SingleHealWithHOT_Level1.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_Absorb_Level3",
+      "name": "吸收盾",
+      "source": "config/Aries/Cards/Life_Absorb_Level3.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "absorb",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleAttack_Level4",
+      "name": "噬草召唤",
+      "source": "config/Aries/Cards/Life_SingleAttack_Level4.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleHeal_Level4",
+      "name": "生机勃发",
+      "source": "config/Aries/Cards/Life_AreaHeal_Level4.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleAttack_Level6",
+      "name": "大地之怒",
+      "source": "config/Aries/Cards/Life_SingleAttack_Level6_low_level.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "vines",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_LifeGlobalAura",
+      "name": "生命对抗",
+      "source": "config/Aries/Cards/Life_LifeGlobalAura.xml",
+      "placement": "field",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleHeal_Level0",
+      "name": "静水灵体",
+      "source": "config/Aries/Cards/Life_SingleHeal_Level0.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_AreaHeal_Level3",
+      "name": "生命庇护",
+      "source": "config/Aries/Cards/Life_AreaHeal_Level3.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_LifePrism",
+      "name": "生命棱镜",
+      "source": "config/Aries/Cards/Life_LifePrism.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_LifeDamageBlade",
+      "name": "生命术",
+      "source": "config/Aries/Cards/Life_LifeDamageBlade.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "blade",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_AreaAccuracyBlade",
+      "name": "生命之礼",
+      "source": "config/Aries/Cards/Life_AreaAccuracyBlade.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "blade",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_HealBlade",
+      "name": "治疗术",
+      "source": "config/Aries/Cards/Life_HealBlade.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "blade",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleHealWithHOT_Level5",
+      "name": "生命圣光",
+      "source": "config/Aries/Cards/Life_SingleHealWithHOT_Level5.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleHeal_LevelX",
+      "name": "精灵之舞",
+      "source": "config/Aries/Cards/Life_SingleHeal_LevelX.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_AreaHealWithAbsorb_Level7",
+      "name": "重生",
+      "source": "config/Aries/Cards/Life_AreaHealWithAbsorb_Level7.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleHeal_ForNonLife_Level2",
+      "name": "万象凝气",
+      "source": "config/Aries/Cards/Life_SingleHeal_ForNonLife_Level2.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleHeal_ForLife_Level2",
+      "name": "万象回春",
+      "source": "config/Aries/Cards/Life_SingleHeal_ForLife_Level2.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_LifeDamageTrap",
+      "name": "生命陷阱",
+      "source": "config/Aries/Cards/Life_LifeDamageTrap.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_LifeDispellWeakness",
+      "name": "生命之敌",
+      "source": "config/Aries/Cards/Life_LifeDispellWeakness.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_LifeGreatShield",
+      "name": "生命盾",
+      "source": "config/Aries/Cards/Life_LifeGreatShield.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "shield",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleAttack_Level0",
+      "name": "生命魔光",
+      "source": "config/Aries/Cards/Life_SingleAttack_Level0_120_adv.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttack_Level1",
+      "name": "暗灵之咒",
+      "source": "config/Aries/Cards/Death_SingleAttack_Level1.xml",
+      "placement": "target",
+      "motion": "spiral",
+      "attack": "vortex",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttackWithLifeTap_Level2",
+      "name": "吸血幽灵",
+      "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level2.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "drain",
+      "returnToCaster": true,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttack_Level3",
+      "name": "幽灵突袭",
+      "source": "config/Aries/Cards/Death_SingleAttack_Level3.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttackWithLifeTap_Level4",
+      "name": "回光返照",
+      "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level4.xml",
+      "placement": "projectile",
+      "motion": "pulse",
+      "attack": "drain",
+      "returnToCaster": true,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttack_Level5",
+      "name": "墓地莽石",
+      "source": "config/Aries/Cards/Death_SingleAttack_Level5.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "vortex",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SymmetryGlobalTrap",
+      "name": "死亡绝",
+      "source": "config/Aries/Cards/Death_SymmetryGlobalTrap.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_DeathGlobalAura",
+      "name": "死亡对抗",
+      "source": "config/Aries/Cards/Death_DeathGlobalAura.xml",
+      "placement": "field",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttackWithLifeTap_Level6",
+      "name": "蝠王吸魂",
+      "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level6.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "drain",
+      "returnToCaster": true,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_DeathDamageTrap",
+      "name": "死亡陷阱",
+      "source": "config/Aries/Cards/Death_DeathDamageTrap.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_DeathDamageBlade",
+      "name": "死亡术",
+      "source": "config/Aries/Cards/Death_DeathDamageBlade.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "blade",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_DeathPrism",
+      "name": "死亡棱镜",
+      "source": "config/Aries/Cards/Death_DeathPrism.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleHealWithImmolate_Level3",
+      "name": "祭献",
+      "source": "config/Aries/Cards/Death_SingleHealWithImmolate_Level3.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_GlobalDamageTrap",
+      "name": "黑暗诅咒",
+      "source": "config/Aries/Cards/Death_GlobalDamageTrap.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttackWithDOT_Level4",
+      "name": "死亡毒",
+      "source": "config/Aries/Cards/Death_SingleAttackWithDOT_Level4.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_AreaDamageWeakness",
+      "name": "群之羁绊",
+      "source": "config/Aries/Cards/Death_AreaDamageWeakness.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_AreaAttackWithLifeTap_Level7",
+      "name": "死亡群攻",
+      "source": "config/Aries/Cards/Death_AreaAttackWithLifeTap_Level7.xml",
+      "placement": "projectile",
+      "motion": "pulse",
+      "attack": "drain",
+      "returnToCaster": true,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_HealWeakness",
+      "name": "死亡巫术",
+      "source": "config/Aries/Cards/Death_HealWeakness.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_DeathDispellWeakness",
+      "name": "死亡之敌",
+      "source": "config/Aries/Cards/Death_DeathDispellWeakness.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_DeathGreatShield",
+      "name": "死亡盾",
+      "source": "config/Aries/Cards/Death_DeathGreatShield.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "shield",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttack_Level0",
+      "name": "死亡魔光",
+      "source": "config/Aries/Cards/Death_SingleAttack_Level0_120_adv.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_Rune_FireResist_MiniAura",
+      "name": "烈火盾墙符文",
+      "source": "config/Aries/Cards/Fire_Rune_FireResist_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Rune_IceResist_MiniAura",
+      "name": "寒冰盾墙符文",
+      "source": "config/Aries/Cards/Ice_Rune_IceResist_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_Rune_StormResist_MiniAura",
+      "name": "风暴盾墙符文",
+      "source": "config/Aries/Cards/Storm_Rune_StormResist_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_Rune_LifeResist_MiniAura",
+      "name": "生命盾墙符文",
+      "source": "config/Aries/Cards/Life_Rune_LifeResist_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_Rune_DeathResist_MiniAura",
+      "name": "死亡盾墙符文",
+      "source": "config/Aries/Cards/Death_Rune_DeathResist_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_Rune_AreaAttack_Level2",
+      "name": "烈火群击符文",
+      "source": "config/Aries/Cards/Fire_Rune_AreaAttack_Level2.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Rune_AreaAttack_Level2",
+      "name": "寒冰群击符文",
+      "source": "config/Aries/Cards/Ice_Rune_AreaAttack_Level2.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_Rune_AreaAttack_Level2",
+      "name": "风暴群击",
+      "source": "config/Aries/Cards/Storm_Rune_AreaAttack_Level2.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_Rune_AreaAttack_Level2",
+      "name": "生命群击",
+      "source": "config/Aries/Cards/Life_Rune_AreaAttack_Level2.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_Rune_AreaAttack_Level2",
+      "name": "死亡群击",
+      "source": "config/Aries/Cards/Death_Rune_AreaAttack_Level2.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_Rune_FireAccuracy_MiniAura",
+      "name": "烈火专注",
+      "source": "config/Aries/Cards/Fire_Rune_FireAccuracy_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Rune_IceAccuracy_MiniAura",
+      "name": "寒冰专注",
+      "source": "config/Aries/Cards/Ice_Rune_IceAccuracy_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_Rune_StormAccuracy_MiniAura",
+      "name": "风暴专注",
+      "source": "config/Aries/Cards/Storm_Rune_StormAccuracy_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_Rune_LifeAccuracy_MiniAura",
+      "name": "生命专注",
+      "source": "config/Aries/Cards/Life_Rune_LifeAccuracy_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_Rune_DeathAccuracy_MiniAura",
+      "name": "死亡专注",
+      "source": "config/Aries/Cards/Death_Rune_DeathAccuracy_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_Pet_SingleAttackWithLifeTap_IronShellsPoison",
+      "name": "铁壳毒物",
+      "source": "config/Aries/Cards/Death_Pet_SingleAttackWithLifeTap_IronShellsPoison.xml",
+      "placement": "projectile",
+      "motion": "pulse",
+      "attack": "drain",
+      "returnToCaster": true,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_Pet_SingleAttack_FireRockyOgresDominance",
+      "name": "暴怒鬃王",
+      "source": "config/Aries/Cards/Fire_Pet_SingleAttack_FireRockyOgresDominance.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_Pet_SingleAttack_FireRockyOgresFocus",
+      "name": "火兽袭击",
+      "source": "config/Aries/Cards/Fire_Pet_SingleAttack_FireRockyOgresFocus.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Pet_SingleAttack_WaterBubblesFury",
+      "name": "咕噜大法",
+      "source": "config/Aries/Cards/Ice_Pet_SingleAttack_WaterBubblesFury.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "swords",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_Pet_SingleAttack_ForestSpikyOgresPunch",
+      "name": "土猿猛击",
+      "source": "config/Aries/Cards/Life_Pet_SingleAttack_ForestSpikyOgresPunch.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_Pet_SingleAttack_IronBeeSting",
+      "name": "苍蝇穿刺",
+      "source": "config/Aries/Cards/Storm_Pet_SingleAttack_IronBeeSting.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_Pet_AreaAttack_LevelX_ShadowSmashBullsSmash",
+      "name": "连环闪电",
+      "source": "config/Aries/Cards/Storm_Pet_AreaAttack_LevelX_ShadowSmashBullsSmash.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_Pet_SingleAttack_GhostOctopusBossDoom",
+      "name": "死亡章鱼",
+      "source": "config/Aries/Cards/Death_Pet_SingleAttack_GhostOctopusBossDoom.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "vortex",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_Pet_AreaAttack_ShadowOfPhoenixsBreath",
+      "name": "凤凰涅磐",
+      "source": "config/Aries/Cards/Fire_Pet_AreaAttack_ShadowOfPhoenixsBreath.xml",
+      "placement": "center",
+      "motion": "fly",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Pet_SingleAttack_IcePangolinsFreeze",
+      "name": "冰兽发威",
+      "source": "config/Aries/Cards/Ice_Pet_SingleAttack_IcePangolinsFreeze.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "swords",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_Pet_AreaHeal_ZodiacRabbitsBlessing",
+      "name": "超能神兔",
+      "source": "config/Aries/Cards/Life_Pet_AreaHeal_ZodiacRabbitsBlessing.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_Pet_SingleHeal_Nymphora",
+      "name": "圣灵复活",
+      "source": "config/Aries/Cards/Life_Pet_SingleHeal_Nymphora.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Pet_SingleAttackWithDOT_FrostMonkey",
+      "name": "冰刺魂体",
+      "source": "config/Aries/Cards/Ice_Pet_SingleAttackWithDOT_FrostMonkey.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_Pet_SingleAttack_ManekiNeko",
+      "name": "疾猫霹雳",
+      "source": "config/Aries/Cards/Storm_Pet_SingleAttack_ManekiNeko.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Pet_AreaAttack_BananaAttack",
+      "name": "帽子戏法",
+      "source": "config/Aries/Cards/Ice_Pet_AreaAttack_BananaAttack.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Pet_SingleAttackWithDOT_FrostScylla",
+      "name": "冰魄神柱",
+      "source": "config/Aries/Cards/Ice_Pet_SingleAttackWithDOT_FrostScylla.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Pet_IceSingleAttack_FrostFang_Boss",
+      "name": "恶狼袭击",
+      "source": "config/Aries/Cards/Ice_Pet_IceSingleAttack_FrostFang_Boss.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "swords",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_Pet_DeathSingleAttack_UndeadMonkey_Boss",
+      "name": "亡灵大军",
+      "source": "config/Aries/Cards/Death_Pet_DeathSingleAttack_UndeadMonkey_Boss.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "vortex",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_Pet_SingleAttackWithDOT_Level2",
+      "name": "雷神电轮",
+      "source": "config/Aries/Cards/Storm_Pet_SingleAttackWithDOT_Level2.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_Pet_SingleAttack_FireRockyOgresDominance_Power",
+      "name": "火鬃王暴怒",
+      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_FireRockyOgresDominance_Power.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_Pet_AreaAttack_Level6",
+      "name": "强化海狮冰剑",
+      "source": "config/Aries/Cards/Ice_Pet_AreaAttack_Level6.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "swords",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_AreaAttack_DoomLordsWrath",
+      "name": "群之暗伤符文_屏蔽",
+      "source": "config/Aries/Cards/Death_AreaAttack_DoomLordsWrath.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttackWithDisabledHeal",
+      "name": "天魔杀星",
+      "source": "config/Aries/Cards/Death_SingleAttackWithDisabledHeal_low_level.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "drain",
+      "returnToCaster": true,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_DOTAttackWithSplash_Level6",
+      "name": "熔岩炸弹",
+      "source": "config/Aries/Cards/Fire_DOTAttackWithSplash_Level6.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_ReflectionShield",
+      "name": "冰霜魔镜",
+      "source": "config/Aries/Cards/Ice_ReflectionShield.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "reflect",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_AreaCleanse",
+      "name": "圣灵净化",
+      "source": "config/Aries/Cards/Life_AreaCleanse.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "cleanse",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_StormDamageTrap_Standing",
+      "name": "惊雷裂隙",
+      "source": "config/Aries/Cards/Storm_StormDamageTrap_Standing.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttackWithPercent",
+      "name": "灵魂契约符文",
+      "source": "config/Aries/Cards/Death_Rune_SingleAttackWithPercent.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttackWithExplode",
+      "name": "急速点燃符文",
+      "source": "config/Aries/Cards/Fire_Rune_SingleAttackWithExplode.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleFreeze",
+      "name": "冰封神符符文",
+      "source": "config/Aries/Cards/Ice_Rune_SingleFreeze.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "freeze",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_AreaPowerPipBoost",
+      "name": "希望之光符文",
+      "source": "config/Aries/Cards/Life_Rune_AreaPowerPipBoost.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "pips",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_StormConversePositiveWard",
+      "name": "怒风逆转符文",
+      "source": "config/Aries/Cards/Storm_Rune_StormConversePositiveWard.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "cleanse",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_Rune_HealTrap_Standing",
+      "name": "瘟神巫术符文",
+      "source": "config/Aries/Cards/Death_Rune_HealTrap_Standing.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_Rune_PowerPipTrap_Standing",
+      "name": "超魔抑制符文",
+      "source": "config/Aries/Cards/Life_Rune_PowerPipTrap_Standing.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "trap",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_Pet_DeathGlobalAuraDamage",
+      "name": "暗黑力场",
+      "source": "config/Aries/Cards/Death_Pet_DeathGlobalAuraDamage.xml",
+      "placement": "field",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_SingleHeal_LongCD",
+      "name": "愈合符文",
+      "source": "config/Aries/Cards/Balance_Rune_SingleHeal_LongCD.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_BoostPowerPipChance_Standing",
+      "name": "超魔爆发符文",
+      "source": "config/Aries/Cards/Balance_BoostPowerPipChance_Standing.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "shield",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_ArenaAttack_Level8",
+      "name": "地狱爆炎符文",
+      "source": "config/Aries/Cards/Fire_ArenaAttack_Level8.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_DefensiveStance",
+      "name": "Ice_DefensiveStance",
+      "source": "config/Aries/Cards/Ice_DefensiveStance.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_AreaHealWithHOT_Level8",
+      "name": "天使赐福符文",
+      "source": "config/Aries/Cards/Life_AreaHealWithHOT_Level8.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleStealth",
+      "name": "风影斗篷符文",
+      "source": "config/Aries/Cards/Storm_SingleStealth.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "stealth",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleGuardianWithImmolate_Level8",
+      "name": "灵魂替身符文",
+      "source": "config/Aries/Cards/Death_SingleGuardianWithImmolate_Level8.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "absorb",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_AreaStunAbsorb",
+      "name": "群晕吸收",
+      "source": "config/Aries/Cards/Balance_Rune_AreaStunAbsorb.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "shield",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttack_Level1_Crazy",
+      "name": "熔岩爆",
+      "source": "config/Aries/Cards/Fire_SingleAttack_Level1_Crazy.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleAttack_Level1_Crazy",
+      "name": "冰霜裂",
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level1_Crazy.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "swords",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_Level1_Crazy",
+      "name": "疾空破",
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level1_Crazy.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleAttack_Level1_Crazy",
+      "name": "生灵光刃",
+      "source": "config/Aries/Cards/Life_SingleAttack_Level1_Crazy.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "vines",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttack_Level1_Crazy",
+      "name": "湮灭之咒",
+      "source": "config/Aries/Cards/Death_SingleAttack_Level1_Crazy.xml",
+      "placement": "target",
+      "motion": "spiral",
+      "attack": "vortex",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttack_Level2_Crazy",
+      "name": "火神天罚",
+      "source": "config/Aries/Cards/Fire_SingleAttack_Level2_Crazy.xml",
+      "placement": "target",
+      "motion": "fall",
+      "attack": "meteor",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleAttack_Level2_Crazy",
+      "name": "陨落冰山",
+      "source": "config/Aries/Cards/Ice_SingleAttack_Level2_Crazy.xml",
+      "placement": "target",
+      "motion": "fall",
+      "attack": "meteor",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_Level2_Crazy",
+      "name": "雷鸣遁空",
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level2_Crazy.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleAttack_Level2_Crazy",
+      "name": "荆棘刺尖",
+      "source": "config/Aries/Cards/Life_SingleAttack_Level2_Crazy.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "vines",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttackWithLifeTap_Level2_Crazy",
+      "name": "吸星幽魂",
+      "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level2_Crazy.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "drain",
+      "returnToCaster": true,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_Enrage_Level1",
+      "name": "1级激怒符文卡",
+      "source": "config/Aries/Cards/Balance_Rune_Enrage_Level1.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "enrage",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_SingleAttack_Level6_OutStandingCard",
+      "name": "火魔怒吼",
+      "source": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level6_OutStandingCard.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_AreaAttack_Level6_OutStandingCard",
+      "name": "海狮冰锥",
+      "source": "config/Aries/Cards/Ice_AreaAttack_Level6_OutStandingCard.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "swords",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttack_Level6_OutStandingCard",
+      "name": "狂风暴击",
+      "source": "config/Aries/Cards/Storm_SingleAttack_Level6_OutStandingCard.xml",
+      "placement": "target",
+      "motion": "spiral",
+      "attack": "vortex",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleAttack_Level6_OutStandingCard",
+      "name": "巨岩之怒",
+      "source": "config/Aries/Cards/Life_SingleAttack_Level6_OutStandingCard.xml",
+      "placement": "center",
+      "motion": "lunge",
+      "attack": "vines",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttackWithLifeTap_Level6_OutStandingCard",
+      "name": "恶灵夺魂",
+      "source": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level6_OutStandingCard.xml",
+      "placement": "center",
+      "motion": "hover",
+      "attack": "drain",
+      "returnToCaster": true,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_CatchPetCard_General",
+      "name": "普通抓宠卡",
+      "source": "config/Aries/Cards/Balance_Rune_CatchPetCard_General.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "capture",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_CatchPetCard_High",
+      "name": "高级抓宠符文",
+      "source": "config/Aries/Cards/Balance_Rune_CatchPetCard_High.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "capture",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_CatchPetCard_Top",
+      "name": "顶级抓宠符文",
+      "source": "config/Aries/Cards/Balance_Rune_CatchPetCard_Top.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "capture",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_AreaAttackCard_Elementary",
+      "name": "能量脉冲符文",
+      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_Elementary.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_AreaAttackCard_Middle",
+      "name": "超能脉冲符文",
+      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_Middle.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_AreaAttackCard_High",
+      "name": "脉冲奥义符文",
+      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_High.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_GlobalShield",
+      "name": "潘多拉结界守护",
+      "source": "config/Aries/Cards/Balance_AreaGlobalShield_Pandora_01.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "shield",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Fire_BlazingStance",
+      "name": "烈焰形态符文",
+      "source": "config/Aries/Cards/Fire_BlazingStance.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_PierceStance",
+      "name": "坚冰形态符文",
+      "source": "config/Aries/Cards/Ice_PierceStance.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_ElectricStance",
+      "name": "狂风形态",
+      "source": "config/Aries/Cards/Storm_ElectricStance.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_HealingStance",
+      "name": "光刃形态符文",
+      "source": "config/Aries/Cards/Life_HealingStance.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_VampireStance",
+      "name": "魔刃形态",
+      "source": "config/Aries/Cards/Death_VampireStance.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_SingleHealWithCleanse_Lv4",
+      "name": "愈合MAX",
+      "source": "config/Aries/Cards/Balance_Rune_SingleHealWithCleanse_Lv4.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_AreaAttackWithImmolate_Lv5",
+      "name": "狰狞",
+      "source": "config/Aries/Cards/Balance_Rune_AreaAttackWithImmolate_Lv5.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_SingleAttackWithStun_Lv5",
+      "name": "先发制人符文",
+      "source": "config/Aries/Cards/Balance_Rune_SingleAttackWithStun_Lv5.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_SingleAttackWithSelfStun_Lv5",
+      "name": "弑神脉冲",
+      "source": "config/Aries/Cards/Balance_Rune_SingleAttackWithSelfStun_Lv5.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "caster"
+    },
+    {
+      "base": "Fire_SingleAttackWith_Trap",
+      "name": "烈火反转",
+      "source": "config/Aries/Cards/Fire_SingleAttackWith_Trap.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Ice_SingleAttackWith_Trap",
+      "name": "寒冰反转",
+      "source": "config/Aries/Cards/Ice_SingleAttackWith_Trap.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "swords",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Storm_SingleAttackWith_Trap",
+      "name": "风暴反转",
+      "source": "config/Aries/Cards/Storm_SingleAttackWith_Trap.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "lightning",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Life_SingleAttackWith_Trap",
+      "name": "生命反转",
+      "source": "config/Aries/Cards/Life_SingleAttackWith_Trap.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "vines",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Death_SingleAttackWith_Trap",
+      "name": "死亡反转",
+      "source": "config/Aries/Cards/Death_SingleAttackWith_Trap.xml",
+      "placement": "target",
+      "motion": "spiral",
+      "attack": "vortex",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_GainPips",
+      "name": "超魔祝福符文",
+      "source": "config/Aries/Cards/Balance_Rune_GainPips.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "pips",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_Rune_PandoraResist_MiniAura",
+      "name": "潘多拉盾墙守护符文",
+      "source": "config/Aries/Cards/Balance_Rune_PandoraResist_MiniAura.xml",
+      "placement": "target",
+      "motion": "orbit",
+      "attack": "aura",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_AreaAttack_DragonLight",
+      "name": "梦龙脉冲符文",
+      "source": "config/Aries/Cards/Balance_Rune_AreaAttackCard_Dragon.xml",
+      "placement": "target",
+      "motion": "pulse",
+      "attack": "burst",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_SingleHeal_DragonLight",
+      "name": "梦龙之光符文",
+      "source": "config/Aries/Cards/Balance_Rune_SingleHeal_Dragon.xml",
+      "placement": "target",
+      "motion": "rise",
+      "attack": "heal",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    },
+    {
+      "base": "Balance_SingleAttack_Level2_teen",
+      "name": "梦龙极光符文",
+      "source": "config/Aries/Cards/Balance_Rune_SingleAttack_Dragon.xml",
+      "placement": "projectile",
+      "motion": "fly",
+      "attack": "bolt",
+      "returnToCaster": false,
+      "secondaryTarget": "target"
+    }
+  ]
 }

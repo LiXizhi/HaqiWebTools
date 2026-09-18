@@ -1,5 +1,6 @@
 // Build shared base effects plus thin variant references. No Lua execution or runtime build.
 import fs from 'node:fs';
+import {spellChoreography} from '../js/spell_choreography_core.js';
 const root=new URL('../',import.meta.url),read=p=>JSON.parse(fs.readFileSync(new URL(p,root)));
 const file=new URL('data/adventure/spell-effects.json',root),config=JSON.parse(fs.readFileSync(file));
 const cards=read('data/kids/cards.json'),chapter=read('data/adventure/combat.json').cards,names=read('data/kids/card_names.json');
@@ -47,5 +48,10 @@ for(const c of Object.values(cards)) {
 }
 config.version=2;config.description='本地kids全卡库演出：基础技能共享配置，等级/品质变体只引用基础并叠加光环。仅演出覆盖，不改变战斗引擎支持范围。';config.palettes.balance=['#d9c188','#fff4cc','#8c7453'];
 config.variantAuras={normal:{color:null,rings:0},green:{color:'#93ee87',rings:1},blue:{color:'#80c9ff',rings:2},purple:{color:'#d09aff',rings:2},gold:{color:'#ffdb70',rings:3}};
+for(const [id,base] of Object.entries(bases)) {
+ const card=Object.values(cards).find(c=>refs[c.key].base===id);
+ if(card.type==='DOTAttackWithHOT')base.friendly=false;
+ base.choreography=spellChoreography(base,card);
+}
 config.bases=bases;config.cards=refs;fs.writeFileSync(file,JSON.stringify(config,null,2)+'\n');
 console.log(`${Object.keys(bases).length} shared bases / ${Object.keys(refs).length} card references`);

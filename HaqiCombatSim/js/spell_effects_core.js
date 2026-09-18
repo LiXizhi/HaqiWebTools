@@ -1,5 +1,6 @@
 // Presentation-only definitions and seeded samples. Never consumes the arena RNG.
 import { createRng, hashSeed } from './rng_core.js';
+import {SUBJECT_MOTIONS,SUBJECT_PLACEMENTS} from './spell_choreography_core.js';
 export const EFFECT_KINDS = ['bolt','burst','meteor','swords','lightning','vines','vortex','shield','blade','trap','heal','drain','summon','absorb','reflect','aura','cleanse','steal','stun','freeze','stealth','enrage','pips','capture','pet','dissolve','pass'];
 export function centeredSpellSubject(spec) {return spec.kind==='summon'||spec.subjectPlacement==='center';}
 export function validateSpellEffects(config, cards) {
@@ -15,6 +16,8 @@ export function validateSpellEffects(config, cards) {
         if(!(effect.scale>0&&effect.scale<=3)||!EFFECT_KINDS.includes(effect.kind)||!config.palettes[card.spellSchool]||!(effect.duration>=500&&effect.duration<=4000)||!Number.isInteger(effect.count)||effect.count<1||effect.count>160)throw new Error(`技能特效参数无效：${card.key}`);
         if(effect.secondary&&!EFFECT_KINDS.includes(effect.secondary)&&effect.secondary!=='dot')throw new Error(`附加演出无效：${card.key}`);
         if(effect.subjectPlacement!==undefined&&effect.subjectPlacement!=='center')throw new Error(`主体定位无效：${card.key}`);
+        const choreography=effect.choreography;
+        if(choreography&&(!SUBJECT_MOTIONS.includes(choreography.motion)||!SUBJECT_PLACEMENTS.includes(choreography.placement)||!EFFECT_KINDS.includes(choreography.attack)||typeof choreography.returnToCaster!=='boolean'||!['caster','target'].includes(choreography.secondaryTarget)))throw new Error(`技能编舞无效：${card.key}`);
         if(effect.kind==='summon'&&(!config.summons[effect.summon]||!EFFECT_KINDS.includes(effect.attack)))throw new Error(`召唤特效无效：${card.key}`);
     }
     for(const def of Object.values(config.summons)) {

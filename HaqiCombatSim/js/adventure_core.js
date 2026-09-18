@@ -4,6 +4,8 @@ import { normalizeStats, statIdToEntry, clampDeck } from './combat_unit_core.js'
 import * as Pets from './adventure_pets_core.js';
 import { hashSeed } from './rng_core.js';
 import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
+import { resolvePetReward, migrateQuestPetRewards } from './adventure_rewards_core.js';
+export { rewardLabel } from './adventure_rewards_core.js';
 
 export const SAVE_VERSION = 2;
 export const SCHOOL_NAMES = { fire: '烈火', ice: '寒冰', storm: '风暴', life: '生命', death: '死亡' };
@@ -157,7 +159,7 @@ export function rewardsFor(save, content, quest) {
         // Original choice count after school filtering; all included chapter choices are unambiguous.
         rewards.push(...(group.choice > 0 ? rows.slice(0, group.choice) : rows));
     }
-    return rewards;
+    return rewards.map(reward => resolvePetReward(content, reward));
 }
 export function applyAction(save, content, action) {
     assert(!save.pendingEncounter || ['settle-encounter','retreat'].includes(action.type), '请先完成当前战斗');
@@ -178,10 +180,17 @@ export function applyAction(save, content, action) {
         if (save.quests[target?.id]?.claimed) return { changed: false };
         assert(target === q && questReady(save,q) && q.endNpc === Number(action.npcId), '任务尚未完成');
         for (const r of rewardsFor(save,content,q)) {
-            if (r.id === 113) save.xp += r.count;
+            if (r.kind === 'pet') { for (let i = 0; i < r.count; i++) Pets.addPet(save,content,r.petId); }
+            else if (r.id === 113) save.xp += r.count;
             else save.inventory[r.id] = (save.inventory[r.id] || 0) + r.count;
         }
         save.quests[q.id].claimed = true;
+        if(content.pets) {
+            for(const r of rewardsFor(save,content,q)) if(r.kind==='pet') {
+                save.questPetConversions ??= {};
+                save.questPetConversions[r.id] = (save.questPetConversions[r.id] || 0) + r.count;
+            }
+        }
         syncProgression(save,content);
         if (q.id === 63013) save.graduated = true;
         break;
@@ -320,7 +329,9 @@ export function parseSave(raw,content) {
     }
     syncProgression(s,content); validDeck(s,content,s.deck);
     if(s.deckLayouts!==undefined)validateDeckLayouts(s,content,s.deckLayouts,s.activeDeckLayout);
-    syncDeckLayouts(s,content); return s;
+    syncDeckLayouts(s,content);
+    migrateQuestPetRewards(s,content,rewardsFor);
+    return s;
 }
 
 export function specialEncounter(save,content,id){

@@ -15,7 +15,7 @@ function soundLabel(){soundButton.textContent=sound.enabled?'音效：开启':'�
 soundLabel();document.querySelector('.effect-controls').append(soundButton);
 soundButton.onclick=async()=>{const requested=!sound.enabled,ok=await sound.setEnabled(requested);soundLabel();if(requested&&!ok)$('atlas-status').textContent='浏览器暂时无法启用音效，请重试。';};
 document.addEventListener('pointerdown',()=>sound.unlock());document.addEventListener('keydown',()=>sound.unlock());
-let effects,cards,art,fx,representatives=[],selected,progress=.35,playing=false,last=0,frame=0,page=0,revision=0,selectionRevision=0;
+let effects,cards,art,fx,representatives=[],selected,progress=.35,environmentTime=0,playing=false,last=0,frame=0,page=0,revision=0,selectionRevision=0;
 const ctx=$('atlas-effect').getContext('2d');
 import { fetchJson as read } from './runtime_data.js';
 function drawEffect(){
@@ -29,6 +29,7 @@ function drawEffect(){
  const targets=spec.area?[{x:690,y:230},to,{x:850,y:340}]:[to];
  if(spec.area&&spec.friendly)targets.splice(0,targets.length,{x:140,y:250},from,{x:300,y:340});
  const impact=spec.kind==='summon'?effects.timeline.summonImpact:effects.timeline.impact;
+ if(spec.choreography?.placement==='field'&&progress>=impact)fx.drawEnvironment(ctx,{card:c,center:{x:490,y:300},radius:380,aspect:.32,time:environmentTime,reducedMotion:reduced.matches,strength:Math.min(1,(progress-impact)/.1)});
  const hitProgress=(progress-impact)*3000/HIT_DURATION_MS;
  const struck=!spec.friendly&&expectedBaseDamage(c)>0&&hitProgress>=0&&hitProgress<1;
  // Visible training targets make the moment of impact readable beneath the particles.
@@ -38,16 +39,16 @@ function drawEffect(){
   ctx.beginPath();ctx.arc(0,-88,13,0,Math.PI*2);ctx.fill();ctx.stroke();
   ctx.beginPath();ctx.moveTo(-12,-18);ctx.lineTo(-17,0);ctx.moveTo(12,-18);ctx.lineTo(17,0);ctx.stroke();
  });
- fx.draw(ctx,{card:c,progress,from,to,targets,center:{x:490,y:300},width:1000,height:440,seed:7,reducedMotion:reduced.matches});
+ fx.draw(ctx,{card:c,progress,from,to,targets,center:{x:490,y:300},width:1000,height:440,seed:7,reducedMotion:reduced.matches,environmentManaged:true});
  sound.track(effects,c,progress,{active:playing&&!document.hidden,reducedMotion:reduced.matches});
 }
 function updatePlay(){$('effect-play').textContent=playing?'暂停演出':'播放演出';}
-function tick(now){if(!playing||document.hidden){frame=0;return;}if(last)progress=(progress+Math.min(now-last,100)/3000)%1;last=now;$('effect-progress').value=Math.round(progress*1000);drawEffect();frame=requestAnimationFrame(tick);}
+function tick(now){if(!playing||document.hidden){frame=0;return;}if(last){const dt=Math.min(now-last,100);environmentTime+=dt/1000;const next=progress+dt/3000;progress=effects.bases[selected?.base]?.choreography?.placement==='field'?Math.min(1,next):next%1;}last=now;$('effect-progress').value=Math.round(progress*1000);drawEffect();frame=requestAnimationFrame(tick);}
 function run(){last=0;if(!frame&&playing&&!document.hidden)frame=requestAnimationFrame(tick);updatePlay();}
 async function choose(item){
  sound.stop();
  const token=++selectionRevision;await art.ensure(item.base);if(token!==selectionRevision)return;
- selected=item;progress=.35;$('effect-progress').value=350;
+ selected=item;progress=.35;environmentTime=0;$('effect-progress').value=350;
  document.querySelectorAll('.atlas-select').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.base===item.base)));
  const row=art.manifest.bases[item.base],ref=skillFrame(art.manifest,item.base),sheet=art.manifest.sheets[ref.atlas];
  $('effect-name').textContent=row.name;$('effect-kind').textContent=row.effectAtlas?'专属九帧演出':'共享主体演出';

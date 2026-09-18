@@ -33,6 +33,9 @@
 .touch-joystick{display:none;position:absolute;left:22px;bottom:112px;width:86px;height:86px;border:1px solid #fff2cc99;border-radius:50%;background:#e7eed633;box-shadow:inset 0 0 18px #183e3c25;touch-action:none;user-select:none}
 .joystick-stick{position:absolute;left:50%;top:50%;width:36px;height:36px;transform:translate(-50%,-50%);border-radius:50%;border:1px solid #fff4d5bb;background:#edf1d7b8;box-shadow:0 3px 9px #173d4840;pointer-events:none}
 .touch-joystick.active{background:#e7eed64d}.touch-joystick.active .joystick-stick{background:#fff4d5e6}
+.floating-joystick{display:block;position:fixed;bottom:auto;transform:translate(-50%,-50%);pointer-events:none;z-index:20}
+.touch-movement-hint{display:none;position:absolute;bottom:96px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;color:#f9f0d5;text-shadow:0 1px 3px #173d48;pointer-events:none!important}
+@media(pointer:coarse){.touch-movement-hint{display:block}}
 @media(pointer:coarse),(max-width:650px){.touch-joystick{display:block}}
 
 /* Saved journey and character creation are separate entry states. */
@@ -145,8 +148,112 @@
  .hand-card:not(.selected) .discard-button{visibility:hidden;pointer-events:none}
 }
 
+/* Account role picker */
+.role-screen { overflow-y:auto; align-items:safe center; padding:24px 16px; }
+.role-manager { width:min(720px,100%); max-width:720px; margin:auto; }
+.role-manager h1 { margin:0 0 12px; }
+.role-list { display:grid; gap:10px; }
+.role-card { display:flex; align-items:center; gap:14px; padding:10px; border:1px solid #b9cbbb; border-radius:12px; }
+.role-card.recent { border-color:#548769; background:#e7efe4; }
+.role-portrait { width:64px; height:68px; image-rendering:pixelated; flex:none; }
+.role-description { flex:1; min-width:0; overflow-wrap:anywhere; }
+.role-description h2 { margin:0; font-size:18px; }
+.role-description p { margin:5px 0; }
+.role-create,.role-actions { display:flex; align-items:center; flex-wrap:wrap; gap:10px; margin:16px 0; }
+.role-import { font-size:12px; text-decoration:underline; }
+.role-conflict { border:1px solid #b76d40; border-radius:8px; padding:12px; }
+.role-backup-import { display:grid; gap:8px; margin-top:16px; font-size:13px; }
+.role-backup-import input { max-width:100%; }
+.role-status { color:#24533d; }
+@media(max-width:480px) { .role-manager { padding:18px; } .role-card { gap:8px; flex-wrap:wrap; } .role-card button { margin-left:auto; } }
+
 /* Original bag-style individual card slots, enlarged for touch input. */
 .bag-tabs{display:flex;gap:6px;flex-wrap:wrap;border-bottom:2px solid #b7aa7a;padding-bottom:8px}.bag-tab{padding:10px 15px;border:1px solid #b8aa7c;border-radius:7px 7px 0 0;background:#ece4cf;color:#655b3f;max-width:100%;overflow-wrap:anywhere}.bag-tab[aria-pressed=true]{background:#386b55;color:white;border-color:#386b55}.bag-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:14px 0}.bag-name{min-width:0;width:160px;max-width:100%;padding:10px;border:1px solid #b8aa7c;border-radius:6px;background:#fffaf0;font:inherit}.bag-workspace{display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:20px}.bag-main{min-width:0}.bag-slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:5px;padding:10px;background:#d6cdb1;border:1px solid #af9a64;border-radius:7px}.bag-slot{display:flex;align-items:center;justify-content:center;aspect-ratio:1;min-width:0;padding:2px;border:1px solid #b69c60;background:#fbf3dc;box-shadow:inset 0 0 0 2px #e7d8b0;border-radius:4px;touch-action:pan-y;user-select:none;-webkit-touch-callout:none}.bag-slot.empty{background:#c6bea6;box-shadow:inset 0 1px 4px #786b4130}.bag-slot.holding{background:#d4a46b;outline:2px solid #95602d}.bag-subject{width:100%;height:auto;pointer-events:none;display:block}.bag-slot:focus-visible,.bag-library-card:focus-visible{outline:3px solid #386b55;outline-offset:2px}.bag-library{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:8px}.bag-library-card{display:flex;flex-direction:column;align-items:center;padding:8px 4px;gap:5px;background:#fff9e9;border:1px solid #d8cbae;border-radius:6px;font:inherit;font-size:11px;color:#4e523e}.bag-library-card .bag-subject{width:48px;height:48px;background:#ece1c5;border:1px solid #b69c60;border-radius:3px}.bag-library-card:disabled{opacity:.45}.bag-detail{align-self:start;position:sticky;top:0;display:flex;align-items:center;flex-direction:column;gap:12px}.bag-detail .spell-face{width:150px;max-width:100%}.bag-footer{display:flex;gap:12px;align-items:center;justify-content:space-between;margin-top:16px}.bag-status{font-size:12px;flex:1}.bag-footer button{flex-shrink:0}.equipment-card-slots{grid-template-columns:repeat(auto-fill,46px)}
 @media(max-width:600px){.bag-workspace{grid-template-columns:minmax(0,1fr)}.bag-detail{position:static;flex-direction:row;flex-wrap:wrap;padding-top:12px}.bag-detail .spell-face{width:105px}.bag-slots{gap:4px;padding:7px}.bag-tab{padding:10px;font-size:12px}.bag-controls{gap:7px}.bag-controls button{font-size:12px}.bag-footer{align-items:flex-start}.bag-footer .primary{padding:12px}.bag-library{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .bag-footer{position:sticky;bottom:-28px;background:var(--paper,#faf7e8);padding:10px 0;border-top:1px solid #d8cbae;z-index:3}@media(max-width:600px){.bag-footer{bottom:-17px}}
 @media(max-width:600px){.bag-detail{order:-1}.bag-detail>p{margin:0}}
+
+/* Creation is a two-step flow. Scroll the whole page from its top on short screens. */
+.entry-screen.entry-wizard{display:block;overflow-y:auto;overflow-x:hidden;padding:28px 5vw;overscroll-behavior:contain;}
+.entry-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,440px);gap:clamp(28px,6vw,96px);align-items:center;min-height:100%;max-width:1060px;margin:0 auto;}
+.entry-wizard .entry-intro{min-width:0;}
+.entry-wizard .creation-form{width:100%;margin:0;padding:26px;min-width:0;}
+.creation-steps{display:flex;align-items:center;gap:12px;font-size:11px;color:#8e9484;margin-bottom:20px;}
+.creation-steps i{height:1px;background:#d9d2ba;flex:1;}
+.creation-steps .current{color:#315e4d;font-weight:700;}
+.creation-steps .done{color:#78917a;}
+.creation-caption{font-size:12px;color:#7a806c;margin:8px 0 16px;}
+.creation-form .avatar-choice{margin:12px 0;gap:12px;}
+.creation-form .avatar-option .art{width:70px!important;height:74px!important;}
+.creation-form .school-description{min-height:22px;margin:10px 0;}
+.creation-form .field-label{margin-top:14px;}
+.creation-form .starter-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:24px 0;align-items:stretch;}
+.creation-form .starter-choices button{padding:16px 3px;min-width:0;gap:10px;font-size:12px;}
+.creation-form .starter-choices .pet-sheet{width:64px!important;height:64px!important;max-width:100%;}
+.creation-form .starter-choices .selected{outline:2px solid #b48a3d;background:#f8efd5;}
+.creation-summary{font-size:13px;color:#52745c;padding:10px 0;border-bottom:1px solid #ded9c3;}
+.creation-form .creation-import{font-size:11px;color:#829080;margin:10px auto 0;text-decoration:underline;text-underline-offset:3px;}
+.creation-form .creation-back{font-size:12px;margin:8px auto 0;}
+@media(max-width:720px){
+ .entry-screen.entry-wizard{padding:20px 16px 28px;}
+ .entry-layout{display:flex;flex-direction:column;gap:22px;min-height:100%;justify-content:safe center;}
+ .entry-wizard .entry-intro{flex:none;text-align:center;max-width:100%;}
+ .entry-wizard .game-title{font-size:36px;letter-spacing:5px;line-height:1.4;}
+ .entry-wizard .title-rule,.entry-wizard .entry-description,.entry-wizard .entry-intro>.eyebrow{display:none;}
+ .entry-wizard .chapter-title{font-size:17px;letter-spacing:6px;margin:4px 0 10px;}
+ .entry-wizard .cloud-entry-button{margin-top:8px;font-size:12px;padding:7px 16px;}
+ .entry-wizard .creation-form{max-width:440px;padding:22px;}
+ .creation-steps{margin-bottom:14px;}
+}
+@media(max-height:620px) and (min-width:721px){.entry-wizard .creation-form{padding:20px;}.entry-wizard .game-title{font-size:52px;}.creation-steps{margin-bottom:12px;}}
+
+/* School showcase: the original tutorial's representative skills, one at a time. */
+.entry-wizard.school-step .entry-layout{grid-template-columns:minmax(0,1fr) minmax(360px,550px);max-width:1160px;}
+.creation-steps{font-size:10px;gap:7px;white-space:nowrap;}
+.creation-preview{display:block;width:100%;height:auto;aspect-ratio:1.95;border-radius:9px;background:#163943;border:1px solid #b6b797;}
+.preview-controls{display:flex;align-items:center;gap:12px;min-height:34px;}
+.preview-status{font-size:11px;color:#73806f;flex:1;}
+.preview-controls .text-button{font-size:11px;white-space:nowrap;}
+.creation-skill-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+.creation-skill-choices button{font-size:12px;padding:8px 3px;min-width:0;}
+.creation-skill-choices button.selected{border-color:#6d8e70;background:#e5ecdc;}
+.creation-preview-note{font-size:10px;color:#889080;margin-top:8px;}
+@media(max-width:720px){.entry-wizard.school-step .entry-layout{display:flex;}.creation-preview{aspect-ratio:1.6;}.creation-skill-choices{gap:5px;}.creation-skill-choices button{font-size:11px;}.creation-form .starter-choices button{font-size:11px;}.creation-form .starter-choices .pet-sheet{width:58px!important;height:58px!important;}}
+.entry-wizard.school-step .creation-form{padding:22px;}
+.creation-preview{aspect-ratio:2.25;}
+@media(max-width:720px){.creation-preview{aspect-ratio:1.8;}}
+
+/* A small meeting place: the chosen companion runs up beside the hero. */
+.entry-wizard.companion-step .entry-layout{grid-template-columns:minmax(0,1fr) minmax(340px,500px);}
+.companion-scene{position:relative;height:214px;overflow:hidden;border-radius:48% 48% 16px 16px;background:radial-gradient(ellipse at 50% 12%,#fff9d4 0,transparent 54%),linear-gradient(#dae8cc,#b5cba6 65%,#ced7a7);isolation:isolate;}
+.companion-scene::before,.companion-scene::after{content:'';position:absolute;width:130px;height:160px;background:#72996c45;border-radius:50%;bottom:24px;left:-80px;transform:rotate(-30deg);z-index:-1;}
+.companion-scene::after{left:auto;right:-80px;transform:rotate(30deg);}
+.companion-scene-label{position:absolute;top:20px;left:0;right:0;text-align:center;letter-spacing:3px;color:#6f825e;font-size:10px;}
+.companion-clearing{position:absolute;left:12%;right:12%;height:50px;bottom:20px;border-radius:50%;background:#f2e9b993;box-shadow:0 0 0 10px #e0e2b333;}
+.companion-hero{position:absolute;bottom:23px;left:calc(44% - 50px);width:100px;text-align:center;}
+.companion-hero::before,.companion-position::before{content:'';position:absolute;bottom:17px;left:20%;width:60%;height:10px;border-radius:50%;background:#455d4730;filter:blur(3px);}
+.companion-hero .art{position:relative;display:block;}
+.companion-name{position:relative;font-size:11px;color:#435c43;display:block;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.companion-position{position:absolute;left:61%;bottom:40px;width:82px;height:82px;}
+.companion-position::before{bottom:0;}
+.companion-runner{position:relative;width:82px;height:82px;transform-origin:50% 90%;}
+.companion-runner.arriving{animation:companion-arrive 1.05s both;}
+.companion-runner.arriving .pet-sheet{animation:companion-bound .18s 5 alternate ease-in-out;}
+.companion-greeting{text-align:center;font-size:13px;color:#45634e;margin:14px 0 4px;}
+.companion-invitation{text-align:center;font-size:11px;color:#89927c;margin:0 0 10px;}
+.companion-step .creation-form .starter-choices{margin:12px 0 4px;gap:8px;}
+.companion-step .creation-form .starter-choices button{padding:8px 3px;gap:3px;border-radius:16px;background:#eef0df80;border-color:transparent;transition:background .2s,box-shadow .2s;}
+.companion-step .creation-form .starter-choices .selected{outline:0;background:#f9f1d8;box-shadow:inset 0 0 0 1px #b48a3d80;}
+.companion-step .creation-form .starter-choices .pet-sheet{width:48px!important;height:48px!important;}
+.companion-step .creation-caption{margin-bottom:12px;}
+@keyframes companion-arrive{0%{transform:translateX(170px) scale(.82);}75%{transform:translateX(-8px) scale(1);}90%{transform:translateX(3px);}100%{transform:translateX(0);}}
+@keyframes companion-bound{from{transform:translateY(0) rotate(-5deg);}to{transform:translateY(-9px) rotate(5deg);}}
+@media(max-width:720px){.entry-wizard.companion-step .entry-layout{display:flex;}.companion-scene{height:184px;}.companion-hero{bottom:18px;}.companion-position{left:62%;bottom:35px;}.companion-step .creation-form{padding:20px;}}
+@media(prefers-reduced-motion:reduce){.companion-runner.arriving,.companion-runner.arriving .pet-sheet{animation:none;}}
+
+/* Compact card illustrations use the same subject art as the card bag. */
+.creation-skill-choices .creation-skill-option{display:flex;align-items:center;gap:8px;text-align:left;padding:6px;border:1px solid transparent;background:transparent;border-radius:8px;font-size:12px;line-height:1.4;}
+.creation-skill-choices .creation-skill-option.selected{background:#e5ecdc;border-color:#8aa17b;}
+.creation-skill-card{display:block;flex:0 0 42px;width:42px;height:48px;object-fit:contain;background:linear-gradient(145deg,#fcf5d9,#dfd3ad);border:1px solid #b8a778;border-radius:5px;box-shadow:0 2px 3px #354b3420;}
+.creation-skill-option span{min-width:0;}
+@media(max-width:720px){.creation-skill-choices .creation-skill-option{gap:5px;padding:4px;font-size:11px;}.creation-skill-card{flex-basis:30px;width:30px;height:40px;}}

@@ -1,6 +1,7 @@
 // Optional browser IO adapter. PersonalPageStore owns the workspace and writes;
 // uncached SDK file reads verify the remote server, avoiding the store's local fallback.
 import { makeCloudSnapshot, parseCloudSnapshot, snapshotPath, checkpointPaths } from './adventure_cloud_core.js';
+import { validateRoles, emptyRoles, roleIdValid } from './adventure_roles_core.js';
 
 export const SDK_URL = 'https://cdn.keepwork.com/sdk/keepworkSDK.core.iife.js';
 let sdkLoading;
@@ -43,12 +44,68 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         if (typeof text !== 'string' || !text) throw new CloudError('无法从云端读取记录，请检查网络后重试。');
         return text;
     }
+    const rolesPath = 'roles/index.json';
+    async function readRoles(current) {
+        // getFileByFullPath conflates 404 and network errors. loadPage preserves
+        // the SDK's explicit "Page not found" error; only that means a new account.
+        check(current);
+        const full = store.getRemotePagePath(rolesPath);
+        if (!full.startsWith(`${current.owner}/`)) throw new CloudError('云端账号不一致');
+        const parts = full.split('/');
+        let result;
+        try { result = await timeout(sdk.loadPage({ sitePath: parts.slice(0, 2).join('/'), pagePath: parts.slice(2).join('/'), useCache: false, useServerCache: false })); }
+        catch (error) {
+            check(current);
+            if (error.message === `Page not found: ${full}`) return { owner: current.owner, revision: null, catalog: emptyRoles() };
+            throw error;
+        }
+        check(current);
+        if (result?.success !== true || typeof result.content !== 'string' || result.content.length > 6 * 1024 * 1024) throw new CloudError('角色列表读取失败，请重试。');
+        const value = JSON.parse(result.content);
+        if (value.owner !== current.owner || !roleIdValid(value.revision)) throw new CloudError('角色列表身份或版本无效');
+        return { owner: current.owner, revision: value.revision, catalog: validateRoles(value.catalog, content, dataset) };
+    }
+    async function writeVerified(path, text, current) {
+        const target = store;
+        await timeout(target.savePageData(path, 'content', text, false, false));check(current);
+        if (!await timeout(target.syncToGit(path, false))) throw new CloudError('角色云端保存未完成，本地进度已保留。');
+        check(current);
+        if (JSON.stringify(JSON.parse(await remoteText(path, current))) !== text) throw new CloudError('角色云端保存未通过远端核验。');
+    }
     return {
         get owner() { return owner; },
-        connect: () => guarded(async () => {
+        roles: () => guarded(async () => readRoles(await session())),
+        roleAncestor: (base, head) => guarded(async () => {
+            const current = await session();let revision = head;
+            // A clean cache can still belong to a concurrently overwritten branch.
+            // Require ancestry before replacing it; large gaps fail closed to UI backup.
+            for (let i = 0; i < 64; i++) {
+                if (revision === base) return true;
+                if (!roleIdValid(revision)) return false;
+                const row = JSON.parse(await remoteText(`roles/history/${revision}.json`, current));
+                if (row.owner !== current.owner || row.revision !== revision) throw new CloudError('角色历史记录无效');
+                revision = row.parentRevision;
+            }
+            return false;
+        }),
+        saveRoles: (catalog, expectedRevision) => guarded(async () => {
+            const clean = validateRoles(catalog, content, dataset), current = await session();
+            const previous = await readRoles(current);
+            if (previous.revision !== expectedRevision) throw new CloudError('其他设备已更新角色列表，请先处理云端冲突。');
+            const revision = uuid();
+            const text = JSON.stringify({ owner: current.owner, revision, parentRevision: expectedRevision, catalog: clean });
+            // Immutable full-catalog history preserves both sides of a write race.
+            await writeVerified(`roles/history/${revision}.json`, text, current);
+            if ((await readRoles(current)).revision !== expectedRevision) throw new CloudError('其他设备已更新角色列表，本次进度已保留，请刷新处理冲突。');
+            await writeVerified(rolesPath, text, current);
+            return revision;
+        }),
+        disconnect: () => guarded(async () => { if (sdk) await sdk.logout();authVersion++;owner = null;store = null; }),
+        connect: ({ interactive = true } = {}) => guarded(async () => {
             sdk = await loadSDK();
             if (!unsubscribe) unsubscribe = sdk.onAuthStateChange(() => { authVersion++;owner = null;store = null;onAccountChange(); });
             if (!sdk.token) {
+                if (!interactive) throw new CloudError('请登录 Keepwork 后继续账号角色。');
                 try { await sdk.showLoginWindow({ title: '登录 Keepwork，继续魔法旅程', lang: 'zhCN' }); }
                 catch { throw new CloudError('已取消登录，你可以继续本地冒险。'); }
             }

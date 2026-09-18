@@ -18,11 +18,12 @@ function fixture(config=effects){
  return {ctx,fx,subjects,ellipses};
 }
 const cardFor=base=>Object.values(cards).find(c=>effects.cards[c.key].base===base);
-test('summon and creature subjects stay at arena center throughout attacks in either direction',()=>{
+test('summons animate near arena center in either direction and reduced motion remains stationary',()=>{
  for(const base of ['Life_SingleAttack_Level6_OutStandingCard','Ice_SingleAttack_Level6','Fire_SingleAttack_Level6','Storm_SingleAttack_Level5'])for(const reverse of [false,true])for(const reducedMotion of [false,true]){
   const f=fixture();for(const progress of [.15,.4,.6,.85])f.fx.draw(f.ctx,{card:cardFor(base),progress,from:{x:reverse?800:180,y:300},to:{x:reverse?180:800,y:260},center:{x:490,y:310},width:1000,height:440,reducedMotion});
-  assert.equal(f.subjects.length,4);assert.ok(f.subjects.every(s=>s.x===490));
-  assert.ok(f.subjects.every(s=>s.y===f.subjects[0].y));
+  assert.equal(f.subjects.length,4);assert.ok(f.subjects.every(s=>Math.abs(s.x-490)<50));
+  if(reducedMotion)assert.ok(f.subjects.every(s=>s.x===490&&s.y===f.subjects[0].y));
+  else assert.ok(new Set(f.subjects.map(s=>`${s.x}:${s.y}`)).size>1);
  }
 });
 test('area attack shares a single center summon while impacts still reach every target',()=>{

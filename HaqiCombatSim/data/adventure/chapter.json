@@ -124,7 +124,7 @@
       "questId": 63005,
       "section": "description",
       "original": "青龙导师让我利用任务追踪系统，传送到指定地点打败一只怪物。（完成任务后可以获得炫酷坐骑）",
-      "replacement": "青龙导师让我利用任务追踪系统，沿小路前往指定地点打败一只怪物。（完成任务后可以获得原版奖励收藏）",
+      "replacement": "青龙导师让我利用任务追踪系统，沿小路前往指定地点打败一只怪物。（任务奖励以对话中的奖励清单为准）",
       "reason": "browser-controls-or-chapter-scope"
     },
     {
@@ -1419,7 +1419,7 @@
     {
       "id": 63005,
       "title": "阵营训练（四）",
-      "description": "青龙导师让我利用任务追踪系统，沿小路前往指定地点打败一只怪物。（完成任务后可以获得原版奖励收藏）",
+      "description": "青龙导师让我利用任务追踪系统，沿小路前往指定地点打败一只怪物。（任务奖励以对话中的奖励清单为准）",
       "startNpc": 36211,
       "endNpc": 36203,
       "requires": [
@@ -4109,6 +4109,7 @@
       "description": "",
       "icon": "Texture/Aries/Item/16071_TransformPill_Smilodon.png",
       "assetkey": "16103_TransformPill_Smilodon_Cute",
+      "rewardPetId": "zodiac_tiger_tangtang",
       "stats": {
         "28": 5,
         "46": 15,

@@ -146,6 +146,8 @@ export function createRenderer(canvas,assets) {
         const slotPoint=(side,slot)=>{const a=([-155,-110,155,110][slot%4])*Math.PI/180;return{x:cx+Math.cos(a)*r*.76*(side==='near'?1:-1),y:cy+Math.sin(a)*r*.39};};
         for(const side of ['near','far'])for(let slot=0;slot<4;slot++){const at=slotPoint(side,slot);circleRune(c,at.x,at.y,19,t*.2,'#f2e6b677');}
         const ev=presentation?.event,p=presentation?.progress||0,positions={};
+        const aura=presentation&&Object.hasOwn(presentation,'aura')?presentation.aura:battle.aura;
+        if(aura?.cardKey)effects.drawEnvironment(c,{card:battle.resolved.cards[aura.cardKey],center:{x:cx,y:cy-2},radius:r,time:t,reducedMotion:reducedMotion.matches});
         for(const side of ['near','far'])for(const [i,unit] of battle.sides[side].entries())positions[unit.id]=slotPoint(side,unit.slot??i);
         for(const id of Object.keys(battle.unitsById)) {
             const hp=presentation?.hp?.[id]??battle.unitsById[id].hp;
@@ -165,7 +167,7 @@ export function createRenderer(canvas,assets) {
             for(let i=0;i<Math.min(2,labels.length);i++)text(c,labels[i]+(i===1&&labels.length>2?` 等${labels.length}项`:''),at.x,at.y+101+i*14,w<650?9:11,'#eedba2');
         }
         if(ev?.type==='cast'||ev?.type==='fizzle') {
-            effects.draw(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],center:{x:cx,y:cy-2},width:w,height:h,seed:`${ev.round}:${ev.caster}:${ev.card}`,reducedMotion:reducedMotion.matches,failed:ev.type==='fizzle'});
+            effects.draw(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],center:{x:cx,y:cy-2},width:w,height:h,seed:`${ev.round}:${ev.caster}:${ev.card}`,reducedMotion:reducedMotion.matches,failed:ev.type==='fizzle',environmentManaged:true});
         }
         if(ev?.type==='damage'||ev?.type==='heal') {
             const at=positions[ev.target];if(at){c.save();c.globalAlpha=1-p*.65;text(c,`${ev.type==='heal'?'+':'−'}${ev.amount}${ev.mark==='c'?' 暴击':''}`,at.x,at.y-100-p*40,26,ev.type==='heal'?'#adf8a0':'#fff0b4');c.restore();}

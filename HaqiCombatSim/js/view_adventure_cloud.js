@@ -22,7 +22,7 @@ export function renderCloud(root, state, callbacks) {
     }
     const status = el('p', state.error ? 'error-text cloud-status' : 'muted cloud-status', state.busy || state.error || state.message || '连接后可查看云端记录。');status.setAttribute('role', state.error ? 'alert' : 'status');body.append(status);
     if (state.preview) {
-        const preview = el('section', 'cloud-preview', progressCard(state.preview.save, '即将恢复的云端进度'), el('p', 'muted', `保存时间：${readableDate(state.preview.snapshot.updatedAt)}`), el('p', '', '恢复会替换当前旅程。替换前会在此浏览器保留一份本地备份，可在这里导出。'), el('div', 'cloud-actions', button('确认恢复这份进度', callbacks.restore, 'primary'), button('取消恢复', callbacks.cancelPreview, 'secondary')));
+        const preview = el('section', 'cloud-preview', progressCard(state.preview.save, '即将恢复的云端进度'), el('p', 'muted', `保存时间：${readableDate(state.preview.snapshot.updatedAt)}`), el('p', '', '恢复会替换当前旅程。替换前会在此浏览器保留一份本地备份，可在这里恢复。'), el('div', 'cloud-actions', button('确认恢复这份进度', callbacks.restore, 'primary'), button('取消恢复', callbacks.cancelPreview, 'secondary')));
         body.append(preview);
     }
     if (state.paths.length) {
@@ -35,7 +35,7 @@ export function renderCloud(root, state, callbacks) {
         }
         body.append(list, el('p', 'muted', '最多显示最近 30 条。先查看角色与任务进度，再决定是否恢复。'));
     }
-    if (state.hasBackup) body.append(button('导出上次恢复前的本地备份', callbacks.backup, 'secondary settings-button'));
+    if (state.hasBackup) body.append(button('恢复上次保留的本地进度', callbacks.backup, 'secondary settings-button'));
     body.append(el('p', 'muted cloud-footnote', '云端仅保存角色与游戏进度，存储于你的 Keepwork 项目；可见性遵循该项目设置。'));
     if (state.busy) for (const node of body.querySelectorAll('button')) node.disabled = true;
 }

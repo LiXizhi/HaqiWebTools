@@ -58,11 +58,13 @@ function frame(now){
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
     if(card){
         const spec=spellEffect(assets.effects,card),duration=previewDuration();
-        if(playing&&!document.hidden){elapsed+=dt;if(elapsed>duration+650&&$('loop').checked)elapsed=0;}
+        const environment=spec.choreography?.placement==='field';
+        if(playing&&!document.hidden){elapsed+=dt;if(!environment&&elapsed>duration+650&&$('loop').checked)elapsed=0;}
         const p=Math.min(1,elapsed/duration),from={x:w*.23,y:h*.64},to={x:w*.76,y:h*.57};
         ctx.save();ctx.strokeStyle='#819d8966';ctx.lineWidth=2;for(const r of [1,.83,.51]){ctx.beginPath();ctx.ellipse(w*.5,h*.62,w*.4*r,h*.22*r,0,0,Math.PI*2);ctx.stroke();}ctx.restore();
         const size=Math.min(90,w*.18),targets=spec.area?[{x:w*.60,y:h*.47},to,{x:w*.82,y:h*.72}]:[spec.friendly?from:to];
         const mode=$('actor-action').value,reduced=$('reduced').checked;
+        if(mode==='auto'&&environment&&p>=assets.effects.timeline.impact)fx.drawEnvironment(ctx,{card,center:{x:w*.5,y:h*.62},radius:w*.4,aspect:h*.22/(w*.4),time:elapsed/1000,reducedMotion:reduced,strength:Math.min(1,(p-assets.effects.timeline.impact)/.1)});
         const reaction=previewTargetAction(spec,assets.effects.timeline,elapsed,duration,mode);
         const drawActor=(at,atlas,index,action,progress,direction)=>drawAnimatedActor(ctx,at,action,progress,direction,reduced,()=>assets.tile(ctx,atlas,index,-size/2,-size,size,size));
         drawActor(from,'sprites',10,mode==='auto'?'cast':'idle',Math.min(1,p/.45),1);
@@ -70,13 +72,13 @@ function frame(now){
             const friendly=spec.area&&spec.friendly;
             drawActor(at,friendly?'sprites':'creatures',friendly?10:1,reaction.action,reaction.progress,-1);
         }};
-        // Keep the recoiling silhouette visible through dense impact particles.
-        if(reaction.action!=='hit')drawTargets();
-        if(mode==='auto')fx.draw(ctx,{card,progress:p,from,to:targets[0],targets,center:{x:w*.5,y:h*.62},width:w,height:h,seed:7,reducedMotion:reduced});
-        if(reaction.action==='hit')drawTargets();
+        // Recoil changes the pose, never the actor's layer relative to spell effects.
+        drawTargets();
+        if(mode==='auto')fx.draw(ctx,{card,progress:p,from,to:targets[0],targets,center:{x:w*.5,y:h*.62},width:w,height:h,seed:7,reducedMotion:reduced,environmentManaged:true});
         sound.track(assets.effects,card,p,{active:mode==='auto'&&playing&&!document.hidden,reducedMotion:reduced});
         $('seek').value=Math.round(p*1000);const timing=assets.effects.timeline,summon=spec.kind==='summon';
         $('phase').textContent=p<.18?'凝聚魔力':p<(summon?timing.summonAttack:timing.attack)?'法术成形':p<(summon?timing.summonImpact:timing.impact)?(spec.friendly?'祝福与守护':'释放法术'):p<1?'命中与消散':'演出结束';
+        if(environment&&p>=timing.impact)$('phase').textContent='环境对抗持续中 · 新对抗将替换当前效果';
         if(mode!=='auto')$('phase').textContent={cast:'宠物施法 · 蓄力跃动',hit:'宠物受击 · 闪白后仰',death:'宠物死亡 · 下沉消散'}[mode];
     }
     requestAnimationFrame(frame);

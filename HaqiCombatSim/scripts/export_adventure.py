@@ -137,7 +137,7 @@ replacements={
 }
 for q in quests:
     original_description=q['description']
-    description=original_description.replace('传送到指定地点','沿小路前往指定地点').replace('可以获得炫酷坐骑','可以获得原版奖励收藏')
+    description=original_description.replace('传送到指定地点','沿小路前往指定地点').replace('完成任务后可以获得炫酷坐骑','任务奖励以对话中的奖励清单为准')
     if description!=original_description:
         q['originalDescription']=original_description
         q['description']=description
@@ -230,6 +230,7 @@ items={}
 for iid in sorted(used_items):
     if str(iid) in all_items:
         item=all_items[str(iid)];items[str(iid)]={**item,'art':asset(item['icon'])}
+items['16103']['rewardPetId']='zodiac_tiger_tangtang'
 # Virtual reward IDs are actor attributes, not missing store items.
 for iid,label in [(113,'战斗经验'),(100,'奇豆')]:items[str(iid)]={'id':iid,'name':label,'kind':0,'stats':{}}
 

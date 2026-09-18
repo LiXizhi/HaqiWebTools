@@ -327,3 +327,7 @@ npm test 99/99通过，新增正反方向、不同阶段、简化模式、群体
 - 最终CDN版本： https://cdn.keepwork.com/haqi/haqicombatsim/release/0382d8b8190ed7eb/ ，52/52实际GET核验HTTP、CORS和SHA-256通过，release/manifest.json的verified为true。正式Haqi.html浏览器加载成功。
 - 本机托管release/HaqiCombatSim_v1.html、JS/JSON来自CDN：页签导航保留宿主地址，跨域内联Worker完成7500场（4.3s），无Worker回退或控制台错误。
 - 初次用户澄清前的完整资源上传已完成，保留原CDN目录未删除；最终链接以上述仅代码/配置版本为准。Git镜像未获同步确认，不复制。
+
+## 2026-09-18：构建时精简美术JSON
+
+npm run build通过，dist为48文件/3,298,097字节，无美术文件。npm test 132/132，投影清单通过现有章节/资源/技能校验；225个基础技能全部动画采样裁剪与原清单一致，CDN、对照图UI字段、商店裁剪及宠物玩法数据保持一致；源JSON未改动。此次为本地构建验证，未重新发布CDN。

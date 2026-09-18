@@ -14,6 +14,8 @@ npm run preview
 
 ## 上传
 
+构建时由 `scripts/package_runtime_data.mjs` 压缩所有JSON，并按运行时字段白名单精简美术清单：保留CDN、裁剪/动画、原卡对照及实际校验字段，删除未使用的生成与溯源元数据；商店缺图记录只保留布尔标记。`card-atlas.json`、`cdn-publish-plan.json`、`skill-art-plan.json`、`expansion-report.json`仅供开发工具使用，不进入dist。源码清单保留完整字段；修改运行时读取字段时应同步更新投影及测试。
+
 ```sh
 npm run plan:release  # 构建并生成发布计划，不上传
 npm run upload        # 构建、上传、逐文件远端核验

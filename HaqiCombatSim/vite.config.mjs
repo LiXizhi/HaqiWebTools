@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+import { packageRuntimeData } from './scripts/package_runtime_data.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
@@ -31,12 +31,7 @@ export default defineConfig({
         closeBundle() {
             // Artwork already lives on permanent CDN URLs. Only runtime JSON
             // needs document-relative copies; never include artwork in dist.
-            for (const directory of ['data']) {
-                fs.cpSync(path.join(root, directory), path.join(root, 'dist', directory), {
-                    recursive: true,
-                    filter: source => fs.statSync(source).isDirectory() || /\.json$/i.test(source),
-                });
-            }
+            packageRuntimeData(path.join(root, 'data'), path.join(root, 'dist', 'data'));
         },
     }],
     build: {

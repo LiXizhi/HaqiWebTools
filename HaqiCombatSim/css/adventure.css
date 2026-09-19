@@ -383,3 +383,6 @@
 
 /* Keep the reason visible while an unaffordable card is selected. */
 .cast-announcement.cast-blocked{max-width:calc(100% - 32px);width:max-content;box-sizing:border-box;background:#fff1cb;color:#822d18;border:2px solid #d59039;border-radius:12px;padding:12px 18px;font-weight:700;line-height:1.5;text-align:center;white-space:normal;box-shadow:0 3px 16px #0005}
+
+/* Playable card face when a cosmetic download or canvas draw fails. */
+.spell-face-fallback{box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;gap:8px;width:100%;aspect-ratio:302/460;padding:14px 10px;border:3px solid #dfc478;border-radius:9px;background:#f7edce;color:#173b4b;white-space:normal;text-align:left;font-size:12px}.spell-face-fallback strong{font-size:16px}.spell-face-fallback small{font-size:10px}

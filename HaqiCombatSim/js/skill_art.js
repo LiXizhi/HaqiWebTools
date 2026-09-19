@@ -14,13 +14,20 @@ export async function loadSkillArt(effects, mode) {
     function load(id,row){
         if(!pending.has(id))pending.set(id,new Promise((resolve,reject)=>{
             const image=new Image();image.crossOrigin='anonymous';
-            image.onload=()=>{images.set(id,image);resolve(image);};
-            image.onerror=()=>{pending.delete(id);reject(new Error('技能图集加载失败：'+id));};
+            const fail=()=>{clearTimeout(timer);image.onload=image.onerror=null;pending.delete(id);reject(new Error('技能图集加载失败：'+id));};
+            const timer=setTimeout(fail,12000);
+            image.onload=()=>{clearTimeout(timer);image.onload=image.onerror=null;images.set(id,image);resolve(image);};
+            image.onerror=fail;
             image.src=assetUrl(row,mode);
         }));
         return pending.get(id);
     }
-    await Promise.all(Object.entries(frames.entries).map(([school,row])=>load('frame:'+school,row)));
+    // Frames/subjects are cosmetic. Failed requests remain retryable in load().
+    async function optionalImages(requests){
+        const results=await Promise.allSettled(requests);
+        for(const result of results)if(result.status==='rejected')console.warn('卡牌图片暂不可用：',result.reason);
+    }
+    await optionalImages(Object.entries(frames.entries).map(([school,row])=>load('frame:'+school,row)));
     function ensure(base){
         const row=manifest.bases[base];if(!row)return Promise.reject(new Error('缺少技能主体：'+base));
         const id=row.effectAtlas||row.atlas;
@@ -36,5 +43,5 @@ export async function loadSkillArt(effects, mode) {
     }
     const renderer=new CardRenderer({images,effects,drawSubject});
     const drawCard=renderer.draw.bind(renderer);
-    return {manifest,images,ensure,drawSubject,renderer,drawCard,async preload(cards){await Promise.all([...new Set(Object.values(cards).map(c=>effects.cards[c.key]?.base).filter(Boolean))].map(ensure));}};
+    return {manifest,images,ensure,drawSubject,renderer,drawCard,async preload(cards){await optionalImages([...new Set(Object.values(cards).map(c=>effects.cards[c.key]?.base).filter(Boolean))].map(ensure));}};
 }

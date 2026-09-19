@@ -1,4 +1,5 @@
 import { castBlockedMessage } from './adventure_cast_feedback_core.js';
+import { createCardFace } from './view_adventure_card.js';
 import { renderDeckEditor } from './view_adventure_deck.js';
 import { bindDialogue } from './view_adventure_dialogue.js';
 import { bindHandGesture } from './view_adventure_hand.js';
@@ -113,7 +114,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
 export function objectiveLabel(g,c) {
     if(g.kind==='talk')return `与${c.npcs[g.id]?.name||g.id}交谈`;
     if(g.kind==='defeat')return `击败${Object.values(c.monsters).find(m=>m.goalId===g.id)?.name||'训练敌人'}`;
-    return ({79016:'强化一次晶石法杖',79019:'喂养你的宠物',79037:'装备翡翠口袋并保存配卡','hatch-pet':'打开出奇蛋，获得宠物','equip-staff':'装备晶石法杖'})[g.id]||'完成导师的指导';
+    return ({79016:'强化一件装备（点击追踪进入强化）',79019:'喂养你的宠物',79037:'装备翡翠口袋并保存配卡','hatch-pet':'打开出奇蛋，获得宠物','equip-staff':'装备晶石法杖'})[g.id]||'完成导师的指导';
 }
 export function updateHeroHealth(root,save,content) {
     const bar=root.querySelector('.hero-health');if(!bar)return;
@@ -198,14 +199,11 @@ function spellHint(card,d) {
 function spellFace(assets,card,artCard=card) {
     // kids pe_item.DrawCardMask: 151×230, pips (120,5), cooldown (7,115), description (18,142).
     // Shared background + generated subject; title/numbers/description stay dynamic.
-    const canvas=el('canvas','spell-art');canvas.width=302;canvas.height=460;
     const cost=card.pipcost===114||card.pipcost==='X'||Number(card.pipcost)<0?'X':String(card.pipcost);
     const rounds=assets.content.items[artCard.itemId]?.stats?.[186]??0;
     const description=spellHint(card,assets.dataset);
-    assets.skillArt.drawCard(canvas.getContext('2d'),card,{name:artCard.name,cooldown:rounds,description});
-    canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`${artCard.name}，消耗 ${cost} 点魔力，冷却 ${rounds} 回合。${description}`);
-    canvas.title=`${description}。本系法术：1个超级魔力抵2点；其他系抵1点。`;
-    return el('span','spell-face',canvas);
+    return createCardFace({el,name:artCard.name,cost,cooldown:rounds,description,
+        draw:context=>assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description})});
 }
 export function renderPanel(root,kind,model,cb) {
     const {assets,save}=model,c=assets.content,d=assets.dataset;
@@ -300,6 +298,18 @@ export function renderDialogue(root,model,dialog,cb) {
     bindDialogue(root,box,content.querySelector('.dialogue-text'),hint,content.querySelector('button.primary')||content.querySelector('button'));
 }
 export function renderBattle(root,model,cb) {
+    try { renderBattleContent(root,model,cb); }
+    catch(error) {
+        console.error('战斗界面显示失败：',error);
+        root.disposeHandGesture?.();root.battleLayoutObserver?.disconnect();
+        root.className='battle-layer visible';root.battleStatusEntries=[];
+        root.replaceChildren(el('div','result-card',el('h2','','战斗界面暂时无法显示'),
+            el('p','','进度已保留。可以重试显示，或撤退后重新挑战。'),
+            button('重试显示',()=>renderBattle(root,model,cb),'primary'),
+            button('撤退并保留进度',cb.retreat,'secondary')));
+    }
+}
+function renderBattleContent(root,model,cb) {
     root.disposeHandGesture?.();
     root.battleLayoutObserver?.disconnect();
     const oldSelected=root.querySelector('.hand-card.selected')?.dataset.seq;

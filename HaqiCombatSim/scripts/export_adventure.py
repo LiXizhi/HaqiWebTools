@@ -126,7 +126,7 @@ replacements={
  (63001,'startDialog',3): '想快速找到任务目标，就点击任务手记里的“追踪目标”。你会沿小路自动走过去，十分方便。',
  (63002,'startDialog',1): '战斗时，点击或轻触一张卡牌，再选择目标就可以施法。魔力不足时可以跳过回合；不需要的卡牌可以弃掉。',
  (63002,'endDialog',0): '刚才的战斗中，你是不是希望学会更多不同的卡牌技能？',
- (63007,'startDialog',3): '打开下方的“背包”，装备晶石法杖，再点“强化”。第一次强化需要70仙豆，现在就试一试吧！',
+ (63007,'startDialog',3): '点击任务追踪，或打开背包里的“强化装备”，选择晶石法杖并点击“强化”。第一次需要70仙豆；强化任意一件支持强化的装备后，回来找我交任务吧！',
  (63008,'endDialog',1): '在原来的魔法世界里，一些怪物还可以捕捉成为战宠。这段旅程中，我们先来照顾从出奇蛋中获得的小伙伴。',
  (63008,'endDialog',2): '宠物会跟随你一起探索。这次先学习喂养，让它健康长大；捕捉和宠物战斗的课程留待以后的冒险。',
  (63008,'endDialog',3): '点击下方“宠物”，或按 P 打开宠物面板，查看它的信息。想让宠物快点长大，可以喂它吃一些战宠口粮。',
@@ -239,6 +239,10 @@ pet={'itemId':10136,'name':all_items['10136']['name'],'levels':{k:number(v) for 
 addons=xml('config/Aries/Others/globalstore.addonlevel.kids.xml')
 upgrade=next(e for e in addons if '1912' in e.get('gsids','').split(',')).findall('addon')
 gear_upgrade=[{**{k:number(v) for k,v in row.attrib.items()},'cost':LuaData(row.get('levelup_requirement')).value()} for row in upgrade]
+upgrade_groups=[]
+for itemset in addons:
+    rows=[{**{k:number(v) for k,v in row.attrib.items()},'cost':LuaData(row.get('levelup_requirement')).value()} for row in itemset.findall('addon')]
+    upgrade_groups.append({'gsids':[int(gsid) for gsid in re.findall(r'\d+',itemset.get('gsids',''))],'levels':rows})
 
 encounters=[{'id':mid,'monsterId':mid,'zone':'camp' if i<5 else 'town',
  'x':[360,1380,380,1410,1510,1310,1430][i],'y':[880,560,1130,870,1200,1070,660][i]} for i,mid in enumerate(monsters)]
@@ -261,7 +265,7 @@ extras={'townMap':asset('texture/aries/worldmaps/townmap/haqitownmap_bg.png'),
 content={'schemaVersion':1,'contentVersion':'kids-opening-1','title':'魔法哈奇 · 初心之旅',
  'dialogueAdaptations':dialogue_adaptations,'arenas':arenas,
  'schools':schools,'quests':quests,'npcs':npcs,'monsters':monsters,'encounters':encounters,
- 'items':items,'cardItems':card_items,'learn':learn,'pet':pet,'upgrade':gear_upgrade,'extras':extras,
+ 'items':items,'cardItems':card_items,'learn':learn,'pet':pet,'upgrade':gear_upgrade,'upgradeGroups':upgrade_groups,'extras':extras,
  'progression':{'xpThresholds':[0,41,114,255,495,869,1418,2479,3654,4654],'levelCap':10},
  'adaptations':[
  '任务63000–63013按编号串联，去除等级上限锁；地图距离缩短。',

@@ -197,3 +197,11 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 
 ### 2026-09-19 冒险角色自然恢复（网页改编）
 角色脱战自然恢复使用 BalanceParams.adventure.heroRegenPerSecond，默认每秒最大生命值的 2%，50 秒可从空血回满。此为用户指定的网页冒险规则，不修改 Lua 战斗治疗公式。宠物保留每分钟 5% 的既有规则。
+
+### 2026-09-19 装备强化与任务63007
+
+- `script/apps/Aries/Items/item.addonlevel.lua` L130–188：按 GSID 查询当前等级的累计属性、目标等级和对应材料需求；`adventure_upgrade_core.js` 保留此语义，不累加历级属性，不统一套用法杖数值。
+- `script/apps/Aries/Combat/ServerObject/player_server.lua` L3434–3474：强化对应111全系攻击、151绝对攻击、159绝对抗性、101生命、196暴击、204韧性，六项进入已穿戴装备属性。
+- `script/kids/3DMapSystemItem/ServerObject/PowerAPI_client.lua` L191–199：成功回复 SetItemAddonLevel 后触发79016；本地成功强化任意支持装备后触发。删除旧网页“只要已有强化装备就自动完成”的差异。背包强化不要求先穿戴。
+- 本机原 XML 缺失，数据从相邻 HaqiCombatEmulator/data/kids/ruleset.json 的 addons 提取；其 manifest 与本项目已存源 XML SHA-256 均为 c6bf06c76180997bfcd5e18d959ab179089c0f3d43fc483cbfd492e3e20cfb8f。468个GSID按相同配置合为9组。scripts/import_upgrade_snapshot.mjs 强制检查来源哈希，常规 export_adventure.py 仍从原 XML 导出。
+- 边界：网页仍按 GSID 而非 GUID 存装备，多件同款共用强化记录；不调用原服强化服务、不声称已验证服务端持久化。未收录高阶材料时保留原要求并提示不可用，未增加替代货币或材料获取方式。原版全装备、宝石、套装仍需实例模型支持。

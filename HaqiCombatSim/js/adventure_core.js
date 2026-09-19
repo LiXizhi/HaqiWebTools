@@ -4,6 +4,7 @@ import { normalizeStats, statIdToEntry, clampDeck } from './combat_unit_core.js'
 import * as Pets from './adventure_pets_core.js';
 import { hashSeed } from './rng_core.js';
 import { equipmentRequirements } from './adventure_item_rules_core.js';
+import { upgradeAt, upgradeLevels, applyUpgradeStats } from './adventure_upgrade_core.js';
 import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
 import { resolvePetReward, migrateQuestPetRewards } from './adventure_rewards_core.js';
 export { rewardLabel } from './adventure_rewards_core.js';
@@ -150,8 +151,7 @@ export function playerSpec(save, content) {
             if (typeof stats[entry.stat] === 'object') stats[entry.stat][entry.school] = (stats[entry.stat][entry.school] || 0) + Number(value);
             else stats[entry.stat] += Number(value);
         }
-        // globalstore.addonlevel.kids.xml: the first three upgrades each add 1% all-school attack.
-        stats.damagePct.all = (stats.damagePct.all || 0) + (content.upgrade.find(row => row.level === save.upgrades[iid])?.attack_percentage || 0);
+        applyUpgradeStats(stats,upgradeAt(content,iid,save.upgrades[iid]));
         for (const id of [139,140,141]) {
             const key = content.cardItems[item.stats[id]];
             if (key) fixed.push({ key, count: 1 });
@@ -170,7 +170,6 @@ function signal(save, content, kind, id, count = 1) {
 }
 function syncGoals(save,content) {
     if (save.equipment[11] === 1912) signal(save,content,'action','equip-staff');
-    if (Object.values(save.upgrades).some(x => x > 0)) signal(save,content,'action',79016);
     if (save.pet) signal(save,content,'action','hatch-pet');
     if (save.pet?.xp > 0) signal(save,content,'action',79019);
     if (save.equipment[24] === 24003 && save.tips.deckEditedWithBag) signal(save,content,'action',79037);
@@ -245,12 +244,14 @@ export function applyAction(save, content, action) {
     }
     case 'upgrade': {
         const iid = Number(action.itemId), level = save.upgrades[iid] || 0;
-        assert(iid === 1912 && owns(save,iid), '本章可强化晶石法杖');
-        const upgrade = content.upgrade.find(row => row.level === level + 1);
-        assert(upgrade, '本章法杖已达到强化上限');
+        assert(content.items[iid] && owns(save,iid) && upgradeLevels(content,iid).length, '请选择已拥有且支持强化的装备');
+        const upgrade = upgradeAt(content,iid,level+1);
+        assert(upgrade, '装备已达到强化上限');
         const [currency,cost] = upgrade.cost;
-        assert((save.inventory[currency] || 0) >= cost, '仙豆不足');
-        save.inventory[currency] -= cost; save.upgrades[iid] = level + 1; syncGoals(save,content); break;
+        assert((save.inventory[currency] || 0) >= cost, `${content.items[currency]?.name||'强化材料'}不足`);
+        save.inventory[currency] -= cost; save.upgrades[iid] = level + 1;
+        // PowerAPI_client.lua L191–199: goal 79016 only follows a successful upgrade.
+        signal(save,content,'action',79016); syncGoals(save,content); break;
     }
     case 'hatch':
         assert(owns(save,17307) && !save.pet, '需要一枚出奇蛋');
@@ -346,7 +347,7 @@ export function parseSave(raw,content) {
     for (const [key,n] of Object.entries(s.cards)) assert(availableCardLessons(s,content).some(x => x.key === key) && Number.isInteger(n) && n >= 1 && n <= 3,'存档卡牌无效');
     assert(Array.isArray(s.rewardedEncounters) && Number.isInteger(s.encounterSerial) && s.encounterSerial >= 0,'存档战斗记录无效');
     assert(new Set(s.rewardedEncounters).size === s.rewardedEncounters.length && s.rewardedEncounters.every(x=>typeof x==='string'), '存档奖励记录无效');
-    for(const [id,n] of Object.entries(s.upgrades))assert(Number(id)===1912 && owns(s,id) && Number.isInteger(n) && n>=0 && n<=content.upgrade.length,'存档强化记录无效');
+    for(const [id,n] of Object.entries(s.upgrades))assert(content.items[id] && upgradeLevels(content,id).length && owns(s,id) && Number.isInteger(n) && n>=0 && (n===0||upgradeAt(content,id,n)),'存档强化记录无效');
     syncProgression(s,content);
     assert(s.bagRulesVersion===undefined||s.bagRulesVersion===1,'卡包规则版本无效');
     migrateBagRules(s,content);

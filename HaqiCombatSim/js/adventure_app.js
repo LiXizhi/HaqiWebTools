@@ -76,7 +76,7 @@ function paintPanel() {
         }
     }
 }
-function openPanel(kind) {if(stage!=='world')return;close();path=[];destination=null;panel=kind;if(kind==='equipment'||kind==='inventory'){equipmentView.tab=kind==='equipment'?'gear':'all';equipmentView.slot=0;equipmentView.query='';equipmentView.item=null;}paintPanel();}
+function openPanel(kind) {if(stage!=='world')return;close();path=[];destination=null;panel=kind==='upgrade'?'equipment':kind;if(['equipment','inventory','upgrade'].includes(kind)){equipmentView.tab=kind==='upgrade'?'upgrade':kind==='equipment'?'gear':'all';equipmentView.slot=0;equipmentView.query='';equipmentView.item=kind==='upgrade'?1912:null;}paintPanel();}
 function applyDebug(patch) {safely(()=>{
     if(stage!=='world')throw Error('请先完成当前战斗');
     const result=prepareDebugEdit(save,assets.content,patch);
@@ -111,7 +111,7 @@ async function cloudAction(label,fn) {
     cloud.busy=label;cloud.error='';cloud.message='';cloud.preview=null;paintCloud();
     try{await fn();}catch(e){cloud.error=e.message;}finally{cloud.busy='';cloud.owner=cloudClient.owner;paintCloud();}
 }
-function action(value) {safely(()=>{A.applyAction(save,assets.content,value.type==='checkin'?{...value,now:Date.now()}:value);persist();paintHud();paintPanel();const text={checkin:'签到成功，奇豆已到账！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'晶石法杖强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(text[value.type]||'进度已保存');});}
+function action(value) {safely(()=>{A.applyAction(save,assets.content,value.type==='checkin'?{...value,now:Date.now()}:value);persist();paintHud();paintPanel();const text={checkin:'签到成功，奇豆已到账！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(text[value.type]||'进度已保存');});}
 function enterWorld(newSave,restoredBattle=null) {
     creationPreview?.stop();
     save=newSave;if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content);stage='world';path=[];destination=null;animation=null;close();
@@ -305,7 +305,7 @@ function track() {
         const monster=Object.values(c.monsters).find(m=>m.goalId===goal.id);
         walkTo({...world.encounters.find(e=>e.monsterId===monster.id),kind:'encounter'},true);
     }
-    if(goal.kind==='action')openPanel(goal.id==='hatch-pet'||goal.id===79019?'pet':goal.id===79037&&save.equipment[24]===24003?'deck':'inventory');
+    if(goal.kind==='action')openPanel(goal.id===79016?'upgrade':goal.id==='hatch-pet'||goal.id===79019?'pet':goal.id===79037&&save.equipment[24]===24003?'deck':'inventory');
 }
 function paintBattle(){
     const hero=battle.sides.near[0],hand=cardsInHand(hero);

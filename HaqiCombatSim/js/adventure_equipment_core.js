@@ -2,6 +2,7 @@
 import { playerSpec, applyAction, SCHOOL_NAMES } from './adventure_core.js';
 import { statIdToEntry } from './combat_unit_core.js';
 import { baseMaxHp, applyHpStats, powerPipChanceByLevel } from './combat_formulas_core.js';
+import { upgradeAt, upgradeAttributes } from './adventure_upgrade_core.js';
 
 export const EQUIPMENT_SLOTS = [{id:2,name:'帽子'},{id:5,name:'法袍'},{id:7,name:'靴子'},{id:11,name:'法杖'},{id:24,name:'卡包'},{id:4,name:'眼饰'},{id:6,name:'裤子'},{id:8,name:'背部'},{id:9,name:'手套'},{id:10,name:'左手'},{id:15,name:'手镯'},{id:16,name:'戒指'},{id:17,name:'项链'},{id:18,name:'炫彩头饰'},{id:19,name:'炫彩服装'},{id:70,name:'炫彩背饰'},{id:71,name:'炫彩鞋子'}];
 const STAT_NAMES = {hpFlat:'生命',hpPct:'生命加成',powerPipPct:'超级魔力率',damagePct:'攻击',resistPct:'防御',accuracyPct:'命中',critPct:'暴击',resiliencePct:'韧性',penetration:'穿透',startupNormal:'起始普通魔力',startupPower:'起始超级魔力',damageAbs:'固定攻击',resistAbs:'固定防御',hitPct:'命中率',dodgePct:'闪避率',penetrationReceive:'受穿透',outputHealPct:'治疗加成',inputHealPct:'受治疗加成',critRatioBonus:'暴击伤害加成'};
@@ -13,8 +14,7 @@ export function equipmentAttributes(item, save, content) {
         if(entry) rows.push({label:`${SCHOOL_STATS.has(entry.stat)?(entry.school==='all'?'全系':SCHOOL_NAMES[entry.school]||entry.school):''}${STAT_NAMES[entry.stat]}`,value:Number(value),unit:percent(entry.stat)?'%':''});
         else if(Number(id)===167||Number(id)===170)rows.push({label:Number(id)===167?'卡包容量':'同卡上限',value:Number(value),unit:'张'});
     }
-    const upgrade=content.upgrade.find(row=>row.level===(save.upgrades[item.id]||0));
-    if(upgrade)rows.push({label:'强化 · 全系攻击',value:upgrade.attack_percentage,unit:'%'});
+    for(const row of upgradeAttributes(upgradeAt(content,item.id,save.upgrades[item.id])))rows.push({...row,label:'强化 · '+row.label});
     return rows;
 }
 const SCHOOL_STATS=new Set(['damagePct','resistPct','accuracyPct','critPct','resiliencePct','penetration']);

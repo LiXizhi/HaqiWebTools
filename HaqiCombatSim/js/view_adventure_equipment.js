@@ -1,5 +1,6 @@
 import { equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
 import { equipmentRequirements } from './adventure_item_rules_core.js';
+import { upgradeLevels, upgradeAt, upgradeAttributes } from './adventure_upgrade_core.js';
 import { EQUIPMENT_SLOTS, equipmentAttributes, equipmentCards, equipmentSummary, previewEquipment } from './adventure_equipment_core.js';
 
 // DOM only; mutations are dispatched through the adventure controller.
@@ -10,8 +11,8 @@ export function renderEquipment(body,model,cb,ui) {
     const owned=Object.values(c.items).filter(item=>(save.inventory[item.id]||0)>0&&!['100','113','17213'].includes(String(item.id)));
     const shell=el('div','equipment-layout'),character=el('section','equipment-character'),wardrobe=el('section','equipment-wardrobe');
     const tabs=el('div','equipment-tabs');
-    for(const [id,label] of [['gear','角色装备'],['all','旅途背包']]) {
-        const b=button(label,()=>{state.tab=id;state.slot=0;state.item=null;render();},`secondary ${state.tab===id?'active':''}`);
+    for(const [id,label] of [['gear','角色装备'],['all','旅途背包'],['upgrade','强化装备']]) {
+        const b=button(label,()=>{state.tab=id;state.slot=0;state.query='';state.item=null;render();},`secondary ${state.tab===id?'active':''}`);
         b.setAttribute('aria-pressed',String(state.tab===id));tabs.append(b);
     }
     body.append(tabs,shell);
@@ -49,7 +50,7 @@ export function renderEquipment(body,model,cb,ui) {
         [...body.querySelectorAll('button')].find(b=>(b.getAttribute('aria-label')||b.textContent)===focusLabel)?.focus({preventScroll:true});
     }
     function paintList(){
-        const items=owned.filter(item=>(state.tab==='all'||isGear(item))&&(!state.slot||item.slot===state.slot)&&item.name.includes(state.query.trim()));
+        const items=owned.filter(item=>(state.tab==='upgrade'?upgradeLevels(c,item.id).length:state.tab==='all'||isGear(item))&&(!state.slot||item.slot===state.slot)&&item.name.includes(state.query.trim()));
         count.textContent=`${items.length} 种物品 · 点击查看详情与换装对比`;
         grid.replaceChildren();
         if(!items.some(item=>item.id===state.item))state.item=items[0]?.id||null;
@@ -65,6 +66,17 @@ export function renderEquipment(body,model,cb,ui) {
         detail.replaceChildren();if(!item){detail.append(el('p','muted','选择一件物品，查看属性、穿戴条件和获取途径。'));return;}
         const equipped=Number(save.equipment[item.slot])===item.id,gear=isGear(item),level=save.upgrades[item.id]||0;
         detail.append(el('div','equipment-detail-heading',art(assets,item.art,64,64),el('div','',el('p','eyebrow',equipped?'正在装备':gear?'装备详情':'物品详情'),el('h3','',item.name),el('p','muted',`拥有 ${save.inventory[item.id]} 件${level?` · 强化 +${level}`:''}`))));
+        if(upgradeLevels(c,item.id).length){
+            const next=upgradeAt(c,item.id,level+1);
+            if(next){
+                const [currency,cost]=next.cost,held=save.inventory[currency]||0;
+                const name=c.items[currency]?.name||`材料（${currency}）`;
+                detail.append(el('h4','','强化装备'),el('p','muted',`强化 +${level+1}：${upgradeAttributes(next).map(row=>`${row.label} +${row.value}${row.unit}`).join('、')}（累计）`),el('p','muted',`消耗 ${cost} ${name} · 持有 ${held}。强化保留在装备上，穿戴后属性生效。`));
+                const b=button(held>=cost?`强化 · ${cost} ${name}`:`${name}不足 · 需要 ${cost}`,()=>cb.action({type:'upgrade',itemId:item.id}),'primary');
+                b.disabled=held<cost||!!save.pendingEncounter;detail.append(b);
+                if(!c.items[currency])detail.append(el('p','equipment-warning','此档需要的原版材料尚未接入当前旅途，暂时无法继续强化。'));
+            }else detail.append(el('p','muted','已达到原版配置的强化上限。'));
+        }else if(gear)detail.append(el('p','muted','原版强化配置未包含此装备。'));
         if(gear){
             const requirements=equipmentRequirements(item),school=Object.keys(c.schools).find(key=>c.schools[key]===requirements.school);
             detail.append(el('p','muted',`${EQUIPMENT_SLOTS.find(s=>s.id===item.slot)?.name||'装备'} · 等级 ${requirements.level} · ${school?SCHOOL_NAMES[school]+'系':'全学系通用'}`));
@@ -84,14 +96,6 @@ export function renderEquipment(body,model,cb,ui) {
                 b.disabled=!!save.pendingEncounter;detail.append(el('div','equipment-actions',b));
             }else detail.append(el('p','equipment-warning',reason));
             if(item.slot===24&&cb.panel)detail.append(button('整理魔法卡包',()=>cb.panel('deck'),'secondary'));
-            if(item.id===1912){
-                const next=c.upgrade.find(row=>row.level===level+1);
-                if(next){
-                    const [currency,cost]=next.cost,afford=(save.inventory[currency]||0)>=cost;
-                    detail.append(el('p','muted',`强化 +${level+1}：全系攻击累计 +${next.attack_percentage}% · 消耗 ${cost} 仙豆`));
-                    const b=button(afford?`强化 · ${cost} 仙豆`:`仙豆不足 · 需要 ${cost}`,()=>cb.action({type:'upgrade',itemId:item.id}),'secondary');b.disabled=!afford||!!save.pendingEncounter;detail.append(b);
-                }else detail.append(el('p','muted','已达到本章强化上限。'));
-            }
             const cards=equipmentCards(item,c);
             if(cards.length){const faces=el('div','equipment-cards');for(const key of cards){const card=assets.dataset.cards[key];if(card)faces.append(spellFace(assets,card));}detail.append(el('h4','','附加法术 · 装备后可用'),faces);}
         }else{

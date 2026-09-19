@@ -11,7 +11,7 @@ import {presentedEnvironment} from './spell_environment_core.js';
 import * as A from './adventure_core.js';
 import * as W from './adventure_world_core.js';
 import * as P from './combat_pve_core.js';
-import { cardsInHand } from './combat_unit_core.js';
+import { cardsInHand, selectableCards, PET_CARD_SEQ_BASE } from './combat_unit_core.js';
 import { validTargets } from './combat_arena_core.js';
 import { resolveHandSwipe } from './adventure_hand_core.js';
 import * as V from './view_adventure.js';
@@ -31,6 +31,7 @@ const nodes={world:$('world'),hud:$('hud'),entry:$('entry'),overlay:$('overlay')
 let assets,renderer,save,world,battle,stage='loading',panel=null,dialog=null,dialogDone=null;
 let path=[],destination=null,moving=false,lastFrame=0,lastSave=0,toastTimer=0;
 let selected=null,discarded=[],animation=null,music=null,storageWarning=false;
+let petCardsOpen=false;
 let cloudClient;
 let roleStore,roleStorage=null,roleEpoch=0,lastRoleSync=0;
 const roles={busy:'',error:'',message:'',conflict:null};
@@ -116,6 +117,7 @@ async function cloudAction(label,fn) {
 }
 function action(value) {safely(()=>{A.applyAction(save,assets.content,value.type==='checkin'?{...value,now:Date.now()}:value);persist();paintHud();paintPanel();const text={checkin:'签到成功，奇豆已到账！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(text[value.type]||'进度已保存');});}
 function enterWorld(newSave,restoredBattle=null) {
+    petCardsOpen=false;
     creationPreview?.stop();
     save=newSave;if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content);stage='world';path=[];destination=null;animation=null;close();
     if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};
@@ -286,7 +288,7 @@ function interact(target) {
     if(target.kind==='encounter')safely(()=>{
         A.beginEncounter(save,assets.content,target.id);persist();
         battle=P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';close();nodes.hud.hidden=true;
-        selected=null;discarded=[];animation=null;paintBattle();
+        selected=null;discarded=[];animation=null;petCardsOpen=false;paintBattle();
     });
 }
 function interactNearest(){if(!panel&&!dialog)interact(W.nearestInteraction(world,save.position));}
@@ -311,9 +313,9 @@ function track() {
     if(goal.kind==='action')openPanel(goal.id===79016?'upgrade':goal.id==='hatch-pet'||goal.id===79019?'pet':goal.id===79037&&save.equipment[24]===24003?'deck':'inventory');
 }
 function paintBattle(){
-    const hero=battle.sides.near[0],hand=cardsInHand(hero);
+    const hero=battle.sides.near[0],hand=selectableCards(hero);
     if(selected&&!hand.some(h=>h.seq===selected.seq&&h.key===selected.key))selected=null;
-    V.renderBattle(nodes.battle,model(),{sound:toggleSound,cloud:openCloud,swipePlay:h=>{
+    V.renderBattle(nodes.battle,{...model(),petCardsOpen},{togglePetCards:()=>{if(animation||battle.finished)return;petCardsOpen=!petCardsOpen;selected=null;paintBattle();},sound:toggleSound,cloud:openCloud,swipePlay:h=>{
         if(animation)return;
         const intent=resolveHandSwipe(battle,h,discarded);
         if(!intent)return;
@@ -321,7 +323,7 @@ function paintBattle(){
         if(intent.decision)playRound(intent.decision);
         else {paintBattle();toast(intent.message);}
     },reselect:()=>{if(animation||battle.finished)return;selected=null;paintBattle();},select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
-    if(animation||battle.finished)return;discarded=discarded.includes(seq)?discarded.filter(x=>x!==seq):[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
+    if(animation||battle.finished||seq>=PET_CARD_SEQ_BASE)return;discarded=discarded.includes(seq)?discarded.filter(x=>x!==seq):[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
 },target:id=>{
     if(!selected||animation||battle.finished)return;
     const card=battle.resolved.cards[selected.key];
@@ -338,7 +340,7 @@ function playRound(decision) {
     safely(()=>{
         const start=battle.events.length,hp=Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,u.hp])),aura=battle.aura?{...battle.aura}:null;
         const hand=cardsInHand(battle.sides.near[0]);
-        P.playPveRound(battle,decision);A.recordDecision(save,decision);persist();selected=null;discarded=[];
+        P.playPveRound(battle,decision);A.recordDecision(save,decision);persist();selected=null;discarded=[];petCardsOpen=false;
         const events=battle.events.slice(start).filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','pass','capture','aura'].includes(e.type));
         // Preserve surviving hand IDs while hidden, so only new cards deal in after ALL events.
         animation={events:events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),index:0,start:performance.now(),hp,aura,entered:-1,hand:hand.filter(h=>(decision.pass||decision.capture||h.seq!==decision.seq)&&!decision.discardSeqs?.includes(h.seq))};paintBattle();

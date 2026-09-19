@@ -42,6 +42,7 @@ export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide
         }
     });
     for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];U.shuffleDeck(unit,arena.rng);for(const row of [...(spec.fixedCards||[])].reverse())for(let n=0;n<(row.count||1);n++){unit.deckSeq.unshift(row.key);unit.deckMap.unshift(0);}}
+    for(const [i,spec] of (party||[player]).entries())if(spec.petCards)U.preparePetCards(arena.sides.near[i],spec.petCards,arena.rng);
     emit(arena,{type:'combat_start',firstSide,mode:'pve'});
     advancePveRound(arena); return arena;
 }
@@ -153,7 +154,7 @@ export function playPveRound(a,decision) {
         if(!U.isAlive(u)||!target?.isMob||!U.isAlive(target)||!target.template.speciesId||target.template.unlockLevel>a.heroLevel||a.captureUsed>=a.captureStock)throw Error('无法捕获：需要晶球、存活的野生宠物和解锁等级');
     }
     if(!decision.pass&&!decision.capture&&U.isAlive(u)) {
-        if(u.deckMap[decision.seq]!==1 || u.deckSeq[decision.seq]!==decision.key || discarded.includes(decision.seq))throw new Error('请选择手中的卡牌');
+        if(!Number.isInteger(decision.seq)||!U.selectableCards(u).some(h=>h.seq===decision.seq&&h.key===decision.key)||discarded.includes(decision.seq))throw new Error('请选择手中的卡牌');
         const card=a.resolved.cards[decision.key];
         if(!U.canCast(u,card,a.resolved))throw new Error('魔力不足或技能尚在冷却');
         if(!validTargets(a,u,card).some(t=>t.id===decision.targetId))throw new Error('请选择有效目标');

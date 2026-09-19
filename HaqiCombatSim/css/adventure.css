@@ -386,3 +386,6 @@
 
 /* Playable card face when a cosmetic download or canvas draw fails. */
 .spell-face-fallback{box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;gap:8px;width:100%;aspect-ratio:302/460;padding:14px 10px;border:3px solid #dfc478;border-radius:9px;background:#f7edce;color:#173b4b;white-space:normal;text-align:left;font-size:12px}.spell-face-fallback strong{font-size:16px}.spell-face-fallback small{font-size:10px}
+
+/* Pet cards are a separate selectable pile below the normal hand. */
+.battle-card-tabs{position:absolute;left:50%;transform:translateX(-50%);z-index:8;width:max-content;max-width:calc(100% - 24px);text-align:center}.battle-card-tabs[hidden]{display:none}.battle-card-tabs button{padding:8px 16px;min-height:36px;background:#f7edce;color:#173b4b;border:1px solid #b99c51}

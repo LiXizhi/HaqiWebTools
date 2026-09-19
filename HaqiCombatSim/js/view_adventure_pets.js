@@ -23,7 +23,7 @@ export function renderPetCollection(body,model,cb,{el,button}){
   formation.append(el('label','',`卡位 ${i+1}`,select));
  }
  const hero=el('select','');hero.setAttribute('aria-label','主角卡位');for(let i=0;i<4;i++)hero.append(new Option(`主角站在卡位 ${i+1}`,i));hero.value=heroSlot;hero.onchange=()=>{heroSlot=Number(hero.value);};
- body.append(el('h3','','随行阵容'),el('p','muted','同位伙伴提供附加卡并在地图跟随；其他伙伴自动战斗。'),formation,hero,button('保存阵容',()=>cb.action({type:'formation',slots,heroSlot}),'primary'));
+ body.append(el('h3','','随行阵容'),el('p','muted','同位伙伴在地图跟随，战斗中通过“使用宠物卡”单独选牌；其他伙伴自动战斗。'),formation,hero,button('保存阵容',()=>cb.action({type:'formation',slots,heroSlot}),'primary'));
  const owned=el('select','');owned.setAttribute('aria-label','选择养成宠物');for(const id of Object.keys(save.pets))owned.append(new Option(c.pets[id].name,id));
  if(model.petView?.selected&&save.pets[model.petView.selected])owned.value=model.petView.selected;
  const detail=el('section','pet-detail');body.append(el('h3','',`宠物收藏 ${Object.keys(save.pets).filter(id=>!c.pets[id].legacy).length} / ${Object.keys(c.pets).filter(id=>!c.pets[id].legacy).length} · 另含教学伙伴`),owned,detail);

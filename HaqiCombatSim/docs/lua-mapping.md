@@ -205,3 +205,10 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 - `script/kids/3DMapSystemItem/ServerObject/PowerAPI_client.lua` L191–199：成功回复 SetItemAddonLevel 后触发79016；本地成功强化任意支持装备后触发。删除旧网页“只要已有强化装备就自动完成”的差异。背包强化不要求先穿戴。
 - 本机原 XML 缺失，数据从相邻 HaqiCombatEmulator/data/kids/ruleset.json 的 addons 提取；其 manifest 与本项目已存源 XML SHA-256 均为 c6bf06c76180997bfcd5e18d959ab179089c0f3d43fc483cbfd492e3e20cfb8f。468个GSID按相同配置合为9组。scripts/import_upgrade_snapshot.mjs 强制检查来源哈希，常规 export_adventure.py 仍从原 XML 导出。
 - 边界：网页仍按 GSID 而非 GUID 存装备，多件同款共用强化记录；不调用原服强化服务、不声称已验证服务端持久化。未收录高阶材料时保留原要求并提示不可用，未增加替代货币或材料获取方式。原版全装备、宝石、套装仍需实例模型支持。
+
+### 2026-09-19：普通手牌与宠物卡分离
+- player_server.lua `ShuffleFollowPetCards` L773–800：独立牌序和状态，全部宠物卡开战可选；kids 按实例 RNG 随机权重排序。
+- `PrepareCard` L804–826、`GetCardsInHand` L829–853：普通卡最多 8 张；宠物卡单独返回，不参与补牌或卡包剩余计数。
+- `HasCard` L5253–5267、`UseCard` L5332–5335 / L5379–5390：宠物卡使用 10000 偏移序号，成功消耗指定副本，失误不移入普通卡尾；JS 普通序号从 0 开始，对应宠物序号从 10000 开始。
+- MyCards.lua `GetFollowPetCardItems2` L236 起：独立宠物选牌列表。网页用手牌下方按钮切换列表，复用主角魔力、目标、冷却和一回合一次行动规则。
+- 用户明确无需兼容旧存档；不保留旧的宠物牌混入 fixedCards 的重演分支。新存档保存 petCards 起始规格，通过独立序号的决定序列重演。

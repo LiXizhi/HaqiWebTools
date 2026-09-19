@@ -117,7 +117,7 @@ export function validTargets(arena, unit, card) {
 export function castableCards(arena, unit) {
     const R = arena.resolved;
     const out = [];
-    for (const { seq, key } of U.cardsInHand(unit)) {
+    for (const { seq, key } of U.selectableCards(unit)) {
         const card = R.cards[key];
         if (card && U.canCast(unit, card, R)) out.push({ seq, key, card });
     }

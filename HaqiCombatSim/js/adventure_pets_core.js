@@ -58,7 +58,7 @@ export function productPrice(item,content){const p=petParams(content);return ite
 export function partySpecs(save,content,hero){
  hero={...hero,slot:save.heroSlot,hp:save.heroHp??specMaxHp(hero)};
  const support=save.pets[save.formation[save.heroSlot]];
- if(support)hero.fixedCards=[...(hero.fixedCards||[]),...support.deck.map(x=>({...x}))];
+ if(support)hero.petCards=support.deck.map(x=>({...x}));
  return [hero,...save.formation.flatMap((id,slot)=>{
   if(!id||slot===save.heroSlot)return [];const pet=save.pets[id],definition=content.pets[id];
   return [{id:pet.id,name:definition.name,school:definition.school,level:pet.level,slot,speciesId:id,hp:pet.hp,stats:normalizeStats(),deck:pet.deck.map(x=>({...x})),deckCapacity:petCapacity(pet,content),deckEachCapacity:petParams(content).petCopies,isBot:true}];

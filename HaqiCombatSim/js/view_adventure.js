@@ -333,7 +333,14 @@ function renderBattleContent(root,model,cb) {
     const hand=el('div','battle-hand'),bottom=el('div','battle-controls');
     hand.classList.toggle('hand-focused',!!selected);
     hand.hidden=animating||battle.finished;
-    const visibleHand=model.hand||U.cardsInHand(hero);
+    const petHand=U.petCardsInHand(hero),petCardsOpen=!!model.petCardsOpen;
+    const visibleHand=petCardsOpen?petHand:(model.hand||U.cardsInHand(hero));
+    hand.setAttribute('aria-label',petCardsOpen?'宠物卡牌':'玩家手牌');
+    const togglePets=button(petCardsOpen?`返回玩家卡（${U.cardsInHand(hero).length}张）`:`使用宠物卡（${petHand.length}张）`,cb.togglePetCards,'secondary');
+    togglePets.setAttribute('aria-pressed',String(petCardsOpen));
+    togglePets.disabled=!petCardsOpen&&!petHand.length;
+    const tabs=el('div','battle-card-tabs',togglePets);
+    tabs.hidden=animating||battle.finished||!hero.petDeckSeq?.length;
     root.handBattle=battle;root.handSeqs=new Set(visibleHand.map(h=>h.seq));
     hand.style.gridTemplateColumns=visibleHand.map((h,i)=>h.seq===selected?.seq||i===visibleHand.length-1?'var(--hand-width)':'minmax(0,1fr)').join(' ');
     for(const h of hand.hidden?[]:visibleHand) {
@@ -346,9 +353,9 @@ function renderBattleContent(root,model,cb) {
         select.disabled=animating||battle.finished;select.setAttribute('aria-label',`选择${artCard.name}${available?'':'（魔力不足或冷却中）'}`);select.setAttribute('aria-pressed',String(isSelected));
         const drop=button(isDiscard?'撤销弃牌':'弃牌',()=>cb.discard(h.seq),'discard-button');drop.disabled=animating||battle.finished;
         node.title=`${artCard.name} · ${cardTargetKind(card)==='hostile'?'对敌人':'对友方'} · ${expectedBaseDamage(card)?'基础伤害 '+expectedBaseDamage(card):expectedBaseHeal(card)?'基础治疗 '+expectedBaseHeal(card):'增益 / 减益魔法'}`;
-        node.title+=isDiscard?' · 右键撤销弃牌':' · 右键弃牌';
-        if(isSelected)node.append(select,el('div','hand-focus-actions',drop,button('重新选择',cb.reselect,'secondary small')));
-        else node.append(select,drop);
+        node.title+=petCardsOpen?' · 宠物卡':isDiscard?' · 右键撤销弃牌':' · 右键弃牌';
+        if(isSelected)node.append(select,el('div','hand-focus-actions',petCardsOpen?null:drop,button('重新选择',cb.reselect,'secondary small')));
+        else {node.append(select);if(!petCardsOpen)node.append(drop);}
         hand.append(node);
     }
     const pass=button('跳过本回合',cb.pass,'secondary');pass.disabled=animating||battle.finished;
@@ -364,10 +371,10 @@ function renderBattleContent(root,model,cb) {
     const targets=el('div','battle-party-controls',allies.roster);
     if(battle.monsterTemplates[0].speciesId){const capture=button(`捕获（晶球 ${battle.captureStock-battle.captureUsed}）`,()=>cb.capture('mob0'),'secondary');capture.disabled=animating||battle.finished||hero.hp<=0||battle.captureStock<=battle.captureUsed;targets.append(capture);}
     bottom.append(targets);
-    root.append(top,canvas,status,hand,bottom);
+    root.append(top,canvas,status,hand,tabs,bottom);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
     root.oncontextmenu=e=>{
-        if(animating||battle.finished||e.pointerType==='touch'||!matchMedia('(pointer:fine)').matches)return;
+        if(petCardsOpen||animating||battle.finished||e.pointerType==='touch'||!matchMedia('(pointer:fine)').matches)return;
         const node=e.target.closest('.hand-card')||(selected?hand.querySelector('.hand-card.selected'):null);
         const face=node?.querySelector('.card-select');if(!face||node.hidden)return;
         const rect=face.getBoundingClientRect();
@@ -382,12 +389,13 @@ function renderBattleContent(root,model,cb) {
     // Measure wrapped controls, including party targets, instead of assuming a fixed footer height.
     const layout=()=>{
         const footer=bottom.offsetHeight+(parseFloat(getComputedStyle(bottom).bottom)||0)+12;
-        if(!selected)hand.style.bottom=`${footer}px`;
+        tabs.style.bottom=`${footer}px`;
+        if(!selected)hand.style.bottom=`${footer+(tabs.hidden?0:tabs.offsetHeight+8)}px`;
         status.style.top=`${top.offsetTop+top.offsetHeight+8}px`;
         // The arena fills the viewport. Cards and HUD float above it without resizing it.
     };
     root.battleLayoutObserver=new ResizeObserver(layout);
-    for(const node of [root,top,hand,bottom,status])root.battleLayoutObserver.observe(node);
+    for(const node of [root,top,hand,tabs,bottom,status])root.battleLayoutObserver.observe(node);
     layout();
     if(oldHand)animateHandSelection(hand,oldHand,oldSelected,String(selected.seq));
     const log=el('details','battle-log',el('summary','','战斗记录'),el('div','',...battle.events.filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','capture'].includes(e.type)).slice(-24).map(e=>el('p','',eventLabel(e,battle,assets)))));root.append(log);

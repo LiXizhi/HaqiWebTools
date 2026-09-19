@@ -733,6 +733,22 @@ export function cardsInHand(unit) {
     return out;
 }
 
+// player_server.lua ShuffleFollowPetCards L773-800, GetCardsInHand L829-853:
+// a separate, fully available pet pile; it never occupies normal hand slots.
+// Lua uses seq >= 10000 for pet picks (HasCard / UseCard L5253-5267, L5332-5335).
+export const PET_CARD_SEQ_BASE = 10000;
+export function preparePetCards(unit, deck, rng) {
+    const singles=[];
+    for(const {key,count} of deck)for(let i=0;i<count;i++)singles.push({key,weight:rng.int(1,999999)});
+    singles.sort((a,b)=>b.weight-a.weight);
+    unit.petDeckSeq=singles.map(row=>row.key);
+    unit.petDeckMap=singles.map(()=>1);
+}
+export function petCardsInHand(unit) {
+    return (unit.petDeckSeq||[]).flatMap((key,i)=>unit.petDeckMap[i]===1?[{seq:PET_CARD_SEQ_BASE+i,key}]:[]);
+}
+export function selectableCards(unit) { return [...cardsInHand(unit),...petCardsInHand(unit)]; }
+
 export function deckRemaining(unit) {
     return unit.deckMap.filter(s => s === 0 || s === 1 || s === -1).length;
 }
@@ -766,11 +782,19 @@ export function restoreDiscardedCard(unit, seq) {
 }
 
 export function markCardUsed(unit, seq) {
+    if(seq>=PET_CARD_SEQ_BASE){
+        const i=seq-PET_CARD_SEQ_BASE;
+        if(unit.petDeckMap?.[i]===1)unit.petDeckMap[i]=-1;
+        return;
+    }
     if (unit.deckMap[seq] === 1) unit.deckMap[seq] = -2;
 }
 
 /** 失误：Lua 标记 -3 并把同卡追加到卡尾（可再抽到） */
 export function markCardFizzled(unit, seq) {
+    // player_server.lua UseCard L5379-5390: only normal cards move to the tail;
+    // a fizzled pet card remains available in its separate pile.
+    if(seq>=PET_CARD_SEQ_BASE)return;
     if (unit.deckMap[seq] === 1) {
         unit.deckMap[seq] = -3;
         unit.deckSeq.push(unit.deckSeq[seq]);

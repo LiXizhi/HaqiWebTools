@@ -16,8 +16,8 @@
 |---|---|
 | 基础装备属性 | `adventure_core.js:86` 的 `playerSpec` 只聚合 `statIdToEntry` 可识别项；其余直接跳过。当前覆盖 HP、超级魔力率、百分比攻击/抗性/准确率、部分暴击/韧性/穿透和起始魔力。 |
 | 漏映射的战斗属性 | `combat_unit_core.js:13` 未覆盖 151–158 绝对攻击、159–166 绝对抗性、182/183 治疗/受治疗、188 闪避等；224/225 等级评分、226–241 绝对属性百分比、243–245 命中/闪避评分、247 受穿透、254/255 暴击/韧性也不能直接导入。含评分或乘法者必须对照 Lua 换算，不能只加映射。 |
-| 强化 | 2026-09-19 已接入原 kids 快照的 468 个 GSID 强化表，当前收录物品可按各自配置强化，六种强化属性进入 playerSpec，存档校验同步扩展。仍按 GSID 保存，缺少同款不同实例区分；部分高阶材料未接入，不等同完整原服装备导入。 |
-| 镶嵌宝石 | 没有装备实例的 `serverdata.gem.ins` / 孔位模型，没有宝石属性聚合。背包按 GSID 计数、穿戴按部位记录 GSID，不能表达同款两件装备不同镶嵌和强化。 |
+| 强化 | 2026-09-19 已接入原 kids 快照的 468 个 GSID 强化表，当前收录物品可按各自配置强化，六种强化属性进入 playerSpec，存档校验同步扩展。已按 GUID / serverdata.addlel 保存独立等级，补齐468件装备与仙豆/祝福魔珠材料定义；不等同原服账号装备导入。 |
+| 镶嵌宝石 | 已有装备实例，强化保留 `serverdata.gem.ins` / `gem.holecnt`；未实现镶嵌操作与宝石属性聚合。背包数量仍按 GSID 汇总，穿戴另记录 GUID，同款独立强化。 |
 | 套装 | 商店导出没有套装字段或效果表；`playerSpec` 没有按套装件数叠加属性。 |
 | 附加牌与卡包 | 已读取装备 139/140/141 附加牌，以及卡包 167/170 容量；这是局部支持，尚未接上真实角色卡组和未映射 GSID 报告。 |
 | VIP、原版随从加成 | 没有接入原版角色属性链；当前网页宠物玩法不等同原版随从属性。 |
@@ -150,7 +150,7 @@ pets / formation（扩展）, pendingEncounter.player
 | 卡包道具 | 部位 slot `24`；`stats[167]` 容量、`stats[170]` 单卡上限 |
 | 装备附加牌 | 道具 `stats[139]` / `[140]` / `[141]` → card key（冒险 `equipmentCards` / `playerSpec.fixedCards`） |
 | 穿戴学系 / 等级需求 | `stats[137]` 学系、`stats[138]` 等级（冒险 `canEquip`） |
-| 法杖强化 | 冒险 `save.upgrades[itemId]` + `globalstore.addonlevel.kids.xml` 导出的 1/2/3% 全系攻击 |
+| 装备强化 | 冒险 `equipmentInstances[].serverdata.addlel` + 原 kids 468件强化配置；`save.upgrades` 仅为所选穿戴实例的兼容投影 |
 | 学系 / 等级 | `school`、`level`；HP 走 `baseMaxHp` + `applyHpStats` |
 | 装备分数档（无实物时） | `stats_by_gear.json` 的 `from`/`to`（注释：匹配 GS = 实际 GS + 1000） |
 

@@ -36,9 +36,11 @@ export function defaultParams(version = 'teen') {
     const teen = version === 'teen';
     return {
         version,
+        // Web island unlock levels; original world configuration is unavailable.
+        worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
         adventure: {
-            levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [8,12,16,20],
+            levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [2,4,6,8],
             petCopies: 3, heroRegenPerSecond: .02, regenPerMinute: .05, hungerPerMinute: 1, feedThreshold: 30,
             foodRestore: 40, defeatHp: .1, captureBase: .2, captureWounded: .65,
             foodPrice: 10, capturePrice: 25, petPriceBase: 100, petPriceLevel: 40,
@@ -190,6 +192,8 @@ export function resolveParams(dataset, params) {
     return {
         version,
         global: { ...params.global },
+        // Web island unlock levels; original world configuration is unavailable.
+        worldTravel: { ...defaultParams(version).worldTravel, ...params.worldTravel },
         checkin: { ...defaultParams(version).checkin, ...params.checkin },
         adventure: { ...defaultParams(version).adventure, ...params.adventure },
         perSchool: params.perSchool,

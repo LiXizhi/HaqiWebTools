@@ -1,3 +1,6 @@
+import { islandName } from './adventure_world_map_core.js';
+import { drawSchoolIcon } from './card_renderer.js';
+import { renderWorldMap } from './view_adventure_world_map.js';
 import { castBlockedMessage } from './adventure_cast_feedback_core.js';
 import { createCardFace } from './view_adventure_card.js';
 import { renderDeckEditor } from './view_adventure_deck.js';
@@ -17,6 +20,7 @@ import { rewardLabel } from './adventure_rewards_core.js';
 import * as U from './combat_unit_core.js';
 import { expectedBaseDamage,expectedBaseHeal,cardTargetKind } from './combat_cards_core.js';
 import { renderEquipment } from './view_adventure_equipment.js';
+import { renderStrengthening } from './view_adventure_strengthening.js';
 import { COLORS } from './adventure_renderer.js';
 export function el(tag,cls,...children) {
     const n=document.createElement(tag);if(cls)n.className=cls;
@@ -149,13 +153,23 @@ export function renderHud(root,model,cb) {
     const {assets,save}=model,c=assets.content,q=currentQuest(save,c);root.replaceChildren();
     const next=c.progression.xpThresholds[save.level]||save.xp,previous=c.progression.xpThresholds[save.level-1];
     const xp=el('div','xp-bar',el('i'));xp.firstChild.style.width=`${save.level>=c.progression.levelCap?100:Math.max(0,(save.xp-previous)/(next-previous)*100)}%`;
-    const name=button(el('strong','',save.name),()=>cb.panel('equipment'),'hero-name');name.title='角色与装备（R）';
+    const school=el('canvas','hero-school-icon');school.width=48;school.height=48;
+    school.setAttribute('role','img');school.setAttribute('aria-label',`${SCHOOL_NAMES[save.school]}系`);school.title=`${SCHOOL_NAMES[save.school]}系`;
+    drawSchoolIcon(school.getContext('2d'),save.school,24,24,36);
+    const name=button([school,el('strong','',save.name)],()=>cb.panel('equipment'),'hero-name');name.title='角色与装备（R）';
     const membership=button('升级会员',cb.membership,'hero-membership');
-    const status=el('section','hero-status',el('div','hero-text',el('div','hero-heading',name,membership),el('span','',`${SCHOOL_NAMES[save.school]}学徒 · 等级 ${save.level}`),xp));
+    membership.setAttribute('aria-haspopup','dialog');
+    const details=el('div','hero-details',el('span','hero-level',`等级 ${save.level}`));
+    for(const [id,label]of [[100,'奇豆'],[17213,'仙豆']]){
+        const amount=save.inventory[id]||0;
+        const currency=el('span','hero-currency',`${label} ${amount.toLocaleString('zh-CN')}`);currency.title=`${label} ${amount}`;
+        details.append(currency);
+    }
+    const status=el('section','hero-status',el('div','hero-text',el('div','hero-heading',name,membership),details,xp));
     const warning=el('span','save-indicator',model.storageWarning?'存档未保存':'');warning.hidden=!model.storageWarning;
     status.querySelector('.hero-text').append(el('div','hero-health',el('i'),el('span','hero-health-label')),warning);
     updateHeroHealth(status,save,c);
-    root.append(status,el('div','location-label',el('span','',save.zone==='camp'?'魔 法 营 地':'哈 奇 小 镇'),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
+    root.append(status,el('div','location-label',el('span','',islandName(save.zone)),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
     const utilities=el('nav','utility-nav');utilities.setAttribute('aria-label','其他功能');
     const checkin=button([icon('gourd'),el('span','','签到'),el('small','','')],()=>cb.panel('checkin'),'utility-button checkin-button');
     checkin.title='定时领取奇豆';
@@ -178,9 +192,8 @@ export function renderHud(root,model,cb) {
     root.append(tracker);
     const nav=el('nav','game-nav');nav.setAttribute('aria-label','游戏菜单');
     for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['shop','商店','shop']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
-    root.append(nav,el('div','movement-hint','WASD / 方向键移动 · 点击寻路 / 按住跟随 · 滚轮缩放 · E 交谈'));
+    root.append(nav);
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
-    root.append(el('div','touch-movement-hint','单指拖动移动 · 双指缩放 · 靠近后交谈或挑战'));
 }
 function modal(root,title,subtitle,cb,wide=false) {
     root.replaceChildren();root.className='overlay visible';
@@ -207,8 +220,18 @@ function spellFace(assets,card,artCard=card) {
 }
 export function renderPanel(root,kind,model,cb) {
     const {assets,save}=model,c=assets.content,d=assets.dataset;
+    if(kind==='membership'){
+        const body=modal(root,'升级会员','',cb);
+        body.append(el('p','','会员开通与续费暂未开放，请留意后续更新。'),button('返回冒险',cb.close,'primary'));
+        return;
+    }
+    if(kind==='upgrade'){
+        const body=modal(root,'装备强化','',cb,true);
+        renderStrengthening(body,model,cb,{el,button,art});
+        return;
+    }
     const titles={checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['全局商店','等级科技树 · 装备、伙伴与补给'],equipment:['角色与装备','魔法学徒 · 旅途行装'],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包','装备与旅途收藏'],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
-    const body=modal(root,...titles[kind],cb,['deck','quests','inventory','equipment','pet','shop'].includes(kind)||kind==='debug');
+    const body=modal(root,...titles[kind],cb,['deck','quests','inventory','equipment','pet','shop','map'].includes(kind)||kind==='debug');
     if(kind==='checkin'){
         body.closest('.modal').classList.add('checkin-modal');
         const grid=el('div','checkin-gourds');
@@ -217,7 +240,7 @@ export function renderPanel(root,kind,model,cb) {
         updateCheckin(root,model);
     }
     if(kind==='shop')renderShop(body,model,cb,{el,button,art});
-    if(kind==='pet'&&c.pets)renderPetCollection(body,model,cb,{el,button});
+    if(kind==='pet'&&c.pets)renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon});
     if(kind==='quests') {
         const current=currentQuest(save,c);
         for(const q of c.quests){const state=questState(save,q.id);const block=el('article',`journal-quest ${state.claimed?'done':''} ${current?.id===q.id?'current':''}`,el('div','journal-title',el('span','quest-number',String(q.id-62999).padStart(2,'0')),el('h3','',q.title),badge(state.claimed?'已完成':state.accepted?'进行中':current?.id===q.id?'可接取':'未开启')));
@@ -238,7 +261,7 @@ export function renderPanel(root,kind,model,cb) {
         });
     }
     if(kind==='deck') renderDeckEditor(body,model,cb,{el,button,spellFace});
-    if(kind==='pet'){
+    if(kind==='pet'&&!c.pets){
         body.append(el('h3','','初心之旅 · 咕噜噜教学'));
         body.append(el('div','pet-portrait',tile(assets,'creatures',save.pet?6:7,170,180)));
         if(save.pet)body.append(el('h3','center',save.pet.name),el('p','center muted',`等级 ${save.pet.level} · 经验 ${save.pet.xp} · 教学伙伴`),el('p','center','小小的咕噜噜，已经认定你是它最好的朋友。'),el('p','center muted',`战宠口粮 ${save.inventory[17172]||0} 包 · 每包增加 ${c.pet.foodXp} 经验`),button('喂养一包战宠口粮',()=>cb.action({type:'feed'}),'primary centered'));
@@ -256,7 +279,7 @@ export function renderPanel(root,kind,model,cb) {
         const effectsLink=el('a','sim-link','技能特效工坊');effectsLink.href='HaqiEffects.html';effectsLink.target='_blank';effectsLink.rel='noopener';body.append(effectsLink);
     }
     if(kind==='map') {
-        body.append(art(assets,save.zone==='camp'?c.extras.campMap:c.extras.townMap,Math.min(520,window.innerWidth-80),300),el('p','muted','原版地图参考 · 当前二维地图压缩了步行距离'),button('追踪当前任务',()=>{cb.close();cb.track();},'primary'));
+        renderWorldMap(body,model,cb,{el,button});
     }
 }
 function ownsEgg(save){return (save.inventory[17307]||0)>0;}
@@ -328,7 +351,7 @@ function renderBattleContent(root,model,cb) {
     const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,badge(`第 ${battle.turn} 回合`),button('撤退',cb.retreat,'secondary small')));
     const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');canvas.onclick=e=>{const point=Object.entries(canvas.battlePositions||{}).sort((a,b)=>Math.hypot(a[1].x-e.offsetX,a[1].y-e.offsetY)-Math.hypot(b[1].x-e.offsetX,b[1].y-e.offsetY))[0];if(point)cb.target(point[0]);};
     const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
-    const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');status.textContent=battle.finished?'对决结束':animating?'魔法正在生效…':selected?(blockedMessage||'点击法阵中的目标施法'):'选择一张卡牌，再点击目标';
+    const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');status.textContent=battle.finished?'对决结束':animating?'魔法正在生效…':blockedMessage;
     status.classList.toggle('cast-blocked',!!blockedMessage&&!animating&&!battle.finished);
     const hand=el('div','battle-hand'),bottom=el('div','battle-controls');
     hand.classList.toggle('hand-focused',!!selected);
@@ -361,7 +384,7 @@ function renderBattleContent(root,model,cb) {
     const legalTargets=selected?validTargets(battle,hero,battle.resolved.cards[selected.key]):[];
     const targetEnemy=button('对敌方施法',()=>cb.target(legalTargets[0]?.id),'primary'),targetSelf=button(legalTargets[0]?.id===hero.id?'对自己施法':'对友方施法',()=>cb.target(legalTargets[0]?.id),'primary');
     const kind=selected&&cardTargetKind(battle.resolved.cards[selected.key]),canPlay=selected&&!discarded.includes(selected.seq)&&U.isAlive(hero);targetEnemy.hidden=legalTargets.length!==1||kind==='friendly'||kind==='self';targetSelf.hidden=legalTargets.length!==1||kind==='hostile'||kind==='all';targetEnemy.disabled=targetSelf.disabled=animating||battle.finished||!canPlay;
-    bottom.append(el('div','pip-legend',el('span','','蓝色：普通魔力'),el('span','','金色：超级魔力'),el('small','',`卡包剩余 ${U.deckRemaining(hero)} 张`)),el('div','battle-actions',targetEnemy,targetSelf,el('div','battle-hand-actions',togglePets,pass)));
+    bottom.append(el('div','pip-legend',el('small','',`卡包剩余 ${U.deckRemaining(hero)} 张`)),el('div','battle-actions',targetEnemy,targetSelf,el('div','battle-hand-actions',togglePets,pass)));
     const rosterOptions={heroId:hero.id,canTarget:unit=>!animating&&!battle.finished&&canPlay&&legalTargets.includes(unit),target:cb.target,el,button,schoolNames:SCHOOL_NAMES,colors:COLORS};
     const foes=createBattleRoster(battle,'far',rosterOptions),allies=createBattleRoster(battle,'near',rosterOptions);
     root.battleStatusEntries=[...foes.entries,...allies.entries];updateBattleRoster(root.battleStatusEntries,model.presentation);
@@ -383,7 +406,6 @@ function renderBattleContent(root,model,cb) {
     root.disposeHandGesture=selected?null:bindHandGesture(hand,{
         select:seq=>cb.select(visibleHand.find(h=>h.seq===seq)),
         play:seq=>cb.swipePlay(visibleHand.find(h=>h.seq===seq)),
-        hint:status,
     });
     // Measure wrapped controls, including party targets, instead of assuming a fixed footer height.
     const layout=()=>{

@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "local": "assets/adventure/world-map/world-map-12ae0dadaeb9.webp",
+  "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/world-map/world-map-12ae0dadaeb9.webp",
+  "width": 1280,
+  "height": 640,
+  "size": 190982,
+  "sha256": "12ae0dadaeb94f7fb86af0568867cbc198c8a15d3b78fcf153aa1596a0abfe9d",
+  "losslessAttemptBytes": 2451948,
+  "sourceEntry": "texture/aries/worldmaps/worldmap/worldmap_bg.dds.z,22ca86e45bd3f83e8f9166162646ee2f,150401",
+  "sourceMd5": "22ca86e45bd3f83e8f9166162646ee2f",
+  "referenceLocal": "assets/adventure/world-map/original-world-map.webp",
+  "generatedSourceSha256": "22f9b5f9013f06b9b9a10ef0f8fefe02f346887abcabfa8dbcb548e7eabac473",
+  "generator": "built-in image_gen",
+  "anchors": {
+    "camp": [
+      50,
+      80
+    ],
+    "town": [
+      50,
+      45
+    ],
+    "fire": [
+      80,
+      74
+    ],
+    "ice": [
+      79,
+      27
+    ],
+    "desert": [
+      21,
+      75
+    ],
+    "dark": [
+      21,
+      27
+    ]
+  },
+  "referenceSha256": "7509531950d7879bb951689bdf6d66c570ee97cedec32442708bfcac6dd95dda",
+  "prompt": "docs/world-map-art.md",
+  "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/worldmap/worldmap_bg.dds.z,22ca86e45bd3f83e8f9166162646ee2f,150401",
+  "sourceSha256": "8173a1cb12591e9059caf53700172fd31c26f953b2311e1de7eb05db1da96820"
+}

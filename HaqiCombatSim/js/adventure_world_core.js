@@ -1,14 +1,17 @@
 // Compact authored maps. The original NPC coordinates remain in AdventureContent for provenance.
-import { createRng } from './rng_core.js';
+import { islandFor } from './adventure_world_map_core.js';
+import { createRng, hashSeed } from './rng_core.js';
 export const WALK_SPEED = 210;
 export function createWorld(zone,content) {
-    const town=zone==='town',w=1800,h=1600;
+    if(!islandFor(zone))throw new Error('目的地不存在');
+    const town=zone!=='camp',remote=!['camp','town'].includes(zone),w=1800,h=1600;
     const npcs=Object.values(content.npcs).filter(n=>n.zone===zone);
     const encounters=content.encounters.filter(e=>e.zone===zone);
-    const portal={id:'portal',x:town?900:1000,y:town?1310:1430,zone:town?'camp':'town',name:town?'返回魔法营地':'前往哈奇小镇'};
+    const portal={id:'portal',x:town?900:1000,y:town?1310:1430,zone:town?'camp':'town',name:town?'返回魔法营地':'前往哈奇岛'};
     const buildings=town?[{x:800,y:535,tile:4,w:230,h:230},{x:505,y:740,tile:5,w:190,h:200},{x:1090,y:680,tile:6,w:220,h:210},
       {x:1180,y:390,tile:4,w:160,h:175},{x:475,y:440,tile:4,w:180,h:185}]:
       [{x:1110,y:585,tile:5,w:190,h:180},{x:1130,y:850,tile:4,w:175,h:165},{x:645,y:550,tile:6,w:175,h:170}];
+    if(remote)buildings.splice(1);
     const center=town?{x:800,y:810}:{x:860,y:810};
     // Winding village lanes with short spurs: geography is authored, not a minimap texture.
     const routes=town?[
@@ -31,7 +34,7 @@ export function createWorld(zone,content) {
         const nearest=roads.map(r=>{const dx=r.b.x-r.a.x,dy=r.b.y-r.a.y,t=Math.max(0,Math.min(1,((p.x-r.a.x)*dx+(p.y-r.a.y)*dy)/(dx*dx+dy*dy)));return{x:r.a.x+t*dx,y:r.a.y+t*dy};}).sort((a,b)=>distance(a,p)-distance(b,p))[0];
         paths.push({a:nearest,b:{x:p.x,y:p.y},width:40});
     }
-    const trees=[],rng=createRng(town?818:530);
+    const trees=[],rng=createRng(remote?hashSeed(zone):town?818:530);
     for(let i=0;i<430;i++) {
         const p={x:rng.int(110,1690),y:rng.int(150,1490)};
         if(!onIsland(p.x,p.y,24))continue;

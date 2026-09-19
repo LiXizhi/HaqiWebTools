@@ -5,6 +5,7 @@ import {CardRenderer} from '../js/card_renderer.js';
 
 function el(tag,cls,...children){
     const node={tag,cls,children:children.flat(),style:{setProperty(){}},attrs:{},setAttribute(k,v){this.attrs[k]=v;},getAttribute(k){return this.attrs[k];},append(child){this.children.push(child);}};
+    if(tag==='canvas')node.getContext=()=>new Proxy({}, {get:()=>()=>{}});
     Object.defineProperties(node,{firstChild:{get(){return this.children[0];}},lastChild:{get(){return this.children.at(-1);}}});
     node.classList={toggle(k,on){node[k]=on;}};return node;
 }

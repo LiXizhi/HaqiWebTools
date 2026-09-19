@@ -71,8 +71,8 @@ export function paintTerrain(c, world) {
     }
 
     const grass = c.createRadialGradient(790, 620, 80, 900, 800, 850);
-    grass.addColorStop(0, world.zone === 'camp' ? '#abc67a' : '#b3cc89');
-    grass.addColorStop(.65, '#8bb36b'); grass.addColorStop(1, '#5c8c64');
+    const palette={fire:['#d7a071','#b77650','#784f49'],ice:['#e1f2ef','#b0d3de','#789eb3'],desert:['#ead198','#d8b473','#b58d54'],dark:['#aba0b9','#827998','#535671']}[world.zone]||['#abc67a','#8bb36b','#5c8c64'];
+    grass.addColorStop(0,palette[0]);grass.addColorStop(.65,palette[1]);grass.addColorStop(1,palette[2]);
     coast(c, -29); c.fillStyle = '#a8b47b'; c.fill();
     coast(c, -34); c.fillStyle = grass; c.fill();
     c.save(); coast(c, -34); c.clip();

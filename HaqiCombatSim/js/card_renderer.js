@@ -2,7 +2,7 @@ import {expectedBaseDamage,expectedBaseHeal} from './combat_cards_core.js';
 const TAU=Math.PI*2;
 const colors={ice:'#70d9ff',fire:'#ff9749',storm:'#ffdc68',life:'#8fe88c',death:'#c795fa',balance:'#e8cc84'};
 function path(c,points,fill,stroke='#fcf3bf',width=2){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fillStyle=fill;c.fill();c.lineWidth=width;c.strokeStyle=stroke;c.stroke();}
-function symbol(c,school,x,y,size,color){c.save();c.translate(x,y);c.scale(size/24,size/24);c.lineJoin='round';c.lineCap='round';c.strokeStyle=color;c.fillStyle=color;c.lineWidth=2.5;
+export function drawSchoolIcon(c,school,x,y,size,color=colors[school]){c.save();c.translate(x,y);c.scale(size/24,size/24);c.lineJoin='round';c.lineCap='round';c.strokeStyle=color;c.fillStyle=color;c.lineWidth=2.5;
  if(school==='ice'){for(const [dx,dy,r]of [[0,-2,10],[-8,6,4],[8,6,4]]){path(c,[[dx,dy-r],[dx+r*.6,dy],[dx,dy+r],[dx-r*.6,dy]],color,'#fff2a9',1.2);path(c,[[dx,dy-r],[dx,dy+r],[dx-r*.6,dy]],'#0874bd','#fff2a9',.5);}}
  if(school==='fire'){c.beginPath();c.moveTo(0,-12);c.bezierCurveTo(-2,-3,-11,-4,-10,4);c.bezierCurveTo(-8,15,10,13,10,3);c.bezierCurveTo(9,-2,5,-6,5,-8);c.bezierCurveTo(5,-2,0,0,0,-12);c.fill();}
  if(school==='storm')path(c,[[3,-12],[-10,2],[-1,2],[-4,12],[11,-4],[2,-4]],color,color,1);
@@ -14,7 +14,7 @@ function badge(c,x,y,r,value){const g=c.createRadialGradient(x-4,y-5,2,x,y,r);g.
 
 // All card chrome, corner graphics, numbers and layout are owned here.
 export class CardRenderer {
-    drawSchoolIcon(c,school,x,y,size,color=colors[school]){symbol(c,school,x,y,size,color);}
+    drawSchoolIcon(c,school,x,y,size,color=colors[school]){drawSchoolIcon(c,school,x,y,size,color);}
     constructor({images,effects,drawSubject}){this.images=images;this.effects=effects;this.drawSubject=drawSubject;}
     draw(c,card,{name,description,cooldown=0,details=true,width=302,height=460,backgroundOnly=false,golden=false,subject=null}={}){
         const {effects,images,drawSubject}=this;
@@ -25,7 +25,7 @@ export class CardRenderer {
         c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';c.lineWidth=5;c.strokeStyle='#172431';
         c.font='900 27px "Microsoft YaHei",sans-serif';const title=name||reference.name;
         c.strokeText(title,151,52,218);c.fillStyle='#fffde5';c.fillText(title,151,52,218);
-        symbol(c,school,27,28,40,colors[school]);
+        drawSchoolIcon(c,school,27,28,40);
         c.save();c.beginPath();c.rect(22,87,258,180);c.clip();if(subject)subject(c);else drawSubject(c,base,42,68,218,218);c.restore();
         badge(c,267,276,16,null);this.drawTypeIcon(c,card,267,276);
         if(details){

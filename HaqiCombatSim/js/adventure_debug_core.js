@@ -1,7 +1,9 @@
+import { travelStatus, islandSpawn } from './adventure_world_map_core.js';
 // Debug save editing only. Combat formulae and runtime balance parameters are unchanged.
 import { parseSave, availableCardLessons, syncDeckLayouts, syncProgression, canEquip, deckLimits, deckCardCopies, recommendedDeck, petLevel } from './adventure_core.js';
 import { clampDeck } from './combat_unit_core.js';
 import { upgradeLevels } from './adventure_upgrade_core.js';
+import { findEquipmentInstance, syncEquipmentInstances } from './adventure_equipment_instances_core.js';
 
 const check=(ok,message)=>{if(!ok)throw new Error(message);};
 export function debugFields(save,content) {
@@ -42,15 +44,19 @@ export function prepareDebugEdit(save,content,patch) {
         if(kind==='upgrade'){
             check(!value||(next.inventory[id]||0)>0,'请先拥有装备，再设置强化等级');
             next.upgrades[id]=value;
+            const instance=findEquipmentInstance(next,content,id);
+            if(instance){syncEquipmentInstances(next,content);next.equipmentInstances.find(row=>row.guid===instance.guid).serverdata.addlel=value;}
         }
         if(kind==='card'){if(value)next.cards[id]=value;else delete next.cards[id];}
         if(key==='petXp'){next.pet.xp=value;next.pet.level=petLevel(value,content);}
     }
     syncProgression(next,content);
+    if(!travelStatus(next,content,next.zone).allowed){next.zone='camp';next.position=islandSpawn('camp');notes.push('等级低于岛屿要求，已返回魔法营地');}
     for(const [slot,id] of Object.entries(next.equipment))if(!canEquip(next,content.items[id],content)){
         delete next.equipment[slot];notes.push(`自动卸下：${content.items[id].name}`);
     }
     for(const id of Object.keys(next.upgrades))if(!(next.inventory[id]>0)){delete next.upgrades[id];notes.push('已清除未持有装备的强化记录');}
+    syncEquipmentInstances(next,content);
     const ownedDeck=next.deck.map(row=>({...row,count:Math.min(row.count,deckCardCopies(next,content,row.key))})).filter(row=>row.count>0);
     next.deck=clampDeck(ownedDeck,{...deckLimits(next,content),version:'kids'}).deck;
     if(!next.deck.length)next.deck=recommendedDeck(next,content);

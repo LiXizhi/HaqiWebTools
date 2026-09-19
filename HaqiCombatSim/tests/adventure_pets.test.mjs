@@ -12,6 +12,37 @@ const read=path=>JSON.parse(fs.readFileSync(new URL('../data/'+path,import.meta.
 const catalog=read('adventure/pets.json');
 const {content:c,dataset:d}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),catalog,read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 const fresh=starter=>A.createAdventure(c,{starter,seed:812});
+test('pet decks are limited to 2/4/6/8 cards across four stages',()=>{
+ assert.deepEqual([1,9,10,24,25,39,40,50].map(level=>P.petCapacity({level},c)),[2,2,4,4,6,6,8,8]);
+ for(const level of [1,10,25,40]){
+  const pet={speciesId:'dragon_green',level},deck=P.recommendedPetDeck(pet,c);
+  assert.equal(deck.reduce((sum,row)=>sum+row.count,0),P.petCapacity(pet,c));
+  assert.doesNotThrow(()=>P.validatePetDeck(pet,c,deck));
+  const excess=P.petLessons(pet,c).filter(row=>row.level<=level).map(row=>({key:row.key,count:3}));
+  assert.throws(()=>P.validatePetDeck(pet,c,excess),/容量/);
+ }
+});
+test('legacy pet decks shrink in order while active battles retain replay until retreat',()=>{
+ const legacy={...c,balanceParams:{...c.balanceParams,adventure:{...P.petParams(c),petCapacities:[8,12,16,20]}}};
+ const old=A.createAdventure(legacy,{starter:'dragon_green',seed:812});delete old.petDeckRulesVersion;
+ const original=structuredClone(old.pets.dragon_green.deck);
+ const migrated=A.parseSave(old,c);
+ assert.deepEqual(migrated.pets.dragon_green.deck,[{key:original[0].key,count:2}]);
+ assert.equal(migrated.petDeckRulesVersion,1);
+ assert.deepEqual(A.parseSave(migrated,c),migrated);
+ assert.deepEqual(old.pets.dragon_green.deck,original);
+ const invalid=structuredClone(migrated);invalid.pets.dragon_green.deck=original;
+ assert.throws(()=>A.parseSave(invalid,c),/容量/);
+ A.beginEncounter(old,legacy,'trial:1');
+ const battle=B.restorePveBattle(d,legacy,old.pendingEncounter);
+ const pick={pass:true};B.playPveRound(battle,pick);A.recordDecision(old,pick);
+ const loaded=A.parseSave(old,c);
+ assert.deepEqual(B.restorePveBattle(d,c,loaded.pendingEncounter).events,battle.events);
+ assert.deepEqual(loaded.pets.dragon_green.deck,original);
+ A.settleParty(loaded,c,battle,{retreat:true});A.applyAction(loaded,c,{type:'retreat'});
+ assert.equal(loaded.petDeckRulesVersion,1);assert.equal(loaded.pets.dragon_green.deck.reduce((sum,row)=>sum+row.count,0),2);
+ assert.doesNotThrow(()=>A.parseSave(loaded,c));
+});
 test('359 source pets have four-stage WebP resources, hashes and permanent CORS URLs',()=>{
  assert.equal(Object.keys(catalog.pets).length,359);
  for(const pet of Object.values(catalog.pets)){

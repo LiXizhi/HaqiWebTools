@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>装备强化隔离验收</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_strengthening.css">
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import * as A from '../../js/adventure_core.js';
+import {syncEquipmentInstances,findEquipmentInstance} from '../../js/adventure_equipment_instances_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+// Isolated, in-memory fixture. Never reads or writes user storage.
+// Base URL preserves production fetch paths for resources and local-mode archives.
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),c=assets.content,save=A.createAdventure(c,{name:'强化验收'});
+save.xp=c.progression.xpThresholds[9];A.syncProgression(save,c);
+save.inventory[1912]=2;save.inventory[17213]=490;save.inventory[17487]=2;
+for(const id of c.upgradeGroups.flatMap(g=>g.gsids).slice(0,20))save.inventory[id]??=1;
+syncEquipmentInstances(save,c);
+for(const q of c.quests.filter(q=>q.id<63007))save.quests[q.id]={accepted:true,claimed:true,progress:Object.fromEntries(q.goals.map(g=>[`${g.kind}:${g.id}`,g.count]))};
+A.applyAction(save,c,{type:'accept',questId:63007,npcId:36211});
+const state={guid:findEquipmentInstance(save,c,1912).guid,filter:0,page:0,pending:false,message:''};
+const model={save,assets,strengtheningView:state},root=document.querySelector('#root');
+const cb={close:()=>root.replaceChildren(),refresh:paint,action:value=>{A.applyAction(save,c,value);return true;}};
+function paint(){renderPanel(root,'upgrade',model,cb);}
+paint();
+</script></body></html>

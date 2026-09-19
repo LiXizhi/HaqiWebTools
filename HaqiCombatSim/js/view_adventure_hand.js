@@ -1,14 +1,12 @@
 // Touch-only hand browsing. Keep the DOM/layout stable until the finger is released.
-export function bindHandGesture(hand, { select, play, hint }) {
+export function bindHandGesture(hand, { select, play }) {
     const doc=hand.ownerDocument, win=doc.defaultView;
     let gesture=null;
-    const idleHint=hint.textContent;
     function clear() {
         if(!gesture)return;
         const old=gesture;gesture=null;
         hand.classList.remove('hand-browsing','hand-aiming');
         for(const node of hand.children){node.classList.remove('touch-preview','touch-ready');node.style.removeProperty('--hand-drag-y');}
-        hint.textContent=idleHint;
         if(old&&hand.hasPointerCapture(old.id))hand.releasePointerCapture(old.id);
     }
     function preview() {
@@ -20,7 +18,6 @@ export function bindHandGesture(hand, { select, play, hint }) {
             node.classList.toggle('touch-ready',active&&g.rise>=56);
             node.style.setProperty('--hand-drag-y',`${active?-Math.min(120,Math.max(12,g.rise)):0}px`);
         }
-        hint.textContent=g.rise>=56?'松手出牌；多个目标时需再点选目标':'左右滑动选牌，向上拖动后松手出牌';
     }
     function down(e) {
         if(e.pointerType!=='touch'||e.isPrimary===false||gesture)return;

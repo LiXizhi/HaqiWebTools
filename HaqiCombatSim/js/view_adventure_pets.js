@@ -1,7 +1,7 @@
 import { equipmentAttributes,EQUIPMENT_SLOTS } from './adventure_equipment_core.js';
 import { canEquip, equipmentBlockReason } from './adventure_core.js';
 import { showPetDetails } from './view_adventure_pet_details.js';
-import { STARTERS,STAGE_NAMES,petStage,petCapacity,petLessons,productPrice,petParams,FOOD_ID } from './adventure_pets_core.js';
+import { STARTERS,STAGE_NAMES,petStage,productPrice,petParams,FOOD_ID } from './adventure_pets_core.js';
 export function petPortrait(assets,id,stage=0,size=96){
  const box=document.createElement('div');box.className='pet-sheet';box.style.width=box.style.height=`${size}px`;
  const art=assets.content.pets[id]?.art;if(!art)return box;
@@ -11,38 +11,115 @@ export function petPortrait(assets,id,stage=0,size=96){
 export function starterPicker(assets,onSelect,{el,button}){
  const row=el('div','starter-choices');for(const id of STARTERS){const b=button([petPortrait(assets,id,0,72),el('span','',assets.content.pets[id].name)],()=>{for(const child of row.children){child.classList.remove('selected');child.setAttribute('aria-pressed','false');}b.classList.add('selected');b.setAttribute('aria-pressed','true');onSelect(id);},'secondary');b.dataset.petId=id;b.setAttribute('aria-pressed',String(id===STARTERS[0]));if(id===STARTERS[0])b.classList.add('selected');row.append(b);}return row;
 }
-export function renderPetCollection(body,model,cb,{el,button}){
+export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon}){
  const {save,assets}=model,c=assets.content,p=petParams(c);
- body.append(el('p','muted',`非战斗时，角色每秒恢复最大生命的 ${p.heroRegenPerSecond*100}%，宠物每分钟恢复最大生命的 ${p.regenPerMinute*100}%；携带宠物每分钟减少 ${p.hungerPerMinute} 饱食。低于 ${p.feedThreshold} 时自动进食，每份恢复 ${p.foodRestore}。离线只恢复生命。`));
- if(Object.values(save.pets).some(pet=>pet.hunger===0))body.append(el('p','pet-supply-notice','有伙伴饱食为 0，已暂停自然回血。请到商店购买营养餐并喂食。'));
- if(!save.starterChosen)body.append(el('h3','','领取初始抱抱龙（选择后立即领取）'),starterPicker(assets,id=>cb.action({type:'starter',petId:id}),{el,button}));
- const formation=el('div','pet-formation'),slots=[...save.formation];let heroSlot=save.heroSlot;
- for(let i=0;i<4;i++){
-  const select=el('select','');select.setAttribute('aria-label',`卡位${i+1}宠物`);select.append(new Option('空位',''));
-  for(const id of Object.keys(save.pets))select.append(new Option(c.pets[id].name,id));select.value=slots[i]||'';select.onchange=()=>{slots[i]=select.value||null;};
-  formation.append(el('label','',`卡位 ${i+1}`,select));
+ body.closest('.modal').classList.add('pet-collection-modal');
+ body.closest('.modal').querySelector('.eyebrow')?.remove();
+ const state=model.petView||(model.petView={}),ids=Object.keys(save.pets);
+ const formation=el('div','pet-stage-line'),shelf=el('div','pet-shelf');
+ const title=el('div','pet-section-heading pet-drag-help',el('small','muted','拖动角色'));
+ const commit=(slots,heroSlot=save.heroSlot)=>cb.action({type:'formation',slots,heroSlot});
+ function place(id,index){
+  if(id==='hero'){commit([...save.formation],index);return;}
+  if(!save.pets[id])return;
+  const slots=[...save.formation],previous=slots.indexOf(id);
+  if(previous>=0)slots[previous]=slots[index];
+  slots[index]=id;commit(slots);
  }
- const hero=el('select','');hero.setAttribute('aria-label','主角卡位');for(let i=0;i<4;i++)hero.append(new Option(`主角站在卡位 ${i+1}`,i));hero.value=heroSlot;hero.onchange=()=>{heroSlot=Number(hero.value);};
- body.append(el('h3','','随行阵容'),el('p','muted','同位伙伴在地图跟随，战斗中通过“使用宠物卡”单独选牌；其他伙伴自动战斗。'),formation,hero,button('保存阵容',()=>cb.action({type:'formation',slots,heroSlot}),'primary'));
- const owned=el('select','');owned.setAttribute('aria-label','选择养成宠物');for(const id of Object.keys(save.pets))owned.append(new Option(c.pets[id].name,id));
- if(model.petView?.selected&&save.pets[model.petView.selected])owned.value=model.petView.selected;
- const detail=el('section','pet-detail');body.append(el('h3','',`宠物收藏 ${Object.keys(save.pets).filter(id=>!c.pets[id].legacy).length} / ${Object.keys(c.pets).filter(id=>!c.pets[id].legacy).length} · 另含教学伙伴`),owned,detail);
- function paint(){
-  detail.replaceChildren();const pet=save.pets[owned.value];if(!pet)return;const def=c.pets[pet.speciesId];let draft=pet.deck.map(x=>({...x}));
-  detail.append(petPortrait(assets,pet.speciesId,petStage(pet.level,c),120),el('h3','',def.name),el('p','',`${def.traits.elementalAttribute}系 · ${STAGE_NAMES[petStage(pet.level,c)]} · 等级 ${pet.level} · 经验 ${pet.xp}`),el('p','',`生命 ${Math.floor(pet.hp)} · 饱食 ${Math.floor(pet.hunger)} / 100 · 食物 ${save.inventory[FOOD_ID]||0}`),button('喂食',()=>cb.action({type:'pet-feed',petId:pet.speciesId}),'secondary'));
-  detail.append(button('查看四阶段与卡片',()=>showPetDetails(assets,pet.speciesId,petPortrait,{el,button}),'secondary'));
-  const count=el('p',''),update=()=>{count.textContent=`卡包 ${draft.reduce((n,x)=>n+x.count,0)} / ${petCapacity(pet,c)} 张`;};detail.append(count);update();
-  const grid=el('div','pet-card-list');
-  for(const lesson of petLessons(pet,c)){
-   const input=el('input','');input.type='number';input.min=0;input.max=petParams(c).petCopies;input.value=draft.find(x=>x.key===lesson.key)?.count||0;input.disabled=pet.level<lesson.level;
-   input.setAttribute('aria-label',`${assets.dataset.cards[lesson.key]?.name||lesson.key}份数`);input.onchange=()=>{draft=draft.filter(x=>x.key!==lesson.key);if(Number(input.value)>0)draft.push({key:lesson.key,count:Number(input.value)});update();};
-   grid.append(el('label','',el('span','',`${lesson.level}级 · ${assets.dataset.cards[lesson.key]?.name||lesson.key}`),input));
+ function bindDrag(node,id,scrollable=false){
+  let gesture=null,suppressClick=false;
+  node.draggable=false;
+  node.addEventListener('pointerdown',event=>{
+   if(!event.isPrimary||event.button!==0)return;
+  const art=node.querySelector('.pet-sheet,canvas'),bounds=art.getBoundingClientRect();
+  suppressClick=false;gesture={x:event.clientX,y:event.clientY,scroll:shelf.scrollLeft,moved:false,art,bounds,ghost:null,mode:null};
+   node.setPointerCapture(event.pointerId);
+  });
+  node.addEventListener('pointermove',event=>{
+   if(!gesture)return;
+   const dx=event.clientX-gesture.x,dy=event.clientY-gesture.y;
+   if(Math.hypot(dx,dy)<8&&!gesture.moved)return;
+  gesture.moved=true;
+  gesture.mode ||= scrollable&&Math.abs(dx)>Math.abs(dy)?'scroll':'drag';
+  if(gesture.mode==='scroll'){shelf.scrollLeft=gesture.scroll-dx;return;}
+  node.classList.add('is-dragging');
+  if(!gesture.ghost){
+   const ghost=gesture.art.cloneNode(true),bounds=gesture.bounds;
+   ghost.className='pet-drag-preview';ghost.setAttribute('aria-hidden','true');
+   ghost.style.width=`${bounds.width}px`;ghost.style.height=`${bounds.height}px`;
+   ghost.style.left=`${bounds.left}px`;ghost.style.top=`${bounds.top}px`;
+   if(ghost instanceof HTMLCanvasElement)ghost.getContext('2d').drawImage(gesture.art,0,0);
+   else{const style=getComputedStyle(gesture.art);ghost.style.backgroundImage=style.backgroundImage;ghost.style.backgroundSize=style.backgroundSize;ghost.style.backgroundPosition=style.backgroundPosition;}
+   document.body.append(ghost);gesture.ghost=ghost;
   }
-  detail.append(grid,button('保存宠物卡包',()=>cb.action({type:'pet-deck',petId:pet.speciesId,deck:draft}),'primary'));
+  gesture.ghost.style.transform=`translate3d(${dx}px,${dy}px,0)`;
+   const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.pet-stage-slot');
+   for(const slot of formation.children)slot.classList.toggle('drop-ready',slot===target);
+  });
+  const finish=event=>{
+   if(!gesture)return;
+  const moved=gesture.moved,mode=gesture.mode;gesture.ghost?.remove();gesture=null;node.classList.remove('is-dragging');
+   for(const slot of formation.children)slot.classList.remove('drop-ready');
+  if(moved){suppressClick=true;const target=event.type==='pointerup'&&mode==='drag'?document.elementFromPoint(event.clientX,event.clientY)?.closest('.pet-stage-slot'):null;if(target&&formation.contains(target))place(id,Number(target.dataset.slot));}
+  };
+  node.addEventListener('pointerup',finish);node.addEventListener('pointercancel',finish);
+  node.addEventListener('lostpointercapture',finish);
+  node.addEventListener('click',event=>{if(suppressClick){event.preventDefault();event.stopImmediatePropagation();suppressClick=false;}},true);
  }
- owned.onchange=()=>{if(model.petView)model.petView.selected=owned.value;paint();};paint();
- body.append(button('前往宠物图鉴与商店',()=>cb.panel('shop'),'secondary'),el('h3','','自动进食记录'),...save.careLog.map(x=>el('p','muted',x)),el('h3','','宠物家园'),el('p','muted','MagicHaqi · 联动筹备中，当前冒险进度不会写入家园。'));
- if(c.homeUrl){const a=el('a','','打开宠物家园');a.href=c.homeUrl;a.target='_blank';a.rel='noopener noreferrer';body.append(a);}
+ const open=id=>{
+  state.selected=id;
+  showPetDetails(assets,id,petPortrait,{el,button,spellFace},{save,action:cb.action,place,shop:()=>cb.panel('shop'),tile});
+ };
+ body.append(title,formation);
+ for(let index=0;index<4;index++){
+  const id=save.formation[index],pet=save.pets[id],isHero=index===save.heroSlot;
+  const slot=el('section',`pet-stage-slot${isHero?' is-hero':''}`);slot.dataset.slot=index;
+  const stand=button([pet?el('span','pet-standing-art',petPortrait(assets,id,petStage(pet.level,c),120)):el('span','pet-empty','+'),...(pet?[el('strong','',c.pets[id].name)]:[])],()=>{if(id)open(id);else{state.targetSlot=index;paintShelf();shelf.querySelector('button')?.focus();}},'pet-stand');
+  stand.setAttribute('aria-label',`卡位 ${index+1}：${pet?c.pets[id].name:'空位'}`);
+    if(id)bindDrag(stand,id);
+  slot.ondragover=event=>{event.preventDefault();slot.classList.add('drop-ready');};
+  slot.ondragleave=()=>slot.classList.remove('drop-ready');
+  slot.ondrop=event=>{event.preventDefault();slot.classList.remove('drop-ready');place(event.dataTransfer.getData('text/plain'),index);};
+  if(isHero){
+  const hero=button(tile(assets,'sprites',save.appearance==='girl'?12:8,96,120),()=>{},'pet-hero-figure');
+   hero.setAttribute('aria-label',`主角，卡位 ${index+1}`);hero.title='拖动主角换位';bindDrag(hero,'hero');
+   hero.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();place('hero',(index+(event.key==='ArrowLeft'?3:1))%4);}});
+   slot.append(hero);
+  }
+  slot.append(stand);formation.append(slot);
+ }
+ if(!save.starterChosen)body.append(el('h3','','领取初始抱抱龙（选择后立即领取）'),starterPicker(assets,id=>cb.action({type:'starter',petId:id}),{el,button}));
+ const query=el('input','pet-search');query.placeholder='搜索我的伙伴';query.setAttribute('aria-label','搜索我的伙伴');query.value=state.query||'';
+ const previous=button('‹',()=>shelf.scrollBy({left:-shelf.clientWidth,behavior:'smooth'}),'pet-page-arrow'),next=button('›',()=>shelf.scrollBy({left:shelf.clientWidth,behavior:'smooth'}),'pet-page-arrow');
+ previous.setAttribute('aria-label','上一页宠物');next.setAttribute('aria-label','下一页宠物');previous.title='上一页宠物';next.title='下一页宠物';
+ const status=el('span','muted');status.setAttribute('aria-live','polite');
+ body.append(el('div','pet-section-heading',el('h3','',`我的收藏 ${ids.filter(id=>!c.pets[id].legacy).length} / ${Object.values(c.pets).filter(pet=>!pet.legacy).length}`),query,previous,next),status,shelf);
+ function paintShelf(){
+  shelf.replaceChildren();const visible=ids.filter(id=>c.pets[id].name.includes(query.value.trim()));
+  status.textContent=state.targetSlot!=null?`选择卡位 ${state.targetSlot+1} 的伙伴`:`${visible.length} 位伙伴 · 营养餐 ${save.inventory[FOOD_ID]||0}`;
+  if(state.targetSlot!=null)status.append(button('取消',()=>{delete state.targetSlot;paintShelf();},'pet-inline-button'));
+  for(const id of visible){
+   const pet=save.pets[id],slot=save.formation.indexOf(id);
+   const item=button([petPortrait(assets,id,petStage(pet.level,c),96),el('strong','',c.pets[id].name),el('small','',`等级 ${pet.level} · ${slot>=0?`卡位 ${slot+1}`:'休息中'}`)],()=>{if(state.targetSlot!=null){const index=state.targetSlot;delete state.targetSlot;place(id,index);}else open(id);},'pet-owned');
+    item.dataset.petId=id;bindDrag(item,id,true);shelf.append(item);
+  }
+  if(!visible.length)shelf.append(el('p','muted','没有找到伙伴'));
+  requestAnimationFrame(updatePager);
+ }
+ function updatePager(){previous.disabled=shelf.scrollLeft<=1;next.disabled=shelf.scrollLeft+shelf.clientWidth>=shelf.scrollWidth-1;}
+ shelf.onscroll=updatePager;query.oninput=()=>{state.query=query.value;paintShelf();};paintShelf();
+ const notes=el('details','pet-care-notes',el('summary','','照料与自动进食'),el('p','muted',`非战斗时角色每秒恢复 ${p.heroRegenPerSecond*100}% 生命，宠物每分钟恢复 ${p.regenPerMinute*100}%。携带伙伴每分钟减少 ${p.hungerPerMinute} 饱食，低于 ${p.feedThreshold} 自动进食，每份恢复 ${p.foodRestore}。离线只恢复生命。`),...save.careLog.slice(-3).map(text=>el('p','muted',text)));
+ const teaching=button('咕噜噜教学',()=>{
+  const dialog=el('dialog','modal pet-growth-modal'),close=()=>dialog.close();
+  const exit=button('×',close,'close-button');exit.setAttribute('aria-label','关闭教学伙伴');
+  const content=el('div','modal-body',tile(assets,'creatures',save.pet?6:7,120,128));
+  if(save.pet){content.append(el('h3','',save.pet.name),el('p','',`等级 ${save.pet.level} · 经验 ${save.pet.xp} · 口粮 ${save.inventory[17172]||0} 包`),button('喂养一包战宠口粮',()=>{close();cb.action({type:'feed'});},'primary'));}
+  else content.append(el('p','','完成青龙的强化指导，领取出奇蛋。'),button('打开出奇蛋',()=>{close();cb.action({type:'hatch'});},'primary'));
+  dialog.append(el('header','modal-header',el('h2','','初心之旅 · 咕噜噜'),exit),content);document.body.append(dialog);dialog.addEventListener('keydown',event=>event.stopPropagation());dialog.addEventListener('close',()=>{dialog.remove();teaching.focus();},{once:true});dialog.showModal();
+ },'secondary');
+ const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop'),'secondary'),teaching,notes);
+ if(c.homeUrl){const link=el('a','pet-home-link',icon('shop'),el('span','','宠物家园'));link.href=c.homeUrl;link.target='_blank';link.rel='noopener noreferrer';link.title='联动筹备中，当前冒险进度不会写入家园';footer.append(link);}
+ body.append(footer);
 }
 export function renderShop(body,model,cb,{el,button,art}){
  const {save,assets}=model,c=assets.content,state=model.shopView||{category:'pet',query:'',school:'',slot:'',ownership:'',page:0};

@@ -30,6 +30,7 @@ export function addPet(save,content,id,xp=0){
  pet.hp=petMaxHp(pet,content);pet.deck=recommendedPetDeck(pet,content);save.pets[id]=pet;return pet;
 }
 export function initializePets(save,content,starter=null){
+ save.petDeckRulesVersion=1;
  save.pets={};save.formation=[null,null,null,null];save.heroSlot=0;save.heroHp=null;save.careAt=0;save.careLog=[];save.transactions=[];save.starterChosen=false;
  if(starter){check(STARTERS.includes(starter),'请选择抱抱龙颜色');addPet(save,content,starter);save.formation[0]=starter;save.starterChosen=true;}
 }
@@ -79,6 +80,19 @@ export function tickCare(save,content,hero,now,online=false){
  }
  for(const pet of Object.values(save.pets))if(pet.hunger>0)pet.hp=Math.min(petMaxHp(pet,content),pet.hp+petMaxHp(pet,content)*p.regenPerMinute*minutes);
  save.careLog=save.careLog.slice(-20);
+}
+export function migratePetDeckRules(save,content){
+ check(save.petDeckRulesVersion===undefined||save.petDeckRulesVersion===1,'宠物卡包规则版本无效');
+ if(save.petDeckRulesVersion===1)return content;
+ const legacy={...content,balanceParams:{...content.balanceParams,adventure:{...petParams(content),petCapacities:[8,12,16,20]}}};
+ validatePets(save,legacy);
+ if(save.pendingEncounter?.party)return legacy;
+ for(const pet of Object.values(save.pets)){
+  let remaining=petCapacity(pet,content);
+  pet.deck=pet.deck.flatMap(row=>{const count=Math.min(row.count,remaining);remaining-=count;return count?[{...row,count}]:[];});
+ }
+ save.petDeckRulesVersion=1;
+ return content;
 }
 export function validatePets(save,content){
  check(save.pets&&typeof save.pets==='object'&&!Array.isArray(save.pets),'宠物收藏无效');

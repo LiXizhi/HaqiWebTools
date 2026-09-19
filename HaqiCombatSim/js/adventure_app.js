@@ -1,3 +1,7 @@
+import { rewardSnapshot, rewardChanges } from './adventure_reward_feedback_core.js';
+import { createRewardFeedback } from './view_adventure_rewards.js';
+import { islandName } from './adventure_world_map_core.js';
+import { initialStrengtheningSelection } from './adventure_strengthening_core.js';
 import { castBlockedMessage } from './adventure_cast_feedback_core.js';
 import { tickCheckin } from './adventure_checkin_core.js';
 import { prepareDebugEdit } from './adventure_debug_core.js';
@@ -54,7 +58,28 @@ const touchMovement=bindTouchMovement(nodes.world,touchIndicator,{enabled:()=>st
 }});
 const shopView={category:'pet',query:'',school:'',slot:'',ownership:'',page:0},petView={selected:null};
 const equipmentView={tab:'gear',slot:0,item:null,query:''};
-const model=()=>({assets,save,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
+const strengtheningView={guid:null,filter:0,page:0,pending:false,message:''};
+const model=()=>({assets,save,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
+const rewardRoot=V.el('div','reward-feedback');nodes.world.parentElement.append(rewardRoot);
+const rewardFeedback=createRewardFeedback(rewardRoot,{
+    describe:reward=>{
+        const item=assets.content.items[reward.id];
+        const info={name:reward.kind==='card'?(assets.dataset.cards[reward.key]?.name||reward.name):reward.name,label:reward.kind==='card'?'立即配卡':reward.gear?'立即穿上':reward.kind==='pet'?'查看伙伴':'查看背包'};
+        if(reward.gear)info.reason=A.equipmentBlockReason(save,item,assets.content);
+        if(item?.art){const art=V.el('canvas');art.width=128;art.height=128;try{assets.draw(art.getContext('2d'),item.art,0,0,128,128);info.art=art;}catch{ /* Text remains usable when art fails. */ }}
+        return info;
+    },
+    activate:reward=>{
+        if(stage!=='world'||panel||dialog)return false;
+        if(reward.gear)return action({type:'equip',itemId:reward.id});
+        openPanel(reward.kind==='card'?'deck':reward.kind==='pet'?'pet':'inventory');
+    },
+});
+function showRewards(before){
+    const event=rewardChanges(before,save,assets.content);
+    for(const item of event.items)if(item.kind==='card')item.name=assets.dataset.cards[item.key]?.name||item.name;
+    rewardFeedback.push(event);
+}
 function toast(message) {nodes.toast.textContent=message;nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);}
 function safely(fn) {try{return fn();}catch(e){toast(e.message);return false;}}
 function persist() {
@@ -64,14 +89,14 @@ function persist() {
     lastSave=performance.now();
 }
 function close() {nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
-function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>toast('会员升级暂未开放。'),cloud:openCloud,track,interact:interactNearest});}
+function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>openPanel('membership'),cloud:openCloud,track,interact:interactNearest});}
 function paintPanel() {
     if(panel==='cloud'){paintCloud();return;}
     if(!panel)return;
     const equipment=['equipment','inventory','shop','pet'].includes(panel);
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
-    V.renderPanel(nodes.overlay,panel,model(),{close,action,track,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true)});
+    V.renderPanel(nodes.overlay,panel,model(),{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true)});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
@@ -80,7 +105,13 @@ function paintPanel() {
         }
     }
 }
-function openPanel(kind) {if(stage!=='world')return;close();path=[];destination=null;panel=kind==='upgrade'?'equipment':kind;if(['equipment','inventory','upgrade'].includes(kind)){equipmentView.tab=kind==='upgrade'?'upgrade':kind==='equipment'?'gear':'all';equipmentView.slot=0;equipmentView.query='';equipmentView.item=kind==='upgrade'?1912:null;}paintPanel();}
+function openPanel(kind,options={}) {
+    if(stage!=='world')return;
+    close();path=[];destination=null;panel=kind;
+    if(kind==='upgrade')Object.assign(strengtheningView,{guid:initialStrengtheningSelection(save,assets.content,options.itemId,options.guid),filter:0,page:0,pending:false,message:'',offsetX:0,offsetY:0});
+    if(['equipment','inventory'].includes(kind)){equipmentView.tab=kind==='equipment'?'gear':'all';equipmentView.slot=0;equipmentView.query='';equipmentView.item=null;equipmentView.guid=null;}
+    paintPanel();
+}
 function applyDebug(patch) {safely(()=>{
     if(stage!=='world')throw Error('请先完成当前战斗');
     const result=prepareDebugEdit(save,assets.content,patch);
@@ -115,8 +146,9 @@ async function cloudAction(label,fn) {
     cloud.busy=label;cloud.error='';cloud.message='';cloud.preview=null;paintCloud();
     try{await fn();}catch(e){cloud.error=e.message;}finally{cloud.busy='';cloud.owner=cloudClient.owner;paintCloud();}
 }
-function action(value) {safely(()=>{A.applyAction(save,assets.content,value.type==='checkin'?{...value,now:Date.now()}:value);persist();paintHud();paintPanel();const text={checkin:'签到成功，奇豆已到账！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(text[value.type]||'进度已保存');});}
+function action(value) {return safely(()=>{const before=rewardSnapshot(save);A.applyAction(save,assets.content,value.type==='checkin'?{...value,now:Date.now()}:value);showRewards(before);persist();paintHud();paintPanel();const text={checkin:'签到成功，奇豆已到账！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(text[value.type]||'进度已保存');return true;});}
 function enterWorld(newSave,restoredBattle=null) {
+    rewardFeedback.reset();
     petCardsOpen=false;
     creationPreview?.stop();
     save=newSave;if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content);stage='world';path=[];destination=null;animation=null;close();
@@ -128,7 +160,7 @@ function enterWorld(newSave,restoredBattle=null) {
 }
 function showTitle(manage=false) {
     spellSound.stop();
-    persist();if(storageWarning&&stage!=='title'){toast('当前进度尚未保存，请勿关闭页面。请检查浏览器存储或重试。');return;}close();stage='title';keys.clear();path=[];destination=null;animation=null;battle=null;
+    persist();if(storageWarning&&stage!=='title'){toast('当前进度尚未保存，请勿关闭页面。请检查浏览器存储或重试。');return;}close();rewardFeedback.reset();stage='title';keys.clear();path=[];destination=null;animation=null;battle=null;
     music?.pause();nodes.hud.hidden=true;nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';nodes.entry.hidden=false;
     save=roleStore.catalog.roles.find(row=>row.id===roleStore.catalog.activeId)?.save||A.createAdventure(assets.content);
     world=W.createWorld(save.zone,assets.content);
@@ -244,13 +276,13 @@ function updateMusic() {
     if(save.music&&stage!=='title')music.play().catch(()=>{if(music.error)toast('背景音乐暂时不可用，可以继续游玩。');});else music.pause();
 }
 function toggleMusic(){save.music=!save.music;persist();updateMusic();paintPanel();}
-function travel(zone){safely(()=>{A.applyAction(save,assets.content,{type:'travel',zone});enterWorld(save);toast(zone==='town'?'欢迎来到哈奇小镇！第一章已经完成。':'你回到了熟悉的魔法营地。');});}
+function travel(zone){safely(()=>{A.applyAction(save,assets.content,{type:'travel',zone});enterWorld(save);toast(`已抵达${islandName(zone)}。`);});}
 function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog,{close,next:nextDialogue,startQuest:q=>startLines(q.startDialog,'接取任务',()=>{
     A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(`已接取：${q.title}`);
 }),finishQuest:q=>startLines(q.endDialog,'领取奖励',()=>{
-    const level=save.level;const rewards=A.rewardsFor(save,assets.content,q);
+    const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim',questId:q.id,npcId:q.endNpc});
-    toast(`${rewards.map(r=>A.rewardLabel(assets.content,r)).join(' · ')}${save.level>level?`　升到 ${save.level} 级！`:''}`);
+    showRewards(before);return 'reward';
 }),questTalk:(q,talk)=>startQuestTalk(talk),panel:openPanel,travel,track});}
 function startQuestTalk(talk) {
     startLines(talk.dialog,'谢谢你，我知道了',()=>{
@@ -269,6 +301,7 @@ function nextDialogue() {
         const npcId=dialog.npcId,advance=dialogDone?.();dialogDone=null;persist();paintHud();
         if(advance){
             close();
+            if(advance==='reward')return;
             const q=A.currentQuest(save,assets.content),goal=q&&A.questProgress(save,q).find(g=>g.value<g.count);
             if(q&&(A.questReady(save,q)||goal?.kind==='talk'))track();
             return;
@@ -301,6 +334,7 @@ function track() {
     if(stage!=='world')return;close();
     const c=assets.content,q=A.currentQuest(save,c);
     if(!q){walkTo({...world.portal,kind:'portal'},true);return;}
+    if(save.zone!==c.npcs[q.startNpc].zone){travel(c.npcs[q.startNpc].zone);if(save.zone!==c.npcs[q.startNpc].zone)return;}
     const npc=id=>({...c.npcs[id],kind:'npc',questDialogue:true}),state=A.questState(save,q.id);
     if(!state.accepted){walkTo(npc(q.startNpc),true);return;}
     if(A.questReady(save,q)){walkTo(npc(q.endNpc),true);return;}
@@ -334,7 +368,7 @@ function paintBattle(){
 },capture:id=>playRound({capture:true,targetId:id}),pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
     if(assets.content.pets)A.settleParty(save,assets.content,battle,{retreat:true});
     A.applyAction(save,assets.content,{type:'retreat'});save.careAt=Date.now();enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
-},finish:()=>safely(()=>{A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save);})});}
+},finish:()=>safely(()=>{const before=rewardSnapshot(save);A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save);showRewards(before);})});}
 function playRound(decision) {
     if(animation||battle.finished)return;
     safely(()=>{
@@ -371,6 +405,7 @@ function tickAnimation(now) {
 }
 const directionKeys={w:'up',arrowup:'up',s:'down',arrowdown:'down',a:'left',arrowleft:'left',d:'right',arrowright:'right'};
 window.addEventListener('keydown',e=>{
+    if(rewardRoot.contains(e.target))return;
     if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
     const key=e.key.toLowerCase();if(directionKeys[key]&&stage==='world'&&!panel&&!dialog){e.preventDefault();heldPointer=null;keys.add(directionKeys[key]);path=[];destination=null;}
     if(e.repeat)return;
@@ -429,7 +464,9 @@ function frame(now) {
         if(button){button.hidden=!near;if(near)button.textContent=near.kind==='npc'?`与${near.name}交谈`:near.kind==='portal'?near.name:`挑战${assets.content.monsters[near.monsterId].name}`;}
         if((wasMoving&&!moving)||(moving&&now-lastSave>3000))persist();
     }
-    renderer.render(world,save,now,{moving,path,title:stage==='title'});
+    const rewardEffect=rewardFeedback.tick(now,stage==='world'&&!panel&&!dialog);
+    const bagButton=nodes.hud.querySelector('[data-ui-icon=bag]')?.closest('button');bagButton?.classList.toggle('reward-glow',!rewardRoot.hidden&&!!rewardRoot.querySelector('.reward-popup:not([hidden]) strong'));
+    renderer.render(world,save,now,{moving,path,title:stage==='title',rewardEffect});
     if(stage==='battle'){const presentation=tickAnimation(now),canvas=$('battle-canvas');V.updateBattleRoster(nodes.battle.battleStatusEntries,presentation);if(canvas)canvas.battlePositions=renderer.renderBattle(canvas,battle,save,now,presentation);}
 }
 async function boot(){

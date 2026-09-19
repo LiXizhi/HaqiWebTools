@@ -77,7 +77,7 @@ lessons={
  'death':[22366,22181,22190,22182,22189,22183,22199],
 }
 unlock_levels=[1,1,2,3,4,6,7]
-used_items={17172,17307,17593,17213,17114,10136,24003}
+used_items={17487,17172,17307,17593,17213,17114,10136,24003}
 used_cards=set()
 learn={}
 for school,ids in lessons.items():
@@ -262,9 +262,17 @@ for encounter in encounters:
 extras={'townMap':asset('texture/aries/worldmaps/townmap/haqitownmap_bg.png'),
  'campMap':asset('worlds/myworlds/newuserisland/minimap.png'),
  'music':asset('audio/haqi/ariesregionbgmusics/haqitownbg.ogg',True)}
+previous_content=json.loads((OUT/'chapter.json').read_text(encoding='utf8')) if (OUT/'chapter.json').exists() else {}
+strengthening_catalog={str(gsid):dict(all_items[str(gsid)]) for group in upgrade_groups for gsid in group['gsids'] if str(gsid) in all_items}
+for gsid,item in strengthening_catalog.items():
+    old=previous_content.get('strengtheningCatalog',{}).get(gsid,{})
+    if old.get('artSource',{}).get('entry') in [row['entry'] for row in manifest.get(item['icon'].lower(),[])]:
+        item['art']=old['art'];item['artSource']=old['artSource']
 content={'schemaVersion':1,'contentVersion':'kids-opening-1','title':'魔法哈奇 · 初心之旅',
  'dialogueAdaptations':dialogue_adaptations,'arenas':arenas,
+ 'upgradeSkin':previous_content.get('upgradeSkin',{}),'strengtheningIcons':previous_content.get('strengtheningIcons',{}),
  'schools':schools,'quests':quests,'npcs':npcs,'monsters':monsters,'encounters':encounters,
+ 'strengtheningCatalog':strengthening_catalog,
  'items':items,'cardItems':card_items,'learn':learn,'pet':pet,'upgrade':gear_upgrade,'upgradeGroups':upgrade_groups,'extras':extras,
  'progression':{'xpThresholds':[0,41,114,255,495,869,1418,2479,3654,4654],'levelCap':10},
  'adaptations':[

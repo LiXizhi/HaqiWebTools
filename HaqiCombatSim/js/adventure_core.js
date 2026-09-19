@@ -1,10 +1,12 @@
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
+import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { SCHOOLS } from './combat_params_core.js';
 import { normalizeStats, statIdToEntry, clampDeck } from './combat_unit_core.js';
 import * as Pets from './adventure_pets_core.js';
 import { hashSeed } from './rng_core.js';
 import { equipmentRequirements } from './adventure_item_rules_core.js';
 import { upgradeAt, upgradeLevels, applyUpgradeStats } from './adventure_upgrade_core.js';
+import { findEquipmentInstance, syncEquipmentInstances, validateEquipmentInstances } from './adventure_equipment_instances_core.js';
 import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
 import { resolvePetReward, migrateQuestPetRewards } from './adventure_rewards_core.js';
 export { rewardLabel } from './adventure_rewards_core.js';
@@ -34,7 +36,7 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
     assert(SCHOOLS.includes(school), '请选择魔法学系');
     const save = { schemaVersion: SAVE_VERSION, contentVersion: content.contentVersion, seed: hashSeed(String(seed)),
         name: String(name).trim().slice(0, 16) || '小哈奇', school, appearance: appearance === 'girl' ? 'girl' : 'boy',
-        xp: 0, level: 1, inventory: {}, equipment: {}, upgrades: {}, cards: {}, deck: [], quests: {},
+        xp: 0, level: 1, inventory: {}, equipment: {}, upgrades: {}, equipmentInstances: [], equipmentGuids: {}, nextEquipmentGuid: 1, cards: {}, deck: [], quests: {},
         pet: null, zone: 'camp', position: { x: 860, y: 850 }, facing: 3,
         encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
         visitedTown: false, music: false, tips: {}, revision: 0, bagRulesVersion: 1 };
@@ -151,7 +153,7 @@ export function playerSpec(save, content) {
             if (typeof stats[entry.stat] === 'object') stats[entry.stat][entry.school] = (stats[entry.stat][entry.school] || 0) + Number(value);
             else stats[entry.stat] += Number(value);
         }
-        applyUpgradeStats(stats,upgradeAt(content,iid,save.upgrades[iid]));
+        applyUpgradeStats(stats,upgradeAt(content,iid,findEquipmentInstance(save,content,iid)?.serverdata.addlel||0));
         for (const id of [139,140,141]) {
             const key = content.cardItems[item.stats[id]];
             if (key) fixed.push({ key, count: 1 });
@@ -196,7 +198,7 @@ export function rewardsFor(save, content, quest) {
 }
 export function applyAction(save, content, action) {
     assert(!save.pendingEncounter || ['settle-encounter','retreat'].includes(action.type), '请先完成当前战斗');
-    if(content.pets&&Pets.petAction(save,content,action)){save.revision++;return {changed:true};}
+    if(content.pets&&Pets.petAction(save,content,action)){syncEquipmentInstances(save,content);save.revision++;return {changed:true};}
     const q = currentQuest(save,content);
     switch (action.type) {
     case 'checkin': claimCheckin(save, content, action.now, action.index); break;
@@ -231,7 +233,11 @@ export function applyAction(save, content, action) {
     case 'equip': {
         const item = content.items[action.itemId];
         assert(canEquip(save,item,content), equipmentBlockReason(save,item,content));
+        const instance=findEquipmentInstance(save,content,item.id,action.guid);
+        assert(instance,'找不到这件装备');
+        syncEquipmentInstances(save,content);
         save.equipment[item.slot] = item.id;
+        save.equipmentGuids[item.slot]=instance.guid;
         save.deck = clampDeck(save.deck, { ...deckLimits(save,content), version:'kids' }).deck;
         syncGoals(save,content); break;
     }
@@ -239,17 +245,21 @@ export function applyAction(save, content, action) {
         const slot = Number(action.slot);
         assert(Number.isInteger(slot) && save.equipment[slot], '这个部位没有装备');
         delete save.equipment[slot];
+        if(save.equipmentGuids)delete save.equipmentGuids[slot];
         save.deck = clampDeck(save.deck, { ...deckLimits(save,content), version:'kids' }).deck;
         break;
     }
     case 'upgrade': {
-        const iid = Number(action.itemId), level = save.upgrades[iid] || 0;
+        const instance=findEquipmentInstance(save,content,action.itemId,action.guid);
+        const iid = instance?.gsid, level = instance?.serverdata.addlel || 0;
         assert(content.items[iid] && owns(save,iid) && upgradeLevels(content,iid).length, '请选择已拥有且支持强化的装备');
         const upgrade = upgradeAt(content,iid,level+1);
         assert(upgrade, '装备已达到强化上限');
         const [currency,cost] = upgrade.cost;
         assert((save.inventory[currency] || 0) >= cost, `${content.items[currency]?.name||'强化材料'}不足`);
-        save.inventory[currency] -= cost; save.upgrades[iid] = level + 1;
+        syncEquipmentInstances(save,content);
+        save.inventory[currency] -= cost;
+        save.equipmentInstances.find(row=>row.guid===instance.guid).serverdata.addlel=level+1;
         // PowerAPI_client.lua L191–199: goal 79016 only follows a successful upgrade.
         signal(save,content,'action',79016); syncGoals(save,content); break;
     }
@@ -281,17 +291,17 @@ export function applyAction(save, content, action) {
     case 'deck':
         validDeck(save,content,action.deck); save.deck = clone(action.deck); save.tips.deckEdited = true; save.tips.deckEditedWithBag = save.equipment[24] === 24003; syncGoals(save,content); break;
     case 'travel':
-        assert(['camp','town'].includes(action.zone), '目的地不存在');
-        assert(action.zone !== 'town' || save.graduated, '完成最后的考核后即可前往哈奇小镇');
-        save.zone = action.zone; save.position = action.zone === 'town' ? {x:800,y:810} : {x:950,y:1330};
+        assert(travelStatus(save,content,action.zone).allowed, travelStatus(save,content,action.zone).reason);
+        save.zone = action.zone; save.position = islandSpawn(action.zone);
         if (action.zone === 'town') save.visitedTown = true;
         break;
     case 'retreat':
-        save.pendingEncounter = null; save.position = save.zone === 'camp' ? {x:860,y:850} : {x:800,y:810}; break;
+        save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); save.position = save.zone === 'camp' ? {x:860,y:850} : {x:800,y:810}; break;
     default: throw new Error('未知操作');
     }
     migrateBagRules(save,content);
     syncDeckLayouts(save,content);
+    syncEquipmentInstances(save,content);
     save.revision++;
     return { changed: true, quest: currentQuest(save,content), level: save.level };
 }
@@ -330,14 +340,14 @@ export function settleEncounter(save,content,battle) {
         if (monster.id === 'water-bubble' && battle.rng.int(1,100) <= 20) save.inventory[17114] = (save.inventory[17114] || 0) + 1;
         syncProgression(save,content);
     } else save.position = save.zone === 'camp' ? {x:860,y:850} : {x:800,y:810};
-    save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; migrateBagRules(save,content); save.revision++; return true;
+    save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); save.revision++; return true;
 }
 export function parseSave(raw,content) {
     const s = typeof raw === 'string' ? JSON.parse(raw) : clone(raw);
     if(s?.schemaVersion===1){s.schemaVersion=SAVE_VERSION;if(content.pets){Pets.initializePets(s,content);if(s.pet&&content.pets.legacy_gululu)Pets.addPet(s,content,'legacy_gululu',s.pet.xp);}}
     assert(s && s.schemaVersion === SAVE_VERSION && s.contentVersion === content.contentVersion,'存档版本不兼容');
     validateCheckin(s);
-    assert(SCHOOLS.includes(s.school) && ['camp','town'].includes(s.zone),'存档角色无效');
+    assert(SCHOOLS.includes(s.school) && islandFor(s.zone),'存档角色无效');
     assert(typeof s.name === 'string' && s.name.length <= 16 && ['boy','girl'].includes(s.appearance),'存档外观无效');
     assert(Number.isSafeInteger(s.xp) && s.xp >= 0 && Number.isInteger(s.seed),'存档经验无效');
     assert(Number.isFinite(s.position?.x) && Number.isFinite(s.position?.y) && s.position.x >= 0 && s.position.x <= 1800 && s.position.y >= 0 && s.position.y <= 1600,'存档位置无效');
@@ -348,6 +358,7 @@ export function parseSave(raw,content) {
     assert(Array.isArray(s.rewardedEncounters) && Number.isInteger(s.encounterSerial) && s.encounterSerial >= 0,'存档战斗记录无效');
     assert(new Set(s.rewardedEncounters).size === s.rewardedEncounters.length && s.rewardedEncounters.every(x=>typeof x==='string'), '存档奖励记录无效');
     for(const [id,n] of Object.entries(s.upgrades))assert(content.items[id] && upgradeLevels(content,id).length && owns(s,id) && Number.isInteger(n) && n>=0 && (n===0||upgradeAt(content,id,n)),'存档强化记录无效');
+    validateEquipmentInstances(s,content);
     syncProgression(s,content);
     assert(s.bagRulesVersion===undefined||s.bagRulesVersion===1,'卡包规则版本无效');
     migrateBagRules(s,content);
@@ -363,22 +374,24 @@ export function parseSave(raw,content) {
         previous = !!state?.claimed;
     }
     assert(!s.graduated || s.quests[63013]?.claimed,'毕业记录无效');
-    assert(s.zone !== 'town' || s.graduated,'未解锁哈奇小镇');
+    assert(travelStatus({...s,pendingEncounter:null},content,s.zone).allowed,'未达到岛屿开放等级');
     if (s.pendingEncounter) {
         assert(s.pendingEncounter.id === `${s.seed}:${s.encounterSerial}` && s.pendingEncounter.seed === hashSeed(`${s.seed}:encounter:${s.encounterSerial}`),'存档战斗种子无效');
         assert(JSON.stringify(s.pendingEncounter.player) === JSON.stringify(playerSpec(s,content)), '存档战斗角色无效');
         assert((content.encounters.some(e => e.id === s.pendingEncounter.encounterId && e.zone === s.zone)||specialEncounter(s,content,s.pendingEncounter.encounterId)) && Array.isArray(s.pendingEncounter.decisions) && s.pendingEncounter.decisions.length <= 200 && Number.isInteger(s.pendingEncounter.seed),'存档战斗无效');
     }
     if (s.pet) assert(s.pet.itemId === content.pet.itemId && Number.isSafeInteger(s.pet.xp) && s.pet.xp >= 0 && s.pet.xp <= content.pet.levels.max_exp && s.pet.level === petLevel(s.pet.xp,content),'存档宠物无效');
-    if(content.pets){Pets.validatePets(s,content);if(s.pendingEncounter?.party){assert(JSON.stringify(s.pendingEncounter.party)===JSON.stringify(Pets.partySpecs(s,content,playerSpec(s,content))),'存档阵容无效');const encounter=content.encounters.find(e=>e.id===s.pendingEncounter.encounterId)||specialEncounter(s,content,s.pendingEncounter.encounterId);assert(JSON.stringify(s.pendingEncounter.monster)===JSON.stringify(encounter.monster||content.monsters[encounter.monsterId]),'存档敌人无效');assert(s.pendingEncounter.captureStock===(s.inventory[Pets.CAPTURE_ID]||0)&&s.pendingEncounter.heroLevel===s.level,'存档捕获记录无效');}}
+    const petContent=content.pets?Pets.migratePetDeckRules(s,content):content;
+    if(content.pets){Pets.validatePets(s,petContent);if(s.pendingEncounter?.party){assert(JSON.stringify(s.pendingEncounter.party)===JSON.stringify(Pets.partySpecs(s,petContent,playerSpec(s,content))),'存档阵容无效');const encounter=content.encounters.find(e=>e.id===s.pendingEncounter.encounterId)||specialEncounter(s,content,s.pendingEncounter.encounterId);assert(JSON.stringify(s.pendingEncounter.monster)===JSON.stringify(encounter.monster||content.monsters[encounter.monsterId]),'存档敌人无效');assert(s.pendingEncounter.captureStock===(s.inventory[Pets.CAPTURE_ID]||0)&&s.pendingEncounter.heroLevel===s.level,'存档捕获记录无效');}}
     if(s.pendingEncounter?.party){
         assert(JSON.stringify(s.pendingEncounter.petIds)===JSON.stringify(s.formation.filter(Boolean)),'存档宠物奖励阵容无效');
-        if(s.pendingEncounter.adventureParams)assert(JSON.stringify(s.pendingEncounter.adventureParams)===JSON.stringify(Pets.petParams(content)),'存档养成参数无效');
+        if(s.pendingEncounter.adventureParams)assert(JSON.stringify(s.pendingEncounter.adventureParams)===JSON.stringify(Pets.petParams(petContent)),'存档养成参数无效');
     }
     syncProgression(s,content); validDeck(s,content,s.deck);
     if(s.deckLayouts!==undefined)validateDeckLayouts(s,content,s.deckLayouts,s.activeDeckLayout);
     syncDeckLayouts(s,content);
     migrateQuestPetRewards(s,content,rewardsFor);
+    syncEquipmentInstances(s,content);
     return s;
 }
 

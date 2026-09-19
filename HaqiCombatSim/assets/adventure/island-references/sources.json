@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "usage": "design-reference-only",
+  "maps": [
+    {
+      "id": "town",
+      "name": "哈奇岛",
+      "sourceEntry": "texture/aries/worldmaps/townmap/haqitownmap_bg.png.p,9cff554bdaf9f60338232c25bd9e46b8,856931",
+      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/townmap/haqitownmap_bg.png.p,9cff554bdaf9f60338232c25bd9e46b8,856931",
+      "sourceMd5": "9cff554bdaf9f60338232c25bd9e46b8",
+      "sourceSha256": "ba88d3d7365439bd58c015fd3c79fdc23d768fa9f1ebacffde4d1ded4ae737ae",
+      "local": "assets/adventure/island-references/town.webp",
+      "width": 1024,
+      "height": 1024,
+      "size": 87118,
+      "sha256": "29ff267ebfe7595b393d8fed13b2087acef7eda5e1d8c95ff95210dc23d1655f",
+      "losslessAttemptBytes": 612116
+    },
+    {
+      "id": "fire",
+      "name": "火鸟岛",
+      "sourceEntry": "texture/aries/worldmaps/flamingphoenixisland/flamingphoenixisland_bg.png.p,1fd7fe52efb69212a4347d8f89af8e05,678326",
+      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/flamingphoenixisland/flamingphoenixisland_bg.png.p,1fd7fe52efb69212a4347d8f89af8e05,678326",
+      "sourceMd5": "1fd7fe52efb69212a4347d8f89af8e05",
+      "sourceSha256": "2265f285343bbaa7258f299126d6584bd61e7e93cdc71f87c1d50d509462b158",
+      "local": "assets/adventure/island-references/fire.webp",
+      "width": 1024,
+      "height": 512,
+      "size": 63254,
+      "sha256": "72410eb82f096efe9b41c6c940e510204dd60ef871baf974ba1fe83da561aa37",
+      "losslessAttemptBytes": 453578
+    },
+    {
+      "id": "ice",
+      "name": "寒冰岛",
+      "sourceEntry": "texture/aries/worldmaps/frostroarisland/loginisland_frostroarisland_bg_32bits.png.p,04b49f8fc6e5c3ef91e317a2138fb4b5,655970",
+      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/frostroarisland/loginisland_frostroarisland_bg_32bits.png.p,04b49f8fc6e5c3ef91e317a2138fb4b5,655970",
+      "sourceMd5": "04b49f8fc6e5c3ef91e317a2138fb4b5",
+      "sourceSha256": "1eaa9431a812182b70edc614309b6db6e604257c216c3165f476f6b39301b139",
+      "local": "assets/adventure/island-references/ice.webp",
+      "width": 1024,
+      "height": 1024,
+      "size": 65476,
+      "sha256": "fc1a4a835de9ad6cc8be4cf27f582fd6b601b66a1e926e67b991d65f6276a80b",
+      "losslessAttemptBytes": 474514
+    },
+    {
+      "id": "desert",
+      "name": "沙漠岛",
+      "sourceEntry": "texture/aries/worldmaps/ancientegyptisland/loginisland_ancientegyptisland_bg_32bits.png.p,8e6ec8e227c0936761152f5730f5033b,648366",
+      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/ancientegyptisland/loginisland_ancientegyptisland_bg_32bits.png.p,8e6ec8e227c0936761152f5730f5033b,648366",
+      "sourceMd5": "8e6ec8e227c0936761152f5730f5033b",
+      "sourceSha256": "7befd0aab530bec2e0c9427c26b6efe900f0c01ceeb70b51314adc9ac73c28b1",
+      "local": "assets/adventure/island-references/desert.webp",
+      "width": 1024,
+      "height": 1024,
+      "size": 71956,
+      "sha256": "0ac5033ee981129045b2983ad2000eb989453ae0830e7d803b3f5631f8005fba",
+      "losslessAttemptBytes": 440818
+    },
+    {
+      "id": "dark",
+      "name": "幽暗岛",
+      "sourceEntry": "texture/aries/worldmaps/darkforestisland/loginisland_darkforestisland_bg.png.p,be418cc8282f0357ea717992c9d135e5,687284",
+      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/darkforestisland/loginisland_darkforestisland_bg.png.p,be418cc8282f0357ea717992c9d135e5,687284",
+      "sourceMd5": "be418cc8282f0357ea717992c9d135e5",
+      "sourceSha256": "2260fe291659284ee69ab47ffb07f2b54f918102e9b07516001e9460871094f2",
+      "local": "assets/adventure/island-references/dark.webp",
+      "width": 1024,
+      "height": 1024,
+      "size": 58272,
+      "sha256": "c7bf2e8f3de49bb732d2eead82c96947e3516b14f7b3d0e1f93e28b8a338db79",
+      "losslessAttemptBytes": 473940
+    }
+  ]
+}

@@ -1,6 +1,7 @@
+import { equipmentInstances, findEquipmentInstance } from './adventure_equipment_instances_core.js';
 import { equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
 import { equipmentRequirements } from './adventure_item_rules_core.js';
-import { upgradeLevels, upgradeAt, upgradeAttributes } from './adventure_upgrade_core.js';
+import { upgradeLevels } from './adventure_upgrade_core.js';
 import { EQUIPMENT_SLOTS, equipmentAttributes, equipmentCards, equipmentSummary, previewEquipment } from './adventure_equipment_core.js';
 
 // DOM only; mutations are dispatched through the adventure controller.
@@ -12,7 +13,7 @@ export function renderEquipment(body,model,cb,ui) {
     const shell=el('div','equipment-layout'),character=el('section','equipment-character'),wardrobe=el('section','equipment-wardrobe');
     const tabs=el('div','equipment-tabs');
     for(const [id,label] of [['gear','角色装备'],['all','旅途背包'],['upgrade','强化装备']]) {
-        const b=button(label,()=>{state.tab=id;state.slot=0;state.query='';state.item=null;render();},`secondary ${state.tab===id?'active':''}`);
+        const b=button(label,()=>{if(id==='upgrade'&&cb.panel){cb.panel('upgrade');return;}state.tab=id;state.slot=0;state.query='';state.item=null;render();},`secondary ${state.tab===id?'active':''}`);
         b.setAttribute('aria-pressed',String(state.tab===id));tabs.append(b);
     }
     body.append(tabs,shell);
@@ -56,7 +57,7 @@ export function renderEquipment(body,model,cb,ui) {
         if(!items.some(item=>item.id===state.item))state.item=items[0]?.id||null;
         for(const item of items) {
             const equipped=Number(save.equipment[item.slot])===item.id;
-            const b=button([art(assets,item.art,52,52),el('span','equipment-item-name',item.name),el('small','',equipped?'已装备':`拥有 ${save.inventory[item.id]}`)],()=>{state.item=item.id;paintList();detail.scrollIntoView({block:'nearest',behavior:'smooth'});},`equipment-item ${equipped?'equipped':''} ${state.item===item.id?'selected':''}`);
+            const b=button([art(assets,item.art,52,52),el('span','equipment-item-name',item.name),el('small','',equipped?'已装备':`拥有 ${save.inventory[item.id]}`)],()=>{state.item=item.id;state.guid=null;paintList();detail.scrollIntoView({block:'nearest',behavior:'smooth'});},`equipment-item ${equipped?'equipped':''} ${state.item===item.id?'selected':''}`);
             b.setAttribute('aria-pressed',String(state.item===item.id));grid.append(b);
         }
         if(!items.length)grid.append(el('p','equipment-empty-list',state.query?'没有找到匹配的物品。':state.slot?'这个部位还没有装备。完成导师任务可以获得。':'背包还空着。去找青龙导师开启旅程吧。'));
@@ -64,27 +65,22 @@ export function renderEquipment(body,model,cb,ui) {
     }
     function paintDetail(item){
         detail.replaceChildren();if(!item){detail.append(el('p','muted','选择一件物品，查看属性、穿戴条件和获取途径。'));return;}
-        const equipped=Number(save.equipment[item.slot])===item.id,gear=isGear(item),level=save.upgrades[item.id]||0;
+        const instance=findEquipmentInstance(save,c,item.id,state.guid)||findEquipmentInstance(save,c,item.id);
+        const equipped=Number(save.equipment[item.slot])===item.id&&(!save.equipmentGuids?.[item.slot]||save.equipmentGuids[item.slot]===instance?.guid),gear=isGear(item),level=instance?.serverdata.addlel||0;
+        if(gear){
+            const copies=equipmentInstances(save,c).rows.filter(row=>row.gsid===item.id);
+            if(copies.length>1){const select=el('select','equipment-instance-select');select.setAttribute('aria-label','选择装备实例');copies.forEach((row,i)=>{const option=el('option','',`第 ${i+1} 件 · 强化 +${row.serverdata.addlel}${row.guid===save.equipmentGuids?.[item.slot]?' · 已装备':''}`);option.value=row.guid;select.append(option);});select.value=instance.guid;select.onchange=()=>{state.guid=select.value;paintDetail(item);};detail.append(select);}
+        }
         detail.append(el('div','equipment-detail-heading',art(assets,item.art,64,64),el('div','',el('p','eyebrow',equipped?'正在装备':gear?'装备详情':'物品详情'),el('h3','',item.name),el('p','muted',`拥有 ${save.inventory[item.id]} 件${level?` · 强化 +${level}`:''}`))));
-        if(upgradeLevels(c,item.id).length){
-            const next=upgradeAt(c,item.id,level+1);
-            if(next){
-                const [currency,cost]=next.cost,held=save.inventory[currency]||0;
-                const name=c.items[currency]?.name||`材料（${currency}）`;
-                detail.append(el('h4','','强化装备'),el('p','muted',`强化 +${level+1}：${upgradeAttributes(next).map(row=>`${row.label} +${row.value}${row.unit}`).join('、')}（累计）`),el('p','muted',`消耗 ${cost} ${name} · 持有 ${held}。强化保留在装备上，穿戴后属性生效。`));
-                const b=button(held>=cost?`强化 · ${cost} ${name}`:`${name}不足 · 需要 ${cost}`,()=>cb.action({type:'upgrade',itemId:item.id}),'primary');
-                b.disabled=held<cost||!!save.pendingEncounter;detail.append(b);
-                if(!c.items[currency])detail.append(el('p','equipment-warning','此档需要的原版材料尚未接入当前旅途，暂时无法继续强化。'));
-            }else detail.append(el('p','muted','已达到原版配置的强化上限。'));
-        }else if(gear)detail.append(el('p','muted','原版强化配置未包含此装备。'));
+        if(upgradeLevels(c,item.id).length)detail.append(button('装备强化',()=>cb.panel?.('upgrade',{itemId:item.id,guid:instance?.guid}),'primary'));
         if(gear){
             const requirements=equipmentRequirements(item),school=Object.keys(c.schools).find(key=>c.schools[key]===requirements.school);
             detail.append(el('p','muted',`${EQUIPMENT_SLOTS.find(s=>s.id===item.slot)?.name||'装备'} · 等级 ${requirements.level} · ${school?SCHOOL_NAMES[school]+'系':'全学系通用'}`));
             const attrs=el('div','equipment-attributes');
-            for(const row of equipmentAttributes(item,save,c))attrs.append(el('span','',`${row.label} +${row.value}${row.unit}`));
+            for(const row of equipmentAttributes(item,save,c,instance?.guid))attrs.append(el('span','',`${row.label} +${row.value}${row.unit}`));
             detail.append(attrs);
             const reason=equipmentBlockReason(save,item,c);
-            const action=equipped?{type:'unequip',slot:item.slot}:{type:'equip',itemId:item.id};
+            const action=equipped?{type:'unequip',slot:item.slot}:{type:'equip',itemId:item.id,guid:instance?.guid};
             if(!reason){
                 const preview=previewEquipment(save,c,action),changes=preview.rows.filter(row=>row.delta);
                 const previous=c.items[save.equipment[item.slot]];

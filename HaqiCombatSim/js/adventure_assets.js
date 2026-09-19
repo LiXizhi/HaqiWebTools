@@ -61,6 +61,7 @@ export async function loadResources(progress) {
     }
     const [catalog,candidates,kidsCards,kidsCharms,cardNames]=await Promise.all([json('data/adventure/pets.json'),json('data/adventure/shop-candidates.json'),json('data/kids/cards.json'),json('data/kids/charms.json'),json('data/kids/card_names.json')]);
     installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames);
+    for(const [id,entry] of Object.entries(content.strengtheningIcons||{}))lazyImages.set(id,entry);
     const shopIcons=await json('data/adventure/shop-icons.json');
     for(const [id,entry] of Object.entries(shopIcons.entries))lazyImages.set(id,entry);
     for(const [id,ref] of Object.entries(shopIcons.items))if(content.items[id]&&!content.items[id].art){content.items[id].art=ref;content.items[id].iconFallback=!!shopIcons.fallbacks[id];}

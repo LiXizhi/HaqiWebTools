@@ -23,7 +23,7 @@ test('all schools and starters deal only six player cards; pet pile is separatel
         const battle=B.restorePveBattle(dataset,content,save.pendingEncounter),hero=battle.sides.near[0];
         assert.equal(U.cardsInHand(hero).length,6);assert.equal(U.deckRemaining(hero),6);
         assert.ok(U.cardsInHand(hero).every(h=>save.deck.some(row=>row.key===h.key)));
-        assert.equal(U.petCardsInHand(hero).length,6);
+        assert.equal(U.petCardsInHand(hero).length,2);
         assert.ok(U.petCardsInHand(hero).every(h=>h.seq>=U.PET_CARD_SEQ_BASE&&save.pets[starter].deck.some(row=>row.key===h.key)));
         assert.deepEqual(A.parseSave(save,content).pendingEncounter,save.pendingEncounter);
     }
@@ -35,7 +35,7 @@ test('pet selection spends one chosen copy and hero mana without consuming or re
     const decision={...pick,targetId:'mob0'};
     assert.deepEqual(resolveHandSwipe(battle,pick).decision,{...decision,discardSeqs:[]});
     B.playPveRound(battle,decision);
-    assert.equal(U.petCardsInHand(hero).length,5);
+    assert.equal(U.petCardsInHand(hero).length,1);
     assert.deepEqual(U.cardsInHand(hero),own);assert.deepEqual(hero.deckMap,maps);
     const cast=battle.events.find(e=>e.type==='cast'&&e.caster==='hero');
     assert.equal(cast.realcost,1);
@@ -56,15 +56,18 @@ test('pet fizzle retains the chosen copy; unavailable, discarded and forged pet 
     battle.resolved.cards[pick.key].accuracy=-10000;
     B.playPveRound(battle,decision);
     assert.ok(battle.events.some(e=>e.type==='fizzle'&&e.caster==='hero'));
-    assert.equal(U.petCardsInHand(hero).length,6);assert.equal(JSON.stringify(hero.deckSeq),own);
+    assert.equal(U.petCardsInHand(hero).length,2);assert.equal(JSON.stringify(hero.deckSeq),own);
 });
 test('normal hand can empty without hiding pet cards; replay preserves both piles and RNG',()=>{
-    const save=fresh();A.beginEncounter(save,content,'fire-scout');
+    const save=fresh(),pet=save.pets.dragon_green;
+    const free=P.petLessons(pet,content).find(lesson=>lesson.level<=pet.level&&dataset.cards[lesson.key].pipcost===0);
+    A.applyAction(save,content,{type:'pet-deck',petId:'dragon_green',deck:[{key:free.key,count:2}]});
+    A.beginEncounter(save,content,'fire-scout');
     const battle=B.restorePveBattle(dataset,content,save.pendingEncounter),hero=battle.sides.near[0];
     const pick=U.petCardsInHand(hero).find(h=>battle.resolved.cards[h.key].pipcost===0);
     const decision={...pick,targetId:'mob0',discardSeqs:U.cardsInHand(hero).map(h=>h.seq)};
     B.playPveRound(battle,decision);A.recordDecision(save,decision);
-    assert.equal(U.cardsInHand(hero).length,0);assert.equal(U.petCardsInHand(hero).length,5);
+    assert.equal(U.cardsInHand(hero).length,0);assert.equal(U.petCardsInHand(hero).length,1);
     const replay=B.restorePveBattle(dataset,content,A.parseSave(save,content).pendingEncounter);
     assert.deepEqual(replay.events,battle.events);assert.equal(replay.rng.state(),battle.rng.state());
     assert.deepEqual(U.petCardsInHand(replay.sides.near[0]),U.petCardsInHand(hero));

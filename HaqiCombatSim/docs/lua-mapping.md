@@ -204,7 +204,7 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 - `script/apps/Aries/Combat/ServerObject/player_server.lua` L3434–3474：强化对应111全系攻击、151绝对攻击、159绝对抗性、101生命、196暴击、204韧性，六项进入已穿戴装备属性。
 - `script/kids/3DMapSystemItem/ServerObject/PowerAPI_client.lua` L191–199：成功回复 SetItemAddonLevel 后触发79016；本地成功强化任意支持装备后触发。删除旧网页“只要已有强化装备就自动完成”的差异。背包强化不要求先穿戴。
 - 本机原 XML 缺失，数据从相邻 HaqiCombatEmulator/data/kids/ruleset.json 的 addons 提取；其 manifest 与本项目已存源 XML SHA-256 均为 c6bf06c76180997bfcd5e18d959ab179089c0f3d43fc483cbfd492e3e20cfb8f。468个GSID按相同配置合为9组。scripts/import_upgrade_snapshot.mjs 强制检查来源哈希，常规 export_adventure.py 仍从原 XML 导出。
-- 边界：网页仍按 GSID 而非 GUID 存装备，多件同款共用强化记录；不调用原服强化服务、不声称已验证服务端持久化。未收录高阶材料时保留原要求并提示不可用，未增加替代货币或材料获取方式。原版全装备、宝石、套装仍需实例模型支持。
+- 本次初版的 GSID 共用强化限制已由下方“完整强化窗口与实例”实现替代；原服接口、宝石操作及套装系统仍是独立范围。
 
 ### 2026-09-19：普通手牌与宠物卡分离
 - player_server.lua `ShuffleFollowPetCards` L773–800：独立牌序和状态，全部宠物卡开战可选；kids 按实例 RNG 随机权重排序。
@@ -212,3 +212,12 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 - `HasCard` L5253–5267、`UseCard` L5332–5335 / L5379–5390：宠物卡使用 10000 偏移序号，成功消耗指定副本，失误不移入普通卡尾；JS 普通序号从 0 开始，对应宠物序号从 10000 开始。
 - MyCards.lua `GetFollowPetCardItems2` L236 起：独立宠物选牌列表。网页用手牌下方按钮切换列表，复用主角魔力、目标、冷却和一回合一次行动规则。
 - 用户明确无需兼容旧存档；不保留旧的宠物牌混入 fixedCards 的重演分支。新存档保存 petCards 起始规格，通过独立序号的决定序列重演。
+
+### 2026-09-19 完整强化窗口与实例
+
+- `Avatar_equip_upgrade.kids.html`：750×450桌面窗口、左侧装备/箭头/下一级累计属性/材料/强化按钮、右侧七分类及4×3分页。`Avatar_equip_upgrade.lua` L92–118 保留 GetProps 标签（原版固定防御也显示百分号，计算仍按绝对值）；L149–170 分类和10级以内自动选择1912；一次操作升一级，不增加概率、保护道具或替代材料。
+- `Avatar_equipment_subpage.lua` L176–257：已穿戴与背包实例都可选择，满级实例不再列入，排除17233–17248魔法书。`script/kids/3DMapSystemItem/Item_CombatApparel.lua` L619–644：实例保存 serverdata.addlel，强化只改此字段，保留 gem.ins / gem.holecnt。
+- `adventure_equipment_instances_core.js` 以本地 GUID 区分同款装备；穿戴 GUID 决定战斗和比较属性。旧 GSID 存档只将既有强化赋给第一件，不复制给所有同款；导入校验、云检查点、调试物品增减同步实例。
+- `strengtheningCatalog` 补齐468件原定义（包括商城等级上限外装备），导入脚本核对原数据库及强化XML快照哈希。仅补充定义，不制造高阶装备售价。材料只有17213仙豆及17487祝福魔珠；魔珠说明保留原出处，未伪造尚未实现的原副本掉落。
+- 15张原版UI纹理从 assets_manifest.txt 对应原始文件无损转为 WebP；缺失的115件图标整理为4张图集。19张资源均使用已上传且核验SHA-256及CORS的永久Keepwork CDN，保留原清单条目、哈希、裁剪和本地副本。
+- 浏览器适配：手机单列，错误/成功为窗口内状态信息，键盘可操作；本地同步操作代替原 PowerAPI 服务回复，不冒充原服联网或服务端持久化。宝石镶嵌、装备继承是其他系统；本次仅保留其已有实例数据。

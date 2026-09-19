@@ -9,6 +9,10 @@ export function installExpansion(content,dataset,catalog,candidates,kidsCards,ki
  content.equipmentExportReport=[];
  const addCard=key=>{const card=kidsCards[key];if(!card||!isSupportedType(card.type))return false;const base=key.replace(/_(Binding|1000Accuracy)$/,'');const schoolName={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡'}[card.spellSchool]||'通用';dataset.cards[key]??={...card,name:cardNames[key]||cardNames[base]||`${schoolName}秘法（${card.pipcost}魔力）`};return true;};
  dataset.charms=kidsCharms;
+ for(const item of Object.values(content.strengtheningCatalog||{})){
+  content.items[item.id]??=structuredClone(item);
+  for(const stat of [139,140,141]){const key=content.cardItems[item.stats[stat]];if(key)addCard(key);}
+ }
  for(const pet of Object.values(content.pets)){
   for(const lesson of pet.lessons)if(!addCard(lesson.key))throw Error('宠物卡牌未支持 '+lesson.key);
   content.shop.push({id:'pet:'+pet.id,kind:'pet',petId:pet.id,name:pet.name,level:pet.unlockLevel,school:pet.school});

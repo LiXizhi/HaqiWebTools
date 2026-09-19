@@ -4,22 +4,48 @@ import { bindTouchMovement } from '../js/view_adventure_movement.js';
 import { createRenderer } from '../js/adventure_renderer.js';
 
 function setup() {
-    const surface=new EventTarget(),captures=new Set(),values=[],zooms=[];
+    const surface=new EventTarget(),captures=new Set(),values=[],zooms=[],taps=[];
     surface.clientHeight=720;
     surface.setPointerCapture=id=>captures.add(id);
     surface.hasPointerCapture=id=>captures.has(id);
     surface.releasePointerCapture=id=>captures.delete(id);
     const indicator={hidden:true,style:{},firstElementChild:{style:{}}};
     let enabled=true;
-    const input=bindTouchMovement(surface,indicator,{enabled:()=>enabled,steer:(x,y)=>values.push([x,y]),zoom:factor=>zooms.push(factor)});
+    const input=bindTouchMovement(surface,indicator,{enabled:()=>enabled,steer:(x,y)=>values.push([x,y]),zoom:factor=>zooms.push(factor),tap:(x,y)=>{assert.deepEqual(values.at(-1),[0,0]);taps.push([x,y]);}});
     const send=(type,props={})=>{
         const event=new Event(type,{cancelable:true});
         Object.assign(event,{pointerId:1,pointerType:'touch',button:0,clientX:200,clientY:300},props);
         surface.dispatchEvent(event);
         return event;
     };
-    return {send,input,indicator,captures,values,zooms,disable:()=>{enabled=false;},last:()=>values.at(-1)};
+    return {send,input,indicator,captures,values,zooms,taps,disable:()=>{enabled=false;},last:()=>values.at(-1)};
 }
+
+test('touch and pen taps interact once after stopping, with tolerance for finger jitter',()=>{
+    for(const pointerType of ['touch','pen']){
+        const s=setup();s.send('pointerdown',{pointerType});assert.ok(s.indicator.hidden);
+        s.send('pointermove',{pointerType,clientX:203});assert.ok(s.indicator.hidden);
+        s.send('pointerup',{pointerType,clientX:203});
+        assert.deepEqual(s.taps,[[203,300]]);
+        s.send('lostpointercapture');assert.equal(s.taps.length,1);
+    }
+});
+
+test('drag returning to its origin, pinch, cancellation and disabled input never tap',()=>{
+    for(const gesture of ['drag','pinch','pointercancel','lostpointercapture','disable','reset','releaseFar']){
+        const s=setup();s.send('pointerdown');
+        if(gesture==='drag'){
+            s.send('pointermove',{clientX:220});assert.equal(s.indicator.hidden,false);
+            s.send('pointermove');
+        }else if(gesture==='pinch'){
+            s.send('pointerdown',{pointerId:2,clientX:300});s.send('pointerup',{pointerId:2,clientX:300});
+        }else if(gesture==='disable')s.disable();
+        else if(gesture==='reset')s.input.reset();
+        else if(gesture!=='releaseFar')s.send(gesture);
+        s.send('pointerup',gesture==='releaseFar'?{clientX:250}:{});
+        assert.deepEqual(s.taps,[],gesture);assert.ok(s.indicator.hidden);
+    }
+});
 test('touch starts stationary at the contact point, steers relative to it and stops on release',()=>{
     const s=setup();s.send('pointerdown');assert.deepEqual(s.last(),[0,0]);
     assert.equal(s.indicator.style.left,'200px');assert.equal(s.indicator.style.top,'300px');

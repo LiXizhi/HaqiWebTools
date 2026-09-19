@@ -1,6 +1,6 @@
 // Touch input stays in screen coordinates: camera motion never changes the heading.
-export function bindTouchMovement(surface,indicator,{enabled,steer,zoom=()=>{}}) {
-    let origin=null,pinching=false,pinchDistance=0;
+export function bindTouchMovement(surface,indicator,{enabled,steer,zoom=()=>{},tap=()=>{}}) {
+    let origin=null,pinching=false,pinchDistance=0,dragging=false;
     const contacts=new Map();
     const radius=43,deadZone=6;
     function span() {
@@ -8,7 +8,7 @@ export function bindTouchMovement(surface,indicator,{enabled,steer,zoom=()=>{}})
         return b?Math.hypot(b.x-a.x,b.y-a.y):0;
     }
     function reset() {
-        const ids=[...contacts.keys()];contacts.clear();origin=null;pinching=false;pinchDistance=0;
+        const ids=[...contacts.keys()];contacts.clear();origin=null;pinching=false;pinchDistance=0;dragging=false;
         indicator.hidden=true;steer(0,0);
         for(const id of ids)if(surface.hasPointerCapture(id))surface.releasePointerCapture(id);
     }
@@ -26,10 +26,10 @@ export function bindTouchMovement(surface,indicator,{enabled,steer,zoom=()=>{}})
             pinching=true;pinchDistance=span();origin=null;
             indicator.hidden=true;steer(0,0);return;
         }
-        origin={x:e.clientX,y:e.clientY};
+        origin={x:e.clientX,y:e.clientY};dragging=false;
         indicator.style.left=`${origin.x}px`;indicator.style.top=`${origin.y}px`;
         indicator.firstElementChild.style.transform='translate(-50%,-50%)';
-        indicator.hidden=false;steer(0,0);
+        indicator.hidden=true;steer(0,0);
     });
     surface.addEventListener('pointermove',e=>{
         if(!contacts.has(e.pointerId))return;
@@ -42,6 +42,8 @@ export function bindTouchMovement(surface,indicator,{enabled,steer,zoom=()=>{}})
             pinchDistance=next;return;
         }
         const x=e.clientX-origin.x,y=e.clientY-origin.y,length=Math.hypot(x,y);
+        if(length>deadZone)dragging=true;
+        indicator.hidden=!dragging;
         const scale=length?Math.min(radius,length)/length:0;
         indicator.firstElementChild.style.transform=`translate(-50%,-50%) translate(${x*scale}px,${y*scale}px)`;
         const speed=Math.max(0,Math.min(1,(length-deadZone)/(radius-deadZone)));
@@ -49,10 +51,14 @@ export function bindTouchMovement(surface,indicator,{enabled,steer,zoom=()=>{}})
     });
     for(const type of ['pointerup','pointercancel','lostpointercapture'])surface.addEventListener(type,e=>{
         if(!contacts.has(e.pointerId))return;
+        const tapped=type==='pointerup'&&enabled()&&!pinching&&!dragging&&origin
+            &&Math.hypot(e.clientX-origin.x,e.clientY-origin.y)<=deadZone;
         contacts.delete(e.pointerId);
         if(surface.hasPointerCapture(e.pointerId))surface.releasePointerCapture(e.pointerId);
         // After a pinch, one remaining finger must not unexpectedly start walking.
         if(!contacts.size)reset();else pinchDistance=span();
+        // Stop steering before the callback creates an interaction path.
+        if(tapped)tap(e.clientX,e.clientY);
     });
     return {reset};
 }

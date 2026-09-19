@@ -48,8 +48,8 @@ function resetMovementInput(){keys.clear();joystick={x:0,y:0};heldPointer=null;t
 const touchIndicator=V.el('div','touch-joystick floating-joystick active',V.el('span','joystick-stick'));
 touchIndicator.hidden=true;touchIndicator.setAttribute('aria-hidden','true');nodes.world.parentElement.append(touchIndicator);
 const touchMovement=bindTouchMovement(nodes.world,touchIndicator,{enabled:()=>stage==='world'&&!panel&&!dialog,steer:(x,y)=>{joystick={x,y};path=[];destination=null;heldPointer=null;},zoom:factor=>renderer?.zoomBy(factor),tap:(x,y)=>{
-    const {target}=pickWorldTarget(x,y);
-    if(target)walkTo(target,true);
+    const {p,target}=pickWorldTarget(x,y);
+    walkTo(target||p,!!target);
 }});
 const shopView={category:'pet',query:'',school:'',slot:'',ownership:'',page:0},petView={selected:null};
 const equipmentView={tab:'gear',slot:0,item:null,query:''};

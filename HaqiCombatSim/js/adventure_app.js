@@ -25,6 +25,8 @@ import { createRenderer } from './adventure_renderer.js';
 import { createCloudClient } from './adventure_cloud.js';
 import { checkedProgress } from './adventure_cloud_core.js';
 import { renderCloud } from './view_adventure_cloud.js';
+import { renderLocalMap } from './view_adventure_local_map.js';
+import { regionAt } from './adventure_island_layout_core.js';
 import { createRoleStore } from './adventure_roles.js';
 import { MAX_ROLES } from './adventure_roles_core.js';
 import { renderRoles } from './view_adventure_roles.js';
@@ -91,6 +93,7 @@ function persist() {
 function close() {nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>openPanel('membership'),cloud:openCloud,track,interact:interactNearest});}
 function paintPanel() {
+    if(panel==='localmap'&&world.layout){renderLocalMap(nodes.overlay,world,save,{close,draw:canvas=>renderer.minimap(canvas,world,save),walk:target=>walkTo(target,true)});return;}
     if(panel==='cloud'){paintCloud();return;}
     if(!panel)return;
     const equipment=['equipment','inventory','shop','pet'].includes(panel);
@@ -318,6 +321,7 @@ function interact(target) {
         if(talk)startQuestTalk(talk);else paintDialogue();
     }
     if(target.kind==='portal')travel(target.zone);
+    if(target.kind==='landmark')toast(`${target.name}：${target.description}`);
     if(target.kind==='encounter')safely(()=>{
         A.beginEncounter(save,assets.content,target.id);persist();
         battle=P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';close();nodes.hud.hidden=true;
@@ -335,7 +339,7 @@ function track() {
     const c=assets.content,q=A.currentQuest(save,c);
     if(!q){walkTo({...world.portal,kind:'portal'},true);return;}
     if(save.zone!==c.npcs[q.startNpc].zone){travel(c.npcs[q.startNpc].zone);if(save.zone!==c.npcs[q.startNpc].zone)return;}
-    const npc=id=>({...c.npcs[id],kind:'npc',questDialogue:true}),state=A.questState(save,q.id);
+    const npc=id=>({...world.npcs.find(n=>n.id===id),kind:'npc',questDialogue:true}),state=A.questState(save,q.id);
     if(!state.accepted){walkTo(npc(q.startNpc),true);return;}
     if(A.questReady(save,q)){walkTo(npc(q.endNpc),true);return;}
     const goal=A.questProgress(save,q).find(g=>g.value<g.count);
@@ -421,7 +425,7 @@ document.addEventListener('visibilitychange',()=>{spellSound.stop();if(document.
 window.addEventListener('pagehide',()=>spellSound.stop());
 function pickWorldTarget(clientX,clientY) {
     const rect=nodes.world.getBoundingClientRect(),p=renderer.screenToWorld(clientX-rect.left,clientY-rect.top);
-    const targets=[...world.npcs.map(n=>({...n,kind:'npc'})),...world.encounters.map(n=>({...n,kind:'encounter'})),{...world.portal,kind:'portal'}];
+    const targets=[...world.npcs.map(n=>({...n,kind:'npc'})),...world.encounters.map(n=>({...n,kind:'encounter'})),...(world.landmarks||[]).map(n=>({...n,kind:'landmark'})),{...world.portal,kind:'portal'}];
     const target=targets.filter(n=>Math.abs(n.x-p.x)<48&&p.y>n.y-100&&p.y<n.y+35).sort((a,b)=>W.distance(a,p)-W.distance(b,p))[0];
     return {p,target};
 }
@@ -461,7 +465,8 @@ function frame(now) {
         if(moving)save.facing=Math.abs(dx)>Math.abs(dy)?(dx<0?1:2):(dy<0?3:0);
         if(destination&&W.distance(save.position,destination)<82)interact(destination);
         const near=W.nearestInteraction(world,save.position),button=$('interact');
-        if(button){button.hidden=!near;if(near)button.textContent=near.kind==='npc'?`与${near.name}交谈`:near.kind==='portal'?near.name:`挑战${assets.content.monsters[near.monsterId].name}`;}
+        if(world.layout){const label=nodes.hud.querySelector('.location-label small'),region=regionAt(world,save.position);if(label&&label.textContent!==region.name)label.textContent=region.name;}
+        if(button){button.hidden=!near;if(near)button.textContent=near.kind==='npc'?`与${near.name}交谈`:near.kind==='landmark'?`查看${near.name}`:near.kind==='portal'?near.name:`挑战${assets.content.monsters[near.monsterId].name}`;}
         if((wasMoving&&!moving)||(moving&&now-lastSave>3000))persist();
     }
     const rewardEffect=rewardFeedback.tick(now,stage==='world'&&!panel&&!dialog);

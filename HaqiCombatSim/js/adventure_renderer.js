@@ -6,8 +6,9 @@ import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
 import { battleActorAction } from './actor_animation_core.js';
 import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES } from './adventure_core.js';
-import { onIsland,distance } from './adventure_world_core.js';
+import { onIsland,distance,nearbyWorldObjects } from './adventure_world_core.js';
 import { OCEAN_COLOR, paintTerrain } from './adventure_terrain.js';
+import { paintLargeTerrain,createTerrainTileCache } from './adventure_large_terrain.js';
 export const COLORS={fire:'#e98f44',ice:'#6ecbdc',storm:'#b39aea',life:'#84bd59',death:'#a887c7'};
 const TAU=Math.PI*2;
 function ellipse(c,x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);c.fill();}
@@ -32,6 +33,8 @@ export function questMarker(save,content,npcId) {
 export function createRenderer(canvas,assets) {
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const ctx=canvas.getContext('2d'),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
+    const terrainTiles=createTerrainTileCache(paintLargeTerrain,()=>document.createElement('canvas'));
+    let overviewWorld=null,overview=null;
     let companion=null,companionId=null,companionWorld=null,companionSave=null,lastPetTime=null;
     let zoom=1;
     function zoomBy(factor) {
@@ -44,8 +47,14 @@ export function createRenderer(canvas,assets) {
         ctx.setTransform(dpr,0,0,dpr,0,0);cam.w=w;cam.h=h;return {w,h};
     }
     function ground(world) {
-        if(backingZone===world.zone)return backing;
-        backingZone=world.zone;backing=document.createElement('canvas');backing.width=world.w;backing.height=world.h;
+        if(world.layout){
+            if(overviewWorld===world)return overview;
+            overviewWorld=world;overview=document.createElement('canvas');overview.width=560;overview.height=440;
+            const c=overview.getContext('2d');c.scale(overview.width/world.w,overview.height/world.h);paintLargeTerrain(c,world,undefined,true);
+            return overview;
+        }
+        if(backingZone===world)return backing;
+        backingZone=world;backing=document.createElement('canvas');backing.width=world.w;backing.height=world.h;
         const c=backing.getContext('2d');
         paintTerrain(c,world);
         // Inlaid stone plaza and school learning circle.
@@ -69,15 +78,19 @@ export function createRenderer(canvas,assets) {
     function render(world,save,time,{moving=false,path=[],title=false,rewardEffect=null}={}) {
         const {w,h}=size(),t=time/1000;ctx.fillStyle=OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         const baseScale=w<650?.82:1,sceneZoom=title?1:zoom;
-        cam.scale=baseScale*sceneZoom;const center=title?{x:875+Math.sin(t*.04)*60,y:770}:save.position;
+        cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:save.position;
         cam.x=center.x-w/(2*cam.scale);cam.y=center.y-h/(2*cam.scale)+(w<650?50:25)/sceneZoom;
-        ctx.save();ctx.scale(cam.scale,cam.scale);ctx.translate(-cam.x,-cam.y);ctx.drawImage(ground(world),0,0);
+        ctx.save();ctx.scale(cam.scale,cam.scale);ctx.translate(-cam.x,-cam.y);
+        if(world.layout)terrainTiles.draw(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale},(c,x,y,size)=>{
+            const map=ground(world),dw=Math.min(size,world.w-x),dh=Math.min(size,world.h-y);
+            c.drawImage(map,x*map.width/world.w,y*map.height/world.h,dw*map.width/world.w,dh*map.height/world.h,x,y,dw,dh);
+        });else ctx.drawImage(ground(world),0,0);
         // Moving water highlights, grounded visual-only ambient animation.
         ctx.strokeStyle='#e3f3da33';ctx.lineWidth=2;
-        for(let i=0;i<38;i++){const x=(i*151+t*8)%1750,y=80+(i*269)%1450;if(onIsland(x,y,-12))continue;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+13,y+4,x+26,y);ctx.stroke();}
+        if(!world.layout&&!reducedMotion.matches)for(let i=0;i<38;i++){const x=(i*151+t*8)%1750,y=80+(i*269)%1450;if(onIsland(x,y,-12))continue;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+13,y+4,x+26,y);ctx.stroke();}
         if(path.length&&!title){ctx.strokeStyle='#fff6bc88';ctx.setLineDash([3,10]);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(save.position.x,save.position.y);for(const p of path)ctx.lineTo(p.x,p.y);ctx.stroke();ctx.setLineDash([]);const end=path[path.length-1];circleRune(ctx,end.x,end.y,15,t,'#fff3ae');}
         circleRune(ctx,world.portal.x,world.portal.y,45,t,save.graduated?'#e9e29a':'#a6bab0');
-        const objects=[...world.trees.map(x=>({...x,kind:'tree'})),...world.buildings.map(x=>({...x,kind:'building'})),...world.npcs.map(x=>({...x,kind:'npc'})),...world.encounters.map(x=>({...x,kind:'mob'})),{...save.position,kind:'hero'}];
+        const objects=[...nearbyWorldObjects(world,{x:cam.x-240,y:cam.y-60,w:w/cam.scale+480,h:h/cam.scale+320}),{...save.position,kind:'hero'}];
         const petId=save.formation?.[save.heroSlot]||(!save.pets&&save.pet?'legacy':null);
         if(petId){
             if(!companion||companionId!==petId||companionWorld!==world||companionSave!==save){
@@ -93,6 +106,11 @@ export function createRenderer(canvas,assets) {
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
             if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;shadow(ctx,o.x,o.y,o.size*.3);assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
             if(o.kind==='building'){shadow(ctx,o.x,o.y,o.w*.4);assets.tile(ctx,'sprites',o.tile,o.x-o.w/2,o.y-o.h,o.w,o.h);}
+            if(o.kind==='landmark'){
+                shadow(ctx,o.x,o.y,18);ctx.fillStyle='#786344';ctx.fillRect(o.x-3,o.y-43,6,43);
+                ctx.fillStyle='#daca98';ctx.beginPath();ctx.roundRect(o.x-45,o.y-60,90,30,5);ctx.fill();
+                text(ctx,o.name,o.x,o.y-40,12,'#425847');
+            }
             if(o.kind==='npc') {
                 shadow(ctx,o.x,o.y,25);const dragon=[36211,30112].includes(o.id),sw=dragon?100:64,sh=dragon?104:86;
                 assets.draw(ctx,o.portrait,o.x-sw/2,o.y-sh+Math.sin(t*1.6+o.id)*1.5,sw,sh);
@@ -117,17 +135,21 @@ export function createRenderer(canvas,assets) {
         }
         plate(ctx,world.portal.name,world.portal.x,world.portal.y+48);
         // A few drifting motes. No random calls or dependence on combat seed.
-        for(let i=0;i<18;i++){const x=470+(i*97)%950+Math.sin(t*.4+i)*20,y=420+(i*179)%820+Math.cos(t*.3+i)*15;ellipse(ctx,x,y,2,2,`rgba(255,252,181,${.22+.18*Math.sin(t+i)})`);}
+        if(!reducedMotion.matches)for(let i=0;i<12;i++){const x=(world.layout?Math.floor(cam.x/800)*800:470)+(i*97)%950+Math.sin(t*.4+i)*20,y=(world.layout?Math.floor(cam.y/800)*800:420)+(i*179)%820+Math.cos(t*.3+i)*15;ellipse(ctx,x,y,2,2,`rgba(255,252,181,${.22+.18*Math.sin(t+i)})`);}
         if(!title)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);
         ctx.restore();
         const vignette=ctx.createRadialGradient(w*.5,h*.5,h*.15,w*.5,h*.5,Math.max(w,h)*.68);vignette.addColorStop(0,'transparent');vignette.addColorStop(1,'#113b4b66');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
     }
     function minimap(target,world,save) {
         const c=target.getContext('2d'),w=target.width,h=target.height;c.clearRect(0,0,w,h);c.fillStyle='#6ba7a2';c.fillRect(0,0,w,h);
-        const sx=w/world.w,sy=h/world.h;c.save();c.scale(sx,sy);c.drawImage(ground(world),0,0);
+        const sx=w/world.w,sy=h/world.h;c.save();c.scale(sx,sy);c.drawImage(ground(world),0,0,world.w,world.h);
         for(const b of world.buildings){c.fillStyle='#627b83';c.fillRect(b.x-45,b.y-60,90,65);}
         for(const n of world.npcs)ellipse(c,n.x,n.y,questMarker(save,assets.content,n.id)?22:13,questMarker(save,assets.content,n.id)?22:13,questMarker(save,assets.content,n.id)?'#ffe89c':'#f6f3d9');
         ellipse(c,save.position.x,save.position.y,25,25,'#184f73');ellipse(c,save.position.x,save.position.y,13,13,'#fff');c.restore();
+        if(world.layout){
+            for(const r of world.layout.regions){ellipse(c,r.x*sx,r.y*sy,3,3,'#fff3c3');text(c,r.name,r.x*sx,r.y*sy-9,11,'#25483b');}
+            ellipse(c,save.position.x*sx,save.position.y*sy,5,5,'#fff');ellipse(c,save.position.x*sx,save.position.y*sy,3,3,'#205c99');
+        }
     }
     function screenToWorld(x,y){return{x:x/cam.scale+cam.x,y:y/cam.scale+cam.y};}
     function renderBattle(target,battle,save,time,presentation) {

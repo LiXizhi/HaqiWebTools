@@ -176,6 +176,9 @@ export function renderHud(root,model,cb) {
     utilities.append(checkin);
     for(const [label,key,action]of [['地图','map',()=>cb.panel('map')],['云存档','cloud',cb.cloud],['设置','settings',()=>cb.panel('settings')]])utilities.append(button([icon(key),el('span','',label)],action,'utility-button'));
     root.append(utilities);
+    if(save.zone==='town'){
+        const guide=button('岛内导览',()=>cb.panel('localmap'),'island-guide-button');guide.title='查看地形，选择地标步行前往';root.append(guide);
+    }
     updateCheckin(root,model);
     const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),el('span','chapter-count',`${Object.values(save.quests).filter(x=>x.claimed).length} / 14`)));
     if(q){

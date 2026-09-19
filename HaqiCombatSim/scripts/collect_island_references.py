@@ -4,15 +4,17 @@ import io
 import json
 from pathlib import Path
 import urllib.request
+import zipfile
+import zlib
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCES = {
     'town': ('哈奇岛', 'townmap/haqitownmap_bg.png.p'),
     'fire': ('火鸟岛', 'flamingphoenixisland/flamingphoenixisland_bg.png.p'),
-    'ice': ('寒冰岛', 'frostroarisland/loginisland_frostroarisland_bg_32bits.png.p'),
-    'desert': ('沙漠岛', 'ancientegyptisland/loginisland_ancientegyptisland_bg_32bits.png.p'),
-    'dark': ('幽暗岛', 'darkforestisland/loginisland_darkforestisland_bg.png.p'),
+    'ice': ('寒冰岛', 'frostroarisland/frostroarisland_bg.dds.z'),
+    'desert': ('沙漠岛', 'ancientegyptisland/ancientegyptisland_bg.dds.z'),
+    'dark': ('幽暗岛', 'darkforestisland/darkforestisland_bg.dds.z'),
 }
 
 def main():
@@ -28,13 +30,20 @@ def main():
         with urllib.request.urlopen(url, timeout=40) as response:
             raw = response.read()
         assert len(raw) == int(size) and hashlib.md5(raw).hexdigest() == md5, key
-        picture = Image.open(io.BytesIO(raw)).convert('RGB')
+        decoded = raw
+        if path.endswith('.z'):
+            if raw.startswith(b'PK'):
+                with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+                    decoded = archive.read(archive.namelist()[0])
+            else:
+                decoded = zlib.decompress(raw)
+        picture = Image.open(io.BytesIO(decoded)).convert('RGBA')
         output = io.BytesIO()
-        picture.save(output, format='WEBP', lossless=True, method=6)
+        picture.save(output, format='WEBP', lossless=True, method=6, exact=True)
         lossless_bytes = len(output.getvalue())
         if lossless_bytes > 200_000:
             output = io.BytesIO()
-            picture.save(output, format='WEBP', quality=88, method=6)
+            picture.save(output, format='WEBP', quality=88, method=6, exact=True)
         data = output.getvalue()
         assert len(data) <= 200_000, key
         local = f'assets/adventure/island-references/{key}.webp'

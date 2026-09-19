@@ -244,3 +244,7 @@ runtime_data.js统一浏览器JSON读取；Vite生产构建将源码data的32个
 ## 2026-09-19：世界地图
 
 adventure_world_map_core集中六岛身份、出生点与BalanceParams.worldTravel等级检查；view_adventure_world_map仅展示选中岛屿和传送状态，控制器通过既有travel动作切换场景并保存。adventure_world_core复用可复现地形与碰撞，adventure_terrain区分远方岛屿地表；原版岛屿专属内容仍未导入。存档校验、调试降级和云端位置展示共用岛屿定义。
+
+## 2026-09-20：大型岛屿地图
+
+adventure_island_layout_core 提供哈奇岛空间骨架、区域与水域规则；adventure_world_core 生成对象并缓存空间桶/道路图；adventure_large_terrain 负责固定内存预算的分块地面和低分辨率导览。view_adventure_local_map 仅绑定目的地意图，adventure_app 负责步行与交互。worldLayoutVersion=1 标识新地图坐标，parseSave 区分旧版尺寸校验和位置迁移；旧任务、战斗与来源数据不修改。详见 island-exploration.md。

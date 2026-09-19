@@ -47,6 +47,6 @@ export function installExpansion(content,dataset,catalog,candidates,kidsCards,ki
   const lesson=existingLessons.get(card.key)||[...existingLessons.values()].find(row=>card.key.startsWith(row.key+'_'));
   content.cardLibrary.push({key:card.key,name,school:card.spellSchool,level:Math.max(1,Number(card.requireLevel||lesson?.level||1)),copies:3,supported:isSupportedType(card.type)});
  }
- content.pets.legacy_gululu={id:'legacy_gululu',sourceId:'legacy_gululu',name:content.pet.name,school:'life',traits:{elementalAttribute:'生命'},unlockLevel:1,lessons:content.learn.life.slice(0,7),legacy:true};
+ content.pets.legacy_gululu={id:'legacy_gululu',sourceId:'legacy_gululu',name:content.pet.name,school:'life',traits:{elementalAttribute:'生命'},unlockLevel:1,lessons:content.learn.life.slice(0,7),legacy:true,art:structuredClone(content.pets.shanhaijing_xuangui_gugu.art)};
  return {content,dataset};
 }

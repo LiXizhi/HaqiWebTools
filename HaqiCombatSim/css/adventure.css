@@ -474,3 +474,6 @@
 /* Keep pet selection and passing together at every viewport width. */
 .battle-hand-actions{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:nowrap}
 .battle-hand-actions button{white-space:nowrap}
+.island-guide-button{position:absolute;left:28px;bottom:24px;pointer-events:auto;padding:9px 16px;border:1px solid #c7be95;border-radius:9px;background:#f4efd9;color:#385e4a;font-size:13px;box-shadow:0 4px 16px #183e3c20}
+.island-guide .modal-body{display:grid;grid-template-columns:minmax(0,1fr) 160px;gap:14px;overflow:auto}.island-guide .modal-body>p{grid-column:1/-1;margin:0;color:#59715b}.island-guide-map{width:100%;height:auto;border-radius:12px;border:2px solid #bcba91}.island-guide-destinations{display:grid;gap:7px;align-content:start}.island-guide-destinations button{padding:9px 10px;border-radius:7px;background:#e0e5c9;color:#355d48;min-height:40px}.island-guide-destinations button:hover{background:#cad7ac}
+@media(max-width:650px){.island-guide-button{left:12px;bottom:90px;padding:7px 10px;font-size:12px}.island-guide .modal-body{display:block}.island-guide-map{margin:12px 0}.island-guide-destinations{grid-template-columns:repeat(2,minmax(0,1fr))}}

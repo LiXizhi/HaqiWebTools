@@ -12,9 +12,9 @@
       "local": "assets/adventure/island-references/town.webp",
       "width": 1024,
       "height": 1024,
-      "size": 87118,
-      "sha256": "29ff267ebfe7595b393d8fed13b2087acef7eda5e1d8c95ff95210dc23d1655f",
-      "losslessAttemptBytes": 612116
+      "size": 96346,
+      "sha256": "8e3604d9b9179b76222f15de83edc9ca7639cd603b23fac42c67e4853f410220",
+      "losslessAttemptBytes": 624398
     },
     {
       "id": "fire",
@@ -26,51 +26,51 @@
       "local": "assets/adventure/island-references/fire.webp",
       "width": 1024,
       "height": 512,
-      "size": 63254,
-      "sha256": "72410eb82f096efe9b41c6c940e510204dd60ef871baf974ba1fe83da561aa37",
-      "losslessAttemptBytes": 453578
+      "size": 69502,
+      "sha256": "b9f957806ffb033840e557719ba9f2ec0cec3b661ff084acc6648c834f30f2d8",
+      "losslessAttemptBytes": 483410
     },
     {
       "id": "ice",
       "name": "寒冰岛",
-      "sourceEntry": "texture/aries/worldmaps/frostroarisland/loginisland_frostroarisland_bg_32bits.png.p,04b49f8fc6e5c3ef91e317a2138fb4b5,655970",
-      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/frostroarisland/loginisland_frostroarisland_bg_32bits.png.p,04b49f8fc6e5c3ef91e317a2138fb4b5,655970",
-      "sourceMd5": "04b49f8fc6e5c3ef91e317a2138fb4b5",
-      "sourceSha256": "1eaa9431a812182b70edc614309b6db6e604257c216c3165f476f6b39301b139",
+      "sourceEntry": "texture/aries/worldmaps/frostroarisland/frostroarisland_bg.dds.z,22b4c4f54379c7cb7c7751f862098b10,148313",
+      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/frostroarisland/frostroarisland_bg.dds.z,22b4c4f54379c7cb7c7751f862098b10,148313",
+      "sourceMd5": "22b4c4f54379c7cb7c7751f862098b10",
+      "sourceSha256": "b0ff261f0facb7e8f158c2e3a6995a5b577ba0663a34f40b14c5bf12309ffc0e",
       "local": "assets/adventure/island-references/ice.webp",
       "width": 1024,
-      "height": 1024,
-      "size": 65476,
-      "sha256": "fc1a4a835de9ad6cc8be4cf27f582fd6b601b66a1e926e67b991d65f6276a80b",
-      "losslessAttemptBytes": 474514
+      "height": 512,
+      "size": 54130,
+      "sha256": "2e4988685ed146a9300488d2f5d68e3df960708ed1d39b904bc8e23f3e0c828c",
+      "losslessAttemptBytes": 328858
     },
     {
       "id": "desert",
       "name": "沙漠岛",
-      "sourceEntry": "texture/aries/worldmaps/ancientegyptisland/loginisland_ancientegyptisland_bg_32bits.png.p,8e6ec8e227c0936761152f5730f5033b,648366",
-      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/ancientegyptisland/loginisland_ancientegyptisland_bg_32bits.png.p,8e6ec8e227c0936761152f5730f5033b,648366",
-      "sourceMd5": "8e6ec8e227c0936761152f5730f5033b",
-      "sourceSha256": "7befd0aab530bec2e0c9427c26b6efe900f0c01ceeb70b51314adc9ac73c28b1",
+      "sourceEntry": "texture/aries/worldmaps/ancientegyptisland/ancientegyptisland_bg.dds.z,d8041d4f9291629d5b9413bf113c3aa5,143489",
+      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/ancientegyptisland/ancientegyptisland_bg.dds.z,d8041d4f9291629d5b9413bf113c3aa5,143489",
+      "sourceMd5": "d8041d4f9291629d5b9413bf113c3aa5",
+      "sourceSha256": "d423ec7da97e28d6651bb0a88d87d081bf67a967dbfbdec6240f5f395700623a",
       "local": "assets/adventure/island-references/desert.webp",
       "width": 1024,
-      "height": 1024,
-      "size": 71956,
-      "sha256": "0ac5033ee981129045b2983ad2000eb989453ae0830e7d803b3f5631f8005fba",
-      "losslessAttemptBytes": 440818
+      "height": 512,
+      "size": 66832,
+      "sha256": "41dd9542b363b478b50f10806531f57812502aa4df08444ac726703f99c26b51",
+      "losslessAttemptBytes": 309484
     },
     {
       "id": "dark",
       "name": "幽暗岛",
-      "sourceEntry": "texture/aries/worldmaps/darkforestisland/loginisland_darkforestisland_bg.png.p,be418cc8282f0357ea717992c9d135e5,687284",
-      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/darkforestisland/loginisland_darkforestisland_bg.png.p,be418cc8282f0357ea717992c9d135e5,687284",
-      "sourceMd5": "be418cc8282f0357ea717992c9d135e5",
-      "sourceSha256": "2260fe291659284ee69ab47ffb07f2b54f918102e9b07516001e9460871094f2",
+      "sourceEntry": "texture/aries/worldmaps/darkforestisland/darkforestisland_bg.dds.z,1080dad2e96194a5f55cd0bd78b83dc9,143736",
+      "sourceUrl": "https://cdn.keepwork.com/update61/assetdownload/update/texture/aries/worldmaps/darkforestisland/darkforestisland_bg.dds.z,1080dad2e96194a5f55cd0bd78b83dc9,143736",
+      "sourceMd5": "1080dad2e96194a5f55cd0bd78b83dc9",
+      "sourceSha256": "671f1d99e49213434462c0d435f9b3b113cbbc4265c349e46f76f656a7789509",
       "local": "assets/adventure/island-references/dark.webp",
       "width": 1024,
-      "height": 1024,
-      "size": 58272,
-      "sha256": "c7bf2e8f3de49bb732d2eead82c96947e3516b14f7b3d0e1f93e28b8a338db79",
-      "losslessAttemptBytes": 473940
+      "height": 512,
+      "size": 54028,
+      "sha256": "50f2749ae52b750430d3f0902437bbffc47f55f1df2f9cc6051bb710a20afd96",
+      "losslessAttemptBytes": 279480
     }
   ]
 }

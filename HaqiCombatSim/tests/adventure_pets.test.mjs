@@ -12,6 +12,16 @@ const read=path=>JSON.parse(fs.readFileSync(new URL('../data/'+path,import.meta.
 const catalog=read('adventure/pets.json');
 const {content:c,dataset:d}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),catalog,read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 const fresh=starter=>A.createAdventure(c,{starter,seed:812});
+test('legacy gululu reuses a four-stage catalog appearance without replacing its identity or lessons',()=>{
+ const legacy=c.pets.legacy_gululu,template=catalog.pets.shanhaijing_xuangui_gugu;
+ assert.deepEqual(legacy.art,template.art);
+ assert.notEqual(legacy.art,c.pets.shanhaijing_xuangui_gugu.art);
+ assert.equal(legacy.art.rows,4);assert.equal(legacy.art.cols,4);
+ assert.equal(legacy.id,'legacy_gululu');assert.equal(legacy.sourceId,'legacy_gululu');
+ assert.equal(legacy.name,c.pet.name);assert.equal(legacy.school,'life');assert.equal(legacy.legacy,true);
+ assert.deepEqual(legacy.lessons,c.learn.life.slice(0,7));
+ assert.equal(Object.values(c.pets).filter(pet=>!pet.legacy).length,359);
+});
 test('pet decks are limited to 2/4/6/8 cards across four stages',()=>{
  assert.deepEqual([1,9,10,24,25,39,40,50].map(level=>P.petCapacity({level},c)),[2,2,4,4,6,6,8,8]);
  for(const level of [1,10,25,40]){

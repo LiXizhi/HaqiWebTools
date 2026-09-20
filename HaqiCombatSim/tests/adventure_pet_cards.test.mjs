@@ -16,12 +16,12 @@ function setup(){
     const battle=B.createPveBattle({dataset,player,party:P.partySpecs(save,content,player),monsters:[monster],seed:9});
     return {save,battle,hero:battle.sides.near[0]};
 }
-test('all schools and starters deal only six player cards; pet pile is separately available',()=>{
+test('all schools and starters deal four player cards; pet pile is separately available',()=>{
     for(const school of ['fire','ice','storm','life','death'])for(const starter of P.STARTERS){
         const save=A.createAdventure(content,{school,starter});
         A.beginEncounter(save,content,'fire-scout');
         const battle=B.restorePveBattle(dataset,content,save.pendingEncounter),hero=battle.sides.near[0];
-        assert.equal(U.cardsInHand(hero).length,6);assert.equal(U.deckRemaining(hero),6);
+        assert.equal(U.cardsInHand(hero).length,4);assert.equal(U.deckRemaining(hero),4);
         assert.ok(U.cardsInHand(hero).every(h=>save.deck.some(row=>row.key===h.key)));
         assert.equal(U.petCardsInHand(hero).length,2);
         assert.ok(U.petCardsInHand(hero).every(h=>h.seq>=U.PET_CARD_SEQ_BASE&&save.pets[starter].deck.some(row=>row.key===h.key)));

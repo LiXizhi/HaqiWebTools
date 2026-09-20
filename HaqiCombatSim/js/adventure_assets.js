@@ -65,6 +65,9 @@ export async function loadResources(progress) {
     const [catalog,candidates,kidsCards,kidsCharms,cardNames]=await Promise.all([json('data/adventure/pets.json'),json('data/adventure/shop-candidates.json'),json('data/kids/cards.json'),json('data/kids/charms.json'),json('data/kids/card_names.json')]);
     installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames);
     content.shopConfig=await json('data/adventure/shop.json');
+    content.magicStar=await json('data/adventure/magic-star.json');
+    content.checkinConfig=await json('data/adventure/checkin.json');
+    for(const [id,item] of Object.entries(content.checkinConfig.items))content.items[id]??=item;
     content.gemCatalog=await json('data/adventure/gems.json');
     Object.assign(content.items,content.gemCatalog.items);
     for(const [id,entry] of Object.entries(content.strengtheningIcons||{}))lazyImages.set(id,entry);

@@ -1,3 +1,4 @@
+import {persistReward} from './adventure_reward_persistence.js';
 import { createMembershipClient } from './adventure_membership.js';
 import { rewardSnapshot, rewardChanges } from './adventure_reward_feedback_core.js';
 import { createRewardFeedback } from './view_adventure_rewards.js';
@@ -48,8 +49,9 @@ const roles={busy:'',error:'',message:'',conflict:null};
 let titleView='create',roleDraft=null,creationPreview=null;
 const LAST_ACCOUNT_KEY='haqi.roles.last-account.v1';
 const cloud={owner:null,busy:'',error:'',message:'',paths:[],preview:null};
-const membership=createMembershipClient({onChange:()=>{if(assets&&save&&stage==='world'){paintHud();if(['shop','membership'].includes(panel))paintPanel();}}});
+const membership=createMembershipClient({onChange:()=>{if(assets&&save&&stage==='world'){paintHud();if(['shop','membership','checkin'].includes(panel))paintPanel();}}});
 let buyingVip=false;
+const membershipView={tab:'attributes'};
 const refreshMembership=()=>membership.refresh().catch(error=>toast(error.message));
 const keys=new Set();
 const spellSound=createSpellSound({defaultEnabled:true});
@@ -69,7 +71,7 @@ const shopView={category:'pet',query:'',school:'',slot:'',ownership:'',page:0},p
 const equipmentView={tab:'gear',slot:0,item:null,query:''};
 const gemView={guid:null,gemId:null,runes:[null,null,null],runeIndex:0,step:'equipment',filter:0,page:0,mode:'mount',removeIds:[],message:'',confirm:false};
 const strengtheningView={guid:null,filter:0,page:0,pending:false,message:''};
-const model=()=>({assets,save,membership:membership.state,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
+const model=()=>({assets,save,membership:membership.state,membershipView,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
 const rewardRoot=V.el('div','reward-feedback');nodes.world.parentElement.append(rewardRoot);
 const rewardFeedback=createRewardFeedback(rewardRoot,{
     describe:reward=>{
@@ -107,7 +109,7 @@ function paintPanel() {
     const equipment=['equipment','inventory','shop','pet'].includes(panel);
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
-    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId},{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true),refreshMembership});
+    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId},{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true),refreshMembership,becomeVip:()=>membership.openProfile().catch(error=>toast(error.message))});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
@@ -122,9 +124,9 @@ function openPanel(kind,options={}) {
     if(kind==='quests')selectedQuestId=options.questId??A.currentQuest(save,assets.content)?.id??assets.content.quests.at(-1)?.id;
     if(kind==='gems')Object.assign(gemView,{guid:options.guid||null,gemId:null,runes:[null,null,null],runeIndex:0,step:options.guid?'gems':'equipment',filter:0,page:0,mode:'mount',removeIds:[],message:'',confirm:false});
     if(kind==='upgrade')Object.assign(strengtheningView,{guid:initialStrengtheningSelection(save,assets.content,options.itemId,options.guid),filter:0,page:0,pending:false,message:'',offsetX:0,offsetY:0});
-    if(['equipment','inventory'].includes(kind)){equipmentView.tab=kind==='equipment'?'gear':'all';equipmentView.slot=0;equipmentView.query='';equipmentView.item=null;equipmentView.guid=null;}
+    if(['equipment','inventory'].includes(kind)){equipmentView.tab='gear';equipmentView.slot=0;equipmentView.query='';equipmentView.item=null;equipmentView.guid=null;}
     paintPanel();
-    if(['shop','membership'].includes(kind))refreshMembership();
+    if(['shop','membership','checkin'].includes(kind))refreshMembership();
 }
 function applyDebug(patch) {safely(()=>{
     if(stage!=='world')throw Error('请先完成当前战斗');
@@ -162,7 +164,7 @@ async function cloudAction(label,fn) {
 }
 function action(value) {
     const product=value.type==='buy'&&assets.content.shop.find(item=>item.id===value.productId);
-    if(!product?.vipOnly)return performAction(value);
+    if(!product?.vipOnly&&value.type!=='magic-star-claim'&&!(value.type==='checkin'&&value.bonus===true))return performAction(value);
     return buyVipProduct(value);
 }
 async function buyVipProduct(value) {
@@ -170,12 +172,12 @@ async function buyVipProduct(value) {
     buyingVip=true;const target=save,epoch=roleEpoch;
     try {
         const status=await membership.refresh();
-        if(target!==save||epoch!==roleEpoch||stage!=='world')throw Error('角色或游戏状态已变化，请重新购买。');
-        if(status.status==='guest')throw Error('请先登录 Keepwork VIP 会员账号，再购买会员专属商品。');
-        return performAction(value,{keepworkVip:status.isVip});
+        if(target!==save||epoch!==roleEpoch||stage!=='world')throw Error('角色或游戏状态已变化，请重新操作。');
+        if(status.status==='guest')throw Error('请先登录会员账号，再使用会员权益。');
+        return performAction(value,{keepworkVip:status.isVip,expiresAt:status.expiresAt,now:Date.now()});
     }catch(error){toast(error.message);return false;}finally{buyingVip=false;}
 }
-function performAction(value,access={}) {return safely(()=>{const before=rewardSnapshot(save);const result=A.applyAction(save,assets.content,value.type==='checkin'?{...value,now:Date.now()}:value,access);showRewards(before);persist();paintHud();paintPanel();const text={checkin:'签到成功，奇豆已到账！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(result?.message||text[value.type]||'进度已保存');return result?.message?result:true;});}
+function performAction(value,access={}) {return safely(()=>{const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['checkin','magic-star-claim'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}showRewards(before);paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(result?.message||text[value.type]||'进度已保存');return result?.message?result:true;});}
 function enterWorld(newSave,restoredBattle=null) {
     teleportEffect=null;
     rewardFeedback.reset();

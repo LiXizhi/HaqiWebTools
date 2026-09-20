@@ -107,7 +107,7 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
         if(total()>=limits.capacity){say('卡包已满，请先移出卡牌');return;}
         if(count>=(owned[key]?copies(key):limits.eachCapacity)){say('已达到单卡上限');return;}
         if(!owned[key]){owned[key]=lesson.copies;learned.add(key);trainingPointsSpent+=learning.cost;}
-        if(row)row.count++;else deck.push({key,count:1});mark();paintCards();
+        if(row)row.count++;else deck.push({key,count:1});closePreview();mark();paintCards();
     }
     // One reusable visual follows the pointer; it never intercepts drop events.
     const dragGhost=el('div','bag-drag-ghost');dragGhost.hidden=true;dragGhost.setAttribute('aria-hidden','true');
@@ -207,7 +207,7 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     const drop=button('删除布局',()=>{if(layouts.length<=1)return;layouts.splice(active,1);active=Math.max(0,active-1);mark();paintTabs();paintCards();},'text-button');
     const equipment=el('div','bag-slots equipment-card-slots');
     for(const row of playerSpec(save,content).fixedCards)for(let i=0;i<row.count;i++){
-        const card=cards[row.key];if(!card)continue;const slot=button(subject(card),()=>inspect(row.key,false,slot),'bag-slot');slot.setAttribute('aria-label',card.name+'，装备附卡');previewEvents(slot,row.key);equipment.append(slot);
+        const card=cards[row.key];if(!card)continue;const slot=button(subject(card),()=>inspect(row.key,false,slot),'bag-slot');slot.setAttribute('aria-label',card.name+'，装备附卡');previewEvents(slot,row.key);bindCardGesture(slot,row.key);equipment.append(slot);
     }
     const saveButton=button('保存并使用',()=>{
         if(layouts.some(row=>!row.name.trim())){say('请填写卡包名称');return;}

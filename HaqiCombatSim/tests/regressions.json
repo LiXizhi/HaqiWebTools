@@ -1,0 +1,20 @@
+{
+  "regressions": [
+    {
+      "id": "ambient-motes-disabled",
+      "date": "2026-09-21",
+      "cause": "Default screen-space motes appear attached to the camera during player movement.",
+      "trigger": "Render a region with motes weather without an explicit preview override.",
+      "expected": "No default motes drawing at desktop or mobile viewport sizes; explicit previews and other weather remain available.",
+      "sources": ["js/adventure_weather.js", "js/adventure_renderer.js"],
+      "tests": ["tests/adventure_map_generator.test.mjs", "tests/environment_art.test.mjs"],
+      "evidence": {
+        "focused": "7/7 passed",
+        "full": "270/270 passed",
+        "build": "Map consistency checks and Vite build passed",
+        "mutation": "In-memory removal of the motes guard restores ellipse drawing, violating the zero-draw regression assertion.",
+        "browser": "Not verified"
+      }
+    }
+  ]
+}

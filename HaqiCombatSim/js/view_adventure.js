@@ -1,4 +1,5 @@
 import {renderGems} from './view_adventure_gems.js';
+import {renderMembership} from './view_adventure_membership.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import {renderQuestJournal} from './view_adventure_quests.js';
 import { islandName } from './adventure_world_map_core.js';
@@ -131,27 +132,34 @@ export function updateHeroHealth(root,save,content) {
     bar.querySelector('.hero-health-label').textContent=`${hp} / ${maxHp}`;
     bar.setAttribute('aria-label',`生命 ${hp} / ${maxHp}`);
 }
-function checkinTime(ms){return `${Math.ceil(ms/60000)} 分钟`;}
+function checkinTime(ms){return `${Math.max(1,Math.ceil((ms-1)/60000))} 分钟`;}
 function gourdArt(){
     const art=el('span','gourd-art');
     art.innerHTML='<svg viewBox="0 0 80 112" aria-hidden="true"><ellipse cx="40" cy="104" rx="25" ry="5" fill="#685225" opacity=".15"/><path d="M35 8h10l-2 12c17 4 21 23 9 34 26 13 23 47-12 47S2 67 28 54C16 43 20 24 37 20z" fill="currentColor" stroke="#8f621f" stroke-width="2.5"/><path d="M29 33c-6 8-3 14 0 17M23 71c-6 11-1 19 5 22" fill="none" stroke="#fff4b6" stroke-width="5" stroke-linecap="round" opacity=".7"/><path d="M27 54q13 6 26 0l-1 7q-12 5-24 0z" fill="#af4e32"/><path d="m46 60 12 19-9-3-3 8-7-23" fill="#af4e32"/><path d="M33 8h14v7H33z" fill="#826035"/><circle cx="38" cy="79" r="10" fill="#fff0b5" opacity=".85"/><text x="38" y="83" text-anchor="middle" font-size="12" fill="#8f621f">福</text></svg>';
     return art;
 }
 export function updateCheckin(root,model) {
-    const status=checkinStatus(model.save,model.assets.content,model.now??Date.now());
+    const status=checkinStatus(model.save,model.assets.content,model.now??Date.now(),model.membership);
     const nav=root.querySelector('.checkin-button');
     if(nav){nav.querySelector('small').textContent=status.ready?'可领取':status.finished?'已领完':checkinTime(status.remainingMs);nav.classList.toggle('reward-ready',status.ready);}
     const grid=root.querySelector('.checkin-gourds');if(!grid)return;
     for(const g of status.gourds){
-        const b=grid.children[g.index],label=g.claimed?'已领取':g.ready?'点击领取':`还需 ${checkinTime(g.remainingMs)}`;
-        b.disabled=!g.ready;b.classList.toggle('ready',g.ready);b.classList.toggle('claimed',g.claimed);
-        b.querySelector('.gourd-time').textContent=`${g.minute} 分钟`;
-        b.querySelector('.gourd-coins').textContent=`${g.coins} 奇豆`;
-        b.querySelector('.gourd-state').textContent=label;
-        b.setAttribute('aria-label',`${g.minute}分钟葫芦，${g.coins}奇豆，${label}`);b.title=label;
+        const card=grid.children[g.index],b=card.querySelector('.gourd-base'),vip=card.querySelector('.gourd-vip');
+        const label=g.claimed?'已领取':g.ready?'领取奖励':`还需 ${checkinTime(g.remainingMs)}`;
+        b.disabled=!g.ready;card.classList.toggle('ready',g.ready||g.vipReady);card.classList.toggle('claimed',g.claimed&&(!status.starLevel||g.vipClaimed));
+        card.querySelector('.gourd-time').textContent=`${g.minute} 分钟`;
+        const names=g.rewards.map(r=>`${model.assets.content.items[r.id]?.name||r.id} × ${r.count}`);
+        card.querySelector('.gourd-coins').textContent=names[0];
+        card.querySelector('.gourd-items').textContent=names.slice(1).join('、');
+        b.textContent=label;b.setAttribute('aria-label',`${g.minute}分钟葫芦：${label}`);card.title=names.join('、');
+        vip.textContent=g.vipClaimed?'魔法星已领取':!status.starLevel?'魔法星额外奖励':g.vipReady?`再领 ${g.vipCoins} 仙豆`:'魔法星奖励待解锁';
+        vip.disabled=g.vipClaimed||(status.starLevel>0&&!g.vipReady);
+        vip.setAttribute('aria-label',`${g.minute}分钟葫芦：${vip.textContent}`);
     }
-    root.querySelector('.checkin-online').textContent=`今日累计在线 ${Math.floor(status.onlineMs/60000)} 分钟`;
-    root.querySelector('.checkin-balance').textContent=`当前拥有 ${model.save.inventory[100]||0} 奇豆`;
+    root.querySelector('.checkin-online').textContent=`今日累计在线 ${Math.floor(status.onlineMs/60000)} 分钟 · 普通奖励 ${status.baseCount}/5 · 魔法星奖励 ${status.vipCount}/5`;
+    root.querySelector('.checkin-balance').textContent=`当前拥有 ${model.save.inventory[17213]||0} 仙豆`;
+    root.querySelector('.checkin-member-summary').textContent=status.starLevel?`魔法星 ${status.starLevel} 级：每个葫芦额外 ${status.gourds[0].vipCoins} 仙豆`:'普通奖励人人可领，拥有魔法星可再领一份额外仙豆。';
+
 }
 export function renderHud(root,model,cb) {
     const {assets,save}=model,c=assets.content,q=currentQuest(save,c);root.replaceChildren();
@@ -161,7 +169,10 @@ export function renderHud(root,model,cb) {
     school.setAttribute('role','img');school.setAttribute('aria-label',`${SCHOOL_NAMES[save.school]}系`);school.title=`${SCHOOL_NAMES[save.school]}系`;
     drawSchoolIcon(school.getContext('2d'),save.school,24,24,36);
     const name=button([school,el('strong','',save.name)],()=>cb.panel('equipment'),'hero-name');name.title='角色与装备（R）';
-    const membership=button(model.membership?.isVip?'Keepwork VIP':'会员状态',cb.membership,'hero-membership');
+    const isVip=model.membership?.isVip===true;
+    const membership=button(isVip?'会员权益':'升级会员',cb.membership,'hero-membership');
+    membership.title=isVip?'会员权益':'升级会员';
+    membership.setAttribute('aria-label',membership.title);
     membership.setAttribute('aria-haspopup','dialog');
     const details=el('div','hero-details',el('span','hero-level',`等级 ${save.level}`));
     for(const [id,label]of [[100,'奇豆'],[17213,'仙豆']]){
@@ -176,7 +187,7 @@ export function renderHud(root,model,cb) {
     root.append(status,el('div','location-label',el('span','',islandName(save.zone)),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
     const utilities=el('nav','utility-nav');utilities.setAttribute('aria-label','其他功能');
     const checkin=button([icon('gourd'),el('span','utility-label','签到'),el('small','','')],()=>cb.panel('checkin'),'utility-button checkin-button');
-    checkin.title='定时领取奇豆';
+    checkin.title='米酒葫芦 · 在线领奖';
     utilities.append(checkin);
     for(const [label,key,action]of [['世界地图','map',()=>cb.panel('map')],['云存档','cloud',cb.cloud],['设置','settings',()=>cb.panel('settings')]])utilities.append(button([icon(key),el('span','utility-label',label)],action,'utility-button'));
     root.append(utilities);
@@ -226,12 +237,8 @@ function spellFace(assets,card,artCard=card) {
 export function renderPanel(root,kind,model,cb) {
     const {assets,save}=model,c=assets.content,d=assets.dataset;
     if(kind==='membership'){
-        const body=modal(root,'Keepwork 会员','',cb),membership=model.membership||{status:'unknown'};
-        const labels={unknown:'尚未确认会员状态',loading:'正在查询 Keepwork 会员状态…',guest:'尚未登录 Keepwork',error:'暂时无法确认会员状态，请检查网络后重试。'};
-        body.append(el('p','',membership.status==='ready'?`${membership.username} · ${membership.isVip?'VIP会员':'普通用户'}`:labels[membership.status]),el('p','muted','会员资格与 Keepwork 账号一致，普通 VIP 和超级 VIP 均可购买会员专属商品。'));
-        const refresh=button('刷新会员状态',()=>cb.refreshMembership?.(),'secondary');refresh.disabled=membership.status==='loading';body.append(refresh);
-        if(membership.status==='guest')body.append(button('登录 Keepwork',()=>cb.roles?.(),'primary'));
-        body.append(button('返回冒险',cb.close,'secondary'));
+        const body=modal(root,'魔法星','',cb,true);
+        renderMembership(body,model,cb,{el,button,spellFace});
         return;
     }
     if(kind==='gems'){
@@ -248,8 +255,11 @@ export function renderPanel(root,kind,model,cb) {
     if(kind==='checkin'){
         body.closest('.modal').classList.add('checkin-modal');
         const grid=el('div','checkin-gourds');
-        for(let index=0;index<5;index++)grid.append(button([el('span','gourd-time'),gourdArt(),el('strong','gourd-coins'),el('span','gourd-state')],()=>cb.action({type:'checkin',index}),'gourd-reward'));
-        body.append(el('p','checkin-online'),grid,el('p','checkin-rules muted','亮起的葫芦可以直接领取。每天累计在线解锁，每个葫芦限领一次；每日零点（北京时间）重置。'),el('p','checkin-balance muted'));
+        for(let index=0;index<5;index++)grid.append(el('article','gourd-reward',el('span','gourd-time'),gourdArt(),el('strong','gourd-coins'),el('small','gourd-items'),button('',()=>cb.action({type:'checkin',index}),'primary gourd-base'),button('',()=>model.membership?.isVip?cb.action({type:'checkin',index,bonus:true}):cb.panel('membership'),'secondary gourd-vip')));
+        const bonusRows=model.assets.content.checkinConfig?.vipCoinsByLevel.slice(1).map((amount,index)=>el('span','',`${index+1}级：${amount}仙豆`))||[];
+        const vipTable=el('details','checkin-vip-table',el('summary','','查看魔法星额外奖励'),el('div','',...bonusRows));
+        body.append(el('p','checkin-intro','在小镇待得越久，酿造的米酒葫芦就越香醇。'),el('div','checkin-member-bar',el('p','checkin-member-summary'),button(model.membership?.isVip?'会员权益':'升级会员',()=>cb.panel('membership'),'secondary')),el('p','checkin-online'),grid,vipTable,el('p','checkin-rules muted','每天累计在线解锁，每个葫芦先领普通奖励，会员再领魔法星奖励。中途升级会员可补领当天已解锁的额外奖励；每天零点（北京时间）重置。'),el('p','checkin-rules muted','道具按原版兑换表发放。捕鱼、精力药剂、自动战斗药丸及抽奖道具的使用暂未开放，可保留在背包。原版幸运抽奖（普通一次、会员额外一次）与日历签到暂未开放。'),el('p','checkin-balance muted'));
+
         updateCheckin(root,model);
     }
     if(kind==='shop')renderShop(body,model,cb,{el,button,art,tile});

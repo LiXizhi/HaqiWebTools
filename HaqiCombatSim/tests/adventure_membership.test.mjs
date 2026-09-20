@@ -40,3 +40,9 @@ test('an unresponsive membership request times out without granting access',asyn
     const client=createMembershipClient({loadSDK:()=>new Promise(()=>{}),timeoutMs:5});
     await assert.rejects(client.refresh(),/无法确认/);assert.equal(client.state.isVip,false);
 });
+
+test('profile UI opens via the SDK and refreshes membership on close',async()=>{
+ const {client,sdk}=harness({username:'test',commonVip:1,commonVipDeadline:'2027-01-01',vip:1,vipDeadline:'2027-09-21'});
+ let opened=false;sdk.showProfileWindow=async options=>{opened=true;assert.equal(options.title,'个人资料');};
+ const status=await client.openProfile();assert.equal(opened,true);assert.equal(status.expiresAt,'2027-09-21T00:00:00.000Z');
+});

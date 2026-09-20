@@ -8,7 +8,10 @@ export function checkedProgress(raw, content, dataset) {
     if (typeof raw === 'string') requireValue(raw.length <= 1024 * 1024, '存档文件过大');
     const parsed = parseSave(raw, content);
     // Only the game's known fields travel to the cloud; SDK state never enters a save.
-    const save = Object.fromEntries(Object.keys(createAdventure(content)).map(key => [key, parsed[key]]));
+    // These optional fields are validated by parseSave but do not exist until
+    // the first online tick/claim. Keep them across role reloads and cloud sync.
+    const keys=[...Object.keys(createAdventure(content)),'magicStarClaims','checkin'];
+    const save = Object.fromEntries(keys.filter(key=>parsed[key]!==undefined).map(key => [key, parsed[key]]));
     const battle = save.pendingEncounter ? restorePveBattle(dataset, content, save.pendingEncounter) : null;
     return { save, battle };
 }

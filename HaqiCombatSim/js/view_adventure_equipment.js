@@ -1,4 +1,4 @@
-import {createCloseButton} from './view_adventure_controls.js';
+import {DetailDialog} from './view_detail_dialog.js';
 import { equipmentInstances, findEquipmentInstance } from './adventure_equipment_instances_core.js';
 import { equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
 import { equipmentRequirements } from './adventure_item_rules_core.js';
@@ -59,15 +59,11 @@ export function renderEquipment(body,model,cb,ui) {
     }
     const grid=el('div','equipment-grid'),pager=el('div','equipment-pager'),detail=el('section','equipment-detail');detail.setAttribute('aria-label','物品详情');
     wardrobe.append(filters,grid,pager);
-    const dialog=el('dialog','equipment-item-dialog'),footer=el('div','equipment-detail-footer');
-    dialog.setAttribute('aria-label','物品详情与装备对比');
-    const closeDetail=()=>dialog.close();
-    const closeButton=createCloseButton(closeDetail,'关闭物品详情');
-    dialog.append(el('header','equipment-dialog-header',el('strong','','物品详情'),closeButton),detail,footer);
-    body.append(dialog);
-    dialog.addEventListener('keydown',event=>{event.stopPropagation();if(event.key==='Escape'){event.preventDefault();closeDetail();}});
-    dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)closeDetail();}});
-    function openDetail(item){paintDetail(item);dialog.showModal();closeButton.focus({preventScroll:true});}
+    const inspector=new DetailDialog(body,{el,title:'物品详情与装备对比'});
+    const {dialog,footer}=inspector;
+    inspector.body.replaceWith(detail);inspector.body=detail;
+    function openDetail(item){paintDetail(item);inspector.open();}
+
 
     function render(){
         const focusLabel=document.activeElement?.getAttribute('aria-label')||document.activeElement?.textContent;
@@ -94,7 +90,7 @@ export function renderEquipment(body,model,cb,ui) {
         const previous=button('上一页',()=>{state.page--;paintList();},'secondary small'),next=button('下一页',()=>{state.page++;paintList();},'secondary small');
         previous.disabled=state.page===0;next.disabled=state.page===pages-1;
         pager.append(previous,el('span','',`${state.page+1} / ${pages}`),next);
-        if(!items.length)grid.append(el('p','equipment-empty-list',state.slot?'这个分类还没有物品。':travel?'旅行背包还没有物品。':'还没有装备，完成导师任务可以获得。'));
+        if(!items.length&&!travel)grid.append(el('p','equipment-empty-list',state.slot?'这个分类还没有物品。':'还没有装备，完成导师任务可以获得。'));
     }
     function paintDetail(item){
         detail.replaceChildren();footer.replaceChildren();if(!item){detail.append(el('p','muted','选择一件物品，查看属性、穿戴条件和获取途径。'));return;}

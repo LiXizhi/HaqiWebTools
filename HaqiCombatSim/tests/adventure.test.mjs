@@ -77,6 +77,44 @@ test('rewards cannot be claimed twice and defeat/retreat retain inventory',()=>{
     const n=s.inventory[17213];act(s,'claim',{questId:63000,npcId:36211});assert.equal(s.inventory[17213],n);
     A.beginEncounter(s,content,'fire-scout');act(s,'retreat');assert.equal(s.inventory[17213],n);assert.equal(s.pendingEncounter,null);
 });
+test('unequipped pocket allows ten cards and two copies, preserving equipped bag stats',()=>{
+    const save=A.createAdventure(content);
+    assert.deepEqual(A.deckLimits(save,content),{capacity:10,eachCapacity:2,handSize:8});
+    save.xp=content.progression.xpThresholds.at(-1);A.syncProgression(save,content);
+    const keys=Object.keys(save.cards);
+    const fullDeck=keys.slice(0,5).map(key=>({key,count:2}));
+    assert.equal(A.validDeck(save,content,fullDeck),true);
+    assert.throws(()=>A.validDeck(save,content,[{key:keys[0],count:3}]),/单卡上限/);
+    assert.throws(()=>A.validDeck(save,content,[...fullDeck,{key:keys[5],count:1}]),/卡包已满/);
+    save.deck=keys.map(key=>({key,count:3}));A.syncDeckLayouts(save,content);
+    assert.equal(save.deck.reduce((total,row)=>total+row.count,0),10);
+    assert.ok(save.deck.every(row=>row.count<=2));
+    assert.equal(A.validDeck(save,content,A.recommendedDeck(save,content)),true);
+    for(const bag of Object.values(content.items).filter(item=>item.slot===24)) {
+        save.equipment[24]=bag.id;
+        assert.deepEqual(A.deckLimits(save,content),{capacity:Number(bag.stats[167]),eachCapacity:Number(bag.stats[170]),handSize:8});
+    }
+});
+test('legacy pocket saves migrate after validation and defer migration during battle',()=>{
+    const legacy=A.createAdventure(content);
+    delete legacy.defaultPocketVersion;
+    legacy.deck=A.recommendedDeck(legacy,content);A.syncDeckLayouts(legacy,content);
+    assert.ok(legacy.deck.some(row=>row.count===3));
+    const loaded=A.parseSave(JSON.stringify(legacy),content);
+    assert.equal(loaded.defaultPocketVersion,1);
+    assert.ok(loaded.deck.every(row=>row.count<=2));
+    assert.equal(loaded.xp,legacy.xp);
+    const invalid=structuredClone(legacy);invalid.deck[0].count=99;
+    assert.throws(()=>A.parseSave(invalid,content));
+    A.beginEncounter(legacy,content,'fire-scout');
+    const resumed=A.parseSave(JSON.stringify(legacy),content);
+    assert.deepEqual(resumed.pendingEncounter,legacy.pendingEncounter);
+    assert.equal(A.deckLimits(resumed,content).eachCapacity,3);
+    act(resumed,'retreat');
+    assert.equal(A.deckLimits(resumed,content).eachCapacity,2);
+    assert.ok(resumed.deck.every(row=>row.count<=2));
+    assert.doesNotThrow(()=>A.parseSave(resumed,content));
+});
 test('school gear restrictions, deck capacity, invalid decisions and save rejection',()=>{
     const s=A.createAdventure(content,{school:'fire'});s.inventory[1236]=1;
     assert.equal(A.canEquip(s,content.items[1236],content),false);

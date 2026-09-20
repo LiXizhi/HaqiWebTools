@@ -1,0 +1,199 @@
+{
+  "source": "script/apps/Aries/Desktop/CombatCharacterFrame/CombatMagicStarPage.lua: ExList, NeedInfo, SpecialList",
+  "levelCap": 10,
+  "levels": [
+    {
+      "level": 0,
+      "HP": 5,
+      "attack": 5,
+      "guard": 4,
+      "cure": 2,
+      "becured": 2,
+      "hit": 2,
+      "exp": 150,
+      "stamina": 0,
+      "weekly_money": 300,
+      "daily_money": 120,
+      "friends": 0
+    },
+    {
+      "level": 1,
+      "HP": 5,
+      "attack": 5,
+      "guard": 5,
+      "cure": 3,
+      "becured": 3,
+      "hit": 2,
+      "exp": 155,
+      "stamina": 10,
+      "weekly_money": 360,
+      "daily_money": 120,
+      "friends": 10
+    },
+    {
+      "level": 2,
+      "HP": 5,
+      "attack": 6,
+      "guard": 6,
+      "cure": 4,
+      "becured": 3,
+      "hit": 3,
+      "exp": 160,
+      "stamina": 20,
+      "weekly_money": 480,
+      "daily_money": 160,
+      "friends": 20
+    },
+    {
+      "level": 3,
+      "HP": 6,
+      "attack": 7,
+      "guard": 6,
+      "cure": 4,
+      "becured": 3,
+      "hit": 3,
+      "exp": 165,
+      "stamina": 30,
+      "weekly_money": 600,
+      "daily_money": 200,
+      "friends": 30
+    },
+    {
+      "level": 4,
+      "HP": 6,
+      "attack": 8,
+      "guard": 7,
+      "cure": 4,
+      "becured": 5,
+      "hit": 4,
+      "exp": 170,
+      "stamina": 40,
+      "weekly_money": 720,
+      "daily_money": 240,
+      "friends": 40
+    },
+    {
+      "level": 5,
+      "HP": 6,
+      "attack": 9,
+      "guard": 7,
+      "cure": 5,
+      "becured": 5,
+      "hit": 4,
+      "exp": 175,
+      "stamina": 50,
+      "weekly_money": 840,
+      "daily_money": 280,
+      "friends": 50
+    },
+    {
+      "level": 6,
+      "HP": 7,
+      "attack": 10,
+      "guard": 7,
+      "cure": 5,
+      "becured": 6,
+      "hit": 4,
+      "exp": 180,
+      "stamina": 60,
+      "weekly_money": 960,
+      "daily_money": 320,
+      "friends": 60
+    },
+    {
+      "level": 7,
+      "HP": 7,
+      "attack": 12,
+      "guard": 8,
+      "cure": 6,
+      "becured": 6,
+      "hit": 5,
+      "exp": 185,
+      "stamina": 70,
+      "weekly_money": 1020,
+      "daily_money": 340,
+      "friends": 70
+    },
+    {
+      "level": 8,
+      "HP": 7,
+      "attack": 14,
+      "guard": 8,
+      "cure": 6,
+      "becured": 7,
+      "hit": 5,
+      "exp": 190,
+      "stamina": 80,
+      "weekly_money": 1080,
+      "daily_money": 360,
+      "friends": 80
+    },
+    {
+      "level": 9,
+      "HP": 8,
+      "attack": 17,
+      "guard": 8,
+      "cure": 6,
+      "becured": 7,
+      "hit": 5,
+      "exp": 195,
+      "stamina": 90,
+      "weekly_money": 1140,
+      "daily_money": 380,
+      "friends": 90
+    },
+    {
+      "level": 10,
+      "HP": 10,
+      "attack": 20,
+      "guard": 9,
+      "cure": 8,
+      "becured": 8,
+      "hit": 6,
+      "exp": 200,
+      "stamina": 100,
+      "weekly_money": 1200,
+      "daily_money": 400,
+      "friends": 100
+    }
+  ],
+  "rewards": [
+    {
+      "id": "1290",
+      "itemId": 1290,
+      "name": "火焰魔杖",
+      "starLevel": 1,
+      "heroLevel": 1
+    },
+    {
+      "id": "1291",
+      "itemId": 1291,
+      "name": "暴云魔杖",
+      "starLevel": 1,
+      "heroLevel": 21
+    },
+    {
+      "id": "1292",
+      "itemId": 1292,
+      "name": "烈焰魔杖",
+      "starLevel": 1,
+      "heroLevel": 31
+    },
+    {
+      "id": "1296",
+      "itemId": 1296,
+      "name": "灵光魔杖",
+      "starLevel": 6,
+      "heroLevel": 1
+    },
+    {
+      "id": "1297",
+      "itemId": 1297,
+      "name": "守护法杖",
+      "starLevel": 10,
+      "heroLevel": 1
+    }
+  ],
+  "weeklyItemId": 17213,
+  "weeklySource": "Web adaptation of SpecialList.weekly_money display values, per character, Asia/Shanghai calendar week."
+}

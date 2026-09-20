@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>会员界面验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_shop.css">
+<body class="haqi-app"><div id="hud" class="world-hud"></div><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,applyAction} from '../../js/adventure_core.js';
+import {tickCheckin} from '../../js/adventure_checkin_core.js';
+import {renderHud,renderPanel} from '../../js/view_adventure.js';
+// Isolated test identity, never reads or writes a real account or save.
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'小哈奇'});
+if(new URLSearchParams(location.search).has('checkin'))tickCheckin(save,Date.now(),5400001);
+if(new URLSearchParams(location.search).has('gear'))save.inventory[1290]=1;
+const model={assets,save,equipmentView:{tab:'gear',slot:0,item:null,page:0},shopView:{},membership:{status:'ready',isVip:!new URLSearchParams(location.search).has('ordinary'),username:'会员界面验收',expiresAt:'2027-09-21T00:00:00Z'}};
+const root=document.querySelector('#root'),cb={close:()=>root.replaceChildren(),panel:show,membership:()=>show('membership'),refreshMembership:()=>show('membership'),track:()=>{},cloud:()=>{},becomeVip:()=>{root.textContent='个人资料入口已调用（隔离验收）';},action:value=>{try{applyAction(save,assets.content,value.type==='checkin'?{...value,now:Date.now()}:value,{keepworkVip:model.membership.isVip,expiresAt:model.membership.expiresAt,now:Date.now()});renderHud(document.querySelector('#hud'),model,cb);show(value.type==='checkin'?'checkin':'membership');}catch(error){root.append(document.createTextNode(error.message));}}};
+function show(kind){renderPanel(root,kind,model,cb)}
+renderHud(document.querySelector('#hud'),model,cb);
+</script></body></html>

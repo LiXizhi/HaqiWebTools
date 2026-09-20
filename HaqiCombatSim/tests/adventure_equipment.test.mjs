@@ -25,10 +25,10 @@ test('preview is side-effect free and bag removal trims only configured cards in
     const s=hero();act(s,'equip',{itemId:24003});s.deck=A.recommendedDeck(s,content);
     assert.equal(s.deck.reduce((n,r)=>n+r.count,0),20);
     const old=structuredClone(s),preview=previewEquipment(s,content,{type:'unequip',slot:24});
-    assert.deepEqual(s,old);assert.equal(preview.trimmed,6);
-    act(s,'unequip',{slot:24});assert.equal(s.deck.reduce((n,r)=>n+r.count,0),14);
+    assert.deepEqual(s,old);assert.equal(preview.trimmed,10);
+    act(s,'unequip',{slot:24});assert.equal(s.deck.reduce((n,r)=>n+r.count,0),10);
     assert.deepEqual(s.cards,old.cards);assert.equal(s.inventory[24003],1);
-    assert.deepEqual(s.deck.slice(0,4),old.deck.slice(0,4));assert.doesNotThrow(()=>A.parseSave(s,content));
+    assert.deepEqual(s.deck,old.deck.slice(0,5).map(row=>({...row,count:2})));assert.doesNotThrow(()=>A.parseSave(s,content));
 });
 test('invalid ownership, school, level, slot and non-equipment actions are atomic',()=>{
     const s=A.createAdventure(content);s.inventory[1912]=1;s.inventory[1236]=1;s.inventory[17213]=10;

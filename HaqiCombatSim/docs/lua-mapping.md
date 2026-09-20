@@ -238,3 +238,14 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 - Database/extendedcost.db.mem：脚本export_skill_learning.py解码纯数据，校验确定性的单资格奖励，导出105条thisClass/otherClass记录（exID、等级、前置卡牌、学系、费用），源SHA-256保存在chapter.skillLearning。未知条件不放开。
 - 对应adventure_learning_core.js，核心保存与界面草稿共用skillLearningStatus。学习费用来自数据，不统一假设所有卡牌1点；没有学习配置的变体不再默认为一级可学。
 - 原导师7Mentor.xml与服务端升级发点表缺失。网页发点采用BalanceParams.skillLearning.pointLevels的4/8/12/16/20/25/30/35/40/45/50，均1点；明确属于网页改编。未实现导师顺序菜单、任务课程全量及洗点接口。既有章节本系自动赠卡和旧存档已学资格保留。
+
+## 魔法星 UI 与会员适配（2026-09-21）
+
+`CombatMagicStarPage.lua` 的 SpecialList（0–10级）原值导入 `data/adventure/magic-star.json`，仅用于 UI 属性预览，不改变战斗公式。ExList/NeedInfo 对应 1290/1291/1292/1296/1297 奖励及门槛。用户要求将原版 M 值成长替换为剩余会员日历月数（向上取整，封顶10级），实现于 `adventure_magic_star_core.js`。每周仙豆按 SpecialList.weekly_money 做本地发放，区别于原版 MagicMoneyBox.lua 的后端兑换1658。
+
+## 米酒葫芦兑换数据（2026-09-21）
+
+- `MiJiuHuLu.lua:GetObtainAwardState L326–389`：累计在线严格大于1/15/30/60/90分钟；普通及会员奖励独立标记，普通领取后才显示会员领取。
+- `Database/extendedcost.db.mem:1802–1806` 导出至 `data/adventure/checkin.json`：普通仙豆100/120/140/160/180，及捕鱼网、精力值药剂、白色魔力晶石、抽奖铜币、自动战斗药丸。五个角色等级分组奖励完全相同。兑换表道具数量高于 `GetTip2` 的旧提示，以实际配置为准。
+- `extendedcost:1801` 与 `MiJiuHuLu.lua:GetVipTip L260–278`：星级1–10额外仙豆150/160/170/180/190/200/220/240/260/300；星级沿用用户指定的会员剩余有效期映射。服务器日标记50321–50342改为角色存档中的claimed/vipClaimed，不作为背包物品。
+- 原版幸运抽奖走 `paraworld.users.Lottery`，本地无权重与完整奖池，未伪造；日历签到是独立 `DailyCheckin` 活动，本次仍未接入。上述入口和道具未开放用途在界面明确说明。

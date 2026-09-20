@@ -1,0 +1,171 @@
+{
+  "source": "Database/extendedcost.db.mem:1801–1806; script/apps/Aries/Desktop/MiJiuHuLu.lua:GetObtainAwardState/GetVipTip",
+  "sourceSha256": "df148affc7f6091c0309485f6642b74db303d28d6304ef6700e120f6825bb27e",
+  "gourds": [
+    {
+      "exchangeId": 1802,
+      "rewards": [
+        {
+          "id": 17213,
+          "count": 100
+        },
+        {
+          "id": 17113,
+          "count": 10
+        },
+        {
+          "id": 17393,
+          "count": 2
+        },
+        {
+          "id": 17258,
+          "count": 2
+        }
+      ]
+    },
+    {
+      "exchangeId": 1803,
+      "rewards": [
+        {
+          "id": 17213,
+          "count": 120
+        },
+        {
+          "id": 17346,
+          "count": 2
+        }
+      ]
+    },
+    {
+      "exchangeId": 1804,
+      "rewards": [
+        {
+          "id": 17213,
+          "count": 140
+        },
+        {
+          "id": 17369,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "exchangeId": 1805,
+      "rewards": [
+        {
+          "id": 17213,
+          "count": 160
+        },
+        {
+          "id": 12007,
+          "count": 10
+        }
+      ]
+    },
+    {
+      "exchangeId": 1806,
+      "rewards": [
+        {
+          "id": 17213,
+          "count": 180
+        },
+        {
+          "id": 17347,
+          "count": 2
+        }
+      ]
+    }
+  ],
+  "vipCoinsByLevel": [
+    0,
+    150,
+    160,
+    170,
+    180,
+    190,
+    200,
+    220,
+    240,
+    260,
+    300
+  ],
+  "items": {
+    "17369": {
+      "id": 17369,
+      "name": "幸运铜币",
+      "description": "此道具可以用来参与一次【幸运铜币专区大抽奖】#祝你好运！；当前版本暂未开放使用，可保留在背包中。",
+      "stats": {},
+      "slot": 0,
+      "kind": 0,
+      "sourceIcon": "Texture/Aries/Item/17369_LotteryCopperCoin.png",
+      "sourceSha256": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+      "useUnavailable": true
+    },
+    "17393": {
+      "id": 17393,
+      "name": "精力值药剂(小)",
+      "description": "使用一个精力值药剂(小)#可回复50点精力值#每日获得上限为4瓶#魔法星用户可以使用；当前版本暂未开放使用，可保留在背包中。",
+      "stats": {},
+      "slot": 0,
+      "kind": 0,
+      "sourceIcon": "Texture/Aries/Item/17393_EnergyPills_BindingS.png",
+      "sourceSha256": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+      "useUnavailable": true
+    },
+    "17258": {
+      "id": 17258,
+      "name": "白色魔力晶石",
+      "description": "打造顶级装备的必备材料。；当前版本暂未开放使用，可保留在背包中。",
+      "stats": {},
+      "slot": 0,
+      "kind": 0,
+      "sourceIcon": "Texture/Aries/Item/17258_ThassosWhite.png",
+      "sourceSha256": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+      "useUnavailable": true
+    },
+    "17347": {
+      "id": 17347,
+      "name": "翻倍捕鱼网",
+      "description": "一旦捕获成功，获得的鱼X2！#售价：5魔豆/件；当前版本暂未开放使用，可保留在背包中。",
+      "stats": {},
+      "slot": 0,
+      "kind": 0,
+      "sourceIcon": "Texture/Aries/Item/17347_DoubleCatchingFishNet.png",
+      "sourceSha256": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+      "useUnavailable": true
+    },
+    "17113": {
+      "id": 17113,
+      "name": "捕鱼网",
+      "description": "结实的渔网，可以用来在休闲渔场捕鱼，捕获的鱼可以卖给渔夫汉特获得仙豆哦#购买价格:5仙豆#购买地点:哈奇岛-休闲渔场-渔夫汉特；当前版本暂未开放使用，可保留在背包中。",
+      "stats": {},
+      "slot": 0,
+      "kind": 0,
+      "sourceIcon": "Texture/Aries/Item/17113_CatchingFishNet.png",
+      "sourceSha256": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+      "useUnavailable": true
+    },
+    "17346": {
+      "id": 17346,
+      "name": "特大捕鱼网",
+      "description": "比普通捕鱼网大2倍，必能捕获到鱼。#售价：2魔豆/件；当前版本暂未开放使用，可保留在背包中。",
+      "stats": {},
+      "slot": 0,
+      "kind": 0,
+      "sourceIcon": "Texture/Aries/Item/17346_SuperCatchingFishNet.png",
+      "sourceSha256": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+      "useUnavailable": true
+    },
+    "12007": {
+      "id": 12007,
+      "name": "自动战斗药丸",
+      "description": "此道具用来开启自动战斗功能，每次战斗消耗一个；当前版本暂未开放使用，可保留在背包中。",
+      "stats": {},
+      "slot": 0,
+      "kind": 0,
+      "sourceIcon": "Texture/Aries/Item/12007_AutomaticCombatPills.png",
+      "sourceSha256": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+      "useUnavailable": true
+    }
+  }
+}

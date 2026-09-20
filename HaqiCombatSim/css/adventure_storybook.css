@@ -298,7 +298,7 @@
 .storybook-ui .utility-nav { padding:0; grid-template-columns:repeat(4,54px); gap:5px; }
 .storybook-ui .utility-nav::before { content:none; }
 .storybook-ui .game-nav { padding:0 8px 4px; }
-.storybook-ui .game-nav::before { content:""; top:22px; border:6px solid transparent; border-image:var(--ui-wood) var(--ui-wood-slice) fill / 6px / 0 stretch; filter:drop-shadow(0 2px 4px #21180744); }
+.storybook-ui .game-nav::before { content:none; }
 .storybook-ui .dialogue-box { min-height:146px; padding-left:176px; }
 .storybook-ui .dialogue-box::before { left:0; }
 .storybook-ui .dialogue-portrait { left:10px; bottom:8px; width:154px!important; height:178px!important; }
@@ -473,3 +473,83 @@
         text-decoration:underline;
     }
 }
+
+/* VIP star: original MagicStar information-card hierarchy, Keepwork entitlement. */
+.membership-emblem { position:relative; display:inline-grid; place-items:center; width:88px; height:88px; flex:none; filter:drop-shadow(0 3px 2px #70471940); }
+.membership-emblem svg { position:absolute; inset:0; width:100%; height:100%; }
+.membership-emblem b { position:relative; color:#785021; font:bold 30px Georgia,serif; text-shadow:0 1px #fff4bc; }
+.membership-card { display:grid; grid-template-columns:180px minmax(0,1fr); border:1px solid #c7a35d; border-radius:8px; overflow:hidden; background:#fff9e8; }
+.membership-identity { display:flex; flex-direction:column; align-items:center; padding:24px 14px; text-align:center; background:linear-gradient(#eae3d1,#f6edda); border-right:1px solid #d3b779; }
+.is-vip .membership-identity { background:radial-gradient(ellipse at top,#fff6c6,#edcb83); }
+.membership-identity h3 { margin:14px 0 4px; }
+.membership-account { margin:0; overflow-wrap:anywhere; max-width:100%; font-size:12px; }
+.membership-status { margin:14px 0 0; font-size:12px; color:#426244; }
+.membership-benefits { padding:24px; }
+.membership-benefits h3 { margin:8px 0 14px; }
+.membership-benefits p { line-height:1.7; }
+.membership-eyebrow { margin:0; color:#956c24; font-size:12px; letter-spacing:2px; }
+.membership-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:16px; }
+@media(max-width:520px) {
+ .membership-card { grid-template-columns:1fr; }
+ .membership-identity { padding:16px; border-right:0; border-bottom:1px solid #d3b779; }
+ .membership-identity .membership-emblem { width:64px; height:64px; }
+ .membership-benefits { padding:16px; }
+}
+
+/* Compact text membership entry beside the character name. */
+:is(.haqi-app,.storybook-ui) .hero-membership { min-height:24px; padding:2px 6px; border:1px solid #c2a56b; border-radius:4px; background:#f8e8bf; color:#745124; font-size:10px; line-height:18px; text-decoration:none; }
+:is(.haqi-app,.storybook-ui) .hero-membership:hover { background:#fff3d5; border-color:#947039; text-decoration:none; }
+
+/* Original MagicStar: identity and staff rewards left, four information tabs right. */
+.magic-star-modal { width:min(940px,96vw); }
+.magic-star-layout { display:grid; grid-template-columns:minmax(260px,0.85fr) minmax(0,1.15fr); gap:16px; }
+.magic-star-left,.magic-star-right { min-width:0; padding:14px; border:1px solid #d4b875; border-radius:7px; background:#fff8e6; }
+.magic-star-identity { display:flex; align-items:center; gap:14px; }
+.magic-star-identity h3 { margin:0 0 8px; }.magic-star-identity p { margin:5px 0; font-size:12px; }
+.magic-star-energy { margin:14px 0 20px; padding:8px 12px; border:1px solid #bdab66; border-radius:4px; background:#f3e1a8; color:#675126; }
+.magic-star-rewards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.magic-star-reward { display:flex; flex-direction:column; align-items:center; gap:5px; padding:8px; background:#f7edce; border:1px solid #dcc48c; border-radius:5px; text-align:center; }
+.magic-star-reward strong { font-size:12px; }.magic-star-reward small { font-size:10px; }.magic-star-reward button { min-height:28px; padding:3px 12px; }
+.magic-star-item { width:60px; height:60px; }.magic-star-left>h3 { font-size:15px; }
+.magic-star-tabs { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:4px; }
+.magic-star-tabs button { padding:6px 2px; font-size:12px; }
+.magic-star-detail { padding-top:12px; }.magic-star-detail p { line-height:1.8; font-size:13px; }
+.magic-star-detail h3 { margin:6px 0 12px; font-size:17px; }
+.magic-star-table-scroll { overflow-x:auto; }.magic-star-table { width:100%; border-collapse:collapse; font-size:11px; white-space:nowrap; text-align:center; }
+.magic-star-table th,.magic-star-table td { padding:8px 4px; border-bottom:1px solid #ddca9b; }.magic-star-table th { background:#efdfaf; }
+.magic-star-table .current,.magic-star-weekly-list .current { background:#dce8ca; color:#254a31; font-weight:bold; }
+.magic-star-weekly-list { margin:14px 0; display:grid; grid-template-columns:1fr 1fr; gap:3px 14px; font-size:12px; }.magic-star-weekly-list>div { display:flex; justify-content:space-between; padding:4px; }
+.magic-star-footer { display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:14px; }.magic-star-footer p { flex:1; min-width:180px; font-size:12px; }
+@media(max-width:700px) { .magic-star-layout { grid-template-columns:1fr; }.magic-star-rewards { grid-template-columns:repeat(3,minmax(0,1fr)); }.magic-star-left,.magic-star-right { padding:10px; }.magic-star-footer p { flex-basis:100%; } }
+.magic-star-rewards { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.magic-star-reward { padding:7px 3px; }
+.magic-star-item { width:52px; height:52px; }
+.magic-star-reward small { min-height:26px; }
+.magic-star-modal .magic-star-reward button { min-height:28px; height:28px; padding:2px 8px; font-size:11px; }
+.magic-star-footer { position:sticky; bottom:-16px; z-index:1; padding:10px 0; border-top:1px solid #cfb477; background:#f5e5ba; }
+
+/* MiJiuHuLu: five brewing stages, separate ordinary and magic-star claims. */
+.checkin-modal { width:min(880px,96vw); }
+.checkin-intro { text-align:center; font-size:14px; margin:0 0 12px; }
+.checkin-member-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:8px 12px; border:1px solid #c9ad70; border-radius:6px; background:#f2e4bd; }
+.checkin-member-summary { margin:0; font-size:12px; }.checkin-member-bar button { flex:none; }
+.checkin-online { margin:14px 0; }
+.checkin-gourds .gourd-reward { border-radius:8px; background:#faf0d3; padding:12px 7px; gap:7px; }
+.checkin-gourds .gourd-art { height:92px; }
+.checkin-gourds .gourd-items { min-height:66px; font-size:11px; line-height:1.6; color:#786443; text-align:center; }
+.checkin-gourds .gourd-base,.checkin-gourds .gourd-vip { width:100%; min-height:32px; height:auto; padding:4px 2px; font-size:11px; }
+.checkin-gourds .gourd-vip { color:#76501e; }
+.checkin-vip-table { font-size:12px; padding:10px; border:1px solid #d4bc83; border-radius:5px; }
+.checkin-vip-table summary { cursor:pointer; }.checkin-vip-table>div { display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:10px; }
+@media(max-width:600px){.checkin-gourds{grid-template-columns:repeat(2,minmax(0,1fr));}.checkin-vip-table>div{grid-template-columns:repeat(2,1fr);}.checkin-member-bar{align-items:flex-start;}.checkin-gourds .gourd-items{min-height:52px;}}
+.checkin-gourds .gourd-reward:nth-child(1) .gourd-art { transform:scale(.65); transform-origin:bottom; }
+.checkin-gourds .gourd-reward:nth-child(2) .gourd-art { transform:scale(.75); transform-origin:bottom; }
+.checkin-gourds .gourd-reward:nth-child(3) .gourd-art { transform:scale(.85); transform-origin:bottom; }
+.checkin-gourds .gourd-reward:nth-child(4) .gourd-art { transform:scale(.95); transform-origin:bottom; }
+
+/* A reward's inspect target stays enabled independently of its claim button. */
+:is(.haqi-app,.storybook-ui) .magic-star-reward .item-inspect-button { display:flex; flex-direction:column; align-items:center; gap:5px; width:100%; height:auto; min-height:76px; padding:3px; border:1px solid transparent; border-radius:4px; background:none; box-shadow:none; color:inherit; font:inherit; text-shadow:none; }
+:is(.haqi-app,.storybook-ui) .item-inspect-button::before { display:none; }
+:is(.haqi-app,.storybook-ui) .item-inspect-button:hover { background:#fff6d9; border-color:#c3a263; }
+:is(.haqi-app,.storybook-ui) .item-inspect-button:focus-visible { outline:2px solid #86602c; outline-offset:1px; }
+.item-details-art { width:96px; height:96px; flex:none; }

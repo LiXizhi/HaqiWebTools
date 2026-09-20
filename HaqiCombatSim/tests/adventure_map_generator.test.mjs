@@ -52,6 +52,26 @@ test('version one external islands migrate to their new arrival points while tow
     }
 });
 
+test('ordinary regions do not draw ambient motes while explicit previews remain available',()=>{
+    let checked=0;
+    for(const id of ids){
+        const world=createWorld(id,content);
+        for(const position of world.layout.regions.filter(region=>region.weather.kind==='motes')){
+            const calls=[];
+            const context=new Proxy({}, {get:(_,key)=>(...args)=>calls.push([key,...args])});
+            for(const time of [0,100]){
+                drawIslandWeather(context,world,position,time,1280,720);
+                drawIslandWeather(context,world,position,time,390,844);
+                assert.equal(calls.length,0,`${id}:${position.id}`);
+            }
+            drawIslandWeather(context,world,position,100,1280,720,false,null,position.weather);
+            assert.ok(calls.some(call=>call[0]==='ellipse'));
+            checked++;
+        }
+    }
+    assert.ok(checked>0);
+});
+
 test('regional weather has a fixed viewport budget and respects reduced motion',()=>{
     const world=createWorld('ice',content),position=world.layout.regions.find(r=>r.biome==='snow');
     const commands=[];const c=new Proxy({}, {get:(_,key)=>(...args)=>commands.push([key,...args])});

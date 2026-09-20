@@ -3,6 +3,7 @@ import { regionAt } from './adventure_island_layout_core.js';
 export function drawIslandWeather(c,world,position,time,w,h,reducedMotion=false,art=null,override=null){
     const weather=override||(world.layout&&regionAt(world,position)?.weather);
     if(!weather||weather.kind==='none'||reducedMotion)return;
+    if(!override&&weather.kind==='motes')return;
     const {kind,color,speed,wind}=weather,count=Math.min(64,weather.count);
     const wrap=(n,max)=>((n%max)+max)%max;
     c.save();c.fillStyle=color;c.strokeStyle=color;c.lineWidth=1;

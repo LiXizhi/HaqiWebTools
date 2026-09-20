@@ -207,12 +207,12 @@ test('VIP-only goods require transient Keepwork access, not a character or actio
  const item=c.shop.find(row=>row.vipOnly&&!row.isInternalTest);assert.ok(item);
  const s=fresh();s.xp=c.progression.xpThresholds[49];A.syncProgression(s,c);s.inventory[100]=10000;
  s.vip=true;s.keepworkVip=true;const before=structuredClone(s);
- assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:item.id,keepworkVip:true}),/Keepwork VIP/);
+ assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:item.id,keepworkVip:true}),/仅限会员购买/);
  assert.deepEqual(s,before);
  const cost=P.productPrice(item,c);
  A.applyAction(s,c,{type:'buy',productId:item.id},{keepworkVip:true});
  assert.equal(s.inventory[100],10000-cost);assert.equal(s.inventory[item.itemId],1);
  const purchased=structuredClone(s);
- assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:item.id},{keepworkVip:false}),/Keepwork VIP/);
+ assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:item.id},{keepworkVip:false}),/仅限会员购买/);
  assert.deepEqual(s,purchased);assert.doesNotThrow(()=>A.parseSave(s,c));
 });

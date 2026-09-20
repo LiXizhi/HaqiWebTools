@@ -21,7 +21,7 @@ test('removing bag and staff repairs equipment, deck and upgrades without deleti
     A.applyAction(s,c,{type:'equip',itemId:24003});A.applyAction(s,c,{type:'equip',itemId:1912});s.deck=A.recommendedDeck(s,c);
     const r=prepareDebugEdit(s,c,{'inventory:24003':0,'inventory:1912':0});
     assert.deepEqual(r.save.equipment,{});assert.deepEqual(r.save.upgrades,{});
-    assert.equal(r.save.deck.reduce((n,r)=>n+r.count,0),14);assert.deepEqual(r.save.cards,s.cards);
+    assert.equal(r.save.deck.reduce((n,r)=>n+r.count,0),10);assert.deepEqual(r.save.cards,s.cards);
     assert.ok(r.notes.length>=3);assert.doesNotThrow(()=>A.parseSave(r.save,c));
 });
 test('lowering level unequips restricted gear but retains learned cards',()=>{

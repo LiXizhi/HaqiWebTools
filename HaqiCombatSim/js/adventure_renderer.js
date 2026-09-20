@@ -136,8 +136,6 @@ export function createRenderer(canvas,assets) {
             }
         }
         plate(ctx,world.portal.name,world.portal.x,world.portal.y+48);
-        // A few drifting motes. No random calls or dependence on combat seed.
-        if(!world.layout&&!reducedMotion.matches)for(let i=0;i<12;i++){const x=(world.layout?Math.floor(cam.x/800)*800:470)+(i*97)%950+Math.sin(t*.4+i)*20,y=(world.layout?Math.floor(cam.y/800)*800:420)+(i*179)%820+Math.cos(t*.3+i)*15;ellipse(ctx,x,y,2,2,`rgba(255,252,181,${.22+.18*Math.sin(t+i)})`);}
         if(!title)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);
         if(!title)drawTeleportEffect(ctx,teleportEffect,time,reducedMotion.matches);
         ctx.restore();

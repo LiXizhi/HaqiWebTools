@@ -1,0 +1,19 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>奖励持久化隔离验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app"><div id="root"></div><p id="status" role="status"></p><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {createRoleStore} from '../../js/adventure_roles.js';
+import {persistReward} from '../../js/adventure_reward_persistence.js';
+import {renderPanel} from '../../js/view_adventure.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources();
+// Separate namespace; never touches the user's role cache or real account.
+const prefix='haqi.test.reward-reload.'+(new URLSearchParams(location.search).get('case')||'default')+'.';
+const storage={getItem:key=>localStorage.getItem(prefix+key),setItem:(key,value)=>localStorage.setItem(prefix+key,value)};
+const store=createRoleStore({content:assets.content,dataset:assets.dataset,storage});store.open('fixture');if(!store.catalog.roles.length)store.create(createAdventure(assets.content));
+const model={assets,save:store.catalog.roles[0].save,now:Date.now(),membership:{status:'ready',isVip:true,expiresAt:'2028-09-21',username:'隔离验收'},membershipView:{tab:'gifts'}};
+const root=document.querySelector('#root'),status=document.querySelector('#status');
+const cb={close:()=>{},refreshMembership:()=>{},becomeVip:()=>{},action:value=>{try{model.save=persistReward(model.save,assets.content,value,{keepworkVip:true,expiresAt:model.membership.expiresAt,now:Date.now()},store.scoped()).save;paint();}catch(error){status.textContent=error.message;}}};
+function paint(){renderPanel(root,'membership',model,cb);status.textContent=`仙豆余额 ${model.save.inventory[17213]||0}`;}paint();
+</script></body></html>

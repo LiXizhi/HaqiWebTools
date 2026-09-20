@@ -1,3 +1,4 @@
+import {claimMagicStar,validateMagicStarClaims} from './adventure_magic_star_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { worldDimensions, mapInfo } from './adventure_island_layout_core.js';
@@ -42,7 +43,7 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
         xp: 0, level: 1, inventory: {}, equipment: {}, upgrades: {}, equipmentInstances: [], equipmentGuids: {}, nextEquipmentGuid: 1, cards: {}, deck: [], quests: {},
         pet: null, zone: 'camp', position: {...mapInfo('camp',content).initialSpawn}, facing: 3,
         encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
-        visitedTown: false, music: false, tips: {}, revision: 0, bagRulesVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion };
+        visitedTown: false, music: false, tips: {}, revision: 0, bagRulesVersion: 1, defaultPocketVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion };
     syncProgression(save, content);
     save.deck = recommendedDeck(save, content);
     syncDeckLayouts(save,content);
@@ -51,7 +52,13 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
 }
 export function deckLimits(save, content) {
     const bag = content.items[save.equipment[24]];
-    return { capacity: Number(bag?.stats[167] || 14), eachCapacity: Number(bag?.stats[170] || 3), handSize: 8 };
+    const legacy = save.defaultPocketVersion === undefined;
+    return { capacity: Number(bag?.stats[167] || (legacy ? 14 : 10)), eachCapacity: Number(bag?.stats[170] || (legacy ? 3 : 2)), handSize: 8 };
+}
+function migrateDefaultPocket(save,content) {
+    if(save.defaultPocketVersion===1||save.pendingEncounter)return;
+    save.defaultPocketVersion=1;
+    syncDeckLayouts(save,content);
 }
 // arena_server.lua L8080-8086: learned spells are qualifications, not consumed copies.
 // Preserve the original chapter-only inventory mode for its standalone fixtures.
@@ -218,7 +225,8 @@ export function applyAction(save, content, action, access={}) {
     if(content.pets&&Pets.petAction(save,content,action,access)){syncEquipmentInstances(save,content);save.revision++;return {changed:true};}
     const q = currentQuest(save,content);
     switch (action.type) {
-    case 'checkin': claimCheckin(save, content, action.now, action.index); break;
+    case 'magic-star-claim': claimMagicStar(save,content,action,access);syncEquipmentInstances(save,content);break;
+    case 'checkin': claimCheckin(save, content, action.now, action.index, access, action.bonus===true); break;
     case 'accept': {
         assert(q && q.id === Number(action.questId) && q.startNpc === Number(action.npcId), '当前没有可接取的任务');
         if (!save.quests[q.id]) save.quests[q.id] = { accepted: true, claimed: false, progress: {} };
@@ -325,6 +333,7 @@ export function applyAction(save, content, action, access={}) {
     default: throw new Error('未知操作');
     }
     migrateBagRules(save,content);
+    migrateDefaultPocket(save,content);
     syncDeckLayouts(save,content);
     syncEquipmentInstances(save,content);
     save.revision++;
@@ -365,13 +374,15 @@ export function settleEncounter(save,content,battle) {
         if (monster.id === 'water-bubble' && battle.rng.int(1,100) <= 20) save.inventory[17114] = (save.inventory[17114] || 0) + 1;
         syncProgression(save,content);
     } else save.position = {...mapInfo(save.zone,content).initialSpawn};
-    save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); save.revision++; return true;
+    save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); migrateDefaultPocket(save,content); save.revision++; return true;
 }
 export function parseSave(raw,content) {
     const s = typeof raw === 'string' ? JSON.parse(raw) : clone(raw);
     if(s?.schemaVersion===1){s.schemaVersion=SAVE_VERSION;if(content.pets){Pets.initializePets(s,content);if(s.pet&&content.pets.legacy_gululu)Pets.addPet(s,content,'legacy_gululu',s.pet.xp);}}
     assert(s && s.schemaVersion === SAVE_VERSION && s.contentVersion === content.contentVersion,'存档版本不兼容');
+    assert(s.defaultPocketVersion===undefined||s.defaultPocketVersion===1,'默认口袋规则版本无效');
     validateCheckin(s);
+    validateMagicStarClaims(s,content);
     assert(SCHOOLS.includes(s.school) && islandFor(s.zone),'存档角色无效');
     assert(typeof s.name === 'string' && s.name.length <= 16 && ['boy','girl'].includes(s.appearance),'存档外观无效');
     assert(Number.isSafeInteger(s.xp) && s.xp >= 0 && Number.isInteger(s.seed),'存档经验无效');
@@ -423,6 +434,7 @@ export function parseSave(raw,content) {
     }
     syncProgression(s,content); validDeck(s,content,s.deck);
     if(s.deckLayouts!==undefined)validateDeckLayouts(s,content,s.deckLayouts,s.activeDeckLayout);
+    migrateDefaultPocket(s,content);
     syncDeckLayouts(s,content);
     migrateQuestPetRewards(s,content,rewardsFor);
     syncEquipmentInstances(s,content);

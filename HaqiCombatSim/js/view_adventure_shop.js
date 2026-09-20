@@ -22,7 +22,7 @@ export function renderShop(body,model,cb,{el,button,art,tile}) {
     tabs.setAttribute('aria-label','商品分类');subtabs.setAttribute('aria-label','商品子分类');
     header.insertBefore(tabs,header.querySelector('.close-button'));
     const balance=el('section','shop-wallet',el('span','','我的奇豆'),el('strong','',String(save.inventory[100]||0)),el('small','',`${save.name} · ${save.level}级`));
-    const membershipLabel=model.membership?.isVip?'Keepwork VIP':'会员状态';
+    const membershipLabel=model.membership?.isVip?'会员权益':'升级会员';
     balance.append(button(membershipLabel,()=>cb.panel('membership'),'secondary shop-membership'));
     const preview=el('section','shop-preview');preview.setAttribute('aria-label','商品预览');
     const aside=el('aside','shop-sidebar',balance,preview);
@@ -60,7 +60,7 @@ export function renderShop(body,model,cb,{el,button,art,tile}) {
             if(tile)preview.append(tile(assets,'sprites',save.appearance==='girl'?12:8,120,150));
             preview.append(el('p','muted','点击商品图标查看详情'));return;
         }
-        preview.append(el('div','shop-preview-art',picture(item,112)),el('h3','',item.name),el('p','shop-item-meta',`${item.vipOnly?'Keepwork VIP 专属 · ':''}${item.level}级 · ${SCHOOL_NAMES[item.school]||'通用'}${owned(item)?' · 已拥有':''}`));
+        preview.append(el('div','shop-preview-art',picture(item,112)),el('h3','',item.name),el('p','shop-item-meta',`${item.vipOnly?'会员专属 · ':''}${item.level}级 · ${SCHOOL_NAMES[item.school]||'通用'}${owned(item)?' · 已拥有':''}`));
         const gear=c.items[item.itemId];
         if(item.kind==='gear'){
             if(gear.description)preview.append(el('p','shop-description',gear.description));

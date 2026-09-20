@@ -8,10 +8,15 @@ raw=base64.b64decode(source)
 source_hash=hashlib.sha256(source).hexdigest()
 key=b'Copyright@ParaEngine, LiXizhi\0'
 rows=LuaData(bytes(b^key[i%len(key)] for i,b in enumerate(raw)).decode()).value()
+flags=json.loads((Path(__file__).resolve().parents[1]/'data/adventure/item-flags.json').read_text(encoding='utf8'))['items']
 items={}
 for row in rows:
  t=row[18]; stats={str(t[i]):t[i+1] for i in range(2,22,2) if t[i]}
  if (t[23]==1 or t[22]==24) and t[22]>0 and 0<=float(stats.get('138',0))<=50:
   items[str(row[0])]={'id':row[0],'name':t[0],'description':t[1],'stats':stats,'slot':t[22],'kind':t[23],'source':'Database/globalstore.db.mem','sourceSha256':source_hash,'sourceIcon':row[3]}
+for item in items.values():
+ item['vipOnly']=item['stats'].get('180') == 1
+ if flags.get(str(item['id']),{}).get('isInternalTest') is True:
+  item['isInternalTest']=True
 Path('data/adventure/shop-candidates.json').write_text(json.dumps(items,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 print(len(items),'equipment candidates')

@@ -1,8 +1,6 @@
 import {createCloseButton} from './view_adventure_controls.js';
-import { equipmentAttributes,EQUIPMENT_SLOTS } from './adventure_equipment_core.js';
-import { canEquip, equipmentBlockReason } from './adventure_core.js';
 import { showPetDetails } from './view_adventure_pet_details.js';
-import { STARTERS,STAGE_NAMES,petStage,productPrice,petParams,FOOD_ID } from './adventure_pets_core.js';
+import { STARTERS,STAGE_NAMES,petStage,petParams,FOOD_ID } from './adventure_pets_core.js';
 export function petPortrait(assets,id,stage=0,size=96){
  const box=document.createElement('div');box.className='pet-sheet';box.style.width=box.style.height=`${size}px`;
  const art=assets.content.pets[id]?.art;if(!art)return box;
@@ -121,61 +119,4 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop'),'secondary'),teaching,notes);
  if(c.homeUrl){const link=el('a','pet-home-link',icon('shop'),el('span','','宠物家园'));link.href=c.homeUrl;link.target='_blank';link.rel='noopener noreferrer';link.title='联动筹备中，当前冒险进度不会写入家园';footer.append(link);}
  body.append(footer);
-}
-export function renderShop(body,model,cb,{el,button,art}){
- const {save,assets}=model,c=assets.content,state=model.shopView||{category:'pet',query:'',school:'',slot:'',ownership:'',page:0};
- body.append(el('p','',`奇豆 ${save.inventory[100]||0} · 当前等级 ${save.level} / 50`));
- let category=state.category;
- const filters=el('div','shop-filters'),query=el('input',''),school=el('select',''),ownership=el('select',''),slot=el('select','');
- const tabs=el('nav','shop-category-tabs');tabs.setAttribute('aria-label','商品分类');
- for(const [value,label] of [['gear','装备'],['bag','卡包'],['pet','宠物'],['supply','补给']]){
-  const tab=button(label,()=>{category=value;state.category=value;slot.value='';if(value==='supply')school.value='';updateFilters();body.scrollTop=0;},'secondary shop-category-tab');
-  tab.dataset.category=value;tabs.append(tab);
- }
- const header=body.closest('.modal').querySelector('.modal-header');header.classList.add('shop-header');header.insertBefore(tabs,header.querySelector('.close-button'));
- query.placeholder='搜索物种或装备名称';query.setAttribute('aria-label','搜索商品');
- for(const [v,n] of [['','所有学系'],['fire','烈火'],['ice','寒冰'],['storm','风暴'],['life','生命 / 自然'],['death','死亡'],['all','通用']])school.append(new Option(n,v));
- for(const [v,n] of [['','所有收藏'],['owned','已拥有'],['new','未拥有']])ownership.append(new Option(n,v));
- slot.append(new Option('所有部位',''));school.setAttribute('aria-label','商品学系');ownership.setAttribute('aria-label','收藏筛选');slot.setAttribute('aria-label','装备部位');
- for(const id of [...new Set(c.shop.filter(x=>x.slot).map(x=>x.slot))].sort((a,b)=>a-b))slot.append(new Option(EQUIPMENT_SLOTS.find(x=>x.id===id)?.name||`装备部位 ${id}`,id));
- query.value=state.query;school.value=state.school;slot.value=state.slot;ownership.value=state.ownership;
- filters.append(query,school,slot,ownership);body.append(filters);
- const tree=el('div','shop-tree'),pager=el('div','shop-pager');body.append(tree,pager);let page=state.page;
- const owned=item=>item.kind==='pet'?!!save.pets[item.petId]:(save.inventory[item.itemId]||0)>0;
- function paint(){
-  for(const tab of tabs.children){const selected=tab.dataset.category===category;tab.classList.toggle('active',selected);tab.setAttribute('aria-pressed',String(selected));}
-  slot.hidden=category!=='gear';school.hidden=category==='supply';
-  tree.replaceChildren();pager.replaceChildren();
-  const rows=c.shop.filter(x=>(category==='bag'?x.kind==='gear'&&x.slot===24:x.kind===category)&&x.name.includes(query.value)&&(!school.value||x.school===school.value)&&(!slot.value||String(x.slot)===slot.value)&&(!ownership.value||owned(x)===(ownership.value==='owned'))).sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'zh'));
-  page=Math.min(page,Math.max(0,Math.ceil(rows.length/24)-1));state.page=page;let last=-1;
-  for(const item of rows.slice(page*24,page*24+24)){
-   if(last!==item.level){tree.append(el('h3','shop-tier',`${item.level}级解锁 ${save.level>=item.level?'· 已解锁':'· 待成长'}`));last=item.level;}
-   const cost=productPrice(item,c),card=el('article','shop-card');
-   if(item.petId){
-    card.append(petPortrait(assets,item.petId));
-    card.append(button('查看四阶段与卡片',()=>showPetDetails(assets,item.petId,petPortrait,{el,button}),'secondary pet-details-button'));
-   }
-   if(item.kind==='gear'){const gear=c.items[item.itemId],image=art(assets,gear.art,80,80,'shop-gear-icon');image.setAttribute('role','img');image.setAttribute('aria-label',item.name);card.append(image);if(gear.iconFallback)card.append(el('small','muted','原图缺失 · 同部位示意图'));}
-   card.append(el('strong','',item.name),el('p','muted',`${cost} 奇豆${owned(item)?' · 已拥有':''}`));
-   if(item.kind==='gear'){const gear=c.items[item.itemId];card.append(el('p','',gear.description||''),el('small','',`属性：${equipmentAttributes(gear,save,c).map(x=>`${x.label} ${x.value}${x.unit}`).join(' · ')}`));if(gear.unsupportedStats?.length)card.append(el('small','muted',`当前未生效属性：${gear.unsupportedStats.join('、')}`));}
-   const buy=button('购买',()=>cb.action({type:'buy',productId:item.id}),'primary');buy.disabled=save.level<item.level||(save.inventory[100]||0)<cost||item.kind==='pet'&&owned(item);card.append(buy);
-   if(item.slot===24){
-    buy.disabled ||= owned(item);
-    card.append(el('small','muted',`${item.school==='all'?'全学系通用':{fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡'}[item.school]+'系专用'} · ${item.level}级可装备`));
-    if(owned(item)){
-     const gear=c.items[item.itemId],equipped=save.equipment[24]===item.itemId;
-     const equip=button(equipped?'已装备':'前往卡包配卡',()=>cb.panel('deck'),'secondary');
-     equip.disabled=equipped||!canEquip(save,gear,c);card.append(equip);
-     if(!canEquip(save,gear,c))card.append(el('small','muted',equipmentBlockReason(save,gear,c)));
-    }
-   }
-   if(item.kind==='pet'){const capture=button('寻找并捕获',()=>cb.encounter('wild:'+item.petId),'secondary');capture.disabled=save.level<item.level;card.append(capture);}
-   tree.append(card);
-  }
-  pager.append(button('上一页',()=>{page=Math.max(0,page-1);paint();},'secondary'),el('span','',`${page+1} / ${Math.max(1,Math.ceil(rows.length/24))} · 共${rows.length}项`),button('下一页',()=>{page++;paint();},'secondary'));
- }
- function updateFilters(){page=0;Object.assign(state,{category,query:query.value,school:school.value,slot:slot.value,ownership:ownership.value,page});paint();}
- for(const input of [query,school,slot,ownership])input.oninput=updateFilters;paint();
- const trial=el('select','');trial.setAttribute('aria-label','试炼等级');for(let level=1;level<=50;level++){const option=new Option(`${level}级试炼${level>save.level?'（未解锁）':''}`,level);option.disabled=level>save.level;trial.append(option);}trial.value=save.level;
- body.append(el('h3','','魔法试炼 · 经验与奇豆'),trial,button('开始试炼',()=>cb.encounter('trial:'+trial.value),'primary'));
 }

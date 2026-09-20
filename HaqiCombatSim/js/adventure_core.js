@@ -5,11 +5,13 @@ import { SCHOOLS } from './combat_params_core.js';
 import { normalizeStats, statIdToEntry, clampDeck } from './combat_unit_core.js';
 import * as Pets from './adventure_pets_core.js';
 import { hashSeed } from './rng_core.js';
+import {mountGem,removeGems} from './adventure_gems_core.js';
 import { equipmentRequirements } from './adventure_item_rules_core.js';
 import { upgradeAt, upgradeLevels, applyUpgradeStats } from './adventure_upgrade_core.js';
 import { findEquipmentInstance, syncEquipmentInstances, validateEquipmentInstances } from './adventure_equipment_instances_core.js';
 import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
 import { resolvePetReward, migrateQuestPetRewards } from './adventure_rewards_core.js';
+import {syncTrainingPoints,validateTrainingPoints,skillLearningStatus} from './adventure_learning_core.js';
 export { rewardLabel } from './adventure_rewards_core.js';
 
 export const SAVE_VERSION = 2;
@@ -59,6 +61,7 @@ export function deckCardCopies(save, content, key) {
 }
 export function syncProgression(save, content) {
     save.level = Math.min(content.progression.levelCap, content.progression.xpThresholds.filter(x => save.xp >= x).length);
+    syncTrainingPoints(save);
     for (const lesson of content.learn[save.school]) {
         if (lesson.level <= save.level && !save.cards[lesson.key]) save.cards[lesson.key] = lesson.copies;
     }
@@ -69,12 +72,15 @@ export function availableCardLessons(save,content) {
 export function learnDeckCards(save,content,keys=[]) {
     assert(Array.isArray(keys)&&keys.length<=Object.keys(content.cardLibrary||{}).length,'学习卡牌列表无效');
     const lessons=new Map(availableCardLessons(save,content).map(row=>[row.key,row]));
+    const draft={...save,cards:{...save.cards}};
     for(const key of keys){
         const lesson=lessons.get(key);
-        assert(lesson&&lesson.supported!==false,'此卡牌效果暂未开放');
-        assert(save.level>=lesson.level,'尚未达到学习等级');
-        save.cards[key]=Math.max(save.cards[key]||0,lesson.copies);
+        const status=skillLearningStatus(draft,content,lesson);
+        assert(status.allowed,status.reason);
+        draft.trainingPointsSpent=(draft.trainingPointsSpent||0)+status.cost;
+        draft.cards[key]=Math.max(draft.cards[key]||0,lesson.copies);
     }
+    save.cards=draft.cards;save.trainingPointsSpent=draft.trainingPointsSpent??save.trainingPointsSpent??0;
 }
 export function recommendedDeck(save, content) {
     // The chapter unlock order introduces wand, attacks, blade, trap, healing and shield.
@@ -113,6 +119,13 @@ export function syncDeckLayouts(save, content) {
     }
     save.deck=clone(save.deckLayouts[save.activeDeckLayout].deck);
 }
+// A new tab requires another owned, usable bag. Keep the starter deck usable
+// without equipment and preserve legacy layouts without granting new ones.
+export function deckLayoutCapacity(save,content) {
+    return Math.min(6,Math.max(1,Object.values(content.items)
+        .filter(item=>item.slot===24&&canEquip(save,item,content))
+        .reduce((total,item)=>total+(save.inventory[item.id]||0),0)));
+}
 function validateDeckLayouts(save,content,layouts,active) {
     assert(Array.isArray(layouts)&&layouts.length>=1&&layouts.length<=6,'请保留一至六个卡包');
     assert(Number.isInteger(active)&&active>=0&&active<layouts.length,'请选择有效卡包');
@@ -149,7 +162,10 @@ export function playerSpec(save, content) {
     for (const iid of Object.values(save.equipment)) {
         const item = content.items[iid];
         if (!canEquip(save,item,content)) continue;
-        for (const [id,value] of Object.entries(item.stats)) {
+        // player_server.lua L3476–3488: socketed gem stats add to equipped item stats.
+        const instance=findEquipmentInstance(save,content,iid);
+        const sources=[item,...(instance?.serverdata.gem?.ins||[]).map(id=>content.items[id]).filter(Boolean)];
+        for (const [id,value] of sources.flatMap(source=>Object.entries(source.stats))) {
             const entry = statIdToEntry(id); if (!entry) continue;
             if (typeof stats[entry.stat] === 'object') stats[entry.stat][entry.school] = (stats[entry.stat][entry.school] || 0) + Number(value);
             else stats[entry.stat] += Number(value);
@@ -197,9 +213,9 @@ export function rewardsFor(save, content, quest) {
     }
     return rewards.map(reward => resolvePetReward(content, reward));
 }
-export function applyAction(save, content, action) {
+export function applyAction(save, content, action, access={}) {
     assert(!save.pendingEncounter || ['settle-encounter','retreat'].includes(action.type), '请先完成当前战斗');
-    if(content.pets&&Pets.petAction(save,content,action)){syncEquipmentInstances(save,content);save.revision++;return {changed:true};}
+    if(content.pets&&Pets.petAction(save,content,action,access)){syncEquipmentInstances(save,content);save.revision++;return {changed:true};}
     const q = currentQuest(save,content);
     switch (action.type) {
     case 'checkin': claimCheckin(save, content, action.now, action.index); break;
@@ -250,6 +266,12 @@ export function applyAction(save, content, action) {
         save.deck = clampDeck(save.deck, { ...deckLimits(save,content), version:'kids' }).deck;
         break;
     }
+    case 'mount-gem': {
+        const result=mountGem(save,content,action);
+        if(result.success)signal(save,content,'action',79017);
+        syncGoals(save,content);syncEquipmentInstances(save,content);save.revision++;return {...result,changed:true};
+    }
+    case 'remove-gems': {const result=removeGems(save,content,action);save.revision++;return {...result,changed:true};}
     case 'upgrade': {
         const instance=findEquipmentInstance(save,content,action.itemId,action.guid);
         const iid = instance?.gsid, level = instance?.serverdata.addlel || 0;
@@ -283,7 +305,9 @@ export function applyAction(save, content, action) {
         }
         if(action.learnedKeys?.length)learnDeckCards(next,content,action.learnedKeys);
         validateDeckLayouts(next,content,action.layouts,action.active);
+        assert(action.layouts.length<=Math.max(save.deckLayouts?.length||1,deckLayoutCapacity(next,content)), '没有多余的可用卡包，请先到商店购买');
         save.cards=next.cards;
+        save.trainingPointsSpent=next.trainingPointsSpent;
         save.equipment=next.equipment;
         save.deckLayouts=clone(action.layouts);save.activeDeckLayout=action.active;
         save.deck=clone(save.deckLayouts[action.active].deck);
@@ -351,6 +375,8 @@ export function parseSave(raw,content) {
     assert(SCHOOLS.includes(s.school) && islandFor(s.zone),'存档角色无效');
     assert(typeof s.name === 'string' && s.name.length <= 16 && ['boy','girl'].includes(s.appearance),'存档外观无效');
     assert(Number.isSafeInteger(s.xp) && s.xp >= 0 && Number.isInteger(s.seed),'存档经验无效');
+    validateTrainingPoints(s,content);
+    assert(s.gemSerial===undefined||(Number.isSafeInteger(s.gemSerial)&&s.gemSerial>=0),'存档宝石操作记录无效');
     const oldLayout=s.worldLayoutVersion??0,currentLayout=content.worldMapIndex.layoutVersion;
     assert(Number.isInteger(oldLayout)&&oldLayout>=0&&oldLayout<=currentLayout,'地图版本不兼容');
     const bounds=oldLayout===currentLayout?worldDimensions(s.zone,content):oldLayout===1&&s.zone==='town'?{w:5600,h:4400}:{w:1800,h:1600};
@@ -382,7 +408,7 @@ export function parseSave(raw,content) {
         previous = !!state?.claimed;
     }
     assert(!s.graduated || s.quests[63013]?.claimed,'毕业记录无效');
-    assert(travelStatus({...s,pendingEncounter:null},content,s.zone).allowed,'未达到岛屿开放等级');
+    assert(travelStatus({...s,pendingEncounter:null},content,s.zone).allowed,'存档目的地无效');
     if (s.pendingEncounter) {
         assert(s.pendingEncounter.id === `${s.seed}:${s.encounterSerial}` && s.pendingEncounter.seed === hashSeed(`${s.seed}:encounter:${s.encounterSerial}`),'存档战斗种子无效');
         assert(JSON.stringify(s.pendingEncounter.player) === JSON.stringify(playerSpec(s,content)), '存档战斗角色无效');

@@ -47,6 +47,10 @@ export function validateEquipmentInstances(save,content) {
         counts[row.gsid]=(counts[row.gsid]||0)+1;
         const gem=row.serverdata.gem;
         if(gem)check(Array.isArray(gem.ins)&&gem.ins.every(id=>Number.isSafeInteger(id)&&id>0)&&Number.isSafeInteger(gem.holecnt)&&gem.holecnt>=0);
+        if(gem&&content.gemCatalog){
+            const types=gem.ins.map(id=>content.gemCatalog.items[id]?.stats[42]);
+            check(gem.ins.length<=Number(item.stats[36]||0)&&types.every(Boolean)&&new Set(types).size===types.length);
+        }
     }
     for(const [id,count] of Object.entries(counts))check(count<=(save.inventory[id]||0));
     for(const [slot,guid] of Object.entries(save.equipmentGuids))check(save.equipmentInstances.some(row=>row.guid===guid&&row.gsid===save.equipment[slot]&&content.items[row.gsid].slot===Number(slot)));

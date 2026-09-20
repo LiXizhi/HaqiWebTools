@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "title": "哈奇商城",
+  "source": "script/apps/Aries/HaqiShop/HaqiShop.kids1.html",
+  "pageSize": 9,
+  "categories": [
+    {"id":"gear","label":"装备","kind":"gear","excludeSlots":[24],"subcategories":[
+      {"label":"全部"},{"label":"帽子","slots":[2]},{"label":"衣服","slots":[5,6]},{"label":"鞋子","slots":[7]},
+      {"label":"武器","slots":[10,11]},{"label":"首饰","slots":[4,9,15,16,17]},{"label":"背部","slots":[8]},
+      {"label":"炫彩","slots":[18,19,70,71]}
+    ]},
+    {"id":"bag","label":"卡包","kind":"gear","slots":[24],"sourceCategory":2007,"subcategories":[
+      {"label":"全部"},{"label":"风暴系","school":"storm"},{"label":"烈火系","school":"fire"},
+      {"label":"寒冰系","school":"ice"},{"label":"生命系","school":"life"},{"label":"死亡系","school":"death"},{"label":"通用","school":"all"}
+    ]},
+    {"id":"pet","label":"宠物","kind":"pet","subcategories":[
+      {"label":"全部"},{"label":"风暴系","school":"storm"},{"label":"烈火系","school":"fire"},
+      {"label":"寒冰系","school":"ice"},{"label":"生命系","school":"life"},{"label":"死亡系","school":"death"}
+    ]},
+    {"id":"supply","label":"补给","kind":"supply","subcategories":[
+      {"label":"全部"},{"label":"喂养材料","itemIds":[990001]},{"label":"捕获道具","itemIds":[990002]}
+    ]}
+  ]
+}

@@ -295,4 +295,7 @@ dataset={'pve':{'stormChargingWardIds':charging},'version':'kids','cards':{k:car
 for name,obj in [('chapter.json',content),('combat.json',dataset),('assets.json',assets)]:
  (OUT/name).write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n')
 print(f'Exported {len(quests)} quests, {len(npcs)} NPCs, {len(monsters)} monsters, {len(used_cards)} cards, {len(assets)} assets.')
+# Refresh learning rules after the chapter/card-item mapping has been exported.
+import subprocess, sys
+subprocess.run([sys.executable, str(APP/'scripts/export_skill_learning.py'), '--root', str(ROOT)], check=True)
 if missing:raise SystemExit('Missing required assets: '+str(missing))

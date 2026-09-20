@@ -8,6 +8,7 @@ const copy=x=>JSON.parse(JSON.stringify(x));
 test('legacy single deck migrates without losing cards; layouts switch and round-trip independently',()=>{
     const s=A.createAdventure(content);delete s.deckLayouts;delete s.activeDeckLayout;
     const migrated=A.parseSave(s,content);assert.deepEqual(migrated.deckLayouts[0].deck,s.deck);
+    migrated.inventory[24003]=2;migrated.xp=content.progression.xpThresholds[9];A.syncProgression(migrated,content);
     const first=copy(s.deck),second=[{key:s.deck[0].key,count:1}];
     A.applyAction(migrated,content,{type:'deck-layouts',layouts:[{name:'任务',deck:first},{name:'挑战',deck:second}],active:1});
     const restored=A.parseSave(JSON.stringify(migrated),content);
@@ -27,7 +28,7 @@ test('layout validation rejects malformed inactive decks and changes during batt
 });
 test('capacity changes and debug ownership changes reconcile every saved layout',()=>{
     const s=A.createAdventure(content);s.xp=content.progression.xpThresholds[9];A.syncProgression(s,content);
-    s.inventory[24003]=1;A.applyAction(s,content,{type:'equip',itemId:24003});
+    s.inventory[24003]=2;A.applyAction(s,content,{type:'equip',itemId:24003});
     const large=A.recommendedDeck(s,content);
     A.applyAction(s,content,{type:'deck-layouts',layouts:[{name:'甲',deck:large},{name:'乙',deck:large}],active:0});
     A.applyAction(s,content,{type:'unequip',slot:24});
@@ -79,8 +80,53 @@ test('30 cards render as 30 icons; hold removes exactly one and scrolling cancel
     assert.equal(s.deck.reduce((n,row)=>n+row.count,0),30,'unsaved draft does not change character');
 });
 import {installExpansion} from '../js/adventure_expansion_core.js';
+import {trainingPoints,skillLearningStatus} from '../js/adventure_learning_core.js';
 const readData=name=>JSON.parse(fs.readFileSync(new URL('../data/'+name+'.json',import.meta.url)));
 function expanded(){return installExpansion(...['adventure/chapter','adventure/combat','adventure/pets','adventure/shop-candidates','kids/cards','kids/charms','kids/card_names'].map(readData));}
+
+test('training points enforce exchange prerequisites, class restrictions and atomic spending',()=>{
+    const {content:c}=expanded(),s=A.createAdventure(c);
+    const ice=c.cardItems[22139],iceNext=c.cardItems[22140],life=c.cardItems[22158];
+    const learn=keys=>A.applyAction(s,c,{type:'deck-layouts',layouts:s.deckLayouts,active:0,learnedKeys:keys});
+    const before=copy(s);assert.throws(()=>learn([ice]),/训练点/);assert.deepEqual(s,before);
+    s.xp=c.progression.xpThresholds[3];A.syncProgression(s,c);assert.equal(trainingPoints(s,c),1);
+    assert.throws(()=>learn([iceNext]),/前置/);
+    const leveled=copy(s);assert.throws(()=>learn([ice,life]),/训练点/);assert.deepEqual(s,leveled);
+    assert.throws(()=>A.applyAction(s,c,{type:'deck-layouts',learnedKeys:[ice],layouts:[{name:'非法卡包',deck:[{key:ice,count:999}]}],active:0}));
+    assert.deepEqual(s,leveled,'invalid deck rolls back a valid paid lesson');
+    const restricted=c.cardLibrary.find(row=>row.key===c.cardItems[22332]);
+    assert.match(skillLearningStatus(s,c,restricted).reason,/仅本系/);
+    learn([ice,ice]);assert.equal(trainingPoints(s,c),0);assert.equal(s.trainingPointsSpent,1);
+    A.syncProgression(s,c);assert.equal(trainingPoints(A.parseSave(s,c),c),0);
+    s.xp=c.progression.xpThresholds[7];A.syncProgression(s,c);assert.equal(trainingPoints(s,c),1);
+    learn([iceNext]);assert.equal(trainingPoints(s,c),0);
+    const own=c.cardLibrary.find(row=>row.key===c.cardItems[22101]);delete s.cards[own.key];
+    assert.equal(skillLearningStatus(s,c,own).cost,0);learn([own.key]);assert.equal(s.trainingPointsSpent,2);
+    const variant=c.cardLibrary.find(row=>row.key.endsWith('_Binding')&&!c.skillLearning.courses[row.key]&&!s.cards[row.key]);
+    assert.equal(skillLearningStatus(s,c,variant).allowed,false);
+    assert.throws(()=>learn([variant.key]),/其他途径/);
+    const old=copy(s);delete old.trainingPointLevel;delete old.trainingPointsSpent;
+    const migrated=A.parseSave(old,c);assert.deepEqual(migrated.cards,s.cards);assert.equal(trainingPoints(migrated,c),2);
+    for(const spent of [-1,1.5,999]){const bad=copy(s);bad.trainingPointsSpent=spent;assert.throws(()=>A.parseSave(bad,c),/训练点/);}
+    const invalid=copy(s);invalid.trainingPointLevel=999;assert.throws(()=>A.parseSave(invalid,c),/训练点/);
+});
+
+test('deck defaults to learned cards and stages learning points until save',()=>{
+    const {content:c,dataset}=expanded(),s=A.createAdventure(c);s.xp=c.progression.xpThresholds[3];A.syncProgression(s,c);
+    const h=domHelpers(),body=h.el('section');let action;
+    renderDeckEditor(body,{save:s,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action:value=>action=value},h);
+    const all=node=>[node,...(node?.children||[]).flatMap(child=>typeof child==='object'?all(child):[])];
+    const nodes=()=>all(body),byLabel=label=>nodes().find(node=>node.attributes?.['aria-label']===label);
+    const toggle=nodes().find(node=>node.className==='bag-filter');assert.equal(toggle.attributes['aria-pressed'],'true');
+    assert.equal(nodes().filter(node=>node.className==='bag-library-card ').length,Object.keys(s.cards).length);
+    toggle.onclick();nodes().find(node=>node.dataset?.school==='ice').onclick();
+    const key=c.cardItems[22139],add=byLabel('学习并放入'+dataset.cards[key].name);
+    assert.equal(add.disabled,false);add.onclick();
+    assert.equal(s.cards[key],undefined);assert.equal(trainingPoints(s,c),1);
+    assert.ok(nodes().some(node=>node.textContent==='训练点：0'));
+    nodes().find(node=>node.tag==='button'&&node.children[0]==='保存并使用').onclick();
+    A.applyAction(s,c,action);assert.ok(s.cards[key]);assert.equal(trainingPoints(s,c),0);
+});
 
 test('bag selector stages real equipment and five-copy decks until save, shop opens bag category',()=>{
     const {content:c,dataset}=expanded(),s=A.createAdventure(c);
@@ -98,19 +144,21 @@ test('bag selector stages real equipment and five-copy decks until save, shop op
     all(body).find(node=>node.tag==='button'&&node.children[0]==='购买卡包').onclick();
     assert.equal(panel,'shop');assert.equal(shopView.category,'bag');
 });
-test('all six schools are searchable lessons; cross-school and balance learning persist without changing the character school',()=>{
+test('all six schools are searchable; verified cross-school learning spends points and persists',()=>{
     const {content:c,dataset}=expanded(),s=A.createAdventure(c);
+    s.xp=c.progression.xpThresholds[7];A.syncProgression(s,c);
     assert.deepEqual(new Set(c.cardLibrary.map(row=>row.school)),new Set(['fire','ice','storm','life','death','balance']));
     assert.ok(c.cardLibrary.length>600);
     assert.ok(c.cardLibrary.every(row=>dataset.cards[row.key]));
     assert.ok(!c.cardLibrary.some(row=>row.key==='Pass'||row.key==='Dead'));
-    const rows=['ice','balance'].map(school=>c.cardLibrary.find(row=>row.school===school&&row.level<=1&&row.supported&&!s.cards[row.key]));
+    const rows=[22139,22158].map(id=>c.cardLibrary.find(row=>row.key===c.cardItems[id]));
     assert.ok(rows.every(Boolean));
     A.applyAction(s,c,{type:'deck-layouts',learnedKeys:rows.map(row=>row.key),layouts:[{name:'混合系',deck:rows.map(row=>({key:row.key,count:3}))}],active:0});
     const restored=A.parseSave(JSON.stringify(s),c);
     assert.equal(restored.school,'fire');assert.equal(restored.deck.reduce((n,row)=>n+row.count,0),6);
     for(const row of rows)assert.equal(restored.cards[row.key],3);
     assert.deepEqual(A.playerSpec(restored,c).deck,s.deck);
+    assert.equal(restored.trainingPointsSpent,2);
 });
 test('learning and deck changes commit atomically, respecting required levels and unsupported effects',()=>{
     const {content:c}=expanded(),s=A.createAdventure(c),before=copy(s);

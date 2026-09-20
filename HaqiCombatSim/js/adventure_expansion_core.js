@@ -22,10 +22,12 @@ export function installExpansion(content,dataset,catalog,candidates,kidsCards,ki
   const requirements=equipmentRequirements(item);
   const validSchool=!requirements.school||Object.values(content.schools).includes(requirements.school);
   if(!validSchool||fixed.some(key=>!key||!kidsCards[key]||!isSupportedType(kidsCards[key].type))){content.equipmentExportReport.push({id:item.id,reason:validSchool?'附加卡未支持':'学系不适用'});continue;}
-  item.unsupportedStats=Object.keys(item.stats).filter(id=>!statIdToEntry(id)&&![137,138,139,140,141,167,168,169,170].includes(Number(id)));
+  item.unsupportedStats=Object.keys(item.stats).filter(id=>!statIdToEntry(id)&&![137,138,139,140,141,167,168,169,170,180].includes(Number(id)));
   if(!Object.keys(item.stats).some(id=>statIdToEntry(id)||[139,140,141,167,170].includes(Number(id)))){content.equipmentExportReport.push({id:item.id,reason:'无可生效属性'});continue;}
   fixed.forEach(addCard);content.items[item.id]??=item;
-  content.shop.push({id:'gear:'+item.id,kind:'gear',itemId:item.id,name:item.name,level:requirements.level,slot:item.slot,school:Object.keys(content.schools).find(s=>content.schools[s]===requirements.school)||'all'});
+  content.items[item.id].isInternalTest=item.isInternalTest===true;
+  const vipOnly=item.vipOnly===true||item.stats[180]===1;content.items[item.id].vipOnly=vipOnly;
+  content.shop.push({id:'gear:'+item.id,kind:'gear',vipOnly,isInternalTest:item.isInternalTest===true,itemId:item.id,name:item.name,level:requirements.level,slot:item.slot,school:Object.keys(content.schools).find(s=>content.schools[s]===requirements.school)||'all'});
  }
  for(const [id,name] of [[FOOD_ID,'宠物营养餐'],[CAPTURE_ID,'捕获晶球']]){content.items[id]={id,name,kind:0,stats:{}};content.shop.push({id:'supply:'+id,kind:'supply',itemId:id,name,level:1});}
  const p=petParams(content);content.progression.levelCap=p.levelCap;

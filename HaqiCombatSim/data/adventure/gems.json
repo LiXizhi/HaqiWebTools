@@ -1,0 +1,1820 @@
+{
+  "source": "Database/globalstore.db.mem",
+  "sourceSha256": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+  "items": {
+    "26057": {
+      "id": 26057,
+      "name": "2级黄玄珠",
+      "description": "",
+      "stats": {
+        "104": 2,
+        "41": 2,
+        "42": 12,
+        "39": 16,
+        "37": 26058,
+        "38": 26056
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26057_FireAccuracyGem02.png"
+    },
+    "26090": {
+      "id": 26090,
+      "name": "5级绿玛瑙",
+      "description": "",
+      "stats": {
+        "183": 7,
+        "41": 5,
+        "42": 18,
+        "38": 26089,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26090_HealIncoming05.png"
+    },
+    "26032": {
+      "id": 26032,
+      "name": "2级黄和玉",
+      "description": "",
+      "stats": {
+        "120": 3,
+        "41": 2,
+        "42": 7,
+        "37": 26033,
+        "38": 26031,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26032_FireResistGem02.png"
+    },
+    "26089": {
+      "id": 26089,
+      "name": "4级绿玛瑙",
+      "description": "",
+      "stats": {
+        "183": 6,
+        "41": 4,
+        "42": 18,
+        "37": 26090,
+        "38": 26088,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26089_HealIncoming04.png"
+    },
+    "26031": {
+      "id": 26031,
+      "name": "1级黄和玉",
+      "description": "",
+      "stats": {
+        "120": 2,
+        "41": 1,
+        "42": 7,
+        "37": 26032,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26031_FireResistGem01.png"
+    },
+    "26096": {
+      "id": 26096,
+      "name": "1级绿玄珠",
+      "description": "",
+      "stats": {
+        "108": 1,
+        "41": 1,
+        "42": 20,
+        "39": 16,
+        "37": 26097
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26096_LifeAccuracyGem01.png"
+    },
+    "26029": {
+      "id": 26029,
+      "name": "4级紫晶石",
+      "description": "",
+      "stats": {
+        "114": 10,
+        "41": 4,
+        "42": 6,
+        "40": 16,
+        "37": 26030,
+        "38": 26028
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26029_StormDamageGem04.png"
+    },
+    "26062": {
+      "id": 26062,
+      "name": "2级蓝玄珠",
+      "description": "",
+      "stats": {
+        "105": 2,
+        "41": 2,
+        "42": 13,
+        "39": 16,
+        "37": 26063,
+        "38": 26061
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26062_IceAccuracyGem02.png"
+    },
+    "26095": {
+      "id": 26095,
+      "name": "5级尖晶石",
+      "description": "",
+      "stats": {
+        "212": 7,
+        "41": 5,
+        "42": 19,
+        "39": 11,
+        "38": 26094
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26095_PenetrationGem05.png"
+    },
+    "26020": {
+      "id": 26020,
+      "name": "5级绿晶石",
+      "description": "",
+      "stats": {
+        "116": 12,
+        "41": 5,
+        "42": 4,
+        "40": 16,
+        "38": 26019
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26020_LifeDamageGem05.png"
+    },
+    "26094": {
+      "id": 26094,
+      "name": "4级尖晶石",
+      "description": "",
+      "stats": {
+        "212": 5,
+        "41": 4,
+        "42": 19,
+        "39": 11,
+        "37": 26095,
+        "38": 26093,
+        "50": 8750
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26094_PenetrationGem04.png"
+    },
+    "26019": {
+      "id": 26019,
+      "name": "4级绿晶石",
+      "description": "",
+      "stats": {
+        "116": 10,
+        "41": 4,
+        "42": 4,
+        "40": 16,
+        "37": 26020,
+        "38": 26018
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26019_LifeDamageGem04.png"
+    },
+    "26052": {
+      "id": 26052,
+      "name": "2级紫和玉",
+      "description": "",
+      "stats": {
+        "122": 3,
+        "41": 2,
+        "42": 11,
+        "37": 26053,
+        "38": 26051,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26052_StormResistGem02.png"
+    },
+    "26093": {
+      "id": 26093,
+      "name": "3级尖晶石",
+      "description": "",
+      "stats": {
+        "212": 3,
+        "41": 3,
+        "42": 19,
+        "39": 11,
+        "37": 26094,
+        "38": 26092,
+        "50": 1750
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26093_PenetrationGem03.png"
+    },
+    "26051": {
+      "id": 26051,
+      "name": "1级紫和玉",
+      "description": "",
+      "stats": {
+        "122": 2,
+        "41": 1,
+        "42": 11,
+        "37": 26052,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26051_StormResistGem01.png"
+    },
+    "26017": {
+      "id": 26017,
+      "name": "2级绿晶石",
+      "description": "",
+      "stats": {
+        "116": 6,
+        "41": 2,
+        "42": 4,
+        "40": 16,
+        "37": 26018,
+        "38": 26016
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26017_LifeDamageGem02.png"
+    },
+    "26083": {
+      "id": 26083,
+      "name": "3级红玛瑙",
+      "description": "",
+      "stats": {
+        "182": 5,
+        "41": 3,
+        "42": 17,
+        "37": 26084,
+        "38": 26082,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26083_HealOutgoing03.png"
+    },
+    "26049": {
+      "id": 26049,
+      "name": "4级黑和玉",
+      "description": "",
+      "stats": {
+        "125": 5,
+        "41": 4,
+        "42": 10,
+        "37": 26050,
+        "38": 26048,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26049_DeathResistGem04.png"
+    },
+    "26082": {
+      "id": 26082,
+      "name": "2级红玛瑙",
+      "description": "",
+      "stats": {
+        "182": 4,
+        "41": 2,
+        "42": 17,
+        "37": 26083,
+        "38": 26081,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26082_HealOutgoing02.png"
+    },
+    "26024": {
+      "id": 26024,
+      "name": "4级黑晶石",
+      "description": "",
+      "stats": {
+        "117": 10,
+        "41": 4,
+        "42": 5,
+        "40": 16,
+        "37": 26025,
+        "38": 26023
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26024_DeathDamageGem04.png"
+    },
+    "26081": {
+      "id": 26081,
+      "name": "1级红玛瑙",
+      "description": "",
+      "stats": {
+        "182": 3,
+        "41": 1,
+        "42": 17,
+        "37": 26082,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26081_HealOutgoing01.png"
+    },
+    "26023": {
+      "id": 26023,
+      "name": "3级黑晶石",
+      "description": "",
+      "stats": {
+        "117": 8,
+        "41": 3,
+        "42": 5,
+        "40": 16,
+        "37": 26024,
+        "38": 26022
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26023_DeathDamageGem03.png"
+    },
+    "26022": {
+      "id": 26022,
+      "name": "2级黑晶石",
+      "description": "",
+      "stats": {
+        "117": 6,
+        "41": 2,
+        "42": 5,
+        "40": 16,
+        "37": 26023,
+        "38": 26021
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26022_DeathDamageGem02.png"
+    },
+    "26055": {
+      "id": 26055,
+      "name": "5级紫和玉",
+      "description": "",
+      "stats": {
+        "122": 7,
+        "41": 5,
+        "42": 11,
+        "38": 26054,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26055_StormResistGem05.png"
+    },
+    "26088": {
+      "id": 26088,
+      "name": "3级绿玛瑙",
+      "description": "",
+      "stats": {
+        "183": 5,
+        "41": 3,
+        "42": 18,
+        "37": 26089,
+        "38": 26087,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26088_HealIncoming03.png"
+    },
+    "26021": {
+      "id": 26021,
+      "name": "1级黑晶石",
+      "description": "",
+      "stats": {
+        "117": 4,
+        "41": 1,
+        "42": 5,
+        "40": 16,
+        "37": 26022
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26021_DeathDamageGem01.png"
+    },
+    "26054": {
+      "id": 26054,
+      "name": "4级紫和玉",
+      "description": "",
+      "stats": {
+        "122": 5,
+        "41": 4,
+        "42": 11,
+        "37": 26055,
+        "38": 26053,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26054_StormResistGem04.png"
+    },
+    "26087": {
+      "id": 26087,
+      "name": "2级绿玛瑙",
+      "description": "",
+      "stats": {
+        "183": 4,
+        "41": 2,
+        "42": 18,
+        "37": 26088,
+        "38": 26086,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26087_HealIncoming02.png"
+    },
+    "26012": {
+      "id": 26012,
+      "name": "2级蓝晶石",
+      "description": "",
+      "stats": {
+        "113": 6,
+        "41": 2,
+        "42": 3,
+        "40": 16,
+        "37": 26013,
+        "38": 26011
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26012_IceDamegeGem02.png"
+    },
+    "26053": {
+      "id": 26053,
+      "name": "3级紫和玉",
+      "description": "",
+      "stats": {
+        "122": 4,
+        "41": 3,
+        "42": 11,
+        "37": 26054,
+        "38": 26052,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26053_StormResistGem03.png"
+    },
+    "26086": {
+      "id": 26086,
+      "name": "1级绿玛瑙",
+      "description": "",
+      "stats": {
+        "183": 3,
+        "41": 1,
+        "42": 18,
+        "37": 26087,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26086_HealIncoming01.png"
+    },
+    "26011": {
+      "id": 26011,
+      "name": "1级蓝晶石",
+      "description": "",
+      "stats": {
+        "113": 4,
+        "41": 1,
+        "42": 3,
+        "40": 16,
+        "37": 26012
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26011_IceDamageGem01.png"
+    },
+    "26044": {
+      "id": 26044,
+      "name": "4级绿和玉",
+      "description": "",
+      "stats": {
+        "124": 5,
+        "41": 4,
+        "42": 9,
+        "37": 26045,
+        "38": 26043,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26044_LifeResistGem04.png"
+    },
+    "26085": {
+      "id": 26085,
+      "name": "5级红玛瑙",
+      "description": "",
+      "stats": {
+        "182": 7,
+        "41": 5,
+        "42": 17,
+        "38": 26084,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26085_HealOutgoing05.png"
+    },
+    "26043": {
+      "id": 26043,
+      "name": "3级绿和玉",
+      "description": "",
+      "stats": {
+        "124": 4,
+        "41": 3,
+        "42": 9,
+        "37": 26044,
+        "38": 26042,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26043_LifeResistGem03.png"
+    },
+    "26076": {
+      "id": 26076,
+      "name": "1级月光镜",
+      "description": "",
+      "stats": {
+        "102": 2,
+        "41": 1,
+        "42": 16,
+        "37": 26077,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26076_PowerpipPercent01.png"
+    },
+    "26009": {
+      "id": 26009,
+      "name": "4级黄晶石",
+      "description": "",
+      "stats": {
+        "112": 10,
+        "41": 4,
+        "42": 2,
+        "40": 16,
+        "37": 26010,
+        "38": 26008
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26009_FireDamageGem04.png"
+    },
+    "26042": {
+      "id": 26042,
+      "name": "2级绿和玉",
+      "description": "",
+      "stats": {
+        "124": 3,
+        "41": 2,
+        "42": 9,
+        "37": 26043,
+        "38": 26041,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26042_LifeResistGem02.png"
+    },
+    "26075": {
+      "id": 26075,
+      "name": "5级紫玄珠",
+      "description": "",
+      "stats": {
+        "106": 5,
+        "41": 5,
+        "42": 15,
+        "39": 16,
+        "38": 26074
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26075_StormAccuracyGem05.png"
+    },
+    "26041": {
+      "id": 26041,
+      "name": "1级绿和玉",
+      "description": "",
+      "stats": {
+        "124": 2,
+        "41": 1,
+        "42": 9,
+        "37": 26042,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26041_LifeResistGem01.png"
+    },
+    "26016": {
+      "id": 26016,
+      "name": "1级绿晶石",
+      "description": "",
+      "stats": {
+        "116": 4,
+        "41": 1,
+        "42": 4,
+        "40": 16,
+        "37": 26017
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26016_LifeDamageGem01.png"
+    },
+    "26064": {
+      "id": 26064,
+      "name": "4级蓝玄珠",
+      "description": "",
+      "stats": {
+        "105": 4,
+        "41": 4,
+        "42": 13,
+        "39": 16,
+        "37": 26065,
+        "38": 26063
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26064_IceAccuracyGem04.png"
+    },
+    "26073": {
+      "id": 26073,
+      "name": "3级紫玄珠",
+      "description": "",
+      "stats": {
+        "106": 3,
+        "41": 3,
+        "42": 15,
+        "39": 16,
+        "37": 26074,
+        "38": 26072
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26073_StormAccuracyGem03.png"
+    },
+    "26015": {
+      "id": 26015,
+      "name": "5级蓝晶石",
+      "description": "",
+      "stats": {
+        "113": 12,
+        "41": 5,
+        "42": 3,
+        "40": 16,
+        "38": 26014
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26015_IceDamageGem05.png"
+    },
+    "26072": {
+      "id": 26072,
+      "name": "2级紫玄珠",
+      "description": "",
+      "stats": {
+        "106": 2,
+        "41": 2,
+        "42": 15,
+        "39": 16,
+        "37": 26073,
+        "38": 26071
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26072_StormAccuracyGem02.png"
+    },
+    "26080": {
+      "id": 26080,
+      "name": "5级月光镜",
+      "description": "",
+      "stats": {
+        "102": 10,
+        "41": 5,
+        "42": 16,
+        "38": 26079,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26080_PowerpipPercent05.png"
+    },
+    "26013": {
+      "id": 26013,
+      "name": "3级蓝晶石",
+      "description": "",
+      "stats": {
+        "113": 8,
+        "41": 3,
+        "42": 3,
+        "40": 16,
+        "37": 26014,
+        "38": 26012
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26013_IceDamageGem03.png"
+    },
+    "26046": {
+      "id": 26046,
+      "name": "1级黑和玉",
+      "description": "",
+      "stats": {
+        "125": 2,
+        "41": 1,
+        "42": 10,
+        "37": 26047,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26046_DeathResistGem01.png"
+    },
+    "26004": {
+      "id": 26004,
+      "name": "4级血精玺",
+      "description": "",
+      "stats": {
+        "101": 480,
+        "41": 4,
+        "42": 1,
+        "40": 11,
+        "37": 26005,
+        "38": 26003
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26004_HPGems04.png"
+    },
+    "26045": {
+      "id": 26045,
+      "name": "5级绿和玉",
+      "description": "",
+      "stats": {
+        "124": 7,
+        "41": 5,
+        "42": 9,
+        "38": 26044,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26045_LifeResistGem05.png"
+    },
+    "26078": {
+      "id": 26078,
+      "name": "3级月光镜",
+      "description": "",
+      "stats": {
+        "102": 6,
+        "41": 3,
+        "42": 16,
+        "37": 26079,
+        "38": 26077,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26078_PowerpipPercent03.png"
+    },
+    "26003": {
+      "id": 26003,
+      "name": "3级血精玺",
+      "description": "",
+      "stats": {
+        "101": 240,
+        "41": 3,
+        "42": 1,
+        "40": 11,
+        "37": 26004,
+        "38": 26002
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26003_HPGems03.png"
+    },
+    "26036": {
+      "id": 26036,
+      "name": "1级蓝和玉",
+      "description": "",
+      "stats": {
+        "121": 2,
+        "41": 1,
+        "42": 8,
+        "37": 26037,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26036_IceResistGem01.png"
+    },
+    "26035": {
+      "id": 26035,
+      "name": "5级黄和玉",
+      "description": "",
+      "stats": {
+        "120": 7,
+        "41": 5,
+        "42": 7,
+        "38": 26034,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26035_FireResistGem05.png"
+    },
+    "26068": {
+      "id": 26068,
+      "name": "3级黑玄珠",
+      "description": "",
+      "stats": {
+        "109": 3,
+        "41": 3,
+        "42": 14,
+        "39": 16,
+        "37": 26069,
+        "38": 26067
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26068_DeathAccuracyGem03.png"
+    },
+    "26001": {
+      "id": 26001,
+      "name": "1级血精玺",
+      "description": "",
+      "stats": {
+        "101": 60,
+        "41": 1,
+        "42": 1,
+        "40": 16,
+        "37": 26002
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26001_HPGems01.png"
+    },
+    "26034": {
+      "id": 26034,
+      "name": "4级黄和玉",
+      "description": "",
+      "stats": {
+        "120": 5,
+        "41": 4,
+        "42": 7,
+        "37": 26035,
+        "38": 26033,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26034_FireResistGem04.png"
+    },
+    "26067": {
+      "id": 26067,
+      "name": "2级黑玄珠",
+      "description": "",
+      "stats": {
+        "109": 2,
+        "41": 2,
+        "42": 14,
+        "39": 16,
+        "37": 26068,
+        "38": 26066
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26067_DeathAccuracyGem02.png"
+    },
+    "26100": {
+      "id": 26100,
+      "name": "5级绿玄珠",
+      "description": "",
+      "stats": {
+        "108": 5,
+        "41": 5,
+        "42": 20,
+        "39": 16,
+        "38": 26099
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26100_LifeAccuracyGem05.png"
+    },
+    "26703": {
+      "id": 26703,
+      "name": "顶级宝石镶嵌符",
+      "description": "提高宝石镶嵌成功率：25%",
+      "stats": {
+        "35": 25
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 7,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26703_SocketingRune03.png"
+    },
+    "26033": {
+      "id": 26033,
+      "name": "3级黄和玉",
+      "description": "",
+      "stats": {
+        "120": 4,
+        "41": 3,
+        "42": 7,
+        "37": 26034,
+        "38": 26032,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26033_FireResistGem03.png"
+    },
+    "26099": {
+      "id": 26099,
+      "name": "4级绿玄珠",
+      "description": "",
+      "stats": {
+        "108": 4,
+        "41": 4,
+        "42": 20,
+        "39": 16,
+        "37": 26100,
+        "38": 26098
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26099_LifeAccuracyGem04.png"
+    },
+    "26008": {
+      "id": 26008,
+      "name": "3级黄晶石",
+      "description": "",
+      "stats": {
+        "112": 8,
+        "41": 3,
+        "42": 2,
+        "40": 16,
+        "37": 26009,
+        "38": 26007
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26008_FireDamageGem03.png"
+    },
+    "17179": {
+      "id": 17179,
+      "name": "宝石调羹",
+      "description": "购买此道具可用来挖取装备上的宝石#地点：购物街-达尔莫德\n",
+      "stats": {},
+      "slot": 0,
+      "kind": 3,
+      "subtype": 7,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/17179_GemRemovalSpoon.png"
+    },
+    "26065": {
+      "id": 26065,
+      "name": "5级蓝玄珠",
+      "description": "",
+      "stats": {
+        "105": 5,
+        "41": 5,
+        "42": 13,
+        "39": 16,
+        "38": 26064
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26065_IceAccuracyGem05.png"
+    },
+    "26098": {
+      "id": 26098,
+      "name": "3级绿玄珠",
+      "description": "",
+      "stats": {
+        "108": 3,
+        "41": 3,
+        "42": 20,
+        "39": 16,
+        "37": 26099,
+        "38": 26097
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26098_LifeAccuracyGem03.png"
+    },
+    "26007": {
+      "id": 26007,
+      "name": "2级黄晶石",
+      "description": "",
+      "stats": {
+        "112": 6,
+        "41": 2,
+        "42": 2,
+        "40": 16,
+        "37": 26008,
+        "38": 26006
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26007_FireDamageGem02.png"
+    },
+    "26040": {
+      "id": 26040,
+      "name": "5级蓝和玉",
+      "description": "",
+      "stats": {
+        "121": 7,
+        "41": 5,
+        "42": 8,
+        "38": 26039,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26040_IceResistGem05.png"
+    },
+    "26701": {
+      "id": 26701,
+      "name": "低级宝石镶嵌符",
+      "description": "提高宝石镶嵌成功率：5%",
+      "stats": {
+        "35": 5
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 7,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26701_SocketingRune01.png"
+    },
+    "26097": {
+      "id": 26097,
+      "name": "2级绿玄珠",
+      "description": "",
+      "stats": {
+        "108": 2,
+        "41": 2,
+        "42": 20,
+        "39": 16,
+        "37": 26098,
+        "38": 26096
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26097_LifeAccuracyGem02.png"
+    },
+    "26084": {
+      "id": 26084,
+      "name": "4级红玛瑙",
+      "description": "",
+      "stats": {
+        "182": 6,
+        "41": 4,
+        "42": 17,
+        "37": 26085,
+        "38": 26083,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26084_HealOutgoing04.png"
+    },
+    "26079": {
+      "id": 26079,
+      "name": "4级月光镜",
+      "description": "",
+      "stats": {
+        "102": 8,
+        "41": 4,
+        "42": 16,
+        "37": 26080,
+        "38": 26078,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26079_PowerpipPercent04.png"
+    },
+    "26077": {
+      "id": 26077,
+      "name": "2级月光镜",
+      "description": "",
+      "stats": {
+        "102": 4,
+        "41": 2,
+        "42": 16,
+        "37": 26078,
+        "38": 26076,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26077_PowerpipPercent02.png"
+    },
+    "26074": {
+      "id": 26074,
+      "name": "4级紫玄珠",
+      "description": "",
+      "stats": {
+        "106": 4,
+        "41": 4,
+        "42": 15,
+        "39": 16,
+        "37": 26075,
+        "38": 26073
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26074_StormAccuracyGem04.png"
+    },
+    "26071": {
+      "id": 26071,
+      "name": "1级紫玄珠",
+      "description": "",
+      "stats": {
+        "106": 1,
+        "41": 1,
+        "42": 15,
+        "39": 16,
+        "37": 26072
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26071_StormAccuracyGem01.png"
+    },
+    "26069": {
+      "id": 26069,
+      "name": "4级黑玄珠",
+      "description": "",
+      "stats": {
+        "109": 4,
+        "41": 4,
+        "42": 14,
+        "39": 16,
+        "37": 26070,
+        "38": 26068
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26069_DeathAccuracyGem04.png"
+    },
+    "26066": {
+      "id": 26066,
+      "name": "1级黑玄珠",
+      "description": "",
+      "stats": {
+        "109": 1,
+        "41": 1,
+        "42": 14,
+        "39": 16,
+        "37": 26067
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26066_DeathAccuracyGem01.png"
+    },
+    "26063": {
+      "id": 26063,
+      "name": "3级蓝玄珠",
+      "description": "",
+      "stats": {
+        "105": 3,
+        "41": 3,
+        "42": 13,
+        "39": 16,
+        "37": 26064,
+        "38": 26062
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26063_IceAccuracyGem03.png"
+    },
+    "26061": {
+      "id": 26061,
+      "name": "1级蓝玄珠",
+      "description": "",
+      "stats": {
+        "105": 1,
+        "41": 1,
+        "42": 13,
+        "39": 16,
+        "37": 26062
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26061_IceAccuracyGem01.png"
+    },
+    "26039": {
+      "id": 26039,
+      "name": "4级蓝和玉",
+      "description": "",
+      "stats": {
+        "121": 5,
+        "41": 4,
+        "42": 8,
+        "37": 26040,
+        "38": 26038,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26039_IceResistGem04.png"
+    },
+    "26058": {
+      "id": 26058,
+      "name": "3级黄玄珠",
+      "description": "",
+      "stats": {
+        "104": 3,
+        "41": 3,
+        "42": 12,
+        "39": 16,
+        "37": 26059,
+        "38": 26057
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26058_FireAccuracyGem03.png"
+    },
+    "26056": {
+      "id": 26056,
+      "name": "1级黄玄珠",
+      "description": "",
+      "stats": {
+        "104": 1,
+        "41": 1,
+        "42": 12,
+        "39": 16,
+        "37": 26057
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26056_FireAccuracyGem01.png"
+    },
+    "26050": {
+      "id": 26050,
+      "name": "5级黑和玉",
+      "description": "",
+      "stats": {
+        "125": 7,
+        "41": 5,
+        "42": 10,
+        "38": 26049,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26050_DeathResistGem05.png"
+    },
+    "26048": {
+      "id": 26048,
+      "name": "3级黑和玉",
+      "description": "",
+      "stats": {
+        "125": 4,
+        "41": 3,
+        "42": 10,
+        "37": 26049,
+        "38": 26047,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26048_DeathResistGem03.png"
+    },
+    "26047": {
+      "id": 26047,
+      "name": "2级黑和玉",
+      "description": "",
+      "stats": {
+        "125": 3,
+        "41": 2,
+        "42": 10,
+        "37": 26048,
+        "38": 26046,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26047_DeathResistGem02.png"
+    },
+    "26030": {
+      "id": 26030,
+      "name": "5级紫晶石",
+      "description": "",
+      "stats": {
+        "114": 12,
+        "41": 5,
+        "42": 6,
+        "40": 16,
+        "38": 26029
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26030_StormDamageGem05.png"
+    },
+    "26018": {
+      "id": 26018,
+      "name": "3级绿晶石",
+      "description": "",
+      "stats": {
+        "116": 8,
+        "41": 3,
+        "42": 4,
+        "40": 16,
+        "37": 26019,
+        "38": 26017
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26018_LifeDamageGem03.png"
+    },
+    "26014": {
+      "id": 26014,
+      "name": "4级蓝晶石",
+      "description": "",
+      "stats": {
+        "113": 10,
+        "41": 4,
+        "42": 3,
+        "40": 16,
+        "37": 26015,
+        "38": 26013
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26014_IceDamageGem04.png"
+    },
+    "26010": {
+      "id": 26010,
+      "name": "5级黄晶石",
+      "description": "",
+      "stats": {
+        "112": 12,
+        "41": 5,
+        "42": 2,
+        "40": 16,
+        "38": 26009
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26010_FireDamageGem05.png"
+    },
+    "26006": {
+      "id": 26006,
+      "name": "1级黄晶石",
+      "description": "",
+      "stats": {
+        "112": 4,
+        "41": 1,
+        "42": 2,
+        "40": 16,
+        "37": 26007
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26006_FireDamageGem01.png"
+    },
+    "26002": {
+      "id": 26002,
+      "name": "2级血精玺",
+      "description": "",
+      "stats": {
+        "101": 120,
+        "41": 2,
+        "42": 1,
+        "40": 11,
+        "37": 26003,
+        "38": 26001
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26002_HPGems02.png"
+    },
+    "26005": {
+      "id": 26005,
+      "name": "5级血精玺",
+      "description": "",
+      "stats": {
+        "101": 960,
+        "41": 5,
+        "42": 1,
+        "40": 16,
+        "38": 26004
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26005_HPGems05.png"
+    },
+    "26038": {
+      "id": 26038,
+      "name": "3级蓝和玉",
+      "description": "",
+      "stats": {
+        "121": 4,
+        "41": 3,
+        "42": 8,
+        "37": 26039,
+        "38": 26037,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26038_IceResistGem03.png"
+    },
+    "26702": {
+      "id": 26702,
+      "name": "高级宝石镶嵌符",
+      "description": "提高宝石镶嵌成功率：10%",
+      "stats": {
+        "35": 10
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 7,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26702_SocketingRune01.png"
+    },
+    "26037": {
+      "id": 26037,
+      "name": "2级蓝和玉",
+      "description": "",
+      "stats": {
+        "121": 3,
+        "41": 2,
+        "42": 8,
+        "37": 26038,
+        "38": 26036,
+        "40": 11
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26037_IceResistGem02.png"
+    },
+    "26070": {
+      "id": 26070,
+      "name": "5级黑玄珠",
+      "description": "",
+      "stats": {
+        "109": 5,
+        "41": 5,
+        "42": 14,
+        "39": 16,
+        "38": 26069
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26070_DeathAccuracyGem05.png"
+    },
+    "26028": {
+      "id": 26028,
+      "name": "3级紫晶石",
+      "description": "",
+      "stats": {
+        "114": 8,
+        "41": 3,
+        "42": 6,
+        "40": 16,
+        "37": 26029,
+        "38": 26027
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26028_StormDamageGem03.png"
+    },
+    "26027": {
+      "id": 26027,
+      "name": "2级紫晶石",
+      "description": "",
+      "stats": {
+        "114": 6,
+        "41": 2,
+        "42": 6,
+        "40": 16,
+        "37": 26028,
+        "38": 26026
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26027_StormDamageGem02.png"
+    },
+    "26060": {
+      "id": 26060,
+      "name": "5级黄玄珠",
+      "description": "",
+      "stats": {
+        "104": 5,
+        "41": 5,
+        "42": 12,
+        "39": 16,
+        "38": 26059
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26060_FireAccuracyGem05.png"
+    },
+    "26026": {
+      "id": 26026,
+      "name": "1级紫晶石",
+      "description": "",
+      "stats": {
+        "114": 4,
+        "41": 1,
+        "42": 6,
+        "40": 16,
+        "37": 26027
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26026_StormDamageGem01.png"
+    },
+    "26059": {
+      "id": 26059,
+      "name": "4级黄玄珠",
+      "description": "",
+      "stats": {
+        "104": 4,
+        "41": 4,
+        "42": 12,
+        "39": 16,
+        "37": 26060,
+        "38": 26058
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26059_FireAccuracyGem04.png"
+    },
+    "26092": {
+      "id": 26092,
+      "name": "2级尖晶石",
+      "description": "",
+      "stats": {
+        "212": 2,
+        "41": 2,
+        "42": 19,
+        "39": 11,
+        "37": 26093,
+        "38": 26091,
+        "50": 350
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26092_PenetrationGem02.png"
+    },
+    "26025": {
+      "id": 26025,
+      "name": "5级黑晶石",
+      "description": "",
+      "stats": {
+        "117": 12,
+        "41": 5,
+        "42": 5,
+        "40": 16,
+        "38": 26024
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26025_DeathDamageGem05.png"
+    },
+    "26091": {
+      "id": 26091,
+      "name": "1级尖晶石",
+      "description": "",
+      "stats": {
+        "212": 1,
+        "41": 1,
+        "42": 19,
+        "39": 11,
+        "37": 26092,
+        "50": 70
+      },
+      "slot": 0,
+      "kind": 3,
+      "subtype": 6,
+      "maxCopiesInStack": 1000,
+      "sourceIcon": "Texture/Aries/Item/26091_PenetrationGem01.png"
+    }
+  }
+}

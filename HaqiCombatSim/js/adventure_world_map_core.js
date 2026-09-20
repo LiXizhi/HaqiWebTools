@@ -2,8 +2,8 @@ import { resolveParams } from './combat_params_core.js';
 import { mapInfo } from './adventure_island_layout_core.js';
 
 // Original world identities: Scene/WorldManager.lua L1160–1165.
-// Level gates follow CanEnterWorld's min_level check (L593); thresholds are
-// the web adaptation in BalanceParams because AriesGameWorlds.config.xml is absent.
+// Recommended levels use the web adaptation in BalanceParams. Below-level
+// travel asks for confirmation in the controller instead of locking islands.
 export const ISLANDS = [
     {id:'camp',name:'魔法营地',source:'NewUserIsland',description:'初心之旅的起点，五系导师等你归来。'},
     {id:'town',name:'哈奇岛',source:'61HaqiTown',description:'熟悉的哈奇小镇，阳光与绿意环绕的家园。'},
@@ -18,7 +18,7 @@ export function travelStatus(save,content,zone){
     const island=islandFor(zone);
     if(!island)return {allowed:false,reason:'目的地不存在'};
     const minLevel=resolveParams({cards:{}},content.balanceParams||{version:'kids'}).worldTravel[zone];
-    const reason=save.pendingEncounter?'请先完成当前战斗':save.level<minLevel?`达到 ${minLevel} 级后可前往${island.name}`:'';
-    return {allowed:!reason,reason,minLevel,current:save.zone===zone};
+    const reason=save.pendingEncounter?'请先完成当前战斗':'';
+    return {allowed:!reason,reason,minLevel,requiresConfirmation:save.level<minLevel,current:save.zone===zone};
 }
 export function islandSpawn(zone,content){return {...mapInfo(zone,content).spawn};}

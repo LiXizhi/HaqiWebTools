@@ -16,6 +16,10 @@ export function equipmentAttributes(item, save, content, guid) {
         else if(Number(id)===167||Number(id)===170)rows.push({label:Number(id)===167?'卡包容量':'同卡上限',value:Number(value),unit:'张'});
     }
     for(const row of upgradeAttributes(upgradeAt(content,item.id,findEquipmentInstance(save,content,item.id,guid)?.serverdata.addlel||0)))rows.push({...row,label:'强化 · '+row.label});
+    for(const id of findEquipmentInstance(save,content,item.id,guid)?.serverdata.gem?.ins||[]){
+        const gem=content.items[id];if(!gem)continue;
+        for(const [stat,value] of Object.entries(gem.stats)){const entry=statIdToEntry(stat);if(entry)rows.push({label:`宝石 · ${gem.name} · ${SCHOOL_STATS.has(entry.stat)?(entry.school==='all'?'全系':SCHOOL_NAMES[entry.school]||entry.school):''}${STAT_NAMES[entry.stat]}`,value:Number(value),unit:percent(entry.stat)?'%':''});}
+    }
     return rows;
 }
 const SCHOOL_STATS=new Set(['damagePct','resistPct','accuracyPct','critPct','resiliencePct','penetration']);

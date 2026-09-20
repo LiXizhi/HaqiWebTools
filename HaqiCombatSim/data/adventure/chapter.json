@@ -22873,5 +22873,1551 @@
         "file": "data/adventure/maps/dark.json"
       }
     }
+  },
+  "skillLearning": {
+    "version": 1,
+    "source": "Database/extendedcost.db.mem",
+    "sha256": "df148affc7f6091c0309485f6642b74db303d28d6304ef6700e120f6825bb27e",
+    "courses": {
+      "Fire_SingleAttackWithDOT_Level1": {
+        "own": {
+          "exchangeId": 491,
+          "level": 1,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 492,
+          "level": 1,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Fire_SingleAttackWithDOT_Level2": {
+        "own": {
+          "exchangeId": 493,
+          "level": 2,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 494,
+          "level": 2,
+          "cost": 1,
+          "prerequisites": [
+            "Fire_SingleAttackWithDOT_Level1"
+          ],
+          "supported": true
+        }
+      },
+      "Fire_SingleAttackWithDOT_Level3": {
+        "own": {
+          "exchangeId": 495,
+          "level": 4,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 496,
+          "level": 4,
+          "cost": 1,
+          "prerequisites": [
+            "Fire_SingleAttackWithDOT_Level2"
+          ],
+          "supported": true
+        }
+      },
+      "Fire_FireDamageTrap": {
+        "own": {
+          "exchangeId": 497,
+          "level": 8,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 498,
+          "level": 8,
+          "cost": 1,
+          "prerequisites": [
+            "Fire_SingleAttackWithDOT_Level3"
+          ],
+          "supported": true
+        }
+      },
+      "Fire_AreaAttackWithDOT_Level4": {
+        "own": {
+          "exchangeId": 499,
+          "level": 12,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 500,
+          "level": 12,
+          "cost": 1,
+          "prerequisites": [
+            "Fire_FireDamageTrap"
+          ],
+          "supported": true
+        }
+      },
+      "Fire_FireGlobalAura": {
+        "own": {
+          "exchangeId": 501,
+          "level": 18,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 502,
+          "level": 18,
+          "cost": 1,
+          "prerequisites": [
+            "Fire_AreaAttackWithDOT_Level4"
+          ],
+          "supported": true
+        }
+      },
+      "Fire_SingleAttackWithDOT_Level5": {
+        "own": {
+          "exchangeId": 503,
+          "level": 32,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 504,
+          "level": 32,
+          "cost": 1,
+          "prerequisites": [
+            "Fire_FireGlobalAura"
+          ],
+          "supported": true
+        }
+      },
+      "Fire_SingleAttackWithDOT_Level6": {
+        "own": {
+          "exchangeId": 505,
+          "level": 42,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 506,
+          "level": 42,
+          "cost": 1,
+          "prerequisites": [
+            "Fire_SingleAttackWithDOT_Level5"
+          ],
+          "supported": true
+        }
+      },
+      "Storm_SingleAttack_Level1": {
+        "own": {
+          "exchangeId": 507,
+          "level": 1,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 508,
+          "level": 1,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Storm_SingleAttack_Level2": {
+        "own": {
+          "exchangeId": 509,
+          "level": 4,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 510,
+          "level": 4,
+          "cost": 1,
+          "prerequisites": [
+            "Storm_StormDamageTrap"
+          ],
+          "supported": true
+        }
+      },
+      "Storm_SingleAttack_Level3": {
+        "own": {
+          "exchangeId": 511,
+          "level": 8,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 512,
+          "level": 8,
+          "cost": 1,
+          "prerequisites": [
+            "Storm_SingleAttack_Level2"
+          ],
+          "supported": true
+        }
+      },
+      "Storm_StormDamageTrap": {
+        "own": {
+          "exchangeId": 513,
+          "level": 2,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 514,
+          "level": 2,
+          "cost": 1,
+          "prerequisites": [
+            "Storm_SingleAttack_Level1"
+          ],
+          "supported": true
+        }
+      },
+      "Storm_SingleAttack_Level4": {
+        "own": {
+          "exchangeId": 515,
+          "level": 12,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 516,
+          "level": 12,
+          "cost": 1,
+          "prerequisites": [
+            "Storm_SingleAttack_Level3"
+          ],
+          "supported": true
+        }
+      },
+      "Storm_AreaDamageTrap": {
+        "own": {
+          "exchangeId": 517,
+          "level": 30,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 518,
+          "level": 30,
+          "cost": 1,
+          "prerequisites": [
+            "Storm_SingleAttack_Level5"
+          ],
+          "supported": true
+        }
+      },
+      "Storm_StormGlobalAura": {
+        "own": {
+          "exchangeId": 519,
+          "level": 18,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 520,
+          "level": 18,
+          "cost": 1,
+          "prerequisites": [
+            "Storm_SingleAttack_Level4"
+          ],
+          "supported": true
+        }
+      },
+      "Storm_SingleAttack_Level5": {
+        "own": {
+          "exchangeId": 521,
+          "level": 20,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 522,
+          "level": 20,
+          "cost": 1,
+          "prerequisites": [
+            "Storm_StormGlobalAura"
+          ],
+          "supported": true
+        }
+      },
+      "Ice_SingleAttack_Level1": {
+        "own": {
+          "exchangeId": 523,
+          "level": 1,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 524,
+          "level": 1,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Ice_SingleAttack_Level2": {
+        "own": {
+          "exchangeId": 525,
+          "level": 4,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 526,
+          "level": 4,
+          "cost": 1,
+          "prerequisites": [
+            "Ice_SingleAttack_Level1"
+          ],
+          "supported": true
+        }
+      },
+      "Ice_SingleAttack_Level3": {
+        "own": {
+          "exchangeId": 527,
+          "level": 8,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 528,
+          "level": 8,
+          "cost": 1,
+          "prerequisites": [
+            "Ice_SingleAttack_Level2"
+          ],
+          "supported": true
+        }
+      },
+      "Ice_GlobalShield": {
+        "own": {
+          "exchangeId": 529,
+          "level": 10,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 530,
+          "level": 10,
+          "cost": 1,
+          "prerequisites": [
+            "Ice_SingleAttack_Level3"
+          ],
+          "supported": true
+        }
+      },
+      "Ice_SingleAttack_Level4": {
+        "own": {
+          "exchangeId": 531,
+          "level": 12,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 532,
+          "level": 12,
+          "cost": 1,
+          "prerequisites": [
+            "Ice_GlobalShield"
+          ],
+          "supported": true
+        }
+      },
+      "Ice_AreaAttack_Level4": {
+        "own": {
+          "exchangeId": 533,
+          "level": 16,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 534,
+          "level": 16,
+          "cost": 1,
+          "prerequisites": [
+            "Ice_SingleAttack_Level4"
+          ],
+          "supported": true
+        }
+      },
+      "Ice_IceGlobalAura": {
+        "own": {
+          "exchangeId": 535,
+          "level": 18,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 536,
+          "level": 18,
+          "cost": 1,
+          "prerequisites": [
+            "Ice_AreaAttack_Level4"
+          ],
+          "supported": true
+        }
+      },
+      "Ice_SingleAttack_Level6": {
+        "own": {
+          "exchangeId": 537,
+          "level": 42,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 538,
+          "level": 42,
+          "cost": 1,
+          "prerequisites": [
+            "Ice_IceGlobalAura"
+          ],
+          "supported": true
+        }
+      },
+      "Life_SingleAttack_Level1": {
+        "own": {
+          "exchangeId": 539,
+          "level": 1,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 540,
+          "level": 1,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Life_SingleAttack_Level2": {
+        "own": {
+          "exchangeId": 541,
+          "level": 4,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 542,
+          "level": 4,
+          "cost": 1,
+          "prerequisites": [
+            "Life_SingleHealWithHOT_Level1"
+          ],
+          "supported": true
+        }
+      },
+      "Life_SingleHealWithHOT_Level1": {
+        "own": {
+          "exchangeId": 543,
+          "level": 6,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 544,
+          "level": 6,
+          "cost": 1,
+          "prerequisites": [
+            "Life_SingleAttack_Level1"
+          ],
+          "supported": true
+        }
+      },
+      "Life_Absorb_Level3": {
+        "own": {
+          "exchangeId": 545,
+          "level": 20,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 546,
+          "level": 20,
+          "cost": 1,
+          "prerequisites": [
+            "Life_LifeGlobalAura"
+          ],
+          "supported": true
+        }
+      },
+      "Life_SingleAttack_Level4": {
+        "own": {
+          "exchangeId": 547,
+          "level": 12,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 548,
+          "level": 12,
+          "cost": 1,
+          "prerequisites": [
+            "Life_LifeDamageTrap"
+          ],
+          "supported": true
+        }
+      },
+      "Life_AreaHeal_Level4": {
+        "own": {
+          "exchangeId": 549,
+          "level": 26,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 550,
+          "level": 26,
+          "cost": 1,
+          "prerequisites": [
+            "Life_Absorb_Level3"
+          ],
+          "supported": true
+        }
+      },
+      "Life_SingleAttack_Level6": {
+        "own": {
+          "exchangeId": 551,
+          "level": 34,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 552,
+          "level": 34,
+          "cost": 1,
+          "prerequisites": [
+            "Life_AreaHeal_Level4"
+          ],
+          "supported": true
+        }
+      },
+      "Life_LifeGlobalAura": {
+        "own": {
+          "exchangeId": 553,
+          "level": 18,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 554,
+          "level": 18,
+          "cost": 1,
+          "prerequisites": [
+            "Life_SingleAttack_Level4"
+          ],
+          "supported": true
+        }
+      },
+      "Death_SingleAttack_Level1": {
+        "own": {
+          "exchangeId": 555,
+          "level": 1,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 556,
+          "level": 1,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Death_SingleAttackWithLifeTap_Level2": {
+        "own": {
+          "exchangeId": 557,
+          "level": 4,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 558,
+          "level": 4,
+          "cost": 1,
+          "prerequisites": [
+            "Death_SingleAttack_Level1"
+          ],
+          "supported": true
+        }
+      },
+      "Death_SingleAttack_Level3": {
+        "own": {
+          "exchangeId": 559,
+          "level": 8,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 560,
+          "level": 8,
+          "cost": 1,
+          "prerequisites": [
+            "Death_SingleAttackWithLifeTap_Level2"
+          ],
+          "supported": true
+        }
+      },
+      "Death_SingleAttackWithLifeTap_Level4": {
+        "own": {
+          "exchangeId": 561,
+          "level": 12,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 562,
+          "level": 12,
+          "cost": 1,
+          "prerequisites": [
+            "Death_SingleAttack_Level3"
+          ],
+          "supported": true
+        }
+      },
+      "Death_SingleAttack_Level5": {
+        "own": {
+          "exchangeId": 563,
+          "level": 20,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 564,
+          "level": 20,
+          "cost": 1,
+          "prerequisites": [
+            "Death_SingleAttackWithLifeTap_Level4"
+          ],
+          "supported": true
+        }
+      },
+      "Death_SymmetryGlobalTrap": {
+        "own": {
+          "exchangeId": 565,
+          "level": 26,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 566,
+          "level": 26,
+          "cost": 1,
+          "prerequisites": [
+            "Death_SingleAttack_Level5"
+          ],
+          "supported": true
+        }
+      },
+      "Death_DeathGlobalAura": {
+        "own": {
+          "exchangeId": 567,
+          "level": 30,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 568,
+          "level": 30,
+          "cost": 1,
+          "prerequisites": [
+            "Death_SymmetryGlobalTrap"
+          ],
+          "supported": true
+        }
+      },
+      "Death_SingleAttackWithLifeTap_Level6": {
+        "own": {
+          "exchangeId": 569,
+          "level": 38,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 570,
+          "level": 38,
+          "cost": 1,
+          "prerequisites": [
+            "Death_DeathGlobalAura"
+          ],
+          "supported": true
+        }
+      },
+      "Life_LifeDamageTrap": {
+        "own": {
+          "exchangeId": 571,
+          "level": 8,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 572,
+          "level": 8,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Fire_FireDispellWeakness": {
+        "own": {
+          "exchangeId": 573,
+          "level": 34,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 574,
+          "level": 34,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Ice_IceDispellWeakness": {
+        "own": {
+          "exchangeId": 575,
+          "level": 40,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 576,
+          "level": 40,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Storm_StormDispellWeakness": {
+        "own": {
+          "exchangeId": 577,
+          "level": 36,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 578,
+          "level": 36,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Death_DeathDispellWeakness": {
+        "own": {
+          "exchangeId": 579,
+          "level": 36,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 580,
+          "level": 36,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Life_LifeDispellWeakness": {
+        "own": {
+          "exchangeId": 581,
+          "level": 36,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 582,
+          "level": 36,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Death_HealWeakness": {
+        "own": {
+          "exchangeId": 583,
+          "level": 22,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 584,
+          "level": 22,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Ice_StunAbsorb": {
+        "own": {
+          "exchangeId": 585,
+          "level": 36,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 586,
+          "level": 36,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Ice_IceGreatShield": {
+        "own": {
+          "exchangeId": 587,
+          "level": 14,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 588,
+          "level": 14,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Fire_FireGreatShield": {
+        "own": {
+          "exchangeId": 589,
+          "level": 14,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 590,
+          "level": 14,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Storm_StormGreatShield": {
+        "own": {
+          "exchangeId": 591,
+          "level": 14,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 592,
+          "level": 14,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Life_LifeGreatShield": {
+        "own": {
+          "exchangeId": 593,
+          "level": 16,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 594,
+          "level": 16,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Death_DeathGreatShield": {
+        "own": {
+          "exchangeId": 595,
+          "level": 16,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 596,
+          "level": 16,
+          "cost": 1,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Fire_DOTAttackWithSplash_Level6": {
+        "own": {
+          "exchangeId": 842,
+          "level": 44,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        },
+        "other": {
+          "exchangeId": 843,
+          "level": 44,
+          "cost": 100,
+          "prerequisites": [
+            "Fire_SingleAttackWithDOT_Level6"
+          ],
+          "supported": true,
+          "school": "fire"
+        }
+      },
+      "Ice_ReflectionShield": {
+        "own": {
+          "exchangeId": 844,
+          "level": 44,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        },
+        "other": {
+          "exchangeId": 845,
+          "level": 44,
+          "cost": 100,
+          "prerequisites": [
+            "Ice_SingleAttack_Level6"
+          ],
+          "supported": true,
+          "school": "ice"
+        }
+      },
+      "Death_SingleAttackWithDisabledHeal": {
+        "own": {
+          "exchangeId": 846,
+          "level": 44,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        },
+        "other": {
+          "exchangeId": 847,
+          "level": 44,
+          "cost": 100,
+          "prerequisites": [
+            "Death_SingleAttackWithLifeTap_Level6"
+          ],
+          "supported": true,
+          "school": "death"
+        }
+      },
+      "Life_AreaCleanse": {
+        "own": {
+          "exchangeId": 848,
+          "level": 44,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        },
+        "other": {
+          "exchangeId": 849,
+          "level": 44,
+          "cost": 100,
+          "prerequisites": [
+            "Life_LifeGlobalAura"
+          ],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Storm_StormDamageTrap_Standing": {
+        "own": {
+          "exchangeId": 850,
+          "level": 44,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        },
+        "other": {
+          "exchangeId": 851,
+          "level": 44,
+          "cost": 100,
+          "prerequisites": [
+            "Storm_SingleAttack_Level5"
+          ],
+          "supported": true,
+          "school": "storm"
+        }
+      },
+      "Storm_SingleAttack_Level6": {
+        "own": {
+          "exchangeId": 853,
+          "level": 38,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        }
+      },
+      "Life_SingleHeal_LevelX": {
+        "own": {
+          "exchangeId": 854,
+          "level": 38,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Ice_IceDamageBlade": {
+        "own": {
+          "exchangeId": 855,
+          "level": 10,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        }
+      },
+      "Fire_AreaStun": {
+        "own": {
+          "exchangeId": 856,
+          "level": 26,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        }
+      },
+      "Fire_SingleAttack_Level0_120_adv": {
+        "own": {
+          "exchangeId": 896,
+          "level": 1,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        }
+      },
+      "Storm_SingleAttack_Level0_120_adv": {
+        "own": {
+          "exchangeId": 897,
+          "level": 1,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        }
+      },
+      "Ice_SingleAttack_Level0_120_adv": {
+        "own": {
+          "exchangeId": 898,
+          "level": 1,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        }
+      },
+      "Life_SingleAttack_Level0_120_adv": {
+        "own": {
+          "exchangeId": 899,
+          "level": 1,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Death_SingleAttack_Level0_120_adv": {
+        "own": {
+          "exchangeId": 900,
+          "level": 1,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        }
+      },
+      "Balance_BoostPowerPipChance_Standing": {
+        "own": {
+          "exchangeId": 905,
+          "level": 50,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Storm_StormAccuracyBlade": {
+        "own": {
+          "exchangeId": 2001,
+          "level": 16,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        }
+      },
+      "Life_SingleHeal_ForNonLife_Level2": {
+        "own": {
+          "exchangeId": 2002,
+          "level": 16,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true
+        }
+      },
+      "Storm_StormDamageBlade": {
+        "own": {
+          "exchangeId": 2003,
+          "level": 10,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        }
+      },
+      "Storm_RemovePositiveCharm": {
+        "own": {
+          "exchangeId": 2004,
+          "level": 22,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        }
+      },
+      "Storm_RemoveNegativeCharm": {
+        "own": {
+          "exchangeId": 2005,
+          "level": 24,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        }
+      },
+      "Storm_AreaAttack_LevelX": {
+        "own": {
+          "exchangeId": 2006,
+          "level": 34,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        }
+      },
+      "Storm_SingleAttack_WildBolt_Level2": {
+        "own": {
+          "exchangeId": 2007,
+          "level": 28,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "storm"
+        }
+      },
+      "Life_SingleHeal_Level0": {
+        "own": {
+          "exchangeId": 2008,
+          "level": 2,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Life_SingleHeal_ForLife_Level2": {
+        "own": {
+          "exchangeId": 2009,
+          "level": 14,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Life_AreaHeal_Level3": {
+        "own": {
+          "exchangeId": 2010,
+          "level": 22,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Life_SingleAttack_Level3": {
+        "own": {
+          "exchangeId": 2011,
+          "level": 8,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Life_LifePrism": {
+        "own": {
+          "exchangeId": 2012,
+          "level": 28,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Life_LifeDamageBlade": {
+        "own": {
+          "exchangeId": 2013,
+          "level": 10,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Life_AreaAccuracyBlade": {
+        "own": {
+          "exchangeId": 2014,
+          "level": 40,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Life_HealBlade": {
+        "own": {
+          "exchangeId": 2015,
+          "level": 24,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Life_SingleHealWithHOT_Level5": {
+        "own": {
+          "exchangeId": 2016,
+          "level": 30,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "life"
+        }
+      },
+      "Death_DeathDamageTrap": {
+        "own": {
+          "exchangeId": 2017,
+          "level": 2,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        }
+      },
+      "Death_DeathDamageBlade": {
+        "own": {
+          "exchangeId": 2018,
+          "level": 10,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        }
+      },
+      "Death_DeathPrism": {
+        "own": {
+          "exchangeId": 2019,
+          "level": 24,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        }
+      },
+      "Death_SingleHealWithImmolate_Level3": {
+        "own": {
+          "exchangeId": 2020,
+          "level": 34,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        }
+      },
+      "Death_GlobalDamageTrap": {
+        "own": {
+          "exchangeId": 2021,
+          "level": 18,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        }
+      },
+      "Death_SingleAttackWithDOT_Level4": {
+        "own": {
+          "exchangeId": 2022,
+          "level": 28,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        }
+      },
+      "Death_AreaDamageWeakness": {
+        "own": {
+          "exchangeId": 2023,
+          "level": 32,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "death"
+        }
+      },
+      "Ice_SingleStun": {
+        "own": {
+          "exchangeId": 2024,
+          "level": 32,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        }
+      },
+      "Ice_IceDamageTrap": {
+        "own": {
+          "exchangeId": 2025,
+          "level": 2,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        }
+      },
+      "Ice_IcePrism": {
+        "own": {
+          "exchangeId": 2026,
+          "level": 24,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        }
+      },
+      "Ice_AreaAbsorb_LevelX": {
+        "own": {
+          "exchangeId": 2027,
+          "level": 20,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        }
+      },
+      "Ice_StealPositiveWard": {
+        "own": {
+          "exchangeId": 2028,
+          "level": 26,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        }
+      },
+      "Ice_SingleAttackWithDOT_Level5": {
+        "own": {
+          "exchangeId": 2029,
+          "level": 28,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "ice"
+        }
+      },
+      "Fire_FireDamageBlade": {
+        "own": {
+          "exchangeId": 2030,
+          "level": 10,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        }
+      },
+      "Fire_FirePrism": {
+        "own": {
+          "exchangeId": 2031,
+          "level": 24,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        }
+      },
+      "Fire_DOTAttackWithHOT_Level2": {
+        "own": {
+          "exchangeId": 2032,
+          "level": 22,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        }
+      },
+      "Fire_StealPositiveCharm": {
+        "own": {
+          "exchangeId": 2033,
+          "level": 16,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        }
+      },
+      "Fire_DOTAttack_LevelX": {
+        "own": {
+          "exchangeId": 2034,
+          "level": 38,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        }
+      },
+      "Fire_SingleAttackWithImmolate_Level4": {
+        "own": {
+          "exchangeId": 2035,
+          "level": 20,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        }
+      },
+      "Fire_AreaDOTAttack_Level5": {
+        "own": {
+          "exchangeId": 2036,
+          "level": 28,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        }
+      },
+      "Fire_AreaAccuracyWeakness": {
+        "own": {
+          "exchangeId": 2037,
+          "level": 30,
+          "cost": 0,
+          "prerequisites": [],
+          "supported": true,
+          "school": "fire"
+        }
+      }
+    }
   }
 }

@@ -17,10 +17,14 @@ export function renderWorldMap(body,{save,assets},cb,{el,button}) {
     const buttons=new Map();
     for(const island of ISLANDS){
         const state=travelStatus(save,assets.content,island.id);
-        const node=button(el('strong','island-name',island.name),()=>cb.travel(island.id),'world-island');
+        const node=button([
+            el('strong','island-name',island.name),
+            el('span','island-state',`建议 ${state.minLevel} 级`),
+        ],()=>{if(!state.current)cb.travel(island.id);},'world-island');
         node.classList.toggle('locked',!state.allowed);node.classList.toggle('current',state.current);
-        node.setAttribute('aria-label',`${island.name}，${state.current?'当前位置':`${state.minLevel}级解锁`}`);
-        node.disabled=state.current||!state.allowed;node.title=state.current?'已在此岛':state.reason||`传送到${island.name}`;
+        node.setAttribute('aria-label',`${island.name}，${state.current?'当前位置，':''}建议 ${state.minLevel} 级前往`);
+        if(state.current)node.setAttribute('aria-current','location');
+        node.disabled=!state.current&&!state.allowed;node.title=state.current?'已在此岛':state.reason||`传送到${island.name}`;
         buttons.set(island.id,node);chart.append(node);
     }
     const viewport=el('div','world-chart-viewport',chart);

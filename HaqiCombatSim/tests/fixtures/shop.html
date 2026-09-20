@@ -1,0 +1,14 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>商店隔离验收</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_shop.css">
+<body class="haqi-app"><div id="root"></div><div id="toast" role="status" aria-live="polite"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import * as A from '../../js/adventure_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+// In-memory fixture: never reads/writes the player's local or cloud save.
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),save=A.createAdventure(assets.content,{name:'商店验收',school:'fire'});
+save.inventory[100]=new URLSearchParams(location.search).has('poor')?0:1000;
+const model={assets,save,shopView:{category:'pet'}},root=document.querySelector('#root');
+const cb={close:()=>root.replaceChildren(),action:value=>{try{A.applyAction(save,assets.content,value);paint();}catch(error){const toast=document.querySelector('#toast');toast.textContent=error.message;toast.classList.add('visible');}},panel:kind=>renderPanel(root,kind,model,cb),encounter:id=>{root.textContent=id;}};
+function paint(){renderPanel(root,'shop',model,cb);}paint();
+</script></body></html>

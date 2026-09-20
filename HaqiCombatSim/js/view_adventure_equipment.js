@@ -19,8 +19,8 @@ export function renderEquipment(body,model,cb,ui) {
     const owned=Object.values(c.items).filter(item=>(save.inventory[item.id]||0)>0&&!['100','113','17213'].includes(String(item.id)));
     const shell=el('div','equipment-layout'),character=el('section','equipment-character'),wardrobe=el('section','equipment-wardrobe');
     const tabs=el('div','equipment-tabs');
-    for(const [id,label] of [['gear','角色装备'],['all','旅行背包'],['upgrade','强化装备']]) {
-        const b=button(label,()=>{if(id==='upgrade'&&cb.panel){cb.panel('upgrade');return;}state.tab=id;state.slot=0;state.page=0;state.query='';state.item=null;state.guid=null;render();},`secondary ${state.tab===id?'active':''}`);
+    for(const [id,label] of [['gear','角色装备'],['all','旅行背包'],['upgrade','强化装备'],['gems','镶嵌宝石']]) {
+        const b=button(label,()=>{if(['upgrade','gems'].includes(id)&&cb.panel){cb.panel(id);return;}state.tab=id;state.slot=0;state.page=0;state.query='';state.item=null;state.guid=null;render();},`secondary ${state.tab===id?'active':''}`);
         b.setAttribute('aria-pressed',String(state.tab===id));tabs.append(b);
     }
     body.append(tabs,shell);
@@ -128,6 +128,7 @@ export function renderEquipment(body,model,cb,ui) {
                 const b=button(equipped?'卸下':'穿上',()=>{dialog.close();cb.action(action);},equipped?'secondary':'primary');
                 b.disabled=!!save.pendingEncounter;footer.prepend(b);if(save.pendingEncounter)footer.append(el('span','muted','战斗中无法换装'));
             }else {detail.append(el('p','equipment-warning',reason));const b=button('穿上',()=>{},'primary');b.disabled=true;footer.prepend(b);}
+            if(item.stats[36]>0)footer.append(button('镶嵌宝石',()=>{dialog.close();cb.panel?.('gems',{itemId:item.id,guid:instance?.guid});},'secondary'));
             if(upgradeLevels(c,item.id).length)footer.append(button('强化',()=>{dialog.close();cb.panel?.('upgrade',{itemId:item.id,guid:instance?.guid});},'secondary'));
             if(item.slot===24&&cb.panel)footer.append(button('整理魔法卡包',()=>{dialog.close();cb.panel('deck');},'secondary'));
             const cards=equipmentCards(item,c);

@@ -13,7 +13,6 @@
 .storybook-ui::-webkit-scrollbar-thumb:hover,.storybook-ui *::-webkit-scrollbar-thumb:hover { background:#89765399; }
 .storybook-ui::-webkit-scrollbar-button,.storybook-ui *::-webkit-scrollbar-button { display:none; width:0; height:0; }
 .storybook-ui::-webkit-scrollbar-corner,.storybook-ui *::-webkit-scrollbar-corner { background:transparent; }
-.storybook-ui .pet-profile-tabs button[aria-pressed=true] { color:#344c31; font-weight:700; text-shadow:none; box-shadow:inset 0 -3px #58794d; }
 .storybook-ui .icon[data-ui-icon] {
     display:inline-block; width:44px; height:44px; flex:none;
     background-image:var(--ui-atlas); background-size:400% 400%; background-repeat:no-repeat;
@@ -196,10 +195,10 @@
 .storybook-ui .track-button .icon { width:19px; height:19px; }
 .storybook-ui .game-nav { bottom:max(6px,env(safe-area-inset-bottom)); padding:0; gap:8px; width:auto; }
 .storybook-ui .nav-button { position:relative; isolation:isolate; min-width:0; width:64px; height:65px; padding:0; gap:0; color:#fff1c8; font-size:11px; overflow:visible; }
-.storybook-ui .nav-button::before { content:""; position:absolute; z-index:-1; width:43px; height:43px; left:50%; top:2px; transform:translateX(-50%); border-radius:50%; border:1px solid #d4ab58; background:radial-gradient(circle at 40% 30%,#416346ed,#203c2feb); box-shadow:0 0 0 2px #61431b,0 0 0 3px #c7a35a,0 2px 6px #211707; }
+.storybook-ui :is(.nav-button,.utility-button)::before { content:""; position:absolute; z-index:-1; width:var(--hud-ring-size,43px); height:var(--hud-ring-size,43px); left:50%; top:2px; transform:translateX(-50%); border-radius:50%; border:1px solid #d4ab58; background:radial-gradient(circle at 40% 30%,#416346ed,#203c2feb); box-shadow:0 0 0 2px #61431b,0 0 0 3px #c7a35a,0 2px 6px #211707; }
 .storybook-ui .nav-button .icon { width:48px; height:48px; margin-top:0; }
-.storybook-ui .nav-button>span:last-child { position:relative; isolation:isolate; min-width:58px; line-height:20px; padding:0 8px; margin-top:-3px; }
-.storybook-ui .nav-button>span:last-child::before { content:""; position:absolute; inset:0; z-index:-1; border:6px solid transparent; border-image:var(--ui-wood) var(--ui-wood-slice) fill / 6px / 0 stretch; }
+.storybook-ui .nav-button>span:last-child,.storybook-ui .utility-label { position:relative; isolation:isolate; min-width:58px; line-height:20px; padding:0 8px; margin-top:-3px; }
+.storybook-ui .nav-button>span:last-child::before,.storybook-ui .utility-label::before { content:""; position:absolute; inset:0; z-index:-1; border:6px solid transparent; border-image:var(--ui-wood) var(--ui-wood-slice) fill / 6px / 0 stretch; }
 .storybook-ui .movement-hint { bottom:14px; }
 .storybook-ui .interact-button { bottom:83px; min-height:40px; padding:6px 14px; }
 .storybook-ui :is(.primary,.secondary) { padding:8px 15px; }
@@ -296,8 +295,8 @@
 .storybook-ui .hero-text>span { margin:1px 0 0; color:#eddfbb; text-shadow:none; }
 .storybook-ui .hero-health { margin-top:4px; }
 .storybook-ui .xp-bar { margin:4px 0 0; }
-.storybook-ui .utility-nav { padding:4px 5px; border-radius:9px; }
-.storybook-ui .utility-nav::before { content:""; border:1px solid #a98b51; border-image:none; border-radius:9px; background:linear-gradient(#3e3828f5,#302c21f5); box-shadow:inset 0 0 0 1px #f2d48833,0 2px 6px #21180744; filter:none; }
+.storybook-ui .utility-nav { padding:0; grid-template-columns:repeat(4,54px); gap:5px; }
+.storybook-ui .utility-nav::before { content:none; }
 .storybook-ui .game-nav { padding:0 8px 4px; }
 .storybook-ui .game-nav::before { content:""; top:22px; border:6px solid transparent; border-image:var(--ui-wood) var(--ui-wood-slice) fill / 6px / 0 stretch; filter:drop-shadow(0 2px 4px #21180744); }
 .storybook-ui .dialogue-box { min-height:146px; padding-left:176px; }
@@ -309,7 +308,7 @@
  .storybook-ui .hero-status { width:177px; padding:6px 8px 7px; }
  .storybook-ui .hero-heading { padding:0; min-height:24px; }
  .storybook-ui .location-label { top:101px; }
- .storybook-ui .utility-nav { padding:3px 4px; }
+ .storybook-ui .utility-nav { padding:0; grid-template-columns:repeat(2,50px); }
  .storybook-ui .game-nav { padding:0 5px 3px; }
  .storybook-ui .dialogue-box { padding:0 12px; min-height:150px; }
  .storybook-ui .dialogue-portrait { left:7px; top:-18px; bottom:auto; width:86px!important; height:114px!important; }
@@ -320,7 +319,7 @@
 }
 @media(max-height:540px) and (min-width:651px) {
  .storybook-ui .hero-status { width:204px; padding:5px 8px 6px; }
- .storybook-ui .utility-nav { padding:3px 4px; }
+ .storybook-ui .utility-nav { padding:0; grid-template-columns:repeat(4,50px); }
  .storybook-ui .game-nav { padding:0 6px 3px; }
  .storybook-ui .dialogue-box { min-height:125px; padding-left:128px; }
  .storybook-ui .dialogue-box::before { left:0; }
@@ -336,7 +335,7 @@
 .haqi-app .bag-preview-close { position:static; align-self:flex-end; }
 .haqi-app .bag-detail:not([data-preview-mode="hover"]) { max-height:calc(100dvh - 16px); overflow-y:auto; }
 .storybook-ui .modal-header { gap:10px; }
-.storybook-ui :is(.hero-status,.utility-nav)::before {
+.storybook-ui .hero-status::before {
  content:""; border:1px solid #b69048; border-image:none; border-radius:9px;
  background:#f7e8bb var(--ui-parchment) center / cover;
  box-shadow:inset 0 0 0 2px #fff0bd99,inset 0 0 12px #c3984c25,0 3px 8px #261b1140; filter:none;
@@ -344,7 +343,7 @@
 .storybook-ui .hero-text strong { color:#51391f; text-shadow:none; }
 .storybook-ui .hero-text>span { color:#80613c; text-shadow:none; }
 .storybook-ui .hero-membership { color:#745629; }
-.storybook-ui .hero-status { width:260px; }
+.storybook-ui .hero-status { width:224px; }
 .hero-text { min-width:0; }
 .hero-name { display:flex; align-items:center; gap:4px; }
 .hero-name strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
@@ -354,13 +353,29 @@
 .hero-membership:hover { text-decoration:underline; text-underline-offset:3px; }
 .hero-membership:focus-visible { outline:2px solid #745629; outline-offset:2px; }
 @media(max-width:650px) {
- .storybook-ui .hero-status { width:min(232px,calc(100vw - 125px)); }
+ .storybook-ui .hero-status { width:min(216px,calc(100vw - 125px)); }
  .hero-school-icon { width:18px; height:18px; }
  .hero-details { gap:2px 7px; font-size:10px; }
 }
-.storybook-ui .utility-button,.storybook-ui .checkin-button.reward-ready { color:#604323; text-shadow:none; }
+/* Floating shortcuts share the bottom navigation's ring and wooden label. */
+.storybook-ui .utility-button { --hud-ring-size:35px; isolation:isolate; justify-content:flex-start; min-height:58px; gap:0; overflow:visible; }
+.storybook-ui .utility-button .icon { width:40px; height:40px; flex-shrink:0; }
+.storybook-ui .utility-button .utility-label { min-width:50px; padding:0 4px; line-height:20px; white-space:nowrap; }
+.storybook-ui .utility-button,.storybook-ui .checkin-button.reward-ready { color:#fff1c8; text-shadow:0 1px 2px #33200b; }
+.storybook-ui .utility-button small { text-shadow:none; }
+@media(max-width:650px) {
+ .storybook-ui .utility-button { --hud-ring-size:31px; min-height:54px; }
+ .storybook-ui .utility-button .icon { width:36px; height:36px; }
+ .storybook-ui .utility-button .utility-label { min-width:46px; line-height:20px; }
+ .storybook-ui .quest-tracker { top:140px; }
+}
+@media(max-height:540px) and (min-width:651px) {
+ .storybook-ui .utility-button { --hud-ring-size:31px; min-height:54px; }
+ .storybook-ui .utility-button .icon { width:36px; height:36px; }
+ .storybook-ui .quest-tracker { top:78px; }
+}
 .storybook-ui .utility-button small,.storybook-ui .checkin-button.reward-ready small { color:#82602c; }
-.storybook-ui .utility-button:hover:not(:disabled) { color:#3d5e39; }
+.storybook-ui .utility-button:hover:not(:disabled) { color:#fff8df; }
 .storybook-ui .quest-track-title { display:flex; align-items:center; gap:6px; width:100%; min-height:36px; padding:0; text-align:left; color:#674723; background:none; font:inherit; }
 .storybook-ui .quest-track-title:hover .quest-title { color:#345a35; text-decoration:underline; text-underline-offset:3px; }
 .storybook-ui .quest-state { flex:none; display:grid; place-items:center; width:23px; height:27px; color:#b88019; font:bold 25px Georgia,serif; text-shadow:0 1px #fff9d4; }
@@ -369,6 +384,7 @@
 .storybook-ui .quest-tracker h3 { margin-bottom:0; }
 .storybook-ui .quest-tracker>p,.storybook-ui .tracker-goal { margin-right:64px; }
 .storybook-ui .quest-tracker { min-height:94px; }
+.storybook-ui .quest-tracker::before { opacity:.72; }
 .storybook-ui .track-button { right:7px; bottom:6px; justify-content:center; min-width:58px; min-height:36px; padding:5px 10px; color:#fff2cf; background:linear-gradient(#557a48,#31553b); border:1px solid #a77f3c; border-radius:18px; box-shadow:inset 0 0 0 1px #ead19a88; white-space:nowrap; }
 .storybook-ui .dialogue-box { width:min(740px,100%); }
 .storybook-ui .dialogue-content { grid-template-columns:minmax(0,1fr) 168px; column-gap:14px; padding-right:44px; }
@@ -408,3 +424,52 @@
 .haqi-app .close-button:focus-visible{outline:2px solid #916524;outline-offset:2px}
 .haqi-app .close-button:active:not(:disabled){transform:scale(.96)}
 @media(prefers-reduced-motion:reduce){.haqi-app .close-button{transition:none}.haqi-app .close-button:active:not(:disabled){transform:none}}
+
+/* Shared tabs and category filters. Keep state visible without the art atlas.
+   Explicit groups avoid restyling selected cards, inventory cells or toggles.
+   New groups can opt in with .gui-tabs and aria-pressed/aria-selected. */
+:is(.haqi-app,.storybook-ui) {
+    --gui-tab-idle:#fff3d4;
+    --gui-tab-ink:#63421e;
+    --gui-tab-border:#b99a60;
+    --gui-tab-selected:#244f3b;
+    --gui-tab-selected-ink:#fff8df;
+    --gui-tab-marker:#f4ca69;
+}
+:is(.haqi-app,.storybook-ui) :is(.gui-tabs,.shop-tabs,.shop-subtabs,.shop-category-tabs,.equipment-tabs,.equipment-filters,.bag-tabs,.bag-school-tabs,.pet-profile-tabs,.strengthening-filters,.gem-tabs,.gem-filters)>button:is([aria-pressed],[aria-selected]) {
+    position:relative;
+    background:var(--gui-tab-idle);
+    color:var(--gui-tab-ink);
+    border:1px solid var(--gui-tab-border);
+    border-radius:6px;
+    box-shadow:inset 0 1px #fffaf0,0 1px 2px #50361f20;
+    text-shadow:none;
+    outline:none;
+    font-weight:600;
+}
+:is(.haqi-app,.storybook-ui) :is(.gui-tabs,.shop-tabs,.shop-subtabs,.shop-category-tabs,.equipment-tabs,.equipment-filters,.bag-tabs,.bag-school-tabs,.pet-profile-tabs,.strengthening-filters,.gem-tabs,.gem-filters)>button:is([aria-pressed],[aria-selected])::before {
+    /* The cream border-image previously hid the selected background. */
+    display:none;
+}
+:is(.haqi-app,.storybook-ui) :is(.gui-tabs,.shop-tabs,.shop-subtabs,.shop-category-tabs,.equipment-tabs,.equipment-filters,.bag-tabs,.bag-school-tabs,.pet-profile-tabs,.strengthening-filters,.gem-tabs,.gem-filters)>button:is([aria-pressed],[aria-selected]):hover:not(:disabled):not([aria-pressed=true]):not([aria-selected=true]) {
+    background:#f4dfaa;
+    border-color:#87662e;
+}
+:is(.haqi-app,.storybook-ui) :is(.gui-tabs,.shop-tabs,.shop-subtabs,.shop-category-tabs,.equipment-tabs,.equipment-filters,.bag-tabs,.bag-school-tabs,.pet-profile-tabs,.strengthening-filters,.gem-tabs,.gem-filters)>button:is([aria-pressed=true],[aria-selected=true]) {
+    background:var(--gui-tab-selected);
+    color:var(--gui-tab-selected-ink);
+    border-color:var(--gui-tab-selected);
+    box-shadow:inset 0 -4px var(--gui-tab-marker),0 1px 2px #18352530;
+    font-weight:700;
+}
+:is(.haqi-app,.storybook-ui) :is(.gui-tabs,.shop-tabs,.shop-subtabs,.shop-category-tabs,.equipment-tabs,.equipment-filters,.bag-tabs,.bag-school-tabs,.pet-profile-tabs,.strengthening-filters,.gem-tabs,.gem-filters)>button:is([aria-pressed],[aria-selected]):focus-visible {
+    outline:3px solid #a75b16;
+    outline-offset:2px;
+}
+@media(forced-colors:active) {
+    :is(.haqi-app,.storybook-ui) :is(.gui-tabs,.shop-tabs,.shop-subtabs,.shop-category-tabs,.equipment-tabs,.equipment-filters,.bag-tabs,.bag-school-tabs,.pet-profile-tabs,.strengthening-filters,.gem-tabs,.gem-filters)>button:is([aria-pressed=true],[aria-selected=true]) {
+        outline:2px solid Highlight;
+        outline-offset:-4px;
+        text-decoration:underline;
+    }
+}

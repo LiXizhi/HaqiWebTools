@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>公共页签验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<link rel="stylesheet" href="../../css/adventure_shop.css"><link rel="stylesheet" href="../../css/adventure_strengthening.css"><link rel="stylesheet" href="../../css/adventure_gems.css"><link rel="stylesheet" href="../../css/adventure_world_map.css">
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+// Real views with an in-memory character; no player storage is read or written.
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'页签验收'});
+const params=new URLSearchParams(location.search);
+if(params.has('noatlas'))document.body.classList.remove('storybook-ui');
+const model={assets,save,shopView:{category:'pet'},petView:{},equipmentView:{tab:'gear',slot:0,item:null,query:'',page:0},strengtheningView:{guid:null,filter:0,page:0,pending:false,message:''},gemView:{guid:null,gemId:null,runes:[null,null,null],runeIndex:0,step:'equipment',filter:0,page:0,mode:'mount',removeIds:[],message:'',confirm:false}};
+const root=document.querySelector('#root'),cb={close:()=>root.replaceChildren(),panel:show,action:()=>{},encounter:()=>{},refresh:()=>show(params.get('panel')||'shop')};
+function show(kind){renderPanel(root,kind,model,cb);}show(params.get('panel')||'shop');
+</script></body></html>

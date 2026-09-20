@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "description": "是否是内测道具。按物品ID维护；重新导出商店候选时写入isInternalTest属性。",
+  "items": {
+    "1122": {
+      "name": "D达人手套___命中测试",
+      "isInternalTest": true
+    },
+    "1126": {
+      "name": "B达人手套___数值测试专用",
+      "isInternalTest": true
+    },
+    "2025": {
+      "name": "45级数值模拟测试",
+      "isInternalTest": true
+    },
+    "2026": {
+      "name": "50级数值模拟测试",
+      "isInternalTest": true
+    },
+    "2027": {
+      "name": "52级数值模拟测试",
+      "isInternalTest": true
+    },
+    "2028": {
+      "name": "绝对值攻击数值模拟测试",
+      "isInternalTest": true
+    },
+    "2029": {
+      "name": "升级版绝对值攻击数值模拟测试",
+      "isInternalTest": true
+    },
+    "2030": {
+      "name": "翻滚吧蛋炒饭测试",
+      "isInternalTest": true
+    }
+  }
+}

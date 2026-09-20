@@ -1,3 +1,4 @@
+import {renderGems} from './view_adventure_gems.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import {renderQuestJournal} from './view_adventure_quests.js';
 import { islandName } from './adventure_world_map_core.js';
@@ -15,7 +16,8 @@ import { specMaxHp } from './adventure_pets_core.js';
 import { checkinStatus } from './adventure_checkin_core.js';
 import { playerSpec } from './adventure_core.js';
 import { renderDebugEditor } from './view_adventure_debug.js';
-import { renderPetCollection,renderShop,starterPicker,petPortrait } from './view_adventure_pets.js';
+import { renderPetCollection,starterPicker,petPortrait } from './view_adventure_pets.js';
+import { renderShop } from './view_adventure_shop.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck } from './adventure_core.js';
 import { rewardLabel } from './adventure_rewards_core.js';
@@ -159,7 +161,7 @@ export function renderHud(root,model,cb) {
     school.setAttribute('role','img');school.setAttribute('aria-label',`${SCHOOL_NAMES[save.school]}系`);school.title=`${SCHOOL_NAMES[save.school]}系`;
     drawSchoolIcon(school.getContext('2d'),save.school,24,24,36);
     const name=button([school,el('strong','',save.name)],()=>cb.panel('equipment'),'hero-name');name.title='角色与装备（R）';
-    const membership=button('升级会员',cb.membership,'hero-membership');
+    const membership=button(model.membership?.isVip?'Keepwork VIP':'会员状态',cb.membership,'hero-membership');
     membership.setAttribute('aria-haspopup','dialog');
     const details=el('div','hero-details',el('span','hero-level',`等级 ${save.level}`));
     for(const [id,label]of [[100,'奇豆'],[17213,'仙豆']]){
@@ -173,10 +175,10 @@ export function renderHud(root,model,cb) {
     updateHeroHealth(status,save,c);
     root.append(status,el('div','location-label',el('span','',islandName(save.zone)),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
     const utilities=el('nav','utility-nav');utilities.setAttribute('aria-label','其他功能');
-    const checkin=button([icon('gourd'),el('span','','签到'),el('small','','')],()=>cb.panel('checkin'),'utility-button checkin-button');
+    const checkin=button([icon('gourd'),el('span','utility-label','签到'),el('small','','')],()=>cb.panel('checkin'),'utility-button checkin-button');
     checkin.title='定时领取奇豆';
     utilities.append(checkin);
-    for(const [label,key,action]of [['世界地图','map',()=>cb.panel('map')],['云存档','cloud',cb.cloud],['设置','settings',()=>cb.panel('settings')]])utilities.append(button([icon(key),el('span','',label)],action,'utility-button'));
+    for(const [label,key,action]of [['世界地图','map',()=>cb.panel('map')],['云存档','cloud',cb.cloud],['设置','settings',()=>cb.panel('settings')]])utilities.append(button([icon(key),el('span','utility-label',label)],action,'utility-button'));
     root.append(utilities);
 
     updateCheckin(root,model);
@@ -224,16 +226,24 @@ function spellFace(assets,card,artCard=card) {
 export function renderPanel(root,kind,model,cb) {
     const {assets,save}=model,c=assets.content,d=assets.dataset;
     if(kind==='membership'){
-        const body=modal(root,'升级会员','',cb);
-        body.append(el('p','','会员开通与续费暂未开放，请留意后续更新。'),button('返回冒险',cb.close,'primary'));
+        const body=modal(root,'Keepwork 会员','',cb),membership=model.membership||{status:'unknown'};
+        const labels={unknown:'尚未确认会员状态',loading:'正在查询 Keepwork 会员状态…',guest:'尚未登录 Keepwork',error:'暂时无法确认会员状态，请检查网络后重试。'};
+        body.append(el('p','',membership.status==='ready'?`${membership.username} · ${membership.isVip?'VIP会员':'普通用户'}`:labels[membership.status]),el('p','muted','会员资格与 Keepwork 账号一致，普通 VIP 和超级 VIP 均可购买会员专属商品。'));
+        const refresh=button('刷新会员状态',()=>cb.refreshMembership?.(),'secondary');refresh.disabled=membership.status==='loading';body.append(refresh);
+        if(membership.status==='guest')body.append(button('登录 Keepwork',()=>cb.roles?.(),'primary'));
+        body.append(button('返回冒险',cb.close,'secondary'));
         return;
+    }
+    if(kind==='gems'){
+        const body=modal(root,'宝石镶嵌精工坊','',cb,true);
+        renderGems(body,model,cb,{el,button,art});return;
     }
     if(kind==='upgrade'){
         const body=modal(root,'装备强化','',cb,true);
         renderStrengthening(body,model,cb,{el,button,art});
         return;
     }
-    const titles={checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['全局商店','等级科技树 · 装备、伙伴与补给'],equipment:['我的背包',''],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
+    const titles={checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
     const body=modal(root,...titles[kind],cb,['deck','quests','inventory','equipment','pet','shop','map'].includes(kind)||kind==='debug');
     if(kind==='checkin'){
         body.closest('.modal').classList.add('checkin-modal');
@@ -242,7 +252,7 @@ export function renderPanel(root,kind,model,cb) {
         body.append(el('p','checkin-online'),grid,el('p','checkin-rules muted','亮起的葫芦可以直接领取。每天累计在线解锁，每个葫芦限领一次；每日零点（北京时间）重置。'),el('p','checkin-balance muted'));
         updateCheckin(root,model);
     }
-    if(kind==='shop')renderShop(body,model,cb,{el,button,art});
+    if(kind==='shop')renderShop(body,model,cb,{el,button,art,tile});
     if(kind==='pet'&&c.pets)renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon});
     if(kind==='quests') {
         renderQuestJournal(body,model,cb,{el,button,objectiveLabel});

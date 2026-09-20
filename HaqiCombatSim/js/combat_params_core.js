@@ -39,6 +39,10 @@ export function defaultParams(version = 'teen') {
         // Web island unlock levels; original world configuration is unavailable.
         worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
+        // Web progression schedule; original server training-point grant table is unavailable.
+        skillLearning: { pointLevels: [4,8,12,16,20,25,30,35,40,45,50] },
+        // SueSue_equipment_extend_panel.lua GetAllOdds: kids level 1–5.
+        gems: { odds: [100,80,60,40,25] },
         adventure: {
             levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [2,4,6,8],
             petCopies: 3, heroRegenPerSecond: .02, regenPerMinute: .05, hungerPerMinute: 1, feedThreshold: 30,

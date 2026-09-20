@@ -184,3 +184,35 @@ test('capture tuning is snapshotted and reward roster tampering is rejected',()=
  const altered=structuredClone(s);altered.pendingEncounter.petIds.push(P.STARTERS[0]);assert.throws(()=>A.parseSave(altered,configured),/奖励阵容/);
  A.settleEncounter(s,configured,b);assert.ok(s.pets.dragon_purple);assert.equal(s.inventory[P.CAPTURE_ID],0);
 });
+
+test('internal-test item flags survive export and reject purchases without invalidating old saves',()=>{
+ const flags=read('adventure/item-flags.json').items,candidates=read('adventure/shop-candidates.json');
+ for(const [id,flag] of Object.entries(flags))assert.equal(candidates[id].isInternalTest,flag.isInternalTest);
+ for(const id of [2025,2026,2027]){
+  const item=c.shop.find(row=>row.itemId===id);
+  assert.equal(item.isInternalTest,true);assert.equal(c.items[id].isInternalTest,true);
+  const save=fresh();save.inventory[100]=10000;const before=structuredClone(save);
+  assert.throws(()=>A.applyAction(save,c,{type:'buy',productId:item.id}),/内测道具/);
+  assert.deepEqual(save,before);
+  const legacy={...c,shop:c.shop.map(row=>row.id===item.id?{...row,isInternalTest:false}:row)};
+  A.applyAction(save,legacy,{type:'buy',productId:item.id});
+  assert.doesNotThrow(()=>A.parseSave(save,c));assert.equal(save.inventory[id],1);
+ }
+ const publicItem=c.shop.find(row=>row.kind==='gear'&&!row.isInternalTest&&row.level===1);
+ const save=fresh();save.inventory[100]=10000;
+ assert.doesNotThrow(()=>A.applyAction(save,c,{type:'buy',productId:publicItem.id}));
+});
+
+test('VIP-only goods require transient Keepwork access, not a character or action flag',()=>{
+ const item=c.shop.find(row=>row.vipOnly&&!row.isInternalTest);assert.ok(item);
+ const s=fresh();s.xp=c.progression.xpThresholds[49];A.syncProgression(s,c);s.inventory[100]=10000;
+ s.vip=true;s.keepworkVip=true;const before=structuredClone(s);
+ assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:item.id,keepworkVip:true}),/Keepwork VIP/);
+ assert.deepEqual(s,before);
+ const cost=P.productPrice(item,c);
+ A.applyAction(s,c,{type:'buy',productId:item.id},{keepworkVip:true});
+ assert.equal(s.inventory[100],10000-cost);assert.equal(s.inventory[item.itemId],1);
+ const purchased=structuredClone(s);
+ assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:item.id},{keepworkVip:false}),/Keepwork VIP/);
+ assert.deepEqual(s,purchased);assert.doesNotThrow(()=>A.parseSave(s,c));
+});

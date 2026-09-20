@@ -34,7 +34,7 @@ export function initializePets(save,content,starter=null){
  save.pets={};save.formation=[null,null,null,null];save.heroSlot=0;save.heroHp=null;save.careAt=0;save.careLog=[];save.transactions=[];save.starterChosen=false;
  if(starter){check(STARTERS.includes(starter),'请选择抱抱龙颜色');addPet(save,content,starter);save.formation[0]=starter;save.starterChosen=true;}
 }
-export function petAction(save,content,action){
+export function petAction(save,content,action,access={}){
  const p=petParams(content),pet=save.pets[action.petId];
  switch(action.type){
  case 'starter':check(!save.starterChosen&&STARTERS.includes(action.petId),'已领取初始伙伴');addPet(save,content,action.petId);save.formation[save.heroSlot]=action.petId;save.starterChosen=true;break;
@@ -46,7 +46,7 @@ export function petAction(save,content,action){
  case 'pet-deck':check(pet,'尚未拥有宠物');validatePetDeck(pet,content,action.deck);pet.deck=action.deck.map(x=>({...x}));break;
  case 'pet-feed':check(pet&&pet.hunger<100&&(save.inventory[FOOD_ID]||0)>0,'需要食物，且宠物尚未吃饱');save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+p.foodRestore);break;
  case 'buy':{
-  const item=content.shop.find(x=>x.id===action.productId);check(item,'商品不存在');check(save.level>=item.level,'等级尚未解锁');
+  const item=content.shop.find(x=>x.id===action.productId);check(item,'商品不存在');check(!item.isInternalTest,'内测道具不对外出售');check(!item.vipOnly||access.keepworkVip===true,'该商品仅限 Keepwork VIP 会员购买。请登录会员账号后重试。');check(save.level>=item.level,'等级尚未解锁');
   check(item.kind!=='pet'||!save.pets[item.petId],'已经拥有这只宠物');const cost=productPrice(item,content);
   check((save.inventory[100]||0)>=cost,'奇豆不足');
   if(item.kind==='pet')addPet(save,content,item.petId);else save.inventory[item.itemId]=(save.inventory[item.itemId]||0)+1;

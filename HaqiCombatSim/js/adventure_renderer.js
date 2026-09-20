@@ -1,5 +1,6 @@
 import { drawIslandWeather } from './adventure_weather.js';
 import { drawRewardEffect } from './view_adventure_rewards.js';
+import { drawTeleportEffect } from './view_adventure_teleport.js';
 import { petStage } from './adventure_pets_core.js';
 import { createCompanion, stepCompanion } from './adventure_companion_core.js';
 // Canvas presentation only. Visual motion uses time/seeded map decorations, never gameplay RNG.
@@ -76,7 +77,7 @@ export function createRenderer(canvas,assets) {
         const index={'fire-scout':0,'ice-scout':1,'storm-scout':2,'life-scout':3,'death-scout':4,'water-bubble':5,'death-bubble':4,pet:6}[id]??5;
         const bob=Math.sin(t*2.8+x)*3;shadow(c,x,y,27*scale);assets.tile(c,'creatures',index,x-45*scale,y-84*scale+bob,90*scale,88*scale);
     }
-    function render(world,save,time,{moving=false,path=[],title=false,rewardEffect=null,weatherOverride=null,weatherTime=time}={}) {
+    function render(world,save,time,{moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time}={}) {
         const {w,h}=size(),t=time/1000;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         const baseScale=w<650?.82:1,sceneZoom=title?1:zoom;
         cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:save.position;
@@ -138,6 +139,7 @@ export function createRenderer(canvas,assets) {
         // A few drifting motes. No random calls or dependence on combat seed.
         if(!world.layout&&!reducedMotion.matches)for(let i=0;i<12;i++){const x=(world.layout?Math.floor(cam.x/800)*800:470)+(i*97)%950+Math.sin(t*.4+i)*20,y=(world.layout?Math.floor(cam.y/800)*800:420)+(i*179)%820+Math.cos(t*.3+i)*15;ellipse(ctx,x,y,2,2,`rgba(255,252,181,${.22+.18*Math.sin(t+i)})`);}
         if(!title)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);
+        if(!title)drawTeleportEffect(ctx,teleportEffect,time,reducedMotion.matches);
         ctx.restore();
         drawIslandWeather(ctx,world,save.position,weatherTime/1000,w,h,reducedMotion.matches,assets.environmentArt,weatherOverride);
         const vignette=ctx.createRadialGradient(w*.5,h*.5,h*.15,w*.5,h*.5,Math.max(w,h)*.68);vignette.addColorStop(0,'transparent');vignette.addColorStop(1,'#113b4b66');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);

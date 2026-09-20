@@ -9,7 +9,7 @@
 | 内容 | 唯一维护入口 |
 | --- | --- |
 | 基础布局、模态窗口结构 | `css/adventure.css` |
-| 绘本颜色、图集图标、主次按钮、共享关闭按钮尺寸 | `css/adventure_storybook.css` |
+| 绘本颜色、图集图标、主次按钮、共享页签状态、共享关闭按钮尺寸 | `css/adventure_storybook.css` |
 | 美术来源、裁剪和永久 CDN | `data/adventure/ui-art.json`、`js/adventure_ui_art.js` |
 | 共享关闭按钮 DOM 与事件 | `js/view_adventure_controls.js` |
 | 地图窗口布局 | `js/view_adventure_maps.js`、`css/adventure_world_map.css` |
@@ -45,7 +45,21 @@ header.append(createCloseButton(closeDetails, '关闭物品详情'));
 - 按钮说明实际动作，如“打开世界地图”“返回当前岛屿地图”。相同动作在不同入口保持用词一致。
 - 动作可一步完成时，不额外引入选中后再确认的步骤；涉及删除或不可逆覆盖则遵循该操作本身的确认规则。
 - 可点击地图地名用真实 DOM 按钮覆盖在图上，不只在 Canvas 中绘制文字，保证鼠标、触屏与键盘均可操作。
-- 地图遵循当前约定：岛名或地标一次点击传送，保留等级/战斗状态检查；不重复显示用户等级、位置摘要、任务追踪或底部世界地图入口。
+- 地图遵循当前约定：岛名或地标一次点击传送，保留战斗状态检查；岛屿不按等级锁定，低于建议等级时提示“那里很危险，确定还要前往吗？”，达到等级直接前往；不重复显示用户等级、位置摘要、任务追踪或底部世界地图入口。
+
+## 页签与分类筛选（2026-09-20）
+
+统一样式维护在 `css/adventure_storybook.css` 的 Shared tabs 段。主分类和二级分类使用相同的选中语言，页面CSS仅负责排列、间距和尺寸，不再自行定义选中底色或边框。
+
+- 未选中：浅纸色底 `#fff3d4`、棕色文字、细金棕边框。
+- 当前选中：深绿色实底 `#244f3b`、浅色文字 `#fff8df`、底部4px金色标记 `#f4ca69` 与加粗文字。不能只改文字颜色或使用一圈细边框表达选中。
+- 悬停只加深未选中项，不能覆盖选中底色；键盘 `:focus-visible` 使用独立的3px外框。选中与焦点可以同时辨认，切换不改变尺寸、不挤压标题或关闭按钮。
+- 页签不使用通用 `.secondary::before` 的奶油色图集填充，避免它遮盖选中底色；样式不依赖图片，图集加载失败仍可区分状态。系统强制颜色模式补充内框与下划线。
+- 现有接入范围：商城两级分类、背包分类和装备部位、卡包方案和学系、宠物详情、强化部位、镶嵌步骤和分类。不要对全局所有 `[aria-pressed=true]` 着色，物品格、卡牌选中、声音开关另有含义。
+- 新页签容器添加 `.gui-tabs`，按钮同步 `aria-pressed="true/false"`；已有完整ARIA tabs键盘模式的组件可以使用 `aria-selected`。未实现完整键盘模式时不要仅为样式添加 `role="tab"`。
+- 统一颜色变量为 `--gui-tab-idle`、`--gui-tab-ink`、`--gui-tab-border`、`--gui-tab-selected`、`--gui-tab-selected-ink`、`--gui-tab-marker`；调整在公共入口完成，不在各窗口覆盖。
+
+核验入口：`tests/fixtures/tabs.html?panel=shop`，panel还可选 inventory、deck、pet、upgrade、gems、map；`&noatlas` 模拟未启用图集皮肤。验收页仅用内存角色，禁止写玩家存档。检查两级切换、鼠标移开后仍清晰、Tab焦点、桌面和390px手机。
 
 ## 美术与性能
 

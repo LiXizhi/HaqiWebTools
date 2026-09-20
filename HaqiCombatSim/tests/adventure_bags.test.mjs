@@ -6,9 +6,29 @@ import * as A from '../js/adventure_core.js';
 import {restorePveBattle} from '../js/combat_pve_core.js';
 import {prepareDebugEdit} from '../js/adventure_debug_core.js';
 import {partySpecs} from '../js/adventure_pets_core.js';
+import {syncEquipmentInstances} from '../js/adventure_equipment_instances_core.js';
 const read=name=>JSON.parse(fs.readFileSync(new URL('../data/'+name+'.json',import.meta.url)));
 const {content:c,dataset:d}=installExpansion(...['adventure/chapter','adventure/combat','adventure/pets','adventure/shop-candidates','kids/cards','kids/charms'].map(read));
 const level=(s,n)=>{s.xp=c.progression.xpThresholds[n-1];A.syncProgression(s,c);};
+
+test('additional layouts require owned usable bags; legacy layouts survive without enabling free additions',()=>{
+ const s=A.createAdventure(c);s.inventory[100]=100000;
+ const layouts=n=>Array.from({length:n},(_,i)=>({name:`卡包${i+1}`,deck:s.deck.map(row=>({...row}))}));
+ const add=n=>A.applyAction(s,c,{type:'deck-layouts',layouts:layouts(n),active:0});
+ const before=JSON.stringify(s);
+ assert.equal(A.deckLayoutCapacity(s,c),1);
+ assert.throws(()=>add(2),/购买/);assert.equal(JSON.stringify(s),before);
+ s.inventory[24014]=2;assert.equal(A.deckLayoutCapacity(s,c),1,'underlevel items grant no usable tabs');
+ A.applyAction(s,c,{type:'buy',productId:'gear:24001'});
+ assert.throws(()=>add(2),/购买/);
+ A.applyAction(s,c,{type:'buy',productId:'gear:24001'});add(2);
+ assert.equal(A.parseSave(s,c).deckLayouts.length,2);
+ assert.throws(()=>add(3),/购买/);
+ delete s.inventory[24001];syncEquipmentInstances(s,c);
+ const legacy=A.parseSave(s,c);A.applyAction(legacy,c,{type:'deck-layouts',layouts:legacy.deckLayouts,active:1});
+ assert.equal(legacy.deckLayouts.length,2);
+ assert.throws(()=>A.applyAction(legacy,c,{type:'deck-layouts',layouts:layouts(3),active:0}),/购买/);
+});
 
 test('original bags use their own level and school attributes at purchase and equip',()=>{
  const s=A.createAdventure(c);s.inventory[100]=100000;

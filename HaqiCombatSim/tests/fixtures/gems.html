@@ -1,0 +1,18 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>宝石镶嵌隔离验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_gems.css">
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import * as A from '../../js/adventure_core.js';
+import {syncEquipmentInstances} from '../../js/adventure_equipment_instances_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),c=assets.content,save=A.createAdventure(c,{name:'宝石验收'});
+save.xp=c.progression.xpThresholds[19];A.syncProgression(save,c);
+for(const item of Object.values(c.items).filter(x=>x.kind===1&&x.stats[36]>0).slice(0,24))save.inventory[item.id]=1;
+for(const id of Object.keys(c.gemCatalog.items))save.inventory[id]=4;
+syncEquipmentInstances(save,c);
+const gemView={guid:null,gemId:null,runes:[null,null,null],runeIndex:0,step:'equipment',filter:0,page:0,mode:'mount',removeIds:[],message:'',confirm:false};
+const root=document.querySelector('#root'),model={save,assets,gemView};
+const cb={close:()=>root.replaceChildren(),refresh:paint,action:value=>{try{return A.applyAction(save,c,value);}catch(e){gemView.message=e.message;return false;}}};
+function paint(){renderPanel(root,'gems',model,cb);}paint();
+</script></body></html>

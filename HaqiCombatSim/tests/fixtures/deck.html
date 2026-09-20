@@ -1,0 +1,13 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>卡包隔离验收</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import * as A from '../../js/adventure_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+// In-memory only; never reads or writes player saves.
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),save=A.createAdventure(assets.content,{name:'卡包验收'});
+if(new URLSearchParams(location.search).has('bags'))save.inventory[24001]=2;
+const root=document.querySelector('#root');
+renderPanel(root,'deck',{assets,save,shopView:{}},{close:()=>root.replaceChildren(),action:value=>A.applyAction(save,assets.content,value),panel:()=>{root.textContent='购买卡包';}});
+</script></body></html>

@@ -221,3 +221,20 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 - `strengtheningCatalog` 补齐468件原定义（包括商城等级上限外装备），导入脚本核对原数据库及强化XML快照哈希。仅补充定义，不制造高阶装备售价。材料只有17213仙豆及17487祝福魔珠；魔珠说明保留原出处，未伪造尚未实现的原副本掉落。
 - 15张原版UI纹理从 assets_manifest.txt 对应原始文件无损转为 WebP；缺失的115件图标整理为4张图集。19张资源均使用已上传且核验SHA-256及CORS的永久Keepwork CDN，保留原清单条目、哈希、裁剪和本地副本。
 - 浏览器适配：手机单列，错误/成功为窗口内状态信息，键盘可操作；本地同步操作代替原 PowerAPI 服务回复，不冒充原服联网或服务端持久化。宝石镶嵌、装备继承是其他系统；本次仅保留其已有实例数据。
+
+## 2026-09-20：儿童版宝石镶嵌与剥离
+
+- `30042_SueSue_equipment_extend_panel.lua` L186–258：装备七分类、stat36孔位、26001–26699宝石和26701–26703镶嵌符；L304–347：stat35符加成和五档基础成功率100/80/60/40/25，上限100%。概率集中到BalanceParams.gems。
+- `30042_SueSue_equipment_extend_bagpage.html` L46–154、L163–374：满槽只换同类、不允许同级/低级替换、替换需确认、命中限手镯/戒指、穿透限武器、武器和首饰属性限制。与panel.lua的kids类型过滤共同检查。孔数沿用kids stat36，不增加teen打孔系统。
+- `30042_SueSue_equipment_extend_panel.html` L203–250：消费前确认，四级及以上要求100%；原奇豆检查是注释代码，本次不扣奇豆。`extend_panel.lua` L395–433：成功推进79017；失败降一级或一级消失。降级目标用原stat38。
+- `30042_SueSue_equipment_cutgem_panel.html` L28–41、L89–119、L231–245：99%基础加固定1%（代码覆盖魔法星等级），实际100%；每颗一个17179调羹、检查背包堆叠上限。未引入VIP要求。
+- `Item_CombatApparel.lua` L588–616：gem.ins / gem.holecnt附着GUID；保留强化等级。`player_server.lua` L3476–3488：仅已穿戴实例宝石属性加入角色与战斗。
+- `scripts/export_adventure_gems.py` 从原Database/globalstore.db.mem导出104项至gems.json，记录原文件SHA-256；maxcopiesinstack索引依据paraworld.globalstore.lua L551。资源层加载，定义不硬编码到规则中。
+- 服务端差异：`PowerItemManager.lua` L1696–1733转发EquipGem，仓库没有服务端随机实现。本地按客户端显示概率、seed+持久化gemSerial结算；失败保留装备原宝石并返回stat38低一级宝石，此为明确的本地结算适配，不声称原服服务端1:1。未接入原服背包、支付、宝石合成、新价格或新掉落。现有库存可直接使用；隔离验收页提供材料，不改玩家库存。
+
+## 2026-09-20：原版训练点学习约束
+
+- CombatSkillLearn.lua L173–239：选择本系exID或外系other_exID，本系课程免费，外系按froms消耗训练点；L495–531检查外系点数，L561–613检查战斗等级（-14）、学系（-18）及前置资格。
+- Database/extendedcost.db.mem：脚本export_skill_learning.py解码纯数据，校验确定性的单资格奖励，导出105条thisClass/otherClass记录（exID、等级、前置卡牌、学系、费用），源SHA-256保存在chapter.skillLearning。未知条件不放开。
+- 对应adventure_learning_core.js，核心保存与界面草稿共用skillLearningStatus。学习费用来自数据，不统一假设所有卡牌1点；没有学习配置的变体不再默认为一级可学。
+- 原导师7Mentor.xml与服务端升级发点表缺失。网页发点采用BalanceParams.skillLearning.pointLevels的4/8/12/16/20/25/30/35/40/45/50，均1点；明确属于网页改编。未实现导师顺序菜单、任务课程全量及洗点接口。既有章节本系自动赠卡和旧存档已学资格保留。

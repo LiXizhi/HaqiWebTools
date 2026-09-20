@@ -8,6 +8,7 @@ import * as U from '../js/combat_unit_core.js';
 import { SimpleBot } from '../js/combat_policy_core.js';
 import { isSupportedType } from '../js/combat_cards_core.js';
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
+content.worldMaps=Object.fromEntries(Object.entries(content.worldMapIndex.islands).map(([id,row])=>[id,JSON.parse(fs.readFileSync(new URL('../'+row.file,import.meta.url)))]));
 const dataset=JSON.parse(fs.readFileSync(new URL('../data/adventure/combat.json',import.meta.url)));
 function act(s,type,props={}) { return A.applyAction(s,content,{type,...props}); }
 function battle(s,id) {

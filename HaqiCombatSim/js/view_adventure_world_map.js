@@ -1,4 +1,4 @@
-import { ISLANDS, islandName, travelStatus } from './adventure_world_map_core.js';
+import { ISLANDS, travelStatus } from './adventure_world_map_core.js';
 import { fetchJson } from './runtime_data.js';
 import { assetUrl } from './adventure_media_core.js';
 
@@ -10,31 +10,22 @@ function loadMapArt(){
 
 export function renderWorldMap(body,{save,assets},cb,{el,button}) {
     body.closest('.modal').classList.add('world-map-modal');
-    const chart=el('div','world-chart'),detail=el('div','world-map-detail');
-    chart.setAttribute('aria-label','世界地图，选择岛屿查看传送条件');
-    const loading=el('p','world-map-loading','地图载入中，可先选择目的地。');
+    const chart=el('div','world-chart');
+    chart.setAttribute('aria-label','世界地图，点击岛名传送');
+    const loading=el('p','world-map-loading','地图载入中…');
     loading.setAttribute('role','status');chart.append(loading);
     const buttons=new Map();
-    function select(island){
-        for(const [id,node] of buttons){node.classList.toggle('selected',id===island.id);node.setAttribute('aria-pressed',String(id===island.id));}
-        const state=travelStatus(save,assets.content,island.id);
-        const go=button(state.current?'你在这里':state.allowed?'传送到这里':`${state.minLevel} 级解锁`,()=>cb.travel(island.id),'primary');
-        go.disabled=state.current||!state.allowed;
-        detail.replaceChildren(el('div','world-map-description',el('h3','',island.name),el('p','',island.description),el('small','',state.current?'当前所在岛屿':state.reason||`${state.minLevel} 级起可自由传送`)),go);
-    }
     for(const island of ISLANDS){
         const state=travelStatus(save,assets.content,island.id);
-        const node=button([el('strong','island-name',island.name),el('small','island-state',state.current?'当前位置':state.allowed?`${state.minLevel} 级 · 可传送`:`${state.minLevel} 级解锁`)],()=>select(island),'world-island');
+        const node=button(el('strong','island-name',island.name),()=>cb.travel(island.id),'world-island');
         node.classList.toggle('locked',!state.allowed);node.classList.toggle('current',state.current);
         node.setAttribute('aria-label',`${island.name}，${state.current?'当前位置':`${state.minLevel}级解锁`}`);
+        node.disabled=state.current||!state.allowed;node.title=state.current?'已在此岛':state.reason||`传送到${island.name}`;
         buttons.set(island.id,node);chart.append(node);
     }
-    detail.setAttribute('aria-live','polite');
     const viewport=el('div','world-chart-viewport',chart);
     viewport.setAttribute('tabindex','0');viewport.setAttribute('aria-label','世界地图，小屏可左右滚动查看全部岛屿');
-    body.append(el('div','world-map-summary',el('span','',`当前位置：${islandName(save.zone)}`),el('span','',`角色等级 ${save.level}`)),viewport,detail,
-        el('div','world-map-footer',el('small','muted','点击岛屿查看详情，达到等级即可免费传送。远方四岛已开放探索，专属任务待开放。'),button('返回并追踪当前任务',cb.track,'secondary')));
-    select(ISLANDS.find(i=>i.id===save.zone)||ISLANDS[0]);
+    body.append(viewport);
     // Cosmetic loading is lazy and never blocks travel. A failed CDN image
     // leaves a plain destination list; explicit local mode uses the archive.
     const fallback=()=>{loading.textContent='地图图片暂不可用，请从列表选择目的地。';};

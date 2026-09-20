@@ -1,3 +1,4 @@
+import {createCloseButton} from './view_adventure_controls.js';
 import { petParams, STAGE_NAMES, petStage, petCapacity, petMaxHp, FOOD_ID } from './adventure_pets_core.js';
 import { createCardFace } from './view_adventure_card.js';
 // A native nested dialog keeps the shop filters, page and scroll position intact.
@@ -6,7 +7,7 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
     const trigger=document.activeElement,dialog=el('dialog','modal pet-growth-modal');
     dialog.setAttribute('aria-label',`${def.name} · 四阶段与卡片`);
     const close=()=>dialog.close();
-    const exit=button('×',close,'close-button');exit.setAttribute('aria-label','关闭宠物详情');
+    const exit=createCloseButton(close,'关闭宠物详情');
     dialog.append(el('header','modal-header',el('div','',el('p','eyebrow','宠物图鉴 · 成长与魔法'),el('h2','',def.name)),exit));
     dialog.classList.add('pet-profile-modal');
     const body=el('div','modal-body'),tabs=el('nav','pet-profile-tabs'),content=el('div','pet-profile-content');

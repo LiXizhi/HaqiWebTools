@@ -1,3 +1,5 @@
+import {createCloseButton} from './view_adventure_controls.js';
+import {renderQuestJournal} from './view_adventure_quests.js';
 import { islandName } from './adventure_world_map_core.js';
 import { drawSchoolIcon } from './card_renderer.js';
 import { renderWorldMap } from './view_adventure_world_map.js';
@@ -174,18 +176,16 @@ export function renderHud(root,model,cb) {
     const checkin=button([icon('gourd'),el('span','','签到'),el('small','','')],()=>cb.panel('checkin'),'utility-button checkin-button');
     checkin.title='定时领取奇豆';
     utilities.append(checkin);
-    for(const [label,key,action]of [['地图','map',()=>cb.panel('map')],['云存档','cloud',cb.cloud],['设置','settings',()=>cb.panel('settings')]])utilities.append(button([icon(key),el('span','',label)],action,'utility-button'));
+    for(const [label,key,action]of [['世界地图','map',()=>cb.panel('map')],['云存档','cloud',cb.cloud],['设置','settings',()=>cb.panel('settings')]])utilities.append(button([icon(key),el('span','',label)],action,'utility-button'));
     root.append(utilities);
-    if(save.zone==='town'){
-        const guide=button('岛内导览',()=>cb.panel('localmap'),'island-guide-button');guide.title='查看地形，选择地标步行前往';root.append(guide);
-    }
+
     updateCheckin(root,model);
     const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),el('span','chapter-count',`${Object.values(save.quests).filter(x=>x.claimed).length} / 14`)));
     if(q){
         const state=questState(save,q.id),ready=questReady(save,q);
         const statusLabel=ready?'可以交付':state.accepted?'进行中':'可接取';
         const marker=el('span',`quest-state ${ready?'ready':state.accepted?'active':'available'}`,ready?'?':'!');marker.setAttribute('aria-hidden','true');
-        const questLink=button([marker,el('span','quest-title',q.title)],cb.track,'quest-track-title');questLink.title=`${statusLabel}，点击自动追踪`;questLink.setAttribute('aria-label',`${q.title}，${statusLabel}，自动追踪`);
+        const questLink=button([marker,el('span','quest-title',q.title)],()=>cb.panel('quests',{questId:q.id}),'quest-track-title');questLink.title=`${statusLabel}，点击查看任务详情`;questLink.setAttribute('aria-label',`${q.title}，${statusLabel}，查看任务详情`);
         tracker.append(el('h3','',questLink));
         if(!state.accepted)tracker.append(el('p','',`去找${c.npcs[q.startNpc].name}，接取新的任务。`));
         else if(ready)tracker.append(el('p','',`任务已完成，向${c.npcs[q.endNpc].name}回报。`));
@@ -201,7 +201,7 @@ export function renderHud(root,model,cb) {
 function modal(root,title,subtitle,cb,wide=false) {
     root.replaceChildren();root.className='overlay visible';
     const box=el('section',`modal ${wide?'wide':''}`);box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',title);
-    const close=button(icon('close'),cb.close,'close-button');close.setAttribute('aria-label','关闭');
+    const close=createCloseButton(cb.close);
     box.append(el('header','modal-header',el('div','',el('p','eyebrow',subtitle),el('h2','',title)),close));const body=el('div','modal-body');box.append(body);root.append(box);
     return body;
 }
@@ -233,7 +233,7 @@ export function renderPanel(root,kind,model,cb) {
         renderStrengthening(body,model,cb,{el,button,art});
         return;
     }
-    const titles={checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['全局商店','等级科技树 · 装备、伙伴与补给'],equipment:['角色与装备','魔法学徒 · 旅途行装'],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包','装备与旅途收藏'],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
+    const titles={checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['全局商店','等级科技树 · 装备、伙伴与补给'],equipment:['我的背包',''],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
     const body=modal(root,...titles[kind],cb,['deck','quests','inventory','equipment','pet','shop','map'].includes(kind)||kind==='debug');
     if(kind==='checkin'){
         body.closest('.modal').classList.add('checkin-modal');
@@ -245,11 +245,7 @@ export function renderPanel(root,kind,model,cb) {
     if(kind==='shop')renderShop(body,model,cb,{el,button,art});
     if(kind==='pet'&&c.pets)renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon});
     if(kind==='quests') {
-        const current=currentQuest(save,c);
-        for(const q of c.quests){const state=questState(save,q.id);const block=el('article',`journal-quest ${state.claimed?'done':''} ${current?.id===q.id?'current':''}`,el('div','journal-title',el('span','quest-number',String(q.id-62999).padStart(2,'0')),el('h3','',q.title),badge(state.claimed?'已完成':state.accepted?'进行中':current?.id===q.id?'可接取':'未开启')));
-            if(current?.id===q.id||state.accepted){block.append(el('p','',q.description));for(const g of questProgress(save,q))block.append(el('p','goal-line',`${g.value>=g.count?'✓':'◇'} ${objectiveLabel(g,c)}　${g.value}/${g.count}`));if(!state.claimed)block.append(button('追踪这个任务',()=>{cb.close();cb.track();},'secondary'));}
-            body.append(block);
-        }
+        renderQuestJournal(body,model,cb,{el,button,objectiveLabel});
     }
     if(kind==='inventory'||kind==='equipment') {
         const box=body.closest('.modal');box.classList.add('equipment-modal');
@@ -293,7 +289,7 @@ export function renderDialogue(root,model,dialog,cb) {
     box.classList.toggle('dialogue-sequence',!!dialog.lines);
     const portrait=art(assets,npc.portrait,150,190,'dialogue-portrait');
     const content=el('div','dialogue-content',el('p','eyebrow',npc.zone==='camp'?'魔法营地':'哈奇小镇'),el('h2','',npc.name));
-    const close=button(icon('close'),cb.close,'close-button');close.setAttribute('aria-label','关闭');
+    const close=createCloseButton(cb.close);
     if(dialog.lines){
         const line=dialog.lines[dialog.index],last=dialog.index===dialog.lines.length-1;
         const replyLabel=entry=>entry.buttons?.[0]?.label&&!entry.buttons[0].label.includes('NEXT')?entry.buttons[0].label:'继续';
@@ -315,7 +311,7 @@ export function renderDialogue(root,model,dialog,cb) {
         if(q&&state.accepted&&!(ready&&q.endNpc===npc.id))choices.append(button(ready?'前往回报任务':'查看任务目标',()=>{cb.close();cb.track();},'secondary'));
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
-        if(npc.id===36205)choices.append(button('去哈奇小镇',()=>cb.travel('town'),'secondary'));
+        if(npc.id===36205)choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
         choices.append(button('下次再聊',cb.close,'text-button'));content.append(choices);
     }
     const hint=el('p','dialogue-hint');

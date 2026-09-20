@@ -11,7 +11,7 @@ export function createJsonReader({ packed = productionPacks, request = (...args)
     return async function readJson(url) {
         if (!packed) return download(url);
         const key = String(url).replace(/^\.\//, '');
-        const match = /^data\/(adventure|kids|teen|sample)\/([^/]+\.json)$/.exec(key);
+        const match = /^data\/(adventure|kids|teen|sample)\/((?:maps\/)?[a-zA-Z0-9_-]+\.json)$/.exec(key);
         if (!match) throw new Error(`未知的数据路径：${url}`);
         const group = match[2] === 'manifest.json' && match[1] !== 'adventure' ? 'datasets' : match[1];
         const packUrl = `data/${group}.json`;

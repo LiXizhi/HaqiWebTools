@@ -1,23 +1,17 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>哈奇岛探索验收</title><base href="../../"><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css">
-<body class="haqi-app"><main id="game"><canvas id="world" tabindex="0"></canvas><div id="hud"></div><div id="overlay"></div><div id="toast" role="status"></div></main>
-<script type="module">
-import {loadResources} from '../../js/adventure_assets.js';
-import {createAdventure,applyAction} from '../../js/adventure_core.js';
-import {createWorld,findPath,followPath,nearestInteraction} from '../../js/adventure_world_core.js';
-import {createRenderer} from '../../js/adventure_renderer.js';
-import {renderHud} from '../../js/view_adventure.js';
-import {renderLocalMap} from '../../js/view_adventure_local_map.js';
-// Isolated in-memory fixture: no player storage reads or writes.
-const assets=await loadResources(),save=createAdventure(assets.content,{name:'探索者'});
-applyAction(save,assets.content,{type:'travel',zone:'town'});
-const world=createWorld('town',assets.content),canvas=document.querySelector('#world'),renderer=createRenderer(canvas,assets),overlay=document.querySelector('#overlay');
-let path=[],last=0;
-const close=()=>{overlay.replaceChildren();overlay.className='overlay';};
-function guide(){path=[];renderLocalMap(overlay,world,save,{close,draw:c=>renderer.minimap(c,world,save),walk:p=>{close();path=findPath(world,save.position,p);}});}
-renderHud(document.querySelector('#hud'),{assets,save,now:Date.now()},{panel:name=>name==='localmap'&&guide(),membership(){},cloud(){},track(){},interact(){}});
-canvas.onclick=e=>{const r=canvas.getBoundingClientRect();path=findPath(world,save.position,renderer.screenToWorld(e.clientX-r.left,e.clientY-r.top));};
-function frame(t){const result=followPath(world,save.position,path,210*Math.min(.055,(t-last)/1000||0));last=t;save.position=result.position;path=result.path;renderer.render(world,save,t,{moving:!!path.length,path});requestAnimationFrame(frame);}requestAnimationFrame(frame);
-window.explorationQA={world,save,renderer,canvas,guide,nearestInteraction,go:region=>{path=[];save.position={x:region.x,y:region.y};},ready:true};
-</script></body></html>
-
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>岛屿场景预览</title><base href="../../"><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_world_map.css"><link rel="stylesheet" href="tests/fixtures/exploration.css"></head>
+<body class="haqi-app">
+<header id="preview-tools">
+<strong>场景预览</strong>
+<label>岛屿<select id="scene-select" disabled></select></label>
+<label>区域<select id="region-select" disabled></select></label>
+<label>天气<select id="weather-select"><option value="auto">跟随地域</option><option value="none">晴朗</option><option value="snow">降雪</option><option value="sand">沙尘</option><option value="embers">余烬</option><option value="mist">薄雾</option><option value="ash">灰烬</option><option value="motes">萤光</option></select></label>
+<button id="zoom-out" aria-label="缩小">−</button><button id="zoom-in" aria-label="放大">＋</button>
+<button id="arrival">返回入口</button><button id="preview-map">世界地图</button>
+<label class="check"><input id="show-hud" type="checkbox">游戏界面</label>
+<label class="check"><input id="pause-weather" type="checkbox">暂停天气</label>
+<p id="preview-status" role="status">正在加载场景。测试角色不读写存档。</p>
+</header>
+<main id="game"><canvas id="world" tabindex="0" aria-label="岛屿场景，点击地面或使用方向键行走"></canvas><div id="hud" hidden></div><div id="overlay"></div><div id="toast" role="status"></div></main>
+<script type="module" src="tests/fixtures/exploration.js"></script></body></html>

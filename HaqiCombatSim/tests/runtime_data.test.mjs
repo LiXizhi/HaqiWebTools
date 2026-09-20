@@ -61,6 +61,7 @@ test('five compact packs load all datasets, retain projected content and preserv
         const output = fs.readFileSync(path.join(destination, 'adventure.json'), 'utf8');
         assert.equal(output, JSON.stringify(JSON.parse(output)));
         assert.deepEqual(await reader('data/adventure/skill-art.json'), compact('skill-art'));
+        for(const id of ['camp','town','fire','ice','desert','dark','index'])assert.deepEqual(await reader(`data/adventure/maps/${id}.json`),read(`maps/${id}`));
         assert.equal(fs.readFileSync(new URL('adventure/skill-art.json', source), 'utf8'), original);
         assert.equal((await discoverDatasets(reader)).length, 3);
         assert.deepEqual(calls, ['data/adventure.json', 'data/datasets.json']);

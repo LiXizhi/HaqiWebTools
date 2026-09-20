@@ -47,6 +47,9 @@ function domHelpers(){
         getBoundingClientRect(){return {left:0,top:0,right:300,bottom:200};}
     }
     const el=(...args)=>new Element(...args),button=(label,fn,cls='')=>{const b=el('button',cls,label);b.onclick=fn;return b;};
+    // The shared close control builds its own nodes; expose the harness DOM so
+    // views can create them without a browser document.
+    globalThis.document={createElement:(...args)=>new Element(...args),createElementNS:()=>new Element('svg')};
     return {el,button,spellFace:()=>el('canvas')};
 }
 test('30 cards render as 30 icons; hold removes exactly one and scrolling cancels removal',t=>{

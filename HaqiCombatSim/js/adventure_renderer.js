@@ -1,3 +1,4 @@
+import { drawIslandWeather } from './adventure_weather.js';
 import { drawRewardEffect } from './view_adventure_rewards.js';
 import { petStage } from './adventure_pets_core.js';
 import { createCompanion, stepCompanion } from './adventure_companion_core.js';
@@ -49,7 +50,7 @@ export function createRenderer(canvas,assets) {
     function ground(world) {
         if(world.layout){
             if(overviewWorld===world)return overview;
-            overviewWorld=world;overview=document.createElement('canvas');overview.width=560;overview.height=440;
+            overviewWorld=world;overview=document.createElement('canvas');overview.width=560;overview.height=Math.round(560*world.h/world.w);
             const c=overview.getContext('2d');c.scale(overview.width/world.w,overview.height/world.h);paintLargeTerrain(c,world,undefined,true);
             return overview;
         }
@@ -75,8 +76,8 @@ export function createRenderer(canvas,assets) {
         const index={'fire-scout':0,'ice-scout':1,'storm-scout':2,'life-scout':3,'death-scout':4,'water-bubble':5,'death-bubble':4,pet:6}[id]??5;
         const bob=Math.sin(t*2.8+x)*3;shadow(c,x,y,27*scale);assets.tile(c,'creatures',index,x-45*scale,y-84*scale+bob,90*scale,88*scale);
     }
-    function render(world,save,time,{moving=false,path=[],title=false,rewardEffect=null}={}) {
-        const {w,h}=size(),t=time/1000;ctx.fillStyle=OCEAN_COLOR;ctx.fillRect(0,0,w,h);
+    function render(world,save,time,{moving=false,path=[],title=false,rewardEffect=null,weatherOverride=null,weatherTime=time}={}) {
+        const {w,h}=size(),t=time/1000;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         const baseScale=w<650?.82:1,sceneZoom=title?1:zoom;
         cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:save.position;
         cam.x=center.x-w/(2*cam.scale);cam.y=center.y-h/(2*cam.scale)+(w<650?50:25)/sceneZoom;
@@ -104,7 +105,7 @@ export function createRenderer(canvas,assets) {
         objects.sort((a,b)=>a.y-b.y);
         for(const o of objects) {
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
-            if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;shadow(ctx,o.x,o.y,o.size*.3);assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
+            if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;shadow(ctx,o.x,o.y,o.size*.3);const winter=o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
             if(o.kind==='building'){shadow(ctx,o.x,o.y,o.w*.4);assets.tile(ctx,'sprites',o.tile,o.x-o.w/2,o.y-o.h,o.w,o.h);}
             if(o.kind==='landmark'){
                 shadow(ctx,o.x,o.y,18);ctx.fillStyle='#786344';ctx.fillRect(o.x-3,o.y-43,6,43);
@@ -135,19 +136,20 @@ export function createRenderer(canvas,assets) {
         }
         plate(ctx,world.portal.name,world.portal.x,world.portal.y+48);
         // A few drifting motes. No random calls or dependence on combat seed.
-        if(!reducedMotion.matches)for(let i=0;i<12;i++){const x=(world.layout?Math.floor(cam.x/800)*800:470)+(i*97)%950+Math.sin(t*.4+i)*20,y=(world.layout?Math.floor(cam.y/800)*800:420)+(i*179)%820+Math.cos(t*.3+i)*15;ellipse(ctx,x,y,2,2,`rgba(255,252,181,${.22+.18*Math.sin(t+i)})`);}
+        if(!world.layout&&!reducedMotion.matches)for(let i=0;i<12;i++){const x=(world.layout?Math.floor(cam.x/800)*800:470)+(i*97)%950+Math.sin(t*.4+i)*20,y=(world.layout?Math.floor(cam.y/800)*800:420)+(i*179)%820+Math.cos(t*.3+i)*15;ellipse(ctx,x,y,2,2,`rgba(255,252,181,${.22+.18*Math.sin(t+i)})`);}
         if(!title)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);
         ctx.restore();
+        drawIslandWeather(ctx,world,save.position,weatherTime/1000,w,h,reducedMotion.matches,assets.environmentArt,weatherOverride);
         const vignette=ctx.createRadialGradient(w*.5,h*.5,h*.15,w*.5,h*.5,Math.max(w,h)*.68);vignette.addColorStop(0,'transparent');vignette.addColorStop(1,'#113b4b66');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
     }
-    function minimap(target,world,save) {
+    function minimap(target,world,save,{labels=true}={}) {
         const c=target.getContext('2d'),w=target.width,h=target.height;c.clearRect(0,0,w,h);c.fillStyle='#6ba7a2';c.fillRect(0,0,w,h);
         const sx=w/world.w,sy=h/world.h;c.save();c.scale(sx,sy);c.drawImage(ground(world),0,0,world.w,world.h);
         for(const b of world.buildings){c.fillStyle='#627b83';c.fillRect(b.x-45,b.y-60,90,65);}
         for(const n of world.npcs)ellipse(c,n.x,n.y,questMarker(save,assets.content,n.id)?22:13,questMarker(save,assets.content,n.id)?22:13,questMarker(save,assets.content,n.id)?'#ffe89c':'#f6f3d9');
         ellipse(c,save.position.x,save.position.y,25,25,'#184f73');ellipse(c,save.position.x,save.position.y,13,13,'#fff');c.restore();
         if(world.layout){
-            for(const r of world.layout.regions){ellipse(c,r.x*sx,r.y*sy,3,3,'#fff3c3');text(c,r.name,r.x*sx,r.y*sy-9,11,'#25483b');}
+            if(labels)for(const r of world.layout.regions){ellipse(c,r.x*sx,r.y*sy,3,3,'#fff3c3');text(c,r.name,r.x*sx,r.y*sy-9,11,'#25483b');}
             ellipse(c,save.position.x*sx,save.position.y*sy,5,5,'#fff');ellipse(c,save.position.x*sx,save.position.y*sy,3,3,'#205c99');
         }
     }

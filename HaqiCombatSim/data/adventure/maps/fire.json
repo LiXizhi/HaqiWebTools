@@ -1,0 +1,2520 @@
+{
+  "id": "fire",
+  "name": "火鸟岛",
+  "version": 1,
+  "seed": 71021,
+  "w": 5200,
+  "h": 4400,
+  "baseBiome": "volcanic",
+  "spawn": {
+    "x": 1500,
+    "y": 3290
+  },
+  "portal": {
+    "x": 1640,
+    "y": 3380
+  },
+  "coast": [
+    [
+      600,
+      3270
+    ],
+    [
+      880,
+      2510
+    ],
+    [
+      800,
+      2050
+    ],
+    [
+      1280,
+      1600
+    ],
+    [
+      1680,
+      1720
+    ],
+    [
+      2070,
+      980
+    ],
+    [
+      2890,
+      740
+    ],
+    [
+      3250,
+      390
+    ],
+    [
+      3870,
+      760
+    ],
+    [
+      4400,
+      1330
+    ],
+    [
+      4300,
+      2020
+    ],
+    [
+      4680,
+      2750
+    ],
+    [
+      4210,
+      3290
+    ],
+    [
+      4420,
+      3750
+    ],
+    [
+      3650,
+      3970
+    ],
+    [
+      3040,
+      3740
+    ],
+    [
+      2340,
+      3900
+    ],
+    [
+      1790,
+      3660
+    ],
+    [
+      1100,
+      3780
+    ]
+  ],
+  "regions": [
+    {
+      "id": "landing",
+      "name": "西南登陆地",
+      "x": 1500,
+      "y": 3290,
+      "rx": 800,
+      "ry": 650,
+      "biome": "ash",
+      "description": "西南海岸是登岛起点，北行通向高地，东侧道路绕过熔岩。",
+      "sign": [
+        1595,
+        3345
+      ],
+      "color": "#766267",
+      "weather": {
+        "kind": "ash",
+        "count": 22,
+        "speed": 9,
+        "color": "#d9c6b3",
+        "wind": 15
+      }
+    },
+    {
+      "id": "ridge",
+      "name": "中央岔路",
+      "x": 2550,
+      "y": 2260,
+      "rx": 800,
+      "ry": 650,
+      "biome": "volcanic",
+      "description": "火山山脊在这里分成两条路，一条通向北部，一条绕行东南。",
+      "sign": [
+        2645,
+        2315
+      ],
+      "color": "#9f6b50",
+      "weather": {
+        "kind": "embers",
+        "count": 18,
+        "speed": -15,
+        "color": "#ffbc72",
+        "wind": 5
+      }
+    },
+    {
+      "id": "goldtree",
+      "name": "金树高地",
+      "x": 3390,
+      "y": 1090,
+      "rx": 800,
+      "ry": 650,
+      "biome": "gold",
+      "description": "原图北方的金色巨树是这片高地的视觉中心。",
+      "sign": [
+        3485,
+        1145
+      ],
+      "color": "#c9aa65",
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    {
+      "id": "caldera",
+      "name": "火山环道",
+      "x": 3830,
+      "y": 1840,
+      "rx": 800,
+      "ry": 650,
+      "biome": "volcanic",
+      "description": "环道绕开炽热熔岩，桥头连接东部岩坡。",
+      "sign": [
+        3925,
+        1895
+      ],
+      "color": "#9f6b50",
+      "weather": {
+        "kind": "embers",
+        "count": 18,
+        "speed": -15,
+        "color": "#ffbc72",
+        "wind": 5
+      }
+    },
+    {
+      "id": "lava",
+      "name": "熔岩边缘",
+      "x": 3820,
+      "y": 3150,
+      "rx": 800,
+      "ry": 650,
+      "biome": "ash",
+      "description": "熔岩占据东南低地，沿标记的桥梁与石路行进。",
+      "sign": [
+        3915,
+        3205
+      ],
+      "color": "#766267",
+      "weather": {
+        "kind": "ash",
+        "count": 22,
+        "speed": 9,
+        "color": "#d9c6b3",
+        "wind": 15
+      }
+    },
+    {
+      "id": "west",
+      "name": "西部岩台",
+      "x": 1490,
+      "y": 2230,
+      "rx": 800,
+      "ry": 650,
+      "biome": "ash",
+      "description": "西部高低岩台与狭窄小路形成另一条回程路线。",
+      "sign": [
+        1585,
+        2285
+      ],
+      "color": "#766267",
+      "weather": {
+        "kind": "ash",
+        "count": 22,
+        "speed": 9,
+        "color": "#d9c6b3",
+        "wind": 15
+      }
+    }
+  ],
+  "routes": [
+    [
+      [
+        1500,
+        3290
+      ],
+      [
+        2080,
+        2880
+      ],
+      [
+        2550,
+        2260
+      ],
+      [
+        2870,
+        1590
+      ],
+      [
+        3390,
+        1090
+      ],
+      [
+        4050,
+        1420
+      ],
+      [
+        3830,
+        1840
+      ]
+    ],
+    [
+      [
+        3830,
+        1840
+      ],
+      [
+        4080,
+        2400
+      ],
+      [
+        3820,
+        3150
+      ],
+      [
+        3020,
+        3500
+      ],
+      [
+        2080,
+        2880
+      ]
+    ],
+    [
+      [
+        2550,
+        2260
+      ],
+      [
+        2130,
+        2030
+      ],
+      [
+        1490,
+        2230
+      ],
+      [
+        1180,
+        2810
+      ],
+      [
+        1500,
+        3290
+      ]
+    ]
+  ],
+  "npcPositions": {},
+  "encounterPositions": {},
+  "buildings": [],
+  "rivers": [
+    {
+      "points": [
+        [
+          3390,
+          2240
+        ],
+        [
+          3460,
+          2630
+        ],
+        [
+          3520,
+          2990
+        ],
+        [
+          3260,
+          3440
+        ]
+      ],
+      "width": 110,
+      "material": "lava"
+    }
+  ],
+  "lakes": [
+    {
+      "x": 3110,
+      "y": 1190,
+      "rx": 130,
+      "ry": 120,
+      "material": "lava"
+    }
+  ],
+  "bridges": [
+    {
+      "x": 3295,
+      "y": 3380,
+      "w": 287,
+      "h": 112,
+      "angle": 2.729182211992406,
+      "generated": true
+    }
+  ],
+  "mountains": [
+    {
+      "x": 3090,
+      "y": 1200,
+      "biome": "volcanic",
+      "scale": 1.2
+    },
+    {
+      "x": 4110,
+      "y": 1920,
+      "biome": "volcanic",
+      "scale": 0.9
+    },
+    {
+      "x": 2350,
+      "y": 1280,
+      "biome": "ash",
+      "scale": 1
+    }
+  ],
+  "farms": [],
+  "source": "assets/adventure/island-references/fire.webp",
+  "retainPreviousPosition": false,
+  "features": [
+    {
+      "kind": "goldTree",
+      "x": 3460,
+      "y": 910,
+      "size": 210
+    }
+  ],
+  "visitingNpcs": [
+    {
+      "sourceId": 36205,
+      "position": [
+        1640,
+        3265
+      ]
+    }
+  ],
+  "theme": "fire",
+  "layoutVersion": 2,
+  "rules": {
+    "schemaVersion": 1,
+    "layoutVersion": 2,
+    "roads": {
+      "width": 82,
+      "spurWidth": 46,
+      "treeClearance": 48,
+      "layers": [
+        [
+          14,
+          "#655448"
+        ],
+        [
+          8,
+          "#937855"
+        ],
+        [
+          0,
+          "#b49a72"
+        ],
+        [
+          -12,
+          "#ccb48a"
+        ]
+      ]
+    },
+    "forest": {
+      "attemptsPerMillion": 270,
+      "maxTrees": 850,
+      "spacing": 65,
+      "coastPadding": 75,
+      "clearingRadius": 145,
+      "size": [
+        115,
+        180
+      ]
+    },
+    "terrain": {
+      "ocean": "#438b9b",
+      "base": "#8eb077",
+      "sand": "#e5d5aa",
+      "coastLayers": [
+        [
+          150,
+          "#529ba9"
+        ],
+        [
+          95,
+          "#75b8bb"
+        ],
+        [
+          48,
+          "#b0d6cc"
+        ],
+        [
+          18,
+          "#edf0cf"
+        ]
+      ],
+      "coastWidth": 70,
+      "texture": {
+        "cell": 64,
+        "count": 8,
+        "light": "#fff4c21f",
+        "dark": "#35523f16"
+      },
+      "shadow": "#244b3820"
+    },
+    "water": {
+      "water": {
+        "bank": "#c6c59a",
+        "edge": "#619d91",
+        "fill": "#65b8bf",
+        "center": "#80cbd0",
+        "shine": "#d6efe466"
+      },
+      "lava": {
+        "bank": "#584845",
+        "edge": "#9f5337",
+        "fill": "#ef813c",
+        "center": "#f6bc62",
+        "shine": "#fff1b477"
+      },
+      "ice": {
+        "bank": "#cfdfd6",
+        "edge": "#7caebc",
+        "fill": "#88c8db",
+        "center": "#b4e1e7",
+        "shine": "#f5ffffaa"
+      },
+      "dark": {
+        "bank": "#717471",
+        "edge": "#425e67",
+        "fill": "#536f85",
+        "center": "#7794a5",
+        "shine": "#c6e1e755"
+      }
+    },
+    "bridge": {
+      "auto": true,
+      "margin": 30,
+      "edge": "#796c4d",
+      "fill": "#c4b88c",
+      "seam": "#857a5855"
+    },
+    "mountain": {
+      "layers": 6,
+      "baseRadius": 75,
+      "stepRadius": 31,
+      "stepHeight": 7,
+      "aspect": 0.56
+    },
+    "plaza": {
+      "radiusX": 180,
+      "radiusY": 110,
+      "edge": "#aaa989",
+      "fill": "#dad6b4",
+      "line": "#b5b18b"
+    },
+    "biomes": {
+      "grass": {
+        "color": "#8eb077",
+        "forest": {
+          "tiles": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "density": 0.8
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "forest": {
+        "color": "#527d55",
+        "forest": {
+          "tiles": [
+            0,
+            0,
+            1
+          ],
+          "density": 1
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "town": {
+        "color": "#adc184",
+        "forest": {
+          "tiles": [
+            0,
+            2
+          ],
+          "density": 0.2
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "farm": {
+        "color": "#a1b965",
+        "forest": {
+          "tiles": [
+            0,
+            2
+          ],
+          "density": 0.18
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "lake": {
+        "color": "#82ad75",
+        "forest": {
+          "tiles": [
+            0,
+            1
+          ],
+          "density": 0.65
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "beach": {
+        "color": "#e8d7a2",
+        "forest": {
+          "tiles": [
+            3
+          ],
+          "density": 0.15
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "park": {
+        "color": "#b2c889",
+        "forest": {
+          "tiles": [
+            0,
+            2
+          ],
+          "density": 0.55
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "snow": {
+        "color": "#dce9e7",
+        "forest": {
+          "tiles": [
+            1
+          ],
+          "density": 0.55
+        },
+        "weather": {
+          "kind": "snow",
+          "count": 46,
+          "speed": 25,
+          "color": "#f5fcff",
+          "wind": 11
+        },
+        "snow": true,
+        "mountain": [
+          "#f8fcf1",
+          "#e9f2ec",
+          "#cddfe0",
+          "#a8c3ce",
+          "#87a7b9",
+          "#6d8e9e"
+        ]
+      },
+      "ice": {
+        "color": "#a3cbd9",
+        "forest": {
+          "tiles": [
+            1
+          ],
+          "density": 0.16
+        },
+        "weather": {
+          "kind": "snow",
+          "count": 38,
+          "speed": 30,
+          "color": "#eefbff",
+          "wind": 18
+        },
+        "snow": true
+      },
+      "gold": {
+        "color": "#c9aa65",
+        "forest": {
+          "tiles": [
+            0
+          ],
+          "density": 0.08
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        },
+        "mountain": [
+          "#ecdc9b",
+          "#daca85",
+          "#cab474",
+          "#bba064",
+          "#ac905b",
+          "#a08d5f"
+        ]
+      },
+      "volcanic": {
+        "color": "#9f6b50",
+        "forest": {
+          "tiles": [
+            1
+          ],
+          "density": 0.04
+        },
+        "weather": {
+          "kind": "embers",
+          "count": 18,
+          "speed": -15,
+          "color": "#ffbc72",
+          "wind": 5
+        },
+        "mountain": [
+          "#e59b58",
+          "#c17b4e",
+          "#a26647",
+          "#865742",
+          "#704a3d",
+          "#5b4140"
+        ]
+      },
+      "ash": {
+        "color": "#766267",
+        "forest": {
+          "tiles": [
+            1
+          ],
+          "density": 0.025
+        },
+        "weather": {
+          "kind": "ash",
+          "count": 22,
+          "speed": 9,
+          "color": "#d9c6b3",
+          "wind": 15
+        }
+      },
+      "desert": {
+        "color": "#d6b578",
+        "forest": {
+          "tiles": [
+            3
+          ],
+          "density": 0.035
+        },
+        "weather": {
+          "kind": "sand",
+          "count": 24,
+          "speed": 4,
+          "color": "#f7dcad",
+          "wind": 35
+        },
+        "mountain": [
+          "#f0d49b",
+          "#ddbd82",
+          "#cba970",
+          "#ba915b",
+          "#a77d4c",
+          "#946b44"
+        ]
+      },
+      "oasis": {
+        "color": "#91b18a",
+        "forest": {
+          "tiles": [
+            3
+          ],
+          "density": 0.7
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "dark": {
+        "color": "#666e79",
+        "forest": {
+          "tiles": [
+            1,
+            1,
+            0
+          ],
+          "density": 0.9
+        },
+        "weather": {
+          "kind": "mist",
+          "count": 9,
+          "speed": 2,
+          "color": "#b9bdd6",
+          "wind": 8
+        },
+        "mountain": [
+          "#a2a7ad",
+          "#8b939c",
+          "#7c838d",
+          "#6d737e",
+          "#5e6570",
+          "#4e5661"
+        ]
+      },
+      "marsh": {
+        "color": "#7d8f83",
+        "forest": {
+          "tiles": [
+            1
+          ],
+          "density": 0.45
+        },
+        "weather": {
+          "kind": "mist",
+          "count": 10,
+          "speed": 2,
+          "color": "#bdccca",
+          "wind": 6
+        }
+      }
+    }
+  },
+  "trees": [
+    {
+      "x": 2348,
+      "y": 1089,
+      "tile": 0,
+      "size": 137,
+      "snow": false
+    },
+    {
+      "x": 3582,
+      "y": 956,
+      "tile": 0,
+      "size": 129,
+      "snow": false
+    },
+    {
+      "x": 3263,
+      "y": 1512,
+      "tile": 0,
+      "size": 143,
+      "snow": false
+    },
+    {
+      "x": 4337,
+      "y": 2809,
+      "tile": 1,
+      "size": 125,
+      "snow": false
+    },
+    {
+      "x": 2373,
+      "y": 2929,
+      "tile": 1,
+      "size": 175,
+      "snow": false
+    },
+    {
+      "x": 2558,
+      "y": 1184,
+      "tile": 0,
+      "size": 126,
+      "snow": false
+    },
+    {
+      "x": 2474,
+      "y": 2727,
+      "tile": 1,
+      "size": 157,
+      "snow": false
+    },
+    {
+      "x": 3643,
+      "y": 1861,
+      "tile": 1,
+      "size": 125,
+      "snow": false
+    },
+    {
+      "x": 4190,
+      "y": 2528,
+      "tile": 1,
+      "size": 152,
+      "snow": false
+    },
+    {
+      "x": 3901,
+      "y": 3763,
+      "tile": 1,
+      "size": 164,
+      "snow": false
+    },
+    {
+      "x": 2981,
+      "y": 1333,
+      "tile": 0,
+      "size": 151,
+      "snow": false
+    },
+    {
+      "x": 3526,
+      "y": 858,
+      "tile": 0,
+      "size": 171,
+      "snow": false
+    },
+    {
+      "x": 3903,
+      "y": 2309,
+      "tile": 1,
+      "size": 117,
+      "snow": false
+    },
+    {
+      "x": 2658,
+      "y": 2934,
+      "tile": 1,
+      "size": 120,
+      "snow": false
+    },
+    {
+      "x": 2314,
+      "y": 1394,
+      "tile": 1,
+      "size": 158,
+      "snow": false
+    },
+    {
+      "x": 1374,
+      "y": 2072,
+      "tile": 1,
+      "size": 169,
+      "snow": false
+    },
+    {
+      "x": 3154,
+      "y": 1543,
+      "tile": 0,
+      "size": 121,
+      "snow": false
+    },
+    {
+      "x": 3106,
+      "y": 785,
+      "tile": 0,
+      "size": 147,
+      "snow": false
+    },
+    {
+      "x": 2776,
+      "y": 2423,
+      "tile": 1,
+      "size": 165,
+      "snow": false
+    },
+    {
+      "x": 866,
+      "y": 3031,
+      "tile": 1,
+      "size": 122,
+      "snow": false
+    },
+    {
+      "x": 3471,
+      "y": 820,
+      "tile": 0,
+      "size": 121,
+      "snow": false
+    },
+    {
+      "x": 2988,
+      "y": 816,
+      "tile": 0,
+      "size": 125,
+      "snow": false
+    },
+    {
+      "x": 1829,
+      "y": 1977,
+      "tile": 1,
+      "size": 163,
+      "snow": false
+    },
+    {
+      "x": 952,
+      "y": 3107,
+      "tile": 1,
+      "size": 143,
+      "snow": false
+    },
+    {
+      "x": 1906,
+      "y": 2732,
+      "tile": 1,
+      "size": 129,
+      "snow": false
+    },
+    {
+      "x": 2844,
+      "y": 2362,
+      "tile": 1,
+      "size": 130,
+      "snow": false
+    },
+    {
+      "x": 3813,
+      "y": 1134,
+      "tile": 0,
+      "size": 156,
+      "snow": false
+    },
+    {
+      "x": 3628,
+      "y": 2518,
+      "tile": 1,
+      "size": 125,
+      "snow": false
+    },
+    {
+      "x": 2607,
+      "y": 902,
+      "tile": 0,
+      "size": 149,
+      "snow": false
+    },
+    {
+      "x": 2278,
+      "y": 1210,
+      "tile": 0,
+      "size": 134,
+      "snow": false
+    },
+    {
+      "x": 3111,
+      "y": 2300,
+      "tile": 1,
+      "size": 149,
+      "snow": false
+    },
+    {
+      "x": 3563,
+      "y": 2170,
+      "tile": 1,
+      "size": 124,
+      "snow": false
+    },
+    {
+      "x": 2037,
+      "y": 1872,
+      "tile": 1,
+      "size": 165,
+      "snow": false
+    },
+    {
+      "x": 2882,
+      "y": 2038,
+      "tile": 1,
+      "size": 123,
+      "snow": false
+    },
+    {
+      "x": 2672,
+      "y": 1193,
+      "tile": 0,
+      "size": 164,
+      "snow": false
+    },
+    {
+      "x": 3641,
+      "y": 1044,
+      "tile": 0,
+      "size": 124,
+      "snow": false
+    },
+    {
+      "x": 3740,
+      "y": 1538,
+      "tile": 1,
+      "size": 140,
+      "snow": false
+    },
+    {
+      "x": 3166,
+      "y": 2588,
+      "tile": 1,
+      "size": 124,
+      "snow": false
+    },
+    {
+      "x": 2083,
+      "y": 1641,
+      "tile": 1,
+      "size": 173,
+      "snow": false
+    },
+    {
+      "x": 2876,
+      "y": 1821,
+      "tile": 1,
+      "size": 177,
+      "snow": false
+    },
+    {
+      "x": 1015,
+      "y": 1965,
+      "tile": 1,
+      "size": 151,
+      "snow": false
+    },
+    {
+      "x": 1476,
+      "y": 2813,
+      "tile": 1,
+      "size": 164,
+      "snow": false
+    },
+    {
+      "x": 1154,
+      "y": 3615,
+      "tile": 1,
+      "size": 119,
+      "snow": false
+    },
+    {
+      "x": 3314,
+      "y": 1598,
+      "tile": 1,
+      "size": 158,
+      "snow": false
+    },
+    {
+      "x": 2390,
+      "y": 1390,
+      "tile": 0,
+      "size": 138,
+      "snow": false
+    },
+    {
+      "x": 2025,
+      "y": 1733,
+      "tile": 1,
+      "size": 155,
+      "snow": false
+    },
+    {
+      "x": 1923,
+      "y": 3334,
+      "tile": 1,
+      "size": 115,
+      "snow": false
+    },
+    {
+      "x": 955,
+      "y": 2091,
+      "tile": 1,
+      "size": 126,
+      "snow": false
+    },
+    {
+      "x": 2705,
+      "y": 896,
+      "tile": 0,
+      "size": 139,
+      "snow": false
+    },
+    {
+      "x": 3846,
+      "y": 943,
+      "tile": 0,
+      "size": 172,
+      "snow": false
+    },
+    {
+      "x": 3293,
+      "y": 1001,
+      "tile": 0,
+      "size": 146,
+      "snow": false
+    },
+    {
+      "x": 2564,
+      "y": 1627,
+      "tile": 1,
+      "size": 177,
+      "snow": false
+    },
+    {
+      "x": 4088,
+      "y": 2040,
+      "tile": 1,
+      "size": 129,
+      "snow": false
+    }
+  ],
+  "paths": [
+    {
+      "a": {
+        "x": 1500,
+        "y": 3290
+      },
+      "b": {
+        "x": 2080,
+        "y": 2880
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2080,
+        "y": 2880
+      },
+      "b": {
+        "x": 2550,
+        "y": 2260
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2550,
+        "y": 2260
+      },
+      "b": {
+        "x": 2870,
+        "y": 1590
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2870,
+        "y": 1590
+      },
+      "b": {
+        "x": 3390,
+        "y": 1090
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 3390,
+        "y": 1090
+      },
+      "b": {
+        "x": 4050,
+        "y": 1420
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 4050,
+        "y": 1420
+      },
+      "b": {
+        "x": 3830,
+        "y": 1840
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 3830,
+        "y": 1840
+      },
+      "b": {
+        "x": 4080,
+        "y": 2400
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 4080,
+        "y": 2400
+      },
+      "b": {
+        "x": 3820,
+        "y": 3150
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 3820,
+        "y": 3150
+      },
+      "b": {
+        "x": 3020,
+        "y": 3500
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 3020,
+        "y": 3500
+      },
+      "b": {
+        "x": 2080,
+        "y": 2880
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2550,
+        "y": 2260
+      },
+      "b": {
+        "x": 2130,
+        "y": 2030
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2130,
+        "y": 2030
+      },
+      "b": {
+        "x": 1490,
+        "y": 2230
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 1490,
+        "y": 2230
+      },
+      "b": {
+        "x": 1180,
+        "y": 2810
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 1180,
+        "y": 2810
+      },
+      "b": {
+        "x": 1500,
+        "y": 3290
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 1605.1357779980178,
+        "y": 3215.6798810703667
+      },
+      "b": {
+        "x": 1640,
+        "y": 3265
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 1537.4212091179386,
+        "y": 3263.547076313181
+      },
+      "b": {
+        "x": 1595,
+        "y": 3345
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 2550,
+        "y": 2260
+      },
+      "b": {
+        "x": 2645,
+        "y": 2315
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 3488,
+        "y": 1139
+      },
+      "b": {
+        "x": 3485,
+        "y": 1145
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 3866.2603031108747,
+        "y": 1921.2230789683595
+      },
+      "b": {
+        "x": 3925,
+        "y": 1895
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 3820,
+        "y": 3150
+      },
+      "b": {
+        "x": 3915,
+        "y": 3205
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 1560.8896797153025,
+        "y": 2207.846975088968
+      },
+      "b": {
+        "x": 1585,
+        "y": 2285
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 1550.9296333002974,
+        "y": 3253.998017839445
+      },
+      "b": {
+        "x": 1640,
+        "y": 3380
+      },
+      "width": 46
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "landing",
+      "name": "西南登陆地",
+      "x": 1595,
+      "y": 3345,
+      "description": "西南海岸是登岛起点，北行通向高地，东侧道路绕过熔岩。"
+    },
+    {
+      "id": "ridge",
+      "name": "中央岔路",
+      "x": 2645,
+      "y": 2315,
+      "description": "火山山脊在这里分成两条路，一条通向北部，一条绕行东南。"
+    },
+    {
+      "id": "goldtree",
+      "name": "金树高地",
+      "x": 3485,
+      "y": 1145,
+      "description": "原图北方的金色巨树是这片高地的视觉中心。"
+    },
+    {
+      "id": "caldera",
+      "name": "火山环道",
+      "x": 3925,
+      "y": 1895,
+      "description": "环道绕开炽热熔岩，桥头连接东部岩坡。"
+    },
+    {
+      "id": "lava",
+      "name": "熔岩边缘",
+      "x": 3915,
+      "y": 3205,
+      "description": "熔岩占据东南低地，沿标记的桥梁与石路行进。"
+    },
+    {
+      "id": "west",
+      "name": "西部岩台",
+      "x": 1585,
+      "y": 2285,
+      "description": "西部高低岩台与狭窄小路形成另一条回程路线。"
+    }
+  ],
+  "details": [
+    {
+      "x": 3773,
+      "y": 3472,
+      "biome": "ash",
+      "size": 8
+    },
+    {
+      "x": 3821,
+      "y": 2281,
+      "biome": "volcanic",
+      "size": 7
+    },
+    {
+      "x": 1990,
+      "y": 3377,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 3623,
+      "y": 3176,
+      "biome": "ash",
+      "size": 4
+    },
+    {
+      "x": 3488,
+      "y": 950,
+      "biome": "gold",
+      "size": 8
+    },
+    {
+      "x": 3015,
+      "y": 2681,
+      "biome": "volcanic",
+      "size": 8
+    },
+    {
+      "x": 3256,
+      "y": 1858,
+      "biome": "volcanic",
+      "size": 7
+    },
+    {
+      "x": 3186,
+      "y": 2720,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 2699,
+      "y": 2428,
+      "biome": "volcanic",
+      "size": 8
+    },
+    {
+      "x": 2176,
+      "y": 3720,
+      "biome": "ash",
+      "size": 11
+    },
+    {
+      "x": 2822,
+      "y": 2808,
+      "biome": "volcanic",
+      "size": 8
+    },
+    {
+      "x": 1744,
+      "y": 2378,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 3002,
+      "y": 2835,
+      "biome": "volcanic",
+      "size": 9
+    },
+    {
+      "x": 2694,
+      "y": 1166,
+      "biome": "gold",
+      "size": 5
+    },
+    {
+      "x": 1033,
+      "y": 2256,
+      "biome": "ash",
+      "size": 4
+    },
+    {
+      "x": 1713,
+      "y": 3016,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 1006,
+      "y": 2769,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 2904,
+      "y": 1404,
+      "biome": "gold",
+      "size": 12
+    },
+    {
+      "x": 1752,
+      "y": 2225,
+      "biome": "ash",
+      "size": 10
+    },
+    {
+      "x": 1553,
+      "y": 2483,
+      "biome": "ash",
+      "size": 6
+    },
+    {
+      "x": 3203,
+      "y": 3100,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 3296,
+      "y": 2761,
+      "biome": "ash",
+      "size": 11
+    },
+    {
+      "x": 3540,
+      "y": 2563,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 3282,
+      "y": 2293,
+      "biome": "volcanic",
+      "size": 12
+    },
+    {
+      "x": 3720,
+      "y": 1411,
+      "biome": "gold",
+      "size": 5
+    },
+    {
+      "x": 3933,
+      "y": 951,
+      "biome": "gold",
+      "size": 8
+    },
+    {
+      "x": 3161,
+      "y": 716,
+      "biome": "gold",
+      "size": 12
+    },
+    {
+      "x": 3155,
+      "y": 3633,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 1759,
+      "y": 1834,
+      "biome": "ash",
+      "size": 8
+    },
+    {
+      "x": 1076,
+      "y": 3355,
+      "biome": "ash",
+      "size": 4
+    },
+    {
+      "x": 2933,
+      "y": 3048,
+      "biome": "ash",
+      "size": 8
+    },
+    {
+      "x": 3057,
+      "y": 2026,
+      "biome": "volcanic",
+      "size": 7
+    },
+    {
+      "x": 3047,
+      "y": 2489,
+      "biome": "volcanic",
+      "size": 5
+    },
+    {
+      "x": 1198,
+      "y": 2181,
+      "biome": "ash",
+      "size": 8
+    },
+    {
+      "x": 3556,
+      "y": 1253,
+      "biome": "gold",
+      "size": 9
+    },
+    {
+      "x": 3012,
+      "y": 1797,
+      "biome": "volcanic",
+      "size": 10
+    },
+    {
+      "x": 2566,
+      "y": 1864,
+      "biome": "volcanic",
+      "size": 11
+    },
+    {
+      "x": 1614,
+      "y": 2924,
+      "biome": "ash",
+      "size": 6
+    },
+    {
+      "x": 3725,
+      "y": 3528,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 2051,
+      "y": 2593,
+      "biome": "volcanic",
+      "size": 7
+    },
+    {
+      "x": 3029,
+      "y": 1811,
+      "biome": "volcanic",
+      "size": 12
+    },
+    {
+      "x": 2869,
+      "y": 3211,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 3325,
+      "y": 685,
+      "biome": "gold",
+      "size": 9
+    },
+    {
+      "x": 1706,
+      "y": 3521,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 2787,
+      "y": 2314,
+      "biome": "volcanic",
+      "size": 11
+    },
+    {
+      "x": 1656,
+      "y": 2046,
+      "biome": "ash",
+      "size": 12
+    },
+    {
+      "x": 1536,
+      "y": 2604,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 1410,
+      "y": 2117,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 3701,
+      "y": 1144,
+      "biome": "gold",
+      "size": 8
+    },
+    {
+      "x": 1064,
+      "y": 2267,
+      "biome": "ash",
+      "size": 8
+    },
+    {
+      "x": 3317,
+      "y": 580,
+      "biome": "gold",
+      "size": 9
+    },
+    {
+      "x": 1740,
+      "y": 2560,
+      "biome": "ash",
+      "size": 8
+    },
+    {
+      "x": 3660,
+      "y": 2566,
+      "biome": "ash",
+      "size": 6
+    },
+    {
+      "x": 2763,
+      "y": 2841,
+      "biome": "volcanic",
+      "size": 10
+    },
+    {
+      "x": 1312,
+      "y": 2339,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 3625,
+      "y": 1681,
+      "biome": "volcanic",
+      "size": 9
+    },
+    {
+      "x": 3749,
+      "y": 860,
+      "biome": "gold",
+      "size": 6
+    },
+    {
+      "x": 2405,
+      "y": 3359,
+      "biome": "ash",
+      "size": 12
+    },
+    {
+      "x": 2726,
+      "y": 2737,
+      "biome": "volcanic",
+      "size": 10
+    },
+    {
+      "x": 2354,
+      "y": 1220,
+      "biome": "gold",
+      "size": 10
+    },
+    {
+      "x": 2428,
+      "y": 3320,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 1265,
+      "y": 2434,
+      "biome": "ash",
+      "size": 12
+    },
+    {
+      "x": 3320,
+      "y": 873,
+      "biome": "gold",
+      "size": 6
+    },
+    {
+      "x": 2407,
+      "y": 2596,
+      "biome": "volcanic",
+      "size": 6
+    },
+    {
+      "x": 3092,
+      "y": 2190,
+      "biome": "volcanic",
+      "size": 7
+    },
+    {
+      "x": 3210,
+      "y": 2983,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 2250,
+      "y": 1383,
+      "biome": "volcanic",
+      "size": 8
+    },
+    {
+      "x": 1890,
+      "y": 1994,
+      "biome": "ash",
+      "size": 11
+    },
+    {
+      "x": 1645,
+      "y": 2930,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 1631,
+      "y": 2868,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 2205,
+      "y": 1979,
+      "biome": "volcanic",
+      "size": 4
+    },
+    {
+      "x": 3557,
+      "y": 2600,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 2805,
+      "y": 2739,
+      "biome": "volcanic",
+      "size": 8
+    },
+    {
+      "x": 4138,
+      "y": 1547,
+      "biome": "volcanic",
+      "size": 9
+    },
+    {
+      "x": 2505,
+      "y": 3726,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 888,
+      "y": 2860,
+      "biome": "ash",
+      "size": 10
+    },
+    {
+      "x": 3180,
+      "y": 1948,
+      "biome": "volcanic",
+      "size": 4
+    },
+    {
+      "x": 2113,
+      "y": 1276,
+      "biome": "volcanic",
+      "size": 9
+    },
+    {
+      "x": 969,
+      "y": 3010,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 2368,
+      "y": 3537,
+      "biome": "ash",
+      "size": 6
+    },
+    {
+      "x": 4003,
+      "y": 1939,
+      "biome": "volcanic",
+      "size": 8
+    },
+    {
+      "x": 1205,
+      "y": 3077,
+      "biome": "ash",
+      "size": 11
+    },
+    {
+      "x": 2640,
+      "y": 1856,
+      "biome": "volcanic",
+      "size": 11
+    },
+    {
+      "x": 3174,
+      "y": 915,
+      "biome": "gold",
+      "size": 5
+    },
+    {
+      "x": 3189,
+      "y": 3257,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 3166,
+      "y": 2469,
+      "biome": "volcanic",
+      "size": 12
+    },
+    {
+      "x": 1484,
+      "y": 1755,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 2020,
+      "y": 2630,
+      "biome": "volcanic",
+      "size": 9
+    },
+    {
+      "x": 3669,
+      "y": 1151,
+      "biome": "gold",
+      "size": 8
+    },
+    {
+      "x": 3289,
+      "y": 1039,
+      "biome": "gold",
+      "size": 12
+    },
+    {
+      "x": 4098,
+      "y": 1489,
+      "biome": "volcanic",
+      "size": 9
+    },
+    {
+      "x": 3923,
+      "y": 3334,
+      "biome": "ash",
+      "size": 10
+    },
+    {
+      "x": 2921,
+      "y": 3674,
+      "biome": "ash",
+      "size": 6
+    },
+    {
+      "x": 3434,
+      "y": 1734,
+      "biome": "volcanic",
+      "size": 5
+    },
+    {
+      "x": 2181,
+      "y": 1216,
+      "biome": "gold",
+      "size": 9
+    },
+    {
+      "x": 2615,
+      "y": 3300,
+      "biome": "ash",
+      "size": 10
+    },
+    {
+      "x": 3601,
+      "y": 1125,
+      "biome": "gold",
+      "size": 4
+    },
+    {
+      "x": 3281,
+      "y": 3252,
+      "biome": "ash",
+      "size": 4
+    },
+    {
+      "x": 4180,
+      "y": 2154,
+      "biome": "volcanic",
+      "size": 6
+    },
+    {
+      "x": 3965,
+      "y": 1276,
+      "biome": "gold",
+      "size": 4
+    },
+    {
+      "x": 2855,
+      "y": 914,
+      "biome": "gold",
+      "size": 8
+    },
+    {
+      "x": 2057,
+      "y": 1705,
+      "biome": "volcanic",
+      "size": 7
+    },
+    {
+      "x": 2157,
+      "y": 3233,
+      "biome": "ash",
+      "size": 11
+    },
+    {
+      "x": 3612,
+      "y": 1441,
+      "biome": "gold",
+      "size": 11
+    },
+    {
+      "x": 3339,
+      "y": 748,
+      "biome": "gold",
+      "size": 7
+    },
+    {
+      "x": 2257,
+      "y": 1322,
+      "biome": "gold",
+      "size": 11
+    },
+    {
+      "x": 2848,
+      "y": 2074,
+      "biome": "volcanic",
+      "size": 12
+    },
+    {
+      "x": 2029,
+      "y": 3411,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 2894,
+      "y": 2734,
+      "biome": "volcanic",
+      "size": 9
+    },
+    {
+      "x": 3343,
+      "y": 3677,
+      "biome": "ash",
+      "size": 6
+    },
+    {
+      "x": 3011,
+      "y": 2764,
+      "biome": "volcanic",
+      "size": 9
+    },
+    {
+      "x": 1824,
+      "y": 2348,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 1390,
+      "y": 2068,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 2436,
+      "y": 1686,
+      "biome": "volcanic",
+      "size": 11
+    },
+    {
+      "x": 3027,
+      "y": 2141,
+      "biome": "volcanic",
+      "size": 8
+    },
+    {
+      "x": 3740,
+      "y": 1926,
+      "biome": "volcanic",
+      "size": 4
+    },
+    {
+      "x": 2993,
+      "y": 3658,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 1112,
+      "y": 3092,
+      "biome": "ash",
+      "size": 10
+    },
+    {
+      "x": 4154,
+      "y": 2409,
+      "biome": "volcanic",
+      "size": 4
+    },
+    {
+      "x": 1644,
+      "y": 2342,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 1951,
+      "y": 1635,
+      "biome": "ash",
+      "size": 8
+    },
+    {
+      "x": 1536,
+      "y": 3538,
+      "biome": "ash",
+      "size": 10
+    },
+    {
+      "x": 1271,
+      "y": 1849,
+      "biome": "ash",
+      "size": 12
+    },
+    {
+      "x": 1142,
+      "y": 3331,
+      "biome": "ash",
+      "size": 12
+    },
+    {
+      "x": 2907,
+      "y": 2128,
+      "biome": "volcanic",
+      "size": 7
+    },
+    {
+      "x": 1619,
+      "y": 3126,
+      "biome": "ash",
+      "size": 12
+    },
+    {
+      "x": 3550,
+      "y": 3813,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 1806,
+      "y": 3454,
+      "biome": "ash",
+      "size": 11
+    },
+    {
+      "x": 3811,
+      "y": 2679,
+      "biome": "ash",
+      "size": 11
+    },
+    {
+      "x": 3738,
+      "y": 3645,
+      "biome": "ash",
+      "size": 11
+    },
+    {
+      "x": 1207,
+      "y": 3461,
+      "biome": "ash",
+      "size": 6
+    },
+    {
+      "x": 1341,
+      "y": 3626,
+      "biome": "ash",
+      "size": 12
+    },
+    {
+      "x": 3441,
+      "y": 656,
+      "biome": "gold",
+      "size": 9
+    },
+    {
+      "x": 3549,
+      "y": 2041,
+      "biome": "volcanic",
+      "size": 6
+    },
+    {
+      "x": 969,
+      "y": 2740,
+      "biome": "ash",
+      "size": 12
+    },
+    {
+      "x": 3073,
+      "y": 1754,
+      "biome": "volcanic",
+      "size": 7
+    },
+    {
+      "x": 3147,
+      "y": 1969,
+      "biome": "volcanic",
+      "size": 10
+    },
+    {
+      "x": 1553,
+      "y": 2542,
+      "biome": "ash",
+      "size": 8
+    },
+    {
+      "x": 1020,
+      "y": 2582,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 4475,
+      "y": 2612,
+      "biome": "ash",
+      "size": 12
+    },
+    {
+      "x": 2328,
+      "y": 1186,
+      "biome": "gold",
+      "size": 8
+    },
+    {
+      "x": 2071,
+      "y": 1575,
+      "biome": "volcanic",
+      "size": 6
+    },
+    {
+      "x": 911,
+      "y": 2068,
+      "biome": "ash",
+      "size": 6
+    },
+    {
+      "x": 4337,
+      "y": 2824,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 3047,
+      "y": 2213,
+      "biome": "volcanic",
+      "size": 10
+    },
+    {
+      "x": 3314,
+      "y": 653,
+      "biome": "gold",
+      "size": 8
+    },
+    {
+      "x": 2057,
+      "y": 3125,
+      "biome": "ash",
+      "size": 9
+    },
+    {
+      "x": 2103,
+      "y": 2400,
+      "biome": "volcanic",
+      "size": 7
+    },
+    {
+      "x": 3057,
+      "y": 2739,
+      "biome": "volcanic",
+      "size": 4
+    },
+    {
+      "x": 3301,
+      "y": 921,
+      "biome": "gold",
+      "size": 5
+    },
+    {
+      "x": 2067,
+      "y": 3211,
+      "biome": "ash",
+      "size": 4
+    },
+    {
+      "x": 1287,
+      "y": 3179,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 3346,
+      "y": 3138,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 1900,
+      "y": 2448,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 3591,
+      "y": 2688,
+      "biome": "ash",
+      "size": 10
+    },
+    {
+      "x": 2487,
+      "y": 1610,
+      "biome": "volcanic",
+      "size": 8
+    },
+    {
+      "x": 2120,
+      "y": 2224,
+      "biome": "volcanic",
+      "size": 5
+    },
+    {
+      "x": 4366,
+      "y": 2380,
+      "biome": "volcanic",
+      "size": 11
+    },
+    {
+      "x": 2123,
+      "y": 1688,
+      "biome": "volcanic",
+      "size": 5
+    },
+    {
+      "x": 3768,
+      "y": 3461,
+      "biome": "ash",
+      "size": 11
+    },
+    {
+      "x": 4254,
+      "y": 2899,
+      "biome": "ash",
+      "size": 8
+    },
+    {
+      "x": 2405,
+      "y": 1875,
+      "biome": "volcanic",
+      "size": 6
+    },
+    {
+      "x": 2157,
+      "y": 2439,
+      "biome": "volcanic",
+      "size": 9
+    },
+    {
+      "x": 2292,
+      "y": 1076,
+      "biome": "gold",
+      "size": 11
+    },
+    {
+      "x": 3872,
+      "y": 1019,
+      "biome": "gold",
+      "size": 12
+    },
+    {
+      "x": 3053,
+      "y": 1793,
+      "biome": "volcanic",
+      "size": 8
+    },
+    {
+      "x": 4149,
+      "y": 2185,
+      "biome": "volcanic",
+      "size": 10
+    },
+    {
+      "x": 2685,
+      "y": 2781,
+      "biome": "volcanic",
+      "size": 12
+    },
+    {
+      "x": 1663,
+      "y": 2706,
+      "biome": "ash",
+      "size": 10
+    },
+    {
+      "x": 3713,
+      "y": 3411,
+      "biome": "ash",
+      "size": 5
+    },
+    {
+      "x": 2986,
+      "y": 3302,
+      "biome": "ash",
+      "size": 7
+    },
+    {
+      "x": 2724,
+      "y": 3674,
+      "biome": "ash",
+      "size": 7
+    }
+  ],
+  "sourceHash": "fc96f0477f2e850e57c5c8ceea93fe13e9cb7a615ffc052fe030091e45e78520"
+}

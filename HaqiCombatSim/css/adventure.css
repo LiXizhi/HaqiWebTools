@@ -477,3 +477,119 @@
 .island-guide-button{position:absolute;left:28px;bottom:24px;pointer-events:auto;padding:9px 16px;border:1px solid #c7be95;border-radius:9px;background:#f4efd9;color:#385e4a;font-size:13px;box-shadow:0 4px 16px #183e3c20}
 .island-guide .modal-body{display:grid;grid-template-columns:minmax(0,1fr) 160px;gap:14px;overflow:auto}.island-guide .modal-body>p{grid-column:1/-1;margin:0;color:#59715b}.island-guide-map{width:100%;height:auto;border-radius:12px;border:2px solid #bcba91}.island-guide-destinations{display:grid;gap:7px;align-content:start}.island-guide-destinations button{padding:9px 10px;border-radius:7px;background:#e0e5c9;color:#355d48;min-height:40px}.island-guide-destinations button:hover{background:#cad7ac}
 @media(max-width:650px){.island-guide-button{left:12px;bottom:90px;padding:7px 10px;font-size:12px}.island-guide .modal-body{display:block}.island-guide-map{margin:12px 0}.island-guide-destinations{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* Inventory details use the browser top layer so actions never scroll away. */
+.haqi-app .equipment-modal .modal-header{padding:6px 16px;min-height:52px}
+.equipment-modal .modal-header .eyebrow{display:none}
+.equipment-modal .modal-header h2{font-size:20px;line-height:1.3}
+.equipment-tabs{margin-bottom:14px;padding-bottom:10px}
+.haqi-app .equipment-filters button{padding:7px 12px;font-size:12px;min-height:38px}
+.equipment-grid{max-height:460px;max-height:min(460px,55dvh)}
+.equipment-quantity{position:absolute;right:4px;top:4px;min-width:20px;padding:2px 5px;border:1px solid #d7bf80;border-radius:9px;background:#fff6dc;color:#614825;font-size:11px;font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums;box-shadow:0 1px 3px #46341130}
+.equipment-item-dialog{width:min(580px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 24px);padding:0;border:2px solid #cfb67d;border-radius:12px;background:#fff9e9;color:var(--ink);box-shadow:0 18px 70px #1c241b66;overflow:hidden;font:inherit}
+.equipment-item-dialog[open]{display:flex;flex-direction:column}
+.equipment-item-dialog::backdrop{background:#182e2c88}
+.equipment-dialog-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 16px;border-bottom:1px solid var(--line);flex-shrink:0}
+.equipment-item-dialog .equipment-detail{overflow:auto;min-height:0;border:0;border-radius:0;padding:16px 20px;overscroll-behavior:contain}
+.equipment-detail-heading h3{margin:3px 0}
+.equipment-detail-footer{display:flex;align-items:center;gap:10px;flex-wrap:wrap;flex-shrink:0;padding:12px 20px;border-top:1px solid var(--line);background:#f6ecd1}
+.equipment-detail-footer:empty{display:none}
+.equipment-detail-footer>.primary{min-width:120px;font-size:16px}
+.equipment-comparison{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+.equipment-comparison th,.equipment-comparison td{padding:8px 5px;border-bottom:1px solid #ded9c380;text-align:right}
+.equipment-comparison th:first-child{text-align:left;font-weight:500}
+.equipment-comparison thead{color:#7d6a42;background:#f2ecd9}
+@media(max-width:700px){.equipment-item-dialog .equipment-detail{padding:12px}.equipment-detail-footer{padding:10px 12px}.equipment-grid{max-height:55dvh}.equipment-comparison{font-size:11px}.equipment-comparison th,.equipment-comparison td{padding:7px 3px}}
+/* Match the strengthening window: compact panels, fixed 4 × 3 inventory and paging. */
+.haqi-app .modal.equipment-modal{width:850px;max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px)}
+.equipment-modal .equipment-layout{grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:14px;font-size:13px;min-height:490px}
+.equipment-modal .equipment-character{padding:14px;max-height:490px;overflow:auto;background:linear-gradient(145deg,#fffdf344,#e7ddbc30)}
+.equipment-modal .equipment-character h3{font-size:17px;margin:0 0 4px}
+.equipment-modal .equipment-portrait{margin:6px 0}
+.equipment-modal .equipment-portrait .art{width:90px!important;height:104px!important}
+.equipment-modal .equipment-slots{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.equipment-modal .equipment-slot{padding:5px 2px;gap:2px;height:66px;border-radius:7px;background:#fffaf080}
+.equipment-modal .equipment-slot:last-child{grid-column:auto}
+.equipment-modal .equipment-slot-title{display:none}
+.equipment-modal .equipment-slot-name{font-size:10px}
+.equipment-modal .equipment-slot .art{width:34px!important;height:34px!important}
+.equipment-modal .equipment-empty{height:34px;font-size:20px}
+.equipment-modal .modal-header .equipment-wallet{flex:1;justify-content:center;gap:24px;margin:0;padding:0;font-size:12px;white-space:nowrap}
+.equipment-profile{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.equipment-identity{min-width:0;text-align:left}
+.equipment-identity h3{overflow-wrap:anywhere}
+.equipment-modal .equipment-profile .equipment-portrait{flex:none;float:none;margin:0}
+.equipment-modal .equipment-filters{min-height:34px;align-content:flex-start;gap:5px;margin-bottom:10px}
+.haqi-app .equipment-filters .equipment-filter{padding:7px 9px;min-height:34px;border:1px solid var(--line);border-radius:6px;font:inherit;font-size:12px;white-space:nowrap;color:var(--ink);background:#fffaf050}
+.haqi-app .equipment-filter[aria-pressed=true]{background:var(--green);color:#fff8df;border-color:var(--green);box-shadow:0 2px 6px #24483f20}
+.equipment-modal .equipment-grid{position:relative;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,80px);gap:7px;padding:10px;border:1px solid var(--line);border-radius:10px;background:#e5debd25;overflow:visible;max-height:none;margin:10px 0 0}
+.equipment-modal .equipment-item{height:80px;justify-content:center;padding:7px;background:#fffaf080;border:1px solid var(--line);border-radius:9px;box-shadow:inset 0 1px #ffffff88}
+.equipment-modal .equipment-item .art{max-width:100%;object-fit:contain}
+.equipment-modal .equipment-item-name{display:none}
+.equipment-modal .equipment-item.selected{border-color:var(--green);background:#d9e5c977;box-shadow:inset 0 0 0 1px var(--green)}
+.equipment-modal .equipment-item:hover:not(.empty){border-color:var(--gold);background:#fff6d8}
+.equipment-modal .equipment-item.empty{opacity:.4}
+.equipment-modal .equipment-equipped-label{position:absolute;left:4px;bottom:3px;font-size:10px}
+.equipment-modal .equipment-empty-list{position:absolute;inset:90px 10px auto;padding:12px 4px;text-align:center;pointer-events:none;background:var(--paper);border-radius:6px}
+.equipment-pager{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:12px;font-size:12px;color:var(--muted)}
+.haqi-app .equipment-pager button{min-width:66px;padding:7px 10px;font-size:12px}
+@media(max-width:700px){
+.equipment-modal .equipment-layout{grid-template-columns:1fr;gap:12px;min-height:0}
+.equipment-modal .equipment-character{max-height:220px;padding:10px}
+.equipment-modal .equipment-portrait{float:left;width:90px;margin:0 8px 0 0}
+.equipment-modal .equipment-slots{grid-template-columns:repeat(4,minmax(0,1fr))}
+.equipment-modal .equipment-slot{height:60px}
+.equipment-modal .equipment-filters{min-height:0}
+.equipment-modal .equipment-grid{grid-template-rows:repeat(3,70px);gap:6px;padding:8px}
+.equipment-modal .equipment-item{height:70px;padding:5px}
+}
+
+@media(max-width:700px){.equipment-modal .modal-header .equipment-wallet{gap:6px;flex-direction:column;align-items:flex-start;font-size:11px;padding-left:6px}.equipment-modal .equipment-profile .equipment-portrait{width:70px}.equipment-modal .equipment-profile .equipment-portrait .art{width:70px!important;height:80px!important}}
+
+/* Quest book: independent directory and detail scrolling, like the original journal. */
+.modal.quest-journal-modal{width:min(900px,100%);height:min(620px,90dvh)}
+.quest-journal-modal .modal-header{flex:none}
+.quest-journal-modal .modal-header h2{font-size:25px}
+.modal.quest-journal-modal .modal-body{display:flex;min-height:0;overflow:hidden;padding:14px}
+.journal-layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:18px;flex:1;min-height:0;min-width:0}
+.journal-sidebar{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line);padding-right:14px}
+.journal-chapter{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 6px 13px;border-bottom:1px solid var(--line);font-size:14px}
+.journal-chapter span{font-size:11px;color:var(--muted)}
+.journal-directory{position:relative;overflow:auto;min-height:0;padding:8px 4px 8px 0;overscroll-behavior:contain}
+.journal-entry{display:flex;align-items:center;gap:10px;width:100%;min-height:58px;padding:10px;text-align:left;background:transparent;color:var(--ink);border:1px solid transparent;border-radius:5px}
+.journal-entry:hover{background:#c494431a}
+.journal-entry.selected{background:#d9bc7755;border-color:var(--gold);box-shadow:inset 3px 0 var(--green)}
+.journal-index{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.journal-entry-text{display:grid;gap:5px;min-width:0}
+.journal-entry strong{font-size:14px;font-weight:600;line-height:1.45}
+.journal-entry small{font-size:11px;color:var(--muted)}
+.journal-detail{overflow:auto;min-width:0;padding:12px 14px 10px 0;overscroll-behavior:contain;color:var(--ink)}
+.journal-detail-heading{border-bottom:1px solid var(--line);padding-bottom:14px}
+.journal-detail-heading h3{margin:8px 0 0;font-size:24px;line-height:1.4}
+.journal-status{font-size:12px;color:var(--green);font-weight:700}
+.journal-detail p{font-size:14px;line-height:1.85}
+.journal-description{margin:17px 0 20px}
+.journal-section{margin:20px 0}
+.journal-section h4{margin:0 0 10px;font-size:15px;color:var(--ink);border-left:3px solid var(--gold);padding-left:9px}
+.journal-objective{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:14px;padding:8px 0;line-height:1.6;border-bottom:1px dashed var(--line)}
+.journal-objective strong{white-space:nowrap;font-size:12px}
+.journal-objective.complete{color:var(--green)}
+.journal-contacts{display:flex;flex-wrap:wrap;gap:8px 28px}
+.journal-contacts p{margin:0;font-size:13px}
+.journal-contacts span{color:var(--muted);margin-right:12px}
+.journal-rewards{display:flex;flex-wrap:wrap;gap:8px}
+.journal-reward{padding:8px 10px;border:1px solid var(--line);background:#fff9df88;border-radius:4px;font-size:13px}
+.journal-footer{border-top:1px solid var(--line);padding-top:14px;margin-top:22px}
+.journal-footer p{color:var(--muted);margin:0;font-size:13px}
+.journal-entry:focus-visible{outline:2px solid var(--green);outline-offset:-2px}
+@media(max-width:600px){
+ .modal.quest-journal-modal{height:90dvh}
+ .modal.quest-journal-modal .modal-body{padding:10px}
+ .journal-layout{grid-template-columns:minmax(0,1fr);grid-template-rows:155px minmax(0,1fr);gap:10px}
+ .journal-sidebar{padding:0;border-right:0;border-bottom:1px solid var(--line)}
+ .journal-chapter{padding:2px 4px 7px}
+ .journal-directory{padding:4px 0}
+ .journal-entry{min-height:45px;padding:7px 10px}
+ .journal-entry-text{display:flex;align-items:center;justify-content:space-between;flex:1;gap:8px}
+ .journal-entry strong{font-size:13px}.journal-entry small{white-space:nowrap}
+ .journal-detail{padding:7px 5px}.journal-detail-heading h3{font-size:21px}
+}

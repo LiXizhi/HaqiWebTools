@@ -1,0 +1,185 @@
+{
+  "schemaVersion": 1,
+  "atlases": {
+    "trees": {
+      "local": "assets/adventure/environment/snow-trees-20e205dd9bda.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/snow-trees-20e205dd9bda.webp",
+      "width": 652,
+      "height": 652,
+      "size": 180648,
+      "sha256": "20e205dd9bdaf14226329640d4650929bde8e2fa3d3571426852119ea7f9720c",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "77ac3a957801c75aaa862ccb766c25f5c8722207e02ee7d51a73bce377606a14",
+        "width": 1254,
+        "height": 1254
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 90
+      },
+      "frames": {
+        "spruce": {
+          "rect": [
+            29,
+            8,
+            267,
+            310
+          ],
+          "sourceRect": [
+            74,
+            12,
+            530,
+            615
+          ]
+        },
+        "pine": {
+          "rect": [
+            371,
+            8,
+            236,
+            310
+          ],
+          "sourceRect": [
+            707,
+            12,
+            469,
+            615
+          ]
+        },
+        "fir": {
+          "rect": [
+            8,
+            334,
+            309,
+            310
+          ],
+          "sourceRect": [
+            55,
+            658,
+            549,
+            550
+          ]
+        },
+        "oldPine": {
+          "rect": [
+            347,
+            334,
+            284,
+            310
+          ],
+          "sourceRect": [
+            689,
+            627,
+            532,
+            580
+          ]
+        }
+      }
+    },
+    "weather": {
+      "local": "assets/adventure/environment/weather-c82470b17345.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/weather-c82470b17345.webp",
+      "width": 576,
+      "height": 384,
+      "size": 111822,
+      "sha256": "c82470b1734513d99f3fea4ab2820f68171d8f1af260bab9a259a4c5adf15736",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "d3c8a30efbff4a57a9b75a9eacba1f573ee5251cbb83d8d404e4b0a0db6af6db",
+        "width": 1254,
+        "height": 1254
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "snow": {
+          "rect": [
+            17,
+            8,
+            157,
+            176
+          ],
+          "sourceRect": [
+            102,
+            214,
+            262,
+            294
+          ]
+        },
+        "sand": {
+          "rect": [
+            200,
+            15,
+            176,
+            169
+          ],
+          "sourceRect": [
+            424,
+            168,
+            411,
+            394
+          ]
+        },
+        "embers": {
+          "rect": [
+            416,
+            8,
+            128,
+            176
+          ],
+          "sourceRect": [
+            955,
+            207,
+            231,
+            317
+          ]
+        },
+        "mist": {
+          "rect": [
+            8,
+            207,
+            176,
+            169
+          ],
+          "sourceRect": [
+            45,
+            727,
+            373,
+            358
+          ]
+        },
+        "ash": {
+          "rect": [
+            200,
+            208,
+            176,
+            168
+          ],
+          "sourceRect": [
+            418,
+            712,
+            391,
+            374
+          ]
+        },
+        "motes": {
+          "rect": [
+            414,
+            200,
+            132,
+            176
+          ],
+          "sourceRect": [
+            955,
+            747,
+            222,
+            296
+          ]
+        }
+      }
+    }
+  }
+}

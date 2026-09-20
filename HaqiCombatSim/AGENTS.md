@@ -10,6 +10,8 @@
 4. [docs/adventure.md](docs/adventure.md) — `Haqi.html` 的内容、存档、资源与已实施范围
 5. [docs/player-import.md](docs/player-import.md)、[docs/async-pvp.md](docs/async-pvp.md)、[docs/pets-vip-innovation.md](docs/pets-vip-innovation.md)、[docs/card-i18n.md](docs/card-i18n.md) — 2026-09-18 计划需求（真实用户数据、异步 PVP、帕鲁式宠物/VIP 口粮、卡牌多语言）；实现前先读，不要编造生产接口、VIP 网关、翻译服务或凭据
 
+6. [docs/gui-style-guide.md](docs/gui-style-guide.md) — 新增或修改冒险 GUI 前必读；关闭按钮统一使用 `js/view_adventure_controls.js` 的 `createCloseButton`，不另造文字叉号或窗口专属样式。
+
 ## 硬规则
 
 1. **源码保持原生 ES Module + Vanilla JS。** 用户于2026-09-18明确要求参考Maisi/MagicHaqi，允许Vite作为开发与发布工具；`npm run build`生成`dist/`，`npm run upload`发布到Keepwork CDN。源码仍支持普通HTTP静态服务，不引入TypeScript或前端框架。详见`docs/deployment.md`。

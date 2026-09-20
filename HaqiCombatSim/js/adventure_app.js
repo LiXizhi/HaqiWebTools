@@ -25,7 +25,7 @@ import { createRenderer } from './adventure_renderer.js';
 import { createCloudClient } from './adventure_cloud.js';
 import { checkedProgress } from './adventure_cloud_core.js';
 import { renderCloud } from './view_adventure_cloud.js';
-import { renderLocalMap } from './view_adventure_local_map.js';
+import {renderMaps} from './view_adventure_maps.js';
 import { regionAt } from './adventure_island_layout_core.js';
 import { createRoleStore } from './adventure_roles.js';
 import { MAX_ROLES } from './adventure_roles_core.js';
@@ -35,6 +35,7 @@ import { createCreationPreview, tutorialCards } from './adventure_creation_previ
 const $=id=>document.getElementById(id);
 const nodes={world:$('world'),hud:$('hud'),entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer'),toast:$('toast')};
 let assets,renderer,save,world,battle,stage='loading',panel=null,dialog=null,dialogDone=null;
+let selectedQuestId=null;
 let path=[],destination=null,moving=false,lastFrame=0,lastSave=0,toastTimer=0;
 let selected=null,discarded=[],animation=null,music=null,storageWarning=false;
 let petCardsOpen=false;
@@ -93,13 +94,13 @@ function persist() {
 function close() {nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>openPanel('membership'),cloud:openCloud,track,interact:interactNearest});}
 function paintPanel() {
-    if(panel==='localmap'&&world.layout){renderLocalMap(nodes.overlay,world,save,{close,draw:canvas=>renderer.minimap(canvas,world,save),walk:target=>walkTo(target,true)});return;}
+    if(['map','worldmap','localmap'].includes(panel)&&world.layout){renderMaps(nodes.overlay,world,model(),{close,track,travel,draw:(canvas,options)=>renderer.minimap(canvas,world,save,options),teleport:teleportToLandmark,switchMap:view=>openPanel(view==='world'?'worldmap':'map')},panel==='worldmap'?'world':'local');return;}
     if(panel==='cloud'){paintCloud();return;}
     if(!panel)return;
     const equipment=['equipment','inventory','shop','pet'].includes(panel);
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
-    V.renderPanel(nodes.overlay,panel,model(),{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true)});
+    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId},{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true)});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
@@ -111,6 +112,7 @@ function paintPanel() {
 function openPanel(kind,options={}) {
     if(stage!=='world')return;
     close();path=[];destination=null;panel=kind;
+    if(kind==='quests')selectedQuestId=options.questId??A.currentQuest(save,assets.content)?.id??assets.content.quests.at(-1)?.id;
     if(kind==='upgrade')Object.assign(strengtheningView,{guid:initialStrengtheningSelection(save,assets.content,options.itemId,options.guid),filter:0,page:0,pending:false,message:'',offsetX:0,offsetY:0});
     if(['equipment','inventory'].includes(kind)){equipmentView.tab=kind==='equipment'?'gear':'all';equipmentView.slot=0;equipmentView.query='';equipmentView.item=null;equipmentView.guid=null;}
     paintPanel();
@@ -279,6 +281,12 @@ function updateMusic() {
     if(save.music&&stage!=='title')music.play().catch(()=>{if(music.error)toast('背景音乐暂时不可用，可以继续游玩。');});else music.pause();
 }
 function toggleMusic(){save.music=!save.music;persist();updateMusic();paintPanel();}
+function teleportToLandmark(id){safely(()=>{
+    if(stage!=='world'||save.pendingEncounter)throw Error('请先完成当前战斗');
+    const target=world.landmarks.find(mark=>mark.id===id);
+    if(!target||!W.walkable(world,target.x,target.y))throw Error('此地点暂时无法抵达');
+    close();path=[];destination=null;save.position={x:target.x,y:target.y};save.revision++;persist();paintHud();
+});}
 function travel(zone){safely(()=>{A.applyAction(save,assets.content,{type:'travel',zone});enterWorld(save);toast(`已抵达${islandName(zone)}。`);});}
 function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog,{close,next:nextDialogue,startQuest:q=>startLines(q.startDialog,'接取任务',()=>{
     A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(`已接取：${q.title}`);
@@ -316,11 +324,12 @@ function interact(target) {
     if(stage!=='world'||!target)return;
     path=[];destination=null;keys.clear();persist();
     if(target.kind==='npc'){
+        if(target.id===36205||target.name==='法斯特船长'){openPanel('worldmap');return;}
         close();dialog={npcId:target.id};
         const talk=target.questDialogue&&A.pendingQuestTalk(save,A.currentQuest(save,assets.content),target.id);
         if(talk)startQuestTalk(talk);else paintDialogue();
     }
-    if(target.kind==='portal')travel(target.zone);
+    if(target.kind==='portal')openPanel('worldmap');
     if(target.kind==='landmark')toast(`${target.name}：${target.description}`);
     if(target.kind==='encounter')safely(()=>{
         A.beginEncounter(save,assets.content,target.id);persist();

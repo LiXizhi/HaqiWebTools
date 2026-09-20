@@ -1,5 +1,5 @@
 import { resolveParams } from './combat_params_core.js';
-import { TOWN_LAYOUT } from './adventure_island_layout_core.js';
+import { mapInfo } from './adventure_island_layout_core.js';
 
 // Original world identities: Scene/WorldManager.lua L1160–1165.
 // Level gates follow CanEnterWorld's min_level check (L593); thresholds are
@@ -21,4 +21,4 @@ export function travelStatus(save,content,zone){
     const reason=save.pendingEncounter?'请先完成当前战斗':save.level<minLevel?`达到 ${minLevel} 级后可前往${island.name}`:'';
     return {allowed:!reason,reason,minLevel,current:save.zone===zone};
 }
-export function islandSpawn(zone){return zone==='town'?{...TOWN_LAYOUT.spawn}:zone==='camp'?{x:950,y:1330}:{x:800,y:810};}
+export function islandSpawn(zone,content){return {...mapInfo(zone,content).spawn};}

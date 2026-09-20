@@ -1,3 +1,4 @@
+import {createCloseButton} from './view_adventure_controls.js';
 import { equipmentAttributes,EQUIPMENT_SLOTS } from './adventure_equipment_core.js';
 import { canEquip, equipmentBlockReason } from './adventure_core.js';
 import { showPetDetails } from './view_adventure_pet_details.js';
@@ -111,7 +112,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  const notes=el('details','pet-care-notes',el('summary','','照料与自动进食'),el('p','muted',`非战斗时角色每秒恢复 ${p.heroRegenPerSecond*100}% 生命，宠物每分钟恢复 ${p.regenPerMinute*100}%。携带伙伴每分钟减少 ${p.hungerPerMinute} 饱食，低于 ${p.feedThreshold} 自动进食，每份恢复 ${p.foodRestore}。离线只恢复生命。`),...save.careLog.slice(-3).map(text=>el('p','muted',text)));
  const teaching=button('咕噜噜教学',()=>{
   const dialog=el('dialog','modal pet-growth-modal'),close=()=>dialog.close();
-  const exit=button('×',close,'close-button');exit.setAttribute('aria-label','关闭教学伙伴');
+  const exit=createCloseButton(close,'关闭教学伙伴');
   const content=el('div','modal-body',tile(assets,'creatures',save.pet?6:7,120,128));
   if(save.pet){content.append(el('h3','',save.pet.name),el('p','',`等级 ${save.pet.level} · 经验 ${save.pet.xp} · 口粮 ${save.inventory[17172]||0} 包`),button('喂养一包战宠口粮',()=>{close();cb.action({type:'feed'});},'primary'));}
   else content.append(el('p','','完成青龙的强化指导，领取出奇蛋。'),button('打开出奇蛋',()=>{close();cb.action({type:'hatch'});},'primary'));

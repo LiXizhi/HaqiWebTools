@@ -5,7 +5,7 @@
 .world-chart{position:relative;isolation:isolate;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:12px;border-radius:18px;background:#e6d7b5}
 .world-map-loading{grid-column:1/-1;margin:0;color:#655338;font-size:14px}
 .world-island{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:64px;padding:5px;border:2px solid transparent;border-radius:12px;background:#f5e9cf;color:#51432d;cursor:pointer}
-.world-island:hover,.world-island.selected,.world-island:focus-visible{outline:2px solid #b58a43;outline-offset:2px}
+.world-island:hover,.world-island:focus-visible{outline:2px solid #b58a43;outline-offset:2px}
 .world-island .island-name{font-size:17px}
 .world-island .island-state{font-size:12px;border-radius:12px;padding:2px 8px;background:#173d49cc;color:#fff5df}
 .world-island.current .island-state{background:#f0d99c;color:#4f4226}
@@ -13,9 +13,35 @@
 .world-map-painting{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .world-chart.has-art .world-island{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);width:142px;height:110px;min-height:0;justify-content:flex-end;background:transparent;box-shadow:none}
 .world-chart.has-art .world-island:active:not(:disabled){transform:translate(-50%,-50%)}
-.world-chart.has-art .world-island:hover,.world-chart.has-art .world-island.selected,.world-chart.has-art .world-island:focus-visible{outline-color:#ffe2a2;background:#e9e6bb18}
+.world-chart.has-art .world-island:hover,.world-chart.has-art .world-island:focus-visible{outline-color:#ffe2a2;background:#e9e6bb18}
 .world-chart.has-art .island-name{background:#163a48dd;border:1px solid #ebd4a0bb;border-radius:7px;padding:3px 12px;font-size:16px;color:#fff0cb}
 .world-chart.has-art .world-island.current .island-name{background:#355b43eb;border-color:#ffe49a}
 .world-chart.has-art .world-island.locked .island-name{background:#393743ed;color:#ddd5c5}
 .world-map-detail{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:15px 6px;border-bottom:1px solid #ae976b55}.world-map-detail h3{margin:0 0 5px}.world-map-detail p{margin:4px 0;font-size:14px}.world-map-detail button{flex-shrink:0;min-width:135px}.world-map-detail small{color:#756044}.world-map-footer{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:12px}.world-map-footer button{flex-shrink:0}
 @media(max-width:600px){.world-map-detail,.world-map-footer{align-items:stretch;flex-direction:column;gap:10px}.world-map-summary{font-size:12px}}
+
+.map-view-switch{display:flex;gap:8px;padding:10px 16px;border-bottom:1px solid #b99c6544;flex-shrink:0}.map-view-switch button{flex:1;min-height:38px}
+
+/* A single title and adjacent switch keep the map itself prominent. */
+.haqi-app .compact-map-modal .modal-header{padding:12px 18px;gap:12px}
+.map-heading{display:flex;align-items:center;gap:16px;min-width:0}
+.haqi-app .compact-map-modal .map-heading h2{margin:0;font-size:26px}
+.haqi-app .compact-map-modal .map-view-toggle{padding:7px 13px;font-size:13px;white-space:nowrap;min-height:36px}
+.compact-map-modal .modal-body{padding:14px 18px}
+.compact-map-modal .world-map-detail{justify-content:flex-end;border:0;padding:12px 0 0}
+.compact-map-modal .world-map-detail[hidden]{display:none}
+.compact-map-modal .world-chart.has-art .world-island{height:80px}
+@media(max-width:600px){.haqi-app .compact-map-modal .modal-header{padding:10px 12px}.haqi-app .compact-map-modal .map-heading h2{font-size:22px}.map-heading{gap:10px}.compact-map-modal .modal-body{padding:10px 12px}}
+
+.haqi-app .compact-map-modal .map-heading{display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:14px}
+.haqi-app .compact-map-modal .map-heading h2{flex:none;white-space:nowrap}
+.haqi-app .compact-map-modal .map-view-toggle{flex:none}
+.haqi-app .compact-map-modal .world-map-detail{display:flex;flex-direction:row;justify-content:flex-end;gap:10px;padding-top:12px}
+.haqi-app .compact-map-modal .world-map-detail button{min-width:90px}
+
+.island-guide-chart{position:relative;min-width:0;align-self:start}
+.island-guide-chart .island-guide-map{display:block;width:100%;height:auto;margin:0}
+.haqi-app .island-map-label{position:absolute;transform:translate(-50%,-100%);padding:3px 6px;border:1px solid #8f7f5355;border-radius:6px;background:#f5edccd9;color:#26493b;font-size:11px;white-space:nowrap;line-height:1.4;cursor:pointer;box-shadow:0 2px 6px #23402e33}
+.haqi-app .island-map-label:hover,.haqi-app .island-map-label:focus-visible{background:#fff4c5;outline:2px solid #91784b}
+.haqi-app .island-map-label:active:not(:disabled){transform:translate(-50%,-100%)}
+@media(max-width:650px){.island-guide-chart{margin:12px 0}.haqi-app .island-map-label{font-size:9px;padding:3px}}

@@ -1,0 +1,533 @@
+{
+  "schemaVersion": 1,
+  "layoutVersion": 2,
+  "roads": {
+    "width": 82,
+    "spurWidth": 46,
+    "treeClearance": 48,
+    "layers": [
+      [
+        14,
+        "#648554"
+      ],
+      [
+        8,
+        "#b2b182"
+      ],
+      [
+        0,
+        "#d3c098"
+      ],
+      [
+        -12,
+        "#e3d1ac"
+      ]
+    ]
+  },
+  "forest": {
+    "attemptsPerMillion": 270,
+    "maxTrees": 850,
+    "spacing": 65,
+    "coastPadding": 75,
+    "clearingRadius": 145,
+    "size": [
+      115,
+      180
+    ]
+  },
+  "terrain": {
+    "ocean": "#438b9b",
+    "base": "#8eb077",
+    "sand": "#e5d5aa",
+    "coastLayers": [
+      [
+        150,
+        "#529ba9"
+      ],
+      [
+        95,
+        "#75b8bb"
+      ],
+      [
+        48,
+        "#b0d6cc"
+      ],
+      [
+        18,
+        "#edf0cf"
+      ]
+    ],
+    "coastWidth": 70,
+    "texture": {
+      "cell": 64,
+      "count": 8,
+      "light": "#fff4c21f",
+      "dark": "#35523f16"
+    },
+    "shadow": "#244b3820"
+  },
+  "water": {
+    "water": {
+      "bank": "#c6c59a",
+      "edge": "#619d91",
+      "fill": "#65b8bf",
+      "center": "#80cbd0",
+      "shine": "#d6efe466"
+    },
+    "lava": {
+      "bank": "#584845",
+      "edge": "#9f5337",
+      "fill": "#ef813c",
+      "center": "#f6bc62",
+      "shine": "#fff1b477"
+    },
+    "ice": {
+      "bank": "#cfdfd6",
+      "edge": "#7caebc",
+      "fill": "#88c8db",
+      "center": "#b4e1e7",
+      "shine": "#f5ffffaa"
+    },
+    "dark": {
+      "bank": "#717471",
+      "edge": "#425e67",
+      "fill": "#536f85",
+      "center": "#7794a5",
+      "shine": "#c6e1e755"
+    }
+  },
+  "bridge": {
+    "auto": true,
+    "margin": 30,
+    "edge": "#796c4d",
+    "fill": "#c4b88c",
+    "seam": "#857a5855"
+  },
+  "mountain": {
+    "layers": 6,
+    "baseRadius": 75,
+    "stepRadius": 31,
+    "stepHeight": 7,
+    "aspect": 0.56
+  },
+  "plaza": {
+    "radiusX": 180,
+    "radiusY": 110,
+    "edge": "#aaa989",
+    "fill": "#dad6b4",
+    "line": "#b5b18b"
+  },
+  "biomes": {
+    "grass": {
+      "color": "#8eb077",
+      "forest": {
+        "tiles": [
+          0,
+          0,
+          1,
+          2
+        ],
+        "density": 0.8
+      },
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    "forest": {
+      "color": "#527d55",
+      "forest": {
+        "tiles": [
+          0,
+          0,
+          1
+        ],
+        "density": 1
+      },
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    "town": {
+      "color": "#adc184",
+      "forest": {
+        "tiles": [
+          0,
+          2
+        ],
+        "density": 0.2
+      },
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    "farm": {
+      "color": "#a1b965",
+      "forest": {
+        "tiles": [
+          0,
+          2
+        ],
+        "density": 0.18
+      },
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    "lake": {
+      "color": "#82ad75",
+      "forest": {
+        "tiles": [
+          0,
+          1
+        ],
+        "density": 0.65
+      },
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    "beach": {
+      "color": "#e8d7a2",
+      "forest": {
+        "tiles": [
+          3
+        ],
+        "density": 0.15
+      },
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    "park": {
+      "color": "#b2c889",
+      "forest": {
+        "tiles": [
+          0,
+          2
+        ],
+        "density": 0.55
+      },
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    "snow": {
+      "color": "#dce9e7",
+      "forest": {
+        "tiles": [
+          1
+        ],
+        "density": 0.55
+      },
+      "weather": {
+        "kind": "snow",
+        "count": 46,
+        "speed": 25,
+        "color": "#f5fcff",
+        "wind": 11
+      },
+      "snow": true,
+      "mountain": [
+        "#f8fcf1",
+        "#e9f2ec",
+        "#cddfe0",
+        "#a8c3ce",
+        "#87a7b9",
+        "#6d8e9e"
+      ]
+    },
+    "ice": {
+      "color": "#a3cbd9",
+      "forest": {
+        "tiles": [
+          1
+        ],
+        "density": 0.16
+      },
+      "weather": {
+        "kind": "snow",
+        "count": 38,
+        "speed": 30,
+        "color": "#eefbff",
+        "wind": 18
+      },
+      "snow": true
+    },
+    "gold": {
+      "color": "#c9aa65",
+      "forest": {
+        "tiles": [
+          0
+        ],
+        "density": 0.08
+      },
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      },
+      "mountain": [
+        "#ecdc9b",
+        "#daca85",
+        "#cab474",
+        "#bba064",
+        "#ac905b",
+        "#a08d5f"
+      ]
+    },
+    "volcanic": {
+      "color": "#9f6b50",
+      "forest": {
+        "tiles": [
+          1
+        ],
+        "density": 0.04
+      },
+      "weather": {
+        "kind": "embers",
+        "count": 18,
+        "speed": -15,
+        "color": "#ffbc72",
+        "wind": 5
+      },
+      "mountain": [
+        "#e59b58",
+        "#c17b4e",
+        "#a26647",
+        "#865742",
+        "#704a3d",
+        "#5b4140"
+      ]
+    },
+    "ash": {
+      "color": "#766267",
+      "forest": {
+        "tiles": [
+          1
+        ],
+        "density": 0.025
+      },
+      "weather": {
+        "kind": "ash",
+        "count": 22,
+        "speed": 9,
+        "color": "#d9c6b3",
+        "wind": 15
+      }
+    },
+    "desert": {
+      "color": "#d6b578",
+      "forest": {
+        "tiles": [
+          3
+        ],
+        "density": 0.035
+      },
+      "weather": {
+        "kind": "sand",
+        "count": 24,
+        "speed": 4,
+        "color": "#f7dcad",
+        "wind": 35
+      },
+      "mountain": [
+        "#f0d49b",
+        "#ddbd82",
+        "#cba970",
+        "#ba915b",
+        "#a77d4c",
+        "#946b44"
+      ]
+    },
+    "oasis": {
+      "color": "#91b18a",
+      "forest": {
+        "tiles": [
+          3
+        ],
+        "density": 0.7
+      },
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    "dark": {
+      "color": "#666e79",
+      "forest": {
+        "tiles": [
+          1,
+          1,
+          0
+        ],
+        "density": 0.9
+      },
+      "weather": {
+        "kind": "mist",
+        "count": 9,
+        "speed": 2,
+        "color": "#b9bdd6",
+        "wind": 8
+      },
+      "mountain": [
+        "#a2a7ad",
+        "#8b939c",
+        "#7c838d",
+        "#6d737e",
+        "#5e6570",
+        "#4e5661"
+      ]
+    },
+    "marsh": {
+      "color": "#7d8f83",
+      "forest": {
+        "tiles": [
+          1
+        ],
+        "density": 0.45
+      },
+      "weather": {
+        "kind": "mist",
+        "count": 10,
+        "speed": 2,
+        "color": "#bdccca",
+        "wind": 6
+      }
+    }
+  },
+  "themes": {
+    "fire": {
+      "roads": {
+        "layers": [
+          [
+            14,
+            "#655448"
+          ],
+          [
+            8,
+            "#937855"
+          ],
+          [
+            0,
+            "#b49a72"
+          ],
+          [
+            -12,
+            "#ccb48a"
+          ]
+        ]
+      }
+    },
+    "ice": {
+      "terrain": {
+        "base": "#c1dce2",
+        "sand": "#d7e5de"
+      },
+      "roads": {
+        "layers": [
+          [
+            14,
+            "#8aa9b5"
+          ],
+          [
+            8,
+            "#b9cdd0"
+          ],
+          [
+            0,
+            "#dae6df"
+          ],
+          [
+            -12,
+            "#eef3e9"
+          ]
+        ]
+      }
+    },
+    "desert": {
+      "terrain": {
+        "base": "#d6b578",
+        "sand": "#efdcad"
+      },
+      "roads": {
+        "layers": [
+          [
+            14,
+            "#ad915f"
+          ],
+          [
+            8,
+            "#c9b281"
+          ],
+          [
+            0,
+            "#e5ce9c"
+          ],
+          [
+            -12,
+            "#efddb8"
+          ]
+        ]
+      }
+    },
+    "dark": {
+      "terrain": {
+        "base": "#666e79",
+        "sand": "#a09c85"
+      },
+      "roads": {
+        "layers": [
+          [
+            14,
+            "#4e5958"
+          ],
+          [
+            8,
+            "#788177"
+          ],
+          [
+            0,
+            "#a6aa94"
+          ],
+          [
+            -12,
+            "#c4c4aa"
+          ]
+        ]
+      }
+    }
+  }
+}

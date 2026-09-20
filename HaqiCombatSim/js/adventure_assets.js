@@ -1,3 +1,4 @@
+import {loadEnvironmentArt} from './adventure_environment_art.js';
 import { installExpansion } from './adventure_expansion_core.js';
 // Browser IO for the self-contained adventure package.
 import { validateSpellEffects } from './spell_effects_core.js';
@@ -11,9 +12,11 @@ function loadImage(url) { return new Promise((resolve,reject)=>{const i=new Imag
 export async function loadResources(progress) {
     const [content,dataset,manifest,media,effects]=await Promise.all(['chapter','combat','assets','media','spell-effects'].map(n=>json(`data/adventure/${n}.json`)));
     validateAdventureContent(content,dataset,manifest);
+    content.worldMaps=Object.fromEntries(await Promise.all(Object.entries(content.worldMapIndex.islands).map(async([id,info])=>[id,await json(info.file)])));
     validateSpellEffects(effects,dataset.cards);
     const mode=assetMode(location.hostname,location.search);
     // A failed cosmetic download must not block local saves or gameplay.
+    const environmentReady=loadEnvironmentArt(mode).catch(error=>{console.warn('使用基础场景素材：',error.message);return null;});
     const uiArtReady=loadUiArt(mode).catch(error=>console.warn('使用基础界面：',error.message));
     validateMediaManifest(media,manifest,mode);
     const images=new Map(),bounds=new Map(),failures=[],lazyImages=new Map(),imageLoading=new Map();
@@ -69,7 +72,8 @@ export async function loadResources(progress) {
     const petLoading=new Set();
     function drawPet(ctx,id,stage,x,y,w,h){const art=content.pets[id]?.art;if(!art)return false;const key='pet:'+id;const img=images.get(key);if(!img){if(!petLoading.has(id)){petLoading.add(id);loadImage(mode==='local'?art.local:art.cdn).then(image=>images.set(key,image)).catch(()=>petLoading.delete(id));}return false;}const sw=img.width/4,sh=img.height/4;ctx.drawImage(img,0,stage*sh,sw,sh,x,y,w,h);return true;}
     await uiArtReady;
-    return {drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    const environmentArt=await environmentReady;
+    return {environmentArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

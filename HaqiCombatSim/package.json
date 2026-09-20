@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite --host 127.0.0.1 --open /HaqiCombatSim.html",
-        "build": "vite build",
+        "build": "npm run check:maps && vite build",
         "preview": "vite preview --host 127.0.0.1 --open /HaqiCombatSim.html",
         "plan:release": "npm run build && node uploadRelease.mjs --dry-run",
         "upload": "npm run build && node uploadRelease.mjs",
@@ -14,7 +14,7 @@
         "export": "node scripts/export_data.mjs --config ../../config/Aries --out data --version both",
         "test": "node --test tests/*.test.mjs",
         "sim": "node scripts/run_batch.mjs",
-        "export:adventure": "python3 scripts/export_adventure.py",
+        "export:adventure": "python3 scripts/export_adventure.py && npm run generate:maps",
         "assets:adventure": "node scripts/prepare_adventure_assets.mjs",
         "check:adventure": "node scripts/check_adventure.mjs && node scripts/prepare_adventure_assets.mjs --check",
         "plan:adventure-cdn": "node scripts/publish_adventure_media.mjs",
@@ -24,7 +24,9 @@
         "export:spell-names": "python3 scripts/export_spell_names.py",
         "prepare:spell-art": "python3 scripts/prepare_spell_art.py && python3 scripts/draw_spell_fallbacks.py",
         "plan:spell-art-cdn": "node scripts/publish_spell_art.mjs",
-        "verify:spell-art-cdn": "node scripts/publish_spell_art.mjs --verify"
+        "verify:spell-art-cdn": "node scripts/publish_spell_art.mjs --verify",
+        "generate:maps": "node scripts/generate_island_maps.mjs",
+        "check:maps": "node scripts/generate_island_maps.mjs --check"
     },
     "engines": {
         "node": "^20.19.0 || >=22.12.0"

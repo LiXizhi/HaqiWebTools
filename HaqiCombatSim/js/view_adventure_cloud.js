@@ -1,3 +1,4 @@
+import {createCloseButton} from './view_adventure_controls.js';
 import { islandName } from './adventure_world_map_core.js';
 import { el, button } from './view_adventure.js';
 import { SCHOOL_NAMES } from './adventure_core.js';
@@ -10,7 +11,7 @@ function readableDate(value) { const date = new Date(value);return Number.isFini
 export function renderCloud(root, state, callbacks) {
     root.replaceChildren();root.className = 'overlay visible';
     const box = el('section', 'modal cloud-modal');box.setAttribute('role', 'dialog');box.setAttribute('aria-modal', 'true');box.setAttribute('aria-label', '云端旅途');
-    const close = button('×', callbacks.close, 'close-button');close.setAttribute('aria-label', '关闭');
+    const close = createCloseButton(callbacks.close);
     const body = el('div', 'modal-body');
     box.append(el('header', 'modal-header', el('div', '', el('p', 'eyebrow', '在另一台设备，接着冒险'), el('h2', '', '云端旅途')), close), body);root.append(box);
     body.append(el('p', 'muted', '本地进度照常自动保存。手动保存到 Keepwork 后，可在其他设备登录同一账号、选择记录继续。每次保存都会新增一条记录。'), progressCard(state.local, '当前本地进度'));

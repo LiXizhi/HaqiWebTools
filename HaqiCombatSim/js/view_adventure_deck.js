@@ -1,3 +1,4 @@
+import {createCloseButton} from './view_adventure_controls.js';
 import {deckLimits,deckCardCopies,canEquip,recommendedDeck,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
 import {clampDeck} from './combat_unit_core.js';
 const SCHOOL_LABELS={...SCHOOL_NAMES,balance:'平衡'};
@@ -60,7 +61,7 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
             detail.hidden=false;return;
         }
         const card=cards[key],lesson=lessonMap.get(key);
-        const close=button('×',closePreview,'bag-preview-close');close.setAttribute('aria-label','关闭卡牌预览');
+        const close=createCloseButton(closePreview,'关闭卡牌预览','bag-preview-close');
         detail.replaceChildren(close,spellFace(assets,card));
         if(removable)detail.append(button('移出一张',()=>remove(key),'secondary'));
         else if(lesson){

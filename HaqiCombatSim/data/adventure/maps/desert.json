@@ -1,0 +1,3292 @@
+{
+  "id": "desert",
+  "name": "沙漠岛",
+  "version": 1,
+  "seed": 91021,
+  "w": 5800,
+  "h": 4600,
+  "baseBiome": "desert",
+  "spawn": {
+    "x": 2800,
+    "y": 3710
+  },
+  "portal": {
+    "x": 2940,
+    "y": 3800
+  },
+  "coast": [
+    [
+      770,
+      2170
+    ],
+    [
+      1510,
+      2030
+    ],
+    [
+      1600,
+      1280
+    ],
+    [
+      2210,
+      710
+    ],
+    [
+      3240,
+      570
+    ],
+    [
+      4010,
+      450
+    ],
+    [
+      4670,
+      960
+    ],
+    [
+      4510,
+      1710
+    ],
+    [
+      4880,
+      2250
+    ],
+    [
+      5100,
+      2820
+    ],
+    [
+      4890,
+      3440
+    ],
+    [
+      4020,
+      3570
+    ],
+    [
+      3660,
+      3950
+    ],
+    [
+      2670,
+      4150
+    ],
+    [
+      2040,
+      3740
+    ],
+    [
+      2320,
+      3290
+    ],
+    [
+      1900,
+      3040
+    ],
+    [
+      1230,
+      3030
+    ],
+    [
+      640,
+      2650
+    ]
+  ],
+  "regions": [
+    {
+      "id": "landing",
+      "name": "南部绿洲",
+      "x": 2800,
+      "y": 3710,
+      "rx": 800,
+      "ry": 650,
+      "biome": "oasis",
+      "description": "南部水源是旅程的起点，向北进入峡谷，向西可到遗迹。",
+      "sign": [
+        2895,
+        3765
+      ],
+      "color": "#91b18a",
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    {
+      "id": "ruins",
+      "name": "西侧遗迹",
+      "x": 1460,
+      "y": 2580,
+      "rx": 800,
+      "ry": 650,
+      "biome": "desert",
+      "description": "西侧伸入海中的石台与古老遗迹由狭路连接。",
+      "sign": [
+        1555,
+        2635
+      ],
+      "color": "#d6b578",
+      "weather": {
+        "kind": "sand",
+        "count": 24,
+        "speed": 4,
+        "color": "#f7dcad",
+        "wind": 35
+      }
+    },
+    {
+      "id": "canyon",
+      "name": "中央峡谷",
+      "x": 2980,
+      "y": 2420,
+      "rx": 800,
+      "ry": 650,
+      "biome": "desert",
+      "description": "峡谷中的道路分向西侧遗迹、北部沙丘和东方高地。",
+      "sign": [
+        3075,
+        2475
+      ],
+      "color": "#d6b578",
+      "weather": {
+        "kind": "sand",
+        "count": 24,
+        "speed": 4,
+        "color": "#f7dcad",
+        "wind": 35
+      }
+    },
+    {
+      "id": "dunes",
+      "name": "北部沙丘",
+      "x": 2520,
+      "y": 1270,
+      "rx": 800,
+      "ry": 650,
+      "biome": "desert",
+      "description": "开阔沙丘围绕北方小水源，远处的岩壁标示道路边界。",
+      "sign": [
+        2615,
+        1325
+      ],
+      "color": "#d6b578",
+      "weather": {
+        "kind": "sand",
+        "count": 24,
+        "speed": 4,
+        "color": "#f7dcad",
+        "wind": 35
+      }
+    },
+    {
+      "id": "temple",
+      "name": "东北高台",
+      "x": 4200,
+      "y": 1320,
+      "rx": 800,
+      "ry": 650,
+      "biome": "gold",
+      "description": "东北独立高台经曲折坡道抵达，参考原图高地和古建筑的关系。",
+      "sign": [
+        4295,
+        1375
+      ],
+      "color": "#c9aa65",
+      "weather": {
+        "kind": "motes",
+        "count": 12,
+        "speed": 3,
+        "color": "#fff6bf",
+        "wind": 3
+      }
+    },
+    {
+      "id": "east",
+      "name": "东部岩谷",
+      "x": 4360,
+      "y": 2940,
+      "rx": 800,
+      "ry": 650,
+      "biome": "desert",
+      "description": "东南岩谷保留回环路线，可沿南坡返回绿洲。",
+      "sign": [
+        4455,
+        2995
+      ],
+      "color": "#d6b578",
+      "weather": {
+        "kind": "sand",
+        "count": 24,
+        "speed": 4,
+        "color": "#f7dcad",
+        "wind": 35
+      }
+    }
+  ],
+  "routes": [
+    [
+      [
+        2800,
+        3710
+      ],
+      [
+        3010,
+        3130
+      ],
+      [
+        2980,
+        2420
+      ],
+      [
+        2660,
+        1840
+      ],
+      [
+        2520,
+        1270
+      ],
+      [
+        3300,
+        1080
+      ],
+      [
+        4200,
+        1320
+      ]
+    ],
+    [
+      [
+        4200,
+        1320
+      ],
+      [
+        4110,
+        2010
+      ],
+      [
+        4360,
+        2940
+      ],
+      [
+        3580,
+        3280
+      ],
+      [
+        2800,
+        3710
+      ]
+    ],
+    [
+      [
+        2980,
+        2420
+      ],
+      [
+        2320,
+        2550
+      ],
+      [
+        1460,
+        2580
+      ],
+      [
+        1970,
+        2760
+      ],
+      [
+        2510,
+        2990
+      ],
+      [
+        3010,
+        3130
+      ]
+    ]
+  ],
+  "npcPositions": {},
+  "encounterPositions": {},
+  "buildings": [],
+  "rivers": [
+    {
+      "points": [
+        [
+          3290,
+          2170
+        ],
+        [
+          3530,
+          2660
+        ],
+        [
+          3440,
+          3010
+        ]
+      ],
+      "width": 92,
+      "material": "water"
+    }
+  ],
+  "lakes": [
+    {
+      "x": 2690,
+      "y": 3850,
+      "rx": 115,
+      "ry": 90
+    },
+    {
+      "x": 2800,
+      "y": 1310,
+      "rx": 105,
+      "ry": 80
+    }
+  ],
+  "bridges": [],
+  "mountains": [
+    {
+      "x": 3670,
+      "y": 1540,
+      "biome": "desert",
+      "scale": 1.3
+    },
+    {
+      "x": 2210,
+      "y": 2040,
+      "biome": "desert",
+      "scale": 1
+    },
+    {
+      "x": 4570,
+      "y": 2470,
+      "biome": "desert",
+      "scale": 1.1
+    }
+  ],
+  "farms": [],
+  "source": "assets/adventure/island-references/desert.webp",
+  "retainPreviousPosition": false,
+  "features": [
+    {
+      "kind": "ruins",
+      "x": 1560,
+      "y": 2390,
+      "size": 180
+    },
+    {
+      "kind": "ruins",
+      "x": 4280,
+      "y": 1120,
+      "size": 240
+    }
+  ],
+  "visitingNpcs": [
+    {
+      "sourceId": 36205,
+      "position": [
+        2940,
+        3685
+      ]
+    }
+  ],
+  "theme": "desert",
+  "layoutVersion": 2,
+  "rules": {
+    "schemaVersion": 1,
+    "layoutVersion": 2,
+    "roads": {
+      "width": 82,
+      "spurWidth": 46,
+      "treeClearance": 48,
+      "layers": [
+        [
+          14,
+          "#ad915f"
+        ],
+        [
+          8,
+          "#c9b281"
+        ],
+        [
+          0,
+          "#e5ce9c"
+        ],
+        [
+          -12,
+          "#efddb8"
+        ]
+      ]
+    },
+    "forest": {
+      "attemptsPerMillion": 270,
+      "maxTrees": 850,
+      "spacing": 65,
+      "coastPadding": 75,
+      "clearingRadius": 145,
+      "size": [
+        115,
+        180
+      ]
+    },
+    "terrain": {
+      "ocean": "#438b9b",
+      "base": "#d6b578",
+      "sand": "#efdcad",
+      "coastLayers": [
+        [
+          150,
+          "#529ba9"
+        ],
+        [
+          95,
+          "#75b8bb"
+        ],
+        [
+          48,
+          "#b0d6cc"
+        ],
+        [
+          18,
+          "#edf0cf"
+        ]
+      ],
+      "coastWidth": 70,
+      "texture": {
+        "cell": 64,
+        "count": 8,
+        "light": "#fff4c21f",
+        "dark": "#35523f16"
+      },
+      "shadow": "#244b3820"
+    },
+    "water": {
+      "water": {
+        "bank": "#c6c59a",
+        "edge": "#619d91",
+        "fill": "#65b8bf",
+        "center": "#80cbd0",
+        "shine": "#d6efe466"
+      },
+      "lava": {
+        "bank": "#584845",
+        "edge": "#9f5337",
+        "fill": "#ef813c",
+        "center": "#f6bc62",
+        "shine": "#fff1b477"
+      },
+      "ice": {
+        "bank": "#cfdfd6",
+        "edge": "#7caebc",
+        "fill": "#88c8db",
+        "center": "#b4e1e7",
+        "shine": "#f5ffffaa"
+      },
+      "dark": {
+        "bank": "#717471",
+        "edge": "#425e67",
+        "fill": "#536f85",
+        "center": "#7794a5",
+        "shine": "#c6e1e755"
+      }
+    },
+    "bridge": {
+      "auto": true,
+      "margin": 30,
+      "edge": "#796c4d",
+      "fill": "#c4b88c",
+      "seam": "#857a5855"
+    },
+    "mountain": {
+      "layers": 6,
+      "baseRadius": 75,
+      "stepRadius": 31,
+      "stepHeight": 7,
+      "aspect": 0.56
+    },
+    "plaza": {
+      "radiusX": 180,
+      "radiusY": 110,
+      "edge": "#aaa989",
+      "fill": "#dad6b4",
+      "line": "#b5b18b"
+    },
+    "biomes": {
+      "grass": {
+        "color": "#8eb077",
+        "forest": {
+          "tiles": [
+            0,
+            0,
+            1,
+            2
+          ],
+          "density": 0.8
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "forest": {
+        "color": "#527d55",
+        "forest": {
+          "tiles": [
+            0,
+            0,
+            1
+          ],
+          "density": 1
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "town": {
+        "color": "#adc184",
+        "forest": {
+          "tiles": [
+            0,
+            2
+          ],
+          "density": 0.2
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "farm": {
+        "color": "#a1b965",
+        "forest": {
+          "tiles": [
+            0,
+            2
+          ],
+          "density": 0.18
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "lake": {
+        "color": "#82ad75",
+        "forest": {
+          "tiles": [
+            0,
+            1
+          ],
+          "density": 0.65
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "beach": {
+        "color": "#e8d7a2",
+        "forest": {
+          "tiles": [
+            3
+          ],
+          "density": 0.15
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "park": {
+        "color": "#b2c889",
+        "forest": {
+          "tiles": [
+            0,
+            2
+          ],
+          "density": 0.55
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "snow": {
+        "color": "#dce9e7",
+        "forest": {
+          "tiles": [
+            1
+          ],
+          "density": 0.55
+        },
+        "weather": {
+          "kind": "snow",
+          "count": 46,
+          "speed": 25,
+          "color": "#f5fcff",
+          "wind": 11
+        },
+        "snow": true,
+        "mountain": [
+          "#f8fcf1",
+          "#e9f2ec",
+          "#cddfe0",
+          "#a8c3ce",
+          "#87a7b9",
+          "#6d8e9e"
+        ]
+      },
+      "ice": {
+        "color": "#a3cbd9",
+        "forest": {
+          "tiles": [
+            1
+          ],
+          "density": 0.16
+        },
+        "weather": {
+          "kind": "snow",
+          "count": 38,
+          "speed": 30,
+          "color": "#eefbff",
+          "wind": 18
+        },
+        "snow": true
+      },
+      "gold": {
+        "color": "#c9aa65",
+        "forest": {
+          "tiles": [
+            0
+          ],
+          "density": 0.08
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        },
+        "mountain": [
+          "#ecdc9b",
+          "#daca85",
+          "#cab474",
+          "#bba064",
+          "#ac905b",
+          "#a08d5f"
+        ]
+      },
+      "volcanic": {
+        "color": "#9f6b50",
+        "forest": {
+          "tiles": [
+            1
+          ],
+          "density": 0.04
+        },
+        "weather": {
+          "kind": "embers",
+          "count": 18,
+          "speed": -15,
+          "color": "#ffbc72",
+          "wind": 5
+        },
+        "mountain": [
+          "#e59b58",
+          "#c17b4e",
+          "#a26647",
+          "#865742",
+          "#704a3d",
+          "#5b4140"
+        ]
+      },
+      "ash": {
+        "color": "#766267",
+        "forest": {
+          "tiles": [
+            1
+          ],
+          "density": 0.025
+        },
+        "weather": {
+          "kind": "ash",
+          "count": 22,
+          "speed": 9,
+          "color": "#d9c6b3",
+          "wind": 15
+        }
+      },
+      "desert": {
+        "color": "#d6b578",
+        "forest": {
+          "tiles": [
+            3
+          ],
+          "density": 0.035
+        },
+        "weather": {
+          "kind": "sand",
+          "count": 24,
+          "speed": 4,
+          "color": "#f7dcad",
+          "wind": 35
+        },
+        "mountain": [
+          "#f0d49b",
+          "#ddbd82",
+          "#cba970",
+          "#ba915b",
+          "#a77d4c",
+          "#946b44"
+        ]
+      },
+      "oasis": {
+        "color": "#91b18a",
+        "forest": {
+          "tiles": [
+            3
+          ],
+          "density": 0.7
+        },
+        "weather": {
+          "kind": "motes",
+          "count": 12,
+          "speed": 3,
+          "color": "#fff6bf",
+          "wind": 3
+        }
+      },
+      "dark": {
+        "color": "#666e79",
+        "forest": {
+          "tiles": [
+            1,
+            1,
+            0
+          ],
+          "density": 0.9
+        },
+        "weather": {
+          "kind": "mist",
+          "count": 9,
+          "speed": 2,
+          "color": "#b9bdd6",
+          "wind": 8
+        },
+        "mountain": [
+          "#a2a7ad",
+          "#8b939c",
+          "#7c838d",
+          "#6d737e",
+          "#5e6570",
+          "#4e5661"
+        ]
+      },
+      "marsh": {
+        "color": "#7d8f83",
+        "forest": {
+          "tiles": [
+            1
+          ],
+          "density": 0.45
+        },
+        "weather": {
+          "kind": "mist",
+          "count": 10,
+          "speed": 2,
+          "color": "#bdccca",
+          "wind": 6
+        }
+      }
+    }
+  },
+  "trees": [
+    {
+      "x": 1873,
+      "y": 1736,
+      "tile": 3,
+      "size": 150,
+      "snow": false
+    },
+    {
+      "x": 2729,
+      "y": 1082,
+      "tile": 3,
+      "size": 116,
+      "snow": false
+    },
+    {
+      "x": 2614,
+      "y": 3739,
+      "tile": 3,
+      "size": 146,
+      "snow": false
+    },
+    {
+      "x": 3461,
+      "y": 928,
+      "tile": 0,
+      "size": 120,
+      "snow": false
+    },
+    {
+      "x": 3298,
+      "y": 3847,
+      "tile": 3,
+      "size": 172,
+      "snow": false
+    },
+    {
+      "x": 2286,
+      "y": 3039,
+      "tile": 3,
+      "size": 172,
+      "snow": false
+    },
+    {
+      "x": 2964,
+      "y": 1465,
+      "tile": 3,
+      "size": 136,
+      "snow": false
+    },
+    {
+      "x": 3054,
+      "y": 3992,
+      "tile": 3,
+      "size": 146,
+      "snow": false
+    },
+    {
+      "x": 3731,
+      "y": 3551,
+      "tile": 3,
+      "size": 167,
+      "snow": false
+    },
+    {
+      "x": 4357,
+      "y": 1538,
+      "tile": 0,
+      "size": 150,
+      "snow": false
+    },
+    {
+      "x": 2635,
+      "y": 3392,
+      "tile": 3,
+      "size": 133,
+      "snow": false
+    },
+    {
+      "x": 3528,
+      "y": 1360,
+      "tile": 0,
+      "size": 180,
+      "snow": false
+    },
+    {
+      "x": 3728,
+      "y": 3715,
+      "tile": 3,
+      "size": 174,
+      "snow": false
+    },
+    {
+      "x": 2565,
+      "y": 3339,
+      "tile": 3,
+      "size": 126,
+      "snow": false
+    },
+    {
+      "x": 2690,
+      "y": 3476,
+      "tile": 3,
+      "size": 118,
+      "snow": false
+    },
+    {
+      "x": 1682,
+      "y": 1489,
+      "tile": 3,
+      "size": 158,
+      "snow": false
+    },
+    {
+      "x": 2504,
+      "y": 3938,
+      "tile": 3,
+      "size": 176,
+      "snow": false
+    },
+    {
+      "x": 2419,
+      "y": 3482,
+      "tile": 3,
+      "size": 143,
+      "snow": false
+    },
+    {
+      "x": 3036,
+      "y": 3442,
+      "tile": 3,
+      "size": 166,
+      "snow": false
+    },
+    {
+      "x": 2725,
+      "y": 3240,
+      "tile": 3,
+      "size": 180,
+      "snow": false
+    },
+    {
+      "x": 3532,
+      "y": 3604,
+      "tile": 3,
+      "size": 150,
+      "snow": false
+    },
+    {
+      "x": 2394,
+      "y": 3235,
+      "tile": 3,
+      "size": 154,
+      "snow": false
+    },
+    {
+      "x": 3977,
+      "y": 1430,
+      "tile": 0,
+      "size": 148,
+      "snow": false
+    },
+    {
+      "x": 2353,
+      "y": 3732,
+      "tile": 3,
+      "size": 121,
+      "snow": false
+    },
+    {
+      "x": 2472,
+      "y": 3231,
+      "tile": 3,
+      "size": 157,
+      "snow": false
+    },
+    {
+      "x": 3233,
+      "y": 3206,
+      "tile": 3,
+      "size": 140,
+      "snow": false
+    },
+    {
+      "x": 2466,
+      "y": 3570,
+      "tile": 3,
+      "size": 131,
+      "snow": false
+    },
+    {
+      "x": 3554,
+      "y": 2907,
+      "tile": 3,
+      "size": 159,
+      "snow": false
+    },
+    {
+      "x": 1837,
+      "y": 1869,
+      "tile": 3,
+      "size": 141,
+      "snow": false
+    },
+    {
+      "x": 1923,
+      "y": 2348,
+      "tile": 3,
+      "size": 167,
+      "snow": false
+    },
+    {
+      "x": 2455,
+      "y": 2340,
+      "tile": 3,
+      "size": 140,
+      "snow": false
+    },
+    {
+      "x": 3433,
+      "y": 3192,
+      "tile": 3,
+      "size": 122,
+      "snow": false
+    },
+    {
+      "x": 4068,
+      "y": 1478,
+      "tile": 0,
+      "size": 137,
+      "snow": false
+    },
+    {
+      "x": 2350,
+      "y": 3585,
+      "tile": 3,
+      "size": 144,
+      "snow": false
+    },
+    {
+      "x": 2952,
+      "y": 4001,
+      "tile": 3,
+      "size": 146,
+      "snow": false
+    },
+    {
+      "x": 3118,
+      "y": 3249,
+      "tile": 3,
+      "size": 178,
+      "snow": false
+    },
+    {
+      "x": 4673,
+      "y": 2901,
+      "tile": 3,
+      "size": 150,
+      "snow": false
+    },
+    {
+      "x": 4328,
+      "y": 1028,
+      "tile": 0,
+      "size": 163,
+      "snow": false
+    },
+    {
+      "x": 3419,
+      "y": 3656,
+      "tile": 3,
+      "size": 170,
+      "snow": false
+    },
+    {
+      "x": 3659,
+      "y": 3599,
+      "tile": 3,
+      "size": 164,
+      "snow": false
+    },
+    {
+      "x": 4410,
+      "y": 2147,
+      "tile": 3,
+      "size": 179,
+      "snow": false
+    },
+    {
+      "x": 3878,
+      "y": 1390,
+      "tile": 0,
+      "size": 128,
+      "snow": false
+    },
+    {
+      "x": 2835,
+      "y": 3224,
+      "tile": 3,
+      "size": 125,
+      "snow": false
+    },
+    {
+      "x": 2836,
+      "y": 1930,
+      "tile": 3,
+      "size": 177,
+      "snow": false
+    },
+    {
+      "x": 2287,
+      "y": 2038,
+      "tile": 3,
+      "size": 171,
+      "snow": false
+    },
+    {
+      "x": 3434,
+      "y": 3547,
+      "tile": 3,
+      "size": 153,
+      "snow": false
+    },
+    {
+      "x": 4452,
+      "y": 1021,
+      "tile": 0,
+      "size": 128,
+      "snow": false
+    },
+    {
+      "x": 3497,
+      "y": 3528,
+      "tile": 3,
+      "size": 127,
+      "snow": false
+    },
+    {
+      "x": 2381,
+      "y": 2034,
+      "tile": 3,
+      "size": 165,
+      "snow": false
+    },
+    {
+      "x": 3070,
+      "y": 3918,
+      "tile": 3,
+      "size": 119,
+      "snow": false
+    },
+    {
+      "x": 2419,
+      "y": 3108,
+      "tile": 3,
+      "size": 122,
+      "snow": false
+    },
+    {
+      "x": 4574,
+      "y": 2525,
+      "tile": 3,
+      "size": 139,
+      "snow": false
+    },
+    {
+      "x": 2405,
+      "y": 3668,
+      "tile": 3,
+      "size": 162,
+      "snow": false
+    },
+    {
+      "x": 2475,
+      "y": 3152,
+      "tile": 3,
+      "size": 167,
+      "snow": false
+    },
+    {
+      "x": 1562,
+      "y": 2294,
+      "tile": 3,
+      "size": 160,
+      "snow": false
+    },
+    {
+      "x": 2845,
+      "y": 3323,
+      "tile": 3,
+      "size": 151,
+      "snow": false
+    },
+    {
+      "x": 1437,
+      "y": 2807,
+      "tile": 3,
+      "size": 159,
+      "snow": false
+    },
+    {
+      "x": 1090,
+      "y": 2474,
+      "tile": 3,
+      "size": 128,
+      "snow": false
+    },
+    {
+      "x": 3195,
+      "y": 3733,
+      "tile": 3,
+      "size": 133,
+      "snow": false
+    },
+    {
+      "x": 3122,
+      "y": 1771,
+      "tile": 3,
+      "size": 140,
+      "snow": false
+    },
+    {
+      "x": 2637,
+      "y": 2668,
+      "tile": 3,
+      "size": 129,
+      "snow": false
+    },
+    {
+      "x": 2552,
+      "y": 2256,
+      "tile": 3,
+      "size": 167,
+      "snow": false
+    },
+    {
+      "x": 3736,
+      "y": 1448,
+      "tile": 0,
+      "size": 141,
+      "snow": false
+    },
+    {
+      "x": 4837,
+      "y": 2708,
+      "tile": 3,
+      "size": 176,
+      "snow": false
+    },
+    {
+      "x": 3624,
+      "y": 3849,
+      "tile": 3,
+      "size": 170,
+      "snow": false
+    },
+    {
+      "x": 4350,
+      "y": 828,
+      "tile": 0,
+      "size": 134,
+      "snow": false
+    },
+    {
+      "x": 2488,
+      "y": 3653,
+      "tile": 3,
+      "size": 142,
+      "snow": false
+    },
+    {
+      "x": 3202,
+      "y": 1329,
+      "tile": 3,
+      "size": 153,
+      "snow": false
+    },
+    {
+      "x": 4107,
+      "y": 941,
+      "tile": 0,
+      "size": 132,
+      "snow": false
+    },
+    {
+      "x": 4238,
+      "y": 1185,
+      "tile": 0,
+      "size": 137,
+      "snow": false
+    },
+    {
+      "x": 3238,
+      "y": 3782,
+      "tile": 3,
+      "size": 139,
+      "snow": false
+    },
+    {
+      "x": 2569,
+      "y": 3652,
+      "tile": 3,
+      "size": 126,
+      "snow": false
+    },
+    {
+      "x": 3539,
+      "y": 3841,
+      "tile": 3,
+      "size": 141,
+      "snow": false
+    },
+    {
+      "x": 2119,
+      "y": 941,
+      "tile": 3,
+      "size": 131,
+      "snow": false
+    },
+    {
+      "x": 3128,
+      "y": 3092,
+      "tile": 3,
+      "size": 144,
+      "snow": false
+    },
+    {
+      "x": 2562,
+      "y": 3561,
+      "tile": 3,
+      "size": 146,
+      "snow": false
+    },
+    {
+      "x": 1958,
+      "y": 2258,
+      "tile": 3,
+      "size": 170,
+      "snow": false
+    },
+    {
+      "x": 2370,
+      "y": 3826,
+      "tile": 3,
+      "size": 179,
+      "snow": false
+    },
+    {
+      "x": 2740,
+      "y": 1629,
+      "tile": 3,
+      "size": 123,
+      "snow": false
+    },
+    {
+      "x": 4429,
+      "y": 1744,
+      "tile": 0,
+      "size": 174,
+      "snow": false
+    },
+    {
+      "x": 825,
+      "y": 2340,
+      "tile": 3,
+      "size": 148,
+      "snow": false
+    },
+    {
+      "x": 3557,
+      "y": 3735,
+      "tile": 3,
+      "size": 129,
+      "snow": false
+    },
+    {
+      "x": 2581,
+      "y": 3225,
+      "tile": 3,
+      "size": 138,
+      "snow": false
+    },
+    {
+      "x": 3317,
+      "y": 3271,
+      "tile": 3,
+      "size": 179,
+      "snow": false
+    },
+    {
+      "x": 2305,
+      "y": 3522,
+      "tile": 3,
+      "size": 165,
+      "snow": false
+    },
+    {
+      "x": 2833,
+      "y": 935,
+      "tile": 3,
+      "size": 156,
+      "snow": false
+    },
+    {
+      "x": 3590,
+      "y": 2993,
+      "tile": 3,
+      "size": 124,
+      "snow": false
+    },
+    {
+      "x": 3437,
+      "y": 1440,
+      "tile": 0,
+      "size": 179,
+      "snow": false
+    },
+    {
+      "x": 3139,
+      "y": 3810,
+      "tile": 3,
+      "size": 130,
+      "snow": false
+    },
+    {
+      "x": 2658,
+      "y": 2215,
+      "tile": 3,
+      "size": 161,
+      "snow": false
+    },
+    {
+      "x": 1490,
+      "y": 2257,
+      "tile": 3,
+      "size": 118,
+      "snow": false
+    },
+    {
+      "x": 1020,
+      "y": 2290,
+      "tile": 3,
+      "size": 115,
+      "snow": false
+    },
+    {
+      "x": 3103,
+      "y": 3660,
+      "tile": 3,
+      "size": 170,
+      "snow": false
+    },
+    {
+      "x": 2314,
+      "y": 3791,
+      "tile": 3,
+      "size": 169,
+      "snow": false
+    },
+    {
+      "x": 3436,
+      "y": 3914,
+      "tile": 3,
+      "size": 179,
+      "snow": false
+    },
+    {
+      "x": 1367,
+      "y": 2431,
+      "tile": 3,
+      "size": 170,
+      "snow": false
+    },
+    {
+      "x": 2203,
+      "y": 3079,
+      "tile": 3,
+      "size": 164,
+      "snow": false
+    },
+    {
+      "x": 3703,
+      "y": 1718,
+      "tile": 0,
+      "size": 166,
+      "snow": false
+    },
+    {
+      "x": 3642,
+      "y": 3440,
+      "tile": 3,
+      "size": 117,
+      "snow": false
+    },
+    {
+      "x": 3935,
+      "y": 2122,
+      "tile": 0,
+      "size": 137,
+      "snow": false
+    },
+    {
+      "x": 2396,
+      "y": 2281,
+      "tile": 3,
+      "size": 132,
+      "snow": false
+    },
+    {
+      "x": 3076,
+      "y": 1715,
+      "tile": 3,
+      "size": 165,
+      "snow": false
+    },
+    {
+      "x": 2603,
+      "y": 994,
+      "tile": 3,
+      "size": 145,
+      "snow": false
+    },
+    {
+      "x": 3873,
+      "y": 2708,
+      "tile": 3,
+      "size": 123,
+      "snow": false
+    },
+    {
+      "x": 4225,
+      "y": 780,
+      "tile": 0,
+      "size": 127,
+      "snow": false
+    },
+    {
+      "x": 2141,
+      "y": 2142,
+      "tile": 3,
+      "size": 127,
+      "snow": false
+    },
+    {
+      "x": 3079,
+      "y": 3384,
+      "tile": 3,
+      "size": 121,
+      "snow": false
+    },
+    {
+      "x": 4353,
+      "y": 3133,
+      "tile": 3,
+      "size": 138,
+      "snow": false
+    },
+    {
+      "x": 3394,
+      "y": 3259,
+      "tile": 3,
+      "size": 170,
+      "snow": false
+    },
+    {
+      "x": 3799,
+      "y": 2665,
+      "tile": 3,
+      "size": 150,
+      "snow": false
+    },
+    {
+      "x": 4847,
+      "y": 2906,
+      "tile": 3,
+      "size": 153,
+      "snow": false
+    },
+    {
+      "x": 4548,
+      "y": 2100,
+      "tile": 0,
+      "size": 147,
+      "snow": false
+    },
+    {
+      "x": 3604,
+      "y": 1453,
+      "tile": 0,
+      "size": 134,
+      "snow": false
+    },
+    {
+      "x": 2177,
+      "y": 3706,
+      "tile": 3,
+      "size": 150,
+      "snow": false
+    },
+    {
+      "x": 1053,
+      "y": 2645,
+      "tile": 3,
+      "size": 178,
+      "snow": false
+    },
+    {
+      "x": 2588,
+      "y": 3930,
+      "tile": 3,
+      "size": 139,
+      "snow": false
+    },
+    {
+      "x": 3216,
+      "y": 2558,
+      "tile": 3,
+      "size": 122,
+      "snow": false
+    },
+    {
+      "x": 3771,
+      "y": 3631,
+      "tile": 3,
+      "size": 164,
+      "snow": false
+    },
+    {
+      "x": 2410,
+      "y": 3308,
+      "tile": 3,
+      "size": 150,
+      "snow": false
+    },
+    {
+      "x": 4071,
+      "y": 2302,
+      "tile": 3,
+      "size": 135,
+      "snow": false
+    },
+    {
+      "x": 3280,
+      "y": 3615,
+      "tile": 3,
+      "size": 171,
+      "snow": false
+    },
+    {
+      "x": 2174,
+      "y": 2688,
+      "tile": 3,
+      "size": 121,
+      "snow": false
+    },
+    {
+      "x": 4362,
+      "y": 1996,
+      "tile": 0,
+      "size": 133,
+      "snow": false
+    },
+    {
+      "x": 3361,
+      "y": 3529,
+      "tile": 3,
+      "size": 136,
+      "snow": false
+    },
+    {
+      "x": 2988,
+      "y": 1900,
+      "tile": 3,
+      "size": 174,
+      "snow": false
+    },
+    {
+      "x": 2654,
+      "y": 2598,
+      "tile": 3,
+      "size": 172,
+      "snow": false
+    },
+    {
+      "x": 2654,
+      "y": 2331,
+      "tile": 3,
+      "size": 168,
+      "snow": false
+    },
+    {
+      "x": 1762,
+      "y": 2877,
+      "tile": 3,
+      "size": 126,
+      "snow": false
+    },
+    {
+      "x": 3456,
+      "y": 727,
+      "tile": 0,
+      "size": 171,
+      "snow": false
+    },
+    {
+      "x": 2761,
+      "y": 3998,
+      "tile": 3,
+      "size": 148,
+      "snow": false
+    },
+    {
+      "x": 1860,
+      "y": 1184,
+      "tile": 3,
+      "size": 155,
+      "snow": false
+    },
+    {
+      "x": 3261,
+      "y": 3953,
+      "tile": 3,
+      "size": 173,
+      "snow": false
+    },
+    {
+      "x": 3794,
+      "y": 1387,
+      "tile": 0,
+      "size": 173,
+      "snow": false
+    },
+    {
+      "x": 3243,
+      "y": 1679,
+      "tile": 3,
+      "size": 122,
+      "snow": false
+    },
+    {
+      "x": 2731,
+      "y": 3382,
+      "tile": 3,
+      "size": 128,
+      "snow": false
+    },
+    {
+      "x": 3611,
+      "y": 3659,
+      "tile": 3,
+      "size": 125,
+      "snow": false
+    },
+    {
+      "x": 2092,
+      "y": 2447,
+      "tile": 3,
+      "size": 134,
+      "snow": false
+    },
+    {
+      "x": 2515,
+      "y": 3486,
+      "tile": 3,
+      "size": 160,
+      "snow": false
+    },
+    {
+      "x": 2798,
+      "y": 2847,
+      "tile": 3,
+      "size": 127,
+      "snow": false
+    },
+    {
+      "x": 2340,
+      "y": 999,
+      "tile": 3,
+      "size": 168,
+      "snow": false
+    },
+    {
+      "x": 1665,
+      "y": 2475,
+      "tile": 3,
+      "size": 160,
+      "snow": false
+    },
+    {
+      "x": 3079,
+      "y": 1305,
+      "tile": 3,
+      "size": 148,
+      "snow": false
+    },
+    {
+      "x": 3497,
+      "y": 613,
+      "tile": 0,
+      "size": 162,
+      "snow": false
+    },
+    {
+      "x": 2431,
+      "y": 3794,
+      "tile": 3,
+      "size": 156,
+      "snow": false
+    },
+    {
+      "x": 3254,
+      "y": 3121,
+      "tile": 3,
+      "size": 125,
+      "snow": false
+    },
+    {
+      "x": 1776,
+      "y": 1833,
+      "tile": 3,
+      "size": 162,
+      "snow": false
+    },
+    {
+      "x": 2654,
+      "y": 3279,
+      "tile": 3,
+      "size": 128,
+      "snow": false
+    },
+    {
+      "x": 3502,
+      "y": 3898,
+      "tile": 3,
+      "size": 150,
+      "snow": false
+    },
+    {
+      "x": 2821,
+      "y": 3931,
+      "tile": 3,
+      "size": 146,
+      "snow": false
+    },
+    {
+      "x": 3211,
+      "y": 3360,
+      "tile": 3,
+      "size": 158,
+      "snow": false
+    },
+    {
+      "x": 3981,
+      "y": 701,
+      "tile": 0,
+      "size": 149,
+      "snow": false
+    },
+    {
+      "x": 2387,
+      "y": 3395,
+      "tile": 3,
+      "size": 148,
+      "snow": false
+    },
+    {
+      "x": 3704,
+      "y": 2318,
+      "tile": 3,
+      "size": 165,
+      "snow": false
+    },
+    {
+      "x": 2291,
+      "y": 3164,
+      "tile": 3,
+      "size": 160,
+      "snow": false
+    },
+    {
+      "x": 3990,
+      "y": 1005,
+      "tile": 0,
+      "size": 128,
+      "snow": false
+    },
+    {
+      "x": 2370,
+      "y": 1714,
+      "tile": 3,
+      "size": 132,
+      "snow": false
+    },
+    {
+      "x": 2641,
+      "y": 3194,
+      "tile": 3,
+      "size": 149,
+      "snow": false
+    },
+    {
+      "x": 2707,
+      "y": 3582,
+      "tile": 3,
+      "size": 146,
+      "snow": false
+    },
+    {
+      "x": 3361,
+      "y": 3143,
+      "tile": 3,
+      "size": 120,
+      "snow": false
+    },
+    {
+      "x": 2996,
+      "y": 772,
+      "tile": 3,
+      "size": 136,
+      "snow": false
+    },
+    {
+      "x": 3486,
+      "y": 3461,
+      "tile": 3,
+      "size": 154,
+      "snow": false
+    },
+    {
+      "x": 4229,
+      "y": 957,
+      "tile": 0,
+      "size": 131,
+      "snow": false
+    },
+    {
+      "x": 1822,
+      "y": 1582,
+      "tile": 3,
+      "size": 170,
+      "snow": false
+    },
+    {
+      "x": 2987,
+      "y": 3496,
+      "tile": 3,
+      "size": 161,
+      "snow": false
+    }
+  ],
+  "paths": [
+    {
+      "a": {
+        "x": 2800,
+        "y": 3710
+      },
+      "b": {
+        "x": 3010,
+        "y": 3130
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 3010,
+        "y": 3130
+      },
+      "b": {
+        "x": 2980,
+        "y": 2420
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2980,
+        "y": 2420
+      },
+      "b": {
+        "x": 2660,
+        "y": 1840
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2660,
+        "y": 1840
+      },
+      "b": {
+        "x": 2520,
+        "y": 1270
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2520,
+        "y": 1270
+      },
+      "b": {
+        "x": 3300,
+        "y": 1080
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 3300,
+        "y": 1080
+      },
+      "b": {
+        "x": 4200,
+        "y": 1320
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 4200,
+        "y": 1320
+      },
+      "b": {
+        "x": 4110,
+        "y": 2010
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 4110,
+        "y": 2010
+      },
+      "b": {
+        "x": 4360,
+        "y": 2940
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 4360,
+        "y": 2940
+      },
+      "b": {
+        "x": 3580,
+        "y": 3280
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 3580,
+        "y": 3280
+      },
+      "b": {
+        "x": 2800,
+        "y": 3710
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2980,
+        "y": 2420
+      },
+      "b": {
+        "x": 2320,
+        "y": 2550
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2320,
+        "y": 2550
+      },
+      "b": {
+        "x": 1460,
+        "y": 2580
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 1460,
+        "y": 2580
+      },
+      "b": {
+        "x": 1970,
+        "y": 2760
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 1970,
+        "y": 2760
+      },
+      "b": {
+        "x": 2510,
+        "y": 2990
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2510,
+        "y": 2990
+      },
+      "b": {
+        "x": 3010,
+        "y": 3130
+      },
+      "width": 82
+    },
+    {
+      "a": {
+        "x": 2917.9389890331527,
+        "y": 3644.9823521996723
+      },
+      "b": {
+        "x": 2940,
+        "y": 3685
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 2849.6041850497922,
+        "y": 3682.654103113576
+      },
+      "b": {
+        "x": 2895,
+        "y": 3765
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 1561.7384615384615,
+        "y": 2615.9076923076923
+      },
+      "b": {
+        "x": 1555,
+        "y": 2635
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 2982.489108910891,
+        "y": 2478.9089108910894
+      },
+      "b": {
+        "x": 3075,
+        "y": 2475
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 2597.031807602793,
+        "y": 1251.2358417377811
+      },
+      "b": {
+        "x": 2615,
+        "y": 1325
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 4194.53531598513,
+        "y": 1361.895910780669
+      },
+      "b": {
+        "x": 4295,
+        "y": 1375
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 4360,
+        "y": 2940
+      },
+      "b": {
+        "x": 4455,
+        "y": 2995
+      },
+      "width": 46
+    },
+    {
+      "a": {
+        "x": 2869.3180385730493,
+        "y": 3671.786209504601
+      },
+      "b": {
+        "x": 2940,
+        "y": 3800
+      },
+      "width": 46
+    }
+  ],
+  "landmarks": [
+    {
+      "id": "landing",
+      "name": "南部绿洲",
+      "x": 2895,
+      "y": 3765,
+      "description": "南部水源是旅程的起点，向北进入峡谷，向西可到遗迹。"
+    },
+    {
+      "id": "ruins",
+      "name": "西侧遗迹",
+      "x": 1555,
+      "y": 2635,
+      "description": "西侧伸入海中的石台与古老遗迹由狭路连接。"
+    },
+    {
+      "id": "canyon",
+      "name": "中央峡谷",
+      "x": 3075,
+      "y": 2475,
+      "description": "峡谷中的道路分向西侧遗迹、北部沙丘和东方高地。"
+    },
+    {
+      "id": "dunes",
+      "name": "北部沙丘",
+      "x": 2615,
+      "y": 1325,
+      "description": "开阔沙丘围绕北方小水源，远处的岩壁标示道路边界。"
+    },
+    {
+      "id": "temple",
+      "name": "东北高台",
+      "x": 4295,
+      "y": 1375,
+      "description": "东北独立高台经曲折坡道抵达，参考原图高地和古建筑的关系。"
+    },
+    {
+      "id": "east",
+      "name": "东部岩谷",
+      "x": 4455,
+      "y": 2995,
+      "description": "东南岩谷保留回环路线，可沿南坡返回绿洲。"
+    }
+  ],
+  "details": [
+    {
+      "x": 4598,
+      "y": 3122,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 1872,
+      "y": 2228,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 2382,
+      "y": 2802,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 1588,
+      "y": 2715,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 3256,
+      "y": 1188,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 3596,
+      "y": 2826,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 2514,
+      "y": 2688,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 2883,
+      "y": 3258,
+      "biome": "oasis",
+      "size": 8
+    },
+    {
+      "x": 4374,
+      "y": 3011,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 3859,
+      "y": 907,
+      "biome": "gold",
+      "size": 7
+    },
+    {
+      "x": 2522,
+      "y": 3359,
+      "biome": "oasis",
+      "size": 11
+    },
+    {
+      "x": 2530,
+      "y": 1074,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 1874,
+      "y": 2136,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 4496,
+      "y": 984,
+      "biome": "gold",
+      "size": 12
+    },
+    {
+      "x": 2384,
+      "y": 1357,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 3977,
+      "y": 2853,
+      "biome": "desert",
+      "size": 10
+    },
+    {
+      "x": 1902,
+      "y": 1399,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 3331,
+      "y": 686,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 2957,
+      "y": 1355,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 3543,
+      "y": 2938,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 3847,
+      "y": 2595,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 1846,
+      "y": 2038,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 2266,
+      "y": 3597,
+      "biome": "oasis",
+      "size": 6
+    },
+    {
+      "x": 3159,
+      "y": 2172,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 3633,
+      "y": 727,
+      "biome": "gold",
+      "size": 5
+    },
+    {
+      "x": 2735,
+      "y": 1405,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 1341,
+      "y": 2917,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 3906,
+      "y": 744,
+      "biome": "gold",
+      "size": 5
+    },
+    {
+      "x": 2307,
+      "y": 1338,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 4678,
+      "y": 3271,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 2650,
+      "y": 3474,
+      "biome": "oasis",
+      "size": 7
+    },
+    {
+      "x": 3012,
+      "y": 1741,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 3995,
+      "y": 2706,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 3823,
+      "y": 573,
+      "biome": "gold",
+      "size": 7
+    },
+    {
+      "x": 2312,
+      "y": 1851,
+      "biome": "desert",
+      "size": 10
+    },
+    {
+      "x": 2168,
+      "y": 1215,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 2701,
+      "y": 3385,
+      "biome": "oasis",
+      "size": 9
+    },
+    {
+      "x": 4535,
+      "y": 3264,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 3758,
+      "y": 2781,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 1712,
+      "y": 2829,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 3901,
+      "y": 1882,
+      "biome": "gold",
+      "size": 10
+    },
+    {
+      "x": 4232,
+      "y": 3072,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 4723,
+      "y": 2507,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 2268,
+      "y": 1124,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 2795,
+      "y": 2858,
+      "biome": "desert",
+      "size": 8
+    },
+    {
+      "x": 3548,
+      "y": 3079,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 3433,
+      "y": 2713,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 4560,
+      "y": 2158,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 4119,
+      "y": 2691,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 3561,
+      "y": 3019,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 2418,
+      "y": 3303,
+      "biome": "oasis",
+      "size": 6
+    },
+    {
+      "x": 3630,
+      "y": 1259,
+      "biome": "gold",
+      "size": 6
+    },
+    {
+      "x": 4417,
+      "y": 1083,
+      "biome": "gold",
+      "size": 10
+    },
+    {
+      "x": 4792,
+      "y": 2880,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 3743,
+      "y": 3662,
+      "biome": "oasis",
+      "size": 9
+    },
+    {
+      "x": 3882,
+      "y": 3485,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 2471,
+      "y": 906,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 3335,
+      "y": 3199,
+      "biome": "oasis",
+      "size": 6
+    },
+    {
+      "x": 3287,
+      "y": 1280,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 2717,
+      "y": 2981,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 4418,
+      "y": 2617,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 3156,
+      "y": 3948,
+      "biome": "oasis",
+      "size": 6
+    },
+    {
+      "x": 3293,
+      "y": 761,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 2251,
+      "y": 1458,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 3581,
+      "y": 2315,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 4123,
+      "y": 914,
+      "biome": "gold",
+      "size": 12
+    },
+    {
+      "x": 1050,
+      "y": 2511,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 3501,
+      "y": 2230,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 2718,
+      "y": 3680,
+      "biome": "oasis",
+      "size": 7
+    },
+    {
+      "x": 4384,
+      "y": 1978,
+      "biome": "gold",
+      "size": 7
+    },
+    {
+      "x": 1766,
+      "y": 2810,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 1797,
+      "y": 1509,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 3469,
+      "y": 1789,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 1873,
+      "y": 2330,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 4209,
+      "y": 3281,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 3960,
+      "y": 2985,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 4403,
+      "y": 1077,
+      "biome": "gold",
+      "size": 10
+    },
+    {
+      "x": 2715,
+      "y": 880,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 3064,
+      "y": 1593,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 3799,
+      "y": 2477,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 2153,
+      "y": 3073,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 4138,
+      "y": 2721,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 4591,
+      "y": 3055,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 3652,
+      "y": 1937,
+      "biome": "desert",
+      "size": 10
+    },
+    {
+      "x": 3376,
+      "y": 1818,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 3896,
+      "y": 2826,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 780,
+      "y": 2518,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 3816,
+      "y": 1694,
+      "biome": "gold",
+      "size": 10
+    },
+    {
+      "x": 1447,
+      "y": 2228,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 1638,
+      "y": 2022,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 3308,
+      "y": 2114,
+      "biome": "desert",
+      "size": 10
+    },
+    {
+      "x": 1286,
+      "y": 2707,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 1637,
+      "y": 2040,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 1599,
+      "y": 2142,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 2617,
+      "y": 3761,
+      "biome": "oasis",
+      "size": 8
+    },
+    {
+      "x": 1743,
+      "y": 2947,
+      "biome": "desert",
+      "size": 10
+    },
+    {
+      "x": 1289,
+      "y": 2822,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 2206,
+      "y": 1036,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 3685,
+      "y": 652,
+      "biome": "gold",
+      "size": 5
+    },
+    {
+      "x": 3002,
+      "y": 3959,
+      "biome": "oasis",
+      "size": 11
+    },
+    {
+      "x": 3419,
+      "y": 1506,
+      "biome": "gold",
+      "size": 9
+    },
+    {
+      "x": 3885,
+      "y": 3549,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 2261,
+      "y": 2487,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 1904,
+      "y": 2495,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 2157,
+      "y": 2776,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 4390,
+      "y": 3029,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 3819,
+      "y": 2377,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 2821,
+      "y": 1441,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 2325,
+      "y": 1531,
+      "biome": "desert",
+      "size": 8
+    },
+    {
+      "x": 2704,
+      "y": 3357,
+      "biome": "oasis",
+      "size": 11
+    },
+    {
+      "x": 4183,
+      "y": 2676,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 2268,
+      "y": 1506,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 4065,
+      "y": 1404,
+      "biome": "gold",
+      "size": 4
+    },
+    {
+      "x": 2262,
+      "y": 2661,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 4157,
+      "y": 2516,
+      "biome": "desert",
+      "size": 10
+    },
+    {
+      "x": 4098,
+      "y": 714,
+      "biome": "gold",
+      "size": 9
+    },
+    {
+      "x": 1074,
+      "y": 2297,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 1556,
+      "y": 2738,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 3102,
+      "y": 2185,
+      "biome": "desert",
+      "size": 8
+    },
+    {
+      "x": 3778,
+      "y": 3703,
+      "biome": "oasis",
+      "size": 4
+    },
+    {
+      "x": 3143,
+      "y": 3686,
+      "biome": "oasis",
+      "size": 12
+    },
+    {
+      "x": 816,
+      "y": 2575,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 3968,
+      "y": 3484,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 4743,
+      "y": 3079,
+      "biome": "desert",
+      "size": 8
+    },
+    {
+      "x": 3786,
+      "y": 2178,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 2309,
+      "y": 3701,
+      "biome": "oasis",
+      "size": 10
+    },
+    {
+      "x": 1200,
+      "y": 2327,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 3478,
+      "y": 3726,
+      "biome": "oasis",
+      "size": 9
+    },
+    {
+      "x": 4351,
+      "y": 1906,
+      "biome": "gold",
+      "size": 10
+    },
+    {
+      "x": 4076,
+      "y": 1060,
+      "biome": "gold",
+      "size": 11
+    },
+    {
+      "x": 3036,
+      "y": 2222,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 859,
+      "y": 2252,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 2423,
+      "y": 1902,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 4714,
+      "y": 2461,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 857,
+      "y": 2626,
+      "biome": "desert",
+      "size": 10
+    },
+    {
+      "x": 2527,
+      "y": 3066,
+      "biome": "oasis",
+      "size": 12
+    },
+    {
+      "x": 4076,
+      "y": 1162,
+      "biome": "gold",
+      "size": 10
+    },
+    {
+      "x": 3609,
+      "y": 1953,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 1995,
+      "y": 1613,
+      "biome": "desert",
+      "size": 4
+    },
+    {
+      "x": 3406,
+      "y": 1701,
+      "biome": "gold",
+      "size": 7
+    },
+    {
+      "x": 2313,
+      "y": 1106,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 3965,
+      "y": 1098,
+      "biome": "gold",
+      "size": 8
+    },
+    {
+      "x": 3572,
+      "y": 3186,
+      "biome": "desert",
+      "size": 9
+    },
+    {
+      "x": 1899,
+      "y": 1456,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 4303,
+      "y": 1668,
+      "biome": "gold",
+      "size": 5
+    },
+    {
+      "x": 2699,
+      "y": 3686,
+      "biome": "oasis",
+      "size": 5
+    },
+    {
+      "x": 1769,
+      "y": 1528,
+      "biome": "desert",
+      "size": 8
+    },
+    {
+      "x": 3308,
+      "y": 3763,
+      "biome": "oasis",
+      "size": 5
+    },
+    {
+      "x": 3170,
+      "y": 2948,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 4303,
+      "y": 934,
+      "biome": "gold",
+      "size": 6
+    },
+    {
+      "x": 3321,
+      "y": 1429,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 3804,
+      "y": 1009,
+      "biome": "gold",
+      "size": 7
+    },
+    {
+      "x": 4150,
+      "y": 3213,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 1653,
+      "y": 2259,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 2472,
+      "y": 836,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 3852,
+      "y": 2131,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 4364,
+      "y": 1640,
+      "biome": "gold",
+      "size": 4
+    },
+    {
+      "x": 3726,
+      "y": 1554,
+      "biome": "gold",
+      "size": 7
+    },
+    {
+      "x": 4372,
+      "y": 1560,
+      "biome": "gold",
+      "size": 5
+    },
+    {
+      "x": 998,
+      "y": 2614,
+      "biome": "desert",
+      "size": 6
+    },
+    {
+      "x": 3894,
+      "y": 3326,
+      "biome": "desert",
+      "size": 12
+    },
+    {
+      "x": 1021,
+      "y": 2690,
+      "biome": "desert",
+      "size": 11
+    },
+    {
+      "x": 4384,
+      "y": 1651,
+      "biome": "gold",
+      "size": 5
+    },
+    {
+      "x": 3243,
+      "y": 2428,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 3642,
+      "y": 2467,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 2669,
+      "y": 1566,
+      "biome": "desert",
+      "size": 5
+    },
+    {
+      "x": 2995,
+      "y": 3503,
+      "biome": "oasis",
+      "size": 10
+    },
+    {
+      "x": 2776,
+      "y": 1877,
+      "biome": "desert",
+      "size": 7
+    },
+    {
+      "x": 3636,
+      "y": 2271,
+      "biome": "desert",
+      "size": 12
+    }
+  ],
+  "sourceHash": "7cf7d4c051669b2701a3792da56d216a51f57627fb9d690bc81c1feef1be6121"
+}

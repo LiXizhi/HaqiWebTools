@@ -7,6 +7,7 @@ import { islandSpawn } from '../js/adventure_world_map_core.js';
 import { riverBlocks } from '../js/adventure_island_layout_core.js';
 import { createTerrainTileCache } from '../js/adventure_large_terrain.js';
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
+content.worldMaps=Object.fromEntries(Object.entries(content.worldMapIndex.islands).map(([id,row])=>[id,JSON.parse(fs.readFileSync(new URL('../'+row.file,import.meta.url)))]));
 
 test('large town preserves authored content, separates encounters and has traversable scenic routes',()=>{
     const before=JSON.stringify(content),world=createWorld('town',content);
@@ -14,7 +15,7 @@ test('large town preserves authored content, separates encounters and has traver
     assert.deepEqual(world,createWorld('town',content));
     assert.ok(world.w*world.h>8*1800*1600);
     assert.ok(distance(...world.encounters)>1200);
-    assert.deepEqual(world.npcs.map(n=>n.id).sort(),Object.values(content.npcs).filter(n=>n.zone==='town').map(n=>n.id).sort());
+    assert.deepEqual(world.npcs.filter(n=>n.id!==36205).map(n=>n.id).sort(),Object.values(content.npcs).filter(n=>n.zone==='town').map(n=>n.id).sort());
     let position=world.center;
     for(const target of [...world.landmarks,...world.npcs,...world.encounters,world.portal]){
         assert.ok(walkable(world,target.x,target.y),target.name||target.id);
@@ -38,11 +39,11 @@ test('old town saves relocate once; large coordinates, retreat and invalid bound
     const original=createAdventure(content);applyAction(original,content,{type:'travel',zone:'town'});
     delete original.worldLayoutVersion;original.position={x:800,y:810};
     const old=JSON.stringify(original),migrated=parseSave(old,content);
-    assert.deepEqual(migrated.position,islandSpawn('town'));assert.equal(JSON.stringify(original),old);
+    assert.deepEqual(migrated.position,islandSpawn('town',content));assert.equal(JSON.stringify(original),old);
     migrated.position={x:4700,y:2700};assert.deepEqual(parseSave(migrated,content).position,migrated.position);
     const invalid=structuredClone(migrated);invalid.position.x=6000;assert.throws(()=>parseSave(invalid,content),/位置/);
-    const future=structuredClone(migrated);future.worldLayoutVersion=2;assert.throws(()=>parseSave(future,content),/地图版本/);
-    applyAction(migrated,content,{type:'retreat'});assert.deepEqual(migrated.position,islandSpawn('town'));
+    const future=structuredClone(migrated);future.worldLayoutVersion=99;assert.throws(()=>parseSave(future,content),/地图版本/);
+    applyAction(migrated,content,{type:'retreat'});assert.deepEqual(migrated.position,islandSpawn('town',content));
 });
 
 test('terrain caches only bounded small tiles, reuses warm frames and invalidates on a new world',()=>{

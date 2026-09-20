@@ -1,6 +1,6 @@
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
-import { worldDimensions } from './adventure_island_layout_core.js';
+import { worldDimensions, mapInfo } from './adventure_island_layout_core.js';
 import { SCHOOLS } from './combat_params_core.js';
 import { normalizeStats, statIdToEntry, clampDeck } from './combat_unit_core.js';
 import * as Pets from './adventure_pets_core.js';
@@ -38,9 +38,9 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
     const save = { schemaVersion: SAVE_VERSION, contentVersion: content.contentVersion, seed: hashSeed(String(seed)),
         name: String(name).trim().slice(0, 16) || '小哈奇', school, appearance: appearance === 'girl' ? 'girl' : 'boy',
         xp: 0, level: 1, inventory: {}, equipment: {}, upgrades: {}, equipmentInstances: [], equipmentGuids: {}, nextEquipmentGuid: 1, cards: {}, deck: [], quests: {},
-        pet: null, zone: 'camp', position: { x: 860, y: 850 }, facing: 3,
+        pet: null, zone: 'camp', position: {...mapInfo('camp',content).initialSpawn}, facing: 3,
         encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
-        visitedTown: false, music: false, tips: {}, revision: 0, bagRulesVersion: 1, worldLayoutVersion: 1 };
+        visitedTown: false, music: false, tips: {}, revision: 0, bagRulesVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion };
     syncProgression(save, content);
     save.deck = recommendedDeck(save, content);
     syncDeckLayouts(save,content);
@@ -293,11 +293,11 @@ export function applyAction(save, content, action) {
         validDeck(save,content,action.deck); save.deck = clone(action.deck); save.tips.deckEdited = true; save.tips.deckEditedWithBag = save.equipment[24] === 24003; syncGoals(save,content); break;
     case 'travel':
         assert(travelStatus(save,content,action.zone).allowed, travelStatus(save,content,action.zone).reason);
-        save.zone = action.zone; save.position = islandSpawn(action.zone); save.worldLayoutVersion = 1;
+        save.zone = action.zone; save.position = islandSpawn(action.zone,content); save.worldLayoutVersion = content.worldMapIndex.layoutVersion;
         if (action.zone === 'town') save.visitedTown = true;
         break;
     case 'retreat':
-        save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); save.position = save.zone === 'camp' ? {x:860,y:850} : islandSpawn(save.zone); break;
+        save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); save.position = {...mapInfo(save.zone,content).initialSpawn}; break;
     default: throw new Error('未知操作');
     }
     migrateBagRules(save,content);
@@ -340,7 +340,7 @@ export function settleEncounter(save,content,battle) {
         // Original water-bubble loot1 = {[17114,1]=20}; draw remains on the encounter's seeded RNG.
         if (monster.id === 'water-bubble' && battle.rng.int(1,100) <= 20) save.inventory[17114] = (save.inventory[17114] || 0) + 1;
         syncProgression(save,content);
-    } else save.position = save.zone === 'camp' ? {x:860,y:850} : islandSpawn(save.zone);
+    } else save.position = {...mapInfo(save.zone,content).initialSpawn};
     save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); save.revision++; return true;
 }
 export function parseSave(raw,content) {
@@ -351,10 +351,14 @@ export function parseSave(raw,content) {
     assert(SCHOOLS.includes(s.school) && islandFor(s.zone),'存档角色无效');
     assert(typeof s.name === 'string' && s.name.length <= 16 && ['boy','girl'].includes(s.appearance),'存档外观无效');
     assert(Number.isSafeInteger(s.xp) && s.xp >= 0 && Number.isInteger(s.seed),'存档经验无效');
-    assert(s.worldLayoutVersion===undefined||s.worldLayoutVersion===1,'地图版本不兼容');
-    const bounds=s.worldLayoutVersion===1?worldDimensions(s.zone):{w:1800,h:1600};
+    const oldLayout=s.worldLayoutVersion??0,currentLayout=content.worldMapIndex.layoutVersion;
+    assert(Number.isInteger(oldLayout)&&oldLayout>=0&&oldLayout<=currentLayout,'地图版本不兼容');
+    const bounds=oldLayout===currentLayout?worldDimensions(s.zone,content):oldLayout===1&&s.zone==='town'?{w:5600,h:4400}:{w:1800,h:1600};
     assert(Number.isFinite(s.position?.x) && Number.isFinite(s.position?.y) && s.position.x >= 0 && s.position.x <= bounds.w && s.position.y >= 0 && s.position.y <= bounds.h,'存档位置无效');
-    if(s.worldLayoutVersion===undefined){if(s.zone==='town')s.position=islandSpawn('town');s.worldLayoutVersion=1;}
+    if(oldLayout<currentLayout){
+        if((oldLayout===0&&s.zone==='town')||!mapInfo(s.zone,content).retainPreviousPosition)s.position=islandSpawn(s.zone,content);
+        s.worldLayoutVersion=currentLayout;
+    }
     for (const field of ['inventory','equipment','upgrades','cards','quests','tips']) assert(s[field] && typeof s[field] === 'object' && !Array.isArray(s[field]),'存档数据不完整');
     for (const [id,n] of Object.entries(s.inventory)) assert(content.items[id] && Number.isInteger(n) && n >= 0,'存档物品无效');
     for (const [slot,id] of Object.entries(s.equipment)) assert(content.items[id]?.slot === Number(slot) && owns(s,id),'存档装备无效');

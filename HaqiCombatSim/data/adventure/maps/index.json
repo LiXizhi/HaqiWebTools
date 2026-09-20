@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "layoutVersion": 2,
+  "islands": {
+    "camp": {
+      "name": "魔法营地",
+      "w": 1800,
+      "h": 1600,
+      "spawn": {
+        "x": 950,
+        "y": 1330
+      },
+      "initialSpawn": {
+        "x": 860,
+        "y": 850
+      },
+      "retainPreviousPosition": true,
+      "file": "data/adventure/maps/camp.json"
+    },
+    "town": {
+      "name": "哈奇岛",
+      "w": 5600,
+      "h": 4400,
+      "spawn": {
+        "x": 3500,
+        "y": 3000
+      },
+      "initialSpawn": {
+        "x": 3500,
+        "y": 3000
+      },
+      "retainPreviousPosition": true,
+      "file": "data/adventure/maps/town.json"
+    },
+    "fire": {
+      "name": "火鸟岛",
+      "w": 5200,
+      "h": 4400,
+      "spawn": {
+        "x": 1500,
+        "y": 3290
+      },
+      "initialSpawn": {
+        "x": 1500,
+        "y": 3290
+      },
+      "retainPreviousPosition": false,
+      "file": "data/adventure/maps/fire.json"
+    },
+    "ice": {
+      "name": "寒冰岛",
+      "w": 5200,
+      "h": 4600,
+      "spawn": {
+        "x": 2270,
+        "y": 3710
+      },
+      "initialSpawn": {
+        "x": 2270,
+        "y": 3710
+      },
+      "retainPreviousPosition": false,
+      "file": "data/adventure/maps/ice.json"
+    },
+    "desert": {
+      "name": "沙漠岛",
+      "w": 5800,
+      "h": 4600,
+      "spawn": {
+        "x": 2800,
+        "y": 3710
+      },
+      "initialSpawn": {
+        "x": 2800,
+        "y": 3710
+      },
+      "retainPreviousPosition": false,
+      "file": "data/adventure/maps/desert.json"
+    },
+    "dark": {
+      "name": "幽暗岛",
+      "w": 5000,
+      "h": 4800,
+      "spawn": {
+        "x": 2320,
+        "y": 3890
+      },
+      "initialSpawn": {
+        "x": 2320,
+        "y": 3890
+      },
+      "retainPreviousPosition": false,
+      "file": "data/adventure/maps/dark.json"
+    }
+  }
+}

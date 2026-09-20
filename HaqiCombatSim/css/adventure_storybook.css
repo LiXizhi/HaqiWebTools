@@ -86,8 +86,6 @@
 .storybook-ui .dialogue-choices { gap:8px; margin-top:14px; }
 .storybook-ui .dialogue-choices button { max-width:100%; overflow-wrap:anywhere; }
 .storybook-ui .text-button { color:#76613c; min-height:44px; }
-.storybook-ui .close-button { min-width:44px; min-height:44px; width:44px; height:44px; padding:0; color:#674826; }
-.storybook-ui .close-button .icon { width:38px; height:38px; }
 .storybook-ui .dialogue-box>.close-button { right:12px; top:9px; }
 .storybook-ui .modal { padding:9px; }
 .storybook-ui .modal-header { background:linear-gradient(90deg,#e0c17e44,transparent); padding:17px 20px; border-color:#cbb17a; }
@@ -223,7 +221,6 @@
 .storybook-ui .dialogue-bottom .primary { max-width:100%; text-align:center; padding:8px 15px; }
 .storybook-ui .dialogue-bottom .muted { text-align:center; }
 .storybook-ui .dialogue-box>.close-button { right:-7px; top:-18px; }
-.storybook-ui .close-button .icon { width:27px; height:27px; }
 .storybook-ui .modal { padding:2px; border-radius:9px; }
 .storybook-ui .modal-header { padding:10px 15px; }
 .storybook-ui .modal-body { padding:14px; }
@@ -335,8 +332,6 @@
 .haqi-app,.haqi-app * { -webkit-user-select:none; user-select:none; }
 .haqi-app :is(input,textarea,[contenteditable=true]) { -webkit-user-select:text; user-select:text; }
 .haqi-app :is(img,canvas) { -webkit-user-drag:none; }
-.haqi-app :is(.close-button,.bag-preview-close),.haqi-app .modal.deck-editor-modal .modal-header .close-button { display:grid; place-items:center; width:48px; height:48px; min-width:48px; min-height:48px; padding:0; font-size:32px; line-height:1; flex-shrink:0; }
-.storybook-ui .close-button .icon { width:40px; height:40px; }
 .storybook-ui .dialogue-box>.close-button { right:8px; top:8px; z-index:1; }
 .haqi-app .bag-preview-close { position:static; align-self:flex-end; }
 .haqi-app .bag-detail:not([data-preview-mode="hover"]) { max-height:calc(100dvh - 16px); overflow-y:auto; }
@@ -400,3 +395,16 @@
  .storybook-ui .dialogue-sequence .dialogue-text { max-height:96px; }
  .storybook-ui .dialogue-sequence .dialogue-bottom { right:20px; bottom:10px; }
 }
+
+/* Shared close control. Keep sizing here, not in individual window skins. */
+.haqi-app .close-button,.haqi-app .modal.deck-editor-modal .modal-header .close-button{
+ display:grid;place-items:center;flex:0 0 var(--gui-close-hit-size,48px);
+ width:var(--gui-close-hit-size,48px);height:var(--gui-close-hit-size,48px);
+ min-width:var(--gui-close-hit-size,48px);min-height:var(--gui-close-hit-size,48px);
+ padding:0;border:0;border-radius:50%;background:transparent;color:#426550;line-height:1;
+}
+.haqi-app .close-button .icon{width:var(--gui-close-icon-size,40px);height:var(--gui-close-icon-size,40px);pointer-events:none}
+.haqi-app .close-button:hover{filter:brightness(1.1)}
+.haqi-app .close-button:focus-visible{outline:2px solid #916524;outline-offset:2px}
+.haqi-app .close-button:active:not(:disabled){transform:scale(.96)}
+@media(prefers-reduced-motion:reduce){.haqi-app .close-button{transition:none}.haqi-app .close-button:active:not(:disabled){transform:none}}

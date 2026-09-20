@@ -51,7 +51,7 @@ export function prepareDebugEdit(save,content,patch) {
         if(key==='petXp'){next.pet.xp=value;next.pet.level=petLevel(value,content);}
     }
     syncProgression(next,content);
-    if(!travelStatus(next,content,next.zone).allowed){next.zone='camp';next.position=islandSpawn('camp');notes.push('等级低于岛屿要求，已返回魔法营地');}
+    if(!travelStatus(next,content,next.zone).allowed){next.zone='camp';next.position=islandSpawn('camp',content);notes.push('等级低于岛屿要求，已返回魔法营地');}
     for(const [slot,id] of Object.entries(next.equipment))if(!canEquip(next,content.items[id],content)){
         delete next.equipment[slot];notes.push(`自动卸下：${content.items[id].name}`);
     }

@@ -2,8 +2,79 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createPveBattle,playPveRound,restorePveBattle} from '../js/combat_pve_core.js';
-import {useCard} from '../js/combat_cards_core.js';
+import {useCard,tickDots} from '../js/combat_cards_core.js';
 import {playerSpec,createAdventure} from '../js/adventure_core.js';
+import {validTargets} from '../js/combat_arena_core.js';
+import {validateRounds,takeDamage} from '../js/combat_unit_core.js';
+test('ice area threat uses source multiplier only in version 5 and permits overrides',()=>{
+ const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
+ const content=read('chapter'),dataset=read('combat'),player=playerSpec(createAdventure(content),content);player.school='ice';
+ for(const version of [4,5])for(const ratio of [2,3]){
+  const arena=createPveBattle({dataset,player,monsters:[content.monsters['fire-scout']],threatRulesVersion:version,adventureParams:{iceAreaAttackThreatRatio:ratio}});
+  const hero=arena.sides.near[0],mob=arena.sides.far[0];mob.hp=10000;
+  useCard(arena,hero,{key:'Ice_AreaAttack',type:'AreaAttack',spellSchool:'ice',accuracy:1000,hitchance:1000,pipcost:0,params:{damage_min:100,damage_max:100,damage_school:'ice'}},mob);
+  const damage=arena.events.find(event=>event.type==='damage').amount;
+  assert.equal(mob.threats.hero,damage*(version===5?ratio:1));
+ }
+});
+test('kids stealth blocks single targeting before cost, allows area and healing and expires',()=>{
+ const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
+ const content=read('chapter'),dataset=read('combat'),player=playerSpec(createAdventure(content),content);
+ const arena=createPveBattle({dataset,player,monsters:[content.monsters['fire-scout']],stealthRulesVersion:1,threatRulesVersion:4});
+ const hero=arena.sides.near[0],mob=arena.sides.far[0];
+ useCard(arena,hero,{key:'Storm_SingleStealth',type:'SingleStealth',spellSchool:'storm',accuracy:1000,pipcost:0,params:{rounds:2}},hero);
+ assert.equal(hero.stealth,true);assert.equal(mob.threats.hero,100);
+ const single={key:'Fire_SingleAttack',type:'SingleAttack',spellSchool:'fire',accuracy:1000,pipcost:1,params:{damage_min:100,damage_max:100}};
+ assert.deepEqual(validTargets(arena,mob,single),[]);
+ const before=JSON.stringify(mob.pips),rng=arena.rng.state();assert.equal(useCard(arena,mob,single,hero).ok,false);
+ assert.equal(JSON.stringify(mob.pips),before);assert.equal(arena.rng.state(),rng);
+ assert.ok(validTargets(arena,mob,{...single,key:'Fire_AreaAttack',type:'AreaAttack'}).includes(hero));
+ assert.ok(validTargets(arena,hero,{...single,key:'Life_SingleHeal',type:'SingleHeal'}).includes(hero));
+ validateRounds(hero);assert.equal(hero.stealth,true);validateRounds(hero);assert.equal(hero.stealth,false);
+ hero.stealth=true;hero.stealthRounds=2;hero.reflectAmount=50;takeDamage(hero,hero.hp);
+ assert.equal(hero.stealth,false);assert.equal(hero.stealthRounds,null);assert.equal(hero.reflectAmount,0);
+});
+test('reflection uses full incoming damage, stacks shields, cannot kill and preserves legacy battles',()=>{
+ const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
+ const content=read('chapter'),dataset=read('combat'),player=playerSpec(createAdventure(content),content);
+ for(const version of [0,1]){
+  const arena=createPveBattle({dataset,player,monsters:[content.monsters['fire-scout']],reflectionRulesVersion:version});
+  const hero=arena.sides.near[0],mob=arena.sides.far[0];
+  hero.stats.damagePct={};hero.stats.damageAbs={};mob.stats.resistPct={};mob.stats.resistAbs={};mob.stats.resilience={all:10000};
+  hero.hp=hero.maxHp=500;mob.hp=mob.maxHp=500;
+  const shield={key:'reflect-test',type:'ReflectionShield',spellSchool:'ice',pipcost:0,accuracy:1000,params:{reflect_amount:15}};
+  useCard(arena,mob,shield,mob);useCard(arena,mob,shield,mob);
+  const attack={key:'attack-test',type:'SingleAttack',spellSchool:'fire',pipcost:0,accuracy:1000,hitchance:1000,params:{damage_min:100,damage_max:100,damage_school:'fire'}};
+  useCard(arena,hero,attack,mob);
+  assert.equal(mob.hp,430);assert.equal(hero.hp,version?400:500);
+  if(version){assert.equal(mob.reflectAmount,0);hero.hp=10;useCard(arena,mob,shield,mob);useCard(arena,hero,attack,mob);assert.equal(hero.hp,1);}
+ }
+});
+test('reflection absorbs DOT without retaliation and respects configurable cap',()=>{
+ const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
+ const content=read('chapter'),dataset=read('combat'),player=playerSpec(createAdventure(content),content);
+ const arena=createPveBattle({dataset,player,monsters:[content.monsters['fire-scout']],reflectionRulesVersion:1});
+ const hero=arena.sides.near[0],mob=arena.sides.far[0];
+ mob.stats.resistPct={};mob.stats.resistAbs={};mob.stats.resilience={all:10000};hero.stats.damagePct={};hero.stats.damageAbs={};
+ hero.hp=hero.maxHp=500;mob.hp=mob.maxHp=500;mob.reflectAmount=30;
+ mob.dots=[{casterId:hero.id,damageSchool:'fire',ticks:[{dmg:100}],cardKey:'dot-test'}];
+ tickDots(arena,mob);assert.equal(mob.hp,430);assert.equal(mob.reflectAmount,0);assert.equal(hero.hp,500);
+ mob.reflectAmount=30;arena.resolved.global.maxReflectDamage=25;
+ useCard(arena,hero,{key:'attack-test',type:'SingleAttack',spellSchool:'fire',pipcost:0,accuracy:1000,hitchance:1000,params:{damage_min:100,damage_max:100,damage_school:'fire'}},mob);
+ assert.equal(hero.hp,475);
+});
+test('reflection checkpoint reproduces events and remaining shield',()=>{
+ const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
+ const content=read('chapter'),dataset=read('combat'),player=playerSpec(createAdventure(content),content);
+ const card={key:'reflection-replay',type:'ReflectionShield',spellSchool:'fire',target:'friendly',pipcost:0,accuracy:1000,params:{reflect_amount:300}};
+ dataset.cards[card.key]=card;player.deck=[card.key];
+ const checkpoint={encounterId:'fire-scout',monster:content.monsters['fire-scout'],player,seed:42,decisions:[],reflectionRulesVersion:1};
+ const battle=restorePveBattle(dataset,content,checkpoint),hero=battle.sides.near[0];
+ const decision={key:card.key,seq:hero.deckSeq.indexOf(card.key),targetId:hero.id};
+ playPveRound(battle,decision);checkpoint.decisions.push(decision);
+ const replay=restorePveBattle(dataset,content,checkpoint);
+ assert.deepEqual(replay.events,battle.events);assert.equal(replay.sides.near[0].reflectAmount,hero.reflectAmount);assert.equal(replay.rng.state(),battle.rng.state());
+});
 test('version 4 real DOT battle replays pending queues and multiple rounds exactly',()=>{
  const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
  const content=read('chapter'),dataset=read('combat'),player=playerSpec(createAdventure(content),content);
@@ -221,7 +292,7 @@ test('new PvE damage hook records direct and splash threat while legacy battles 
  const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
  const content=read('chapter'),dataset=read('combat'),player=playerSpec(createAdventure(content),content),monsters=[content.monsters['fire-scout'],content.monsters['fire-scout']];
  const arena=createPveBattle({dataset,player,monsters,threatRulesVersion:1});
- for(const version of [-1,5,'1',null])assert.throws(()=>createPveBattle({dataset,player,monsters,threatRulesVersion:version}),/版本/);
+ for(const version of [-1,6,'1',null])assert.throws(()=>createPveBattle({dataset,player,monsters,threatRulesVersion:version}),/版本/);
  const healing=createPveBattle({dataset,player,monsters,threatRulesVersion:2});
  const healer=healing.sides.near[0];healer.pips={normal:7,power:0};
  const spell={...healing.resolved.cards.Life_SingleHeal_Level0,pipcost:0,accuracy:1000,params:{heal_min:101,heal_max:101}};
@@ -259,4 +330,14 @@ test('threat ordering, ties, weighted pending queues, taunt and death cleanup',(
  ally.hp=0;advanceThreat(mob,[hero,ally]);assert.equal(mob.threats.ally,undefined);
  assert.equal(threatTarget(mob,[ally,hero],true),hero);
  hero.combatActive=false;assert.equal(threatTarget(mob,[ally,hero]),null);
+});
+test('pure area DOT registers unscaled per-target pending threat only in version 5',()=>{
+ const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
+ const content=read('chapter'),dataset=read('combat'),player=playerSpec(createAdventure(content),content);
+ for(const version of [4,5]){
+  const arena=createPveBattle({dataset,player,monsters:Array(2).fill(content.monsters['fire-scout']),threatRulesVersion:version});
+  for(const mob of arena.sides.far)mob.stats.resilience={all:10000};
+  useCard(arena,arena.sides.near[0],{key:'Fire_AreaDOTAttack',type:'AreaDOTAttack',spellSchool:'fire',pipcost:0,accuracy:1000,params:{damage_school:'fire',dots:'10,20,30'}},arena.sides.far[0]);
+  for(const mob of arena.sides.far)assert.deepEqual(mob.pendingThreats?.hero,version===5?[[10,20,30]]:undefined);
+ }
 });

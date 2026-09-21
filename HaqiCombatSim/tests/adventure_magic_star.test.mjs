@@ -39,6 +39,19 @@ test('incomplete pocket pool does not spend quota or grant inventory',()=>{
  assert.equal(JSON.stringify(save),before);
 });
 const now=Date.parse('2026-09-21T00:00:00Z'),access={keepworkVip:true,expiresAt:'2027-09-21T00:00:00Z',now};
+test('combat experience snapshots source VIP ratio, rounds up and preserves legacy rewards',()=>{
+ const config=read('adventure/chapter.json');config.magicStar=content.magicStar;config.monsters['fire-scout'].xp=101;
+ for(const [member,legacy,expected] of [[{},false,101],[access,false,202],[{...access,expiresAt:'2026-10-01'},false,157],[access,true,101]]){
+  const save=A.createAdventure(config);A.beginEncounter(save,config,'fire-scout',member);
+  if(legacy)delete save.pendingEncounter.magicStarExperiencePercent;
+  const restored=A.parseSave(JSON.stringify(save),config),seed=restored.pendingEncounter.seed;
+  A.settleEncounter(restored,config,{finished:true,seed,winner:'near'});
+  assert.equal(restored.xp,expected);assert.equal(restored.pendingEncounter,null);
+  assert.throws(()=>A.settleEncounter(restored,config,{finished:true,seed,winner:'near'}),/结束/);assert.equal(restored.xp,expected);
+ }
+ const invalid=A.createAdventure(config);A.beginEncounter(invalid,config,'fire-scout',access);invalid.pendingEncounter.magicStarExperiencePercent=999;
+ assert.throws(()=>A.parseSave(invalid,config),/经验倍率/);
+});
 test('combat bonuses use source level table and reject expired or unconfirmed access',()=>{
  const stats=normalizeStats();applyMagicStarCombat(stats,content,magicStarCombatLevel(content,access));
  assert.equal(stats.magicStarHpPct,10);assert.equal(stats.hpPct,0);assert.equal(stats.damagePct.all,20);assert.equal(stats.resistPct.all,9);

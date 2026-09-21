@@ -1,5 +1,11 @@
 # 公式与常量 ↔ Lua 源码对照表
 
+2026-09-21追加：card_server.lua L3312–3337普通吸收后记录整次ReflectDamage并扣reflect_amount，L3362–3398反射经过攻击者wards、抗性、攻击者自身穿透、全局光环和攻击者输出/接收权重，绝对攻防不参与；普通吸收后限制MAX_REFLECT_DAMAGE且最多HP-1，不递归。L1881–1890 DOT只消耗反射容量。mob_server.lua L2409反射容量叠加；kids上限4500由card_server.lua L193确定。本地reflectionRulesVersion=1启用，旧遭遇保留吸收近似。
+
+隐身：card_server.lua L2340以卡名area/arena/singleheal豁免目标限制，L6043设置回合并使用stun仇恨/20%溅射；mob_server.lua L3215–3240定义到期，L2312受伤退出仅teen。本轮只为kids冒险新遭遇启用stealthRulesVersion=1，未宣称teen迁移完成。L4465冰系普通群攻2倍仇恨、L4307群体DOT沿同一预计算分支，新threatRulesVersion=5启用。
+
+会员经验：PowerItemManager.lua L84、L1234–1254的kids额外比例0.5–1，数组索引为星级+1；arena_server.lua L6343以ceil(original_exp*(1+exp_scale_acc))结算。本地复用magic-star.json的总百分比exp，新遭遇冻结magicStarExperiencePercent，旧遭遇默认100；不复刻网吧、活动时段与经验药剂叠加。
+
 2026-09-21仇恨版本4：card_server.lua L3738–3765单疗HOT、L4142–4175攻击HOT预计算ceil(heal*0.3)；L5070–5094群疗HOT每人每跳ceil(ceil(heal*0.2)*0.3)。L4090–4136纯DOT护符逐次取整后取abs，L3090–3120单攻DOT保留符号，L4333–4368群攻DOT只追加给受击怪物，不使用本地伤害序列0.83旁目标系数。mob_server.lua L2976–3000从队列尾出队，card_server.lua L1735在怪物UseCard入口推进，目标已选定。player_server.lua L4747防御kids权重3、taunt权重5；mob_server.lua L2927–2948只将即时量乘权重，延迟值未乘，本地版本4照此实现。card_server.lua L3196成功眩晕目标500、L5471移除正面盾/偷盾100与20%溅射、L6448反射盾100、L6666对称盾200；L4792群能量每受益者50，L4940群净化每受益者100；L4460–4474群攻仇恨在最终输出/接收权重前且无溅射。原版死亡清理分支疑似缺少写回，本地保留既有清表规则，作为明确差异。
 
 2026-09-21效果/群疗仇恨：card_server.lua L1304 GetEffectThreat直接读取CombatThreatConfig.xml。L5233/L5273光环全体200；L5316迷你光环目标80/其他ceil(80*0.2)；L5387起移除正面护符及偷护符目标100/其他20，移除负面护符全体100；L6310起Charms与L6492起Wards目标80/其他16；L6395群护符与L6770群盾全体60；L5531吸收全体400。L5124起群疗惩罚前逐人GetDamageThreat累计，带吸收每人加400，L5185最后ceil(total*0.2)。新仇恨版本3启用，旧版无新增钩子。AreaHealWithHOT目前只有即时部分接通，HOT延迟仇恨仍未完成。

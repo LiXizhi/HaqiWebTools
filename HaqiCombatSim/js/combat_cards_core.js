@@ -56,6 +56,9 @@ export function isAttackCard(card) {
 export function isHealCard(card) {
     return /Heal|^HoT$|^Revive$/.test(card.type);
 }
+export function canTargetStealth(card,target) {
+    return !target.stealth||/area|arena|singleheal/i.test(card.key);
+}
 
 /** 期望伤害（不含目标属性），用于 UI/简单 Bot 排序 */
 export function expectedBaseDamage(card) {
@@ -138,7 +141,7 @@ function applyDamage(arena, caster, target, card, opts) {
     }
 
     const areaThreat=arena.threatRulesVersion>=4&&opts.areaThreat;
-    if(areaThreat)arena.onDamageThreat?.(caster,target,opts.halve?Math.ceil(damage/2):damage,true,card.type==='AreaAttackWithExtraThreat'?Number(card.params.threat_ratio??1):1);
+    if(areaThreat)arena.onDamageThreat?.(caster,target,opts.halve?Math.ceil(damage/2):damage,true,card.type==='AreaAttackWithExtraThreat'?Number(card.params.threat_ratio??1):arena.threatRulesVersion>=5&&card.type==='AreaAttack'&&caster.school==='ice'?R.adventure.iceAreaAttackThreatRatio:1);
     damage = Math.ceil(damage * U.getOutputDamageFinalWeight(caster, arena, R));
     damage = Math.ceil(damage * U.getReceiveDamageFinalWeight(target, school, R));
     if (opts.maxDamage !== undefined && damage > opts.maxDamage) damage = opts.maxDamage;
@@ -146,9 +149,25 @@ function applyDamage(arena, caster, target, card, opts) {
 
     if(!areaThreat)arena.onDamageThreat?.(caster,target,damage);
     damage = U.absorbUnitDamage(target, damage);
+    const reflected = target.reflectAmount > 0 && damage > 0 ? damage : 0;
+    if(reflected){const absorbed=Math.min(target.reflectAmount,damage);target.reflectAmount-=absorbed;damage-=absorbed;}
     U.takeDamage(target, damage);
     caster.totals.damageDealt += damage;
     emit(arena, { type: 'damage', caster: caster.id, target: target.id, card: card.key, school, amount: damage, mark, label: opts.label || '' });
+    if(reflected){
+        const reflectBuffs={list:[]};
+        const reflectSchool=U.processDamageAgainstWards(caster,R,reflectBuffs.list,school);
+        reflectBuffs.resistPercent=U.getResist(caster,reflectSchool,R);
+        reflectBuffs.spellPenetration=U.getSpellPenetration(caster,reflectSchool);
+        reflectBuffs.spellPenetrationReceive=U.getSpellPenetrationReceive(caster);
+        if(arena.aura?.boostSchool===reflectSchool&&arena.aura.boostDamage)reflectBuffs.list.push(arena.aura.boostDamage);
+        let amount=damageExpression(reflected,0,reflectBuffs,version,R.global.maxSpellPenetration);
+        amount=Math.ceil(amount*U.getOutputDamageFinalWeight(caster,arena,R));
+        amount=Math.ceil(amount*U.getReceiveDamageFinalWeight(caster,reflectSchool,R));
+        amount=Math.max(0,Math.min(U.absorbUnitDamage(caster,amount),R.global.maxReflectDamage,caster.hp-1));
+        U.takeDamage(caster,amount);target.totals.damageDealt+=amount;
+        emit(arena,{type:'damage',caster:target.id,target:caster.id,card:card.key,school:reflectSchool,amount,mark:'',label:'reflection'});
+    }
     return { damage, mark, school };
 }
 
@@ -198,6 +217,7 @@ function buildDotSequence(arena, caster, target, card, dotsStr, buffsList, sibli
     seq.ticks.reverse();
     if(['DOTAttack','DOTAttackWithHOT'].includes(card.type))arena.onDotThreat?.(caster,target,seq.ticks.map(tick=>buffsList.reduce((damage,boost)=>Math.ceil(damage*(100+boost)/100),tick.dmg)));
     if(['SingleAttackWithDOT','AreaAttackWithDOT'].includes(card.type))arena.onDotThreat?.(caster,target,[...threatTicks].reverse(),card.type==='AreaAttackWithDOT',false);
+    if(arena.threatRulesVersion>=5&&card.type==='AreaDOTAttack')arena.onDotThreat?.(caster,target,[...threatTicks].reverse(),true,false);
     return seq;
 }
 
@@ -215,6 +235,7 @@ export function tickDots(arena, unit) {
         dmg = Math.ceil(dmg * (dot.outputWeight || 1));
         dmg = Math.ceil(dmg * U.getReceiveDamageFinalWeight(victim, school, R));
         dmg = U.absorbUnitDamage(victim, dmg);
+        if(victim.reflectAmount>0&&dmg>0){const absorbed=Math.min(victim.reflectAmount,dmg);victim.reflectAmount-=absorbed;dmg-=absorbed;}
         U.takeDamage(victim, dmg);
         const caster = arena.unitsById[dot.casterId];
         if (caster) caster.totals.damageDealt += dmg;
@@ -605,8 +626,13 @@ handlers.Absorb = absorbCard;
 handlers.Absorb_Adv = absorbCard;
 handlers.AreaAbsorb = absorbCard;
 
-/** ReflectionShield：以吸收层近似（反弹部分忽略，记入 unsupported 提示） */
 handlers.ReflectionShield = (arena, caster, card, target) => {
+    if(arena.reflectionRulesVersion===1){
+        const amount=Number(card.params.reflect_amount||0);
+        target.reflectAmount=(target.reflectAmount||0)+amount;
+        emit(arena,{type:'absorb',caster:caster.id,target:target.id,card:card.key,amount,label:'reflection'});
+        return;
+    }
     U.appendAbsorb(target, Number(card.params.reflect_amount || 0), 0);
     emit(arena, { type: 'absorb', caster: caster.id, target: target.id, card: card.key, amount: Number(card.params.reflect_amount || 0), label: 'reflect≈absorb' });
 };
@@ -691,10 +717,16 @@ handlers.SingleTaunt = (arena,caster,card,target) => {
 handlers.AreaTaunt = (arena,caster,card) => {
     for(const target of aliveEnemies(arena,caster))handlers.SingleTaunt(arena,caster,card,target);
 };
+handlers.SingleStealth = (arena,caster,card,target) => {
+    target.stealth=true;
+    target.stealthRounds=card.params.rounds===undefined?null:Number(card.params.rounds);
+    arena.onEffectThreat?.(caster,target,'Stun');
+    emit(arena,{type:'stealth',caster:caster.id,target:target.id,card:card.key,rounds:target.stealthRounds});
+};
 
 /** 未实现列表（透明记录） */
 export const UNSUPPORTED_TYPES = [
-    'Random', 'Enrage', 'Fizzle', 'PickPet', 'CatchPet', 'SingleFreeze', 'SingleStealth', 'SingleGuardianWithImmolate',
+    'Random', 'Enrage', 'Fizzle', 'PickPet', 'CatchPet', 'SingleFreeze', 'SingleGuardianWithImmolate',
     'ConversePositiveWard', 'Revive', 'Dead', 'AreaControl',
 ];
 
@@ -724,12 +756,16 @@ function registerUnsupported(arena, card) {
 export function useCard(arena, caster, card, target, seq) {
     const R = arena.resolved;
     arena.advanceCasterThreat?.(caster);
-    if (!handlers[card.type]) {
+    if (!handlers[card.type]||(card.type==='SingleStealth'&&arena.stealthRulesVersion!==1)) {
         registerUnsupported(arena, card);
         emit(arena, { type: 'unsupported', caster: caster.id, card: card.key, cardType: card.type });
         return { ok: false, unsupported: true };
     }
     // Stance 校验（card_server.lua L1812-1823）
+    if(arena.stealthRulesVersion===1&&target&&!canTargetStealth(card,target)){
+        emit(arena,{type:'pass',caster:caster.id,reason:'stealth'});
+        return {ok:false};
+    }
     if (card.type === 'Stance' && card.spellSchool !== caster.school && card.spellSchool !== 'balance') {
         emit(arena, { type: 'pass', caster: caster.id, reason: 'stance_school' });
         return { ok: false };

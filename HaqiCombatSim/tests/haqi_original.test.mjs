@@ -37,6 +37,13 @@ test('original reader uses authenticated identity and returns no session credent
     assert.ok(source.isClosed());
 });
 
+test('product selection requests only listed equipment and card bags', async () => {
+    const source=fixture();source.responses['Items.GetMyBags'].bagids='0,1,2,24,25,99';
+    const result=await readOriginalCharacter({...source.options,requestedBags:[0,1,24,25]});
+    assert.deepEqual(result.inventory.map(row=>row.bag),[0,1,24,25]);
+    assert.deepEqual(source.calls.filter(row=>row.name==='Items.GetItemsInBag').map(row=>row.params.bag),[0,1,24,25]);
+});
+
 test('original reader selects only linked roles before authentication', async () => {
     const source = fixture();
     source.responses['Users.GetNIDByOtherAccountID'] = { nid: '456,123' };

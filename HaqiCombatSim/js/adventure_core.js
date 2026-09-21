@@ -373,7 +373,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
     if(initialParty)assert(initialParty.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
-        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, progressionRulesVersion:3, threatRulesVersion:4 };
+        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1 };
     save.pendingEncounter.runes = runeInventory(save,content);
     if(content.pets){
         const party=initialParty;
@@ -414,7 +414,7 @@ export function settleEncounter(save,content,battle) {
     const encounter = content.encounters.find(e => e.id === pending.encounterId), monster = pending.monster || content.monsters[encounter.monsterId];
     if(content.pets)settleParty(save,content,battle);
     if (battle.winner === 'near') {
-        save.xp += monster.xp; save.inventory[100] = (save.inventory[100] || 0) + monster.coins;
+        save.xp += Math.ceil(monster.xp*(pending.magicStarExperiencePercent??100)/100); save.inventory[100] = (save.inventory[100] || 0) + monster.coins;
         if (monster.goalId) signal(save,content,'defeat',monster.goalId);
         // Original water-bubble loot1 = {[17114,1]=20}; draw remains on the encounter's seeded RNG.
         if (monster.id === 'water-bubble' && battle.rng.int(1,100) <= 20) save.inventory[17114] = (save.inventory[17114] || 0) + 1;
@@ -468,9 +468,12 @@ export function parseSave(raw,content) {
     assert(travelStatus({...s,pendingEncounter:null},content,s.zone).allowed,'存档目的地无效');
     if (s.pendingEncounter) {
         assert(s.pendingEncounter.equipmentStatsVersion===undefined||s.pendingEncounter.equipmentStatsVersion===1,'装备属性规则版本无效');
+        assert(s.pendingEncounter.reflectionRulesVersion===undefined||s.pendingEncounter.reflectionRulesVersion===1,'反射规则版本无效');
+        assert(s.pendingEncounter.stealthRulesVersion===undefined||s.pendingEncounter.stealthRulesVersion===1,'隐身规则版本无效');
         assert(s.pendingEncounter.progressionRulesVersion===undefined||[1,2,3].includes(s.pendingEncounter.progressionRulesVersion),'成长属性规则版本无效');
-        assert(s.pendingEncounter.threatRulesVersion===undefined||[1,2,3,4].includes(s.pendingEncounter.threatRulesVersion),'仇恨规则版本无效');
+        assert(s.pendingEncounter.threatRulesVersion===undefined||[1,2,3,4,5].includes(s.pendingEncounter.threatRulesVersion),'仇恨规则版本无效');
         assert(s.pendingEncounter.magicStarLevel===undefined||Number.isInteger(s.pendingEncounter.magicStarLevel)&&s.pendingEncounter.magicStarLevel>=0&&s.pendingEncounter.magicStarLevel<=10,'魔法星战斗等级无效');
+        assert(s.pendingEncounter.magicStarExperiencePercent===undefined||s.pendingEncounter.magicStarExperiencePercent===(s.pendingEncounter.magicStarLevel?content.magicStar?.levels[s.pendingEncounter.magicStarLevel]?.exp:100),'魔法星经验倍率无效');
         if(s.pendingEncounter.runes!==undefined){
             const runes=s.pendingEncounter.runes;
             assert(Array.isArray(runes)&&new Set(runes.map(row=>row.itemId)).size===runes.length,'存档符文无效');
@@ -489,6 +492,7 @@ export function parseSave(raw,content) {
             const expected=Pets.petParams(petContent),saved=s.pendingEncounter.adventureParams;
             const threatVersion=s.pendingEncounter.threatRulesVersion||0;
             const optional=new Set([
+                ...(threatVersion<5?['iceAreaAttackThreatRatio']:[]),
                 ...(threatVersion<1?['damageThreatRatio','splashDamageThreatRatio']:[]),
                 ...(threatVersion<2?['singleHealThreatRatio']:[]),
                 ...(threatVersion<3?['areaHealThreatRatio','effectThreatGlobal','effectThreatMiniAura','effectThreatRemovePositiveCharm','effectThreatRemoveNegativeCharm','effectThreatStealCharm','effectThreatCharms','effectThreatWards','effectThreatAreaCharm','effectThreatAreaWard','effectThreatAbsorb']:[]),

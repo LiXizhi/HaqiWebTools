@@ -3,7 +3,7 @@
 // PvP 每个 turn 只有一方行动（currentPlayingSide 交替）；nRemainingRounds 每 turn 减 1。
 import { createRng, hashSeed } from './rng_core.js';
 import * as U from './combat_unit_core.js';
-import { useCard, tickDots, tickHots, cardTargetKind } from './combat_cards_core.js';
+import { useCard, tickDots, tickHots, cardTargetKind, canTargetStealth } from './combat_cards_core.js';
 
 export const SIDES = ['near', 'far'];
 
@@ -107,10 +107,11 @@ export function actingUnits(arena) {
 /** 目标是否对该卡合法 */
 export function validTargets(arena, unit, card) {
     const kind = cardTargetKind(card);
-    if (kind === 'self') return [unit];
-    if (kind === 'friendly') return alliesOf(arena, unit).filter(U.isAlive);
-    if (kind === 'all') return [...enemiesOf(arena, unit).filter(U.isAlive), ...alliesOf(arena, unit).filter(U.isAlive)];
-    return enemiesOf(arena, unit).filter(U.isAlive);
+    const available=target=>U.isAlive(target)&&(arena.stealthRulesVersion!==1||canTargetStealth(card,target));
+    if (kind === 'self') return available(unit)?[unit]:[];
+    if (kind === 'friendly') return alliesOf(arena, unit).filter(available);
+    if (kind === 'all') return [...enemiesOf(arena, unit).filter(available), ...alliesOf(arena, unit).filter(available)];
+    return enemiesOf(arena, unit).filter(available);
 }
 
 /** 手牌中可施放的卡 [{seq, key, card}] */

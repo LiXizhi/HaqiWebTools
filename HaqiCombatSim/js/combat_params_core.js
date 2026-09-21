@@ -44,6 +44,7 @@ export function defaultParams(version = 'teen') {
         // SueSue_equipment_extend_panel.lua GetAllOdds: kids level 1–5.
         gems: { odds: [100,80,60,40,25] },
         adventure: {
+            iceAreaAttackThreatRatio:2,
             damageThreatRatio:1, splashDamageThreatRatio:0.05,
             singleHealThreatRatio:0.3,
             areaHealThreatRatio:0.2,
@@ -76,6 +77,7 @@ export function defaultParams(version = 'teen') {
             xpGrowth: 300, petXpStep: 30,
         },
         global: {
+            maxReflectDamage: teen ? 5000 : 4500,
             maxPips: teen ? 14 : 7,
             maxRounds: teen ? 80 : 100,
             handSize: 8,

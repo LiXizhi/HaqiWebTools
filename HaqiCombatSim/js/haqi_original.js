@@ -11,7 +11,7 @@ function checkedResponse(value, name) {
     return value;
 }
 
-export async function readOriginalCharacter({ sdk, fetchImpl = globalThis.fetch, connect = connectHaqiRest, signal, selectRole, onProgress = () => {} }) {
+export async function readOriginalCharacter({ sdk, fetchImpl = globalThis.fetch, connect = connectHaqiRest, signal, selectRole, requestedBags, onProgress = () => {} }) {
     const token = sdk?.token;
     if (!token) throw Error('请先登录 Keepwork。');
     const controller = new AbortController();
@@ -86,9 +86,11 @@ export async function readOriginalCharacter({ sdk, fetchImpl = globalThis.fetch,
         if (typeof bags.bagids !== 'string' || !/^(?:\d+(?:,\d+)*)?$/.test(bags.bagids)) throw Error('原服背包目录格式暂不支持。');
         const bagIds = bags.bagids ? bags.bagids.split(',').map(Number) : [];
         if (bagIds.length > 100 || bagIds.some(bag => !Number.isSafeInteger(bag)) || new Set(bagIds).size !== bagIds.length) throw Error('原服背包目录无效。');
+        if (requestedBags !== undefined && (!Array.isArray(requestedBags) || !requestedBags.length || requestedBags.some(bag => !Number.isSafeInteger(bag) || bag < 0))) throw Error('读取背包范围无效。');
+        const selectedBags = requestedBags === undefined ? bagIds : bagIds.filter(bag => requestedBags.includes(bag));
         const inventory = [];
-        for (const bag of bagIds) {
-            onProgress(`正在读取背包 ${inventory.length + 1}/${bagIds.length}…`);
+        for (const bag of selectedBags) {
+            onProgress(`正在读取背包 ${inventory.length + 1}/${selectedBags.length}…`);
             const result = await request('Items.GetItemsInBag', { nid, bag });
             if (!Array.isArray(result.items) || result.items.length > 10000) throw Error('原服背包内容格式暂不支持。');
             inventory.push({ bag, items: result.items.map(item => ({ guid: item.guid, gsid: item.gsid, position: item.position, copies: item.copies, clientdata: item.clientdata, serverdata: item.serverdata })) });

@@ -1,3 +1,4 @@
+import {openOriginalImport} from './haqi_import.js';
 import {persistReward} from './adventure_reward_persistence.js';
 import { createMembershipClient } from './adventure_membership.js';
 import { rewardSnapshot, rewardChanges } from './adventure_reward_feedback_core.js';
@@ -240,7 +241,7 @@ function paintRoles() {
             roleStore.replace(roles.conflict.catalog,roles.conflict.revision);roles.conflict=null;roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
             roles.message='已加载云端角色，本地进度已备份。';
         }),
-        importOriginal:()=>toast('《魔法哈奇》2009客户端数据导入尚未接入。装备、宝石和强化校验完成后开放。'),
+        importOriginal:beginOriginalImport,
     });
 }
 async function roleOperation(label,fn) {
@@ -256,6 +257,18 @@ function activateRole(id) {
     selected=null;discarded=[];shopView.page=0;petView.selected=null;
     enterWorld(restored.save,restored.battle);
 }
+function beginOriginalImport() {
+    if(roles.busy||roles.conflict||cloud.busy)return;
+    if(roleStore.catalog.roles.length>=MAX_ROLES){toast('最多可创建5个主角。');return;}
+    creationPreview?.stop();
+    const epoch=roleEpoch,owner=roleStore.owner;
+    openOriginalImport({root:nodes.entry,overlay:nodes.overlay,assets,
+        isCurrent:()=>stage==='title'&&epoch===roleEpoch&&owner===roleStore.owner&&!roles.conflict,
+        commit:(imported,sourceOwner)=>{
+            if(owner&&owner!==sourceOwner)throw Error('当前角色账号与原服账号不同，请切换账号后重试。');
+            roleStore.create(imported);titleView='roles';toast('角色已导入并保存在本机，可从角色列表进入。');
+        },onClose:()=>paintTitle()});
+}
 function newRoleForm() {
     if(roles.busy)return;
     if(roleStore.catalog.roles.length>=MAX_ROLES){toast('最多可创建5个主角。');return;}
@@ -268,7 +281,7 @@ function paintCreation() {
         draft:roleDraft,busy:roles.busy,owner:roleStore.owner,
         roles:roleStore.catalog.roles.length?()=>{titleView='roles';paintRoles();}:null,
         login:openCloud,cloud:openCloud,
-        importOriginal:()=>toast('哈奇2009角色导入尚未开放。'),
+        importOriginal:beginOriginalImport,
         previewChoices:school=>tutorialCards(assets,school),
         preview:(...args)=>creationPreview.play(...args),stopPreview:()=>creationPreview.stop(),pausePreview:()=>creationPreview.togglePause(),
         create:options=>roleOperation('正在创建角色…',async()=>{

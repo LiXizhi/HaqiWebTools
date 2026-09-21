@@ -1,0 +1,14 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>原服导入验收（内存）</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app"><div id="entry"></div><div id="overlay" class="overlay"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {openOriginalImport} from '../../js/haqi_import.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources();
+window.importEvidence={commits:0};
+openOriginalImport({root:document.querySelector('#entry'),overlay:document.querySelector('#overlay'),assets,isCurrent:()=>true,
+loadSDK:async()=>({token:'fixture-only',getUserProfile:async()=>({username:new URLSearchParams(location.search).has('changed-owner')?'other':'fixture'})}),
+read:async({requestedBags})=>{window.importEvidence.bags=requestedBags;return {owner:'fixture',name:'预览验收',school:'fire',level:10,inventory:[{bag:0,items:[{guid:88,gsid:1912,position:11,copies:1,serverdata:{addlel:2}}]}]};},
+commit:save=>{window.importEvidence.commits++;window.importEvidence.name=save.name;},
+onClose:()=>{document.querySelector('#entry').textContent='已退出（没有写入浏览器存档）';}});
+</script></body></html>

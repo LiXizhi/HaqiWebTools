@@ -25,6 +25,11 @@ test('import preview presents differences safely and only confirms on explicit a
     renderOriginalImport(root,state,cb);
     assert.equal(confirmed,0);assert.ok(root.all().some(n=>n.tag==='li'&&n.textContent===warning));
     assert.equal(root.all().some(n=>n.tag==='img'),false);
+    assert.equal(root.all().find(n=>n.textContent==='确认导入为新角色').disabled,true);
+    state.reviewed={inventory:true};renderOriginalImport(root,state,cb);
+    assert.equal(root.all().find(n=>n.textContent==='确认导入为新角色').disabled,true);
+    state.reviewed.deck=true;renderOriginalImport(root,state,cb);
+    assert.equal(root.all().find(n=>n.textContent==='确认导入为新角色').disabled,false);
     root.all().find(n=>n.textContent==='确认导入为新角色').onclick();assert.equal(confirmed,1);
     state.busy='正在保存…';renderOriginalImport(root,state,cb);
     assert.equal(root.all().find(n=>n.textContent==='确认导入为新角色').disabled,true);

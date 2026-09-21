@@ -392,6 +392,8 @@ export function takeDamage(unit, points) {
         unit.miniaura = null;
         unit.stance = null;
         unit.stunned = false;
+        if(unit.reflectAmount!==undefined)unit.reflectAmount=0;
+        if(unit.stealth!==undefined){unit.stealth=false;unit.stealthRounds=null;}
         unit.pips.normal = 0;
         unit.pips.power = 0;
         unit.picked = null;
@@ -826,6 +828,7 @@ export function validateCooldown(unit) {
 
 /** ValidateMiniAura / ValidateStandingEffects / ValidateStance / ValidateProtectRounds */
 export function validateRounds(unit) {
+    if(unit.stealthRounds>0&&--unit.stealthRounds===0){unit.stealth=false;unit.stealthRounds=null;}
     if (unit.miniaura) {
         unit.miniaura.rounds -= 1;
         if (unit.miniaura.rounds <= 0) unit.miniaura = null;

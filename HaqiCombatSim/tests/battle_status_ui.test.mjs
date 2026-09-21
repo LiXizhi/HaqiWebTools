@@ -29,6 +29,12 @@ test('corner status preserves charm, ward, periodic and stun information',()=>{
     const u={...unit('hero','near'),charms:[1],wards:[{id:2}],dots:[{}],hots:[{}],stunned:true};
     assert.deepEqual(battleStatusLabels(u,{resolved:{charms:{1:{desc:'提升攻击'}},wards:{2:{desc:'抵御伤害'}}}}),['提升攻击','抵御伤害','持续伤害','持续治疗','眩晕']);
 });
+test('corner status exposes reflection capacity and remaining stealth rounds',()=>{
+    const current={...unit('hero','near'),reflectAmount:250,stealth:true,stealthRounds:2};
+    assert.deepEqual(battleStatusLabels(current,{resolved:{}}),['反射盾 250','隐身 · 2回合']);
+    current.reflectAmount=0;current.stealthRounds=null;
+    assert.deepEqual(battleStatusLabels(current,{resolved:{}}),['隐身']);
+});
 test('variant qualities use a thick bottom strip without a whole-card outline',()=>{
     for(const color of [null,'#93ee87','#80c9ff','#d09aff','#ffdb70']){
         const rects=[],strokes=[];

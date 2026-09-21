@@ -7,6 +7,8 @@ export function battleStatusLabels(unit,battle) {
         ...unit.charms.filter(id=>id>0).map(id=>battle.resolved.charms[id]?.desc),
         ...unit.wards.filter(w=>w.id>0).map(w=>battle.resolved.wards[w.id]?.desc),
         unit.dots.length?'持续伤害':'',unit.hots.length?'持续治疗':'',unit.stunned?'眩晕':'',
+        unit.reflectAmount>0?`反射盾 ${unit.reflectAmount}`:'',
+        unit.stealth?`隐身${unit.stealthRounds>0?` · ${unit.stealthRounds}回合`:''}`:'',
     ].filter(Boolean);
 }
 

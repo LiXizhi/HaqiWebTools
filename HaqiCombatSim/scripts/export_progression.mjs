@@ -1,4 +1,6 @@
 import {readFile,writeFile} from 'node:fs/promises';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {parseXml,findAll} from './lib/xml_lite.mjs';
 const source=new URL('../../../config/Aries/',import.meta.url);
 const load=async path=>parseXml(await readFile(new URL(path,source),'utf8'));
@@ -16,5 +18,8 @@ const giftItems=Object.fromEntries(gifts.map(({itemId})=>{
  return [itemId,{id:itemId,name:giftNames[itemId],kind:0,stats:{},description:'魔法口袋礼物，使用功能暂未开放。'}];
 }));
 if(!Object.keys(sets).length||!Object.keys(professions).length||!gifts.length)throw Error('Empty progression export');
-await writeFile(new URL('../data/adventure/progression-bonuses.json',import.meta.url),JSON.stringify({source:'config/Aries: ItemSet/AllItemSetAttr.xml, Combat/DragonTotemStats.xml, VIP/MagicStar_gifts.xml',components:{},sets,professions,gifts,giftItems},null,2)+'\n');
+const members=JSON.parse(execFileSync(process.env.PYTHON||'python',[fileURLToPath(new URL('./export_set_components.py',import.meta.url))],{encoding:'utf8'}));
+const components=Object.fromEntries(Object.entries(members.components).filter(([,setId])=>sets[setId]));
+if(!Object.keys(components).length)throw Error('No matching set components');
+await writeFile(new URL('../data/adventure/progression-bonuses.json',import.meta.url),JSON.stringify({source:'config/Aries: ItemSet/AllItemSetAttr.xml, Combat/DragonTotemStats.xml, VIP/MagicStar_gifts.xml',componentSource:{path:members.source,sha256:members.sha256},components,sets,professions,gifts,giftItems},null,2)+'\n');
 console.log({sets:Object.keys(sets).length,professions:Object.keys(professions).length,gifts:gifts.length});

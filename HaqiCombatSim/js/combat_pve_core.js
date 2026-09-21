@@ -13,6 +13,7 @@ export function runeCardsInHand(battle) {
     return (battle.runes||[]).filter(row=>row.count>(battle.runeUsed[row.itemId]||0)&&isSupportedType(battle.resolved.cards[row.key]?.type)).map(row=>({key:row.key,runeId:row.itemId,seq:-row.itemId,count:row.count-(battle.runeUsed[row.itemId]||0)}));
 }
 export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], threatRulesVersion = 0 }) {
+    if(![0,1,2].includes(threatRulesVersion))throw Error('仇恨规则版本无效');
     if(!Array.isArray(runes)||runes.some(row=>!row||!Number.isSafeInteger(row.itemId)||row.itemId<=0||!Number.isSafeInteger(row.count)||row.count<=0||typeof row.key!=='string'||!row.key)||new Set(runes.map(row=>row.itemId)).size!==runes.length)throw Error('符文检查点无效');
     if(party){
         if(!Array.isArray(party)||party.length<1||party.length>4||party[0].id!==player.id||new Set(party.map(u=>u.id)).size!==party.length||new Set(party.map(u=>u.slot)).size!==party.length||party.some(u=>!Number.isInteger(u.slot)||u.slot<0||u.slot>3))throw Error('我方阵容必须使用四个不同卡位');
@@ -37,12 +38,18 @@ export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide
     const arena = createArena({ resolved, near:party||[player], far, seed, firstSide });
     arena.mode = 'pve'; arena.currentSide = 'near'; arena.firstActingSide = firstSide;
     arena.threatRulesVersion=threatRulesVersion;
-    if(threatRulesVersion===1)arena.onDamageThreat=(caster,target,damage)=>{
+    if(threatRulesVersion>=1)arena.onDamageThreat=(caster,target,damage)=>{
         if(caster.isMob)return;
+        if(threatRulesVersion>=2&&!arena.sides.far.includes(target))return;
         const base=Math.ceil(damage*arena.resolved.adventure.damageThreatRatio);
         for(const mob of arena.sides.far)if(U.isAlive(mob))appendThreat(mob,caster,mob===target?base:Math.ceil(base*arena.resolved.adventure.splashDamageThreatRatio));
     };
     arena.runes=structuredClone(runes);arena.runeUsed={};arena.completedDecisions=0;
+    if(threatRulesVersion>=2)arena.onSingleHealThreat=(caster,heal)=>{
+        if(caster.isMob)return;
+        const amount=Math.ceil(heal*arena.resolved.adventure.singleHealThreatRatio);
+        for(const mob of arena.sides.far)if(U.isAlive(mob))appendThreat(mob,caster,amount);
+    };
     arena.monsterTemplates = monsters;arena.captureStock=captureStock;arena.captureUsed=0;arena.captured=[];arena.heroLevel=heroLevel;
     for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];unit.slot=spec.slot??i;unit.speciesId=spec.speciesId;if(Number.isFinite(spec.hp))unit.hp=Math.max(0,Math.min(unit.maxHp,Math.floor(spec.hp)));}
     monsters.forEach((m,i) => {
@@ -60,7 +67,7 @@ export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide
 }
 function advancePveRound(a) {
     a.turn++; a.phase='pick';
-    if(a.threatRulesVersion===1)for(const mob of a.sides.far)advanceThreat(mob,a.sides.near);
+    if(a.threatRulesVersion>=1)for(const mob of a.sides.far)advanceThreat(mob,a.sides.near);
     for (const u of [...a.sides.near,...a.sides.far]) {
         if (!U.isAlive(u)) continue;
         if (!u.hasStartupPips) {
@@ -126,7 +133,7 @@ function targetFor(a,u,card,pick) {
     if(tag==='max_max_hp')return [...targets].sort((x,y)=>y.maxHp-x.maxHp)[0];
     if(tag==='lowest_hp')return [...targets].sort((x,y)=>x.hp-y.hp)[0];
     if(tag==='random_friendly'||tag==='random_hostile')return a.rng.pick(targets);
-    if(a.threatRulesVersion===1&&(tag==='threat_highest'||tag==='threat_lowest'))return threatTarget(u,targets,tag==='threat_lowest');
+    if(a.threatRulesVersion>=1&&(tag==='threat_highest'||tag==='threat_lowest'))return threatTarget(u,targets,tag==='threat_lowest');
     return targets[0]; // One solo player means threat_highest has exactly one hostile candidate.
 }
 function finished(a) {

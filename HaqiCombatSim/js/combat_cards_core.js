@@ -5,6 +5,7 @@ import {
     damageExpression, healExpression, applyHealPenalty, tryCriticalStrike, tryDodge, rollFizzle, critDamageRatio,
 } from './combat_formulas_core.js';
 import * as U from './combat_unit_core.js';
+import {tauntThreat} from './combat_threat_core.js';
 
 /** card_server.lua L1246-1263 GetNumericalValueFromSection：数字或 "600p"（每费） */
 export function numericFromSection(section, realcost) {
@@ -252,6 +253,7 @@ function applyHeal(arena, caster, target, card, baseHeal, casterBuffs, label) {
     if (arena.aura && arena.aura.boostHeal) buffs.push(arena.aura.boostHeal);
     buffs.push(U.getInputHealBoost(target));
     let heal = healExpression(baseHeal, buffs, R.version);
+    if(card.type.startsWith('SingleHeal'))arena.onSingleHealThreat?.(caster,heal);
     heal = applyHealPenalty(Math.ceil(heal), R.global.healPenalty);
     const done = U.takeHeal(target, heal);
     caster.totals.healDone += done;
@@ -666,11 +668,17 @@ handlers.StealWard = (arena, caster, card, target) => {
 };
 
 handlers.Pass = () => {};
+handlers.SingleTaunt = (arena,caster,card,target) => {
+    if(target?.isMob&&U.isAlive(target)&&target.combatActive!==false)tauntThreat(target,caster,Number(card.params.additional_threat||0));
+};
+handlers.AreaTaunt = (arena,caster,card) => {
+    for(const target of aliveEnemies(arena,caster))handlers.SingleTaunt(arena,caster,card,target);
+};
 
 /** 未实现列表（透明记录） */
 export const UNSUPPORTED_TYPES = [
     'Random', 'Enrage', 'Fizzle', 'PickPet', 'CatchPet', 'SingleFreeze', 'SingleStealth', 'SingleGuardianWithImmolate',
-    'ConversePositiveWard', 'Revive', 'Dead', 'AreaControl', 'SingleTaunt', 'AreaTaunt',
+    'ConversePositiveWard', 'Revive', 'Dead', 'AreaControl',
 ];
 
 export function isSupportedType(type) {

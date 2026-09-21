@@ -1,5 +1,5 @@
 import {claimMagicStar,validateMagicStarClaims,magicStarCombatLevel,applyMagicStarCombat} from './adventure_magic_star_core.js';
-import {equipmentSetStats,dragonTotemStage} from './adventure_progression_bonuses_core.js';
+import {equipmentSetStats,dragonTotemStage,progressionStatEntry} from './adventure_progression_bonuses_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { worldDimensions, mapInfo } from './adventure_island_layout_core.js';
@@ -186,10 +186,10 @@ export function playerSpec(save, content, starLevel=save.pendingEncounter?.magic
         }
     }
     const limits = deckLimits(save,content);
-    if(!save.pendingEncounter||save.pendingEncounter.progressionRulesVersion===1){
+    if(!save.pendingEncounter||[1,2,3].includes(save.pendingEncounter.progressionRulesVersion)){
         const config=content.progressionBonuses;
         const equipped=Object.values(save.equipment).filter(id=>canEquip(save,content.items[id],content));
-        const bonuses=[equipmentSetStats(equipped,config).stats];
+        const bonuses=[!save.pendingEncounter||save.pendingEncounter.progressionRulesVersion>=2?equipmentSetStats(equipped,config).stats:{}];
         for(const professionId of Object.keys(config?.professions||{}))if(save.inventory[professionId]>0){
             const expId=config.professions[professionId][0]?.expId;
             const stage=dragonTotemStage(config,professionId,expId,save.inventory[expId]||0);
@@ -197,9 +197,10 @@ export function playerSpec(save, content, starLevel=save.pendingEncounter?.magic
             break;
         }
         for(const source of bonuses)for(const [id,value] of Object.entries(source)){
-            const entry=statIdToEntry(id);if(!entry)continue;
-            if(typeof stats[entry.stat]==='object')stats[entry.stat][entry.school]=(stats[entry.stat][entry.school]||0)+value;
-            else stats[entry.stat]+=value;
+            const entry=(!save.pendingEncounter||save.pendingEncounter.progressionRulesVersion>=3?progressionStatEntry:statIdToEntry)(id);if(!entry)continue;
+            const amount=value*(entry.scale??1);
+            if(typeof stats[entry.stat]==='object')stats[entry.stat][entry.school]=(stats[entry.stat][entry.school]||0)+amount;
+            else stats[entry.stat]=(stats[entry.stat]||0)+amount;
         }
     }
     applyMagicStarCombat(stats,content,starLevel);
@@ -370,7 +371,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
     if(initialParty)assert(initialParty.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
-        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, progressionRulesVersion:1, threatRulesVersion:1 };
+        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, progressionRulesVersion:3, threatRulesVersion:2 };
     save.pendingEncounter.runes = runeInventory(save,content);
     if(content.pets){
         const party=initialParty;
@@ -465,8 +466,8 @@ export function parseSave(raw,content) {
     assert(travelStatus({...s,pendingEncounter:null},content,s.zone).allowed,'存档目的地无效');
     if (s.pendingEncounter) {
         assert(s.pendingEncounter.equipmentStatsVersion===undefined||s.pendingEncounter.equipmentStatsVersion===1,'装备属性规则版本无效');
-        assert(s.pendingEncounter.progressionRulesVersion===undefined||s.pendingEncounter.progressionRulesVersion===1,'成长属性规则版本无效');
-        assert(s.pendingEncounter.threatRulesVersion===undefined||s.pendingEncounter.threatRulesVersion===1,'仇恨规则版本无效');
+        assert(s.pendingEncounter.progressionRulesVersion===undefined||[1,2,3].includes(s.pendingEncounter.progressionRulesVersion),'成长属性规则版本无效');
+        assert(s.pendingEncounter.threatRulesVersion===undefined||[1,2].includes(s.pendingEncounter.threatRulesVersion),'仇恨规则版本无效');
         assert(s.pendingEncounter.magicStarLevel===undefined||Number.isInteger(s.pendingEncounter.magicStarLevel)&&s.pendingEncounter.magicStarLevel>=0&&s.pendingEncounter.magicStarLevel<=10,'魔法星战斗等级无效');
         if(s.pendingEncounter.runes!==undefined){
             const runes=s.pendingEncounter.runes;

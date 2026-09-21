@@ -1,13 +1,48 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {createPveBattle} from '../js/combat_pve_core.js';
+import {createPveBattle,playPveRound,restorePveBattle} from '../js/combat_pve_core.js';
 import {useCard} from '../js/combat_cards_core.js';
 import {playerSpec,createAdventure} from '../js/adventure_core.js';
+test('healing checkpoint replay reproduces threat and event sequence',()=>{
+ const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
+ const content=read('chapter'),dataset=read('combat'),player=playerSpec(createAdventure(content),content);
+ player.deck=['Life_SingleHeal_Level0'];player.school='life';
+ const checkpoint={encounterId:'fire-scout',player,seed:42,decisions:[],threatRulesVersion:2};
+ const battle=restorePveBattle(dataset,content,checkpoint);
+ const hero=battle.sides.near[0],seq=hero.deckSeq.indexOf('Life_SingleHeal_Level0');
+ const decision={key:'Life_SingleHeal_Level0',seq,targetId:'hero'};
+ playPveRound(battle,decision);checkpoint.decisions.push(decision);
+ const replay=restorePveBattle(dataset,content,checkpoint);
+ assert.ok(battle.sides.far[0].threats.hero>0);
+ assert.deepEqual(replay.sides.far[0].threats,battle.sides.far[0].threats);
+ assert.deepEqual(replay.events,battle.events);assert.equal(replay.rng.state(),battle.rng.state());
+});
+test('monster actually attacks the higher threat party member',()=>{
+ const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
+ const content=read('chapter'),dataset=read('combat'),hero={...playerSpec(createAdventure(content),content),slot:0};
+ const ally={...structuredClone(hero),id:'ally',slot:1,isBot:true,deck:[]};
+ const monster=structuredClone(content.monsters['fire-scout']);
+ const card=Object.values(dataset.cards).find(row=>row.type==='SingleAttack'&&row.pipcost===0);assert.ok(card);
+ monster.sequences=[[{round:'1',card:card.key,target_hostile:'threat_highest',accuracy_boost:1000}]];monster.genes=[];
+ const arena=createPveBattle({dataset,player:hero,party:[hero,ally],monsters:[monster],threatRulesVersion:2});
+ appendThreat(arena.sides.far[0],arena.sides.near[1],100);
+ playPveRound(arena,{pass:true});
+ assert.ok(arena.events.some(event=>event.type==='damage'&&event.caster==='mob0'&&event.target==='ally'));
+});
 test('new PvE damage hook records direct and splash threat while legacy battles keep no hook',()=>{
  const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
  const content=read('chapter'),dataset=read('combat'),player=playerSpec(createAdventure(content),content),monsters=[content.monsters['fire-scout'],content.monsters['fire-scout']];
  const arena=createPveBattle({dataset,player,monsters,threatRulesVersion:1});
+ for(const version of [-1,3,'1',null])assert.throws(()=>createPveBattle({dataset,player,monsters,threatRulesVersion:version}),/版本/);
+ const healing=createPveBattle({dataset,player,monsters,threatRulesVersion:2});
+ const healer=healing.sides.near[0];healer.pips={normal:7,power:0};
+ const spell={...healing.resolved.cards.Life_SingleHeal_Level0,pipcost:0,accuracy:1000,params:{heal_min:101,heal_max:101}};
+ useCard(healing,healer,spell,healer);
+ assert.equal(healing.sides.far[0].threats.hero,31);assert.equal(healing.sides.far[1].threats.hero,31);
+ healing.onDamageThreat(healer,healer,1000);
+ assert.equal(healing.sides.far[0].threats.hero,31);assert.equal(healing.sides.far[1].threats.hero,31);
+ assert.equal(arena.onSingleHealThreat,undefined);
  arena.onDamageThreat(arena.sides.near[0],arena.sides.far[0],101);
  assert.equal(arena.sides.far[0].threats.hero,101);assert.equal(arena.sides.far[1].threats.hero,6);
  const hero=arena.sides.near[0];hero.pips={normal:7,power:0};
@@ -15,6 +50,15 @@ test('new PvE damage hook records direct and splash threat while legacy battles 
  useCard(arena,hero,{...card,accuracy:1000},arena.sides.far[0]);
  assert.ok(arena.sides.far[0].threats.hero>101);
  assert.equal(createPveBattle({dataset,player,monsters}).onDamageThreat,undefined);
+ const mob=arena.sides.far[0];mob.hp=mob.maxHp;mob.threats.ally=9999;
+ useCard(arena,hero,{...card,key:'test-taunt',type:'SingleTaunt',pipcost:0,accuracy:1000,params:{additional_threat:25}},mob);
+ assert.equal(mob.threats.hero,10024);
+ arena.sides.far[1].threats.ally=20000;
+ useCard(arena,hero,{...card,key:'test-area-taunt',type:'AreaTaunt',pipcost:0,accuracy:1000,params:{additional_threat:10}},mob);
+ assert.equal(mob.threats.hero,10034);assert.equal(arena.sides.far[1].threats.hero,20010);
+ const hp=mob.hp;mob.combatActive=false;
+ useCard(arena,hero,{...card,key:'inactive-taunt',type:'SingleTaunt',pipcost:0,accuracy:1000,params:{additional_threat:100}},mob);
+ assert.equal(mob.threats.hero,10034);assert.equal(mob.hp,hp);
 });
 import {appendThreat,tauntThreat,advanceThreat,threatTarget} from '../js/combat_threat_core.js';
 test('threat ordering, ties, weighted pending queues, taunt and death cleanup',()=>{
@@ -26,4 +70,6 @@ test('threat ordering, ties, weighted pending queues, taunt and death cleanup',(
  advanceThreat(mob,[hero,ally]);assert.equal(mob.threats.ally,30);
  tauntThreat(mob,hero,7);assert.equal(mob.threats.hero,37);
  ally.hp=0;advanceThreat(mob,[hero,ally]);assert.equal(mob.threats.ally,undefined);
+ assert.equal(threatTarget(mob,[ally,hero],true),hero);
+ hero.combatActive=false;assert.equal(threatTarget(mob,[ally,hero]),null);
 });

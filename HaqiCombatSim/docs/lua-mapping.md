@@ -1,5 +1,11 @@
 # 公式与常量 ↔ Lua 源码对照表
 
+2026-09-21成长属性补齐：player_server.lua L2317起151–158绝对攻击、L2486起159–166绝对防御（getResistAbs保持负值）；L2704–2709属性376每点增加0.001暴击倍率；L2856起188为全系闪避百分比。仅套装/图腾使用progressionStatEntry，不扩展普通装备或商城候选。新遭遇progressionRulesVersion=3，版本1/2保留原映射。card_server.lua L1340–1344的TryDoubleAttack在kids和teen均直接返回false，因此256不启用双倍伤害；不是待猜测的暴击属性。
+
+2026-09-21仇恨续接：card_server.lua L6093–6098 SingleTaunt、L6123–6165 AreaTaunt对存活且激活的怪物调用SetHighestThreat；本地两种卡已接入。L1300 GetHealThreat返回ceil(heal*0.3)，L3854–3865单体即时治疗在治疗惩罚前追加到所有存活敌方怪物。该比例通过BalanceParams.singleHealThreatRatio配置，新遭遇threatRulesVersion=2启用，版本0/1不追补。HOT延迟仇恨、群疗及效果权重仍未接通，不以日志回血量近似。
+
+2026-09-21套装成员补齐：paraworld.globalstore.lua L544的itemsetid=t[31]对应globalstore.db.mem每条row[19]模板第31项（Python row[18][30]）。沿用player_server.lua L3260–3270的GSID 1001–8999及已知效果表过滤，得到391件/83套。数据文件componentSource记录原缓存SHA-256；新遭遇progressionRulesVersion=2，版本1保持空套装映射行为。
+
 ## 2026-09-21 长期系统首批接入
 
 后续口袋闭环：沿用MagicStar_gifts.xml十项权重和getgiftNum的星级+1周额度，改用本项目createRng与角色seed/周/序号加权抽取。原客户端GetGift存在区间遗漏，本地不照搬，也不调用exid=660兑换后端。普通礼物每次一件属于Web单人改编，记录在magicStarClaims.pocket并走persistReward，不代表服务器防作弊或道具使用玩法已迁移。

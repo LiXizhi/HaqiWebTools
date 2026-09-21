@@ -15,7 +15,7 @@ export function advanceThreat(mob,units) {
     }
 }
 export function threatTarget(mob,targets,lowest=false) {
-    return [...targets].sort((left,right)=>{
+    return targets.filter(unit=>unit.hp>0&&unit.combatActive!==false).sort((left,right)=>{
         const difference=(mob.threats?.[left.id]||0)-(mob.threats?.[right.id]||0);
         return (lowest?difference:-difference)||(left.slot||0)-(right.slot||0);
     })[0]||null;

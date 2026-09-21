@@ -1,3 +1,12 @@
+import {statIdToEntry} from './combat_unit_core.js';
+export function progressionStatEntry(id) {
+    const value=Number(id),schools=['all','fire','ice','storm','myth','life','death','balance'];
+    if(value>=151&&value<=158)return {stat:'damageAbs',school:schools[value-151]};
+    if(value>=159&&value<=166)return {stat:'resistAbs',school:schools[value-159]};
+    if(value===188)return {stat:'dodgePct'};
+    if(value===376)return {stat:'critRatioBonus',scale:0.001};
+    return statIdToEntry(value);
+}
 export function equipmentSetStats(equipped,config) {
     const counts={},stats={};
     for(const id of new Set(equipped)){

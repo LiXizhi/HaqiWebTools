@@ -2,11 +2,12 @@ import { castBlockedMessage } from './adventure_cast_feedback_core.js';
 // Resolve a UI swipe using the existing casting/target rules; never guess a target.
 import { selectableCards } from './combat_unit_core.js';
 import { validTargets } from './combat_arena_core.js';
+import { runeCardsInHand } from './combat_pve_core.js';
 
 export function resolveHandSwipe(battle, hand, discarded=[]) {
     if(!battle||battle.finished||!hand)return null;
     const hero=battle.sides.near[0];
-    if(!selectableCards(hero).some(h=>h.seq===hand.seq&&h.key===hand.key))return null;
+    if(![...selectableCards(hero),...runeCardsInHand(battle)].some(h=>h.seq===hand.seq&&h.key===hand.key&&h.runeId===hand.runeId))return null;
     const card=battle.resolved.cards[hand.key];
     if(discarded.includes(hand.seq))return {message:'请先撤销弃牌'};
     const message=castBlockedMessage(hero,card,battle.resolved);

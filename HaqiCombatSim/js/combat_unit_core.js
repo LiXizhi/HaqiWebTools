@@ -19,6 +19,8 @@ export function statIdToEntry(id) {
     if (id >= 204 && id <= 211) return { stat: 'resiliencePct', school: STAT_ID_SCHOOL[id - 204] };
     if (id >= 212 && id <= 219) return { stat: 'penetration', school: STAT_ID_SCHOOL[id - 212] };
     if (id === 242) return { stat: 'hpPct', school: 'all' };
+    if (id === 182) return { stat: 'outputHealPct', school: 'all' };
+    if (id === 183) return { stat: 'inputHealPct', school: 'all' };
     if (id === 184) return { stat: 'startupNormal', school: 'all' };
     if (id === 185) return { stat: 'startupPower', school: 'all' };
     return null;
@@ -36,6 +38,7 @@ export function normalizeStats(partial = {}) {
         else stats[name] = { ...(v || {}) };
     }
     for (const name of SCALAR_STATS) stats[name] = Number(partial[name] || 0);
+    if(partial.magicStarHpPct)stats.magicStarHpPct=Number(partial.magicStarHpPct);
     return stats;
 }
 
@@ -177,6 +180,7 @@ export function computeMaxHp(unit, resolved) {
     let hp = baseMaxHp(unit.school, unit.level, resolved.version);
     hp = Math.ceil(hp * (schoolFactor(resolved, unit.school).hp || 1));
     hp = applyHpStats(hp, unit.stats.hpPct, unit.stats.hpFlat, resolved.version);
+    if(resolved.version==='kids'&&unit.stats.magicStarHpPct)hp=Math.ceil(hp*(100+unit.stats.magicStarHpPct)/100);
     return Math.max(1, hp);
 }
 

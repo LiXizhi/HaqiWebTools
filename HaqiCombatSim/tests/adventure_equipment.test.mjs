@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {useCard} from '../js/combat_cards_core.js';
+import {signedAttribute,unsupportedEquipmentStats,visibleEquipmentSummary} from '../js/adventure_equipment_core.js';
 import * as A from '../js/adventure_core.js';
 import { equipmentSummary, previewEquipment, equipmentAttributes, equipmentCards } from '../js/adventure_equipment_core.js';
 import { createPveBattle, restorePveBattle } from '../js/combat_pve_core.js';
@@ -8,6 +10,78 @@ const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json
 const dataset=JSON.parse(fs.readFileSync(new URL('../data/adventure/combat.json',import.meta.url)));
 function hero(){const s=A.createAdventure(content);s.xp=4654;A.syncProgression(s,content);s.inventory={1240:1,1250:1,1260:1,1912:1,24003:1,17213:500};return s;}
 const act=(s,type,props)=>A.applyAction(s,content,{type,...props});
+test('equipped healing boosts increase actual card healing and socket stats use the same mapping',()=>{
+    const copy=structuredClone(content),save=hero();
+    const measure=()=>{
+        const arena=createPveBattle({dataset,player:A.playerSpec(save,copy),monsters:[copy.monsters['fire-scout']],seed:812});
+        const unit=arena.sides.near[0];unit.hp=1;unit.pips={normal:7,power:0};
+        const card=arena.resolved.cards.Life_SingleHeal_Level0;
+        assert.ok(card);useCard(arena,unit,{...card,accuracy:1000},unit);
+        return unit.hp;
+    };
+    const base=measure();copy.items[1240].stats[182]=20;copy.items[1240].stats[183]=10;
+    A.applyAction(save,copy,{type:'equip',itemId:1240});assert.ok(measure()>base);
+    copy.items[99991]={id:99991,stats:{182:3,183:4}};
+    save.equipmentInstances.find(row=>row.gsid===1240).serverdata.gem={holecnt:0,ins:[99991]};
+    assert.equal(A.playerSpec(save,copy).stats.outputHealPct,23);
+    assert.equal(A.playerSpec(save,copy).stats.inputHealPct,14);
+});
+test('compact equipment summary preserves primary stats and nonzero secondary stats',()=>{
+    const save=hero(),rows=visibleEquipmentSummary(save,content);
+    assert.ok(rows.some(row=>row.key==='damagePct'));
+    assert.ok(!rows.some(row=>row.key==='ice.damagePct'));
+    const copy=structuredClone(content);copy.items[1240].stats={113:9};A.applyAction(save,copy,{type:'equip',itemId:1240});
+    assert.equal(visibleEquipmentSummary(save,copy).find(row=>row.key==='ice.damagePct').value,9);
+});
+test('off-school equipment bonuses appear in replacement comparison',()=>{
+    const copy=structuredClone(content),save=hero();copy.items[1240].stats={113:9,121:4};
+    const rows=previewEquipment(save,copy,{type:'equip',itemId:1240}).rows;
+    assert.equal(rows.find(row=>row.key==='ice.damagePct').delta,9);
+    assert.equal(rows.find(row=>row.key==='ice.resistPct').delta,4);
+    assert.equal(rows.find(row=>row.key==='damagePct').delta,0);
+});
+test('unsupported attribute reports exclude metadata, healing and zero values',()=>{
+    assert.deepEqual(unsupportedEquipmentStats({stats:{182:12,183:7,137:6,138:10,139:22104,999:4,998:0}}),['999']);
+});
+test('attribute signs never display plus-minus or positive zero',()=>{
+    assert.equal(signedAttribute(12),'+12');assert.equal(signedAttribute(-7),'-7');assert.equal(signedAttribute(0),'0');
+});
+test('replacement previews combine all-school and own-school stats without mutating inventory',()=>{
+    const copy=structuredClone(content),save=hero();copy.items[1240].stats={111:3,112:7,204:2,205:4,212:5,213:6};
+    const before=JSON.stringify(save),preview=previewEquipment(save,copy,{type:'equip',itemId:1240});
+    for(const [key,value] of [['damagePct',10],['resiliencePct',6],['penetration',11]])assert.equal(preview.rows.find(row=>row.key===key).delta,value);
+    assert.equal(JSON.stringify(save),before);
+    assert.equal(new Set(preview.rows.map(row=>row.key)).size,preview.rows.length);
+});
+test('equipment summary includes defensive and absolute school stats from player spec',()=>{
+    const save=hero();act(save,'equip',{itemId:1240});
+    const stats=A.playerSpec(save,content).stats,rows=equipmentSummary(save,content);
+    for(const key of ['resiliencePct','penetration','damageAbs','resistAbs'])assert.equal(rows.find(row=>row.key===key).value,(stats[key].all||0)+(stats[key][save.school]||0));
+});
+test('equipment summary includes healing and global combat modifiers',()=>{
+    const save=hero(),stats=A.playerSpec(save,content).stats,rows=equipmentSummary(save,content);
+    for(const key of ['outputHealPct','inputHealPct','hitPct','dodgePct','penetrationReceive','critRatioBonus'])assert.equal(rows.find(row=>row.key===key).value,stats[key]||0);
+});
+test('source healing stats 182 and 183 enter equipment and replacement previews',()=>{
+    const copy=structuredClone(content),save=hero();
+    copy.items[1240].stats[182]=12;copy.items[1240].stats[183]=7;
+    const preview=previewEquipment(save,copy,{type:'equip',itemId:1240});
+    assert.equal(preview.rows.find(row=>row.key==='outputHealPct').delta,12);
+    assert.equal(preview.rows.find(row=>row.key==='inputHealPct').delta,7);
+    A.applyAction(save,copy,{type:'equip',itemId:1240});
+    assert.equal(A.playerSpec(save,copy).stats.outputHealPct,12);
+    assert.equal(A.playerSpec(save,copy).stats.inputHealPct,7);
+});
+test('legacy active battles retain pre-healing equipment rules until the next encounter',()=>{
+    const copy=structuredClone(content),save=hero();copy.items[1240].stats[182]=12;
+    A.applyAction(save,copy,{type:'equip',itemId:1240});A.beginEncounter(save,copy,'fire-scout');
+    delete save.pendingEncounter.equipmentStatsVersion;save.pendingEncounter.player.stats.outputHealPct=0;
+    assert.doesNotThrow(()=>A.parseSave(save,copy));
+    assert.equal(A.playerSpec(save,copy).stats.outputHealPct,0);
+    A.applyAction(save,copy,{type:'retreat'});A.beginEncounter(save,copy,'fire-scout');
+    assert.equal(save.pendingEncounter.player.stats.outputHealPct,12);
+    assert.doesNotThrow(()=>A.parseSave(save,copy));
+});
 
 test('all chapter slots equip, remove, persist and reproduce actual battle HP and spells',()=>{
     const s=hero();

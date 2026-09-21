@@ -7,16 +7,127 @@ import * as W from '../js/adventure_world_core.js';
 import * as U from '../js/combat_unit_core.js';
 import { SimpleBot } from '../js/combat_policy_core.js';
 import { isSupportedType } from '../js/combat_cards_core.js';
+import { checkedProgress } from '../js/adventure_cloud_core.js';
+import { resolveHandSwipe } from '../js/adventure_hand_core.js';
+import { runeStatus } from '../js/adventure_runes_core.js';
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
 content.worldMaps=Object.fromEntries(Object.entries(content.worldMapIndex.islands).map(([id,row])=>[id,JSON.parse(fs.readFileSync(new URL('../'+row.file,import.meta.url)))]));
 const dataset=JSON.parse(fs.readFileSync(new URL('../data/adventure/combat.json',import.meta.url)));
 function act(s,type,props={}) { return A.applyAction(s,content,{type,...props}); }
+test('rune status distinguishes consumables, missing spells and unsupported effects',()=>{
+    assert.equal(runeStatus(content.items[1912],content,dataset),null);
+    const item=content.items[23104];
+    assert.equal(runeStatus(item,content,dataset).available,true);
+    assert.equal(runeStatus(item,{cardItems:{}},dataset).reason,'符文法术尚未配置');
+    assert.equal(runeStatus(item,content,{cards:{}}).available,false);
+    assert.equal(runeStatus(item,{cardItems:{22104:'Balance_Rune_CatchPetCard_General'}},dataset).reason,'专属抓宠符文暂未开放');
+});
+test('owned rune consumables are snapshotted separately from the learned deck',()=>{
+    const save=A.createAdventure(content);
+    const entry=Object.entries(content.cardItems).map(([id,key])=>[Number(id)+1000,key]).find(([id])=>content.items[id]?.kind===18&&content.items[id].subtype===2);
+    assert.ok(entry);
+    const [id,key]=entry;
+    save.inventory[id]=2;
+    const {checkpoint}=A.beginEncounter(save,content,'fire-scout');
+    assert.deepEqual(checkpoint.runes,[{itemId:Number(id),key,count:2}]);
+    assert.deepEqual(checkpoint.player.deck,save.deck);
+});
 function battle(s,id) {
     const {checkpoint}=A.beginEncounter(s,content,id);
     const b=P.restorePveBattle(dataset,content,checkpoint),bot=new SimpleBot();
     while(!b.finished) { const pick=bot.pick(b,b.sides.near[0]); P.playPveRound(b,pick);A.recordDecision(s,pick); }
     return b;
 }
+test('rune success consumes once, replay preserves usage and retreat never refunds',()=>{
+    const save=A.createAdventure(content);save.inventory[23104]=2;
+    A.beginEncounter(save,content,'ice-scout');
+    const arena=P.restorePveBattle(dataset,content,save.pendingEncounter);
+    const rune=P.runeCardsInHand(arena).find(row=>row.runeId===23104);
+    assert.ok(rune);
+    assert.equal(resolveHandSwipe(arena,rune).decision.runeId,23104);
+    arena.resolved.cards[rune.key].accuracy=100;
+    const decision={...rune,targetId:'mob0'};
+    P.playPveRound(arena,decision);A.recordDecision(save,decision,arena);
+    assert.equal(save.inventory[23104],1);
+    const loaded=A.parseSave(save,content);
+    const restored=P.restorePveBattle(dataset,content,loaded.pendingEncounter);
+    assert.equal(restored.runeUsed[23104],1);
+    assert.deepEqual(restored.events,arena.events);
+    assert.doesNotThrow(()=>checkedProgress(save,content,dataset));
+    const tampered=structuredClone(save);tampered.inventory[23104]=2;
+    assert.throws(()=>checkedProgress(tampered,content,dataset),/符文库存/);
+    A.applyAction(loaded,content,{type:'retreat'});
+    assert.equal(loaded.inventory[23104],1);
+});
+test('rune fizzle and invalid target do not consume inventory',()=>{
+    const save=A.createAdventure(content);save.inventory[23104]=1;
+    A.beginEncounter(save,content,'ice-scout');
+    const arena=P.restorePveBattle(dataset,content,save.pendingEncounter),rune=P.runeCardsInHand(arena)[0];
+    assert.throws(()=>P.playPveRound(arena,{...rune,targetId:'missing'}),/目标/);
+    arena.resolved.cards[rune.key].accuracy=-1000;
+    const decision={...rune,targetId:'mob0'};
+    P.playPveRound(arena,decision);A.recordDecision(save,decision,arena);
+    assert.equal(save.inventory[23104],1);
+    assert.deepEqual(arena.runeUsed,{});
+});
+test('invalid rune accounting cannot partially mutate the save',()=>{
+    const save=A.createAdventure(content);save.inventory[23104]=2;save.inventory[23109]=2;
+    A.beginEncounter(save,content,'ice-scout');
+    const arena=P.restorePveBattle(dataset,content,save.pendingEncounter);
+    arena.runeUsed={23104:1,23109:3};
+    arena.completedDecisions=1;
+    const before=JSON.stringify(save);
+    assert.throws(()=>A.recordDecision(save,{pass:true},arena),/消耗/);
+    assert.equal(JSON.stringify(save),before);
+    arena.runeUsed={};arena.seed++;
+    assert.throws(()=>A.recordDecision(save,{pass:true},arena),/遭遇/);
+    assert.equal(JSON.stringify(save),before);
+});
+test('exhausted rune cannot cast again and legacy checkpoints have no rune hand',()=>{
+    const save=A.createAdventure(content);save.inventory[23104]=1;
+    A.beginEncounter(save,content,'ice-scout');
+    const arena=P.restorePveBattle(dataset,content,save.pendingEncounter),rune=P.runeCardsInHand(arena)[0];
+    P.playPveRound(arena,{...rune,targetId:'mob0'});
+    assert.equal(P.runeCardsInHand(arena).length,0);
+    const events=arena.events.length;
+    assert.throws(()=>P.playPveRound(arena,{...rune,targetId:'mob0'}),/符文/);
+    assert.equal(arena.events.length,events);
+    const legacy=structuredClone(save.pendingEncounter);delete legacy.runes;
+    assert.deepEqual(P.runeCardsInHand(P.restorePveBattle(dataset,content,legacy)),[]);
+});
+test('each executed decision persists once and replay can continue',()=>{
+    const save=A.createAdventure(content);A.beginEncounter(save,content,'ice-scout');
+    const arena=P.restorePveBattle(dataset,content,save.pendingEncounter);
+    assert.throws(()=>A.recordDecision(save,{pass:true},arena),/未执行/);
+    P.playPveRound(arena,{pass:true});A.recordDecision(save,{pass:true},arena);
+    const before=JSON.stringify(save);
+    assert.throws(()=>A.recordDecision(save,{pass:true},arena),/已经记录/);
+    assert.equal(JSON.stringify(save),before);
+    const restored=P.restorePveBattle(dataset,content,save.pendingEncounter);
+    P.playPveRound(restored,{pass:true});A.recordDecision(save,{pass:true},restored);
+    assert.equal(save.pendingEncounter.decisions.length,2);
+});
+test('malformed rune checkpoints and decisions are rejected before mutation',()=>{
+    const save=A.createAdventure(content);save.inventory[23104]=1;A.beginEncounter(save,content,'ice-scout');
+    const checkpoint=save.pendingEncounter;
+    for(const runes of [null,{},[null],[{itemId:23104,key:'Fire',count:1.5}],[...checkpoint.runes,...checkpoint.runes]]){
+        assert.throws(()=>P.restorePveBattle(dataset,content,{...checkpoint,runes}),/符文检查点/);
+    }
+    const arena=P.restorePveBattle(dataset,content,checkpoint),events=arena.events.length;
+    for(const decision of [null,[],{pass:true,discardSeqs:{}}])assert.throws(()=>P.playPveRound(arena,decision),/决定无效/);
+    assert.equal(arena.events.length,events);assert.equal(arena.completedDecisions,0);
+});
+test('rune recording requires engine results and cannot restore spent inventory',()=>{
+    const save=A.createAdventure(content);save.inventory[23104]=2;A.beginEncounter(save,content,'ice-scout');
+    const arena=P.restorePveBattle(dataset,content,save.pendingEncounter),rune=P.runeCardsInHand(arena)[0],decision={...rune,targetId:'mob0'};
+    assert.throws(()=>A.recordDecision(save,decision),/战斗结果/);
+    assert.equal(save.pendingEncounter.decisions.length,0);
+    P.playPveRound(arena,decision);A.recordDecision(save,decision,arena);
+    P.playPveRound(arena,{pass:true});arena.runeUsed[23104]=0;
+    const before=JSON.stringify(save);
+    assert.throws(()=>A.recordDecision(save,{pass:true},arena),/倒退/);
+    assert.equal(JSON.stringify(save),before);
+});
 export function playChapter(school) {
     const s=A.createAdventure(content,{school,seed:530});
     const evidence=[];

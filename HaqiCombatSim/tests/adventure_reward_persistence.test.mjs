@@ -11,6 +11,21 @@ const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)))
 const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 content.magicStar=read('adventure/magic-star.json');content.checkinConfig=read('adventure/checkin.json');Object.assign(content.items,content.checkinConfig.items);
 const now=Date.parse('2026-09-21T04:00:00Z'),access={keepworkVip:true,expiresAt:'2027-09-21',now};
+content.progressionBonuses=read('adventure/progression-bonuses.json');
+for(const [id,item] of Object.entries(content.progressionBonuses.giftItems))content.items[id]??=item;
+test('real pocket pool persists one gift, rolls back failed storage and rejects stale tabs',()=>{
+ const h=harness(),second=h.open(),save=h.store.catalog.roles[0].save,before=JSON.stringify(save);
+ const action={type:'magic-star-claim',rewardId:'pocket'},scoped=h.store.scoped();
+ assert.throws(()=>persistReward(save,content,action,access,{getItem:scoped.getItem,setItem:()=>{throw Error('quota');}}),/quota/);
+ assert.equal(JSON.stringify(save),before);
+ const next=persistReward(save,content,action,access,scoped).save;
+ assert.equal(next.magicStarClaims.pocket.used,1);
+ assert.equal(content.progressionBonuses.gifts.reduce((sum,row)=>sum+(next.inventory[row.itemId]||0)-(save.inventory[row.itemId]||0),0),1);
+ assert.throws(()=>persistReward(second.catalog.roles[0].save,content,action,access,second.scoped()),/其他页面/);
+ const loaded=h.open().catalog.roles[0].save;assert.deepEqual(loaded,next);
+ const cloud=makeCloudSnapshot(next,content,dataset,new Date(now).toISOString(),id);
+ assert.deepEqual(parseCloudSnapshot(JSON.stringify(cloud),content,dataset).save.magicStarClaims,next.magicStarClaims);
+});
 const weekly={type:'magic-star-claim',rewardId:'weekly'},id='12345678-1234-1234-1234-123456789abc';
 function harness(){const data=new Map();const storage={getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};const open=()=>{const store=createRoleStore({content,dataset,storage,uuid:()=>id,now:()=>now});store.open('test');return store;};const store=open();store.create(createAdventure(content));return {storage,store,open};}
 test('weekly and staff claim records survive real role-store reload and cloud roundtrip',()=>{

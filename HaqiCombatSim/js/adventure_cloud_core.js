@@ -13,6 +13,7 @@ export function checkedProgress(raw, content, dataset) {
     const keys=[...Object.keys(createAdventure(content)),'magicStarClaims','checkin'];
     const save = Object.fromEntries(keys.filter(key=>parsed[key]!==undefined).map(key => [key, parsed[key]]));
     const battle = save.pendingEncounter ? restorePveBattle(dataset, content, save.pendingEncounter) : null;
+    for(const rune of save.pendingEncounter?.runes||[])requireValue((save.inventory[rune.itemId]||0)===rune.count-(battle.runeUsed[rune.itemId]||0),'符文库存与战斗重演不一致');
     return { save, battle };
 }
 export function makeCloudSnapshot(save, content, dataset, updatedAt, id) {

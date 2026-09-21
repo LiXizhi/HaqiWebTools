@@ -1,9 +1,12 @@
 import {currentQuest,questState,questReady,questProgress,rewardsFor} from './adventure_core.js';
 import {rewardLabel} from './adventure_rewards_core.js';
+import {ItemDetails} from './view_adventure_item_details.js';
 
 // Layout reference: Aries/Quest/QuestListPage.html and QuestDetailFramePage.html.
-export function renderQuestJournal(body,model,cb,{el,button,objectiveLabel}) {
+export function renderQuestJournal(body,model,cb,ui) {
+    const {el,button,objectiveLabel}=ui;
     const {save,assets}=model,c=assets.content,current=currentQuest(save,c);
+    const inspector=new ItemDetails(body,model,ui);
     const box=body.closest('.modal');box.classList.add('quest-journal-modal');
     const label=q=>{const s=questState(save,q.id);return s.claimed?'已完成':s.accepted?(questReady(save,q)?'可交付':'进行中'):current?.id===q.id?'可接取':'未开启';};
     const list=el('nav','journal-directory');list.setAttribute('aria-label','章节任务');
@@ -22,7 +25,14 @@ export function renderQuestJournal(body,model,cb,{el,button,objectiveLabel}) {
         detail.append(section('任务目标',...(goals.length?goals.map(g=>el('div',`journal-objective ${g.value>=g.count?'complete':''}`,el('span','',objectiveLabel(g,c)),el('strong','',`${g.value} / ${g.count}`))):[el('p','',`与${c.npcs[q.endNpc]?.name||'导师'}交谈，完成指导。`)])));
         detail.append(el('div','journal-contacts',el('p','',el('span','','任务接取'),c.npcs[q.startNpc]?.name||'导师'),el('p','',el('span','','任务交付'),c.npcs[q.endNpc]?.name||'导师')));
         const rewards=rewardsFor(save,c,q);
-        detail.append(section(state.claimed?'已获得奖励':'任务奖励',el('div','journal-rewards',...rewards.map(r=>el('span','journal-reward',rewardLabel(c,r))))));
+        detail.append(section(state.claimed?'已获得奖励':'任务奖励',el('div','journal-rewards',...rewards.map(reward=>{
+            const item=c.items[reward.id];
+            if(!item||reward.kind==='pet'||reward.id===113)return el('span','journal-reward',rewardLabel(c,reward));
+            const inspect=button(rewardLabel(c,reward),()=>inspector.show(item,{trigger:inspect,source:q.title}),'journal-reward item-inspect-button');
+            inspect.setAttribute('aria-haspopup','dialog');
+            inspect.setAttribute('aria-label',`查看${item.name}详情`);
+            return inspect;
+        }))));
         const footer=el('footer','journal-footer');
         if(active&&!state.claimed)footer.append(button(state.accepted?(questReady(save,q)?'前往交付':'追踪任务目标'):'前往接取',()=>{cb.close();cb.track();},'primary'));
         else footer.append(el('p','',state.claimed?'任务已完成，奖励已领取。':'完成前置任务后开启。'));

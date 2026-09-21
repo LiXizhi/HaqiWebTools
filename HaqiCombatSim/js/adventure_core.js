@@ -1,4 +1,5 @@
-import {claimMagicStar,validateMagicStarClaims} from './adventure_magic_star_core.js';
+import {claimMagicStar,validateMagicStarClaims,magicStarCombatLevel,applyMagicStarCombat} from './adventure_magic_star_core.js';
+import {equipmentSetStats,dragonTotemStage} from './adventure_progression_bonuses_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { worldDimensions, mapInfo } from './adventure_island_layout_core.js';
@@ -164,7 +165,7 @@ function migrateBagRules(save,content) {
     }
     save.bagRulesVersion=1;
 }
-export function playerSpec(save, content) {
+export function playerSpec(save, content, starLevel=save.pendingEncounter?.magicStarLevel||0) {
     const stats = normalizeStats(), fixed = [];
     for (const iid of Object.values(save.equipment)) {
         const item = content.items[iid];
@@ -173,6 +174,7 @@ export function playerSpec(save, content) {
         const instance=findEquipmentInstance(save,content,iid);
         const sources=[item,...(instance?.serverdata.gem?.ins||[]).map(id=>content.items[id]).filter(Boolean)];
         for (const [id,value] of sources.flatMap(source=>Object.entries(source.stats))) {
+            if(save.pendingEncounter&&save.pendingEncounter.equipmentStatsVersion!==1&&[182,183].includes(Number(id)))continue;
             const entry = statIdToEntry(id); if (!entry) continue;
             if (typeof stats[entry.stat] === 'object') stats[entry.stat][entry.school] = (stats[entry.stat][entry.school] || 0) + Number(value);
             else stats[entry.stat] += Number(value);
@@ -184,6 +186,23 @@ export function playerSpec(save, content) {
         }
     }
     const limits = deckLimits(save,content);
+    if(!save.pendingEncounter||save.pendingEncounter.progressionRulesVersion===1){
+        const config=content.progressionBonuses;
+        const equipped=Object.values(save.equipment).filter(id=>canEquip(save,content.items[id],content));
+        const bonuses=[equipmentSetStats(equipped,config).stats];
+        for(const professionId of Object.keys(config?.professions||{}))if(save.inventory[professionId]>0){
+            const expId=config.professions[professionId][0]?.expId;
+            const stage=dragonTotemStage(config,professionId,expId,save.inventory[expId]||0);
+            if(stage)bonuses.push(stage.stats);
+            break;
+        }
+        for(const source of bonuses)for(const [id,value] of Object.entries(source)){
+            const entry=statIdToEntry(id);if(!entry)continue;
+            if(typeof stats[entry.stat]==='object')stats[entry.stat][entry.school]=(stats[entry.stat][entry.school]||0)+value;
+            else stats[entry.stat]+=value;
+        }
+    }
+    applyMagicStarCombat(stats,content,starLevel);
     return { id: 'hero', name: save.name, school: save.school, level: save.level, isBot: false, stats,
         deck: clone(save.deck), fixedCards: fixed, deckCapacity: limits.capacity, deckEachCapacity: limits.eachCapacity };
 }
@@ -339,18 +358,20 @@ export function applyAction(save, content, action, access={}) {
     save.revision++;
     return { changed: true, quest: currentQuest(save,content), level: save.level };
 }
-export function beginEncounter(save,content,encounterId) {
+export function beginEncounter(save,content,encounterId,access={}) {
     assert(!save.pendingEncounter, '已有进行中的战斗');
     const encounter = content.encounters.find(e => e.id === encounterId) || specialEncounter(save,content,encounterId);
     assert(encounter && encounter.zone === save.zone, '这里没有这个敌人');
     const monster = encounter.monster || content.monsters[encounter.monsterId];
     assert(encounterId !== 'death-scout' || (save.quests[63012]?.claimed), '请先完成考核前的准备');
     validDeck(save,content,save.deck);
-    const initialParty=content.pets?Pets.partySpecs(save,content,playerSpec(save,content)):null;
+    const magicStarLevel=magicStarCombatLevel(content,access),player=playerSpec(save,content,magicStarLevel);
+    const initialParty=content.pets?Pets.partySpecs(save,content,player):null;
     if(initialParty)assert(initialParty.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
-        seed: hashSeed(`${save.seed}:encounter:${serial}`), player: playerSpec(save,content), decisions: [] };
+        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, progressionRulesVersion:1, threatRulesVersion:1 };
+    save.pendingEncounter.runes = runeInventory(save,content);
     if(content.pets){
         const party=initialParty;
         assert(party.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
@@ -358,8 +379,30 @@ export function beginEncounter(save,content,encounterId) {
     }
     save.revision++; return { encounter, monster, checkpoint: save.pendingEncounter };
 }
-export function recordDecision(save, decision) {
-    assert(save.pendingEncounter,'没有进行中的战斗'); save.pendingEncounter.decisions.push(clone(decision)); save.revision++;
+export function runeInventory(save,content) {
+    return Object.entries(save.inventory).flatMap(([id,count])=>{
+        const key=content.cardItems[Number(id)-1000];
+        const item=content.items[id];
+        return count>0&&item?.kind===18&&item.subtype===2&&key&&!key.includes('CatchPet')?[{itemId:Number(id),key,count}]:[];
+    });
+}
+export function recordDecision(save, decision, battle) {
+    assert(save.pendingEncounter,'没有进行中的战斗');
+    assert(decision?.runeId===undefined||battle,'符文决定缺少战斗结果');
+    if(battle){
+        assert(battle.seed===save.pendingEncounter.seed,'战斗记录不属于当前遭遇');
+        assert(battle.completedDecisions===save.pendingEncounter.decisions.length+1,'战斗决定未执行或已经记录');
+        for(const rune of save.pendingEncounter.runes||[]){
+            const used=battle.runeUsed?.[rune.itemId]||0;
+            assert(Number.isInteger(used)&&used>=0&&used<=rune.count,'符文消耗记录无效');
+            assert(rune.count-used<=(save.inventory[rune.itemId]||0),'符文消耗记录不能倒退');
+        }
+        for(const rune of save.pendingEncounter.runes||[]){
+            const used=battle.runeUsed?.[rune.itemId]||0;
+            save.inventory[rune.itemId]=rune.count-used;
+        }
+    }
+    save.pendingEncounter.decisions.push(clone(decision)); save.revision++;
 }
 export function settleEncounter(save,content,battle) {
     const pending = save.pendingEncounter;
@@ -421,6 +464,15 @@ export function parseSave(raw,content) {
     assert(!s.graduated || s.quests[63013]?.claimed,'毕业记录无效');
     assert(travelStatus({...s,pendingEncounter:null},content,s.zone).allowed,'存档目的地无效');
     if (s.pendingEncounter) {
+        assert(s.pendingEncounter.equipmentStatsVersion===undefined||s.pendingEncounter.equipmentStatsVersion===1,'装备属性规则版本无效');
+        assert(s.pendingEncounter.progressionRulesVersion===undefined||s.pendingEncounter.progressionRulesVersion===1,'成长属性规则版本无效');
+        assert(s.pendingEncounter.threatRulesVersion===undefined||s.pendingEncounter.threatRulesVersion===1,'仇恨规则版本无效');
+        assert(s.pendingEncounter.magicStarLevel===undefined||Number.isInteger(s.pendingEncounter.magicStarLevel)&&s.pendingEncounter.magicStarLevel>=0&&s.pendingEncounter.magicStarLevel<=10,'魔法星战斗等级无效');
+        if(s.pendingEncounter.runes!==undefined){
+            const runes=s.pendingEncounter.runes;
+            assert(Array.isArray(runes)&&new Set(runes.map(row=>row.itemId)).size===runes.length,'存档符文无效');
+            for(const rune of runes)assert(content.items[rune.itemId]?.kind===18&&content.items[rune.itemId].subtype===2&&content.cardItems[rune.itemId-1000]===rune.key&&!rune.key.includes('CatchPet')&&Number.isSafeInteger(rune.count)&&rune.count>0&&(s.inventory[rune.itemId]||0)<=rune.count,'存档符文无效');
+        }
         assert(s.pendingEncounter.id === `${s.seed}:${s.encounterSerial}` && s.pendingEncounter.seed === hashSeed(`${s.seed}:encounter:${s.encounterSerial}`),'存档战斗种子无效');
         assert(JSON.stringify(s.pendingEncounter.player) === JSON.stringify(playerSpec(s,content)), '存档战斗角色无效');
         assert((content.encounters.some(e => e.id === s.pendingEncounter.encounterId && e.zone === s.zone)||specialEncounter(s,content,s.pendingEncounter.encounterId)) && Array.isArray(s.pendingEncounter.decisions) && s.pendingEncounter.decisions.length <= 200 && Number.isInteger(s.pendingEncounter.seed),'存档战斗无效');

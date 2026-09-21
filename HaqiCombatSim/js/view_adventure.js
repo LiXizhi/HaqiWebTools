@@ -265,7 +265,7 @@ export function renderPanel(root,kind,model,cb) {
     if(kind==='shop')renderShop(body,model,cb,{el,button,art,tile});
     if(kind==='pet'&&c.pets)renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon});
     if(kind==='quests') {
-        renderQuestJournal(body,model,cb,{el,button,objectiveLabel});
+        renderQuestJournal(body,model,cb,{el,button,objectiveLabel,spellFace});
     }
     if(kind==='inventory'||kind==='equipment') {
         const box=body.closest('.modal');box.classList.add('equipment-modal');
@@ -376,14 +376,31 @@ function renderBattleContent(root,model,cb) {
     hand.classList.toggle('hand-focused',!!selected);
     hand.hidden=animating||battle.finished;
     const petHand=U.petCardsInHand(hero),petCardsOpen=!!model.petCardsOpen;
-    const visibleHand=petCardsOpen?petHand:(model.hand||U.cardsInHand(hero));
+    const runeCardsOpen=!!model.runeCardsOpen;
+    const runeHand=model.runeHand||[],runePageSize=matchMedia('(max-width:650px)').matches?4:8,runePages=Math.max(1,Math.ceil(runeHand.length/runePageSize));
+    if(root.handBattle!==battle)root.runePage=0;
+    root.runePage=Math.min(Math.max(0,root.runePage||0),runePages-1);
+    const visibleHand=runeCardsOpen?runeHand.slice(root.runePage*runePageSize,root.runePage*runePageSize+runePageSize):petCardsOpen?petHand:(model.hand||U.cardsInHand(hero));
     hand.setAttribute('aria-label',petCardsOpen?'宠物卡牌':'玩家手牌');
     const togglePets=button(petCardsOpen?`返回玩家卡（${U.cardsInHand(hero).length}张）`:`使用宠物卡（${petHand.length}张）`,cb.togglePetCards,'secondary');
     togglePets.setAttribute('aria-pressed',String(petCardsOpen));
     togglePets.disabled=!petCardsOpen&&!petHand.length;
     togglePets.hidden=animating||battle.finished||!hero.petDeckSeq?.length;
+    const toggleRunes=button(runeCardsOpen?'返回玩家卡':`符文卡（${(model.runeHand||[]).reduce((total,row)=>total+row.count,0)}）`,cb.toggleRunes,'secondary');
+    toggleRunes.setAttribute('aria-pressed',String(runeCardsOpen));
+    toggleRunes.hidden=animating||battle.finished;
+    toggleRunes.disabled=!runeCardsOpen&&!model.runeHand?.length;
+    const runePager=el('div','battle-hand-actions');
+    runePager.hidden=!runeCardsOpen||runePages===1||animating||battle.finished;
+    const changeRunePage=delta=>{root.runePage+=delta;cb.reselect();};
+    const previousRunes=button('上一页',()=>changeRunePage(-1),'secondary small'),nextRunes=button('下一页',()=>changeRunePage(1),'secondary small');
+    previousRunes.disabled=root.runePage===0;nextRunes.disabled=root.runePage===runePages-1;
+    runePager.append(previousRunes,el('span','',`${root.runePage+1} / ${runePages}`),nextRunes);
+    if(runeCardsOpen)hand.setAttribute('aria-label','符文卡牌');
     root.handBattle=battle;root.handSeqs=new Set(visibleHand.map(h=>h.seq));
-    hand.style.gridTemplateColumns=visibleHand.map((h,i)=>h.seq===selected?.seq||i===visibleHand.length-1?'var(--hand-width)':'minmax(0,1fr)').join(' ');
+    hand.style.gridTemplateColumns=visibleHand.map((h,i)=>h.seq===selected?.seq||i===visibleHand.length-1?'var(--hand-width)':'minmax(0,calc(var(--hand-width) + 12px))').join(' ');
+    hand.style.justifyContent='center';
+    if(runeCardsOpen)hand.style.gridTemplateColumns=visibleHand.map((row,index)=>index===visibleHand.length-1?'var(--hand-width)':'minmax(0,1fr)').join(' ');
     for(const h of hand.hidden?[]:visibleHand) {
         const card=battle.resolved.cards[h.key],artCard=assets.dataset.cards[h.key],available=U.isAlive(hero)&&U.canCast(hero,card,battle.resolved),isSelected=selected?.seq===h.seq,isDiscard=discarded.includes(h.seq);
         const node=el('div',`hand-card ${isSelected?'selected':''} ${isDiscard?'discarded':''} ${available?'':'unavailable'}`);
@@ -394,8 +411,9 @@ function renderBattleContent(root,model,cb) {
         select.disabled=animating||battle.finished;select.setAttribute('aria-label',`选择${artCard.name}${available?'':'（魔力不足或冷却中）'}`);select.setAttribute('aria-pressed',String(isSelected));
         const drop=button(isDiscard?'撤销弃牌':'弃牌',()=>cb.discard(h.seq),'discard-button');drop.disabled=animating||battle.finished;
         node.title=`${artCard.name} · ${cardTargetKind(card)==='hostile'?'对敌人':'对友方'} · ${expectedBaseDamage(card)?'基础伤害 '+expectedBaseDamage(card):expectedBaseHeal(card)?'基础治疗 '+expectedBaseHeal(card):'增益 / 减益魔法'}`;
-        node.title+=petCardsOpen?' · 宠物卡':isDiscard?' · 右键撤销弃牌':' · 右键弃牌';
-        if(isSelected)node.append(select,el('div','hand-focus-actions',petCardsOpen?null:drop,button('重新选择',cb.reselect,'secondary small')));
+        node.title+=runeCardsOpen?` · 符文剩余 ${h.count}`:petCardsOpen?' · 宠物卡':isDiscard?' · 右键撤销弃牌':' · 右键弃牌';
+        if(h.runeId)node.append(badge(`剩余 ${h.count}`));
+        if(isSelected)node.append(select,el('div','hand-focus-actions',petCardsOpen||runeCardsOpen?null:drop,button('重新选择',cb.reselect,'secondary small')));
         else node.append(select);
         hand.append(node);
     }
@@ -403,7 +421,7 @@ function renderBattleContent(root,model,cb) {
     const legalTargets=selected?validTargets(battle,hero,battle.resolved.cards[selected.key]):[];
     const targetEnemy=button('对敌方施法',()=>cb.target(legalTargets[0]?.id),'primary'),targetSelf=button(legalTargets[0]?.id===hero.id?'对自己施法':'对友方施法',()=>cb.target(legalTargets[0]?.id),'primary');
     const kind=selected&&cardTargetKind(battle.resolved.cards[selected.key]),canPlay=selected&&!discarded.includes(selected.seq)&&U.isAlive(hero);targetEnemy.hidden=legalTargets.length!==1||kind==='friendly'||kind==='self';targetSelf.hidden=legalTargets.length!==1||kind==='hostile'||kind==='all';targetEnemy.disabled=targetSelf.disabled=animating||battle.finished||!canPlay;
-    bottom.append(el('div','pip-legend',el('small','',`卡包剩余 ${U.deckRemaining(hero)} 张`)),el('div','battle-actions',targetEnemy,targetSelf,el('div','battle-hand-actions',togglePets,pass)));
+    bottom.append(el('div','pip-legend',el('small','',`卡包剩余 ${U.deckRemaining(hero)} 张`)),el('div','battle-actions',targetEnemy,targetSelf,el('div','battle-hand-actions',togglePets,toggleRunes,pass)));
     const rosterOptions={heroId:hero.id,canTarget:unit=>!animating&&!battle.finished&&canPlay&&legalTargets.includes(unit),target:cb.target,el,button,schoolNames:SCHOOL_NAMES,colors:COLORS};
     const foes=createBattleRoster(battle,'far',rosterOptions),allies=createBattleRoster(battle,'near',rosterOptions);
     root.battleStatusEntries=[...foes.entries,...allies.entries];updateBattleRoster(root.battleStatusEntries,model.presentation);
@@ -411,11 +429,11 @@ function renderBattleContent(root,model,cb) {
     top.classList.add('battle-roster-heading');bottom.classList.add('battle-roster-controls');
     const targets=el('div','battle-party-controls',allies.roster);
     if(battle.monsterTemplates[0].speciesId){const capture=button(`捕获（晶球 ${battle.captureStock-battle.captureUsed}）`,()=>cb.capture('mob0'),'secondary');capture.disabled=animating||battle.finished||hero.hp<=0||battle.captureStock<=battle.captureUsed;targets.append(capture);}
-    bottom.append(targets);
+    bottom.append(targets,runePager);
     root.append(top,canvas,status,hand,bottom);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
     root.oncontextmenu=e=>{
-        if(petCardsOpen||animating||battle.finished||e.pointerType==='touch'||!matchMedia('(pointer:fine)').matches)return;
+        if(petCardsOpen||runeCardsOpen||animating||battle.finished||e.pointerType==='touch'||!matchMedia('(pointer:fine)').matches)return;
         const node=e.target.closest('.hand-card')||(selected?hand.querySelector('.hand-card.selected'):null);
         const face=node?.querySelector('.card-select');if(!face||node.hidden)return;
         const rect=face.getBoundingClientRect();

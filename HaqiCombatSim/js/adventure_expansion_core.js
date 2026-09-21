@@ -24,6 +24,7 @@ export function installExpansion(content,dataset,catalog,candidates,kidsCards,ki
   if(!validSchool||fixed.some(key=>!key||!kidsCards[key]||!isSupportedType(kidsCards[key].type))){content.equipmentExportReport.push({id:item.id,reason:validSchool?'附加卡未支持':'学系不适用'});continue;}
   item.unsupportedStats=Object.keys(item.stats).filter(id=>!statIdToEntry(id)&&![137,138,139,140,141,167,168,169,170,180].includes(Number(id)));
   if(!Object.keys(item.stats).some(id=>statIdToEntry(id)||[139,140,141,167,170].includes(Number(id)))){content.equipmentExportReport.push({id:item.id,reason:'无可生效属性'});continue;}
+    if(!Object.keys(item.stats).some(id=>(statIdToEntry(id)&&![182,183].includes(Number(id)))||[139,140,141,167,170].includes(Number(id)))){content.equipmentExportReport.push({id:item.id,reason:'治疗装备商城资源待准备'});continue;}
   fixed.forEach(addCard);content.items[item.id]??=item;
   content.items[item.id].isInternalTest=item.isInternalTest===true;
   const vipOnly=item.vipOnly===true||item.stats[180]===1;content.items[item.id].vipOnly=vipOnly;

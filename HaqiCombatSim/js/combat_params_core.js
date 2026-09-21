@@ -44,6 +44,7 @@ export function defaultParams(version = 'teen') {
         // SueSue_equipment_extend_panel.lua GetAllOdds: kids level 1–5.
         gems: { odds: [100,80,60,40,25] },
         adventure: {
+            damageThreatRatio:1, splashDamageThreatRatio:0.05,
             levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [2,4,6,8],
             petCopies: 3, heroRegenPerSecond: .02, regenPerMinute: .05, hungerPerMinute: 1, feedThreshold: 30,
             foodRestore: 40, defeatHp: .1, captureBase: .2, captureWounded: .65,

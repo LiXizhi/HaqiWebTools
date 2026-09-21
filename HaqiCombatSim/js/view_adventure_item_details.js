@@ -1,4 +1,6 @@
 import {DetailDialog} from './view_detail_dialog.js';
+import {signedAttribute,unsupportedEquipmentStats} from './adventure_equipment_core.js';
+import {runeStatus} from './adventure_runes_core.js';
 import {equipmentAttributes,equipmentCards,EQUIPMENT_SLOTS} from './adventure_equipment_core.js';
 import {equipmentRequirements} from './adventure_item_rules_core.js';
 import {SCHOOL_NAMES} from './adventure_core.js';
@@ -20,10 +22,16 @@ export class ItemDetails extends DetailDialog {
             // Preview base item stats, not another owned instance's upgrades.
             const preview={...save,equipmentInstances:[],upgrades:{}};
             const attributes=el('div','equipment-attributes');
-            for(const row of equipmentAttributes(item,preview,c))attributes.append(el('span','',`${row.label} +${row.value}${row.unit}`));
+            for(const row of equipmentAttributes(item,preview,c))attributes.append(el('span','',`${row.label} ${signedAttribute(row.value)}${row.unit}`));
             this.body.append(attributes);
+            if(unsupportedEquipmentStats(item).length)this.body.append(el('p','equipment-warning','这件装备还有未接入的原版属性，当前预览仅包含已支持部分。'));
         }
-        if(item.description)this.body.append(el('p','',String(item.description).replace(/[|#]/g,' ')));
+        const rune=runeStatus(item,c,assets.dataset);
+        if(item.description&&!rune)this.body.append(el('p','',String(item.description).replace(/[|#]/g,' ')));
+        if(rune){
+            this.body.append(el('p',rune.available?'muted':'equipment-warning',rune.available?'战斗符文 · 成功施法消耗一张，失误不消耗':rune.reason));
+            if(rune.card&&spellFace)this.body.append(el('div','equipment-cards',spellFace(assets,rune.card)));
+        }
         const cards=equipmentCards(item,c),faces=el('div','equipment-cards');
         for(const key of cards){const card=assets.dataset.cards[key];if(card&&spellFace)faces.append(spellFace(assets,card));}
         if(faces.childNodes.length)this.body.append(el('h4','','附加法术 · 装备后可用'),faces);

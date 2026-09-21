@@ -1,4 +1,6 @@
 import {DetailDialog} from './view_detail_dialog.js';
+import {signedAttribute,unsupportedEquipmentStats,visibleEquipmentSummary} from './adventure_equipment_core.js';
+import {runeStatus} from './adventure_runes_core.js';
 import { equipmentInstances, findEquipmentInstance } from './adventure_equipment_instances_core.js';
 import { equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
 import { equipmentRequirements } from './adventure_item_rules_core.js';
@@ -40,8 +42,8 @@ export function renderEquipment(body,model,cb,ui) {
         statDetails.open=state.statsOpen??false;
         statDetails.ontoggle=()=>{state.statsOpen=statDetails.open;};
         const stats=el('dl','equipment-summary');
-        for(const row of equipmentSummary(save,c))stats.append(el('dt','',row.label),el('dd','',`${row.value}${row.unit}`));
-        statDetails.append(stats,el('p','muted','攻击、防御、命中、暴击为本系装备加成。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。'));
+        for(const row of visibleEquipmentSummary(save,c))stats.append(el('dt','',row.label),el('dd','',`${row.value}${row.unit}`));
+        statDetails.append(stats,el('p','muted','属性加成包含装备、强化和宝石；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。'));
         character.append(statDetails);
     }else{
         character.append(el('h3','equipment-section-title','旅行物品'));
@@ -106,8 +108,9 @@ export function renderEquipment(body,model,cb,ui) {
             const requirements=equipmentRequirements(item),school=Object.keys(c.schools).find(key=>c.schools[key]===requirements.school);
             detail.append(el('p','muted',`${EQUIPMENT_SLOTS.find(s=>s.id===item.slot)?.name||'装备'} · 等级 ${requirements.level} · ${school?SCHOOL_NAMES[school]+'系':'全学系通用'}`));
             const attrs=el('div','equipment-attributes');
-            for(const row of equipmentAttributes(item,save,c,instance?.guid))attrs.append(el('span','',`${row.label} +${row.value}${row.unit}`));
+            for(const row of equipmentAttributes(item,save,c,instance?.guid))attrs.append(el('span','',`${row.label} ${signedAttribute(row.value)}${row.unit}`));
             detail.append(attrs);
+            if(unsupportedEquipmentStats(item).length)detail.append(el('p','equipment-warning','这件装备还有未接入的原版属性，当前属性与换装对比仅包含已支持部分。'));
             const reason=save.pendingEncounter?'战斗中无法换装':equipmentBlockReason(save,item,c);
             const action=equipped?{type:'unequip',slot:item.slot}:{type:'equip',itemId:item.id,guid:instance?.guid};
             if(!reason){
@@ -130,8 +133,13 @@ export function renderEquipment(body,model,cb,ui) {
             const cards=equipmentCards(item,c);
             if(cards.length){const faces=el('div','equipment-cards');for(const key of cards){const card=assets.dataset.cards[key];if(card)faces.append(spellFace(assets,card));}detail.append(el('h4','','附加法术 · 装备后可用'),faces);}
         }else{
-            detail.append(el('p','muted',String(item.description||'旅途中收集的物品。').replace(/[|#]/g,' ')));
-            if(item.id===17307&&!save.pet)footer.append(button('打开出奇蛋',()=>{dialog.close();cb.action({type:'hatch'});},'primary'));
+            const rune=runeStatus(item,c,assets.dataset);
+            if(!rune)detail.append(el('p','muted',String(item.description||'旅途中收集的物品。').replace(/[|#]/g,' ')));
+            if(rune){
+                detail.append(el('p',rune.available?'muted':'equipment-warning',rune.available?'战斗符文 · 成功施法消耗一张，失误不消耗':rune.reason));
+                if(rune.card)detail.append(el('div','equipment-cards',spellFace(assets,rune.card)));
+            }
+            else if(item.id===17307&&!save.pet)footer.append(button('打开出奇蛋',()=>{dialog.close();cb.action({type:'hatch'});},'primary'));
             else if(item.id===17172){const b=button(save.pet?'喂养宠物':'先孵化一只宠物',()=>{dialog.close();cb.action({type:'feed'});},'primary');b.disabled=!save.pet||save.pet.xp>=c.pet.levels.max_exp;footer.append(b);}
             else detail.append(el('p','muted','旅途收藏 · 本章暂无主动使用功能'));
         }

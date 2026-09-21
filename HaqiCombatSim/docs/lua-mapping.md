@@ -1,8 +1,20 @@
 # 公式与常量 ↔ Lua 源码对照表
 
+## 2026-09-21 长期系统首批接入
+
+后续口袋闭环：沿用MagicStar_gifts.xml十项权重和getgiftNum的星级+1周额度，改用本项目createRng与角色seed/周/序号加权抽取。原客户端GetGift存在区间遗漏，本地不照搬，也不调用exid=660兑换后端。普通礼物每次一件属于Web单人改编，记录在magicStarClaims.pocket并走persistReward，不代表服务器防作弊或道具使用玩法已迁移。
+
+- 魔法星：player_server.lua L38–45六项数组；L1798–1806生命倍率在装备计算后应用，不能使用242的3.14倍率。Web会员等级仍沿用已有剩余日历月改编，遭遇冻结等级。
+- 套装：player_server.lua L3230–3270读取AllItemSetAttr.xml与itemsetid，L3507以后累计所有已达门槛。本地导出效果表，成员映射尚缺，不能猜成员。
+- 图腾：card_server.lua L1090–1173读取DragonTotemStats.xml，按经验降序取职业与exp_gsid匹配首档，不累加历史档。特殊属性和学习入口待补。
+- 魔法口袋：30413_MagicPocket.lua getgiftNum为星级+1减本周50317领取数；本地仅完成额度计算与MagicStar_gifts.xml奖池导出，尚无领取。
+- 仇恨：mob_server.lua L2920–3008表、嘲讽、延迟队列，L4638–4686最高/最低和卡位并列规则；card_server.lua L2771–2787在吸收前追加直接及溅射仇恨，Cards/CombatThreatConfig.xml的damage ratio=1、splash=0.05通过BalanceParams配置。仅直接伤害接通，治疗/持续伤害/效果/隐身等仍待迁移。
+
 所有路径相对 `paraworld/script/apps/Aries/Combat/ServerObject/`。行号为 2026-09-16 `dev` 分支快照，改动 JS 前请重新核对。JS 列为计划中的函数名（`js/combat_formulas_core.js` 等）。
 
 ## 1. 常量
+
+2026-09-21核对：`player_server.lua` L2988 `GetOutputHealBoost`读取182，L3015 `GetInputHealBoost`读取183，单位百分比。`combat_unit_core.js`的`statIdToEntry`分别映射至`outputHealPct`、`inputHealPct`，装备和宝石共用。这里只补属性映射；Lua中的VIP额外治疗奖励仍未迁移。旧冒险进行中战斗以`equipmentStatsVersion`保留此前装备规则。
 
 | 常量 | 值 | 来源 | JS |
 |------|----|------|----|

@@ -141,6 +141,7 @@ function applyDamage(arena, caster, target, card, opts) {
     if (opts.maxDamage !== undefined && damage > opts.maxDamage) damage = opts.maxDamage;
     if (opts.halve) damage = Math.ceil(damage / 2);
 
+    arena.onDamageThreat?.(caster,target,damage);
     damage = U.absorbUnitDamage(target, damage);
     U.takeDamage(target, damage);
     caster.totals.damageDealt += damage;

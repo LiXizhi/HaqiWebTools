@@ -43,6 +43,7 @@ let teleportEffect=null;
 let path=[],destination=null,moving=false,lastFrame=0,lastSave=0,toastTimer=0;
 let selected=null,discarded=[],animation=null,music=null,storageWarning=false;
 let petCardsOpen=false;
+let runeCardsOpen=false;
 let cloudClient;
 let roleStore,roleStorage=null,roleEpoch=0,lastRoleSync=0;
 const roles={busy:'',error:'',message:'',conflict:null};
@@ -182,6 +183,7 @@ function enterWorld(newSave,restoredBattle=null) {
     teleportEffect=null;
     rewardFeedback.reset();
     petCardsOpen=false;
+    runeCardsOpen=false;
     creationPreview?.stop();
     save=newSave;if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content);stage='world';path=[];destination=null;animation=null;close();
     if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};
@@ -368,9 +370,9 @@ function interact(target) {
     if(target.kind==='portal')openPanel('worldmap');
     if(target.kind==='landmark')toast(`${target.name}：${target.description}`);
     if(target.kind==='encounter')safely(()=>{
-        A.beginEncounter(save,assets.content,target.id);persist();
+        A.beginEncounter(save,assets.content,target.id,{keepworkVip:membership.state.isVip,expiresAt:membership.state.expiresAt,now:Date.now()});persist();
         battle=P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';close();nodes.hud.hidden=true;
-        selected=null;discarded=[];animation=null;petCardsOpen=false;paintBattle();
+        selected=null;discarded=[];animation=null;petCardsOpen=false;runeCardsOpen=false;paintBattle();
     });
 }
 function interactNearest(){if(!panel&&!dialog)interact(W.nearestInteraction(world,save.position));}
@@ -396,9 +398,9 @@ function track() {
     if(goal.kind==='action')openPanel(goal.id===79016?'upgrade':goal.id==='hatch-pet'||goal.id===79019?'pet':goal.id===79037&&save.equipment[24]===24003?'deck':'inventory');
 }
 function paintBattle(){
-    const hero=battle.sides.near[0],hand=selectableCards(hero);
+    const hero=battle.sides.near[0],hand=[...selectableCards(hero),...P.runeCardsInHand(battle)];
     if(selected&&!hand.some(h=>h.seq===selected.seq&&h.key===selected.key))selected=null;
-    V.renderBattle(nodes.battle,{...model(),petCardsOpen},{togglePetCards:()=>{if(animation||battle.finished)return;petCardsOpen=!petCardsOpen;selected=null;paintBattle();},sound:toggleSound,cloud:openCloud,swipePlay:h=>{
+    V.renderBattle(nodes.battle,{...model(),petCardsOpen,runeCardsOpen,runeHand:P.runeCardsInHand(battle)},{toggleRunes:()=>{if(animation||battle.finished)return;runeCardsOpen=!runeCardsOpen;petCardsOpen=false;selected=null;paintBattle();},togglePetCards:()=>{if(animation||battle.finished)return;petCardsOpen=!petCardsOpen;runeCardsOpen=false;selected=null;paintBattle();},sound:toggleSound,cloud:openCloud,swipePlay:h=>{
         if(animation)return;
         const intent=resolveHandSwipe(battle,h,discarded);
         if(!intent)return;
@@ -406,7 +408,7 @@ function paintBattle(){
         if(intent.decision)playRound(intent.decision);
         else {paintBattle();toast(intent.message);}
     },reselect:()=>{if(animation||battle.finished)return;selected=null;paintBattle();},select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
-    if(animation||battle.finished||seq>=PET_CARD_SEQ_BASE)return;discarded=discarded.includes(seq)?discarded.filter(x=>x!==seq):[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
+    if(animation||battle.finished||seq<0||seq>=PET_CARD_SEQ_BASE)return;discarded=discarded.includes(seq)?discarded.filter(x=>x!==seq):[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
 },target:id=>{
     if(!selected||animation||battle.finished)return;
     const card=battle.resolved.cards[selected.key];
@@ -423,7 +425,7 @@ function playRound(decision) {
     safely(()=>{
         const start=battle.events.length,hp=Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,u.hp])),aura=battle.aura?{...battle.aura}:null;
         const hand=cardsInHand(battle.sides.near[0]);
-        P.playPveRound(battle,decision);A.recordDecision(save,decision);persist();selected=null;discarded=[];petCardsOpen=false;
+        P.playPveRound(battle,decision);A.recordDecision(save,decision,battle);persist();selected=null;discarded=[];petCardsOpen=false;runeCardsOpen=false;
         const events=battle.events.slice(start).filter(e=>['cast','damage','heal','dot','hot','speak','fizzle','pass','capture','aura'].includes(e.type));
         // Preserve surviving hand IDs while hidden, so only new cards deal in after ALL events.
         animation={events:events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),index:0,start:performance.now(),hp,aura,entered:-1,hand:hand.filter(h=>(decision.pass||decision.capture||h.seq!==decision.seq)&&!decision.discardSeqs?.includes(h.seq))};paintBattle();

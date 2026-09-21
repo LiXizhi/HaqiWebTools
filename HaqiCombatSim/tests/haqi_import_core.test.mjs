@@ -17,6 +17,22 @@ const snapshot=()=>({name:'原角色',school:'fire',level:10,xp:4654,owner:'PRIV
 test('limited bag IDs match original equipment, learned card and rune Lua bags',()=>{
     assert.deepEqual(ORIGINAL_IMPORT_BAGS,[0,1,24,25]);assert.ok(Object.isFrozen(ORIGINAL_IMPORT_BAGS));
 });
+test('original numeric school IDs import all five supported schools after four bags are read',()=>{
+    for (const [id,school] of [[986,'fire'],[987,'ice'],[988,'storm'],[990,'life'],[991,'death']]) {
+        for (const value of [id,String(id)]) {
+            const raw=snapshot();raw.school=value;
+            const before=structuredClone(raw);
+            const {save}=prepareOriginalImport(raw,content,dataset);
+            assert.equal(save.school,school);assert.equal(save.level,10);
+            assert.equal(save.inventory[1912],2);assert.deepEqual(raw,before);
+            assert.deepEqual(parseSave(save,content),save);
+        }
+    }
+    for (const school of [989,992,999,null]) {
+        const raw=snapshot();raw.school=school;
+        assert.throws(()=>prepareOriginalImport(raw,content,dataset),/学系暂不支持/);
+    }
+});
 test('pure import preserves per-GUID equipment upgrades, independent adventure and safe metadata',()=>{
     const raw=snapshot(),before=structuredClone(raw),c=structuredClone(content),d=structuredClone(dataset);
     const result=prepareOriginalImport(raw,c,d),s=result.save;

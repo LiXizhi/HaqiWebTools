@@ -8,7 +8,7 @@ const assets=await loadResources();
 window.importEvidence={commits:0};
 openOriginalImport({root:document.querySelector('#entry'),overlay:document.querySelector('#overlay'),assets,isCurrent:()=>true,
 loadSDK:async()=>({token:'fixture-only',getUserProfile:async()=>({username:new URLSearchParams(location.search).has('changed-owner')?'other':'fixture'})}),
-read:async({requestedBags})=>{window.importEvidence.bags=requestedBags;return {owner:'fixture',name:'预览验收',school:'fire',level:10,inventory:[{bag:0,items:[{guid:88,gsid:1912,position:11,copies:1,serverdata:{addlel:2}}]}]};},
+read:async({requestedBags})=>{window.importEvidence.bags=requestedBags;return {owner:'fixture',name:'预览验收',school:986,level:10,inventory:[{bag:0,items:[{guid:88,gsid:1912,position:11,copies:1,serverdata:{addlel:2}}]}]};},
 commit:save=>{window.importEvidence.commits++;window.importEvidence.name=save.name;},
 onClose:()=>{document.querySelector('#entry').textContent='已退出（没有写入浏览器存档）';}});
 </script></body></html>

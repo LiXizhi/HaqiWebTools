@@ -10,11 +10,11 @@ test('legacy single deck migrates without losing cards; layouts switch and round
     const migrated=A.parseSave(s,content);assert.deepEqual(migrated.deckLayouts[0].deck,s.deck);
     migrated.inventory[24003]=2;migrated.xp=content.progression.xpThresholds[9];A.syncProgression(migrated,content);
     const first=copy(s.deck),second=[{key:s.deck[0].key,count:1}];
-    A.applyAction(migrated,content,{type:'deck-layouts',layouts:[{name:'任务',deck:first},{name:'挑战',deck:second}],active:1});
+    A.applyAction(migrated,content,{type:'deck-layouts',layouts:[{bagItemId:0,name:'基础卡包',deck:first},{bagItemId:24003,name:'翡翠口袋',deck:second}],active:1});
     const restored=A.parseSave(JSON.stringify(migrated),content);
-    assert.deepEqual(A.playerSpec(restored,content).deck,second);assert.deepEqual(restored.deckLayouts[0].deck,first);
-    A.applyAction(restored,content,{type:'deck-layouts',layouts:restored.deckLayouts,active:0});
-    assert.deepEqual(restored.deck,first);assert.deepEqual(restored.deckLayouts[1].deck,second);
+    assert.deepEqual(A.playerSpec(restored,content).deck,second);
+    assert.equal(restored.deckLayouts.filter(row=>row.bagItemId===24003).length,1);
+    assert.equal(restored.equipment[24],24003);
 });
 test('layout validation rejects malformed inactive decks and changes during battle atomically',()=>{
     const s=A.createAdventure(content),before=copy(s);
@@ -30,11 +30,11 @@ test('capacity changes and debug ownership changes reconcile every saved layout'
     const s=A.createAdventure(content);s.xp=content.progression.xpThresholds[9];A.syncProgression(s,content);
     s.inventory[24003]=2;A.applyAction(s,content,{type:'equip',itemId:24003});
     const large=A.recommendedDeck(s,content);
-    A.applyAction(s,content,{type:'deck-layouts',layouts:[{name:'甲',deck:large},{name:'乙',deck:large}],active:0});
+    A.applyAction(s,content,{type:'deck-layouts',layouts:[{bagItemId:24003,name:'翡翠口袋',deck:large}],active:0});
     A.applyAction(s,content,{type:'unequip',slot:24});
-    for(const layout of s.deckLayouts){A.validDeck(s,content,layout.deck);assert.ok(layout.deck.reduce((n,r)=>n+r.count,0)<=14);}
+    for(const layout of s.deckLayouts)A.validDeck({...s,equipment:{...s.equipment,24:layout.bagItemId}},content,layout.deck);
     const next=prepareDebugEdit(s,content,{['card:'+s.deck[0].key]:1}).save;
-    for(const layout of next.deckLayouts)A.validDeck(next,content,layout.deck);
+    for(const layout of next.deckLayouts)A.validDeck({...next,equipment:{...next.equipment,24:layout.bagItemId}},content,layout.deck);
     assert.deepEqual(next.deckLayouts[next.activeDeckLayout].deck,next.deck);
 });
 import {renderDeckEditor,hoverPreviewPosition} from '../js/view_adventure_deck.js';
@@ -82,6 +82,25 @@ test('deck drag follows pointer; touch hold and right click inspect without remo
     assert.equal(s.deck.reduce((n,row)=>n+row.count,0),initial,'draft keeps save intact');
 });
 import {installExpansion} from '../js/adventure_expansion_core.js';
+test('equipment cards only show a transient card face without preview actions',t=>{
+    t.mock.timers.enable({apis:['setTimeout']});
+    const s=A.createAdventure(content);s.xp=114;A.syncProgression(s,content);s.inventory[1912]=1;
+    A.applyAction(s,content,{type:'equip',itemId:1912});
+    const fixed=A.playerSpec(s,content).fixedCards;assert.ok(fixed.length);
+    const cards=Object.fromEntries([...content.learn[s.school],...fixed].map(row=>[row.key,{key:row.key,name:row.key}]));
+    const h=domHelpers(),body=h.el('section');
+    renderDeckEditor(body,{save:s,assets:{content,dataset:{cards},effects:{cards:{}},skillArt:{}}},{action(){}},h);
+    const find=(node,cls)=>node?.className===cls?node:node?.children?.map(child=>find(child,cls)).find(Boolean);
+    const slot=find(body,'bag-slots equipment-card-slots').children[0],preview=find(body,'bag-detail');
+    slot.onpointerenter({pointerType:'mouse'});t.mock.timers.tick(350);
+    assert.equal(preview.hidden,false);assert.equal(preview.attributes.role,'tooltip');
+    assert.deepEqual(preview.children.map(node=>node.tag),['canvas']);
+    slot.onclick();assert.deepEqual(preview.children.map(node=>node.tag),['canvas']);
+    assert.equal(slot.oncontextmenu,undefined);assert.equal(slot.onpointerup,undefined);
+    slot.onpointerleave();assert.equal(preview.hidden,true);
+    slot.onfocus();t.mock.timers.tick(350);assert.equal(preview.hidden,false);
+    slot.onblur();assert.equal(preview.hidden,true);
+});
 import {trainingPoints,skillLearningStatus} from '../js/adventure_learning_core.js';
 const readData=name=>JSON.parse(fs.readFileSync(new URL('../data/'+name+'.json',import.meta.url)));
 function expanded(){return installExpansion(...['adventure/chapter','adventure/combat','adventure/pets','adventure/shop-candidates','kids/cards','kids/charms','kids/card_names'].map(readData));}
@@ -122,6 +141,10 @@ test('deck defaults to learned cards and stages learning points until save',t=>{
     const nodes=()=>all(body),byLabel=label=>nodes().find(node=>node.attributes?.['aria-label']===label);
     const toggle=nodes().find(node=>node.className==='bag-filter');assert.equal(toggle.attributes['aria-pressed'],'true');
     assert.equal(nodes().filter(node=>node.className==='bag-library-card ').length,Object.keys(s.cards).length);
+    const badges=nodes().filter(node=>node.className==='bag-card-count');
+    assert.equal(badges.length,s.deck.length);
+    assert.deepEqual(badges.map(node=>Number(node.children[0])).sort(),s.deck.map(row=>row.count).sort());
+    assert.ok(nodes().filter(node=>node.className==='bag-library-card ').every(node=>!node.children.some(child=>child?.tag==='small')));
     toggle.onclick();nodes().find(node=>node.dataset?.school==='ice').onclick();
     const key=c.cardItems[22139],add=byLabel('学习并放入'+dataset.cards[key].name);
     assert.equal(add.attributes['aria-disabled'],'false');
@@ -136,7 +159,7 @@ test('deck defaults to learned cards and stages learning points until save',t=>{
     add.onpointerdown({button:0,pointerType:'mouse',clientX:20,clientY:20});add.onpointerup({clientX:20,clientY:20});add.onclick();
     assert.equal(s.cards[key],undefined);assert.equal(trainingPoints(s,c),1);
     assert.ok(nodes().some(node=>node.textContent==='训练点：0'));
-    nodes().find(node=>node.tag==='button'&&node.children[0]==='保存并使用').onclick();
+    nodes().find(node=>node.tag==='button'&&node.children[0]==='保存').onclick();
     A.applyAction(s,c,action);assert.ok(s.cards[key]);assert.equal(trainingPoints(s,c),0);
 });
 
@@ -146,12 +169,15 @@ test('bag selector stages real equipment and five-copy decks until save, shop op
     const h=domHelpers(),body=h.el('section'),shopView={};let action,panel;
     renderDeckEditor(body,{save:s,shopView,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action:value=>action=value,panel:value=>panel=value},h);
     const all=node=>[node,...(node?.children||[]).flatMap(child=>typeof child==='object'?all(child):[])];
-    const selector=all(body).find(node=>node.attributes?.['aria-label']==='选择已拥有的卡包装备');
-    selector.value='24014';selector.onchange();
+    const selectBag=id=>all(body).find(node=>node.dataset?.bagItemId===String(id)).onclick();
+    selectBag(24014);
     const recommend=all(body).find(node=>node.tag==='button'&&node.children[0]==='推荐');recommend.onclick();
     assert.equal(s.equipment[24],undefined,'changing equipment is only a draft');
-    all(body).find(node=>node.tag==='button'&&node.children[0]==='保存并使用').onclick();
-    assert.equal(action.bagItemId,24014);assert.ok(action.layouts[0].deck.some(row=>row.count===5));
+    selectBag(0);selectBag(24014);
+    all(body).find(node=>node.tag==='button'&&node.children[0]==='保存').onclick();
+    assert.equal(action.bagItemId,24014);assert.ok(action.layouts[action.active].deck.some(row=>row.count===5));
+    assert.ok(!all(body).some(node=>node.tag==='select'||node.className==='bag-add'));
+    assert.equal(all(body).find(node=>node.className==='bag-status').hidden,true);
     A.applyAction(s,c,action);assert.equal(s.equipment[24],24014);
     all(body).find(node=>node.tag==='button'&&node.children[0]==='购买卡包').onclick();
     assert.equal(panel,'shop');assert.equal(shopView.category,'bag');

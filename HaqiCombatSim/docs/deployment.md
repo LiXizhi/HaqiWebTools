@@ -16,6 +16,8 @@ npm run preview
 
 ## 上传
 
+`npc-catalog.json`同样采用构建期字段白名单：保留居民显示、商店与导师课程、交易限制、兑换条件/费用/奖励及物品属性；移除原始XML、重复原始列/奖励字符串、旧引擎模型与坐标、来源哈希和导出报告。仅精简dist数据包，原始目录保留完整资料。NPC字段或交易逻辑新增读取时，须同步更新投影与行为对照测试。
+
 构建时由 `scripts/package_runtime_data.mjs` 压缩所有JSON，并按运行时字段白名单精简美术清单：保留CDN、裁剪/动画、原卡对照及实际校验字段，删除未使用的生成与溯源元数据；商店缺图记录只保留布尔标记。`card-atlas.json`、`cdn-publish-plan.json`、`skill-art-plan.json`、`expansion-report.json`仅供开发工具使用，不进入dist。源码清单保留完整字段；修改运行时读取字段时应同步更新投影及测试。
 
 ```sh

@@ -2,8 +2,8 @@
 // border-image crops. Gameplay and all text remain ordinary DOM content.
 import { fetchJson } from './runtime_data.js';
 
-export async function loadUiArt(mode) {
-    const manifest = await fetchJson('data/adventure/ui-art.json');
+export async function loadUiArt(mode,read=fetchJson) {
+    const manifest = await read('data/adventure/ui-art.json');
     const url = mode === 'local' ? manifest.local : manifest.cdn;
     if (!url || (mode !== 'local' && !url.startsWith('https://cdn.keepwork.com/'))) {
         throw new Error('界面图集缺少有效的资源地址');

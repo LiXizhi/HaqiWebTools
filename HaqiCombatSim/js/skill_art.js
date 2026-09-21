@@ -3,8 +3,8 @@ import {skillFrame, validateSkillArt} from './skill_art_core.js';
 import {CardRenderer} from './card_renderer.js';
 export {cardDescription} from './card_renderer.js';
 
-import { fetchJson as read } from './runtime_data.js';
-export async function loadSkillArt(effects, mode) {
+import { fetchJson } from './runtime_data.js';
+export async function loadSkillArt(effects, mode, read=fetchJson) {
     const [manifest,frames]=await Promise.all([read('data/adventure/skill-art.json'),read('data/adventure/card-frames.json')]);
     validateSkillArt(manifest,effects);
     const images=new Map(),pending=new Map(),subjectFrames=new Map();

@@ -1,0 +1,18 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>居民商店隔离预览</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {installExpansion} from '../../js/adventure_expansion_core.js';
+import {installNpcCatalog} from '../../js/adventure_npc_core.js';
+import {createAdventure,applyAction} from '../../js/adventure_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+const read=async p=>(await fetch('../../data/'+p)).json();
+const args=await Promise.all(['adventure/chapter.json','adventure/combat.json','adventure/pets.json','adventure/shop-candidates.json','kids/cards.json','kids/charms.json'].map(read));
+const {content,dataset}=installExpansion(...args);installNpcCatalog(content,await read('adventure/npc-catalog.json'));
+const save=createAdventure(content);save.zone='town';save.level=50;save.trainingPointLevel=50;save.cards={};save.inventory[17143]=100;save.inventory[17213]=10000;
+const serviceNpc=content.npcCatalog.npcs.find(n=>n.id===Number(new URLSearchParams(location.search).get('npc')||30112));save.zone=serviceNpc.zone;
+const assets={content,dataset,draw:()=>false,skillArt:{drawCard:()=>false}};
+const root=document.getElementById('root');
+const npcServiceView={};
+const paint=()=>renderPanel(root,'npc-services',{assets,save,serviceNpc,npcServiceView},{close:()=>root.replaceChildren(),action:a=>{applyAction(save,content,a);paint();}});
+paint();
+</script></body></html>

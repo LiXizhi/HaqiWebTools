@@ -73,7 +73,9 @@ const shopView={category:'pet',query:'',school:'',slot:'',ownership:'',page:0},p
 const equipmentView={tab:'gear',slot:0,item:null,query:''};
 const gemView={guid:null,gemId:null,runes:[null,null,null],runeIndex:0,step:'equipment',filter:0,page:0,mode:'mount',removeIds:[],message:'',confirm:false};
 const strengtheningView={guid:null,filter:0,page:0,pending:false,message:''};
-const model=()=>({assets,save,membership:membership.state,membershipView,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
+let serviceNpc=null;
+const npcServiceView={query:'',page:0};
+const model=()=>({assets,save,serviceNpc,npcServiceView,membership:membership.state,membershipView,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
 const rewardRoot=V.el('div','reward-feedback');nodes.world.parentElement.append(rewardRoot);
 const rewardFeedback=createRewardFeedback(rewardRoot,{
     describe:reward=>{
@@ -123,6 +125,7 @@ function paintPanel() {
 function openPanel(kind,options={}) {
     if(stage!=='world')return;
     close();path=[];destination=null;panel=kind;
+    if(kind==='npc-services'){serviceNpc=options.npc;Object.assign(npcServiceView,{query:'',page:0,kind:'',category:''});}
     if(kind==='quests')selectedQuestId=options.questId??A.currentQuest(save,assets.content)?.id??assets.content.quests.at(-1)?.id;
     if(kind==='gems')Object.assign(gemView,{guid:options.guid||null,gemId:null,runes:[null,null,null],runeIndex:0,step:options.guid?'gems':'equipment',filter:0,page:0,mode:'mount',removeIds:[],message:'',confirm:false});
     if(kind==='upgrade')Object.assign(strengtheningView,{guid:initialStrengtheningSelection(save,assets.content,options.itemId,options.guid),filter:0,page:0,pending:false,message:'',offsetX:0,offsetY:0});
@@ -192,7 +195,7 @@ async function buyVipProduct(value) {
         return performAction(value,{keepworkVip:status.isVip,expiresAt:status.expiresAt,now:Date.now()});
     }catch(error){toast(error.message);return false;}finally{buyingVip=false;}
 }
-function performAction(value,access={}) {return safely(()=>{const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['checkin','magic-star-claim','choose-totem','use-totem-item'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}showRewards(before);paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(result?.message||text[value.type]||'进度已保存');return result?.message?result:true;});}
+function performAction(value,access={}) {return safely(()=>{const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['npc-purchase','checkin','magic-star-claim','choose-totem','use-totem-item'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}showRewards(before);paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(result?.message||text[value.type]||'进度已保存');return result?.message?result:true;});}
 function enterWorld(newSave,restoredBattle=null) {
     teleportEffect=null;
     rewardFeedback.reset();
@@ -390,7 +393,7 @@ function interact(target) {
     path=[];destination=null;keys.clear();persist();
     if(target.kind==='npc'){
         if(target.id===36205||target.name==='法斯特船长'){openPanel('worldmap');return;}
-        close();dialog={npcId:target.id};
+        close();dialog={npcId:target.id,npc:target};
         const talk=target.questDialogue&&A.pendingQuestTalk(save,A.currentQuest(save,assets.content),target.id);
         if(talk)startQuestTalk(talk);else paintDialogue();
     }
@@ -551,7 +554,17 @@ function frame(now) {
 }
 async function boot(){
     try {
-        assets=await loadResources(p=>{const bar=$('load-progress');if(bar)bar.value=p;});
+        assets=await loadResources(({label,detail='',value})=>{
+            const bar=$('load-progress');
+            if(!bar)return;
+            if(value===null)bar.removeAttribute('value');else bar.value=value;
+            bar.setAttribute('aria-label',label);
+            $('load-status').textContent=label+'…';
+            $('load-detail').textContent=detail;
+        });
+        $('load-status').textContent='正在初始化世界…';
+        $('load-detail').textContent='';
+        $('load-progress').removeAttribute('value');
         if(assets.content.schemaVersion!==1||!assets.content.quests?.length||!assets.dataset.cards)throw new Error('章节数据格式不正确，请重新导出并检查资源。');
         roleStore=createRoleStore({content:assets.content,dataset:assets.dataset});roleStore.open();
         roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
@@ -561,7 +574,7 @@ async function boot(){
         // Keep the loading screen until session restoration chooses the final screen.
         // Rendering the guest title first briefly exposes creation/role selection.
         if(localStorage.getItem(LAST_ACCOUNT_KEY)){
-            nodes.entry.querySelector('p').textContent='正在恢复账号与角色…';
+            $('load-status').textContent='正在恢复账号与角色…';
             await connectRoles(false);
         }
         if(stage==='loading')showTitle(!!roles.conflict||!!(roleStore.owner&&roles.error));

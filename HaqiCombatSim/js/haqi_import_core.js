@@ -27,10 +27,13 @@ function deckIds(raw) {
 }
 
 export function prepareOriginalImport(snapshot, content, dataset) {
+    const originalSchools = {986:'fire',987:'ice',988:'storm',989:'myth',990:'life',991:'death',992:'balance'};
+    const school = record(snapshot) ? originalSchools[snapshot.school] ?? snapshot.school : undefined;
     if (!record(snapshot) || !Array.isArray(snapshot.inventory) || snapshot.inventory.length > 100 ||
-        !Object.hasOwn(content.learn, snapshot.school) || !positive(snapshot.level)) throw Error('原服角色资料无效，未创建角色。');
+        !positive(snapshot.level)) throw Error('原服角色资料无效，未创建角色。');
+    if (typeof school !== 'string' || !Object.hasOwn(content.learn, school)) throw Error('该角色的学系暂不支持导入，未创建角色。');
     const warnings = [], warn = message => warnings.push(message);
-    const save = createAdventure(content, {name:snapshot.name, school:snapshot.school});
+    const save = createAdventure(content, {name:snapshot.name, school});
     const level = Math.min(snapshot.level, content.progression.levelCap);
     // Web adventure experience curves differ: preserve level, not unverified raw XP.
     save.xp = content.progression.xpThresholds[level - 1];

@@ -1,3 +1,4 @@
+import {purchaseNpcOffer} from './adventure_npc_core.js';
 import {claimMagicStar,validateMagicStarClaims,magicStarCombatLevel,applyMagicStarCombat} from './adventure_magic_star_core.js';
 import {equipmentSetStats,dragonTotemStage,progressionStatEntry,chooseDragonTotem,useDragonTotemItem} from './adventure_progression_bonuses_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
@@ -115,31 +116,40 @@ export function validDeck(save, content, deck) {
     }
     assert(total <= limits.capacity, '卡包已满'); return true;
 }
-// Original CombatCardDeckSubPage: named bag tabs and one icon per card copy.
-// The active deck remains the battle/legacy-save source of truth.
 export function syncDeckLayouts(save, content) {
-    if (!save.deckLayouts) { save.deckLayouts = [{name:'卡包一',deck:clone(save.deck)}]; save.activeDeckLayout = 0; }
-    const limits = {...deckLimits(save,content),version:'kids'};
-    for (let i=0;i<save.deckLayouts.length;i++) {
-        const layout=save.deckLayouts[i],source=i===save.activeDeckLayout?save.deck:layout.deck;
-        layout.deck=clampDeck(source.map(row=>({...row,count:Math.min(row.count,deckCardCopies(save,content,row.key))})).filter(row=>row.count>0),limits).deck;
-        if(!layout.deck.length)layout.deck=recommendedDeck(save,content);
-    }
+    const equipped=Number(save.equipment[24])||0;
+    const bags=Object.values(content.items).filter(item=>item.slot===24&&canEquip(save,item,content));
+    const ids=[...new Set([equipped,...bags.map(item=>Number(item.id))])].filter(id=>id||!equipped);
+    const previous=save.deckLayouts||[],current=previous[save.activeDeckLayout||0];
+    const legacy=previous.filter(row=>row.bagItemId===undefined&&row!==current);
+    save.deckLayouts=ids.map(bagItemId=>{
+        const existing=previous.find(row=>row.bagItemId===bagItemId);
+        const source=existing?(existing===current&&existing.bagItemId===equipped?save.deck:existing.deck)
+            :bagItemId===equipped?save.deck:legacy.shift()?.deck||save.deck;
+        const draft={...save,equipment:{...save.equipment,24:bagItemId}};
+        const limits={...deckLimits(draft,content),version:'kids'};
+        let deck=clampDeck(source.map(row=>({...row,count:Math.min(row.count,deckCardCopies(draft,content,row.key))})).filter(row=>row.count>0),limits).deck;
+        if(!deck.length)deck=recommendedDeck(draft,content);
+        return {bagItemId,name:content.items[bagItemId]?.name||'基础卡包',deck};
+    });
+    save.activeDeckLayout=save.deckLayouts.findIndex(row=>row.bagItemId===equipped);
     save.deck=clone(save.deckLayouts[save.activeDeckLayout].deck);
 }
-// A new tab requires another owned, usable bag. Keep the starter deck usable
-// without equipment and preserve legacy layouts without granting new ones.
 export function deckLayoutCapacity(save,content) {
-    return Math.min(6,Math.max(1,Object.values(content.items)
-        .filter(item=>item.slot===24&&canEquip(save,item,content))
-        .reduce((total,item)=>total+(save.inventory[item.id]||0),0)));
+    return Math.max(1,Object.values(content.items).filter(item=>item.slot===24&&canEquip(save,item,content)).length);
 }
 function validateDeckLayouts(save,content,layouts,active) {
-    assert(Array.isArray(layouts)&&layouts.length>=1&&layouts.length<=6,'请保留一至六个卡包');
+    assert(Array.isArray(layouts)&&layouts.length>=1&&layouts.length<=Object.keys(content.items).length,'请保留有效卡包');
     assert(Number.isInteger(active)&&active>=0&&active<layouts.length,'请选择有效卡包');
+    const seen=new Set();
     for(const row of layouts){
         assert(row&&typeof row.name==='string'&&row.name.trim().length>0&&row.name.length<=16,'卡包名称需为一至十六字');
-        validDeck(save,content,row.deck);
+        if(row.bagItemId!==undefined){
+            assert(Number.isInteger(row.bagItemId)&&!seen.has(row.bagItemId),'每个卡包只能有一个实例');
+            seen.add(row.bagItemId);
+            assert(row.bagItemId===0||content.items[row.bagItemId]?.slot===24&&canEquip(save,content.items[row.bagItemId],content),'卡包尚未拥有或不符合使用条件');
+        }
+        validDeck(row.bagItemId===undefined?save:{...save,equipment:{...save.equipment,24:row.bagItemId}},content,row.deck);
     }
 }
 export function canEquip(save, item, content) {
@@ -245,6 +255,7 @@ export function applyAction(save, content, action, access={}) {
     if(content.pets&&Pets.petAction(save,content,action,access)){syncEquipmentInstances(save,content);save.revision++;return {changed:true};}
     const q = currentQuest(save,content);
     switch (action.type) {
+    case 'npc-purchase': purchaseNpcOffer(save,content,action);break;
     case 'magic-star-claim': claimMagicStar(save,content,action,access);syncEquipmentInstances(save,content);break;
     case 'choose-totem': chooseDragonTotem(save,content,action.professionId);break;
     case 'use-totem-item': useDragonTotemItem(save,content,action.itemId);break;
@@ -335,7 +346,13 @@ export function applyAction(save, content, action, access={}) {
         }
         if(action.learnedKeys?.length)learnDeckCards(next,content,action.learnedKeys);
         validateDeckLayouts(next,content,action.layouts,action.active);
-        assert(action.layouts.length<=Math.max(save.deckLayouts?.length||1,deckLayoutCapacity(next,content)), '没有多余的可用卡包，请先到商店购买');
+        const selected=action.layouts[action.active].bagItemId;
+        if(selected!==undefined){
+            assert(action.bagItemId===undefined||action.bagItemId===selected,'请选择一致的卡包');
+            if(selected)next.equipment[24]=selected;else delete next.equipment[24];
+        }else{
+            assert(action.layouts.length<=deckLayoutCapacity(next,content), '没有多余的可用卡包，请先到商店购买');
+        }
         save.cards=next.cards;
         save.trainingPointsSpent=next.trainingPointsSpent;
         save.equipment=next.equipment;

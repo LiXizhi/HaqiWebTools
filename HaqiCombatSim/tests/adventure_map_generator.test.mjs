@@ -72,6 +72,38 @@ test('ordinary regions do not draw ambient motes while explicit previews remain 
     assert.ok(checked>0);
 });
 
+test('weather stays planted in the world when the camera follows the character',()=>{
+    const weather={kind:'ash',count:22,speed:9,color:'#d9c6b3',wind:15};
+    const spanX=1280+40,spanY=720+40;
+    const wrap=(n,max)=>((n%max)+max)%max;
+    const marks=camera=>{
+        const commands=[];
+        const c=new Proxy({},{get:(_,key)=>(...args)=>commands.push([key,...args])});
+        drawIslandWeather(c,{layout:null},{x:1500,y:3290},10,1280,720,false,null,weather,camera);
+        return commands.filter(call=>call[0]==='ellipse').map(call=>[call[1],call[2]]);
+    };
+    const still=marks(null),moved=marks({x:40,y:25,scale:1});
+    const near=(n,max)=>{const d=wrap(n,max);return Math.min(d,max-d);};
+    assert.equal(moved.length,still.length);
+    assert.equal(moved.length,22);
+    for(let i=0;i<still.length;i++){
+        assert.ok(near(still[i][0]-40-moved[i][0],spanX)<1e-6);
+        assert.ok(near(still[i][1]-25-moved[i][1],spanY)<1e-6);
+    }
+    assert.notDeepEqual(moved,still);
+    const zoomed=marks({x:40,y:0,scale:1.25});
+    for(let i=0;i<still.length;i++)assert.ok(near(still[i][0]-50-zoomed[i][0],spanX)<1e-6);
+    const period=marks({x:spanX,y:spanY,scale:1});
+    for(let i=0;i<still.length;i++){
+        assert.ok(Math.abs(still[i][0]-period[i][0])<1e-6);
+        assert.ok(Math.abs(still[i][1]-period[i][1])<1e-6);
+    }
+    const again=[];
+    const context=new Proxy({},{get:(_,key)=>(...args)=>again.push([key,...args])});
+    drawIslandWeather(context,{layout:null},{x:0,y:0},10,1280,720,true,null,weather,{x:80,y:40,scale:1});
+    assert.equal(again.length,0);
+});
+
 test('regional weather has a fixed viewport budget and respects reduced motion',()=>{
     const world=createWorld('ice',content),position=world.layout.regions.find(r=>r.biome==='snow');
     const commands=[];const c=new Proxy({}, {get:(_,key)=>(...args)=>commands.push([key,...args])});

@@ -1,0 +1,25 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>居民高清图片验证</title><base href="../../"><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_dialogue.css">
+<style>body{background:#596456}header{position:relative;z-index:100;padding:16px;background:#f4e9c9;color:#423824}header label{margin-right:16px}#status{margin-left:16px}#original{width:256px;height:256px;margin:20px;background:#e9ddbc}.overlay{pointer-events:none}.overlay button{pointer-events:auto}</style></head>
+<body class="haqi-app storybook-ui"><header><label>居民<select id="npc" disabled></select></label><button id="show">显示对话</button><span id="status">正在加载</span></header><img id="original" alt="256像素原图" crossorigin="anonymous"><div id="dialogue"></div>
+<script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {renderDialogue} from '../../js/view_adventure.js';
+import {assetUrl} from '../../js/adventure_media_core.js';
+const select=document.querySelector('#npc'),status=document.querySelector('#status'),root=document.querySelector('#dialogue');
+try{
+    const assets=await loadResources(),save=createAdventure(assets.content);
+    const manifest=await (await fetch('data/adventure/npc-art.json')).json();
+    const npcs=assets.content.npcCatalog.npcs.filter(n=>n.artVisible);
+    for(const n of npcs){const option=document.createElement('option');option.value=n.instanceId;option.textContent=n.name;select.append(option);}
+    select.value=npcs.find(n=>n.name==='安吉奶奶').instanceId;select.disabled=false;
+    function show(){
+        const npc=npcs.find(n=>n.instanceId===select.value),entry=manifest.entries[npc.portrait.id];
+        document.querySelector('#original').src=assetUrl(entry,assets.mode);
+        status.textContent=`${entry.width}×${entry.height} · ${entry.size} 字节 · ${assets.mode==='local'?'本地':'CDN'} · 不读写存档`;
+        renderDialogue(root,{assets,save},{lines:[{npcId:npc.id,text:npc.description||'欢迎来到这里，年轻的魔法师。'}],index:0,finishLabel:'结束交谈'},{close:()=>root.replaceChildren(),next:()=>root.replaceChildren()});
+    }
+    select.onchange=show;document.querySelector('#show').onclick=show;show();
+}catch(error){status.textContent=error.message;console.error(error);}
+</script></body></html>

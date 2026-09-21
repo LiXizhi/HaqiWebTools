@@ -13,7 +13,26 @@ export function projectRuntimeData(relativePath, value) {
     const name = relativePath.slice('adventure/'.length);
     if (developmentFiles.has(name)) return null;
     switch (name) {
+        case 'npc-catalog.json': return {
+            version: value.version,
+            npcs: value.npcs.map(row => ({
+                ...pick(row, ['id', 'instanceId', 'zone', 'name', 'description', 'place', 'enabled', 'x', 'y']),
+                buttons: row.buttons.map(button => pick(button, ['label', 'dofunction', 'param1', 'param2', 'canshow'])),
+            })),
+            shops: value.shops.map(row => pick(row, ['id', 'npcId', 'menu', 'categoryName', 'itemId', 'exchangeId', 'dailyLimit', 'name', 'platform', 'timeRange'])),
+            mentors: map(value.mentors, row => ({
+                attributes: pick(row.attributes, ['class']),
+                courses: row.courses.map(course => pick(course, ['type', 'class', 'gsid', 'exID', 'other_exID', 'needlevel', 'tips', 'name'])),
+            })),
+            exchanges: map(value.exchanges, row => pick(row, ['prerequisites', 'costs', 'rewards'])),
+            items: map(value.items, row => pick(row, ['id', 'name', 'description', 'sourceIcon', 'assetkey', 'stats', 'slot', 'kind', 'subtype'])),
+        };
         case 'assets.json': return map(value, row => pick(row, ['entry']));
+        case 'npc-art.json': return {
+            version: value.version, byteLimit: value.byteLimit,
+            entries: map(value.entries, row => pick(row, [...urlFields, 'size', 'width', 'height'])),
+            instances: map(value.instances, row => pick(row, ['visible', 'portrait'])),
+        };
         case 'media.json': return {
             schemaVersion: value.schemaVersion,
             entries: map(value.entries, row => pick(row, [...urlFields, 'sha256', 'size', 'sourceEntry', 'width', 'height', 'optional'])),

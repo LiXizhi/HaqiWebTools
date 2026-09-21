@@ -5,9 +5,9 @@
     "description": "魔法哈奇 2D 网页战斗模拟器：无 UI 战斗引擎 + 人机对战 + 批量胜率模拟 + 数值建议",
     "type": "module",
     "scripts": {
-        "dev": "vite --host 127.0.0.1 --open /HaqiCombatSim.html",
+        "dev": "vite --host 127.0.0.1 --open /Haqi.html",
         "build": "npm run check:maps && vite build",
-        "preview": "vite preview --host 127.0.0.1 --open /HaqiCombatSim.html",
+        "preview": "vite preview --host 127.0.0.1 --open /Haqi.html",
         "plan:release": "npm run build && node uploadRelease.mjs --dry-run",
         "upload": "npm run build && node uploadRelease.mjs",
         "verify:release": "node uploadRelease.mjs --verify-only",

@@ -1,6 +1,5 @@
 import {createCloseButton} from './view_adventure_controls.js';
-import {deckLimits,deckCardCopies,deckLayoutCapacity,canEquip,recommendedDeck,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
-import {clampDeck} from './combat_unit_core.js';
+import {deckLimits,deckCardCopies,syncDeckLayouts,equipmentBlockReason,recommendedDeck,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
 import {skillLearningStatus,trainingPoints} from './adventure_learning_core.js';
 const SCHOOL_LABELS={...SCHOOL_NAMES,balance:'平衡'};
 const PAGE_SIZE=36;
@@ -24,19 +23,20 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     if(save.tips.bagRulesAdjusted)body.append(el('p','bag-hint','旧存档中不符合等级或学系要求的口袋已卸下，物品仍保留在背包中。'));
     let bagItemId=save.equipment[24],limits=deckLimits(save,content);
     let trainingPointsSpent=save.trainingPointsSpent||0;
-    const draftSave=()=>({...save,cards:owned,trainingPointsSpent,equipment:{...save.equipment,...(bagItemId?{24:bagItemId}:{})}});
+    const draftSave=()=>({...save,cards:owned,trainingPointsSpent,equipment:{...save.equipment,24:bagItemId||0}});
     const copies=key=>deckCardCopies(draftSave(),content,key);
-    const layouts=JSON.parse(JSON.stringify(save.deckLayouts||[{name:'卡包一',deck:save.deck}]));
-    let active=save.activeDeckLayout||0,school='all',page=0,query='',ownedOnly=true,previewPinned=false,hoverTimer;
+    const draft=JSON.parse(JSON.stringify(save));syncDeckLayouts(draft,content);
+    const layouts=draft.deckLayouts;
+    let active=draft.activeDeckLayout,school='all',page=0,query='',ownedOnly=true,previewPinned=false,hoverTimer;
     const owned={...save.cards},learned=new Set(),lessons=availableCardLessons(save,content),lessonMap=new Map(lessons.map(row=>[row.key,row]));
     layouts[active].deck=save.deck.map(row=>({...row}));
     const tabs=el('div','bag-tabs'),slots=el('div','bag-slots'),library=el('div','bag-library'),detail=el('div','bag-detail');
     detail.hidden=true;detail.setAttribute('role','dialog');detail.setAttribute('aria-label','卡牌预览');
-    const status=el('span','bag-status');status.setAttribute('aria-live','polite');
-    const counter=el('strong',''),name=el('input','bag-name');name.maxLength=16;name.setAttribute('aria-label','卡包名称');name.hidden=true;
+    const status=el('span','bag-status');status.setAttribute('aria-live','polite');status.hidden=true;
+    const counter=el('strong','');
     const total=()=>layouts[active].deck.reduce((n,row)=>n+row.count,0);
-    const say=text=>{status.textContent=text;};
-    const mark=()=>say('有修改待保存');
+    const say=text=>{status.textContent=text;status.hidden=!text;};
+    const mark=()=>say('');
     function subject(card) {
         const canvas=el('canvas','bag-subject');canvas.width=96;canvas.height=96;
         const base=assets.effects.cards[card.key]?.base;
@@ -176,8 +176,10 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
             const card=cards[lesson.key];if(!card)continue;
             const n=layouts[active].deck.find(row=>row.key===lesson.key)?.count||0;
             const learning=skillLearningStatus(draftSave(),content,lesson),available=learning.allowed;
-            const label=owned[lesson.key]?`已放 ${n}/${copies(lesson.key)}`:learning.reason;
-            const entry=button([el('span','bag-library-icon',subject(card)),el('span','bag-card-name',card.name),el('small','muted',label)],()=>{},`bag-library-card ${available?'':'locked'}`);
+            const badge=n>0?el('span','bag-card-count',String(n)):null;
+            if(badge)badge.setAttribute('aria-label',`已放入 ${n} 张`);
+            const entry=button([el('span','bag-library-icon',subject(card)),el('span','bag-card-name',card.name),badge,
+                owned[lesson.key]?null:el('small','muted',learning.reason)],()=>{},`bag-library-card ${available?'':'locked'}`);
             entry.setAttribute('aria-label',`${owned[lesson.key]?'放入':'学习并放入'}${card.name}`);
             entry.setAttribute('aria-disabled',String(!available||n>=(owned[lesson.key]?copies(lesson.key):limits.eachCapacity)||total()>=limits.capacity));
             previewEvents(entry,lesson.key);bindCardGesture(entry,lesson.key,false,()=>add(lesson.key));library.append(entry);
@@ -195,44 +197,35 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     }
     function paintTabs(){
         closePreview();tabs.replaceChildren();layouts.forEach((layout,index)=>{
-            const tab=button(layout.name,()=>{active=index;mark();paintTabs();paintCards();},'bag-tab');tab.setAttribute('aria-pressed',String(index===active));tabs.append(tab);
+            const item=content.items[layout.bagItemId],art=el('canvas','bag-item-icon');art.width=80;art.height=80;art.setAttribute('aria-hidden','true');
+            if(item?.art)assets.draw?.(art.getContext('2d'),item.art,0,0,80,80);
+            const tab=button(item?.art?art:el('span','',layout.name),()=>{
+                active=index;bagItemId=layout.bagItemId;limits=deckLimits(draftSave(),content);mark();paintTabs();paintCards();
+            },'bag-tab');
+            tab.dataset.bagItemId=String(layout.bagItemId);tab.title=layout.name;tab.setAttribute('aria-label',layout.name);
+            tab.setAttribute('aria-pressed',String(index===active));tabs.append(tab);
         });
-        create.disabled=layouts.length>=deckLayoutCapacity(save,content);
-        create.title=create.disabled?'没有多余的可用卡包，请先到商店购买':'使用已拥有的卡包';
-        tabs.append(create);drop.disabled=layouts.length===1;name.value=layouts[active].name;name.hidden=true;
+        for(const item of Object.values(content.items).filter(item=>item.slot===24&&save.inventory[item.id]>0&&!layouts.some(layout=>layout.bagItemId===Number(item.id)))){
+            const art=el('canvas','bag-item-icon');art.width=80;art.height=80;art.setAttribute('aria-hidden','true');
+            if(item.art)assets.draw?.(art.getContext('2d'),item.art,0,0,80,80);
+            const tab=button(item.art?art:item.name,()=>{},'bag-tab');tab.disabled=true;
+            tab.title=`${item.name} · ${equipmentBlockReason(save,item,content)}`;tab.setAttribute('aria-label',tab.title);tab.setAttribute('aria-pressed','false');tabs.append(tab);
+        }
     }
-    name.oninput=()=>{layouts[active].name=name.value;mark();tabs.children[active].textContent=name.value||'未命名';};
-    const rename=button('改名',()=>{name.hidden=!name.hidden;if(!name.hidden)name.focus();},'text-button');
-    const create=button('+',()=>{if(layouts.length>=deckLayoutCapacity(save,content)){say('没有多余的可用卡包，请先到商店购买');return;}layouts.push({name:`卡包${layouts.length+1}`,deck:layouts[active].deck.map(row=>({...row}))});active=layouts.length-1;mark();paintTabs();paintCards();},'bag-tab bag-add');create.setAttribute('aria-label','使用多余卡包');
-    const drop=button('删除布局',()=>{if(layouts.length<=1)return;layouts.splice(active,1);active=Math.max(0,active-1);mark();paintTabs();paintCards();},'text-button');
     const equipment=el('div','bag-slots equipment-card-slots');
     for(const row of playerSpec(save,content).fixedCards)for(let i=0;i<row.count;i++){
-        const card=cards[row.key];if(!card)continue;const slot=button(subject(card),()=>inspect(row.key,false,slot),'bag-slot');slot.setAttribute('aria-label',card.name+'，装备附卡');previewEvents(slot,row.key);bindCardGesture(slot,row.key);equipment.append(slot);
+        const card=cards[row.key];if(!card)continue;const slot=button(subject(card),()=>{},'bag-slot');slot.setAttribute('aria-label',card.name+'，装备附卡');previewEvents(slot,row.key);equipment.append(slot);
     }
-    const saveButton=button('保存并使用',()=>{
-        if(layouts.some(row=>!row.name.trim())){say('请填写卡包名称');return;}
+    const saveButton=button('保存',()=>{
         cb.action({type:'deck-layouts',layouts,active,learnedKeys:[...learned],...(bagItemId?{bagItemId}:{})});
     },'primary');
-    const bag=el('section','bag-main',el('div','bag-section-bar',counter,button('推荐',()=>{layouts[active].deck=recommendedDeck(draftSave(),content);mark();paintCards();},'secondary'),rename,drop),name,slots,
+    const bag=el('section','bag-main',el('div','bag-section-bar',counter,button('推荐',()=>{layouts[active].deck=recommendedDeck(draftSave(),content);mark();paintCards();},'secondary')),slots,
         el('p','bag-hint','拖出移除；长按 / 右键查看详情'),
         el('details','bag-equipment',el('summary','',`装备附卡 ${equipment.children.length} 张 · 不占卡位`),equipment));
     const collection=el('section','bag-collection',el('div','bag-section-bar',el('strong','','法术牌库'),search,toggle),filters,
         library,el('div','bag-pager',countLabel,points,previous,next));
-    const selector=el('select','bag-equipment-select');selector.setAttribute('aria-label','选择已拥有的卡包装备');
-    if(!bagItemId){const option=el('option','','未装备口袋 · 基础配卡');option.value='';selector.append(option);}
-    for(const item of Object.values(content.items).filter(item=>item.slot===24&&(save.inventory[item.id]||0)>0)){
-        const option=el('option','',`${item.name} · ${item.stats[167]}张 / 单卡${item.stats[170]}张${canEquip(save,item,content)?'':' · 不符合使用条件'}`);
-        option.value=String(item.id);option.disabled=!canEquip(save,item,content);selector.append(option);
-    }
-    selector.value=String(bagItemId||'');
-    selector.onchange=()=>{
-        bagItemId=Number(selector.value)||undefined;limits=deckLimits(draftSave(),content);
-        let removed=0;
-        for(const layout of layouts){const result=clampDeck(layout.deck,limits);layout.deck=result.deck;removed+=result.trimmed;}
-        paintCards();say(removed?`更换口袋将从配卡方案中移出 ${removed} 张，已学法术保留；保存后生效`:'更换口袋待保存');
-    };
     const shop=button('购买卡包',()=>{if(shopView)Object.assign(shopView,{category:'bag',subcategory:0,selected:null,query:'',school:'',slot:'',ownership:'',level:'',page:0});cb.panel('shop');},'secondary');
     shop.title='前往商店购买卡包；当前修改需先保存';
-    body.append(el('div','bag-toolbar',tabs,selector,shop),el('div','bag-workspace',bag,collection),el('div','bag-footer',status,saveButton),detail);
-    paintTabs();paintCards();say('当前使用：'+layouts[active].name);
+    body.append(el('div','bag-toolbar',tabs,shop),el('div','bag-workspace',bag,collection),status,el('div','bag-footer',saveButton),detail);
+    paintTabs();paintCards();
 }

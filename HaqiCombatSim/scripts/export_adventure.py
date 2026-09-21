@@ -298,4 +298,5 @@ print(f'Exported {len(quests)} quests, {len(npcs)} NPCs, {len(monsters)} monster
 # Refresh learning rules after the chapter/card-item mapping has been exported.
 import subprocess, sys
 subprocess.run([sys.executable, str(APP/'scripts/export_skill_learning.py'), '--root', str(ROOT)], check=True)
+subprocess.run([sys.executable, str(APP/'scripts/export_npc_catalog.py'), '--root', str(ROOT)], check=True)
 if missing:raise SystemExit('Missing required assets: '+str(missing))

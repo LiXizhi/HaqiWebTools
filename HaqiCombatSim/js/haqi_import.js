@@ -34,7 +34,7 @@ export function openOriginalImport({root,overlay,assets,isCurrent,commit,onClose
             const model={assets,save:structuredClone(state.preview.save),equipmentView:{tab:'gear',slot:0,item:null,query:''},petView:{},shopView:{},membership:{isVip:false}};
             renderPanel(overlay,kind,model,{close:()=>{clearOverlay();paint();},action:()=>false,panel:target=>{if(['inventory','deck'].includes(target))preview(target);}});
             state.reviewed[kind]=true;paint();
-            const note=document.createElement('p');note.className='muted';note.textContent='导入预览 · 仅供核对，操作不保存';overlay.querySelector('.modal-body')?.prepend(note);
+            const note=document.createElement('p');note.className='muted';note.textContent='只读预览';overlay.querySelector('.modal-body')?.prepend(note);
         }catch(error){state.error=error.message;paint();}
     }
     async function confirm(){

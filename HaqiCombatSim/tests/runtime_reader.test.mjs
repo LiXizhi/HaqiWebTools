@@ -2,6 +2,25 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createJsonReader } from '../js/runtime_data.js';
 
+test('streamed progress handles UTF-8 boundaries and unknown or compressed lengths', async () => {
+    const value = { text: '魔法世界' }, bytes = new TextEncoder().encode(JSON.stringify(value));
+    for (const headers of [{ 'content-length': String(bytes.length) }, {}, { 'content-length': '8', 'content-encoding': 'gzip' }]) {
+        const events = [];
+        const read = createJsonReader({ packed: false, onProgress: event => events.push(event), request: async () => new Response(new ReadableStream({
+            start(controller) {
+                for (let offset = 0; offset < bytes.length; offset += 2) controller.enqueue(bytes.slice(offset, offset + 2));
+                controller.close();
+            },
+        }), { headers }) });
+        assert.deepEqual(await read('data/example.json'), value);
+        assert.equal(events[0].loaded, 0);
+        assert.equal(events.at(-1).loaded, bytes.length);
+        assert.equal(events.at(-1).done, true);
+        assert.equal(events[0].total, headers['content-length'] && !headers['content-encoding'] ? bytes.length : null);
+        assert.ok(events.filter(event => !event.done && event.loaded > 0).length > 1);
+    }
+});
+
 test('concurrent reads share one pack request but return independent data', async () => {
     let count = 0;
     const read = createJsonReader({ packed: true, request: async url => {

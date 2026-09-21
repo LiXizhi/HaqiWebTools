@@ -21,7 +21,7 @@
     <div id="hud"></div>
     <div id="battle-layer"></div>
     <div id="overlay"></div>
-    <div id="entry"><div class="loading-card"><span class="sigil">✧</span><h1>魔法哈奇</h1><p>正在准备你的魔法之旅…</p><progress id="load-progress" max="1" value="0"></progress></div></div>
+    <div id="entry"><div class="loading-card" aria-busy="true"><span class="sigil">✧</span><h1>魔法哈奇</h1><p id="load-status" role="status">正在准备你的魔法之旅…</p><progress id="load-progress" max="1" aria-label="正在准备游戏资源"></progress><p id="load-detail" class="muted" style="min-height:1.5em;font-variant-numeric:tabular-nums"></p></div></div>
     <div id="toast" role="status" aria-live="polite"></div>
   </main>
   <noscript>请开启 JavaScript 后开始冒险。</noscript>

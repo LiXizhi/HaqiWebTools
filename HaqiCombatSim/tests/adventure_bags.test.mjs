@@ -11,7 +11,7 @@ const read=name=>JSON.parse(fs.readFileSync(new URL('../data/'+name+'.json',impo
 const {content:c,dataset:d}=installExpansion(...['adventure/chapter','adventure/combat','adventure/pets','adventure/shop-candidates','kids/cards','kids/charms'].map(read));
 const level=(s,n)=>{s.xp=c.progression.xpThresholds[n-1];A.syncProgression(s,c);};
 
-test('additional layouts require owned usable bags; legacy layouts survive without enabling free additions',()=>{
+test('duplicate owned bags produce one layout and duplicate layout identities are rejected',()=>{
  const s=A.createAdventure(c);s.inventory[100]=100000;
  const layouts=n=>Array.from({length:n},(_,i)=>({name:`卡包${i+1}`,deck:s.deck.map(row=>({...row}))}));
  const add=n=>A.applyAction(s,c,{type:'deck-layouts',layouts:layouts(n),active:0});
@@ -21,12 +21,17 @@ test('additional layouts require owned usable bags; legacy layouts survive witho
  s.inventory[24014]=2;assert.equal(A.deckLayoutCapacity(s,c),1,'underlevel items grant no usable tabs');
  A.applyAction(s,c,{type:'buy',productId:'gear:24001'});
  assert.throws(()=>add(2),/购买/);
- A.applyAction(s,c,{type:'buy',productId:'gear:24001'});add(2);
- assert.equal(A.parseSave(s,c).deckLayouts.length,2);
+ A.applyAction(s,c,{type:'buy',productId:'gear:24001'});
+ assert.equal(A.deckLayoutCapacity(s,c),1);
+ assert.throws(()=>add(2),/购买/);
+ assert.equal(A.parseSave(s,c).deckLayouts.filter(row=>row.bagItemId===24001).length,1);
+ const duplicate={...A.parseSave(s,c).deckLayouts.find(row=>row.bagItemId===24001)};
+ assert.throws(()=>A.applyAction(s,c,{type:'deck-layouts',layouts:[duplicate,duplicate],active:0}),/一个实例/);
  assert.throws(()=>add(3),/购买/);
  delete s.inventory[24001];syncEquipmentInstances(s,c);
- const legacy=A.parseSave(s,c);A.applyAction(legacy,c,{type:'deck-layouts',layouts:legacy.deckLayouts,active:1});
- assert.equal(legacy.deckLayouts.length,2);
+ s.deckLayouts=layouts(2);s.activeDeckLayout=1;
+ const legacy=A.parseSave(s,c);A.applyAction(legacy,c,{type:'deck-layouts',layouts:legacy.deckLayouts,active:0});
+ assert.equal(legacy.deckLayouts.length,1);
  assert.throws(()=>A.applyAction(legacy,c,{type:'deck-layouts',layouts:layouts(3),active:0}),/购买/);
 });
 
@@ -62,6 +67,7 @@ test('five copies are learned qualifications and survive save, debug, battle and
  A.applyAction(s,c,{type:'equip',itemId:24001});
  assert.equal(s.deck.reduce((n,row)=>n+row.count,0),12);assert.ok(s.deck.every(row=>row.count<=2));
  assert.ok(keys.every(key=>s.cards[key]));assert.equal(s.inventory[24014],1);
+ A.applyAction(s,c,{type:'equip',itemId:24014});assert.deepEqual(s.deck,deck);
 });
 
 test('bag selection and deck save reject invalid ownership and excess copies atomically',()=>{

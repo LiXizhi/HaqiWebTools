@@ -7,11 +7,34 @@ export function createWorld(zone,content) {
     const layout=content.worldMaps?.[zone];
     if(!layout)throw Error('缺少岛屿地图：'+zone);
     const point=([x,y])=>({x,y});
-    const npcs=Object.values(content.npcs).filter(n=>n.zone===zone).map(n=>({...n,...point(layout.npcPositions[n.id]||[n.x,n.y])}));
-    for(const row of layout.visitingNpcs||[]){const source=content.npcs[row.sourceId];if(!source)throw Error('缺少居民来源');npcs.push({...source,zone,...point(row.position)});}
+    const originals=content.npcCatalog?.npcs.filter(n=>n.zone===zone&&n.enabled!=='0'&&n.artVisible!==false);
+    const npcs=(originals||Object.values(content.npcs).filter(n=>n.zone===zone)).map(n=>({...content.npcs[n.id],...n,...point(layout.npcPositions[n.id]||[n.x,n.y])}));
+    if(!originals)for(const row of layout.visitingNpcs||[]){const source=content.npcs[row.sourceId];if(!source)throw Error('缺少居民来源');npcs.push({...source,zone,...point(row.position)});}
     const encounters=content.encounters.filter(e=>e.zone===zone).map(e=>({...e,...point(layout.encounterPositions[e.id]||[e.x,e.y])}));
-    return {zone,w:layout.w,h:layout.h,layout,npcs,encounters,portal:{id:'portal',...layout.portal,zone:zone==='camp'?'town':'camp',name:'查看世界地图'},
+    const world={zone,w:layout.w,h:layout.h,layout,npcs,encounters,portal:{id:'portal',...layout.portal,zone:zone==='camp'?'town':'camp',name:'查看世界地图'},
         landmarks:layout.landmarks,buildings:layout.buildings||[],paths:layout.paths,trees:layout.trees,decorations:[],center:{...(layout.center||layout.spawn)}};
+    if(originals){
+        // Original 3D coordinates are retained in the catalogue. Roadside positions are a 2D adaptation.
+        const candidates=[];
+        for(const path of layout.paths){
+            const a=[path.a.x,path.a.y],b=[path.b.x,path.b.y],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
+            for(let d=0;d<length;d+=80)for(const side of [-1,1]){
+                const x=a[0]+(b[0]-a[0])*d/length-(b[1]-a[1])/length*48*side;
+                const y=a[1]+(b[1]-a[1])*d/length+(b[0]-a[0])/length*48*side;
+                if(walkable(world,x,y))candidates.push({x,y});
+            }
+        }
+        const placed=npcs.filter(n=>Number.isFinite(n.x)&&Number.isFinite(n.y));
+        for(const n of npcs.filter(n=>!Number.isFinite(n.x)||!Number.isFinite(n.y))){
+            const index=(n.id*31)%Math.max(1,candidates.length);
+            const ordered=[...candidates.slice(index),...candidates.slice(0,index)];
+            const spot=ordered.find(p=>placed.every(other=>distance(p,other)>68));
+            if(!spot)throw Error('居民道路位置不足：'+zone);
+            Object.assign(n,spot);placed.push(n);
+        }
+    }
+    objectIndices.delete(world);
+    return world;
 }
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 export function onIsland(x,y,padding=0) { return ((x-900)/(805-padding))**2+((y-800)/(715-padding))**2<1; }

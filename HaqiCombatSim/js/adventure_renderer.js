@@ -115,7 +115,10 @@ export function createRenderer(canvas,assets) {
             }
             if(o.kind==='npc') {
                 shadow(ctx,o.x,o.y,25);const dragon=[36211,30112].includes(o.id),sw=dragon?100:64,sh=dragon?104:86;
-                assets.draw(ctx,o.portrait,o.x-sw/2,o.y-sh+Math.sin(t*1.6+o.id)*1.5,sw,sh);
+                // The world redraws every frame; a late image callback must not erase a moved camera's scene.
+                if(!assets.draw(ctx,o.portrait,o.x-sw/2,o.y-sh+Math.sin(t*1.6+o.id)*1.5,sw,sh,true,false)){
+                    ellipse(ctx,o.x,o.y-27,19,28,'#668b76');ellipse(ctx,o.x,o.y-65,14,16,'#efd6ad');
+                }
                 plate(ctx,o.name,o.x,o.y+19);
                 const marker=questMarker(save,assets.content,o.id);
                 if(marker){text(ctx,marker,o.x,o.y-sh-8+Math.sin(t*3)*3,29,'#fff1a3');}
@@ -139,7 +142,7 @@ export function createRenderer(canvas,assets) {
         if(!title)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);
         if(!title)drawTeleportEffect(ctx,teleportEffect,time,reducedMotion.matches);
         ctx.restore();
-        drawIslandWeather(ctx,world,save.position,weatherTime/1000,w,h,reducedMotion.matches,assets.environmentArt,weatherOverride);
+        drawIslandWeather(ctx,world,save.position,weatherTime/1000,w,h,reducedMotion.matches,assets.environmentArt,weatherOverride,cam);
         const vignette=ctx.createRadialGradient(w*.5,h*.5,h*.15,w*.5,h*.5,Math.max(w,h)*.68);vignette.addColorStop(0,'transparent');vignette.addColorStop(1,'#113b4b66');ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);
     }
     function minimap(target,world,save,{labels=true}={}) {

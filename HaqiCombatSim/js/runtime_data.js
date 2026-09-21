@@ -1,11 +1,40 @@
 // Browser IO only. Source mode reads individual files; Vite releases read packs.
 const productionPacks = typeof __HAQI_PACKED_DATA__ !== 'undefined' && __HAQI_PACKED_DATA__;
 
-export function createJsonReader({ packed = productionPacks, request = (...args) => fetch(...args) } = {}) {
+export function createJsonReader({ packed = productionPacks, request = (...args) => fetch(...args), onProgress } = {}) {
     const pending = new Map();
     async function download(url) {
         const response = await request(url, packed ? undefined : { cache: 'no-cache' });
         if (!response.ok) throw new Error(`无法读取 ${url}（${response.status}）`);
+        if (onProgress) {
+            const length = Number(response.headers?.get('content-length'));
+            const encoding = response.headers?.get('content-encoding');
+            const total = (!encoding || encoding === 'identity') && length > 0 ? length : null;
+            let loaded = 0;
+            onProgress({ url, loaded, total, done: false });
+            if (response.body?.getReader) {
+                const reader = response.body.getReader(), decoder = new TextDecoder();
+                const chunks = [];
+                try {
+                    while (true) {
+                        const chunk = await reader.read();
+                        if (chunk.done) break;
+                        loaded += chunk.value.byteLength;
+                        chunks.push(decoder.decode(chunk.value, { stream: true }));
+                        onProgress({ url, loaded, total, done: false });
+                    }
+                    chunks.push(decoder.decode());
+                    const value = JSON.parse(chunks.join(''));
+                    onProgress({ url, loaded, total, done: true });
+                    return value;
+                } finally {
+                    reader.releaseLock();
+                }
+            }
+            const value = await response.json();
+            onProgress({ url, loaded, total, done: true });
+            return value;
+        }
         return response.json();
     }
     return async function readJson(url) {

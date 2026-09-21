@@ -1,3 +1,29 @@
+.entry-screen.original-import { display:grid; grid-template-columns:minmax(0,1fr); place-items:center; padding:24px 16px; }
+.original-import .import-panel { width:min(480px,100%); max-height:calc(100dvh - 48px); overflow-y:auto; overflow-wrap:anywhere; margin:auto; padding:24px; border-radius:8px; }
+.import-panel .panel-header { gap:12px; margin-bottom:18px; }
+.import-panel .panel-header h2 { margin:0; font-size:24px; letter-spacing:0; }
+.import-identity { display:flex; align-items:center; gap:12px; padding:12px 0 18px; border-bottom:1px solid var(--line); }
+.import-identity h3 { margin:0; font-size:22px; }
+.import-level { color:var(--green); font-weight:700; white-space:nowrap; }
+.import-previews { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:20px 0; }
+.import-panel .import-preview { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; min-width:0; height:170px; padding:12px; position:relative; border-radius:8px; }
+.import-preview strong { font-size:20px; }
+.import-preview .icon[data-ui-icon] { width:64px; height:64px; }
+.import-count,.import-reviewed { font-size:12px; }
+.import-reviewed { position:absolute; top:6px; right:8px; color:var(--green); }
+.import-details { border-top:1px solid var(--line); padding:12px 0; color:var(--muted); font-size:12px; line-height:1.7; }
+.import-details summary { cursor:pointer; min-height:32px; }
+.import-details ul { padding-left:20px; }
+.import-panel .import-confirm { width:100%; margin-top:12px; min-height:48px; }
+.import-hint,.import-status { color:var(--muted); font-size:12px; line-height:1.7; }
+.import-roles { display:grid; gap:12px; margin:18px 0; }
+.import-panel .import-role { min-height:60px; text-align:left; padding:12px 20px; font-size:18px; }
+@media(max-width:480px) {
+    .original-import .import-panel { padding:18px; }
+    .import-panel .panel-header h2 { font-size:22px; }
+    .import-previews { gap:12px; }
+}
+
 /* Classic storybook skin. All illustrated surfaces share ui-art.json's single
    alpha atlas. The four border-image crops keep their corners at every size. */
 .storybook-ui {

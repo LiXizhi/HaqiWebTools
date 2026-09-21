@@ -1,3 +1,5 @@
+import {renderNpcServices} from './view_adventure_npc.js';
+import {npcServices} from './adventure_npc_core.js';
 import {renderGems} from './view_adventure_gems.js';
 import {renderMembership} from './view_adventure_membership.js';
 import {createCloseButton} from './view_adventure_controls.js';
@@ -111,7 +113,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
             if(draft.previewKey)play(draft.previewKey,true);
         }
         const submit=el('button','primary begin-button',cb.busy|| (draft.step===1?'下一步 · 选择抱抱龙':draft.step===2?'下一步 · 选择系别':`确认选择${SCHOOL_NAMES[draft.school]} · 开始冒险`));submit.type='submit';form.append(submit);
-        if(draft.step===2)form.append(button('导入魔法哈奇角色',cb.importOriginal,'text-button creation-import'));
+        if(draft.step===1)form.append(button('导入魔法哈奇角色',cb.importOriginal,'text-button creation-import'));
         if(draft.step>1)form.append(button('上一步',()=>{draft.step--;paint();root.scrollTop=0;},'text-button creation-back'));
         if(cb.roles)form.append(button('返回我的角色',cb.roles,'text-button creation-back'));
         if(error){const status=el('p','error-text',error);status.setAttribute('role','alert');form.append(status);}
@@ -250,7 +252,7 @@ export function renderPanel(root,kind,model,cb) {
         renderStrengthening(body,model,cb,{el,button,art});
         return;
     }
-    const titles={checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
+    const titles={'npc-services':['居民商店与课程',''],checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','第一章 · 初心之旅'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
     const body=modal(root,...titles[kind],cb,['deck','quests','inventory','equipment','pet','shop','map'].includes(kind)||kind==='debug');
     if(kind==='checkin'){
         body.closest('.modal').classList.add('checkin-modal');
@@ -262,6 +264,7 @@ export function renderPanel(root,kind,model,cb) {
 
         updateCheckin(root,model);
     }
+    if(kind==='npc-services')renderNpcServices(body,model,cb,{el,button,spellFace});
     if(kind==='shop')renderShop(body,model,cb,{el,button,art,tile});
     if(kind==='pet'&&c.pets)renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon});
     if(kind==='quests') {
@@ -304,11 +307,11 @@ export function renderPanel(root,kind,model,cb) {
 function ownsEgg(save){return (save.inventory[17307]||0)>0;}
 export function renderDialogue(root,model,dialog,cb) {
     root.disposeDialogue?.();
-    const {assets,save}=model,c=assets.content,npc=c.npcs[dialog.lines?.[dialog.index]?.npcId]||c.npcs[dialog.npcId];root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
+    const {assets,save}=model,c=assets.content,npc=(dialog.lines?c.npcs[dialog.lines[dialog.index]?.npcId]:dialog.npc)||c.npcs[dialog.npcId];root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
     const box=el('section','dialogue-box rpg-dialogue');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',`与${npc.name}交谈`);
     box.classList.toggle('dialogue-sequence',!!dialog.lines);
     const portrait=art(assets,npc.portrait,150,190,'dialogue-portrait');
-    const content=el('div','dialogue-content',el('p','eyebrow',npc.zone==='camp'?'魔法营地':'哈奇小镇'),el('h2','',npc.name));
+    const content=el('div','dialogue-content',el('p','eyebrow',islandName(npc.zone)),el('h2','',npc.name));
     const close=createCloseButton(cb.close);
     if(dialog.lines){
         const line=dialog.lines[dialog.index],last=dialog.index===dialog.lines.length-1;
@@ -329,6 +332,7 @@ export function renderDialogue(root,model,dialog,cb) {
         const talk=pendingQuestTalk(save,q,npc.id);
         if(talk)choices.append(button(talk.label||'我想了解更多魔法',()=>cb.questTalk(q,talk),'primary'));
         if(q&&state.accepted&&!(ready&&q.endNpc===npc.id))choices.append(button(ready?'前往回报任务':'查看任务目标',()=>{cb.close();cb.track();},'secondary'));
+        if(npcServices(c,npc).length)choices.append(button('查看商品与学习魔法',()=>cb.panel('npc-services',{npc}),'primary'));
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
         if(npc.id===36205)choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));

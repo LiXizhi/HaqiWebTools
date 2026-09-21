@@ -146,7 +146,8 @@ function openCloud() {persist();close();path=[];destination=null;if(!cloud.busy)
 function paintCloud() {
     if(panel!=='cloud')return;
     renderCloud(nodes.overlay,{...cloud,local:cloudLocal(),localUpdatedAt:roleStorage&&localUpdatedAt(roleStorage),hasBackup:roleStorage&&!!readBackup(roleStorage)},{close,
-        connect:()=>{showTitle();connectRoles();},
+        connect:()=>{showTitle(true);if(stage==='title')connectRoles();},
+        logout:()=>changeCloudAccount(false),switchAccount:()=>changeCloudAccount(true),
         refresh:()=>cloudAction('正在读取云端目录…',async()=>{cloud.paths=await cloudClient.list();cloud.message=cloud.paths.length?'云端目录已刷新。':'未找到云端记录，可刷新重试。';}),
         upload:()=>cloudAction('正在保存并核验云端进度…',async()=>{const current=cloudLocal();if(!current)throw new Error('请先开始一段冒险。');const result=await cloudClient.upload(current);cloud.paths=[result.path,...cloud.paths.filter(p=>p!==result.path)].sort().reverse().slice(0,30);cloud.message='已保存到云端，并核验远端内容。';}),
         preview:path=>cloudAction('正在校验存档与战斗记录…',async()=>{if(!roleStorage)throw Error('请先新建或选择一个角色。');const target=roleStorage,localRaw=readLocal(target);const preview=await cloudClient.read(path);if(roleStorage!==target||readLocal(target)!==localRaw)throw new Error('本地进度已变化，请重新查看这份记录。');cloud.preview={...preview,localRaw};cloud.message='请比较两份进度，确认后恢复。';}),
@@ -163,6 +164,18 @@ async function cloudAction(label,fn) {
     cloud.busy=label;cloud.error='';cloud.message='';cloud.preview=null;paintCloud();
     try{await fn();}catch(e){cloud.error=e.message;}finally{cloud.busy='';cloud.owner=cloudClient.owner;paintCloud();}
 }
+async function changeCloudAccount(reconnect) {
+    if(cloud.busy||roles.busy)return;
+    showTitle(true);if(stage!=='title')return;
+    let disconnected=false;
+    await roleOperation('正在退出账号…',async()=>{
+        let pending=false;try{await syncRoles();}catch{pending=true;}
+        await cloudClient.disconnect();resetRoleAccount();localStorage.removeItem(LAST_ACCOUNT_KEY);
+        disconnected=true;
+        roles.message=pending?'已退出账号。未同步进度保留在原账号的本机缓存。':'已退出账号，本地进度已保留。';
+    });
+    if(reconnect&&disconnected)await connectRoles();
+}
 function action(value) {
     const product=value.type==='buy'&&assets.content.shop.find(item=>item.id===value.productId);
     if(!product?.vipOnly&&value.type!=='magic-star-claim'&&!(value.type==='checkin'&&value.bonus===true))return performAction(value);
@@ -178,7 +191,7 @@ async function buyVipProduct(value) {
         return performAction(value,{keepworkVip:status.isVip,expiresAt:status.expiresAt,now:Date.now()});
     }catch(error){toast(error.message);return false;}finally{buyingVip=false;}
 }
-function performAction(value,access={}) {return safely(()=>{const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['checkin','magic-star-claim'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}showRewards(before);paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(result?.message||text[value.type]||'进度已保存');return result?.message?result:true;});}
+function performAction(value,access={}) {return safely(()=>{const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['checkin','magic-star-claim','choose-totem','use-totem-item'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}showRewards(before);paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(result?.message||text[value.type]||'进度已保存');return result?.message?result:true;});}
 function enterWorld(newSave,restoredBattle=null) {
     teleportEffect=null;
     rewardFeedback.reset();
@@ -214,7 +227,7 @@ function paintRoles() {
     creationPreview?.stop();
     renderRoles(nodes.entry,assets,{...roles,owner:roleStore.owner,catalog:roleStore.catalog,dirty:roleStore.dirty},{
         select:id=>roleOperation('正在进入角色…',async()=>{activateRole(id);await syncRoles();}),
-        create:newRoleForm,login:()=>connectRoles(),logout:()=>roleOperation('正在退出…',async()=>{
+        create:newRoleForm,login:openCloud,logout:()=>roleOperation('正在退出…',async()=>{
             let pending=false;try{await syncRoles();}catch{pending=true;}
             await cloudClient.disconnect();resetRoleAccount();localStorage.removeItem(LAST_ACCOUNT_KEY);
             if(pending)roles.message='已退出账号。未同步进度仍保留在该账号的本机缓存，下次登录可继续。';
@@ -254,7 +267,7 @@ function paintCreation() {
     V.renderEntry(nodes.entry,assets,null,{
         draft:roleDraft,busy:roles.busy,owner:roleStore.owner,
         roles:roleStore.catalog.roles.length?()=>{titleView='roles';paintRoles();}:null,
-        login:roleStore.owner?openCloud:()=>connectRoles(),cloud:openCloud,
+        login:openCloud,cloud:openCloud,
         importOriginal:()=>toast('哈奇2009角色导入尚未开放。'),
         previewChoices:school=>tutorialCards(assets,school),
         preview:(...args)=>creationPreview.play(...args),stopPreview:()=>creationPreview.stop(),pausePreview:()=>creationPreview.togglePause(),
@@ -288,6 +301,7 @@ async function reconcileRoles(remote) {
 function connectRoles(interactive=true) {
     return roleOperation('正在登录并读取角色…',async()=>{
         const owner=await cloudClient.connect({interactive});
+        cloud.owner=owner;cloud.preview=null;cloud.paths=[];
         refreshMembership();
         const remote=await cloudClient.roles();
         roleEpoch++;roleStore.open(owner);roleStorage=null;cloud.owner=owner;cloud.preview=null;cloud.paths=[];

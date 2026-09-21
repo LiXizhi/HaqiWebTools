@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>魔法哈奇 · 原服只读导入测试</title>
+<style>
+body{margin:0;background:#f6efd9;color:#302c24;font:16px/1.6 system-ui}main{max-width:960px;margin:auto;padding:24px}button{font:inherit;padding:10px;margin:4px;cursor:pointer}button:disabled{cursor:wait}table{border-collapse:collapse;width:100%}td,th{padding:8px;border:1px solid #baad8e;text-align:left;overflow-wrap:anywhere}.scroll{overflow:auto}#status{white-space:pre-wrap}details{margin:12px 0}h1{font-size:24px}
+</style>
+</head>
+<body><main>
+<h1>原服角色只读导入测试</h1>
+<p>这是独立测试页，不加载主游戏、不创建角色、不读写冒险存档。读取结果仅留在内存，刷新即清除。</p>
+<p>使用 Keepwork 授权读取原版 MMORPG 人物、装备及卡包。授权可能影响原客户端会话，请先退出原版游戏。当前读取器仅支持已实名成年账号。</p>
+<button id="ping">测试 WebSocket 连通性</button>
+<button id="read">登录并读取原服角色</button>
+<button id="cancel" disabled>取消读取</button>
+<button id="clear">清除显示</button>
+<p id="status" role="status" aria-live="polite">尚未连接。不会自动登录或请求原服数据。</p>
+<section id="result" aria-label="原服读取结果"></section>
+</main><script type="module" src="js/haqi_import_test.js"></script></body>
+</html>

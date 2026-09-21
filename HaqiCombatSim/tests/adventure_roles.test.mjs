@@ -111,6 +111,33 @@ test('silent reconnect does not open a login window without a session', async ()
     const m = cloudMock();m.sdk.token = null;m.sdk.showLoginWindow = () => { throw Error('should not open'); };
     await assert.rejects(m.client().connect({ interactive: false }), /请登录/);
 });
+test('logout before connect clears existing SDK session and permits a different account', async () => {
+    const mock = cloudMock(), client = mock.client();
+    await client.disconnect();assert.equal(mock.sdk.token, null);
+    mock.sdk.showLoginWindow = async () => { mock.sdk.username = 'bob';mock.sdk.token = 'new-session'; };
+    assert.equal(await client.connect(), 'bob');
+    assert.equal(mock.remote.size, 0);
+});
+test('logout API failure does not block switching when SDK already cleared credentials', async () => {
+    const mock = cloudMock(), client = mock.client();await client.connect();
+    mock.sdk.logout = async () => { mock.sdk.token = null;throw Error('offline'); };
+    await client.disconnect();assert.equal(client.owner, null);
+    await assert.rejects(client.connect(), /取消登录/);
+    assert.equal(mock.remote.size, 0);
+});
+test('expired authentication has actionable feedback without opening silent login', async () => {
+    const mock = cloudMock(), client = mock.client();
+    mock.sdk.getUserProfile = async () => { throw Object.assign(Error('unauthorized'), { status: 401 }); };
+    await assert.rejects(client.connect({ interactive: false }), /登录已过期.*切换账号/);
+    assert.equal(client.owner, null);
+});
+test('invalid remote roles report validation failure while retaining authenticated identity', async () => {
+    const mock = cloudMock(), client = mock.client();await client.connect();
+    mock.remote.set(mock.store.getRemotePagePath('roles/index.json'), JSON.stringify({owner:'alice',revision:id(1),catalog:{schemaVersion:99,roles:[]}}));
+    const before = [...mock.remote];
+    await assert.rejects(client.roles(), /已登录.*角色校验失败/);
+    assert.equal(client.owner, 'alice');assert.deepEqual([...mock.remote], before);
+});
 test('immutable ancestry distinguishes later progress from a competing device branch', async () => {
     const m = cloudMock(), c = m.client();await c.connect();
     const first = await c.saveRoles(emptyRoles(), null), second = await c.saveRoles(emptyRoles(), first);

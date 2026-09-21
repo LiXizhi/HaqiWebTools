@@ -26,7 +26,10 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         if (!sdk?.token || !owner || authVersion !== session.version || store?.getUsername() !== session.owner || store.isUseLocal()) throw new CloudError('登录状态已变化，请重新连接 Keepwork。');
     };
     async function guarded(fn) {
-        try { return await fn(); } catch (error) { throw error instanceof CloudError ? error : new CloudError('云端操作未完成。请检查网络或重新登录；本地进度仍然保留。'); }
+        try { return await fn(); } catch (error) {
+            if (error?.status === 401) throw new CloudError('登录已过期，请点击“切换账号”重新登录；本地进度仍然保留。');
+            throw error instanceof CloudError ? error : new CloudError('云端操作未完成。请检查网络或重新登录；本地进度仍然保留。');
+        }
     }
     async function session() {
         if (!owner) throw new CloudError('请先连接 Keepwork。');
@@ -63,7 +66,10 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         if (result?.success !== true || typeof result.content !== 'string' || result.content.length > 6 * 1024 * 1024) throw new CloudError('角色列表读取失败，请重试。');
         const value = JSON.parse(result.content);
         if (value.owner !== current.owner || !roleIdValid(value.revision)) throw new CloudError('角色列表身份或版本无效');
-        return { owner: current.owner, revision: value.revision, catalog: validateRoles(value.catalog, content, dataset) };
+        let catalog;
+        try { catalog = validateRoles(value.catalog, content, dataset); }
+        catch (error) { throw new CloudError(`已登录，但云端角色校验失败：${error.message}。云端记录未修改，本地进度仍保留。`); }
+        return { owner: current.owner, revision: value.revision, catalog };
     }
     async function writeVerified(path, text, current) {
         const target = store;
@@ -100,14 +106,22 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
             await writeVerified(rolesPath, text, current);
             return revision;
         }),
-        disconnect: () => guarded(async () => { if (sdk) await sdk.logout();authVersion++;owner = null;store = null; }),
+        disconnect: () => guarded(async () => {
+            sdk ||= await loadSDK();
+            try { await sdk.logout(); }
+            catch (error) { if (sdk.token) throw error; }
+            authVersion++;owner = null;store = null;
+        }),
         connect: ({ interactive = true } = {}) => guarded(async () => {
             sdk = await loadSDK();
             if (!unsubscribe) unsubscribe = sdk.onAuthStateChange(() => { authVersion++;owner = null;store = null;onAccountChange(); });
             if (!sdk.token) {
                 if (!interactive) throw new CloudError('请登录 Keepwork 后继续账号角色。');
                 try { await sdk.showLoginWindow({ title: '登录 Keepwork，继续魔法旅程', lang: 'zhCN' }); }
-                catch { throw new CloudError('已取消登录，你可以继续本地冒险。'); }
+                catch (error) {
+                    if (/cancel|取消/i.test(error?.message || '')) throw new CloudError('已取消登录，你可以继续本地冒险。');
+                    throw new CloudError('登录窗口暂时不可用，请刷新后重试；本地进度仍然保留。');
+                }
             }
             if (!sdk.token) throw new CloudError('已取消登录，你可以继续本地冒险。');
             const version = authVersion;

@@ -1,6 +1,23 @@
 {
   "regressions": [
     {
+      "id": "cloud-auth-legacy-threat-params",
+      "date": "2026-09-21",
+      "cause": "New threat defaults made version-two cloud battle snapshots fail strict parameter equality; generic error wrapping disguised this as login failure.",
+      "trigger": "Read a cloud role with a version-two active battle, or switch an expired SDK session.",
+      "expected": "Known missing later-version threat fields are accepted without changing the snapshot; altered parameters remain rejected. Authentication, role validation, logout and switching have distinct outcomes.",
+      "sources": ["js/adventure_core.js", "js/adventure_cloud.js", "js/adventure_app.js", "js/view_adventure_cloud.js"],
+      "tests": ["tests/adventure_pets.test.mjs", "tests/adventure_roles.test.mjs", "tests/adventure_cloud.test.mjs"],
+      "evidence": {
+        "focused": "Legacy version-two replay and 28 cloud/role tests passed",
+        "full": "347/347 passed before final account-entry callback adjustment; node --check passed afterward",
+        "browser": "Real cloud role read failed with invalid adventure parameters before compatibility fix and passed afterward; no remote writes",
+        "mutation": "Not run; pre-fix failure reproduced with existing remote record",
+        "build": "Blocked by existing camp map snapshot mismatch",
+        "limitations": "Desktop/mobile account control visual check and real second-account switch not completed"
+      }
+    },
+    {
       "id": "ambient-motes-disabled",
       "date": "2026-09-21",
       "cause": "Default screen-space motes appear attached to the camera during player movement.",

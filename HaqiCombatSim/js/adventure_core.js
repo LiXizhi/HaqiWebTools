@@ -1,5 +1,5 @@
 import {claimMagicStar,validateMagicStarClaims,magicStarCombatLevel,applyMagicStarCombat} from './adventure_magic_star_core.js';
-import {equipmentSetStats,dragonTotemStage,progressionStatEntry} from './adventure_progression_bonuses_core.js';
+import {equipmentSetStats,dragonTotemStage,progressionStatEntry,chooseDragonTotem,useDragonTotemItem} from './adventure_progression_bonuses_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { worldDimensions, mapInfo } from './adventure_island_layout_core.js';
@@ -246,6 +246,8 @@ export function applyAction(save, content, action, access={}) {
     const q = currentQuest(save,content);
     switch (action.type) {
     case 'magic-star-claim': claimMagicStar(save,content,action,access);syncEquipmentInstances(save,content);break;
+    case 'choose-totem': chooseDragonTotem(save,content,action.professionId);break;
+    case 'use-totem-item': useDragonTotemItem(save,content,action.itemId);break;
     case 'checkin': claimCheckin(save, content, action.now, action.index, access, action.bonus===true); break;
     case 'accept': {
         assert(q && q.id === Number(action.questId) && q.startNpc === Number(action.npcId), '当前没有可接取的任务');
@@ -371,7 +373,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
     if(initialParty)assert(initialParty.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
-        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, progressionRulesVersion:3, threatRulesVersion:2 };
+        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, progressionRulesVersion:3, threatRulesVersion:4 };
     save.pendingEncounter.runes = runeInventory(save,content);
     if(content.pets){
         const party=initialParty;
@@ -467,7 +469,7 @@ export function parseSave(raw,content) {
     if (s.pendingEncounter) {
         assert(s.pendingEncounter.equipmentStatsVersion===undefined||s.pendingEncounter.equipmentStatsVersion===1,'装备属性规则版本无效');
         assert(s.pendingEncounter.progressionRulesVersion===undefined||[1,2,3].includes(s.pendingEncounter.progressionRulesVersion),'成长属性规则版本无效');
-        assert(s.pendingEncounter.threatRulesVersion===undefined||[1,2].includes(s.pendingEncounter.threatRulesVersion),'仇恨规则版本无效');
+        assert(s.pendingEncounter.threatRulesVersion===undefined||[1,2,3,4].includes(s.pendingEncounter.threatRulesVersion),'仇恨规则版本无效');
         assert(s.pendingEncounter.magicStarLevel===undefined||Number.isInteger(s.pendingEncounter.magicStarLevel)&&s.pendingEncounter.magicStarLevel>=0&&s.pendingEncounter.magicStarLevel<=10,'魔法星战斗等级无效');
         if(s.pendingEncounter.runes!==undefined){
             const runes=s.pendingEncounter.runes;
@@ -483,7 +485,17 @@ export function parseSave(raw,content) {
     if(content.pets){Pets.validatePets(s,petContent);if(s.pendingEncounter?.party){assert(JSON.stringify(s.pendingEncounter.party)===JSON.stringify(Pets.partySpecs(s,petContent,playerSpec(s,content))),'存档阵容无效');const encounter=content.encounters.find(e=>e.id===s.pendingEncounter.encounterId)||specialEncounter(s,content,s.pendingEncounter.encounterId);assert(JSON.stringify(s.pendingEncounter.monster)===JSON.stringify(encounter.monster||content.monsters[encounter.monsterId]),'存档敌人无效');assert(s.pendingEncounter.captureStock===(s.inventory[Pets.CAPTURE_ID]||0)&&s.pendingEncounter.heroLevel===s.level,'存档捕获记录无效');}}
     if(s.pendingEncounter?.party){
         assert(JSON.stringify(s.pendingEncounter.petIds)===JSON.stringify(s.formation.filter(Boolean)),'存档宠物奖励阵容无效');
-        if(s.pendingEncounter.adventureParams)assert(JSON.stringify(s.pendingEncounter.adventureParams)===JSON.stringify(Pets.petParams(petContent)),'存档养成参数无效');
+        if(s.pendingEncounter.adventureParams){
+            const expected=Pets.petParams(petContent),saved=s.pendingEncounter.adventureParams;
+            const threatVersion=s.pendingEncounter.threatRulesVersion||0;
+            const optional=new Set([
+                ...(threatVersion<1?['damageThreatRatio','splashDamageThreatRatio']:[]),
+                ...(threatVersion<2?['singleHealThreatRatio']:[]),
+                ...(threatVersion<3?['areaHealThreatRatio','effectThreatGlobal','effectThreatMiniAura','effectThreatRemovePositiveCharm','effectThreatRemoveNegativeCharm','effectThreatStealCharm','effectThreatCharms','effectThreatWards','effectThreatAreaCharm','effectThreatAreaWard','effectThreatAbsorb']:[]),
+                ...(threatVersion<4?['splashManipulationThreatRatio','effectThreatStun','effectThreatRemovePositiveWard','effectThreatStealWard','effectThreatSymmetryWards','effectThreatReflectionShield','effectThreatAreaPowerPipBoost','effectThreatAreaCleanse','defensiveThreatWeight','tauntThreatWeight']:[]),
+            ]);
+            assert(Object.keys(saved).every(key=>Object.hasOwn(expected,key))&&Object.entries(expected).every(([key,value])=>!Object.hasOwn(saved,key)?optional.has(key):JSON.stringify(saved[key])===JSON.stringify(value)),'存档养成参数无效');
+        }
     }
     syncProgression(s,content); validDeck(s,content,s.deck);
     if(s.deckLayouts!==undefined)validateDeckLayouts(s,content,s.deckLayouts,s.activeDeckLayout);

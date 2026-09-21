@@ -12,6 +12,21 @@ const read=path=>JSON.parse(fs.readFileSync(new URL('../data/'+path,import.meta.
 const catalog=read('adventure/pets.json');
 const {content:c,dataset:d}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),catalog,read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 const fresh=starter=>A.createAdventure(c,{starter,seed:812});
+test('version two cloud battles survive added threat defaults without accepting altered parameters',()=>{
+ const save=fresh('dragon_green');A.beginEncounter(save,c,'trial:1');
+ save.pendingEncounter.threatRulesVersion=2;
+ const params=save.pendingEncounter.adventureParams;
+ for(const key of Object.keys(params))if((/Threat|Weight/.test(key))&&!['damageThreatRatio','splashDamageThreatRatio','singleHealThreatRatio'].includes(key))delete params[key];
+ const battle=B.restorePveBattle(d,c,save.pendingEncounter);
+ const decision={pass:true};B.playPveRound(battle,decision);A.recordDecision(save,decision);
+ const restored=checkedProgress(save,c,d);
+ assert.deepEqual(restored.battle.events,battle.events);assert.equal(restored.battle.rng.state(),battle.rng.state());
+ assert.deepEqual(restored.save.pendingEncounter.adventureParams,params);
+ const bad=structuredClone(save);bad.pendingEncounter.adventureParams.damageThreatRatio=99;
+ assert.throws(()=>A.parseSave(bad,c),/养成参数/);
+ const missing=structuredClone(save);delete missing.pendingEncounter.adventureParams.petCopies;
+ assert.throws(()=>A.parseSave(missing,c),/养成参数/);
+});
 test('legacy gululu reuses a four-stage catalog appearance without replacing its identity or lessons',()=>{
  const legacy=c.pets.legacy_gululu,template=catalog.pets.shanhaijing_xuangui_gugu;
  assert.deepEqual(legacy.art,template.art);

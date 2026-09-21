@@ -1,5 +1,9 @@
 # 公式与常量 ↔ Lua 源码对照表
 
+2026-09-21仇恨版本4：card_server.lua L3738–3765单疗HOT、L4142–4175攻击HOT预计算ceil(heal*0.3)；L5070–5094群疗HOT每人每跳ceil(ceil(heal*0.2)*0.3)。L4090–4136纯DOT护符逐次取整后取abs，L3090–3120单攻DOT保留符号，L4333–4368群攻DOT只追加给受击怪物，不使用本地伤害序列0.83旁目标系数。mob_server.lua L2976–3000从队列尾出队，card_server.lua L1735在怪物UseCard入口推进，目标已选定。player_server.lua L4747防御kids权重3、taunt权重5；mob_server.lua L2927–2948只将即时量乘权重，延迟值未乘，本地版本4照此实现。card_server.lua L3196成功眩晕目标500、L5471移除正面盾/偷盾100与20%溅射、L6448反射盾100、L6666对称盾200；L4792群能量每受益者50，L4940群净化每受益者100；L4460–4474群攻仇恨在最终输出/接收权重前且无溅射。原版死亡清理分支疑似缺少写回，本地保留既有清表规则，作为明确差异。
+
+2026-09-21效果/群疗仇恨：card_server.lua L1304 GetEffectThreat直接读取CombatThreatConfig.xml。L5233/L5273光环全体200；L5316迷你光环目标80/其他ceil(80*0.2)；L5387起移除正面护符及偷护符目标100/其他20，移除负面护符全体100；L6310起Charms与L6492起Wards目标80/其他16；L6395群护符与L6770群盾全体60；L5531吸收全体400。L5124起群疗惩罚前逐人GetDamageThreat累计，带吸收每人加400，L5185最后ceil(total*0.2)。新仇恨版本3启用，旧版无新增钩子。AreaHealWithHOT目前只有即时部分接通，HOT延迟仇恨仍未完成。
+
 2026-09-21成长属性补齐：player_server.lua L2317起151–158绝对攻击、L2486起159–166绝对防御（getResistAbs保持负值）；L2704–2709属性376每点增加0.001暴击倍率；L2856起188为全系闪避百分比。仅套装/图腾使用progressionStatEntry，不扩展普通装备或商城候选。新遭遇progressionRulesVersion=3，版本1/2保留原映射。card_server.lua L1340–1344的TryDoubleAttack在kids和teen均直接返回false，因此256不启用双倍伤害；不是待猜测的暴击属性。
 
 2026-09-21仇恨续接：card_server.lua L6093–6098 SingleTaunt、L6123–6165 AreaTaunt对存活且激活的怪物调用SetHighestThreat；本地两种卡已接入。L1300 GetHealThreat返回ceil(heal*0.3)，L3854–3865单体即时治疗在治疗惩罚前追加到所有存活敌方怪物。该比例通过BalanceParams.singleHealThreatRatio配置，新遭遇threatRulesVersion=2启用，版本0/1不追补。HOT延迟仇恨、群疗及效果权重仍未接通，不以日志回血量近似。

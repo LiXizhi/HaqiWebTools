@@ -6,6 +6,7 @@ function fixture() {
     const sdk = { token: 'synthetic-token' }, calls = [];
     let closed = false;
     const responses = {
+        'Users.GetNIDByOtherAccountID': { nid: '123' },
         Ping: { ver: 26 }, AuthUser: { issuccess: true, nid: 123, sessionkey: 'not-for-storage' },
         'Power_Users.GetUserAndDragonInfo': { user: { nid: 123, nickname: 'Test' }, dragon: { combatschool: 'fire', combatlel: 10, combatexp: 4654 } },
         'Items.GetMyBags': { issuccess: true, bagids: '0,1' },
@@ -27,11 +28,34 @@ function fixture() {
 test('original reader uses authenticated identity and returns no session credentials', async () => {
     const source = fixture();const result = await readOriginalCharacter(source.options);
     assert.equal(result.owner, 'TestUser');assert.equal(result.inventory.length, 2);
-    assert.equal(source.calls[1].params.ver, 26);
-    assert.equal(source.calls[1].params.plat, 7);
+    assert.equal(source.calls[1].name, 'Users.GetNIDByOtherAccountID');
+    assert.equal(source.calls[2].params.ver, 26);
+    assert.equal(source.calls[2].params.plat, 7);
+    assert.equal(source.calls[2].params.nid2, 123);
     assert.ok(source.calls.filter(row => row.name === 'Items.GetItemsInBag').every(row => row.params.nid === 123));
     assert.ok(!JSON.stringify(result).includes('synthetic'));assert.ok(!JSON.stringify(result).includes('not-for-storage'));
     assert.ok(source.isClosed());
+});
+
+test('original reader selects only linked roles before authentication', async () => {
+    const source = fixture();
+    source.responses['Users.GetNIDByOtherAccountID'] = { nid: '456,123' };
+    source.options.selectRole = async ids => { assert.deepEqual(ids, [456,123]);return 123; };
+    await readOriginalCharacter(source.options);
+    assert.equal(source.calls[2].params.nid2, 123);
+    for (const value of ['', '-1', '123,bad', '123,123']) {
+        const invalid = fixture();invalid.responses['Users.GetNIDByOtherAccountID'] = { nid: value };
+        await assert.rejects(readOriginalCharacter(invalid.options));
+        assert.ok(invalid.isClosed());
+        assert.ok(!invalid.calls.some(row => row.name === 'AuthUser'));
+    }
+    const outside = fixture();outside.responses['Users.GetNIDByOtherAccountID'] = { nid: '123,456' };
+    outside.options.selectRole = () => 999;
+    await assert.rejects(readOriginalCharacter(outside.options), /请选择/);
+    assert.ok(!outside.calls.some(row => row.name === 'AuthUser'));
+    const mismatch = fixture();mismatch.responses.AuthUser.nid = 456;
+    await assert.rejects(readOriginalCharacter(mismatch.options));
+    assert.equal(mismatch.calls.length, 3);
 });
 
 test('original reader fails closed for incomplete bags and identity mismatch', async () => {
@@ -42,6 +66,18 @@ test('original reader fails closed for incomplete bags and identity mismatch', a
         if (mode === 'auth') source.responses.AuthUser = { issuccess: false, errorcode: 419 };
         await assert.rejects(readOriginalCharacter(source.options));assert.ok(source.isClosed());
     }
+});
+
+test('original reader reports authentication step and known error without leaking server content', async () => {
+    const source = fixture();
+    source.responses.AuthUser = { issuccess: false, errorcode: 438, message: 'private-server-content' };
+    await assert.rejects(readOriginalCharacter(source.options), error => {
+        assert.match(error.message, /AuthUser.*438.*未传递必要的用户凭证/);
+        assert.ok(!error.message.includes('private-server-content'));
+        return true;
+    });
+    assert.ok(source.isClosed());
+    assert.equal(source.calls.length, 3);
 });
 
 test('original reader cancels before authorization and rejects account changes', async () => {

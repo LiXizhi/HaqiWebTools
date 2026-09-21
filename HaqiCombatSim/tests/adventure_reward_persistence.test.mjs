@@ -7,11 +7,23 @@ import {createRoleStore} from '../js/adventure_roles.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
 import {makeCloudSnapshot,parseCloudSnapshot} from '../js/adventure_cloud_core.js';
 import {tickCheckin} from '../js/adventure_checkin_core.js';
+import {installDragonTotemItems} from '../js/adventure_progression_bonuses_core.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));
 const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 content.magicStar=read('adventure/magic-star.json');content.checkinConfig=read('adventure/checkin.json');Object.assign(content.items,content.checkinConfig.items);
 const now=Date.parse('2026-09-21T04:00:00Z'),access={keepworkVip:true,expiresAt:'2027-09-21',now};
 content.progressionBonuses=read('adventure/progression-bonuses.json');
+installDragonTotemItems(content);
+test('totem choice rolls back failed persistence and survives local and cloud reload',()=>{
+ const h=harness(),save=h.store.catalog.roles[0].save,scoped=h.store.scoped(),before=JSON.stringify(save);
+ const action={type:'choose-totem',professionId:50351};
+ assert.throws(()=>persistReward(save,content,action,{}, {getItem:scoped.getItem,setItem:()=>{throw Error('quota');}}),/quota/);
+ assert.equal(JSON.stringify(save),before);
+ const next=persistReward(save,content,action,{},scoped).save;
+ assert.equal(h.open().catalog.roles[0].save.inventory[50351],1);
+ const snapshot=makeCloudSnapshot(next,content,dataset,new Date(now).toISOString(),id);
+ assert.equal(parseCloudSnapshot(JSON.stringify(snapshot),content,dataset).save.inventory[50351],1);
+});
 for(const [id,item] of Object.entries(content.progressionBonuses.giftItems))content.items[id]??=item;
 test('real pocket pool persists one gift, rolls back failed storage and rejects stale tabs',()=>{
  const h=harness(),second=h.open(),save=h.store.catalog.roles[0].save,before=JSON.stringify(save);

@@ -13,7 +13,7 @@ export function runeCardsInHand(battle) {
     return (battle.runes||[]).filter(row=>row.count>(battle.runeUsed[row.itemId]||0)&&isSupportedType(battle.resolved.cards[row.key]?.type)).map(row=>({key:row.key,runeId:row.itemId,seq:-row.itemId,count:row.count-(battle.runeUsed[row.itemId]||0)}));
 }
 export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], threatRulesVersion = 0 }) {
-    if(![0,1,2].includes(threatRulesVersion))throw Error('仇恨规则版本无效');
+    if(![0,1,2,3,4].includes(threatRulesVersion))throw Error('仇恨规则版本无效');
     if(!Array.isArray(runes)||runes.some(row=>!row||!Number.isSafeInteger(row.itemId)||row.itemId<=0||!Number.isSafeInteger(row.count)||row.count<=0||typeof row.key!=='string'||!row.key)||new Set(runes.map(row=>row.itemId)).size!==runes.length)throw Error('符文检查点无效');
     if(party){
         if(!Array.isArray(party)||party.length<1||party.length>4||party[0].id!==player.id||new Set(party.map(u=>u.id)).size!==party.length||new Set(party.map(u=>u.slot)).size!==party.length||party.some(u=>!Number.isInteger(u.slot)||u.slot<0||u.slot>3))throw Error('我方阵容必须使用四个不同卡位');
@@ -38,17 +38,45 @@ export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide
     const arena = createArena({ resolved, near:party||[player], far, seed, firstSide });
     arena.mode = 'pve'; arena.currentSide = 'near'; arena.firstActingSide = firstSide;
     arena.threatRulesVersion=threatRulesVersion;
-    if(threatRulesVersion>=1)arena.onDamageThreat=(caster,target,damage)=>{
+    if(threatRulesVersion>=4)arena.advanceCasterThreat=caster=>{
+        if(caster.isMob)advanceThreat(caster,arena.sides.near);
+    };
+    const threatWeight=caster=>threatRulesVersion<4?1:caster.stance?.name==='defensive'?resolved.adventure.defensiveThreatWeight:caster.stance?.name==='taunt'?resolved.adventure.tauntThreatWeight:1;
+    if(threatRulesVersion>=4)arena.onDotThreat=(caster,target,ticks,area=false,absolute=true)=>{
+        if(caster.isMob||!arena.sides.far.includes(target))return;
+        const direct=ticks.map(damage=>Math.ceil((absolute?Math.abs(damage):damage)*arena.resolved.adventure.damageThreatRatio)).reverse();
+        const splash=direct.map(value=>Math.ceil(value*arena.resolved.adventure.splashDamageThreatRatio));
+        for(const mob of arena.sides.far)if(U.isAlive(mob)&&(!area||mob===target))appendThreat(mob,caster,0,mob===target?direct:splash);
+    };
+    if(threatRulesVersion>=4)arena.onHotThreat=(caster,ticks,area=false)=>{
+        if(caster.isMob)return;
+        const pending=ticks.map(heal=>Math.ceil((area?Math.ceil(heal*arena.resolved.adventure.areaHealThreatRatio):heal)*arena.resolved.adventure.singleHealThreatRatio)).reverse();
+        for(const mob of arena.sides.far)if(U.isAlive(mob))appendThreat(mob,caster,0,pending);
+    };
+    if(threatRulesVersion>=3)arena.onAreaHealThreat=(caster,total)=>{
+        if(caster.isMob)return;
+        const amount=Math.ceil(total*arena.resolved.adventure.areaHealThreatRatio);
+        for(const mob of arena.sides.far)if(U.isAlive(mob))appendThreat(mob,caster,amount,[],threatWeight(caster));
+    };
+    if(threatRulesVersion>=3)arena.onEffectThreat=(caster,target,key,area=false,targetOnly=false)=>{
+        if(caster.isMob)return;
+        if(threatRulesVersion<4&&['Stun','RemovePositiveWard','StealWard','SymmetryWards','ReflectionShield','AreaPowerPipBoost','AreaCleanse'].includes(key))return;
+        const count=['AreaPowerPipBoost','AreaCleanse'].includes(key)?arena.sides.near.filter(U.isAlive).length:1;
+        const amount=arena.resolved.adventure[`effectThreat${key}`]*count;
+        if(!Number.isFinite(amount))return;
+        for(const mob of arena.sides.far)if(U.isAlive(mob)&&(!targetOnly||mob===target))appendThreat(mob,caster,area||mob===target?amount:Math.ceil(amount*arena.resolved.adventure.splashManipulationThreatRatio),[],threatWeight(caster));
+    };
+    if(threatRulesVersion>=1)arena.onDamageThreat=(caster,target,damage,area=false,ratio=1)=>{
         if(caster.isMob)return;
         if(threatRulesVersion>=2&&!arena.sides.far.includes(target))return;
-        const base=Math.ceil(damage*arena.resolved.adventure.damageThreatRatio);
-        for(const mob of arena.sides.far)if(U.isAlive(mob))appendThreat(mob,caster,mob===target?base:Math.ceil(base*arena.resolved.adventure.splashDamageThreatRatio));
+        const base=Math.ceil(Math.ceil(damage*arena.resolved.adventure.damageThreatRatio)*ratio);
+        for(const mob of arena.sides.far)if(U.isAlive(mob)&&(!area||mob===target))appendThreat(mob,caster,mob===target?base:Math.ceil(base*arena.resolved.adventure.splashDamageThreatRatio),[],threatWeight(caster));
     };
     arena.runes=structuredClone(runes);arena.runeUsed={};arena.completedDecisions=0;
     if(threatRulesVersion>=2)arena.onSingleHealThreat=(caster,heal)=>{
         if(caster.isMob)return;
         const amount=Math.ceil(heal*arena.resolved.adventure.singleHealThreatRatio);
-        for(const mob of arena.sides.far)if(U.isAlive(mob))appendThreat(mob,caster,amount);
+        for(const mob of arena.sides.far)if(U.isAlive(mob))appendThreat(mob,caster,amount,[],threatWeight(caster));
     };
     arena.monsterTemplates = monsters;arena.captureStock=captureStock;arena.captureUsed=0;arena.captured=[];arena.heroLevel=heroLevel;
     for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];unit.slot=spec.slot??i;unit.speciesId=spec.speciesId;if(Number.isFinite(spec.hp))unit.hp=Math.max(0,Math.min(unit.maxHp,Math.floor(spec.hp)));}
@@ -67,7 +95,7 @@ export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide
 }
 function advancePveRound(a) {
     a.turn++; a.phase='pick';
-    if(a.threatRulesVersion>=1)for(const mob of a.sides.far)advanceThreat(mob,a.sides.near);
+    if(a.threatRulesVersion>=1&&a.threatRulesVersion<4)for(const mob of a.sides.far)advanceThreat(mob,a.sides.near);
     for (const u of [...a.sides.near,...a.sides.far]) {
         if (!U.isAlive(u)) continue;
         if (!u.hasStartupPips) {

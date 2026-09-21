@@ -1,11 +1,17 @@
 import { connectHaqiRest } from './npl_rest.js';
 
-function checkedResponse(value) {
-    if (!value || value.issuccess === false || Number(value.errorcode || value.errorCode || 0) !== 0) throw Error('原服读取失败，请稍后重试。');
+function checkedResponse(value, name) {
+    const code = Number(value?.errorcode || value?.errorCode || 0);
+    if (!value || value.issuccess === false || code !== 0) {
+        // paraworld.auth.lua AuthUser maps these server authentication errors.
+        const authErrors = { 438: '未传递必要的用户凭证', 419: '无法正确验证用户凭证', 496: '用户凭证无效或已过期' };
+        const reason = name === 'AuthUser' ? authErrors[code] : null;
+        throw Error(`原服读取失败（${name}${Number.isSafeInteger(code) && code !== 0 ? `，错误码 ${code}` : ''}）：${reason || '请稍后重试'}。`);
+    }
     return value;
 }
 
-export async function readOriginalCharacter({ sdk, fetchImpl = globalThis.fetch, connect = connectHaqiRest, signal, onProgress = () => {} }) {
+export async function readOriginalCharacter({ sdk, fetchImpl = globalThis.fetch, connect = connectHaqiRest, signal, selectRole, onProgress = () => {} }) {
     const token = sdk?.token;
     if (!token) throw Error('请先登录 Keepwork。');
     const controller = new AbortController();
@@ -40,7 +46,7 @@ export async function readOriginalCharacter({ sdk, fetchImpl = globalThis.fetch,
             controller.signal.addEventListener('abort', cancel, { once: true });
         });
         check();lastRequestAt = Date.now();
-        const value = checkedResponse(await client.request(name, params));check();return value;
+        const value = checkedResponse(await client.request(name, params), name);check();return value;
     };
     try {
         onProgress('正在核验 Keepwork 登录…');
@@ -58,11 +64,21 @@ export async function readOriginalCharacter({ sdk, fetchImpl = globalThis.fetch,
         client = await connect();check();
         const ping = await request('Ping');
         if (!Number.isSafeInteger(ping.ver) || ping.ver <= 0) throw Error('原服协议版本无效。');
+        // MainLogin.lua OnSelectUser: resolve and select the linked role before AuthUser.
+        const roles = await request('Users.GetNIDByOtherAccountID', { plat: 7, oid: profile.username.toLowerCase() });
+        const roleText = String(roles.nid ?? '');
+        if (!/^(?:-1|\d+(?:,\d+)*)?$/.test(roleText)) throw Error('原服角色列表格式暂不支持。');
+        const roleIds = roleText.split(',').map(Number).filter(id => id > 0);
+        if (roleIds.some(id => !Number.isSafeInteger(id)) || new Set(roleIds).size !== roleIds.length) throw Error('原服角色列表无效。');
+        if (!roleIds.length) throw Error('该账号尚未创建原版角色。');
+        const selectedNid = roleIds.length === 1 ? roleIds[0] : Number(await selectRole?.([...roleIds]));
+        check();
+        if (!roleIds.includes(selectedNid)) throw Error('请选择该账号下的原服角色后再读取。');
         const oauth = await http('https://keepwork.com/api/wiki/models/oauth_app/agreeOauth', { username: profile.username, client_id: '1000003' });
         if (typeof oauth?.data?.code !== 'string' || !oauth.data.code) throw Error('未获得魔法哈奇授权，请稍后重试。');
-        const auth = await request('AuthUser', { username: profile.username, plat: 7, token: oauth.data.code, oid: profile.username.toLowerCase(), from: 7, loginplat: 1, ver: ping.ver });
+        const auth = await request('AuthUser', { username: profile.username, plat: 7, token: oauth.data.code, oid: profile.username.toLowerCase(), from: 7, loginplat: 1, ver: ping.ver, nid2: selectedNid });
         const nid = Number(auth.nid);
-        if (auth.issuccess !== true || !Number.isSafeInteger(nid) || nid <= 0) throw Error('魔法哈奇登录失败，或该账号尚未创建原版角色。');
+        if (auth.issuccess !== true || !Number.isSafeInteger(nid) || nid !== selectedNid) throw Error('魔法哈奇登录失败，或该账号尚未创建原版角色。');
         onProgress('正在读取人物和背包…');
         const character = await request('Power_Users.GetUserAndDragonInfo', { nid });
         if (Number(character.user?.nid) !== nid || !character.dragon) throw Error('原版人物资料不完整，未创建导入角色。');

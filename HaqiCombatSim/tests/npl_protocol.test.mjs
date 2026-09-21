@@ -70,6 +70,45 @@ test('REST reply parser rejects executable and ambiguous input', () => {
     assert.deepEqual(parseRestReply('seq=2,data="{\\034ok\\034:true}",'), { seq: 2, data: { ok: true } });
 });
 
+test('REST authentication routing fields are validated but not exposed as character data', () => {
+    for (const routing of ['last_nid=123,new_nid=456,', 'new_nid="456",last_nid="123",', 'new_nid=456,last_nid="~123",', 'last_nid="~123",new_nid=-1,']) {
+        assert.deepEqual(parseRestReply(`${routing}data="{\\"issuccess\\":true,\\"nid\\":456}",seq=2,`), {
+            seq: 2, data: { issuccess: true, nid: 456 },
+        });
+    }
+    for (const routing of ['last_nid={},', 'new_nid=os.execute("bad"),', 'new_nid="bad",', 'new_nid=1,new_nid=2,', 'last_nid=9007199254740992,', 'last_nid="~bad",', 'last_nid="~-1",', 'new_nid="~123",']) {
+        assert.throws(() => parseRestReply(`${routing}data="{}",seq=2,`));
+    }
+});
+
+test('REST client reads AuthUser routing envelope then continues reading inventory', async () => {
+    class FakeSocket {
+        constructor() { this.seq = 0;queueMicrotask(() => this.onopen()); }
+        send() {
+            const seq = ++this.seq;
+            const data = seq === 1 ? { issuccess: true, nid: 456 } : { items: [] };
+            const routing = seq === 1 ? 'last_nid="~123",new_nid=456,' : '';
+            queueMicrotask(() => this.onmessage({ data: encodeNplActivation('8', `${routing}data=${encodeLuaData(JSON.stringify(data))},seq=${seq},`).buffer }));
+        }
+        close() {}
+    }
+    const client = await connectHaqiRest({ WebSocketClass: FakeSocket });
+    try {
+        assert.deepEqual(await client.request('AuthUser'), { issuccess: true, nid: 456 });
+        assert.deepEqual(await client.request('Items.GetItemsInBag'), { items: [] });
+    } finally { client.close(); }
+});
+
+test('REST parsing failures identify the request without exposing response data', async () => {
+    class FakeSocket {
+        constructor() { queueMicrotask(() => this.onopen()); }
+        send() { queueMicrotask(() => this.onmessage({ data: encodeNplActivation('8', 'data="private-response",seq=1,').buffer })); }
+        close() {}
+    }
+    const client = await connectHaqiRest({ WebSocketClass: FakeSocket });
+    await assert.rejects(client.request('AuthUser'), error => error.message.includes('AuthUser') && !error.message.includes('private-response'));
+});
+
 test('NPL rejects malformed, oversized and incomplete input', async () => {
     assert.throws(() => encodeNplActivation('1\nInjected:value', ''), /target/);
     for (const text of ['A 1\n\nx:', 'A 1\n\n999999999:', 'GET /\n\n0:']) {

@@ -67,6 +67,8 @@ export async function loadResources(progress) {
     content.shopConfig=await json('data/adventure/shop.json');
     content.magicStar=await json('data/adventure/magic-star.json');
     content.progressionBonuses=await json('data/adventure/progression-bonuses.json');
+    const {installDragonTotemItems}=await import('./adventure_progression_bonuses_core.js');
+    installDragonTotemItems(content);
     content.checkinConfig=await json('data/adventure/checkin.json');
     for(const [id,item] of Object.entries(content.checkinConfig.items))content.items[id]??=item;
     for(const [id,item] of Object.entries(content.progressionBonuses.giftItems||{}))content.items[id]??=item;

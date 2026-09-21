@@ -41,7 +41,7 @@ export async function connectHaqiRest({ WebSocketClass = globalThis.WebSocket, t
                     if (!pending || reply.seq !== pending.seq) continue;
                     const current = pending;pending = null;clearTimeout(current.timer);current.resolve(reply.data);
                 }
-            }).catch(() => stop(new Error('Invalid Haqi server response')));
+            }).catch(() => stop(new Error(`原服响应解析失败（${pending?.url || '连接'}），请重试或反馈当前步骤。`)));
         };
     });
     return {
@@ -55,7 +55,7 @@ export async function connectHaqiRest({ WebSocketClass = globalThis.WebSocket, t
             catch (error) { return Promise.reject(error); }
             return new Promise((resolve, reject) => {
                 const timer = setTimeout(() => stop(new Error('Haqi request timed out')), timeoutMs);
-                pending = { seq, resolve, reject, timer };
+                pending = { seq, url, resolve, reject, timer };
                 try { socket.send(frame); } catch { stop(new Error('Haqi send failed')); }
             });
         },
@@ -87,12 +87,25 @@ export function parseRestReply(body) {
     };
     while (offset < body.length) {
         whitespace();if (offset === body.length) break;
-        const match = /^(data|seq)\s*=\s*/.exec(body.slice(offset));
+        // rest.lua:handle_response forwards authentication routing fields unchanged.
+        const match = /^(data|seq|last_nid|new_nid)\s*=\s*/.exec(body.slice(offset));
         if (!match || Object.hasOwn(fields, match[1])) throw Error('Invalid REST field');
         offset += match[0].length;
         if (match[1] === 'data') {
             if (!['"', "'"].includes(body[offset])) throw Error('Invalid REST data');
             fields.data = string();
+        } else if (match[1] === 'last_nid' || match[1] === 'new_nid') {
+            let value;
+            if (['"', "'"].includes(body[offset])) value = string();
+            else {
+                const number = /^-?\d+/.exec(body.slice(offset));
+                if (!number) throw Error('Invalid REST routing ID');
+                value = number[0];offset += value.length;
+            }
+            // NPLConnection.cpp assigns anonymous connections a "~"-prefixed temporary NID.
+            const numericId = match[1] === 'last_nid' && value.startsWith('~') ? value.slice(1) : value;
+            if (!/^-?\d+$/.test(numericId) || !Number.isSafeInteger(Number(numericId)) || (value.startsWith('~') && !/^~\d+$/.test(value))) throw Error('Invalid REST routing ID');
+            fields[match[1]] = value;
         } else {
             const number = /^\d+/.exec(body.slice(offset));
             if (!number) throw Error('Invalid REST sequence');

@@ -1,6 +1,7 @@
 import { findEquipmentInstance } from './adventure_equipment_instances_core.js';
+import {progressionStatEntry,equipmentSetStats} from './adventure_progression_bonuses_core.js';
 // Equipment presentation data. All values come from the chapter and existing combat rules.
-import { playerSpec, applyAction, SCHOOL_NAMES } from './adventure_core.js';
+import { playerSpec, applyAction, SCHOOL_NAMES,canEquip } from './adventure_core.js';
 import { statIdToEntry } from './combat_unit_core.js';
 import { baseMaxHp, applyHpStats, powerPipChanceByLevel } from './combat_formulas_core.js';
 import { upgradeAt, upgradeAttributes } from './adventure_upgrade_core.js';
@@ -9,6 +10,21 @@ export const EQUIPMENT_SLOTS = [{id:2,name:'帽子'},{id:5,name:'法袍'},{id:7,
 const STAT_NAMES = {hpFlat:'生命',hpPct:'生命加成',powerPipPct:'超级魔力率',damagePct:'攻击',resistPct:'防御',accuracyPct:'命中',critPct:'暴击',resiliencePct:'韧性',penetration:'穿透',startupNormal:'起始普通魔力',startupPower:'起始超级魔力',damageAbs:'固定攻击',resistAbs:'固定防御',hitPct:'命中率',dodgePct:'闪避率',penetrationReceive:'受穿透',outputHealPct:'治疗加成',inputHealPct:'受治疗加成',critRatioBonus:'暴击伤害加成'};
 const percent = stat => stat.endsWith('Pct');
 export const signedAttribute = value => `${value>0?'+':''}${value}`;
+export function progressionAttributes(stats) {
+    return Object.entries(stats||{}).map(([id,value])=>{
+        const entry=progressionStatEntry(id);
+        if(!entry)return {label:Number(id)===256?'双倍攻击（原版禁用）':`未接入属性 ${id}`,value:Number(value),unit:''};
+        const schoolStat=SCHOOL_STATS.has(entry.stat)||['damageAbs','resistAbs'].includes(entry.stat);
+        return {label:`${schoolStat?(entry.school==='all'?'全系':SCHOOL_NAMES[entry.school]||entry.school):''}${STAT_NAMES[entry.stat]}`,value:Number(value)*(entry.scale??1),unit:percent(entry.stat)?'%':''};
+    });
+}
+export function equipmentSetDetails(save,content,itemId) {
+    const config=content.progressionBonuses,setId=config?.components?.[itemId];
+    if(!setId)return null;
+    const equipped=Object.values(save.equipment).filter(id=>canEquip(save,content.items[id],content));
+    const count=equipmentSetStats(equipped,config).counts[setId]||0;
+    return {setId,count,groups:(config.sets[setId]||[]).map(group=>({items:group.items,active:count>=group.items,attributes:progressionAttributes(group.stats)}))};
+}
 export function visibleEquipmentSummary(save,content) {
     const primary=new Set(['hp','damagePct','resistPct','accuracyPct','critPct','pip','normal','power','capacity','eachCapacity','fixed']);
     return equipmentSummary(save,content).filter(row=>primary.has(row.key)||row.value!==0);

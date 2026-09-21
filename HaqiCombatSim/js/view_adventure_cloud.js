@@ -16,7 +16,8 @@ export function renderCloud(root, state, callbacks) {
     box.append(el('header', 'modal-header', el('div', '', el('p', 'eyebrow', '在另一台设备，接着冒险'), el('h2', '', '云端旅途')), close), body);root.append(box);
     body.append(el('p', 'muted', '本地进度照常自动保存。手动保存到 Keepwork 后，可在其他设备登录同一账号、选择记录继续。每次保存都会新增一条记录。'), progressCard(state.local, '当前本地进度'));
     if (state.localUpdatedAt) body.append(el('p', 'muted cloud-time', `本地保存：${readableDate(state.localUpdatedAt)}`));
-    const account = el('div', 'cloud-actions', el('span', '', state.owner ? `Keepwork · ${state.owner}` : '尚未连接 Keepwork'), button(state.owner ? '重新连接' : '连接 Keepwork', callbacks.connect, 'secondary'));
+    const account = el('div', 'cloud-actions', el('span', '', state.owner ? `Keepwork · ${state.owner}` : '尚未登录 Keepwork'), button(state.owner ? '重新读取角色' : '登录 Keepwork', callbacks.connect, 'secondary'));
+    account.append(button('切换账号', callbacks.switchAccount, 'secondary'), button('退出登录', callbacks.logout, 'secondary'));
     body.append(account);
     if (state.owner) {
         const upload = button('保存当前进度到云端', callbacks.upload, 'primary');upload.disabled = !state.local;

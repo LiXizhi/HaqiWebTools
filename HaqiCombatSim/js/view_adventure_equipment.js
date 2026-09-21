@@ -1,5 +1,6 @@
 import {DetailDialog} from './view_detail_dialog.js';
-import {signedAttribute,unsupportedEquipmentStats,visibleEquipmentSummary} from './adventure_equipment_core.js';
+import {DRAGON_TOTEMS,dragonTotemStage,dragonTotemItemExperience} from './adventure_progression_bonuses_core.js';
+import {signedAttribute,unsupportedEquipmentStats,visibleEquipmentSummary,progressionAttributes,equipmentSetDetails} from './adventure_equipment_core.js';
 import {runeStatus} from './adventure_runes_core.js';
 import { equipmentInstances, findEquipmentInstance } from './adventure_equipment_instances_core.js';
 import { equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
@@ -45,6 +46,26 @@ export function renderEquipment(body,model,cb,ui) {
         for(const row of visibleEquipmentSummary(save,c))stats.append(el('dt','',row.label),el('dd','',`${row.value}${row.unit}`));
         statDetails.append(stats,el('p','muted','属性加成包含装备、强化和宝石；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。'));
         character.append(statDetails);
+        if(c.progressionBonuses){
+            const current=DRAGON_TOTEMS.find(row=>(save.inventory[row.id]||0)>0);
+            const experience=save.inventory[50359]||0;
+            const stage=current?dragonTotemStage(c.progressionBonuses,current.id,50359,experience):null;
+            const totems=el('details','equipment-stat-details',el('summary','','龙图腾'));
+            totems.append(el('p','',current?`${current.name} · ${stage?.level??0}级 · 经验 ${experience}`:'尚未学习图腾信仰'));
+            for(const attribute of progressionAttributes(stage?.stats))totems.append(el('p','',`${attribute.label} ${signedAttribute(attribute.value)}${attribute.unit}`));
+            totems.append(el('p','muted',`魔豆 ${save.inventory[984]||0} · ${current?'转换信仰50魔豆，保留经验':'首次学习免费'}`));
+            const choices=el('div','equipment-attributes');
+            for(const row of DRAGON_TOTEMS){
+                const selected=current?.id===row.id;
+                const choose=button(selected?`${row.name} · 已学习`:`${current?'转换为':'学习'}${row.name}`,()=>{
+                    if(!globalThis.confirm(current?`花费50魔豆，将信仰转换为${row.name}？图腾经验保留。`:`免费学习${row.name}？`))return;
+                    cb.action({type:'choose-totem',professionId:row.id});
+                },'secondary');
+                choose.disabled=selected||!!save.pendingEncounter||!!current&&(save.inventory[984]||0)<50||!c.progressionBonuses.professions?.[row.id]?.length;
+                choices.append(choose);
+            }
+            totems.append(choices);character.append(totems);
+        }
     }else{
         character.append(el('h3','equipment-section-title','旅行物品'));
         const summary=el('dl','equipment-summary');
@@ -110,6 +131,11 @@ export function renderEquipment(body,model,cb,ui) {
             const attrs=el('div','equipment-attributes');
             for(const row of equipmentAttributes(item,save,c,instance?.guid))attrs.append(el('span','',`${row.label} ${signedAttribute(row.value)}${row.unit}`));
             detail.append(attrs);
+            const set=equipmentSetDetails(save,c,item.id);
+            if(set){
+                detail.append(el('h4','',`套装 ${set.setId} · 已穿戴 ${set.count} 件`));
+                for(const group of set.groups)detail.append(el('p',group.active?'equipment-gain':'muted',`${group.items}件 · ${group.active?'已激活':'未激活'}：${group.attributes.map(row=>`${row.label} ${signedAttribute(row.value)}${row.unit}`).join('，')}`));
+            }
             if(unsupportedEquipmentStats(item).length)detail.append(el('p','equipment-warning','这件装备还有未接入的原版属性，当前属性与换装对比仅包含已支持部分。'));
             const reason=save.pendingEncounter?'战斗中无法换装':equipmentBlockReason(save,item,c);
             const action=equipped?{type:'unequip',slot:item.slot}:{type:'equip',itemId:item.id,guid:instance?.guid};
@@ -141,6 +167,14 @@ export function renderEquipment(body,model,cb,ui) {
             }
             else if(item.id===17307&&!save.pet)footer.append(button('打开出奇蛋',()=>{dialog.close();cb.action({type:'hatch'});},'primary'));
             else if(item.id===17172){const b=button(save.pet?'喂养宠物':'先孵化一只宠物',()=>{dialog.close();cb.action({type:'feed'});},'primary');b.disabled=!save.pet||save.pet.xp>=c.pet.levels.max_exp;footer.append(b);}
+            else if(item.stats?.[70]!==undefined&&item.stats?.[71]!==undefined){
+                const gain=dragonTotemItemExperience(save,c,item.id);
+                const use=button(gain?`使用 · 图腾经验 +${gain}`:'图腾道具暂不可用',()=>{
+                    if(!globalThis.confirm(`使用1个${item.name}，增加${gain}点图腾经验？`))return;
+                    dialog.close();cb.action({type:'use-totem-item',itemId:item.id});
+                },'primary');
+                use.disabled=!gain||!!save.pendingEncounter;footer.append(use);
+            }
             else detail.append(el('p','muted','旅途收藏 · 本章暂无主动使用功能'));
         }
         const quests=c.quests.filter(q=>q.rewards.some(group=>group.items.some(row=>row.id===item.id)));

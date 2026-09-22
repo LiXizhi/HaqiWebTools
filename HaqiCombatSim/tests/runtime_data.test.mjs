@@ -99,6 +99,8 @@ test('five compact packs load all datasets, retain projected content and preserv
             await assert.rejects(reader(`data/adventure/${name}.json`), /数据包缺少/);
         }
         const output = fs.readFileSync(path.join(destination, 'adventure.json'), 'utf8');
+        assert.ok(!Object.hasOwn(JSON.parse(output).files,'data/adventure/dungeons.json'));
+        assert.ok(Object.hasOwn(JSON.parse(output).files,'data/adventure/dungeon-index.json'));
         assert.equal(output, JSON.stringify(JSON.parse(output)));
         assert.deepEqual(await reader('data/adventure/skill-art.json'), compact('skill-art'));
         assert.deepEqual(await reader('data/adventure/npc-catalog.json'), compact('npc-catalog'));

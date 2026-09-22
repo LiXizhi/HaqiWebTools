@@ -628,3 +628,57 @@
 @media(max-width:520px){.npc-service-footer{padding:6px 8px;gap:4px}.npc-pager{gap:4px;font-size:11px}.npc-pager button{padding:6px;font-size:11px}.npc-wallet{font-size:11px}}
 .npc-card-preview{position:fixed;z-index:80;width:151px;pointer-events:none}.npc-card-preview .spell-face{display:block;width:151px;height:230px}.npc-card-preview .spell-art{width:100%;height:100%}
 @media(max-width:520px){.npc-goods{grid-template-columns:minmax(0,1fr)}.npc-skill{grid-template-columns:40px minmax(0,1fr) auto;row-gap:2px}.npc-skill>.npc-thumb{grid-row:1/3}.npc-skill-text{grid-column:2;grid-row:1}.npc-skill-status{grid-column:2;grid-row:2}.npc-skill>.npc-action{grid-column:3;grid-row:1/3}}
+
+/* Illustrated dungeon selection, inspired by the original warrior lobby. */
+ .modal.dungeon-modal{width:min(830px,100%);height:min(680px,88dvh)}
+.modal.dungeon-modal .modal-header{flex-shrink:0;padding:10px 16px}
+.modal.dungeon-modal .modal-header h2{margin:0;font-size:24px}
+.modal.dungeon-modal .modal-body{flex:1;min-height:0;padding:0 14px 12px;overflow-y:auto}
+.dungeon-toolbar{flex-shrink:0;padding:10px 14px}
+.dungeon-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.dungeon-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:stretch}
+.dungeon-card{display:flex;flex-direction:column;border:1px solid #bd9551;border-radius:10px;overflow:hidden;background:#fff5da;min-width:0;box-shadow:0 2px 0 #7f58241a}
+.dungeon-portrait{height:108px;flex-shrink:0;position:relative;display:grid;place-items:center;background:radial-gradient(ellipse at 50% 70%,#f7dda0 0%,#d8c490 42%,#859e83 100%);border-bottom:1px solid #c5a367;isolation:isolate}
+.dungeon-portrait:after{content:'';position:absolute;bottom:8px;width:90px;height:12px;background:#3e51362b;border-radius:50%;z-index:-1}
+.dungeon-portrait canvas{width:108px;height:108px;position:absolute;bottom:0;filter:drop-shadow(0 3px 2px #35291330)}
+.dungeon-portrait>.icon{width:76px;height:76px;opacity:.7}
+.dungeon-level{position:absolute;top:6px;left:6px;border-radius:12px;background:#244f3b;color:#fff3d4;padding:3px 7px;font-size:11px;z-index:1}
+.dungeon-card-info{display:flex;flex-direction:column;flex:1;gap:5px;min-width:0;padding:9px 10px}
+.dungeon-card h3{font-size:16px;margin:0;color:var(--ink);overflow-wrap:anywhere}
+.dungeon-card p{margin:0;overflow-wrap:anywhere}
+.dungeon-boss-name{font-size:12px;color:var(--muted)}
+.dungeon-status{font-size:11px;color:var(--green)}
+.dungeon-rewards{font-size:11px;color:var(--muted)}
+.dungeon-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:auto;padding-top:3px}.dungeon-actions button{flex:1;white-space:nowrap;min-height:36px;padding:7px 9px;font-size:13px}
+.dungeon-pagination{flex-shrink:0;display:flex;justify-content:center;align-items:center;gap:20px;padding:9px 14px;border-top:1px solid var(--line);font-size:14px;background:var(--paper)}
+.dungeon-pagination button{min-height:36px;padding:7px 14px}
+.dungeon-current{flex-shrink:0;display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:0 14px 10px;padding:8px;background:#e4e7c9;border-radius:8px;font-size:12px}.dungeon-current span{flex:1}
+.dungeon-empty{grid-column:1/-1;text-align:center;padding:30px 12px;color:var(--muted)}
+@media(max-width:760px){.dungeon-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:440px){.dungeon-list{grid-template-columns:minmax(0,1fr);gap:8px}.dungeon-card{display:grid;grid-template-columns:96px minmax(0,1fr)}.dungeon-portrait{height:100%;min-height:132px;border-bottom:0;border-right:1px solid #c5a367}.dungeon-portrait canvas{width:96px;height:96px;bottom:6px}.dungeon-portrait>.icon{width:70px;height:70px}.dungeon-level{left:4px;top:6px;font-size:10px;padding:3px 5px}.dungeon-tabs button{padding:8px 10px}.modal.dungeon-modal .modal-body{padding:0 10px 10px}.dungeon-toolbar{padding:8px 10px}}
+
+/* Full quest journal: filters stay visible; directory and detail scroll separately. */
+.modal.quest-journal-modal .modal-body{flex-direction:column}
+.quest-journal-modal .modal-header>div:first-child{min-width:0}
+.quest-journal-modal .modal-header h2{white-space:nowrap}
+.journal-filters{display:flex;gap:8px;margin-left:auto;min-width:0}
+.journal-filters select{width:130px}
+.journal-filters select{min-width:0;padding:8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:var(--ink);font:inherit;font-size:13px}
+.journal-load-status{font-size:12px;margin-bottom:8px;color:var(--muted)}
+.journal-load-status[hidden]{display:none}
+.journal-load-status button{margin-left:8px}
+.journal-directory{flex:1}
+.journal-pagination{display:flex;align-items:center;justify-content:space-between;gap:5px;flex:none;padding:8px 0 0;font-size:12px}
+.journal-pagination button{padding:6px 8px;min-width:0;font-size:12px}
+.journal-unavailable{background:#d9bc7726;border-left:3px solid var(--gold);padding:8px 12px}
+.journal-prerequisite{display:block;text-align:left;margin:5px 0;padding:7px 9px;color:var(--green);background:transparent;border:1px solid var(--line);max-width:100%}
+.journal-reward-group{margin:12px 0}.journal-reward-group>p{margin:0 0 6px}
+@media(max-width:600px){
+ .quest-journal-modal .modal-header{gap:5px}
+ .quest-journal-modal .modal-header h2{font-size:20px}
+ .journal-filters{gap:4px;flex:1}
+ .journal-filters select{width:0;flex:1;padding:6px 2px;font-size:12px}
+ .journal-layout{grid-template-rows:minmax(170px,36%) minmax(0,1fr)}
+ .journal-entry-text{display:grid;gap:2px}
+ .journal-pagination{padding:4px 0}
+}

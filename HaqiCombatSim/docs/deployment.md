@@ -45,3 +45,11 @@ npm run verify:release # 对当前dist重新核验，不上传
 `upload`或`verify:release`远端核验成功并生成正式入口后，自动查找祖先目录下的 `maisi` checkout（例如 `lxzsrc/maisi`），优先使用 `MAISI_ROOT`。确认仓库Git标记及MagicHaqi入口存在后，将本次四个 `release/Haqi*_v1.html` 复制到 `<maisi>/maisi/maisi/webgames/MagicHaqi/release/`，更新同名文件并逐字节核验。其他文件保持原样；不复制美术、预览HTML或manifest，不替Maisi执行Git提交/推送。
 
 未找到Maisi时打印跳过信息，不影响CDN发布；`plan:release`和失败的上传/核验不会复制。若复制发生IO错误则命令报错，可修复后运行 `verify:release`重新核验并复制。
+
+## 副本整包按需加载（2026-09-22）
+
+副本保持一个完整JSON，不按世界拆分。`data/adventure/dungeons.json`保留完整原版导出配置，构建时按既有白名单剔除归档XML，独立输出`dist/data/adventure/dungeons.json`。由现有`vite.config.mjs`在同一次构建中作为资源输出，运行`npm run build`即可，无独立构建配置、额外打包命令或JS入口产物。
+
+`data/adventure/dungeon-index.json`是生成的轻量菜单/存档校验索引，包含在主启动数据包中。主`adventure.json`不再包含完整副本数据。首次进入任意副本，浏览器读取完整副本JSON并缓存，之后进入其他副本不再下载。源码与发布使用同一相对URL，副本IO专用独立JSON读取器，不走五包路由。当前角色在副本内的本地/云端存档恢复会先预加载；历史清怪记录用轻量索引校验。
+
+Vite开发启动、正常构建及副本导出都会同步更新轻量索引；副本数据修改后按正常流程重新构建发布。发布白名单仍只允许HTML/JS/CSS/JSON，不包含美术或音频。

@@ -1,0 +1,1229 @@
+{
+  "version": 1,
+  "source": "Database/extendedcost.db.mem; Database/globalstore.db.mem; script/apps/Aries/NPCs/TownSquare/30388_CatchFish.lua; script/apps/Aries/Player/main.lua:GetStamina",
+  "extendedCostSha256": "df148affc7f6091c0309485f6642b74db303d28d6304ef6700e120f6825bb27e",
+  "globalStoreSha256": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+  "catchFishSha256": "7dd6a33492d62bc762c905efdceb6c9da480f57fe141e6485f353f9552cebcc5",
+  "staminaMax": 100,
+  "staminaGsid": -19,
+  "nets": [
+    {
+      "id": 17113,
+      "exchangeId": 1569,
+      "exchangeName": "Get_GoFishingExchange ",
+      "absolutelyHit": false,
+      "staminaRequired": 10,
+      "branches": [
+        [
+          {
+            "gsid": 17106,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 52202,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17107,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17108,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17109,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -3,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17110,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17111,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50366,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50367,
+            "count": 1,
+            "p": 1000
+          }
+        ]
+      ]
+    },
+    {
+      "id": 17346,
+      "exchangeId": 1645,
+      "exchangeName": "Get_GoFishingExchange_Strike",
+      "absolutelyHit": true,
+      "staminaRequired": 10,
+      "branches": [
+        [
+          {
+            "gsid": 17106,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 52202,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17107,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17108,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17109,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -3,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17110,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17111,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50366,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50367,
+            "count": 1,
+            "p": 1000
+          }
+        ]
+      ]
+    },
+    {
+      "id": 17347,
+      "exchangeId": 1605,
+      "exchangeName": "Get_GoFishingExchange_Double",
+      "absolutelyHit": false,
+      "staminaRequired": 10,
+      "branches": [
+        [
+          {
+            "gsid": 17106,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": 52202,
+            "count": 2,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17107,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 2,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17108,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 2,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17109,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -3,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 2,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17110,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 2,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17111,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": 50366,
+            "count": 2,
+            "p": 1000
+          },
+          {
+            "gsid": 50367,
+            "count": 2,
+            "p": 1000
+          }
+        ]
+      ]
+    },
+    {
+      "id": 17348,
+      "exchangeId": 1606,
+      "exchangeName": "Get_17111_ShinyCrownFish_FromFishingExchange",
+      "absolutelyHit": false,
+      "staminaRequired": 10,
+      "branches": [
+        [
+          {
+            "gsid": 17111,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50366,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50367,
+            "count": 1,
+            "p": 1000
+          }
+        ]
+      ]
+    },
+    {
+      "id": 17349,
+      "exchangeId": 1646,
+      "exchangeName": "Get_ShinyCrownFish_Strike",
+      "absolutelyHit": true,
+      "staminaRequired": 10,
+      "branches": [
+        [
+          {
+            "gsid": 17111,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50366,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50367,
+            "count": 1,
+            "p": 1000
+          }
+        ]
+      ]
+    },
+    {
+      "id": 17465,
+      "exchangeId": 1852,
+      "exchangeName": "greedy_17465_Outstanding_FishingApparatus_Exchange",
+      "absolutelyHit": true,
+      "staminaRequired": 10,
+      "branches": [
+        [
+          {
+            "gsid": 17106,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 52202,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17107,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17108,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17109,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -3,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17110,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17111,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50366,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50367,
+            "count": 1,
+            "p": 1000
+          }
+        ]
+      ]
+    },
+    {
+      "id": 17466,
+      "exchangeId": 1853,
+      "exchangeName": "greedy_17466_Well_FishingApparatus_Exchange",
+      "absolutelyHit": true,
+      "staminaRequired": 10,
+      "branches": [
+        [
+          {
+            "gsid": 17106,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 52202,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17107,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17108,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17109,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -3,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17110,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17111,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50366,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50367,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 50401,
+            "count": 1,
+            "p": 1000
+          }
+        ]
+      ]
+    },
+    {
+      "id": 17467,
+      "exchangeId": 1854,
+      "exchangeName": "greedy_17467_Ordinary_FishingApparatus_Exchange",
+      "absolutelyHit": true,
+      "staminaRequired": 10,
+      "branches": [
+        [
+          {
+            "gsid": 17106,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 52202,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17107,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17108,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -2,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17109,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -3,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17110,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 17111,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": -19,
+            "count": -5,
+            "p": 1000
+          },
+          {
+            "gsid": 50368,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50378,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50366,
+            "count": 1,
+            "p": 1000
+          },
+          {
+            "gsid": 50367,
+            "count": 1,
+            "p": 1000
+          }
+        ],
+        [
+          {
+            "gsid": 50401,
+            "count": 1,
+            "p": 1000
+          }
+        ]
+      ]
+    }
+  ],
+  "potions": [
+    {
+      "id": 17393,
+      "exchangeId": 21134,
+      "exchangeName": "Get_17393_EnergyPills_BindingS",
+      "restore": 50,
+      "blocked": "精力药剂的特殊前提尚未接入"
+    },
+    {
+      "id": 17344,
+      "exchangeId": 21130,
+      "exchangeName": "Get_17344_EnergyPills_BindingM",
+      "restore": 100,
+      "blocked": ""
+    },
+    {
+      "id": 17345,
+      "exchangeId": 21131,
+      "exchangeName": "Get_17345_EnergyPills_BindingL",
+      "restore": 200,
+      "blocked": ""
+    }
+  ],
+  "items": {
+    "17106": {
+      "id": 17106,
+      "name": "臭脚丫马靴",
+      "description": "不知道谁扔到水里的旧靴子...不过据说可以在渔夫汉特处换取仙豆#出售价格:20仙豆#出售地点：哈奇岛-休闲渔场-渔夫汉特",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17106_OldBoot.png"
+    },
+    "17107": {
+      "id": 17107,
+      "name": "胖乎乎水母",
+      "description": "色彩鲜艳的海洋生物，出售给渔夫汉特可以获得仙豆#出售价格:5仙豆#出售地点：哈奇岛-休闲渔场-渔夫汉特",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17107_SandwichJellyFish.png"
+    },
+    "17108": {
+      "id": 17108,
+      "name": "小毛头泥鳅",
+      "description": "滑不溜秋的泥鳅，经常在在浅海泥沙里出现，出售给渔夫汉特可以获得仙豆#出售价格:10仙豆#出售地点：哈奇岛-休闲渔场-渔夫汉特",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17108_SlippyWeatherfish.png"
+    },
+    "17109": {
+      "id": 17109,
+      "name": "呆呆大头鱼",
+      "description": "一条的奇怪的大头鱼，出售给渔夫汉特可以获得仙豆#出售价格:20仙豆#出售地点：哈奇岛-休闲渔场-渔夫汉特",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17109_BigHeadFish.png"
+    },
+    "17110": {
+      "id": 17110,
+      "name": "大个头螃蟹",
+      "description": "长着两支大钳子，看起来很凶悍，出售给渔夫汉特可以获得仙豆#出售价格:50仙豆#出售地点：哈奇岛-休闲渔场-渔夫汉特",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17110_BigSizeCrab.png"
+    },
+    "17111": {
+      "id": 17111,
+      "name": "闪闪皇冠鱼",
+      "description": "据说是皇冠鱼的变异品种，夜晚中闪闪发光，出售给渔夫汉特可以获得仙豆#出售价格:200仙豆#出售地点：哈奇岛-休闲渔场-渔夫汉特",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17111_ShinyCrownFish.png"
+    },
+    "17113": {
+      "id": 17113,
+      "name": "捕鱼网",
+      "description": "结实的渔网，可以用来在休闲渔场捕鱼，捕获的鱼可以卖给渔夫汉特获得仙豆哦#购买价格:5仙豆#购买地点:哈奇岛-休闲渔场-渔夫汉特",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17113_CatchingFishNet.png"
+    },
+    "17344": {
+      "id": 17344,
+      "name": "精力值药剂(中)",
+      "description": "使用一个精力值药剂(中)#可回复100点精力值。",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17344_EnergyPills_BindingM.png"
+    },
+    "17345": {
+      "id": 17345,
+      "name": "精力值药剂(大)",
+      "description": "使用一个精力值药剂(大)#可回复200点精力值。",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17345_EnergyPills_BindingL.png"
+    },
+    "17346": {
+      "id": 17346,
+      "name": "特大捕鱼网",
+      "description": "比普通捕鱼网大2倍，必能捕获到鱼。#售价：2魔豆/件",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17346_SuperCatchingFishNet.png"
+    },
+    "17347": {
+      "id": 17347,
+      "name": "翻倍捕鱼网",
+      "description": "一旦捕获成功，获得的鱼X2！#售价：5魔豆/件",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17347_DoubleCatchingFishNet.png"
+    },
+    "17348": {
+      "id": 17348,
+      "name": "皇冠鱼专用网",
+      "description": "用此网捕鱼，捕获成功后获得的鱼类必为皇冠鱼。#售价：20魔豆/件",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17348_ImperialCrownCatchingFishNet.png"
+    },
+    "17349": {
+      "id": 17349,
+      "name": "皇冠鱼必中网",
+      "description": "用此网捕鱼，就算乱投都能100%捕获皇冠鱼！#售价：50魔豆/件#",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17349_SuperImperialCrownCatchingFishNet.png"
+    },
+    "17393": {
+      "id": 17393,
+      "name": "精力值药剂(小)",
+      "description": "使用一个精力值药剂(小)#可回复50点精力值#每日获得上限为4瓶#魔法星用户可以使用",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17393_EnergyPills_BindingS.png"
+    },
+    "17465": {
+      "id": 17465,
+      "name": "卓越捕鱼器",
+      "description": "多克特博士发明的最佳产品，在钓鱼台使用可以自动捕鱼，有100%的成功率，每2秒可以发射1个",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17465_Outstanding_FishingApparatus.png"
+    },
+    "17466": {
+      "id": 17466,
+      "name": "精良捕鱼器",
+      "description": "多克特博士发明的成功产品，在钓鱼台使用可以自动捕鱼，有高达85%的成功率，每2.5秒可以发射1个",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17466_Well_FishingApparatus.png"
+    },
+    "17467": {
+      "id": 17467,
+      "name": "普通捕鱼器",
+      "description": "多克特博士发明的残次品，在钓鱼台使用可以自动捕鱼，可惜只有75%的成功率,每3秒可以发射1个",
+      "kind": 3,
+      "sourceIcon": "Texture/Aries/Item/17467_Ordinary_FishingApparatus.png"
+    },
+    "50366": {
+      "id": 50366,
+      "name": "皇冠鱼月榜",
+      "description": "捕捉皇冠鱼的月度排名，本排行榜每月一号凌晨系统自动清零重新累积。",
+      "kind": 14,
+      "sourceIcon": "Texture/Aries/Item/17111_ShinyCrownFish.png"
+    },
+    "50367": {
+      "id": 50367,
+      "name": "皇冠鱼周榜",
+      "description": "捕捉皇冠鱼的周度排名，本排行榜每周星期一凌晨系统自动清零重新累积。",
+      "kind": 14,
+      "sourceIcon": "Texture/Aries/Item/17111_ShinyCrownFish.png"
+    },
+    "50368": {
+      "id": 50368,
+      "name": "捕鱼达人周榜",
+      "description": "捕鱼达人的周度排名，本排行榜每周星期一凌晨系统自动清零重新累积。",
+      "kind": 14,
+      "sourceIcon": "Texture/Aries/Item/17109_BigHeadFish.png"
+    },
+    "50378": {
+      "id": 50378,
+      "name": "捕鱼达人月榜",
+      "description": "捕鱼达人的月度排名，本排行榜每月一号凌晨系统自动清零重新累积。",
+      "kind": 14,
+      "sourceIcon": "Texture/Aries/Item/17109_BigHeadFish.png"
+    },
+    "50401": {
+      "id": 50401,
+      "name": "捕鱼没有奖励_标记",
+      "description": "很遗憾，什么都没有。",
+      "kind": 14,
+      "sourceIcon": "Texture/alphadot.png"
+    },
+    "52202": {
+      "id": 52202,
+      "name": "捕鱼捕到臭马靴月榜_标记",
+      "description": "",
+      "kind": 14,
+      "sourceIcon": "Texture/Aries/Item/17106_OldBoot.png"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>休闲渔场验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<link rel="stylesheet" href="../../css/adventure_fishing.css">
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {applyAction,createAdventure} from '../../js/adventure_core.js';
+import {createWorld} from '../../js/adventure_world_core.js';
+import {isOcean} from '../../js/adventure_fishing_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources();
+const save=createAdventure(assets.content,{name:'渔场验收'});
+save.inventory[17113]=5;save.inventory[17349]=1;save.inventory[17344]=1;
+const world=createWorld('town',assets.content);
+const ocean=isOcean(world,0,0),land=isOcean(world,world.layout.spawn.x,world.layout.spawn.y);
+const model={assets,save,fishingView:{netId:17113,message:ocean&&!land?'海岸外的海面可以开始捕鱼。':'海面判断异常。'},shopView:{},petView:{},equipmentView:{tab:'gear',slot:0,item:null,query:''},strengtheningView:{},gemView:{}};
+const root=document.querySelector('#root');
+const cb={close:()=>root.replaceChildren(),panel:()=>show(),action(value){const result=applyAction(save,assets.content,value);model.fishingView.message=result.message;model.fishingView.netId=value.netId||model.fishingView.netId;show();return result;}};
+function show(){renderPanel(root,'fishing',model,cb);}show();
+</script></body></html>

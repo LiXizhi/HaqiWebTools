@@ -23,7 +23,7 @@ test('storybook UI ships as one alpha WebP below 100,000 bytes with valid nine-s
         assert.ok(x >= 0 && y >= 0 && w > 0 && h > 0);
         assert.ok(x + w <= manifest.width && y + h <= manifest.height);
         const [column, row] = frame.cell;
-        assert.ok(Number.isInteger(column) && Number.isInteger(row) && column >= 0 && column < 4 && row >= 0 && row < 4);
+        assert.ok(Number.isInteger(column) && Number.isInteger(row) && column >= 0 && column < (manifest.columns || 4) && row >= 0 && row < (manifest.rows || 4));
         assert.ok(!cells.has(frame.cell.join(',')), 'cells cannot overlap');
         cells.add(frame.cell.join(','));
         if (frame.slice) {
@@ -31,7 +31,7 @@ test('storybook UI ships as one alpha WebP below 100,000 bytes with valid nine-s
             assert.ok(top + bottom < h && left + right < w, 'stretchable center remains');
         }
     }
-    assert.equal(cells.size, 16);
+    assert.equal(cells.size, 17);
     for (const name of ['paper', 'wood', 'jade', 'cream']) assert.ok(manifest.frames[name].slice);
-    for (const name of ['book', 'cards', 'bag', 'pet', 'shop', 'map', 'cloud', 'settings', 'gourd', 'close']) assert.ok(manifest.frames[name]);
+    for (const name of ['book', 'cards', 'bag', 'pet', 'shop', 'map', 'cloud', 'settings', 'gourd', 'close', 'dungeon']) assert.ok(manifest.frames[name]);
 });

@@ -1,0 +1,1724 @@
+{
+  "version": 1,
+  "monsterCatalogSha256": "2ee299c1f90ebdea06d982fed9557e211725c94dffbf0b7a1aa2c70099b80a96",
+  "jobs": [
+    {
+      "id": "boss-40236",
+      "name": "鳄王拉比",
+      "monsterId": "config/Aries/Mob/ChallengeSecretLand/No90_MobTemplate_BossSet_Class05_Life_Lv55.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/DeathCrocodile01/DeathCrocodile01.x",
+      "source": "config/Aries/Mob/ChallengeSecretLand/No90_MobTemplate_BossSet_Class05_Life_Lv55.xml",
+      "sourceSha256": "c1a7a20dc33fac5628bb5f3b9afe0fb2daf96bcf7957e76410f84e49e5c94922",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "joybean_count": "0",
+        "displayname": "鳄王拉比",
+        "name": "Mob",
+        "scale": "3",
+        "asset": "character/v5/10mobs/HaqiTown/DeathCrocodile01/DeathCrocodile01.x",
+        "uid": "20100703T071757.562500-415",
+        "level": "55",
+        "phase": "life",
+        "hp": "100060",
+        "power_pip_percent": "1000",
+        "startup_pips_normal": "3",
+        "startup_pips_power": "2",
+        "is_immune_to_stun": "true",
+        "is_immune_to_dispel": "true",
+        "resist_death_percent": "0",
+        "resist_life_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "damage_death_percent": "0",
+        "damage_life_percent": "736",
+        "damage_storm_percent": "0",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "0",
+        "accuracy_fire_percent": "1000",
+        "accuracy_storm_percent": "1000",
+        "accuracy_ice_percent": "1000",
+        "accuracy_death_percent": "1000",
+        "accuracy_life_percent": "1000",
+        "available_cards": "(22362,1)",
+        "speak_dead": "千万不要来惹我",
+        "experience_pts": "0",
+        "loot1": "",
+        "loot2": "{[17342,2]=100}",
+        "loot6": "{[2131,1]=2}",
+        "loot7": "{[2129,1]=2}",
+        "loot8": "{[17341,2]=50,[17341,3]=50}"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/deathcrocodile01/deathcrocodile01.x.z,5bb635b903a2cdca1ba130b066955d55,199831",
+          "path": "character/v5/10mobs/haqitown/deathcrocodile01/deathcrocodile01.x.z",
+          "md5": "5bb635b903a2cdca1ba130b066955d55",
+          "size": 199831
+        }
+      },
+      "questIds": [
+        62403
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40285",
+      "name": "瘟疫领主真身",
+      "monsterId": "config/Aries/Mob/DarkForestIslandMarshNest/MobTemplate_MarshNestBoss_Set_Death_Lv55.xml#0",
+      "model": "character/v6/10mobs/01RainbowIsland/DeathApe01/DeathApe01.x",
+      "source": "config/Aries/Mob/DarkForestIslandMarshNest/MobTemplate_MarshNestBoss_Set_Death_Lv55.xml",
+      "sourceSha256": "da6fc3228a1e0ccfd090e9926ca29448603263a7e23347c0e8a8d41d7007f99f",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "joybean_count": "0",
+        "displayname": "瘟疫领主真身",
+        "name": "Mob",
+        "scale": "2.5",
+        "asset": "character/v6/10mobs/01RainbowIsland/DeathApe01/DeathApe01.x",
+        "uid": "20100703T071757.562500-415",
+        "level": "55",
+        "phase": "death",
+        "hp": "551240",
+        "power_pip_percent": "1000",
+        "startup_pips_normal": "2",
+        "startup_pips_power": "2",
+        "resist_death_percent": "0",
+        "resist_life_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "damage_death_percent": "716",
+        "damage_life_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "0",
+        "accuracy_fire_percent": "1000",
+        "accuracy_storm_percent": "1000",
+        "accuracy_ice_percent": "1000",
+        "accuracy_death_percent": "1000",
+        "accuracy_life_percent": "1000",
+        "available_cards": "(22186,2)(23323,5)(22189,10)(22142,5)(22184,10)(22334,3)(22188,3)",
+        "speak_dead": "选择了黑暗是罪……？",
+        "experience_pts": "0",
+        "loot1_hard": "{[17213,100]=100}",
+        "loot2_hard": "{[17258,1]=50}",
+        "loot3_hard": "{[17545,1]=100}",
+        "loot8_hard": "{[17260,1]=2}"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v6/10mobs/01rainbowisland/deathape01/deathape01.x.z,b95d3950f822a77c9e50ccfc486d4f22,216467",
+          "path": "character/v6/10mobs/01rainbowisland/deathape01/deathape01.x.z",
+          "md5": "b95d3950f822a77c9e50ccfc486d4f22",
+          "size": 216467
+        },
+        "thumbnail": {
+          "entry": "character/v6/10mobs/01rainbowisland/deathape01/deathape01.x.png.p,765adb790691d4513a02ab36d0d9c268,7378",
+          "path": "character/v6/10mobs/01rainbowisland/deathape01/deathape01.x.png.p",
+          "md5": "765adb790691d4513a02ab36d0d9c268",
+          "size": 7378
+        }
+      },
+      "questIds": [
+        62401,
+        62410
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40287",
+      "name": "暴躁的上古梦龙守卫",
+      "monsterId": "config/Aries/Mob/DeathLand/MobTemplate_Ancient_Dragon02_Death.xml#0",
+      "model": "character/v6/03pet/ChinaDragon_Balance/ChinaDragon_BalanceLV3.x",
+      "source": "config/Aries/Mob/DeathLand/MobTemplate_Ancient_Dragon02_Death.xml",
+      "sourceSha256": "78874afc0874d7d7e1faf7d508e63c9b87d684a049b1b65c8c0c8fe0fd112e97",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "joybean_count": "0",
+        "displayname": "暴躁的上古梦龙守卫",
+        "name": "Mob",
+        "scale": "4",
+        "asset": "character/v6/03pet/ChinaDragon_Balance/ChinaDragon_BalanceLV3.x",
+        "uid": "20100703T071757.562500-415",
+        "level": "60",
+        "phase": "death",
+        "hp": "180400",
+        "power_pip_percent": "1000",
+        "startup_pips_normal": "1",
+        "startup_pips_power": "2",
+        "resist_death_percent": "0",
+        "resist_life_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "damage_death_percent": "1200",
+        "damage_life_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "0",
+        "accuracy_fire_percent": "150",
+        "accuracy_storm_percent": "150",
+        "accuracy_ice_percent": "150",
+        "accuracy_death_percent": "150",
+        "accuracy_life_percent": "150",
+        "available_cards": "(22196,10)(22186,5)(22443,5)",
+        "speak_dead": "就算击败了我，你也只是活在梦境之中……",
+        "experience_pts": "0",
+        "loot1": ""
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v6/03pet/chinadragon_balance/chinadragon_balancelv3.x.z,d51f267821ccbe1a5ca50ee4baa1f0c4,294596",
+          "path": "character/v6/03pet/chinadragon_balance/chinadragon_balancelv3.x.z",
+          "md5": "d51f267821ccbe1a5ca50ee4baa1f0c4",
+          "size": 294596
+        },
+        "thumbnail": {
+          "entry": "character/v6/03pet/chinadragon_balance/chinadragon_balancelv3.x.png.p,c70383bd625e78b8cc17729e3c3201ea,6635",
+          "path": "character/v6/03pet/chinadragon_balance/chinadragon_balancelv3.x.png.p",
+          "md5": "c70383bd625e78b8cc17729e3c3201ea",
+          "size": 6635
+        }
+      },
+      "questIds": [
+        62408,
+        62409
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40026",
+      "name": "章鱼首领",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_GhostOctopus_Boss.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/GhostOctopus_Boss/GhostOctopus_Boss.x",
+      "source": "config/Aries/Mob/FireLand/MobTemplate_GhostOctopus_Boss.xml",
+      "sourceSha256": "d4c6a618c3286afc482f9b9efbf42a741f15a03582f4d95579870a665fb57b84",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "章鱼首领",
+        "scale": "2.2",
+        "asset": "character/v5/10mobs/HaqiTown/GhostOctopus_Boss/GhostOctopus_Boss.x",
+        "phase": "death",
+        "level": "15",
+        "hp": "595",
+        "experience_pts": "97",
+        "joybean_count": "80",
+        "loot1": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "loot8": "{[50409,1]=30,[17518,1]=10}",
+        "speak_dead": "就算死了一个我，还有千千万万个我……",
+        "power_pip_percent": "8",
+        "startup_pips_normal": "2",
+        "startup_pips_power": "0",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "-22",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level15_Mobs",
+        "enrage_ai_cards_key": "Level15_Mobs_death",
+        "enrage_loot_key": "Level15_Mobs",
+        "available_cards": "(22362,20)(22103,30)(22102,10)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/ghostoctopus_boss/ghostoctopus_boss.x.z,f5f491808fb729764cc45b374ad6ee37,180550",
+          "path": "character/v5/10mobs/haqitown/ghostoctopus_boss/ghostoctopus_boss.x.z",
+          "md5": "f5f491808fb729764cc45b374ad6ee37",
+          "size": 180550
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/ghostoctopus_boss/ghostoctopus_boss.x.png.p,5f0bf40a083a81dd53d8ea5ce0475e48,3670",
+          "path": "character/v5/10mobs/haqitown/ghostoctopus_boss/ghostoctopus_boss.x.png.p",
+          "md5": "5f0bf40a083a81dd53d8ea5ce0475e48",
+          "size": 3670
+        }
+      },
+      "questIds": [
+        62113
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40047",
+      "name": "傀儡首领2号",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_IcePangolin_Fuben.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/IcePangolin_Fuben/IcePangolin_Fuben.x",
+      "source": "config/Aries/Mob/FireLand/MobTemplate_IcePangolin_Fuben.xml",
+      "sourceSha256": "5fc56b56f2100a09ce2e8fb6e09f21f3ca77db6e060c9dbfd504ce3bf277fefe",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "傀儡首领2号",
+        "scale": "1.8",
+        "asset": "character/v5/10mobs/HaqiTown/IcePangolin_Fuben/IcePangolin_Fuben.x",
+        "phase": "ice",
+        "level": "18",
+        "hp": "1120",
+        "experience_pts": "155",
+        "joybean_count": "95",
+        "loot1": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "loot8": "{[50409,1]=30,[17518,1]=10}",
+        "speak_dead": "魔王是不会善罢甘休的……",
+        "power_pip_percent": "8",
+        "startup_pips_normal": "2",
+        "startup_pips_power": "0",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "-3",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level18_Mobs",
+        "enrage_ai_cards_key": "Level13_Mobs",
+        "enrage_loot_key": "Level18_Mobs",
+        "available_cards": "(22364,20)(22141,30)(22140,10)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/icepangolin_fuben/icepangolin_fuben.x.z,970056ff7f4a26a7733deaaf5b7ba357,87341",
+          "path": "character/v5/10mobs/haqitown/icepangolin_fuben/icepangolin_fuben.x.z",
+          "md5": "970056ff7f4a26a7733deaaf5b7ba357",
+          "size": 87341
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/icepangolin_fuben/icepangolin_fuben.x.png.p,ba1120e288afe140a14e8083e969fd9d,3845",
+          "path": "character/v5/10mobs/haqitown/icepangolin_fuben/icepangolin_fuben.x.png.p",
+          "md5": "ba1120e288afe140a14e8083e969fd9d",
+          "size": 3845
+        }
+      },
+      "questIds": [
+        62124
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40027",
+      "name": "风暴飞蝇",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_IronBee_Boss.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/IronBee_Boss/IronBee_Boss.x",
+      "source": "config/Aries/Mob/FireLand/MobTemplate_IronBee_Boss.xml",
+      "sourceSha256": "3a733ea2d5552d17e2eb2cd3e199a0c84e84a03df5fe877d89e1e1d85650c52d",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "风暴飞蝇",
+        "scale": "1.5",
+        "asset": "character/v5/10mobs/HaqiTown/IronBee_Boss/IronBee_Boss.x",
+        "phase": "storm",
+        "level": "16",
+        "hp": "520",
+        "experience_pts": "114",
+        "joybean_count": "80",
+        "catch_pet": "10166",
+        "loot1": "{}",
+        "loot8": "{[50409,1]=30,[17518,1]=10}",
+        "speak_dead": "原来魔王欺骗了我……",
+        "power_pip_percent": "8",
+        "startup_pips_normal": "1",
+        "startup_pips_power": "0",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "-46",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level18_Mobs",
+        "enrage_ai_cards_key": "Level13_Mobs",
+        "enrage_loot_key": "Level18_Mobs",
+        "available_cards": "(22363,20)(22123,30)(22122,10)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/ironbee_boss/ironbee_boss.x.z,d0ccb2e936f0b0f75a0f6f24ce7ba9fe,38969",
+          "path": "character/v5/10mobs/haqitown/ironbee_boss/ironbee_boss.x.z",
+          "md5": "d0ccb2e936f0b0f75a0f6f24ce7ba9fe",
+          "size": 38969
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/ironbee_boss/ironbee_boss.x.png.p,d977be962d30d55656ac78ce0e21e59a,2683",
+          "path": "character/v5/10mobs/haqitown/ironbee_boss/ironbee_boss.x.png.p",
+          "md5": "d977be962d30d55656ac78ce0e21e59a",
+          "size": 2683
+        }
+      },
+      "questIds": [
+        62118
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40114",
+      "name": "傀儡首领1号",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_IronBee_Boss_Fuben.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/IronBee_Boss_Fuben/IronBee_Boss_Fuben.x",
+      "source": "config/Aries/Mob/FireLand/MobTemplate_IronBee_Boss_Fuben.xml",
+      "sourceSha256": "9699f6c9e3b2d2d5b3d19aedc06bb4b37a1966fc532b93c7ca197c6084cefb49",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "傀儡首领1号",
+        "scale": "1.8",
+        "asset": "character/v5/10mobs/HaqiTown/IronBee_Boss_Fuben/IronBee_Boss_Fuben.x",
+        "phase": "fire",
+        "level": "18",
+        "hp": "870",
+        "experience_pts": "155",
+        "joybean_count": "95",
+        "loot1": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "loot8": "{[50409,1]=30,[17518,1]=10}",
+        "speak_dead": "出来混的，我知道早晚都要还……",
+        "power_pip_percent": "8",
+        "startup_pips_normal": "2",
+        "startup_pips_power": "0",
+        "damage_fire_percent": "21",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level18_Mobs",
+        "enrage_ai_cards_key": "Level13_Mobs",
+        "enrage_loot_key": "Level18_Mobs",
+        "available_cards": "(22362,20)(22103,30)(22102,10)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/ironbee_boss_fuben/ironbee_boss_fuben.x.z,0d657febd1f91faa551c038408977b46,38982",
+          "path": "character/v5/10mobs/haqitown/ironbee_boss_fuben/ironbee_boss_fuben.x.z",
+          "md5": "0d657febd1f91faa551c038408977b46",
+          "size": 38982
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/ironbee_boss_fuben/ironbee_boss_fuben.x.png.p,408885e4d423282898a7bec063cb0aa8,2967",
+          "path": "character/v5/10mobs/haqitown/ironbee_boss_fuben/ironbee_boss_fuben.x.png.p",
+          "md5": "408885e4d423282898a7bec063cb0aa8",
+          "size": 2967
+        }
+      },
+      "questIds": [
+        62122
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40112",
+      "name": "火鸟战士首领",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_PhoenixWarrior.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/PhoenixWarrior/PhoenixWarrior.x",
+      "source": "config/Aries/Mob/FireLand/MobTemplate_PhoenixWarrior.xml",
+      "sourceSha256": "451b3904b8bb0cf5ff5089b86115e8d6c1e1166c1ac7b4f4457b53526a43c54f",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "火鸟战士首领",
+        "scale": "1.8",
+        "asset": "character/v5/10mobs/HaqiTown/PhoenixWarrior/PhoenixWarrior.x",
+        "phase": "fire",
+        "level": "19",
+        "hp": "898",
+        "experience_pts": "178",
+        "joybean_count": "100",
+        "loot1": "{}",
+        "loot2": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "loot8": "{[50409,1]=30,[17518,1]=10}",
+        "speak_dead": "不！我不甘心！",
+        "power_pip_percent": "8",
+        "startup_pips_normal": "2",
+        "startup_pips_power": "0",
+        "damage_fire_percent": "21",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level20_Mobs",
+        "enrage_ai_cards_key": "Level15_Mobs_fire",
+        "enrage_loot_key": "Level20_Mobs",
+        "available_cards": "(22362,20)(22103,30)(22102,10)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/phoenixwarrior/phoenixwarrior.x.z,a34d3c7c6cff1da57f4bb8bfe45a8aac,198739",
+          "path": "character/v5/10mobs/haqitown/phoenixwarrior/phoenixwarrior.x.z",
+          "md5": "a34d3c7c6cff1da57f4bb8bfe45a8aac",
+          "size": 198739
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/phoenixwarrior/phoenixwarrior.x.png.p,ef2d8d26046ad9bbe7d122af8dba1491,3820",
+          "path": "character/v5/10mobs/haqitown/phoenixwarrior/phoenixwarrior.x.png.p",
+          "md5": "ef2d8d26046ad9bbe7d122af8dba1491",
+          "size": 3820
+        }
+      },
+      "questIds": [
+        62126
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40018",
+      "name": "烈火蟹首领",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_RedCrabLower.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/RedCrab/RedCrab.x",
+      "source": "config/Aries/Mob/FireLand/MobTemplate_RedCrabLower.xml",
+      "sourceSha256": "f459161d8aab45a1f3c65de787fd4926e5e83162a4353bc1f74df585962479c4",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "烈火蟹首领",
+        "scale": "2.3",
+        "asset": "character/v5/10mobs/HaqiTown/RedCrab/RedCrab.x",
+        "phase": "fire",
+        "level": "12",
+        "hp": "324",
+        "experience_pts": "56",
+        "joybean_count": "65",
+        "catch_pet": "10155",
+        "loot1": "{}",
+        "loot2": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "loot8": "{[50409,1]=30,[17518,1]=10}",
+        "speak_dead": "我居然就这样……",
+        "power_pip_percent": "8",
+        "startup_pips_normal": "2",
+        "startup_pips_power": "0",
+        "damage_fire_percent": "14",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level13_Mobs",
+        "enrage_ai_cards_key": "Level13_Mobs",
+        "enrage_loot_key": "Level13_Mobs",
+        "available_cards": "(22362,20)(22103,30)(22102,10)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/redcrab/redcrab.x.z,85a0ada334e66ce9bef756cc9a77987b,63425",
+          "path": "character/v5/10mobs/haqitown/redcrab/redcrab.x.z",
+          "md5": "85a0ada334e66ce9bef756cc9a77987b",
+          "size": 63425
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/redcrab/redcrab.x.png.p,d5240881dc6e2938dd6316c9a7c93064,2687",
+          "path": "character/v5/10mobs/haqitown/redcrab/redcrab.x.png.p",
+          "md5": "d5240881dc6e2938dd6316c9a7c93064",
+          "size": 2687
+        }
+      },
+      "questIds": [
+        62107
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40020",
+      "name": "噬巫鼠首领",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_RedDevouringRat.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/RedDevouringRat/RedDevouringRat.x",
+      "source": "config/Aries/Mob/FireLand/MobTemplate_RedDevouringRat.xml",
+      "sourceSha256": "ecd96006d7e461f2bdea144833049568c40d83c16300670b178c69a81b441dd8",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "噬巫鼠首领",
+        "scale": "1.8",
+        "asset": "character/v5/10mobs/HaqiTown/RedDevouringRat/RedDevouringRat.x",
+        "phase": "fire",
+        "level": "14",
+        "hp": "483",
+        "experience_pts": "81",
+        "joybean_count": "75",
+        "catch_pet": "10161",
+        "loot1": "{}",
+        "loot2": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "loot8": "{[50409,1]=30,[17518,1]=10}",
+        "speak_dead": "我居然玩阴的都玩不过你……",
+        "power_pip_percent": "8",
+        "startup_pips_normal": "2",
+        "startup_pips_power": "0",
+        "damage_fire_percent": "14",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level15_Mobs",
+        "enrage_ai_cards_key": "Level15_Mobs_fire",
+        "enrage_loot_key": "Level15_Mobs",
+        "available_cards": "(22362,20)(22103,30)(22102,10)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/reddevouringrat/reddevouringrat.x.z,ca1b32565550b079ed9b0a962a9a9a98,258231",
+          "path": "character/v5/10mobs/haqitown/reddevouringrat/reddevouringrat.x.z",
+          "md5": "ca1b32565550b079ed9b0a962a9a9a98",
+          "size": 258231
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/reddevouringrat/reddevouringrat.x.png.p,009712b07835ef83b41c98e780b84fae,3890",
+          "path": "character/v5/10mobs/haqitown/reddevouringrat/reddevouringrat.x.png.p",
+          "md5": "009712b07835ef83b41c98e780b84fae",
+          "size": 3890
+        }
+      },
+      "questIds": [
+        62110
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40286",
+      "name": "冰魔伯爵",
+      "monsterId": "config/Aries/Mob/HeroStormEye/MobTemplate_IceBonBoss_Special.xml#0",
+      "model": "character/v5/02animals/FireBon/FireBon.x",
+      "source": "config/Aries/Mob/HeroStormEye/MobTemplate_IceBonBoss_Special.xml",
+      "sourceSha256": "f1f87aafdd0bcc31ef7a63d49c2c9e3da762cbce7fbe8068526c0048f6c3cd6e",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "joybean_count": "0",
+        "displayname": "冰魔伯爵",
+        "name": "Mob",
+        "scale": "1.6",
+        "asset": "character/v5/02animals/FireBon/FireBon.x",
+        "uid": "20100703T071757.562500-415",
+        "level": "55",
+        "phase": "ice",
+        "hp": "320000",
+        "power_pip_percent": "1000",
+        "startup_pips_normal": "3",
+        "startup_pips_power": "2",
+        "is_immune_to_dispel": "true",
+        "is_immune_to_freeze": "true",
+        "is_immune_to_stun": "true",
+        "resist_death_percent": "0",
+        "resist_life_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "damage_death_percent": "0",
+        "damage_life_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "420",
+        "accuracy_fire_percent": "1000",
+        "accuracy_storm_percent": "1000",
+        "accuracy_ice_percent": "1000",
+        "accuracy_death_percent": "1000",
+        "accuracy_life_percent": "1000",
+        "available_cards": "(22153,5)(22146,5)(22142,5)(22144,5)",
+        "speak_dead": "此时此刻，我只想来杯浓浓的冰咖啡……",
+        "experience_pts": "0",
+        "loot1_hard": "{[17213,100]=90,[17532,1]=0.5}",
+        "loot2_hard": "{[17341,6]=70,[17341,8]=20,[17341,10]=10}",
+        "loot3_hard": "{[17412,1]=50,[17412,2]=5,[17260,1]=5}"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/02animals/firebon/firebon.x.z,267b0bb33e746c80848e714db49edac0,100273",
+          "path": "character/v5/02animals/firebon/firebon.x.z",
+          "md5": "267b0bb33e746c80848e714db49edac0",
+          "size": 100273
+        }
+      },
+      "questIds": [
+        62406,
+        62410
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40128",
+      "name": "松木妖首领",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_DeadTreeMonsterBoss.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/DeadTreeMonster/DeadTreeMonster.x",
+      "source": "config/Aries/Mob/IceLand/MobTemplate_DeadTreeMonsterBoss.xml",
+      "sourceSha256": "7f891ca57fea84896f6d5b9e77160e263c7130bc35959592015b03974433f01d",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "松木妖首领",
+        "scale": "1.5",
+        "asset": "character/v5/10mobs/HaqiTown/DeadTreeMonster/DeadTreeMonster.x",
+        "phase": "life",
+        "level": "23",
+        "hp": "1768",
+        "experience_pts": "293",
+        "joybean_count": "120",
+        "loot1": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "speak_dead": "我不想做一个饿死鬼……",
+        "power_pip_percent": "12",
+        "startup_pips_normal": "0",
+        "startup_pips_power": "2",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "-30",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level23_Mobs",
+        "enrage_ai_cards_key": "Level23_Mobs",
+        "enrage_loot_key": "Level23_Mobs",
+        "available_cards": "(22365,20)(22163,30)(22160,5)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/deadtreemonster/deadtreemonster.x.z,ee90fd67589e07be068de601171126a6,91512",
+          "path": "character/v5/10mobs/haqitown/deadtreemonster/deadtreemonster.x.z",
+          "md5": "ee90fd67589e07be068de601171126a6",
+          "size": 91512
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/deadtreemonster/deadtreemonster.x.png.p,c5f033bf22e5dbeff74147935daa7b00,2912",
+          "path": "character/v5/10mobs/haqitown/deadtreemonster/deadtreemonster.x.png.p",
+          "md5": "c5f033bf22e5dbeff74147935daa7b00",
+          "size": 2912
+        }
+      },
+      "questIds": [
+        62216
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40040",
+      "name": "雪狼首领",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_IceFrostFang04.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/IceFrostFang04/IceFrostFang04.x",
+      "source": "config/Aries/Mob/IceLand/MobTemplate_IceFrostFang04.xml",
+      "sourceSha256": "e240a015748f2ceffea38c3f04db40826aedb4fb0a1880564b1e65e786a60f4b",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "雪狼首领",
+        "scale": "1.5",
+        "asset": "character/v5/10mobs/HaqiTown/IceFrostFang04/IceFrostFang04.x",
+        "phase": "storm",
+        "level": "26",
+        "hp": "1120",
+        "experience_pts": "404",
+        "joybean_count": "135",
+        "catch_pet": "10163",
+        "loot1": "{}",
+        "loot2": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "speak_dead": "在我死之前，我想摆一个全世界最帅的姿势……",
+        "power_pip_percent": "12",
+        "startup_pips_normal": "0",
+        "startup_pips_power": "2",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "-30",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level28_Mobs",
+        "enrage_ai_cards_key": "Level23_Mobs",
+        "enrage_loot_key": "Level28_Mobs",
+        "available_cards": "(22363,20)(22125,30)(22123,5)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/icefrostfang04/icefrostfang04.x.z,939d5d3208e60ba6c1272d09566680a7,182480",
+          "path": "character/v5/10mobs/haqitown/icefrostfang04/icefrostfang04.x.z",
+          "md5": "939d5d3208e60ba6c1272d09566680a7",
+          "size": 182480
+        }
+      },
+      "questIds": [
+        62232
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40116",
+      "name": "大地巨人首领",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_LifeStoneMonster02.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/LifeStoneMonster02/LifeStoneMonster02.x",
+      "source": "config/Aries/Mob/IceLand/MobTemplate_LifeStoneMonster02.xml",
+      "sourceSha256": "484bbafe8911ddcd4a305c994e16460e4152b518ffe4fa7fb9148c8f9a778897",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "大地巨人首领",
+        "scale": "3",
+        "asset": "character/v5/10mobs/HaqiTown/LifeStoneMonster02/LifeStoneMonster02.x",
+        "phase": "life",
+        "level": "21",
+        "hp": "1534",
+        "experience_pts": "230",
+        "joybean_count": "110",
+        "loot1": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "speak_dead": "欲望，是无止境的吧……",
+        "power_pip_percent": "12",
+        "startup_pips_normal": "0",
+        "startup_pips_power": "2",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "-30",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level23_Mobs",
+        "enrage_ai_cards_key": "Level23_Mobs",
+        "enrage_loot_key": "Level23_Mobs",
+        "available_cards": "(22365,20)(22163,30)(22160,5)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/lifestonemonster02/lifestonemonster02.x.z,4f5f32cd01e0bfae0e51227efc87d44d,133071",
+          "path": "character/v5/10mobs/haqitown/lifestonemonster02/lifestonemonster02.x.z",
+          "md5": "4f5f32cd01e0bfae0e51227efc87d44d",
+          "size": 133071
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/lifestonemonster02/lifestonemonster02.x.png.p,a1fa0898f12ac3a70f7b1920d82fb9f4,8186",
+          "path": "character/v5/10mobs/haqitown/lifestonemonster02/lifestonemonster02.x.png.p",
+          "md5": "a1fa0898f12ac3a70f7b1920d82fb9f4",
+          "size": 8186
+        }
+      },
+      "questIds": [
+        62205
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40037",
+      "name": "暴风蝎首领",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_SandScorpion_Boss.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/SandScorpion_Boss/SandScorpion_Boss.x",
+      "source": "config/Aries/Mob/IceLand/MobTemplate_SandScorpion_Boss.xml",
+      "sourceSha256": "1632fde14e31562e20fbeb3bc82516e6b8f695c645ca40685dab33c01edec8fe",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "暴风蝎首领",
+        "scale": "1.5",
+        "asset": "character/v5/10mobs/HaqiTown/SandScorpion_Boss/SandScorpion_Boss.x",
+        "phase": "death",
+        "level": "22",
+        "hp": "1482",
+        "experience_pts": "261",
+        "joybean_count": "115",
+        "catch_pet": "10169",
+        "loot1": "{}",
+        "loot2": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "speak_dead": "其实你不爱我，对不对……",
+        "power_pip_percent": "12",
+        "startup_pips_normal": "0",
+        "startup_pips_power": "2",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "-16",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level23_Mobs",
+        "enrage_ai_cards_key": "Level23_Mobs",
+        "enrage_loot_key": "Level23_Mobs",
+        "available_cards": "(22366,20)(22184,30)(22183,5)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/sandscorpion_boss/sandscorpion_boss.x.z,1cb6f914a1b4c49a76993c735b6e2848,85767",
+          "path": "character/v5/10mobs/haqitown/sandscorpion_boss/sandscorpion_boss.x.z",
+          "md5": "1cb6f914a1b4c49a76993c735b6e2848",
+          "size": 85767
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/sandscorpion_boss/sandscorpion_boss.x.png.p,5fc84225e58e36e103d245ad849cde3f,3321",
+          "path": "character/v5/10mobs/haqitown/sandscorpion_boss/sandscorpion_boss.x.png.p",
+          "md5": "5fc84225e58e36e103d245ad849cde3f",
+          "size": 3321
+        }
+      },
+      "questIds": [
+        62212
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40043",
+      "name": "风鹰首领",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_StormWindEagle02.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/StormWindEagle02/StormWindEagle02.x",
+      "source": "config/Aries/Mob/IceLand/MobTemplate_StormWindEagle02.xml",
+      "sourceSha256": "125c1a4a40db970a768ae7dda6109c0a2e25498bfcaa223929b19f2d9e0a16bd",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "风鹰首领",
+        "scale": "1.5",
+        "asset": "character/v5/10mobs/HaqiTown/StormWindEagle02/StormWindEagle02.x",
+        "phase": "fire",
+        "level": "25",
+        "hp": "1378",
+        "experience_pts": "365",
+        "joybean_count": "130",
+        "loot1": "{}",
+        "loot2": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "speak_dead": "最初的天堂，最后的荒凉……",
+        "power_pip_percent": "12",
+        "startup_pips_normal": "0",
+        "startup_pips_power": "2",
+        "damage_fire_percent": "35",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level25_Mobs",
+        "enrage_ai_cards_key": "Level25_Mobs_fire",
+        "enrage_loot_key": "Level25_Mobs",
+        "available_cards": "(22362,20)(22105,30)(22114,5)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/stormwindeagle02/stormwindeagle02.x.z,c02288fff03d810b9c82cd32051677e8,182901",
+          "path": "character/v5/10mobs/haqitown/stormwindeagle02/stormwindeagle02.x.z",
+          "md5": "c02288fff03d810b9c82cd32051677e8",
+          "size": 182901
+        }
+      },
+      "questIds": [
+        62224
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40118",
+      "name": "青锭亡灵猴首领",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/UndeadMonkey/UndeadMonkey.x",
+      "source": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey.xml",
+      "sourceSha256": "221a21e87ea9921cab7a7ecf97259a8e237a5eb773e478f91c619e517a7acb10",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "青锭亡灵猴首领",
+        "scale": "1",
+        "asset": "character/v5/10mobs/HaqiTown/UndeadMonkey/UndeadMonkey.x",
+        "phase": "ice",
+        "level": "24",
+        "hp": "1600",
+        "experience_pts": "328",
+        "joybean_count": "125",
+        "catch_pet": "10165",
+        "loot1": "{[17172,1]=10}",
+        "loot2": "{}",
+        "speak_dead": "……呃！",
+        "power_pip_percent": "12",
+        "startup_pips_normal": "1",
+        "startup_pips_power": "1",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "1",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level25_Mobs",
+        "enrage_ai_cards_key": "Level25_Mobs_ice",
+        "enrage_loot_key": "Level25_Mobs",
+        "available_cards": "(22364,20)(22143,30)(22141,5)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/undeadmonkey/undeadmonkey.x.z,62b9df28df55bc42c2d11e82fd7663f6,271788",
+          "path": "character/v5/10mobs/haqitown/undeadmonkey/undeadmonkey.x.z",
+          "md5": "62b9df28df55bc42c2d11e82fd7663f6",
+          "size": 271788
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/undeadmonkey/undeadmonkey.x.png.p,5a32c8a1b9868561886032181cbea8ff,3521",
+          "path": "character/v5/10mobs/haqitown/undeadmonkey/undeadmonkey.x.png.p",
+          "md5": "5a32c8a1b9868561886032181cbea8ff",
+          "size": 3521
+        }
+      },
+      "questIds": [
+        62218
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40117",
+      "name": "魅紫亡灵猴",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey_Boss.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/UndeadMonkey_Boss/UndeadMonkey_Boss.x",
+      "source": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey_Boss.xml",
+      "sourceSha256": "4fa3adbfd0c6152fe92d068b61c191ee33328241a5a7179171963797d2c67f0b",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "魅紫亡灵猴",
+        "scale": "1",
+        "asset": "character/v5/10mobs/HaqiTown/UndeadMonkey_Boss/UndeadMonkey_Boss.x",
+        "phase": "fire",
+        "level": "24",
+        "hp": "1150",
+        "experience_pts": "328",
+        "joybean_count": "125",
+        "loot1": "{}",
+        "loot2": "{[16003,1]=15,[16016,1]=15,[16019,1]=10,[16020,1]=10,[17172,1]=30}",
+        "speak_dead": "哪里才是神圣的天堂……？",
+        "power_pip_percent": "12",
+        "startup_pips_normal": "1",
+        "startup_pips_power": "1",
+        "damage_fire_percent": "28",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level25_Mobs",
+        "enrage_ai_cards_key": "Level25_Mobs_fire",
+        "enrage_loot_key": "Level25_Mobs",
+        "available_cards": "(22362,20)(22105,30)(22114,5)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/undeadmonkey_boss/undeadmonkey_boss.x.z,0342db3ae265289a57e8f6a3c0f0b20a,271729",
+          "path": "character/v5/10mobs/haqitown/undeadmonkey_boss/undeadmonkey_boss.x.z",
+          "md5": "0342db3ae265289a57e8f6a3c0f0b20a",
+          "size": 271729
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/undeadmonkey_boss/undeadmonkey_boss.x.png.p,9ae8b0bb11581b1347c751ba91489400,4477",
+          "path": "character/v5/10mobs/haqitown/undeadmonkey_boss/undeadmonkey_boss.x.png.p",
+          "md5": "9ae8b0bb11581b1347c751ba91489400",
+          "size": 4477
+        }
+      },
+      "questIds": [
+        62218
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40059",
+      "name": "毒蛇首领",
+      "monsterId": "config/Aries/Mob/StormLand/MobTemplate_DeathSnake_Boss.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/DeathSnake_Boss/DeathSnake_Boss.x",
+      "source": "config/Aries/Mob/StormLand/MobTemplate_DeathSnake_Boss.xml",
+      "sourceSha256": "0d178b6b16e22c942d9ba1e32cd8c816279589bdf21000c344b351e392e64654",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "毒蛇首领",
+        "scale": "1.5",
+        "asset": "character/v5/10mobs/HaqiTown/DeathSnake_Boss/DeathSnake_Boss.x",
+        "phase": "death",
+        "level": "39",
+        "hp": "3250",
+        "experience_pts": "1312",
+        "joybean_count": "200",
+        "loot1": "{[17172,1]=10}",
+        "speak_dead": "到头来我为了什么……",
+        "power_pip_percent": "15",
+        "startup_pips_normal": "0",
+        "startup_pips_power": "2",
+        "damage_fire_percent": "0",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "2",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level40_Mobs",
+        "enrage_ai_cards_key": "Level35_Mobs_death",
+        "enrage_loot_key": "Level40_Mobs"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/deathsnake_boss/deathsnake_boss.x.z,ee5e7c3f9072b653a6f37053d7040215,34997",
+          "path": "character/v5/10mobs/haqitown/deathsnake_boss/deathsnake_boss.x.z",
+          "md5": "ee5e7c3f9072b653a6f37053d7040215",
+          "size": 34997
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/deathsnake_boss/deathsnake_boss.x.png.p,5b51c210a5e027d9590323bd810872b1,5446",
+          "path": "character/v5/10mobs/haqitown/deathsnake_boss/deathsnake_boss.x.png.p",
+          "md5": "5b51c210a5e027d9590323bd810872b1",
+          "size": 5446
+        }
+      },
+      "questIds": [
+        62334
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40134",
+      "name": "火岩甲虫统帅",
+      "monsterId": "config/Aries/Mob/StormLand/MobTemplate_FireBeatle_Boss.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/FireBeatle_Boss/FireBeatle_Boss.x",
+      "source": "config/Aries/Mob/StormLand/MobTemplate_FireBeatle_Boss.xml",
+      "sourceSha256": "26291ec00db23264ca79182e916da600f11d5305709a84ee0657bf728525cf86",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "火岩甲虫统帅",
+        "scale": "1.5",
+        "asset": "character/v5/10mobs/HaqiTown/FireBeatle_Boss/FireBeatle_Boss.x",
+        "phase": "fire",
+        "level": "36",
+        "hp": "2587",
+        "experience_pts": "1029",
+        "joybean_count": "185",
+        "catch_pet": "10172",
+        "loot1": "{[17172,1]=10}",
+        "speak_dead": "伟大的魔王啊！恐怕我不能继续为你效力了……",
+        "power_pip_percent": "15",
+        "startup_pips_normal": "1",
+        "startup_pips_power": "2",
+        "damage_fire_percent": "49",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level38_Mobs",
+        "enrage_ai_cards_key": "Level33_Mobs",
+        "enrage_loot_key": "Level38_Mobs"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/firebeatle_boss/firebeatle_boss.x.z,d23586b47227d3d1db0b58e9ff4dbb62,82491",
+          "path": "character/v5/10mobs/haqitown/firebeatle_boss/firebeatle_boss.x.z",
+          "md5": "d23586b47227d3d1db0b58e9ff4dbb62",
+          "size": 82491
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/firebeatle_boss/firebeatle_boss.x.png.p,e7dc3c5d7443d2d1f556ae8118cfe457,5086",
+          "path": "character/v5/10mobs/haqitown/firebeatle_boss/firebeatle_boss.x.png.p",
+          "md5": "e7dc3c5d7443d2d1f556ae8118cfe457",
+          "size": 5086
+        }
+      },
+      "questIds": [
+        62323
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40053",
+      "name": "烈火亡灵蛇",
+      "monsterId": "config/Aries/Mob/StormLand/MobTemplate_FlamingSnake_Boss.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/FlamingSnake_Boss/FlamingSnake_Boss.x",
+      "source": "config/Aries/Mob/StormLand/MobTemplate_FlamingSnake_Boss.xml",
+      "sourceSha256": "a30e1f03cea2cd9c4175dd3675f4386d19f7a8edc67480754c252f5516aebbff",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "烈火亡灵蛇",
+        "scale": "1",
+        "asset": "character/v5/10mobs/HaqiTown/FlamingSnake_Boss/FlamingSnake_Boss.x",
+        "phase": "fire",
+        "level": "37",
+        "hp": "2060",
+        "experience_pts": "1118",
+        "joybean_count": "190",
+        "loot1": "{}",
+        "speak_dead": "……噢，不！",
+        "power_pip_percent": "15",
+        "startup_pips_normal": "0",
+        "startup_pips_power": "2",
+        "damage_fire_percent": "49",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level38_Mobs",
+        "enrage_ai_cards_key": "Level33_Mobs",
+        "enrage_loot_key": "Level38_Mobs",
+        "available_cards": "(22362,20)(22115,30)(22114,10)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/flamingsnake_boss/flamingsnake_boss.x.z,bc3759ec342087bd979a661d13a26f69,33717",
+          "path": "character/v5/10mobs/haqitown/flamingsnake_boss/flamingsnake_boss.x.z",
+          "md5": "bc3759ec342087bd979a661d13a26f69",
+          "size": 33717
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/flamingsnake_boss/flamingsnake_boss.x.png.p,60a7c773e5108020ce9255ceeb08bb40,3484",
+          "path": "character/v5/10mobs/haqitown/flamingsnake_boss/flamingsnake_boss.x.png.p",
+          "md5": "60a7c773e5108020ce9255ceeb08bb40",
+          "size": 3484
+        }
+      },
+      "questIds": [
+        62326
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40048",
+      "name": "烈火食人花",
+      "monsterId": "config/Aries/Mob/StormLand/MobTemplate_FungusSavage_Boss.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/FungusSavage_Boss/FungusSavage_Boss.x",
+      "source": "config/Aries/Mob/StormLand/MobTemplate_FungusSavage_Boss.xml",
+      "sourceSha256": "7e18c4c227075c107ad5ecaa9ba8a92eab1516700f0ab025e2af4d39fa73d209",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "烈火食人花",
+        "scale": "1",
+        "asset": "character/v5/10mobs/HaqiTown/FungusSavage_Boss/FungusSavage_Boss.x",
+        "phase": "fire",
+        "level": "33",
+        "hp": "1780",
+        "experience_pts": "793",
+        "joybean_count": "170",
+        "loot1": "{}",
+        "speak_dead": " 没什么好说的，败者为寇……",
+        "power_pip_percent": "15",
+        "startup_pips_normal": "0",
+        "startup_pips_power": "2",
+        "damage_fire_percent": "42",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level33_Mobs",
+        "enrage_ai_cards_key": "Level33_Mobs",
+        "enrage_loot_key": "Level33_Mobs",
+        "available_cards": "(22362,20)(22115,30)(22114,10)"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/fungussavage_boss/fungussavage_boss.x.z,729616e6e0c1c8c54d8d32f3b1f3142d,155820",
+          "path": "character/v5/10mobs/haqitown/fungussavage_boss/fungussavage_boss.x.z",
+          "md5": "729616e6e0c1c8c54d8d32f3b1f3142d",
+          "size": 155820
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/fungussavage_boss/fungussavage_boss.x.png.p,a2f1b8b1c0ab2d74dcf2e9ec33533245,2810",
+          "path": "character/v5/10mobs/haqitown/fungussavage_boss/fungussavage_boss.x.png.p",
+          "md5": "a2f1b8b1c0ab2d74dcf2e9ec33533245",
+          "size": 2810
+        }
+      },
+      "questIds": [
+        62311
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    },
+    {
+      "id": "boss-40051",
+      "name": "沙漠巨蜥首领",
+      "monsterId": "config/Aries/Mob/StormLand/MobTemplate_LizardMonk_Boss.xml#0",
+      "model": "character/v5/10mobs/HaqiTown/LizardMonk_Boss/LizardMonk_Boss.x",
+      "source": "config/Aries/Mob/StormLand/MobTemplate_LizardMonk_Boss.xml",
+      "sourceSha256": "bbe5557a420e6d8372f59e945c25e64c2b85e69e458d8af425b3bb22a7fb024a",
+      "attributes": {
+        "ai_module": "Genes_Attacker",
+        "uid": "20100703T054036.406250-13",
+        "guard_distance": "10",
+        "guarding_range": "20",
+        "random_walk_range": "5",
+        "name": "Boss",
+        "displayname": "沙漠巨蜥首领",
+        "scale": "2.3",
+        "asset": "character/v5/10mobs/HaqiTown/LizardMonk_Boss/LizardMonk_Boss.x",
+        "phase": "fire",
+        "level": "34",
+        "hp": "2405",
+        "experience_pts": "866",
+        "joybean_count": "175",
+        "loot1": "{[17172,1]=10}",
+        "speak_dead": "我不入地狱谁入地狱！",
+        "power_pip_percent": "15",
+        "startup_pips_normal": "1",
+        "startup_pips_power": "2",
+        "damage_fire_percent": "42",
+        "damage_ice_percent": "0",
+        "damage_storm_percent": "0",
+        "damage_life_percent": "0",
+        "damage_death_percent": "0",
+        "resist_fire_percent": "0",
+        "resist_ice_percent": "0",
+        "resist_storm_percent": "0",
+        "resist_life_percent": "0",
+        "resist_death_percent": "0",
+        "enrage_enable": "true",
+        "enrage_stats_key": "Level35_Mobs",
+        "enrage_ai_cards_key": "Level35_Mobs_fire",
+        "enrage_loot_key": "Level35_Mobs"
+      },
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/lizardmonk_boss/lizardmonk_boss.x.z,bf61575527fa7db746d467e0867c687e,174180",
+          "path": "character/v5/10mobs/haqitown/lizardmonk_boss/lizardmonk_boss.x.z",
+          "md5": "bf61575527fa7db746d467e0867c687e",
+          "size": 174180
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/lizardmonk_boss/lizardmonk_boss.x.png.p,63d7347d0fc654f6dfc835a07300a73c,3251",
+          "path": "character/v5/10mobs/haqitown/lizardmonk_boss/lizardmonk_boss.x.png.p",
+          "md5": "63d7347d0fc654f6dfc835a07300a73c",
+          "size": 3251
+        }
+      },
+      "questIds": [
+        62314
+      ],
+      "render": {
+        "width": 512,
+        "height": 512,
+        "transparent": true,
+        "method": "original-model-mini-scene"
+      },
+      "output": {
+        "width": 256,
+        "height": 256,
+        "format": "webp",
+        "byteLimitExclusive": 48000
+      },
+      "status": "cdn-verified"
+    }
+  ]
+}

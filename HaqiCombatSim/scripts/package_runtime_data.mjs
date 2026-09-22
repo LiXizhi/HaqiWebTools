@@ -7,13 +7,14 @@ import {npcItemLimits} from '../js/adventure_npc_core.js';
 const pick = (row, keys) => Object.fromEntries(keys.filter(key => Object.hasOwn(row, key)).map(key => [key, row[key]]));
 const map = (rows, project) => Object.fromEntries(Object.entries(rows).map(([id, row]) => [id, project(row)]));
 const urlFields = ['local', 'cdn'];
-const developmentFiles = new Set(['card-atlas.json', 'cdn-publish-plan.json', 'skill-art-plan.json', 'expansion-report.json']);
+const developmentFiles = new Set(['card-atlas.json', 'cdn-publish-plan.json', 'skill-art-plan.json', 'expansion-report.json', 'quest-catalog.json', 'monster-catalog.json', 'boss-art-plan.json', 'boss-art.json', 'quest-journal.json']);
 
 export function projectRuntimeData(relativePath, value) {
     if (!relativePath.startsWith('adventure/')) return value;
     const name = relativePath.slice('adventure/'.length);
     if (developmentFiles.has(name)) return null;
     switch (name) {
+        case 'dungeons.json': return {version:value.version,worlds:value.worlds.map(row=>pick(row,['id','name','attributes','arenas','warnings','recommendedLevel','monsterCount'])),monsters:map(value.monsters,row=>pick(row,['id','source','name','school','level','hp','xp','coins','attributes','pool','sequences','genes','cardsets']))};
         case 'npc-catalog.json': return {
             version: value.version,
             npcs: value.npcs.map(row => ({
@@ -67,6 +68,7 @@ function collectRuntimeData(source, files, prefix = '') {
         if (entry.isDirectory()) {
             collectRuntimeData(from, files, `${prefix}${entry.name}/`);
         } else if (entry.name.endsWith('.json')) {
+            if(prefix==='adventure/'&&entry.name==='dungeons.json')continue;
             const value = projectRuntimeData(`${prefix}${entry.name}`, JSON.parse(fs.readFileSync(from, 'utf8')));
             if (value === null) continue;
             files[`data/${prefix}${entry.name}`] = value;

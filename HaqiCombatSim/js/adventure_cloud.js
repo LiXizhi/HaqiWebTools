@@ -20,7 +20,7 @@ export function loadKeepwork() {
     }).catch(error => { sdkLoading = null;throw error; });
     return timeout(sdkLoading);
 }
-export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, now = () => new Date().toISOString(), uuid = () => crypto.randomUUID(), onAccountChange = () => {} }) {
+export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, now = () => new Date().toISOString(), uuid = () => crypto.randomUUID(), onAccountChange = () => {}, prepareSaves = async () => {} }) {
     let sdk, store, owner = null, authVersion = 0, unsubscribe;
     const check = session => {
         if (!sdk?.token || !owner || authVersion !== session.version || store?.getUsername() !== session.owner || store.isUseLocal()) throw new CloudError('登录状态已变化，请重新连接 Keepwork。');
@@ -66,6 +66,7 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         if (result?.success !== true || typeof result.content !== 'string' || result.content.length > 6 * 1024 * 1024) throw new CloudError('角色列表读取失败，请重试。');
         const value = JSON.parse(result.content);
         if (value.owner !== current.owner || !roleIdValid(value.revision)) throw new CloudError('角色列表身份或版本无效');
+        await prepareSaves((value.catalog?.roles||[]).map(row=>row.save));check(current);
         let catalog;
         try { catalog = validateRoles(value.catalog, content, dataset); }
         catch (error) { throw new CloudError(`已登录，但云端角色校验失败：${error.message}。云端记录未修改，本地进度仍保留。`); }
@@ -154,7 +155,10 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         read: path => guarded(async () => {
             if (!checkpointPaths(path.replace(/^checkpoints\//, '')).includes(path)) throw new CloudError('云端记录路径无效');
             const current = await session();
-            const result = parseCloudSnapshot(await remoteText(path, current), content, dataset);
+            const raw=await remoteText(path,current);
+            if(raw.length>1024*1024)throw new CloudError('存档文件过大');
+            await prepareSaves([JSON.parse(raw).save]);check(current);
+            const result = parseCloudSnapshot(raw, content, dataset);
             if (snapshotPath(result.snapshot) !== path) throw new CloudError('云端记录与文件编号不一致');
             return { ...result, owner: current.owner, authVersion: current.version };
         }),

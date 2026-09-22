@@ -3,10 +3,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {installNpcCatalog,npcOffers,npcOfferStatus} from '../js/adventure_npc_core.js';
-import {createWorld,walkable,nearestInteraction,nearbyWorldObjects} from '../js/adventure_world_core.js';
+import {createWorld,walkable,nearestInteraction,nearbyWorldObjects,distance} from '../js/adventure_world_core.js';
 import {projectRuntimeData} from '../scripts/package_runtime_data.mjs';
 import {createAdventure,applyAction,parseSave} from '../js/adventure_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
+import {installNpcArt} from '../js/adventure_npc_art_core.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));
 const {content:c}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 installNpcCatalog(c,read('adventure/npc-catalog.json'));
@@ -87,9 +88,29 @@ test('six original island catalogues retain all instances and place residents de
     for(const z of Object.keys(c.worldMaps)){
         const world=createWorld(z,c),again=createWorld(z,c);
         assert.deepEqual(world.npcs,again.npcs);
-        assert.equal(world.npcs.length,c.npcCatalog.npcs.filter(n=>n.zone===z&&n.hidden!==true).length);
+        assert.equal(world.npcs.filter(n=>!n.worldMapGuide).length,c.npcCatalog.npcs.filter(n=>n.zone===z&&n.hidden!==true).length);
         for(const n of world.npcs){assert.ok(Number.isFinite(n.x)&&Number.isFinite(n.y));if(!world.layout.npcPositions[n.id])assert.ok(walkable(world,n.x,n.y),`${z} ${n.id}`);}
     }
+});
+test('world map portals retain authored captains and restore missing visiting guides with their art',()=>{
+    const content=structuredClone(c);
+    installNpcArt(content,read('adventure/npc-art.json'));
+    const before=JSON.stringify(content);
+    for(const zone of Object.keys(content.worldMaps)){
+        const world=createWorld(zone,content),captains=world.npcs.filter(n=>(n.id===36205||n.name==='法斯特船长')&&distance(n,world.portal)<=160);
+        assert.equal(captains.length,1,zone);
+        const captain=captains[0],expected=world.layout.npcPositions[36205]||[world.portal.x,world.portal.y];
+        assert.deepEqual([captain.x,captain.y],expected);
+        assert.deepEqual(captain.portrait,content.npcs[36205].portrait);
+        assert.ok(walkable(world,captain.x,captain.y));
+        assert.equal(nearestInteraction(world,captain).id,36205);
+        assert.ok(nearbyWorldObjects(world,{x:captain.x-1,y:captain.y-1,w:2,h:2}).some(n=>n.id===36205));
+    }
+    assert.equal(JSON.stringify(content),before);
+    delete content.worldMaps.fire.visitingNpcs;
+    const world=createWorld('fire',content),captain=world.npcs.find(n=>n.id===36205);
+    assert.deepEqual({x:captain.x,y:captain.y},{x:world.portal.x,y:world.portal.y});
+    assert.equal(nearestInteraction(world,captain).id,36205);
 });
 test('unfinished town residents are hidden, retained in the catalogue and explicitly restorable',()=>{
     const resident=npc(30162);

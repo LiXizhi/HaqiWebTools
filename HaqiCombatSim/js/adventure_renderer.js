@@ -77,6 +77,11 @@ export function createRenderer(canvas,assets) {
         const index={'fire-scout':0,'ice-scout':1,'storm-scout':2,'life-scout':3,'death-scout':4,'water-bubble':5,'death-bubble':4,pet:6}[id]??5;
         const bob=Math.sin(t*2.8+x)*3;shadow(c,x,y,27*scale);assets.tile(c,'creatures',index,x-45*scale,y-84*scale+bob,90*scale,88*scale);
     }
+    function monster(c,m,x,y,t,scale=1){
+        const bob=reducedMotion.matches?0:Math.sin(t*2.8+x)*2;
+        shadow(c,x,y,27*scale);
+        if(!assets.drawMonster?.(c,m,x-52*scale,y-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',x,y,t,scale);
+    }
     function render(world,save,time,{moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time}={}) {
         const {w,h}=size(),t=time/1000;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         const baseScale=w<650?.82:1,sceneZoom=title?1:zoom;
@@ -91,7 +96,8 @@ export function createRenderer(canvas,assets) {
         ctx.strokeStyle='#e3f3da33';ctx.lineWidth=2;
         if(!world.layout&&!reducedMotion.matches)for(let i=0;i<38;i++){const x=(i*151+t*8)%1750,y=80+(i*269)%1450;if(onIsland(x,y,-12))continue;ctx.beginPath();ctx.moveTo(x,y);ctx.quadraticCurveTo(x+13,y+4,x+26,y);ctx.stroke();}
         if(path.length&&!title){ctx.strokeStyle='#fff6bc88';ctx.setLineDash([3,10]);ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(save.position.x,save.position.y);for(const p of path)ctx.lineTo(p.x,p.y);ctx.stroke();ctx.setLineDash([]);const end=path[path.length-1];circleRune(ctx,end.x,end.y,15,t,'#fff3ae');}
-        circleRune(ctx,world.portal.x,world.portal.y,45,t,save.graduated?'#e9e29a':'#a6bab0');
+        if(!world.portal.hidden)circleRune(ctx,world.portal.x,world.portal.y,45,t,save.graduated?'#e9e29a':'#a6bab0');
+        if(world.entrancePortal)circleRune(ctx,world.entrancePortal.x,world.entrancePortal.y,45,t,'#a6bab0');
         const objects=[...nearbyWorldObjects(world,{x:cam.x-240,y:cam.y-60,w:w/cam.scale+480,h:h/cam.scale+320}),{...save.position,kind:'hero'}];
         const petId=save.formation?.[save.heroSlot]||(!save.pets&&save.pet?'legacy':null);
         if(petId){
@@ -124,7 +130,9 @@ export function createRenderer(canvas,assets) {
                 if(marker){text(ctx,marker,o.x,o.y-sh-8+Math.sin(t*3)*3,29,'#fff1a3');}
             }
             if(o.kind==='mob') {
-                const m=assets.content.monsters[o.monsterId];creature(ctx,o.id,o.x,o.y,t,.8);plate(ctx,m.name,o.x,o.y+18,'#ffebd7');
+                const m=assets.content.monsters[o.monsterId]||{name:'缺失怪物'};
+                if(o.monsterIds){for(const [i,id]of o.monsterIds.entries()){const mob=assets.content.monsters[id];monster(ctx,mob,o.x+(i-(o.monsterIds.length-1)/2)*42,o.y-(i%2)*16,t,.7);}plate(ctx,`${m.name} · ${o.monsterIds.length}只${o.blocked?.length?' · 待迁移':''}`,o.x,o.y+18,'#ffebd7');}
+                else {monster(ctx,m,o.x,o.y,t,.8);plate(ctx,m.name,o.x,o.y+18,'#ffebd7');}
                 const q=currentQuest(save,assets.content),goal=q&&questProgress(save,q).find(g=>g.kind==='defeat'&&g.id===m.goalId&&g.value<g.count);
                 if(goal&&questState(save,q.id).accepted)text(ctx,'◇',o.x,o.y-90+Math.sin(t*3)*3,25,'#fff2a9');
             }
@@ -138,7 +146,8 @@ export function createRenderer(canvas,assets) {
                 ctx.restore();
             }
         }
-        plate(ctx,world.portal.name,world.portal.x,world.portal.y+48);
+        if(!world.portal.hidden)plate(ctx,world.portal.name,world.portal.x,world.portal.y+48);
+        if(world.entrancePortal)plate(ctx,world.entrancePortal.name,world.entrancePortal.x,world.entrancePortal.y+48);
         if(!title)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);
         if(!title)drawTeleportEffect(ctx,teleportEffect,time,reducedMotion.matches);
         ctx.restore();
@@ -180,7 +189,7 @@ export function createRenderer(canvas,assets) {
             const pose=hp>0&&hit?{action:'hit',progress:hit.progress}:battleActorAction(id,hp,ev,p);
             drawAnimatedActor(c,positions[id],pose.action,pose.progress,id==='hero'?1:-1,reducedMotion.matches,()=>{
                 if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,.70);const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if(support&&assets.content.pets[supportId]?.art)assets.drawPet(c,supportId,petStage(support.level,assets.content),12,-48,48,48);}
-                else {const unit=battle.unitsById[id],species=unit.speciesId||unit.template?.speciesId;if(species&&assets.content.pets[species]?.art)assets.drawPet(c,species,petStage(unit.level,assets.content),-42,-84,84,84);else creature(c,unit.isMob?unit.template.id:'pet',0,0,t,.85);}
+                else {const unit=battle.unitsById[id],species=unit.speciesId||unit.template?.speciesId;if(unit.isMob)monster(c,unit.template,0,0,t,.95);else if(species&&assets.content.pets[species]?.art)assets.drawPet(c,species,petStage(unit.level,assets.content),-42,-84,84,84);else creature(c,unit.isMob?unit.template.id:'pet',0,0,t,.85);}
             });
         }
         for(const u of [...battle.sides.near,...battle.sides.far]) {

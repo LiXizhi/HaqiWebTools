@@ -1,0 +1,19 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1"><title>怪物战斗美术验收</title><style>body{background:#173c43;color:#fff;font:14px sans-serif;margin:12px}canvas{width:100%;height:300px}#gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}#gallery canvas{height:130px}figure{margin:0;text-align:center;background:#244b50;border-radius:8px}figcaption{padding:8px}</style><h1>原版怪物战斗美术验收</h1><p id="status">加载中</p><canvas id="battle"></canvas><div id="gallery"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {createAdventure,playerSpec} from '../../js/adventure_core.js';
+import {createPveBattle} from '../../js/combat_pve_core.js';
+const read=async n=>(await fetch('../../data/adventure/'+n+'.json')).json();
+try {
+ const assets=await loadResources(),boss=await read('boss-art'),catalog=await read('monster-catalog');
+ const save=createAdventure(assets.content),renderer=createRenderer(document.querySelector('#battle'),assets);
+ const rows=Object.entries(boss.entries).map(([id,e])=>({id,e,m:catalog.monsters.find(m=>m.source===e.source)}));
+ const pets=Object.values(assets.monsterArt.bindings).filter(b=>b.kind==='pet').filter((b,i,a)=>a.findIndex(v=>v.petId===b.petId)===i);
+ const previews=[...rows.map(r=>({name:r.m.name,monster:r.m})),...pets.map(b=>({name:assets.content.pets[b.petId].name,monster:{speciesId:b.petId,level:1}}))];
+ const canvases=previews.map(p=>{const f=document.createElement('figure'),c=document.createElement('canvas'),label=document.createElement('figcaption');c.width=260;c.height=260;label.textContent=p.name;f.append(c,label);document.querySelector('#gallery').append(f);return c;});
+ function select(index=0){const monsters=rows.slice(index,index+4).map(({m})=>({...m,id:m.source,school:m.attributes.phase,level:Number(m.attributes.level)||1,hp:Number(m.attributes.hp)||1,pool:[],sequences:[],genes:[],cardsets:{}}));window.battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters,seed:1});}
+ select();window.selectBosses=select;
+ function frame(t){let loaded=0;previews.forEach((p,i)=>{const c=canvases[i],ctx=c.getContext('2d');ctx.clearRect(0,0,260,260);if(assets.drawMonster(ctx,p.monster,10,10,240,240))loaded++;});renderer.renderBattle(document.querySelector('#battle'),window.battle,save,t);window.result={loaded,total:previews.length,bosses:rows.length,mode:assets.mode,readable:canvases.every(c=>c.getContext('2d').getImageData(0,0,1,1))};document.querySelector('#status').textContent=`${loaded}/${previews.length} 已加载；${assets.mode}模式；只读预览，不写存档`;requestAnimationFrame(frame);}
+ requestAnimationFrame(frame);
+}catch(e){window.failure=e.stack;document.querySelector('#status').textContent=e.stack;}
+</script></html>

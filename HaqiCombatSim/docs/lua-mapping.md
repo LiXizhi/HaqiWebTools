@@ -271,9 +271,25 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 
 `CombatMagicStarPage.lua` 的 SpecialList（0–10级）原值导入 `data/adventure/magic-star.json`，仅用于 UI 属性预览，不改变战斗公式。ExList/NeedInfo 对应 1290/1291/1292/1296/1297 奖励及门槛。用户要求将原版 M 值成长替换为剩余会员日历月数（向上取整，封顶10级），实现于 `adventure_magic_star_core.js`。每周仙豆按 SpecialList.weekly_money 做本地发放，区别于原版 MagicMoneyBox.lua 的后端兑换1658。
 
+## 休闲渔场（2026-09-22）
+
+- `30388_CatchFish.lua` 渔网表：17113/1569、17346/1645、17347/1605、17348/1606、17349/1646、17465/1852、17466/1853、17467/1854。`absolutely_hit` 为真时不要求网住鱼影。
+- 奖励不使用 `GetFish`。该函数的返回值只作为是否调用 `ItemManager.ExtendedCost` 的真值；实际获得物来自 `msg.obtains`。
+- `extendedcost.db.mem` 中上述兑换的 `froms` 均为对应网×1，`pres` 为精力 `-19 >= 10`。`|` 分隔的 `otos` 为互斥分支，与 `ItemManager.GetExtendedCostTemplateOtosInMemory` 的拆分一致；本地在分支间等概率抽取，再按每项 `p/1000` 判定。客户端没有另存分支权重。
+- 精力上限采用 `Player.GetStamina` 儿童版 `energy == 0` 分支的 100。药剂 17344/21130 回复100，17345/21131 回复200，超出上限不保留。17393/21134 含未识别前提 `-15`，不启用。
+- 50366、50367、50368、50378、52202 是排行标记，只累加在角色存档，不进入背包，也不连接全服排行。50401 表示这网没有渔获。
+- 海产 `esellprice` 为 0 且 `cansell` 为假，因此不开放卖给渔夫汉特。
+
 ## 米酒葫芦兑换数据（2026-09-21）
 
 - `MiJiuHuLu.lua:GetObtainAwardState L326–389`：累计在线严格大于1/15/30/60/90分钟；普通及会员奖励独立标记，普通领取后才显示会员领取。
 - `Database/extendedcost.db.mem:1802–1806` 导出至 `data/adventure/checkin.json`：普通仙豆100/120/140/160/180，及捕鱼网、精力值药剂、白色魔力晶石、抽奖铜币、自动战斗药丸。五个角色等级分组奖励完全相同。兑换表道具数量高于 `GetTip2` 的旧提示，以实际配置为准。
 - `extendedcost:1801` 与 `MiJiuHuLu.lua:GetVipTip L260–278`：星级1–10额外仙豆150/160/170/180/190/200/220/240/260/300；星级沿用用户指定的会员剩余有效期映射。服务器日标记50321–50342改为角色存档中的claimed/vipClaimed，不作为背包物品。
 - 原版幸运抽奖走 `paraworld.users.Lottery`，本地无权重与完整奖池，未伪造；日历签到是独立 `DailyCheckin` 活动，本次仍未接入。上述入口和道具未开放用途在界面明确说明。
+
+
+## 2026-09-22：副本数据接入
+
+原身份来自config/Aries/Scene/AriesGameWorlds.config.xml，竞技场位置、原四卡位来自WorldData/<name>.Arenas_Mobs.xml，怪物属性/随机牌池/sequence/gene/cardset来自mob_template。导出器复用globalstore.db.mem的GSID→法术键，保留来源哈希及原XML。沿用既有mob_server.lua L4759–5040的序列/基因/牌池实现，不新增伤害公式；怪物先手、未支持目标和技能阻断对应组。
+
+二维坐标投影、近邻避让、路线、持久清怪和重开为Web规则。多怪奖励按各模板experience_pts和joybean_count累计（会员沿用逐怪ceil倍率），不把原宝箱/场景脚本当已实现。新检查点记录原怪物卡位，旧单怪检查点保持原行为；源码归档XML不写入检查点，避免开发/发布投影造成对比不一致。

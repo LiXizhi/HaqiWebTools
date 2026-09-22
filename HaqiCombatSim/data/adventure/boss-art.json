@@ -1,0 +1,744 @@
+{
+  "version": 1,
+  "byteLimitExclusive": 48000,
+  "entries": {
+    "boss-40236": {
+      "name": "鳄王拉比",
+      "local": "assets/adventure/bosses/660bf744f406eadfad592d74fc0acc8a9e56ce05a1034e74fcd8a6d733c25c6a.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/660bf744f406eadfad592d74fc0acc8a9e56ce05a1034e74fcd8a6d733c25c6a.webp",
+      "sha256": "660bf744f406eadfad592d74fc0acc8a9e56ce05a1034e74fcd8a6d733c25c6a",
+      "size": 23742,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/DeathCrocodile01/DeathCrocodile01.x",
+      "monsterId": "config/Aries/Mob/ChallengeSecretLand/No90_MobTemplate_BossSet_Class05_Life_Lv55.xml#0",
+      "questIds": [
+        62403
+      ],
+      "source": "config/Aries/Mob/ChallengeSecretLand/No90_MobTemplate_BossSet_Class05_Life_Lv55.xml",
+      "templateSha256": "c1a7a20dc33fac5628bb5f3b9afe0fb2daf96bcf7957e76410f84e49e5c94922",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/deathcrocodile01/deathcrocodile01.x.z,5bb635b903a2cdca1ba130b066955d55,199831",
+          "path": "character/v5/10mobs/haqitown/deathcrocodile01/deathcrocodile01.x.z",
+          "md5": "5bb635b903a2cdca1ba130b066955d55",
+          "size": 199831
+        }
+      },
+      "renderSha256": "96a3476893c8580f51f29473529bf543fc533000af911bf8938db1bf4587006f",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40285": {
+      "name": "瘟疫领主真身",
+      "local": "assets/adventure/bosses/f68a992d71454e95421057f324b99c870c5eafecb37ae006b06fda5bb09c09f5.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/f68a992d71454e95421057f324b99c870c5eafecb37ae006b06fda5bb09c09f5.webp",
+      "sha256": "f68a992d71454e95421057f324b99c870c5eafecb37ae006b06fda5bb09c09f5",
+      "size": 28800,
+      "width": 256,
+      "height": 256,
+      "model": "character/v6/10mobs/01RainbowIsland/DeathApe01/DeathApe01.x",
+      "monsterId": "config/Aries/Mob/DarkForestIslandMarshNest/MobTemplate_MarshNestBoss_Set_Death_Lv55.xml#0",
+      "questIds": [
+        62401,
+        62410
+      ],
+      "source": "config/Aries/Mob/DarkForestIslandMarshNest/MobTemplate_MarshNestBoss_Set_Death_Lv55.xml",
+      "templateSha256": "da6fc3228a1e0ccfd090e9926ca29448603263a7e23347c0e8a8d41d7007f99f",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v6/10mobs/01rainbowisland/deathape01/deathape01.x.z,b95d3950f822a77c9e50ccfc486d4f22,216467",
+          "path": "character/v6/10mobs/01rainbowisland/deathape01/deathape01.x.z",
+          "md5": "b95d3950f822a77c9e50ccfc486d4f22",
+          "size": 216467
+        },
+        "thumbnail": {
+          "entry": "character/v6/10mobs/01rainbowisland/deathape01/deathape01.x.png.p,765adb790691d4513a02ab36d0d9c268,7378",
+          "path": "character/v6/10mobs/01rainbowisland/deathape01/deathape01.x.png.p",
+          "md5": "765adb790691d4513a02ab36d0d9c268",
+          "size": 7378
+        }
+      },
+      "renderSha256": "8deeceea40ab0112eda101940c22256e9a1e2c6ee1c515c90fda344f245212f9",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40287": {
+      "name": "暴躁的上古梦龙守卫",
+      "local": "assets/adventure/bosses/dee689c60b74b3f0edb30e49191953d165e9e80017faea17a08803d35f7cd4ec.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/dee689c60b74b3f0edb30e49191953d165e9e80017faea17a08803d35f7cd4ec.webp",
+      "sha256": "dee689c60b74b3f0edb30e49191953d165e9e80017faea17a08803d35f7cd4ec",
+      "size": 43316,
+      "width": 256,
+      "height": 256,
+      "model": "character/v6/03pet/ChinaDragon_Balance/ChinaDragon_BalanceLV3.x",
+      "monsterId": "config/Aries/Mob/DeathLand/MobTemplate_Ancient_Dragon02_Death.xml#0",
+      "questIds": [
+        62408,
+        62409
+      ],
+      "source": "config/Aries/Mob/DeathLand/MobTemplate_Ancient_Dragon02_Death.xml",
+      "templateSha256": "78874afc0874d7d7e1faf7d508e63c9b87d684a049b1b65c8c0c8fe0fd112e97",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v6/03pet/chinadragon_balance/chinadragon_balancelv3.x.z,d51f267821ccbe1a5ca50ee4baa1f0c4,294596",
+          "path": "character/v6/03pet/chinadragon_balance/chinadragon_balancelv3.x.z",
+          "md5": "d51f267821ccbe1a5ca50ee4baa1f0c4",
+          "size": 294596
+        },
+        "thumbnail": {
+          "entry": "character/v6/03pet/chinadragon_balance/chinadragon_balancelv3.x.png.p,c70383bd625e78b8cc17729e3c3201ea,6635",
+          "path": "character/v6/03pet/chinadragon_balance/chinadragon_balancelv3.x.png.p",
+          "md5": "c70383bd625e78b8cc17729e3c3201ea",
+          "size": 6635
+        }
+      },
+      "renderSha256": "4bdcbe4ae789751b9f547ebcf93bc8c6bf1b47cd62a3e20094416ecba5a77943",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40026": {
+      "name": "章鱼首领",
+      "local": "assets/adventure/bosses/62806ee4ba4d1c06ecd2a3eea91dc507bcf59ac6a4397179036d33f372595d4e.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/62806ee4ba4d1c06ecd2a3eea91dc507bcf59ac6a4397179036d33f372595d4e.webp",
+      "sha256": "62806ee4ba4d1c06ecd2a3eea91dc507bcf59ac6a4397179036d33f372595d4e",
+      "size": 39364,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/GhostOctopus_Boss/GhostOctopus_Boss.x",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_GhostOctopus_Boss.xml#0",
+      "questIds": [
+        62113
+      ],
+      "source": "config/Aries/Mob/FireLand/MobTemplate_GhostOctopus_Boss.xml",
+      "templateSha256": "d4c6a618c3286afc482f9b9efbf42a741f15a03582f4d95579870a665fb57b84",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/ghostoctopus_boss/ghostoctopus_boss.x.z,f5f491808fb729764cc45b374ad6ee37,180550",
+          "path": "character/v5/10mobs/haqitown/ghostoctopus_boss/ghostoctopus_boss.x.z",
+          "md5": "f5f491808fb729764cc45b374ad6ee37",
+          "size": 180550
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/ghostoctopus_boss/ghostoctopus_boss.x.png.p,5f0bf40a083a81dd53d8ea5ce0475e48,3670",
+          "path": "character/v5/10mobs/haqitown/ghostoctopus_boss/ghostoctopus_boss.x.png.p",
+          "md5": "5f0bf40a083a81dd53d8ea5ce0475e48",
+          "size": 3670
+        }
+      },
+      "renderSha256": "134b74c14f07338d538367609d49a8a2518b370d168488c57c6f51f04f125713",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40047": {
+      "name": "傀儡首领2号",
+      "local": "assets/adventure/bosses/fcbfbcd95567ba7bbe5ba9f6f3ffe6e2ee485ff014e40954464a7c3f67874bd7.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/fcbfbcd95567ba7bbe5ba9f6f3ffe6e2ee485ff014e40954464a7c3f67874bd7.webp",
+      "sha256": "fcbfbcd95567ba7bbe5ba9f6f3ffe6e2ee485ff014e40954464a7c3f67874bd7",
+      "size": 21312,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/IcePangolin_Fuben/IcePangolin_Fuben.x",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_IcePangolin_Fuben.xml#0",
+      "questIds": [
+        62124
+      ],
+      "source": "config/Aries/Mob/FireLand/MobTemplate_IcePangolin_Fuben.xml",
+      "templateSha256": "5fc56b56f2100a09ce2e8fb6e09f21f3ca77db6e060c9dbfd504ce3bf277fefe",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/icepangolin_fuben/icepangolin_fuben.x.z,970056ff7f4a26a7733deaaf5b7ba357,87341",
+          "path": "character/v5/10mobs/haqitown/icepangolin_fuben/icepangolin_fuben.x.z",
+          "md5": "970056ff7f4a26a7733deaaf5b7ba357",
+          "size": 87341
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/icepangolin_fuben/icepangolin_fuben.x.png.p,ba1120e288afe140a14e8083e969fd9d,3845",
+          "path": "character/v5/10mobs/haqitown/icepangolin_fuben/icepangolin_fuben.x.png.p",
+          "md5": "ba1120e288afe140a14e8083e969fd9d",
+          "size": 3845
+        }
+      },
+      "renderSha256": "8b16914118aa89f931f11e76b266ad00b79eb22514f17ae8b31026a78e8014b0",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40027": {
+      "name": "风暴飞蝇",
+      "local": "assets/adventure/bosses/f886e4c40c3fda32f06870a77d5a9b8acec5aebbda416240594f7295bc439713.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/f886e4c40c3fda32f06870a77d5a9b8acec5aebbda416240594f7295bc439713.webp",
+      "sha256": "f886e4c40c3fda32f06870a77d5a9b8acec5aebbda416240594f7295bc439713",
+      "size": 38710,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/IronBee_Boss/IronBee_Boss.x",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_IronBee_Boss.xml#0",
+      "questIds": [
+        62118
+      ],
+      "source": "config/Aries/Mob/FireLand/MobTemplate_IronBee_Boss.xml",
+      "templateSha256": "3a733ea2d5552d17e2eb2cd3e199a0c84e84a03df5fe877d89e1e1d85650c52d",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/ironbee_boss/ironbee_boss.x.z,d0ccb2e936f0b0f75a0f6f24ce7ba9fe,38969",
+          "path": "character/v5/10mobs/haqitown/ironbee_boss/ironbee_boss.x.z",
+          "md5": "d0ccb2e936f0b0f75a0f6f24ce7ba9fe",
+          "size": 38969
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/ironbee_boss/ironbee_boss.x.png.p,d977be962d30d55656ac78ce0e21e59a,2683",
+          "path": "character/v5/10mobs/haqitown/ironbee_boss/ironbee_boss.x.png.p",
+          "md5": "d977be962d30d55656ac78ce0e21e59a",
+          "size": 2683
+        }
+      },
+      "renderSha256": "3e36ad089f760d80722be416350483c7e09b2ec5a8604975a58f6570255a9c06",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40114": {
+      "name": "傀儡首领1号",
+      "local": "assets/adventure/bosses/2bfd43e32aac84bfb13843e0ca1a9ef5a0c9dc1ac27fd01eeef97d3fa50ed301.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/2bfd43e32aac84bfb13843e0ca1a9ef5a0c9dc1ac27fd01eeef97d3fa50ed301.webp",
+      "sha256": "2bfd43e32aac84bfb13843e0ca1a9ef5a0c9dc1ac27fd01eeef97d3fa50ed301",
+      "size": 38042,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/IronBee_Boss_Fuben/IronBee_Boss_Fuben.x",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_IronBee_Boss_Fuben.xml#0",
+      "questIds": [
+        62122
+      ],
+      "source": "config/Aries/Mob/FireLand/MobTemplate_IronBee_Boss_Fuben.xml",
+      "templateSha256": "9699f6c9e3b2d2d5b3d19aedc06bb4b37a1966fc532b93c7ca197c6084cefb49",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/ironbee_boss_fuben/ironbee_boss_fuben.x.z,0d657febd1f91faa551c038408977b46,38982",
+          "path": "character/v5/10mobs/haqitown/ironbee_boss_fuben/ironbee_boss_fuben.x.z",
+          "md5": "0d657febd1f91faa551c038408977b46",
+          "size": 38982
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/ironbee_boss_fuben/ironbee_boss_fuben.x.png.p,408885e4d423282898a7bec063cb0aa8,2967",
+          "path": "character/v5/10mobs/haqitown/ironbee_boss_fuben/ironbee_boss_fuben.x.png.p",
+          "md5": "408885e4d423282898a7bec063cb0aa8",
+          "size": 2967
+        }
+      },
+      "renderSha256": "1b4da082cdd8e2e7acf9abece2e6a8f877e127047d4b7abd1f563a33d2a9b304",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40112": {
+      "name": "火鸟战士首领",
+      "local": "assets/adventure/bosses/54645615545b69a42bbc68d729b087146659485576cb7ced83d682b18d35b193.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/54645615545b69a42bbc68d729b087146659485576cb7ced83d682b18d35b193.webp",
+      "sha256": "54645615545b69a42bbc68d729b087146659485576cb7ced83d682b18d35b193",
+      "size": 26708,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/PhoenixWarrior/PhoenixWarrior.x",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_PhoenixWarrior.xml#0",
+      "questIds": [
+        62126
+      ],
+      "source": "config/Aries/Mob/FireLand/MobTemplate_PhoenixWarrior.xml",
+      "templateSha256": "451b3904b8bb0cf5ff5089b86115e8d6c1e1166c1ac7b4f4457b53526a43c54f",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/phoenixwarrior/phoenixwarrior.x.z,a34d3c7c6cff1da57f4bb8bfe45a8aac,198739",
+          "path": "character/v5/10mobs/haqitown/phoenixwarrior/phoenixwarrior.x.z",
+          "md5": "a34d3c7c6cff1da57f4bb8bfe45a8aac",
+          "size": 198739
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/phoenixwarrior/phoenixwarrior.x.png.p,ef2d8d26046ad9bbe7d122af8dba1491,3820",
+          "path": "character/v5/10mobs/haqitown/phoenixwarrior/phoenixwarrior.x.png.p",
+          "md5": "ef2d8d26046ad9bbe7d122af8dba1491",
+          "size": 3820
+        }
+      },
+      "renderSha256": "776d25a07302ca6cb0ead14c4683540f51e1bcf0ce754dceb056f08d7b0a34b6",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40018": {
+      "name": "烈火蟹首领",
+      "local": "assets/adventure/bosses/0c09a529c39d8b1f2f304a244f3bcbc770628bcc63c9a761c142ac2628ca72be.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/0c09a529c39d8b1f2f304a244f3bcbc770628bcc63c9a761c142ac2628ca72be.webp",
+      "sha256": "0c09a529c39d8b1f2f304a244f3bcbc770628bcc63c9a761c142ac2628ca72be",
+      "size": 39214,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/RedCrab/RedCrab.x",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_RedCrabLower.xml#0",
+      "questIds": [
+        62107
+      ],
+      "source": "config/Aries/Mob/FireLand/MobTemplate_RedCrabLower.xml",
+      "templateSha256": "f459161d8aab45a1f3c65de787fd4926e5e83162a4353bc1f74df585962479c4",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/redcrab/redcrab.x.z,85a0ada334e66ce9bef756cc9a77987b,63425",
+          "path": "character/v5/10mobs/haqitown/redcrab/redcrab.x.z",
+          "md5": "85a0ada334e66ce9bef756cc9a77987b",
+          "size": 63425
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/redcrab/redcrab.x.png.p,d5240881dc6e2938dd6316c9a7c93064,2687",
+          "path": "character/v5/10mobs/haqitown/redcrab/redcrab.x.png.p",
+          "md5": "d5240881dc6e2938dd6316c9a7c93064",
+          "size": 2687
+        }
+      },
+      "renderSha256": "d8f78a2711dc7b845098ec13cdb14a5ce0098c9eab5006a321a705f4a177858e",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40020": {
+      "name": "噬巫鼠首领",
+      "local": "assets/adventure/bosses/9f93f63d1e1730b37ea53b02e0ac912713628aeae493f8569f7c96e826e0c7ad.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/9f93f63d1e1730b37ea53b02e0ac912713628aeae493f8569f7c96e826e0c7ad.webp",
+      "sha256": "9f93f63d1e1730b37ea53b02e0ac912713628aeae493f8569f7c96e826e0c7ad",
+      "size": 38098,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/RedDevouringRat/RedDevouringRat.x",
+      "monsterId": "config/Aries/Mob/FireLand/MobTemplate_RedDevouringRat.xml#0",
+      "questIds": [
+        62110
+      ],
+      "source": "config/Aries/Mob/FireLand/MobTemplate_RedDevouringRat.xml",
+      "templateSha256": "ecd96006d7e461f2bdea144833049568c40d83c16300670b178c69a81b441dd8",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/reddevouringrat/reddevouringrat.x.z,ca1b32565550b079ed9b0a962a9a9a98,258231",
+          "path": "character/v5/10mobs/haqitown/reddevouringrat/reddevouringrat.x.z",
+          "md5": "ca1b32565550b079ed9b0a962a9a9a98",
+          "size": 258231
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/reddevouringrat/reddevouringrat.x.png.p,009712b07835ef83b41c98e780b84fae,3890",
+          "path": "character/v5/10mobs/haqitown/reddevouringrat/reddevouringrat.x.png.p",
+          "md5": "009712b07835ef83b41c98e780b84fae",
+          "size": 3890
+        }
+      },
+      "renderSha256": "7e3b1e0734c300ee04b2ec025b06eb245f89acb5ba06ac6dca778e24e78f8ffc",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40286": {
+      "name": "冰魔伯爵",
+      "local": "assets/adventure/bosses/715a9693c331665d2bce709b14b7d3b6f3ab2cbb151787c0d75903c051db4d5b.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/715a9693c331665d2bce709b14b7d3b6f3ab2cbb151787c0d75903c051db4d5b.webp",
+      "sha256": "715a9693c331665d2bce709b14b7d3b6f3ab2cbb151787c0d75903c051db4d5b",
+      "size": 34778,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/02animals/FireBon/FireBon.x",
+      "monsterId": "config/Aries/Mob/HeroStormEye/MobTemplate_IceBonBoss_Special.xml#0",
+      "questIds": [
+        62406,
+        62410
+      ],
+      "source": "config/Aries/Mob/HeroStormEye/MobTemplate_IceBonBoss_Special.xml",
+      "templateSha256": "f1f87aafdd0bcc31ef7a63d49c2c9e3da762cbce7fbe8068526c0048f6c3cd6e",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/02animals/firebon/firebon.x.z,267b0bb33e746c80848e714db49edac0,100273",
+          "path": "character/v5/02animals/firebon/firebon.x.z",
+          "md5": "267b0bb33e746c80848e714db49edac0",
+          "size": 100273
+        }
+      },
+      "renderSha256": "3b0ef5947b058c0524bc33619fb391669611512ca823c5c02e0f2558cf1a6fbc",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40128": {
+      "name": "松木妖首领",
+      "local": "assets/adventure/bosses/500bc9d62726c02a9751a23925bcd311fb9db00e3e984a33f3d11698a6928c7a.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/500bc9d62726c02a9751a23925bcd311fb9db00e3e984a33f3d11698a6928c7a.webp",
+      "sha256": "500bc9d62726c02a9751a23925bcd311fb9db00e3e984a33f3d11698a6928c7a",
+      "size": 25784,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/DeadTreeMonster/DeadTreeMonster.x",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_DeadTreeMonsterBoss.xml#0",
+      "questIds": [
+        62216
+      ],
+      "source": "config/Aries/Mob/IceLand/MobTemplate_DeadTreeMonsterBoss.xml",
+      "templateSha256": "7f891ca57fea84896f6d5b9e77160e263c7130bc35959592015b03974433f01d",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/deadtreemonster/deadtreemonster.x.z,ee90fd67589e07be068de601171126a6,91512",
+          "path": "character/v5/10mobs/haqitown/deadtreemonster/deadtreemonster.x.z",
+          "md5": "ee90fd67589e07be068de601171126a6",
+          "size": 91512
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/deadtreemonster/deadtreemonster.x.png.p,c5f033bf22e5dbeff74147935daa7b00,2912",
+          "path": "character/v5/10mobs/haqitown/deadtreemonster/deadtreemonster.x.png.p",
+          "md5": "c5f033bf22e5dbeff74147935daa7b00",
+          "size": 2912
+        }
+      },
+      "renderSha256": "97ad1c1170f92e161a2ad8d85b97462d1374d75387caad2ffb99ccaf475fbbfc",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40040": {
+      "name": "雪狼首领",
+      "local": "assets/adventure/bosses/8fed8439bf618cb69c0ed32f72fcc941541fe130e7766b77e11cf7aa20d4ecb0.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/8fed8439bf618cb69c0ed32f72fcc941541fe130e7766b77e11cf7aa20d4ecb0.webp",
+      "sha256": "8fed8439bf618cb69c0ed32f72fcc941541fe130e7766b77e11cf7aa20d4ecb0",
+      "size": 44306,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/IceFrostFang04/IceFrostFang04.x",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_IceFrostFang04.xml#0",
+      "questIds": [
+        62232
+      ],
+      "source": "config/Aries/Mob/IceLand/MobTemplate_IceFrostFang04.xml",
+      "templateSha256": "e240a015748f2ceffea38c3f04db40826aedb4fb0a1880564b1e65e786a60f4b",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/icefrostfang04/icefrostfang04.x.z,939d5d3208e60ba6c1272d09566680a7,182480",
+          "path": "character/v5/10mobs/haqitown/icefrostfang04/icefrostfang04.x.z",
+          "md5": "939d5d3208e60ba6c1272d09566680a7",
+          "size": 182480
+        }
+      },
+      "renderSha256": "28cb6cb87d0392dda8c8af1b4109c172e2751cd747aa901ec691968da3624696",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40116": {
+      "name": "大地巨人首领",
+      "local": "assets/adventure/bosses/d65ae28d46e4b742501ceb37bce30a4cbc3e49af07c548d5db0fb0f6b58b6bb2.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/d65ae28d46e4b742501ceb37bce30a4cbc3e49af07c548d5db0fb0f6b58b6bb2.webp",
+      "sha256": "d65ae28d46e4b742501ceb37bce30a4cbc3e49af07c548d5db0fb0f6b58b6bb2",
+      "size": 26876,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/LifeStoneMonster02/LifeStoneMonster02.x",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_LifeStoneMonster02.xml#0",
+      "questIds": [
+        62205
+      ],
+      "source": "config/Aries/Mob/IceLand/MobTemplate_LifeStoneMonster02.xml",
+      "templateSha256": "484bbafe8911ddcd4a305c994e16460e4152b518ffe4fa7fb9148c8f9a778897",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/lifestonemonster02/lifestonemonster02.x.z,4f5f32cd01e0bfae0e51227efc87d44d,133071",
+          "path": "character/v5/10mobs/haqitown/lifestonemonster02/lifestonemonster02.x.z",
+          "md5": "4f5f32cd01e0bfae0e51227efc87d44d",
+          "size": 133071
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/lifestonemonster02/lifestonemonster02.x.png.p,a1fa0898f12ac3a70f7b1920d82fb9f4,8186",
+          "path": "character/v5/10mobs/haqitown/lifestonemonster02/lifestonemonster02.x.png.p",
+          "md5": "a1fa0898f12ac3a70f7b1920d82fb9f4",
+          "size": 8186
+        }
+      },
+      "renderSha256": "4a9d823a3a912f831cb1db63b39c6094f0fbdd137a900f30b92347bec58860e2",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40037": {
+      "name": "暴风蝎首领",
+      "local": "assets/adventure/bosses/36562efd6cad76a092bcf2c2765a2cf3b265962682d1f985f626c014b998f268.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/36562efd6cad76a092bcf2c2765a2cf3b265962682d1f985f626c014b998f268.webp",
+      "sha256": "36562efd6cad76a092bcf2c2765a2cf3b265962682d1f985f626c014b998f268",
+      "size": 44354,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/SandScorpion_Boss/SandScorpion_Boss.x",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_SandScorpion_Boss.xml#0",
+      "questIds": [
+        62212
+      ],
+      "source": "config/Aries/Mob/IceLand/MobTemplate_SandScorpion_Boss.xml",
+      "templateSha256": "1632fde14e31562e20fbeb3bc82516e6b8f695c645ca40685dab33c01edec8fe",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/sandscorpion_boss/sandscorpion_boss.x.z,1cb6f914a1b4c49a76993c735b6e2848,85767",
+          "path": "character/v5/10mobs/haqitown/sandscorpion_boss/sandscorpion_boss.x.z",
+          "md5": "1cb6f914a1b4c49a76993c735b6e2848",
+          "size": 85767
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/sandscorpion_boss/sandscorpion_boss.x.png.p,5fc84225e58e36e103d245ad849cde3f,3321",
+          "path": "character/v5/10mobs/haqitown/sandscorpion_boss/sandscorpion_boss.x.png.p",
+          "md5": "5fc84225e58e36e103d245ad849cde3f",
+          "size": 3321
+        }
+      },
+      "renderSha256": "3c15b64d0c9f0c4dab8d8eb899035833160d17ba255523585d1a8685ea51c330",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40043": {
+      "name": "风鹰首领",
+      "local": "assets/adventure/bosses/80ff10a399eb9416fc79ffb0496cc06bff6cd1726cb54846ed4f474eeed0cd06.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/80ff10a399eb9416fc79ffb0496cc06bff6cd1726cb54846ed4f474eeed0cd06.webp",
+      "sha256": "80ff10a399eb9416fc79ffb0496cc06bff6cd1726cb54846ed4f474eeed0cd06",
+      "size": 36534,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/StormWindEagle02/StormWindEagle02.x",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_StormWindEagle02.xml#0",
+      "questIds": [
+        62224
+      ],
+      "source": "config/Aries/Mob/IceLand/MobTemplate_StormWindEagle02.xml",
+      "templateSha256": "125c1a4a40db970a768ae7dda6109c0a2e25498bfcaa223929b19f2d9e0a16bd",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/stormwindeagle02/stormwindeagle02.x.z,c02288fff03d810b9c82cd32051677e8,182901",
+          "path": "character/v5/10mobs/haqitown/stormwindeagle02/stormwindeagle02.x.z",
+          "md5": "c02288fff03d810b9c82cd32051677e8",
+          "size": 182901
+        }
+      },
+      "renderSha256": "d25128d4fe1af26e682bf7610b1bcb363f53dcaf956fee8881902db50845b6a8",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40118": {
+      "name": "青锭亡灵猴首领",
+      "local": "assets/adventure/bosses/e05178c208476e7b704810dcfc07b1601f446037c237cc71f4ff4ca682136a5b.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/e05178c208476e7b704810dcfc07b1601f446037c237cc71f4ff4ca682136a5b.webp",
+      "sha256": "e05178c208476e7b704810dcfc07b1601f446037c237cc71f4ff4ca682136a5b",
+      "size": 37760,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/UndeadMonkey/UndeadMonkey.x",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey.xml#0",
+      "questIds": [
+        62218
+      ],
+      "source": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey.xml",
+      "templateSha256": "221a21e87ea9921cab7a7ecf97259a8e237a5eb773e478f91c619e517a7acb10",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/undeadmonkey/undeadmonkey.x.z,62b9df28df55bc42c2d11e82fd7663f6,271788",
+          "path": "character/v5/10mobs/haqitown/undeadmonkey/undeadmonkey.x.z",
+          "md5": "62b9df28df55bc42c2d11e82fd7663f6",
+          "size": 271788
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/undeadmonkey/undeadmonkey.x.png.p,5a32c8a1b9868561886032181cbea8ff,3521",
+          "path": "character/v5/10mobs/haqitown/undeadmonkey/undeadmonkey.x.png.p",
+          "md5": "5a32c8a1b9868561886032181cbea8ff",
+          "size": 3521
+        }
+      },
+      "renderSha256": "22572ac319ab0e07a8f17a1d71754f45f3dbbe40c46d4dc9f8eb5f0ecc5f0b8a",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40117": {
+      "name": "魅紫亡灵猴",
+      "local": "assets/adventure/bosses/372f330e3dbaf1d431394cb3e79328664e100fdf1385d7288861f4367c829011.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/372f330e3dbaf1d431394cb3e79328664e100fdf1385d7288861f4367c829011.webp",
+      "sha256": "372f330e3dbaf1d431394cb3e79328664e100fdf1385d7288861f4367c829011",
+      "size": 39504,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/UndeadMonkey_Boss/UndeadMonkey_Boss.x",
+      "monsterId": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey_Boss.xml#0",
+      "questIds": [
+        62218
+      ],
+      "source": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey_Boss.xml",
+      "templateSha256": "4fa3adbfd0c6152fe92d068b61c191ee33328241a5a7179171963797d2c67f0b",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/undeadmonkey_boss/undeadmonkey_boss.x.z,0342db3ae265289a57e8f6a3c0f0b20a,271729",
+          "path": "character/v5/10mobs/haqitown/undeadmonkey_boss/undeadmonkey_boss.x.z",
+          "md5": "0342db3ae265289a57e8f6a3c0f0b20a",
+          "size": 271729
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/undeadmonkey_boss/undeadmonkey_boss.x.png.p,9ae8b0bb11581b1347c751ba91489400,4477",
+          "path": "character/v5/10mobs/haqitown/undeadmonkey_boss/undeadmonkey_boss.x.png.p",
+          "md5": "9ae8b0bb11581b1347c751ba91489400",
+          "size": 4477
+        }
+      },
+      "renderSha256": "22fd8a1e94b658fd5f39ba40adb3f276447645df2d4cd1f07f54056176775bcd",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40059": {
+      "name": "毒蛇首领",
+      "local": "assets/adventure/bosses/36ae60077b5f4fb0adc4724cbc6a72194e0fddbdee9c8c6c947d0f11e314cbba.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/36ae60077b5f4fb0adc4724cbc6a72194e0fddbdee9c8c6c947d0f11e314cbba.webp",
+      "sha256": "36ae60077b5f4fb0adc4724cbc6a72194e0fddbdee9c8c6c947d0f11e314cbba",
+      "size": 39044,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/DeathSnake_Boss/DeathSnake_Boss.x",
+      "monsterId": "config/Aries/Mob/StormLand/MobTemplate_DeathSnake_Boss.xml#0",
+      "questIds": [
+        62334
+      ],
+      "source": "config/Aries/Mob/StormLand/MobTemplate_DeathSnake_Boss.xml",
+      "templateSha256": "0d178b6b16e22c942d9ba1e32cd8c816279589bdf21000c344b351e392e64654",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/deathsnake_boss/deathsnake_boss.x.z,ee5e7c3f9072b653a6f37053d7040215,34997",
+          "path": "character/v5/10mobs/haqitown/deathsnake_boss/deathsnake_boss.x.z",
+          "md5": "ee5e7c3f9072b653a6f37053d7040215",
+          "size": 34997
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/deathsnake_boss/deathsnake_boss.x.png.p,5b51c210a5e027d9590323bd810872b1,5446",
+          "path": "character/v5/10mobs/haqitown/deathsnake_boss/deathsnake_boss.x.png.p",
+          "md5": "5b51c210a5e027d9590323bd810872b1",
+          "size": 5446
+        }
+      },
+      "renderSha256": "41923216a1f6efafd18f5890456b68b6a48cce8da90f5ee366e359c728a23add",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40134": {
+      "name": "火岩甲虫统帅",
+      "local": "assets/adventure/bosses/752987c412734186c1ec0b80fc20750051d2a65f195df59f8c2e9f0250cdb9de.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/752987c412734186c1ec0b80fc20750051d2a65f195df59f8c2e9f0250cdb9de.webp",
+      "sha256": "752987c412734186c1ec0b80fc20750051d2a65f195df59f8c2e9f0250cdb9de",
+      "size": 44058,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/FireBeatle_Boss/FireBeatle_Boss.x",
+      "monsterId": "config/Aries/Mob/StormLand/MobTemplate_FireBeatle_Boss.xml#0",
+      "questIds": [
+        62323
+      ],
+      "source": "config/Aries/Mob/StormLand/MobTemplate_FireBeatle_Boss.xml",
+      "templateSha256": "26291ec00db23264ca79182e916da600f11d5305709a84ee0657bf728525cf86",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/firebeatle_boss/firebeatle_boss.x.z,d23586b47227d3d1db0b58e9ff4dbb62,82491",
+          "path": "character/v5/10mobs/haqitown/firebeatle_boss/firebeatle_boss.x.z",
+          "md5": "d23586b47227d3d1db0b58e9ff4dbb62",
+          "size": 82491
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/firebeatle_boss/firebeatle_boss.x.png.p,e7dc3c5d7443d2d1f556ae8118cfe457,5086",
+          "path": "character/v5/10mobs/haqitown/firebeatle_boss/firebeatle_boss.x.png.p",
+          "md5": "e7dc3c5d7443d2d1f556ae8118cfe457",
+          "size": 5086
+        }
+      },
+      "renderSha256": "468629b66798e2f71c6d226852977dbca3f2418a155e6c8f6a0b206b242b1e0f",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40053": {
+      "name": "烈火亡灵蛇",
+      "local": "assets/adventure/bosses/c5b22ef5573231a25151db1176f7f82a9863d103663e0c5970679f5b86314a18.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/c5b22ef5573231a25151db1176f7f82a9863d103663e0c5970679f5b86314a18.webp",
+      "sha256": "c5b22ef5573231a25151db1176f7f82a9863d103663e0c5970679f5b86314a18",
+      "size": 37262,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/FlamingSnake_Boss/FlamingSnake_Boss.x",
+      "monsterId": "config/Aries/Mob/StormLand/MobTemplate_FlamingSnake_Boss.xml#0",
+      "questIds": [
+        62326
+      ],
+      "source": "config/Aries/Mob/StormLand/MobTemplate_FlamingSnake_Boss.xml",
+      "templateSha256": "a30e1f03cea2cd9c4175dd3675f4386d19f7a8edc67480754c252f5516aebbff",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/flamingsnake_boss/flamingsnake_boss.x.z,bc3759ec342087bd979a661d13a26f69,33717",
+          "path": "character/v5/10mobs/haqitown/flamingsnake_boss/flamingsnake_boss.x.z",
+          "md5": "bc3759ec342087bd979a661d13a26f69",
+          "size": 33717
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/flamingsnake_boss/flamingsnake_boss.x.png.p,60a7c773e5108020ce9255ceeb08bb40,3484",
+          "path": "character/v5/10mobs/haqitown/flamingsnake_boss/flamingsnake_boss.x.png.p",
+          "md5": "60a7c773e5108020ce9255ceeb08bb40",
+          "size": 3484
+        }
+      },
+      "renderSha256": "9b288bd46a6dc704203abc331c96c9bbbd4b64aadbb18915f5a1fe1ebe3fe1b1",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40048": {
+      "name": "烈火食人花",
+      "local": "assets/adventure/bosses/d46ae03984092a6458e7d7b928dd17285b109c79d0d7aae1d4e0a27a2cf571c0.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/d46ae03984092a6458e7d7b928dd17285b109c79d0d7aae1d4e0a27a2cf571c0.webp",
+      "sha256": "d46ae03984092a6458e7d7b928dd17285b109c79d0d7aae1d4e0a27a2cf571c0",
+      "size": 35142,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/FungusSavage_Boss/FungusSavage_Boss.x",
+      "monsterId": "config/Aries/Mob/StormLand/MobTemplate_FungusSavage_Boss.xml#0",
+      "questIds": [
+        62311
+      ],
+      "source": "config/Aries/Mob/StormLand/MobTemplate_FungusSavage_Boss.xml",
+      "templateSha256": "7e18c4c227075c107ad5ecaa9ba8a92eab1516700f0ab025e2af4d39fa73d209",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/fungussavage_boss/fungussavage_boss.x.z,729616e6e0c1c8c54d8d32f3b1f3142d,155820",
+          "path": "character/v5/10mobs/haqitown/fungussavage_boss/fungussavage_boss.x.z",
+          "md5": "729616e6e0c1c8c54d8d32f3b1f3142d",
+          "size": 155820
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/fungussavage_boss/fungussavage_boss.x.png.p,a2f1b8b1c0ab2d74dcf2e9ec33533245,2810",
+          "path": "character/v5/10mobs/haqitown/fungussavage_boss/fungussavage_boss.x.png.p",
+          "md5": "a2f1b8b1c0ab2d74dcf2e9ec33533245",
+          "size": 2810
+        }
+      },
+      "renderSha256": "baf4a89df8beba534be8e44a8ecfed3ad10dce04fbdb7067e3484b7ea9cd36f2",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    },
+    "boss-40051": {
+      "name": "沙漠巨蜥首领",
+      "local": "assets/adventure/bosses/a1f135313a5bcd08894a7df1b40f783bd677b154c34842094778a70713d40e10.webp",
+      "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/bosses/bosses/a1f135313a5bcd08894a7df1b40f783bd677b154c34842094778a70713d40e10.webp",
+      "sha256": "a1f135313a5bcd08894a7df1b40f783bd677b154c34842094778a70713d40e10",
+      "size": 27058,
+      "width": 256,
+      "height": 256,
+      "model": "character/v5/10mobs/HaqiTown/LizardMonk_Boss/LizardMonk_Boss.x",
+      "monsterId": "config/Aries/Mob/StormLand/MobTemplate_LizardMonk_Boss.xml#0",
+      "questIds": [
+        62314
+      ],
+      "source": "config/Aries/Mob/StormLand/MobTemplate_LizardMonk_Boss.xml",
+      "templateSha256": "bbe5557a420e6d8372f59e945c25e64c2b85e69e458d8af425b3bb22a7fb024a",
+      "originalAssets": {
+        "model": {
+          "entry": "character/v5/10mobs/haqitown/lizardmonk_boss/lizardmonk_boss.x.z,bf61575527fa7db746d467e0867c687e,174180",
+          "path": "character/v5/10mobs/haqitown/lizardmonk_boss/lizardmonk_boss.x.z",
+          "md5": "bf61575527fa7db746d467e0867c687e",
+          "size": 174180
+        },
+        "thumbnail": {
+          "entry": "character/v5/10mobs/haqitown/lizardmonk_boss/lizardmonk_boss.x.png.p,63d7347d0fc654f6dfc835a07300a73c,3251",
+          "path": "character/v5/10mobs/haqitown/lizardmonk_boss/lizardmonk_boss.x.png.p",
+          "md5": "63d7347d0fc654f6dfc835a07300a73c",
+          "size": 3251
+        }
+      },
+      "renderSha256": "c7fef259a8f992f6f2edfb11ff9eb514be3b910810d7add0064bd283feb57684",
+      "method": "original-model-mini-scene",
+      "renderSize": 512
+    }
+  }
+}

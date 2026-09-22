@@ -3,7 +3,7 @@
 import { SAVE_KEY } from './adventure_assets.js';
 import { emptyRoles, validateRoles, addRole, selectRole } from './adventure_roles_core.js';
 
-export function createRoleStore({ content, dataset, storage = localStorage, uuid = () => crypto.randomUUID(), now = () => Date.now() }) {
+export function createRoleStore({ content, dataset, storage = localStorage, uuid = () => crypto.randomUUID(), now = () => Date.now(), prepareSaves = async () => {} }) {
     let owner = null, state, raw;
     const key = () => `haqi.roles.v1.${owner === null ? 'guest' : 'account.' + encodeURIComponent(owner)}`;
     function write(next) {
@@ -15,6 +15,13 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         get catalog() { return state.catalog; },
         get base() { return state.base; },
         get dirty() { return state.dirty; },
+        async prepareOpen(account = null) {
+            const accountKey=`haqi.roles.v1.${account===null?'guest':'account.'+encodeURIComponent(account)}`;
+            const captured=storage.getItem(accountKey),legacy=!captured&&account===null?storage.getItem(SAVE_KEY):null;
+            const saves=captured?(JSON.parse(captured).catalog?.roles||[]).map(row=>row.save):legacy?[JSON.parse(legacy)]:[];
+            await prepareSaves(saves);
+            if(storage.getItem(accountKey)!==captured||legacy!==null&&storage.getItem(SAVE_KEY)!==legacy)throw Error('角色进度已变化，请重新读取。');
+        },
         open(account = null) {
             const nextKey = `haqi.roles.v1.${account === null ? 'guest' : 'account.' + encodeURIComponent(account)}`;
             const nextRaw = storage.getItem(nextKey);

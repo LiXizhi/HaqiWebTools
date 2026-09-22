@@ -1,0 +1,20 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>全岛任务清单验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app"><div id="root" class="overlay"></div><script type="module">
+import {createAdventure} from '../../js/adventure_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+import {createQuestJournalLoader} from '../../js/adventure_quest_journal.js';
+import {loadUiArt} from '../../js/adventure_ui_art.js';
+const read=async url=>(await fetch(new URL('../../'+url,location.href))).json();
+const content=await read('data/adventure/chapter.json');
+let calls=0;
+const loadQuestJournal=createQuestJournalLoader(async url=>{calls++;if(new URLSearchParams(location.search).has('fail')&&calls===1)throw Error('test failure');return read(url);});
+const assets={content,loadQuestJournal,draw:()=>false,drawPet:()=>false};
+const save=createAdventure(content,{name:'任务验收'}),root=document.querySelector('#root');
+const params=new URLSearchParams(location.search);if(params.has('zone'))save.zone=params.get('zone');if(params.has('previous'))save.dungeonReturn={zone:params.get('previous')};
+const model={assets,save};window.testState={save,initial:JSON.stringify(save),tracked:0,closed:0};
+const cb={close:()=>{root.replaceChildren();window.testState.closed++;},track:()=>window.testState.tracked++};
+if(!new URLSearchParams(location.search).has('noatlas'))await loadUiArt('cdn',read).catch(()=>{});
+renderPanel(root,'quests',model,cb);
+</script></body></html>

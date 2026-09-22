@@ -299,4 +299,8 @@ print(f'Exported {len(quests)} quests, {len(npcs)} NPCs, {len(monsters)} monster
 import subprocess, sys
 subprocess.run([sys.executable, str(APP/'scripts/export_skill_learning.py'), '--root', str(ROOT)], check=True)
 subprocess.run([sys.executable, str(APP/'scripts/export_npc_catalog.py'), '--root', str(ROOT)], check=True)
+subprocess.run([sys.executable, str(APP/'scripts/export_quest_catalog.py'), '--root', str(ROOT)], check=True)
+subprocess.run([sys.executable, str(APP/'scripts/export_monster_catalog.py'), '--root', str(ROOT)], check=True)
+subprocess.run([sys.executable, str(APP/'scripts/prepare_boss_art.py')], check=True)
+subprocess.run(['node', str(APP/'scripts/package_quests.mjs')], check=True)
 if missing:raise SystemExit('Missing required assets: '+str(missing))

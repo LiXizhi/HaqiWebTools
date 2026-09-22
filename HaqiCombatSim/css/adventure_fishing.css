@@ -1,0 +1,18 @@
+.fishing-modal{width:min(760px,100%)}
+.fishing-modal .modal-body{display:flex;flex-direction:column;gap:12px}
+.fishing-stage{width:100%;height:auto;border-radius:12px;background:#0d3b4a;cursor:crosshair;touch-action:manipulation}
+.fishing-stage:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.fishing-stamina{display:flex;align-items:center;gap:10px}
+.fishing-stamina-track{flex:1;height:8px;border-radius:99px;background:#e7e0cc;overflow:hidden}
+.fishing-stamina-fill{display:block;height:100%;background:#2f7d62}
+.fishing-nets{display:flex;flex-wrap:wrap;gap:8px}
+.fishing-net{display:inline-flex;align-items:center;gap:6px;min-height:40px}
+.fishing-net .art{width:28px;height:28px}
+.fishing-actions,.fishing-potions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.fishing-status{min-height:1.4em;margin:0}
+.fishing-rules{margin:0}
+@media(max-width:420px){
+    .fishing-modal .modal-header,.fishing-modal .modal-body{padding-left:14px;padding-right:14px}
+    .fishing-net{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){.fishing-stage{cursor:default}}

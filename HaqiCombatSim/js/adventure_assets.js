@@ -1,4 +1,9 @@
+import {createMonsterArtRenderer} from './adventure_monster_art.js';
+import {createQuestJournalLoader} from './adventure_quest_journal.js';
+import {installDungeonIndex} from './adventure_dungeons_core.js';
+import {createDungeonLoader} from './adventure_dungeons.js';
 import {installNpcCatalog} from './adventure_npc_core.js';
+import {installFishing} from './adventure_fishing_core.js';
 import {installNpcArt} from './adventure_npc_art_core.js';
 import {loadEnvironmentArt} from './adventure_environment_art.js';
 import { installExpansion } from './adventure_expansion_core.js';
@@ -78,6 +83,9 @@ export async function loadResources(progress) {
     }
     const [catalog,candidates,kidsCards,kidsCharms,cardNames]=await Promise.all([json('data/adventure/pets.json'),json('data/adventure/shop-candidates.json'),json('data/kids/cards.json'),json('data/kids/charms.json'),json('data/kids/card_names.json')]);
     installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames);
+    const dungeonJson=createJsonReader({packed:false});
+    installDungeonIndex(content,await json('data/adventure/dungeon-index.json'));
+    const dungeons=createDungeonLoader({content,dataset,cards:kidsCards,names:cardNames,readJson:dungeonJson});
     installNpcCatalog(content,await json('data/adventure/npc-catalog.json'));
     const npcArt=await json('data/adventure/npc-art.json');
     installNpcArt(content,npcArt);
@@ -87,6 +95,7 @@ export async function loadResources(progress) {
     content.progressionBonuses=await json('data/adventure/progression-bonuses.json');
     const {installDragonTotemItems}=await import('./adventure_progression_bonuses_core.js');
     installDragonTotemItems(content);
+    installFishing(content,await json('data/adventure/fishing.json'));
     content.checkinConfig=await json('data/adventure/checkin.json');
     for(const [id,item] of Object.entries(content.checkinConfig.items))content.items[id]??=item;
     for(const [id,item] of Object.entries(content.progressionBonuses.giftItems||{}))content.items[id]??=item;
@@ -100,9 +109,12 @@ export async function loadResources(progress) {
     await skillArt.preload(dataset.cards);
     const petLoading=new Set();
     function drawPet(ctx,id,stage,x,y,w,h){const art=content.pets[id]?.art;if(!art)return false;const key='pet:'+id;const img=images.get(key);if(!img){if(!petLoading.has(id)){petLoading.add(id);loadImage(mode==='local'?art.local:art.cdn).then(image=>images.set(key,image)).catch(()=>petLoading.delete(id));}return false;}const sw=img.width/4,sh=img.height/4;ctx.drawImage(img,0,stage*sh,sw,sh,x,y,w,h);return true;}
+    const monsterArt=await json('data/adventure/monster-art.json');
+    for(const [id,entry] of Object.entries(monsterArt.entries))lazyImages.set('monster:'+id,entry);
+    const drawMonster=createMonsterArtRenderer(monsterArt,content,draw,drawPet);
     await uiArtReady;
     const environmentArt=await environmentReady;
-    return {environmentArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    return {drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(),dungeons,environmentArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

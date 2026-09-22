@@ -1,12 +1,12 @@
 {
   "schemaVersion": 1,
   "style": "经典魔法绘本",
-  "local": "assets/adventure/ui/storybook-d835b3634eee.webp",
-  "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/ui/storybook-d835b3634eee.webp",
+  "local": "assets/adventure/ui/storybook-edbc67b355aa.webp",
+  "cdn": "https://cdn.keepwork.com/haqi/haqicombatsim/ui/storybook-edbc67b355aa.webp",
   "width": 512,
-  "height": 512,
-  "size": 94572,
-  "sha256": "d835b3634eee8f46bfbdf09610ba27d986e2cee98b05831cf4b2ee3b04cc3b38",
+  "height": 640,
+  "size": 97696,
+  "sha256": "edbc67b355aa6ba11bf9bc97c5232cc81e600aad8a3242cc4487ff8af648de11",
   "source": {
     "generator": "image_gen",
     "date": "2026-09-19",
@@ -330,6 +330,40 @@
         239,
         244
       ]
+    },
+    "dungeon": {
+      "rect": [
+        8,
+        522,
+        112,
+        107
+      ],
+      "cell": [
+        0,
+        4
+      ],
+      "sourceRect": [
+        0,
+        25,
+        1230,
+        1173
+      ]
+    }
+  },
+  "columns": 4,
+  "rows": 5,
+  "additions": {
+    "dungeon": {
+      "generator": "image_gen",
+      "date": "2026-09-22",
+      "prompt": "Use case: stylized-concept. Create a single game UI dungeon entrance icon, square transparent PNG, no text. A friendly fantasy ancient stone arch gateway in warm weathered golden sandstone, teal emerald magical glow within its dark entrance, a short three-step staircase, two little gold-trimmed turrets and a green jewel above the arch. Hand-painted polished storybook MMORPG item icon, warm gold highlights and deep olive shadows, chunky readable silhouette, simple enough to read at 64px. Centered isolated object filling 86% of canvas, straight-on slightly isometric view. No circular border or button frame, no landscape background, no lettering, no watermark. Genuine transparent alpha outside the gateway. Matches an ornate gold and green fantasy game HUD.",
+      "sha256": "2f82f91560491560a49538e7aab135027a9c3273a0f49f5161f07df80017b6c4",
+      "width": 1254,
+      "height": 1254,
+      "baseAtlas": "assets/adventure/ui/storybook-d835b3634eee.webp",
+      "local": "assets/adventure/ui/dungeon-icon.webp",
+      "size": 20502,
+      "webpSha256": "6207440e02560126ab5edadc92a0da94b3e889650548770a9e3d73c246104225"
     }
   }
 }

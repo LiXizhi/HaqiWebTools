@@ -1,18 +1,25 @@
+import {dungeonFor} from './adventure_dungeons_core.js';
 // Compact authored maps. The original NPC coordinates remain in AdventureContent for provenance.
 import { islandFor } from './adventure_world_map_core.js';
 import { onLargeIsland, riverBlocks } from './adventure_island_layout_core.js';
 export const WALK_SPEED = 210;
-export function createWorld(zone,content) {
-    if(!islandFor(zone))throw new Error('目的地不存在');
+export function createWorld(zone,content,save=null) {
+    if(!islandFor(zone)&&!dungeonFor(content,zone))throw new Error('目的地不存在');
     const layout=content.worldMaps?.[zone];
     if(!layout)throw Error('缺少岛屿地图：'+zone);
     const point=([x,y])=>({x,y});
     const originals=content.npcCatalog?.npcs.filter(n=>n.zone===zone&&n.enabled!=='0'&&n.artVisible!==false&&n.hidden!==true);
     const npcs=(originals||Object.values(content.npcs).filter(n=>n.zone===zone&&n.hidden!==true)).map(n=>({...content.npcs[n.id],...n,...point(layout.npcPositions[n.id]||[n.x,n.y])}));
-    if(!originals)for(const row of layout.visitingNpcs||[]){const source=content.npcs[row.sourceId];if(!source)throw Error('缺少居民来源');if(source.hidden===true||row.hidden===true)continue;npcs.push({...source,zone,...point(row.position)});}
-    const encounters=content.encounters.filter(e=>e.zone===zone).map(e=>({...e,...point(layout.encounterPositions[e.id]||[e.x,e.y])}));
-    const world={zone,w:layout.w,h:layout.h,layout,npcs,encounters,portal:{id:'portal',...layout.portal,zone:zone==='camp'?'town':'camp',name:'查看世界地图'},
+    if(!originals)for(const row of layout.visitingNpcs||[]){const source=content.npcs[row.sourceId];if(!source)throw Error('缺少居民来源');if(source.hidden===true||row.hidden===true)continue;npcs.push({...source,zone,...(row.sourceId===36205?layout.portal:point(row.position))});}
+    const encounters=content.encounters.filter(e=>e.zone===zone&&!save?.dungeonRuns?.[zone]?.cleared.includes(e.id)).map(e=>({...e,...point(layout.encounterPositions[e.id]||[e.x,e.y])}));
+    const world={zone,w:layout.w,h:layout.h,layout,npcs,encounters,portal:{id:'portal',...layout.portal,zone:zone==='camp'?'town':'camp',name:dungeonFor(content,zone)?'离开副本':'查看世界地图'},
         landmarks:layout.landmarks,buildings:layout.buildings||[],paths:layout.paths,trees:layout.trees,decorations:[],center:{...(layout.center||layout.spawn)}};
+    if(layout.route){
+        world.portal.hidden=!save?.dungeonRuns?.[zone]?.cleared.includes(layout.bossArenaId);
+        world.entrancePortal={id:'dungeon-entrance',...layout.entrancePortal,name:'离开副本',zone:world.portal.zone};
+        // Old free-roaming checkpoints resume safely on the new road.
+        if(save&&(!walkable(world,save.position.x,save.position.y)||routeLocation(world,save.position).progress>dungeonLimit(world)))save.position={...layout.spawn};
+    }
     if(originals){
         // Original 3D coordinates are retained in the catalogue. Roadside positions are a 2D adaptation.
         const candidates=[];
@@ -33,6 +40,13 @@ export function createWorld(zone,content) {
             Object.assign(n,spot);placed.push(n);
         }
     }
+    // The original resident catalogue does not include the web map's visiting captain.
+    // Keep authored residents in place, and supply a guide for every island travel portal.
+    if(!dungeonFor(content,zone)&&!npcs.some(n=>(n.id===36205||n.name==='法斯特船长')&&distance(n,world.portal)<=160)){
+        const source=content.npcs[36205];
+        if(!source)throw Error('缺少法斯特船长来源');
+        npcs.push({...source,zone,x:world.portal.x,y:world.portal.y,worldMapGuide:true});
+    }
     objectIndices.delete(world);
     return world;
 }
@@ -42,8 +56,33 @@ function segmentDistance(p,a,b) {
     const dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy||1)));
     return Math.hypot(p.x-a.x-t*dx,p.y-a.y-t*dy);
 }
+function routeLocation(world,p){
+    let offset=0,best={distance:Infinity,progress:0,index:0,point:world.layout.route[0]};
+    for(const [index,path]of world.paths.entries()){
+        const {a,b}=path,dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy);
+        const t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(length*length||1)));
+        const point={x:a.x+t*dx,y:a.y+t*dy},d=distance(p,point);
+        if(d<best.distance)best={distance:d,progress:offset+t*length,index,point};
+        offset+=length;
+    }
+    return best;
+}
+function dungeonLimit(world){return world.encounters.length?routeLocation(world,world.encounters[0]).progress-60:Infinity;}
+function routePoint(world,progress){
+    for(const path of world.paths){const length=distance(path.a,path.b);if(progress<=length)return {x:path.a.x+(path.b.x-path.a.x)*progress/length,y:path.a.y+(path.b.y-path.a.y)*progress/length};progress-=length;}
+    return {...world.layout.route.at(-1)};
+}
+export function dungeonAutoInteraction(world,p){
+    if(!world.layout.route)return null;
+    if(world.entrancePortal&&distance(p,world.entrancePortal)<70)return {...world.entrancePortal,kind:'portal'};
+    const next=world.encounters[0];
+    if(next&&!next.blocked?.length&&distance(p,next)<84)return {...next,kind:'encounter'};
+    if(!world.portal.hidden&&distance(p,world.portal)<70)return {...world.portal,kind:'portal'};
+    return null;
+}
 export function walkable(world,x,y) {
     if(!Number.isFinite(x)||!Number.isFinite(y))return false;
+    if(world.layout?.route)return routeLocation(world,{x,y}).distance<=world.paths[0].width/2-8;
     if(world.layout?!onLargeIsland(world,x,y,26)||riverBlocks(world,x,y):!onIsland(x,y,26))return false;
     return !nearbyWorldObjects(world,{x:x-160,y:y-160,w:320,h:320}).some(o=>
         o.kind==='building'?x>o.x-o.w*.3-10&&x<o.x+o.w*.3+10&&y>o.y-o.h*.42-10&&y<o.y+12:
@@ -52,7 +91,8 @@ export function walkable(world,x,y) {
 export function movePosition(world,position,dx,dy) {
     // Sweep small steps to prevent tunneling through trees during a delayed frame.
     const steps=Math.max(1,Math.ceil(Math.hypot(dx,dy)/8));let {x,y}=position;
-    for(let i=0;i<steps;i++) {if(walkable(world,x+dx/steps,y))x+=dx/steps;if(walkable(world,x,y+dy/steps))y+=dy/steps;}
+    const allowed=(x,y)=>walkable(world,x,y)&&(!world.layout?.route||routeLocation(world,{x,y}).progress<=dungeonLimit(world));
+    for(let i=0;i<steps;i++) {if(allowed(x+dx/steps,y))x+=dx/steps;if(allowed(x,y+dy/steps))y+=dy/steps;}
     return {x,y};
 }
 function clearSegment(world,a,b) {
@@ -72,6 +112,13 @@ export function followPath(world,position,path,budget) {
     return {position:p,path:remaining,blocked:false};
 }
 export function findPath(world,start,destination) {
+    if(world.layout?.route){
+        const from=routeLocation(world,start),to=routeLocation(world,destination),limit=dungeonLimit(world);
+        const end=routeLocation(world,routePoint(world,Math.min(to.progress,limit)));
+        const points=world.layout.route.slice(from.index+1,end.index+1);
+        if(end.progress<from.progress)points.splice(0,points.length,...world.layout.route.slice(end.index+1,from.index+1).reverse());
+        return [...points,end.point].map(p=>({...p}));
+    }
     // Start from the actual position, without a detour to the current grid center.
     if(clearSegment(world,start,destination))return [{x:destination.x,y:destination.y}];
     if(world.layout){const road=roadPath(world,start,destination);if(road.length)return road;}
@@ -117,8 +164,8 @@ export function findPath(world,start,destination) {
     return [];
 }
 export function nearestInteraction(world,p) {
-    return [...world.npcs.map(n=>({...n,kind:'npc'})),...world.encounters.map(e=>({...e,kind:'encounter'})),...(world.landmarks||[]).map(e=>({...e,kind:'landmark'})),{...world.portal,kind:'portal'}]
-        .filter(e=>distance(e,p)<90).sort((a,b)=>distance(a,p)-distance(b,p))[0]||null;
+    return [...world.npcs.map(n=>({...n,kind:'npc'})),...world.encounters.map(e=>({...e,kind:'encounter'})),...(world.landmarks||[]).map(e=>({...e,kind:'landmark'})),...(world.entrancePortal?[{...world.entrancePortal,kind:'portal'}]:[]),{...world.portal,kind:'portal'}]
+        .filter(e=>!e.hidden&&distance(e,p)<90).sort((a,b)=>distance(a,p)-distance(b,p))[0]||null;
 }
 
 const roadGraphs=new WeakMap();

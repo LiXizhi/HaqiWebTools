@@ -41,7 +41,7 @@
 .storybook-ui::-webkit-scrollbar-corner,.storybook-ui *::-webkit-scrollbar-corner { background:transparent; }
 .storybook-ui .icon[data-ui-icon] {
     display:inline-block; width:44px; height:44px; flex:none;
-    background-image:var(--ui-atlas); background-size:400% 400%; background-repeat:no-repeat;
+    background-image:var(--ui-atlas); background-size:var(--ui-atlas-size,400% 400%); background-repeat:no-repeat;
     filter:none;
 }
 .storybook-ui .icon[data-ui-icon] svg { display:none; }

@@ -12,7 +12,8 @@ const emit = (a,e) => { a.events.push({ turn:a.turn,...e }); };
 export function runeCardsInHand(battle) {
     return (battle.runes||[]).filter(row=>row.count>(battle.runeUsed[row.itemId]||0)&&isSupportedType(battle.resolved.cards[row.key]?.type)).map(row=>({key:row.key,runeId:row.itemId,seq:-row.itemId,count:row.count-(battle.runeUsed[row.itemId]||0)}));
 }
-export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0 }) {
+export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0 }) {
+    if(monsterSlots&&(!Array.isArray(monsterSlots)||monsterSlots.length!==monsters.length||new Set(monsterSlots).size!==monsterSlots.length||monsterSlots.some(n=>!Number.isInteger(n)||n<0||n>3)))throw Error('怪物卡位无效');
     if(![0,1].includes(stealthRulesVersion))throw Error('隐身规则版本无效');
     if(![0,1].includes(reflectionRulesVersion))throw Error('反射规则版本无效');
     if(![0,1,2,3,4,5].includes(threatRulesVersion))throw Error('仇恨规则版本无效');
@@ -85,7 +86,7 @@ export function createPveBattle({ dataset, player, monsters, seed = 1, firstSide
     arena.monsterTemplates = monsters;arena.captureStock=captureStock;arena.captureUsed=0;arena.captured=[];arena.heroLevel=heroLevel;
     for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];unit.slot=spec.slot??i;unit.speciesId=spec.speciesId;if(Number.isFinite(spec.hp))unit.hp=Math.max(0,Math.min(unit.maxHp,Math.floor(spec.hp)));}
     monsters.forEach((m,i) => {
-        const u = arena.sides.far[i]; u.isMob = true; u.hp = u.maxHp = m.hp;
+        const u = arena.sides.far[i]; if(monsterSlots)u.slot=monsterSlots[i]; u.isMob = true; u.hp = u.maxHp = m.hp;
         u.template = m; u.aiMemory = { round:0, lastHp:m.hp };
         u.stats.powerPipPct = Number(m.attributes.power_pip_percent || 0);
         for (const key of [...m.pool.map(x=>x.key),...m.sequences.flat().map(x=>x.card),...m.genes.map(x=>x.card)].filter(Boolean)) {
@@ -263,7 +264,7 @@ export function playPveRound(a,decision) {
 export function restorePveBattle(dataset,content,checkpoint) {
     const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId);
     if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
-    const a=createPveBattle({dataset,player:checkpoint.player,monsters:[checkpoint.monster||content.monsters[encounter.monsterId]],seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion});
+    const a=createPveBattle({dataset,player:checkpoint.player,monsters:checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]],monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion});
     for(const decision of checkpoint.decisions)playPveRound(a,decision);
     return a;
 }

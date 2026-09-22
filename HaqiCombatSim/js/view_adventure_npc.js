@@ -70,7 +70,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
     body.addEventListener('scroll',hidePreview,{passive:true});
 
     const offerCard=row=>{
-        const cardKey=content.cardItems[row.kind==='mentor'?row.itemId:row.itemId-1000];
+        const cardKey=row.kind==='mentor'?content.cardItems[row.itemId]:(content.cardItems[row.itemId]||content.cardItems[row.itemId-1000]);
         return dataset.cards[cardKey]||null;
     };
     const offerName=row=>{

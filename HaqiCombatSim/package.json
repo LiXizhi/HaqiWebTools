@@ -18,6 +18,7 @@
         "export:quests": "python3 scripts/export_quest_catalog.py && python3 scripts/export_monster_catalog.py && python3 scripts/prepare_boss_art.py && node scripts/package_quests.mjs",
         "export:adventure": "python3 scripts/export_adventure.py && npm run generate:maps",
         "export:fishing": "python3 scripts/export_fishing.py",
+        "export:runes": "python scripts/export_runes.py",
         "assets:adventure": "node scripts/prepare_adventure_assets.mjs",
         "check:adventure": "node scripts/check_adventure.mjs && node scripts/prepare_adventure_assets.mjs --check",
         "plan:adventure-cdn": "node scripts/publish_adventure_media.mjs",

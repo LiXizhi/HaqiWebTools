@@ -7,7 +7,7 @@ import {npcItemLimits} from '../js/adventure_npc_core.js';
 const pick = (row, keys) => Object.fromEntries(keys.filter(key => Object.hasOwn(row, key)).map(key => [key, row[key]]));
 const map = (rows, project) => Object.fromEntries(Object.entries(rows).map(([id, row]) => [id, project(row)]));
 const urlFields = ['local', 'cdn'];
-const developmentFiles = new Set(['card-atlas.json', 'cdn-publish-plan.json', 'skill-art-plan.json', 'expansion-report.json', 'quest-catalog.json', 'monster-catalog.json', 'boss-art-plan.json', 'boss-art.json', 'quest-journal.json']);
+const developmentFiles = new Set(['card-atlas.json', 'cdn-publish-plan.json', 'skill-art-plan.json', 'expansion-report.json', 'quest-catalog.json', 'monster-catalog.json', 'boss-art-plan.json', 'boss-art.json', 'quest-journal.json', 'quest-runtime.json']);
 
 export function projectRuntimeData(relativePath, value) {
     if (!relativePath.startsWith('adventure/')) return value;

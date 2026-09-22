@@ -4,6 +4,7 @@ import {renderDungeons} from './view_adventure_dungeons.js';
 import {openOriginalImport} from './haqi_import.js';
 import {persistReward} from './adventure_reward_persistence.js';
 import { createMembershipClient } from './adventure_membership.js';
+import { magicBeanExchangeQuote, exchangeMagicBeans } from './adventure_magic_bean_exchange_core.js';
 import { rewardSnapshot, rewardChanges } from './adventure_reward_feedback_core.js';
 import { createRewardFeedback } from './view_adventure_rewards.js';
 import { TELEPORT_EFFECT_MS } from './view_adventure_teleport.js';
@@ -20,6 +21,7 @@ import { createSpellSound } from './spell_sound.js';
 import { HIT_DURATION_MS,castHitReactions } from './actor_animation_core.js';
 import {presentedEnvironment} from './spell_environment_core.js';
 import * as A from './adventure_core.js';
+import {catalogAcceptBlock,catalogGoalRows,catalogQuestReady} from './adventure_catalog_quests_core.js';
 import * as W from './adventure_world_core.js';
 import * as P from './combat_pve_core.js';
 import { cardsInHand, selectableCards, PET_CARD_SEQ_BASE } from './combat_unit_core.js';
@@ -64,7 +66,7 @@ const autoSave=createAutoSave({
 function queueCloudSave(){autoSave.request();}
 setInterval(()=>void autoSave.tick(),15000);
 
-const membership=createMembershipClient({onChange:()=>{if(assets&&save&&stage==='world'){paintHud();if(['shop','membership','checkin'].includes(panel))paintPanel();}}});
+const membership=createMembershipClient({onChange:()=>{if(!assets||!save)return;if(stage==='world'&&!save.pendingEncounter)maybeExchangeMagicBeans();if(stage==='world'){paintHud();if(['shop','membership','checkin'].includes(panel))paintPanel();}}});
 let buyingVip=false;
 const membershipView={tab:'attributes'};
 const refreshMembership=()=>membership.refresh().catch(error=>toast(error.message));
@@ -86,7 +88,7 @@ const gemView={guid:null,gemId:null,runes:[null,null,null],runeIndex:0,step:'equ
 const strengtheningView={guid:null,filter:0,page:0,pending:false,message:''};
 let serviceNpc=null;
 const npcServiceView={query:'',page:0};
-const model=()=>({assets,save,dungeonLoading,serviceNpc,npcServiceView,fishingView,membership:membership.state,membershipView,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
+const model=()=>({assets,save,dungeonLoading,serviceNpc,npcServiceView,fishingView,membership:membership.state,membershipView,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
 const rewardRoot=V.el('div','reward-feedback');nodes.world.parentElement.append(rewardRoot);
 const rewardFeedback=createRewardFeedback(rewardRoot,{
     describe:reward=>{
@@ -117,7 +119,7 @@ function persist() {
     lastSave=performance.now();
 }
 function close() {nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
-function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>openPanel('membership'),cloud:openCloud,track,interact:interactNearest});}
+function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>openPanel('membership'),cloud:openCloud,track,untrack,interact:interactNearest});}
 function paintPanel() {
     if(['map','worldmap','localmap'].includes(panel)&&world.layout){renderMaps(nodes.overlay,world,model(),{close,track,travel,draw:(canvas,options)=>renderer.minimap(canvas,world,save,options),teleport:teleportToLandmark,switchMap:view=>openPanel(view==='world'?'worldmap':'map')},panel==='worldmap'?'world':'local');return;}
     if(panel==='cloud'){paintCloud();return;}
@@ -216,7 +218,28 @@ async function buyVipProduct(value) {
     }catch(error){toast(error.message);return false;}finally{buyingVip=false;}
 }
 function performAction(value,access={}) {return safely(()=>{const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['npc-purchase','checkin','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}if(value.type==='fish'||value.type==='stamina-potion'){fishingView.message=result?.message||'';fishingView.netId=value.netId||fishingView.netId;}showRewards(before);queueCloudSave();paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(result?.message||text[value.type]||'进度已保存');return result?.message?result:true;});}
-function enterWorld(newSave,restoredBattle=null) {
+let exchangingBeans=false;
+function maybeExchangeMagicBeans({announce=true}={}) {
+    if(exchangingBeans||!assets||!save||!roleStore?.owner||save.pendingEncounter)return;
+    const member=membership.state;
+    if(member.status!=='ready'||member.username!==roleStore.owner||member.isVip!==true)return;
+    const now=Date.now(),record=roleStore.catalog.magicBeanExchange||null,owner=roleStore.owner,id=roleStore.catalog.activeId,epoch=roleEpoch;
+    let quote;
+    try{quote=magicBeanExchangeQuote(member,record,now);}catch(error){toast(error.message);return;}
+    if(!quote.beans||roleStore.owner!==owner||roleStore.catalog.activeId!==id||roleEpoch!==epoch)return;
+    exchangingBeans=true;
+    try{
+        const before=rewardSnapshot(save),next=structuredClone(save);
+        exchangeMagicBeans(next,assets.content,member,record,now);
+        save=roleStore.commitMagicBeanExchange(next,quote.until);
+        storageWarning=false;
+        toast(`会员剩余 ${quote.days} 天已兑换为 ${quote.beans} 魔豆`);
+        if(announce)showRewards(before);
+        paintHud();
+        if(panel)paintPanel();
+    }catch(error){toast(error.message);}finally{exchangingBeans=false;}
+}
+function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     teleportEffect=null;
     rewardFeedback.reset();
     petCardsOpen=false;
@@ -227,6 +250,7 @@ function enterWorld(newSave,restoredBattle=null) {
     nodes.entry.replaceChildren();nodes.entry.className='';nodes.entry.hidden=true;nodes.hud.hidden=false;
     nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';battle=null;paintHud();
     if(save.pendingEncounter){battle=restoredBattle||P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';nodes.hud.hidden=true;paintBattle();}
+    else maybeExchangeMagicBeans({announce:announceBeans});
     persist();queueCloudSave();updateMusic();
 }
 function showTitle(manage=false) {
@@ -397,7 +421,13 @@ function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog
     const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim',questId:q.id,npcId:q.endNpc});
     showRewards(before);return 'reward';
-}),questTalk:(q,talk)=>startQuestTalk(talk),panel:openPanel,travel,track});}
+}),startCatalog:q=>{
+    A.applyAction(save,assets.content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});persist();toast(`已接取：${q.title}`);paintDialogue();paintHud();
+},finishCatalog:q=>{
+    const before=rewardSnapshot(save);
+    A.applyAction(save,assets.content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});
+    persist();showRewards(before);toast(`已完成：${q.title}`);close();paintHud();
+},questTalk:(q,talk)=>startQuestTalk(talk),panel:openPanel,travel,track});}
 function startQuestTalk(talk) {
     startLines(talk.dialog,'谢谢你，我知道了',()=>{
         A.applyAction(save,assets.content,{type:'talk',npcId:talk.npcId});
@@ -446,9 +476,47 @@ function walkTo(target,autoInteract=false) {
     if(autoInteract&&W.distance(save.position,target)<85){interact(target);return;}
     if(!path.length)toast('这里暂时走不过去，试试旁边的小路。');
 }
-function track() {
+function untrack(){safely(()=>{A.applyAction(save,assets.content,{type:'track-catalog',questId:null});paintHud();});}
+function trackCatalog(id) {
+    const c=assets.content,quest=c.catalogQuests.byId[id],snap=A.catalogStatSnapshot(save,c);
+    A.applyAction(save,c,{type:'track-catalog',questId:id});
+    const state=A.questState(save,id),ready=catalogQuestReady(save,c,quest,snap);
+    const goal=catalogGoalRows(save,c,quest,snap).find(g=>g.value<g.count);
+    const npcId=!state.accepted?quest.startNpc:ready?quest.endNpc:goal?.kind==='talk'?goal.id:0;
+    if(!state.accepted&&catalogAcceptBlock(save,c,quest,snap)){toast(catalogAcceptBlock(save,c,quest,snap));return;}
+    if(!state.accepted&&(!c.npcs[quest.startNpc]||quest.startNpc===-1)){A.applyAction(save,c,{type:'accept-catalog',questId:id,npcId:quest.startNpc});toast(`已接取：${quest.title}`);paintHud();return;}
+    if(ready&&(!c.npcs[quest.endNpc]||quest.endNpc===-1)){
+        const before=rewardSnapshot(save);
+        A.applyAction(save,c,{type:'claim-catalog',questId:id,npcId:quest.endNpc});
+        showRewards(before);toast(`已完成：${quest.title}`);paintHud();return;
+    }
+    if(npcId&&c.npcs[npcId]){
+        if(save.zone!==c.npcs[npcId].zone){travel(c.npcs[npcId].zone);if(save.zone!==c.npcs[npcId].zone)return;}
+        const placed=world.npcs.find(n=>n.id===npcId);
+        if(placed){walkTo({...placed,kind:'npc',questDialogue:true},true);return;}
+        if(!state.accepted){A.applyAction(save,c,{type:'accept-catalog',questId:id,npcId:quest.startNpc});toast(`已接取：${quest.title}`);paintHud();return;}
+        if(ready){const before=rewardSnapshot(save);A.applyAction(save,c,{type:'claim-catalog',questId:id,npcId:quest.endNpc});showRewards(before);toast(`已完成：${quest.title}`);paintHud();return;}
+    }
+    if(goal&&(goal.kind==='kill'||goal.kind==='loot')){
+        const goalIds=goal.kind==='kill'?[goal.id]:goal.producers;
+        const encounter=c.encounters.find(e=>(e.monsterIds||[e.monsterId]).some(mid=>goalIds.includes(c.catalogQuests.paths[String(c.monsters[mid]?.source||'').toLowerCase()])));
+        const placed=encounter&&world.encounters.find(e=>e.id===encounter.id);
+        if(placed){walkTo({...placed,kind:'encounter'},true);return;}
+        if(encounter){toast(`前往副本挑战${goal.name}`);openPanel('dungeons');return;}
+        toast(`${goal.name}不在当前已开放的遭遇里。`);return;
+    }
+    if(goal?.kind==='custom'&&[79016,79025].includes(goal.id)){openPanel('upgrade');return;}
+    if(goal?.kind==='custom'&&[79017,79026].includes(goal.id)){openPanel('inventory');return;}
+    if(goal?.kind==='custom'&&goal.id===79019){openPanel('pet');return;}
+    if(goal?.kind==='custom'&&goal.id===79037){openPanel('deck');return;}
+    toast(goal?`${goal.name}需要在冒险中继续完成。`:'任务已记录在手记中。');
+    paintHud();
+}
+function track(questId) {
     if(stage!=='world')return;close();
-    const c=assets.content,q=A.currentQuest(save,c);
+    const c=assets.content;
+    if(questId&&c.catalogQuests?.byId[Number(questId)]){trackCatalog(Number(questId));return;}
+    const q=A.currentQuest(save,c);
     if(dungeonFor(c,save.zone)){const next=world.encounters[0];walkTo(next?{...next,kind:'encounter'}:{...world.portal,kind:'portal'},true);return;}
     if(!q){walkTo({...world.portal,kind:'portal'},true);return;}
     if(save.zone!==c.npcs[q.startNpc].zone){travel(c.npcs[q.startNpc].zone);if(save.zone!==c.npcs[q.startNpc].zone)return;}
@@ -482,10 +550,10 @@ function paintBattle(){
     if(message){toast(message);return;}
     if(!validTargets(battle,hero,card).some(t=>t.id===id)){toast('请选择这张卡牌可施放的目标。');return;}
     playRound({...selected,targetId:id,discardSeqs:discarded});
-},capture:id=>playRound({capture:true,targetId:id}),pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
+},openRunes:()=>{if(animation||battle.finished)return;runeCardsOpen=true;petCardsOpen=false;selected=null;paintBattle();},pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
     if(assets.content.pets)A.settleParty(save,assets.content,battle,{retreat:true});
     A.applyAction(save,assets.content,{type:'retreat'});save.careAt=Date.now();enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
-},finish:()=>safely(()=>{const before=rewardSnapshot(save);A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save);showRewards(before);})});}
+},finish:()=>safely(()=>{const before=rewardSnapshot(save);A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save,null,{announceBeans:false});showRewards(before);})});}
 function playRound(decision) {
     if(animation||battle.finished)return;
     safely(()=>{

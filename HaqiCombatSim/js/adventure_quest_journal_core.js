@@ -1,6 +1,7 @@
-// Read-only projections: never add catalogue quests to the playable quest engine.
+// Journal rows stay a display projection. Progress lives in adventure_catalog_quests_core.js.
 import {islandFor} from './adventure_world_map_core.js';
 import {currentQuest,questState,questReady} from './adventure_core.js';
+import {catalogQuestStatus} from './adventure_catalog_quests_core.js';
 export const QUEST_REGIONS={camp:'魔法营地',town:'哈奇岛',fire:'火鸟岛',ice:'寒冰岛',desert:'沙漠岛',dark:'幽暗岛','21':'魔法师之路','22':'试炼秘境'};
 export function defaultJournalRegion(save){
     return islandFor(save.zone)?.id||islandFor(save.dungeonReturn?.zone)?.id||'town';
@@ -28,12 +29,14 @@ export function projectQuestJournal(catalog) {
         repeat:text(q.data,'QuestRepeat'),validDate:text(q.data,'ValidDate')
     }))};
 }
-export function journalQuestStatus(save,content,row) {
+export function journalQuestStatus(save,content,row,stats) {
     const playable=content.quests.find(q=>q.id===row.id);
     if(playable){const state=questState(save,row.id);return state.claimed?'已完成':state.accepted?(questReady(save,playable)?'可交付':'进行中'):currentQuest(save,content)?.id===row.id?'可接取':'未开启';}
+    const quest=content.catalogQuests?.byId[row.id];
+    if(quest)return catalogQuestStatus(save,content,quest,stats||{});
     return row.obsolete?'原版已废除':'尚未开放';
 }
-export function filterJournalQuests(rows,{region='',status='',query=''}={},save,content) {
+export function filterJournalQuests(rows,{region='',status='',query=''}={},save,content,stats) {
     const needle=query.trim().toLocaleLowerCase();
-    return rows.filter(q=>!q.obsolete&&(!region||q.region===region)&&(!status||journalQuestStatus(save,content,q)===status)&&(!needle||`${q.id} ${q.title}`.toLocaleLowerCase().includes(needle)));
+    return rows.filter(q=>!q.obsolete&&(!region||q.region===region)&&(!status||journalQuestStatus(save,content,q,stats)===status)&&(!needle||`${q.id} ${q.title}`.toLocaleLowerCase().includes(needle)));
 }

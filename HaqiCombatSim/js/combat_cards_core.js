@@ -41,7 +41,8 @@ export function cardTargetKind(card) {
         if (t === 'AreaCharm') return 'hostile';
         return 'friendly';
     }
-    if (/^(Global|Stance|MiniAura|Pass|Enrage|Fizzle|PickPet|CatchPet)$/.test(t)) return 'self';
+    // CatchPet targets the mob (card_server.lua L2388). It is resolved by the PvE catch rune, not a generic handler.
+    if (/^(Global|Stance|MiniAura|Pass|Enrage|Fizzle|PickPet)$/.test(t)) return 'self';
     if (t === 'ArenaAttack') return 'all';
     return 'hostile';
 }

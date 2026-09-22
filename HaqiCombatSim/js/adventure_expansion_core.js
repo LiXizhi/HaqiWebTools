@@ -30,7 +30,7 @@ export function installExpansion(content,dataset,catalog,candidates,kidsCards,ki
   const vipOnly=item.vipOnly===true||item.stats[180]===1;content.items[item.id].vipOnly=vipOnly;
   content.shop.push({id:'gear:'+item.id,kind:'gear',vipOnly,isInternalTest:item.isInternalTest===true,itemId:item.id,name:item.name,level:requirements.level,slot:item.slot,school:Object.keys(content.schools).find(s=>content.schools[s]===requirements.school)||'all'});
  }
- for(const [id,name] of [[FOOD_ID,'宠物营养餐'],[CAPTURE_ID,'捕获晶球']]){content.items[id]={id,name,kind:0,stats:{}};content.shop.push({id:'supply:'+id,kind:'supply',itemId:id,name,level:1});}
+ for(const [id,name] of [[FOOD_ID,'宠物营养餐'],[CAPTURE_ID,'捕获晶球']]){content.items[id]={id,name,kind:0,stats:{}};content.shop.push({id:'supply:'+id,kind:'supply',itemId:id,name,level:1,retired:id===CAPTURE_ID});}
  const p=petParams(content);content.progression.levelCap=p.levelCap;
  while(content.progression.xpThresholds.length<p.levelCap){const level=content.progression.xpThresholds.length;content.progression.xpThresholds.push(content.progression.xpThresholds.at(-1)+p.xpGrowth*level);}
  for(const school of Object.keys(content.learn)){

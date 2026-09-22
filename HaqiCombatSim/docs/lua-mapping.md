@@ -1,5 +1,9 @@
 # 公式与常量 ↔ Lua 源码对照表
 
+2026-09-23起，新的野生捕获只走抓宠符文。捕获晶球不再出现在商城和战斗按钮里；未使用的晶球换成普通抓宠符文。检查点里已经记录的晶球出手仍按此前网页公式重演：`captureBase + captureWounded × 已损失生命比例`。
+
+2026-09-22抓宠符文：player_server.lua TryCatchPet L1081–1136，kids成功率为`base_weight * (1 - hp / maxHp) + (玩家等级 - 怪物等级) / 80`，再乘1000后与`math.random(0, 1000)`比较。`catch_pet_force_chance_percent`改为`百分比 * 10`。卡面权重为普通2、高级5、顶级20。card_server.lua L2387–2438在命中判定前结算，成功和失败都返回已施放，因此符文都会消耗；L2298目标已死亡则不消耗。arena_server.lua L8882–8904在出牌前拒绝已拥有的宠物。本地只对带宠物身份的野生遭遇启用，不把原版`catch_pet`物品编号猜测成当前宠物图鉴。
+
 2026-09-21追加：card_server.lua L3312–3337普通吸收后记录整次ReflectDamage并扣reflect_amount，L3362–3398反射经过攻击者wards、抗性、攻击者自身穿透、全局光环和攻击者输出/接收权重，绝对攻防不参与；普通吸收后限制MAX_REFLECT_DAMAGE且最多HP-1，不递归。L1881–1890 DOT只消耗反射容量。mob_server.lua L2409反射容量叠加；kids上限4500由card_server.lua L193确定。本地reflectionRulesVersion=1启用，旧遭遇保留吸收近似。
 
 隐身：card_server.lua L2340以卡名area/arena/singleheal豁免目标限制，L6043设置回合并使用stun仇恨/20%溅射；mob_server.lua L3215–3240定义到期，L2312受伤退出仅teen。本轮只为kids冒险新遭遇启用stealthRulesVersion=1，未宣称teen迁移完成。L4465冰系普通群攻2倍仇恨、L4307群体DOT沿同一预计算分支，新threatRulesVersion=5启用。
@@ -178,6 +182,7 @@
 | `card_server.lua:3234` kids PvE伤害分支；1340 TryDoubleAttack | 公共卡牌伤害模块标记targetIsMob，PvE使用非PvP补偿分支；kids/teen双击原函数返回false，未增加额外双击 |
 | `config/Aries/Mob/NewIslandMonster/*.xml` 与 `WorldData/NewUserIsland.Arenas_Mobs.xml` | 五侦察兵原生命/等级/抗性/攻击修正/起始魔力/台词/卡池/奖励/场地ID；`1-`不是通配回合，而是前置额外动作 |
 | `config/Aries/Quests/quest_list.xml` 63000–63013 | ID、居民、对白、目标和按学系筛选的奖励；原文与浏览器替换文本均保留 |
+| `QuestProvider.lua` TryAccept/CanFinished；`QuestHelp.lua` Table_Add、Table_Add_Item；`QuestServerLogics.lua` Kill_Handler | 除14条教学任务外的未废除任务：击败、掉落检定、交谈和自定义目标写入同一存档。条件0按全部完成。网页战斗没有难度档，按困难（mode 2）计；mode 4以上不计。等级下限高于章节上限时降到上限。不执行对白脚本和变身 |
 | `Database/globalstore.db.mem`；`combat_unit_core.js` 原stats映射 | 从已装备道具汇总HP/伤害/抗性/命中/暴击/起始魔力；139/140/141装备附加牌；167/170卡包容量/同卡上限 |
 | `config/Aries/Others/globalstore.addonlevel.kids.xml` 的1912所在itemset | 原三档70/140/280仙豆及累计1/2/3%全系攻击，由导出数据驱动 |
 | `config/Aries/Others/combatpet_levels.xml`；`CombatPet/CombatPetProvider.lua:439`、749 GetLevelInfo | 10136宠物原经验增量15/62/139/248、零基配置级别和满级显示；口粮17172的stat60提供300经验 |
@@ -270,6 +275,8 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 ## 魔法星 UI 与会员适配（2026-09-21）
 
 `CombatMagicStarPage.lua` 的 SpecialList（0–10级）原值导入 `data/adventure/magic-star.json`，仅用于 UI 属性预览，不改变战斗公式。ExList/NeedInfo 对应 1290/1291/1292/1296/1297 奖励及门槛。用户要求将原版 M 值成长替换为剩余会员日历月数（向上取整，封顶10级），实现于 `adventure_magic_star_core.js`。每周仙豆按 SpecialList.weekly_money 做本地发放，区别于原版 MagicMoneyBox.lua 的后端兑换1658。
+
+2026-09-23 起，Keepwork 会员到期日可自动兑换为魔豆（物品 984）：北京时间日历天数 × 10。这是网页规则，`extendedcost` 与原服魔豆充值都没有这条兑换。第一次从今天算到到期日，并把该到期日记在账号角色列表；之后只计算更晚的到期日，不从今天重算已兑过的天数。
 
 ## 休闲渔场（2026-09-22）
 

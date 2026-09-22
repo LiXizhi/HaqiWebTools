@@ -17,6 +17,7 @@ import { findEquipmentInstance, syncEquipmentInstances, validateEquipmentInstanc
 import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
 import { resolvePetReward, migrateQuestPetRewards } from './adventure_rewards_core.js';
 import {syncTrainingPoints,validateTrainingPoints,skillLearningStatus} from './adventure_learning_core.js';
+import {acceptCatalogQuest,claimCatalogQuest,noteCatalogKills,noteCatalogSignal,validateCatalogQuests} from './adventure_catalog_quests_core.js';
 export { rewardLabel } from './adventure_rewards_core.js';
 
 export const SAVE_VERSION = 2;
@@ -220,11 +221,25 @@ export function playerSpec(save, content, starLevel=save.pendingEncounter?.magic
         deck: clone(save.deck), fixedCards: fixed, deckCapacity: limits.capacity, deckEachCapacity: limits.eachCapacity };
 }
 function signal(save, content, kind, id, count = 1) {
-    const q = currentQuest(save, content); if (!q || !questState(save,q.id).accepted) return;
-    const state = save.quests[q.id];
-    for (const goal of q.goals) if (goal.kind === kind && String(goal.id) === String(id)) {
-        const key = `${kind}:${id}`; state.progress[key] = Math.min(goal.count, (state.progress[key] || 0) + count);
+    const q = currentQuest(save, content);
+    if (q && questState(save,q.id).accepted) {
+        const state = save.quests[q.id];
+        for (const goal of q.goals) if (goal.kind === kind && String(goal.id) === String(id)) {
+            const key = `${kind}:${id}`; state.progress[key] = Math.min(goal.count, (state.progress[key] || 0) + count);
+        }
     }
+    if (kind === 'talk') noteCatalogSignal(save, content, 'talk', id, count);
+    if (kind === 'action' && Number.isInteger(Number(id))) noteCatalogSignal(save, content, 'custom', Number(id), count);
+}
+export function catalogStatSnapshot(save, content) {
+    const spec = playerSpec(save, content);
+    const schools = ['fire', 'ice', 'storm', 'life', 'death', 'balance'];
+    return {
+        214: save.level, 79031: save.level, 79030: 0,
+        79032: Math.floor(spec.stats.powerPipPct || 0),
+        79033: Math.floor(spec.stats.damage?.[save.school] || 0),
+        79034: Math.floor(Math.max(0, ...schools.map(school => spec.stats.resist?.[school] || 0)))
+    };
 }
 function syncGoals(save,content) {
     if (save.equipment[11] === 1912) signal(save,content,'action','equip-staff');
@@ -252,6 +267,18 @@ export function rewardsFor(save, content, quest) {
     }
     return rewards.map(reward => resolvePetReward(content, reward));
 }
+function grantQuestRewards(save, content, quest) {
+    const rewards = rewardsFor(save, content, quest);
+    for (const r of rewards) {
+        if (r.kind === 'pet') { for (let i = 0; i < r.count; i++) Pets.addPet(save, content, r.petId); }
+        else if (r.id === 113) save.xp += r.count;
+        else save.inventory[r.id] = (save.inventory[r.id] || 0) + r.count;
+    }
+    if (content.pets) for (const r of rewards) if (r.kind === 'pet') {
+        save.questPetConversions ??= {};
+        save.questPetConversions[r.id] = (save.questPetConversions[r.id] || 0) + r.count;
+    }
+}
 export function applyAction(save, content, action, access={}) {
     assert(!save.pendingEncounter || ['settle-encounter','retreat'].includes(action.type), '请先完成当前战斗');
     if(content.pets&&Pets.petAction(save,content,action,access)){syncEquipmentInstances(save,content);save.revision++;return {changed:true};}
@@ -272,22 +299,26 @@ export function applyAction(save, content, action, access={}) {
     case 'talk':
         assert(content.npcs[action.npcId], '找不到这位居民');
         signal(save,content,'talk',action.npcId); break;
+    case 'accept-catalog': acceptCatalogQuest(save,content,action.questId,action.npcId,catalogStatSnapshot(save,content)); break;
+    case 'claim-catalog': {
+        const target = claimCatalogQuest(save,content,action.questId,action.npcId,catalogStatSnapshot(save,content));
+        if (!target) return { changed: false };
+        grantQuestRewards(save,content,target);
+        save.quests[target.id].claimed = true;
+        if (save.trackedQuestId === target.id) delete save.trackedQuestId;
+        syncProgression(save,content);
+        break;
+    }
+    case 'track-catalog':
+        if (action.questId == null) delete save.trackedQuestId;
+        else { assert(content.catalogQuests?.byId[Number(action.questId)], '找不到这个任务'); save.trackedQuestId = Number(action.questId); }
+        break;
     case 'claim': {
         const target = content.quests.find(x => x.id === Number(action.questId));
         if (save.quests[target?.id]?.claimed) return { changed: false };
         assert(target === q && questReady(save,q) && q.endNpc === Number(action.npcId), '任务尚未完成');
-        for (const r of rewardsFor(save,content,q)) {
-            if (r.kind === 'pet') { for (let i = 0; i < r.count; i++) Pets.addPet(save,content,r.petId); }
-            else if (r.id === 113) save.xp += r.count;
-            else save.inventory[r.id] = (save.inventory[r.id] || 0) + r.count;
-        }
+        grantQuestRewards(save,content,q);
         save.quests[q.id].claimed = true;
-        if(content.pets) {
-            for(const r of rewardsFor(save,content,q)) if(r.kind==='pet') {
-                save.questPetConversions ??= {};
-                save.questPetConversions[r.id] = (save.questPetConversions[r.id] || 0) + r.count;
-            }
-        }
         syncProgression(save,content);
         if (q.id === 63013) save.graduated = true;
         break;
@@ -313,7 +344,7 @@ export function applyAction(save, content, action, access={}) {
     }
     case 'mount-gem': {
         const result=mountGem(save,content,action);
-        if(result.success)signal(save,content,'action',79017);
+        if(result.success){signal(save,content,'action',79017);signal(save,content,'action',79026);}
         syncGoals(save,content);syncEquipmentInstances(save,content);save.revision++;return {...result,changed:true};
     }
     case 'remove-gems': {const result=removeGems(save,content,action);save.revision++;return {...result,changed:true};}
@@ -329,7 +360,7 @@ export function applyAction(save, content, action, access={}) {
         save.inventory[currency] -= cost;
         save.equipmentInstances.find(row=>row.guid===instance.guid).serverdata.addlel=level+1;
         // PowerAPI_client.lua L191–199: goal 79016 only follows a successful upgrade.
-        signal(save,content,'action',79016); syncGoals(save,content); break;
+        signal(save,content,'action',79016); signal(save,content,'action',79025); syncGoals(save,content); break;
     }
     case 'hatch':
         assert(owns(save,17307) && !save.pet, '需要一枚出奇蛋');
@@ -404,15 +435,15 @@ export function beginEncounter(save,content,encounterId,access={}) {
     if(content.pets){
         const party=initialParty;
         assert(party.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
-        Object.assign(save.pendingEncounter,{party,monster,petIds:save.formation.filter(Boolean),captureStock:save.inventory[Pets.CAPTURE_ID]||0,heroLevel:save.level,adventureParams:clone(Pets.petParams(content))});
+        Object.assign(save.pendingEncounter,{party,monster,petIds:save.formation.filter(Boolean),captureStock:save.inventory[Pets.CAPTURE_ID]||0,heroLevel:save.level,ownedPets:Object.keys(save.pets).sort(),adventureParams:clone(Pets.petParams(content))});
     }
     save.revision++; return { encounter, monster, checkpoint: save.pendingEncounter };
 }
 export function runeInventory(save,content) {
     return Object.entries(save.inventory).flatMap(([id,count])=>{
-        const key=content.cardItems[Number(id)-1000];
+        const key=content.cardItems[id]||content.cardItems[Number(id)-1000];
         const item=content.items[id];
-        return count>0&&item?.kind===18&&item.subtype===2&&key&&!key.includes('CatchPet')?[{itemId:Number(id),key,count}]:[];
+        return count>0&&item?.kind===18&&item.subtype===2&&key?[{itemId:Number(id),key,count}]:[];
     });
 }
 export function recordDecision(save, decision, battle) {
@@ -445,6 +476,7 @@ export function settleEncounter(save,content,battle) {
         save.inventory[100] = (save.inventory[100] || 0) + defeated.reduce((n,m)=>n+m.coins,0);
         if(pending.dungeonMonsterIds)save.dungeonRuns[save.zone].cleared.push(encounter.id);
         if (monster.goalId) signal(save,content,'defeat',monster.goalId);
+        noteCatalogKills(save,content,defeated,createRng(hashSeed(`${save.seed}:quest:${pending.id}`)));
         // Original water-bubble loot1 = {[17114,1]=20}; draw remains on the encounter's seeded RNG.
         if (monster.id === 'water-bubble' && battle.rng.int(1,100) <= 20) save.inventory[17114] = (save.inventory[17114] || 0) + 1;
         syncProgression(save,content);
@@ -472,6 +504,7 @@ export function parseSave(raw,content) {
         s.worldLayoutVersion=currentLayout;
     }
     for (const field of ['inventory','equipment','upgrades','cards','quests','tips']) assert(s[field] && typeof s[field] === 'object' && !Array.isArray(s[field]),'存档数据不完整');
+    if(content.pets)Pets.retireCaptureCrystals(s,content);
     for (const [id,n] of Object.entries(s.inventory)) assert(content.items[id] && Number.isInteger(n) && n >= 0,'存档物品无效');
     for (const [slot,id] of Object.entries(s.equipment)) assert(content.items[id]?.slot === Number(slot) && owns(s,id),'存档装备无效');
     for (const [key,n] of Object.entries(s.cards)) assert(availableCardLessons(s,content).some(x => x.key === key) && Number.isInteger(n) && n >= 1 && n <= 3,'存档卡牌无效');
@@ -494,6 +527,7 @@ export function parseSave(raw,content) {
         previous = !!state?.claimed;
     }
     assert(!s.graduated || s.quests[63013]?.claimed,'毕业记录无效');
+    validateCatalogQuests(s,content);
     validateDungeons(s,content);
     assert(dungeonFor(content,s.zone)?.playable||travelStatus({...s,pendingEncounter:null},content,s.zone).allowed,'存档目的地无效');
     if (s.pendingEncounter) {
@@ -507,7 +541,7 @@ export function parseSave(raw,content) {
         if(s.pendingEncounter.runes!==undefined){
             const runes=s.pendingEncounter.runes;
             assert(Array.isArray(runes)&&new Set(runes.map(row=>row.itemId)).size===runes.length,'存档符文无效');
-            for(const rune of runes)assert(content.items[rune.itemId]?.kind===18&&content.items[rune.itemId].subtype===2&&content.cardItems[rune.itemId-1000]===rune.key&&!rune.key.includes('CatchPet')&&Number.isSafeInteger(rune.count)&&rune.count>0&&(s.inventory[rune.itemId]||0)<=rune.count,'存档符文无效');
+            for(const rune of runes)assert(content.items[rune.itemId]?.kind===18&&content.items[rune.itemId].subtype===2&&(content.cardItems[rune.itemId]||content.cardItems[rune.itemId-1000])===rune.key&&(!String(rune.key).includes('CatchPet')||content.runeCatalog?.runes.some(row=>row.gsid===rune.itemId&&row.key===rune.key&&Number.isFinite(row.baseWeight)))&&Number.isSafeInteger(rune.count)&&rune.count>0&&(s.inventory[rune.itemId]||0)<=rune.count,'存档符文无效');
         }
         assert(s.pendingEncounter.id === `${s.seed}:${s.encounterSerial}` && s.pendingEncounter.seed === hashSeed(`${s.seed}:encounter:${s.encounterSerial}`),'存档战斗种子无效');
         assert(JSON.stringify(s.pendingEncounter.player) === JSON.stringify(playerSpec(s,content)), '存档战斗角色无效');
@@ -520,7 +554,7 @@ export function parseSave(raw,content) {
         assert(JSON.stringify(s.pendingEncounter.dungeonMonsterIds)===JSON.stringify(encounter?.monsterIds)&&JSON.stringify(s.pendingEncounter.dungeonMonsterSlots)===JSON.stringify(encounter?.monsterSlots),'副本阵容记录无效');
         assert(!encounter?.blocked?.length&&!s.dungeonRuns?.[s.zone]?.cleared.includes(encounter?.id),'副本战斗记录无效');
     }
-    if(content.pets){Pets.validatePets(s,petContent);if(s.pendingEncounter?.party){assert(JSON.stringify(s.pendingEncounter.party)===JSON.stringify(Pets.partySpecs(s,petContent,playerSpec(s,content))),'存档阵容无效');const encounter=content.encounters.find(e=>e.id===s.pendingEncounter.encounterId)||specialEncounter(s,content,s.pendingEncounter.encounterId);assert(JSON.stringify(s.pendingEncounter.monster)===JSON.stringify(encounter.monster||content.monsters[encounter.monsterId]),'存档敌人无效');assert(s.pendingEncounter.captureStock===(s.inventory[Pets.CAPTURE_ID]||0)&&s.pendingEncounter.heroLevel===s.level,'存档捕获记录无效');}}
+    if(content.pets){Pets.validatePets(s,petContent);if(s.pendingEncounter?.party){assert(JSON.stringify(s.pendingEncounter.party)===JSON.stringify(Pets.partySpecs(s,petContent,playerSpec(s,content))),'存档阵容无效');const encounter=content.encounters.find(e=>e.id===s.pendingEncounter.encounterId)||specialEncounter(s,content,s.pendingEncounter.encounterId);assert(JSON.stringify(s.pendingEncounter.monster)===JSON.stringify(encounter.monster||content.monsters[encounter.monsterId]),'存档敌人无效');assert(s.pendingEncounter.captureStock===(s.inventory[Pets.CAPTURE_ID]||0)&&s.pendingEncounter.heroLevel===s.level,'存档捕获记录无效');const ownedPets=Object.keys(s.pets).sort();if(s.pendingEncounter.ownedPets!==undefined)assert(JSON.stringify(s.pendingEncounter.ownedPets)===JSON.stringify(ownedPets),'存档捕获记录无效');else if((s.pendingEncounter.runes||[]).some(rune=>String(rune.key).includes('CatchPet')))assert(false,'存档捕获记录无效');}}
     if(s.pendingEncounter?.party){
         assert(JSON.stringify(s.pendingEncounter.petIds)===JSON.stringify(s.formation.filter(Boolean)),'存档宠物奖励阵容无效');
         if(s.pendingEncounter.adventureParams){
@@ -564,6 +598,7 @@ export function settleParty(save,content,battle,{retreat=false}={}){
     if(battle.winner!=='near'||retreat)save.heroHp=Math.max(save.heroHp,Math.ceil(battle.unitsById.hero.maxHp*p.defeatHp));
     for(const u of battle.sides.near)if(u.speciesId&&save.pets[u.speciesId])save.pets[u.speciesId].hp=u.hp;
     save.inventory[Pets.CAPTURE_ID]=Math.max(0,(save.inventory[Pets.CAPTURE_ID]||0)-(battle.captureUsed||0));
+    Pets.retireCaptureCrystals(save,content,{keepActiveBattle:false});
     if(!retreat){
         for(const id of battle.captured||[])Pets.addPet(save,content,id);
         if(battle.winner==='near')for(const id of pending.petIds||[]){const pet=save.pets[id];pet.xp+=pending.dungeonMonsterIds?battle.monsterTemplates.reduce((sum,m)=>sum+m.xp,0):battle.monsterTemplates[0].xp;pet.level=Pets.petXpLevel(pet.xp,content);}

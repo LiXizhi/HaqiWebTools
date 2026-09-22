@@ -71,7 +71,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
         }
         if(item.kind==='pet'){
             preview.append(button('查看四阶段与卡片',()=>showPetDetails(assets,item.petId,petPortrait,{el,button}),'secondary'));
-            const capture=button('寻找并捕获',()=>cb.encounter('wild:'+item.petId),'secondary');capture.disabled=save.level<item.level;preview.append(capture);
+            const capture=button('寻找并捕获',()=>cb.encounter('wild:'+item.petId),'secondary');capture.disabled=save.level<item.level;preview.append(capture,el('small','muted','捕获时从符文卡使用抓宠符文。普通和高级符文由哈奇岛的安卓婆婆出售。'));
         }
         preview.append(el('p','shop-preview-price',`${productPrice(item,c)} 奇豆 / 件`),buyButton(item));
     }
@@ -85,7 +85,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
             const tab=button(row.label,()=>{sub=index;page=0;state.selected=null;paint();},'secondary');
             tab.setAttribute('aria-pressed',String(index===sub));subtabs.append(tab);
         });
-        const rows=c.shop.filter(item=>!item.isInternalTest&&matches(item,category)&&matches(item,category.subcategories[sub])&&item.name.includes(query.value.trim())&&(!ownership.value||owned(item)===(ownership.value==='owned'))&&(!level.value||item.level<=save.level)&&(category.id!=='gear'||!school.value||item.school===school.value))
+        const rows=c.shop.filter(item=>!item.isInternalTest&&!item.retired&&matches(item,category)&&matches(item,category.subcategories[sub])&&item.name.includes(query.value.trim())&&(!ownership.value||owned(item)===(ownership.value==='owned'))&&(!level.value||item.level<=save.level)&&(category.id!=='gear'||!school.value||item.school===school.value))
             .sort((a,b)=>a.level-b.level||a.name.localeCompare(b.name,'zh'));
         const pages=Math.max(1,Math.ceil(rows.length/pageSize));page=Math.min(page,pages-1);remember();
         grid.replaceChildren();pager.replaceChildren();

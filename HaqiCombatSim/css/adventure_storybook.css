@@ -533,6 +533,7 @@
 .magic-star-identity { display:flex; align-items:center; gap:14px; }
 .magic-star-identity h3 { margin:0 0 8px; }.magic-star-identity p { margin:5px 0; font-size:12px; }
 .magic-star-energy { margin:14px 0 20px; padding:8px 12px; border:1px solid #bdab66; border-radius:4px; background:#f3e1a8; color:#675126; }
+.magic-bean-note { margin:8px 0 0; font-size:12px; line-height:1.6; }
 .magic-star-rewards { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
 .magic-star-reward { display:flex; flex-direction:column; align-items:center; gap:5px; padding:8px; background:#f7edce; border:1px solid #dcc48c; border-radius:5px; text-align:center; }
 .magic-star-reward strong { font-size:12px; }.magic-star-reward small { font-size:10px; }.magic-star-reward button { min-height:28px; padding:3px 12px; }

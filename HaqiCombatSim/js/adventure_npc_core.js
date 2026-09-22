@@ -65,8 +65,9 @@ function checkNpcOffer(save,content,offer) {
         if(save.level<Number(offer.needlevel||1))return deny(`${offer.needlevel}级可学习`);
     }else if(!item||![1,3,18].includes(item.kind)||item.kind===18&&item.subtype!==2)return deny('商品已收录，此类原版交易尚未开放');
     else if(item.kind===18){
-        const runeKey=content.cardItems[offer.itemId-1000];
-        if(!runeKey||runeKey.includes('CatchPet')||!content.cardLibrary?.some(r=>r.key===runeKey&&r.supported))return deny('符文效果尚未接入');
+        const runeKey=content.cardItems[offer.itemId]||content.cardItems[offer.itemId-1000];
+        const catchRune=content.runeCatalog?.runes.some(row=>row.gsid===offer.itemId&&row.key===runeKey&&Number.isFinite(row.baseWeight));
+        if(!runeKey||!catchRune&&!content.cardLibrary?.some(r=>r.key===runeKey&&r.supported))return deny(runeKey?.includes('CatchPet')?'专属抓宠符文尚未配置':'符文效果尚未接入');
         if(item.stats?.[180])return deny('原服会员条件尚未接入');
     }
     if(offer.kind==='shop'){

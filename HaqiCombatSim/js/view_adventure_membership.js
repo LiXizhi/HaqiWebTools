@@ -1,5 +1,6 @@
 import {ItemDetails} from './view_adventure_item_details.js';
 import {magicStarStatus,magicStarWeek,magicPocketRemaining} from './adventure_magic_star_core.js';
+import {magicBeanExchangeText} from './adventure_magic_bean_exchange_core.js';
 // Layout reference: Aries/Desktop/CombatCharacterFrame/CombatMagicStarPage.html.
 // Keepwork supplies the entitlement; remaining calendar months map to star levels.
 export function membershipEmblem(el,level='V') {
@@ -20,7 +21,7 @@ export function renderMembership(body,model,cb,ui) {
     body.closest('.modal').classList.add('magic-star-modal');
     const labels={unknown:'会员状态待确认',loading:'正在查询会员状态…',guest:'登录后查看会员状态',error:'查询失败，请刷新重试'};
     const identity=el('div','magic-star-identity',membershipEmblem(el,star.level),el('div','',el('h3','',`魔法星 ${star.level} 级`),el('p','',member.status==='ready'?(star.level?'魔法星已激活':'魔法星未激活'):labels[member.status]),el('p','muted',star.expiresAt?`有效期至 ${new Date(star.expiresAt).toLocaleDateString('zh-CN')}`:star.level?'有效日期待确认':'升级会员，点亮魔法星')));
-    const energy=el('div','magic-star-energy',el('span','',star.days===null?'会员有效，剩余天数待确认':`剩余能量：${star.days} 天`));
+    const energy=el('div','magic-star-energy',el('span','',star.days===null?'会员有效，剩余天数待确认':`剩余能量：${star.days} 天`),el('p','magic-bean-note',magicBeanExchangeText(member,model.magicBeanExchange||null,now,{inBattle:!!save.pendingEncounter})));
     const left=el('section','magic-star-left',identity,energy,el('h3','','专属左手法杖'));
     const rewards=el('div','magic-star-rewards');
     for(const reward of config.rewards){
@@ -47,7 +48,7 @@ export function renderMembership(body,model,cb,ui) {
             for(const row of config.levels){const tr=el('tr',star.level===row.level?'current':'');if(star.level===row.level)tr.setAttribute('aria-current','true');for(const field of ['level','HP','attack','guard','cure','becured','hit','exp'])tr.append(el('td','',field==='level'?`${row[field]}级`:`${row[field]}%`));rows.append(tr);}
             table.append(rows);detail.append(el('div','magic-star-table-scroll',table));
         }else if(key==='growth'){
-            detail.append(el('h3','','魔法星如何成长'),el('p','','魔法星等级按会员剩余有效期计算。未开通或已到期为 0 级；一个月为 1 级，一年达到最高 10 级。'),el('p','','不足一个月按一个月计算，最高 10 级。剩余有效期变短时，魔法星等级也会随之变化。'),el('p','','有效日期暂时无法确认时，已确认的会员按 1 级显示。'),el('p','muted','续期后点击“刷新会员状态”，查看最新等级和可领取奖励。'));
+            detail.append(el('h3','','魔法星如何成长'),el('p','','魔法星等级按会员剩余有效期计算。未开通或已到期为 0 级；一个月为 1 级，一年达到最高 10 级。'),el('p','','不足一个月按一个月计算，最高 10 级。剩余有效期变短时，魔法星等级也会随之变化。'),el('p','','有效日期暂时无法确认时，已确认的会员按 1 级显示。'),el('p','','剩余有效期按北京时间的日历天数自动兑换为魔豆，每天 10 颗。第一次从今天算到到期日；记下这次兑到的日期后，再次兑换只计算更晚的新增天数。'),el('p','muted','续期后点击“刷新会员状态”，查看最新等级。新增的会员天数会自动兑换。'));
         }else if(key==='features'){
             detail.append(el('h3','','魔法星独有功能'),el('p','','已开放：战斗属性加成、商城会员专属商品、专属左手法杖、每周仙豆和魔法口袋礼物。'),el('p','','法杖需同时达到魔法星和角色等级要求，每个角色每件领取一次。已有同款法杖不重复发放。'),el('p','muted','魔法星环绕表现暂未开放。'),button('前往商城',()=>cb.panel('shop'),'primary'));
         }else{

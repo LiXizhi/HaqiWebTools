@@ -127,7 +127,7 @@ test('capture replay consumes crystal once and duplicate captures become experie
  const id=P.STARTERS[0];A.beginEncounter(s,c,'wild:'+id);const b=B.restorePveBattle(d,c,s.pendingEncounter);
  while(!b.finished){const pick=b.captureUsed<b.captureStock?{capture:true,targetId:'mob0'}:{pass:true};B.playPveRound(b,pick);A.recordDecision(s,pick);}
  assert.ok(b.captureUsed>0);assert.deepEqual(B.restorePveBattle(d,c,s.pendingEncounter).events,b.events);
- A.settleEncounter(s,c,b);assert.equal(s.inventory[P.CAPTURE_ID],20-b.captureUsed);assert.equal(Object.keys(s.pets).length,1);assert.throws(()=>A.settleEncounter(s,c,b));
+ A.settleEncounter(s,c,b);assert.equal(s.inventory[P.CAPTURE_ID],undefined);assert.equal(s.inventory[P.GENERAL_CATCH_RUNE],20-b.captureUsed);assert.equal(Object.keys(s.pets).length,1);assert.throws(()=>A.settleEncounter(s,c,b));
 });
 test('legacy migration, linkage and invalid imported pet states',()=>{
  const old=A.createAdventure(read('adventure/chapter.json'));old.schemaVersion=1;

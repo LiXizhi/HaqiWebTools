@@ -1,7 +1,7 @@
 // Local account cache is one atomic JSON write. Legacy storage calls receive a
 // role-scoped facade so cloud/debug backups never leak between roles/accounts.
 import { SAVE_KEY } from './adventure_assets.js';
-import { emptyRoles, validateRoles, addRole, selectRole } from './adventure_roles_core.js';
+import { emptyRoles, validateRoles, addRole, selectRole, grantMagicBeans } from './adventure_roles_core.js';
 
 export function createRoleStore({ content, dataset, storage = localStorage, uuid = () => crypto.randomUUID(), now = () => Date.now(), prepareSaves = async () => {} }) {
     let owner = null, state, raw;
@@ -40,6 +40,12 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         replace(catalog, base, dirty = false) { write({ catalog: validateRoles(catalog, content, dataset), base, dirty }); },
         create(save) { const next = addRole(state.catalog, uuid(), save, now());write({ ...state, catalog: next, dirty: true });return next.activeId; },
         select(id) { write({ ...state, catalog: selectRole(state.catalog, id, now()), dirty: true }); },
+        commitMagicBeanExchange(nextSave, exchangedUntil) {
+            const id = state.catalog.activeId;
+            const catalog = validateRoles(grantMagicBeans(state.catalog, id, nextSave, exchangedUntil), content, dataset);
+            write({ ...state, catalog, dirty: true });
+            return catalog.roles.find(row => row.id === id).save;
+        },
         checkpoint() { return JSON.stringify(state.catalog); },
         markSynced(base, captured) { write({ ...state, base, dirty: JSON.stringify(state.catalog) !== captured }); },
         scoped() {

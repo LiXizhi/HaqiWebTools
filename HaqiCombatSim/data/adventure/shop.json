@@ -18,7 +18,7 @@
       {"label":"寒冰系","school":"ice"},{"label":"生命系","school":"life"},{"label":"死亡系","school":"death"}
     ]},
     {"id":"supply","label":"补给","kind":"supply","subcategories":[
-      {"label":"全部"},{"label":"喂养材料","itemIds":[990001]},{"label":"捕获道具","itemIds":[990002]}
+      {"label":"全部"},{"label":"喂养材料","itemIds":[990001]}
     ]}
   ]
 }

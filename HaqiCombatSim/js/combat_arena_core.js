@@ -111,7 +111,9 @@ export function validTargets(arena, unit, card) {
     if (kind === 'self') return available(unit)?[unit]:[];
     if (kind === 'friendly') return alliesOf(arena, unit).filter(available);
     if (kind === 'all') return [...enemiesOf(arena, unit).filter(available), ...alliesOf(arena, unit).filter(available)];
-    return enemiesOf(arena, unit).filter(available);
+    const enemies = enemiesOf(arena, unit).filter(available);
+    if (card.type === 'CatchPet') return enemies.filter(target => target.template?.speciesId && !arena.ownedPets?.includes(target.template.speciesId) && !arena.captured?.includes(target.template.speciesId));
+    return enemies;
 }
 
 /** 手牌中可施放的卡 [{seq, key, card}] */

@@ -7,7 +7,8 @@ import { createCompanion, stepCompanion } from './adventure_companion_core.js';
 import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
 import { battleActorAction } from './actor_animation_core.js';
-import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES } from './adventure_core.js';
+import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES,catalogStatSnapshot } from './adventure_core.js';
+import {catalogNpcMarker,catalogTracksMonster} from './adventure_catalog_quests_core.js';
 import { onIsland,distance,nearbyWorldObjects } from './adventure_world_core.js';
 import { OCEAN_COLOR, paintTerrain } from './adventure_terrain.js';
 import { paintLargeTerrain,createTerrainTileCache } from './adventure_large_terrain.js';
@@ -26,6 +27,11 @@ function circleRune(c,x,y,r,t,color='#e4d69a') {
     for(let i=0;i<8;i++){c.save();c.rotate(i*TAU/8);c.strokeRect(r*.89,-3,5,6);c.restore();}c.restore();
 }
 export function questMarker(save,content,npcId) {
+    const tracked=content.catalogQuests?.byId[save.trackedQuestId];
+    if(tracked&&(tracked.startNpc===npcId||tracked.endNpc===npcId||tracked.groups.some(g=>g.kind==='talk'&&g.items.some(i=>i.id===npcId)))){
+        const mark=catalogNpcMarker(save,content,npcId,catalogStatSnapshot(save,content));
+        if(mark)return mark;
+    }
     const q=currentQuest(save,content);if(!q)return null;
     if(!questState(save,q.id).accepted&&q.startNpc===npcId)return '!';
     if(questReady(save,q)&&q.endNpc===npcId)return '?';
@@ -134,7 +140,8 @@ export function createRenderer(canvas,assets) {
                 if(o.monsterIds){for(const [i,id]of o.monsterIds.entries()){const mob=assets.content.monsters[id];monster(ctx,mob,o.x+(i-(o.monsterIds.length-1)/2)*42,o.y-(i%2)*16,t,.7);}plate(ctx,`${m.name} · ${o.monsterIds.length}只${o.blocked?.length?' · 待迁移':''}`,o.x,o.y+18,'#ffebd7');}
                 else {monster(ctx,m,o.x,o.y,t,.8);plate(ctx,m.name,o.x,o.y+18,'#ffebd7');}
                 const q=currentQuest(save,assets.content),goal=q&&questProgress(save,q).find(g=>g.kind==='defeat'&&g.id===m.goalId&&g.value<g.count);
-                if(goal&&questState(save,q.id).accepted)text(ctx,'◇',o.x,o.y-90+Math.sin(t*3)*3,25,'#fff2a9');
+                const trackedMob=(o.monsterIds||[o.monsterId]).some(id=>catalogTracksMonster(save,assets.content,assets.content.monsters[id]));
+                if((goal&&questState(save,q.id).accepted)||trackedMob)text(ctx,'◇',o.x,o.y-90+Math.sin(t*3)*3,25,'#fff2a9');
             }
             if(o.kind==='hero'){circleRune(ctx,o.x,o.y+2,24,t,'#f7e6a088');avatar(ctx,save,o.x,o.y,t,moving);if(!title)plate(ctx,save.name,o.x,o.y+21);}
             if(o.kind==='pet'){

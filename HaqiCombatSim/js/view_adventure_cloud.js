@@ -4,7 +4,7 @@ import { el, button } from './view_adventure.js';
 import { SCHOOL_NAMES } from './adventure_core.js';
 function progressCard(save, label) {
     return el('article', 'cloud-progress', el('p', 'eyebrow', label), save
-        ? el('div', '', el('h3', '', save.name), el('p', '', `${SCHOOL_NAMES[save.school]} · 等级 ${save.level} · ${Object.values(save.quests).filter(q => q.claimed).length} / 14 任务`), el('small', 'muted', `${islandName(save.zone)}${save.pendingEncounter ? ' · 战斗中（恢复已保存的回合）' : ''}`))
+        ? el('div', '', el('h3', '', save.name), el('p', '', `${SCHOOL_NAMES[save.school]} · 等级 ${save.level} · 已完成 ${Object.values(save.quests).filter(q => q.claimed).length} 个任务`), el('small', 'muted', `${islandName(save.zone)}${save.pendingEncounter ? ' · 战斗中（恢复已保存的回合）' : ''}`))
         : el('p', 'muted', '还没有本地冒险记录'));
 }
 function readableDate(value) { const date = new Date(value);return Number.isFinite(+date) ? date.toLocaleString('zh-CN', { hour12: false }) : '未知时间'; }

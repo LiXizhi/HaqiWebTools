@@ -1,6 +1,6 @@
 import {DetailDialog} from './view_detail_dialog.js';
 import {signedAttribute,unsupportedEquipmentStats} from './adventure_equipment_core.js';
-import {runeStatus} from './adventure_runes_core.js';
+import {runeObtainLines,runeStatus} from './adventure_runes_core.js';
 import {equipmentAttributes,equipmentCards,EQUIPMENT_SLOTS} from './adventure_equipment_core.js';
 import {equipmentRequirements} from './adventure_item_rules_core.js';
 import {SCHOOL_NAMES} from './adventure_core.js';
@@ -33,7 +33,9 @@ export class ItemDetails extends DetailDialog {
         const rune=runeStatus(item,c,assets.dataset);
         if(item.description&&!rune)this.body.append(el('p','',String(item.description).replace(/[|#]/g,' ')));
         if(rune){
-            this.body.append(el('p',rune.available?'muted':'equipment-warning',rune.available?'战斗符文 · 成功施法消耗一张，失误不消耗':rune.reason));
+            this.body.append(el('p',rune.available?'muted':'equipment-warning',rune.catch?'抓宠符文 · 对野生宠物施放。血量越低越容易成功，成功或失败都消耗一张':rune.available?'战斗符文 · 成功施法消耗一张，失误不消耗':rune.reason));
+            const obtain=runeObtainLines(c,item.id);
+            if(obtain.length)this.body.append(el('p','equipment-source',`获取途径：${obtain.join('；')}`));
             if(rune.card&&spellFace)this.body.append(el('div','equipment-cards',spellFace(assets,rune.card)));
         }
         const cards=equipmentCards(item,c),faces=el('div','equipment-cards');

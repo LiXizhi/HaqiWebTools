@@ -4,7 +4,7 @@ import { baseMaxHp, applyHpStats } from './combat_formulas_core.js';
 import { normalizeStats } from './combat_unit_core.js';
 export const STARTERS=['dragon_green','dragon_purple','dragon_orange'];
 export const STAGE_NAMES=['幼年','青年','成年','隐藏形态'];
-export const FOOD_ID=990001, CAPTURE_ID=990002;
+export const FOOD_ID=990001, CAPTURE_ID=990002, GENERAL_CATCH_RUNE=23439;
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 export const petParams=content=>resolveParams({cards:{}},content.balanceParams||defaultParams('kids')).adventure;
 export function petStage(level,content){return petParams(content).stageLevels.filter(n=>level>=n).length-1;}
@@ -46,7 +46,7 @@ export function petAction(save,content,action,access={}){
  case 'pet-deck':check(pet,'尚未拥有宠物');validatePetDeck(pet,content,action.deck);pet.deck=action.deck.map(x=>({...x}));break;
  case 'pet-feed':check(pet&&pet.hunger<100&&(save.inventory[FOOD_ID]||0)>0,'需要食物，且宠物尚未吃饱');save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+p.foodRestore);break;
  case 'buy':{
-  const item=content.shop.find(x=>x.id===action.productId);check(item,'商品不存在');check(!item.isInternalTest,'内测道具不对外出售');check(!item.vipOnly||access.keepworkVip===true,'该商品仅限会员购买。请登录会员账号后重试。');check(save.level>=item.level,'等级尚未解锁');
+  const item=content.shop.find(x=>x.id===action.productId);check(item,'商品不存在');check(!item.retired,'捕获晶球已停售，请使用抓宠符文');check(!item.isInternalTest,'内测道具不对外出售');check(!item.vipOnly||access.keepworkVip===true,'该商品仅限会员购买。请登录会员账号后重试。');check(save.level>=item.level,'等级尚未解锁');
   check(item.kind!=='pet'||!save.pets[item.petId],'已经拥有这只宠物');const cost=productPrice(item,content);
   check((save.inventory[100]||0)>=cost,'奇豆不足');
   if(item.kind==='pet')addPet(save,content,item.petId);else save.inventory[item.itemId]=(save.inventory[item.itemId]||0)+1;
@@ -56,6 +56,17 @@ export function petAction(save,content,action,access={}){
  }return true;
 }
 export function productPrice(item,content){const p=petParams(content);return item.kind==='pet'?p.petPriceBase+p.petPriceLevel*item.level:item.kind==='gear'?p.gearPriceBase+p.gearPriceLevel*item.level:item.itemId===FOOD_ID?p.foodPrice:p.capturePrice;}
+// Unused capture crystals become the general catch rune. A battle already casting crystals keeps its stock so the old checkpoint can replay.
+export function retireCaptureCrystals(save,content,{keepActiveBattle=true}={}){
+ const count=save.inventory?.[CAPTURE_ID]||0;
+ if(!count||keepActiveBattle&&save.pendingEncounter?.decisions?.some(row=>row?.capture))return false;
+ const rune=content.items?.[GENERAL_CATCH_RUNE];
+ if(rune?.kind!==18||rune.subtype!==2)return false;
+ save.inventory[GENERAL_CATCH_RUNE]=(save.inventory[GENERAL_CATCH_RUNE]||0)+count;
+ delete save.inventory[CAPTURE_ID];
+ if(save.pendingEncounter&&Object.hasOwn(save.pendingEncounter,'captureStock'))save.pendingEncounter.captureStock=0;
+ return true;
+}
 export function partySpecs(save,content,hero){
  hero={...hero,slot:save.heroSlot,hp:save.heroHp??specMaxHp(hero)};
  const support=save.pets[save.formation[save.heroSlot]];

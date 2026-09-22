@@ -4,6 +4,7 @@ import {installDungeonIndex} from './adventure_dungeons_core.js';
 import {createDungeonLoader} from './adventure_dungeons.js';
 import {installNpcCatalog} from './adventure_npc_core.js';
 import {installFishing} from './adventure_fishing_core.js';
+import {installRuneCatalog} from './adventure_runes_core.js';
 import {installNpcArt} from './adventure_npc_art_core.js';
 import {loadEnvironmentArt} from './adventure_environment_art.js';
 import { installExpansion } from './adventure_expansion_core.js';
@@ -96,6 +97,9 @@ export async function loadResources(progress) {
     const {installDragonTotemItems}=await import('./adventure_progression_bonuses_core.js');
     installDragonTotemItems(content);
     installFishing(content,await json('data/adventure/fishing.json'));
+    installRuneCatalog(content,await json('data/adventure/runes.json'));
+    const {installCatalogQuests}=await import('./adventure_catalog_quests_core.js');
+    installCatalogQuests(content,await json('data/adventure/quest-runtime.json'));
     content.checkinConfig=await json('data/adventure/checkin.json');
     for(const [id,item] of Object.entries(content.checkinConfig.items))content.items[id]??=item;
     for(const [id,item] of Object.entries(content.progressionBonuses.giftItems||{}))content.items[id]??=item;

@@ -3,11 +3,12 @@
 <body class="haqi-app"><div id="root"></div><script type="module">
 import {installExpansion} from '../../js/adventure_expansion_core.js';
 import {installNpcCatalog} from '../../js/adventure_npc_core.js';
+import {installRuneCatalog} from '../../js/adventure_runes_core.js';
 import {createAdventure,applyAction} from '../../js/adventure_core.js';
 import {renderPanel} from '../../js/view_adventure.js';
 const read=async p=>(await fetch('../../data/'+p)).json();
 const args=await Promise.all(['adventure/chapter.json','adventure/combat.json','adventure/pets.json','adventure/shop-candidates.json','kids/cards.json','kids/charms.json'].map(read));
-const {content,dataset}=installExpansion(...args);installNpcCatalog(content,await read('adventure/npc-catalog.json'));
+const {content,dataset}=installExpansion(...args);installNpcCatalog(content,await read('adventure/npc-catalog.json'));installRuneCatalog(content,await read('adventure/runes.json'));
 const save=createAdventure(content);save.zone='town';save.level=50;save.trainingPointLevel=50;save.cards={};save.inventory[17143]=100;save.inventory[17213]=10000;
 const serviceNpc=content.npcCatalog.npcs.find(n=>n.id===Number(new URLSearchParams(location.search).get('npc')||30112));save.zone=serviceNpc.zone;
 const assets={content,dataset,draw:()=>false,skillArt:{drawCard:()=>false}};

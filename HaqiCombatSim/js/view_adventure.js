@@ -24,7 +24,8 @@ import { renderDebugEditor } from './view_adventure_debug.js';
 import { renderPetCollection,starterPicker,petPortrait } from './view_adventure_pets.js';
 import { renderShop } from './view_adventure_shop.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
-import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck } from './adventure_core.js';
+import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot } from './adventure_core.js';
+import {catalogGoalRows,catalogObjectiveLabel,catalogQuestReady,catalogQuestsForNpc,catalogQuestStatus} from './adventure_catalog_quests_core.js';
 import { rewardLabel } from './adventure_rewards_core.js';
 import * as U from './combat_unit_core.js';
 import { expectedBaseDamage,expectedBaseHeal,cardTargetKind } from './combat_cards_core.js';
@@ -198,11 +199,25 @@ export function renderHud(root,model,cb) {
     root.append(utilities);
 
     updateCheckin(root,model);
-    const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),el('span','chapter-count',`${Object.values(save.quests).filter(x=>x.claimed).length} / 14`)));
+    const chapterDone=c.quests.filter(quest=>save.quests[quest.id]?.claimed).length;
+    const catalogClaimed=c.catalogQuests?.quests.filter(quest=>save.quests[quest.id]?.claimed).length||0;
+    const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),el('span','chapter-count',`${chapterDone} / 14${catalogClaimed?` · 全岛 ${catalogClaimed}`:''}`)));
     const dungeon=dungeonFor(c,save.zone);
     if(dungeon){
         const cleared=save.dungeonRuns?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!save.dungeonRuns?.[save.zone]?.cleared.includes(a.id)).length;
         tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，沿路走向出口即可离开。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可在副本菜单暂离。'),button(remaining?'寻找下一组':'返回出口',cb.track,'track-button'));
+    }else if(c.catalogQuests?.byId[save.trackedQuestId]){
+        const tracked=c.catalogQuests.byId[save.trackedQuestId],snap=catalogStatSnapshot(save,c),ready=catalogQuestReady(save,c,tracked,snap);
+        const statusLabel=catalogQuestStatus(save,c,tracked,snap);
+        const marker=el('span',`quest-state ${ready?'ready':'active'}`,ready?'?':'!');marker.setAttribute('aria-hidden','true');
+        const questLink=button([marker,el('span','quest-title',tracked.title)],()=>cb.panel('quests',{questId:tracked.id}),'quest-track-title');
+        questLink.title=`${statusLabel}，点击查看任务详情`;questLink.setAttribute('aria-label',`${tracked.title}，${statusLabel}，查看任务详情`);
+        tracker.append(el('h3','',questLink));
+        const goals=catalogGoalRows(save,c,tracked,snap);
+        if(!goals.length)tracker.append(el('p','',ready?`向${c.npcs[tracked.endNpc]?.name||'居民'}交付。`:'与居民交谈后即可交付。'));
+        else for(const g of goals)tracker.append(el('div',`tracker-goal ${g.value>=g.count?'complete':''}`,el('span','',g.value>=g.count?'✓':'◇'),el('span','',catalogObjectiveLabel(g))));
+        tracker.append(button('追踪',()=>cb.track(tracked.id),'track-button'));
+        if(q)tracker.append(button('返回教学任务',cb.untrack,'text-button'));
     }else if(q){
         const state=questState(save,q.id),ready=questReady(save,q);
         const statusLabel=ready?'可以交付':state.accepted?'进行中':'可接取';
@@ -333,11 +348,14 @@ export function renderDialogue(root,model,dialog,cb) {
     }
     else {
         const q=currentQuest(save,c),state=q&&questState(save,q.id),ready=q&&questReady(save,q);
+        const snap=catalogStatSnapshot(save,c),here=catalogQuestsForNpc(save,c,npc.id,snap);
         content.append(el('p','dialogue-text',npc.description||'欢迎来到这里，年轻的魔法师。愿你的旅程充满惊喜。'));
         const choices=el('div','dialogue-choices');
         if(q&&(q.startNpc===npc.id||q.endNpc===npc.id))content.append(el('div','dialogue-rewards',el('span','dialogue-reward-label','任务奖励'),...rewardsFor(save,c,q).map(r=>el('span','dialogue-reward',rewardLabel(c,r)))));
         if(q&&!state.accepted&&q.startNpc===npc.id)choices.append(button(`接取任务 · ${q.title}`,()=>cb.startQuest(q),'primary'));
         if(q&&ready&&q.endNpc===npc.id)choices.append(button(`完成任务 · ${q.title}`,()=>cb.finishQuest(q),'primary'));
+        for(const quest of here.accept)choices.append(button(`接取任务 · ${quest.title}`,()=>cb.startCatalog(quest),'primary'));
+        for(const quest of here.claim)choices.append(button(`完成任务 · ${quest.title}`,()=>cb.finishCatalog(quest),'primary'));
         const talk=pendingQuestTalk(save,q,npc.id);
         if(talk)choices.append(button(talk.label||'我想了解更多魔法',()=>cb.questTalk(q,talk),'primary'));
         if(q&&state.accepted&&!(ready&&q.endNpc===npc.id))choices.append(button(ready?'前往回报任务':'查看任务目标',()=>{cb.close();cb.track();},'secondary'));
@@ -423,7 +441,7 @@ function renderBattleContent(root,model,cb) {
         const select=button(spellFace(assets,card,artCard),()=>cb.select(h),'card-select');
         select.disabled=animating||battle.finished;select.setAttribute('aria-label',`选择${artCard.name}${available?'':'（魔力不足或冷却中）'}`);select.setAttribute('aria-pressed',String(isSelected));
         const drop=button(isDiscard?'撤销弃牌':'弃牌',()=>cb.discard(h.seq),'discard-button');drop.disabled=animating||battle.finished;
-        node.title=`${artCard.name} · ${cardTargetKind(card)==='hostile'?'对敌人':'对友方'} · ${expectedBaseDamage(card)?'基础伤害 '+expectedBaseDamage(card):expectedBaseHeal(card)?'基础治疗 '+expectedBaseHeal(card):'增益 / 减益魔法'}`;
+        node.title=`${artCard.name} · ${card.type==='CatchPet'?'对野生宠物':cardTargetKind(card)==='hostile'?'对敌人':'对友方'} · ${card.type==='CatchPet'?'抓宠符文':expectedBaseDamage(card)?'基础伤害 '+expectedBaseDamage(card):expectedBaseHeal(card)?'基础治疗 '+expectedBaseHeal(card):'增益 / 减益魔法'}`;
         node.title+=runeCardsOpen?` · 符文剩余 ${h.count}`:petCardsOpen?' · 宠物卡':isDiscard?' · 右键撤销弃牌':' · 右键弃牌';
         if(h.runeId)node.append(badge(`剩余 ${h.count}`));
         if(isSelected)node.append(select,el('div','hand-focus-actions',petCardsOpen||runeCardsOpen?null:drop,button('重新选择',cb.reselect,'secondary small')));
@@ -441,7 +459,13 @@ function renderBattleContent(root,model,cb) {
     top.firstChild.replaceChildren(foes.roster);
     top.classList.add('battle-roster-heading');bottom.classList.add('battle-roster-controls');
     const targets=el('div','battle-party-controls',allies.roster);
-    if(battle.monsterTemplates[0].speciesId){const capture=button(`捕获（晶球 ${battle.captureStock-battle.captureUsed}）`,()=>cb.capture('mob0'),'secondary');capture.disabled=animating||battle.finished||hero.hp<=0||battle.captureStock<=battle.captureUsed;targets.append(capture);}
+    if(battle.monsterTemplates.some(row=>row.speciesId)){
+        const catchStock=(model.runeHand||[]).filter(row=>battle.resolved.cards[row.key]?.type==='CatchPet').reduce((sum,row)=>sum+row.count,0);
+        const capture=button(catchStock?`抓宠符文（${catchStock}）`:'没有抓宠符文',()=>cb.openRunes?.(),'secondary');
+        capture.disabled=animating||battle.finished||hero.hp<=0||!catchStock;
+        if(!catchStock)capture.title='向哈奇岛的安卓婆婆购买普通或高级抓宠符文';
+        targets.append(capture);
+    }
     bottom.append(targets,runePager);
     root.append(top,canvas,status,hand,bottom);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
@@ -519,7 +543,7 @@ export function eventLabel(e,battle,assets) {
     if(e.type==='damage'||e.type==='dot')return `${target} 受到 ${e.amount} 点伤害`;
     if(e.type==='heal'||e.type==='hot')return `${target} 恢复 ${e.amount} 点生命`;
     if(e.type==='speak')return `${caster}：${e.text}`;
-    if(e.type==='capture')return e.success?`${target}捕获成功！`:`${target}挣脱了晶球`;
+    if(e.type==='capture')return e.success?`${target}捕获成功！`:e.runeId?`${target}挣脱了抓宠符文`:`${target}挣脱了晶球`;
     if(e.type==='pass')return `${caster} 跳过本回合`;
     if(e.type==='fizzle')return `${caster} 的魔法失误了`;
     return '';

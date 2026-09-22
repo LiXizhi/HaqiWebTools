@@ -20,7 +20,7 @@ test('rune status distinguishes consumables, missing spells and unsupported effe
     assert.equal(runeStatus(item,content,dataset).available,true);
     assert.equal(runeStatus(item,{cardItems:{}},dataset).reason,'符文法术尚未配置');
     assert.equal(runeStatus(item,content,{cards:{}}).available,false);
-    assert.equal(runeStatus(item,{cardItems:{22104:'Balance_Rune_CatchPetCard_General'}},dataset).reason,'专属抓宠符文暂未开放');
+    assert.equal(runeStatus(item,{cardItems:{22104:'Balance_Rune_CatchPetCard_General'}},dataset).reason,'专属抓宠符文尚未配置');
 });
 test('owned rune consumables are snapshotted separately from the learned deck',()=>{
     const save=A.createAdventure(content);

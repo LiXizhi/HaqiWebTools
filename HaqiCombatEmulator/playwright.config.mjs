@@ -1,2 +1,0 @@
-import {defineConfig} from '@playwright/test';
-export default defineConfig({testDir:'./tests/browser',testMatch:'*.spec.mjs',timeout:120000,workers:1,reporter:'list',use:{baseURL:'http://127.0.0.1:8766',channel:'chrome',headless:true},webServer:{command:'python3 -m http.server 8766 --bind 127.0.0.1',url:'http://127.0.0.1:8766/HaqiCombatEmulator.html',reuseExistingServer:false,stdout:'ignore',stderr:'ignore'}});

@@ -1,1 +1,0 @@
-export const state={version:'kids',view:'battle',ruleset:null,scenario:null,battle:null,report:null,evaluation:null,selected:'0-0',running:false,task:null,seed:20260916,strategy:'tactical',speed:700,manual:{},timer:null};

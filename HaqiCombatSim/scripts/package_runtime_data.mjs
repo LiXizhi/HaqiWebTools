@@ -1,5 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import {npcItemLimits} from '../js/adventure_npc_core.js';
 
 // Explicit runtime projections, not a recursive key blacklist: fields such as
 // `source` still power the card comparison UI, and hashes guard atlas validity.
@@ -16,7 +17,7 @@ export function projectRuntimeData(relativePath, value) {
         case 'npc-catalog.json': return {
             version: value.version,
             npcs: value.npcs.map(row => ({
-                ...pick(row, ['id', 'instanceId', 'zone', 'name', 'description', 'place', 'enabled', 'x', 'y']),
+                ...pick(row, ['id', 'instanceId', 'zone', 'name', 'description', 'place', 'enabled', 'hidden', 'x', 'y']),
                 buttons: row.buttons.map(button => pick(button, ['label', 'dofunction', 'param1', 'param2', 'canshow'])),
             })),
             shops: value.shops.map(row => pick(row, ['id', 'npcId', 'menu', 'categoryName', 'itemId', 'exchangeId', 'dailyLimit', 'name', 'platform', 'timeRange'])),
@@ -25,7 +26,7 @@ export function projectRuntimeData(relativePath, value) {
                 courses: row.courses.map(course => pick(course, ['type', 'class', 'gsid', 'exID', 'other_exID', 'needlevel', 'tips', 'name'])),
             })),
             exchanges: map(value.exchanges, row => pick(row, ['prerequisites', 'costs', 'rewards'])),
-            items: map(value.items, row => pick(row, ['id', 'name', 'description', 'sourceIcon', 'assetkey', 'stats', 'slot', 'kind', 'subtype'])),
+            items: map(value.items, row => ({...pick(row, ['id', 'name', 'description', 'sourceIcon', 'assetkey', 'stats', 'slot', 'kind', 'subtype']), exchangeLimits:npcItemLimits(row)})),
         };
         case 'assets.json': return map(value, row => pick(row, ['entry']));
         case 'npc-art.json': return {

@@ -1,12 +1,11 @@
-import {DetailDialog} from './view_detail_dialog.js';
+import {ItemDetails} from './view_adventure_item_details.js';
 import {DRAGON_TOTEMS,dragonTotemStage,dragonTotemItemExperience} from './adventure_progression_bonuses_core.js';
-import {signedAttribute,unsupportedEquipmentStats,visibleEquipmentSummary,progressionAttributes,equipmentSetDetails} from './adventure_equipment_core.js';
+import {signedAttribute,visibleEquipmentSummary,progressionAttributes,equipmentSetDetails} from './adventure_equipment_core.js';
 import {runeStatus} from './adventure_runes_core.js';
 import { equipmentInstances, findEquipmentInstance } from './adventure_equipment_instances_core.js';
 import { equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
-import { equipmentRequirements } from './adventure_item_rules_core.js';
 import { upgradeLevels } from './adventure_upgrade_core.js';
-import { EQUIPMENT_SLOTS, equipmentAttributes, equipmentCards, equipmentSummary, previewEquipment } from './adventure_equipment_core.js';
+import { EQUIPMENT_SLOTS, previewEquipment } from './adventure_equipment_core.js';
 
 const FILTERS = [[0,'全部',[]],[2,'帽子',[2]],[5,'法袍',[5]],[7,'靴子',[7]],['weapons','武器',[10,11]],[24,'卡包',[24]],['apparel','衣饰',[6,8,9]],['accessories','饰品',[4,15,16,17]],['colorful','炫彩',[18,19,70,71]]];
 
@@ -82,7 +81,7 @@ export function renderEquipment(body,model,cb,ui) {
     }
     const grid=el('div','equipment-grid'),pager=el('div','equipment-pager'),detail=el('section','equipment-detail');detail.setAttribute('aria-label','物品详情');
     wardrobe.append(filters,grid,pager);
-    const inspector=new DetailDialog(body,{el,title:'物品详情与装备对比'});
+    const inspector=new ItemDetails(body,model,ui);
     const {dialog,footer}=inspector;
     inspector.body.replaceWith(detail);inspector.body=detail;
     function openDetail(item){paintDetail(item);inspector.open();}
@@ -119,24 +118,18 @@ export function renderEquipment(body,model,cb,ui) {
         detail.replaceChildren();footer.replaceChildren();if(!item){detail.append(el('p','muted','选择一件物品，查看属性、穿戴条件和获取途径。'));return;}
         const instance=findEquipmentInstance(save,c,item.id,state.guid)||findEquipmentInstance(save,c,item.id);
         const equipped=Number(save.equipment[item.slot])===item.id&&(!save.equipmentGuids?.[item.slot]||save.equipmentGuids[item.slot]===instance?.guid),gear=isGear(item),level=instance?.serverdata.addlel||0;
+        inspector.render(item,{owned:true,instanceGuid:instance?.guid});
+        if(level)detail.append(el('p','muted',`强化 +${level}`));
         if(gear){
             const copies=equipmentInstances(save,c).rows.filter(row=>row.gsid===item.id);
             if(copies.length>1){const select=el('select','equipment-instance-select');select.setAttribute('aria-label','选择装备实例');copies.forEach((row,i)=>{const option=el('option','',`第 ${i+1} 件 · 强化 +${row.serverdata.addlel}${row.guid===save.equipmentGuids?.[item.slot]?' · 已装备':''}`);option.value=row.guid;select.append(option);});select.value=instance.guid;select.onchange=()=>{state.guid=select.value;paintDetail(item);};detail.append(select);}
         }
-        detail.append(el('div','equipment-detail-heading',art(assets,item.art,64,64),el('div','',el('p','eyebrow',equipped?'正在装备':gear?'装备详情':'物品详情'),el('h3','',item.name),el('p','muted',`拥有 ${save.inventory[item.id]} 件${level?` · 强化 +${level}`:''}`))));
-
         if(gear){
-            const requirements=equipmentRequirements(item),school=Object.keys(c.schools).find(key=>c.schools[key]===requirements.school);
-            detail.append(el('p','muted',`${EQUIPMENT_SLOTS.find(s=>s.id===item.slot)?.name||'装备'} · 等级 ${requirements.level} · ${school?SCHOOL_NAMES[school]+'系':'全学系通用'}`));
-            const attrs=el('div','equipment-attributes');
-            for(const row of equipmentAttributes(item,save,c,instance?.guid))attrs.append(el('span','',`${row.label} ${signedAttribute(row.value)}${row.unit}`));
-            detail.append(attrs);
             const set=equipmentSetDetails(save,c,item.id);
             if(set){
                 detail.append(el('h4','',`套装 ${set.setId} · 已穿戴 ${set.count} 件`));
                 for(const group of set.groups)detail.append(el('p',group.active?'equipment-gain':'muted',`${group.items}件 · ${group.active?'已激活':'未激活'}：${group.attributes.map(row=>`${row.label} ${signedAttribute(row.value)}${row.unit}`).join('，')}`));
             }
-            if(unsupportedEquipmentStats(item).length)detail.append(el('p','equipment-warning','这件装备还有未接入的原版属性，当前属性与换装对比仅包含已支持部分。'));
             const reason=save.pendingEncounter?'战斗中无法换装':equipmentBlockReason(save,item,c);
             const action=equipped?{type:'unequip',slot:item.slot}:{type:'equip',itemId:item.id,guid:instance?.guid};
             if(!reason){
@@ -156,16 +149,9 @@ export function renderEquipment(body,model,cb,ui) {
             if(item.stats[36]>0)footer.append(button('镶嵌宝石',()=>{dialog.close();cb.panel?.('gems',{itemId:item.id,guid:instance?.guid});},'secondary'));
             if(upgradeLevels(c,item.id).length)footer.append(button('强化',()=>{dialog.close();cb.panel?.('upgrade',{itemId:item.id,guid:instance?.guid});},'secondary'));
             if(item.slot===24&&cb.panel)footer.append(button('整理魔法卡包',()=>{dialog.close();cb.panel('deck');},'secondary'));
-            const cards=equipmentCards(item,c);
-            if(cards.length){const faces=el('div','equipment-cards');for(const key of cards){const card=assets.dataset.cards[key];if(card)faces.append(spellFace(assets,card));}detail.append(el('h4','','附加法术 · 装备后可用'),faces);}
         }else{
             const rune=runeStatus(item,c,assets.dataset);
-            if(!rune)detail.append(el('p','muted',String(item.description||'旅途中收集的物品。').replace(/[|#]/g,' ')));
-            if(rune){
-                detail.append(el('p',rune.available?'muted':'equipment-warning',rune.available?'战斗符文 · 成功施法消耗一张，失误不消耗':rune.reason));
-                if(rune.card)detail.append(el('div','equipment-cards',spellFace(assets,rune.card)));
-            }
-            else if(item.id===17307&&!save.pet)footer.append(button('打开出奇蛋',()=>{dialog.close();cb.action({type:'hatch'});},'primary'));
+            if(!rune&&item.id===17307&&!save.pet)footer.append(button('打开出奇蛋',()=>{dialog.close();cb.action({type:'hatch'});},'primary'));
             else if(item.id===17172){const b=button(save.pet?'喂养宠物':'先孵化一只宠物',()=>{dialog.close();cb.action({type:'feed'});},'primary');b.disabled=!save.pet||save.pet.xp>=c.pet.levels.max_exp;footer.append(b);}
             else if(item.stats?.[70]!==undefined&&item.stats?.[71]!==undefined){
                 const gain=dragonTotemItemExperience(save,c,item.id);
@@ -175,7 +161,7 @@ export function renderEquipment(body,model,cb,ui) {
                 },'primary');
                 use.disabled=!gain||!!save.pendingEncounter;footer.append(use);
             }
-            else detail.append(el('p','muted','旅途收藏 · 本章暂无主动使用功能'));
+            else if(!rune)detail.append(el('p','muted','旅途收藏 · 本章暂无主动使用功能'));
         }
         const quests=c.quests.filter(q=>q.rewards.some(group=>group.items.some(row=>row.id===item.id)));
         if(quests.length)detail.append(el('p','equipment-source',`获取途径：${quests.map(q=>q.title).join('、')}`));

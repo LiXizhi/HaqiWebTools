@@ -11,6 +11,24 @@ import {projectRuntimeData} from '../scripts/package_runtime_data.mjs';
 const root=new URL('../',import.meta.url);
 const read=name=>JSON.parse(fs.readFileSync(new URL(`data/adventure/${name}.json`,root)));
 const art=read('npc-art'),catalog=read('npc-catalog');
+test('every NPC shop item resolves a verified CDN WebP icon',()=>{
+    const icons=read('shop-icons');
+    for(const row of catalog.shops){
+        const ref=icons.items[row.itemId];
+        assert.ok(ref,`Missing icon: ${row.itemId}`);
+        const entry=icons.entries[ref.id];
+        assert.ok(entry);
+        assert.match(entry.cdn,/^https:\/\/cdn\.keepwork\.com\/.+\.webp$/);
+        const [left,top,width,height]=ref.crop;
+        assert.ok(left>=0&&top>=0&&width>0&&height>0&&left+width<=entry.width&&top+height<=entry.height);
+    }
+    for(const entry of Object.values(icons.entries)){
+        const raw=fs.readFileSync(new URL(entry.local,root));
+        assert.ok(raw.length<=200000);
+        assert.equal(createHash('sha256').update(raw).digest('hex'),entry.sha256);
+        assert.deepEqual(validateMedia(entry.local,raw),{width:entry.width,height:entry.height});
+    }
+});
 function content(packed=false){
     const c=read('chapter');
     installNpcCatalog(c,packed?projectRuntimeData('adventure/npc-catalog.json',catalog):structuredClone(catalog));

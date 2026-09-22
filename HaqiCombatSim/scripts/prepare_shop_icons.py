@@ -30,6 +30,11 @@ const files=['adventure/chapter','adventure/combat','adventure/pets','adventure/
 const {content}=installExpansion(...files.map(n=>JSON.parse(fs.readFileSync('data/'+n+'.json'))));
 console.log(JSON.stringify(content.shop.filter(x=>x.kind==='gear').map(x=>content.items[x.itemId])));
 """],cwd=ROOT).decode('utf8'))
+existing = json.loads(OUT.read_text(encoding='utf8')) if '--npc' in sys.argv else None
+if existing:
+    catalog = json.loads((ROOT/'data/adventure/npc-catalog.json').read_text(encoding='utf8'))
+    gear = [catalog['items'][str(item_id)] for item_id in sorted({row['itemId'] for row in catalog['shops']})
+            if str(item_id) in catalog['items'] and str(item_id) not in existing['items']]
 sources = {}
 for line in (ROOT.parents[1]/'assets_manifest.txt').read_text().splitlines():
     path, md5, size = line.rsplit(',', 2)
@@ -56,6 +61,10 @@ def prepare(source):
     return source, image
 def icon_source(item): return (item.get('sourceIcon') or item.get('icon')).split(';')[0].strip().replace('\\','/').lower()
 fallbacks = {}
+if existing:
+    missing = [item['id'] for item in gear if icon_source(item) not in sources]
+    print('NPC icons without original source:', missing, flush=True)
+    gear = [item for item in gear if icon_source(item) in sources]
 for item in gear:
     if icon_source(item) not in sources:
         replacement = next(row for row in gear if row['slot']==item['slot'] and icon_source(row) in sources)
@@ -66,6 +75,10 @@ with concurrent.futures.ThreadPoolExecutor(max_workers=12) as pool:
     images = dict(pool.map(prepare, keys))
 print('Original images verified:', len(images), flush=True)
 manifest = {'version':1, 'entries':{}, 'items':{}, 'fallbacks':fallbacks, 'sources':{k:sources[k] for k in keys}}
+if existing:
+    manifest = existing
+    manifest['sources'].update({key:sources[key] for key in keys})
+atlas_start = len(manifest['entries'])
 folder = ROOT/'assets/adventure/shop-icons'
 folder.mkdir(parents=True, exist_ok=True)
 for offset in range(0, len(gear), 16):
@@ -87,7 +100,7 @@ for offset in range(0, len(gear), 16):
     raw = buffer.getvalue(); assert len(raw)<=200000
     sha = digest(raw); local = 'assets/adventure/shop-icons/'+sha+'.webp'
     (ROOT/local).write_bytes(raw)
-    key = 'shop-icons:'+str(offset//16)
+    key = 'shop-icons:'+str(atlas_start+offset//16)
     manifest['entries'][key] = dict(local=local,cdn=None,sha256=sha,size=len(raw),width=384,height=384)
     for item,crop in refs.items(): manifest['items'][item] = dict(id=key,crop=crop)
 OUT.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf8')

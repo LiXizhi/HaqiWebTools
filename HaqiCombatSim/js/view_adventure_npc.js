@@ -1,15 +1,17 @@
 import {npcOffers,npcOfferStatus} from './adventure_npc_core.js';
 import {trainingPoints} from './adventure_learning_core.js';
 import {drawSchoolIcon} from './card_renderer.js';
+import {ItemDetails} from './view_adventure_item_details.js';
 
 // Kids skill rows: CombatSkillLearn_panel.kids.html (icon, name, tip, school, level, study).
 // Kids shop cells: NPCShopPage.html grid, 2 columns × 80px, icon + cost + buy.
 const CLASS_SCHOOL={986:'fire',987:'ice',988:'storm',989:'balance',990:'life',991:'death',992:'balance'};
 const PAGE_SIZE=8;
 
-export function renderNpcServices(body,model,cb,{el,button,spellFace}) {
+export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
     const {content,dataset}=model.assets,npc=model.serviceNpc;
     if(!npc)return;
+    const inspector=new ItemDetails(body,model,{el,spellFace});
     const modal=body.closest('.modal'),header=modal.querySelector('.modal-header');
     modal.classList.add('npc-services-modal');
     modal.setAttribute('aria-label',npc.name);
@@ -28,11 +30,6 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace}) {
     const mentorId=Number(String(offers.find(row=>row.kind==='mentor')?.id||'').split(':')[1]);
     const mentorIntro=content.npcCatalog.mentors?.[mentorId]?.attributes?.desc?.trim()||'';
     const intro=el('p','npc-intro');
-    const search=el('input','npc-search');
-    search.type='search';
-    search.placeholder=state.kind==='mentor'?'搜索技能':'搜索商品';
-    search.setAttribute('aria-label',search.placeholder);
-    search.value=state.query||'';
     const serviceTabs=el('nav','gui-tabs npc-service-tabs');
     serviceTabs.setAttribute('aria-label','服务');
     const categoryTabs=el('nav','gui-tabs npc-category-tabs');
@@ -41,6 +38,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace}) {
     const pager=el('nav','npc-pager');
     pager.setAttribute('aria-label','分页');
     const wallet=el('div','npc-wallet');
+    const footer=el('footer','npc-service-footer',wallet,pager);
     const preview=el('div','npc-card-preview');
     preview.hidden=true;
     document.querySelectorAll('.npc-card-preview').forEach(node=>node.remove());
@@ -93,9 +91,17 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace}) {
         const card=offerCard(row);
         const face=card?spellFace(model.assets,card,{...card,name}):null;
         const painted=face&&!face.classList.contains('spell-face-fallback');
-        const thumb=button(painted?face:name.slice(0,1),()=>{},painted?'npc-thumb':'npc-thumb npc-thumb-fallback');
-        thumb.setAttribute('aria-label',card?`查看${name}卡面`:name);
-        bindPreview(thumb,card,name);
+        const itemArt=content.items[row.itemId]?.art;
+        const icon=!painted&&itemArt?art(model.assets,itemArt,40,40):null;
+        const thumb=button(painted?face:icon||name.slice(0,1),()=>{
+            if(row.kind!=='shop')return;
+            hidePreview();
+            const status=npcOfferStatus(model.save,content,row);
+            inspector.show(content.items[row.itemId],{trigger:thumb,source:npc.name,requirements:[status.price,!status.allowed?status.reason:''].filter(Boolean).join(' · '),requirementsLabel:'兑换条件'});
+        },painted||icon?'npc-thumb':'npc-thumb npc-thumb-fallback');
+        thumb.setAttribute('aria-label',row.kind==='shop'?`查看${name}详情`:card?`查看${name}卡面`:name);
+        if(row.kind==='shop')thumb.setAttribute('aria-haspopup','dialog');
+        else bindPreview(thumb,card,name);
         return thumb;
     };
     const actionButton=(row,status,name)=>{
@@ -110,13 +116,12 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace}) {
 
     const draw=()=>{
         hidePreview();
-        const query=search.value.trim();
-        const rows=offers.filter(row=>row.kind===state.kind&&(state.kind!=='shop'||!state.category||row.category===state.category)&&`${offerName(row)} ${row.tips||''} ${row.serviceLabel||''} ${row.categoryName||''}`.includes(query));
+        body.scrollTop=0;
+        const skillShop=state.kind==='mentor';
+        const rows=offers.filter(row=>row.kind===state.kind&&(state.kind!=='shop'||!state.category||row.category===state.category));
         const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));
-        page=Math.min(page,pages-1);state.query=search.value;state.page=page;state.kind=state.kind;
-        list.className=state.kind==='mentor'?'npc-skills':'npc-goods';
-        search.placeholder=state.kind==='mentor'?'搜索技能':'搜索商品';
-        search.setAttribute('aria-label',search.placeholder);
+        page=Math.min(page,pages-1);state.page=page;
+        list.className=skillShop?'npc-skills':'npc-goods';
         intro.textContent=state.kind==='mentor'?mentorIntro:'';
         intro.hidden=!intro.textContent;
         list.replaceChildren();pager.replaceChildren();serviceTabs.replaceChildren();categoryTabs.replaceChildren();wallet.replaceChildren();
@@ -154,7 +159,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace}) {
                 list.append(el('article','npc-good',el('h3','',name),el('div','npc-good-row',thumbnail(row,name),meta,actionButton(row,status,name))));
             }
         }
-        if(!rows.length)list.append(el('p','npc-empty',state.kind==='mentor'?'没有匹配的课程。':'没有匹配的商品。'));
+        if(!rows.length)list.append(el('p','npc-empty',state.kind==='mentor'?'没有可学习的课程。':'没有匹配的商品。'));
         const prev=button('上一页',()=>{page--;draw();},'secondary'),next=button('下一页',()=>{page++;draw();},'secondary');
         prev.disabled=page===0;next.disabled=page>=pages-1;
         const count=el('span','',`${page+1} / ${pages} · ${rows.length}项`);count.setAttribute('aria-live','polite');
@@ -165,7 +170,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace}) {
             for(const id of (ids.length?ids:[100]).slice(0,4))wallet.append(el('span','',`${id===22000?'训练点':content.items[id]?.name||'奇豆'} ${id===22000?trainingPoints(model.save,content):model.save.inventory[id]||0}`));
         }
     };
-    search.addEventListener('input',()=>{page=0;draw();});
-    body.append(intro,serviceTabs,search,categoryTabs,list,pager,wallet);
+    body.append(intro,serviceTabs,categoryTabs,list);
+    modal.append(footer);
     draw();
 }

@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {installNpcCatalog,npcOffers,npcOfferStatus} from '../js/adventure_npc_core.js';
-import {createWorld,walkable} from '../js/adventure_world_core.js';
+import {createWorld,walkable,nearestInteraction,nearbyWorldObjects} from '../js/adventure_world_core.js';
+import {projectRuntimeData} from '../scripts/package_runtime_data.mjs';
 import {createAdventure,applyAction,parseSave} from '../js/adventure_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));
@@ -12,14 +13,102 @@ installNpcCatalog(c,read('adventure/npc-catalog.json'));
 c.worldMaps=Object.fromEntries(['camp','town','fire','ice','desert','dark'].map(z=>[z,read(`adventure/maps/${z}.json`)]));
 const npc=id=>c.npcCatalog.npcs.find(n=>n.id===id);
 const action=(n,o)=>({type:'npc-purchase',npcInstanceId:n.instanceId,offerId:o.id});
+test('catalogue fallback shops are not mistaken for explicit service conditions',()=>{
+    const save=createAdventure(c);
+    for(const [npcId,itemId] of [[36202,17307],[30415,2115]]){
+        const offer=npcOffers(c,npc(npcId)).find(row=>row.itemId===itemId);
+        assert.ok(offer);
+        assert.equal(offer.gated,false);
+        assert.notEqual(npcOfferStatus(save,c,offer).reason,'原版服务开放条件尚未接入');
+        assert.equal(npcOfferStatus(save,c,{...offer,gated:true}).allowed,false);
+    }
+});
+test('real material exchanges grant permanent hats and eggs with limits and runtime parity',()=>{
+    for(const catalog of [c.npcCatalog,projectRuntimeData('adventure/npc-catalog.json',c.npcCatalog)]){
+        const content=structuredClone(c);content.npcCatalog=catalog;
+        for(const [npcId,itemId,costId,count] of [[30415,2115,17302,200],[30415,2116,17302,20],[36202,17307,17306,1]]){
+            const resident=npc(npcId),save=createAdventure(content);save.zone=resident.zone;
+            const offer=npcOffers(content,resident).find(row=>row.itemId===itemId);
+            save.inventory[itemId]=0;save.inventory[costId]=count-1;
+            const before=JSON.stringify(save);
+            assert.match(npcOfferStatus(save,content,offer).reason,/需要/);
+            assert.throws(()=>applyAction(save,content,action(resident,offer)));
+            assert.equal(JSON.stringify(save),before);
+            save.inventory[costId]=count;
+            assert.equal(npcOfferStatus(save,content,offer).allowed,true);
+            applyAction(save,content,action(resident,offer));
+            assert.equal(save.inventory[costId],0);assert.equal(save.inventory[itemId],1);
+            assert.equal(parseSave(JSON.stringify(save),content).inventory[itemId],1);
+            if(itemId!==17307){
+                assert.ok(save.equipmentInstances.some(row=>row.gsid===itemId));
+                save.inventory[costId]=count;
+                assert.match(npcOfferStatus(save,content,offer).reason,/最多持有/);
+            }
+        }
+    }
+});
+test('all resident shop offers are audited and special exchanges fail without mutation',()=>{
+    const save=createAdventure(c);save.level=50;save.trainingPointLevel=50;
+    const reasons={};
+    for(const resident of c.npcCatalog.npcs){
+        for(const offer of npcOffers(c,resident).filter(row=>row.kind==='shop')){
+            const status=npcOfferStatus(save,c,offer);
+            const reason=status.allowed?'可兑换':status.reason.startsWith('需要')?'材料不足':status.reason;
+            reasons[reason]=(reasons[reason]||0)+1;
+            assert.notEqual(reason,'原版服务开放条件尚未接入');
+        }
+    }
+    console.log('NPC shop audit',reasons);
+    const resident=npc(30415),offer=npcOffers(c,resident).find(row=>row.itemId===2115);
+    save.zone=resident.zone;save.inventory[17302]=200;
+    const before=JSON.stringify(save);
+    assert.throws(()=>persistReward(save,c,action(resident,offer),{}, {getItem:()=>null,setItem:()=>{throw Error('quota');}}),/quota/);
+    assert.equal(JSON.stringify(save),before);
+    for(const mutate of [
+        exchange=>exchange.rewards[0].p=500,
+        exchange=>exchange.rewards.push({...exchange.rewards[0]}),
+        exchange=>exchange.costs[0]={id:984,count:1},
+        exchange=>exchange.costs[0]={id:2116,count:1},
+        exchange=>exchange.costs[0]={id:50362,count:1},
+        exchange=>exchange.prerequisites.push({id:-1000,count:1}),
+    ]){
+        const content=structuredClone(c);mutate(content.npcCatalog.exchanges[offer.exchangeId]);
+        assert.throws(()=>applyAction(save,content,action(resident,offer)));
+        assert.equal(JSON.stringify(save),before);
+    }
+    const timed=npcOffers(c,resident).find(row=>c.items[row.itemId].name.includes('(3天)'));
+    assert.ok(timed);
+    assert.match(npcOfferStatus(save,c,timed).reason,/限时/);
+    assert.ok(npcOfferStatus(save,c,timed).price);
+});
 test('six original island catalogues retain all instances and place residents deterministically',()=>{
     assert.deepEqual(c.npcCatalog.report.islands,{camp:27,town:218,fire:9,ice:14,desert:11,dark:13});
     assert.equal(c.npcCatalog.shops.length,1764);
     for(const z of Object.keys(c.worldMaps)){
         const world=createWorld(z,c),again=createWorld(z,c);
         assert.deepEqual(world.npcs,again.npcs);
-        assert.equal(world.npcs.length,c.npcCatalog.report.islands[z]);
+        assert.equal(world.npcs.length,c.npcCatalog.npcs.filter(n=>n.zone===z&&n.hidden!==true).length);
         for(const n of world.npcs){assert.ok(Number.isFinite(n.x)&&Number.isFinite(n.y));if(!world.layout.npcPositions[n.id])assert.ok(walkable(world,n.x,n.y),`${z} ${n.id}`);}
+    }
+});
+test('unfinished town residents are hidden, retained in the catalogue and explicitly restorable',()=>{
+    const resident=npc(30162);
+    assert.equal(resident.hidden,true);
+    const world=createWorld('town',c);
+    assert.ok(!world.npcs.some(n=>n.instanceId===resident.instanceId));
+    for(const id of [30081,30112,30525,30398])assert.ok(world.npcs.some(n=>n.id===id));
+    const restored=structuredClone(c);
+    restored.npcCatalog.npcs.find(n=>n.instanceId===resident.instanceId).hidden=false;
+    const visible=createWorld('town',restored).npcs.find(n=>n.instanceId===resident.instanceId);
+    assert.ok(visible);
+    assert.notEqual(nearestInteraction(world,visible)?.instanceId,resident.instanceId);
+    assert.ok(!nearbyWorldObjects(world,{x:0,y:0,w:world.w,h:world.h}).some(n=>n.instanceId===resident.instanceId));
+    const configured=read('adventure/npc-catalog.json');
+    configured.npcs.find(n=>n.instanceId===resident.instanceId).hidden=false;
+    const packed=projectRuntimeData('adventure/npc-catalog.json',configured);
+    for(const catalog of [configured,packed]){
+        const fresh=read('adventure/chapter.json');installNpcCatalog(fresh,catalog);
+        assert.equal(fresh.npcCatalog.npcs.find(n=>n.instanceId===resident.instanceId).hidden,false);
     }
 });
 test('original mentor menus enforce own school, cross-school points, level and duplicate learning',()=>{

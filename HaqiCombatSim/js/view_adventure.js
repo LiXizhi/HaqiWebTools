@@ -264,8 +264,8 @@ export function renderPanel(root,kind,model,cb) {
 
         updateCheckin(root,model);
     }
-    if(kind==='npc-services')renderNpcServices(body,model,cb,{el,button,spellFace});
-    if(kind==='shop')renderShop(body,model,cb,{el,button,art,tile});
+    if(kind==='npc-services')renderNpcServices(body,model,cb,{el,button,spellFace,art});
+    if(kind==='shop')renderShop(body,model,cb,{el,button,art,tile,spellFace});
     if(kind==='pet'&&c.pets)renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon});
     if(kind==='quests') {
         renderQuestJournal(body,model,cb,{el,button,objectiveLabel,spellFace});

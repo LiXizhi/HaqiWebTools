@@ -1,10 +1,18 @@
 import {trainingPoints} from './adventure_learning_core.js';
 
 const schools={fire:986,ice:987,storm:988,life:990,death:991};
+export function npcItemLimits(item) {
+    if(item?.exchangeLimits)return item.exchangeLimits;
+    const row=item?.sourceRecord,template=row?.[18];
+    if(!template)return null;
+    return {maxCount:template[31],expireTime:template[26],expireType:template[29],hourly:row[14],daily:row[15],weekly:row[16]};
+}
 export function installNpcCatalog(content,catalog) {
+    const chapterNpcIds=new Set(Object.keys(content.npcs).map(Number));
     content.npcCatalog=catalog;
     for(const [id,item] of Object.entries(catalog.items))content.items[id]??=structuredClone(item);
     for(const npc of catalog.npcs){
+        npc.hidden??=npc.zone==='town'&&!chapterNpcIds.has(npc.id)&&!npcServices(content,npc).length;
         content.npcs[npc.id]??=structuredClone(npc);
         if(content.npcs[npc.id].zone===npc.zone)Object.assign(content.npcs[npc.id],{buttons:npc.buttons,instanceId:npc.instanceId});
     }
@@ -19,7 +27,7 @@ export function npcServices(content,npc) {
         if(button.dofunction?.includes('NPCShopPage.ShowPage'))result.push({kind:'shop',id,menu:button.param2||'menu1',label:button.label,gated:!!button.canshow});
     }
     if(!result.some(r=>r.kind==='mentor')&&catalog.mentors[npc.id])result.push({kind:'mentor',id:npc.id,label:'学习魔法'});
-    if(!result.some(r=>r.kind==='shop')&&catalog.shops.some(r=>r.npcId===npc.id))result.push({kind:'shop',id:npc.id,label:'查看商品',gated:true});
+    if(!result.some(r=>r.kind==='shop')&&catalog.shops.some(r=>r.npcId===npc.id))result.push({kind:'shop',id:npc.id,label:'查看商品',gated:false});
     return result;
 }
 export function npcOffers(content,npc) {
@@ -29,6 +37,13 @@ export function npcOffers(content,npc) {
         :catalog.mentors[service.id].courses.map((r,index)=>({...r,id:`mentor:${service.id}:${index}`,kind:'mentor',itemId:Number(r.gsid),serviceLabel:service.label,gated:service.gated,mentorClass:Number(r.class||catalog.mentors[service.id].attributes.class)})));
 }
 export function npcOfferStatus(save,content,offer) {
+    const exchangeId=offer.kind==='mentor'?Number(offer.mentorClass===schools[save.school]?offer.exID:offer.other_exID):offer.exchangeId;
+    const exchange=content.npcCatalog.exchanges[exchangeId];
+    const price=exchange?.costs?.map(({id,count})=>`${count}${id===22000?'训练点':content.items[id]?.name||`物品${id}`}`).join('、');
+    const status=checkNpcOffer(save,content,offer);
+    return price?{...status,price}:status;
+}
+function checkNpcOffer(save,content,offer) {
     const deny=reason=>({allowed:false,reason});
     if(save.pendingEncounter)return deny('请先完成当前战斗');
     if(offer.gated)return deny('原版服务开放条件尚未接入');
@@ -48,11 +63,20 @@ export function npcOfferStatus(save,content,offer) {
         if(!lesson||!lesson.supported)return deny('技能效果尚未接入');
         if(reward.cnt!==1)return deny('特殊课程尚未接入');
         if(save.level<Number(offer.needlevel||1))return deny(`${offer.needlevel}级可学习`);
-    }else if(item?.kind!==18||item.subtype!==2)return deny('商品已收录，此类原版交易尚未开放');
-    else {
+    }else if(!item||![1,3,18].includes(item.kind)||item.kind===18&&item.subtype!==2)return deny('商品已收录，此类原版交易尚未开放');
+    else if(item.kind===18){
         const runeKey=content.cardItems[offer.itemId-1000];
         if(!runeKey||runeKey.includes('CatchPet')||!content.cardLibrary?.some(r=>r.key===runeKey&&r.supported))return deny('符文效果尚未接入');
         if(item.stats?.[180])return deny('原服会员条件尚未接入');
+    }
+    if(offer.kind==='shop'){
+        const limits=npcItemLimits(content.npcCatalog.items[offer.itemId]);
+        if(!limits)return deny('物品持有与有效期资料缺失');
+        if(limits.expireTime||limits.expireType)return deny('限时物品有效期尚未接入');
+        if(limits.hourly||limits.daily||limits.weekly)return deny('原服物品限购计数尚未接入');
+        if(item.stats?.[180])return deny('原服会员条件尚未接入');
+        if(!Number.isSafeInteger(limits.maxCount)||limits.maxCount<=0)return deny('物品持有上限资料无效');
+        if((save.inventory[offer.itemId]||0)+reward.cnt>limits.maxCount)return deny(`最多持有${limits.maxCount}件`);
     }
     for(const condition of exchange.prerequisites){
         const {id,count}=condition;
@@ -64,7 +88,14 @@ export function npcOfferStatus(save,content,offer) {
     const costs=new Map();
     for(const {id,count} of exchange.costs){
         // Never interpret cash, quest flags, bound equipment or server counters as spendable inventory.
-        if(![100,17213,17143,17225,22000].includes(id)||!Number.isSafeInteger(count)||count<=0)return deny('原服货币或材料兑换尚未接入');
+        const material=content.items[id];
+        if(!Number.isSafeInteger(count)||count<=0)return deny('兑换数量无效');
+        if(id>=50000)return deny('原服计数条件尚未接入');
+        if(![100,22000].includes(id)&&material?.kind!==3)return deny('原服货币或装备抵扣尚未接入');
+        if(material?.kind===3){
+            const limits=npcItemLimits(content.npcCatalog.items[id]);
+            if(!limits||limits.expireTime||limits.expireType)return deny('兑换材料有效期尚未接入');
+        }
         if(offer.kind==='mentor'&&id!==22000)return deny('特殊课程费用尚未接入');
         if(offer.kind==='shop'&&id===22000)return deny('特殊兑换费用尚未接入');
         costs.set(id,(costs.get(id)||0)+count);

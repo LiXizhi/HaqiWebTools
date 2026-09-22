@@ -7,9 +7,9 @@ export function createWorld(zone,content) {
     const layout=content.worldMaps?.[zone];
     if(!layout)throw Error('缺少岛屿地图：'+zone);
     const point=([x,y])=>({x,y});
-    const originals=content.npcCatalog?.npcs.filter(n=>n.zone===zone&&n.enabled!=='0'&&n.artVisible!==false);
-    const npcs=(originals||Object.values(content.npcs).filter(n=>n.zone===zone)).map(n=>({...content.npcs[n.id],...n,...point(layout.npcPositions[n.id]||[n.x,n.y])}));
-    if(!originals)for(const row of layout.visitingNpcs||[]){const source=content.npcs[row.sourceId];if(!source)throw Error('缺少居民来源');npcs.push({...source,zone,...point(row.position)});}
+    const originals=content.npcCatalog?.npcs.filter(n=>n.zone===zone&&n.enabled!=='0'&&n.artVisible!==false&&n.hidden!==true);
+    const npcs=(originals||Object.values(content.npcs).filter(n=>n.zone===zone&&n.hidden!==true)).map(n=>({...content.npcs[n.id],...n,...point(layout.npcPositions[n.id]||[n.x,n.y])}));
+    if(!originals)for(const row of layout.visitingNpcs||[]){const source=content.npcs[row.sourceId];if(!source)throw Error('缺少居民来源');if(source.hidden===true||row.hidden===true)continue;npcs.push({...source,zone,...point(row.position)});}
     const encounters=content.encounters.filter(e=>e.zone===zone).map(e=>({...e,...point(layout.encounterPositions[e.id]||[e.x,e.y])}));
     const world={zone,w:layout.w,h:layout.h,layout,npcs,encounters,portal:{id:'portal',...layout.portal,zone:zone==='camp'?'town':'camp',name:'查看世界地图'},
         landmarks:layout.landmarks,buildings:layout.buildings||[],paths:layout.paths,trees:layout.trees,decorations:[],center:{...(layout.center||layout.spawn)}};

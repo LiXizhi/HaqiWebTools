@@ -1,4 +1,4 @@
-import { equipmentAttributes } from './adventure_equipment_core.js';
+import {ItemDetails} from './view_adventure_item_details.js';
 import { canEquip, equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
 import { productPrice } from './adventure_pets_core.js';
 import { petPortrait } from './view_adventure_pets.js';
@@ -7,8 +7,9 @@ import { showPetDetails } from './view_adventure_pet_details.js';
 // Layout: HaqiShop.kids1.html (account/preview, two tab rows, 3 × 3 goods).
 // The original GetByCate provider is replaced by the local JSON catalogue.
 // Purchases still go through the controller and the existing BalanceParams rules.
-export function renderShop(body,model,cb,{el,button,art,tile}) {
+export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     const {save,assets}=model,c=assets.content,config=c.shopConfig;
+    const inspector=new ItemDetails(body,model,{el,spellFace});
     const state=model.shopView||(model.shopView={});
     let category=config.categories.find(row=>row.id===state.category)||config.categories[0];
     let sub=state.subcategoryCategory===category.id&&Number.isInteger(state.subcategory)?state.subcategory:0;
@@ -63,10 +64,6 @@ export function renderShop(body,model,cb,{el,button,art,tile}) {
         preview.append(el('div','shop-preview-art',picture(item,112)),el('h3','',item.name),el('p','shop-item-meta',`${item.vipOnly?'会员专属 · ':''}${item.level}级 · ${SCHOOL_NAMES[item.school]||'通用'}${owned(item)?' · 已拥有':''}`));
         const gear=c.items[item.itemId];
         if(item.kind==='gear'){
-            if(gear.description)preview.append(el('p','shop-description',gear.description));
-            const attributes=el('dl','shop-attributes');
-            for(const row of equipmentAttributes(gear,save,c))attributes.append(el('dt','',row.label),el('dd','',`${row.value}${row.unit}`));
-            preview.append(attributes);
             if(gear.iconFallback)preview.append(el('small','muted','原图缺失 · 同部位示意图'));
             if(gear.unsupportedStats?.length)preview.append(el('small','muted',`当前未生效属性：${gear.unsupportedStats.join('、')}`));
             if(!canEquip(save,gear,c))preview.append(el('small','shop-item-warning',equipmentBlockReason(save,gear,c)));
@@ -97,6 +94,10 @@ export function renderShop(body,model,cb,{el,button,art,tile}) {
             const card=el('article','shop-good');card.dataset.productId=item.id;
             const choose=()=>{state.selected=item.id;for(const node of grid.querySelectorAll('.shop-product-icon'))node.setAttribute('aria-pressed',String(node.dataset.productId===item.id));paintPreview(item);if(matchMedia('(max-width:720px)').matches)preview.scrollIntoView({block:'nearest'});};
             const image=button(picture(item,80),choose,'shop-product-icon');image.dataset.productId=item.id;
+            if(!item.petId){
+                image.setAttribute('aria-haspopup','dialog');
+                image.addEventListener('click',()=>inspector.show(c.items[item.itemId],{trigger:image,source:config.title,requirements:`${productPrice(item,c)} 奇豆 / 件${item.vipOnly?' · 会员专属':''}`,requirementsLabel:'购买条件'}));
+            }
             image.setAttribute('aria-label',`查看${item.name}`);image.setAttribute('aria-pressed',String(state.selected===item.id));
             const name=el('strong','shop-good-name',item.name);name.title=item.name;
             card.append(name,image,el('span','shop-good-price',`${productPrice(item,c)} 奇豆`),el('small','shop-good-level',`${item.vipOnly?'会员专属 · ':''}${item.level}级${owned(item)?' · 已拥有':''}`),buyButton(item));

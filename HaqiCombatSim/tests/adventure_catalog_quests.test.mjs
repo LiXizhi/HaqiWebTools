@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {projectQuestRuntime,installCatalogQuests,catalogQuestStatus,catalogQuestReady,noteCatalogKills,catalogGoalRows} from '../js/adventure_catalog_quests_core.js';
+import {projectQuestRuntime,installCatalogQuests,catalogQuestStatus,catalogQuestReady,noteCatalogKills,catalogGoalRows,trackedQuestIds,catalogTracksMonster} from '../js/adventure_catalog_quests_core.js';
 import {createRng} from '../js/rng_core.js';
 import * as A from '../js/adventure_core.js';
 import {installFishing} from '../js/adventure_fishing_core.js';
@@ -92,4 +92,79 @@ test('loot rolls are reproducible and harder than the web fight does not count',
     assert.equal(save.quests[1].progress['loot:70'], rolled);
     assert.equal(rolled, 2);
     assert.equal(save.quests[2].progress['kill:40001'], undefined);
+});
+
+test('tracks up to three quests and can abandon an accepted quest', () => {
+    const content = playableContent();
+    const save = A.createAdventure(content, {name: '多任务追踪'});
+    raise(save, content, content.progression.levelCap);
+    const chapter = A.currentQuest(save, content);
+    const picks = runtime.quests.filter(q => q.requirements.every(r => r.id === 214) && q.prerequisites.length === 0).slice(0, 4);
+    assert.equal(picks.length, 4);
+    const first = A.applyAction(save, content, {type: 'track-catalog', questId: picks[0].id});
+    assert.equal(first.changed, true);
+    assert.deepEqual(trackedQuestIds(save), [chapter.id, picks[0].id]);
+    A.applyAction(save, content, {type: 'track-catalog', questId: picks[1].id});
+    const full = A.applyAction(save, content, {type: 'track-catalog', questId: picks[2].id});
+    assert.equal(full.full, true);
+    assert.deepEqual(trackedQuestIds(save), [chapter.id, picks[0].id, picks[1].id]);
+    const again = A.applyAction(save, content, {type: 'track-catalog', questId: picks[0].id});
+    assert.equal(again.already, true);
+    A.applyAction(save, content, {type: 'track-catalog', questId: picks[0].id, remove: true});
+    assert.deepEqual(trackedQuestIds(save), [chapter.id, picks[1].id]);
+
+    A.applyAction(save, content, {type: 'accept-catalog', questId: picks[1].id, npcId: picks[1].startNpc});
+    assert.equal(save.quests[picks[1].id].accepted, true);
+    const dropped = A.applyAction(save, content, {type: 'abandon-quest', questId: picks[1].id});
+    assert.equal(dropped.message, `已放弃：${picks[1].title}`);
+    assert.equal(save.quests[picks[1].id], undefined);
+    assert.equal(trackedQuestIds(save).includes(picks[1].id), false);
+    assert.throws(() => A.applyAction(save, content, {type: 'abandon-quest', questId: picks[1].id}), /只能放弃进行中的任务/);
+
+    A.applyAction(save, content, {type: 'accept', questId: chapter.id, npcId: chapter.startNpc});
+    A.applyAction(save, content, {type: 'abandon-quest', questId: chapter.id});
+    assert.equal(save.quests[chapter.id], undefined);
+
+    save.trackedQuestId = picks[3].id;
+    delete save.trackedQuestIds;
+    const parsed = A.parseSave(save, content);
+    assert.deepEqual(parsed.trackedQuestIds, [picks[3].id]);
+    assert.equal(parsed.trackedQuestId, undefined);
+
+    const monsterQuest = runtime.quests.find(q => q.groups.some(g => g.kind === 'kill'));
+    const goal = monsterQuest.groups.find(g => g.kind === 'kill').items[0];
+    const path = Object.entries(runtime.paths).find(([, id]) => id === goal.id)?.[0];
+    save.quests[monsterQuest.id] = {accepted: true, claimed: false, progress: {}};
+    save.trackedQuestIds = [monsterQuest.id];
+    assert.equal(catalogTracksMonster(save, content, {source: path}), true);
+    assert.equal(catalogTracksMonster({...save, trackedQuestIds: [chapter.id]}, content, {source: path}), false);
+});
+
+test('changing islands adds one untracked quest from that island when fewer than three are tracked', () => {
+    const content = playableContent();
+    const save = A.createAdventure(content, {name: '换岛追踪'});
+    raise(save, content, content.progression.levelCap);
+    const openOn = zone => runtime.quests.filter(q => q.region === zone && !q.prerequisites.length && q.requirements.every(r => r.id === 214));
+    const fire = openOn('fire');
+    const town = openOn('town');
+    assert.ok(fire.length >= 2 && town.length >= 1);
+    const active = fire[0];
+    A.applyAction(save, content, {type: 'accept-catalog', questId: active.id, npcId: active.startNpc});
+    A.applyAction(save, content, {type: 'track-catalog', questId: active.id, remove: true});
+    const before = trackedQuestIds(save).length;
+    assert.equal(before < 3, true);
+    A.applyAction(save, content, {type: 'travel', zone: 'fire'});
+    const arrived = trackedQuestIds(save);
+    assert.equal(arrived.includes(active.id), true);
+    assert.equal(arrived.length, Math.min(3, before + 1 + (before ? 0 : 1)));
+    const stayed = [...arrived];
+    A.applyAction(save, content, {type: 'travel', zone: 'fire'});
+    assert.deepEqual(trackedQuestIds(save), stayed);
+    while (trackedQuestIds(save).length < 3) {
+        const extra = town.find(q => !trackedQuestIds(save).includes(q.id));
+        A.applyAction(save, content, {type: 'track-catalog', questId: extra.id});
+    }
+    const full = [...trackedQuestIds(save)];
+    A.applyAction(save, content, {type: 'travel', zone: 'town'});
+    assert.deepEqual(trackedQuestIds(save), full);
 });

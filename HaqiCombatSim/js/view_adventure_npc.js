@@ -11,6 +11,7 @@ const PAGE_SIZE=8;
 export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
     const {content,dataset}=model.assets,npc=model.serviceNpc;
     if(!npc)return;
+    const offerStatus=row=>npcOfferStatus(model.save,content,row,{keepworkVip:model.membership?.isVip,expiresAt:model.membership?.expiresAt,now:model.now});
     const inspector=new ItemDetails(body,model,{el,spellFace});
     const modal=body.closest('.modal'),header=modal.querySelector('.modal-header');
     modal.classList.add('npc-services-modal');
@@ -96,7 +97,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
         const thumb=button(painted?face:icon||name.slice(0,1),()=>{
             if(row.kind!=='shop')return;
             hidePreview();
-            const status=npcOfferStatus(model.save,content,row);
+            const status=offerStatus(row);
             inspector.show(content.items[row.itemId],{trigger:thumb,source:npc.name,requirements:[status.price,!status.allowed?status.reason:''].filter(Boolean).join(' · '),requirementsLabel:'兑换条件'});
         },painted||icon?'npc-thumb':'npc-thumb npc-thumb-fallback');
         thumb.setAttribute('aria-label',row.kind==='shop'?`查看${name}详情`:card?`查看${name}卡面`:name);
@@ -141,7 +142,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
             }
         }
         for(const row of rows.slice(page*PAGE_SIZE,page*PAGE_SIZE+PAGE_SIZE)){
-            const status=npcOfferStatus(model.save,content,row),name=offerName(row),learned=row.kind==='mentor'&&status.reason==='已学会';
+            const status=offerStatus(row),name=offerName(row),learned=row.kind==='mentor'&&status.reason==='已学会';
             if(row.kind==='mentor'){
                 const text=el('div','npc-skill-text',el('div','npc-skill-title',el('strong','',name),schoolMark(schoolOf(row))));
                 if(row.tips)text.append(el('span','npc-skill-tips',row.tips));
@@ -166,7 +167,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
         pager.append(prev,count,next);
         if(state.kind==='mentor')wallet.append(el('span','',`训练点 ${trainingPoints(model.save,content)}`));
         else{
-            const ids=[...new Set(rows.flatMap(row=>(content.npcCatalog.exchanges[row.exchangeId]?.costs||[]).map(cost=>cost.id)))].filter(id=>[100,17213,17143,17225,22000].includes(id));
+            const ids=[...new Set(rows.flatMap(row=>(content.npcCatalog.exchanges[row.exchangeId]?.costs||[]).map(cost=>cost.id)))].filter(id=>[100,984,17213,17143,17225,22000].includes(id));
             for(const id of (ids.length?ids:[100]).slice(0,4))wallet.append(el('span','',`${id===22000?'训练点':content.items[id]?.name||'奇豆'} ${id===22000?trainingPoints(model.save,content):model.save.inventory[id]||0}`));
         }
     };

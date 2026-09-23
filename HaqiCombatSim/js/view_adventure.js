@@ -25,7 +25,7 @@ import { renderPetCollection,starterPicker,petPortrait } from './view_adventure_
 import { renderShop } from './view_adventure_shop.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot } from './adventure_core.js';
-import {catalogGoalRows,catalogObjectiveLabel,catalogQuestReady,catalogQuestsForNpc,catalogQuestStatus} from './adventure_catalog_quests_core.js';
+import {catalogGoalRows,catalogObjectiveLabel,catalogQuestReady,catalogQuestsForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import { rewardLabel } from './adventure_rewards_core.js';
 import * as U from './combat_unit_core.js';
 import { expectedBaseDamage,expectedBaseHeal,cardTargetKind } from './combat_cards_core.js';
@@ -45,7 +45,14 @@ paths.cloud='M6 18a4 4 0 0 1-1-8 7 7 0 0 1 13-2 5 5 0 0 1 0 10 M12 20V10 M8 14l4
 paths.close='M6 6l12 12 M18 6L6 18';
 paths.shop='M3 9l2-6h14l2 6 M3 9v3h18V9 M5 12v9h14v-9 M9 21v-6h6v6';
 function icon(kind) {const span=el('span','icon');span.dataset.uiIcon=kind;span.setAttribute('aria-hidden','true');span.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[kind]||paths.book}"/></svg>`;return span;}
-function art(assets,ref,w=76,h=90,cls='') {const c=el('canvas',`art ${cls}`);c.width=w*2;c.height=h*2;c.style.width=`${w}px`;c.style.height=`${h}px`;assets.draw(c.getContext('2d'),ref,0,0,c.width,c.height);return c;}
+function art(assets,ref,w=76,h=90,cls='') {
+    const tall=ref?.fit==='height';
+    const c=el('canvas',`art ${cls}${tall?' portrait-height':''}`);
+    // Height-fit portraits need a wider bitmap so wing tips are drawn, then CSS lets them overflow the slot.
+    const bw=tall?Math.ceil(h*2*1.75):w*2,bh=h*2;
+    c.width=bw;c.height=bh;c.style.width=`${bw/2}px`;c.style.height=`${h}px`;
+    assets.draw(c.getContext('2d'),ref,0,0,c.width,c.height);return c;
+}
 function tile(assets,sheet,index,w=90,h=95) {const c=el('canvas','art');c.width=w*2;c.height=h*2;c.style.width=`${w}px`;c.style.height=`${h}px`;assets.tile(c.getContext('2d'),sheet,index,0,0,c.width,c.height);return c;}
 function badge(text,cls=''){return el('span',`badge ${cls}`,text);}
 const schoolDescription={fire:'火焰与持续伤害，点燃你的热情。',ice:'坚固的护盾与寒冰魔法，稳步迎战。',storm:'强力的单体攻击，让雷霆为你而鸣。',life:'治疗与自然的力量，守护生命。',death:'吸取生命、布下陷阱，掌握幽暗魔法。'};
@@ -167,8 +174,48 @@ export function updateCheckin(root,model) {
     root.querySelector('.checkin-member-summary').textContent=status.starLevel?`魔法星 ${status.starLevel} 级：每个葫芦额外 ${status.gourds[0].vipCoins} 仙豆`:'普通奖励人人可领，拥有魔法星可再领一份额外仙豆。';
 
 }
+function trackerEntries(save,c) {
+    const ids=trackedQuestIds(save).filter(id=>c.quests.some(quest=>quest.id===id)||c.catalogQuests?.byId[id]);
+    if(ids.length)return ids.map(id=>({id,pinned:true}));
+    const quest=currentQuest(save,c);
+    return quest?[{id:quest.id,pinned:false}]:[];
+}
+function chapterTrackLines(save,c,quest) {
+    const state=questState(save,quest.id);
+    if(!state.accepted)return [{text:`去找${c.npcs[quest.startNpc].name}，接取新的任务。`}];
+    if(questReady(save,quest))return [{text:`任务已完成，向${c.npcs[quest.endNpc].name}回报。`}];
+    return questProgress(save,quest).map(goal=>({text:objectiveLabel(goal,c),done:goal.value>=goal.count}));
+}
+function catalogTrackLines(save,c,quest) {
+    const snap=catalogStatSnapshot(save,c),state=questState(save,quest.id),ready=catalogQuestReady(save,c,quest,snap);
+    if(!state.accepted){const name=c.npcs[quest.startNpc]?.name;return [{text:name?`去找${name}，接取新的任务。`:'接取这个任务。'}];}
+    if(ready){const name=c.npcs[quest.endNpc]?.name;return [{text:name?`任务已完成，向${name}回报。`:'任务已完成，可以交付。'}];}
+    const goals=catalogGoalRows(save,c,quest,snap);
+    if(!goals.length)return [{text:'与居民交谈后即可交付。'}];
+    return goals.map(goal=>({text:catalogObjectiveLabel(goal),done:goal.value>=goal.count}));
+}
+function appendTrackerQuest(tracker,entry,save,c,cb) {
+    const chapter=c.quests.find(quest=>quest.id===entry.id),quest=chapter||c.catalogQuests.byId[entry.id];
+    const ready=chapter?questReady(save,quest):catalogQuestReady(save,c,quest,catalogStatSnapshot(save,c));
+    const state=questState(save,quest.id);
+    const statusLabel=chapter?(ready?'可以交付':state.accepted?'进行中':'可接取'):catalogQuestStatus(save,c,quest,catalogStatSnapshot(save,c));
+    const marker=el('span',`quest-state ${ready?'ready':state.accepted?'active':'available'}`,ready?'?':'!');marker.setAttribute('aria-hidden','true');
+    const questLink=button([marker,el('span','quest-title',quest.title)],()=>cb.panel('quests',{questId:quest.id}),'quest-track-title');
+    questLink.title=`${statusLabel}，点击查看任务详情`;questLink.setAttribute('aria-label',`${quest.title}，${statusLabel}，查看任务详情`);
+    const track=button('追踪',()=>cb.track(quest.id,{pin:false}),'track-button');
+    track.title='追踪这个任务';
+    const card=el('article','tracker-quest',el('h3','',questLink));
+    const lines=chapter?chapterTrackLines(save,c,quest):catalogTrackLines(save,c,quest);
+    lines.forEach((line,index)=>{
+        const text=el('span','tracker-follow-text',line.text);
+        const follow=button(line.done===undefined?text:[el('span','tracker-mark',line.done?'✓':'◇'),text],()=>cb.track(quest.id,{pin:false}),`tracker-follow${line.done?' complete':''}`);
+        follow.title='追踪这个任务';follow.setAttribute('aria-label',`${line.text}，追踪`);
+        card.append(index?follow:el('div','tracker-line',follow,track));
+    });
+    tracker.append(card);
+}
 export function renderHud(root,model,cb) {
-    const {assets,save}=model,c=assets.content,q=currentQuest(save,c);root.replaceChildren();
+    const {assets,save}=model,c=assets.content;root.replaceChildren();
     const next=c.progression.xpThresholds[save.level]||save.xp,previous=c.progression.xpThresholds[save.level-1];
     const xp=el('div','xp-bar',el('i'));xp.firstChild.style.width=`${save.level>=c.progression.levelCap?100:Math.max(0,(save.xp-previous)/(next-previous)*100)}%`;
     const school=el('canvas','hero-school-icon');school.width=48;school.height=48;
@@ -205,30 +252,12 @@ export function renderHud(root,model,cb) {
     const dungeon=dungeonFor(c,save.zone);
     if(dungeon){
         const cleared=save.dungeonRuns?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!save.dungeonRuns?.[save.zone]?.cleared.includes(a.id)).length;
-        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，沿路走向出口即可离开。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可在副本菜单暂离。'),button(remaining?'寻找下一组':'返回出口',cb.track,'track-button'));
-    }else if(c.catalogQuests?.byId[save.trackedQuestId]){
-        const tracked=c.catalogQuests.byId[save.trackedQuestId],snap=catalogStatSnapshot(save,c),ready=catalogQuestReady(save,c,tracked,snap);
-        const statusLabel=catalogQuestStatus(save,c,tracked,snap);
-        const marker=el('span',`quest-state ${ready?'ready':'active'}`,ready?'?':'!');marker.setAttribute('aria-hidden','true');
-        const questLink=button([marker,el('span','quest-title',tracked.title)],()=>cb.panel('quests',{questId:tracked.id}),'quest-track-title');
-        questLink.title=`${statusLabel}，点击查看任务详情`;questLink.setAttribute('aria-label',`${tracked.title}，${statusLabel}，查看任务详情`);
-        tracker.append(el('h3','',questLink));
-        const goals=catalogGoalRows(save,c,tracked,snap);
-        if(!goals.length)tracker.append(el('p','',ready?`向${c.npcs[tracked.endNpc]?.name||'居民'}交付。`:'与居民交谈后即可交付。'));
-        else for(const g of goals)tracker.append(el('div',`tracker-goal ${g.value>=g.count?'complete':''}`,el('span','',g.value>=g.count?'✓':'◇'),el('span','',catalogObjectiveLabel(g))));
-        tracker.append(button('追踪',()=>cb.track(tracked.id),'track-button'));
-        if(q)tracker.append(button('返回教学任务',cb.untrack,'text-button'));
-    }else if(q){
-        const state=questState(save,q.id),ready=questReady(save,q);
-        const statusLabel=ready?'可以交付':state.accepted?'进行中':'可接取';
-        const marker=el('span',`quest-state ${ready?'ready':state.accepted?'active':'available'}`,ready?'?':'!');marker.setAttribute('aria-hidden','true');
-        const questLink=button([marker,el('span','quest-title',q.title)],()=>cb.panel('quests',{questId:q.id}),'quest-track-title');questLink.title=`${statusLabel}，点击查看任务详情`;questLink.setAttribute('aria-label',`${q.title}，${statusLabel}，查看任务详情`);
-        tracker.append(el('h3','',questLink));
-        if(!state.accepted)tracker.append(el('p','',`去找${c.npcs[q.startNpc].name}，接取新的任务。`));
-        else if(ready)tracker.append(el('p','',`任务已完成，向${c.npcs[q.endNpc].name}回报。`));
-        else for(const g of questProgress(save,q))tracker.append(el('div',`tracker-goal ${g.value>=g.count?'complete':''}`,el('span','',g.value>=g.count?'✓':'◇'),el('span','',objectiveLabel(g,c))));
-        tracker.append(button('追踪',cb.track,'track-button'));
-    }else tracker.append(el('h3','','新的魔法旅程'),el('p','',save.visitedTown?'你已完成第一章。和镇上的居民聊聊，或到郊外练习魔法吧。':'你通过了毕业考核！前往营地南边的传送阵，探索哈奇小镇。'),button('前往传送阵',cb.track,'track-button'));
+        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，沿路走向出口即可离开。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可在副本菜单暂离。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button(remaining?'寻找下一组':'返回出口',cb.track,'track-button'));
+    }else{
+        const entries=trackerEntries(save,c);
+        if(entries.length)for(const entry of entries)appendTrackerQuest(tracker,entry,save,c,cb);
+        else tracker.append(el('h3','','新的魔法旅程'),el('p','',save.visitedTown?'你已完成第一章。和镇上的居民聊聊，或到郊外练习魔法吧。':'你通过了毕业考核！前往营地南边的传送阵，探索哈奇小镇。'),button('前往传送阵',cb.track,'track-button'));
+    }
     root.append(tracker);
     const nav=el('nav','game-nav');nav.setAttribute('aria-label','游戏菜单');
     for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['shop','商店','shop']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));

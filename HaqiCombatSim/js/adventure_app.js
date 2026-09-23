@@ -1,4 +1,5 @@
 import {createAutoSave} from './adventure_autosave.js';
+import {npcOffers} from './adventure_npc_core.js';
 import {dungeonFor,enterDungeon,leaveDungeon} from './adventure_dungeons_core.js';
 import {renderDungeons} from './view_adventure_dungeons.js';
 import {openOriginalImport} from './haqi_import.js';
@@ -45,7 +46,7 @@ import { createCreationPreview, tutorialCards } from './adventure_creation_previ
 const $=id=>document.getElementById(id);
 const nodes={world:$('world'),hud:$('hud'),entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer'),toast:$('toast')};
 let assets,renderer,save,world,battle,stage='loading',panel=null,dialog=null,dialogDone=null;
-let selectedQuestId=null;
+let selectedQuestId=null,pinJournalQuest=false;
 let dungeonLoading=null;
 let teleportEffect=null;
 let path=[],destination=null,moving=false,lastFrame=0,lastSave=0,toastTimer=0;
@@ -66,7 +67,7 @@ const autoSave=createAutoSave({
 function queueCloudSave(){autoSave.request();}
 setInterval(()=>void autoSave.tick(),15000);
 
-const membership=createMembershipClient({onChange:()=>{if(!assets||!save)return;if(stage==='world'&&!save.pendingEncounter)maybeExchangeMagicBeans();if(stage==='world'){paintHud();if(['shop','membership','checkin'].includes(panel))paintPanel();}}});
+const membership=createMembershipClient({onChange:()=>{if(!assets||!save)return;if(stage==='world'&&!save.pendingEncounter)maybeExchangeMagicBeans();if(stage==='world'){paintHud();if(['shop','npc-services','membership','checkin'].includes(panel))paintPanel();}}});
 let buyingVip=false;
 const membershipView={tab:'attributes'};
 const refreshMembership=()=>membership.refresh().catch(error=>toast(error.message));
@@ -128,7 +129,7 @@ function paintPanel() {
     const equipment=['equipment','inventory','shop','pet'].includes(panel);
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
-    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId},{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true),refreshMembership,becomeVip:()=>membership.openProfile().catch(error=>toast(error.message))});
+    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId,pinJournalQuest},{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true),refreshMembership,becomeVip:()=>membership.openProfile().catch(error=>toast(error.message))});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
@@ -141,7 +142,7 @@ function openPanel(kind,options={}) {
     if(stage!=='world')return;
     close();path=[];destination=null;panel=kind;
     if(kind==='npc-services'){serviceNpc=options.npc;Object.assign(npcServiceView,{query:'',page:0,kind:'',category:''});}
-    if(kind==='quests')selectedQuestId=options.questId??A.currentQuest(save,assets.content)?.id??assets.content.quests.at(-1)?.id;
+    if(kind==='quests'){pinJournalQuest=options.questId!=null;selectedQuestId=options.questId??A.currentQuest(save,assets.content)?.id??assets.content.quests.at(-1)?.id;}
     if(kind==='gems')Object.assign(gemView,{guid:options.guid||null,gemId:null,runes:[null,null,null],runeIndex:0,step:options.guid?'gems':'equipment',filter:0,page:0,mode:'mount',removeIds:[],message:'',confirm:false});
     if(kind==='upgrade')Object.assign(strengtheningView,{guid:initialStrengtheningSelection(save,assets.content,options.itemId,options.guid),filter:0,page:0,pending:false,message:'',offsetX:0,offsetY:0});
     if(['equipment','inventory'].includes(kind)){equipmentView.tab='gear';equipmentView.slot=0;equipmentView.query='';equipmentView.item=null;equipmentView.guid=null;}
@@ -203,8 +204,12 @@ async function changeCloudAccount(reconnect) {
     if(reconnect&&disconnected)await connectRoles();
 }
 function action(value) {
+    if(panel==='quests'&&(value?.type==='abandon-quest'||(value?.type==='track-catalog'&&value.remove)))selectedQuestId=Number(value.questId);
     const product=value.type==='buy'&&assets.content.shop.find(item=>item.id===value.productId);
-    if(!product?.vipOnly&&value.type!=='magic-star-claim'&&!(value.type==='checkin'&&value.bonus===true))return performAction(value);
+    const resident=value.type==='npc-purchase'&&assets.content.npcCatalog?.npcs.find(npc=>npc.instanceId===value.npcInstanceId);
+    const offer=resident&&npcOffers(assets.content,resident).find(row=>row.id===value.offerId);
+    const memberOffer=offer&&assets.content.items[offer.itemId]?.stats?.[180];
+    if(!product?.vipOnly&&!memberOffer&&value.type!=='magic-star-claim'&&!(value.type==='checkin'&&value.bonus===true))return performAction(value);
     return buyVipProduct(value);
 }
 async function buyVipProduct(value) {
@@ -416,13 +421,13 @@ function travel(zone){safely(()=>{
     A.applyAction(save,assets.content,{type:'travel',zone});enterWorld(save);showTeleportEffect();toast(`已抵达${islandName(zone)}。`);
 });}
 function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog,{close,next:nextDialogue,startQuest:q=>startLines(q.startDialog,'接取任务',()=>{
-    A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(`已接取：${q.title}`);
+    const result=A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(result.full?`已接取：${q.title}。追踪已满3个，请先取消一条。`:`已接取：${q.title}`);
 }),finishQuest:q=>startLines(q.endDialog,'领取奖励',()=>{
     const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim',questId:q.id,npcId:q.endNpc});
     showRewards(before);return 'reward';
 }),startCatalog:q=>{
-    A.applyAction(save,assets.content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});persist();toast(`已接取：${q.title}`);paintDialogue();paintHud();
+    const result=A.applyAction(save,assets.content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});persist();toast(result.full?`已接取：${q.title}。追踪已满3个，请先取消一条。`:`已接取：${q.title}`);paintDialogue();paintHud();
 },finishCatalog:q=>{
     const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});
@@ -476,10 +481,9 @@ function walkTo(target,autoInteract=false) {
     if(autoInteract&&W.distance(save.position,target)<85){interact(target);return;}
     if(!path.length)toast('这里暂时走不过去，试试旁边的小路。');
 }
-function untrack(){safely(()=>{A.applyAction(save,assets.content,{type:'track-catalog',questId:null});paintHud();});}
+function untrack(questId){safely(()=>{A.applyAction(save,assets.content,{type:'track-catalog',questId:questId??null,remove:questId!=null});paintHud();});}
 function trackCatalog(id) {
     const c=assets.content,quest=c.catalogQuests.byId[id],snap=A.catalogStatSnapshot(save,c);
-    A.applyAction(save,c,{type:'track-catalog',questId:id});
     const state=A.questState(save,id),ready=catalogQuestReady(save,c,quest,snap);
     const goal=catalogGoalRows(save,c,quest,snap).find(g=>g.value<g.count);
     const npcId=!state.accepted?quest.startNpc:ready?quest.endNpc:goal?.kind==='talk'?goal.id:0;
@@ -512,18 +516,26 @@ function trackCatalog(id) {
     toast(goal?`${goal.name}需要在冒险中继续完成。`:'任务已记录在手记中。');
     paintHud();
 }
-function track(questId) {
+function track(questId, options={}) {
     if(stage!=='world')return;close();
-    const c=assets.content;
-    if(questId&&c.catalogQuests?.byId[Number(questId)]){trackCatalog(Number(questId));return;}
-    const q=A.currentQuest(save,c);
-    if(dungeonFor(c,save.zone)){const next=world.encounters[0];walkTo(next?{...next,kind:'encounter'}:{...world.portal,kind:'portal'},true);return;}
-    if(!q){walkTo({...world.portal,kind:'portal'},true);return;}
-    if(save.zone!==c.npcs[q.startNpc].zone){travel(c.npcs[q.startNpc].zone);if(save.zone!==c.npcs[q.startNpc].zone)return;}
-    const npc=id=>({...world.npcs.find(n=>n.id===id),kind:'npc',questDialogue:true}),state=A.questState(save,q.id);
-    if(!state.accepted){walkTo(npc(q.startNpc),true);return;}
-    if(A.questReady(save,q)){walkTo(npc(q.endNpc),true);return;}
-    const goal=A.questProgress(save,q).find(g=>g.value<g.count);
+    const c=assets.content,id=Number(questId);
+    const quest=id&&(c.catalogQuests?.byId[id]||c.quests.find(item=>item.id===id));
+    if(quest&&options.pin!==false){
+        const result=safely(()=>A.applyAction(save,c,{type:'track-catalog',questId:id}));
+        if(result===false)return;
+        if(result?.full)toast('最多同时追踪3个任务，请先取消一条。');
+        if(result?.changed){persist();paintHud();}
+    }
+    if(c.catalogQuests?.byId[id]){trackCatalog(id);return;}
+    if(dungeonFor(c,save.zone)&&!quest){const next=world.encounters[0];walkTo(next?{...next,kind:'encounter'}:{...world.portal,kind:'portal'},true);return;}
+    const chapter=c.quests.find(item=>item.id===id)||(!quest&&A.currentQuest(save,c));
+    if(!chapter){walkTo({...world.portal,kind:'portal'},true);return;}
+    if(save.zone!==c.npcs[chapter.startNpc].zone){travel(c.npcs[chapter.startNpc].zone);if(save.zone!==c.npcs[chapter.startNpc].zone)return;}
+    const npc=nid=>({...world.npcs.find(n=>n.id===nid),kind:'npc',questDialogue:true}),state=A.questState(save,chapter.id);
+    if(!state.accepted){walkTo(npc(chapter.startNpc),true);return;}
+    if(A.questReady(save,chapter)){walkTo(npc(chapter.endNpc),true);return;}
+    const goal=A.questProgress(save,chapter).find(g=>g.value<g.count);
+    if(!goal)return;
     if(goal.kind==='talk')walkTo(npc(goal.id),true);
     if(goal.kind==='defeat') {
         const monster=Object.values(c.monsters).find(m=>m.goalId===goal.id);

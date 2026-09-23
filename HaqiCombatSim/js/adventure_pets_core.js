@@ -2,6 +2,7 @@
 import { defaultParams, resolveParams } from './combat_params_core.js';
 import { baseMaxHp, applyHpStats } from './combat_formulas_core.js';
 import { normalizeStats } from './combat_unit_core.js';
+import { dungeonFor } from './adventure_dungeons_core.js';
 export const STARTERS=['dragon_green','dragon_purple','dragon_orange'];
 export const STAGE_NAMES=['幼年','青年','成年','隐藏形态'];
 export const FOOD_ID=990001, CAPTURE_ID=990002, GENERAL_CATCH_RUNE=23439;
@@ -82,14 +83,15 @@ export function tickCare(save,content,hero,now,online=false){
  if(!save.careAt){save.careAt=now;return;}
  const elapsed=Math.max(0,now-save.careAt);save.careAt=Math.max(now,save.careAt);if(save.pendingEncounter)return;
  const minutes=Math.min(1440,elapsed/60000),p=petParams(content),maxHp=specMaxHp(hero);
- // Adventure adaptation (2026-09-19): hero recovers 2% of maximum HP per second outside combat.
- save.heroHp=Math.min(maxHp,(save.heroHp??maxHp)+maxHp*p.heroRegenPerSecond*minutes*60);
+ // Dungeon worlds keep the HP brought in (2026-09-24). Island regen stays 2% max HP per second.
+ const inDungeon=!!dungeonFor(content,save.zone);
+ if(!inDungeon)save.heroHp=Math.min(maxHp,(save.heroHp??maxHp)+maxHp*p.heroRegenPerSecond*minutes*60);
  for(const id of save.formation.filter(Boolean)){
   const pet=save.pets[id];if(online){pet.hunger=Math.max(0,pet.hunger-minutes*p.hungerPerMinute);
    while(pet.hunger<p.feedThreshold&&(save.inventory[FOOD_ID]||0)>0){save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+p.foodRestore);save.careLog.push(`${content.pets[id].name}自动进食，饱食 +${p.foodRestore}`);}
   }
  }
- for(const pet of Object.values(save.pets))if(pet.hunger>0)pet.hp=Math.min(petMaxHp(pet,content),pet.hp+petMaxHp(pet,content)*p.regenPerMinute*minutes);
+ if(!inDungeon)for(const pet of Object.values(save.pets))if(pet.hunger>0)pet.hp=Math.min(petMaxHp(pet,content),pet.hp+petMaxHp(pet,content)*p.regenPerMinute*minutes);
  save.careLog=save.careLog.slice(-20);
 }
 export function migratePetDeckRules(save,content){

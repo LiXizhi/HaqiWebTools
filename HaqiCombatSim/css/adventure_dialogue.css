@@ -51,3 +51,11 @@
  .storybook-ui .rpg-dialogue :is(.dialogue-choices,.dialogue-bottom) { margin-top:9px; padding-top:8px; }
 }
 @media(prefers-reduced-motion:reduce) { .storybook-ui .rpg-dialogue,.rpg-dialogue.is-speaking .dialogue-text>span:first-child::after { animation:none; } }
+/* Winged mages scale to the portrait height; wing tips may extend past the slot. */
+.storybook-ui .rpg-dialogue .dialogue-portrait.portrait-height { width:auto!important; height:240px!important; left:104px; transform:translateX(-50%); pointer-events:none; }
+@media(max-width:650px) {
+ .storybook-ui .rpg-dialogue .dialogue-portrait.portrait-height { left:54px; height:118px!important; top:-16px; bottom:auto; }
+}
+@media(max-height:540px) and (min-width:651px) {
+ .storybook-ui .rpg-dialogue .dialogue-portrait.portrait-height { left:75px; height:169px!important; top:auto; bottom:16px; }
+}

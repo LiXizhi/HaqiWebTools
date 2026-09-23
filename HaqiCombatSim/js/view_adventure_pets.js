@@ -107,7 +107,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  }
  function updatePager(){previous.disabled=shelf.scrollLeft<=1;next.disabled=shelf.scrollLeft+shelf.clientWidth>=shelf.scrollWidth-1;}
  shelf.onscroll=updatePager;query.oninput=()=>{state.query=query.value;paintShelf();};paintShelf();
- const notes=el('details','pet-care-notes',el('summary','','照料与自动进食'),el('p','muted',`非战斗时角色每秒恢复 ${p.heroRegenPerSecond*100}% 生命，宠物每分钟恢复 ${p.regenPerMinute*100}%。携带伙伴每分钟减少 ${p.hungerPerMinute} 饱食，低于 ${p.feedThreshold} 自动进食，每份恢复 ${p.foodRestore}。离线只恢复生命。`),...save.careLog.slice(-3).map(text=>el('p','muted',text)));
+ const notes=el('details','pet-care-notes',el('summary','','照料与自动进食'),el('p','muted',`岛屿上非战斗时角色每秒恢复 ${p.heroRegenPerSecond*100}% 生命，宠物每分钟恢复 ${p.regenPerMinute*100}%。副本中不会自动回血。携带伙伴每分钟减少 ${p.hungerPerMinute} 饱食，低于 ${p.feedThreshold} 自动进食，每份恢复 ${p.foodRestore}。离线只在岛屿上恢复生命。`),...save.careLog.slice(-3).map(text=>el('p','muted',text)));
  const teaching=button('咕噜噜教学',()=>{
   const dialog=el('dialog','modal pet-growth-modal'),close=()=>dialog.close();
   const exit=createCloseButton(close,'关闭教学伙伴');

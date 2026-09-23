@@ -8,7 +8,7 @@ import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
 import { battleActorAction } from './actor_animation_core.js';
 import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES,catalogStatSnapshot } from './adventure_core.js';
-import {catalogNpcMarker,catalogTracksMonster} from './adventure_catalog_quests_core.js';
+import {catalogNpcMarker,catalogTracksMonster,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import { onIsland,distance,nearbyWorldObjects } from './adventure_world_core.js';
 import { OCEAN_COLOR, paintTerrain } from './adventure_terrain.js';
 import { paintLargeTerrain,createTerrainTileCache } from './adventure_large_terrain.js';
@@ -27,8 +27,11 @@ function circleRune(c,x,y,r,t,color='#e4d69a') {
     for(let i=0;i<8;i++){c.save();c.rotate(i*TAU/8);c.strokeRect(r*.89,-3,5,6);c.restore();}c.restore();
 }
 export function questMarker(save,content,npcId) {
-    const tracked=content.catalogQuests?.byId[save.trackedQuestId];
-    if(tracked&&(tracked.startNpc===npcId||tracked.endNpc===npcId||tracked.groups.some(g=>g.kind==='talk'&&g.items.some(i=>i.id===npcId)))){
+    const involved=trackedQuestIds(save).some(id=>{
+        const tracked=content.catalogQuests?.byId[id];
+        return tracked&&(tracked.startNpc===npcId||tracked.endNpc===npcId||tracked.groups.some(g=>g.kind==='talk'&&g.items.some(i=>i.id===npcId)));
+    });
+    if(involved){
         const mark=catalogNpcMarker(save,content,npcId,catalogStatSnapshot(save,content));
         if(mark)return mark;
     }
@@ -122,7 +125,9 @@ export function createRenderer(canvas,assets) {
             if(o.kind==='building'){shadow(ctx,o.x,o.y,o.w*.4);assets.tile(ctx,'sprites',o.tile,o.x-o.w/2,o.y-o.h,o.w,o.h);}
             if(o.kind==='landmark'){
                 shadow(ctx,o.x,o.y,18);ctx.fillStyle='#786344';ctx.fillRect(o.x-3,o.y-43,6,43);
-                ctx.fillStyle='#daca98';ctx.beginPath();ctx.roundRect(o.x-45,o.y-60,90,30,5);ctx.fill();
+                ctx.beginPath();ctx.roundRect(o.x-45,o.y-60,90,30,5);
+                ctx.fillStyle='#daca98';ctx.fill();
+                ctx.strokeStyle='#c4a06a';ctx.lineWidth=2.5;ctx.stroke();
                 text(ctx,o.name,o.x,o.y-40,12,'#425847');
             }
             if(o.kind==='npc') {

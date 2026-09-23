@@ -17,7 +17,7 @@ import { findEquipmentInstance, syncEquipmentInstances, validateEquipmentInstanc
 import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
 import { resolvePetReward, migrateQuestPetRewards } from './adventure_rewards_core.js';
 import {syncTrainingPoints,validateTrainingPoints,skillLearningStatus} from './adventure_learning_core.js';
-import {acceptCatalogQuest,claimCatalogQuest,noteCatalogKills,noteCatalogSignal,validateCatalogQuests} from './adventure_catalog_quests_core.js';
+import {acceptCatalogQuest,claimCatalogQuest,noteCatalogKills,noteCatalogSignal,validateCatalogQuests,pinTrackedQuest,unpinTrackedQuest,showCurrentChapter,trackedQuestIds,supplementIslandTrack} from './adventure_catalog_quests_core.js';
 export { rewardLabel } from './adventure_rewards_core.js';
 
 export const SAVE_VERSION = 2;
@@ -283,8 +283,9 @@ export function applyAction(save, content, action, access={}) {
     assert(!save.pendingEncounter || ['settle-encounter','retreat'].includes(action.type), '请先完成当前战斗');
     if(content.pets&&Pets.petAction(save,content,action,access)){syncEquipmentInstances(save,content);save.revision++;return {changed:true};}
     const q = currentQuest(save,content);
+    let notice, trackFull = false;
     switch (action.type) {
-    case 'npc-purchase': purchaseNpcOffer(save,content,action);break;
+    case 'npc-purchase': purchaseNpcOffer(save,content,action,access);break;
     case 'fish': {const result=castFishing(save,content,action,createRng(hashSeed(`${save.revision}:fish:${action.netId}`)));save.revision++;return {...result,changed:true};}
     case 'stamina-potion': {const result=useStaminaPotion(save,content,action.itemId);save.revision++;return {...result,changed:true};}
     case 'magic-star-claim': claimMagicStar(save,content,action,access);syncEquipmentInstances(save,content);break;
@@ -294,31 +295,51 @@ export function applyAction(save, content, action, access={}) {
     case 'accept': {
         assert(q && q.id === Number(action.questId) && q.startNpc === Number(action.npcId), '当前没有可接取的任务');
         if (!save.quests[q.id]) save.quests[q.id] = { accepted: true, claimed: false, progress: {} };
+        if (trackedQuestIds(save).length && !trackedQuestIds(save).includes(q.id)) trackFull = pinTrackedQuest(save, content, q.id).full === true;
         syncGoals(save,content); break;
     }
     case 'talk':
         assert(content.npcs[action.npcId], '找不到这位居民');
         signal(save,content,'talk',action.npcId); break;
-    case 'accept-catalog': acceptCatalogQuest(save,content,action.questId,action.npcId,catalogStatSnapshot(save,content)); break;
+    case 'accept-catalog': trackFull = acceptCatalogQuest(save,content,action.questId,action.npcId,catalogStatSnapshot(save,content))?.full === true; break;
     case 'claim-catalog': {
         const target = claimCatalogQuest(save,content,action.questId,action.npcId,catalogStatSnapshot(save,content));
         if (!target) return { changed: false };
         grantQuestRewards(save,content,target);
         save.quests[target.id].claimed = true;
-        if (save.trackedQuestId === target.id) delete save.trackedQuestId;
+        unpinTrackedQuest(save, target.id);
         syncProgression(save,content);
         break;
     }
-    case 'track-catalog':
-        if (action.questId == null) delete save.trackedQuestId;
-        else { assert(content.catalogQuests?.byId[Number(action.questId)], '找不到这个任务'); save.trackedQuestId = Number(action.questId); }
+    case 'abandon-quest': {
+        const id = Number(action.questId);
+        const chapter = content.quests.find(quest => quest.id === id);
+        const catalog = content.catalogQuests?.byId[id];
+        const state = save.quests[id];
+        assert(chapter || catalog, '找不到这个任务');
+        assert(state?.accepted === true && !state.claimed, '只能放弃进行中的任务');
+        if (chapter) assert(q?.id === id, '只能放弃当前教学任务');
+        delete save.quests[id];
+        unpinTrackedQuest(save, id);
+        if (chapter) showCurrentChapter(save, content);
+        notice = `已放弃：${(chapter || catalog).title}`;
         break;
+    }
+    case 'track-catalog': {
+        if (action.remove) { unpinTrackedQuest(save, action.questId); notice = '已取消追踪'; break; }
+        if (action.questId == null) { unpinTrackedQuest(save, null); break; }
+        const pinned = pinTrackedQuest(save, content, action.questId);
+        if (pinned.already || pinned.full) return { changed: false, ...pinned };
+        break;
+    }
     case 'claim': {
         const target = content.quests.find(x => x.id === Number(action.questId));
         if (save.quests[target?.id]?.claimed) return { changed: false };
         assert(target === q && questReady(save,q) && q.endNpc === Number(action.npcId), '任务尚未完成');
         grantQuestRewards(save,content,q);
         save.quests[q.id].claimed = true;
+        unpinTrackedQuest(save, q.id);
+        showCurrentChapter(save, content);
         syncProgression(save,content);
         if (q.id === 63013) save.graduated = true;
         break;
@@ -397,11 +418,14 @@ export function applyAction(save, content, action, access={}) {
     }
     case 'deck':
         validDeck(save,content,action.deck); save.deck = clone(action.deck); save.tips.deckEdited = true; save.tips.deckEditedWithBag = save.equipment[24] === 24003; syncGoals(save,content); break;
-    case 'travel':
+    case 'travel': {
+        const previous = save.zone;
         assert(travelStatus(save,content,action.zone).allowed, travelStatus(save,content,action.zone).reason);
         save.zone = action.zone; save.position = islandSpawn(action.zone,content); save.worldLayoutVersion = content.worldMapIndex.layoutVersion;
         if (action.zone === 'town') save.visitedTown = true;
+        if (previous !== action.zone) supplementIslandTrack(save, content, action.zone, catalogStatSnapshot(save, content));
         break;
+    }
     case 'retreat':
         save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); save.position = {...mapInfo(save.zone,content).initialSpawn}; break;
     default: throw new Error('未知操作');
@@ -411,7 +435,7 @@ export function applyAction(save, content, action, access={}) {
     syncDeckLayouts(save,content);
     syncEquipmentInstances(save,content);
     save.revision++;
-    return { changed: true, quest: currentQuest(save,content), level: save.level };
+    return { changed: true, quest: currentQuest(save,content), level: save.level, ...(notice ? { message: notice } : {}), ...(trackFull ? { full: true } : {}) };
 }
 export function beginEncounter(save,content,encounterId,access={}) {
     assert(!save.pendingEncounter, '已有进行中的战斗');

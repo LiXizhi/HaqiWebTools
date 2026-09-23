@@ -36,6 +36,18 @@ export function journalQuestStatus(save,content,row,stats) {
     if(quest)return catalogQuestStatus(save,content,quest,stats||{});
     return row.obsolete?'原版已废除':'尚未开放';
 }
+export function focusJournalQuest(rows,filters,selectedId,pageSize,save,content,stats) {
+    const id=Number(selectedId),next={...filters};
+    if(!Number.isInteger(id))return {filters:next,page:0};
+    const match=quest=>Number(quest.id)===id;
+    let index=filterJournalQuests(rows,next,save,content,stats).findIndex(match);
+    if(index<0){
+        const quest=rows.find(match);
+        next.region=quest&&QUEST_REGIONS[quest.region]?quest.region:'';
+        index=filterJournalQuests(rows,next,save,content,stats).findIndex(match);
+    }
+    return {filters:next,page:index>=0?Math.floor(index/pageSize):0};
+}
 export function filterJournalQuests(rows,{region='',status='',query=''}={},save,content,stats) {
     const needle=query.trim().toLocaleLowerCase();
     return rows.filter(q=>!q.obsolete&&(!region||q.region===region)&&(!status||journalQuestStatus(save,content,q,stats)===status)&&(!needle||`${q.id} ${q.title}`.toLocaleLowerCase().includes(needle)));

@@ -83,6 +83,12 @@ export async function loadResources(progress) {
         const row=Math.floor(index/4), cuts=sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height];
         return draw(ctx,{id:sheet,crop:[(index%4)*cw,cuts[row],cw,cuts[row+1]-cuts[row]]},x,y,w,h,true);
     }
+    if(typeof document!=='undefined')for(const sheet of ['sprites','creatures']){
+        const img=images.get(sheet);if(!img)continue;
+        const cols=4,rows=sheet==='sprites'?4:2,cw=img.width/cols,ch=img.height/rows;
+        const cuts=sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height];
+        for(let index=0;index<cols*rows;index++){const row=Math.floor(index/4);getBounds(sheet,[(index%4)*cw,cuts[row],cw,cuts[row+1]-cuts[row]]);}
+    }
     const [catalog,candidates,kidsCards,kidsCharms,cardNames]=await Promise.all([json('data/adventure/pets.json'),json('data/adventure/shop-candidates.json'),json('data/kids/cards.json'),json('data/kids/charms.json'),json('data/kids/card_names.json')]);
     installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames);
     const dungeonJson=createJsonReader({packed:false});

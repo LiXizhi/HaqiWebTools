@@ -95,7 +95,7 @@ export function movePosition(world,position,dx,dy) {
     for(let i=0;i<steps;i++) {if(allowed(x+dx/steps,y))x+=dx/steps;if(allowed(x,y+dy/steps))y+=dy/steps;}
     return {x,y};
 }
-function clearSegment(world,a,b) {
+export function clearSegment(world,a,b) {
     const length=distance(a,b),steps=Math.max(1,Math.ceil(length/2));
     for(let i=0;i<=steps;i++){const t=i/steps;if(!walkable(world,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t))return false;}
     return true;

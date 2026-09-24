@@ -113,6 +113,11 @@ function showRewards(before){
 }
 function toast(message) {nodes.toast.textContent=message;nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);}
 function safely(fn) {try{return fn();}catch(e){toast(e.message);return false;}}
+let persistTimer=0;
+function queuePersist() {
+    if(persistTimer)return;
+    persistTimer=setTimeout(()=>{persistTimer=0;persist();},0);
+}
 function persist() {
     if(!save||stage==='title')return;
     try {if(!roleStorage)throw Error('尚未选择角色');saveLocal(save,roleStorage);storageWarning=false;}catch {if(!storageWarning)toast('进度未能保存，可能是其他页面已更新。请勿关闭页面，检查存储后重试。');storageWarning=true;}
@@ -639,7 +644,10 @@ for(const event of ['pointerup','pointercancel','lostpointercapture'])nodes.worl
 function frame(now) {
     requestAnimationFrame(frame);if(!renderer||!save)return;
     void autoSave.tick();
-    if(stage==='world'&&!document.hidden&&now-lastCare>1000){lastCare=now;tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),true);V.updateHeroHealth(nodes.hud,save,assets.content);V.updateCheckin(nodes.hud,model());if(panel==='checkin')V.updateCheckin(nodes.overlay,model());if(now-lastSave>10000)persist();}
+    if(stage==='world'&&!document.hidden&&now-lastCare>1000){lastCare=now;setTimeout(()=>{
+        if(stage!=='world'||!save||document.hidden)return;
+        tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),true);V.updateHeroHealth(nodes.hud,save,assets.content);V.updateCheckin(nodes.hud,model());if(panel==='checkin')V.updateCheckin(nodes.overlay,model());if(performance.now()-lastSave>10000)persist();
+    },0);}
     if((stage==='world'||stage==='battle')&&!document.hidden)tickCheckin(save,Date.now(),Math.min(1000,Math.max(0,now-lastFrame)));
     const dt=Math.min(.055,(now-lastFrame)/1000||0);lastFrame=now;const wasMoving=moving;moving=false;
     if(stage==='world'&&!panel&&!dialog) {
@@ -667,7 +675,7 @@ function frame(now) {
         const near=W.nearestInteraction(world,save.position),button=$('interact');
         if(world.layout){const label=nodes.hud.querySelector('.location-label small'),region=regionAt(world,save.position);if(label&&label.textContent!==region.name)label.textContent=region.name;}
         if(button){button.hidden=!near;if(near)button.textContent=near.kind==='npc'?`与${near.name}交谈`:near.kind==='landmark'?`查看${near.name}`:near.kind==='portal'?near.name:`挑战${assets.content.monsters[near.monsterId]?.name||'待迁移怪物'}`;}
-        if((wasMoving&&!moving)||(moving&&now-lastSave>3000))persist();
+        if((wasMoving&&!moving)||(moving&&now-lastSave>3000))queuePersist();
     }
     const rewardEffect=rewardFeedback.tick(now,stage==='world'&&!panel&&!dialog);
     const bagButton=nodes.hud.querySelector('[data-ui-icon=bag]')?.closest('button');bagButton?.classList.toggle('reward-glow',!rewardRoot.hidden&&!!rewardRoot.querySelector('.reward-popup:not([hidden]) strong'));

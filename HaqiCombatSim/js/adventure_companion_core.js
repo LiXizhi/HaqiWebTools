@@ -1,6 +1,6 @@
 // Presentation-only companion motion; never consumes combat RNG or changes saves.
 import { createRng, hashSeed } from './rng_core.js';
-import { distance, findPath, followPath, walkable, WALK_SPEED } from './adventure_world_core.js';
+import { clearSegment, distance, findPath, followPath, walkable, WALK_SPEED } from './adventure_world_core.js';
 
 export function createCompanion(world, hero, seed) {
     const nearby={x:hero.x-38,y:hero.y+28};
@@ -8,8 +8,13 @@ export function createCompanion(world, hero, seed) {
         rng:createRng(hashSeed(seed)),path:[],following:false,wait:1,repath:0,facing:1,moving:false,phase:0};
 }
 
-export function stepCompanion(pet,world,hero,dt) {
+export function stepCompanion(pet,world,hero,dt,options={}) {
     dt=Math.max(0,Math.min(.055,dt));
+    const deferSearch=!!options.deferSearch;
+    function route(from,to){
+        if(deferSearch&&!clearSegment(world,from,to))return null;
+        return findPath(world,from,to);
+    }
     // A zone/save teleport should not leave the companion on the other side of the map.
     if(distance(hero,pet.lastHero)>360){
         const fresh=createCompanion(world,hero,pet.rng.seed);
@@ -21,17 +26,22 @@ export function stepCompanion(pet,world,hero,dt) {
     if(gap>100&&!pet.following){pet.following=true;pet.repath=0;pet.path=[];}
     if(pet.following&&gap<46){pet.following=false;pet.path=[];pet.wait=.8+pet.rng.float()*2;}
     if(pet.following&&pet.repath<=0){
-        pet.path=findPath(world,pet.position,hero);pet.repath=.45;
+        const next=route(pet.position,hero);
+        if(next){pet.path=next;pet.repath=.45;}
+        else pet.repath=.05;
     }else if(!pet.following&&!pet.path.length){
         pet.wait-=dt;
         if(pet.wait<=0){
             pet.wait=1.4+pet.rng.float()*2.8;
-            for(let i=0;i<8;i++){
+            let searched=false;
+            for(let i=0;i<8&&!searched;i++){
                 const angle=pet.rng.float()*Math.PI*2,radius=34+pet.rng.float()*42;
                 const target={x:hero.x+Math.cos(angle)*radius,y:hero.y+Math.sin(angle)*radius};
                 if(!walkable(world,target.x,target.y)||distance(target,pet.position)<18)continue;
-                const route=findPath(world,pet.position,target);
-                if(route.length){pet.path=route;break;}
+                if(deferSearch&&!clearSegment(world,pet.position,target))continue;
+                const next=findPath(world,pet.position,target);
+                searched=true;
+                if(next.length){pet.path=next;break;}
             }
         }
     }

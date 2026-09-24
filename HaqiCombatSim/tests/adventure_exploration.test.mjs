@@ -5,7 +5,7 @@ import { createWorld, findPath, followPath, walkable, distance, nearbyWorldObjec
 import { createAdventure, applyAction, parseSave } from '../js/adventure_core.js';
 import { islandSpawn } from '../js/adventure_world_map_core.js';
 import { riverBlocks } from '../js/adventure_island_layout_core.js';
-import { createTerrainTileCache } from '../js/adventure_large_terrain.js';
+import { createTerrainTileCache, paintLargeTerrain } from '../js/adventure_large_terrain.js';
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
 content.worldMaps=Object.fromEntries(Object.entries(content.worldMapIndex.islands).map(([id,row])=>[id,JSON.parse(fs.readFileSync(new URL('../'+row.file,import.meta.url)))]));
 
@@ -60,4 +60,20 @@ test('terrain caches only bounded small tiles, reuses warm frames and invalidate
     const streamed={...world};let fallbacks=0;
     for(let i=0;i<12;i++){const before=paints;cache.draw(ctx,streamed,rect,()=>fallbacks++);assert.ok(paints-before<=2);}
     const settled=paints;cache.draw(ctx,streamed,rect,()=>fallbacks++);assert.equal(paints,settled);assert.ok(fallbacks>0);
+    const moving={...world};cache.draw(ctx,moving,rect);const parked=paints;
+    cache.draw(ctx,moving,{...rect,x:rect.x+8});assert.equal(paints,parked+1);
+});
+
+test('terrain tile paint skips farmland outside the tile',()=>{
+    let fills=0;
+    const c={fillRect(){fills++;},beginPath(){},moveTo(){},lineTo(){},closePath(){},stroke(){},fill(){},save(){},restore(){},clip(){},translate(){},scale(){},rotate(){},ellipse(){},createRadialGradient(){return{addColorStop(){}};}};
+    const world={w:4000,h:4000,zone:'town',center:{x:200,y:200},paths:[],trees:[],layout:{
+        coast:[[0,0],[400,0],[400,400],[0,400]],regions:[],mountains:[],rivers:[],lakes:[],bridges:[],details:[],features:[],
+        farms:[{x:3000,y:3000,rows:2,cols:2}],
+        rules:{terrain:{ocean:'#000',sand:'#ccc',base:'#888',coastLayers:[[8,'#111']],coastWidth:4,shadow:'#000',texture:{cell:64,count:1,light:'#fff',dark:'#000'}},
+            water:{},roads:{layers:[[0,'#654']]},bridge:{},mountain:{layers:1,baseRadius:1,stepRadius:1,stepHeight:1,aspect:1},
+            plaza:{radiusX:10,radiusY:8,edge:'#aaa',fill:'#ddd',line:'#bbb'},biomes:{}},
+    }};
+    paintLargeTerrain(c,world,{x:0,y:0,w:200,h:200});
+    assert.equal(fills,1);
 });

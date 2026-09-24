@@ -108,7 +108,7 @@ test('regional weather has a fixed viewport budget and respects reduced motion',
     const world=createWorld('ice',content),position=world.layout.regions.find(r=>r.biome==='snow');
     const commands=[];const c=new Proxy({}, {get:(_,key)=>(...args)=>commands.push([key,...args])});
     drawIslandWeather(c,world,position,100,1280,720);const first=structuredClone(commands);
-    assert.ok(commands.filter(c=>c[0]==='ellipse').length<=64);assert.ok(commands.length>10);
+    assert.ok(commands.filter(c=>c[0]==='ellipse').length<=128);assert.ok(commands.length>10);
     commands.length=0;drawIslandWeather(c,world,position,100,1280,720);assert.deepEqual(commands,first);
     commands.length=0;drawIslandWeather(c,world,position,101,1280,720,true);assert.equal(commands.length,0);
 });

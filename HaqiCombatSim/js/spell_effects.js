@@ -152,6 +152,24 @@ export function createSpellEffects(assets) {
         if(!cache.has(cacheKey)){if(cache.size>=128)cache.delete(cache.keys().next().value);const values=effectParticles(spec.base,spec.count,seed);values.groups={};for(const n of [20,22,24,30,32,38,40,48])values.groups[n]=values.slice(0,n);cache.set(cacheKey,values);}
         const particles=cache.get(cacheKey);
         c.save();c.lineCap='round';
+        if(spec.quickAttack){
+            const impact=config.timeline.impact,flight=clamp(p/impact),hit=clamp((p-impact)/(1-impact));
+            c.globalAlpha=Math.min(1,p*12,(1-p)*8);c.shadowColor=primary;c.shadowBlur=5*scale;
+            for(const particle of particles.groups[20]){
+                let point;
+                if(failed)point={x:caster.x+Math.cos(particle.angle)*18*scale*p,y:caster.y+Math.sin(particle.angle)*18*scale*p};
+                else if(reducedMotion)point={x:b.x+Math.cos(particle.angle)*10*scale,y:b.y+Math.sin(particle.angle)*10*scale};
+                else if(p<impact){
+                    const travel=clamp(flight-particle.phase*.12),spread=4*scale*Math.sin(travel*Math.PI);
+                    point={x:caster.x+(b.x-caster.x)*travel+Math.cos(particle.angle)*spread,y:caster.y+(b.y-caster.y)*travel+Math.sin(particle.angle)*spread};
+                }else {
+                    const spread=24*scale*hit*particle.speed;
+                    point={x:b.x+Math.cos(particle.angle)*spread,y:b.y+Math.sin(particle.angle)*spread};
+                }
+                disc(c,point.x,point.y,particle.size*scale*(1-hit*.7),failed?'#9aa1af':particle.phase>.5?primary:light);
+            }
+            c.restore();return;
+        }
         if(reducedMotion){const at=centered?a:b;c.globalAlpha=Math.sin(p*Math.PI)*.65;if(!centered||!echo){rune(c,at.x,at.y+40*scale,radius,0,primary);if(!failed)assets.skillArt?.drawSubject(c,spec.base,at.x-radius,at.y-radius,radius*2,radius*2);}c.restore();return;}
         // A soft darkening gives particles contrast without white screen flashes.
         if(!echo){c.fillStyle=`rgba(10,14,35,${Math.sin(p*Math.PI)*.22})`;c.fillRect(0,0,width,height);}

@@ -33,7 +33,8 @@ export function spellEffect(config,card) {
     if(!card)return null;
     const ref=config.cards[card.key],effect=config.bases[ref?.base];
     if(!effect)throw new Error(`缺少卡牌特效：${card.key}`);
-    return {...effect,name:ref.name,base:ref.base,variant:ref.variant,variantAura:config.variantAuras[ref.variant.rank],palette:config.palettes[card.spellSchool],summonDef:config.summons[effect.summon]};
+    const quickAttack=card.pipcost===0&&/Attack|LifeTap/.test(card.type);
+    return {...effect,quickAttack,duration:quickAttack?550:effect.duration,name:ref.name,base:ref.base,variant:ref.variant,variantAura:config.variantAuras[ref.variant.rank],palette:config.palettes[card.spellSchool],summonDef:config.summons[effect.summon]};
 }
 export function effectParticles(key,count,seed=0) {
     const rng=createRng(hashSeed(`spell-visual:${seed}:${key}`));

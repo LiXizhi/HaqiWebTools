@@ -91,6 +91,8 @@ test('equipment cards only show a transient card face without preview actions',t
     const h=domHelpers(),body=h.el('section');
     renderDeckEditor(body,{save:s,assets:{content,dataset:{cards},effects:{cards:{}},skillArt:{}}},{action(){}},h);
     const find=(node,cls)=>node?.className===cls?node:node?.children?.map(child=>find(child,cls)).find(Boolean);
+    const equipmentPanel=find(body,'bag-equipment');
+    assert.equal(equipmentPanel.tag,'details');assert.equal(equipmentPanel.open,true);
     const slot=find(body,'bag-slots equipment-card-slots').children[0],preview=find(body,'bag-detail');
     slot.onpointerenter({pointerType:'mouse'});t.mock.timers.tick(350);
     assert.equal(preview.hidden,false);assert.equal(preview.attributes.role,'tooltip');
@@ -159,7 +161,10 @@ test('deck defaults to learned cards and stages learning points until save',t=>{
     add.onpointerdown({button:0,pointerType:'mouse',clientX:20,clientY:20});add.onpointerup({clientX:20,clientY:20});add.onclick();
     assert.equal(s.cards[key],undefined);assert.equal(trainingPoints(s,c),1);
     assert.ok(nodes().some(node=>node.textContent==='训练点：0'));
-    nodes().find(node=>node.tag==='button'&&node.children[0]==='保存').onclick();
+    const pager=nodes().find(node=>node.className==='bag-pager');
+    const save=pager.children.find(node=>node.tag==='button'&&node.children[0]==='保存');
+    assert.equal(nodes().some(node=>node.className==='bag-footer'),false);
+    save.onclick();
     A.applyAction(s,c,action);assert.ok(s.cards[key]);assert.equal(trainingPoints(s,c),0);
 });
 

@@ -219,13 +219,15 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     const saveButton=button('保存',()=>{
         cb.action({type:'deck-layouts',layouts,active,learnedKeys:[...learned],...(bagItemId?{bagItemId}:{})});
     },'primary');
+    const equipmentPanel=el('details','bag-equipment',el('summary','',`装备附卡 ${equipment.children.length} 张 · 不占卡位`),equipment);
+    equipmentPanel.open=true;
     const bag=el('section','bag-main',el('div','bag-section-bar',counter,button('推荐',()=>{layouts[active].deck=recommendedDeck(draftSave(),content);mark();paintCards();},'secondary')),slots,
         el('p','bag-hint','拖出移除；长按 / 右键查看详情'),
-        el('details','bag-equipment',el('summary','',`装备附卡 ${equipment.children.length} 张 · 不占卡位`),equipment));
+        equipmentPanel);
     const collection=el('section','bag-collection',el('div','bag-section-bar',el('strong','','法术牌库'),search,toggle),filters,
-        library,el('div','bag-pager',countLabel,points,previous,next));
+        library,el('div','bag-pager',countLabel,points,previous,next,saveButton));
     const shop=button('购买卡包',()=>{if(shopView)Object.assign(shopView,{category:'bag',subcategory:0,selected:null,query:'',school:'',slot:'',ownership:'',level:'',page:0});cb.panel('shop');},'secondary');
     shop.title='前往商店购买卡包；当前修改需先保存';
-    body.append(el('div','bag-toolbar',tabs,shop),el('div','bag-workspace',bag,collection),status,el('div','bag-footer',saveButton),detail);
+    body.append(el('div','bag-toolbar',tabs,shop),el('div','bag-workspace',bag,collection),status,detail);
     paintTabs();paintCards();
 }

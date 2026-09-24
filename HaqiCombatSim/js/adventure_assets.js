@@ -73,7 +73,8 @@ export async function loadResources(progress) {
         }
         const source=(typeof ref==='object'&&ref.crop)||null;
         const rect=trim?getBounds(id,source):(source||[0,0,img.width,img.height]);
-        const ratio=Math.min(w/rect[2],h/rect[3]),dw=rect[2]*ratio,dh=rect[3]*ratio;
+        // Wide winged portraits opt into height fitting so the body matches other residents; wings may extend past the slot.
+        const ratio=(typeof ref==='object'&&ref.fit==='height')?h/rect[3]:Math.min(w/rect[2],h/rect[3]),dw=rect[2]*ratio,dh=rect[3]*ratio;
         ctx.drawImage(img,...rect,x+(w-dw)/2,y+(h-dh)/2,dw,dh);return true;
     }
     function tile(ctx,sheet,index,x,y,w,h) {

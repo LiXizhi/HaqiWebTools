@@ -112,6 +112,16 @@ test('hero regenerates 2% maximum HP per second and fills within 50 seconds outs
   s.heroHp=0;s.pendingEncounter={};P.tickCare(s,c,hero,71000,online);assert.equal(s.heroHp,0);
  }
 });
+test('dungeon worlds keep current hero and pet HP instead of regenerating',()=>{
+ const zone='dungeon:HaqiTown_FireCavern',content={...c,dungeons:[{id:zone}]};
+ const s=fresh(),pet=s.pets[s.formation[0]],hero=A.playerSpec(s,content);
+ pet.hunger=40;pet.hp=10;s.heroHp=10;s.zone=zone;
+ P.tickCare(s,content,hero,1000,true);P.tickCare(s,content,hero,121000,true);
+ assert.equal(s.heroHp,10);assert.equal(pet.hp,10);assert.equal(pet.hunger,38);
+ P.tickCare(s,content,hero,181000,false);assert.equal(s.heroHp,10);assert.equal(pet.hp,10);assert.equal(pet.hunger,38);
+ s.zone='camp';P.tickCare(s,content,hero,182000,true);
+ assert.ok(s.heroHp>10);assert.ok(pet.hp>10);
+});
 test('four hero slots, independent pet decks, replay and settlement',()=>{
  for(let slot=0;slot<4;slot++){
   const s=fresh();for(const id of P.STARTERS)if(!s.pets[id])P.addPet(s,c,id);const fourth=Object.keys(catalog.pets).find(id=>!s.pets[id]);P.addPet(s,c,fourth);

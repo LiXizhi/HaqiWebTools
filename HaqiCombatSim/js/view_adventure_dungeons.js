@@ -7,8 +7,8 @@ function bossPortrait(assets,d){
     const stage=el('div','dungeon-portrait'),fallback=el('span','icon');
     fallback.dataset.uiIcon='dungeon';fallback.setAttribute('aria-hidden','true');stage.append(fallback);
     const binding=monsterArtBinding(d.boss,assets.monsterArt);
-    // Only show an identified boss portrait; pet stand-ins misrepresent the boss.
-    if(binding?.kind!=='portrait'||!assets.drawMonster)return stage;
+    // Portraits when the boss model was rendered; otherwise the pet already used in the world.
+    if(!binding||!assets.drawMonster)return stage;
     const canvas=el('canvas','');canvas.width=256;canvas.height=256;
     canvas.setAttribute('role','img');canvas.setAttribute('aria-label',d.boss.name);stage.append(canvas);
     const ctx=canvas.getContext('2d');let tries=0;
@@ -31,7 +31,7 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null},cb){
     let filter='all',page=0;const pageSize=6;
     const filters=[['all','全部副本'],['recommended','适合我'],['progress','进行中']];
     for(const [key,label]of filters){const b=button(label,()=>{filter=key;page=0;draw();});b.dataset.filter=key;tabs.append(b);}
-    toolbar.append(tabs);modal.append(header,toolbar);
+    toolbar.append(tabs,el('p','muted','副本中不会自动回血，进入后需用现有生命通关。'));modal.append(header,toolbar);
     if(active)modal.append(el('div','dungeon-current',el('span','',`正在探索：${active.name}`),button('返回探索',cb.close,'secondary'),button('暂离副本',cb.leave,'secondary')));
     body.append(list);modal.append(body,footer);root.append(modal);
     function draw(){
@@ -45,13 +45,13 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null},cb){
             const cleared=save.dungeonRuns?.[d.id]?.cleared.length||0,total=d.arenas.length,complete=cleared===total;
             const card=el('article','dungeon-card');
             const picture=bossPortrait(assets,d);picture.append(el('span','dungeon-level',`建议 ${d.recommendedLevel} 级`));
-            const info=el('div','dungeon-card-info',el('h3','',d.name));
-            info.append(el('p','dungeon-boss-name',d.boss?.name||'秘境探索'));
-            if(cleared)info.append(el('span','dungeon-status',complete?'已通关':'探索中'));
             const monsters=d.arenas.filter(a=>!a.blocked?.length).flatMap(a=>(a.monsterIds||[]).map(id=>content.monsters[id])).filter(Boolean);
             const rewards=d.battleRewards||{xp:monsters.some(m=>m.xp>0),coins:monsters.some(m=>m.coins>0)};
             const rewardNames=[rewards.xp?'经验':null,rewards.coins?'奇豆':null].filter(Boolean);
-            if(rewardNames.length)info.append(el('p','dungeon-rewards',`战斗奖励：${rewardNames.join('、')}`));
+            if(rewardNames.length){const reward=el('span','dungeon-rewards',rewardNames.join('、'));reward.title=`战斗奖励：${rewardNames.join('、')}`;picture.append(reward);}
+            if(cleared)picture.append(el('span','dungeon-status',complete?'已通关':'探索中'));
+            const info=el('div','dungeon-card-info',el('h3','',d.name));
+            info.append(el('p','dungeon-boss-name',d.boss?.name||'秘境探索'));
             const actions=el('div','dungeon-actions');
             const enter=button(dungeonLoading===d.id?'正在进入…':active?.id===d.id?'返回探索':save.dungeonRuns?.[d.id]?'继续探索':'进入副本',()=>active?.id===d.id?cb.close():cb.enter(d.id,false),'primary');enter.disabled=!!dungeonLoading;actions.append(enter);
             if(cleared){const restart=button('重新挑战',()=>cb.enter(d.id,true),'secondary');restart.disabled=!!dungeonLoading;actions.append(restart);}

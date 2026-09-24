@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {projectQuestJournal,journalQuestStatus,filterJournalQuests} from '../js/adventure_quest_journal_core.js';
+import {projectQuestJournal,journalQuestStatus,filterJournalQuests,focusJournalQuest} from '../js/adventure_quest_journal_core.js';
 import {createQuestJournalLoader} from '../js/adventure_quest_journal.js';
 import {createAdventure} from '../js/adventure_core.js';
 const read=name=>JSON.parse(fs.readFileSync(new URL(`../data/adventure/${name}.json`,import.meta.url)));
@@ -33,6 +33,14 @@ test('displaying imported quests never grants eligibility or mutates character p
     assert.equal(filterJournalQuests(journal.quests,{region:'fire',query:'玄冰葫芦'},save,content).length>0,true);
     assert.equal(JSON.stringify(save),before);
     assert.equal(content.quests.length,14);
+});
+test('opening a tracked quest from another island selects that quest',()=>{
+    const save=createAdventure(content,{name:'任务验收'});
+    const quest=journal.quests.find(q=>q.title==='安格斯的困惑');
+    const focused=focusJournalQuest(journal.quests,{region:'camp',status:''},quest.id,20,save,content);
+    assert.equal(focused.filters.region,'fire');
+    const visible=filterJournalQuests(journal.quests,focused.filters,save,content);
+    assert.equal(visible.slice(focused.page*20,focused.page*20+20).some(q=>q.id===quest.id),true);
 });
 test('journal loader is lazy, shares downloads, and retries after network failure',async()=>{
     let calls=0;

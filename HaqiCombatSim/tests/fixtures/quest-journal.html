@@ -19,8 +19,9 @@ const assets={content,loadQuestJournal,draw:()=>false,drawPet:()=>false};
 const save=createAdventure(content,{name:'任务验收'}),root=document.querySelector('#root');
 const params=new URLSearchParams(location.search);if(params.has('zone'))save.zone=params.get('zone');if(params.has('previous'))save.dungeonReturn={zone:params.get('previous')};
 if(params.has('ready')){save.xp=content.progression.xpThresholds.at(-1);A.syncProgression(save,content);}
-const model={assets,save};window.testState={save,initial:JSON.stringify(save),tracked:0,closed:0,questId:0,error:''};
-const cb={close:()=>{root.replaceChildren();window.testState.closed++;},track(id){window.testState.tracked++;window.testState.questId=id||0;const quest=content.catalogQuests?.byId[id];if(quest){const snap=catalogStatSnapshot(save,content);try{if(!save.quests[id]?.accepted)A.applyAction(save,content,{type:'accept-catalog',questId:id,npcId:quest.startNpc});else if(catalogQuestReady(save,content,quest,snap))A.applyAction(save,content,{type:'claim-catalog',questId:id,npcId:quest.endNpc});}catch(error){window.testState.error=error.message;}}renderPanel(root,'quests',model,cb);}};
+const model={assets,save};window.testState={save,content,initial:JSON.stringify(save),tracked:0,closed:0,questId:0,error:''};
+const cb={close:()=>{root.replaceChildren();window.testState.closed++;},action(value){try{A.applyAction(save,content,value);}catch(error){window.testState.error=error.message;}renderPanel(root,'quests',model,cb);},track(id){window.testState.tracked++;window.testState.questId=id||0;const quest=content.catalogQuests?.byId[id];if(quest){const snap=catalogStatSnapshot(save,content);try{if(!save.quests[id]?.accepted)A.applyAction(save,content,{type:'accept-catalog',questId:id,npcId:quest.startNpc});else if(catalogQuestReady(save,content,quest,snap))A.applyAction(save,content,{type:'claim-catalog',questId:id,npcId:quest.endNpc});}catch(error){window.testState.error=error.message;}}renderPanel(root,'quests',model,cb);}};
+window.testState.act=value=>cb.action(value);
 if(!new URLSearchParams(location.search).has('noatlas'))await loadUiArt('cdn',read).catch(()=>{});
 renderPanel(root,'quests',model,cb);
 </script></body></html>

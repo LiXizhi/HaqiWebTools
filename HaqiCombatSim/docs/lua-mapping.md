@@ -231,6 +231,9 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 ### 2026-09-19 冒险角色自然恢复（网页改编）
 角色脱战自然恢复使用 BalanceParams.adventure.heroRegenPerSecond，默认每秒最大生命值的 2%，50 秒可从空血回满。此为用户指定的网页冒险规则，不修改 Lua 战斗治疗公式。宠物保留每分钟 5% 的既有规则。
 
+### 2026-09-24 副本世界暂停自然回血
+`39000_BasicArena.lua` `On_AutoHeal` 在非战斗时读取 `world_info.allow_hp_recovery`；`WorldManager.lua` 将该项默认视为真，原世界表没有把实例世界写成 `false`。网页冒险按用户要求：`save.zone` 属于副本时，`tickCare` 不恢复主角和宠物生命（含离线经过的时间），饱食仍按在线规则扣减。离开副本后从当前生命继续岛屿回血，不补回副本内度过的时间。战斗中的治疗与失败/撤退保底生命不变。
+
 ### 2026-09-19 装备强化与任务63007
 
 - `script/apps/Aries/Items/item.addonlevel.lua` L130–188：按 GSID 查询当前等级的累计属性、目标等级和对应材料需求；`adventure_upgrade_core.js` 保留此语义，不累加历级属性，不统一套用法杖数值。

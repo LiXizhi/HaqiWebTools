@@ -145,8 +145,62 @@ export function catalogQuestsForNpc(save, content, npcId, stats = {}) {
         claim: quests.filter(q => q.endNpc === npcId && catalogQuestReady(save, content, q, stats))
     };
 }
-export function catalogNpcMarker(save, content, npcId, stats = {}) {
-    const quest = content.catalogQuests?.byId[save.trackedQuestId];
+// QuestTrackerPage.lua max_size: the kids tracker keeps at most three quests.
+export const MAX_TRACKED_QUESTS = 3;
+const MARK_RANK = { '?': 3, '!': 2, '…': 1 };
+export function trackedQuestIds(save) {
+    const source = Array.isArray(save?.trackedQuestIds) ? save.trackedQuestIds : Number.isInteger(save?.trackedQuestId) && save.trackedQuestId > 0 ? [save.trackedQuestId] : [];
+    return source.filter(id => Number.isInteger(id) && id > 0 && !save.quests?.[id]?.claimed).slice(0, MAX_TRACKED_QUESTS);
+}
+function knownQuest(content, id) {
+    return content.quests?.find(quest => quest.id === id) || content.catalogQuests?.byId[id] || null;
+}
+export function pinTrackedQuest(save, content, questId) {
+    const id = Number(questId);
+    assert(knownQuest(content, id), '找不到这个任务');
+    const current = trackedQuestIds(save);
+    if (current.includes(id)) return { already: true };
+    if (current.length >= MAX_TRACKED_QUESTS) return { full: true };
+    const next = [...current];
+    if (!next.length) {
+        const chapter = content.quests?.find(quest => !save.quests[quest.id]?.claimed);
+        if (chapter && chapter.id !== id) next.push(chapter.id);
+    }
+    next.push(id);
+    save.trackedQuestIds = next.slice(0, MAX_TRACKED_QUESTS);
+    delete save.trackedQuestId;
+    return { added: true };
+}
+export function unpinTrackedQuest(save, questId) {
+    delete save.trackedQuestId;
+    if (questId == null) { delete save.trackedQuestIds; return; }
+    const ids = trackedQuestIds(save).filter(id => id !== Number(questId));
+    if (ids.length) save.trackedQuestIds = ids;
+    else delete save.trackedQuestIds;
+}
+export function supplementIslandTrack(save, content, zone, stats = {}) {
+    const tracked = trackedQuestIds(save);
+    if (!zone || tracked.length >= MAX_TRACKED_QUESTS) return null;
+    const taken = new Set(tracked);
+    let best = null;
+    for (const quest of content.catalogQuests?.quests || []) {
+        if (quest.region !== zone || taken.has(quest.id)) continue;
+        const status = catalogQuestStatus(save, content, quest, stats);
+        const rank = status === '进行中' ? 0 : status === '可接取' ? 1 : 2;
+        if (rank === 2) continue;
+        if (!best || rank < best.rank || (rank === best.rank && quest.id < best.id)) best = { id: quest.id, rank };
+    }
+    if (!best || !pinTrackedQuest(save, content, best.id).added) return null;
+    return best.id;
+}
+export function showCurrentChapter(save, content) {
+    const chapter = content.quests?.find(quest => !save.quests[quest.id]?.claimed);
+    const ids = trackedQuestIds(save);
+    if (!chapter || !ids.length || ids.includes(chapter.id) || ids.length >= MAX_TRACKED_QUESTS) return;
+    save.trackedQuestIds = [...ids, chapter.id];
+    delete save.trackedQuestId;
+}
+function catalogMark(save, content, quest, npcId, stats) {
     if (!quest || questRecord(save, quest.id).claimed) return null;
     const state = questRecord(save, quest.id);
     if (!state.accepted && quest.startNpc === npcId && !catalogAcceptBlock(save, content, quest, stats)) return '!';
@@ -154,13 +208,23 @@ export function catalogNpcMarker(save, content, npcId, stats = {}) {
     if (state.accepted && catalogGoalRows(save, content, quest, stats).some(g => g.kind === 'talk' && g.id === npcId && g.value < g.count)) return '…';
     return null;
 }
+export function catalogNpcMarker(save, content, npcId, stats = {}) {
+    let best = null;
+    for (const id of trackedQuestIds(save)) {
+        const mark = catalogMark(save, content, content.catalogQuests?.byId[id], npcId, stats);
+        if ((MARK_RANK[mark] || 0) > (MARK_RANK[best] || 0)) best = mark;
+    }
+    return best;
+}
 export function catalogTracksMonster(save, content, monster) {
-    const quest = content.catalogQuests?.byId[save.trackedQuestId];
-    const state = quest && questRecord(save, quest.id);
-    if (!state?.accepted || state.claimed) return false;
-    const goalId = content.catalogQuests.paths[String(monster?.source || monster?.id || '').toLowerCase()];
+    const goalId = content.catalogQuests?.paths[String(monster?.source || monster?.id || '').toLowerCase()];
     if (!goalId) return false;
-    return catalogGoalRows(save, content, quest).some(goal => goal.value < goal.count && (goal.kind === 'kill' && goal.id === goalId || goal.kind === 'loot' && goal.producers?.includes(goalId)));
+    return trackedQuestIds(save).some(id => {
+        const quest = content.catalogQuests?.byId[id];
+        const state = quest && questRecord(save, quest.id);
+        if (!state?.accepted || state.claimed) return false;
+        return catalogGoalRows(save, content, quest).some(goal => goal.value < goal.count && (goal.kind === 'kill' && goal.id === goalId || goal.kind === 'loot' && goal.producers?.includes(goalId)));
+    });
 }
 
 function bump(save, quest, kind, id, amount, max) {
@@ -223,7 +287,7 @@ export function acceptCatalogQuest(save, content, questId, npcId, stats = {}) {
     const block = catalogAcceptBlock(save, content, quest, stats);
     assert(!block, block || '当前没有可接取的任务');
     save.quests[quest.id] = { accepted: true, claimed: false, progress: {} };
-    save.trackedQuestId = quest.id;
+    return pinTrackedQuest(save, content, quest.id);
 }
 export function claimCatalogQuest(save, content, questId, npcId, stats = {}) {
     const quest = content.catalogQuests?.byId[Number(questId)];
@@ -238,9 +302,20 @@ export function claimCatalogQuest(save, content, questId, npcId, stats = {}) {
     return quest;
 }
 export function validateCatalogQuests(save, content) {
-    if (save.trackedQuestId !== undefined) {
+    if (!Array.isArray(save.trackedQuestIds) && save.trackedQuestId !== undefined) {
         assert(Number.isInteger(save.trackedQuestId) && save.trackedQuestId > 0, '追踪任务无效');
-        if (content.catalogQuests) assert(content.catalogQuests.byId[save.trackedQuestId], '追踪任务无效');
+        save.trackedQuestIds = [save.trackedQuestId];
+    }
+    delete save.trackedQuestId;
+    if (save.trackedQuestIds !== undefined) {
+        assert(Array.isArray(save.trackedQuestIds), '追踪任务无效');
+        save.trackedQuestIds = save.trackedQuestIds.filter(id => !save.quests[id]?.claimed);
+        assert(save.trackedQuestIds.length <= MAX_TRACKED_QUESTS && new Set(save.trackedQuestIds).size === save.trackedQuestIds.length, '追踪任务无效');
+        for (const id of save.trackedQuestIds) {
+            assert(Number.isInteger(id) && id > 0, '追踪任务无效');
+            if (content.catalogQuests) assert(knownQuest(content, id), '追踪任务无效');
+        }
+        if (!save.trackedQuestIds.length) delete save.trackedQuestIds;
     }
     if (!content.catalogQuests) return;
     const chapter = new Set(content.quests.map(q => String(q.id)));

@@ -82,6 +82,53 @@ test('all resident shop offers are audited and special exchanges fail without mu
     assert.match(npcOfferStatus(save,c,timed).reason,/限时/);
     assert.ok(npcOfferStatus(save,c,timed).price);
 });
+test('magic-bean exchanges debit the local balance and survive save validation',()=>{
+    const content=structuredClone(c),resident=npc(30415),save=createAdventure(content);
+    const offer=npcOffers(content,resident).find(row=>row.itemId===2115);
+    content.npcCatalog.exchanges[offer.exchangeId].costs=[{id:984,count:10}];
+    save.zone=resident.zone;save.inventory[984]=9;save.inventory[2115]=0;
+    const before=JSON.stringify(save);
+    assert.throws(()=>applyAction(save,content,action(resident,offer)),/需要/);
+    assert.equal(JSON.stringify(save),before);
+    save.inventory[984]=10;
+    applyAction(save,content,action(resident,offer));
+    assert.equal(save.inventory[984],0);
+    assert.equal(save.inventory[2115],1);
+    assert.equal(parseSave(JSON.stringify(save),content).inventory[2115],1);
+});
+test('original fisherman magic-bean prices and veteran ownership conditions work in packaged data',()=>{
+    for(const catalog of [c.npcCatalog,projectRuntimeData('adventure/npc-catalog.json',c.npcCatalog)]){
+        const content=structuredClone(c);content.npcCatalog=catalog;
+        for(const [npcId,itemId,price] of [[30389,17466,3],[30389,17113,2]]){
+            const resident=npc(npcId),offer=npcOffers(content,resident).find(row=>row.itemId===itemId);
+            const save=createAdventure(content);save.zone=resident.zone;save.inventory[984]=price;
+            assert.equal(npcOfferStatus(save,content,offer).allowed,true);
+            applyAction(save,content,action(resident,offer));
+            assert.equal(save.inventory[984],0);assert.equal(save.inventory[itemId],1);
+            assert.equal(parseSave(JSON.stringify(save),content).inventory[itemId],1);
+            assert.throws(()=>applyAction(save,content,action(resident,offer)),/需要/);
+        }
+        const resident=npc(30550),offer=npcOffers(content,resident).find(row=>row.itemId===2234);
+        const save=createAdventure(content);save.zone=resident.zone;save.inventory[17484]=2;
+        assert.match(npcOfferStatus(save,content,offer).reason,/需持有/);
+        save.inventory[2075]=1;
+        applyAction(save,content,action(resident,offer));
+        assert.equal(save.inventory[2075],1);assert.equal(save.inventory[17484],0);assert.equal(save.inventory[2234],1);
+        assert.ok(parseSave(JSON.stringify(save),content).equipmentInstances.some(row=>row.gsid===2234));
+    }
+});
+test('member-only equipment requires current verified membership and debits original medals',()=>{
+    const resident=npc(30431),offer=npcOffers(c,resident).find(row=>row.itemId===2383);
+    const save=createAdventure(c);save.zone=resident.zone;save.inventory[17215]=590;
+    const now=Date.parse('2026-09-24T12:00:00Z');
+    const before=JSON.stringify(save);
+    assert.throws(()=>applyAction(save,c,action(resident,offer)),/会员/);
+    assert.throws(()=>applyAction(save,c,action(resident,offer),{keepworkVip:true,now,expiresAt:'2026-09-23'}),/会员/);
+    assert.equal(JSON.stringify(save),before);
+    applyAction(save,c,action(resident,offer),{keepworkVip:true,now,expiresAt:'2026-10-24'});
+    assert.equal(save.inventory[17215],0);assert.equal(save.inventory[2383],1);
+    assert.equal(parseSave(JSON.stringify(save),c).inventory[2383],1);
+});
 test('six original island catalogues retain all instances and place residents deterministically',()=>{
     assert.deepEqual(c.npcCatalog.report.islands,{camp:27,town:218,fire:9,ice:14,desert:11,dark:13});
     assert.equal(c.npcCatalog.shops.length,1764);

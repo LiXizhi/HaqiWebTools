@@ -97,4 +97,4 @@ header.append(createCloseButton(closeDetails, '关闭物品详情'));
 
 ### 副本入口图标（2026-09-22）
 
-副本入口使用AI生成的金色石门/绿色传送门，合入原共享WebP图集第五行第一格。清单使用 columns / rows（当前4×5），加载器统一计算背景尺寸与位置；原16格坐标保留，整体预算仍为100,000字节。新增图标来源、提示词和哈希在 ui-art.json 的 additions 内；可用 scripts/prepare_dungeon_icon.py 从保留的原图集和生成原图重新准备。
+副本入口使用AI生成的金色石门/绿色传送门，合入原共享WebP图集第五行第一格。清单使用 columns / rows（当前4×5），加载器统一计算背景尺寸与位置；原16格坐标保留，整体预算仍为100,000字节。新增图标来源、提示词和哈希在 ui-art.json 的 additions 内；可用 scripts/prepare_dungeon_icon.py 从保留的原图集和生成原图重新准备。副本卡片优先画已有 Boss 立绘；没有立绘时画场景里同一只宠物，石门只在两者都没有时出现。

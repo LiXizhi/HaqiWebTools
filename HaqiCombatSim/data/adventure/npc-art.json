@@ -3519,31 +3519,36 @@
     "town:198:30550": {
       "visible": true,
       "portrait": {
-        "id": "npc:d656547f683dd71de9ab"
+        "id": "npc:d656547f683dd71de9ab",
+        "fit": "height"
       }
     },
     "town:199:30551": {
       "visible": true,
       "portrait": {
-        "id": "npc:0dd962da63f71a8830f8"
+        "id": "npc:0dd962da63f71a8830f8",
+        "fit": "height"
       }
     },
     "town:200:30552": {
       "visible": true,
       "portrait": {
-        "id": "npc:a7c3782c7980120d645a"
+        "id": "npc:a7c3782c7980120d645a",
+        "fit": "height"
       }
     },
     "town:201:30553": {
       "visible": true,
       "portrait": {
-        "id": "npc:d234ff957c206a6924f5"
+        "id": "npc:d234ff957c206a6924f5",
+        "fit": "height"
       }
     },
     "town:202:30554": {
       "visible": true,
       "portrait": {
-        "id": "npc:ae559ae35042ba1fa30b"
+        "id": "npc:ae559ae35042ba1fa30b",
+        "fit": "height"
       }
     },
     "town:203:30556": {

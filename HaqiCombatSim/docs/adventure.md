@@ -10,7 +10,7 @@
 
 新建角色第一步（起名字）及角色管理入口已接入原服只读读取，限定背包0/1/24/25。用户先通过正式背包与卡包面板检查暂存数据，查看两者后才能确认创建独立角色；取消不改存档，最终确认再次核验身份。未支持装备、卡牌和成长差异在折叠说明中显示；非完整原服进度迁移。详见 [player-import.md](player-import.md)。
 
-`Haqi.html` 是独立的 kids 单人冒险入口，使用 Canvas 2D 场景与 HTML 菜单。原 `HaqiCombatSim.html` 的 PvP、批量模拟和调参入口保持独立。
+`Haqi.html` 是独立的 kids 单人冒险入口，使用 Canvas 2D 场景与 HTML 菜单。原 `HaqiCombatSim.html` 的 PvP、批量模拟和调参入口保持独立。界面语言与 `data/adventure/locale/` 词典见 [locale.md](locale.md)。
 
 ## 运行与重新导出
 

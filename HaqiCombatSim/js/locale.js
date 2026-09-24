@@ -2,19 +2,32 @@ import { LOCALES, lookup, parseLocaleFile, speechCode } from './locale_core.js';
 import { setTranslator } from './locale_runtime.js';
 
 const dictionaries = {};
+const loading = new Map();
 let display = 'zh-CN';
 let learning = null;
 let tooltip;
 let launch;
 
-export async function loadLocaleFiles(fetchText = path => fetch(path).then(response => response.ok ? response.text() : Promise.reject(response.status))) {
-    try { dictionaries.en = parseLocaleFile(await fetchText('./data/adventure/locale/en.txt')); }
-    catch { dictionaries.en = {}; }
-    for (const id of ['ja', 'ko']) {
-        try { dictionaries[id] = parseLocaleFile(await fetchText(`./data/adventure/locale/${id}.txt`)); }
-        catch { delete dictionaries[id]; }
-    }
+const defaultFetch = path => fetch(path).then(response => response.ok ? response.text() : Promise.reject(response.status));
+
+export function hasLocale(id) {
+    return id === 'zh-CN' || Object.hasOwn(dictionaries, id);
+}
+
+export async function loadLocaleFiles(ids = [], fetchText = defaultFetch) {
+    await Promise.all(ids.map(id => ensureLocale(id, fetchText)));
     applyTranslator();
+}
+
+function ensureLocale(id, fetchText) {
+    if (!id || id === 'zh-CN' || Object.hasOwn(dictionaries, id)) return Promise.resolve();
+    if (loading.has(id)) return loading.get(id);
+    const task = fetchText(`./data/adventure/locale/${id}.txt`)
+        .then(text => { dictionaries[id] = parseLocaleFile(text); })
+        .catch(() => { dictionaries[id] = {}; })
+        .finally(() => loading.delete(id));
+    loading.set(id, task);
+    return task;
 }
 
 export function configureLocale({ locale = 'zh-CN', languageLearning = null } = {}) {

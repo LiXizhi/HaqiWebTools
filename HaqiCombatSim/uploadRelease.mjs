@@ -23,7 +23,8 @@ function collect(directory, prefix = '') {
         // Static artwork/audio already has permanent URLs in the media manifests.
         // Defensively skip any manually added media; Vite never emits it either.
         if (/\.(webp|ogg)$/i.test(entry.name)) return [];
-        if (!/\.(html|js|css|json)$/.test(entry.name)) throw new Error(`不允许发布此类型：${relative}`);
+        const localeText = /^data\/adventure\/locale\/[A-Za-z0-9._-]+\.txt$/.test(relative);
+        if (!localeText && !/\.(html|js|css|json)$/.test(entry.name)) throw new Error(`不允许发布此类型：${relative}`);
         const bytes = fs.readFileSync(absolute);
         return [{ path: relative, bytes: bytes.length, sha256: sha256(bytes) }];
     });

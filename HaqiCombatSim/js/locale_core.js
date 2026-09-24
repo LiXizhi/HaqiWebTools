@@ -40,17 +40,50 @@ export function splitLocaleLine(line) {
     const at = winners[0].index;
     const key = line.slice(0, at);
     const value = line.slice(at + longest);
-    if (!key || !value) return null;
+    if (!key) return null;
     return { key, value };
+}
+
+function decodeLocaleField(text) {
+    return text.replace(/\\n/g, '\n');
+}
+
+// A blank translation is a known key. Newlines are stored as \n. The longest "|" run is one longer than any run in the text.
+export function formatLocaleLine(key, value = '') {
+    const source = String(key).replaceAll('\r\n', '\n').replaceAll('\r', '\n').replaceAll('\n', '\\n');
+    const translated = String(value ?? '').replaceAll('\r\n', '\n').replaceAll('\r', '\n').replaceAll('\n', '\\n');
+    if (!source) return null;
+    const runs = [...`${source}\n${translated}`.matchAll(/\|+/g)];
+    const longest = runs.reduce((max, run) => Math.max(max, run[0].length), 1);
+    return `${source}${'|'.repeat(longest + 1)}${translated}`;
+}
+
+// A leading # with no "|" is a source note, not a dictionary key.
+export function isLocaleComment(line) {
+    const trimmed = String(line).trim();
+    return trimmed.startsWith('#') && !trimmed.includes('|');
+}
+
+export function stripLocaleComments(text) {
+    return String(text || '').split(/\r?\n/).filter(line => !isLocaleComment(line)).join('\n');
+}
+
+export function localeIdsToLoad(save) {
+    if (!save) return [];
+    const learning = save.languageLearning && typeof save.languageLearning === 'object' ? save.languageLearning : null;
+    const ids = learning?.enabled === true ? [learning.target, learning.native] : [save.locale];
+    return [...new Set(ids.filter(id => IDS.has(id) && id !== 'zh-CN'))];
 }
 
 export function parseLocaleFile(text) {
     const table = {};
     for (const raw of String(text || '').split(/\r?\n/)) {
-        if (!raw.trim()) continue;
+        if (!raw.trim() || isLocaleComment(raw)) continue;
         const pair = splitLocaleLine(raw);
-        if (!pair || Object.hasOwn(table, pair.key)) continue;
-        table[pair.key] = pair.value;
+        if (!pair) continue;
+        const key = decodeLocaleField(pair.key);
+        if (Object.hasOwn(table, key)) continue;
+        table[key] = decodeLocaleField(pair.value);
     }
     return table;
 }

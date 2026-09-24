@@ -54,6 +54,8 @@ npm run verify:release # 对当前dist重新核验，不上传
 
 副本保持一个完整JSON，不按世界拆分。`data/adventure/dungeons.json`保留完整原版导出配置，构建时按既有白名单剔除归档XML，独立输出`dist/data/adventure/dungeons.json`。由现有`vite.config.mjs`在同一次构建中作为资源输出，运行`npm run build`即可，无独立构建配置、额外打包命令或JS入口产物。
 
+`data/adventure/locale/*.txt` 同样在这次构建里逐个输出，不并入启动数据包。源码里以 `#` 开头且不含 `|` 的注释会在输出时去掉。游戏按当前界面语言或语言学习的母语/目标语言按需下载，中文不下载词典。发布白名单因此允许 `data/adventure/locale/` 下的 `.txt`，其他文本文件仍然拒绝。
+
 `data/adventure/dungeon-index.json`是生成的轻量菜单/存档校验索引，包含在主启动数据包中。主`adventure.json`不再包含完整副本数据。首次进入任意副本，浏览器读取完整副本JSON并缓存，之后进入其他副本不再下载。源码与发布使用同一相对URL，副本IO专用独立JSON读取器，不走五包路由。当前角色在副本内的本地/云端存档恢复会先预加载；历史清怪记录用轻量索引校验。
 
 Vite开发启动、正常构建及副本导出都会同步更新轻量索引；副本数据修改后按正常流程重新构建发布。发布白名单仍只允许HTML/JS/CSS/JSON，不包含美术或音频。

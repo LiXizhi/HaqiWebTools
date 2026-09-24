@@ -16,7 +16,7 @@ def npl(code):
     if not reply.get('ok') or not reply.get('result',{}).get('ok'):raise RuntimeError(str(reply))
     return reply['result'].get('result')
 
-def render(job,out):
+def render(job,out,settle_seconds=6):
     key=job['id'];model=json.dumps(job['model'])
     npl(f'''
 NPL.load("(gl)script/ide/Canvas3D.lua");
@@ -41,22 +41,28 @@ return true;
     npl(f'local c=CommonCtrl.GetControl("{CONTROL}");local s=ParaScene.GetMiniSceneGraph(c.resourceName);s:CameraSetLookAtPos({center[0]},{center[1]},{center[2]});return true;')
     # Verified against Smilodon front face; every model gets four independent views.
     angles=[-math.pi/2,0,math.pi,math.pi/2]
+    # IsLoaded only covers the primary asset. Composite models and textures are
+    # requested on draw, so warm every direction before accepting any frame.
+    for angle in angles:
+        npl(f'local c=CommonCtrl.GetControl("{CONTROL}");c:CameraSetEyePosByAngle({angle},0.35,{distance});local s=ParaScene.GetMiniSceneGraph(c.resourceName);s:Draw(0);return true;')
+        time.sleep(settle_seconds/4)
+    npl(f'local c=CommonCtrl.GetControl("{CONTROL}");c:EnableActiveRendering(false);local o=ParaScene.GetMiniSceneGraph(c.resourceName):GetObject(c.obj_name);o:SetField("AnimFrame",0);return true;')
     frames=[]
     for attempt in range(10):
         frames=[]
         for i,angle in enumerate(angles):
             path=(out/f'{key}-{i}.png').resolve().as_posix()
             npl(f'local c=CommonCtrl.GetControl("{CONTROL}");c:CameraSetEyePosByAngle({angle},0.35,{distance});local s=ParaScene.GetMiniSceneGraph(c.resourceName);s:EnableActiveRendering(false);s:Draw(0);return true;')
-            time.sleep(.45 if attempt else 1)
-            npl(f'local c=CommonCtrl.GetControl("{CONTROL}");local s=ParaScene.GetMiniSceneGraph(c.resourceName);s:EnableActiveRendering(false);s:Draw(0.1);c:SaveToFile({json.dumps(path)},512);return true;')
-            image=Image.open(path).convert('RGBA');box=image.getbbox()
-            if not box:
-                for retry in range(6):
-                    time.sleep(.5)
-                    npl(f'local c=CommonCtrl.GetControl("{CONTROL}");local s=ParaScene.GetMiniSceneGraph(c.resourceName);s:Draw(0);c:SaveToFile({json.dumps(path)},512);return true;')
-                    image=Image.open(path).convert('RGBA');box=image.getbbox()
-                    if box:break
-                if not box:raise RuntimeError('Empty rendering')
+            previous=None;stable=0
+            for retry in range(30):
+                time.sleep(1)
+                npl(f'local c=CommonCtrl.GetControl("{CONTROL}");local s=ParaScene.GetMiniSceneGraph(c.resourceName);s:GetObject(c.obj_name):SetField("AnimFrame",0);s:Draw(0);c:SaveToFile({json.dumps(path)},512);return true;')
+                image=Image.open(path).convert('RGBA');box=image.getbbox()
+                pixels=image.tobytes()
+                stable=stable+1 if box and pixels==previous else 0
+                previous=pixels
+                if stable>=2:break
+            else:raise RuntimeError('Rendering did not settle: '+key+' direction '+str(i))
             frames.append(image)
         boxes=[im.getbbox() for im in frames]
         if all(min(b[:2])>8 and max(b[2:])<504 for b in boxes):break
@@ -70,21 +76,26 @@ return true;
     assert len(raw)<=200000
     sha=hashlib.sha256(raw).hexdigest();local=f'assets/{key}-{sha[:12]}.webp';(HERE/local).write_bytes(raw)
     return dict(local=local,cdn=None,width=768,height=768,columns=2,rows=2,bytes=len(raw),sha256=sha,
-        source={'method':'original-model-mini-scene','model':job['model'],'originalAsset':job['originalAsset']},
+        source={'method':'original-model-mini-scene','model':job['model'],'originalAsset':job['originalAsset'],
+            'capture':{'warmupSeconds':settle_seconds,'stableSamples':3,'sampleIntervalSeconds':1,'animFrame':0}},
         camera={'angles':angles,'elevation':.35,'distance':distance,'lookAt':center,'bounds':bb},
         frameBounds=[[v/512 for v in b] for b in boxes])
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--id');p.add_argument('--retry',action='store_true');args=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--id',action='append');p.add_argument('--retry',action='store_true');p.add_argument('--force',action='store_true');p.add_argument('--settle-seconds',type=float,default=6);args=p.parse_args()
+    if args.settle_seconds<6:p.error('--settle-seconds must be at least 6')
     out=HERE/'native-cache';out.mkdir(exist_ok=True)
     jobs=json.loads((HERE/'original-catalog.json').read_text(encoding='utf-8'))['jobs']
-    path=HERE/'native-assets.json';assets=json.loads(path.read_text()) if path.exists() else {}
-    failures={}
+    path=HERE/'native-assets.json';assets=json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    failure_path=HERE/'native-failures.json'
+    failures=json.loads(failure_path.read_text(encoding='utf-8')) if failure_path.exists() else {}
     for job in jobs:
-        if args.id and job['id']!=args.id:continue
-        if job['id'] in assets:continue
+        if args.id and job['id'] not in args.id:continue
+        if args.retry and job['id'] not in failures:continue
+        if job['id'] in assets and not args.force:continue
         try:
-            assets[job['id']]=render(job,out)
+            assets[job['id']]=render(job,out,args.settle_seconds)
+            failures.pop(job['id'],None)
             path.write_text(json.dumps(assets,ensure_ascii=False,indent=2),encoding='utf-8')
             print('OK',job['id'],job['name'],assets[job['id']]['bytes'],flush=True)
         except Exception as e:

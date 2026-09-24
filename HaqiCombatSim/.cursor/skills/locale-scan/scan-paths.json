@@ -1,0 +1,34 @@
+{
+  "localeDir": "data/adventure/locale",
+  "base": "en.txt",
+  "files": [
+    "js/view_adventure.js",
+    "js/view_language_learning.js",
+    "js/view_haqi_import.js",
+    "js/view_detail_dialog.js",
+    "js/card_renderer.js",
+    "js/adventure_renderer.js",
+    "js/adventure_app.js",
+    "js/locale.js",
+    "js/adventure_core.js",
+    "js/adventure_cast_feedback_core.js",
+    "js/adventure_rewards_core.js",
+    "js/adventure_checkin_core.js",
+    "js/adventure_expansion_core.js",
+    "js/language_learning.js",
+    "js/language_learning_core.js"
+  ],
+  "dirs": [
+    {
+      "path": "js",
+      "include": ["view_adventure_*.js"]
+    }
+  ],
+  "json": [
+    {
+      "path": "data/adventure/chapter.json",
+      "fields": ["label"],
+      "enabled": false
+    }
+  ]
+}

@@ -1,72 +1,901 @@
-拖动任何文字或按钮到这里，可以翻译。||Drag any text or button here to translate.
-下次再聊||Talk to you later
-查看商品与学习魔法||View goods and learn magic
-自由交谈||Free talk
-语言挑战||Language challenge
-语言学习：关闭||Language learning: off
-语言学习：开启||Language learning: on
-界面语言||Display language
-母语||Native language
-目标语言||Target language
-旅途设置||Journey settings
-你的冒险旅程||Your adventure
-设置||Settings
-任务||Quests
-卡包||Cards
-背包||Bag
-宠物||Pet
-商店||Shop
-世界地图||World map
-副本||Dungeons
-交谈||Talk
-购买||Buy
-撤退||Retreat
-跳过本回合||Skip this turn
-魔法对决||Magic duel
-对决结束||The duel is over
-魔法正在生效…||The spell is taking effect…
-签到||Check in
-会员权益||Membership
-升级会员||Upgrade membership
-切换 / 新建角色||Switch / new character
-属性编辑器 · 调试||Stat editor · debug
-技能音效：开启||Spell sounds: on
-技能音效：关闭||Spell sounds: off
-背景音乐：开启||Music: on
-背景音乐：关闭||Music: off
-云端旅途 · 跨设备继续冒险||Cloud journey · continue on another device
-回到开始画面||Back to the title
-关于这段旅程||About this journey
-查看改编说明||View adaptation notes
-打开战斗模拟器||Open the combat simulator
-技能特效工坊||Spell effect workshop
-接取任务||Accept quest
-完成任务||Complete quest
-继续||Continue
-让这只宠物开心||Make this pet happy
-解释天空为什么是蓝色的||Explain why the sky is blue
-给它讲一个很短的故事||Tell it a very short story
-夸它可爱||Say it is cute
-说你喜欢它||Say you like it
-请它一起玩||Ask it to play with you
-说到阳光||Mention sunlight
-说到空气||Mention the air
-说到蓝光||Mention blue light
-有一个开始||There is a beginning
-有一个朋友||There is a friend
-有一个结尾||There is an ending
-对话挑战||Talk challenge
-挂断||Hang up
-按住说话||Hold to talk
-发送||Send
-通过||Passed
+# js/adventure_app.js
+本地存档失败，云端同步已暂停||Local save failed; cloud sync paused.
+正在自动保存…||Auto-saving…
+云存档暂未完成，本地进度已保留，将自动重试。||Cloud save not finished yet; local progress is kept and will retry automatically.
+浏览器暂时无法启用音效，请重试。||The browser could not enable sound for now. Please try again.
+Pair corresponding words between the two lines. Return JSON only: {"groups":[{"color":0,"top":"Back","bottom":"回到"}]}. Use the same color number for a matching pair. Keep each fragment exactly as it appears. Do not translate or explain.||
+界面语言已更新||Display language updated.
+说出这件物品的名字||Say the name of this item
+说说你为什么想要它||Say why you want it
+用一句话描述它||Describe it in one sentence
 未通过||Not yet
-奇豆不足||Not enough Qi beans
-烈火||Fire
-寒冰||Ice
+通过||Passed
+查看背包||View bag
+查看伙伴||View companions
+立即穿上||Wear now
+立即配卡||Build deck now
+进度未能保存，可能是其他页面已更新。请勿关闭页面，检查存储后重试。||Progress could not be saved; another page may have updated it. Keep this page open, check storage and try again.
+尚未选择角色||No character selected yet
+请先完成当前战斗||Finish the current battle first
+调试属性已保存，修改前的备份已保留。||Debug stats saved; a backup from before the change was kept.
+没有可恢复的调试备份||No debug backup to restore
+角色进度已变化，请重试||Character progress has changed. Please try again.
+已恢复上次调试修改前的存档。||Restored the save from before your last debug change.
+请选择一份记录查看，或保存当前旅程。||Pick a record to view, or save the current journey.
+未找到云端记录，可刷新重试。||No cloud records found; refresh and try again.
+云端目录已刷新。||Cloud records refreshed.
+正在读取云端目录…||Loading cloud records…
+请先开始一段冒险。||Start an adventure first.
+已保存到云端，并核验远端内容。||Saved to the cloud and verified against the remote copy.
+正在保存并核验云端进度…||Saving and verifying cloud progress…
+本地进度已变化，请重新查看这份记录。||Local progress has changed; please review this record again.
+请比较两份进度，确认后恢复。||Compare the two saves and confirm before restoring.
+请先新建或选择一个角色。||Create or select a character first.
+正在校验存档与战斗记录…||Verifying save and battle records…
+云端进度已恢复。原本地进度已保留为备份。||Cloud progress restored. Your previous local progress was kept as a backup.
+已恢复本地备份。||Local backup restored.
+正在加载备份…||Loading backup…
+正在退出账号…||Signing out…
+已退出账号，本地进度已保留。||Signed out; local progress kept.
+已退出账号。未同步进度保留在原账号的本机缓存。||Signed out. Unsynced progress stays in the original account's local cache.
+角色或游戏状态已变化，请重新操作。||Character or game state has changed; please try again.
+请先登录会员账号，再使用会员权益。||Sign in to a membership account before using member perks.
+咕噜噜吃饱了，获得了经验！||Gululu is full and gained experience!
+咕噜噜从蛋里探出了头，开始跟随你。||Gululu peeked out of the egg and now follows you.
+进度已保存||Progress saved
+卡包已保存。||Card deck saved.
+领取成功，奖励已放入背包！||Claimed! The reward is in your bag.
+已经装备。属性将在下一场战斗中生效。||Already equipped. Stats take effect in the next battle.
+装备强化成功！||Equipment upgraded!
+装备已卸下，属性与配卡已更新。||Equipment unequipped; stats and card deck updated.
+当前进度尚未保存，请勿关闭页面。请检查浏览器存储或重试。||Progress is not saved yet. Do not close the page; check browser storage or retry.
+正在进入角色…||Entering character…
+正在退出…||Signing out…
+已退出账号。未同步进度仍保留在该账号的本机缓存，下次登录可继续。||Signed out. Unsynced progress stays in that account's local cache and continues at next login.
+正在保存并核验角色…||Saving and verifying character…
+正在读取角色…||Loading character…
+正在备份并加载云端…||Backing up and loading from cloud…
+已加载云端角色，本地进度已备份。||Cloud character loaded; local progress backed up.
+角色不存在||Character not found
+最多可创建5个主角。||You can create up to 5 characters.
+当前角色账号与原服账号不同，请切换账号后重试。||This character belongs to a different original-server account. Switch accounts and try again.
+角色已导入并保存在本机，可从角色列表进入。||Character imported and saved locally; enter it from the character list.
+正在创建角色…||Creating character…
+请先处理角色云端冲突，再新建角色。||Resolve the character cloud conflict before creating a new one.
+角色有云端冲突，本地进度已保留。请在角色列表处理。||This character has a cloud conflict; local progress is kept. Resolve it in the character list.
+账号已切换，请重新连接。||Account switched; please reconnect.
+角色已保存到云端并核验。||Character saved to the cloud and verified.
+账号已变化，请重新登录。||Account changed; please sign in again.
+另一台设备更新了角色，本地进度尚未上传，请选择备份后加载云端。||Another device updated this character and local progress is not uploaded. Choose a backup, then load the cloud copy.
+检测到不同设备的角色分支，请先备份本地角色再加载云端。||Character branches from different devices detected. Back up the local character before loading the cloud copy.
+正在登录并读取角色…||Signing in and loading character…
+当前为访客角色。||This is a guest character.
+背景音乐暂时不可用，可以继续游玩。||Music is unavailable for now; you can keep playing.
+此地点暂时无法抵达||This place cannot be reached for now
+重新开启会重置该副本的清怪进度，确定继续吗？||Reopening resets the monster-clearing progress of this dungeon. Continue?
+，请重试。||, please try again.
+副本加载失败：||Failed to load dungeon: 
+那里很危险，确定还要前往吗？||It is dangerous there. Still want to go?
+接取任务||Accept quest
+谢谢你，我知道了||Thanks, got it
+法斯特船长||Captain Fast
+这里暂时走不过去，试试旁边的小路。||The way through is blocked for now; try the side path.
+任务已记录在手记中。||The quest is recorded in your journal.
+最多同时追踪3个任务，请先取消一条。||You can track up to 3 quests at a time; remove one first.
+请先撤销弃牌||Undo the discard first
+请选择这张卡牌可施放的目标。||Choose a target this card can be cast on.
+你回到了安全地点。已保留物品与任务进度。||You returned to a safe place. Items and quest progress are kept.
+正在初始化世界…||Initializing the world…
+章节数据格式不正确，请重新导出并检查资源。||Chapter data format is invalid; re-export and check the assets.
+登录状态已变化，请重新连接。||Login state changed; please reconnect.
+正在恢复账号与角色…||Restoring account and character…
+冒险暂时无法开始||The adventure cannot start for now
+请通过 HTTP 静态服务器打开游戏；恢复 data/adventure 中的章节文件，并运行 npm run assets:adventure 检查美术资源。||Open the game via an HTTP static server; restore the chapter files in data/adventure and run npm run assets:adventure to check art assets.
+重新尝试||Try again
+
+# js/adventure_cast_feedback_core.js
+当前无法施法，请重新选择或跳过本回合。||You cannot cast right now. Choose again or skip this turn.
+当前无法施放这张卡牌，请重新选择。||This card cannot be cast right now. Choose another.
+
+# js/adventure_checkin_core.js
+签到参数无效||Invalid check-in parameters
+签到时间无效||Invalid check-in time
+请选择一个葫芦||Choose a gourd
+请先登录会员账号，再领取魔法星奖励。||Sign in to a membership account before claiming Magic Star rewards.
+这个葫芦的魔法星奖励今天已经领取过了。||This gourd's Magic Star reward was already claimed today.
+请先领取这个葫芦的普通奖励。||Claim this gourd's normal reward first.
+在线时间不足，葫芦还不能领取。||Not enough online time yet; this gourd cannot be claimed.
+这个葫芦今天已经领取过了。||This gourd was already claimed today.
+签到奖励配置无效||Invalid check-in reward config
+签到数值超出范围||Check-in value out of range
+存档签到记录无效||Invalid saved check-in record
+
+# js/adventure_core.js
 风暴||Storm
+寒冰||Ice
+烈火||Fire
 生命||Life
 死亡||Death
+请选择魔法学系||Choose a magic school
+学习卡牌列表无效||Invalid learnable card list
+卡包至少需要一张卡牌||A deck needs at least one card
+卡牌份数无效||Invalid card copy count
+此卡牌效果暂未开放||This card effect is not available yet
+超过拥有数量或单卡上限||Exceeds owned count or per-card limit
+卡包已满||Deck is full
+基础卡包||Basic deck
+请保留有效卡包||Keep at least one valid deck
+请选择有效卡包||Choose a valid deck
+卡包名称需为一至十六字||Deck name must be 1 to 16 characters
+每个卡包只能有一个实例||Each deck can have only one instance
+卡包尚未拥有或不符合使用条件||Deck not owned or does not meet the use conditions
+这不是可穿戴的装备||This cannot be worn
+尚未获得这件装备||You do not have this equipment yet
+不符合学系要求||School requirement not met
+当前没有可接取的任务||No quests available to accept
+找不到这位居民||Resident not found
+找不到这个任务||Quest not found
+只能放弃进行中的任务||You can only abandon active quests
+只能放弃当前教学任务||You can only abandon the current tutorial quest
+已取消追踪||Tracking removed
+任务尚未完成||Quest not finished yet
+找不到这件装备||Equipment not found
+这个部位没有装备||No equipment in this slot
+请选择已拥有且支持强化的装备||Choose owned equipment that supports upgrading
+装备已达到强化上限||Equipment has reached its upgrade limit
+需要一枚出奇蛋||Requires a Surprise Egg
+需要宠物和战宠口粮||Requires a pet and pet food
+宠物已经长大了！||Your pet has grown up!
+请选择一致的卡包||Choose matching decks
+没有多余的可用卡包，请先到商店购买||No spare deck available; buy one in the shop first
+未知操作||Unknown action
+已有进行中的战斗||A battle is already in progress
+这里没有这个敌人||This enemy is not here
+这组怪物已经击败，请重新开启副本后挑战||This group is already defeated; reopen the dungeon to fight again
+请先击败挡路的怪物||Defeat the monsters blocking the way first
+请先完成考核前的准备||Finish the pre-exam preparation first
+伙伴们需要休息恢复生命||Your companions need rest to recover health
+没有进行中的战斗||No battle in progress
+符文决定缺少战斗结果||Rune decision lacks a battle result
+战斗记录不属于当前遭遇||The battle record does not belong to this encounter
+战斗决定未执行或已经记录||Battle decision not applied or already recorded
+符文消耗记录无效||Invalid rune consumption record
+符文消耗记录不能倒退||Rune consumption record cannot go backwards
+战斗尚未结束||Battle not finished yet
+存档版本不兼容||Incompatible save version
+默认口袋规则版本无效||Invalid default pocket rule version
+存档角色无效||Invalid saved character
+存档外观无效||Invalid saved appearance
+存档经验无效||Invalid saved experience
+存档宝石操作记录无效||Invalid saved gem operation record
+地图版本不兼容||Incompatible map version
+存档位置无效||Invalid saved location
+存档数据不完整||Incomplete save data
+存档物品无效||Invalid saved items
+存档装备无效||Invalid saved equipment
+存档卡牌无效||Invalid saved cards
+存档战斗记录无效||Invalid saved battle records
+存档奖励记录无效||Invalid saved reward records
+存档强化记录无效||Invalid saved upgrade records
+卡包规则版本无效||Invalid deck rule version
+存档装备条件无效||Invalid saved equipment conditions
+存档任务顺序无效||Invalid saved quest order
+存档任务进度无效||Invalid saved quest progress
+存档任务未达标||Saved quest objectives not met
+毕业记录无效||Invalid graduation record
+存档目的地无效||Invalid saved destination
+装备属性规则版本无效||Invalid equipment stat rule version
+反射规则版本无效||Invalid reflect rule version
+隐身规则版本无效||Invalid invisibility rule version
+成长属性规则版本无效||Invalid growth stat rule version
+仇恨规则版本无效||Invalid threat rule version
+魔法星战斗等级无效||Invalid Magic Star battle level
+魔法星经验倍率无效||Invalid Magic Star experience multiplier
+存档符文无效||Invalid saved runes
+存档战斗种子无效||Invalid saved battle seed
+存档战斗角色无效||Invalid saved battle characters
+存档战斗无效||Invalid saved battle
+存档宠物无效||Invalid saved pets
+副本阵容记录无效||Invalid dungeon party record
+副本战斗记录无效||Invalid dungeon battle record
+存档捕获记录无效||Invalid saved capture record
+存档敌人无效||Invalid saved enemies
+存档阵容无效||Invalid saved party
+存档宠物奖励阵容无效||Invalid saved pet reward party
+存档养成参数无效||Invalid saved growth parameters
+挑战等级尚未解锁||Challenge level not unlocked yet
+
+# js/adventure_expansion_core.js
+通用||Generic
+宠物卡牌未支持 ||Pet card not supported 
+附加卡未支持||Attached card not supported
+学系不适用||School not applicable
+无可生效属性||No effective stats
+治疗装备商城资源待准备||Healing gear mall assets pending
+捕获晶球||Capture orb
+宠物营养餐||Pet nutrition meal
+平衡||Balance
+
+# js/adventure_renderer.js
+缺失怪物||Missing monster
+
+# js/adventure_rewards_core.js
+任务宠物奖励缺少图鉴||Quest pet reward lacks a catalog entry
+任务宠物奖励映射无效||Invalid quest pet reward mapping
+任务宠物兑换记录无效||Invalid quest pet exchange record
+
+# js/card_renderer.js
+吸收伤害，保护目标||Absorb damage to protect the target
+护盾或陷阱，改变受到的伤害||Shield or trap that changes damage taken
+施加增益或减益效果||Apply buffs or debuffs
+控制目标行动||Control the target's actions
+改变魔力点||Change pips
+改变场地或姿态效果||Change field or stance effects
+跳过当前回合||Skip the current turn
+施法失败，魔力消散||The spell fizzles and its power fades
+
+# js/language_learning.js
+AIChat 请求失败||AIChat request failed
+语言学习||Language learning
+语言老师没有及时回复||The language teacher did not reply in time
+
+# js/language_learning_core.js
+夸它可爱||Say it is cute
+请它一起玩||Ask it to play with you
+让这只宠物开心||Make this pet happy
+说你喜欢它||Say you like it
+解释天空为什么是蓝色的||Explain why the sky is blue
+说到空气||Mention the air
+说到蓝光||Mention blue light
+说到阳光||Mention sunlight
+给它讲一个很短的故事||Tell it a very short story
+有一个结尾||There is an ending
+有一个开始||There is a beginning
+有一个朋友||There is a friend
+
+# js/locale.js
+拖动任何文字或按钮到这里，可以翻译。||Drag any text or button here to translate.
+翻译||Translate
+点击朗读||Click to read aloud
+
+# js/view_adventure.js
+火焰与持续伤害，点燃你的热情。||Fire and damage over time. Ignite your passion.
+坚固的护盾与寒冰魔法，稳步迎战。||Solid shields and ice magic. Fight steadily.
+强力的单体攻击，让雷霆为你而鸣。||Strong single-target attacks. Let thunder ring for you.
+吸取生命、布下陷阱，掌握幽暗魔法。||Drain life and set traps. Master the dark arts.
+治疗与自然的力量，守护生命。||Healing and the power of nature. Guard life.
+小哈奇||Little Haqi
+初心之旅||Beginner's Journey
+魔法哈奇||Magic Haqi
+魔法哈奇 · 第一章||Magic Haqi · Chapter 1
+选一门魔法，遇见你的伙伴。\n从这里，开始一段新的旅程。||Pick a school of magic and meet your companion.\nA new journey starts here.
+登录 Keepwork||Sign in to Keepwork
+我的云端旅途||My cloud journey
+起名字||Pick a name
+选择抱抱龙||Choose your Cuddle Dragon
+选择系别||Choose your school
+你的冒险，从名字开始||Your adventure begins with a name
+选择你的抱抱龙||Choose your Cuddle Dragon
+找到属于你的魔法||Find the magic that is yours
+点击系别，看看它的代表技能。喜欢的话，就选它吧。||Tap a school to see its signature spell. If you like it, pick it.
+先选一个模样，再告诉我们你的名字。||First pick a look, then tell us your name.
+选一位伙伴，陪你踏上魔法旅程。||Choose a companion for your magic journey.
+魔法少年||Magic Boy
+魔法少女||Magic Girl
+你的名字||Your name
+魔法营地 · 初次相遇||Magic Camp · First Meeting
+点一点，让喜欢的伙伴来到你身边。||Tap to bring your favorite companion to your side.
+正在准备技能演出…||Preparing the spell showcase…
+暂停||Pause
+继续播放||Resume
+重播||Replay
+代表技能演示，需在冒险中逐步学习。||A showcase of the signature spell; learn it step by step in the adventure.
+下一步 · 选择抱抱龙||Next · Choose your Cuddle Dragon
+下一步 · 选择系别||Next · Choose your school
+导入魔法哈奇角色||Import a Magic Haqi character
+上一步||Back
+返回我的角色||Back to my characters
+打开出奇蛋，获得宠物||Open a Surprise Egg to get a pet
+强化一件装备（点击追踪进入强化）||Upgrade a piece of equipment (track it to open upgrading)
+完成导师的指导||Complete the mentor's guidance
+喂养你的宠物||Feed your pet
+装备翡翠口袋并保存配卡||Equip the Emerald Pocket and save your deck
+装备晶石法杖||Equip the Crystal Wand
+<svg viewBox="0 0 80 112" aria-hidden="true"><ellipse cx="40" cy="104" rx="25" ry="5" fill="#685225" opacity=".15"/><path d="M35 8h10l-2 12c17 4 21 23 9 34 26 13 23 47-12 47S2 67 28 54C16 43 20 24 37 20z" fill="currentColor" stroke="#8f621f" stroke-width="2.5"/><path d="M29 33c-6 8-3 14 0 17M23 71c-6 11-1 19 5 22" fill="none" stroke="#fff4b6" stroke-width="5" stroke-linecap="round" opacity=".7"/><path d="M27 54q13 6 26 0l-1 7q-12 5-24 0z" fill="#af4e32"/><path d="m46 60 12 19-9-3-3 8-7-23" fill="#af4e32"/><path d="M33 8h14v7H33z" fill="#826035"/><circle cx="38" cy="79" r="10" fill="#fff0b5" opacity=".85"/><text x="38" y="83" text-anchor="middle" font-size="12" fill="#8f621f">福</text></svg>||
+可领取||Claimable
+已领完||Fully claimed
+领取奖励||Claim reward
+已领取||Claimed
+魔法星额外奖励||Magic Star extra reward
+魔法星奖励待解锁||Magic Star reward locked
+魔法星已领取||Magic Star reward claimed
+普通奖励人人可领，拥有魔法星可再领一份额外仙豆。||Everyone can claim the normal reward; with Magic Star you can claim an extra batch of fairy beans.
+接取这个任务。||Accept this quest.
+任务已完成，可以交付。||Quest finished; ready to turn in.
+与居民交谈后即可交付。||Talk to the resident to turn it in.
+进行中||In progress
+可接取||Available
+可以交付||Ready to turn in
+追踪||Track
+追踪这个任务||Track this quest
+角色与装备（R）||Character & equipment (R)
+会员权益||Membership
+升级会员||Upgrade membership
+奇豆||Qi beans
+仙豆||Fairy beans
+存档未保存||Progress not saved
+新的故事，在这里继续||A new story continues here
+在晨光中，发现魔法||Discover magic in the morning light
+其他功能||More features
+签到||Check in
+米酒葫芦 · 在线领奖||Rice Wine Gourd · Online rewards
+副本||Dungeons
+设置||Settings
+世界地图||World map
+冒险手记||Adventure journal
+返回出口||Back to the exit
+副本探索||Dungeon exploration
+副本中不会自动回血，请用现有生命通关。||Health does not regenerate in dungeons; finish with the health you have.
+前路暂未开放，可在副本菜单暂离。||The path ahead is not open yet; you can leave from the dungeon menu.
+寻找下一组||Find the next group
+沿道路前进，遇到怪物自动开始战斗。||Move along the road; battles start automatically on contact.
+Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the exit to leave.
+你通过了毕业考核！前往营地南边的传送阵，探索哈奇小镇。||You passed the graduation exam! Head to the teleporter south of camp to explore Haqi Town.
+你已完成第一章。和镇上的居民聊聊，或到郊外练习魔法吧。||You finished Chapter 1. Chat with the townsfolk or practice magic outside town.
+前往传送阵||Go to the teleporter
+新的魔法旅程||A new magic journey
+游戏菜单||Game menu
+背包||Bag
+宠物||Pet
+卡包||Cards
+任务||Quests
+商店||Shop
+交谈||Talk
+增益魔法||Buff spells
+护盾 / 陷阱||Shields / traps
 辅助魔法||Support spell
-伤害||Damage
+魔法星||Magic Star
+宝石镶嵌精工坊||Gem socketing workshop
+装备强化||Upgrade equipment
+点击海面撒网||Click the sea to cast the net
+调试工具 · 修改当前存档||Debug tools · edit the current save
+哈奇商城||Haqi Mall
+居民商店与课程||Resident shops and courses
+旅途设置||Journey settings
+米酒葫芦||Rice Wine Gourd
+你的冒险旅程||Your adventure
+全岛任务||Island quests
+属性编辑器||Stat editor
+我的背包||My bag
+我的魔法卡包||My magic decks
+我的小伙伴||My companions
+休闲渔场||Leisure fishery
+一路相伴的小伙伴||Companions along the way
+在线相伴 · 每日好礼||Online together · daily gifts
+准备你的魔法||Prepare your magic
+查看魔法星额外奖励||View Magic Star extra rewards
+道具按原版兑换表发放。捕鱼网可在海上使用；中、大精力药剂可在渔场补充精力。小药剂、自动战斗药丸和抽奖道具的使用暂未开放，可保留在背包。原版幸运抽奖与日历签到暂未开放。||Items follow the original redemption table. Fishing nets can be used at sea; medium and large stamina potions refill stamina at the fishery. Small potions, auto-battle pills and lottery items cannot be used yet and can stay in your bag. The original lucky draw and calendar check-in are not open yet.
+每天累计在线解锁，每个葫芦先领普通奖励，会员再领魔法星奖励。中途升级会员可补领当天已解锁的额外奖励；每天零点（北京时间）重置。||Unlocked by accumulated online time each day. Claim each gourd's normal reward first; members can then claim the Magic Star reward. Upgrading membership mid-day lets you claim that day's unlocked extras. Resets daily at midnight (Beijing time).
+在小镇待得越久，酿造的米酒葫芦就越香醇。||The longer you stay in town, the mellower the rice wine gourd brews.
+初心之旅 · 咕噜噜教学||Beginner's Journey · Gululu tutorial
+喂养一包战宠口粮||Feed a pack of pet food
+小小的咕噜噜，已经认定你是它最好的朋友。||Little Gululu has decided you are its best friend.
+打开出奇蛋||Open a Surprise Egg
+等待与你相遇||Waiting to meet you
+继续你的冒险吧。||Continue your adventure.
+完成青龙的强化指导，即可获得一枚出奇蛋。||Finish the Azure Dragon's upgrade guidance to earn a Surprise Egg.
+切换 / 新建角色||Switch / new character
+属性编辑器 · 调试||Stat editor · debug
+技能音效：关闭||Spell sounds: off
+技能音效：开启||Spell sounds: on
+本地进度自动保存。登录后，升级、重要操作和每十分钟自动同步云端；网络失败会重试。||Local progress saves automatically. When signed in, level-ups, key actions and a ten-minute timer sync to the cloud; network failures retry.
+云端旅途 · 跨设备继续冒险||Cloud journey · continue on another device
+背景音乐：关闭||Music: off
+背景音乐：开启||Music: on
+进度自动保存在当前浏览器。登录 Keepwork 后可同步角色，在其他设备继续旅程。||Progress saves automatically in this browser. Sign in to Keepwork to sync your character and continue on other devices.
+回到开始画面||Back to the title
+本章保留魔法哈奇 kids 原版角色、任务对白和卡牌数据。地图、升级节奏和毕业后的镇区是适合单人游玩的二维改编。||This chapter keeps the original Magic Haqi kids characters, quest dialogue and card data. The map, leveling pace and the post-graduation town are a 2D adaptation for solo play.
+查看改编说明||View adaptation notes
+打开战斗模拟器||Open the combat simulator
+关于这段旅程||About this journey
+技能特效工坊||Spell effect workshop
+继续||Continue
+欢迎来到这里，年轻的魔法师。愿你的旅程充满惊喜。||Welcome, young wizard. May your journey be full of surprises.
+任务奖励||Quest rewards
+我想了解更多魔法||I want to learn more magic
+查看任务目标||View quest objectives
+前往回报任务||Go turn in the quest
+查看商品与学习魔法||View goods and learn magic
+查看装备与法杖||View equipment and wands
+看看我的宠物||Look at my pets
+打开世界地图||Open the world map
+自由交谈||Free talk
+下次再聊||Talk to you later
+战斗界面显示失败：||Battle UI failed to render: 
+战斗界面暂时无法显示||The battle UI cannot be displayed for now
+进度已保留。可以重试显示，或撤退后重新挑战。||Progress kept. Retry the display, or retreat and fight again.
+重试显示||Retry display
+撤退并保留进度||Retreat and keep progress
+关闭音效||Mute sounds
+开启音效||Unmute sounds
+撤退||Retreat
+对话挑战||Talk challenge
+魔法对决||Magic duel
+战斗法阵，点击敌人或自己选择目标||Battle circle; click an enemy or yourself to choose a target
+对决结束||The duel is over
+魔法正在生效…||The spell is taking effect…
+宠物卡牌||Pet cards
+玩家手牌||Player hand
+返回玩家卡||Back to player cards
+上一页||Previous page
+下一页||Next page
+符文卡牌||Rune cards
+撤销弃牌||Undo discard
+弃牌||Discard
+ · 宠物卡||· pet card
+ · 右键撤销弃牌||· right-click to undo discard
+ · 右键弃牌||· right-click to discard
+重新选择||Choose again
+跳过本回合||Skip this turn
+对敌方施法||Cast on an enemy
+对友方施法||Cast on an ally
+对自己施法||Cast on yourself
+没有抓宠符文||No pet-catching runes
+向哈奇岛的安卓婆婆购买普通或高级抓宠符文||Buy normal or advanced pet-catching runes from Granny Andro on Haqi Island
+战斗记录||Battle log
+对决胜利||Duel won
+回到安全地点||Return to a safe place
+继续加油||Keep going
+魔法的力量，属于你！||The power of magic is yours!
+收下奖励，继续冒险||Take the rewards and keep adventuring
+休息一下，再来挑战||Take a break and try again
+已保留你的物品与任务进度。调整卡包，再来试试吧。||Your items and quest progress are kept. Adjust your deck and try again.
+
+# js/view_adventure_battle_status.js
+持续伤害||Damage over time
+持续治疗||Healing over time
+眩晕||Stun
+敌方队伍状态||Enemy team status
+我方队伍状态||Your team status
+自己||Self
+暂无魔力||No pips yet
+
+# js/view_adventure_card.js
+卡面美术暂不可用||Card art unavailable
+使用文字卡牌：||Using text card: 
+图片暂不可用，仍可施法||Image unavailable; casting still works
+
+# js/view_adventure_cloud.js
+还没有本地冒险记录||No local adventure records yet
+未知时间||Unknown time
+云端旅途||Cloud journey
+在另一台设备，接着冒险||Continue on another device
+本地进度照常自动保存。手动保存到 Keepwork 后，可在其他设备登录同一账号、选择记录继续。每次保存都会新增一条记录。||Local progress keeps auto-saving. After manually saving to Keepwork, sign in with the same account on another device and pick a record to continue. Each save adds a new record.
+当前本地进度||Current local progress
+尚未登录 Keepwork||Not signed in to Keepwork
+重新读取角色||Reload character
+切换账号||Switch account
+退出登录||Sign out
+保存当前进度到云端||Save current progress to the cloud
+刷新云端记录||Refresh cloud records
+连接后可查看云端记录。||Sign in to view cloud records.
+恢复会替换当前旅程。替换前会在此浏览器保留一份本地备份，可在这里恢复。||Restoring replaces the current journey. A local backup is kept in this browser first and can be restored here.
+即将恢复的云端进度||Cloud progress to be restored
+取消恢复||Cancel restore
+确认恢复这份进度||Confirm restoring this progress
+最近的云端记录||Recent cloud records
+查看并比较 →||View and compare →
+最多显示最近 30 条。先查看角色与任务进度，再决定是否恢复。||Shows the latest 30 records. Review character and quest progress before restoring.
+恢复上次保留的本地进度||Restore the last kept local progress
+云端仅保存角色与游戏进度，存储于你的 Keepwork 项目；可见性遵循该项目设置。||The cloud stores only character and game progress, inside your Keepwork project; visibility follows that project's settings.
+
+# js/view_adventure_controls.js
+关闭||Close
+
+# js/view_adventure_debug.js
+调试修改会保存到当前旅程。等级与经验联动；修改前自动保留一份备份，可恢复上一次修改前的状态。战斗中不可修改。||Debug edits save to the current journey. Level and experience are linked; a backup is kept automatically before each edit so you can undo the last change. Not available during battle.
+搜索调试属性||Search debug stats
+搜索名称或物品编号||Search by name or item ID
+属性分类||Stat categories
+全部||All
+没有匹配的属性。||No matching stats.
+保存并生效||Save and apply
+撤销未保存修改||Undo unsaved edits
+恢复上次修改前||Restore before last edit
+查看计算属性（只读）||View computed stats (read-only)
+生命、攻击、防御等由等级、装备与强化计算。可通过上方对应字段调整；这里不覆盖战斗公式。||Health, attack, defense and more are computed from level, equipment and upgrades. Adjust them via the fields above; this does not override combat formulas.
+物品数量设为 0 会移除持有；强化需要持有法杖。已学卡牌至少保留 1 份，升级会按原规则学习法术，降级保留已学卡牌。||Setting an item count to 0 removes it; upgrading requires holding the wand. Learned cards keep at least 1 copy; leveling up learns spells by the original rules, and leveling down keeps learned cards.
+尚未修改属性。||No stats edited yet.
+
+# js/view_adventure_deck.js
+旧存档中不符合等级或学系要求的口袋已卸下，物品仍保留在背包中。||Pockets from old saves that no longer meet level or school requirements were unequipped; the items remain in your bag.
+卡牌预览||Card preview
+关闭卡牌预览||Close card preview
+移出一张||Remove one
+放入一张||Add one
+卡包至少保留一张||Keep at least one card in the deck
+卡包已满，请先移出卡牌||Deck is full; remove a card first
+已达到单卡上限||Per-card limit reached
+搜索卡牌||Search cards
+只看已学||Learned only
+本系课程免费；外系课程消耗训练点。升级获得训练点，保存后才扣除。||Courses of your own school are free; other schools cost training points. Level-ups grant training points, deducted only after saving.
+没有符合条件的卡牌||No matching cards
+，装备附卡||, equipment attached card
+保存||Save
+推荐||Recommended
+拖出移除；长按 / 右键查看详情||Drag out to remove; long-press / right-click for details
+法术牌库||Spell library
+购买卡包||Buy a deck
+前往商店购买卡包；当前修改需先保存||Go to the shop to buy a deck; save current edits first
+
+# js/view_adventure_dialogue.js
+点击任意位置 / 空格 · 显示完整对白||Click anywhere / Space · show full dialogue
+
+# js/view_adventure_dungeons.js
+副本冒险||Dungeon adventures
+全部副本||All dungeons
+适合我||Right for me
+副本中不会自动回血，进入后需用现有生命通关。||Health does not regenerate in dungeons; clear them with the health you have.
+返回探索||Back to exploring
+暂离副本||Leave dungeon
+经验||Experience
+探索中||Exploring
+已通关||Cleared
+秘境探索||Secret realm exploration
+继续探索||Keep exploring
+进入副本||Enter dungeon
+正在进入…||Entering…
+重新挑战||Fight again
+该分类暂无副本。||No dungeons in this category.
+还没有进行中的副本，选一个开始冒险吧。||No dungeon in progress; pick one to start an adventure.
+
+# js/view_adventure_equipment.js
+法袍||Robe
+帽子||Hat
+饰品||Accessory
+武器||Weapon
+炫彩||Rainbow
+靴子||Boots
+衣饰||Outfit
+卡牌||Cards
+收藏||Collection
+消耗品||Consumables
+角色装备||Character equipment
+旅行背包||Travel bag
+强化装备||Upgrade equipment
+镶嵌宝石||Socket gems
+角色形象||Character look
+未装备||Not equipped
+当前属性||Current stats
+属性加成包含装备、强化和宝石；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。||Stat bonuses include equipment, upgrades and gems; other schools and extended stats show only non-zero entries. Max health and super pip rate include level base values. Equipment attached cards do not take normal deck capacity.
+龙图腾||Dragon Totem
+尚未学习图腾信仰||Totem belief not learned yet
+旅行物品||Travel items
+消耗品、卡牌与收藏物品收纳在这里。点击右侧物品查看详情。||Consumables, cards and collection items are stored here. Click an item on the right for details.
+已装备||Equipped
+还没有装备，完成导师任务可以获得。||No equipment yet; finish mentor quests to earn some.
+这个分类还没有物品。||Nothing in this category yet.
+选择一件物品，查看属性、穿戴条件和获取途径。||Select an item to view stats, requirements and how to get it.
+选择装备实例||Select an equipment instance
+战斗中无法换装||Cannot change equipment during battle
+穿戴后变化||Changes when worn
+卸下后变化||Changes when removed
+变化||Change
+当前||Current
+换装后||After change
+属性||Stats
+卸下后||After removal
+基础属性不变，请查看附加法术。||Base stats unchanged; see the attached spells.
+穿上||Wear
+卸下||Remove
+强化||Upgrade
+整理魔法卡包||Organize magic decks
+喂养宠物||Feed pets
+先孵化一只宠物||Hatch a pet first
+图腾道具暂不可用||Totem items unavailable for now
+旅途收藏 · 本章暂无主动使用功能||Journey collection · no active use in this chapter
+
+# js/view_adventure_fishing.js
+海面。点击鱼影撒网，或使用下方撒网按钮对准金色光圈。||The sea. Click a fish shadow to cast, or use the cast button below to aim at the golden circle.
+背包里没有渔网。米酒葫芦会发放捕鱼网。||No fishing net in your bag. The Rice Wine Gourd grants fishing nets.
+点击海面，把网撒向游过的鱼影。金色光圈是键盘撒网的落点。||Click the sea to cast your net at passing fish shadows. The golden circle is where keyboard casts land.
+撒网||Cast net
+普通网要罩住鱼影才结算。必中网和捕鱼器点中海面就会结算。渔获、扣网和扣精力都按原版兑换表，鱼的种类不由你点中的影子决定。||A normal net must cover a fish shadow to resolve. Sure-hit nets and fish catchers resolve on any sea click. Catch, net loss and stamina use follow the original redemption table; the fish type is not decided by the shadow you hit.
+
+# js/view_adventure_gems.js
+调羹||Spoon
+符||Talisman
+宝石操作已完成。||Gem operation complete.
+镶嵌宝石可以提高装备属性。镶嵌失败会让宝石降级或消失，请按步骤操作。||Socketing gems improves equipment stats. A failed socket can downgrade or destroy the gem; follow the steps.
+选择装备和需要剥离的宝石，剥离后可重新镶嵌。||Choose equipment and the gems to remove; removed gems can be socketed again.
+1. 放入装备||1. Add equipment
+放入装备||Add equipment
+2. 选择要剥离的宝石||2. Choose gems to remove
+每颗消耗一个宝石调羹；成功率100%。||Each gem costs one gem spoon; 100% success rate.
+2. 放入宝石||2. Add gems
+放入宝石||Add gems
+3. 放入镶嵌符，提高成功率（最多100%）||3. Add talismans to raise the success rate (up to 100%)
+增加成功率||Raise success rate
+宝石剥离||Gem removal
+返回宝石镶嵌||Back to gem socketing
+宝石调羹不足。||Not enough gem spoons.
+请先放入装备。||Add equipment first.
+请先完成当前战斗。||Finish the current battle first.
+请选择要剥离的宝石。||Choose the gems to remove.
+选中的宝石将返回背包。||Selected gems return to your bag.
+剥离||Remove
+取消||Cancel
+确认||Confirm
+镶嵌||Socket
+开始剥离||Start removal
+开始镶嵌||Start socketing
+宝石||Gems
+镶嵌符||Socketing talisman
+装备||Equipment
+1级||Level 1
+2级||Level 2
+3级||Level 3
+4级||Level 4
+5级||Level 5
+全部镶嵌符||All talismans
+该镶嵌符已全部放入。||All copies of this talisman are placed.
+三个镶嵌符槽已满，点击左侧槽位取出。||All three talisman slots are full; click a slot on the left to take one out.
+背包中没有该等级的宝石||No gems of this level in your bag
+背包中没有镶嵌符；镶嵌符可以提高成功率。||No talismans in your bag; talismans raise the success rate.
+没有符合条件的装备||No matching equipment
+
+# js/view_adventure_item_details.js
+领取条件||Claim requirements
+这件装备还有未接入的原版属性，当前预览仅包含已支持部分。||This equipment has original stats not yet integrated; the preview shows supported parts only.
+战斗符文 · 成功施法消耗一张，失误不消耗||Battle rune · one is used on a successful cast, not on a fizzle
+抓宠符文 · 对野生宠物施放。血量越低越容易成功，成功或失败都消耗一张||Pet-catching rune · cast on wild pets. Lower health improves success; one is used whether it succeeds or fails
+附加法术 · 装备后可用||Attached spells · available when equipped
+
+# js/view_adventure_maps.js
+返回当前岛屿地图||Back to the current island map
+
+# js/view_adventure_membership.js
+查询失败，请刷新重试||Query failed; refresh and try again
+登录后查看会员状态||Sign in to view membership status
+会员状态待确认||Membership status pending
+正在查询会员状态…||Checking membership status…
+魔法星未激活||Magic Star inactive
+魔法星已激活||Magic Star active
+升级会员，点亮魔法星||Upgrade membership to light up the Magic Star
+有效日期待确认||Valid dates pending
+会员有效，剩余天数待确认||Membership active; remaining days pending
+专属左手法杖||Exclusive left-hand wand
+领取||Claim
+未解锁||Locked
+魔法星专属左手法杖||Magic Star exclusive left-hand wand
+魔法星权益||Magic Star perks
+魔法星属性加成||Magic Star stat bonuses
+生命、攻击、防御、治疗、受治疗和命中在新战斗中生效；经验加成暂未开放。||Health, attack, defense, healing, healing received and accuracy apply in new battles; the experience bonus is not available yet.
+被治疗||Healing received
+等级||Level
+防御||Defense
+攻击||Attack
+命中||Accuracy
 治疗||Heal
+不足一个月按一个月计算，最高 10 级。剩余有效期变短时，魔法星等级也会随之变化。||Less than a month counts as one month, up to level 10. The Magic Star level drops as the remaining term shortens.
+魔法星等级按会员剩余有效期计算。未开通或已到期为 0 级；一个月为 1 级，一年达到最高 10 级。||The Magic Star level is based on your remaining membership term. Inactive or expired is level 0; one month is level 1, one year reaches level 10.
+魔法星如何成长||How the Magic Star grows
+剩余有效期按北京时间的日历天数自动兑换为魔豆，每天 10 颗。第一次从今天算到到期日；记下这次兑到的日期后，再次兑换只计算更晚的新增天数。||Remaining term auto-exchanges into magic beans by Beijing-time calendar days, 10 per day. The first exchange counts from today to the expiry date; note the date it reaches, and later exchanges count only newly added days after that.
+续期后点击“刷新会员状态”，查看最新等级。新增的会员天数会自动兑换。||After renewing, click "Refresh membership status" to see the latest level. Newly added membership days exchange automatically.
+有效日期暂时无法确认时，已确认的会员按 1 级显示。||When valid dates cannot be confirmed yet, confirmed members show as level 1.
+法杖需同时达到魔法星和角色等级要求，每个角色每件领取一次。已有同款法杖不重复发放。||Wands require both the Magic Star and character level requirements; one claim per character per wand. Duplicate wands are not granted again.
+魔法星独有功能||Magic Star exclusive features
+魔法星环绕表现暂未开放。||The Magic Star aura effect is not open yet.
+前往商城||Go to the mall
+已开放：战斗属性加成、商城会员专属商品、专属左手法杖、每周仙豆和魔法口袋礼物。||Open now: battle stat bonuses, member-only mall items, the exclusive left-hand wand, weekly fairy beans and Magic Pocket gifts.
+每个角色每周领取一次，每周一 00:00（北京时间）重置。||One claim per character per week; resets Monday 00:00 (Beijing time).
+魔法储物罐||Magic storage jar
+本周已领取||Claimed this week
+会员可领取||Member claim available
+领取仙豆||Claim fairy beans
+领取神秘礼物||Claim the mystery gift
+每周次数为魔法星等级加一。礼物存入背包，道具使用玩法暂未开放。||Weekly claims equal Magic Star level plus one. Gifts go to your bag; item-use gameplay is not open yet.
+魔法口袋||Magic Pocket
+成长秘籍||Growth guide
+独有功能||Exclusive features
+免费领取||Free claim
+属性加成||Stat bonuses
+刷新会员状态||Refresh membership status
+成为VIP||Become a VIP
+会员开通暂未开放，点击“成为VIP”可查看个人资料。||Membership purchase is not open yet; click "Become a VIP" to view your profile.
+
+# js/view_adventure_npc.js
+服务||Services
+商品分类||Item categories
+分页||Pages
+兑换条件||Exchange requirements
+已学会||Learned
+购买||Buy
+学习||Learn
+商品||Goods
+学习魔法||Learn magic
+免费||Free
+没有可学习的课程。||No courses to learn.
+没有匹配的商品。||No matching goods.
+
+# js/view_adventure_pet_details.js
+关闭宠物详情||Close pet details
+宠物图鉴 · 成长与魔法||Pet catalog · growth and magic
+饱食||Full
+饥饿中 · 已暂停自然回血||Hungry · natural healing paused
+购买营养餐||Buy nutrition meals
+休息||Rest
+魔法||Magic
+保存宠物卡包||Save pet deck
+成长魔法||Growth magic
+宠物详情分类||Pet detail categories
+形态与卡牌||Forms and cards
+养成||Nurturing
+
+# js/view_adventure_pets.js
+拖动角色||Drag characters
+拖动主角换位||Drag the hero to swap positions
+领取初始抱抱龙（选择后立即领取）||Claim your starting Cuddle Dragon (claimed right after choosing)
+搜索我的伙伴||Search my companions
+上一页宠物||Previous pets
+下一页宠物||Next pets
+没有找到伙伴||No companions found
+照料与自动进食||Care and auto-feeding
+咕噜噜教学||Gululu tutorial
+关闭教学伙伴||Close tutorial companion
+完成青龙的强化指导，领取出奇蛋。||Finish the Azure Dragon's upgrade guidance to claim a Surprise Egg.
+初心之旅 · 咕噜噜||Beginner's Journey · Gululu
+图鉴与商店||Catalog and shop
+宠物家园||Pet home
+联动筹备中，当前冒险进度不会写入家园||Crossover in preparation; current adventure progress will not be written to the home
+
+# js/view_adventure_quests.js
+放弃||Abandon
+取消追踪||Stop tracking
+任务清单||Quest list
+全部地区||All regions
+任务所在岛屿||Quest island
+可交付||Turn-in ready
+全部状态||All statuses
+任务状态||Quest status
+尚未开放||Not open yet
+未开启||Not started
+无法推进||Cannot progress
+已完成||Completed
+正在读取全岛任务…||Loading island quests…
+任务目标||Objectives
+导师||Mentor
+任务交付||Turn in
+任务接取||Accept
+已获得奖励||Rewards claimed
+前往交付||Go turn in
+前往接取||Go accept
+追踪任务目标||Track objectives
+任务已完成，奖励已领取。||Quest finished; rewards claimed.
+完成前置任务后开启。||Opens after the prerequisite quest is done.
+全岛任务数据还没有载入，目前可以查看任务内容。||Island quest data is not loaded yet; quest details are viewable for now.
+与任务居民交谈后即可交付。||Talk to the quest resident to turn it in.
+前置任务||Prerequisite quest
+接取条件||Accept requirements
+无物品奖励||No item rewards
+这个目标依赖尚未接入的原服功能。||This objective depends on an original-server feature not yet integrated.
+与任务居民交谈。||Talk to the quest resident.
+原版接取条件||Original accept requirements
+没有符合条件的任务||No matching quests
+请调整岛屿或任务状态。||Adjust the island or quest status.
+任务目录未配置||Quest catalog not configured
+全岛任务读取失败，已保留教学任务。||Failed to load island quests; tutorial quests are kept.
+重试||Retry
+
+# js/view_adventure_rewards.js
+新获得的物品||Newly obtained items
+获得新卡牌||New card obtained
+获得新物品||New item obtained
+获得新装备||New equipment obtained
+已放入背包||Added to your bag
+稍后处理||Later
+获得物品！||Items obtained!
+
+# js/view_adventure_roles.js
+魔法哈奇 · 你的主角||Magic Haqi · your hero
+访客角色 · 保存在当前浏览器||Guest character · saved in this browser
+选择角色||Choose a character
+当前有本地进度待同步。游玩时每分钟自动同步，也可手动保存。||Local progress is waiting to sync. It syncs every minute while playing, or you can save manually.
+角色云端记录已同步。||Cloud character records synced.
+最近使用||Recently used
+继续旅程||Continue journey
+进入角色||Enter character
+还没有主角，创建你的第一段旅程。||No hero yet; create your first journey.
+新建角色||New character
+保存角色到云端||Save character to the cloud
+刷新云端角色||Refresh cloud characters
+退出 Keepwork||Sign out of Keepwork
+云端已有不同的角色进度。加载前会在浏览器自动保留本地副本。||The cloud has different character progress. A local copy is kept in this browser before loading.
+备份本地并加载云端||Back up local and load cloud
+登录 Keepwork，继续最近角色||Sign in to Keepwork to continue your latest character
+
+# js/view_adventure_shop.js
+商品子分类||Item subcategories
+我的奇豆||My Qi beans
+商品预览||Item preview
+输入商品名称||Enter item name
+搜索商品||Search items
+收藏筛选||Favorite filter
+全部商品||All items
+未拥有||Not owned
+已拥有||Owned
+等级筛选||Level filter
+当前可购买等级||Levels you can buy now
+全部等级||All levels
+装备学系||Equipment school
+全部学系||All schools
+商品分页||Item pages
+点击商品图标查看详情||Click an item icon for details
+原图缺失 · 同部位示意图||Original image missing · same-slot sample art
+前往卡包配卡||Go to deck building
+查看四阶段与卡片||View the four stages and cards
+捕获时从符文卡使用抓宠符文。普通和高级符文由哈奇岛的安卓婆婆出售。||During battle, use pet-catching runes from the rune card. Normal and advanced runes are sold by Granny Andro on Haqi Island.
+寻找并捕获||Find and capture
+购买条件||Purchase requirements
+没有符合条件的商品，请调整分类或筛选。||No matching items; adjust the category or filters.
+试炼等级||Trial level
+开始试炼||Start trial
+赚取奇豆 · 魔法试炼||Earn Qi beans · Magic trials
+
+# js/view_adventure_strengthening.js
+请放入你要强化的装备||Add the equipment you want to upgrade
+取出强化栏装备||Take equipment out of the upgrade slot
+强 化||Upgrade
+强化未成功，请检查材料后重试。||Upgrade failed; check the materials and try again.
+强化材料||Upgrade materials
+暴击||Critical
+强化防御||Defense boost
+强化攻击||Attack boost
+强化HP||HP boost
+韧性||Tenacity
+已经强化到满级了||Already at max upgrade level
+放入装备后查看强化属性||Add equipment to view upgrade stats
+每次强化一级，材料足够即可强化。||Each upgrade raises one level; just have enough materials.
+没有可强化的装备||No equipment to upgrade
+
+# js/view_adventure_world_map.js
+世界地图，点击岛名传送||World map; click an island name to teleport
+地图载入中…||Loading map…
+已在此岛||Already on this island
+世界地图，小屏可左右滚动查看全部岛屿||World map; scroll horizontally on small screens to see all islands
+地图图片暂不可用，请从列表选择目的地。||Map image unavailable; choose a destination from the list.
+世界地图使用目的地列表：||World map using the destination list: 
+
+# js/view_detail_dialog.js
+物品详情||Item details
+
+# js/view_haqi_import.js
+导入哈奇角色||Import a Haqi character
+取消角色导入||Cancel character import
+选择哈奇账号||Choose a Haqi account
+已查看||Reviewed
+创建独立新角色，不覆盖已有角色；剧情重新开始。||Creates a separate new character without overwriting existing ones; the story restarts.
+导入差异明细||Import diff details
+导入角色||Import character
+请先查看背包与卡包||Review the bag and decks first
+当前登录账号||Current account
+请先退出原版游戏，读取可能中断原服会话。||Log out of the original game first; reading may interrupt its session.
+查看哈奇账号||View Haqi accounts
+取消读取||Cancel reading
+
+# js/view_language_learning.js
+界面语言||Display language
+语言学习：关闭||Language learning: off
+语言学习：开启||Language learning: on
+母语||Native language
+目标语言||Target language
+发送||Send
+按住说话||Hold to talk
+语言老师还没有准备好||The language teacher is not ready yet
+语言挑战||Language challenge
+
+# unmatched
+完成任务||Complete quest
+挂断||Hang up
+奇豆不足||Not enough Qi beans
+伤害||Damage

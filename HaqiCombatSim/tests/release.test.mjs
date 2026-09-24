@@ -36,6 +36,13 @@ test('release hashes all runtime data, is repeatable, and distinguishes previews
         fs.writeFileSync(data, '{"changed":true}');
         assert.equal(run().status, 0);
         assert.notEqual(read().hash, first.hash);
+        fs.mkdirSync(path.join(root, 'dist/data/adventure/locale'), { recursive: true });
+        fs.writeFileSync(path.join(root, 'dist/data/adventure/locale/en.txt'), '甲||A\n');
+        assert.equal(run().status, 0);
+        assert.ok(read().files.some(file => file.path === 'data/adventure/locale/en.txt'));
+        fs.writeFileSync(path.join(root, 'dist/notes.txt'), 'no');
+        assert.notEqual(run().status, 0);
+        fs.rmSync(path.join(root, 'dist/notes.txt'));
         fs.writeFileSync(path.join(root, 'dist/qiniu.yaml'), 'must not upload');
         assert.notEqual(run().status, 0);
     } finally {

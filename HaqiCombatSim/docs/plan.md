@@ -400,7 +400,8 @@ Web改编：按角色seed、周、领取序号确定性加权抽取，采用XML�
 
 - 目标：卡面标题/说明可出多语言，海外不必等国内版号、也不必重绘卡图。
 - 已有：`CardRenderer` 程序绘制标题与 `cardDescription`；kids `card_names.json` 661 条中文名；图集不含印刷字。
-- 没有：locale 切换、英文名表、teen 卡名、charm/ward 译文、对战页中文名（仍用 key 残段）。
+- 已有界面层：冒险固定句子可切换语言，词典在 `data/adventure/locale/`，见 [locale.md](locale.md)。对战页不加载这套词典。
+- 没有：英文卡名表、teen 卡名、charm/ward 译文、带数字的卡面说明译文、对战页中文名（仍用 key 残段）。
 - 第一语言、翻译权威、是否含 UI/对白：见 [card-i18n.md](card-i18n.md)。本项不做完整 i18n 实现。
 - [ ] 产品确认第一语言与范围（仅卡面 vs 含 UI）
 - [ ] 生成说明模板与 `SCHOOL_NAMES` 可抽 locale；kids 卡名表可并列语言文件

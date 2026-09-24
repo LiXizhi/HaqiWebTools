@@ -42,7 +42,8 @@ import { createRoleStore } from './adventure_roles.js';
 import { MAX_ROLES } from './adventure_roles_core.js';
 import { renderRoles } from './view_adventure_roles.js';
 import { createCreationPreview, tutorialCards } from './adventure_creation_preview.js';
-import { loadLocaleFiles, configureLocale, installLocaleTooltip, setGlossAligner, speakText, textFor } from './locale.js';
+import { localeIdsToLoad } from './locale_core.js';
+import { loadLocaleFiles, configureLocale, hasLocale, installLocaleTooltip, setGlossAligner, speakText, textFor } from './locale.js';
 import { shopPrices, testDurationMs } from './language_learning_core.js';
 import { createTutor, profileFromSave, rememberProfile, syncMemory, tutorSystem, judgeTranscript, battleSpeechScore } from './language_learning.js';
 import { renderFreeTalk, renderLanguageTest } from './view_language_learning.js';
@@ -100,9 +101,15 @@ setGlossAligner((top,bottom)=>tutor.requestLLM([
     {role:'user',content:`Top:\n${top}\nBottom:\n${bottom}`},
 ],{model:'keepwork-lite'}));
 const talkHistory=[];
-function applyLocale(){if(save)configureLocale({locale:save.locale,languageLearning:save.languageLearning});}
-function setLocale(locale){save.locale=locale;if(save.languageLearning.enabled)save.languageLearning.enabled=false;applyLocale();persist();paintHud();if(panel)paintPanel();toast('界面语言已更新');}
-function setLearning(next){save.languageLearning={...save.languageLearning,...next};applyLocale();persist();paintHud();paintPanel();}
+function applyLocale(){
+    if(!save)return Promise.resolve();
+    const ids=localeIdsToLoad(save);
+    const finish=()=>configureLocale({locale:save.locale,languageLearning:save.languageLearning});
+    if(ids.every(hasLocale)){finish();return Promise.resolve();}
+    return loadLocaleFiles(ids).then(finish);
+}
+function setLocale(locale){save.locale=locale;if(save.languageLearning.enabled)save.languageLearning.enabled=false;applyLocale().then(()=>{persist();paintHud();if(panel)paintPanel();toast('界面语言已更新');});}
+function setLearning(next){save.languageLearning={...save.languageLearning,...next};applyLocale().then(()=>{persist();paintHud();paintPanel();});}
 function openFreeTalk(npc){
     talkHistory.length=0;
     const profile=profileFromSave(save);
@@ -306,19 +313,28 @@ function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     petCardsOpen=false;
     runeCardsOpen=false;
     creationPreview?.stop();
-    save=newSave;applyLocale();if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content,save);stage='world';path=[];destination=null;animation=null;close();
+    save=newSave;
+    const reveal=()=>{
+    if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content,save);stage='world';path=[];destination=null;animation=null;close();
     if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};
     nodes.entry.replaceChildren();nodes.entry.className='';nodes.entry.hidden=true;nodes.hud.hidden=false;
     nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';battle=null;paintHud();
     if(save.pendingEncounter){battle=restoredBattle||P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';nodes.hud.hidden=true;paintBattle();}
     else maybeExchangeMagicBeans({announce:announceBeans});
     persist();queueCloudSave();updateMusic();
+    };
+    const ids=localeIdsToLoad(save);
+    if(ids.every(hasLocale)){configureLocale({locale:save.locale,languageLearning:save.languageLearning});reveal();return;}
+    return loadLocaleFiles(ids).then(()=>{if(save!==newSave)return;configureLocale({locale:save.locale,languageLearning:save.languageLearning});reveal();});
 }
-function showTitle(manage=false) {
+async function showTitle(manage=false) {
     spellSound.stop();
     persist();if(storageWarning&&stage!=='title'){toast('当前进度尚未保存，请勿关闭页面。请检查浏览器存储或重试。');return;}close();rewardFeedback.reset();stage='title';keys.clear();path=[];destination=null;animation=null;battle=null;
-    music?.pause();nodes.hud.hidden=true;nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';nodes.entry.hidden=false;
-    save=roleStore.catalog.roles.find(row=>row.id===roleStore.catalog.activeId)?.save||A.createAdventure(assets.content);applyLocale();
+    music?.pause();nodes.hud.hidden=true;nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';
+    save=roleStore.catalog.roles.find(row=>row.id===roleStore.catalog.activeId)?.save||A.createAdventure(assets.content);
+    await applyLocale();
+    if(stage!=='title')return;
+    nodes.entry.hidden=false;
     world=W.createWorld(save.zone,assets.content,save);
     if(manage!==true&&roleStore.catalog.roles.length===1&&!roles.busy&&!roles.conflict){
         try{activateRole(roleStore.catalog.roles[0].id);return;}catch(error){roles.error=error.message;}
@@ -335,7 +351,7 @@ function paintRoles() {
     if(stage!=='title')return;
     creationPreview?.stop();
     renderRoles(nodes.entry,assets,{...roles,owner:roleStore.owner,catalog:roleStore.catalog,dirty:roleStore.dirty},{
-        select:id=>roleOperation('正在进入角色…',async()=>{activateRole(id);await syncRoles();}),
+        select:id=>roleOperation('正在进入角色…',async()=>{await activateRole(id);await syncRoles();}),
         create:newRoleForm,login:openCloud,logout:()=>roleOperation('正在退出…',async()=>{
             let pending=false;try{await syncRoles();}catch{pending=true;}
             await cloudClient.disconnect();resetRoleAccount();localStorage.removeItem(LAST_ACCOUNT_KEY);
@@ -363,7 +379,7 @@ function activateRole(id) {
     const restored=checkedProgress(row.save,assets.content,assets.dataset);
     autoSave.reset();roleStore.select(id);roleStorage=roleStore.scoped();
     selected=null;discarded=[];shopView.page=0;petView.selected=null;
-    enterWorld(restored.save,restored.battle);
+    return enterWorld(restored.save,restored.battle);
 }
 function beginOriginalImport() {
     if(roles.busy||roles.conflict||cloud.busy)return;
@@ -748,7 +764,7 @@ async function boot(){
         $('load-detail').textContent='';
         $('load-progress').removeAttribute('value');
         if(assets.content.schemaVersion!==1||!assets.content.quests?.length||!assets.dataset.cards)throw new Error('章节数据格式不正确，请重新导出并检查资源。');
-        await loadLocaleFiles();installLocaleTooltip();
+        installLocaleTooltip();
         roleStore=createRoleStore({content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves});await roleStore.prepareOpen();roleStore.open();
         roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
         cloudClient=createCloudClient({content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves,onAccountChange:()=>{resetRoleAccount();cloud.message='登录状态已变化，请重新连接。';}});
@@ -760,7 +776,7 @@ async function boot(){
             $('load-status').textContent='正在恢复账号与角色…';
             await connectRoles(false);
         }
-        if(stage==='loading')showTitle(!!roles.conflict||!!(roleStore.owner&&roles.error));
+        if(stage==='loading')await showTitle(!!roles.conflict||!!(roleStore.owner&&roles.error));
     }catch(e){stage='error';nodes.entry.replaceChildren(V.el('section','loading-card',V.el('h1','','冒险暂时无法开始'),V.el('p','',e.message),V.el('p','muted','请通过 HTTP 静态服务器打开游戏；恢复 data/adventure 中的章节文件，并运行 npm run assets:adventure 检查美术资源。'),V.button('重新尝试',()=>location.reload(),'primary')));}
 }
 boot();

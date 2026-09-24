@@ -1,6 +1,6 @@
 # 计划需求：卡牌多语言文案与海外运营
 
-> 状态：**计划中，尚未实现。**  
+> 状态：**卡面专名与带数字的说明仍是计划。** 冒险界面的固定句子已经可以换语言，见 [locale.md](locale.md)。  
 > 来源：产品负责人李西峙，2026-09-18 钉钉私信 Lily（未改产品 git；草稿备忘仅作意图）。  
 > 含义：卡面说明今天主要由程序生成；希望有多语言版本，海外可以先上，不必等国内版号。
 
@@ -56,7 +56,7 @@ devlog_2026-09-17 仍把「配卡面板显示卡牌中文名」列为待办；�
 | 冒险任务 / NPC | `chapter.json` 对白；Keepwork 登录窗 `lang: 'zhCN'` |
 | 字体 | `CardRenderer` 标题/说明用 `"Microsoft YaHei"`；页面 CSS 为 PingFang SC / Microsoft YaHei |
 
-架构上曾经规划独立 `i18n.js`，实际已并入 `SCHOOL_NAMES` 等常量（[architecture.md](architecture.md)「意图 vs 现实」）。**没有** locale 切换、没有 `en.json`、没有运行时翻译服务。
+架构上曾经规划独立 `i18n.js`，早期并入 `SCHOOL_NAMES` 等常量（[architecture.md](architecture.md)「意图 vs 现实」）。冒险界面后来改用中文整句做键的文本词典，见 [locale.md](locale.md)。没有 `en.json`，也没有运行时翻译服务。带数字拼出来的 `cardDescription` 和卡名表仍没有按语言分文件。
 
 AGENTS.md 硬规则 9：用户可见文案为中文。海外包若要换语言，需要产品先改这条约定的适用范围（例如「默认中文，locale 可选」）。
 

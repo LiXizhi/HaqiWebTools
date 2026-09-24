@@ -1,15 +1,22 @@
 """Assemble native sprite metadata into editable 2D mount configuration."""
-import json
+import argparse, json
 from pathlib import Path
 HERE=Path(__file__).resolve().parent
 
 def main():
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--id',action='append',help='Rebuild only these mounts, preserving other calibrations')
+    args=parser.parse_args()
     read=lambda name:json.loads((HERE/name).read_text(encoding='utf-8'))
     source=read('original-catalog.json');native=read('native-assets.json');assets=read('assets.json');catalog=read('catalog.json')
+    existing={m['id']:m for m in catalog['mounts']}
+    overrides=read('pose-overrides.json') if (HERE/'pose-overrides.json').exists() else {}
     concepts=[m for m in catalog['mounts'] if not m.get('source')]
     mounts=[]
     for job in source['jobs']:
         if job['id'] not in native:continue
+        if args.id and job['id'] not in args.id and job['id'] in existing:
+            mounts.append(existing[job['id']]);continue
         asset=native[job['id']];assets[job['id']]=asset
         directions={};kind=job['kind']
         for i,d in enumerate(['down','left','right','up']):
@@ -29,6 +36,7 @@ def main():
             if kind=='wings' and i==3:fg=[[[0,0],[1,0],[1,1],[0,1]]]
             directions[d]=dict(cell=cell,riderCell=i,riderArt=art,seat=seat,anchor=anchor,scale=scale,foreground=fg,
                 characters={'male':{'anchor':anchor},'female':{'anchor':[.5,.65] if art=='rider' else anchor}})
+            directions[d].update(overrides.get(job['id'],{}).get('directions',{}).get(d,{}))
         aliases=[item['name'] for item in source['items'] if item['id'] in job['items']]
         name=next((n for n in aliases if not any(s in n for s in ['假日','荣誉','暂时作废','7天','变身药丸'])),job['name']).replace('变身药丸','')
         mounts.append(dict(id=job['id'],name=name,description=kind,ground=max(b[3] for b in asset['frameBounds']),

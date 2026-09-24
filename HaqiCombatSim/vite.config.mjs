@@ -2,6 +2,7 @@ import {prepareMonsterArt} from './scripts/package_monster_art.mjs';
 import {prepareQuestJournal} from './scripts/package_quests.mjs';
 import { packageRuntimeData } from './scripts/package_runtime_data.mjs';
 import { prepareDungeonFiles } from './scripts/package_dungeons.mjs';
+import { localePackageFiles } from './scripts/package_locale.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
@@ -46,6 +47,9 @@ export default defineConfig(({ command }) => {
                     fileName: 'data/adventure/dungeons.json',
                     source: JSON.stringify(dungeonPayload),
                 });
+                for (const file of localePackageFiles(path.join(root, 'data/adventure/locale'))) {
+                    this.emitFile({ type: 'asset', fileName: file.fileName, source: file.source });
+                }
             },
             closeBundle() {
                 if (command !== 'build') return;

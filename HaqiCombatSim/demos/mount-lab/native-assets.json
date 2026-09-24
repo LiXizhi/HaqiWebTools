@@ -1,7 +1,7 @@
 {
   "original-16071": {
     "local": "assets/original-16071-21c1ed3665fb.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16071-21c1ed3665fb.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -65,17 +65,22 @@
         0.611328125,
         0.75390625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16034": {
-    "local": "assets/original-16034-6604c6ba0af2.webp",
-    "cdn": null,
+    "local": "assets/original-16034-5531e69f04b6.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16034-5531e69f04b6.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 115760,
-    "sha256": "6604c6ba0af299e0d163b5908448018eee0c9300c132f8f5b82c861dcdb32f6d",
+    "bytes": 133248,
+    "sha256": "5531e69f04b681bc0874171f3a593cef8e006e148521d70c112ec9905bda1518",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Cow/Cow_withlilypad.x",
@@ -83,6 +88,12 @@
         "entry": "character/v5/02animals/zodiacanimals/cow/cow_withlilypad.x.z,eb18b48ee4a09c6c2976e693638e3a8c,84141",
         "md5": "eb18b48ee4a09c6c2976e693638e3a8c",
         "bytes": 84141
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -113,37 +124,42 @@
         0.328125,
         0.193359375,
         0.673828125,
-        0.71875
+        0.79296875
       ],
       [
         0.224609375,
-        0.146484375,
+        0.1484375,
         0.78515625,
         0.853515625
       ],
       [
         0.224609375,
-        0.13671875,
+        0.138671875,
         0.7734375,
         0.853515625
       ],
       [
-        0.31640625,
-        0.099609375,
+        0.322265625,
+        0.103515625,
         0.6953125,
         0.8515625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16035": {
-    "local": "assets/original-16035-3351a4dea314.webp",
-    "cdn": null,
+    "local": "assets/original-16035-0648b2e99814.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16035-0648b2e99814.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 137992,
-    "sha256": "3351a4dea314c01b688943e22de282ab297e9478c3d04d72d7948bc1cc2d1559",
+    "bytes": 162064,
+    "sha256": "0648b2e99814f962a112fb7643fa77a25b90a0f872d18dbb8469fdd8da42837c",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Tiger/Tiger_withlilypad.x",
@@ -151,6 +167,12 @@
         "entry": "character/v5/02animals/zodiacanimals/tiger/tiger_withlilypad.x.z,0062d43b317e782789af16e89ee047e8,143591",
         "md5": "0062d43b317e782789af16e89ee047e8",
         "bytes": 143591
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -179,39 +201,44 @@
     "frameBounds": [
       [
         0.326171875,
-        0.203125,
+        0.205078125,
         0.677734375,
-        0.7421875
+        0.82421875
       ],
       [
-        0.220703125,
-        0.146484375,
+        0.236328125,
+        0.1484375,
         0.833984375,
-        0.837890625
+        0.8359375
       ],
       [
         0.17578125,
-        0.13671875,
-        0.77734375,
+        0.138671875,
+        0.765625,
         0.837890625
       ],
       [
         0.32421875,
-        0.09375,
+        0.09765625,
         0.689453125,
-        0.873046875
+        0.86328125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16036": {
-    "local": "assets/original-16036-0ec3e50e1ecb.webp",
-    "cdn": null,
+    "local": "assets/original-16036-01322214321d.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16036-01322214321d.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 109094,
-    "sha256": "0ec3e50e1ecb2b38b59ea53f04fee4a08e816869b67346c40efa3b12e87d8d88",
+    "bytes": 125334,
+    "sha256": "01322214321dd3b3f29ac3de55a269bc7d78f646ca7f10a4a52f7dd96d57e533",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Rabbit/Rabbit_withlilypad.x",
@@ -219,6 +246,12 @@
         "entry": "character/v5/02animals/zodiacanimals/rabbit/rabbit_withlilypad.x.z,3e53cc0d2151d84e4c8fea60894e2c2c,53087",
         "md5": "3e53cc0d2151d84e4c8fea60894e2c2c",
         "bytes": 53087
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -246,40 +279,45 @@
     },
     "frameBounds": [
       [
-        0.3359375,
+        0.337890625,
         0.185546875,
         0.666015625,
-        0.71484375
+        0.806640625
       ],
       [
         0.220703125,
-        0.142578125,
+        0.14453125,
         0.755859375,
         0.8515625
       ],
       [
-        0.25390625,
-        0.1328125,
+        0.251953125,
+        0.13671875,
         0.77734375,
         0.857421875
       ],
       [
         0.326171875,
-        0.099609375,
+        0.10546875,
         0.689453125,
         0.873046875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16037": {
-    "local": "assets/original-16037-de2472b2930a.webp",
-    "cdn": null,
+    "local": "assets/original-16037-e4bfb1386d77.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16037-e4bfb1386d77.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 147640,
-    "sha256": "de2472b2930a98898309d3bd53a8970f7e34d1a4c22383e222a432229fafa533",
+    "bytes": 170158,
+    "sha256": "e4bfb1386d7774fb411c9616d525c82cb13249cd17501e5f5a2b26b0dcccef09",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Dragon/Dragon_withlilypad.x",
@@ -287,6 +325,12 @@
         "entry": "character/v5/02animals/zodiacanimals/dragon/dragon_withlilypad.x.z,fcbf2e225f852a4ae36e327f66ce5b41,81806",
         "md5": "fcbf2e225f852a4ae36e327f66ce5b41",
         "bytes": 81806
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -315,39 +359,44 @@
     "frameBounds": [
       [
         0.330078125,
-        0.203125,
+        0.205078125,
         0.6796875,
-        0.7421875
+        0.826171875
       ],
       [
-        0.193359375,
+        0.21875,
         0.146484375,
         0.83203125,
         0.84765625
       ],
       [
-        0.177734375,
-        0.13671875,
-        0.80859375,
+        0.17578125,
+        0.138671875,
+        0.806640625,
         0.849609375
       ],
       [
         0.32421875,
-        0.09375,
+        0.09765625,
         0.6875,
-        0.892578125
+        0.87890625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16038": {
-    "local": "assets/original-16038-70cd1190c2ae.webp",
-    "cdn": null,
+    "local": "assets/original-16038-e60585088b74.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16038-e60585088b74.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 100804,
-    "sha256": "70cd1190c2ae6e98b82a9d1579d9b34746950b4e30cdc5d0a72ac5122931f517",
+    "bytes": 110232,
+    "sha256": "e60585088b745d59420f912674ecac65e5da47901665f38457ac1717f9ef221c",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Snake/Snake_withlilypad.x",
@@ -355,6 +404,12 @@
         "entry": "character/v5/02animals/zodiacanimals/snake/snake_withlilypad.x.z,691bcefe74c7c7a4cf8197522f1d0d5b,48336",
         "md5": "691bcefe74c7c7a4cf8197522f1d0d5b",
         "bytes": 48336
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -382,40 +437,45 @@
     },
     "frameBounds": [
       [
-        0.326171875,
+        0.328125,
         0.208984375,
         0.681640625,
-        0.7578125
+        0.814453125
       ],
       [
         0.298828125,
-        0.142578125,
+        0.146484375,
         0.853515625,
         0.849609375
       ],
       [
         0.15625,
-        0.12890625,
-        0.703125,
+        0.140625,
+        0.701171875,
         0.845703125
       ],
       [
         0.326171875,
-        0.08203125,
+        0.095703125,
         0.685546875,
-        0.89453125
+        0.892578125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16039": {
-    "local": "assets/original-16039-e4e24426e7a9.webp",
-    "cdn": null,
+    "local": "assets/original-16039-87ff2e5b8c7f.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16039-87ff2e5b8c7f.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 120958,
-    "sha256": "e4e24426e7a9141cc29454c0e0a942096c8d6ae80b9a939efc593796c6160cc4",
+    "bytes": 130864,
+    "sha256": "87ff2e5b8c7f865831e0eb7acc849c8448d7a96f00fb22c2c90fff8df083a0cd",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Horse/Horse_withlilypad.x",
@@ -423,6 +483,12 @@
         "entry": "character/v5/02animals/zodiacanimals/horse/horse_withlilypad.x.z,269c12bc2cb08511280d8adb0b059b06,340936",
         "md5": "269c12bc2cb08511280d8adb0b059b06",
         "bytes": 340936
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -450,40 +516,45 @@
     },
     "frameBounds": [
       [
-        0.333984375,
+        0.33203125,
         0.193359375,
         0.67578125,
-        0.71875
+        0.7890625
       ],
       [
         0.2265625,
-        0.14453125,
+        0.146484375,
         0.783203125,
         0.83203125
       ],
       [
-        0.2265625,
-        0.134765625,
+        0.224609375,
+        0.138671875,
         0.7734375,
         0.833984375
       ],
       [
         0.318359375,
-        0.09765625,
-        0.69140625,
-        0.876953125
+        0.103515625,
+        0.693359375,
+        0.85546875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16040": {
-    "local": "assets/original-16040-66bdb513839f.webp",
-    "cdn": null,
+    "local": "assets/original-16040-d2a6b5e2168c.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16040-d2a6b5e2168c.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 109350,
-    "sha256": "66bdb513839f6f80de553e7e1ea6b9b29aea1b2605b71cbf62e81af84ce9e101",
+    "bytes": 124932,
+    "sha256": "d2a6b5e2168c614c8b572133667bf5b4594b19d594499b93e320f74abb368e43",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Sheep/Sheep_withlilypad.x",
@@ -491,6 +562,12 @@
         "entry": "character/v5/02animals/zodiacanimals/sheep/sheep_withlilypad.x.z,6f079da996901c557900c4f10d863dc9,241263",
         "md5": "6f079da996901c557900c4f10d863dc9",
         "bytes": 241263
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -519,39 +596,44 @@
     "frameBounds": [
       [
         0.33203125,
-        0.189453125,
+        0.19140625,
         0.669921875,
-        0.71875
+        0.79296875
       ],
       [
         0.23046875,
-        0.142578125,
+        0.14453125,
         0.779296875,
-        0.849609375
+        0.84765625
       ],
       [
         0.23046875,
-        0.130859375,
+        0.13671875,
         0.767578125,
-        0.849609375
+        0.84765625
       ],
       [
-        0.3125,
-        0.095703125,
+        0.32421875,
+        0.1015625,
         0.693359375,
         0.8515625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16041": {
-    "local": "assets/original-16041-433ac60ace4e.webp",
-    "cdn": null,
+    "local": "assets/original-16041-35a97b012b33.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16041-35a97b012b33.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 110190,
-    "sha256": "433ac60ace4e0483b1618252f1ce422ae2c1fb7d6861f0549dd0fcbdb8f2cb0c",
+    "bytes": 127368,
+    "sha256": "35a97b012b335e0d792c40cc5e08acd31378cb3d12fe6941423d50010ae2ed1d",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Monkey/Monkey_withlilypad.x",
@@ -559,6 +641,12 @@
         "entry": "character/v5/02animals/zodiacanimals/monkey/monkey_withlilypad.x.z,8b077f28bfbe424b181b65c10b3358ab,78774",
         "md5": "8b077f28bfbe424b181b65c10b3358ab",
         "bytes": 78774
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -588,38 +676,43 @@
       [
         0.328125,
         0.193359375,
-        0.671875,
-        0.720703125
-      ],
-      [
-        0.224609375,
-        0.146484375,
-        0.783203125,
-        0.861328125
-      ],
-      [
-        0.2265625,
-        0.134765625,
-        0.7734375,
+        0.673828125,
         0.8515625
       ],
       [
+        0.224609375,
+        0.1484375,
+        0.78515625,
+        0.861328125
+      ],
+      [
+        0.224609375,
+        0.138671875,
+        0.7734375,
+        0.86328125
+      ],
+      [
         0.322265625,
-        0.09765625,
-        0.697265625,
-        0.8671875
+        0.103515625,
+        0.6953125,
+        0.86328125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16042": {
-    "local": "assets/original-16042-dd4093ea175a.webp",
-    "cdn": null,
+    "local": "assets/original-16042-ee2d9eb02bfc.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16042-ee2d9eb02bfc.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 92628,
-    "sha256": "dd4093ea175a05fac8dfd7022c8e43500ea4aa28b09d440e1ef63e840199addc",
+    "bytes": 100828,
+    "sha256": "ee2d9eb02bfc995469484258c9be7fca8881d13f6ba7eced5c534b73546259ab",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Cock/Cock_withlilypad.x",
@@ -627,6 +720,12 @@
         "entry": "character/v5/02animals/zodiacanimals/cock/cock_withlilypad.x.z,06e58fb6d48e1df58702576a0ae0bb14,87835",
         "md5": "06e58fb6d48e1df58702576a0ae0bb14",
         "bytes": 87835
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -655,39 +754,44 @@
     "frameBounds": [
       [
         0.34765625,
-        0.2265625,
+        0.228515625,
         0.654296875,
-        0.689453125
+        0.796875
       ],
       [
-        0.2265625,
-        0.173828125,
+        0.23046875,
+        0.17578125,
         0.7890625,
-        0.841796875
+        0.84765625
       ],
       [
         0.21875,
-        0.162109375,
-        0.77734375,
-        0.845703125
+        0.16796875,
+        0.771484375,
+        0.84765625
       ],
       [
         0.349609375,
-        0.12109375,
+        0.12890625,
         0.666015625,
         0.869140625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16043": {
-    "local": "assets/original-16043-054f33255fc3.webp",
-    "cdn": null,
+    "local": "assets/original-16043-3730da6fa6c0.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16043-3730da6fa6c0.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 108262,
-    "sha256": "054f33255fc3bfcac3866264289e6faf6ce05775bf89bedba26e5d419273f87d",
+    "bytes": 118372,
+    "sha256": "3730da6fa6c02246e67f8fdce456c1af746952cbe46c3ad333ea5aa741a7c50f",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Dog/Dog_withlilypad.x",
@@ -695,6 +799,12 @@
         "entry": "character/v5/02animals/zodiacanimals/dog/dog_withlilypad.x.z,2f3e048aa08c88ce2867a13ac03941b6,124573",
         "md5": "2f3e048aa08c88ce2867a13ac03941b6",
         "bytes": 124573
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -725,37 +835,42 @@
         0.333984375,
         0.193359375,
         0.673828125,
-        0.720703125
+        0.798828125
       ],
       [
         0.228515625,
-        0.14453125,
+        0.146484375,
         0.78125,
         0.833984375
       ],
       [
         0.228515625,
-        0.134765625,
+        0.140625,
         0.771484375,
         0.837890625
       ],
       [
         0.3203125,
-        0.09765625,
-        0.689453125,
+        0.10546875,
+        0.69140625,
         0.85546875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16044": {
-    "local": "assets/original-16044-ef5ce39aaf6d.webp",
-    "cdn": null,
+    "local": "assets/original-16044-11f983661b03.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16044-11f983661b03.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 104866,
-    "sha256": "ef5ce39aaf6db41c1f3883d88a775b82bba6ba5b546279719f3617d60ad2f83c",
+    "bytes": 119072,
+    "sha256": "11f983661b0323f0d74ef3ce7a8cec8f5d2c379fdff953173ca2b49398c51331",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Pig/Pig_withlilypad.x",
@@ -763,6 +878,12 @@
         "entry": "character/v5/02animals/zodiacanimals/pig/pig_withlilypad.x.z,fbac2b52beb12f1e7cc53db99d9974f6,78467",
         "md5": "fbac2b52beb12f1e7cc53db99d9974f6",
         "bytes": 78467
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -792,38 +913,43 @@
       [
         0.341796875,
         0.228515625,
-        0.66796875,
-        0.72265625
+        0.666015625,
+        0.791015625
       ],
       [
         0.236328125,
-        0.181640625,
+        0.18359375,
         0.765625,
         0.837890625
       ],
       [
         0.2421875,
-        0.169921875,
+        0.173828125,
         0.763671875,
         0.84765625
       ],
       [
         0.328125,
-        0.130859375,
-        0.681640625,
+        0.13671875,
+        0.68359375,
         0.849609375
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16059": {
-    "local": "assets/original-16059-3b4eba48e185.webp",
-    "cdn": null,
+    "local": "assets/original-16059-37e0997fefd9.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16059-37e0997fefd9.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 102288,
-    "sha256": "3b4eba48e185a260c00b8fce7e31a20ecdd77ed2236950126a8d9f99e41a7454",
+    "bytes": 100302,
+    "sha256": "37e0997fefd9ac259b2e5a06978970fec8e8d7335fbd2dd3d1c5cba66776641f",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/MagicAwingCarpet/MagicAwingCarpet.x",
@@ -831,6 +957,12 @@
         "entry": "character/v5/02animals/magicawingcarpet/magicawingcarpet.x.z,98d622667a6453bdd4eb0db23fb0dd26,45594",
         "md5": "98d622667a6453bdd4eb0db23fb0dd26",
         "bytes": 45594
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -841,7 +973,7 @@
         1.5707963267948966
       ],
       "elevation": 0.35,
-      "distance": 12.332424000000001,
+      "distance": 15.415530000000002,
       "lookAt": [
         0.0,
         0.741055,
@@ -858,34 +990,39 @@
     },
     "frameBounds": [
       [
-        0.236328125,
-        0.318359375,
-        0.794921875,
-        0.66796875
+        0.248046875,
+        0.3203125,
+        0.796875,
+        0.65625
       ],
       [
-        0.078125,
-        0.279296875,
-        0.92578125,
-        0.666015625
+        0.125,
+        0.33984375,
+        0.904296875,
+        0.611328125
       ],
       [
-        0.087890625,
-        0.296875,
-        0.921875,
-        0.65234375
+        0.130859375,
+        0.33203125,
+        0.876953125,
+        0.62109375
       ],
       [
-        0.19140625,
-        0.28125,
-        0.81640625,
-        0.70703125
+        0.193359375,
+        0.30078125,
+        0.79296875,
+        0.671875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16066": {
     "local": "assets/original-16066-08b11028dfae.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16066-08b11028dfae.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -949,11 +1086,16 @@
         0.625,
         0.736328125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16069": {
     "local": "assets/original-16069-818ceda7f554.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16069-818ceda7f554.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1017,11 +1159,16 @@
         0.7109375,
         0.8828125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16070": {
     "local": "assets/original-16070-b8d82b365ca1.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16070-b8d82b365ca1.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1085,11 +1232,16 @@
         0.7109375,
         0.830078125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16072": {
     "local": "assets/original-16072-efcf73b39e32.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16072-efcf73b39e32.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1153,11 +1305,16 @@
         0.7109375,
         0.837890625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16073": {
     "local": "assets/original-16073-770b3d8ef73d.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16073-770b3d8ef73d.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1221,17 +1378,22 @@
         0.7109375,
         0.8828125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16074": {
-    "local": "assets/original-16074-56726d0ab74a.webp",
-    "cdn": null,
+    "local": "assets/original-16074-2036c14b3b49.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16074-2036c14b3b49.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 143076,
-    "sha256": "56726d0ab74af17d30996831843a576c45bb5d2d2cb48bb84305b06e4b38480e",
+    "bytes": 142804,
+    "sha256": "2036c14b3b495ab1d87cf58a11d410243509676fdf62e3f1401694025dc6c074",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/GrilRabbit/GrilRabbit.x",
@@ -1239,6 +1401,12 @@
         "entry": "character/v5/02animals/grilrabbit/grilrabbit.x.z,4c0249841bcacab6724fef977aab371b,129971",
         "md5": "4c0249841bcacab6724fef977aab371b",
         "bytes": 129971
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -1266,34 +1434,39 @@
     },
     "frameBounds": [
       [
-        0.2890625,
-        0.07421875,
-        0.720703125,
+        0.236328125,
+        0.119140625,
+        0.74609375,
         0.703125
       ],
       [
-        0.298828125,
-        0.03515625,
-        0.7578125,
+        0.306640625,
+        0.056640625,
+        0.818359375,
         0.6796875
       ],
       [
-        0.244140625,
-        0.037109375,
+        0.19921875,
+        0.076171875,
+        0.6953125,
+        0.6796875
+      ],
+      [
+        0.310546875,
+        0.046875,
         0.703125,
-        0.6796875
-      ],
-      [
-        0.314453125,
-        0.03515625,
-        0.693359375,
         0.7109375
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16076": {
     "local": "assets/original-16076-b43a85e75715.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16076-b43a85e75715.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1357,11 +1530,16 @@
         0.65234375,
         0.837890625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16077": {
     "local": "assets/original-16077-6f17350377cb.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16077-6f17350377cb.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1425,11 +1603,16 @@
         0.662109375,
         0.732421875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16083": {
     "local": "assets/original-16083-70cd3c155e37.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16083-70cd3c155e37.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1493,11 +1676,16 @@
         0.7890625,
         0.7890625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16090": {
     "local": "assets/original-16090-89ea49a45199.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16090-89ea49a45199.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1561,11 +1749,16 @@
         0.7109375,
         0.837890625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16092": {
     "local": "assets/original-16092-bb1c0b2b1e12.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16092-bb1c0b2b1e12.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1629,11 +1822,16 @@
         0.7109375,
         0.830078125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16093": {
     "local": "assets/original-16093-6d6e3c523a4f.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16093-6d6e3c523a4f.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1697,11 +1895,16 @@
         0.7109375,
         0.8828125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16096": {
     "local": "assets/original-16096-ab300b50a5d9.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16096-ab300b50a5d9.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1765,11 +1968,16 @@
         0.7109375,
         0.8828125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16101": {
     "local": "assets/original-16101-3c00a5e9e70e.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16101-3c00a5e9e70e.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1833,11 +2041,16 @@
         0.853515625,
         0.810546875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16110": {
     "local": "assets/original-16110-67571e35d053.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16110-67571e35d053.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1901,11 +2114,16 @@
         0.9140625,
         0.5703125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16111": {
     "local": "assets/original-16111-e10ea8da2c82.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16111-e10ea8da2c82.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -1969,17 +2187,22 @@
         0.8984375,
         0.62890625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16114": {
-    "local": "assets/original-16114-d2f073a753e8.webp",
-    "cdn": null,
+    "local": "assets/original-16114-c9350c273c47.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16114-c9350c273c47.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 88494,
-    "sha256": "d2f073a753e8a11035d9975c53b182f71c3ea8404f1e16143441920264faba1b",
+    "bytes": 86570,
+    "sha256": "c9350c273c47e9a0dda6d170117fbd6a5160e3ade72ff4cdce7ed8ea348fbd0b",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/Tortoise/Tortoise04.x",
@@ -1987,6 +2210,12 @@
         "entry": "character/v5/02animals/tortoise/tortoise04.x.z,c39d62b0b0b83cdbfc1f7641a022cae7,79858",
         "md5": "c39d62b0b0b83cdbfc1f7641a022cae7",
         "bytes": 79858
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -2014,34 +2243,39 @@
     },
     "frameBounds": [
       [
-        0.076171875,
-        0.251953125,
-        0.921875,
-        0.630859375
+        0.234375,
+        0.28125,
+        0.767578125,
+        0.888671875
       ],
       [
         0.1015625,
-        0.212890625,
-        0.96484375,
+        0.30078125,
+        0.962890625,
         0.865234375
       ],
       [
-        0.037109375,
-        0.244140625,
+        0.0390625,
+        0.30078125,
         0.900390625,
         0.865234375
       ],
       [
-        0.083984375,
-        0.271484375,
-        0.892578125,
+        0.23828125,
+        0.26953125,
+        0.763671875,
         0.84765625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16115": {
     "local": "assets/original-16115-d53854a9e8d1.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16115-d53854a9e8d1.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2105,11 +2339,16 @@
         0.638671875,
         0.69140625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16118": {
     "local": "assets/original-16118-4b2408a4e833.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16118-4b2408a4e833.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2173,11 +2412,16 @@
         0.677734375,
         0.673828125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16120": {
     "local": "assets/original-16120-88969dcf6ecd.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16120-88969dcf6ecd.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2241,11 +2485,16 @@
         0.841796875,
         0.845703125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16123": {
     "local": "assets/original-16123-b6f389f62ee0.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16123-b6f389f62ee0.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2309,11 +2558,16 @@
         0.810546875,
         0.904296875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16124": {
     "local": "assets/original-16124-e1098ab67de5.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16124-e1098ab67de5.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2377,11 +2631,16 @@
         0.8203125,
         0.904296875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16125": {
     "local": "assets/original-16125-c2feb18551a2.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16125-c2feb18551a2.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2445,11 +2704,16 @@
         0.830078125,
         0.91796875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16126": {
     "local": "assets/original-16126-9257815b1ba8.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16126-9257815b1ba8.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2513,11 +2777,16 @@
         0.76171875,
         0.83984375
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16127": {
     "local": "assets/original-16127-1278ef7e47ce.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16127-1278ef7e47ce.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2581,11 +2850,16 @@
         0.802734375,
         0.921875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16139": {
     "local": "assets/original-16139-4a7a4753c112.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16139-4a7a4753c112.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2649,11 +2923,16 @@
         0.669921875,
         0.75
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16140": {
     "local": "assets/original-16140-3cdda26b4ee2.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16140-3cdda26b4ee2.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2717,11 +2996,16 @@
         0.669921875,
         0.75
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16145": {
     "local": "assets/original-16145-fe4bf24cd2e7.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16145-fe4bf24cd2e7.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2785,11 +3069,16 @@
         0.982421875,
         0.66015625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16146": {
     "local": "assets/original-16146-c45facbd53d3.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16146-c45facbd53d3.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2853,11 +3142,16 @@
         0.982421875,
         0.66015625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16147": {
     "local": "assets/original-16147-d05526a86ef0.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16147-d05526a86ef0.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2921,11 +3215,16 @@
         0.7421875,
         0.81640625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16148": {
     "local": "assets/original-16148-767513658dca.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16148-767513658dca.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -2989,17 +3288,22 @@
         0.759765625,
         0.802734375
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16149": {
-    "local": "assets/original-16149-95465f75fc28.webp",
-    "cdn": null,
+    "local": "assets/original-16149-5e1290c77142.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16149-5e1290c77142.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 87922,
-    "sha256": "95465f75fc28350f58191cb5e104d1eb4595371981bddc3fe9bc8625e7944d9e",
+    "bytes": 112254,
+    "sha256": "5e1290c77142f7f297884d14f3b3a127a521f780e00bdb4254c324fb18f89e3e",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/XueDiChe/XueDiChe.x",
@@ -3007,6 +3311,12 @@
         "entry": "character/v5/02animals/xuediche/xuediche.x.z,0f4da6246f2617e1f85a4c0419124684,139022",
         "md5": "0f4da6246f2617e1f85a4c0419124684",
         "bytes": 139022
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -3034,21 +3344,21 @@
     },
     "frameBounds": [
       [
-        0.404296875,
-        0.48828125,
-        0.6015625,
-        0.7734375
+        0.314453125,
+        0.384765625,
+        0.6875,
+        0.84375
       ],
       [
-        0.212890625,
-        0.4375,
+        0.1953125,
+        0.435546875,
         0.896484375,
         0.7421875
       ],
       [
         0.10546875,
         0.435546875,
-        0.810546875,
+        0.822265625,
         0.7421875
       ],
       [
@@ -3057,11 +3367,16 @@
         0.64453125,
         0.767578125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16032": {
     "local": "assets/original-16032-afc175ca30b5.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16032-afc175ca30b5.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3125,17 +3440,22 @@
         0.630859375,
         0.798828125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16033": {
-    "local": "assets/original-16033-88bed39cc1dc.webp",
-    "cdn": null,
+    "local": "assets/original-16033-2480be999c3d.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260925/assets/original-16033-2480be999c3d.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
     "rows": 2,
-    "bytes": 131410,
-    "sha256": "88bed39cc1dcc9ffeabbf69bf7f14c2984577cc8695e4cb2f1571e4feeabaa9f",
+    "bytes": 131116,
+    "sha256": "2480be999c3d0acea161878f3cdf2686bb7ded54051237641fc4fc39687069ff",
     "source": {
       "method": "original-model-mini-scene",
       "model": "character/v5/02animals/ZodiacAnimals/Mouse/Mouse_withlilypad.x",
@@ -3143,6 +3463,12 @@
         "entry": "character/v5/02animals/zodiacanimals/mouse/mouse_withlilypad.x.z,f9189ebbce929445751deb8cec063a81,85738",
         "md5": "f9189ebbce929445751deb8cec063a81",
         "bytes": 85738
+      },
+      "capture": {
+        "warmupSeconds": 6,
+        "stableSamples": 3,
+        "sampleIntervalSeconds": 1,
+        "animFrame": 0
       }
     },
     "camera": {
@@ -3177,27 +3503,32 @@
       ],
       [
         0.224609375,
-        0.14453125,
+        0.146484375,
         0.783203125,
         0.830078125
       ],
       [
         0.224609375,
-        0.134765625,
-        0.775390625,
+        0.140625,
+        0.7734375,
         0.833984375
       ],
       [
         0.318359375,
-        0.09765625,
+        0.103515625,
         0.693359375,
         0.8515625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-25",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16051": {
     "local": "assets/original-16051-4f8fe6d2ba3f.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16051-4f8fe6d2ba3f.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3261,11 +3592,16 @@
         0.671875,
         0.71875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16058": {
     "local": "assets/original-16058-17bb37910a2f.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16058-17bb37910a2f.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3329,11 +3665,16 @@
         0.68359375,
         0.791015625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16067": {
     "local": "assets/original-16067-7404bee2671a.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16067-7404bee2671a.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3397,11 +3738,16 @@
         0.97265625,
         0.8203125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16068": {
     "local": "assets/original-16068-fbf62a48e244.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16068-fbf62a48e244.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3465,11 +3811,16 @@
         0.81640625,
         0.74609375
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16075": {
     "local": "assets/original-16075-dd74a4b334fc.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16075-dd74a4b334fc.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3533,11 +3884,16 @@
         0.66015625,
         0.67578125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16078": {
     "local": "assets/original-16078-269a34a82dcf.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16078-269a34a82dcf.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3601,11 +3957,16 @@
         0.68359375,
         0.7734375
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16079": {
     "local": "assets/original-16079-ee6d47133681.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16079-ee6d47133681.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3669,11 +4030,16 @@
         0.677734375,
         0.76171875
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16080": {
     "local": "assets/original-16080-331c249d0ff4.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16080-331c249d0ff4.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3737,11 +4103,16 @@
         0.625,
         0.884765625
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16081": {
     "local": "assets/original-16081-cfd9531c6c08.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16081-cfd9531c6c08.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3805,11 +4176,16 @@
         0.67578125,
         0.76953125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16082": {
     "local": "assets/original-16082-61aa32ddcf73.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16082-61aa32ddcf73.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3873,11 +4249,16 @@
         0.798828125,
         0.783203125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16091": {
     "local": "assets/original-16091-dc31c6c0fdc7.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16091-dc31c6c0fdc7.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -3941,11 +4322,16 @@
         0.68359375,
         0.7734375
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16097": {
     "local": "assets/original-16097-44d34b96f694.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16097-44d34b96f694.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -4009,11 +4395,16 @@
         0.66015625,
         0.673828125
       ]
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16108": {
     "local": "assets/original-16108-f5664658e787.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16108-f5664658e787.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -4057,11 +4448,16 @@
       1,
       2,
       3
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16109": {
     "local": "assets/original-16109-c1c295445cae.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16109-c1c295445cae.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -4105,11 +4501,16 @@
       1,
       2,
       3
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16141": {
     "local": "assets/original-16141-10412c6c27c9.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16141-10412c6c27c9.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -4153,11 +4554,16 @@
       1,
       2,
       3
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16142": {
     "local": "assets/original-16142-61ce66235d12.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16142-61ce66235d12.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -4201,11 +4607,16 @@
       1,
       2,
       3
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16143": {
     "local": "assets/original-16143-7cc7b4b86b0b.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16143-7cc7b4b86b0b.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -4249,11 +4660,16 @@
       1,
       2,
       3
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-16144": {
     "local": "assets/original-16144-d250ec9d3740.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-16144-d250ec9d3740.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -4297,11 +4713,16 @@
       1,
       2,
       3
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   },
   "original-10001": {
     "local": "assets/original-10001-f50b9685a57b.webp",
-    "cdn": null,
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/mount-lab/20260924/assets/original-10001-f50b9685a57b.webp",
     "width": 768,
     "height": 768,
     "columns": 2,
@@ -4345,6 +4766,11 @@
       1,
       2,
       3
-    ]
+    ],
+    "verified": {
+      "date": "2026-09-24",
+      "sha256": true,
+      "cors": "*"
+    }
   }
 }

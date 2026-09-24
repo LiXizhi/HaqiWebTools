@@ -30,6 +30,9 @@ test('adventure startup loads two published packs with CDN images and no loose J
         };
         const { loadResources } = await import('../js/adventure_assets.js');
         const resources = await loadResources();
+        const journal = await resources.loadQuestJournal();
+        assert.ok(journal.quests.length > 400);
+        assert.ok(resources.content.catalogQuests.quests.length > 400);
         assert.deepEqual(requests.sort(), ['data/adventure.json', 'data/kids.json']);
         assert.equal(resources.mode, 'cdn');
         assert.equal(Object.keys(resources.content.pets).length, 360);

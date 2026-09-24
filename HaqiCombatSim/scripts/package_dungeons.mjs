@@ -22,6 +22,6 @@ export function prepareDungeonFiles(base=root){
     const read=p=>JSON.parse(fs.readFileSync(path.join(base,p),'utf8'));
     const result=prepareDungeonBundle(read('data/adventure/dungeons.json'),read('data/kids/cards.json'),read('data/kids/card_names.json'),read('data/adventure/maps/camp.json').rules);
     // Only the catalogue is part of the startup pack. Dungeon content stays in one JSON.
-    fs.writeFileSync(path.join(base,'data/adventure/dungeon-index.json'),JSON.stringify(result.index)+'\n');
+    fs.writeFileSync(path.join(base,'data/adventure/dungeon-index.json'),JSON.stringify(result.index,null,2)+'\n');
     return result;
 }

@@ -15,7 +15,7 @@ import { castBlockedMessage } from './adventure_cast_feedback_core.js';
 import { tickCheckin } from './adventure_checkin_core.js';
 import { prepareDebugEdit } from './adventure_debug_core.js';
 import { DEBUG_BACKUP_KEY, hasDebugBackup, storeDebugEdit, restoreDebugBackup } from './adventure_debug.js';
-import { tickCare } from './adventure_pets_core.js';
+import { tickCare, productPrice } from './adventure_pets_core.js';
 // Browser controller: input, rendering, audio and persistence live outside the pure rules.
 import { effectDuration } from './spell_effects_core.js';
 import { createSpellSound } from './spell_sound.js';
@@ -42,6 +42,10 @@ import { createRoleStore } from './adventure_roles.js';
 import { MAX_ROLES } from './adventure_roles_core.js';
 import { renderRoles } from './view_adventure_roles.js';
 import { createCreationPreview, tutorialCards } from './adventure_creation_preview.js';
+import { loadLocaleFiles, configureLocale, installLocaleTooltip, setGlossAligner, speakText, textFor } from './locale.js';
+import { shopPrices, testDurationMs } from './language_learning_core.js';
+import { createTutor, profileFromSave, rememberProfile, syncMemory, tutorSystem, judgeTranscript, battleSpeechScore } from './language_learning.js';
+import { renderFreeTalk, renderLanguageTest } from './view_language_learning.js';
 
 const $=id=>document.getElementById(id);
 const nodes={world:$('world'),hud:$('hud'),entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer'),toast:$('toast')};
@@ -89,7 +93,54 @@ const gemView={guid:null,gemId:null,runes:[null,null,null],runeIndex:0,step:'equ
 const strengtheningView={guid:null,filter:0,page:0,pending:false,message:''};
 let serviceNpc=null;
 const npcServiceView={query:'',page:0};
-const model=()=>({assets,save,dungeonLoading,serviceNpc,npcServiceView,fishingView,membership:membership.state,membershipView,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled});
+const model=()=>({assets,save,dungeonLoading,serviceNpc,npcServiceView,fishingView,membership:membership.state,membershipView,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled,learningProgress:battle?.learningProgress||0});
+const tutor=createTutor();
+setGlossAligner((top,bottom)=>tutor.requestLLM([
+    {role:'system',content:'Pair corresponding words between the two lines. Return JSON only: {"groups":[{"color":0,"top":"Back","bottom":"回到"}]}. Use the same color number for a matching pair. Keep each fragment exactly as it appears. Do not translate or explain.'},
+    {role:'user',content:`Top:\n${top}\nBottom:\n${bottom}`},
+],{model:'keepwork-lite'}));
+const talkHistory=[];
+function applyLocale(){if(save)configureLocale({locale:save.locale,languageLearning:save.languageLearning});}
+function setLocale(locale){save.locale=locale;if(save.languageLearning.enabled)save.languageLearning.enabled=false;applyLocale();persist();paintHud();if(panel)paintPanel();toast('界面语言已更新');}
+function setLearning(next){save.languageLearning={...save.languageLearning,...next};applyLocale();persist();paintHud();paintPanel();}
+function openFreeTalk(npc){
+    talkHistory.length=0;
+    const profile=profileFromSave(save);
+    renderFreeTalk(nodes.overlay,model(),npc,{
+        close,voice:()=>tutor.requestVoice('start',tutorSystem(profile,`You are ${npc.name}. Free talk.`)).catch(error=>toast(error.message)),
+        greet:()=>tutor.requestLLM([{role:'system',content:tutorSystem(profile,`You are ${npc.name}, ${npc.description||''}. Greet the learner.`)},{role:'user',content:'Hello'}]),
+        reply:async(_npc,answer)=>{
+            const text=await tutor.requestLLM([{role:'system',content:tutorSystem(profile,`You are ${npc.name}.`)},...talkHistory.slice(-20),{role:'user',content:answer}]);
+            talkHistory.push({role:'user',content:answer},{role:'assistant',content:text});
+            rememberProfile(save,{...profile,topics:[...profile.topics,npc.name].slice(-8),notes:profile.notes});
+            persist();syncMemory(save,cloudClient);
+            return text;
+        },
+    },{el:V.el,button:V.button});
+}
+function openLanguageTest(task){
+    const prices=shopPrices(assets.content,productPrice);
+    const hints=['说出这件物品的名字','说说你为什么想要它','用一句话描述它'];
+    renderLanguageTest(nodes.overlay,model(),{...task,prices,hints},{
+        close,finish:(transcript)=>{
+            const profile=profileFromSave(save);
+            const judged=judgeTranscript({transcript,level:profile.level,topic:task.name});
+            if(!judged.pass){toast('未通过');if(panel)paintPanel();else close();return;}
+            const action=task.kind==='npc'?{type:'npc-purchase',npcInstanceId:task.npcInstanceId,offerId:task.offerId,paidByTest:true}:{type:'buy',productId:task.productId,paidByTest:true};
+            performAction(action);toast('通过');
+        },
+    },{el:V.el,button:V.button});
+}
+function battleSpeech(text,goal){
+    if(!battle||battle.finished)return;
+    const learning=save.languageLearning;
+    const translations=goal.hints.map(hint=>textFor(hint,learning.target));
+    const gain=battleSpeechScore(text,goal.hints,translations);
+    P.applyLearningSpeech(battle,(battle.learningProgress||0)+gain);
+    toast(text);
+    paintBattle();
+    if(battle.finished)setTimeout(()=>nodes.battle.querySelector('.result-card button.primary')?.focus(),0);
+}
 const rewardRoot=V.el('div','reward-feedback');nodes.world.parentElement.append(rewardRoot);
 const rewardFeedback=createRewardFeedback(rewardRoot,{
     describe:reward=>{
@@ -134,7 +185,7 @@ function paintPanel() {
     const equipment=['equipment','inventory','shop','pet'].includes(panel);
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
-    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId,pinJournalQuest},{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true),refreshMembership,becomeVip:()=>membership.openProfile().catch(error=>toast(error.message))});
+    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId,pinJournalQuest},{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true),refreshMembership,becomeVip:()=>membership.openProfile().catch(error=>toast(error.message)),setLocale,setLearning,languageTest:openLanguageTest});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
@@ -255,7 +306,7 @@ function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     petCardsOpen=false;
     runeCardsOpen=false;
     creationPreview?.stop();
-    save=newSave;if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content,save);stage='world';path=[];destination=null;animation=null;close();
+    save=newSave;applyLocale();if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content,save);stage='world';path=[];destination=null;animation=null;close();
     if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};
     nodes.entry.replaceChildren();nodes.entry.className='';nodes.entry.hidden=true;nodes.hud.hidden=false;
     nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';battle=null;paintHud();
@@ -267,7 +318,7 @@ function showTitle(manage=false) {
     spellSound.stop();
     persist();if(storageWarning&&stage!=='title'){toast('当前进度尚未保存，请勿关闭页面。请检查浏览器存储或重试。');return;}close();rewardFeedback.reset();stage='title';keys.clear();path=[];destination=null;animation=null;battle=null;
     music?.pause();nodes.hud.hidden=true;nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';nodes.entry.hidden=false;
-    save=roleStore.catalog.roles.find(row=>row.id===roleStore.catalog.activeId)?.save||A.createAdventure(assets.content);
+    save=roleStore.catalog.roles.find(row=>row.id===roleStore.catalog.activeId)?.save||A.createAdventure(assets.content);applyLocale();
     world=W.createWorld(save.zone,assets.content,save);
     if(manage!==true&&roleStore.catalog.roles.length===1&&!roles.busy&&!roles.conflict){
         try{activateRole(roleStore.catalog.roles[0].id);return;}catch(error){roles.error=error.message;}
@@ -437,7 +488,7 @@ function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog
     const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});
     persist();showRewards(before);toast(`已完成：${q.title}`);close();paintHud();
-},questTalk:(q,talk)=>startQuestTalk(talk),panel:openPanel,travel,track});}
+},questTalk:(q,talk)=>startQuestTalk(talk),panel:openPanel,travel,track,freeTalk:openFreeTalk});}
 function startQuestTalk(talk) {
     startLines(talk.dialog,'谢谢你，我知道了',()=>{
         A.applyAction(save,assets.content,{type:'talk',npcId:talk.npcId});
@@ -570,7 +621,7 @@ function paintBattle(){
 },openRunes:()=>{if(animation||battle.finished)return;runeCardsOpen=true;petCardsOpen=false;selected=null;paintBattle();},pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
     if(assets.content.pets)A.settleParty(save,assets.content,battle,{retreat:true});
     A.applyAction(save,assets.content,{type:'retreat'});save.careAt=Date.now();enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
-},finish:()=>safely(()=>{const before=rewardSnapshot(save);A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save,null,{announceBeans:false});showRewards(before);})});}
+},finish:()=>safely(()=>{const before=rewardSnapshot(save);A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save,null,{announceBeans:false});showRewards(before);}),battleTalk:()=>{const goal=battle?.monsterTemplates?.[0]?.name;if(goal)speakText(goal);},battleSpeech});}
 function playRound(decision) {
     if(animation||battle.finished)return;
     safely(()=>{
@@ -697,6 +748,7 @@ async function boot(){
         $('load-detail').textContent='';
         $('load-progress').removeAttribute('value');
         if(assets.content.schemaVersion!==1||!assets.content.quests?.length||!assets.dataset.cards)throw new Error('章节数据格式不正确，请重新导出并检查资源。');
+        await loadLocaleFiles();installLocaleTooltip();
         roleStore=createRoleStore({content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves});await roleStore.prepareOpen();roleStore.open();
         roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
         cloudClient=createCloudClient({content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves,onAccountChange:()=>{resetRoleAccount();cloud.message='登录状态已变化，请重新连接。';}});

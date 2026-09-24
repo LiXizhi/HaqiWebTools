@@ -53,7 +53,9 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     function buyButton(item) {
         const buy=button('购买',()=>cb.action({type:'buy',productId:item.id}),'primary shop-buy');
         buy.setAttribute('aria-label',`${item.name}：购买`);
-        return buy;
+        if(!save.languageLearning?.enabled)return buy;
+        const test=button('语言挑战',()=>cb.languageTest({kind:'shop',productId:item.id,name:item.name,price:productPrice(item,c)}),'secondary shop-buy');
+        return el('div','shop-buy-row',buy,test);
     }
     function paintPreview(item) {
         preview.replaceChildren();

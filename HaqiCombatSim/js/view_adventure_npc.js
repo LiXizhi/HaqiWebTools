@@ -112,7 +112,9 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
         control.disabled=!status.allowed;
         control.title=status.reason||label;
         control.setAttribute('aria-label',`${name}：${status.allowed?label:status.reason}`);
-        return control;
+        if(!model.save.languageLearning?.enabled||row.kind==='mentor')return control;
+        const test=button('语言挑战',()=>cb.languageTest({kind:'npc',npcInstanceId:npc.instanceId,offerId:row.id,name,price:status.costs?.find(([id])=>id===100)?.[1]||10}),'secondary small');
+        return el('div','shop-buy-row',control,test);
     };
 
     const draw=()=>{

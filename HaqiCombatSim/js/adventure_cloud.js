@@ -163,5 +163,18 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
             return { ...result, owner: current.owner, authVersion: current.version };
         }),
         assertPreview: preview => check({ owner: preview.owner, version: preview.authVersion }),
+        readMemory: () => guarded(async () => {
+            const current = await session();
+            try { return await remoteText('memory.md', current); }
+            catch { return ''; }
+        }),
+        writeMemory: text => guarded(async () => {
+            const body = String(text ?? '');
+            const current = await session();
+            await timeout(store.savePageData('memory.md', 'content', body, false, false));check(current);
+            if (!await timeout(store.syncToGit('memory.md', false))) throw new CloudError('学习档案尚未写入云端，本地进度已保留。');
+            if (await remoteText('memory.md', current) !== body) throw new CloudError('学习档案未通过远端核验。本地进度已保留。');
+            return true;
+        }),
     };
 }

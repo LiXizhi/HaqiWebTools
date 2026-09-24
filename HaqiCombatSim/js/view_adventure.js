@@ -32,9 +32,18 @@ import { expectedBaseDamage,expectedBaseHeal,cardTargetKind } from './combat_car
 import { renderEquipment } from './view_adventure_equipment.js';
 import { renderStrengthening } from './view_adventure_strengthening.js';
 import { COLORS } from './adventure_renderer.js';
+import { languageSettings, battleChallengeBar } from './view_language_learning.js';
+import { tr, setText } from './locale_runtime.js';
+import { syncLocaleChrome } from './locale.js';
 export function el(tag,cls,...children) {
     const n=document.createElement(tag);if(cls)n.className=cls;
-    for(const child of children.flat(Infinity))if(child!==null&&child!==undefined&&child!==false)n.append(child instanceof Node?child:document.createTextNode(String(child)));
+    const sources=[];
+    for(const child of children.flat(Infinity)){
+        if(child===null||child===undefined||child===false)continue;
+        if(child instanceof Node)n.append(child);
+        else {const source=String(child);sources.push(source);n.append(document.createTextNode(tr(source)));}
+    }
+    if(sources.length===1&&n.childNodes?.length===1&&n.childNodes[0].nodeType===3&&n.dataset)n.dataset.zh=sources[0];
     return n;
 }
 export function button(label,fn,cls='') {const b=el('button',cls,label);b.type='button';b.onclick=fn;return b;}
@@ -238,6 +247,7 @@ export function renderHud(root,model,cb) {
     status.querySelector('.hero-text').append(el('div','hero-health',el('i'),el('span','hero-health-label')),warning);
     updateHeroHealth(status,save,c);
     root.append(status,el('div','location-label',el('span','',c.worldMaps?.[save.zone]?.name||islandName(save.zone)),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
+    syncLocaleChrome();
     const utilities=el('nav','utility-nav');utilities.setAttribute('aria-label','其他功能');
     const checkin=button([icon('gourd'),el('span','utility-label','签到'),el('small','','')],()=>cb.panel('checkin'),'utility-button checkin-button');
     checkin.title='米酒葫芦 · 在线领奖';
@@ -349,7 +359,9 @@ export function renderPanel(root,kind,model,cb) {
         body.append(el('p','muted','本地进度自动保存。登录后，升级、重要操作和每十分钟自动同步云端；网络失败会重试。'));
         body.append(button('云端旅途 · 跨设备继续冒险',cb.cloud,'primary settings-button'));
         body.append(el('p','','进度自动保存在当前浏览器。登录 Keepwork 后可同步角色，在其他设备继续旅程。'),button(save.music?'背景音乐：开启':'背景音乐：关闭',cb.music,'secondary settings-button'));
-        body.append(button('回到开始画面',cb.title,'secondary settings-button'),el('hr'),el('h3','','关于这段旅程'),el('p','muted','本章保留魔法哈奇 kids 原版角色、任务对白和卡牌数据。地图、升级节奏和毕业后的镇区是适合单人游玩的二维改编。'),el('details','source-details',el('summary','','查看改编说明'),...c.adaptations.map(t=>el('p','muted',t))),el('a','sim-link','打开战斗模拟器'));
+        body.append(button('回到开始画面',cb.title,'secondary settings-button'),el('hr'));
+        languageSettings(body,model,cb,{el,button});
+        body.append(el('h3','','关于这段旅程'),el('p','muted','本章保留魔法哈奇 kids 原版角色、任务对白和卡牌数据。地图、升级节奏和毕业后的镇区是适合单人游玩的二维改编。'),el('details','source-details',el('summary','','查看改编说明'),...c.adaptations.map(t=>el('p','muted',t))),el('a','sim-link','打开战斗模拟器'));
         body.querySelector('a').href='HaqiCombatSim.html';
         const effectsLink=el('a','sim-link','技能特效工坊');effectsLink.href='HaqiEffects.html';effectsLink.target='_blank';effectsLink.rel='noopener';body.append(effectsLink);
     }
@@ -392,6 +404,7 @@ export function renderDialogue(root,model,dialog,cb) {
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
         if(npc.id===36205)choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
+        if(model.save.languageLearning?.enabled)choices.append(button('自由交谈',()=>cb.freeTalk(npc),'primary'));
         choices.append(button('下次再聊',cb.close,'text-button'));content.append(choices);
     }
     const hint=el('p','dialogue-hint');
@@ -427,10 +440,10 @@ function renderBattleContent(root,model,cb) {
     sound.title=model.soundEnabled?'关闭音效':'开启音效';
     sound.setAttribute('aria-label',sound.title);
     sound.setAttribute('aria-pressed',String(!!model.soundEnabled));
-    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,badge(`第 ${battle.turn} 回合`),button('撤退',cb.retreat,'secondary small')));
+    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,badge(`第 ${battle.turn} 回合`),model.save.languageLearning?.enabled?button('对话挑战',cb.battleTalk,'secondary small'):null,button('撤退',cb.retreat,'secondary small')));
     const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');canvas.onclick=e=>{const point=Object.entries(canvas.battlePositions||{}).sort((a,b)=>Math.hypot(a[1].x-e.offsetX,a[1].y-e.offsetY)-Math.hypot(b[1].x-e.offsetX,b[1].y-e.offsetY))[0];if(point)cb.target(point[0]);};
     const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
-    const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');status.textContent=battle.finished?'对决结束':animating?'魔法正在生效…':blockedMessage;
+    const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');setText(status,battle.finished?'对决结束':animating?'魔法正在生效…':blockedMessage);
     status.classList.toggle('cast-blocked',!!blockedMessage&&!animating&&!battle.finished);
     const hand=el('div','battle-hand'),bottom=el('div','battle-controls');
     hand.classList.toggle('hand-focused',!!selected);
@@ -496,7 +509,8 @@ function renderBattleContent(root,model,cb) {
         targets.append(capture);
     }
     bottom.append(targets,runePager);
-    root.append(top,canvas,status,hand,bottom);
+    const challenge=model.save.languageLearning?.enabled?battleChallengeBar({...model,onBattleSpeech:cb.battleSpeech},{el,button}):null;
+    root.append(top,canvas,status,challenge,hand,bottom);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
     root.oncontextmenu=e=>{
         if(petCardsOpen||runeCardsOpen||animating||battle.finished||e.pointerType==='touch'||!matchMedia('(pointer:fine)').matches)return;

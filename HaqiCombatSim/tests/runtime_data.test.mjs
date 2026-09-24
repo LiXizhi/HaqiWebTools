@@ -13,9 +13,47 @@ import { loadDataset, discoverDatasets } from '../js/data_core.js';
 import { installExpansion } from '../js/adventure_expansion_core.js';
 import { installNpcCatalog, npcOffers, npcOfferStatus } from '../js/adventure_npc_core.js';
 import { createAdventure } from '../js/adventure_core.js';
+import { validateMonsterArt, monsterArtBinding } from '../js/adventure_monster_art_core.js';
+import { installCatalogQuests, catalogAcceptBlock, catalogGoalRows } from '../js/adventure_catalog_quests_core.js';
 
 const read = name => JSON.parse(fs.readFileSync(new URL(`../data/adventure/${name}.json`, import.meta.url)));
 const compact = name => projectRuntimeData(`adventure/${name}.json`, read(name));
+
+test('adventure catalog projections preserve bindings, dungeon index and quest rules', () => {
+    const art = compact('monster-art'), originalArt = read('monster-art');
+    validateMonsterArt(art, read('pets').pets);
+    assert.equal(art.adaptations, undefined);
+    for (const key of Object.keys(originalArt.bindings)) {
+        const [source, model] = key.split('|');
+        assert.deepEqual(monsterArtBinding({source, model}, art), monsterArtBinding({source, model}, originalArt));
+    }
+    assert.deepEqual(compact('dungeon-index'), read('dungeon-index'));
+    const journal = read('quest-journal');
+    const expected = structuredClone(journal);
+    for (const quest of expected.quests) {
+        delete quest.repeat;
+        for (const goal of quest.objectives) delete goal.id;
+        for (const prerequisite of quest.prerequisites) delete prerequisite.value;
+    }
+    assert.deepEqual(compact('quest-journal'), expected);
+    const full = read('chapter'), packed = read('chapter');
+    installCatalogQuests(full, read('quest-runtime'));
+    installCatalogQuests(packed, compact('quest-runtime'));
+    const save = createAdventure(full, {school: 'fire'});
+    for (const quest of full.catalogQuests.quests) {
+        const reduced = packed.catalogQuests.byId[quest.id];
+        assert.deepEqual(reduced.groups, quest.groups);
+        assert.deepEqual(reduced.rewards, quest.rewards);
+        assert.equal(catalogAcceptBlock(save, packed, reduced), catalogAcceptBlock(save, full, quest));
+        assert.deepEqual(catalogGoalRows(save, packed, reduced), catalogGoalRows(save, full, quest));
+    }
+    for (const name of ['dungeon-index', 'monster-art', 'quest-journal', 'quest-runtime']) {
+        const original = read(name), before = JSON.stringify(original);
+        const projected = projectRuntimeData(`adventure/${name}.json`, original);
+        assert.equal(JSON.stringify(original), before);
+        assert.ok(JSON.stringify(projected).length <= before.length);
+    }
+});
 
 test('compact art retains validation, every animation crop, CDN URL and comparison UI metadata', () => {
     const original = read('skill-art'), art = compact('skill-art');
@@ -104,6 +142,9 @@ test('five compact packs load all datasets, retain projected content and preserv
         assert.equal(output, JSON.stringify(JSON.parse(output)));
         assert.deepEqual(await reader('data/adventure/skill-art.json'), compact('skill-art'));
         assert.deepEqual(await reader('data/adventure/npc-catalog.json'), compact('npc-catalog'));
+        for (const name of ['dungeon-index', 'monster-art', 'quest-journal', 'quest-runtime']) {
+            assert.deepEqual(await reader(`data/adventure/${name}.json`), compact(name));
+        }
         for(const id of ['camp','town','fire','ice','desert','dark','index'])assert.deepEqual(await reader(`data/adventure/maps/${id}.json`),read(`maps/${id}`));
         assert.equal(fs.readFileSync(new URL('adventure/skill-art.json', source), 'utf8'), original);
         assert.equal((await discoverDatasets(reader)).length, 3);

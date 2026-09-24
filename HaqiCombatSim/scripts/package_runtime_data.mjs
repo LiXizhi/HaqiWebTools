@@ -7,13 +7,47 @@ import {npcItemLimits} from '../js/adventure_npc_core.js';
 const pick = (row, keys) => Object.fromEntries(keys.filter(key => Object.hasOwn(row, key)).map(key => [key, row[key]]));
 const map = (rows, project) => Object.fromEntries(Object.entries(rows).map(([id, row]) => [id, project(row)]));
 const urlFields = ['local', 'cdn'];
-const developmentFiles = new Set(['card-atlas.json', 'cdn-publish-plan.json', 'skill-art-plan.json', 'expansion-report.json', 'quest-catalog.json', 'monster-catalog.json', 'boss-art-plan.json', 'boss-art.json', 'quest-journal.json', 'quest-runtime.json']);
+const developmentFiles = new Set(['card-atlas.json', 'cdn-publish-plan.json', 'skill-art-plan.json', 'expansion-report.json', 'quest-catalog.json', 'monster-catalog.json', 'boss-art-plan.json', 'boss-art.json']);
 
 export function projectRuntimeData(relativePath, value) {
     if (!relativePath.startsWith('adventure/')) return value;
     const name = relativePath.slice('adventure/'.length);
     if (developmentFiles.has(name)) return null;
     switch (name) {
+        case 'dungeon-index.json': return {
+            version: value.version,
+            worlds: value.worlds.map(row => ({
+                ...pick(row, ['id', 'name', 'playable', 'recommendedLevel', 'monsterCount', 'bossArenaId', 'battleRewards', 'mapInfo', 'loaded']),
+                boss: row.boss ? {...pick(row.boss, ['name', 'source', 'level']), attributes: pick(row.boss.attributes, ['asset'])} : null,
+                arenas: row.arenas.map(arena => pick(arena, ['id', 'blocked'])),
+            })),
+        };
+        case 'monster-art.json': return {
+            version: value.version,
+            entries: map(value.entries, row => pick(row, [...urlFields, 'width', 'height', 'size', 'sha256'])),
+            bindings: map(value.bindings, row => pick(row, ['kind', 'id', 'petId'])),
+            models: map(value.models, row => pick(row, ['kind', 'id', 'petId'])),
+        };
+        case 'quest-journal.json': return {
+            version: value.version,
+            quests: value.quests.map(row => ({
+                ...pick(row, ['id', 'title', 'description', 'region', 'obsolete', 'startNpc', 'endNpc', 'validDate']),
+                objectives: row.objectives.map(goal => pick(goal, ['type', 'name', 'count'])),
+                prerequisites: row.prerequisites.map(quest => pick(quest, ['id', 'title'])),
+                requirements: row.requirements.map(requirement => pick(requirement, ['name', 'min', 'max'])),
+                rewards: row.rewards.map(group => ({...pick(group, ['choice', 'schoolFilter']), items: group.items.map(item => pick(item, ['id', 'name', 'count']))})),
+            })),
+        };
+        case 'quest-runtime.json': return {
+            version: value.version, paths: value.paths,
+            quests: value.quests.map(row => ({
+                ...pick(row, ['id', 'title', 'region', 'startNpc', 'endNpc', 'repeat']),
+                prerequisites: row.prerequisites.map(quest => pick(quest, ['id', 'value'])),
+                requirements: row.requirements.map(requirement => pick(requirement, ['id', 'min', 'max'])),
+                groups: row.groups.map(group => ({...pick(group, ['kind', 'condition', 'mode']), items: group.items.map(item => pick(item, ['id', 'name', 'count', 'producers', 'odds', 'unit', 'amount', 'destroy']))})),
+                rewards: row.rewards.map(group => ({...pick(group, ['choice', 'schoolFilter']), items: group.items.map(item => pick(item, ['id', 'name', 'count']))})),
+            })),
+        };
         case 'dungeons.json': return {version:value.version,worlds:value.worlds.map(row=>pick(row,['id','name','attributes','arenas','warnings','recommendedLevel','monsterCount'])),monsters:map(value.monsters,row=>pick(row,['id','source','name','school','level','hp','xp','coins','attributes','pool','sequences','genes','cardsets']))};
         case 'npc-catalog.json': return {
             version: value.version,

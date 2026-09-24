@@ -1,0 +1,72 @@
+拖动任何文字或按钮到这里，可以翻译。||Drag any text or button here to translate.
+下次再聊||Talk to you later
+查看商品与学习魔法||View goods and learn magic
+自由交谈||Free talk
+语言挑战||Language challenge
+语言学习：关闭||Language learning: off
+语言学习：开启||Language learning: on
+界面语言||Display language
+母语||Native language
+目标语言||Target language
+旅途设置||Journey settings
+你的冒险旅程||Your adventure
+设置||Settings
+任务||Quests
+卡包||Cards
+背包||Bag
+宠物||Pet
+商店||Shop
+世界地图||World map
+副本||Dungeons
+交谈||Talk
+购买||Buy
+撤退||Retreat
+跳过本回合||Skip this turn
+魔法对决||Magic duel
+对决结束||The duel is over
+魔法正在生效…||The spell is taking effect…
+签到||Check in
+会员权益||Membership
+升级会员||Upgrade membership
+切换 / 新建角色||Switch / new character
+属性编辑器 · 调试||Stat editor · debug
+技能音效：开启||Spell sounds: on
+技能音效：关闭||Spell sounds: off
+背景音乐：开启||Music: on
+背景音乐：关闭||Music: off
+云端旅途 · 跨设备继续冒险||Cloud journey · continue on another device
+回到开始画面||Back to the title
+关于这段旅程||About this journey
+查看改编说明||View adaptation notes
+打开战斗模拟器||Open the combat simulator
+技能特效工坊||Spell effect workshop
+接取任务||Accept quest
+完成任务||Complete quest
+继续||Continue
+让这只宠物开心||Make this pet happy
+解释天空为什么是蓝色的||Explain why the sky is blue
+给它讲一个很短的故事||Tell it a very short story
+夸它可爱||Say it is cute
+说你喜欢它||Say you like it
+请它一起玩||Ask it to play with you
+说到阳光||Mention sunlight
+说到空气||Mention the air
+说到蓝光||Mention blue light
+有一个开始||There is a beginning
+有一个朋友||There is a friend
+有一个结尾||There is an ending
+对话挑战||Talk challenge
+挂断||Hang up
+按住说话||Hold to talk
+发送||Send
+通过||Passed
+未通过||Not yet
+奇豆不足||Not enough Qi beans
+烈火||Fire
+寒冰||Ice
+风暴||Storm
+生命||Life
+死亡||Death
+辅助魔法||Support spell
+伤害||Damage
+治疗||Heal

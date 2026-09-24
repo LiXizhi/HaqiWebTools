@@ -1,1 +1,4071 @@
-{"version":1,"worlds":[{"id":"dungeon:Instance_Test","name":"Instance_Test","playable":true,"recommendedLevel":18,"monsterCount":2,"boss":{"name":"噬灵鼠","source":"config/Aries/Mob/MobTemplate_GreenDevouringRat.xml","level":18,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreenDevouringRat/GreenDevouringRat.x"}},"bossArenaId":"dungeon:Instance_Test:0","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:Instance_Test:0","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_FireCavern","name":"火鬃怪宝库","playable":true,"recommendedLevel":5,"monsterCount":6,"boss":{"name":"火鬃怪大王","source":"config/Aries/Mob/MobTemplate_FireRockyOgre02.xml","level":12,"attributes":{"asset":"character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_02.x"}},"bossArenaId":"dungeon:HaqiTown_FireCavern:2","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1667.3500000000058,"h":1550,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_FireCavern:0","blocked":[]},{"id":"dungeon:HaqiTown_FireCavern:1","blocked":[]},{"id":"dungeon:HaqiTown_FireCavern:2","blocked":[]}],"loaded":false},{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree","name":"神木空间","playable":true,"recommendedLevel":14,"monsterCount":18,"boss":{"name":"浴火凤凰","source":"config/Aries/Mob/TheGreatTree/MobTemplate_TheShadowPhoenix.xml","level":30,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GlodenPhoenix/GlodenPhoenix.x"}},"bossArenaId":"dungeon:FlamingPhoenixIsland_TheGreatTree:5","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":3702.216796875,"h":2270,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree:0","blocked":[]},{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree:1","blocked":[]},{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree:2","blocked":[]},{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree:3","blocked":[]},{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree:4","blocked":[]},{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree:5","blocked":["未支持卡牌：22207"]}],"loaded":false},{"id":"dungeon:HaqiTown_LightHouse_S1","name":"试炼之塔","playable":true,"recommendedLevel":1,"monsterCount":8,"boss":{"name":"大力猿首领","source":"config/Aries/Mob/MobTemplate_ForestSpikyOgre.xml","level":5,"attributes":{"asset":"character/v5/10mobs/HaqiTown/ForestSpikyOgre/ForestSpikyOgre.x"}},"bossArenaId":"dungeon:HaqiTown_LightHouse_S1:6","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":5380,"h":2510,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_LightHouse_S1:0","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S1:1","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S1:2","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S1:3","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S1:4","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S1:5","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S1:6","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_LightHouse_S2","name":"试炼之塔","playable":true,"recommendedLevel":2,"monsterCount":33,"boss":{"name":"愤怒的火鬃将军","source":"config/Aries/Mob/CrazyTowerMobs/MobTemplate_FireRockyOgre02TowerLvl25.xml","level":20,"attributes":{"asset":"character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_02.x"}},"bossArenaId":"dungeon:HaqiTown_LightHouse_S2:17","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":5500,"h":5150,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_LightHouse_S2:0","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:1","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:2","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:3","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:4","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:5","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:6","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:7","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:8","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:9","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:10","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:11","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:12","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:13","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:14","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:15","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:16","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S2:17","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_LightHouse_S3","name":"试炼之塔","playable":true,"recommendedLevel":12,"monsterCount":71,"boss":{"name":"焚天舞凤","source":"config/Aries/Mob/CrazyTowerMobs/MobTemplate_ShadowOfPhoenixTowerLvl60.xml","level":38,"attributes":{"asset":"character/v5/10mobs/HaqiTown/ShadowOfPhoenix/ShadowOfPhoenix.x"}},"bossArenaId":"dungeon:HaqiTown_LightHouse_S3:34","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":5500,"h":9230,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_LightHouse_S3:0","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:1","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:2","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:3","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:4","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:5","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:6","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:7","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:8","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:9","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:10","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:11","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:12","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:13","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:14","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:15","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:16","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:17","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:18","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:19","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:20","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:21","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:22","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:23","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:24","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:25","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:26","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:27","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:28","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:29","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:30","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:31","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:32","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:33","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S3:34","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_LightHouse_S4","name":"试炼之塔","playable":true,"recommendedLevel":20,"monsterCount":105,"boss":{"name":"镇塔冰熊","source":"config/Aries/Mob/CrazyTowerMobs/MobTemplate_GreatIceBearTowerLvl100.xml","level":45,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreatIceBear/GreatIceBear.x"}},"bossArenaId":"dungeon:HaqiTown_LightHouse_S4:39","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":5500,"h":10430,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_LightHouse_S4:0","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:1","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:2","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:3","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:4","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:5","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:6","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:7","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:8","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:9","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:10","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:11","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:12","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:13","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:14","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:15","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:16","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:17","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:18","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:19","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:20","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:21","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:22","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:23","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:24","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:25","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:26","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:27","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:28","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:29","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:30","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:31","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:32","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:33","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:34","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:35","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:36","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:37","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:38","blocked":[]},{"id":"dungeon:HaqiTown_LightHouse_S4:39","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_YYsDream_S1","name":"梦幻火鸟岛","playable":true,"recommendedLevel":2,"monsterCount":9,"boss":{"name":"恶灵章鱼头目","source":"config/Aries/Mob/YYsDream/MobTemplate_GhostOctopus_BossYYsDream_S1.xml","level":10,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GhostOctopus_Boss/GhostOctopus_Boss.x"}},"bossArenaId":"dungeon:HaqiTown_YYsDream_S1:0","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1526.005859375,"h":1790,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_YYsDream_S1:1","blocked":[]},{"id":"dungeon:HaqiTown_YYsDream_S1:2","blocked":[]},{"id":"dungeon:HaqiTown_YYsDream_S1:3","blocked":[]},{"id":"dungeon:HaqiTown_YYsDream_S1:0","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_YYsDream_S2","name":"梦幻寒冰岛","playable":true,"recommendedLevel":7,"monsterCount":14,"boss":{"name":"牛魔王","source":"config/Aries/Mob/YYsDream/MobTemplate_ShadowSmashBullYYsDream_S2.xml","level":17,"attributes":{"asset":"character/v5/10mobs/HaqiTown/IceShadowSmashBull/IceShadowSmashBull.x"}},"bossArenaId":"dungeon:HaqiTown_YYsDream_S2:4","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":2555.068359375,"h":2030,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_YYsDream_S2:0","blocked":[]},{"id":"dungeon:HaqiTown_YYsDream_S2:1","blocked":[]},{"id":"dungeon:HaqiTown_YYsDream_S2:2","blocked":[]},{"id":"dungeon:HaqiTown_YYsDream_S2:3","blocked":[]},{"id":"dungeon:HaqiTown_YYsDream_S2:4","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_YYsDream_S4","name":"梦魇禁地","playable":true,"recommendedLevel":55,"monsterCount":2,"boss":{"name":"梦魇毒蛇","source":"config/Aries/Mob/YYsDream/MobTemplate_FireSnake_YYsDream_Boss.xml","level":55,"attributes":{"asset":"character/v6/10mobs/04DesertIsland/FireSnake01/FireSnake01.x"}},"bossArenaId":"dungeon:HaqiTown_YYsDream_S4:0","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_YYsDream_S4:0","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_Christmas_Colorful_World","name":"圣诞缤纷世界","playable":true,"recommendedLevel":51,"monsterCount":1,"boss":{"name":"圣诞老人","source":"config/Aries/Mob/Christmas/MobTemplate_Christmas_Colorful_World.xml","level":51,"attributes":{"asset":"character/v6/01human/ChristmasGrandpa/ChristmasGrandpa.x"}},"bossArenaId":"dungeon:HaqiTown_Christmas_Colorful_World:0","battleRewards":{"xp":true,"coins":false},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_Christmas_Colorful_World:0","blocked":[]}],"loaded":false},{"id":"dungeon:DarkForestIsland_MarshNest","name":"沼泽魔窟","playable":true,"recommendedLevel":55,"monsterCount":2,"boss":{"name":"瘟疫领主真身","source":"config/Aries/Mob/DarkForestIslandMarshNest/MobTemplate_MarshNestBoss_Set_Death_Lv55.xml","level":55,"attributes":{"asset":"character/v6/10mobs/01RainbowIsland/DeathApe01/DeathApe01.x"}},"bossArenaId":"dungeon:DarkForestIsland_MarshNest:0","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:DarkForestIsland_MarshNest:0","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_1v1_599","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_1v1_799","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_1v1_999","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_1v1_1199","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_1v1_1200","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_LafeierCastle_PVP_OneTeam","name":"拉斐尔城堡PK赛","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_LafeierCastle_PVP_TwoTeam","name":"拉斐尔城堡PK赛","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_LafeierCastle_PVP_ThreeTeam","name":"拉斐尔城堡PK赛","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_LafeierCastle_PVP_Matcher","name":"拉斐尔城堡PK赛","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:Global_HaqiTown_TreasureHouse","name":"宝箱世界哈奇小镇","playable":true,"recommendedLevel":5,"monsterCount":14,"boss":{"name":"暴熊","source":"config/Aries/Mob/TreasureHouse/HaqiTown/MobTemplate_GreatIceBearLower.xml","level":15,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"}},"bossArenaId":"dungeon:Global_HaqiTown_TreasureHouse:4","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":3850,"h":2030,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:Global_HaqiTown_TreasureHouse:0","blocked":[]},{"id":"dungeon:Global_HaqiTown_TreasureHouse:1","blocked":[]},{"id":"dungeon:Global_HaqiTown_TreasureHouse:2","blocked":[]},{"id":"dungeon:Global_HaqiTown_TreasureHouse:3","blocked":[]},{"id":"dungeon:Global_HaqiTown_TreasureHouse:4","blocked":[]}],"loaded":false},{"id":"dungeon:Global_FlamingPhoenixIsland_TreasureHouse","name":"宝箱世界火鸟岛","playable":true,"recommendedLevel":12,"monsterCount":14,"boss":{"name":"暴熊","source":"config/Aries/Mob/TreasureHouse/FlamingPhoenixIsland/MobTemplate_GreatIceBearLower.xml","level":25,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"}},"bossArenaId":"dungeon:Global_FlamingPhoenixIsland_TreasureHouse:4","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":3850,"h":2030,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:Global_FlamingPhoenixIsland_TreasureHouse:0","blocked":[]},{"id":"dungeon:Global_FlamingPhoenixIsland_TreasureHouse:1","blocked":[]},{"id":"dungeon:Global_FlamingPhoenixIsland_TreasureHouse:2","blocked":[]},{"id":"dungeon:Global_FlamingPhoenixIsland_TreasureHouse:3","blocked":[]},{"id":"dungeon:Global_FlamingPhoenixIsland_TreasureHouse:4","blocked":[]}],"loaded":false},{"id":"dungeon:Global_FrostRoarIsland_TreasureHouse","name":"宝箱世界寒冰岛","playable":true,"recommendedLevel":22,"monsterCount":14,"boss":{"name":"暴熊","source":"config/Aries/Mob/TreasureHouse/FrostRoarIsland/MobTemplate_GreatIceBearLower.xml","level":38,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"}},"bossArenaId":"dungeon:Global_FrostRoarIsland_TreasureHouse:4","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":3850,"h":2030,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:Global_FrostRoarIsland_TreasureHouse:0","blocked":[]},{"id":"dungeon:Global_FrostRoarIsland_TreasureHouse:1","blocked":[]},{"id":"dungeon:Global_FrostRoarIsland_TreasureHouse:2","blocked":[]},{"id":"dungeon:Global_FrostRoarIsland_TreasureHouse:3","blocked":[]},{"id":"dungeon:Global_FrostRoarIsland_TreasureHouse:4","blocked":[]}],"loaded":false},{"id":"dungeon:Global_AncientEgyptIsland_TreasureHouse","name":"宝箱世界沙漠古堡","playable":true,"recommendedLevel":31,"monsterCount":17,"boss":{"name":"暴熊","source":"config/Aries/Mob/TreasureHouse/AncientEgyptIsland/MobTemplate_GreatIceBearLower.xml","level":40,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"}},"bossArenaId":"dungeon:Global_AncientEgyptIsland_TreasureHouse:4","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":3850,"h":2030,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:Global_AncientEgyptIsland_TreasureHouse:0","blocked":[]},{"id":"dungeon:Global_AncientEgyptIsland_TreasureHouse:1","blocked":[]},{"id":"dungeon:Global_AncientEgyptIsland_TreasureHouse:2","blocked":[]},{"id":"dungeon:Global_AncientEgyptIsland_TreasureHouse:3","blocked":[]},{"id":"dungeon:Global_AncientEgyptIsland_TreasureHouse:4","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_TrialOfChampions_Amateur","name":"PK试炼场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_TrialOfChampions_Intermediate","name":"PK试炼场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_TrialOfChampions_Master","name":"PK试炼场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_TrialOfChampions_Amateur1v1","name":"初级PK试炼场1v1","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_TrialOfChampions_Intermediate1v1","name":"中级PK试炼场1v1","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_TrialOfChampions_Master1v1","name":"高级PK试炼场1v1","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_TrialOfChampions_Legendary1v1","name":"顶级PK试炼场1v1","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse","name":"金鬃怪的宝库","playable":true,"recommendedLevel":10,"monsterCount":11,"boss":{"name":"金鬃大王","source":"config/Aries/Mob/GoldenOgreTreasureHouse/MobTemplate_FireRockyOgre4.xml","level":15,"attributes":{"asset":"character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_03.x"}},"bossArenaId":"dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse:3","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1400,"h":1790,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse:0","blocked":[]},{"id":"dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse:1","blocked":[]},{"id":"dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse:2","blocked":[]},{"id":"dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse:3","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_1v1","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_2v2","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_2v2_1999","name":"红蘑菇赛场2V2","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_2v2_5000","name":"红蘑菇赛场2V2","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_3v3","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_4v4","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_AI_1v1","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_AI_2v2","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_AI_3v3","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_RedMushroomArena_AI_4v4","name":"红蘑菇赛场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_FireCavern_110527_1","name":"火鬃怪宝库","playable":true,"recommendedLevel":6,"monsterCount":1,"boss":{"name":"火毛怪","source":"config/Aries/Mob/BreakingNews/MobTemplate_FireCavernFireRockyOgre01.xml","level":6,"attributes":{"asset":"character/v5/10mobs/HaqiTown/BlazeHairMonster/BlazeHairMonster.x"}},"bossArenaId":"dungeon:HaqiTown_FireCavern_110527_1:0","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_FireCavern_110527_1:0","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_FireCavern_110527_2","name":"火鬃怪宝库","playable":true,"recommendedLevel":6,"monsterCount":4,"boss":{"name":"残暴的火鬃怪队长","source":"config/Aries/Mob/BreakingNews/MobTemplate_FireRockyOgre02.xml","level":15,"attributes":{"asset":"character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre.x"}},"bossArenaId":"dungeon:HaqiTown_FireCavern_110527_2:0","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_FireCavern_110527_2:0","blocked":[]}],"loaded":false},{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree_110610_3","name":"神木空间","playable":true,"recommendedLevel":50,"monsterCount":1,"boss":{"name":"暗黑虚影","source":"config/Aries/Mob/BreakingNews/MobTemplate_51DoomLords03.xml","level":50,"attributes":{"asset":"character/v5/10mobs/HaqiTown/DoomLordsShadow/DoomLordsShadow.x"}},"bossArenaId":"dungeon:FlamingPhoenixIsland_TheGreatTree_110610_3:0","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree_110610_3:0","blocked":[]}],"loaded":false},{"id":"dungeon:FrostRoarIsland_IceBearLair","name":"冰封极地","playable":true,"recommendedLevel":22,"monsterCount":14,"boss":{"name":"风眼守护兽","source":"config/Aries/Mob/FrozenPolar/MobTemplate_FrozenPolar05_2.xml","level":28,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreatIceBear/GreatIceBear.x"}},"bossArenaId":"dungeon:FrostRoarIsland_IceBearLair:4","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":2555.068359375,"h":2030,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:FrostRoarIsland_IceBearLair:0","blocked":["未支持卡牌：22226"]},{"id":"dungeon:FrostRoarIsland_IceBearLair:1","blocked":[]},{"id":"dungeon:FrostRoarIsland_IceBearLair:2","blocked":["未支持卡牌：22236"]},{"id":"dungeon:FrostRoarIsland_IceBearLair:3","blocked":["未支持卡牌：22246"]},{"id":"dungeon:FrostRoarIsland_IceBearLair:4","blocked":["未支持卡牌：Ice_Absorb_LevelX","未支持卡牌：22226"]}],"loaded":false},{"id":"dungeon:HaqiTown_FireCavern_Hero","name":"火鬃大王的巢穴","playable":true,"recommendedLevel":40,"monsterCount":13,"boss":{"name":"试炼宝库大王","source":"config/Aries/Mob/FireCavern_Hero/MobTemplate_FireRockyOgre02.xml","level":42,"attributes":{"asset":"character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_02.x"}},"bossArenaId":"dungeon:HaqiTown_FireCavern_Hero:4","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":4092.744140625,"h":2030,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_FireCavern_Hero:0","blocked":[]},{"id":"dungeon:HaqiTown_FireCavern_Hero:1","blocked":[]},{"id":"dungeon:HaqiTown_FireCavern_Hero:2","blocked":[]},{"id":"dungeon:HaqiTown_FireCavern_Hero:3","blocked":[]},{"id":"dungeon:HaqiTown_FireCavern_Hero:4","blocked":["怪物先手尚未迁移","场景施法脚本尚未迁移"]}],"loaded":false},{"id":"dungeon:FrostRoarIsland_IceKingCave","name":"大地冰熊的巢穴","playable":true,"recommendedLevel":25,"monsterCount":12,"boss":{"name":"冰雪之王霍伊斯","source":"config/Aries/Mob/IceKingCave/MobTemplate_FrozenPolarBOSS.xml","level":30,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"}},"bossArenaId":"dungeon:FrostRoarIsland_IceKingCave:3","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":1400,"h":1790,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:FrostRoarIsland_IceKingCave:0","blocked":["未支持卡牌：22226"]},{"id":"dungeon:FrostRoarIsland_IceKingCave:1","blocked":["未支持卡牌：22226","未支持卡牌：Fire_AreaAttack_Level4"]},{"id":"dungeon:FrostRoarIsland_IceKingCave:2","blocked":["未支持卡牌：Ice_Absorb_LevelX","未支持卡牌：22226"]},{"id":"dungeon:FrostRoarIsland_IceKingCave:3","blocked":["未支持卡牌：Ice_Absorb_LevelX","未支持卡牌：22226","未支持卡牌：Fire_AreaAttack_Level4"]}],"loaded":false},{"id":"dungeon:AncientEgyptIsland_LostTemple","name":"落日神殿","playable":true,"recommendedLevel":35,"monsterCount":4,"boss":{"name":"千年木乃伊萨鲁","source":"config/Aries/Mob/AncientEgyptIsland/MobTemplate_DeathMummy_Boss.xml","level":40,"attributes":{"asset":"character/v5/10mobs/HaqiTown/DeathMummy_Boss/DeathMummy_Boss.x"}},"bossArenaId":"dungeon:AncientEgyptIsland_LostTemple:0","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:AncientEgyptIsland_LostTemple:0","blocked":["怪物先手尚未迁移","场景施法脚本尚未迁移"]}],"loaded":false},{"id":"dungeon:FrostRoarIsland_StormEye","name":"风暴之眼","playable":true,"recommendedLevel":35,"monsterCount":3,"boss":{"name":"艾俄罗斯","source":"config/Aries/Mob/StormEye/MobTemplate_Boss.xml","level":35,"attributes":{"asset":"character/v5/10mobs/HaqiTown/FrostScyllaRedhead/FrostScyllaRedhead.x"}},"bossArenaId":"dungeon:FrostRoarIsland_StormEye:0","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:FrostRoarIsland_StormEye:0","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_YYsNightmare","name":"梦魇火鸟岛","playable":true,"recommendedLevel":44,"monsterCount":10,"boss":{"name":"梦魇章鱼头目","source":"config/Aries/Mob/YYsNightmare/MobTemplate_NightmareOctopus_Boss.xml","level":44,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GhostOctopus_Boss/GhostOctopus_Boss.x"}},"bossArenaId":"dungeon:HaqiTown_YYsNightmare:0","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1526.005859375,"h":1790,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_YYsNightmare:1","blocked":[]},{"id":"dungeon:HaqiTown_YYsNightmare:2","blocked":[]},{"id":"dungeon:HaqiTown_YYsNightmare:3","blocked":["未支持卡牌：21192"]},{"id":"dungeon:HaqiTown_YYsNightmare:0","blocked":["未支持卡牌：21192","怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:AncientEgyptIsland_PharaohFortress","name":"地狱之海","playable":true,"recommendedLevel":39,"monsterCount":9,"boss":{"name":"法老王图坦卡蒙","source":"config/Aries/Mob/PharaohFortress/MobTemplate_FuriousDeathMummy.xml","level":46,"attributes":{"asset":"character/v5/10mobs/HaqiTown/FuriousDeathMummy/FuriousDeathMummy.x"}},"bossArenaId":"dungeon:AncientEgyptIsland_PharaohFortress:2","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":2254.365234375,"h":1550,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:AncientEgyptIsland_PharaohFortress:0","blocked":[]},{"id":"dungeon:AncientEgyptIsland_PharaohFortress:1","blocked":[]},{"id":"dungeon:AncientEgyptIsland_PharaohFortress:2","blocked":["缺少原版怪物模板","怪物先手尚未迁移","场景施法脚本尚未迁移"]}],"loaded":false},{"id":"dungeon:HaqiTown_LightHouse_Hero","name":"英雄试炼之塔","playable":true,"recommendedLevel":45,"monsterCount":4,"boss":{"name":"魔牛舅舅","source":"config/Aries/Mob/HeroTowerMobs/MobTemplate_ShadowSmashBull_HeroTower.xml","level":45,"attributes":{"asset":"character/v5/10mobs/HaqiTown/ShadowSmashBull/ShadowSmashBull.x"}},"bossArenaId":"dungeon:HaqiTown_LightHouse_Hero:0","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_LightHouse_Hero:0","blocked":["怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree_Hero","name":"异界空间","playable":true,"recommendedLevel":45,"monsterCount":12,"boss":{"name":"咕噜王","source":"config/Aries/Mob/FlamingPhoenixIsland_TheGreatTree_Hero/MobTemplate_WaterBubble02.xml","level":57,"attributes":{"asset":"character/v5/10mobs/HaqiTown/DeathBubble/DeathBubble.x"}},"bossArenaId":"dungeon:FlamingPhoenixIsland_TheGreatTree_Hero:2","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1929.21875,"h":1550,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree_Hero:0","blocked":[]},{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree_Hero:1","blocked":[]},{"id":"dungeon:FlamingPhoenixIsland_TheGreatTree_Hero:2","blocked":["怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:AncientEgyptIsland_LostTemple_NanJue","name":"神殿秘境","playable":true,"recommendedLevel":43,"monsterCount":4,"boss":{"name":"暗黑男爵","source":"config/Aries/Mob/LostTemple_NanJue/MobTemplate_51DoomLords01.xml","level":60,"attributes":{"asset":"character/v5/10mobs/HaqiTown/DoomLords/DoomLords.x"}},"bossArenaId":"dungeon:AncientEgyptIsland_LostTemple_NanJue:0","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:AncientEgyptIsland_LostTemple_NanJue:0","blocked":["怪物先手尚未迁移","场景施法脚本尚未迁移"]}],"loaded":false},{"id":"dungeon:HaqiTown_GraduateExam_54_55","name":"中阶魔法师考场","playable":true,"recommendedLevel":55,"monsterCount":1,"boss":{"name":"白龙考官","source":"config/Aries/Mob/Intermediate_Mage_Test/MobTemplate_WhiteDragon.xml","level":55,"attributes":{"asset":"character\\v5\\01human\\WhiteDragon\\WhiteDragon.x"}},"bossArenaId":"dungeon:HaqiTown_GraduateExam_54_55:0","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_GraduateExam_54_55:0","blocked":["未支持卡牌：Storm_Rune_StormConversePositiveWard","未支持卡牌：Life_SingleHeal_Level4","未支持卡牌：22023"]}],"loaded":false},{"id":"dungeon:BattleField_ChampionsValley","name":"英雄谷(初级)","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:BattleField_ChampionsValley_Master","name":"英雄谷(高级)","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_CampfireChallenge","name":"神秘篝火岛","playable":true,"recommendedLevel":10,"monsterCount":9,"boss":{"name":"费尔斯通王子","source":"config/Aries/Mob/HaqiTown_CampfireChallenge/MobTemplate_43mob.xml","level":50,"attributes":{"asset":"character/v5/10mobs/HaqiTown/Bonfire_Boss/Bonfire_Boss.x"}},"bossArenaId":"dungeon:HaqiTown_CampfireChallenge:3","battleRewards":{"xp":true,"coins":true},"mapInfo":{"w":1400,"h":1790,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:HaqiTown_CampfireChallenge:0","blocked":[]},{"id":"dungeon:HaqiTown_CampfireChallenge:1","blocked":[]},{"id":"dungeon:HaqiTown_CampfireChallenge:2","blocked":[]},{"id":"dungeon:HaqiTown_CampfireChallenge:3","blocked":[]}],"loaded":false},{"id":"dungeon:HaqiTown_TrialOfChampions_FairPlay_LowLevel","name":"竞技场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:HaqiTown_TrialOfChampions_FairPlay_HighLevel","name":"竞技场","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:AncientEgyptIsland_LostTemple_DeathLandEntrance","name":"神殿废墟","playable":true,"recommendedLevel":55,"monsterCount":4,"boss":{"name":"狂暴的嗜血暴鳄拉尔齐","source":"config/Aries/Mob/FieldRaid/DarkCrocodile/MobTemplate_Death_DarkCrocodile_Plus.xml","level":55,"attributes":{"asset":"character/v5/10mobs/HaqiTown/DeathCrocodile03/DeathCrocodile03.x"}},"bossArenaId":"dungeon:AncientEgyptIsland_LostTemple_DeathLandEntrance:0","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:AncientEgyptIsland_LostTemple_DeathLandEntrance:0","blocked":["未支持卡牌：Fire_AreaAttack_Level4","未支持卡牌：Fire_SingleAttack_Level6","未支持目标规则：noshield","未支持卡牌：Fire_Pet_SingleAttack_Level6","未支持卡牌：Fire_Pet_AreaAttack_Level4"]}],"loaded":false},{"id":"dungeon:DarkForestIsland_PirateSeamaster","name":"幽灵船宝藏","playable":true,"recommendedLevel":55,"monsterCount":1,"boss":{"name":"库力蛙","source":"config/Aries/Mob/DarkForestIsland_PirateSeamaster/MobTemplate_PirateSeamaster_LifeBoss.xml","level":55,"attributes":{"asset":"character/v6/10mobs/01RainbowIsland/LifeToad02/LifeToad02.x"}},"bossArenaId":"dungeon:DarkForestIsland_PirateSeamaster:0","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:DarkForestIsland_PirateSeamaster:0","blocked":["未支持目标规则：noshield"]}],"loaded":false},{"id":"dungeon:CrazyTower_1_to_5","name":"烈焰秘境","playable":true,"recommendedLevel":1,"monsterCount":5,"boss":{"name":"巨大火鸟","source":"config/Aries/Mob/ChallengeSecretLand/No5_MobTemplate_BossSet_Class01_Fire_Lv5.xml","level":5,"attributes":{"asset":"character/v5/10mobs/HaqiTown/PhoenixWarrior_Fuben/PhoenixWarrior_Fuben.x"}},"bossArenaId":"dungeon:CrazyTower_1_to_5:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_1_to_5:0","blocked":[]},{"id":"dungeon:CrazyTower_1_to_5:1","blocked":["未支持卡牌：22292"]},{"id":"dungeon:CrazyTower_1_to_5:2","blocked":[]},{"id":"dungeon:CrazyTower_1_to_5:3","blocked":["未支持卡牌：22292"]},{"id":"dungeon:CrazyTower_1_to_5:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_6_to_10","name":"烈焰秘境","playable":true,"recommendedLevel":6,"monsterCount":5,"boss":{"name":"狂暴火战士","source":"config/Aries/Mob/ChallengeSecretLand/No10_MobTemplate_BossSet_Class01_Fire_Lv10.xml","level":10,"attributes":{"asset":"character/v5/10mobs/HaqiTown/PhoenixWarrior_Fuben/PhoenixWarrior_Fuben.x"}},"bossArenaId":"dungeon:CrazyTower_6_to_10:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_6_to_10:0","blocked":[]},{"id":"dungeon:CrazyTower_6_to_10:1","blocked":["未支持卡牌：22292"]},{"id":"dungeon:CrazyTower_6_to_10:2","blocked":["未支持卡牌：22292"]},{"id":"dungeon:CrazyTower_6_to_10:3","blocked":[]},{"id":"dungeon:CrazyTower_6_to_10:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_11_to_15","name":"冰封秘境","playable":true,"recommendedLevel":11,"monsterCount":5,"boss":{"name":"冷冽亡灵猴","source":"config/Aries/Mob/ChallengeSecretLand/No15_MobTemplate_BossSet_Class01_Ice_Lv15.xml","level":15,"attributes":{"asset":"character/v5/10mobs/HaqiTown/UndeadMonkey/UndeadMonkey.x"}},"bossArenaId":"dungeon:CrazyTower_11_to_15:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_11_to_15:0","blocked":[]},{"id":"dungeon:CrazyTower_11_to_15:1","blocked":[]},{"id":"dungeon:CrazyTower_11_to_15:2","blocked":[]},{"id":"dungeon:CrazyTower_11_to_15:3","blocked":[]},{"id":"dungeon:CrazyTower_11_to_15:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_16_to_20","name":"冰封秘境","playable":true,"recommendedLevel":16,"monsterCount":5,"boss":{"name":"冷血暴熊","source":"config/Aries/Mob/ChallengeSecretLand/No20_MobTemplate_BossSet_Class01_Ice_Lv20.xml","level":20,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"}},"bossArenaId":"dungeon:CrazyTower_16_to_20:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_16_to_20:0","blocked":[]},{"id":"dungeon:CrazyTower_16_to_20:1","blocked":[]},{"id":"dungeon:CrazyTower_16_to_20:2","blocked":[]},{"id":"dungeon:CrazyTower_16_to_20:3","blocked":[]},{"id":"dungeon:CrazyTower_16_to_20:4","blocked":["未支持卡牌：Ice_Rune_SingleFreeze"]}],"loaded":false},{"id":"dungeon:CrazyTower_21_to_25","name":"风蚀秘境","playable":true,"recommendedLevel":21,"monsterCount":5,"boss":{"name":"雷动鬃王","source":"config/Aries/Mob/ChallengeSecretLand/No25_MobTemplate_BossSet_Class02_Storm_Lv25.xml","level":25,"attributes":{"asset":"character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_03.x"}},"bossArenaId":"dungeon:CrazyTower_21_to_25:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_21_to_25:0","blocked":[]},{"id":"dungeon:CrazyTower_21_to_25:1","blocked":[]},{"id":"dungeon:CrazyTower_21_to_25:2","blocked":[]},{"id":"dungeon:CrazyTower_21_to_25:3","blocked":[]},{"id":"dungeon:CrazyTower_21_to_25:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_26_to_30","name":"风蚀秘境","playable":true,"recommendedLevel":26,"monsterCount":5,"boss":{"name":"雷动熊王","source":"config/Aries/Mob/ChallengeSecretLand/No30_MobTemplate_BossSet_Class02_Storm_Lv30.xml","level":30,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreatStormBearLower/GreatStormBearLower.x"}},"bossArenaId":"dungeon:CrazyTower_26_to_30:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_26_to_30:0","blocked":[]},{"id":"dungeon:CrazyTower_26_to_30:1","blocked":[]},{"id":"dungeon:CrazyTower_26_to_30:2","blocked":[]},{"id":"dungeon:CrazyTower_26_to_30:3","blocked":[]},{"id":"dungeon:CrazyTower_26_to_30:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_31_to_35","name":"万象秘境","playable":true,"recommendedLevel":31,"monsterCount":5,"boss":{"name":"天赐巨人","source":"config/Aries/Mob/ChallengeSecretLand/No35_MobTemplate_BossSet_Class02_Life_Lv35.xml","level":35,"attributes":{"asset":"character/v5/10mobs/HaqiTown/LifeStoneMonster02/LifeStoneMonster02.x"}},"bossArenaId":"dungeon:CrazyTower_31_to_35:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_31_to_35:0","blocked":[]},{"id":"dungeon:CrazyTower_31_to_35:1","blocked":[]},{"id":"dungeon:CrazyTower_31_to_35:2","blocked":[]},{"id":"dungeon:CrazyTower_31_to_35:3","blocked":[]},{"id":"dungeon:CrazyTower_31_to_35:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_36_to_40","name":"万象秘境","playable":true,"recommendedLevel":36,"monsterCount":5,"boss":{"name":"大地觉醒者","source":"config/Aries/Mob/ChallengeSecretLand/No40_MobTemplate_BossSet_Class02_Life_Lv40.xml","level":40,"attributes":{"asset":"character/v5/10mobs/HaqiTown/LifeStoneMonster03/LifeStoneMonster03.x"}},"bossArenaId":"dungeon:CrazyTower_36_to_40:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_36_to_40:0","blocked":[]},{"id":"dungeon:CrazyTower_36_to_40:1","blocked":[]},{"id":"dungeon:CrazyTower_36_to_40:2","blocked":[]},{"id":"dungeon:CrazyTower_36_to_40:3","blocked":[]},{"id":"dungeon:CrazyTower_36_to_40:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_41_to_45","name":"死寂秘境","playable":true,"recommendedLevel":41,"monsterCount":5,"boss":{"name":"传说九凤天","source":"config/Aries/Mob/ChallengeSecretLand/No45_MobTemplate_BossSet_Class03_Death_Lv45.xml","level":45,"attributes":{"asset":"character/v5/10mobs/HaqiTown/ShadowOfPhoenix/ShadowOfPhoenix.x"}},"bossArenaId":"dungeon:CrazyTower_41_to_45:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_41_to_45:0","blocked":[]},{"id":"dungeon:CrazyTower_41_to_45:1","blocked":[]},{"id":"dungeon:CrazyTower_41_to_45:2","blocked":[]},{"id":"dungeon:CrazyTower_41_to_45:3","blocked":[]},{"id":"dungeon:CrazyTower_41_to_45:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_46_to_50","name":"死寂秘境","playable":true,"recommendedLevel":46,"monsterCount":5,"boss":{"name":"不死黑熊","source":"config/Aries/Mob/ChallengeSecretLand/No50_MobTemplate_BossSet_Class03_Death_Lv50.xml","level":50,"attributes":{"asset":"character/v5/10mobs/HaqiTown/DeathBear/DeathBear.x"}},"bossArenaId":"dungeon:CrazyTower_46_to_50:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_46_to_50:0","blocked":[]},{"id":"dungeon:CrazyTower_46_to_50:1","blocked":[]},{"id":"dungeon:CrazyTower_46_to_50:2","blocked":[]},{"id":"dungeon:CrazyTower_46_to_50:3","blocked":[]},{"id":"dungeon:CrazyTower_46_to_50:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_51_to_55","name":"烈焰禁地","playable":true,"recommendedLevel":45,"monsterCount":10,"boss":{"name":"不死鸟","source":"config/Aries/Mob/ChallengeSecretLand/No55_MobTemplate_BossSet_Class04_Fire_Lv53.xml","level":53,"attributes":{"asset":"character/v5/10mobs/HaqiTown/PhoenixWarrior_Fuben/PhoenixWarrior_Fuben.x"}},"bossArenaId":"dungeon:CrazyTower_51_to_55:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_51_to_55:0","blocked":["未支持卡牌：Ice_Rune_SingleFreeze"]},{"id":"dungeon:CrazyTower_51_to_55:1","blocked":[]},{"id":"dungeon:CrazyTower_51_to_55:2","blocked":[]},{"id":"dungeon:CrazyTower_51_to_55:3","blocked":[]},{"id":"dungeon:CrazyTower_51_to_55:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_56_to_60","name":"烈焰禁地","playable":true,"recommendedLevel":51,"monsterCount":10,"boss":{"name":"恶魔费雷斯","source":"config/Aries/Mob/ChallengeSecretLand/No60_MobTemplate_BossSet_Class04_Fire_Lv55.xml","level":55,"attributes":{"asset":"character/v5/10mobs/HaqiTown/DoomLords/DoomLords.x"}},"bossArenaId":"dungeon:CrazyTower_56_to_60:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_56_to_60:0","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_56_to_60:1","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_56_to_60:2","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_56_to_60:3","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_56_to_60:4","blocked":["怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:CrazyTower_61_to_65","name":"冰封禁地","playable":true,"recommendedLevel":45,"monsterCount":10,"boss":{"name":"冰熊破坏者","source":"config/Aries/Mob/ChallengeSecretLand/No65_MobTemplate_BossSet_Class04_Ice_Lv53.xml","level":53,"attributes":{"asset":"character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"}},"bossArenaId":"dungeon:CrazyTower_61_to_65:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_61_to_65:0","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_61_to_65:1","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_61_to_65:2","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_61_to_65:3","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_61_to_65:4","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:CrazyTower_66_to_70","name":"冰封禁地","playable":true,"recommendedLevel":51,"monsterCount":10,"boss":{"name":"艾卡冰魔","source":"config/Aries/Mob/ChallengeSecretLand/No70_MobTemplate_BossSet_Class05_Ice_Lv55.xml","level":55,"attributes":{"asset":"character/v5/10mobs/HaqiTown/Bonfire03/Bonfire03.x"}},"bossArenaId":"dungeon:CrazyTower_66_to_70:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_66_to_70:0","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_66_to_70:1","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_66_to_70:2","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_66_to_70:3","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_66_to_70:4","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:CrazyTower_71_to_75","name":"风蚀禁地","playable":true,"recommendedLevel":45,"monsterCount":10,"boss":{"name":"饕餮鬃王","source":"config/Aries/Mob/ChallengeSecretLand/No75_MobTemplate_BossSet_Class05_Storm_Lv53.xml","level":53,"attributes":{"asset":"character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_03.x"}},"bossArenaId":"dungeon:CrazyTower_71_to_75:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_71_to_75:0","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_71_to_75:1","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_71_to_75:2","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_71_to_75:3","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_71_to_75:4","blocked":["怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:CrazyTower_76_to_80","name":"风蚀禁地","playable":true,"recommendedLevel":51,"monsterCount":10,"boss":{"name":"蛇后妮卡","source":"config/Aries/Mob/ChallengeSecretLand/No80_MobTemplate_BossSet_Class05_Storm_Lv55.xml","level":55,"attributes":{"asset":"character/v5/10mobs/HaqiTown/Medusa/Medusa.x"}},"bossArenaId":"dungeon:CrazyTower_76_to_80:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_76_to_80:0","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_76_to_80:1","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_76_to_80:2","blocked":["未支持卡牌：22295","未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_76_to_80:3","blocked":["未支持卡牌：22295","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_76_to_80:4","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:CrazyTower_81_to_85","name":"万象禁地","playable":true,"recommendedLevel":45,"monsterCount":10,"boss":{"name":"改造草食者","source":"config/Aries/Mob/ChallengeSecretLand/No85_MobTemplate_BossSet_Class05_Life_Lv53.xml","level":53,"attributes":{"asset":"character/v5/10mobs/HaqiTown/LifePangolin/LifePangolin.x"}},"bossArenaId":"dungeon:CrazyTower_81_to_85:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_81_to_85:0","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_81_to_85:1","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_81_to_85:2","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_81_to_85:3","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_81_to_85:4","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:CrazyTower_86_to_90","name":"万象禁地","playable":true,"recommendedLevel":51,"monsterCount":10,"boss":{"name":"鳄王拉比","source":"config/Aries/Mob/ChallengeSecretLand/No90_MobTemplate_BossSet_Class05_Life_Lv55.xml","level":55,"attributes":{"asset":"character/v5/10mobs/HaqiTown/DeathCrocodile01/DeathCrocodile01.x"}},"bossArenaId":"dungeon:CrazyTower_86_to_90:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_86_to_90:0","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_86_to_90:1","blocked":["未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_86_to_90:2","blocked":["未支持卡牌：22295","未支持卡牌：Ice_Rune_SingleFreeze","怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_86_to_90:3","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_86_to_90:4","blocked":["怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:CrazyTower_91_to_95","name":"死寂禁地","playable":true,"recommendedLevel":45,"monsterCount":10,"boss":{"name":"黑熊改造者","source":"config/Aries/Mob/ChallengeSecretLand/No95_MobTemplate_BossSet_Class05_Death_Lv53.xml","level":53,"attributes":{"asset":"character/v5/10mobs/HaqiTown/DeathBear/DeathBear.x"}},"bossArenaId":"dungeon:CrazyTower_91_to_95:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_91_to_95:0","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_91_to_95:1","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_91_to_95:2","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_91_to_95:3","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_91_to_95:4","blocked":["怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:CrazyTower_96_to_100","name":"死寂禁地","playable":true,"recommendedLevel":51,"monsterCount":10,"boss":{"name":"法老王威格夫","source":"config/Aries/Mob/ChallengeSecretLand/No100_MobTemplate_BossSet_Class05_Death_Lv55.xml","level":55,"attributes":{"asset":"character/v5/10mobs/HaqiTown/FuriousDeathMummy/FuriousDeathMummy.x"}},"bossArenaId":"dungeon:CrazyTower_96_to_100:4","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_96_to_100:0","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_96_to_100:1","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_96_to_100:2","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_96_to_100:3","blocked":["怪物先手尚未迁移"]},{"id":"dungeon:CrazyTower_96_to_100:4","blocked":["怪物先手尚未迁移"]}],"loaded":false},{"id":"dungeon:CrazyTower_WaterBubbleSupreme","name":"咕噜军团的大本营","playable":true,"recommendedLevel":40,"monsterCount":11,"boss":{"name":"绿绿的咕噜噜","source":"config/Aries/Mob/MobSupreme/WaterBubbleSupreme/MobTemplate_LifeBubble.xml","level":45,"attributes":{"asset":"character/v5/10mobs/HaqiTown/LifeBubble/LifeBubble.x"}},"bossArenaId":"dungeon:CrazyTower_WaterBubbleSupreme:4","battleRewards":{"xp":true,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_WaterBubbleSupreme:0","blocked":[]},{"id":"dungeon:CrazyTower_WaterBubbleSupreme:1","blocked":[]},{"id":"dungeon:CrazyTower_WaterBubbleSupreme:2","blocked":[]},{"id":"dungeon:CrazyTower_WaterBubbleSupreme:3","blocked":[]},{"id":"dungeon:CrazyTower_WaterBubbleSupreme:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_IroncladSupreme","name":"铁壳军团的大本营","playable":true,"recommendedLevel":46,"monsterCount":11,"boss":{"name":"一只绿色的铁壳","source":"config/Aries/Mob/MobSupreme/IroncladSupreme/MobTemplate_LifeIronclad.xml","level":48,"attributes":{"asset":"character/v5/10mobs/HaqiTown/LifeIronShell/LifeIronShell.x"}},"bossArenaId":"dungeon:CrazyTower_IroncladSupreme:4","battleRewards":{"xp":true,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_IroncladSupreme:0","blocked":[]},{"id":"dungeon:CrazyTower_IroncladSupreme:1","blocked":[]},{"id":"dungeon:CrazyTower_IroncladSupreme:2","blocked":[]},{"id":"dungeon:CrazyTower_IroncladSupreme:3","blocked":[]},{"id":"dungeon:CrazyTower_IroncladSupreme:4","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_SnowmanSupreme","name":"胖胖军团的大本营","playable":true,"recommendedLevel":49,"monsterCount":14,"boss":{"name":"贪吃的蓝胖胖","source":"config/Aries/Mob/MobSupreme/SnowmanSupreme/MobTemplate_IceSnowman.xml","level":50,"attributes":{"asset":"character/v5/10mobs/HaqiTown/EvilSnowman/EvilSnowman.x"}},"bossArenaId":"dungeon:CrazyTower_SnowmanSupreme:2","battleRewards":{"xp":true,"coins":false},"mapInfo":{"w":2144.7999999999956,"h":2033.3499999999913,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_SnowmanSupreme:0","blocked":[]},{"id":"dungeon:CrazyTower_SnowmanSupreme:1","blocked":[]},{"id":"dungeon:CrazyTower_SnowmanSupreme:3","blocked":[]},{"id":"dungeon:CrazyTower_SnowmanSupreme:4","blocked":[]},{"id":"dungeon:CrazyTower_SnowmanSupreme:2","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_WaterBubbleCasern","name":"咕噜军团的小基地","playable":true,"recommendedLevel":40,"monsterCount":5,"boss":{"name":"绿绿的咕噜噜","source":"config/Aries/Mob/MobSupreme/WaterBubbleSupreme/MobTemplate_LifeBubble.xml","level":45,"attributes":{"asset":"character/v5/10mobs/HaqiTown/LifeBubble/LifeBubble.x"}},"bossArenaId":"dungeon:CrazyTower_WaterBubbleCasern:1","battleRewards":{"xp":true,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_WaterBubbleCasern:0","blocked":[]},{"id":"dungeon:CrazyTower_WaterBubbleCasern:2","blocked":[]},{"id":"dungeon:CrazyTower_WaterBubbleCasern:3","blocked":[]},{"id":"dungeon:CrazyTower_WaterBubbleCasern:4","blocked":[]},{"id":"dungeon:CrazyTower_WaterBubbleCasern:1","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_IroncladCasern","name":"铁壳军团的小基地","playable":true,"recommendedLevel":46,"monsterCount":5,"boss":{"name":"一只绿色的铁壳","source":"config/Aries/Mob/MobSupreme/IroncladSupreme/MobTemplate_LifeIronclad.xml","level":48,"attributes":{"asset":"character/v5/10mobs/HaqiTown/LifeIronShell/LifeIronShell.x"}},"bossArenaId":"dungeon:CrazyTower_IroncladCasern:1","battleRewards":{"xp":true,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_IroncladCasern:0","blocked":[]},{"id":"dungeon:CrazyTower_IroncladCasern:2","blocked":[]},{"id":"dungeon:CrazyTower_IroncladCasern:3","blocked":[]},{"id":"dungeon:CrazyTower_IroncladCasern:4","blocked":[]},{"id":"dungeon:CrazyTower_IroncladCasern:1","blocked":[]}],"loaded":false},{"id":"dungeon:CrazyTower_SnowmanCasern","name":"胖胖军团的小基地","playable":true,"recommendedLevel":49,"monsterCount":5,"boss":{"name":"贪吃的蓝胖胖","source":"config/Aries/Mob/MobSupreme/SnowmanSupreme/MobTemplate_IceSnowman.xml","level":50,"attributes":{"asset":"character/v5/10mobs/HaqiTown/EvilSnowman/EvilSnowman.x"}},"bossArenaId":"dungeon:CrazyTower_SnowmanCasern:3","battleRewards":{"xp":true,"coins":false},"mapInfo":{"w":2304.2499999999927,"h":2179.2000000000007,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:CrazyTower_SnowmanCasern:0","blocked":[]},{"id":"dungeon:CrazyTower_SnowmanCasern:1","blocked":[]},{"id":"dungeon:CrazyTower_SnowmanCasern:2","blocked":[]},{"id":"dungeon:CrazyTower_SnowmanCasern:4","blocked":[]},{"id":"dungeon:CrazyTower_SnowmanCasern:3","blocked":[]}],"loaded":false},{"id":"dungeon:BattleField_ChampionsValley_Coliseum","name":"英雄谷(竞技场)","playable":false,"recommendedLevel":1,"monsterCount":0,"boss":null,"battleRewards":{"xp":false,"coins":false},"arenas":[],"loaded":false},{"id":"dungeon:FrostRoarIsland_HeroStormEye","name":"异界风暴之眼","playable":true,"recommendedLevel":55,"monsterCount":4,"boss":{"name":"冰魔伯爵","source":"config/Aries/Mob/HeroStormEye/MobTemplate_IceBonBoss_Special.xml","level":55,"attributes":{"asset":"character/v5/02animals/FireBon/FireBon.x"}},"bossArenaId":"dungeon:FrostRoarIsland_HeroStormEye:0","battleRewards":{"xp":false,"coins":false},"mapInfo":{"w":1400,"h":1200,"spawn":{"x":350,"y":350},"initialSpawn":{"x":350,"y":350},"retainPreviousPosition":true},"arenas":[{"id":"dungeon:FrostRoarIsland_HeroStormEye:0","blocked":[]}],"loaded":false}]}
+{
+  "version": 1,
+  "worlds": [
+    {
+      "id": "dungeon:Instance_Test",
+      "name": "Instance_Test",
+      "playable": true,
+      "recommendedLevel": 18,
+      "monsterCount": 2,
+      "boss": {
+        "name": "噬灵鼠",
+        "source": "config/Aries/Mob/MobTemplate_GreenDevouringRat.xml",
+        "level": 18,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreenDevouringRat/GreenDevouringRat.x"
+        }
+      },
+      "bossArenaId": "dungeon:Instance_Test:0",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:Instance_Test:0",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_FireCavern",
+      "name": "火鬃怪宝库",
+      "playable": true,
+      "recommendedLevel": 5,
+      "monsterCount": 6,
+      "boss": {
+        "name": "火鬃怪大王",
+        "source": "config/Aries/Mob/MobTemplate_FireRockyOgre02.xml",
+        "level": 12,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_02.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_FireCavern:2",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1667.3500000000058,
+        "h": 1550,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_FireCavern:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_FireCavern:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_FireCavern:2",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:FlamingPhoenixIsland_TheGreatTree",
+      "name": "神木空间",
+      "playable": true,
+      "recommendedLevel": 14,
+      "monsterCount": 18,
+      "boss": {
+        "name": "浴火凤凰",
+        "source": "config/Aries/Mob/TheGreatTree/MobTemplate_TheShadowPhoenix.xml",
+        "level": 30,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GlodenPhoenix/GlodenPhoenix.x"
+        }
+      },
+      "bossArenaId": "dungeon:FlamingPhoenixIsland_TheGreatTree:5",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 3702.216796875,
+        "h": 2270,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:FlamingPhoenixIsland_TheGreatTree:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FlamingPhoenixIsland_TheGreatTree:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FlamingPhoenixIsland_TheGreatTree:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FlamingPhoenixIsland_TheGreatTree:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FlamingPhoenixIsland_TheGreatTree:4",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FlamingPhoenixIsland_TheGreatTree:5",
+          "blocked": [
+            "未支持卡牌：22207"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_LightHouse_S1",
+      "name": "试炼之塔",
+      "playable": true,
+      "recommendedLevel": 1,
+      "monsterCount": 8,
+      "boss": {
+        "name": "大力猿首领",
+        "source": "config/Aries/Mob/MobTemplate_ForestSpikyOgre.xml",
+        "level": 5,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/ForestSpikyOgre/ForestSpikyOgre.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_LightHouse_S1:6",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 5380,
+        "h": 2510,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S1:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S1:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S1:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S1:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S1:4",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S1:5",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S1:6",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_LightHouse_S2",
+      "name": "试炼之塔",
+      "playable": true,
+      "recommendedLevel": 2,
+      "monsterCount": 33,
+      "boss": {
+        "name": "愤怒的火鬃将军",
+        "source": "config/Aries/Mob/CrazyTowerMobs/MobTemplate_FireRockyOgre02TowerLvl25.xml",
+        "level": 20,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_02.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_LightHouse_S2:17",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 5500,
+        "h": 5150,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:4",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:5",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:6",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:7",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:8",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:9",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:10",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:11",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:12",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:13",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:14",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:15",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:16",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S2:17",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_LightHouse_S3",
+      "name": "试炼之塔",
+      "playable": true,
+      "recommendedLevel": 12,
+      "monsterCount": 71,
+      "boss": {
+        "name": "焚天舞凤",
+        "source": "config/Aries/Mob/CrazyTowerMobs/MobTemplate_ShadowOfPhoenixTowerLvl60.xml",
+        "level": 38,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/ShadowOfPhoenix/ShadowOfPhoenix.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_LightHouse_S3:34",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 5500,
+        "h": 9230,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:4",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:5",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:6",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:7",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:8",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:9",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:10",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:11",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:12",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:13",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:14",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:15",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:16",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:17",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:18",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:19",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:20",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:21",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:22",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:23",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:24",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:25",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:26",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:27",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:28",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:29",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:30",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:31",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:32",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:33",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S3:34",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_LightHouse_S4",
+      "name": "试炼之塔",
+      "playable": true,
+      "recommendedLevel": 20,
+      "monsterCount": 105,
+      "boss": {
+        "name": "镇塔冰熊",
+        "source": "config/Aries/Mob/CrazyTowerMobs/MobTemplate_GreatIceBearTowerLvl100.xml",
+        "level": 45,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreatIceBear/GreatIceBear.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_LightHouse_S4:39",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 5500,
+        "h": 10430,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:4",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:5",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:6",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:7",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:8",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:9",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:10",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:11",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:12",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:13",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:14",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:15",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:16",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:17",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:18",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:19",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:20",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:21",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:22",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:23",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:24",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:25",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:26",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:27",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:28",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:29",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:30",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:31",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:32",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:33",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:34",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:35",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:36",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:37",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:38",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_LightHouse_S4:39",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_YYsDream_S1",
+      "name": "梦幻火鸟岛",
+      "playable": true,
+      "recommendedLevel": 2,
+      "monsterCount": 9,
+      "boss": {
+        "name": "恶灵章鱼头目",
+        "source": "config/Aries/Mob/YYsDream/MobTemplate_GhostOctopus_BossYYsDream_S1.xml",
+        "level": 10,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GhostOctopus_Boss/GhostOctopus_Boss.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_YYsDream_S1:0",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1526.005859375,
+        "h": 1790,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_YYsDream_S1:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_YYsDream_S1:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_YYsDream_S1:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_YYsDream_S1:0",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_YYsDream_S2",
+      "name": "梦幻寒冰岛",
+      "playable": true,
+      "recommendedLevel": 7,
+      "monsterCount": 14,
+      "boss": {
+        "name": "牛魔王",
+        "source": "config/Aries/Mob/YYsDream/MobTemplate_ShadowSmashBullYYsDream_S2.xml",
+        "level": 17,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/IceShadowSmashBull/IceShadowSmashBull.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_YYsDream_S2:4",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 2555.068359375,
+        "h": 2030,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_YYsDream_S2:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_YYsDream_S2:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_YYsDream_S2:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_YYsDream_S2:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_YYsDream_S2:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_YYsDream_S4",
+      "name": "梦魇禁地",
+      "playable": true,
+      "recommendedLevel": 55,
+      "monsterCount": 2,
+      "boss": {
+        "name": "梦魇毒蛇",
+        "source": "config/Aries/Mob/YYsDream/MobTemplate_FireSnake_YYsDream_Boss.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character/v6/10mobs/04DesertIsland/FireSnake01/FireSnake01.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_YYsDream_S4:0",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_YYsDream_S4:0",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_Christmas_Colorful_World",
+      "name": "圣诞缤纷世界",
+      "playable": true,
+      "recommendedLevel": 51,
+      "monsterCount": 1,
+      "boss": {
+        "name": "圣诞老人",
+        "source": "config/Aries/Mob/Christmas/MobTemplate_Christmas_Colorful_World.xml",
+        "level": 51,
+        "attributes": {
+          "asset": "character/v6/01human/ChristmasGrandpa/ChristmasGrandpa.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_Christmas_Colorful_World:0",
+      "battleRewards": {
+        "xp": true,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_Christmas_Colorful_World:0",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:DarkForestIsland_MarshNest",
+      "name": "沼泽魔窟",
+      "playable": true,
+      "recommendedLevel": 55,
+      "monsterCount": 2,
+      "boss": {
+        "name": "瘟疫领主真身",
+        "source": "config/Aries/Mob/DarkForestIslandMarshNest/MobTemplate_MarshNestBoss_Set_Death_Lv55.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character/v6/10mobs/01RainbowIsland/DeathApe01/DeathApe01.x"
+        }
+      },
+      "bossArenaId": "dungeon:DarkForestIsland_MarshNest:0",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:DarkForestIsland_MarshNest:0",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_1v1_599",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_1v1_799",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_1v1_999",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_1v1_1199",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_1v1_1200",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_LafeierCastle_PVP_OneTeam",
+      "name": "拉斐尔城堡PK赛",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_LafeierCastle_PVP_TwoTeam",
+      "name": "拉斐尔城堡PK赛",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_LafeierCastle_PVP_ThreeTeam",
+      "name": "拉斐尔城堡PK赛",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_LafeierCastle_PVP_Matcher",
+      "name": "拉斐尔城堡PK赛",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:Global_HaqiTown_TreasureHouse",
+      "name": "宝箱世界哈奇小镇",
+      "playable": true,
+      "recommendedLevel": 5,
+      "monsterCount": 14,
+      "boss": {
+        "name": "暴熊",
+        "source": "config/Aries/Mob/TreasureHouse/HaqiTown/MobTemplate_GreatIceBearLower.xml",
+        "level": 15,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"
+        }
+      },
+      "bossArenaId": "dungeon:Global_HaqiTown_TreasureHouse:4",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 3850,
+        "h": 2030,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:Global_HaqiTown_TreasureHouse:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_HaqiTown_TreasureHouse:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_HaqiTown_TreasureHouse:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_HaqiTown_TreasureHouse:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_HaqiTown_TreasureHouse:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:Global_FlamingPhoenixIsland_TreasureHouse",
+      "name": "宝箱世界火鸟岛",
+      "playable": true,
+      "recommendedLevel": 12,
+      "monsterCount": 14,
+      "boss": {
+        "name": "暴熊",
+        "source": "config/Aries/Mob/TreasureHouse/FlamingPhoenixIsland/MobTemplate_GreatIceBearLower.xml",
+        "level": 25,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"
+        }
+      },
+      "bossArenaId": "dungeon:Global_FlamingPhoenixIsland_TreasureHouse:4",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 3850,
+        "h": 2030,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:Global_FlamingPhoenixIsland_TreasureHouse:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_FlamingPhoenixIsland_TreasureHouse:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_FlamingPhoenixIsland_TreasureHouse:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_FlamingPhoenixIsland_TreasureHouse:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_FlamingPhoenixIsland_TreasureHouse:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:Global_FrostRoarIsland_TreasureHouse",
+      "name": "宝箱世界寒冰岛",
+      "playable": true,
+      "recommendedLevel": 22,
+      "monsterCount": 14,
+      "boss": {
+        "name": "暴熊",
+        "source": "config/Aries/Mob/TreasureHouse/FrostRoarIsland/MobTemplate_GreatIceBearLower.xml",
+        "level": 38,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"
+        }
+      },
+      "bossArenaId": "dungeon:Global_FrostRoarIsland_TreasureHouse:4",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 3850,
+        "h": 2030,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:Global_FrostRoarIsland_TreasureHouse:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_FrostRoarIsland_TreasureHouse:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_FrostRoarIsland_TreasureHouse:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_FrostRoarIsland_TreasureHouse:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_FrostRoarIsland_TreasureHouse:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:Global_AncientEgyptIsland_TreasureHouse",
+      "name": "宝箱世界沙漠古堡",
+      "playable": true,
+      "recommendedLevel": 31,
+      "monsterCount": 17,
+      "boss": {
+        "name": "暴熊",
+        "source": "config/Aries/Mob/TreasureHouse/AncientEgyptIsland/MobTemplate_GreatIceBearLower.xml",
+        "level": 40,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"
+        }
+      },
+      "bossArenaId": "dungeon:Global_AncientEgyptIsland_TreasureHouse:4",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 3850,
+        "h": 2030,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:Global_AncientEgyptIsland_TreasureHouse:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_AncientEgyptIsland_TreasureHouse:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_AncientEgyptIsland_TreasureHouse:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_AncientEgyptIsland_TreasureHouse:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:Global_AncientEgyptIsland_TreasureHouse:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_TrialOfChampions_Amateur",
+      "name": "PK试炼场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_TrialOfChampions_Intermediate",
+      "name": "PK试炼场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_TrialOfChampions_Master",
+      "name": "PK试炼场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_TrialOfChampions_Amateur1v1",
+      "name": "初级PK试炼场1v1",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_TrialOfChampions_Intermediate1v1",
+      "name": "中级PK试炼场1v1",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_TrialOfChampions_Master1v1",
+      "name": "高级PK试炼场1v1",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_TrialOfChampions_Legendary1v1",
+      "name": "顶级PK试炼场1v1",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse",
+      "name": "金鬃怪的宝库",
+      "playable": true,
+      "recommendedLevel": 10,
+      "monsterCount": 11,
+      "boss": {
+        "name": "金鬃大王",
+        "source": "config/Aries/Mob/GoldenOgreTreasureHouse/MobTemplate_FireRockyOgre4.xml",
+        "level": 15,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_03.x"
+        }
+      },
+      "bossArenaId": "dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse:3",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1790,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse:3",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_1v1",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_2v2",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_2v2_1999",
+      "name": "红蘑菇赛场2V2",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_2v2_5000",
+      "name": "红蘑菇赛场2V2",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_3v3",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_4v4",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_AI_1v1",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_AI_2v2",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_AI_3v3",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_RedMushroomArena_AI_4v4",
+      "name": "红蘑菇赛场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_FireCavern_110527_1",
+      "name": "火鬃怪宝库",
+      "playable": true,
+      "recommendedLevel": 6,
+      "monsterCount": 1,
+      "boss": {
+        "name": "火毛怪",
+        "source": "config/Aries/Mob/BreakingNews/MobTemplate_FireCavernFireRockyOgre01.xml",
+        "level": 6,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/BlazeHairMonster/BlazeHairMonster.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_FireCavern_110527_1:0",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_FireCavern_110527_1:0",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_FireCavern_110527_2",
+      "name": "火鬃怪宝库",
+      "playable": true,
+      "recommendedLevel": 6,
+      "monsterCount": 4,
+      "boss": {
+        "name": "残暴的火鬃怪队长",
+        "source": "config/Aries/Mob/BreakingNews/MobTemplate_FireRockyOgre02.xml",
+        "level": 15,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_FireCavern_110527_2:0",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_FireCavern_110527_2:0",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:FlamingPhoenixIsland_TheGreatTree_110610_3",
+      "name": "神木空间",
+      "playable": true,
+      "recommendedLevel": 50,
+      "monsterCount": 1,
+      "boss": {
+        "name": "暗黑虚影",
+        "source": "config/Aries/Mob/BreakingNews/MobTemplate_51DoomLords03.xml",
+        "level": 50,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/DoomLordsShadow/DoomLordsShadow.x"
+        }
+      },
+      "bossArenaId": "dungeon:FlamingPhoenixIsland_TheGreatTree_110610_3:0",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:FlamingPhoenixIsland_TheGreatTree_110610_3:0",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:FrostRoarIsland_IceBearLair",
+      "name": "冰封极地",
+      "playable": true,
+      "recommendedLevel": 22,
+      "monsterCount": 14,
+      "boss": {
+        "name": "风眼守护兽",
+        "source": "config/Aries/Mob/FrozenPolar/MobTemplate_FrozenPolar05_2.xml",
+        "level": 28,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreatIceBear/GreatIceBear.x"
+        }
+      },
+      "bossArenaId": "dungeon:FrostRoarIsland_IceBearLair:4",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 2555.068359375,
+        "h": 2030,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:FrostRoarIsland_IceBearLair:0",
+          "blocked": [
+            "未支持卡牌：22226"
+          ]
+        },
+        {
+          "id": "dungeon:FrostRoarIsland_IceBearLair:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FrostRoarIsland_IceBearLair:2",
+          "blocked": [
+            "未支持卡牌：22236"
+          ]
+        },
+        {
+          "id": "dungeon:FrostRoarIsland_IceBearLair:3",
+          "blocked": [
+            "未支持卡牌：22246"
+          ]
+        },
+        {
+          "id": "dungeon:FrostRoarIsland_IceBearLair:4",
+          "blocked": [
+            "未支持卡牌：Ice_Absorb_LevelX",
+            "未支持卡牌：22226"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_FireCavern_Hero",
+      "name": "火鬃大王的巢穴",
+      "playable": true,
+      "recommendedLevel": 40,
+      "monsterCount": 13,
+      "boss": {
+        "name": "试炼宝库大王",
+        "source": "config/Aries/Mob/FireCavern_Hero/MobTemplate_FireRockyOgre02.xml",
+        "level": 42,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_02.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_FireCavern_Hero:4",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 4092.744140625,
+        "h": 2030,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_FireCavern_Hero:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_FireCavern_Hero:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_FireCavern_Hero:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_FireCavern_Hero:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_FireCavern_Hero:4",
+          "blocked": [
+            "怪物先手尚未迁移",
+            "场景施法脚本尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:FrostRoarIsland_IceKingCave",
+      "name": "大地冰熊的巢穴",
+      "playable": true,
+      "recommendedLevel": 25,
+      "monsterCount": 12,
+      "boss": {
+        "name": "冰雪之王霍伊斯",
+        "source": "config/Aries/Mob/IceKingCave/MobTemplate_FrozenPolarBOSS.xml",
+        "level": 30,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"
+        }
+      },
+      "bossArenaId": "dungeon:FrostRoarIsland_IceKingCave:3",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1790,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:FrostRoarIsland_IceKingCave:0",
+          "blocked": [
+            "未支持卡牌：22226"
+          ]
+        },
+        {
+          "id": "dungeon:FrostRoarIsland_IceKingCave:1",
+          "blocked": [
+            "未支持卡牌：22226",
+            "未支持卡牌：Fire_AreaAttack_Level4"
+          ]
+        },
+        {
+          "id": "dungeon:FrostRoarIsland_IceKingCave:2",
+          "blocked": [
+            "未支持卡牌：Ice_Absorb_LevelX",
+            "未支持卡牌：22226"
+          ]
+        },
+        {
+          "id": "dungeon:FrostRoarIsland_IceKingCave:3",
+          "blocked": [
+            "未支持卡牌：Ice_Absorb_LevelX",
+            "未支持卡牌：22226",
+            "未支持卡牌：Fire_AreaAttack_Level4"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:AncientEgyptIsland_LostTemple",
+      "name": "落日神殿",
+      "playable": true,
+      "recommendedLevel": 35,
+      "monsterCount": 4,
+      "boss": {
+        "name": "千年木乃伊萨鲁",
+        "source": "config/Aries/Mob/AncientEgyptIsland/MobTemplate_DeathMummy_Boss.xml",
+        "level": 40,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/DeathMummy_Boss/DeathMummy_Boss.x"
+        }
+      },
+      "bossArenaId": "dungeon:AncientEgyptIsland_LostTemple:0",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:AncientEgyptIsland_LostTemple:0",
+          "blocked": [
+            "怪物先手尚未迁移",
+            "场景施法脚本尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:FrostRoarIsland_StormEye",
+      "name": "风暴之眼",
+      "playable": true,
+      "recommendedLevel": 35,
+      "monsterCount": 3,
+      "boss": {
+        "name": "艾俄罗斯",
+        "source": "config/Aries/Mob/StormEye/MobTemplate_Boss.xml",
+        "level": 35,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/FrostScyllaRedhead/FrostScyllaRedhead.x"
+        }
+      },
+      "bossArenaId": "dungeon:FrostRoarIsland_StormEye:0",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:FrostRoarIsland_StormEye:0",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_YYsNightmare",
+      "name": "梦魇火鸟岛",
+      "playable": true,
+      "recommendedLevel": 44,
+      "monsterCount": 10,
+      "boss": {
+        "name": "梦魇章鱼头目",
+        "source": "config/Aries/Mob/YYsNightmare/MobTemplate_NightmareOctopus_Boss.xml",
+        "level": 44,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GhostOctopus_Boss/GhostOctopus_Boss.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_YYsNightmare:0",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1526.005859375,
+        "h": 1790,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_YYsNightmare:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_YYsNightmare:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_YYsNightmare:3",
+          "blocked": [
+            "未支持卡牌：21192"
+          ]
+        },
+        {
+          "id": "dungeon:HaqiTown_YYsNightmare:0",
+          "blocked": [
+            "未支持卡牌：21192",
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:AncientEgyptIsland_PharaohFortress",
+      "name": "地狱之海",
+      "playable": true,
+      "recommendedLevel": 39,
+      "monsterCount": 9,
+      "boss": {
+        "name": "法老王图坦卡蒙",
+        "source": "config/Aries/Mob/PharaohFortress/MobTemplate_FuriousDeathMummy.xml",
+        "level": 46,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/FuriousDeathMummy/FuriousDeathMummy.x"
+        }
+      },
+      "bossArenaId": "dungeon:AncientEgyptIsland_PharaohFortress:2",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 2254.365234375,
+        "h": 1550,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:AncientEgyptIsland_PharaohFortress:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:AncientEgyptIsland_PharaohFortress:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:AncientEgyptIsland_PharaohFortress:2",
+          "blocked": [
+            "缺少原版怪物模板",
+            "怪物先手尚未迁移",
+            "场景施法脚本尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_LightHouse_Hero",
+      "name": "英雄试炼之塔",
+      "playable": true,
+      "recommendedLevel": 45,
+      "monsterCount": 4,
+      "boss": {
+        "name": "魔牛舅舅",
+        "source": "config/Aries/Mob/HeroTowerMobs/MobTemplate_ShadowSmashBull_HeroTower.xml",
+        "level": 45,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/ShadowSmashBull/ShadowSmashBull.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_LightHouse_Hero:0",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_LightHouse_Hero:0",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:FlamingPhoenixIsland_TheGreatTree_Hero",
+      "name": "异界空间",
+      "playable": true,
+      "recommendedLevel": 45,
+      "monsterCount": 12,
+      "boss": {
+        "name": "咕噜王",
+        "source": "config/Aries/Mob/FlamingPhoenixIsland_TheGreatTree_Hero/MobTemplate_WaterBubble02.xml",
+        "level": 57,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/DeathBubble/DeathBubble.x"
+        }
+      },
+      "bossArenaId": "dungeon:FlamingPhoenixIsland_TheGreatTree_Hero:2",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1929.21875,
+        "h": 1550,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:FlamingPhoenixIsland_TheGreatTree_Hero:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FlamingPhoenixIsland_TheGreatTree_Hero:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:FlamingPhoenixIsland_TheGreatTree_Hero:2",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:AncientEgyptIsland_LostTemple_NanJue",
+      "name": "神殿秘境",
+      "playable": true,
+      "recommendedLevel": 43,
+      "monsterCount": 4,
+      "boss": {
+        "name": "暗黑男爵",
+        "source": "config/Aries/Mob/LostTemple_NanJue/MobTemplate_51DoomLords01.xml",
+        "level": 60,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/DoomLords/DoomLords.x"
+        }
+      },
+      "bossArenaId": "dungeon:AncientEgyptIsland_LostTemple_NanJue:0",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:AncientEgyptIsland_LostTemple_NanJue:0",
+          "blocked": [
+            "怪物先手尚未迁移",
+            "场景施法脚本尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_GraduateExam_54_55",
+      "name": "中阶魔法师考场",
+      "playable": true,
+      "recommendedLevel": 55,
+      "monsterCount": 1,
+      "boss": {
+        "name": "白龙考官",
+        "source": "config/Aries/Mob/Intermediate_Mage_Test/MobTemplate_WhiteDragon.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character\\v5\\01human\\WhiteDragon\\WhiteDragon.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_GraduateExam_54_55:0",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_GraduateExam_54_55:0",
+          "blocked": [
+            "未支持卡牌：Storm_Rune_StormConversePositiveWard",
+            "未支持卡牌：Life_SingleHeal_Level4",
+            "未支持卡牌：22023"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:BattleField_ChampionsValley",
+      "name": "英雄谷(初级)",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:BattleField_ChampionsValley_Master",
+      "name": "英雄谷(高级)",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_CampfireChallenge",
+      "name": "神秘篝火岛",
+      "playable": true,
+      "recommendedLevel": 10,
+      "monsterCount": 9,
+      "boss": {
+        "name": "费尔斯通王子",
+        "source": "config/Aries/Mob/HaqiTown_CampfireChallenge/MobTemplate_43mob.xml",
+        "level": 50,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/Bonfire_Boss/Bonfire_Boss.x"
+        }
+      },
+      "bossArenaId": "dungeon:HaqiTown_CampfireChallenge:3",
+      "battleRewards": {
+        "xp": true,
+        "coins": true
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1790,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:HaqiTown_CampfireChallenge:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_CampfireChallenge:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_CampfireChallenge:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:HaqiTown_CampfireChallenge:3",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_TrialOfChampions_FairPlay_LowLevel",
+      "name": "竞技场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:HaqiTown_TrialOfChampions_FairPlay_HighLevel",
+      "name": "竞技场",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:AncientEgyptIsland_LostTemple_DeathLandEntrance",
+      "name": "神殿废墟",
+      "playable": true,
+      "recommendedLevel": 55,
+      "monsterCount": 4,
+      "boss": {
+        "name": "狂暴的嗜血暴鳄拉尔齐",
+        "source": "config/Aries/Mob/FieldRaid/DarkCrocodile/MobTemplate_Death_DarkCrocodile_Plus.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/DeathCrocodile03/DeathCrocodile03.x"
+        }
+      },
+      "bossArenaId": "dungeon:AncientEgyptIsland_LostTemple_DeathLandEntrance:0",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:AncientEgyptIsland_LostTemple_DeathLandEntrance:0",
+          "blocked": [
+            "未支持卡牌：Fire_AreaAttack_Level4",
+            "未支持卡牌：Fire_SingleAttack_Level6",
+            "未支持目标规则：noshield",
+            "未支持卡牌：Fire_Pet_SingleAttack_Level6",
+            "未支持卡牌：Fire_Pet_AreaAttack_Level4"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:DarkForestIsland_PirateSeamaster",
+      "name": "幽灵船宝藏",
+      "playable": true,
+      "recommendedLevel": 55,
+      "monsterCount": 1,
+      "boss": {
+        "name": "库力蛙",
+        "source": "config/Aries/Mob/DarkForestIsland_PirateSeamaster/MobTemplate_PirateSeamaster_LifeBoss.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character/v6/10mobs/01RainbowIsland/LifeToad02/LifeToad02.x"
+        }
+      },
+      "bossArenaId": "dungeon:DarkForestIsland_PirateSeamaster:0",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:DarkForestIsland_PirateSeamaster:0",
+          "blocked": [
+            "未支持目标规则：noshield"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_1_to_5",
+      "name": "烈焰秘境",
+      "playable": true,
+      "recommendedLevel": 1,
+      "monsterCount": 5,
+      "boss": {
+        "name": "巨大火鸟",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No5_MobTemplate_BossSet_Class01_Fire_Lv5.xml",
+        "level": 5,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/PhoenixWarrior_Fuben/PhoenixWarrior_Fuben.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_1_to_5:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_1_to_5:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_1_to_5:1",
+          "blocked": [
+            "未支持卡牌：22292"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_1_to_5:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_1_to_5:3",
+          "blocked": [
+            "未支持卡牌：22292"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_1_to_5:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_6_to_10",
+      "name": "烈焰秘境",
+      "playable": true,
+      "recommendedLevel": 6,
+      "monsterCount": 5,
+      "boss": {
+        "name": "狂暴火战士",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No10_MobTemplate_BossSet_Class01_Fire_Lv10.xml",
+        "level": 10,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/PhoenixWarrior_Fuben/PhoenixWarrior_Fuben.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_6_to_10:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_6_to_10:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_6_to_10:1",
+          "blocked": [
+            "未支持卡牌：22292"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_6_to_10:2",
+          "blocked": [
+            "未支持卡牌：22292"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_6_to_10:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_6_to_10:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_11_to_15",
+      "name": "冰封秘境",
+      "playable": true,
+      "recommendedLevel": 11,
+      "monsterCount": 5,
+      "boss": {
+        "name": "冷冽亡灵猴",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No15_MobTemplate_BossSet_Class01_Ice_Lv15.xml",
+        "level": 15,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/UndeadMonkey/UndeadMonkey.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_11_to_15:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_11_to_15:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_11_to_15:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_11_to_15:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_11_to_15:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_11_to_15:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_16_to_20",
+      "name": "冰封秘境",
+      "playable": true,
+      "recommendedLevel": 16,
+      "monsterCount": 5,
+      "boss": {
+        "name": "冷血暴熊",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No20_MobTemplate_BossSet_Class01_Ice_Lv20.xml",
+        "level": 20,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_16_to_20:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_16_to_20:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_16_to_20:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_16_to_20:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_16_to_20:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_16_to_20:4",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_21_to_25",
+      "name": "风蚀秘境",
+      "playable": true,
+      "recommendedLevel": 21,
+      "monsterCount": 5,
+      "boss": {
+        "name": "雷动鬃王",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No25_MobTemplate_BossSet_Class02_Storm_Lv25.xml",
+        "level": 25,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_03.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_21_to_25:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_21_to_25:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_21_to_25:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_21_to_25:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_21_to_25:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_21_to_25:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_26_to_30",
+      "name": "风蚀秘境",
+      "playable": true,
+      "recommendedLevel": 26,
+      "monsterCount": 5,
+      "boss": {
+        "name": "雷动熊王",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No30_MobTemplate_BossSet_Class02_Storm_Lv30.xml",
+        "level": 30,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreatStormBearLower/GreatStormBearLower.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_26_to_30:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_26_to_30:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_26_to_30:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_26_to_30:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_26_to_30:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_26_to_30:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_31_to_35",
+      "name": "万象秘境",
+      "playable": true,
+      "recommendedLevel": 31,
+      "monsterCount": 5,
+      "boss": {
+        "name": "天赐巨人",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No35_MobTemplate_BossSet_Class02_Life_Lv35.xml",
+        "level": 35,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/LifeStoneMonster02/LifeStoneMonster02.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_31_to_35:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_31_to_35:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_31_to_35:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_31_to_35:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_31_to_35:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_31_to_35:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_36_to_40",
+      "name": "万象秘境",
+      "playable": true,
+      "recommendedLevel": 36,
+      "monsterCount": 5,
+      "boss": {
+        "name": "大地觉醒者",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No40_MobTemplate_BossSet_Class02_Life_Lv40.xml",
+        "level": 40,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/LifeStoneMonster03/LifeStoneMonster03.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_36_to_40:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_36_to_40:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_36_to_40:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_36_to_40:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_36_to_40:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_36_to_40:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_41_to_45",
+      "name": "死寂秘境",
+      "playable": true,
+      "recommendedLevel": 41,
+      "monsterCount": 5,
+      "boss": {
+        "name": "传说九凤天",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No45_MobTemplate_BossSet_Class03_Death_Lv45.xml",
+        "level": 45,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/ShadowOfPhoenix/ShadowOfPhoenix.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_41_to_45:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_41_to_45:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_41_to_45:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_41_to_45:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_41_to_45:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_41_to_45:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_46_to_50",
+      "name": "死寂秘境",
+      "playable": true,
+      "recommendedLevel": 46,
+      "monsterCount": 5,
+      "boss": {
+        "name": "不死黑熊",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No50_MobTemplate_BossSet_Class03_Death_Lv50.xml",
+        "level": 50,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/DeathBear/DeathBear.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_46_to_50:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_46_to_50:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_46_to_50:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_46_to_50:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_46_to_50:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_46_to_50:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_51_to_55",
+      "name": "烈焰禁地",
+      "playable": true,
+      "recommendedLevel": 45,
+      "monsterCount": 10,
+      "boss": {
+        "name": "不死鸟",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No55_MobTemplate_BossSet_Class04_Fire_Lv53.xml",
+        "level": 53,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/PhoenixWarrior_Fuben/PhoenixWarrior_Fuben.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_51_to_55:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_51_to_55:0",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_51_to_55:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_51_to_55:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_51_to_55:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_51_to_55:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_56_to_60",
+      "name": "烈焰禁地",
+      "playable": true,
+      "recommendedLevel": 51,
+      "monsterCount": 10,
+      "boss": {
+        "name": "恶魔费雷斯",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No60_MobTemplate_BossSet_Class04_Fire_Lv55.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/DoomLords/DoomLords.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_56_to_60:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_56_to_60:0",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_56_to_60:1",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_56_to_60:2",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_56_to_60:3",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_56_to_60:4",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_61_to_65",
+      "name": "冰封禁地",
+      "playable": true,
+      "recommendedLevel": 45,
+      "monsterCount": 10,
+      "boss": {
+        "name": "冰熊破坏者",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No65_MobTemplate_BossSet_Class04_Ice_Lv53.xml",
+        "level": 53,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/GreatIceBearLower/GreatIceBearLower.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_61_to_65:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_61_to_65:0",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_61_to_65:1",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_61_to_65:2",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_61_to_65:3",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_61_to_65:4",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_66_to_70",
+      "name": "冰封禁地",
+      "playable": true,
+      "recommendedLevel": 51,
+      "monsterCount": 10,
+      "boss": {
+        "name": "艾卡冰魔",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No70_MobTemplate_BossSet_Class05_Ice_Lv55.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/Bonfire03/Bonfire03.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_66_to_70:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_66_to_70:0",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_66_to_70:1",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_66_to_70:2",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_66_to_70:3",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_66_to_70:4",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_71_to_75",
+      "name": "风蚀禁地",
+      "playable": true,
+      "recommendedLevel": 45,
+      "monsterCount": 10,
+      "boss": {
+        "name": "饕餮鬃王",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No75_MobTemplate_BossSet_Class05_Storm_Lv53.xml",
+        "level": 53,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/FireRockyOgre/FireRockyOgre_03.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_71_to_75:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_71_to_75:0",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_71_to_75:1",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_71_to_75:2",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_71_to_75:3",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_71_to_75:4",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_76_to_80",
+      "name": "风蚀禁地",
+      "playable": true,
+      "recommendedLevel": 51,
+      "monsterCount": 10,
+      "boss": {
+        "name": "蛇后妮卡",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No80_MobTemplate_BossSet_Class05_Storm_Lv55.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/Medusa/Medusa.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_76_to_80:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_76_to_80:0",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_76_to_80:1",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_76_to_80:2",
+          "blocked": [
+            "未支持卡牌：22295",
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_76_to_80:3",
+          "blocked": [
+            "未支持卡牌：22295",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_76_to_80:4",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_81_to_85",
+      "name": "万象禁地",
+      "playable": true,
+      "recommendedLevel": 45,
+      "monsterCount": 10,
+      "boss": {
+        "name": "改造草食者",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No85_MobTemplate_BossSet_Class05_Life_Lv53.xml",
+        "level": 53,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/LifePangolin/LifePangolin.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_81_to_85:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_81_to_85:0",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_81_to_85:1",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_81_to_85:2",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_81_to_85:3",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_81_to_85:4",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_86_to_90",
+      "name": "万象禁地",
+      "playable": true,
+      "recommendedLevel": 51,
+      "monsterCount": 10,
+      "boss": {
+        "name": "鳄王拉比",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No90_MobTemplate_BossSet_Class05_Life_Lv55.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/DeathCrocodile01/DeathCrocodile01.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_86_to_90:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_86_to_90:0",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_86_to_90:1",
+          "blocked": [
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_86_to_90:2",
+          "blocked": [
+            "未支持卡牌：22295",
+            "未支持卡牌：Ice_Rune_SingleFreeze",
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_86_to_90:3",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_86_to_90:4",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_91_to_95",
+      "name": "死寂禁地",
+      "playable": true,
+      "recommendedLevel": 45,
+      "monsterCount": 10,
+      "boss": {
+        "name": "黑熊改造者",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No95_MobTemplate_BossSet_Class05_Death_Lv53.xml",
+        "level": 53,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/DeathBear/DeathBear.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_91_to_95:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_91_to_95:0",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_91_to_95:1",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_91_to_95:2",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_91_to_95:3",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_91_to_95:4",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_96_to_100",
+      "name": "死寂禁地",
+      "playable": true,
+      "recommendedLevel": 51,
+      "monsterCount": 10,
+      "boss": {
+        "name": "法老王威格夫",
+        "source": "config/Aries/Mob/ChallengeSecretLand/No100_MobTemplate_BossSet_Class05_Death_Lv55.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/FuriousDeathMummy/FuriousDeathMummy.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_96_to_100:4",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_96_to_100:0",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_96_to_100:1",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_96_to_100:2",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_96_to_100:3",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        },
+        {
+          "id": "dungeon:CrazyTower_96_to_100:4",
+          "blocked": [
+            "怪物先手尚未迁移"
+          ]
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_WaterBubbleSupreme",
+      "name": "咕噜军团的大本营",
+      "playable": true,
+      "recommendedLevel": 40,
+      "monsterCount": 11,
+      "boss": {
+        "name": "绿绿的咕噜噜",
+        "source": "config/Aries/Mob/MobSupreme/WaterBubbleSupreme/MobTemplate_LifeBubble.xml",
+        "level": 45,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/LifeBubble/LifeBubble.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_WaterBubbleSupreme:4",
+      "battleRewards": {
+        "xp": true,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_WaterBubbleSupreme:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_WaterBubbleSupreme:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_WaterBubbleSupreme:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_WaterBubbleSupreme:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_WaterBubbleSupreme:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_IroncladSupreme",
+      "name": "铁壳军团的大本营",
+      "playable": true,
+      "recommendedLevel": 46,
+      "monsterCount": 11,
+      "boss": {
+        "name": "一只绿色的铁壳",
+        "source": "config/Aries/Mob/MobSupreme/IroncladSupreme/MobTemplate_LifeIronclad.xml",
+        "level": 48,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/LifeIronShell/LifeIronShell.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_IroncladSupreme:4",
+      "battleRewards": {
+        "xp": true,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_IroncladSupreme:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_IroncladSupreme:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_IroncladSupreme:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_IroncladSupreme:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_IroncladSupreme:4",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_SnowmanSupreme",
+      "name": "胖胖军团的大本营",
+      "playable": true,
+      "recommendedLevel": 49,
+      "monsterCount": 14,
+      "boss": {
+        "name": "贪吃的蓝胖胖",
+        "source": "config/Aries/Mob/MobSupreme/SnowmanSupreme/MobTemplate_IceSnowman.xml",
+        "level": 50,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/EvilSnowman/EvilSnowman.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_SnowmanSupreme:2",
+      "battleRewards": {
+        "xp": true,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2144.7999999999956,
+        "h": 2033.3499999999913,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_SnowmanSupreme:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_SnowmanSupreme:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_SnowmanSupreme:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_SnowmanSupreme:4",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_SnowmanSupreme:2",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_WaterBubbleCasern",
+      "name": "咕噜军团的小基地",
+      "playable": true,
+      "recommendedLevel": 40,
+      "monsterCount": 5,
+      "boss": {
+        "name": "绿绿的咕噜噜",
+        "source": "config/Aries/Mob/MobSupreme/WaterBubbleSupreme/MobTemplate_LifeBubble.xml",
+        "level": 45,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/LifeBubble/LifeBubble.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_WaterBubbleCasern:1",
+      "battleRewards": {
+        "xp": true,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_WaterBubbleCasern:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_WaterBubbleCasern:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_WaterBubbleCasern:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_WaterBubbleCasern:4",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_WaterBubbleCasern:1",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_IroncladCasern",
+      "name": "铁壳军团的小基地",
+      "playable": true,
+      "recommendedLevel": 46,
+      "monsterCount": 5,
+      "boss": {
+        "name": "一只绿色的铁壳",
+        "source": "config/Aries/Mob/MobSupreme/IroncladSupreme/MobTemplate_LifeIronclad.xml",
+        "level": 48,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/LifeIronShell/LifeIronShell.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_IroncladCasern:1",
+      "battleRewards": {
+        "xp": true,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_IroncladCasern:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_IroncladCasern:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_IroncladCasern:3",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_IroncladCasern:4",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_IroncladCasern:1",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:CrazyTower_SnowmanCasern",
+      "name": "胖胖军团的小基地",
+      "playable": true,
+      "recommendedLevel": 49,
+      "monsterCount": 5,
+      "boss": {
+        "name": "贪吃的蓝胖胖",
+        "source": "config/Aries/Mob/MobSupreme/SnowmanSupreme/MobTemplate_IceSnowman.xml",
+        "level": 50,
+        "attributes": {
+          "asset": "character/v5/10mobs/HaqiTown/EvilSnowman/EvilSnowman.x"
+        }
+      },
+      "bossArenaId": "dungeon:CrazyTower_SnowmanCasern:3",
+      "battleRewards": {
+        "xp": true,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 2304.2499999999927,
+        "h": 2179.2000000000007,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:CrazyTower_SnowmanCasern:0",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_SnowmanCasern:1",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_SnowmanCasern:2",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_SnowmanCasern:4",
+          "blocked": []
+        },
+        {
+          "id": "dungeon:CrazyTower_SnowmanCasern:3",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:BattleField_ChampionsValley_Coliseum",
+      "name": "英雄谷(竞技场)",
+      "playable": false,
+      "recommendedLevel": 1,
+      "monsterCount": 0,
+      "boss": null,
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "arenas": [],
+      "loaded": false
+    },
+    {
+      "id": "dungeon:FrostRoarIsland_HeroStormEye",
+      "name": "异界风暴之眼",
+      "playable": true,
+      "recommendedLevel": 55,
+      "monsterCount": 4,
+      "boss": {
+        "name": "冰魔伯爵",
+        "source": "config/Aries/Mob/HeroStormEye/MobTemplate_IceBonBoss_Special.xml",
+        "level": 55,
+        "attributes": {
+          "asset": "character/v5/02animals/FireBon/FireBon.x"
+        }
+      },
+      "bossArenaId": "dungeon:FrostRoarIsland_HeroStormEye:0",
+      "battleRewards": {
+        "xp": false,
+        "coins": false
+      },
+      "mapInfo": {
+        "w": 1400,
+        "h": 1200,
+        "spawn": {
+          "x": 350,
+          "y": 350
+        },
+        "initialSpawn": {
+          "x": 350,
+          "y": 350
+        },
+        "retainPreviousPosition": true
+      },
+      "arenas": [
+        {
+          "id": "dungeon:FrostRoarIsland_HeroStormEye:0",
+          "blocked": []
+        }
+      ],
+      "loaded": false
+    }
+  ]
+}

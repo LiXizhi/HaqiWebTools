@@ -49,9 +49,9 @@ export function petAction(save,content,action,access={}){
  case 'buy':{
   const item=content.shop.find(x=>x.id===action.productId);check(item,'商品不存在');check(!item.retired,'捕获晶球已停售，请使用抓宠符文');check(!item.isInternalTest,'内测道具不对外出售');check(!item.vipOnly||access.keepworkVip===true,'该商品仅限会员购买。请登录会员账号后重试。');check(save.level>=item.level,'等级尚未解锁');
   check(item.kind!=='pet'||!save.pets[item.petId],'已经拥有这只宠物');const cost=productPrice(item,content);
-  check((save.inventory[100]||0)>=cost,'奇豆不足');
+  if(!action.paidByTest){check((save.inventory[100]||0)>=cost,'奇豆不足');save.inventory[100]-=cost;}
   if(item.kind==='pet')addPet(save,content,item.petId);else save.inventory[item.itemId]=(save.inventory[item.itemId]||0)+1;
-  save.inventory[100]-=cost;save.transactions.push({id:save.transactions.length+1,productId:item.id,cost});break;
+  save.transactions.push({id:save.transactions.length+1,productId:item.id,cost:action.paidByTest?0:cost,paidByTest:!!action.paidByTest});break;
  }
  default:return false;
  }return true;

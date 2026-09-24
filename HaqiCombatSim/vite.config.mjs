@@ -2,7 +2,6 @@ import {prepareMonsterArt} from './scripts/package_monster_art.mjs';
 import {prepareQuestJournal} from './scripts/package_quests.mjs';
 import { packageRuntimeData } from './scripts/package_runtime_data.mjs';
 import { prepareDungeonFiles } from './scripts/package_dungeons.mjs';
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
@@ -11,7 +10,7 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 const entries = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects'];
 
 export default defineConfig(({ command }) => {
-    let dungeonPayload,questPayload,questRuntime;
+    let dungeonPayload;
     return {
         root,
         base: './',
@@ -38,13 +37,10 @@ export default defineConfig(({ command }) => {
             buildStart() {
                 // Refresh the lightweight catalogue for both development and builds.
                 dungeonPayload = prepareDungeonFiles(root).payload;
-                questPayload = prepareQuestJournal(root);
-                questRuntime = JSON.parse(fs.readFileSync(path.join(root, 'data/adventure/quest-runtime.json'), 'utf8'));
+                prepareQuestJournal(root);
                 prepareMonsterArt(root);
             },
             generateBundle() {
-                this.emitFile({type:'asset',fileName:'data/adventure/quest-journal.json',source:JSON.stringify(questPayload)});
-                this.emitFile({type:'asset',fileName:'data/adventure/quest-runtime.json',source:JSON.stringify(questRuntime)});
                 this.emitFile({
                     type: 'asset',
                     fileName: 'data/adventure/dungeons.json',

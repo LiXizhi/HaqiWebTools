@@ -16,6 +16,10 @@ npm run preview
 
 ## 上传
 
+2026-09-24：`dungeon-index.json`、`monster-art.json`、`quest-journal.json`、`quest-runtime.json` 统一经过构建期字段白名单并进入 `data/adventure.json`，不再单独输出两个任务文件。任务窗口复用启动阶段的读取器与缓存，因此冒险启动及首次打开任务窗口合计只请求 adventure/kids 两个配置包。代价是任务手记随启动包下载，不再延迟到打开窗口时下载。完整 `dungeons.json` 仍独立按需加载，不并入启动包。
+
+怪物美术移除 adaptations 溯源记录，保留外观绑定和验证所需哈希、尺寸、大小；任务手记移除未使用的 repeat、目标 id 和前置 value；任务运行表移除未使用的条件 name。副本轻量索引已有字段均被实际功能使用，保持其菜单、外观和存档校验信息。源码 JSON 不做裁剪，普通 HTTP/Vite dev 仍按原路径读取。
+
 `npc-catalog.json`同样采用构建期字段白名单：保留居民显示、商店与导师课程、交易限制、兑换条件/费用/奖励及物品属性；移除原始XML、重复原始列/奖励字符串、旧引擎模型与坐标、来源哈希和导出报告。仅精简dist数据包，原始目录保留完整资料。NPC字段或交易逻辑新增读取时，须同步更新投影与行为对照测试。
 
 构建时由 `scripts/package_runtime_data.mjs` 压缩所有JSON，并按运行时字段白名单精简美术清单：保留CDN、裁剪/动画、原卡对照及实际校验字段，删除未使用的生成与溯源元数据；商店缺图记录只保留布尔标记。`card-atlas.json`、`cdn-publish-plan.json`、`skill-art-plan.json`、`expansion-report.json`仅供开发工具使用，不进入dist。源码清单保留完整字段；修改运行时读取字段时应同步更新投影及测试。

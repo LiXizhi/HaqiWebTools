@@ -687,3 +687,27 @@
  .journal-entry-text{display:grid;gap:2px}
  .journal-pagination{padding:4px 0}
 }
+.locale-launch{position:fixed;z-index:80;display:flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:1px solid #d7ceaa;border-radius:10px;background:rgba(249,245,233,.92);color:#5a3e18;box-shadow:0 4px 14px rgba(24,62,60,.16);cursor:pointer}
+.locale-launch svg{width:20px;height:20px}
+.locale-launch.is-open{background:#fff3d2;border-color:#c4a36a}
+.locale-launch.locale-gloss-over{outline:2px solid rgba(180,120,40,.85)}
+.locale-gloss{position:fixed;z-index:80;top:12px;left:12px;width:min(280px,calc(100vw - 24px));min-height:64px;padding:8px 12px 10px;background:rgba(255,248,230,.78);color:#3a2a12;border-radius:10px;box-shadow:0 8px 24px rgba(40,28,8,.18);backdrop-filter:blur(6px);cursor:grab;user-select:none;touch-action:none}
+.locale-gloss-hint{margin:0;font-size:13px;line-height:1.5;text-align:center}
+.locale-gloss.dragging{cursor:grabbing}
+.locale-gloss-rule{height:1px;margin:0 0 8px;background:rgba(90,62,24,.35)}
+.locale-gloss-rule.bottom{margin:8px 0 0}
+.locale-gloss-target,.locale-gloss-native{margin:0;font-size:14px;line-height:1.45;text-align:center}
+.locale-gloss-target{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;cursor:grab}
+.locale-gloss-target.is-speakable{cursor:pointer}
+.locale-gloss-target.is-speakable .locale-gloss-words{text-decoration:underline;text-underline-offset:3px}
+.locale-gloss-speaker{display:inline-flex;width:16px;height:16px;flex:none}
+.locale-gloss-speaker svg{width:16px;height:16px}
+.locale-gloss-over{outline:2px solid rgba(180,120,40,.85)}
+.locale-gloss-native{margin-top:4px}
+.locale-choices{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px}
+.learning-battle{position:absolute;top:128px;left:50%;transform:translateX(-50%);z-index:3;width:min(440px,92vw);text-align:center;background:rgba(18,40,32,.9);color:#fff;padding:8px 10px;border-radius:10px}
+.learning-meter{height:8px;background:#234;border-radius:4px;overflow:hidden;margin:6px 0}
+.learning-meter i{display:block;height:100%;background:#8fe88c}
+.learning-hints{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:6px}
+.language-room .language-input,.learning-battle .language-input{width:100%;margin-top:8px}
+.language-actions,.shop-buy-row{display:flex;gap:6px;flex-wrap:wrap}

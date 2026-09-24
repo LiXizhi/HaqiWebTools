@@ -1,0 +1,5 @@
+native-cache/
+__pycache__/
+test-run.log
+upload.log
+checks.log

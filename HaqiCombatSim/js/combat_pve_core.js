@@ -175,6 +175,24 @@ function targetFor(a,u,card,pick) {
     if(a.threatRulesVersion>=1&&(tag==='threat_highest'||tag==='threat_lowest'))return threatTarget(u,targets,tag==='threat_lowest');
     return targets[0]; // One solo player means threat_highest has exactly one hostile candidate.
 }
+export function applyLearningSpeech(a, progress) {
+    const value = Math.max(0, Math.min(100, Number(progress) || 0));
+    a.learningProgress = Math.max(a.learningProgress || 0, value);
+    if (a.learningProgress >= 100) {
+        for (const unit of a.sides.far) unit.hp = 0;
+        finished(a);
+        return a.learningProgress;
+    }
+    if (a.learningProgress >= 50 && !a.learningWeakened) {
+        a.learningWeakened = true;
+        for (const unit of a.sides.far) {
+            if (!U.isAlive(unit)) continue;
+            unit.hp = Math.max(1, unit.hp - Math.max(1, Math.floor(unit.maxHp * 0.25)));
+        }
+        emit(a, { type: 'learning_weaken' });
+    }
+    return a.learningProgress;
+}
 function finished(a) {
     if(a.finished)return true;
     if(!a.sides.near.some(U.isAlive))a.winner='far';

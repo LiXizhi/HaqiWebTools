@@ -1,0 +1,4350 @@
+{
+  "original-16071": {
+    "local": "assets/original-16071-21c1ed3665fb.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 95792,
+    "sha256": "21c1ed3665fb8d8656b6a12480d4e2d406adf61960a4039b44d4543e34b4138b",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/Smilodon/Smilodon.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/smilodon/smilodon.x.z,1a644e9312e8bd54208e7c5e551d4c6e,196827",
+        "md5": "1a644e9312e8bd54208e7c5e551d4c6e",
+        "bytes": 196827
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 17.6241,
+      "lookAt": [
+        0.0,
+        1.289345,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.16912,
+        "min_y": 0,
+        "max_z": 1.07291,
+        "max_x": 2.16912,
+        "min_z": -1.07291,
+        "max_y": 2.57869
+      }
+    },
+    "frameBounds": [
+      [
+        0.373046875,
+        0.388671875,
+        0.58203125,
+        0.693359375
+      ],
+      [
+        0.08984375,
+        0.3984375,
+        0.755859375,
+        0.666015625
+      ],
+      [
+        0.251953125,
+        0.388671875,
+        0.916015625,
+        0.650390625
+      ],
+      [
+        0.431640625,
+        0.359375,
+        0.611328125,
+        0.75390625
+      ]
+    ]
+  },
+  "original-16034": {
+    "local": "assets/original-16034-6604c6ba0af2.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 115760,
+    "sha256": "6604c6ba0af299e0d163b5908448018eee0c9300c132f8f5b82c861dcdb32f6d",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Cow/Cow_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/cow/cow_withlilypad.x.z,eb18b48ee4a09c6c2976e693638e3a8c,84141",
+        "md5": "eb18b48ee4a09c6c2976e693638e3a8c",
+        "bytes": 84141
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.664268,
+      "lookAt": [
+        0.22119,
+        1.28118,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -0.71749,
+        "min_y": -0.00041,
+        "max_z": 0.68686,
+        "max_x": 1.15987,
+        "min_z": -0.68686,
+        "max_y": 2.56277
+      }
+    },
+    "frameBounds": [
+      [
+        0.328125,
+        0.193359375,
+        0.673828125,
+        0.71875
+      ],
+      [
+        0.224609375,
+        0.146484375,
+        0.78515625,
+        0.853515625
+      ],
+      [
+        0.224609375,
+        0.13671875,
+        0.7734375,
+        0.853515625
+      ],
+      [
+        0.31640625,
+        0.099609375,
+        0.6953125,
+        0.8515625
+      ]
+    ]
+  },
+  "original-16035": {
+    "local": "assets/original-16035-3351a4dea314.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 137992,
+    "sha256": "3351a4dea314c01b688943e22de282ab297e9478c3d04d72d7948bc1cc2d1559",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Tiger/Tiger_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/tiger/tiger_withlilypad.x.z,0062d43b317e782789af16e89ee047e8,143591",
+        "md5": "0062d43b317e782789af16e89ee047e8",
+        "bytes": 143591
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.676877999999999,
+      "lookAt": [
+        0.05435000000000001,
+        1.278755,
+        -0.005079999999999973
+      ],
+      "bounds": {
+        "min_x": -1.05117,
+        "min_y": -0.00526,
+        "max_z": 0.6175,
+        "max_x": 1.15987,
+        "min_z": -0.62766,
+        "max_y": 2.56277
+      }
+    },
+    "frameBounds": [
+      [
+        0.326171875,
+        0.203125,
+        0.677734375,
+        0.7421875
+      ],
+      [
+        0.220703125,
+        0.146484375,
+        0.833984375,
+        0.837890625
+      ],
+      [
+        0.17578125,
+        0.13671875,
+        0.77734375,
+        0.837890625
+      ],
+      [
+        0.32421875,
+        0.09375,
+        0.689453125,
+        0.873046875
+      ]
+    ]
+  },
+  "original-16036": {
+    "local": "assets/original-16036-0ec3e50e1ecb.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 109094,
+    "sha256": "0ec3e50e1ecb2b38b59ea53f04fee4a08e816869b67346c40efa3b12e87d8d88",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Rabbit/Rabbit_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/rabbit/rabbit_withlilypad.x.z,3e53cc0d2151d84e4c8fea60894e2c2c,53087",
+        "md5": "3e53cc0d2151d84e4c8fea60894e2c2c",
+        "bytes": 53087
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.90703,
+      "lookAt": [
+        0.27269,
+        1.328645,
+        -0.024565000000000003
+      ],
+      "bounds": {
+        "min_x": -0.71783,
+        "min_y": 0.00037,
+        "max_z": 0.60078,
+        "max_x": 1.26321,
+        "min_z": -0.64991,
+        "max_y": 2.65692
+      }
+    },
+    "frameBounds": [
+      [
+        0.3359375,
+        0.185546875,
+        0.666015625,
+        0.71484375
+      ],
+      [
+        0.220703125,
+        0.142578125,
+        0.755859375,
+        0.8515625
+      ],
+      [
+        0.25390625,
+        0.1328125,
+        0.77734375,
+        0.857421875
+      ],
+      [
+        0.326171875,
+        0.099609375,
+        0.689453125,
+        0.873046875
+      ]
+    ]
+  },
+  "original-16037": {
+    "local": "assets/original-16037-de2472b2930a.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 147640,
+    "sha256": "de2472b2930a98898309d3bd53a8970f7e34d1a4c22383e222a432229fafa533",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Dragon/Dragon_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/dragon/dragon_withlilypad.x.z,fcbf2e225f852a4ae36e327f66ce5b41,81806",
+        "md5": "fcbf2e225f852a4ae36e327f66ce5b41",
+        "bytes": 81806
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.693544,
+      "lookAt": [
+        0.053769999999999984,
+        1.2790300000000001,
+        -0.011245000000000005
+      ],
+      "bounds": {
+        "min_x": -1.05161,
+        "min_y": -0.00819,
+        "max_z": 0.60486,
+        "max_x": 1.15915,
+        "min_z": -0.62735,
+        "max_y": 2.56625
+      }
+    },
+    "frameBounds": [
+      [
+        0.330078125,
+        0.203125,
+        0.6796875,
+        0.7421875
+      ],
+      [
+        0.193359375,
+        0.146484375,
+        0.83203125,
+        0.84765625
+      ],
+      [
+        0.177734375,
+        0.13671875,
+        0.80859375,
+        0.849609375
+      ],
+      [
+        0.32421875,
+        0.09375,
+        0.6875,
+        0.892578125
+      ]
+    ]
+  },
+  "original-16038": {
+    "local": "assets/original-16038-70cd1190c2ae.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 100804,
+    "sha256": "70cd1190c2ae6e98b82a9d1579d9b34746950b4e30cdc5d0a72ac5122931f517",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Snake/Snake_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/snake/snake_withlilypad.x.z,691bcefe74c7c7a4cf8197522f1d0d5b,48336",
+        "md5": "691bcefe74c7c7a4cf8197522f1d0d5b",
+        "bytes": 48336
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.704880000000001,
+      "lookAt": [
+        0.21943499999999994,
+        1.2894,
+        -0.01146999999999998
+      ],
+      "bounds": {
+        "min_x": -0.71767,
+        "min_y": 0,
+        "max_z": 0.60463,
+        "max_x": 1.15654,
+        "min_z": -0.62757,
+        "max_y": 2.5788
+      }
+    },
+    "frameBounds": [
+      [
+        0.326171875,
+        0.208984375,
+        0.681640625,
+        0.7578125
+      ],
+      [
+        0.298828125,
+        0.142578125,
+        0.853515625,
+        0.849609375
+      ],
+      [
+        0.15625,
+        0.12890625,
+        0.703125,
+        0.845703125
+      ],
+      [
+        0.326171875,
+        0.08203125,
+        0.685546875,
+        0.89453125
+      ]
+    ]
+  },
+  "original-16039": {
+    "local": "assets/original-16039-e4e24426e7a9.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 120958,
+    "sha256": "e4e24426e7a9141cc29454c0e0a942096c8d6ae80b9a939efc593796c6160cc4",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Horse/Horse_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/horse/horse_withlilypad.x.z,269c12bc2cb08511280d8adb0b059b06,340936",
+        "md5": "269c12bc2cb08511280d8adb0b059b06",
+        "bytes": 340936
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.684626,
+      "lookAt": [
+        0.22119,
+        1.277265,
+        -0.011950000000000016
+      ],
+      "bounds": {
+        "min_x": -0.71749,
+        "min_y": -0.00824,
+        "max_z": 0.60415,
+        "max_x": 1.15987,
+        "min_z": -0.62805,
+        "max_y": 2.56277
+      }
+    },
+    "frameBounds": [
+      [
+        0.333984375,
+        0.193359375,
+        0.67578125,
+        0.71875
+      ],
+      [
+        0.2265625,
+        0.14453125,
+        0.783203125,
+        0.83203125
+      ],
+      [
+        0.2265625,
+        0.134765625,
+        0.7734375,
+        0.833984375
+      ],
+      [
+        0.318359375,
+        0.09765625,
+        0.69140625,
+        0.876953125
+      ]
+    ]
+  },
+  "original-16040": {
+    "local": "assets/original-16040-66bdb513839f.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 109350,
+    "sha256": "66bdb513839f6f80de553e7e1ea6b9b29aea1b2605b71cbf62e81af84ce9e101",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Sheep/Sheep_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/sheep/sheep_withlilypad.x.z,6f079da996901c557900c4f10d863dc9,241263",
+        "md5": "6f079da996901c557900c4f10d863dc9",
+        "bytes": 241263
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.768632,
+      "lookAt": [
+        0.21765,
+        1.31162,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -0.7179,
+        "min_y": 0.00996,
+        "max_z": 0.65861,
+        "max_x": 1.1532,
+        "min_z": -0.65861,
+        "max_y": 2.61328
+      }
+    },
+    "frameBounds": [
+      [
+        0.33203125,
+        0.189453125,
+        0.669921875,
+        0.71875
+      ],
+      [
+        0.23046875,
+        0.142578125,
+        0.779296875,
+        0.849609375
+      ],
+      [
+        0.23046875,
+        0.130859375,
+        0.767578125,
+        0.849609375
+      ],
+      [
+        0.3125,
+        0.095703125,
+        0.693359375,
+        0.8515625
+      ]
+    ]
+  },
+  "original-16041": {
+    "local": "assets/original-16041-433ac60ace4e.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 110190,
+    "sha256": "433ac60ace4e0483b1618252f1ce422ae2c1fb7d6861f0549dd0fcbdb8f2cb0c",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Monkey/Monkey_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/monkey/monkey_withlilypad.x.z,8b077f28bfbe424b181b65c10b3358ab,78774",
+        "md5": "8b077f28bfbe424b181b65c10b3358ab",
+        "bytes": 78774
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.6639040000000005,
+      "lookAt": [
+        0.22119,
+        1.28125,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -0.71749,
+        "min_y": -0.00027,
+        "max_z": 0.72456,
+        "max_x": 1.15987,
+        "min_z": -0.72456,
+        "max_y": 2.56277
+      }
+    },
+    "frameBounds": [
+      [
+        0.328125,
+        0.193359375,
+        0.671875,
+        0.720703125
+      ],
+      [
+        0.224609375,
+        0.146484375,
+        0.783203125,
+        0.861328125
+      ],
+      [
+        0.2265625,
+        0.134765625,
+        0.7734375,
+        0.8515625
+      ],
+      [
+        0.322265625,
+        0.09765625,
+        0.697265625,
+        0.8671875
+      ]
+    ]
+  },
+  "original-16042": {
+    "local": "assets/original-16042-dd4093ea175a.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 92628,
+    "sha256": "dd4093ea175a05fac8dfd7022c8e43500ea4aa28b09d440e1ef63e840199addc",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Cock/Cock_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/cock/cock_withlilypad.x.z,06e58fb6d48e1df58702576a0ae0bb14,87835",
+        "md5": "06e58fb6d48e1df58702576a0ae0bb14",
+        "bytes": 87835
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 7.652684000000001,
+      "lookAt": [
+        0.33129000000000003,
+        1.47167,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -0.80069,
+        "min_y": 0,
+        "max_z": 0.64483,
+        "max_x": 1.46327,
+        "min_z": -0.64483,
+        "max_y": 2.94334
+      }
+    },
+    "frameBounds": [
+      [
+        0.34765625,
+        0.2265625,
+        0.654296875,
+        0.689453125
+      ],
+      [
+        0.2265625,
+        0.173828125,
+        0.7890625,
+        0.841796875
+      ],
+      [
+        0.21875,
+        0.162109375,
+        0.77734375,
+        0.845703125
+      ],
+      [
+        0.349609375,
+        0.12109375,
+        0.666015625,
+        0.869140625
+      ]
+    ]
+  },
+  "original-16043": {
+    "local": "assets/original-16043-054f33255fc3.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 108262,
+    "sha256": "054f33255fc3bfcac3866264289e6faf6ce05775bf89bedba26e5d419273f87d",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Dog/Dog_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/dog/dog_withlilypad.x.z,2f3e048aa08c88ce2867a13ac03941b6,124573",
+        "md5": "2f3e048aa08c88ce2867a13ac03941b6",
+        "bytes": 124573
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.729788000000001,
+      "lookAt": [
+        0.21943000000000001,
+        1.28461,
+        -0.012249999999999983
+      ],
+      "bounds": {
+        "min_x": -0.71767,
+        "min_y": -0.00958,
+        "max_z": 0.60385,
+        "max_x": 1.15653,
+        "min_z": -0.62835,
+        "max_y": 2.5788
+      }
+    },
+    "frameBounds": [
+      [
+        0.333984375,
+        0.193359375,
+        0.673828125,
+        0.720703125
+      ],
+      [
+        0.228515625,
+        0.14453125,
+        0.78125,
+        0.833984375
+      ],
+      [
+        0.228515625,
+        0.134765625,
+        0.771484375,
+        0.837890625
+      ],
+      [
+        0.3203125,
+        0.09765625,
+        0.689453125,
+        0.85546875
+      ]
+    ]
+  },
+  "original-16044": {
+    "local": "assets/original-16044-ef5ce39aaf6d.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 104866,
+    "sha256": "ef5ce39aaf6db41c1f3883d88a775b82bba6ba5b546279719f3617d60ad2f83c",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Pig/Pig_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/pig/pig_withlilypad.x.z,fbac2b52beb12f1e7cc53db99d9974f6,78467",
+        "md5": "fbac2b52beb12f1e7cc53db99d9974f6",
+        "bytes": 78467
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.98659,
+      "lookAt": [
+        0.23193499999999995,
+        1.342905,
+        -0.03381000000000001
+      ],
+      "bounds": {
+        "min_x": -0.72033,
+        "min_y": -0.00067,
+        "max_z": 0.58229,
+        "max_x": 1.1842,
+        "min_z": -0.64991,
+        "max_y": 2.68648
+      }
+    },
+    "frameBounds": [
+      [
+        0.341796875,
+        0.228515625,
+        0.66796875,
+        0.72265625
+      ],
+      [
+        0.236328125,
+        0.181640625,
+        0.765625,
+        0.837890625
+      ],
+      [
+        0.2421875,
+        0.169921875,
+        0.763671875,
+        0.84765625
+      ],
+      [
+        0.328125,
+        0.130859375,
+        0.681640625,
+        0.849609375
+      ]
+    ]
+  },
+  "original-16059": {
+    "local": "assets/original-16059-3b4eba48e185.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 102288,
+    "sha256": "3b4eba48e185a260c00b8fce7e31a20ecdd77ed2236950126a8d9f99e41a7454",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/MagicAwingCarpet/MagicAwingCarpet.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/magicawingcarpet/magicawingcarpet.x.z,98d622667a6453bdd4eb0db23fb0dd26,45594",
+        "md5": "98d622667a6453bdd4eb0db23fb0dd26",
+        "bytes": 45594
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 12.332424000000001,
+      "lookAt": [
+        0.0,
+        0.741055,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.37162,
+        "min_y": 0,
+        "max_z": 1.59528,
+        "max_x": 2.37162,
+        "min_z": -1.59528,
+        "max_y": 1.48211
+      }
+    },
+    "frameBounds": [
+      [
+        0.236328125,
+        0.318359375,
+        0.794921875,
+        0.66796875
+      ],
+      [
+        0.078125,
+        0.279296875,
+        0.92578125,
+        0.666015625
+      ],
+      [
+        0.087890625,
+        0.296875,
+        0.921875,
+        0.65234375
+      ],
+      [
+        0.19140625,
+        0.28125,
+        0.81640625,
+        0.70703125
+      ]
+    ]
+  },
+  "original-16066": {
+    "local": "assets/original-16066-08b11028dfae.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 106486,
+    "sha256": "08b11028dfae3ac254c0dab22815928476ade5ab555ec78ce4b5a7e8f2d60830",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/XiYiJinJiaoLong/XiYiJinJiaoLong.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/xiyijinjiaolong/xiyijinjiaolong.x.z,aa942eff4911002f028f879ac6f880e5,152765",
+        "md5": "aa942eff4911002f028f879ac6f880e5",
+        "bytes": 152765
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 20.2989921875,
+      "lookAt": [
+        0.0,
+        1.405215,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.99867,
+        "min_y": 0,
+        "max_z": 0.82406,
+        "max_x": 1.99867,
+        "min_z": -0.82406,
+        "max_y": 2.81043
+      }
+    },
+    "frameBounds": [
+      [
+        0.361328125,
+        0.369140625,
+        0.626953125,
+        0.7265625
+      ],
+      [
+        0.0234375,
+        0.38671875,
+        0.85546875,
+        0.67578125
+      ],
+      [
+        0.150390625,
+        0.384765625,
+        0.978515625,
+        0.666015625
+      ],
+      [
+        0.390625,
+        0.322265625,
+        0.625,
+        0.736328125
+      ]
+    ]
+  },
+  "original-16069": {
+    "local": "assets/original-16069-818ceda7f554.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 157770,
+    "sha256": "818ceda7f554ab596166542db7a1d58d39783bc241741b5316f033e76f1326e2",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/GoldenDragon/GoldenDragon.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/goldendragon/goldendragon.x.z,996350f702a943f0dfed9d85c929d1b3,250320",
+        "md5": "996350f702a943f0dfed9d85c929d1b3",
+        "bytes": 250320
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 19.397787500000003,
+      "lookAt": [
+        0.0,
+        1.761595,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.38742,
+        "min_y": 0,
+        "max_z": 0.94522,
+        "max_x": 2.38742,
+        "min_z": -0.94522,
+        "max_y": 3.52319
+      }
+    },
+    "frameBounds": [
+      [
+        0.298828125,
+        0.20703125,
+        0.71484375,
+        0.748046875
+      ],
+      [
+        0.046875,
+        0.171875,
+        0.837890625,
+        0.693359375
+      ],
+      [
+        0.1640625,
+        0.169921875,
+        0.943359375,
+        0.693359375
+      ],
+      [
+        0.283203125,
+        0.14453125,
+        0.7109375,
+        0.8828125
+      ]
+    ]
+  },
+  "original-16070": {
+    "local": "assets/original-16070-b8d82b365ca1.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 154854,
+    "sha256": "b8d82b365ca1a477b7d5f2142fbd7724a6176553412d81fe72af4e052b732dd4",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/bluedragon/bluedragon.x.z,963c339703a1f99f89e2151bf79a2686,245306",
+        "md5": "963c339703a1f99f89e2151bf79a2686",
+        "bytes": 245306
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 19.397787500000003,
+      "lookAt": [
+        0.0,
+        1.683585,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.38742,
+        "min_y": 0,
+        "max_z": 0.94522,
+        "max_x": 2.38742,
+        "min_z": -0.94522,
+        "max_y": 3.36717
+      }
+    },
+    "frameBounds": [
+      [
+        0.296875,
+        0.19921875,
+        0.712890625,
+        0.740234375
+      ],
+      [
+        0.064453125,
+        0.1640625,
+        0.837890625,
+        0.685546875
+      ],
+      [
+        0.162109375,
+        0.162109375,
+        0.91796875,
+        0.685546875
+      ],
+      [
+        0.283203125,
+        0.13671875,
+        0.7109375,
+        0.830078125
+      ]
+    ]
+  },
+  "original-16072": {
+    "local": "assets/original-16072-efcf73b39e32.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 153662,
+    "sha256": "efcf73b39e3243833cd5f87018abf3d39b382e3300418db64787c4a292748bda",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/whitedragon/whitedragon.x.z,1da5a5b85d613fa8faa820917900c790,243798",
+        "md5": "1da5a5b85d613fa8faa820917900c790",
+        "bytes": 243798
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 19.397787500000003,
+      "lookAt": [
+        0.0,
+        1.74639,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.38742,
+        "min_y": 0,
+        "max_z": 0.94522,
+        "max_x": 2.38742,
+        "min_z": -0.94522,
+        "max_y": 3.49278
+      }
+    },
+    "frameBounds": [
+      [
+        0.296875,
+        0.20703125,
+        0.712890625,
+        0.74609375
+      ],
+      [
+        0.064453125,
+        0.169921875,
+        0.837890625,
+        0.69140625
+      ],
+      [
+        0.162109375,
+        0.16796875,
+        0.921875,
+        0.69140625
+      ],
+      [
+        0.283203125,
+        0.142578125,
+        0.7109375,
+        0.837890625
+      ]
+    ]
+  },
+  "original-16073": {
+    "local": "assets/original-16073-770b3d8ef73d.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 166996,
+    "sha256": "770b3d8ef73d9c1114198d02574a194a944c3ed2d9767f3d280e6bb77e498cb5",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/GreenDragon/GreenDragon.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/greendragon/greendragon.x.z,51191f63ddc6192ff51bf95d663ccdd1,247423",
+        "md5": "51191f63ddc6192ff51bf95d663ccdd1",
+        "bytes": 247423
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 19.397787500000003,
+      "lookAt": [
+        0.0,
+        1.75166,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.38742,
+        "min_y": 0,
+        "max_z": 0.94522,
+        "max_x": 2.38742,
+        "min_z": -0.94522,
+        "max_y": 3.50332
+      }
+    },
+    "frameBounds": [
+      [
+        0.298828125,
+        0.20703125,
+        0.712890625,
+        0.74609375
+      ],
+      [
+        0.046875,
+        0.169921875,
+        0.837890625,
+        0.69140625
+      ],
+      [
+        0.162109375,
+        0.16796875,
+        0.9453125,
+        0.69140625
+      ],
+      [
+        0.283203125,
+        0.142578125,
+        0.7109375,
+        0.8828125
+      ]
+    ]
+  },
+  "original-16074": {
+    "local": "assets/original-16074-56726d0ab74a.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 143076,
+    "sha256": "56726d0ab74af17d30996831843a576c45bb5d2d2cb48bb84305b06e4b38480e",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/GrilRabbit/GrilRabbit.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/grilrabbit/grilrabbit.x.z,4c0249841bcacab6724fef977aab371b,129971",
+        "md5": "4c0249841bcacab6724fef977aab371b",
+        "bytes": 129971
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 15.764226562500001,
+      "lookAt": [
+        0.0,
+        1.351165,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.55217,
+        "min_y": 0,
+        "max_z": 1.11668,
+        "max_x": 1.55217,
+        "min_z": -1.11668,
+        "max_y": 2.70233
+      }
+    },
+    "frameBounds": [
+      [
+        0.2890625,
+        0.07421875,
+        0.720703125,
+        0.703125
+      ],
+      [
+        0.298828125,
+        0.03515625,
+        0.7578125,
+        0.6796875
+      ],
+      [
+        0.244140625,
+        0.037109375,
+        0.703125,
+        0.6796875
+      ],
+      [
+        0.314453125,
+        0.03515625,
+        0.693359375,
+        0.7109375
+      ]
+    ]
+  },
+  "original-16076": {
+    "local": "assets/original-16076-b43a85e75715.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 158576,
+    "sha256": "b43a85e757155af468283641fd9c59ceaf8b31cb4178ae8af55f9a0b404c1fe3",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/HorseSilverWolf/HorseSilverWolf.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/horsesilverwolf/horsesilverwolf.x.z,f49c55f8ab45f5fd03f1c2c46abd6153,194597",
+        "md5": "f49c55f8ab45f5fd03f1c2c46abd6153",
+        "bytes": 194597
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 13.928265,
+      "lookAt": [
+        0.0,
+        1.50528,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.14281,
+        "min_y": 0,
+        "max_z": 0.82348,
+        "max_x": 2.14281,
+        "min_z": -0.82348,
+        "max_y": 3.01056
+      }
+    },
+    "frameBounds": [
+      [
+        0.314453125,
+        0.271484375,
+        0.671875,
+        0.796875
+      ],
+      [
+        0.173828125,
+        0.248046875,
+        0.87109375,
+        0.736328125
+      ],
+      [
+        0.130859375,
+        0.28125,
+        0.81640625,
+        0.767578125
+      ],
+      [
+        0.244140625,
+        0.25,
+        0.65234375,
+        0.837890625
+      ]
+    ]
+  },
+  "original-16077": {
+    "local": "assets/original-16077-6f17350377cb.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 150098,
+    "sha256": "6f17350377cb430acb03661b340c5f78428a77ab77d94bf6e2f2603688e5aae9",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ChasingWindEagle/ChasingWindEagle.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/chasingwindeagle/chasingwindeagle.x.z,4390d12df667729a7f5463918a0de68a,173992",
+        "md5": "4390d12df667729a7f5463918a0de68a",
+        "bytes": 173992
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 14.044225,
+      "lookAt": [
+        0.0,
+        1.465075,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.16065,
+        "min_y": 0,
+        "max_z": 1.18628,
+        "max_x": 2.16065,
+        "min_z": -1.18628,
+        "max_y": 2.93015
+      }
+    },
+    "frameBounds": [
+      [
+        0.26953125,
+        0.251953125,
+        0.673828125,
+        0.75390625
+      ],
+      [
+        0.162109375,
+        0.3125,
+        0.861328125,
+        0.728515625
+      ],
+      [
+        0.150390625,
+        0.3046875,
+        0.853515625,
+        0.73046875
+      ],
+      [
+        0.33203125,
+        0.26171875,
+        0.662109375,
+        0.732421875
+      ]
+    ]
+  },
+  "original-16083": {
+    "local": "assets/original-16083-70cd3c155e37.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 130764,
+    "sha256": "70cd3c155e3744c4271265177ee8dd840fdc81bd23e5019f0386ae665713411e",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/HKBS/HKBS.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/hkbs/hkbs.x.z,589ae54411eb32af778ccbd19f326de7,203447",
+        "md5": "589ae54411eb32af778ccbd19f326de7",
+        "bytes": 203447
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 25.05927734375,
+      "lookAt": [
+        0.0,
+        2.467375,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.4634,
+        "min_y": 0,
+        "max_z": 1.52269,
+        "max_x": 1.4634,
+        "min_z": -1.52269,
+        "max_y": 4.93475
+      }
+    },
+    "frameBounds": [
+      [
+        0.208984375,
+        0.091796875,
+        0.76171875,
+        0.724609375
+      ],
+      [
+        0.2578125,
+        0.087890625,
+        0.6328125,
+        0.712890625
+      ],
+      [
+        0.361328125,
+        0.1015625,
+        0.740234375,
+        0.716796875
+      ],
+      [
+        0.25390625,
+        0.111328125,
+        0.7890625,
+        0.7890625
+      ]
+    ]
+  },
+  "original-16090": {
+    "local": "assets/original-16090-89ea49a45199.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 172094,
+    "sha256": "89ea49a45199a5ea82a3f05ec407094db794972313465ecf5c11554c57ff1813",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon_02.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/whitedragon/whitedragon_02.x.z,7f72717af83b80cb642cee82442d2b73,254557",
+        "md5": "7f72717af83b80cb642cee82442d2b73",
+        "bytes": 254557
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 19.397787500000003,
+      "lookAt": [
+        0.0,
+        1.74639,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.38742,
+        "min_y": 0,
+        "max_z": 0.94522,
+        "max_x": 2.38742,
+        "min_z": -0.94522,
+        "max_y": 3.49278
+      }
+    },
+    "frameBounds": [
+      [
+        0.296875,
+        0.03515625,
+        0.712890625,
+        0.74609375
+      ],
+      [
+        0.064453125,
+        0.169921875,
+        0.8515625,
+        0.69140625
+      ],
+      [
+        0.1484375,
+        0.16796875,
+        0.921875,
+        0.69140625
+      ],
+      [
+        0.283203125,
+        0.142578125,
+        0.7109375,
+        0.837890625
+      ]
+    ]
+  },
+  "original-16092": {
+    "local": "assets/original-16092-bb1c0b2b1e12.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 164732,
+    "sha256": "bb1c0b2b1e12b23a711035c4f855d77b0864bfdb32c75995006d2732d91aa906",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon_02.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/bluedragon/bluedragon_02.x.z,9e0caf958d2c42de3da4d97c02b02ab6,256005",
+        "md5": "9e0caf958d2c42de3da4d97c02b02ab6",
+        "bytes": 256005
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 19.397787500000003,
+      "lookAt": [
+        0.0,
+        1.683585,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.38742,
+        "min_y": 0,
+        "max_z": 0.94522,
+        "max_x": 2.38742,
+        "min_z": -0.94522,
+        "max_y": 3.36717
+      }
+    },
+    "frameBounds": [
+      [
+        0.296875,
+        0.19921875,
+        0.712890625,
+        0.740234375
+      ],
+      [
+        0.064453125,
+        0.1640625,
+        0.853515625,
+        0.685546875
+      ],
+      [
+        0.1484375,
+        0.162109375,
+        0.91796875,
+        0.685546875
+      ],
+      [
+        0.283203125,
+        0.13671875,
+        0.7109375,
+        0.830078125
+      ]
+    ]
+  },
+  "original-16093": {
+    "local": "assets/original-16093-6d6e3c523a4f.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 174578,
+    "sha256": "6d6e3c523a4ffb5cdfe2708fdc40a20fb0f391941079c1adfc400e8d4dec5ccd",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/GoldenDragon/GoldenDragon_02.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/goldendragon/goldendragon_02.x.z,54912342fb3013035ed4f456711cd69c,261067",
+        "md5": "54912342fb3013035ed4f456711cd69c",
+        "bytes": 261067
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 19.397787500000003,
+      "lookAt": [
+        0.0,
+        1.761595,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.38742,
+        "min_y": 0,
+        "max_z": 0.94522,
+        "max_x": 2.38742,
+        "min_z": -0.94522,
+        "max_y": 3.52319
+      }
+    },
+    "frameBounds": [
+      [
+        0.298828125,
+        0.20703125,
+        0.71484375,
+        0.748046875
+      ],
+      [
+        0.046875,
+        0.171875,
+        0.8515625,
+        0.693359375
+      ],
+      [
+        0.1484375,
+        0.169921875,
+        0.943359375,
+        0.693359375
+      ],
+      [
+        0.283203125,
+        0.14453125,
+        0.7109375,
+        0.8828125
+      ]
+    ]
+  },
+  "original-16096": {
+    "local": "assets/original-16096-ab300b50a5d9.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 179228,
+    "sha256": "ab300b50a5d98151e0427442ae021aae85423ead436bf0110932afc1cb775efd",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/GreenDragon/GreenDragon_02.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/greendragon/greendragon_02.x.z,da4a3efa54a329bb8bfdaf856a2a3a39,258249",
+        "md5": "da4a3efa54a329bb8bfdaf856a2a3a39",
+        "bytes": 258249
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 19.397787500000003,
+      "lookAt": [
+        0.0,
+        1.75166,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.38742,
+        "min_y": 0,
+        "max_z": 0.94522,
+        "max_x": 2.38742,
+        "min_z": -0.94522,
+        "max_y": 3.50332
+      }
+    },
+    "frameBounds": [
+      [
+        0.298828125,
+        0.20703125,
+        0.712890625,
+        0.74609375
+      ],
+      [
+        0.046875,
+        0.169921875,
+        0.8515625,
+        0.69140625
+      ],
+      [
+        0.1484375,
+        0.16796875,
+        0.9453125,
+        0.69140625
+      ],
+      [
+        0.283203125,
+        0.142578125,
+        0.7109375,
+        0.8828125
+      ]
+    ]
+  },
+  "original-16101": {
+    "local": "assets/original-16101-3c00a5e9e70e.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 116054,
+    "sha256": "3c00a5e9e70e6935bb1ac4902f944f2354b1c35ffbd7b849394cae5d7c5de7e2",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/DragonBoss_Ice/DragonBoss_Ice.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/dragonboss_ice/dragonboss_ice.x.z,00d7d6bb360a588ab9f3aefa71e18e0e,440404",
+        "md5": "00d7d6bb360a588ab9f3aefa71e18e0e",
+        "bytes": 440404
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 18.7343203125,
+      "lookAt": [
+        0.0,
+        1.70857,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.84461,
+        "min_y": 0,
+        "max_z": 0.92142,
+        "max_x": 1.84461,
+        "min_z": -0.92142,
+        "max_y": 3.41714
+      }
+    },
+    "frameBounds": [
+      [
+        0.1484375,
+        0.279296875,
+        0.853515625,
+        0.724609375
+      ],
+      [
+        0.01953125,
+        0.2265625,
+        0.873046875,
+        0.7734375
+      ],
+      [
+        0.130859375,
+        0.22265625,
+        0.982421875,
+        0.77734375
+      ],
+      [
+        0.150390625,
+        0.193359375,
+        0.853515625,
+        0.810546875
+      ]
+    ]
+  },
+  "original-16110": {
+    "local": "assets/original-16110-67571e35d053.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 91886,
+    "sha256": "67571e35d053aed5dfa3b1641881a58622c9af3ba81feb83d92208cadf679d3e",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ChiBang02/ChiBang02.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/chibang02/chibang02.x.z,dd4440771274cd4d1b8332b4091c13cb,21511",
+        "md5": "dd4440771274cd4d1b8332b4091c13cb",
+        "bytes": 21511
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 12.1875,
+      "lookAt": [
+        0.0,
+        1.5,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -0.5,
+        "min_y": 0,
+        "max_z": 0.5,
+        "max_x": 0.5,
+        "min_z": -0.5,
+        "max_y": 3
+      }
+    },
+    "frameBounds": [
+      [
+        0.05078125,
+        0.279296875,
+        0.92578125,
+        0.578125
+      ],
+      [
+        0.388671875,
+        0.193359375,
+        0.666015625,
+        0.6796875
+      ],
+      [
+        0.388671875,
+        0.203125,
+        0.6484375,
+        0.623046875
+      ],
+      [
+        0.068359375,
+        0.259765625,
+        0.9140625,
+        0.5703125
+      ]
+    ]
+  },
+  "original-16111": {
+    "local": "assets/original-16111-e10ea8da2c82.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 90028,
+    "sha256": "e10ea8da2c82e25f74f965e8cfcf81dfc0d043c5524dac1d41b6f65d9d893033",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ChiBang01/ChiBang01.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/chibang01/chibang01.x.z,b7a838ec58649dd2aa8b87c0629fb803,21424",
+        "md5": "b7a838ec58649dd2aa8b87c0629fb803",
+        "bytes": 21424
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 12.1875,
+      "lookAt": [
+        0.0,
+        1.5,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -0.5,
+        "min_y": 0,
+        "max_z": 0.5,
+        "max_x": 0.5,
+        "min_z": -0.5,
+        "max_y": 3
+      }
+    },
+    "frameBounds": [
+      [
+        0.060546875,
+        0.294921875,
+        0.935546875,
+        0.662109375
+      ],
+      [
+        0.251953125,
+        0.181640625,
+        0.6640625,
+        0.701171875
+      ],
+      [
+        0.36328125,
+        0.21484375,
+        0.681640625,
+        0.671875
+      ],
+      [
+        0.064453125,
+        0.265625,
+        0.8984375,
+        0.62890625
+      ]
+    ]
+  },
+  "original-16114": {
+    "local": "assets/original-16114-d2f073a753e8.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 88494,
+    "sha256": "d2f073a753e8a11035d9975c53b182f71c3ea8404f1e16143441920264faba1b",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/Tortoise/Tortoise04.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/tortoise/tortoise04.x.z,c39d62b0b0b83cdbfc1f7641a022cae7,79858",
+        "md5": "c39d62b0b0b83cdbfc1f7641a022cae7",
+        "bytes": 79858
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 12.068420000000001,
+      "lookAt": [
+        0.0,
+        1.68214,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.32085,
+        "min_y": 0,
+        "max_z": 1.87387,
+        "max_x": 2.32085,
+        "min_z": -1.87387,
+        "max_y": 3.36428
+      }
+    },
+    "frameBounds": [
+      [
+        0.076171875,
+        0.251953125,
+        0.921875,
+        0.630859375
+      ],
+      [
+        0.1015625,
+        0.212890625,
+        0.96484375,
+        0.865234375
+      ],
+      [
+        0.037109375,
+        0.244140625,
+        0.900390625,
+        0.865234375
+      ],
+      [
+        0.083984375,
+        0.271484375,
+        0.892578125,
+        0.84765625
+      ]
+    ]
+  },
+  "original-16115": {
+    "local": "assets/original-16115-d53854a9e8d1.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 66812,
+    "sha256": "d53854a9e8d1bcc2a85f1383dc69eaea3ab8fa72119e33098c9dc4527d26e824",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/HaiTun/HaiTun.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/haitun/haitun.x.z,1b75a718e0d296235a9862147b517725,65736",
+        "md5": "1b75a718e0d296235a9862147b517725",
+        "bytes": 65736
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 35.12379,
+      "lookAt": [
+        0.0,
+        2.72656,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -5.40366,
+        "min_y": 0.03082,
+        "max_z": 2.04915,
+        "max_x": 5.40366,
+        "min_z": -2.04915,
+        "max_y": 5.4223
+      }
+    },
+    "frameBounds": [
+      [
+        0.3671875,
+        0.3515625,
+        0.634765625,
+        0.615234375
+      ],
+      [
+        0.0546875,
+        0.373046875,
+        0.76171875,
+        0.642578125
+      ],
+      [
+        0.232421875,
+        0.36328125,
+        0.943359375,
+        0.634765625
+      ],
+      [
+        0.36328125,
+        0.34375,
+        0.638671875,
+        0.69140625
+      ]
+    ]
+  },
+  "original-16118": {
+    "local": "assets/original-16118-4b2408a4e833.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 93634,
+    "sha256": "4b2408a4e8339f7ee135f34ff45a5739bffade2b0905139753475560d13fd03c",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ShuangRenFeiTing/ShuangRenFeiTing.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/shuangrenfeiting/shuangrenfeiting.x.z,a7b1e64d4424078eb2f84b2dad5bae32,75576",
+        "md5": "a7b1e64d4424078eb2f84b2dad5bae32",
+        "bytes": 75576
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 32.412554687500005,
+      "lookAt": [
+        0.0,
+        2.00765,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -3.19139,
+        "min_y": -0.06337,
+        "max_z": 1.5965,
+        "max_x": 3.19139,
+        "min_z": -1.5965,
+        "max_y": 4.07867
+      }
+    },
+    "frameBounds": [
+      [
+        0.330078125,
+        0.2734375,
+        0.6875,
+        0.60546875
+      ],
+      [
+        0.068359375,
+        0.353515625,
+        0.677734375,
+        0.662109375
+      ],
+      [
+        0.32421875,
+        0.349609375,
+        0.8828125,
+        0.65625
+      ],
+      [
+        0.279296875,
+        0.3671875,
+        0.677734375,
+        0.673828125
+      ]
+    ]
+  },
+  "original-16120": {
+    "local": "assets/original-16120-88969dcf6ecd.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 140176,
+    "sha256": "88969dcf6ecdd3babd00ef6cb124a2b78e1fcfb9aa0fda5ce1be82b17dd9f7af",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/NanGuaChe/NanGuaChe.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/nanguache/nanguache.x.z,086d4cb6b188fcdf9812922573b8cc28,97806",
+        "md5": "086d4cb6b188fcdf9812922573b8cc28",
+        "bytes": 97806
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 25.898015,
+      "lookAt": [
+        0.0,
+        3.293885,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -3.98431,
+        "min_y": 0,
+        "max_z": 3.45211,
+        "max_x": 3.98431,
+        "min_z": -3.45211,
+        "max_y": 6.58777
+      }
+    },
+    "frameBounds": [
+      [
+        0.173828125,
+        0.212890625,
+        0.837890625,
+        0.82421875
+      ],
+      [
+        0.158203125,
+        0.24609375,
+        0.833984375,
+        0.84375
+      ],
+      [
+        0.169921875,
+        0.244140625,
+        0.845703125,
+        0.84375
+      ],
+      [
+        0.15234375,
+        0.2734375,
+        0.841796875,
+        0.845703125
+      ]
+    ]
+  },
+  "original-16123": {
+    "local": "assets/original-16123-b6f389f62ee0.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 171144,
+    "sha256": "b6f389f62ee0b6c08102642db8aff4aa3c3ca143c8a9a95b0e23a8a4950b2f58",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/EpicDragonFire/EpicDragonFire.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/epicdragonfire/epicdragonfire.x.z,3697a681466b18d4f656f65045fda4f4,358657",
+        "md5": "3697a681466b18d4f656f65045fda4f4",
+        "bytes": 358657
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 30.4493515625,
+      "lookAt": [
+        0.0,
+        2.99809,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.36918,
+        "min_y": 0,
+        "max_z": 1.11321,
+        "max_x": 2.36918,
+        "min_z": -1.11321,
+        "max_y": 5.99618
+      }
+    },
+    "frameBounds": [
+      [
+        0.26953125,
+        0.248046875,
+        0.71875,
+        0.732421875
+      ],
+      [
+        0.046875,
+        0.208984375,
+        0.75,
+        0.703125
+      ],
+      [
+        0.251953125,
+        0.2109375,
+        0.96484375,
+        0.703125
+      ],
+      [
+        0.21484375,
+        0.19140625,
+        0.810546875,
+        0.904296875
+      ]
+    ]
+  },
+  "original-16124": {
+    "local": "assets/original-16124-e1098ab67de5.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 197736,
+    "sha256": "e1098ab67de5d6e40d373dd21996b687481b610687830a42fa2b133f15aab3ee",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/EpicDragonIce/EpicDragonIce.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/epicdragonice/epicdragonice.x.z,5ec13cb0aa72eb4f8d68fe0b0023dbdc,381756",
+        "md5": "5ec13cb0aa72eb4f8d68fe0b0023dbdc",
+        "bytes": 381756
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 30.293554687499995,
+      "lookAt": [
+        0.0,
+        2.98275,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.59063,
+        "min_y": 0,
+        "max_z": 1.42664,
+        "max_x": 2.59063,
+        "min_z": -1.42664,
+        "max_y": 5.9655
+      }
+    },
+    "frameBounds": [
+      [
+        0.244140625,
+        0.203125,
+        0.75,
+        0.732421875
+      ],
+      [
+        0.048828125,
+        0.1796875,
+        0.73828125,
+        0.703125
+      ],
+      [
+        0.263671875,
+        0.1796875,
+        0.962890625,
+        0.703125
+      ],
+      [
+        0.1796875,
+        0.158203125,
+        0.8203125,
+        0.904296875
+      ]
+    ]
+  },
+  "original-16125": {
+    "local": "assets/original-16125-c2feb18551a2.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 185206,
+    "sha256": "c2feb18551a2245c0d345971a3a6fd3e0f52683cac23001c51892d365cae448c",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/EpicDragonStorm/EpicDragonStorm.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/epicdragonstorm/epicdragonstorm.x.z,6d988217f4b3ac64bc9746833da6f1c2,330857",
+        "md5": "6d988217f4b3ac64bc9746833da6f1c2",
+        "bytes": 330857
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 28.892246093750003,
+      "lookAt": [
+        0.0,
+        2.844775,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.47749,
+        "min_y": 0,
+        "max_z": 1.12503,
+        "max_x": 2.47749,
+        "min_z": -1.12503,
+        "max_y": 5.68955
+      }
+    },
+    "frameBounds": [
+      [
+        0.255859375,
+        0.22265625,
+        0.74609375,
+        0.736328125
+      ],
+      [
+        0.03125,
+        0.1796875,
+        0.755859375,
+        0.705078125
+      ],
+      [
+        0.25,
+        0.181640625,
+        0.982421875,
+        0.705078125
+      ],
+      [
+        0.193359375,
+        0.1640625,
+        0.830078125,
+        0.91796875
+      ]
+    ]
+  },
+  "original-16126": {
+    "local": "assets/original-16126-9257815b1ba8.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 143586,
+    "sha256": "9257815b1ba8219a35ae0d3fba6fcc0cb0ef23e1ab41cd5711fd56b7201a9554",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/EpicDragonLife/EpicDragonLife.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/epicdragonlife/epicdragonlife.x.z,60a08c2ea849fdd25456ec99f0521901,362358",
+        "md5": "60a08c2ea849fdd25456ec99f0521901",
+        "bytes": 362358
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 35.897265625,
+      "lookAt": [
+        0.0,
+        2.8276,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.45587,
+        "min_y": 0,
+        "max_z": 1.38615,
+        "max_x": 2.45587,
+        "min_z": -1.38615,
+        "max_y": 5.6552
+      }
+    },
+    "frameBounds": [
+      [
+        0.296875,
+        0.267578125,
+        0.689453125,
+        0.689453125
+      ],
+      [
+        0.09375,
+        0.23828125,
+        0.69921875,
+        0.6640625
+      ],
+      [
+        0.30078125,
+        0.23828125,
+        0.89453125,
+        0.666015625
+      ],
+      [
+        0.25,
+        0.216796875,
+        0.76171875,
+        0.83984375
+      ]
+    ]
+  },
+  "original-16127": {
+    "local": "assets/original-16127-1278ef7e47ce.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 169834,
+    "sha256": "1278ef7e47ce9d8827b863f4ed79019473be70cb3f4071b1b5f38b5ccdc7ed01",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/EpicDragonDeath/EpicDragonDeath.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/epicdragondeath/epicdragondeath.x.z,71b638a10277a6d7f5437421fc771536,367344",
+        "md5": "71b638a10277a6d7f5437421fc771536",
+        "bytes": 367344
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 30.202300781250003,
+      "lookAt": [
+        0.0,
+        2.973765,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.13746,
+        "min_y": 0,
+        "max_z": 1.2426,
+        "max_x": 2.13746,
+        "min_z": -1.2426,
+        "max_y": 5.94753
+      }
+    },
+    "frameBounds": [
+      [
+        0.26953125,
+        0.25,
+        0.720703125,
+        0.734375
+      ],
+      [
+        0.03515625,
+        0.224609375,
+        0.763671875,
+        0.703125
+      ],
+      [
+        0.23828125,
+        0.224609375,
+        0.98046875,
+        0.703125
+      ],
+      [
+        0.2265625,
+        0.21484375,
+        0.802734375,
+        0.921875
+      ]
+    ]
+  },
+  "original-16139": {
+    "local": "assets/original-16139-4a7a4753c112.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 155130,
+    "sha256": "4a7a4753c112745a913d71161ac29a56ded2e59a94db4aa44f1a64ea2a8d59c4",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/JuXiangLv1/JuXiangLv1.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/juxianglv1/juxianglv1.x.z,48cbfd595f3e712f75f6f1d4f2a7ec96,181954",
+        "md5": "48cbfd595f3e712f75f6f1d4f2a7ec96",
+        "bytes": 181954
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 79.5305875,
+      "lookAt": [
+        0.0,
+        8.085375,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -9.78838,
+        "min_y": 0.11069,
+        "max_z": 6.76666,
+        "max_x": 9.78838,
+        "min_z": -6.76666,
+        "max_y": 16.06006
+      }
+    },
+    "frameBounds": [
+      [
+        0.296875,
+        0.287109375,
+        0.703125,
+        0.849609375
+      ],
+      [
+        0.306640625,
+        0.2578125,
+        0.966796875,
+        0.73046875
+      ],
+      [
+        0.03515625,
+        0.255859375,
+        0.69921875,
+        0.732421875
+      ],
+      [
+        0.3359375,
+        0.21875,
+        0.669921875,
+        0.75
+      ]
+    ]
+  },
+  "original-16140": {
+    "local": "assets/original-16140-3cdda26b4ee2.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 162244,
+    "sha256": "3cdda26b4ee21d17d3d68dd380063ec268820dbe847059b2ed2677a208bd0239",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/JuXiangLv2/JuXiangLv2.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/juxianglv2/juxianglv2.x.z,8549c49c9daef3177814ecd7137fa46d,198450",
+        "md5": "8549c49c9daef3177814ecd7137fa46d",
+        "bytes": 198450
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 79.5305875,
+      "lookAt": [
+        0.0,
+        8.085375,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -9.78838,
+        "min_y": 0.11069,
+        "max_z": 6.76666,
+        "max_x": 9.78838,
+        "min_z": -6.76666,
+        "max_y": 16.06006
+      }
+    },
+    "frameBounds": [
+      [
+        0.296875,
+        0.287109375,
+        0.703125,
+        0.849609375
+      ],
+      [
+        0.306640625,
+        0.2578125,
+        0.966796875,
+        0.73046875
+      ],
+      [
+        0.03515625,
+        0.255859375,
+        0.69921875,
+        0.732421875
+      ],
+      [
+        0.3359375,
+        0.205078125,
+        0.669921875,
+        0.75
+      ]
+    ]
+  },
+  "original-16145": {
+    "local": "assets/original-16145-fe4bf24cd2e7.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 99522,
+    "sha256": "fe4bf24cd2e77a0cdf4b833007f3e3cdab894f46a8a86e03090b3a86438f462a",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi02.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/jinglingyuyi/jinglingyuyi02.x.z,4dbef9625781acaf765ab0a939355fb2,32353",
+        "md5": "4dbef9625781acaf765ab0a939355fb2",
+        "bytes": 32353
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 12.187540625000002,
+      "lookAt": [
+        0.0,
+        1.4416849999999999,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -0.74093,
+        "min_y": -0.05832,
+        "max_z": 0.74093,
+        "max_x": 0.74093,
+        "min_z": -0.74093,
+        "max_y": 2.94169
+      }
+    },
+    "frameBounds": [
+      [
+        0.048828125,
+        0.27734375,
+        0.9296875,
+        0.654296875
+      ],
+      [
+        0.4375,
+        0.25,
+        0.529296875,
+        0.787109375
+      ],
+      [
+        0.478515625,
+        0.234375,
+        0.58984375,
+        0.787109375
+      ],
+      [
+        0.033203125,
+        0.29296875,
+        0.982421875,
+        0.66015625
+      ]
+    ]
+  },
+  "original-16146": {
+    "local": "assets/original-16146-c45facbd53d3.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 47668,
+    "sha256": "c45facbd53d3efe58fb582ce302790ff2198720c7dd2957a0069c12e1ec00b70",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi03.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/jinglingyuyi/jinglingyuyi03.x.z,780f339a5fc7eb4c4704134e86f3cffb,32335",
+        "md5": "780f339a5fc7eb4c4704134e86f3cffb",
+        "bytes": 32335
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 12.187540625000002,
+      "lookAt": [
+        0.0,
+        1.4416849999999999,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -0.74093,
+        "min_y": -0.05832,
+        "max_z": 0.74093,
+        "max_x": 0.74093,
+        "min_z": -0.74093,
+        "max_y": 2.94169
+      }
+    },
+    "frameBounds": [
+      [
+        0.048828125,
+        0.27734375,
+        0.9296875,
+        0.654296875
+      ],
+      [
+        0.4375,
+        0.25,
+        0.525390625,
+        0.787109375
+      ],
+      [
+        0.478515625,
+        0.234375,
+        0.58984375,
+        0.787109375
+      ],
+      [
+        0.033203125,
+        0.29296875,
+        0.982421875,
+        0.66015625
+      ]
+    ]
+  },
+  "original-16147": {
+    "local": "assets/original-16147-d05526a86ef0.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 134530,
+    "sha256": "d05526a86ef0f8b7b7089cbdb689a6af71fa214e26af07b9ae9974b76aee80b1",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/JingYu/JingYu.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/jingyu/jingyu.x.z,a0309f62d86ccbed408434cfd3c2c996,50345",
+        "md5": "a0309f62d86ccbed408434cfd3c2c996",
+        "bytes": 50345
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 16.1559775,
+      "lookAt": [
+        -0.502335,
+        1.803185,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.98787,
+        "min_y": 0,
+        "max_z": 1.40501,
+        "max_x": 1.9832,
+        "min_z": -1.40501,
+        "max_y": 3.60637
+      }
+    },
+    "frameBounds": [
+      [
+        0.23828125,
+        0.3046875,
+        0.7578125,
+        0.7421875
+      ],
+      [
+        0.044921875,
+        0.2421875,
+        0.794921875,
+        0.771484375
+      ],
+      [
+        0.201171875,
+        0.2109375,
+        0.951171875,
+        0.76953125
+      ],
+      [
+        0.25390625,
+        0.193359375,
+        0.7421875,
+        0.81640625
+      ]
+    ]
+  },
+  "original-16148": {
+    "local": "assets/original-16148-767513658dca.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 124304,
+    "sha256": "767513658dca2e899e286b658c186f9de85a2d74b3db3a050298944d63eb5ee6",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v6/02animals/YinYangLingHu/YinYangLingHu.x",
+      "originalAsset": {
+        "entry": "character/v6/02animals/yinyanglinghu/yinyanglinghu.x.z,37619dd98d4e84c5d29a39bee6844068,200012",
+        "md5": "37619dd98d4e84c5d29a39bee6844068",
+        "bytes": 200012
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 22.6554453125,
+      "lookAt": [
+        0.0,
+        1.90941,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.23069,
+        "min_y": 0,
+        "max_z": 1.04711,
+        "max_x": 2.23069,
+        "min_z": -1.04711,
+        "max_y": 3.81882
+      }
+    },
+    "frameBounds": [
+      [
+        0.328125,
+        0.326171875,
+        0.60546875,
+        0.703125
+      ],
+      [
+        0.01953125,
+        0.28125,
+        0.69140625,
+        0.69921875
+      ],
+      [
+        0.310546875,
+        0.28125,
+        0.962890625,
+        0.671875
+      ],
+      [
+        0.333984375,
+        0.259765625,
+        0.759765625,
+        0.802734375
+      ]
+    ]
+  },
+  "original-16149": {
+    "local": "assets/original-16149-95465f75fc28.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 87922,
+    "sha256": "95465f75fc28350f58191cb5e104d1eb4595371981bddc3fe9bc8625e7944d9e",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/XueDiChe/XueDiChe.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/xuediche/xuediche.x.z,0f4da6246f2617e1f85a4c0419124684,139022",
+        "md5": "0f4da6246f2617e1f85a4c0419124684",
+        "bytes": 139022
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 24.940604,
+      "lookAt": [
+        0.0,
+        2.497605,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -4.79627,
+        "min_y": -0.2888,
+        "max_z": 2.39292,
+        "max_x": 4.79627,
+        "min_z": -2.39292,
+        "max_y": 5.28401
+      }
+    },
+    "frameBounds": [
+      [
+        0.404296875,
+        0.48828125,
+        0.6015625,
+        0.7734375
+      ],
+      [
+        0.212890625,
+        0.4375,
+        0.896484375,
+        0.7421875
+      ],
+      [
+        0.10546875,
+        0.435546875,
+        0.810546875,
+        0.7421875
+      ],
+      [
+        0.357421875,
+        0.408203125,
+        0.64453125,
+        0.767578125
+      ]
+    ]
+  },
+  "original-16032": {
+    "local": "assets/original-16032-afc175ca30b5.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 105410,
+    "sha256": "afc175ca30b521eba63bfabb2b64bcca63401a8a574bc83f6a36d36ac952b1e3",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/Ostrich/Ostrich.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/ostrich/ostrich.x.z,4dea07a6e7a0d852c3e1544363894666,172513",
+        "md5": "4dea07a6e7a0d852c3e1544363894666",
+        "bytes": 172513
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 4.732416,
+      "lookAt": [
+        0.0,
+        0.91008,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -0.411,
+        "min_y": 0,
+        "max_z": 0.26707,
+        "max_x": 0.411,
+        "min_z": -0.26707,
+        "max_y": 1.82016
+      }
+    },
+    "frameBounds": [
+      [
+        0.375,
+        0.314453125,
+        0.615234375,
+        0.87890625
+      ],
+      [
+        0.341796875,
+        0.26953125,
+        0.720703125,
+        0.87109375
+      ],
+      [
+        0.287109375,
+        0.265625,
+        0.65625,
+        0.87109375
+      ],
+      [
+        0.39453125,
+        0.2421875,
+        0.630859375,
+        0.798828125
+      ]
+    ]
+  },
+  "original-16033": {
+    "local": "assets/original-16033-88bed39cc1dc.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 131410,
+    "sha256": "88bed39cc1dcc9ffeabbf69bf7f14c2984577cc8695e4cb2f1571e4feeabaa9f",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ZodiacAnimals/Mouse/Mouse_withlilypad.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/mouse/mouse_withlilypad.x.z,f9189ebbce929445751deb8cec063a81,85738",
+        "md5": "f9189ebbce929445751deb8cec063a81",
+        "bytes": 85738
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 6.6653340000000005,
+      "lookAt": [
+        0.22119,
+        1.280975,
+        -0.0116
+      ],
+      "bounds": {
+        "min_x": -0.71749,
+        "min_y": -0.00082,
+        "max_z": 0.6045,
+        "max_x": 1.15987,
+        "min_z": -0.6277,
+        "max_y": 2.56277
+      }
+    },
+    "frameBounds": [
+      [
+        0.33203125,
+        0.193359375,
+        0.67578125,
+        0.8046875
+      ],
+      [
+        0.224609375,
+        0.14453125,
+        0.783203125,
+        0.830078125
+      ],
+      [
+        0.224609375,
+        0.134765625,
+        0.775390625,
+        0.833984375
+      ],
+      [
+        0.318359375,
+        0.09765625,
+        0.693359375,
+        0.8515625
+      ]
+    ]
+  },
+  "original-16051": {
+    "local": "assets/original-16051-4f8fe6d2ba3f.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 142662,
+    "sha256": "4f8fe6d2ba3f1b8ed705e7ae1965f0fad538241071978735ad23eea481c69bb4",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/Elephant/Elephant.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/elephant/elephant.x.z,be16d096aa1e447be84dcd8a11b7c748,152010",
+        "md5": "be16d096aa1e447be84dcd8a11b7c748",
+        "bytes": 152010
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 19.440890625,
+      "lookAt": [
+        0.0,
+        1.91418,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.53211,
+        "min_y": 0,
+        "max_z": 1.17081,
+        "max_x": 1.53211,
+        "min_z": -1.17081,
+        "max_y": 3.82836
+      }
+    },
+    "frameBounds": [
+      [
+        0.33203125,
+        0.318359375,
+        0.677734375,
+        0.7890625
+      ],
+      [
+        0.33984375,
+        0.318359375,
+        0.9140625,
+        0.70703125
+      ],
+      [
+        0.07421875,
+        0.318359375,
+        0.662109375,
+        0.70703125
+      ],
+      [
+        0.33203125,
+        0.322265625,
+        0.671875,
+        0.71875
+      ]
+    ]
+  },
+  "original-16058": {
+    "local": "assets/original-16058-17bb37910a2f.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 97798,
+    "sha256": "17bb37910a2f584a21867df7752136af06351a6df9cf4dbad83ac2f0af0535c2",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/MagicBesom/MagicBesom.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/magicbesom/magicbesom.x.z,cdd66840877dd044ae3e068da96a2533,13557",
+        "md5": "cdd66840877dd044ae3e068da96a2533",
+        "bytes": 13557
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 9.991592,
+      "lookAt": [
+        0.0,
+        1.526025,
+        -0.04987999999999998
+      ],
+      "bounds": {
+        "min_x": -1.92146,
+        "min_y": 0,
+        "max_z": 0.71242,
+        "max_x": 1.92146,
+        "min_z": -0.81218,
+        "max_y": 3.05205
+      }
+    },
+    "frameBounds": [
+      [
+        0.412109375,
+        0.302734375,
+        0.603515625,
+        0.56640625
+      ],
+      [
+        0.02734375,
+        0.2421875,
+        0.83203125,
+        0.625
+      ],
+      [
+        0.166015625,
+        0.2421875,
+        0.98046875,
+        0.6171875
+      ],
+      [
+        0.353515625,
+        0.203125,
+        0.68359375,
+        0.791015625
+      ]
+    ]
+  },
+  "original-16067": {
+    "local": "assets/original-16067-7404bee2671a.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 157904,
+    "sha256": "7404bee2671a9bab901ee2e05c163855eec47f26d28ef002c21f7843c53deb65",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/Pegasus/Pegasus.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/pegasus/pegasus.x.z,1ad10c042bc0d8ecee2de547261e00b0,293326",
+        "md5": "1ad10c042bc0d8ecee2de547261e00b0",
+        "bytes": 293326
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 15.372946875000002,
+      "lookAt": [
+        0.0,
+        1.892055,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.64527,
+        "min_y": 0,
+        "max_z": 0.82264,
+        "max_x": 1.64527,
+        "min_z": -0.82264,
+        "max_y": 3.78411
+      }
+    },
+    "frameBounds": [
+      [
+        0.244140625,
+        0.072265625,
+        0.791015625,
+        0.8046875
+      ],
+      [
+        0.22265625,
+        0.03515625,
+        0.857421875,
+        0.7421875
+      ],
+      [
+        0.140625,
+        0.123046875,
+        0.76953125,
+        0.74609375
+      ],
+      [
+        0.04296875,
+        0.201171875,
+        0.97265625,
+        0.8203125
+      ]
+    ]
+  },
+  "original-16068": {
+    "local": "assets/original-16068-fbf62a48e244.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 109970,
+    "sha256": "fbf62a48e244f83829f737742726e334364eed9f02c6e8070dd44e698c52c6f8",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/Pegasus_Black/Pegasus_Black.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/pegasus_black/pegasus_black.x.z,c5b412e3eb48971f52cb860132c10394,293593",
+        "md5": "c5b412e3eb48971f52cb860132c10394",
+        "bytes": 293593
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 19.216183593750003,
+      "lookAt": [
+        0.0,
+        1.892055,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.64527,
+        "min_y": 0,
+        "max_z": 0.82264,
+        "max_x": 1.64527,
+        "min_z": -0.82264,
+        "max_y": 3.78411
+      }
+    },
+    "frameBounds": [
+      [
+        0.080078125,
+        0.3671875,
+        0.951171875,
+        0.755859375
+      ],
+      [
+        0.294921875,
+        0.32421875,
+        0.76953125,
+        0.7109375
+      ],
+      [
+        0.234375,
+        0.27734375,
+        0.724609375,
+        0.7109375
+      ],
+      [
+        0.181640625,
+        0.236328125,
+        0.81640625,
+        0.74609375
+      ]
+    ]
+  },
+  "original-16075": {
+    "local": "assets/original-16075-dd74a4b334fc.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 60372,
+    "sha256": "dd74a4b334fc111bf89312910590dc490aa53117f97ade40df6d9e2c9f0bc617",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/HorsePhoenix/HorsePhoenix.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/horsephoenix/horsephoenix.x.z,ee1be853fe453b640dd87f061ac88bc6,219507",
+        "md5": "ee1be853fe453b640dd87f061ac88bc6",
+        "bytes": 219507
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 56.733963012695305,
+      "lookAt": [
+        0.0,
+        2.86009,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.22852,
+        "min_y": 0,
+        "max_z": 1.38164,
+        "max_x": 2.22852,
+        "min_z": -1.38164,
+        "max_y": 5.72018
+      }
+    },
+    "frameBounds": [
+      [
+        0.322265625,
+        0.328125,
+        0.681640625,
+        0.54296875
+      ],
+      [
+        0.126953125,
+        0.400390625,
+        0.578125,
+        0.58984375
+      ],
+      [
+        0.435546875,
+        0.375,
+        0.892578125,
+        0.548828125
+      ],
+      [
+        0.345703125,
+        0.380859375,
+        0.66015625,
+        0.67578125
+      ]
+    ]
+  },
+  "original-16078": {
+    "local": "assets/original-16078-269a34a82dcf.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 74186,
+    "sha256": "269a34a82dcf456f15efff82e0d7d26ef560c61144393e471e62345d150fa54d",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/horsephoenix_x/horsephoenix_x.x.z,9a5817cab166a1599b357a3b2272ab5c,181535",
+        "md5": "9a5817cab166a1599b357a3b2272ab5c",
+        "bytes": 181535
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 40.44599609375,
+      "lookAt": [
+        0.0,
+        2.54872,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.22852,
+        "min_y": 0,
+        "max_z": 1.38164,
+        "max_x": 2.22852,
+        "min_z": -1.38164,
+        "max_y": 5.09744
+      }
+    },
+    "frameBounds": [
+      [
+        0.28515625,
+        0.31640625,
+        0.716796875,
+        0.568359375
+      ],
+      [
+        0.064453125,
+        0.3984375,
+        0.599609375,
+        0.646484375
+      ],
+      [
+        0.404296875,
+        0.392578125,
+        0.94921875,
+        0.646484375
+      ],
+      [
+        0.3046875,
+        0.37890625,
+        0.68359375,
+        0.7734375
+      ]
+    ]
+  },
+  "original-16079": {
+    "local": "assets/original-16079-ee6d47133681.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 131282,
+    "sha256": "ee6d47133681cf5271e9b9ae55b9b21314e334f1c45969d00715e879f3088cf1",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ChasingWindEagle_W/ChasingWindEagle_W.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/chasingwindeagle_w/chasingwindeagle_w.x.z,409f4d357a8c0d54641b6bfd190138bb,174450",
+        "md5": "409f4d357a8c0d54641b6bfd190138bb",
+        "bytes": 174450
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 10.724090000000002,
+      "lookAt": [
+        0.0,
+        1.1699,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.64986,
+        "min_y": 0,
+        "max_z": 0.9992,
+        "max_x": 1.64986,
+        "min_z": -0.9992,
+        "max_y": 2.3398
+      }
+    },
+    "frameBounds": [
+      [
+        0.3515625,
+        0.3359375,
+        0.646484375,
+        0.763671875
+      ],
+      [
+        0.154296875,
+        0.291015625,
+        0.89453125,
+        0.736328125
+      ],
+      [
+        0.119140625,
+        0.283203125,
+        0.86328125,
+        0.7421875
+      ],
+      [
+        0.3203125,
+        0.240234375,
+        0.677734375,
+        0.76171875
+      ]
+    ]
+  },
+  "original-16080": {
+    "local": "assets/original-16080-331c249d0ff4.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 188054,
+    "sha256": "331c249d0ff4ec522b311861deee68c97225520bbd92f015307c4a07e4fc6a6a",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ElkAnimals/ElkAnimals.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/elkanimals/elkanimals.x.z,9a9470e1048fe35e0e6eb8348d8ebcfd,161483",
+        "md5": "9a9470e1048fe35e0e6eb8348d8ebcfd",
+        "bytes": 161483
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 10.62126,
+      "lookAt": [
+        -0.10913499999999998,
+        2.04255,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.33928,
+        "min_y": 0,
+        "max_z": 0.8446,
+        "max_x": 1.12101,
+        "min_z": -0.8446,
+        "max_y": 4.0851
+      }
+    },
+    "frameBounds": [
+      [
+        0.359375,
+        0.083984375,
+        0.642578125,
+        0.908203125
+      ],
+      [
+        0.337890625,
+        0.05078125,
+        0.828125,
+        0.87109375
+      ],
+      [
+        0.17578125,
+        0.05078125,
+        0.666015625,
+        0.869140625
+      ],
+      [
+        0.376953125,
+        0.048828125,
+        0.625,
+        0.884765625
+      ]
+    ]
+  },
+  "original-16081": {
+    "local": "assets/original-16081-cfd9531c6c08.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 148398,
+    "sha256": "cfd9531c6c08d96aa7823929c16719f779ca48c07803183c339f493e2c449d8a",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/ChasingWindEagle_X/ChasingWindEagle_X.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/chasingwindeagle_x/chasingwindeagle_x.x.z,5bf55673fce59f58762efecf679df541,174446",
+        "md5": "5bf55673fce59f58762efecf679df541",
+        "bytes": 174446
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 10.724025000000001,
+      "lookAt": [
+        0.0,
+        1.210035,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.64985,
+        "min_y": 0,
+        "max_z": 0.9992,
+        "max_x": 1.64985,
+        "min_z": -0.9992,
+        "max_y": 2.42007
+      }
+    },
+    "frameBounds": [
+      [
+        0.3515625,
+        0.34375,
+        0.646484375,
+        0.771484375
+      ],
+      [
+        0.15625,
+        0.298828125,
+        0.892578125,
+        0.7421875
+      ],
+      [
+        0.119140625,
+        0.291015625,
+        0.857421875,
+        0.75
+      ],
+      [
+        0.3203125,
+        0.24609375,
+        0.67578125,
+        0.76953125
+      ]
+    ]
+  },
+  "original-16082": {
+    "local": "assets/original-16082-61aa32ddcf73.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 102700,
+    "sha256": "61aa32ddcf73a5d180df834dd0924feb106a3ef043a912612d6f73371c920514",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/Robot01/Robot.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/robot01/robot.x.z,909560fddef718f5043da4f1dc08b6f5,191273",
+        "md5": "909560fddef718f5043da4f1dc08b6f5",
+        "bytes": 191273
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 16.122210000000003,
+      "lookAt": [
+        0.0,
+        2.48034,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -1.92703,
+        "min_y": 0,
+        "max_z": 2.0947,
+        "max_x": 1.92703,
+        "min_z": -2.0947,
+        "max_y": 4.96068
+      }
+    },
+    "frameBounds": [
+      [
+        0.208984375,
+        0.0546875,
+        0.79296875,
+        0.8046875
+      ],
+      [
+        0.212890625,
+        0.09375,
+        0.7109375,
+        0.919921875
+      ],
+      [
+        0.291015625,
+        0.07421875,
+        0.810546875,
+        0.91796875
+      ],
+      [
+        0.203125,
+        0.091796875,
+        0.798828125,
+        0.783203125
+      ]
+    ]
+  },
+  "original-16091": {
+    "local": "assets/original-16091-dc31c6c0fdc7.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 75536,
+    "sha256": "dc31c6c0fdc77633df13db096968f3ce17f18b757673cf65df98254efa75b7db",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X_02.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/horsephoenix_x/horsephoenix_x_02.x.z,3fc0a56304cf6dae7b137ed9af965c1c,184466",
+        "md5": "3fc0a56304cf6dae7b137ed9af965c1c",
+        "bytes": 184466
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 40.44599609375,
+      "lookAt": [
+        0.0,
+        2.54872,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.22852,
+        "min_y": 0,
+        "max_z": 1.38164,
+        "max_x": 2.22852,
+        "min_z": -1.38164,
+        "max_y": 5.09744
+      }
+    },
+    "frameBounds": [
+      [
+        0.28515625,
+        0.31640625,
+        0.716796875,
+        0.568359375
+      ],
+      [
+        0.064453125,
+        0.3984375,
+        0.599609375,
+        0.646484375
+      ],
+      [
+        0.404296875,
+        0.392578125,
+        0.94921875,
+        0.646484375
+      ],
+      [
+        0.3046875,
+        0.37890625,
+        0.68359375,
+        0.7734375
+      ]
+    ]
+  },
+  "original-16097": {
+    "local": "assets/original-16097-44d34b96f694.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 60808,
+    "sha256": "44d34b96f6949d1bc5d9058d8e5a4de886d8b1002a61d4594dcb70e6cdb26a93",
+    "source": {
+      "method": "original-model-mini-scene",
+      "model": "character/v5/02animals/HorsePhoenix/HorsePhoenix_02.x",
+      "originalAsset": {
+        "entry": "character/v5/02animals/horsephoenix/horsephoenix_02.x.z,b094791c0c1ba10be4952bacdfc1a6b2,222700",
+        "md5": "b094791c0c1ba10be4952bacdfc1a6b2",
+        "bytes": 222700
+      }
+    },
+    "camera": {
+      "angles": [
+        -1.5707963267948966,
+        0,
+        3.141592653589793,
+        1.5707963267948966
+      ],
+      "elevation": 0.35,
+      "distance": 56.733963012695305,
+      "lookAt": [
+        0.0,
+        2.86009,
+        0.0
+      ],
+      "bounds": {
+        "min_x": -2.22852,
+        "min_y": 0,
+        "max_z": 1.38164,
+        "max_x": 2.22852,
+        "min_z": -1.38164,
+        "max_y": 5.72018
+      }
+    },
+    "frameBounds": [
+      [
+        0.322265625,
+        0.328125,
+        0.681640625,
+        0.54296875
+      ],
+      [
+        0.126953125,
+        0.400390625,
+        0.578125,
+        0.6015625
+      ],
+      [
+        0.435546875,
+        0.375,
+        0.892578125,
+        0.556640625
+      ],
+      [
+        0.345703125,
+        0.380859375,
+        0.66015625,
+        0.673828125
+      ]
+    ]
+  },
+  "original-16108": {
+    "local": "assets/original-16108-f5664658e787.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 149064,
+    "sha256": "f5664658e78773c307920f7e759a2735db446a2db6362d58c8263626d4d55f57",
+    "source": {
+      "method": "original-icon-reference-imagegen",
+      "file": "exec-18b37a01-ffe4-44c0-9681-1950a54ee06f.png",
+      "sha256": "3c7748b50365084b37ba8e12404d1989ab9a4ed18f2fd2dde42fa85cdce0781d",
+      "referenceSha256": "48625efe48a0a21336fdd3a308a98b47a25115edbe1c0bb8d4872b432637b3bb"
+    },
+    "frameBounds": [
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.9973958333333334
+      ],
+      [
+        0.0,
+        0.015625,
+        0.9765625,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.96875
+      ],
+      [
+        0.0,
+        0.0,
+        0.9973958333333334,
+        1.0
+      ]
+    ],
+    "cellOrder": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "original-16109": {
+    "local": "assets/original-16109-c1c295445cae.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 187676,
+    "sha256": "c1c295445cae00999fe5517724ac5a0f165914e5ce321f854ba1c6412412dc56",
+    "source": {
+      "method": "original-icon-reference-imagegen",
+      "file": "exec-92853474-646d-4c10-a749-6f377f64ab29.png",
+      "sha256": "909ba61f39a17b6bad2a4e7f00b7d734d67a09dd9dad4305dc03b5dfcbe3d42f",
+      "referenceSha256": "b8bd5b31ca96221dcc8dedb0580635e69c87e90350770e2c57bf616e8bf3928a"
+    },
+    "frameBounds": [
+      [
+        0.0,
+        0.005208333333333333,
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.026041666666666668,
+        0.9713541666666666,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.9791666666666666,
+        1.0
+      ]
+    ],
+    "cellOrder": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "original-16141": {
+    "local": "assets/original-16141-10412c6c27c9.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 191784,
+    "sha256": "10412c6c27c9ec3af72447e48f25572493c249dfd8a2e7ea7c8f42d591a0f291",
+    "source": {
+      "method": "original-icon-reference-imagegen",
+      "file": "exec-794f51ba-c431-4d60-98e6-b53ea4b3bff8.png",
+      "sha256": "7bd771fb4bea74ec8fe3bc3853def223ad0b4a6a2fb7430b2977242f9396e938",
+      "referenceSha256": "ef8a6d48cd13ffa2fc21eb1de90f34f27be45694d9cc837d5ff1dc15a8916114"
+    },
+    "frameBounds": [
+      [
+        0.0,
+        0.0078125,
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.026041666666666668,
+        0.9765625,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.96875,
+        0.9583333333333334
+      ]
+    ],
+    "cellOrder": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "original-16142": {
+    "local": "assets/original-16142-61ce66235d12.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 179340,
+    "sha256": "61ce66235d129dec79f81d08216f09634525f90590b5dd9d3195c11c8bdb97cf",
+    "source": {
+      "method": "original-icon-reference-imagegen",
+      "file": "exec-acc76050-a12c-4e26-852b-f6bd356628ef.png",
+      "sha256": "61ac293ac6aa09712ee16b89273a7a882e52c612730defc1c0b3d918ebda3e48",
+      "referenceSha256": "83987f6b52720c3453c5598eaaac26447e5c096d6dddceb0100d83466ce071ff"
+    },
+    "frameBounds": [
+      [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.018229166666666668,
+        0.9791666666666666,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.9713541666666666,
+        1.0
+      ]
+    ],
+    "cellOrder": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "original-16143": {
+    "local": "assets/original-16143-7cc7b4b86b0b.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 171642,
+    "sha256": "7cc7b4b86b0bfcd36f2ef71ad1d0d5d8689c754804702d0920d7f39468563082",
+    "source": {
+      "method": "original-icon-reference-imagegen",
+      "file": "exec-f3480aa4-47be-4977-819e-aa3a220a0c24.png",
+      "sha256": "7e206ef47af2f8cb3dd8b84733c474aac1306e1d4ec2d5987bd15fdc27f43d23",
+      "referenceSha256": "7ca9a713cb231b0bd7ef6ee0d4f5092d31435e7d698f0f3e33d1d6d0b4a0a8f9"
+    },
+    "frameBounds": [
+      [
+        0.0,
+        0.0234375,
+        1.0,
+        0.9947916666666666
+      ],
+      [
+        0.0,
+        0.013020833333333334,
+        0.9427083333333334,
+        0.9973958333333334
+      ],
+      [
+        0.044270833333333336,
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        0.013020833333333334,
+        0.010416666666666666,
+        0.9401041666666666,
+        0.9635416666666666
+      ]
+    ],
+    "cellOrder": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "original-16144": {
+    "local": "assets/original-16144-d250ec9d3740.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 182698,
+    "sha256": "d250ec9d3740a84f65992efb9435e54020ed12ccaa4fd2341c3fbfd6dcdfcec3",
+    "source": {
+      "method": "original-icon-reference-imagegen",
+      "file": "exec-292ccccf-742d-4bb6-b2a6-651d2888502c.png",
+      "sha256": "737876cfdb6f2c058c25983fd5c32b4ccfe2e980361cdb9f4abbedabdcada9dc",
+      "referenceSha256": "09b9fdb343e39990026076d8cc9cd8b3a8e319c2ed341eba8612956e094887e8"
+    },
+    "frameBounds": [
+      [
+        0.0,
+        0.036458333333333336,
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.013020833333333334,
+        0.9765625,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.9427083333333334
+      ]
+    ],
+    "cellOrder": [
+      0,
+      1,
+      2,
+      3
+    ]
+  },
+  "original-10001": {
+    "local": "assets/original-10001-f50b9685a57b.webp",
+    "cdn": null,
+    "width": 768,
+    "height": 768,
+    "columns": 2,
+    "rows": 2,
+    "bytes": 140496,
+    "sha256": "f50b9685a57b5e24c8e4ed3a1be4d203632c5f2b73f33f9cc942c2b8fdf9de12",
+    "source": {
+      "method": "original-icon-reference-imagegen",
+      "file": "exec-29af6a39-e081-4d3c-a667-27e3d9555160.png",
+      "sha256": "cd5fce30cd7e392f619244230d13feebc301c6d075fefd83203b160ac386b713",
+      "referenceSha256": "1295dd639ea25f00f5120cfad9c1a52dbe500c73aea187f76654d558e39081a8"
+    },
+    "frameBounds": [
+      [
+        0.0,
+        0.036458333333333336,
+        1.0,
+        1.0
+      ],
+      [
+        0.0,
+        0.049479166666666664,
+        1.0,
+        1.0
+      ],
+      [
+        0.018229166666666668,
+        0.0,
+        1.0,
+        0.9661458333333334
+      ],
+      [
+        0.0,
+        0.0,
+        0.9427083333333334,
+        0.96875
+      ]
+    ],
+    "cellOrder": [
+      0,
+      1,
+      2,
+      3
+    ]
+  }
+}

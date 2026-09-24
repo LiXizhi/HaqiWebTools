@@ -1,0 +1,4682 @@
+{
+  "version": 1,
+  "scope": "Original local kids globalstore snapshot; aliases retained; unavailable teen store is not inferred.",
+  "sources": {
+    "Database/globalstore.db.mem": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+    "assets_manifest.txt": "40b9e2fc8d0b4310c3d439da527dc81fb5bb226d2da65b8469c6e5c6e5d3d565"
+  },
+  "items": [
+    {
+      "id": 15543,
+      "name": "假日霸王虎_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15543_TransformMarker_16087_TransformPill_Smilodon_Holiday",
+      "model": "character/v5/02animals/Smilodon/Smilodon.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8
+      }
+    },
+    {
+      "id": 16133,
+      "name": "王者金龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16133_TransformPill_GoldenDragon",
+      "model": "character/v5/02animals/GoldenDragon/GoldenDragon_02.x",
+      "icon": "Texture/Aries/Item/16069_TransformPill_GoldenDragon.png",
+      "stats": {
+        "46": 31,
+        "28": 10,
+        "51": 21146
+      }
+    },
+    {
+      "id": 16102,
+      "name": "VIP原始晶龙(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16102_TransformPill_CrystalDragonVip",
+      "model": "character/v5/02animals/DragonBoss_Ice/DragonBoss_Ice.x",
+      "icon": "Texture/Aries/Item/16101_TransformPill_CrystalDragon.png",
+      "stats": {
+        "28": 10,
+        "51": 21128,
+        "46": 7,
+        "180": 1
+      }
+    },
+    {
+      "id": 16071,
+      "name": "霸王虎",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16071_TransformPill_Smilodon",
+      "model": "character/v5/02animals/Smilodon/Smilodon.x",
+      "icon": "Texture/Aries/Item/16071_TransformPill_Smilodon.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 827,
+        "180": 1
+      }
+    },
+    {
+      "id": 16040,
+      "name": "羊变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16040_TransformPill_Ram",
+      "model": "character/v5/02animals/ZodiacAnimals/Sheep/Sheep_withlilypad.x",
+      "icon": "Texture/Aries/Item/16040_TransformPill_Ram.png",
+      "stats": {
+        "28": 10,
+        "29": 10124,
+        "51": 886,
+        "46": 3
+      }
+    },
+    {
+      "id": 15559,
+      "name": "萌系霸王虎_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15559_TransformMarker_16103_TransformPill_Smilodon_Cute",
+      "model": "character/v5/02animals/Smilodon/Smilodon.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 75,
+        "103": 1,
+        "111": 4,
+        "119": 2,
+        "102": 4
+      }
+    },
+    {
+      "id": 15528,
+      "name": "羊_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15528_TransformMarker_16040_TransformPill_Ram",
+      "model": "character/v5/02animals/ZodiacAnimals/Sheep/Sheep_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 15505,
+      "name": "黄金飞马_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15505_TransformMarker_16067_TransformPill_Pegasus",
+      "model": "character/v5/02animals/Pegasus/Pegasus.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 100,
+        "103": 1,
+        "111": 3,
+        "119": 3,
+        "102": 6
+      }
+    },
+    {
+      "id": 16149,
+      "name": "尤诺的雪地车",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16149_Snowmobiles",
+      "model": "character/v5/02animals/XueDiChe/XueDiChe.x",
+      "icon": "Texture/Aries/Item/16149_Snowmobiles.png",
+      "stats": {
+        "28": 10,
+        "51": 2270,
+        "46": 62,
+        "50": 1000
+      }
+    },
+    {
+      "id": 15637,
+      "name": "造梦灵狐_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15637_TransformMarker_16148_Dream_LingHu",
+      "model": "character/v6/02animals/YinYangLingHu/YinYangLingHu.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "180": 1
+      }
+    },
+    {
+      "id": 16118,
+      "name": "机械鲨鱼",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16118_DoubleHorse_01",
+      "model": "character/v5/02animals/ShuangRenFeiTing/ShuangRenFeiTing.x",
+      "icon": "Texture/Aries/Item/16118_DoubleHorse_01.png",
+      "stats": {
+        "28": 10,
+        "51": 1764,
+        "46": 62,
+        "50": 1000
+      }
+    },
+    {
+      "id": 15606,
+      "name": "魔力灵狐_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15606_TransformMarker_16142_The_Ninetailed_Fox",
+      "model": "character/v5/02animals/YinYangLingHu/YinYangLingHu.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 1280,
+        "103": 5,
+        "111": 20,
+        "119": 5,
+        "102": 15
+      }
+    },
+    {
+      "id": 15544,
+      "name": "假日机械狼蛛_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15544_TransformMarker_16089_MechanicalMountt_Holiday",
+      "model": "character/v5/02animals/HKBS/HKBS.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "180": 1,
+        "59": 30
+      }
+    },
+    {
+      "id": 16033,
+      "name": "鼠变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16033_TransformPill_Rat",
+      "model": "character/v5/02animals/ZodiacAnimals/Mouse/Mouse_withlilypad.x",
+      "icon": "Texture/Aries/Item/16033_TransformPill_Rat.png",
+      "stats": {
+        "28": 10,
+        "29": 10117,
+        "51": 879,
+        "46": 3
+      }
+    },
+    {
+      "id": 15521,
+      "name": "老鼠_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15521_TransformMarker_16033_TransformPill_Rat",
+      "model": "character/v5/02animals/ZodiacAnimals/Mouse/Mouse_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 16134,
+      "name": "英雄白龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16134_TransformPill_WhiteDragon",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon_02.x",
+      "icon": "Texture/Aries/Item/16072_TransformPill_WhiteDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 21147
+      }
+    },
+    {
+      "id": 16103,
+      "name": "萌系霸王虎",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16103_TransformPill_Smilodon_Cute",
+      "model": "character/v5/02animals/Smilodon/Smilodon.x",
+      "icon": "Texture/Aries/Item/16071_TransformPill_Smilodon.png",
+      "stats": {
+        "28": 5,
+        "46": 15,
+        "51": 21129
+      }
+    },
+    {
+      "id": 16072,
+      "name": "英雄白龙(珍藏版)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16072_TransformPill_WhiteDragon",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon.x",
+      "icon": "Texture/Aries/Item/16072_TransformPill_WhiteDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 828
+      }
+    },
+    {
+      "id": 15591,
+      "name": "紫晶灵翼龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15591_TransformMarker_16127_TransformPill_GoldenDragon_Death",
+      "model": "character/v5/02animals/EpicDragonDeath/EpicDragonDeath.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 960,
+        "103": 5,
+        "111": 20,
+        "119": 5,
+        "102": 15,
+        "204": 6,
+        "137": 11
+      }
+    },
+    {
+      "id": 15560,
+      "name": "机械狼蛛(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15560_TransformMarker_16104_MechanicalMountSevenDays",
+      "model": "character/v5/02animals/HKBS/HKBS.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "59": 30
+      }
+    },
+    {
+      "id": 15506,
+      "name": "暗影神驹_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15506_TransformMarker_16068_TransformPill_Pegasus_Black",
+      "model": "character/v5/02animals/Pegasus_Black/Pegasus_Black.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 100,
+        "103": 1,
+        "111": 3,
+        "119": 3,
+        "102": 6
+      }
+    },
+    {
+      "id": 16150,
+      "name": "尤诺的雪地车(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16150_Snowmobiles_7Days",
+      "model": "character/v5/02animals/XueDiChe/XueDiChe.x",
+      "icon": "Texture/Aries/Item/16149_Snowmobiles.png",
+      "stats": {
+        "28": 10,
+        "51": 2271,
+        "46": 7
+      }
+    },
+    {
+      "id": 15638,
+      "name": "尤诺的雪地车_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15638_TransformMarker_16149_Snowmobiles",
+      "model": "character/v5/02animals/XueDiChe/XueDiChe.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "59": 50,
+        "525": 100
+      }
+    },
+    {
+      "id": 16119,
+      "name": "机械鲨鱼(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16119_DoubleHorse_02",
+      "model": "character/v5/02animals/ShuangRenFeiTing/ShuangRenFeiTing.x",
+      "icon": "Texture/Aries/Item/16118_DoubleHorse_01.png",
+      "stats": {
+        "28": 10,
+        "51": 1765,
+        "46": 7,
+        "50": 300
+      }
+    },
+    {
+      "id": 16088,
+      "name": "假日夜叉魔狼",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16088_HorseSilverWolf_Holiday",
+      "model": "character/v5/02animals/HorseSilverWolf/HorseSilverWolf.x",
+      "icon": "Texture/Aries/Item/16076_HorseSilverWolf.png",
+      "stats": {
+        "28": 10,
+        "46": 7,
+        "51": 21111,
+        "180": 1
+      }
+    },
+    {
+      "id": 16034,
+      "name": "牛变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16034_TransformPill_Ox",
+      "model": "character/v5/02animals/ZodiacAnimals/Cow/Cow_withlilypad.x",
+      "icon": "Texture/Aries/Item/16034_TransformPill_Ox.png",
+      "stats": {
+        "28": 10,
+        "29": 10118,
+        "51": 880,
+        "46": 3
+      }
+    },
+    {
+      "id": 15553,
+      "name": "浴火凤凰_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15553_TransformMarker_16097_HorsePhoenix",
+      "model": "character/v5/02animals/HorsePhoenix/HorsePhoenix_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 450,
+        "103": 5,
+        "111": 17,
+        "119": 5,
+        "102": 12,
+        "138": 40
+      }
+    },
+    {
+      "id": 15522,
+      "name": "牛_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15522_TransformMarker_16034_TransformPill_Ox",
+      "model": "character/v5/02animals/ZodiacAnimals/Cow/Cow_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 16104,
+      "name": "机械狼蛛(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16104_MechanicalMountSevenDays",
+      "model": "character/v5/02animals/HKBS/HKBS.x",
+      "icon": "Texture/Aries/Item/16083_MechanicalMount.png",
+      "stats": {
+        "28": 10,
+        "51": 1551,
+        "46": 7,
+        "50": 100
+      }
+    },
+    {
+      "id": 15538,
+      "name": "蒸汽机器人_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15538_TransformMarker_16082_GMRobot",
+      "model": "character/v5/02animals/Robot01/Robot.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 15507,
+      "name": "王者金龙(珍藏版)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15507_TransformMarker_16069_TransformPill_GoldenDragon",
+      "model": "character/v5/02animals/GoldenDragon/GoldenDragon.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 300,
+        "103": 3,
+        "111": 10,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 15639,
+      "name": "尤诺的雪地车(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15639_TransformMarker_16150_Snowmobiles_7Days",
+      "model": "character/v5/02animals/XueDiChe/XueDiChe.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "59": 50,
+        "525": 100
+      }
+    },
+    {
+      "id": 16120,
+      "name": "梦幻南瓜车",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16120_DoubleHorse_03",
+      "model": "character/v5/02animals/NanGuaChe/NanGuaChe.x",
+      "icon": "Texture/Aries/Item/16120_DoubleHorse_03.png",
+      "stats": {
+        "28": 10,
+        "51": 1766,
+        "46": 62,
+        "50": 1380
+      }
+    },
+    {
+      "id": 16097,
+      "name": "浴火凤凰",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16097_HorsePhoenix",
+      "model": "character/v5/02animals/HorsePhoenix/HorsePhoenix_02.x",
+      "icon": "Texture/Aries/Item/16075_HorsePhoenix.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 21123
+      }
+    },
+    {
+      "id": 16066,
+      "name": "蜥蜴金角龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16066_TransformPill_XiYiJinJiaoLong",
+      "model": "character/v5/02animals/XiYiJinJiaoLong/XiYiJinJiaoLong.x",
+      "icon": "Texture/Aries/Item/16066_TransformPill_XiYiJinJiaoLong.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "180": 1,
+        "51": 772
+      }
+    },
+    {
+      "id": 16035,
+      "name": "虎变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16035_TransformPill_Tiger",
+      "model": "character/v5/02animals/ZodiacAnimals/Tiger/Tiger_withlilypad.x",
+      "icon": "Texture/Aries/Item/16035_TransformPill_Tiger.png",
+      "stats": {
+        "28": 10,
+        "29": 10119,
+        "51": 881,
+        "46": 3
+      }
+    },
+    {
+      "id": 15585,
+      "name": "梦幻南瓜车(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15585_TransformMarker_16121_DoubleHorse",
+      "model": "character/v5/02animals/NanGuaChe/NanGuaChe.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8
+      }
+    },
+    {
+      "id": 15554,
+      "name": "蓝血凤凰_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15554_TransformMarker_16098_SmallPhoenix",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "103": 4,
+        "111": 14,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 15523,
+      "name": "虎_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15523_TransformMarker_16035_TransformPill_Tiger",
+      "model": "character/v5/02animals/ZodiacAnimals/Tiger/Tiger_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 16136,
+      "name": "王者玉龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16136_TransformPill_GreenDragon",
+      "model": "character/v5/02animals/GreenDragon/GreenDragon_02.x",
+      "icon": "Texture/Aries/Item/16073_TransformPill_GreenDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 21149
+      }
+    },
+    {
+      "id": 16113,
+      "name": "勇气之羽(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16113_Courage_WingForRiding_7Day",
+      "model": "character/v5/02animals/ChiBang01/ChiBang01.x",
+      "icon": "Texture/Aries/Item/16111_Courage_WingForRiding.png",
+      "stats": {
+        "28": 10,
+        "46": 7,
+        "51": 1671,
+        "50": 150
+      }
+    },
+    {
+      "id": 16082,
+      "name": "蒸汽机器人",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16082_GMRobot",
+      "model": "character/v5/02animals/Robot01/Robot.x",
+      "icon": "Texture/Aries/Item/16082_GMRobot.png",
+      "stats": {
+        "28": 5,
+        "51": 904,
+        "46": 30
+      }
+    },
+    {
+      "id": 16051,
+      "name": "冲锋大象",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16051_TransformPill_Elephant",
+      "model": "character/v5/02animals/Elephant/Elephant.x",
+      "icon": "Texture/Aries/Item/16051_TransformPill_Elephant.png",
+      "stats": {
+        "28": 10,
+        "180": 1,
+        "46": 15,
+        "51": 769
+      }
+    },
+    {
+      "id": 15601,
+      "name": "浴火凤凰_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15601_TransformMarker_16137_HorsePhoenix",
+      "model": "character/v5/02animals/HorsePhoenix/HorsePhoenix_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 450,
+        "103": 5,
+        "111": 17,
+        "119": 5,
+        "102": 12,
+        "138": 40
+      }
+    },
+    {
+      "id": 15539,
+      "name": "机械狼蛛_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15539_TransformMarker_16083_MechanicalMount",
+      "model": "character/v5/02animals/HKBS/HKBS.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "138": 45,
+        "180": 1,
+        "59": 30
+      }
+    },
+    {
+      "id": 15508,
+      "name": "英雄银龙(珍藏版)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15508_TransformMarker_16070_TransformPill_BlueDragon",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 200,
+        "103": 2,
+        "111": 9,
+        "119": 4,
+        "102": 10
+      }
+    },
+    {
+      "id": 16129,
+      "name": "蓝元冰霜龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16129_TransformPill_GoldenDragon_Ice",
+      "model": "character/v5/02animals/EpicDragonIce/EpicDragonIce.x",
+      "icon": "Texture/Aries/Item/16124_TransformPill_GoldenDragon_Ice.png",
+      "stats": {
+        "28": 10,
+        "51": 21142,
+        "46": 31,
+        "137": 7
+      }
+    },
+    {
+      "id": 16098,
+      "name": "蓝血凤凰",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16098_SmallPhoenix",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X_02.x",
+      "icon": "Texture/Aries/Item/16078_SmallPhoenix.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 21124
+      }
+    },
+    {
+      "id": 16067,
+      "name": "黄金飞马",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16067_TransformPill_Pegasus",
+      "model": "character/v5/02animals/Pegasus/Pegasus.x",
+      "icon": "Texture/Aries/Item/16067_TransformPill_Pegasus.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "180": 1,
+        "51": 773
+      }
+    },
+    {
+      "id": 16036,
+      "name": "兔变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16036_TransformPill_Rabbit",
+      "model": "character/v5/02animals/ZodiacAnimals/Rabbit/Rabbit_withlilypad.x",
+      "icon": "Texture/Aries/Item/16036_TransformPill_Rabbit.png",
+      "stats": {
+        "28": 10,
+        "29": 10120,
+        "51": 882,
+        "46": 3
+      }
+    },
+    {
+      "id": 15555,
+      "name": "逐风神鹰_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15555_TransformMarker_16099_ChasingWindEagle",
+      "model": "character/v5/02animals/ChasingWindEagle/ChasingWindEagle.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 200,
+        "103": 2,
+        "111": 9,
+        "119": 4,
+        "102": 10
+      }
+    },
+    {
+      "id": 15524,
+      "name": "兔_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15524_TransformMarker_16036_TransformPill_Rabbit",
+      "model": "character/v5/02animals/ZodiacAnimals/Rabbit/Rabbit_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 16145,
+      "name": "蓝色精灵羽翼",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16145_BlueFairyWings",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi02.x",
+      "icon": "Texture/Aries/Item/16145_BlueFairyWings.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 2183,
+        "138": 20
+      }
+    },
+    {
+      "id": 16114,
+      "name": "蓝晶神龟",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16114_SuperTurtleRed",
+      "model": "character/v5/02animals/Tortoise/Tortoise04.x",
+      "icon": "Texture/Aries/Item/16114_SuperTurtleRed.png",
+      "stats": {
+        "28": 12,
+        "46": 62,
+        "51": 21135
+      }
+    },
+    {
+      "id": 16083,
+      "name": "机械狼蛛",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16083_MechanicalMount",
+      "model": "character/v5/02animals/HKBS/HKBS.x",
+      "icon": "Texture/Aries/Item/16083_MechanicalMount.png",
+      "stats": {
+        "28": 10,
+        "51": 909,
+        "46": 62,
+        "138": 45,
+        "180": 1,
+        "50": 500
+      }
+    },
+    {
+      "id": 15602,
+      "name": "蓝血凤凰_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15602_TransformMarker_16138_SmallPhoenix",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "103": 4,
+        "111": 14,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 15571,
+      "name": "希望之羽_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15571_TransformMarker_16110_TransformPill_Seal_WingForRiding",
+      "model": "character/v5/02animals/ChiBang02/ChiBang02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "74": 1
+      }
+    },
+    {
+      "id": 15540,
+      "name": "假日仙兔_变身标记_活动",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15540_TransformMarker_16084_TransformPill_GrilRabbit",
+      "model": "character/v5/02animals/GrilRabbit/GrilRabbit.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8
+      }
+    },
+    {
+      "id": 16130,
+      "name": "黄铜啸天龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16130_TransformPill_GoldenDragon_Storm",
+      "model": "character/v5/02animals/EpicDragonStorm/EpicDragonStorm.x",
+      "icon": "Texture/Aries/Item/16125_TransformPill_GoldenDragon_Storm.png",
+      "stats": {
+        "28": 10,
+        "51": 21143,
+        "46": 31,
+        "137": 8
+      }
+    },
+    {
+      "id": 16068,
+      "name": "暗影神驹",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16068_TransformPill_Pegasus_Black",
+      "model": "character/v5/02animals/Pegasus_Black/Pegasus_Black.x",
+      "icon": "Texture/Aries/Item/16068_TransformPill_Pegasus_Black.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 809,
+        "180": 1
+      }
+    },
+    {
+      "id": 15587,
+      "name": "红玉霸天龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15587_TransformMarker_16123_TransformPill_GoldenDragon_Fire",
+      "model": "character/v5/02animals/EpicDragonFire/EpicDragonFire.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 800,
+        "103": 5,
+        "111": 22,
+        "119": 5,
+        "102": 15,
+        "151": 3,
+        "137": 6
+      }
+    },
+    {
+      "id": 15556,
+      "name": "黑色小神鹰_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15556_TransformMarker_16100_SmallEagle_Black",
+      "model": "character/v5/02animals/ChasingWindEagle_X/ChasingWindEagle_X.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "138": 50
+      }
+    },
+    {
+      "id": 16146,
+      "name": "白色精灵羽翼",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16146_WhiteFairyWings",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi03.x",
+      "icon": "Texture/Aries/Item/16146_WhiteFairyWings.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 2184,
+        "138": 20
+      }
+    },
+    {
+      "id": 16084,
+      "name": "假日仙兔",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16084_TransformPill_GrilRabbit_Holiday",
+      "model": "character/v5/02animals/GrilRabbit/GrilRabbit.x",
+      "icon": "Texture/Aries/Item/16074_TransformPill_GrilRabbit.png",
+      "stats": {
+        "28": 10,
+        "46": 3,
+        "51": 20001
+      }
+    },
+    {
+      "id": 15603,
+      "name": "小猛犸_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15603_TransformMarker_16139_TransformPill_JuXiangLv1",
+      "model": "character/v5/02animals/JuXiangLv1/JuXiangLv1.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 300,
+        "103": 5,
+        "111": 15,
+        "119": 5,
+        "102": 12,
+        "159": 1
+      }
+    },
+    {
+      "id": 15572,
+      "name": "勇气之羽_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15572_TransformMarker_16111_TransformPill_Courage_WingForRiding",
+      "model": "character/v5/02animals/ChiBang01/ChiBang01.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "74": 1
+      }
+    },
+    {
+      "id": 15549,
+      "name": "王者金龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15549_TransformMarker_16093_TransformPill_GoldenDragon",
+      "model": "character/v5/02animals/GoldenDragon/GoldenDragon_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 350,
+        "103": 5,
+        "111": 15,
+        "119": 5,
+        "102": 12
+      }
+    },
+    {
+      "id": 16100,
+      "name": "黑色小神鹰",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16100_SmallEagle_Black",
+      "model": "character/v5/02animals/ChasingWindEagle_X/ChasingWindEagle_X.x",
+      "icon": "Texture/Aries/Item/16081_SmallEagle_Black.png",
+      "stats": {
+        "46": 62,
+        "28": 10,
+        "51": 21126,
+        "138": 50,
+        "180": 1
+      }
+    },
+    {
+      "id": 16077,
+      "name": "逐风神鹰(珍藏版)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16077_ChasingWindEagle",
+      "model": "character/v5/02animals/ChasingWindEagle/ChasingWindEagle.x",
+      "icon": "Texture/Aries/Item/16077_ChasingWindEagle.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 892,
+        "138": 50
+      }
+    },
+    {
+      "id": 15534,
+      "name": "圣诞麋鹿_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15534_TransformMarker_16080_ChristmasDeer",
+      "model": "character/v5/02animals/ElkAnimals/ElkAnimals.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "102": 10,
+        "111": 10,
+        "119": 4,
+        "138": 20
+      }
+    },
+    {
+      "id": 15503,
+      "name": "魔幻飞毯_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15503_TransformMarker_16059_TransformPill_MagicAwingCarpet",
+      "model": "character/v5/02animals/MagicAwingCarpet/MagicAwingCarpet.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 50,
+        "103": 1,
+        "111": 2,
+        "119": 2,
+        "102": 3
+      }
+    },
+    {
+      "id": 16116,
+      "name": "逐梦海豚(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16116_DreamDelphis7Days",
+      "model": "character/v5/02animals/HaiTun/HaiTun.x",
+      "icon": "Texture/Aries/Item/16115_DreamDelphis.png",
+      "stats": {
+        "28": 10,
+        "51": 1712,
+        "46": 7,
+        "50": 300
+      }
+    },
+    {
+      "id": 15550,
+      "name": "英雄白龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15550_TransformMarker_16094_TransformPill_WhiteDragon",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "103": 4,
+        "111": 14,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 15519,
+      "name": "蓝血凤凰(珍藏版)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15519_TransformMarker_16078_SmallPhoenix",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 200,
+        "103": 2,
+        "111": 9,
+        "119": 4,
+        "102": 10
+      }
+    },
+    {
+      "id": 16093,
+      "name": "王者金龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16093_TransformPill_GoldenDragon",
+      "model": "character/v5/02animals/GoldenDragon/GoldenDragon_02.x",
+      "icon": "Texture/Aries/Item/16069_TransformPill_GoldenDragon.png",
+      "stats": {
+        "46": 62,
+        "28": 10,
+        "51": 21119
+      }
+    },
+    {
+      "id": 16109,
+      "name": "御海仙龟",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16109_SuperTurtle",
+      "model": "character/v5/02animals/Tortoise/Tortoise02.x",
+      "icon": "Texture/Aries/Item/16109_SuperTurtle.png",
+      "stats": {
+        "28": 18,
+        "46": 9999,
+        "51": 21133
+      }
+    },
+    {
+      "id": 15504,
+      "name": "蜥蜴金角龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15504_TransformMarker_16066_TransformPill_XiYiJinJiaoLong",
+      "model": "character/v5/02animals/XiYiJinJiaoLong/XiYiJinJiaoLong.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 100,
+        "103": 1,
+        "111": 3,
+        "119": 3,
+        "102": 6
+      }
+    },
+    {
+      "id": 15612,
+      "name": "圣诞大麋鹿(31天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15612_TransformMarker_16143_ChristmasDeer_Max",
+      "model": "character/v6/02animals/ShengDanMiLu/ShengDanMiLu.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "180": 1,
+        "119": 5,
+        "138": 20,
+        "102": 10,
+        "111": 10,
+        "101": 300,
+        "103": 4
+      }
+    },
+    {
+      "id": 15636,
+      "name": "逐梦鲸鱼_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15636_TransformMarker_16147_Dream_Jingyu",
+      "model": "character/v5/02animals/JingYu/JingYu.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "180": 1
+      }
+    },
+    {
+      "id": 16125,
+      "name": "黄铜啸天龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16125_TransformPill_GoldenDragon_Storm",
+      "model": "character/v5/02animals/EpicDragonStorm/EpicDragonStorm.x",
+      "icon": "Texture/Aries/Item/16125_TransformPill_GoldenDragon_Storm.png",
+      "stats": {
+        "28": 10,
+        "51": 21138,
+        "46": 62,
+        "137": 8
+      }
+    },
+    {
+      "id": 16094,
+      "name": "英雄白龙_暂时作废",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16094_TransformPill_WhiteDragon",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon_02.x",
+      "icon": "Texture/Aries/Item/16072_TransformPill_WhiteDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 21120
+      }
+    },
+    {
+      "id": 16032,
+      "name": "鸵鸟变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16032_TransformPill_Ostrich",
+      "model": "character/v5/02animals/Ostrich/Ostrich.x",
+      "icon": "Texture/Aries/Item/16032_TransformPill_Ostrich.png",
+      "stats": {
+        "28": 25,
+        "46": 3,
+        "51": 878
+      }
+    },
+    {
+      "id": 15582,
+      "name": "机械鲨鱼_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15582_TransformMarker_16118_DoubleHorse",
+      "model": "character/v5/02animals/ShuangRenFeiTing/ShuangRenFeiTing.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "59": 50,
+        "525": 100
+      }
+    },
+    {
+      "id": 15551,
+      "name": "英雄银龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15551_TransformMarker_16095_TransformPill_BlueDragon",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "103": 4,
+        "111": 14,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 15520,
+      "name": "鸵鸟_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15520_TransformMarker_16032_TransformPill_Ostrich",
+      "model": "character/v5/02animals/Ostrich/Ostrich.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 15509,
+      "name": "霸王虎_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15509_TransformMarker_16071_TransformPill_Smilodon",
+      "model": "character/v5/02animals/Smilodon/Smilodon.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8
+      }
+    },
+    {
+      "id": 16141,
+      "name": "黄金猛犸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16141_TransformPill_JuXiang_Lv3",
+      "model": "character/v5/02animals/JuXiangLv3/JuXiangLv3.x",
+      "icon": "Texture/Aries/Item/16141_TransformPill_JuXiang_Lv3.png",
+      "stats": {
+        "28": 10,
+        "46": 15,
+        "51": 21155
+      }
+    },
+    {
+      "id": 16110,
+      "name": "希望之羽",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16110_Seal_WingForRiding",
+      "model": "character/v5/02animals/ChiBang02/ChiBang02.x",
+      "icon": "Texture/Aries/Item/16110_Seal_WingForRiding.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 1660,
+        "180": 1,
+        "50": 500
+      }
+    },
+    {
+      "id": 15580,
+      "name": "逐梦海豚(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15580_TransformMarker_16116_DreamDelphis7Days",
+      "model": "character/v5/02animals/HaiTun/HaiTun.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "59": 50,
+        "525": 100
+      }
+    },
+    {
+      "id": 16079,
+      "name": "白色小神鹰",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16079_SmallEagle",
+      "model": "character/v5/02animals/ChasingWindEagle_W/ChasingWindEagle_W.x",
+      "icon": "Texture/Aries/Item/16079_SmallEagle.png",
+      "stats": {
+        "46": 31,
+        "28": 10,
+        "51": 891,
+        "138": 50,
+        "180": 1
+      }
+    },
+    {
+      "id": 15598,
+      "name": "英雄白龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15598_TransformMarker_16134_TransformPill_WhiteDragon",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 650,
+        "103": 4,
+        "111": 25,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 15518,
+      "name": "逐风神鹰(珍藏版)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15518_TransformMarker_16077_ChasingWindEagle",
+      "model": "character/v5/02animals/ChasingWindEagle/ChasingWindEagle.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 200,
+        "103": 2,
+        "111": 9,
+        "119": 4,
+        "102": 10,
+        "138": 50
+      }
+    },
+    {
+      "id": 16126,
+      "name": "翡翠始祖龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16126_TransformPill_GoldenDragon_Life",
+      "model": "character/v5/02animals/EpicDragonLife/EpicDragonLife.x",
+      "icon": "Texture/Aries/Item/16126_TransformPill_GoldenDragon_Life.png",
+      "stats": {
+        "28": 10,
+        "51": 21139,
+        "46": 62,
+        "137": 10
+      }
+    },
+    {
+      "id": 15614,
+      "name": "蓝色精灵羽翼_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15614_TransformMarker_16145_BlueFairyWings",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "180": 1,
+        "119": 5,
+        "138": 48,
+        "102": 10,
+        "111": 20,
+        "101": 700,
+        "103": 5,
+        "74": 1
+      }
+    },
+    {
+      "id": 15501,
+      "name": "冲锋大象_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15501_TransformMarker_16051_TransformPill_Elephant",
+      "model": "character/v5/02animals/Elephant/Elephant.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 50,
+        "103": 1,
+        "111": 2,
+        "119": 2,
+        "102": 3
+      }
+    },
+    {
+      "id": 15583,
+      "name": "机械鲨鱼(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15583_TransformMarker_16119_DoubleHorse",
+      "model": "character/v5/02animals/ShuangRenFeiTing/ShuangRenFeiTing.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "59": 50,
+        "525": 100
+      }
+    },
+    {
+      "id": 15552,
+      "name": "王者玉龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15552_TransformMarker_16096_TransformPill_GreenDragon",
+      "model": "character/v5/02animals/GreenDragon/GreenDragon_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 350,
+        "103": 5,
+        "111": 15,
+        "119": 5,
+        "102": 12
+      }
+    },
+    {
+      "id": 10001,
+      "name": "抱抱龙",
+      "slot": 31,
+      "kind": 10,
+      "subtype": 1,
+      "assetKey": "MountPetPurpleDragon",
+      "model": "character/v5/02animals/Ostrich/Ostrich.x",
+      "icon": "Texture/Aries/Item/10001_DragonIcon.png",
+      "stats": {}
+    },
+    {
+      "id": 16041,
+      "name": "猴变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16041_TransformPill_Monkey",
+      "model": "character/v5/02animals/ZodiacAnimals/Monkey/Monkey_withlilypad.x",
+      "icon": "Texture/Aries/Item/16041_TransformPill_Monkey.png",
+      "stats": {
+        "28": 10,
+        "29": 10125,
+        "51": 887,
+        "46": 3
+      }
+    },
+    {
+      "id": 15529,
+      "name": "猴_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15529_TransformMarker_16041_TransformPill_Monkey",
+      "model": "character/v5/02animals/ZodiacAnimals/Monkey/Monkey_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 16142,
+      "name": "魔力灵狐",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16142_The_Ninetailed_Fox",
+      "model": "character/v5/02animals/YinYangLingHu/YinYangLingHu.x",
+      "icon": "Texture/Aries/Item/16142_The_Ninetailed_Fox.png",
+      "stats": {
+        "28": 18,
+        "46": 31,
+        "51": 21156
+      }
+    },
+    {
+      "id": 16080,
+      "name": "圣诞麋鹿",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16080_ChristmasDeer",
+      "model": "character/v5/02animals/ElkAnimals/ElkAnimals.x",
+      "icon": "Texture/Aries/Item/16080_ChristmasDeer.png",
+      "stats": {
+        "28": 10,
+        "46": 10,
+        "51": 895,
+        "138": 20,
+        "50": 100
+      }
+    },
+    {
+      "id": 15599,
+      "name": "英雄银龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15599_TransformMarker_16135_TransformPill_BlueDragon",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 850,
+        "103": 4,
+        "111": 20,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 16070,
+      "name": "英雄银龙(珍藏版)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16070_TransformPill_BlueDragon",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon.x",
+      "icon": "Texture/Aries/Item/16070_TransformPill_BlueDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 824
+      }
+    },
+    {
+      "id": 15545,
+      "name": "假日夜叉魔狼_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15545_TransformMarker_16088_HorseSilverWolf_Holiday",
+      "model": "character/v5/02animals/HorseSilverWolf/HorseSilverWolf.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "180": 1
+      }
+    },
+    {
+      "id": 16096,
+      "name": "王者玉龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16096_TransformPill_GreenDragon",
+      "model": "character/v5/02animals/GreenDragon/GreenDragon_02.x",
+      "icon": "Texture/Aries/Item/16073_TransformPill_GreenDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 21122
+      }
+    },
+    {
+      "id": 15615,
+      "name": "白色精灵羽翼_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15615_TransformMarker_16146_WhiteFairyWings",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi03.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "180": 1,
+        "119": 5,
+        "138": 48,
+        "102": 10,
+        "111": 18,
+        "101": 600,
+        "103": 4,
+        "74": 1
+      }
+    },
+    {
+      "id": 15584,
+      "name": "梦幻南瓜车_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15584_TransformMarker_16120_DoubleHorse",
+      "model": "character/v5/02animals/NanGuaChe/NanGuaChe.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8
+      }
+    },
+    {
+      "id": 16073,
+      "name": "王者玉龙(珍藏版)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16073_TransformPill_GreenDragon",
+      "model": "character/v5/02animals/GreenDragon/GreenDragon.x",
+      "icon": "Texture/Aries/Item/16073_TransformPill_GreenDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 829
+      }
+    },
+    {
+      "id": 16042,
+      "name": "鸡变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16042_TransformPill_Rooster",
+      "model": "character/v5/02animals/ZodiacAnimals/Cock/Cock_withlilypad.x",
+      "icon": "Texture/Aries/Item/16042_TransformPill_Rooster.png",
+      "stats": {
+        "28": 10,
+        "29": 10126,
+        "51": 888,
+        "46": 3
+      }
+    },
+    {
+      "id": 15561,
+      "name": "仙兔(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15561_TransformMarker_16105_TransformPill_GrilRabbitSevenDays",
+      "model": "character/v5/02animals/GrilRabbit/GrilRabbit.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8
+      }
+    },
+    {
+      "id": 15530,
+      "name": "鸡_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15530_TransformMarker_16042_TransformPill_Rooster",
+      "model": "character/v5/02animals/ZodiacAnimals/Cock/Cock_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 16143,
+      "name": "圣诞大麋鹿(31天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16143_ChristmasDeer_Max",
+      "model": "character/v6/02animals/ShengDanMiLu/ShengDanMiLu.x",
+      "icon": "Texture/Aries/Item/16143_ChristmasDeer_Max.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 1996,
+        "138": 20
+      }
+    },
+    {
+      "id": 16112,
+      "name": "希望之羽(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16112_Seal_WingForRiding_7Day",
+      "model": "character/v5/02animals/ChiBang02/ChiBang02.x",
+      "icon": "Texture/Aries/Item/16110_Seal_WingForRiding.png",
+      "stats": {
+        "28": 10,
+        "46": 7,
+        "51": 1670,
+        "50": 150
+      }
+    },
+    {
+      "id": 16147,
+      "name": "逐梦鲸鱼",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16147_Dream_Jingyu",
+      "model": "character/v5/02animals/JingYu/JingYu.x",
+      "icon": "Texture/Aries/Item/16147_Dream_Jingyu.png",
+      "stats": {
+        "28": 10,
+        "46": 121,
+        "51": 2224
+      }
+    },
+    {
+      "id": 15600,
+      "name": "王者玉龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15600_TransformMarker_16136_TransformPill_GreenDragon",
+      "model": "character/v5/02animals/GreenDragon/GreenDragon_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 350,
+        "103": 5,
+        "111": 15,
+        "119": 5,
+        "102": 12
+      }
+    },
+    {
+      "id": 16089,
+      "name": "假日机械狼蛛",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16089_MechanicalMount_Holiday",
+      "model": "character/v5/02animals/HKBS/HKBS.x",
+      "icon": "Texture/Aries/Item/16083_MechanicalMount.png",
+      "stats": {
+        "28": 10,
+        "51": 21110,
+        "46": 7,
+        "180": 1
+      }
+    },
+    {
+      "id": 16058,
+      "name": "魔法师扫帚",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16058_TransformPill_MagicBesom",
+      "model": "character/v5/02animals/MagicBesom/MagicBesom.x",
+      "icon": "Texture/Aries/Item/16058_TransformPill_MagicBesom.png",
+      "stats": {
+        "46": 15,
+        "28": 10,
+        "180": 1,
+        "51": 770
+      }
+    },
+    {
+      "id": 15577,
+      "name": "勇气之羽(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15577_TransformMarker_16113_TransformPill_Courage_WingForRiding_7Day",
+      "model": "character/v5/02animals/ChiBang01/ChiBang01.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "74": 1
+      }
+    },
+    {
+      "id": 15546,
+      "name": "荣誉白龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15546_TransformMarker_16090_TransformPill_WhiteDragon_VIP",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 650,
+        "103": 4,
+        "111": 25,
+        "102": 10,
+        "119": 5
+      }
+    },
+    {
+      "id": 15515,
+      "name": "仙兔_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15515_TransformMarker_16074_TransformPill_GrilRabbit",
+      "model": "character/v5/02animals/GrilRabbit/GrilRabbit.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8
+      }
+    },
+    {
+      "id": 16128,
+      "name": "红玉霸天龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16128_TransformPill_GoldenDragon_Fire",
+      "model": "character/v5/02animals/EpicDragonFire/EpicDragonFire.x",
+      "icon": "Texture/Aries/Item/16123_TransformPill_GoldenDragon_Fire.png",
+      "stats": {
+        "28": 10,
+        "51": 21141,
+        "46": 31,
+        "137": 6
+      }
+    },
+    {
+      "id": 16105,
+      "name": "仙兔(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16105_TransformPill_GrilRabbitSevenDays",
+      "model": "character/v5/02animals/GrilRabbit/GrilRabbit.x",
+      "icon": "Texture/Aries/Item/16074_TransformPill_GrilRabbit.png",
+      "stats": {
+        "28": 10,
+        "46": 7,
+        "51": 1552,
+        "50": 100
+      }
+    },
+    {
+      "id": 15533,
+      "name": "白色小神鹰_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15533_TransformMarker_16079_SmallEagle",
+      "model": "character/v5/02animals/ChasingWindEagle_W/ChasingWindEagle_W.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "138": 50
+      }
+    },
+    {
+      "id": 16043,
+      "name": "狗变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16043_TransformPill_Dog",
+      "model": "character/v5/02animals/ZodiacAnimals/Dog/Dog_withlilypad.x",
+      "icon": "Texture/Aries/Item/16043_TransformPill_Dog.png",
+      "stats": {
+        "28": 10,
+        "29": 10127,
+        "51": 889,
+        "46": 3
+      }
+    },
+    {
+      "id": 15593,
+      "name": "蓝元冰霜龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15593_TransformMarker_16129_TransformPill_GoldenDragon_Ice",
+      "model": "character/v5/02animals/EpicDragonIce/EpicDragonIce.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 1380,
+        "103": 5,
+        "111": 25,
+        "119": 5,
+        "102": 15,
+        "159": 3,
+        "137": 7
+      }
+    },
+    {
+      "id": 15562,
+      "name": "霸王虎(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15562_TransformMarker_16106_TransformPill_SmilodonSevenDays",
+      "model": "character/v5/02animals/Smilodon/Smilodon.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8
+      }
+    },
+    {
+      "id": 15531,
+      "name": "狗狗_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15531_TransformMarker_16043_TransformPill_Dog",
+      "model": "character/v5/02animals/ZodiacAnimals/Dog/Dog_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 16121,
+      "name": "梦幻南瓜车(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16121_DoubleHorse_04",
+      "model": "character/v5/02animals/NanGuaChe/NanGuaChe.x",
+      "icon": "Texture/Aries/Item/16120_DoubleHorse_03.png",
+      "stats": {
+        "28": 10,
+        "51": 1767,
+        "46": 7,
+        "50": 480
+      }
+    },
+    {
+      "id": 16090,
+      "name": "荣誉白龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16090_TransformPill_WhiteDragon_VIP",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon_02.x",
+      "icon": "Texture/Aries/Item/16072_TransformPill_WhiteDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 7,
+        "51": 21113,
+        "180": 1
+      }
+    },
+    {
+      "id": 16059,
+      "name": "魔幻飞毯",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16059_TransformPill_MagicAwingCarpet",
+      "model": "character/v5/02animals/MagicAwingCarpet/MagicAwingCarpet.x",
+      "icon": "Texture/Aries/Item/16059_TransformPill_MagicAwingCarpet.png",
+      "stats": {
+        "180": 1,
+        "46": 15,
+        "28": 10,
+        "51": 771
+      }
+    },
+    {
+      "id": 15578,
+      "name": "蓝晶神龟_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15578_TransformMarker_16109_SuperTurtleRed",
+      "model": "character/v5/02animals/Tortoise/Tortoise04.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "119": 5,
+        "111": 12,
+        "102": 10
+      }
+    },
+    {
+      "id": 15547,
+      "name": "荣誉蓝血凤凰_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15547_TransformMarker_16091_SmallPhoenix_VIP",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "103": 4,
+        "111": 14,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 15581,
+      "name": "双人跑车(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15581_TransformMarker_16117_car",
+      "model": "character/v3/vehicles/car/car.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "59": 50,
+        "525": 100
+      }
+    },
+    {
+      "id": 15588,
+      "name": "蓝元冰霜龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15588_TransformMarker_16124_TransformPill_GoldenDragon_Ice",
+      "model": "character/v5/02animals/EpicDragonIce/EpicDragonIce.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 880,
+        "103": 5,
+        "111": 18,
+        "119": 5,
+        "102": 15,
+        "159": 3,
+        "137": 7
+      }
+    },
+    {
+      "id": 15604,
+      "name": "白银猛犸_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15604_TransformMarker_16140_TransformPill_JuXiangLv2",
+      "model": "character/v5/02animals/JuXiangLv2/JuXiangLv2.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "103": 5,
+        "111": 16,
+        "119": 5,
+        "102": 15,
+        "159": 2
+      }
+    },
+    {
+      "id": 15613,
+      "name": "金色精灵羽翼_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15613_TransformMarker_16144_GoldenFairyWings",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi01.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "180": 1,
+        "119": 5,
+        "138": 48,
+        "102": 10,
+        "111": 25,
+        "101": 800,
+        "103": 6,
+        "74": 1
+      }
+    },
+    {
+      "id": 16137,
+      "name": "浴火凤凰",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16137_HorsePhoenix",
+      "model": "character/v5/02animals/HorsePhoenix/HorsePhoenix_02.x",
+      "icon": "Texture/Aries/Item/16075_HorsePhoenix.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 21150
+      }
+    },
+    {
+      "id": 16106,
+      "name": "霸王虎(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16106_TransformPill_SmilodonSevenDays",
+      "model": "character/v5/02animals/Smilodon/Smilodon.x",
+      "icon": "Texture/Aries/Item/16071_TransformPill_Smilodon.png",
+      "stats": {
+        "28": 10,
+        "46": 7,
+        "51": 1553,
+        "50": 100
+      }
+    },
+    {
+      "id": 16075,
+      "name": "浴火凤凰(珍藏版)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16075_HorsePhoenix",
+      "model": "character/v5/02animals/HorsePhoenix/HorsePhoenix.x",
+      "icon": "Texture/Aries/Item/16075_HorsePhoenix.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 865
+      }
+    },
+    {
+      "id": 16044,
+      "name": "猪变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16044_TransformPill_Boar",
+      "model": "character/v5/02animals/ZodiacAnimals/Pig/Pig_withlilypad.x",
+      "icon": "Texture/Aries/Item/16044_TransformPill_Boar.png",
+      "stats": {
+        "28": 10,
+        "29": 10128,
+        "51": 890,
+        "46": 3
+      }
+    },
+    {
+      "id": 15594,
+      "name": "黄铜啸天龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15594_TransformMarker_16130_TransformPill_GoldenDragon_Storm",
+      "model": "character/v5/02animals/EpicDragonStorm/EpicDragonStorm.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 1020,
+        "103": 6,
+        "111": 35,
+        "119": 5,
+        "102": 15,
+        "196": 6,
+        "137": 8
+      }
+    },
+    {
+      "id": 15563,
+      "name": "夜叉魔狼(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15563_TransformMarker_16107_HorseSilverWolfSevenDays",
+      "model": "character/v5/02animals/HorseSilverWolf/HorseSilverWolf.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8
+      }
+    },
+    {
+      "id": 15532,
+      "name": "猪_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15532_TransformMarker_16044_TransformPill_Boar",
+      "model": "character/v5/02animals/ZodiacAnimals/Pig/Pig_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 16132,
+      "name": "紫晶灵翼龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16132_TransformPill_GoldenDragon_Death",
+      "model": "character/v5/02animals/EpicDragonDeath/EpicDragonDeath.x",
+      "icon": "Texture/Aries/Item/16127_TransformPill_GoldenDragon_Death.png",
+      "stats": {
+        "28": 10,
+        "51": 21145,
+        "46": 31,
+        "137": 11
+      }
+    },
+    {
+      "id": 16122,
+      "name": "双人坐骑05",
+      "slot": 1,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16122_DoubleHorse_05",
+      "model": "character/v3/vehicles/car/car.x",
+      "icon": "character/v3/vehicles/car/car.x.png",
+      "stats": {
+        "28": 10,
+        "51": 1768,
+        "46": 7,
+        "50": 300
+      }
+    },
+    {
+      "id": 16091,
+      "name": "荣誉蓝血凤凰",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16091_SmallPhoenix_VIP",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X_02.x",
+      "icon": "Texture/Aries/Item/16078_SmallPhoenix.png",
+      "stats": {
+        "28": 10,
+        "46": 7,
+        "51": 21114,
+        "180": 1
+      }
+    },
+    {
+      "id": 15579,
+      "name": "逐梦海豚_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15579_TransformMarker_16115_DreamDelphis",
+      "model": "character/v5/02animals/HaiTun/HaiTun.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "59": 50,
+        "180": 1,
+        "525": 100
+      }
+    },
+    {
+      "id": 15548,
+      "name": "荣誉银龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15548_TransformMarker_16092_TransformPill_BlueDragon_VIP",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 850,
+        "103": 4,
+        "111": 20,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 15537,
+      "name": "黑色小神鹰(珍藏版)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15537_TransformMarker_16081_SmallEagle_Black",
+      "model": "character/v5/02animals/ChasingWindEagle_X/ChasingWindEagle_X.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "138": 50
+      }
+    },
+    {
+      "id": 15525,
+      "name": "龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15525_TransformMarker_16037_TransformPill_Dragon",
+      "model": "character/v5/02animals/ZodiacAnimals/Dragon/Dragon_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 15590,
+      "name": "翡翠始祖龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15590_TransformMarker_16126_TransformPill_GoldenDragon_Life",
+      "model": "character/v5/02animals/EpicDragonLife/EpicDragonLife.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 1000,
+        "103": 5,
+        "111": 19,
+        "119": 5,
+        "102": 15,
+        "182": 2,
+        "183": 2,
+        "137": 10
+      }
+    },
+    {
+      "id": 16138,
+      "name": "蓝血凤凰",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16138_SmallPhoenix",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X_02.x",
+      "icon": "Texture/Aries/Item/16078_SmallPhoenix.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 21151
+      }
+    },
+    {
+      "id": 16095,
+      "name": "英雄银龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16095_TransformPill_BlueDragon",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon_02.x",
+      "icon": "Texture/Aries/Item/16070_TransformPill_BlueDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 21121
+      }
+    },
+    {
+      "id": 15605,
+      "name": "黄金猛犸_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15605_TransformMarker_16141_TransformPill_JuXiangLv3",
+      "model": "character/v5/02animals/JuXiangLv3/JuXiangLv3.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 600,
+        "103": 5,
+        "111": 18,
+        "119": 5,
+        "102": 18,
+        "159": 3
+      }
+    },
+    {
+      "id": 16107,
+      "name": "夜叉魔狼(7天)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16107_HorseSilverWolfSevenDays",
+      "model": "character/v5/02animals/HorseSilverWolf/HorseSilverWolf.x",
+      "icon": "Texture/Aries/Item/16076_HorseSilverWolf.png",
+      "stats": {
+        "28": 10,
+        "46": 7,
+        "51": 1554,
+        "50": 100
+      }
+    },
+    {
+      "id": 16076,
+      "name": "夜叉魔狼",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16076_HorseSilverWolf",
+      "model": "character/v5/02animals/HorseSilverWolf/HorseSilverWolf.x",
+      "icon": "Texture/Aries/Item/16076_HorseSilverWolf.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 871,
+        "180": 1
+      }
+    },
+    {
+      "id": 15595,
+      "name": "翡翠始祖龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15595_TransformMarker_16131_TransformPill_GoldenDragon_Life",
+      "model": "character/v5/02animals/EpicDragonLife/EpicDragonLife.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 1320,
+        "103": 5,
+        "111": 27,
+        "119": 5,
+        "102": 15,
+        "182": 2,
+        "183": 2,
+        "137": 10
+      }
+    },
+    {
+      "id": 15564,
+      "name": "土遁神龟_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15564_TransformMarker_16108_SmallTurtle",
+      "model": "character/v5/02animals/Tortoise/Tortoise01.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "111": 12,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 16127,
+      "name": "紫晶灵翼龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16127_TransformPill_GoldenDragon_Death",
+      "model": "character/v5/02animals/EpicDragonDeath/EpicDragonDeath.x",
+      "icon": "Texture/Aries/Item/16127_TransformPill_GoldenDragon_Death.png",
+      "stats": {
+        "28": 10,
+        "51": 21140,
+        "46": 62,
+        "137": 11
+      }
+    },
+    {
+      "id": 16148,
+      "name": "造梦灵狐",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16148_Dream_LingHu",
+      "model": "character/v6/02animals/YinYangLingHu/YinYangLingHu.x",
+      "icon": "Texture/Aries/Item/16148_Dream_LingHu.png",
+      "stats": {
+        "28": 10,
+        "46": 152,
+        "51": 2253
+      }
+    },
+    {
+      "id": 16115,
+      "name": "逐梦海豚",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16115_DreamDelphis",
+      "model": "character/v5/02animals/HaiTun/HaiTun.x",
+      "icon": "Texture/Aries/Item/16115_DreamDelphis.png",
+      "stats": {
+        "28": 10,
+        "51": 1711,
+        "46": 62,
+        "180": 1,
+        "50": 1080
+      }
+    },
+    {
+      "id": 16111,
+      "name": "勇气之羽",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16111_Courage_WingForRiding",
+      "model": "character/v5/02animals/ChiBang01/ChiBang01.x",
+      "icon": "Texture/Aries/Item/16111_Courage_WingForRiding.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 1661,
+        "180": 1,
+        "50": 500
+      }
+    },
+    {
+      "id": 16099,
+      "name": "逐风神鹰",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16099_ChasingWindEagle",
+      "model": "character/v5/02animals/ChasingWindEagle/ChasingWindEagle.x",
+      "icon": "Texture/Aries/Item/16077_ChasingWindEagle.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 21125,
+        "138": 50
+      }
+    },
+    {
+      "id": 15597,
+      "name": "王者金龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15597_TransformMarker_16133_TransformPill_GoldenDragon",
+      "model": "character/v5/02animals/GoldenDragon/GoldenDragon_02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 350,
+        "103": 5,
+        "111": 15,
+        "119": 5,
+        "102": 12
+      }
+    },
+    {
+      "id": 16078,
+      "name": "蓝血凤凰(珍藏版)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16078_SmallPhoenix",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X.x",
+      "icon": "Texture/Aries/Item/16078_SmallPhoenix.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 893
+      }
+    },
+    {
+      "id": 15541,
+      "name": "暗影神驹_变身标记_活动",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15541_TransformMarker_16085_TransformPill_Pegasus_Black",
+      "model": "character/v5/02animals/Pegasus_Black/Pegasus_Black.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 100,
+        "103": 1,
+        "111": 3,
+        "119": 3,
+        "102": 6
+      }
+    },
+    {
+      "id": 16140,
+      "name": "白银猛犸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16140_TransformPill_JuXiang_Lv2",
+      "model": "character/v5/02animals/JuXiangLv2/JuXiangLv2.x",
+      "icon": "Texture/Aries/Item/16140_TransformPill_JuXiang_Lv2.png",
+      "stats": {
+        "28": 10,
+        "46": 15,
+        "51": 21154
+      }
+    },
+    {
+      "id": 15516,
+      "name": "浴火凤凰(珍藏版)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15516_TransformMarker_16075_HorsePhoenix",
+      "model": "character/v5/02animals/HorsePhoenix/HorsePhoenix.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 300,
+        "103": 3,
+        "111": 10,
+        "119": 5,
+        "102": 10,
+        "138": 40
+      }
+    },
+    {
+      "id": 16123,
+      "name": "红玉霸天龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16123_TransformPill_GoldenDragon_Fire",
+      "model": "character/v5/02animals/EpicDragonFire/EpicDragonFire.x",
+      "icon": "Texture/Aries/Item/16123_TransformPill_GoldenDragon_Fire.png",
+      "stats": {
+        "28": 10,
+        "51": 21136,
+        "46": 62,
+        "137": 6
+      }
+    },
+    {
+      "id": 15589,
+      "name": "黄铜啸天龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15589_TransformMarker_16125_TransformPill_GoldenDragon_Storm",
+      "model": "character/v5/02animals/EpicDragonStorm/EpicDragonStorm.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 680,
+        "103": 6,
+        "111": 23,
+        "119": 5,
+        "102": 15,
+        "196": 6,
+        "137": 8
+      }
+    },
+    {
+      "id": 16092,
+      "name": "荣誉银龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16092_TransformPill_BlueDragon_VIP",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon_02.x",
+      "icon": "Texture/Aries/Item/16070_TransformPill_BlueDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 7,
+        "51": 21115,
+        "180": 1
+      }
+    },
+    {
+      "id": 16039,
+      "name": "马变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16039_TransformPill_Horse",
+      "model": "character/v5/02animals/ZodiacAnimals/Horse/Horse_withlilypad.x",
+      "icon": "Texture/Aries/Item/16039_TransformPill_Horse.png",
+      "stats": {
+        "28": 10,
+        "29": 10123,
+        "51": 885,
+        "46": 3
+      }
+    },
+    {
+      "id": 16069,
+      "name": "王者金龙(珍藏版)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16069_TransformPill_GoldenDragon",
+      "model": "character/v5/02animals/GoldenDragon/GoldenDragon.x",
+      "icon": "Texture/Aries/Item/16069_TransformPill_GoldenDragon.png",
+      "stats": {
+        "46": 31,
+        "28": 10,
+        "51": 823
+      }
+    },
+    {
+      "id": 16038,
+      "name": "蛇变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16038_TransformPill_Snake",
+      "model": "character/v5/02animals/ZodiacAnimals/Snake/Snake_withlilypad.x",
+      "icon": "Texture/Aries/Item/16038_TransformPill_Snake.png",
+      "stats": {
+        "28": 10,
+        "29": 10122,
+        "51": 884,
+        "46": 3
+      }
+    },
+    {
+      "id": 15526,
+      "name": "蛇_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15526_TransformMarker_16038_TransformPill_Snake",
+      "model": "character/v5/02animals/ZodiacAnimals/Snake/Snake_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 15510,
+      "name": "英雄白龙(珍藏版)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15510_TransformMarker_16072_TransformPill_WhiteDragon",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 200,
+        "103": 2,
+        "111": 9,
+        "119": 4,
+        "102": 10
+      }
+    },
+    {
+      "id": 16131,
+      "name": "翡翠始祖龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16131_TransformPill_GoldenDragon_Life",
+      "model": "character/v5/02animals/EpicDragonLife/EpicDragonLife.x",
+      "icon": "Texture/Aries/Item/16126_TransformPill_GoldenDragon_Life.png",
+      "stats": {
+        "28": 10,
+        "51": 21144,
+        "46": 31,
+        "137": 10
+      }
+    },
+    {
+      "id": 16108,
+      "name": "土遁神龟",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16108_SmallTurtle",
+      "model": "character/v5/02animals/Tortoise/Tortoise01.x",
+      "icon": "Texture/Aries/Item/16108_SmallTurtle.png",
+      "stats": {
+        "28": 12,
+        "46": 31,
+        "51": 21132
+      }
+    },
+    {
+      "id": 16086,
+      "name": "假日黄金飞马",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16086_TransformPill_Pegasus_Holiday",
+      "model": "character/v5/02animals/Pegasus/Pegasus.x",
+      "icon": "Texture/Aries/Item/16067_TransformPill_Pegasus.png",
+      "stats": {
+        "28": 10,
+        "46": 3,
+        "51": 20003
+      }
+    },
+    {
+      "id": 15596,
+      "name": "紫晶灵翼龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15596_TransformMarker_16132_TransformPill_GoldenDragon_Death",
+      "model": "character/v5/02animals/EpicDragonDeath/EpicDragonDeath.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 1200,
+        "103": 5,
+        "111": 30,
+        "119": 5,
+        "102": 15,
+        "204": 6,
+        "137": 11
+      }
+    },
+    {
+      "id": 15565,
+      "name": "御海仙龟_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15565_TransformMarker_16109_SuperTurtle",
+      "model": "character/v5/02animals/Tortoise/Tortoise02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "103": 4,
+        "111": 14,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 16139,
+      "name": "小猛犸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16139_TransformPill_JuXiang_Lv1",
+      "model": "character/v5/02animals/JuXiangLv1/JuXiangLv1.x",
+      "icon": "Texture/Aries/Item/16139_TransformPill_JuXiang_Lv1.png",
+      "stats": {
+        "28": 10,
+        "46": 7,
+        "51": 21153
+      }
+    },
+    {
+      "id": 16085,
+      "name": "假日暗影神驹",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16085_TransformPill_Pegasus_Black_Holiday",
+      "model": "character/v5/02animals/Pegasus_Black/Pegasus_Black.x",
+      "icon": "Texture/Aries/Item/16068_TransformPill_Pegasus_Black.png",
+      "stats": {
+        "28": 10,
+        "46": 3,
+        "51": 20002
+      }
+    },
+    {
+      "id": 15557,
+      "name": "原始晶龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15557_TransformMarker_16101_TransformPill_CrystalDragon",
+      "model": "character/v5/02animals/DragonBoss_Ice/DragonBoss_Ice.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "119": 5,
+        "102": 10,
+        "111": 12
+      }
+    },
+    {
+      "id": 15542,
+      "name": "黄金飞马_变身标记_活动",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15542_TransformMarker_16086_TransformPill_Pegasus",
+      "model": "character/v5/02animals/Pegasus/Pegasus.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 100,
+        "103": 1,
+        "111": 3,
+        "119": 3,
+        "102": 6
+      }
+    },
+    {
+      "id": 15511,
+      "name": "王者玉龙(珍藏版)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15511_TransformMarker_16073_TransformPill_GreenDragon",
+      "model": "character/v5/02animals/GreenDragon/GreenDragon.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 300,
+        "103": 3,
+        "111": 10,
+        "119": 5,
+        "102": 10
+      }
+    },
+    {
+      "id": 15502,
+      "name": "魔法师扫帚_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15502_TransformMarker_16058_TransformPill_MagicBesom",
+      "model": "character/v5/02animals/MagicBesom/MagicBesom.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 50,
+        "103": 1,
+        "111": 2,
+        "119": 2,
+        "102": 3
+      }
+    },
+    {
+      "id": 16124,
+      "name": "蓝元冰霜龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16124_TransformPill_GoldenDragon_Ice",
+      "model": "character/v5/02animals/EpicDragonIce/EpicDragonIce.x",
+      "icon": "Texture/Aries/Item/16124_TransformPill_GoldenDragon_Ice.png",
+      "stats": {
+        "28": 10,
+        "51": 21137,
+        "46": 62,
+        "137": 7
+      }
+    },
+    {
+      "id": 16037,
+      "name": "龙变身药丸",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16037_TransformPill_Dragon",
+      "model": "character/v5/02animals/ZodiacAnimals/Dragon/Dragon_withlilypad.x",
+      "icon": "Texture/Aries/Item/16037_TransformPill_Dragon.png",
+      "stats": {
+        "28": 10,
+        "29": 10121,
+        "51": 883,
+        "46": 3
+      }
+    },
+    {
+      "id": 15517,
+      "name": "夜叉魔狼_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15517_TransformMarker_16076_HorseSilverWolf",
+      "model": "character/v5/02animals/HorseSilverWolf/HorseSilverWolf.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8
+      }
+    },
+    {
+      "id": 16101,
+      "name": "原始晶龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16101_TransformPill_CrystalDragon",
+      "model": "character/v5/02animals/DragonBoss_Ice/DragonBoss_Ice.x",
+      "icon": "Texture/Aries/Item/16101_TransformPill_CrystalDragon.png",
+      "stats": {
+        "28": 10,
+        "51": 21127,
+        "46": 9999
+      }
+    },
+    {
+      "id": 15576,
+      "name": "希望之羽(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15576_TransformMarker_16112_TransformPill_Seal_WingForRiding_7Day",
+      "model": "character/v5/02animals/ChiBang02/ChiBang02.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "74": 1
+      }
+    },
+    {
+      "id": 15586,
+      "name": "双人坐骑05_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15586_TransformMarker_16122_DoubleHorse",
+      "model": "character/v3/vehicles/car/car.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 150,
+        "103": 2,
+        "111": 7,
+        "119": 4,
+        "102": 8,
+        "59": 50,
+        "525": 100
+      }
+    },
+    {
+      "id": 15558,
+      "name": "VIP原始晶龙(7天)_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15558_TransformMarker_16102_TransformPill_CrystalDragonVip",
+      "model": "character/v5/02animals/DragonBoss_Ice/DragonBoss_Ice.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 400,
+        "119": 5,
+        "102": 10,
+        "111": 12
+      }
+    },
+    {
+      "id": 15527,
+      "name": "马_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15527_TransformMarker_16039_TransformPill_Horse",
+      "model": "character/v5/02animals/ZodiacAnimals/Horse/Horse_withlilypad.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0
+      }
+    },
+    {
+      "id": 16144,
+      "name": "金色精灵羽翼",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16144_GoldenFairyWings",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi01.x",
+      "icon": "Texture/Aries/Item/16144_GoldenFairyWings.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 2182,
+        "138": 20
+      }
+    },
+    {
+      "id": 16074,
+      "name": "仙兔",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16074_TransformPill_GrilRabbit",
+      "model": "character/v5/02animals/GrilRabbit/GrilRabbit.x",
+      "icon": "Texture/Aries/Item/16074_TransformPill_GrilRabbit.png",
+      "stats": {
+        "28": 10,
+        "46": 62,
+        "51": 836,
+        "180": 1
+      }
+    },
+    {
+      "id": 16081,
+      "name": "黑色小神鹰(珍藏版)",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16081_SmallEagle_Black",
+      "model": "character/v5/02animals/ChasingWindEagle_X/ChasingWindEagle_X.x",
+      "icon": "Texture/Aries/Item/16081_SmallEagle_Black.png",
+      "stats": {
+        "46": 31,
+        "28": 10,
+        "51": 903,
+        "138": 50,
+        "180": 1
+      }
+    },
+    {
+      "id": 15592,
+      "name": "红玉霸天龙_变身标记",
+      "slot": 33,
+      "kind": 2,
+      "subtype": 8,
+      "assetKey": "15592_TransformMarker_16128_TransformPill_GoldenDragon_Fire",
+      "model": "character/v5/02animals/EpicDragonFire/EpicDragonFire.x",
+      "icon": "Texture/alphadot.png",
+      "stats": {
+        "12": 0,
+        "101": 1080,
+        "103": 5,
+        "111": 33,
+        "119": 5,
+        "102": 15,
+        "151": 3,
+        "137": 6
+      }
+    },
+    {
+      "id": 16135,
+      "name": "英雄银龙",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16135_TransformPill_BlueDragon",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon_02.x",
+      "icon": "Texture/Aries/Item/16070_TransformPill_BlueDragon.png",
+      "stats": {
+        "28": 10,
+        "46": 31,
+        "51": 21148
+      }
+    },
+    {
+      "id": 16117,
+      "name": "双人跑车(7天)",
+      "slot": 1,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16117_car",
+      "model": "character/v3/vehicles/car/car.x",
+      "icon": "character/v3/vehicles/car/car.x.png",
+      "stats": {
+        "28": 10,
+        "51": 1763,
+        "46": 7,
+        "50": 300
+      }
+    },
+    {
+      "id": 16087,
+      "name": "假日霸王虎",
+      "slot": 0,
+      "kind": 2,
+      "subtype": 6,
+      "assetKey": "16087_TransformPill_Smilodon_Holiday",
+      "model": "character/v5/02animals/Smilodon/Smilodon.x",
+      "icon": "Texture/Aries/Item/16071_TransformPill_Smilodon.png",
+      "stats": {
+        "28": 10,
+        "46": 3,
+        "51": 21109
+      }
+    }
+  ],
+  "jobs": [
+    {
+      "id": "original-16032",
+      "name": "鸵鸟变身药丸",
+      "model": "character/v5/02animals/Ostrich/Ostrich.x",
+      "items": [
+        16032
+      ],
+      "markers": [
+        15520
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/ostrich/ostrich.x.z,4dea07a6e7a0d852c3e1544363894666,172513",
+        "md5": "4dea07a6e7a0d852c3e1544363894666",
+        "bytes": 172513
+      }
+    },
+    {
+      "id": "original-16033",
+      "name": "鼠变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Mouse/Mouse_withlilypad.x",
+      "items": [
+        16033
+      ],
+      "markers": [
+        15521
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/mouse/mouse_withlilypad.x.z,f9189ebbce929445751deb8cec063a81,85738",
+        "md5": "f9189ebbce929445751deb8cec063a81",
+        "bytes": 85738
+      }
+    },
+    {
+      "id": "original-16034",
+      "name": "牛变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Cow/Cow_withlilypad.x",
+      "items": [
+        16034
+      ],
+      "markers": [
+        15522
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/cow/cow_withlilypad.x.z,eb18b48ee4a09c6c2976e693638e3a8c,84141",
+        "md5": "eb18b48ee4a09c6c2976e693638e3a8c",
+        "bytes": 84141
+      }
+    },
+    {
+      "id": "original-16035",
+      "name": "虎变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Tiger/Tiger_withlilypad.x",
+      "items": [
+        16035
+      ],
+      "markers": [
+        15523
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/tiger/tiger_withlilypad.x.z,0062d43b317e782789af16e89ee047e8,143591",
+        "md5": "0062d43b317e782789af16e89ee047e8",
+        "bytes": 143591
+      }
+    },
+    {
+      "id": "original-16036",
+      "name": "兔变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Rabbit/Rabbit_withlilypad.x",
+      "items": [
+        16036
+      ],
+      "markers": [
+        15524
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/rabbit/rabbit_withlilypad.x.z,3e53cc0d2151d84e4c8fea60894e2c2c,53087",
+        "md5": "3e53cc0d2151d84e4c8fea60894e2c2c",
+        "bytes": 53087
+      }
+    },
+    {
+      "id": "original-16037",
+      "name": "龙变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Dragon/Dragon_withlilypad.x",
+      "items": [
+        16037
+      ],
+      "markers": [
+        15525
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/dragon/dragon_withlilypad.x.z,fcbf2e225f852a4ae36e327f66ce5b41,81806",
+        "md5": "fcbf2e225f852a4ae36e327f66ce5b41",
+        "bytes": 81806
+      }
+    },
+    {
+      "id": "original-16038",
+      "name": "蛇变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Snake/Snake_withlilypad.x",
+      "items": [
+        16038
+      ],
+      "markers": [
+        15526
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/snake/snake_withlilypad.x.z,691bcefe74c7c7a4cf8197522f1d0d5b,48336",
+        "md5": "691bcefe74c7c7a4cf8197522f1d0d5b",
+        "bytes": 48336
+      }
+    },
+    {
+      "id": "original-16039",
+      "name": "马变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Horse/Horse_withlilypad.x",
+      "items": [
+        16039
+      ],
+      "markers": [
+        15527
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/horse/horse_withlilypad.x.z,269c12bc2cb08511280d8adb0b059b06,340936",
+        "md5": "269c12bc2cb08511280d8adb0b059b06",
+        "bytes": 340936
+      }
+    },
+    {
+      "id": "original-16040",
+      "name": "羊变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Sheep/Sheep_withlilypad.x",
+      "items": [
+        16040
+      ],
+      "markers": [
+        15528
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/sheep/sheep_withlilypad.x.z,6f079da996901c557900c4f10d863dc9,241263",
+        "md5": "6f079da996901c557900c4f10d863dc9",
+        "bytes": 241263
+      }
+    },
+    {
+      "id": "original-16041",
+      "name": "猴变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Monkey/Monkey_withlilypad.x",
+      "items": [
+        16041
+      ],
+      "markers": [
+        15529
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/monkey/monkey_withlilypad.x.z,8b077f28bfbe424b181b65c10b3358ab,78774",
+        "md5": "8b077f28bfbe424b181b65c10b3358ab",
+        "bytes": 78774
+      }
+    },
+    {
+      "id": "original-16042",
+      "name": "鸡变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Cock/Cock_withlilypad.x",
+      "items": [
+        16042
+      ],
+      "markers": [
+        15530
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/cock/cock_withlilypad.x.z,06e58fb6d48e1df58702576a0ae0bb14,87835",
+        "md5": "06e58fb6d48e1df58702576a0ae0bb14",
+        "bytes": 87835
+      }
+    },
+    {
+      "id": "original-16043",
+      "name": "狗变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Dog/Dog_withlilypad.x",
+      "items": [
+        16043
+      ],
+      "markers": [
+        15531
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/dog/dog_withlilypad.x.z,2f3e048aa08c88ce2867a13ac03941b6,124573",
+        "md5": "2f3e048aa08c88ce2867a13ac03941b6",
+        "bytes": 124573
+      }
+    },
+    {
+      "id": "original-16044",
+      "name": "猪变身药丸",
+      "model": "character/v5/02animals/ZodiacAnimals/Pig/Pig_withlilypad.x",
+      "items": [
+        16044
+      ],
+      "markers": [
+        15532
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/zodiacanimals/pig/pig_withlilypad.x.z,fbac2b52beb12f1e7cc53db99d9974f6,78467",
+        "md5": "fbac2b52beb12f1e7cc53db99d9974f6",
+        "bytes": 78467
+      }
+    },
+    {
+      "id": "original-16051",
+      "name": "冲锋大象",
+      "model": "character/v5/02animals/Elephant/Elephant.x",
+      "items": [
+        16051
+      ],
+      "markers": [
+        15501
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/elephant/elephant.x.z,be16d096aa1e447be84dcd8a11b7c748,152010",
+        "md5": "be16d096aa1e447be84dcd8a11b7c748",
+        "bytes": 152010
+      }
+    },
+    {
+      "id": "original-16058",
+      "name": "魔法师扫帚",
+      "model": "character/v5/02animals/MagicBesom/MagicBesom.x",
+      "items": [
+        16058
+      ],
+      "markers": [
+        15502
+      ],
+      "kind": "broom",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/magicbesom/magicbesom.x.z,cdd66840877dd044ae3e068da96a2533,13557",
+        "md5": "cdd66840877dd044ae3e068da96a2533",
+        "bytes": 13557
+      }
+    },
+    {
+      "id": "original-16059",
+      "name": "魔幻飞毯",
+      "model": "character/v5/02animals/MagicAwingCarpet/MagicAwingCarpet.x",
+      "items": [
+        16059
+      ],
+      "markers": [
+        15503
+      ],
+      "kind": "platform",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/magicawingcarpet/magicawingcarpet.x.z,98d622667a6453bdd4eb0db23fb0dd26,45594",
+        "md5": "98d622667a6453bdd4eb0db23fb0dd26",
+        "bytes": 45594
+      }
+    },
+    {
+      "id": "original-16066",
+      "name": "蜥蜴金角龙",
+      "model": "character/v5/02animals/XiYiJinJiaoLong/XiYiJinJiaoLong.x",
+      "items": [
+        16066
+      ],
+      "markers": [
+        15504
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/xiyijinjiaolong/xiyijinjiaolong.x.z,aa942eff4911002f028f879ac6f880e5,152765",
+        "md5": "aa942eff4911002f028f879ac6f880e5",
+        "bytes": 152765
+      }
+    },
+    {
+      "id": "original-16067",
+      "name": "黄金飞马",
+      "model": "character/v5/02animals/Pegasus/Pegasus.x",
+      "items": [
+        16067,
+        16086
+      ],
+      "markers": [
+        15505,
+        15542
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/pegasus/pegasus.x.z,1ad10c042bc0d8ecee2de547261e00b0,293326",
+        "md5": "1ad10c042bc0d8ecee2de547261e00b0",
+        "bytes": 293326
+      }
+    },
+    {
+      "id": "original-16068",
+      "name": "暗影神驹",
+      "model": "character/v5/02animals/Pegasus_Black/Pegasus_Black.x",
+      "items": [
+        16068,
+        16085
+      ],
+      "markers": [
+        15506,
+        15541
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/pegasus_black/pegasus_black.x.z,c5b412e3eb48971f52cb860132c10394,293593",
+        "md5": "c5b412e3eb48971f52cb860132c10394",
+        "bytes": 293593
+      }
+    },
+    {
+      "id": "original-16069",
+      "name": "王者金龙(珍藏版)",
+      "model": "character/v5/02animals/GoldenDragon/GoldenDragon.x",
+      "items": [
+        16069
+      ],
+      "markers": [
+        15507
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/goldendragon/goldendragon.x.z,996350f702a943f0dfed9d85c929d1b3,250320",
+        "md5": "996350f702a943f0dfed9d85c929d1b3",
+        "bytes": 250320
+      }
+    },
+    {
+      "id": "original-16070",
+      "name": "英雄银龙(珍藏版)",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon.x",
+      "items": [
+        16070
+      ],
+      "markers": [
+        15508
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/bluedragon/bluedragon.x.z,963c339703a1f99f89e2151bf79a2686,245306",
+        "md5": "963c339703a1f99f89e2151bf79a2686",
+        "bytes": 245306
+      }
+    },
+    {
+      "id": "original-16071",
+      "name": "霸王虎",
+      "model": "character/v5/02animals/Smilodon/Smilodon.x",
+      "items": [
+        16071,
+        16087,
+        16103,
+        16106
+      ],
+      "markers": [
+        15543,
+        15559,
+        15509,
+        15562
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/smilodon/smilodon.x.z,1a644e9312e8bd54208e7c5e551d4c6e,196827",
+        "md5": "1a644e9312e8bd54208e7c5e551d4c6e",
+        "bytes": 196827
+      }
+    },
+    {
+      "id": "original-16072",
+      "name": "英雄白龙(珍藏版)",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon.x",
+      "items": [
+        16072
+      ],
+      "markers": [
+        15510
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/whitedragon/whitedragon.x.z,1da5a5b85d613fa8faa820917900c790,243798",
+        "md5": "1da5a5b85d613fa8faa820917900c790",
+        "bytes": 243798
+      }
+    },
+    {
+      "id": "original-16073",
+      "name": "王者玉龙(珍藏版)",
+      "model": "character/v5/02animals/GreenDragon/GreenDragon.x",
+      "items": [
+        16073
+      ],
+      "markers": [
+        15511
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/greendragon/greendragon.x.z,51191f63ddc6192ff51bf95d663ccdd1,247423",
+        "md5": "51191f63ddc6192ff51bf95d663ccdd1",
+        "bytes": 247423
+      }
+    },
+    {
+      "id": "original-16074",
+      "name": "仙兔",
+      "model": "character/v5/02animals/GrilRabbit/GrilRabbit.x",
+      "items": [
+        16074,
+        16084,
+        16105
+      ],
+      "markers": [
+        15540,
+        15561,
+        15515
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/grilrabbit/grilrabbit.x.z,4c0249841bcacab6724fef977aab371b,129971",
+        "md5": "4c0249841bcacab6724fef977aab371b",
+        "bytes": 129971
+      }
+    },
+    {
+      "id": "original-16075",
+      "name": "浴火凤凰(珍藏版)",
+      "model": "character/v5/02animals/HorsePhoenix/HorsePhoenix.x",
+      "items": [
+        16075
+      ],
+      "markers": [
+        15516
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/horsephoenix/horsephoenix.x.z,ee1be853fe453b640dd87f061ac88bc6,219507",
+        "md5": "ee1be853fe453b640dd87f061ac88bc6",
+        "bytes": 219507
+      }
+    },
+    {
+      "id": "original-16076",
+      "name": "夜叉魔狼",
+      "model": "character/v5/02animals/HorseSilverWolf/HorseSilverWolf.x",
+      "items": [
+        16076,
+        16088,
+        16107
+      ],
+      "markers": [
+        15545,
+        15563,
+        15517
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/horsesilverwolf/horsesilverwolf.x.z,f49c55f8ab45f5fd03f1c2c46abd6153,194597",
+        "md5": "f49c55f8ab45f5fd03f1c2c46abd6153",
+        "bytes": 194597
+      }
+    },
+    {
+      "id": "original-16077",
+      "name": "逐风神鹰(珍藏版)",
+      "model": "character/v5/02animals/ChasingWindEagle/ChasingWindEagle.x",
+      "items": [
+        16077,
+        16099
+      ],
+      "markers": [
+        15555,
+        15518
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/chasingwindeagle/chasingwindeagle.x.z,4390d12df667729a7f5463918a0de68a,173992",
+        "md5": "4390d12df667729a7f5463918a0de68a",
+        "bytes": 173992
+      }
+    },
+    {
+      "id": "original-16078",
+      "name": "蓝血凤凰(珍藏版)",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X.x",
+      "items": [
+        16078
+      ],
+      "markers": [
+        15519
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/horsephoenix_x/horsephoenix_x.x.z,9a5817cab166a1599b357a3b2272ab5c,181535",
+        "md5": "9a5817cab166a1599b357a3b2272ab5c",
+        "bytes": 181535
+      }
+    },
+    {
+      "id": "original-16079",
+      "name": "白色小神鹰",
+      "model": "character/v5/02animals/ChasingWindEagle_W/ChasingWindEagle_W.x",
+      "items": [
+        16079
+      ],
+      "markers": [
+        15533
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/chasingwindeagle_w/chasingwindeagle_w.x.z,409f4d357a8c0d54641b6bfd190138bb,174450",
+        "md5": "409f4d357a8c0d54641b6bfd190138bb",
+        "bytes": 174450
+      }
+    },
+    {
+      "id": "original-16080",
+      "name": "圣诞麋鹿",
+      "model": "character/v5/02animals/ElkAnimals/ElkAnimals.x",
+      "items": [
+        16080
+      ],
+      "markers": [
+        15534
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/elkanimals/elkanimals.x.z,9a9470e1048fe35e0e6eb8348d8ebcfd,161483",
+        "md5": "9a9470e1048fe35e0e6eb8348d8ebcfd",
+        "bytes": 161483
+      }
+    },
+    {
+      "id": "original-16081",
+      "name": "黑色小神鹰(珍藏版)",
+      "model": "character/v5/02animals/ChasingWindEagle_X/ChasingWindEagle_X.x",
+      "items": [
+        16081,
+        16100
+      ],
+      "markers": [
+        15556,
+        15537
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/chasingwindeagle_x/chasingwindeagle_x.x.z,5bf55673fce59f58762efecf679df541,174446",
+        "md5": "5bf55673fce59f58762efecf679df541",
+        "bytes": 174446
+      }
+    },
+    {
+      "id": "original-16082",
+      "name": "蒸汽机器人",
+      "model": "character/v5/02animals/Robot01/Robot.x",
+      "items": [
+        16082
+      ],
+      "markers": [
+        15538
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/robot01/robot.x.z,909560fddef718f5043da4f1dc08b6f5,191273",
+        "md5": "909560fddef718f5043da4f1dc08b6f5",
+        "bytes": 191273
+      }
+    },
+    {
+      "id": "original-16083",
+      "name": "机械狼蛛",
+      "model": "character/v5/02animals/HKBS/HKBS.x",
+      "items": [
+        16083,
+        16089,
+        16104
+      ],
+      "markers": [
+        15544,
+        15560,
+        15539
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/hkbs/hkbs.x.z,589ae54411eb32af778ccbd19f326de7,203447",
+        "md5": "589ae54411eb32af778ccbd19f326de7",
+        "bytes": 203447
+      }
+    },
+    {
+      "id": "original-16090",
+      "name": "荣誉白龙",
+      "model": "character/v5/02animals/WhiteDragon/WhiteDragon_02.x",
+      "items": [
+        16090,
+        16094,
+        16134
+      ],
+      "markers": [
+        15550,
+        15598,
+        15546
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/whitedragon/whitedragon_02.x.z,7f72717af83b80cb642cee82442d2b73,254557",
+        "md5": "7f72717af83b80cb642cee82442d2b73",
+        "bytes": 254557
+      }
+    },
+    {
+      "id": "original-16091",
+      "name": "荣誉蓝血凤凰",
+      "model": "character/v5/02animals/HorsePhoenix_X/HorsePhoenix_X_02.x",
+      "items": [
+        16091,
+        16098,
+        16138
+      ],
+      "markers": [
+        15554,
+        15602,
+        15547
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/horsephoenix_x/horsephoenix_x_02.x.z,3fc0a56304cf6dae7b137ed9af965c1c,184466",
+        "md5": "3fc0a56304cf6dae7b137ed9af965c1c",
+        "bytes": 184466
+      }
+    },
+    {
+      "id": "original-16092",
+      "name": "荣誉银龙",
+      "model": "character/v5/02animals/BlueDragon/BlueDragon_02.x",
+      "items": [
+        16092,
+        16095,
+        16135
+      ],
+      "markers": [
+        15551,
+        15599,
+        15548
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/bluedragon/bluedragon_02.x.z,9e0caf958d2c42de3da4d97c02b02ab6,256005",
+        "md5": "9e0caf958d2c42de3da4d97c02b02ab6",
+        "bytes": 256005
+      }
+    },
+    {
+      "id": "original-16093",
+      "name": "王者金龙",
+      "model": "character/v5/02animals/GoldenDragon/GoldenDragon_02.x",
+      "items": [
+        16093,
+        16133
+      ],
+      "markers": [
+        15549,
+        15597
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/goldendragon/goldendragon_02.x.z,54912342fb3013035ed4f456711cd69c,261067",
+        "md5": "54912342fb3013035ed4f456711cd69c",
+        "bytes": 261067
+      }
+    },
+    {
+      "id": "original-16096",
+      "name": "王者玉龙",
+      "model": "character/v5/02animals/GreenDragon/GreenDragon_02.x",
+      "items": [
+        16096,
+        16136
+      ],
+      "markers": [
+        15552,
+        15600
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/greendragon/greendragon_02.x.z,da4a3efa54a329bb8bfdaf856a2a3a39,258249",
+        "md5": "da4a3efa54a329bb8bfdaf856a2a3a39",
+        "bytes": 258249
+      }
+    },
+    {
+      "id": "original-16097",
+      "name": "浴火凤凰",
+      "model": "character/v5/02animals/HorsePhoenix/HorsePhoenix_02.x",
+      "items": [
+        16097,
+        16137
+      ],
+      "markers": [
+        15553,
+        15601
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/horsephoenix/horsephoenix_02.x.z,b094791c0c1ba10be4952bacdfc1a6b2,222700",
+        "md5": "b094791c0c1ba10be4952bacdfc1a6b2",
+        "bytes": 222700
+      }
+    },
+    {
+      "id": "original-16101",
+      "name": "原始晶龙",
+      "model": "character/v5/02animals/DragonBoss_Ice/DragonBoss_Ice.x",
+      "items": [
+        16101,
+        16102
+      ],
+      "markers": [
+        15557,
+        15558
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/dragonboss_ice/dragonboss_ice.x.z,00d7d6bb360a588ab9f3aefa71e18e0e,440404",
+        "md5": "00d7d6bb360a588ab9f3aefa71e18e0e",
+        "bytes": 440404
+      }
+    },
+    {
+      "id": "original-16108",
+      "name": "土遁神龟",
+      "model": "character/v5/02animals/Tortoise/Tortoise01.x",
+      "items": [
+        16108
+      ],
+      "markers": [
+        15564
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/tortoise/tortoise01.x.z,1ddefaaac321e39bfc9d9729212ef7ad,79858",
+        "md5": "1ddefaaac321e39bfc9d9729212ef7ad",
+        "bytes": 79858
+      }
+    },
+    {
+      "id": "original-16109",
+      "name": "御海仙龟",
+      "model": "character/v5/02animals/Tortoise/Tortoise02.x",
+      "items": [
+        16109
+      ],
+      "markers": [
+        15565
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/tortoise/tortoise02.x.z,4d8b1c91815a2128e10846bb2f7ae269,142211",
+        "md5": "4d8b1c91815a2128e10846bb2f7ae269",
+        "bytes": 142211
+      }
+    },
+    {
+      "id": "original-16110",
+      "name": "希望之羽",
+      "model": "character/v5/02animals/ChiBang02/ChiBang02.x",
+      "items": [
+        16110,
+        16112
+      ],
+      "markers": [
+        15571,
+        15576
+      ],
+      "kind": "wings",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/chibang02/chibang02.x.z,dd4440771274cd4d1b8332b4091c13cb,21511",
+        "md5": "dd4440771274cd4d1b8332b4091c13cb",
+        "bytes": 21511
+      }
+    },
+    {
+      "id": "original-16111",
+      "name": "勇气之羽",
+      "model": "character/v5/02animals/ChiBang01/ChiBang01.x",
+      "items": [
+        16111,
+        16113
+      ],
+      "markers": [
+        15572,
+        15577
+      ],
+      "kind": "wings",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/chibang01/chibang01.x.z,b7a838ec58649dd2aa8b87c0629fb803,21424",
+        "md5": "b7a838ec58649dd2aa8b87c0629fb803",
+        "bytes": 21424
+      }
+    },
+    {
+      "id": "original-16114",
+      "name": "蓝晶神龟",
+      "model": "character/v5/02animals/Tortoise/Tortoise04.x",
+      "items": [
+        16114
+      ],
+      "markers": [
+        15578
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/tortoise/tortoise04.x.z,c39d62b0b0b83cdbfc1f7641a022cae7,79858",
+        "md5": "c39d62b0b0b83cdbfc1f7641a022cae7",
+        "bytes": 79858
+      }
+    },
+    {
+      "id": "original-16115",
+      "name": "逐梦海豚",
+      "model": "character/v5/02animals/HaiTun/HaiTun.x",
+      "items": [
+        16115,
+        16116
+      ],
+      "markers": [
+        15580,
+        15579
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/haitun/haitun.x.z,1b75a718e0d296235a9862147b517725,65736",
+        "md5": "1b75a718e0d296235a9862147b517725",
+        "bytes": 65736
+      }
+    },
+    {
+      "id": "original-16117",
+      "name": "双人跑车(7天)",
+      "model": "character/v3/vehicles/car/car.x",
+      "items": [
+        16117,
+        16122
+      ],
+      "markers": [
+        15581,
+        15586
+      ],
+      "kind": "vehicle",
+      "sourceVersion": "kids",
+      "originalAsset": null
+    },
+    {
+      "id": "original-16118",
+      "name": "机械鲨鱼",
+      "model": "character/v5/02animals/ShuangRenFeiTing/ShuangRenFeiTing.x",
+      "items": [
+        16118,
+        16119
+      ],
+      "markers": [
+        15582,
+        15583
+      ],
+      "kind": "vehicle",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/shuangrenfeiting/shuangrenfeiting.x.z,a7b1e64d4424078eb2f84b2dad5bae32,75576",
+        "md5": "a7b1e64d4424078eb2f84b2dad5bae32",
+        "bytes": 75576
+      }
+    },
+    {
+      "id": "original-16120",
+      "name": "梦幻南瓜车",
+      "model": "character/v5/02animals/NanGuaChe/NanGuaChe.x",
+      "items": [
+        16120,
+        16121
+      ],
+      "markers": [
+        15585,
+        15584
+      ],
+      "kind": "vehicle",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/nanguache/nanguache.x.z,086d4cb6b188fcdf9812922573b8cc28,97806",
+        "md5": "086d4cb6b188fcdf9812922573b8cc28",
+        "bytes": 97806
+      }
+    },
+    {
+      "id": "original-16123",
+      "name": "红玉霸天龙",
+      "model": "character/v5/02animals/EpicDragonFire/EpicDragonFire.x",
+      "items": [
+        16123,
+        16128
+      ],
+      "markers": [
+        15587,
+        15592
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/epicdragonfire/epicdragonfire.x.z,3697a681466b18d4f656f65045fda4f4,358657",
+        "md5": "3697a681466b18d4f656f65045fda4f4",
+        "bytes": 358657
+      }
+    },
+    {
+      "id": "original-16124",
+      "name": "蓝元冰霜龙",
+      "model": "character/v5/02animals/EpicDragonIce/EpicDragonIce.x",
+      "items": [
+        16124,
+        16129
+      ],
+      "markers": [
+        15593,
+        15588
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/epicdragonice/epicdragonice.x.z,5ec13cb0aa72eb4f8d68fe0b0023dbdc,381756",
+        "md5": "5ec13cb0aa72eb4f8d68fe0b0023dbdc",
+        "bytes": 381756
+      }
+    },
+    {
+      "id": "original-16125",
+      "name": "黄铜啸天龙",
+      "model": "character/v5/02animals/EpicDragonStorm/EpicDragonStorm.x",
+      "items": [
+        16125,
+        16130
+      ],
+      "markers": [
+        15594,
+        15589
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/epicdragonstorm/epicdragonstorm.x.z,6d988217f4b3ac64bc9746833da6f1c2,330857",
+        "md5": "6d988217f4b3ac64bc9746833da6f1c2",
+        "bytes": 330857
+      }
+    },
+    {
+      "id": "original-16126",
+      "name": "翡翠始祖龙",
+      "model": "character/v5/02animals/EpicDragonLife/EpicDragonLife.x",
+      "items": [
+        16126,
+        16131
+      ],
+      "markers": [
+        15590,
+        15595
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/epicdragonlife/epicdragonlife.x.z,60a08c2ea849fdd25456ec99f0521901,362358",
+        "md5": "60a08c2ea849fdd25456ec99f0521901",
+        "bytes": 362358
+      }
+    },
+    {
+      "id": "original-16127",
+      "name": "紫晶灵翼龙",
+      "model": "character/v5/02animals/EpicDragonDeath/EpicDragonDeath.x",
+      "items": [
+        16127,
+        16132
+      ],
+      "markers": [
+        15591,
+        15596
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/epicdragondeath/epicdragondeath.x.z,71b638a10277a6d7f5437421fc771536,367344",
+        "md5": "71b638a10277a6d7f5437421fc771536",
+        "bytes": 367344
+      }
+    },
+    {
+      "id": "original-16139",
+      "name": "小猛犸",
+      "model": "character/v5/02animals/JuXiangLv1/JuXiangLv1.x",
+      "items": [
+        16139
+      ],
+      "markers": [
+        15603
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/juxianglv1/juxianglv1.x.z,48cbfd595f3e712f75f6f1d4f2a7ec96,181954",
+        "md5": "48cbfd595f3e712f75f6f1d4f2a7ec96",
+        "bytes": 181954
+      }
+    },
+    {
+      "id": "original-16140",
+      "name": "白银猛犸",
+      "model": "character/v5/02animals/JuXiangLv2/JuXiangLv2.x",
+      "items": [
+        16140
+      ],
+      "markers": [
+        15604
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/juxianglv2/juxianglv2.x.z,8549c49c9daef3177814ecd7137fa46d,198450",
+        "md5": "8549c49c9daef3177814ecd7137fa46d",
+        "bytes": 198450
+      }
+    },
+    {
+      "id": "original-16141",
+      "name": "黄金猛犸",
+      "model": "character/v5/02animals/JuXiangLv3/JuXiangLv3.x",
+      "items": [
+        16141
+      ],
+      "markers": [
+        15605
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/juxianglv3/juxianglv3.x.z,b8b3a6fcd20c3478e9638321dba8af4c,200981",
+        "md5": "b8b3a6fcd20c3478e9638321dba8af4c",
+        "bytes": 200981
+      }
+    },
+    {
+      "id": "original-16142",
+      "name": "魔力灵狐",
+      "model": "character/v5/02animals/YinYangLingHu/YinYangLingHu.x",
+      "items": [
+        16142
+      ],
+      "markers": [
+        15606
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/yinyanglinghu/yinyanglinghu.x.z,8c50244c37ad125e6dcfcf0090f72281,205489",
+        "md5": "8c50244c37ad125e6dcfcf0090f72281",
+        "bytes": 205489
+      }
+    },
+    {
+      "id": "original-16143",
+      "name": "圣诞大麋鹿(31天)",
+      "model": "character/v6/02animals/ShengDanMiLu/ShengDanMiLu.x",
+      "items": [
+        16143
+      ],
+      "markers": [
+        15612
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v6/02animals/shengdanmilu/shengdanmilu.x.z,e1a8fb0d39eff50e6609bb6bcd9133db,201542",
+        "md5": "e1a8fb0d39eff50e6609bb6bcd9133db",
+        "bytes": 201542
+      }
+    },
+    {
+      "id": "original-16144",
+      "name": "金色精灵羽翼",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi01.x",
+      "items": [
+        16144
+      ],
+      "markers": [
+        15613
+      ],
+      "kind": "wings",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/jinglingyuyi/jinglingyuyi01.x.z,569c87881cd01e1989ccf5a0b0a9ed5c,32338",
+        "md5": "569c87881cd01e1989ccf5a0b0a9ed5c",
+        "bytes": 32338
+      }
+    },
+    {
+      "id": "original-16145",
+      "name": "蓝色精灵羽翼",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi02.x",
+      "items": [
+        16145
+      ],
+      "markers": [
+        15614
+      ],
+      "kind": "wings",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/jinglingyuyi/jinglingyuyi02.x.z,4dbef9625781acaf765ab0a939355fb2,32353",
+        "md5": "4dbef9625781acaf765ab0a939355fb2",
+        "bytes": 32353
+      }
+    },
+    {
+      "id": "original-16146",
+      "name": "白色精灵羽翼",
+      "model": "character/v5/02animals/Jinglingyuyi/Jinglingyuyi03.x",
+      "items": [
+        16146
+      ],
+      "markers": [
+        15615
+      ],
+      "kind": "wings",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/jinglingyuyi/jinglingyuyi03.x.z,780f339a5fc7eb4c4704134e86f3cffb,32335",
+        "md5": "780f339a5fc7eb4c4704134e86f3cffb",
+        "bytes": 32335
+      }
+    },
+    {
+      "id": "original-16147",
+      "name": "逐梦鲸鱼",
+      "model": "character/v5/02animals/JingYu/JingYu.x",
+      "items": [
+        16147
+      ],
+      "markers": [
+        15636
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/jingyu/jingyu.x.z,a0309f62d86ccbed408434cfd3c2c996,50345",
+        "md5": "a0309f62d86ccbed408434cfd3c2c996",
+        "bytes": 50345
+      }
+    },
+    {
+      "id": "original-16148",
+      "name": "造梦灵狐",
+      "model": "character/v6/02animals/YinYangLingHu/YinYangLingHu.x",
+      "items": [
+        16148
+      ],
+      "markers": [
+        15637
+      ],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v6/02animals/yinyanglinghu/yinyanglinghu.x.z,37619dd98d4e84c5d29a39bee6844068,200012",
+        "md5": "37619dd98d4e84c5d29a39bee6844068",
+        "bytes": 200012
+      }
+    },
+    {
+      "id": "original-16149",
+      "name": "尤诺的雪地车",
+      "model": "character/v5/02animals/XueDiChe/XueDiChe.x",
+      "items": [
+        16149,
+        16150
+      ],
+      "markers": [
+        15638,
+        15639
+      ],
+      "kind": "vehicle",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v5/02animals/xuediche/xuediche.x.z,0f4da6246f2617e1f85a4c0419124684,139022",
+        "md5": "0f4da6246f2617e1f85a4c0419124684",
+        "bytes": 139022
+      }
+    },
+    {
+      "id": "original-10001",
+      "name": "抱抱龙",
+      "model": "character/v3/PurpleDragonMajor/Female/PurpleDragonMajorFemale.xml",
+      "items": [
+        10001
+      ],
+      "markers": [],
+      "kind": "animal",
+      "sourceVersion": "kids",
+      "originalAsset": {
+        "entry": "character/v3/purpledragonmajor/female/purpledragonmajorfemale.xml.p,56a9c2730b4ead0ef521bd593457f2a6,419",
+        "md5": "56a9c2730b4ead0ef521bd593457f2a6",
+        "bytes": 419
+      }
+    }
+  ]
+}

@@ -1,4 +1,5 @@
 import {expectedBaseDamage,expectedBaseHeal} from './combat_cards_core.js';
+import { tr } from './locale_runtime.js';
 const TAU=Math.PI*2;
 const colors={ice:'#70d9ff',fire:'#ff9749',storm:'#ffdc68',life:'#8fe88c',death:'#c795fa',balance:'#e8cc84'};
 function path(c,points,fill,stroke='#fcf3bf',width=2){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fillStyle=fill;c.fill();c.lineWidth=width;c.strokeStyle=stroke;c.stroke();}
@@ -23,14 +24,14 @@ export class CardRenderer {
         c.save();c.scale(width/302,height/460);c.clearRect(0,0,302,460);c.drawImage(background,0,0,302,460);
         if(backgroundOnly){c.restore();return true;}
         c.textAlign='center';c.textBaseline='middle';c.lineJoin='round';c.lineWidth=5;c.strokeStyle='#172431';
-        c.font='900 27px "Microsoft YaHei",sans-serif';const title=name||reference.name;
+        c.font='900 27px "Microsoft YaHei",sans-serif';const title=tr(name||reference.name);
         c.strokeText(title,151,52,218);c.fillStyle='#fffde5';c.fillText(title,151,52,218);
         drawSchoolIcon(c,school,27,28,40);
         c.save();c.beginPath();c.rect(22,87,258,180);c.clip();if(subject)subject(c);else drawSubject(c,base,42,68,218,218);c.restore();
         badge(c,267,276,16,null);this.drawTypeIcon(c,card,267,276);
         if(details){
             badge(c,277,28,15,card.pipcost<0||card.pipcost===114||card.pipcost==='X'?'X':String(card.pipcost));badge(c,36,276,19,String(cooldown));
-            const text=description||cardDescription(card),lines=[];let line='';
+            const text=tr(description||cardDescription(card)),lines=[];let line='';
             c.fillStyle='#173b4b';c.font='bold 18px "Microsoft YaHei",sans-serif';
             for(const ch of text){if(c.measureText(line+ch).width>218){lines.push(line);line=ch;}else line+=ch;}if(line)lines.push(line);
             c.textAlign='left';c.textBaseline='top';lines.slice(0,5).forEach((value,i)=>c.fillText(value,41,307+i*23));

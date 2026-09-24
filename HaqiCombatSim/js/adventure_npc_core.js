@@ -105,7 +105,7 @@ function checkNpcOffer(save,content,offer,access) {
         costs.set(id,(costs.get(id)||0)+count);
     }
     const price=[...costs].map(([id,count])=>`${count}${id===22000?'训练点':content.items[id]?.name||'货币'}`).join('、')||'免费';
-    for(const [id,count] of costs)if((id===22000?trainingPoints(save,content):save.inventory[id]||0)<count)return {...deny(`需要${price}`),price};
+    for(const [id,count] of costs)if((id===22000?trainingPoints(save,content):save.inventory[id]||0)<count)return {...deny(`需要${price}`),price,costs:[...costs],reward,key};
     return {allowed:true,reason:price,price,costs:[...costs],reward,key};
 }
 export function purchaseNpcOffer(save,content,action,access={}) {
@@ -114,8 +114,9 @@ export function purchaseNpcOffer(save,content,action,access={}) {
     const offer=npcOffers(content,npc).find(r=>r.id===action.offerId);
     if(!offer)throw Error('商品或课程不存在');
     const status=npcOfferStatus(save,content,offer,access);
-    if(!status.allowed)throw Error(status.reason);
-    for(const [id,count] of status.costs){
+    const waived=action.paidByTest&&!status.allowed&&String(status.reason||'').startsWith('需要');
+    if(!status.allowed&&!waived)throw Error(status.reason);
+    if(!action.paidByTest)for(const [id,count] of status.costs){
         if(id===22000)save.trainingPointsSpent=(save.trainingPointsSpent||0)+count;
         else save.inventory[id]-=count;
     }

@@ -12,11 +12,12 @@ import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES,catalogSt
 import {catalogNpcMarker,catalogTracksMonster,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import { onIsland,distance,nearbyWorldObjects } from './adventure_world_core.js';
 import { OCEAN_COLOR, paintTerrain } from './adventure_terrain.js';
+import { tr } from './locale_runtime.js';
 import { paintLargeTerrain,createTerrainTileCache } from './adventure_large_terrain.js';
 export const COLORS={fire:'#e98f44',ice:'#6ecbdc',storm:'#b39aea',life:'#84bd59',death:'#a887c7'};
 const TAU=Math.PI*2;
 function ellipse(c,x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);c.fill();}
-function text(c,value,x,y,size=13,color='#fff',align='center') {c.font=`600 ${size}px "PingFang SC", "Microsoft YaHei", sans-serif`;c.textAlign=align;c.fillStyle=color;c.fillText(value,x,y);}
+function text(c,value,x,y,size=13,color='#fff',align='center') {const shown=tr(value);c.font=`600 ${size}px "PingFang SC", "Microsoft YaHei", sans-serif`;c.textAlign=align;c.fillStyle=color;c.fillText(shown,x,y);}
 const PLATE={
     hero:{text:'#eef7ff',bg:'rgba(18,78,140,.92)',stroke:'#9fd0f5'},
     npc:{text:'#fbf6d7',bg:'rgba(24,55,46,.82)',stroke:'#b7d7a4'},
@@ -25,12 +26,13 @@ const PLATE={
 };
 const plateWidths=new Map();
 function plate(c,label,x,y,style=PLATE.place) {
+    const shown=tr(label);
     c.font='600 12px "PingFang SC", sans-serif';
-    let width=plateWidths.get(label);
-    if(width===undefined){width=c.measureText(label).width+20;plateWidths.set(label,width);}
+    let width=plateWidths.get(shown);
+    if(width===undefined){width=c.measureText(shown).width+20;plateWidths.set(shown,width);}
     c.beginPath();c.roundRect(x-width/2,y-14,width,23,8);c.fillStyle=style.bg;c.fill();
     if(style.stroke){c.strokeStyle=style.stroke;c.lineWidth=1.5;c.stroke();}
-    text(c,label,x,y+2,12,style.text);
+    text(c,shown,x,y+2,12,style.text);
 }
 function circleRune(c,x,y,r,t,color='#e4d69a') {
     c.save();c.translate(x,y);c.scale(1,.53);c.strokeStyle=color;c.lineWidth=2;

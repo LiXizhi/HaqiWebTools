@@ -125,7 +125,7 @@ export async function loadResources(progress) {
     const drawMonster=createMonsterArtRenderer(monsterArt,content,draw,drawPet);
     await uiArtReady;
     const environmentArt=await environmentReady;
-    return {drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(),dungeons,environmentArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    return {drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

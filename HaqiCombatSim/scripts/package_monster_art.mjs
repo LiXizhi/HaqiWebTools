@@ -29,7 +29,7 @@ export function prepareMonsterArt(root){
         models[model]??=binding;
     }
     const result={version:1,entries,bindings,models,adaptations};
-    fs.writeFileSync(path.join(root,'data/adventure/monster-art.json'),JSON.stringify(result)+'\n');
+    fs.writeFileSync(path.join(root,'data/adventure/monster-art.json'),JSON.stringify(result,null,2)+'\n');
     return result;
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){

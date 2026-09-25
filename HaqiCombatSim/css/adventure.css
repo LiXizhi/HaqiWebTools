@@ -135,6 +135,7 @@
 @media(max-width:600px){.pet-stage-line{--pet-preview-height:72px}}
 @media(orientation:landscape) and (max-height:550px){.pet-stage-line{--pet-preview-height:64px}}
 .pet-mount-composite{position:relative;max-width:none;flex:none;overflow:visible}
+.pet-mount-composite canvas.pet-mount-canvas{width:100%!important;height:100%!important;max-width:none;object-fit:fill}
 .pet-mount-layer{position:absolute;background-repeat:no-repeat;pointer-events:none}
 .pet-mount[aria-pressed="true"]{border:2px solid var(--green);box-shadow:inset 0 0 0 1px var(--gold)}
 .pet-page-arrow{width:32px;height:32px;padding:0;background:#276d60;color:#fff7dc;border:1px solid #b59b60;border-radius:50%;font-size:24px;line-height:1}
@@ -727,10 +728,19 @@
  .journal-entry-text{display:grid;gap:2px}
  .journal-pagination{padding:4px 0}
 }
-.locale-launch{position:fixed;z-index:80;display:flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:1px solid #d7ceaa;border-radius:10px;background:rgba(249,245,233,.92);color:#5a3e18;box-shadow:0 4px 14px rgba(24,62,60,.16);cursor:pointer}
+.locale-launch{position:absolute;display:flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:1px solid #d7ceaa;border-radius:10px;background:rgba(249,245,233,.92);color:#5a3e18;box-shadow:0 4px 14px rgba(24,62,60,.16);cursor:pointer}
 .locale-launch svg{width:20px;height:20px}
 .locale-launch.is-open{background:#fff3d2;border-color:#c4a36a}
 .locale-launch.locale-gloss-over{outline:2px solid rgba(180,120,40,.85)}
+/* Mount visibility toggle shares the locale-launch chrome; sits on the same row under the hero card. */
+/* 两个按钮都挂在 #hud 内（absolute，无 z-index），与 .hero-status 同一堆叠层，不浮在整个窗口上。 */
+.mount-toggle{position:absolute;display:flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:1px solid #d7ceaa;border-radius:50%;background:rgba(249,245,233,.92);color:#5a3e18;box-shadow:0 4px 14px rgba(24,62,60,.16);cursor:pointer}
+/* 坐骑 emoji 图标（随坐骑名称变化，圆形按钮）；隐藏态叠半透明 SVG 禁止标志（圆圈+斜杠）并压暗底图。 */
+.mount-toggle .mount-emoji{position:relative;display:flex;align-items:center;justify-content:center;width:20px;height:20px;font-size:18px;line-height:1;user-select:none}
+.mount-toggle .mount-emoji-stop{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+.mount-toggle .mount-emoji-stop svg{width:24px;height:24px;opacity:.7}
+.mount-toggle[aria-pressed="false"]{background:#fff3d2;border-color:#c4a36a}
+.mount-toggle[aria-pressed="false"] .mount-emoji{opacity:.45}
 .locale-gloss{position:fixed;z-index:80;top:12px;left:12px;width:min(280px,calc(100vw - 24px));min-height:64px;padding:8px 12px 10px;background:rgba(255,248,230,.78);color:#3a2a12;border-radius:10px;box-shadow:0 8px 24px rgba(40,28,8,.18);backdrop-filter:blur(6px);cursor:grab;user-select:none;touch-action:none}
 .locale-gloss-hint{margin:0;font-size:13px;line-height:1.5;text-align:center}
 .locale-gloss.dragging{cursor:grabbing}
@@ -752,13 +762,36 @@
 .language-room .language-input,.learning-battle .language-input{width:100%;margin-top:8px}
 .language-actions,.shop-buy-row{display:flex;gap:6px;flex-wrap:wrap}
 
-/* Selected card and its readable effect description share the central preview. */
-.battle-layer .battle-hand.hand-focused{width:min(560px,calc(100% - 32px))}
-.battle-hand.hand-focused .hand-card.selected{display:grid;grid-template-columns:clamp(100px,13vw,160px) minmax(0,1fr);align-items:center;gap:16px}
-.battle-card-detail{max-height:min(300px,42dvh);overflow:auto;overscroll-behavior:contain;pointer-events:auto;touch-action:pan-y;padding:14px 16px;border:1px solid var(--gold);border-radius:10px;background:var(--paper);color:var(--ink);box-shadow:0 6px 24px #071d2a55;text-align:left;font-size:13px;line-height:1.65;overflow-wrap:anywhere}
+/* Selected card with a collapsible description stacked above the card face. */
+.battle-layer .battle-hand.hand-focused{width:min(440px,calc(100% - 32px))}
+.battle-hand.hand-focused .hand-card.selected{display:flex;flex-direction:column;align-items:center;gap:14px}
+.battle-hand.hand-focused .hand-card.selected .card-select{width:clamp(100px,13vw,160px)}
+/* The detail panel lives inside the card node; hovering it must not lift the face. */
+.battle-hand.hand-focused .hand-card:hover .card-select:enabled{transform:none}
+.battle-card-detail{pointer-events:none;width:min(400px,100%);text-align:center}
+.battle-card-detail>summary{list-style:none;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;user-select:none;-webkit-user-select:none;min-height:36px;padding:8px 18px;font-size:13px;font-weight:600;pointer-events:auto}
+.battle-card-detail>summary::marker{content:none}
+.battle-card-detail>summary::-webkit-details-marker{display:none}
+.battle-card-detail>summary:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.battle-card-detail:not([open])>summary{width:max-content;margin:0 auto;border:1px solid var(--gold);border-radius:999px;background:#173d48e8;color:#fff3d5;box-shadow:0 3px 12px #071d2a40}
+.battle-card-detail[open]{position:relative;pointer-events:auto;border:1px solid var(--gold);border-radius:12px;background:var(--paper);color:var(--ink);box-shadow:0 6px 24px #071d2a55}
+.battle-card-detail[open]>summary{position:absolute;top:6px;right:8px;z-index:1;width:auto;min-height:0;padding:3px 8px;font-size:11px;font-weight:400;color:#8a7a4d;border-radius:6px;text-decoration:underline dotted}
+.battle-card-detail[open]>summary:hover{color:#5d4a1e;text-decoration-style:solid}
+.battle-card-detail[open] h3{padding-right:56px}
+.battle-card-detail-body{max-height:min(280px,32dvh);overflow:auto;overscroll-behavior:contain;touch-action:pan-y;padding:12px 16px 14px;text-align:left;font-size:13px;line-height:1.65;overflow-wrap:anywhere}
 .battle-card-detail h3{margin:0 0 6px;font-size:18px}.battle-card-detail p{margin:7px 0}.battle-card-detail .card-detail-meta,.battle-card-detail small{font-size:11px;color:var(--muted)}
-.battle-card-detail:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
-@media(max-width:650px){.battle-hand.hand-focused .hand-card.selected{grid-template-columns:100px minmax(0,1fr);gap:10px}.battle-card-detail{padding:10px;font-size:12px;max-height:34dvh}.battle-card-detail h3{font-size:16px}}
-@media(max-height:500px){.battle-hand.hand-focused .hand-card.selected{grid-template-columns:78px minmax(0,1fr)}.battle-card-detail{max-height:38dvh}}
+.battle-card-detail-body:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+@media(max-width:650px){.battle-hand.hand-focused .hand-card.selected{gap:10px}.battle-hand.hand-focused .hand-card.selected .card-select{width:100px}.battle-card-detail-body{padding:10px 12px 12px;font-size:12px;max-height:34dvh}.battle-card-detail h3{font-size:16px}}
+@media(max-height:500px){.battle-hand.hand-focused .hand-card.selected .card-select{width:78px}.battle-card-detail-body{max-height:38dvh}}
 .battle-hand.hand-focused .hand-card.unavailable{filter:none}
 .battle-hand.hand-focused .hand-card.unavailable .card-select{filter:grayscale(1)}
+
+/* Creation appearance carousels: arrows remain separate accessible buttons. */
+.avatar-choice .avatar-carousel{display:grid;grid-template-columns:32px minmax(0,1fr) 32px;align-items:center;padding:4px;min-width:0}
+.avatar-carousel .avatar-select{display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0;width:100%;padding:4px 0;background:none;color:inherit;border:0;touch-action:pan-y}
+.avatar-carousel .avatar-page{min-width:32px;min-height:44px;padding:0;background:none;border:0;color:var(--green);font-size:30px;line-height:1}
+.avatar-carousel .avatar-counter{font-size:10px;color:var(--muted)}
+.avatar-carousel .avatar-picture{display:block;pointer-events:none}
+.avatar-carousel button:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:6px}
+.avatar-carousel .avatar-page:disabled{opacity:.3}
+@media(max-width:480px){.avatar-choice .avatar-carousel{grid-template-columns:24px minmax(0,1fr) 24px}.avatar-carousel .avatar-page{min-width:24px}.avatar-carousel .avatar-picture canvas{width:72px!important;height:76px!important}}

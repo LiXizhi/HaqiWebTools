@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>魔法星VIP等级图集</title>
+<style>body{margin:0;padding:24px;background:#13233b;color:#e3f5ff;font:16px sans-serif}main{max-width:900px;margin:auto}h1{font-size:22px}.preview{background:radial-gradient(ellipse,#254665,#101d30);border:1px solid #5b8292;border-radius:18px;max-width:360px}canvas{width:100%;height:auto;display:block}button{font:inherit;color:inherit;border:1px solid #52778c;background:#203850;border-radius:8px;padding:8px;cursor:pointer}button[aria-pressed=true]{border-color:#ffdf8b;background:#40516c;box-shadow:0 0 0 2px #ffdf8b}#levels{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:600px}#levels canvas{width:80px;max-width:100%;margin:auto}p{line-height:1.7}a{color:#86dbff}#pause{margin-top:12px}</style>
+<main><h1>魔法星 · VIP 1～16级</h1><p>魔法星会绕行、轻快换位，落后时加速追上主人。点击画布让主角走过去，或开启自动跑动；下方可选等级。</p><div class="preview"><canvas id="preview" width="360" height="250"></canvas></div><button id="pause">暂停摇摆</button><p id="status">正在加载图集…</p><div id="levels"></div><p><a href="../../assets/adventure/effects/magic-star-vip-levels-16.webp" download>下载4×4透明WebP图集</a></p></main>
+<script type="module">
+const url='../../assets/adventure/effects/magic-star-vip-levels-16.webp',image=new Image();image.src=url;await image.decode();
+const bytes=(await (await fetch(url)).arrayBuffer()).byteLength;
+let selected=1,paused=false,time=0,last=0;const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+const draw=(c,level,size)=>{const i=level-1,cell=image.width/4;c.drawImage(image,i%4*cell,Math.floor(i/4)*cell,cell,cell,-size/2,-size/2,size,size);};
+const buttons=[];for(let level=1;level<=16;level++){const b=document.createElement('button'),icon=document.createElement('canvas');icon.width=icon.height=100;b.type='button';b.setAttribute('aria-label',`VIP ${level}级`);b.setAttribute('aria-pressed',level===selected);b.append(icon,document.createTextNode(`VIP ${level}`));const c=icon.getContext('2d');c.translate(50,50);draw(c,level,100);b.onclick=()=>{selected=level;buttons.forEach((x,i)=>x.setAttribute('aria-pressed',i+1===level));};buttons.push(b);document.getElementById('levels').append(b);}
+const pause=document.getElementById('pause');pause.onclick=()=>{paused=!paused;pause.textContent=paused?'继续摇摆':'暂停摇摆';};
+import {createStarFollower} from '/js/adventure_star_motion_core.js';
+import {drawMagicStar} from '/js/adventure_star.js';
+import {loadResources} from '/js/adventure_assets.js';
+const assets=await loadResources(),follower=createStarFollower(),owner={x:180,y:185},target={...owner};
+let automatic=false;
+const canvas=document.getElementById('preview'),run=document.createElement('button');run.textContent='主角跑动';run.onclick=()=>{automatic=!automatic;run.textContent=automatic?'主角停下':'主角跑动';target.x=owner.x;target.y=owner.y;};document.getElementById('pause').after(run);
+canvas.style.touchAction='none';canvas.onclick=e=>{automatic=false;run.textContent='主角跑动';const r=canvas.getBoundingClientRect();target.x=Math.max(65,Math.min(295,(e.clientX-r.left)*360/r.width));target.y=Math.max(125,Math.min(210,(e.clientY-r.top)*250/r.height));};
+const c=canvas.getContext('2d');function frame(now){const dt=Math.min(.055,(now-last)/1000||0);last=now;
+if(!paused){time+=dt*1000;if(automatic){target.x=180+Math.sin(time/900)*112;target.y=177+Math.sin(time/1400)*22;}const dx=target.x-owner.x,dy=target.y-owner.y,d=Math.hypot(dx,dy),step=Math.min(d,230*dt);if(d){owner.x+=dx/d*step;owner.y+=dy/d*step;}follower.step({x:owner.x,y:owner.y-66},time,{reducedMotion:reduce.matches});}
+c.clearRect(0,0,360,250);if(!follower.state.front)drawMagicStar(c,follower.state,assets,selected);assets.tile(c,'sprites',8,owner.x-34,owner.y-78,68,78);if(follower.state.front)drawMagicStar(c,follower.state,assets,selected);c.fillStyle='#e3f5ff';c.textAlign='center';c.font='14px sans-serif';c.fillText(`VIP ${selected}`,180,239);requestAnimationFrame(frame);}
+document.getElementById('status').textContent=`${image.width}×${image.height} · ${bytes.toLocaleString()} 字节（小于32KB）· 16个静态等级外观`;
+requestAnimationFrame(frame);
+</script></html>

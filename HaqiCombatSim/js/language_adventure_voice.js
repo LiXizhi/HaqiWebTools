@@ -1,5 +1,6 @@
-// Keepwork IO only. No raw audio or transcript is persisted by this adapter.
+// Keepwork IO only. Microphone audio/transcripts are not persisted; completed TTS may be cached.
 import {loadKeepwork} from './adventure_cloud.js';
+import {cachedLearningAudio,rememberLearningAudio} from './learning_audio_cache.js';
 
 function deadline(promise, ms, signal) {
     return new Promise((resolve,reject)=>{
@@ -103,14 +104,32 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
             // await actual playback. Finishing synthesis is not finishing speech.
             sdk.speech?.resumeSharedAudioEngine?.();
             const voiceType=getSettings().voiceType;
-            speaker=sdk.speechRTC.createSession({audioFormat:'mp3',autoPlay:false,enableSubtitle:false,speechRate:-8,...(voiceType?{voiceType}:{})});
-            const stream=speaker;
-            let audio=null,finishPlayback=null;
-            const stop=()=>{audio?.pause();finishPlayback?.();void stream.stop({finish:false}).catch(()=>{});};
+            const config={audioFormat:'mp3',autoPlay:false,enableSubtitle:false,speechRate:-8,...(voiceType?{voiceType}:{})};
+            const key=JSON.stringify([text,locale,config]);
+            let stream=null,audio=null,finishPlayback=null,release=null;
+            const request=new AbortController();
+            const stop=()=>{request.abort();audio?.pause();finishPlayback?.();void stream?.stop({finish:false}).catch(()=>{});};
             signal.addEventListener('abort',stop,{once:true});
             const active={stop};playback=active;
             try{
-                const result=await deadline(stream.synthesize(text,{close:true,closeConnection:false}),30000,signal);
+                let result;
+                if(sdk.speechRTC.synthesizeCached){
+                    const pending=sdk.speechRTC.synthesizeCached(text,{...config,signal:request.signal});
+                    pending.then(value=>{if(request.signal.aborted)value.release?.();},()=>{});
+                    result=await deadline(pending,30000,signal);
+                    release=result.release;
+                }else{
+                    const cached=cachedLearningAudio(key);
+                    if(cached){const audioUrl=URL.createObjectURL(cached);result={audioUrl};release=()=>URL.revokeObjectURL(audioUrl);}
+                    else{
+                        stream=speaker=sdk.speechRTC.createSession(config);
+                        result=await deadline(stream.synthesize(text,{close:true,closeConnection:false}),30000,signal);
+                        if(result?.audioUrl?.startsWith('blob:'))release=()=>URL.revokeObjectURL(result.audioUrl);
+                        if(turn===epoch&&!signal.aborted&&result?.audioUrl){
+                            try{const blob=await deadline(fetch(result.audioUrl,{signal:request.signal}).then(r=>r.blob()),3000,signal);if(turn===epoch&&!signal.aborted)rememberLearningAudio(key,blob);}catch{/* Playback still works when copying to cache fails. */}
+                        }
+                    }
+                }
                 if(turn!==epoch||signal.aborted)throw Error('对话已结束');
                 if(!result?.audioUrl)throw Error('朗读服务没有返回音频，请重试');
                 audio=new Audio(result.audioUrl);
@@ -119,9 +138,9 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
                     audio.onerror=()=>reject(Error('朗读播放失败，请重试'));
                     audio.play().catch(reject);
                 }),60000,signal);
-            }finally{stop();signal.removeEventListener('abort',stop);if(speaker===stream)speaker=null;if(playback===active)playback=null;}
+            }finally{stop();release?.();signal.removeEventListener('abort',stop);if(speaker===stream)speaker=null;if(playback===active)playback=null;}
         },
-        async judge(messages,signal,{maxTokens=800}={}){
+        async judge(messages,signal,{maxTokens=800,rawText=false}={}){
             const sdk=await load(signal);
             if(!sdk.token)throw Error('使用AI服务需要先登录Keepwork');
             const abortController=new AbortController(),abort=()=>abortController.abort();
@@ -131,7 +150,7 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
                 const result=await deadline(sdk.aiChat.chat({messages,...(model?{model}:{}),stream:false,tools:[],enableTools:[],needMqttTools:false,needPersonalTools:false,reasoning:false,maxTokens,abortController}),45000,signal);
                 const text=typeof result==='string'?result:result?.choices?.[0]?.message?.content||result?.result;
                 if(typeof text!=='string')throw Error('对话服务未返回有效内容');
-                return JSON.parse(text.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,''));
+                return rawText?text:JSON.parse(text.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,''));
             }finally{abort();signal.removeEventListener('abort',abort);}
         },
     };

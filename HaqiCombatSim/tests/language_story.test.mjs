@@ -72,3 +72,17 @@ test('configured model and voice are forwarded to their actual SDK calls',async(
     const voice=createLearningVoice({getSettings:()=>({model:'keepwork-lite',voiceType:'selected-voice'}),load:async()=>({token:'test',aiChat:{chat:async options=>{chatOptions=options;return '{"reply":"ok"}';}},speechRTC:{createSession:options=>{voiceOptions=options;return {synthesize:async()=>({audioUrl:'blob:test'}),stop:async()=>{}};}}})});
     try{const signal=new AbortController().signal;await voice.judge([],signal);await voice.speak('Hello','en',signal);assert.equal(chatOptions.model,'keepwork-lite');assert.equal(voiceOptions.voiceType,'selected-voice');assert.ok(audio);}finally{globalThis.Audio=oldAudio;await voice.cancel();}
 });
+
+test('legacy SDK repeats reuse completed audio and voice changes require synthesis',async()=>{
+    let calls=0,selected='cache-test-one';const oldAudio=globalThis.Audio;
+    globalThis.Audio=class{play(){queueMicrotask(()=>this.onended());return Promise.resolve();}pause(){}};
+    const voice=createLearningVoice({getSettings:()=>({voiceType:selected}),load:async()=>({speechRTC:{createSession:()=>({synthesize:async()=>{calls++;return {audioUrl:'data:audio/mpeg;base64,YXVkaW8='};},stop:async()=>{}})}})});
+    try{const signal=new AbortController().signal;await voice.speak('Cache example','en',signal);await voice.speak('Cache example','en',signal);assert.equal(calls,1);selected='cache-test-two';await voice.speak('Cache example','en',signal);assert.equal(calls,2);}finally{globalThis.Audio=oldAudio;await voice.cancel();}
+});
+
+test('new SDK cached synthesis is preferred and releases playback URL',async()=>{
+    let released=0,options;const oldAudio=globalThis.Audio;
+    globalThis.Audio=class{play(){queueMicrotask(()=>this.onended());return Promise.resolve();}pause(){}};
+    const voice=createLearningVoice({load:async()=>({speechRTC:{createSession:()=>{throw Error('legacy path');},synthesizeCached:async(text,config)=>{options=config;return {audioUrl:'blob:test',release:()=>released++};}}})});
+    try{await voice.speak('Cached SDK example','en',new AbortController().signal);assert.equal(options.speechRate,-8);assert.equal(released,1);}finally{globalThis.Audio=oldAudio;await voice.cancel();}
+});

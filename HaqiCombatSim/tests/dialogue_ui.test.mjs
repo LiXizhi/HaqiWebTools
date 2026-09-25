@@ -52,3 +52,21 @@ test('translation maps once without speaking or advancing and ignores late resul
     ui.root.disposeDialogue();assert.equal(signal.aborted,true);resolve([]);await pending;
     assert.equal(ui.text.children[0].children[0].textContent,'Go');
 });
+
+test('opening dialogue shows cached mapping without generating or clicking',async t=>{
+    let generated=0;const mapWords=async()=>{generated++;};
+    mapWords.peek=async()=>[[{text:'Go',color:'#A23'}],[{text:'走',color:'#A23'}]];
+    const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(ui.text.children[0].children[0].children[0].style.color,'#A23');
+    assert.equal(ui.text.children[1].children[2].textContent,'已映射');
+    await ui.text.children[1].onclick();assert.equal(generated,0);assert.equal(ui.calls,0);
+});
+
+test('late cache lookup cannot repaint a closed dialogue',async t=>{
+    let finish;const mapWords=()=>{};mapWords.peek=()=>new Promise(resolve=>{finish=resolve;});
+    const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
+    ui.root.disposeDialogue();finish([[{text:'Go',color:'#A23'}],[{text:'走',color:'#A23'}]]);
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(ui.text.children[0].children[0].children.length,0);
+});

@@ -1,0 +1,19 @@
+<!doctype html><meta charset="utf-8"><title>词义映射缓存验收</title>
+<button id="run">验证映射缓存</button><pre id="result">只使用模拟模型与独立测试数据库。</pre>
+<script type="module">
+import {createMappingStore,createDialogueMapper} from '../../js/dialogue_mapping.js';
+document.querySelector('#run').onclick=async()=>{
+ const result=document.querySelector('#result');result.textContent='验证中…';
+ try{
+  const databaseName='haqi-mapping-test-'+Date.now(),store=createMappingStore({databaseName});
+  const lines=[{text:'Hello',locale:'en'},{text:'你好',locale:'zh-CN'}];let calls=0;
+  const mapper=createDialogueMapper({store,generate:async()=>{calls++;return JSON.stringify({text:'Hello(#B24)',translation:'你好(#B24)'});}});
+  await Promise.all([mapper(lines),mapper(lines),mapper(lines)]);if(calls!==1)throw Error('并发去重失败');
+  const reopened=createDialogueMapper({store:createMappingStore({databaseName}),generate:()=>{throw Error('应使用IndexedDB');}});
+  await reopened(lines);
+  for(let i=0;i<501;i++)await store.put('test-'+i,'value');
+  const fresh=createMappingStore({databaseName});if(await fresh.get('test-0')!==null||await fresh.get('test-500')!=='value')throw Error('500条淘汰失败');
+  result.textContent='PASS：并发只调用一次，IndexedDB跨实例命中，最近500条淘汰通过。';
+ }catch(error){result.textContent='FAIL：'+error.message;}
+};
+</script>

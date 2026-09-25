@@ -117,8 +117,8 @@ function collectRuntimeData(source, files, prefix = '') {
             collectRuntimeData(from, files, `${prefix}${entry.name}/`);
         } else if (entry.name.endsWith('.json')) {
             if(prefix==='adventure/'&&entry.name==='dungeons.json')continue;
-            // The small public website catalogue is emitted separately by Vite.
-            if(prefix===''&&entry.name==='official-website.json')continue;
+            // Standalone website/character preview data is not part of game packs.
+            if(prefix===''&&['official-website.json','hero-preview.json'].includes(entry.name))continue;
             const value = projectRuntimeData(`${prefix}${entry.name}`, JSON.parse(fs.readFileSync(from, 'utf8')));
             if (value === null) continue;
             files[`data/${prefix}${entry.name}`] = value;
@@ -129,6 +129,9 @@ function collectRuntimeData(source, files, prefix = '') {
 export function packageRuntimeData(source, destination) {
     const files = {};
     collectRuntimeData(source, files);
+    const fishingKey = 'data/adventure/fishing.json';
+    const fishing = files[fishingKey];
+    delete files[fishingKey];
     const packs = Object.fromEntries(['datasets', 'adventure', 'kids', 'teen', 'sample'].map(group => [group, { schemaVersion: 1, files: {} }]));
     for (const [key, value] of Object.entries(files)) {
         const [, directory, name] = key.split('/');
@@ -137,5 +140,9 @@ export function packageRuntimeData(source, destination) {
         packs[group].files[key] = value;
     }
     fs.mkdirSync(destination, { recursive: true });
+    if (fishing) {
+        fs.mkdirSync(path.join(destination, 'adventure'), { recursive: true });
+        fs.writeFileSync(path.join(destination, 'adventure/fishing.json'), JSON.stringify(fishing));
+    }
     for (const [group, pack] of Object.entries(packs)) fs.writeFileSync(path.join(destination, `${group}.json`), JSON.stringify(pack));
 }

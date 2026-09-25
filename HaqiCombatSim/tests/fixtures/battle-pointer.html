@@ -1,0 +1,24 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1"><title>战斗指针验收</title><style>body{margin:0;background:#173c43;color:#fff;font:14px sans-serif}canvas{width:100%;height:420px}p{padding:12px}#roster{display:flex;flex-wrap:wrap}.combatant-status{max-width:180px}.combatant-school{width:24px;height:24px}.combatant-effects{max-height:36px;overflow:hidden}</style><p>只读内存预览：先转向，再施法；循环展示玩家和三只怪物，回合结束转回玩家并等待选牌。</p><canvas id="battle"></canvas><div id="roster"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {createAdventure,playerSpec} from '../../js/adventure_core.js';
+import {createPveBattle} from '../../js/combat_pve_core.js';
+
+const assets=await loadResources(),save=createAdventure(assets.content),canvas=document.querySelector('#battle'),renderer=createRenderer(canvas,assets);
+const catalog=await(await fetch('data/adventure/monster-catalog.json')).json();
+const monsters=catalog.monsters.filter(m=>m.name.includes('章鱼')).slice(0,3).map((m,i)=>({...m,id:'preview'+i,school:'storm',level:1,hp:100,pool:[],sequences:[],genes:[],cardsets:{}}));
+const battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters,seed:1});
+import {withBattlePointer,POINTER_TURN_MS} from '../../js/battle_pointer_core.js';
+const ids=Object.keys(battle.unitsById),card=Object.values(battle.resolved.cards).find(c=>c.type==='SingleAttack');
+const queue=withBattlePointer(ids.map(caster=>({type:'cast',caster,target:caster==='hero'?ids[1]:'hero',card:card.key})),'hero','hero');
+queue.push({type:'waiting',caster:'hero'});
+if(new URLSearchParams(location.search).has('mobile'))canvas.style.width='390px';
+let index=0,start=performance.now(),pointer='hero';
+function frame(now){
+ const event=queue[index],duration=event.type==='movearrow'?POINTER_TURN_MS:1500,progress=Math.min(1,(now-start)/duration);
+ const aim=event.type==='movearrow'?{from:event.from,to:event.caster,progress}:{from:pointer,to:pointer,progress:1};
+ renderer.renderBattle(canvas,battle,save,now,{event,progress,pointer:aim});
+ if(progress===1){pointer=event.caster;index=(index+1)%queue.length;start=now;if(index===0)queue[0].from=pointer;}
+ requestAnimationFrame(frame);
+}requestAnimationFrame(frame);
+</script></html>

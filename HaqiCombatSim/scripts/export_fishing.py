@@ -129,3 +129,5 @@ catalog = {
 }
 out.write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 print(f'Exported {len(nets)} nets and {len(potions)} potions')
+
+out.with_name('fishing-items.json').write_text(json.dumps(catalog['items'], ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

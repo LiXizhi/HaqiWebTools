@@ -10,7 +10,7 @@ test('set details reflect eligible equipped pieces and expose disabled source st
  const details=equipmentSetDetails(save,content,1240);assert.equal(details.count,1);assert.deepEqual(details.groups.map(row=>row.active),[true,false]);
  assert.equal(progressionAttributes({256:1})[0].label,'双倍攻击（原版禁用）');
  assert.equal(progressionAttributes({376:84})[0].value,0.084);
- assert.equal(progressionAttributes({101:20})[0].label,'生命');assert.equal(progressionAttributes({102:3})[0].label,'超级魔力率');
+ assert.equal(progressionAttributes({101:20})[0].label,'生命值');assert.equal(progressionAttributes({102:3})[0].label,'超级魔力率');
  A.applyAction(save,content,{type:'unequip',slot:content.items[1240].slot});assert.equal(equipmentSetDetails(save,content,1240).count,0);
 });
 import {installDragonTotemItems,dragonTotemItemExperience} from '../js/adventure_progression_bonuses_core.js';

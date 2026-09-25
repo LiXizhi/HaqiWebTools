@@ -127,7 +127,9 @@ test('five compact packs load all datasets, retain projected content and preserv
     const original = fs.readFileSync(new URL('adventure/skill-art.json', source), 'utf8');
     try {
         packageRuntimeData(fileURLToPath(source), destination);
-        assert.deepEqual(fs.readdirSync(destination).sort(), ['adventure.json', 'datasets.json', 'kids.json', 'sample.json', 'teen.json']);
+        assert.deepEqual(JSON.parse(fs.readFileSync(path.join(destination,'adventure/fishing.json'))),read('fishing'));
+        assert.equal(JSON.parse(fs.readFileSync(path.join(destination,'adventure.json'))).files['data/adventure/fishing.json'],undefined);
+        assert.deepEqual(fs.readdirSync(destination).sort(), ['adventure', 'adventure.json', 'datasets.json', 'kids.json', 'sample.json', 'teen.json']);
         const calls = [];
         const reader = createJsonReader({ packed: true, request: async url => {
             calls.push(url);

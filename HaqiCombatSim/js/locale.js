@@ -164,9 +164,10 @@ export function syncLocaleChrome() {
     launch.hidden = !learning || !hero;
     launch.classList.toggle('is-open', Boolean(learning && hero && tooltip && !tooltip.hidden));
     if (!learning || !hero) return;
-    const rect = hero.getBoundingClientRect();
-    launch.style.left = `${rect.left}px`;
-    launch.style.top = `${rect.bottom + 8}px`;
+    // launch 挂在 #hud 内（installLocaleTooltip），与 .hero-status 同一 absolute 坐标系；
+    // 用 offset 定位避免 fixed 脱离 HUD 堆叠上下文、盖住面板或弹窗。
+    launch.style.left = `${hero.offsetLeft}px`;
+    launch.style.top = `${hero.offsetTop + hero.offsetHeight + 8}px`;
 }
 
 export function installLocaleTooltip(doc = document) {
@@ -180,7 +181,8 @@ export function installLocaleTooltip(doc = document) {
     launch.title = '翻译';
     launch.setAttribute('aria-label', '翻译');
     launch.innerHTML = icon;
-    doc.body.append(launch);
+    // 挂到 #hud：与英雄卡同层、同 z 序，不再浮在整个窗口上；无 #hud 的夹具回落 body。
+    (doc.querySelector('#hud') || doc.body).append(launch);
     tooltip = doc.createElement('aside');
     tooltip.className = 'locale-gloss';
     tooltip.hidden = true;

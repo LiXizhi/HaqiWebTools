@@ -1,5 +1,4 @@
-.learning-launch{position:fixed;right:16px;top:110px;z-index:55;max-width:min(260px,65vw);white-space:normal;padding:10px 16px;min-height:48px}
-.learning-launch[hidden],.learning-overlay[hidden]{display:none!important}
+.learning-overlay[hidden]{display:none!important}
 .learning-overlay{z-index:240!important;position:fixed;inset:0;background:#231b1680;display:grid;place-items:center;padding:12px}
 .learning-room{position:relative;width:min(560px,100%);max-height:90dvh;overflow:hidden;display:flex;flex-direction:column;background:var(--paper,#fff8df);color:var(--ink,#392719);border:3px solid var(--gold,#b78636);border-radius:16px;padding:16px;box-sizing:border-box}
 .learning-room .modal-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-shrink:0}
@@ -11,7 +10,7 @@
 .learning-actions{display:flex;flex-wrap:wrap;gap:10px}.learning-actions button{min-height:48px}
 .learning-history{max-height:180px;overflow:auto;border-top:1px solid var(--gold,#b78636);overflow-wrap:anywhere}
 .learning-status{min-height:1.5em;overflow-wrap:anywhere}.learning-room progress{width:100%;margin-top:12px}
-@media(max-width:480px){.learning-launch{top:100px;right:8px;font-size:12px}.learning-room{padding:12px}.learning-question,.learning-answer{font-size:17px}}
+@media(max-width:480px){.learning-room{padding:12px}.learning-question,.learning-answer{font-size:17px}}
 .camp-chat{position:relative;width:min(1080px,100%);height:min(800px,94dvh);display:grid;grid-template-columns:32% minmax(0,1fr);overflow:hidden;border:2px solid var(--gold,#b78636);border-radius:22px;background:#faf8f0;color:#283d32;box-shadow:0 24px 80px #10291b80}
 .camp-chat-character{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;padding:28px 22px;background:radial-gradient(ellipse at 45% 45%,#668577 0%,#244f3b 68%);color:#fff8df;text-align:center;position:relative}
 .camp-chat-character::before{content:'';position:absolute;inset:18px;border:1px solid #f2d79055;border-radius:130px 130px 20px 20px;pointer-events:none}

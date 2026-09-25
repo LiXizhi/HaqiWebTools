@@ -55,6 +55,15 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],readAlou
         ready=true;box.classList.remove('is-speaking');box.classList.add('dialogue-learning');text.replaceChildren();
         const idleHint='点击喇叭朗读，点击译文映射词义；相近颜色表示近似对应。';
         const labels=[];let mapped=false;
+        const mappingCaptions=[];
+        function showMapping(result){
+            result.forEach((parts,i)=>{labels[i].replaceChildren(...parts.map(part=>{
+                const span=document.createElement('span');span.textContent=part.text;const color=mappingColor(part);
+                if(color){span.className=/[\u3400-\u9fff]/u.test(part.text)?'dialogue-mapped-word is-cjk':'dialogue-mapped-word';span.style.color=color;span.style.fontWeight='600';span.title=part.match==='approximate'?'近似词义对应':'相同颜色表示对应词义';if(part.match==='approximate')span.style.textDecoration='underline dotted';}
+                return span;
+            }));});mapped=true;
+            for(const caption of mappingCaptions)caption.textContent='已映射';
+        }
         for(const row of lines){
             const isTarget=row.locale===targetLocale,canMap=!isTarget&&lines.length>1;
             const control=document.createElement('button');control.type='button';control.className='dialogue-read';
@@ -62,23 +71,20 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],readAlou
             const icon=document.createElement('span');icon.className='dialogue-action-icon';icon.setAttribute('aria-hidden','true');
             icon.innerHTML=canMap?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h15m-4-4 4 4-4 4M20 17H5m4-4-4 4 4 4"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4 5 9H2v6h3l6 5ZM15 8c3 2 3 6 0 8m3-11c5 4 5 10 0 14"/></svg>';
             control.append(label,icon);
-            if(canMap){const caption=document.createElement('span');caption.className='dialogue-action-caption';caption.textContent='词义映射';control.append(caption);}
+            let mappingLabel;
+            if(canMap){mappingLabel=document.createElement('span');mappingLabel.className='dialogue-action-caption';mappingLabel.textContent='词义映射';control.append(mappingLabel);mappingCaptions.push(mappingLabel);}
             control.lang=row.locale;control.title=canMap?'点击映射上下两行词义':'点击朗读';control.setAttribute('aria-label',`${canMap?'词义映射':'朗读'}：${row.text}`);
             control.onclick=async()=>{
                 if(canMap){
                     if(mapping||mapped)return;
-                    const current=new AbortController();mapping=current;control.setAttribute('aria-busy','true');setText(hint,'正在映射词义…');
+                    const current=new AbortController();mapping=current;control.setAttribute('aria-busy','true');mappingLabel.textContent='映射中…';setText(hint,'正在映射词义…');
                     try{
                         if(!mapWords)throw Error('词义映射暂时不可用，请稍后重试。');
                         const result=await mapWords(lines,current.signal);
                         if(disposed||current.signal.aborted)return;
-                        result.forEach((parts,i)=>{labels[i].replaceChildren(...parts.map(part=>{
-                            const span=document.createElement('span');span.textContent=part.text;const color=mappingColor(part);
-                            if(color){span.style.color=color;span.style.fontWeight='600';span.title=part.match==='approximate'?'近似词义对应':'相同颜色表示对应词义';if(part.match==='approximate')span.style.textDecoration='underline dotted';}
-                            return span;
-                        }));});mapped=true;setText(hint,idleHint);
+                        showMapping(result);setText(hint,idleHint);
                     }catch(error){if(!disposed&&!current.signal.aborted)hint.textContent=error.message||'词义映射失败，请重试。';}
-                    finally{if(mapping===current)mapping=null;control.setAttribute('aria-busy','false');}
+                    finally{if(mapping===current)mapping=null;control.setAttribute('aria-busy','false');mappingLabel.textContent=mapped?'已映射':'重试映射';}
                     return;
                 }
                 playback?.abort();const current=new AbortController();playback=current;
@@ -89,6 +95,11 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],readAlou
             text.append(control);
         }
         setText(hint,idleHint);
+        if(lines.length>1&&mapWords?.peek){
+            void mapWords.peek(lines).then(result=>{
+                if(result&&!disposed&&!mapped&&!mapping)showMapping(result);
+            }).catch(()=>{});
+        }
     }else if(reduced||!chars.length)finish();else tick();
     root.disposeDialogue=()=>{
         disposed=true;clearTimeout(timer);playback?.abort();mapping?.abort();

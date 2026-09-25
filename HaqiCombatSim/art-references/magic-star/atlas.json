@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "name": "蓝色魔法星循环图集",
+  "local": "assets/adventure/effects/magic-star-blue-16.webp",
+  "cdn": null,
+  "width": 768,
+  "height": 768,
+  "columns": 4,
+  "rows": 4,
+  "frameCount": 16,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "frameOrder": "row-major",
+  "fps": 10,
+  "loopDurationMs": 1600,
+  "frameBounds": [
+    [
+      33,
+      46,
+      164,
+      170
+    ],
+    [
+      36,
+      46,
+      158,
+      170
+    ],
+    [
+      41,
+      46,
+      152,
+      171
+    ],
+    [
+      48,
+      45,
+      145,
+      172
+    ],
+    [
+      67,
+      44,
+      135,
+      169
+    ],
+    [
+      62,
+      41,
+      139,
+      169
+    ],
+    [
+      50,
+      44,
+      146,
+      168
+    ],
+    [
+      47,
+      44,
+      152,
+      169
+    ],
+    [
+      37,
+      42,
+      161,
+      161
+    ],
+    [
+      47,
+      42,
+      149,
+      164
+    ],
+    [
+      49,
+      42,
+      149,
+      164
+    ],
+    [
+      55,
+      40,
+      141,
+      164
+    ],
+    [
+      64,
+      26,
+      137,
+      152
+    ],
+    [
+      43,
+      27,
+      152,
+      150
+    ],
+    [
+      38,
+      27,
+      156,
+      150
+    ],
+    [
+      31,
+      28,
+      161,
+      149
+    ]
+  ],
+  "boundsAlphaThreshold": 32,
+  "bytes": 139278,
+  "sha256": "098fe4511d1788b600a9e13de252995028b5e7ab6968b8e200160f636e51cceb",
+  "encoding": "quality-95",
+  "source": {
+    "kind": "imagegen-reinterpretation",
+    "generatedSha256": "40477ff9768d5f104079075f5eab226751ea45651d21ecf30f6a4eb78778204d",
+    "originalModel": "character/v5/11vip/MagicStar/MagicStar.x",
+    "originalTextureEntry": "character/v5/11vip/magicstar/magicstar.dds.z,15a510b7d9d56e8655ba26106b2868f4,5632",
+    "attachmentSource": "script/apps/Aries/Pet/main.lua L1906-1915, L2027-2035: AddAttachment(asset, 4, 1)",
+    "note": "原版贴图参考的AI重绘，并非原模型动画直接导出；头顶绕行由预览单独驱动。"
+  }
+}

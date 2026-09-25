@@ -1,6 +1,7 @@
 import { el, button } from './view_adventure.js';
 import { SCHOOL_NAMES } from './adventure_core.js';
 import { MAX_ROLES } from './adventure_roles_core.js';
+import {heroPortrait} from './hero_renderer.js';
 
 export function renderRoles(root, assets, model, cb) {
     root.replaceChildren();root.className = 'entry-screen role-screen';
@@ -14,8 +15,7 @@ export function renderRoles(root, assets, model, cb) {
     const addButton = (label, fn, cls = 'secondary') => { const b = button(label, fn, cls);controls.push(b);return b; };
     const rows = el('div', 'role-list');
     for (const row of model.catalog.roles) {
-        const s = row.save, portrait = el('canvas', 'role-portrait');portrait.width = 96;portrait.height = 100;
-        assets.tile(portrait.getContext('2d'), 'sprites', s.appearance === 'girl' ? 12 : 8, 0, 0, 96, 100);
+        const s = row.save, portrait = heroPortrait(assets,s,96,100);portrait.className='role-portrait';
         portrait.setAttribute('role', 'img');portrait.setAttribute('aria-label', s.appearance === 'girl' ? '魔法少女' : '魔法少年');
         const recent = row.id === model.catalog.activeId;
         rows.append(el('article', `role-card ${recent ? 'recent' : ''}`, portrait,

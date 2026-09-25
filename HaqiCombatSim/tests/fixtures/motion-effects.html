@@ -1,0 +1,25 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>主角移动特效验收</title>
+<style>body{height:100dvh;display:flex;flex-direction:column;margin:0;background:#20372f;color:#fff;font:14px sans-serif}header{padding:12px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}select,button{font:inherit;padding:8px}canvas{display:block;width:100%;flex:1;min-height:0}p{margin:0;padding:8px 12px}</style>
+<header><label>学系 <select id="school"><option value="fire">烈火</option><option value="ice">寒冰</option><option value="storm">风暴</option><option value="life">生命</option><option value="death">死亡</option></select></label><label><input id="grown" type="checkbox" checked>成长形态</label><label><input id="vip" type="checkbox" checked>会员预览</label><label><input id="ride" type="checkbox">骑乘</label><button id="pause">暂停移动</button></header><p id="status">正在加载；此页仅使用内存角色。</p><canvas id="world"></canvas>
+<script type="module">
+import {loadResources} from '/js/adventure_assets.js';
+import {createAdventure} from '/js/adventure_core.js';
+import {createWorld} from '/js/adventure_world_core.js';
+import {createRenderer} from '/js/adventure_renderer.js';
+const $=id=>document.getElementById(id);
+try{
+ const assets=await loadResources(),save=createAdventure(assets.content,{name:'移动特效预览'}),world=createWorld(save.zone,assets.content,save),renderer=createRenderer($('world'),assets);
+ const origin={x:world.center.x,y:world.center.y-30};let elapsed=0,last=0,paused=false;
+ const mount=Object.entries(assets.content.mountByItem).find(([,row])=>row.art?.cdn)?.[0];
+ $('pause').onclick=()=>{paused=!paused;$('pause').textContent=paused?'继续移动':'暂停移动';};
+ $('status').textContent='五系全向转弯预览；停止后拖尾消退。此页不写入玩家存档。';
+ function frame(time){const dt=Math.min(50,time-last||0);last=time;if(!paused)elapsed+=dt;const a=elapsed/450;
+ save.position={x:origin.x+Math.cos(a)*75,y:origin.y+Math.sin(a)*52};
+ const dx=-Math.sin(a),dy=Math.cos(a)*.7;save.facing=Math.abs(dx)>Math.abs(dy)?(dx<0?1:2):(dy<0?3:0);
+ save.school=$('school').value;save.level=$('grown').checked?50:1;save.mountId=$('ride').checked?Number(mount):null;
+ renderer.render(world,save,time,{moving:!paused,membership:{status:'ready',isVip:$('vip').checked}});requestAnimationFrame(frame);}
+ requestAnimationFrame(frame);
+}catch(error){$('status').textContent=error.stack;}
+</script></html>
+
+

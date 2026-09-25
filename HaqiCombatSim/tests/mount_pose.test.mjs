@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolveMountPose, riderPlacement, updateSeat } from '../js/mount_pose_core.js';
 
-const catalog = JSON.parse(readFileSync(new URL('../data/mount-demo/mounts.json', import.meta.url), 'utf8'));
+// The standalone mount lab never shipped this catalogue, so the pose fixtures live
+// with the test. Seat coordinates match the saddles drawn by scripts/draw_mount_demo.py:
+// 280x220 cells, mount origin at the bottom centre, so seat = saddle - (140, 220).
+const catalog = JSON.parse(readFileSync(new URL('fixtures/mount-demo-catalog.json', import.meta.url), 'utf8'));
 const byId = Object.fromEntries(catalog.mounts.map(mount => [mount.id, mount]));
 
 test('four facings place the rider and mirror the right seat', () => {

@@ -1,0 +1,24 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><base href="../../"><meta name="viewport" content="width=device-width,initial-scale=1"><title>主角形象选择预览</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><style>body{background:#244b42;min-height:100dvh}#result{position:relative;color:white;padding:20px}#result canvas{max-width:100%}</style></head><body class="haqi-app"><div id="entry"></div><div id="result" role="status">正在加载；此页不读写玩家存档。</div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {renderEntry} from '../../js/view_adventure.js';
+import {createAdventure,parseSave,playerSpec} from '../../js/adventure_core.js';
+import {createWorld} from '../../js/adventure_world_core.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {createPveBattle} from '../../js/combat_pve_core.js';
+import {createCreationPreview,tutorialCards} from '../../js/adventure_creation_preview.js';
+const result=document.querySelector('#result');
+try{
+ const assets=await loadResources(),preview=createCreationPreview(assets),draft={name:'形象预览',school:'fire',appearance:'boy',starter:'dragon_green',step:1};
+ const root=document.querySelector('#entry');
+ renderEntry(root,assets,null,{draft,previewChoices:s=>tutorialCards(assets,s),preview:(...args)=>preview.play(...args),stopPreview:()=>preview.stop(),pausePreview:()=>preview.togglePause(),create:options=>{
+  preview.stop();const original=createAdventure(assets.content,options),save=parseSave(JSON.stringify(original),assets.content,assets.dataset);root.replaceChildren();root.className='';
+  result.textContent=`内存存档往返核验：${save.headId} · ${save.appearance}。未写入玩家存档。`;
+  const worldCanvas=document.createElement('canvas'),battleCanvas=document.createElement('canvas');for(const c of [worldCanvas,battleCanvas]){c.style.width='100%';c.style.height='340px';result.append(c);}
+  const renderer=createRenderer(worldCanvas,assets),world=createWorld(save.zone,assets.content,save);
+  const ride=document.createElement('button');ride.textContent='切换骑乘';ride.onclick=()=>{save.mountId=save.mountId?null:Number(Object.keys(assets.content.mountByItem)[0]);};result.prepend(ride);
+  const battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters:[{id:'preview',name:'测试目标',school:'fire',level:1,hp:100,pool:[],sequences:[],genes:[],cardsets:{}}],seed:1});
+  function frame(t){renderer.render(world,save,t);renderer.renderBattle(battleCanvas,battle,save,t);requestAnimationFrame(frame);}requestAnimationFrame(frame);
+ },login:()=>{},importOriginal:()=>{}});
+ result.textContent='左右点击或滑动切换形象；此页不读写玩家存档。';
+}catch(error){result.textContent=error.stack;}
+</script></body></html>

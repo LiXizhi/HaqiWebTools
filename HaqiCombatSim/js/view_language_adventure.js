@@ -4,9 +4,8 @@ import {tr} from './locale_runtime.js';
 const el=(tag,cls,text)=>{const n=document.createElement(tag);n.className=cls||'';if(text!==undefined)n.textContent=text;return n;};
 const button=(label,run,cls='secondary')=>{const n=el('button',cls,tr(label));n.type='button';n.onclick=run;return n;};
 export function createLearningView(callbacks) {
-    const launch=button('抱抱龙 · 和我聊聊',()=>callbacks.open(),'primary learning-launch');launch.hidden=true;
     const root=el('div','overlay learning-overlay');root.hidden=true;
-    document.body.append(launch,root);
+    document.body.append(root);
     let trigger=null;
     root.addEventListener('keydown',e=>{
         e.stopPropagation();
@@ -19,9 +18,6 @@ export function createLearningView(callbacks) {
         }
     });
     return {
-        launch,
-        visibility(visible){launch.hidden=!visible;},
-        invite(text){launch.textContent=text||tr('抱抱龙 · 和我聊聊');},
         close(){root.hidden=true;root.classList.remove('visible');root.replaceChildren();if(trigger?.isConnected)trigger.focus({preventScroll:true});},
         render(state){
             if(root.hidden)trigger=document.activeElement;

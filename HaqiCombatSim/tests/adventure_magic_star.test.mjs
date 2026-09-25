@@ -6,6 +6,7 @@ import {magicStarCombatLevel,applyMagicStarCombat} from '../js/adventure_magic_s
 import {normalizeStats} from '../js/combat_unit_core.js';
 import {createPveBattle} from '../js/combat_pve_core.js';
 import {magicPocketRemaining} from '../js/adventure_magic_star_core.js';
+import {starCompanionVisible} from '../js/adventure_star.js';
 test('magic pocket allows level plus one weekly gifts and blocks clock rollback',()=>{
  const now=Date.parse('2026-09-21T00:00:00Z'),week=magicStarWeek(now);
  assert.equal(magicPocketRemaining(null,10,now),11);
@@ -94,4 +95,12 @@ test('weekly beans use original display table, reset Monday in China and block c
 test('malformed claim records are rejected, legacy saves remain valid',()=>{
  const save=A.createAdventure(content);A.parseSave(save,content);
  save.magicStarClaims={items:['unknown'],week:null};assert.throws(()=>A.parseSave(save,content),/领取记录/);
+});
+test('scene companion follows by default and hides only when the local preference says so',()=>{
+ const style={vip:true};
+ assert.equal(starCompanionVisible({},style),true);
+ assert.equal(starCompanionVisible({magicStarFollow:true},style),true);
+ assert.equal(starCompanionVisible({magicStarFollow:false},style),false);
+ assert.equal(starCompanionVisible({magicStarFollow:true},{vip:false}),false);
+ assert.equal(starCompanionVisible({magicStarFollow:true},style,{title:true}),false);
 });

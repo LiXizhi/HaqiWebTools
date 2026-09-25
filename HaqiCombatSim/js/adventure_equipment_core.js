@@ -15,7 +15,9 @@ export function progressionAttributes(stats) {
         const entry=progressionStatEntry(id);
         if(!entry)return {label:Number(id)===256?'双倍攻击（原版禁用）':`未接入属性 ${id}`,value:Number(value),unit:''};
         const schoolStat=SCHOOL_STATS.has(entry.stat)||['damageAbs','resistAbs'].includes(entry.stat);
-        return {label:`${schoolStat?(entry.school==='all'?'全系':SCHOOL_NAMES[entry.school]||entry.school):''}${STAT_NAMES[entry.stat]}`,value:Number(value)*(entry.scale??1),unit:percent(entry.stat)?'%':''};
+        const schoolLabel=schoolStat?(entry.school==='all'?'全系':SCHOOL_NAMES[entry.school]||entry.school):'';
+        const name=entry.stat==='hpFlat'?'生命值':STAT_NAMES[entry.stat];
+        return {label:`${schoolLabel}${name}`,name,schoolLabel,value:Number(value)*(entry.scale??1),unit:percent(entry.stat)?'%':''};
     });
 }
 export function equipmentSetDetails(save,content,itemId) {

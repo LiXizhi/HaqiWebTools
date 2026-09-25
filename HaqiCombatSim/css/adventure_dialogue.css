@@ -64,3 +64,4 @@
  .storybook-ui .rpg-dialogue .dialogue-portrait.portrait-height { left:75px; height:169px!important; top:auto; bottom:16px; }
 }
 .dialogue-action-icon{display:inline-flex;width:18px;height:18px;margin-left:8px;vertical-align:middle;color:#376957}.dialogue-action-icon svg{width:100%;height:100%}.dialogue-action-caption{font-size:11px;margin-left:4px;color:#376957}.dialogue-read[aria-busy="true"] .dialogue-action-icon{opacity:.45}
+.dialogue-mapped-word{border-radius:2px}.dialogue-mapped-word.is-cjk{margin-inline:.09em}

@@ -1,5 +1,6 @@
-import { setText } from './locale_runtime.js';
-import {ItemDetails} from './view_adventure_item_details.js';
+import {heroPortrait} from './hero_renderer.js';
+import { setText, fill } from './locale_runtime.js';
+import {ItemDetails, attributeSpan} from './view_adventure_item_details.js';
 import {DRAGON_TOTEMS,dragonTotemStage,dragonTotemItemExperience} from './adventure_progression_bonuses_core.js';
 import {signedAttribute,visibleEquipmentSummary,progressionAttributes,equipmentSetDetails,equipmentAttributes} from './adventure_equipment_core.js';
 import {runeStatus} from './adventure_runes_core.js';
@@ -30,7 +31,7 @@ export function renderEquipment(body,model,cb,ui) {
     }
     body.append(tabs,shell);
     const identity=el('div','equipment-identity',el('h3','',save.name),el('p','muted',`${SCHOOL_NAMES[save.school]}学徒 · 等级 ${save.level}`));
-    const portrait=tile(assets,'sprites',save.appearance==='girl'?12:8,130,150);
+    const portrait=heroPortrait(assets,save,130,150);
     portrait.setAttribute('role','img');portrait.setAttribute('aria-label','角色形象');
     character.append(el('div','equipment-profile',identity,el('div','equipment-portrait',portrait)));
     if(!travel){
@@ -55,7 +56,7 @@ export function renderEquipment(body,model,cb,ui) {
             const stage=current?dragonTotemStage(c.progressionBonuses,current.id,50359,experience):null;
             const totems=el('details','equipment-stat-details',el('summary','','龙图腾'));
             totems.append(el('p','',current?`${current.name} · ${stage?.level??0}级 · 经验 ${experience}`:'尚未学习图腾信仰'));
-            for(const attribute of progressionAttributes(stage?.stats))totems.append(el('p','',`${attribute.label} ${signedAttribute(attribute.value)}${attribute.unit}`));
+            for(const attribute of progressionAttributes(stage?.stats))totems.append(el('p','',attributeSpan(el,attribute)));
             totems.append(el('p','muted',`魔豆 ${save.inventory[984]||0} · ${current?'转换信仰50魔豆，保留经验':'首次学习免费'}`));
             const choices=el('div','equipment-attributes');
             for(const row of DRAGON_TOTEMS){
@@ -134,7 +135,7 @@ export function renderEquipment(body,model,cb,ui) {
         }
         if(mount){
             detail.append(el('p','muted',mount.art?.cdn?'骑乘后，这些属性加入角色战斗属性。':'这只坐骑还没有骑乘形象。'));
-            for(const row of equipmentAttributes({stats:mount.stats||{}},save,c))detail.append(el('p','',`${row.label} ${signedAttribute(row.value)}${row.unit}`));
+            for(const row of equipmentAttributes({stats:mount.stats||{}},save,c))detail.append(el('p','',attributeSpan(el,row)));
             const riding=save.mountId===item.id;
             const action=riding?{type:'dismount'}:{type:'ride',itemId:item.id};
             if(mount.art?.cdn&&!save.pendingEncounter){
@@ -151,8 +152,16 @@ export function renderEquipment(body,model,cb,ui) {
         }else if(gear){
             const set=equipmentSetDetails(save,c,item.id);
             if(set){
-                detail.append(el('h4','',`套装 ${set.setId} · 已穿戴 ${set.count} 件`));
-                for(const group of set.groups)detail.append(el('p',group.active?'equipment-gain':'muted',`${group.items}件 · ${group.active?'已激活':'未激活'}：${group.attributes.map(row=>`${row.label} ${signedAttribute(row.value)}${row.unit}`).join('，')}`));
+                const heading=el('h4','');setText(heading,'套装 {id} · 已穿戴 {count} 件',{id:set.setId,count:set.count});detail.append(heading);
+                for(const group of set.groups){
+                    const status=group.active?'已激活':'未激活';
+                    const attrNodes=[];
+                    group.attributes.forEach((row,i)=>{if(i)attrNodes.push('，');attrNodes.push(attributeSpan(el,row));});
+                    const prefix=fill('{count} 件 · {status}：',{count:group.items,status}).text;
+                    const line=el('p',group.active?'equipment-gain':'muted',prefix,...attrNodes);
+                    line.dataset.zh=`${group.items} 件 · ${status}：${group.attributes.map(row=>`${row.label} ${signedAttribute(row.value)}${row.unit}`).join('，')}`;
+                    detail.append(line);
+                }
             }
             const reason=save.pendingEncounter?'战斗中无法换装':equipmentBlockReason(save,item,c);
             const action=equipped?{type:'unequip',slot:item.slot}:{type:'equip',itemId:item.id,guid:instance?.guid};

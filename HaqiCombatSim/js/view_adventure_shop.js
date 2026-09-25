@@ -1,3 +1,4 @@
+import {heroPortrait} from './hero_renderer.js';
 import { fill, setText, tr } from './locale_runtime.js';
 import {ItemDetails} from './view_adventure_item_details.js';
 import { canEquip, equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
@@ -148,7 +149,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     function paintPreview(item) {
         preview.replaceChildren();
         if(!item){
-            if(tile)preview.append(tile(assets,'sprites',save.appearance==='girl'?12:8,120,150));
+            if(tile)preview.append(heroPortrait(assets,save,120,150));
             preview.append(el('p','muted','点击商品图标查看详情'));return;
         }
         preview.append(el('div','shop-preview-art',picture(item,112)),el('h3','',item.name),el('p','shop-item-meta',itemMeta(item,true)));

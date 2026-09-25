@@ -1,10 +1,11 @@
 import {createMonsterArtRenderer} from './adventure_monster_art.js';
+import {loadHeroLibrary} from './hero_renderer.js';
 import {createQuestJournalLoader} from './adventure_quest_journal.js';
 import {installDungeonIndex} from './adventure_dungeons_core.js';
 import {installIslandEncounters} from './adventure_island_encounters_core.js';
 import {createDungeonLoader} from './adventure_dungeons.js';
 import {installNpcCatalog} from './adventure_npc_core.js';
-import {installFishing} from './adventure_fishing_core.js';
+import {createFishingLoader} from './adventure_fishing_loader.js';
 import {installRuneCatalog} from './adventure_runes_core.js';
 import {installNpcArt} from './adventure_npc_art_core.js';
 import {loadEnvironmentArt} from './adventure_environment_art.js';
@@ -81,7 +82,9 @@ export async function loadResources(progress) {
         const ratio=(typeof ref==='object'&&ref.fit==='height')?h/rect[3]:Math.min(w/rect[2],h/rect[3]),dw=rect[2]*ratio,dh=rect[3]*ratio;
         ctx.drawImage(img,...rect,x+(w-dw)/2,y+(h-dh)/2,dw,dh);return true;
     }
+    let hero=null;
     function tile(ctx,sheet,index,x,y,w,h) {
+        if(hero&&sheet==='sprites'&&index>=8&&index<16)return hero.drawTile(ctx,index,x,y,w,h);
         const img=images.get(sheet);if(!img)return;
         const cols=4,rows=sheet==='sprites'?4:2,cw=img.width/cols,ch=img.height/rows;
         const row=Math.floor(index/4), cuts=sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height];
@@ -108,10 +111,12 @@ export async function loadResources(progress) {
     for(const [id,entry] of Object.entries(npcArt.entries))lazyImages.set(id,entry);
     content.shopConfig=await json('data/adventure/shop.json');
     content.magicStar=await json('data/adventure/magic-star.json');
+    content.magicStarArt=await json('data/adventure/magic-star-art.json');
+    lazyImages.set('magic-star-companion',content.magicStarArt);
     content.progressionBonuses=await json('data/adventure/progression-bonuses.json');
     const {installDragonTotemItems}=await import('./adventure_progression_bonuses_core.js');
     installDragonTotemItems(content);
-    installFishing(content,await json('data/adventure/fishing.json'));
+    const loadFishing=createFishingLoader(content,await json('data/adventure/fishing-items.json'),createJsonReader({packed:false}));
     installRuneCatalog(content,await json('data/adventure/runes.json'));
     const {installCatalogQuests}=await import('./adventure_catalog_quests_core.js');
     installCatalogQuests(content,await json('data/adventure/quest-runtime.json'));
@@ -138,7 +143,8 @@ export async function loadResources(progress) {
     const environmentArt=await environmentReady;
     const buildingArt=await buildingArtReady;
     const terrainDecorationArt=await terrainDecorationsReady;
-    return {drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,terrainDecorationArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    hero=await loadHeroLibrary(json,content.mountCatalog,{local:mode==='local',sprites:media.entries.sprites,sourceImages:images,getBounds});
+    return {hero,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,terrainDecorationArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

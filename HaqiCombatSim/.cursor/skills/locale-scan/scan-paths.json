@@ -15,6 +15,7 @@
     "js/adventure_cast_feedback_core.js",
     "js/adventure_rewards_core.js",
     "js/adventure_checkin_core.js",
+    "js/adventure_cloud.js",
     "js/adventure_expansion_core.js",
     "js/language_learning.js",
     "js/language_learning_core.js"

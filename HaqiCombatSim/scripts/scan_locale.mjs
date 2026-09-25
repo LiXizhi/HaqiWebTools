@@ -30,7 +30,7 @@ export function extractJsStrings(source) {
     };
     while (i < text.length) {
         const ch = text[i];
-        if (ch === '/' && text[i + 1] === '/') {
+        if (ch === '/' && text[i + 1] === '/' && text[i - 1] !== '\\') {
             while (i < text.length && text[i] !== '\n') i += 1;
             continue;
         }

@@ -1,3 +1,5 @@
+> 2026-09-25 存储更新：角色云端已拆成小型状态、完整收藏、战斗背包、历史记录；临时血量/饥饿等存IndexedDB。旧存档自动兼容，详见[用户存储结构](user-storage.md)。
+
 # Haqi.html · 初心之旅
 
 ## 哈奇岛居民显示开关（2026-09-22）
@@ -120,7 +122,7 @@ npm run verify:adventure-cdn
 
 每次保存会在 `sdk.personalPageStore.withWorkspace('HaqiAdventure')` 下新增 `checkpoints/<UTC时间>_<UUID>.json`。封装版本1包含 `app`、`id`、`updatedAt`、完整AdventureSave；不会上传SDK token、密码或密钥。无固定latest文件，不自动覆盖其他设备的记录，也没有后台自动云同步。
 
-`createFile` 硬编码开启后台 server pageCache 写入，可能抢先清除pending；不能据此证明持久化。适配器使用 `savePageData(path, 'content', text, false, false)` 暂存内容并关闭立即后台flush/远端缓存，再等待 `syncToGit(path,false)`，再通过SDK的 `getFileByFullPath(...,undefined,false)` 直接读取远端核验JSON内容。PersonalPageStore的普通读取、甚至 `forceRemote` 读取都可能在失败时回退本地，因此不能用它们证明云端成功。列表使用 `listDir('checkpoints',false,{remoteOnly:true})`；SDK会吞掉目录错误，所以空列表只提示刷新重试，不断言没有存档。
+2026-09-25 起按用户要求启用服务器 pageCache：`savePageData(path,'content',text,false,true)` 暂存后等待 `syncToGit(path,true)`，再以 `getFileByFullPath(...,undefined,true)` 核验缓存返回内容。角色目录使用 `loadPage({useCache:true,useServerCache:true,...})`；仅明确的缓存 404 表示新账号，网络错误不视为空目录。保留账号切换、版本冲突、本地备份与写入核验。目录 `listDir('checkpoints',false,{remoteOnly:true})` 的 SDK 内部使用缓存目录 API，仍仅在用户刷新时调用。
 
 恢复流程先读取实际远端记录，校验版本、角色、任务、装备及战斗重演，再显示本地/云端进度供玩家选择。点击「确认恢复」前不会修改本地存档；先备份到 `haqi.adventure.kids.v1.before-cloud`，再替换主存档。备份写入失败则中止恢复；菜单可导出上次备份。更新时间使用独立 `.updated` 键，不改变原存档兼容性。账号变化使旧预览失效。
 
@@ -425,7 +427,7 @@ NPC 对白逐字显示并在标点短暂停顿。点击或按空格先显示全�
 
 每条实际渔获独立称重，双倍奖励分别记两条。鱼种（含原有马靴海产）各保留重量前十，按克排序、同重按捕获序号先后；新高和进入前十会在主角上方提示。重量纯展示，不影响掉落、精力、装备或战斗。未改版前的背包物品不补造重量。
 
-`save.fishingRecords = {version:1,total,byFish:{[itemId]:[{serial,grams}]}}` 与奖励一起本地原子保存，导入/角色重载/云存档均校验并保留。个人榜以角色隔离；Keepwork `HaqiAdventure` workspace 的 `fishing/records.json` 是所有本人角色的榜单镜像，每次角色同步沿用无缓存写入、syncToGit、远端读取核验。镜像带 owner/revision，权威数据仍为角色存档；多设备冲突走现有角色同步流程，不通过镜像反向覆盖角色。访客离线可用，登录及角色同步后写入 workspace。
+`save.fishingRecords = {version:1,total,byFish:{[itemId]:[{serial,grams}]}}` 与奖励一起本地原子保存，导入/角色重载/云存档均校验并保留。个人榜以角色隔离；Keepwork `HaqiAdventure` workspace 的 `fishing/records.json` 是所有本人角色的榜单镜像，首次产生钓鱼纪录后才通过 cache API 写入及读取核验；后续仅在纪录变化或有纪录的角色被移除时更新，不随普通角色保存重复请求。镜像带 owner/revision，权威数据仍为角色存档；多设备冲突走现有角色同步流程，不通过镜像反向覆盖角色。访客离线可用，登录及角色同步后写入 workspace。
 
 ### 四方向提竿与临时近景镜头（2026-09-25）
 
@@ -479,3 +481,28 @@ adventure_buildings_core按固定几何选取路旁空地和南向海岸，不�
 ### 宠物自选外观（2026-09-25）
 
 宠物详情的四阶段进化路径可点击选择已解锁外观，养成和形态与卡牌页共用选择。偏好保存在宠物的可选字段 `appearanceStage` 中，收藏、场景跟随与己方战斗显示统一采用；未选择的旧档仍随等级自动显示。未解锁阶段不可选，导入存档校验阶段范围。外观不修改经验、等级、属性、技能、卡包容量或战斗编队；战斗中不可变更。
+
+## 全向移动特效（2026-09-25）
+
+主角与坐骑保留四方向身体，魔法飘带按碰撞后真实位移角度摆动。五系分别留下余烬、冰晶、电弧、叶片与幽焰，脚印/尘土固定在经过的世界位置；等级、已穿戴实例强化和镶嵌宝石增强密度、大小及寿命，成长后出现短残影。会员状态已验证且未过期时增加金色魔法星。它是视觉成长映射，不改变战斗属性；身体图集内已烘焙的装备仍保持四方向。
+
+停止移动后自然消退；传送、换地图及上下坐骑清理旧轨迹；减少动态效果偏好关闭新增特效。独立视觉随机源和160个粒子上限。只读预览入口为 `tests/fixtures/motion-effects.html`（默认CDN，可切学系、成长、会员与骑乘，不写存档）。
+
+
+## 钓鱼按需加载（2026-09-25）
+
+启动只载入 `fishing-items.json` 的物品元数据，供背包展示及旧存档校验。完整 `fishing.json` 从发布启动包拆出，首次在岸边进入钓鱼时加载，并发请求合并、成功后复用、失败后可再次点击重试。加载期间离开场景、关闭窗口、切换角色或移动后不自动进入钓鱼。
+
+### 魔法星跟随（2026-09-25）
+
+游戏已使用蓝色VIP静态图集。已确认会员可见，等级沿用magicStarStatus（当前最多10）；16格是素材容量，未新增会员规则。星星在头顶附近轻快绕行、变换半径和速度，人物移动时产生短暂落后并追赶；骑乘锚定骑手头部，前后遮挡随位置变化。减少动态效果时改为固定相对位置。位置与速度仅留在渲染器内，不进存档。
+
+图集通过data/adventure/magic-star-art.json按需加载默认Keepwork CDN，保留明确的本地资源模式。预览tests/fixtures/magic-star.html可点击移动、自动跑动和切换等级；不操作玩家存档。
+
+### 战斗地面行动指针（2026-09-25）
+
+法阵中央新增金色贴地指针，默认指向玩家；按实际出手顺序先旋转200ms，再开始该角色施法，伤害/治疗结算时保持朝向。覆盖宠物、怪物、失误、跳过和捕获，回合间保留方向；战斗结束隐藏。参照原版movearrow正向旋转，减少动态效果时直接切换方向。仅改变表现，不修改战斗记录和存档。只读预览：tests/fixtures/battle-pointer.html（?mobile为390px画布）。
+
+### 战斗指针回位与样式更新（2026-09-26）
+
+覆盖上一日的金色样式及回合间保留方向规则：指针改为半透明青绿色魔法符文轮廓；每轮结算后先转回下一轮首位存活行动者，再恢复选牌。按己方卡位及敌方先手配置选取待机朝向，结束战斗不再回位。

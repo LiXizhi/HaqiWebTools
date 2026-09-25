@@ -2,7 +2,7 @@
 <title>营地对白验收</title>
 <link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_dialogue.css">
 <body class="haqi-app storybook-ui"><div id="root"></div><script type="module">
-import {dialogueMappingPrompt,validateDialogueMapping} from '../../js/dialogue_mapping_core.js';
+import {mapDialogue} from '../../js/dialogue_mapping.js';
 import {createAdventure} from '../../js/adventure_core.js';
 import {renderDialogue} from '../../js/view_adventure.js';
 import {loadUiArt} from '../../js/adventure_ui_art.js';
@@ -17,8 +17,6 @@ if(params.has('learning')){
     await loadLocaleFiles(['en'],path=>fetch('../../'+path).then(r=>r.text()));
     configureLocale({locale:'en',languageLearning:save.languageLearning});
 }
-const mappingVoice=createLearningVoice({getSettings:()=>({model:'keepwork-lite'})});
-const mapDialogue=async(lines,signal)=>validateDialogueMapping(await mappingVoice.judge(dialogueMappingPrompt(lines),signal,{maxTokens:3000}),lines);
 const voice=createLearningVoice({getSettings:()=>save.languageLearning});
 if(width){root.style.width=`${width}px`;root.style.right='auto';}
 const sequences=content.quests.flatMap(q=>[

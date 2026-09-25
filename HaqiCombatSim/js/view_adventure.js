@@ -1,4 +1,6 @@
+import {createHeroPicker} from './view_hero_picker.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
+import {heroPortrait} from './hero_renderer.js';
 import {renderNpcServices} from './view_adventure_npc.js';
 import {npcServices} from './adventure_npc_core.js';
 import {renderGems} from './view_adventure_gems.js';
@@ -54,6 +56,9 @@ paths.dungeon='M3 21V9h4V5h3V3h4v2h3v4h4v12H3 M9 21v-7a3 3 0 0 1 6 0v7 M5 12v2 M
 paths.cloud='M6 18a4 4 0 0 1-1-8 7 7 0 0 1 13-2 5 5 0 0 1 0 10 M12 20V10 M8 14l4-4 4 4';
 paths.close='M6 6l12 12 M18 6L6 18';
 paths.shop='M3 9l2-6h14l2 6 M3 9v3h18V9 M5 12v9h14v-9 M9 21v-6h6v6';
+// 坐骑名称 → emoji：关键词按从具体到一般排序（如“狼蛛”先于“狼”），未命中回落为抱抱龙 🐲。
+const mountEmojiKeys=[['狼蛛','🕷️'],['机器人','🤖'],['雪地车','🚙'],['南瓜车','🎃'],['飞毯','🪄'],['扫帚','🧹'],['凤凰','🦅'],['鹰','🦅'],['羽','🪶'],['龙','🐲'],['虎','🐯'],['狼','🐺'],['马','🐎'],['驹','🐎'],['龟','🐢'],['海豚','🐬'],['鲨','🦈'],['鲸','🐳'],['猛犸','🦣'],['狐','🦊'],['兔','🐰'],['象','🐘'],['鹿','🦌'],['鸵鸟','🦤'],['鼠','🐭'],['牛','🐂'],['蛇','🐍'],['羊','🐑'],['猴','🐒'],['鸡','🐔'],['狗','🐶'],['猪','🐷'],['鸟','🐦'],['车','🚗']];
+function mountEmoji(name) {const text=String(name||'');return (mountEmojiKeys.find(([key])=>text.includes(key))||[])[1]||'🐲';}
 function icon(kind) {const span=el('span','icon');span.dataset.uiIcon=kind;span.setAttribute('aria-hidden','true');span.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[kind]||paths.book}"/></svg>`;return span;}
 function art(assets,ref,w=76,h=90,cls='') {
     const tall=ref?.fit==='height';
@@ -63,7 +68,7 @@ function art(assets,ref,w=76,h=90,cls='') {
     c.width=bw;c.height=bh;c.style.width=`${bw/2}px`;c.style.height=`${h}px`;
     assets.draw(c.getContext('2d'),ref,0,0,c.width,c.height);return c;
 }
-function tile(assets,sheet,index,w=90,h=95) {const c=el('canvas','art');c.width=w*2;c.height=h*2;c.style.width=`${w}px`;c.style.height=`${h}px`;assets.tile(c.getContext('2d'),sheet,index,0,0,c.width,c.height);return c;}
+function tile(assets,sheet,index,w=90,h=95) {if(sheet==='sprites'&&index>=8&&index<16)return heroPortrait(assets,{appearance:index>=12?'girl':'boy'},w,h,{facing:index%4});const c=el('canvas','art');c.width=w*2;c.height=h*2;c.style.width=`${w}px`;c.style.height=`${h}px`;assets.tile(c.getContext('2d'),sheet,index,0,0,c.width,c.height);return c;}
 function badge(text,cls=''){return el('span',`badge ${cls}`,text);}
 const schoolDescription={fire:'火焰与持续伤害，点燃你的热情。',ice:'坚固的护盾与寒冰魔法，稳步迎战。',storm:'强力的单体攻击，让雷霆为你而鸣。',life:'治疗与自然的力量，守护生命。',death:'吸取生命、布下陷阱，掌握幽暗魔法。'};
 export function renderEntry(root,assets,stored,cb,error='') {
@@ -78,24 +83,21 @@ export function renderEntry(root,assets,stored,cb,error='') {
         const steps=el('div','creation-steps');
         for(const [index,label]of ['起名字','选择抱抱龙','选择系别'].entries()){
             if(index)steps.append(el('i',''));
-            const item=el('span',draft.step===index+1?'current':draft.step>index+1?'done':'',`0${index+1} ${label}`);
+            // 序号与标签分开传入，让 tr() 只查标签本身，避免「01 起名字」整串无法命中词典。
+            const item=el('span',draft.step===index+1?'current':draft.step>index+1?'done':'',`0${index+1} `,label);
             if(draft.step===index+1)item.setAttribute('aria-current','step');steps.append(item);
         }
         const titles=['你的冒险，从名字开始','选择你的抱抱龙','找到属于你的魔法'];
         const captions=['先选一个模样，再告诉我们你的名字。','选一位伙伴，陪你踏上魔法旅程。','点击系别，看看它的代表技能。喜欢的话，就选它吧。'];
         form.append(steps,el('h2','',titles[draft.step-1]),el('p','creation-caption',captions[draft.step-1]));
         if(draft.step===1) {
-            const preview=el('div','avatar-choice');
-            for(const [value,label,index]of [['boy','魔法少年',8],['girl','魔法少女',12]]){
-                const b=button([tile(assets,'sprites',index),el('span','',label)],()=>{draft.appearance=value;for(const n of preview.children){const on=n.dataset.appearance===value;n.classList.toggle('selected',on);n.setAttribute('aria-pressed',String(on));}},`avatar-option ${draft.appearance===value?'selected':''}`);
-                b.dataset.appearance=value;b.setAttribute('aria-pressed',String(draft.appearance===value));preview.append(b);
-            }
+            const preview=createHeroPicker(assets,draft);
             const name=el('input','name-input');name.id='hero-name';name.name='name';name.value=draft.name;name.maxLength=16;name.autocomplete='off';name.required=true;name.oninput=()=>{draft.name=name.value;};
             const label=el('label','field-label','你的名字');label.htmlFor=name.id;
             form.append(preview,label,name);
         } else if(draft.step===2) {
             const scene=el('div','companion-scene');
-            const hero=el('div','companion-hero',tile(assets,'sprites',draft.appearance==='girl'?12:8,100,120),el('span','companion-name',draft.name));
+            const hero=el('div','companion-hero',heroPortrait(assets,draft,100,120),el('span','companion-name',draft.name));
             const companion=el('div','companion-position');
             const greeting=el('p','companion-greeting');greeting.setAttribute('role','status');
             scene.append(el('span','companion-scene-label','魔法营地 · 初次相遇'),el('div','companion-clearing'),hero,companion);
@@ -120,7 +122,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
             const choices=cb.previewChoices(draft.school),cards=el('div','creation-skill-choices');
             if(!choices.some(c=>c.key===draft.previewKey))draft.previewKey=choices[0]?.key;
             let pause;
-            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}setText(pause,'暂停');if(!cb.busy)cb.preview(canvas,key,draft.appearance,text=>{setText(status,text);},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
+            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}setText(pause,'暂停');if(!cb.busy)cb.preview(canvas,key,{appearance:draft.appearance,headId:draft.headId},text=>{setText(status,text);},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
             for(const choice of choices){
                 const face=el('canvas','creation-skill-card');face.width=112;face.height=112;face.setAttribute('aria-hidden','true');
                 const base=assets.effects.cards[choice.key]?.base;
@@ -145,7 +147,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
         if(error){const status=el('p','error-text',error);status.setAttribute('role','alert');form.append(status);}
         if(cb.busy)for(const node of root.querySelectorAll('button,input'))node.disabled=true;
     }
-    form.onsubmit=e=>{e.preventDefault();if(cb.busy)return;if(draft.step<3){draft.name=draft.name.trim()||'小哈奇';draft.step++;paint();root.scrollTop=0;}else cb.create({name:draft.name,school:draft.school,appearance:draft.appearance,starter:draft.starter});};
+    form.onsubmit=e=>{e.preventDefault();if(cb.busy)return;if(draft.step<3){draft.name=draft.name.trim()||'小哈奇';draft.step++;paint();root.scrollTop=0;}else cb.create({name:draft.name,school:draft.school,appearance:draft.appearance,headId:draft.headId,starter:draft.starter});};
     paint();
 }
 function withName(pattern, name) {
@@ -317,6 +319,27 @@ export function renderHud(root,model,cb) {
     const nav=el('nav','game-nav');nav.setAttribute('aria-label','游戏菜单');
     for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['shop','商店','shop']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
     root.append(nav);
+    // 坐骑显隐开关：仅漫游场景生效，战斗中恒显示；没有坐骑时不渲染按钮。
+    if(save.mountId){
+        // 图集没有坐骑图标：改用与坐骑名称匹配的 emoji；隐藏时叠半透明 SVG 禁止标志（圆圈+斜杠），透出底下的 emoji。
+        const mountMark=el('span','mount-emoji',mountEmoji(c.mountByItem?.[save.mountId]?.name||'抱抱龙'));
+        mountMark.setAttribute('aria-hidden','true');
+        if(save.mountHidden){
+            const stop=el('span','mount-emoji-stop');
+            stop.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M5.3 5.3l13.4 13.4"/></svg>';
+            mountMark.append(stop);
+        }
+        const mountToggle=button([mountMark],()=>cb.mountToggle(),'mount-toggle');
+        mountToggle.title=tr(save.mountHidden?'在场景中显示坐骑':'在场景中隐藏坐骑');
+        mountToggle.setAttribute('aria-label',mountToggle.title);
+        mountToggle.setAttribute('aria-pressed',String(!save.mountHidden));
+        root.append(mountToggle);
+        // 与 locale-launch 同一排：英雄卡下方，翻译按钮存在时排在其右侧。
+        // root 即 #hud，status 是其内 absolute 子元素，offset 坐标与 hud 同一坐标系。
+        const locale=document.querySelector('.locale-launch');
+        mountToggle.style.left=`${status.offsetLeft+(locale&&!locale.hidden?44:0)}px`;
+        mountToggle.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
+    }
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
 }
 function modal(root,title,subtitle,cb,wide=false) {
@@ -456,6 +479,10 @@ export function renderDialogue(root,model,dialog,cb) {
         lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),readAloud:cb.readDialogue,mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,
     });
 }
+// 战斗卡牌说明的展开偏好只存本机（localStorage），默认折叠。
+const CARD_DETAIL_OPEN_KEY='haqi.battle.card-detail-open';
+function isCardDetailOpen(){try{return localStorage.getItem(CARD_DETAIL_OPEN_KEY)==='open';}catch{return false;}}
+function saveCardDetailOpen(open){try{localStorage.setItem(CARD_DETAIL_OPEN_KEY,open?'open':'closed');}catch{}}
 export function renderBattle(root,model,cb) {
     try { renderBattleContent(root,model,cb); }
     catch(error) {
@@ -534,10 +561,18 @@ function renderBattleContent(root,model,cb) {
         node.title+=' · '+(runeCardsOpen?fill('符文剩余 {count}',{count:h.count}).text:tr(petCardsOpen?'宠物卡':'向下拖动或右键弃牌'));
         if(h.runeId)node.append(badge(`剩余 ${h.count}`));
         if(isSelected){
-            const detail=el('section','battle-card-detail',el('h3','',artCard.name),el('p','card-detail-meta',description.meta),...description.lines.map(line=>el('p','',line)),el('small','',description.note));
-            detail.id='selected-card-detail';detail.tabIndex=0;detail.setAttribute('aria-label',tr('卡牌效果说明'));detail.setAttribute('aria-live','polite');
-            select.setAttribute('aria-describedby',detail.id);
-            node.append(select,detail,el('div','hand-focus-actions',petCardsOpen||runeCardsOpen?null:drop,button('重新选择',cb.reselect,'secondary small')));
+            // 上下结构：说明框折叠在卡面上方，点击"查看详情"展开，状态记在本地。
+            const detailBody=el('div','battle-card-detail-body',el('h3','',artCard.name),el('p','card-detail-meta',description.meta),...description.lines.map(line=>el('p','',line)),el('small','',description.note));
+            detailBody.id='selected-card-detail';detailBody.tabIndex=0;detailBody.setAttribute('aria-label',tr('卡牌效果说明'));detailBody.setAttribute('aria-live','polite');
+            select.setAttribute('aria-describedby',detailBody.id);
+            const toggleLabel=el('span','card-detail-toggle-label');
+            const summary=el('summary','card-detail-toggle',toggleLabel);
+            const detail=el('details','battle-card-detail',summary,detailBody);
+            const syncToggle=()=>{setText(toggleLabel,detail.open?'收起':'查看详情');summary.setAttribute('aria-expanded',String(detail.open));};
+            detail.open=isCardDetailOpen();
+            detail.addEventListener('toggle',()=>{saveCardDetailOpen(detail.open);syncToggle();});
+            syncToggle();
+            node.append(detail,select,el('div','hand-focus-actions',petCardsOpen||runeCardsOpen?null:drop,button('重新选择',cb.reselect,'secondary small')));
         }
         else node.append(select);
         hand.append(node);

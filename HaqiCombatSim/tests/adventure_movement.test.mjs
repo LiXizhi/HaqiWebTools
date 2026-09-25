@@ -96,7 +96,7 @@ test('scene zoom clamps, keeps hero anchored and updates world picking without r
     try {
         for(const width of [1280,390]){
             const canvas={clientWidth:width,clientHeight:720,getContext:()=>ctx};
-            const renderer=createRenderer(canvas,{effects:{cards:{}},content:{quests:[]},tile(){}});
+            const renderer=createRenderer(canvas,{effects:{cards:{}},content:{quests:[]},hero:{drawSave:(c,s,x,y)=>({nameY:y})},tile(){}});
             const world={zone:'camp',w:1800,h:1600,trees:[],paths:[],decorations:[],buildings:[],npcs:[],encounters:[],center:{x:900,y:800},portal:{x:900,y:1300,name:'出口'}};
             const save={position:{x:900,y:800},quests:{},name:'测试'};
             renderer.render(world,save,1000);const initial=created;

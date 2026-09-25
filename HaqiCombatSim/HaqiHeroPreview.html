@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>主角分层实验室 · 魔法哈奇</title><link rel="stylesheet" href="css/hero_preview.css"></head>
+<body>
+<main>
+ <header><div><p class="eyebrow">魔法哈奇 / 美术预览</p><h1>让主角转过头来。</h1><p class="intro">十六方向精灵头部，原样保留的四方向身体。步行与骑乘共用同一个头。</p></div><span class="badge">独立测试 · 不读取存档</span></header>
+ <section class="toolbar" aria-label="预览控制">
+  <label>主角<select id="gender"><option value="male">男主角</option><option value="female">女主角</option></select></label>
+  <label>头部形象<select id="head-style"></select></label>
+  <label>身体姿态<select id="mode"><option value="walk">无坐骑 · 原步行形象</option><option value="mounted">骑乘 · 原座位配置</option><option value="standing">无坐骑 · 骑手站姿</option></select></label>
+  <label class="mount-select">坐骑<select id="mount" disabled></select></label>
+  <label>身体朝向<select id="facing"><option value="0">向前</option><option value="1">向左</option><option value="2">向右</option><option value="3">向后</option></select></label>
+  <label>头部控制<select id="control"><option value="auto">自动注视</option><option value="manual">手动转头 · 限制45°</option><option value="inspect">素材检查 · 全16方向</option></select></label>
+  <label>头部方向<select id="head"></select></label>
+ </section>
+ <div class="switches"><label><input id="debug" type="checkbox">连接点与身体边界</label><label><input id="overlay" type="checkbox">叠加原图检查定位</label><label><input id="body-only" type="checkbox">只看身体与脖子</label><label><input id="npc" type="checkbox">测试 NPC</label><label><input id="motion" type="checkbox" checked>起伏与张望</label><label>放大 <input id="zoom" type="range" min="1" max="3" step=".1" value="1.8"></label><button id="reset">重置位置</button></div>
+ <p id="status" role="status">正在准备图集…</p>
+ <section class="comparison">
+  <article class="stage-card"><div class="stage-title"><h2>原整身</h2><span>现有图集与定位</span></div><canvas id="before" aria-label="原整身角色对照"></canvas></article>
+  <article class="stage-card new"><div class="stage-title"><h2>头身分层</h2><span id="pose-label">十六方向头部</span></div><canvas id="after" tabindex="0" aria-label="分层角色，使用方向键或拖动移动"></canvas></article>
+ </section>
+ <p class="hint">在右侧画布按住拖动，或使用 WASD / 方向键移动。松开后停步；开启测试 NPC 后靠近观察注视。青色：身体矩形，金色：头颈连接点，红色：原座位。</p>
+ <section class="details"><article class="ui-card"><div><p class="eyebrow">同一个渲染类</p><h2>UI 缩略预览</h2><p>与大图使用相同姿态、头部和座位关系。</p></div><div id="thumbnail"></div></article><article class="notes"><h2>身体定位保持不变</h2><p>短脖子保留在身体图上，头部覆盖其上形成重叠，转头时也能保持连接。可切换多种发型，步行和骑乘共用所选头部。</p><p id="asset-info"></p><a id="asset-mode" href="?assets=local">切换本地资源模式</a> · <a href="data/hero-preview.json" target="_blank" rel="noopener">资源与连接点清单</a></article></section>
+ <section class="atlas-section"><div class="stage-title"><h2>十六方向头部图集</h2><span>从正面开始，向左每格转 22.5°，完整一周</span></div><img id="atlas" alt="当前角色十六方向尖耳头部图集"></section>
+<footer>游戏已接入同一分层渲染类；此页保留原图对照，不读取玩家存档。</footer>
+</main><script type="module" src="js/hero_preview.js"></script>
+</body></html>

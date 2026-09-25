@@ -14,6 +14,7 @@ test('follower stays visible while its sheet is unavailable, independently of ri
         const mount=catalog.mounts.find(row=>row.rideable);
         let ready=false,petDraws=0,fallbacks=0,mountDraws=0;
         const assets={effects:{cards:{}},content:{quests:[],pets:{dragon_green:{art:{cdn:'test'}}},mountCatalog:catalog,mountByItem:{1:{mountId:mount.id}}},
+            hero:{drawSave(c,save,x,y){if(save.mountId)mountDraws++;return {nameY:y};}},
             tile(c,sheet,index){if(sheet==='creatures'&&index===6)fallbacks++;},
             draw(c,ref){if(ref.id===`mount:${mount.id}`)mountDraws++;return true;},
             drawPet(c,id){assert.equal(id,'dragon_green');petDraws++;return ready;}};

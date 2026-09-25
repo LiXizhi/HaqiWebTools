@@ -53,9 +53,9 @@ SDK 源码可在 `lxzsrc/keepworkSDK/`（本机 `/Users/mac/lxzsrc/keepworkSDK`�
 
 ### Keepwork SDK 存储
 
-- 需要登录或跨设备存储时，优先使用 **Keepwork SDK**，不另造后端。云端进度使用 `sdk.personalPageStore.withWorkspace('HaqiAdventure')` 的作用域实例，保存和读取版本化 JSON。通用接口为 `createFile` / `readFile`；本游戏需要持久化确认，使用下述无缓存写入及远端核验路径。
+- 需要登录或跨设备存储时，优先使用 **Keepwork SDK**，不另造后端。云端进度使用 `sdk.personalPageStore.withWorkspace('HaqiAdventure')` 的作用域实例，保存和读取版本化 JSON。通用接口为 `createFile` / `readFile`；本游戏使用下述服务器 cache API 写入及缓存核验路径（2026-09-25 用户更新）。
 - Keepwork 适配器放在浏览器 IO 层，保持 `*_core.js` 纯净。保留当前本地自动存档、JSON 导入/导出和访客体验；登录取消、网络失败不能阻断游戏。
-- `createFile` 硬编码开启后台 server pageCache 写入，可能抢先清除pending，返回值不代表持久化成功。游戏使用 `savePageData(path, 'content', text, false, false)` 显式暂存无缓存写入；`loadPageData(forceRemote=true)` 仍可能回退本地。先 `syncToGit(path, false)`，再通过 `sdk.getFileByFullPath(store.getRemotePagePath(path), undefined, false)` 读取实际远端内容并核验。
+- personal workspace 的读写统一开启 cache API：`savePageData(path, 'content', text, false, true)` 暂存、`syncToGit(path, true)` 等待服务器缓存写入，再用 `getFileByFullPath(fullPath, undefined, true)` 核验；角色目录使用 `loadPage({useCache:true,useServerCache:true,...})`。保留版本冲突和账号校验，不再强制绕过缓存读取 Git。非启动必需数据首次使用时加载；钓鱼镜像仅在纪录变化时同步。
 - 同步记录存档版本与更新时间；加载云端存档仍走现有校验和战斗重演，处理本地/云端冲突后再替换进度，不能悄悄覆盖较新的进度。SDK token、密码和密钥不得进入游戏存档。
 - 按需加载 SDK，不为只使用本地存档的启动流程增加必需网络依赖。引入前核对登录和存储接口；实际账号的远端读写仍需按 QA 记录验证。
 
@@ -84,3 +84,8 @@ Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 
 - `npm test`（`node --test tests/`）：公式回归、确定性、冒烟。
 - 浏览器打开 `HaqiCombatSim.html`：对战页能完整打完一场 1v1；批量页 1v1 × 五系 × 200 场能出矩阵。
 - 改动引擎后，在 `docs/qa-report.md` 追加一条验证记录。
+
+## 用户存储分层（2026-09-25 用户更新）
+
+- personal workspace入口只存小型当前状态和分文件引用；完整物品收藏、战斗背包和历史记录分开，未变化的文件复用。禁止恢复为每次同步全量收藏/流水。
+- 当前血量、宠物饥饿/血量、坐标、计时及未结束战斗只存本机IndexedDB，缺失时生命/饥饿默认满格。领取标记、物品数量、成长和阵容等核心数据仍持久化云端。仅核心变化才置dirty；详情见`docs/user-storage.md`。

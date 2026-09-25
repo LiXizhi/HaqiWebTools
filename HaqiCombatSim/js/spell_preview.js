@@ -1,3 +1,4 @@
+import { createHeroActor, updateHeroActor } from './hero_pose_core.js';
 import { loadResources } from './adventure_assets.js';
 import { fetchJson } from './runtime_data.js';
 import { createSpellEffects } from './spell_effects.js';
@@ -9,7 +10,7 @@ import { effectDuration,spellEffect,validateSpellEffects } from './spell_effects
 const $=id=>document.getElementById(id),canvas=$('preview'),ctx=canvas.getContext('2d');
 const names={ice:'寒冰',fire:'烈火',storm:'风暴',life:'生命',death:'死亡',balance:'通用'};
 const ranks={normal:'普通',green:'绿卡',blue:'蓝卡',purple:'紫卡',gold:'金卡'};
-const sound=createSpellSound();
+const sound=createSpellSound(),heroActor=createHeroActor(7419);
 const soundButton=document.createElement('button');soundButton.type='button';
 function soundLabel(){soundButton.textContent=sound.enabled?'音效：开启':'音效：关闭';soundButton.setAttribute('aria-pressed',String(sound.enabled));}
 soundLabel();document.querySelector('.controls').append(soundButton);
@@ -66,7 +67,7 @@ function frame(now){
         const mode=$('actor-action').value,reduced=$('reduced').checked;
         if(mode==='auto'&&environment&&p>=assets.effects.timeline.impact)fx.drawEnvironment(ctx,{card,center:{x:w*.5,y:h*.62},radius:w*.4,aspect:h*.22/(w*.4),time:elapsed/1000,reducedMotion:reduced,strength:Math.min(1,(p-assets.effects.timeline.impact)/.1)});
         const reaction=previewTargetAction(spec,assets.effects.timeline,elapsed,duration,mode);
-        const drawActor=(at,atlas,index,action,progress,direction)=>drawAnimatedActor(ctx,at,action,progress,direction,reduced,()=>assets.tile(ctx,atlas,index,-size/2,-size,size,size));
+        const drawActor=(at,atlas,index,action,progress,direction)=>drawAnimatedActor(ctx,at,action,progress,direction,reduced,()=>{if(atlas==='sprites'){const pose=updateHeroActor(heroActor,{time:now/1000,facing:index%4,reducedMotion:reduced});assets.hero.drawTile(ctx,index,-size/2,-size,size,size,{time:now/1000,head:pose.head,breath:pose.breath});}else assets.tile(ctx,atlas,index,-size/2,-size,size,size);});
         drawActor(from,'sprites',10,mode==='auto'?'cast':'idle',Math.min(1,p/.45),1);
         const drawTargets=()=>{for(const at of spec.area?targets:[to]) {
             const friendly=spec.area&&spec.friendly;

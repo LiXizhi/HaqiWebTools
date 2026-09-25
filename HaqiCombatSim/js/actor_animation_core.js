@@ -43,7 +43,7 @@ export function castHitReactions(events,index,progress,duration,impact) {
     const reactions=[];
     for(let i=index+1;i<events.length;i++) {
         const event=events[i];
-        if(event.periodic||['cast','fizzle','pass','speak'].includes(event.type))break;
+        if(event.periodic||['movearrow','cast','fizzle','pass','speak'].includes(event.type))break;
         if(event.type==='damage'&&event.amount>0)reactions.push({eventIndex:i,target:event.target,progress:hitProgress});
     }
     return reactions;

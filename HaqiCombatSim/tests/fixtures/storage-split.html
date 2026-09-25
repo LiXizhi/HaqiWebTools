@@ -1,0 +1,38 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>角色分层存储验证</title>
+<h1>角色分层存储验证</h1><p>隔离测试账号与数据库，不登录或修改游戏账号。</p><button id="run">运行 IndexedDB 恢复验证</button><pre id="result">等待验证</pre>
+<script type="module">
+import {createRuntimeStore} from '../../js/adventure_runtime_store.js';
+import {createRoleStore} from '../../js/adventure_roles.js';
+import {createAdventure,beginEncounter,recordDecision} from '../../js/adventure_core.js';
+import {installExpansion} from '../../js/adventure_expansion_core.js';
+import {restorePveBattle,playPveRound} from '../../js/combat_pve_core.js';
+import {SAVE_KEY} from '../../js/adventure_assets.js';
+const output=document.querySelector('#result');
+document.querySelector('#run').onclick=async()=>{
+    output.textContent='正在验证…';
+    try{
+        const read=async path=>(await fetch('../../data/'+path)).json();
+        const data=await Promise.all(['adventure/chapter.json','adventure/combat.json','adventure/pets.json','adventure/shop-candidates.json','kids/cards.json','kids/charms.json'].map(read));
+        const {content,dataset}=installExpansion(...data),values=new Map();
+        const storage={getItem:key=>values.get(key)??null,setItem:(key,value)=>values.set(key,value)};
+        const databaseName='haqi-storage-split-fixture',owner='fixture-'+crypto.randomUUID();
+        const make=()=>createRoleStore({content,dataset,storage,runtimeStore:createRuntimeStore({databaseName})});
+        const first=make();first.open(owner);const id=first.create(createAdventure(content));
+        first.markSynced('12345678-1234-1234-1234-123456789abc',first.checkpoint());
+        let save=JSON.parse(first.scoped().getItem(SAVE_KEY));save.heroHp=7;save.pets.dragon_green.hp=9;save.pets.dragon_green.hunger=12;
+        first.scoped().setItem(SAVE_KEY,JSON.stringify(save));await first.flushRuntime();
+        if(first.dirty)throw Error('临时数值错误地触发云同步');
+        const second=make();await second.prepareOpen(owner);second.open(owner);save=second.catalog.roles[0].save;
+        if(save.heroHp!==7||save.pets.dragon_green.hp!==9||save.pets.dragon_green.hunger!==12)throw Error('IndexedDB数值未恢复');
+        beginEncounter(save,content,'trial:1');const battle=restorePveBattle(dataset,content,save.pendingEncounter);
+        playPveRound(battle,{pass:true});recordDecision(save,{pass:true});
+        second.scoped().setItem(SAVE_KEY,JSON.stringify(save));await second.flushRuntime();
+        const third=make();await third.prepareOpen(owner);third.open(owner);
+        const resumed=restorePveBattle(dataset,content,third.catalog.roles[0].save.pendingEncounter);
+        if(JSON.stringify(resumed.events)!==JSON.stringify(battle.events))throw Error('本地战斗重演不一致');
+        const persisted=JSON.parse(values.get(`haqi.roles.v1.account.${owner}`)).catalog.roles[0].save;
+        if(persisted.heroHp!==undefined||persisted.pets.dragon_green.hunger!==undefined||persisted.pendingEncounter!==undefined)throw Error('临时状态仍在localStorage');
+        output.textContent='全部通过\n真实 IndexedDB 写入并跨实例恢复血量和饥饿值\n临时数值不标记云端待同步\n未结束战斗从 IndexedDB 恢复并确定性重演\nlocalStorage 核心存档不含血量、饥饿值和战斗过程';
+    }catch(error){output.textContent='失败：'+error.message;}
+};
+</script></html>

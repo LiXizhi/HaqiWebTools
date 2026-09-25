@@ -1,17 +1,18 @@
 import {createRng,hashSeed} from './rng_core.js';
 import {resolveMountDrawPose} from './adventure_mounts_core.js';
+import {HeroRenderer} from './hero_renderer.js';
 
 // Website-only showcase. Never reads or changes character saves.
 export function createCompanionShowcase(catalog,{local=false,seed=1}={}) {
- const $=id=>document.getElementById(id),rng=createRng(hashSeed(seed)),images=new Map();
+ const $=id=>document.getElementById(id),rng=createRng(hashSeed(seed));
+ const heroReady=Promise.resolve(new HeroRenderer(catalog.heroArt,catalog,{local}));
  const el=(tag,cls,...children)=>{const n=document.createElement(tag);n.className=cls||'';n.append(...children);return n;};
  let lang='zh-CN',mount=catalog.mounts.find(m=>m.id==='original-16059')||catalog.mounts[0],chosen=rng.shuffle([...catalog.pets]).slice(0,3);
  const text=(zh,en)=>lang==='en'?en:zh,name=row=>lang==='en'?row.nameEn:row.name;
- function load(sheet){const url=local?sheet.local:sheet.cdn;if(!images.has(url))images.set(url,new Promise((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=()=>{images.delete(url);reject(new Error('art'));};i.src=url;}));return images.get(url);}
  async function mountPortrait(canvas,entry){
   try{
-   const pose=resolveMountDrawPose(entry,2,{size:400,gender:'male'}),sheet=catalog.sheets[pose.rider.art];
-   const [mountImage,riderImage]=await Promise.all([load(entry.art),load(sheet)]);
+   const hero=await heroReady;await hero.ensure({gender:'male',mount:entry});
+   const pose=resolveMountDrawPose(entry,2,{size:400,gender:'male'});
    // Include both complete sprite rectangles: tall riders can extend above the mount.
    const rects=[pose.mount,pose.rider],padding=8;
    const originX=Math.floor(Math.min(...rects.map(r=>r.x)))-padding,originY=Math.floor(Math.min(...rects.map(r=>r.y)))-padding;
@@ -19,9 +20,7 @@ export function createCompanionShowcase(catalog,{local=false,seed=1}={}) {
    buffer.width=Math.ceil(Math.max(...rects.map(r=>r.x+r.w)))-originX+padding;
    buffer.height=Math.ceil(Math.max(...rects.map(r=>r.y+r.h)))-originY+padding;
    const c=buffer.getContext('2d',{willReadFrequently:true});c.translate(-originX,-originY);
-   function layer(image,art,rect){const cols=art.columns||2,rows=art.rows||2,w=image.width/cols,h=image.height/rows;c.drawImage(image,(rect.cell%cols)*w,Math.floor(rect.cell/cols)*h,w,h,rect.x,rect.y,rect.w,rect.h);}
-   layer(mountImage,entry.art,pose.mount);layer(riderImage,sheet,pose.rider);
-   for(const polygon of pose.foreground){c.save();c.beginPath();polygon.forEach(([x,y],i)=>c[i?'lineTo':'moveTo'](pose.mount.x+x*pose.mount.w,pose.mount.y+y*pose.mount.h));c.closePath();c.clip();layer(mountImage,entry.art,pose.mount);c.restore();}
+   hero.draw(c,{gender:'male',mount:entry},{facing:2,size:400,reducedMotion:true});
    // Remove transparent margins only. Keep the scene scale instead of fitting wide mounts into a square.
    const pixels=c.getImageData(0,0,buffer.width,buffer.height).data;let left=buffer.width,top=buffer.height,right=0,bottom=0;
    for(let y=0;y<buffer.height;y++)for(let x=0;x<buffer.width;x++)if(pixels[(y*buffer.width+x)*4+3]>20){left=Math.min(left,x);top=Math.min(top,y);right=Math.max(right,x);bottom=Math.max(bottom,y);}

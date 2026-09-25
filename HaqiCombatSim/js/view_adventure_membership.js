@@ -2,16 +2,31 @@ import { fill, setText, tr } from './locale_runtime.js';
 import {ItemDetails} from './view_adventure_item_details.js';
 import {magicStarStatus,magicStarWeek,magicPocketRemaining} from './adventure_magic_star_core.js';
 import {magicBeanExchangeText} from './adventure_magic_bean_exchange_core.js';
+import {drawMagicStarIcon} from './adventure_star.js';
 // Layout reference: Aries/Desktop/CombatCharacterFrame/CombatMagicStarPage.html.
 // Keepwork supplies the entitlement; remaining calendar months map to star levels.
-export function membershipEmblem(el,level='V') {
+export function membershipEmblem(el,assets,level=0) {
     const icon=el('span','membership-emblem');icon.setAttribute('aria-hidden','true');
-    const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
-    svg.setAttribute('viewBox','0 0 48 48');
-    const star=document.createElementNS(ns,'path');
-    star.setAttribute('d','M24 3 30 16 45 18 34 29 37 44 24 37 11 44 14 29 3 18 18 16Z');
-    star.setAttribute('fill','#f6cf63');star.setAttribute('stroke','#94631e');star.setAttribute('stroke-width','2');
-    svg.append(star);icon.append(svg,el('b','',String(level)));return icon;
+    const picture=el('canvas','');picture.width=176;picture.height=176;
+    if(!level)icon.classList.add('inactive');
+    drawMagicStarIcon(picture.getContext('2d'),assets,level,0,0,176);
+    icon.append(picture);return icon;
+}
+
+// One radio button under the emblem: browsers never clear a checked radio, so the flip is applied by hand.
+export function membershipFollowToggle(el,follow,{onChange,disabled=false}={}) {
+    const label=el('label','magic-star-follow');
+    const input=el('input','magic-star-follow-input');
+    input.type='radio';input.name='magic-star-follow';input.checked=follow;input.disabled=disabled;
+    const flip=event=>{event.preventDefault();if(input.disabled)return;follow=!follow;input.checked=follow;display();onChange?.(follow);};
+    function display() {
+        label.classList.toggle('on',follow);
+        label.title=tr(input.disabled?'开通魔法星后可设置跟随':'取消后在场景中不再显示魔法星。');
+    }
+    input.addEventListener('click',flip);
+    input.addEventListener('keydown',event=>{if(event.key===' '||event.key==='Enter')flip(event);});
+    label.append(input,el('span','magic-star-follow-label','跟随主角'));
+    display();return label;
 }
 
 function showExchange(node, source) {
@@ -35,7 +50,10 @@ export function renderMembership(body,model,cb,ui) {
     const expiry=el('p','muted');
     if(star.expiresAt){const date=new Date(star.expiresAt);setText(expiry,'有效期至 {date}',{date:`${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`});}
     else setText(expiry,star.level?'有效日期待确认':'升级会员，点亮魔法星');
-    const identity=el('div','magic-star-identity',membershipEmblem(el,star.level),el('div','',starTitle,starState,expiry));
+    const identity=el('div','magic-star-identity',
+        el('div','magic-star-emblem-stack',membershipEmblem(el,assets,star.level),
+            membershipFollowToggle(el,save.magicStarFollow!==false,{disabled:star.level===0,onChange:follow=>cb.action({type:'magic-star-follow',follow})})),
+        el('div','',starTitle,starState,expiry));
     const energyLabel=el('span','');
     if(star.days===null)setText(energyLabel,'会员有效，剩余天数待确认');
     else setText(energyLabel,'剩余能量：{days} 天',{days:star.days});
@@ -49,7 +67,7 @@ export function renderMembership(body,model,cb,ui) {
         const picture=el('canvas','magic-star-item');picture.width=80;picture.height=80;picture.setAttribute('role','img');picture.setAttribute('aria-label',tr(reward.name));
         if(item?.art)assets.draw(picture.getContext('2d'),item.art,0,0,80,80);
         const claim=button(owned?'已领取':eligible?'领取':'未解锁',()=>cb.action({type:'magic-star-claim',rewardId:reward.id}),'primary');claim.disabled=owned||!eligible;claim.setAttribute('aria-label',`${reward.name}：${claim.textContent}`);
-        const inspect=button([picture,el('strong','',reward.name)],()=>inspector.show(item,{trigger:inspect,source:'魔法星专属左手法杖',requirements:`魔法星 ${reward.starLevel} 级 · 角色 ${reward.heroLevel} 级`}), 'item-inspect-button');
+        const inspect=button([picture,el('strong','',reward.name)],()=>inspector.show(item,{trigger:inspect,source:'魔法星专属左手法杖',requirements:fill('魔法星 {star} 级 · 角色 {level} 级',{star:reward.starLevel,level:reward.heroLevel}).text}), 'item-inspect-button');
         inspect.setAttribute('aria-label',`查看${reward.name}详情`);inspect.setAttribute('aria-haspopup','dialog');
         const requirement=el('small','');
         if(reward.heroLevel>1)setText(requirement,'魔法星 {star} 级 · 角色 {level} 级',{star:reward.starLevel,level:reward.heroLevel});

@@ -45,7 +45,7 @@ export function pendingQuestTalk(save, quest, npcId) {
 export function questReady(save, quest) {
     return !!quest && questState(save, quest.id).accepted && questProgress(save, quest).every(g => g.value >= g.count);
 }
-export function createAdventure(content, { name = '小哈奇', school = 'fire', appearance = 'boy', seed = 530, starter = 'dragon_green' } = {}) {
+export function createAdventure(content, { name = '小哈奇', school = 'fire', appearance = 'boy', headId, seed = 530, starter = 'dragon_green' } = {}) {
     assert(SCHOOLS.includes(school), '请选择魔法学系');
     const save = { schemaVersion: SAVE_VERSION, contentVersion: content.contentVersion, seed: hashSeed(String(seed)),
         name: String(name).trim().slice(0, 16) || '小哈奇', school, appearance: appearance === 'girl' ? 'girl' : 'boy',
@@ -54,6 +54,7 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
         dungeonRuns: {}, dungeonReturn: null, encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
         visitedTown: false, music: false, tips: {}, revision: 0, bagRulesVersion: 1, defaultPocketVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion,
         locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
+    if(typeof headId==='string'&&/^[a-z0-9-]{1,64}$/.test(headId))save.headId=headId;
     syncProgression(save, content);
     save.deck = recommendedDeck(save, content);
     syncDeckLayouts(save,content);
@@ -539,6 +540,7 @@ export function parseSave(raw,content) {
     validateMagicStarClaims(s,content);
     assert(SCHOOLS.includes(s.school) && (islandFor(s.zone)||dungeonFor(content,s.zone)?.playable),'存档角色无效');
     assert(typeof s.name === 'string' && s.name.length <= 16 && ['boy','girl'].includes(s.appearance),'存档外观无效');
+    assert(s.headId===undefined||(typeof s.headId==='string'&&/^[a-z0-9-]{1,64}$/.test(s.headId)),'存档头部形象无效');
     assert(Number.isSafeInteger(s.xp) && s.xp >= 0 && Number.isInteger(s.seed),'存档经验无效');
     validateTrainingPoints(s,content);
     assert(s.gemSerial===undefined||(Number.isSafeInteger(s.gemSerial)&&s.gemSerial>=0),'存档宝石操作记录无效');

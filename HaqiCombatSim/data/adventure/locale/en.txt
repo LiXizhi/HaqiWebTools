@@ -110,6 +110,48 @@ Pair corresponding words between the two lines. Return JSON only: {"groups":[{"c
 签到数值超出范围||Check-in value out of range
 存档签到记录无效||Invalid saved check-in record
 
+# js/adventure_cloud.js
+连接超时。当前本地进度仍然保留，请稍后刷新云端记录。||Connection timed out. Your local progress is kept; refresh the cloud records later.
+Keepwork 暂时不可用，请继续本地冒险。||Keepwork is unavailable for now; keep playing locally.
+无法连接 Keepwork，请检查网络后重试。||Could not connect to Keepwork. Check your network and try again.
+登录状态已变化，请重新连接 Keepwork。||Your sign-in state changed. Please reconnect to Keepwork.
+登录已过期，请点击“切换账号”重新登录；本地进度仍然保留。||Your sign-in expired. Click "Switch account" to sign in again; local progress is kept.
+云端操作未完成。请检查网络或重新登录；本地进度仍然保留。||The cloud operation did not finish. Check your network or sign in again; local progress is kept.
+请先连接 Keepwork。||Connect to Keepwork first.
+登录账号已变化，请重新连接 Keepwork。||The signed-in account changed. Please reconnect to Keepwork.
+云端账号不一致，请重新连接。||The cloud account does not match. Please reconnect.
+无法从云端读取记录，请检查网络后重试。||Could not read the cloud record. Check your network and try again.
+云端账号不一致||The cloud account does not match
+角色列表读取失败，请重试。||Could not read the character list. Please try again.
+角色列表身份或版本无效||Invalid character list identity or version
+角色分文件路径无效||Invalid character part-file path
+角色分文件过大||The character part file is too large
+角色分文件身份无效||Invalid character part-file identity
+角色列表格式无效||Invalid character list format
+角色编号无效||Invalid character ID
+角色存储版本不兼容||Incompatible character storage version
+角色云端保存未完成，本地进度已保留。||The character was not fully saved to the cloud; local progress is kept.
+角色云端保存未通过远端核验。||The cloud character save did not pass remote verification.
+角色历史记录无效||Invalid character history record
+其他设备已更新角色列表，请先处理云端冲突。||Another device updated the character list. Resolve the cloud conflict first.
+战斗尚未结束，进度先保存在本机，结算后再同步。||A battle is still in progress. Progress stays on this device and syncs after it ends.
+其他设备已更新角色列表，本次进度已保留，请刷新处理冲突。||Another device updated the character list. This progress is kept; refresh to resolve the conflict.
+请登录 Keepwork 后继续账号角色。||Sign in to Keepwork to continue this account's characters.
+登录 Keepwork，继续魔法旅程||Sign in to Keepwork to continue the magic journey
+已取消登录，你可以继续本地冒险。||Sign-in was canceled. You can keep playing locally.
+登录窗口暂时不可用，请刷新后重试；本地进度仍然保留。||The sign-in window is unavailable for now. Refresh and try again; local progress is kept.
+登录未完成，请重新连接 Keepwork。||Sign-in did not finish. Please reconnect to Keepwork.
+Keepwork 存储接口暂时不可用，请稍后重试。||Keepwork storage is unavailable for now. Please try again later.
+战斗尚未结束，请结算后再保存云端快照。||A battle is still in progress. Finish it before saving a cloud snapshot.
+云端尚未确认写入，请稍后刷新检查。本地存档已保留。||The cloud has not confirmed the write yet; refresh and check later. The local save is kept.
+云端内容未通过核验，请稍后刷新检查。本地存档已保留。||The cloud content did not pass verification; refresh and check later. The local save is kept.
+云端记录路径无效||Invalid cloud record path
+存档文件过大||The save file is too large
+云端记录存储版本不兼容||Incompatible cloud record storage version
+云端记录与文件编号不一致||The cloud record does not match its file ID
+学习档案尚未写入云端，本地进度已保留。||The learning journal was not written to the cloud; local progress is kept.
+学习档案未通过远端核验。本地进度已保留。||The learning journal did not pass remote verification. Local progress is kept.
+
 # js/adventure_core.js
 风暴||Storm
 寒冰||Ice
@@ -204,6 +246,12 @@ Pair corresponding words between the two lines. Return JSON only: {"groups":[{"c
 存档宠物奖励阵容无效||Invalid saved pet reward party
 存档养成参数无效||Invalid saved growth parameters
 挑战等级尚未解锁||Challenge level not unlocked yet
+魔法星会继续跟随主角。||The Magic Star keeps following your hero.
+已取消跟随，场景中不再显示魔法星。||Follow is off; the Magic Star is no longer shown in the scene.
+在场景中显示坐骑||Show mount in the scene
+在场景中隐藏坐骑||Hide mount in the scene
+坐骑已在场景中隐藏，战斗时仍会出现。||Mount hidden from the scene; it still appears in combat.
+坐骑会跟随主角一起行动。||The mount travels with your hero again.
 
 # js/adventure_expansion_core.js
 通用||Generic
@@ -710,6 +758,9 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 刷新会员状态||Refresh membership status
 成为VIP||Become a VIP
 会员开通暂未开放，点击“成为VIP”可查看个人资料。||Membership purchase is not open yet; click "Become a VIP" to view your profile.
+跟随主角||Follow the hero
+开通魔法星后可设置跟随||Available once the Magic Star is active
+取消后在场景中不再显示魔法星。||Unchecked hides the Magic Star in the scene.
 
 # js/view_adventure_npc.js
 服务||Services
@@ -3569,6 +3620,13 @@ VIP专用仙豆礼盒||VIP Fairy Bean Gift Box
 当前未生效属性：{stats}||Stats not applied yet: {stats}
 获取途径：{source}||Source: {source}
 {label}：{text}||{label}: {text}
+套装 {id} · 已穿戴 {count} 件||Set {id} · {count} items equipped
+{count} 件 · {status}：||{count} items · {status}:
+套装||Set
+已穿戴||Equipped
+{count} 件||{count} items
+已激活||Active
+未激活||Inactive
 森林裙||Forest Skirt
 森林短裤||Forest Shorts
 森林手腕||Forest Wrist
@@ -5439,3 +5497,26 @@ S4死亡装供货商||S4 Death gear supplier
 {name} · {target} · {description}||{name} · {target} · {description}
 符文剩余 {count}||Runes remaining: {count}
 向下拖动或右键弃牌||Drag down or right-click to discard
+收起||Collapse
+
+# Hero head selection
+上一个形象||Previous look
+下一个形象||Next look
+棕发精灵少年||Chestnut Elf Boy
+双马尾精灵少女||Twin-tail Elf Girl
+墨发少年||Raven-haired Boy
+墨发少女||Raven-haired Girl
+栗发少年||Chestnut-haired Boy
+栗发少女||Braided Girl
+金发少年||Blond Boy
+金发少女||Blond Bob Girl
+赤发少年||Copper Curl Boy
+赤发少女||Copper Bun Girl
+卷发少年||Curly-haired Boy
+卷发少女||Curly Puff Girl
+棕肤少年||Twist-haired Boy
+棕肤少女||Twist-haired Girl
+侧分少年||Side-part Boy
+丸子少女||High-bun Girl
+波浪少年||Wavy-haired Boy
+波浪少女||Wavy Bob Girl

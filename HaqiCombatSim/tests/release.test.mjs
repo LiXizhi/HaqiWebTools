@@ -3,10 +3,10 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { syncMaisiRelease } from '../scripts/sync_maisi_release.mjs';
 
-test('release hashes all runtime data, is repeatable, and distinguishes previews from verified releases', () => {
+test('release hashes all runtime data, is repeatable, and distinguishes previews from verified releases', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-release-'));
     try {
         fs.copyFileSync(new URL('../uploadRelease.mjs', import.meta.url), path.join(root, 'uploadRelease.mjs'));
@@ -18,34 +18,40 @@ test('release hashes all runtime data, is repeatable, and distinguishes previews
         }
         const data = path.join(root, 'dist/data/cards.json');
         fs.writeFileSync(data, '{}');
-        const run = () => spawnSync(process.execPath, [path.join(root, 'uploadRelease.mjs'), '--dry-run'], { encoding: 'utf8' });
+        // Async spawn instead of spawnSync: blocked sandboxes and some CI hosts
+        // reject synchronous child process creation (EBUSY) while allowing async.
+        const run = () => new Promise((resolve, reject) => {
+            const child = spawn(process.execPath, [path.join(root, 'uploadRelease.mjs'), '--dry-run'], { stdio: 'ignore' });
+            child.on('error', reject);
+            child.on('exit', code => resolve(code ?? 1));
+        });
         const read = () => JSON.parse(fs.readFileSync(path.join(root, 'release/manifest.json'), 'utf8'));
-        assert.equal(run().status, 0);
+        assert.equal(await run(), 0);
         const first = read();
         assert.equal(first.verified, false);
         assert.ok(fs.readFileSync(path.join(root, 'release/HaqiOfficialWebsite_preview.html'), 'utf8').includes(`<base href="${first.base}">`));
         assert.equal(fs.existsSync(path.join(root, 'release/Haqi_v1.html')), false);
         assert.ok(fs.readFileSync(path.join(root, 'release/Haqi_preview.html'), 'utf8').includes(`<base href="${first.base}">`));
-        assert.equal(run().status, 0);
+        assert.equal(await run(), 0);
         assert.equal(read().hash, first.hash);
         fs.mkdirSync(path.join(root, 'dist/assets'), { recursive: true });
         fs.writeFileSync(path.join(root, 'dist/assets/static.webp'), 'local art is not a release dependency');
         fs.writeFileSync(path.join(root, 'dist/assets/music.ogg'), 'local music');
-        assert.equal(run().status, 0);
+        assert.equal(await run(), 0);
         assert.equal(read().hash, first.hash);
         assert.ok(read().files.every(file => !/\.(webp|ogg)$/.test(file.path)));
         fs.writeFileSync(data, '{"changed":true}');
-        assert.equal(run().status, 0);
+        assert.equal(await run(), 0);
         assert.notEqual(read().hash, first.hash);
         fs.mkdirSync(path.join(root, 'dist/data/adventure/locale'), { recursive: true });
         fs.writeFileSync(path.join(root, 'dist/data/adventure/locale/en.txt'), '甲||A\n');
-        assert.equal(run().status, 0);
+        assert.equal(await run(), 0);
         assert.ok(read().files.some(file => file.path === 'data/adventure/locale/en.txt'));
         fs.writeFileSync(path.join(root, 'dist/notes.txt'), 'no');
-        assert.notEqual(run().status, 0);
+        assert.notEqual(await run(), 0);
         fs.rmSync(path.join(root, 'dist/notes.txt'));
         fs.writeFileSync(path.join(root, 'dist/qiniu.yaml'), 'must not upload');
-        assert.notEqual(run().status, 0);
+        assert.notEqual(await run(), 0);
     } finally {
         // Only this test's freshly created OS temp directory is removed.
         fs.rmSync(root, { recursive: true, force: true });

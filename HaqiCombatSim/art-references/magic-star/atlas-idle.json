@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "name": "蓝色魔法星正面软弹待机",
+  "local": "assets/adventure/effects/magic-star-blue-idle-16.webp",
+  "animation": "front-facing-wiggle",
+  "cdn": null,
+  "width": 768,
+  "height": 768,
+  "columns": 4,
+  "rows": 4,
+  "frameCount": 16,
+  "frameWidth": 192,
+  "frameHeight": 192,
+  "frameOrder": "row-major",
+  "fps": 10,
+  "loopDurationMs": 1600,
+  "frameBounds": [
+    [
+      35,
+      46,
+      164,
+      172
+    ],
+    [
+      38,
+      53,
+      162,
+      171
+    ],
+    [
+      34,
+      67,
+      163,
+      172
+    ],
+    [
+      36,
+      51,
+      157,
+      171
+    ],
+    [
+      34,
+      46,
+      163,
+      168
+    ],
+    [
+      34,
+      45,
+      163,
+      168
+    ],
+    [
+      34,
+      46,
+      163,
+      168
+    ],
+    [
+      33,
+      38,
+      158,
+      169
+    ],
+    [
+      36,
+      36,
+      164,
+      160
+    ],
+    [
+      35,
+      46,
+      163,
+      160
+    ],
+    [
+      31,
+      52,
+      160,
+      161
+    ],
+    [
+      31,
+      37,
+      160,
+      158
+    ],
+    [
+      35,
+      26,
+      163,
+      148
+    ],
+    [
+      34,
+      25,
+      163,
+      148
+    ],
+    [
+      33,
+      26,
+      161,
+      148
+    ],
+    [
+      31,
+      26,
+      161,
+      148
+    ]
+  ],
+  "boundsAlphaThreshold": 32,
+  "bytes": 128252,
+  "sha256": "a31481f6dd999829165624dfac7d04014c5c9c32f66183f4182c0d93eba11ff9",
+  "encoding": "quality-95",
+  "source": {
+    "kind": "imagegen-reinterpretation",
+    "generatedSha256": "2e8db896f73166e47a119fe3d0fdbd186db0d956c75be88202bd8749dc415dc3",
+    "originalModel": "character/v5/11vip/MagicStar/MagicStar.x",
+    "originalTextureEntry": "character/v5/11vip/magicstar/magicstar.dds.z,15a510b7d9d56e8655ba26106b2868f4,5632",
+    "attachmentSource": "script/apps/Aries/Pet/main.lua L1906-1915, L2027-2035: AddAttachment(asset, 4, 1)",
+    "note": "原版贴图参考的AI重绘，并非原模型动画直接导出；头顶绕行由预览单独驱动。"
+  }
+}

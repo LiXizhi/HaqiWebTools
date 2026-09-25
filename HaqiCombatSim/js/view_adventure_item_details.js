@@ -51,7 +51,7 @@ export class ItemDetails extends DetailDialog {
         if(source){const line=el('p','equipment-source');setText(line,'获取途径：{source}',{source});this.body.append(line);}
     }
 }
-function attributeSpan(el,row){
+export function attributeSpan(el,row){
     const span=el('span','');
     const amount=`${signedAttribute(row.value)}${row.unit}`;
     const label=row.name?(row.schoolLabel?fill('{school}{name}',{school:row.schoolLabel,name:row.name}).text:tr(row.name)):tr(row.label);

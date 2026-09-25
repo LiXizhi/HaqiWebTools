@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "name": "魔法星VIP 1–16级静态图集",
+  "local": "assets/adventure/effects/magic-star-vip-levels-16.webp",
+  "animation": "none",
+  "cdn": "https://cdn.keepwork.com/haqi/adventure/magic-star/20260925/magic-star-vip-levels-16.webp",
+  "width": 320,
+  "height": 320,
+  "columns": 4,
+  "rows": 4,
+  "frameCount": 16,
+  "frameWidth": 80,
+  "frameHeight": 80,
+  "frameOrder": "row-major",
+  "frameBounds": [
+    [
+      14,
+      17,
+      70,
+      71
+    ],
+    [
+      12,
+      16,
+      69,
+      71
+    ],
+    [
+      11,
+      16,
+      68,
+      71
+    ],
+    [
+      10,
+      16,
+      68,
+      71
+    ],
+    [
+      13,
+      10,
+      71,
+      65
+    ],
+    [
+      12,
+      10,
+      69,
+      65
+    ],
+    [
+      10,
+      10,
+      68,
+      65
+    ],
+    [
+      9,
+      10,
+      68,
+      65
+    ],
+    [
+      13,
+      7,
+      71,
+      62
+    ],
+    [
+      11,
+      6,
+      70,
+      62
+    ],
+    [
+      10,
+      6,
+      69,
+      62
+    ],
+    [
+      9,
+      6,
+      68,
+      62
+    ],
+    [
+      13,
+      3,
+      71,
+      57
+    ],
+    [
+      11,
+      2,
+      70,
+      57
+    ],
+    [
+      10,
+      2,
+      69,
+      57
+    ],
+    [
+      9,
+      2,
+      68,
+      58
+    ]
+  ],
+  "boundsAlphaThreshold": 32,
+  "bytes": 31908,
+  "sha256": "ddccf67edfa5f6aeeb5115125dcda3dedfa45d7b60081da09444b8dc4e7f2657",
+  "encoding": "quality-80",
+  "source": {
+    "kind": "imagegen-reinterpretation",
+    "generatedSha256": "05c414aa1a6cf45884479fd08837b168784505313610ad6efc2aaba332e03e04",
+    "originalModel": "character/v5/11vip/MagicStar/MagicStar.x",
+    "originalTextureEntry": "character/v5/11vip/magicstar/magicstar.dds.z,15a510b7d9d56e8655ba26106b2868f4,5632",
+    "attachmentSource": "script/apps/Aries/Pet/main.lua L1906-1915, L2027-2035: AddAttachment(asset, 4, 1)",
+    "note": "按用户要求创作的16级外观设计，不代表原版会员等级规则；每级固定一格，仅由代码摇摆和缩放。"
+  },
+  "levels": [
+    {
+      "level": 1,
+      "cell": 0
+    },
+    {
+      "level": 2,
+      "cell": 1
+    },
+    {
+      "level": 3,
+      "cell": 2
+    },
+    {
+      "level": 4,
+      "cell": 3
+    },
+    {
+      "level": 5,
+      "cell": 4
+    },
+    {
+      "level": 6,
+      "cell": 5
+    },
+    {
+      "level": 7,
+      "cell": 6
+    },
+    {
+      "level": 8,
+      "cell": 7
+    },
+    {
+      "level": 9,
+      "cell": 8
+    },
+    {
+      "level": 10,
+      "cell": 9
+    },
+    {
+      "level": 11,
+      "cell": 10
+    },
+    {
+      "level": 12,
+      "cell": 11
+    },
+    {
+      "level": 13,
+      "cell": 12
+    },
+    {
+      "level": 14,
+      "cell": 13
+    },
+    {
+      "level": 15,
+      "cell": 14
+    },
+    {
+      "level": 16,
+      "cell": 15
+    }
+  ]
+}

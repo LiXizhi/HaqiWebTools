@@ -1,4 +1,5 @@
 import {resolvePose} from './mount_core.js';
+import {HeroRenderer} from '../../js/hero_renderer.js';
 
 export async function loadArt(manifest, {local = false, baseURL = import.meta.url} = {}) {
   const entries = await Promise.all(Object.entries(manifest).map(async ([id, asset]) => {
@@ -14,7 +15,13 @@ export async function loadArt(manifest, {local = false, baseURL = import.meta.ur
     if (image.naturalWidth !== asset.width || image.naturalHeight !== asset.height) throw new Error(`${id} 图集尺寸不符`);
     return [id, image];
   }));
-  return new Map(entries);
+  const images=new Map(entries);
+  const response=await fetch(new URL('../../data/adventure/hero-art.json',import.meta.url));
+  if(!response.ok)throw new Error('主角图集清单不可用');
+  images.hero=new HeroRenderer(await response.json(),{mounts:[]},{local});
+  for(const [id,image] of images)images.hero.images.set('mount:'+id,image);
+  await Promise.all(['male','female'].map(gender=>images.hero.ensure({gender})));
+  return images;
 }
 
 function sprite(ctx, images, item) {
@@ -32,17 +39,8 @@ export function drawMount(ctx, images, mount, direction, options = {}) {
     ctx.fillStyle = '#153b3230'; ctx.beginPath();
     ctx.ellipse(0, 0, pose.mount.w * (pose.showMount ? .26 : .1), pose.mount.w * .035, 0, 0, Math.PI * 2); ctx.fill();
   }
-  if (pose.showMount) sprite(ctx, images, pose.mount);
-  if (pose.showRider) sprite(ctx, images, pose.rider);
-  if (pose.showMount && pose.showRider && options.occlusion !== false && pose.foreground.length) {
-    // Repaint original mount pixels inside authored polygons: no second drifting atlas.
-    ctx.save(); ctx.beginPath();
-    for (const polygon of pose.foreground) {
-      polygon.forEach(([u,v], i) => ctx[i ? 'lineTo' : 'moveTo'](pose.mount.x + u * pose.mount.w, pose.mount.y + v * pose.mount.h));
-      ctx.closePath();
-    }
-    ctx.clip(); sprite(ctx, images, pose.mount); ctx.restore();
-  }
+  if(!pose.showRider&&pose.showMount)sprite(ctx,images,pose.mount);
+  if(pose.showRider)images.hero.draw(ctx,{gender:options.gender||'male',mount:pose.showMount?mount:null},{...options,facing:['down','left','right','up'].indexOf(direction),pose:{...pose,key:pose.rider.art,mount:pose.showMount?pose.mount:null,foreground:options.occlusion===false?[]:pose.foreground}});
   if (options.debug && pose.showMount) {
     ctx.strokeStyle = '#c16b33'; ctx.lineWidth = 1; ctx.setLineDash([4, 4]);
     ctx.strokeRect(pose.mount.x, pose.mount.y, pose.mount.w, pose.mount.h);

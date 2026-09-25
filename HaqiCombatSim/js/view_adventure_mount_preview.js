@@ -1,14 +1,14 @@
 import { resolveMountDrawPose } from './adventure_mounts_core.js';
 import { fill } from './locale_runtime.js';
+import {heroPortrait} from './hero_renderer.js';
 
-// Same seat, rider sheet and foreground as the scene. Independent CSS layers
-// also allow late image loads without erasing another layer of the preview.
+// Same class as world/battle. Existing alpha bounds retain the UI scale and seat.
 export function createMountPreview(assets,save,{el,tile}) {
  const preview=el('div','pet-mount-preview');
  const row=assets.content.mountByItem?.[save.mountId];
  const mount=row&&assets.content.mountCatalog?.mounts.find(entry=>entry.id===row.mountId);
  preview.dataset.previewMount=mount?.id||'';
- if(!mount){preview.append(tile(assets,'sprites',save.appearance==='girl'?12:8,96,120));return preview;}
+ if(!mount){preview.append(assets.hero?heroPortrait(assets,save,96,120):tile?.(assets,'sprites',save.appearance==='girl'?12:8,96,120)||el('canvas','art'));return preview;}
  const baseSize=120;
  // Formation slots are zero-based: face inward on either half of the stage.
  const facing=(save.heroSlot??0)<2?2:1;
@@ -27,17 +27,11 @@ export function createMountPreview(assets,save,{el,tile}) {
  picture.style.width=`calc(var(--pet-preview-height, 120px) * ${width/baseSize})`;
  picture.style.height=`calc(var(--pet-preview-height, 120px) * ${height/baseSize})`;
  picture.setAttribute('role','img');picture.setAttribute('aria-label',fill('{name}骑乘{mount}',{name:save.name,mount:assets.content.items[save.mountId]?.name||mount.name}).text);
- function layer(rect,sheet,polygon){
-  const node=el('div','pet-mount-layer'),cols=sheet.columns||2,rows=sheet.rows||2;
-  Object.assign(node.style,{left:`${(rect.x-left)/width*100}%`,top:`${(rect.y-top)/height*100}%`,width:`${rect.w/width*100}%`,height:`${rect.h/height*100}%`,
-   backgroundImage:`url("${assets.mode==='local'?sheet.local:sheet.cdn}")`,backgroundSize:`${cols*100}% ${rows*100}%`,
-   backgroundPosition:`${cols>1?(rect.cell%cols)*100/(cols-1):0}% ${rows>1?Math.floor(rect.cell/cols)*100/(rows-1):0}%`});
-  if(polygon)node.style.clipPath=`polygon(${polygon.map(([x,y])=>`${x*100}% ${y*100}%`).join(',')})`;
-  node.setAttribute('aria-hidden','true');picture.append(node);
- }
- layer(pose.mount,mount.art);
- layer(pose.rider,assets.content.mountCatalog.sheets[pose.rider.art]);
- for(const polygon of pose.foreground)layer(pose.mount,mount.art,polygon);
+ const options={width:Math.ceil(width*2),height:Math.ceil(height*2),x:-left*2,y:-top*2,size:baseSize*2,facing,animate:true};
+ const view=assets.hero?.createView({gender:save.appearance==='girl'?'female':'male',headId:save.headId,mount},options);
+ const canvas=view?.node||el('canvas','pet-mount-canvas');
+ canvas.className='pet-mount-canvas';canvas.style.width='100%';canvas.style.height='100%';canvas.style.display='block';
+ canvas.setAttribute('aria-hidden','true');picture.append(canvas);view?.ready.catch(()=>{});
  preview.append(picture);
  return preview;
 }

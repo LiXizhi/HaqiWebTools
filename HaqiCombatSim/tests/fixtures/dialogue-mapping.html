@@ -6,19 +6,19 @@
 import {bindDialogue} from '../../js/view_adventure_dialogue.js';
 import {createCloseButton} from '../../js/view_adventure_controls.js';
 import {createLearningVoice} from '../../js/language_adventure_voice.js';
-import {dialogueMappingPrompt,validateDialogueMapping} from '../../js/dialogue_mapping_core.js';
+import {parseDialogueMapping} from '../../js/dialogue_mapping_core.js';
+import {mapDialogue} from '../../js/dialogue_mapping.js';
 const root=document.querySelector('#root'),box=root.querySelector('section');
 const voice=createLearningVoice({getSettings:()=>({model:'keepwork-lite'})});
 const close=()=>{root.disposeDialogue?.();root.hidden=true;};box.append(createCloseButton(close));
 const button=root.querySelector('.primary');button.onclick=close;
 // Explicit mock mode only verifies rendering; never represents a live model result.
 const mock=new URLSearchParams(location.search).has('mock');
-const part=(text,group=0,kind='none',match=group?'exact':'none')=>({text,group,kind,match});
-const sample={lines:[[part('Let',1,'verb'),part(' '),part('me',2,'function'),part(' '),part('take',3,'verb'),part(' '),part('you',4,'function'),part(' for a '),part('thrilling',5,'modifier','approximate'),part(' '),part('ride',6,'noun','approximate'),part('!')],[part('让',1,'verb'),part('我',2,'function'),part('带',3,'verb'),part('你',4,'function'),part('享受'),part('风驰电掣',5,'modifier','approximate'),part('的'),part('感觉',6,'noun','approximate'),part('吧！')]]};
+const sample=JSON.stringify({text:'Let(#A23) me(#246) take(#A50) you(#275) for(#666) a(#666) thrilling(#067) ride(#638)!',translation:'让(#A23)我(#246)带(#A50)你(#275)享受(#666)风驰电掣(#067)的(#666)感觉(#638)吧(#666)！'});
 if(mock)root.querySelector('.eyebrow').textContent='模拟映射 · 仅排版验收';
 bindDialogue(root,box,root.querySelector('.dialogue-text'),root.querySelector('.dialogue-hint'),button,{
  lines:[{text:'Let me take you for a thrilling ride!',locale:'en'},{text:'让我带你享受风驰电掣的感觉吧！',locale:'zh-CN'}],
  readAloud:(text,locale,signal)=>voice.speak(text,locale,signal),
- mapWords:async(lines,signal)=>validateDialogueMapping(mock?sample:await voice.judge(dialogueMappingPrompt(lines),signal,{maxTokens:3000}),lines),
+ mapWords:async(lines,signal)=>mock?parseDialogueMapping(sample,lines):mapDialogue(lines,signal),
 });
 </script></body></html>

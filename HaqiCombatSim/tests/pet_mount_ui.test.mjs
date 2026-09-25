@@ -11,33 +11,23 @@ const read=name=>JSON.parse(fs.readFileSync(new URL('../data/'+name,import.meta.
 const {content}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 installMountCatalog(content,read('adventure/mount-catalog.json'));
 
-test('mount preview composes every rideable mount with both player appearances and atlas modes',()=>{
+test('mount UI delegates all 66 mounts to the shared renderer without a second rider scale',()=>{
  const el=(tag,cls,...children)=>({className:cls,style:{},dataset:{},children,setAttribute(){},append(...nodes){this.children.push(...nodes);}});
  for(const mount of content.mountCatalog.mounts.filter(row=>row.rideable)){
   const itemId=Object.keys(content.mountByItem).find(id=>content.mountByItem[id].mountId===mount.id);
   for(const appearance of ['boy','girl'])for(const mode of ['local','cdn'])for(const heroSlot of [0,1,2,3]){
-   const preview=createMountPreview({content,mode},{mountId:itemId,appearance,heroSlot,name:'测试'},{el});
-   const picture=preview.children[0],layers=picture.children;
-   assert.ok(layers.length>=2);
-   assert.equal(layers[0].style.backgroundImage,`url("${mode==='local'?mount.art.local:mount.art.cdn}")`);
-   const riderSheets=Object.entries(content.mountCatalog.sheets).filter(([id])=>id.startsWith('female-')===(appearance==='girl'));
-   assert.ok(riderSheets.some(([,sheet])=>layers[1].style.backgroundImage===`url("${mode==='local'?sheet.local:sheet.cdn}")`));
-   for(const layer of layers){
-    assert.ok(!JSON.stringify(layer.style).match(/NaN|undefined|Infinity/));
-    assert.ok(parseFloat(layer.style.width)>0&&parseFloat(layer.style.height)>0);
-   }
-   // Percent layers may extend into transparent margins. The visible bounds
-   // position the composite but must never introduce a second fit-to-slot scale.
+   let requested;
+   const hero={createView(a,options){requested={appearance:a,options};return {node:el('canvas'),ready:Promise.resolve()};}};
+   const preview=createMountPreview({content,mode,hero},{mountId:itemId,appearance,heroSlot,name:'测试'},{el});
+   const picture=preview.children[0];assert.equal(picture.children.length,1);assert.equal(picture.children[0].className,'pet-mount-canvas');
+   assert.equal(requested.appearance.mount,mount);assert.equal(requested.appearance.gender,appearance==='girl'?'female':'male');
+   assert.equal(requested.options.size,240);assert.equal(requested.options.facing,heroSlot<2?2:1);assert.equal(requested.options.animate,true);
+   const scene=resolveMountDrawPose(mount,requested.options.facing,{size:120,gender:requested.appearance.gender});
+   const rendered=resolveMountDrawPose(mount,requested.options.facing,{size:requested.options.size,gender:requested.appearance.gender});
+   assert.equal(rendered.rider.w/2,scene.rider.w);
    const factor=value=>Number(value.match(/\* ([\d.e+-]+)\)/)[1]);
-   const width=120*factor(picture.style.width),height=120*factor(picture.style.height);
-   const scene=resolveMountDrawPose(mount,heroSlot<2?2:1,{size:120,gender:appearance==='girl'?'female':'male'});
-   assert.equal(preview.dataset.previewFacing,heroSlot<2?'right':'left');
-   for(const [index,rect] of [scene.mount,scene.rider].entries()){
-    assert.equal(layers[index].style.backgroundPosition,`${rect.cell%2*100}% ${Math.floor(rect.cell/2)*100}%`);
-   }
-   assert.ok(Math.abs(width*parseFloat(layers[1].style.width)/100-scene.rider.w)<1e-8);
-   assert.ok(Math.abs(height*parseFloat(layers[1].style.height)/100-scene.rider.h)<1e-8);
-   assert.equal(Number(preview.dataset.overhang),Math.max(0,height/120-1));
+   const height=120*factor(picture.style.height);assert.equal(Number(preview.dataset.overhang),Math.max(0,height/120-1));
+   assert.ok(requested.options.width>0&&requested.options.height>0);
   }
  }
 });
@@ -78,7 +68,7 @@ test('pet tabs default to followers; owned mount details ride, switch and dismou
  assert.ok(!ui.cards().some(card=>card.dataset.mountId===ui.mounts[2].id));
  ui.cards()[0].click();assert.equal(ui.actions.length,0);assert.ok(ui.all().find(node=>node.tagName==='dialog').open);ui.detailAction().click();assert.equal(ui.save.mountId,ui.mounts[0].id);
  assert.equal(preview().dataset.previewMount,content.mountByItem[ui.mounts[0].id].mountId);
- assert.ok(ui.all().filter(node=>node.className==='pet-mount-layer').length>=2);
+ assert.ok(ui.all().filter(node=>node.className==='pet-mount-canvas').length>=1);
  assert.equal(ui.tab('mount').attributes['aria-pressed'],'true');
  assert.equal(ui.cards()[0].attributes['aria-pressed'],'true');
  ui.cards()[1].click();ui.detailAction().click();assert.equal(ui.save.mountId,ui.mounts[1].id);

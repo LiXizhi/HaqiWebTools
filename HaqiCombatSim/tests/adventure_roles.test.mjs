@@ -1,4 +1,6 @@
 import test from 'node:test';
+import {createRuntimeStore} from '../js/adventure_runtime_store.js';
+import {coreCatalogKey,durableSave,restoreRuntime} from '../js/adventure_storage_core.js';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createAdventure, beginEncounter, recordDecision } from '../js/adventure_core.js';
@@ -14,9 +16,9 @@ const content = load('chapter'), dataset = load('combat');
 const hero = name => createAdventure(content, { name });
 const id = n => `12345678-1234-1234-1234-${String(n).padStart(12, '0')}`;
 function local() {
-    const data = new Map();let n = 0;
+    const data = new Map(),runtimeStore=createRuntimeStore({indexedDB:null});let n = 0;
     const storage = { getItem: k => data.get(k) ?? null, setItem: (k, v) => data.set(k, v) };
-    return { data, storage, make: () => createRoleStore({ content, dataset, storage, uuid: () => id(++n), now: () => 1000 + n }) };
+    return { data, storage, make: () => createRoleStore({ content, dataset, storage, runtimeStore, uuid: () => id(++n), now: () => 1000 + n }) };
 }
 test('legacy save migrates once to guest role without changing source or binding to an account', () => {
     const l = local();saveLocal(hero('旧角色'), l.storage);const original = l.storage.getItem(SAVE_KEY);
@@ -68,18 +70,18 @@ function cloudMock() {
         onAuthStateChange: cb => { listeners.push(cb);return () => {}; }, showLoginWindow: async () => {},
         logout: async () => { sdk.token = null;listeners.forEach(cb => cb()); },
         loadPage: async opts => {
-            assert.equal(opts.useCache, false);assert.equal(opts.useServerCache, false);
+            assert.equal(opts.useCache, true);assert.equal(opts.useServerCache, true);
             if (readFailure) throw Error('network failure');
             const full = `${opts.sitePath}/${opts.pagePath}`;
             if (!remote.has(full)) throw Error(`Page not found: ${full}`);
             return { success: true, content: remote.get(full) };
         },
-        getFileByFullPath: async (full, _, useCache) => { assert.equal(useCache, false);return remote.get(full) ?? null; },
+        getFileByFullPath: async (full, _, useCache) => { assert.equal(useCache, true);return remote.get(full) ?? null; },
     };
     const store = { getUsername: () => sdk.username, isUseLocal: () => !sdk.token,
         getRemotePagePath: path => `${sdk.username}/edunotes/store/HaqiAdventure/${path}`,
-        savePageData: async (path, key, text, flush, cache) => { assert.equal(flush, false);assert.equal(cache, false);pending.set(path, text); },
-        syncToGit: async path => { if (syncFailure) return false;remote.set(store.getRemotePagePath(path), pending.get(path));return true; },
+        savePageData: async (path, key, text, flush, cache) => { assert.equal(flush, false);assert.equal(cache, true);pending.set(path, text); },
+        syncToGit: async (path,useCache) => { assert.equal(useCache,true); if (syncFailure) return false;remote.set(store.getRemotePagePath(path), pending.get(path));return true; },
     };
     sdk.personalPageStore = { withWorkspace: () => store };
     return { sdk, store, remote, setReadFailure: v => readFailure = v, setSyncFailure: v => syncFailure = v,
@@ -91,16 +93,18 @@ test('fishing species rankings survive role reload and verified workspace file s
     const reopened=l.make();reopened.open('alice');
     assert.deepEqual(reopened.catalog.roles[0].save.fishingRecords,save.fishingRecords);
     const m=cloudMock(),c=m.client();await c.connect();const revision=await c.saveRoles(reopened.catalog,null);
-    const file=JSON.parse(m.remote.get(m.store.getRemotePagePath('fishing/records.json')));
-    assert.equal(file.revision,revision);assert.equal(file.owner,'alice');
-    assert.deepEqual(file.roles[0].records,save.fishingRecords);
-    assert.equal(file.roles[0].records.byFish[17108].length,10);
+    const index=JSON.parse(m.remote.get(m.store.getRemotePagePath('roles/index.json')));
+    assert.equal(index.revision,revision);
+    const file=JSON.parse(m.remote.get(m.store.getRemotePagePath(index.catalog.roles[0].files.records)));
+    assert.equal(file.owner,'alice');
+    assert.deepEqual(file.data.fishingRecords,save.fishingRecords);
+    assert.equal(file.data.fishingRecords.byFish[17108].length,10);
     assert.deepEqual((await c.roles()).catalog.roles[0].save.fishingRecords,save.fishingRecords);
 });
-test('failed fishing file verification does not publish the role catalog',async()=>{
+test('failed history part verification does not publish the role catalog',async()=>{
     const m=cloudMock(),c=m.client();await c.connect();
     const original=m.sdk.getFileByFullPath;
-    m.sdk.getFileByFullPath=async(path,...args)=>path.endsWith('fishing/records.json')?'{}':original(path,...args);
+    m.sdk.getFileByFullPath=async(path,...args)=>path.includes('/records/')?'{}':original(path,...args);
     const save=hero('钓鱼者');recordFishingCatch(save,[{id:17108,count:1}]);
     await assert.rejects(c.saveRoles(addRole(emptyRoles(),id(1),save,1),null),/核验/);
     assert.equal(m.remote.has(m.store.getRemotePagePath('roles/index.json')),false);
@@ -116,6 +120,25 @@ test('cloud role catalog roundtrip, five roles and immutable history; logout inv
 test('network failure is not an empty cloud account; failed sync cannot claim success', async () => {
     const m = cloudMock(), c = m.client();await c.connect();m.setReadFailure(true);await assert.rejects(c.roles());
     m.setReadFailure(false);m.setSyncFailure(true);await assert.rejects(c.saveRoles(emptyRoles(), null), /保存/);assert.equal(m.remote.size, 0);
+});
+test('drifted cloud part witnesses load primary fields instead of blocking the account', async () => {
+    const m = cloudMock(), c = m.client();await c.connect();
+    const catalog = addRole(emptyRoles(), id(1), hero('旧格式'), 1);
+    const revision = await c.saveRoles(catalog, null);
+    const index = JSON.parse(m.remote.get(m.store.getRemotePagePath('roles/index.json')));
+    const itemsPath = m.store.getRemotePagePath(index.catalog.roles[0].files.items);
+    const itemsFile = JSON.parse(m.remote.get(itemsPath));
+    itemsFile.data.ownedItemIds = ['999'];
+    m.remote.set(itemsPath, JSON.stringify(itemsFile));
+    const warnings = [];const warn = console.warn;console.warn = (...args) => warnings.push(args.join(' '));
+    try {
+        const reader = m.client();await reader.connect();
+        const loaded = await reader.roles();
+        assert.equal(loaded.revision, revision);
+        assert.equal(loaded.catalog.roles[0].save.name, '旧格式');
+        assert.deepEqual(loaded.catalog.roles[0].save.inventory, catalog.roles[0].save.inventory);
+    } finally { console.warn = warn; }
+    assert.equal(warnings.some(text => text.includes('consistency join')), true);
 });
 test('stale device does not overwrite a newer role catalog', async () => {
     const m = cloudMock(), a = m.client(), b = m.client();await a.connect();await b.connect();
@@ -161,7 +184,7 @@ test('invalid remote roles report validation failure while retaining authenticat
 });
 test('immutable ancestry distinguishes later progress from a competing device branch', async () => {
     const m = cloudMock(), c = m.client();await c.connect();
-    const first = await c.saveRoles(emptyRoles(), null), second = await c.saveRoles(emptyRoles(), first);
+    const first = await c.saveRoles(emptyRoles(), null), second = await c.saveRoles(addRole(emptyRoles(),id(1),hero('变化'),1), first);
     assert.equal(await c.roleAncestor(first, second), true);
     assert.equal(await c.roleAncestor(second, first), false);
     const other = id(999);
@@ -184,4 +207,86 @@ test('switching and reloading preserves each role combat checkpoint and determin
     const restored = restorePveBattle(dataset, content, combatSave.pendingEncounter);
     assert.deepEqual(restored.events, battle.events);assert.equal(restored.rng.state(), battle.rng.state());
     assert.equal(reload.catalog.roles.find(row => row.id !== combatId).save.pendingEncounter, null);
+});
+
+
+test('workspace cache 404 is a new account; other failed responses are not', async () => {
+    const m=cloudMock(),c=m.client();await c.connect();
+    m.sdk.loadPage=async()=>({success:false,fromServerCache:true,content:''});
+    assert.deepEqual((await c.roles()).catalog,emptyRoles());
+    m.sdk.loadPage=async()=>({success:false,content:''});
+    await assert.rejects(c.roles(),/读取失败/);
+});
+
+test('history files only change with records and are absent from the small index',async()=>{
+    const m=cloudMock(),c=m.client();await c.connect();
+    const index=()=>JSON.parse(m.remote.get(m.store.getRemotePagePath('roles/index.json')));
+    const catalog=addRole(emptyRoles(),id(1),hero('钓鱼者'),1);
+    let revision=await c.saveRoles(catalog,null),before=index();
+    recordFishingCatch(catalog.roles[0].save,[{id:17108,count:1}]);
+    revision=await c.saveRoles(catalog,revision);let after=index();
+    assert.notEqual(after.catalog.roles[0].files.records,before.catalog.roles[0].files.records);
+    assert.equal(after.catalog.roles[0].files.items,before.catalog.roles[0].files.items);
+    assert.equal(JSON.stringify(after).includes('fishingRecords'),false);
+    before=after;catalog.roles[0].save.name='改名';
+    revision=await c.saveRoles(catalog,revision);after=index();
+    assert.deepEqual(after.catalog.roles[0].files,before.catalog.roles[0].files);
+    assert.equal(m.remote.has(m.store.getRemotePagePath('fishing/records.json')),false);
+});
+
+
+test('legacy all-in-one cloud catalog migrates losslessly and later reads reuse immutable files',async()=>{
+    const m=cloudMock(),c=m.client();await c.connect();
+    const catalog=addRole(emptyRoles(),id(1),hero('旧版角色'),1);
+    recordFishingCatch(catalog.roles[0].save,[{id:17108,count:2}]);
+    const path=m.store.getRemotePagePath('roles/index.json');
+    m.remote.set(path,JSON.stringify({owner:'alice',revision:id(2),parentRevision:null,catalog}));
+    const legacy=await c.roles();assert.deepEqual(legacy.catalog,validateRoles(catalog,content,dataset));
+    const revision=await c.saveRoles(legacy.catalog,legacy.revision);
+    const manifest=JSON.parse(m.remote.get(path));assert.equal(manifest.schemaVersion,2);
+    assert.equal(manifest.catalog.roles[0].save,undefined);
+    const reader=m.client();await reader.connect();let reads=0;
+    const original=m.sdk.getFileByFullPath;m.sdk.getFileByFullPath=(...args)=>{reads++;return original(...args);};
+    assert.equal(coreCatalogKey((await reader.roles()).catalog),coreCatalogKey(catalog));
+    assert.equal(reads,3);await reader.roles();assert.equal(reads,3);
+    assert.equal((await reader.roles()).revision,revision);
+});
+
+test('cloud no-op suppresses writes while loadout changes reuse collection and record files',async()=>{
+    const m=cloudMock(),c=m.client();await c.connect();
+    const catalog=addRole(emptyRoles(),id(1),hero('角色'),1);
+    let revision=await c.saveRoles(catalog,null);
+    const index=()=>JSON.parse(m.remote.get(m.store.getRemotePagePath('roles/index.json')));
+    const before=index();let writes=[];
+    const original=m.store.savePageData;m.store.savePageData=(path,...args)=>{writes.push(path);return original(path,...args);};
+    catalog.roles[0].save.position.x+=10;catalog.roles[0].save.revision++;catalog.roles[0].lastPlayedAt++;
+    assert.equal(await c.saveRoles(catalog,revision),revision);assert.equal(writes.length,0);
+    catalog.roles[0].save.deck=[...catalog.roles[0].save.deck].reverse();
+    revision=await c.saveRoles(catalog,revision);
+    const after=index();assert.notEqual(after.catalog.roles[0].files.battle,before.catalog.roles[0].files.battle);
+    assert.equal(after.catalog.roles[0].files.items,before.catalog.roles[0].files.items);
+    assert.equal(after.catalog.roles[0].files.records,before.catalog.roles[0].files.records);
+    assert.equal(writes.length,3); // battle part + small history manifest + index
+    assert.equal(writes.some(path=>path.includes('/items/')),false);
+});
+
+test('incomplete or cross-role cloud parts fail closed without replacing the manifest',async()=>{
+    const m=cloudMock(),c=m.client();await c.connect();
+    await c.saveRoles(addRole(emptyRoles(),id(1),hero('角色'),1),null);
+    const path=m.store.getRemotePagePath('roles/index.json'),text=m.remote.get(path),manifest=JSON.parse(text);
+    m.remote.delete(m.store.getRemotePagePath(manifest.catalog.roles[0].files.items));
+    const reader=m.client();await reader.connect();await assert.rejects(reader.roles());assert.equal(m.remote.get(path),text);
+    manifest.catalog.roles[0].files.items=`roles/${id(999)}/items/${id(3)}.json`;
+    m.remote.set(path,JSON.stringify(manifest));await assert.rejects(reader.roles(),/路径/);
+});
+
+test('concurrent manifest update prevents publication of newly written parts',async()=>{
+    const m=cloudMock(),c=m.client();await c.connect();
+    const catalog=addRole(emptyRoles(),id(1),hero('角色'),1);
+    const first=await c.saveRoles(catalog,null),path=m.store.getRemotePagePath('roles/index.json');
+    const original=m.store.syncToGit;
+    m.store.syncToGit=async(...args)=>{const result=await original(...args);if(args[0].includes('/battle/')){const remote=JSON.parse(m.remote.get(path));remote.revision=id(999);m.remote.set(path,JSON.stringify(remote));}return result;};
+    catalog.roles[0].save.deck.reverse();
+    await assert.rejects(c.saveRoles(catalog,first),/冲突/);
+    assert.equal(JSON.parse(m.remote.get(path)).revision,id(999));
 });

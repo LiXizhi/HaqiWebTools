@@ -13,26 +13,30 @@ function mockSDK(options={}) {
     const remote=new Map(),cache=new Map(),listeners=[];
     const sdk={token:'fixture-token',username:'fixture-user',getUserProfile:async()=>({username:sdk.username}),
         showLoginWindow:async()=>null,onAuthStateChange:cb=>{listeners.push(cb);return()=>{};},
-        getFileByFullPath:async(path,cb,useCache)=>{assert.equal(useCache,false);if(options.readFail)return null;return remote.get(path)||null;},
+        getFileByFullPath:async(path,cb,useCache)=>{assert.equal(useCache,true);if(options.readFail)return null;return remote.get(path)||null;},
         changeAccount(name){sdk.username=name;for(const cb of listeners)cb();},
     };
     const store={getUsername:()=>sdk.username,isUseLocal:()=>!sdk.token,getRemotePagePath:path=>`${sdk.username}/edunotes/store/HaqiAdventure/${path}`,
-        savePageData:async(path,key,text,flush,useCache)=>{assert.equal(key,'content');assert.equal(flush,false);assert.equal(useCache,false);cache.set(path,text);},
-        syncToGit:async path=>{if(options.syncFail)return false;if(!options.cacheOnly)remote.set(store.getRemotePagePath(path),JSON.stringify(JSON.parse(cache.get(path)),null,2));return true;},
+        savePageData:async(path,key,text,flush,useCache)=>{assert.equal(key,'content');assert.equal(flush,false);assert.equal(useCache,true);cache.set(path,text);},
+        syncToGit:async(path,useCache)=>{assert.equal(useCache,true);if(options.syncFail)return false;if(!options.cacheOnly)remote.set(store.getRemotePagePath(path),JSON.stringify(JSON.parse(cache.get(path)),null,2));return true;},
         listDir:async(dir,recursive,opts)=>{assert.equal(dir,'checkpoints');assert.equal(opts.remoteOnly,true);return [...remote.keys()].map(x=>x.split('/').at(-1)).join('\n');},
     };
     sdk.personalPageStore={withWorkspace:name=>{assert.equal(name,'HaqiAdventure');return store;}};
     return {sdk,store,remote,cache};
 }
 function client(mock,extra={}) {return createCloudClient({content,dataset,loadSDK:async()=>mock.sdk,now:()=>date,uuid:()=>id,...extra});}
-test('cloud snapshot roundtrip restores combat events, RNG and decisions without rewarding twice',async()=>{
-    const save=A.createAdventure(content);A.beginEncounter(save,content,'ice-scout');
-    const b=P.restorePveBattle(dataset,content,save.pendingEncounter);const decision={pass:true};P.playPveRound(b,decision);A.recordDecision(save,decision);
-    const original=JSON.stringify(save),mock=mockSDK(),c=client(mock);await c.connect();
-    const uploaded=await c.upload(save);assert.equal(JSON.stringify(save),original);
+test('cloud snapshots exclude local runtime and defer unfinished battles',async()=>{
+    const save=A.createAdventure(content),mock=mockSDK(),c=client(mock);await c.connect();
+    A.beginEncounter(save,content,'ice-scout');
+    await assert.rejects(c.upload(save),/战斗尚未结束/);assert.equal(mock.remote.size,0);
+    save.pendingEncounter=null;save.position.x+=10;
+    const original=JSON.stringify(save),uploaded=await c.upload(save);
+    assert.equal(JSON.stringify(save),original);
+    const stored=JSON.parse(mock.remote.get(mock.store.getRemotePagePath(uploaded.path)));
+    assert.equal(stored.save.position,undefined);assert.equal(stored.save.pendingEncounter,undefined);
     assert.deepEqual(await c.list(),[uploaded.path]);
-    const loaded=await c.read(uploaded.path);assert.deepEqual(loaded.battle.events,b.events);assert.equal(loaded.battle.rng.state(),b.rng.state());assert.deepEqual(loaded.save.rewardedEncounters,save.rewardedEncounters);
-    assert.doesNotThrow(()=>c.assertPreview(loaded));assert.equal(JSON.stringify(loaded.snapshot).includes('fixture-token'),false);
+    const loaded=await c.read(uploaded.path);assert.equal(loaded.save.pendingEncounter,null);
+    assert.deepEqual(loaded.save.inventory,save.inventory);assert.doesNotThrow(()=>c.assertPreview(loaded));
 });
 test('each cloud write preserves earlier device snapshots instead of overwriting latest',async()=>{
     const mock=mockSDK();let serial=0;const c=client(mock,{uuid:()=>`${id.slice(0,-1)}${serial++}`});await c.connect();
@@ -58,7 +62,7 @@ test('account changes invalidate previews and in-flight writes',async()=>{
     mock.sdk.changeAccount('another-user');assert.equal(c.owner,null);assert.equal(changed,1);assert.throws(()=>c.assertPreview(preview),/登录/);
     await c.connect();mock.store.savePageData=async()=>mock.sdk.changeAccount('third-user');await assert.rejects(c.upload(A.createAdventure(content)),/登录/);
 });
-test('cloud durable write bypasses createFile background pageCache race',async()=>{
+test('cloud awaits cache sync and verifies it without a background flush race',async()=>{
     const mock=mockSDK();
     mock.store.createFile=async(path,text)=>{mock.cache.set(path,text);throw Error('createFile only writes server cache');};
     const c=client(mock);await c.connect();const result=await c.upload(A.createAdventure(content));

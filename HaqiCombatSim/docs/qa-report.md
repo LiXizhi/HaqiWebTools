@@ -1,3 +1,11 @@
+# 2026-09-26 云端旧分文件容错读取
+
+真实账号登录后反复报「云端操作未完成」，F12 原始错误为 `joinRoleSave` 的「物品数量账本与收藏不一致」：物品存储格式调整后，云端旧分文件见证字段与现行拆分规则不匹配。修复：`joinRoleSave` 新增 `strict` 参数（默认严格），云端 `readRoles` 合并失败时降级只合并主字段并 `console.warn`，下次核心同步按现行格式重写分文件自愈；`guarded()` 同时输出原始错误便于诊断。新增容错合并与云端漂移加载两测试；storage/roles/cloud 定向 50/50，全量 648/650（2 项失败为既有 mount-demo/mounts.json 缺失，与本次无关）。
+
+# 2026-09-25 坐骑详情属性翻译
+
+修复坐骑详情面板属性行未翻译的问题。原 `view_adventure_equipment.js` 把属性名与数值拼成整串传给 `el()`，导致 `生命值 +80`、`全系攻击 +5%`、`全系防御 +4%` 在英文界面下仍为中文（字典只有单词条）。改为复用 `view_adventure_item_details.js` 的 `attributeSpan`，通过 `fill('{school}{name}')` 拆分翻译；`progressionAttributes` 补充 `name`/`schoolLabel` 字段并统一 hpFlat 为“生命值”。英文界面下坐骑属性显示为 `HP +80`、`All-school Attack +5%`、`All-school Defense +4%`。`npm test` 通过（仅剩两项原有失败：`mount_pose` 缺数据文件、任务目录哈希漂移）。
+
 # 2026-09-25 商城确认与非卖品
 
 隔离商店页不写玩家存档。左上角同时有奇豆 1,000 与魔豆。超过 10000 魔豆显示非卖品，10000 仍显示原价。购买荣誉蓝血凤凰打开详情，购买条件为非卖品，非会员确认后魔豆不变。确认购买魔力灵狐后魔豆 2,000,000 变为 1,000,001，并显示已拥有。梦幻南瓜车关闭确认不扣费，再次确认后减少 1180。1920 与 390 宽度无页面横向溢出。
@@ -870,3 +878,47 @@ npm run build通过，dist为48文件/3,298,097字节，无美术文件。npm te
 
 - 新增可选外观阶段及已解锁范围校验，不修改战斗公式/规格；宠物定向35项通过，591项全量589通过（既有坐骑演示数据缺失、目录哈希失败2项），完整构建通过。
 - 隔离浏览器桌面与390px验收高等级选择幼年/青年、键盘选择、两页同步、收藏图集同步、低等级禁用及无横向溢出。真实玩家存档未操作。
+
+
+## 2026-09-25：用户存储分层与本地运行状态
+
+- 云端v2入口/收藏/战斗背包/历史拆分；核心变化指纹、旧版迁移、分文件缓存、失败/并发冲突保护均通过回归。350宠物和1000历史记录不扩大index状态或出战包，已有物品数量变化不改收藏。
+- 浏览器 `tests/fixtures/storage-split.html`（隔离数据库/账号）真实IndexedDB保存和跨实例恢复通过：主角/宠物血量、饥饿值、战斗重演；临时变化不触发云端dirty。源码游戏访客创建、场景进入及刷新恢复通过；旧本地存档首次重连迁移定向36项通过。
+- `npm test`：622项，620通过；坐骑测试资源缺失和目录依赖哈希不一致为已有失败。构建通过。真实账号云端迁移/跨设备联调未实测；验证未写任何真实workspace。
+
+## 2026-09-25 战斗卡牌说明折叠面板
+
+选中卡牌的效果说明改为上下结构：默认折叠为卡面上方"查看详情"胶囊，点击展开"卡牌说明"框（含收起），展开状态存localStorage（haqi.battle.card-detail-open）跨战斗保持。npm test既有2项无关失败不变（mount-demo缺数据、quest-catalog哈希），其余全部通过。Vite浏览器实测：默认折叠、展开内容完整、收起恢复、localStorage值为open、控制台无新增报错（既有资源请求中止不变）。
+
+### 2026-09-25 卡牌说明面板微调
+
+去掉悬停说明框时卡牌上浮的手势规则（hand-focused 下 transform:none 覆盖）；移除展开态的"卡牌说明"标题行，"收起"改为说明框右上角小字链接，卡牌名加右内边距防重叠。17项定向测试通过；浏览器实测：折叠/展开切换正常、悬停说明框卡牌无位移、右上角"收起"可用、localStorage持久化保持、控制台无新增报错。
+
+### 2026-09-26 魔法星跟随开关
+
+详情页魔法星图标缩到56px，其下新增"跟随主角"单选钮；取消跟随按用户确认在场景中隐藏魔法星（显隐集中到 `starCompanionVisible`）。`npm test` 632/639，7项失败与改动前基线一致；魔法星定向9项全过（含新增的默认开启/隐藏/重载保持）。Playwright验收：默认勾选、点击取消、Space切回、未开通会员时禁用；临时场景夹具对比蓝色像素8068→6243确认隐藏，夹具已删除。未提交、未发布。
+
+### 2026-09-26 邀请气泡指向当前剧情角色
+
+气泡文案不再固定写宠物名：附近有可触发剧情的营地角色时显示该角色名（如"法斯特船长 · 想和你聊两句"），没有目标时保留待机文案"抱抱龙小绿 · 和我聊聊"。invitation 现在携带目标（npcId/name/position），玩家离开该目标 150 距离即失效并回到待机，避免"走远仍是上一次的目标"；点击气泡或宠物不再直接开对话，而是寻路到目标 NPC，到达后再打开剧情（走不到则提示）。原先无目标时硬编码回落到青龙 36211 的分支只在完全没有邀请时保留。
+改动文件：`js/language_adventure.js`（bubbleLabel/storyTarget/expired/invitation getter）、`js/adventure_app.js`（approachInvite/talkApproach/点击入口）、`js/adventure_renderer.js`（companionTarget）。新增定向测试"invite bubble names the nearby camp story character and expires once the player walks away"，language 三组测试 29 项全过。`npm test` 640/644，剩余 4 项失败与本次改动无关（mount-demo 缺数据、catalog/发布哈希漂移，以及未跟踪的 storage 拆分新功能 1 项）。未提交、未发布。
+
+### 2026-09-26 魔法星跟随开关改为仅本机存储
+
+应用户要求，`magicStarFollow` 不再进存档/云端：`durableSave` 剔除该字段（localStorage 核心副本与云端快照均不含），`runtimeValues` 以 `prefs` 随角色运行时写入 IndexedDB，`restoreRuntime` 无条件恢复；切换走 `adventure_app.js` 的 `setMagicStarFollow`（不 revision++、不触发云端保存、不置脏），`checkedProgress` 白名单保留该字段。`npm test` 642/644（2 项失败为既有 mount_pose、quest-catalog 哈希漂移，与本次无关）；真实浏览器验收 IndexedDB `prefs:{magicStarFollow:false}` 往返、localStorage 不含该字段、切换不置脏。未提交、未发布。
+
+### 2026-09-26 场景坐骑显隐开关
+
+英雄卡下方新增坐骑图标按钮（翻译按钮右侧）：切换漫游场景坐骑显隐，战斗恒显示，无坐骑时按钮隐藏。偏好 `mountHidden` 仅存本机 IndexedDB（prefFields，durableSave/云端/coreCatalogKey 均剔除），`setMountVisibility` 不置脏不触发云端。定向测试 29 项（含新增 mount visibility device-local 用例）全过；`npm test` 642/645，3 项失败均为既有问题（mount-demo 缺数据、quest-catalog 哈希漂移、release hash 环境）；`npm run build` 通过。
+
+### 2026-09-26 坐骑/翻译按钮 z 序修正
+
+`.mount-toggle` 与 `.locale-launch` 由 fixed+z-index:80 改为 #hud 内 absolute（无 z-index），与英雄卡同堆叠层，不再浮在弹窗/窗口之上；定位改 offset 坐标。定向测试 39 项全过，build 通过。
+
+### 2026-09-26 坐骑按钮改为 emoji 图标并加隐藏禁止标志
+
+按用户反馈（矢量兜底图形在 36px 按钮里不美观）：`.mount-toggle` 图标由 `paths.mount` 矢量路径改为按当前坐骑名称匹配的 emoji（`view_adventure.js` `mountEmoji` 关键词表，狼蛛先于狼等从具体到一般排序，未命中回落 🐲），抱抱龙显示 🐲；`mountHidden` 时在 emoji 上叠加居中 🚫 禁止标志并降低底图亮度（aria-pressed=false 时 opacity .45，背景高亮沿用）。脚本核对 mount-catalog.json 全部坐骑商品名（100+ 条）均有合理映射，无 typo；`npm test` 652/652 全过（既有失败已在此前修复），`npm run build` 通过。未提交、未发布。
+
+### 2026-09-26 坐骑按钮微调：圆形 + 半透明 SVG 禁止标志
+
+按用户第二轮反馈：按钮改为正圆（border-radius:50%）；隐藏态由整枚 🚫 emoji 改为半透明 SVG 禁止标志（圆圈+斜杠，#c0392b、opacity .7、24px 居中叠于 emoji 之上），底下 emoji 仍以 .45 压暗，禁令与坐骑形象同时可辨。`npm test` 全过（fail 0），`npm run build` 通过。未提交、未发布。

@@ -102,3 +102,13 @@ header.append(createCloseButton(closeDetails, '关闭物品详情'));
 ### 经验条始终显示本级进度（2026-09-25）
 
 HUD 经验条（`.xp-bar`）必须同时可见"已获得"与"未填满"两种颜色，不得在角色达到等级上限时整条填满。填充比例沿用原版 `EXPArea.lua EXPArea.UpdateUI` L86-94：本级内经验／下一级所需经验，并保留 L93 的最小宽度 `math.max(3,width)`（当前实现为 `.xp-bar i{min-width:3px}`）。轨道色与填充色都在共享样式里定义（基础规则 `css/adventure.css`，绘本主题覆盖在 `css/adventure_storybook.css`），窗口级不再各自覆盖。核验入口：`tests/fixtures/exp-bar.html`（`?assets=local&lang=en&level=&fill=`）。
+
+### 魔法星统一美术（2026-09-25）
+
+魔法星详情和场景跟随伙伴统一使用 `magic-star-art.json` 的蓝色 VIP 等级图集，通过 `adventure_star.js` 的 `drawMagicStarIcon` 选择等级格。UI 不再绘制独立金色 SVG 星；未激活使用基础星灰色样式，具体等级与激活状态由旁边文字说明。
+
+### 魔法星跟随开关（2026-09-26）
+
+魔法星详情的身份区改为竖排图标栈：徽章缩至 56px，其下放单个圆形单选钮"跟随主角"（`.magic-star-follow`，由 `view_adventure_membership.js` 的 `membershipFollowToggle` 生成），等级、激活状态和有效期仍在右侧。控件用原生 `input[type=radio]`：圆形外观配合单键开关语义；浏览器不会取消已选中的单选钮，因此 click/Space/Enter 手写翻转，禁用状态保持可见并给出原因。取消跟随＝场景不再绘制该伙伴，不采用"原地停留"。显隐只由 `adventure_star.js` 的 `starCompanionVisible` 判定，动画期间（标题、隐藏、捕鱼、传送）与会员失效条件不变。
+
+偏好只存本机：字段 `magicStarFollow` 写在角色存档对象上，但 `adventure_storage_core.js` 的 `durableSave` 会剔除它，因此不进 localStorage 核心副本、不上云、也不置脏；`runtimeValues` 把它放进 `prefs` 与角色运行时一起写入 IndexedDB，`restoreRuntime` 无条件恢复（不受 zone/revision 匹配限制）。默认 `undefined` 即跟随。切换由 `adventure_app.js` 的 `setMagicStarFollow` 处理（不走 `applyAction`、不 `revision++`、不触发云端保存），并由 `adventure_cloud_core.js` 的 `checkedProgress` 白名单保留，避免重载时被角色校验剔除。

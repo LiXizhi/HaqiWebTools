@@ -1,0 +1,57 @@
+{
+  "rider": {
+    "sheet": "rider.webp",
+    "frameWidth": 160,
+    "frameHeight": 200
+  },
+  "mounts": [
+    {
+      "id": "dragon",
+      "name": "绿龙",
+      "size": { "w": 280, "h": 220 },
+      "bob": 6,
+      "seats": {
+        "down": { "x": 0, "y": -110, "riderScale": 0.55, "crop": 1 },
+        "left": { "x": 36, "y": -106, "riderScale": 0.55, "crop": 1 },
+        "up": { "x": 0, "y": -114, "riderScale": 0.55, "crop": 1 }
+      },
+      "art": { "back": "dragon-back.webp", "front": "dragon-front.webp" }
+    },
+    {
+      "id": "car",
+      "name": "小汽车",
+      "size": { "w": 280, "h": 220 },
+      "bob": 2,
+      "seats": {
+        "down": { "x": 0, "y": -72, "riderScale": 0.5, "crop": 1 },
+        "left": { "x": -6, "y": -68, "riderScale": 0.5, "crop": 1 },
+        "up": { "x": 0, "y": -74, "riderScale": 0.5, "crop": 1 }
+      },
+      "art": { "back": "car-back.webp", "front": "car-front.webp" }
+    },
+    {
+      "id": "carpet",
+      "name": "飞毯",
+      "size": { "w": 280, "h": 220 },
+      "bob": 8,
+      "seats": {
+        "down": { "x": 0, "y": -42, "riderScale": 0.55, "crop": 1 },
+        "left": { "x": 0, "y": -38, "riderScale": 0.55, "crop": 1 },
+        "up": { "x": 0, "y": -42, "riderScale": 0.55, "crop": 1 }
+      },
+      "art": { "back": "carpet.webp" }
+    },
+    {
+      "id": "wings",
+      "name": "光翼",
+      "size": { "w": 280, "h": 220 },
+      "bob": 10,
+      "seats": {
+        "down": { "x": 0, "y": -20, "riderScale": 0.6, "crop": 1 },
+        "left": { "x": 4, "y": -20, "riderScale": 0.6, "crop": 1 },
+        "up": { "x": 0, "y": -20, "riderScale": 0.6, "crop": 1 }
+      },
+      "art": { "back": "wings.webp" }
+    }
+  ]
+}

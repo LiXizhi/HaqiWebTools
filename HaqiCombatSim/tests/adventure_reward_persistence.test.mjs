@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {createRuntimeStore} from '../js/adventure_runtime_store.js';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
@@ -39,7 +40,7 @@ test('real pocket pool persists one gift, rolls back failed storage and rejects 
  assert.deepEqual(parseCloudSnapshot(JSON.stringify(cloud),content,dataset).save.magicStarClaims,next.magicStarClaims);
 });
 const weekly={type:'magic-star-claim',rewardId:'weekly'},id='12345678-1234-1234-1234-123456789abc';
-function harness(){const data=new Map();const storage={getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};const open=()=>{const store=createRoleStore({content,dataset,storage,uuid:()=>id,now:()=>now});store.open('test');return store;};const store=open();store.create(createAdventure(content));return {storage,store,open};}
+function harness(){const runtimeStore=createRuntimeStore({indexedDB:null}),data=new Map();const storage={getItem:key=>data.get(key)??null,setItem:(key,value)=>data.set(key,value)};const open=()=>{const store=createRoleStore({content,dataset,storage,runtimeStore,uuid:()=>id,now:()=>now});store.open('test');return store;};const store=open();store.create(createAdventure(content));return {storage,store,open};}
 test('weekly and staff claim records survive real role-store reload and cloud roundtrip',()=>{
  const h=harness();let save=h.store.catalog.roles[0].save;
  save=persistReward(save,content,weekly,access,h.store.scoped()).save;

@@ -51,6 +51,21 @@ export function textFor(source, locale) {
     return lookup(String(source ?? ''), locale, dictionaries);
 }
 
+export function dialogueLearningLines(source, settings) {
+    if(!settings?.enabled)return [];
+    const target=settings.target||'en',native=settings.native||'zh-CN';
+    const locales=[target,native];
+    const lines=[];
+    for(const locale of locales){
+        if(locale==='zh-CN'&&target!=='zh-CN'&&settings.showChinese===false)continue;
+        const value=textFor(source,locale);
+        if(!value||lines.some(row=>row.text===value))continue;
+        // A missing translation remains honest Chinese, including its TTS language.
+        lines.push({text:value,locale:value===source&&/[\u3400-\u9fff]/u.test(value)?'zh-CN':locale});
+    }
+    return lines;
+}
+
 let glossAligner = null;
 
 export function setGlossAligner(fn) {

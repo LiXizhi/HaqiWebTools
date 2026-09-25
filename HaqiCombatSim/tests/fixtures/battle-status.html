@@ -1,0 +1,17 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1"><title>头顶战斗状态验收</title><style>body{margin:0;background:#173c43;color:#fff;font:14px sans-serif}canvas{width:100%;height:420px}p{padding:12px}#roster{display:flex;flex-wrap:wrap}.combatant-status{max-width:180px}.combatant-school{width:24px;height:24px}.combatant-effects{max-height:36px;overflow:hidden}</style><p>只读内存预览：术、减益、护盾、吸收盾、持续效果、叠层。悬停角色卡片查看详情。</p><canvas id="battle"></canvas><div id="roster"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {createAdventure,playerSpec} from '../../js/adventure_core.js';
+import {createPveBattle} from '../../js/combat_pve_core.js';
+import {createBattleRoster,updateBattleRoster} from '../../js/view_adventure_battle_status.js';
+const assets=await loadResources(),save=createAdventure(assets.content),canvas=document.querySelector('#battle'),renderer=createRenderer(canvas,assets);
+const catalog=await(await fetch('data/adventure/monster-catalog.json')).json();
+const monsters=catalog.monsters.filter(m=>m.name.includes('章鱼')).slice(0,3).map((m,i)=>({...m,id:'preview'+i,school:'storm',level:1,hp:100,pool:[],sequences:[],genes:[],cardsets:{}}));
+const battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters,seed:1});
+for(const [i,u] of Object.values(battle.unitsById).entries()){
+ u.charms=[11,11,12];u.wards=[{id:11},{id:0,absorb:true,pts:250}];if(i===1){u.dots=[{ticks:[{dmg:10},{dmg:10},{dmg:10}]},{ticks:[{dmg:5}]}];u.hots=[{ticks:[20,20]}];u.stunned=true;u.reflectAmount=100;}
+}
+const el=(tag,cls,...kids)=>{const n=document.createElement(tag);n.className=cls;n.append(...kids);return n;};
+for(const side of ['near','far']){const rows=createBattleRoster(battle,side,{heroId:'hero',canTarget:()=>true,target:()=>{},el,button:(kids,fn,cls)=>{const n=el('button',cls,...kids);n.onclick=fn;return n;},schoolNames:{fire:'烈火',storm:'风暴'}});updateBattleRoster(rows.entries);document.querySelector('#roster').append(rows.roster);}
+function frame(t){renderer.renderBattle(canvas,battle,save,t);requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></html>

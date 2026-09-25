@@ -25,7 +25,11 @@ export function pcm16(samples, sampleRate) {
     }
     return out;
 }
-export function createLearningVoice({load=sdkReady}={}) {
+export async function loadLearningOptions(signal=new AbortController().signal) {
+    const sdk=await sdkReady(signal);
+    return {models:sdk.aiGenerators?.getModels?.('chat')||[],voices:sdk.speech?.getSupportedVoices?.()||[]};
+}
+export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
     let current=null,speaker=null,playback=null,epoch=0;
     async function dispose(old){
         if(current===old)current=null;
@@ -98,7 +102,8 @@ export function createLearningVoice({load=sdkReady}={}) {
             // HelloLearner/js/speech.js: synthesize MP3 without autoPlay, then
             // await actual playback. Finishing synthesis is not finishing speech.
             sdk.speech?.resumeSharedAudioEngine?.();
-            speaker=sdk.speechRTC.createSession({audioFormat:'mp3',autoPlay:false,enableSubtitle:false,speechRate:-8});
+            const voiceType=getSettings().voiceType;
+            speaker=sdk.speechRTC.createSession({audioFormat:'mp3',autoPlay:false,enableSubtitle:false,speechRate:-8,...(voiceType?{voiceType}:{})});
             const stream=speaker;
             let audio=null,finishPlayback=null;
             const stop=()=>{audio?.pause();finishPlayback?.();void stream.stop({finish:false}).catch(()=>{});};
@@ -116,13 +121,14 @@ export function createLearningVoice({load=sdkReady}={}) {
                 }),60000,signal);
             }finally{stop();signal.removeEventListener('abort',stop);if(speaker===stream)speaker=null;if(playback===active)playback=null;}
         },
-        async judge(messages,signal){
+        async judge(messages,signal,{maxTokens=800}={}){
             const sdk=await load(signal);
-            if(!sdk.token)throw Error('剧情挑战需要先登录Keepwork');
+            if(!sdk.token)throw Error('使用AI服务需要先登录Keepwork');
             const abortController=new AbortController(),abort=()=>abortController.abort();
             signal.addEventListener('abort',abort,{once:true});
             try{
-                const result=await deadline(sdk.aiChat.chat({messages,stream:false,tools:[],enableTools:[],needMqttTools:false,needPersonalTools:false,reasoning:false,maxTokens:800,abortController}),45000,signal);
+                const model=getSettings().model;
+                const result=await deadline(sdk.aiChat.chat({messages,...(model?{model}:{}),stream:false,tools:[],enableTools:[],needMqttTools:false,needPersonalTools:false,reasoning:false,maxTokens,abortController}),45000,signal);
                 const text=typeof result==='string'?result:result?.choices?.[0]?.message?.content||result?.result;
                 if(typeof text!=='string')throw Error('对话服务未返回有效内容');
                 return JSON.parse(text.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,''));

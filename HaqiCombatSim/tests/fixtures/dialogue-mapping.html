@@ -1,0 +1,24 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>对白词义映射验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_dialogue.css">
+<body class="haqi-app storybook-ui"><div id="root" class="overlay dialogue-layer rpg-dialogue-layer visible"><section class="dialogue-box rpg-dialogue"><div class="dialogue-content"><p class="eyebrow">Magic Camp</p><h2>Tyrant Tiger Mount</h2><p class="dialogue-text"></p><div class="dialogue-choices"><button class="primary">继续</button></div><p class="dialogue-hint"></p></div></section></div>
+<script type="module">
+import {bindDialogue} from '../../js/view_adventure_dialogue.js';
+import {createCloseButton} from '../../js/view_adventure_controls.js';
+import {createLearningVoice} from '../../js/language_adventure_voice.js';
+import {dialogueMappingPrompt,validateDialogueMapping} from '../../js/dialogue_mapping_core.js';
+const root=document.querySelector('#root'),box=root.querySelector('section');
+const voice=createLearningVoice({getSettings:()=>({model:'keepwork-lite'})});
+const close=()=>{root.disposeDialogue?.();root.hidden=true;};box.append(createCloseButton(close));
+const button=root.querySelector('.primary');button.onclick=close;
+// Explicit mock mode only verifies rendering; never represents a live model result.
+const mock=new URLSearchParams(location.search).has('mock');
+const part=(text,group=0,kind='none',match=group?'exact':'none')=>({text,group,kind,match});
+const sample={lines:[[part('Let',1,'verb'),part(' '),part('me',2,'function'),part(' '),part('take',3,'verb'),part(' '),part('you',4,'function'),part(' for a '),part('thrilling',5,'modifier','approximate'),part(' '),part('ride',6,'noun','approximate'),part('!')],[part('让',1,'verb'),part('我',2,'function'),part('带',3,'verb'),part('你',4,'function'),part('享受'),part('风驰电掣',5,'modifier','approximate'),part('的'),part('感觉',6,'noun','approximate'),part('吧！')]]};
+if(mock)root.querySelector('.eyebrow').textContent='模拟映射 · 仅排版验收';
+bindDialogue(root,box,root.querySelector('.dialogue-text'),root.querySelector('.dialogue-hint'),button,{
+ lines:[{text:'Let me take you for a thrilling ride!',locale:'en'},{text:'让我带你享受风驰电掣的感觉吧！',locale:'zh-CN'}],
+ readAloud:(text,locale,signal)=>voice.speak(text,locale,signal),
+ mapWords:async(lines,signal)=>validateDialogueMapping(mock?sample:await voice.judge(dialogueMappingPrompt(lines),signal,{maxTokens:3000}),lines),
+});
+</script></body></html>

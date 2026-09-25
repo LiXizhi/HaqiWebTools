@@ -109,6 +109,10 @@ export function recordLearningCompletion(save, content, completion, access) {
     const {course,mode,locale,attemptId,now,score,spoken}=completion;
     assert(save.zone==='camp'&&save.languageLearning?.enabled&&save.languageLearning.target===locale,'学习场景已变化');
     assert((mode==='listening'?completion.heard===true:spoken===true)&&score===100&&/^[\w-]{1,80}$/.test(attemptId),'口语任务尚未完成');
+    if(completion.story){
+        const s=completion.story;
+        assert(typeof s.id==='string'&&s.id.length<100&&Array.isArray(s.turnIds)&&s.turnIds.length===3&&new Set(s.turnIds).size===3&&Array.isArray(s.proof)&&s.proof.length===3&&s.proof.every((p,i)=>p.turnId===s.turnIds[i]&&typeof p.quote==='string'&&p.quote.trim()&&typeof p.hinted==='boolean'),'故事口语记录不完整');
+    }
     const status=rewardStatus(save,content,course,mode,now);
     if(status.ledger.attempts.includes(attemptId))return {amount:0,currency:status.currency,duplicate:true};
     const state=save.languageAdventure||{version:1,progress:{}};
@@ -126,7 +130,11 @@ export function recordLearningCompletion(save, content, completion, access) {
         assert(Number.isSafeInteger(count),'学习奖励数值无效');
         save.inventory[status.currency]=count;
     }
-    save.languageAdventure={version:1,progress:{...state.progress,[locale]:byLanguage},ledger};
+    let stories=state.stories;
+    if(completion.story){const s=completion.story,rows=stories?.[locale]||{},old=rows[s.id]||{};
+        stories={...stories,[locale]:{...rows,[s.id]:{completed:(old.completed||0)+1,lastAt:now,hintsUsed:s.hintsUsed===true,passedTurns:[...s.turnIds]}}};
+    }
+    save.languageAdventure={version:1,progress:{...state.progress,[locale]:byLanguage},ledger,...(stories?{stories}:{})};
     return {amount:status.amount,currency:status.currency};
 }
 export function validateLearningSave(save) {
@@ -138,6 +146,13 @@ export function validateLearningSave(save) {
         for(const row of Object.values(rows)){
             for(const key of ['basic','challenge','lastAt'])assert(Number.isSafeInteger(row[key])&&row[key]>=0,'学习进度无效');
             if(row.listening!==undefined)assert(Number.isSafeInteger(row.listening)&&row.listening>=0,'听力记录无效');
+        }
+    }
+    if(state.stories!==undefined){
+        assert(state.stories&&typeof state.stories==='object'&&!Array.isArray(state.stories),'故事记录无效');
+        for(const rows of Object.values(state.stories)){
+            assert(rows&&typeof rows==='object'&&!Array.isArray(rows),'故事记录无效');
+            for(const row of Object.values(rows))assert(Number.isSafeInteger(row.completed)&&row.completed>=0&&Number.isSafeInteger(row.lastAt)&&row.lastAt>=0&&typeof row.hintsUsed==='boolean'&&Array.isArray(row.passedTurns)&&row.passedTurns.length===3&&row.passedTurns.every(x=>typeof x==='string'&&x.length<100),'故事进度无效');
         }
     }
     if(!state.ledger)return;

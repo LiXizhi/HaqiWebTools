@@ -1,6 +1,22 @@
 // Presentation-only companion motion; never consumes combat RNG or changes saves.
 import { createRng, hashSeed } from './rng_core.js';
 import { clearSegment, distance, findPath, followPath, walkable, WALK_SPEED } from './adventure_world_core.js';
+import { STARTERS } from './adventure_pets_core.js';
+
+// Map companionship is independent of combat participation. The four formation
+// slots are ordered left to right; equal distances prefer the lower slot.
+export function selectCompanionId(save, content) {
+    const owned=id=>!!save.pets?.[id]&&!!content.pets?.[id];
+    const heroSlot=save.heroSlot??0;
+    const slots=save.formation||[];
+    let closest=null,best=Infinity;
+    for(let slot=0;slot<slots.length;slot++){
+        const id=slots[slot],gap=Math.abs(slot-heroSlot);
+        if(owned(id)&&gap<best){closest=id;best=gap;}
+    }
+    if(closest)return closest;
+    return STARTERS.find(owned)||Object.keys(save.pets||{}).find(owned)||STARTERS[0];
+}
 
 export function createCompanion(world, hero, seed) {
     const nearby={x:hero.x-38,y:hero.y+28};

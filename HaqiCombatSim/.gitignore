@@ -4,5 +4,6 @@ release/
 .DS_Store
 
 .asset-cache/
+.cache/
 
 *.log

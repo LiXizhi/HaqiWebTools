@@ -1,4 +1,4 @@
-import {petMaxHp, petParams, petStage, STAGE_NAMES} from './adventure_pets_core.js';
+import {petMaxHp, petParams, petAppearanceStage, STAGE_NAMES} from './adventure_pets_core.js';
 
 function fillStatus(node,pet,content) {
  const max=petMaxHp(pet,content);
@@ -25,16 +25,21 @@ export function updatePetStatus(root,save,content) {
  }
 }
 
-export function createPetEvolution(assets,id,pet,portrait,el) {
- const p=petParams(assets.content),current=pet?petStage(pet.level,assets.content):-1;
+export function createPetEvolution(assets,id,pet,portrait,el,onSelect) {
+ const p=petParams(assets.content),current=pet?petAppearanceStage(pet,assets.content):-1;
  const path=el('div','pet-growth-stages');path.setAttribute('aria-label','四阶段进化路径');
  for(let index=0;index<4;index++){
   const locked=!!pet&&pet.level<p.stageLevels[index];
-  const stage=el('section',`pet-growth-stage${locked?' is-locked':''}${current===index?' is-current':''}`,
+  const selectable=!!pet&&!!onSelect;
+  const stage=el(selectable?'button':'section',`pet-growth-stage${locked?' is-locked':''}${current===index?' is-current':''}`,
    portrait(assets,id,index,96),el('h3','',STAGE_NAMES[index]),
    el('p','muted',`${p.stageLevels[index]}级${locked?'解锁':''} · 卡包 ${p.petCapacities[index]} 张`),
    el('small','pet-growth-state',current===index?'当前形态':locked?'未解锁':pet?'已解锁':'进化形态'));
   if(current===index)stage.setAttribute('aria-current','step');
+  if(selectable){
+   stage.type='button';stage.disabled=locked;stage.setAttribute('aria-pressed',String(current===index));
+   stage.onclick=()=>{if(!locked)onSelect(index);};
+  }
   path.append(stage);
  }
  return path;

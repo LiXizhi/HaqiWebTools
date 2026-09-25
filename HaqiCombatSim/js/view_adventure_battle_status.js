@@ -1,15 +1,9 @@
 import {drawSchoolIcon} from './card_renderer.js';
+import {battleStatusEffects} from './view_adventure_overhead_status.js';
 
 // Corner rosters share the arena's target callbacks; no battle state is mutated here.
 export function battleStatusLabels(unit,battle) {
-    return [
-        ...unit.standingWards.filter(w=>w.rounds>0).map(w=>`狂风印记 ${battle.resolved.global.stormChargingWardIds.indexOf(w.id)+1}阶 · ${w.rounds}回合`),
-        ...unit.charms.filter(id=>id>0).map(id=>battle.resolved.charms[id]?.desc),
-        ...unit.wards.filter(w=>w.id>0).map(w=>battle.resolved.wards[w.id]?.desc),
-        unit.dots.length?'持续伤害':'',unit.hots.length?'持续治疗':'',unit.stunned?'眩晕':'',
-        unit.reflectAmount>0?`反射盾 ${unit.reflectAmount}`:'',
-        unit.stealth?`隐身${unit.stealthRounds>0?` · ${unit.stealthRounds}回合`:''}`:'',
-    ].filter(Boolean);
+    return battleStatusEffects(unit,battle).map(effect=>effect.desc);
 }
 
 export function createBattleRoster(battle,side,{heroId,canTarget,target,el,button,schoolNames}) {

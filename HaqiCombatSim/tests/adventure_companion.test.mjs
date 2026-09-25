@@ -1,9 +1,35 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createCompanion, stepCompanion } from '../js/adventure_companion_core.js';
+import { createCompanion, stepCompanion, selectCompanionId } from '../js/adventure_companion_core.js';
 import { walkable, distance } from '../js/adventure_world_core.js';
 
 const world={w:1800,h:1600,buildings:[],trees:[]};
+const content={pets:{dragon_green:{},dragon_purple:{},cat:{},dog:{}}};
+test('companion prefers the shared slot, then nearest slot with stable ties',()=>{
+    const save={heroSlot:2,formation:['dragon_green','cat','dog',null],pets:{dragon_green:{},cat:{},dog:{}}};
+    const before=structuredClone(save);
+    assert.equal(selectCompanionId(save,content),'dog');
+    assert.deepEqual(save,before);
+    save.formation[2]=null;
+    assert.equal(selectCompanionId(save,content),'cat');
+    save.formation[3]='dog';
+    assert.equal(selectCompanionId(save,content),'cat');
+    save.heroSlot=3;
+    assert.equal(selectCompanionId(save,content),'dog');
+});
+test('empty formations use an owned dragon, then another owned pet, then a visual default',()=>{
+    const save={heroSlot:0,formation:[null,null,null,null],pets:{cat:{},dragon_purple:{}}};
+    assert.equal(selectCompanionId(save,content),'dragon_purple');
+    delete save.pets.dragon_purple;
+    assert.equal(selectCompanionId(save,content),'cat');
+    save.formation[0]='missing';
+    assert.equal(selectCompanionId(save,content),'cat');
+    save.pets={};
+    const before=structuredClone(save);
+    assert.equal(selectCompanionId(save,content),'dragon_green');
+    assert.deepEqual(save,before);
+    assert.equal(selectCompanionId({},content),'dragon_green');
+});
 test('a stranded companion returns when the hero gradually leaves it behind',()=>{
     const hero={x:1100,y:800},pet=createCompanion(world,{x:700,y:800},123);
     // No single-frame teleport: the last hero position is still nearby.

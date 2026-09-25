@@ -268,3 +268,23 @@ test('VIP-only goods require transient Keepwork access, not a character or actio
  assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:item.id},{keepworkVip:false}),/仅限会员购买/);
  assert.deepEqual(s,purchased);assert.doesNotThrow(()=>A.parseSave(s,c));
 });
+
+test('appearance selection persists independently of pet growth, cards and battle specs',()=>{
+ const save=fresh('dragon_green'),pet=save.pets.dragon_green;
+ pet.xp=P.petParams(c).petXpStep*40*39/2;pet.level=P.petXpLevel(pet.xp,c);
+ assert.equal(pet.level,40);assert.equal(P.petAppearanceStage(pet,c),3);
+ const before=structuredClone(pet),party=P.partySpecs(save,c,A.playerSpec(save,c));
+ A.applyAction(save,c,{type:'pet-appearance',petId:'dragon_green',stage:0});
+ assert.equal(P.petAppearanceStage(pet,c),0);
+ assert.deepEqual(pet,{...before,appearanceStage:0});
+ assert.deepEqual(P.partySpecs(save,c,A.playerSpec(save,c)),party);
+ assert.equal(P.petCapacity(pet,c),P.petCapacity(before,c));
+ const loaded=A.parseSave(JSON.stringify(save),c);assert.equal(loaded.pets.dragon_green.appearanceStage,0);
+ for(const stage of [-1,4,1.5,'0',null]){
+  assert.throws(()=>A.applyAction(save,c,{type:'pet-appearance',petId:'dragon_green',stage}),/形态/);
+  const broken=structuredClone(save);broken.pets.dragon_green.appearanceStage=stage;assert.throws(()=>A.parseSave(JSON.stringify(broken),c),/外观/);
+ }
+ const young=fresh('dragon_green');assert.throws(()=>A.applyAction(young,c,{type:'pet-appearance',petId:'dragon_green',stage:1}),/未解锁/);
+ A.beginEncounter(save,c,'trial:1');assert.throws(()=>A.applyAction(save,c,{type:'pet-appearance',petId:'dragon_green',stage:1}),/战斗/);
+ assert.equal(A.parseSave(JSON.stringify(save),c).pets.dragon_green.appearanceStage,0);
+});

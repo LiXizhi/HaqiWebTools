@@ -1,4 +1,8 @@
 /* NPC conversation: a quiet reading area and a separate response rail. */
+.rpg-dialogue .dialogue-read{display:block;width:100%;margin:0;padding:4px 8px 4px 0;border:0;border-radius:6px;background:transparent;box-shadow:none;color:inherit;font:inherit;line-height:1.8;text-align:left;letter-spacing:inherit;white-space:normal;cursor:pointer;overflow-wrap:anywhere;min-height:44px}
+.rpg-dialogue .dialogue-read+ .dialogue-read{font-size:.86em;color:#806b4a;padding-top:5px;border-top:1px solid #ae8b4230}
+.rpg-dialogue .dialogue-read:hover{background:#cbbb8533;color:#275e4d}
+.rpg-dialogue .dialogue-read:focus-visible{outline:2px solid #52724d;outline-offset:2px}
 .storybook-ui .rpg-dialogue-layer { padding:40px 24px max(88px,calc(env(safe-area-inset-bottom) + 76px)); background:linear-gradient(180deg,#10292510 15%,#10251f66 75%,#091c20b3); }
 .storybook-ui .rpg-dialogue {
  width:min(960px,100%); height:auto; min-height:260px; max-height:calc(100dvh - 140px);
@@ -59,3 +63,4 @@
 @media(max-height:540px) and (min-width:651px) {
  .storybook-ui .rpg-dialogue .dialogue-portrait.portrait-height { left:75px; height:169px!important; top:auto; bottom:16px; }
 }
+.dialogue-action-icon{display:inline-flex;width:18px;height:18px;margin-left:8px;vertical-align:middle;color:#376957}.dialogue-action-icon svg{width:100%;height:100%}.dialogue-action-caption{font-size:11px;margin-left:4px;color:#376957}.dialogue-read[aria-busy="true"] .dialogue-action-icon{opacity:.45}

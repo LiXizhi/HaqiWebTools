@@ -311,3 +311,7 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 - 2026-09-25 用户要求钓鱼失误主要降低重量：新增 fishingPerformance（hits/rounds/mistakes）影响独立重量分布，手动至少命中一次不空手。场景自动捕鱼器的原空手分支有 99% 概率替换为同工具成功分支，总失败率约 0.14%；这是明确的 Web 规则覆盖，不能再声称新场景模式与 Lua 空手概率完全相同。成功分支的鱼种、数量、精力和标记仍走原导出表；旧调用保持原概率。参数集中于 BalanceParams.fishing。
 
 2026-09-25宠物休息饱食：按用户新增的Web养成规则，未上阵收藏宠物每分钟恢复0.5饱食（BalanceParams.adventure.restingHungerPerMinute），不消耗口粮；非原服Lua移植。沿用tickCare的24小时上限、时钟回退保护和战斗暂停，原版战斗数值公式不变。
+
+### 2026-09-25 唯一装备元数据
+
+`script/kids/3DMapSystemApp/API/paraworld.globalstore.lua:545,551` 分别读取 Lua 模板 t[32] 的 maxcount 与 t[38] 的 maxcopiesinstack（Python 索引31/37）。导出遗漏已补齐；拥有上限1不等同于单堆上限1。历史重复唯一装备的最高强化合并、保留穿戴实例与返还多余镶嵌宝石是网页存档修复规则，不宣称原服提供此合成机制。未改动战斗公式。

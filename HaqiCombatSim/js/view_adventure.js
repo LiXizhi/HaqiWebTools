@@ -4,6 +4,7 @@ import {npcServices} from './adventure_npc_core.js';
 import {renderGems} from './view_adventure_gems.js';
 import {renderMembership} from './view_adventure_membership.js';
 import {createCloseButton} from './view_adventure_controls.js';
+import {attachStatusTooltips} from './view_adventure_status_tooltip.js';
 
 import {renderQuestJournal,translatedGoal,rewardChip} from './view_adventure_quests.js';
 import { islandName } from './adventure_world_map_core.js';
@@ -11,6 +12,7 @@ import { drawSchoolIcon } from './card_renderer.js';
 import { renderWorldMap } from './view_adventure_world_map.js';
 import { castBlockedMessage } from './adventure_cast_feedback_core.js';
 import { createCardFace } from './view_adventure_card.js';
+import {describeCard} from './card_description_core.js';
 import { renderDeckEditor } from './view_adventure_deck.js';
 import { bindDialogue } from './view_adventure_dialogue.js';
 import { bindHandGesture } from './view_adventure_hand.js';
@@ -27,13 +29,13 @@ import { renderShop } from './view_adventure_shop.js';
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot } from './adventure_core.js';
 import {catalogGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import * as U from './combat_unit_core.js';
-import { expectedBaseDamage,expectedBaseHeal,cardTargetKind } from './combat_cards_core.js';
+import { cardTargetKind } from './combat_cards_core.js';
 import { renderEquipment } from './view_adventure_equipment.js';
 import { renderStrengthening } from './view_adventure_strengthening.js';
 import { COLORS } from './adventure_renderer.js';
 import { languageSettings, battleChallengeBar } from './view_language_learning.js';
 import { tr, setText, fill } from './locale_runtime.js';
-import { syncLocaleChrome } from './locale.js';
+import { syncLocaleChrome,dialogueLearningLines } from './locale.js';
 export function el(tag,cls,...children) {
     const n=document.createElement(tag);if(cls)n.className=cls;
     const sources=[];
@@ -325,17 +327,13 @@ function modal(root,title,subtitle,cb,wide=false) {
     return body;
 }
 function spellHint(card,d) {
-    if(expectedBaseDamage(card))return fill('伤害 {amount}',{amount:expectedBaseDamage(card)}).text;
-    if(expectedBaseHeal(card))return fill('治疗 {amount}',{amount:expectedBaseHeal(card)}).text;
-    if(card.params.charms)return d.charms.charm[card.params.charms]?.desc||'增益魔法';
-    if(card.params.wards)return d.charms.ward[card.params.wards]?.desc||'护盾 / 陷阱';
-    return '辅助魔法';
+    return describeCard(card,{dataset:d,translate:tr}).summary;
 }
 function spellFace(assets,card,artCard=card) {
     // kids pe_item.DrawCardMask: 151×230, pips (120,5), cooldown (7,115), description (18,142).
     // Shared background + generated subject; title/numbers/description stay dynamic.
     const cost=card.pipcost===114||card.pipcost==='X'||Number(card.pipcost)<0?'X':String(card.pipcost);
-    const rounds=assets.content.items[artCard.itemId]?.stats?.[186]??0;
+    const rounds=card.params.cooldown??0;
     const description=spellHint(card,assets.dataset);
     return createCardFace({el,name:artCard.name,cost,cooldown:rounds,description,
         draw:context=>assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description})});
@@ -453,13 +451,16 @@ export function renderDialogue(root,model,dialog,cb) {
     const hint=el('p','dialogue-hint');
     content.append(hint);
     box.append(portrait,content,close);root.append(box);
-    bindDialogue(root,box,content.querySelector('.dialogue-text'),hint,content.querySelector('button.primary')||content.querySelector('button'));
+    const dialogueText=content.querySelector('.dialogue-text');
+    bindDialogue(root,box,dialogueText,hint,content.querySelector('button.primary')||content.querySelector('button'),{
+        lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),readAloud:cb.readDialogue,mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,
+    });
 }
 export function renderBattle(root,model,cb) {
     try { renderBattleContent(root,model,cb); }
     catch(error) {
         console.error('战斗界面显示失败：',error);
-        root.disposeHandGesture?.();root.battleLayoutObserver?.disconnect();
+        root.disposeHandGesture?.();root.disposeStatusTooltips?.();root.battleLayoutObserver?.disconnect();
         root.className='battle-layer visible';root.battleStatusEntries=[];
         root.replaceChildren(el('div','result-card',el('h2','','战斗界面暂时无法显示'),
             el('p','','进度已保留。可以重试显示，或撤退后重新挑战。'),
@@ -468,6 +469,7 @@ export function renderBattle(root,model,cb) {
     }
 }
 function renderBattleContent(root,model,cb) {
+    root.disposeStatusTooltips?.();
     root.disposeHandGesture?.();
     root.battleLayoutObserver?.disconnect();
     const oldSelected=root.querySelector('.hand-card.selected')?.dataset.seq;
@@ -525,12 +527,18 @@ function renderBattleContent(root,model,cb) {
         node.hidden=!!selected&&!isSelected;
         if(!animating&&!previous.has(h.seq)){node.classList.add('card-arriving');node.style.setProperty('--deal-delay',`${hand.children.length*65}ms`);}
         const select=button(spellFace(assets,card,artCard),()=>cb.select(h),'card-select');
-        select.disabled=animating||battle.finished;select.setAttribute('aria-label',`选择${artCard.name}${available?'':'（魔力不足或冷却中）'}`);select.setAttribute('aria-pressed',String(isSelected));
+        select.disabled=animating||battle.finished;select.setAttribute('aria-label',fill(available?'选择{name}':'选择{name}（魔力不足或冷却中）',{name:artCard.name}).text);select.setAttribute('aria-pressed',String(isSelected));
         const drop=button('弃牌',()=>cb.discard(h.seq),'discard-button');drop.disabled=animating||battle.finished;
-        node.title=`${artCard.name} · ${card.type==='CatchPet'?'对野生宠物':cardTargetKind(card)==='hostile'?'对敌人':'对友方'} · ${card.type==='CatchPet'?'抓宠符文':expectedBaseDamage(card)?'基础伤害 '+expectedBaseDamage(card):expectedBaseHeal(card)?'基础治疗 '+expectedBaseHeal(card):'增益 / 减益魔法'}`;
-        node.title+=runeCardsOpen?` · 符文剩余 ${h.count}`:petCardsOpen?' · 宠物卡':' · 向下拖动或右键弃牌';
+        const description=describeCard(card,{dataset:battle.resolved,translate:tr});
+        node.title=fill('{name} · {target} · {description}',{name:artCard.name,target:description.target,description:description.summary}).text;
+        node.title+=' · '+(runeCardsOpen?fill('符文剩余 {count}',{count:h.count}).text:tr(petCardsOpen?'宠物卡':'向下拖动或右键弃牌'));
         if(h.runeId)node.append(badge(`剩余 ${h.count}`));
-        if(isSelected)node.append(select,el('div','hand-focus-actions',petCardsOpen||runeCardsOpen?null:drop,button('重新选择',cb.reselect,'secondary small')));
+        if(isSelected){
+            const detail=el('section','battle-card-detail',el('h3','',artCard.name),el('p','card-detail-meta',description.meta),...description.lines.map(line=>el('p','',line)),el('small','',description.note));
+            detail.id='selected-card-detail';detail.tabIndex=0;detail.setAttribute('aria-label',tr('卡牌效果说明'));detail.setAttribute('aria-live','polite');
+            select.setAttribute('aria-describedby',detail.id);
+            node.append(select,detail,el('div','hand-focus-actions',petCardsOpen||runeCardsOpen?null:drop,button('重新选择',cb.reselect,'secondary small')));
+        }
         else node.append(select);
         hand.append(node);
     }
@@ -557,6 +565,7 @@ function renderBattleContent(root,model,cb) {
     bottom.append(targets,runePager);
     const challenge=null;
     root.append(top,canvas,status,challenge,hand,bottom);
+    attachStatusTooltips(root,canvas);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
     root.oncontextmenu=e=>{
         if(petCardsOpen||runeCardsOpen||animating||battle.finished||e.pointerType==='touch'||!matchMedia('(pointer:fine)').matches)return;

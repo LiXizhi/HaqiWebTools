@@ -1,0 +1,25 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>卡牌效果说明验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<style>body{margin:0;background:#173c43}#preview{position:relative;width:100%;height:100dvh}#tools{position:fixed;top:0;left:0;z-index:100;background:white;padding:4px}body.mobile #preview{width:390px;height:844px;max-width:100%}</style>
+<body><nav id="tools"><button id="mobile">390px预览</button><button id="images">切换无图</button><button id="language">English</button><span id="action"></span></nav><main id="preview"></main>
+<script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,playerSpec} from '../../js/adventure_core.js';
+import {createPveBattle} from '../../js/combat_pve_core.js';
+import {renderBattle} from '../../js/view_adventure.js';
+import {setTranslator} from '../../js/locale_runtime.js';
+import {lookup,parseLocaleFile} from '../../js/locale_core.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'说明验收'});
+const battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters:[{id:'preview-enemy',name:'练习目标',school:'fire',level:1,hp:1000,attributes:{},pool:[],sequences:[],genes:[],cardsets:{}}],seed:1});
+const hand=['Fire_SingleAttackWithDOT_Level2','Life_SingleHealWithHOT_Level1','Life_Absorb_Level3','Storm_AreaAttack_LevelX','Ice_IcePrism','Fire_FirePrism'].map((key,seq)=>({key,seq}));
+const root=document.querySelector('#preview'),model={assets,save,battle,hand,selected:null,discarded:[],animating:false,runeHand:[]};
+const say=text=>document.querySelector('#action').textContent=text;
+const cb={select:h=>{model.selected=h;paint();},reselect:()=>{model.selected=null;paint();},discard:seq=>{model.hand=model.hand.filter(h=>h.seq!==seq);model.selected=null;paint();say('已弃牌');},target:()=>{model.animating=true;paint();say('施法中，详情已隐藏');},swipePlay:()=>{},pass:()=>{},retreat:()=>{},sound:()=>{},togglePetCards:()=>{},toggleRunes:()=>{}};
+function paint(){renderBattle(root,model,cb);}paint();
+document.querySelector('#mobile').onclick=()=>{document.body.classList.toggle('mobile');};
+const draw=assets.skillArt.drawCard.bind(assets.skillArt);let noImages=false;
+document.querySelector('#images').onclick=()=>{noImages=!noImages;assets.skillArt.drawCard=noImages?()=>false:draw;paint();};
+let english=false;
+document.querySelector('#language').onclick=async()=>{const en=parseLocaleFile(await(await fetch('data/adventure/locale/en.txt')).text());english=!english;setTranslator(s=>lookup(s,english?'en':'zh-CN',{en}));paint();document.querySelector('#language').textContent=english?'中文':'English';};
+</script></body></html>

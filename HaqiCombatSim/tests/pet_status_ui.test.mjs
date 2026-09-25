@@ -27,3 +27,12 @@ test('evolution always shows four stages, unlock levels, current stage and locke
  const unlocked=createPetEvolution({content},'test',{...pet,level:40},()=>el('div','pet-sheet'),el);
  assert.ok(unlocked.children.every(n=>!n.className.includes('is-locked')));
 });
+
+test('owned evolution stages select unlocked appearances and retain locked silhouettes',()=>{
+ const selected=[];
+ const path=createPetEvolution({content},'test',{...pet,appearanceStage:0},()=>el('div','pet-sheet'),el,stage=>selected.push(stage));
+ assert.ok(path.children.every(n=>n.tag==='button'));
+ assert.deepEqual(path.children.map(n=>n.disabled),[false,false,true,true]);
+ assert.equal(path.children[0].attributes['aria-pressed'],'true');
+ path.children[1].onclick();path.children[2].onclick();assert.deepEqual(selected,[1]);
+});

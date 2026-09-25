@@ -12,6 +12,16 @@ import {createAdventure} from './js/adventure_core.js';
 import {recordLearningCompletion} from './js/language_adventure_core.js';
 import {loadUiArt} from './js/adventure_ui_art.js';
 import {loadKeepwork} from './js/adventure_cloud.js';
+import {languageSettings} from './js/view_language_learning.js';
+const live=new URLSearchParams(location.search).has('live');
+if(live){
+    document.querySelector('h1').textContent='魔法营地 · 真实语音试玩';
+    document.querySelector('main > p').textContent='选择营地居民，听一听，再用自己的声音回答。这里只使用临时角色，不修改游戏存档。';
+    document.getElementById('transcript').closest('label').hidden=true;
+    const login=document.createElement('button');login.textContent='登录语音服务';
+    login.onclick=async()=>{try{const sdk=await loadKeepwork();await sdk.showLoginWindow({title:'登录后使用语音服务'});}catch(error){document.getElementById('status').textContent=error.message;}};
+    document.querySelector('main').append(login);
+}
 if(!new URLSearchParams(location.search).has('noatlas'))await loadUiArt('cdn',url=>fetch(url).then(r=>r.json())).catch(()=>{});
 const content=await fetch('data/adventure/chapter.json').then(r=>r.json());
 const save=createAdventure(content);save.languageLearning={enabled:true,target:'en',native:'zh-CN'};
@@ -19,7 +29,13 @@ const catalog=await loadLearningCatalog();
 const state={save,content,role:'fixture',identity:'fixture',stage:'world'};
 const status=document.getElementById('status');
 const mock={start:async()=>{},finish:async()=>document.getElementById('transcript').value,cancel:async()=>{},speak:async()=>{},judge:async messages=>({reply:state.save.languageLearning.target==='en'?'Thank you. Tell me more.':'谢谢，请再说一点。',completed:[]})};
-const app=createLanguageAdventure({getState:()=>state,load:async()=>catalog,notify:text=>{status.textContent=text;},...(new URLSearchParams(location.search).has('live')?{}:{voice:mock}),commit:completion=>{const result=recordLearningCompletion(save,content,completion,{learningCompletion:completion});status.textContent=JSON.stringify({currency:save.inventory,progress:save.languageAdventure},null,2);return result;}});
+const settingsRoot=document.createElement('section');document.querySelector('main').append(settingsRoot);
+function showSettings(){settingsRoot.replaceChildren();const el=(tag,cls,...children)=>{const n=document.createElement(tag);n.className=cls;n.append(...children.filter(x=>x!==null&&x!==undefined));return n;};const button=(label,run,cls)=>{const n=el('button',cls,label);n.onclick=run;return n;};languageSettings(settingsRoot,{save},{setLearning:next=>{Object.assign(save.languageLearning,next);showSettings();},setLocale:value=>{save.locale=value;showSettings();}},{el,button});settingsRoot.scrollIntoView();}
+const app=createLanguageAdventure({getState:()=>state,load:async()=>catalog,saveSettings:next=>Object.assign(save.languageLearning,next),openSettings:showSettings,notify:text=>{status.textContent=text;},...(new URLSearchParams(location.search).has('live')?{}:{voice:mock}),commit:completion=>{const result=recordLearningCompletion(save,content,completion,{learningCompletion:completion});status.textContent=JSON.stringify({currency:save.inventory,progress:save.languageAdventure},null,2);return result;}});
+const list=document.createElement('select');list.setAttribute('aria-label','选择营地NPC');
+for(const p of catalog.profiles)list.add(new Option(p.name,p.id));
+const openNpc=document.createElement('button');openNpc.textContent='打开所选NPC';openNpc.onclick=()=>{save.zone='camp';app.open({instanceId:list.value});};
+document.querySelector('main').append(list,openNpc);
 document.getElementById('english').onclick=()=>{app.close();save.zone='camp';save.languageLearning.target='en';save.languageLearning.native='zh-CN';app.open();};
 document.getElementById('chinese').onclick=()=>{app.close();save.zone='camp';save.languageLearning.target='zh-CN';save.languageLearning.native='en';app.open();};
 document.getElementById('unsupported').onclick=()=>{app.close();save.languageLearning.target='ja';app.open();};

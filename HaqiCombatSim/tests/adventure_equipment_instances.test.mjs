@@ -108,3 +108,14 @@ test('unique merging waits for existing battle checkpoints',()=>{
     syncEquipmentInstances(s,uniqueContent);assert.equal(s.inventory[1912],2);
     s.pendingEncounter=null;syncEquipmentInstances(s,uniqueContent);assert.equal(s.inventory[1912],1);
 });
+
+test('loading an old duplicate save migrates once and remains importable',()=>{
+    const old=hero(),[first,second]=old.equipmentInstances.filter(row=>row.gsid===1912);
+    first.serverdata.addlel=1;second.serverdata.addlel=3;
+    old.equipment[11]=1912;old.equipmentGuids[11]=first.guid;old.upgrades[1912]=1;
+    const before=structuredClone(old),loaded=A.parseSave(old,uniqueContent);
+    assert.deepEqual(old,before);
+    assert.equal(loaded.inventory[1912],1);assert.equal(loaded.upgrades[1912],3);
+    assert.equal(loaded.equipmentGuids[11],first.guid);
+    assert.deepEqual(A.parseSave(loaded,uniqueContent),loaded);
+});

@@ -7,6 +7,7 @@
     "js/view_haqi_import.js",
     "js/view_detail_dialog.js",
     "js/card_renderer.js",
+    "js/card_description_core.js",
     "js/adventure_renderer.js",
     "js/adventure_app.js",
     "js/locale.js",
@@ -78,6 +79,11 @@
     {
       "path": "data/adventure/maps/dark.json",
       "fields": ["name", "description"]
+    },
+    {
+      "path": "data/adventure/island-encounters.json",
+      "fields": ["name"],
+      "under": ["monsters"]
     }
   ]
 }

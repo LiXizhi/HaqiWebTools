@@ -1,4 +1,6 @@
+import {dialogueMappingPrompt,validateDialogueMapping} from './dialogue_mapping_core.js';
 import {createLanguageAdventure} from './language_adventure.js';
+import {createLearningVoice} from './language_adventure_voice.js';
 import {createAutoSave} from './adventure_autosave.js';
 import {npcOffers} from './adventure_npc_core.js';
 import {dungeonFor,enterDungeon,leaveDungeon} from './adventure_dungeons_core.js';
@@ -106,6 +108,8 @@ let serviceNpc=null;
 const npcServiceView={query:'',page:0};
 const model=()=>({assets,save,dungeonLoading,serviceNpc,npcServiceView,membership:membership.state,membershipView,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled,learningProgress:battle?.learningProgress||0});
 const languageAdventure=createLanguageAdventure({
+    saveSettings:next=>{const before=save.languageLearning;save.languageLearning={...before,...next};persist();if(storageWarning){save.languageLearning=before;throw Error('设置未能保存，请重试。');}queueCloudSave();},
+    openSettings:()=>openPanel('settings'),
     getState:()=>({save,content:assets?.content,role:roleStorage,identity:roleStore?.owner,stage,battle,animating:!!animation,busy:!!dialog||!!animation||document.hidden||!!document.querySelector('dialog[open]'),near:world&&save&&stage==='world'&&!panel&&!dialog?W.nearestInteraction(world,save.position):null}),
     commit:completion=>{
         const committed=persistReward(save,assets.content,{type:'language-complete',completion},{learningCompletion:completion},roleStorage);
@@ -191,6 +195,9 @@ function openPanel(kind,options={}) {
     if(stage!=='world')return;
     close();path=[];destination=null;panel=kind;
     if(kind==='pet')petView.tab='follow';
+    if(kind==='shop'&&options.category){
+        Object.assign(shopView,{category:options.category,subcategory:options.subcategory??0,subcategoryCategory:options.category,page:0,query:'',ownership:'',level:'',school:'',slot:''});
+    }
     if(kind==='npc-services'){serviceNpc=options.npc;Object.assign(npcServiceView,{query:'',page:0,kind:'',category:''});}
     if(kind==='quests'){pinJournalQuest=options.questId!=null;selectedQuestId=options.questId??A.currentQuest(save,assets.content)?.id??assets.content.quests.at(-1)?.id;}
     if(kind==='gems')Object.assign(gemView,{guid:options.guid||null,gemId:null,runes:[null,null,null],runeIndex:0,step:options.guid?'gems':'equipment',filter:0,page:0,mode:'mount',removeIds:[],message:'',confirm:false});
@@ -486,7 +493,10 @@ function travel(zone){safely(()=>{
     if(dungeonFor(assets.content,save.zone))leaveDungeon(save,assets.content);
     A.applyAction(save,assets.content,{type:'travel',zone});enterWorld(save);showTeleportEffect();toast('已抵达{name}。',{name:islandName(zone)});
 });}
-function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog,{close,next:nextDialogue,startQuest:q=>startLines(q.startDialog,'接取任务',()=>{
+const mappingVoice=createLearningVoice({getSettings:()=>({model:'keepwork-lite'})});
+const mapDialogue=async(lines,signal)=>validateDialogueMapping(await mappingVoice.judge(dialogueMappingPrompt(lines),signal,{maxTokens:3000}),lines);
+const dialogueVoice=createLearningVoice({getSettings:()=>save?.languageLearning||{}});
+function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog,{close,mapDialogue,readDialogue:(text,locale,signal)=>dialogueVoice.speak(text,locale,signal),next:nextDialogue,startQuest:q=>startLines(q.startDialog,'接取任务',()=>{
     const result=A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(result.full?'已接取：{title}。追踪已满3个，请先取消一条。':'已接取：{title}',{title:q.title});
 }),finishQuest:q=>startLines(q.endDialog,'领取奖励',()=>{
     const before=rewardSnapshot(save);

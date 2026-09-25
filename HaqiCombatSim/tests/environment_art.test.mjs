@@ -25,7 +25,7 @@ test('environment atlases retain alpha, provenance and bounded nonoverlapping cr
 
 test('weather atlas replaces vector particles, keeps its budget and can be suppressed',()=>{
     const calls=[],c={save(){},restore(){},beginPath(){throw Error('Unexpected fallback');}},art={draw(...args){calls.push(args);return true;}};
-    for(const kind of ['sand','embers','mist','ash','motes']){
+    for(const kind of ['embers','mist','ash','motes']){
         calls.length=0;const weather={kind,count:100,speed:20,wind:4,color:'#fff'};
         drawIslandWeather(c,{},null,10,1280,720,false,art,weather);
         assert.equal(calls.length,64);assert.ok(calls.every(a=>a[1]==='weather'&&a[2]===kind));
@@ -40,6 +40,16 @@ test('weather atlas replaces vector particles, keeps its budget and can be suppr
     const drawn=flakes.length;
     drawIslandWeather(snowContext,{},null,10,1280,720,true,art,{kind:'snow',count:40,speed:20,wind:4,color:'#fff'});
     assert.equal(flakes.length,drawn);
+    flakes.length=0;
+    const sand={kind:'sand',count:100,speed:4,wind:35,color:'#f7dcad'};
+    drawIslandWeather(snowContext,{},null,10,1280,720,false,art,sand);
+    assert.equal(calls.length,0);
+    assert.equal(flakes.filter(call=>call[0]==='bezierCurveTo').length,64);
+    assert.equal(flakes.filter(call=>call[0]==='ellipse').length,192);
+    const sandDrawn=flakes.length;
+    drawIslandWeather(snowContext,{},null,10,1280,720,true,art,sand);
+    drawIslandWeather(snowContext,{},null,10,1280,720,false,art,sand,null,0);
+    assert.equal(flakes.length,sandDrawn);
     const alphas=[];
     drawIslandWeather({save(){},restore(){},beginPath(){},ellipse(){},fill(){},stroke(){},moveTo(){},lineTo(){},rotate(){},translate(){},set globalAlpha(v){alphas.push(v);},get globalAlpha(){return alphas.at(-1)??1;}},{},null,10,1280,720,false,null,{kind:'snow',count:8,speed:20,wind:4,color:'#fff'},null,.4);
     assert.ok(alphas.length>0&&alphas.every(v=>v<=.4+1e-6));

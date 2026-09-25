@@ -86,6 +86,7 @@
 .pet-stage-slot{position:relative;min-width:0;text-align:center;border-bottom:3px solid #789b8a}
 .pet-stage-slot.is-hero{border-color:#b47c29}
 .pet-stage-slot.drop-ready{outline:2px solid #287866;background:#b2d8bf66}
+.pet-shelf.drop-ready{outline:2px solid #287866;background:#b2d8bf66}
 .pet-stand{display:flex;flex-direction:column;align-items:center;position:relative;width:100%;min-width:0;background:none;color:#51482f;padding:0 4px 8px;border:0;border-radius:0;gap:4px}
 .pet-stage-slot::before{content:'';position:absolute;top:94px;left:5%;width:90%;height:32px;border-radius:50%;background:radial-gradient(ellipse,#d4d4d0 0 55%,#91938f 58% 63%,#c3c4bf 66% 77%,#8b8d89 80%);border:1px solid #797c79;box-shadow:0 3px 0 #737671,0 5px 7px #30343130;pointer-events:none;z-index:0}
 .pet-drag-preview{position:fixed;z-index:10000;pointer-events:none;background-repeat:no-repeat;object-fit:contain;filter:drop-shadow(0 10px 6px #24282355);will-change:transform}
@@ -179,6 +180,10 @@
 .pet-growth-stage:not(:last-child)::after{content:'→';position:absolute;right:-9px;top:35px;color:#927141}
 .pet-growth-stage.is-locked .pet-sheet{filter:brightness(0);opacity:.8}
 .pet-growth-stage.is-current{outline:2px solid var(--green);outline-offset:-2px}
+.pet-profile-modal button.pet-growth-stage{color:inherit;font:inherit;box-shadow:none;white-space:normal}
+.pet-profile-modal button.pet-growth-stage:disabled{opacity:1;cursor:default}
+.pet-profile-modal button.pet-growth-stage:focus-visible{outline:3px solid var(--gold);outline-offset:1px}
+.pet-profile-modal button.pet-growth-stage:hover:not(:disabled){background:#b2d8bf33}
 .pet-growth-state{display:block;font-size:11px;color:#79654b;margin-top:4px}
 .pet-position-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}.pet-position-actions button{flex:1;min-width:105px;font-size:12px}
 .pet-deck-heading{display:flex;gap:16px;align-items:center;margin-bottom:12px}.pet-deck-heading>.primary{margin-left:auto}
@@ -495,6 +500,11 @@
 
 /* Full-screen arena stays fixed through selection, the entire round and the next deal. */
 .battle-layer .battle-canvas{inset:0;width:100%;height:100%;z-index:0}
+.battle-status-targets{position:absolute;inset:0;z-index:2;pointer-events:none}
+.battle-status-targets .battle-status-hit{position:absolute;display:block;margin:0;padding:0;min-width:0;min-height:0;border:0;border-radius:6px;background:transparent;box-shadow:none;pointer-events:auto;cursor:help;touch-action:manipulation}
+.battle-status-targets .battle-status-hit:focus-visible{outline:2px solid #fff0bd;outline-offset:2px}
+.battle-status-tooltip{position:absolute;z-index:12;max-width:min(280px,calc(100% - 16px));padding:10px 13px;border:1px solid var(--gold);border-radius:8px;background:var(--paper);color:var(--ink);box-shadow:0 4px 16px #061b3655;font-size:13px;line-height:1.6;white-space:pre-line;overflow-wrap:anywhere;pointer-events:none}
+.battle-status-tooltip[hidden]{display:none}
 .battle-layer .battle-hand{z-index:6}
 .battle-layer .battle-controls{z-index:7;pointer-events:none}
 .battle-layer .battle-controls>*{pointer-events:auto}
@@ -741,3 +751,14 @@
 .learning-hints{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:6px}
 .language-room .language-input,.learning-battle .language-input{width:100%;margin-top:8px}
 .language-actions,.shop-buy-row{display:flex;gap:6px;flex-wrap:wrap}
+
+/* Selected card and its readable effect description share the central preview. */
+.battle-layer .battle-hand.hand-focused{width:min(560px,calc(100% - 32px))}
+.battle-hand.hand-focused .hand-card.selected{display:grid;grid-template-columns:clamp(100px,13vw,160px) minmax(0,1fr);align-items:center;gap:16px}
+.battle-card-detail{max-height:min(300px,42dvh);overflow:auto;overscroll-behavior:contain;pointer-events:auto;touch-action:pan-y;padding:14px 16px;border:1px solid var(--gold);border-radius:10px;background:var(--paper);color:var(--ink);box-shadow:0 6px 24px #071d2a55;text-align:left;font-size:13px;line-height:1.65;overflow-wrap:anywhere}
+.battle-card-detail h3{margin:0 0 6px;font-size:18px}.battle-card-detail p{margin:7px 0}.battle-card-detail .card-detail-meta,.battle-card-detail small{font-size:11px;color:var(--muted)}
+.battle-card-detail:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+@media(max-width:650px){.battle-hand.hand-focused .hand-card.selected{grid-template-columns:100px minmax(0,1fr);gap:10px}.battle-card-detail{padding:10px;font-size:12px;max-height:34dvh}.battle-card-detail h3{font-size:16px}}
+@media(max-height:500px){.battle-hand.hand-focused .hand-card.selected{grid-template-columns:78px minmax(0,1fr)}.battle-card-detail{max-height:38dvh}}
+.battle-hand.hand-focused .hand-card.unavailable{filter:none}
+.battle-hand.hand-focused .hand-card.unavailable .card-select{filter:grayscale(1)}

@@ -140,3 +140,24 @@ test('pointer drag rides on release and suppresses the following detail click',t
  emit('pointerdown');emit('pointermove',{clientY:20});emit('pointercancel',{clientY:20});
  assert.deepEqual(ui.actions.map(action=>action.type),['ride']);
 });
+
+test('dragging a formation pet to the collection rests it; cancel, outside and battle drops do not',t=>{
+ const ui=setup(t),id=ui.save.formation[ui.save.heroSlot];
+ const oldCanvas=globalThis.HTMLCanvasElement;
+ globalThis.HTMLCanvasElement=class {};
+ t.after(()=>{if(oldCanvas===undefined)delete globalThis.HTMLCanvasElement;else globalThis.HTMLCanvasElement=oldCanvas;});
+ const card=ui.all().find(node=>node.className==='pet-stage-line').children[ui.save.heroSlot].children.find(node=>node.className==='pet-stand');
+ const shelf=ui.all().find(node=>node.className==='pet-shelf');
+ const ghost=new HTMLCanvasElement();Object.assign(ghost,{style:{},setAttribute(){},getContext:()=>({drawImage(){}}),remove(){}});
+ const picture={getBoundingClientRect:()=>({left:0,top:20,width:120,height:120}),cloneNode:()=>ghost};
+ card.querySelector=()=>picture;card.setPointerCapture=()=>{};
+ document.body={append(){}};shelf.closest=()=>null;document.elementFromPoint=()=>shelf;
+ const emit=(type,extra={})=>(card.listeners[type]||[]).forEach(fn=>fn({type,isPrimary:true,button:0,pointerId:1,clientX:10,clientY:20,...extra}));
+ const drag=end=>{emit('pointerdown');emit('pointermove',{clientY:300});emit(end,{clientY:300});};
+ drag('pointercancel');assert.equal(ui.actions.length,0);
+ document.elementFromPoint=()=>null;drag('pointerup');assert.equal(ui.actions.length,0);
+ document.elementFromPoint=()=>shelf;ui.save.pendingEncounter={id:'battle'};drag('pointerup');assert.equal(ui.actions.length,0);
+ delete ui.save.pendingEncounter;const heroSlot=ui.save.heroSlot;drag('pointerup');
+ assert.equal(ui.actions.length,1);assert.ok(!ui.save.formation.includes(id));assert.ok(ui.save.pets[id]);assert.equal(ui.save.heroSlot,heroSlot);
+ let suppressed=false;emit('click',{preventDefault(){},stopImmediatePropagation(){suppressed=true;}});assert.ok(suppressed);
+});

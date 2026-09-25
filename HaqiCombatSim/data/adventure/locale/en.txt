@@ -5143,3 +5143,299 @@ S4死亡装供货商||S4 Death gear supplier
 还没有坐骑，可在商城或居民商店获取。||No mounts yet. Find one in the mall or a resident shop.
 {name}骑乘{mount}||{name} riding {mount}
 点击坐骑查看详情，或拖到上方骑乘。||Click a mount for details, or drag it above to ride.
+
+# data/adventure/island-encounters.json
+火鸟战士||Firebird Warrior
+冰柱巨人斯科拉||Skora the Ice Pillar Giant
+噬灵鼠||Soulbite Rat
+深蓝噬巫鼠||Deep Blue Witchbite Rat
+风暴飞蝇||Storm Fly
+铁壳怪||Ironshell
+夺命恶魔埃尔温||Erwin the Deadly Demon
+神木4级守卫||Sacred Tree Guard Lv. 4
+神木1级守卫||Sacred Tree Guard Lv. 1
+神木2级守卫||Sacred Tree Guard Lv. 2
+神木3级守卫||Sacred Tree Guard Lv. 3
+雪人之王||Snowman King
+章鱼之王||Octopus King
+食蚁兽之王||Anteater King
+深蓝亡灵猴||Deep Blue Undead Monkey
+寒冰雪狼||Frost Snow Wolf
+冰熊卫士||Ice Bear Guard
+爆牙火熊||Fangburst Fire Bear
+大地冰熊||Earth Ice Bear
+大地蓝巨人||Earth Blue Giant
+暴风蝎||Storm Scorpion
+暴风蝎首领||Storm Scorpion Chief
+大地巨人||Earth Giant
+变异暴风蝎||Mutated Storm Scorpion
+青锭亡灵猴首领||Jade Undead Monkey Chief
+魅紫亡灵猴||Violet Undead Monkey
+风鹰||Wind Eagle
+风鹰之王||Wind Eagle King
+木妖之王||Wood Sprite King
+雪狼之王||Snow Wolf King
+冰虾之王||Ice Shrimp King
+亡灵猴之王||Undead Monkey King
+邪恶守卫||Evil Guard
+风暴亡灵蛇||Storm Undead Serpent
+烈火亡灵蛇||Fire Undead Serpent
+寒冰亡灵蛇||Ice Undead Serpent
+首领守卫||Chief Guard
+统领守卫||Commander Guard
+巨鳄护法||Giant Crocodile Guardian
+巨鳄精英||Giant Crocodile Elite
+地狱护法||Infernal Guardian
+恶灵树精||Wraith Treant
+剧毒花藤怪||Venomous Flower Vine
+热情花藤怪||Fiery Flower Vine
+恶灵拉希姆||Rahim the Wraith
+鱼人偷袭者||Murloc Ambusher
+鱼人护卫||Murloc Guard
+伪善的妖姬||Deceitful Enchantress
+# js/adventure_renderer.js
+2只||2 enemies
+3只||3 enemies
+4只||4 enemies
+待迁移||Not yet available
+
+# data/adventure/chapter.json
+欢迎来到魔法营地！我是青龙。从这里开始，学会你的第一道魔法吧。||Welcome to Magic Camp! I'm Azure Dragon. Let's start your journey by learning your first spell.
+我来试试||Let me try!
+点一下地面就能走过去，点一下居民就能上前交谈。先在营地里试试吧！||Click the ground to walk there, or click a resident to walk over and talk. Try it here in camp!
+迈出第一步了！接下来，去认识营地里的朋友，一起发现魔法的乐趣。||You've taken your first step! Now meet your friends around camp and discover the joys of magic together.
+谢谢你||Thank you!
+请指教||Please teach me.
+魔法让我快乐！哪怕只是一个小法术，也能给平常的日子添点惊喜。你也去试试吧。||Magic makes me happy! Even a little spell can bring a touch of wonder to an ordinary day. Give it a try!
+记住了||Got it!
+我学习魔法，是想变得更强，守护身边的人。遇到困难时，有力量就能多帮上一把。||I study magic to grow stronger and protect the people around me. With that strength, I can lend a hand when times get tough.
+去问问苏苏和莫卡，他们为什么学习魔法。打开任务，点击“追踪目标”就能找到他们。||Ask Susu and Moka why they study magic. Open Quests and click "Track objectives" to find them.
+有人为快乐，有人为守护。带着你自己的心愿，我们开始练习魔法吧！||Some learn for joy, others to protect people. Whatever your own wish may be, let's start practicing magic!
+去挑战烈火侦查兵。战斗时，先点卡牌，再点目标，就能施法；魔力不足时可以跳过回合。||Challenge the Fire Scout. In battle, click a card, then a target to cast your spell. You can pass a turn if you don't have enough pips.
+第一场胜利！这顶帽子送给你。打开“背包”穿上它，还能用上装备附带的卡牌。||Your first victory! Here's a hat for you. Open your Bag to equip it and use the cards it grants.
+这次挑战寒冰侦查兵，试试刚学会的本领。完成训练后，我送你一件新衣服。||Challenge the Ice Scout this time and put your new skills to the test. Finish the training, and I'll give you a new outfit.
+打得不错！收好这件衣服，记得到“背包”里穿上，为下一场挑战做好准备。||Well fought! Take this outfit and remember to equip it in your Bag. Get ready for your next challenge!
+营地受光明守护，侦察兵是能自行修复的训练伙伴。放心挑战风暴侦察兵吧！||The light protects our camp, and the scouts are training partners that repair themselves. Go ahead and challenge the Storm Scout!
+你越来越熟练了！这双鞋送给你。训练伙伴很快就能恢复，不必担心它们。||You're getting better! These shoes are for you. Don't worry about your training partners; they'll recover soon.
+接下来是精英生命侦查兵，试试你的实力吧！获胜后去找古奇，为出行准备装备。||The Elite Life Scout is next. Show what you can do! After you win, visit Goochi to get ready for your journey.
+听说你通过了训练，干得好！想去更远的地方冒险，先准备一把趁手的法杖吧。||I heard you passed your training. Well done! Before you venture farther afield, you'll need a trusty wand.
+去找青龙领取法杖吧。有了趁手的武器，再学会强化，你就能更从容地迎接挑战。||Go see Azure Dragon to get your wand. With a trusty weapon and a little knowledge of upgrading, you'll be ready for tougher challenges.
+这把法杖送给你！接下来，我会教你强化装备，让它在冒险中助你一臂之力。||This wand is yours! Next, I'll teach you to upgrade your equipment so it can serve you better on your adventures.
+打开“背包”的“强化装备”，选一件可强化的装备完成强化，再回来找我。记得备好仙豆！||Open "Upgrade equipment" in your Bag, choose an item you can upgrade, and upgrade it. Then come back to me. Bring enough Fairy beans!
+强化成功了！送你一枚出奇蛋。打开它，看看哪位小伙伴会加入你的旅程吧。||Upgrade complete! Here's a Surprise Egg. Open it and see which little friend will join your journey!
+打开“宠物”，孵化出奇蛋，再去找杰西卡。她会教你照顾这位新伙伴。||Open Pet and hatch your Surprise Egg, then visit Jessica. She'll teach you how to care for your new companion.
+瞧，你们已经成了好朋友！在“宠物”里可以查看伙伴、喂它口粮，陪它一起长大。||Look, you're already friends! Open Pet to check on your companion, feed it, and watch it grow.
+打开“宠物”，点击“喂养一包战宠口粮”。让新伙伴吃饱，它就有精神陪你冒险啦！||Open Pet and click "Feed a pack of pet food". A full tummy will give your new friend the energy to adventure with you!
+小家伙吃得真开心！记得照顾它，往后的旅程，你们就能一路相伴了。||Your little friend loved that meal! Take good care of it, and you'll have a companion for the adventures ahead.
+烈火热情而执着，擅长用火焰攻击多个敌人。面对成群的对手，让火焰为你开路吧！||Fire is passionate and determined, using flames to strike several enemies at once. When foes gather, let fire clear your path!
+寒冰的力量在于坚韧。稳住防守，承受对手的攻势，再抓住机会还击。||Ice draws its strength from endurance. Hold your defenses, weather the enemy's attacks, then seize your chance to strike back.
+风暴追求强力的单体攻击。看准关键对手，集中力量出击，让战斗尽快分出胜负！||Storm excels at powerful attacks against a single target. Pick a key opponent, focus your power, and bring the battle to a swift end!
+生命魔法能恢复生命、支援伙伴。照顾好自己和同伴，才能一起走得更远。||Life magic restores health and supports your allies. Care for yourself and your companions, and you'll go farther together.
+死亡魔法能在攻击时吸取生命。削弱对手，也为自己争取继续战斗的机会。||Death magic drains life as it attacks. Weaken your enemies while giving yourself the strength to keep fighting.
+去见见营地里的五位魔法导师吧。每一系都有自己的拿手本领，听听他们怎么说。||Meet the five magic mentors around camp. Each school has its own strengths. Hear what they have to say!
+各系各有所长，配合卡牌才能发挥本领。打开“卡包”查看已学魔法，调整后记得保存。||Each school has its strengths, and the right mix of cards brings them out. Open Cards to review your spells, and save any changes you make.
+死亡侦察兵会在攻击时吸血。别让它慢慢恢复，准备好卡牌，抓住机会尽快击败它！||The Death Scout drains life when it attacks. Don't let it keep healing! Prepare your cards and defeat it as quickly as you can.
+最终考核快到了。先去找领地看守者，打听对手的本领，做好准备再挑战。||Your final test is coming up. Visit the Territory keeper to learn about your opponent's abilities, then prepare before taking the challenge.
+知道对手会吸血，就更要安排好进攻。收好这个新卡包，接下来整理一下你的卡牌。||Since your opponent can drain life, you'll need to plan your attacks carefully. Take this new card bag, then organize your cards.
+在“背包”装备翡翠口袋，再打开“卡包”调整卡牌。可以点“推荐配卡”，最后记得保存。||Equip the Emerald Pocket in your Bag, then open Cards to adjust your cards. You can click "Recommended". Remember to save!
+准备得不错！出发前整理卡包，是魔法师的好习惯。现在，迎接最后的考核吧。||You're well prepared! Every good magician checks their deck before setting out. Now it's time for your final test.
+最后一关：击败死亡侦察兵！带上准备好的卡牌，去证明你已经能独当一面吧。||Your final challenge: defeat the Death Scout! Take your prepared deck and show that you can stand on your own.
+恭喜你，通过考核！带上伙伴和勇气出发吧，营地之外，还有更多奇妙的相遇等着你。||Congratulations, you passed! Set out with your companion and your courage. More wonderful encounters await beyond the camp!
+# js/adventure_app.js
+已经骑上坐骑。属性将在下一场战斗中生效。||Mounted. The stat bonuses will take effect in your next battle.
+已经下来了。||Dismounted.
+这张卡牌已弃掉||This card has been discarded.
+这里离水边太远，换一处海岸试试。||You're too far from the water. Try another spot on the coast.
+这处岸边暂时走不到，换个位置吧。||You can't reach this part of the shore right now. Try another spot.
+没能走到水边，换个位置再试试。||Couldn't reach the water. Try another spot.
+# js/adventure_core.js
+语言课程仅发放限额奖励，请使用货币购买||Language lessons only grant limited rewards. Please use currency to make purchases.
+尚未获得这只坐骑||You don't own this mount yet.
+当前没有骑乘坐骑||You aren't riding a mount.
+存档坐骑无效||Invalid mount in save data.
+# js/view_adventure_equipment.js
+属性加成包含装备、强化、宝石和骑乘中的坐骑；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。||Stat bonuses include equipment, upgrades, gems, and your current mount. Stats for other schools and additional attributes are shown only when nonzero. Maximum health and power pip rate include base values from your level. Equipment cards do not count toward your regular deck capacity.
+骑乘后，这些属性加入角色战斗属性。||These bonuses are added to your combat stats while riding.
+这只坐骑还没有骑乘形象。||This mount has no riding appearance yet.
+骑乘后变化||Changes while riding
+暂不可骑乘||Not rideable yet
+战斗中无法换坐骑||You can't change mounts during battle.
+# js/view_adventure_npc.js
+训练点||Training points
+# js/view_adventure_overhead_status.js
+印||Mark
+术||Charm
+盾||Shield
+吸||Absorb
+陷||Trap
+疗||Heal
+伤||Damage
+晕||Stun
+反||Reflect
+隐||Stealth
+环||Aura
+# js/view_adventure_pet_details.js
+进化路径||Evolution path
+# js/view_adventure_pet_status.js
+四阶段进化路径||Four-stage evolution path
+当前形态||Current form
+进化形态||Evolved form
+已解锁||Unlocked
+# js/view_adventure_pets.js
+查看详情||View details
+# js/view_adventure_scene_fishing.js
+上||Up
+下||Down
+右||Right
+左||Left
+抛竿||Cast
+选择捕鱼道具||Choose fishing gear
+渔具||Fishing gear
+沿用背包中的渔网和捕鱼器，每次成功结算消耗一份。||Use nets and fishing devices from your Bag. One is consumed each time a fishing attempt is successfully processed.
+捕鱼道具||Fishing gear
+选择鱼种排行榜||Choose a species leaderboard
+个人重量榜||Personal weight records
+每种鱼保留前十；重量不影响奖励。随角色保存，登录后同步。||Your top ten catches by weight are kept for each species. Weight does not affect rewards. Records are saved with your character and synced after you sign in.
+个人钓鱼排行榜||Personal fishing records
+纪录||Record
+结束钓鱼||Stop fishing
+还没有这条鱼的纪录，去试试吧。||No record for this fish yet. Try catching one!
+药剂使用失败，请重试。||Couldn't use the potion. Please try again.
+必中道具会自动提竿||Guaranteed-catch gear sets the hook automatically.
+咬钩后，按金色方向提竿；方向键或 WASD 也可以||When a fish bites, press the gold direction to set the hook. You can also use the arrow keys or WASD.
+等咬钩||Waiting for a bite
+抛线中||Casting
+收杆中||Reeling in
+松线||Let out line
+提竿！||Set the hook!
+再抛一竿||Cast again
+鱼||Fish
+别急，等金色方向亮起；按中一次就有收获||Wait for the gold direction to light up. One correct press is enough to catch something!
+松线稍等，收得太急会让鱼变小||Let out some line and wait. Reeling too fast makes the fish smaller.
+没有捕鱼道具了，看看米酒葫芦吧||You're out of fishing gear. Check the Rice Wine Gourd.
+精力不足，打开渔具使用药剂||Not enough stamina. Open Fishing gear to use a potion.
+抛竿…||Casting...
+稳稳收鱼！||Reel it in steadily!
+这次没有按中，再试一次吧||Missed the direction this time. Try again!
+保存失败，请重试||Couldn't save. Please try again.
+钓到了！||Caught one!
+鱼儿溜走了||The fish got away.
+大鱼上岸！||A big catch!
+巨物上岸！||A huge catch!
+等浮漂沉下去…||Wait for the float to dip...
+好收获！||Nice catch!
+再试一次吧||Try again!
+再来一竿？||Cast again?
+# js/view_adventure.js
+ · 向下拖动或右键弃牌|| · Drag down or right-click to discard
+
+# js/card_description_core.js — templates are translated before substituting values
+{amount}×魔力||{amount}×pips
+{min}～{max}||{min}–{max}
+{amount}×{rounds}回合||{amount}×{rounds} turns
+；||;
+～||–
+任意系||any school
+自己或一名友方||yourself or one ally
+一名敌人||one enemy
+全体友方||all allies
+全体敌人||all enemies
+全场所有角色||everyone in the arena
+伤害为目标当前生命的 {percent}%||Damage: {percent}% of the target's current HP
+对{target}造成其当前生命 {percent}% 的基础伤害，另受此牌的伤害上限限制。||Deal base damage equal to {percent}% of the current HP of {target}, subject to this card's damage cap.
+每段基础 {amount}||Base per hit: {amount}
+对{target}立即造成 {amount} 点{school}基础伤害。||Immediately deal {amount} base {school} damage to {target}.
+分段攻击 {times} 次；特殊段数可能使用不同伤害。||Attack {times} times. Special hits may use different damage values.
+持续 {ticks}||Damage over time: {ticks}
+持续治疗 {ticks}||Healing over time: {ticks}
+每回合 {amount}||{amount} each turn
+各回合依次为 {amounts}||{amounts} on successive turns
+为{target}附加持续治疗：{rounds} 回合，{schedule} 点基础生命值。||Apply healing over time to {target} for {rounds} turns: {schedule} base HP.
+对{target}附加持续伤害：{rounds} 回合，{schedule} 点基础伤害。||Apply damage over time to {target} for {rounds} turns: {schedule} base damage.
+立即为{target}恢复 {amount} 点基础生命值。||Immediately restore {amount} base HP to {target}.
+吸收 {amount}||Absorb {amount}
+为{target}施加护盾，累计吸收 {amount} 点伤害。护盾不会恢复已经损失的生命。||Give {target} a shield that absorbs a total of {amount} damage. It does not restore lost HP.
+吸收就是替你承受伤害：结算到护盾的伤害先扣护盾容量，超过剩余容量的部分才扣生命；没用完的容量保留，用完后护盾消失。||Absorption takes damage for you: damage reaching the shield uses its capacity first. Only damage exceeding its remaining capacity reduces HP. Unused capacity stays; the shield disappears when depleted.
+例如：护盾剩余 {capacity} 点，承受一次 200 点伤害后，生命不减少，护盾还剩 {remaining} 点。||Example: with {capacity} shield capacity left, taking 200 damage costs no HP and leaves {remaining} shield capacity.
+基础总伤害：{amount} 点（即时效果与持续效果合计，并非一次生效）。||Total base damage: {amount}, combining immediate damage and damage over time, not all at once.
+基础总治疗：{amount} 点（即时效果与持续效果合计，并非一次生效）。||Total base healing: {amount}, combining immediate healing and healing over time, not all at once.
+{from}伤害→{to}伤害||{from} damage → {to} damage
+给{target}放置棱镜。当该目标下一次受到{from}伤害时，将这次伤害转换为{to}伤害，并消耗棱镜；其他系伤害不会触发这个棱镜。||Place a prism on {target}. The next time that target receives {from} damage, convert that damage to {to} and consume the prism. Other damage schools do not trigger this prism.
+转换的是目标受到的伤害，不是目标发出的攻击，也不会改变卡牌或角色的学系。转换后按新学系的抗性结算。||The prism changes incoming damage, not the target's outgoing attacks or the school of a card or character. Resistance is then checked against the new school.
+用途：如果敌人抵抗{from}、却不擅长抵抗{to}，先放棱镜，再用{from}攻击它。伤害不保证增加，仍取决于它对两系的抗性。||Use it when an enemy resists {from} more than {to}: place the prism, then attack with {from}. The damage increase depends on its resistances to both schools.
+棱镜与护盾、陷阱按后放先处理的顺序结算；搭配使用时，放置顺序会影响哪些效果触发。||Prisms, shields and traps are processed newest first. When combining them, placement order affects which effects trigger.
+持续护盾||Persistent ward
+对{target}施加持续效果：{effect}，持续 {rounds} 回合。||Apply {effect} to {target} for {rounds} turns.
+下次{school}攻击 +{percent}%||Next {school} attack +{percent}%
+下次{school}攻击 -{percent}%||Next {school} attack -{percent}%
+下次受到{school}伤害 +{percent}%||Next incoming {school} damage +{percent}%
+下次受到{school}伤害 -{percent}%||Next incoming {school} damage -{percent}%
+使{target}下一次匹配的{school}攻击伤害提高 {percent}%，触发后消耗此术。||Increase the next matching {school} attack by {target} by {percent}%. The charm is consumed when triggered.
+使{target}下一次匹配的{school}攻击伤害降低 {percent}%，触发后消耗此术。||Reduce the next matching {school} attack by {target} by {percent}%. The charm is consumed when triggered.
+给{target}放置陷阱，使其下一次受到的{school}伤害提高 {percent}%，触发后陷阱消失。||Place a trap on {target} that increases the next incoming {school} damage by {percent}%. The trap disappears when triggered.
+为{target}施加减伤盾，使其下一次受到的{school}伤害降低 {percent}%，触发后护盾消失。||Shield {target} to reduce the next incoming {school} damage by {percent}%. The shield disappears when triggered.
+减伤盾按比例减少一次匹配的伤害；吸收盾则有固定容量，可以分多次扣除。||A damage-reduction shield reduces one matching damage event by a percentage. An absorb shield has a fixed capacity that can cover multiple hits.
+抵挡一次眩晕||Block one stun
+为{target}抵挡下一次眩晕，触发后消耗护盾；不会吸收生命伤害。||Block the next stun on {target}, then consume the shield. This does not absorb HP damage.
+对{target}施加：{effect}。||Apply {effect} to {target}.
+将实际造成伤害的 {percent}% 转为自己的生命回复。||Restore your own HP by {percent}% of the damage actually dealt.
+施法同时对自己造成 {amount} 点基础伤害。||Casting also deals {amount} base damage to yourself.
+友方承受的直接伤害减半。||Direct damage to allies is halved.
+跳过本回合，不施放法术。||Pass this turn without casting a spell.
+净化{target}的负面效果。||Cleanse negative effects from {target}.
+净化全体友方的负面效果。||Cleanse negative effects from all allies.
+为{target}增加 {count} 点普通魔力，不超过魔力上限。||Give {target} {count} normal pips, up to the pip limit.
+嘲讽{target}，将自己对目标怪物的仇恨提高至最高仇恨并追加 {count} 点。||Taunt {target}: raise your threat with that monster to the highest current threat, then add {count}.
+嘲讽全体敌方怪物，逐个提高自己的仇恨并追加 {count} 点。||Taunt all enemy monsters: raise your threat with each to its highest current threat, then add {count}.
+随机移除{target}最多 {count} 个增益术。||Randomly remove up to {count} positive charms from {target}.
+随机移除{target}最多 {count} 个减益术。||Randomly remove up to {count} negative charms from {target}.
+随机移除{target}最多 {count} 个正面护盾。||Randomly remove up to {count} positive wards from {target}.
+从{target}随机偷取最多 {count} 个增益术，转移到自己身上。||Randomly steal up to {count} positive charms from {target} and transfer them to yourself.
+从{target}随机偷取最多 {count} 个正面护盾，转移到自己身上。||Randomly steal up to {count} positive wards from {target} and transfer them to yourself.
+捕捉野生宠物||Capture a wild pet
+尝试捕捉选中的野生宠物；成功率受符文、目标剩余生命和等级差影响，成功或失败均消耗一张符文。||Try to capture the selected wild pet. The rune, remaining HP and level difference affect the chance. One rune is consumed whether the attempt succeeds or fails.
+此牌的特殊效果说明尚未完整收录，请结合战斗记录查看实际效果。||This card's special effects are not fully documented yet. Check the battle log for the actual effects.
+“×魔力”按本次施法实际计入的魔力点计算，不是固定总量；本系超级魔力每个抵 2 点，其他系抵 1 点。||“×pips” uses the effective pips counted for this cast, not a fixed total. Each power pip counts as 2 for your own school and 1 for other schools.
+护盾效果||Shield effect
+增益 / 减益||Buff / debuff
+控制行动||Action control
+改变魔力||Change pips
+场地 / 姿态||Field / stance
+特殊魔法||Special spell
+{school}系 · {target} · 消耗 {cost} 点魔力 · 冷却 {rounds} 回合 · 基础命中 {accuracy}%||{school} · {target} · Cost: {cost} pips · Cooldown: {rounds} turns · Base accuracy: {accuracy}%
+以上为基础效果；实际伤害、治疗与命中受角色属性、目标防御及战斗状态影响。||These are base effects. Actual damage, healing and accuracy depend on character stats, target defenses and battle effects.
+卡牌效果说明||Card effect details
+
+# data/kids/charms.json — effect labels used by card_description_core.js
+-50%法术命中||-50% spell accuracy
++30%风暴命中||+30% Storm accuracy
++10%法术命中||+10% spell accuracy
++45%治疗效果||+45% healing
+-50%治疗效果||-50% healing
++35%治疗效果||+35% healing
+-100%法术命中||-100% spell accuracy
+-180%超级魔力点生成率||-180% power-pip generation chance
+忽略50%风暴抗性||Ignore 50% Storm resistance
++60%超级魔力点生成率||+60% power-pip generation chance
+-60%治疗效果||-60% healing
+-55%治疗效果||-55% healing
+-65%治疗效果||-65% healing
+-60%法术命中||-60% spell accuracy
+-55%法术命中||-55% spell accuracy
+-65%法术命中||-65% spell accuracy
++20%法术命中||+20% spell accuracy
++15%法术命中||+15% spell accuracy
++25%法术命中||+25% spell accuracy
++55%治疗效果||+55% healing
++50%治疗效果||+50% healing
++60%治疗效果||+60% healing
++40%风暴命中||+40% Storm accuracy
++35%风暴命中||+35% Storm accuracy
++45%风暴命中||+45% Storm accuracy
+
+# js/view_adventure.js — translated card selection labels
+选择{name}||Select {name}
+选择{name}（魔力不足或冷却中）||Select {name} (not enough pips or on cooldown)
+{name} · {target} · {description}||{name} · {target} · {description}
+符文剩余 {count}||Runes remaining: {count}
+向下拖动或右键弃牌||Drag down or right-click to discard

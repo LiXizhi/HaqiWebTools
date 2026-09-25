@@ -1,4 +1,5 @@
-import {expectedBaseDamage,expectedBaseHeal} from './combat_cards_core.js';
+import {expectedBaseDamage} from './combat_cards_core.js';
+import {describeCard} from './card_description_core.js';
 import { tr } from './locale_runtime.js';
 const TAU=Math.PI*2;
 const colors={ice:'#70d9ff',fire:'#ff9749',storm:'#ffdc68',life:'#8fe88c',death:'#c795fa',balance:'#e8cc84'};
@@ -47,7 +48,7 @@ export class CardRenderer {
     }
     drawTypeIcon(c,card,x,y){
         c.save();c.translate(x,y);c.strokeStyle='#19374d';c.fillStyle='#19374d';c.lineWidth=3;c.lineCap='round';
-        if(expectedBaseHeal(card)){c.fillRect(-3,-10,6,20);c.fillRect(-10,-3,20,6);}
+        if(card.params?.heal_min!==undefined||card.params?.hots!==undefined){c.fillRect(-3,-10,6,20);c.fillRect(-10,-3,20,6);}
         else if(expectedBaseDamage(card)){
             // Closed fist: four knuckles, folded thumb and a short wrist.
             path(c,[[-8,-3],[-8,-8],[-5,-10],[-2,-10],[0,-9],[3,-10],[6,-9],[9,-7],[10,-2],[9,3],[5,7],[5,11],[-5,11],[-6,6],[-11,1],[-11,-3],[-9,-5],[-6,-3],[-3,1]],'#19374d','#e9db83',1.2);
@@ -61,17 +62,5 @@ export class CardRenderer {
     }
 }
 export function cardDescription(card){
-    const damage=expectedBaseDamage(card),heal=expectedBaseHeal(card);
-    if(damage)return `基础伤害 ${Math.round(damage)}${heal?' · 治疗 '+Math.round(heal):''} · 命中 ${card.accuracy}%`;
-    if(heal)return `基础治疗 ${Math.round(heal)} · 命中 ${card.accuracy}%`;
-    const type=card.type;
-    if(/Absorb|Guardian/.test(type))return '吸收伤害，保护目标';
-    if(/Ward|Shield/.test(type))return '护盾或陷阱，改变受到的伤害';
-    if(/Charm/.test(type))return '施加增益或减益效果';
-    if(/Stun|Freeze/.test(type))return '控制目标行动';
-    if(/Pip/.test(type))return '改变魔力点';
-    if(/Global|Aura|Stance/.test(type))return '改变场地或姿态效果';
-    if(/Pass/.test(type))return '跳过当前回合';
-    if(/Fizzle/.test(type))return '施法失败，魔力消散';
-    return '辅助魔法';
+    return describeCard(card,{translate:tr}).summary;
 }

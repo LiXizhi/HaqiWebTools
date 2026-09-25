@@ -5,7 +5,7 @@ import { createMountPreview } from './view_adventure_mount_preview.js';
 import { createPetStatus } from './view_adventure_pet_status.js';
 import { ItemDetails } from './view_adventure_item_details.js';
 import { equipmentAttributes, signedAttribute } from './adventure_equipment_core.js';
-import { STARTERS,STAGE_NAMES,petStage,petParams,FOOD_ID } from './adventure_pets_core.js';
+import { STARTERS,STAGE_NAMES,petAppearanceStage,petParams,FOOD_ID } from './adventure_pets_core.js';
 export function petPortrait(assets,id,stage=0,size=96){
  const box=document.createElement('div');box.className='pet-sheet';box.style.width=box.style.height=`${size}px`;
  const art=assets.content.pets[id]?.art;if(!art)return box;
@@ -26,6 +26,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  const title=el('div','pet-section-heading pet-drag-help',el('small','muted','拖动角色'));
  const commit=(slots,heroSlot=save.heroSlot)=>cb.action({type:'formation',slots,heroSlot});
  function place(id,index){
+  if(save.pendingEncounter)return;
   if(String(id).startsWith('mount:')){
    const itemId=Number(String(id).slice(6));
    if(!save.pendingEncounter&&save.inventory[itemId]>0&&c.mountByItem?.[itemId]?.art?.cdn&&Number(save.mountId)!==itemId)cb.action({type:'ride',itemId});
@@ -37,11 +38,17 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   if(previous>=0)slots[previous]=slots[index];
   slots[index]=id;commit(slots);
  }
+ function rest(id){
+  if(save.pendingEncounter||!save.pets[id]||!save.formation.includes(id))return;
+  delete state.targetSlot;
+  commit(save.formation.map(value=>value===id?null:value));
+ }
+ function overCollection(hit){return !!hit&&[shelf,shelfHeading,status].some(node=>node===hit||node.contains(hit));}
  function bindDrag(node,id,scrollable=false){
   let gesture=null,suppressClick=false;
   node.draggable=false;
   node.addEventListener('pointerdown',event=>{
-   if(!event.isPrimary||event.button!==0)return;
+   if(!event.isPrimary||event.button!==0||save.pendingEncounter)return;
   const art=node.querySelector('.pet-mount-composite,.pet-sheet,canvas')||node.firstElementChild,bounds=art.getBoundingClientRect();
   suppressClick=false;gesture={x:event.clientX,y:event.clientY,scroll:shelf.scrollLeft,moved:false,art,bounds,ghost:null,mode:null};
    node.setPointerCapture(event.pointerId);
@@ -64,14 +71,22 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
    document.body.append(ghost);gesture.ghost=ghost;
   }
   gesture.ghost.style.transform=`translate3d(${dx}px,${dy}px,0)`;
-   const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.pet-stage-slot');
+   const hit=document.elementFromPoint(event.clientX,event.clientY),target=hit?.closest('.pet-stage-slot');
    for(const slot of formation.children)slot.classList.toggle('drop-ready',slot===target);
+   shelf.classList.toggle('drop-ready',!scrollable&&!!save.pets[id]&&overCollection(hit));
   });
   const finish=event=>{
    if(!gesture)return;
   const moved=gesture.moved,mode=gesture.mode;gesture.ghost?.remove();gesture=null;node.classList.remove('is-dragging');
    for(const slot of formation.children)slot.classList.remove('drop-ready');
-  if(moved){suppressClick=true;const target=event.type==='pointerup'&&mode==='drag'?document.elementFromPoint(event.clientX,event.clientY)?.closest('.pet-stage-slot'):null;if(target&&formation.contains(target))place(id,Number(target.dataset.slot));}
+   shelf.classList.remove('drop-ready');
+  if(moved){
+   suppressClick=true;
+   if(event.type!=='pointerup'||mode!=='drag')return;
+   const hit=document.elementFromPoint(event.clientX,event.clientY),target=hit?.closest('.pet-stage-slot');
+   if(target&&formation.contains(target))place(id,Number(target.dataset.slot));
+   else if(!scrollable&&overCollection(hit))rest(id);
+  }
   };
   node.addEventListener('pointerup',finish);node.addEventListener('pointercancel',finish);
   node.addEventListener('lostpointercapture',finish);
@@ -79,7 +94,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  }
  const open=id=>{
   state.selected=id;
-  showPetDetails(assets,id,petPortrait,{el,button,spellFace},{save,action:cb.action,place,shop:()=>cb.panel('shop'),tile});
+  showPetDetails(assets,id,petPortrait,{el,button,spellFace},{save,action:cb.action,shop:()=>cb.panel('shop',{category:'supply',subcategory:1}),tile});
  };
  let mountDetails;
  const openMount=(item,trigger)=>{
@@ -101,9 +116,9 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  for(let index=0;index<4;index++){
   const id=save.formation[index],pet=save.pets[id],isHero=index===save.heroSlot;
   const slot=el('section',`pet-stage-slot${isHero?' is-hero':''}`);slot.dataset.slot=index;
-  const stand=button([pet?el('span','pet-standing-art',el('span','pet-status-portrait',createPetStatus(pet,c,el),petPortrait(assets,id,petStage(pet.level,c),120))):el('span','pet-empty','+'),...(pet?[el('strong','',c.pets[id].name),el('small','pet-stage-level',`等级 ${pet.level} · ${STAGE_NAMES[petStage(pet.level,c)]}`)]:[])],()=>{if(id)open(id);else{state.targetSlot=index;paintShelf();shelf.querySelector('button')?.focus();}},'pet-stand');
+  const stand=button([pet?el('span','pet-standing-art',el('span','pet-status-portrait',createPetStatus(pet,c,el),petPortrait(assets,id,petAppearanceStage(pet,c),120))):el('span','pet-empty','+'),...(pet?[el('strong','',c.pets[id].name),el('small','pet-stage-level',`等级 ${pet.level} · ${STAGE_NAMES[petAppearanceStage(pet,c)]}`)]:[])],()=>{if(id)open(id);else{state.targetSlot=index;paintShelf();shelf.querySelector('button')?.focus();}},'pet-stand');
   stand.setAttribute('aria-label',`卡位 ${index+1}：${pet?c.pets[id].name:'空位'}`);
-    if(id)bindDrag(stand,id);
+    if(id){bindDrag(stand,id);stand.addEventListener('keydown',event=>{if(event.key==='Delete'||event.key==='Backspace'){event.preventDefault();rest(id);}});}
   slot.ondragover=event=>{event.preventDefault();slot.classList.add('drop-ready');};
   slot.ondragleave=()=>slot.classList.remove('drop-ready');
   slot.ondrop=event=>{event.preventDefault();slot.classList.remove('drop-ready');place(event.dataTransfer.getData('text/plain'),index);};
@@ -134,7 +149,8 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   const label=state.tab==='mount'?'搜索我的坐骑':'搜索我的伙伴';query.placeholder=tr(label);query.setAttribute('aria-label',tr(label));query.value=(state.tab==='mount'?state.mountQuery:state.query)||'';
  }
  updateTabs();
- body.append(el('div','pet-section-heading',collection,query,previous,next),status,shelf);
+ const shelfHeading=el('div','pet-section-heading',collection,query,previous,next);
+ body.append(shelfHeading,status,shelf);
  function paintShelf(){
   shelf.replaceChildren();
   const q=query.value.trim().toLowerCase();
@@ -160,7 +176,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
    const meta=el('small','');
    if(slot>=0)setText(meta,'等级 {level} · 卡位 {slot}',{level:pet.level,slot:slot+1});
    else setText(meta,'等级 {level} · 休息中',{level:pet.level});
-   const item=button([el('span','pet-card-portrait',createPetStatus(pet,c,el),petPortrait(assets,id,petStage(pet.level,c),96)),el('strong','',c.pets[id].name),meta],()=>{if(state.targetSlot!=null){const index=state.targetSlot;delete state.targetSlot;place(id,index);}else open(id);},'pet-owned');
+   const item=button([el('span','pet-card-portrait',createPetStatus(pet,c,el),petPortrait(assets,id,petAppearanceStage(pet,c),96)),el('strong','',c.pets[id].name),meta],()=>{if(state.targetSlot!=null){const index=state.targetSlot;delete state.targetSlot;place(id,index);}else open(id);},'pet-owned');
     item.dataset.petId=id;bindDrag(item,id,true);shelf.append(item);
   }
   if(!visible.length)shelf.append(el('p','muted','没有找到伙伴'));
@@ -177,7 +193,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   else content.append(el('p','','完成青龙的强化指导，领取出奇蛋。'),button('打开出奇蛋',()=>{close();cb.action({type:'hatch'});},'primary'));
   dialog.append(el('header','modal-header',el('h2','','初心之旅 · 咕噜噜'),exit),content);document.body.append(dialog);dialog.addEventListener('keydown',event=>event.stopPropagation());dialog.addEventListener('close',()=>{dialog.remove();teaching.focus();},{once:true});dialog.showModal();
  },'secondary');
- const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop'),'secondary'),teaching,notes);
+ const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop',{category:state.tab==='mount'?'mount':'pet'}),'secondary'),teaching,notes);
  if(c.homeUrl){const link=el('a','pet-home-link',icon('shop'),el('span','','宠物家园'));link.href=c.homeUrl;link.target='_blank';link.rel='noopener noreferrer';link.title='联动筹备中，当前冒险进度不会写入家园';footer.append(link);}
  body.append(footer);
 }

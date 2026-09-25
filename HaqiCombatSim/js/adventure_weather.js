@@ -39,7 +39,7 @@ export function drawIslandWeather(c,world,position,time,w,h,reducedMotion=false,
     const wrap=(n,max)=>((n%max)+max)%max;
     const scale=camera?.scale>0?camera.scale:1;
     const scrollX=(camera?.x||0)*scale,scrollY=(camera?.y||0)*scale;
-    const speckSize=kind==='mist'?180:kind==='sand'?70:kind==='ash'?38:18;
+    const speckSize=kind==='mist'?180:kind==='ash'?38:18;
     const alphaScale=kind==='mist'?.08:1;
     c.save();c.fillStyle=kind==='snow'?'#f7fbff':color;c.strokeStyle=kind==='snow'?'#f7fbff':color;c.lineWidth=1;
     for(let i=0;i<count;i++){
@@ -64,17 +64,39 @@ export function drawIslandWeather(c,world,position,time,w,h,reducedMotion=false,
             }
             continue;
         }
+        if(kind==='sand'){
+            // Screen-sized ribbons, like snowflakes, remain legible over pale terrain.
+            // Integrating the gust keeps motion continuous while its speed rises/falls.
+            const depth=speck.depth,direction=wind<0?-1:1;
+            const gust=time+.24*Math.sin(time*1.15+speck.sway)/1.15;
+            const spanX=w+360,spanY=h+100;
+            const x=wrap(speck.u*spanX+gust*wind*(1.5+depth*2)-scrollX,spanX)-180;
+            const y=wrap(speck.v*spanY+time*speed*.18+Math.sin(time*.8+speck.sway)*(5+depth*10)-scrollY,spanY)-50;
+            const length=48+depth*100,bend=8+speck.v*14;
+            const alpha=(.28+depth*.3)*(.7+.3*Math.sin(time*1.15+speck.sway)**2)*opacity;
+            c.save();c.translate(x,y);c.scale(direction,1);c.lineCap='round';
+            c.beginPath();c.moveTo(-length/2,bend*.3);
+            c.bezierCurveTo(-length*.15,-bend,length*.18,bend,length/2,-bend*.4);
+            c.globalAlpha=alpha*.6;c.strokeStyle='#805126';c.lineWidth=3+depth*2;c.stroke();
+            c.globalAlpha=alpha;c.strokeStyle='#fff1bf';c.lineWidth=1.3+depth;c.stroke();
+            // Separate grains trail the ribbon; dark and light stay visible on roads/trees.
+            for(let j=0;j<3;j++){
+                const px=-length*.45+j*length*.28,py=10+Math.sin(speck.sway+j+time*1.8)*5;
+                c.globalAlpha=alpha*(j===1?.85:1);c.fillStyle=j===1?'#fff0bb':'#94602d';
+                c.beginPath();c.ellipse(px,py,1.5+depth*1.8,.8+depth*.8,-.15,0,Math.PI*2);c.fill();
+            }
+            c.restore();continue;
+        }
         const x=wrap(speck.x+time*wind+Math.sin(time*.6+speck.sway)*9-scrollX,w+40)-20;
         const y=wrap(speck.y+time*speed-scrollY,h+40)-20;
         c.globalAlpha=(kind==='mist'?alphaScale:speck.alpha)*opacity;
         if(art){
             const size=speckSize||speck.size;
-            c.globalAlpha*=kind==='mist'?.8:kind==='sand'?.3:.85;
+            c.globalAlpha*=kind==='mist'?.8:.85;
             if(art.draw(c,'weather',kind,x-size/2,y-size/2,size,size))continue;
         }
         c.beginPath();
-        if(kind==='sand'){c.moveTo(x,y);c.lineTo(x+9,y-2);c.stroke();}
-        else {const r=kind==='mist'?45:kind==='snow'?1.5+i%3*.5:1.3;c.ellipse(x,y,r,kind==='mist'?r*.25:r,0,0,Math.PI*2);c.fill();}
+        const r=kind==='mist'?45:1.3;c.ellipse(x,y,r,kind==='mist'?r*.25:r,0,0,Math.PI*2);c.fill();
     }
     c.restore();
 }

@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 
-def prepare(path, names, columns, target_cell):
+def prepare(path, names, columns, target_cell, kind=None):
     image = Image.open(path).convert('RGBA')
     assert image.getchannel('A').getextrema()[0] == 0, 'Real alpha required'
     rows = (len(names)+columns-1)//columns
@@ -29,7 +29,7 @@ def prepare(path, names, columns, target_cell):
             data=stream.getvalue()
             if len(data)<=200000:
                 digest=hashlib.sha256(data).hexdigest()
-                kind='snow-trees' if columns==2 else 'weather'
+                kind=kind or ('snow-trees' if columns==2 else 'weather')
                 local=f'assets/adventure/environment/{kind}-{digest[:12]}.webp'
                 target=ROOT/local;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
                 return {'local':local,'cdn':'','width':atlas.width,'height':atlas.height,'size':len(data),'sha256':digest,

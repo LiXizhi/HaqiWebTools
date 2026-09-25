@@ -4,8 +4,8 @@ import {npcServices} from './adventure_npc_core.js';
 import {renderGems} from './view_adventure_gems.js';
 import {renderMembership} from './view_adventure_membership.js';
 import {createCloseButton} from './view_adventure_controls.js';
-import {renderFishing} from './view_adventure_fishing.js';
-import {renderQuestJournal} from './view_adventure_quests.js';
+
+import {renderQuestJournal,translatedGoal} from './view_adventure_quests.js';
 import { islandName } from './adventure_world_map_core.js';
 import { drawSchoolIcon } from './card_renderer.js';
 import { renderWorldMap } from './view_adventure_world_map.js';
@@ -25,7 +25,7 @@ import { renderPetCollection,starterPicker,petPortrait } from './view_adventure_
 import { renderShop } from './view_adventure_shop.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot } from './adventure_core.js';
-import {catalogGoalRows,catalogObjectiveLabel,catalogQuestReady,catalogQuestsForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
+import {catalogGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import { rewardLabel } from './adventure_rewards_core.js';
 import * as U from './combat_unit_core.js';
 import { expectedBaseDamage,expectedBaseHeal,cardTargetKind } from './combat_cards_core.js';
@@ -33,7 +33,7 @@ import { renderEquipment } from './view_adventure_equipment.js';
 import { renderStrengthening } from './view_adventure_strengthening.js';
 import { COLORS } from './adventure_renderer.js';
 import { languageSettings, battleChallengeBar } from './view_language_learning.js';
-import { tr, setText } from './locale_runtime.js';
+import { tr, setText, fill } from './locale_runtime.js';
 import { syncLocaleChrome } from './locale.js';
 export function el(tag,cls,...children) {
     const n=document.createElement(tag);if(cls)n.className=cls;
@@ -101,8 +101,8 @@ export function renderEntry(root,assets,stored,cb,error='') {
             const meet=(id,animate)=>{
                 const pet=petPortrait(assets,id,0,82),runner=el('div',`companion-runner${animate?' arriving':''}`,pet);
                 companion.replaceChildren(runner);
-                greeting.textContent=`${assets.content.pets[id].name}，以后就一起冒险吧。`;
-                scene.setAttribute('aria-label',`${draft.name}和${assets.content.pets[id].name}站在一起`);
+                setText(greeting,'{name}，以后就一起冒险吧。',{name:assets.content.pets[id].name});
+                scene.setAttribute('aria-label',fill('{hero}和{pet}站在一起',{hero:draft.name,pet:assets.content.pets[id].name}).text);
             };
             const picker=starterPicker(assets,id=>{draft.starter=id;meet(id,true);},{el,button});
             for(const b of picker.children){const selected=b.dataset.petId===draft.starter;b.classList.toggle('selected',selected);b.setAttribute('aria-pressed',String(selected));}
@@ -114,25 +114,30 @@ export function renderEntry(root,assets,stored,cb,error='') {
                 const b=button([el('i','school-gem'),el('span','',label)],()=>{draft.school=key;draft.previewKey=null;paint();},`school-choice ${draft.school===key?'selected':''}`);
                 b.dataset.school=key;b.style.setProperty('--school',COLORS[key]);b.setAttribute('aria-pressed',String(draft.school===key));schools.append(b);
             }
-            const canvas=el('canvas','creation-preview');canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`${SCHOOL_NAMES[draft.school]}系技能动画预览`);
+            const canvas=el('canvas','creation-preview');canvas.setAttribute('role','img');canvas.setAttribute('aria-label',fill('{school}系技能动画预览',{school:SCHOOL_NAMES[draft.school]}).text);
             const status=el('p','preview-status','正在准备技能演出…');status.setAttribute('role','status');
             const choices=cb.previewChoices(draft.school),cards=el('div','creation-skill-choices');
             if(!choices.some(c=>c.key===draft.previewKey))draft.previewKey=choices[0]?.key;
             let pause;
-            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}pause.textContent='暂停';if(!cb.busy)cb.preview(canvas,key,draft.appearance,text=>{status.textContent=text;},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
+            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}setText(pause,'暂停');if(!cb.busy)cb.preview(canvas,key,draft.appearance,text=>{setText(status,text);},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
             for(const choice of choices){
                 const face=el('canvas','creation-skill-card');face.width=112;face.height=112;face.setAttribute('aria-hidden','true');
                 const base=assets.effects.cards[choice.key]?.base;
                 if(base)assets.skillArt.ensure(base).then(()=>{if(face.isConnected)assets.skillArt.drawSubject(face.getContext('2d'),base,0,0,112,112);}).catch(()=>{});
                 const b=button([face,el('span','',choice.name)],()=>play(choice.key),'creation-skill-option');b.dataset.key=choice.key;cards.append(b);
             }
-            pause=button('暂停',()=>{pause.textContent=cb.pausePreview()?'继续播放':'暂停';},'text-button');
+            pause=button('暂停',()=>{setText(pause,cb.pausePreview()?'继续播放':'暂停');},'text-button');
             form.append(schools,el('p','school-description',schoolDescription[draft.school]),canvas,
                 el('div','preview-controls',status,button('重播',()=>play(draft.previewKey),'text-button'),pause),cards,
                 el('p','creation-preview-note','代表技能演示，需在冒险中逐步学习。'));
             if(draft.previewKey)play(draft.previewKey,true);
         }
-        const submit=el('button','primary begin-button',cb.busy|| (draft.step===1?'下一步 · 选择抱抱龙':draft.step===2?'下一步 · 选择系别':`确认选择${SCHOOL_NAMES[draft.school]} · 开始冒险`));submit.type='submit';form.append(submit);
+        const submit=el('button','primary begin-button');submit.type='submit';
+        if(cb.busy)setText(submit,cb.busy);
+        else if(draft.step===1)setText(submit,'下一步 · 选择抱抱龙');
+        else if(draft.step===2)setText(submit,'下一步 · 选择系别');
+        else setText(submit,'确认选择{school} · 开始冒险',{school:SCHOOL_NAMES[draft.school]});
+        form.append(submit);
         if(draft.step===1)form.append(button('导入魔法哈奇角色',cb.importOriginal,'text-button creation-import'));
         if(draft.step>1)form.append(button('上一步',()=>{draft.step--;paint();root.scrollTop=0;},'text-button creation-back'));
         if(cb.roles)form.append(button('返回我的角色',cb.roles,'text-button creation-back'));
@@ -142,9 +147,12 @@ export function renderEntry(root,assets,stored,cb,error='') {
     form.onsubmit=e=>{e.preventDefault();if(cb.busy)return;if(draft.step<3){draft.name=draft.name.trim()||'小哈奇';draft.step++;paint();root.scrollTop=0;}else cb.create({name:draft.name,school:draft.school,appearance:draft.appearance,starter:draft.starter});};
     paint();
 }
+function withName(pattern, name) {
+    return tr(pattern).replaceAll('{name}', tr(name ?? ''));
+}
 export function objectiveLabel(g,c) {
-    if(g.kind==='talk')return `与${c.npcs[g.id]?.name||g.id}交谈`;
-    if(g.kind==='defeat')return `击败${Object.values(c.monsters).find(m=>m.goalId===g.id)?.name||'训练敌人'}`;
+    if(g.kind==='talk')return withName('与{name}交谈', c.npcs[g.id]?.name||String(g.id));
+    if(g.kind==='defeat')return withName('击败{name}', Object.values(c.monsters).find(m=>m.goalId===g.id)?.name||'训练敌人');
     return ({79016:'强化一件装备（点击追踪进入强化）',79019:'喂养你的宠物',79037:'装备翡翠口袋并保存配卡','hatch-pet':'打开出奇蛋，获得宠物','equip-staff':'装备晶石法杖'})[g.id]||'完成导师的指导';
 }
 export function updateHeroHealth(root,save,content) {
@@ -152,9 +160,9 @@ export function updateHeroHealth(root,save,content) {
     const maxHp=specMaxHp(playerSpec(save,content)),hp=Math.max(0,Math.min(maxHp,Math.floor(save.heroHp??maxHp)));
     bar.style.setProperty('--health',`${maxHp>0?hp/maxHp*100:0}%`);
     bar.querySelector('.hero-health-label').textContent=`${hp} / ${maxHp}`;
-    bar.setAttribute('aria-label',`生命 ${hp} / ${maxHp}`);
+    bar.setAttribute('aria-label',fill('生命 {hp} / {max}',{hp,max:maxHp}).text);
 }
-function checkinTime(ms){return `${Math.max(1,Math.ceil((ms-1)/60000))} 分钟`;}
+function minutesLeft(ms){return Math.max(1,Math.ceil((ms-1)/60000));}
 function gourdArt(){
     const art=el('span','gourd-art');
     art.innerHTML='<svg viewBox="0 0 80 112" aria-hidden="true"><ellipse cx="40" cy="104" rx="25" ry="5" fill="#685225" opacity=".15"/><path d="M35 8h10l-2 12c17 4 21 23 9 34 26 13 23 47-12 47S2 67 28 54C16 43 20 24 37 20z" fill="currentColor" stroke="#8f621f" stroke-width="2.5"/><path d="M29 33c-6 8-3 14 0 17M23 71c-6 11-1 19 5 22" fill="none" stroke="#fff4b6" stroke-width="5" stroke-linecap="round" opacity=".7"/><path d="M27 54q13 6 26 0l-1 7q-12 5-24 0z" fill="#af4e32"/><path d="m46 60 12 19-9-3-3 8-7-23" fill="#af4e32"/><path d="M33 8h14v7H33z" fill="#826035"/><circle cx="38" cy="79" r="10" fill="#fff0b5" opacity=".85"/><text x="38" y="83" text-anchor="middle" font-size="12" fill="#8f621f">福</text></svg>';
@@ -163,24 +171,37 @@ function gourdArt(){
 export function updateCheckin(root,model) {
     const status=checkinStatus(model.save,model.assets.content,model.now??Date.now(),model.membership);
     const nav=root.querySelector('.checkin-button');
-    if(nav){nav.querySelector('small').textContent=status.ready?'可领取':status.finished?'已领完':checkinTime(status.remainingMs);nav.classList.toggle('reward-ready',status.ready);}
+    const navLabel=nav?.querySelector('small');
+    if(nav&&navLabel){
+        if(status.ready)setText(navLabel,'可领取');
+        else if(status.finished)setText(navLabel,'已领完');
+        else setText(navLabel,'{minutes} 分钟',{minutes:minutesLeft(status.remainingMs)});
+        nav.classList.toggle('reward-ready',status.ready);
+    }
     const grid=root.querySelector('.checkin-gourds');if(!grid)return;
     for(const g of status.gourds){
         const card=grid.children[g.index],b=card.querySelector('.gourd-base'),vip=card.querySelector('.gourd-vip');
-        const label=g.claimed?'已领取':g.ready?'领取奖励':`还需 ${checkinTime(g.remainingMs)}`;
         b.disabled=!g.ready;card.classList.toggle('ready',g.ready||g.vipReady);card.classList.toggle('claimed',g.claimed&&(!status.starLevel||g.vipClaimed));
-        card.querySelector('.gourd-time').textContent=`${g.minute} 分钟`;
-        const names=g.rewards.map(r=>`${model.assets.content.items[r.id]?.name||r.id} × ${r.count}`);
-        card.querySelector('.gourd-coins').textContent=names[0];
-        card.querySelector('.gourd-items').textContent=names.slice(1).join('、');
-        b.textContent=label;b.setAttribute('aria-label',`${g.minute}分钟葫芦：${label}`);card.title=names.join('、');
-        vip.textContent=g.vipClaimed?'魔法星已领取':!status.starLevel?'魔法星额外奖励':g.vipReady?`再领 ${g.vipCoins} 仙豆`:'魔法星奖励待解锁';
+        setText(card.querySelector('.gourd-time'),'{minutes} 分钟',{minutes:g.minute});
+        const names=g.rewards.map(r=>fill('{name} × {count}',{name:model.assets.content.items[r.id]?.name||r.id,count:r.count}).text);
+        card.querySelector('.gourd-coins').textContent=names[0]||'';
+        card.querySelector('.gourd-items').textContent=names.slice(1).join(tr('、'));
+        if(g.claimed)setText(b,'已领取');
+        else if(g.ready)setText(b,'领取奖励');
+        else setText(b,'还需 {minutes} 分钟',{minutes:minutesLeft(g.remainingMs)});
+        b.setAttribute('aria-label',fill('{minute}分钟葫芦：{label}',{minute:g.minute,label:b.textContent}).text);
+        card.title=names.join(tr('、'));
+        if(g.vipClaimed)setText(vip,'魔法星已领取');
+        else if(!status.starLevel)setText(vip,'魔法星额外奖励');
+        else if(g.vipReady)setText(vip,'再领 {count} 仙豆',{count:g.vipCoins});
+        else setText(vip,'魔法星奖励待解锁');
         vip.disabled=g.vipClaimed||(status.starLevel>0&&!g.vipReady);
-        vip.setAttribute('aria-label',`${g.minute}分钟葫芦：${vip.textContent}`);
+        vip.setAttribute('aria-label',fill('{minute}分钟葫芦：{label}',{minute:g.minute,label:vip.textContent}).text);
     }
-    root.querySelector('.checkin-online').textContent=`今日累计在线 ${Math.floor(status.onlineMs/60000)} 分钟 · 普通奖励 ${status.baseCount}/5 · 魔法星奖励 ${status.vipCount}/5`;
-    root.querySelector('.checkin-balance').textContent=`当前拥有 ${model.save.inventory[17213]||0} 仙豆`;
-    root.querySelector('.checkin-member-summary').textContent=status.starLevel?`魔法星 ${status.starLevel} 级：每个葫芦额外 ${status.gourds[0].vipCoins} 仙豆`:'普通奖励人人可领，拥有魔法星可再领一份额外仙豆。';
+    setText(root.querySelector('.checkin-online'),'今日累计在线 {minutes} 分钟 · 普通奖励 {base}/5 · 魔法星奖励 {vip}/5',{minutes:Math.floor(status.onlineMs/60000),base:status.baseCount,vip:status.vipCount});
+    setText(root.querySelector('.checkin-balance'),'当前拥有 {count} 仙豆',{count:model.save.inventory[17213]||0});
+    if(status.starLevel)setText(root.querySelector('.checkin-member-summary'),'魔法星 {level} 级：每个葫芦额外 {count} 仙豆',{level:status.starLevel,count:status.gourds[0].vipCoins});
+    else setText(root.querySelector('.checkin-member-summary'),'普通奖励人人可领，拥有魔法星可再领一份额外仙豆。');
 
 }
 function trackerEntries(save,c) {
@@ -191,17 +212,17 @@ function trackerEntries(save,c) {
 }
 function chapterTrackLines(save,c,quest) {
     const state=questState(save,quest.id);
-    if(!state.accepted)return [{text:`去找${c.npcs[quest.startNpc].name}，接取新的任务。`}];
-    if(questReady(save,quest))return [{text:`任务已完成，向${c.npcs[quest.endNpc].name}回报。`}];
+    if(!state.accepted)return [{text:withName('去找{name}，接取新的任务。', c.npcs[quest.startNpc].name)}];
+    if(questReady(save,quest))return [{text:withName('任务已完成，向{name}回报。', c.npcs[quest.endNpc].name)}];
     return questProgress(save,quest).map(goal=>({text:objectiveLabel(goal,c),done:goal.value>=goal.count}));
 }
 function catalogTrackLines(save,c,quest) {
     const snap=catalogStatSnapshot(save,c),state=questState(save,quest.id),ready=catalogQuestReady(save,c,quest,snap);
-    if(!state.accepted){const name=c.npcs[quest.startNpc]?.name;return [{text:name?`去找${name}，接取新的任务。`:'接取这个任务。'}];}
-    if(ready){const name=c.npcs[quest.endNpc]?.name;return [{text:name?`任务已完成，向${name}回报。`:'任务已完成，可以交付。'}];}
+    if(!state.accepted){const name=c.npcs[quest.startNpc]?.name;return [{text:name?withName('去找{name}，接取新的任务。', name):'接取这个任务。'}];}
+    if(ready){const name=c.npcs[quest.endNpc]?.name;return [{text:name?withName('任务已完成，向{name}回报。', name):'任务已完成，可以交付。'}];}
     const goals=catalogGoalRows(save,c,quest,snap);
     if(!goals.length)return [{text:'与居民交谈后即可交付。'}];
-    return goals.map(goal=>({text:catalogObjectiveLabel(goal),done:goal.value>=goal.count}));
+    return goals.map(goal=>({text:translatedGoal(goal),done:goal.value>=goal.count}));
 }
 function appendTrackerQuest(tracker,entry,save,c,cb) {
     const chapter=c.quests.find(quest=>quest.id===entry.id),quest=chapter||c.catalogQuests.byId[entry.id];
@@ -210,7 +231,7 @@ function appendTrackerQuest(tracker,entry,save,c,cb) {
     const statusLabel=chapter?(ready?'可以交付':state.accepted?'进行中':'可接取'):catalogQuestStatus(save,c,quest,catalogStatSnapshot(save,c));
     const marker=el('span',`quest-state ${ready?'ready':state.accepted?'active':'available'}`,ready?'?':'!');marker.setAttribute('aria-hidden','true');
     const questLink=button([marker,el('span','quest-title',quest.title)],()=>cb.panel('quests',{questId:quest.id}),'quest-track-title');
-    questLink.title=`${statusLabel}，点击查看任务详情`;questLink.setAttribute('aria-label',`${quest.title}，${statusLabel}，查看任务详情`);
+    questLink.title=fill('{status}，点击查看任务详情',{status:statusLabel}).text;questLink.setAttribute('aria-label',fill('{title}，{status}，查看任务详情',{title:quest.title,status:statusLabel}).text);
     const track=button('追踪',()=>cb.track(quest.id,{pin:false}),'track-button');
     track.title='追踪这个任务';
     const card=el('article','tracker-quest',el('h3','',questLink));
@@ -218,7 +239,7 @@ function appendTrackerQuest(tracker,entry,save,c,cb) {
     lines.forEach((line,index)=>{
         const text=el('span','tracker-follow-text',line.text);
         const follow=button(line.done===undefined?text:[el('span','tracker-mark',line.done?'✓':'◇'),text],()=>cb.track(quest.id,{pin:false}),`tracker-follow${line.done?' complete':''}`);
-        follow.title='追踪这个任务';follow.setAttribute('aria-label',`${line.text}，追踪`);
+        follow.title=tr('追踪这个任务');follow.setAttribute('aria-label',fill('{text}，追踪',{text:line.text}).text);
         card.append(index?follow:el('div','tracker-line',follow,track));
     });
     tracker.append(card);
@@ -228,20 +249,31 @@ export function renderHud(root,model,cb) {
     const next=c.progression.xpThresholds[save.level]||save.xp,previous=c.progression.xpThresholds[save.level-1];
     const xp=el('div','xp-bar',el('i'));xp.firstChild.style.width=`${save.level>=c.progression.levelCap?100:Math.max(0,(save.xp-previous)/(next-previous)*100)}%`;
     const school=el('canvas','hero-school-icon');school.width=48;school.height=48;
-    school.setAttribute('role','img');school.setAttribute('aria-label',`${SCHOOL_NAMES[save.school]}系`);school.title=`${SCHOOL_NAMES[save.school]}系`;
+    school.setAttribute('role','img');const schoolLabel=fill('{school}系',{school:SCHOOL_NAMES[save.school]}).text;school.setAttribute('aria-label',schoolLabel);school.title=schoolLabel;
     drawSchoolIcon(school.getContext('2d'),save.school,24,24,36);
-    const name=button([school,el('strong','',save.name)],()=>cb.panel('equipment'),'hero-name');name.title='角色与装备（R）';
+    const level=el('span','hero-level-badge',String(save.level));
+    level.dataset.zh='等级';
+    level.title=`${tr('等级')} ${save.level}`;
+    level.setAttribute('aria-label',level.title);
+    const name=button([school,level,el('strong','',save.name)],()=>cb.panel('equipment'),'hero-name');name.title='角色与装备（R）';
     const isVip=model.membership?.isVip===true;
     const membership=button(isVip?'会员权益':'升级会员',cb.membership,'hero-membership');
     membership.title=isVip?'会员权益':'升级会员';
     membership.setAttribute('aria-label',membership.title);
     membership.setAttribute('aria-haspopup','dialog');
-    const details=el('div','hero-details',el('span','hero-level',`等级 ${save.level}`));
-    for(const [id,label]of [[100,'奇豆'],[17213,'仙豆']]){
-        const amount=save.inventory[id]||0;
-        const currency=el('span','hero-currency',`${label} ${amount.toLocaleString('zh-CN')}`);currency.title=`${label} ${amount}`;
-        details.append(currency);
-    }
+    const currency=(id,label)=>{
+        const amount=(save.inventory[id]||0).toLocaleString('zh-CN');
+        const icon=el('canvas','hero-bean-icon');icon.width=32;icon.height=32;icon.setAttribute('aria-hidden','true');
+        const art=c.currencyIcons?.[id];
+        if(art)assets.draw(icon.getContext('2d'),art,0,0,32,32);
+        const node=el('span','hero-currency',icon,el('span','',amount));
+        node.dataset.zh=label;
+        node.title=`${tr(label)} ${amount}`;
+        node.setAttribute('aria-label',node.title);
+        return node;
+    };
+    const details=el('div','hero-details');
+    for(const [id,label]of [[100,'奇豆'],[17213,'仙豆'],[984,'魔豆']])details.append(currency(id,label));
     const status=el('section','hero-status',el('div','hero-text',el('div','hero-heading',name,membership),details,xp));
     const warning=el('span','save-indicator',model.storageWarning?'存档未保存':'');warning.hidden=!model.storageWarning;
     status.querySelector('.hero-text').append(el('div','hero-health',el('i'),el('span','hero-health-label')),warning);
@@ -258,7 +290,8 @@ export function renderHud(root,model,cb) {
     updateCheckin(root,model);
     const chapterDone=c.quests.filter(quest=>save.quests[quest.id]?.claimed).length;
     const catalogClaimed=c.catalogQuests?.quests.filter(quest=>save.quests[quest.id]?.claimed).length||0;
-    const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),el('span','chapter-count',`${chapterDone} / 14${catalogClaimed?` · 全岛 ${catalogClaimed}`:''}`)));
+    const chapterCount=el('span','chapter-count');setText(chapterCount,catalogClaimed?'{done} / 14 · 全岛 {claimed}':'{done} / 14',{done:chapterDone,claimed:catalogClaimed});
+    const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),chapterCount));
     const dungeon=dungeonFor(c,save.zone);
     if(dungeon){
         const cleared=save.dungeonRuns?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!save.dungeonRuns?.[save.zone]?.cleared.includes(a.id)).length;
@@ -313,19 +346,19 @@ export function renderPanel(root,kind,model,cb) {
         renderStrengthening(body,model,cb,{el,button,art});
         return;
     }
-    const titles={'npc-services':['居民商店与课程',''],checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','全岛任务'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇'],fishing:['休闲渔场','点击海面撒网']};
+    const titles={'npc-services':['居民商店与课程',''],checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','全岛任务'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
     const body=modal(root,...titles[kind],cb,['deck','quests','inventory','equipment','pet','shop','map'].includes(kind)||kind==='debug');
     if(kind==='checkin'){
         body.closest('.modal').classList.add('checkin-modal');
         const grid=el('div','checkin-gourds');
         for(let index=0;index<5;index++)grid.append(el('article','gourd-reward',el('span','gourd-time'),gourdArt(),el('strong','gourd-coins'),el('small','gourd-items'),button('',()=>cb.action({type:'checkin',index}),'primary gourd-base'),button('',()=>model.membership?.isVip?cb.action({type:'checkin',index,bonus:true}):cb.panel('membership'),'secondary gourd-vip')));
-        const bonusRows=model.assets.content.checkinConfig?.vipCoinsByLevel.slice(1).map((amount,index)=>el('span','',`${index+1}级：${amount}仙豆`))||[];
+        const bonusRows=model.assets.content.checkinConfig?.vipCoinsByLevel.slice(1).map((amount,index)=>{const row=el('span','');setText(row,'{level}级：{amount}仙豆',{level:index+1,amount});return row;})||[];
         const vipTable=el('details','checkin-vip-table',el('summary','','查看魔法星额外奖励'),el('div','',...bonusRows));
         body.append(el('p','checkin-intro','在小镇待得越久，酿造的米酒葫芦就越香醇。'),el('div','checkin-member-bar',el('p','checkin-member-summary'),button(model.membership?.isVip?'会员权益':'升级会员',()=>cb.panel('membership'),'secondary')),el('p','checkin-online'),grid,vipTable,el('p','checkin-rules muted','每天累计在线解锁，每个葫芦先领普通奖励，会员再领魔法星奖励。中途升级会员可补领当天已解锁的额外奖励；每天零点（北京时间）重置。'),el('p','checkin-rules muted','道具按原版兑换表发放。捕鱼网可在海上使用；中、大精力药剂可在渔场补充精力。小药剂、自动战斗药丸和抽奖道具的使用暂未开放，可保留在背包。原版幸运抽奖与日历签到暂未开放。'),el('p','checkin-balance muted'));
 
         updateCheckin(root,model);
     }
-    if(kind==='fishing'){body.closest('.modal').classList.add('fishing-modal');renderFishing(body,model,cb,{el,button,art});}
+
     if(kind==='npc-services')renderNpcServices(body,model,cb,{el,button,spellFace,art});
     if(kind==='shop')renderShop(body,model,cb,{el,button,art,tile,spellFace});
     if(kind==='pet'&&c.pets)renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon});
@@ -373,7 +406,7 @@ function ownsEgg(save){return (save.inventory[17307]||0)>0;}
 export function renderDialogue(root,model,dialog,cb) {
     root.disposeDialogue?.();
     const {assets,save}=model,c=assets.content,npc=(dialog.lines?c.npcs[dialog.lines[dialog.index]?.npcId]:dialog.npc)||c.npcs[dialog.npcId];root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
-    const box=el('section','dialogue-box rpg-dialogue');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',`与${npc.name}交谈`);
+    const box=el('section','dialogue-box rpg-dialogue');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',fill('与{name}交谈',{name:npc.name}).text);
     box.classList.toggle('dialogue-sequence',!!dialog.lines);
     const portrait=art(assets,npc.portrait,150,190,'dialogue-portrait');
     const content=el('div','dialogue-content',el('p','eyebrow',islandName(npc.zone)),el('h2','',npc.name));
@@ -393,10 +426,10 @@ export function renderDialogue(root,model,dialog,cb) {
         content.append(el('p','dialogue-text',npc.description||'欢迎来到这里，年轻的魔法师。愿你的旅程充满惊喜。'));
         const choices=el('div','dialogue-choices');
         if(q&&(q.startNpc===npc.id||q.endNpc===npc.id))content.append(el('div','dialogue-rewards',el('span','dialogue-reward-label','任务奖励'),...rewardsFor(save,c,q).map(r=>el('span','dialogue-reward',rewardLabel(c,r)))));
-        if(q&&!state.accepted&&q.startNpc===npc.id)choices.append(button(`接取任务 · ${q.title}`,()=>cb.startQuest(q),'primary'));
-        if(q&&ready&&q.endNpc===npc.id)choices.append(button(`完成任务 · ${q.title}`,()=>cb.finishQuest(q),'primary'));
-        for(const quest of here.accept)choices.append(button(`接取任务 · ${quest.title}`,()=>cb.startCatalog(quest),'primary'));
-        for(const quest of here.claim)choices.append(button(`完成任务 · ${quest.title}`,()=>cb.finishCatalog(quest),'primary'));
+        if(q&&!state.accepted&&q.startNpc===npc.id){const accept=button('',()=>cb.startQuest(q),'primary');setText(accept,'接取任务 · {title}',{title:q.title});choices.append(accept);}
+        if(q&&ready&&q.endNpc===npc.id){const claim=button('',()=>cb.finishQuest(q),'primary');setText(claim,'完成任务 · {title}',{title:q.title});choices.append(claim);}
+        for(const quest of here.accept){const accept=button('',()=>cb.startCatalog(quest),'primary');setText(accept,'接取任务 · {title}',{title:quest.title});choices.append(accept);}
+        for(const quest of here.claim){const claim=button('',()=>cb.finishCatalog(quest),'primary');setText(claim,'完成任务 · {title}',{title:quest.title});choices.append(claim);}
         const talk=pendingQuestTalk(save,q,npc.id);
         if(talk)choices.append(button(talk.label||'我想了解更多魔法',()=>cb.questTalk(q,talk),'primary'));
         if(q&&state.accepted&&!(ready&&q.endNpc===npc.id))choices.append(button(ready?'前往回报任务':'查看任务目标',()=>{cb.close();cb.track();},'secondary'));
@@ -440,7 +473,7 @@ function renderBattleContent(root,model,cb) {
     sound.title=model.soundEnabled?'关闭音效':'开启音效';
     sound.setAttribute('aria-label',sound.title);
     sound.setAttribute('aria-pressed',String(!!model.soundEnabled));
-    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,badge(`第 ${battle.turn} 回合`),model.save.languageLearning?.enabled?button('对话挑战',cb.battleTalk,'secondary small'):null,button('撤退',cb.retreat,'secondary small')));
+    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,(()=>{const turn=el('span','badge');setText(turn,'第 {turn} 回合',{turn:battle.turn});return turn;})(),model.save.languageLearning?.enabled?button('对话挑战',cb.battleTalk,'secondary small'):null,button('撤退',cb.retreat,'secondary small')));
     const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');canvas.onclick=e=>{const point=Object.entries(canvas.battlePositions||{}).sort((a,b)=>Math.hypot(a[1].x-e.offsetX,a[1].y-e.offsetY)-Math.hypot(b[1].x-e.offsetX,b[1].y-e.offsetY))[0];if(point)cb.target(point[0]);};
     const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');setText(status,battle.finished?'对决结束':animating?'魔法正在生效…':blockedMessage);
@@ -582,12 +615,12 @@ export function animatePlayedCard(root,card,duration) {
 }
 export function eventLabel(e,battle,assets) {
     const caster=battle.unitsById[e.caster]?.name||'',target=battle.unitsById[e.target]?.name||'',card=assets.dataset.cards[e.card]?.name||'';
-    if(e.type==='cast')return `${caster} → ${target} · ${card}`;
-    if(e.type==='damage'||e.type==='dot')return `${target} 受到 ${e.amount} 点伤害`;
-    if(e.type==='heal'||e.type==='hot')return `${target} 恢复 ${e.amount} 点生命`;
-    if(e.type==='speak')return `${caster}：${e.text}`;
-    if(e.type==='capture')return e.success?`${target}捕获成功！`:e.runeId?`${target}挣脱了抓宠符文`:`${target}挣脱了晶球`;
-    if(e.type==='pass')return `${caster} 跳过本回合`;
-    if(e.type==='fizzle')return `${caster} 的魔法失误了`;
+    if(e.type==='cast')return fill('{caster} → {target} · {card}',{caster,target,card}).text;
+    if(e.type==='damage'||e.type==='dot')return fill('{target} 受到 {amount} 点伤害',{target,amount:e.amount}).text;
+    if(e.type==='heal'||e.type==='hot')return fill('{target} 恢复 {amount} 点生命',{target,amount:e.amount}).text;
+    if(e.type==='speak')return fill('{caster}：{text}',{caster,text:e.text}).text;
+    if(e.type==='capture')return fill(e.success?'{target}捕获成功！':e.runeId?'{target}挣脱了抓宠符文':'{target}挣脱了晶球',{target}).text;
+    if(e.type==='pass')return fill('{caster} 跳过本回合',{caster}).text;
+    if(e.type==='fizzle')return fill('{caster} 的魔法失误了',{caster}).text;
     return '';
 }

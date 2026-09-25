@@ -2101,14 +2101,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.5048828125,
-            0.4595703125
+            0.5,
+            0.44
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.29654296875,
+          "scale": 0.32,
           "foreground": [
             [
               [
@@ -2138,7 +2138,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -2149,25 +2149,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.3681640625,
-            0.47382812500000004
+            0.51,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.37037109375,
+          "scale": 0.32,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -2178,25 +2178,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.626953125,
-            0.47382812500000004
+            0.49,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.3617578125,
+          "scale": 0.32,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -2207,19 +2207,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.501953125,
-            0.480859375
+            0.5,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.25,
+          "scale": 0.32,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -2702,14 +2702,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.517578125,
-            0.2919921875
+            0.51,
+            0.47
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.46142578125,
+          "scale": 0.4,
           "foreground": [
             [
               [
@@ -2739,7 +2739,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -2750,25 +2750,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.455078125,
-            0.37226562500000004
+            0.48,
+            0.47
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.3962109375,
+          "scale": 0.4,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -2779,25 +2779,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.5400390625,
-            0.31796875
+            0.52,
+            0.47
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.4454296875,
+          "scale": 0.4,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -2808,19 +2808,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.5078125,
-            0.448828125
+            0.5,
+            0.5
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.585703125,
+          "scale": 0.4,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -3023,14 +3023,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.5068359375,
-            0.3693359375
+            0.505,
+            0.43
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.34083984375,
+          "scale": 0.36,
           "foreground": [
             [
               [
@@ -3060,7 +3060,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -3071,25 +3071,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.5537109375,
-            0.379296875
+            0.44,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.49095703125,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -3100,25 +3100,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.4423828125,
-            0.38046875
+            0.56,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.49833984375,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -3129,19 +3129,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4970703125,
-            0.43984375000000003
+            0.5,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.46511718750000003,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -3182,14 +3182,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.5048828125,
-            0.3615234375
+            0.505,
+            0.43
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.34083984375,
+          "scale": 0.36,
           "foreground": [
             [
               [
@@ -3219,7 +3219,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -3230,25 +3230,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.5400390625,
-            0.371484375
+            0.44,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.47619140625,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -3259,25 +3259,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.451171875,
-            0.37265625
+            0.56,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.487265625,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -3288,19 +3288,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4970703125,
-            0.4140625
+            0.5,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.43681640625,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -3509,14 +3509,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.5048828125,
-            0.36875
+            0.505,
+            0.43
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.339609375,
+          "scale": 0.36,
           "foreground": [
             [
               [
@@ -3546,7 +3546,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -3557,25 +3557,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.5419921875,
-            0.37734375
+            0.44,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.47865234375,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -3586,25 +3586,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.451171875,
-            0.378515625
+            0.56,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.487265625,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -3615,19 +3615,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4970703125,
-            0.420703125
+            0.5,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.438046875,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -3668,14 +3668,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.505859375,
-            0.36875
+            0.505,
+            0.43
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.339609375,
+          "scale": 0.36,
           "foreground": [
             [
               [
@@ -3705,7 +3705,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -3716,25 +3716,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.5537109375,
-            0.37734375
+            0.44,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.49341796875,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -3745,25 +3745,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.4423828125,
-            0.378515625
+            0.56,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.49833984375,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -3774,19 +3774,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4970703125,
-            0.438671875
+            0.5,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.46634765625,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -3992,14 +3992,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.501953125,
-            0.392578125
+            0.5,
+            0.47
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.25,
+          "scale": 0.2,
           "foreground": [
             [
               [
@@ -4029,7 +4029,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -4040,25 +4040,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.6640625,
-            0.44453125
+            0.53,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.2879296875,
+          "scale": 0.2,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -4069,25 +4069,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.3525390625,
-            0.476171875
+            0.47,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.28423828125,
+          "scale": 0.2,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -4098,19 +4098,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.5029296875,
-            0.498828125
+            0.5,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.25,
+          "scale": 0.2,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -4478,14 +4478,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.5009765625,
-            0.3919921875
+            0.5,
+            0.47
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.27193359375,
+          "scale": 0.24,
           "foreground": [
             [
               [
@@ -4515,7 +4515,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -4526,25 +4526,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.6767578125,
-            0.494140625
+            0.53,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.34330078125,
+          "scale": 0.24,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -4555,25 +4555,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.33203125,
-            0.49765625
+            0.47,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.3371484375,
+          "scale": 0.24,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -4584,19 +4584,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.494140625,
-            0.53671875
+            0.5,
+            0.47
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.25,
+          "scale": 0.24,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -4796,14 +4796,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.5009765625,
-            0.33125
+            0.5,
+            0.46
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.5192578125,
+          "scale": 0.42,
           "foreground": [
             [
               [
@@ -4833,7 +4833,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -4844,25 +4844,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.4208984375,
-            0.37812500000000004
+            0.53,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.51556640625,
+          "scale": 0.42,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -4873,25 +4873,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.5830078125,
-            0.37890625
+            0.47,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.516796875,
+          "scale": 0.42,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -4902,19 +4902,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.5009765625,
-            0.38320312500000003
+            0.5,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.526640625,
+          "scale": 0.42,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -5447,14 +5447,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.5048828125,
-            0.2484375
+            0.505,
+            0.43
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.447890625,
+          "scale": 0.36,
           "foreground": [
             [
               [
@@ -5484,7 +5484,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -5495,25 +5495,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.53515625,
-            0.37734375
+            0.44,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.487265625,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -5524,25 +5524,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.4580078125,
-            0.378515625
+            0.56,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.49587890625000003,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -5553,19 +5553,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4970703125,
-            0.420703125
+            0.5,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.438046875,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -5612,14 +5612,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.5009765625,
-            0.3919921875
+            0.5,
+            0.47
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.27193359375,
+          "scale": 0.24,
           "foreground": [
             [
               [
@@ -5649,7 +5649,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -5660,25 +5660,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.6767578125,
-            0.494140625
+            0.53,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.34330078125,
+          "scale": 0.24,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -5689,25 +5689,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.33203125,
-            0.49765625
+            0.47,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.3371484375,
+          "scale": 0.24,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -5718,19 +5718,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.494140625,
-            0.53671875
+            0.5,
+            0.47
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.25,
+          "scale": 0.24,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -5777,14 +5777,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.5048828125,
-            0.3615234375
+            0.505,
+            0.43
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.34083984375,
+          "scale": 0.36,
           "foreground": [
             [
               [
@@ -5814,7 +5814,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -5825,25 +5825,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.533203125,
-            0.371484375
+            0.44,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.4848046875,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -5854,25 +5854,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.458984375,
-            0.37265625
+            0.56,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.497109375,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -5883,19 +5883,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4970703125,
-            0.4140625
+            0.5,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.43681640625,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -5939,14 +5939,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.5068359375,
-            0.3693359375
+            0.505,
+            0.43
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.34083984375,
+          "scale": 0.36,
           "foreground": [
             [
               [
@@ -5976,7 +5976,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -5987,25 +5987,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.5458984375,
-            0.379296875
+            0.44,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.50080078125,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -6016,25 +6016,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.44921875,
-            0.38046875
+            0.56,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.506953125,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -6045,19 +6045,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4970703125,
-            0.43984375000000003
+            0.5,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.46511718750000003,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -6101,14 +6101,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.505859375,
-            0.36875
+            0.505,
+            0.43
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.339609375,
+          "scale": 0.36,
           "foreground": [
             [
               [
@@ -6138,7 +6138,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -6149,25 +6149,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.546875,
-            0.37734375
+            0.44,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.50203125,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -6178,25 +6178,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.44921875,
-            0.378515625
+            0.56,
+            0.45
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.506953125,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -6207,19 +6207,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4970703125,
-            0.438671875
+            0.5,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.46634765625,
+          "scale": 0.36,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -6263,14 +6263,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.501953125,
-            0.392578125
+            0.5,
+            0.47
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.25,
+          "scale": 0.2,
           "foreground": [
             [
               [
@@ -6300,7 +6300,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -6311,25 +6311,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.6640625,
-            0.44765625
+            0.53,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.2879296875,
+          "scale": 0.2,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -6340,25 +6340,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.3525390625,
-            0.480859375
+            0.47,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.28423828125,
+          "scale": 0.2,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -6369,19 +6369,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.5029296875,
-            0.498046875
+            0.5,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.25,
+          "scale": 0.2,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -6585,13 +6585,13 @@
           "riderArt": "rider",
           "seat": [
             0.5,
-            0.29921875
+            0.3
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [
             [
               [
@@ -6621,7 +6621,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -6632,25 +6632,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.48828125,
-            0.40937500000000004
+            0.6,
+            0.29
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -6661,25 +6661,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.5,
-            0.3875
+            0.4,
+            0.265
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -6690,19 +6690,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4986979166666667,
-            0.4
+            0.5,
+            0.285
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -6744,13 +6744,13 @@
           "riderArt": "rider",
           "seat": [
             0.5,
-            0.3036458333333333
+            0.3
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [
             [
               [
@@ -6780,7 +6780,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -6791,25 +6791,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.4856770833333333,
-            0.4156250000000001
+            0.37,
+            0.32
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -6820,25 +6820,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.5,
-            0.4
+            0.63,
+            0.32
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -6849,19 +6849,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4895833333333333,
-            0.4
+            0.52,
+            0.31
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -8796,13 +8796,13 @@
           "riderArt": "rider",
           "seat": [
             0.5,
-            0.45585937499999996
+            0.45
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.354375,
+          "scale": 0.34,
           "foreground": [
             [
               [
@@ -8832,7 +8832,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -8843,25 +8843,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.3671875,
-            0.44648437500000004
+            0.51,
+            0.425
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.418359375,
+          "scale": 0.34,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -8872,25 +8872,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.63671875,
-            0.446875
+            0.49,
+            0.425
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.4158984375,
+          "scale": 0.34,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -8901,19 +8901,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.5029296875,
-            0.43125
+            0.5,
+            0.43
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.3346875,
+          "scale": 0.34,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -8955,13 +8955,13 @@
           "riderArt": "rider",
           "seat": [
             0.5,
-            0.45585937499999996
+            0.45
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.354375,
+          "scale": 0.34,
           "foreground": [
             [
               [
@@ -8991,7 +8991,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -9002,25 +9002,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.3671875,
-            0.44648437500000004
+            0.52,
+            0.39
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.418359375,
+          "scale": 0.34,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -9031,25 +9031,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.63671875,
-            0.446875
+            0.48,
+            0.39
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.4158984375,
+          "scale": 0.34,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -9060,19 +9060,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.5029296875,
-            0.42304687500000004
+            0.5,
+            0.415
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.34330078125,
+          "scale": 0.34,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -9114,13 +9114,13 @@
           "riderArt": "rider",
           "seat": [
             0.5,
-            0.30546875
+            0.3
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.48,
           "foreground": [
             [
               [
@@ -9150,7 +9150,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -9161,25 +9161,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.48828125,
-            0.4156250000000001
+            0.73,
+            0.34
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.48,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -9190,25 +9190,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.5,
-            0.4
+            0.27,
+            0.315
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.48,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -9219,19 +9219,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.484375,
-            0.38333333333333336
+            0.5,
+            0.31
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.48,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -9273,13 +9273,13 @@
           "riderArt": "rider",
           "seat": [
             0.5,
-            0.3
+            0.45
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.48,
           "foreground": [
             [
               [
@@ -9309,7 +9309,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -9320,25 +9320,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.4895833333333333,
-            0.41093750000000007
+            0.43,
+            0.53
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.48,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -9349,25 +9349,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.5,
-            0.4
+            0.57,
+            0.49
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.48,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -9378,19 +9378,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4856770833333333,
-            0.4
+            0.5,
+            0.43
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.48,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -9432,13 +9432,13 @@
           "riderArt": "rider",
           "seat": [
             0.5,
-            0.31484375
+            0.46
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [
             [
               [
@@ -9468,7 +9468,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -9479,25 +9479,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.4713541666666667,
-            0.40677083333333336
+            0.58,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -9508,25 +9508,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.5221354166666666,
-            0.4
+            0.42,
+            0.46
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -9537,19 +9537,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.4765625,
-            0.3916666666666667
+            0.49,
+            0.5
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.6,
+          "scale": 0.5,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },
@@ -9591,7 +9591,7 @@
           "riderArt": "standing",
           "seat": [
             0.5,
-            0.5375000000000001
+            0.56
           ],
           "anchor": [
             0.5,
@@ -9619,25 +9619,25 @@
           "riderCell": 1,
           "riderArt": "standing",
           "seat": [
-            0.48828125,
-            0.52625
+            0.3,
+            0.5
           ],
           "anchor": [
-            0.5,
+            0.6,
             0.44
           ],
-          "scale": 0.740234375,
+          "scale": 0.75,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.5,
+                0.6,
                 0.44
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.6,
                 0.44
               ]
             }
@@ -9648,11 +9648,11 @@
           "riderCell": 2,
           "riderArt": "standing",
           "seat": [
-            0.5,
-            0.52
+            0.735,
+            0.5
           ],
           "anchor": [
-            0.5,
+            0.4,
             0.44
           ],
           "scale": 0.75,
@@ -9660,13 +9660,13 @@
           "characters": {
             "male": {
               "anchor": [
-                0.5,
+                0.4,
                 0.44
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.4,
                 0.44
               ]
             }
@@ -9678,7 +9678,7 @@
           "riderArt": "standing",
           "seat": [
             0.5,
-            0.49020833333333336
+            0.55
           ],
           "anchor": [
             0.5,
@@ -10226,14 +10226,14 @@
           "riderCell": 0,
           "riderArt": "rider",
           "seat": [
-            0.466796875,
-            0.4392578125
+            0.47,
+            0.49
           ],
           "anchor": [
             0.49,
             0.65
           ],
-          "scale": 0.25,
+          "scale": 0.28,
           "foreground": [
             [
               [
@@ -10263,7 +10263,7 @@
             },
             "female": {
               "anchor": [
-                0.5,
+                0.49,
                 0.65
               ]
             }
@@ -10274,25 +10274,25 @@
           "riderCell": 1,
           "riderArt": "rider",
           "seat": [
-            0.63671875,
-            0.4375
+            0.49,
+            0.5
           ],
           "anchor": [
-            0.49,
+            0.57,
             0.65
           ],
-          "scale": 0.4109765625,
+          "scale": 0.28,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.57,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.57,
                 0.65
               ]
             }
@@ -10303,25 +10303,25 @@
           "riderCell": 2,
           "riderArt": "rider",
           "seat": [
-            0.35546875,
-            0.44843750000000004
+            0.51,
+            0.5
           ],
           "anchor": [
-            0.49,
+            0.43,
             0.65
           ],
-          "scale": 0.42328125,
+          "scale": 0.28,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.43,
                 0.65
               ]
             },
             "female": {
               "anchor": [
-                0.5,
+                0.43,
                 0.65
               ]
             }
@@ -10332,19 +10332,19 @@
           "riderCell": 3,
           "riderArt": "rider",
           "seat": [
-            0.546875,
-            0.476953125
+            0.51,
+            0.48
           ],
           "anchor": [
-            0.49,
+            0.5,
             0.65
           ],
-          "scale": 0.34207031250000003,
+          "scale": 0.28,
           "foreground": [],
           "characters": {
             "male": {
               "anchor": [
-                0.49,
+                0.5,
                 0.65
               ]
             },

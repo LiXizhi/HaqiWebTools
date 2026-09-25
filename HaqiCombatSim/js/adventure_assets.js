@@ -35,6 +35,7 @@ export async function loadResources(progress) {
     const mode=assetMode(location.hostname,location.search);
     // A failed cosmetic download must not block local saves or gameplay.
     const environmentReady=loadEnvironmentArt(mode,json).catch(error=>{console.warn('使用基础场景素材：',error.message);return null;});
+    const terrainDecorationsReady=loadEnvironmentArt(mode,json,'data/adventure/terrain-decoration-art.json').catch(error=>{console.warn('使用基础地表纹理：',error.message);return null;});
     const uiArtReady=loadUiArt(mode,json).catch(error=>console.warn('使用基础界面：',error.message));
     validateMediaManifest(media,manifest,mode);
     const images=new Map(),bounds=new Map(),failures=[],lazyImages=new Map(),imageLoading=new Map();
@@ -113,6 +114,9 @@ export async function loadResources(progress) {
     content.gemCatalog=await json('data/adventure/gems.json');
     Object.assign(content.items,content.gemCatalog.items);
     for(const [id,entry] of Object.entries(content.strengtheningIcons||{}))lazyImages.set(id,entry);
+    const currencyIcons=await json('data/adventure/currency-icons.json');
+    for(const [id,entry] of Object.entries(currencyIcons.entries))lazyImages.set(id,entry);
+    content.currencyIcons=currencyIcons.items;
     const shopIcons=await json('data/adventure/shop-icons.json');
     for(const [id,entry] of Object.entries(shopIcons.entries))lazyImages.set(id,entry);
     for(const [id,ref] of Object.entries(shopIcons.items))if(content.items[id]&&!content.items[id].art){content.items[id].art=ref;content.items[id].iconFallback=!!shopIcons.fallbacks[id];}
@@ -125,7 +129,8 @@ export async function loadResources(progress) {
     const drawMonster=createMonsterArtRenderer(monsterArt,content,draw,drawPet);
     await uiArtReady;
     const environmentArt=await environmentReady;
-    return {drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    const terrainDecorationArt=await terrainDecorationsReady;
+    return {drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,terrainDecorationArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

@@ -58,7 +58,7 @@ export function questMarker(save,content,npcId) {
 export function createRenderer(canvas,assets) {
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const ctx=canvas.getContext('2d'),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
-    const terrainTiles=createTerrainTileCache(paintLargeTerrain,()=>document.createElement('canvas'));
+    const terrainTiles=createTerrainTileCache((c,world,rect)=>paintLargeTerrain(c,world,rect,false,assets.terrainDecorationArt),()=>document.createElement('canvas'));
     let vignetteCanvas=null,vignetteW=0,vignetteH=0;
     let overviewWorld=null,overview=null;
     let companion=null,companionId=null,companionWorld=null,companionSave=null,lastPetTime=null;
@@ -115,7 +115,7 @@ export function createRenderer(canvas,assets) {
         const coldTiles=world.layout?terrainTiles.draw(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale},(c,x,y,size)=>{
             const map=ground(world),dw=Math.min(size,world.w-x),dh=Math.min(size,world.h-y);
             c.drawImage(map,x*map.width/world.w,y*map.height/world.h,dw*map.width/world.w,dh*map.height/world.h,x,y,dw,dh);
-        }):0;
+        },cam.scale*canvas.width/w):0;
         if(!world.layout)ctx.drawImage(ground(world),0,0);
         // Moving water highlights, grounded visual-only ambient animation.
         ctx.strokeStyle='#e3f3da33';ctx.lineWidth=2;

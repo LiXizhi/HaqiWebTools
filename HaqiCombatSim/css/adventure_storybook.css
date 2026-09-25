@@ -374,8 +374,10 @@
 .hero-name { display:flex; align-items:center; gap:4px; }
 .hero-name strong { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .hero-school-icon { flex:none; width:22px; height:22px; }
-.hero-details { display:flex; align-items:baseline; flex-wrap:wrap; gap:2px 10px; margin-top:3px; color:#80613c; font-size:10px; font-variant-numeric:tabular-nums; }
-.hero-level,.hero-currency { white-space:nowrap; }
+.hero-level-badge { flex:none; box-sizing:border-box; width:18px; height:18px; border:1px solid #b69048; border-radius:50%; background:#fff6d8; color:#51391f; font-size:8px; font-weight:700; line-height:16px; text-align:center; font-variant-numeric:tabular-nums; }
+.hero-details { display:flex; align-items:center; flex-wrap:wrap; gap:2px 8px; margin-top:3px; color:#80613c; font-size:10px; font-variant-numeric:tabular-nums; }
+.hero-currency { display:inline-flex; align-items:center; gap:2px; white-space:nowrap; }
+.hero-bean-icon { width:14px; height:14px; flex:none; }
 .hero-membership:hover { text-decoration:underline; text-underline-offset:3px; }
 .hero-membership:focus-visible { outline:2px solid #745629; outline-offset:2px; }
 @media(max-width:650px) {

@@ -4,11 +4,15 @@
 import {loadResources} from '../../js/adventure_assets.js';
 import * as A from '../../js/adventure_core.js';
 import {renderPanel} from '../../js/view_adventure.js';
+import {loadLocaleFiles,configureLocale} from '../../js/locale.js';
 // In-memory fixture: never reads/writes the player's local or cloud save.
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const params=new URLSearchParams(location.search);
 const assets=await loadResources(),save=A.createAdventure(assets.content,{name:'商店验收',school:'fire'});
-save.inventory[100]=new URLSearchParams(location.search).has('poor')?0:1000;
+save.inventory[100]=params.has('poor')?0:1000;
+if(params.has('learn'))save.languageLearning={...save.languageLearning,enabled:true};
+if(params.get('locale')==='en'){save.locale='en';await loadLocaleFiles(['en']);configureLocale({locale:'en'});}
 const model={assets,save,shopView:{category:'pet'}},root=document.querySelector('#root');
-const cb={close:()=>root.replaceChildren(),action:value=>{try{A.applyAction(save,assets.content,value);paint();}catch(error){const toast=document.querySelector('#toast');toast.textContent=error.message;toast.classList.add('visible');}},panel:kind=>renderPanel(root,kind,model,cb),encounter:id=>{root.textContent=id;}};
+const cb={close:()=>root.replaceChildren(),action:value=>{try{A.applyAction(save,assets.content,value);paint();}catch(error){const toast=document.querySelector('#toast');toast.textContent=error.message;toast.classList.add('visible');}},panel:kind=>renderPanel(root,kind,model,cb),encounter:id=>{root.textContent=id;},languageTest:task=>{const toast=document.querySelector('#toast');toast.textContent=`语言挑战：${task.name}`;toast.classList.add('visible');}};
 function paint(){renderPanel(root,'shop',model,cb);}paint();
 </script></body></html>

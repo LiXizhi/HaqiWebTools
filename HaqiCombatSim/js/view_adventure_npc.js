@@ -2,6 +2,7 @@ import {npcOffers,npcOfferStatus} from './adventure_npc_core.js';
 import {trainingPoints} from './adventure_learning_core.js';
 import {drawSchoolIcon} from './card_renderer.js';
 import {ItemDetails} from './view_adventure_item_details.js';
+import { setText, tr } from './locale_runtime.js';
 
 // Kids skill rows: CombatSkillLearn_panel.kids.html (icon, name, tip, school, level, study).
 // Kids shop cells: NPCShopPage.html grid, 2 columns × 80px, icon + cost + buy.
@@ -15,11 +16,11 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
     const inspector=new ItemDetails(body,model,{el,spellFace});
     const modal=body.closest('.modal'),header=modal.querySelector('.modal-header');
     modal.classList.add('npc-services-modal');
-    modal.setAttribute('aria-label',npc.name);
-    header.querySelector('h2').textContent=npc.name;
+    modal.setAttribute('aria-label',tr(npc.name));
+    const title=header.querySelector('h2');setText(title,npc.name);
     const eyebrow=header.querySelector('.eyebrow');
     const role=(npc.subtitle||'').replace(/[()（）]/g,'').trim();
-    if(role&&eyebrow)eyebrow.textContent=role;else eyebrow?.remove();
+    if(role&&eyebrow)setText(eyebrow,role);else eyebrow?.remove();
 
     const state=model.npcServiceView||{};
     const offers=npcOffers(content,npc);
@@ -126,6 +127,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
         page=Math.min(page,pages-1);state.page=page;
         list.className=skillShop?'npc-skills':'npc-goods';
         intro.textContent=state.kind==='mentor'?mentorIntro:'';
+        if(mentorIntro&&state.kind==='mentor')setText(intro,mentorIntro);
         intro.hidden=!intro.textContent;
         list.replaceChildren();pager.replaceChildren();serviceTabs.replaceChildren();categoryTabs.replaceChildren();wallet.replaceChildren();
         if(kinds.length>1){

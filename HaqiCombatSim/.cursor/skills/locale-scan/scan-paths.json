@@ -26,9 +26,53 @@
   ],
   "json": [
     {
+      "path": "data/adventure/npc-catalog.json",
+      "fields": ["name"],
+      "under": ["npcs"]
+    },
+    {
       "path": "data/adventure/chapter.json",
-      "fields": ["label"],
-      "enabled": false
+      "fields": ["name"],
+      "under": ["npcs"]
+    },
+    {
+      "path": "data/adventure/chapter.json",
+      "fields": ["title", "description", "text", "label"],
+      "under": ["quests"]
+    },
+    {
+      "path": "data/adventure/quest-journal.json",
+      "fields": ["title", "description"],
+      "under": ["quests"]
+    },
+    {
+      "path": "data/adventure/quest-journal.json",
+      "fields": ["name"],
+      "under": ["objectives"]
+    },
+    {
+      "path": "data/adventure/maps/camp.json",
+      "fields": ["name", "description"]
+    },
+    {
+      "path": "data/adventure/maps/town.json",
+      "fields": ["name", "description"]
+    },
+    {
+      "path": "data/adventure/maps/fire.json",
+      "fields": ["name", "description"]
+    },
+    {
+      "path": "data/adventure/maps/ice.json",
+      "fields": ["name", "description"]
+    },
+    {
+      "path": "data/adventure/maps/desert.json",
+      "fields": ["name", "description"]
+    },
+    {
+      "path": "data/adventure/maps/dark.json",
+      "fields": ["name", "description"]
     }
   ]
 }

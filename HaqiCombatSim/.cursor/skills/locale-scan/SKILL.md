@@ -39,7 +39,7 @@ Edit `scan-paths.json` only.
 
 - `files`: exact paths, `.js` or `.json`.
 - `dirs`: one directory plus `include` globs (`view_adventure_*.js`). No recursion.
-- `json`: a JSON file and the object keys to collect (`label`, `name`). `"enabled": false` skips that entry. Leave quest and catalog JSON off until those sentences are meant to be translated. Do not enable a whole `data/adventure` directory.
+- `json`: a JSON file, the object keys to collect (`name`, `title`), and optional `under` ancestor keys so only that part of the file is read. NPC names and quest text are already listed. `"enabled": false` skips an entry. Do not enable a whole `data/adventure` directory.
 
 ## Update a dictionary
 

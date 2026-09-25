@@ -1,8 +1,8 @@
 import {fetchJson} from './runtime_data.js';
 import {assetUrl} from './adventure_media_core.js';
 
-export async function loadEnvironmentArt(mode,read=fetchJson){
-    const manifest=await read('data/adventure/environment-art.json'),images={};
+export async function loadEnvironmentArt(mode,read=fetchJson,path='data/adventure/environment-art.json'){
+    const manifest=await read(path),images={};
     await Promise.all(Object.entries(manifest.atlases).map(async([key,row])=>{
         if(row.size>200000)throw Error('场景图集超出大小限制');
         const image=new Image();image.crossOrigin='anonymous';

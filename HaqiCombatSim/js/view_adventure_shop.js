@@ -1,8 +1,10 @@
+import { tr } from './locale_runtime.js';
 import {ItemDetails} from './view_adventure_item_details.js';
 import { canEquip, equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
 import { productPrice } from './adventure_pets_core.js';
 import { petPortrait } from './view_adventure_pets.js';
 import { showPetDetails } from './view_adventure_pet_details.js';
+import { createCloseButton } from './view_adventure_controls.js';
 
 // Layout: HaqiShop.kids1.html (account/preview, two tab rows, 3 × 3 goods).
 // The original GetByCate provider is replaced by the local JSON catalogue.
@@ -22,7 +24,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     const tabs=el('nav','shop-tabs'),subtabs=el('nav','shop-subtabs');
     tabs.setAttribute('aria-label','商品分类');subtabs.setAttribute('aria-label','商品子分类');
     header.insertBefore(tabs,header.querySelector('.close-button'));
-    const balance=el('section','shop-wallet',el('span','','我的奇豆'),el('strong','',String(save.inventory[100]||0)),el('small','',`${save.name} · ${save.level}级`));
+    const balance=el('section','shop-wallet',beanButton('我的奇豆'),el('strong','',String(save.inventory[100]||0)),el('small','',`${save.name} · ${save.level}级`));
     const membershipLabel=model.membership?.isVip?'会员权益':'升级会员';
     balance.append(button(membershipLabel,()=>cb.panel('membership'),'secondary shop-membership'));
     const preview=el('section','shop-preview');preview.setAttribute('aria-label','商品预览');
@@ -42,6 +44,25 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     status.setAttribute('aria-live','polite');pager.setAttribute('aria-label','商品分页');
     const catalog=el('section','shop-catalog',subtabs,el('div','shop-toolbar',query,ownership,level,school),grid,pager);
     body.append(el('div','shop-layout',aside,catalog));
+    body.addEventListener('pointerdown',event=>{if(event.target.closest('.shop-bean'))return;for(const node of body.querySelectorAll('.shop-bean.is-open'))node.classList.remove('is-open');});
+    function beanButton(label){
+        const icon=el('canvas','shop-bean-icon');icon.width=32;icon.height=32;icon.setAttribute('aria-hidden','true');
+        const art=c.currencyIcons?.['100'];if(art)assets.draw(icon.getContext('2d'),art,0,0,32,32);
+        const tip=el('span','shop-bean-tip',label);tip.setAttribute('role','tooltip');
+        const node=el('button','shop-bean',icon,tip);node.type='button';
+        node.dataset.zh=label;node.title=tr(label);node.setAttribute('aria-label',tr(label));
+        node.addEventListener('click',event=>{
+            event.stopPropagation();
+            const open=node.classList.toggle('is-open');
+            if(open)for(const other of document.querySelectorAll('.shop-bean.is-open'))if(other!==node)other.classList.remove('is-open');
+        });
+        return node;
+    }
+    function beanPrice(amount,extra){
+        const row=el('span','shop-bean-price',beanButton('奇豆'),el('span','',String(amount)));
+        if(extra)row.append(el('span','',extra));
+        return row;
+    }
     const owned=item=>item.kind==='pet'?!!save.pets[item.petId]:(save.inventory[item.itemId]||0)>0;
     const matches=(item,filter)=>!filter||(!filter.kind||item.kind===filter.kind)&&(!filter.slots||filter.slots.includes(item.slot))&&(!filter.excludeSlots||!filter.excludeSlots.includes(item.slot))&&(!filter.school||item.school===filter.school)&&(!filter.itemIds||filter.itemIds.includes(item.itemId));
     function picture(item,size) {
@@ -50,11 +71,51 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
         if(gear?.art){const image=art(assets,gear.art,size,size,'shop-item-art');image.setAttribute('role','img');image.setAttribute('aria-label',item.name);return image;}
         return el('span','shop-art-fallback',item.name.slice(0,2));
     }
+    function talkIcon() {
+        const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');
+        svg.setAttribute('viewBox','0 0 32 32');svg.setAttribute('aria-hidden','true');svg.classList.add('pet-free-icon');
+        const badge=document.createElementNS(ns,'circle');
+        badge.setAttribute('cx','16');badge.setAttribute('cy','16');badge.setAttribute('r','15');badge.setAttribute('fill','#2f6b45');
+        const bubble=document.createElementNS(ns,'path');
+        bubble.setAttribute('fill','#fff8df');bubble.setAttribute('stroke','#f4ca69');bubble.setAttribute('stroke-width','1.2');
+        bubble.setAttribute('stroke-linejoin','round');
+        bubble.setAttribute('d','M8.2 9.2h12.4a2.4 2.4 0 0 1 2.4 2.4v5.6a2.4 2.4 0 0 1-2.4 2.4H14.2L11 22.2v-2.6H8.2a2.4 2.4 0 0 1-2.4-2.4v-5.6a2.4 2.4 0 0 1 2.4-2.4z');
+        const heart=document.createElementNS(ns,'path');
+        heart.setAttribute('fill','#e07a3d');
+        heart.setAttribute('d','M16 17.2c-2.4-1.6-4-2.8-4-4.3a1.8 1.8 0 0 1 3.2-1.2L16 12.6l.8-.9a1.8 1.8 0 0 1 3.2 1.2c0 1.5-1.6 2.7-4 4.3z');
+        svg.append(badge,bubble,heart);return svg;
+    }
+    function offerLanguageTest(item) {
+        cb.languageTest({kind:'shop',productId:item.id,name:item.name,price:productPrice(item,c)});
+    }
+    function openPetBuy(item,trigger) {
+        const dialog=el('dialog','pet-buy-dialog');
+        dialog.setAttribute('aria-label',`${item.name}：购买`);
+        const close=()=>dialog.close();
+        const exit=createCloseButton(close,'关闭购买');
+        const confirm=button('购买',()=>{close();cb.action({type:'buy',productId:item.id});},'primary');
+        confirm.setAttribute('aria-label',`${item.name}：购买`);
+        const talk=button([talkIcon(),el('span','','跟我说话，就能免费得到我。')],()=>{close();offerLanguageTest(item);},'pet-free-talk');
+        dialog.append(
+            el('header','modal-header',el('h2','',item.name),exit),
+            el('div','modal-body pet-buy-body',el('div','shop-preview-art',picture(item,112)),el('p','shop-preview-price',beanPrice(productPrice(item,c),' / 件')),confirm),
+            talk
+        );
+        document.body.append(dialog);
+        dialog.addEventListener('pointerdown',event=>{if(event.target.closest('.shop-bean'))return;for(const node of dialog.querySelectorAll('.shop-bean.is-open'))node.classList.remove('is-open');});
+        dialog.addEventListener('keydown',event=>{event.stopPropagation();if(event.key==='Escape'){event.preventDefault();close();}});
+        dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)close();});
+        dialog.addEventListener('close',()=>{dialog.remove();if(trigger?.isConnected)trigger.focus({preventScroll:true});},{once:true});
+        dialog.showModal();exit.focus();
+    }
     function buyButton(item) {
-        const buy=button('购买',()=>cb.action({type:'buy',productId:item.id}),'primary shop-buy');
+        const buy=button('购买',()=>{
+            if(item.kind==='pet'&&save.languageLearning?.enabled)openPetBuy(item,buy);
+            else cb.action({type:'buy',productId:item.id});
+        },'primary shop-buy');
         buy.setAttribute('aria-label',`${item.name}：购买`);
-        if(!save.languageLearning?.enabled)return buy;
-        const test=button('语言挑战',()=>cb.languageTest({kind:'shop',productId:item.id,name:item.name,price:productPrice(item,c)}),'secondary shop-buy');
+        if(item.kind==='pet'||!save.languageLearning?.enabled)return buy;
+        const test=button('语言挑战',()=>offerLanguageTest(item),'secondary shop-buy');
         return el('div','shop-buy-row',buy,test);
     }
     function paintPreview(item) {
@@ -75,7 +136,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
             preview.append(button('查看四阶段与卡片',()=>showPetDetails(assets,item.petId,petPortrait,{el,button}),'secondary'));
             const capture=button('寻找并捕获',()=>cb.encounter('wild:'+item.petId),'secondary');capture.disabled=save.level<item.level;preview.append(capture,el('small','muted','捕获时从符文卡使用抓宠符文。普通和高级符文由哈奇岛的安卓婆婆出售。'));
         }
-        preview.append(el('p','shop-preview-price',`${productPrice(item,c)} 奇豆 / 件`),buyButton(item));
+        preview.append(el('p','shop-preview-price',beanPrice(productPrice(item,c),' / 件')),buyButton(item));
     }
     function remember(){Object.assign(state,{category:category.id,subcategory:sub,subcategoryCategory:category.id,page,query:query.value,ownership:ownership.value,level:level.value,school:school.value,slot:''});}
     function paint(){
@@ -102,7 +163,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
             }
             image.setAttribute('aria-label',`查看${item.name}`);image.setAttribute('aria-pressed',String(state.selected===item.id));
             const name=el('strong','shop-good-name',item.name);name.title=item.name;
-            card.append(name,image,el('span','shop-good-price',`${productPrice(item,c)} 奇豆`),el('small','shop-good-level',`${item.vipOnly?'会员专属 · ':''}${item.level}级${owned(item)?' · 已拥有':''}`),buyButton(item));
+            card.append(name,image,el('span','shop-good-price',beanPrice(productPrice(item,c))),el('small','shop-good-level',`${item.vipOnly?'会员专属 · ':''}${item.level}级${owned(item)?' · 已拥有':''}`),buyButton(item));
             grid.append(card);
         }
         if(!visible.length)grid.append(el('p','shop-empty','没有符合条件的商品，请调整分类或筛选。'));

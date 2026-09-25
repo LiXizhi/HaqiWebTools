@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "entries": {
+    "currency-icons": {
+      "local": "assets/adventure/currency-icons/ba978ecb585425ec5280748b1e8456a3705c67b06f5046cb2b3a1f98ea554b66.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/currency-icons/ba978ecb585425ec5280748b1e8456a3705c67b06f5046cb2b3a1f98ea554b66.webp",
+      "sha256": "ba978ecb585425ec5280748b1e8456a3705c67b06f5046cb2b3a1f98ea554b66",
+      "size": 11750,
+      "width": 288,
+      "height": 96
+    }
+  },
+  "items": {
+    "100": {
+      "id": "currency-icons",
+      "crop": [
+        0,
+        0,
+        96,
+        96
+      ],
+      "source": "texture/aries/item/0_joybean.png"
+    },
+    "17213": {
+      "id": "currency-icons",
+      "crop": [
+        96,
+        0,
+        96,
+        96
+      ],
+      "source": "texture/aries/item/17213_godbean.png"
+    },
+    "984": {
+      "id": "currency-icons",
+      "crop": [
+        192,
+        0,
+        96,
+        96
+      ],
+      "source": "texture/aries/item/984_magicbean.png"
+    }
+  },
+  "sources": {
+    "100": {
+      "path": "texture/aries/item/0_joybean.png",
+      "entry": "texture/aries/item/0_joybean.png.p,4bf46db1b54f04a069b65edabb88ebda,4817",
+      "sourceSha256": "13b9b905b9194db585113027d97fb3e445f238a23a8157c0fbf2e843e93d6568"
+    },
+    "17213": {
+      "path": "texture/aries/item/17213_godbean.png",
+      "entry": "texture/aries/item/17213_godbean.png.p,e993ffadaf9602a7b28e93d35daa6b6b,8659",
+      "sourceSha256": "744fb48e331fe3101629a0570384a8c4a0f7c15763e06ebd59a3713672311ff1"
+    },
+    "984": {
+      "path": "texture/aries/item/984_magicbean.png",
+      "entry": "texture/aries/item/984_magicbean.png.p,6dcf0ba1482c65fe2ec7a31f0c7120fd,7893",
+      "sourceSha256": "6e09583cc0f9c6c021a63db46a9a3125d67a337cfa49948591db0c78b0fe2a42"
+    }
+  }
+}

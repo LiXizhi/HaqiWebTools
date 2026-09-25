@@ -66,7 +66,7 @@ test('terrain caches only bounded small tiles, reuses warm frames and invalidate
 
 test('terrain tile paint skips farmland outside the tile',()=>{
     let fills=0;
-    const c={fillRect(){fills++;},beginPath(){},moveTo(){},lineTo(){},closePath(){},stroke(){},fill(){},save(){},restore(){},clip(){},translate(){},scale(){},rotate(){},ellipse(){},createRadialGradient(){return{addColorStop(){}};}};
+    const c={fillRect(){fills++;},beginPath(){},moveTo(){},lineTo(){},quadraticCurveTo(){},setLineDash(){},closePath(){},stroke(){},fill(){},save(){},restore(){},clip(){},translate(){},scale(){},rotate(){},ellipse(){},createRadialGradient(){return{addColorStop(){}};}};
     const world={w:4000,h:4000,zone:'town',center:{x:200,y:200},paths:[],trees:[],layout:{
         coast:[[0,0],[400,0],[400,400],[0,400]],regions:[],mountains:[],rivers:[],lakes:[],bridges:[],details:[],features:[],
         farms:[{x:3000,y:3000,rows:2,cols:2}],
@@ -76,4 +76,16 @@ test('terrain tile paint skips farmland outside the tile',()=>{
     }};
     paintLargeTerrain(c,world,{x:0,y:0,w:200,h:200});
     assert.equal(fills,1);
+});
+
+test('terrain density changes rebuild sharp tiles within a fixed pixel budget',()=>{
+    let paints=0;const allocated=[];
+    const cache=createTerrainTileCache(()=>paints++,()=>{const c={getContext:()=>({translate(){},scale(){}})};allocated.push(c);return c;});
+    const ctx={drawImage(){}},world={w:5600,h:4400},rect={x:1000,y:1000,w:1280,h:720};
+    cache.draw(ctx,world,rect,undefined,1);const normal=paints;
+    cache.draw(ctx,world,rect,undefined,2);assert.ok(paints>normal);assert.equal(allocated.at(-1).width,1028);
+    const sharp=paints;cache.draw(ctx,world,rect,undefined,2);assert.equal(paints,sharp);
+    for(let x=0;x<world.w;x+=512)cache.draw(ctx,world,{...rect,x},undefined,2);
+    assert.ok(cache.size*1028*1028*4<=64*1024*1024);
+    cache.draw(ctx,world,rect,undefined,1);assert.equal(allocated.at(-1).width,516);
 });

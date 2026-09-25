@@ -1,4 +1,5 @@
 // Dialogue presentation only; quest actions remain in the controller.
+import { fill, setText } from './locale_runtime.js';
 export function bindDialogue(root,box,text,hint,defaultButton) {
     const full=text.textContent,chars=Array.from(full);
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -11,7 +12,7 @@ export function bindDialogue(root,box,text,hint,defaultButton) {
     function finish(){
         clearTimeout(timer);ready=true;visible.textContent=full;
         box.classList.remove('is-speaking');
-        hint.textContent=`点击空白处 / 空格 · ${defaultButton.textContent}`;
+        setText(hint,'点击空白处 / 空格 · {action}',{action:defaultButton.textContent});
     }
     function tick(){
         if(disposed||!box.isConnected)return;
@@ -46,7 +47,7 @@ export function bindDialogue(root,box,text,hint,defaultButton) {
     root.addEventListener('keydown',keydown);
     box.tabIndex=-1;box.focus({preventScroll:true});
     defaultButton.classList.add('dialogue-default');
-    hint.textContent='点击任意位置 / 空格 · 显示完整对白';
+    setText(hint,'点击任意位置 / 空格 · 显示完整对白');
     box.classList.add('is-speaking');
     if(reduced||!chars.length)finish();else tick();
     root.disposeDialogue=()=>{

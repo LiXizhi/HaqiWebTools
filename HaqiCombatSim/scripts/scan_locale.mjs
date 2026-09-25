@@ -124,20 +124,27 @@ export function extractJsStrings(source) {
     return found;
 }
 
-export function extractJsonStrings(value, fields = null) {
+export function extractJsonStrings(value, fields = null, under = null) {
     const wanted = fields?.length ? new Set(fields) : null;
+    const ancestors = under?.length ? new Set(under) : null;
     const found = [];
-    const walk = (node, key) => {
+    const walk = (node, key, stack) => {
         if (typeof node === 'string') {
-            if ((!wanted || wanted.has(key)) && CJK.test(node)) found.push(node);
+            const inScope = !ancestors || stack.some(name => ancestors.has(name));
+            if (inScope && (!wanted || wanted.has(key)) && CJK.test(node)) found.push(node);
             return;
         }
-        if (Array.isArray(node)) { node.forEach(item => walk(item, key)); return; }
+        if (Array.isArray(node)) {
+            const next = key ? [...stack, key] : stack;
+            node.forEach(item => walk(item, '', next));
+            return;
+        }
         if (node && typeof node === 'object') {
-            for (const [childKey, child] of Object.entries(node)) walk(child, childKey);
+            const next = key ? [...stack, key] : stack;
+            for (const [childKey, child] of Object.entries(node)) walk(child, childKey, next);
         }
     };
-    walk(value, '');
+    walk(value, '', []);
     return found;
 }
 
@@ -148,9 +155,9 @@ function matchName(name, pattern) {
 
 export function filesFromManifest(manifest, baseDir = root) {
     const files = [];
-    const add = (rel, kind, fields) => {
+    const add = (rel, kind, fields, under) => {
         const abs = path.resolve(baseDir, rel);
-        files.push({ rel: rel.split(path.sep).join('/'), abs, kind, fields: fields || null });
+        files.push({ rel: rel.split(path.sep).join('/'), abs, kind, fields: fields || null, under: under || null });
     };
     for (const rel of manifest.files || []) add(rel, kindOf(rel), null);
     for (const dir of manifest.dirs || []) {
@@ -167,12 +174,13 @@ export function filesFromManifest(manifest, baseDir = root) {
     }
     for (const entry of manifest.json || []) {
         if (entry.enabled === false) continue;
-        add(entry.path, 'json', entry.fields || null);
+        add(entry.path, 'json', entry.fields || null, entry.under || null);
     }
     const seen = new Set();
     return files.filter(file => {
-        if (seen.has(file.rel)) return false;
-        seen.add(file.rel);
+        const key = `${file.rel}\0${(file.fields || []).join(',')}\0${(file.under || []).join(',')}`;
+        if (seen.has(key)) return false;
+        seen.add(key);
         return true;
     });
 }
@@ -187,7 +195,7 @@ export function scanSources(files) {
     for (const file of files) {
         const source = readFileSync(file.abs, 'utf8');
         if (file.kind === 'json') {
-            const values = extractJsonStrings(JSON.parse(source), file.fields);
+            const values = extractJsonStrings(JSON.parse(source), file.fields, file.under);
             values.forEach((text, index) => {
                 if (!staticHits.has(text)) staticHits.set(text, { file: file.rel, line: index + 1 });
             });

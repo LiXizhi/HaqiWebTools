@@ -1,18 +1,43 @@
-import { createRng, hashSeed } from './rng_core.js';
+import { paintGroundDetail, paintWaterDetail, paintRoadDetail, paintRiverBank } from './adventure_terrain_detail.js';
+import { groundDecorations } from './adventure_ground_decorations_core.js';
 
 function polygon(c,points){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();}
 function line(c,points,width,color){c.strokeStyle=color;c.lineWidth=width;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();}
 function oval(c,x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.fill();}
 function hits(rect,x0,y0,x1,y1){return x1>=rect.x&&x0<=rect.x+rect.w&&y1>=rect.y&&y0<=rect.y+rect.h;}
+function blend(a,b,t){
+    const rgb=[1,3,5].map(i=>Math.round(parseInt(a.slice(i,i+2),16)*(1-t)+parseInt(b.slice(i,i+2),16)*t));
+    return `rgb(${rgb.join(',')})`;
+}
+function riverClip(c,points,radius){
+    c.beginPath();
+    for(let i=1;i<points.length;i++){
+        const [ax,ay]=points[i-1],[bx,by]=points[i],length=Math.hypot(bx-ax,by-ay)||1;
+        const nx=-(by-ay)/length*radius,ny=(bx-ax)/length*radius;
+        c.moveTo(ax-nx,ay-ny);c.lineTo(bx-nx,by-ny);c.lineTo(bx+nx,by+ny);c.lineTo(ax+nx,ay+ny);c.closePath();
+    }
+    for(const [x,y] of points){c.moveTo(x+radius,y);c.arc(x,y,radius,0,Math.PI*2);}
+    c.clip();
+}
 
 // A deterministic, world-space painter. It paints either one small terrain tile
 // or a low-resolution overview; it never allocates a world-sized bitmap.
-export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},overview=false){
+export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},overview=false,decorationArt=null){
     const {layout}=world,{rules}=layout,{terrain}=rules;
     c.fillStyle=terrain.ocean;c.fillRect(rect.x,rect.y,rect.w,rect.h);
     c.lineJoin='round';c.lineCap='round';
-    for(const [width,color] of terrain.coastLayers){
-        polygon(c,layout.coast);c.strokeStyle=color;c.lineWidth=width;c.stroke();
+    for(let i=0;i<terrain.coastLayers.length;i++){
+        const [width,color]=terrain.coastLayers[i],outer=i?terrain.coastLayers[i-1]:[width+65,terrain.ocean];
+        for(let step=1;step<=8;step++){
+            polygon(c,layout.coast);c.strokeStyle=blend(outer[1],color,step/8);c.lineWidth=outer[0]+(width-outer[0])*step/8;c.stroke();
+        }
+    }
+    if(!overview){
+        paintWaterDetail(c,world,rect,'water',true);
+        // Broken crests follow the existing coast, underneath the beach fill.
+        c.save();c.setLineDash([18,9,5,13]);
+        polygon(c,layout.coast);c.lineWidth=terrain.coastWidth+13;c.strokeStyle='#e7fff050';c.stroke();
+        c.restore();
     }
     polygon(c,layout.coast);c.fillStyle=terrain.sand;c.fill();
     c.save();polygon(c,layout.coast);c.clip();
@@ -24,6 +49,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         oval(c,0,0,1.25,1.25,g);c.restore();
     }
     polygon(c,layout.coast);c.lineWidth=terrain.coastWidth;c.strokeStyle=terrain.sand;c.stroke();
+    if(!overview)paintGroundDetail(c,world,rect);
     // Relief contours and small stone fans suggest altitude without animated geometry.
     for(const mountain of layout.mountains||[]){
         const {x:cx,y:cy,biome,scale=1}=mountain,shape=rules.mountain,palette=rules.biomes[biome].mountain||rules.biomes.gold.mountain;
@@ -51,14 +77,30 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         if(!hits(rect,x0-pad,y0-pad,x1+pad,y1+pad))continue;
         const palette=rules.water[river.material||'water'];
         line(c,river.points,river.width+32,palette.bank);line(c,river.points,river.width+12,palette.edge);
-        line(c,river.points,river.width,palette.fill);line(c,river.points,river.width*.52,palette.center);
-        line(c,river.points,3,palette.shine);
+        line(c,river.points,river.width,palette.fill);
+        // Thin translucent passes soften the old hard central stripe.
+        c.save();c.globalAlpha=.12;
+        for(let i=0;i<9;i++)line(c,river.points,river.width*(.94-i*.065),palette.center);
+        c.restore();
+        if(!overview){
+            c.save();riverClip(c,river.points,river.width/2);
+            paintWaterDetail(c,world,rect,river.material||'water');c.restore();
+            paintRiverBank(c,world,rect,river,palette);
+        }
     }
     for(const l of layout.lakes||[]){
         if(!hits(rect,l.x-l.rx-18,l.y-l.ry-18,l.x+l.rx+18,l.y+l.ry+18))continue;
         const palette=rules.water[l.material||'water'];
         oval(c,l.x,l.y,l.rx+18,l.ry+18,palette.bank);oval(c,l.x,l.y,l.rx+6,l.ry+6,palette.edge);
-        oval(c,l.x,l.y,l.rx,l.ry,palette.fill);oval(c,l.x,l.y,l.rx*.8,l.ry*.7,palette.center);
+        oval(c,l.x,l.y,l.rx,l.ry,palette.fill);
+        c.save();c.translate(l.x,l.y);c.scale(l.rx,l.ry);
+        const depth=c.createRadialGradient(-.15,-.2,0,0,0,1);depth.addColorStop(0,palette.center);depth.addColorStop(1,palette.fill);
+        oval(c,0,0,1,1,depth);c.restore();
+        if(!overview){c.save();c.beginPath();c.ellipse(l.x,l.y,l.rx,l.ry,0,0,Math.PI*2);c.clip();paintWaterDetail(c,world,rect,l.material||'water');c.restore();}
+    }
+    if(!overview&&decorationArt)for(const d of groundDecorations(world,rect)){
+        c.save();c.translate(d.x,d.y);if(d.flip)c.scale(-1,1);
+        decorationArt.draw(c,d.atlas,d.frame,-d.size/2,-d.size,d.size,d.size);c.restore();
     }
     // Every road pass is drawn over the full network to avoid crossing seams.
     const roadPad=Math.max(0,...rules.roads.layers.map(([extra])=>extra));
@@ -69,6 +111,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
             line(c,[[p.a.x,p.a.y],[p.b.x,p.b.y]],Math.max(4,p.width+extra),color);
         }
     }
+    if(!overview)paintRoadDetail(c,world,rect);
     for(const b of layout.bridges){
         const reach=Math.hypot(b.w,b.h)/2;
         if(!hits(rect,b.x-reach,b.y-reach,b.x+reach,b.y+reach))continue;
@@ -105,24 +148,12 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         c.strokeStyle=plaza.line;c.lineWidth=2;
         for(let i=0;i<3;i++){c.beginPath();c.ellipse(world.center.x,world.center.y,145-i*36,83-i*20,0,0,Math.PI*2);c.stroke();}
     }
-    if(!overview){
-        // Grid-seeded texture is identical at adjoining tile boundaries.
-        const {cell,count,light,dark}=terrain.texture;
-        for(let gy=Math.floor(rect.y/cell);gy<=Math.floor((rect.y+rect.h)/cell);gy++)for(let gx=Math.floor(rect.x/cell);gx<=Math.floor((rect.x+rect.w)/cell);gx++){
-            const rng=createRng(hashSeed(`${gx}:${gy}:${world.zone}-ground`));
-            for(let i=0;i<count;i++){
-                const x=gx*cell+rng.int(4,cell-4),y=gy*cell+rng.int(4,cell-4);
-                // The enclosing coast clip already removes offshore marks.
-                oval(c,x,y,rng.int(1,3),1,i%3?light:dark);
-            }
-        }
-    }
     c.restore();
 }
 
 export function createTerrainTileCache(paint,createCanvas,limit=24){
-    const tiles=new Map();let currentWorld=null,previous=null;
-    const pixels=512,bleed=2;
+    const tiles=new Map();let currentWorld=null,previous=null,currentDensity=null;
+    let pixels=512,capacity=limit;const bleed=2;
     function paintTile(world,size,scale,margin,x,y){
         const tile=createCanvas();tile.width=tile.height=pixels+bleed*2;const tc=tile.getContext('2d');
         tc.translate(bleed,bleed);tc.scale(scale,scale);tc.translate(-x*size,-y*size);
@@ -130,14 +161,18 @@ export function createTerrainTileCache(paint,createCanvas,limit=24){
         return tile;
     }
     return {
-        draw(c,world,rect,fallback){
-            if(currentWorld!==world){tiles.clear();currentWorld=world;previous=null;}
+        draw(c,world,rect,fallback,pixelRatio=1){
+            const density=Number.isFinite(pixelRatio)&&pixelRatio>1?2:1;
+            if(currentWorld!==world||currentDensity!==density){tiles.clear();currentWorld=world;currentDensity=density;previous=null;}
+            pixels=512*density;
+            // At most 64 MiB of RGBA tiles (including bleed) on high-DPI displays.
+            capacity=Math.max(1,Math.min(limit,Math.floor(64*1024*1024/((pixels+bleed*2)**2*4))));
             let generated=0;
             const touched=new Set();
             // Zoomed-out or very wide screens use coarser terrain tiles rather
             // than repeatedly evicting visible tiles or growing mobile memory.
-            let size=pixels;
-            while((Math.ceil(rect.w/size)+1)*(Math.ceil(rect.h/size)+1)>limit)size*=2;
+            let size=512;
+            while((Math.ceil(rect.w/size)+1)*(Math.ceil(rect.h/size)+1)>capacity)size*=2;
             const scale=pixels/size,margin=bleed/scale;
             const x0=Math.max(0,Math.floor(rect.x/size)),y0=Math.max(0,Math.floor(rect.y/size));
             const x1=Math.min(Math.ceil(world.w/size)-1,Math.floor((rect.x+rect.w)/size));
@@ -154,8 +189,14 @@ export function createTerrainTileCache(paint,createCanvas,limit=24){
                         tile=paintTile(world,size,scale,margin,x,y);
                     }
                     tiles.delete(key);tiles.set(key,tile);touched.add(key);
-                    c.drawImage(tile,bleed,bleed,pixels,pixels,x*size,y*size,size,size);
-                    while(tiles.size>limit)tiles.delete(tiles.keys().next().value);
+                    // Include one painted bleed pixel on each side so fractional
+                    // camera transforms cannot expose the floor between tiles.
+                    // Keep the outer pixel as a filtering gutter; expand source
+                    // and destination equally to preserve world-space alignment.
+                    const overlap=1/scale;
+                    c.drawImage(tile,bleed-1,bleed-1,pixels+2,pixels+2,
+                        x*size-overlap,y*size-overlap,size+overlap*2,size+overlap*2);
+                    while(tiles.size>capacity)tiles.delete(tiles.keys().next().value);
                 }
             }
             const dx=previous?rect.x-previous.x:0,dy=previous?rect.y-previous.y:0;
@@ -164,10 +205,10 @@ export function createTerrainTileCache(paint,createCanvas,limit=24){
                 const py=Math.abs(dy)>Math.abs(dx)?(dy>0?y1+1:y0-1):Math.max(y0,Math.min(y1,Math.floor((rect.y+rect.h/2)/size)));
                 const key=`${size}:${px},${py}`;
                 const oldest=tiles.keys().next().value;
-                if(px>=0&&py>=0&&px<cols&&py<rows&&!tiles.has(key)&&(tiles.size<limit||oldest!==undefined&&!touched.has(oldest))){
+                if(px>=0&&py>=0&&px<cols&&py<rows&&!tiles.has(key)&&(tiles.size<capacity||oldest!==undefined&&!touched.has(oldest))){
                     const tile=paintTile(world,size,scale,margin,px,py);
                     tiles.set(key,tile);generated++;
-                    while(tiles.size>limit){
+                    while(tiles.size>capacity){
                         const old=tiles.keys().next().value;
                         if(touched.has(old)){tiles.delete(key);generated--;break;}
                         tiles.delete(old);

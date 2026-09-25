@@ -19,6 +19,9 @@ test('json scan can limit fields', () => {
     const all = extractJsonStrings({ label: '交谈', name: '店主', note: '内部说明' });
     assert.deepEqual(all, ['交谈', '店主', '内部说明']);
     assert.deepEqual(extractJsonStrings({ label: '交谈', name: '店主' }, ['label']), ['交谈']);
+    const nested = extractJsonStrings({ npcs: [{ name: '青龙', attributes: { name: '青龙' } }], quests: [{ title: '启程' }] }, ['name'], ['npcs']);
+    assert.deepEqual(nested, ['青龙', '青龙']);
+    assert.deepEqual(extractJsonStrings({ quests: [{ text: '欢迎' }] }, ['text'], ['quests']), ['欢迎']);
 });
 
 test('missing and stale keys stay apart from dynamic templates', () => {

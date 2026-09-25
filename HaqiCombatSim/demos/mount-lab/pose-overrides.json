@@ -85,5 +85,2525 @@
         ]
       }
     }
+  },
+  "original-16051": {
+    "note": "按四向原画实际鞍面定位；侧面以骑手臀部作为锚点，缩放不再受尾巴和翅膀包围盒影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.44
+        ],
+        "scale": 0.32,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.51,
+          0.49
+        ],
+        "scale": 0.32,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.49,
+          0.49
+        ],
+        "scale": 0.32,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.49
+        ],
+        "scale": 0.32,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16067": {
+    "note": "按四向原画实际鞍面定位；侧面以骑手臀部作为锚点，缩放不再受尾巴和翅膀包围盒影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.51,
+          0.47
+        ],
+        "scale": 0.4,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.48,
+          0.47
+        ],
+        "scale": 0.4,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.52,
+          0.47
+        ],
+        "scale": 0.4,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.5
+        ],
+        "scale": 0.4,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16069": {
+    "note": "按四向原画实际鞍面定位；侧面以骑手臀部作为锚点，缩放不再受尾巴和翅膀包围盒影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.505,
+          0.43
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.44,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.56,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.48
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16070": {
+    "note": "按四向原画实际鞍面定位；侧面以骑手臀部作为锚点，缩放不再受尾巴和翅膀包围盒影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.505,
+          0.43
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.44,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.56,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.48
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16072": {
+    "note": "按四向原画实际鞍面定位；侧面以骑手臀部作为锚点，缩放不再受尾巴和翅膀包围盒影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.505,
+          0.43
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.44,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.56,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.48
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16073": {
+    "note": "按四向原画实际鞍面定位；侧面以骑手臀部作为锚点，缩放不再受尾巴和翅膀包围盒影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.505,
+          0.43
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.44,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.56,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.48
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16078": {
+    "note": "按各方向鞍面或背部承重点校准，排除头颈、尾羽和尾巴对包围盒定位的影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.47
+        ],
+        "scale": 0.24,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.53,
+          0.49
+        ],
+        "scale": 0.24,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.47,
+          0.49
+        ],
+        "scale": 0.24,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.47
+        ],
+        "scale": 0.24,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16075": {
+    "note": "按各方向鞍面或背部承重点校准，排除头颈、尾羽和尾巴对包围盒定位的影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.47
+        ],
+        "scale": 0.2,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.53,
+          0.48
+        ],
+        "scale": 0.2,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.47,
+          0.49
+        ],
+        "scale": 0.2,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.48
+        ],
+        "scale": 0.2,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16080": {
+    "note": "按各方向鞍面或背部承重点校准，排除头颈、尾羽和尾巴对包围盒定位的影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.46
+        ],
+        "scale": 0.42,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.53,
+          0.49
+        ],
+        "scale": 0.42,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.47,
+          0.49
+        ],
+        "scale": 0.42,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.49
+        ],
+        "scale": 0.42,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16090": {
+    "note": "按各方向鞍面或背部承重点校准，排除头颈、尾羽和尾巴对包围盒定位的影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.505,
+          0.43
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.44,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.56,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.48
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16108": {
+    "note": "按各方向鞍面或背部承重点校准，排除头颈、尾羽和尾巴对包围盒定位的影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.3
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.6,
+          0.29
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.4,
+          0.265
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.285
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16139": {
+    "note": "按各方向鞍面或背部承重点校准，排除头颈、尾羽和尾巴对包围盒定位的影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.45
+        ],
+        "scale": 0.34,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.51,
+          0.425
+        ],
+        "scale": 0.34,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.49,
+          0.425
+        ],
+        "scale": 0.34,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.43
+        ],
+        "scale": 0.34,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16140": {
+    "note": "按各方向鞍面或背部承重点校准，排除头颈、尾羽和尾巴对包围盒定位的影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.45
+        ],
+        "scale": 0.34,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.52,
+          0.39
+        ],
+        "scale": 0.34,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.48,
+          0.39
+        ],
+        "scale": 0.34,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.415
+        ],
+        "scale": 0.34,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16141": {
+    "note": "按各方向鞍面或背部承重点校准，排除头颈、尾羽和尾巴对包围盒定位的影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.3
+        ],
+        "scale": 0.48,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.73,
+          0.34
+        ],
+        "scale": 0.48,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.27,
+          0.315
+        ],
+        "scale": 0.48,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.31
+        ],
+        "scale": 0.48,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16142": {
+    "note": "按各方向鞍面或背部承重点校准，排除头颈、尾羽和尾巴对包围盒定位的影响。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.45
+        ],
+        "scale": 0.48,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.43,
+          0.53
+        ],
+        "scale": 0.48,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.57,
+          0.49
+        ],
+        "scale": 0.48,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.43
+        ],
+        "scale": 0.48,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16143": {
+    "note": "按鞍面定位，侧面使用臀部锚点，四向保持一致的骑手缩放。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.46
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.58,
+          0.48
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.42,
+          0.46
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.49,
+          0.5
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16148": {
+    "note": "按鞍面定位，侧面使用臀部锚点，四向保持一致的骑手缩放。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.47,
+          0.49
+        ],
+        "scale": 0.28,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.49,
+          0.5
+        ],
+        "scale": 0.28,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.51,
+          0.5
+        ],
+        "scale": 0.28,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.51,
+          0.48
+        ],
+        "scale": 0.28,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16144": {
+    "note": "羽翼按每方向的翼根对齐肩胛，侧面以角色背部而非身体中心为锚点；仅背向重绘翅膀遮挡。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.56
+        ],
+        "scale": 0.75,
+        "anchor": [
+          0.5,
+          0.44
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.44
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.44
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.3,
+          0.5
+        ],
+        "scale": 0.75,
+        "anchor": [
+          0.6,
+          0.44
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.6,
+              0.44
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.6,
+              0.44
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.735,
+          0.5
+        ],
+        "scale": 0.75,
+        "anchor": [
+          0.4,
+          0.44
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.4,
+              0.44
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.4,
+              0.44
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.55
+        ],
+        "scale": 0.75,
+        "anchor": [
+          0.5,
+          0.44
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.44
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.44
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16091": {
+    "note": "已对照普通版四向原画，使用同族背部/鞍面校准；独立保存，避免只修复珍藏版。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.47
+        ],
+        "scale": 0.24,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.53,
+          0.49
+        ],
+        "scale": 0.24,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.47,
+          0.49
+        ],
+        "scale": 0.24,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.47
+        ],
+        "scale": 0.24,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16092": {
+    "note": "已对照普通版四向原画，使用同族背部/鞍面校准；独立保存，避免只修复珍藏版。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.505,
+          0.43
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.44,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.56,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.48
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16093": {
+    "note": "已对照普通版四向原画，使用同族背部/鞍面校准；独立保存，避免只修复珍藏版。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.505,
+          0.43
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.44,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.56,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.48
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16096": {
+    "note": "已对照普通版四向原画，使用同族背部/鞍面校准；独立保存，避免只修复珍藏版。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.505,
+          0.43
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.44,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.56,
+          0.45
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.48
+        ],
+        "scale": 0.36,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16097": {
+    "note": "已对照普通版四向原画，使用同族背部/鞍面校准；独立保存，避免只修复珍藏版。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.47
+        ],
+        "scale": 0.2,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.53,
+          0.48
+        ],
+        "scale": 0.2,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.47,
+          0.49
+        ],
+        "scale": 0.2,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.5,
+          0.48
+        ],
+        "scale": 0.2,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
+  },
+  "original-16109": {
+    "note": "御海仙龟按金色座椅内部坐面定位，侧向位置独立于土遁神龟。",
+    "directions": {
+      "down": {
+        "seat": [
+          0.5,
+          0.3
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.49,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.49,
+              0.65
+            ]
+          }
+        }
+      },
+      "left": {
+        "seat": [
+          0.37,
+          0.32
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.57,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.57,
+              0.65
+            ]
+          }
+        }
+      },
+      "right": {
+        "seat": [
+          0.63,
+          0.32
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.43,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.43,
+              0.65
+            ]
+          }
+        }
+      },
+      "up": {
+        "seat": [
+          0.52,
+          0.31
+        ],
+        "scale": 0.5,
+        "anchor": [
+          0.5,
+          0.65
+        ],
+        "characters": {
+          "male": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          },
+          "female": {
+            "anchor": [
+              0.5,
+              0.65
+            ]
+          }
+        }
+      }
+    }
   }
 }

@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<title>地形瓦片接缝检查</title>
+<style>body{background:#203d47;color:#fff;font:16px sans-serif}canvas{max-width:100%}</style>
+<h1>地形瓦片接缝检查</h1>
+<pre id="result">检查中</pre>
+<script type="module">
+import {createTerrainTileCache} from '../../js/adventure_large_terrain.js';
+const makeCanvas=()=>document.createElement('canvas');
+const world={w:5600,h:4400},failures=[];
+let checks=0,oldFailures=0;
+// An opaque floor must stay opaque across horizontal/vertical joins and their
+// intersections, even when both zoom and camera position are fractional.
+for(const dpr of [1,1.25,2])for(const zoom of [.615,.75,1,1.15,1.3225,1.4]){
+    for(const offset of [.13,.5,.91])for(const legacy of [false,true]){
+        const canvas=makeCanvas();canvas.width=640;canvas.height=480;
+        const c=canvas.getContext('2d',{willReadFrequently:true}),scale=dpr*zoom;
+        c.scale(scale,scale);c.translate(-400-offset,-400-offset);
+        const cache=createTerrainTileCache((tc,w,r)=>{
+            tc.fillStyle='#dbcb96';tc.fillRect(r.x,r.y,r.w,r.h);
+        },makeCanvas);
+        const target=legacy?{drawImage(tile,sx,sy,sw,sh,x,y,w,h){
+            // Reproduce the previous cropped draw using the same cached pixels.
+            const unit=w/sw;
+            c.drawImage(tile,sx+1,sy+1,sw-2,sh-2,x+unit,y+unit,w-2*unit,h-2*unit);
+        }}:c;
+        cache.draw(target,world,{x:400+offset,y:400+offset,w:640/scale,h:480/scale},undefined,scale);
+        const pixels=c.getImageData(0,0,640,480).data;
+        let gaps=0;
+        for(let y=2;y<478;y++)for(let x=2;x<638;x++)if(pixels[(y*640+x)*4+3]!==255)gaps++;
+        if(legacy){if(gaps)oldFailures++;}
+        else {checks++;if(gaps)failures.push({dpr,zoom,offset,gaps});}
+        if(!legacy&&dpr===1&&zoom===1.4&&offset===.5)document.body.append(canvas);
+    }
+}
+document.getElementById('result').textContent=JSON.stringify({passed:!failures.length&&oldFailures>0,checks,oldFailures,failures},null,2);
+</script>
+</html>

@@ -1,0 +1,846 @@
+{
+  "schemaVersion": 1,
+  "grid": {
+    "cols": 4,
+    "rows": 4
+  },
+  "atlases": {
+    "meadow": {
+      "local": "assets/adventure/environment/terrain-meadow-20b11df57136.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/terrain-meadow-20b11df57136.webp",
+      "width": 536,
+      "height": 536,
+      "size": 189070,
+      "sha256": "20b11df571364cecdc61460e0cf37c34352dde9b7aa6ea80c59b415d75050408",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "ca0a1a62f79d4ec570bac07d70b2c28b71197806c454de02f41d2ec8e698bda5",
+        "width": 1254,
+        "height": 1254,
+        "description": "image_gen 原生透明 4×4 格图；左上光照、俯视三分之四视角、低矮地表装饰",
+        "cells": [
+          "grass",
+          "wildGrass",
+          "clover",
+          "fern",
+          "daisies",
+          "buttercups",
+          "blueFlowers",
+          "pinkFlowers",
+          "moss",
+          "amberLeaves",
+          "greenLeaves",
+          "redMushrooms",
+          "paleMushrooms",
+          "lowShrub",
+          "mixedMeadow",
+          "grassStone"
+        ]
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "grass": {
+          "rect": [
+            8,
+            26,
+            118,
+            100
+          ],
+          "sourceRect": [
+            68,
+            103,
+            170,
+            144
+          ],
+          "cell": 0
+        },
+        "wildGrass": {
+          "rect": [
+            142,
+            27,
+            118,
+            99
+          ],
+          "sourceRect": [
+            338,
+            47,
+            274,
+            231
+          ],
+          "cell": 1
+        },
+        "clover": {
+          "rect": [
+            276,
+            22,
+            118,
+            104
+          ],
+          "sourceRect": [
+            681,
+            86,
+            205,
+            181
+          ],
+          "cell": 2
+        },
+        "fern": {
+          "rect": [
+            410,
+            28,
+            118,
+            98
+          ],
+          "sourceRect": [
+            969,
+            74,
+            254,
+            212
+          ],
+          "cell": 3
+        },
+        "daisies": {
+          "rect": [
+            8,
+            142,
+            117,
+            118
+          ],
+          "sourceRect": [
+            54,
+            361,
+            217,
+            218
+          ],
+          "cell": 4
+        },
+        "buttercups": {
+          "rect": [
+            142,
+            144,
+            118,
+            116
+          ],
+          "sourceRect": [
+            360,
+            362,
+            217,
+            214
+          ],
+          "cell": 5
+        },
+        "blueFlowers": {
+          "rect": [
+            280,
+            142,
+            110,
+            118
+          ],
+          "sourceRect": [
+            676,
+            365,
+            210,
+            225
+          ],
+          "cell": 6
+        },
+        "pinkFlowers": {
+          "rect": [
+            410,
+            163,
+            118,
+            97
+          ],
+          "sourceRect": [
+            981,
+            390,
+            231,
+            190
+          ],
+          "cell": 7
+        },
+        "moss": {
+          "rect": [
+            8,
+            303,
+            118,
+            91
+          ],
+          "sourceRect": [
+            32,
+            694,
+            251,
+            193
+          ],
+          "cell": 8
+        },
+        "amberLeaves": {
+          "rect": [
+            142,
+            300,
+            118,
+            94
+          ],
+          "sourceRect": [
+            357,
+            696,
+            233,
+            185
+          ],
+          "cell": 9
+        },
+        "greenLeaves": {
+          "rect": [
+            276,
+            305,
+            118,
+            89
+          ],
+          "sourceRect": [
+            659,
+            700,
+            252,
+            189
+          ],
+          "cell": 10
+        },
+        "redMushrooms": {
+          "rect": [
+            410,
+            292,
+            118,
+            102
+          ],
+          "sourceRect": [
+            976,
+            691,
+            230,
+            199
+          ],
+          "cell": 11
+        },
+        "paleMushrooms": {
+          "rect": [
+            8,
+            426,
+            118,
+            102
+          ],
+          "sourceRect": [
+            48,
+            1002,
+            216,
+            187
+          ],
+          "cell": 12
+        },
+        "lowShrub": {
+          "rect": [
+            142,
+            421,
+            118,
+            107
+          ],
+          "sourceRect": [
+            340,
+            966,
+            256,
+            233
+          ],
+          "cell": 13
+        },
+        "mixedMeadow": {
+          "rect": [
+            276,
+            425,
+            118,
+            103
+          ],
+          "sourceRect": [
+            660,
+            982,
+            252,
+            220
+          ],
+          "cell": 14
+        },
+        "grassStone": {
+          "rect": [
+            410,
+            422,
+            118,
+            106
+          ],
+          "sourceRect": [
+            971,
+            983,
+            247,
+            222
+          ],
+          "cell": 15
+        }
+      }
+    },
+    "stones": {
+      "local": "assets/adventure/environment/terrain-stones-06b3275c7e1a.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/terrain-stones-06b3275c7e1a.webp",
+      "width": 536,
+      "height": 536,
+      "size": 172456,
+      "sha256": "06b3275c7e1a65eca434db5d51fd58bb4df1c0dc7ff4f19ce78765c82fa5607b",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "b02fb8672b3fe381ea95618de6223af5ad747581588255d0f3522525c9659eca",
+        "width": 1254,
+        "height": 1254,
+        "description": "image_gen 原生透明 4×4 格图；左上光照、俯视三分之四视角、低矮地表装饰",
+        "cells": [
+          "sandPebbles",
+          "greyPebbles",
+          "mossRocks",
+          "sandstone",
+          "branch",
+          "log",
+          "leafPile",
+          "roots",
+          "volcanicGravel",
+          "lavaSlab",
+          "snowRocks",
+          "iceCrystals",
+          "sandRipples",
+          "dryGrass",
+          "pinecones",
+          "lichenStone"
+        ]
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "sandPebbles": {
+          "rect": [
+            8,
+            36,
+            118,
+            90
+          ],
+          "sourceRect": [
+            49,
+            98,
+            228,
+            174
+          ],
+          "cell": 0
+        },
+        "greyPebbles": {
+          "rect": [
+            142,
+            36,
+            118,
+            90
+          ],
+          "sourceRect": [
+            366,
+            104,
+            220,
+            167
+          ],
+          "cell": 1
+        },
+        "mossRocks": {
+          "rect": [
+            276,
+            39,
+            118,
+            87
+          ],
+          "sourceRect": [
+            661,
+            88,
+            252,
+            186
+          ],
+          "cell": 2
+        },
+        "sandstone": {
+          "rect": [
+            410,
+            43,
+            118,
+            83
+          ],
+          "sourceRect": [
+            975,
+            97,
+            244,
+            172
+          ],
+          "cell": 3
+        },
+        "branch": {
+          "rect": [
+            8,
+            183,
+            118,
+            77
+          ],
+          "sourceRect": [
+            24,
+            396,
+            268,
+            176
+          ],
+          "cell": 4
+        },
+        "log": {
+          "rect": [
+            142,
+            159,
+            118,
+            101
+          ],
+          "sourceRect": [
+            344,
+            376,
+            254,
+            218
+          ],
+          "cell": 5
+        },
+        "leafPile": {
+          "rect": [
+            276,
+            171,
+            118,
+            89
+          ],
+          "sourceRect": [
+            650,
+            384,
+            261,
+            196
+          ],
+          "cell": 6
+        },
+        "roots": {
+          "rect": [
+            410,
+            168,
+            118,
+            92
+          ],
+          "sourceRect": [
+            960,
+            378,
+            275,
+            215
+          ],
+          "cell": 7
+        },
+        "volcanicGravel": {
+          "rect": [
+            8,
+            303,
+            118,
+            91
+          ],
+          "sourceRect": [
+            31,
+            692,
+            264,
+            203
+          ],
+          "cell": 8
+        },
+        "lavaSlab": {
+          "rect": [
+            142,
+            293,
+            118,
+            101
+          ],
+          "sourceRect": [
+            343,
+            683,
+            257,
+            221
+          ],
+          "cell": 9
+        },
+        "snowRocks": {
+          "rect": [
+            276,
+            298,
+            118,
+            96
+          ],
+          "sourceRect": [
+            658,
+            688,
+            258,
+            210
+          ],
+          "cell": 10
+        },
+        "iceCrystals": {
+          "rect": [
+            410,
+            291,
+            118,
+            103
+          ],
+          "sourceRect": [
+            982,
+            690,
+            232,
+            203
+          ],
+          "cell": 11
+        },
+        "sandRipples": {
+          "rect": [
+            8,
+            429,
+            118,
+            99
+          ],
+          "sourceRect": [
+            23,
+            972,
+            275,
+            231
+          ],
+          "cell": 12
+        },
+        "dryGrass": {
+          "rect": [
+            142,
+            416,
+            118,
+            112
+          ],
+          "sourceRect": [
+            343,
+            964,
+            254,
+            242
+          ],
+          "cell": 13
+        },
+        "pinecones": {
+          "rect": [
+            276,
+            429,
+            118,
+            99
+          ],
+          "sourceRect": [
+            669,
+            988,
+            233,
+            196
+          ],
+          "cell": 14
+        },
+        "lichenStone": {
+          "rect": [
+            410,
+            437,
+            118,
+            91
+          ],
+          "sourceRect": [
+            961,
+            985,
+            264,
+            203
+          ],
+          "cell": 15
+        }
+      }
+    },
+    "shore": {
+      "local": "assets/adventure/environment/terrain-shore-1307b6047bc4.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/terrain-shore-1307b6047bc4.webp",
+      "width": 652,
+      "height": 652,
+      "size": 199748,
+      "sha256": "1307b6047bc4090a29c787872ab94dad102994607aff990bf3a2d614318e777c",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "139ecaaa18ca8779f854130005809aa406e8692754d325aa4d84efe325524b40",
+        "width": 1254,
+        "height": 1254,
+        "description": "image_gen 原生透明 4×4 格图；左上光照、俯视三分之四视角、低矮地表装饰",
+        "cells": [
+          "reeds",
+          "cattails",
+          "bankGrass",
+          "lilyPads",
+          "shells",
+          "starfish",
+          "wetPebbles",
+          "driftwood",
+          "algae",
+          "bankStone",
+          "waterLily",
+          "rushes",
+          "beachRocks",
+          "shellFragments",
+          "coastalGrass",
+          "coral"
+        ]
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 90
+      },
+      "frames": {
+        "reeds": {
+          "rect": [
+            8,
+            15,
+            147,
+            140
+          ],
+          "sourceRect": [
+            59,
+            89,
+            226,
+            215
+          ],
+          "cell": 0
+        },
+        "cattails": {
+          "rect": [
+            178,
+            8,
+            133,
+            147
+          ],
+          "sourceRect": [
+            371,
+            72,
+            210,
+            232
+          ],
+          "cell": 1
+        },
+        "bankGrass": {
+          "rect": [
+            334,
+            49,
+            147,
+            106
+          ],
+          "sourceRect": [
+            663,
+            115,
+            244,
+            176
+          ],
+          "cell": 2
+        },
+        "lilyPads": {
+          "rect": [
+            497,
+            55,
+            147,
+            100
+          ],
+          "sourceRect": [
+            1000,
+            149,
+            202,
+            137
+          ],
+          "cell": 3
+        },
+        "shells": {
+          "rect": [
+            8,
+            212,
+            147,
+            106
+          ],
+          "sourceRect": [
+            55,
+            420,
+            217,
+            157
+          ],
+          "cell": 4
+        },
+        "starfish": {
+          "rect": [
+            171,
+            216,
+            147,
+            102
+          ],
+          "sourceRect": [
+            378,
+            430,
+            193,
+            134
+          ],
+          "cell": 5
+        },
+        "wetPebbles": {
+          "rect": [
+            334,
+            239,
+            147,
+            79
+          ],
+          "sourceRect": [
+            670,
+            446,
+            233,
+            126
+          ],
+          "cell": 6
+        },
+        "driftwood": {
+          "rect": [
+            497,
+            211,
+            147,
+            107
+          ],
+          "sourceRect": [
+            984,
+            414,
+            226,
+            165
+          ],
+          "cell": 7
+        },
+        "algae": {
+          "rect": [
+            8,
+            391,
+            147,
+            90
+          ],
+          "sourceRect": [
+            51,
+            742,
+            220,
+            135
+          ],
+          "cell": 8
+        },
+        "bankStone": {
+          "rect": [
+            171,
+            374,
+            147,
+            107
+          ],
+          "sourceRect": [
+            352,
+            707,
+            236,
+            172
+          ],
+          "cell": 9
+        },
+        "waterLily": {
+          "rect": [
+            334,
+            386,
+            147,
+            95
+          ],
+          "sourceRect": [
+            667,
+            715,
+            238,
+            154
+          ],
+          "cell": 10
+        },
+        "rushes": {
+          "rect": [
+            497,
+            334,
+            147,
+            147
+          ],
+          "sourceRect": [
+            991,
+            683,
+            215,
+            215
+          ],
+          "cell": 11
+        },
+        "beachRocks": {
+          "rect": [
+            8,
+            543,
+            147,
+            101
+          ],
+          "sourceRect": [
+            48,
+            1009,
+            234,
+            160
+          ],
+          "cell": 12
+        },
+        "shellFragments": {
+          "rect": [
+            171,
+            546,
+            147,
+            98
+          ],
+          "sourceRect": [
+            375,
+            1030,
+            187,
+            125
+          ],
+          "cell": 13
+        },
+        "coastalGrass": {
+          "rect": [
+            335,
+            497,
+            145,
+            147
+          ],
+          "sourceRect": [
+            666,
+            956,
+            240,
+            243
+          ],
+          "cell": 14
+        },
+        "coral": {
+          "rect": [
+            497,
+            562,
+            147,
+            82
+          ],
+          "sourceRect": [
+            994,
+            1038,
+            208,
+            116
+          ],
+          "cell": 15
+        }
+      }
+    }
+  }
+}

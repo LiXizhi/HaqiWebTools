@@ -323,6 +323,7 @@ AIChat 请求失败||AIChat request failed
 升级会员||Upgrade membership
 奇豆||Qi beans
 仙豆||Fairy beans
+魔豆||Magic beans
 存档未保存||Progress not saved
 新的故事，在这里继续||A new story continues here
 在晨光中，发现魔法||Discover magic in the morning light
@@ -817,6 +818,7 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 # js/view_adventure_shop.js
 商品子分类||Item subcategories
 我的奇豆||My Qi beans
+ / 件|| / each
 商品预览||Item preview
 输入商品名称||Enter item name
 搜索商品||Search items
@@ -841,6 +843,8 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 试炼等级||Trial level
 开始试炼||Start trial
 赚取奇豆 · 魔法试炼||Earn Qi beans · Magic trials
+关闭购买||Close purchase
+跟我说话，就能免费得到我。||Talk to me to get me for free.
 
 # js/view_adventure_strengthening.js
 请放入你要强化的装备||Add the equipment you want to upgrade
@@ -899,3 +903,1568 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 挂断||Hang up
 奇豆不足||Not enough Qi beans
 伤害||Damage
+
+# data/adventure/npc-catalog.json
+茜茜||Sissy
+莫尼||Moni
+杰西卡||Jessica
+莫纳||Mona
+亚尔弗列得||Alfred
+伏尔坎||Vulcan
+艾米娜||Amina
+高登||Gordon
+爱丽丝||Alice
+磊奥||Leo
+青龙||Azure Dragon
+魔法小丑拉布拉||Labra the Magic Clown
+香橙宝宝||Orange Baby
+菠萝小姐||Miss Pineapple
+草莓姑娘||Miss Strawberry
+鸭梨山大||Alexander Pear
+香蕉先生||Mr. Banana
+霸王虎坐骑||Tyrant Tiger Mount
+魔狼坐骑||Magic Wolf Mount
+仙兔坐骑||Fairy Rabbit Mount
+机器人坐骑||Robot Mount
+寒冰系优秀学员||Outstanding Ice Student
+烈火系优秀学员||Outstanding Fire Student
+风暴系优秀学员||Outstanding Storm Student
+生命系优秀学员||Outstanding Life Student
+死亡系优秀学员||Outstanding Death Student
+拉拉||Lala
+树上的蜂窝||Honeycomb in the Tree
+多科特合成器||Dockart Synthesizer
+按钮||Button
+西瓜小屋||Melon House
+围棋凳||Go Stool
+打泉水的地方||Spring Pump
+泉水特效||Spring Effect
+垃圾处理器||Trash Processor
+渔夫汉特||Fisherman Hunt
+绿芽树状凳||Sprout Tree Stool
+小鱼||Little Fish
+三角玻璃桌||Triangular Glass Table
+红枫叶兑换 祈福灯||Red Maple Exchange · Blessing Lamp
+葱头菜头||Scallion Head
+泡泡龙||Bubble Dragon
+祖玛||Zuma
+蛋糕游戏机||Cake Arcade
+人气徽章展示框||Popularity Badge Frame
+跳蚤鸡||Flea Chicken
+松鼠||Squirrel
+警察徽章展示框||Police Badge Frame
+抱抱龙成长心愿||Cuddle Dragon Growth Wish
+兰色龙图腾||Blue Dragon Totem
+时报架||Newspaper Rack
+过山车||Roller Coaster
+冰雕心语||Ice Sculpture Whispers
+雪人||Snowman
+篝火||Campfire
+招募牌||Recruitment Sign
+时空门||Time-Space Gate
+红衫木屏风||Redwood Screen
+多多||Duoduo
+白龙导师||White Dragon Mentor
+学者书架||Scholar's Bookshelf
+涂涂||Tutu
+垃圾回收游戏||Trash Recycling Game
+巴斯||Bass
+青蛙椅||Frog Chair
+日光调节器||Sunlight Regulator
+莫卡||Moka
+闹闹菜头||Noisy Radish
+滚雪球||Snowball Roll
+眼力大比拼||Eagle-Eye Contest
+呼噜大叔||Uncle Snore
+皇冠蛇||Crown Snake
+神奇浆果树||Magic Berry Tree
+友情徽章展示框||Friendship Badge Frame
+小滕||Xiao Teng
+宠物图鉴||Pet Catalog
+摩天轮||Ferris Wheel
+冰雕礼盒||Ice Sculpture Gift Box
+礼物树||Gift Tree
+天使徽章展示框||Angel Badge Frame
+大抱熊公仔||Big Cuddle Bear Plush
+生肖花||Zodiac Flower
+布老虎||Cloth Tiger
+金刚蜗牛||King Kong Snail
+种子购买田 告示牌||Seed Plot Signboard
+怪怪蛋||Weird Egg
+营地马灯||Camp Lantern
+榕树茶几||Banyan Tea Table
+陶罐||Clay Pot
+织布机||Loom
+吵吵葱头||Rowdy Scallion
+跳舞机||Dance Machine
+西瓜田||Melon Field
+跟随宠物物品标记||Following Pet Item Marker
+蘑咕噜||Mogulu
+熊猫||Panda
+百变生肖||Shapeshifting Zodiac
+希尔警长||Sheriff Hill
+汪汪狗||Doggy
+古奇||Goochi
+地震||Earthquake
+过山车售票亭||Roller Coaster Ticket Booth
+魔镜||Magic Mirror
+苏菲||Sophie
+七色花||Seven-Color Flower
+星形石块||Star-Shaped Stone
+红枫叶兑换 杂物架||Red Maple Exchange · Utility Shelf
+多克特博士||Dr. Dockart
+红枫叶兑换 彩色蝴蝶丛||Red Maple Exchange · Butterfly Bush
+燕子雏形||Swallow Sculpture
+果实回收篮||Fruit Return Basket
+围棋桌||Go Table
+水晶兔||Crystal Rabbit
+回魂草||Soul Return Herb
+热心果签约书台||Passion Fruit Signing Desk
+绿芽树状桌||Sprout Tree Table
+日光机按钮||Sunlight Machine Button
+火龙怪 木牌||Fire Dragon Plaque
+建房机||House Builder
+农场大作战||Farm Battle
+沙滩椰子树||Beach Coconut Tree
+跳楼||Sky Jump
+庄稼保卫战||Crop Defense
+丹瑟||Danser
+灌溉王||Irrigation King
+钓鱼||Fishing
+碎花布大抱熊||Floral Cuddle Bear
+环保卫士徽章||Eco Guardian Badge
+罗莉猫||Loli Cat
+小蓝马||Little Blue Horse
+萤火虫游戏||Firefly Game
+鸟屋挂钟||Birdhouse Wall Clock
+大牙怪||Big Tooth Monster
+蘑菇钥匙||Mushroom Key
+镇长信箱||Mayor's Mailbox
+种子购买田||Seed Plot
+白天鹅||White Swan
+搬家车||Moving Truck
+雪堆||Snow Pile
+冬冬||Dongdong
+值勤表||Duty Roster
+巡逻亭||Patrol Booth
+抱抱龙技能等级相关||Cuddle Dragon Skill Level Info
+小勇||Xiao Yong
+跳台传送点||Jump Pad Teleport Point
+家族展示框||Family Display Frame
+天上的许愿灯||Wishing Lanterns in the Sky
+西梅掉落器||Plum Dropper
+许愿灯||Wishing Lantern
+苏苏||Susu
+泡泡机||Bubble Machine
+摩天轮售票亭||Ferris Wheel Ticket Booth
+古井木桶||Old Well Bucket
+古井木桶旁的木桶||Barrel Beside the Old Well
+小乖||Xiao Guai
+威克||Wick
+建造台||Building Bench
+建造台牌子||Building Bench Sign
+卡乐夫||Carlov
+日光机模型||Sunlight Machine Model
+罗德镇长||Mayor Rhode
+魔法储值罐||Magic Charge Jar
+魔法星手册||Magic Star Handbook
+能量石||Energy Stone
+寻宝队队长哈利||Treasure Hunt Captain Harry
+寻宝队队员南希||Treasure Hunt Member Nancy
+全齐齐||Qiqi
+达尔莫德||Dalmod
+嘎嘎||Gaga
+勇士徽章展示框||Warrior Badge Frame
+安吉奶奶||Granny Angie
+新||New
+年||Year
+快||Fast
+乐||Joy
+梦幻公主YY||Dream Princess YY
+贪吃的暴熊||Gluttonous Fierce Bear
+面包树||Bread Tree
+试炼场管理员||Trial Ground Keeper
+憨厚的小胖||Simple-Hearted Chubby
+赛场管理员||Arena Keeper
+冠军雕像||Champion Statue
+兔九哥||Brother Rabbit Nine
+家族旗子||Family Flag
+兔八哥||Brother Rabbit Eight
+红蘑菇使者||Red Mushroom Envoy
+安卓婆婆||Granny Andro
+仙豆物品管理员||Fairy Bean Item Keeper
+特殊物品管理员||Special Item Keeper
+货币兑换商||Currency Exchanger
+善良的小火魔||Kind Little Fire Imp
+普尔纳||Puna
+哈瑞斯||Harris
+沙兹||Shaz
+史密斯||Smith
+韦伦||Welen
+巨龙图腾||Great Dragon Totem
+蓝晶神龟||Blue Crystal Turtle
+酷炫小魔女||Cool Little Witch
+酷炫小魔头||Cool Little Devil
+冰凉哈奇||Chilled Haqi
+清凉哈奇||Refreshing Haqi
+白色胖雪人||White Chubby Snowman
+鸭梨绅士||Pear Gentleman
+小蓝马王子||Little Blue Horse Prince
+蘑咕噜王子||Mogulu Prince
+龙息魔法师||Dragonbreath Wizard
+冰裂魔法师||Icecrack Wizard
+雷霆魔法师||Thunder Wizard
+万象魔法师||Myriad Wizard
+灾厄魔法师||Doom Wizard
+英雄宝盒||Hero Chest
+圣诞大使||Christmas Ambassador
+里昂伯爵||Count Leon
+多多特黑市商人||Duoduote Black Marketeer
+传说中的勇者||Legendary Hero
+上古梦龙||Ancient Dream Dragon
+新大陆探险者||New World Explorer
+皇家骑士队长||Royal Knight Captain
+莫妮卡||Monica
+菲拉||Fila
+安东尼||Antony
+米歇尔||Michelle
+卡牌分解机||Card Disassembler
+尤诺||Yuno
+火百灵||Fire Lark
+斯诺曼||Snoman
+伍迪||Woody
+菲尼克斯||Phoenix
+暗黑魔牛||Dark Magic Bull
+安格斯||Angus
+虾米粒||Shrimpy
+蒙克||Monk
+雏鹰1号||Eaglet No.1
+雏鹰2号||Eaglet No.2
+雏鹰3号||Eaglet No.3
+伊戈尔||Igor
+沃尔夫||Wolff
+传送门||Portal
+艾斯||Ace
+青青||Qingqing
+厉择||Lize
+美杜莎||Medusa
+尤里||Yuri
+凯皮汀||Kapitan
+发怒的尤里||Enraged Yuri
+斐迪南||Ferdinand
+古格||Gugu
+智慧星||Wisdom Star
+艾琳||Irene
+米娜||Mina
+米妮||Minnie
+莫利亚||Moria
+前线护卫||Frontline Guard
+瘟疫领主||Plague Lord
+
+# data/adventure/quest-journal.json
+安格斯的困惑||Angus's Confusion
+应安格斯的要求，去帮他消灭1只幽魂章鱼。||At Angus's request, help him destroy 1 Ghost Octopus.
+斯诺曼肥了||Snoman Got Plump
+斯诺曼越来越肥，帮它消灭1只绿色食蚁兽，它就肯去减肥了。||Snoman keeps getting plumper; help it destroy 1 Green Anteater and it will agree to slim down.
+虾米粒被欺负||Shrimpy Bullied
+教训1只白冰虾，帮虾米粒出一口气。||Teach 1 White Ice Shrimp a lesson to stand up for Shrimpy.
+蒙克的提问||Monk's Question
+打败1只松木妖后询问蒙克问题的答案。||Defeat 1 Pine Sprite, then ask Monk for the answer.
+是时候解决问题了||Time to Settle It
+消灭1只亡灵猴。||Destroy 1 Undead Monkey.
+一瞬间的烟花||Fireworks in a Flash
+帮伊戈尔消灭风鹰，完成他的心愿。||Help Igor destroy the Wind Eagle and fulfill his wish.
+暴动前的征兆||Signs Before the Uprising
+暴动快要来临了，击败1只沙地泥兽。||An uprising is coming; defeat 1 Sand Mud Beast.
+恶意的煽动||Malicious Instigation
+拆穿阴谋，击败1个沙漠巨蜥。||Expose the plot and defeat 1 Desert Monitor.
+火岩甲虫蠢蠢欲动||The Fire Rock Beetles Stir
+击败1个火岩甲虫，阻止暴乱发生。||Defeat 1 Fire Rock Beetle and stop the riot.
+不为人知的秘密||A Hidden Secret
+亡灵蛇加入了暴动行列,击败1个亡灵蛇。||Undead Snakes have joined the uprising; defeat 1 Undead Snake.
+无所畏惧（四）||Fearless (IV)
+提升自己最好的考验要到来了，应青龙要求，击败五怪之首。||The finest trial of growth arrives; at Azure Dragon's request, defeat the chief of the five monsters.
+无所畏惧（五）||Fearless (V)
+阻止拉尔齐恶行||Stop Larqi's Evil
+前往“神殿废墟”，阻止拉尔齐带着被迷惑的小王子逃回幽暗岛。||Go to the Temple Ruins and stop Larqi from fleeing back to Dark Isle with the bewitched little prince.
+挣扎在神殿废墟里的王子||The Prince Struggling in the Temple Ruins
+哈奇小信使||Little Haqi Messenger
+博士让你帮他的忙送信给哈奇岛上的居民们。||The doctor asks you to help deliver letters to the residents of Haqi Island.
+博士让你帮他的忙送信给火鸟岛上的居民们。||The doctor asks you to help deliver letters to the residents of Firebird Island.
+博士让你帮他的忙送信给寒冰岛上的居民们。||The doctor asks you to help deliver letters to the residents of Ice Island.
+博士让你帮他的忙送信给沙漠岛上的居民们。||The doctor asks you to help deliver letters to the residents of Desert Island.
+野外的霸主||Wild Overlords
+达尔莫德心爱的宝石被沙漠岛上的“霸主”抢走了，快去帮忙教训下它们吧！（消灭食人花之王和巨蜥之王）||Dalmod's beloved gem was stolen by the "Overlords" of Desert Island. Go teach them a lesson! (Defeat the Piranha King and the Monitor Lizard King)
+达尔莫德心爱的宝石被沙漠岛上的“霸主”抢走了，快去帮忙教训下它们吧！（消灭食人花之王和甲虫之王）||Dalmod's beloved gem was stolen by the "Overlords" of Desert Island. Go teach them a lesson! (Defeat the Piranha King and the Beetle King)
+达尔莫德心爱的宝石被沙漠岛上的“霸主”抢走了，快去帮忙教训下它们吧！（消灭食人花之王和万蛇之王）||Dalmod's beloved gem was stolen by the "Overlords" of Desert Island. Go teach them a lesson! (Defeat the Piranha King and the Serpent King)
+达尔莫德心爱的宝石被沙漠岛上的“霸主”抢走了，快去帮忙教训下它们吧！（消灭食人花之王和泥兽之王）||Dalmod's beloved gem was stolen by the "Overlords" of Desert Island. Go teach them a lesson! (Defeat the Piranha King and the Mud Beast King)
+给小伙伴们投人气||Give Friends Popularity
+快给小伙伴们投人气吧~有你的支持是他们最大的鼓励！||Give your friends popularity now! Your support is their greatest encouragement!
+捕鱼的快乐||The Joy of Fishing
+大叔介绍了我一种赚外快的好方法：捕鱼！每日一捕，仙豆到手~||The uncle showed me a great way to earn extra: fishing! One catch a day, fairy beans in hand~
+成为一名优秀的灵兽猎人||Become a Top Spirit Beast Hunter
+以最快的速度，想方设法的获得一颗1级的未鉴定魂珠。||Get a Level 1 Unidentified Soul Orb as fast as you can, by any means.
+选择一种生活技能||Choose a Life Skill
+以最快的速度，想方设法的获得两颗1级的未鉴定魂珠。||Get two Level 1 Unidentified Soul Orbs as fast as you can, by any means.
+以最快的速度，想方设法的获得一颗2级的未鉴定魂珠。||Get a Level 2 Unidentified Soul Orb as fast as you can, by any means.
+以最快的速度，想方设法的获得两颗2级的未鉴定魂珠。||Get two Level 2 Unidentified Soul Orbs as fast as you can, by any means.
+以最快的速度，想方设法的获得一颗3级的未鉴定魂珠。||Get a Level 3 Unidentified Soul Orb as fast as you can, by any means.
+以最快的速度，想方设法的获得两颗3级的未鉴定魂珠。||Get two Level 3 Unidentified Soul Orbs as fast as you can, by any means.
+以最快的速度，想方设法的获得一颗4级的未鉴定魂珠。||Get a Level 4 Unidentified Soul Orb as fast as you can, by any means.
+以最快的速度，想方设法的获得一颗5级的未鉴定魂珠。||Get a Level 5 Unidentified Soul Orb as fast as you can, by any means.
+以最快的速度，想方设法的获得一颗6级的未鉴定魂珠。||Get a Level 6 Unidentified Soul Orb as fast as you can, by any means.
+以最快的速度，想方设法的获得一颗7级的未鉴定魂珠。||Get a Level 7 Unidentified Soul Orb as fast as you can, by any means.
+成为一名优秀的鉴定师||Become a Top Appraiser
+以最快的速度，想方设法的获得一块1级灵魂碎片。||Get one Level 1 Soul Shard as fast as you can, by any means.
+以最快的速度，想方设法的获得两块1级灵魂碎片。||Get two Level 1 Soul Shards as fast as you can, by any means.
+以最快的速度，想方设法的获得四块1级灵魂碎片。||Get four Level 1 Soul Shards as fast as you can, by any means.
+以最快的速度，想方设法的获得两块2级灵魂碎片。||Get two Level 2 Soul Shards as fast as you can, by any means.
+以最快的速度，想方设法的获得四块2级灵魂碎片。||Get four Level 2 Soul Shards as fast as you can, by any means.
+以最快的速度，想方设法的获得两块3级灵魂碎片。||Get two Level 3 Soul Shards as fast as you can, by any means.
+以最快的速度，想方设法的获得四块3级灵魂碎片。||Get four Level 3 Soul Shards as fast as you can, by any means.
+以最快的速度，想方设法的获得两块4级灵魂碎片。||Get two Level 4 Soul Shards as fast as you can, by any means.
+以最快的速度，想方设法的获得两块5级灵魂碎片。||Get two Level 5 Soul Shards as fast as you can, by any means.
+以最快的速度，想方设法的获得两块6级灵魂碎片。||Get two Level 6 Soul Shards as fast as you can, by any means.
+以最快的速度，想方设法的获得两块7级灵魂碎片。||Get two Level 7 Soul Shards as fast as you can, by any means.
+成为一名优秀的工匠||Become a Top Craftsman
+以最快的速度，想方设法的获得魂印。||Get a Soul Seal as fast as you can, by any means.
+巨龙图腾的指引||Guidance of the Great Dragon Totem
+根据巨龙图腾的指引，用普通的魂印换取同阶段更好的魂印，供奉图腾提升自己的信仰值。||Follow the Great Dragon Totem's guidance: trade ordinary Soul Seals for better ones of the same tier and worship the totem to raise your belief.
+选择一种图腾信仰||Choose a Totem Belief
+消灭咕噜噜(双倍奖励)||Destroy Gululu (Double Reward)
+进入“咕噜噜大本营”（副本)，打败怪物获得100颗“咕噜噜的泪水”即可完成任务获得双倍的奖章奖励！||Enter the "Gululu Base Camp" dungeon, defeat monsters to gather 100 "Gululu's Tears" and finish the quest for double medal rewards!
+进入“咕噜噜大本营”（副本)，打败怪物获得150颗“咕噜噜的泪水”即可完成任务获得双倍的奖章奖励！||Enter the "Gululu Base Camp" dungeon, defeat monsters to gather 150 "Gululu's Tears" and finish the quest for double medal rewards!
+进入“咕噜噜大本营”（副本)，打败怪物获得200颗“咕噜噜的泪水”即可完成任务获得双倍的奖章奖励！||Enter the "Gululu Base Camp" dungeon, defeat monsters to gather 200 "Gululu's Tears" and finish the quest for double medal rewards!
+进入“咕噜噜大本营”（副本)，打败怪物获得250颗“咕噜噜的泪水”即可完成任务获得双倍奖章奖励！||Enter the "Gululu Base Camp" dungeon, defeat monsters to gather 250 "Gululu's Tears" and finish the quest for double medal rewards!
+消灭咕噜噜(第1次)||Destroy Gululu (1st Time)
+进入“咕噜噜大本营”（副本)，打败怪物获得300颗“咕噜噜的泪水”即可完成任务获得奖章奖励！||Enter the "Gululu Base Camp" dungeon, defeat monsters to gather 300 "Gululu's Tears" and finish the quest for medal rewards!
+消灭铁壳怪(双倍奖励)||Destroy the Ironshell (Double Reward)
+进入“铁壳怪大本营”（副本)，打败怪物获得100颗“铁壳的泪水”即可完成任务获得双倍的奖章奖励！||Enter the "Ironshell Base Camp" dungeon, defeat monsters to gather 100 "Ironshell's Tears" and finish the quest for double medal rewards!
+进入“铁壳怪大本营”（副本)，打败怪物获得200颗“铁壳的泪水”即可完成任务获得双倍的奖章奖励！||Enter the "Ironshell Base Camp" dungeon, defeat monsters to gather 200 "Ironshell's Tears" and finish the quest for double medal rewards!
+进入“铁壳怪大本营”（副本)，打败怪物获得300颗“铁壳的泪水”即可完成任务获得双倍的奖章奖励！||Enter the "Ironshell Base Camp" dungeon, defeat monsters to gather 300 "Ironshell's Tears" and finish the quest for double medal rewards!
+进入“铁壳怪大本营”（副本)，打败怪物获得400颗“铁壳的泪水”即可完成任务获得双倍奖章奖励！||Enter the "Ironshell Base Camp" dungeon, defeat monsters to gather 400 "Ironshell's Tears" and finish the quest for double medal rewards!
+消灭铁壳怪(第1次)||Destroy the Ironshell (1st Time)
+进入“铁壳怪大本营”（副本)，打败怪物获得300颗“铁壳的泪水”即可完成任务获得奖章奖励！||Enter the "Ironshell Base Camp" dungeon, defeat monsters to gather 300 "Ironshell's Tears" and finish the quest for medal rewards!
+消灭胖雪人(双倍奖励)||Destroy the Chubby Snowman (Double Reward)
+进入“胖胖大本营”（副本)，打败怪物获得100颗“胖胖的泪水”即可完成任务获得双倍的奖章奖励！||Enter the "Chubby Base Camp" dungeon, defeat monsters to gather 100 "Chubby's Tears" and finish the quest for double medal rewards!
+进入“胖胖大本营”（副本)，打败怪物获得200颗“胖胖的泪水”即可完成任务获得双倍的奖章奖励！||Enter the "Chubby Base Camp" dungeon, defeat monsters to gather 200 "Chubby's Tears" and finish the quest for double medal rewards!
+进入“胖胖大本营”（副本)，打败怪物获得300颗“胖胖的泪水”即可完成任务获得双倍的奖章奖励！||Enter the "Chubby Base Camp" dungeon, defeat monsters to gather 300 "Chubby's Tears" and finish the quest for double medal rewards!
+进入“胖胖大本营”（副本)，打败怪物获得400颗“胖胖的泪水”即可完成任务获得双倍奖章奖励！||Enter the "Chubby Base Camp" dungeon, defeat monsters to gather 400 "Chubby's Tears" and finish the quest for double medal rewards!
+消灭胖雪人(第1次)||Destroy the Chubby Snowman (1st Time)
+进入“胖胖大本营”（副本)，打败怪物获得300颗“胖胖的泪水”即可完成任务获得奖章奖励！||Enter the "Chubby Base Camp" dungeon, defeat monsters to gather 300 "Chubby's Tears" and finish the quest for medal rewards!
+消灭咕噜噜(第2次)||Destroy Gululu (2nd Time)
+消灭咕噜噜(第3次)||Destroy Gululu (3rd Time)
+消灭咕噜噜(第4次)||Destroy Gululu (4th Time)
+消灭咕噜噜(第5次)||Destroy Gululu (5th Time)
+消灭咕噜噜(第6次)||Destroy Gululu (6th Time)
+消灭咕噜噜(第7次)||Destroy Gululu (7th Time)
+消灭咕噜噜(第8次)||Destroy Gululu (8th Time)
+消灭咕噜噜(第9次)||Destroy Gululu (9th Time)
+消灭咕噜噜(第10次)||Destroy Gululu (10th Time)
+消灭铁壳怪(第2次)||Destroy the Ironshell (2nd Time)
+消灭铁壳怪(第3次)||Destroy the Ironshell (3rd Time)
+消灭铁壳怪(第4次)||Destroy the Ironshell (4th Time)
+消灭铁壳怪(第5次)||Destroy the Ironshell (5th Time)
+消灭铁壳怪(第6次)||Destroy the Ironshell (6th Time)
+消灭铁壳怪(第7次)||Destroy the Ironshell (7th Time)
+消灭铁壳怪(第8次)||Destroy the Ironshell (8th Time)
+消灭铁壳怪(第9次)||Destroy the Ironshell (9th Time)
+消灭铁壳怪(第10次)||Destroy the Ironshell (10th Time)
+消灭胖雪人(第2次)||Destroy the Chubby Snowman (2nd Time)
+消灭胖雪人(第3次)||Destroy the Chubby Snowman (3rd Time)
+消灭胖雪人(第4次)||Destroy the Chubby Snowman (4th Time)
+消灭胖雪人(第5次)||Destroy the Chubby Snowman (5th Time)
+消灭胖雪人(第6次)||Destroy the Chubby Snowman (6th Time)
+消灭胖雪人(第7次)||Destroy the Chubby Snowman (7th Time)
+消灭胖雪人(第8次)||Destroy the Chubby Snowman (8th Time)
+消灭胖雪人(第9次)||Destroy the Chubby Snowman (9th Time)
+消灭胖雪人(第10次)||Destroy the Chubby Snowman (10th Time)
+咕噜噜的泪水||Gululu's Tears
+进入咕噜噜怪物军团，打败250只咕噜噜即可完成任务。||Enter the Gululu monster legion and defeat 250 Gululu to finish this quest.
+铁壳怪的泪水||Ironshell's Tears
+进入咕噜噜怪物军团，打败250只铁壳怪即可完成任务。||Enter the Gululu monster legion and defeat 250 Ironshells to finish this quest.
+胖雪人的泪水||Chubby Snowman's Tears
+进入咕噜噜怪物军团，打败600只胖雪人即可完成任务。||Enter the Gululu monster legion and defeat 600 Chubby Snowmen to finish this quest.
+守护幽暗岛||Defend Dark Isle
+前线紧急来报！仙人掌族在幽暗岛远古森林一带开始动乱，请协助幽暗岛护卫兵打败它们。||Urgent report from the frontline! The Cactus tribe is stirring in the Ancient Forest of Dark Isle; help the Dark Isle guards defeat them.
+清剿仙人掌族||Wipe Out the Cactus Tribe
+这一次！要给仙人掌族最大的打击！他们在幽暗岛远古森林一带开始动乱，请协助幽暗岛护卫兵打败它们。||This time, strike the Cactus tribe hard! They are stirring in the Ancient Forest of Dark Isle; help the Dark Isle guards defeat them.
+伍迪渴望的玄冰葫芦||The Mysterious Ice Gourd Woody Craves
+伍迪需要一个玄冰葫芦，和沸腾湖的邪恶雪人-斯诺曼商量一下吧！||Woody needs a Mysterious Ice Gourd; talk it over with Snoman, the evil snowman of Boiling Lake!
+启程火鸟岛||Set Off for Firebird Island
+玄冰葫芦不在我手上||The Mysterious Ice Gourd Is Not with Me
+斯诺曼的玄冰葫芦被铁壳怪抢走了，先去帮他找回来吧。||An Ironshell stole Snoman's Mysterious Ice Gourd; help him get it back first.
+斯诺曼是个大骗子||Snoman Is a Big Liar
+斯诺曼反悔了，说要你去用一个冰糖葫芦换。去打败噬巫鼠获得。||Snoman went back on his word and wants a Candied Hawthorn in exchange. Defeat Witchbane Rats to get one.
+把玄冰葫芦送去给伍迪||Deliver the Mysterious Ice Gourd to Woody
+伍迪需要玄冰葫芦，记得给他送去！||Woody needs the Mysterious Ice Gourd; remember to deliver it!
+忏悔的火百灵||The Repentant Fire Lark
+有些火鸟被暗黑的傀儡术控制后侵占了很多火焰果，打败它们。||Some firebirds, controlled by dark puppetry, seized many Flame Fruits; defeat them.
+帮火百灵找真凶||Find the Real Culprit for the Fire Lark
+找到对火鸟释放傀儡术的帮凶，战胜火螃蟹。||Find the accomplice who cast puppetry on the firebirds and defeat the Fire Crab.
+幕后指使者||The Hidden Mastermind
+和暗黑魔牛对话。战胜烈火蟹首领。||Talk to the Dark Magic Bull. Defeat the Fire Crab Chief.
+斯诺曼的恶作剧||Snoman's Prank
+斯洛曼把冰糖葫芦吃完了以后把玄冰葫芦给抢走了，他让你帮他再去弄点白糖冰糕来。||Snoman ate the Candied Hawthorn and snatched the Mysterious Ice Gourd away; he wants you to fetch some White Sugar Popsicles.
+把真的玄冰葫芦送去给伍迪||Deliver the Real Mysterious Ice Gourd to Woody
+斯诺曼把真的玄冰葫芦给你了，快送去给伍迪吧！||Snoman gave you the real Mysterious Ice Gourd; hurry and deliver it to Woody!
+与首领的较量||Facing the Chief
+去焚香丛林消灭1个噬灵鼠首领，黑暗势力任务。||Go to the Incense Jungle and destroy 1 Soulbite Rat Chief. Dark forces quest.
+初见端倪拜访神秘来访者||First Clues: Visit the Mysterious Visitor
+发现了章鱼首领的阴谋，去乱草沼泽拜访安格斯询问来火鸟岛的原因。||You uncovered the Octopus Chief's plot; visit Angus in the Wildgrass Marsh and ask why he came to Firebird Island.
+谁能挡我||Who Can Stop Me
+想对付章鱼首领，还得要过章鱼守卫这关。||To face the Octopus Chief, you must first get past the Octopus Guards.
+受死吧坏章鱼||Die, Wicked Octopus
+过关斩将，去对付章鱼首领！||Fight your way through and take on the Octopus Chief!
+斯诺曼好无聊||Snoman Is So Bored
+听到斯诺曼在大叫吗，快去看看怎么回事||Hear Snoman shouting? Go see what is going on.
+原来是求救信号||It Was a Cry for Help
+去火鸟洲打败炫冰穿天兽净化它们的灵魂。||Go to Firebird Isle and defeat the Frost Sky Beasts to purify their souls.
+暗黑魔牛生气了||The Dark Magic Bull Is Angry
+夺回暗黑魔牛的金指环。||Take back the Dark Magic Bull's Gold Ring.
+生气了后果很严重||When Anger Turns Serious
+帮暗黑魔牛教训作恶多端的邪恶雪人||Help the Dark Magic Bull punish the evil snowman for all his misdeeds.
+斯诺曼又有意见||Snoman Is Complaining Again
+斯洛曼想喝口水都不行，一直嚷嚷着。原来是沸腾湖被绿色食蚁兽弄得一片狼藉，快去收拾！||Snoman cannot even take a sip of water and keeps yelling. The Green Anteaters trashed Boiling Lake; go clean it up!
+捎口信||Pass the Message
+伍迪哨口信告诉你火鸟岛危机出现，让你去找菲尼克斯商讨对策。||Woody sent word that Firebird Island is in crisis and asked you to discuss a plan with Phoenix.
+危机挑战（一）||Crisis Challenge (I)
+当魔王得知章鱼首领被打败后大怒，派出了傀儡首领1号，去打败他。||Enraged at the Octopus Chief's defeat, the Demon King sent Puppet Chief No.1; go defeat him.
+菲尼克斯的担忧||Phoenix's Worry
+菲尼克斯觉得魔王不可能就此罢休，让你去找伍迪商讨事宜。||Phoenix believes the Demon King will not stop here; go discuss with Woody.
+危机挑战（二）||Crisis Challenge (II)
+魔王当然不会就此收手，派出了傀儡首领2号。||Of course the Demon King will not give up; he sent Puppet Chief No.2.
+意想不到的事情发生了||The Unexpected Happened
+火百灵告诉你，魔王真正的王牌是……||The Fire Lark tells you the Demon King's real trump card is...
+全力以赴拯救火鸟岛||Give Everything to Save Firebird Island
+最大的危机来了，原来火鸟战士也一早甘愿成为魔王的傀儡。||The greatest crisis is here: the Firebird Warriors had long since willingly become the Demon King's puppets.
+终于结束了||It Is Finally Over
+与菲尼克斯对话。||Talk to Phoenix.
+菲尼克斯的难题||Phoenix's Dilemma
+去神木空间把菲尼克斯放置在那的火鸟蛋取回。（该任务需进入副本“神木空间”）||Go to the Sacred Tree Space and retrieve the Firebird Egg Phoenix left there. (Enter the "Sacred Tree Space" dungeon)
+凤凰之影的考验||The Trial of the Phoenix Shadow
+接受菲尼克斯的考验，在神木空间顶层找到凤凰之影并战胜它！（该任务需进入副本“神木空间”）||Accept Phoenix's trial, find the Phoenix Shadow at the top of the Sacred Tree Space and defeat it! (Enter the "Sacred Tree Space" dungeon)
+启程寒冰岛||Set Off for Ice Island
+菲尼克斯让你出发赶往寒冰岛。||Phoenix sends you off to Ice Island.
+虾米粒的心愿（一）||Shrimpy's Wish (I)
+帮虾米粒找到1颗流晶石||Find 1 Flow Crystal for Shrimpy
+虾米粒的心愿（二）||Shrimpy's Wish (II)
+帮虾米粒去探蒙克的口风||Sound out Monk for Shrimpy
+虾米粒的心愿（三）||Shrimpy's Wish (III)
+在大地巨人身上夺取稀有石块||Seize a Rare Stone from an Earth Giant
+虾米粒的心愿（四）||Shrimpy's Wish (IV)
+帮虾米粒在大地蓝巨人身上夺取远古稀石||Help Shrimpy seize an Ancient Rare Stone from a Blue Earth Giant
+初识七彩冰莲||First Meeting with the Rainbow Ice Lotus
+阻止大地巨人首领偷走冰莲种子||Stop the Earth Giant Chief from stealing the Ice Lotus seeds
+七彩冰莲的由来||Origin of the Rainbow Ice Lotus
+听古奇讲述七彩冰莲的由来。||Listen to Goochi tell the origin of the Rainbow Ice Lotus.
+冰莲种子不见了||The Ice Lotus Seeds Are Gone
+询问虾米粒冰莲种子的下落。||Ask Shrimpy about the whereabouts of the Ice Lotus seeds.
+七彩冰莲是我的了||The Rainbow Ice Lotus Is Mine
+原来冰莲种子被小米粒拿走了，快去收拾它。||The Rice Grain took the Ice Lotus seeds; go sort it out.
+首战风暴蝎||First Battle with the Storm Scorpion
+接受挑战，去消灭1只风暴蝎||Accept the challenge and destroy 1 Storm Scorpion
+变异也疯狂||Mutation Madness
+继续挑战！去消灭1只变异风暴蝎||Keep going! Destroy 1 Mutated Storm Scorpion
+充分迎接下次挑战||Be Ready for the Next Challenge
+了解暴风蝎首领的来历。||Learn about the Storm Scorpion Chief's origins.
+风暴蝎首领的叫嚣||The Storm Scorpion Chief's Taunts
+第三次考验！去消灭风暴蝎首领。||Third trial! Destroy the Storm Scorpion Chief.
+新朋友艾斯||A New Friend, Ace
+应蒙克要求，去结识新朋友艾斯。||At Monk's request, go meet the new friend Ace.
+生命源液的作用||What Life Essence Does
+了解完生命源液的作用后去松木妖身上夺回1份生命源液。||After learning what Life Essence does, reclaim 1 Life Essence from a Pine Sprite.
+敢打我小弟||How Dare You Hit My Little Buddy
+去了解蒙克叫喊的原因。||Go find out why Monk is yelling.
+松木妖首领发怒了||The Pine Sprite Chief Is Furious
+去消灭松木妖首领。||Go destroy the Pine Sprite Chief.
+艾斯想造一个冥火之拥||Ace Wants an Embrace of Netherfire
+艾斯很贪玩，让你帮他收集五彩冥火造一个冥火之拥。||Ace is playful and asks you to gather the five Netherfires to craft an Embrace of Netherfire.
+收集五彩冥火（一）||Gather the Five Netherfires (I)
+打败青锭亡灵猴和魅紫亡灵猴获取它们身上的锭色冥火和紫色冥火。||Defeat the Azure Ingot Undead Monkey and the Charm Purple Undead Monkey to take their Ingot Netherfire and Purple Netherfire.
+收集五彩冥火（二）||Gather the Five Netherfires (II)
+打败深蓝亡灵猴和火红亡灵获取它们身上的蓝色冥火和红色冥火。||Defeat the Deep Blue Undead Monkey and the Fiery Red Undead to take their Blue Netherfire and Red Netherfire.
+可以制作冥火之拥了||Ready to Craft the Embrace of Netherfire
+把收集齐的冥火拿去交给艾斯。||Bring the gathered Netherfires to Ace.
+伊戈尔的苦恼||Igor's Troubles
+帮伊戈尔满足她三个孩子的要求||Help Igor meet her three eaglets' requests
+雏鹰一号的要求||Eaglet No.1's Request
+打败风鹰，在它身上获取缠丝藤蔓。||Defeat the Wind Eagle and take its Twining Vine.
+雏鹰二号的要求||Eaglet No.2's Request
+帮雏鹰二号问虾米粒拿一个漂亮的虾壳。||Ask Shrimpy for a pretty shrimp shell for Eaglet No.2.
+雏鹰三号的要求||Eaglet No.3's Request
+帮雏鹰三号教训风鹰首领。||Punish the Wind Eagle Chief for Eaglet No.3.
+满足要求了||Requests Fulfilled
+告诉雏鹰妈妈满足雏鹰们的要求了。||Tell the mother eagle the eaglets' requests are met.
+蒙克的记忆消失了||Monk's Memory Is Gone
+帮蒙克唤回记忆，去消灭寒冰雪狼把生命之魂夺回。||Help Monk regain his memory: destroy the Ice Snow Wolf and take back the Life Soul.
+帮蒙克恢复记忆||Help Monk Recover His Memory
+去帮蒙克打败烈火雪狼。||Help Monk defeat the Fire Snow Wolf.
+蒙克让你去找沃尔夫||Monk Sends You to Wolff
+去找雪狼沃尔夫交谈。||Go talk to the snow wolf Wolff.
+黑暗降临||Darkness Falls
+去净化生命雪狼。||Go purify the Life Snow Wolf.
+想弄清事实真相||Wanting the Truth
+去和大家对话，查找事情的线索。||Talk to everyone and look for clues.
+继续净化||Keep Purifying
+去净化死亡雪狼。||Go purify the Death Snow Wolf.
+净化雪狼首领||Purify the Snow Wolf Chief
+帮沃尔夫净化雪狼首领。||Help Wolff purify the Snow Wolf Chief.
+了解避风港的历史||The History of the Haven
+与艾斯对话，了解避风港。||Talk with Ace to learn about the Haven.
+寻找冰雪之王||Searching for the Ice and Snow King
+消灭巨牙冰熊看能不能引诱冰雪之王出现。||Destroy Fanged Ice Bears to see if you can lure out the Ice and Snow King.
+艾斯的宝石袋不见了||Ace's Gem Bag Is Missing
+帮艾斯去冰封极地找回七彩石头。||Help Ace find the Rainbow Stones in the Frozen Polar Wilds.
+询问古奇||Ask Goochi
+去找古奇交谈。||Go talk to Goochi.
+古奇的工具||Goochi's Tool
+去冰莲峰打败大地冰熊拿回古奇的玄铁镐。||Defeat the Earth Ice Bear on Ice Lotus Peak and take back Goochi's Dark Iron Pick.
+冰雪之王||The Ice and Snow King
+消灭冰雪之王霍伊斯。（该任务需进入副本“冰熊巢穴”）||Destroy the Ice and Snow King Hoiss. (Enter the "Ice Bear Den" dungeon)
+准备前往风暴之眼||Preparing for the Eye of the Storm
+找艾斯询问风暴之眼的事情。||Ask Ace about the Eye of the Storm.
+抵达风暴之眼||Reach the Eye of the Storm
+抵达风暴之眼，去击败飓风黑暗者艾俄罗斯！（该任务需进入副本“风暴之眼”）||Reach the Eye of the Storm and defeat Aiolos the Hurricane Darkener! (Enter the "Eye of the Storm" dungeon)
+事情的真相||The Truth
+询问青龙关于寒冰岛的一切。||Ask Azure Dragon about everything on Ice Island.
+出发沙漠古堡||Set Off for the Desert Castle
+前往下一岛屿找青青。||Go to the next island and find Qingqing.
+青青给你的考验||Qingqing's Trial for You
+青青听青龙述说了你一路以来的经历，给出考验看你是否能顺利通过。||Qingqing heard from Azure Dragon about your journey and sets a trial to see if you can pass.
+再战黑暗势力||Fight the Dark Forces Again
+青青让你去尝试消灭黑暗势力的食蚁兽统领。||Qingqing asks you to try destroying the dark forces' Anteater Commander.
+初步了解沙漠岛||First Look at Desert Island
+青青和你说了下沙漠岛的近况后让你认识尤里。||After telling you the latest on Desert Island, Qingqing introduces you to Yuri.
+斯诺曼也有黑暗的一面||Snoman Has a Dark Side Too
+尤里和你说它也认识斯诺曼，但是是黑暗的一面…||Yuri tells you he also knows Snoman, but his dark side...
+青青有旧患||Qingqing Has an Old Wound
+尤里和你说其实青青有旧患。||Yuri tells you Qingqing actually has an old wound.
+隐隐作痛的右臂||The Aching Right Arm
+青青的右臂上有旧伤，击败沙地泥兽获得白茅根。||Qingqing has an old injury on his right arm; defeat Sand Mud Beasts to get Cogon Grass Root.
+探知沙漠岛||Getting to Know Desert Island
+沙漠古堡沉睡了好久，一个就快被遗忘的岛屿。||The Desert Castle has slept for ages, an island nearly forgotten.
+尤里的线索||Yuri's Clue
+打败沙漠巨蜥获得古沙之石交给尤里。||Defeat Desert Monitors to get Ancient Sand Stones and bring them to Yuri.
+古堡沉睡的秘密||The Sleeping Castle's Secret
+尤里让你询问众人获得更多线索。||Yuri asks you to question everyone for more clues.
+净化沙漠枯花族||Purify the Desert Withered Flower Tribe
+青青告诉你亡灵苏醒附体，许多生物受到了控制。||Qingqing tells you the undead have awakened and possessed many creatures.
+净化食人花族||Purify the Piranha Tribe
+青青让你净化寒冰食人花和烈火食人花。||Qingqing asks you to purify the Ice Piranha Plants and Fire Piranha Plants.
+顽固的厉泽||Stubborn Lize
+青青让你和厉泽述说事实，厉泽不相信。||Qingqing asks you to tell Lize the truth, but Lize will not believe it.
+意想不到||Unexpected
+把厉泽的事情告诉了青青后，青青觉得其实火鸟岛和寒冰岛的部分居民已经被软禁了。||After you report Lize to Qingqing, he realizes some residents of Firebird Island and Ice Island are already under house arrest.
+大战沙漠巨蜥首领||Battle the Desert Monitor Chief
+青青让你去击败沙漠巨蜥首领，解放居民。||Qingqing asks you to defeat the Desert Monitor Chief and free the residents.
+重获新生||Born Again
+青青再让你去找厉泽告诉他事情的经过。||Qingqing sends you back to Lize to tell him what happened.
+厉泽给出的难题||Lize's Hard Question
+让厉泽相信的唯一办法就是证明给他看你有能力击败章鱼精英统领。||The only way to convince Lize is to prove you can defeat the Octopus Elite Commander.
+庞大的黑暗统领军||The Vast Dark Legion
+厉泽相信了你，跟你述说黑暗统领军和巨石迷阵的事情。||Lize believes you and tells you about the Dark Legion and the Megalith Maze.
+关键人物||The Key Figure
+美杜莎不愿意多说，让你先把黑暗统领军队之甲虫精兵的精髓甲虫和惊雷甲虫给消灭掉。||Medusa will not say more; first destroy the Dark Legion beetle elite's Essence Beetles and Thunderclap Beetles.
+梵天的眼泪||Brahma's Tear
+美杜莎和你说梵天的眼泪消失了，眼泪是唯一唤醒沉睡沙漠和驱逐黑暗的唯一希望！||Medusa tells you Brahma's Tear has vanished; it is the only hope to wake the sleeping desert and drive out the darkness!
+继续寻找线索||Keep Searching for Clues
+询问居民看看有没有什么重要线索。||Ask the residents whether there are any important clues.
+无需过分思考||No Need to Overthink
+美杜莎让你别急，保持头脑清醒，并继续把黑暗统领军队一局消灭。||Medusa tells you not to rush, keep a clear head, and keep wiping out the Dark Legion.
+向青青回报情况||Report Back to Qingqing
+美杜莎让你去找青青谈话。||Medusa sends you to talk with Qingqing.
+继续歼灭||Keep Annihilating
+青青和美杜莎的想法不谋而合，让你消灭黑暗统领军队的火岩甲虫统帅。||Qingqing and Medusa think alike; destroy the Dark Legion's Fire Rock Beetle Marshal.
+求助青龙||Seek Azure Dragon's Help
+青青让你去找青龙，看有没有什么线索。||Qingqing sends you to Azure Dragon for clues.
+眼泪的化身||The Tear's New Form
+青龙和你述说眼泪并没有消失，而是化身成为了匕首想看得见眼泪还要获得通灵之眼。||Azure Dragon tells you the Tear did not vanish; it became a dagger, and to see the Tear you must also gain the Spirit Eye.
+事态紧急||Urgent Situation
+青青和你说在四种不同的亡灵蛇身上都有通灵之眼碎片，让你一举歼灭亡灵蛇部队合成通灵之眼。||Qingqing tells you four kinds of Undead Snakes each carry a Spirit Eye fragment; wipe out the Undead Snake troops and assemble the Spirit Eye.
+事态紧急（二）||Urgent Situation (II)
+继续收集通灵之眼碎片。||Keep collecting Spirit Eye fragments.
+获得通灵之眼||Obtain the Spirit Eye
+青青让你将收集到的通灵碎片拿给美杜莎用灵气合成。||Qingqing asks you to bring the collected spirit fragments to Medusa to assemble with her aura.
+持续升温||Heating Up
+美杜莎问你有没有感觉最近沙漠岛的天气越来越热，让你问问凯皮汀到底怎么回事。||Medusa asks whether you have noticed Desert Island growing hotter, and sends you to ask Kapitan what is going on.
+苏醒的军团||The Awakened Legion
+凯皮汀慌慌张张的和你说木乃伊军团苏醒了，得知情况后分别和青青美杜莎谈话。||Kapitan flusteredly tells you the mummy legion has awakened; after learning this, talk with Qingqing and Medusa.
+匕首的下落||The Dagger's Whereabouts
+青青告知你千年木乃伊有匕首，但想要接近千年木乃伊必须把木乃伊侍卫消灭。||Qingqing tells you the Millennium Mummy holds the dagger, but to approach it you must destroy the Mummy Guards.
+匕首的下落（二）||The Dagger's Whereabouts (II)
+青青让你消灭千年木乃伊获取匕首打败法老。（该任务需进入副本“落日神殿”）||Qingqing asks you to destroy the Millennium Mummy to get the dagger and defeat the Pharaoh. (Enter the "Sunfall Temple" dungeon)
+阿努比斯的阴谋||Anubis's Plot
+凯皮汀告诉你，阿努比斯的阴谋。||Kapitan tells you of Anubis's plot.
+获取生命之魂||Obtain the Life Soul
+凯皮汀让你打败毒蛇首领获取生命之魂打开地狱之海。||Kapitan asks you to defeat the Viper Chief, take the Life Soul and open the Sea of the Underworld.
+阻止黑暗前行||Stop the Darkness
+感受到了很可怕的能量正从古堡中蔓延出来，看来法老好像复活了，马上进入地狱之海吧！（该任务需进入副本“地狱之海”）||A terrifying energy spreads from the castle; the Pharaoh seems revived. Enter the Sea of the Underworld at once! (Enter the "Sea of the Underworld" dungeon)
+将梵天的眼泪永撒沙漠||Scatter Brahma's Tear Over the Desert Forever
+分别和居民说话，法老继续沉睡，沙漠岛被唤醒，事情也告一断落。||Speak with the residents; the Pharaoh sleeps on, Desert Island awakens, and the matter comes to a close.
+堕落的骄阳||The Fallen Blazing Sun
+它不是我在哈奇岛上认识的大力猿，我要把他的真身打败，让他觉悟！||That is not the Mighty Ape I knew on Haqi Island; I will defeat its true form and make it see the light!
+王者的象征||Symbol of the King
+循着亚瑟王的脚步，找到失落的王者头冠！||Follow King Arthur's footsteps and find the lost Crown of Kings!
+消逝的上古灵魂（一）||Vanished Ancient Souls (I)
+在拉斐尔城主的指引下，寻找亚瑟王灵魂的线索！||Under Lord Raphael's guidance, seek clues to King Arthur's soul!
+消逝的上古灵魂（二）||Vanished Ancient Souls (II)
+向各大岛屿的守护者索要银制风铃的碎片！||Ask the guardians of each island for fragments of the Silver Wind Chime!
+消逝的上古灵魂（三）||Vanished Ancient Souls (III)
+前往寒冰岛，找寻进入异界的道路！||Go to Ice Island and find the way into the Otherworld!
+消逝的上古灵魂（四）||Vanished Ancient Souls (IV)
+在虾米粒的帮助下进入异界空间，击败冰魔伯爵！||With Shrimpy's help, enter the Otherworld Space and defeat the Ice Demon Count!
+消逝的上古灵魂（五）||Vanished Ancient Souls (V)
+收集城主所需要的祭品，解除皇冠的封印！||Gather the offerings Lord Raphael needs and break the crown's seal!
+寻找上古龙族的遗迹||Search for the Ancient Dragon Ruins
+前往幽暗岛，寻找上古龙族的遗迹||Go to Dark Isle and search for the ruins of the ancient dragons
+暴躁的上古龙族||The Irritable Ancient Dragons
+前往幽暗岛，击败暴躁的上古梦龙守卫||Go to Dark Isle and defeat the irritable Ancient Dream Dragon guards
+归来！亚瑟王之怒||Return! The Wrath of King Arthur
+传说中的亚瑟王套装已经解封，通过考验即可获得亚瑟王的传承，完成传承得到最终的亚瑟王套装！||The legendary King Arthur set is unsealed; pass the trial to receive Arthur's legacy and claim the final King Arthur set!
+上道！打倒王下八魔头||On Your Way! Topple the Eight Demon Chiefs
+严惩黑暗恶势力，做好准备后分别去到“王下八魔窟”打败里面的魔头。完成一系列任务后得到哈奇岛“无惧黑暗”的公认，顺利从哈奇魔法学院毕业，踏上魔法师之路。||Punish the dark evil forces: when ready, visit each of the "Eight Demon Lairs" and defeat the demon inside. Complete this quest series to earn Haqi Island's recognition of "fearless against darkness", graduate from the Haqi Magic Academy, and set out on the wizard's path.
+八魔头之黑暗男爵分身||Eight Chiefs: Dark Baron Avatar
+前往黑暗领域击败黑暗男爵分身，获得一级赏金奖励。||Go to the Dark Domain and defeat the Dark Baron Avatar for a tier-1 bounty reward.
+八魔头之杀手埃尔温||Eight Chiefs: Assassin Erwin
+前往恶灵荒野击败夺命杀手埃尔温，获得二级赏金奖励。||Go to the Wraith Wilds and defeat the deadly Assassin Erwin for a tier-2 bounty reward.
+八魔头之千年木乃伊“伊萨鲁”||Eight Chiefs: Millennium Mummy "Isalu"
+前往落日神殿击败千年木乃伊，获得三级赏金奖励。||Go to the Sunfall Temple and defeat the Millennium Mummy for a tier-3 bounty reward.
+八魔头之试练宝库大王||Eight Chiefs: Trial Vault King
+前往试练宝库击败宝库大王，获得四级赏金奖励。||Go to the Trial Vault and defeat the Vault King for a tier-4 bounty reward.
+八魔头之黑暗男爵真身||Eight Chiefs: Dark Baron True Form
+前往神殿秘境击败黑暗男爵真身，获得五级赏金奖励。||Go to the Temple Secret Realm and defeat the Dark Baron's true form for a tier-5 bounty reward.
+八魔头之梦魇章鱼头目||Eight Chiefs: Nightmare Octopus Leader
+到达梦魇禁地击败梦魇章鱼头目，获得六级赏金奖励。||Reach the Nightmare Forbidden Land and defeat the Nightmare Octopus Leader for a tier-6 bounty reward.
+八魔头之魔牛舅舅“阿姆斯”||Eight Chiefs: Demon Bull Uncle "Arms"
+前往魔域宝塔击败魔牛舅舅，获得七级赏金奖励。||Go to the Demon Realm Pagoda and defeat the Demon Bull Uncle for a tier-7 bounty reward.
+八魔头之异界咕噜王||Eight Chiefs: Otherworld Gulu King
+前往异界空间击败咕噜王，获得顶级赏金奖励。||Go to the Otherworld Space and defeat the Gulu King for the top bounty reward.
+嗜血暴鳄拉尔齐再度让火魔王子受到黑暗势力的迷惑，白龙把它们暂时羁留在了神殿废墟里。进入“神殿废墟”（精英难度）解救可怜的火魔王子吧！||The bloodthirsty croc Larqi has once again bewitched the Fire Imp Prince with dark forces, and the White Dragon has detained them in the Temple Ruins for now. Enter the "Temple Ruins" (Elite difficulty) and rescue the poor Fire Imp Prince!
+征战！全能魔法师||Battle! All-Round Wizard
+前往哈奇岛阳光海岸参加公平试炼PK赛和英雄谷比赛，证明自己是全能魔法师。||Go to Sunny Coast on Haqi Island, join the Fair Trial PK matches and Hero Valley contests, and prove you are an all-round wizard.
+红蘑菇挑战赛||Red Mushroom Challenge
+前往阳光海岸参加试练PK赛与红蘑菇赛场打败对手获取徽章。||Go to Sunny Coast, join the Trial PK matches and the Red Mushroom arena, and beat opponents to earn badges.
+中阶魔法师考试（一）||Mid-tier Wizard Exam (I)
+在购物街找到【仙豆装备管理员】，尝试把自己的【超级魔力点生成率】提升至70%。||Find the [Fairy Bean Gear Keeper] on Shopping Street and raise your [Super pip generation rate] to 70%.
+中阶魔法师考试（二）||Mid-tier Wizard Exam (II)
+在购物街找到【达尔莫德】，尝试把自己的【超级魔力点生成率】提升至80%。||Find [Dalmod] on Shopping Street and raise your [Super pip generation rate] to 80%.
+中阶魔法师考试（三）||Mid-tier Wizard Exam (III)
+在购物街找到【达尔莫德】，尝试把自己的【本系攻击力】提升至100%。||Find [Dalmod] on Shopping Street and raise your [Own-school attack] to 100%.
+中阶魔法师考试（四）||Mid-tier Wizard Exam (IV)
+在购物街找到【苏苏】，尝试把任意一系的【防御力】提升至45%。||Find [Susu] on Shopping Street and raise any school's [Defense] to 45%.
+中阶魔法师考试（五）||Mid-tier Wizard Exam (V)
+进入【中阶魔法师考场】，击败【白龙考官】完成考试。||Enter the [Mid-tier Wizard Exam Hall] and defeat the [White Dragon Examiner] to finish the exam.
+征战！英雄谷争霸||Battle! Hero Valley Rumble
+前往哈奇岛阳光海岸参加英雄谷争霸，获得一个英雄谷徽章即可完成任务。||Go to Sunny Coast on Haqi Island and join the Hero Valley Rumble; earn one Hero Valley Badge to finish this quest.
+哈奇公约||The Haqi Pact
+威克号召大家去【签约台】与你的好友们签订【哈奇公约】。||Wick calls on everyone to visit the [Signing Desk] and sign the [Haqi Pact] with your friends.
+参与蘑菇挑战||Join the Mushroom Challenge
+每打赢2场红蘑菇挑战赛即可领取1个原始和玉和1个原始晶石||Win 2 Red Mushroom Challenge matches to claim 1 Primal Harmony Jade and 1 Primal Crystal
+挑战秘境第1层||Secret Realm Challenge: Floor 1
+魔法看护让我进入试炼秘境挑战“烈焰香橙”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Blazing Orange".
+挑战秘境第2层||Secret Realm Challenge: Floor 2
+深入秘境，打败秘境第2层守卫“烈焰火毛怪”。||Go deep into the Secret Realm and defeat the Floor 2 guard, "Blazing Fuzzler".
+挑战秘境第3层||Secret Realm Challenge: Floor 3
+深入秘境，打败秘境第3层守卫“烈焰喵喵怪”。||Go deep into the Secret Realm and defeat the Floor 3 guard, "Blazing Meowler".
+挑战秘境第4层||Secret Realm Challenge: Floor 4
+深入秘境，打败秘境第4层守卫。“火红螃蟹”||Go deep into the Secret Realm and defeat the Floor 4 guard, the "Fiery Red Crab".
+激战！秘境第5层boss||Fierce Fight! Secret Realm Floor 5 BOSS
+深入秘境，打败秘境第5层BOSS“巨大火鸟”。||Go deep into the Secret Realm and defeat the Floor 5 BOSS, "Giant Firebird".
+挑战秘境第6层||Secret Realm Challenge: Floor 6
+快进入试炼秘境接受前所未有的超强挑战：打败Boss“香蕉绅士”||Enter the Trial Secret Realm now for an unprecedented super challenge: defeat the Boss "Banana Gentleman"
+挑战秘境第7层||Secret Realm Challenge: Floor 7
+深入秘境，打败秘境第7层守卫“热情的菠萝”。||Go deep into the Secret Realm and defeat the Floor 7 guard, "Passionate Pineapple".
+挑战秘境第8层||Secret Realm Challenge: Floor 8
+深入秘境，打败秘境第8层守卫“甲壳虫统领”。||Go deep into the Secret Realm and defeat the Floor 8 guard, "Beetle Commander".
+挑战秘境第9层||Secret Realm Challenge: Floor 9
+深入秘境，打败秘境第9层守卫“魔蟹统领”。||Go deep into the Secret Realm and defeat the Floor 9 guard, "Demon Crab Commander".
+激战！秘境第10层boss||Fierce Fight! Secret Realm Floor 10 BOSS
+深入秘境，打败秘境第10层BOSS“狂暴火战士”。||Go deep into the Secret Realm and defeat the Floor 10 BOSS, "Raging Fire Warrior".
+挑战秘境第11层||Secret Realm Challenge: Floor 11
+魔法看护让我进入试炼秘境挑战“霜冻冰咕噜”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Frosty Ice Gulu".
+挑战秘境第12层||Secret Realm Challenge: Floor 12
+深入秘境，打败秘境第12层守卫“极寒白冰虾”。||Go deep into the Secret Realm and defeat the Floor 12 guard, "Polar White Ice Shrimp".
+挑战秘境第13层||Secret Realm Challenge: Floor 13
+深入秘境，打败秘境第13守卫“阴冷噬灵鼠”。||Go deep into the Secret Realm and defeat the Floor 13 guard, the "Chilly Soulbite Rat".
+挑战秘境第14层||Secret Realm Challenge: Floor 14
+深入秘境，打败秘境第14层守卫“极寒刺蛇”。||Go deep into the Secret Realm and defeat the Floor 14 guard, "Polar Spike Snake".
+激战！秘境第15层boss||Fierce Fight! Secret Realm Floor 15 BOSS
+深入秘境，打败秘境第15层BOSS“冷冽亡灵猴”。||Go deep into the Secret Realm and defeat the Floor 15 BOSS, "Frigid Undead Monkey".
+挑战秘境第16层||Secret Realm Challenge: Floor 16
+魔法看护让我进入试炼秘境挑战“霜冻食人花”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Frost Piranha Plant".
+挑战秘境第17层||Secret Realm Challenge: Floor 17
+深入秘境，打败秘境第17层守卫“极寒雪人”。||Go deep into the Secret Realm and defeat the Floor 17 guard, "Polar Snowman".
+挑战秘境第18层||Secret Realm Challenge: Floor 18
+深入秘境，打败秘境第18层守卫“阴暗噬灵鼠”。||Go deep into the Secret Realm and defeat the Floor 18 guard, "Gloomy Soulbite Rat".
+挑战秘境第19层||Secret Realm Challenge: Floor 19
+深入秘境，打败秘境第19层守卫“极寒百毒蛇”。||Go deep into the Secret Realm and defeat the Floor 19 guard, "Polar Venom Snake".
+激战！秘境第20层boss||Fierce Fight! Secret Realm Floor 20 BOSS
+深入秘境，打败秘境第20层BOSS“冷血暴熊”。||Go deep into the Secret Realm and defeat the Floor 20 BOSS, "Cold-Blooded Fierce Bear".
+挑战秘境第21层||Secret Realm Challenge: Floor 21
+魔法看护让我进入试炼秘境挑战“鸭梨巨大”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Giant Pear".
+挑战秘境第22层||Secret Realm Challenge: Floor 22
+深入秘境，打败秘境第22层守卫“荒漠飞蝇”。||Go deep into the Secret Realm and defeat the Floor 22 guard, "Desert Fly".
+挑战秘境第23层||Secret Realm Challenge: Floor 23
+深入秘境，打败秘境第23层守卫“狂野猫”。||Go deep into the Secret Realm and defeat the Floor 23 guard, "Wildcat".
+挑战秘境第24层||Secret Realm Challenge: Floor 24
+深入秘境，打败秘境第24层守卫“疾风蝎”。||Go deep into the Secret Realm and defeat the Floor 24 guard, "Swift Scorpion".
+激战！秘境第25层boss||Fierce Fight! Secret Realm Floor 25 BOSS
+深入秘境，打败秘境第25层BOSS“雷动鬃王”。||Go deep into the Secret Realm and defeat the Floor 25 BOSS, "Thunder Mane King".
+挑战秘境第26层||Secret Realm Challenge: Floor 26
+魔法看护让我进入试炼秘境挑战“雷暴食人花”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Thunderstorm Piranha Plant".
+挑战秘境第27层||Secret Realm Challenge: Floor 27
+深入秘境，打败秘境第27层守卫“飞蝇统领”。||Go deep into the Secret Realm and defeat the Floor 27 guard, "Fly Commander".
+挑战秘境第28层||Secret Realm Challenge: Floor 28
+深入秘境，打败秘境第28层守卫“荒漠泥浆”。||Go deep into the Secret Realm and defeat the Floor 28 guard, "Desert Sludge".
+挑战秘境第29层||Secret Realm Challenge: Floor 29
+深入秘境，打败秘境第29层守卫“雷暴刺蛇”。||Go deep into the Secret Realm and defeat the Floor 29 guard, "Thunderstorm Spike Snake".
+激战！秘境第30层boss||Fierce Fight! Secret Realm Floor 30 BOSS
+深入秘境，打败秘境第30层BOSS“雷动熊王”。||Go deep into the Secret Realm and defeat the Floor 30 BOSS, "Thunder Bear King".
+挑战秘境第31层||Secret Realm Challenge: Floor 31
+魔法看护让我进入试炼秘境挑战“贪婪的食草兽”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Greedy Grazer".
+挑战秘境第32层||Secret Realm Challenge: Floor 32
+深入秘境，打败秘境第32层守卫“无惧树妖”。||Go deep into the Secret Realm and defeat the Floor 32 guard, "Fearless Dryad".
+挑战秘境第33层||Secret Realm Challenge: Floor 33
+深入秘境，打败秘境第33层守卫“天赐神猴”。||Go deep into the Secret Realm and defeat the Floor 33 guard, "Blessed Divine Monkey".
+挑战秘境第34层||Secret Realm Challenge: Floor 34
+深入秘境，打败秘境第34层守卫“重生暴熊”。||Go deep into the Secret Realm and defeat the Floor 34 guard, "Reborn Fierce Bear".
+激战！秘境第35层boss||Fierce Fight! Secret Realm Floor 35 BOSS
+深入秘境，打败秘境第35层BOSS“天赐巨人”。||Go deep into the Secret Realm and defeat the Floor 35 BOSS, "Blessed Giant".
+挑战秘境第36层||Secret Realm Challenge: Floor 36
+魔法看护让我进入试炼秘境挑战“爱美树精”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Vain Treant".
+挑战秘境第37层||Secret Realm Challenge: Floor 37
+深入秘境，打败秘境第37层守卫“天赐破坏者”。||Go deep into the Secret Realm and defeat the Floor 37 guard, "Blessed Destroyer".
+挑战秘境第38层||Secret Realm Challenge: Floor 38
+深入秘境，打败秘境第38层守卫“土遁神猴”。||Go deep into the Secret Realm and defeat the Floor 38 guard, "Earthbound Divine Monkey".
+挑战秘境第39层||Secret Realm Challenge: Floor 39
+深入秘境，打败秘境第39层守卫“喝醉的白熊”。||Go deep into the Secret Realm and defeat the Floor 39 guard, "Drunk White Bear".
+激战！秘境第40层boss||Fierce Fight! Secret Realm Floor 40 BOSS
+深入秘境，打败秘境第40层BOSS“大地觉醒者”。||Go deep into the Secret Realm and defeat the Floor 40 BOSS, "Earth Awakener".
+挑战秘境第41层||Secret Realm Challenge: Floor 41
+魔法看护让我进入试炼秘境挑战“死亡之眼”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Death Eye".
+挑战秘境第42层||Secret Realm Challenge: Floor 42
+深入秘境，打败秘境第42层守卫“地狱铁壳”。||Go deep into the Secret Realm and defeat the Floor 42 guard, "Hell Ironshell".
+挑战秘境第43层||Secret Realm Challenge: Floor 43
+深入秘境，打败秘境第43层守卫“无情食人花”。||Go deep into the Secret Realm and defeat the Floor 43 guard, "Ruthless Piranha Plant".
+挑战秘境第44层||Secret Realm Challenge: Floor 44
+深入秘境，打败秘境第44层守卫“阴暗八爪鱼”。||Go deep into the Secret Realm and defeat the Floor 44 guard, "Gloomy Octopus".
+激战！秘境第45层boss||Fierce Fight! Secret Realm Floor 45 BOSS
+深入秘境，打败秘境第45层BOSS“传说九凤天”。||Go deep into the Secret Realm and defeat the Floor 45 BOSS, "Legendary Nine Phoenix".
+挑战秘境第46层||Secret Realm Challenge: Floor 46
+魔法看护让我进入试炼秘境挑战“邪恶黑猫”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Wicked Black Cat".
+挑战秘境第47层||Secret Realm Challenge: Floor 47
+深入秘境，打败秘境第47层守卫“骨灰级螃蟹”。||Go deep into the Secret Realm and defeat the Floor 47 guard, "Veteran Crab".
+挑战秘境第48层||Secret Realm Challenge: Floor 48
+深入秘境，打败秘境第48层守卫“邪恶食人花”。||Go deep into the Secret Realm and defeat the Floor 48 guard, "Wicked Piranha Plant".
+挑战秘境第49层||Secret Realm Challenge: Floor 49
+深入秘境，打败秘境第49层守卫“嗜血八爪鱼”。||Go deep into the Secret Realm and defeat the Floor 49 guard, "Bloodthirsty Octopus".
+激战！秘境第50层boss||Fierce Fight! Secret Realm Floor 50 BOSS
+深入秘境，打败秘境第50层BOSS“不死黑熊”。||Go deep into the Secret Realm and defeat the Floor 50 BOSS, "Undying Black Bear".
+挑战秘境第51层||Secret Realm Challenge: Floor 51
+魔法看护让我进入试炼秘境挑战“火红鬃王”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Fiery Mane King".
+挑战秘境第52层||Secret Realm Challenge: Floor 52
+深入秘境，打败秘境第52层精英“红唇章王”。||Go deep into the Secret Realm and defeat the Floor 52 elite, "Red-Lip Octopus King".
+挑战秘境第53层||Secret Realm Challenge: Floor 53
+深入秘境，打败秘境第53层精英“爆炎蛇”。||Go deep into the Secret Realm and defeat the Floor 53 elite, "Blast Flame Snake".
+挑战秘境第54层||Secret Realm Challenge: Floor 54
+深入秘境，打败秘境第54层精英“岩浆虫王”。||Go deep into the Secret Realm and defeat the Floor 54 elite, "Magma Worm King".
+激战！秘境第55层boss||Fierce Fight! Secret Realm Floor 55 BOSS
+深入秘境，打败秘境第55层BOSS“不死鸟”。||Go deep into the Secret Realm and defeat the Floor 55 BOSS, "Undying Firebird".
+挑战秘境第56层||Secret Realm Challenge: Floor 56
+魔法看护让我进入试炼秘境挑战“魔化鬃王”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Demonized Mane King".
+挑战秘境第57层||Secret Realm Challenge: Floor 57
+深入秘境，打败秘境第57层精英“鬼火神猴”。||Go deep into the Secret Realm and defeat the Floor 57 elite, "Ghostfire Divine Monkey".
+挑战秘境第58层||Secret Realm Challenge: Floor 58
+深入秘境，打败秘境第58层精英“丝光红蝇”。||Go deep into the Secret Realm and defeat the Floor 58 elite, "Silken Red Fly".
+挑战秘境第59层||Secret Realm Challenge: Floor 59
+深入秘境，打败秘境第59层精英“怒吼豺狼”。||Go deep into the Secret Realm and defeat the Floor 59 elite, "Roaring Jackal".
+激战！秘境第60层boss||Fierce Fight! Secret Realm Floor 60 BOSS
+深入秘境，打败秘境第60层BOSS“恶魔费雷斯”。||Go deep into the Secret Realm and defeat the Floor 60 BOSS, "Demon Feres".
+挑战秘境第61层||Secret Realm Challenge: Floor 61
+魔法看护让我进入试炼秘境挑战“噬灵审判者”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Soulbite Judge".
+挑战秘境第62层||Secret Realm Challenge: Floor 62
+深入秘境，打败秘境第62层精英“冰极爱好者”。||Go deep into the Secret Realm and defeat the Floor 62 elite, "Chill Devotee".
+挑战秘境第63层||Secret Realm Challenge: Floor 63
+深入秘境，打败秘境第63层精英“冰甲王”。||Go deep into the Secret Realm and defeat the Floor 63 elite, "Ice Armor King".
+挑战秘境第64层||Secret Realm Challenge: Floor 64
+深入秘境，打败秘境第64层精英“冰蛇统领”。||Go deep into the Secret Realm and defeat the Floor 64 elite, "Ice Snake Commander".
+激战！65层勇者终极披风||Fierce Fight! Floor 65 Hero's Ultimate Cape
+打败秘境第65层BOSS“冰熊破坏者”，就可以获得一件传说中的光翼……||Defeat the Floor 65 BOSS "Ice Bear Destroyer" to earn a legendary Lightwing cape...
+挑战秘境第66层||Secret Realm Challenge: Floor 66
+魔法看护让我进入试炼秘境挑战“极冻亡灵猴”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Deep-Frozen Undead Monkey".
+挑战秘境第67层||Secret Realm Challenge: Floor 67
+深入秘境，打败秘境第67层精英“霜冻神牛”。||Go deep into the Secret Realm and defeat the Floor 67 elite, "Frost Divine Ox".
+挑战秘境第68层||Secret Realm Challenge: Floor 68
+深入秘境，打败秘境第68层精英“天冰柱人”。||Go deep into the Secret Realm and defeat the Floor 68 elite, "Sky Icicle Sentinel".
+挑战秘境第69层||Secret Realm Challenge: Floor 69
+深入秘境，打败秘境第69层精英“天冰柱王”。||Go deep into the Secret Realm and defeat the Floor 69 elite, "Sky Icicle King".
+激战！秘境第70层boss||Fierce Fight! Secret Realm Floor 70 BOSS
+深入秘境，打败秘境第70层BOSS“艾卡冰魔”。||Go deep into the Secret Realm and defeat the Floor 70 BOSS, "Aika the Ice Demon".
+挑战秘境第71层||Secret Realm Challenge: Floor 71
+魔法看护让我进入试炼秘境挑战“狂野甲虫王”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Wild Beetle King".
+挑战秘境第72层||Secret Realm Challenge: Floor 72
+深入秘境，打败秘境第72层精英“飓风蝎王”。||Go deep into the Secret Realm and defeat the Floor 72 elite, "Hurricane Scorpion King".
+挑战秘境第73层||Secret Realm Challenge: Floor 73
+深入秘境，打败秘境第73层精英“宝藏守护者”。||Go deep into the Secret Realm and defeat the Floor 73 elite, "Treasure Guardian".
+挑战秘境第74层||Secret Realm Challenge: Floor 74
+深入秘境，打败秘境第74层精英“暴风使者”。||Go deep into the Secret Realm and defeat the Floor 74 elite, "Storm Envoy".
+激战！秘境第75层boss||Fierce Fight! Secret Realm Floor 75 BOSS
+深入秘境，打败秘境第75层BOSS“饕餮鬃王”。||Go deep into the Secret Realm and defeat the Floor 75 BOSS, "Gluttonous Mane King".
+挑战秘境第76层||Secret Realm Challenge: Floor 76
+魔法看护让我进入试炼秘境挑战“飓风蝇”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Hurricane Fly".
+挑战秘境第77层||Secret Realm Challenge: Floor 77
+深入秘境，打败秘境第77层精英“污泥王”。||Go deep into the Secret Realm and defeat the Floor 77 elite, "Sludge King".
+挑战秘境第78层||Secret Realm Challenge: Floor 78
+深入秘境，打败秘境第78层精英“香蕉绅士”。||Go deep into the Secret Realm and defeat the Floor 78 elite, "Banana Gentleman".
+挑战秘境第79层||Secret Realm Challenge: Floor 79
+深入秘境，打败秘境第79层精英“魔牛绅士”。||Go deep into the Secret Realm and defeat the Floor 79 elite, "Demon Bull Gentleman".
+激战！秘境第80层boss||Fierce Fight! Secret Realm Floor 80 BOSS
+深入秘境，打败秘境第80层BOSS“蛇后妮卡”。||Go deep into the Secret Realm and defeat the Floor 80 BOSS, "Snake Queen Nika".
+挑战秘境第81层||Secret Realm Challenge: Floor 81
+魔法看护让我进入试炼秘境挑战“光年树妖”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Lightyear Dryad".
+挑战秘境第82层||Secret Realm Challenge: Floor 82
+深入秘境，打败秘境第82层精英“巨诞灵猿”。||Go deep into the Secret Realm and defeat the Floor 82 elite, "Colossal Spirit Ape".
+挑战秘境第83层||Secret Realm Challenge: Floor 83
+深入秘境，打败秘境第83层精英“恩赐天鹰”||Go deep into the Secret Realm and defeat the Floor 83 elite, the "Blessed Sky Eagle"
+挑战秘境第84层||Secret Realm Challenge: Floor 84
+深入秘境，打败秘境第84层精英“草莓大大”。||Go deep into the Secret Realm and defeat the Floor 84 elite, "Big Strawberry".
+激战！秘境第85层boss||Fierce Fight! Secret Realm Floor 85 BOSS
+深入秘境，打败秘境第85层BOSS“改造草食者”。||Go deep into the Secret Realm and defeat the Floor 85 BOSS, "Modified Grazer".
+挑战秘境第86层||Secret Realm Challenge: Floor 86
+魔法看护让我进入试炼秘境挑战“木妖绅士”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Wood Sprite Gentleman".
+挑战秘境第87层||Secret Realm Challenge: Floor 87
+深入秘境，打败秘境第87层精英“大力巨人”。||Go deep into the Secret Realm and defeat the Floor 87 elite, "Mighty Giant".
+挑战秘境第88层||Secret Realm Challenge: Floor 88
+深入秘境，打败秘境第88层精英“通灵巨人”。||Go deep into the Secret Realm and defeat the Floor 88 elite, "Spirit Giant".
+挑战秘境第89层||Secret Realm Challenge: Floor 89
+深入秘境，打败秘境第89层精英“大地统领者”。||Go deep into the Secret Realm and defeat the Floor 89 elite, "Earth Ruler".
+激战！秘境第90层boss||Fierce Fight! Secret Realm Floor 90 BOSS
+深入秘境，打败秘境第90层BOSS“鳄王拉比”。||Go deep into the Secret Realm and defeat the Floor 90 BOSS, "Croc King Rabi".
+挑战秘境第92层||Secret Realm Challenge: Floor 92
+深入秘境，打败秘境第92层精英“嗜血章王”。||Go deep into the Secret Realm and defeat the Floor 92 elite, "Bloodthirsty Octopus King".
+挑战秘境第93层||Secret Realm Challenge: Floor 93
+深入秘境，打败秘境第93层精英“绝望眼镜蛇”。||Go deep into the Secret Realm and defeat the Floor 93 elite, "Despair Cobra".
+挑战秘境第94层||Secret Realm Challenge: Floor 94
+深入秘境，打败秘境第94层精英“炼狱雪人”。||Go deep into the Secret Realm and defeat the Floor 94 elite, "Purgatory Snowman".
+激战！秘境第95层boss||Fierce Fight! Secret Realm Floor 95 BOSS
+深入秘境，打败秘境第95层BOSS“黑熊改造者”。||Go deep into the Secret Realm and defeat the Floor 95 BOSS, "Black Bear Modifier".
+挑战秘境第96层||Secret Realm Challenge: Floor 96
+魔法看护让我进入试炼秘境挑战“传说九凤天”。||The Magic Warden lets me enter the Trial Secret Realm to challenge "Legendary Nine Phoenix".
+挑战秘境第97层||Secret Realm Challenge: Floor 97
+深入秘境，打败秘境第97层精英“万年木乃伊”。||Go deep into the Secret Realm and defeat the Floor 97 elite, "Ten-Thousand-Year Mummy".
+挑战秘境第98层||Secret Realm Challenge: Floor 98
+深入秘境，打败秘境第98层精英“不死巨鳄”。||Go deep into the Secret Realm and defeat the Floor 98 elite, "Undying Giant Croc".
+挑战秘境第99层||Secret Realm Challenge: Floor 99
+深入秘境，打败秘境第99层精英“地狱使者”。||Go deep into the Secret Realm and defeat the Floor 99 elite, "Hell Emissary".
+激战！秘境第100层boss||Fierce Fight! Secret Realm Floor 100 BOSS
+深入秘境，打败秘境第100层BOSS“法老王威格夫”。||Go deep into the Secret Realm and defeat the Floor 100 BOSS, "Pharaoh Wigef".
+通过学习某种生活技能后，使用生活技能可以获取更多意想不到的材料和物品。||After learning a life skill, using it can bring unexpected materials and items.
+每个图腾的部分都代表着不同的力量，每一位优秀的魔法师都可以选择其中一个部分进行供奉，供奉的时间越久能得到的力量越强大！||Each part of a totem represents a different power; every fine wizard may choose one part to worship. The longer you worship, the stronger the power you gain!
+开启全新魔法之旅||Start a Brand-New Magic Journey
+欢迎来到魔法哈奇。你将在该任务中了解到基本的游戏操作。||Welcome to Magic Haqi. This quest teaches you the basic controls.
+与居民探讨魔法||Discuss Magic with Residents
+熟练掌握了一些简单的操作后，青龙导师让我利用追踪系统与居民谈话。||After mastering a few simple controls, Mentor Azure Dragon asks me to use the tracking system to talk with residents.
+阵营训练（一）||Faction Training (I)
+青龙导师让我利用任务追踪系统，传送到指定地点打败一只怪物。（完成任务后可以获得装备）||Mentor Azure Dragon asks me to use quest tracking to teleport to the marked spot and defeat a monster. (Rewards equipment)
+阵营训练（二）||Faction Training (II)
+阵营训练（三）||Faction Training (III)
+阵营训练（四）||Faction Training (IV)
+青龙导师让我利用任务追踪系统，传送到指定地点打败一只怪物。（完成任务后可以获得炫酷坐骑）||Mentor Azure Dragon asks me to use quest tracking to teleport to the marked spot and defeat a monster. (Rewards a cool mount)
+让自己变强||Make Yourself Stronger
+为了以后的出行做最好的准备，需要装备更好的武器来提升自己的实力。||To be fully prepared for the journeys ahead, equip better weapons to boost your strength.
+让自己变得更强||Make Yourself Even Stronger
+为了以后的出行做最好的准备，需要学会通过强化装备来提升自己的实力。||To be fully prepared for the journeys ahead, learn to upgrade equipment to boost your strength.
+明星宠物商人||Star Pet Merchant
+去找杰西卡了解宠物口粮的事情。||Go ask Jessica about pet food.
+喂养明星宠物||Feed the Star Pet
+杰西卡给了我一些战宠口粮，并教我如何喂养宠物。||Jessica gave me some pet food and taught me how to feed pets.
+魔法的奥义||The Essence of Magic
+青龙导师让我去认识一下五位系别导师，它们会和我讲述每个系别都具备哪些特点。||Mentor Azure Dragon asks me to meet the five school mentors; they will explain what makes each school special.
+领地守护者||Territory Guardian
+导师让我放轻松，然后去找领地守护者了解一些“考核”的相关事宜。||My mentor tells me to relax and visit the Territory Guardian to learn about the "exam".
+考核前的准备||Preparing for the Exam
+导师让我学会调整自己的卡包，将强力的卡牌放入卡包中。||My mentor wants me to learn to adjust my deck and put powerful cards in it.
+最后的考核||The Final Exam
+（利用任务追踪系统）打败“魔法营地”中死亡侦察兵。||(Use quest tracking) defeat the Death Scout in the Magic Camp.
+出发前往下一岛屿火鸟岛冒险。||Set off to adventure on the next island, Firebird Island.
+为了以后的出行做最好的准备，需要通过强化装备来提升自己的实力。||To be fully prepared for the journeys ahead, upgrade equipment to boost your strength.
+提升自己的实力||Boost Your Strength
+为了以后的出行做最好的准备，需要通过镶嵌宝石来提升自己的实力。||To be fully prepared for the journeys ahead, socket gems to boost your strength.
+捕获一只神奇宠物吧||Capture a Magic Pet
+点击任务传送到指定位置，使用抓宠符文捕获1只火鸟战士。||Click the quest to teleport to the marked spot and use a pet-catching rune to capture 1 Firebird Warrior.
+点击任务传送到指定位置，使用抓宠符文捕获1只炫冰穿天兽。||Click the quest to teleport to the marked spot and use a pet-catching rune to capture 1 Frost Sky Beast.
+点击任务传送到指定位置，使用抓宠符文捕获1只小米粒。||Click the quest to teleport to the marked spot and use a pet-catching rune to capture 1 Rice Grain.
+点击任务传送到指定位置，使用抓宠符文捕获1只雪狼首领。||Click the quest to teleport to the marked spot and use a pet-catching rune to capture 1 Snow Wolf Chief.
+点击任务传送到指定位置，使用抓宠符文捕获1只沙漠巨蜥。||Click the quest to teleport to the marked spot and use a pet-catching rune to capture 1 Desert Monitor.
+点击任务传送到指定位置，使用抓宠符文捕获1只火岩甲虫统帅。||Click the quest to teleport to the marked spot and use a pet-catching rune to capture 1 Fire Rock Beetle Marshal.
+神秘商人的限时回馈||The Mysterious Merchant's Limited Offer
+只要充值10魔豆（1元），立即获赠神秘商人带来的丰富礼物。||Top up 10 magic beans (CNY 1) and instantly receive rich gifts from the mysterious merchant.
+神秘商人的特别回馈||The Mysterious Merchant's Special Offer
+只要充值90魔豆（9元），立即获赠神秘商人带来的丰富礼物。||Top up 90 magic beans (CNY 9) and instantly receive rich gifts from the mysterious merchant.
+神秘商人的最大回馈||The Mysterious Merchant's Biggest Offer
+只要充值200魔豆（20元），立即获赠神秘商人带来的最丰富礼物。||Top up 200 magic beans (CNY 20) and instantly receive the richest gifts from the mysterious merchant.
+红蘑菇1v1竞赛||Red Mushroom 1v1 Contest
+在红蘑菇1v1天梯赛中达到1100分||Reach 1100 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1150分||Reach 1150 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1200分||Reach 1200 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1250分||Reach 1250 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1300分||Reach 1300 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1350分||Reach 1350 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1400分||Reach 1400 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1450分||Reach 1450 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1500分||Reach 1500 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1550分||Reach 1550 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1600分||Reach 1600 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1650分||Reach 1650 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1700分||Reach 1700 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1750分||Reach 1750 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1800分||Reach 1800 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1850分||Reach 1850 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1900分||Reach 1900 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到1950分||Reach 1950 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到2000分||Reach 2000 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到2050分||Reach 2050 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到2100分||Reach 2100 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到2150分||Reach 2150 points in the Red Mushroom 1v1 ladder
+在红蘑菇1v1天梯赛中达到2200分||Reach 2200 points in the Red Mushroom 1v1 ladder
+拉斐尔3v3城堡争夺战||Raphael 3v3 Castle Siege
+报名参加拉斐尔3v3城堡争夺战，并且获得一次胜利！||Sign up for the Raphael 3v3 Castle Siege and win a match!
+失落的上古宝藏||The Lost Ancient Treasure
+进入异界风暴之眼，击败冰魔伯爵和瘟疫领主，找到宝藏的埋藏地点的秘密！||Enter the Otherworld Eye of the Storm, defeat the Ice Demon Count and the Plague Lord, and uncover the secret of the treasure's burial site!
+英雄谷战斗号角的召唤！||The Call of the Hero Valley Battle Horn!
+参加英雄谷战斗，赢取上古宝藏和英雄积分！||Fight in Hero Valley battles to win ancient treasures and hero points!
+英雄谷之王争夺！||Fight to Be King of Hero Valley!
+参加每周的英雄谷之王争夺赛，赢取上古宝藏和英雄积分！||Join the weekly King of Hero Valley contest to win ancient treasures and hero points!
+双人搭档干活不累(第1次)||A Partner Makes It Easy (1st Time)
+报名参加红蘑菇2v2排名争夺战，轻松获得神级奖励！||Sign up for the Red Mushroom 2v2 ranked contest and easily earn divine rewards!
+双人搭档干活不累(第2次)||A Partner Makes It Easy (2nd Time)
+
+# js/view_adventure.js
+与{name}交谈||Talk to {name}
+击败{name}||Defeat {name}
+训练敌人||Training enemy
+去找{name}，接取新的任务。||Go to {name} to accept a new quest.
+任务已完成，向{name}回报。||Quest finished; report back to {name}.
+
+# js/view_adventure_quests.js
+收集{name}||Collect {name}
+
+# data/adventure/chapter.json
+欢迎来到魔法哈奇！我是你的魔法导师青龙，你将从我这里接到第一个新手任务。||Welcome to Magic Haqi! I am Azure Dragon, your magic mentor. Your first beginner quest comes from me.
+NEXT（下一步）||NEXT (Next)
+完成一系列的新手任务，可以帮助你掌握基本操作以及一些战斗技巧，迅速摆脱小白的称号。||A series of beginner quests will help you master the basics and some battle skills, quickly shaking off the rookie title.
+“做任务”可以获得许多经验，大量装备、战斗宠物以及初级必备用品等作为奖励。||Quests grant plenty of experience, plus lots of equipment, battle pets and beginner essentials as rewards.
+（“做任务”是最快成长的方式。）||(Questing is the fastest way to grow.)
+让我们开始吧！先来熟悉一下基本的游戏操作，请仔细看，其实相当简单。||Let's begin! First, get familiar with the basic controls. Look closely, it is quite simple.
+在游戏中，使用 WASD 或方向键移动；也可以点击或轻触地面自动寻路。触摸设备左下角有方向按钮。||In game, move with WASD or arrow keys; you can also click or tap the ground for auto pathing. Touch devices have direction buttons at the lower left.
+我明白了。||Got it.
+镜头会跟随你。点击居民走近交谈，或走到居民身边按 E；触摸设备也可以点下方的交谈按钮。||The camera follows you. Click a resident to walk over and talk, or walk up and press E; on touch devices, use the Talk button below.
+右上角的小地图可以帮助你认识营地。点击任务中的“追踪目标”，就会沿小路走向下一位居民。||The minimap at the top right helps you learn the camp. Click "Track objective" on a quest and you will walk the path to the next resident.
+我明白了，继续吧。||Got it, let's continue.
+都学会了吗？快自己试试吧！||Got all that? Try it yourself now!
+（还没有熟悉操作的话，还是关闭对话框后重新再看一次吧。）||(If the controls still feel new, close this dialog and go through it once more.)
+好好学习努力修炼，通过我的最终考核后，便正式踏上魔法之旅。||Study hard and practice well; pass my final exam and you will formally begin your magic journey.
+我已经掌握了基本操作，可以开始下一阶段的学习了。||I have the basics down and am ready for the next stage.
+好，看你已经充满信心。加油前进吧！||Good, you look confident. Onward!
+（第一个任务完成了。）||(First quest finished.)
+你好，很高兴在这里见到你。||Hello, nice to meet you here.
+你想知道点什么呢？||What would you like to know?
+你为什么想要学习魔法呢？||Why do you want to learn magic?
+每当我使用魔法的时候，都感到很快乐！这种快乐无法用金钱来衡量，是无价的。||Whenever I use magic I feel joy! That joy cannot be measured in money; it is priceless.
+我知道了，谢谢你。||I see, thank you.
+我想知道学习魔法有什么好处？||I want to know what good learning magic does?
+学习魔法可以消灭一切罪恶根源，让自己也变得更为强大！||Learning magic can root out all evil and make you stronger too!
+（思考中）我知道了，谢谢你。||(Thinking) I see, thank you.
+我相信冥冥中很多事都是注定的，你有想过自己为什么来到这里吗？||I believe many things are destined. Have you thought about why you came here?
+我想从这里开始，一步一步的学习更多强大的魔法。||I want to start here and learn more powerful magic step by step.
+我被魔法的惊奇所感染，甘愿花费大半辈子的时间潜行修炼魔法。那你为什么想要学习魔法？||I was struck by the wonder of magic and gladly spent half a lifetime quietly practicing it. And why do you want to learn magic?
+（思考中）||(Thinking)
+不用马上回答我的问题，我希望你可以带着这个问题一边思考，一边询问岛上的居民，看看他们的答案又是什么。||No need to answer right away. Carry the question with you, think it over, and ask the island's residents what their answers are.
+好的。导师，我想以最快速度完成任务。||Okay. Mentor, I want to finish quests as fast as possible.
+想快速找到任务目标，就点击任务手记里的“追踪目标”。你会沿小路自动走过去，十分方便。||To find quest objectives fast, click "Track objective" in your quest journal. You will walk the path there automatically. Very handy.
+看来在你的心里，已经有了真正的答案。告诉我，你为什么想要学习魔法？||It seems you already hold the true answer in your heart. Tell me, why do you want to learn magic?
+关于这个神奇的世界，我的了解还太少。||I still know too little about this wondrous world.
+哦？那么你想开启那道通往神秘魔法世界的大门吗？||Oh? Then do you want to open the gate to that mysterious world of magic?
+想！我要学习更多的魔法，拥有更强大的力量，去探索这未知的一切。||Yes! I want to learn more magic, gain greater power, and explore all the unknowns.
+青龙导师让我利用任务追踪系统，沿小路前往指定地点打败一只怪物。（完成任务后可以获得装备）||Mentor Azure Dragon asks me to use quest tracking, follow the path to the marked spot and defeat a monster. (Rewards equipment)
+我在附近安置了一个1级的烈火侦查兵，你去消灭看看，完成以后我会给你一顶神奇的帽子。||I stationed a Level 1 Fire Scout nearby. Go destroy it and I will give you a magic hat.
+战斗时，点击或轻触一张卡牌，再选择目标就可以施法。魔力不足时可以跳过回合；不需要的卡牌可以弃掉。||In battle, click or tap a card, then choose a target to cast. Skip your turn when pips run short; discard cards you do not need.
+知道了，我现在就去试试。||Got it, I'll try right now.
+刚才的战斗中，你是不是希望学会更多不同的卡牌技能？||In that battle, did you wish you knew more card skills?
+不断成长就能学习到不同的技能，获得更多的卡牌。||Keep growing and you will learn new skills and gain more cards.
+（原来在不同的等级阶段，我可以学习不同的本系卡牌技能。）||(So at different levels I can learn different skills of my own school.)
+既然你顺利的完成了任务，我就送你一顶神奇的帽子。这顶帽子携带了一张卡牌，如果戴上了帽子就可以使用附加的卡牌技能。||Since you finished the quest, take this magic hat. It carries a card; wear the hat to use its attached card skill.
+（我可以按快捷键B打开装备菜单查看装备。）||(I can press B to open the equipment menu and check my gear.)
+游戏中会按阶段弹出小提示，我希望你可以多加留意，这样对成长也是相当有帮助的。||The game shows tips at stages; keep an eye out for them, they really help you grow.
+(切勿忽略一些重要的游戏提示。）||(Never ignore important game tips.)
+我在附近安置了一个2级的寒冰侦查兵，你去消灭看看，完成以后我会给你一件不错的衣服。||I stationed a Level 2 Ice Scout nearby. Go destroy it and I will give you a nice outfit.
+（我要使用任务追踪，以最快速度完成任务！）||(I'll use quest tracking to finish this quest fast!)
+既然你顺利的完成了任务，我就送你一件不错的衣服。||Since you finished the quest, take this nice outfit.
+（按B打开装备菜单，将获得的装备穿上。）||(Press B to open the equipment menu and put on the new gear.)
+你知道"魔法营地"的来历吗？||Do you know the story of the "Magic Camp"?
+我还不太了解。||Not really.
+魔法营地是一座四面环海的小岛，有一股强大的光明能量将岛屿包围。||The Magic Camp is a small island surrounded by sea, wrapped in a mighty light energy.
+一旦有黑暗的气息靠近这座岛屿，光明能量就激发出强大的漩涡和海流阻隔一切黑暗。所以在这座岛屿上修炼魔法十分安全。||Whenever darkness draws near, the light energy stirs up powerful whirlpools and currents to block it. So practicing magic here is very safe.
+这真是一座神奇的岛屿。||What a wondrous island.
+岛上的怪物都是善良的侦察兵。它们平日会专门巡逻岛屿保障安全，还专门给你们这些新生的魔法师做平日战斗练习之用。||The monsters here are kind scouts. They patrol the island to keep it safe, and serve as sparring partners for young wizards like you.
+原来如此。||I see.
+好了，你现在该去练习了。 这次的任务是让你打败一只3级的风暴侦察兵，回来以后我奖励你一双很结实的鞋子。||Now go practice. This quest is to defeat a Level 3 Storm Scout; come back and I will reward you with a sturdy pair of shoes.
+明白。||Understood.
+打侦察兵打得很爽吧？||Fighting scouts feels great, right?
+如果把它们给打败了，这座岛屿不就不安全了吗？||If they are defeated, doesn't the island become unsafe?
+你不必担心被你打败的侦察兵会不会消失死亡等等，它们经过改良，修复能力异常的快速，不一会就可以原地重生。||Do not worry about the scouts you defeat vanishing or dying; they are modified with astonishing recovery and will regenerate on the spot in no time.
+原来是这样，太神奇了。||So that's how it is. Amazing.
+既然你顺利的完成了任务，我就送你一双很结实的鞋子。||Since you finished the quest, take this sturdy pair of shoes.
+（我可以按B打开装备菜单，将获得的装备穿上。）||(Press B to open the equipment menu and put on the new gear.)
+青龙导师让我利用任务追踪系统，沿小路前往指定地点打败一只怪物。（任务奖励以对话中的奖励清单为准）||Mentor Azure Dragon asks me to use quest tracking, follow the path to the marked spot and defeat a monster. (Rewards are as listed in the dialogue)
+你已经练习战斗了几次，现在感觉如何？||You have practiced a few battles now; how does it feel?
+得心应手了！||Like a natural!
+那么我再适当增加一些难度。我在附近安置了一只精英级别的生命侦查兵，如果你能打败它，我会给你大量的仙豆作为奖励，可以用这些仙豆来购买所需要的装备。||Then let me raise the difficulty a bit. I stationed an elite Life Scout nearby. Defeat it and I will reward you with plenty of fairy beans to buy the gear you need.
+（点击任务追踪上的任务到目标怪物的周围将怪物消灭。）||(Click the tracked quest to reach the target monster and destroy it.)
+你好像有心事。||You seem to have something on your mind.
+真想到外面的世界看看……||I really want to see the world out there...
+你很快就可以凭借自己的实力，去迎接全新的挑战。||Soon you will rely on your own strength to face brand-new challenges.
+要为了以后的出行做最好的准备，你现在需要获得更好的武器来提升自己的实力。||To be fully prepared for the journeys ahead, you need better weapons to boost your strength.
+好的。||Okay.
+随着我们不断的成长，在不同等级阶段我们应该穿着适合的装备。打怪物时也会更得心应手。||As we grow, we should wear gear suited to our level. Fighting monsters becomes much easier too.
+一般情况下，我们获取的仙豆是这个世界上最主流的货币。基本上所有的装备都可以通过仙豆来换购。||Usually, the fairy beans we earn are the world's main currency. Nearly all equipment can be bought with them.
+去找青龙吧，他会给你一把好的法杖，并告诉你如何强化法杖。||Go to Azure Dragon; he will give you a good wand and tell you how to upgrade it.
+以后你要学会自己用仙豆购买装备和强化装备，知道了吗？||From now on you should learn to buy and upgrade gear with fairy beans yourself, understood?
+（接取任务）||(Accept the quest)
+来，这是给你的法杖。||Here, this wand is for you.
+嗯嗯！||Yes!
+我现在会告诉你如何强化这一把法杖，仔细看好了哦。||Now I will show you how to upgrade this wand. Watch closely.
+(完成任务)||(Finish the quest)
+要为了以后的出行做最好的准备，你现在需要学会通过“强化装备”来提升自己的实力。||To be fully prepared for the journeys ahead, you now need to learn to boost your strength through "Upgrade equipment".
+用仙豆兑换了新的装备后，我们还可以对该装备进行等级强化。整体装备强化后，效果就会非常明显。||After exchanging fairy beans for new gear, we can upgrade its level. Once a full set is upgraded, the effect is striking.
+同样，强化时所需要的材料也是仙豆，所以平时多攒点仙豆准没错。||Upgrading materials are also fairy beans, so it never hurts to save up.
+（仙豆是主流货币，攒多点仙豆可以购买/强化）||(Fairy beans are the main currency; save up to buy and upgrade)
+点击任务追踪，或打开背包里的“强化装备”，选择晶石法杖并点击“强化”。第一次需要70仙豆；强化任意一件支持强化的装备后，回来找我交任务吧！||Click quest tracking, or open "Upgrade equipment" in your bag, select the Crystal Wand and click "Upgrade". The first time costs 70 fairy beans. After upgrading any equipment that supports it, come back and turn in the quest!
+尝试强化装备了吗？||Tried upgrading equipment?
+嗯嗯，果然提升了自身的属性。||Yes, my stats really improved.
+你的表现一直很不错，我送你一只出奇蛋吧！打开蛋可以获得一只宠物。||You have done very well; take this Surprise Egg! Open it to get a pet.
+好的，谢谢导师。||Okay, thank you, Mentor.
+打开蛋了吗？去找杰西卡吧！她会告诉你一些宠物相关知识。||Opened the egg? Go find Jessica! She will teach you about pets.
+嗯，好的。||Okay.
+那么，你想了解一些关于战斗宠物的事情吗？||So, would you like to know about battle pets?
+想，请你告诉我吧。||Yes, please tell me.
+在原来的魔法世界里，一些怪物还可以捕捉成为战宠。这段旅程中，我们先来照顾从出奇蛋中获得的小伙伴。||In the original magic world, some monsters could be captured as battle pets. On this journey, we start by caring for the companion from your Surprise Egg.
+我明白了，原来是这样。||I see, so that's how it is.
+宠物会跟随你一起探索。这次先学习喂养，让它健康长大；捕捉和宠物战斗的课程留待以后的冒险。||Pets explore with you. This time, learn feeding and help it grow healthy; capturing and pet battles come in later adventures.
+（已经获得过的宠物就不可以再去捕捉了，安心喂养吧！）||(Pets you already own cannot be captured again; just feed them happily!)
+点击下方“宠物”，或按 P 打开宠物面板，查看它的信息。想让宠物快点长大，可以喂它吃一些战宠口粮。||Click "Pet" below or press P to open the pet panel and view its info. To help it grow faster, feed it some pet food.
+希望你一路顺风。||Have a good journey.
+谢谢你，杰西卡。||Thank you, Jessica.
+我给了你几包宠物口粮，想知道如何喂养宠物吗？||I gave you a few packs of pet food; want to learn how to feed your pet?
+当然想，不然我的宠物会吃不饱的！||Of course, otherwise my pet will go hungry!
+打开“宠物”面板，点击“喂养一包战宠口粮”。每包增加300经验，让你的小伙伴长大吧！||Open the "Pet" panel and click "Feed a pack of pet food". Each pack adds 300 experience; help your little companion grow!
+你身旁这只可爱的宠物看起来真健康啊！||The cute pet beside you looks really healthy!
+嗯，我刚刚才喂饱了它呢！||Yes, I just fed it full!
+你好，我是烈火系魔法导师。||Hello, I am the Fire school mentor.
+你好，我是烈火魔法导师-伏尔坎。你想了解更多关于烈火魔法的事情吗？||Hello, I am Vulcan, the Fire mentor. Want to know more about Fire magic?
+请说。||Please go on.
+烈火魔法也代表着热情与执着，一般来说，在对抗多个敌人时对比其它系别的魔法会更为有效。||Fire magic stands for passion and persistence; against multiple enemies it tends to outperform other schools.
+(如果需要使用群体攻击横扫敌人，可以选修烈火系的魔法。）||(If you want area attacks to sweep enemies, consider the Fire school.)
+你好，我是寒冰系魔法导师。||Hello, I am the Ice school mentor.
+你好，我是寒冰魔法导师-艾米娜。你想了解更多关于寒冰魔法的事情吗？||Hello, I am Amina, the Ice mentor. Want to know more about Ice magic?
+寒冰魔法是冷酷与持久的象征，在每场战斗都能拥有更强劲的防守。||Ice magic symbolizes cold resolve and endurance, giving stronger defense in every battle.
+(如果在攻击的同时还需要更多的防御，可以选修寒冰系的魔法。）||(If you want more defense alongside offense, consider the Ice school.)
+你好，我是风暴系魔法导师。||Hello, I am the Storm school mentor.
+你好，我是风暴魔法导师-高登。你想了解更多关于风暴魔法的事情吗？||Hello, I am Gordon, the Storm mentor. Want to know more about Storm magic?
+风暴魔法雷厉风行，单体攻击最为强大。适合喜欢速战速决的魔法师学习。||Storm magic is swift and decisive, with the strongest single-target attacks. It suits wizards who like quick battles.
+(如果想追求最强的单体攻击，可以选修风暴系的魔法。）||(If you want the strongest single-target attacks, consider the Storm school.)
+你好，我是生命系魔法导师。||Hello, I am the Life school mentor.
+你好，我是生命魔法导师-爱丽丝。你想了解更多关于生命魔法的事情吗？||Hello, I am Alice, the Life mentor. Want to know more about Life magic?
+使用生命魔法可以重燃一切希望，在战斗中不仅可以充当辅助，也可以作较强的单体攻击。||Life magic can rekindle all hope; in battle it can support allies and also strike as a strong single-target attack.
+(如果想在战斗中能恢复血量，可以选修生命系的魔法。）||(If you want to restore health in battle, consider the Life school.)
+你好，我是死亡系魔法导师。||Hello, I am the Death school mentor.
+你好，我是死亡魔法导师-磊奥。你想了解更多关于死亡魔法的事情吗？||Hello, I am Leo, the Death mentor. Want to know more about Death magic?
+掌握了死亡魔法，就代表你可以驾驭神秘的黑暗力量。在攻击时能够吸取敌方的血，然后再将其转换成为自己的生命。||Mastering Death magic means wielding mysterious dark power. Your attacks drain enemy blood and convert it into your own health.
+(如果想在攻击的同时吸取敌方的血量，我可以选修死亡系的魔法。）||(If you want to drain health while attacking, consider the Death school.)
+我想你对不同种类的魔法了解并不是太多，去见五位魔法导师吧。||I think you do not know the different kinds of magic well yet; go meet the five mentors.
+每个系别的魔法都有不同的特点。认识五位导师后，也想想自己的学系擅长什么，怎样把学会的法术配合起来使用。||Each school's magic has its own traits. After meeting the five mentors, think about what your school excels at and how to combine your spells.
+(再给自己一些时间，考虑清楚。）||(Take some more time to think it over.)
+随着等级提升，你会自动学会本系的新卡牌。打开“卡包”查看已学会的魔法，按加减按钮调整份数，再保存卡包。||As you level up, new cards of your school are learned automatically. Open "Cards" to view learned spells, adjust copies with the plus/minus buttons, then save the deck.
+(等下有空可以去各系导师处查看魔法面板。）||(Later, visit each school's mentor to view their magic panels.)
+需要帮忙吗？||Need help?
+你好，年轻人。||Hello, young one.
+你好，看守者。我想了解一下这只怪物的弱点。||Hello, Keeper. I want to learn this monster's weakness.
+我好久都没看到那么阳光的人了，就凭这一点，我决定把这只臭哄哄的怪物的弱点全部告诉你。||I have not seen such a sunny person in ages; for that alone, I will tell you everything about this stinky monster's weakness.
+请大概说一下。||Please give me an overview.
+这只怪上辈子就是吸血鬼,在攻击的同时还会吸血，所以你一定要尽快将它打倒。||This monster was a vampire in a past life; it drains blood as it attacks, so bring it down as fast as you can.
+谢谢你的提醒。||Thanks for the warning.
+唔……看了你一直以来的表现，我想先透露一些关于“考核”的小情报给你。||Hmm... given how you have been doing, let me leak some inside info about the "exam".
+是什么呢？||What is it?
+本次的考核将在这座岛上一个神秘领地进行。到时候，你将前往领地击败一只最强大的BOSS。||The exam will take place on a mysterious territory of this island. You will go there and defeat its mightiest BOSS.
+好像颇有难度的样子。||Sounds quite challenging.
+而在领地的附近，有一位领地看守者。在考核前，你得要先去和他打声招呼，或许他心情可以给你提供更多的”作战提示“。||Near the territory lives a Territory Guardian. Before the exam, go say hello; depending on his mood he may share more battle tips.
+放轻松，现在就出发去找领地看守者。||Relax, and set off to find the Territory Guardian now.
+怎么样？||How is it going?
+我相信我一定可以通过最终考核。||I believe I can pass the final exam.
+我刚才奖励了你一个卡包，你现在要做的事情就是把老旧的卡包替换成这个新的。||I just rewarded you a deck; what you need to do now is replace your old deck with this new one.
+先在“背包”装备翡翠口袋，再打开“卡包”放入更强力的卡牌。可以使用“推荐配卡”，最后点击“保存卡包”。||First equip the Emerald Pocket in your "Bag", then open "Cards" and add stronger cards. You can use "Recommended", then click "Save deck".
+学会了吗？以后遇到大型战斗前一定要好好调整一下自己卡牌。||Got it? Before any big battle, always adjust your cards well.
+好的，我学会了。||Okay, I've got it.
+嗯，考核的时间到了。||Well, exam time has come.
+（如果已经准备好了，可以再次和导师说话，接取考核任务。）||(When ready, talk to your mentor again to accept the exam quest.)
+你准备好了吗？||Are you ready?
+我准备好了。||I am ready.
+本次的考核将在这座岛上一个神秘领地进行。只要你将怪物死亡侦察兵击败，就能顺利通过这次考核。||The exam takes place on a mysterious territory of this island. Defeat the Death Scout and you will pass.
+你的冒险之旅即将正式开始了！你要记住，整个生命就是一场冒险，而走得最远的人，常是愿意去做，并愿意去冒险的人。||Your adventure is about to officially begin! Remember, all of life is an adventure, and those who go farthest are usually the ones willing to act and take risks.
+fine！期待我出航的那一刻。||Fine! I cannot wait for the moment I set sail.
+如果你在旅程中遇到什么危难，不要慌乱，因为这些都是需要遇到的事。如果畏惧艰难不愿意向前，那么你永远都会在原地踏步的。||If you meet danger on your journey, do not panic; these things must be met. Fear the hardship and refuse to move forward, and you will stand still forever.
+我的魔法冒险即将开始了。||My magic adventure is about to begin.
+
+# data/adventure/quest-journal.json
+章鱼守卫||Octopus Guard
+绿色食蚁兽||Green Anteater
+小米粒||Rice Grain
+松木妖||Pine Sprite
+火红亡灵猴||Fiery Undead Monkey
+风鹰首领||Wind Eagle Chief
+沙地泥兽||Sand Mud Beast
+沙漠巨蜥||Desert Monitor
+精髓甲虫||Essence Beetle
+死亡亡灵蛇||Death Undead Snake
+食人花之王||Piranha King
+巨蜥之王||Monitor Lizard King
+甲虫之王||Beetle King
+万蛇之王||Serpent King
+泥兽之王||Mud Beast King
+狂暴的嗜血暴鳄拉尔齐||Frenzied Bloodthirsty Croc Larqi
+给别人投人气||Give popularity to others
+捕获一只胖乎乎水母||Capture a chubby jellyfish
+1级未鉴定魂珠||Level 1 Unidentified Soul Orb
+2级未鉴定魂珠||Level 2 Unidentified Soul Orb
+3级未鉴定魂珠||Level 3 Unidentified Soul Orb
+4级未鉴定魂珠||Level 4 Unidentified Soul Orb
+5级未鉴定魂珠||Level 5 Unidentified Soul Orb
+6级未鉴定魂珠||Level 6 Unidentified Soul Orb
+7级未鉴定魂珠||Level 7 Unidentified Soul Orb
+1级灵魂碎片||Level 1 Soul Shard
+2级灵魂碎片||Level 2 Soul Shard
+3级灵魂碎片||Level 3 Soul Shard
+4级灵魂碎片||Level 4 Soul Shard
+5级灵魂碎片||Level 5 Soul Shard
+6级灵魂碎片||Level 6 Soul Shard
+7级灵魂碎片||Level 7 Soul Shard
+1阶咕噜噜的魂印||Tier 1 Gululu Soul Seal
+2阶菠萝小姐的魂印||Tier 2 Miss Pineapple Soul Seal
+3阶火鸟战士的魂印||Tier 3 Firebird Warrior Soul Seal
+4阶烈火蟹的魂印||Tier 4 Fire Crab Soul Seal
+5阶小米粒的魂印||Tier 5 Rice Grain Soul Seal
+6阶风鹰首领的魂印||Tier 6 Wind Eagle Chief Soul Seal
+7阶沙漠巨蜥的魂印||Tier 7 Desert Monitor Soul Seal
+1阶死亡泡泡的魂印||Tier 1 Death Bubble Soul Seal
+2阶草莓姑娘的魂印||Tier 2 Miss Strawberry Soul Seal
+3阶幽魂章鱼的魂印||Tier 3 Ghost Octopus Soul Seal
+4阶烈火蟹首领的魂印||Tier 4 Fire Crab Chief Soul Seal
+5阶亡灵猴的魂印||Tier 5 Undead Monkey Soul Seal
+6阶爆牙火熊的魂印||Tier 6 Fang-Burst Fire Bear Soul Seal
+7阶邪恶守卫的魂印||Tier 7 Evil Guard Soul Seal
+8阶亡灵蛇的魂印||Tier 8 Undead Snake Soul Seal
+8阶食人花的魂印||Tier 8 Piranha Plant Soul Seal
+9阶千年木乃伊的魂印||Tier 9 Millennium Mummy Soul Seal
+9阶阿努比斯的魂印||Tier 9 Anubis Soul Seal
+10阶火龙魔师的魂印||Tier 10 Fire Dragon Mage Soul Seal
+10阶冰龙魔师的魂印||Tier 10 Ice Dragon Mage Soul Seal
+铁壳的泪水||Ironshell's Tears
+胖胖的泪水||Chubby's Tears
+巨锤仙人掌||Hammer Cactus
+格斗仙人掌||Brawler Cactus
+铁拳仙人王||Iron Fist Cactus King
+玄冰葫芦||Mysterious Ice Gourd
+冰糖葫芦||Candied Hawthorn
+火焰果||Flame Fruit
+烈火蟹||Fire Crab
+烈火蟹首领||Fire Crab Chief
+白糖冰糕||White Sugar Popsicle
+噬巫鼠首领||Witchbane Rat Chief
+章鱼首领||Octopus Chief
+炫冰穿天兽||Frost Sky Beast
+金指环||Gold Ring
+邪恶雪人||Evil Snowman
+傀儡首领1号||Puppet Chief No.1
+傀儡首领2号||Puppet Chief No.2
+火鸟战士首领||Firebird Warrior Chief
+火鸟蛋||Firebird Egg
+凤凰之影||Phoenix Shadow
+流晶石||Flow Crystal
+稀有石块||Rare Stone
+远古稀石||Ancient Rare Stone
+大地巨人首领||Earth Giant Chief
+风暴蝎||Storm Scorpion
+变异风暴蝎||Mutated Storm Scorpion
+风暴蝎首领||Storm Scorpion Chief
+生命源液||Life Essence
+松木妖首领||Pine Sprite Chief
+锭色冥火||Ingot Netherfire
+紫色冥火||Purple Netherfire
+蓝色冥火||Blue Netherfire
+红色冥火||Red Netherfire
+蝉丝藤蔓||Cicada Silk Vine
+生命之魂||Life Soul
+烈火雪狼||Fire Snow Wolf
+生命雪狼||Life Snow Wolf
+死亡雪狼||Death Snow Wolf
+雪狼首领||Snow Wolf Chief
+巨牙冰熊||Fanged Ice Bear
+七彩石头||Rainbow Stone
+古奇的玄铁镐||Goochi's Dark Iron Pick
+霍伊斯||Hoiss
+艾俄罗斯||Aiolos
+狡猾天鼠||Cunning Sky Rat
+食蚁兽统领||Anteater Commander
+斯诺曼黑暗面||Snoman's Dark Side
+白茅根||Cogon Grass Root
+古沙之石||Ancient Sand Stone
+荒漠枯花妖||Desert Withered Flower Sprite
+亡灵枯花妖||Undead Withered Flower Sprite
+烈火食人花||Fire Piranha Plant
+寒冰食人花||Ice Piranha Plant
+沙漠巨蜥首领||Desert Monitor Chief
+章鱼精英统领||Octopus Elite Commander
+惊雷甲虫||Thunderclap Beetle
+火岩甲虫||Fire Rock Beetle
+火岩甲虫统帅||Fire Rock Beetle Marshal
+蓝通灵碎片||Blue Spirit Fragment
+红通灵碎片||Red Spirit Fragment
+黄通灵碎片||Yellow Spirit Fragment
+魂通灵碎片||Soul Spirit Fragment
+邪灵木乃伊||Evil Spirit Mummy
+强而有力的匕首||Powerful Dagger
+毒蛇首领||Viper Chief
+法老王图坦卡蒙||Pharaoh Tutankhamun
+瘟疫领主真身||Plague Lord True Form
+被封印的上古君王头冠||Sealed Crown of the Ancient Monarch
+秘境第90层BOSS||Secret Realm Floor 90 BOSS
+破旧银制风铃的第1块碎片||Broken Silver Wind Chime Fragment 1
+破旧银制风铃的第2块碎片||Broken Silver Wind Chime Fragment 2
+破旧银制风铃的第3块碎片||Broken Silver Wind Chime Fragment 3
+冰魔伯爵||Ice Demon Count
+白色魔力晶石||White Magic Crystal
+乌晶石||Onyx Crystal
+黄色魔力晶石||Yellow Magic Crystal
+绿色魔力晶石||Green Magic Crystal
+赤晶石||Crimson Crystal
+中级药丸包裹||Medium Pill Pack
+暴躁的上古梦龙守卫||Irritable Ancient Dream Dragon Guard
+幼年上古梦龙||Young Ancient Dream Dragon
+黑暗男爵分身||Dark Baron Avatar
+杀手埃尔温||Assassin Erwin
+千年木乃伊萨鲁||Millennium Mummy Salu
+试炼宝库大王||Trial Vault King
+黑暗男爵真身||Dark Baron True Form
+梦魇章鱼头目||Nightmare Octopus Leader
+魔牛舅舅||Demon Bull Uncle
+咕噜王||Gulu King
+拉尔齐的尖齿（精英难度）||Larqi's Sharp Fangs (Elite)
+试炼徽章||Trial Badge
+英雄谷徽章||Hero Valley Badge
+赛场英雄徽章||Arena Hero Badge
+超魔生成率||Super pip rate
+本系攻击力||Own-school attack
+最大防御力||Max defense
+白龙考官||White Dragon Examiner
+秘境第1层守卫||Secret Realm Floor 1 Guard
+秘境第2层守卫||Secret Realm Floor 2 Guard
+秘境第3层守卫||Secret Realm Floor 3 Guard
+秘境第4层守卫||Secret Realm Floor 4 Guard
+秘境第5层BOSS||Secret Realm Floor 5 BOSS
+秘境第6层守卫||Secret Realm Floor 6 Guard
+秘境第7层守卫||Secret Realm Floor 7 Guard
+秘境第8层守卫||Secret Realm Floor 8 Guard
+秘境第9层守卫||Secret Realm Floor 9 Guard
+秘境第10层BOSS||Secret Realm Floor 10 BOSS
+秘境第11层守卫||Secret Realm Floor 11 Guard
+秘境第12层守卫||Secret Realm Floor 12 Guard
+秘境第13层守卫||Secret Realm Floor 13 Guard
+秘境第14层守卫||Secret Realm Floor 14 Guard
+秘境第15层BOSS||Secret Realm Floor 15 BOSS
+秘境第16层守卫||Secret Realm Floor 16 Guard
+秘境第17层守卫||Secret Realm Floor 17 Guard
+秘境第18层守卫||Secret Realm Floor 18 Guard
+秘境第19层守卫||Secret Realm Floor 19 Guard
+秘境第20层BOSS||Secret Realm Floor 20 BOSS
+秘境第21层守卫||Secret Realm Floor 21 Guard
+秘境第22层守卫||Secret Realm Floor 22 Guard
+秘境第23层守卫||Secret Realm Floor 23 Guard
+秘境第24层守卫||Secret Realm Floor 24 Guard
+秘境第25层BOSS||Secret Realm Floor 25 BOSS
+秘境第26层守卫||Secret Realm Floor 26 Guard
+秘境第27层守卫||Secret Realm Floor 27 Guard
+秘境第28层守卫||Secret Realm Floor 28 Guard
+秘境第29层守卫||Secret Realm Floor 29 Guard
+秘境第30层BOSS||Secret Realm Floor 30 BOSS
+秘境第31层守卫||Secret Realm Floor 31 Guard
+秘境第32层守卫||Secret Realm Floor 32 Guard
+秘境第33层守卫||Secret Realm Floor 33 Guard
+秘境第34层守卫||Secret Realm Floor 34 Guard
+秘境第35层BOSS||Secret Realm Floor 35 BOSS
+秘境第36层守卫||Secret Realm Floor 36 Guard
+秘境第37层守卫||Secret Realm Floor 37 Guard
+秘境第38层守卫||Secret Realm Floor 38 Guard
+秘境第39层守卫||Secret Realm Floor 39 Guard
+秘境第40层BOSS||Secret Realm Floor 40 BOSS
+秘境第41层守卫||Secret Realm Floor 41 Guard
+秘境第42层守卫||Secret Realm Floor 42 Guard
+秘境第43层守卫||Secret Realm Floor 43 Guard
+秘境第44层守卫||Secret Realm Floor 44 Guard
+秘境第45层BOSS||Secret Realm Floor 45 BOSS
+秘境第46层守卫||Secret Realm Floor 46 Guard
+秘境第47层守卫||Secret Realm Floor 47 Guard
+秘境第48层守卫||Secret Realm Floor 48 Guard
+秘境第49层守卫||Secret Realm Floor 49 Guard
+秘境第50层BOSS||Secret Realm Floor 50 BOSS
+秘境第51层精英||Secret Realm Floor 51 Elite
+秘境第52层精英||Secret Realm Floor 52 Elite
+秘境第53层精英||Secret Realm Floor 53 Elite
+秘境第54层精英||Secret Realm Floor 54 Elite
+秘境第55层BOSS||Secret Realm Floor 55 BOSS
+秘境第56层精英||Secret Realm Floor 56 Elite
+秘境第57层精英||Secret Realm Floor 57 Elite
+秘境第58层精英||Secret Realm Floor 58 Elite
+秘境第59层精英||Secret Realm Floor 59 Elite
+秘境第60层BOSS||Secret Realm Floor 60 BOSS
+秘境第61层精英||Secret Realm Floor 61 Elite
+秘境第62层精英||Secret Realm Floor 62 Elite
+秘境第63层精英||Secret Realm Floor 63 Elite
+秘境第64层精英||Secret Realm Floor 64 Elite
+秘境第65层BOSS||Secret Realm Floor 65 BOSS
+秘境第66层精英||Secret Realm Floor 66 Elite
+秘境第67层精英||Secret Realm Floor 67 Elite
+秘境第68层精英||Secret Realm Floor 68 Elite
+秘境第69层精英||Secret Realm Floor 69 Elite
+秘境第70层BOSS||Secret Realm Floor 70 BOSS
+秘境第71层精英||Secret Realm Floor 71 Elite
+秘境第72层精英||Secret Realm Floor 72 Elite
+秘境第73层精英||Secret Realm Floor 73 Elite
+秘境第74层精英||Secret Realm Floor 74 Elite
+秘境第75层BOSS||Secret Realm Floor 75 BOSS
+秘境第76层精英||Secret Realm Floor 76 Elite
+秘境第77层精英||Secret Realm Floor 77 Elite
+秘境第78层精英||Secret Realm Floor 78 Elite
+秘境第79层精英||Secret Realm Floor 79 Elite
+秘境第80层BOSS||Secret Realm Floor 80 BOSS
+秘境第81层精英||Secret Realm Floor 81 Elite
+秘境第82层精英||Secret Realm Floor 82 Elite
+秘境第83层精英||Secret Realm Floor 83 Elite
+秘境第84层精英||Secret Realm Floor 84 Elite
+秘境第85层BOSS||Secret Realm Floor 85 BOSS
+秘境第86层精英||Secret Realm Floor 86 Elite
+秘境第87层精英||Secret Realm Floor 87 Elite
+秘境第88层精英||Secret Realm Floor 88 Elite
+秘境第89层精英||Secret Realm Floor 89 Elite
+秘境第92层精英||Secret Realm Floor 92 Elite
+秘境第93层精英||Secret Realm Floor 93 Elite
+秘境第94层精英||Secret Realm Floor 94 Elite
+秘境第95层BOSS||Secret Realm Floor 95 BOSS
+秘境第96层精英||Secret Realm Floor 96 Elite
+秘境第97层精英||Secret Realm Floor 97 Elite
+秘境第98层精英||Secret Realm Floor 98 Elite
+秘境第99层精英||Secret Realm Floor 99 Elite
+秘境第100层BOSS||Secret Realm Floor 100 BOSS
+烈火侦察兵||Fire Scout
+寒冰侦察兵||Ice Scout
+风暴侦察兵||Storm Scout
+生命侦察兵||Life Scout
+强化一次装备||Upgrade equipment once
+口粮喂养一次宠物||Feed pet food once
+切换一次卡包||Switch deck once
+死亡侦察兵||Death Scout
+成功强化一次装备||Successfully upgrade equipment once
+镶嵌一颗宝石||Socket a gem
+成功镶嵌一颗宝石||Successfully socket a gem
+捕获火鸟战士||Capture a Firebird Warrior
+捕获炫冰穿天兽||Capture a Frost Sky Beast
+捕获小米粒||Capture a Rice Grain
+捕获雪狼首领||Capture the Snow Wolf Chief
+捕获沙漠巨蜥||Capture a Desert Monitor
+捕获火岩甲虫统帅||Capture the Fire Rock Beetle Marshal
+充值魔豆的数量||Number of magic beans topped up
+红蘑菇1v1||Red Mushroom 1v1
+拉斐尔3v3||Raphael 3v3
+参加红蘑菇2v2次数||Red Mushroom 2v2 matches played
+
+# js/view_adventure_local_map.js
+魔法营地||Magic Camp
+哈奇岛||Haqi Island
+火鸟岛||Firebird Island
+寒冰岛||Ice Island
+沙漠岛||Desert Island
+幽暗岛||Dark Isle
+哈奇小镇||Haqi Town
+魔法师之路||Wizard's Path
+试炼秘境||Trial Realm
+其他任务||Other quests
+导师广场||Mentor Square
+训练林地||Training Grove
+营地传送门||Camp Portal
+雪山眺望台||Snowpeak Overlook
+西部密林||Western Woods
+金色山谷||Golden Valley
+河畔田野||Riverside Fields
+南部湖畔||South Lakeshore
+东部海滨||East Shore
+南岸沙滩||South Beach
+西南登陆地||Southwest Landing
+中央岔路||Central Fork
+金树高地||Golden Tree Heights
+火山环道||Volcano Loop
+熔岩边缘||Lava Edge
+西部岩台||West Rock Terrace
+冰海南港||Ice Sea Harbor
+浮冰通道||Floe Passage
+西部松林||Western Pines
+北部雪岭||North Snow Ridge
+冰蓝高地||Ice-Blue Heights
+东部冰原||Eastern Ice Field
+南部绿洲||South Oasis
+西侧遗迹||Western Ruins
+中央峡谷||Central Canyon
+北部沙丘||North Dunes
+东北高台||Northeast Mesa
+东部岩谷||East Rock Valley
+南部旧广场||South Old Square
+中央幽谷||Central Hollow
+西北禁地||Northwest Forbidden Ground
+北部密林||North Woods
+东部瞭望台||East Lookout
+东北石脊||Northeast Stone Ridge
+在营地认识五系导师，沿道路开始初心旅程。||Meet the five mentors in camp and start the beginner journey along the road.
+沿林间训练道路寻找侦察兵。||Follow the forest training road to find the scouts.
+营地中央的五系导师广场，沿道路向北进入训练林地。||The five mentors' square in the center of camp. Follow the road north into the training grove.
+营地南侧的道路尽头，通往哈奇小镇与世界地图。||The end of the road on the south side of camp, leading to Haqi Town and the world map.
+北方的雪峰与山脚林地连成一线。沿山路向东，可以望见金色的山谷。||The northern snow peaks run into the woods at their foot. Follow the mountain road east to see the golden valley.
+林间小路弯向雪山，河岸的岔路则通往南边田野。留意远离大路的怪物。||The forest path bends toward the snow peaks, and the fork by the river leads to the southern fields. Watch for monsters off the main road.
+金色岩坡隔开了北方山地和东部海岸。沿南坡绕行，可以回到小镇。||Golden rock slopes separate the northern mountains from the east coast. Follow the south slope back to town.
+农田之间留着宽阔的田埂。过桥是小镇，沿河向南则是一片安静的湖岸。||Wide ridges run between the fields. Cross the bridge for town, or follow the river south to a quiet lakeshore.
+河水在这里汇成湖泊。水泡怪在远处的岸边活动，主路上可以安心经过。||The river gathers into a lake here. Bubble creatures wander the far shore; the main road is safe to pass.
+熟悉的小镇是探索的起点。西行过桥去田野，北行通往山谷，东行可到海滨。||The familiar town is where exploration starts. Cross the bridge west to the fields, go north to the valley, or east to the shore.
+海风从东边吹来。原版地图上的游乐区域位于这一侧，专属设施和故事将逐步补全。||The sea breeze comes from the east. The original map's amusement area is on this side; its rides and stories will be filled in over time.
+从小镇走到海边，沿弯曲的沙滩回望山林。营地传送门就在小镇南侧。||Walk from town to the sea and look back at the woods along the curving beach. The camp portal is just south of town.
+西南海岸是登岛起点，北行通向高地，东侧道路绕过熔岩。||The southwest coast is the landing. North leads to the heights, and the east road goes around the lava.
+火山山脊在这里分成两条路，一条通向北部，一条绕行东南。||The volcanic ridge splits here: one road goes north, the other loops southeast.
+原图北方的金色巨树是这片高地的视觉中心。||The golden great tree from the original northern art is the landmark of these heights.
+环道绕开炽热熔岩，桥头连接东部岩坡。||The loop road stays clear of the hot lava, and the bridge joins the eastern rock slope.
+熔岩占据东南低地，沿标记的桥梁与石路行进。||Lava fills the southeast lowland. Stay on the marked bridges and stone road.
+西部高低岩台与狭窄小路形成另一条回程路线。||The high and low rock terraces in the west, with a narrow path, make another way back.
+从南部港湾踏上浮冰通道，北方雪峰指引前进方向。||Step from the south harbor onto the floe passage. The northern snow peaks show the way.
+冰块之间留有深水，沿冰桥前往东侧雪原。||Deep water lies between the ice. Follow the ice bridge to the snowfield on the east.
+西部背风坡仍有松林，从这里可绕回海港。||Pines still stand on the sheltered western slope. From here you can loop back to the harbor.
+积雪覆盖北方山岭，山路连接西部林地和东部高地。||Snow covers the northern ridge. The mountain road joins the western woods and the eastern heights.
+高地的冰蓝山峰与雪道构成寒冰岛的远景。||Ice-blue peaks and snow tracks make the distant view of Ice Island.
+开阔冰原与浮冰通道相连，南行可以返回港湾。||The open ice field joins the floe passage. South leads back to the harbor.
+南部水源是旅程的起点，向北进入峡谷，向西可到遗迹。||The southern water is the start of the journey. North enters the canyon, and west reaches the ruins.
+西侧伸入海中的石台与古老遗迹由狭路连接。||A narrow path joins the stone terrace that reaches into the sea with the ancient ruins.
+峡谷中的道路分向西侧遗迹、北部沙丘和东方高地。||Roads in the canyon split toward the western ruins, the north dunes, and the eastern heights.
+开阔沙丘围绕北方小水源，远处的岩壁标示道路边界。||Open dunes surround the small northern spring. The far rock wall marks the edge of the road.
+东北独立高台经曲折坡道抵达，参考原图高地和古建筑的关系。||The standalone northeast mesa is reached by a winding ramp, following the original heights and ruins.
+东南岩谷保留回环路线，可沿南坡返回绿洲。||The southeast rock valley keeps a loop. Follow the south slope back to the oasis.
+南方旧广场是幽暗岛入口，穿过山谷道路前往中央林地。||The old southern square is the entrance to Dark Isle. The valley road leads to the central woods.
+岩壁与树影包围中央谷地，岔路通向不同高地。||Rock walls and tree shadows enclose the central hollow. The forks lead to different heights.
+西北红色险地参考原图的独立环形地标，沿外环经过。||The red northwest hazard follows the original ring landmark. Stay on the outer loop.
+北方森林延伸至高地，薄雾中仍可沿路牌返回。||The northern forest climbs toward the heights. The signposts still lead back through the mist.
+东侧地标眺望外海，曲折道路连接中央山谷。||The eastern landmark looks out to sea. A winding road joins the central valley.
+东北石脊提供另一条连通北部密林的道路。||The northeast stone ridge is another road into the northern woods.
+{name}地形与当前位置||{name} terrain and your location
+传送到{name}||Teleport to {name}
+建议 {level} 级||Recommended level {level}
+{name}，当前位置，建议 {level} 级前往||{name}, you are here, recommended level {level}
+{name}，建议 {level} 级前往||{name}, recommended level {level}
+查看世界地图||View the world map
+离开副本||Leave the dungeon
+待迁移怪物||Monster pending migration
+{name}，以后就一起冒险吧。||{name}, let's adventure together.
+{hero}和{pet}站在一起||{hero} and {pet} stand together
+{school}系技能动画预览||{school} skill preview
+确认选择{school} · 开始冒险||Choose {school} · Begin the adventure
+生命 {hp} / {max}||HP {hp} / {max}
+{minutes} 分钟||{minutes} min
+{name} × {count}||{name} × {count}
+、||, 
+还需 {minutes} 分钟||{minutes} min left
+{minute}分钟葫芦：{label}||{minute}-minute gourd: {label}
+再领 {count} 仙豆||Claim {count} more fairy beans
+今日累计在线 {minutes} 分钟 · 普通奖励 {base}/5 · 魔法星奖励 {vip}/5||Online today {minutes} min · regular rewards {base}/5 · Magic Star rewards {vip}/5
+当前拥有 {count} 仙豆||Fairy beans: {count}
+魔法星 {level} 级：每个葫芦额外 {count} 仙豆||Magic Star level {level}: {count} extra fairy beans per gourd
+{status}，点击查看任务详情||{status}, click to view the quest
+{title}，{status}，查看任务详情||{title}, {status}, view the quest
+{text}，追踪||{text}, track
+{school}系||{school}
+{done} / 14 · 全岛 {claimed}||{done} / 14 · island quests {claimed}
+{done} / 14||{done} / 14
+{caster} → {target} · {card}||{caster} → {target} · {card}
+{target} 受到 {amount} 点伤害||{target} takes {amount} damage
+{target} 恢复 {amount} 点生命||{target} recovers {amount} HP
+{caster}：{text}||{caster}: {text}
+{target}捕获成功！||{target} captured!
+{target}挣脱了抓宠符文||{target} broke free of the catching rune
+{target}挣脱了晶球||{target} broke free of the orb
+{caster} 跳过本回合||{caster} skips this turn
+{caster} 的魔法失误了||{caster}'s spell fizzled
+副本加载失败：{message}，请重试。||Failed to load the dungeon: {message}. Please try again.
+已抵达{name}。||Arrived at {name}.
+已接取：{title}。追踪已满3个，请先取消一条。||Accepted: {title}. Tracking is full (3). Cancel one first.
+已接取：{title}||Accepted: {title}
+已完成：{title}||Completed: {title}
+{name}：{description}||{name}: {description}
+查看{name}||View {name}
+挑战{name}||Challenge {name}
+会员剩余 {days} 天已兑换为 {beans} 魔豆||{days} days of membership exchanged for {beans} magic beans
+前往副本挑战{name}||Enter a dungeon to challenge {name}
+{name}不在当前已开放的遭遇里。||{name} is not in an open encounter yet.
+{name}需要在冒险中继续完成。||{name} still needs to be finished in the adventure.
+接取任务 · {title}||Accept quest · {title}
+完成任务 · {title}||Turn in quest · {title}
+第 {turn} 回合||Turn {turn}
+{region} · {status}||{region} · {status}
+{shown} / {total} 项||{shown} / {total}
+与{name}交谈，完成指导。||Talk to {name} to finish the lesson.
+确定放弃「{title}」吗？进度会清除，之后可以重新接取。||Abandon "{title}"? Progress will be cleared, and you can accept it again later.
+查看{name}详情||View {name}
+点击空白处 / 空格 · {action}||Click empty space / Space · {action}
+
+# js/view_adventure_local_map.js
+选择渔网||Choose a net
+本次渔获 0||Catch this trip: 0
+海边捕鱼||Shore fishing
+结束捕鱼||Stop fishing
+海边捕鱼操作||Shore fishing controls
+未能使用药剂，请重试。||Could not use the potion. Please try again.
+必中网与捕鱼器点海面即可自动收网，奖励仍按原兑换表。||Sure-hit nets and fishers haul automatically when you tap the water. Rewards still follow the original exchange table.
+罩住鱼影，再看准金色区收网；失手不扣网和精力。||Cover the fish shadow, then haul when the needle is in the gold zone. A miss costs neither net nor stamina.
+点鱼影撒网，指针进入金色区时收网。空格也能操作；点陆地离开。||Tap a fish shadow to cast. Haul when the needle enters the gold zone. Space works too; tap land to leave.
+没有渔网。可从米酒葫芦领取，或查看背包。||No fishing net. Claim one from the rice-wine gourds, or check your bag.
+背包里没有渔网。可从米酒葫芦领取。||There is no fishing net in the bag. Claim one from the rice-wine gourds.
+等指针进入金色区，再点收网！||Wait until the needle enters the gold zone, then tap Haul!
+鱼影已锁定，点击收网。||The fish shadow is locked. Tap Haul.
+渔网正在合拢…||The net is closing…
+未能保存这次渔获，请重试。||Could not save this catch. Please try again.
+未能保存||Could not save
+鱼影溜走了||The fish shadow got away
+收网||Haul
+收网中…||Hauling…
+
+# data/adventure/chapter.json
+任务63000–63013按编号串联，去除等级上限锁；地图距离缩短。||Quests 63000–63013 are chained by number, without the level-cap lock; map distances are shorter.
+旧版视角、传送和教学演示改为浏览器操作；原对白与逐条改编记录均保存在章节数据。||The old camera, teleport and tutorial demos are browser controls; the original dialogue and each adaptation note stay in the chapter data.
+毕业后来到哈奇小镇；原任务63014前往火鸟岛，未纳入本章。||After graduation you reach Haqi Town; the original quest 63014 to Firebird Island is not part of this chapter.
+1–10级经验阈值按原任务奖励编排；技能解锁时间为本章安排。||Experience thresholds for levels 1–10 follow the original quest rewards; skill unlock timing is arranged for this chapter.
+原出奇蛋随机结果在本章固定为水咕噜；宠物仅跟随、喂养，不参战。||The original Surprise Egg's random result is fixed as a water Gululu in this chapter; pets only follow and can be fed, and do not fight.
+VIP仙豆礼盒保留为纪念收藏，不开放充值或随机兑换。||The VIP fairy-bean gift box is kept as a souvenir and does not open top-up or random exchange.
+帽子、衣服、鞋子奖励保留本系选项；桌面鼠标提示同步适配触摸。||Hat, clothes and shoe rewards keep your school's options; desktop mouse hints are adapted for touch.
+部分营地居民共用原版立绘，外观资源映射不改变NPC身份。||Some camp residents share original portraits; the art mapping does not change who the NPC is.
+初始基础牌每种3份；装备附带法术作为额外固定手牌补充。||Each starter basic card has 3 copies; spells attached to equipment are extra fixed cards in hand.
+胜负后恢复生命；无耐久损耗、在线计时、会员或节日暴怒机制。||HP recovers after a win or loss; there is no durability loss, online timer, membership or holiday rage.
+
+# js/view_adventure.js
+{level}级：{amount}仙豆||Level {level}: {amount} fairy beans
+捕鱼网||Fishing Net
+精力值药剂(小)||Stamina Potion (Small)
+特大捕鱼网||Extra-large Fishing Net
+幸运铜币||Lucky Copper Coin
+自动战斗药丸||Auto-battle Pill
+翻倍捕鱼网||Double Fishing Net

@@ -37,7 +37,9 @@ import { checkedProgress } from './adventure_cloud_core.js';
 import { renderCloud } from './view_adventure_cloud.js';
 import {renderMaps} from './view_adventure_maps.js';
 import { regionAt } from './adventure_island_layout_core.js';
+import { fill, setText, tr } from './locale_runtime.js';
 import { isOcean } from './adventure_fishing_core.js';
+import { createSceneFishing } from './view_adventure_scene_fishing.js';
 import { createRoleStore } from './adventure_roles.js';
 import { MAX_ROLES } from './adventure_roles_core.js';
 import { renderRoles } from './view_adventure_roles.js';
@@ -86,7 +88,10 @@ let joystick={x:0,y:0},heldPointer=null;
 function resetMovementInput(){keys.clear();joystick={x:0,y:0};heldPointer=null;touchMovement.reset();}
 const touchIndicator=V.el('div','touch-joystick floating-joystick active',V.el('span','joystick-stick'));
 touchIndicator.hidden=true;touchIndicator.setAttribute('aria-hidden','true');nodes.world.parentElement.append(touchIndicator);
-const fishingView={netId:null,message:''};
+const sceneFishing=createSceneFishing(nodes.world.parentElement,{
+    isWater:point=>world&&!dungeonFor(assets.content,world.zone)&&isOcean(world,point.x,point.y),
+    action:value=>performAction(value),focus:()=>nodes.world.focus({preventScroll:true}),
+},{el:V.el,button:V.button});
 const touchMovement=bindTouchMovement(nodes.world,touchIndicator,{enabled:()=>stage==='world'&&!panel&&!dialog,steer:(x,y)=>{joystick={x,y};path=[];destination=null;heldPointer=null;},zoom:factor=>renderer?.zoomBy(factor),tap:(x,y)=>clickWorld(x,y)});
 const shopView={category:'pet',query:'',school:'',slot:'',ownership:'',page:0},petView={selected:null};
 const equipmentView={tab:'gear',slot:0,item:null,query:''};
@@ -94,7 +99,7 @@ const gemView={guid:null,gemId:null,runes:[null,null,null],runeIndex:0,step:'equ
 const strengtheningView={guid:null,filter:0,page:0,pending:false,message:''};
 let serviceNpc=null;
 const npcServiceView={query:'',page:0};
-const model=()=>({assets,save,dungeonLoading,serviceNpc,npcServiceView,fishingView,membership:membership.state,membershipView,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled,learningProgress:battle?.learningProgress||0});
+const model=()=>({assets,save,dungeonLoading,serviceNpc,npcServiceView,membership:membership.state,membershipView,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled,learningProgress:battle?.learningProgress||0});
 const tutor=createTutor();
 setGlossAligner((top,bottom)=>tutor.requestLLM([
     {role:'system',content:'Pair corresponding words between the two lines. Return JSON only: {"groups":[{"color":0,"top":"Back","bottom":"回到"}]}. Use the same color number for a matching pair. Keep each fragment exactly as it appears. Do not translate or explain.'},
@@ -169,7 +174,12 @@ function showRewards(before){
     for(const item of event.items)if(item.kind==='card')item.name=assets.dataset.cards[item.key]?.name||item.name;
     rewardFeedback.push(event);
 }
-function toast(message) {nodes.toast.textContent=message;nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);}
+function toast(message, vars) {
+    const filled = vars ? fill(message, vars) : { zh: String(message ?? ''), text: tr(message) };
+    if (nodes.toast.dataset) nodes.toast.dataset.zh = filled.zh;
+    nodes.toast.textContent = filled.text;
+    nodes.toast.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>nodes.toast.classList.remove('visible'),4200);
+}
 function safely(fn) {try{return fn();}catch(e){toast(e.message);return false;}}
 let persistTimer=0;
 function queuePersist() {
@@ -179,10 +189,10 @@ function queuePersist() {
 function persist() {
     if(!save||stage==='title')return;
     try {if(!roleStorage)throw Error('尚未选择角色');saveLocal(save,roleStorage);storageWarning=false;}catch {if(!storageWarning)toast('进度未能保存，可能是其他页面已更新。请勿关闭页面，检查存储后重试。');storageWarning=true;}
-    const indicator=document.querySelector('.save-indicator');if(indicator){indicator.textContent=storageWarning?'存档未保存':'';indicator.hidden=!storageWarning;}
+    const indicator=document.querySelector('.save-indicator');if(indicator){setText(indicator,storageWarning?'存档未保存':'');indicator.hidden=!storageWarning;}
     lastSave=performance.now();
 }
-function close() {nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
+function close() {sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>openPanel('membership'),cloud:openCloud,track,untrack,interact:interactNearest});}
 function paintPanel() {
     if(['map','worldmap','localmap'].includes(panel)&&world.layout){renderMaps(nodes.overlay,world,model(),{close,track,travel,draw:(canvas,options)=>renderer.minimap(canvas,world,save,options),teleport:teleportToLandmark,switchMap:view=>openPanel(view==='world'?'worldmap':'map')},panel==='worldmap'?'world':'local');return;}
@@ -285,7 +295,7 @@ async function buyVipProduct(value) {
         return performAction(value,{keepworkVip:status.isVip,expiresAt:status.expiresAt,now:Date.now()});
     }catch(error){toast(error.message);return false;}finally{buyingVip=false;}
 }
-function performAction(value,access={}) {return safely(()=>{const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['npc-purchase','checkin','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}if(value.type==='fish'||value.type==='stamina-potion'){fishingView.message=result?.message||'';fishingView.netId=value.netId||fishingView.netId;}showRewards(before);queueCloudSave();paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(result?.message||text[value.type]||'进度已保存');return result?.message?result:true;});}
+function performAction(value,access={}) {return safely(()=>{const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['npc-purchase','checkin','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}showRewards(before);queueCloudSave();paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(result?.message||text[value.type]||'进度已保存');return result?.message?result:true;});}
 let exchangingBeans=false;
 function maybeExchangeMagicBeans({announce=true}={}) {
     if(exchangingBeans||!assets||!save||!roleStore?.owner||save.pendingEncounter)return;
@@ -301,7 +311,7 @@ function maybeExchangeMagicBeans({announce=true}={}) {
         exchangeMagicBeans(next,assets.content,member,record,now);
         save=roleStore.commitMagicBeanExchange(next,quote.until);
         storageWarning=false;
-        toast(`会员剩余 ${quote.days} 天已兑换为 ${quote.beans} 魔豆`);
+        toast('会员剩余 {days} 天已兑换为 {beans} 魔豆',{days:quote.days,beans:quote.beans});
         if(announce)showRewards(before);
         paintHud();
         if(panel)paintPanel();
@@ -475,35 +485,35 @@ function teleportToLandmark(id){safely(()=>{
 });}
 async function loadAndEnterDungeon(id,restart=false){
     if(dungeonLoading||stage!=='world')return;
-    if(restart&&!confirm('重新开启会重置该副本的清怪进度，确定继续吗？'))return;
+    if(restart&&!confirm(tr('重新开启会重置该副本的清怪进度，确定继续吗？')))return;
     const target=save,epoch=roleEpoch,zone=save.zone;
     dungeonLoading=id;paintPanel();
     try{
         await assets.dungeons.load(id);
         if(save!==target||epoch!==roleEpoch||stage!=='world'||panel!=='dungeons'||save.zone!==zone)return;
         enterDungeon(save,assets.content,id,{restart});enterWorld(save);queueCloudSave();
-    }catch(error){toast('副本加载失败：'+error.message+'，请重试。');}
+    }catch(error){toast('副本加载失败：{message}，请重试。',{message:error.message});}
     finally{dungeonLoading=null;if(panel==='dungeons')paintPanel();}
 }
 function exitDungeon(){safely(()=>{leaveDungeon(save,assets.content);enterWorld(save);queueCloudSave();});}
 function travel(zone){safely(()=>{
     const status=travelStatus(save,assets.content,zone);
-    if(status.allowed&&status.requiresConfirmation&&!window.confirm('那里很危险，确定还要前往吗？'))return;
+    if(status.allowed&&status.requiresConfirmation&&!window.confirm(tr('那里很危险，确定还要前往吗？')))return;
     if(dungeonFor(assets.content,save.zone))leaveDungeon(save,assets.content);
-    A.applyAction(save,assets.content,{type:'travel',zone});enterWorld(save);showTeleportEffect();toast(`已抵达${islandName(zone)}。`);
+    A.applyAction(save,assets.content,{type:'travel',zone});enterWorld(save);showTeleportEffect();toast('已抵达{name}。',{name:islandName(zone)});
 });}
 function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog,{close,next:nextDialogue,startQuest:q=>startLines(q.startDialog,'接取任务',()=>{
-    const result=A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(result.full?`已接取：${q.title}。追踪已满3个，请先取消一条。`:`已接取：${q.title}`);
+    const result=A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(result.full?'已接取：{title}。追踪已满3个，请先取消一条。':'已接取：{title}',{title:q.title});
 }),finishQuest:q=>startLines(q.endDialog,'领取奖励',()=>{
     const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim',questId:q.id,npcId:q.endNpc});
     showRewards(before);return 'reward';
 }),startCatalog:q=>{
-    const result=A.applyAction(save,assets.content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});persist();toast(result.full?`已接取：${q.title}。追踪已满3个，请先取消一条。`:`已接取：${q.title}`);paintDialogue();paintHud();
+    const result=A.applyAction(save,assets.content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});persist();toast(result.full?'已接取：{title}。追踪已满3个，请先取消一条。':'已接取：{title}',{title:q.title});paintDialogue();paintHud();
 },finishCatalog:q=>{
     const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});
-    persist();showRewards(before);toast(`已完成：${q.title}`);close();paintHud();
+    persist();showRewards(before);toast('已完成：{title}',{title:q.title});close();paintHud();
 },questTalk:(q,talk)=>startQuestTalk(talk),panel:openPanel,travel,track,freeTalk:openFreeTalk});}
 function startQuestTalk(talk) {
     startLines(talk.dialog,'谢谢你，我知道了',()=>{
@@ -540,7 +550,7 @@ function interact(target) {
         if(talk)startQuestTalk(talk);else paintDialogue();
     }
     if(target.kind==='portal'&&(target.id===world.entrancePortal?.id||!world.portal.hidden)){if(dungeonFor(assets.content,save.zone))exitDungeon();else openPanel('worldmap');}
-    if(target.kind==='landmark')toast(`${target.name}：${target.description}`);
+    if(target.kind==='landmark')toast('{name}：{description}',{name:target.name,description:target.description});
     if(target.kind==='encounter')safely(()=>{
         A.beginEncounter(save,assets.content,target.id,{keepworkVip:membership.state.isVip,expiresAt:membership.state.expiresAt,now:Date.now()});persist();
         battle=P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';close();nodes.hud.hidden=true;
@@ -560,32 +570,32 @@ function trackCatalog(id) {
     const goal=catalogGoalRows(save,c,quest,snap).find(g=>g.value<g.count);
     const npcId=!state.accepted?quest.startNpc:ready?quest.endNpc:goal?.kind==='talk'?goal.id:0;
     if(!state.accepted&&catalogAcceptBlock(save,c,quest,snap)){toast(catalogAcceptBlock(save,c,quest,snap));return;}
-    if(!state.accepted&&(!c.npcs[quest.startNpc]||quest.startNpc===-1)){A.applyAction(save,c,{type:'accept-catalog',questId:id,npcId:quest.startNpc});toast(`已接取：${quest.title}`);paintHud();return;}
+    if(!state.accepted&&(!c.npcs[quest.startNpc]||quest.startNpc===-1)){A.applyAction(save,c,{type:'accept-catalog',questId:id,npcId:quest.startNpc});toast('已接取：{title}',{title:quest.title});paintHud();return;}
     if(ready&&(!c.npcs[quest.endNpc]||quest.endNpc===-1)){
         const before=rewardSnapshot(save);
         A.applyAction(save,c,{type:'claim-catalog',questId:id,npcId:quest.endNpc});
-        showRewards(before);toast(`已完成：${quest.title}`);paintHud();return;
+        showRewards(before);toast('已完成：{title}',{title:quest.title});paintHud();return;
     }
     if(npcId&&c.npcs[npcId]){
         if(save.zone!==c.npcs[npcId].zone){travel(c.npcs[npcId].zone);if(save.zone!==c.npcs[npcId].zone)return;}
         const placed=world.npcs.find(n=>n.id===npcId);
         if(placed){walkTo({...placed,kind:'npc',questDialogue:true},true);return;}
-        if(!state.accepted){A.applyAction(save,c,{type:'accept-catalog',questId:id,npcId:quest.startNpc});toast(`已接取：${quest.title}`);paintHud();return;}
-        if(ready){const before=rewardSnapshot(save);A.applyAction(save,c,{type:'claim-catalog',questId:id,npcId:quest.endNpc});showRewards(before);toast(`已完成：${quest.title}`);paintHud();return;}
+        if(!state.accepted){A.applyAction(save,c,{type:'accept-catalog',questId:id,npcId:quest.startNpc});toast('已接取：{title}',{title:quest.title});paintHud();return;}
+        if(ready){const before=rewardSnapshot(save);A.applyAction(save,c,{type:'claim-catalog',questId:id,npcId:quest.endNpc});showRewards(before);toast('已完成：{title}',{title:quest.title});paintHud();return;}
     }
     if(goal&&(goal.kind==='kill'||goal.kind==='loot')){
         const goalIds=goal.kind==='kill'?[goal.id]:goal.producers;
         const encounter=c.encounters.find(e=>(e.monsterIds||[e.monsterId]).some(mid=>goalIds.includes(c.catalogQuests.paths[String(c.monsters[mid]?.source||'').toLowerCase()])));
         const placed=encounter&&world.encounters.find(e=>e.id===encounter.id);
         if(placed){walkTo({...placed,kind:'encounter'},true);return;}
-        if(encounter){toast(`前往副本挑战${goal.name}`);openPanel('dungeons');return;}
-        toast(`${goal.name}不在当前已开放的遭遇里。`);return;
+        if(encounter){toast('前往副本挑战{name}',{name:goal.name});openPanel('dungeons');return;}
+        toast('{name}不在当前已开放的遭遇里。',{name:goal.name});return;
     }
     if(goal?.kind==='custom'&&[79016,79025].includes(goal.id)){openPanel('upgrade');return;}
     if(goal?.kind==='custom'&&[79017,79026].includes(goal.id)){openPanel('inventory');return;}
     if(goal?.kind==='custom'&&goal.id===79019){openPanel('pet');return;}
     if(goal?.kind==='custom'&&goal.id===79037){openPanel('deck');return;}
-    toast(goal?`${goal.name}需要在冒险中继续完成。`:'任务已记录在手记中。');
+    toast(goal?'{name}需要在冒险中继续完成。':'任务已记录在手记中。',goal?{name:goal.name}:undefined);
     paintHud();
 }
 function track(questId, options={}) {
@@ -675,6 +685,7 @@ function tickAnimation(now) {
 const directionKeys={w:'up',arrowup:'up',s:'down',arrowdown:'down',a:'left',arrowleft:'left',d:'right',arrowright:'right'};
 window.addEventListener('keydown',e=>{
     if(rewardRoot.contains(e.target))return;
+    if(sceneFishing.key(e)){e.preventDefault();return;}
     if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
     const key=e.key.toLowerCase();if(directionKeys[key]&&stage==='world'&&!panel&&!dialog){e.preventDefault();heldPointer=null;keys.add(directionKeys[key]);path=[];destination=null;}
     if(e.repeat)return;
@@ -686,11 +697,16 @@ window.addEventListener('keydown',e=>{
 window.addEventListener('keyup',e=>{keys.delete(directionKeys[e.key.toLowerCase()]);});
 window.addEventListener('blur',()=>{resetMovementInput();path=[];destination=null;persist();});
 window.addEventListener('pagehide',persist);
-document.addEventListener('visibilitychange',()=>{spellSound.stop();if(document.hidden){resetMovementInput();path=[];destination=null;persist();music?.pause();}else{if(stage==='world'&&save?.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);updateMusic();}});
+document.addEventListener('visibilitychange',()=>{spellSound.stop();if(document.hidden){sceneFishing.stop();resetMovementInput();path=[];destination=null;persist();music?.pause();}else{if(stage==='world'&&save?.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);updateMusic();}});
 window.addEventListener('pagehide',()=>spellSound.stop());
 function clickWorld(clientX,clientY) {
     const {p,target}=pickWorldTarget(clientX,clientY);
-    if(!target&&isOcean(world,p.x,p.y)){openPanel('fishing');return false;}
+    if(!target&&!dungeonFor(assets.content,world.zone)&&isOcean(world,p.x,p.y)){
+        if(sceneFishing.active)sceneFishing.aim(p);
+        else{resetMovementInput();path=[];destination=null;sceneFishing.start(p,model());}
+        return false;
+    }
+    if(sceneFishing.active)sceneFishing.stop();
     walkTo(target||p,!!target);
     return !target;
 }
@@ -740,14 +756,29 @@ function frame(now) {
         if(auto&&world.autoContact!==auto.id){world.autoContact=auto.id;interact(auto);}
         else if(destination&&W.distance(save.position,destination)<82)interact(destination);
         const near=W.nearestInteraction(world,save.position),button=$('interact');
-        if(world.layout){const label=nodes.hud.querySelector('.location-label small'),region=regionAt(world,save.position);if(label&&label.textContent!==region.name)label.textContent=region.name;}
-        if(button){button.hidden=!near;if(near)button.textContent=near.kind==='npc'?`与${near.name}交谈`:near.kind==='landmark'?`查看${near.name}`:near.kind==='portal'?near.name:`挑战${assets.content.monsters[near.monsterId]?.name||'待迁移怪物'}`;}
+        if(world.layout){const label=nodes.hud.querySelector('.location-label small'),region=regionAt(world,save.position);if(label&&label.dataset.zh!==region.name)setText(label,region.name);}
+        if(button){
+            button.hidden=!near;
+            if(near){
+                const monster=assets.content.monsters[near.monsterId]?.name||'待迁移怪物';
+                const next=near.kind==='npc'?['与{name}交谈',{name:near.name}]:near.kind==='landmark'?['查看{name}',{name:near.name}]:near.kind==='portal'?[near.name,null]:['挑战{name}',{name:monster}];
+                const zh=next[1]?fill(next[0],next[1]).zh:next[0];
+                if(button.dataset.zh!==zh){if(next[1])setText(button,next[0],next[1]);else setText(button,next[0]);}
+            }
+        }
         if((wasMoving&&!moving)||(moving&&now-lastSave>3000))queuePersist();
     }
     const rewardEffect=rewardFeedback.tick(now,stage==='world'&&!panel&&!dialog);
     const bagButton=nodes.hud.querySelector('[data-ui-icon=bag]')?.closest('button');bagButton?.classList.toggle('reward-glow',!rewardRoot.hidden&&!!rewardRoot.querySelector('.reward-popup:not([hidden]) strong'));
     if(teleportEffect&&(stage!=='world'||now-teleportEffect.started>=TELEPORT_EFFECT_MS))teleportEffect=null;
     renderer.render(world,save,now,{moving,path,title:stage==='title',rewardEffect,teleportEffect});
+    if(sceneFishing.active){
+        if(stage!=='world'||panel||dialog||moving||document.hidden)sceneFishing.stop();
+        else{
+            const origin=renderer.screenToWorld(0,0),unit=renderer.screenToWorld(1,1);
+            sceneFishing.update(model(),now,p=>({x:(p.x-origin.x)/(unit.x-origin.x),y:(p.y-origin.y)/(unit.y-origin.y)}));
+        }
+    }
     if(stage==='battle'){const presentation=tickAnimation(now),canvas=$('battle-canvas');V.updateBattleRoster(nodes.battle.battleStatusEntries,presentation);if(canvas)canvas.battlePositions=renderer.renderBattle(canvas,battle,save,now,presentation);}
 }
 async function boot(){
@@ -756,12 +787,12 @@ async function boot(){
             const bar=$('load-progress');
             if(!bar)return;
             if(value===null)bar.removeAttribute('value');else bar.value=value;
-            bar.setAttribute('aria-label',label);
-            $('load-status').textContent=label+'…';
-            $('load-detail').textContent=detail;
+            bar.setAttribute('aria-label',tr(label));
+            setText($('load-status'),String(label).endsWith('…')?label:`${label}…`);
+            setText($('load-detail'),detail);
         });
-        $('load-status').textContent='正在初始化世界…';
-        $('load-detail').textContent='';
+        setText($('load-status'),'正在初始化世界…');
+        setText($('load-detail'),'');
         $('load-progress').removeAttribute('value');
         if(assets.content.schemaVersion!==1||!assets.content.quests?.length||!assets.dataset.cards)throw new Error('章节数据格式不正确，请重新导出并检查资源。');
         installLocaleTooltip();
@@ -773,7 +804,7 @@ async function boot(){
         // Keep the loading screen until session restoration chooses the final screen.
         // Rendering the guest title first briefly exposes creation/role selection.
         if(localStorage.getItem(LAST_ACCOUNT_KEY)){
-            $('load-status').textContent='正在恢复账号与角色…';
+            setText($('load-status'),'正在恢复账号与角色…');
             await connectRoles(false);
         }
         if(stage==='loading')await showTitle(!!roles.conflict||!!(roleStore.owner&&roles.error));

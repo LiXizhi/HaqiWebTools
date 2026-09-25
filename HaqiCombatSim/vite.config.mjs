@@ -1,3 +1,4 @@
+import {prepareOfficialCatalog} from './scripts/package_official_website.mjs';
 import {prepareMonsterArt} from './scripts/package_monster_art.mjs';
 import {prepareQuestJournal} from './scripts/package_quests.mjs';
 import { packageRuntimeData } from './scripts/package_runtime_data.mjs';
@@ -8,10 +9,10 @@ import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-const entries = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects'];
+const entries = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite'];
 
 export default defineConfig(({ command }) => {
-    let dungeonPayload;
+    let dungeonPayload, officialPayload;
     return {
         root,
         base: './',
@@ -38,10 +39,12 @@ export default defineConfig(({ command }) => {
             buildStart() {
                 // Refresh the lightweight catalogue for both development and builds.
                 dungeonPayload = prepareDungeonFiles(root).payload;
+                officialPayload = prepareOfficialCatalog();
                 prepareQuestJournal(root);
                 prepareMonsterArt(root);
             },
             generateBundle() {
+                this.emitFile({type: 'asset', fileName: 'data/official-website.json', source: officialPayload});
                 this.emitFile({
                     type: 'asset',
                     fileName: 'data/adventure/dungeons.json',

@@ -13,7 +13,7 @@ test('release hashes all runtime data, is repeatable, and distinguishes previews
         fs.mkdirSync(path.join(root, 'scripts'));
         fs.copyFileSync(new URL('../scripts/sync_maisi_release.mjs', import.meta.url), path.join(root, 'scripts/sync_maisi_release.mjs'));
         fs.mkdirSync(path.join(root, 'dist/data'), { recursive: true });
-        for (const page of ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects']) {
+        for (const page of ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite']) {
             fs.writeFileSync(path.join(root, `dist/${page}.html`), '<html><head></head><body></body></html>');
         }
         const data = path.join(root, 'dist/data/cards.json');
@@ -23,6 +23,7 @@ test('release hashes all runtime data, is repeatable, and distinguishes previews
         assert.equal(run().status, 0);
         const first = read();
         assert.equal(first.verified, false);
+        assert.ok(fs.readFileSync(path.join(root, 'release/HaqiOfficialWebsite_preview.html'), 'utf8').includes(`<base href="${first.base}">`));
         assert.equal(fs.existsSync(path.join(root, 'release/Haqi_v1.html')), false);
         assert.ok(fs.readFileSync(path.join(root, 'release/Haqi_preview.html'), 'utf8').includes(`<base href="${first.base}">`));
         assert.equal(run().status, 0);
@@ -58,7 +59,7 @@ test('verified release copies only its entry wrappers into a sibling Maisi check
         const releaseDir = path.join(projectRoot, 'release');
         const repo = path.join(root, 'maisi');
         const game = path.join(repo, 'maisi/maisi/webgames/MagicHaqi');
-        const pages = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects'];
+        const pages = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite'];
         const options = { projectRoot, releaseDir, pages, verified: true, configuredRoot: '' };
         fs.mkdirSync(releaseDir, { recursive: true });
         assert.equal(syncMaisiRelease(options), null);

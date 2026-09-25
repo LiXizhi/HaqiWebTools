@@ -72,6 +72,19 @@ export function paintWaterDetail(c,world,rect,material='water',ocean=false){
 }
 
 export function paintRoadDetail(c,world,rect){
+    // Sparse irregular shoulders break up ruler-straight edges. World-space
+    // sampling and nearest-network distance also keep crossroads free of seams.
+    cells(world,rect,64,'road-verge',(cx,cy,rng)=>{
+        const nearby=world.paths.filter(p=>segmentDistance({x:cx+32,y:cy+32},p.a,p.b)<p.width/2+64);
+        if(!nearby.length)return;
+        for(let i=0;i<18;i++){
+            const x=cx+rng.float()*64,y=cy+rng.float()*64;
+            const edge=Math.min(...nearby.map(p=>segmentDistance({x,y},p.a,p.b)-p.width/2));
+            if(edge<-7||edge>10)continue;
+            const color=world.layout.rules.roads.layers[edge>1?1:2][1];
+            ellipse(c,x,y,1+rng.float()*3,.6+rng.float()*1.4,color+'65');
+        }
+    });
     // A single union clip keeps intersections clean, including parallel spurs.
     c.save();c.beginPath();
     for(const p of world.paths){
@@ -94,6 +107,24 @@ export function paintRoadDetail(c,world,rect){
     c.restore();
 }
 
+export function paintShoreDetail(c,world,rect){
+    const {coast,rules}=world.layout,half=rules.terrain.coastWidth/2;
+    cells(world,rect,64,'shore-verge',(cx,cy,rng)=>{
+        const nearby=[];
+        coast.forEach(([x,y],i)=>{
+            const next=coast[(i+1)%coast.length],a={x,y},b={x:next[0],y:next[1]};
+            if(segmentDistance({x:cx+32,y:cy+32},a,b)<half+70)nearby.push([a,b]);
+        });
+        if(!nearby.length)return;
+        for(let i=0;i<24;i++){
+            const x=cx+rng.float()*64,y=cy+rng.float()*64;
+            const distance=Math.min(...nearby.map(([a,b])=>segmentDistance({x,y},a,b)));
+            if(Math.abs(distance-half)>12)continue;
+            ellipse(c,x,y,1+rng.float()*4,.7+rng.float()*1.6,rules.terrain.sand+'60');
+        }
+    });
+}
+
 export function paintRiverBank(c,world,rect,river,palette){
     const r=river.width/2;
     river.points.slice(1).forEach(([bx,by],i)=>{
@@ -102,7 +133,7 @@ export function paintRiverBank(c,world,rect,river,palette){
         const dx=(bx-ax)/length,dy=(by-ay)/length;
         const rng=createRng(hashSeed(`${world.zone}:bank:${ax}:${ay}:${bx}:${by}`));
         for(let d=12;d<length;d+=18){
-            const side=rng.int(0,1)?1:-1,offset=r+8+rng.float()*6;
+            const side=rng.int(0,1)?1:-1,offset=r+3+rng.float()*16;
             const x=ax+dx*d-dy*offset*side,y=ay+dy*d+dx*offset*side,size=1+rng.float()*2.5;
             if(x<rect.x-6||x>rect.x+rect.w+6||y<rect.y-6||y>rect.y+rect.h+6)continue;
             ellipse(c,x+1,y+1,size+1,size*.65,palette.edge+'70');

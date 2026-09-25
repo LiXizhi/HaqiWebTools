@@ -42,6 +42,9 @@ def main():
         mounts.append(dict(id=job['id'],name=name,description=kind,ground=max(b[3] for b in asset['frameBounds']),
             lift=18 if kind in ['wings','platform','broom'] else 0,bob=1.5,
             source={'version':job['sourceVersion'],'model':job['model'],'items':job['items'],'markers':job['markers'],'aliases':aliases,'method':asset['source']['method']},directions=directions))
+    for mount in mounts:
+        if existing.get(mount['id'],{}).get('layoutBounds'):
+            mount['layoutBounds']=existing[mount['id']]['layoutBounds']
     catalog['mounts']=mounts+concepts
     catalog['coverage']={'sourceItems':len(source['items']),'expectedAppearances':len(source['jobs']),'readyAppearances':len(mounts),
         'missing':[j['id'] for j in source['jobs'] if j['id'] not in native],'scope':source['scope']}

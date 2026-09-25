@@ -23,7 +23,7 @@ for row in LuaData(decode('Database/globalstore.db.mem')).value():
     t = row[18]
     items[str(row[0])] = dict(id=row[0], name=t[0], description=t[1], sourceIcon=row[3],
         assetkey=row[12], stats={str(t[i]):t[i+1] for i in range(2,22,2) if t[i]},
-        slot=t[22], kind=t[23], subtype=t[24], source='Database/globalstore.db.mem', sourceRecord=row)
+        slot=t[22], kind=t[23], subtype=t[24], maxCount=t[31], maxCopiesInStack=t[37], source='Database/globalstore.db.mem', sourceRecord=row)
 exchanges = {}
 for line in decode('Database/extendedcost.db.mem').splitlines():
     m = re.search(r'exname="([^"]*)",(\d+),pres=\{(.*?)\},froms=\{(.*?)\},', line)

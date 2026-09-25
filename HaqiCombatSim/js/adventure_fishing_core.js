@@ -3,6 +3,8 @@
 // Each kept row is granted when rng.int(1,1000) <= p. A miss before ExtendedCost does not spend the net.
 import { onLargeIsland } from './adventure_island_layout_core.js';
 import { onIsland } from './adventure_world_core.js';
+import { recordFishingCatch, fishingQuality, fishingSpecies, fishingTuning } from './adventure_fishing_records_core.js';
+import {createRng,hashSeed} from './rng_core.js';
 
 export const SHADOW_COUNT = 5;
 const LANES = [0.28, 0.42, 0.55, 0.68, 0.8];
@@ -66,20 +68,32 @@ function grantBranch(save, content, branch, rng) {
 export function castFishing(save, content, action, rng) {
     const net = netById(content, action.netId);
     if (!net) throw Error('没有这种渔网');
+    const quality=fishingQuality(action.fishingPerformance);
     if (save.pendingEncounter) throw Error('请先完成当前战斗');
     const owned = save.inventory[net.id] || 0;
     if (owned < 1) throw Error(`没有${content.items[net.id]?.name || '渔网'}`);
     const stamina = readStamina(save, content);
     if (stamina < net.staminaRequired) throw Error(`精力值低于${net.staminaRequired}，现在不能捕鱼`);
-    const contacted = action.hit === true || net.absolutelyHit;
+    const contacted = (quality===null?action.hit===true:action.fishingPerformance.hits>0) || net.absolutelyHit;
     if (!contacted) return { caught: false, message: '鱼影躲开了，渔网还在。' };
-    const branch = net.branches[rng.int(1, net.branches.length) - 1];
+    let branch = net.branches[rng.int(1, net.branches.length) - 1];
+    // Scene fishing: a landed manual pull guarantees a catch. Automatic apparatus
+    // keeps only a 1% escape chance, independently of the legacy reward stream.
+    if(quality!==null){
+        const hasFish=b=>b.some(row=>fishingSpecies.includes(row.gsid)&&row.p===1000&&row.count>0);
+        const successful=net.branches.filter(hasFish);
+        if(!hasFish(branch)&&successful.length){
+            const rescue=createRng(hashSeed(`${save.seed}:${save.revision}:${net.id}:fish-rescue`));
+            if(!net.absolutelyHit||rescue.float()>=fishingTuning.fishingAutoEscapeChance)branch=successful[rescue.int(0,successful.length-1)];
+        }
+    }
     save.inventory[net.id] = owned - 1;
     const grant = grantBranch(save, content, branch, rng);
     save.stamina = Math.max(0, stamina + grant.staminaDelta);
     if (!grant.items.length) return { caught: false, spent: true, stamina: save.stamina, message: '鱼儿跑掉了。' };
     const summary = grant.items.map(item => `${item.name}×${item.count}`).join('、');
-    return { caught: true, spent: true, items: grant.items, stamina: save.stamina, message: `捕到了${summary}。` };
+    const catches=recordFishingCatch(save,grant.items,action.fishingPerformance);
+    return { caught: true, spent: true, items: grant.items, catches, stamina: save.stamina, message: `捕到了${summary}。` };
 }
 export function useStaminaPotion(save, content, itemId) {
     const potion = content.fishing?.potions.find(row => row.id === Number(itemId));

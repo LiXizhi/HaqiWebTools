@@ -2,6 +2,7 @@
 // uncached SDK file reads verify the remote server, avoiding the store's local fallback.
 import { makeCloudSnapshot, parseCloudSnapshot, snapshotPath, checkpointPaths } from './adventure_cloud_core.js';
 import { validateRoles, emptyRoles, roleIdValid } from './adventure_roles_core.js';
+import { fishingRecordsFile } from './adventure_fishing_records_core.js';
 
 export const SDK_URL = 'https://cdn.keepwork.com/sdk/keepworkSDK.core.iife.js';
 let sdkLoading;
@@ -104,6 +105,7 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
             // Immutable full-catalog history preserves both sides of a write race.
             await writeVerified(`roles/history/${revision}.json`, text, current);
             if ((await readRoles(current)).revision !== expectedRevision) throw new CloudError('其他设备已更新角色列表，本次进度已保留，请刷新处理冲突。');
+            await writeVerified('fishing/records.json', JSON.stringify(fishingRecordsFile(clean,current.owner,revision)), current);
             await writeVerified(rolesPath, text, current);
             return revision;
         }),

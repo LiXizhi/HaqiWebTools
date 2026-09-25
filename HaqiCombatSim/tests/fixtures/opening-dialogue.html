@@ -1,0 +1,24 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>营地对白验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_dialogue.css">
+<body class="haqi-app storybook-ui"><div id="root"></div><script type="module">
+import {createAdventure} from '../../js/adventure_core.js';
+import {renderDialogue} from '../../js/view_adventure.js';
+import {loadUiArt} from '../../js/adventure_ui_art.js';
+const content=await (await fetch('../../data/adventure/chapter.json')).json();
+await loadUiArt('cdn',async path=>(await fetch('../../'+path)).json());
+const save=createAdventure(content),assets={content,draw:()=>false},root=document.querySelector('#root');
+const params=new URLSearchParams(location.search),width=Number(params.get('width'));
+if(width){root.style.width=`${width}px`;root.style.right='auto';}
+const sequences=content.quests.flatMap(q=>[
+    {quest:q.id,lines:q.startDialog,finishLabel:'接取任务'},
+    ...q.talks.map(t=>({quest:q.id,lines:t.dialog,finishLabel:t.dialog.at(-1).buttons[0].label})),
+    {quest:q.id,lines:q.endDialog,finishLabel:'领取奖励'}]);
+let sequence=0,index=0;
+function paint(){
+    if(sequence===sequences.length){root.replaceChildren();root.className='';root.textContent='全部对白已检查';return;}
+    renderDialogue(root,{assets,save},{...sequences[sequence],index},{close:next,next});
+}
+function next(){if(++index===sequences[sequence].lines.length){sequence++;index=0;}paint();}
+paint();
+</script></body></html>

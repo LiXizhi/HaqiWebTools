@@ -1,6 +1,7 @@
 import {createCloseButton} from './view_adventure_controls.js';
 import { petParams, STAGE_NAMES, petStage, petCapacity, petMaxHp, FOOD_ID } from './adventure_pets_core.js';
 import { createCardFace } from './view_adventure_card.js';
+import { createPetEvolution } from './view_adventure_pet_status.js';
 // A native nested dialog keeps the shop filters, page and scroll position intact.
 export function showPetDetails(assets,id,portrait,{el,button,spellFace},options={}) {
     const def=assets.content.pets[id];
@@ -22,7 +23,7 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
             const stage=petStage(pet.level,assets.content),info=el('div','pet-profile-info');
             info.append(el('h3','',`${def.traits.elementalAttribute}系 · ${STAGE_NAMES[stage]}`),el('p','',`等级 ${pet.level} · 经验 ${pet.xp}`));
             for(const [label,value,max] of [['生命',pet.hp,petMaxHp(pet,assets.content)],['饱食',pet.hunger,100]]){
-                const meter=el('progress','');meter.max=max;meter.value=value;meter.setAttribute('aria-label',label);
+                const meter=el('progress',`pet-meter pet-meter-${label==='饱食'?'hunger':'hp'}`);meter.max=max;meter.value=value;meter.setAttribute('aria-label',label);
                 info.append(el('label','pet-stat',el('span','',`${label} ${Math.floor(value)} / ${max}`),meter));
             }
             const feed=button(`喂食 · 营养餐 ${options.save.inventory[FOOD_ID]||0}`,()=>perform({type:'pet-feed',petId:id}),'primary');feed.disabled=pet.hunger>=100||!(options.save.inventory[FOOD_ID]>0);info.append(feed);
@@ -35,10 +36,9 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
                 const target=button(current?`卡位 ${index+1} · 已上阵`:`上阵卡位 ${index+1}`,()=>{close();options.place(id,index);},'secondary');target.disabled=current;positions.append(target);
             }
             if(options.save.formation.includes(id))positions.append(button('休息',()=>perform({type:'formation',slots:options.save.formation.map(value=>value===id?null:value),heroSlot:options.save.heroSlot}),'secondary'));
-            content.append(positions);
+            content.append(positions,el('h3','','进化路径'),createPetEvolution(assets,id,pet,portrait,el));
         }else{
-            const stages=el('div','pet-growth-stages');
-            for(let index=0;index<4;index++)stages.append(el('section',`pet-growth-stage${pet&&pet.level<p.stageLevels[index]?' is-locked':''}`,portrait(assets,id,index,96),el('h3','',STAGE_NAMES[index]),el('p','muted',`${p.stageLevels[index]}级 · 卡包 ${p.petCapacities[index]} 张`)));
+            const stages=createPetEvolution(assets,id,pet,portrait,el);
             content.append(stages);
             const count=el('strong',''),pack=el('div','pet-pack-emblem',el('span','','魔法'),el('strong','','卡包'));
             const heading=el('div','pet-deck-heading',pack,count),cards=el('div','pet-spell-shelf');

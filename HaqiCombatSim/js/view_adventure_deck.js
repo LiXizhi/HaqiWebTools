@@ -1,6 +1,7 @@
 import {createCloseButton} from './view_adventure_controls.js';
 import {deckLimits,deckCardCopies,syncDeckLayouts,equipmentBlockReason,recommendedDeck,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
 import {skillLearningStatus,trainingPoints} from './adventure_learning_core.js';
+import { setText, tr } from './locale_runtime.js';
 const SCHOOL_LABELS={...SCHOOL_NAMES,balance:'平衡'};
 const PAGE_SIZE=36;
 const HOVER_DELAY=350;
@@ -35,7 +36,14 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     const status=el('span','bag-status');status.setAttribute('aria-live','polite');status.hidden=true;
     const counter=el('strong','');
     const total=()=>layouts[active].deck.reduce((n,row)=>n+row.count,0);
-    const say=text=>{status.textContent=text;status.hidden=!text;};
+    const say=text=>{setText(status,text);status.hidden=!text;};
+    const showLearning=(node,status)=>{
+        const reason=String(status?.reason||'');
+        const need=/^需要(\d+)训练点$/.exec(reason),cost=/^(\d+)训练点$/.exec(reason);
+        if(need)setText(node,'需要{count}训练点',{count:need[1]});
+        else if(cost)setText(node,'{count}训练点',{count:cost[1]});
+        else setText(node,reason);
+    };
     const mark=()=>say('');
     function subject(card) {
         const canvas=el('canvas','bag-subject');canvas.width=96;canvas.height=96;
@@ -103,7 +111,7 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     function add(key) {
         const lesson=lessonMap.get(key),deck=layouts[active].deck,row=deck.find(row=>row.key===key),count=row?.count||0;
         const learning=skillLearningStatus(draftSave(),content,lesson);
-        if(!learning.allowed){say(learning.reason);return;}
+        if(!learning.allowed){showLearning(status,learning);status.hidden=false;return;}
         if(total()>=limits.capacity){say('卡包已满，请先移出卡牌');return;}
         if(count>=(owned[key]?copies(key):limits.eachCapacity)){say('已达到单卡上限');return;}
         if(!owned[key]){owned[key]=lesson.copies;learned.add(key);trainingPointsSpent+=learning.cost;}
@@ -158,19 +166,22 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     }
     const filters=el('div','bag-school-tabs');
     for(const [id,label] of [['all','全部'],...Object.entries(SCHOOL_LABELS)]){
-        const tab=button(id===save.school?`${label}·本系`:label,()=>{school=id;page=0;paintLibrary();},'bag-school');tab.dataset.school=id;filters.append(tab);
+        const tab=button('',()=>{school=id;page=0;paintLibrary();},'bag-school');
+        if(id===save.school)setText(tab,'{school}·本系',{school:label});
+        else setText(tab,label);
+        tab.dataset.school=id;filters.append(tab);
     }
-    const search=el('input','bag-search');search.type='search';search.placeholder='搜索卡牌';search.setAttribute('aria-label','搜索卡牌');
+    const search=el('input','bag-search');search.type='search';search.placeholder=tr('搜索卡牌');search.setAttribute('aria-label',tr('搜索卡牌'));
     search.oninput=()=>{query=search.value.trim().toLowerCase();page=0;paintLibrary();};
     const toggle=button('只看已学',()=>{ownedOnly=!ownedOnly;toggle.setAttribute('aria-pressed',String(ownedOnly));page=0;paintLibrary();},'bag-filter');toggle.setAttribute('aria-pressed','true');
     const points=el('span','bag-training-points');points.title='本系课程免费；外系课程消耗训练点。升级获得训练点，保存后才扣除。';
     const countLabel=el('span','bag-page-count'),previous=button('上一页',()=>{page--;paintLibrary();},'bag-page'),next=button('下一页',()=>{page++;paintLibrary();},'bag-page');
     function paintLibrary(){
-        points.textContent=`训练点：${trainingPoints(draftSave(),content)}`;
+        setText(points,'训练点：{count}',{count:trainingPoints(draftSave(),content)});
         for(const tab of filters.children)tab.setAttribute('aria-pressed',String(tab.dataset.school===school));
         const rows=lessons.filter(row=>(school==='all'||row.school===school)&&(!ownedOnly||owned[row.key])&&(!query||`${cards[row.key]?.name||row.name||''} ${row.key}`.toLowerCase().includes(query)));
         const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));page=Math.max(0,Math.min(page,pages-1));
-        countLabel.textContent=`${rows.length} 张 · ${page+1}/${pages}`;previous.disabled=page===0;next.disabled=page>=pages-1;
+        setText(countLabel,'{count} 张 · {page}/{pages}',{count:rows.length,page:page+1,pages});previous.disabled=page===0;next.disabled=page>=pages-1;
         library.replaceChildren();
         for(const lesson of rows.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE)){
             const card=cards[lesson.key];if(!card)continue;
@@ -178,8 +189,9 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
             const learning=skillLearningStatus(draftSave(),content,lesson),available=learning.allowed;
             const badge=n>0?el('span','bag-card-count',String(n)):null;
             if(badge)badge.setAttribute('aria-label',`已放入 ${n} 张`);
-            const entry=button([el('span','bag-library-icon',subject(card)),el('span','bag-card-name',card.name),badge,
-                owned[lesson.key]?null:el('small','muted',learning.reason)],()=>{},`bag-library-card ${available?'':'locked'}`);
+            const note=owned[lesson.key]?null:el('small','muted');
+            if(note)showLearning(note,learning);
+            const entry=button([el('span','bag-library-icon',subject(card)),el('span','bag-card-name',card.name),badge,note],()=>{},`bag-library-card ${available?'':'locked'}`);
             entry.setAttribute('aria-label',`${owned[lesson.key]?'放入':'学习并放入'}${card.name}`);
             entry.setAttribute('aria-disabled',String(!available||n>=(owned[lesson.key]?copies(lesson.key):limits.eachCapacity)||total()>=limits.capacity));
             previewEvents(entry,lesson.key);bindCardGesture(entry,lesson.key,false,()=>add(lesson.key));library.append(entry);
@@ -187,7 +199,7 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
         if(!rows.length)library.append(el('p','muted','没有符合条件的卡牌'));
     }
     function paintCards(){
-        counter.textContent=`${total()}/${limits.capacity} 张 · 单卡最多 ${limits.eachCapacity}`;slots.replaceChildren();
+        setText(counter,'{used}/{capacity} 张 · 单卡最多 {each}',{used:total(),capacity:limits.capacity,each:limits.eachCapacity});slots.replaceChildren();
         for(const row of layouts[active].deck)for(let i=0;i<row.count;i++){
             const card=cards[row.key],slot=button(subject(card),()=>{},'bag-slot');
             slot.setAttribute('aria-label',`${card.name}，第 ${i+1} 张，拖出移除，长按或右键查看详情`);previewEvents(slot,row.key,true);bindCardGesture(slot,row.key,true);slots.append(slot);
@@ -219,7 +231,9 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     const saveButton=button('保存',()=>{
         cb.action({type:'deck-layouts',layouts,active,learnedKeys:[...learned],...(bagItemId?{bagItemId}:{})});
     },'primary');
-    const equipmentPanel=el('details','bag-equipment',el('summary','',`装备附卡 ${equipment.children.length} 张 · 不占卡位`),equipment);
+    const equipmentSummary=el('summary','');
+    setText(equipmentSummary,'装备附卡 {count} 张 · 不占卡位',{count:equipment.children.length});
+    const equipmentPanel=el('details','bag-equipment',equipmentSummary,equipment);
     equipmentPanel.open=true;
     const bag=el('section','bag-main',el('div','bag-section-bar',counter,button('推荐',()=>{layouts[active].deck=recommendedDeck(draftSave(),content);mark();paintCards();},'secondary')),slots,
         el('p','bag-hint','拖出移除；长按 / 右键查看详情'),

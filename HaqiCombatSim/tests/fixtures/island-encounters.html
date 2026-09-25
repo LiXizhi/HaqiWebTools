@@ -1,0 +1,28 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>四岛任务怪物验收</title>
+<style>body{margin:12px;background:#193d42;color:white;font:14px sans-serif}canvas{width:100%;height:480px}button{margin:4px;padding:10px}#gallery{display:flex;flex-wrap:wrap}figure{width:130px;margin:4px;text-align:center}figure canvas{width:130px;height:130px}</style>
+<h1>四岛任务怪物验收</h1><p id="status">正在加载</p><nav></nav><canvas id="world"></canvas><div id="gallery"></div>
+<script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createWorld} from '../../js/adventure_world_core.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+try {
+ const assets=await loadResources(),save=createAdventure(assets.content),renderer=createRenderer(document.querySelector('#world'),assets);
+ let world,previews=[];
+ function select(zone){
+  save.zone=zone;world=createWorld(zone,assets.content);save.position={x:world.encounters[0].x,y:world.encounters[0].y+80};
+  document.querySelector('#gallery').replaceChildren();
+  previews=world.encounters.map(e=>{const m=assets.content.monsters[e.monsterId],figure=document.createElement('figure'),canvas=document.createElement('canvas'),label=document.createElement('figcaption');canvas.width=260;canvas.height=260;label.textContent=m.name+(e.blocked.length?'（待迁移）':'');figure.append(canvas,label);document.querySelector('#gallery').append(figure);return {canvas,m};});
+ }
+ for(const [zone,name] of Object.entries({fire:'火鸟岛',ice:'寒冰岛',desert:'沙漠岛',dark:'幽暗岛'})){const button=document.createElement('button');button.textContent=name;button.onclick=()=>select(zone);document.querySelector('nav').append(button);}
+ select('fire');
+ function frame(t){
+  renderer.render(world,save,t);let loaded=0;
+  for(const {canvas,m} of previews){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,260,260);if(assets.drawMonster(ctx,m,10,10,240,240))loaded++;ctx.getImageData(0,0,1,1);}
+  document.querySelector('#status').textContent=`${world.layout.name}：${world.encounters.length}处遭遇，${world.encounters.filter(e=>!e.blocked.length).length}处可挑战；WebP ${loaded}/${previews.length}；${assets.mode}，Canvas可读；不读写玩家存档。`;
+  requestAnimationFrame(frame);
+ }
+ requestAnimationFrame(frame);
+} catch(error){document.querySelector('#status').textContent=error.stack;}
+</script></html>

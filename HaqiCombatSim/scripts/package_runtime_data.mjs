@@ -12,6 +12,7 @@ const developmentFiles = new Set(['card-atlas.json', 'cdn-publish-plan.json', 's
 export function projectRuntimeData(relativePath, value) {
     if (!relativePath.startsWith('adventure/')) return value;
     const name = relativePath.slice('adventure/'.length);
+    if (name === 'building-art-plan.json') return null;
     if (developmentFiles.has(name)) return null;
     switch (name) {
         case 'dungeon-index.json': return {
@@ -61,7 +62,7 @@ export function projectRuntimeData(relativePath, value) {
                 courses: row.courses.map(course => pick(course, ['type', 'class', 'gsid', 'exID', 'other_exID', 'needlevel', 'tips', 'name'])),
             })),
             exchanges: map(value.exchanges, row => pick(row, ['prerequisites', 'costs', 'rewards'])),
-            items: map(value.items, row => ({...pick(row, ['id', 'name', 'description', 'sourceIcon', 'assetkey', 'stats', 'slot', 'kind', 'subtype']), exchangeLimits:npcItemLimits(row)})),
+            items: map(value.items, row => ({...pick(row, ['id', 'name', 'description', 'sourceIcon', 'assetkey', 'stats', 'slot', 'kind', 'subtype', 'maxCount', 'maxCopiesInStack']), exchangeLimits:npcItemLimits(row)})),
         };
         case 'assets.json': return map(value, row => pick(row, ['entry']));
         case 'npc-art.json': return {
@@ -88,6 +89,19 @@ export function projectRuntimeData(relativePath, value) {
             items: value.items,
             fallbacks: map(value.fallbacks, () => true),
         };
+        case 'mount-catalog.json': return {
+            version: value.version,
+            sheets: map(value.sheets, row => pick(row, [...urlFields, 'width', 'height', 'columns', 'rows'])),
+            mounts: value.mounts.map(mount => ({
+                ...pick(mount, ['id', 'name', 'ground', 'lift', 'bob', 'stats', 'commerce', 'rideable', 'layoutBounds']),
+                art: mount.art ? pick(mount.art, [...urlFields, 'width', 'height', 'columns', 'rows']) : null,
+                source: { items: mount.source?.items || [] },
+                directions: Object.fromEntries(Object.entries(mount.directions || {}).map(([direction, pose]) => [direction, {
+                    ...pick(pose, ['cell', 'riderCell', 'riderArt', 'seat', 'anchor', 'scale', 'foreground']),
+                    ...(pose.characters ? { characters: Object.fromEntries(Object.entries(pose.characters).map(([gender, row]) => [gender, pick(row, ['anchor', 'seat', 'scale'])])) } : {}),
+                }])),
+            })),
+        };
         case 'pets.json': return {
             ...value,
             pets: map(value.pets, row => ({ ...row, ...(row.art ? { art: pick(row.art, urlFields) } : {}) })),
@@ -103,6 +117,8 @@ function collectRuntimeData(source, files, prefix = '') {
             collectRuntimeData(from, files, `${prefix}${entry.name}/`);
         } else if (entry.name.endsWith('.json')) {
             if(prefix==='adventure/'&&entry.name==='dungeons.json')continue;
+            // The small public website catalogue is emitted separately by Vite.
+            if(prefix===''&&entry.name==='official-website.json')continue;
             const value = projectRuntimeData(`${prefix}${entry.name}`, JSON.parse(fs.readFileSync(from, 'utf8')));
             if (value === null) continue;
             files[`data/${prefix}${entry.name}`] = value;

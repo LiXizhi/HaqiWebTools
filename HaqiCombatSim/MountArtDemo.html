@@ -18,10 +18,10 @@
       <label for="mode">预览状态</label><select id="mode"><option value="mounted">骑乘</option><option value="unmounted">下骑</option><option value="transformed">变身为坐骑</option></select>
       <label>朝向</label><div id="directions" class="segmented"></div>
       <div class="toggles"><label><input type="checkbox" id="debug"> 显示座位与遮挡区</label><label><input type="checkbox" id="occlusion" checked> 启用前景遮挡</label><label><input type="checkbox" id="motion" checked> 移动与悬浮预览</label></div>
-      <details open><summary>校准当前方向</summary><p class="muted">只修改选中坐骑的当前方向；数值以单格宽高为单位。</p><form id="calibration">
+      <details open><summary>校准当前方向</summary><p class="muted">按人物与坐骑比例自动缩放坐骑；人物与坐骑的可见总高度超过原角色高度两倍时，四向统一整体缩小。座位、锚点和比例只校准当前方向。</p><form id="calibration">
         <label>座位横向 <input name="seatX" type="number" min="-0.5" max="1.5" step="0.01"></label>
         <label>座位纵向 <input name="seatY" type="number" min="-0.5" max="1.5" step="0.01"></label>
-        <label>角色缩放 <input name="scale" type="number" min="0.1" max="2" step="0.01"></label>
+        <label>人物 / 坐骑比例 <input name="scale" type="number" min="0.1" max="2" step="0.01"></label>
         <label>角色锚点横向 <input name="anchorX" type="number" min="0" max="1" step="0.01"></label>
         <label>角色锚点纵向 <input name="anchorY" type="number" min="0" max="1" step="0.01"></label>
       </form><p class="muted">红十字是座位，角色锚点与它重合。橙色多边形是坐骑前景。</p></details>
@@ -30,7 +30,7 @@
       <p id="status" role="status">正在加载 WebP 美术…</p>
     </aside>
     <section class="workspace">
-      <div class="section-head"><div><h2 id="mount-title">四向对照</h2><p>同一个角色图集，与四套独立的方向参数组合。</p></div><span>前 / 左 / 右 / 后</span></div>
+      <div class="section-head"><div><h2 id="mount-title">四向对照</h2><p>以角色大小为基准，人物与坐骑的可见总高度上限为原角色高度两倍，超限时四向统一缩小。</p></div><span>前 / 左 / 右 / 后</span></div>
       <div id="views" class="views"></div>
       <div class="section-head"><div><h2>场景试乘</h2><p>点击地面移动；聚焦场景后用方向键或 WASD。移动到石柱前后检查遮挡。</p></div><button id="center">回到中央</button></div>
       <canvas id="scene" width="1100" height="460" tabindex="0" aria-label="坐骑移动场景，方向键控制，点击地面移动"></canvas>

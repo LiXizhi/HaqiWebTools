@@ -6,6 +6,8 @@ import {syncEquipmentInstances} from '../js/adventure_equipment_instances_core.j
 import {gemPreview,gemCompatibility,gemEquipment} from '../js/adventure_gems_core.js';
 const read=n=>JSON.parse(fs.readFileSync(new URL(`../data/adventure/${n}.json`,import.meta.url)));
 const c=read('chapter');c.gemCatalog=read('gems');Object.assign(c.items,read('shop-candidates'),c.gemCatalog.items);
+// Non-unique fixture preserves independent socket coverage.
+c.items[1231].maxCount=99;
 c.progression.levelCap=50;while(c.progression.xpThresholds.length<50)c.progression.xpThresholds.push(c.progression.xpThresholds.at(-1)+1000);
 function hero(){const s=A.createAdventure(c);s.xp=c.progression.xpThresholds[19];A.syncProgression(s,c);Object.assign(s.inventory,{1231:2,26001:10,26002:10,26003:10,26004:10,26005:10,26701:3,26702:3,26703:3,17179:3});syncEquipmentInstances(s,c);return s;}
 const guid=s=>s.equipmentInstances.find(x=>x.gsid===1231).guid;

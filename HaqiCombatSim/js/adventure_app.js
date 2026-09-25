@@ -1,6 +1,8 @@
+import {createLanguageAdventure} from './language_adventure.js';
 import {createAutoSave} from './adventure_autosave.js';
 import {npcOffers} from './adventure_npc_core.js';
 import {dungeonFor,enterDungeon,leaveDungeon} from './adventure_dungeons_core.js';
+import {catalogGoalEncounter} from './adventure_island_encounters_core.js';
 import {renderDungeons} from './view_adventure_dungeons.js';
 import {openOriginalImport} from './haqi_import.js';
 import {persistReward} from './adventure_reward_persistence.js';
@@ -16,6 +18,7 @@ import { tickCheckin } from './adventure_checkin_core.js';
 import { prepareDebugEdit } from './adventure_debug_core.js';
 import { DEBUG_BACKUP_KEY, hasDebugBackup, storeDebugEdit, restoreDebugBackup } from './adventure_debug.js';
 import { tickCare, productPrice } from './adventure_pets_core.js';
+import { updatePetStatus } from './view_adventure_pet_status.js';
 // Browser controller: input, rendering, audio and persistence live outside the pure rules.
 import { effectDuration } from './spell_effects_core.js';
 import { createSpellSound } from './spell_sound.js';
@@ -40,15 +43,14 @@ import { regionAt } from './adventure_island_layout_core.js';
 import { fill, setText, tr } from './locale_runtime.js';
 import { isOcean } from './adventure_fishing_core.js';
 import { createSceneFishing } from './view_adventure_scene_fishing.js';
+import { fishingSpot } from './adventure_fishing_spot_core.js';
 import { createRoleStore } from './adventure_roles.js';
 import { MAX_ROLES } from './adventure_roles_core.js';
 import { renderRoles } from './view_adventure_roles.js';
 import { createCreationPreview, tutorialCards } from './adventure_creation_preview.js';
 import { localeIdsToLoad } from './locale_core.js';
 import { loadLocaleFiles, configureLocale, hasLocale, installLocaleTooltip, setGlossAligner, speakText, textFor } from './locale.js';
-import { shopPrices, testDurationMs } from './language_learning_core.js';
-import { createTutor, profileFromSave, rememberProfile, syncMemory, tutorSystem, judgeTranscript, battleSpeechScore } from './language_learning.js';
-import { renderFreeTalk, renderLanguageTest } from './view_language_learning.js';
+import { createTutor } from './language_learning.js';
 
 const $=id=>document.getElementById(id);
 const nodes={world:$('world'),hud:$('hud'),entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer'),toast:$('toast')};
@@ -57,6 +59,7 @@ let selectedQuestId=null,pinJournalQuest=false;
 let dungeonLoading=null;
 let teleportEffect=null;
 let path=[],destination=null,moving=false,lastFrame=0,lastSave=0,toastTimer=0;
+let fishingApproach=null;
 let selected=null,discarded=[],animation=null,music=null,storageWarning=false;
 let petCardsOpen=false;
 let runeCardsOpen=false;
@@ -89,10 +92,12 @@ function resetMovementInput(){keys.clear();joystick={x:0,y:0};heldPointer=null;t
 const touchIndicator=V.el('div','touch-joystick floating-joystick active',V.el('span','joystick-stick'));
 touchIndicator.hidden=true;touchIndicator.setAttribute('aria-hidden','true');nodes.world.parentElement.append(touchIndicator);
 const sceneFishing=createSceneFishing(nodes.world.parentElement,{
+    activeChanged:active=>{renderer?.setFishingCamera(active);if(active){clearTimeout(toastTimer);nodes.toast.classList.remove('visible');}},
     isWater:point=>world&&!dungeonFor(assets.content,world.zone)&&isOcean(world,point.x,point.y),
+    vibrate:pattern=>{try{if(!document.hidden)navigator.vibrate?.(pattern);}catch{}},
     action:value=>performAction(value),focus:()=>nodes.world.focus({preventScroll:true}),
 },{el:V.el,button:V.button});
-const touchMovement=bindTouchMovement(nodes.world,touchIndicator,{enabled:()=>stage==='world'&&!panel&&!dialog,steer:(x,y)=>{joystick={x,y};path=[];destination=null;heldPointer=null;},zoom:factor=>renderer?.zoomBy(factor),tap:(x,y)=>clickWorld(x,y)});
+const touchMovement=bindTouchMovement(nodes.world,touchIndicator,{enabled:()=>stage==='world'&&!panel&&!dialog&&!languageAdventure.active,steer:(x,y)=>{joystick={x,y};path=[];destination=null;heldPointer=null;},zoom:factor=>renderer?.zoomBy(factor),tap:(x,y)=>clickWorld(x,y)});
 const shopView={category:'pet',query:'',school:'',slot:'',ownership:'',page:0},petView={selected:null};
 const equipmentView={tab:'gear',slot:0,item:null,query:''};
 const gemView={guid:null,gemId:null,runes:[null,null,null],runeIndex:0,step:'equipment',filter:0,page:0,mode:'mount',removeIds:[],message:'',confirm:false};
@@ -100,12 +105,18 @@ const strengtheningView={guid:null,filter:0,page:0,pending:false,message:''};
 let serviceNpc=null;
 const npcServiceView={query:'',page:0};
 const model=()=>({assets,save,dungeonLoading,serviceNpc,npcServiceView,membership:membership.state,membershipView,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled,learningProgress:battle?.learningProgress||0});
+const languageAdventure=createLanguageAdventure({
+    getState:()=>({save,content:assets?.content,role:roleStorage,identity:roleStore?.owner,stage,battle,animating:!!animation,busy:!!dialog||!!animation||document.hidden||!!document.querySelector('dialog[open]'),near:world&&save&&stage==='world'&&!panel&&!dialog?W.nearestInteraction(world,save.position):null}),
+    commit:completion=>{
+        const committed=persistReward(save,assets.content,{type:'language-complete',completion},{learningCompletion:completion},roleStorage);
+        save=committed.save;storageWarning=false;queueCloudSave();if(stage==='world')paintHud();return committed.result;
+    },notify:message=>toast(message),
+});
 const tutor=createTutor();
 setGlossAligner((top,bottom)=>tutor.requestLLM([
     {role:'system',content:'Pair corresponding words between the two lines. Return JSON only: {"groups":[{"color":0,"top":"Back","bottom":"回到"}]}. Use the same color number for a matching pair. Keep each fragment exactly as it appears. Do not translate or explain.'},
     {role:'user',content:`Top:\n${top}\nBottom:\n${bottom}`},
 ],{model:'keepwork-lite'}));
-const talkHistory=[];
 function applyLocale(){
     if(!save)return Promise.resolve();
     const ids=localeIdsToLoad(save);
@@ -113,46 +124,10 @@ function applyLocale(){
     if(ids.every(hasLocale)){finish();return Promise.resolve();}
     return loadLocaleFiles(ids).then(finish);
 }
-function setLocale(locale){save.locale=locale;if(save.languageLearning.enabled)save.languageLearning.enabled=false;applyLocale().then(()=>{persist();paintHud();if(panel)paintPanel();toast('界面语言已更新');});}
-function setLearning(next){save.languageLearning={...save.languageLearning,...next};applyLocale().then(()=>{persist();paintHud();paintPanel();});}
-function openFreeTalk(npc){
-    talkHistory.length=0;
-    const profile=profileFromSave(save);
-    renderFreeTalk(nodes.overlay,model(),npc,{
-        close,voice:()=>tutor.requestVoice('start',tutorSystem(profile,`You are ${npc.name}. Free talk.`)).catch(error=>toast(error.message)),
-        greet:()=>tutor.requestLLM([{role:'system',content:tutorSystem(profile,`You are ${npc.name}, ${npc.description||''}. Greet the learner.`)},{role:'user',content:'Hello'}]),
-        reply:async(_npc,answer)=>{
-            const text=await tutor.requestLLM([{role:'system',content:tutorSystem(profile,`You are ${npc.name}.`)},...talkHistory.slice(-20),{role:'user',content:answer}]);
-            talkHistory.push({role:'user',content:answer},{role:'assistant',content:text});
-            rememberProfile(save,{...profile,topics:[...profile.topics,npc.name].slice(-8),notes:profile.notes});
-            persist();syncMemory(save,cloudClient);
-            return text;
-        },
-    },{el:V.el,button:V.button});
-}
-function openLanguageTest(task){
-    const prices=shopPrices(assets.content,productPrice);
-    const hints=['说出这件物品的名字','说说你为什么想要它','用一句话描述它'];
-    renderLanguageTest(nodes.overlay,model(),{...task,prices,hints},{
-        close,finish:(transcript)=>{
-            const profile=profileFromSave(save);
-            const judged=judgeTranscript({transcript,level:profile.level,topic:task.name});
-            if(!judged.pass){toast('未通过');if(panel)paintPanel();else close();return;}
-            const action=task.kind==='npc'?{type:'npc-purchase',npcInstanceId:task.npcInstanceId,offerId:task.offerId,paidByTest:true}:{type:'buy',productId:task.productId,paidByTest:true};
-            performAction(action);toast('通过');
-        },
-    },{el:V.el,button:V.button});
-}
-function battleSpeech(text,goal){
-    if(!battle||battle.finished)return;
-    const learning=save.languageLearning;
-    const translations=goal.hints.map(hint=>textFor(hint,learning.target));
-    const gain=battleSpeechScore(text,goal.hints,translations);
-    P.applyLearningSpeech(battle,(battle.learningProgress||0)+gain);
-    toast(text);
-    paintBattle();
-    if(battle.finished)setTimeout(()=>nodes.battle.querySelector('.result-card button.primary')?.focus(),0);
-}
+function setLocale(locale){languageAdventure.close();save.locale=locale;applyLocale().then(()=>{persist();paintHud();if(panel)paintPanel();toast('界面语言已更新');});}
+function setLearning(next){languageAdventure.close();save.languageLearning={...save.languageLearning,...next};applyLocale().then(()=>{persist();paintHud();paintPanel();});}
+function openFreeTalk(npc){void languageAdventure.open(npc);}
+function openLanguageTest(){void languageAdventure.open();}
 const rewardRoot=V.el('div','reward-feedback');nodes.world.parentElement.append(rewardRoot);
 const rewardFeedback=createRewardFeedback(rewardRoot,{
     describe:reward=>{
@@ -192,34 +167,37 @@ function persist() {
     const indicator=document.querySelector('.save-indicator');if(indicator){setText(indicator,storageWarning?'存档未保存':'');indicator.hidden=!storageWarning;}
     lastSave=performance.now();
 }
-function close() {sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
+function close() {languageAdventure.close();fishingApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>openPanel('membership'),cloud:openCloud,track,untrack,interact:interactNearest});}
 function paintPanel() {
-    if(['map','worldmap','localmap'].includes(panel)&&world.layout){renderMaps(nodes.overlay,world,model(),{close,track,travel,draw:(canvas,options)=>renderer.minimap(canvas,world,save,options),teleport:teleportToLandmark,switchMap:view=>openPanel(view==='world'?'worldmap':'map')},panel==='worldmap'?'world':'local');return;}
+    if(['map','worldmap','localmap'].includes(panel)&&world.layout){renderMaps(nodes.overlay,world,model(),{close,track,travel,draw:(canvas,options)=>renderer.minimap(canvas,world,save,options),teleport:teleportToLandmark,teleportToPosition,switchMap:view=>openPanel(view==='world'?'worldmap':'map')},panel==='worldmap'?'world':'local');return;}
     if(panel==='cloud'){paintCloud();return;}
     if(panel==='dungeons'){renderDungeons(nodes.overlay,model(),{close,enter:loadAndEnterDungeon,leave:exitDungeon});return;}
     if(!panel)return;
     const equipment=['equipment','inventory','shop','pet'].includes(panel);
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
-    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId,pinJournalQuest},{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true),refreshMembership,becomeVip:()=>membership.openProfile().catch(error=>toast(error.message)),setLocale,setLearning,languageTest:openLanguageTest});
+    const focusedMount=panel==='pet'&&nodes.overlay.contains(document.activeElement)?document.activeElement.dataset.mountId:null;
+    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId,pinJournalQuest},{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,learningEvent:(event,context)=>languageAdventure.emit(event,event,context),cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true),refreshMembership,becomeVip:()=>membership.openProfile().catch(error=>toast(error.message)),setLocale,setLearning,languageTest:openLanguageTest});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
             const buttons=[...nodes.overlay.querySelectorAll('button')];
-            (buttons.find(b=>(b.getAttribute('aria-label')||b.textContent)===focusLabel)||nodes.overlay.querySelector('.equipment-detail button:not(:disabled)'))?.focus({preventScroll:true});
+            (buttons.find(b=>focusedMount?b.dataset.mountId===focusedMount:(b.getAttribute('aria-label')||b.textContent)===focusLabel)||nodes.overlay.querySelector('.equipment-detail button:not(:disabled)'))?.focus({preventScroll:true});
         }
     }
 }
 function openPanel(kind,options={}) {
     if(stage!=='world')return;
     close();path=[];destination=null;panel=kind;
+    if(kind==='pet')petView.tab='follow';
     if(kind==='npc-services'){serviceNpc=options.npc;Object.assign(npcServiceView,{query:'',page:0,kind:'',category:''});}
     if(kind==='quests'){pinJournalQuest=options.questId!=null;selectedQuestId=options.questId??A.currentQuest(save,assets.content)?.id??assets.content.quests.at(-1)?.id;}
     if(kind==='gems')Object.assign(gemView,{guid:options.guid||null,gemId:null,runes:[null,null,null],runeIndex:0,step:options.guid?'gems':'equipment',filter:0,page:0,mode:'mount',removeIds:[],message:'',confirm:false});
     if(kind==='upgrade')Object.assign(strengtheningView,{guid:initialStrengtheningSelection(save,assets.content,options.itemId,options.guid),filter:0,page:0,pending:false,message:'',offsetX:0,offsetY:0});
     if(['equipment','inventory'].includes(kind)){equipmentView.tab='gear';equipmentView.slot=0;equipmentView.query='';equipmentView.item=null;equipmentView.guid=null;}
     paintPanel();
+    if(['inventory','equipment'].includes(kind))languageAdventure.emit('inventory','inventory');
     if(['shop','membership','checkin'].includes(kind))refreshMembership();
 }
 function applyDebug(patch) {safely(()=>{
@@ -295,7 +273,7 @@ async function buyVipProduct(value) {
         return performAction(value,{keepworkVip:status.isVip,expiresAt:status.expiresAt,now:Date.now()});
     }catch(error){toast(error.message);return false;}finally{buyingVip=false;}
 }
-function performAction(value,access={}) {return safely(()=>{const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['npc-purchase','checkin','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}showRewards(before);queueCloudSave();paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};toast(result?.message||text[value.type]||'进度已保存');return result?.message?result:true;});}
+function performAction(value,access={}) {return safely(()=>{const sceneFeedback=value.type==='fish'&&sceneFishing.active;const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['npc-purchase','checkin','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}if(!sceneFeedback)showRewards(before);queueCloudSave();paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',ride:'已经骑上坐骑。属性将在下一场战斗中生效。',dismount:'已经下来了。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};if(!sceneFeedback)toast(result?.message||text[value.type]||'进度已保存');if(value.type==='fish')languageAdventure.emit('fish','camp-coast',{caught:!!result?.caught,itemId:result?.items?.[0]?.id});else if(['equip','unequip','ride','dismount'].includes(value.type))languageAdventure.emit('equipment','equipment',{itemId:value.itemId});else if(['buy','npc-purchase','claim','claim-catalog'].includes(value.type))languageAdventure.emit('item-gained','inventory');return result?.message?result:true;});}
 let exchangingBeans=false;
 function maybeExchangeMagicBeans({announce=true}={}) {
     if(exchangingBeans||!assets||!save||!roleStore?.owner||save.pendingEncounter)return;
@@ -483,6 +461,12 @@ function teleportToLandmark(id){safely(()=>{
     if(!target||!W.walkable(world,target.x,target.y))throw Error('此地点暂时无法抵达');
     close();path=[];destination=null;save.position={x:target.x,y:target.y};save.revision++;persist();paintHud();showTeleportEffect();
 });}
+function teleportToPosition(x,y){safely(()=>{
+    if(stage!=='world'||save.pendingEncounter)throw Error('请先完成当前战斗');
+    const target=W.nearestWalkable(world,x,y);
+    if(!target)throw Error('此地点暂时无法抵达');
+    close();path=[];destination=null;save.position={x:target.x,y:target.y};save.revision++;persist();paintHud();showTeleportEffect();
+});}
 async function loadAndEnterDungeon(id,restart=false){
     if(dungeonLoading||stage!=='world')return;
     if(restart&&!confirm(tr('重新开启会重置该副本的清怪进度，确定继续吗？')))return;
@@ -516,7 +500,7 @@ function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog
     persist();showRewards(before);toast('已完成：{title}',{title:q.title});close();paintHud();
 },questTalk:(q,talk)=>startQuestTalk(talk),panel:openPanel,travel,track,freeTalk:openFreeTalk});}
 function startQuestTalk(talk) {
-    startLines(talk.dialog,'谢谢你，我知道了',()=>{
+    startLines(talk.dialog,talk.dialog.at(-1)?.buttons?.[0]?.label||'谢谢你',()=>{
         A.applyAction(save,assets.content,{type:'talk',npcId:talk.npcId});
         return true;
     });
@@ -544,7 +528,7 @@ function interact(target) {
     if(stage!=='world'||!target)return;
     path=[];destination=null;keys.clear();persist();
     if(target.kind==='npc'){
-        if(target.id===36205||target.name==='法斯特船长'){openPanel('worldmap');return;}
+        if((target.id===36205||target.name==='法斯特船长')&&!(save.zone==='camp'&&save.languageLearning?.enabled)){openPanel('worldmap');return;}
         close();dialog={npcId:target.id,npc:target};
         const talk=target.questDialogue&&A.pendingQuestTalk(save,A.currentQuest(save,assets.content),target.id);
         if(talk)startQuestTalk(talk);else paintDialogue();
@@ -584,11 +568,15 @@ function trackCatalog(id) {
         if(ready){const before=rewardSnapshot(save);A.applyAction(save,c,{type:'claim-catalog',questId:id,npcId:quest.endNpc});showRewards(before);toast('已完成：{title}',{title:quest.title});paintHud();return;}
     }
     if(goal&&(goal.kind==='kill'||goal.kind==='loot')){
-        const goalIds=goal.kind==='kill'?[goal.id]:goal.producers;
-        const encounter=c.encounters.find(e=>(e.monsterIds||[e.monsterId]).some(mid=>goalIds.includes(c.catalogQuests.paths[String(c.monsters[mid]?.source||'').toLowerCase()])));
+        const encounter=catalogGoalEncounter(c,goal,save.zone,quest.region);
+        if(encounter&&!dungeonFor(c,encounter.zone)&&save.zone!==encounter.zone){
+            travel(encounter.zone);if(save.zone!==encounter.zone)return;
+        }
         const placed=encounter&&world.encounters.find(e=>e.id===encounter.id);
         if(placed){walkTo({...placed,kind:'encounter'},true);return;}
         if(encounter){toast('前往副本挑战{name}',{name:goal.name});openPanel('dungeons');return;}
+        const blocked=catalogGoalEncounter(c,goal,save.zone,quest.region,true);
+        if(blocked?.blocked?.length){toast(blocked.blocked.join('；'));return;}
         toast('{name}不在当前已开放的遭遇里。',{name:goal.name});return;
     }
     if(goal?.kind==='custom'&&[79016,79025].includes(goal.id)){openPanel('upgrade');return;}
@@ -627,7 +615,7 @@ function track(questId, options={}) {
 }
 function paintBattle(){
     const hero=battle.sides.near[0],hand=[...selectableCards(hero),...P.runeCardsInHand(battle)];
-    if(selected&&!hand.some(h=>h.seq===selected.seq&&h.key===selected.key))selected=null;
+    if(selected&&(discarded.includes(selected.seq)||!hand.some(h=>h.seq===selected.seq&&h.key===selected.key)))selected=null;
     V.renderBattle(nodes.battle,{...model(),petCardsOpen,runeCardsOpen,runeHand:P.runeCardsInHand(battle)},{toggleRunes:()=>{if(animation||battle.finished)return;runeCardsOpen=!runeCardsOpen;petCardsOpen=false;selected=null;paintBattle();},togglePetCards:()=>{if(animation||battle.finished)return;petCardsOpen=!petCardsOpen;runeCardsOpen=false;selected=null;paintBattle();},sound:toggleSound,cloud:openCloud,swipePlay:h=>{
         if(animation)return;
         const intent=resolveHandSwipe(battle,h,discarded);
@@ -635,19 +623,19 @@ function paintBattle(){
         selected=h;
         if(intent.decision)playRound(intent.decision);
         else {paintBattle();toast(intent.message);}
-    },reselect:()=>{if(animation||battle.finished)return;selected=null;paintBattle();},select:h=>{if(animation||battle.finished)return;selected=h;paintBattle();},discard:seq=>{
-    if(animation||battle.finished||seq<0||seq>=PET_CARD_SEQ_BASE)return;discarded=discarded.includes(seq)?discarded.filter(x=>x!==seq):[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
+    },reselect:()=>{if(animation||battle.finished)return;selected=null;paintBattle();},select:h=>{if(animation||battle.finished||!h||discarded.includes(h.seq))return;selected=h;paintBattle();},discard:seq=>{
+    if(animation||battle.finished||seq<0||seq>=PET_CARD_SEQ_BASE||discarded.includes(seq)||!hand.some(h=>h.seq===seq))return;discarded=[...discarded,seq];if(selected?.seq===seq)selected=null;paintBattle();
 },target:id=>{
     if(!selected||animation||battle.finished)return;
     const card=battle.resolved.cards[selected.key];
-    const message=discarded.includes(selected.seq)?'请先撤销弃牌':castBlockedMessage(hero,card,battle.resolved);
+    const message=discarded.includes(selected.seq)?'这张卡牌已弃掉':castBlockedMessage(hero,card,battle.resolved);
     if(message){toast(message);return;}
     if(!validTargets(battle,hero,card).some(t=>t.id===id)){toast('请选择这张卡牌可施放的目标。');return;}
     playRound({...selected,targetId:id,discardSeqs:discarded});
 },openRunes:()=>{if(animation||battle.finished)return;runeCardsOpen=true;petCardsOpen=false;selected=null;paintBattle();},pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
     if(assets.content.pets)A.settleParty(save,assets.content,battle,{retreat:true});
     A.applyAction(save,assets.content,{type:'retreat'});save.careAt=Date.now();enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
-},finish:()=>safely(()=>{const before=rewardSnapshot(save);A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save,null,{announceBeans:false});showRewards(before);}),battleTalk:()=>{const goal=battle?.monsterTemplates?.[0]?.name;if(goal)speakText(goal);},battleSpeech});}
+},finish:()=>safely(()=>{const before=rewardSnapshot(save);A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save,null,{announceBeans:false});showRewards(before);}),battleTalk:()=>void languageAdventure.open()});}
 function playRound(decision) {
     if(animation||battle.finished)return;
     safely(()=>{
@@ -684,6 +672,7 @@ function tickAnimation(now) {
 }
 const directionKeys={w:'up',arrowup:'up',s:'down',arrowdown:'down',a:'left',arrowleft:'left',d:'right',arrowright:'right'};
 window.addEventListener('keydown',e=>{
+    if(languageAdventure.active)return;
     if(rewardRoot.contains(e.target))return;
     if(sceneFishing.key(e)){e.preventDefault();return;}
     if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;
@@ -695,15 +684,24 @@ window.addEventListener('keydown',e=>{
     if(key==='r')openPanel('equipment');if(key==='j')openPanel('quests');if(key==='b'||key==='i')openPanel('inventory');if(key==='c')openPanel('deck');if(key==='p')openPanel('pet');
 });
 window.addEventListener('keyup',e=>{keys.delete(directionKeys[e.key.toLowerCase()]);});
-window.addEventListener('blur',()=>{resetMovementInput();path=[];destination=null;persist();});
+window.addEventListener('blur',()=>{fishingApproach=null;sceneFishing.stop(false);resetMovementInput();path=[];destination=null;persist();});
 window.addEventListener('pagehide',persist);
-document.addEventListener('visibilitychange',()=>{spellSound.stop();if(document.hidden){sceneFishing.stop();resetMovementInput();path=[];destination=null;persist();music?.pause();}else{if(stage==='world'&&save?.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);updateMusic();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)languageAdventure.close();spellSound.stop();if(document.hidden){fishingApproach=null;sceneFishing.stop(false);resetMovementInput();path=[];destination=null;persist();music?.pause();}else{if(stage==='world'&&save?.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);updateMusic();}});
 window.addEventListener('pagehide',()=>spellSound.stop());
 function clickWorld(clientX,clientY) {
     const {p,target}=pickWorldTarget(clientX,clientY);
     if(!target&&!dungeonFor(assets.content,world.zone)&&isOcean(world,p.x,p.y)){
         if(sceneFishing.active)sceneFishing.aim(p);
-        else{resetMovementInput();path=[];destination=null;sceneFishing.start(p,model());}
+        else{
+            const spot=fishingSpot(world,save.position,p);
+            if(!spot){toast('这里离水边太远，换一处海岸试试。');return false;}
+            close();path=[];destination=null;
+            if(W.distance(save.position,spot.shore)>8){
+                path=W.findPath(world,save.position,spot.shore);
+                if(!path.length){toast('这处岸边暂时走不到，换个位置吧。');return false;}
+                fishingApproach=spot;
+            }else sceneFishing.start(spot.water,model());
+        }
         return false;
     }
     if(sceneFishing.active)sceneFishing.stop();
@@ -719,36 +717,49 @@ function pickWorldTarget(clientX,clientY) {
 nodes.world.addEventListener('pointerdown',e=>{
     if(e.pointerType==='touch'||e.pointerType==='pen')return;
     if(stage!=='world'||panel||dialog||e.button!==0)return;e.preventDefault();nodes.world.focus({preventScroll:true});
-    if(e.pointerType==='mouse'&&clickWorld(e.clientX,e.clientY)){heldPointer={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,since:performance.now(),active:false};nodes.world.setPointerCapture(e.pointerId);}
+    // Defer target picking and pathfinding until release, after gesture detection.
+    if(e.pointerType==='mouse'){heldPointer={id:e.pointerId,x:e.clientX,y:e.clientY,startX:e.clientX,startY:e.clientY,since:performance.now(),active:false};nodes.world.setPointerCapture(e.pointerId);}
 });
 nodes.world.addEventListener('pointermove',e=>{if(heldPointer?.id===e.pointerId){heldPointer.x=e.clientX;heldPointer.y=e.clientY;if(Math.hypot(e.clientX-heldPointer.startX,e.clientY-heldPointer.startY)>6){heldPointer.active=true;path=[];destination=null;}}});
-function releaseWorldPointer(e){if(heldPointer?.id!==e.pointerId)return;if(heldPointer.active||e.type!=='pointerup'){path=[];destination=null;}heldPointer=null;}
+function releaseWorldPointer(e){
+    if(heldPointer?.id!==e.pointerId)return;
+    const clicked=e.type==='pointerup'&&!heldPointer.active&&performance.now()-heldPointer.since<180
+        &&Math.hypot(e.clientX-heldPointer.startX,e.clientY-heldPointer.startY)<=6;
+    heldPointer=null;
+    if(nodes.world.hasPointerCapture(e.pointerId))nodes.world.releasePointerCapture(e.pointerId);
+    if(!clicked){path=[];destination=null;return;}
+    if(stage==='world'&&!panel&&!dialog&&!languageAdventure.active)clickWorld(e.clientX,e.clientY);
+}
 for(const event of ['pointerup','pointercancel','lostpointercapture'])nodes.world.addEventListener(event,releaseWorldPointer);
 function frame(now) {
     requestAnimationFrame(frame);if(!renderer||!save)return;
     void autoSave.tick();
+    languageAdventure.tick(now);
     if(stage==='world'&&!document.hidden&&now-lastCare>1000){lastCare=now;setTimeout(()=>{
         if(stage!=='world'||!save||document.hidden)return;
-        tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),true);V.updateHeroHealth(nodes.hud,save,assets.content);V.updateCheckin(nodes.hud,model());if(panel==='checkin')V.updateCheckin(nodes.overlay,model());if(performance.now()-lastSave>10000)persist();
+        tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),true);updatePetStatus(document,save,assets.content);V.updateHeroHealth(nodes.hud,save,assets.content);V.updateCheckin(nodes.hud,model());if(panel==='checkin')V.updateCheckin(nodes.overlay,model());if(performance.now()-lastSave>10000)persist();
     },0);}
     if((stage==='world'||stage==='battle')&&!document.hidden)tickCheckin(save,Date.now(),Math.min(1000,Math.max(0,now-lastFrame)));
     const dt=Math.min(.055,(now-lastFrame)/1000||0);lastFrame=now;const wasMoving=moving;moving=false;
-    if(stage==='world'&&!panel&&!dialog) {
+    if(stage==='world'&&!panel&&!dialog&&!languageAdventure.active) {
         let dx=Number(keys.has('right'))-Number(keys.has('left')),dy=Number(keys.has('down'))-Number(keys.has('up'));
         if(!dx&&!dy){dx=joystick.x;dy=joystick.y;}
         if(heldPointer&&(heldPointer.active||now-heldPointer.since>=180)){
             heldPointer.active=true;path=[];destination=null;
             const rect=nodes.world.getBoundingClientRect(),target=renderer.screenToWorld(heldPointer.x-rect.left,heldPointer.y-rect.top);
             const x=target.x-save.position.x,y=target.y-save.position.y,distance=Math.hypot(x,y);
-            if(!dx&&!dy&&distance>6){const scale=Math.min(1,(distance-6)/(W.WALK_SPEED*dt||1));dx=x/distance*scale;dy=y/distance*scale;}
+            const travel=W.WALK_SPEED*(save.mountId?assets.content.balanceParams?.adventure?.mountSpeed||1.35:1)*dt;
+            if(!dx&&!dy&&distance>6){const scale=Math.min(1,(distance-6)/(travel||1));dx=x/distance*scale;dy=y/distance*scale;}
         }
         if(!dx&&!dy&&path.length){
-            const previous=save.position,next=W.followPath(world,save.position,path,W.WALK_SPEED*dt);
+            const travel=W.WALK_SPEED*(save.mountId?assets.content.balanceParams?.adventure?.mountSpeed||1.35:1)*dt;
+            const previous=save.position,next=W.followPath(world,save.position,path,travel);
             save.position=next.position;path=next.path;dx=save.position.x-previous.x;dy=save.position.y-previous.y;moving=Math.hypot(dx,dy)>.01;
             if(next.blocked&&destination)path=W.findPath(world,save.position,destination);
         }else if(dx||dy){
             const length=Math.max(1,Math.hypot(dx,dy)),previous=save.position;
-            save.position=W.movePosition(world,save.position,dx/length*W.WALK_SPEED*dt,dy/length*W.WALK_SPEED*dt);moving=W.distance(previous,save.position)>.01;
+            const travel=W.WALK_SPEED*(save.mountId?assets.content.balanceParams?.adventure?.mountSpeed||1.35:1)*dt;
+            save.position=W.movePosition(world,save.position,dx/length*travel,dy/length*travel);moving=W.distance(previous,save.position)>.01;
         }
         if(moving)save.facing=Math.abs(dx)>Math.abs(dy)?(dx<0?1:2):(dy<0?3:0);
         const auto=W.dungeonAutoInteraction(world,save.position);
@@ -768,12 +779,20 @@ function frame(now) {
         }
         if((wasMoving&&!moving)||(moving&&now-lastSave>3000))queuePersist();
     }
-    const rewardEffect=rewardFeedback.tick(now,stage==='world'&&!panel&&!dialog);
+    const rewardEffect=rewardFeedback.tick(now,stage==='world'&&!panel&&!dialog&&!sceneFishing.active);
     const bagButton=nodes.hud.querySelector('[data-ui-icon=bag]')?.closest('button');bagButton?.classList.toggle('reward-glow',!rewardRoot.hidden&&!!rewardRoot.querySelector('.reward-popup:not([hidden]) strong'));
     if(teleportEffect&&(stage!=='world'||now-teleportEffect.started>=TELEPORT_EFFECT_MS))teleportEffect=null;
-    renderer.render(world,save,now,{moving,path,title:stage==='title',rewardEffect,teleportEffect});
+    if(fishingApproach){
+        if(stage!=='world'||panel||dialog||keys.size||joystick.x||joystick.y||heldPointer||document.hidden)fishingApproach=null;
+        else if(!path.length){
+            const spot=fishingApproach;fishingApproach=null;
+            if(W.distance(save.position,spot.shore)<24){moving=false;sceneFishing.start(spot.water,model());}
+            else toast('没能走到水边，换个位置再试试。');
+        }
+    }
+    renderer.render(world,save,now,{moving,path,title:stage==='title',rewardEffect,teleportEffect,fishingPose:sceneFishing.pose(now)});
     if(sceneFishing.active){
-        if(stage!=='world'||panel||dialog||moving||document.hidden)sceneFishing.stop();
+        if(stage!=='world'||panel||dialog||moving||keys.size||joystick.x||joystick.y||heldPointer?.active||document.hidden)sceneFishing.stop(false);
         else{
             const origin=renderer.screenToWorld(0,0),unit=renderer.screenToWorld(1,1);
             sceneFishing.update(model(),now,p=>({x:(p.x-origin.x)/(unit.x-origin.x),y:(p.y-origin.y)/(unit.y-origin.y)}));
@@ -787,8 +806,9 @@ async function boot(){
             const bar=$('load-progress');
             if(!bar)return;
             if(value===null)bar.removeAttribute('value');else bar.value=value;
-            bar.setAttribute('aria-label',tr(label));
-            setText($('load-status'),String(label).endsWith('…')?label:`${label}…`);
+            const status=String(label).endsWith('…')?label:`${label}…`;
+            bar.setAttribute('aria-label',tr(status));
+            setText($('load-status'),status);
             setText($('load-detail'),detail);
         });
         setText($('load-status'),'正在初始化世界…');

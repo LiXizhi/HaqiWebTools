@@ -20682,7 +20682,7 @@
     {
       "id": 63000,
       "title": "开启全新魔法之旅",
-      "description": "欢迎来到魔法哈奇。你将在该任务中了解到基本的游戏操作。",
+      "description": "点击地面移动，点击居民交谈，开始营地里的第一课。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -20726,7 +20726,7 @@
     {
       "id": 63001,
       "title": "与居民探讨魔法",
-      "description": "熟练掌握了一些简单的操作后，青龙导师让我利用追踪系统与居民谈话。",
+      "description": "与苏苏、莫卡交谈，听听他们为什么学习魔法。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -20789,7 +20789,7 @@
     {
       "id": 63002,
       "title": "阵营训练（一）",
-      "description": "青龙导师让我利用任务追踪系统，传送到指定地点打败一只怪物。（完成任务后可以获得装备）",
+      "description": "击败烈火侦查兵，再向青龙回报。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -20866,7 +20866,7 @@
     {
       "id": 63003,
       "title": "阵营训练（二）",
-      "description": "青龙导师让我利用任务追踪系统，传送到指定地点打败一只怪物。（完成任务后可以获得装备）",
+      "description": "击败寒冰侦查兵，再向青龙回报。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -20948,7 +20948,7 @@
     {
       "id": 63004,
       "title": "阵营训练（三）",
-      "description": "青龙导师让我利用任务追踪系统，传送到指定地点打败一只怪物。（完成任务后可以获得装备）",
+      "description": "击败风暴侦察兵，再向青龙回报。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -21019,7 +21019,7 @@
     {
       "id": 63005,
       "title": "阵营训练（四）",
-      "description": "青龙导师让我利用任务追踪系统，传送到指定地点打败一只怪物。（完成任务后可以获得炫酷坐骑）",
+      "description": "击败生命侦查兵，再去找古奇。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -21076,7 +21076,7 @@
     {
       "id": 63006,
       "title": "让自己变强",
-      "description": "为了以后的出行做最好的准备，需要装备更好的武器来提升自己的实力。",
+      "description": "去找青龙，领取新的法杖。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "莫纳",
@@ -21125,7 +21125,7 @@
     {
       "id": 63007,
       "title": "让自己变得更强",
-      "description": "为了以后的出行做最好的准备，需要学会通过强化装备来提升自己的实力。",
+      "description": "强化一件装备，再向青龙回报。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -21187,7 +21187,7 @@
     {
       "id": 63008,
       "title": "明星宠物商人",
-      "description": "去找杰西卡了解宠物口粮的事情。",
+      "description": "打开出奇蛋，再与杰西卡交谈。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -21242,7 +21242,7 @@
     {
       "id": 63009,
       "title": "喂养明星宠物",
-      "description": "杰西卡给了我一些战宠口粮，并教我如何喂养宠物。",
+      "description": "在宠物面板喂养一包战宠口粮。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "杰西卡",
@@ -21299,7 +21299,7 @@
     {
       "id": 63010,
       "title": "魔法的奥义",
-      "description": "青龙导师让我去认识一下五位系别导师，它们会和我讲述每个系别都具备哪些特点。",
+      "description": "与五位魔法导师交谈，了解各系特色。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -21374,7 +21374,7 @@
     {
       "id": 63011,
       "title": "领地守护者",
-      "description": "导师让我放轻松，然后去找领地守护者了解一些“考核”的相关事宜。",
+      "description": "与领地看守者交谈，了解考核对手。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -21451,7 +21451,7 @@
     {
       "id": 63012,
       "title": "考核前的准备",
-      "description": "导师让我学会调整自己的卡包，将强力的卡牌放入卡包中。",
+      "description": "装备翡翠口袋，整理并保存卡包。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -21508,7 +21508,7 @@
     {
       "id": 63013,
       "title": "最后的考核",
-      "description": "（利用任务追踪系统）打败“魔法营地”中死亡侦察兵。",
+      "description": "击败死亡侦察兵，完成最终考核。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",

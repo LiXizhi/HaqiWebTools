@@ -1,0 +1,419 @@
+{
+  "schemaVersion": 1,
+  "grid": {
+    "cols": 2,
+    "rows": 2
+  },
+  "atlases": {
+    "town": {
+      "local": "assets/adventure/environment/buildings-town-588efee7f663.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/buildings-town-588efee7f663.webp",
+      "width": 768,
+      "height": 768,
+      "size": 198248,
+      "sha256": "588efee7f663f0c937c27e6d61726152789be657a317601a30f496d98238842e",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "76aad33fbc1630b9d411261db0ec47a65804b1ff2ded48aade39852555f7aa74",
+        "width": 1254,
+        "height": 1254,
+        "prompt": "data/adventure/building-art-plan.json#town",
+        "reference": "data/adventure/world-map-art.json"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 86
+      },
+      "frames": {
+        "harbor": {
+          "rect": [
+            8,
+            34,
+            368,
+            342
+          ],
+          "sourceRect": [
+            47,
+            50,
+            594,
+            552
+          ],
+          "cell": 0
+        },
+        "boat": {
+          "rect": [
+            394,
+            8,
+            364,
+            368
+          ],
+          "sourceRect": [
+            715,
+            53,
+            492,
+            497
+          ],
+          "cell": 1
+        },
+        "village": {
+          "rect": [
+            8,
+            451,
+            368,
+            309
+          ],
+          "sourceRect": [
+            37,
+            656,
+            584,
+            490
+          ],
+          "cell": 2
+        },
+        "tower": {
+          "rect": [
+            404,
+            392,
+            343,
+            368
+          ],
+          "sourceRect": [
+            715,
+            629,
+            503,
+            539
+          ],
+          "cell": 3
+        }
+      }
+    },
+    "fire": {
+      "local": "assets/adventure/environment/buildings-fire-0755dc2cc1d7.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/buildings-fire-0755dc2cc1d7.webp",
+      "width": 768,
+      "height": 768,
+      "size": 186662,
+      "sha256": "0755dc2cc1d7656653dc5adee1a5b6fa3adeb6d5d1c26e1e074048bbf2bf7298",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "9e6052391e75d4e414ed7eb7e755729f14bef3c0e0d22ad1383ba3830a4e57c3",
+        "width": 1254,
+        "height": 1254,
+        "prompt": "data/adventure/building-art-plan.json#fire",
+        "reference": "data/adventure/world-map-art.json"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 86
+      },
+      "frames": {
+        "harbor": {
+          "rect": [
+            8,
+            55,
+            368,
+            321
+          ],
+          "sourceRect": [
+            19,
+            69,
+            601,
+            525
+          ],
+          "cell": 0
+        },
+        "boat": {
+          "rect": [
+            392,
+            13,
+            368,
+            363
+          ],
+          "sourceRect": [
+            678,
+            12,
+            566,
+            559
+          ],
+          "cell": 1
+        },
+        "village": {
+          "rect": [
+            8,
+            459,
+            368,
+            301
+          ],
+          "sourceRect": [
+            18,
+            706,
+            632,
+            517
+          ],
+          "cell": 2
+        },
+        "tower": {
+          "rect": [
+            406,
+            392,
+            339,
+            368
+          ],
+          "sourceRect": [
+            691,
+            628,
+            548,
+            595
+          ],
+          "cell": 3
+        }
+      }
+    },
+    "ice": {
+      "local": "assets/adventure/environment/buildings-ice-c7bc2c05b73d.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/buildings-ice-c7bc2c05b73d.webp",
+      "width": 768,
+      "height": 768,
+      "size": 191664,
+      "sha256": "c7bc2c05b73d41d8d0b94d9d91efc0e95f7cecbeddb14964cc46468610d3d5f9",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "76e43f1fa07803aa9fa4eeb5db9af72709a3da87bd70eae15f9b18db7b01acdb",
+        "width": 1254,
+        "height": 1254,
+        "prompt": "data/adventure/building-art-plan.json#ice",
+        "reference": "data/adventure/world-map-art.json"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 82
+      },
+      "frames": {
+        "harbor": {
+          "rect": [
+            23,
+            8,
+            338,
+            368
+          ],
+          "sourceRect": [
+            52,
+            46,
+            512,
+            558
+          ],
+          "cell": 0
+        },
+        "boat": {
+          "rect": [
+            429,
+            8,
+            293,
+            368
+          ],
+          "sourceRect": [
+            740,
+            45,
+            420,
+            528
+          ],
+          "cell": 1
+        },
+        "village": {
+          "rect": [
+            8,
+            424,
+            368,
+            336
+          ],
+          "sourceRect": [
+            37,
+            668,
+            586,
+            535
+          ],
+          "cell": 2
+        },
+        "tower": {
+          "rect": [
+            417,
+            392,
+            318,
+            368
+          ],
+          "sourceRect": [
+            706,
+            628,
+            494,
+            572
+          ],
+          "cell": 3
+        }
+      }
+    },
+    "desert": {
+      "local": "assets/adventure/environment/buildings-desert-0e714a7338e9.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/buildings-desert-0e714a7338e9.webp",
+      "width": 768,
+      "height": 768,
+      "size": 190478,
+      "sha256": "0e714a7338e9e6f894d417bd2c7c69e7a44e90499f268a5d89bed38067b8501d",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "1e902b39a8647867044511227879c6d474b53b492b52e8ef551911336c714982",
+        "width": 1254,
+        "height": 1254,
+        "prompt": "data/adventure/building-art-plan.json#desert",
+        "reference": "data/adventure/world-map-art.json"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 82
+      },
+      "frames": {
+        "harbor": {
+          "rect": [
+            8,
+            40,
+            368,
+            336
+          ],
+          "sourceRect": [
+            78,
+            50,
+            549,
+            501
+          ],
+          "cell": 0
+        },
+        "boat": {
+          "rect": [
+            402,
+            8,
+            347,
+            368
+          ],
+          "sourceRect": [
+            684,
+            32,
+            511,
+            542
+          ],
+          "cell": 1
+        },
+        "village": {
+          "rect": [
+            8,
+            431,
+            368,
+            329
+          ],
+          "sourceRect": [
+            34,
+            659,
+            603,
+            539
+          ],
+          "cell": 2
+        },
+        "tower": {
+          "rect": [
+            415,
+            392,
+            322,
+            368
+          ],
+          "sourceRect": [
+            709,
+            607,
+            512,
+            586
+          ],
+          "cell": 3
+        }
+      }
+    },
+    "dark": {
+      "local": "assets/adventure/environment/buildings-dark-f702bf5e9fd9.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/buildings-dark-f702bf5e9fd9.webp",
+      "width": 768,
+      "height": 768,
+      "size": 188272,
+      "sha256": "f702bf5e9fd96a32e8052deb234d5a7ae25a8773380bae57d74a3bcf2986d234",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "84bc4c8a95f85e9249f972c017984e90a84e7f195b5de5660b1f3bab70a50801",
+        "width": 1254,
+        "height": 1254,
+        "prompt": "data/adventure/building-art-plan.json#dark",
+        "reference": "data/adventure/world-map-art.json"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 82
+      },
+      "frames": {
+        "harbor": {
+          "rect": [
+            33,
+            8,
+            318,
+            368
+          ],
+          "sourceRect": [
+            61,
+            0,
+            534,
+            618
+          ],
+          "cell": 0
+        },
+        "boat": {
+          "rect": [
+            398,
+            8,
+            356,
+            368
+          ],
+          "sourceRect": [
+            644,
+            3,
+            590,
+            610
+          ],
+          "cell": 1
+        },
+        "village": {
+          "rect": [
+            8,
+            425,
+            368,
+            335
+          ],
+          "sourceRect": [
+            35,
+            642,
+            605,
+            551
+          ],
+          "cell": 2
+        },
+        "tower": {
+          "rect": [
+            417,
+            392,
+            318,
+            368
+          ],
+          "sourceRect": [
+            701,
+            629,
+            525,
+            608
+          ],
+          "cell": 3
+        }
+      }
+    }
+  }
+}

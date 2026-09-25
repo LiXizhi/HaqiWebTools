@@ -9,9 +9,10 @@ export function debugFields(save,content) {
     const fields=[],add=(id,label,group,value,min=0,max=Number.MAX_SAFE_INTEGER)=>fields.push({id,label,group,value,min,max});
     add('level','角色等级','角色',save.level,1,content.progression.levelCap);
     add('xp','累计经验','角色',save.xp);
-    for(const id of [100,17213])if(content.items[id])add(`inventory:${id}`,content.items[id].name,'货币',save.inventory[id]||0);
+    // 魔豆(984)不在 content.items 中，但存档与商店扣费都走 save.inventory[984]。
+    for(const [id,fallback] of [[100,'奇豆'],[984,'魔豆'],[17213,'仙豆']])add(`inventory:${id}`,content.items[id]?.name||fallback,'货币',save.inventory[id]||0);
     for(const item of Object.values(content.items)) {
-        if([100,113,17213].includes(item.id)||content.cardItems[item.id])continue;
+        if([100,113,984,17213].includes(item.id)||content.cardItems[item.id])continue;
         add(`inventory:${item.id}`,`${item.name} · ${item.id}`,'物品',save.inventory[item.id]||0);
     }
     for(const item of Object.values(content.items))if(upgradeLevels(content,item.id).length)add(`upgrade:${item.id}`,`${item.name}强化等级`,'强化',save.upgrades[item.id]||0,0,Math.max(...upgradeLevels(content,item.id).map(row=>row.level)));

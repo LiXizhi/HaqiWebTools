@@ -1,8 +1,11 @@
+import { paintSoftShadow, paintStaticShadows } from './adventure_shadows.js';
 import { drawIslandWeather, stepWeatherFade } from './adventure_weather.js';
+import { createCameraZoom } from './adventure_camera_core.js';
 import { regionAt } from './adventure_island_layout_core.js';
 import { drawRewardEffect } from './view_adventure_rewards.js';
 import { drawTeleportEffect } from './view_adventure_teleport.js';
 import { petStage } from './adventure_pets_core.js';
+import { resolveMountDrawPose } from './adventure_mounts_core.js';
 import { createCompanion, stepCompanion } from './adventure_companion_core.js';
 // Canvas presentation only. Visual motion uses time/seeded map decorations, never gameplay RNG.
 import { createSpellEffects } from './spell_effects.js';
@@ -13,6 +16,7 @@ import {catalogNpcMarker,catalogTracksMonster,trackedQuestIds} from './adventure
 import { onIsland,distance,nearbyWorldObjects } from './adventure_world_core.js';
 import { OCEAN_COLOR, paintTerrain } from './adventure_terrain.js';
 import { tr } from './locale_runtime.js';
+import { createSignpostPainter } from './adventure_signposts.js';
 import { paintLargeTerrain,createTerrainTileCache } from './adventure_large_terrain.js';
 export const COLORS={fire:'#e98f44',ice:'#6ecbdc',storm:'#b39aea',life:'#84bd59',death:'#a887c7'};
 const TAU=Math.PI*2;
@@ -56,16 +60,16 @@ export function questMarker(save,content,npcId) {
     return null;
 }
 export function createRenderer(canvas,assets) {
+    const drawSignpost=createSignpostPainter();
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const ctx=canvas.getContext('2d'),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
     const terrainTiles=createTerrainTileCache((c,world,rect)=>paintLargeTerrain(c,world,rect,false,assets.terrainDecorationArt),()=>document.createElement('canvas'));
     let vignetteCanvas=null,vignetteW=0,vignetteH=0;
     let overviewWorld=null,overview=null;
     let companion=null,companionId=null,companionWorld=null,companionSave=null,lastPetTime=null;
-    let zoom=1,weatherFade=null;
+    const cameraZoom=createCameraZoom();let weatherFade=null;
     function zoomBy(factor) {
-        if(Number.isFinite(factor)&&factor>0)zoom=Math.max(.75,Math.min(1.4,zoom*factor));
-        return zoom;
+        return cameraZoom.zoomBy(factor);
     }
     function size() {
         const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(2,window.devicePixelRatio||1);
@@ -90,28 +94,75 @@ export function createRenderer(canvas,assets) {
         for(const d of world.decorations)if(d.kind===3&&onIsland(d.x,d.y,80)&&!world.paths.some(p=>Math.hypot(d.x-p.a.x,d.y-p.a.y)<135)) {
             ellipse(c,d.x,d.y,2,2,'#f4edbb');ellipse(c,d.x+3,d.y-3,2,2,'#e9bca4');
         }
+        paintStaticShadows(c,world);
         return backing;
     }
-    function shadow(c,x,y,w=24) {ellipse(c,x,y,w,w*.32,'#173d4140');}
-    function avatar(c,save,x,y,time,moving,scale=1) {
-        shadow(c,x,y,23*scale);const bob=moving?Math.sin(time*14)*3:Math.sin(time*2)*1;
-        assets.tile(c,'sprites',(save.appearance==='girl'?12:8)+(save.facing||0),x-34*scale,y-78*scale+bob,68*scale,78*scale);
+    function shadow(c,x,y,w=24) {paintSoftShadow(c,x,y,w*1.18,w*.4,.3);}
+    function paintSheet(c,id,art,cell,x,y,w,h) {
+        if(!art?.width)return false;
+        const cols=art.columns||2,rows=art.rows||2,cw=art.width/cols,ch=art.height/rows;
+        return assets.draw(c,{id,crop:[(cell%cols)*cw,Math.floor(cell/cols)*ch,cw,ch]},x,y,w,h,false);
     }
-    function creature(c,id,x,y,t,scale=1) {
+    function sheetVisibleBottom(id,art,pose,fallback) {
+        if(!art?.width)return fallback;
+        const cw=art.width/(art.columns||2),ch=art.height/(art.rows||2);
+        const crop=[(pose.cell%(art.columns||2))*cw,Math.floor(pose.cell/(art.columns||2))*ch,cw,ch];
+        try {
+            const bounds=assets.getBounds?.(id,crop);
+            if(bounds){
+                const ratio=Math.min(pose.w/cw,pose.h/ch);
+                return pose.y+(pose.h-ch*ratio)/2+(bounds[1]-crop[1]+bounds[3])*ratio;
+            }
+        } catch { /* Keep rendering if the image cannot be read for alpha bounds. */ }
+        return fallback;
+    }
+    function avatar(c,save,x,y,time,moving,scale=1) {
+        const row=save.mountId&&assets.content.mountByItem?.[save.mountId];
+        const mount=row&&assets.content.mountCatalog?.mounts.find(item=>item.id===row.mountId);
+        if(mount?.art?.cdn){
+            const pose=resolveMountDrawPose(mount,save.facing||0,{size:78*scale,time,moving,gender:save.appearance==='girl'?'female':'male'});
+            c.save();c.translate(x,y);shadow(c,0,0,28*scale);
+            paintSheet(c,`mount:${mount.id}`,mount.art,pose.mount.cell,pose.mount.x,pose.mount.y,pose.mount.w,pose.mount.h);
+            const rider=assets.content.mountCatalog.sheets[pose.rider.art];
+            paintSheet(c,`mount-sheet:${pose.rider.art}`,rider,pose.rider.cell,pose.rider.x,pose.rider.y,pose.rider.w,pose.rider.h);
+            if(pose.foreground?.length){
+                c.save();c.beginPath();
+                for(const polygon of pose.foreground)polygon.forEach(([u,v],i)=>c[i?'lineTo':'moveTo'](pose.mount.x+u*pose.mount.w,pose.mount.y+v*pose.mount.h));
+                c.closePath();c.clip();
+                paintSheet(c,`mount:${mount.id}`,mount.art,pose.mount.cell,pose.mount.x,pose.mount.y,pose.mount.w,pose.mount.h);
+                c.restore();
+            }
+            c.restore();
+            // Anchor the name to the unanimated pose, excluding transparent sheet padding.
+            const namePose=resolveMountDrawPose(mount,save.facing||0,{size:78*scale,time:0,gender:save.appearance==='girl'?'female':'male'});
+            const groundLine=namePose.mount.y+namePose.mount.h*mount.ground;
+            const mountBottom=sheetVisibleBottom(`mount:${mount.id}`,mount.art,namePose.mount,groundLine);
+            const riderBottom=sheetVisibleBottom(`mount-sheet:${pose.rider.art}`,rider,namePose.rider,mountBottom);
+            return y+Math.max(mountBottom,riderBottom);
+        }
+        const bob=moving?Math.sin(time*14)*3:Math.sin(time*2)*1;
+        shadow(c,x,y,23*scale);
+        assets.tile(c,'sprites',(save.appearance==='girl'?12:8)+(save.facing||0),x-34*scale,y-78*scale+bob,68*scale,78*scale);
+        return y;
+    }
+    function creature(c,id,x,y,t,scale=1,groundShadow=true) {
         const index={'fire-scout':0,'ice-scout':1,'storm-scout':2,'life-scout':3,'death-scout':4,'water-bubble':5,'death-bubble':4,pet:6}[id]??5;
-        const bob=Math.sin(t*2.8+x)*3;shadow(c,x,y,27*scale);assets.tile(c,'creatures',index,x-45*scale,y-84*scale+bob,90*scale,88*scale);
+        const bob=Math.sin(t*2.8+x)*3;if(groundShadow)shadow(c,x,y,27*scale);assets.tile(c,'creatures',index,x-45*scale,y-84*scale+bob,90*scale,88*scale);
     }
     function monster(c,m,x,y,t,scale=1){
         const bob=reducedMotion.matches?0:Math.sin(t*2.8+x)*2;
         shadow(c,x,y,27*scale);
-        if(!assets.drawMonster?.(c,m,x-52*scale,y-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',x,y,t,scale);
+        if(!assets.drawMonster?.(c,m,x-52*scale,y-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',x,y,t,scale,false);
     }
-    function render(world,save,time,{moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time}={}) {
+    function render(world,save,time,{moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null}={}) {
         const {w,h}=size(),t=time/1000;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
-        const baseScale=w<650?.82:1,sceneZoom=title?1:zoom;
+        cameraZoom.tick(time,reducedMotion.matches);
+        const baseScale=w<650?.82:1,sceneZoom=title?1:cameraZoom.value;
         cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:save.position;
         cam.x=center.x-w/(2*cam.scale);cam.y=center.y-h/(2*cam.scale)+(w<650?50:25)/sceneZoom;
-        ctx.save();ctx.scale(cam.scale,cam.scale);ctx.translate(-cam.x,-cam.y);
+        ctx.save();
+        try {
+        ctx.scale(cam.scale,cam.scale);ctx.translate(-cam.x,-cam.y);
         const coldTiles=world.layout?terrainTiles.draw(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale},(c,x,y,size)=>{
             const map=ground(world),dw=Math.min(size,world.w-x),dh=Math.min(size,world.h-y);
             c.drawImage(map,x*map.width/world.w,y*map.height/world.h,dw*map.width/world.w,dh*map.height/world.h,x,y,dw,dh);
@@ -137,14 +188,17 @@ export function createRenderer(canvas,assets) {
         objects.sort((a,b)=>a.y-b.y);
         for(const o of objects) {
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
-            if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;shadow(ctx,o.x,o.y,o.size*.3);const winter=o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
-            if(o.kind==='building'){shadow(ctx,o.x,o.y,o.w*.4);assets.tile(ctx,'sprites',o.tile,o.x-o.w/2,o.y-o.h,o.w,o.h);}
+            if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const winter=o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
+            if(o.kind==='building'){
+                ctx.save();
+                if(o.atlas&&Math.abs(save.position.x-o.x)<o.w*.5&&save.position.y<o.y&&save.position.y>o.y-o.h)ctx.globalAlpha=.52;
+                const bob=o.frame==='boat'&&!reducedMotion.matches?Math.sin(t*1.4+o.x)*2:0;
+                const drawn=o.atlas&&assets.buildingArt?.draw(ctx,o.atlas,o.frame,o.x-o.w/2,o.y-o.h+bob,o.w,o.h);
+                if(!drawn&&!o.decorationOnly)assets.tile(ctx,'sprites',o.tile,o.x-o.w/2,o.y-o.h,o.w,o.h);
+                ctx.restore();
+            }
             if(o.kind==='landmark'){
-                shadow(ctx,o.x,o.y,18);ctx.fillStyle='#786344';ctx.fillRect(o.x-3,o.y-43,6,43);
-                ctx.beginPath();ctx.roundRect(o.x-45,o.y-60,90,30,5);
-                ctx.fillStyle='#daca98';ctx.fill();
-                ctx.strokeStyle='#c4a06a';ctx.lineWidth=2.5;ctx.stroke();
-                text(ctx,o.name,o.x,o.y-40,12,'#425847');
+                drawSignpost(ctx,o.name,o.x,o.y);
             }
             if(o.kind==='npc') {
                 shadow(ctx,o.x,o.y,25);const dragon=[36211,30112].includes(o.id),sw=dragon?100:64,sh=dragon?104:86;
@@ -159,18 +213,33 @@ export function createRenderer(canvas,assets) {
             if(o.kind==='mob') {
                 const m=assets.content.monsters[o.monsterId]||{name:'缺失怪物'};
                 if(o.monsterIds){for(const [i,id]of o.monsterIds.entries()){const mob=assets.content.monsters[id];monster(ctx,mob,o.x+(i-(o.monsterIds.length-1)/2)*42,o.y-(i%2)*16,t,.7);}plate(ctx,`${m.name} · ${o.monsterIds.length}只${o.blocked?.length?' · 待迁移':''}`,o.x,o.y+18,PLATE.mob);}
-                else {monster(ctx,m,o.x,o.y,t,.8);plate(ctx,m.name,o.x,o.y+18,PLATE.mob);}
+                else {monster(ctx,m,o.x,o.y,t,.8);plate(ctx,m.name+(o.blocked?.length?' · 待迁移':''),o.x,o.y+18,PLATE.mob);}
                 const q=currentQuest(save,assets.content),goal=q&&questProgress(save,q).find(g=>g.kind==='defeat'&&g.id===m.goalId&&g.value<g.count);
                 const trackedMob=(o.monsterIds||[o.monsterId]).some(id=>catalogTracksMonster(save,assets.content,assets.content.monsters[id]));
                 if((goal&&questState(save,q.id).accepted)||trackedMob)text(ctx,'◇',o.x,o.y-90+Math.sin(t*3)*3,25,'#fff2a9');
             }
-            if(o.kind==='hero'){circleRune(ctx,o.x,o.y+2,24,t,'#f7e6a088');avatar(ctx,save,o.x,o.y,t,moving);if(!title)plate(ctx,save.name,o.x,o.y+21,PLATE.hero);}
+            if(o.kind==='hero'){
+                circleRune(ctx,o.x,o.y+2,24,t,'#f7e6a088');
+                let nameY;
+                if(fishingPose){
+                    // A temporary standing pose, without changing the saved mount or facing.
+                    ctx.save();ctx.translate(o.x,o.y-fishingPose.lift);ctx.rotate(fishingPose.lean);
+                    avatar(ctx,{...save,mountId:null,facing:fishingPose.facing},0,0,t,false);ctx.restore();
+                    nameY=o.y+21;
+                }else{
+                    const heroBottom=avatar(ctx,save,o.x,o.y,t,moving);
+                    nameY=heroBottom+21;
+                }
+                if(!title)plate(ctx,save.name,o.x,nameY,PLATE.hero);
+            }
             if(o.kind==='pet'){
                 const id=save.formation?.[save.heroSlot],pet=save.pets?.[id];
                 const hop=reducedMotion.matches?0:companion.moving?Math.abs(Math.sin(companion.phase))*5:Math.sin(t*2.5)*1.5;
                 shadow(ctx,o.x,o.y,18);ctx.save();ctx.translate(o.x,o.y);ctx.scale(companion.facing,1);
-                if(pet&&assets.content.pets[id]?.art)assets.drawPet(ctx,id,petStage(pet.level,assets.content),-32,-60-hop,64,64);
-                else creature(ctx,'pet',0,-hop,t,.36);
+                // Pet sheets load lazily: keep the follower visible until its sheet is ready,
+                // including after a failed request. Mount rendering is independent of this pet.
+                const drawn=pet&&assets.content.pets[id]?.art&&assets.drawPet(ctx,id,petStage(pet.level,assets.content),-32,-60-hop,64,64);
+                if(!drawn)creature(ctx,'pet',0,-hop,t,.36,false);
                 ctx.restore();
             }
         }
@@ -178,7 +247,7 @@ export function createRenderer(canvas,assets) {
         if(world.entrancePortal)plate(ctx,world.entrancePortal.name,world.entrancePortal.x,world.entrancePortal.y+48);
         if(!title)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);
         if(!title)drawTeleportEffect(ctx,teleportEffect,time,reducedMotion.matches);
-        ctx.restore();
+        } finally {ctx.restore();}
         const liveWeather=weatherOverride||world.layout&&regionAt(world,save.position)?.weather||null;
         weatherFade=stepWeatherFade(weatherFade,liveWeather,weatherTime,!!weatherOverride);
         const paintWeather=(weather,opacity)=>weather&&opacity>0.01&&drawIslandWeather(ctx,world,save.position,weatherTime/1000,w,h,reducedMotion.matches,assets.environmentArt,weather,cam,opacity);
@@ -242,5 +311,5 @@ export function createRenderer(canvas,assets) {
         }
         return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:at.x*scale,y:at.y*scale}]));
     }
-    return {render,minimap,screenToWorld,renderBattle,zoomBy};
+    return {render,minimap,screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active)};
 }

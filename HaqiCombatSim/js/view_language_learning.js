@@ -7,7 +7,7 @@ export function languageSettings(body, model, cb, { el, button }) {
     body.append(el('h3', '', '界面语言'));
     const locales = el('div', 'locale-choices');
     for (const row of localeChoices()) {
-        const selected = !learning.enabled && model.save.locale === row.id;
+        const selected = model.save.locale === row.id;
         const control = button(row.name, () => cb.setLocale(row.id), selected ? 'primary small' : 'secondary small');
         control.setAttribute('aria-pressed', String(selected));
         locales.append(control);
@@ -19,6 +19,8 @@ export function languageSettings(body, model, cb, { el, button }) {
     body.append(pairRow('native', learning, cb, { el, button }));
     body.append(el('p', 'muted', '目标语言'));
     body.append(pairRow('target', learning, cb, { el, button }));
+    body.append(el('p','muted','营地课程支持中文和英语。其他语言课程尚未提供。录音只在点击后开启。'));
+    body.append(button(learning.autoSpeak?'语音陪伴：开启':'语音陪伴：关闭',()=>cb.setLearning({...learning,autoSpeak:!learning.autoSpeak}),'secondary'));
 }
 
 function pairRow(field, learning, cb, { el, button }) {
@@ -27,7 +29,7 @@ function pairRow(field, learning, cb, { el, button }) {
         const selected = learning[field] === locale.id;
         const control = button(locale.name, () => {
             const next = { ...learning, [field]: locale.id };
-            if (next.native === next.target) next.target = next.native === 'en' ? 'ja' : 'en';
+            if (next.native === next.target) next.target = next.native === 'en' ? 'zh-CN' : 'en';
             cb.setLearning(next);
         }, selected ? 'primary small' : 'secondary small');
         control.setAttribute('aria-pressed', String(selected));

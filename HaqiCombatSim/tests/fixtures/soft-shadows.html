@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><base href="/"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>柔和地面阴影预览</title>
+<style>body{margin:12px;background:#193d42;color:white;font:14px sans-serif}canvas{display:block;width:100%;height:560px}button{padding:10px;margin:4px}</style>
+<p>树木与建筑阴影烘焙到地形；角色使用跟随位置的柔和阴影。不读写玩家存档。</p>
+<button id="tree">树木</button><button id="building">建筑</button><p id="status">加载中</p><canvas></canvas>
+<script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createWorld} from '../../js/adventure_world_core.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {paintStaticShadows} from '../../js/adventure_shadows.js';
+import {createTerrainTileCache} from '../../js/adventure_large_terrain.js';
+const assets=await loadResources(),world=createWorld('town',assets.content),save=createAdventure(assets.content);
+const renderer=createRenderer(document.querySelector('canvas'),assets);
+function focus(o){save.position={x:o.x+100,y:o.y+40};}
+focus(world.trees[0]);
+document.querySelector('#tree').onclick=()=>focus(world.trees[0]);
+document.querySelector('#building').onclick=()=>focus(world.buildings[0]||world.trees[0]);
+// Oversized shadow centered outside a tile must still contribute its fringe.
+const sample={w:1024,h:1024,trees:[{x:512,y:512,size:380}],buildings:[{x:700,y:530,w:340}]};
+const make=()=>document.createElement('canvas'),a=make(),b=make();a.width=b.width=a.height=b.height=1024;
+const paint=(c,w,r)=>{c.fillStyle='#abc67a';c.fillRect(r.x,r.y,r.w,r.h);paintStaticShadows(c,w,r);};
+paint(a.getContext('2d'),sample,{x:0,y:0,w:1024,h:1024});
+createTerrainTileCache(paint,make).draw(b.getContext('2d'),sample,{x:0,y:0,w:1024,h:1024});
+const ap=a.getContext('2d').getImageData(0,0,1024,1024).data,bp=b.getContext('2d').getImageData(0,0,1024,1024).data;
+let max=0;for(let i=0;i<ap.length;i++)max=Math.max(max,Math.abs(ap[i]-bp[i]));
+document.querySelector('#status').textContent=`阴影跨瓦片像素最大差：${max}；建筑 ${world.buildings.length} 处；${assets.mode}`;
+function frame(t){renderer.render(world,save,t);requestAnimationFrame(frame);}requestAnimationFrame(frame);
+</script></html>
+

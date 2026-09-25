@@ -1,4 +1,10 @@
 {
+  "original-16068": {
+    "note": "暗影神驹正面按马身高度校准比例，避免展开的翅膀宽度导致坐骑过小。",
+    "directions": {
+      "down": { "scale": 0.3 }
+    }
+  },
   "original-16074": {
     "note": "仙兔以鞍面而非长耳朵的包围盒定位座位；坐标对应 AnimFrame=0 四向原模型图集。",
     "directions": {

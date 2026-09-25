@@ -59,3 +59,15 @@ npm run verify:release # 对当前dist重新核验，不上传
 `data/adventure/dungeon-index.json`是生成的轻量菜单/存档校验索引，包含在主启动数据包中。主`adventure.json`不再包含完整副本数据。首次进入任意副本，浏览器读取完整副本JSON并缓存，之后进入其他副本不再下载。源码与发布使用同一相对URL，副本IO专用独立JSON读取器，不走五包路由。当前角色在副本内的本地/云端存档恢复会先预加载；历史清怪记录用轻量索引校验。
 
 Vite开发启动、正常构建及副本导出都会同步更新轻量索引；副本数据修改后按正常流程重新构建发布。发布白名单仍只允许HTML/JS/CSS/JSON，不包含美术或音频。
+
+## 多语言产品官网（2026-09-25）
+
+新增同目录入口 `HaqiOfficialWebsite.html`，中英文官网随 `Haqi.html` 等五个入口一起由 Vite 构建、CDN 发布、生成 `_v1.html` 包装页，并沿用已存在的 Maisi 发布入口同步流程。源文件为 `js/official_website.js`、`js/official_website_i18n.js` 和 `css/official_website.css`。
+
+`data/official-website.json` 是约16KB的独立展示包：`scripts/package_official_website.mjs` 在 Vite dev/build 时根据 kids 卡牌、物品候选目录、原版任务目录、宠物、技能和语言课程生成数量，并摘取五张卡的实际模板与美术引用。它不进入主游戏五包，也不复制美术。普通 HTTP 服务可读取入库快照；更新原始数据后可运行 `node scripts/package_official_website.mjs` 刷新。默认使用永久 CDN，源码可显式 `?assets=local`，中英文参数为 `?lang=zh-CN` / `?lang=en`。
+
+官网复用 `loadSkillArt` / `createSpellEffects` 渲染卡面与演出；不会初始化游戏、登录、读取或修改角色存档。语言切换只写当前URL。数据导入说明限定装备/已学牌/符文，并说明预览确认、独立角色及未迁移内容；学习说明限定当前营地中英试点。
+
+2026-09-25官网调整：第二章节已替换为宠物/坐骑组合展示，官网包增加全部坐骑轻量外观/姿态和宠物名字/美术目录；骑乘复用正式伙伴UI，图片按可见区域加载。原六岛互动章节删除，首屏地图背景保留。展示不会修改游戏存档。
+
+官网小队展示进一步简化：移除列表/搜索，仅保留骑乘角色和三宠物四个可点击展示位，单击各换一位、顶部按钮一次全换；保持完整目录可抽取。主角与坐骑合成后按透明边界放大显示。

@@ -10,7 +10,7 @@ export function checkedProgress(raw, content, dataset) {
     // Only the game's known fields travel to the cloud; SDK state never enters a save.
     // These optional fields are validated by parseSave but do not exist until
     // the first online tick/claim. Keep them across role reloads and cloud sync.
-    const keys=[...Object.keys(createAdventure(content)),'magicStarClaims','checkin'];
+    const keys=[...Object.keys(createAdventure(content)),'magicStarClaims','checkin','fishingRecords'];
     const save = Object.fromEntries(keys.filter(key=>parsed[key]!==undefined).map(key => [key, parsed[key]]));
     const battle = save.pendingEncounter ? restorePveBattle(dataset, content, save.pendingEncounter) : null;
     for(const rune of save.pendingEncounter?.runes||[])requireValue((save.inventory[rune.itemId]||0)===rune.count-(battle.runeUsed[rune.itemId]||0),'符文库存与战斗重演不一致');

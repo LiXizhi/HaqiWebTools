@@ -15,10 +15,10 @@ function setup(){
     hand.getBoundingClientRect=()=>({left:0,right:180,top:400,bottom:550});
     hand.setPointerCapture=id=>captures.add(id);hand.hasPointerCapture=id=>captures.has(id);hand.releasePointerCapture=id=>captures.delete(id);
     const hint={textContent:'选择卡牌'};
-    const dispose=bindHandGesture(hand,{select:seq=>calls.push(['select',seq]),play:seq=>calls.push(['play',seq]),hint});
+    const dispose=bindHandGesture(hand,{select:seq=>calls.push(['select',seq]),play:seq=>calls.push(['play',seq]),discard:seq=>calls.push(['discard',seq]),hint});
     function send(type,props={},surface=hand){
         const event=new Event(type,{cancelable:true});
-        Object.assign(event,{pointerId:1,pointerType:'touch',isPrimary:true,clientX:20,clientY:480},props);
+        Object.assign(event,{pointerId:1,pointerType:'touch',button:0,isPrimary:true,clientX:20,clientY:480},props);
         Object.defineProperty(event,'target',{value:props.target||hand.children[0].face});
         surface.dispatchEvent(event);return event;
     }
@@ -40,13 +40,13 @@ test('upward drag locks the browsed card and only casts after release beyond thr
     assert.equal(s.hand.classList.contains('hand-aiming'),false);
     const click=s.send('click',{clientX:110,clientY:410,detail:1},s.root);assert.ok(click.defaultPrevented);
 });
-test('dragging back cancels the cast; sideways/downward release outside the hand does nothing',()=>{
+test('dragging back cancels the cast; sideways release outside the hand does nothing',()=>{
     const s=setup();s.send('pointerdown');s.send('pointermove',{clientY:400});
     assert.ok(s.hand.classList.contains('hand-aiming'));
     s.send('pointermove',{clientY:480});assert.equal(s.hand.classList.contains('hand-aiming'),false);
     s.send('pointerup',{clientY:470});
     assert.deepEqual(s.calls,[['select',0]]);
-    for(const point of [{clientX:260,clientY:400},{clientX:20,clientY:600}]){
+    for(const point of [{clientX:260,clientY:400}]){
         const t=setup();t.send('pointerdown');t.send('pointerup',point);assert.deepEqual(t.calls,[]);
     }
 });
@@ -61,10 +61,29 @@ test('pointer cancellation, capture loss, blur, second touch and disposal never 
         s.send('pointerup',{clientY:400});assert.deepEqual(s.calls,[],reason);assert.equal(s.captures.size,0);
     }
 });
-test('mouse and disabled buttons retain their existing behavior; short taps only select',()=>{
-    const s=setup();s.send('pointerdown',{pointerType:'mouse'});s.send('pointerup',{pointerType:'mouse',clientY:400});assert.deepEqual(s.calls,[]);
+test('right mouse button and disabled buttons retain their existing behavior; short taps only select',()=>{
+    const s=setup();s.send('pointerdown',{pointerType:'mouse',button:2});s.send('pointerup',{pointerType:'mouse',button:2,clientY:400});assert.deepEqual(s.calls,[]);
     s.hand.children[0].face.disabled=true;s.send('pointerdown');s.send('pointerup',{clientY:400});assert.deepEqual(s.calls,[]);
     s.hand.children[0].face.disabled=false;s.send('pointerdown');s.send('pointerup');assert.deepEqual(s.calls,[['select',0]]);
+});
+
+test('downward mouse, pen and touch drags discard exactly once even below the hand',()=>{
+    for(const pointerType of ['mouse','pen','touch']){
+        const s=setup();s.send('pointerdown',{pointerType});
+        s.send('pointermove',{pointerType,clientY:540,clientX:110});
+        assert.deepEqual(s.calls,[]);
+        s.send('pointerup',{pointerType,clientY:600,clientX:110});
+        s.send('pointerup',{pointerType,clientY:600});
+        assert.deepEqual(s.calls,[['discard',0]]);assert.equal(s.captures.size,0);
+        assert.ok(s.send('click',{clientX:110,clientY:600,detail:1},s.root).defaultPrevented);
+    }
+});
+
+test('cancelled downward drags never discard and mouse clicks still select',()=>{
+    const s=setup();s.send('pointerdown');s.send('pointermove',{clientY:550});s.send('pointercancel');s.send('pointerup',{clientY:600});
+    assert.deepEqual(s.calls,[]);
+    s.send('pointerdown',{pointerType:'mouse'});s.send('pointerup',{pointerType:'mouse'});
+    assert.deepEqual(s.calls,[['select',0]]);
 });
 
 function battle(target='hostile'){
@@ -84,7 +103,7 @@ test('swipe only auto-casts a unique legal target; multiple enemies/allies requi
 test('swipe rejects discarded, unaffordable, cooling down, stale and finished hands without mutating battle',()=>{
     const b=battle(),before=JSON.stringify(b);
     const discards=[2];const intent=resolveHandSwipe(b,pick,discards);assert.deepEqual(intent.decision.discardSeqs,[2]);assert.notEqual(intent.decision.discardSeqs,discards);
-    assert.equal(JSON.stringify(b),before);assert.equal(resolveHandSwipe(b,pick,[0]).message,'请先撤销弃牌');
+    assert.equal(JSON.stringify(b),before);assert.equal(resolveHandSwipe(b,pick,[0]).message,'这张卡牌已弃掉');
     b.sides.near[0].pips.normal=0;assert.ok(resolveHandSwipe(b,pick).message);
     b.sides.near[0].pips.normal=2;b.sides.near[0].cooldowns.spell=1;assert.ok(resolveHandSwipe(b,pick).message);
     b.sides.near[0].cooldowns.spell=0;b.sides.near[0].hp=0;assert.ok(resolveHandSwipe(b,pick).message);

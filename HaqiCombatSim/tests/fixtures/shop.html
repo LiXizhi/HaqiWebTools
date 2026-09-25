@@ -10,9 +10,10 @@ const base=document.createElement('base');base.href=new URL('../../',location.hr
 const params=new URLSearchParams(location.search);
 const assets=await loadResources(),save=A.createAdventure(assets.content,{name:'商店验收',school:'fire'});
 save.inventory[100]=params.has('poor')?0:1000;
+save.inventory[984]=params.has('poor')?0:Number(params.get('beans')||1280);
 if(params.has('learn'))save.languageLearning={...save.languageLearning,enabled:true};
 if(params.get('locale')==='en'){save.locale='en';await loadLocaleFiles(['en']);configureLocale({locale:'en'});}
-const model={assets,save,shopView:{category:'pet'}},root=document.querySelector('#root');
+const model={assets,save,shopView:{category:params.get('category')||'pet'}},root=document.querySelector('#root');
 const cb={close:()=>root.replaceChildren(),action:value=>{try{A.applyAction(save,assets.content,value);paint();}catch(error){const toast=document.querySelector('#toast');toast.textContent=error.message;toast.classList.add('visible');}},panel:kind=>renderPanel(root,kind,model,cb),encounter:id=>{root.textContent=id;},languageTest:task=>{const toast=document.querySelector('#toast');toast.textContent=`语言挑战：${task.name}`;toast.classList.add('visible');}};
 function paint(){renderPanel(root,'shop',model,cb);}paint();
 </script></body></html>

@@ -49,14 +49,16 @@ export function petAction(save,content,action,access={}){
  case 'buy':{
   const item=content.shop.find(x=>x.id===action.productId);check(item,'商品不存在');check(!item.retired,'捕获晶球已停售，请使用抓宠符文');check(!item.isInternalTest,'内测道具不对外出售');check(!item.vipOnly||access.keepworkVip===true,'该商品仅限会员购买。请登录会员账号后重试。');check(save.level>=item.level,'等级尚未解锁');
   check(item.kind!=='pet'||!save.pets[item.petId],'已经拥有这只宠物');const cost=productPrice(item,content);
-  if(!action.paidByTest){check((save.inventory[100]||0)>=cost,'奇豆不足');save.inventory[100]-=cost;}
+  const currency=item.kind==='mount'?item.currency:100;
+  check(!action.paidByTest,'语言课程仅发放限额奖励，请使用货币购买');
+  check((save.inventory[currency]||0)>=cost,currency===984?'魔豆不足':'奇豆不足');save.inventory[currency]-=cost;
   if(item.kind==='pet')addPet(save,content,item.petId);else save.inventory[item.itemId]=(save.inventory[item.itemId]||0)+1;
-  save.transactions.push({id:save.transactions.length+1,productId:item.id,cost:action.paidByTest?0:cost,paidByTest:!!action.paidByTest});break;
+  save.transactions.push({id:save.transactions.length+1,productId:item.id,cost,paidByTest:false});break;
  }
  default:return false;
  }return true;
 }
-export function productPrice(item,content){const p=petParams(content);return item.kind==='pet'?p.petPriceBase+p.petPriceLevel*item.level:item.kind==='gear'?p.gearPriceBase+p.gearPriceLevel*item.level:item.itemId===FOOD_ID?p.foodPrice:p.capturePrice;}
+export function productPrice(item,content){const p=petParams(content);return item.kind==='mount'?item.price:item.kind==='pet'?p.petPriceBase+p.petPriceLevel*item.level:item.kind==='gear'?p.gearPriceBase+p.gearPriceLevel*item.level:item.itemId===FOOD_ID?p.foodPrice:p.capturePrice;}
 // Unused capture crystals become the general catch rune. A battle already casting crystals keeps its stock so the old checkpoint can replay.
 export function retireCaptureCrystals(save,content,{keepActiveBattle=true}={}){
  const count=save.inventory?.[CAPTURE_ID]||0;
@@ -91,6 +93,10 @@ export function tickCare(save,content,hero,now,online=false){
    while(pet.hunger<p.feedThreshold&&(save.inventory[FOOD_ID]||0)>0){save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+p.foodRestore);save.careLog.push(`${content.pets[id].name}自动进食，饱食 +${p.foodRestore}`);}
   }
  }
+ // Web companion care: stored pets rest without consuming food, including
+ // offline time (the same 24-hour elapsed cap and battle pause apply).
+ const active=new Set(save.formation.filter(Boolean));
+ for(const [id,pet] of Object.entries(save.pets))if(!active.has(id))pet.hunger=Math.min(100,pet.hunger+minutes*p.restingHungerPerMinute);
  if(!inDungeon)for(const pet of Object.values(save.pets))if(pet.hunger>0)pet.hp=Math.min(petMaxHp(pet,content),pet.hp+petMaxHp(pet,content)*p.regenPerMinute*minutes);
  save.careLog=save.careLog.slice(-20);
 }

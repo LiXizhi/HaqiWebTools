@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>经验条隔离验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app"><div id="hud"></div><p id="fixture-status">正在加载资源…</p><script type="module">
+// Isolated, in-memory fixture: renders the real hero HUD through renderHud so the experience bar can
+// be measured. Default state mirrors the reported screenshot (level 50 = level cap, 152/1,960/460).
+// No player storage is read or written.
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,syncProgression} from '../../js/adventure_core.js';
+import {renderHud} from '../../js/view_adventure.js';
+import {loadLocaleFiles,configureLocale} from '../../js/locale.js';
+addEventListener('error',event=>{document.documentElement.dataset.fixtureError=event.message||'error';});
+addEventListener('unhandledrejection',event=>{document.documentElement.dataset.fixtureError=String(event.reason?.message||event.reason);});
+try{
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const params=new URLSearchParams(location.search);
+const lang=params.get('lang')||'zh-CN';
+if(lang!=='zh-CN')await loadLocaleFiles([lang]);
+configureLocale({locale:lang});
+const assets=await loadResources(),c=assets.content;
+const levels=c.progression.xpThresholds,cap=c.progression.levelCap;
+const save=createAdventure(c,{name:params.get('name')||'deluca',school:params.get('school')||'fire'});
+Object.assign(save.inventory,{100:152,17213:1960,984:460});
+// ?level=<n> defaults to the level cap. ?fill=<0-100> is the wanted progress inside that level's own band.
+const level=Math.min(cap,Math.max(1,Number(params.get('level'))||cap));
+const fill=Math.max(0,Math.min(100,Number(params.get('fill')??'10')));
+const start=levels[level-1]??0,band=(levels[level]??start)-start;
+save.xp=Math.round(start+band*fill/100);
+syncProgression(save,c);
+const model={assets,save,storageWarning:false,membership:{isVip:false}};
+const root=document.querySelector('#hud');
+renderHud(root,model,{panel:()=>{},membership:()=>{},cloud:()=>{},track:()=>{},untrack:()=>{},interact:()=>{}});
+const bar=root.querySelector('.xp-bar'),inner=bar.querySelector('i');
+const measured=inner.getBoundingClientRect().width/bar.getBoundingClientRect().width*100;
+Object.assign(document.documentElement.dataset,{fixtureReady:'1',level:String(save.level),xp:String(save.xp),
+    previous:String(levels[save.level-1]),next:String(levels[save.level]),wanted:String(fill),measured:measured.toFixed(2)});
+document.querySelector('#fixture-status').textContent=`等级 ${save.level} / ${cap} · 累计经验 ${save.xp} · 本级区间 ${levels[save.level-1]} – ${levels[save.level]} · 期望 ${fill}% · 实测 ${measured.toFixed(2)}% · 条宽 ${bar.getBoundingClientRect().width.toFixed(1)}px`;
+}catch(error){
+document.querySelector('#fixture-status').textContent=String(error&&error.stack||error);
+document.documentElement.dataset.fixtureError=String(error&&error.message||error);
+}
+</script></body></html>

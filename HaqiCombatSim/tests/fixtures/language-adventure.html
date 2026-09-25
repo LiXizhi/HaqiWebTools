@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><base href="../../">
+<title>营地语言冒险 · 隔离验收</title>
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/language_adventure.css">
+<style>body{overflow:auto;padding:20px}main{max-width:720px}main button{margin:5px}#status{white-space:pre-wrap;overflow-wrap:anywhere}textarea{width:100%;min-height:70px;box-sizing:border-box}.learning-launch{top:auto;bottom:30px}</style></head>
+<body class="haqi-app"><main><h1>营地语言冒险 · 隔离验收</h1><p>只使用内存角色，不读取或写入真实存档。默认模拟语音结果，不代表真实麦克风验收。URL加 live=1 才连接Keepwork语音。</p>
+<button id="english">学英语</button><button id="chinese">学中文</button><button id="unsupported">缺失语言</button><button id="captain">船长课程</button><button id="bag">背包触发</button><button id="leave">离开营地</button><button id="capabilities">检查线上SDK能力（不录音）</button>
+<label>模拟识别文本（仅此隔离页）<textarea id="transcript">Hello, nice to meet you.</textarea></label><p id="status">加载中…</p></main>
+<script type="module">
+import {createLanguageAdventure,loadLearningCatalog} from './js/language_adventure.js';
+import {createAdventure} from './js/adventure_core.js';
+import {recordLearningCompletion} from './js/language_adventure_core.js';
+import {loadUiArt} from './js/adventure_ui_art.js';
+import {loadKeepwork} from './js/adventure_cloud.js';
+if(!new URLSearchParams(location.search).has('noatlas'))await loadUiArt('cdn',url=>fetch(url).then(r=>r.json())).catch(()=>{});
+const content=await fetch('data/adventure/chapter.json').then(r=>r.json());
+const save=createAdventure(content);save.languageLearning={enabled:true,target:'en',native:'zh-CN'};
+const catalog=await loadLearningCatalog();
+const state={save,content,role:'fixture',identity:'fixture',stage:'world'};
+const status=document.getElementById('status');
+const mock={start:async()=>{},finish:async()=>document.getElementById('transcript').value,cancel:async()=>{},speak:async()=>{},judge:async messages=>({reply:state.save.languageLearning.target==='en'?'Thank you. Tell me more.':'谢谢，请再说一点。',completed:[]})};
+const app=createLanguageAdventure({getState:()=>state,load:async()=>catalog,notify:text=>{status.textContent=text;},...(new URLSearchParams(location.search).has('live')?{}:{voice:mock}),commit:completion=>{const result=recordLearningCompletion(save,content,completion,{learningCompletion:completion});status.textContent=JSON.stringify({currency:save.inventory,progress:save.languageAdventure},null,2);return result;}});
+document.getElementById('english').onclick=()=>{app.close();save.zone='camp';save.languageLearning.target='en';save.languageLearning.native='zh-CN';app.open();};
+document.getElementById('chinese').onclick=()=>{app.close();save.zone='camp';save.languageLearning.target='zh-CN';save.languageLearning.native='en';app.open();};
+document.getElementById('unsupported').onclick=()=>{app.close();save.languageLearning.target='ja';app.open();};
+document.getElementById('captain').onclick=()=>app.open({name:'法斯特船长',instanceId:'camp:5:36205'});
+document.getElementById('bag').onclick=()=>{save.inventory[1290]=1;app.emit('inventory','inventory');};
+document.getElementById('leave').onclick=()=>{save.zone='town';app.tick(performance.now()+1000);};
+document.getElementById('capabilities').onclick=async()=>{
+    status.textContent='正在检查SDK…';
+    try{const sdk=await loadKeepwork();await sdk.loadAIChat();const session=sdk.speechRTC?.createSession();status.textContent=JSON.stringify({sdkLoaded:true,asr:typeof session?.startASR==='function',tts:typeof session?.synthesize==='function',chat:typeof sdk.aiChat?.chat==='function'});}catch(error){status.textContent=error.message;}
+};
+setInterval(()=>app.tick(performance.now()),500);
+status.textContent='准备完成。';
+</script></body></html>

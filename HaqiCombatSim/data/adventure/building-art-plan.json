@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "generator": "built-in image_gen",
+  "assets": [
+    {
+      "id": "town",
+      "name": "哈奇岛",
+      "prompt": "Use case: stylized-concept. Create a production game sprite atlas for 哈奇岛, a whimsical hand-painted fantasy island RPG. 2 by 2 equal square cells, four completely isolated scenery groups in reading order: a timber waterfront boatyard with red tiled boathouse and short wooden pier; a small cream-sailed wooden coastal boat without water; a cozy cluster of three cream plaster red-roof merchant houses; a blue-roof windmill with a small granary. Three-quarter top-down view, roofs visible, orthographic camera, soft upper-left daylight, clear painterly shapes matching a colorful storybook island map. Each group fits fully inside its own cell with generous empty margins, centered horizontally, feet at a common baseline. Actual transparent RGBA background throughout all empty space. No background scenery, ocean, terrain tile, rectangular base, borders, lettering, characters, watermark, or checkerboard. Four groups must never touch. One square image."
+    },
+    {
+      "id": "fire",
+      "name": "火鸟岛",
+      "prompt": "Use case: stylized-concept. Create a production game sprite atlas for 火鸟岛, a whimsical hand-painted fantasy island RPG. 2 by 2 equal square cells, four completely isolated scenery groups in reading order: a basalt harbor forge with copper-roof workshop and short dark timber pier; a rugged dark wooden cargo ship with burnt-orange sails without water; a cluster of black volcanic-stone smith workshops with glowing orange furnaces; a squat obsidian watchtower with bronze roof and supply shed. Three-quarter top-down view, roofs visible, orthographic camera, soft upper-left daylight, clear painterly shapes matching a colorful storybook island map. Each group fits fully inside its own cell with generous empty margins, centered horizontally, feet at a common baseline. Actual transparent RGBA background throughout all empty space. No background scenery, ocean, terrain tile, rectangular base, borders, lettering, characters, watermark, or checkerboard. Four groups must never touch. One square image."
+    },
+    {
+      "id": "ice",
+      "name": "寒冰岛",
+      "prompt": "Use case: stylized-concept. Create a production game sprite atlas for 寒冰岛, a whimsical hand-painted fantasy island RPG. 2 by 2 equal square cells, four completely isolated scenery groups in reading order: a snow-covered timber boathouse with short frost-coated wooden pier; a small Nordic wooden sailboat with pale blue sail without water; a cluster of snow-roofed blue and white alpine houses; an icy blue crystal observatory tower with a little snow-covered lodge. Three-quarter top-down view, roofs visible, orthographic camera, soft upper-left daylight, clear painterly shapes matching a colorful storybook island map. Each group fits fully inside its own cell with generous empty margins, centered horizontally, feet at a common baseline. Actual transparent RGBA background throughout all empty space. No background scenery, ocean, terrain tile, rectangular base, borders, lettering, characters, watermark, or checkerboard. Four groups must never touch. One square image."
+    },
+    {
+      "id": "desert",
+      "name": "沙漠岛",
+      "prompt": "Use case: stylized-concept. Create a production game sprite atlas for 沙漠岛, a whimsical hand-painted fantasy island RPG. 2 by 2 equal square cells, four completely isolated scenery groups in reading order: a sandstone harbor warehouse with striped awning and short wooden pier; a small curved Arabian dhow with cream sail without water; a cluster of warm sandstone domed bazaar buildings and colorful awnings; a sandstone oasis watchtower with a little caravan pavilion. Three-quarter top-down view, roofs visible, orthographic camera, soft upper-left daylight, clear painterly shapes matching a colorful storybook island map. Each group fits fully inside its own cell with generous empty margins, centered horizontally, feet at a common baseline. Actual transparent RGBA background throughout all empty space. No background scenery, ocean, terrain tile, rectangular base, borders, lettering, characters, watermark, or checkerboard. Four groups must never touch. One square image."
+    },
+    {
+      "id": "dark",
+      "name": "幽暗岛",
+      "prompt": "Use case: stylized-concept. Create a production game sprite atlas for 幽暗岛, a whimsical hand-painted fantasy island RPG. 2 by 2 equal square cells, four completely isolated scenery groups in reading order: a weathered gothic boathouse with short crooked wooden pier and muted violet lanterns; an old dark wooden ghostly sailboat with torn purple sails without water; a cluster of gothic slate-roof cottages with muted violet windows; a ruined stone abbey tower with a small attached crypt. Three-quarter top-down view, roofs visible, orthographic camera, soft upper-left daylight, clear painterly shapes matching a colorful storybook island map. Each group fits fully inside its own cell with generous empty margins, centered horizontally, feet at a common baseline. Actual transparent RGBA background throughout all empty space. No background scenery, ocean, terrain tile, rectangular base, borders, lettering, characters, watermark, or checkerboard. Four groups must never touch. One square image."
+    }
+  ]
+}

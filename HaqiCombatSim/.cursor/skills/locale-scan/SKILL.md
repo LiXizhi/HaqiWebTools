@@ -24,6 +24,18 @@ node scripts/scan_locale.mjs
 
 `--paths` selects another manifest. `--check` exits 1 when any static string is missing from the base dictionary or any base key is absent from the scanned sources.
 
+## Check the running page
+
+`scripts/verify_en_locale.mjs` walks the English adventure UI and lists Chinese that is still visible. Use it after dictionary or `setText` changes, and when a screenshot still shows Chinese.
+
+From `web/HaqiCombatSim`, with Playwright installed outside the repo:
+
+```text
+HAQI_URL=http://127.0.0.1:8788/Haqi.html PLAYWRIGHT_ROOT=$TEMP/pw-haqi/node_modules node scripts/verify_en_locale.mjs
+```
+
+`HAQI_URL` defaults to `http://127.0.0.1:8765/Haqi.html`. `PLAYWRIGHT_ROOT` is the directory that contains `playwright/package.json`. The script opens a new character, switches to English, and prints JSON of leftover Chinese on the settings, HUD, world map, and check-in screens. It exits 1 when any remain, apart from the name `小哈奇` and the language names. It does not open every shop, so a shop screenshot can still need a manual pass. Do not save over the player's real checkpoint.
+
 ## Read the report
 
 - **源码有、词典没有**: a static Chinese string literal or JSON value is not a key in `en.txt`.

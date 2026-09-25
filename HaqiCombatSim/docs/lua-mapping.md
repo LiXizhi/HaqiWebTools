@@ -1,5 +1,7 @@
 # 公式与常量 ↔ Lua 源码对照表
 
+2026-09-25坐骑：paraworld.globalstore.lua 字段序中 `o[3]` 为 count（魔豆，物品984），`o[8]` 为 ebuyprice（奇豆，物品100）。NPCShopProvider.lua 在 exid==0 时按这两项直购。ItemsFilter.lua 代码91为 class 2 / subclass 6 坐骑；subclass 8 是别名。ItemManager.lua 将 stats[180]==1 标为会员物品。变身药丸的 28/46/51 只记录外形，网页不把它们当成战斗属性；可骑乘条目在 mount-catalog.json 里另有 stats，骑乘时按 combat_unit_core.js 的 statIdToEntry 加到英雄。这是网页补充，不是原药丸的战斗公式。移动加速使用 BalanceParams.adventure.mountSpeed，kids 坐骑没有单独移速属性。
+
 2026-09-23起，新的野生捕获只走抓宠符文。捕获晶球不再出现在商城和战斗按钮里；未使用的晶球换成普通抓宠符文。检查点里已经记录的晶球出手仍按此前网页公式重演：`captureBase + captureWounded × 已损失生命比例`。
 
 2026-09-22抓宠符文：player_server.lua TryCatchPet L1081–1136，kids成功率为`base_weight * (1 - hp / maxHp) + (玩家等级 - 怪物等级) / 80`，再乘1000后与`math.random(0, 1000)`比较。`catch_pet_force_chance_percent`改为`百分比 * 10`。卡面权重为普通2、高级5、顶级20。card_server.lua L2387–2438在命中判定前结算，成功和失败都返回已施放，因此符文都会消耗；L2298目标已死亡则不消耗。arena_server.lua L8882–8904在出牌前拒绝已拥有的宠物。本地只对带宠物身份的野生遭遇启用，不把原版`catch_pet`物品编号猜测成当前宠物图鉴。
@@ -303,3 +305,9 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 原身份来自config/Aries/Scene/AriesGameWorlds.config.xml，竞技场位置、原四卡位来自WorldData/<name>.Arenas_Mobs.xml，怪物属性/随机牌池/sequence/gene/cardset来自mob_template。导出器复用globalstore.db.mem的GSID→法术键，保留来源哈希及原XML。沿用既有mob_server.lua L4759–5040的序列/基因/牌池实现，不新增伤害公式；怪物先手、未支持目标和技能阻断对应组。
 
 二维坐标投影、近邻避让、路线、持久清怪和重开为Web规则。多怪奖励按各模板experience_pts和joybean_count累计（会员沿用逐怪ceil倍率），不把原宝箱/场景脚本当已实现。新检查点记录原怪物卡位，旧单怪检查点保持原行为；源码归档XML不写入检查点，避免开发/发布投影造成对比不一致。
+
+- 2026-09-25 钓鱼多轮提竿与重量是 Web 趣味规则，不对应 Lua 公式。参数集中在 BalanceParams.fishing（独立于战斗 adventure 参数，避免影响旧战斗重演）。重量用 seed + 捕获序号 + 鱼种派生独立 RNG；原 ExtendedCost 的分支、奖励 RNG、消耗及概率均保持原样。
+
+- 2026-09-25 用户要求钓鱼失误主要降低重量：新增 fishingPerformance（hits/rounds/mistakes）影响独立重量分布，手动至少命中一次不空手。场景自动捕鱼器的原空手分支有 99% 概率替换为同工具成功分支，总失败率约 0.14%；这是明确的 Web 规则覆盖，不能再声称新场景模式与 Lua 空手概率完全相同。成功分支的鱼种、数量、精力和标记仍走原导出表；旧调用保持原概率。参数集中于 BalanceParams.fishing。
+
+2026-09-25宠物休息饱食：按用户新增的Web养成规则，未上阵收藏宠物每分钟恢复0.5饱食（BalanceParams.adventure.restingHungerPerMinute），不消耗口粮；非原服Lua移植。沿用tickCare的24小时上限、时钟回退保护和战斗暂停，原版战斗数值公式不变。

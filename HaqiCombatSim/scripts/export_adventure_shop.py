@@ -13,7 +13,7 @@ items={}
 for row in rows:
  t=row[18]; stats={str(t[i]):t[i+1] for i in range(2,22,2) if t[i]}
  if (t[23]==1 or t[22]==24) and t[22]>0 and 0<=float(stats.get('138',0))<=50:
-  items[str(row[0])]={'id':row[0],'name':t[0],'description':t[1],'stats':stats,'slot':t[22],'kind':t[23],'source':'Database/globalstore.db.mem','sourceSha256':source_hash,'sourceIcon':row[3]}
+  items[str(row[0])]={'id':row[0],'name':t[0],'description':t[1],'stats':stats,'slot':t[22],'kind':t[23],'maxCount':t[31],'maxCopiesInStack':t[37],'source':'Database/globalstore.db.mem','sourceSha256':source_hash,'sourceIcon':row[3]}
 for item in items.values():
  item['vipOnly']=item['stats'].get('180') == 1
  if flags.get(str(item['id']),{}).get('isInternalTest') is True:

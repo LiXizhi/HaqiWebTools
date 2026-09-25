@@ -4,6 +4,16 @@ import { createCompanion, stepCompanion } from '../js/adventure_companion_core.j
 import { walkable, distance } from '../js/adventure_world_core.js';
 
 const world={w:1800,h:1600,buildings:[],trees:[]};
+test('a stranded companion returns when the hero gradually leaves it behind',()=>{
+    const hero={x:1100,y:800},pet=createCompanion(world,{x:700,y:800},123);
+    // No single-frame teleport: the last hero position is still nearby.
+    pet.lastHero={x:1097,y:800};
+    const before={...hero};
+    stepCompanion(pet,world,hero,1/60,{deferSearch:true});
+    assert.ok(distance(pet.position,hero)<60);
+    assert.ok(walkable(world,pet.position.x,pet.position.y));
+    assert.deepEqual(hero,before);
+});
 test('companion wanders independently and reproducibly without changing the hero',()=>{
     const hero={x:900,y:800},a=createCompanion(world,hero,123),b=createCompanion(world,hero,123);
     const start={...a.position};let moved=false,left=false,right=false,paused=false;

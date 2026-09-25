@@ -2,12 +2,37 @@ import {npcOffers,npcOfferStatus} from './adventure_npc_core.js';
 import {trainingPoints} from './adventure_learning_core.js';
 import {drawSchoolIcon} from './card_renderer.js';
 import {ItemDetails} from './view_adventure_item_details.js';
-import { setText, tr } from './locale_runtime.js';
+import { fill, setText, tr } from './locale_runtime.js';
 
 // Kids skill rows: CombatSkillLearn_panel.kids.html (icon, name, tip, school, level, study).
 // Kids shop cells: NPCShopPage.html grid, 2 columns × 80px, icon + cost + buy.
 const CLASS_SCHOOL={986:'fire',987:'ice',988:'storm',989:'balance',990:'life',991:'death',992:'balance'};
+function localizeOffer(text) {
+    const raw=String(text||'');
+    const training=/^(\d+)训练点$/.exec(raw),need=/^需要(\d+)训练点$/.exec(raw),learn=/^(\d+)级可学习$/.exec(raw),level=/^(\d+)级$/.exec(raw);
+    if(training)return fill('{count}训练点',{count:training[1]}).text;
+    if(need)return fill('需要{count}训练点',{count:need[1]}).text;
+    if(learn)return fill('{level}级可学习',{level:learn[1]}).text;
+    if(level)return fill('{level}级',{level:level[1]}).text;
+    return tr(raw);
+}
 const PAGE_SIZE=8;
+function moneyLine(el,tag,cls,text){
+    const node=el(tag,cls);
+    const source=String(text||'');
+    const parts=source.split('、');
+    const rendered=[];
+    for(const part of parts){
+        const need=/^需要(\d+)(奇豆|魔豆|仙豆|训练点)$/.exec(part);
+        const plain=/^(\d+)(奇豆|魔豆|仙豆|训练点)$/.exec(part);
+        if(need)rendered.push(fill('需要 {count} {unit}',{count:need[1],unit:need[2]}).text);
+        else if(plain)rendered.push(fill('{count} {unit}',{count:plain[1],unit:plain[2]}).text);
+        else{setText(node,source);return node;}
+    }
+    node.textContent=rendered.join(', ');
+    if(node.dataset)node.dataset.zh=source;
+    return node;
+}
 
 export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
     const {content,dataset}=model.assets,npc=model.serviceNpc;
@@ -95,7 +120,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
         const painted=face&&!face.classList.contains('spell-face-fallback');
         const itemArt=content.items[row.itemId]?.art;
         const icon=!painted&&itemArt?art(model.assets,itemArt,40,40):null;
-        const thumb=button(painted?face:icon||name.slice(0,1),()=>{
+        const thumb=button(painted?face:icon||tr(name).slice(0,1),()=>{
             if(row.kind!=='shop')return;
             hidePreview();
             const status=offerStatus(row);
@@ -109,13 +134,39 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
     const actionButton=(row,status,name)=>{
         const learned=row.kind==='mentor'&&status.reason==='已学会';
         const label=row.kind==='mentor'?(learned?'已学会':'学习'):'购买';
-        const control=button(label,()=>cb.action({type:'npc-purchase',npcInstanceId:npc.instanceId,offerId:row.id}),`${learned?'secondary':'primary'} small npc-action${learned?' is-learned':''}`);
+        const purchase=()=>cb.action({type:'npc-purchase',npcInstanceId:npc.instanceId,offerId:row.id});
+        const control=button(label,()=>{
+            if(row.kind!=='shop'){purchase();return;}
+            hidePreview();
+            const current=offerStatus(row);
+            const item=content.items[row.itemId]||{id:row.itemId,name};
+            inspector.render(item,{source:npc.name});
+            const quantity=el('p','');
+            setText(quantity,'购买数量：{count}',{count:current.reward?.cnt||1});
+            inspector.body.append(quantity,moneyLine(el,'p','',current.price||current.reason));
+            if(!current.allowed)inspector.body.append(moneyLine(el,'p','npc-blocked',current.reason));
+            let submitted=false;
+            const confirm=button('确认购买',()=>{
+                if(submitted)return;
+                const latest=offerStatus(row);
+                if(!latest.allowed){
+                    confirm.disabled=true;
+                    inspector.body.append(moneyLine(el,'p','npc-blocked',latest.reason));
+                    return;
+                }
+                submitted=true;confirm.disabled=true;
+                inspector.close();
+                purchase();
+            },'primary');
+            confirm.disabled=!current.allowed;
+            inspector.footer.append(button('取消',()=>inspector.close(),'secondary'),confirm);
+            inspector.open(control);
+        },`${learned?'secondary':'primary'} small npc-action${learned?' is-learned':''}`);
+        if(row.kind==='shop')control.setAttribute('aria-haspopup','dialog');
         control.disabled=!status.allowed;
         control.title=status.reason||label;
         control.setAttribute('aria-label',`${name}：${status.allowed?label:status.reason}`);
-        if(!model.save.languageLearning?.enabled||row.kind==='mentor')return control;
-        const test=button('语言挑战',()=>cb.languageTest({kind:'npc',npcInstanceId:npc.instanceId,offerId:row.id,name,price:status.costs?.find(([id])=>id===100)?.[1]||10}),'secondary small');
-        return el('div','shop-buy-row',control,test);
+        return control;
     };
 
     const draw=()=>{
@@ -151,28 +202,33 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
                 const text=el('div','npc-skill-text',el('div','npc-skill-title',el('strong','',name),schoolMark(schoolOf(row))));
                 if(row.tips)text.append(el('span','npc-skill-tips',row.tips));
                 const chips=[];
-                if(row.needlevel)chips.push(`${row.needlevel}级`);
-                if(status.allowed&&status.price&&status.price!=='免费')chips.push(status.price);
-                else if(!status.allowed&&!learned)chips.push(status.reason);
+                if(row.needlevel)chips.push(fill('{level}级',{level:row.needlevel}).text);
+                if(status.allowed&&status.price&&status.price!=='免费')chips.push(localizeOffer(status.price));
+                else if(!status.allowed&&!learned)chips.push(localizeOffer(status.reason));
                 const chip=el('span',`npc-skill-status${status.allowed||learned?'':' is-blocked'}`,chips.join(' · '));
                 list.append(el('article','npc-skill',thumbnail(row,name),text,chip,actionButton(row,status,name)));
             }else{
                 const meta=el('div','npc-good-meta');
-                if(status.price)meta.append(el('p','',status.price));
-                if(!status.allowed&&status.reason&&status.reason!==status.price&&status.reason!==`需要${status.price}`)meta.append(el('p','npc-blocked',status.reason));
-                meta.append(el('p','muted',`已拥有 ${model.save.inventory[row.itemId]||0}`));
+                if(status.price)meta.append(moneyLine(el,'p','',status.price));
+                if(!status.allowed&&status.reason&&status.reason!==status.price&&status.reason!==`需要${status.price}`)meta.append(moneyLine(el,'p','npc-blocked',status.reason));
+                const owned=el('p','muted');setText(owned,'已拥有 {count}',{count:model.save.inventory[row.itemId]||0});
+                meta.append(owned);
                 list.append(el('article','npc-good',el('h3','',name),el('div','npc-good-row',thumbnail(row,name),meta,actionButton(row,status,name))));
             }
         }
         if(!rows.length)list.append(el('p','npc-empty',state.kind==='mentor'?'没有可学习的课程。':'没有匹配的商品。'));
         const prev=button('上一页',()=>{page--;draw();},'secondary'),next=button('下一页',()=>{page++;draw();},'secondary');
         prev.disabled=page===0;next.disabled=page>=pages-1;
-        const count=el('span','',`${page+1} / ${pages} · ${rows.length}项`);count.setAttribute('aria-live','polite');
+        const count=el('span','');setText(count,'{page} / {pages} · {count}项',{page:page+1,pages,count:rows.length});count.setAttribute('aria-live','polite');
         pager.append(prev,count,next);
-        if(state.kind==='mentor')wallet.append(el('span','',`训练点 ${trainingPoints(model.save,content)}`));
+        if(state.kind==='mentor'){const points=el('span','');setText(points,'训练点 {count}',{count:trainingPoints(model.save,content)});wallet.append(points);}
         else{
             const ids=[...new Set(rows.flatMap(row=>(content.npcCatalog.exchanges[row.exchangeId]?.costs||[]).map(cost=>cost.id)))].filter(id=>[100,984,17213,17143,17225,22000].includes(id));
-            for(const id of (ids.length?ids:[100]).slice(0,4))wallet.append(el('span','',`${id===22000?'训练点':content.items[id]?.name||'奇豆'} ${id===22000?trainingPoints(model.save,content):model.save.inventory[id]||0}`));
+            for(const id of (ids.length?ids:[100]).slice(0,4)){
+                const balance=el('span','');
+                setText(balance,'{name} {count}',{name:id===22000?'训练点':content.items[id]?.name||'奇豆',count:id===22000?trainingPoints(model.save,content):model.save.inventory[id]||0});
+                wallet.append(balance);
+            }
         }
     };
     body.append(intro,serviceTabs,categoryTabs,list);

@@ -1,3 +1,4 @@
+import { fill, setText, tr } from './locale_runtime.js';
 import {ItemDetails} from './view_adventure_item_details.js';
 import {magicStarStatus,magicStarWeek,magicPocketRemaining} from './adventure_magic_star_core.js';
 import {magicBeanExchangeText} from './adventure_magic_bean_exchange_core.js';
@@ -13,6 +14,15 @@ export function membershipEmblem(el,level='V') {
     svg.append(star);icon.append(svg,el('b','',String(level)));return icon;
 }
 
+function showExchange(node, source) {
+    const done=/^会员天数已兑换至 (\d+)年(\d+)月(\d+)日。之后只兑换更晚的到期日，每天 10 魔豆。$/.exec(source);
+    if(done){setText(node,'会员天数已兑换至 {year}年{month}月{day}日。之后只兑换更晚的到期日，每天 10 魔豆。',{year:done[1],month:done[2],day:done[3]});return;}
+    const after=/^战斗结束后自动兑换 (\d+) 天，获得 (\d+) 魔豆。$/.exec(source);
+    if(after){setText(node,'战斗结束后自动兑换 {days} 天，获得 {beans} 魔豆。',{days:after[1],beans:after[2]});return;}
+    const ready=/^可兑换 (\d+) 天，共 (\d+) 魔豆。登录后会自动放入背包。$/.exec(source);
+    if(ready){setText(node,'可兑换 {days} 天，共 {beans} 魔豆。登录后会自动放入背包。',{days:ready[1],beans:ready[2]});return;}
+    setText(node,source);
+}
 export function renderMembership(body,model,cb,ui) {
     const {el,button}=ui;
     const inspector=new ItemDetails(body,model,ui);
@@ -20,19 +30,31 @@ export function renderMembership(body,model,cb,ui) {
     const now=model.now??Date.now(),star=magicStarStatus(member,now),record=save.magicStarClaims||{items:[],week:null};
     body.closest('.modal').classList.add('magic-star-modal');
     const labels={unknown:'会员状态待确认',loading:'正在查询会员状态…',guest:'登录后查看会员状态',error:'查询失败，请刷新重试'};
-    const identity=el('div','magic-star-identity',membershipEmblem(el,star.level),el('div','',el('h3','',`魔法星 ${star.level} 级`),el('p','',member.status==='ready'?(star.level?'魔法星已激活':'魔法星未激活'):labels[member.status]),el('p','muted',star.expiresAt?`有效期至 ${new Date(star.expiresAt).toLocaleDateString('zh-CN')}`:star.level?'有效日期待确认':'升级会员，点亮魔法星')));
-    const energy=el('div','magic-star-energy',el('span','',star.days===null?'会员有效，剩余天数待确认':`剩余能量：${star.days} 天`),el('p','magic-bean-note',magicBeanExchangeText(member,model.magicBeanExchange||null,now,{inBattle:!!save.pendingEncounter})));
+    const starTitle=el('h3','');setText(starTitle,'魔法星 {level} 级',{level:star.level});
+    const starState=el('p','');setText(starState,member.status==='ready'?(star.level?'魔法星已激活':'魔法星未激活'):labels[member.status]);
+    const expiry=el('p','muted');
+    if(star.expiresAt){const date=new Date(star.expiresAt);setText(expiry,'有效期至 {date}',{date:`${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`});}
+    else setText(expiry,star.level?'有效日期待确认':'升级会员，点亮魔法星');
+    const identity=el('div','magic-star-identity',membershipEmblem(el,star.level),el('div','',starTitle,starState,expiry));
+    const energyLabel=el('span','');
+    if(star.days===null)setText(energyLabel,'会员有效，剩余天数待确认');
+    else setText(energyLabel,'剩余能量：{days} 天',{days:star.days});
+    const energyNote=el('p','magic-bean-note');showExchange(energyNote,magicBeanExchangeText(member,model.magicBeanExchange||null,now,{inBattle:!!save.pendingEncounter}));
+    const energy=el('div','magic-star-energy',energyLabel,energyNote);
     const left=el('section','magic-star-left',identity,energy,el('h3','','专属左手法杖'));
     const rewards=el('div','magic-star-rewards');
     for(const reward of config.rewards){
         const item=assets.content.items[reward.itemId],owned=record.items.includes(reward.id)||(save.inventory[reward.itemId]||0)>0;
         const eligible=star.level>=reward.starLevel&&save.level>=reward.heroLevel;
-        const picture=el('canvas','magic-star-item');picture.width=80;picture.height=80;picture.setAttribute('role','img');picture.setAttribute('aria-label',reward.name);
+        const picture=el('canvas','magic-star-item');picture.width=80;picture.height=80;picture.setAttribute('role','img');picture.setAttribute('aria-label',tr(reward.name));
         if(item?.art)assets.draw(picture.getContext('2d'),item.art,0,0,80,80);
         const claim=button(owned?'已领取':eligible?'领取':'未解锁',()=>cb.action({type:'magic-star-claim',rewardId:reward.id}),'primary');claim.disabled=owned||!eligible;claim.setAttribute('aria-label',`${reward.name}：${claim.textContent}`);
         const inspect=button([picture,el('strong','',reward.name)],()=>inspector.show(item,{trigger:inspect,source:'魔法星专属左手法杖',requirements:`魔法星 ${reward.starLevel} 级 · 角色 ${reward.heroLevel} 级`}), 'item-inspect-button');
         inspect.setAttribute('aria-label',`查看${reward.name}详情`);inspect.setAttribute('aria-haspopup','dialog');
-        rewards.append(el('article','magic-star-reward',inspect,el('small','',`魔法星 ${reward.starLevel} 级${reward.heroLevel>1?` · 角色 ${reward.heroLevel} 级`:''}`),claim));
+        const requirement=el('small','');
+        if(reward.heroLevel>1)setText(requirement,'魔法星 {star} 级 · 角色 {level} 级',{star:reward.starLevel,level:reward.heroLevel});
+        else setText(requirement,'魔法星 {level} 级',{level:reward.starLevel});
+        rewards.append(el('article','magic-star-reward',inspect,requirement,claim));
     }
     left.append(rewards);
     const tabs=el('nav','gui-tabs magic-star-tabs'),detail=el('div','magic-star-detail');tabs.setAttribute('aria-label','魔法星权益');
@@ -45,7 +67,7 @@ export function renderMembership(body,model,cb,ui) {
             const table=el('table','magic-star-table'),head=el('tr','');
             for(const title of ['等级','生命','攻击','防御','治疗','被治疗','命中','经验'])head.append(el('th','',title));
             table.append(el('thead','',head));const rows=el('tbody','');
-            for(const row of config.levels){const tr=el('tr',star.level===row.level?'current':'');if(star.level===row.level)tr.setAttribute('aria-current','true');for(const field of ['level','HP','attack','guard','cure','becured','hit','exp'])tr.append(el('td','',field==='level'?`${row[field]}级`:`${row[field]}%`));rows.append(tr);}
+            for(const row of config.levels){const tr=el('tr',star.level===row.level?'current':'');if(star.level===row.level)tr.setAttribute('aria-current','true');for(const field of ['level','HP','attack','guard','cure','becured','hit','exp']){const cell=el('td','');if(field==='level')setText(cell,'{level}级',{level:row[field]});else cell.textContent=`${row[field]}%`;tr.append(cell);}rows.append(tr);}
             table.append(rows);detail.append(el('div','magic-star-table-scroll',table));
         }else if(key==='growth'){
             detail.append(el('h3','','魔法星如何成长'),el('p','','魔法星等级按会员剩余有效期计算。未开通或已到期为 0 级；一个月为 1 级，一年达到最高 10 级。'),el('p','','不足一个月按一个月计算，最高 10 级。剩余有效期变短时，魔法星等级也会随之变化。'),el('p','','有效日期暂时无法确认时，已确认的会员按 1 级显示。'),el('p','','剩余有效期按北京时间的日历天数自动兑换为魔豆，每天 10 颗。第一次从今天算到到期日；记下这次兑到的日期后，再次兑换只计算更晚的新增天数。'),el('p','muted','续期后点击“刷新会员状态”，查看最新等级。新增的会员天数会自动兑换。'));

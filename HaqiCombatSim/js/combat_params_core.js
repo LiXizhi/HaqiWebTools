@@ -39,10 +39,21 @@ export function defaultParams(version = 'teen') {
         // Web island unlock levels; original world configuration is unavailable.
         worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
+        languageAdventure: { basicReward:10, beginnerReward:30, intermediateReward:50, advancedReward:80, basicDailyCap:100, challengeDailyCap:200, basicCourseLimit:2, challengeCourseLimit:1, promptCooldownMs:90000, sourceCooldownMs:300000, maxTurns:8 },
         // Web progression schedule; original server training-point grant table is unavailable.
         skillLearning: { pointLevels: [4,8,12,16,20,25,30,35,40,45,50] },
         // SueSue_equipment_extend_panel.lua GetAllOdds: kids level 1–5.
         gems: { odds: [100,80,60,40,25] },
+        fishing: {
+            // Web-only fishing challenge and cosmetic weights; no reward/stat effect.
+            fishingMinGrams:180, fishingMaxGrams:18000, fishingWeightPower:3,
+            fishingMinPulls:3, fishingMaxPulls:5, fishingBiteMs:1400,
+            fishingWindowStepMs:150, fishingRestMinMs:650, fishingRestMaxMs:1100,
+            fishingInputGraceMs:180,
+            fishingMistakePenalty:.15, fishingSmallWeightRatio:.08,
+            fishingPerfectWeightFloor:.25, fishingLargeGrams:6000, fishingHugeGrams:12000,
+            fishingAutoEscapeChance:.01,
+        },
         adventure: {
             iceAreaAttackThreatRatio:2,
             damageThreatRatio:1, splashDamageThreatRatio:0.05,
@@ -69,10 +80,10 @@ export function defaultParams(version = 'teen') {
             defensiveThreatWeight:3,
             tauntThreatWeight:5,
             levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [2,4,6,8],
-            petCopies: 3, heroRegenPerSecond: .02, regenPerMinute: .05, hungerPerMinute: 1, feedThreshold: 30,
+            petCopies: 3, heroRegenPerSecond: .02, regenPerMinute: .05, hungerPerMinute: 1, restingHungerPerMinute: .5, feedThreshold: 30,
             foodRestore: 40, defeatHp: .1, captureBase: .2, captureWounded: .65,
             foodPrice: 10, capturePrice: 25, petPriceBase: 100, petPriceLevel: 40,
-            gearPriceBase: 30, gearPriceLevel: 15, duplicateXp: 50,
+            gearPriceBase: 30, gearPriceLevel: 15, duplicateXp: 50, mountSpeed: 1.35,
             encounterXpBase: 25, encounterXpLevel: 12, encounterCoinsBase: 30, encounterCoinsLevel: 8,
             xpGrowth: 300, petXpStep: 30,
         },
@@ -224,6 +235,8 @@ export function resolveParams(dataset, params) {
         // Web island unlock levels; original world configuration is unavailable.
         worldTravel: { ...defaultParams(version).worldTravel, ...params.worldTravel },
         checkin: { ...defaultParams(version).checkin, ...params.checkin },
+        languageAdventure: { ...defaultParams(version).languageAdventure, ...params.languageAdventure },
+        fishing: { ...defaultParams(version).fishing, ...params.fishing },
         adventure: { ...defaultParams(version).adventure, ...params.adventure },
         perSchool: params.perSchool,
         fairPlay: params.fairPlay || null,

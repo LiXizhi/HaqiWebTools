@@ -8,6 +8,8 @@ import {makeCloudSnapshot,parseCloudSnapshot} from '../js/adventure_cloud_core.j
 import {installExpansion} from '../js/adventure_expansion_core.js';
 const read=name=>JSON.parse(fs.readFileSync(new URL('../data/adventure/'+name+'.json',import.meta.url)));
 const c=read('chapter'),d=read('combat');
+// Exercise independent instances using an explicitly non-unique equipment definition.
+c.items[1912].maxCount=99;
 function hero(){const s=A.createAdventure(c);s.xp=4654;A.syncProgression(s,c);s.inventory={1912:2,1240:1,17213:10000};syncEquipmentInstances(s,c);return s;}
 const act=(s,type,props={})=>A.applyAction(s,c,{type,...props});
 test('same GSID has independent GUID upgrades, equipped stats and unchanged socket data',()=>{
@@ -76,4 +78,33 @@ test('Pandora shield uses original alternating bean and pearl costs and cumulati
     A.applyAction(s,content,{type:'upgrade',guid});assert.equal(s.inventory[17213],0);
     const old=structuredClone(s);assert.throws(()=>A.applyAction(s,content,{type:'upgrade',guid}),/不足/);assert.deepEqual(s,old);
     assert.deepEqual(A.parseSave(s,content).equipmentInstances,s.equipmentInstances);
+});
+
+const uniqueContent=read('chapter');
+test('original unique equipment merges repeat grants and legacy stacks with highest strengthening',()=>{
+    const s=A.createAdventure(uniqueContent);s.inventory[1912]=3;s.upgrades[1912]=2;
+    syncEquipmentInstances(s,uniqueContent);
+    assert.equal(s.inventory[1912],1);assert.equal(s.equipmentInstances.length,1);
+    assert.equal(s.equipmentInstances[0].serverdata.addlel,2);
+    const guid=s.equipmentInstances[0].guid;
+    s.inventory[1912]+=5;syncEquipmentInstances(s,uniqueContent);
+    assert.equal(s.inventory[1912],1);assert.equal(s.equipmentInstances[0].guid,guid);
+    assert.equal(s.upgrades[1912],2);
+    assert.deepEqual(A.parseSave(s,uniqueContent),s);
+});
+test('unique migration keeps equipped identity, max upgrade and holes, and refunds duplicate socket gems once',()=>{
+    const s=hero(),[first,second]=s.equipmentInstances.filter(x=>x.gsid===1912);
+    first.serverdata={addlel:3,gem:{holecnt:2,ins:[26001]}};
+    second.serverdata={addlel:1,gem:{holecnt:1,ins:[26002]}};
+    s.equipment[11]=1912;s.equipmentGuids[11]=second.guid;
+    syncEquipmentInstances(s,uniqueContent);
+    assert.equal(s.inventory[1912],1);assert.equal(s.inventory[26001],1);
+    assert.equal(s.equipmentGuids[11],second.guid);
+    assert.deepEqual(s.equipmentInstances.find(x=>x.gsid===1912).serverdata,{addlel:3,gem:{holecnt:2,ins:[26002]}});
+    const merged=structuredClone(s);syncEquipmentInstances(s,uniqueContent);assert.deepEqual(s,merged);
+});
+test('unique merging waits for existing battle checkpoints',()=>{
+    const s=hero();s.pendingEncounter={id:'legacy'};
+    syncEquipmentInstances(s,uniqueContent);assert.equal(s.inventory[1912],2);
+    s.pendingEncounter=null;syncEquipmentInstances(s,uniqueContent);assert.equal(s.inventory[1912],1);
 });

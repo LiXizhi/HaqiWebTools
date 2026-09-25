@@ -1,0 +1,44 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>装备槽位隔离验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app"><div id="root"><p id="fixture-status">正在加载资源…</p></div><script type="module">
+// Isolated, in-memory fixture: renders the real equipment panel. No player storage is read or written.
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {syncEquipmentInstances} from '../../js/adventure_equipment_instances_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+import {loadLocaleFiles,configureLocale} from '../../js/locale.js';
+addEventListener('error',event=>{document.documentElement.dataset.fixtureError=event.message||'error';});
+addEventListener('unhandledrejection',event=>{document.documentElement.dataset.fixtureError=String(event.reason?.message||event.reason);});
+try{
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const params=new URLSearchParams(location.search);
+const lang=params.get('lang')||'zh-CN';
+if(lang!=='zh-CN')await loadLocaleFiles([lang]);
+configureLocale({locale:lang});
+const assets=await loadResources(),c=assets.content,save=createAdventure(c,{name:'deluca'});
+save.xp=c.progression.xpThresholds[9];
+// Slots mirroring the reported screenshot: a few normal slots plus the four 炫彩 slots (18/19/70/71).
+const rainbow={18:1985,19:1986,70:1796,71:1987};
+const wanted=[2,7,11,9,17,24,18,19,70,71];
+const bySlot={};
+for(const item of Object.values(c.items))if(wanted.includes(item.slot))bySlot[item.slot]??=item;
+for(const slot of wanted){
+    const item=c.items[rainbow[slot]]||bySlot[slot];
+    if(!item)continue;
+    save.inventory[item.id]=Math.max(1,save.inventory[item.id]||0);
+    save.equipment[slot]=item.id;
+}
+syncEquipmentInstances(save,c);
+// ?empty=70 leaves a slot unequipped so the empty-cell layout stays reviewable.
+for(const slot of (params.get('empty')||'').split(',').map(Number).filter(Boolean))delete save.equipment[slot];
+const model={assets,save,equipmentView:{tab:'gear',slot:0,item:null,query:'',page:0}};
+const root=document.querySelector('#root');
+const cb={close:()=>root.replaceChildren(),panel:()=>{},action:()=>{},refresh:()=>renderPanel(root,params.get('panel')||'equipment',model,cb)};
+renderPanel(root,params.get('panel')||'equipment',model,cb);
+document.documentElement.dataset.fixtureReady='1';
+}catch(error){
+document.querySelector('#fixture-status').textContent=String(error&&error.stack||error);
+document.documentElement.dataset.fixtureError=String(error&&error.message||error);
+}
+</script></body></html>

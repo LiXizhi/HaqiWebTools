@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>五岛建筑预览</title><base href="../../">
+<style>body{margin:16px;background:#233c48;color:#fff;font:16px system-ui}canvas{width:100%;max-width:1000px;height:auto;display:block;margin:12px 0}select{font:inherit;padding:8px}p{max-width:1000px}</style>
+<label>岛屿 <select id="zone"><option value="town">哈奇岛</option><option value="fire">火鸟岛</option><option value="ice">寒冰岛</option><option value="desert">沙漠岛</option><option value="dark">幽暗岛</option></select></label>
+<label>位置 <select id="view"><option value="harbor">船坞与漂船</option><option value="village">特色建筑群</option><option value="tower">特色地标</option></select></label>
+<p id="status">正在加载建筑图集</p><canvas width="1000" height="650"></canvas>
+<script type="module">
+import {createWorld} from '../../js/adventure_world_core.js';
+import {paintLargeTerrain} from '../../js/adventure_large_terrain.js';
+import {loadEnvironmentArt} from '../../js/adventure_environment_art.js';
+import {assetUrl} from '../../js/adventure_media_core.js';
+const read=async path=>(await fetch(path)).json();
+const content=await read('data/adventure/chapter.json');content.worldMaps={};
+const query=new URLSearchParams(location.search),mode=query.get('assets')==='local'?'local':'cdn';
+// The document base allows the normal local loader; this fixture never touches saves.
+const art=await loadEnvironmentArt(mode,read,'data/adventure/building-art.json');
+const media=await read('data/adventure/media.json'),captainImage=new Image();captainImage.crossOrigin='anonymous';
+await new Promise((resolve,reject)=>{captainImage.onload=resolve;captainImage.onerror=reject;captainImage.src=assetUrl(media.entries[content.npcs[36205].portrait.id],mode);});
+const alphaCanvas=document.createElement('canvas');alphaCanvas.width=captainImage.width;alphaCanvas.height=captainImage.height;
+const alphaContext=alphaCanvas.getContext('2d');alphaContext.drawImage(captainImage,0,0);
+const pixels=alphaContext.getImageData(0,0,alphaCanvas.width,alphaCanvas.height).data;
+let left=alphaCanvas.width,top=alphaCanvas.height,right=0,bottom=0;
+for(let y=0;y<alphaCanvas.height;y++)for(let x=0;x<alphaCanvas.width;x++)if(pixels[(y*alphaCanvas.width+x)*4+3]>12){left=Math.min(left,x);top=Math.min(top,y);right=Math.max(right,x);bottom=Math.max(bottom,y);}
+const captainCrop=[left,top,right-left+1,bottom-top+1],captainScale=Math.min(64/captainCrop[2],86/captainCrop[3]);
+const select=document.querySelector('#zone'),view=document.querySelector('#view'),canvas=document.querySelector('canvas'),c=canvas.getContext('2d');
+for(const z of Object.keys(art.manifest.atlases))content.worldMaps[z]=await read('data/adventure/maps/'+z+'.json');
+select.value=content.worldMaps[query.get('island')]?query.get('island'):'town';
+if(['harbor','village','tower'].includes(query.get('view')))view.value=query.get('view');
+function render(){
+    const world=createWorld(select.value,content),objects=world.buildings.filter(b=>b.atlas),target=objects.find(b=>b.frame===view.value);
+    const harborView=view.value==='harbor';canvas.height=harborView?850:650;
+    const rect={x:target.x-500,y:harborView?Math.min(world.portal.y,target.y-225)-80:target.y-340,w:1000,h:canvas.height};
+    c.setTransform(1,0,0,1,-rect.x,-rect.y);paintLargeTerrain(c,world,rect);
+    for(const b of objects.sort((a,b)=>a.y-b.y))art.draw(c,b.atlas,b.frame,b.x-b.w/2,b.y-b.h,b.w,b.h);
+    if(harborView){
+        const captain=world.npcs.find(n=>n.harborGuide);
+        c.strokeStyle='#fff0af';c.lineWidth=3;c.beginPath();c.ellipse(world.portal.x,world.portal.y,40,22,0,0,Math.PI*2);c.stroke();
+        c.font='16px sans-serif';c.textAlign='center';c.fillStyle='#fff';c.strokeStyle='#283329';c.lineWidth=4;
+        c.strokeText('传送点',world.portal.x,world.portal.y+42);c.fillText('传送点',world.portal.x,world.portal.y+42);
+        if(captain){
+            const cw=captainCrop[2]*captainScale,ch=captainCrop[3]*captainScale;
+            c.drawImage(captainImage,...captainCrop,captain.x-cw/2,captain.y-ch,cw,ch);
+            c.strokeText('法斯特船长',captain.x,captain.y+22);c.fillText('法斯特船长',captain.x,captain.y+22);
+        }
+    }
+    // Reading canvas pixels checks CDN CORS, including alpha decoding.
+    c.getImageData(0,0,1,1);
+    document.querySelector('#status').textContent=`已加载五张透明图集；当前场景 ${objects.length} 组建筑及船只；${mode==='local'?'本地':'CDN'}解码与画布读取通过。`;
+}
+select.onchange=render;view.onchange=render;render();
+</script></html>

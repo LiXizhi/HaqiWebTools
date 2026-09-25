@@ -32,7 +32,7 @@ function ensureLocale(id, fetchText) {
 
 export function configureLocale({ locale = 'zh-CN', languageLearning = null } = {}) {
     learning = languageLearning?.enabled ? languageLearning : null;
-    display = learning?.target || locale || 'zh-CN';
+    display = locale || 'zh-CN';
     applyTranslator();
     if (!learning && tooltip) tooltip.hidden = true;
     syncLocaleChrome();

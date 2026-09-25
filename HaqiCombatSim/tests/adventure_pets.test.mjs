@@ -101,6 +101,33 @@ test('online auto-feed, offline regeneration, hunger zero and clock rollback',()
  const hunger=pet.hunger;P.tickCare(s,c,hero,121000,false);assert.equal(pet.hunger,hunger);assert.equal(s.inventory[P.FOOD_ID],1);
  pet.hunger=0;const hp=pet.hp;P.tickCare(s,c,hero,181000,false);assert.equal(pet.hp,hp);P.tickCare(s,c,hero,1000,true);assert.equal(s.careAt,181000);
 });
+
+test('stored pets recover satiety without eating; formation changes switch care and battles pause it',()=>{
+ const s=fresh(),hero=A.playerSpec(s,c),active=s.pets[s.formation[0]];
+ const resting=P.addPet(s,c,'dragon_purple');
+ active.hunger=50;resting.hunger=10;s.inventory[P.FOOD_ID]=3;
+ P.tickCare(s,c,hero,1000,true);P.tickCare(s,c,hero,61000,true);
+ assert.equal(active.hunger,49);assert.equal(resting.hunger,10.5);assert.equal(s.inventory[P.FOOD_ID],3);
+ P.tickCare(s,c,hero,121000,false);
+ assert.equal(active.hunger,49);assert.equal(resting.hunger,11);assert.equal(s.inventory[P.FOOD_ID],3);
+ P.petAction(s,c,{type:'formation',slots:['dragon_purple',null,null,null],heroSlot:0});
+ resting.hunger=50;P.tickCare(s,c,hero,181000,true);
+ assert.equal(active.hunger,49.5);assert.equal(resting.hunger,49);
+ s.pendingEncounter={};P.tickCare(s,c,hero,241000,true);
+ assert.equal(active.hunger,49.5);assert.equal(resting.hunger,49);
+ delete s.pendingEncounter;P.tickCare(s,c,hero,301000,true);
+ assert.equal(active.hunger,50);assert.equal(resting.hunger,48);
+ P.tickCare(s,c,hero,301000+3*86400000,false);assert.equal(active.hunger,100);
+ P.tickCare(s,c,hero,1000,true);assert.equal(active.hunger,100);
+});
+
+test('resting hunger recovery uses BalanceParams and the 24-hour elapsed cap',()=>{
+ const content={...c,balanceParams:{...c.balanceParams,adventure:{...P.petParams(c),restingHungerPerMinute:.01}}};
+ const s=fresh(),pet=P.addPet(s,content,'dragon_purple');pet.hunger=0;
+ P.tickCare(s,content,A.playerSpec(s,content),1000,false);
+ P.tickCare(s,content,A.playerSpec(s,content),1000+3*86400000,false);
+ assert.equal(pet.hunger,14.4);
+});
 test('hero regenerates 2% maximum HP per second and fills within 50 seconds outside combat',()=>{
  for(const online of [false,true]){
   const s=fresh(),hero=A.playerSpec(s,c),maxHp=P.specMaxHp(hero);s.heroHp=0;

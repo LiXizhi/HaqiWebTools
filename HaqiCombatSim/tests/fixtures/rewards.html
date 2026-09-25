@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>奖励特效隔离验收</title>
 <link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_rewards.css">
-<body class="haqi-app"><main id="game"><canvas id="world"></canvas><div id="hud"></div><div id="feedback" class="reward-feedback"></div><div style="position:fixed;top:8px;left:8px;z-index:40"><button id="gain">获得经验与装备</button><button id="pause">暂停演示</button><span id="result">内存测试，不保存进度</span></div></main>
+<body class="haqi-app"><main id="game"><canvas id="world"></canvas><div id="hud"></div><div id="feedback" class="reward-feedback"></div><div style="position:fixed;top:8px;left:8px;z-index:40"><button id="gain">获得经验与装备</button><button id="burst">一次获得多件</button><button id="pause">暂停演示</button><span id="result">内存测试，不保存进度</span></div></main>
 <script type="module">
 import {loadResources} from '../../js/adventure_assets.js';
 import * as A from '../../js/adventure_core.js';
@@ -14,6 +14,7 @@ const assets=await loadResources(),save=A.createAdventure(assets.content,{name:'
 const feedback=createRewardFeedback(document.querySelector('#feedback'),{describe:r=>({label:r.gear?'立即穿上':'立即配卡',reason:r.gear?A.equipmentBlockReason(save,assets.content.items[r.id],assets.content):'',name:r.name}),activate:r=>{if(r.gear){A.applyAction(save,assets.content,{type:'equip',itemId:r.id});document.querySelector('#result').textContent=`已穿上：${assets.content.items[save.equipment[assets.content.items[r.id].slot]].name}`;}else document.querySelector('#result').textContent='卡牌配卡入口已触发';}});
 renderHud(document.querySelector('#hud'),{assets,save,now:Date.now()},{panel:()=>{},membership:()=>{},cloud:()=>{},track:()=>{},interact:()=>{}});
 document.querySelector('#gain').onclick=()=>{feedback.reset();const before=rewardSnapshot(save);save.xp+=1000;A.syncProgression(save,assets.content);save.inventory[1912]=(save.inventory[1912]||0)+1;feedback.push(rewardChanges(before,save,assets.content));};
+document.querySelector('#burst').onclick=()=>{feedback.reset();const names=[['胖乎乎水母',1],['胖乎乎水母',1],['小黄鱼',2],['海星',1],['珍珠贝',3],['珊瑚',1],['海藻',4],['寄居蟹',1],['小丑鱼',1]];for(const [name,count] of names)feedback.push({items:[{kind:'item',id:name,name,count}]});};
 let frozen=false,time=0,last=0;document.querySelector('#pause').onclick=()=>{frozen=!frozen;document.querySelector('#pause').textContent=frozen?'继续演示':'暂停演示';};
 function frame(now){if(!frozen)time+=Math.min(now-last,50);last=now;renderer.render(world,save,time,{rewardEffect:feedback.tick(time,true)});requestAnimationFrame(frame);}requestAnimationFrame(frame);
 </script></body></html>

@@ -1,0 +1,1335 @@
+{
+  "version": 1,
+  "zone": "camp",
+  "languages": {
+    "zh-CN": {
+      "content": true,
+      "speech": "zh-CN",
+      "recognition": true,
+      "challenge": true
+    },
+    "en": {
+      "content": true,
+      "speech": "en-US",
+      "recognition": true,
+      "challenge": true
+    }
+  },
+  "courses": [
+    {
+      "id": "greeting",
+      "title": "打招呼",
+      "events": [
+        "npc",
+        "near-npc"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "greeting.1",
+          "question": "你好！",
+          "answer": "你好，很高兴见到你。",
+          "variants": [
+            "你好，很高兴认识你。"
+          ]
+        },
+        {
+          "id": "greeting.2",
+          "question": "你今天好吗？",
+          "answer": "我很好，谢谢。",
+          "variants": []
+        },
+        {
+          "id": "greeting.3",
+          "question": "我们可以聊聊吗？",
+          "answer": "当然可以。",
+          "variants": []
+        }
+      ],
+      "scenario": "我想认识你。请打个招呼，告诉我你喜欢做什么，再邀请我一起做一件事。",
+      "goals": [
+        {
+          "id": "greet",
+          "text": "礼貌问候对方",
+          "weight": 30
+        },
+        {
+          "id": "interest",
+          "text": "说明自己喜欢做的事",
+          "weight": 30
+        },
+        {
+          "id": "invite",
+          "text": "邀请对方一起做一件具体的事",
+          "weight": 40
+        }
+      ]
+    },
+    {
+      "id": "introduction",
+      "title": "介绍自己",
+      "events": [
+        "npc",
+        "near-npc"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "introduction.1",
+          "question": "你是新来的吗？",
+          "answer": "是的，我是新来的。",
+          "variants": []
+        },
+        {
+          "id": "introduction.2",
+          "question": "你想认识朋友吗？",
+          "answer": "我想认识新朋友。",
+          "variants": []
+        },
+        {
+          "id": "introduction.3",
+          "question": "你来自哪里？",
+          "answer": "我来自远方。",
+          "variants": []
+        }
+      ],
+      "scenario": "我想认识你。请打个招呼，告诉我你喜欢做什么，再邀请我一起做一件事。",
+      "goals": [
+        {
+          "id": "greet",
+          "text": "礼貌问候对方",
+          "weight": 30
+        },
+        {
+          "id": "interest",
+          "text": "说明自己喜欢做的事",
+          "weight": 30
+        },
+        {
+          "id": "invite",
+          "text": "邀请对方一起做一件具体的事",
+          "weight": 40
+        }
+      ]
+    },
+    {
+      "id": "help",
+      "title": "请求帮助",
+      "events": [
+        "npc",
+        "near-npc",
+        "battle-decision"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "help.1",
+          "question": "你需要帮忙吗？",
+          "answer": "是的，请帮帮我。",
+          "variants": [
+            "好的，请帮我一下。"
+          ]
+        },
+        {
+          "id": "help.2",
+          "question": "你想问什么？",
+          "answer": "请再说一遍。",
+          "variants": []
+        },
+        {
+          "id": "help.3",
+          "question": "我说得太快了吗？",
+          "answer": "请说慢一点。",
+          "variants": []
+        }
+      ],
+      "scenario": "我们来讨论下一场战斗。请提出先做什么，解释原因，再问我是否同意。这里只讨论，不会自动出牌。",
+      "goals": [
+        {
+          "id": "plan",
+          "text": "提出具体战术行动",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释行动的原因",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问伙伴是否同意",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "thanks",
+      "title": "感谢与告别",
+      "events": [
+        "npc",
+        "battle-end"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "thanks.1",
+          "question": "这有帮助吗？",
+          "answer": "是的，谢谢你的帮助。",
+          "variants": []
+        },
+        {
+          "id": "thanks.2",
+          "question": "你准备离开了吗？",
+          "answer": "是的，下次再聊。",
+          "variants": []
+        },
+        {
+          "id": "thanks.3",
+          "question": "下次还来吗？",
+          "answer": "会的，回头见。",
+          "variants": []
+        }
+      ],
+      "scenario": "我们来讨论下一场战斗。请提出先做什么，解释原因，再问我是否同意。这里只讨论，不会自动出牌。",
+      "goals": [
+        {
+          "id": "plan",
+          "text": "提出具体战术行动",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释行动的原因",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问伙伴是否同意",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "identify",
+      "title": "认识物品",
+      "events": [
+        "inventory",
+        "item-selected",
+        "item-gained"
+      ],
+      "requiresItem": true,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "identify.1",
+          "question": "这是什么？",
+          "answer": "这是{item}。",
+          "variants": []
+        },
+        {
+          "id": "identify.2",
+          "question": "你能描述这件物品吗？",
+          "answer": "我看到{item}。",
+          "variants": []
+        },
+        {
+          "id": "identify.3",
+          "question": "我们谈谈什么？",
+          "answer": "我们来谈谈{item}吧。",
+          "variants": []
+        }
+      ],
+      "scenario": "我在为探险做准备。请推荐一种物品，说明它有什么用，再问我是否愿意选择它。",
+      "goals": [
+        {
+          "id": "recommend",
+          "text": "推荐一种物品",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释推荐物品的用途",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问对方是否愿意选择它",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "ownership",
+      "title": "拥有物品",
+      "events": [
+        "inventory",
+        "item-selected"
+      ],
+      "requiresItem": true,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "ownership.1",
+          "question": "你的背包里有什么？",
+          "answer": "我的背包里有{item}。",
+          "variants": [
+            "我背包里有{item}。"
+          ]
+        },
+        {
+          "id": "ownership.2",
+          "question": "你有这样的物品吗？",
+          "answer": "是的，我有。",
+          "variants": []
+        },
+        {
+          "id": "ownership.3",
+          "question": "这是你的吗？",
+          "answer": "是的，这是我的。",
+          "variants": []
+        }
+      ],
+      "scenario": "我在为探险做准备。请推荐一种物品，说明它有什么用，再问我是否愿意选择它。",
+      "goals": [
+        {
+          "id": "recommend",
+          "text": "推荐一种物品",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释推荐物品的用途",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问对方是否愿意选择它",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "quantity",
+      "title": "询问数量",
+      "events": [
+        "inventory",
+        "fish"
+      ],
+      "requiresItem": true,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "quantity.1",
+          "question": "你有多少这样的物品？",
+          "answer": "我有{count}{measure}。",
+          "variants": [
+            "一共有{count}{measure}。"
+          ]
+        },
+        {
+          "id": "quantity.2",
+          "question": "只有一个吗？",
+          "answer": "让我数一数。",
+          "variants": []
+        },
+        {
+          "id": "quantity.3",
+          "question": "你能告诉我数量吗？",
+          "answer": "数量是{count}。",
+          "variants": []
+        }
+      ],
+      "scenario": "我在为探险做准备。请推荐一种物品，说明它有什么用，再问我是否愿意选择它。",
+      "goals": [
+        {
+          "id": "recommend",
+          "text": "推荐一种物品",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释推荐物品的用途",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问对方是否愿意选择它",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "preference",
+      "title": "表达喜好",
+      "events": [
+        "inventory",
+        "item-selected",
+        "npc"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "preference.1",
+          "question": "你喜欢这件物品吗？",
+          "answer": "是的，我喜欢。",
+          "variants": []
+        },
+        {
+          "id": "preference.2",
+          "question": "你喜欢什么？",
+          "answer": "我喜欢探索。",
+          "variants": []
+        },
+        {
+          "id": "preference.3",
+          "question": "你更喜欢哪个？",
+          "answer": "我更喜欢这个。",
+          "variants": []
+        }
+      ],
+      "scenario": "我在为探险做准备。请推荐一种物品，说明它有什么用，再问我是否愿意选择它。",
+      "goals": [
+        {
+          "id": "recommend",
+          "text": "推荐一种物品",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释推荐物品的用途",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问对方是否愿意选择它",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "choice",
+      "title": "作出选择",
+      "events": [
+        "item-selected",
+        "equipment",
+        "npc"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "choice.1",
+          "question": "你想要哪个？",
+          "answer": "我想要这个。",
+          "variants": []
+        },
+        {
+          "id": "choice.2",
+          "question": "你确定吗？",
+          "answer": "是的，我确定。",
+          "variants": []
+        },
+        {
+          "id": "choice.3",
+          "question": "为什么选这个？",
+          "answer": "因为它很有用。",
+          "variants": []
+        }
+      ],
+      "scenario": "我在为探险做准备。请推荐一种物品，说明它有什么用，再问我是否愿意选择它。",
+      "goals": [
+        {
+          "id": "recommend",
+          "text": "推荐一种物品",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释推荐物品的用途",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问对方是否愿意选择它",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "equipment",
+      "title": "谈论装备",
+      "events": [
+        "equipment",
+        "item-selected"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "equipment.1",
+          "question": "我们看看装备好吗？",
+          "answer": "好的，让我看看。",
+          "variants": []
+        },
+        {
+          "id": "equipment.2",
+          "question": "你准备好了吗？",
+          "answer": "我准备好了。",
+          "variants": []
+        },
+        {
+          "id": "equipment.3",
+          "question": "你想换装备吗？",
+          "answer": "我想先比较一下。",
+          "variants": []
+        }
+      ],
+      "scenario": "我在为探险做准备。请推荐一种物品，说明它有什么用，再问我是否愿意选择它。",
+      "goals": [
+        {
+          "id": "recommend",
+          "text": "推荐一种物品",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释推荐物品的用途",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问对方是否愿意选择它",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "location",
+      "title": "询问位置",
+      "events": [
+        "landmark",
+        "npc"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "location.1",
+          "question": "我们在哪里？",
+          "answer": "我们在魔法营地。",
+          "variants": []
+        },
+        {
+          "id": "location.2",
+          "question": "你想去哪里？",
+          "answer": "我想去海边。",
+          "variants": []
+        },
+        {
+          "id": "location.3",
+          "question": "你找到这个地方了吗？",
+          "answer": "是的，我找到了。",
+          "variants": []
+        }
+      ],
+      "scenario": "我想和你一起探索营地。请说出想去哪里，解释为什么，再邀请我同行。",
+      "goals": [
+        {
+          "id": "place",
+          "text": "提出一个想去的地点",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "说明去那里的原因",
+          "weight": 40
+        },
+        {
+          "id": "invite",
+          "text": "邀请对方一起前往",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "explore",
+      "title": "探索邀请",
+      "events": [
+        "landmark",
+        "near-npc"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "explore.1",
+          "question": "我们一起探索吧？",
+          "answer": "好，我们走吧。",
+          "variants": []
+        },
+        {
+          "id": "explore.2",
+          "question": "你想四处看看吗？",
+          "answer": "我想四处看看。",
+          "variants": []
+        },
+        {
+          "id": "explore.3",
+          "question": "我们要休息一下吗？",
+          "answer": "好，休息一下吧。",
+          "variants": []
+        }
+      ],
+      "scenario": "我想和你一起探索营地。请说出想去哪里，解释为什么，再邀请我同行。",
+      "goals": [
+        {
+          "id": "place",
+          "text": "提出一个想去的地点",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "说明去那里的原因",
+          "weight": 40
+        },
+        {
+          "id": "invite",
+          "text": "邀请对方一起前往",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "directions",
+      "title": "澄清路线",
+      "events": [
+        "landmark",
+        "npc"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "directions.1",
+          "question": "你知道怎么走吗？",
+          "answer": "请给我指路。",
+          "variants": []
+        },
+        {
+          "id": "directions.2",
+          "question": "我们要一起走吗？",
+          "answer": "请跟我来。",
+          "variants": []
+        },
+        {
+          "id": "directions.3",
+          "question": "你听清楚了吗？",
+          "answer": "你能再解释一下吗？",
+          "variants": []
+        }
+      ],
+      "scenario": "我想和你一起探索营地。请说出想去哪里，解释为什么，再邀请我同行。",
+      "goals": [
+        {
+          "id": "place",
+          "text": "提出一个想去的地点",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "说明去那里的原因",
+          "weight": 40
+        },
+        {
+          "id": "invite",
+          "text": "邀请对方一起前往",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "catch",
+      "title": "捕鱼收获",
+      "events": [
+        "fish"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "catch.1",
+          "question": "捕鱼结束了，你想说什么？",
+          "answer": "我刚才去捕鱼了。",
+          "variants": []
+        },
+        {
+          "id": "catch.2",
+          "question": "你还想捕鱼吗？",
+          "answer": "我想再试一次。",
+          "variants": []
+        },
+        {
+          "id": "catch.3",
+          "question": "你想先看看收获吗？",
+          "answer": "我想先看看背包。",
+          "variants": []
+        }
+      ],
+      "scenario": "我想和你一起探索营地。请说出想去哪里，解释为什么，再邀请我同行。",
+      "goals": [
+        {
+          "id": "place",
+          "text": "提出一个想去的地点",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "说明去那里的原因",
+          "weight": 40
+        },
+        {
+          "id": "invite",
+          "text": "邀请对方一起前往",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "patience",
+      "title": "等待与鼓励",
+      "events": [
+        "fish",
+        "battle-end"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "patience.1",
+          "question": "我们再试一次好吗？",
+          "answer": "好的，不要放弃。",
+          "variants": []
+        },
+        {
+          "id": "patience.2",
+          "question": "你需要一点时间吗？",
+          "answer": "请等一下。",
+          "variants": []
+        },
+        {
+          "id": "patience.3",
+          "question": "你愿意继续吗？",
+          "answer": "我愿意继续尝试。",
+          "variants": []
+        }
+      ],
+      "scenario": "我们来讨论下一场战斗。请提出先做什么，解释原因，再问我是否同意。这里只讨论，不会自动出牌。",
+      "goals": [
+        {
+          "id": "plan",
+          "text": "提出具体战术行动",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释行动的原因",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问伙伴是否同意",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "prepare",
+      "title": "战前准备",
+      "events": [
+        "battle-start"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "prepare.1",
+          "question": "你准备开始了吗？",
+          "answer": "是的，我们开始吧。",
+          "variants": []
+        },
+        {
+          "id": "prepare.2",
+          "question": "我们先做什么？",
+          "answer": "我们先看看卡牌。",
+          "variants": []
+        },
+        {
+          "id": "prepare.3",
+          "question": "你需要更多时间吗？",
+          "answer": "我需要一点时间。",
+          "variants": []
+        }
+      ],
+      "scenario": "我们来讨论下一场战斗。请提出先做什么，解释原因，再问我是否同意。这里只讨论，不会自动出牌。",
+      "goals": [
+        {
+          "id": "plan",
+          "text": "提出具体战术行动",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释行动的原因",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问伙伴是否同意",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "protect",
+      "title": "保护伙伴",
+      "events": [
+        "battle-decision",
+        "battle-start"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "protect.1",
+          "question": "你希望我怎么帮你？",
+          "answer": "请保护我。",
+          "variants": []
+        },
+        {
+          "id": "protect.2",
+          "question": "我们需要小心吗？",
+          "answer": "是的，我们要小心。",
+          "variants": []
+        },
+        {
+          "id": "protect.3",
+          "question": "你会帮我吗？",
+          "answer": "我会帮助你。",
+          "variants": []
+        }
+      ],
+      "scenario": "我们来讨论下一场战斗。请提出先做什么，解释原因，再问我是否同意。这里只讨论，不会自动出牌。",
+      "goals": [
+        {
+          "id": "plan",
+          "text": "提出具体战术行动",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释行动的原因",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问伙伴是否同意",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "strategy",
+      "title": "讨论策略",
+      "events": [
+        "battle-decision"
+      ],
+      "requiresItem": false,
+      "tier": "intermediate",
+      "pairs": [
+        {
+          "id": "strategy.1",
+          "question": "你想先做什么？",
+          "answer": "我想先治疗。",
+          "variants": []
+        },
+        {
+          "id": "strategy.2",
+          "question": "我们要保存魔力吗？",
+          "answer": "是的，先保存魔力。",
+          "variants": []
+        },
+        {
+          "id": "strategy.3",
+          "question": "现在进攻还是等待？",
+          "answer": "我们先等一等。",
+          "variants": []
+        }
+      ],
+      "scenario": "我们来讨论下一场战斗。请提出先做什么，解释原因，再问我是否同意。这里只讨论，不会自动出牌。",
+      "goals": [
+        {
+          "id": "plan",
+          "text": "提出具体战术行动",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释行动的原因",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问伙伴是否同意",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "feelings",
+      "title": "关心伙伴",
+      "events": [
+        "battle-end",
+        "npc"
+      ],
+      "requiresItem": false,
+      "tier": "beginner",
+      "pairs": [
+        {
+          "id": "feelings.1",
+          "question": "你还好吗？",
+          "answer": "我还好，谢谢关心。",
+          "variants": []
+        },
+        {
+          "id": "feelings.2",
+          "question": "你累了吗？",
+          "answer": "我想休息一下。",
+          "variants": []
+        },
+        {
+          "id": "feelings.3",
+          "question": "你现在感觉怎么样？",
+          "answer": "我觉得好多了。",
+          "variants": []
+        }
+      ],
+      "scenario": "我们来讨论下一场战斗。请提出先做什么，解释原因，再问我是否同意。这里只讨论，不会自动出牌。",
+      "goals": [
+        {
+          "id": "plan",
+          "text": "提出具体战术行动",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释行动的原因",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问伙伴是否同意",
+          "weight": 30
+        }
+      ]
+    },
+    {
+      "id": "plans",
+      "title": "回顾与计划",
+      "events": [
+        "battle-end",
+        "item-gained",
+        "npc"
+      ],
+      "requiresItem": false,
+      "tier": "intermediate",
+      "pairs": [
+        {
+          "id": "plans.1",
+          "question": "接下来想做什么？",
+          "answer": "我想继续探索。",
+          "variants": []
+        },
+        {
+          "id": "plans.2",
+          "question": "今天学到什么了？",
+          "answer": "我学会了请求帮助。",
+          "variants": []
+        },
+        {
+          "id": "plans.3",
+          "question": "你想分享今天的经历吗？",
+          "answer": "我想给你讲个故事。",
+          "variants": []
+        }
+      ],
+      "scenario": "我们来讨论下一场战斗。请提出先做什么，解释原因，再问我是否同意。这里只讨论，不会自动出牌。",
+      "goals": [
+        {
+          "id": "plan",
+          "text": "提出具体战术行动",
+          "weight": 30
+        },
+        {
+          "id": "reason",
+          "text": "解释行动的原因",
+          "weight": 40
+        },
+        {
+          "id": "confirm",
+          "text": "询问伙伴是否同意",
+          "weight": 30
+        }
+      ]
+    }
+  ],
+  "npcs": {
+    "camp:0:36200": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:1:36201": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:2:36202": [
+      "greeting",
+      "feelings",
+      "help"
+    ],
+    "camp:3:36203": [
+      "choice",
+      "equipment",
+      "preference"
+    ],
+    "camp:4:36204": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:5:36205": [
+      "location",
+      "directions",
+      "explore"
+    ],
+    "camp:6:36206": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:7:36207": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:8:36208": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:9:36209": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:10:36210": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:11:36211": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:12:36212": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:13:36213": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:14:36214": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:15:36215": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:16:36217": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:17:36218": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:18:36219": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:19:36220": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:20:36221": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:21:36222": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:22:36223": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:23:36224": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:24:36225": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:25:36227": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ],
+    "camp:26:36228": [
+      "greeting",
+      "introduction",
+      "help",
+      "thanks",
+      "plans"
+    ]
+  },
+  "locations": {
+    "academy": [
+      "location",
+      "directions",
+      "explore"
+    ],
+    "gate": [
+      "location",
+      "directions",
+      "explore"
+    ]
+  },
+  "vocabulary": {
+    "hat": {
+      "zh-CN": {
+        "item": "一顶帽子",
+        "measure": "顶"
+      },
+      "en": {
+        "item": "a hat"
+      }
+    },
+    "wand": {
+      "zh-CN": {
+        "item": "一根法杖",
+        "measure": "根"
+      },
+      "en": {
+        "item": "a wand"
+      }
+    },
+    "fish": {
+      "zh-CN": {
+        "item": "一条鱼",
+        "measure": "条"
+      },
+      "en": {
+        "item": "a fish"
+      }
+    },
+    "item": {
+      "zh-CN": {
+        "item": "一件物品",
+        "measure": "件"
+      },
+      "en": {
+        "item": "an item"
+      }
+    },
+    "robe": {
+      "zh-CN": {
+        "item": "一件法袍",
+        "measure": "件"
+      },
+      "en": {
+        "item": "a robe"
+      }
+    },
+    "boots": {
+      "zh-CN": {
+        "item": "一双靴子",
+        "measure": "双"
+      },
+      "en": {
+        "item": "a pair of boots"
+      }
+    },
+    "bag": {
+      "zh-CN": {
+        "item": "一个卡包",
+        "measure": "个"
+      },
+      "en": {
+        "item": "a card bag"
+      }
+    },
+    "food": {
+      "zh-CN": {
+        "item": "一份宠物食物",
+        "measure": "份"
+      },
+      "en": {
+        "item": "some pet food"
+      }
+    },
+    "egg": {
+      "zh-CN": {
+        "item": "一颗蛋",
+        "measure": "颗"
+      },
+      "en": {
+        "item": "an egg"
+      }
+    },
+    "card": {
+      "zh-CN": {
+        "item": "一张卡牌",
+        "measure": "张"
+      },
+      "en": {
+        "item": "a card"
+      }
+    },
+    "net": {
+      "zh-CN": {
+        "item": "一张渔网",
+        "measure": "张"
+      },
+      "en": {
+        "item": "a fishing net"
+      }
+    },
+    "bubble": {
+      "zh-CN": {
+        "item": "一个水泡",
+        "measure": "个"
+      },
+      "en": {
+        "item": "a bubble"
+      }
+    },
+    "pearl": {
+      "zh-CN": {
+        "item": "一颗魔珠",
+        "measure": "颗"
+      },
+      "en": {
+        "item": "a magic pearl"
+      }
+    }
+  },
+  "vocabularyBindings": {
+    "slots": {
+      "2": "hat",
+      "5": "robe",
+      "7": "boots",
+      "11": "wand",
+      "24": "bag"
+    },
+    "kinds": {
+      "18": "card"
+    },
+    "items": {
+      "17109": "fish",
+      "17111": "fish",
+      "17113": "net",
+      "17114": "bubble",
+      "17172": "food",
+      "17307": "egg",
+      "17346": "net",
+      "17347": "net",
+      "17348": "net",
+      "17349": "net",
+      "17465": "net",
+      "17466": "net",
+      "17467": "net",
+      "17487": "pearl",
+      "990001": "food"
+    }
+  }
+}

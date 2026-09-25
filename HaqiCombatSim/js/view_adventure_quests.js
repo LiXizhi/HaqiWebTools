@@ -2,8 +2,23 @@ import {QUEST_REGIONS,defaultJournalRegion,journalQuestStatus,filterJournalQuest
 import {catalogAcceptBlock,catalogGoalRows,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import { tr, fill, setText } from './locale_runtime.js';
 import {currentQuest,questState,questReady,questProgress,rewardsFor,catalogStatSnapshot} from './adventure_core.js';
-import {rewardLabel} from './adventure_rewards_core.js';
 import {ItemDetails} from './view_adventure_item_details.js';
+
+export function rewardChip(content, reward, { el, button, onClick, className = 'dialogue-reward' } = {}) {
+    const node = onClick ? button('', onClick, className) : el('span', className);
+    const petName = reward.kind === 'pet' ? content.pets?.[reward.petId]?.name : '';
+    const name = petName || content.items?.[reward.id]?.name || reward.name || '';
+    setText(node, petName ? '宠物·{name} × {count}' : '{name} × {count}', { name, count: reward.count });
+    return node;
+}
+function rewardGroupCaption(group, el) {
+    const optional = group.choice !== '-1' && Number(group.choice) > 0;
+    const node = el('p', 'muted');
+    const kind = optional ? '可选奖励' : '固定奖励';
+    if (group.schoolFilter) setText(node, '{kind} · 按学系选择', { kind });
+    else setText(node, kind);
+    return node;
+}
 
 // Layout reference: Aries/Quest/QuestListPage.html and QuestDetailFramePage.html.
 export function translatedGoal(goal) {
@@ -61,8 +76,8 @@ export function renderQuestJournal(body,model,cb,ui) {
         const rewards=rewardsFor(save,c,q);
         detail.append(section(state.claimed?'已获得奖励':'任务奖励',el('div','journal-rewards',...rewards.map(reward=>{
             const item=c.items[reward.id];
-            if(!item||reward.kind==='pet'||reward.id===113)return el('span','journal-reward',rewardLabel(c,reward));
-            const inspect=button(rewardLabel(c,reward),()=>inspector.show(item,{trigger:inspect,source:q.title}),'journal-reward item-inspect-button');
+            if(!item||reward.kind==='pet'||reward.id===113)return rewardChip(c,reward,{el,className:'journal-reward'});
+            const inspect=rewardChip(c,reward,{el,button,onClick:()=>inspector.show(item,{trigger:inspect,source:q.title}),className:'journal-reward item-inspect-button'});
             inspect.setAttribute('aria-haspopup','dialog');
             inspect.setAttribute('aria-label',fill('查看{name}详情',{name:item.name}).text);
             return inspect;
@@ -95,10 +110,10 @@ export function renderQuestJournal(body,model,cb,ui) {
             })));
             if(block&&label(q)==='未开启')detail.append(section('接取条件',el('p','',block)));
             const rewardQuest=runtime;
-            detail.append(section(questState(save,q.id).claimed?'已获得奖励':'任务奖励',...(rewardQuest.rewards.length?rewardQuest.rewards.map(group=>el('div','journal-reward-group',el('p','muted',`${group.choice>0?'可选奖励':'固定奖励'}${group.schoolFilter?' · 按学系选择':''}`),el('div','journal-rewards',...(rewardsForSafe(group)).map(r=>{
-                const item=c.items[r.id],text=r.kind==='pet'?`宠物奖励 × ${r.count}`:`${item?.name||r.name||r.id} × ${r.count}`;
-                if(!item||r.id===113||r.kind==='pet')return el('span','journal-reward',text);
-                const inspect=button(text,()=>inspector.show(item,{trigger:inspect,source:q.title}),'journal-reward item-inspect-button');
+            detail.append(section(questState(save,q.id).claimed?'已获得奖励':'任务奖励',...(rewardQuest.rewards.length?rewardQuest.rewards.map(group=>el('div','journal-reward-group',rewardGroupCaption(group,el),el('div','journal-rewards',...(rewardsForSafe(group)).map(r=>{
+                const item=c.items[r.id];
+                if(!item||r.id===113||r.kind==='pet')return rewardChip(c,r,{el,className:'journal-reward'});
+                const inspect=rewardChip(c,r,{el,button,onClick:()=>inspector.show(item,{trigger:inspect,source:q.title}),className:'journal-reward item-inspect-button'});
                 inspect.setAttribute('aria-haspopup','dialog');inspect.setAttribute('aria-label',fill('查看{name}详情',{name:item.name}).text);return inspect;
             })))):[el('p','','无物品奖励')])));
             const footer=el('footer','journal-footer');
@@ -117,7 +132,7 @@ export function renderQuestJournal(body,model,cb,ui) {
             return button(p.title,()=>{filters.region=target.region;filters.status='';region.value=target.region;status.value='';selectedId=target.id;page=Math.floor(filterJournalQuests(rows,filters,save,c).findIndex(q=>q.id===target.id)/pageSize);renderList();},'journal-prerequisite');
         })));
         if(q.requirements.length||q.validDate)detail.append(section('原版接取条件',...q.requirements.map(r=>el('p','',`${r.name}：${r.min||'0'}${r.max&&r.max!=='-1'?` ～ ${r.max}`:''}`)),...(q.validDate?[el('p','',q.validDate)]:[])));
-        detail.append(section('任务奖励',...(q.rewards.length?q.rewards.map(group=>el('div','journal-reward-group',el('p','muted',`${group.choice==='-1'?'固定奖励':'可选奖励'}${group.schoolFilter?' · 按学系选择':''}`),el('div','journal-rewards',...group.items.map(r=>{const item=c.items[r.id],label=`${item?.name||r.name} × ${r.count}`;if(!item||r.id===113)return el('span','journal-reward',label);const inspect=button(label,()=>inspector.show(item,{trigger:inspect,source:q.title}),'journal-reward item-inspect-button');inspect.setAttribute('aria-haspopup','dialog');inspect.setAttribute('aria-label',fill('查看{name}详情',{name:item.name}).text);return inspect;})))):[el('p','','无物品奖励')])));
+        detail.append(section('任务奖励',...(q.rewards.length?q.rewards.map(group=>el('div','journal-reward-group',rewardGroupCaption(group,el),el('div','journal-rewards',...group.items.map(r=>{const item=c.items[r.id];if(!item||r.id===113)return rewardChip(c,r,{el,className:'journal-reward'});const inspect=rewardChip(c,r,{el,button,onClick:()=>inspector.show(item,{trigger:inspect,source:q.title}),className:'journal-reward item-inspect-button'});inspect.setAttribute('aria-haspopup','dialog');inspect.setAttribute('aria-label',fill('查看{name}详情',{name:item.name}).text);return inspect;})))):[el('p','','无物品奖励')])));
         detail.append(el('footer','journal-footer',el('p','',`任务编号 ${q.id} · 开放后可接取`)));detail.scrollTop=0;
     }
     function renderList(){
@@ -142,7 +157,7 @@ export function renderQuestJournal(body,model,cb,ui) {
         }
         const previous=button('上一页',()=>{page--;renderList();},'secondary'),next=button('下一页',()=>{page++;renderList();},'secondary');
         previous.disabled=page===0;next.disabled=page===pages-1;
-        pager.append(previous,el('span','',`${page+1} / ${pages}`),next);
+        const pageCount=el('span','journal-page-count');setText(pageCount,'{page} / {pages}',{page:page+1,pages});pager.append(previous,pageCount,next);
         const visible=filtered.slice(page*pageSize,(page+1)*pageSize);
         const initial=visible.find(q=>q.id===Number(selectedId))||visible[0];
         if(initial)select(initial);else{list.append(el('p','muted','没有符合条件的任务'));detail.replaceChildren(el('p','muted','请调整岛屿或任务状态。'));delete detail.dataset.questId;}

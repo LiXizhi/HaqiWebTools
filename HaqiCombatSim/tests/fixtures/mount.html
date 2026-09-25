@@ -1,0 +1,48 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>坐骑隔离验收</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_shop.css">
+<style>#stage{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:8px}#stage canvas{width:100%;height:280px;background:#9ec8c0;border-radius:12px}#tools{display:flex;gap:8px;padding:0 8px}#status{padding:8px}</style>
+<body class="haqi-app"><p id="status" role="status">正在加载。测试角色不读写存档。</p><div id="tools"><button id="open-shop" type="button">商城</button><button id="open-bag" type="button">背包</button><button id="show-world" type="button">地图</button><button id="start-battle" type="button">战斗</button></div><div id="stage"><canvas id="world" width="640" height="360"></canvas><canvas id="battle" width="640" height="280" hidden></canvas></div><div id="root"></div><div id="toast" role="status"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import * as A from '../../js/adventure_core.js';
+import {createWorld} from '../../js/adventure_world_core.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {restorePveBattle} from '../../js/combat_pve_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+// In-memory fixture: never reads or writes the player's local or cloud save.
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources();
+const save=A.createAdventure(assets.content,{name:'坐骑验收',school:'fire'});
+save.inventory[984]=500;
+const model={assets,save,shopView:{category:'mount'},equipmentView:{tab:'gear',slot:'mounts',page:0,query:'',item:null,guid:null,statsOpen:true}};
+const root=document.querySelector('#root'),status=document.querySelector('#status'),worldCanvas=document.querySelector('#world'),battleCanvas=document.querySelector('#battle');
+const renderer=createRenderer(worldCanvas,assets);
+const world=createWorld(save.zone,assets.content,save);
+const cb={close:()=>paint('equipment'),action:value=>{try{A.applyAction(save,assets.content,value);paint(document.body.dataset.panel||'equipment');}catch(error){const toast=document.querySelector('#toast');toast.textContent=error.message;toast.classList.add('visible');}},panel:kind=>{if(kind==='shop'||kind==='equipment')paint(kind);},encounter:()=>{}};
+function hp(){return A.playerSpec(save,assets.content).stats.hpFlat;}
+function paint(kind){
+    document.body.dataset.panel=kind;
+    renderPanel(root,kind,model,cb);
+    const riding=save.mountId?assets.content.items[save.mountId]?.name:'未骑乘';
+    status.textContent=`魔豆 ${save.inventory[984]||0} · ${riding} · 生命平坦 ${hp()}。测试角色不读写存档。`;
+    draw();
+}
+function draw(){
+    renderer.render(world,save,performance.now());
+    battleCanvas.hidden=!save.pendingEncounter;
+    if(save.pendingEncounter){
+        const battle=restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);
+        renderer.renderBattle(battleCanvas,battle,save,performance.now(),null);
+    }
+}
+document.querySelector('#open-shop').onclick=()=>paint('shop');
+document.querySelector('#open-bag').onclick=()=>paint('equipment');
+document.querySelector('#show-world').onclick=()=>{root.replaceChildren();draw();};
+document.querySelector('#start-battle').onclick=()=>{
+    if(save.pendingEncounter){status.textContent='战斗已经开始。';return;}
+    const encounter=assets.content.encounters.find(row=>row.zone===save.zone&&!row.blocked?.length);
+    try{A.beginEncounter(save,assets.content,encounter.id);draw();status.textContent=`战斗中 · ${assets.content.items[save.mountId]?.name||'未骑乘'} · 生命平坦 ${hp()}`;}
+    catch(error){status.textContent=error.message;}
+};
+paint('shop');
+window.__mountFixture={save,assets,paint,draw,hp};
+</script></body></html>

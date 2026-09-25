@@ -13,6 +13,7 @@
       {"label":"全部"},{"label":"风暴系","school":"storm"},{"label":"烈火系","school":"fire"},
       {"label":"寒冰系","school":"ice"},{"label":"生命系","school":"life"},{"label":"死亡系","school":"death"},{"label":"通用","school":"all"}
     ]},
+    {"id":"mount","label":"坐骑","kind":"mount","subcategories":[{"label":"全部"}]},
     {"id":"pet","label":"宠物","kind":"pet","subcategories":[
       {"label":"全部"},{"label":"风暴系","school":"storm"},{"label":"烈火系","school":"fire"},
       {"label":"寒冰系","school":"ice"},{"label":"生命系","school":"life"},{"label":"死亡系","school":"death"}

@@ -55,7 +55,7 @@ node scripts/diff_locale.mjs data/adventure/locale/en.txt data/adventure/locale/
 
 游戏启动时只请求当前需要的语言。界面语言是中文时不下载词典。改成 English 就下载 `en.txt`。语言学习打开后，再下载母语和目标语言里还没有的文件。已经读过的文件不再请求。文件不存在时该语言继续显示中文。
 
-语言学习关闭时，显示语言是存档的 `locale`。打开后，画面显示 `languageLearning.target`，母语只用于对照，不改界面。
+显示语言始终是存档的 `locale`，与学习开关独立。教学句子使用 `languageLearning.target`，教学解释使用 `languageLearning.native`。教学资源独立存放于 `learning.<locale>.txt`，经 `renderLearningTemplate` 严格查目标语言后再填命名占位符；缺内容时禁用课程，不使用普通UI的中文回退。
 
 存档默认值在 `adventure_core.js`：`locale: 'zh-CN'`，`languageLearning: { enabled: false, native: 'zh-CN', target: 'en' }`。未知语言 id 会在 `normalizeLocaleSave` 里收回这些默认值。母语和目标语言相同则把目标改成另一种。
 
@@ -86,3 +86,7 @@ node scripts/scan_locale.mjs
 ## 测试
 
 `tests/locale_core.test.mjs`：缺译文回退中文、最长 `|` 分隔、重复键保留第一次、对齐差异、语言对、存档默认值。`tests/locale_scan.test.mjs`：字符串提取、JSON 字段、缺句与残留键。
+
+## 首屏启动顺序
+
+`adventure_boot.js` 在加载游戏控制器和配置前，从上次账号活动角色、访客活动角色或访客旧存档仅读取语言偏好，优先加载所需词典。词典完成前加载卡片隐藏且无文字；完成后显示本地化 Logo 名称、Loading 与阶段进度，再启动游戏。中文无需请求词典；缺失词典沿用中文回退。该读取不代替后续存档校验，也不修改存档。

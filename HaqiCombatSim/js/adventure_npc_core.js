@@ -1,4 +1,5 @@
 import {trainingPoints} from './adventure_learning_core.js';
+import {mountDirectSale} from './adventure_mounts_core.js';
 
 const schools={fire:986,ice:987,storm:988,life:990,death:991};
 export function npcItemLimits(item) {
@@ -51,6 +52,17 @@ function checkNpcOffer(save,content,offer,access) {
     if(offer.kind==='mentor'&&save.cards[key])return deny('已学会');
     if(offer.type==='optionskill')return deny(offer.tips||'请前往指定导师学习');
     if(offer.kind==='shop'&&(offer.npcId<=0||offer.platform||offer.timeRange||offer.dailyLimit>=0))return deny('原服活动或限购条件尚未接入');
+    const direct=mountDirectSale(content,offer);
+    if(direct){
+        if(direct.row.vip&&(access.keepworkVip!==true||!Number.isFinite(access.now)||Number.isFinite(Date.parse(access.expiresAt))&&Date.parse(access.expiresAt)<=access.now))return deny('该商品仅限有效会员购买');
+        const limits=npcItemLimits(content.npcCatalog.items[offer.itemId]);
+        if(limits&&(!Number.isSafeInteger(limits.maxCount)||limits.maxCount<=0))return deny('物品持有上限资料无效');
+        if(limits&&(save.inventory[offer.itemId]||0)+1>limits.maxCount)return deny(`最多持有${limits.maxCount}件`);
+        const price=`${direct.price.amount}${direct.price.currency===100?'奇豆':'魔豆'}`;
+        const costs=[[direct.price.currency,direct.price.amount]];
+        if((save.inventory[direct.price.currency]||0)<direct.price.amount)return {...deny(`需要${price}`),price,costs,reward:{gsid:offer.itemId,p:1000,cnt:1}};
+        return {allowed:true,reason:price,price,costs,reward:{gsid:offer.itemId,p:1000,cnt:1}};
+    }
     const own=offer.mentorClass===schools[save.school];
     const exchangeId=offer.kind==='mentor'?Number(own?offer.exID:offer.other_exID):offer.exchangeId;
     const exchange=content.npcCatalog.exchanges[exchangeId];
@@ -114,9 +126,9 @@ export function purchaseNpcOffer(save,content,action,access={}) {
     const offer=npcOffers(content,npc).find(r=>r.id===action.offerId);
     if(!offer)throw Error('商品或课程不存在');
     const status=npcOfferStatus(save,content,offer,access);
-    const waived=action.paidByTest&&!status.allowed&&String(status.reason||'').startsWith('需要');
-    if(!status.allowed&&!waived)throw Error(status.reason);
-    if(!action.paidByTest)for(const [id,count] of status.costs){
+    if(action.paidByTest)throw Error('语言课程仅发放限额奖励，请使用货币购买');
+    if(!status.allowed)throw Error(status.reason);
+    for(const [id,count] of status.costs){
         if(id===22000)save.trainingPointsSpent=(save.trainingPointsSpent||0)+count;
         else save.inventory[id]-=count;
     }

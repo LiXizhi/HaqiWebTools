@@ -5,7 +5,7 @@ import {setText} from './locale_runtime.js';
 // One map window; controller determines the initial view for each entry point.
 export function renderMaps(root,world,model,cb,view='local'){
     if(view==='world')renderPanel(root,'map',model,cb);
-    else renderLocalMap(root,world,model.save,{close:cb.close,draw:cb.draw,teleport:cb.teleport});
+    else renderLocalMap(root,world,model.save,{close:cb.close,draw:cb.draw,teleport:cb.teleport,teleportToPosition:cb.teleportToPosition});
     const modal=root.querySelector('.modal'),header=modal.querySelector('.modal-header');
     modal.classList.add('compact-map-modal');
     header.querySelector('.eyebrow')?.remove();

@@ -15,6 +15,8 @@
   <link rel="stylesheet" href="css/adventure_shop.css">
 <link rel="stylesheet" href="css/adventure_gems.css">
   <link rel="stylesheet" href="css/adventure_fishing.css">
+  <link rel="stylesheet" href="css/adventure_loading.css">
+<link rel="stylesheet" href="css/language_adventure.css">
 </head>
 <body class="haqi-app">
   <main id="game" aria-label="魔法哈奇冒险">
@@ -22,10 +24,16 @@
     <div id="hud"></div>
     <div id="battle-layer"></div>
     <div id="overlay"></div>
-    <div id="entry"><div class="loading-card" aria-busy="true"><span class="sigil">✧</span><h1>魔法哈奇</h1><p id="load-status" role="status">正在准备你的魔法之旅…</p><progress id="load-progress" max="1" aria-label="正在准备游戏资源"></progress><p id="load-detail" class="muted" style="min-height:1.5em;font-variant-numeric:tabular-nums"></p></div></div>
+    <div id="entry"><section id="boot-loading" class="boot-loading" aria-busy="true" hidden>
+      <svg class="boot-emblem" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="35" fill="none" stroke="currentColor" opacity=".3"/><circle cx="40" cy="40" r="29" fill="none" stroke="currentColor" opacity=".5"/><path d="M40 13 47 33 67 40 47 47 40 67 33 47 13 40 33 33Z" fill="currentColor"/><path d="m40 29 11 11-11 11-11-11Z" fill="#315952"/></svg>
+      <h1 id="load-title"></h1><p id="load-caption" class="boot-caption"></p>
+      <p id="load-status" class="boot-status" role="status"></p>
+      <progress id="load-progress" max="1"></progress>
+      <p id="load-detail" class="boot-detail"></p>
+    </section></div>
     <div id="toast" role="status" aria-live="polite"></div>
   </main>
   <noscript>请开启 JavaScript 后开始冒险。</noscript>
-  <script type="module" src="js/adventure_app.js"></script>
+  <script type="module" src="js/adventure_boot.js"></script>
 </body>
 </html>

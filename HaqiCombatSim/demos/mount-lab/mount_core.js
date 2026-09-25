@@ -1,3 +1,4 @@
+import {mountLayout} from '../../js/mount_layout_core.js';
 // Pure 2D layout. Coordinates are fractions of a cell, not 3D attachment points.
 export const DIRECTIONS = ['down', 'left', 'right', 'up'];
 export const MODES = ['mounted', 'unmounted', 'transformed'];
@@ -36,23 +37,22 @@ export function validateCatalog(catalog) {
   return catalog;
 }
 
-export function resolvePose(mount, direction, {size = 280, mode = 'mounted', time = 0, moving = false, gender = 'male'} = {}) {
+export function resolvePose(mount, direction, {size = 100, mode = 'mounted', time = 0, moving = false, gender = 'male'} = {}) {
   if (!DIRECTIONS.includes(direction) || !MODES.includes(mode)) throw new Error('朝向或模式无效');
   finite(size, 'size');
   if (size <= 0) throw new Error('尺寸必须大于零');
   if (!['male','female'].includes(gender)) throw new Error('角色类型无效');
   const source = mount.directions[direction];
   const p = {...source, ...source.characters?.[gender]};
-  const lift = mode === 'unmounted' ? 0 : mount.lift;
-  const bob = mode === 'unmounted' ? 0 : Math.sin(time * (moving ? 9 : 2)) * (moving ? mount.bob : mount.bob * .25);
-  const x = -size / 2, y = -size * mount.ground + bob - lift;
-  const riderSize = mode === 'unmounted' ? size * .55 : size * p.scale;
-  const anchor = mode === 'unmounted' ? [.5, .96] : p.anchor;
-  const seat = mode === 'unmounted' ? [0, 0] : [x + p.seat[0] * size, y + p.seat[1] * size];
+  const bob = Math.sin(time * (moving ? 9 : 2)) * (moving ? mount.bob : mount.bob * .25);
+  const layout = mountLayout(mount, p, mode === 'transformed' ? size * p.scale : size, bob, {gender, limitSize: mode === 'mounted'});
+  if (mode === 'unmounted') {
+    layout.seat = [0, 0];
+    layout.rider = {x: -size * .5, y: -size * .96, w: size, h: size};
+  }
   const rider = {art: (gender === 'female' ? 'female-' : '') + (mode === 'unmounted' ? 'standing' : p.riderArt),
-    cell: mode === 'unmounted' ? DIRECTIONS.indexOf(direction) : p.riderCell,
-    x: seat[0] - anchor[0] * riderSize, y: seat[1] - anchor[1] * riderSize, w: riderSize, h: riderSize};
-  return {mount: {art: mount.id, cell: p.cell, x, y, w: size, h: size}, rider, seat,
+    cell: mode === 'unmounted' ? DIRECTIONS.indexOf(direction) : p.riderCell, ...layout.rider};
+  return {mount: {art: mount.id, cell: p.cell, ...layout.mount}, rider, seat: layout.seat,
     foreground: p.foreground, showMount: mode !== 'unmounted', showRider: mode !== 'transformed'};
 }
 

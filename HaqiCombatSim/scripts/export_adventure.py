@@ -37,7 +37,7 @@ all_items = {}
 for row in mem('Database/globalstore.db.mem'):
     t=row[18]
     all_items[str(row[0])] = dict(id=row[0], name=t[0], description=t[1], icon=row[3], assetkey=row[12],
-        stats={str(t[i]):t[i+1] for i in range(2,22,2) if t[i]}, slot=t[22], kind=t[23], subtype=t[24], source='Database/globalstore.db.mem')
+        stats={str(t[i]):t[i+1] for i in range(2,22,2) if t[i]}, slot=t[22], kind=t[23], subtype=t[24], maxCount=t[31], maxCopiesInStack=t[37], source='Database/globalstore.db.mem')
 
 manifest = {}
 for line in read('assets_manifest.txt').decode().splitlines():
@@ -117,45 +117,10 @@ for q in xml('config/Aries/Quests/quest_list.xml'):
       'endDialog':dialog(q.find('EndDialog')),'source':'config/Aries/Quests/quest_list.xml'})
 quests.sort(key=lambda q:q['id'])
 
-# Preserve every original line alongside explicit browser/tutorial adaptations.
-dialogue_adaptations=[]
-replacements={
- (63000,'startDialog',4): '在游戏中，使用 WASD 或方向键移动；也可以点击或轻触地面自动寻路。触摸设备左下角有方向按钮。',
- (63000,'startDialog',5): '镜头会跟随你。点击居民走近交谈，或走到居民身边按 E；触摸设备也可以点下方的交谈按钮。',
- (63000,'startDialog',6): '右上角的小地图可以帮助你认识营地。点击任务中的“追踪目标”，就会沿小路走向下一位居民。',
- (63001,'startDialog',3): '想快速找到任务目标，就点击任务手记里的“追踪目标”。你会沿小路自动走过去，十分方便。',
- (63002,'startDialog',1): '战斗时，点击或轻触一张卡牌，再选择目标就可以施法。魔力不足时可以跳过回合；不需要的卡牌可以弃掉。',
- (63002,'endDialog',0): '刚才的战斗中，你是不是希望学会更多不同的卡牌技能？',
- (63007,'startDialog',3): '点击任务追踪，或打开背包里的“强化装备”，选择晶石法杖并点击“强化”。第一次需要70仙豆；强化任意一件支持强化的装备后，回来找我交任务吧！',
- (63008,'endDialog',1): '在原来的魔法世界里，一些怪物还可以捕捉成为战宠。这段旅程中，我们先来照顾从出奇蛋中获得的小伙伴。',
- (63008,'endDialog',2): '宠物会跟随你一起探索。这次先学习喂养，让它健康长大；捕捉和宠物战斗的课程留待以后的冒险。',
- (63008,'endDialog',3): '点击下方“宠物”，或按 P 打开宠物面板，查看它的信息。想让宠物快点长大，可以喂它吃一些战宠口粮。',
- (63009,'startDialog',1): '打开“宠物”面板，点击“喂养一包战宠口粮”。每包增加300经验，让你的小伙伴长大吧！',
- (63010,'endDialog',0): '每个系别的魔法都有不同的特点。认识五位导师后，也想想自己的学系擅长什么，怎样把学会的法术配合起来使用。',
- (63010,'endDialog',1): '随着等级提升，你会自动学会本系的新卡牌。打开“卡包”查看已学会的魔法，按加减按钮调整份数，再保存卡包。',
- (63012,'startDialog',1): '先在“背包”装备翡翠口袋，再打开“卡包”放入更强力的卡牌。可以使用“推荐配卡”，最后点击“保存卡包”。',
-}
-for q in quests:
-    original_description=q['description']
-    description=original_description.replace('传送到指定地点','沿小路前往指定地点').replace('完成任务后可以获得炫酷坐骑','任务奖励以对话中的奖励清单为准')
-    if description!=original_description:
-        q['originalDescription']=original_description
-        q['description']=description
-        dialogue_adaptations.append({'questId':q['id'],'section':'description','original':original_description,'replacement':description,'reason':'browser-controls-or-chapter-scope'})
-    for section in ['startDialog','endDialog']:
-        for index,line in enumerate(q[section]):
-            original=line['text'];replacement=replacements.get((q['id'],section,index))
-            if replacement:
-                line['originalText']=original;line['text']=replacement
-                dialogue_adaptations.append({'questId':q['id'],'section':section,'index':index,'original':original,'replacement':replacement,'reason':'browser-controls-or-chapter-scope'})
-            for button in line['buttons']:
-                label=button.get('label','');new=label
-                if any(word in label for word in ['跳转','传送到','视觉调整','开始演示','选修','训练点','超级战宠','只学会了一种']):
-                    new='我明白了，继续吧。'
-                if replacement and ('NEXT' in label or '移动' in label):new='我明白了。'
-                if new!=label:
-                    button['originalLabel']=label;button['label']=new
-                    dialogue_adaptations.append({'questId':q['id'],'section':section,'index':index,'original':label,'replacement':new,'reason':'browser-button'})
+# Keep original source dialogue in the adaptation audit; author runtime text separately.
+from lib.opening_dialogue import apply_opening_dialogue
+dialogue_adaptations = apply_opening_dialogue(
+    quests, json.loads((APP/'config/opening-dialogue.json').read_text(encoding='utf-8')))
 
 portraits={36200:'susu',36201:'moka',36202:'tutu',36203:'gucci',36204:'barth',36205:'faster',
  36206:'fire',36207:'ice',36208:'storm',36209:'life',36210:'death',36211:'qinglong',

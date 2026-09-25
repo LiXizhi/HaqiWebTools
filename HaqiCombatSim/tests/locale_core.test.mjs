@@ -31,7 +31,7 @@ test('locale lines split on the longest pipe run', () => {
     assert.equal(noted['下次再聊'], 'Talk to you later');
     assert.equal(noted['#甲'], 'Keep');
     assert.equal(stripLocaleComments('# js/view_adventure.js\n下次再聊||Talk to you later\n'), '下次再聊||Talk to you later\n');
-    assert.deepEqual(localeIdsToLoad({ locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en' } }), []);
+    assert.deepEqual(localeIdsToLoad({ locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false } }), []);
     assert.deepEqual(localeIdsToLoad({ locale: 'en', languageLearning: { enabled: false, native: 'zh-CN', target: 'ja' } }), ['en']);
     assert.deepEqual(localeIdsToLoad({ locale: 'zh-CN', languageLearning: { enabled: true, native: 'ja', target: 'en' } }), ['en', 'ja']);
 });
@@ -58,7 +58,7 @@ test('catalog speech codes and language pairs', () => {
 test('save locale defaults without a Chinese dictionary', () => {
     const save = normalizeLocaleSave({});
     assert.equal(save.locale, 'zh-CN');
-    assert.deepEqual(save.languageLearning, { enabled: false, native: 'zh-CN', target: 'en' });
+    assert.deepEqual(save.languageLearning, { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false });
     const same = normalizeLocaleSave({ locale: 'ja', languageLearning: { enabled: true, native: 'ko', target: 'ko' } });
     assert.equal(same.locale, 'ja');
     assert.equal(same.languageLearning.target, 'en');

@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 
-def prepare(path, names, columns, target_cell, kind=None):
+def prepare(path, names, columns, target_cell, kind=None, source_rects=None):
     image = Image.open(path).convert('RGBA')
     assert image.getchannel('A').getextrema()[0] == 0, 'Real alpha required'
     rows = (len(names)+columns-1)//columns
@@ -12,6 +12,8 @@ def prepare(path, names, columns, target_cell, kind=None):
     for i, name in enumerate(names):
         x, y = round(i%columns*image.width/columns), round(i//columns*image.height/rows)
         right, bottom = round((i%columns+1)*image.width/columns), round((i//columns+1)*image.height/rows)
+        if source_rects:
+            x, y, right, bottom = source_rects[i]
         cell = image.crop((x,y,right,bottom))
         box = cell.getchannel('A').point(lambda a: 255 if a>12 else 0).getbbox()
         assert box, name

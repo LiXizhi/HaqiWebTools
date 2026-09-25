@@ -11,6 +11,11 @@ export function renderLocalMap(root,world,save,callbacks){
     header.append(title,close);box.append(header);
     const body=document.createElement('div');body.className='modal-body';
     const canvas=document.createElement('canvas');canvas.width=560;canvas.height=Math.round(560*world.h/world.w);canvas.className='island-guide-map';canvas.setAttribute('aria-label',fill('{name}地形与当前位置',{name}).text);
+    canvas.style.cursor='pointer';
+    canvas.addEventListener('click',e=>{
+        const rect=canvas.getBoundingClientRect();
+        callbacks.teleportToPosition((e.clientX-rect.left)/rect.width*world.w,(e.clientY-rect.top)/rect.height*world.h);
+    });
     const list=document.createElement('div');list.className='island-guide-destinations';
     const map=document.createElement('div');map.className='island-guide-chart';map.append(canvas);
     for(const mark of world.landmarks){

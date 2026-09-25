@@ -8,6 +8,7 @@ import { validateRoles, emptyRoles, addRole } from '../js/adventure_roles_core.j
 import { SAVE_KEY, saveLocal, readLocal, replaceLocalWithBackup, readBackup } from '../js/adventure_assets.js';
 import { storeDebugEdit, restoreDebugBackup, hasDebugBackup } from '../js/adventure_debug.js';
 import { createCloudClient } from '../js/adventure_cloud.js';
+import {recordFishingCatch} from '../js/adventure_fishing_records_core.js';
 const load = n => JSON.parse(fs.readFileSync(new URL(`../data/adventure/${n}.json`, import.meta.url)));
 const content = load('chapter'), dataset = load('combat');
 const hero = name => createAdventure(content, { name });
@@ -84,6 +85,26 @@ function cloudMock() {
     return { sdk, store, remote, setReadFailure: v => readFailure = v, setSyncFailure: v => syncFailure = v,
         client: () => createCloudClient({ content, dataset, loadSDK: async () => sdk, uuid: () => id(++serial) }) };
 }
+test('fishing species rankings survive role reload and verified workspace file sync',async()=>{
+    const l=local(),s=l.make();s.open('alice');const save=hero('钓鱼者');
+    recordFishingCatch(save,[{id:17108,count:15},{id:17111,count:2}]);s.create(save);
+    const reopened=l.make();reopened.open('alice');
+    assert.deepEqual(reopened.catalog.roles[0].save.fishingRecords,save.fishingRecords);
+    const m=cloudMock(),c=m.client();await c.connect();const revision=await c.saveRoles(reopened.catalog,null);
+    const file=JSON.parse(m.remote.get(m.store.getRemotePagePath('fishing/records.json')));
+    assert.equal(file.revision,revision);assert.equal(file.owner,'alice');
+    assert.deepEqual(file.roles[0].records,save.fishingRecords);
+    assert.equal(file.roles[0].records.byFish[17108].length,10);
+    assert.deepEqual((await c.roles()).catalog.roles[0].save.fishingRecords,save.fishingRecords);
+});
+test('failed fishing file verification does not publish the role catalog',async()=>{
+    const m=cloudMock(),c=m.client();await c.connect();
+    const original=m.sdk.getFileByFullPath;
+    m.sdk.getFileByFullPath=async(path,...args)=>path.endsWith('fishing/records.json')?'{}':original(path,...args);
+    const save=hero('钓鱼者');recordFishingCatch(save,[{id:17108,count:1}]);
+    await assert.rejects(c.saveRoles(addRole(emptyRoles(),id(1),save,1),null),/核验/);
+    assert.equal(m.remote.has(m.store.getRemotePagePath('roles/index.json')),false);
+});
 test('cloud role catalog roundtrip, five roles and immutable history; logout invalidates access', async () => {
     const m = cloudMock(), c = m.client();await c.connect();assert.deepEqual((await c.roles()).catalog, emptyRoles());
     let catalog = emptyRoles();for (let n = 1; n <= 5; n++) catalog = addRole(catalog, id(n), hero(`角色${n}`), n);

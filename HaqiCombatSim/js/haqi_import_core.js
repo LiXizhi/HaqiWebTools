@@ -101,6 +101,8 @@ export function prepareOriginalImport(snapshot, content, dataset) {
         }
     }
     syncEquipmentInstances(save,content);
+    if(equipment>save.equipmentInstances.length)warn('重复的唯一装备已合并，保留最高强化，多余镶嵌宝石退回背包。');
+    equipment=save.equipmentInstances.length;
     const deck = [], limits = deckLimits(save,content);
     let total = 0;
     const ids = equippedBag ? deckIds(equippedBag.clientdata) : null;

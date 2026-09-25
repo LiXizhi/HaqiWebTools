@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "scope": "四岛单怪遭遇的Web改编；旧kids数值缺失，按同类直伤、费用档位与现有普通牌强度选择，不宣称还原旧数值。",
+  "cards": {
+    "Fire_SingleAttack_Level1": {"key": "Fire_Pet_SingleAttack_FireRockyOgresFocus", "reason": "同系单体直伤，1费130伤害，避开Crazy特殊高伤牌"},
+    "Fire_SingleAttack_Level3": {"key": "Fire_Pet_SingleAttack_FireRockyOgresDominance", "reason": "同系单体直伤，3费370伤害"},
+    "Fire_SingleAttack_Level5": {"key": "Fire_SingleAttack_Level5_VIP", "reason": "同系单体直伤，5费600伤害"},
+    "Fire_SingleAttack_Level6": {"key": "Fire_SingleAttack_Level5_VIP", "reason": "同系高阶单体直伤，采用5费600伤害；不使用2费120伤害的低等级变体"},
+    "Fire_AreaAttack_Level4": {"key": "Fire_AreaAttack_Level4_Binding", "reason": "同系群体直伤，4费305至345伤害，75命中"},
+    "22226": {"key": "Ice_SingleAttack_Level0_80_adv", "reason": "原物品对应Ice_SingleAttack_Level0_80，现有版本同为0费100命中80寒冰伤害"},
+    "Ice_Absorb_LevelX": {"key": "Life_Absorb_Level3", "reason": "用户授权近似替换为单体600点吸收盾，0费100命中、冷却3；采用生命系现有牌，不还原旧寒冰数值"},
+    "Ice_Rune_SingleFreeze": {"key": "Ice_SingleStun", "reason": "用户授权用寒冰单体眩晕近似冰封，0费70命中、冷却4；不保留受伤解冻、抗重复冰封及附加护盾"}
+  },
+  "targets": {
+    "noshield": {"target": "threat_highest", "reason": "用户授权将优先无盾敌人改为最高仇恨敌人，不再检查护盾"}
+  }
+}

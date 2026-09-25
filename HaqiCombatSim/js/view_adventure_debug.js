@@ -3,12 +3,24 @@ import { equipmentSummary } from './adventure_equipment_core.js';
 
 export function renderDebugEditor(body,{save,assets,debugBackup},cb,{el,button}) {
     const content=assets.content,fields=debugFields(save,content),patch={},inputs=new Map();
-    body.append(el('p','debug-intro','调试修改会保存到当前旅程。等级与经验联动；修改前自动保留一份备份，可恢复上一次修改前的状态。战斗中不可修改。'));
+    body.append(el('p','debug-intro','调试修改会保存到当前旅程。等级与经验联动；修改前自动保留一份备份，可恢复上一次修改前的状态。一键充值点击后立即生效，其余修改需点「保存并生效」。战斗中不可修改。'));
     const form=el('form','debug-form'),toolbar=el('div','debug-toolbar');
     const search=el('input');search.type='search';search.placeholder='搜索名称或物品编号';search.setAttribute('aria-label','搜索调试属性');
     const group=el('select');group.setAttribute('aria-label','属性分类');
     for(const name of ['全部',...new Set(fields.map(f=>f.group))]){const option=el('option','',name);option.value=name;group.append(option);}
     toolbar.append(search,group);form.append(toolbar);
+    const topup=el('div','debug-topup');
+    for(const id of ['inventory:100','inventory:984','inventory:17213']) {
+        const field=fields.find(row=>row.id===id);
+        if(!field)continue;
+        topup.append(button(`${field.label}充值到1000`,()=>{
+            // One click applies immediately: tops up to at least 1000 and saves, so the HUD updates without pressing 保存并生效.
+            const input=inputs.get(id),value=Math.max(Number(input.value)||0,1000);
+            input.value=String(value);patch[id]=value;paintPreview();
+            if(value>(save.inventory[id.slice(10)]||0))cb.applyDebug({[id]:value});
+        },'secondary debug-topup-button'));
+    }
+    form.append(topup);
     const list=el('div','debug-fields'),empty=el('p','muted','没有匹配的属性。');empty.hidden=true;
     for(const field of fields){
         const input=el('input');input.type='number';input.step='1';input.min=String(field.min);input.max=String(field.max);input.value=field.value;

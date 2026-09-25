@@ -1,0 +1,24 @@
+- main "魔法哈奇冒险" [ref=e2]:
+  - generic "魔法世界，点击地面移动，点击居民交谈" [active] [ref=e3]
+  - generic [ref=e16]:
+    - generic [ref=e17]:
+      - paragraph [ref=e18]: 魔法哈奇 · 第一章
+      - heading "魔法哈奇" [level=1] [ref=e19]
+      - heading "初心之旅" [level=2] [ref=e21]
+      - paragraph [ref=e22]: 选一门魔法，遇见你的伙伴。 从这里，开始一段新的旅程。
+      - button "登录 Keepwork" [ref=e23] [cursor=pointer]
+    - generic [ref=e24]:
+      - generic [ref=e25]:
+        - generic [ref=e26]: 01 起名字
+        - generic [ref=e28]: 02 选择抱抱龙
+        - generic [ref=e30]: 03 选择系别
+      - heading "你的冒险，从名字开始" [level=2] [ref=e31]
+      - paragraph [ref=e32]: 先选一个模样，再告诉我们你的名字。
+      - generic [ref=e33]:
+        - button "魔法少年" [pressed] [ref=e34] [cursor=pointer]
+        - button "魔法少女" [ref=e37] [cursor=pointer]
+      - generic [ref=e40]: 你的名字
+      - textbox "你的名字" [ref=e41]: 小哈奇
+      - button "下一步 · 选择抱抱龙" [ref=e42] [cursor=pointer]
+      - button "导入魔法哈奇角色" [ref=e43] [cursor=pointer]
+  - status

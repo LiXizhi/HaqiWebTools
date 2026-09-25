@@ -7,6 +7,11 @@ export function prepareQuestJournal(root) {
     const catalog=JSON.parse(fs.readFileSync(path.join(root,'data/adventure/quest-catalog.json'),'utf8'));
     const chapter=JSON.parse(fs.readFileSync(path.join(root,'data/adventure/chapter.json'),'utf8'));
     const payload=projectQuestJournal(catalog);
+    // The source catalog remains archival; teaching text follows the playable chapter.
+    for(const row of payload.quests){
+        const quest=chapter.quests.find(q=>q.id===row.id);
+        if(quest){row.title=quest.title;row.description=quest.description;}
+    }
     const runtime=projectQuestRuntime(catalog,chapter.quests.map(q=>q.id));
     fs.writeFileSync(path.join(root,'data/adventure/quest-journal.json'),JSON.stringify(payload,null,2)+'\n');
     fs.writeFileSync(path.join(root,'data/adventure/quest-runtime.json'),JSON.stringify(runtime,null,2)+'\n');

@@ -24,7 +24,7 @@ test('original numeric school IDs import all five supported schools after four b
             const before=structuredClone(raw);
             const {save}=prepareOriginalImport(raw,content,dataset);
             assert.equal(save.school,school);assert.equal(save.level,10);
-            assert.equal(save.inventory[1912],2);assert.deepEqual(raw,before);
+            assert.equal(save.inventory[1912],1);assert.deepEqual(raw,before);
             assert.deepEqual(parseSave(save,content),save);
         }
     }
@@ -33,13 +33,13 @@ test('original numeric school IDs import all five supported schools after four b
         assert.throws(()=>prepareOriginalImport(raw,content,dataset),/学系暂不支持/);
     }
 });
-test('pure import preserves per-GUID equipment upgrades, independent adventure and safe metadata',()=>{
+test('pure import merges unique equipment with highest upgrade, independent adventure and safe metadata',()=>{
     const raw=snapshot(),before=structuredClone(raw),c=structuredClone(content),d=structuredClone(dataset);
     const result=prepareOriginalImport(raw,c,d),s=result.save;
     assert.deepEqual(raw,before);assert.deepEqual(c,content);assert.deepEqual(d,dataset);
-    assert.equal(s.equipmentGuids[11],'equipment-88');assert.equal(s.equipmentInstances.length,2);
-    assert.deepEqual(s.equipmentInstances.map(row=>row.serverdata.addlel),[2,1]);
-    assert.equal(s.inventory[1912],2);assert.equal(s.inventory[100],undefined);
+    assert.equal(s.equipmentGuids[11],'equipment-88');assert.equal(s.equipmentInstances.length,1);
+    assert.deepEqual(s.equipmentInstances.map(row=>row.serverdata.addlel),[2]);
+    assert.equal(s.inventory[1912],1);assert.equal(s.inventory[100],undefined);
     assert.equal(s.level,10);assert.equal(s.pendingEncounter,null);assert.deepEqual(s.quests,{});
     assert.equal(s.encounterSerial,0);assert.ok(!JSON.stringify(result).includes('PRIVATE_'));
     assert.deepEqual(parseSave(s,c),s);assert.deepEqual(prepareOriginalImport(raw,c,d),result);
@@ -48,13 +48,13 @@ test('ignores out-of-scope inventory and warns on unknown, malformed, duplicate 
     const raw=snapshot();raw.inventory.push({bag:99,items:[item(100,1912,11)]});
     raw.inventory[1].items.push(item(88,1912,11),item(91,999999,1),item(92,1912,1,{copies:2}),item(93,1912,1,{serverdata:'{x=execute()}'}),item(94,1912,1,{serverdata:{addlel:999}}));
     const result=prepareOriginalImport(raw,content,dataset);
-    assert.equal(result.save.inventory[1912],2);assert.equal(result.summary.skipped,5);
+    assert.equal(result.save.inventory[1912],1);assert.equal(result.summary.skipped,5);
     assert.match(result.warnings.join('\n'),/范围外/);assert.match(result.warnings.join('\n'),/重复/);
 });
 test('wrong equipped position remains inventory; bag 1 position never means equipped',()=>{
     const raw=snapshot();raw.inventory[0].items[0].position=12;
     const {save}=prepareOriginalImport(raw,content,dataset);
-    assert.equal(save.equipment[11],undefined);assert.equal(save.inventory[1912],2);
+    assert.equal(save.equipment[11],undefined);assert.equal(save.inventory[1912],1);
 });
 test('recognized socket data survives and unverified gems skip whole equipment',()=>{
     const c=structuredClone(content);c.items[1912].stats[36]=2;c.items[26001]={id:26001,stats:{42:1}};

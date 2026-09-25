@@ -1,13 +1,14 @@
+import { setText } from './locale_runtime.js';
 import {ItemDetails} from './view_adventure_item_details.js';
 import {DRAGON_TOTEMS,dragonTotemStage,dragonTotemItemExperience} from './adventure_progression_bonuses_core.js';
-import {signedAttribute,visibleEquipmentSummary,progressionAttributes,equipmentSetDetails} from './adventure_equipment_core.js';
+import {signedAttribute,visibleEquipmentSummary,progressionAttributes,equipmentSetDetails,equipmentAttributes} from './adventure_equipment_core.js';
 import {runeStatus} from './adventure_runes_core.js';
 import { equipmentInstances, findEquipmentInstance } from './adventure_equipment_instances_core.js';
 import { equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
 import { upgradeLevels } from './adventure_upgrade_core.js';
 import { EQUIPMENT_SLOTS, previewEquipment } from './adventure_equipment_core.js';
 
-const FILTERS = [[0,'全部',[]],[2,'帽子',[2]],[5,'法袍',[5]],[7,'靴子',[7]],['weapons','武器',[10,11]],[24,'卡包',[24]],['apparel','衣饰',[6,8,9]],['accessories','饰品',[4,15,16,17]],['colorful','炫彩',[18,19,70,71]]];
+const FILTERS = [[0,'全部',[]],[2,'帽子',[2]],[5,'法袍',[5]],[7,'靴子',[7]],['weapons','武器',[10,11]],[24,'卡包',[24]],['apparel','衣饰',[6,8,9]],['accessories','饰品',[4,15,16,17]],['colorful','炫彩',[18,19,70,71]],['mounts','坐骑',['mount']]];
 
 const TRAVEL_FILTERS = [[0,'全部'],['supplies','消耗品'],['cards','卡牌'],['collection','收藏']];
 const travelCategory = item => item.kind===3?'supplies':item.kind===18?'cards':'collection';
@@ -18,6 +19,8 @@ export function renderEquipment(body,model,cb,ui) {
     const {el,button,art,tile,spellFace}=ui,{save,assets}=model,c=assets.content;
     const state=model.equipmentView,travel=state.tab==='all';
     const isGear=item=>item.kind===1||item.slot===24;
+    const isMountItem=item=>!!c.mountByItem?.[item.id]||(item.kind===2&&item.subtype===6)||(item.kind===10&&item.subtype===1);
+    const showingMounts=state.slot==='mounts'||state.slot==='mount';
     const owned=Object.values(c.items).filter(item=>(save.inventory[item.id]||0)>0&&!['100','113','17213'].includes(String(item.id)));
     const shell=el('div','equipment-layout'),character=el('section','equipment-character'),wardrobe=el('section','equipment-wardrobe');
     const tabs=el('div','equipment-tabs');
@@ -33,8 +36,9 @@ export function renderEquipment(body,model,cb,ui) {
     if(!travel){
         const slots=el('div','equipment-slots');
         for(const slot of EQUIPMENT_SLOTS) {
-            const item=c.items[save.equipment[slot.id]];
-            const b=button([el('span','equipment-slot-name',slot.name),item?art(assets,item.art,42,42):el('span','equipment-empty','＋'),el('span','equipment-slot-title',item?.name||'未装备')],()=>{state.tab='gear';state.slot=slot.id;state.page=0;state.item=item?.id||null;state.guid=save.equipmentGuids?.[slot.id]||null;const next=render();if(item)next.openDetail(item);},`equipment-slot ${state.slot===slot.id?'selected':''}`);
+            const item=slot.id==='mount'?c.items[save.mountId]:c.items[save.equipment[slot.id]];
+            // An equipped slot shows only the item art; the slot name is kept for empty slots.
+            const b=button([item?null:el('span','equipment-slot-name',slot.name),item?art(assets,item.art,42,42):el('span','equipment-empty','＋'),el('span','equipment-slot-title',item?.name||'未装备')],()=>{state.tab='gear';state.slot=slot.id==='mount'?'mounts':slot.id;state.page=0;state.item=item?.id||null;state.guid=slot.id==='mount'?null:save.equipmentGuids?.[slot.id]||null;const next=render();if(item)next.openDetail(item);},`equipment-slot ${state.slot===slot.id||(slot.id==='mount'&&state.slot==='mounts')?'selected':''}`);
             b.setAttribute('aria-label',`${slot.name}：${item?.name||'未装备'}，查看该部位`);slots.append(b);
         }
         character.append(slots);
@@ -43,7 +47,7 @@ export function renderEquipment(body,model,cb,ui) {
         statDetails.ontoggle=()=>{state.statsOpen=statDetails.open;};
         const stats=el('dl','equipment-summary');
         for(const row of visibleEquipmentSummary(save,c))stats.append(el('dt','',row.label),el('dd','',`${row.value}${row.unit}`));
-        statDetails.append(stats,el('p','muted','属性加成包含装备、强化和宝石；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。'));
+        statDetails.append(stats,el('p','muted','属性加成包含装备、强化、宝石和骑乘中的坐骑；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。'));
         character.append(statDetails);
         if(c.progressionBonuses){
             const current=DRAGON_TOTEMS.find(row=>(save.inventory[row.id]||0)>0);
@@ -74,7 +78,10 @@ export function renderEquipment(body,model,cb,ui) {
     shell.append(character,wardrobe);
     const header=body.closest('.modal').querySelector('.modal-header');
     header.querySelector('.equipment-wallet')?.remove();
-    header.insertBefore(el('div','equipment-wallet',el('span','',`仙豆 ${save.inventory[17213]||0}`),el('span','',`奇豆 ${save.inventory[100]||0}`)),header.querySelector('.close-button'));
+    const fairyBeans=save.inventory[17213]||0,qiBeans=save.inventory[100]||0;
+    const fairySpan=el('span',''),qiSpan=el('span','');
+    setText(fairySpan,'仙豆 {count}',{count:fairyBeans});setText(qiSpan,'奇豆 {count}',{count:qiBeans});
+    header.insertBefore(el('div','equipment-wallet',fairySpan,qiSpan),header.querySelector('.close-button'));
     const filters=el('div','equipment-filters');
     for(const [id,label,slots=[]] of travel?TRAVEL_FILTERS:FILTERS) {
         const b=button(label,()=>{state.slot=id;state.page=0;state.item=null;render();},`equipment-filter ${state.slot===id||slots.includes(state.slot)?'active':''}`);b.setAttribute('aria-pressed',String(state.slot===id||slots.includes(state.slot)));filters.append(b);
@@ -84,7 +91,7 @@ export function renderEquipment(body,model,cb,ui) {
     const inspector=new ItemDetails(body,model,ui);
     const {dialog,footer}=inspector;
     inspector.body.replaceWith(detail);inspector.body=detail;
-    function openDetail(item){paintDetail(item);inspector.open();}
+    function openDetail(item){cb.learningEvent?.('item-selected',{itemId:item.id});paintDetail(item);inspector.open();}
 
 
     function render(){
@@ -94,13 +101,13 @@ export function renderEquipment(body,model,cb,ui) {
         return next;
     }
     function paintList(){
-        const items=owned.filter(item=>(travel?!isGear(item):isGear(item))&&(!state.slot||(travel?travelCategory(item)===state.slot:(FILTERS.find(([id])=>id===state.slot)?.[2]||[state.slot]).includes(item.slot))));
+        const items=owned.filter(item=>showingMounts?isMountItem(item):(travel?!isGear(item):isGear(item))&&(!state.slot||(travel?travelCategory(item)===state.slot:(FILTERS.find(([id])=>id===state.slot)?.[2]||[state.slot]).includes(item.slot))));
         const pages=Math.max(1,Math.ceil(items.length/PAGE_SIZE));
         state.page=Math.max(0,Math.min(state.page||0,pages-1));
         grid.replaceChildren();pager.replaceChildren();
         if(!items.some(item=>item.id===state.item))state.item=items[0]?.id||null;
         for(const item of items.slice(state.page*PAGE_SIZE,(state.page+1)*PAGE_SIZE)) {
-            const equipped=Number(save.equipment[item.slot])===item.id;
+            const equipped=showingMounts?save.mountId===item.id:Number(save.equipment[item.slot])===item.id;
             const b=button([art(assets,item.art,52,52),el('span','equipment-item-name',item.name)],()=>{state.item=item.id;state.guid=null;for(const cell of grid.children){const selected=cell===b;cell.classList.toggle('selected',selected);cell.setAttribute('aria-pressed',String(selected));}openDetail(item);},`equipment-item ${equipped?'equipped':''} ${state.item===item.id?'selected':''}`);
             const quantity=save.inventory[item.id];
             if(!isGear(item)||quantity>1)b.append(el('span','equipment-quantity',String(quantity)));
@@ -116,15 +123,32 @@ export function renderEquipment(body,model,cb,ui) {
     }
     function paintDetail(item){
         detail.replaceChildren();footer.replaceChildren();if(!item){detail.append(el('p','muted','选择一件物品，查看属性、穿戴条件和获取途径。'));return;}
-        const instance=findEquipmentInstance(save,c,item.id,state.guid)||findEquipmentInstance(save,c,item.id);
-        const equipped=Number(save.equipment[item.slot])===item.id&&(!save.equipmentGuids?.[item.slot]||save.equipmentGuids[item.slot]===instance?.guid),gear=isGear(item),level=instance?.serverdata.addlel||0;
+        const mount=c.mountByItem?.[item.id];
+        const instance=mount?null:findEquipmentInstance(save,c,item.id,state.guid)||findEquipmentInstance(save,c,item.id);
+        const equipped=mount?save.mountId===item.id:Number(save.equipment[item.slot])===item.id&&(!save.equipmentGuids?.[item.slot]||save.equipmentGuids[item.slot]===instance?.guid),gear=isGear(item),level=instance?.serverdata.addlel||0;
         inspector.render(item,{owned:true,instanceGuid:instance?.guid});
         if(level)detail.append(el('p','muted',`强化 +${level}`));
         if(gear){
             const copies=equipmentInstances(save,c).rows.filter(row=>row.gsid===item.id);
             if(copies.length>1){const select=el('select','equipment-instance-select');select.setAttribute('aria-label','选择装备实例');copies.forEach((row,i)=>{const option=el('option','',`第 ${i+1} 件 · 强化 +${row.serverdata.addlel}${row.guid===save.equipmentGuids?.[item.slot]?' · 已装备':''}`);option.value=row.guid;select.append(option);});select.value=instance.guid;select.onchange=()=>{state.guid=select.value;paintDetail(item);};detail.append(select);}
         }
-        if(gear){
+        if(mount){
+            detail.append(el('p','muted',mount.art?.cdn?'骑乘后，这些属性加入角色战斗属性。':'这只坐骑还没有骑乘形象。'));
+            for(const row of equipmentAttributes({stats:mount.stats||{}},save,c))detail.append(el('p','',`${row.label} ${signedAttribute(row.value)}${row.unit}`));
+            const riding=save.mountId===item.id;
+            const action=riding?{type:'dismount'}:{type:'ride',itemId:item.id};
+            if(mount.art?.cdn&&!save.pendingEncounter){
+                const preview=previewEquipment(save,c,action),changes=preview.rows.filter(row=>row.delta);
+                if(changes.length){
+                    detail.append(el('p','equipment-compare-title',riding?'卸下后变化':'骑乘后变化'));
+                    for(const row of changes)detail.append(el('p',row.delta>0?'equipment-gain':'equipment-loss',`${row.label} ${row.delta>0?'+':''}${row.delta}${row.unit}`));
+                }
+            }
+            const ride=button(riding?'卸下':mount.art?.cdn?'骑上':'暂不可骑乘',()=>{dialog.close();cb.action(action);},riding?'secondary':'primary');
+            ride.disabled=!!save.pendingEncounter||!mount.art?.cdn;
+            footer.prepend(ride);
+            if(save.pendingEncounter)footer.append(el('span','muted','战斗中无法换坐骑'));
+        }else if(gear){
             const set=equipmentSetDetails(save,c,item.id);
             if(set){
                 detail.append(el('h4','',`套装 ${set.setId} · 已穿戴 ${set.count} 件`));

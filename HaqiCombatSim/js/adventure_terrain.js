@@ -83,11 +83,6 @@ export function paintTerrain(c, world) {
         wash.addColorStop(0, i % 3 ? '#d2db8c24' : '#42785320'); wash.addColorStop(1, '#8bb36b00');
         oval(c, x, y, radius, radius, wash);
     }
-    for (const tree of world.trees) {
-        const shade = c.createRadialGradient(tree.x, tree.y, 3, tree.x, tree.y, tree.size * .48);
-        shade.addColorStop(0, '#31583e25'); shade.addColorStop(1, '#31583e00');
-        oval(c, tree.x, tree.y, tree.size * .48, tree.size * .3, shade);
-    }
     for (const d of world.decorations) if (onIsland(d.x, d.y, 48)) {
         oval(c, d.x, d.y, d.size * 2, d.size, '#ccdb9230');
         if (d.kind < 2) {

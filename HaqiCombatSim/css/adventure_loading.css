@@ -1,0 +1,17 @@
+/* Startup only: keep the page free of text until the dictionary is ready. */
+#entry:has(.boot-loading){position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#426c62 0%,#224a4b 48%,#142e3b 100%)}
+.boot-loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,calc(100% - 40px));padding:36px 28px;text-align:center;color:#fff4d8}
+.boot-emblem{display:block;width:76px;height:76px;margin:0 auto 18px;color:#e4c784;filter:drop-shadow(0 0 20px #dfc87844)}
+.boot-loading h1{font-size:clamp(30px,7vw,42px);letter-spacing:.08em;line-height:1.3;text-shadow:0 4px 18px #071f3155}
+.boot-loading h1::after{content:"";display:block;width:100px;height:1px;margin:24px auto;background:linear-gradient(90deg,transparent,#d8bf7f,transparent)}
+.boot-caption{font-size:13px;letter-spacing:.14em;color:#edd9a5}
+.boot-status{min-height:3.6em;margin-top:18px;font-size:13px;color:#d2e0d5;overflow-wrap:anywhere}
+.boot-loading progress{display:block;appearance:none;width:100%;height:7px;margin:8px auto 12px;overflow:hidden;border:1px solid #d8c28a40;border-radius:99px;background:#102f3c80;accent-color:#d9be7c}
+.boot-loading progress::-webkit-progress-bar{background:#102f3c80;border-radius:99px}
+.boot-loading progress::-webkit-progress-value{background:linear-gradient(90deg,#739e85,#ead39a);border-radius:99px;transition:width .25s ease}
+.boot-loading progress::-moz-progress-bar{background:linear-gradient(90deg,#739e85,#ead39a);border-radius:99px}
+.boot-loading progress:indeterminate{background:linear-gradient(90deg,transparent,#e4c784,transparent) 0 0/40% 100% no-repeat,#102f3c80;animation:boot-progress 1.8s ease-in-out infinite alternate}
+.boot-loading progress:indeterminate::-webkit-progress-bar{background:transparent}
+.boot-detail{min-height:1.8em;font-size:11px;color:#acc5bb;font-variant-numeric:tabular-nums}
+@keyframes boot-progress{to{background-position:100% 0}}
+@media(prefers-reduced-motion:reduce){.boot-loading progress:indeterminate{animation:none;background-position:50% 0}.boot-loading progress::-webkit-progress-value{transition:none}}

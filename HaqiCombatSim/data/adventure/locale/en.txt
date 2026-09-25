@@ -324,6 +324,8 @@ AIChat 请求失败||AIChat request failed
 奇豆||Qi beans
 仙豆||Fairy beans
 魔豆||Magic beans
+奇豆 {count}||Qi beans: {count}
+仙豆 {count}||Fairy beans: {count}
 存档未保存||Progress not saved
 新的故事，在这里继续||A new story continues here
 在晨光中，发现魔法||Discover magic in the morning light
@@ -539,6 +541,8 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 副本中不会自动回血，进入后需用现有生命通关。||Health does not regenerate in dungeons; clear them with the health you have.
 返回探索||Back to exploring
 暂离副本||Leave dungeon
+正在探索：{name}||Exploring: {name}
+战斗奖励：{rewards}||Battle rewards: {rewards}
 经验||Experience
 探索中||Exploring
 已通关||Cleared
@@ -562,6 +566,8 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 收藏||Collection
 消耗品||Consumables
 角色装备||Character equipment
+坐骑||Mount
+骑上||Ride
 旅行背包||Travel bag
 强化装备||Upgrade equipment
 镶嵌宝石||Socket gems
@@ -778,6 +784,14 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 与任务居民交谈后即可交付。||Talk to the quest resident to turn it in.
 前置任务||Prerequisite quest
 接取条件||Accept requirements
+请先完成前置任务||Complete the prerequisite quest first
+已经接取||Already accepted
+已经完成||Already completed
+固定奖励||Fixed rewards
+可选奖励||Optional rewards
+{kind} · 按学系选择||{kind} · choose by school
+假日黄金飞马||Holiday Golden Pegasus
+{page} / {pages}||{page} / {pages}
 无物品奖励||No item rewards
 这个目标依赖尚未接入的原服功能。||This objective depends on an original-server feature not yet integrated.
 与任务居民交谈。||Talk to the quest resident.
@@ -795,6 +809,7 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 获得新装备||New equipment obtained
 已放入背包||Added to your bag
 稍后处理||Later
+稍后处理 · 下一件（{count}）||Later · next ({count})
 获得物品！||Items obtained!
 
 # js/view_adventure_roles.js
@@ -818,6 +833,11 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 # js/view_adventure_shop.js
 商品子分类||Item subcategories
 我的奇豆||My Qi beans
+我的魔豆||My Magic beans
+非卖品||Not for sale
+确认购买||Confirm purchase
+购买数量：{count}||Purchase quantity: {count}
+仍要购买将花费 {cost} 魔豆||Buying anyway costs {cost} magic beans
  / 件|| / each
 商品预览||Item preview
 输入商品名称||Enter item name
@@ -1787,6 +1807,21 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 导师让我学会调整自己的卡包，将强力的卡牌放入卡包中。||My mentor wants me to learn to adjust my deck and put powerful cards in it.
 最后的考核||The Final Exam
 （利用任务追踪系统）打败“魔法营地”中死亡侦察兵。||(Use quest tracking) defeat the Death Scout in the Magic Camp.
+# chapter.json adapted quest descriptions
+点击地面移动，点击居民交谈，开始营地里的第一课。||Click the ground to move, click residents to talk, and start your first lesson in camp.
+与苏苏、莫卡交谈，听听他们为什么学习魔法。||Talk with Susu and Moka, and hear why they study magic.
+击败烈火侦查兵，再向青龙回报。||Defeat the Fire Scout, then report back to Azure Dragon.
+击败寒冰侦查兵，再向青龙回报。||Defeat the Ice Scout, then report back to Azure Dragon.
+击败风暴侦察兵，再向青龙回报。||Defeat the Storm Scout, then report back to Azure Dragon.
+击败生命侦查兵，再去找古奇。||Defeat the Life Scout, then go find Goochi.
+去找青龙，领取新的法杖。||Go to Azure Dragon and claim your new wand.
+强化一件装备，再向青龙回报。||Upgrade a piece of equipment, then report back to Azure Dragon.
+打开出奇蛋，再与杰西卡交谈。||Open the Surprise Egg, then talk with Jessica.
+在宠物面板喂养一包战宠口粮。||Feed a pack of pet food in the pet panel.
+与五位魔法导师交谈，了解各系特色。||Talk with the five magic mentors to learn about each school's traits.
+与领地看守者交谈，了解考核对手。||Talk with the Territory Guardian to learn about your exam opponent.
+装备翡翠口袋，整理并保存卡包。||Equip the Emerald Pocket, organize and save your deck.
+击败死亡侦察兵，完成最终考核。||Defeat the Death Scout to complete the final exam.
 出发前往下一岛屿火鸟岛冒险。||Set off to adventure on the next island, Firebird Island.
 为了以后的出行做最好的准备，需要通过强化装备来提升自己的实力。||To be fully prepared for the journeys ahead, upgrade equipment to boost your strength.
 提升自己的实力||Boost Your Strength
@@ -2383,6 +2418,7 @@ fine！期待我出航的那一刻。||Fine! I cannot wait for the moment I set 
 生命 {hp} / {max}||HP {hp} / {max}
 {minutes} 分钟||{minutes} min
 {name} × {count}||{name} × {count}
+宠物·{name} × {count}||Pet · {name} × {count}
 、||, 
 还需 {minutes} 分钟||{minutes} min left
 {minute}分钟葫芦：{label}||{minute}-minute gourd: {label}
@@ -2459,6 +2495,46 @@ VIP仙豆礼盒保留为纪念收藏，不开放充值或随机兑换。||The VI
 部分营地居民共用原版立绘，外观资源映射不改变NPC身份。||Some camp residents share original portraits; the art mapping does not change who the NPC is.
 初始基础牌每种3份；装备附带法术作为额外固定手牌补充。||Each starter basic card has 3 copies; spells attached to equipment are extra fixed cards in hand.
 胜负后恢复生命；无耐久损耗、在线计时、会员或节日暴怒机制。||HP recovers after a win or loss; there is no durability loss, online timer, membership or holiday rage.
+我是抱抱龙医生苏菲。抱抱龙是我们哈奇的好伙伴，如果你愿意帮助其他小哈奇照顾抱抱龙，就可以获得天使徽章哦！||I am Sophie, the Cuddle Dragon doctor. Cuddle Dragons are Haqi's good friends. If you help other young Haqi care for their Cuddle Dragons, you can earn an Angel Badge!
+我是神龙大人派来支援魔法学院的新导师，以后“重学魔法”请来找我。此外，我将逐步传授大家一些不分系别的通用魔法。||I am the new mentor sent by the Divine Dragon to support the Magic Academy. Come to me to "relearn magic". I will also teach general magic that is not tied to one school.
+或许你改变不了世界，但是你可以改变自己！别满于现状，记得时刻向前冲！||You may not change the world, but you can change yourself! Don't settle for how things are. Keep charging forward!
+最近的天气一直都变化无常的。||The weather lately keeps changing.
+我有个哥哥，他在哈奇岛上设计了很多家具，名气很大哦！||I have an older brother. He designs a lot of furniture on Haqi Island, and he is quite famous!
+怪物的生命值越低，捕捉的成功率越高。||The lower a monster's HP, the higher the catch rate.
+我卖的都是精良的装备,攒齐一套可以触发强大的属性哦!||I sell fine equipment. Collect a full set to unlock powerful stats!
+你好，勇敢的冒险者。||Hello, brave adventurer.
+小哈奇,我是法斯特船长。当你成长到10级时，你就可以去火鸟岛冒险了。||Young Haqi, I am Captain Fast. When you reach level 10, you can adventure on Firebird Island.
+烈火系魔法师-我叫伏尔坎，我平时喜欢自己一个人研究各种群攻类的魔法。||I am Vulcan, a Fire mage. I like studying area spells on my own.
+我是寒冰系魔法师-艾米娜，寒冰系魔法拥有极强的防御能力。||I am Amina, an Ice mage. Ice magic has very strong defense.
+我是风暴系法师-高登，风暴拥有着最强大而狂暴的力量，无坚不摧！||I am Gordon, a Storm mage. Storm holds the wildest power, and nothing can stand against it!
+我是生命系魔法师-爱丽丝，小哈奇，我们都要好好爱惜自己的生命。||I am Alice, a Life mage. Young Haqi, we should all take good care of our lives.
+我是死亡系-磊奥，虽然我们死亡系的颜色是黑色的，但却不代表是黑暗。||I am Leo of the Death school. Our color is black, but that does not mean darkness.
+我是青龙，也是陪伴你成长的导师。||I am Azure Dragon, the mentor who stays with you as you grow.
+战斗经验||Combat EXP
+初级寒冰魔法师帽||Beginner Ice Mage Hat
+初级死亡魔法师帽||Beginner Death Mage Hat
+初级生命魔法师帽||Beginner Life Mage Hat
+初级风暴魔法师帽||Beginner Storm Mage Hat
+初级烈火魔法师帽||Beginner Fire Mage Hat
+初级寒冰魔法师袍||Beginner Ice Mage Robe
+初级死亡魔法师袍||Beginner Death Mage Robe
+初级生命魔法师袍||Beginner Life Mage Robe
+初级风暴魔法师袍||Beginner Storm Mage Robe
+初级烈火魔法师袍||Beginner Fire Mage Robe
+萌系霸王虎||Cute Tyrant Tiger
+初级寒冰魔法师靴||Beginner Ice Mage Boots
+初级死亡魔法师靴||Beginner Death Mage Boots
+初级生命魔法师靴||Beginner Life Mage Boots
+初级风暴魔法师靴||Beginner Storm Mage Boots
+初级烈火魔法师靴||Beginner Fire Mage Boots
+晶石法杖(传说)||Crystal Wand (Legendary)
+出奇蛋||Surprise Egg
+战宠口粮||Pet Food
+VIP专用仙豆礼盒||VIP Fairy Bean Gift Box
+翡翠口袋||Emerald Pocket
+普通抓宠符文||Normal Pet-catching Rune
+高级抓宠符文||Advanced Pet-catching Rune
+顶级抓宠符文||Top Pet-catching Rune
 
 # js/view_adventure.js
 {level}级：{amount}仙豆||Level {level}: {amount} fairy beans
@@ -2468,3 +2544,2602 @@ VIP仙豆礼盒保留为纪念收藏，不开放充值或随机兑换。||The VI
 幸运铜币||Lucky Copper Coin
 自动战斗药丸||Auto-battle Pill
 翻倍捕鱼网||Double Fishing Net
+
+# js/view_adventure_deck.js
+{school}·本系||{school} · yours
+{used}/{capacity} 张 · 单卡最多 {each}||{used}/{capacity} cards · max {each} each
+{count} 张 · {page}/{pages}||{count} cards · {page}/{pages}
+训练点：{count}||Training points: {count}
+装备附卡 {count} 张 · 不占卡位||Attached cards {count} · no deck slot
+需要{count}训练点||Need {count} TP
+{count}训练点||{count} TP
+本系免费||Free for your school
+已学||Learned
+
+# js/view_adventure.js
+伤害 {amount}||Damage {amount}
+{cost} 点魔力 · 冷却 {rounds} 回合||{cost} pips · cooldown {rounds}
+{name}，消耗 {cost} 点魔力，冷却 {rounds} 回合。{description}||{name}, costs {cost} pips, cooldown {rounds}. {description}
+{description}。本系法术：1个超级魔力抵2点；其他系抵1点。||{description}. Your school: 1 power pip counts as 2; other schools count as 1.
+治疗 {amount}||Heal {amount}
+
+# js/view_adventure_npc.js
+{level}级||Level {level}
+{level}级可学习||Learn at level {level}
+{page} / {pages} · {count}项||{page} / {pages} · {count} items
+训练点 {count}||Training points {count}
+火鸟岛火百灵学习||Learn from Firelark on Firebird Island
+火鸟岛伍迪学习||Learn from Woody on Firebird Island
+通用魔法，各系都可以学习||General magic. Every school can learn it.
+风暴系魔法力量来自于雷霆，无坚不摧，单体攻击力最高，擅长速战速决！||Storm magic comes from thunder. Nothing stands against it, its single-target attacks are the strongest, and it likes to finish fights fast!
+生命系魔法的力量源自生命的能量，最擅长治疗，生命力非常顽强！||Life magic draws on the energy of life. It excels at healing, and its vitality is very tough!
+死亡系魔法的力量来自地狱，最擅长吸血，在伤害对方的同时也能让自己恢复，非常神秘莫测的一个系别！||Death magic comes from the underworld. It excels at draining life, hurting a foe while healing itself.
+寒冰系魔法的力量来自于冰层，坚固厚重，防御超强！||Ice magic draws its power from the ice sheet. It is solid and heavy, with outstanding defense!
+烈火系魔法的力量源自于火焰，来势汹涌，烟雾弥漫，能让敌人陷入中毒，昏迷等状态！||Fire magic comes from flame. It surges in with smoke and can poison or stun enemies!
+
+# data/adventure/npc-catalog.json spells
+超魔爆发||Power Pip Burst
+风暴之敌||Storm Cleanse
+风暴盾||Storm Shield
+疾电术||Spark Bolt
+金灵遁空||Golden Bolt
+暗夜雷动||Night Thunder
+风暴陷阱||Storm Trap
+雷神之剑||Thunder Sword
+雷云风暴||Thundercloud
+风暴对抗||Storm Aura
+蛇女雷暴||Lamia Storm
+风暴神箭||Storm Accuracy
+风暴术||Storm Blade
+厉风破运||Steal Charm
+和风逐暗||Dispel Hex
+风鹰之眼||Eagle Eye
+极限暴熊||Wild Bear
+旋风爆击||Cyclone Strike
+万象凝气||Off-school Heal
+惊雷裂隙||Thunder Rift
+风暴魔光||Storm Nova
+风影斗篷||Wind Cloak
+狂风形态||Storm Form
+生命之敌||Life Cleanse
+生命盾||Life Shield
+生灵光弧||Life Arc
+灵木刺阵||Thorn Array
+莽林狂舞||Wildwood Dance
+生生不息||Renew
+吸收盾||Absorb Shield
+噬草召唤||Vine Summon
+生机勃发||Flourish
+大地之怒||Earth's Wrath
+生命对抗||Life Aura
+静水灵体||Still Water
+生命庇护||Life Ward
+生命棱镜||Life Prism
+生命术||Life Blade
+生命之礼||Life Accuracy
+治疗术||Heal Blade
+生命圣光||Holy Light
+精灵之舞||Fairy Dance
+万象回春||Greater Heal
+生命陷阱||Life Trap
+圣灵净化||Purify
+生命魔光||Life Nova
+天使赐福||Angel's Blessing
+光刃形态||Light Blade Form
+死亡巫术||Heal Hex
+死亡之敌||Death Cleanse
+死亡盾||Death Shield
+暗灵之咒||Dark Spell
+吸血幽灵||Life Tap Ghost
+幽灵突袭||Ghost Strike
+回光返照||Last Light
+墓地莽石||Grave Boulder
+死亡绝||Death Link
+死亡对抗||Death Aura
+蝠王吸魂||Bat Drain
+死亡陷阱||Death Trap
+死亡术||Death Blade
+死亡棱镜||Death Prism
+祭献||Sacrifice
+黑暗诅咒||Dark Curse
+死亡毒||Death Poison
+群之羁绊||Group Hex
+天魔杀星||Heal Block
+死亡魔光||Death Nova
+灵魂替身||Soul Substitute
+魔刃形态||Vampire Form
+寒冰之敌||Ice Cleanse
+眩晕吸收||Stun Absorb
+寒冰盾||Ice Shield
+冰霜破||Frost Break
+陨落冰石||Falling Ice
+冰剑凛空||Ice Sword
+结界守护||Barrier
+破地冰钻||Ice Drill
+冰魄漫天||Ice Storm
+冰极对抗||Ice Aura
+海狮冰剑||Sea Lion Ice
+寒冰眩晕||Ice Stun
+寒冰陷阱||Ice Trap
+寒冰棱镜||Ice Prism
+坚固壁垒||Ice Bastion
+神偷之手||Steal Ward
+冰雹来袭||Hail
+寒冰术||Ice Blade
+冰霜魔镜||Frost Mirror
+寒冰魔光||Ice Nova
+坚冰形态||Ice Form
+烈火之敌||Fire Cleanse
+烈火盾||Fire Shield
+火焰爆||Flame Burst
+火神之怒||Fire God's Wrath
+火凤焚天||Phoenix Flame
+烈火陷阱||Fire Trap
+星火袭空||Spark Shower
+火极对抗||Fire Aura
+火焰喷发||Flame Eruption
+火魔掷石||Fire Boulder
+烈火术||Fire Blade
+烈火棱镜||Fire Prism
+烈火链||Fire Chain
+偷天换日||Steal Boon
+火狼咆哮||Fire Wolf
+灼伤之炎||Immolate
+烈火怒吼||Fire Roar
+烟雾||Smoke
+烈火眩晕||Fire Stun
+熔岩炸弹||Lava Bomb
+烈火魔光||Fire Nova
+地狱爆炎||Hellfire
+烈焰形态||Blaze Form
+
+# data/adventure/npc-catalog.json
+我是寒冰系魔法师-艾米娜，寒冰系很炫的哦！你找我有事吗？||I am Amina, the Ice mage. Ice magic is pretty cool! Did you need me?
+我是青龙，一直镇守魔法学院，没想到黑暗之魔居然卷土重来了，你来找我有什么事吗？||I am Azure Dragon. I have guarded the Magic Academy, and I did not expect the dark demon to return. What do you need?
+烈火系魔法师-伏尔坎就是我了，我平时喜欢自己一个人研究各种群攻类的魔法。来找我有什么事呢？||I am Vulcan, the Fire mage. I like studying area spells on my own. What do you need?
+我是风暴系法师-高登，风暴拥有着最强大而狂暴的力量，无坚不摧！你来找我有什么事吗？||I am Gordon, a Storm mage. Storm holds the wildest power, and nothing can stand against it! Did you need me?
+我是生命系魔法师-爱丽丝，小哈奇，我们都要好好爱惜自己的生命，知道吗？对了，你有事找我？||I am Alice, a Life mage. Young Haqi, we should all take good care of our lives. Did you need me?
+我是死亡系-磊奥，虽然我们死亡系的颜色是黑色的，但却不代表是黑暗。你找我有事吗？||I am Leo of the Death school. Our color is black, but that does not mean darkness. Did you need me?
+
+# data/adventure/npc-catalog.json descriptions
+你喜欢我吗？我可是很讨人喜欢的哦！如果你有任何活动的激活码都来找我吧！||Do you like me? I am very likable! Bring me any event activation code.
+你好,想要获得我的追随？快快完成杰西卡小姐的任务吧！||Hello, want me to follow you? Finish Miss Jessica's quest first!
+让我带你享受风驰电掣的感觉吧！||Let me take you for a thrilling ride!
+魔狼一族只会臣服于真正的强者！||The magic wolves bow only to a true champion!
+大兔子坐骑超级萌,不来一个么？||The big rabbit mount is super cute. Don't you want one?
+嘿！你好,我是哈奇岛多克特博士的高科技产物。||Hey! I am a high-tech creation of Doctor Dockart of Haqi Island.
+寒冰魔法师是哈奇世界里最棒的防御法师，我们可以吸引所有怪物的攻击保护队友，我希望你也可以一直保护你的队友！||Ice mages are the best defenders in the Haqi world. We draw every monster's attacks to protect our teammates, and I hope you will always protect yours!
+永不磨灭的火焰是烈火魔法师的信仰，我们从不轻言放弃，永远战斗在最后一刻！||An undying flame is a Fire mage's faith. We never give up, and we fight to the last moment!
+风暴魔法师非常擅长穿透攻击，我们喜欢速战速决，让粉丝们永远抓不到我们的影子。||Storm mages are great at piercing attacks. We like to finish fights fast, so fans never catch our shadow.
+我救治过的伤者早已不计其数，每次看着受伤者完全恢复后那种阳光般的表情，我也会非常开心！||I have treated more wounded people than I can count. Seeing them recover, bright as sunshine, makes me happy too!
+我们是从不畏惧死亡的魔法师，因为我们是从炼狱中活下来的勇士！||We are mages who do not fear death, because we are warriors who survived the inferno!
+请哈奇们团结起来，让我们一起把黑暗魔法赶走吧！||Haqi, stand together and drive the dark magic away!
+多去渔场玩玩，让我看看你捕鱼是不是比我厉害呢！||Spend more time at the fishing grounds, and let me see if you fish better than I do!
+咳咳，看见没有小镇周边的怪物越来越多了，好吓人呀！||Ahem, haven't you noticed more and more monsters around town? How scary!
+这些可恶的十二生肖，到处乱跑，看我怎么收拾它们！||Those awful zodiac beasts run everywhere. Watch me sort them out!
+我的名字叫做巴斯，一直病着呢，其实是心病啊！||My name is Bath. I have been ill for a long time, though it is really a sickness of the heart!
+都来看看我设计的家具吧，全手工很精致的哦！||Come see the furniture I designed. It is all handmade and very fine!
+跳跳农场生机勃勃呀，瞧瞧我的西瓜、庄稼，今年可是要大丰收噜！||Hop Farm is full of life. Look at my watermelons and crops. This year will be a great harvest!
+我是传说中最名贵的熊猫||I am the legendary, most precious panda.
+小镇中心有我在你就放心吧！只是最近周边的怪物越来越猖狂了，看来我们得加紧巡逻了，你自己也要注意安全！||With me in the town center, you can relax! Monsters nearby have grown bolder, so we must patrol harder. You watch out too!
+我在想办法发明一点新奇的玩意，你暂时不要来烦着我。||I am trying to invent something new. Please don't bother me for now.
+我是水晶兔，我可爱不？||I am Crystal Rabbit. Aren't I cute?
+我是舞蹈大使丹瑟，你想跟我一起学习又炫又酷的舞步吗？||I am Dancer, the dance ambassador. Want to learn flashy, cool steps with me?
+哈奇小镇是个美丽而充满温暖的地方，是这里让我从丑小鸭变成了白天鹅，我很喜欢这里，感激充满爱心的小哈奇！||Haqi Town is beautiful and warm. This place turned me from an ugly duckling into a swan. I love it here, and I am grateful to the kind young Haqi!
+嘿，小哈奇，欢迎你来到警察局！在希尔的保护下，我们小镇中心是非常安全的！至于我嘛~呃！我是小镇里最英勇的龙！哈哈~||Hey, young Haqi, welcome to the police station! Under Hill's protection, our town center is very safe! As for me, uh, I am the bravest dragon in town! Haha!
+喜欢我设计的服装吗？喜欢的话要记得多来捧个场哦亲~||Do you like the clothes I designed? If you do, come back and support the shop!
+我是苏菲的抱抱龙，专门负责医生的后勤工作，最近小镇周边开始不安宁了，要小心呀！||I am Sophie's Cuddle Dragon, in charge of the doctor's supplies. The area around town has grown restless lately. Be careful!
+我是哈奇大使威克，负责奖励推荐朋友一起来玩《魔法哈奇》的人。如果你推荐的朋友满足下面的条件，就可以让你获得一个热心果。积累热心果可以获得非常珍贵的奖品哦！||I am Wick, the Haqi ambassador. I reward people who invite friends to play Magic Haqi. If your friend meets the conditions, you earn a Kindness Fruit. Collect them for very precious prizes!
+小哈奇,我是法斯特船长。FAST~顾名思义就是去别的岛屿很快的意思！找我是想去哪呢？||Young Haqi, I am Captain Fast. FAST means getting to other islands quickly! Where do you want to go?
+我叫卡乐夫。我这里的宝贝可多了，你的红枫叶带齐了吗？还是你想去游乐园里逛逛呢？||My name is Kalev. I have lots of treasures. Have you gathered the red maple leaves, or do you want to look around the amusement park?
+我是神奇的魔法储值罐，魔法星玩家每周都可以来我这里领取储存的仙豆哦！||I am the magic savings jar. Magic Star players can claim stored fairy beans from me every week!
+我是寻宝队队长哈利，火鬃怪真的太厉害了……该死！我把队员弄丢了！||I am Harry, captain of the treasure team. The fire-mane beasts are too strong... Darn it! I lost my teammates!
+呜呜，火鬃怪大王真可怕！||Waa, the fire-mane king is terrifying!
+我是收藏家全齐齐，你有火玉吗，听说宝库里面藏了不少的火玉，赶紧进去帮我找找，我会用面包来给你交换的！||I am collector Quanqiqi. Do you have fire jade? I hear the vault hides a lot of it. Go find some for me, and I will trade bread for it!
+我是宝石合成魔师达尔莫德，你可以在我这里进行宝石的合成和镶嵌.||I am Darmode, the gem-synthesis mage. You can fuse and socket gems here.
+你好吗？||How are you?
+可不要把没用的东西乱丢哦，都可以出售给我！||Don't throw useless things away. You can sell them to me!
+我是YY，实力太弱去不了其他岛屿，但我的梦里也有火鸟岛和寒冰岛呢，不知道和真的像不像。||I am YY. I am too weak to reach other islands, but my dreams have Firebird Island and Ice Island. I wonder if they look like the real ones.
+我是暴熊，没有甜甜圈就不要来找我。||I am the raging bear. Don't come looking for me without a doughnut.
+我是试炼场管理员. 公平竞技场是禁止装备魔力生效的场所，是练习魔法战术的好地方哦！||I am the trial-ground keeper. The fair arena blocks equipment magic, and it is a good place to practice tactics!
+我这里拥有试炼斗士梦寐以求的竞技装备，找我准没错！||I have the arena gear trial fighters dream of. You came to the right person!
+你好，我是红蘑菇赛场管理员，负责每天发放免费赛场门票，以及参赛报名。与我对话打开组队集合界面之后，点击左下角的“报名排队”就可以了。||Hello, I am the Red Mushroom arena keeper. I hand out free tickets every day and take entries. Talk to me to open the team lobby, then click Sign up at the lower left.
+我是兔八哥保险公司客户经理，本公司专门提供PK保障服务，但是目前暂停供应保险单。||I am the account manager at Bugs Bunny Insurance. We offer PvP coverage, but policies are paused for now.
+你好，我是兔八哥保险公司的总经理兼客户总监，但是目前暂停供应保险单。。||Hello, I am the general manager and client director of Bugs Bunny Insurance, but policies are paused for now.
+参加红蘑菇赛场就能获得仙豆和赛场英雄徽章！优胜者还能获得强大的飞龙坐骑和极品头冠哦！||Enter the Red Mushroom arena for fairy beans and arena hero badges! Winners can also earn a mighty dragon mount and a superb crown!
+你受伤了么？我这里出售各种红枣与药丸，吃了保证你健健康康。||Are you hurt? I sell red dates and pills. Eat them and you will feel well.
+我非常怀念很久以前曾经出现过的“死亡骑士”套装，你见过这个传说中的装备吗？||I miss the Death Knight set that appeared long ago. Have you seen that legendary equipment?
+我这里的货币兑换相当公道，兑换过的都说好!真的，没坑你~~||My currency exchange is very fair. Everyone who has used it says so! Really, I am not tricking you.
+不好啦！我们火魔族的火魔王子费尔斯通被嗜血暴鳄拉尔齐给抓走了，你快和其他的哈奇伙伴们一起去沙漠岛解救它吧！||Oh no! Fire Prince Firestone of our fire-demon clan was taken by the bloodthirsty crocodile Lalqi. Gather other Haqi and rescue him on Desert Island!
+你有更多的原始宝石让我进行打磨嘛？||Do you have more raw gems for me to polish?
+终于回到了自己熟悉的地方……||At last I am back somewhere familiar...
+你好，阳光的冒险者。||Hello, sunny adventurer.
+我会教你你激怒怪物的强大能力，同时也出售激怒所需的魔法卡片！||I can teach you how to enrage monsters, and I also sell the cards you need for it!
+我会教你鉴定未辨识魂珠的强大能力，同时也出售鉴定所需魔法晶体！||I can teach you how to identify unknown soul pearls, and I also sell the crystals you need!
+我会教你合成魂印的强大能力，同时也出售合成所需融合剂！||I can teach you how to fuse soul seals, and I also sell the fusion agent you need!
+巨龙一族拥有强大的力量！||The dragon clan has tremendous power!
+你好，请叫我龟仙人谢谢。||Hello. Please call me Master Turtle.
+想来一套像我这样的套装么？||Want a set of gear like mine?
+想玩转怪物军团吗？||Want to master the monster legion?
+我那么Gentleman，为什么还有人叫我Uncle鸭梨……蜀黍真的好桑心。||I am such a gentleman. Why do people still call me Uncle Pear... It really hurts.
+欢迎光临，我的朋友。||Welcome, my friend.
+欢迎你，我的朋友。||Welcome, my friend.
+你好！||Hello!
+剩蛋快了~~生蛋快落~~圣诞快乐~~||Eggs are almost gone, eggs are almost here. Merry Christmas!
+你好，勇敢的哈奇，欢迎报名参与3v3城堡大师赛！我是你最忠诚的朋友，你可以叫我里昂。||Hello, brave Haqi. Welcome to sign up for the 3v3 Castle Masters. I am your most loyal friend. You can call me Leon.
+我是传说中的勇者，你有什么要问我的吗？||I am the legendary hero. Do you have something to ask me?
+哈奇大陆的居民，你好！我是来自遥远的新大陆探险者！||Hello, people of the Haqi continent! I am an explorer from a far new land!
+哈奇大陆的居民，你好！我是皇家骑士队长！||Hello, people of the Haqi continent! I am the captain of the royal knights!
+有需要的符文卡么？来我这看看吧。||Need rune cards? Come take a look.
+哟嚯，我这里有着哈奇大陆上最幸运的卡袋哦！||Yoho, I have the luckiest card bags on the Haqi continent!
+打出一手好卡，赢得一片未来。||Play a good hand, and win a future.
+我这里的战斗卡包又大又结实！||My battle decks are big and sturdy!
+我对不起大家，对不起火鸟岛……||I am sorry, everyone. I am sorry, Firebird Island...
+我是最自然最正宗的吃货！我的第一大特征就是无论我吃什么都不会分给你吃的！||I am the most natural, authentic foodie! My greatest trait is that I will not share whatever I am eating!
+我伍迪，为了拯救火鸟岛，粉碎黑暗大魔王的阴谋，提前从哈奇小镇赶过来，在这里接应哈奇的小勇士们!||I am Woody. To save Firebird Island and smash the dark lord's plot, I came ahead from Haqi Town to meet the young heroes!
+我是菲尼克斯，从火鸟浴火而成凤凰；守护了火鸟岛这么久，才发现自己原来也是自私的，也有无能为力的时候……呵呵。||I am Phoenix, reborn from the firebird. I have guarded Firebird Island so long, only to find I can be selfish, and that sometimes I am powerless... heh.
+小哈奇,我是法斯特船长,你想去哪呀？||Young Haqi, I am Captain Fast. Where do you want to go?
+小朋友，没事别瞎逛，要知道这里可是我的地盘。乖，叫我老大！||Kid, don't wander around. This is my turf. Be good and call me boss!
+我好饿，想吃新鲜肥美的蚂蚁！开玩笑啦别介意哦~||I am so hungry I want fresh, plump ants! Just kidding, don't mind me.
+小哈奇，奶奶这有很多你所需要的必备品，来看看吧！||Young Haqi, Grandma has many supplies you need. Come and see!
+我都快受不了，那么热的地方是人住的吗？||I can hardly stand it. Is a place that hot fit for people?
+虽然我的钳子小，但是我会努力跟其他白冰虾一样的！小哈奇，我们一起加油吧！||My claws are small, but I will work as hard as the other white ice shrimp! Young Haqi, let's do our best!
+很茫然，让我静下心来想一想……||I feel lost. Let me quiet down and think...
+我是雏鹰1号，你也是雏鹰吗？||I am Eaglet No. 1. Are you an eaglet too?
+我是雏鹰2号，看起来你不像雏鹰哦？||I am Eaglet No. 2. You don't look like an eaglet.
+我是雏鹰3号，我知道你是哈奇！今天的你看起来更像一个快乐的哈奇！||I am Eaglet No. 3. I know you are Haqi! Today you look like an even happier Haqi!
+怒风峡谷太危险了，我要保护好我的孩子们！||Ragewind Canyon is too dangerous. I have to protect my children!
+我是沃尔夫，雪狼本身就是孤独的，凛冽的风也遮盖不住我的怒吼！||I am Wolf. Snow wolves are lonely, and the biting wind cannot cover my roar!
+小哈奇,想镇上的伙伴了吧？要不回去看看？||Young Haqi, missing your friends in town? Why not go back and see them?
+我的铁镐呢？敲不开这破山洞啊，必须要拿回我的铁镐！||Where is my iron pick? I can't crack this cave without it. I must get my pick back!
+女孩子不是都喜欢可爱的东西吗？那为什么青青不喜欢我……||Don't girls all like cute things? Then why doesn't Qingqing like me...
+这里真冷啊，赶紧穿上我精心打造的装备吧！||It is so cold here. Put on the gear I crafted!
+小哈奇,我是法斯特船长,这次是想去哪呢？||Young Haqi, I am Captain Fast. Where do you want to go this time?
+沙漠古堡很危险，你要保护好自己！打败黑暗势力的重任就交给你了！||The Desert Castle is dangerous. Protect yourself! Defeating the dark forces is up to you!
+有事快说，没事的话就这样吧！||If you have business, say it. Otherwise, that is all.
+有什么事吗？累了记得要休息，身体可是自己的。||Do you need something? Rest when you are tired. Your body is your own.
+嘘！千万不要跟别人说我躲在这里，我最讨厌睡觉了！||Shh! Don't tell anyone I am hiding here. I hate sleeping!
+沉睡的木乃伊……是不是苏醒了！？||The sleeping mummy... has it awakened?!
+谁？是谁让你来我的？||Who? Who sent you to me?
+想要什么赶紧挑，风沙太大我准备撤了！||Pick what you want quickly. The sand is too strong and I am leaving!
+请跟我一起，追寻上古宝物的秘密……||Come with me, and seek the secret of the ancient treasure...
+最近总感觉周围有一些可爱的病毒在围绕着我。||Lately I keep feeling cute little viruses circling around me.
+读书破万卷，行走遍天下，你便会得到人生的真谛。||Read ten thousand books and walk the world, and you will find the truth of life.
+今天将要结束，明天也将会结束。难以结束的，是昨天。||Today will end, and tomorrow will end too. What is hard to end is yesterday.
+淡淡的月光下流淌着是满满的思念。||Under the pale moonlight flows a river of longing.
+为什么月亮要在黑夜降临后才爬出来呢?||Why does the moon climb out only after night falls?
+我相信上帝是仁慈的，出于为万物的考虑，他说了很多荒谬的安慰话。||I believe God is merciful. For the sake of all things, he said many absurd words of comfort.
+前方有一股未知能量，禁止继续前进。||An unknown energy lies ahead. You may not go on.
+这里很危险！你还不能进入。||It is dangerous here! You cannot enter yet.
+这里危险，一定要小心前行。||It is dangerous here. Go forward carefully.
+别再来打扰我！我要继续满足在这快乐的幽暗世界中。||Stop bothering me! I want to stay pleased in this happy dark world.
+
+# data/kids/card_names.json
+强化风暴陷阱||Empowered Storm Trap
+风暴11||Storm 11
+光刃形态符文||Light Blade Form Rune
+风暴专注||Storm Focus
+3级激怒符文卡||Lv 3 taunt rune card
+寒冰6||Ice 6
+土猿猛击||Earth Ape Smash
+风暴攻7||Storm Strike 7
+寒冰盾墙符文||Ice Shield Wall Rune
+群晕吸收||Group Stun Absorb
+寒冰11||Ice 11
+4级激怒符文卡||Lv 4 taunt rune card
+死亡群击||Death Volley
+强化生命术||Empowered Life Blade
+死亡9商城||Death 9 (shop)
+寒冰反转||Ice Reversal
+风暴盾墙符文||Storm Shield Wall Rune
+寒冰4||Ice 4
+1级激怒符文卡||Lv 1 taunt rune card
+咕噜大法||Gululu Art
+烈火专注||Fire Focus
+生命2||Life 2
+群之暗伤符文_屏蔽||Group Dark Wound Rune (blocked)
+强化死亡术||Empowered Death Blade
+地狱爆炎符文||Inferno Burst Rune
+烈火11||Fire 11
+生命反转||Life Reversal
+寒冰5||Ice 5
+2级激怒符文卡||Lv 2 taunt rune card
+风暴群击||Storm Volley
+蛇后雷暴||Serpent Queen's Storm
+暴怒鬃王||Raging Mane King
+生命3||Life 3
+烈火反转||Fire Reversal
+烈火盾墙符文||Fire Shield Wall Rune
+烈火群击符文(绑定)||Fire Volley Rune (bound)
+坚冰形态符文||Solid Ice Form Rune
+寒冰2||Ice 2
+强化治疗术||Empowered Heal Blade
+先发制人符文||First Strike Rune
+暗黑力场||Dark Force Field
+生命群击||Life Volley
+连环闪电||Chain Lightning
+超魔爆发符文||Super Magic Burst Rune
+风暴反转||Storm Reversal
+超能脉冲符文||Super Pulse Rune
+寒冰群击符文(绑定)||Ice Volley Rune (bound)
+火攻5||Fire Strike 5
+烈火群击符文||Fire Volley Rune
+寒冰3||Ice 3
+强化生命庇护||Empowered Life Ward
+铁壳毒物||Iron-shell Toxin
+生命1||Life 1
+生命专注||Life Focus
+愈合符文||Mend Rune
+脉冲奥义符文||Pulse Mystery Rune
+生命11||Life 11
+风暴攻5||Storm Strike 5
+寒冰群击符文||Ice Volley Rune
+愈合MAX||Mend MAX
+苍蝇穿刺||Fly Pierce
+强化星火袭空||Empowered Spark Shower
+死亡专注||Death Focus
+风暴3||Storm 3
+生命盾墙符文||Life Shield Wall Rune
+灵魂替身符文||Soul Double Rune
+冰攻7||Ice Strike 7
+寒冰1||Ice 1
+寒冰专注||Ice Focus
+生命7商城||Life 7 (shop)
+冰兽暴击||Ice Beast Crit
+死亡5||Death 5
+能量脉冲符文||Energy Pulse Rune
+死亡盾墙符文||Death Shield Wall Rune
+死亡群击符文(绑定)||Death Volley Rune (bound)
+强化烈火盾||Empowered Fire Shield
+风暴1||Storm 1
+死亡7商城||Death 7 (shop)
+风影斗篷符文||Wind Shadow Cloak Rune
+烈火盾墙符文(绑定)||Fire Shield Wall Rune (bound)
+风暴7商城||Storm 7 (shop)
+强化熔岩炸弹||Empowered Lava Bomb
+狰狞||Fierce Visage
+灵魂契约符文||Soul Pact Rune
+死亡3||Death 3
+冰魄神柱||Ice Soul Pillar
+火攻7||Fire Strike 7
+风暴群击符文(绑定)||Storm Volley Rune (bound)
+天使赐福符文||Angel's Blessing Rune
+烈焰形态符文||Flame Form Rune
+强化海狮冰剑||Empowered Sea Lion Ice
+强化生命陷阱||Empowered Life Trap
+寒冰7商城||Ice 7 (shop)
+希望之光符文||Light of Hope Rune
+生命群击符文(绑定)||Life Volley Rune (bound)
+强化厉风破运||Empowered Steal Charm
+弑神脉冲||Godslayer Pulse
+冰封神符符文||Frozen Talisman Rune
+潘多拉结界守护||Pandora Barrier
+强化烈火怒吼||Empowered Fire Roar
+强化生机勃发||Empowered Flourish
+怒风逆转符文||Ragewind Reversal Rune
+死亡6||Death 6
+恶狼袭击||Wolf Assault
+火鬃王暴怒||Fire Mane King's Rage
+烈火4||Fire 4
+潘多拉盾墙守护符文||Pandora Shield Wall Rune
+超魔抑制符文||Super Magic Suppress Rune
+亡灵大军||Undead Army
+风暴2||Storm 2
+荆棘刺尖||Thorn Spike
+生命9商城||Life 9 (shop)
+迅雷闪电||Swift Thunder
+烈火5||Fire 5
+梦龙脉冲符文||Dream Dragon Pulse Rune
+强化寒冰陷阱||Empowered Ice Trap
+首领激怒符文卡||Boss taunt rune card
+寒冰9商城||Ice 9 (shop)
+死亡4||Death 4
+吸星幽魂||Star-draining Wraith
+死亡11||Death 11
+烈火2||Fire 2
+幽灵大军||Ghost Army
+死亡反转||Death Reversal
+瘟神巫术符文||Plague Witchcraft Rune
+埃尔温生命术||Elwyn Life Blade
+强化雷神之剑||Empowered Thunder Sword
+生命4||Life 4
+圣灵复活||Holy Revival
+烈火3||Fire 3
+重生||Rebirth
+超魔祝福符文||Super Magic Blessing Rune
+群之暗伤符文||Group Dark Wound Rune
+死亡2||Death 2
+梦龙之光符文||Dream Dragon Light Rune
+死亡章鱼||Death Octopus
+强化大地之怒||Empowered Earth's Wrath
+生命5||Life 5
+冰刺魂体||Ice Spike Soul
+帽子戏法||Hat Trick
+风暴6||Storm 6
+冰兽发威||Ice Beast Fury
+凤凰涅磐||Phoenix Nirvana
+[炫彩]灵木刺阵||[Rainbow] Thorn Array
+[炫彩]幽灵突袭||[Rainbow] Ghost Strike
+超能神兔||Super Divine Rabbit
+强化寒冰术||Empowered Ice Blade
+烈火6||Fire 6
+死亡1||Death 1
+疾空破||Sky Break
+[炫彩]回光返照||[Rainbow] Last Light
+风暴4||Storm 4
+7级激怒符文卡||Lv 7 taunt rune card
+强化风暴术||Empowered Storm Blade
+强化烈火陷阱||Empowered Fire Trap
+烈火7商城||Fire 7 (shop)
+[炫彩]火凤焚天||[Rainbow] Phoenix Flame
+海狮冰锥||Sea Lion Ice Spike
+生灵光刃||Life Light Blade
+8级激怒符文卡||Lv 8 taunt rune card
+强化死亡陷阱||Empowered Death Trap
+熔岩爆||Lava Burst
+[炫彩]灼伤之炎||[Rainbow] Immolate
+狂风暴击||Raging Storm Strike
+烈火9商城||Fire 9 (shop)
+死亡群攻||Death Volley
+5级激怒符文卡||Lv 5 taunt rune card
+强化烈火术||Empowered Fire Blade
+疾猫霹雳||Swift Cat Thunder
+急速点燃符文||Quick Ignite Rune
+生命6||Life 6
+冰霜裂||Frost Split
+风暴9商城||Storm 9 (shop)
+[炫彩]冰剑凛空||[Rainbow] Ice Sword
+火兽袭击||Fire Beast Assault
+强化墓地莽石||Empowered Grave Boulder
+6级激怒符文卡||Lv 6 taunt rune card
+火魔怒吼||Fire Demon Roar
+陨落冰山||Falling Iceberg
+[炫彩]破地冰钻||[Rainbow] Ice Drill
+[炫彩]暗夜雷动||[Rainbow] Night Thunder
+强化结界守护||Empowered Barrier
+普通抓宠卡||Basic Catch Card
+雷鸣遁空||Thunder Vanish
+湮灭之咒||Annihilation Curse
+[炫彩]雷神之剑||[Rainbow] Thunder Sword
+烈火1||Fire 1
+9级激怒符文卡||Lv 9 taunt rune card
+梦龙极光符文||Dream Dragon Aurora Rune
+巨岩之怒||Boulder Wrath
+火神天罚||Fire God's Judgment
+10级激怒符文卡||Lv 10 taunt rune card
+火魔投石||Fire Demon Boulder
+恶灵夺魂||Evil Spirit Seize
+生命盾墙符文(绑定)||Life Shield Wall Rune (bound)
+雷神电轮||Thunder God's Wheel
+死亡盾墙符文(绑定)||Death Shield Wall Rune (bound)
+风暴5||Storm 5
+寒冰盾墙符文(绑定)||Ice Shield Wall Rune (bound)
+[炫彩]噬草召唤||[Rainbow] Vine Summon
+风暴盾墙符文(绑定)||Storm Shield Wall Rune (bound)
+
+魔法哈奇 · 初心之旅||Magic Haqi · A New Adventure
+加载中…||Loading…
+正在准备你的魔法之旅…||Preparing your magical adventure…
+正在准备游戏资源||Preparing game resources
+正在连接资源服务器…||Connecting to the resource server…
+正在下载游戏配置…||Downloading game data…
+正在加载卡牌与场景…||Loading cards and scenery…
+正在加载场景图片…||Loading scene artwork…
+正在准备世界与角色资源…||Preparing the world and characters…
+
+# js/view_adventure_rewards.js js/view_adventure.js battle rewards
+获得经验 +{xp}||EXP +{xp}
+经验 +{xp}||EXP +{xp}
+升级了！ {from} → {to} 级||Level up! {from} → {to}
+升到 {level} 级！||Reached level {level}!
+另获 {count} 种奖励||{count} more rewards
+{name} ×{count}||{name} × {count}
+获得 {xp} 经验 · {coins} 奇豆||Gained {xp} EXP · {coins} Qi beans
+卡包剩余 {count} 张||{count} cards left in deck
+抱抱龙小绿||Little Green Cuddle Dragon
+抱抱龙小橙||Little Orange Cuddle Dragon
+抱抱龙小紫||Little Purple Cuddle Dragon
+
+# js/view_adventure_shop.js mount mall
+{name} · {level}级||{name} · level {level}
+{count} 魔豆||{count} magic beans
+{count} 奇豆||{count} Qi beans
+{page} / {pages} 页 · {count} 件||{page} / {pages} · {count} items
+会员专属||Members only
+全学系||All schools
+补给||Supplies
+喂养材料||Feeding supplies
+{level}级试炼||Level {level} trial
+{level}级试炼（未解锁）||Level {level} trial (locked)
+购买后在背包的坐骑分类中骑乘。骑乘时属性加入战斗。||After purchase, ride it from Mounts in your bag. Riding adds its stats in battle.
+冲锋大象||Charge Elephant
+魔法师扫帚||Mage Broom
+魔幻飞毯||Magic Carpet
+蜥蜴金角龙||Lizard Goldenhorn Dragon
+黄金飞马||Golden Pegasus
+暗影神驹||Shadow Steed
+霸王虎||Tyrant Tiger
+仙兔||Fairy Rabbit
+夜叉魔狼||Yaksha Wolf
+白色小神鹰||Little White Eagle
+机械狼蛛||Mechanical Spider
+荣誉白龙||Honor White Dragon
+荣誉蓝血凤凰||Honor Blue Phoenix
+荣誉银龙||Honor Silver Dragon
+浴火凤凰||Rebirth Phoenix
+原始晶龙||Primal Crystal Dragon
+御海仙龟||Sea Immortal Turtle
+希望之羽||Wings of Hope
+勇气之羽||Wings of Courage
+梦幻南瓜车||Dream Pumpkin Carriage
+蓝元冰霜龙||Azure Frost Dragon
+翡翠始祖龙||Emerald Progenitor Dragon
+紫晶灵翼龙||Amethyst Wing Dragon
+魔力灵狐||Magic Fox
+
+# pet shop schools, price line, and Magic Star
+风暴系||Storm
+烈火系||Fire
+寒冰系||Ice
+生命系||Life
+死亡系||Death
+魔法星 {level} 级||Magic Star level {level}
+魔法星 {star} 级 · 角色 {level} 级||Magic Star level {star} · hero level {level}
+角色 {level} 级||Hero level {level}
+有效期至 {date}||Valid until {date}
+剩余能量：{days} 天||Energy left: {days} days
+会员有效，剩余天数待确认||Membership is active; remaining days are not confirmed yet
+有效日期待确认||Expiry date not confirmed yet
+升级会员，点亮魔法星||Upgrade membership to light your Magic Star
+会员天数已兑换至 {year}年{month}月{day}日。之后只兑换更晚的到期日，每天 10 魔豆。||Membership days are exchanged through {year}/{month}/{day}. After that, only a later expiry is exchanged, 10 magic beans a day.
+战斗结束后自动兑换 {days} 天，获得 {beans} 魔豆。||After battle, {days} days are exchanged for {beans} magic beans.
+可兑换 {days} 天，共 {beans} 魔豆。登录后会自动放入背包。||{days} days can be exchanged for {beans} magic beans. They go into your bag after you sign in.
+正在查询会员到期日…||Checking the membership expiry date…
+会员状态暂时无法确认，本次不会兑换魔豆。||Membership status cannot be confirmed right now, so no magic beans will be exchanged.
+登录会员后，剩余有效期会自动兑换为魔豆，每天 10 颗。同一段日期只兑换一次。||After you sign in, the remaining term is exchanged for magic beans, 10 a day. Each date range is exchanged once.
+开通会员后，剩余有效期会在登录时自动兑换为魔豆，每天 10 颗。||After you join, the remaining term is exchanged for magic beans when you sign in, 10 a day.
+会员有效日期待确认，暂时无法兑换魔豆。||The membership date is not confirmed yet, so magic beans cannot be exchanged.
+当前没有可兑换的会员天数。||There are no membership days to exchange.
+火焰魔杖||Flame Wand
+暴云魔杖||Stormcloud Wand
+烈焰魔杖||Blaze Wand
+灵光魔杖||Gleam Wand
+守护法杖||Guardian Staff
+抱抱绿龙||Green Cuddle Dragon
+阿凡紫||Purple Avan
+啵啵柯基||Bobo Corgi
+布布卡皮糖||Bubu Capybara
+布丁橘喵||Pudding Orange Cat
+豆豆火汪||Bean Fire Pup
+豆豆圆喵||Bean Round Cat
+花环啾啾||Wreath Chirp
+茄茄果壳||Eggplant Shell
+可可点舞||Cocoa Dancer
+辣辣叶鳍||Spicy Leaf Fin
+麦麦粒尾||Wheat Grain Tail
+咪咪莲角||Mimi Lotus Horn
+咪咪雪泡||Mimi Snow Puff
+绵绵咩咩||Fluffy Baa
+棉花啾兔||Cotton Chirp Rabbit
+棉棉咪噜||Cotton Purr
+摩摩卡皮||Momo Capybara
+奶沫哞布布||Milk-foam Moo
+年糕柴柴||Rice-cake Shiba
+糯糯芽芽||Sticky Sprout
+噼啪豆豆||Crackle Bean
+皮皮泡爪||Pipi Bubble Paw
+噗噗长鹅||Puff Long Goose
+绒绒博美||Fluffy Pomeranian
+珊珊豹啵||Coral Leopard
+苔苔狮螺螺||Moss Lion Snail
+糖糖金毛||Sugar Golden Retriever
+糖糖嗡嗡||Sugar Buzzer
+糖糖玉章||Sugar Jade Seal
+桃桃咪咪||Peach Mimi
+柚柚果帽||Pomelo Fruit Hat
+云云鲨叽||Cloudy Shark Chirp
+
+# data/adventure/pets.json names
+康康麦团||Zhouhuo Nuoka Puff
+巷巷象宝||Duli Elephant Treasure
+杏杏羽尾||Apricot Zaozhou Tail
+椰椰奶爪||Taohuo Zhenhuo Paw
+汪汪福豆||Woof Luzao Bean
+米米鼠团||Yahuo Mouse Puff
+梅梅霜蹦||Plum Frost Zhentao
+茶茶露须||Tea Dew Whisker
+橙霜蜗鹰||Orange Frost Duli Eagle
+杏杏熊鲤||Apricot Bear Fenba
+梅梅环尾尾||Plum Sugu Tail
+焦焦糖针||Nuoka Sugar Bawen
+橘橘络壳||Tangerine Yuzhou Jisha
+莲莲软垫||Lotus Luzao Qigu
+雪球哈奇||Snow Ball Fenzao Jiba
+西西竹电||Dudu Lanqi Spark
+薯薯绒咩||Jiwen Fluff Beiwen
+枣枣芽角||Qimei Sprout Horn
+欢欢灵耳||Nuomei Gunuo Ear
+奶奶哞哞||Granny Moo
+叽叽彩冠||Chirpy Lanbei Crest
+巴西莉豆豆||Bali Dudu Ruilan Bean
+啵啵珍珍||Lansha Wenlan
+菠菠卷翼||Taotao Duli Wing
+糖糖陨龟||Sugar Fenzao Turtle
+钱钱铃鹿||Nazhen Bell Deer
+奶盖鳄啾啾||Zhenhuo Nuoxi Kafen Chirp
+圆圆泡咩||Round Bubble Beiwen
+荷荷露狼||Zhouhuo Dew Kalu
+豆豆心翼||Bean Heart Wing
+桔桔豆雀||Tangerine Bean Kaka
+荔荔粉掌||Lychee Pink Paw
+蜜蜜牛宝||Honey Ox Treasure
+姜姜雾狐||Ginger Mist Fox
+奶奶霜尘||Granny Frost Baji
+橄榄啾啾||Ranmei Taoran Chirp
+龙龙茶鲨||Dragon Shazhen Shark
+藕藕鲸鹿||Ruizhen Whale Deer
+露娜暹喵||Dew Yuzhou Gulu Cat
+噗噗电团||Lusha Spark Puff
+竹竹熊团||Bamboo Bear Puff
+枣枣狐鹭鹭||Qimei Fox Nabei
+桃桃熔尾||Peach Meixi Tail
+葡葡星螺||Grape Star Zhendu
+芝芝画獭||Guji Yazhou Lanzao
+耳耳糯团||Ear Jiwen Puff
+河河芽鳞||Yahuo Sprout Scale
+龟龟咕噜||Turtle Lansha Ransu
+梨梨须啾啾||Pear Whisker Chirp
+香香泡鳐||Lanqi Bubble Taohuo
+杏杏叶须||Apricot Leaf Whisker
+月苔鸭鸭||Moon Moss Guwen
+噜噜元宝||Lulu Zhouyu Treasure
+悠悠团蛇||Meimei Puff Snake
+杏杏豹壳||Apricot Leopard Jisha
+螺螺茶咩||Zhendu Shazhen Beiwen
+薄薄霜角||Taoran Frost Horn
+可可啵啵||Cocoa Lansha
+豆豆影尾||Bean Shadow Tail
+霜瓜糯鲸鲸||Frost Meiqi Jiwen Whale
+葵葵虎虾||Beili Tiger Shrimp
+柚柚梦啾||Pomelo Dream Chirp
+珠珠梦貘||Pearl Dream Meisu
+苔苔金牛||Moss Gold Ox
+橘轮兔啵||Kaqi Lizao Rabbit Lansha
+丝丝阳结||Silk Jisha Qizhen
+铃铃象咕||Bell Elephant Lansha
+杷杷叶钳||Zhouhuo Leaf Qizhen
+麦麦香鲸||Nuoka Lanqi Whale
+芒芒火蛙||Xihuo Fire Frog
+煤球鹤龟||Taoran Ball Crane Turtle
+鲛珠咪咪||Yazhou Pearl Mimi
+棉杏螳兔||Beiwen Qibei Subo Rabbit
+蜜蜜网角||Honey Beinuo Horn
+菇菇岩岩||Mushroom Guzao
+菇菇光角||Mushroom Light Horn
+麦麦虎鲵||Nuoka Tiger Wenbo
+露露方方||Dew Beiji
+冰豆企鹅||Ice Bean Penguin
+可可虎灵||Cocoa Tiger Gunuo
+闪闪糯兔||Sparkle Jiwen Rabbit
+拉拉金甲||Guzao Gold Shell
+霞霞刺狐||Shasu Xizhou Fox
+熔熔鼹豆||Meixi Wenzhou Bean
+珊珊泡泡||Shalan Bubble
+斑斑栗栗||Ruibo Chestnut
+朱朱羽丸||Nazhen Zaozhou Fenlu
+松松环豹||Pine Sugu Leopard
+糯糯星马||Sticky Star Horse
+蔗蔗背包||Yabo Rangu Pack
+露露菇啾||Dew Yaran Chirp
+桃桃坚果||Peach Shaya Fruit
+芽芽冰蝶||Sprout Ice Butterfly
+杉杉雪团||Fir Snow Puff
+奇奇桃猴||Jiba Jifen Kasha
+软软月兔||Soft Moon Rabbit
+魔魔软鳐||Fennuo Luzao Taohuo
+荟荟露熊||Dudu Dew Bear
+蓝蓝蝠灯||Blue Taotao Lamp
+灰灰狐螺||Banuo Fox Zhendu
+炭炭鲸马马||Guwen Whale Horse
+棠棠龟鹭||Yuyu Turtle Nabei
+莓莓雀龟||Berry Kaka Turtle
+碧碧鹿铃||Duyu Deer Bell
+瓷瓷咩咩||Lusha Baa
+茶茶鳄蝶||Tea Kafen Butterfly
+糖角啾啾||Sugar Horn Chirp
+铃铃草马||Bell Lanbei Horse
+玉米啾鹤||Jade Yahuo Chirp Crane
+翠翠涟甲||Fenfen Jiji Shell
+梅梅纤蛇||Plum Yutao Snake
+稞稞穗壳||Nuoqi Qixi Jisha
+琥琥角角||Amber Horn
+玉玉鸢鳗||Jade Xitao Zhouhuo
+橘橘旋犬||Tangerine Sulan Dog
+莲火龟糯||Lotus Fire Turtle Jiwen
+龙眼虾貂||Dragon Fenji Shrimp Sharan
+噜噜焰团||Lulu Yuli Puff
+盐盐粉翼||Kaxi Pink Wing
+豆豆犀壳||Bean Yuyu Jisha
+焦糖狐狐||Nuoka Sugar Fox
+豆豆锦翼||Bean Shamei Wing
+瓜瓜透明翼||Meiqi Durui Borui Wing
+瓷瓷蛙蜓||Lusha Frog Zhouli
+团团竹钳||Puff Lanqi Qizhen
+玫瑰布布||Qigu Ranbo Qimei
+檀檀蜜鼹||Taotao Kalu Wenzhou
+棘棘暖虾||Ranya Zhenhuo Shrimp
+盐盐虎螺||Kaxi Tiger Zhendu
+天狗旺团||Tengu Liqi Puff
+波波鳐糖||Bobo Taohuo Sugar
+糖糖翼芯||Sugar Wing Yalan
+腾腾绫绫||Zhenzhou Lubei
+雾雾莲蝠||Mist Lotus Taotao
+橙橙星壳||Orange Star Jisha
+星榴鳞狸||Star Meixi Scale Fenlu
+银银丝耳||Silver Silk Ear
+桂桂月冠||Osmanthus Moon Crest
+糖糖虎爪||Sugar Tiger Paw
+阿努可可||Susu Xina Cocoa
+梨梨护心||Pear Yutao Heart
+白白绒啾||White Fluff Chirp
+瓷瓷梦熊||Lusha Dream Bear
+芝芝鹿鲸||Guji Deer Whale
+焰焰虎豆||Yuli Tiger Bean
+云云潜鲨||Cloudy Fenji Shark
+椰椰熊咕||Taohuo Bear Lansha
+糯糯团羊||Sticky Puff Sheep
+海晶喵潜||Yabo Crystal Cat Fenji
+蜜蜜豆豆||Honey Bean
+星火狮团||Star Fire Lion Puff
+莉莉泡鸢||Ruilan Bubble Xitao
+蕨蕨迅迅||Taona Naka
+桂桂方鲸||Osmanthus Beiji Whale
+莲焰鱼鱼||Lotus Yuli Fish
+柠柠鲸獾||Taotao Whale Zhenzhou
+槿槿花鲤||Dudu Flower Fenba
+桂桂甲咕||Osmanthus Shell Lansha
+苏苏牛鳐||Zhouna Ox Taohuo
+碧桃铃鹿||Duyu Jifen Bell Deer
+貔貅钱宝||Pixiu Nazhen Treasure
+雨珠咕咕||Rain Pearl Lansha
+豆豆鹿钩钩||Bean Deer Guzao
+糖糖塔蟹||Sugar Ranzhen Crab
+葡葡鼠鹭||Grape Mouse Nabei
+盐盐星驼||Kaxi Star Meiqi
+混混豆芽||Lusha Bean Sprout
+薇薇衔石||Yaran Meixi Subo
+栗栗霜角||Chestnut Frost Horn
+独角奶芙||Taolan Horn Zhenhuo Beiji
+茶茶发龙||Tea Lanxi Dragon
+莓莓双冠||Berry Fenwen Crest
+柚柚冷雾||Pomelo Duli Mist
+夜菇鲨鲨||Night Yaran Shark
+奶团卷卷||Zhenhuo Puff Duli
+云云菌翼||Cloudy Barui Wing
+嘟嘟云马||Toot Cloud Horse
+白虎糖糖||White Tiger Sugar
+莓莓麂噜噜||Berry Huofen Lulu
+古铜露露||Bayu Badu Dew
+椒椒蹄蹄||Pepper Taoran
+藤藤铃鹿||Vine Bell Deer
+果果心鸽||Fruity Heart Dove
+枫糖啾狐||Maple Sugar Chirp Fox
+绒绒音豹||Fluffy Jisha Leopard
+金金虎蜻蜓||Gold Tiger Luqi Zhouli
+狮鹫蜜团||Lion Lubei Kalu Puff
+楂楂暖鬃||Lika Zhenhuo Jifen
+莓莓星蛾||Berry Star Huoji
+桃桃钳啾||Peach Qizhen Chirp
+琥琥柔角||Amber Kasha Horn
+盏盏潮鸣||Jiwen Xilan Yatao
+雷音鹰啾||Thunder Jisha Eagle Chirp
+合合花鼻||Kabei Flower Yazhou
+璃璃鹿芽||Jifen Deer Sprout
+荔荔果貂||Lychee Fruit Sharan
+枫枫糖狸||Maple Sugar Fenlu
+栗栗火龙||Chestnut Fire Dragon
+柠光豹鸢||Taotao Light Leopard Xitao
+桂桂鸦兔兔||Osmanthus Zhentao Rabbit
+木木瓜鲨||Fenzao Meiqi Shark
+桃桃鹭熊||Peach Nabei Bear
+桃胶喵鲟||Jifen Boli Cat Zhouzhou
+糯糯龙奇||Sticky Dragon Jiba
+蒲蒲齿鸮||Huosha Jiji Owl
+虹蛇滴滴||Nasu Snake Meixi
+椒藤鹿虾||Shabo Vine Deer Shrimp
+方方啾豆||Beiji Chirp Bean
+狰狰喵球||Yuli Cat Ball
+梅梅熊鳐||Plum Bear Taohuo
+盐盐喵钳钳||Kaxi Cat Qizhen
+砂砂影兔||Huofen Shadow Rabbit
+棉棉雷羊||Cotton Thunder Sheep
+雾雾花鳞||Mist Flower Scale
+茶茶鹰尾||Tea Eagle Tail
+藻藻星翼||Zhoudu Star Wing
+轨轨汪布||Fenzao Pup Qimei
+露露银喵||Dew Silver Cat
+莲莲鲤泡||Lotus Fenba Bubble
+悠悠月团||Meimei Moon Puff
+云舟鲸糖||Cloud Boat Whale Sugar
+藤藤花鸽||Vine Flower Dove
+琥珀糯糯||Amber Sticky
+冰芯啾鸮||Ice Yalan Chirp Owl
+闪闪小鹤||Sparkle Sugu Crane
+芝芝夜鸮||Guji Night Owl
+可可象卷||Cocoa Elephant Duli
+浆浆花豹||Boyu Flower Leopard
+栗栗闪熊||Chestnut Shalan Bear
+霜霜核喵||Frost Yudu Cat
+墨墨镜喵||Ranlan Ransu Cat
+棉棉红燕||Cotton Red Wenbo
+克拉软软||Jizao Guzao Soft
+莓莓小鲸||Berry Sugu Whale
+玫盐鸮鸮||Qigu Kaxi Owl
+玫玫蜜角||Qigu Kalu Horn
+雾雾驼蛾||Mist Meiqi Huoji
+栗栗月翅||Chestnut Moon Guba
+紫菜狐宝||Purple Ransu Fox Treasure
+梨梨蝶尾||Pear Butterfly Tail
+豆豆电泡||Bean Spark Bubble
+玫玫量蝎||Qigu Durui Borui
+飞飞丝卷||Shasu Silk Duli
+鹿鹿雪团||Deer Snow Puff
+竹竹瓣尾||Bamboo Suran Tail
+霜霜晶晶||Frost Crystal
+霜霜翼宝||Frost Wing Treasure
+烟烟晶鹿||Zhouzhou Crystal Deer
+松松飞狐||Pine Shasu Fox
+葵葵鲨鹿||Beili Shark Deer
+藤藤贝蝶||Vine Guji Butterfly
+星咩绵绵||Star Beiwen Wenbo
+银线鲟兔||Silver Yaya Zhouzhou Rabbit
+芝芝角角||Guji Horn
+蓝盐鹰蛇||Blue Kaxi Eagle Snake
+椰椰雷鸽||Taohuo Thunder Dove
+芬芬雪丸||Taolan Snow Fenlu
+棘棘火鹤||Ranya Fire Crane
+柚柚冰狐||Pomelo Ice Fox
+糖糖夜鸮||Sugar Night Owl
+曜曜豹影||Meiqi Leopard Shadow
+蜜蜜电鳐||Honey Spark Taohuo
+蜜蜜鲸啾||Honey Whale Chirp
+极极鹤雪||Lanka Crane Snow
+雷豆兔迅||Thunder Bean Rabbit Naka
+芒芒蝠鲸||Xihuo Taotao Whale
+云云镭狐||Cloudy Guwen Fox
+云云贝蝠||Cloudy Guji Taotao
+露露汪鲎||Dew Pup Lizao
+墨墨幽灯||Ranlan Zaozhou Lamp
+珠珠雪跑||Pearl Snow Ruibo
+布布雷麟||Qimei Thunder Jiji
+电电青鬃||Spark Nuozhen Jifen
+琪琪星咕||Bowen Star Lansha
+糖糖刺鸥||Sugar Xizhou Zaotao
+翼翼糖双||Wing Sugar Fenwen
+苔苔雷鸮||Moss Thunder Owl
+芋芋狮鲎||Qigu Lion Lizao
+芽芽电喵蝉||Sprout Spark Cat Zaorui
+枣枣夜狐||Qimei Night Fox
+云铃电鹿||Cloud Bell Spark Deer
+竹竹光虎||Bamboo Light Tiger
+极极珊鹰||Lanka Shalan Eagle
+霜桃飞飞||Frost Jifen Shasu
+霜霜啵鹅||Frost Lansha Goose
+杏杏星鸮||Apricot Star Owl
+金金芽芽||Gold Sprout
+冻冻星蛇||Jilu Star Snake
+曜曜蛛龟||Meiqi Zhoudu Turtle
+墨墨竹喵||Ranlan Lanqi Cat
+利维冰芽||Guzao Taobo Ice Sprout
+玖玖云狐||Xibo Cloud Fox
+松松电鸮||Pine Spark Owl
+榴榴电角||Meixi Spark Horn
+紫紫鲸狐狐||Purple Whale Fox
+瑰瑰泡丝||Ranbo Bubble Silk
+奇奇绒爪||Jiba Fluff Paw
+银耳鲨糯||Silver Ear Shark Jiwen
+莲莲雪球||Lotus Snow Ball
+雪雪梦狐||Snowy Dream Fox
+莲莲轨鹤||Lotus Fenzao Crane
+星星狐嗡||Starry Fox Gufen
+萤萤鹤蟹||Fenba Crane Crab
+晶晶狐环||Crystal Fox Sugu
+月月鲸蝶||Moon Whale Butterfly
+葫芦量量||Sulan Nuoka Durui
+星星磁汪||Starry Beiba Pup
+霓霓光鳐||Jisha Light Taohuo
+凤火啾啾||Taoran Fire Chirp
+噜噜麒麟羽||Lulu Qilin Zaozhou
+胭胭灯鲤||Wenlan Lamp Fenba
+玖玖绒绒||Xibo Fluffy
+雷雷螺鲨||Thunder Zhendu Shark
+波波小龙||Bobo Sugu Dragon
+梅梅墨浪||Plum Ranlan Libei
+沫沫彩羽||Qigu Lanbei Zaozhou
+曜曜月铃||Meiqi Moon Bell
+娜娜雷凰||Yuzhou Thunder Fensha
+云云鲲团||Cloudy Kun Puff
+盈盈龙泡||Bawen Dragon Bubble
+芋芋夜斑||Qigu Night Ruibo
+晶晶鳐蜂||Crystal Taohuo Lika
+鲲鹏泡芙||Kun Peng Bubble Beiji
+
+和我聊聊||Talk with me
+抱抱龙 · 和我聊聊||Dragon · Talk with me
+抱抱龙 · 想和你聊两句||Dragon · Shall we talk?
+抱抱龙 · 营地语言冒险||Dragon · Camp language adventure
+营地语言冒险||Camp language adventure
+关闭语言冒险||Close language adventure
+选择一门课程。基础交流后可进行剧情挑战。||Choose a lesson. Complete the guided practice to unlock a story challenge.
+自由交谈（无奖励）||Free conversation (no rewards)
+听示范||Listen to an example
+点击录音||Start recording
+结束录音||Finish recording
+进入剧情挑战||Start story challenge
+挑战进度||Challenge progress
+再练一次||Practise again
+本次可得||Available reward
+达到每日上限仍可练习||You can keep practising after the daily limit
+听一听，再自己读出回答。||Listen, then say the answer yourself.
+正在朗读…||Speaking…
+正在连接麦克风…||Connecting the microphone…
+正在录音，说完请点击结束录音。||Recording. Select Finish recording when you are done.
+正在识别…||Recognizing your speech…
+再试一次：请用目标语言读出示范回答。||Try again: say the example answer in your target language.
+这句听懂了，我们再说一句。||I understood that. Let us try another sentence.
+伙伴正在思考…||Your partner is thinking…
+继续用目标语言完成剩余目标。||Keep using your target language to complete the remaining goals.
+用目标语言完成这些交流目标。||Use your target language to complete these goals.
+本次挑战结束。可以再练一次。||This challenge has ended. You can try again.
+自由交谈不发放奖励。||Free conversation does not award currency.
+练习完成；本次没有可领奖励。||Practice complete. No reward is available for this attempt.
+交流完成，获得{amount}{currency}。||Conversation complete. You earned {amount} {currency}.
+该语言的营地课程尚未提供||Camp lessons are not yet available in this language
+语音陪伴：开启||Voice companion: on
+语音陪伴：关闭||Voice companion: off
+营地课程支持中文和英语。其他语言课程尚未提供。录音只在点击后开启。||Camp lessons support Chinese and English. Other languages are not available yet. Recording starts only when you choose it.
+打招呼||Greetings
+介绍自己||Introductions
+请求帮助||Asking for help
+感谢与告别||Thanks and goodbyes
+认识物品||Identifying objects
+拥有物品||What you have
+询问数量||Asking about quantities
+表达喜好||Likes and preferences
+作出选择||Making choices
+谈论装备||Talking about equipment
+询问位置||Asking about places
+探索邀请||Exploring together
+澄清路线||Clarifying directions
+捕鱼收获||Talking about fishing
+等待与鼓励||Patience and encouragement
+战前准备||Preparing for battle
+保护伙伴||Protecting your partner
+讨论策略||Discussing a strategy
+关心伙伴||Checking on your partner
+回顾与计划||Looking back and planning
+对话已结束||The conversation has ended
+语音服务超时，请重试||The voice service timed out. Please try again.
+当前Keepwork版本尚未提供语音识别||Speech recognition is not available in this Keepwork version
+当前Keepwork版本尚未提供朗读||Speech playback is not available in this Keepwork version
+没有识别成功，请重新录音||Speech was not recognized. Please record again.
+没有听清，请重新说一遍||I could not hear clearly. Please try again.
+剧情挑战需要先登录Keepwork||Sign in to Keepwork before starting a story challenge
+对话结果无效，请重试||The conversation result was invalid. Please try again.
+
+# equipment shop labels, gear names, and item descriptions
+衣服||Clothes
+鞋子||Shoes
+首饰||Accessories
+背部||Back
+法杖||Wand
+眼饰||Eyewear
+裤子||Pants
+手套||Gloves
+左手||Off hand
+手镯||Bracelet
+戒指||Ring
+项链||Necklace
+炫彩头饰||Rainbow headwear
+炫彩服装||Rainbow outfit
+炫彩背饰||Rainbow back piece
+炫彩鞋子||Rainbow shoes
+全学系通用||All schools
+全系||All-school
+拥有 {count} 件||Owned: {count}
+{slot} · 等级 {level} · 全学系通用||{slot} · level {level} · all schools
+{slot} · 等级 {level} · {school}系||{slot} · level {level} · {school}
+{school}{name}||{school} {name}
+生命值||HP
+生命加成||Health bonus
+超级魔力率||Power pip rate
+穿透||Penetration
+起始普通魔力||Starting pips
+起始超级魔力||Starting power pips
+固定攻击||Flat attack
+固定防御||Flat defense
+命中率||Hit chance
+闪避率||Dodge
+受穿透||Penetration taken
+治疗加成||Healing bonus
+受治疗加成||Healing received
+暴击伤害加成||Critical damage
+卡包容量||Deck capacity
+同卡上限||Copy limit
+当前未生效属性：{stats}||Stats not applied yet: {stats}
+获取途径：{source}||Source: {source}
+{label}：{text}||{label}: {text}
+森林裙||Forest Skirt
+森林短裤||Forest Shorts
+森林手腕||Forest Wrist
+森林靴||Forest Boots
+休闲红T恤||Casual Red T-Shirt
+休闲小短裤||Casual Little Shorts
+休闲跑鞋||Casual Running Shoes
+警察服||Police Uniform
+警察裤||Police Pants
+警察靴||Police Boots
+警察帽||Police Hat
+神勇墨镜||Heroic Sunglasses
+棒棒糖||Lollipop
+虎纹外套||Tiger Stripe Jacket
+虎虎鞋||Tiger Shoes
+虎头帽||Tiger Head Hat
+虎虎屁屁裤||Tiger Bottom Pants
+野囡囡背心||Wild Girl Vest
+小野人短裤||Little Wildling Shorts
+野囡囡草裙||Wild Girl Grass Skirt
+小野人草鞋||Little Wildling Straw Sandals
+野囡囡草鞋||Wild Girl Straw Sandals
+小野人手链||Little Wildling Bracelet
+人字沙滩鞋||Flip-Flop Beach Shoes
+红色小泳衣||Red Little Swimsuit
+红星小泳裤||Red Star Little Swim Trunks
+绿星星男泳裤||Boy Red Star Beach Pants
+海蓝小泳衣||Sea Blue Little Swimsuit
+海蓝小短裤||Sea Blue Little Shorts
+鹅黄小泳衣||Pale Yellow Little Swimsuit
+鹅黄小泳裤||Pale Yellow Little Swim Trunks
+野人女式红色皮束胸||Wildling Women'S Red Leather Top
+野人女式黄色皮束胸||Wildling Women'S Yellow Leather Top
+野人红色毛靴||Wildling Red Fur Boots
+野人黄色毛靴||Wildling Yellow Fur Boots
+金黄工装短袖||Golden Workwear Short Sleeves
+金黄工装短裤||Golden Workwear Shorts
+防滑板鞋||Nonslip Sneakers
+蓝色恐龙装||Blue Dinosaur Outfit
+蓝色恐龙裤||Blue Dinosaur Pants
+蓝色恐龙靴||Blue Dinosaur Boots
+橙色恐龙装||Orange Dinosaur Outfit
+橙色恐龙裤||Orange Dinosaur Pants
+橙色恐龙靴||Orange Dinosaur Boots
+绿色恐龙装||Green Dinosaur Outfit
+绿色恐龙裤||Green Dinosaur Pants
+绿色恐龙靴||Green Dinosaur Boots
+蓝绿条纹紧身T恤||Blue Green Striped Fitted T-Shirt
+白色紧身裤||White Fitted Pants
+小白袜||Little White Socks
+红蓝格纹紧身T恤||Red Blue Plaid Fitted T-Shirt
+黑色紧身裤||Black Fitted Pants
+小黑袜||Little Black Socks
+小翅膀||Little Wings
+真蓝冰舞衫||True Blue Ice Dance Shirt
+真蓝冰舞裙||True Blue Ice Dance Skirt
+冰舞靴||Ice Dance Boots
+公牛球衣||Bull Jersey
+公牛球裤||Bull Jersey Pants
+公牛球鞋||Bull Court Shoes
+医生外套||Doctor Jacket
+医生长裤||Doctor Trousers
+医生鞋||Doctor Shoes
+大使上衣||Ambassador Green Coat
+大使长裤||Ambassador Trousers
+大使鞋||Ambassador Shoes
+大使帽子||Ambassador Hat
+大使手腕||Ambassador Wrist
+彩条衫||Striped Shirt
+工装短裤||Workwear Shorts
+脚丫印章帽||Toes Stamp Hat
+姹紫嫣红棉衣||Colorful Cotton Coat
+紫菲红裤袜||Purple Red Tights
+黑白猫帽||Black And White Cat Hat
+南瓜头棉衣||Pumpkin Head Cotton Coat
+海盗帽||Pirate Hat
+条纹海盗服||Striped Pirate Uniform
+玫瑰格子裤||Rose Plaid Pants
+圣诞帽||Christmas Hat
+圣诞老人衣||Santa Top
+圣诞吊带裙||Christmas Camisole Skirt
+绿野仙踪裤袜||Wizard Of Oz Tights
+水粉裤袜||Pink Tights
+圣诞老人靴||Santa Boots
+驯鹿帽||Reindeer Hat
+驯鹿衣||Reindeer Top
+驯鹿裤||Reindeer Pants
+驯鹿鞋||Reindeer Shoes
+圣诞火红靴||Christmas Fiery Red Boots
+南瓜条纹裤||Pumpkin Striped Pants
+驯鹿手套||Reindeer Gloves
+蓝色海军装||Blue Navy Outfit
+蓝色海军裤||Blue Navy Pants
+蓝色海军鞋||Blue Navy Shoes
+糖果背包||Candy Backpack
+精英投手服||Elite Pitcher Uniform
+精英投手裤||Elite Pitcher Pants
+精英投手靴||Elite Pitcher Boots
+精英投手手套||Elite Pitcher Gloves
+精英红妆服||Elite Red Dress Uniform
+精英红妆短裤||Elite Red Dress Shorts
+精英红妆靴||Elite Red Dress Boots
+精英红妆手套||Elite Red Dress Gloves
+舞者之衣||Dancer Clothes
+舞者之裤||Dancer 'S Pants
+舞者之鞋||Dancer Shoes
+舞者手套||Dancer Gloves
+机械舞摆裙||D Da Ren Coat
+舞者修身裤||Dancer Slim Pants
+红舞鞋||D Da Ren Boots
+D达人手套___命中测试||D Da Ren Gloves
+B达人衣||B Da Ren Coat
+B达人裤||B Da Ren Pants
+B达人靴||B Da Ren Boots
+B达人手套___数值测试专用||B Da Ren Gloves
+托马斯背心||F Da Ren Coat
+托马斯炫舞裤||F Da Ren Pants
+托马斯舞鞋||F Da Ren Boots
+F达人手套___暂时不用||F Da Ren Gloves
+海盗靴||Pirate Boots
+黑白猫靴||Black And White Cat Boots
+工装鞋||Workwear Shoes
+五彩缤纷棉靴||Purple Red Boots
+魅舞眼罩||D Dancer Mask
+锅盖帽||Boiler Hat
+金元宝毡帽||New Year Golden Hat
+无袖绵绵袄||New Year Girl Coat
+雪绵绵短裙||New Year Girl Pant
+雪绒棉靴||New Year Girl Boots
+鸿福短袖棉衣||New Year Boy Coat
+鸿福棉裤||New Year Boy Pant
+雪地靴||New Year Boy Boots
+吉星高照唐装||New Year Warm Coat
+吉祥如意棉裤||New Year Warm Pant
+辞旧迎新棉鞋||New Year Warm Boots
+探测器||Detector
+雪绒保暖手套||New Year Girl Hand
+御寒露指手套||New Year Boy Hand
+星光眼镜||Masque Glass
+金闪条纹袄||Yuan Xiao Girl Shirt
+金闪条纹裙||Yuan Xiao Girl Pants
+蕾丝边棉靴||Yuan Xiao Girl Boots
+古色古香唐装||Yuan Xiao Boy Shirt
+耀眼光芒棉裤||Yuan Xiao Boy Pants
+智者火把||Yuan Xiao Torch
+古奇的凿子||Gucci Chisel
+棒棒糖女上||Lollipop Girl Shirt
+棒棒糖女下||Lollipop Girl Pants
+棒棒糖女鞋||Lollipop Shoes
+清凉背心||Cool Vest
+海浪裙||Cool Summer Girl Pants
+海蓝花边凉鞋||Cool Summer Girl Boots
+淑女连身女上||Fair Lady Girl Shirt
+淑女连身女下||Fair Lady Girl Pants
+淑女连身女鞋||Fair Lady Girl Boots
+功夫衫||Kung Fu Shirt
+功夫裤||Kung Fu Pants
+功夫鞋||Kung Fu Shoes
+功夫黄上||Kong Fu Yellow Shirt
+功夫黄下||Kong Fu Yellow Pants
+功夫黄鞋||Kung Fu Yellow Shoes
+咧嘴西瓜裙||Watermelon Girl Shirt
+西瓜纹理裤袜||Watermelon Girl Pants
+稻草人字拖||Watermelon Girl Boots
+甜滋滋坎肩||Watermelon Boy Shirt
+卷边西瓜短裤||Watermelon Boy Pants
+全齐齐的蓝光铠甲||Watermelon Boy Boots
+棒棒糖男上||Lollipop Boy Shirt
+棒棒糖男下||Lollipop Boy Pants
+棒棒糖男鞋||Lollipop Shoes
+海天一色短袖||Cool Summer Boy Shirt
+万里无云短裤||Cool Summer Boy Pants
+星光熠熠球鞋||Cool Summer Boy Boots
+丰收草帽||Watermelon Yellow Hat
+时尚护腕||Cool Summer Wrist
+花瓣风车||Blue Pinwheel
+卷角风车||Pink Pinwheel
+果汁吸管风车||Orange Pinwheel
+银色铠甲||Silver Armor
+糖果套帽子1||Candy Suit Hat1
+牛仔礼服||Candy Suit Shirt1
+星旗裤||Candy Suit Pant1
+牛仔手套||Cowboy Gloves
+骑士马靴||Candy Suit Boot1
+糖果套帽子2||Candy Suit Hat2
+迷彩礼服||Candy Suit Shirt2
+迷彩裤||Camouflage Pants
+迷彩手套||Camouflage Gloves
+山地鞋||Candy Suit Boot2
+汉堡礼帽||Candy Suit Hat3
+葡萄酱礼服||Candy Suit Shirt3
+白巧克力短裤||Candy Suit Pant3
+葡萄酱手套||Candy Suit Gloves3
+奶酪布丁鞋||Candy Suit Boot3
+糖果套帽子4||Candy Suit Hat4
+可可菠萝礼服||Candy Suit Shirt4
+蓝莓灯笼裤||Candy Suit Pant4
+可可菠萝手套||Candy Suit Gloves4
+漆皮大头鞋||Candy Suit Boot4
+糖果毡帽||Colorful Strip Hot Hat
+酸奶布丁裙||Colorful Strip Hot Shirt
+脆皮彩豆裤||Colorful Strip Hot Pant
+圈圈奶糖手镯||Colorful Strip Hot Gloves
+麦芽糖皮鞋||Colorful Strip Hot Boot
+易拉罐小盖帽||Cola Suit Hat
+易拉罐摆裙||Cola Suit Shirt
+铝皮贴身裤||Cola Suit Pant
+易拉罐凉拖||Cola Suit Boot
+硬纸皮礼帽||Newspaper Hat
+环保褶皱夹克||Newspaper Shirt
+久远报纸裤||Newspaper Pant
+环保鞋||Newspaper Boot
+环保蝴蝶发带||Plastic Stripe Hat
+环保蝴蝶套装||Plastic Stripe Shirt
+女仆花边帽||Servant Girl Hat
+女仆套装||Servant Girl Shirt
+女仆裤_取消_合并在衣服里||Servant Girl Pant
+女仆鞋||Servant Girl Boot
+女仆手套||Servant Girl Gloves
+火龙帽||Fire Hat1
+水晶帽||Ice Hat1
+雷神帽||Storm Hat1
+亡灵帽||Death Hat1
+圣光帽||Life Hat1
+火龙鳞甲||Fire Suit1
+水晶护甲||Ice Suit1
+雷神铠甲||Storm Suit1
+亡灵战甲||Death Suit1
+圣光灵甲||Life Suit1
+火龙靴||Fire Boot1
+水晶靴||Ice Boot1
+雷神靴||Storm Boot1
+亡灵靴||Death Boot1
+圣光靴||Life Boot1
+火背1||Fire Back1
+冰背1||Ice Back1
+风背1||Storm Back1
+死背1||Death Back1
+生背1||Life Back1
+桃木法杖||Common Newbie Wand
+赤灵杖||Fire Wand 5
+冰灵杖||Ice Wand 5
+雷灵杖||Storm Wand 5
+青灵杖||Life Wand 5
+亡魂杖||Death Wand 5
+炙炎燃烧杖||Fire Wand 10
+圣冰来袭杖||Ice Wand 10
+雷震狂鸣杖||Storm Wand 10
+圣光救赎杖||Life Wand 10
+亡灵夜袭杖||Death Wand 10
+用脸滚键盘吧||Alphadot
+小魔女帽||Imp Female Hat
+小魔女服||Imp Female Uniform
+小魔女鞋||Imp Shoes
+魔法小高帽||Magic Gentle Hat
+小绅士礼服||Magic Gentle Shirt
+魔法鞋||Magic Shoes
+闪耀勇士帽||Shining Warrior Hat
+闪耀勇士服||Shining Warrior Uniform
+闪耀勇士鞋||Shining Warrior Shoes
+魔幻防护帽||Magic Protection Hat
+魔幻防护服||Magic Protection Suit
+魔幻防护鞋||Magic Protection Boot
+左手持4||VIP Staff4
+左手持5||VIP Staff5
+左手持6||VIP Staff6
+左手持9||VIP Staff9
+左手持10||VIP Staff10
+左手持11||VIP Staff11
+焚天帽||Fire Hat2
+寒流帽||Ice Hat2
+雷鸣帽||Storm Hat2
+亡命帽||Death Hat2
+青凝帽||Life Hat2
+炽火愤怒帽||Fire Hat3
+寒光盾庇帽||Ice Hat3
+疾电崩雷帽||Storm Hat3
+噬魂暗影帽||Death Hat3
+祥光普照帽||Life Hat3
+绝灭疾风帽||Common Hat6
+焚天铠甲||Fire Suit2
+寒流铠甲||Ice Suit2
+雷鸣铠甲||Storm Suit2
+亡命铠甲||Death Suit2
+青凝铠甲||Life Suit2
+炽火愤怒甲||Fire Suit3
+寒光盾庇甲||Ice Suit3
+疾电崩雷甲||Storm Suit3
+噬魂暗影甲||Death Suit3
+祥光普照甲||Life Suit3
+流光护体衣||Common Suit6
+焚天战靴||Fire Boot2
+寒流战靴||Ice Boot2
+雷鸣战靴||Storm Boot2
+亡命战靴||Death Boot2
+青凝战靴||Life Boot2
+炽火愤怒鞋||Fire Boot3
+寒光盾庇鞋||Ice Boot3
+疾电崩雷鞋||Storm Boot3
+噬魂暗影鞋||Death Boot3
+祥光普照鞋||Life Boot3
+凌波疾风鞋||Common Boot6
+炎灵帽||Fire Hat4
+冰雪帽||Ice Hat4
+飓风帽||Storm Hat4
+影兽帽||Death Hat4
+普光帽||Life Hat4
+火光冠||Fire Hat5
+冰晶冠||Ice Hat5
+雷卷冠||Storm Hat5
+魔咒冠||Death Hat5
+信仰冠||Life Hat5
+睿智帽||Common Hat7
+精锐冠||Common Hat8
+炎灵战衣||Fire Suit4
+冰雪战衣||Ice Suit4
+飓风战衣||Storm Suit4
+影兽战衣||Death Suit4
+普光战衣||Life Suit4
+火光法袍||Fire Suit5
+冰晶法袍||Ice Suit5
+雷卷法袍||Storm Suit5
+魔咒法袍||Death Suit5
+信仰法袍||Life Suit5
+睿智战衣||Common Suit7
+精锐法袍||Common Suit8
+炎灵鞋||Fire Boot4
+冰雪鞋||Ice Boot4
+飓风鞋||Storm Boot4
+影兽鞋||Death Boot4
+普光鞋||Life Boot4
+火光靴||Fire Boot5
+冰晶靴||Ice Boot5
+雷卷靴||Storm Boot5
+魔咒靴||Death Boot5
+信仰靴||Life Boot5
+睿智鞋||Common Boot7
+精锐靴||Common Boot8
+火舞帽||Fire Exchange Hat01
+霜冻帽||Ice Exchange Hat01
+激电帽||Storm Exchange Hat01
+袭魂帽||Death Exchange Hat01
+碧波帽||Life Exchange Hat01
+赤火猎人帽||Fire Exchange Hat02
+蓝光猎人帽||Ice Exchange Hat02
+霹雳猎人帽||Storm Exchange Hat02
+魔魂猎人帽||Soul Hunter Hat
+圣辉猎人帽||Life Exchange Hat02
+火咒帽||Fire Exchange Hat03
+冰刺帽||Ice Exchange Hat03
+闪爆帽||Storm Exchange Hat03
+祭祀帽||Death Exchange Hat03
+绿芒帽||Life Exchange Hat03
+火舞衣||Fire Exchange Suit01
+霜冻衣||Ice Exchange Suit01
+激电衣||Storm Exchange Suit01
+袭魂衣||Death Exchange Suit01
+碧波衣||Life Exchange Suit01
+赤火猎人衣||Fire Exchange Suit02
+蓝光猎人衣||Ice Exchange Suit02
+霹雳猎人衣||Storm Exchange Suit02
+魔魂猎人衣||Soul Hunter Top
+圣辉猎人衣||Life Exchange Suit02
+火咒袍||Fire Exchange Suit03
+冰刺袍||Ice Exchange Suit03
+闪爆袍||Storm Exchange Suit03
+祭祀袍||Death Exchange Suit03
+绿芒袍||Life Exchange Suit03
+火舞鞋||Fire Exchange Boot01
+霜冻鞋||Ice Exchange Boot01
+激电鞋||Storm Exchange Boot01
+袭魂鞋||Death Exchange Boot01
+碧波鞋||Life Exchange Boot01
+赤火猎人鞋||Fire Exchange Boot02
+蓝光猎人鞋||Ice Exchange Boot02
+霹雳猎人鞋||Storm Exchange Boot02
+魔魂猎人鞋||Soul Hunter Shoes
+圣辉猎人鞋||Life Exchange Boot02
+火咒鞋||Fire Exchange Boot03
+冰刺鞋||Ice Exchange Boot03
+闪爆鞋||Storm Exchange Boot03
+祭祀鞋||Death Exchange Boot03
+绿芒鞋||Life Exchange Boot03
+火舞披风||Fire Exchange Back01
+霜冻披风||Ice Exchange Back01
+激电披风||Storm Exchange Back01
+袭魂披风||Death Exchange Back01
+碧波披风||Life Exchange Back01
+赤火猎人披风||Fire Exchange Back02
+蓝光猎人披风||Ice Exchange Back02
+霹雳猎人披风||Storm Exchange Back02
+魔魂猎人披风||Soul Hunter Cape
+圣辉猎人披风||Life Exchange Back02
+火咒披风||Fire Exchange Back03
+冰刺披风||Ice Exchange Back03
+闪爆披风||Storm Exchange Back03
+祭祀披风||Death Exchange Back03
+绿芒披风||Life Exchange Back03
+火舞手镯||Fire Exchange Bracelet01
+霜冻手镯||Ice Exchange Bracelet01
+激电手镯||Storm Exchange Bracelet01
+袭魂手镯||Death Exchange Bracelet01
+碧波手镯||Life Exchange Bracelet01
+赤火猎人手镯||Fire Exchange Bracelet02
+蓝光猎人手镯||Ice Exchange Bracelet02
+霹雳猎人手镯||Storm Exchange Bracelet02
+魔魂猎人手镯||Soul Hunter Bracelet
+圣辉猎人手镯||Life Exchange Bracelet02
+火咒手镯||Fire Exchange Bracelet03
+冰刺手镯||Ice Exchange Bracelet03
+闪爆手镯||Storm Exchange Bracelet03
+祭祀手镯||Death Exchange Bracelet03
+绿芒手镯||Life Exchange Bracelet03
+烈火伯爵法杖||Fire Count Wand
+寒冰伯爵法杖||Ice Count Wand
+风暴伯爵法杖||Storm Count Wand
+生命伯爵法杖||Life Count Wand
+死亡伯爵法杖||Death Count Wand
+圣徒帽||Shop Common Hat01
+魔魂帽||Soul Hat
+王者之颠帽||King'S Peak Hat
+圣徒衣||Shop Common Suit01
+魔魂衣||Soul Top
+王者之颠衣||King'S Peak Top
+圣徒鞋||Shop Common Boot01
+魔魂鞋||Soul Shoes
+王者之颠鞋||King'S Peak Shoes
+圣徒披风||Shop Common Back01
+魔魂披风||Soul Cape
+王者之颠披风||King'S Peak Cape
+圣徒手镯||Shop Common Bracelet01
+魔魂手镯||Soul Bracelet
+王者之颠手镯||King'S Peak Bracelet
+灿烂千阳杖||Fire Wand 15
+蓝色废墟杖||Ice Wand 15
+金光闪烁杖||Storm Wand 15
+造物生灵杖||Life Wand 15
+回生起死杖||Death Wand 15
+学徒帽||Newbie Hat
+学徒衣||Newbie Suit
+学徒鞋||Newbie Boot
+男爵小丑帽||Clown Hat
+男爵小丑衣||Clown Suit
+男爵小丑鞋||Clown Boot
+公主小丑帽||Pricess Clown Hat
+公主小丑裙||Princess Clown Suit
+公主小丑鞋||Princess Clown Boot
+闪灵帽||Shining Hat
+闪灵衣||Shining Suit
+闪灵鞋||Shining Boot
+闪灵翅膀||Shining Back
+异域法师帽||Exotic Mage Hat
+异域法师服||Exotic Mage Uniform
+异域法师鞋||Exotic Mage Shoes
+异域法师披风||Exotic Mage Cape
+烈火伯爵之帽||Fire Count Hat
+寒冰伯爵之帽||Ice Count Hat
+风暴伯爵之帽||Storm Count Hat
+死亡伯爵之帽||Death Count Hat
+生命伯爵之帽||Life Count Hat
+烈火伯爵之衣||Fire Count Clothes
+寒冰伯爵之衣||Ice Count Clothes
+风暴伯爵之衣||Storm Count Clothes
+死亡伯爵之衣||Death Count Clothes
+生命伯爵之衣||Life Count Clothes
+烈火伯爵之鞋||Fire Count Shoes
+寒冰伯爵之鞋||Ice Count Shoes
+风暴伯爵之鞋||Storm Count Shoes
+死亡伯爵之鞋||Death Count Shoes
+生命伯爵之鞋||Life Count Shoes
+烈火伯爵披风||Fire Count Cape
+寒冰伯爵披风||Ice Count Cape
+风暴伯爵披风||Storm Count Cape
+死亡伯爵披风||Death Count Cape
+生命伯爵披风||Life Count Cape
+烈火伯爵手镯||Fire Count Bracelet
+寒冰伯爵手镯||Ice Count Bracelet
+风暴伯爵手镯||Storm Count Bracelet
+死亡伯爵手镯||Death Count Bracelet
+生命伯爵手镯||Life Count Bracelet
+烈火游侠法杖||Fire Ranger Wand
+寒冰游侠法杖||Ice Ranger Wand
+风暴游侠法杖||Storm Ranger Wand
+死亡游侠法杖||Death Ranger Wand
+生命游侠法杖||Life Ranger Wand
+爆火杖||Fire Wand20
+怒冰杖||Ice Wand20
+惊雷杖||Storm Wand20
+瞑死杖||Death Wand20
+永生杖||Life Wand20
+圣火熔炼帽||Egypt Fire Hat1
+冰凌穿天帽||Egypt Ice Hat1
+雷光突击帽||Egypt Storm Hat1
+死亡临界帽||Egypt Death Hat1
+生命守护帽||Life Guardian Hat
+热火阿拉丁帽||Egypt Fire Hat2
+晶莹阿拉丁帽||Egypt Ice Hat2
+闪耀阿拉丁帽||Shining Aladdin Hat
+暗黑阿拉丁帽||Dark Aladdin Hat
+荧光阿拉丁帽||Egypt Life Hat2
+荒漠牛仔帽||Desert Cowboy Hat
+新岛掉落通帽2||Egypt Common Hat2
+艾希斯圣火帽||Isis Sacred Flame Hat
+艾希斯坚冰帽||Egypt Exchange Ice Hat
+艾希斯闪电帽||Egypt Exchange Storm Hat
+艾希斯魂灵帽||Egypt Exchange Death Hat
+艾希斯绿日帽||Egypt Exchange Life Hat
+圣火熔炼衣||Egypt Fire Suit1
+冰凌穿天衣||Egypt Ice Suit1
+雷光突击衣||Egypt Storm Suit1
+死亡临界衣||Egypt Death Suit1
+生命守护衣||Life Guardian Top
+热火阿拉丁袍||Egypt Fire Suit2
+晶莹阿拉丁袍||Egypt Ice Suit2
+闪耀阿拉丁袍||Egypt Storm Suit2
+暗黑阿拉丁袍||Egypt Death Suit2
+荧光阿拉丁袍||Egypt Life Suit2
+荒漠牛仔衣||Desert Cowboy Top
+新岛掉落通衣2||Egypt Common Suit2
+艾希斯圣火袍||Egypt Exchange Fire Suit
+艾希斯坚冰袍||Egypt Exchange Ice Suit
+艾希斯闪电袍||Egypt Exchange Storm Suit
+艾希斯魂灵袍||Egypt Exchange Death Suit
+艾希斯绿日袍||Egypt Exchange Life Suit
+圣火熔炼鞋||Egypt Fire Boot1
+冰凌穿天鞋||Egypt Ice Boot1
+雷光突击鞋||Egypt Storm Boot1
+死亡临界鞋||Egypt Death Boot1
+生命守护鞋||Life Guardian Shoes
+热火阿拉丁鞋||Egypt Fire Boot2
+晶莹阿拉丁鞋||Egypt Ice Boot2
+闪耀阿拉丁鞋||Shining Aladdin Shoes
+暗黑阿拉丁鞋||Dark Aladdin Shoes
+荧光阿拉丁鞋||Egypt Life Boot2
+荒漠牛仔鞋||Desert Cowboy Shoes
+新岛掉落通鞋2||Egypt Common Boot2
+艾希斯圣火鞋||Isis Sacred Flame Shoes
+艾希斯坚冰鞋||Egypt Exchange Ice Boot
+艾希斯闪电鞋||Egypt Exchange Storm Boot
+艾希斯魂灵鞋||Egypt Death Exchange Boot
+艾希斯绿日鞋||Egypt Exchange Life Boot
+圣火熔炼巾||Egypt Fire Back1
+冰凌穿天巾||Egypt Ice Back1
+雷光突击巾||Egypt Storm Back1
+死亡临界巾||Egypt Death Back1
+生命守护巾||Egypt Life Back1
+热火阿拉丁巾||Egypt Fire Back2
+晶莹阿拉丁巾||Egypt Ice Back2
+闪耀阿拉丁巾||Egypt Storm Back2
+暗黑阿拉丁巾||Egypt Death Back2
+荧光阿拉丁巾||Egypt Life Back2
+荒漠牛仔披肩||Egypt Common Back1
+新岛掉落通背2||Egypt Common Back2
+艾希斯圣火巾||Egypt Exchange Fire Back
+艾希斯坚冰巾||Egypt Exchange Ice Back
+艾希斯闪电巾||Egypt Exchange Storm Back
+艾希斯魂灵巾||Egypt Exchange Death Back
+艾希斯绿日巾||Egypt Exchange Life Back
+圣火熔炼镯||Egypt Fire Bracelet1
+冰凌穿天镯||Egypt Ice Bracelet1
+雷光突击镯||Egype Storm Bracelet1
+死亡临界镯||Egypt Death Bracelet1
+生命守护镯||Egypt Life Bracelet1
+热火阿拉丁镯||Egypt Fire Bracelet2
+晶莹阿拉丁镯||Egypt Ice Bracelet2
+闪耀阿拉丁镯||Egypt Storm Bracelet2
+暗黑阿拉丁镯||Egypt Death Bracelet2
+荧光阿拉丁镯||Egypt Life Bracelet2
+荒漠牛仔手镯||Desert Cowboy Bracelet
+新岛掉落镯2||Egypt Common Bracelet2
+艾希斯圣火镯||Egypt Exchange Fire Bracelet
+艾希斯坚冰镯||Egypt Exchange Ice Bracelet
+艾希斯闪电镯||Egypt Exchange Storm Bracelet
+艾希斯魂灵镯||Egypt Exchange Death Bracelet
+艾希斯绿日镯||Egypt Exchange Life Bracelet
+冲天火焰斧||Fire Wand25
+冰袭末日斧||Ice Wand25
+狂暴霹雳斧||Storm Wand25
+死神复活斧||Death Wand25
+生息魔力斧||Life Wand25
+烈火游侠之帽||Fire Ranger Hat
+寒冰游侠之帽||Ice Ranger Hat
+风暴游侠之帽||Storm Ranger Hat
+死亡游侠之帽||Death Ranger Hat
+生命游侠之帽||Life Ranger Hat
+新年兔女郎帽子||Shop New Years Gal Hat
+痞痞兔头套||Shop New Years Rabbit Hat01
+灯笼兔头套||Shop New Years Rabbit Hat02
+魔术师礼帽||Shop New Years Rose Hat
+烈火游侠之衣||Fire Ranger Clothes
+寒冰游侠之衣||Ice Ranger Clothes
+风暴游侠之衣||Storm Ranger Clothes
+死亡游侠之衣||Death Ranger Clothes
+生命游侠之衣||Life Ranger Clothes
+新年兔女郎裙子||Shop New Years Gal Suit
+痞痞兔套服||Shop New Years Rabbit Suit01
+灯笼兔套服||Shop New Years Rabbit Suit02
+烈火游侠之鞋||Fire Ranger Shoes
+寒冰游侠之鞋||Ice Ranger Shoes
+风暴游侠之鞋||Storm Ranger Shoes
+死亡游侠之鞋||Death Ranger Shoes
+生命游侠之鞋||Life Ranger Shoes
+新年兔女郎鞋子||Shop New Years Gal Boot
+烈火游侠披风||Fire Ranger Cape
+寒冰游侠披风||Ice Ranger Cape
+风暴游侠披风||Storm Ranger Cape
+死亡游侠披风||Death Ranger Cape
+生命游侠披风||Life Ranger Cape
+烈火游侠手镯||Fire Ranger Bracelet
+寒冰游侠手镯||Ice Ranger Bracelet
+风暴游侠手镯||Storm Ranger Bracelet
+死亡游侠手镯||Death Ranger Bracelet
+生命游侠手镯||Life Ranger Bracelet
+凤炎之镰||Shop Fire Wand03
+霜冻之镰||Shop Ice Wand03
+飓风之镰||Shop Storm Wand03
+末日之镰||Shop Death Wand03
+极光之镰||Shop Life Wand03
+玫瑰花手持||Shop New Years Rose Wand
+酷酷男头套||Shop School Uniform Boy Hat
+乖乖女头套||Shop School Uniform Gal Hat
+酷酷男学生装||Shop School Uniform Boy Suit
+乖乖女学生装||Shop School Uniform Gal Suit
+乖乖女鞋子||Shop School Uniform Gal Boot
+酷酷男书包||Shop School Uniform Boy Back
+乖乖女书包||Shop School Uniform Gal Back
+酷酷男鞋子||Shop School Uniform Boy Boot
+烈火战神之盔||Fire War God 'S Helm
+寒冰战神之盔||Ice War God 'S Helm
+风暴战神之盔||Storm War God 'S Helm
+死亡战神之盔||Death War God 'S Helm
+生命战神之盔||Life War God 'S Helm
+烈火战神之甲||Shop Fire Suit Lv32
+寒冰战神之甲||Shop Ice Suit Lv32
+风暴战神之甲||Shop Storm Suit Lv32
+死亡战神之甲||Shop Death Suit Lv32
+生命战神之甲||Shop Life Suit Lv32
+烈火战神之鞋||Fire War God Shoes
+寒冰战神之鞋||Ice War God Shoes
+风暴战神之鞋||Storm War God Shoes
+死亡战神之鞋||Death War God Shoes
+生命战神之鞋||Life War God Shoes
+烈火战神披风||Fire War God Cape
+寒冰战神披风||Ice War God Cape
+风暴战神披风||Storm War God Cape
+死亡战神披风||Death War God Cape
+生命战神披风||Life War God Cape
+烈火战神手镯||Fire War God Bracelet
+寒冰战神手镯||Ice War God Bracelet
+风暴战神手镯||Storm War God Bracelet
+死亡战神手镯||Death War God Bracelet
+生命战神手镯||Life War God Bracelet
+烈火战神法杖||Fire War God Wand
+寒冰战神法杖||Ice War God Wand
+风暴战神法杖||Storm War God Wand
+死亡战神法杖||Death War God Wand
+生命战神法杖||Life War God Wand
+浪漫头纱||Shop Wedding Hat Girl
+浪漫婚纱裙||Shop Wedding Shirt Girl
+浪漫婚纱鞋||Shop Wedding Boot Girl
+帅气婚纱头||Shop Wedding Hat Boy
+帅气婚纱礼服||Shop Wedding Shirt Boy
+帅气婚纱鞋||Shop Wedding Boot Boy
+风暴试炼戒指||Storm Trial Ring
+烈火试炼戒指||Fire Trial Ring
+寒冰试炼戒指||Ice Trial Ring
+生命试炼戒指||Life Trial Ring
+死亡试炼戒指||Death Trial Ring
+风暴试炼项链||Storm Trial Necklace
+烈火试炼项链||Fire Trial Necklace
+寒冰试炼项链||Ice Trial Necklace
+生命试炼项链||Life Trial Necklace
+死亡试炼项链||Death Trial Necklace
+小王子踏青帽||Shop Spring Hat Boy
+小仙女踏青帽||Shop Spring Hat Girl
+小王子踏青衣||Shop Spring Shirt Boy
+小仙女踏青衣||Shop Spring Shirt Girl
+小王子踏青鞋||Shop Spring Boot Boy
+小仙女踏青鞋||Shop Spring Boot Girl
+小王子翅膀||Little Prince Wings
+小仙女翅膀||Shop Spring Combat Back Girl
+火炎之翼||Darkly Combat Back
+烈火试炼之冠||Fire Trial 'S Crown
+寒冰试炼之冠||Ice Trial 'S Crown
+风暴试炼之冠||Storm Trial 'S Crown
+死亡试炼之冠||Death Trial 'S Crown
+生命试炼之冠||Life Trial 'S Crown
+六一男帽||Children'S Day Male Hat
+六一女帽||Children'S Day Female Hat
+烈火试炼法袍||Fire Trial Robe
+寒冰试炼法袍||Ice Trial Robe
+风暴试炼法袍||Storm Trial Robe
+死亡试炼法袍||Death Trial Robe
+生命试炼法袍||Life Trial Robe
+六一男衣||Children'S Day Male Top
+六一女衣||Children'S Day Female Top
+烈火试炼之鞋||Fire Trial Shoes
+寒冰试炼之鞋||Ice Trial Shoes
+风暴试炼之鞋||Storm Trial Shoes
+死亡试炼之鞋||Death Trial Shoes
+生命试炼之鞋||Life Trial Shoes
+六一男鞋||Children'S Day Shoes
+六一女鞋||Children'S Day Shoes
+烈火试炼披风||Fire Trial Cape
+寒冰试炼披风||Ice Trial Cape
+风暴试炼披风||Storm Trial Cape
+死亡试炼披风||Death Trial Cape
+生命试炼披风||Life Trial Cape
+六一时装男背||Shop201161 Back Boy
+六一时装女背||Shop201161 Back Girl
+烈火试炼手镯||Fire Trial Bracelet
+寒冰试炼手镯||Ice Trial Bracelet
+风暴试炼手镯||Storm Trial Bracelet
+死亡试炼手镯||Death Trial Bracelet
+生命试炼手镯||Life Trial Bracelet
+烈火试炼法杖||Fire Trial Wand
+寒冰试炼法杖||Ice Trial Wand
+风暴试炼法杖||Storm Trial Wand
+死亡试炼法杖||Death Trial Wand
+生命试炼法杖||Life Trial Wand
+炫彩婚纱头||Rainbow Wedding Gown Head
+炫彩婚纱礼服||Shop Wedding Shirt Boy
+炫彩婚纱男鞋||Rainbow Wedding Gown Shoes
+炫彩头纱||Shop Wedding Hat Girl
+炫彩婚纱裙||Rainbow Wedding Gown Skirt
+炫彩婚纱女鞋||Rainbow Wedding Gown Shoes
+六一炫彩男帽||Children'S Day Rainbow Male Hat
+六一炫彩女帽||Children'S Day Rainbow Female Hat
+六一炫彩男衣||Children'S Day Rainbow Male Top
+六一炫彩女衣||Children'S Day Rainbow Female Top
+六一炫彩男鞋||Children'S Day Rainbow Shoes
+六一炫彩女鞋||Children'S Day Rainbow Shoes
+炫魔眼罩||D Dancer Mask
+炫魔手套||Dancer Gloves
+烈火强力手套||Dancer Gloves
+寒冰强力手套||Dancer Gloves
+风暴强力手套||Dancer Gloves
+死亡强力手套||Dancer Gloves
+生命强力手套||Dancer Gloves
+时装英雄王冠||Hero Crown
+时装主力金冠||Main Crown
+王者皇冠||King Crown
+英雄皇冠||Hero Crown
+炫彩糖果背包||Rainbow Candy Backpack
+绝版炫彩男爵小丑帽||Clown Hat
+绝版炫彩男爵小丑衣||Clown Suit
+绝版炫彩男爵小丑鞋||Clown Boot
+绝版炫彩公主小丑帽||Pricess Clown Hat
+绝版炫彩公主小丑裙||Princess Clown Suit
+绝版炫彩公主小丑鞋||Princess Clown Boot
+炫彩小魔头帽(珍藏版)||Rainbow Imp Head Hat ( Collector'S)
+炫彩小魔头衣(珍藏版)||Rainbow Imp Head Top ( Collector'S)
+炫彩小魔头鞋(珍藏版)||Rainbow Imp Head Shoes ( Collector'S)
+炫彩小魔女帽(珍藏版)||Rainbow Imp Female Hat ( Collector'S)
+炫彩小魔女裙(珍藏版)||Rainbow Imp Female Skirt ( Collector'S)
+炫彩小魔女鞋(珍藏版)||Rainbow Imp Shoes ( Collector'S)
+魔晶法杖||Magic Crystal Wand
+炫彩酷夏清凉镜(珍藏版)||Colorful Swelters Cool Hat
+炫彩酷夏清凉衣(珍藏版)||Rainbow Summer Cool Top ( Collector'S)
+炫彩酷夏清凉鞋(珍藏版)||Rainbow Summer Cool Shoes ( Collector'S)
+炫彩酷夏迷你帽(珍藏版)||Colorful Mini Hat
+炫彩酷夏迷你裙(珍藏版)||Colorful Mini Shirt
+炫彩酷夏迷你鞋(珍藏版)||Colorful Mini Boot
+炫彩酷夏背包(珍藏版)||Rainbow Summer Backpack ( Collector'S)
+炫彩酷夏泳圈(珍藏版)||Swimming Laps
+圣战功夫帽||Elk Hat
+圣战功夫衣||Elk Coat
+圣战功夫鞋||Elk Boots
+魔晶项链||Magic Crystal Necklace
+魔晶戒指||Magic Crystal Ring
+顽石戒指||Rock Ring
+顽石项链||Rock Amulet
+圣灵印记戒指||Life Ring
+圣灵印记项链||Life Amulet
+炫彩魔晶帽||Rainbow Magic Crystal Hat
+初级烈火法杖||Beginner Fire Wand
+初级寒冰法杖||Beginner Ice Wand
+初级风暴法杖||Beginner Storm Wand
+初级生命法杖||Beginner Life Wand
+初级死亡法杖||Beginner Death Wand
+大天使之翼_暂时作废||Angel Wings
+翡翠短裤||Pants Lv5
+御火短裤||Pants Lv10
+御冰短裤||Pants Lv15
+御风短裤||Pants Lv20
+暗影短裤||Pants Lv25
+金线短裤||Pants Lv30
+寒冰魔晶衣||Ice Magic Crystal Top
+寒冰魔晶披风||Ice Magic Crystal Cape
+寒冰魔晶靴||Ice Magic Crystal Boots
+寒冰魔晶盔||Ice Magic Crystal Helm
+寒冰魔石法杖||Ice Magic-Stone Wand
+寒冰魔石戒指||Ice Magic Stone Ring
+寒冰魔石项链||Ice Magic Stone Necklace
+寒冰魔晶手镯||Ice Magic Crystal Bracelet
+烈火魔晶衣||Fire Magic Crystal Top
+烈火魔晶手镯||Fire Magic Crystal Bracelet
+烈火魔石项链||Fire Magic Stone Necklace
+烈火魔石戒指||Fire Magic Stone Ring
+烈火魔石法杖||Fire Magic-Stone Wand
+烈火魔晶披风||Fire Magic Crystal Cape
+烈火魔晶盔||Fire Magic Crystal Helm
+烈火魔晶靴||Fire Magic Crystal Boots
+风暴魔晶靴||Storm Magic Crystal Boots
+风暴魔晶手镯||Storm Magic Crystal Bracelet
+风暴魔晶衣||Storm Magic Crystal Top
+风暴魔石戒指||Storm Magic Stone Ring
+风暴魔晶披风||Storm Magic Crystal Cape
+风暴魔晶盔||Storm Magic Crystal Helm
+风暴魔石法杖||Storm Magic-Stone Wand
+风暴魔石项链||Storm Magic Stone Necklace
+生命魔晶靴||Life Magic Crystal Boots
+生命魔晶披风||Life Magic Crystal Cape
+生命魔晶手镯||Life Magic Crystal Bracelet
+生命魔石戒指||Life Magic Stone Ring
+生命魔晶衣||Life Magic Crystal Top
+生命魔晶盔||Life Magic Crystal Helm
+生命魔石法杖||Life Magic-Stone Wand
+生命魔石项链||Life Magic Stone Necklace
+死亡魔晶披风||Death Magic Crystal Cape
+死亡魔晶手镯||Death Magic Crystal Bracelet
+死亡魔晶靴||Death Magic Crystal Boots
+死亡魔石项链||Death Magic Stone Necklace
+死亡魔晶衣||Death Magic Crystal Top
+死亡魔晶盔||Death Magic Crystal Helm
+死亡魔石戒指||Death Magic Stone Ring
+死亡魔石法杖||Death Magic-Stone Wand
+圣诞糖果背包||Christmas Candy Backpack
+强化寒冰魔石法杖||Ice Right Hand S2 Power
+强化烈火魔石法杖||Fire Right Hand S2 Power
+强化风暴魔石法杖||Storm Right Hand S2 Power
+强化生命魔石法杖||Life Right Hand S2 Power
+强化死亡魔石法杖||Death Right Hand S2 Power
+强化魔晶法杖||Magic Crystal Wand Power
+卓越魔晶法杖||Magic Crystal Wand Power Hard
+卓越寒冰魔石法杖||Ice Right Hand S2 Power Hard
+卓越烈火魔石法杖||Fire Right Hand S2 Power Hard
+卓越风暴魔石法杖||Storm Right Hand S2 Power Hard
+卓越生命魔石法杖||Life Right Hand S2 Power Hard
+卓越死亡魔石法杖||Death Right Hand S2 Power Hard
+烈火伯爵项链||Fire Count Necklace
+烈火游侠项链||Fire Ranger Necklace
+烈火战神项链||Fire War God Necklace
+风暴伯爵项链||Storm Count Necklace
+风暴游侠项链||Storm Ranger Necklace
+风暴战神项链||Storm War God Necklace
+寒冰伯爵项链||Ice Count Necklace
+寒冰游侠项链||Ice Ranger Necklace
+寒冰战神项链||Ice War God Necklace
+生命伯爵项链||Life Count Necklace
+生命游侠项链||Life Ranger Necklace
+生命战神项链||Life War God Necklace
+死亡伯爵项链||Death Count Necklace
+死亡游侠项链||Death Ranger Necklace
+死亡战神项链||Death War God Necklace
+烈火伯爵戒指||Fire Count Ring
+烈火游侠戒指||Fire Ranger Ring
+烈火战神戒指||Fire War God Ring
+风暴伯爵戒指||Storm Count Ring
+风暴游侠戒指||Storm Ranger Ring
+风暴战神戒指||Storm War God Ring
+寒冰伯爵戒指||Ice Count Ring
+寒冰游侠戒指||Ice Ranger Ring
+寒冰战神戒指||Ice War God Ring
+生命伯爵戒指||Life Count Ring
+生命游侠戒指||Life Ranger Ring
+生命战神戒指||Life War God Ring
+死亡伯爵戒指||Death Count Ring
+死亡游侠戒指||Death Ranger Ring
+死亡战神戒指||Death War God Ring
+白银骑士装||Silver Knight Outfit
+黄金骑士装||Yellow Gold Knight Outfit
+死亡骑士装||Death Knight Outfit
+魔晶初级短裤||Magic Crystal Beginner Shorts
+魔晶中级短裤||S2 Pants Medium
+魔晶高级短裤||S2 Pants High
+晶石法杖(普通)||Right Hand Normal Level10
+晶石法杖(精良)||Right Hand Normal Level10
+光明祭司法杖(普通)||Right Hand Normal Level15
+光明祭司法杖(精良)||Right Hand Normal Level15
+光明祭司法杖(传说)||Right Hand Legend Level15
+破冰法杖(普通)||Right Hand Normal Level25
+破冰法杖(精良)||Right Hand Normal Level25
+破冰法杖(传说)||Right Hand Legend Level25
+回魂之眼法杖(普通)||Right Hand Normal Level35
+回魂之眼法杖(精良)||Right Hand Normal Level35
+回魂之眼法杖(传说)||Right Hand Legend Level35
+权利法杖(普通)||Right Hand Normal Level45
+权利法杖(精良)||Right Hand Normal Level45
+权利法杖(传说)||Right Hand Legend Level45
+月牙光晶法杖(普通)||Right Hand Normal Life Level50
+月牙光晶法杖(精良)||Right Hand Normal Life Level50
+月牙光晶法杖(传说)||Right Hand Legend Life Level50
+怒羽法杖(普通)||Right Hand Normal Ice Level50
+怒羽法杖(精良)||Right Hand Normal Ice Level50
+怒羽法杖(传说)||Right Hand Legend Ice Level50
+太阳神之光法杖(普通)||Right Hand Normal Fire Level50
+太阳神之光法杖(精良)||Right Hand Normal Fire Level50
+太阳神之光法杖(传说)||Right Hand Legend Fire Level50
+神龙之力法杖(普通)||Right Hand Normal Storm Level50
+神龙之力法杖(精良)||Right Hand Normal Storm Level50
+神龙之力法杖(传说)||Right Hand Legend Storm Level50
+七星破空法杖(普通)||Right Hand Normal Death Level50
+七星破空法杖(精良)||Right Hand Normal Death Level50
+七星破空法杖(传说)||Right Hand Legend Death Level50
+炫彩小魔女帽||Rainbow Imp Female Hat
+炫彩小魔女裙||Rainbow Imp Female Skirt
+炫彩小魔女鞋||Rainbow Imp Shoes
+炫彩小魔头帽||Rainbow Imp Head Hat
+炫彩小魔头衣||Rainbow Imp Head Top
+炫彩小魔头鞋||Rainbow Imp Head Shoes
+炫彩酷夏清凉镜||Colorful Swelters Cool Hat
+炫彩酷夏清凉衣||Rainbow Summer Cool Top
+炫彩酷夏清凉鞋||Rainbow Summer Cool Shoes
+炫彩酷夏迷你帽||Colorful Mini Hat
+炫彩酷夏迷你裙||Colorful Mini Shirt
+炫彩酷夏迷你鞋||Colorful Mini Boot
+炫彩酷酷男头套||Shop School Uniform Boy Hat
+炫彩酷酷男学生装||Shop School Uniform Boy Suit
+炫彩酷酷男书包||Shop School Uniform Boy Back
+炫彩酷酷男鞋子||Shop School Uniform Boy Boot
+炫彩乖乖女头套||Shop School Uniform Gal Hat
+炫彩乖乖女学生装||Shop School Uniform Gal Suit
+炫彩乖乖女鞋子||Shop School Uniform Gal Boot
+炫彩乖乖女书包||Shop School Uniform Gal Back
+炫彩荒漠牛仔帽||Rainbow Desert Cowboy Hat
+炫彩荒漠牛仔衣||Rainbow Desert Cowboy Top
+炫彩荒漠牛仔鞋||Rainbow Desert Cowboy Shoes
+炫彩荒漠牛仔披肩||Colorful Cowboy Back
+炫彩王者之颠帽||Rainbow King'S Peak Hat
+炫彩王者之颠衣||Rainbow King'S Peak Top
+炫彩王者之颠鞋||Rainbow King'S Peak Shoes
+炫彩王者之颠披风||Rainbow King'S Peak Cape
+炫彩清凉一夏短袖||Cool Summer Boy Shirt
+炫彩清凉一夏球鞋||Cool Summer Boy Boots
+炫彩清凉一夏短裙||Cool Summer Girl Shirt
+炫彩清凉一夏凉鞋||Cool Summer Girl Boots
+炫彩异域法师帽||Rainbow Exotic Mage Hat
+炫彩异域法师服||Rainbow Exotic Mage Uniform
+炫彩异域法师鞋||Rainbow Exotic Mage Shoes
+炫彩异域法师披风||Rainbow Exotic Mage Cape
+炫彩闪灵帽||Shining Hat
+炫彩闪灵衣||Shining Suit
+炫彩闪灵鞋||Shining Boot
+炫彩闪灵翅膀||Shining Back
+45级数值模拟测试||Wish Level8 Heart Of Flying Dragon
+50级数值模拟测试||Wish Level8 Heart Of Flying Dragon
+52级数值模拟测试||Wish Level8 Heart Of Flying Dragon
+绝对值攻击数值模拟测试||Wish Level8 Heart Of Flying Dragon
+升级版绝对值攻击数值模拟测试||Wish Level8 Heart Of Flying Dragon
+翻滚吧蛋炒饭测试||Alphadot
+炫彩酷夏背包||Rainbow Summer Backpack
+炫彩酷夏泳圈||Swimming Laps
+炫彩小翅膀||Rainbow Little Wings
+炫彩小仙女花圈||Shop Spring Hat Girl
+炫彩小仙女裙||Shop Spring Shirt Girl
+炫彩小仙女鞋||Shop Spring Boot Girl
+炫彩小仙女翅膀||Shop Spring Combat Back Girl
+炫彩小王子羽冠||Shop Spring Hat Boy
+炫彩小王子衣||Rainbow Little Prince Top
+炫彩小王子鞋||Rainbow Little Prince Shoes
+炫彩小王子翅膀||Rainbow Little Prince Wings
+炫彩大魔术师礼帽||Shop New Years Rose Hat
+金柠糖果||Gold Acinus
+紫莎糖果||Silvery Acinus
+甜莓糖果||Strawberry Acinus
+海水糖果||Seawater Acinus
+暗黑萝莉专属耳机||Dark Lolita Headphones
+暗黑萝莉连衣裙||Dark Lolita Dress
+暗黑萝莉鞋||Dark Lolita Shoes
+泡泡懒猫专属耳机||Papaw Cat Hat
+泡泡懒猫连衣裙||Papaw Cat Suit
+泡泡懒猫鞋||Papaw Cat Boot
+机械女仆专属耳机||Queen Robot Hat
+机械女仆连衣裙||Queen Robot Suit
+机械女仆鞋||Queen Robot Boot
+电流研究学徒太阳镜||Electric Shock Hat
+电流研究学徒的衣服||Electric Shock Suit
+电流研究学徒的皮鞋||Electric Shock Boot
+探索爱好者太阳镜||Exploration Hat
+探索爱好者的衣服||Exploration Suit
+探索爱好者的皮鞋||Exploration Boot
+阳光冒险家太阳镜||Adventurer Hat
+阳光冒险家的衣服||Adventurer Suit
+阳光冒险家的皮鞋||Adventurer Boot
+魔晶初级短裤(全面升级)||S2 Pants Regular
+魔晶高级短裤(全面升级)||S2 Pants High
+火焰之子手镯||Fire Bracelet S3
+火焰之子项链||Fire Amulet S3
+火焰之子戒指||Fire Ring S3
+海神水晶手镯||Ice Bracelet S3
+海神水晶项链||Ice Amulet S3
+海神水晶戒指||Ice Ring S3
+雷暴之舞手镯||Storm Bracelet S3
+雷暴之舞项链||Storm Amulet S3
+雷暴之舞戒指||Storm Ring S3
+荆棘之吻手镯||Life Bracelet S3
+荆棘之吻项链||Life Amulet S3
+荆棘之吻戒指||Life Ring S3
+炼狱勇士手镯||Death Bracelet S3
+炼狱勇士项链||Death Amulet S3
+炼狱勇士戒指||Death Ring S3
+爱心戒指(男版)||Boys Ring 32 Bits Fps4 A004
+爱心戒指(女版)||Girls Ring 32 Bits Fps4 A004
+炫彩万圣节南瓜头||Halloween Pumpkin Head
+炫彩万圣节南瓜外套||Halloween Pumpkin Suit
+炫彩万圣节南瓜鞋||Halloween Pumpkin Boot
+圣诞红色绒绒帽||Christmas Hat Red
+圣诞绿色绒绒帽||Christmas Hat Green
+圣诞彩色糖果棒(3天)||Christmas Lolipop
+圣诞彩色糖果棒(VIP)||Christmas Lolipop
+炫彩火焰之子_作废||S3 Fire Colorful
+炫彩海神水晶_作废||S3 Ice Colorful
+炫彩雷暴之舞_作废||S3 Storm Colorful
+炫彩荆棘之吻_作废||S3 Life Colorful
+炫彩炼狱勇士_作废||S3 Death Colorful
+小猪圆盾||Fineday Pig Shield
+无糖的肘子肉||Sugar Free Pork Meat
+小恶魔锤||Angry Demon Hammer
+晴天猪圆盾||Fineday Pig Shield Max
+辛香的肘子肉||Sugar Free Pork Meat Max
+愤怒的恶魔锤||Angry Demon Hammer Max
+妖姬猫耳(战利品)||Elf Brown Head Girl01
+精灵露芙的发型(棕色)||Elf Brown Head Girl01
+精灵猫耳(战利品)||Elf Brown Head Boy01
+精灵塔伦的发型(棕色)||Elf Brown Head Boy01
+妖姬猫耳||Elf Black Head Girl01
+精灵露芙的发型(黑色)||Elf Black Head Girl01
+精灵猫耳||Elf Black Head Boy01
+精灵塔伦的发型(黑色)||Elf Black Head Boy01
+妖姬猫耳(白色珍藏版)||Elf White Head Girl01
+精灵露芙的发型(白色)||Elf White Head Girl01
+精灵猫耳(白色珍藏版)||Elf White Head Boy01
+精灵塔伦的发型(白色)||Elf White Head Boy01
+趴趴果冻(白色绝版)||Ragnarok Gray Head Boy01
+趴趴果冻||Ragnarok Red Head Boy02
+迷糊布丁帽(新年版)||Ragnarok Green Head Boy03
+咕咕果冻(白色绝版)||Ragnarok Gray Head Girl01
+咕咕果冻||Ragnarok Red Head Girl02
+迷糊糖果帽(新年版)||Ragnarok Green Head Girl03
+爆炸菠菜头(棕色)||Spinage Brown Head Boy01
+爆炸菠菜头(红色)||Spinage Red Head Boy02
+爆炸菠菜头(黑色)||Spinage Black Head Boy03
+爆炸蘑菇头(棕色)||Spinage Brown Head Girl01
+爆炸蘑菇头(红色)||Spinage Red Head Girl02
+爆炸蘑菇头(黑色)||Spinage Black Head Girl03
+复古马尾(白色绝版)||Errantry Gray Head Boy01
+复古马尾||Errantry Green Head Boy02
+复古马尾(紫色)||Errantry Red Head Boy03
+怀旧马尾(白色绝版)||Errantry Gray Head Girl01
+怀旧马尾||Errantry Green Head Girl02
+怀旧马尾(紫色)||Errantry Red Head Girl03
+烈火王者皇冠_暂时作废||Fire King Crown _ Retired
+寒冰王者皇冠_暂时作废||Ice King Crown _ Retired
+风暴王者皇冠_暂时作废||Storm King Crown _ Retired
+生命王者皇冠_暂时作废||Life King Crown _ Retired
+死亡王者皇冠_暂时作废||Death King Crown _ Retired
+烈火英雄皇冠_暂时作废||Fire Hero Crown _ Retired
+寒冰英雄皇冠_暂时作废||Ice Hero Crown _ Retired
+风暴英雄皇冠_暂时作废||Storm Hero Crown _ Retired
+生命英雄皇冠_暂时作废||Life Hero Crown _ Retired
+死亡英雄皇冠_暂时作废||Death Hero Crown _ Retired
+青铜冠军手套||Pv P Hero Gloves Lv3
+白银冠军手套||Silver Champion Gloves
+黄金冠军手套||Yellow Gold Champion Gloves
+勇士金短裤||Warrior Gold Shorts
+勇士银短裤||Warrior Silver Shorts
+勇士铜短裤||Copper Pants
+英魂手套||Hero Basin Pv P Gloves
+城堡守护者手套(中阶)||The Castle Gloves Lv2
+城堡守护者手套(高阶)||The Castle Gloves Lv3
+潘多拉·龙息灵盾||The Strongest Fire Level55 Left
+潘多拉·冰裂灵盾||The Strongest Ice Level55 Left
+潘多拉·雷霆灵盾||The Strongest Storm Level55 Left
+潘多拉·万象灵盾||The Strongest Life Level55 Left
+潘多拉·灾厄灵盾||The Strongest Death Level55 Left
+潘多拉·龙息灵盾(魔力进化)||The Strongest Fire Level55 Left EVO
+潘多拉·冰裂灵盾(魔力进化)||The Strongest Ice Level55 Left EVO
+潘多拉·雷霆灵盾(魔力进化)||The Strongest Storm Level55 Left EVO
+潘多拉·神翼灵盾(魔力进化)||The Strongest Life Level55 Left EVO
+潘多拉·灾厄灵盾(魔力进化)||The Strongest Death Level55 Left EVO
+潘多拉·龙息灵盾(终极进化)||The Strongest Fire Level55 Left Final
+潘多拉·冰裂灵盾(终极进化)||The Strongest Ice Level55 Left Final
+潘多拉·雷霆灵盾(终极进化)||The Strongest Storm Level55 Left Final
+潘多拉·神翼灵盾(终极进化)||The Strongest Life Level55 Left Final
+潘多拉·灾厄灵盾(终极进化)||The Strongest Death Level55 Left Final
+闪耀试炼冠(VIP专用)||Glory Warrior Hat
+闪耀试炼袍(VIP专用)||Glory Warrior Suit
+闪耀试炼鞋(VIP专用)||Glory Warrior Boot
+魔幻魔晶盔(VIP专用)||Magic Protection Hat
+魔幻魔晶衣(VIP专用)||Magic Protection Suit
+魔幻魔晶靴(VIP专用)||Magic Protection Boot
+大天使之翼||Angel Wings
+烈火王者皇冠||Fire King Crown
+寒冰王者皇冠||Ice King Crown
+风暴王者皇冠||Storm King Crown
+生命王者皇冠||Life King Crown
+死亡王者皇冠||Death King Crown
+烈火英雄皇冠||Fire Hero Crown
+寒冰英雄皇冠||Ice Hero Crown
+风暴英雄皇冠||Storm Hero Crown
+生命英雄皇冠||Life Hero Crown
+死亡英雄皇冠||Death Hero Crown
+爆炸菠菜头(粉色)||Spinage Pink Head Boy04
+爆炸蘑菇头(绿色)||Spinage Green Head Girl06
+爆炸菠菜头(黄色)||Spinage Yellow Head Boy05
+爆炸菠菜头(绿色)||Spinage Green Head Boy06
+爆炸蘑菇头(粉色)||Spinage Pink Head Girl04
+爆炸蘑菇头(黄色)||Spinage Yellow Head Girl05
+炎息.角兽圣书||Fire Left Hand S4
+冰镜.海神圣书||Ice Left Hand S4
+圣光.麒麟圣书||Storm Left Hand S4
+碧天.万象圣书||Life Left Hand S4
+暗月.紫龙圣书||Dark Moon Purple Dragon Tome
+蓝色温暖牌(31天)||Warm Hand Blue
+紫色温暖牌(31天)||Warm Hand Purple
+黄色温暖牌(31天)||Warm Hand Yellow
+蓝色温暖牌||Warm Hand Blue
+紫色温暖牌||Warm Hand Purple
+黄色温暖牌||Warm Hand Yellow
+卖萌熊宝||Warm Girl Bear Head
+抱抱熊宝||Warm Boy Bear Head
+恶魔王子||Demon Prince
+恶魔公主||Demon Princess
+不死的咸鱼||The Strongest Harpoon Left
+恶魔王子(圣诞版)||Demon Prince Special
+恶魔公主(圣诞版)||Demon Princess Special
+圣诞红色手杖(7天)||The Christmas Cane Left
+圣诞绿色手杖(7天)||The Christmas Cane Green Left
+圣诞萌鹿||Christmas Tire Prince
+圣诞Q鹿||Christmas Q Deer
+圣诞派对装(男)||Christmas Clothing
+圣诞派对装(女)||Christmas Clothing Girl
+圣诞派对鞋(男)||Christmas Shoes
+圣诞派对鞋(女)||Christmas Shoes Girl
+纳福精灵||Send The Elves Prince
+迎春妖姬||Send The Elves Princess
+万事如意装||All The Best Clothing
+心想事成装||Horse Clothing
+万事如意鞋||All The Best Shoes
+心想事成鞋||Horse Shoes
+黑猫泡芙||The Spring Festival Boy
+白兔红茶||White Rabbit Black Tea
+时光眼罩||Haqi Time Mask
+魔幻眼罩||Magic Mask
+装死的兔子||Dead Rabbit
+圣瓦伦丁戒指(男版)||Valentines Boys Ring 32 Bits Fps4 A004
+圣瓦伦丁戒指(女版)||Valentines Girls Ring 32 Bits Fps4 A004
+蓝玫瑰花束||Valentines Day Blue Flower Left
+红玫瑰花束||Valentines Day Red Flower Left
+紫玫瑰花束||Valentines Day Purple Flower Left
+橙玫瑰花束||Valentines Day Orange Flower Left
+熊猫头饰(男)||Panda Boy
+熊猫头饰(女)||Panda Girl
+高端拳击手套||The Boxing Gloves VIP
+美白保湿手套||The Whitening Gloves VIP
+家用洗碗手套||The Washing Gloves VIP
+春季学童帽(男)||The Spring Hat Boy
+春季学童帽(女)||The Spring Hat Girl
+春季小阳伞||Umbrella01 Left
+春季小雨伞||Umbrella02 Left
+红蘑菇头饰(男)||The Red Mushroom Boy
+红蘑菇头饰(女)||The Red Mushroom Girl
+亚瑟君王头冠||Ancient Royal Crown Relive
+造梦花束||Dream Flower Left
+钻石冠军手套||Pv P Hero Gloves Diamond
+亚瑟君王战甲||Ancient Royal Armor
+亚瑟君王战靴||Ancient Royal Boots
+皇家骑士头冠(男)||Knight Captain Helmet Boy
+皇家骑士头冠(女)||Knight Captain Helmet Girl
+皇家骑士铠甲||Knight Captain Armor
+皇家骑士战靴||Knight Captain Boots
+星愿，誓言守护之戒（男）||The Valentines Day Ring Man 32 Bits Fps6 A006
+心语，誓言守护之戒（女）||The Valentines Day Ring Woman 32 Bits Fps6 A006
+苹果味雪糕||Icecreram Green Left
+香草味雪糕||Icecreram Write Left
+咖啡味雪糕||Icecreram Brown Left
+哈密瓜冰棍||Lolly Green Left
+柠檬草冰棍||Lolly Yellow Left
+蔓越莓冰棍||Lolly Pink Left
+超能龙舟桨||The Dragon Boat Left
+逐梦花束||Dream2 Flower Left
+少女心花束||Girl Heart Flower Left
+抱抱你花束||Dream Flower Left
+英烈手套||Hero Basin Pv P Gloves Max
+白猫泡芙(活动)||White Cat Puff (event)
+白发魔女(活动)||White-haired Witch (event)
+腐蚀的杖柄||Head Staff
+真火杖柄||Fire Staff
+魂印合成||The Synthesis Of Soul Signet
+麻布口袋||Combat Deck Level1
+丝绸口袋||Combat Deck Level5
+烈焰口袋||Combat Deck Level15 Fire
+水晶口袋||Combat Deck Level15 Ice
+暴云口袋||Combat Deck Level15 Storm
+圣光口袋||Combat Deck Level15 Life
+亡魂口袋||Combat Deck Level15 Death
+玛瑙口袋||Combat Deck Level20
+金光口袋||Combat Deck Level25
+真丝口袋||Combat Deck Level30
+15级精良口袋||Shop Combat Deck Lv10
+20级精良口袋||Shop Combat Deck Lv20
+30级精良口袋||Shop Combat Deck Lv30
+40级精良口袋||Shop Combat Deck Lv40
+黄金卡包||Gold Shop Combat Deck Lv40
+钻石卡包||Diamond Combat Deck
+红蘑菇卡包||Red Mushroom Combat Deck
+潘多拉卡包||The Pandora Combat Deck
+英雄卡包||The Hero Combat Deck
+斗士大卡包||Fighter Combat Deck
+美丽的森林裙||A beautiful forest skirt
+漂亮的森林短裤||Fine forest shorts
+pp的森林手腕||A forest wristband
+漂亮的森林靴||Fine forest boots
+活泼的白色红条短T恤||A lively white t-shirt with red stripes
+帅帅的迷彩小短裤||Cool little camouflage shorts
+漂亮的红色帆布鞋||Fine red canvas shoes
+时效限制：永久有效||Duration: permanent
+时效限制：至购买当天起30天内有效 在安吉奶奶处可兑换成永久有效的炫彩装||Duration: 30 days from the day you buy it. Granny Anji can exchange it for a permanent rainbow outfit
+时效限制：至购买当天起30天内有效||Duration: 30 days from the day you buy it
+一条制作精良的的短裤，据说比不穿短裤强一点 购买限制：红蘑菇2v2天梯积分达到1200或1V1天梯积分达到1600||Well-made shorts, said to be a little better than wearing none. Requires 1200 Red Mushroom 2v2 ladder points or 1600 1v1 points
+一条制作精良的的短裤，据说比初级短裤强一点 购买限制：红蘑菇2v2天梯积分达到1500或1V1天梯积分达到1800||Well-made shorts, said to be a little better than beginner shorts. Requires 1500 Red Mushroom 2v2 ladder points or 1800 1v1 points
+一条制作精良的的短裤，据说比中级短裤强一点 购买限制：红蘑菇2v2天梯积分达到1800或1V1天梯积分达到2000||Well-made shorts, said to be a little better than intermediate shorts. Requires 1800 Red Mushroom 2v2 ladder points or 2000 1v1 points
+男版潜水套装，集齐套装：清凉镜，清凉衣，清凉鞋，酷夏背包。 套装属性：进入水下后可以开始潜水，咕噜噜噜…… 时效限制：永久有效||Male diving set. Collect the cool goggles, cool top, cool sandals and summer pack. Set bonus: you can dive underwater. Duration: permanent
+女版潜水套装，集齐套装：迷你帽，迷你衣，迷你鞋，酷夏泳圈。 套装属性：进入水下后可以开始潜水，咕噜噜噜…… 时效限制：永久有效||Female diving set. Collect the mini hat, mini top, mini shoes and summer float. Set bonus: you can dive underwater. Duration: permanent
+烈火系达人测试必备||Essential for the Fire adept trial
+寒冰系达人测试必备||Essential for the Ice adept trial
+风暴系达人测试必备||Essential for the Storm adept trial
+生命系达人测试必备||Essential for the Life adept trial
+死亡系达人测试必备||Essential for the Death adept trial
+（VIP永久有效）集千万好运在一身||(VIP, permanent) A bundle of good luck
+VIP7级专属的甜蜜糖果，14天有效期。||Sweet candy exclusive to VIP level 7. Lasts 14 days.
+运气好好，带着我肯定给你带来更多的运气哦~VIP专属，14天有效期。||Good luck follows you. VIP exclusive, lasts 14 days.
+（大客户专用）物超所值，你值得拥有！ 温馨提示：此装备有效期为15天，请注意购买。||(For valued guests) Worth every bean. This gear lasts 15 days.
+钻石恒久远，一颗永流传 使用方法： 1、女生在(男版)戒指上签名，男生在(女版)戒指上签名 2、双方交换戒指 3、仪式完成 一个人一辈子只能拥有一枚男版/女版戒指||A diamond is forever. How to use: 1. She signs the male ring, he signs the female ring. 2. Exchange rings. 3. The ceremony is complete. Each person may own only one male or female ring
+最适合万圣节气氛的傻傻南瓜头，绝版稀有装备 时效限制：永久有效||A silly pumpkin head made for Halloween. Limited rare gear. Duration: permanent
+最适合万圣节气氛的傻傻南瓜外套，绝版稀有装备 时效限制：永久有效||A silly pumpkin jacket made for Halloween. Limited rare gear. Duration: permanent
+最适合万圣节气氛的傻傻南瓜鞋子，绝版稀有装备 时效限制：永久有效||Silly pumpkin shoes made for Halloween. Limited rare gear. Duration: permanent
+时效限制：圣诞限量装备，永久有效||Duration: limited Christmas gear, permanent
+时效限制：圣诞限量装备，3天有效||Duration: limited Christmas gear, lasts 3 days
+时效限制：圣诞装备，VIP专用，永久有效。||Duration: Christmas gear, VIP only, permanent.
+烈火系优秀学员借你的顶尖装备哦~||Top gear lent by an outstanding Fire student
+寒冰系优秀学员借你的顶尖装备哦~||Top gear lent by an outstanding Ice student
+风暴系优秀学员借你的顶尖装备哦~||Top gear lent by an outstanding Storm student
+生命系优秀学员借你的顶尖装备哦~||Top gear lent by an outstanding Life student
+死亡系优秀学员借你的顶尖装备哦~||Top gear lent by an outstanding Death student
+多特博士发现，用这个来敲别人的脑袋好像十分管用。||Dr. Dort found this works very well for tapping someone on the head.
+安吉奶奶做肘子肉时忘了加糖，却忽然有了不可思议的能量！||Granny Anji forgot the sugar in the pork knuckle, and it suddenly gained incredible energy!
+伏尔坎用800度的火喷了一下，温度刚刚好，小恶魔没有生气呢。||Vulcan blasted it with 800-degree fire. The heat was just right, and the little demon did not get angry.
+又是阳光明媚的一天 拿着晴天猪的圆盾闪耀登场。 OH，就连大魔王都被亮瞎眼了……||Another sunny day. The sunny pig round shield makes a shining entrance. Even the demon king was dazzled.
+安吉奶奶使用了顶级辣酱做出的肘子肉，它很怕辣……||Granny Anji made this pork knuckle with top-grade chili sauce. It cannot handle the spice.
+伏尔坎用4800度的高温给烫得外焦里嫩，最后生气了！||Vulcan scorched it at 4800 degrees until it was crisp outside and tender inside, and then it got angry!
+赢得了3届红蘑菇天梯赛的冠军奖品。 到哈奇岛-阳光海岸-NPC红蘑菇使者处领取。||Champion prize from the 3rd Red Mushroom ladder. Claim it from the Red Mushroom envoy on Sunny Coast, Haqi Island.
+赢得了6届红蘑菇天梯赛的冠军奖品。 到哈奇岛-阳光海岸-NPC红蘑菇使者处领取。||Champion prize from the 6th Red Mushroom ladder. Claim it from the Red Mushroom envoy on Sunny Coast, Haqi Island.
+赢得了9届红蘑菇天梯赛的冠军奖品。 到哈奇岛-阳光海岸-NPC红蘑菇使者处领取。||Champion prize from the 9th Red Mushroom ladder. Claim it from the Red Mushroom envoy on Sunny Coast, Haqi Island.
+（配置未完成）||(Not configured yet)
+穿戴此手套 必将胜券在握||Wear these gloves and victory is in your hands
+(配置未完成)||(Not configured yet)
+这个冬天一定很暖了||This winter is sure to be warm
+这个冬天一定很暖了 在哈奇岛NPC胖雪人处购买得到||This winter is sure to be warm. Buy it from the plump snowman on Haqi Island
+拿在手上以后 整个人都帅呆了！||Hold this and you look amazing!
+圣诞专属手杖||Exclusive Christmas cane
+非常具有纪念价值的眼罩 奖励给所有在2012年前注册的魔法哈奇们 请符合条件的哈奇到NPC胖雪人处免费领取 领取眼罩截止日期： 2014年2月13日||A commemorative eye mask for mages who registered before 2012. Eligible mages can claim it free from the plump snowman. Claim deadline: 13 February 2014
+仅在2014寒假 限时推出的一款绝版眼罩 非常具有收藏价值 购买眼罩截止日期： 2014年2月13日||A limited eye mask sold only for the 2014 winter break. Purchase deadline: 13 February 2014
+在街边捡到了的兔子 每天就知道装死……||A rabbit picked up on the street. All it does is play dead.
+承诺一生只送1人 使用方法： 1、女生在(男版)戒指上签名，男生在(女版)戒指上签名 2、双方交换戒指 3、仪式完成 一个人一辈子只能拥有一枚男版/女版戒指||A promise for one person only. How to use: 1. She signs the male ring, he signs the female ring. 2. Exchange rings. 3. The ceremony is complete. Each person may own only one male or female ring
+蓝玫瑰代表着奇迹 9朵玫瑰花见证着我们一起度过的美好时光 (建议将玫瑰赠给你最珍贵的哈奇伙伴)||A blue rose means a miracle. Nine roses mark the time you spent together. Give them to a treasured companion
+红玫瑰代表着唯一 9朵玫瑰花见证着我们一起度过的美好时光 (建议将玫瑰赠给你最珍贵的哈奇伙伴)||A red rose means the one and only. Nine roses mark the time you spent together. Give them to a treasured companion
+紫玫瑰代表着浪漫 9朵玫瑰花见证着我们一起度过的美好时光 (建议将玫瑰赠给你最珍贵的哈奇伙伴)||A purple rose means romance. Nine roses mark the time you spent together. Give them to a treasured companion
+橙玫瑰代表着神秘 9朵玫瑰花见证着我们一起度过的美好时光 (建议将玫瑰赠给你最珍贵的哈奇伙伴)||An orange rose means mystery. Nine roses mark the time you spent together. Give them to a treasured companion
+终于可以做一回街头霸王了！||Finally a chance to be the street champion!
+能够及时地补充营养和水分 打蘑菇 不伤手||Refills energy and water in time. Mushroom hunting without hurting your hands
+妈妈说了猜拳谁输谁洗碗 跟你拼的就是人品||Whoever loses at rock-paper-scissors does the dishes. This one tests your luck
+陪你一起走过的点点滴滴||For all the little moments along the way
+让我陪你到世界的终结吧！||Let me stay with you until the end of the world!
+黑暗势力的诅咒封印了上古君王的头冠 黑夜降临之时总能听见头冠怀念以前主人的哀嚎 时效限制：永久有效||A dark curse sealed the ancient king's crown. At night it still mourns its old master. Duration: permanent
+上古君王“亚瑟王”的头冠，传说获得头冠的人将会继承亚瑟王的所有能力，重建上古时代的辉煌盛世王朝 时效限制：永久有效||The crown of the ancient king Arthur. Its bearer is said to inherit his power. Duration: permanent
+造梦玫瑰代表着梦想 有效使用时间：6个月 9朵玫瑰花见证着你在创意空间造梦的时光 创意同行，谢谢一路有你。||A dream-making rose stands for dreams. Usable for 6 months. Nine roses mark your time dreaming in the creative space
+赢得了12届红蘑菇天梯赛的冠军奖品。 到哈奇岛-阳光海岸-NPC红蘑菇使者处领取。||Champion prize from the 12th Red Mushroom ladder. Claim it from the Red Mushroom envoy on Sunny Coast, Haqi Island.
+上古君王“亚瑟王”的战甲，只有真正王者才能驾驭这个威力无比的盔甲！ 时效限制：永久有效||The armor of the ancient king Arthur. Only a true king can wield it. Duration: permanent
+上古君王“亚瑟王”的战靴，只有真正王者才能驾驭这个威力无比的战靴！ 时效限制：永久有效||The boots of the ancient king Arthur. Only a true king can wield them. Duration: permanent
+充满光明能量的“皇家骑士头冠”，此头冠的能量来自于亚瑟王之冠，拥有此头冠将可以重建上古时代的辉煌盛世王朝 时效限制：永久有效||The Crown of the Royal Knight shines with light from the crown of King Arthur. Duration: permanent
+充满光明能量的“皇家骑士铠甲”，此铠甲的能量来自于亚瑟君王战甲，拥有此铠甲将可以重建上古时代的辉煌盛世王朝 时效限制：永久有效||Royal Knight armor, filled with light from King Arthur's armor. Duration: permanent
+充满光明能量的“皇家骑士战靴”，此铠甲的能量来自于亚瑟君王战靴，拥有此战靴将可以重建上古时代的辉煌盛世王朝 时效限制：永久有效||Royal Knight boots, filled with light from King Arthur's boots. Duration: permanent
+陪伴是最长情的告白。 使用方法： 1、女生在(男版)戒指上签名，男生在(女版)戒指上签名 2、双方交换戒指 3、仪式完成 一个人一辈子只能拥有一枚男版/女版戒指||Companionship is the longest confession. How to use: 1. She signs the male ring, he signs the female ring. 2. Exchange rings. 3. The ceremony is complete. Each person may own only one male or female ring
+陪伴是最长情的告白 使用方法： 1、女生在(男版)戒指上签名，男生在(女版)戒指上签名 2、双方交换戒指 3、仪式完成 一个人一辈子只能拥有一枚男版/女版戒指||Companionship is the longest confession. How to use: 1. She signs the male ring, he signs the female ring. 2. Exchange rings. 3. The ceremony is complete. Each person may own only one male or female ring
+吃着苹果味雪糕 酸甜一夏的味道||Apple ice cream, a sweet-and-sour summer
+吃着香草味雪糕 清新夏季的味道||Vanilla ice cream, a fresh summer
+吃着苹果味雪糕 享受夏季的味道||Apple ice cream, the taste of summer
+学校马路对面贩卖的哈密瓜冰棍 最适合夏天吃了||A cantaloupe popsicle sold across from school. Best in summer
+学校马路对面贩卖的柠檬草冰棍 最适合夏天吃了||A lemongrass popsicle sold across from school. Best in summer
+学校马路对面贩卖的蔓越莓冰棍 最适合夏天吃了||A cranberry popsicle sold across from school. Best in summer
+在2015年端午节出的活动纪念副手 极具收藏意义 用999个超能粽子即可兑换||A 2015 Dragon Boat off-hand souvenir. Exchange 999 super rice dumplings
+逐梦玫瑰代表着创新 有效使用时间：6个月 9朵玫瑰花见证着你在创意空间逐梦的时光 创意同行，谢谢一路有你。||A dream-chasing rose stands for invention. Usable for 6 months. Nine roses mark your time in the creative space
+2020 爱你爱你 魔法哈奇白色情人节限定！时效限制：永久有效||2020 White Day limited item. Duration: permanent
+2020白色情人节特别手持 抱抱你，送给特别的你。||2020 White Day hand item. A hug for someone special.
+穿戴此手套 必将披荆斩棘，所向披靡！||Wear these gloves and cut through every obstacle
+陈旧的杖柄，但似乎有用…… （需将杖柄装备在“玩具”栏中，打败秘境55层BOSS后淬炼成真火杖柄）||An old wand haft that still seems useful. Equip it in the toy slot and defeat the realm floor 55 boss to temper it into a true-fire haft
+经过真火燃烧淬炼而成的杖柄，还在发烫…… （需将杖柄装备在“玩具”栏中，打败秘境65层BOSS后淬炼成冰晶杖柄）||A haft tempered in true fire, still hot. Equip it in the toy slot and defeat the realm floor 65 boss to temper it into an ice-crystal haft
+丝绸口袋||Silk pocket
+这句表达通过了，我们再说一句。||That answer passed. Let's say one more.
+该语言暂不支持剧情评估||Story assessment is not available for this language yet.
+该语言暂不支持朗读||Read-aloud is not available for this language yet.
+该语言暂不支持语音识别||Speech recognition is not available for this language yet.
+背包中的物品||An item in your bag
+听力小测（不发奖励）||Listening check (no reward)
+该课程尚未提供母语听力选项||Listening choices are not yet available in your native language.
+先听一句话，再选出它的意思。答题不发奖励。||Listen to a sentence, then choose its meaning. There is no reward for answering.
+再听一遍，想想它的意思。||Listen again and think about its meaning.
+听力小测通过，已单独记录；不发放奖励。||Listening check passed and recorded separately. No currency is awarded.
+
+# NPC shop categories, roles, and prices
+已拥有 {count}||Owned: {count}
+需要 {count} {unit}||Need {count} {unit}
+{count} {unit}||{count} {unit}
+老虎坐骑||Tiger mount
+兔子坐骑||Rabbit mount
+短期坐骑||Short-term mounts
+长期坐骑||Long-term mounts
+热卖||Hot
+抓宠符文||Catch runes
+杂货||General goods
+1V1天梯||1v1 ladder
+2V2天梯||2v2 ladder
+符文卡||Rune cards
+奖品||Prizes
+暑假礼包||Summer packs
+三周年||Third anniversary
+手套VIP||VIP gloves
+烈火系VIP||Fire VIP
+寒冰系VIP||Ice VIP
+风暴系VIP||Storm VIP
+生命系VIP||Life VIP
+死亡系VIP||Death VIP
+白色晶石||White crystals
+绿色晶石||Green crystals
+旧货币||Old currency
+炫彩装||Rainbow outfits
+奖章兑换||Medal exchange
+史诗坐骑||Epic mounts
+50级奖赏||Level 50 rewards
+冠军手套||Champion gloves
+王者勋章||King medals
+英雄勋章||Hero medals
+荣誉勋章||Honor medals
+兑换仙豆||Exchange fairy beans
+每周奖励||Weekly rewards
+镇长奖励||Mayor rewards
+变身药丸||Transform pills
+炫彩卡牌||Rainbow cards
+其它物品||Other items
+家具类||Furniture
+植物类||Plants
+房屋||Houses
+装扮家具||Decor furniture
+注入能量||Infuse energy
+奇怪发明||Odd inventions
+变身器||Transformers
+领取喇叭||Claim horns
+糖果拿来||Bring candy
+活动激活码||Event codes
+抽奖激活码||Lottery codes
+礼物兑换||Gift exchange
+悬赏包||Bounty packs
+秘境奖章||Realm medals
+口袋||Pockets
+潘多拉||Pandora
+潘多拉碎片||Pandora shards
+换取宠物||Pet exchange
+精力值||Stamina
+卖鱼||Sell fish
+净化魔杖||Purify wands
+合成||Craft
+激怒卡||Taunt cards
+鉴定水晶||Appraisal crystals
+净化魔晶||Purify crystals
+融合剂||Fusion agent
+聚灵魔晶||Spirit crystals
+蓝晶灵龟||Azure crystal turtle
+天赐龟蛋||Gifted turtle eggs
+精选物品||Featured items
+炫彩卡片||Rainbow cards
+喵喵大使||Meow ambassador
+可爱喵喵||Cute meow
+炫彩装扮||Rainbow outfits
+副本回馈||Dungeon thanks
+特别鼓励||Special encouragement
+爆炸头||Explosive hair
+强力短裤||Strong shorts
+恶魔之盾||Demon shield
+升级主手||Upgrade main hand
+老战友||Old comrades
+新战友||New comrades
+激战魔珠||Battle beads
+英雄积分||Hero points
+战魂符文||Battle-soul runes
+圣诞快乐||Merry Christmas
+圣诞礼物||Christmas gifts
+宝物零件||Relic parts
+上古宝物||Ancient relics
+黑市诱惑||Black market
+药丸回收||Pill recycle
+中级药丸||Intermediate pills
+精粹雨露||Essence dew
+参赛额度||Entry quota
+亚瑟王盔甲||Arthur armor
+皇家骑士套装||Royal knight set
+卡牌升级||Card upgrade
+战斗卡包||Battle decks
+营地居民||Camp resident
+装备商人||Gear merchant
+领地看守者||Territory keeper
+岛屿传送者||Island guide
+烈火系导师||Fire mentor
+寒冰系导师||Ice mentor
+风暴系导师||Storm mentor
+生命系导师||Life mentor
+死亡系导师||Death mentor
+大魔导师||Archmage
+激活码奖品管理员||Code prize keeper
+家族管理员||Family keeper
+驯兽师||Beast trainer
+家园设计师||Home designer
+考古学家||Archaeologist
+爱心医生||Kind doctor
+舞蹈达人||Dance adept
+抱抱龙建筑导师||Cuddle Dragon building mentor
+玄玉装备管理员||Jade gear keeper
+哈奇大使||Haqi ambassador
+岛屿传送||Island portal
+家园装饰管理员||Home decor keeper
+战斗宝石商人||Battle gem merchant
+旧物收购||Old goods buyer
+仙豆装备管理员||Fairy bean gear keeper
+兔八哥保险公司客户经理||Bugs Insurance clerk
+兔八哥保险公司总经理||Bugs Insurance manager
+补给品商人||Supply merchant
+原始宝石打磨工匠||Raw gem cutter
+游历商人||Traveling merchant
+秘境看护者||Realm keeper
+符文制造者||Rune maker
+灵兽导师||Spirit beast mentor
+鉴定导师||Appraisal mentor
+魔法工匠||Magic artisan
+怪物军团||Monster legion
+明星宠物||Star pet
+S4烈火装供货商||S4 Fire gear supplier
+S4寒冰装供货商||S4 Ice gear supplier
+S4风暴装供货商||S4 Storm gear supplier
+S4生命装供货商||S4 Life gear supplier
+S4死亡装供货商||S4 Death gear supplier
+奇乐||Qile
+圣诞老人||Santa
+城堡堡主||Castle lord
+符文卡商人||Rune card merchant
+幸运卡袋商人||Lucky card bag merchant
+技能卡商人||Skill card merchant
+战斗卡包商人||Battle deck merchant
+炫彩卡升级||Rainbow card upgrade
+控制魔法导师||Control magic mentor
+防御魔法导师||Defense magic mentor
+寻宝奇兵||Treasure hunter
+奇怪的博士||Strange doctor
+万卷使者||Envoy of scrolls
+船长夫人||Captain's wife
+船长的女儿||Captain's daughter
+提灯女巫||Lantern witch
+支援护卫团||Support guard
+幻影||Phantom
+
+# companion collection counts
+我的收藏 {owned} / {total}||My collection {owned} / {total}
+1 位伙伴 · 营养餐 {food}||1 companion · nutrition meals {food}
+{count} 位伙伴 · 营养餐 {food}||{count} companions · nutrition meals {food}
+等级 {level} · 卡位 {slot}||Level {level} · slot {slot}
+等级 {level} · 休息中||Level {level} · resting
+选择卡位 {slot} 的伙伴||Choose a companion for slot {slot}
+
+# data/adventure/dungeon-index.json
+火鬃怪宝库||Fire Mane Treasury
+神木空间||Sacred Tree Space
+试炼之塔||Tower of Trials
+梦幻火鸟岛||Dream Firebird Island
+梦幻寒冰岛||Dream Ice Island
+梦魇禁地||Nightmare Forbidden Land
+圣诞缤纷世界||Christmas Colorful World
+沼泽魔窟||Marsh Monster Lair
+宝箱世界哈奇小镇||Treasure World: Haqi Town
+宝箱世界火鸟岛||Treasure World: Firebird Island
+宝箱世界寒冰岛||Treasure World: Ice Island
+宝箱世界沙漠古堡||Treasure World: Desert Castle
+金鬃怪的宝库||Golden Mane Treasury
+冰封极地||Frozen Polar Wilds
+火鬃大王的巢穴||Fire Mane King's Lair
+大地冰熊的巢穴||Earth Ice Bear's Lair
+落日神殿||Sunfall Temple
+风暴之眼||Eye of the Storm
+梦魇火鸟岛||Nightmare Firebird Island
+地狱之海||Sea of the Underworld
+英雄试炼之塔||Hero Trial Tower
+异界空间||Otherworld Space
+神殿秘境||Temple Secret Realm
+中阶魔法师考场||Mid-tier Wizard Exam Hall
+神秘篝火岛||Mysterious Bonfire Island
+神殿废墟||Temple Ruins
+幽灵船宝藏||Ghost Ship Treasure
+烈焰秘境||Blaze Secret Realm
+冰封秘境||Frost Secret Realm
+风蚀秘境||Wind Erosion Secret Realm
+万象秘境||Myriad Secret Realm
+死寂秘境||Deathly Secret Realm
+烈焰禁地||Blaze Forbidden Land
+冰封禁地||Frost Forbidden Land
+风蚀禁地||Wind Erosion Forbidden Land
+万象禁地||Myriad Forbidden Land
+死寂禁地||Deathly Forbidden Land
+咕噜军团的大本营||Gulu Legion Base Camp
+铁壳军团的大本营||Ironshell Legion Base Camp
+胖胖军团的大本营||Chubby Legion Base Camp
+咕噜军团的小基地||Gulu Legion Outpost
+铁壳军团的小基地||Ironshell Legion Outpost
+胖胖军团的小基地||Chubby Legion Outpost
+异界风暴之眼||Otherworld Eye of the Storm
+火鬃怪大王||Fire Mane King
+大力猿首领||Mighty Ape Chief
+愤怒的火鬃将军||Angry Fire Mane General
+焚天舞凤||Heaven-Burning Dancing Phoenix
+镇塔冰熊||Tower Guardian Ice Bear
+恶灵章鱼头目||Evil Spirit Octopus Chief
+牛魔王||Bull Demon King
+梦魇毒蛇||Nightmare Viper
+暴熊||Raging Bear
+金鬃大王||Golden Mane King
+火毛怪||Fire Fuzz Monster
+残暴的火鬃怪队长||Brutal Fire Mane Captain
+暗黑虚影||Dark Shadow
+风眼守护兽||Storm Eye Guardian
+冰雪之王霍伊斯||Ice and Snow King Hoiss
+暗黑男爵||Dark Baron
+费尔斯通王子||Prince Firestone
+库力蛙||Kuli Frog
+巨大火鸟||Giant Firebird
+狂暴火战士||Berserk Fire Warrior
+冷冽亡灵猴||Cold Undead Monkey
+冷血暴熊||Cold-Blooded Fierce Bear
+雷动鬃王||Thunder Mane King
+雷动熊王||Thunder Bear King
+天赐巨人||Heaven-sent Giant
+大地觉醒者||Earth Awakener
+传说九凤天||Legendary Nine Phoenix
+不死黑熊||Undying Black Bear
+不死鸟||Undying Firebird
+恶魔费雷斯||Demon Feres
+冰熊破坏者||Ice Bear Destroyer
+艾卡冰魔||Aika Ice Demon
+饕餮鬃王||Gluttonous Mane King
+蛇后妮卡||Snake Queen Nika
+改造草食者||Modified Herbivore
+鳄王拉比||Croc King Rabi
+黑熊改造者||Black Bear Modifier
+法老王威格夫||Pharaoh Wigef
+绿绿的咕噜噜||Green Gulu
+一只绿色的铁壳||A Green Ironshell
+贪吃的蓝胖胖||Gluttonous Blue Chubby
+跟随宠物||Follow pets
+搜索我的坐骑||Search my mounts
+{label}（{count}）||{label} ({count})
+下骑||Dismount
+已骑乘 · 点击下骑||Riding · Click to dismount
+点击坐骑骑上，再次点击当前坐骑下骑。||Click a mount to ride; click the current mount again to dismount.
+没有找到坐骑||No mounts found
+还没有坐骑，可在商城或居民商店获取。||No mounts yet. Find one in the mall or a resident shop.
+{name}骑乘{mount}||{name} riding {mount}
+点击坐骑查看详情，或拖到上方骑乘。||Click a mount for details, or drag it above to ride.

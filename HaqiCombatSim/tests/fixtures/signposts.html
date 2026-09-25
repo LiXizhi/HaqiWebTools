@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>木路牌预览</title>
+<style>body{margin:0;background:#d5c38e;color:#493924;font:14px sans-serif}p{margin:16px}canvas{display:block;width:100%;max-width:760px}</style>
+<p>木路牌：单行、双行、超长中文与连续英文；每组上排桌面，下排手机缩放。不读写存档。</p>
+<p id="result">正在检查文字边界。</p>
+<canvas width="1520" height="1200" aria-label="木路牌多语言和缩放预览"></canvas>
+<script type="module">
+import {createSignpostPainter,layoutSignpostLabel} from '../../js/adventure_signposts.js';
+const canvas=document.querySelector('canvas'),c=canvas.getContext('2d'),draw=createSignpostPainter();
+c.scale(2,2);c.fillStyle='#d5c38e';c.fillRect(0,0,760,600);
+const names=['金色山谷','Golden Valley','Snow Mountain Lookout',
+    '通往遥远的北方雪山与神秘森林的古老道路',
+    'The Ancient Watchtower Beyond the Northern Mountain Pass',
+    'SupercalifragilisticexpialidociousLookout'];
+const failures=[];
+for(const [index,name] of names.entries()){
+    const layout=layoutSignpostLabel(c,name);
+    if(layout.lines.join('').replace(/\s/gu,'')!==name.replace(/\s/gu,''))failures.push('文字丢失');
+    for(const [i,line] of layout.lines.entries()){
+        const m=c.measureText(line),baseline=layout.baseline+i*layout.lineHeight,s=layout.scale;
+        if((Math.max(m.actualBoundingBoxLeft,m.actualBoundingBoxRight)+.3)*s>layout.innerWidth/2
+            ||(baseline-m.actualBoundingBoxAscent)*s < -layout.innerHeight/2
+            ||(baseline+m.actualBoundingBoxDescent+.7)*s>layout.innerHeight/2)failures.push(name);
+    }
+    for(const [row,scale] of [1.4,.82].entries()){
+        c.save();c.translate(125+(index%3)*250,115+Math.floor(index/3)*300+row*145);
+        c.scale(scale,scale);draw(c,name,0,0);c.restore();
+    }
+}
+document.querySelector('#result').textContent=failures.length?`失败：${failures.join('、')}`:'通过：6 种地名完整保留，文字与高光均在木板内边距内。';
+</script></html>

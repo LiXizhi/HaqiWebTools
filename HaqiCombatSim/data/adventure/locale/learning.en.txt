@@ -1,0 +1,140 @@
+你好！||Hello!
+你好，很高兴见到你。||Hello, nice to meet you.
+你好，很高兴认识你。||Hi, nice to meet you.
+你今天好吗？||How are you today?
+我很好，谢谢。||I am fine, thank you.
+我们可以聊聊吗？||Can we talk?
+当然可以。||Of course.
+我想认识你。请打个招呼，告诉我你喜欢做什么，再邀请我一起做一件事。||I would like to get to know you. Say hello, tell me what you like doing, and invite me to do something together.
+礼貌问候对方||Greet the partner politely
+说明自己喜欢做的事||Describe an activity you enjoy
+邀请对方一起做一件具体的事||Invite the partner to a specific shared activity
+你是新来的吗？||Are you new here?
+是的，我是新来的。||Yes, I am new here.
+你想认识朋友吗？||Would you like to make friends?
+我想认识新朋友。||I would like to make new friends.
+你来自哪里？||Where are you from?
+我来自远方。||I come from far away.
+你需要帮忙吗？||Do you need help?
+是的，请帮帮我。||Yes, please help me.
+好的，请帮我一下。||Yes, could you help me, please?
+你想问什么？||What would you like to ask?
+请再说一遍。||Please say that again.
+我说得太快了吗？||Am I speaking too fast?
+请说慢一点。||Please speak more slowly.
+我们来讨论下一场战斗。请提出先做什么，解释原因，再问我是否同意。这里只讨论，不会自动出牌。||Let us discuss our next battle. Suggest what to do first, explain why, and ask if I agree. This conversation does not play any cards.
+提出具体战术行动||Suggest a specific tactical action
+解释行动的原因||Explain the reason for that action
+询问伙伴是否同意||Ask whether the partner agrees
+这有帮助吗？||Does that help?
+是的，谢谢你的帮助。||Yes, thank you for your help.
+你准备离开了吗？||Are you ready to leave?
+是的，下次再聊。||Yes, talk to you later.
+下次还来吗？||Will you come back?
+会的，回头见。||Yes, see you later.
+这是什么？||What is this?
+这是{item}。||This is {item}.
+你能描述这件物品吗？||Can you describe this item?
+我看到{item}。||I can see {item}.
+我们谈谈什么？||What shall we talk about?
+我们来谈谈{item}吧。||Let us talk about {item}.
+我在为探险做准备。请推荐一种物品，说明它有什么用，再问我是否愿意选择它。||I am preparing for an adventure. Recommend an item, explain how it helps, and ask whether I would like it.
+推荐一种物品||Recommend an item
+解释推荐物品的用途||Explain what the item is useful for
+询问对方是否愿意选择它||Ask whether the partner would like to choose it
+你的背包里有什么？||What is in your bag?
+我的背包里有{item}。||There is {item} in my bag.
+我背包里有{item}。||I have {item} in my bag.
+你有这样的物品吗？||Do you have an item like this?
+是的，我有。||Yes, I do.
+这是你的吗？||Is this yours?
+是的，这是我的。||Yes, it is mine.
+你有多少这样的物品？||How many of these do you have?
+我有{count}{measure}。||I have {count}.
+一共有{count}{measure}。||There are {count} in total.
+只有一个吗？||Is there only one?
+让我数一数。||Let me count.
+你能告诉我数量吗？||Can you tell me the number?
+数量是{count}。||The number is {count}.
+你喜欢这件物品吗？||Do you like this item?
+是的，我喜欢。||Yes, I like it.
+你喜欢什么？||What do you like?
+我喜欢探索。||I like exploring.
+你更喜欢哪个？||Which one do you prefer?
+我更喜欢这个。||I prefer this one.
+你想要哪个？||Which one would you like?
+我想要这个。||I would like this one.
+你确定吗？||Are you sure?
+是的，我确定。||Yes, I am sure.
+为什么选这个？||Why choose this one?
+因为它很有用。||Because it is useful.
+我们看看装备好吗？||Shall we look at the equipment?
+好的，让我看看。||Yes, let me have a look.
+你准备好了吗？||Are you ready?
+我准备好了。||I am ready.
+你想换装备吗？||Would you like to change your equipment?
+我想先比较一下。||I would like to compare them first.
+我们在哪里？||Where are we?
+我们在魔法营地。||We are at the Magic Camp.
+你想去哪里？||Where would you like to go?
+我想去海边。||I would like to go to the beach.
+你找到这个地方了吗？||Did you find this place?
+是的，我找到了。||Yes, I found it.
+我想和你一起探索营地。请说出想去哪里，解释为什么，再邀请我同行。||I would like to explore the camp with you. Tell me where you want to go, explain why, and invite me along.
+提出一个想去的地点||Name a place you want to visit
+说明去那里的原因||Explain why you want to go there
+邀请对方一起前往||Invite the partner to come along
+我们一起探索吧？||Shall we explore together?
+好，我们走吧。||Yes, let us go.
+你想四处看看吗？||Would you like to look around?
+我想四处看看。||I would like to look around.
+我们要休息一下吗？||Shall we take a break?
+好，休息一下吧。||Yes, let us take a break.
+你知道怎么走吗？||Do you know the way?
+请给我指路。||Please show me the way.
+我们要一起走吗？||Shall we go together?
+请跟我来。||Please follow me.
+你听清楚了吗？||Did you hear me clearly?
+你能再解释一下吗？||Could you explain that again?
+捕鱼结束了，你想说什么？||Fishing is over. What would you like to say?
+我刚才去捕鱼了。||I went fishing just now.
+你还想捕鱼吗？||Would you like to fish again?
+我想再试一次。||I would like to try again.
+你想先看看收获吗？||Would you like to check your catch first?
+我想先看看背包。||I would like to check my bag first.
+我们再试一次好吗？||Shall we try again?
+好的，不要放弃。||Yes, do not give up.
+你需要一点时间吗？||Do you need a little time?
+请等一下。||Please wait a moment.
+你愿意继续吗？||Would you like to keep going?
+我愿意继续尝试。||I would like to keep trying.
+你准备开始了吗？||Are you ready to begin?
+是的，我们开始吧。||Yes, let us begin.
+我们先做什么？||What should we do first?
+我们先看看卡牌。||Let us look at the cards first.
+你需要更多时间吗？||Do you need more time?
+我需要一点时间。||I need a little time.
+你希望我怎么帮你？||How would you like me to help?
+请保护我。||Please protect me.
+我们需要小心吗？||Should we be careful?
+是的，我们要小心。||Yes, we should be careful.
+你会帮我吗？||Will you help me?
+我会帮助你。||I will help you.
+你想先做什么？||What would you like to do first?
+我想先治疗。||I would like to heal first.
+我们要保存魔力吗？||Should we save our magic?
+是的，先保存魔力。||Yes, save our magic first.
+现在进攻还是等待？||Attack now or wait?
+我们先等一等。||Let us wait first.
+你还好吗？||Are you all right?
+我还好，谢谢关心。||I am all right, thank you for asking.
+你累了吗？||Are you tired?
+我想休息一下。||I would like to rest.
+你现在感觉怎么样？||How do you feel now?
+我觉得好多了。||I feel much better.
+接下来想做什么？||What would you like to do next?
+我想继续探索。||I would like to keep exploring.
+今天学到什么了？||What did you learn today?
+我学会了请求帮助。||I learned how to ask for help.
+你想分享今天的经历吗？||Would you like to share your day?
+我想给你讲个故事。||I would like to tell you a story.

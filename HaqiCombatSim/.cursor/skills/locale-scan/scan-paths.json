@@ -27,12 +27,17 @@
   "json": [
     {
       "path": "data/adventure/npc-catalog.json",
-      "fields": ["name"],
+      "fields": ["name", "description", "subtitle"],
       "under": ["npcs"]
     },
     {
+      "path": "data/adventure/npc-catalog.json",
+      "fields": ["categoryName"],
+      "under": ["shops"]
+    },
+    {
       "path": "data/adventure/chapter.json",
-      "fields": ["name"],
+      "fields": ["name", "description"],
       "under": ["npcs"]
     },
     {

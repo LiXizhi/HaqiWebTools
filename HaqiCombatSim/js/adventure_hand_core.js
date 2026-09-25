@@ -9,7 +9,7 @@ export function resolveHandSwipe(battle, hand, discarded=[]) {
     const hero=battle.sides.near[0];
     if(![...selectableCards(hero),...runeCardsInHand(battle)].some(h=>h.seq===hand.seq&&h.key===hand.key&&h.runeId===hand.runeId))return null;
     const card=battle.resolved.cards[hand.key];
-    if(discarded.includes(hand.seq))return {message:'请先撤销弃牌'};
+    if(discarded.includes(hand.seq))return {message:'这张卡牌已弃掉'};
     const message=castBlockedMessage(hero,card,battle.resolved);
     if(message)return {message};
     const targets=validTargets(battle,hero,card);

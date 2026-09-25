@@ -1,6 +1,7 @@
 import {createMonsterArtRenderer} from './adventure_monster_art.js';
 import {createQuestJournalLoader} from './adventure_quest_journal.js';
 import {installDungeonIndex} from './adventure_dungeons_core.js';
+import {installIslandEncounters} from './adventure_island_encounters_core.js';
 import {createDungeonLoader} from './adventure_dungeons.js';
 import {installNpcCatalog} from './adventure_npc_core.js';
 import {installFishing} from './adventure_fishing_core.js';
@@ -8,6 +9,7 @@ import {installRuneCatalog} from './adventure_runes_core.js';
 import {installNpcArt} from './adventure_npc_art_core.js';
 import {loadEnvironmentArt} from './adventure_environment_art.js';
 import { installExpansion } from './adventure_expansion_core.js';
+import { installMountCatalog } from './adventure_mounts_core.js';
 // Browser IO for the self-contained adventure package.
 import { validateSpellEffects } from './spell_effects_core.js';
 import { validateAdventureContent } from './adventure_content_core.js';
@@ -25,7 +27,7 @@ export async function loadResources(progress) {
         const loaded = rows.reduce((sum, row) => sum + row.loaded, 0);
         const total = active.every(row => row.total && row.loaded <= row.total)
             ? rows.reduce((sum, row) => sum + (row.done ? row.loaded : row.total), 0) : null;
-        progress?.({ label: '正在下载游戏配置', detail: `已读取 ${(loaded / 1048576).toFixed(2)} MB`, value: active.length && total ? loaded / total : null });
+        progress?.({ label: '正在下载游戏配置', detail: `${(loaded / 1048576).toFixed(2)} MB`, value: active.length && total ? loaded / total : null });
     } });
     progress?.({ label: '正在连接资源服务器', value: null });
     const [content,dataset,manifest,media,effects]=await Promise.all(['chapter','combat','assets','media','spell-effects'].map(n=>json(`data/adventure/${n}.json`)));
@@ -35,6 +37,7 @@ export async function loadResources(progress) {
     const mode=assetMode(location.hostname,location.search);
     // A failed cosmetic download must not block local saves or gameplay.
     const environmentReady=loadEnvironmentArt(mode,json).catch(error=>{console.warn('使用基础场景素材：',error.message);return null;});
+    const buildingArtReady=loadEnvironmentArt(mode,json,'data/adventure/building-art.json').catch(error=>{console.warn('使用基础建筑素材：',error.message);return null;});
     const terrainDecorationsReady=loadEnvironmentArt(mode,json,'data/adventure/terrain-decoration-art.json').catch(error=>{console.warn('使用基础地表纹理：',error.message);return null;});
     const uiArtReady=loadUiArt(mode,json).catch(error=>console.warn('使用基础界面：',error.message));
     validateMediaManifest(media,manifest,mode);
@@ -92,10 +95,14 @@ export async function loadResources(progress) {
     }
     const [catalog,candidates,kidsCards,kidsCharms,cardNames]=await Promise.all([json('data/adventure/pets.json'),json('data/adventure/shop-candidates.json'),json('data/kids/cards.json'),json('data/kids/charms.json'),json('data/kids/card_names.json')]);
     installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames);
+    installIslandEncounters(content,dataset,await json('data/adventure/island-encounters.json'),kidsCards,cardNames);
     const dungeonJson=createJsonReader({packed:false});
     installDungeonIndex(content,await json('data/adventure/dungeon-index.json'));
     const dungeons=createDungeonLoader({content,dataset,cards:kidsCards,names:cardNames,readJson:dungeonJson});
     installNpcCatalog(content,await json('data/adventure/npc-catalog.json'));
+    installMountCatalog(content,await json('data/adventure/mount-catalog.json'));
+    for(const mount of content.mountCatalog.mounts)if(mount.art?.cdn)lazyImages.set(`mount:${mount.id}`,mount.art);
+    for(const [id,art] of Object.entries(content.mountCatalog.sheets||{}))if(art?.cdn)lazyImages.set(`mount-sheet:${id}`,art);
     const npcArt=await json('data/adventure/npc-art.json');
     installNpcArt(content,npcArt);
     for(const [id,entry] of Object.entries(npcArt.entries))lazyImages.set(id,entry);
@@ -129,8 +136,9 @@ export async function loadResources(progress) {
     const drawMonster=createMonsterArtRenderer(monsterArt,content,draw,drawPet);
     await uiArtReady;
     const environmentArt=await environmentReady;
+    const buildingArt=await buildingArtReady;
     const terrainDecorationArt=await terrainDecorationsReady;
-    return {drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,terrainDecorationArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    return {drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,terrainDecorationArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

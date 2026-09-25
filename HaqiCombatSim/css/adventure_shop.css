@@ -8,9 +8,11 @@
 .shop-layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:12px;align-items:start}
 .shop-sidebar{display:grid;gap:10px;min-width:0}
 .shop-wallet,.shop-preview{border:1px solid var(--line);border-radius:8px;background:#f9edcf;padding:12px}
-.shop-wallet{display:grid;grid-template-columns:1fr auto;gap:7px;align-items:center}
-.shop-wallet strong{font-size:22px;color:#936223;font-variant-numeric:tabular-nums}
-.shop-wallet small{grid-column:1/-1;color:var(--muted)}
+.shop-wallet{display:flex;flex-direction:column;align-items:stretch;gap:7px}
+.shop-balances{display:flex;flex-direction:column;gap:2px}
+.shop-balance{display:flex;align-items:center;gap:6px;min-width:0}
+.shop-balance strong{font-size:20px;color:#936223;font-variant-numeric:tabular-nums}
+.shop-wallet small{color:var(--muted)}
 .shop-preview{display:flex;flex-direction:column;align-items:center;gap:9px;min-height:294px;background:radial-gradient(ellipse at 50% 25%,#fffbea,#ead7a8)}
 .shop-preview>canvas{margin:25px 0}
 .shop-preview h3,.shop-preview p{margin:0;text-align:center}
@@ -21,7 +23,7 @@
 .shop-item-warning{color:#a3442b}
 .shop-attributes{display:grid;grid-template-columns:1fr auto;gap:5px 8px;font-size:12px;margin:0;width:100%}
 .shop-attributes dd{margin:0;text-align:right;color:#315f44}
-.shop-preview-price{color:#936223;font-weight:bold}
+.shop-preview-price{color:#936223;font-weight:bold;white-space:nowrap}
 .shop-catalog{min-width:0;border:1px solid var(--line);border-radius:8px;padding:10px;background:#f4e4bd}
 .shop-subtabs{display:flex;flex-wrap:wrap;gap:4px;padding-bottom:9px;border-bottom:1px solid var(--line)}
 .shop-subtabs button{font-size:12px;padding:5px 9px;min-height:32px}
@@ -34,7 +36,9 @@
 .shop-product-icon{grid-row:2/5;grid-column:1;display:grid;place-items:center;padding:0;width:84px;height:84px;align-self:center;border:1px solid #b79a61;border-radius:5px;background:linear-gradient(#eee0b8,#fff9e8);cursor:pointer}
 .shop-product-icon[aria-pressed=true]{outline:2px solid var(--green);outline-offset:1px}
 .shop-good-price,.shop-good-level{font-size:11px;overflow-wrap:anywhere;align-self:center}
-.shop-good-price,.shop-preview-price,.shop-bean-price{display:inline-flex;align-items:center;justify-content:center;gap:3px;color:#936223;font-weight:bold}
+.shop-good-price,.shop-preview-price,.shop-bean-price{display:inline-flex;align-items:center;justify-content:center;gap:3px;color:#936223;font-weight:bold;flex-wrap:nowrap}
+.shop-bean-price>span{white-space:nowrap}
+.shop-bean-price.shop-not-for-sale,.equipment-detail-footer .shop-not-for-sale{color:#8a3d32}
 .shop-bean{position:relative;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;border:0;background:transparent;color:inherit;vertical-align:middle}
 .shop-bean:active{transform:none}
 .shop-bean-icon{width:18px;height:18px;pointer-events:none}
@@ -55,9 +59,9 @@
  .shop-tabs{order:3;flex-basis:100%}
  .shop-layout{grid-template-columns:minmax(0,1fr)}
  .shop-sidebar{display:contents}
- .shop-wallet{grid-row:1;grid-template-columns:auto 1fr auto;padding:8px 12px}
- .shop-wallet strong{font-size:18px}
- .shop-wallet small{grid-column:auto}
+ .shop-wallet{grid-row:1;flex-direction:row;flex-wrap:wrap;align-items:center;padding:8px 12px}
+ .shop-balances{flex-direction:row;gap:14px;flex:1}
+ .shop-balance strong{font-size:18px}
  .shop-catalog{grid-row:2}
  .shop-preview{grid-row:3;min-height:0}
  .shop-preview>canvas{display:none}
@@ -71,7 +75,8 @@
  .shop-product-icon>canvas,.shop-product-icon>.pet-sheet,.shop-product-icon>.shop-art-fallback{width:64px!important;height:64px!important;flex-shrink:0}
 }
 
-.shop-wallet .shop-membership{grid-column:1/-1;min-height:30px;padding:4px 8px;font-size:12px}
+.shop-wallet .shop-membership{min-height:30px;padding:4px 8px;font-size:12px}
+@media(max-width:720px){.shop-wallet .shop-membership{flex:1 0 100%}}
 .pet-buy-dialog{color:var(--ink);background:var(--paper);width:min(420px,calc(100vw - 24px));max-width:none;max-height:calc(100dvh - 24px);padding:0;margin:auto;border:1px solid var(--gold);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}
 .pet-buy-dialog::backdrop{background:#102e3c88}
 .pet-buy-dialog[open]{display:flex;flex-direction:column}

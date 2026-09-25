@@ -75,7 +75,7 @@ function render(ms) {
     context.setTransform(1,0,0,1,0,0);context.clearRect(0,0,canvas.width,canvas.height);
     if (!canDraw(mount(), direction)) { noteMissing(context, canvas); continue; }
     context.save();context.translate(180,350);
-    drawMount(context,images,mount(),direction,{...options(t),size:290});
+    drawMount(context,images,mount(),direction,{...options(t),size:state.mode === 'transformed' ? 290 : 100});
     context.restore();
   }
   const w = scene.clientWidth, h = scene.clientHeight, ratio = Math.min(devicePixelRatio || 1,2);
@@ -99,7 +99,7 @@ function render(ms) {
   }
   if(state.target){ctx.strokeStyle='#6b936d';ctx.beginPath();ctx.ellipse(state.target.x*w,state.target.y*h,13,5,0,0,Math.PI*2);ctx.stroke();}
   const objects=[{y:h*.62,draw:()=>pillar(w*.28,h*.62)},{y:h*.62,draw:()=>pillar(w*.73,h*.62)},
-    {y:state.y*h,draw:()=>{if(!canDraw(mount()))return;ctx.save();ctx.translate(state.x*w,state.y*h);drawMount(ctx,images,mount(),state.direction,{...options(t,moving),size:Math.min(220,w*.47)});ctx.restore();}}];
+    {y:state.y*h,draw:()=>{if(!canDraw(mount()))return;ctx.save();ctx.translate(state.x*w,state.y*h);drawMount(ctx,images,mount(),state.direction,{...options(t,moving),size:state.mode === 'transformed' ? Math.min(220,w*.47) : 78});ctx.restore();}}];
   objects.sort((a,b)=>a.y-b.y).forEach(o=>o.draw());
   ctx.fillStyle='#546c51';ctx.font='12px "Microsoft YaHei", sans-serif';ctx.fillText(`${mount().name} / ${names[DIRECTIONS.indexOf(state.direction)]}`,16,24);
   requestAnimationFrame(render);
@@ -169,7 +169,8 @@ async function init(){
       const file=e.target.files[0];if(!file)return;if(file.size>1000000)throw new Error('配置文件不能超过 1 MB');
       const next=validateCatalog(JSON.parse(await file.text()));
       if(next.mounts.length!==original.mounts.length||next.mounts.some(m=>!original.mounts.some(o=>o.id===m.id)))throw new Error('配置必须包含本页已加载的全部坐骑');
-      catalog=next;sync();showAtlases();$('#status').textContent='配置导入成功。';
+      for (const m of next.mounts) m.layoutBounds = original.mounts.find(o => o.id === m.id).layoutBounds;
+      catalog=next;sync();showAtlases();$('#status').textContent='配置导入成功，坐骑将按固定角色大小自动缩放。';
     }catch(error){$('#status').textContent=`导入失败：${error.message}`;}finally{e.target.value='';}
   };
   $('#center').onclick=()=>{state.x=.5;state.y=.7;state.target=null;};

@@ -7,7 +7,12 @@ import {createAdventure} from '../js/adventure_core.js';
 const read=name=>JSON.parse(fs.readFileSync(new URL(`../data/adventure/${name}.json`,import.meta.url)));
 const content=read('chapter'),catalog=read('quest-catalog'),journal=read('quest-journal');
 test('compact journal excludes obsolete records and preserves original prerequisite and reward choices',()=>{
-    assert.deepEqual(projectQuestJournal(catalog),journal);
+    const projected=projectQuestJournal(catalog);
+    for(const row of projected.quests){
+        const quest=content.quests.find(q=>q.id===row.id);
+        if(quest){row.title=quest.title;row.description=quest.description;}
+    }
+    assert.deepEqual(projected,journal);
     assert.equal(journal.quests.length,427);
     const removed=new Set(catalog.quests.filter(q=>q.obsolete).map(q=>q.id));
     assert.equal(removed.size,257);

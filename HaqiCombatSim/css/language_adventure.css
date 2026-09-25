@@ -1,0 +1,14 @@
+.learning-launch{position:fixed;right:16px;top:110px;z-index:55;max-width:min(260px,65vw);white-space:normal;padding:10px 16px;min-height:48px}
+.learning-launch[hidden],.learning-overlay[hidden]{display:none!important}
+.learning-overlay{z-index:240!important;position:fixed;inset:0;background:#231b1680;display:grid;place-items:center;padding:12px}
+.learning-room{position:relative;width:min(560px,100%);max-height:90dvh;overflow:hidden;display:flex;flex-direction:column;background:var(--paper,#fff8df);color:var(--ink,#392719);border:3px solid var(--gold,#b78636);border-radius:16px;padding:16px;box-sizing:border-box}
+.learning-room .modal-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-shrink:0}
+.learning-room .modal-header h2{font-size:20px;margin:0;overflow-wrap:anywhere}
+.learning-room .modal-body{overflow:auto;min-height:0;padding-top:12px}
+.learning-course{display:block;width:100%;margin:8px 0;min-height:44px}
+.learning-room .modal-body .learning-question,.learning-room .modal-body .learning-answer{font-size:19px;line-height:1.6;overflow-wrap:anywhere}
+.learning-answer{background:#fff2cd;border-radius:8px;padding:12px}
+.learning-actions{display:flex;flex-wrap:wrap;gap:10px}.learning-actions button{min-height:48px}
+.learning-history{max-height:180px;overflow:auto;border-top:1px solid var(--gold,#b78636);overflow-wrap:anywhere}
+.learning-status{min-height:1.5em;overflow-wrap:anywhere}.learning-room progress{width:100%;margin-top:12px}
+@media(max-width:480px){.learning-launch{top:100px;right:8px;font-size:12px}.learning-room{padding:12px}.learning-question,.learning-answer{font-size:17px}}

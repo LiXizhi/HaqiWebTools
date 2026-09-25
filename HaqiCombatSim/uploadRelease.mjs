@@ -9,7 +9,7 @@ import { maisiCandidates, syncMaisiRelease } from './scripts/sync_maisi_release.
 const root = path.dirname(fileURLToPath(import.meta.url));
 const dist = path.join(root, 'dist');
 const release = path.join(root, 'release');
-const pages = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects'];
+const pages = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite'];
 const args = new Set(process.argv.slice(2));
 for (const arg of args) if (!['--dry-run', '--verify-only'].includes(arg)) throw new Error(`未知参数：${arg}`);
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');

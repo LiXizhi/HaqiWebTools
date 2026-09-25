@@ -1,6 +1,29 @@
 import {upgradeAt} from './adventure_upgrade_core.js';
 // Item_CombatApparel.lua L588–696: addlel and gem belong to an item GUID, not its GSID.
 const copy=value=>JSON.parse(JSON.stringify(value));
+// paraworld.globalstore.lua L545/551: maxcount is ownership, maxcopiesinstack is stacking.
+export const isUniqueEquipment=item=>(item?.kind===1||item?.slot===24)&&Number(item.maxCount??item.exchangeLimits?.maxCount??item.sourceRecord?.[18]?.[31])===1;
+function mergeUniqueEquipment(save,content) {
+    // Preserve the frozen player spec until an old in-progress battle has finished.
+    if(save.pendingEncounter)return;
+    for(const item of Object.values(content.items).filter(isUniqueEquipment)) {
+        if(!(save.inventory[item.id]>0))continue;
+        const owned=(save.equipmentInstances||[]).filter(row=>row.gsid===item.id);
+        owned.sort((a,b)=>Number(b.guid===save.equipmentGuids?.[item.slot])-Number(a.guid===save.equipmentGuids?.[item.slot])||b.serverdata.addlel-a.serverdata.addlel);
+        const kept=owned[0];
+        if(kept){
+            kept.serverdata.addlel=Math.max(...owned.map(row=>row.serverdata.addlel));
+            // Keep the selected socket layout; return other gems instead of losing paid resources.
+            for(const row of owned.slice(1)) {
+                if(!kept.serverdata.gem&&row.serverdata.gem){kept.serverdata.gem=copy(row.serverdata.gem);continue;}
+                for(const id of row.serverdata.gem?.ins||[])save.inventory[id]=(save.inventory[id]||0)+1;
+                if(row.serverdata.gem&&kept.serverdata.gem)kept.serverdata.gem.holecnt=Math.max(kept.serverdata.gem.holecnt,row.serverdata.gem.holecnt);
+            }
+            save.equipmentInstances=save.equipmentInstances.filter(row=>row.gsid!==item.id||row===kept);
+        }
+        save.inventory[item.id]=1;
+    }
+}
 export function equipmentInstances(save,content) {
     const rows=copy(save.equipmentInstances||[]);let serial=save.nextEquipmentGuid||1;
     for(const item of Object.values(content.items).filter(item=>item.kind===1||item.slot===24)) {
@@ -19,6 +42,7 @@ export function findEquipmentInstance(save,content,itemId,guid) {
     return rows.find(row=>row.gsid===Number(itemId)&&row.guid===selected)||rows.find(row=>row.gsid===Number(itemId));
 }
 export function syncEquipmentInstances(save,content) {
+    mergeUniqueEquipment(save,content);
     const {rows,serial}=equipmentInstances(save,content);
     save.equipmentInstances=rows;save.nextEquipmentGuid=serial;save.equipmentGuids??={};
     for(const slot of Object.keys(save.equipmentGuids))if(!save.equipment[slot])delete save.equipmentGuids[slot];

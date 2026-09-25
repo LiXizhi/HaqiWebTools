@@ -223,7 +223,7 @@
 .storybook-ui .nav-button { position:relative; isolation:isolate; min-width:0; width:64px; height:65px; padding:0; gap:0; color:#fff1c8; font-size:11px; overflow:visible; }
 .storybook-ui :is(.nav-button,.utility-button)::before { content:""; position:absolute; z-index:-1; width:var(--hud-ring-size,43px); height:var(--hud-ring-size,43px); left:50%; top:2px; transform:translateX(-50%); border-radius:50%; border:1px solid #d4ab58; background:radial-gradient(circle at 40% 30%,#416346ed,#203c2feb); box-shadow:0 0 0 2px #61431b,0 0 0 3px #c7a35a,0 2px 6px #211707; }
 .storybook-ui .nav-button .icon { width:48px; height:48px; margin-top:0; }
-.storybook-ui .nav-button>span:last-child,.storybook-ui .utility-label { position:relative; isolation:isolate; min-width:58px; line-height:20px; padding:0 8px; margin-top:-3px; }
+.storybook-ui .nav-button>span:last-child,.storybook-ui .utility-label { position:relative; isolation:isolate; display:flex; align-items:center; justify-content:center; box-sizing:border-box; flex:0 0 20px; height:20px; min-width:58px; line-height:1; padding:0 8px; margin-top:-3px; white-space:nowrap; text-align:center; }
 .storybook-ui .nav-button>span:last-child::before,.storybook-ui .utility-label::before { content:""; position:absolute; inset:0; z-index:-1; border:6px solid transparent; border-image:var(--ui-wood) var(--ui-wood-slice) fill / 6px / 0 stretch; }
 .storybook-ui .movement-hint { bottom:14px; }
 .storybook-ui .interact-button { bottom:83px; min-height:40px; padding:6px 14px; }
@@ -273,7 +273,7 @@
  .storybook-ui .nav-button { width:57px; height:60px; flex:none; font-size:10px; padding:0; }
  .storybook-ui .nav-button::before { width:37px; height:37px; top:3px; }
  .storybook-ui .nav-button .icon { width:44px; height:44px; }
- .storybook-ui .nav-button>span:last-child { min-width:51px; line-height:19px; }
+ .storybook-ui .nav-button>span:last-child { min-width:51px; flex-basis:19px; height:19px; line-height:1; }
  .storybook-ui .interact-button { bottom:80px; min-height:44px; }
  .storybook-ui .dialogue-layer { padding:80px 8px max(75px,calc(env(safe-area-inset-bottom) + 69px)); }
  .storybook-ui .dialogue-box { width:100%; padding:0 13px; min-height:0; max-height:calc(100dvh - 175px); overflow:visible; }
@@ -303,7 +303,7 @@
  .storybook-ui .nav-button { width:56px; height:58px; }
  .storybook-ui .nav-button .icon { width:42px; height:42px; }
  .storybook-ui .nav-button::before { width:36px; height:36px; }
- .storybook-ui .nav-button>span:last-child { min-width:49px; line-height:18px; }
+ .storybook-ui .nav-button>span:last-child { min-width:49px; flex-basis:18px; height:18px; line-height:1; }
  .storybook-ui .interact-button { bottom:69px; }
  .storybook-ui .dialogue-layer { padding:20px 12px 70px; }
  .storybook-ui .dialogue-box { min-height:0; padding:0 20px 0 125px; max-height:calc(100dvh - 110px); }
@@ -321,7 +321,7 @@
 .storybook-ui .hero-text>span { margin:1px 0 0; color:#eddfbb; text-shadow:none; }
 .storybook-ui .hero-health { margin-top:4px; }
 .storybook-ui .xp-bar { margin:4px 0 0; }
-.storybook-ui .utility-nav { padding:0; grid-template-columns:repeat(4,54px); gap:5px; }
+.storybook-ui .utility-nav { display:flex; flex-wrap:wrap; justify-content:flex-end; align-items:flex-start; width:max-content; max-width:min(420px,calc(100vw - 250px)); padding:0; column-gap:12px; row-gap:2px; }
 .storybook-ui .utility-nav::before { content:none; }
 .storybook-ui .game-nav { padding:0 8px 4px; }
 .storybook-ui .game-nav::before { content:none; }
@@ -334,7 +334,7 @@
  .storybook-ui .hero-status { width:177px; padding:6px 8px 7px; }
  .storybook-ui .hero-heading { padding:0; min-height:24px; }
  .storybook-ui .location-label { top:101px; }
- .storybook-ui .utility-nav { padding:0; grid-template-columns:repeat(2,50px); }
+ .storybook-ui .utility-nav { display:grid; grid-template-columns:max-content max-content; justify-content:end; width:max-content; max-width:calc(100vw - 16px); padding:0; column-gap:10px; row-gap:2px; }
  .storybook-ui .game-nav { padding:0 5px 3px; }
  .storybook-ui .dialogue-box { padding:0 12px; min-height:150px; }
  .storybook-ui .dialogue-portrait { left:7px; top:-18px; bottom:auto; width:86px!important; height:114px!important; }
@@ -345,7 +345,7 @@
 }
 @media(max-height:540px) and (min-width:651px) {
  .storybook-ui .hero-status { width:204px; padding:5px 8px 6px; }
- .storybook-ui .utility-nav { padding:0; grid-template-columns:repeat(4,50px); }
+ .storybook-ui .utility-nav { display:flex; width:max-content; max-width:calc(100vw - 220px); padding:0; column-gap:10px; row-gap:2px; }
  .storybook-ui .game-nav { padding:0 6px 3px; }
  .storybook-ui .dialogue-box { min-height:125px; padding-left:128px; }
  .storybook-ui .dialogue-box::before { left:0; }
@@ -386,15 +386,15 @@
  .hero-details { gap:2px 7px; font-size:10px; }
 }
 /* Floating shortcuts share the bottom navigation's ring and wooden label. */
-.storybook-ui .utility-button { --hud-ring-size:35px; isolation:isolate; justify-content:flex-start; min-height:58px; gap:0; overflow:visible; }
+.storybook-ui .utility-button { --hud-ring-size:35px; isolation:isolate; justify-content:flex-start; width:max-content; min-width:54px; min-height:58px; gap:0; overflow:visible; }
 .storybook-ui .utility-button .icon { width:40px; height:40px; flex-shrink:0; }
-.storybook-ui .utility-button .utility-label { min-width:50px; padding:0 4px; line-height:20px; white-space:nowrap; }
+.storybook-ui .utility-button .utility-label { min-width:50px; height:20px; flex-basis:20px; padding:0 6px; line-height:1; white-space:nowrap; }
 .storybook-ui .utility-button,.storybook-ui .checkin-button.reward-ready { color:#fff1c8; text-shadow:0 1px 2px #33200b; }
 .storybook-ui .utility-button small { text-shadow:none; }
 @media(max-width:650px) {
  .storybook-ui .utility-button { --hud-ring-size:31px; min-height:54px; }
  .storybook-ui .utility-button .icon { width:36px; height:36px; }
- .storybook-ui .utility-button .utility-label { min-width:46px; line-height:20px; }
+ .storybook-ui .utility-button .utility-label { min-width:46px; height:20px; flex-basis:20px; line-height:1; }
  .storybook-ui .quest-tracker { top:140px; }
 }
 @media(max-height:540px) and (min-width:651px) {

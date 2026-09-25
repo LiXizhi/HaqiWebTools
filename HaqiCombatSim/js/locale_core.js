@@ -71,7 +71,7 @@ export function stripLocaleComments(text) {
 export function localeIdsToLoad(save) {
     if (!save) return [];
     const learning = save.languageLearning && typeof save.languageLearning === 'object' ? save.languageLearning : null;
-    const ids = learning?.enabled === true ? [learning.target, learning.native] : [save.locale];
+    const ids = learning?.enabled === true ? [save.locale, learning.target, learning.native] : [save.locale];
     return [...new Set(ids.filter(id => IDS.has(id) && id !== 'zh-CN'))];
 }
 
@@ -101,8 +101,8 @@ export function normalizeLocaleSave(save) {
     const learning = save.languageLearning && typeof save.languageLearning === 'object' ? save.languageLearning : {};
     const native = IDS.has(learning.native) ? learning.native : 'zh-CN';
     let target = IDS.has(learning.target) ? learning.target : 'en';
-    if (native === target) target = native === 'en' ? 'ja' : 'en';
-    save.languageLearning = { enabled: learning.enabled === true, native, target };
+    if (native === target) target = native === 'en' ? 'zh-CN' : 'en';
+    save.languageLearning = { enabled: learning.enabled === true, native, target, autoSpeak: learning.autoSpeak === true };
     if (typeof save.learnerMemory !== 'string') save.learnerMemory = '';
     return save;
 }

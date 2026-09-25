@@ -1,4 +1,5 @@
 import {dungeonFor} from './adventure_dungeons_core.js';
+import {islandBuildings,harborAccess} from './adventure_buildings_core.js';
 // Compact authored maps. The original NPC coordinates remain in AdventureContent for provenance.
 import { islandFor } from './adventure_world_map_core.js';
 import { onLargeIsland, riverBlocks } from './adventure_island_layout_core.js';
@@ -11,7 +12,7 @@ export function createWorld(zone,content,save=null) {
     const originals=content.npcCatalog?.npcs.filter(n=>n.zone===zone&&n.enabled!=='0'&&n.artVisible!==false&&n.hidden!==true);
     const npcs=(originals||Object.values(content.npcs).filter(n=>n.zone===zone&&n.hidden!==true)).map(n=>({...content.npcs[n.id],...n,...point(layout.npcPositions[n.id]||[n.x,n.y])}));
     if(!originals)for(const row of layout.visitingNpcs||[]){const source=content.npcs[row.sourceId];if(!source)throw Error('缺少居民来源');if(source.hidden===true||row.hidden===true)continue;npcs.push({...source,zone,...(row.sourceId===36205?layout.portal:point(row.position))});}
-    const encounters=content.encounters.filter(e=>e.zone===zone&&!save?.dungeonRuns?.[zone]?.cleared.includes(e.id)).map(e=>({...e,...point(layout.encounterPositions[e.id]||[e.x,e.y])}));
+    const encounters=content.encounters.filter(e=>e.zone===zone&&!e.legacyOnly&&!save?.dungeonRuns?.[zone]?.cleared.includes(e.id)).map(e=>({...e,...point(layout.encounterPositions[e.id]||[e.x,e.y])}));
     const world={zone,w:layout.w,h:layout.h,layout,npcs,encounters,portal:{id:'portal',...layout.portal,zone:zone==='camp'?'town':'camp',name:dungeonFor(content,zone)?'离开副本':'查看世界地图'},
         landmarks:layout.landmarks,buildings:layout.buildings||[],paths:layout.paths,trees:layout.trees,decorations:[],center:{...(layout.center||layout.spawn)}};
     if(layout.route){
@@ -46,6 +47,21 @@ export function createWorld(zone,content,save=null) {
         const source=content.npcs[36205];
         if(!source)throw Error('缺少法斯特船长来源');
         npcs.push({...source,zone,x:world.portal.x,y:world.portal.y,worldMapGuide:true});
+    }
+    const scenery=islandBuildings(world);
+    world.buildings=[...world.buildings,...scenery];
+    world.trees=world.trees.filter(t=>!scenery.some(b=>Math.abs(t.x-b.x)<b.w*.55&&t.y>b.y-b.h*.5&&t.y<b.y+45));
+    const access=harborAccess(world);
+    if(access){
+        world.paths=[...world.paths,access.path];
+        world.trees=world.trees.filter(t=>segmentDistance(t,access.path.a,access.path.b)>access.path.width/2+35);
+        const captains=world.npcs.filter(n=>n.id===36205||n.name==='法斯特船长');
+        const captain=captains[0];
+        if(captain){
+            Object.assign(captain,access.captain,{harborGuide:true});
+            Object.assign(world.portal,access.captain);
+            world.npcs=world.npcs.filter(n=>!captains.includes(n)||n===captain);
+        }
     }
     objectIndices.delete(world);
     return world;
@@ -85,8 +101,46 @@ export function walkable(world,x,y) {
     if(world.layout?.route)return routeLocation(world,{x,y}).distance<=world.paths[0].width/2-8;
     if(world.layout?!onLargeIsland(world,x,y,26)||riverBlocks(world,x,y):!onIsland(x,y,26))return false;
     return !nearbyWorldObjects(world,{x:x-160,y:y-160,w:320,h:320}).some(o=>
-        o.kind==='building'?x>o.x-o.w*.3-10&&x<o.x+o.w*.3+10&&y>o.y-o.h*.42-10&&y<o.y+12:
+        o.kind==='building'?!o.decorationOnly&&x>o.x-o.w*.3-10&&x<o.x+o.w*.3+10&&y>o.y-o.h*.42-10&&y<o.y+12:
         o.kind==='tree'&&Math.hypot(x-o.x,y-o.y)<20);
+}
+// Snap an arbitrary target to the closest reachable tile. Route worlds project
+// onto the road; island worlds try a tight local spiral first (buildings, trees
+// and near-coast clicks) and only fall back to a whole-island grid scan for
+// points far out in the water.
+export function nearestWalkable(world,x,y) {
+    if(walkable(world,x,y))return{x,y};
+    if(world.layout?.route)return {...routeLocation(world,{x,y}).point};
+    const tryLocal=(radius,step)=>{
+        let best=null,bestDist=Infinity;
+        for(let r=step;r<=radius;r+=step){
+            const count=Math.max(8,Math.ceil(r/step)*8);
+            for(let i=0;i<count;i++){
+                const a=i/count*Math.PI*2,px=x+Math.cos(a)*r,py=y+Math.sin(a)*r;
+                if(!walkable(world,px,py))continue;
+                const d=(px-x)**2+(py-y)**2;
+                if(d<bestDist){bestDist=d;best={x:px,y:py};}
+            }
+            if(best)return best;
+        }
+        return null;
+    };
+    const local=tryLocal(260,26);
+    if(local)return local;
+    const step=56;let best=null,bestDist=Infinity;
+    for(let gy=0;gy<=world.h;gy+=step)for(let gx=0;gx<=world.w;gx+=step){
+        if(!walkable(world,gx,gy))continue;
+        const d=(gx-x)**2+(gy-y)**2;
+        if(d<bestDist){bestDist=d;best={x:gx,y:gy};}
+    }
+    if(!best)return null;
+    for(let dy=-step;dy<=step;dy+=step/4)for(let dx=-step;dx<=step;dx+=step/4){
+        const px=best.x+dx,py=best.y+dy;
+        if(!walkable(world,px,py))continue;
+        const d=(px-x)**2+(py-y)**2;
+        if(d<bestDist){bestDist=d;best={x:px,y:py};}
+    }
+    return best;
 }
 export function movePosition(world,position,dx,dy) {
     // Sweep small steps to prevent tunneling through trees during a delayed frame.

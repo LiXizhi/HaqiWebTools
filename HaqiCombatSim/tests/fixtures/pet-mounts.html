@@ -1,0 +1,23 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>宠物与坐骑页签验收</title><base href="../../">
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"></head>
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,applyAction} from '../../js/adventure_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+import {loadLocaleFiles,configureLocale} from '../../js/locale.js';
+// In-memory character only: never read or write player saves.
+try {
+ const params=new URLSearchParams(location.search);
+ const lang=params.get('lang')||'zh-CN';
+ if(lang!=='zh-CN')await loadLocaleFiles([lang]);
+ configureLocale({locale:lang});
+ const assets=await loadResources(),save=createAdventure(assets.content,{name:'骑乘验收'});
+ if(!params.has('empty'))for(const item of Object.values(assets.content.items).filter(item=>assets.content.mountByItem?.[item.id]).slice(0,8))save.inventory[item.id]=1;
+ if(params.has('battle'))save.pendingEncounter={id:'fixture-battle'};
+ const model={assets,save,petView:{tab:params.get('tab')||'follow'}};
+ const root=document.querySelector('#root');
+ function paint(){renderPanel(root,'pet',model,{close:()=>root.replaceChildren(),panel:()=>{},action:action=>{applyAction(save,assets.content,action);paint();}});}
+ paint();document.documentElement.dataset.fixtureReady='1';
+}catch(error){document.documentElement.dataset.fixtureError=error.message;throw error;}
+</script></body></html>

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>海岸、道路与河岸烘焙预览</title>
+<style>
+body{margin:16px;background:#203d47;color:#fff;font:16px system-ui}canvas{display:block;max-width:100%;height:auto;margin-top:12px}button,select{font:inherit;padding:8px}pre{white-space:pre-wrap}
+</style>
+<label>岛屿 <select id="island"></select></label>
+<button id="crossing">道路与河流</button>
+<button id="shore">海岸</button>
+<pre id="result">检查中</pre>
+<canvas id="terrain" width="1000" height="720"></canvas>
+<script type="module">
+import {createWorld} from '../../js/adventure_world_core.js';
+import {paintLargeTerrain,createTerrainTileCache} from '../../js/adventure_large_terrain.js';
+const read=async path=>(await fetch('../../'+path)).json();
+const content=await read('data/adventure/chapter.json');
+content.worldMaps={};
+const select=document.querySelector('#island'),canvas=document.querySelector('canvas');
+for(const [id,island] of Object.entries(content.worldMapIndex.islands)){
+    content.worldMaps[id]=await read(`data/adventure/maps/${id}.json`);
+    select.add(new Option(island.name,id));
+}
+const query=new URLSearchParams(location.search);
+select.value=content.worldMaps[query.get('island')]?query.get('island'):'town';
+let mode=query.get('view')==='shore'?'shore':'crossing';
+const make=()=>document.createElement('canvas');
+function render(){
+    const world=createWorld(select.value,content),layout=world.layout;
+    const point=mode==='shore'?layout.coast[Math.floor(layout.coast.length/2)]:null;
+    const bridge=layout.bridges.at(-1)||layout.spawn;
+    const center=point?{x:point[0]-100,y:point[1]+40}:bridge;
+    const rect={x:Math.round(center.x-500),y:Math.round(center.y-360),w:1000,h:720};
+    const c=canvas.getContext('2d',{willReadFrequently:true});
+    c.setTransform(1,0,0,1,-rect.x,-rect.y);
+    const start=performance.now();paintLargeTerrain(c,world,rect);
+    const bakeMs=performance.now()-start;
+    const reference=c.getImageData(0,0,1000,720).data;
+    paintLargeTerrain(c,world,rect);
+    const repeat=c.getImageData(0,0,1000,720).data;
+    const stable=reference.every((v,i)=>v===repeat[i]);
+    const tiled=make();tiled.width=1000;tiled.height=720;
+    const tc=tiled.getContext('2d',{willReadFrequently:true});tc.translate(-rect.x,-rect.y);
+    const cache=createTerrainTileCache(paintLargeTerrain,make);
+    cache.draw(tc,world,rect);
+    const pixels=tc.getImageData(0,0,1000,720).data;
+    let maxDelta=0,changed=0;
+    for(let i=0;i<pixels.length;i+=4){
+        let delta=0;for(let j=0;j<4;j++)delta=Math.max(delta,Math.abs(pixels[i+j]-reference[i+j]));
+        maxDelta=Math.max(maxDelta,delta);if(delta>3)changed++;
+    }
+    document.querySelector('#result').textContent=JSON.stringify({island:world.zone,stable,bakeMs:Math.round(bakeMs),tileMaxDelta:maxDelta,tilePixelsOver3:changed},null,2);
+}
+select.onchange=render;
+document.querySelector('#crossing').onclick=()=>{mode='crossing';render();};
+document.querySelector('#shore').onclick=()=>{mode='shore';render();};
+render();
+</script>
+</html>

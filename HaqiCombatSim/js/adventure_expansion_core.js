@@ -32,7 +32,10 @@ export function installExpansion(content,dataset,catalog,candidates,kidsCards,ki
  }
  for(const [id,name] of [[FOOD_ID,'宠物营养餐'],[CAPTURE_ID,'捕获晶球']]){content.items[id]={id,name,kind:0,stats:{}};content.shop.push({id:'supply:'+id,kind:'supply',itemId:id,name,level:1,retired:id===CAPTURE_ID});}
  const p=petParams(content);content.progression.levelCap=p.levelCap;
- while(content.progression.xpThresholds.length<p.levelCap){const level=content.progression.xpThresholds.length;content.progression.xpThresholds.push(content.progression.xpThresholds.at(-1)+p.xpGrowth*level);}
+ // One extra band past the cap: the top level still needs a "next level" target so the experience bar
+ // can show this level's own progress instead of a flat 100%. EXPArea.lua EXPArea.UpdateUI L86-94
+ // draws cur_value/max_value of the current level, where max_value is nextlevelexp.
+ while(content.progression.xpThresholds.length<=p.levelCap){const level=content.progression.xpThresholds.length;content.progression.xpThresholds.push(content.progression.xpThresholds.at(-1)+p.xpGrowth*level);}
  for(const school of Object.keys(content.learn)){
   const seen=new Set(content.learn[school].map(x=>x.key));
   for(const pet of Object.values(content.pets).filter(x=>x.school===school))for(const lesson of pet.lessons)if(!seen.has(lesson.key)){content.learn[school].push({...lesson});seen.add(lesson.key);}

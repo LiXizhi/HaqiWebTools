@@ -15,8 +15,9 @@ export function stepCompanion(pet,world,hero,dt,options={}) {
         if(deferSearch&&!clearSegment(world,from,to))return null;
         return findPath(world,from,to);
     }
-    // A zone/save teleport should not leave the companion on the other side of the map.
-    if(distance(hero,pet.lastHero)>360){
+    // Recover after teleports and after blocked/deferred routes leave the pet behind.
+    // This is visual placement only; it never changes the selected pet or mount.
+    if(distance(hero,pet.lastHero)>360||distance(hero,pet.position)>360){
         const fresh=createCompanion(world,hero,pet.rng.seed);
         Object.assign(pet,fresh);
     }

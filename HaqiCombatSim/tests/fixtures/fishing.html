@@ -1,11 +1,12 @@
 <!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>场景捕鱼隔离验收</title>
 <link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_fishing.css">
-<body class="haqi-app"><main id="game"><canvas id="world" tabindex="0"></canvas><output id="result" style="position:absolute;top:12px;left:12px;background:#fff5dd;padding:8px;max-width:85%">点击海面开始捕鱼；所有道具仅存在内存。</output></main><script type="module">
+<body class="haqi-app"><main id="game"><canvas id="world" tabindex="0"></canvas><output id="result" style="position:absolute;top:12px;left:12px;background:#fff5dd;padding:8px;max-width:min(280px,60vw);font-size:11px">点击海面开始捕鱼；所有道具仅存在内存。</output></main><script type="module">
 import {loadResources} from '../../js/adventure_assets.js';
 import {applyAction,createAdventure} from '../../js/adventure_core.js';
 import {createWorld} from '../../js/adventure_world_core.js';
 import {isOcean} from '../../js/adventure_fishing_core.js';
+import {fishingSpot} from '../../js/adventure_fishing_spot_core.js';
 import {createRenderer} from '../../js/adventure_renderer.js';
 import {createSceneFishing} from '../../js/view_adventure_scene_fishing.js';
 import {el,button} from '../../js/view_adventure.js';
@@ -22,11 +23,13 @@ let coast=0;for(let x=0;x<world.w;x+=20){if(!isOcean(world,x,cy)){coast=x;break;
 save.zone='town';save.position={x:coast+45,y:cy};
 const surface=document.querySelector('#world'),root=document.querySelector('#game'),result=document.querySelector('#result');
 const renderer=createRenderer(surface,assets),model={assets,save};
-const scene=createSceneFishing(root,{isWater:p=>isOcean(world,p.x,p.y),focus:()=>surface.focus(),action(value){
- try{if(params.has('fail'))throw Error('模拟保存失败');const answer=applyAction(save,assets.content,value);result.textContent=JSON.stringify({action:value,result:answer,nets:save.inventory[17113],sure:save.inventory[17349],stamina:save.stamina});return answer;}catch(error){result.textContent=error.message;return false;}
+const scene=createSceneFishing(root,{activeChanged:active=>renderer.setFishingCamera(active),isWater:p=>isOcean(world,p.x,p.y),focus:()=>surface.focus(),action(value){
+ try{if(params.has('fail'))throw Error('模拟保存失败');const answer=applyAction(save,assets.content,value);result.dataset.catch=JSON.stringify(answer.catches||[]);result.dataset.records=JSON.stringify(save.fishingRecords||null);result.textContent=`${answer.message} 普通网 ${save.inventory[17113]} · 必中网 ${save.inventory[17349]} · 精力 ${save.stamina??100}`;return answer;}catch(error){result.textContent=error.message;return false;}
 }},{el,button});
-surface.addEventListener('click',e=>{const rect=surface.getBoundingClientRect(),p=renderer.screenToWorld(e.clientX-rect.left,e.clientY-rect.top);if(isOcean(world,p.x,p.y)){if(scene.active)scene.aim(p);else scene.start(p,model);}else scene.stop();});
+surface.addEventListener('click',e=>{const rect=surface.getBoundingClientRect(),p=renderer.screenToWorld(e.clientX-rect.left,e.clientY-rect.top);if(isOcean(world,p.x,p.y)){if(scene.active)scene.aim(p);else {const spot=fishingSpot(world,save.position,p);if(spot)scene.start(spot.water,model);}}else scene.stop();});
 window.addEventListener('keydown',e=>{if(scene.key(e))e.preventDefault();});
 window.addEventListener('blur',()=>scene.stop());
-function frame(now){renderer.render(world,save,now);const a=renderer.screenToWorld(0,0),b=renderer.screenToWorld(1,1);scene.update(model,now,p=>({x:(p.x-a.x)/(b.x-a.x),y:(p.y-a.y)/(b.y-a.y)}));requestAnimationFrame(frame);}requestAnimationFrame(frame);
+const zoomTrace=[];
+function frame(now){renderer.render(world,save,now,{fishingPose:scene.pose(now)});const a=renderer.screenToWorld(0,0),b=renderer.screenToWorld(1,1);scene.update(model,now,p=>({x:(p.x-a.x)/(b.x-a.x),y:(p.y-a.y)/(b.y-a.y)}));const px=Number((b.x-a.x).toFixed(5));document.documentElement.dataset.worldPerPx=String(px);document.documentElement.dataset.fishing=scene.active?'1':'0';zoomTrace.push(px);if(zoomTrace.length>300)zoomTrace.shift();document.documentElement.dataset.fixtureReady='1';requestAnimationFrame(frame);}requestAnimationFrame(frame);
+window.__zoomTrace=zoomTrace;
 </script></body></html>

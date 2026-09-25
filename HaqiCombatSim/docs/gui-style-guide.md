@@ -98,3 +98,7 @@ header.append(createCloseButton(closeDetails, '关闭物品详情'));
 ### 副本入口图标（2026-09-22）
 
 副本入口使用AI生成的金色石门/绿色传送门，合入原共享WebP图集第五行第一格。清单使用 columns / rows（当前4×5），加载器统一计算背景尺寸与位置；原16格坐标保留，整体预算仍为100,000字节。新增图标来源、提示词和哈希在 ui-art.json 的 additions 内；可用 scripts/prepare_dungeon_icon.py 从保留的原图集和生成原图重新准备。副本卡片优先画已有 Boss 立绘；没有立绘时画场景里同一只宠物，石门只在两者都没有时出现。
+
+### 经验条始终显示本级进度（2026-09-25）
+
+HUD 经验条（`.xp-bar`）必须同时可见"已获得"与"未填满"两种颜色，不得在角色达到等级上限时整条填满。填充比例沿用原版 `EXPArea.lua EXPArea.UpdateUI` L86-94：本级内经验／下一级所需经验，并保留 L93 的最小宽度 `math.max(3,width)`（当前实现为 `.xp-bar i{min-width:3px}`）。轨道色与填充色都在共享样式里定义（基础规则 `css/adventure.css`，绘本主题覆盖在 `css/adventure_storybook.css`），窗口级不再各自覆盖。核验入口：`tests/fixtures/exp-bar.html`（`?assets=local&lang=en&level=&fill=`）。

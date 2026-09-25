@@ -139,24 +139,27 @@ test('six original island catalogues retain all instances and place residents de
         for(const n of world.npcs){assert.ok(Number.isFinite(n.x)&&Number.isFinite(n.y));if(!world.layout.npcPositions[n.id])assert.ok(walkable(world,n.x,n.y),`${z} ${n.id}`);}
     }
 });
-test('world map portals retain authored captains and restore missing visiting guides with their art',()=>{
+test('harbors receive authored captains and restore missing visiting guides with their art',()=>{
     const content=structuredClone(c);
     installNpcArt(content,read('adventure/npc-art.json'));
     const before=JSON.stringify(content);
     for(const zone of Object.keys(content.worldMaps)){
-        const world=createWorld(zone,content),captains=world.npcs.filter(n=>(n.id===36205||n.name==='法斯特船长')&&distance(n,world.portal)<=160);
+        const world=createWorld(zone,content),harbor=world.buildings.find(b=>b.frame==='harbor');
+        const captains=world.npcs.filter(n=>(n.id===36205||n.name==='法斯特船长')&&(harbor?distance(n,harbor)<290:distance(n,world.portal)<=160));
         assert.equal(captains.length,1,zone);
-        const captain=captains[0],expected=world.layout.npcPositions[36205]||[world.portal.x,world.portal.y];
+        const captain=captains[0],road=world.paths.find(p=>p.harborAccess);
+        const expected=road?[road.b.x,road.b.y]:world.layout.npcPositions[36205]||[world.portal.x,world.portal.y];
         assert.deepEqual([captain.x,captain.y],expected);
         assert.deepEqual(captain.portrait,content.npcs[36205].portrait);
         assert.ok(walkable(world,captain.x,captain.y));
-        assert.equal(nearestInteraction(world,captain).id,36205);
-        assert.ok(nearbyWorldObjects(world,{x:captain.x-1,y:captain.y-1,w:2,h:2}).some(n=>n.id===36205));
+        assert.equal(nearestInteraction(world,captain).id,captain.id);
+        assert.ok(nearbyWorldObjects(world,{x:captain.x-1,y:captain.y-1,w:2,h:2}).some(n=>n.id===captain.id));
     }
     assert.equal(JSON.stringify(content),before);
     delete content.worldMaps.fire.visitingNpcs;
+    content.npcCatalog.npcs=content.npcCatalog.npcs.filter(n=>n.zone!=='fire'||(n.id!==36205&&n.name!=='法斯特船长'));
     const world=createWorld('fire',content),captain=world.npcs.find(n=>n.id===36205);
-    assert.deepEqual({x:captain.x,y:captain.y},{x:world.portal.x,y:world.portal.y});
+    assert.deepEqual({x:captain.x,y:captain.y},world.paths.find(p=>p.harborAccess).b);
     assert.equal(nearestInteraction(world,captain).id,36205);
 });
 test('unfinished town residents are hidden, retained in the catalogue and explicitly restorable',()=>{

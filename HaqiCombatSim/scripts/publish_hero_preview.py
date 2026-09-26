@@ -7,13 +7,14 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser();parser.add_argument('--uploader',type=Path);parser.add_argument('--verify',action='store_true');args=parser.parse_args()
 path=ROOT/'data/hero-preview.json';manifest=json.loads(path.read_text(encoding='utf-8'));rows=[*manifest['bodies'].values(),*manifest['heads'].values()]
+rows.extend(body['walk'] for body in manifest['bodies'].values() if body.get('walk'))
 if not args.verify:
  if not args.uploader or not args.uploader.is_file():raise ValueError('Pass the existing qiniu_upload_local_files.py path')
  pending=[row for row in rows if not row.get('cdn')]
  digest=hashlib.sha256(''.join(row['sha256'] for row in pending).encode()).hexdigest()[:12]
  prefix='keepwork/haqi/hero-preview/20260926/'+digest+'/'
  env=dict(os.environ,PYTHONIOENCODING='utf-8')
- result=subprocess.run([sys.executable,str(args.uploader),'--prefix',prefix,*[str(ROOT/row['local']) for row in pending]],capture_output=True,text=True,encoding='utf-8',env=env)
+ result=subprocess.run([sys.executable,str(args.uploader),'--prefix',prefix,*[str(ROOT/row['local']) for row in pending]],capture_output=True,text=True,encoding='utf-8',env=env) if pending else subprocess.CompletedProcess([],0,stdout='')
  # Do not echo general uploader diagnostics/config; only confirmed resource URLs.
  if result.returncode:raise RuntimeError('Existing CDN uploader failed; no manifest URLs were changed')
  for row in pending:

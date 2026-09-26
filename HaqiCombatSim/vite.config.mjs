@@ -12,12 +12,18 @@ const root = path.dirname(fileURLToPath(import.meta.url));
 const entries = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite'];
 
 export default defineConfig(({ command }) => {
+    // H5 publishes dist/ with CDN art URLs. Store shells use app-dist/ and bake local mode.
+    const appTarget = process.env.HAQI_TARGET === 'app';
+    const outDir = appTarget ? 'app-dist' : 'dist';
     let dungeonPayload, officialPayload;
     return {
         root,
         base: './',
         publicDir: false,
-        define: { __HAQI_PACKED_DATA__: JSON.stringify(command === 'build') },
+        define: {
+            __HAQI_PACKED_DATA__: JSON.stringify(command === 'build'),
+            __HAQI_ASSET_MODE__: JSON.stringify(appTarget ? 'local' : ''),
+        },
         plugins: [{
             name: 'inline-cdn-worker',
             apply: 'build',
@@ -56,13 +62,13 @@ export default defineConfig(({ command }) => {
             },
             closeBundle() {
                 if (command !== 'build') return;
-                // Artwork already lives on permanent CDN URLs. Only runtime JSON
-                // needs document-relative copies; never include artwork in dist.
-                packageRuntimeData(path.join(root, 'data'), path.join(root, 'dist', 'data'));
+                // Artwork is not emitted here. H5 keeps CDN URLs in dist/; the app
+                // build copies local WebP/audio afterwards into app-dist/.
+                packageRuntimeData(path.join(root, 'data'), path.join(root, outDir, 'data'));
             },
         }],
         build: {
-            outDir: 'dist',
+            outDir,
             emptyOutDir: true,
             target: 'es2022',
             modulePreload: { polyfill: false },

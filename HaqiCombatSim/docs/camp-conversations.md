@@ -79,35 +79,35 @@
 依据：怪物的生命值越低，捕捉的成功率越高。
 地图参考：导师广场，直线距离 230。
 
-### 宠物照顾计划
+### 认识宠物
 
-我和宠物打交道。来聊聊怎样照顾一位新伙伴。
-
-| 句型 | NPC 问题 | 回答示例 |
-| --- | --- | --- |
-| p002 | Thinking about caring for pets, what can you see?<br>说到照顾宠物，你能看见什么？ | I can see a pet guide.<br>我能看见一本宠物指南。 |
-| p024 | Thinking about caring for pets, what do you prefer doing?<br>说到照顾宠物，你更喜欢做什么？ | I prefer caring for pets.<br>我更喜欢照顾宠物。 |
-| p093 | Thinking about caring for pets, how would you ask for my opinion?<br>说到照顾宠物，你会怎样征求我的意见？ | Do you think it is rewarding?<br>你觉得这很有成就感吗？ |
-
-### 杰西卡：一起商量目的地
-
-我们设想在导师广场照顾宠物。先一起商量计划。
+和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。
 
 | 句型 | NPC 问题 | 回答示例 |
 | --- | --- | --- |
-| p062 | Where would you like to go to care for a pet?<br>你想去哪里照顾一只宠物？ | I would like to go to the academy square.<br>我想去导师广场。 |
-| p044 | How would you ask if we can care for a pet there?<br>你会怎样问我们能不能在那里照顾一只宠物？ | Can we care for a pet?<br>我们能照顾一只宠物吗？ |
-| p091 | Why are you interested in caring for pets?<br>你为什么对照顾宠物感兴趣？ | Because it is rewarding.<br>因为这很有成就感。 |
+| beginner-authored | Do you like pets?<br>你喜欢宠物吗？ | I like pets.<br>我喜欢宠物。 |
+| beginner-authored | A dragon or a rabbit?<br>龙还是兔子？ | I like rabbits.<br>我喜欢兔子。 |
+| beginner-authored | Big or small?<br>大的还是小的？ | I like small pets.<br>我喜欢小宠物。 |
 
-### 杰西卡：开口请求帮助
+### 照顾新伙伴
 
-想要照顾一只宠物时，可以怎样请求帮助？我们练习一下。
+和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。
 
 | 句型 | NPC 问题 | 回答示例 |
 | --- | --- | --- |
-| p031 | After our talk about caring for pets, what do you want to do?<br>聊过照顾宠物之后，你想做什么？ | I want to care for a pet.<br>我想照顾一只宠物。 |
-| p040 | If you wanted to care for a pet, what would you ask me to teach you?<br>如果想照顾一只宠物，你会请我教你什么？ | Please teach me how to care for a pet.<br>请教我怎样照顾一只宠物。 |
-| p060 | You have had a first try at caring for pets. What would you like to do again?<br>设想你初次尝试了照顾宠物。你还想再做什么？ | I would like to care for a pet again.<br>我想再照顾一只宠物一次。 |
+| beginner-authored | Want to learn about food?<br>想了解食物吗？ | Yes, please.<br>好的，谢谢。 |
+| beginner-authored | Food or water?<br>食物还是水？ | I want food.<br>我想要食物。 |
+| beginner-authored | Want help?<br>想要帮助吗？ | I want help.<br>我想要帮助。 |
+
+### 聊聊伙伴
+
+和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。
+
+| 句型 | NPC 问题 | 回答示例 |
+| --- | --- | --- |
+| beginner-authored | Do you like your pet?<br>你喜欢你的宠物吗？ | I like my pet.<br>我喜欢我的宠物。 |
+| beginner-authored | What do you like?<br>你喜欢什么？ | I like rabbits.<br>我喜欢兔子。 |
+| beginner-authored | Do you like small pets?<br>你喜欢小宠物吗？ | Yes!<br>喜欢！ |
 
 ## 莫纳 · 装备商人
 
@@ -182,37 +182,37 @@
 ## 法斯特船长 · 岛屿传送者
 
 依据：小哈奇,我是法斯特船长。当你成长到10级时，你就可以去火鸟岛冒险了。
-地图参考：营地传送门，直线距离 70。
+地图参考：营地传送门，直线距离 85。
 
-### 船长的旅行邀请
+### 请船长帮忙
 
-我是法斯特船长。我们先商量一次旅行吧。
-
-| 句型 | NPC 问题 | 回答示例 |
-| --- | --- | --- |
-| p005 | Thinking about visiting islands, what would you like?<br>说到游览岛屿，你想要什么？ | I would like an island map, please.<br>我想要一张岛屿地图，谢谢。 |
-| p022 | Thinking about visiting islands, what do you love doing?<br>说到游览岛屿，你热爱做什么？ | I love visiting islands.<br>我热爱游览岛屿。 |
-| p091 | Why are you interested in visiting islands?<br>你为什么对游览岛屿感兴趣？ | Because it is exciting.<br>因为这很令人兴奋。 |
-
-### 法斯特船长：一起商量目的地
-
-我们设想在营地传送门游览岛屿。先一起商量计划。
+和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。
 
 | 句型 | NPC 问题 | 回答示例 |
 | --- | --- | --- |
-| p062 | Where would you like to go to plan an island trip?<br>你想去哪里计划一次岛屿旅行？ | I would like to go to the camp gate.<br>我想去营地传送门。 |
-| p044 | How would you ask if we can plan an island trip there?<br>你会怎样问我们能不能在那里计划一次岛屿旅行？ | Can we plan an island trip?<br>我们能计划一次岛屿旅行吗？ |
-| p091 | Why are you interested in visiting islands?<br>你为什么对游览岛屿感兴趣？ | Because it is exciting.<br>因为这很令人兴奋。 |
+| beginner-authored | Need help?<br>需要帮忙吗？ | Help me, please.<br>请帮帮我。 |
+| beginner-authored | A map?<br>要地图吗？ | A map, please.<br>请给我一张地图。 |
+| beginner-authored | The camp map?<br>营地的地图吗？ | Yes, please.<br>是的，谢谢。 |
 
-### 法斯特船长：开口请求帮助
+### 认识营地
 
-想要计划一次岛屿旅行时，可以怎样请求帮助？我们练习一下。
+和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。
 
 | 句型 | NPC 问题 | 回答示例 |
 | --- | --- | --- |
-| p031 | After our talk about visiting islands, what do you want to do?<br>聊过游览岛屿之后，你想做什么？ | I want to plan an island trip.<br>我想计划一次岛屿旅行。 |
-| p040 | If you wanted to plan an island trip, what would you ask me to teach you?<br>如果想计划一次岛屿旅行，你会请我教你什么？ | Please teach me how to plan an island trip.<br>请教我怎样计划一次岛屿旅行。 |
-| p060 | You have had a first try at visiting islands. What would you like to do again?<br>设想你初次尝试了游览岛屿。你还想再做什么？ | I would like to plan an island trip again.<br>我想再计划一次岛屿旅行一次。 |
+| beginner-authored | Looking for the camp?<br>在找营地吗？ | Where is the camp?<br>营地在哪里？ |
+| beginner-authored | You are here. See?<br>你就在这里。看到了吗？ | Here?<br>这里吗？ |
+| beginner-authored | Need help with the map?<br>需要帮忙看地图吗？ | Help me, please.<br>请帮帮我。 |
+
+### 下一次旅行
+
+和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。
+
+| 句型 | NPC 问题 | 回答示例 |
+| --- | --- | --- |
+| beginner-authored | Do you like islands?<br>你喜欢岛屿吗？ | I like islands.<br>我喜欢岛屿。 |
+| beginner-authored | Big or small islands?<br>大岛还是小岛？ | I like small islands.<br>我喜欢小岛。 |
+| beginner-authored | Want a map?<br>想要地图吗？ | A map, please.<br>请给我一张地图。 |
 
 ## 伏尔坎 · 烈火系导师
 
@@ -394,35 +394,35 @@
 依据：我是青龙，也是陪伴你成长的导师。
 地图参考：导师广场，直线距离 113。
 
-### 青龙的成长建议
+### 和导师问好
 
-我会陪伴你成长。来选一件想学的事情吧。
-
-| 句型 | NPC 问题 | 回答示例 |
-| --- | --- | --- |
-| p004 | Thinking about learning new spells, what do you need?<br>说到学习新法术，你需要什么？ | I need a learning notebook.<br>我需要一本学习笔记。 |
-| p039 | Thinking about learning new spells, what are you learning to do?<br>说到学习新法术，你正在学做什么？ | I am learning to learn a new spell.<br>我正在学学习一个新法术。 |
-| p128 | Thinking about learning new spells, did that help?<br>说到学习新法术，这有帮助吗？ | Yes, thank you for your help.<br>有，谢谢你的帮助。 |
-
-### 青龙：一起商量目的地
-
-我们设想在导师广场学习新法术。先一起商量计划。
+和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。
 
 | 句型 | NPC 问题 | 回答示例 |
 | --- | --- | --- |
-| p062 | Where would you like to go to learn a new spell?<br>你想去哪里学习一个新法术？ | I would like to go to the academy square.<br>我想去导师广场。 |
-| p044 | How would you ask if we can learn a new spell there?<br>你会怎样问我们能不能在那里学习一个新法术？ | Can we learn a new spell?<br>我们能学习一个新法术吗？ |
-| p091 | Why are you interested in learning new spells?<br>你为什么对学习新法术感兴趣？ | Because it is rewarding.<br>因为这很有成就感。 |
+| beginner-authored | Hello!<br>你好！ | Hello!<br>你好！ |
+| beginner-authored | What is your name?<br>你叫什么名字？ | My name is Lily.<br>我叫小丽。 |
+| beginner-authored | Ready?<br>准备好了吗？ | Yes!<br>准备好了！ |
 
-### 青龙：开口请求帮助
+### 认识魔法
 
-想要学习一个新法术时，可以怎样请求帮助？我们练习一下。
+和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。
 
 | 句型 | NPC 问题 | 回答示例 |
 | --- | --- | --- |
-| p031 | After our talk about learning new spells, what do you want to do?<br>聊过学习新法术之后，你想做什么？ | I want to learn a new spell.<br>我想学习一个新法术。 |
-| p040 | If you wanted to learn a new spell, what would you ask me to teach you?<br>如果想学习一个新法术，你会请我教你什么？ | Please teach me how to learn a new spell.<br>请教我怎样学习一个新法术。 |
-| p060 | You have had a first try at learning new spells. What would you like to do again?<br>设想你初次尝试了学习新法术。你还想再做什么？ | I would like to learn a new spell again.<br>我想再学习一个新法术一次。 |
+| beginner-authored | Do you like magic?<br>你喜欢魔法吗？ | Yes!<br>喜欢！ |
+| beginner-authored | Magic or pets?<br>魔法还是宠物？ | I like magic.<br>我喜欢魔法。 |
+| beginner-authored | Do you like the camp?<br>你喜欢营地吗？ | I like the camp.<br>我喜欢营地。 |
+
+### 法杖小帮手
+
+和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。
+
+| 句型 | NPC 问题 | 回答示例 |
+| --- | --- | --- |
+| beginner-authored | Need help?<br>需要帮忙吗？ | Help me, please.<br>请帮帮我。 |
+| beginner-authored | With your wand?<br>是法杖的事情吗？ | Yes, please.<br>是的，谢谢。 |
+| beginner-authored | Ready to learn?<br>准备好学习了吗？ | Yes!<br>准备好了！ |
 
 ## 魔法小丑拉布拉 · 激活码奖品管理员
 

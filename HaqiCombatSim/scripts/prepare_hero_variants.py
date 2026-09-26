@@ -6,6 +6,7 @@ import argparse,json
 from pathlib import Path
 from PIL import Image
 from prepare_hero_preview import ROOT,OUT,MANIFEST,read,sha,clean_head
+from calibrate_hero_heads import calibrate
 
 p=argparse.ArgumentParser();p.add_argument('--sources',type=Path,required=True);a=p.parse_args()
 sources=read(a.sources);specs=read(ROOT/'art-references/hero-head-variants.json')['variants'];manifest=read(MANIFEST)
@@ -29,4 +30,4 @@ for spec in specs:
  if previous.get('sha256')==row['sha256'] and previous.get('cdn'):row['cdn']=previous['cdn']
  manifest['heads'][key]=row
  print(key,row['bytes'])
-text=json.dumps(manifest,ensure_ascii=False,indent=2)+'\n';MANIFEST.write_text(text,encoding='utf-8');(ROOT/'data/adventure/hero-art.json').write_text(text,encoding='utf-8')
+text=json.dumps(calibrate(manifest),ensure_ascii=False,indent=2)+'\n';MANIFEST.write_text(text,encoding='utf-8');(ROOT/'data/adventure/hero-art.json').write_text(text,encoding='utf-8')

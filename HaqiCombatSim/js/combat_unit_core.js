@@ -288,18 +288,24 @@ export function getAccuracyBoost(unit, school, resolved) {
 }
 
 /** player_server.lua L2605+ GetCriticalStrike */
-export function getCriticalStrike(unit, school, resolved) {
-    return schoolStat(unit, 'critPct', school) + (schoolFactor(resolved, unit.school).crit || 0);
+export function getCriticalStrike(unit, school, resolved, arena) {
+    return schoolStat(unit, 'critPct', school) + (schoolFactor(resolved, unit.school).crit || 0)
+        // player_server.lua L2660-2686：kids 任一同侧单位持有 storm_kids 姿态 → 全队暴击 +20
+        + (resolved.version === 'kids' && stanceSibling(unit, arena, 'storm_kids') ? 20 : 0);
 }
 
 /** player_server.lua L2715+ GetResilience */
-export function getResilience(unit, school) {
-    return schoolStat(unit, 'resiliencePct', school);
+export function getResilience(unit, school, resolved, arena) {
+    return schoolStat(unit, 'resiliencePct', school)
+        // player_server.lua L2759-2784：kids 任一同侧单位持有 death_kids 姿态 → 全队韧性 +20
+        + (resolved && resolved.version === 'kids' && stanceSibling(unit, arena, 'death_kids') ? 20 : 0);
 }
 
 /** player_server.lua L2811+ GetHitChance（已换算为百分比） */
-export function getHitChance(unit) {
-    return unit.stats.hitPct || 0;
+export function getHitChance(unit, resolved, arena) {
+    return (unit.stats.hitPct || 0)
+        // player_server.lua L2816-2840：kids 任一同侧单位持有 death_kids 姿态 → 全队命中 +10
+        + (resolved && resolved.version === 'kids' && stanceSibling(unit, arena, 'death_kids') ? 10 : 0);
 }
 
 /** player_server.lua L2858+ GetDodge（已换算为百分比） */
@@ -308,8 +314,10 @@ export function getDodge(unit) {
 }
 
 /** player_server.lua L2908+ GetSpellPenetration */
-export function getSpellPenetration(unit, school) {
-    return schoolStat(unit, 'penetration', school);
+export function getSpellPenetration(unit, school, resolved, arena) {
+    return schoolStat(unit, 'penetration', school)
+        // player_server.lua L2945-2969：kids 任一同侧单位持有 life_kids 姿态 → 全队穿透 +15
+        + (resolved && resolved.version === 'kids' && stanceSibling(unit, arena, 'life_kids') ? 15 : 0);
 }
 
 /** player_server.lua L2975+ GetSpellPenetrationReceive */
@@ -321,8 +329,26 @@ export function getSpellPenetrationReceive(unit) {
 export function getOutputHealBoost(unit, resolved) {
     return (unit.stats.outputHealPct || 0) + Math.round(((schoolFactor(resolved, unit.school).heal || 1) - 1) * 100);
 }
-export function getInputHealBoost(unit) {
-    return unit.stats.inputHealPct || 0;
+export function getInputHealBoost(unit, resolved, arena) {
+    return (unit.stats.inputHealPct || 0)
+        // player_server.lua L3045-3069：kids 任一同侧单位持有 death_kids 姿态 → 全队受到治疗效果 +30
+        + (resolved && resolved.version === 'kids' && stanceSibling(unit, arena, 'death_kids') ? 30 : 0);
+}
+
+/** player_server.lua L2705-2711 GetCriticalStrikeDamageRatioBonus（stat 376，0.001/点）
+ *  player_server.lua L3621-3641：kids 任一同侧单位持有 storm_kids 姿态 → stat376 +200（即 +0.2 暴击伤害比） */
+export function getCriticalStrikeDamageRatioBonus(unit, resolved, arena) {
+    return (unit.stats.critRatioBonus || 0)
+        + (resolved && resolved.version === 'kids' && stanceSibling(unit, arena, 'storm_kids') ? 0.2 : 0);
+}
+
+/** kids 姿态同队判定：任一同侧存活单位（含自己）持有该姿态即生效（player_server.lua 各 Get* 的 friendlys 循环） */
+function stanceSibling(unit, arena, name) {
+    if (!arena || !arena.sides || !arena.sides[unit.side]) return false;
+    for (const ally of arena.sides[unit.side]) {
+        if (ally.stance && ally.stance.rounds > 0 && ally.stance.name === name) return true;
+    }
+    return false;
 }
 
 /** player_server.lua L2108-2166 GetPowerPipChance */
@@ -485,6 +511,8 @@ export function hasNegativeCharm(unit, resolved) {
  * 系匹配（或 all / skipschool）则弹出并把数值加入 buffs
  */
 export function processStatAgainstCharms(unit, resolved, buffs, statName, school, buffs2) {
+    // Optional read-only presentation notifications preserve the exact consumption
+    // order; they never add events, change buffs, or consume random numbers.
     const effected = {};
     for (let order = unit.charms.length - 1; order >= 0; order--) {
         const id = unit.charms[order];
@@ -496,6 +524,7 @@ export function processStatAgainstCharms(unit, resolved, buffs, statName, school
         const tplSchool = String(tpl.school || 'all').toLowerCase();
         if (school === 'skipschool' || tplSchool === String(school).toLowerCase() || tplSchool === 'all') {
             unit.charms[order] = 0;
+            unit._arena?.onStatusEffect?.({type:'effect_used',target:unit.id,kind:'charm',id,order});
             buffs.push(Number(tpl[statName]));
             if (buffs2) buffs2.push(Number(tpl[statName]));
             effected[baseId] = true;
@@ -520,13 +549,17 @@ export function processDamageAgainstWards(unit, resolved, buffs, damageSchool) {
             if (effected[baseId]) continue;
             const tplSchool = String(tpl.school || 'all').toLowerCase();
             if (tplSchool === String(damageSchool).toLowerCase() || tplSchool === 'all') {
+                const id=w.id;
                 w.id = 0;
+                unit._arena?.onStatusEffect?.({type:'effect_used',target:unit.id,kind:'ward',id,order});
                 buffs.push(Number(tpl.boost_damage));
                 effected[baseId] = true;
             }
         } else if (tpl.prism_from && tpl.prism_to) {
             if (String(tpl.prism_from).toLowerCase() === String(damageSchool).toLowerCase()) {
+                const id=w.id;
                 w.id = 0;
+                unit._arena?.onStatusEffect?.({type:'effect_used',target:unit.id,kind:'ward',id,order});
                 damageSchool = String(tpl.prism_to).toLowerCase();
             }
         }
@@ -541,7 +574,9 @@ export function processHealAgainstWards(unit, resolved, buffs) {
         if (!w.id || w.absorb) continue;
         const tpl = resolved.wards[w.id];
         if (tpl && tpl.boost_heal !== undefined && tpl.boost_heal !== null) {
+            const id=w.id;
             w.id = 0;
+            unit._arena?.onStatusEffect?.({type:'effect_used',target:unit.id,kind:'ward',id,order});
             buffs.push(Number(tpl.boost_heal));
         }
     }
@@ -550,7 +585,9 @@ export function processHealAgainstWards(unit, resolved, buffs) {
 /** card_server.lua L1265-1283 AbsorbDamage */
 export function absorbUnitDamage(unit, damage) {
     const layers = unit.wards.filter(w => w.absorb && w.pts > 0);
-    damage = absorbDamage(layers, damage);
+    damage = absorbDamage(layers, damage, unit._arena?.onStatusEffect
+        ? layer=>unit._arena.onStatusEffect({type:'effect_used',target:unit.id,kind:'ward',id:layer.id})
+        : null);
     for (const w of unit.wards) if (w.absorb && w.pts <= 0) w.id = 0;
     return damage;
 }

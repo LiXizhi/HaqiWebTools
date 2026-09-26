@@ -1,0 +1,80 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>盾与术逐技能验收</title><style>body{margin:0;background:#173c43;color:#fff;font:15px sans-serif}main{max-width:1100px;margin:auto}canvas{width:100%;height:440px}button{padding:12px;margin:8px}p{padding:12px}body.mobile main{width:390px;max-width:100%}body.mobile canvas{height:320px}</style>
+<main><p>只读内存演示：加盾 → 加术 → 攻击消耗。按钮逐事件前进，暂停保留反馈画面，不写玩家存档。</p><button id="next" disabled>下一步</button><button id="reset" disabled>重播</button><span id="label">正在加载</span><canvas id="battle"></canvas></main>
+<script type="module">
+import {createSpellEffects} from '../../js/spell_effects.js';
+import {createArena} from '../../js/combat_arena_core.js';
+import {resolveParams,defaultParams} from '../../js/combat_params_core.js';
+import {drawOverheadStatus,drawStatusFeedback,drawSpellMiss} from '../../js/view_adventure_overhead_status.js';
+import {describeCard} from '../../js/card_description_core.js';
+import {useCard} from '../../js/combat_cards_core.js';
+import {captureBattlePresentation,battleStatusChanges} from '../../js/view_battle_presentation.js';
+if(new URLSearchParams(location.search).has('mobile'))document.body.className='mobile';
+const dataset=await(await fetch('data/adventure/combat.json')).json(),canvas=document.querySelector('canvas');
+const spec=(id,name)=>({id,name,school:'fire',level:10,deck:[]});
+const battle=createArena({resolved:resolveParams(dataset,defaultParams('kids')),near:[spec('hero','我方角色')],far:[spec('foe','敌方角色')],seed:12});
+const hero=battle.sides.near[0],foe=battle.sides.far[0],hp=Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,u.hp]));
+const mirror=new URLSearchParams(location.search).has('mirror');
+const dispel=new URLSearchParams(location.search).has('dispel');
+const fullCards=dispel||mirror?await(await fetch('data/kids/cards.json')).json():null;
+if(dispel){
+    hero.pips={normal:7,power:0};foe.pips={normal:7,power:0};
+    const desc=describeCard(fullCards.Life_LifeDispellWeakness,{dataset});
+    document.querySelector('p').textContent=['生命之敌',desc.summary,...desc.lines].join(' ');
+}
+if(mirror)document.querySelector('p').textContent=describeCard(fullCards.Ice_ReflectionShield).lines.join(' ');
+const playback=captureBattlePresentation(battle,()=>{
+    if(mirror){
+        battle.reflectionRulesVersion=1;
+        useCard(battle,hero,fullCards.Ice_ReflectionShield,hero);
+        for(let i=0;i<40;i++)useCard(battle,foe,battle.resolved.cards.Fire_SingleAttack_Level0_120_adv,hero);
+        return;
+    }
+    if(dispel){
+        useCard(battle,foe,fullCards.Life_LifeDispellWeakness,hero);
+        useCard(battle,hero,fullCards.Life_SingleHealWithHOT_Level1,hero);
+        return;
+    }
+    useCard(battle,hero,battle.resolved.cards.Ice_GlobalShield,hero);
+    useCard(battle,foe,battle.resolved.cards.Fire_FireDamageTrap,hero);
+    useCard(battle,foe,battle.resolved.cards.Fire_FireDamageTrap,hero);
+    useCard(battle,foe,battle.resolved.cards.Fire_FireDamageBlade,foe);
+    useCard(battle,foe,battle.resolved.cards.Fire_SingleAttack_Level0_120_adv,hero);
+});
+const fx=mirror?createSpellEffects({effects:await(await fetch('data/adventure/spell-effects.json')).json()}):null;
+let index=-1,status=playback.initial,feedback=[],event=null;
+const label=document.querySelector('#label');
+function reset(){index=-1;status=playback.initial;feedback=[];event=null;label.textContent='施法前：无盾、无术';}
+document.querySelector('#next').onclick=()=>{
+    if(index+1>=playback.events.length){reset();return;}
+    event=playback.events[++index];feedback=battleStatusChanges(status,event.status,event).map(c=>({...c,start:0}));status=event.status;
+    label.textContent=`${index+1}/${playback.events.length} ${dataset.cards[event.card]?.name||''} · ${event.type==='fizzle'?'施法失败（MISS）':event.type==='cast'?'施法':event.type==='damage'?'伤害结算':event.sourceType==='effect_used'?'逐层触发':'状态生效'}`;
+};
+if(mirror){
+    for(const [title,predicate] of [['查看魔镜',e=>e.sourceType==='absorb'],['查看反弹',e=>e.sourceType==='reflection'],['查看破碎',(e,i)=>e.type==='damage'&&playback.events[i-1]?.status.hero.some(s=>s.kind==='reflect')&&!e.status.hero.some(s=>s.kind==='reflect')]]){
+        const button=document.createElement('button');button.textContent=title;
+        button.onclick=()=>{reset();const stop=playback.events.findIndex(predicate);for(let i=0;i<=stop;i++)document.querySelector('#next').onclick();};
+        document.querySelector('main').insertBefore(button,canvas);
+    }
+}
+document.querySelector('#reset').onclick=reset;
+for(const button of document.querySelectorAll('button'))button.disabled=false;
+reset();
+function frame(){
+    canvas.width=canvas.clientWidth*2;canvas.height=canvas.clientHeight*2;
+    const c=canvas.getContext('2d');c.scale(2,2);const w=canvas.clientWidth;
+    for(const [i,u] of [hero,foe].entries()){
+        const at={x:w*(i?.75:.25),y:230};
+        c.fillStyle=i?'#dba087':'#87bdc8';c.beginPath();c.arc(at.x,at.y-45,30,0,Math.PI*2);c.fill();
+        c.fillStyle='#fff';c.font='16px sans-serif';c.textAlign='center';c.fillText(u.name,at.x,at.y+10);
+        drawOverheadStatus(c,u,battle,at,w,hp[u.id],status[u.id]);
+        drawStatusFeedback(c,feedback.filter(f=>f.id===u.id),at,250,false,w);
+        if(event?.type==='fizzle'&&event.caster===u.id)drawSpellMiss(c,at,.35);
+    }
+    if(fx&&event?.type==='cast'&&event.label==='reflection'){
+        const at=id=>({x:w*(id==='foe'?.75:.25),y:230});
+        fx.draw(c,{card:battle.resolved.cards[event.card],progress:.45,from:at(event.caster),to:at(event.target),width:w,height:320,reflection:true});
+    }
+    requestAnimationFrame(frame);
+}frame();
+</script></html>

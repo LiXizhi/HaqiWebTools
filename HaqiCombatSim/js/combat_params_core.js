@@ -39,7 +39,7 @@ export function defaultParams(version = 'teen') {
         // Web island unlock levels; original world configuration is unavailable.
         worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
-        languageAdventure: { basicReward:10, beginnerReward:30, intermediateReward:50, advancedReward:80, basicDailyCap:100, challengeDailyCap:200, basicCourseLimit:2, challengeCourseLimit:1, promptCooldownMs:90000, sourceCooldownMs:300000, maxTurns:8 },
+        languageAdventure: { inviteRange:150, interactionRange:85, greetingMs:2500, basicReward:10, beginnerReward:30, intermediateReward:50, advancedReward:80, basicDailyCap:100, challengeDailyCap:200, basicCourseLimit:2, challengeCourseLimit:1, promptCooldownMs:90000, sourceCooldownMs:300000, maxTurns:8 },
         // Web progression schedule; original server training-point grant table is unavailable.
         skillLearning: { pointLevels: [4,8,12,16,20,25,30,35,40,45,50] },
         // SueSue_equipment_extend_panel.lua GetAllOdds: kids level 1–5.

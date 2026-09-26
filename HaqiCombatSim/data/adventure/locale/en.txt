@@ -575,12 +575,16 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 保存||Save
 推荐||Recommended
 拖出移除；长按 / 右键查看详情||Drag out to remove; long-press / right-click for details
+点击右侧牌库的卡牌放入卡包；把卡包里的卡牌拖出、长按或右键移除；改完点下方「保存」。||Click a card in the spell library to add it to your deck; drag a deck card out, long-press or right-click to remove it; press Save below when done.
+点击物品打开详情，可以装备法杖和口袋、使用药剂。||Click an item to open its details; equip wands and pockets, or use potions.
+点击右侧背包选择装备，放入左边的强化栏后点「强化」。||Pick a piece of gear from your bag on the right, put it in the strengthening slot, then press Strengthen.
+点击伙伴查看详情、安排卡位；出奇蛋与喂养口粮都在「咕噜噜教学」里使用。||Click a companion to view details or assign slots; the surprise egg and pet food are used via the Guluulu tutorial button.
 法术牌库||Spell library
 购买卡包||Buy a deck
 前往商店购买卡包；当前修改需先保存||Go to the shop to buy a deck; save current edits first
 
 # js/view_adventure_dialogue.js
-点击任意位置 / 空格 · 显示完整对白||Click anywhere / Space · show full dialogue
+点击对白或空格显示全文 · 空白处关闭||Click the text or press Space to reveal it · Click empty space to close
 
 # js/view_adventure_dungeons.js
 副本冒险||Dungeon adventures
@@ -620,6 +624,22 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 强化装备||Upgrade equipment
 镶嵌宝石||Socket gems
 角色形象||Character look
+编辑||Edit
+修改名字和形象||Change name and look
+关闭修改名字和形象||Close name and look editor
+战斗中无法修改名字和形象||Cannot change name or look during battle
+改名字每次 {nameCost} 魔豆，改形象每次 {lookCost} 魔豆。只收取有改动的部分。当前 {count} 魔豆。||Renaming costs {nameCost} magic beans each time, and a new look costs {lookCost}. Only changes are charged. You have {count} magic beans.
+花费 {count} 魔豆确认||Confirm for {count} magic beans
+名字和形象都没有变化||The name and look are unchanged
+名字需要一至十六个字||The name needs 1 to 16 characters
+请选择基础头部形象||Choose a base head look
+头部形象和性别不一致||The head look does not match the gender
+改名字需要50魔豆||Renaming takes 50 magic beans
+改形象需要50魔豆||A new look takes 50 magic beans
+改名字和形象需要100魔豆||Changing the name and look takes 100 magic beans
+名字已更新。||Name updated.
+形象已更新。||Look updated.
+名字和形象已更新。||Name and look updated.
 未装备||Not equipped
 当前属性||Current stats
 属性加成包含装备、强化和宝石；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。||Stat bonuses include equipment, upgrades and gems; other schools and extended stats show only non-zero entries. Max health and super pip rate include level base values. Equipment attached cards do not take normal deck capacity.
@@ -865,19 +885,23 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 
 # js/view_adventure_roles.js
 魔法哈奇 · 你的主角||Magic Haqi · your hero
+Keepwork：{owner}||Keepwork: {owner}
 访客角色 · 保存在当前浏览器||Guest character · saved in this browser
 选择角色||Choose a character
 当前有本地进度待同步。游玩时每分钟自动同步，也可手动保存。||Local progress is waiting to sync. It syncs every minute while playing, or you can save manually.
 角色云端记录已同步。||Cloud character records synced.
+等级 {level} · {school}||Level {level} · {school}
 最近使用||Recently used
 继续旅程||Continue journey
 进入角色||Enter character
 还没有主角，创建你的第一段旅程。||No hero yet; create your first journey.
+已有 {count} / {total} 个主角||{count} / {total} characters created
 新建角色||New character
 保存角色到云端||Save character to the cloud
 刷新云端角色||Refresh cloud characters
 退出 Keepwork||Sign out of Keepwork
 云端已有不同的角色进度。加载前会在浏览器自动保留本地副本。||The cloud has different character progress. A local copy is kept in this browser before loading.
+{name} · 等级 {level} · {school}||{name} · Level {level} · {school}
 备份本地并加载云端||Back up local and load cloud
 登录 Keepwork，继续最近角色||Sign in to Keepwork to continue your latest character
 
@@ -2512,7 +2536,7 @@ fine！期待我出航的那一刻。||Fine! I cannot wait for the moment I set 
 与{name}交谈，完成指导。||Talk to {name} to finish the lesson.
 确定放弃「{title}」吗？进度会清除，之后可以重新接取。||Abandon "{title}"? Progress will be cleared, and you can accept it again later.
 查看{name}详情||View {name}
-点击空白处 / 空格 · {action}||Click empty space / Space · {action}
+空格 · {action} · 点击空白处关闭||Space · {action} · Click empty space to close
 
 # js/view_adventure_local_map.js
 选择渔网||Choose a net
@@ -5400,7 +5424,7 @@ S4死亡装供货商||S4 Death gear supplier
 全体敌人||all enemies
 全场所有角色||everyone in the arena
 伤害为目标当前生命的 {percent}%||Damage: {percent}% of the target's current HP
-对{target}造成其当前生命 {percent}% 的基础伤害，另受此牌的伤害上限限制。||Deal base damage equal to {percent}% of the current HP of {target}, subject to this card's damage cap.
+对{target}造成其当前生命 {percent}% 的基础伤害，无视目标抗性，另受此牌的伤害上限限制。||Deals base damage equal to {percent}% of {target}'s current health, ignoring target resistance, and subject to this card's damage cap.
 每段基础 {amount}||Base per hit: {amount}
 对{target}立即造成 {amount} 点{school}基础伤害。||Immediately deal {amount} base {school} damage to {target}.
 分段攻击 {times} 次；特殊段数可能使用不同伤害。||Attack {times} times. Special hits may use different damage values.
@@ -5464,6 +5488,98 @@ S4死亡装供货商||S4 Death gear supplier
 以上为基础效果；实际伤害、治疗与命中受角色属性、目标防御及战斗状态影响。||These are base effects. Actual damage, healing and accuracy depend on character stats, target defenses and battle effects.
 卡牌效果说明||Card effect details
 
+# js/card_description_core.js — kids effect completion (2026-09-26)
+生命值 {v}||Health {v}
+超级魔力点生成率 {v}%||Power pip chance {v}%
+{school}命中 {v}%||{school} accuracy {v}%
+{school}攻击伤害 {v}%||{school} attack damage {v}%
+受到的{school}伤害 {v}%||{school} damage received {v}%
+暴击率 {v}%||Critical rate {v}%
+韧性 {v}%||Resilience {v}%
+无视{school}抗性 {v}%||Ignores {school} resistance {v}%
+施放治疗效果 {v}%||Healing dealt {v}%
+受到治疗效果 {v}%||Healing received {v}%
+生命上限 {v}%||Max health {v}%
+下次施法必然失误||Next spell always misses
+使{target}下一次任意施法必然失误（MISS），触发后消耗此术。||Makes {target}'s next spell of any school always miss (MISS); consumed on trigger.
+下次{school}施法命中 {percent}%||Next {school} spell accuracy {percent}%
+使{target}下一次{school}施法的命中 {percent}%，触发后消耗此术。||Adjusts the accuracy of {target}'s next {school} spell by {percent}%; consumed on trigger.
+下次治疗 {percent}%||Next heal {percent}%
+使{target}下一次施放治疗时，治疗效果 {percent}%，触发后消耗此术。||When {target} next casts a healing spell, its healing is {percent}%; consumed on trigger.
+使{target}下一次受到的治疗效果 {percent}%，触发后消耗此术。||{target}'s next healing received is {percent}%; consumed on trigger.
+对{target}施加持续效果：{effect}，持续 {rounds} 回合（该效果在当前模拟器中未实现）。||Applies a lasting effect to {target}: {effect}, for {rounds} rounds (this effect is not implemented in this simulator yet).
+原版此牌还会同时对自身造成 {percent}% 当前生命的伤害；该自伤在当前模拟器中未实现。||The original version of this card also deals {percent}% of the caster's current health to themselves; this self-damage is not implemented in this simulator yet.
+被眩晕的目标会同时获得 {count} 层眩晕抵挡，用于抵挡后续眩晕，每次抵挡消耗一层。||A stunned target also gains {count} layers of Stun Absorb that block later stuns; each block consumes one layer.
+眩晕一名敌人||Stun one enemy
+使{target}眩晕，跳过其下一次行动。||Stuns {target}, skipping their next action.
+眩晕全体敌人||Stun all enemies
+使全体敌人眩晕，各自跳过其下一次行动。||Stuns all enemies; each skips their next action.
+并使{target}眩晕，跳过其下一次行动。||Also stuns {target}, skipping their next action.
+并使全体敌人眩晕，各自跳过其下一次行动。||Also stuns all enemies; each skips their next action.
+施法后自己也会眩晕，跳过自己的下一次行动。||The caster is also stunned afterwards, skipping their own next action.
+施法同时净化{target}：清除其全部持续伤害、减益术与负面护盾。||Also cleanses {target}: removes all damage-over-time effects, weakness charms and negative wards on them.
+引暴溅射 {amount}||Detonate splash {amount}
+对{target}造成伤害；若目标身上已有「溅射」持续伤害，本次改为造成 {amount} 点爆炸伤害，并移除该溅射。||Deals damage to {target}; if the target already has a splash damage-over-time, this cast instead deals {amount} explosion damage and removes the splash.
+此牌对怪物产生的威胁提高至伤害的 {ratio} 倍，更容易吸引怪物攻击。||Threat generated against monsters by this card is {ratio} times its damage, making it more likely to attract monster attacks.
+场地光环：{school}伤害 {percent}%||Arena aura: {school} damage {percent}%
+设置全场场地光环，对双方所有角色生效：{school}伤害 {percent}%，持续到被其他场地光环替换。||Sets an arena-wide aura affecting all characters on both sides: {school} damage {percent}%, lasting until replaced by another arena aura.
+场地光环：治疗效果 {percent}%||Arena aura: healing {percent}%
+设置全场场地光环，对双方所有角色生效：治疗效果 {percent}%，持续到被其他场地光环替换。||Sets an arena-wide aura affecting all characters on both sides: healing {percent}%, lasting until replaced by another arena aura.
+场地光环：超级魔力点生成率 {percent}%||Arena aura: power pip chance {percent}%
+设置全场场地光环，对双方所有角色生效：超级魔力点生成率 {percent}%，持续到被其他场地光环替换。||Sets an arena-wide aura affecting all characters on both sides: power pip chance {percent}%, lasting until replaced by another arena aura.
+使自己获得光环，持续 {rounds} 回合：{effect}。||Grants yourself an aura for {rounds} rounds: {effect}.
+此姿态只有同学系的角色才能施放。||Only a character of the same school can cast this stance.
+攻击与受伤均 -25%||Attacks dealt and damage taken both -25%
+进入防守姿态 {rounds} 回合：自己的攻击伤害 -25%，受到的伤害 -25%。||Enter Defensive Stance for {rounds} rounds: your attack damage -25% and damage taken -25%.
+防守姿态期间，自己对怪物产生的仇恨提高至 3 倍。||While in Defensive Stance, your threat against monsters is tripled.
+仇恨提高至 5 倍||Threat ×5
+进入嘲讽姿态 {rounds} 回合：自己对怪物产生的仇恨提高至 5 倍，用于保护队友。||Enter Taunt Stance for {rounds} rounds: your threat against monsters is multiplied by 5 to protect your allies.
+全队攻击伤害 +15%||Team attack damage +15%
+进入烈焰姿态 {rounds} 回合：自己受到的伤害 +10%。||Enter Blazing Stance for {rounds} rounds: your damage taken +10%.
+队伍中任意角色持有烈焰姿态期间：全队攻击伤害 +15%（同类姿态不叠加）。||While any ally holds Blazing Stance: the whole team's attack damage +15% (same stances do not stack).
+全队受到的伤害 -10%||Team damage taken -10%
+进入寒冰姿态 {rounds} 回合：自己的攻击伤害 -10%。||Enter Frost Stance for {rounds} rounds: your attack damage -10%.
+队伍中任意角色持有寒冰姿态期间：全队受到的伤害 -10%（同类姿态不叠加）。||While any ally holds Frost Stance: the whole team's damage taken -10% (same stances do not stack).
+全队暴击率 +20%||Team critical rate +20%
+进入风暴姿态 {rounds} 回合：自己受到的伤害 +10%。||Enter Storm Stance for {rounds} rounds: your damage taken +10%.
+队伍中任意角色持有风暴姿态期间：全队暴击率 +20%，暴击伤害 +20%（同类姿态不叠加）。||While any ally holds Storm Stance: the whole team's critical rate +20% and critical damage +20% (same stances do not stack).
+全队穿透 +15%||Team penetration +15%
+进入生命姿态 {rounds} 回合：自己受到的伤害 +10%。||Enter Life Stance for {rounds} rounds: your damage taken +10%.
+队伍中任意角色持有生命姿态期间：全队无视抗性 +15%（同类姿态不叠加）。||While any ally holds Life Stance: the whole team ignores +15% resistance (same stances do not stack).
+全队韧性 +20%||Team resilience +20%
+进入死亡姿态 {rounds} 回合：自己受到的伤害 +10%。||Enter Death Stance for {rounds} rounds: your damage taken +10%.
+队伍中任意角色持有死亡姿态期间：全队韧性 +20%、命中 +10%、受到治疗效果 +30%（同类姿态不叠加）。||While any ally holds Death Stance: the whole team's resilience +20%, accuracy +10% and healing received +30% (same stances do not stack).
+全体友方普通魔力 +{count}||All allies normal pips +{count}
+为全体友方增加 {count} 点普通魔力，不超过魔力上限。||Adds {count} normal pips to all allies, capped by the pip limit.
+全体友方超级魔力 +{count}||All allies power pips +{count}
+为全体友方增加 {count} 个超级魔力点（本系卡牌每个按 2 点魔力计费），不超过魔力上限。||Adds {count} power pips to all allies (each counts as 2 pips for same-school cards), capped by the pip limit.
+隐身 {rounds} 回合||Stealth for {rounds} rounds
+使{target}隐身 {rounds} 回合：敌方无法用单体攻击选中它，群体攻击与治疗不受影响。||{target} becomes stealthed for {rounds} rounds: enemies cannot target them with single-target attacks; area attacks and heals are unaffected.
+目标施法或受到伤害后，隐身立即消失。||Stealth ends immediately when the target casts a spell or takes damage.
+当前模拟器未实现此卡，施放时不产生任何效果。||This card is not implemented in this simulator yet; casting it has no effect.
+冰封{target}||Freeze {target}
+冰封{target}，使其无法行动，直到其受到伤害或 {rounds} 回合后解除。||Freezes {target}, preventing them from acting until they take damage or {rounds} rounds pass.
+护盾转换为诅咒||Converts a ward into a hex
+将{target}身上的「{from}」护盾转换为「{to}」诅咒。||Converts one "{from}" ward on {target} into a "{to}" hex.
+替身守护||Guardian proxy
+对自己造成 {amount} 点死亡伤害，并为一名队友创造替身：其死亡后立即复活并恢复 {amount} 点生命。||Deals {amount} Death damage to yourself and creates a proxy for one ally: when they die, they revive immediately with {amount} health.
+激怒怪物||Enrage monsters
+激怒 {min}~{max} 级的野生怪物，使其立即加入战斗。||Enrages wild monsters of level {min}~{max}, making them join the battle immediately.
+系统牌||System card
+系统牌：单位阵亡时由系统使用，不出现在玩家卡组。||System card: used by the system when a unit dies; never appears in player decks.
+系统牌：宠物抓取过程，不出现在玩家卡组。||System card: pet-picking process; never appears in player decks.
+系统牌：表示一次施法失误（MISS）。||System card: marks a fizzled (missed) spell cast.
+系统模板：持续治疗效果。||System template: healing-over-time effect.
+系统模板：持续伤害。||System template: damage-over-time effect.
+-80%风暴伤害||-80% Storm damage
++40%风暴伤害||+40% Storm damage
+不能被治疗||Cannot be healed
+
+忽略55%风暴抗性||Ignores 55% Storm resistance
+忽略60%风暴抗性||Ignores 60% Storm resistance
+忽略65%风暴抗性||Ignores 65% Storm resistance
+护盾||Shield
+诅咒||Hex
 # data/kids/charms.json — effect labels used by card_description_core.js
 -50%法术命中||-50% spell accuracy
 +30%风暴命中||+30% Storm accuracy
@@ -5514,9 +5630,137 @@ S4死亡装供货商||S4 Death gear supplier
 赤发少女||Copper Bun Girl
 卷发少年||Curly-haired Boy
 卷发少女||Curly Puff Girl
-棕肤少年||Twist-haired Boy
-棕肤少女||Twist-haired Girl
+短辫少年||Twist-haired Boy
+短辫少女||Twist-haired Girl
 侧分少年||Side-part Boy
 丸子少女||High-bun Girl
 波浪少年||Wavy-haired Boy
 波浪少女||Wavy Bob Girl
+旅途||Journey
+声音||Sound
+语言||Language
+关于||About
+存档与云端||Save & cloud
+角色||Character
+离开||Exit
+音效与音乐||Sound & music
+工具与链接||Tools & links
+已开启||On
+已关闭||Off
+语言学习||Language learning
+语音陪伴||Voice companion
+中文释义||Chinese glosses
+回到开始画面，选择或创建新的冒险角色。||Return to the title to choose or create a character.
+城镇与场景的背景音乐。||Music for towns and scenes.
+施法与战斗时播放音效。||Spell and battle sound effects.
+在对话与任务中练习目标语言。||Practice your target language in dialogues and quests.
+朗读对话与示范回答。||Read dialogues and example answers aloud.
+对话中同时显示中文意思。||Show Chinese meanings alongside dialogues.
+修改当前存档的调试工具。||Debug tools for editing the current save.
+
+# 战斗状态演出
+护盾破碎||Shield broken
+效果解除||Effect removed
+持续伤害触发||Damage over time
+持续治疗触发||Healing over time
+棱镜转化||Prism activated
+术已触发||Charm activated
+陷阱触发||Trap activated
+效果变化||Effect changed
+效果触发||Effect activated
+减益生效||Debuff applied
+术加成||Charm applied
+效果生效||Effect applied
+
+# 之敌施法阻断
+下次{school}施法失败||Next {school} spell fails
+使{target}下一次{school}攻击或施法失败（MISS），触发后消耗一层此效果；其他学系不会触发。||The next {school} attack or spell cast by {target} fails (MISS), consuming one layer; other schools do not trigger it.
+通过命中判定后仍会消耗本次魔力；若本身命中失误，则不扣魔力，但仍消耗此效果。免疫此效果的怪物不受强制失败影响。||If the accuracy check passes, the spell still costs mana. A natural miss costs no mana but still consumes this effect. Immune monsters are not forced to fail.
+{effect}破掉||{effect} broken
+
+# 冰霜魔镜
+魔镜破碎||Mirror shattered
+魔镜吸收 {amount}，反弹直接伤害||Mirror absorbs {amount} and reflects direct damage
+为{target}附加头顶魔镜，累计吸收 {amount} 点伤害；容量耗尽时魔镜破碎，超出的伤害仍会扣除生命。||Place an overhead mirror on {target}, absorbing {amount} total damage. It shatters when depleted; excess damage still reduces HP.
+受到直接攻击时，以普通吸收盾结算后的整次伤害反弹给攻击者，并反向播放原技能。反弹仍受攻击者的护盾和抗性等影响，不会递归反弹，也不会致死。||Reflect the full direct hit remaining after normal absorption back at the attacker, replaying the original spell in reverse direction. The attacker's shields and resistance still apply. Reflection cannot reflect again or kill.
+持续伤害只消耗魔镜容量，不会反弹。重复施放会叠加剩余容量。||Damage over time only consumes mirror capacity without reflection. Repeated casts add to its remaining capacity.
+{caster} 的魔镜反弹 {card} → {target}||{caster}'s mirror reflects {card} → {target}
+{target} 受到魔镜反弹的 {amount} 点伤害||{target} takes {amount} reflected damage
+
+# Encounter-based bilingual learning
+双语学习||Bilingual learning
+双语学习 · 已开启||Bilingual learning · On
+遇见居民 · 开口交流||Meet residents · Start talking
+在冒险中开口||Speak as you explore
+遇到营地居民，聊三句，练习问好、认识伙伴和请求帮助。没有固定顺序，随时可以离开。||Meet a camp resident and exchange three short answers. Practise greetings, pets and asking for help. There is no fixed order, and you can leave at any time.
+说出的意思基本正确即可通过，不评测发音。可以听示范、看提示；文字求助不能代替口语。||An understandable spoken answer passes. Pronunciation is not scored. Listen to examples or use hints; typed help does not count as speaking.
+完成交流可获得奇豆，用来购买宠物营养餐；后续挑战可获得用于强化装备的仙豆。具体金额与今日可领次数会在交流前显示。||Earn Qidou for pet meals by completing conversations. Later challenges award Xiandou for equipment upgrades. Your available reward and daily limits are shown before you start.
+选择语言||Choose languages
+显示语言||Display language
+开启双语学习||Turn on bilingual learning
+关闭双语学习||Turn off bilingual learning
+保存设置||Save settings
+更多语言与音色设置||More language and voice settings
+（营地课程尚未开放）||(Camp lessons not yet available)
+该语言的营地课程尚未开放。||Camp lessons are not yet available in this language.
+营地先从简单的词语和短句开始。麦克风仅在点击录音时开启。||Start with simple words and short sentences. The microphone only starts when you press Record.
+隐藏释义||Hide translation
+显示释义||Show translation
+{title} · 三轮交流||{title} · Three short answers
+本次到账 {amount} {currency} · 当前余额 {balance}||Received {amount} {currency} · Balance {balance}
+本次可得 {amount} {currency}||Available reward: {amount} {currency}
+首次交流纪念 · {kind} · 已交流 {count} 次||First conversation keepsake · {kind} · Completed {count} times
+曾独立表达||Spoken independently
+参考提示完成||Completed with hints
+宠物营养餐每份 {price} 奇豆。本次奖励可买 {count} 份。||A pet meal costs {price} Qidou. This reward buys {count} meals.
+宠物营养餐每份 {price} 奇豆。可以攒起来购买营养餐。||A pet meal costs {price} Qidou. Save up to buy a meal.
+仙豆可用于强化已有装备。||Xiandou can be used to upgrade equipment you own.
+{item}强化需要 {price} 仙豆，当前 {held}，还差 {missing}。||Upgrading {item} costs {price} Xiandou. You have {held} and need {missing} more.
+同组课程今日奖励次数已用完||Today's reward count for this lesson group has been used up
+今日奖励额度不足||Today's remaining reward allowance is limited
+去使用||Use rewards
+试试独立表达挑战||Try speaking independently
+第 {turn} / {total} 轮||Turn {turn} / {total}
+和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。||Exchange three short answers with a camp resident. This conversation does not complete main quests or buy or grant the items mentioned.
+可以先听示范，再用自己的话回答。||Listen to an example, then answer in your own words.
+和导师问好||Hello, Mentor
+认识魔法||Getting to Know Magic
+法杖小帮手||Help with Your Wand
+认识宠物||Getting to Know Pets
+照顾新伙伴||Caring for a New Friend
+聊聊伙伴||Talking about Pets
+请船长帮忙||Ask the Captain for Help
+认识营地||Getting to Know the Camp
+下一次旅行||Your Next Trip
+听问题，参考下方提示开口回答，也可以用自己的话表达。||Listen to the question and answer aloud. Use the hint or your own words.
+这句通过了，继续聊下一句。||That answer works. Let's keep talking.
+还没有通过，参考回答提示再录一次。||Try once more. The hint can help you answer.
+交流完成，已记录口语练习。||Conversation complete. Your speaking practice has been recorded.
+交流完成，获得 {amount} {currency}。||Conversation complete. Received {amount} {currency}.
+请用目标语言回答，可以先点提示。||Please answer in your learning language. You can use a hint.
+正在理解你的回答…||Understanding your answer…
+语音回答||Spoken answer
+文字求助 · 不计通关||Typed help · Does not count as a spoken answer
+看看提示，再录音回答；文字不会推进故事。||Read the hint, then record an answer. Typing does not advance the story.
+
+双语释义||Bilingual translation
+对话中同时显示另一种语言的意思。||Show the translation alongside the conversation.
+
+营地双语对话||Camp conversation
+换个故事||Another story
+再听一次||Listen again
+回答提示||Answer hint
+收起提示||Hide hint
+显示提示||Show hint
+录音||Record
+连接中||Connecting
+结束||Finish
+正在录音 · 松开发送，滑出取消||Recording · Release to send, slide away to cancel
+按住对话，松开发送 · 点击录制，再点结束||Hold to talk, release to send · Or tap to record and tap again to finish
+交流完成||Conversation complete
+已取消录音，可重新说。||Recording cancelled. You can try again.
+请开口回答。||Please answer aloud.
+
+同组今日剩余 {count} 次 · 今日共享余量 {amount} {currency}||{count} rewards left for this lesson group today · Shared allowance left: {amount} {currency}
+
+双语学习 · 已关闭||Bilingual learning · Off

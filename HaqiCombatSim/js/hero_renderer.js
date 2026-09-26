@@ -1,5 +1,5 @@
 import { resolveMountDrawPose, MOUNT_DIRECTIONS } from './adventure_mounts_core.js';
-import { createHeroActor, updateHeroActor, BODY_TO_HEAD, headBreath } from './hero_pose_core.js';
+import { createHeroActor, updateHeroActor, BODY_TO_HEAD, headBreath, walkFrameIndex } from './hero_pose_core.js';
 
 // One UI scheduler; detached portraits release their actor state automatically.
 const views=new Set();let viewFrame=0;
@@ -62,6 +62,8 @@ export class HeroRenderer {
             const body=this.manifest.bodies[key];
             if(this.manifest.heads[headId])await Promise.all([this.image('body:'+key,body),this.image('head:'+headId,this.manifest.heads[headId])]);
         }));
+        const walk=this.manifest.bodies[gender+'-walk'].walk;
+        if(walk)await this.image('walk:'+gender,walk).catch(()=>null);
         return { fallback:results.some(r => r.status==='rejected'), errors:results.filter(r=>r.status==='rejected').map(r=>r.reason.message) };
     }
     originalBounds(key, cell) {
@@ -77,7 +79,7 @@ export class HeroRenderer {
         }
         return this.sourceBounds.get(id);
     }
-    layout({gender='male',mount=null},{facing=0,size=78,time=0,moving=false,standing=false,bodyRect}={}) {
+    layout({gender='male',mount=null},{facing=0,size=78,time=0,moving=false,standing=false,bodyRect,reducedMotion=false}={}) {
         if(bodyRect)return {key:gender+'-walk',rider:{cell:facing,...bodyRect},foreground:[]};
         if (mount && !standing) {
             const pose=resolveMountDrawPose(mount,facing,{size,time,moving,gender});
@@ -87,29 +89,36 @@ export class HeroRenderer {
         if (standing) {
             return {key:(gender==='female'?'female-':'')+'standing',rider:{cell:facing,x:-size/2,y:-size*.96,w:size,h:size},foreground:[]};
         }
-        const bob=Math.sin(time*(moving?14:2))*(moving?3:1)*size/78;
+        const bob=reducedMotion||moving?0:Math.sin(time*2)*size/78;
         return {key:gender+'-walk',rider:{cell:facing,x:-34*size/78,y:-size+bob,w:68*size/78,h:size},foreground:[]};
     }
     draw(ctx, appearance, options={}) {
         const {x=0,y=0,original=false,debug=false,overlay=false,head=BODY_TO_HEAD[options.facing??0]}=options;
-        const pose=options.pose||this.layout(appearance,options),body=this.manifest.bodies[pose.key],frame=body.frames[pose.rider.cell];
+        const pose=options.pose||this.layout(appearance,options),body=this.manifest.bodies[pose.key];
+        let frame=body.frames[pose.rider.cell];
         const source=this.images.get('original:'+pose.key);
         if(!source)return {ready:false};
         const headId=this.headId(appearance.gender||'male',appearance.headId||body.defaultHead);
-        const heads=this.manifest.heads[headId],headImage=this.images.get('head:'+headId),bodyImage=this.images.get('body:'+pose.key);
+        const heads=this.manifest.heads[headId],headImage=this.images.get('head:'+headId);
+        let bodyImage=this.images.get('body:'+pose.key);
         const split=!original&&!!headImage&&!!bodyImage;
-        const r=pose.rider,crop=body.trimOriginal?this.originalBounds(pose.key,r.cell):frame.crop;
+        const step=walkFrameIndex(body.walk,options),walkImage=this.images.get('walk:'+(appearance.gender||'male'));
+        const walking=split&&step!==null&&!!walkImage;
+        if(walking){frame=body.walk.frames[pose.rider.cell*body.walk.framesPerDirection+step];bodyImage=walkImage;}
+        const r=pose.rider,crop=walking?frame.crop:body.trimOriginal?this.originalBounds(pose.key,r.cell):frame.crop;
         // Same aspect-fit and original alpha trimming as the existing game renderer.
         const ratio=Math.min(r.w/crop[2],r.h/crop[3]);
         const rect={x:r.x+(r.w-crop[2]*ratio)/2,y:r.y+(r.h-crop[3]*ratio)/2,w:crop[2]*ratio,h:crop[3]*ratio};
         const neck=[rect.x+(frame.crop[0]+frame.neck[0]-crop[0])*ratio,rect.y+(frame.crop[1]+frame.neck[1]-crop[1])*ratio];
+        // Move the walking body toward its head without moving the head attachment.
+        const bodyRect=walking?{...rect,y:rect.y+(frame.bodyOffsetY||0)*ratio}:rect;
         const sheet=(image,crop,rect)=>ctx.drawImage(image,...crop,rect.x,rect.y,rect.w,rect.h);
         const mountImage=appearance.mount&&this.images.get('mount:'+appearance.mount.id);
         if(pose.mount&&!mountImage)return {ready:false};
         const drawMount=()=>{const m=pose.mount;const art=appearance.mount.art||mountImage,cw=art.width/(art.columns||2),ch=art.height/(art.rows||2);sheet(mountImage,[m.cell%2*cw,Math.floor(m.cell/2)*ch,cw,ch],m);};
         ctx.save();ctx.translate(x,y);
         if(pose.mount&&mountImage)drawMount();
-        sheet(split?bodyImage:source,crop,rect);
+        sheet(split?bodyImage:source,crop,bodyRect);
         let headRect=null;
         if(split&&!options.bodyOnly){
             const h=heads.frames[(head+heads.directionCount)%heads.directionCount],s=frame.headHeight*ratio/h.height;
@@ -125,13 +134,13 @@ export class HeroRenderer {
             for(const polygon of pose.foreground)polygon.forEach(([u,v],i)=>ctx[i?'lineTo':'moveTo'](pose.mount.x+u*pose.mount.w,pose.mount.y+v*pose.mount.h));
             ctx.closePath();ctx.clip();drawMount();ctx.restore();
         }
-        if(overlay){ctx.save();ctx.globalAlpha=.35;sheet(source,crop,rect);ctx.restore();}
+        if(overlay){ctx.save();ctx.globalAlpha=.35;sheet(source,body.trimOriginal?this.originalBounds(pose.key,r.cell):body.frames[r.cell].crop,rect);ctx.restore();}
         if(debug){
             ctx.lineWidth=1;ctx.strokeStyle='#40dccc';ctx.strokeRect(r.x,r.y,r.w,r.h);
             const cross=(p,color)=>{ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(p[0]-5,p[1]);ctx.lineTo(p[0]+5,p[1]);ctx.moveTo(p[0],p[1]-5);ctx.lineTo(p[0],p[1]+5);ctx.stroke();};
             cross(neck,'#ffcc73');if(pose.seat)cross(pose.seat,'#ff6687');
         }
-        ctx.restore();return {ready:true,split,pose,bodyRect:rect,headRect,neck,seat:pose.seat};
+        ctx.restore();return {ready:true,split,walkFrame:walking?step:null,pose,bodyRect,headRect,neck,seat:pose.seat};
     }
     drawSave(ctx,save,x,y,time=0,moving=false,scale=1,options={}) {
         const appearance=this.appearance(save,options);this.ensure(appearance);
@@ -167,7 +176,7 @@ export class HeroRenderer {
             const pose=this.updateActor(actor,{time,facing:settings.facing||0,reducedMotion:reduced?.matches});
             this.draw(c,current,{x:canvas.width/2,y:canvas.height*.88,size:78,time,head:pose.head,breath:pose.breath,reducedMotion:reduced?.matches,...settings});};
         const view={node:canvas,paint,connected:false};
-        const update=async(a=current,o=settings)=>{current=a;settings=o;const rev=++revision;await this.ensure(a);if(rev===revision&&!disposed){paint();if(settings.animate)scheduleView(view);}};
+        const update=async(a=current,o=settings)=>{current=a;settings=o;const rev=++revision;await this.ensure(a);if(rev===revision&&!disposed){paint();if(settings.animate&&canvas.isConnected)scheduleView(view);}};
         return {node:canvas,update,dispose(){disposed=true;revision++;views.delete(view);},ready:update()};
     }
 }

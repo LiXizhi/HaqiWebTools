@@ -55,7 +55,7 @@ test('a wounded wild pet is caught by the top rune and the cast is replayed', ()
     const decision = { ...rune, targetId: 'mob0' };
     playPveRound(battle, decision);
     recordDecision(save, decision, battle);
-    assert.equal(save.inventory[23441], 0);
+    assert.equal(save.inventory[23441], 1);
     assert.deepEqual(battle.captured, ['dragon_purple']);
     assert.equal(battle.unitsById.mob0.hp, 0);
     const restored = restorePveBattle(dataset, content, save.pendingEncounter);
@@ -70,7 +70,7 @@ test('a full-health general rune is still consumed when the pet escapes', () => 
     const decision = { ...rune, targetId: 'mob0' };
     playPveRound(forced, decision);
     recordDecision(save, decision, forced);
-    assert.equal(save.inventory[23439], 0);
+    assert.equal(save.inventory[23439], 1);
     assert.deepEqual(forced.captured, []);
     assert.ok(forced.unitsById.mob0.hp > 0);
     assert.equal(forced.events.some(event => event.type === 'capture' && event.success === false && event.runeId === 23439), true);

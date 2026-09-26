@@ -16,12 +16,20 @@ export function headBreath(time=0,phase=0,reducedMotion=false) {
     if(reducedMotion)return {x:0,y:0,angle:0};
     return {x:Math.sin(time*1.13+phase)*.22,y:Math.sin(time*1.9+phase)*.55,angle:Math.sin(time*.83+phase)*.012};
 }
+// Sprite playback is cosmetic; a stopped/blocked actor always uses its idle body.
+export function walkFrameIndex(animation, {moving=false, reducedMotion=false, time=0, walkTime=time}={}) {
+    if (!animation || !moving || reducedMotion) return null;
+    const count=animation.framesPerDirection, fps=animation.fps;
+    if (!(count>0 && fps>0) || !Number.isFinite(walkTime)) return null;
+    return ((Math.floor(walkTime*fps)%count)+count)%count;
+}
 // Seconds, world coordinates, and actual displacement after collisions. No saved state.
 export function updateHeroActor(actor, { dx = 0, dy = 0, x = 0, y = 0, time = 0, npcs = [], reducedMotion = false, facing } = {}) {
     if(facing!==undefined)actor.facing=facing;
     if(actor.lastTime!==null&&(time<actor.lastTime||time-actor.lastTime>1)){actor.stoppedAt=time;actor.nextLook=null;actor.lookUntil=0;}
     actor.lastTime=time;
     const moving = Math.hypot(dx, dy) > .01;
+    actor.walkDistance = moving ? (actor.walkDistance || 0) + Math.hypot(dx,dy) : 0;
     let wanted = BODY_TO_HEAD[actor.facing];
     if (moving) {
         if(facing===undefined)actor.facing = Math.abs(dx) > Math.abs(dy) ? dx < 0 ? 1 : 2 : dy < 0 ? 3 : 0;
@@ -50,5 +58,5 @@ export function updateHeroActor(actor, { dx = 0, dy = 0, x = 0, y = 0, time = 0,
     if (actor.head !== wanted && time-actor.lastTurn >= .12) {
         actor.head = wrap(actor.head + Math.sign(delta(wanted, actor.head))); actor.lastTurn = time;
     }
-    return { facing: actor.facing, head: actor.head, moving, targetId: actor.targetId,breath:headBreath(time,actor.phase,reducedMotion) };
+    return { facing: actor.facing, head: actor.head, moving, walkTime:actor.walkDistance/90, targetId: actor.targetId,breath:headBreath(time,actor.phase,reducedMotion) };
 }

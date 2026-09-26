@@ -132,7 +132,7 @@ export function recordLearningCompletion(save, content, completion, access) {
     }
     let stories=state.stories;
     if(completion.story){const s=completion.story,rows=stories?.[locale]||{},old=rows[s.id]||{};
-        stories={...stories,[locale]:{...rows,[s.id]:{completed:(old.completed||0)+1,lastAt:now,hintsUsed:s.hintsUsed===true,passedTurns:[...s.turnIds]}}};
+        stories={...stories,[locale]:{...rows,[s.id]:{completed:(old.completed||0)+1,firstAt:old.firstAt??now,independent:old.independent===true||s.hintsUsed!==true,lastAt:now,hintsUsed:s.hintsUsed===true,passedTurns:[...s.turnIds]}}};
     }
     save.languageAdventure={version:1,progress:{...state.progress,[locale]:byLanguage},ledger,...(stories?{stories}:{})};
     return {amount:status.amount,currency:status.currency};
@@ -154,6 +154,10 @@ export function validateLearningSave(save) {
             assert(rows&&typeof rows==='object'&&!Array.isArray(rows),'故事记录无效');
             for(const row of Object.values(rows))assert(Number.isSafeInteger(row.completed)&&row.completed>=0&&Number.isSafeInteger(row.lastAt)&&row.lastAt>=0&&typeof row.hintsUsed==='boolean'&&Array.isArray(row.passedTurns)&&row.passedTurns.length===3&&row.passedTurns.every(x=>typeof x==='string'&&x.length<100),'故事进度无效');
         }
+    }
+    for(const rows of Object.values(state.stories||{}))for(const row of Object.values(rows)){
+        if(row.firstAt!==undefined)assert(Number.isSafeInteger(row.firstAt)&&row.firstAt>=0,'首通时间无效');
+        if(row.independent!==undefined)assert(typeof row.independent==='boolean','独立表达记录无效');
     }
     if(!state.ledger)return;
     const l=state.ledger;

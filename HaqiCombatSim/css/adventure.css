@@ -65,6 +65,7 @@
 .equipment-slot:last-child{grid-column:1/-1}.equipment-slot-name{font-size:11px;color:#867449}.equipment-slot-title{font-size:11px;overflow-wrap:anywhere}.equipment-empty{display:grid;place-items:center;height:42px;color:#adab90;font-size:24px}
 .equipment-section-title{padding-top:16px}.equipment-summary{display:grid;grid-template-columns:1fr auto;gap:9px;font-size:12px;text-align:left;margin:15px 0}.equipment-summary dd{margin:0;font-weight:700}
 .equipment-wardrobe{min-width:0}.equipment-wallet{justify-content:space-between;font-size:12px;padding:0 0 16px;color:#847244}.equipment-filters{gap:5px;margin-bottom:12px}
+.equipment-wallet-item{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.equipment-bean-icon{width:16px;height:16px;flex:none}
 .equipment-search{display:block;width:100%;min-height:44px;border:1px solid var(--line);background:#fffaf0;border-radius:6px;padding:10px 12px;color:var(--ink);margin-bottom:10px}
 .equipment-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin:12px 0 20px;max-height:305px;overflow:auto;padding:3px}
 .equipment-item{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:7px;background:#f2eddd;border:1px solid #d9d0b4;border-radius:8px;padding:12px 6px;min-width:0;color:var(--ink)}
@@ -305,6 +306,10 @@
 .entry-screen.entry-wizard{display:block;overflow-y:auto;overflow-x:hidden;padding:28px 5vw;overscroll-behavior:contain;}
 .entry-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,440px);gap:clamp(28px,6vw,96px);align-items:center;min-height:100%;max-width:1060px;margin:0 auto;}
 .entry-wizard .entry-intro{min-width:0;}
+/* 首页界面语言切换：与设置窗共用 .locale-choices 按钮组，标签颜色随所在容器（深色题头/纸色角色卡）继承。 */
+.entry-locale{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:14px}
+.entry-locale-label{font-size:11px;letter-spacing:1px;color:inherit}
+.entry-locale .locale-choices{margin:0}
 .entry-wizard .creation-form{width:100%;margin:0;padding:26px;min-width:0;}
 .creation-steps{display:flex;align-items:center;gap:12px;font-size:11px;color:#8e9484;margin-bottom:20px;}
 .creation-steps i{height:1px;background:#d9d2ba;flex:1;}
@@ -330,6 +335,7 @@
  .entry-wizard .title-rule,.entry-wizard .entry-description,.entry-wizard .entry-intro>.eyebrow{display:none;}
  .entry-wizard .chapter-title{font-size:17px;letter-spacing:6px;margin:4px 0 10px;}
  .entry-wizard .cloud-entry-button{margin-top:8px;font-size:12px;padding:7px 16px;}
+ .entry-wizard .entry-locale{justify-content:center;margin-top:10px}
  .entry-wizard .creation-form{max-width:440px;padding:22px;}
  .creation-steps{margin-bottom:14px;}
 }
@@ -394,7 +400,7 @@
 .bag-equipment-select{min-width:0;max-width:100%;padding:7px;border:1px solid #b8aa7c;border-radius:5px;background:#fffaf0;color:#655b3f;font:inherit;font-size:12px}
 .bag-tabs{display:flex;align-items:center;gap:4px;border-bottom:1px solid #b7aa7a;padding:0 0 6px;overflow:auto;flex-shrink:0}.bag-tabs .bag-tab{display:grid;place-items:center;flex:0 0 52px;width:52px;height:52px;padding:4px;white-space:normal;border:1px solid #b8aa7c;border-radius:5px;background:#ece4cf;color:#655b3f;font-size:11px}.bag-item-icon{display:block;width:40px;height:40px}
 .bag-workspace{display:grid;grid-template-columns:minmax(260px,.9fr) minmax(320px,1.3fr);gap:16px;padding:8px 0}.bag-main,.bag-collection{min-width:0}.bag-collection{border-left:1px solid #d8cbae;padding-left:16px}.bag-section-bar{display:flex;align-items:center;gap:7px;min-height:36px;flex-wrap:wrap;margin-bottom:6px}.bag-section-bar strong{font-size:13px;margin-right:auto}.bag-section-bar button{padding:5px 7px;font-size:11px;min-height:30px}.bag-name,.bag-search{min-width:0;max-width:100%;padding:7px;border:1px solid #b8aa7c;border-radius:5px;background:#fffaf0;font:inherit;font-size:12px}.bag-name{width:150px;margin-bottom:6px}.bag-search{width:130px}.bag-filter{border:1px solid #b8aa7c;border-radius:5px;background:transparent}.bag-filter[aria-pressed=true]{background:#386b55;color:white}
-.bag-slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px;padding:7px;background:#d6cdb1;border:1px solid #af9a64;border-radius:6px;max-height:48dvh;overflow:auto}.bag-slot{display:flex;align-items:center;justify-content:center;aspect-ratio:1;min-width:0;min-height:44px;padding:2px;border:1px solid #b69c60;background:#fbf3dc;box-shadow:inset 0 0 0 2px #e7d8b0;border-radius:4px;touch-action:none;user-select:none;-webkit-touch-callout:none}.bag-slot.empty{background:#c6bea6;box-shadow:inset 0 1px 4px #786b4130}.bag-slot.holding{background:#d4a46b;outline:2px solid #95602d}.bag-slots.dragging{outline:2px dashed #a65c39}.bag-slot.dragging{opacity:.35;cursor:grabbing}.bag-subject{width:100%;height:auto;pointer-events:none;display:block}.bag-slot:focus-visible,.bag-library-card:focus-visible{outline:3px solid #386b55;outline-offset:2px}.bag-hint{font-size:11px;line-height:1.5;color:#707663;margin:6px 0}.bag-equipment{font-size:12px;margin-top:10px}.bag-equipment summary{padding:6px 0;cursor:pointer}.equipment-card-slots{grid-template-columns:repeat(auto-fill,44px)}
+.bag-slots{display:grid;align-content:start;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px;padding:7px;background:#d6cdb1;border:1px solid #af9a64;border-radius:6px;max-height:48dvh;overflow:auto}.bag-slot{display:flex;align-items:center;justify-content:center;aspect-ratio:1;min-width:0;min-height:44px;padding:2px;border:1px solid #b69c60;background:#fbf3dc;box-shadow:inset 0 0 0 2px #e7d8b0;border-radius:4px;touch-action:none;user-select:none;-webkit-touch-callout:none}.bag-slot.empty{background:#c6bea6;box-shadow:inset 0 1px 4px #786b4130}.bag-slot.holding{background:#d4a46b;outline:2px solid #95602d}.bag-slots.dragging{outline:2px dashed #a65c39}.bag-slot.dragging{opacity:.35;cursor:grabbing}.bag-subject{width:100%;height:auto;pointer-events:none;display:block}.bag-slot:focus-visible,.bag-library-card:focus-visible{outline:3px solid #386b55;outline-offset:2px}.bag-hint{font-size:11px;line-height:1.5;color:#707663;margin:6px 0}.bag-equipment{font-size:12px;margin-top:10px}.bag-equipment summary{padding:6px 0;cursor:pointer}.equipment-card-slots{grid-template-columns:repeat(auto-fill,44px)}
 .bag-school-tabs{display:flex;flex-wrap:wrap;gap:3px}.bag-school{padding:5px 7px;min-height:30px;border:1px solid transparent;background:#eae6d5;color:#53624a;border-radius:4px;font-size:11px}.bag-library{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));align-content:start;gap:5px;max-height:48dvh;overflow:auto;overscroll-behavior:contain;padding:3px}.bag-library-card{font:inherit;cursor:pointer;touch-action:pan-y;user-select:none;-webkit-touch-callout:none;position:relative;display:flex;flex-direction:column;align-items:center;min-width:0;padding:4px 2px;gap:3px;background:#fff9e9;border:1px solid #d8cbae;border-radius:5px;color:#4e523e}.bag-library-card.locked{background:#ece9dd}.bag-library-card.locked .bag-subject{opacity:.5}.bag-library-icon{display:block;pointer-events:none;width:46px;height:46px;padding:1px;background:#ece1c5;border:1px solid #b69c60;border-radius:3px;touch-action:pan-y}.bag-card-name{font-size:10px;line-height:1.3;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bag-library-card small{font-size:9px}.bag-pager{display:flex;align-items:center;justify-content:flex-end;gap:7px;padding-top:6px;font-size:11px}.bag-page-count{margin-right:auto}.bag-page{padding:5px 8px;font-size:11px;background:#eee8d3;border:1px solid #cfc09a;border-radius:4px}.bag-pager .primary{font-size:12px;padding:6px 14px;flex-shrink:0;line-height:1.3}
 .bag-card-count{position:absolute;top:2px;right:2px;display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--green,#244f3b);color:#fff8df;border:1px solid #d5b76c;font-size:11px;font-weight:700;line-height:1;pointer-events:none}
 .bag-detail{position:fixed;z-index:100;display:flex;flex-direction:column;align-items:center;gap:7px;width:178px;padding:8px;background:#faf5df;border:1px solid #b5a173;box-shadow:0 8px 30px #172c4260;border-radius:8px}.bag-detail[hidden],.bag-name[hidden]{display:none}.bag-detail .spell-face{width:151px;max-width:100%}.bag-detail>.primary,.bag-detail>.secondary{font-size:12px;padding:7px 12px}.bag-preview-close{position:absolute;right:-8px;top:-8px;border:1px solid #ae9864;background:#fff9e5;border-radius:50%;width:28px;height:28px;font-size:21px;color:#385b47;z-index:1}
@@ -575,7 +581,14 @@
 .equipment-modal .modal-header .equipment-wallet{flex:1;justify-content:center;gap:24px;margin:0;padding:0;font-size:12px;white-space:nowrap}
 .equipment-profile{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
 .equipment-identity{min-width:0;text-align:left}
-.equipment-identity h3{overflow-wrap:anywhere}
+.equipment-name-row{display:flex;align-items:center;gap:4px;min-width:0}
+.equipment-name-row h3{margin:0;min-width:0;overflow-wrap:anywhere}
+.haqi-app .equipment-edit{flex:none;margin:0;padding:0 2px;min-width:0;min-height:0;border:0;border-radius:0;background:transparent;box-shadow:none;color:#8a7350;font:inherit;font-size:14px;line-height:1;opacity:.72}
+.haqi-app .equipment-edit:hover:not(:disabled),.haqi-app .equipment-edit:focus-visible{opacity:1;color:var(--ink);background:transparent;box-shadow:none}
+.haqi-app .equipment-edit:disabled{opacity:.35}
+.equipment-customize-hint{margin:2px 0 0;font-size:12px;line-height:1.45}
+.hero-customize-dialog .avatar-choice{margin:0 0 8px}
+.hero-customize-dialog .name-input{margin-top:4px}
 .equipment-modal .equipment-profile .equipment-portrait{flex:none;float:none;margin:0}
 .equipment-modal .equipment-filters{min-height:34px;align-content:flex-start;gap:5px;margin-bottom:10px}
 .haqi-app .equipment-filters .equipment-filter{padding:7px 9px;min-height:34px;border:1px solid var(--line);border-radius:6px;font:inherit;font-size:12px;white-space:nowrap;color:var(--ink);background:#fffaf050}
@@ -735,12 +748,14 @@
 /* Mount visibility toggle shares the locale-launch chrome; sits on the same row under the hero card. */
 /* 两个按钮都挂在 #hud 内（absolute，无 z-index），与 .hero-status 同一堆叠层，不浮在整个窗口上。 */
 .mount-toggle{position:absolute;display:flex;align-items:center;justify-content:center;width:36px;height:36px;padding:0;border:1px solid #d7ceaa;border-radius:50%;background:rgba(249,245,233,.92);color:#5a3e18;box-shadow:0 4px 14px rgba(24,62,60,.16);cursor:pointer}
-/* 坐骑 emoji 图标（随坐骑名称变化，圆形按钮）；隐藏态叠半透明 SVG 禁止标志（圆圈+斜杠）并压暗底图。 */
-.mount-toggle .mount-emoji{position:relative;display:flex;align-items:center;justify-content:center;width:20px;height:20px;font-size:18px;line-height:1;user-select:none}
-.mount-toggle .mount-emoji-stop{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
-.mount-toggle .mount-emoji-stop svg{width:24px;height:24px;opacity:.7}
+/* 坐骑按钮图标：当前坐骑形象图占满按钮（34px 超出按钮内径，出血允许），无形象回落名称 emoji；隐藏态叠半透明灰色 SVG 禁止标志，圆圈与按钮外圈重合，不压暗底图。 */
+.mount-toggle{overflow:visible}
+.mount-toggle .mount-mark{position:relative;display:flex;align-items:center;justify-content:center;width:34px;height:34px;user-select:none}
+.mount-toggle .mount-mark canvas{width:34px;height:34px}
+.mount-toggle .mount-emoji{display:flex;align-items:center;justify-content:center;width:34px;height:34px;font-size:15px;line-height:1}
+.mount-toggle .mount-emoji-stop{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.mount-toggle .mount-emoji-stop svg{width:38px;height:38px;opacity:.75}
 .mount-toggle[aria-pressed="false"]{background:#fff3d2;border-color:#c4a36a}
-.mount-toggle[aria-pressed="false"] .mount-emoji{opacity:.45}
 .locale-gloss{position:fixed;z-index:80;top:12px;left:12px;width:min(280px,calc(100vw - 24px));min-height:64px;padding:8px 12px 10px;background:rgba(255,248,230,.78);color:#3a2a12;border-radius:10px;box-shadow:0 8px 24px rgba(40,28,8,.18);backdrop-filter:blur(6px);cursor:grab;user-select:none;touch-action:none}
 .locale-gloss-hint{margin:0;font-size:13px;line-height:1.5;text-align:center}
 .locale-gloss.dragging{cursor:grabbing}
@@ -795,3 +810,63 @@
 .avatar-carousel button:focus-visible{outline:2px solid var(--green);outline-offset:2px;border-radius:6px}
 .avatar-carousel .avatar-page:disabled{opacity:.3}
 @media(max-width:480px){.avatar-choice .avatar-carousel{grid-template-columns:24px minmax(0,1fr) 24px}.avatar-carousel .avatar-page{min-width:24px}.avatar-carousel .avatar-picture canvas{width:72px!important;height:76px!important}}
+
+/* 旅途设置：页签式绘本选项菜单（桌面与390px手机）。选中态复用 Shared tabs。 */
+.settings-modal{width:min(680px,100%)}
+.settings-modal .modal-body{padding-top:0}
+.settings-tabs{position:sticky;top:0;z-index:3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:0 -28px 16px;padding:20px 28px 10px;background:var(--paper,#fbefd1);border-bottom:1px solid var(--line,#d5c28c)}
+.settings-tab{display:flex;flex-direction:column;align-items:center;gap:3px;min-height:54px;padding:8px 4px 10px;font-size:12px;line-height:1.2}
+.settings-tab-icon{font-size:19px;line-height:1}
+.settings-pane[hidden]{display:none}
+.settings-section{margin:0 0 12px;padding:4px 10px 10px;border:1px solid var(--line,#d5c28c);border-radius:10px;background:#fffdf4}
+.settings-section-title{display:flex;align-items:center;gap:7px;margin:11px 2px 4px;font-size:12px;letter-spacing:1px;color:var(--muted,#7d6b49)}
+.settings-section-title::before{content:'';flex:none;width:7px;height:7px;background:var(--gold,#c49443);transform:rotate(45deg)}
+.settings-cell{display:flex;align-items:center;gap:10px;width:100%;margin:2px 0;padding:10px;border:1px solid transparent;border-radius:8px;background:none;text-align:left;text-decoration:none;color:inherit}
+.settings-cell:hover{background:#f6e8c4;border-color:var(--line,#d5c28c)}
+.settings-cell:focus-visible{outline:3px solid #a75b16;outline-offset:2px}
+.settings-cell:active:not(:disabled){transform:scale(.995)}
+.settings-cell-icon{flex:none;width:30px;font-size:20px;line-height:1;text-align:center}
+.settings-cell-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.settings-cell-text strong{font-size:13px;font-weight:600}
+.settings-cell-text small{font-size:11px;line-height:1.5;color:var(--muted,#7d6b49)}
+.settings-cell::after{content:'';flex:none;width:7px;height:7px;margin-left:auto;border-top:2px solid var(--gold,#c49443);border-right:2px solid var(--gold,#c49443);transform:rotate(45deg);opacity:.65}
+.settings-row{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:2px 0;padding:10px;border-radius:8px}
+.settings-row:hover{background:#fbf3da}
+.settings-toggle{flex:none;min-width:84px;margin-left:auto;padding:7px 12px 7px 27px;border:1px solid #c2a065;border-radius:999px;background:#f3e2b3;color:#6b4c1c;font-size:12px;font-weight:600;position:relative}
+.settings-toggle::before{content:'';position:absolute;left:11px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:#c9ad72}
+.settings-toggle.on{border-color:#1d4a30;background:var(--green,#356a59);color:#fff8df}
+.settings-toggle.on::before{background:#a5e8b5}
+.settings-toggle:focus-visible{outline:3px solid #a75b16;outline-offset:2px}
+.settings-field{display:grid;gap:6px;margin:6px 0;padding:6px 10px}
+.settings-field-label{font-size:12px;color:var(--muted,#7d6b49)}
+.settings-section .locale-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:6px 0 10px}
+.settings-note{margin:6px 10px 10px;font-size:12px}
+.settings-section .learning-settings{padding:8px 10px}
+.settings-section .source-details{margin:6px 10px 10px}
+@media(max-width:520px){
+.settings-tabs{margin:0 -17px 12px;padding:14px 12px 8px;gap:4px}
+.settings-tab{min-height:48px;font-size:11px}
+.settings-tab-icon{font-size:17px}
+.settings-cell{padding:9px 6px}
+.settings-cell-text strong{font-size:12px}
+.settings-toggle{min-width:76px}
+}
+@media(max-width:360px){.settings-section .locale-choices{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){.settings-cell:active:not(:disabled){transform:none}}
+
+/* Teaching-mode pointer (2026-09-26): a tapping 👇 floats above the target the beginner
+   should click — the camp quest track button, the first unplaced attack card in the deck
+   library, the 强化 submit button, or the 咕噜噜教学 button. The hand overlaps the target
+   from above so any overflow:auto container never clips it. Animation respects
+   prefers-reduced-motion. */
+.teach-target{position:relative;animation:teach-pulse 1.4s ease-in-out infinite}
+.teach-pointer{position:absolute;left:50%;bottom:55%;font-size:26px;line-height:1;pointer-events:none;z-index:6;filter:drop-shadow(0 2px 3px #14313c66);animation:teach-tap 1.1s ease-in-out infinite}
+@keyframes teach-pulse{0%,100%{box-shadow:0 0 0 0 #f2d87b00}50%{box-shadow:0 0 0 7px #f2d87b80}}
+@keyframes teach-tap{0%,100%{transform:translateX(-50%) translateY(-4px)}50%{transform:translateX(-50%) translateY(3px)}}
+@media(max-width:650px){.teach-pointer{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.teach-target,.teach-pointer{animation:none}}
+.track-button.teach-target.teach-walk{animation:none}
+
+.learning-mode-launch{pointer-events:auto}
+.learning-chat-emoji{display:flex;align-items:center;justify-content:center;width:34px;height:34px;font-family:"Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji",sans-serif;font-size:24px;line-height:1}
+.camp-chat-reward{padding:10px 14px;background:#fff5d9;border-block:1px solid #cfb77e;color:#463723;font-size:13px}.camp-chat-reward p{margin:3px 0}.camp-chat-reward button{margin-top:5px}

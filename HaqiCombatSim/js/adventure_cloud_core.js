@@ -17,7 +17,12 @@ export function checkedProgress(raw, content, dataset) {
     const keys=[...Object.keys(createAdventure(content)),'magicStarClaims','checkin','fishingRecords','magicStarFollow','mountHidden'];
     const save = Object.fromEntries(keys.filter(key=>parsed[key]!==undefined).map(key => [key, parsed[key]]));
     const battle = save.pendingEncounter ? restorePveBattle(dataset, content, save.pendingEncounter) : null;
-    for(const rune of save.pendingEncounter?.runes||[])requireValue((save.inventory[rune.itemId]||0)===rune.count-(battle.runeUsed[rune.itemId]||0),'符文库存与战斗重演不一致');
+    for(const rune of save.pendingEncounter?.runes||[]){
+        const pending=save.pendingEncounter,used=battle.runeUsed[rune.itemId]||0;
+        const stock=save.inventory[rune.itemId]||0;
+        requireValue(pending.deferredRuneSettlement ? stock===rune.count : stock>=rune.count-used&&stock<=rune.count,'符文库存与战斗重演不一致');
+        requireValue(pending.runeUsed ? (pending.runeUsed[rune.itemId]||0)===used : stock===rune.count-used,'符文消耗与战斗重演不一致');
+    }
     return { save, battle };
 }
 export function makeCloudSnapshot(save, content, dataset, updatedAt, id) {

@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>旅途设置验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<link rel="stylesheet" href="../../css/language_adventure.css">
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {renderPanel,settingsView} from '../../js/view_adventure.js';
+// Real settings view with an in-memory character; no player storage is read or written.
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'设置验收'});
+save.languageLearning={enabled:true,target:'en',native:'zh-CN',autoSpeak:true};
+const params=new URLSearchParams(location.search);
+if(params.get('tab'))settingsView.tab=params.get('tab');
+if(params.has('noatlas'))document.body.classList.remove('storybook-ui');
+const model={assets,save,soundEnabled:true};
+const root=document.querySelector('#root');
+const cb={
+    close:()=>root.replaceChildren(),
+    panel:()=>show(),
+    cloud:()=>{},roles:()=>{},title:()=>{},
+    music:()=>{save.music=!save.music;show();},
+    sound:()=>{model.soundEnabled=!model.soundEnabled;show();},
+    setLocale:id=>{save.locale=id;show();},
+    setLearning:next=>{Object.assign(save.languageLearning,next);show();},
+    refresh:()=>show(),
+};
+function show(){renderPanel(root,'settings',model,cb);}
+show();
+</script></body></html>

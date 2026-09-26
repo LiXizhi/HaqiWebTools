@@ -6,6 +6,7 @@ Run with --male/--female generated PNG paths, or --verify for pixel verification
 import argparse, hashlib, json
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageChops
+from calibrate_hero_heads import calibrate
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'assets/hero-preview'
@@ -76,6 +77,7 @@ def main():
   assert path.stat().st_size<=200000,(key,path.stat().st_size)
   row={'local':path.relative_to(ROOT).as_posix(),'width':im.width,'height':im.height,'bytes':path.stat().st_size,'sha256':sha(path),**extra}
   prev=old.get(section,{}).get(key,{})
+  if prev.get('walk'):row['walk']=prev['walk']
   if prev.get('sha256')==row['sha256'] and prev.get('cdn'):row['cdn']=prev['cdn']
   manifest[section][key]=row
  for key,profile in PROFILES.items():
@@ -131,6 +133,7 @@ def main():
    manifest['heads'][head_id]=row
  for key,head in old.get('heads',{}).items():
   if key not in manifest['heads']:manifest['heads'][key]=head
+ calibrate(manifest)
  MANIFEST.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  (ROOT/'data/adventure/hero-art.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  print('Prepared',len(manifest['bodies']),'body atlases and',len(manifest['heads']),'head atlases')

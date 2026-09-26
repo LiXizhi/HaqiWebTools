@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHeroPicker} from '../js/view_hero_picker.js';
 import {createAdventure,parseSave} from '../js/adventure_core.js';
-import {durableSave} from '../js/adventure_storage_core.js';
+import {durableSave,splitRoleSave,joinRoleSave} from '../js/adventure_storage_core.js';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 const read=p=>JSON.parse(readFileSync(new URL('../data/'+p,import.meta.url)));
 
@@ -26,6 +26,7 @@ test('selected head survives save validation and durable projection; old saves s
  const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
  const save=createAdventure(content,{appearance:'girl',headId:'onyx-girl'});
  assert.equal(parseSave(JSON.stringify(save),content,dataset).headId,'onyx-girl');assert.equal(durableSave(save).headId,'onyx-girl');
+ const {state,...parts}=splitRoleSave(save);assert.equal(joinRoleSave(state,parts,content).headId,'onyx-girl');
  delete save.headId;assert.equal(parseSave(JSON.stringify(save),content,dataset).headId,undefined);
  save.headId='../bad';assert.throws(()=>parseSave(JSON.stringify(save),content,dataset),/头部/);
 });

@@ -8,7 +8,7 @@ import { drawIslandWeather, stepWeatherFade } from './adventure_weather.js';
 import { createCameraZoom } from './adventure_camera_core.js';
 import { regionAt } from './adventure_island_layout_core.js';
 import { drawRewardEffect } from './view_adventure_rewards.js';
-import { drawOverheadStatus } from './view_adventure_overhead_status.js';
+import { drawOverheadStatus,drawStatusFeedback,drawSpellMiss } from './view_adventure_overhead_status.js';
 import { drawTeleportEffect } from './view_adventure_teleport.js';
 import { petAppearanceStage } from './adventure_pets_core.js';
 import { resolveMountDrawPose } from './adventure_mounts_core.js';
@@ -86,7 +86,7 @@ export function createRenderer(canvas,assets) {
     const terrainTiles=createTerrainTileCache((c,world,rect)=>paintLargeTerrain(c,world,rect,false,assets.terrainDecorationArt),()=>document.createElement('canvas'));
     let vignetteCanvas=null,vignetteW=0,vignetteH=0;
     let overviewWorld=null,overview=null;
-    let companion=null,companionId=null,companionWorld=null,companionSave=null,lastPetTime=null,bubbleTarget=null;
+    let companion=null,companionId=null,companionWorld=null,companionSave=null,lastPetTime=null,bubbleTarget=null,greetingTarget=null;
     const cameraZoom=createCameraZoom();let weatherFade=null;
     const motionTrail=createMotionTrail();
     let heroActor=null,heroPrevious=null,heroScope=null,heroIdentity=null;
@@ -127,6 +127,7 @@ export function createRenderer(canvas,assets) {
         const result=assets.hero.drawSave(c,save,x,y,time,moving,scale,{
             head:save.visualHead??headPose?.head,breath:save.visualBreath??headPose?.breath,
             reducedMotion:reducedMotion.matches,nameBounds,
+            ...(headPose?{moving:moving&&headPose.moving,walkTime:headPose.walkTime}:{}),
         });
         return result.nameY;
     }
@@ -148,8 +149,8 @@ export function createRenderer(canvas,assets) {
         shadow(c,x,y,27*scale);
         if(!assets.drawMonster?.(c,m,x-52*scale,y-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',x,y,t,scale,false);
     }
-    function render(world,save,time,{moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null}={}) {
-        const {w,h}=size(),t=time/1000;bubbleTarget=null;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
+    function render(world,save,time,{moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
+        const {w,h}=size(),t=time/1000;bubbleTarget=null;greetingTarget=null;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         cameraZoom.tick(time,reducedMotion.matches);
         const baseScale=w<650?.82:1,sceneZoom=title?1:cameraZoom.value;
         cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:save.position;
@@ -254,6 +255,22 @@ export function createRenderer(canvas,assets) {
                 ctx.restore();
             }
         }
+        if(learningGreeting&&!title){
+            const g=learningGreeting,at=g.npc;
+            const maxWidth=Math.min(260,(w-24)/cam.scale),lines=[];
+            ctx.font='600 14px "Microsoft YaHei", sans-serif';
+            for(const value of [g.text,g.translation].filter(Boolean)){
+                let line='';for(const ch of value){if(ctx.measureText(line+ch).width>maxWidth-24&&line){lines.push(line);line='';}line+=ch;}if(line)lines.push(line);
+            }
+            const height=lines.length*21+20;
+            const left=Math.max(cam.x+12/cam.scale,Math.min(at.x-maxWidth/2,cam.x+w/cam.scale-maxWidth-12/cam.scale));
+            const top=Math.max(cam.y+12/cam.scale,at.y-125-height);
+            greetingTarget={x:left,y:top,w:maxWidth,h:height};
+            ctx.fillStyle='#fffbe9';ctx.strokeStyle='#7a6335';ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect(left,top,maxWidth,height,10);ctx.fill();ctx.stroke();
+            ctx.fillStyle='#493a23';ctx.textAlign='left';lines.forEach((line,i)=>ctx.fillText(line,left+12,top+23+i*21));
+            const head=starAnchor(visualSave,t,false);
+            drawSpeechBubble(ctx,{x:head.x,y:head.y+50},t,true);
+        }
         if(companionBubble&&companion&&!title)bubbleTarget=drawSpeechBubble(ctx,companion.position,t,reducedMotion.matches);
         if(!world.portal.hidden)plate(ctx,world.portal.name,world.portal.x,world.portal.y+48);
         if(world.entrancePortal)plate(ctx,world.entrancePortal.name,world.entrancePortal.x,world.entrancePortal.y+48);
@@ -315,18 +332,20 @@ export function createRenderer(canvas,assets) {
         const statusTargets=[];
         for(const u of [...battle.sides.near,...battle.sides.far]) {
             const at=positions[u.id],hp=presentation?.hp?.[u.id]??u.hp,bw=Math.min(115,w*.20);
-            statusTargets.push(...drawOverheadStatus(c,u,battle,at,w,hp));
+            statusTargets.push(...drawOverheadStatus(c,u,battle,at,w,hp,presentation?.status?.[u.id]));
             plate(c,w<650?u.name.slice(0,6):u.name,at.x,at.y+25,u.id==='hero'?PLATE.hero:u.isMob?PLATE.mob:PLATE.npc);c.fillStyle='#173843';c.beginPath();c.roundRect(at.x-bw/2,at.y+38,bw,10,5);c.fill();
             c.fillStyle=u.isMob?'#d39a7a':'#8ccc8a';c.beginPath();c.roundRect(at.x-bw/2+2,at.y+40,Math.max(0,(bw-4)*hp/u.maxHp),6,3);c.fill();
         }
         if(ev?.type==='cast'||ev?.type==='fizzle') {
-            effects.draw(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],center:{x:cx,y:cy-2},width:w,height:h,seed:`${ev.round}:${ev.caster}:${ev.card}`,reducedMotion:reducedMotion.matches,failed:ev.type==='fizzle',environmentManaged:true});
+            effects.draw(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],center:{x:cx,y:cy-2},width:w,height:h,seed:`${ev.round}:${ev.caster}:${ev.card}`,reducedMotion:reducedMotion.matches,failed:ev.type==='fizzle',reflection:ev.label==='reflection',environmentManaged:true});
         }
         if(ev?.type==='damage'||ev?.type==='heal') {
             const at=positions[ev.target];if(at){c.save();c.globalAlpha=1-p*.65;text(c,`${ev.type==='heal'?'+':'−'}${ev.amount}${ev.mark==='c'?' 暴击':''}`,at.x,at.y-100-p*40,26,ev.type==='heal'?'#adf8a0':'#fff0b4');c.restore();}
         }
+        if(ev?.type==='fizzle')drawSpellMiss(c,positions[ev.caster],p,reducedMotion.matches);
+        for(const u of Object.values(battle.unitsById))drawStatusFeedback(c,(presentation?.statusFeedback||[]).filter(change=>change.id===u.id),positions[u.id],time,reducedMotion.matches,w);
         target.updateStatusTargets?.(statusTargets.map(hit=>({...hit,x:hit.x*scale,y:hit.y*scale,width:hit.width*scale,height:hit.height*scale})));
         return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:at.x*scale,y:at.y*scale}]));
     }
-    return {render,minimap,screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),bubbleTarget:()=>bubbleTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
+    return {render,minimap,screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
 }

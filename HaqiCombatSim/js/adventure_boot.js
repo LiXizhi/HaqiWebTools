@@ -1,16 +1,19 @@
 import { configureLocale, loadLocaleFiles } from './locale.js';
-import { localeIdsToLoad, normalizeLocaleSave } from './locale_core.js';
+import { localeIdsToLoad, normalizeLocaleSave, isLocaleId } from './locale_core.js';
 import { setText, tr } from './locale_runtime.js';
 
 // Read only language preferences; full save validation remains in the app.
+// The local display-language choice (homepage or settings) outranks the role save,
+// so a title-screen pick survives reloads even before any world is entered.
 export function readBootLocale(storage) {
     try {
+        const pref = storage.getItem('haqi.locale.v1');
         const owner = storage.getItem('haqi.roles.last-account.v1');
         const raw = storage.getItem(`haqi.roles.v1.${owner ? 'account.' + encodeURIComponent(owner) : 'guest'}`);
         const catalog = raw ? JSON.parse(raw).catalog : null;
         const saved = catalog?.roles?.find(row => row.id === catalog.activeId)?.save
             || (!owner && !raw ? JSON.parse(storage.getItem('haqi.adventure.kids.v1') || 'null') : null);
-        return normalizeLocaleSave({ locale: saved?.locale, languageLearning: saved?.languageLearning });
+        return normalizeLocaleSave({ locale: isLocaleId(pref) ? pref : saved?.locale, languageLearning: saved?.languageLearning });
     } catch { return normalizeLocaleSave({}); }
 }
 

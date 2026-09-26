@@ -1,0 +1,16 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>对白点击行为验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_dialogue.css">
+<body class="haqi-app storybook-ui"><div id="root" class="overlay dialogue-layer rpg-dialogue-layer visible"><section class="dialogue-box rpg-dialogue"><div class="dialogue-content"><p class="eyebrow">魔法营地</p><h2>霸王虎坐骑</h2><p class="dialogue-text">让我带你享受风驰电掣的感觉吧！</p><div class="dialogue-choices"><button class="primary">查看商品与学习魔法</button><button class="text-button">下次再聊</button></div><p class="dialogue-hint"></p></div></div></div>
+<script type="module">
+import {bindDialogue} from '../../js/view_adventure_dialogue.js';
+import {createCloseButton} from '../../js/view_adventure_controls.js';
+const root=document.querySelector('#root'),box=root.querySelector('section');
+const log=[];
+const close=()=>{log.push('close');root.disposeDialogue?.();root.hidden=true;};
+box.append(createCloseButton(close));
+const button=root.querySelector('.primary');
+button.onclick=()=>log.push('default');
+bindDialogue(root,box,root.querySelector('.dialogue-text'),root.querySelector('.dialogue-hint'),button,{close});
+window.__state=()=>({log:[...log],hidden:root.hidden,hint:root.querySelector('.dialogue-hint').textContent,text:root.querySelector('.dialogue-text').textContent});
+</script></body></html>

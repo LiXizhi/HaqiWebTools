@@ -2,13 +2,16 @@ import {onLargeIsland, riverBlocks, segmentDistance} from './adventure_island_la
 
 // Cosmetic island architecture. Fixed geometry, independent of saves and gameplay RNG.
 export function islandBuildings(world) {
-    if(!['town','fire','ice','desert','dark'].includes(world.zone)||!world.layout)return [];
+    if(!['camp','town','fire','ice','desert','dark'].includes(world.zone)||!world.layout)return [];
+    // 魔法营地 keeps its authored buildings and only gains the pier (2026-09-26);
+    // it also has no dedicated building atlas, so the pier reuses the town art.
+    const scattered=world.zone!=='camp',atlas=world.zone==='camp'?'town':world.zone;
     const result=[],layout=world.layout;
     const occupied=[...world.npcs,...world.encounters,...world.landmarks,...world.buildings,world.portal,layout.spawn];
     const clear=(x,y)=>onLargeIsland(world,x,y,45)&&!riverBlocks(world,x,y);
     // Prefer space beside a road; reserve its full width, residents and encounter areas.
     const candidates=[];
-    for(let y=300;y<world.h-200;y+=140)for(let x=300;x<world.w-200;x+=140){
+    if(scattered)for(let y=300;y<world.h-200;y+=140)for(let x=300;x<world.w-200;x+=140){
         const road=Math.min(...world.paths.map(p=>segmentDistance({x,y},p.a,p.b)-(p.width||60)/2));
         if(road<190||road>440||occupied.some(p=>Math.hypot(x-p.x,y-p.y)<300))continue;
         if(![-110,0,110].every(dx=>[-100,0,25].every(dy=>clear(x+dx,y+dy))))continue;
@@ -17,7 +20,7 @@ export function islandBuildings(world) {
     candidates.sort((a,b)=>a.road-b.road||a.y-b.y||a.x-b.x);
     for(const p of candidates){
         if(result.some(o=>Math.hypot(o.x-p.x,o.y-p.y)<650))continue;
-        result.push({x:p.x,y:p.y,w:230,h:220,atlas:world.zone,frame:result.length%3===2?'tower':'village',tile:4});
+        result.push({x:p.x,y:p.y,w:230,h:220,atlas,frame:result.length%3===2?'tower':'village',tile:4});
         if(result.length===10)break;
     }
     // A southern-facing shoreline lets the pier project into water below the building.
@@ -32,11 +35,14 @@ export function islandBuildings(world) {
     coast.sort((a,b)=>Math.hypot(a.x-world.portal.x,a.y-world.portal.y)-Math.hypot(b.x-world.portal.x,b.y-world.portal.y));
     const harbor=coast[0];
     if(harbor){
-        result.push({...harbor,y:harbor.y+35,w:240,h:225,atlas:world.zone,frame:'harbor',decorationOnly:true});
+        result.push({...harbor,y:harbor.y+35,w:240,h:225,atlas,frame:'harbor',decorationOnly:true});
+        // The camp island stops just below its beach; clamp the moored boats into
+        // the remaining water instead of pushing them past the map edge.
+        const boatDy=Math.min(210,world.h-40-harbor.y-10);
         for(const dx of [-200,200]){
-            const x=harbor.x+dx,y=harbor.y+210;
-            if(x>130&&x<world.w-130&&y<world.h-40&&[-95,0,95].every(ox=>[-55,0,30].every(oy=>!onLargeIsland(world,x+ox,y+oy))))
-                result.push({x,y,w:180,h:200,atlas:world.zone,frame:'boat',decorationOnly:true});
+            const x=harbor.x+dx,y=harbor.y+boatDy;
+            if(x>130&&x<world.w-130&&y<world.h-40&&y>harbor.y+60&&[-95,0,95].every(ox=>[-55,0,30].every(oy=>!onLargeIsland(world,x+ox,y+oy))))
+                result.push({x,y,w:180,h:200,atlas,frame:'boat',decorationOnly:true});
         }
     }
     return result;

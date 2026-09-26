@@ -1,0 +1,9 @@
+{
+  "appId": "com.keepwork.haqi.adventure",
+  "appName": "魔法哈奇",
+  "webDir": "app-dist",
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "https"
+  }
+}

@@ -161,7 +161,7 @@ test('listening assessment requires completed playback and a correct meaning, ne
  assert.equal(h.state.save.inventory[100]||0,0);assert.equal(h.state.save.inventory[17213]||0,0);
  h.cb.choose('greeting.1');assert.equal(progress.listening,1);
 });
-test('invite bubble names the nearby camp story character and expires once the player walks away',async()=>{
+test('invite bubble is dots near an eligible NPC and disappears when the player walks away',async()=>{
  const stories=JSON.parse(read('data/adventure/camp-conversations.json'));
  const full={...catalog,profiles:stories.profiles};
  const state={save:save(),content,stage:'world',role:'r1',identity:'guest'};
@@ -171,11 +171,11 @@ test('invite bubble names the nearby camp story character and expires once the p
  const controller=createLanguageAdventure({getState:()=>state,load:async()=>full,voice,notify:()=>{},commit:()=>({amount:0}),viewFactory:()=>({render(){},close(){},visibility(){},invite(){}})});
  controller.tick(1000);await new Promise(r=>setTimeout(r,0));
  controller.tick(1600);
- assert.equal(controller.bubble,'法斯特船长 · 想和你聊两句');
- assert.deepEqual(controller.invitation,{npcId:36205,name:'法斯特船长',position:{x:920,y:800}});
+ assert.equal(controller.bubble,'…');
+ assert.deepEqual(controller.invitation,{npcId:36205,instanceId:'camp:5:36205',name:'法斯特船长',position:{x:920,y:800}});
  state.near=null;state.save.position={x:1300,y:800};
  controller.tick(2200);
  assert.equal(controller.invitation,null);
- assert.equal(controller.bubble,'抱抱龙 · 和我聊聊');
+ assert.equal(controller.bubble,null);
  assert.equal(controller.active,false);
 });

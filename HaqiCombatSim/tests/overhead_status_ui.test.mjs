@@ -29,7 +29,7 @@ test('overhead icons repeat layers without any text and hide defeated units',()=
 
 test('only periodic durations add numeric badges to the overhead icons',()=>{
     let drawings=0;const texts=[];
-    const context=new Proxy({fillText(value){texts.push(value);},strokeText(){assert.fail('no text labels');},fill(){drawings++;}}, {get:(o,k)=>k in o?o[k]:()=>{}});
+    const context=new Proxy({createLinearGradient(){return {addColorStop(){}};},fillText(value){texts.push(value);},strokeText(){assert.fail('no text labels');},fill(){drawings++;}}, {get:(o,k)=>k in o?o[k]:()=>{}});
     const unit={hp:10,wards:[{id:1},{id:2},{id:0,absorb:true,pts:10}],dots:[{ticks:[{dmg:10},{dmg:10},{dmg:10}]},{ticks:[{dmg:5}]}],hots:[{ticks:[20,20]}],stunned:true,stealth:true,reflectAmount:10,miniaura:{id:1,rounds:2}};
     drawOverheadStatus(context,unit,{resolved:{wards:{1:{school:'ice'},2:{school:'fire',positive:false}}}},{x:380,y:140},390);
     assert.ok(drawings>=10);

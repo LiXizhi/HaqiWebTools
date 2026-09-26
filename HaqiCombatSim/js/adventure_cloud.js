@@ -86,30 +86,32 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         }).catch(error=>{partCache.delete(key);throw error;}));
         const result=await partCache.get(key);check(current);return structuredClone(result);
     }
-    async function readRoles(current) {
+    async function readRoles(current,{quiet=false}={}) {
         const value=await readEnvelope(current);
         if(value.revision===null)return value;
-        let catalog=value.catalog;
+        let catalog=value.catalog,partsStale=[];
         if(value.schemaVersion===2){
             if(!Array.isArray(catalog?.roles)||catalog.roles.length>5)throw new CloudError('角色列表格式无效');
-            // Storage-format changes make old cloud witnesses mismatch; primary fields still merge,
-            // and the next core sync rewrites the part files in the current format.
+            // Storage-format changes make old cloud witnesses mismatch; primary fields still merge.
+            // Drifted role IDs are reported so the next saveRoles rewrites their part files.
             const joinRemote=(row,parts)=>{
-                try { return joinRoleSave(row.state,parts,content); }
-                catch(error) { console.warn('cloud role parts failed consistency join, loading without witnesses:',error);return joinRoleSave(row.state,parts,content,{strict:false}); }
+                try { return {save:joinRoleSave(row.state,parts,content),stale:false}; }
+                catch(error) { if(!quiet)console.warn('cloud role parts failed consistency join, loading without witnesses:',error);return {save:joinRoleSave(row.state,parts,content,{strict:false}),stale:true}; }
             };
             const rows=await Promise.all(catalog.roles.map(async row=>{
                 if(!roleIdValid(row.id))throw new CloudError('角色编号无效');
                 const parts=Object.fromEntries(await Promise.all(storageParts.map(async part=>[part,await readPart(row.files?.[part],row.id,part,current)])));
                 await prepareSaves([row.state]);check(current);
-                return {id:row.id,lastPlayedAt:row.lastPlayedAt,save:joinRemote(row,parts)};
+                const joined=joinRemote(row,parts);
+                return {id:row.id,lastPlayedAt:row.lastPlayedAt,save:joined.save,stale:joined.stale};
             }));
-            catalog={...catalog,roles:rows};
+            partsStale=rows.filter(row=>row.stale).map(row=>row.id);
+            catalog={...catalog,roles:rows.map(({stale,...row})=>row)};
         }else if(value.schemaVersion!==undefined&&value.schemaVersion!==1)throw new CloudError('角色存储版本不兼容');
         await prepareSaves((catalog?.roles||[]).map(row=>row.save));check(current);
         try { catalog=validateRoles(catalog,content,dataset); }
         catch(error){throw new CloudError(`已登录，但云端角色校验失败：${error.message}。云端记录未修改，本地进度仍保留。`);}
-        return {owner:current.owner,revision:value.revision,catalog,manifest:value};
+        return {owner:current.owner,revision:value.revision,catalog,manifest:value,partsStale};
     }
     async function writeVerified(path, text, current) {
         const target = store;
@@ -136,18 +138,22 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         }),
         saveRoles: (catalog, expectedRevision) => guarded(async () => {
             const clean = validateRoles(catalog, content, dataset), current = await session();
-            const previous = await readRoles(current);
+            const previous = await readRoles(current,{quiet:true});
             if (previous.revision !== expectedRevision) throw new CloudError('其他设备已更新角色列表，请先处理云端冲突。');
             if(clean.roles.some(row=>row.save.pendingEncounter))throw new CloudError('战斗尚未结束，进度先保存在本机，结算后再同步。');
-            if(previous.manifest?.schemaVersion===2&&coreCatalogKey(clean)===coreCatalogKey(previous.catalog))return previous.revision;
+            // Drifted part files are rewritten in the current format even when durable content is unchanged,
+            // otherwise old witnesses would trip the strict join on every later load.
+            const staleParts=new Set(previous.partsStale||[]);
+            if(previous.manifest?.schemaVersion===2&&staleParts.size===0&&coreCatalogKey(clean)===coreCatalogKey(previous.catalog))return previous.revision;
             const revision=uuid(),rows=[];
             for(const row of clean.roles){
                 const split=splitRoleSave(row.save),files={};
                 const old=previous.catalog.roles.find(other=>other.id===row.id);
                 const oldParts=old&&splitRoleSave(old.save);
                 const oldFiles=previous.manifest?.schemaVersion===2?previous.manifest.catalog.roles.find(other=>other.id===row.id)?.files:null;
+                const drifted=staleParts.has(row.id);
                 for(const part of storageParts){
-                    if(oldFiles?.[part]&&stableJson(oldParts[part])===stableJson(split[part]))files[part]=oldFiles[part];
+                    if(!drifted&&oldFiles?.[part]&&stableJson(oldParts[part])===stableJson(split[part]))files[part]=oldFiles[part];
                     else{
                         const path=`roles/${row.id}/${part}/${revision}.json`;
                         await writeVerified(path,JSON.stringify({schemaVersion:2,owner:current.owner,roleId:row.id,part,data:split[part]}),current);

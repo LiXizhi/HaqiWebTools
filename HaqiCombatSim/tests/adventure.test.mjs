@@ -48,13 +48,13 @@ test('rune success consumes once, replay preserves usage and retreat never refun
     arena.resolved.cards[rune.key].accuracy=100;
     const decision={...rune,targetId:'mob0'};
     P.playPveRound(arena,decision);A.recordDecision(save,decision,arena);
-    assert.equal(save.inventory[23104],1);
+    assert.equal(save.inventory[23104],2);
     const loaded=A.parseSave(save,content);
     const restored=P.restorePveBattle(dataset,content,loaded.pendingEncounter);
     assert.equal(restored.runeUsed[23104],1);
     assert.deepEqual(restored.events,arena.events);
     assert.doesNotThrow(()=>checkedProgress(save,content,dataset));
-    const tampered=structuredClone(save);tampered.inventory[23104]=2;
+    const tampered=structuredClone(save);tampered.inventory[23104]=1;
     assert.throws(()=>checkedProgress(tampered,content,dataset),/符文库存/);
     A.applyAction(loaded,content,{type:'retreat'});
     assert.equal(loaded.inventory[23104],1);
@@ -357,4 +357,24 @@ test('quest dialogue advances from 茜茜 to 莫尼 and completed talks cannot r
     act(restored,'talk',{npcId:36201});
     assert.equal(A.pendingQuestTalk(restored,q,36201),null);
     assert.equal(A.questReady(restored,q),true);
+});
+
+ test('finished battle settles deferred runes exactly once, including older checkpoints',()=>{
+    for(const legacy of [false,true]){
+        const save=A.createAdventure(content);save.inventory[23104]=2;
+        A.beginEncounter(save,content,'ice-scout');
+        if(legacy){delete save.pendingEncounter.deferredRuneSettlement;delete save.pendingEncounter.runeUsed;}
+        const arena=P.restorePveBattle(dataset,content,save.pendingEncounter);
+        const rune=P.runeCardsInHand(arena).find(row=>row.runeId===23104);
+        const decision={...rune,targetId:'mob0'};
+        P.playPveRound(arena,decision);A.recordDecision(save,decision,arena);
+        assert.equal(save.inventory[23104],2);
+        if(legacy)save.inventory[23104]=1; // A previous application version already debited this cast.
+        const {save:loaded,battle}=checkedProgress(save,content,dataset);
+        while(!battle.finished){P.playPveRound(battle,{pass:true});A.recordDecision(loaded,{pass:true},battle);}
+        A.settleEncounter(loaded,content,battle);
+        assert.equal(loaded.inventory[23104],1);
+        assert.throws(()=>A.settleEncounter(loaded,content,battle),/战斗尚未结束/);
+        assert.equal(loaded.inventory[23104],1);
+    }
 });

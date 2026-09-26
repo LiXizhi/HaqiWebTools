@@ -3,10 +3,49 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {HeroRenderer} from '../js/hero_renderer.js';
-import {BODY_TO_HEAD,clampHead,direction16,createHeroActor,updateHeroActor,headBreath} from '../js/hero_pose_core.js';
+import {BODY_TO_HEAD,clampHead,direction16,createHeroActor,updateHeroActor,headBreath,walkFrameIndex} from '../js/hero_pose_core.js';
 import {resolveMountDrawPose} from '../js/adventure_mounts_core.js';
 const read=p=>JSON.parse(readFileSync(new URL(p,import.meta.url),'utf8'));
 const manifest=read('../data/hero-preview.json'),catalog=read('../data/adventure/mount-catalog.json');
+test('walk cycles contain 24 bounded frames, verified transparent WebPs and a closed playback loop',()=>{
+ for(const gender of ['male','female']){
+  const a=manifest.bodies[gender+'-walk'].walk;
+  assert.match(a.cdn,/^https:\/\/cdn\.keepwork\.com\//);
+  const bytes=readFileSync(new URL('../'+a.local,import.meta.url));
+  assert.equal(bytes.length,a.bytes);assert.ok(bytes.length<=200000);
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),a.sha256);
+  assert.equal(a.frames.length,24);assert.equal(a.framesPerDirection,6);
+  for(const f of a.frames){const [x,y,w,h]=f.crop;assert.ok(x>=0&&y>=0&&x+w<=a.width&&y+h<=a.height);assert.ok(f.neck[0]>0&&f.neck[0]<w&&f.neck[1]>0&&f.neck[1]<h);}
+  for(let frame=0;frame<12;frame++)assert.equal(walkFrameIndex(a,{moving:true,time:(frame+.1)/a.fps}),frame%6);
+  assert.equal(walkFrameIndex(a,{moving:false,time:3}),null);
+  assert.equal(walkFrameIndex(a,{moving:true,reducedMotion:true,time:3}),null);
+ }
+});
+test('walking phase follows actual travel, resets when blocked, and is render-rate independent',()=>{
+ const a=createHeroActor(),b=createHeroActor();
+ let pa,pb;for(let i=0;i<60;i++)pa=updateHeroActor(a,{dx:1.5,time:i/60});
+ for(let i=0;i<30;i++)pb=updateHeroActor(b,{dx:3,time:i/30});
+ assert.equal(pa.walkTime,pb.walkTime);assert.equal(pa.walkTime,1);
+ assert.equal(updateHeroActor(a,{time:2}).walkTime,0);
+});
+test('renderer selects six different source cells in each direction and falls back safely',()=>{
+ const r=prepared();
+ for(const gender of ['male','female']){
+  r.images.set('walk:'+gender,{id:'walk:'+gender});
+  for(let facing=0;facing<4;facing++){
+   r.sourceBounds.set(gender+'-walk:'+facing,manifest.bodies[gender+'-walk'].frames[facing].crop);
+   for(let i=0;i<6;i++){
+    const c=context(),result=r.draw(c,{gender},{facing,moving:true,time:(i+.1)/10});
+    assert.equal(result.walkFrame,i);assert.equal(c.draws[0][0].id,'walk:'+gender);
+    assert.deepEqual(c.draws[0].slice(1,5),manifest.bodies[gender+'-walk'].walk.frames[facing*6+i].crop);
+   }
+   assert.equal(r.draw(context(),{gender},{facing,moving:false}).walkFrame,null);
+   assert.equal(r.draw(context(),{gender},{facing,moving:true,reducedMotion:true}).walkFrame,null);
+  }
+  r.images.delete('walk:'+gender);
+  assert.equal(r.draw(context(),{gender},{moving:true}).walkFrame,null);
+ }
+});
 test('production and preview use identical verified CDN assets',()=>{
  assert.deepEqual(read('../data/adventure/hero-art.json'),manifest);
  for(const row of [...Object.values(manifest.bodies),...Object.values(manifest.heads)])assert.match(row.cdn,/^https:\/\/cdn\.keepwork\.com\//);
@@ -32,6 +71,15 @@ test('all mount/gender/facing body rectangles and foregrounds exactly retain exi
 test('partial split resources fall back to the whole original and never draw a detached head',()=>{
  const r=prepared(),c=context();r.images.delete('body:standing');
  const result=r.draw(c,{gender:'male'},{standing:true});assert.equal(result.split,false);assert.equal(c.draws.length,1);assert.equal(c.draws[0][0].id,'original:standing');
+});
+test('custom heads are shared by walking, mount and portrait paths with safe unknown-ID fallback',()=>{
+ const r=prepared(),mount=catalog.mounts.find(m=>m.rideable);
+ for(const [id,head] of Object.entries(manifest.heads)){
+  const c=context();r.draw(c,{gender:head.gender,mount,headId:id},{facing:2});
+  assert.ok(c.draws.some(args=>args[0].id==='head:'+id),id);
+  assert.equal(r.headId(head.gender,id),id);
+ }
+ assert.equal(r.headId('female','unknown'), 'elf-girl');assert.equal(r.headId('male','elf-girl'),'elf-boy');
 });
 test('walking and riding select the same head ID; head selection never changes body layout',()=>{
  const r=prepared(),mount=catalog.mounts.find(m=>m.rideable);

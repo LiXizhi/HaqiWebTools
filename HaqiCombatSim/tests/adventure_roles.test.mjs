@@ -140,6 +140,38 @@ test('drifted cloud part witnesses load primary fields instead of blocking the a
     } finally { console.warn = warn; }
     assert.equal(warnings.some(text => text.includes('consistency join')), true);
 });
+test('drifted cloud part witnesses self-heal on the next save so later loads stay strict', async () => {
+    const m = cloudMock(), c = m.client();await c.connect();
+    const catalog = addRole(emptyRoles(), id(1), hero('旧格式'), 1);
+    await c.saveRoles(catalog, null);
+    const index = () => JSON.parse(m.remote.get(m.store.getRemotePagePath('roles/index.json')));
+    const beforeFiles = { ...index().catalog.roles[0].files };
+    const itemsPath = m.store.getRemotePagePath(beforeFiles.items);
+    const itemsFile = JSON.parse(m.remote.get(itemsPath));
+    itemsFile.data.ownedItemIds = ['999'];
+    m.remote.set(itemsPath, JSON.stringify(itemsFile));
+    const reader = m.client();await reader.connect();
+    const loaded = await reader.roles();
+    assert.deepEqual(loaded.partsStale, [id(1)]);
+    const warnings = [];const warn = console.warn;console.warn = (...args) => warnings.push(args.join(' '));
+    try {
+        // Healing save with unchanged durable content must rewrite the drifted part files.
+        const revision = await reader.saveRoles(loaded.catalog, loaded.revision);
+        const after = index();
+        assert.notEqual(after.revision, loaded.revision);assert.equal(after.revision, revision);
+        assert.notEqual(after.catalog.roles[0].files.items, beforeFiles.items);
+        assert.notEqual(after.catalog.roles[0].files.records, beforeFiles.records);
+        const healed = await reader.roles();
+        assert.deepEqual(healed.partsStale, []);
+        assert.equal(healed.revision, revision);
+        assert.deepEqual(healed.catalog.roles[0].save.inventory, catalog.roles[0].save.inventory);
+        // A clean no-op afterwards writes nothing again.
+        let writes = 0;const original = m.store.savePageData;m.store.savePageData = (...args) => { writes++;return original(...args); };
+        assert.equal(await reader.saveRoles(healed.catalog, healed.revision), healed.revision);
+        assert.equal(writes, 0);m.store.savePageData = original;
+    } finally { console.warn = warn; }
+    assert.equal(warnings.length, 0);
+});
 test('stale device does not overwrite a newer role catalog', async () => {
     const m = cloudMock(), a = m.client(), b = m.client();await a.connect();await b.connect();
     const catalog = addRole(emptyRoles(), id(1), hero('云端'), 1);await a.saveRoles(catalog, null);

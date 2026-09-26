@@ -64,13 +64,13 @@
     },
     {
       "id": "cocoa-boy",
-      "name": "棕肤少年",
+      "name": "短辫少年",
       "gender": "male",
       "prompt": "Use case: stylized-concept. Production game sprite atlas, exactly FOUR columns by FOUR rows, 16 isolated HEAD ONLY views of ONE identical character. Match the attached reference's polished chibi fantasy RPG painted 3D-like sprite style, big expressive eyes, small pointed elf ears. Genuine TRANSPARENT alpha background. No neck, shoulders, body, props, labels, text, grid lines or cast shadows. All heads fully inside their equal grid cells with ample margins, consistent apparent cranial scale, SAME hairstyle identity and face throughout. Camera at reference's slightly elevated game angle. Exact row-major full yaw turntable: row1 front0°,22.5° toward viewer LEFT,45° left,67.5° left; row2 profile90° LEFT,112.5° left rear,135° left rear,157.5° near back; row3 full BACK180°,202.5° back right,225° back right,247.5° right rear; row4 profile270° RIGHT,292.5° right front,315° right front,337.5° almost front. Back views show hair/back of head with NO face. Heads only cut immediately below chin, no visible neck. Do not duplicate front faces in back row. Reference is style/layout reference, generate a NEW character: African-inspired boy, medium warm brown skin, hazel brown eyes, short chunky black twists with a neatly tapered outline"
     },
     {
       "id": "cocoa-girl",
-      "name": "棕肤少女",
+      "name": "短辫少女",
       "gender": "female",
       "prompt": "Use case: stylized-concept. Production game sprite atlas, exactly FOUR columns by FOUR rows, 16 isolated HEAD ONLY views of ONE identical character. Match the attached reference's polished chibi fantasy RPG painted 3D-like sprite style, big expressive eyes, small pointed elf ears. Genuine TRANSPARENT alpha background. No neck, shoulders, body, props, labels, text, grid lines or cast shadows. All heads fully inside their equal grid cells with ample margins, consistent apparent cranial scale, SAME hairstyle identity and face throughout. Camera at reference's slightly elevated game angle. Exact row-major full yaw turntable: row1 front0°,22.5° toward viewer LEFT,45° left,67.5° left; row2 profile90° LEFT,112.5° left rear,135° left rear,157.5° near back; row3 full BACK180°,202.5° back right,225° back right,247.5° right rear; row4 profile270° RIGHT,292.5° right front,315° right front,337.5° almost front. Back views show hair/back of head with NO face. Heads only cut immediately below chin, no visible neck. Do not duplicate front faces in back row. Reference is style/layout reference, generate a NEW character: African-inspired girl, medium warm brown skin, hazel brown eyes, short black twists arranged in two compact tied ponytails with turquoise ties"
     },

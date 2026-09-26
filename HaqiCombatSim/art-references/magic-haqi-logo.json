@@ -1,0 +1,306 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "local": "art-references/magic-haqi-logo-elf.webp",
+    "sha256": "48ccbeef13b61b669bed8ee98aaf45be355ba464b427ad69202b17be18de3c71",
+    "originalPngSha256": "76bdf7f9f44454917aaf384cfba08e8f3eb2baed9c98adefc13b69a775e56aa1",
+    "width": 1254,
+    "height": 1254,
+    "generator": "built-in imagegen",
+    "prompt": "保留已批准的紫色巫师帽、金色星星、蓝眼睛、棕色头发与笑脸；将可见圆耳改为尖精灵耳；透明背景、无文字。"
+  },
+  "androidBackground": "#eeeaff",
+  "files": [
+    {
+      "local": "assets/branding/magic-haqi-elf-32.webp",
+      "width": 32,
+      "height": 32,
+      "bytes": 2090,
+      "sha256": "7a857eb6e93bcf488ba76b596f6e1715ec59fba1a73b4b052fc666972484db62",
+      "usage": "透明品牌标志",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi-elf-32.webp",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "assets/branding/magic-haqi-elf-48.webp",
+      "width": 48,
+      "height": 48,
+      "bytes": 3830,
+      "sha256": "07329d6b600c4c38f52f2bb0614c071bf988d13ca6418c1f0c75bb21d514e2a6",
+      "usage": "透明品牌标志",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi-elf-48.webp",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "assets/branding/magic-haqi-elf-64.webp",
+      "width": 64,
+      "height": 64,
+      "bytes": 6168,
+      "sha256": "e30ffa0e25e131f84b3b1064fcb99760048b01c651144d1e21db7faadbd11d19",
+      "usage": "透明品牌标志",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi-elf-64.webp",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "assets/branding/magic-haqi-elf-128.webp",
+      "width": 128,
+      "height": 128,
+      "bytes": 18058,
+      "sha256": "9c77a7f2e7fb72e51762aa91bf27e98e39f29d580792e1ac6ef85360e6d365dc",
+      "usage": "透明品牌标志",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi-elf-128.webp",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "assets/branding/magic-haqi-elf-192.webp",
+      "width": 192,
+      "height": 192,
+      "bytes": 33954,
+      "sha256": "6aceb0e4b9caa6ec0a04d18ccc89497b1ea54fb144f30237fa4656a1a04bf4b1",
+      "usage": "透明品牌标志",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi-elf-192.webp",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "assets/branding/magic-haqi-elf-256.webp",
+      "width": 256,
+      "height": 256,
+      "bytes": 53460,
+      "sha256": "bb91e8db4335de442d25e4db2d2b10d712fab1d765486da16969d403c296ba07",
+      "usage": "透明品牌标志",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi-elf-256.webp",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "assets/branding/magic-haqi-elf-512.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 164304,
+      "sha256": "705004293ba6060564e6a32dec727154bb0c04154afece22f96f5e2da636f52f",
+      "usage": "透明品牌标志",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi-elf-512.webp",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "assets/branding/magic-haqi-elf-1024.webp",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 143768,
+      "sha256": "13ef0b25370053d53ebe6a201efc1af9b8feb9b1b29670e9c5adebb4dccd42f3",
+      "usage": "透明品牌标志",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi-elf-1024.webp",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "shell/electron/icons/magic-haqi.png",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 761853,
+      "sha256": "2a46f6293bce9fdfed70d44b39805c45fdd8069251817ffbd94259b94ddf574e",
+      "usage": "桌面窗口图标及高清PNG",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi.png",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "shell/electron/icons/magic-haqi.ico",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 114135,
+      "sha256": "b404d2ca51a5c19caf10423045c3355482ea12e166a265dc6f8b7fd6630e5d9d",
+      "usage": "Windows与Steam快捷方式",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi.ico",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "shell/electron/icons/magic-haqi.icns",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 1378648,
+      "sha256": "5c085b53849463b1d1fcc6da6ec6b7897efce3e8d20bd2647c79de234dfd7a78",
+      "usage": "macOS与Steam快捷方式",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/magic-haqi.icns",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "shell/branding/steam-app-184.jpg",
+      "width": 184,
+      "height": 184,
+      "bytes": 16362,
+      "sha256": "6886c02e2814470f97e689e5e01577330942d90ec3f9778de389aefffc2fe432",
+      "usage": "Steam社区应用图标",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/steam-app-184.jpg",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "shell/branding/android-store-512.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 205365,
+      "sha256": "fa4017b6c443e2d3f60c130783b5a4a7bc2cd40f102d6b2e2a094a8fd8d40843",
+      "usage": "Android商店图标",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/elf-v1-97fdee8844a4/android-store-512.png",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "width": 48,
+      "height": 48,
+      "bytes": 3442,
+      "sha256": "964915fc30a23ccf682ed2a56b062522f8ff094a17563837cfb9ec76d6eec81e",
+      "usage": "Android传统图标",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png",
+      "width": 48,
+      "height": 48,
+      "bytes": 2656,
+      "sha256": "a58209935bdd380822b7905283c73289c15fcb7090a0756771b44baf76c7f07b",
+      "usage": "Android圆形图标",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-mdpi/ic_launcher_foreground.png",
+      "width": 108,
+      "height": 108,
+      "bytes": 5096,
+      "sha256": "dba488335a0844d4d1f0a62e59785efe447695eca191785fd7c5326ac0d42d35",
+      "usage": "Android自适应前景",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "width": 72,
+      "height": 72,
+      "bytes": 6915,
+      "sha256": "d6ee462d72b18d400aa37528fa8ced787e67020e5a35794a1c2dcaa41dc640a8",
+      "usage": "Android传统图标",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png",
+      "width": 72,
+      "height": 72,
+      "bytes": 5078,
+      "sha256": "836b84c0e1864b186a33f00436a048e645f1243e60477a3575ac093b5fad1cf5",
+      "usage": "Android圆形图标",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-hdpi/ic_launcher_foreground.png",
+      "width": 162,
+      "height": 162,
+      "bytes": 10110,
+      "sha256": "5e5696f6b80efa8156612ecffb4edbf63cbd46f72fb71bdf853b9cf574d52c4f",
+      "usage": "Android自适应前景",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "width": 96,
+      "height": 96,
+      "bytes": 11276,
+      "sha256": "ea15909faa5f8058f9c905ce4ada59bfe8e4c33d46fcd2b684a6c76b8dfacb47",
+      "usage": "Android传统图标",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png",
+      "width": 96,
+      "height": 96,
+      "bytes": 8171,
+      "sha256": "a85e3e142d1a1144b692593b74326aa25798c8780e06b5508e4d9dc507f9e4ae",
+      "usage": "Android圆形图标",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-xhdpi/ic_launcher_foreground.png",
+      "width": 216,
+      "height": 216,
+      "bytes": 17011,
+      "sha256": "98e341dc94cd2ed5033ec855203ddab53a0b92fcef38ffa1125478e118e265eb",
+      "usage": "Android自适应前景",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "width": 144,
+      "height": 144,
+      "bytes": 22840,
+      "sha256": "93882c9a82a98a6690e5f13fb5828142484bef425b64e856d021971896139f87",
+      "usage": "Android传统图标",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png",
+      "width": 144,
+      "height": 144,
+      "bytes": 16670,
+      "sha256": "dae2968faad76291cde09a6138d8061c6eb187cf7fd51b578afc85bd57cc4e05",
+      "usage": "Android圆形图标",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher_foreground.png",
+      "width": 324,
+      "height": 324,
+      "bytes": 33342,
+      "sha256": "b7d0c35daeb7b82d2ea90b981f1780698ce7b7bdd0e450111674d4af7236d5d7",
+      "usage": "Android自适应前景",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "width": 192,
+      "height": 192,
+      "bytes": 37507,
+      "sha256": "f029d70836efc3ea70f8e4a7b237cc68b1030f74361653ffd7b98aaa7ca3b09c",
+      "usage": "Android传统图标",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png",
+      "width": 192,
+      "height": 192,
+      "bytes": 27177,
+      "sha256": "d3de469542c795e195e8900d3f8633eae1e18035acbb165058c0f4186bdc8c5a",
+      "usage": "Android圆形图标",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_foreground.png",
+      "width": 432,
+      "height": 432,
+      "bytes": 55220,
+      "sha256": "d6e5a366cd724847dd3102b56a27b3fc9ae9177054afb9db24deaf0c6599285a",
+      "usage": "Android自适应前景",
+      "upload": false
+    }
+  ]
+}

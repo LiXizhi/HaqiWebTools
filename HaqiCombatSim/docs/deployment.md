@@ -50,6 +50,27 @@ npm run verify:release # 对当前dist重新核验，不上传
 
 未找到Maisi时打印跳过信息，不影响CDN发布；`plan:release`和失败的上传/核验不会复制。若复制发生IO错误则命令报错，可修复后运行 `verify:release`重新核验并复制。
 
+## 本地美术独立包（Steam / 桌面 / 手机）
+
+H5 的 `npm run build` 与 `npm run upload` 不变：产物仍是 `dist/`，不含 WebP/Ogg，页面默认请求清单里的永久 Keepwork CDN。商店和桌面安装包走另一条构建，不进入上传白名单。
+
+```sh
+npm run build:app      # app-dist/，默认本地美术，并复制清单引用的 WebP/Ogg
+npm run desktop        # 用已有 app-dist 打开 Electron 窗口
+npm run build:desktop  # 当前系统的安装包：Windows 为 NSIS，macOS 上为 dmg
+npm run build:steam    # 在 build:desktop 之后把 unpacked 程序放到 steam-depot/
+npm run build:android  # 同步到 android/，本机可继续用 Android Studio 打包
+npm run build:ios      # 同步到 ios/，归档和签名需要 Mac
+```
+
+`HAQI_TARGET=app` 时 Vite 把 `__HAQI_ASSET_MODE__` 写成 `local`，因此不带查询参数也会读包内文件。`?assets=cdn` 仍可强制走 CDN，便于对照。源码服务和 `dist/` 不设置该变量，行为与以前相同。玩法里“有没有图”仍看清单中的 `cdn` 字符串，独立包只是不请求这些地址。
+
+`scripts/package_app_assets.mjs` 只扫描 `app-dist/data` 里的运行时 JSON。本地路径必须存在；对象上有 `webpSha256` 或 `sha256` 时必须与文件一致，`size`/`bytes` 必须与文件长度一致。坐骑图集在清单里写成 `assets/...`，实际文件在 `demos/mount-lab/assets/...`，与 `hero_renderer.js` 的骑乘路径一致。`app-dist/index.html` 只做跳转到 `Haqi.html`，因为 Capacitor 要求入口文件名是 `index.html`。
+
+Electron 在 `127.0.0.1` 上提供 `app-dist`（打包后是 `resources/app`），不用 `file://`。安装包由 `shell/electron/electron-builder.yml` 生成，Windows 同时产出 NSIS 和 `win-unpacked`。`scripts/build_desktop.mjs` 会先修补 electron-builder 26 在 Windows 上解包后立即重命名目录失败的问题。macOS 目标写在同一配置里，需在 Mac 上执行 `npm run build:desktop`。`steam-depot/app_build.vdf` 里的 `APP_ID` 和 `DEPOT_ID` 要换成 Steamworks 后台的数字后再上传；这一步没有成就、创意工坊或 Steam 云存档。Keepwork 登录仍按需加载 CDN 上的 SDK，失败时本地冒险和本机存档照常可用。
+
+Android 工程在 `android/`，iOS 工程在 `ios/`。`capacitor.config.json` 的 `webDir` 是 `app-dist`。手机系统 WebView 使用 https 本地源。登录 Keepwork 需要网络，清单声明了 `INTERNET`。iOS 归档不能在 Windows 上完成。
+
 ## 副本整包按需加载（2026-09-22）
 
 副本保持一个完整JSON，不按世界拆分。`data/adventure/dungeons.json`保留完整原版导出配置，构建时按既有白名单剔除归档XML，独立输出`dist/data/adventure/dungeons.json`。由现有`vite.config.mjs`在同一次构建中作为资源输出，运行`npm run build`即可，无独立构建配置、额外打包命令或JS入口产物。

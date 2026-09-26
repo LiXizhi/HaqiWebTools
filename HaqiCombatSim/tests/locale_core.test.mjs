@@ -58,7 +58,7 @@ test('catalog speech codes and language pairs', () => {
 test('save locale defaults without a Chinese dictionary', () => {
     const save = normalizeLocaleSave({});
     assert.equal(save.locale, 'zh-CN');
-    assert.deepEqual(save.languageLearning, { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,showChinese:true,model:'',voiceType:'' });
+    assert.deepEqual(save.languageLearning, { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' });
     const same = normalizeLocaleSave({ locale: 'ja', languageLearning: { enabled: true, native: 'ko', target: 'ko' } });
     assert.equal(same.locale, 'ja');
     assert.equal(same.languageLearning.target, 'en');

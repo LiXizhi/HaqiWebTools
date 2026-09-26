@@ -4,8 +4,8 @@ import { showPetDetails } from './view_adventure_pet_details.js';
 import { createMountPreview } from './view_adventure_mount_preview.js';
 import { createPetStatus } from './view_adventure_pet_status.js';
 import { ItemDetails } from './view_adventure_item_details.js';
-import { equipmentAttributes, signedAttribute } from './adventure_equipment_core.js';
 import { STARTERS,STAGE_NAMES,petAppearanceStage,petParams,FOOD_ID } from './adventure_pets_core.js';
+import { teachPointer } from './view_teaching.js';
 export function petPortrait(assets,id,stage=0,size=96){
  const box=document.createElement('div');box.className='pet-sheet';box.style.width=box.style.height=`${size}px`;
  const art=assets.content.pets[id]?.art;if(!art)return box;
@@ -98,12 +98,9 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  };
  let mountDetails;
  const openMount=(item,trigger)=>{
-  mountDetails ||= new ItemDetails(body,model,{el,spellFace});
+  mountDetails ||= new ItemDetails(body,model,{el,spellFace,tile});
   mountDetails.render(item,{owned:true});
   const mount=c.mountByItem[item.id],riding=Number(save.mountId)===Number(item.id),available=!!mount.art?.cdn;
-  mountDetails.body.append(createMountPreview(assets,{...save,mountId:available?item.id:null},{el,tile}));
-  mountDetails.body.append(el('p','muted',available?'骑乘后，这些属性加入角色战斗属性。':'这只坐骑还没有骑乘形象。'));
-  for(const row of equipmentAttributes({stats:mount.stats||{}},save,c))mountDetails.body.append(el('p','',`${row.label} ${signedAttribute(row.value)}${row.unit}`));
   const ride=button(riding?'下骑':available?'骑上':'暂不可骑乘',()=>{
    mountDetails.close();cb.action(riding?{type:'dismount'}:{type:'ride',itemId:item.id});
   },riding?'secondary':'primary');
@@ -194,6 +191,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   dialog.append(el('header','modal-header',el('h2','','初心之旅 · 咕噜噜'),exit),content);document.body.append(dialog);dialog.addEventListener('keydown',event=>event.stopPropagation());dialog.addEventListener('close',()=>{dialog.remove();teaching.focus();},{once:true});dialog.showModal();
  },'secondary');
  const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop',{category:state.tab==='mount'?'mount':'pet'}),'secondary'),teaching,notes);
+ teachPointer(teaching,save,c);
  if(c.homeUrl){const link=el('a','pet-home-link',icon('shop'),el('span','','宠物家园'));link.href=c.homeUrl;link.target='_blank';link.rel='noopener noreferrer';link.title='联动筹备中，当前冒险进度不会写入家园';footer.append(link);}
  body.append(footer);
 }

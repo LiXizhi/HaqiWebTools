@@ -1,4 +1,4 @@
-import { HeroRenderer } from './hero_renderer.js';
+import { HeroRenderer } from './hero_renderer.js?v=front-walk-lift-1';
 import { BODY_TO_HEAD, clampHead } from './hero_pose_core.js';
 
 const $=id=>document.getElementById(id),local=new URLSearchParams(location.search).get('assets')==='local';
@@ -24,6 +24,7 @@ async function select(){
  try{
   const result=await renderer.prepare(state.appearance);if(rev!==revision)return;
   state.ready=true;status.textContent=result.fallback?'分层资源未完整加载，当前使用原整身回退。'+result.errors.join('；'):`${local?'本地':'Keepwork CDN'}资源已就绪 · 身体与坐骑使用原定位`;
+  status.textContent+=` · 头颈校准 ${renderer.manifest.headCalibration||'未标记'}`;
   const art=renderer.manifest.heads[state.appearance.headId];
   $('atlas').src=local?art.local:art.cdn;$('asset-info').textContent=`${art.name} · ${(art.bytes/1000).toFixed(1)} KB · 16 个方向 · 步行与骑乘共用`;
   thumb?.dispose();$('thumbnail').replaceChildren();thumb=renderer.createView(state.appearance,{width:150,height:170,standing:mode==='standing'});$('thumbnail').append(thumb.node);await thumb.ready;
@@ -44,6 +45,7 @@ function tick(now){
   $('head').disabled=control==='auto';if(control==='auto')$('head').value=String(state.head);
   $('pose-label').textContent=`头朝${names[state.head]}${pose.targetId?' · 注视 NPC':''}`;
   const options={facing,head:state.head,size:78,time:animation?state.time:0,moving:pose.moving&&animation,standing:$('mode').value==='standing',debug:$('debug').checked,bodyOnly:$('body-only').checked,breath:pose.breath,reducedMotion:!animation};lastOptions=options;
+  options.walkTime=pose.walkTime;
   for(const id of ['before','after']){
    const {ctx,w,h}=canvasSize($(id)),zoom=Number($('zoom').value)*(w<380?.82:1);ground(ctx,w,h,zoom);
    ctx.save();ctx.translate(w/2,h*.78);ctx.scale(zoom,zoom);ctx.fillStyle='#06150c55';ctx.beginPath();ctx.ellipse(state.x,state.y+2,23,7,0,0,Math.PI*2);ctx.fill();
@@ -63,7 +65,9 @@ window.addEventListener('keydown',e=>{if(e.target.matches('input,select,button')
 window.addEventListener('keyup',e=>keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{keys.clear();state.pointer=null;});
 document.addEventListener('visibilitychange',()=>{last=0;if(!document.hidden)reset();else{keys.clear();state.pointer=null;}});
 try{
- const get=async url=>{const response=await fetch(url);if(!response.ok)throw new Error(`清单加载失败：${url}`);return response.json();};
+ // This art calibration page must see current metadata even through a caching preview proxy.
+ const refresh=Date.now();
+ const get=async url=>{const response=await fetch(`${url}?preview=${refresh}`,{cache:'no-store'});if(!response.ok)throw new Error(`清单加载失败：${url}`);return response.json();};
  const [manifest,catalog]=await Promise.all([get('data/hero-preview.json'),get('data/adventure/mount-catalog.json')]);
  renderer=new HeroRenderer(manifest,catalog,{local});
  function styles(){const select=$('head-style');select.replaceChildren();for(const [id,h] of Object.entries(manifest.heads).filter(([,h])=>h.gender===$('gender').value)){const o=document.createElement('option');o.value=id;o.textContent=h.name;select.append(o);}}

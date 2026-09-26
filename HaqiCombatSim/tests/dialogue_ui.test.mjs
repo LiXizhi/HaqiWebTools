@@ -6,7 +6,8 @@ function setup(t,reduced=false,options={}){
     const listeners=new Map(),classes=new Set();let calls=0;
     const node=()=>({textContent:'',style:{},children:[],setAttribute(){},append(...nodes){this.children.push(...nodes);},replaceChildren(...nodes){this.children=nodes;}});
     const button={textContent:'继续',classList:{add(){}},click(){calls++;},focus(){document.activeElement=this;}};
-    const box={isConnected:true,classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)},focus(){document.activeElement=this;},querySelectorAll:()=>[button]};
+    const backdrop={closest:()=>null};
+    const box={isConnected:true,classList:{add:c=>classes.add(c),remove:c=>classes.delete(c)},focus(){document.activeElement=this;},querySelectorAll:()=>[button],contains:node=>node!==backdrop};
     const root={addEventListener:(k,fn)=>listeners.set(k,fn),removeEventListener:k=>listeners.delete(k)};
     const text={textContent:'你好，年轻的魔法师。',replaceChildren(...children){this.children=children;},append(child){this.children.push(child);}};
     const hint=node();
@@ -18,7 +19,7 @@ function setup(t,reduced=false,options={}){
     bindDialogue(root,box,text,hint,button,options);
     const target={closest:()=>null};
     const event=extra=>({target,preventDefault(){},stopPropagation(){},stopImmediatePropagation(){},...extra});
-    return {root,text,hint,classes,get calls(){return calls;},key:extra=>listeners.get('keydown')?.(event({key:' ',code:'Space',...extra})),click:extra=>listeners.get('click')?.(event(extra)),listeners};
+    return {root,text,hint,classes,backdrop,get calls(){return calls;},key:extra=>listeners.get('keydown')?.(event({key:' ',code:'Space',...extra})),click:extra=>listeners.get('click')?.(event(extra)),listeners};
 }
 test('first space reveals, held space never advances, second space advances once',t=>{
     const ui=setup(t);assert.ok(ui.classes.has('is-speaking'));
@@ -26,9 +27,12 @@ test('first space reveals, held space never advances, second space advances once
     ui.key({repeat:true});assert.equal(ui.calls,0);
     ui.key();assert.equal(ui.calls,1);
 });
-test('click reveals without accepting; next background click accepts; disposal removes handlers',t=>{
-    const ui=setup(t);ui.click();assert.equal(ui.calls,0);
-    ui.click();assert.equal(ui.calls,1);
+test('inside click only reveals; backdrop click closes and never accepts; disposal removes handlers',t=>{
+    let closed=0;const ui=setup(t,false,{close:()=>closed++});
+    ui.click();assert.equal(ui.calls,0);ui.click();assert.equal(ui.calls,0);
+    ui.click({target:ui.backdrop});assert.equal(closed,1);assert.equal(ui.calls,0);
+    ui.click({target:ui.backdrop});assert.equal(closed,2);assert.equal(ui.calls,0);
+    ui.key();assert.equal(ui.calls,1);
     ui.root.disposeDialogue();assert.equal(ui.listeners.size,0);
 });
 test('close stays immediate and reduced motion shows full text',t=>{

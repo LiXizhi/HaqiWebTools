@@ -61,6 +61,14 @@ header.append(createCloseButton(closeDetails, '关闭物品详情'));
 
 核验入口：`tests/fixtures/tabs.html?panel=shop`，panel还可选 inventory、deck、pet、upgrade、gems、map；`&noatlas` 模拟未启用图集皮肤。验收页仅用内存角色，禁止写玩家存档。检查两级切换、鼠标移开后仍清晰、Tab焦点、桌面和390px手机。
 
+## 设置式选项菜单（2026-09-26）
+
+旅途设置等"选项菜单"型窗口使用 `js/view_adventure_settings.js` 的页签编排与 `js/view_settings_controls.js` 的共享控件，不各自拼按钮列表：
+
+- 页签条吸顶于 `.modal-body`，容器加 `.gui-tabs`，选中态沿用 Shared tabs；页签切换原地显隐内容区（`hidden`），不整面板重绘，焦点留在页签上；因开关触发的重绘通过模块级 `settingsView.tab` 保持当前页签，控制器打开窗口时重置。
+- 内容按 `.settings-section` 分区卡片组织；动作与链接用整行可点的 `.settings-cell`（emoji 图标 + 标题/说明 + CSS 箭头），开关用 `.settings-row` 右侧药丸 `.settings-toggle`（已开启/已关闭 + `aria-pressed`），标签在上、选择组在下的用 `.settings-field`。
+- 控件只依赖注入的 `el/button`，验收页可复用；核验入口 `tests/fixtures/settings.html?tab=journey|sound|language|about`。新增文案同步 `data/adventure/locale/en.txt`。
+
 ## 美术与性能
 
 复用 `ui-art.json` 已有图集与 Keepwork CDN，不为单个窗口下载一套不同皮肤，不把本地绝对路径写进运行时代码。新增资源保留 WebP、alpha、尺寸、来源和哈希，并遵守 AGENTS.md 的字节上限。图标失败时仍应能辨认操作。动画遵循 `prefers-reduced-motion`，避免为 hover 引入持续绘制。

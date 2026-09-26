@@ -100,8 +100,8 @@ function applyDamage(arena, caster, target, card, opts) {
     // 目标 shield / trap / prism
     school = U.processDamageAgainstWards(target, R, buffs.list, school);
     if (!opts.skipResist) {
-        buffs.resistPercent = U.getResist(target, school, R);
-        buffs.spellPenetration = U.getSpellPenetration(caster, school) + (Number(opts.baseSpellPen) || 0);
+        buffs.resistPercent = U.getResist(target, school, R, arena);
+        buffs.spellPenetration = U.getSpellPenetration(caster, school, R, arena) + (Number(opts.baseSpellPen) || 0);
         buffs.spellPenetrationReceive = U.getSpellPenetrationReceive(target);
         boostAbs += U.getResistAbs(target, school);
     }
@@ -113,18 +113,18 @@ function applyDamage(arena, caster, target, card, opts) {
     let mark = '';
     const dodgeCtx = {
         baseHit: opts.baseHit ?? card.hitchance ?? 100,
-        hitChance: U.getHitChance(caster), dodge: U.getDodge(target),
+        hitChance: U.getHitChance(caster, R, arena), dodge: U.getDodge(target),
         casterLevel: caster.level, targetLevel: target.level, targetIsMob: !!target.isMob,
     };
-    const crit = U.getCriticalStrike(caster, school, R);
-    const resil = U.getResilience(target, school);
+    const crit = U.getCriticalStrike(caster, school, R, arena);
+    const resil = U.getResilience(target, school, R, arena);
     // card_server.lua L3234: kids PvE uses the normal dodge branch (no PvP remedy).
     if (version !== 'kids' || arena.mode === 'pve') {
         if (tryDodge(rng, dodgeCtx, version)) {
             damage = Math.ceil(damage * R.global.dodgeDamageRatio);
             mark = 'd';
         } else if (tryCriticalStrike(rng, crit, resil, opts.baseCrit || 0)) {
-            damage = Math.ceil(damage * critDamageRatio(R.global.critDamageRatio, caster.stats.critRatioBonus));
+            damage = Math.ceil(damage * critDamageRatio(R.global.critDamageRatio, U.getCriticalStrikeDamageRatioBonus(caster, R, arena)));
             if (card.params.extra_damage_if_critical) damage = damage * (1 + Number(card.params.extra_damage_if_critical));
             mark = 'c';
         }
@@ -135,7 +135,7 @@ function applyDamage(arena, caster, target, card, opts) {
             mark = 'd';
             target.remedy.absoluteDefense = R.global.protectRounds;
         } else if (tryCriticalStrike(rng, crit, resil, opts.baseCrit || 0)) {
-            damage = Math.ceil(damage * critDamageRatio(R.global.critDamageRatio, caster.stats.critRatioBonus));
+            damage = Math.ceil(damage * critDamageRatio(R.global.critDamageRatio, U.getCriticalStrikeDamageRatioBonus(caster, R, arena)));
             if (card.params.extra_damage_if_critical) damage = damage * (1 + Number(card.params.extra_damage_if_critical));
             mark = 'c';
         }
@@ -158,8 +158,8 @@ function applyDamage(arena, caster, target, card, opts) {
     if(reflected){
         const reflectBuffs={list:[]};
         const reflectSchool=U.processDamageAgainstWards(caster,R,reflectBuffs.list,school);
-        reflectBuffs.resistPercent=U.getResist(caster,reflectSchool,R);
-        reflectBuffs.spellPenetration=U.getSpellPenetration(caster,reflectSchool);
+        reflectBuffs.resistPercent=U.getResist(caster,reflectSchool,R,arena);
+        reflectBuffs.spellPenetration=U.getSpellPenetration(caster,reflectSchool,R,arena);
         reflectBuffs.spellPenetrationReceive=U.getSpellPenetrationReceive(caster);
         if(arena.aura?.boostSchool===reflectSchool&&arena.aura.boostDamage)reflectBuffs.list.push(arena.aura.boostDamage);
         let amount=damageExpression(reflected,0,reflectBuffs,version,R.global.maxSpellPenetration);
@@ -191,12 +191,12 @@ function buildDotSequence(arena, caster, target, card, dotsStr, buffsList, sibli
         cardKey: card.key, casterId: caster.id, damageSchool: school,
         buffsTarget: [...buffsList],
         damageBoostAbs: U.getDamageBoostAbs(caster, school),
-        spellPenetration: U.getSpellPenetration(caster, school),
+        spellPenetration: U.getSpellPenetration(caster, school, R, arena),
         outputWeight: U.getOutputDamageFinalWeight(caster, arena, R),
         ticks: [],
     };
-    const crit = U.getCriticalStrike(caster, school, R);
-    const resil = U.getResilience(target, school);
+    const crit = U.getCriticalStrike(caster, school, R, arena);
+    const resil = U.getResilience(target, school, R, arena);
     let round = 0;
     const threatTicks=[];
     for (const d of splitList(dotsStr)) {
@@ -206,11 +206,11 @@ function buildDotSequence(arena, caster, target, card, dotsStr, buffsList, sibli
         const tickSchool = schools[round] || school;
         let critical = false;
         if (tryCriticalStrike(arena.rng, crit, resil, 0)) {
-            dmg = Math.ceil(dmg * critDamageRatio(R.global.critDamageRatio, caster.stats.critRatioBonus));
+            dmg = Math.ceil(dmg * critDamageRatio(R.global.critDamageRatio, U.getCriticalStrikeDamageRatioBonus(caster, R, arena)));
             critical = true;
         }
-        seq.ticks.push({ dmg, critical, damageSchool: tickSchool, damageBoostAbs: U.getDamageBoostAbs(caster, tickSchool), spellPenetration: U.getSpellPenetration(caster, tickSchool) });
-        const threatBase=critical?Math.ceil(numericFromSection(d,realcost)*critDamageRatio(R.global.critDamageRatio,caster.stats.critRatioBonus)):numericFromSection(d,realcost);
+        seq.ticks.push({ dmg, critical, damageSchool: tickSchool, damageBoostAbs: U.getDamageBoostAbs(caster, tickSchool), spellPenetration: U.getSpellPenetration(caster, tickSchool, R, arena) });
+        const threatBase=critical?Math.ceil(numericFromSection(d,realcost)*critDamageRatio(R.global.critDamageRatio,U.getCriticalStrikeDamageRatioBonus(caster,R,arena))):numericFromSection(d,realcost);
         threatTicks.push(buffsList.reduce((damage,boost)=>Math.ceil(damage*(100+boost)/100),threatBase));
         round++;
     }
@@ -260,7 +260,7 @@ export function tickDots(arena, unit) {
 export function tickHots(arena, unit) {
     if (!U.isAlive(unit)) return;
     for (const hot of U.popHoT(unit)) {
-        const buffs = [U.getInputHealBoost(unit)];
+        const buffs = [U.getInputHealBoost(unit, arena.resolved, arena)];
         if (arena.aura && arena.aura.boostHeal) buffs.push(arena.aura.boostHeal);
         let heal = healExpression(hot.heal, buffs, arena.resolved.version);
         heal = applyHealPenalty(Math.ceil(heal), arena.resolved.global.healPenalty);
@@ -280,7 +280,7 @@ function applyHeal(arena, caster, target, card, baseHeal, casterBuffs, label, co
     const buffs = [...casterBuffs];
     U.processHealAgainstWards(target, R, buffs);
     if (arena.aura && arena.aura.boostHeal) buffs.push(arena.aura.boostHeal);
-    buffs.push(U.getInputHealBoost(target));
+    buffs.push(U.getInputHealBoost(target, R, arena));
     let heal = healExpression(baseHeal, buffs, R.version);
     if(card.type.startsWith('SingleHeal'))arena.onSingleHealThreat?.(caster,heal);
     collectThreat?.(heal);
@@ -418,7 +418,8 @@ function singleAttack(arena, caster, card, target, realcost) {
         baseDamage, damageSchool: school, buffsTargetList: skipResist ? [] : cb.list,
         damagePercent: skipResist ? 0 : cb.damagePercent, boostAbs: skipResist ? 0 : cb.boostAbs,
         baseCrit: Number(p.base_criticalstrike || 0), baseSpellPen: p.base_spellpenetration, skipResist,
-        maxDamage: type === 'SingleAttackWithPercent' ? Number(p.damage_max_player || p.damage_max || Infinity) : undefined,
+        // card_server.lua L3281-3290：百分比伤害上限按目标类型选择 damage_max_mob / damage_max_player
+        maxDamage: type === 'SingleAttackWithPercent' ? Number((target.isMob ? p.damage_max_mob : p.damage_max_player) || p.damage_max || Infinity) : undefined,
     });
 
     if ((type === 'SingleAttackWithLifeTap' || type === 'SingleAttackWithLifeTapAndStandingWards') && U.isAlive(caster)) {
@@ -778,13 +779,32 @@ export function useCard(arena, caster, card, target, seq) {
     if (R.fairPlay && R.fairPlay.forceAccuracy !== undefined && R.fairPlay.forceAccuracy !== null) accuracy = R.fairPlay.forceAccuracy;
     caster.totals.casts++;
     // 失误发生在扣费之前（card_server.lua L2560-2578）
-    if (rollFizzle(arena.rng, accuracy)) {
+    const missed=rollFizzle(arena.rng, accuracy);
+    // card_server.lua L2546-2559: pop one matching dispel even on a natural miss.
+    let dispel=null;
+    if(arena.mode!=='pve'||arena.dispelRulesVersion===1){
+        for(const [id,charm] of Object.entries(R.charms)){
+            if(charm.dispel_school&&String(charm.dispel_school).toLowerCase()===String(card.spellSchool).toLowerCase()&&U.popCharm(caster,Number(id))){
+                dispel=Number(id);break;
+            }
+        }
+    }
+    if (missed) {
         caster.totals.fizzles++;
         if (seq !== undefined) U.markCardFizzled(caster, seq);
-        emit(arena, { type: 'fizzle', caster: caster.id, card: card.key, target: target ? target.id : null, accuracy });
+        emit(arena, { type: 'fizzle', caster: caster.id, card: card.key, target: target ? target.id : null, accuracy,...(dispel!==null?{dispel}: {}) });
         return { ok: false, fizzled: true };
     }
     const realcost = U.payCard(caster, card, R);
+    // card_server.lua L2577-2598; mob_server.lua L3197-3200. Forced fizzle
+    // happens AFTER pip payment, before cooldown/effect execution.
+    const immune=caster.isMob&&[true,'true'].includes(caster.template?.attributes?.is_immune_to_dispel);
+    if(dispel!==null&&!immune){
+        caster.totals.fizzles++;
+        if(seq!==undefined)U.markCardFizzled(caster,seq);
+        emit(arena,{type:'fizzle',caster:caster.id,card:card.key,target:target?.id??null,accuracy,dispel,reason:'dispel',realcost});
+        return {ok:false,fizzled:true};
+    }
     if (card.params.cooldown) U.setCooldown(caster, card.spellName, Number(card.params.cooldown));
     if (seq !== undefined) U.markCardUsed(caster, seq);
     emit(arena, { type: 'cast', caster: caster.id, card: card.key, cardType: card.type, target: target ? target.id : null, school: card.spellSchool, pipcost: card.pipcost, realcost });
@@ -799,5 +819,8 @@ export function useCard(arena, caster, card, target, seq) {
         AreaPowerPipBoost:['AreaPowerPipBoost',true],AreaCleanse:['AreaCleanse',true],
     }[card.type];
     if(effectThreat)arena.onEffectThreat?.(caster,target||caster,...effectThreat);
+    // Optional presentation observer also sees silent secondary effects (e.g. an
+    // attack attaching a trap). It is not part of the deterministic event log.
+    arena.onStatusEffect?.({type:'effects_settled',caster:caster.id,card:card.key});
     return { ok: true };
 }

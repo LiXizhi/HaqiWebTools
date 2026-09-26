@@ -283,15 +283,17 @@ export function arenaDamageBoost(perRound, maxRounds, remainingRounds) {
  * card_server.lua L1265-1283 AbsorbDamage：依序消耗 absorb 层
  * @param absorbs [{pts}] 原地修改（pts 归零的层由调用方清理）
  */
-export function absorbDamage(absorbs, damage) {
+export function absorbDamage(absorbs, damage, onLayer = null) {
     for (const layer of absorbs) {
         if (layer.pts <= 0) continue;
         if (damage - layer.pts >= 0) {
             damage -= layer.pts;
             layer.pts = 0;
+            onLayer?.(layer);
         } else {
             layer.pts -= damage;
             damage = 0;
+            onLayer?.(layer);
             break;
         }
     }

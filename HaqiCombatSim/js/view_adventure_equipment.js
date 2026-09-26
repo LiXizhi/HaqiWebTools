@@ -1,11 +1,15 @@
 import {heroPortrait} from './hero_renderer.js';
-import { setText, fill } from './locale_runtime.js';
+import { setText, fill, tr } from './locale_runtime.js';
+import {DetailDialog} from './view_detail_dialog.js';
+import {createHeroPicker} from './view_hero_picker.js';
+import {HERO_LOOK_BEANS,HERO_NAME_BEANS,heroCustomizeQuote,resolvedHeadId} from './adventure_hero_customize_core.js';
 import {ItemDetails, attributeSpan} from './view_adventure_item_details.js';
 import {DRAGON_TOTEMS,dragonTotemStage,dragonTotemItemExperience} from './adventure_progression_bonuses_core.js';
-import {signedAttribute,visibleEquipmentSummary,progressionAttributes,equipmentSetDetails,equipmentAttributes} from './adventure_equipment_core.js';
+import {signedAttribute,visibleEquipmentSummary,progressionAttributes,equipmentSetDetails} from './adventure_equipment_core.js';
 import {runeStatus} from './adventure_runes_core.js';
 import { equipmentInstances, findEquipmentInstance } from './adventure_equipment_instances_core.js';
 import { equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
+import { teachPointer } from './view_teaching.js';
 import { upgradeLevels } from './adventure_upgrade_core.js';
 import { EQUIPMENT_SLOTS, previewEquipment } from './adventure_equipment_core.js';
 
@@ -30,7 +34,48 @@ export function renderEquipment(body,model,cb,ui) {
         b.setAttribute('aria-pressed',String(state.tab===id));tabs.append(b);
     }
     body.append(tabs,shell);
-    const identity=el('div','equipment-identity',el('h3','',save.name),el('p','muted',`${SCHOOL_NAMES[save.school]}学徒 · 等级 ${save.level}`));
+    const edit=button('✎',()=>openCustomize(edit),'equipment-edit');
+    edit.setAttribute('aria-label',tr('修改名字和形象'));
+    edit.title=edit.getAttribute('aria-label');
+    edit.disabled=!!save.pendingEncounter;
+    if(save.pendingEncounter)edit.title=tr('战斗中无法修改名字和形象');
+    const identity=el('div','equipment-identity',el('div','equipment-name-row',el('h3','',save.name),edit),el('p','muted',`${SCHOOL_NAMES[save.school]}学徒 · 等级 ${save.level}`));
+    function openCustomize(trigger){
+        const draft={name:save.name,appearance:save.appearance==='girl'?'girl':'boy',headId:resolvedHeadId(save)};
+        const dialog=new DetailDialog(body,{el,title:'修改名字和形象',className:'equipment-item-dialog hero-customize-dialog'});
+        dialog.closeButton.setAttribute('aria-label',tr('关闭修改名字和形象'));
+        dialog.closeButton.title=dialog.closeButton.getAttribute('aria-label');
+        dialog.dialog.setAttribute('aria-label',tr('修改名字和形象'));
+        const picker=createHeroPicker(assets,draft);
+        const name=el('input','name-input');name.id='customize-hero-name';name.value=draft.name;name.maxLength=16;name.autocomplete='off';name.setAttribute('aria-label',tr('你的名字'));
+        const label=el('label','field-label','你的名字');label.htmlFor=name.id;
+        const hint=el('p','muted equipment-customize-hint');
+        const confirm=button('',()=>{},'primary');
+        function refresh(){
+            draft.name=name.value;
+            const quote=heroCustomizeQuote(save,draft);
+            const trimmed=draft.name.trim();
+            const invalid=!trimmed||trimmed.length>16;
+            const balance=save.inventory[984]||0;
+            setText(hint,'改名字每次 {nameCost} 魔豆，改形象每次 {lookCost} 魔豆。只收取有改动的部分。当前 {count} 魔豆。',{nameCost:HERO_NAME_BEANS,lookCost:HERO_LOOK_BEANS,count:balance});
+            if(invalid){setText(confirm,'名字需要一至十六个字');confirm.disabled=true;}
+            else if(!quote.total){setText(confirm,'名字和形象都没有变化');confirm.disabled=true;}
+            else if(balance<quote.total){setText(confirm,quote.nameChanged&&quote.lookChanged?'改名字和形象需要100魔豆':quote.nameChanged?'改名字需要50魔豆':'改形象需要50魔豆');confirm.disabled=true;}
+            else{setText(confirm,'花费 {count} 魔豆确认',{count:quote.total});confirm.disabled=false;}
+        }
+        name.oninput=refresh;
+        picker.addEventListener('click',()=>refresh());
+        confirm.onclick=()=>{
+            const quote=heroCustomizeQuote(save,{name:name.value,appearance:draft.appearance,headId:draft.headId});
+            if(confirm.disabled||!quote.total)return;
+            dialog.close();
+            cb.action({type:'customize-hero',name:name.value,appearance:draft.appearance,headId:draft.headId});
+        };
+        dialog.body.append(picker,label,name,hint);
+        dialog.footer.append(confirm);
+        refresh();
+        dialog.open(trigger);
+    }
     const portrait=heroPortrait(assets,save,130,150);
     portrait.setAttribute('role','img');portrait.setAttribute('aria-label','角色形象');
     character.append(el('div','equipment-profile',identity,el('div','equipment-portrait',portrait)));
@@ -79,10 +124,19 @@ export function renderEquipment(body,model,cb,ui) {
     shell.append(character,wardrobe);
     const header=body.closest('.modal').querySelector('.modal-header');
     header.querySelector('.equipment-wallet')?.remove();
-    const fairyBeans=save.inventory[17213]||0,qiBeans=save.inventory[100]||0;
-    const fairySpan=el('span',''),qiSpan=el('span','');
-    setText(fairySpan,'仙豆 {count}',{count:fairyBeans});setText(qiSpan,'奇豆 {count}',{count:qiBeans});
-    header.insertBefore(el('div','equipment-wallet',fairySpan,qiSpan),header.querySelector('.close-button'));
+    // 货币显示与左上英雄卡一致：豆子图标 + 数量，名称保留在 title/aria/data-zh 里。
+    const walletEntry=(id,label)=>{
+        const amount=(save.inventory[id]||0).toLocaleString('zh-CN');
+        const icon=el('canvas','equipment-bean-icon');icon.width=32;icon.height=32;icon.setAttribute('aria-hidden','true');
+        const art=c.currencyIcons?.[String(id)];
+        if(art)assets.draw(icon.getContext('2d'),art,0,0,32,32);
+        const node=el('span','equipment-wallet-item',icon,el('span','',amount));
+        node.dataset.zh=label;
+        node.title=`${tr(label)} ${amount}`;
+        node.setAttribute('aria-label',node.title);
+        return node;
+    };
+    header.insertBefore(el('div','equipment-wallet',walletEntry(17213,'仙豆'),walletEntry(100,'奇豆')),header.querySelector('.close-button'));
     const filters=el('div','equipment-filters');
     for(const [id,label,slots=[]] of travel?TRAVEL_FILTERS:FILTERS) {
         const b=button(label,()=>{state.slot=id;state.page=0;state.item=null;render();},`equipment-filter ${state.slot===id||slots.includes(state.slot)?'active':''}`);b.setAttribute('aria-pressed',String(state.slot===id||slots.includes(state.slot)));filters.append(b);
@@ -107,6 +161,10 @@ export function renderEquipment(body,model,cb,ui) {
         state.page=Math.max(0,Math.min(state.page||0,pages-1));
         grid.replaceChildren();pager.replaceChildren();
         if(!items.some(item=>item.id===state.item))state.item=items[0]?.id||null;
+        // 教学模式：仅在第一页扫描前 12 件装备，找第一件未装备且穿上后属性提升的挂悬浮指针；
+        // 旅行背包/坐骑 tab 不参与。其他页不重复跑 previewEquipment。
+        let teachButton=null;
+        const canTeach=!travel&&!showingMounts&&state.page===0;
         for(const item of items.slice(state.page*PAGE_SIZE,(state.page+1)*PAGE_SIZE)) {
             const equipped=showingMounts?save.mountId===item.id:Number(save.equipment[item.slot])===item.id;
             const b=button([art(assets,item.art,52,52),el('span','equipment-item-name',item.name)],()=>{state.item=item.id;state.guid=null;for(const cell of grid.children){const selected=cell===b;cell.classList.toggle('selected',selected);cell.setAttribute('aria-pressed',String(selected));}openDetail(item);},`equipment-item ${equipped?'equipped':''} ${state.item===item.id?'selected':''}`);
@@ -115,12 +173,18 @@ export function renderEquipment(body,model,cb,ui) {
             if(equipped)b.append(el('small','equipment-equipped-label','已装备'));
             b.setAttribute('aria-label',`${item.name}${!isGear(item)||quantity>1?`，数量 ${quantity}`:''}${equipped?'，已装备':''}，查看详情`);
             b.title=item.name;b.setAttribute('aria-haspopup','dialog');b.setAttribute('aria-pressed',String(state.item===item.id));grid.append(b);
+            if(canTeach&&!teachButton&&!equipped&&isGear(item)&&!equipmentBlockReason(save,item,c)){
+                const instance=findEquipmentInstance(save,c,item.id,state.guid)||findEquipmentInstance(save,c,item.id);
+                const preview=previewEquipment(save,c,{type:'equip',itemId:item.id,guid:instance?.guid});
+                if(preview.rows.some(r=>r.delta>0))teachButton=b;
+            }
         }
         while(grid.children.length<PAGE_SIZE){const empty=el('div','equipment-item empty');empty.setAttribute('aria-hidden','true');grid.append(empty);}
         const previous=button('上一页',()=>{state.page--;paintList();},'secondary small'),next=button('下一页',()=>{state.page++;paintList();},'secondary small');
         previous.disabled=state.page===0;next.disabled=state.page===pages-1;
         pager.append(previous,el('span','',`${state.page+1} / ${pages}`),next);
         if(!items.length&&!travel)grid.append(el('p','equipment-empty-list',state.slot?'这个分类还没有物品。':'还没有装备，完成导师任务可以获得。'));
+        teachPointer(teachButton,save,c);
     }
     function paintDetail(item){
         detail.replaceChildren();footer.replaceChildren();if(!item){detail.append(el('p','muted','选择一件物品，查看属性、穿戴条件和获取途径。'));return;}
@@ -134,8 +198,6 @@ export function renderEquipment(body,model,cb,ui) {
             if(copies.length>1){const select=el('select','equipment-instance-select');select.setAttribute('aria-label','选择装备实例');copies.forEach((row,i)=>{const option=el('option','',`第 ${i+1} 件 · 强化 +${row.serverdata.addlel}${row.guid===save.equipmentGuids?.[item.slot]?' · 已装备':''}`);option.value=row.guid;select.append(option);});select.value=instance.guid;select.onchange=()=>{state.guid=select.value;paintDetail(item);};detail.append(select);}
         }
         if(mount){
-            detail.append(el('p','muted',mount.art?.cdn?'骑乘后，这些属性加入角色战斗属性。':'这只坐骑还没有骑乘形象。'));
-            for(const row of equipmentAttributes({stats:mount.stats||{}},save,c))detail.append(el('p','',attributeSpan(el,row)));
             const riding=save.mountId===item.id;
             const action=riding?{type:'dismount'}:{type:'ride',itemId:item.id};
             if(mount.art?.cdn&&!save.pendingEncounter){

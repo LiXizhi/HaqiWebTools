@@ -9,7 +9,7 @@ import { useCard, tickDots, tickHots, cardTargetKind, isSupportedType } from './
 import { catchChanceMilli, isCatchRuneCard } from './adventure_runes_core.js';
 import * as U from './combat_unit_core.js';
 
-const emit = (a,e) => { a.events.push({ turn:a.turn,...e }); };
+const emit = (a,e) => { const event={turn:a.turn,...e};a.events.push(event);a.onEvent?.(event); };
 function runeCardReady(battle, row) {
     const card = battle.resolved.cards[row.key];
     return isSupportedType(card?.type) || isCatchRuneCard(card);
@@ -17,8 +17,9 @@ function runeCardReady(battle, row) {
 export function runeCardsInHand(battle) {
     return (battle.runes||[]).filter(row=>row.count>(battle.runeUsed[row.itemId]||0)&&runeCardReady(battle,row)).map(row=>({key:row.key,runeId:row.itemId,seq:-row.itemId,count:row.count-(battle.runeUsed[row.itemId]||0)}));
 }
-export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0 }) {
+export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0 }) {
     if(monsterSlots&&(!Array.isArray(monsterSlots)||monsterSlots.length!==monsters.length||new Set(monsterSlots).size!==monsterSlots.length||monsterSlots.some(n=>!Number.isInteger(n)||n<0||n>3)))throw Error('怪物卡位无效');
+    if(![0,1].includes(dispelRulesVersion))throw Error('之敌规则版本无效');
     if(![0,1].includes(stealthRulesVersion))throw Error('隐身规则版本无效');
     if(![0,1].includes(reflectionRulesVersion))throw Error('反射规则版本无效');
     if(![0,1,2,3,4,5].includes(threatRulesVersion))throw Error('仇恨规则版本无效');
@@ -48,7 +49,7 @@ export function createPveBattle({ dataset, player, monsters, monsterSlots = null
     arena.mode = 'pve'; arena.currentSide = 'near'; arena.firstActingSide = firstSide;
     arena.threatRulesVersion=threatRulesVersion;
     arena.reflectionRulesVersion=reflectionRulesVersion;
-    arena.stealthRulesVersion=stealthRulesVersion;
+    arena.stealthRulesVersion=stealthRulesVersion;arena.dispelRulesVersion=dispelRulesVersion;
     if(threatRulesVersion>=4)arena.advanceCasterThreat=caster=>{
         if(caster.isMob)advanceThreat(caster,arena.sides.near);
     };
@@ -305,7 +306,7 @@ export function playPveRound(a,decision) {
 export function restorePveBattle(dataset,content,checkpoint) {
     const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId);
     if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
-    const a=createPveBattle({dataset,player:checkpoint.player,monsters:checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]],monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion});
+    const a=createPveBattle({dataset,player:checkpoint.player,monsters:checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]],monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion});
     for(const decision of checkpoint.decisions)playPveRound(a,decision);
     return a;
 }

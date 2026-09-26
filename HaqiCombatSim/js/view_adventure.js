@@ -1,3 +1,4 @@
+import {renderLearningMode} from './view_learning_mode.js';
 import {createHeroPicker} from './view_hero_picker.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {heroPortrait} from './hero_renderer.js';
@@ -28,14 +29,17 @@ import { renderDebugEditor } from './view_adventure_debug.js';
 import { renderPetCollection,starterPicker,petPortrait } from './view_adventure_pets.js';
 import { renderShop } from './view_adventure_shop.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
-import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot } from './adventure_core.js';
+import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot,teachingMode } from './adventure_core.js';
 import {catalogGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import * as U from './combat_unit_core.js';
 import { cardTargetKind } from './combat_cards_core.js';
 import { renderEquipment } from './view_adventure_equipment.js';
 import { renderStrengthening } from './view_adventure_strengthening.js';
 import { COLORS } from './adventure_renderer.js';
-import { languageSettings, battleChallengeBar } from './view_language_learning.js';
+import { battleChallengeBar } from './view_language_learning.js';
+import { renderSettings, settingsView } from './view_adventure_settings.js';
+export { settingsView } from './view_adventure_settings.js';
+import { createSettingsControls } from './view_settings_controls.js';
 import { tr, setText, fill } from './locale_runtime.js';
 import { syncLocaleChrome,dialogueLearningLines } from './locale.js';
 export function el(tag,cls,...children) {
@@ -50,6 +54,13 @@ export function el(tag,cls,...children) {
     return n;
 }
 export function button(label,fn,cls='') {const b=el('button',cls,label);b.type='button';b.onclick=fn;return b;}
+// Shared disabled overlay for the mount and bilingual-learning controls.
+function disabledModeMark(){
+    const stop=el('span','mount-emoji-stop');
+    stop.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="#6f6f6f" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="11.3"/><path d="M4 4l16 16"/></svg>';
+    return stop;
+}
+
 const paths={book:'M4 4h6q2 0 2 2q0-2 2-2h6v15h-6q-2 0-2 2q0-2-2-2H4z M12 6v15',cards:'M5 5h12v15H5z M8 2h12v15',bag:'M5 8h14v12H5z M8 8V5a4 4 0 0 1 8 0v3',pet:'M8 13q4-5 8 0q6 7-4 6q-10 1-4-6 M5 6v3 M10 3v4 M15 3v4 M20 6v3',settings:'M12 3v3 M12 18v3 M3 12h3 M18 12h3 M5 5l2 2 M17 17l2 2 M5 19l2-2 M17 7l2-2 M16 12a4 4 0 1 1-8 0a4 4 0 1 1 8 0',map:'M3 5l6-2 6 2 6-2v16l-6 2-6-2-6 2z M9 3v16 M15 5v16',sound:'M4 10h4l5-5v14l-5-5H4z M17 8q5 4 0 8',arrow:'M5 12h14 M13 6l6 6-6 6'};
 paths.gourd='M10 2h4v3c4 1 4 6 1 8 7 3 6 9-3 9S2 16 9 13C6 11 6 6 10 5z M8 13h8 M14 12l5 4';
 paths.dungeon='M3 21V9h4V5h3V3h4v2h3v4h4v12H3 M9 21v-7a3 3 0 0 1 6 0v7 M5 12v2 M19 12v2';
@@ -76,6 +87,8 @@ export function renderEntry(root,assets,stored,cb,error='') {
     root.replaceChildren();root.className='entry-screen entry-wizard';
     const intro=el('div','entry-intro',el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','选一门魔法，遇见你的伙伴。\n从这里，开始一段新的旅程。'));
     intro.append(button(cb.owner?'我的云端旅途':'登录 Keepwork',cb.login||cb.cloud,'secondary cloud-entry-button'));
+    // 首页可直接切换界面语言；控制器切换后整页重绘，无需本视图自行刷新。
+    if(cb.setLocale&&cb.locale)intro.append(el('div','entry-locale',el('span','entry-locale-label','界面语言'),createSettingsControls({el,button}).localeSelector(cb.locale,cb.setLocale)));
     const form=el('form','character-form creation-form');
     root.append(el('div','entry-layout',intro,form));
     function paint() {
@@ -158,8 +171,13 @@ export function objectiveLabel(g,c) {
     if(g.kind==='defeat')return withName('击败{name}', Object.values(c.monsters).find(m=>m.goalId===g.id)?.name||'训练敌人');
     return ({79016:'强化一件装备（点击追踪进入强化）',79019:'喂养你的宠物',79037:'装备翡翠口袋并保存配卡','hatch-pet':'打开出奇蛋，获得宠物','equip-staff':'装备晶石法杖'})[g.id]||'完成导师的指导';
 }
-export function updateHeroHealth(root,save,content) {
-    const bar=root.querySelector('.hero-health');if(!bar)return;
+// 每帧同步教学指针：自动寻路（点过追踪）期间隐藏手指与按钮脉冲，寻路结束由下一次 HUD 渲染重新判定。
+export function syncTeachPointer(root,walking) {
+    const hand=root.querySelector('.teach-pointer');if(!hand)return;
+    hand.hidden=walking;
+    root.querySelector('.track-button.teach-target')?.classList.toggle('teach-walk',walking);
+}
+export function updateHeroHealth(root,save,content) {    const bar=root.querySelector('.hero-health');if(!bar)return;
     const maxHp=specMaxHp(playerSpec(save,content)),hp=Math.max(0,Math.min(maxHp,Math.floor(save.heroHp??maxHp)));
     bar.style.setProperty('--health',`${maxHp>0?hp/maxHp*100:0}%`);
     bar.querySelector('.hero-health-label').textContent=`${hp} / ${maxHp}`;
@@ -227,16 +245,28 @@ function catalogTrackLines(save,c,quest) {
     if(!goals.length)return [{text:'与居民交谈后即可交付。'}];
     return goals.map(goal=>({text:translatedGoal(goal),done:goal.value>=goal.count}));
 }
-function appendTrackerQuest(tracker,entry,save,c,cb) {
+function appendTrackerQuest(tracker,entry,save,c,cb,teach) {
     const chapter=c.quests.find(quest=>quest.id===entry.id),quest=chapter||c.catalogQuests.byId[entry.id];
     const ready=chapter?questReady(save,quest):catalogQuestReady(save,c,quest,catalogStatSnapshot(save,c));
     const state=questState(save,quest.id);
+    // 魔法营地教学模式（2026-09-26 用户约定）：不看等级，身处营地即开启；新手岛整套任务
+    // （未接取、进行中、可交付）都持续用指针引导点击"追踪"，直到该任务完成交付才消失；
+    // 点过之后进入自动寻路（model.autoWalk）期间隐藏。
+    const campQuest=chapter?c.npcs[quest.startNpc]?.zone==='camp':quest.region==='camp';
+    const teachNow=teach.allow&&campQuest&&!state.claimed;
+    if(teachNow)teach.allow=false;
     const statusLabel=chapter?(ready?'可以交付':state.accepted?'进行中':'可接取'):catalogQuestStatus(save,c,quest,catalogStatSnapshot(save,c));
     const marker=el('span',`quest-state ${ready?'ready':state.accepted?'active':'available'}`,ready?'?':'!');marker.setAttribute('aria-hidden','true');
     const questLink=button([marker,el('span','quest-title',quest.title)],()=>cb.panel('quests',{questId:quest.id}),'quest-track-title');
     questLink.title=fill('{status}，点击查看任务详情',{status:statusLabel}).text;questLink.setAttribute('aria-label',fill('{title}，{status}，查看任务详情',{title:quest.title,status:statusLabel}).text);
     const track=button('追踪',()=>cb.track(quest.id,{pin:false}),'track-button');
     track.title='追踪这个任务';
+    if(teachNow){
+        track.classList.add('teach-target');
+        const hand=el('span','teach-pointer','👇');
+        hand.setAttribute('aria-hidden','true');
+        track.append(hand);
+    }
     const card=el('article','tracker-quest',el('h3','',questLink));
     const lines=chapter?chapterTrackLines(save,c,quest):catalogTrackLines(save,c,quest);
     lines.forEach((line,index)=>{
@@ -312,7 +342,10 @@ export function renderHud(root,model,cb) {
         tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，沿路走向出口即可离开。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可在副本菜单暂离。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button(remaining?'寻找下一组':'返回出口',cb.track,'track-button'));
     }else{
         const entries=trackerEntries(save,c);
-        if(entries.length)for(const entry of entries)appendTrackerQuest(tracker,entry,save,c,cb);
+        // 教学模式统一走 adventure_core 的 teachingMode（营地 + 营地任务链未全部交付）；
+        // 指针挂在第一条未交付的营地追踪任务上，自动寻路（model.autoWalk）期间不打扰。
+        const teach={allow:!!teachingMode(save,c)};
+        if(entries.length)for(const entry of entries)appendTrackerQuest(tracker,entry,save,c,cb,teach);
         else tracker.append(el('h3','','新的魔法旅程'),el('p','',save.visitedTown?'你已完成第一章。和镇上的居民聊聊，或到郊外练习魔法吧。':'你通过了毕业考核！前往营地南边的传送阵，探索哈奇小镇。'),button('前往传送阵',cb.track,'track-button'));
     }
     root.append(tracker);
@@ -321,13 +354,14 @@ export function renderHud(root,model,cb) {
     root.append(nav);
     // 坐骑显隐开关：仅漫游场景生效，战斗中恒显示；没有坐骑时不渲染按钮。
     if(save.mountId){
-        // 图集没有坐骑图标：改用与坐骑名称匹配的 emoji；隐藏时叠半透明 SVG 禁止标志（圆圈+斜杠），透出底下的 emoji。
-        const mountMark=el('span','mount-emoji',mountEmoji(c.mountByItem?.[save.mountId]?.name||'抱抱龙'));
+        // 图标用当前坐骑的形象图（c.items 的图集裁剪，同装备栏/宠物栏做法）；无形象数据时回落名称 emoji。
+        // 隐藏时叠半透明灰色 SVG 禁止标志（圆圈+斜杠与按钮外圈重合）。
+        const mountItem=c.items[save.mountId];
+        const mountMark=el('span','mount-mark');
         mountMark.setAttribute('aria-hidden','true');
+        mountMark.append(mountItem?.art?art(assets,mountItem.art,34,34):el('span','mount-emoji',mountEmoji(c.mountByItem?.[save.mountId]?.name)));
         if(save.mountHidden){
-            const stop=el('span','mount-emoji-stop');
-            stop.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M5.3 5.3l13.4 13.4"/></svg>';
-            mountMark.append(stop);
+            mountMark.append(disabledModeMark());
         }
         const mountToggle=button([mountMark],()=>cb.mountToggle(),'mount-toggle');
         mountToggle.title=tr(save.mountHidden?'在场景中显示坐骑':'在场景中隐藏坐骑');
@@ -340,6 +374,18 @@ export function renderHud(root,model,cb) {
         mountToggle.style.left=`${status.offsetLeft+(locale&&!locale.hidden?44:0)}px`;
         mountToggle.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
     }
+    const learningEnabled=save.languageLearning?.enabled===true;
+    const learningMark=el('span','mount-mark learning-chat-mark');
+    learningMark.setAttribute('aria-hidden','true');
+    learningMark.append(el('span','learning-chat-emoji','💬'));
+    if(!learningEnabled)learningMark.append(disabledModeMark());
+    const learn=button([learningMark],()=>cb.panel('learning-mode'),'mount-toggle learning-mode-launch');
+    learn.title=tr(learningEnabled?'双语学习 · 已开启':'双语学习 · 已关闭');
+    learn.setAttribute('aria-label',learn.title);
+    learn.setAttribute('aria-pressed',String(learningEnabled));root.append(learn);
+    const localeControl=document.querySelector('.locale-launch');
+    learn.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)+(save.mountId?44:0)}px`;
+    learn.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
 }
 function modal(root,title,subtitle,cb,wide=false) {
@@ -377,7 +423,7 @@ export function renderPanel(root,kind,model,cb) {
         renderStrengthening(body,model,cb,{el,button,art});
         return;
     }
-    const titles={'npc-services':['居民商店与课程',''],checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','全岛任务'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
+    const titles={'learning-mode':['双语学习','遇见居民 · 开口交流'],'npc-services':['居民商店与课程',''],checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','全岛任务'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
     const body=modal(root,...titles[kind],cb,['deck','quests','inventory','equipment','pet','shop','map'].includes(kind)||kind==='debug');
     if(kind==='checkin'){
         body.closest('.modal').classList.add('checkin-modal');
@@ -416,18 +462,9 @@ export function renderPanel(root,kind,model,cb) {
         else body.append(el('h3','center','等待与你相遇'),el('p','center muted','完成青龙的强化指导，即可获得一枚出奇蛋。'),ownsEgg(save)?button('打开出奇蛋',()=>cb.action({type:'hatch'}),'primary centered'):el('p','center','继续你的冒险吧。'));
     }
     if(kind==='debug'){body.closest('.modal').classList.add('debug-modal');renderDebugEditor(body,model,cb,{el,button});}
+    if(kind==='learning-mode')renderLearningMode(body,model,cb,{el,button});
     if(kind==='settings') {
-        body.append(button('切换 / 新建角色',cb.roles,'primary settings-button'));
-        body.append(button('属性编辑器 · 调试',()=>cb.panel('debug'),'secondary settings-button'));
-        body.append(button(model.soundEnabled?'技能音效：开启':'技能音效：关闭',cb.sound,'secondary settings-button'));
-        body.append(el('p','muted','本地进度自动保存。登录后，升级、重要操作和每十分钟自动同步云端；网络失败会重试。'));
-        body.append(button('云端旅途 · 跨设备继续冒险',cb.cloud,'primary settings-button'));
-        body.append(el('p','','进度自动保存在当前浏览器。登录 Keepwork 后可同步角色，在其他设备继续旅程。'),button(save.music?'背景音乐：开启':'背景音乐：关闭',cb.music,'secondary settings-button'));
-        body.append(button('回到开始画面',cb.title,'secondary settings-button'),el('hr'));
-        languageSettings(body,model,cb,{el,button});
-        body.append(el('h3','','关于这段旅程'),el('p','muted','本章保留魔法哈奇 kids 原版角色、任务对白和卡牌数据。地图、升级节奏和毕业后的镇区是适合单人游玩的二维改编。'),el('details','source-details',el('summary','','查看改编说明'),...c.adaptations.map(t=>el('p','muted',t))),el('a','sim-link','打开战斗模拟器'));
-        body.querySelector('a').href='HaqiCombatSim.html';
-        const effectsLink=el('a','sim-link','技能特效工坊');effectsLink.href='HaqiEffects.html';effectsLink.target='_blank';effectsLink.rel='noopener';body.append(effectsLink);
+        renderSettings(body,model,cb,{el,button});
     }
     if(kind==='map') {
         renderWorldMap(body,model,cb,{el,button});
@@ -476,7 +513,7 @@ export function renderDialogue(root,model,dialog,cb) {
     box.append(portrait,content,close);root.append(box);
     const dialogueText=content.querySelector('.dialogue-text');
     bindDialogue(root,box,dialogueText,hint,content.querySelector('button.primary')||content.querySelector('button'),{
-        lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),readAloud:cb.readDialogue,mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,
+        lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),readAloud:cb.readDialogue,mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,close:cb.close,
     });
 }
 // 战斗卡牌说明的展开偏好只存本机（localStorage），默认折叠。
@@ -680,6 +717,7 @@ export function animatePlayedCard(root,card,duration) {
 }
 export function eventLabel(e,battle,assets) {
     const caster=battle.unitsById[e.caster]?.name||'',target=battle.unitsById[e.target]?.name||'',card=assets.dataset.cards[e.card]?.name||'';
+    if(e.label==='reflection'&&['cast','damage'].includes(e.type))return fill(e.type==='cast'?'{caster} 的魔镜反弹 {card} → {target}':'{target} 受到魔镜反弹的 {amount} 点伤害',{caster,target,card,amount:e.amount}).text;
     if(e.type==='cast')return fill('{caster} → {target} · {card}',{caster,target,card}).text;
     if(e.type==='damage'||e.type==='dot')return fill('{target} 受到 {amount} 点伤害',{target,amount:e.amount}).text;
     if(e.type==='heal'||e.type==='hot')return fill('{target} 恢复 {amount} 点生命',{target,amount:e.amount}).text;

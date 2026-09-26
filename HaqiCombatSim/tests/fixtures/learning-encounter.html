@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../">
+<title>偶遇式双语学习 · 隔离验收</title>
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/language_adventure.css">
+<style>body{overflow:auto}main{padding:12px}main button{margin:4px}#scene{width:100%;height:55vh;display:block}#status{white-space:pre-wrap}#phone{width:390px;height:844px;border:1px solid #777;max-width:100%}.fixture-mode{position:fixed;inset:0;z-index:1000;background:#fff8e8;overflow:auto;padding:18px;box-sizing:border-box}</style></head>
+<body class="haqi-app"><main><h1>偶遇式双语学习 · 隔离验收</h1><p>只用内存角色；模拟识别不代表真人语音通过。live=1 使用真实麦克风，phone=1 显示390px内嵌视口。</p>
+<div id="controls"></div><p id="status">加载中…</p><canvas id="scene"></canvas><div id="mode" hidden></div></main>
+<script type="module">
+const params=new URLSearchParams(location.search);
+if(params.has('phone')){
+    document.querySelector('main').replaceChildren(Object.assign(document.createElement('iframe'),{id:'phone',src:'tests/fixtures/learning-encounter.html'+(params.has('live')?'?live=1':'')}));
+}else{
+    const [{loadResources},{createAdventure},{createWorld,findPath,followPath,distance,WALK_SPEED},{createRenderer},{createLanguageAdventure},{recordLearningCompletion,learningParams},{renderLearningMode},V,{loadKeepwork}]=await Promise.all([
+        import('./js/adventure_assets.js'),import('./js/adventure_core.js'),import('./js/adventure_world_core.js'),import('./js/adventure_renderer.js'),import('./js/language_adventure.js'),import('./js/language_adventure_core.js'),import('./js/view_learning_mode.js'),import('./js/view_adventure.js'),import('./js/adventure_cloud.js')]);
+    const assets=await loadResources(()=>{}),save=createAdventure(assets.content),world=createWorld(save.zone,assets.content,save),canvas=document.getElementById('scene'),renderer=createRenderer(canvas,assets);
+    save.languageLearning={...save.languageLearning,enabled:true,selectionConfirmed:true};
+    const state={save,content:assets.content,npcs:world.npcs,stage:'world',role:'fixture',identity:'fixture'},status=document.getElementById('status'),controls=document.getElementById('controls'),mode=document.getElementById('mode');
+    let path=[],pending=null,transcript='',last=0;
+    const input=document.createElement('input');input.placeholder='模拟识别结果';input.value='Hello';
+    const mock={start:async()=>{},finish:async()=>input.value,cancel:async()=>{},speak:async()=>{},judge:async()=>({correct:false,patternMet:false,quote:'',branch:'retry',feedback:'请使用示范或配置变体测试。'})};
+    const app=createLanguageAdventure({getState:()=>state,...(!params.has('live')?{voice:mock}:{}),notify:text=>status.textContent=text,useReward:kind=>status.textContent='用途入口：'+kind,saveSettings:next=>Object.assign(save.languageLearning,next),commit:c=>recordLearningCompletion(save,assets.content,c,{learningCompletion:c})});
+    const add=(name,run)=>controls.append(V.button(name,run,'secondary'));
+    add('双语学习设置',()=>{app.close();pending=null;path=[];mode.hidden=false;mode.className='fixture-mode';mode.replaceChildren(V.button('取消',()=>{mode.hidden=true;state.busy=false;},'secondary'));state.busy=true;renderLearningMode(mode,{save},{applyLearningMode:d=>{save.locale=d.locale;Object.assign(save.languageLearning,d,{enabled:true,selectionConfirmed:true});mode.hidden=true;state.busy=false;},disableLearning:()=>{save.languageLearning.enabled=false;mode.hidden=true;state.busy=false;},panel:()=>{}},{el:V.el,button:V.button});});
+    for(const [id,name] of [[36211,'青龙'],[36202,'杰西卡'],[36205,'船长']])add('靠近'+name,()=>{app.close();pending=null;path=[];const n=world.npcs.find(n=>n.id===id);save.position={x:n.x+120,y:n.y};});
+    add('走远',()=>{app.close();pending=null;path=[];save.position={x:world.npcs[0].x+500,y:world.npcs[0].y+500};});
+    add('学中文',()=>{app.close();save.languageLearning.target='zh-CN';save.languageLearning.native='en';});
+    add('学英语',()=>{app.close();save.languageLearning.target='en';save.languageLearning.native='zh-CN';});
+    add('解锁后续主线情境',()=>{for(const id of [63000,63006,63008,63009,63010])save.quests[id]={claimed:true};});
+    if(params.has('live'))add('登录语音服务',async()=>{const sdk=await loadKeepwork();await sdk.showLoginWindow({title:'语音验收登录'});});else controls.append(input);
+    canvas.onclick=async e=>{
+        if(app.greeting){app.enterGreeting();return;}
+        const invite=app.invitation;if(!invite)return;
+        const npc=world.npcs.find(n=>n.instanceId===invite.instanceId);app.close();pending=await app.prepare(npc);if(pending)path=findPath(world,save.position,npc);
+    };
+    function frame(now){
+        const dt=Math.min(.05,(now-last)/1000||0);last=now;app.tick(now);
+        if(pending&&app.preparedValid(pending)){
+            if(distance(save.position,pending.npc)<=learningParams(assets.content).interactionRange){path=[];app.greet(pending,now);pending=null;}
+            else if(path.length){const next=followPath(world,save.position,path,WALK_SPEED*dt);save.position=next.position;path=next.path;}
+            else{status.textContent='路径不可达，请重新选择附近居民。';pending=null;}
+        }
+        renderer.render(world,save,now,{path,moving:!!path.length,companionBubble:app.bubble,learningGreeting:app.greeting});requestAnimationFrame(frame);
+    }
+    status.textContent='选择靠近一个居民；画布上的点点点邀请出现后，点击画布走近并开始交流。';requestAnimationFrame(frame);
+}
+</script></body></html>

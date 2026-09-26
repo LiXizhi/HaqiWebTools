@@ -12,6 +12,7 @@
     "js/adventure_app.js",
     "js/locale.js",
     "js/adventure_core.js",
+    "js/adventure_hero_customize_core.js",
     "js/adventure_cast_feedback_core.js",
     "js/adventure_rewards_core.js",
     "js/adventure_checkin_core.js",

@@ -9,6 +9,7 @@ test('all hosts default to permanent Keepwork CDN; local source mode is explicit
     assert.equal(assetMode('game.keepwork.com'),'cdn');assert.equal(assetMode('192.168.1.8'),'cdn');
     for(const host of ['localhost','127.0.0.1','[::1]'])assert.equal(assetMode(host),'cdn');
     assert.equal(assetMode('localhost','?assets=cdn'),'cdn');assert.equal(assetMode('192.168.1.8','?assets=local'),'local');assert.throws(()=>assetMode('localhost','?assets=wrong'));
+    assert.equal(assetMode('game.keepwork.com','','local'),'local');assert.equal(assetMode('game.keepwork.com','?assets=cdn','local'),'cdn');assert.equal(assetMode('localhost','','cdn'),'cdn');
 });
 test('asset policy rejects temporary/offsite URLs, traversal and missing required references',()=>{
     const media=load('media'),source=load('assets');assert.equal(validateMediaManifest(media,source,'cdn'),92);

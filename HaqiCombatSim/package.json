@@ -4,9 +4,16 @@
     "version": "0.1.0",
     "description": "魔法哈奇 2D 网页战斗模拟器：无 UI 战斗引擎 + 人机对战 + 批量胜率模拟 + 数值建议",
     "type": "module",
+    "main": "shell/electron/main.js",
     "scripts": {
         "dev": "vite --host 127.0.0.1 --open /Haqi.html",
         "build": "npm run check:maps && node scripts/package_island_encounters.mjs --check && vite build",
+        "build:app": "npm run check:maps && node scripts/package_island_encounters.mjs --check && node scripts/build_app.mjs",
+        "desktop": "electron shell/electron/main.js",
+        "build:desktop": "npm run build:app && node scripts/build_desktop.mjs",
+        "build:steam": "npm run build:desktop && node scripts/stage_steam_depot.mjs",
+        "build:android": "npm run build:app && cap sync android",
+        "build:ios": "npm run build:app && cap sync ios",
         "prepare:island-encounters": "node scripts/package_island_encounters.mjs",
         "preview": "vite preview --host 127.0.0.1 --open /Haqi.html",
         "plan:release": "npm run build && node uploadRelease.mjs --dry-run",
@@ -38,6 +45,12 @@
         "node": "^20.19.0 || >=22.12.0"
     },
     "devDependencies": {
+        "@capacitor/android": "^8.5.2",
+        "@capacitor/cli": "^8.5.2",
+        "@capacitor/core": "^8.5.2",
+        "@capacitor/ios": "^8.5.2",
+        "electron": "^44.4.5",
+        "electron-builder": "^26.15.3",
         "vite": "7.3.6",
         "ws": "^8.21.3"
     }

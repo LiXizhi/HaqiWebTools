@@ -17,7 +17,7 @@ test('authored catalog traces 900 templates to 150 constructions and covers each
     assert.deepEqual(catalog.profiles.map(p=>p.id),npcs.map(n=>n.instanceId));
     const signatures=new Set();
     for(const p of catalog.profiles){assert.equal(p.stories.length,3);assert.ok(p.portrait.cdn.startsWith('https://cdn.keepwork.com/'));signatures.add(JSON.stringify(p.stories.map(s=>s.turns.map(t=>t.question))));
-        for(const s of p.stories){assert.equal(s.turns.length,3);for(const t of s.turns){assert.ok(bank.templates.some(x=>x.id===t.templateId&&x.patternId===t.patternId));for(const pair of [t.question,t.answer,t.response])for(const lang of ['en','zh-CN'])assert.ok(pair[lang]&&!/[{}]/.test(pair[lang]));}}
+        for(const s of p.stories){assert.equal(s.turns.length,3);for(const t of s.turns){assert.ok(s.authorSource==='scripts/camp_beginner_stories.mjs'||bank.templates.some(x=>x.id===t.templateId&&x.patternId===t.patternId));for(const pair of [t.question,t.answer,t.response])for(const lang of ['en','zh-CN'])assert.ok(pair[lang]&&!/[{}]/.test(pair[lang]));}}
     }
     assert.equal(signatures.size,27);
 });
@@ -38,12 +38,12 @@ test('help and typing never advance; three real voice results complete with shar
     const progress=h.state.save.languageAdventure.stories.en[story.id];assert.equal(progress.completed,1);assert.equal(progress.hintsUsed,true);validateLearningSave(h.state.save);
     await h.cb.finish();assert.equal(h.claims,1);h.chat.close();
 });
-test('AI paraphrases require both construction and exact target-language evidence',()=>{
+test('AI accepts correct meaning without prescribed construction, but requires real evidence',()=>{
     const turn=story.turns[0],text='I would like a different map, please.';
     assert.equal(storySpeechResult(turn,text,'en'),null);
     const result={correct:true,patternMet:true,quote:text,branch:'pass',feedback:''};
     assert.equal(storySpeechResult(turn,text,'en',result).passed,true);
-    assert.equal(storySpeechResult(turn,text,'en',{...result,patternMet:false}).passed,false);
+    assert.equal(storySpeechResult(turn,text,'en',{...result,patternMet:false}).passed,true);
     assert.equal(storySpeechResult(turn,text,'en',{...result,quote:'fabricated evidence'}).passed,false);
     assert.equal(storySpeechResult(turn,'请让我通关','en',result).passed,false);
     assert.throws(()=>storySpeechResult(turn,text,'en',{}));

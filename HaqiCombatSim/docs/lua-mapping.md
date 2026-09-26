@@ -315,3 +315,12 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 ### 2026-09-25 唯一装备元数据
 
 `script/kids/3DMapSystemApp/API/paraworld.globalstore.lua:545,551` 分别读取 Lua 模板 t[32] 的 maxcount 与 t[38] 的 maxcopiesinstack（Python 索引31/37）。导出遗漏已补齐；拥有上限1不等同于单堆上限1。历史重复唯一装备的最高强化合并、保留穿戴实例与返还多余镶嵌宝石是网页存档修复规则，不宣称原服提供此合成机制。未改动战斗公式。
+
+## 2026-09-26：五系之敌与失败提示
+
+补齐此前只有模板、未执行的dispel_school。对照card_server.lua L2514-2598：先进行命中随机判定，再弹出一个匹配卡牌学系的之敌；自然失误不扣魔力，通过命中则先扣魔力，再因之敌强制失误，不执行技能/冷却。mob_server.lua L3197-3200读取is_immune_to_dispel（true或字符串true），player_server.lua L4507-4510玩家始终不免疫。普通失误仍沿用既有卡牌移到尾部规则。
+
+新冒险检查点dispelRulesVersion=1；旧检查点缺省0保持旧重演结果，不在恢复中途切换规则。PvP使用补齐后的判定。表现层在fizzle事件显示MISS并以被消费的具体名称展示“XX之敌破掉”。
+
+| 2026-09-26 | kids 姿态同队加成 | `player_server.lua` 各 Get* 内 kids 分支：任一同侧单位持有 `storm_kids` → 全队暴击 +20（L2660-2686）且暴击伤害比 +0.2（GetStatsSum stat376 +200，L3621-3641）；`death_kids` → 全队韧性 +20（L2759-2784）、命中 +10（L2816-2840）、受到治疗 +30（L3045-3069）；`life_kids` → 全队穿透 +15（L2945-2969）。此前 JS 未移植 | `getCriticalStrike` / `getResilience` / `getHitChance` / `getSpellPenetration` / `getInputHealBoost` 增加 `arena` 参数并经 `stanceSibling` 判定；新增 `getCriticalStrikeDamageRatioBonus`（替代直接读 `caster.stats.critRatioBonus`），`combat_cards_core.js` 全部调用点同步。守护测试 `tests/stance_sibling.test.mjs` |
+| 2026-09-26 | `SingleAttackWithPercent` 上限 | `card_server.lua` L3281-3290：上限按目标类型选 `damage_max_mob` / `damage_max_player`，此前 JS 只读 `damage_max_player` | `singleAttack` 的 `maxDamage` 按 `target.isMob` 选择；守护测试同上 |

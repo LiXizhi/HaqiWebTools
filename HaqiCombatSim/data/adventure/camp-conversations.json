@@ -518,222 +518,300 @@
       },
       "stories": [
         {
-          "id": "camp:2:36202.story1",
-          "title": "宠物照顾计划",
-          "context": "我和宠物打交道。来聊聊怎样照顾一位新伙伴。",
+          "id": "camp:2:36202.beginner1",
+          "title": "认识宠物",
+          "context": "和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。",
+          "difficulty": "pre-A1",
+          "mode": "basic",
           "rewardGroup": "preference",
+          "requiresQuest": null,
+          "authorSource": "scripts/camp_beginner_stories.mjs",
           "opening": {
-            "en": "I work with pets. Let us talk about looking after a new friend.",
-            "zh-CN": "我和宠物打交道。来聊聊怎样照顾一位新伙伴。"
+            "en": "Do you like pets?",
+            "zh-CN": "你喜欢宠物吗？"
           },
           "turns": [
             {
-              "id": "camp:2:36202.1.1",
-              "templateId": "p002.pet",
-              "patternId": "p002",
-              "pattern": "I can see {thing}.",
-              "hint": "描述所见：围绕“照顾宠物”回答。",
               "question": {
-                "en": "Thinking about caring for pets, what can you see?",
-                "zh-CN": "说到照顾宠物，你能看见什么？"
+                "en": "Do you like pets?",
+                "zh-CN": "你喜欢宠物吗？"
               },
               "answer": {
-                "en": "I can see a pet guide.",
-                "zh-CN": "我能看见一本宠物指南。"
+                "en": "I like pets.",
+                "zh-CN": "我喜欢宠物。"
               },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "Yes",
+                  "Yes I do",
+                  "No",
+                  "I do not like pets"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "We can talk more about caring for pets.",
-                "zh-CN": "我们可以继续聊聊照顾宠物。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:2:36202.beginner1.1",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:2:36202.1.2",
-              "templateId": "p024.pet",
-              "patternId": "p024",
-              "pattern": "I prefer {activity}.",
-              "hint": "表达偏好：围绕“照顾宠物”回答。",
               "question": {
-                "en": "Thinking about caring for pets, what do you prefer doing?",
-                "zh-CN": "说到照顾宠物，你更喜欢做什么？"
+                "en": "A dragon or a rabbit?",
+                "zh-CN": "龙还是兔子？"
               },
               "answer": {
-                "en": "I prefer caring for pets.",
-                "zh-CN": "我更喜欢照顾宠物。"
+                "en": "I like rabbits.",
+                "zh-CN": "我喜欢兔子。"
               },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "A rabbit",
+                  "Rabbits",
+                  "A dragon",
+                  "I like dragons"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "That is a clear idea for caring for pets.",
-                "zh-CN": "这是关于照顾宠物的一个清楚的想法。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:2:36202.beginner1.2",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:2:36202.1.3",
-              "templateId": "p093.pet",
-              "patternId": "p093",
-              "pattern": "Do you think it is {quality}?",
-              "hint": "征求评价：围绕“照顾宠物”回答。",
               "question": {
-                "en": "Thinking about caring for pets, how would you ask for my opinion?",
-                "zh-CN": "说到照顾宠物，你会怎样征求我的意见？"
+                "en": "Big or small?",
+                "zh-CN": "大的还是小的？"
               },
               "answer": {
-                "en": "Do you think it is rewarding?",
-                "zh-CN": "你觉得这很有成就感吗？"
+                "en": "I like small pets.",
+                "zh-CN": "我喜欢小宠物。"
               },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "Small",
+                  "Big",
+                  "I like big pets"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "Now you can tell someone about caring for pets.",
-                "zh-CN": "现在你可以向别人说说照顾宠物了。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:2:36202.beginner1.3",
+              "patternId": "beginner-authored"
             }
           ],
           "ending": {
-            "en": "Thank you! I enjoyed our talk about caring for pets.",
-            "zh-CN": "谢谢！和你聊照顾宠物很开心。"
+            "en": "Thank you! See you!",
+            "zh-CN": "谢谢你！再见！"
           }
         },
         {
-          "id": "camp:2:36202.story2",
-          "title": "杰西卡：一起商量目的地",
-          "context": "我们设想在导师广场照顾宠物。先一起商量计划。",
+          "id": "camp:2:36202.beginner2",
+          "title": "照顾新伙伴",
+          "context": "和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。",
+          "difficulty": "pre-A1",
+          "mode": "basic",
           "rewardGroup": "location",
+          "requiresQuest": 63008,
+          "authorSource": "scripts/camp_beginner_stories.mjs",
           "opening": {
-            "en": "Let us imagine caring for pets at the academy square. We are only making a plan.",
-            "zh-CN": "我们设想在导师广场照顾宠物。先一起商量计划。"
+            "en": "Want to learn about food?",
+            "zh-CN": "想了解食物吗？"
           },
           "turns": [
             {
-              "id": "camp:2:36202.2.1",
-              "templateId": "p062.pet",
-              "patternId": "p062",
-              "pattern": "I would like to go to {place}.",
-              "hint": "说明目的地：围绕“照顾宠物”回答。",
               "question": {
-                "en": "Where would you like to go to care for a pet?",
-                "zh-CN": "你想去哪里照顾一只宠物？"
+                "en": "Want to learn about food?",
+                "zh-CN": "想了解食物吗？"
               },
               "answer": {
-                "en": "I would like to go to the academy square.",
-                "zh-CN": "我想去导师广场。"
+                "en": "Yes, please.",
+                "zh-CN": "好的，谢谢。"
               },
+              "pattern": "I want …",
+              "variants": {
+                "en": [
+                  "Yes",
+                  "No",
+                  "Not now"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "We can talk more about caring for pets.",
-                "zh-CN": "我们可以继续聊聊照顾宠物。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:2:36202.beginner2.1",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:2:36202.2.2",
-              "templateId": "p044.pet",
-              "patternId": "p044",
-              "pattern": "Can we {action}?",
-              "hint": "询问可能：围绕“照顾宠物”回答。",
               "question": {
-                "en": "How would you ask if we can care for a pet there?",
-                "zh-CN": "你会怎样问我们能不能在那里照顾一只宠物？"
+                "en": "Food or water?",
+                "zh-CN": "食物还是水？"
               },
               "answer": {
-                "en": "Can we care for a pet?",
-                "zh-CN": "我们能照顾一只宠物吗？"
+                "en": "I want food.",
+                "zh-CN": "我想要食物。"
               },
+              "pattern": "I want …",
+              "variants": {
+                "en": [
+                  "Food",
+                  "Water",
+                  "I want water"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "That is a clear idea for caring for pets.",
-                "zh-CN": "这是关于照顾宠物的一个清楚的想法。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:2:36202.beginner2.2",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:2:36202.2.3",
-              "templateId": "p091.pet",
-              "patternId": "p091",
-              "pattern": "Because it is {quality}.",
-              "hint": "说明原因：围绕“照顾宠物”回答。",
               "question": {
-                "en": "Why are you interested in caring for pets?",
-                "zh-CN": "你为什么对照顾宠物感兴趣？"
+                "en": "Want help?",
+                "zh-CN": "想要帮助吗？"
               },
               "answer": {
-                "en": "Because it is rewarding.",
-                "zh-CN": "因为这很有成就感。"
+                "en": "I want help.",
+                "zh-CN": "我想要帮助。"
               },
+              "pattern": "I want …",
+              "variants": {
+                "en": [
+                  "Yes please",
+                  "Help me please",
+                  "No thanks"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "Now you can tell someone about caring for pets.",
-                "zh-CN": "现在你可以向别人说说照顾宠物了。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:2:36202.beginner2.3",
+              "patternId": "beginner-authored"
             }
           ],
           "ending": {
-            "en": "Thank you! I enjoyed our talk about caring for pets.",
-            "zh-CN": "谢谢！和你聊照顾宠物很开心。"
+            "en": "Thank you! See you!",
+            "zh-CN": "谢谢你！再见！"
           }
         },
         {
-          "id": "camp:2:36202.story3",
-          "title": "杰西卡：开口请求帮助",
-          "context": "想要照顾一只宠物时，可以怎样请求帮助？我们练习一下。",
+          "id": "camp:2:36202.beginner3",
+          "title": "聊聊伙伴",
+          "context": "和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。",
+          "difficulty": "pre-A1",
+          "mode": "basic",
           "rewardGroup": "help",
+          "requiresQuest": 63009,
+          "requiresPet": true,
+          "authorSource": "scripts/camp_beginner_stories.mjs",
           "opening": {
-            "en": "Let us practise how to ask for help when you want to care for a pet.",
-            "zh-CN": "想要照顾一只宠物时，可以怎样请求帮助？我们练习一下。"
+            "en": "Do you like your pet?",
+            "zh-CN": "你喜欢你的宠物吗？"
           },
           "turns": [
             {
-              "id": "camp:2:36202.3.1",
-              "templateId": "p031.pet",
-              "patternId": "p031",
-              "pattern": "I want to {action}.",
-              "hint": "表达愿望：围绕“照顾宠物”回答。",
               "question": {
-                "en": "After our talk about caring for pets, what do you want to do?",
-                "zh-CN": "聊过照顾宠物之后，你想做什么？"
+                "en": "Do you like your pet?",
+                "zh-CN": "你喜欢你的宠物吗？"
               },
               "answer": {
-                "en": "I want to care for a pet.",
-                "zh-CN": "我想照顾一只宠物。"
+                "en": "I like my pet.",
+                "zh-CN": "我喜欢我的宠物。"
               },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "Yes",
+                  "Yes I do",
+                  "No"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "We can talk more about caring for pets.",
-                "zh-CN": "我们可以继续聊聊照顾宠物。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:2:36202.beginner3.1",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:2:36202.3.2",
-              "templateId": "p040.pet",
-              "patternId": "p040",
-              "pattern": "Please teach me how to {action}.",
-              "hint": "请求教学：围绕“照顾宠物”回答。",
               "question": {
-                "en": "If you wanted to care for a pet, what would you ask me to teach you?",
-                "zh-CN": "如果想照顾一只宠物，你会请我教你什么？"
+                "en": "What do you like?",
+                "zh-CN": "你喜欢什么？"
               },
               "answer": {
-                "en": "Please teach me how to care for a pet.",
-                "zh-CN": "请教我怎样照顾一只宠物。"
+                "en": "I like rabbits.",
+                "zh-CN": "我喜欢兔子。"
               },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "Rabbits",
+                  "Dragons",
+                  "I like dragons"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "That is a clear idea for caring for pets.",
-                "zh-CN": "这是关于照顾宠物的一个清楚的想法。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:2:36202.beginner3.2",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:2:36202.3.3",
-              "templateId": "p060.pet",
-              "patternId": "p060",
-              "pattern": "I would like to {action} again.",
-              "hint": "重新尝试：围绕“照顾宠物”回答。",
               "question": {
-                "en": "You have had a first try at caring for pets. What would you like to do again?",
-                "zh-CN": "设想你初次尝试了照顾宠物。你还想再做什么？"
+                "en": "Do you like small pets?",
+                "zh-CN": "你喜欢小宠物吗？"
               },
               "answer": {
-                "en": "I would like to care for a pet again.",
-                "zh-CN": "我想再照顾一只宠物一次。"
+                "en": "Yes!",
+                "zh-CN": "喜欢！"
               },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "Yes I do",
+                  "No",
+                  "I like big pets"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "Now you can tell someone about caring for pets.",
-                "zh-CN": "现在你可以向别人说说照顾宠物了。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:2:36202.beginner3.3",
+              "patternId": "beginner-authored"
             }
           ],
           "ending": {
-            "en": "Thank you! I enjoyed our talk about caring for pets.",
-            "zh-CN": "谢谢！和你聊照顾宠物很开心。"
+            "en": "Thank you! See you!",
+            "zh-CN": "谢谢你！再见！"
           }
         }
       ]
@@ -1238,13 +1316,13 @@
         "description": "小哈奇,我是法斯特船长。当你成长到10级时，你就可以去火鸟岛冒险了。",
         "active": true,
         "position": [
-          1000,
-          1440
+          1084.8,
+          1372
         ],
         "nearby": {
           "id": "gate",
           "name": "营地传送门",
-          "distance": 70
+          "distance": 85
         }
       },
       "portrait": {
@@ -1253,222 +1331,297 @@
       },
       "stories": [
         {
-          "id": "camp:5:36205.story1",
-          "title": "船长的旅行邀请",
-          "context": "我是法斯特船长。我们先商量一次旅行吧。",
-          "rewardGroup": "preference",
-          "opening": {
-            "en": "I am Captain Foster. Let us plan a trip before we set off.",
-            "zh-CN": "我是法斯特船长。我们先商量一次旅行吧。"
-          },
-          "turns": [
-            {
-              "id": "camp:5:36205.1.1",
-              "templateId": "p005.travel",
-              "patternId": "p005",
-              "pattern": "I would like {thing}, please.",
-              "hint": "礼貌索取：围绕“游览岛屿”回答。",
-              "question": {
-                "en": "Thinking about visiting islands, what would you like?",
-                "zh-CN": "说到游览岛屿，你想要什么？"
-              },
-              "answer": {
-                "en": "I would like an island map, please.",
-                "zh-CN": "我想要一张岛屿地图，谢谢。"
-              },
-              "response": {
-                "en": "We can talk more about visiting islands.",
-                "zh-CN": "我们可以继续聊聊游览岛屿。"
-              }
-            },
-            {
-              "id": "camp:5:36205.1.2",
-              "templateId": "p022.travel",
-              "patternId": "p022",
-              "pattern": "I love {activity}.",
-              "hint": "表达热爱：围绕“游览岛屿”回答。",
-              "question": {
-                "en": "Thinking about visiting islands, what do you love doing?",
-                "zh-CN": "说到游览岛屿，你热爱做什么？"
-              },
-              "answer": {
-                "en": "I love visiting islands.",
-                "zh-CN": "我热爱游览岛屿。"
-              },
-              "response": {
-                "en": "That is a clear idea for visiting islands.",
-                "zh-CN": "这是关于游览岛屿的一个清楚的想法。"
-              }
-            },
-            {
-              "id": "camp:5:36205.1.3",
-              "templateId": "p091.travel",
-              "patternId": "p091",
-              "pattern": "Because it is {quality}.",
-              "hint": "说明原因：围绕“游览岛屿”回答。",
-              "question": {
-                "en": "Why are you interested in visiting islands?",
-                "zh-CN": "你为什么对游览岛屿感兴趣？"
-              },
-              "answer": {
-                "en": "Because it is exciting.",
-                "zh-CN": "因为这很令人兴奋。"
-              },
-              "response": {
-                "en": "Now you can tell someone about visiting islands.",
-                "zh-CN": "现在你可以向别人说说游览岛屿了。"
-              }
-            }
-          ],
-          "ending": {
-            "en": "Thank you! I enjoyed our talk about visiting islands.",
-            "zh-CN": "谢谢！和你聊游览岛屿很开心。"
-          }
-        },
-        {
-          "id": "camp:5:36205.story2",
-          "title": "法斯特船长：一起商量目的地",
-          "context": "我们设想在营地传送门游览岛屿。先一起商量计划。",
-          "rewardGroup": "location",
-          "opening": {
-            "en": "Let us imagine visiting islands at the camp gate. We are only making a plan.",
-            "zh-CN": "我们设想在营地传送门游览岛屿。先一起商量计划。"
-          },
-          "turns": [
-            {
-              "id": "camp:5:36205.2.1",
-              "templateId": "p062.travel",
-              "patternId": "p062",
-              "pattern": "I would like to go to {place}.",
-              "hint": "说明目的地：围绕“游览岛屿”回答。",
-              "question": {
-                "en": "Where would you like to go to plan an island trip?",
-                "zh-CN": "你想去哪里计划一次岛屿旅行？"
-              },
-              "answer": {
-                "en": "I would like to go to the camp gate.",
-                "zh-CN": "我想去营地传送门。"
-              },
-              "response": {
-                "en": "We can talk more about visiting islands.",
-                "zh-CN": "我们可以继续聊聊游览岛屿。"
-              }
-            },
-            {
-              "id": "camp:5:36205.2.2",
-              "templateId": "p044.travel",
-              "patternId": "p044",
-              "pattern": "Can we {action}?",
-              "hint": "询问可能：围绕“游览岛屿”回答。",
-              "question": {
-                "en": "How would you ask if we can plan an island trip there?",
-                "zh-CN": "你会怎样问我们能不能在那里计划一次岛屿旅行？"
-              },
-              "answer": {
-                "en": "Can we plan an island trip?",
-                "zh-CN": "我们能计划一次岛屿旅行吗？"
-              },
-              "response": {
-                "en": "That is a clear idea for visiting islands.",
-                "zh-CN": "这是关于游览岛屿的一个清楚的想法。"
-              }
-            },
-            {
-              "id": "camp:5:36205.2.3",
-              "templateId": "p091.travel",
-              "patternId": "p091",
-              "pattern": "Because it is {quality}.",
-              "hint": "说明原因：围绕“游览岛屿”回答。",
-              "question": {
-                "en": "Why are you interested in visiting islands?",
-                "zh-CN": "你为什么对游览岛屿感兴趣？"
-              },
-              "answer": {
-                "en": "Because it is exciting.",
-                "zh-CN": "因为这很令人兴奋。"
-              },
-              "response": {
-                "en": "Now you can tell someone about visiting islands.",
-                "zh-CN": "现在你可以向别人说说游览岛屿了。"
-              }
-            }
-          ],
-          "ending": {
-            "en": "Thank you! I enjoyed our talk about visiting islands.",
-            "zh-CN": "谢谢！和你聊游览岛屿很开心。"
-          }
-        },
-        {
-          "id": "camp:5:36205.story3",
-          "title": "法斯特船长：开口请求帮助",
-          "context": "想要计划一次岛屿旅行时，可以怎样请求帮助？我们练习一下。",
+          "id": "camp:5:36205.beginner1",
+          "title": "请船长帮忙",
+          "context": "和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。",
+          "difficulty": "pre-A1",
+          "mode": "basic",
           "rewardGroup": "help",
+          "requiresQuest": null,
+          "authorSource": "scripts/camp_beginner_stories.mjs",
           "opening": {
-            "en": "Let us practise how to ask for help when you want to plan an island trip.",
-            "zh-CN": "想要计划一次岛屿旅行时，可以怎样请求帮助？我们练习一下。"
+            "en": "Need help?",
+            "zh-CN": "需要帮忙吗？"
           },
           "turns": [
             {
-              "id": "camp:5:36205.3.1",
-              "templateId": "p031.travel",
-              "patternId": "p031",
-              "pattern": "I want to {action}.",
-              "hint": "表达愿望：围绕“游览岛屿”回答。",
               "question": {
-                "en": "After our talk about visiting islands, what do you want to do?",
-                "zh-CN": "聊过游览岛屿之后，你想做什么？"
+                "en": "Need help?",
+                "zh-CN": "需要帮忙吗？"
               },
               "answer": {
-                "en": "I want to plan an island trip.",
-                "zh-CN": "我想计划一次岛屿旅行。"
+                "en": "Help me, please.",
+                "zh-CN": "请帮帮我。"
               },
+              "pattern": "Help me, please.",
+              "variants": {
+                "en": [
+                  "Yes please",
+                  "Yes",
+                  "Please help me"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "We can talk more about visiting islands.",
-                "zh-CN": "我们可以继续聊聊游览岛屿。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:5:36205.beginner1.1",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:5:36205.3.2",
-              "templateId": "p040.travel",
-              "patternId": "p040",
-              "pattern": "Please teach me how to {action}.",
-              "hint": "请求教学：围绕“游览岛屿”回答。",
               "question": {
-                "en": "If you wanted to plan an island trip, what would you ask me to teach you?",
-                "zh-CN": "如果想计划一次岛屿旅行，你会请我教你什么？"
+                "en": "A map?",
+                "zh-CN": "要地图吗？"
               },
               "answer": {
-                "en": "Please teach me how to plan an island trip.",
-                "zh-CN": "请教我怎样计划一次岛屿旅行。"
+                "en": "A map, please.",
+                "zh-CN": "请给我一张地图。"
               },
+              "pattern": "… please.",
+              "variants": {
+                "en": [
+                  "Yes",
+                  "Yes please",
+                  "A map",
+                  "No thanks"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "That is a clear idea for visiting islands.",
-                "zh-CN": "这是关于游览岛屿的一个清楚的想法。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:5:36205.beginner1.2",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:5:36205.3.3",
-              "templateId": "p060.travel",
-              "patternId": "p060",
-              "pattern": "I would like to {action} again.",
-              "hint": "重新尝试：围绕“游览岛屿”回答。",
               "question": {
-                "en": "You have had a first try at visiting islands. What would you like to do again?",
-                "zh-CN": "设想你初次尝试了游览岛屿。你还想再做什么？"
+                "en": "The camp map?",
+                "zh-CN": "营地的地图吗？"
               },
               "answer": {
-                "en": "I would like to plan an island trip again.",
-                "zh-CN": "我想再计划一次岛屿旅行一次。"
+                "en": "Yes, please.",
+                "zh-CN": "是的，谢谢。"
               },
+              "pattern": "Yes, please.",
+              "variants": {
+                "en": [
+                  "Yes",
+                  "No"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "Now you can tell someone about visiting islands.",
-                "zh-CN": "现在你可以向别人说说游览岛屿了。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:5:36205.beginner1.3",
+              "patternId": "beginner-authored"
             }
           ],
           "ending": {
-            "en": "Thank you! I enjoyed our talk about visiting islands.",
-            "zh-CN": "谢谢！和你聊游览岛屿很开心。"
+            "en": "Thank you! See you!",
+            "zh-CN": "谢谢你！再见！"
+          }
+        },
+        {
+          "id": "camp:5:36205.beginner2",
+          "title": "认识营地",
+          "context": "和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。",
+          "difficulty": "pre-A1",
+          "mode": "basic",
+          "rewardGroup": "location",
+          "requiresQuest": 63000,
+          "authorSource": "scripts/camp_beginner_stories.mjs",
+          "opening": {
+            "en": "Looking for the camp?",
+            "zh-CN": "在找营地吗？"
+          },
+          "turns": [
+            {
+              "question": {
+                "en": "Looking for the camp?",
+                "zh-CN": "在找营地吗？"
+              },
+              "answer": {
+                "en": "Where is the camp?",
+                "zh-CN": "营地在哪里？"
+              },
+              "pattern": "Where is …?",
+              "variants": {
+                "en": [
+                  "Yes",
+                  "Yes I am"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
+              "response": {
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:5:36205.beginner2.1",
+              "patternId": "beginner-authored"
+            },
+            {
+              "question": {
+                "en": "You are here. See?",
+                "zh-CN": "你就在这里。看到了吗？"
+              },
+              "answer": {
+                "en": "Here?",
+                "zh-CN": "这里吗？"
+              },
+              "pattern": "Here?",
+              "variants": {
+                "en": [
+                  "Yes",
+                  "I see",
+                  "Here",
+                  "No"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
+              "response": {
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:5:36205.beginner2.2",
+              "patternId": "beginner-authored"
+            },
+            {
+              "question": {
+                "en": "Need help with the map?",
+                "zh-CN": "需要帮忙看地图吗？"
+              },
+              "answer": {
+                "en": "Help me, please.",
+                "zh-CN": "请帮帮我。"
+              },
+              "pattern": "Help me, please.",
+              "variants": {
+                "en": [
+                  "Yes please",
+                  "Please help me",
+                  "No thanks"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
+              "response": {
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:5:36205.beginner2.3",
+              "patternId": "beginner-authored"
+            }
+          ],
+          "ending": {
+            "en": "Thank you! See you!",
+            "zh-CN": "谢谢你！再见！"
+          }
+        },
+        {
+          "id": "camp:5:36205.beginner3",
+          "title": "下一次旅行",
+          "context": "和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。",
+          "difficulty": "pre-A1",
+          "mode": "basic",
+          "rewardGroup": "preference",
+          "requiresQuest": 63010,
+          "authorSource": "scripts/camp_beginner_stories.mjs",
+          "opening": {
+            "en": "Do you like islands?",
+            "zh-CN": "你喜欢岛屿吗？"
+          },
+          "turns": [
+            {
+              "question": {
+                "en": "Do you like islands?",
+                "zh-CN": "你喜欢岛屿吗？"
+              },
+              "answer": {
+                "en": "I like islands.",
+                "zh-CN": "我喜欢岛屿。"
+              },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "Yes",
+                  "Yes I do",
+                  "No"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
+              "response": {
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:5:36205.beginner3.1",
+              "patternId": "beginner-authored"
+            },
+            {
+              "question": {
+                "en": "Big or small islands?",
+                "zh-CN": "大岛还是小岛？"
+              },
+              "answer": {
+                "en": "I like small islands.",
+                "zh-CN": "我喜欢小岛。"
+              },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "Small",
+                  "Big",
+                  "I like big islands"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
+              "response": {
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:5:36205.beginner3.2",
+              "patternId": "beginner-authored"
+            },
+            {
+              "question": {
+                "en": "Want a map?",
+                "zh-CN": "想要地图吗？"
+              },
+              "answer": {
+                "en": "A map, please.",
+                "zh-CN": "请给我一张地图。"
+              },
+              "pattern": "… please.",
+              "variants": {
+                "en": [
+                  "Yes please",
+                  "Yes",
+                  "No thanks"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
+              "response": {
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:5:36205.beginner3.3",
+              "patternId": "beginner-authored"
+            }
+          ],
+          "ending": {
+            "en": "Thank you! See you!",
+            "zh-CN": "谢谢你！再见！"
           }
         }
       ]
@@ -2723,222 +2876,297 @@
       },
       "stories": [
         {
-          "id": "camp:11:36211.story1",
-          "title": "青龙的成长建议",
-          "context": "我会陪伴你成长。来选一件想学的事情吧。",
+          "id": "camp:11:36211.beginner1",
+          "title": "和导师问好",
+          "context": "和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。",
+          "difficulty": "pre-A1",
+          "mode": "basic",
           "rewardGroup": "preference",
+          "requiresQuest": null,
+          "authorSource": "scripts/camp_beginner_stories.mjs",
           "opening": {
-            "en": "I am here to help you grow. Let us choose something to learn.",
-            "zh-CN": "我会陪伴你成长。来选一件想学的事情吧。"
+            "en": "Hello!",
+            "zh-CN": "你好！"
           },
           "turns": [
             {
-              "id": "camp:11:36211.1.1",
-              "templateId": "p004.practice",
-              "patternId": "p004",
-              "pattern": "I need {thing}.",
-              "hint": "表达需要：围绕“学习新法术”回答。",
               "question": {
-                "en": "Thinking about learning new spells, what do you need?",
-                "zh-CN": "说到学习新法术，你需要什么？"
+                "en": "Hello!",
+                "zh-CN": "你好！"
               },
               "answer": {
-                "en": "I need a learning notebook.",
-                "zh-CN": "我需要一本学习笔记。"
+                "en": "Hello!",
+                "zh-CN": "你好！"
               },
+              "pattern": "Hello.",
+              "variants": {
+                "en": [
+                  "Hi",
+                  "Hi there"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "We can talk more about learning new spells.",
-                "zh-CN": "我们可以继续聊聊学习新法术。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:11:36211.beginner1.1",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:11:36211.1.2",
-              "templateId": "p039.practice",
-              "patternId": "p039",
-              "pattern": "I am learning to {action}.",
-              "hint": "表示学习：围绕“学习新法术”回答。",
               "question": {
-                "en": "Thinking about learning new spells, what are you learning to do?",
-                "zh-CN": "说到学习新法术，你正在学做什么？"
+                "en": "What is your name?",
+                "zh-CN": "你叫什么名字？"
               },
               "answer": {
-                "en": "I am learning to learn a new spell.",
-                "zh-CN": "我正在学学习一个新法术。"
+                "en": "My name is Lily.",
+                "zh-CN": "我叫小丽。"
               },
+              "pattern": "My name is …",
+              "variants": {
+                "en": [
+                  "I am Lily",
+                  "Lily"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "That is a clear idea for learning new spells.",
-                "zh-CN": "这是关于学习新法术的一个清楚的想法。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:11:36211.beginner1.2",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:11:36211.1.3",
-              "templateId": "p128.practice",
-              "patternId": "p128",
-              "pattern": "Yes, thank you for your help.",
-              "hint": "表达感谢：围绕“学习新法术”回答。",
               "question": {
-                "en": "Thinking about learning new spells, did that help?",
-                "zh-CN": "说到学习新法术，这有帮助吗？"
+                "en": "Ready?",
+                "zh-CN": "准备好了吗？"
               },
               "answer": {
-                "en": "Yes, thank you for your help.",
-                "zh-CN": "有，谢谢你的帮助。"
+                "en": "Yes!",
+                "zh-CN": "准备好了！"
               },
+              "pattern": "Yes.",
+              "variants": {
+                "en": [
+                  "Yes I am",
+                  "Ready",
+                  "No",
+                  "Not yet"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "Now you can tell someone about learning new spells.",
-                "zh-CN": "现在你可以向别人说说学习新法术了。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:11:36211.beginner1.3",
+              "patternId": "beginner-authored"
             }
           ],
           "ending": {
-            "en": "Thank you! I enjoyed our talk about learning new spells.",
-            "zh-CN": "谢谢！和你聊学习新法术很开心。"
+            "en": "Thank you! See you!",
+            "zh-CN": "谢谢你！再见！"
           }
         },
         {
-          "id": "camp:11:36211.story2",
-          "title": "青龙：一起商量目的地",
-          "context": "我们设想在导师广场学习新法术。先一起商量计划。",
+          "id": "camp:11:36211.beginner2",
+          "title": "认识魔法",
+          "context": "和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。",
+          "difficulty": "pre-A1",
+          "mode": "basic",
           "rewardGroup": "location",
+          "requiresQuest": 63000,
+          "authorSource": "scripts/camp_beginner_stories.mjs",
           "opening": {
-            "en": "Let us imagine learning new spells at the academy square. We are only making a plan.",
-            "zh-CN": "我们设想在导师广场学习新法术。先一起商量计划。"
+            "en": "Do you like magic?",
+            "zh-CN": "你喜欢魔法吗？"
           },
           "turns": [
             {
-              "id": "camp:11:36211.2.1",
-              "templateId": "p062.practice",
-              "patternId": "p062",
-              "pattern": "I would like to go to {place}.",
-              "hint": "说明目的地：围绕“学习新法术”回答。",
               "question": {
-                "en": "Where would you like to go to learn a new spell?",
-                "zh-CN": "你想去哪里学习一个新法术？"
+                "en": "Do you like magic?",
+                "zh-CN": "你喜欢魔法吗？"
               },
               "answer": {
-                "en": "I would like to go to the academy square.",
-                "zh-CN": "我想去导师广场。"
+                "en": "Yes!",
+                "zh-CN": "喜欢！"
               },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "Yes I do",
+                  "No",
+                  "No I do not"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "We can talk more about learning new spells.",
-                "zh-CN": "我们可以继续聊聊学习新法术。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:11:36211.beginner2.1",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:11:36211.2.2",
-              "templateId": "p044.practice",
-              "patternId": "p044",
-              "pattern": "Can we {action}?",
-              "hint": "询问可能：围绕“学习新法术”回答。",
               "question": {
-                "en": "How would you ask if we can learn a new spell there?",
-                "zh-CN": "你会怎样问我们能不能在那里学习一个新法术？"
+                "en": "Magic or pets?",
+                "zh-CN": "魔法还是宠物？"
               },
               "answer": {
-                "en": "Can we learn a new spell?",
-                "zh-CN": "我们能学习一个新法术吗？"
+                "en": "I like magic.",
+                "zh-CN": "我喜欢魔法。"
               },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "Magic",
+                  "Pets",
+                  "I like pets"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "That is a clear idea for learning new spells.",
-                "zh-CN": "这是关于学习新法术的一个清楚的想法。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:11:36211.beginner2.2",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:11:36211.2.3",
-              "templateId": "p091.practice",
-              "patternId": "p091",
-              "pattern": "Because it is {quality}.",
-              "hint": "说明原因：围绕“学习新法术”回答。",
               "question": {
-                "en": "Why are you interested in learning new spells?",
-                "zh-CN": "你为什么对学习新法术感兴趣？"
+                "en": "Do you like the camp?",
+                "zh-CN": "你喜欢营地吗？"
               },
               "answer": {
-                "en": "Because it is rewarding.",
-                "zh-CN": "因为这很有成就感。"
+                "en": "I like the camp.",
+                "zh-CN": "我喜欢营地。"
               },
+              "pattern": "I like …",
+              "variants": {
+                "en": [
+                  "Yes",
+                  "Yes I do",
+                  "No"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "Now you can tell someone about learning new spells.",
-                "zh-CN": "现在你可以向别人说说学习新法术了。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:11:36211.beginner2.3",
+              "patternId": "beginner-authored"
             }
           ],
           "ending": {
-            "en": "Thank you! I enjoyed our talk about learning new spells.",
-            "zh-CN": "谢谢！和你聊学习新法术很开心。"
+            "en": "Thank you! See you!",
+            "zh-CN": "谢谢你！再见！"
           }
         },
         {
-          "id": "camp:11:36211.story3",
-          "title": "青龙：开口请求帮助",
-          "context": "想要学习一个新法术时，可以怎样请求帮助？我们练习一下。",
+          "id": "camp:11:36211.beginner3",
+          "title": "法杖小帮手",
+          "context": "和营地居民聊三句。这里只练习交流，不会代替主线操作，也不会购买或领取对话中提到的物品。",
+          "difficulty": "pre-A1",
+          "mode": "basic",
           "rewardGroup": "help",
+          "requiresQuest": 63006,
+          "authorSource": "scripts/camp_beginner_stories.mjs",
           "opening": {
-            "en": "Let us practise how to ask for help when you want to learn a new spell.",
-            "zh-CN": "想要学习一个新法术时，可以怎样请求帮助？我们练习一下。"
+            "en": "Need help?",
+            "zh-CN": "需要帮忙吗？"
           },
           "turns": [
             {
-              "id": "camp:11:36211.3.1",
-              "templateId": "p031.practice",
-              "patternId": "p031",
-              "pattern": "I want to {action}.",
-              "hint": "表达愿望：围绕“学习新法术”回答。",
               "question": {
-                "en": "After our talk about learning new spells, what do you want to do?",
-                "zh-CN": "聊过学习新法术之后，你想做什么？"
+                "en": "Need help?",
+                "zh-CN": "需要帮忙吗？"
               },
               "answer": {
-                "en": "I want to learn a new spell.",
-                "zh-CN": "我想学习一个新法术。"
+                "en": "Help me, please.",
+                "zh-CN": "请帮帮我。"
               },
+              "pattern": "Help me, please.",
+              "variants": {
+                "en": [
+                  "Yes please",
+                  "Yes",
+                  "Please help me"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "We can talk more about learning new spells.",
-                "zh-CN": "我们可以继续聊聊学习新法术。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:11:36211.beginner3.1",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:11:36211.3.2",
-              "templateId": "p040.practice",
-              "patternId": "p040",
-              "pattern": "Please teach me how to {action}.",
-              "hint": "请求教学：围绕“学习新法术”回答。",
               "question": {
-                "en": "If you wanted to learn a new spell, what would you ask me to teach you?",
-                "zh-CN": "如果想学习一个新法术，你会请我教你什么？"
+                "en": "With your wand?",
+                "zh-CN": "是法杖的事情吗？"
               },
               "answer": {
-                "en": "Please teach me how to learn a new spell.",
-                "zh-CN": "请教我怎样学习一个新法术。"
+                "en": "Yes, please.",
+                "zh-CN": "是的，谢谢。"
               },
+              "pattern": "Yes, please.",
+              "variants": {
+                "en": [
+                  "Yes",
+                  "My wand",
+                  "No"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "That is a clear idea for learning new spells.",
-                "zh-CN": "这是关于学习新法术的一个清楚的想法。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:11:36211.beginner3.2",
+              "patternId": "beginner-authored"
             },
             {
-              "id": "camp:11:36211.3.3",
-              "templateId": "p060.practice",
-              "patternId": "p060",
-              "pattern": "I would like to {action} again.",
-              "hint": "重新尝试：围绕“学习新法术”回答。",
               "question": {
-                "en": "You have had a first try at learning new spells. What would you like to do again?",
-                "zh-CN": "设想你初次尝试了学习新法术。你还想再做什么？"
+                "en": "Ready to learn?",
+                "zh-CN": "准备好学习了吗？"
               },
               "answer": {
-                "en": "I would like to learn a new spell again.",
-                "zh-CN": "我想再学习一个新法术一次。"
+                "en": "Yes!",
+                "zh-CN": "准备好了！"
               },
+              "pattern": "Yes.",
+              "variants": {
+                "en": [
+                  "Ready",
+                  "Yes I am",
+                  "Not yet",
+                  "No"
+                ],
+                "zh-CN": []
+              },
+              "hint": "可以先听示范，再用自己的话回答。",
               "response": {
-                "en": "Now you can tell someone about learning new spells.",
-                "zh-CN": "现在你可以向别人说说学习新法术了。"
-              }
+                "en": "Thank you!",
+                "zh-CN": "谢谢！"
+              },
+              "id": "camp:11:36211.beginner3.3",
+              "patternId": "beginner-authored"
             }
           ],
           "ending": {
-            "en": "Thank you! I enjoyed our talk about learning new spells.",
-            "zh-CN": "谢谢！和你聊学习新法术很开心。"
+            "en": "Thank you! See you!",
+            "zh-CN": "谢谢你！再见！"
           }
         }
       ]

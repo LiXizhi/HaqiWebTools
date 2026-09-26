@@ -66,3 +66,11 @@ test('missing effect descriptions are explicit instead of inventing behavior',()
     assert.match(describeCard({type:'FutureSpell',params:{}}).lines.join(''),/尚未完整收录/);
     for(const card of Object.values(cards))assert.ok(describeCard(card,{dataset:{charms}}).summary);
 });
+
+test('mirror descriptions expose real capacity and reflection limitations',()=>{
+    const desc=describeCard(cards.Ice_ReflectionShield);
+    assert.match(desc.summary,/350/);
+    assert.match(desc.lines.join(''),/魔镜破碎/);
+    assert.match(desc.lines.join(''),/持续伤害只消耗/);
+    assert.doesNotMatch(desc.lines.join(''),/尚未完整/);
+});

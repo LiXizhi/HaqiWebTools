@@ -9,6 +9,10 @@ export const LOCALES = [
 
 const IDS = new Set(LOCALES.map(row => row.id));
 
+export function isLocaleId(id) {
+    return IDS.has(id);
+}
+
 export function localeById(id) {
     return LOCALES.find(row => row.id === id) || LOCALES[0];
 }
@@ -103,6 +107,7 @@ export function normalizeLocaleSave(save) {
     let target = IDS.has(learning.target) ? learning.target : 'en';
     if (native === target) target = native === 'en' ? 'zh-CN' : 'en';
     save.languageLearning = { enabled: learning.enabled === true, native, target, autoSpeak: learning.autoSpeak === true,
+        selectionConfirmed:learning.selectionConfirmed===true||(learning.selectionConfirmed===undefined&&IDS.has(learning.target)),
         showChinese:learning.showChinese!==false,
         model:typeof learning.model==='string'?learning.model.slice(0,160):'',
         voiceType:typeof learning.voiceType==='string'?learning.voiceType.slice(0,160):'' };

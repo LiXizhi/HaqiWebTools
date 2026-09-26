@@ -135,7 +135,7 @@ export function createSpellEffects(assets) {
         if(hit>0&&!spec.friendly){c.save();c.globalAlpha*=1-hit;c.strokeStyle=spec.palette[1];c.lineWidth=3*scale;c.beginPath();c.ellipse(b.x,to.y,radius*(.5+hit*1.5),radius*(.2+hit*.4),0,0,TAU);c.stroke();c.restore();}
         return true;
     }
-    function draw(c,{card,spec,progress,from,to,center,width,height,seed=0,reducedMotion=false,failed=false,echo=false,environmentManaged=false,arenaRadius,arenaAspect}) {
+    function draw(c,{card,spec,progress,from,to,center,width,height,seed=0,reducedMotion=false,failed=false,echo=false,reflection=false,environmentManaged=false,arenaRadius,arenaAspect}) {
         if(!spec||!from||!to)return;
         const p=clamp(progress),col=spec.palette,[primary,light,dark]=col;
         if(spec.choreography.placement==='field'&&!failed){
@@ -214,7 +214,7 @@ export function createSpellEffects(assets) {
             if(spec.variant.rank==='gold')for(let i=0;i<12;i++){const ang=i*TAU/12+p*2;shard(c,a.x+Math.cos(ang)*radius*1.3,origin.y+Math.sin(ang)*radius*.5,3*scale,ang,ac);}
             c.restore();
         }
-        if(spec.secondary&&p>impact&&(!echo||spec.choreography.secondaryTarget!=='caster'))supportEffect(c,spec.secondary==='dot'?'enrage':spec.secondary,{a:caster,b:spec.choreography.secondaryTarget==='caster'?caster:b,to:spec.choreography.secondaryTarget==='caster'?from:to,center,radius:radius*.6,scale,p:hit,palette:col,particles,assets});
+        if(!reflection&&spec.secondary&&p>impact&&(!echo||spec.choreography.secondaryTarget!=='caster'))supportEffect(c,spec.secondary==='dot'?'enrage':spec.secondary,{a:caster,b:spec.choreography.secondaryTarget==='caster'?caster:b,to:spec.choreography.secondaryTarget==='caster'?from:to,center,radius:radius*.6,scale,p:hit,palette:col,particles,assets});
         if(['absorb','reflect','aura','cleanse','steal','stun','freeze','stealth','enrage','pips','capture','pet','dissolve','pass'].includes(kind)){
             supportEffect(c,kind,{a:caster,b,to,center:spec.choreography.placement==='field'?center:b,radius,scale,p,palette:col,particles,assets});c.restore();return;
         }
@@ -297,7 +297,7 @@ export function createSpellEffects(assets) {
                 for(const v of particles){const travel=radius*(.2+hit*1.6)*v.speed,px=b.x+Math.cos(v.angle)*travel,py=b.y+Math.sin(v.angle)*travel+hit*hit*35*scale;
                     if(card.spellSchool==='ice')shard(c,px,py,v.size*scale*2,v.spin+hit*2,hit<.3?light:primary);else disc(c,px,py,v.size*scale*(1-hit*.6),v.phase>.5?primary:light);
                 }
-                if(kind==='drain')for(const v of particles.groups[20]){const q=clamp(hit*1.4-v.phase*.3);disc(c,b.x+(caster.x-b.x)*q,b.y+(caster.y-b.y)*q+Math.sin(q*TAU+v.angle)*20*scale,3*scale,primary);}
+                if(kind==='drain'&&!reflection)for(const v of particles.groups[20]){const q=clamp(hit*1.4-v.phase*.3);disc(c,b.x+(caster.x-b.x)*q,b.y+(caster.y-b.y)*q+Math.sin(q*TAU+v.angle)*20*scale,3*scale,primary);}
             }
         }
         c.restore();

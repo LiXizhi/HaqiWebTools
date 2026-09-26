@@ -2,6 +2,7 @@ import {dungeonFor,validateDungeons} from './adventure_dungeons_core.js';
 import {purchaseNpcOffer} from './adventure_npc_core.js';
 import {claimMagicStar,validateMagicStarClaims,magicStarCombatLevel,applyMagicStarCombat} from './adventure_magic_star_core.js';
 import {equipmentSetStats,dragonTotemStage,progressionStatEntry,chooseDragonTotem,useDragonTotemItem} from './adventure_progression_bonuses_core.js';
+import {customizeHero} from './adventure_hero_customize_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { worldDimensions, mapInfo } from './adventure_island_layout_core.js';
@@ -32,6 +33,15 @@ const owns = (s, id) => (s.inventory[id] || 0) > 0;
 export function currentQuest(save, content) {
     return content.quests.find(q => !save.quests[q.id]?.claimed) || null;
 }
+// 新手岛教学模式（2026-09-26 用户约定）：不看等级，身处魔法营地且营地任务链
+// （章节任务按发布 NPC 所在区域、目录任务按 region）尚有未交付的即开启；
+// 全部完成后返回 null，各面板提示与追踪手势据此统一判定。
+export function teachingMode(save, content) {
+    if (!save || save.zone !== 'camp' || !content) return null;
+    const chapter = content.quests?.find(q => !save.quests[q.id]?.claimed && content.npcs[q.startNpc]?.zone === 'camp');
+    if (chapter) return chapter;
+    return content.catalogQuests?.quests.find(q => q.region === 'camp' && !save.quests[q.id]?.claimed) || null;
+}
 export function questState(save, id) { return save.quests[id] || { accepted: false, claimed: false, progress: {} }; }
 export function questProgress(save, quest) {
     const state = questState(save, quest.id);
@@ -53,7 +63,7 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
         pet: null, zone: 'camp', position: {...mapInfo('camp',content).initialSpawn}, facing: 3,
         dungeonRuns: {}, dungeonReturn: null, encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
         visitedTown: false, music: false, tips: {}, revision: 0, bagRulesVersion: 1, defaultPocketVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion,
-        locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
+        locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
     if(typeof headId==='string'&&/^[a-z0-9-]{1,64}$/.test(headId))save.headId=headId;
     syncProgression(save, content);
     save.deck = recommendedDeck(save, content);
@@ -299,6 +309,11 @@ export function applyAction(save, content, action, access={}) {
     case 'stamina-potion': {const result=useStaminaPotion(save,content,action.itemId);save.revision++;return {...result,changed:true};}
     case 'magic-star-claim': claimMagicStar(save,content,action,access);syncEquipmentInstances(save,content);break;
     case 'choose-totem': chooseDragonTotem(save,content,action.professionId);break;
+    case 'customize-hero': {
+        const quote=customizeHero(save,action);
+        notice=quote.nameChanged&&quote.lookChanged?'名字和形象已更新。':quote.nameChanged?'名字已更新。':'形象已更新。';
+        break;
+    }
     case 'use-totem-item': useDragonTotemItem(save,content,action.itemId);break;
     case 'checkin': claimCheckin(save, content, action.now, action.index, access, action.bonus===true); break;
     case 'accept': {
@@ -448,6 +463,7 @@ export function applyAction(save, content, action, access={}) {
         break;
     }
     case 'retreat':
+        settleRunes(save);
         save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); save.position = {...mapInfo(save.zone,content).initialSpawn}; break;
     default: throw new Error('未知操作');
     }
@@ -474,9 +490,11 @@ export function beginEncounter(save,content,encounterId,access={}) {
     if(initialParty)assert(initialParty.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
-        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1 };
+        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1 };
     if(encounter.monsterIds){save.pendingEncounter.dungeonMonsterIds=[...encounter.monsterIds];save.pendingEncounter.dungeonMonsterSlots=[...encounter.monsterSlots];}
     save.pendingEncounter.runes = runeInventory(save,content);
+    save.pendingEncounter.deferredRuneSettlement = true;
+    save.pendingEncounter.runeUsed = {};
     if(content.pets){
         const party=initialParty;
         assert(party.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
@@ -500,20 +518,33 @@ export function recordDecision(save, decision, battle) {
         for(const rune of save.pendingEncounter.runes||[]){
             const used=battle.runeUsed?.[rune.itemId]||0;
             assert(Number.isInteger(used)&&used>=0&&used<=rune.count,'符文消耗记录无效');
-            assert(rune.count-used<=(save.inventory[rune.itemId]||0),'符文消耗记录不能倒退');
+            const previous=save.pendingEncounter.runeUsed?.[rune.itemId]??(rune.count-(save.inventory[rune.itemId]||0));
+            assert(used>=previous,'符文消耗记录不能倒退');
         }
-        for(const rune of save.pendingEncounter.runes||[]){
-            const used=battle.runeUsed?.[rune.itemId]||0;
-            save.inventory[rune.itemId]=rune.count-used;
-        }
+        // Keep consumption in the local checkpoint until finish/retreat, including legacy battles.
+        save.pendingEncounter.runeUsed=clone(battle.runeUsed||{});
     }
     save.pendingEncounter.decisions.push(clone(decision)); save.revision++;
+}
+function settleRunes(save,battle) {
+    const pending=save.pendingEncounter;
+    if(!pending||pending.runesSettled)return;
+    for(const rune of pending.runes||[]){
+        const used=battle?.runeUsed?.[rune.itemId]??pending.runeUsed?.[rune.itemId]??(rune.count-(save.inventory[rune.itemId]||0));
+        assert(Number.isInteger(used)&&used>=0&&used<=rune.count,'符文消耗记录无效');
+    }
+    for(const rune of pending.runes||[]){
+        const used=battle?.runeUsed?.[rune.itemId]??pending.runeUsed?.[rune.itemId]??(rune.count-(save.inventory[rune.itemId]||0));
+        save.inventory[rune.itemId]=rune.count-used;
+    }
+    pending.runesSettled=true;
 }
 export function settleEncounter(save,content,battle) {
     const pending = save.pendingEncounter;
     assert(pending && battle.finished && battle.seed === pending.seed,'战斗尚未结束');
     if (save.rewardedEncounters.includes(pending.id)) { save.pendingEncounter = null; return false; }
     const encounter = content.encounters.find(e => e.id === pending.encounterId), monster = pending.monster || content.monsters[encounter.monsterId];
+    settleRunes(save,battle);
     if(content.pets)settleParty(save,content,battle);
     if (battle.winner === 'near') {
         const defeated=pending.dungeonMonsterIds?pending.dungeonMonsterIds.map(id=>content.monsters[id]):[monster];
@@ -583,6 +614,7 @@ export function parseSave(raw,content) {
     if (s.pendingEncounter) {
         assert(s.pendingEncounter.equipmentStatsVersion===undefined||s.pendingEncounter.equipmentStatsVersion===1,'装备属性规则版本无效');
         assert(s.pendingEncounter.reflectionRulesVersion===undefined||s.pendingEncounter.reflectionRulesVersion===1,'反射规则版本无效');
+        assert(s.pendingEncounter.dispelRulesVersion===undefined||s.pendingEncounter.dispelRulesVersion===1,'之敌规则版本无效');
         assert(s.pendingEncounter.stealthRulesVersion===undefined||s.pendingEncounter.stealthRulesVersion===1,'隐身规则版本无效');
         assert(s.pendingEncounter.progressionRulesVersion===undefined||[1,2,3].includes(s.pendingEncounter.progressionRulesVersion),'成长属性规则版本无效');
         assert(s.pendingEncounter.threatRulesVersion===undefined||[1,2,3,4,5].includes(s.pendingEncounter.threatRulesVersion),'仇恨规则版本无效');
@@ -644,6 +676,7 @@ export function specialEncounter(save,content,id){
     return {id,zone:save.zone,monster};
 }
 export function settleParty(save,content,battle,{retreat=false}={}){
+    settleRunes(save,battle);
     const pending=save.pendingEncounter,p=Pets.petParams(content);
     save.heroHp=battle.unitsById.hero.hp;
     if(battle.winner!=='near'||retreat)save.heroHp=Math.max(save.heroHp,Math.ceil(battle.unitsById.hero.maxHp*p.defeatHp));

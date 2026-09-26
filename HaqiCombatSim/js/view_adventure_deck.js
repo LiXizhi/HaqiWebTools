@@ -1,5 +1,7 @@
 import {createCloseButton} from './view_adventure_controls.js';
+import {teachPointer} from './view_teaching.js';
 import {deckLimits,deckCardCopies,syncDeckLayouts,equipmentBlockReason,recommendedDeck,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
+import {isAttackCard} from './combat_cards_core.js';
 import {skillLearningStatus,trainingPoints} from './adventure_learning_core.js';
 import { setText, tr } from './locale_runtime.js';
 const SCHOOL_LABELS={...SCHOOL_NAMES,balance:'平衡'};
@@ -183,6 +185,9 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
         const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));page=Math.max(0,Math.min(page,pages-1));
         setText(countLabel,'{count} 张 · {page}/{pages}',{count:rows.length,page:page+1,pages});previous.disabled=page===0;next.disabled=page>=pages-1;
         library.replaceChildren();
+        // 教学模式：卡包有空位时，挑第一张尚未放入且当前可加入的攻击类卡牌挂悬浮指针。
+        let teachEntry=null;
+        const hasSpace=total()<limits.capacity;
         for(const lesson of rows.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE)){
             const card=cards[lesson.key];if(!card)continue;
             const n=layouts[active].deck.find(row=>row.key===lesson.key)?.count||0;
@@ -195,8 +200,10 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
             entry.setAttribute('aria-label',`${owned[lesson.key]?'放入':'学习并放入'}${card.name}`);
             entry.setAttribute('aria-disabled',String(!available||n>=(owned[lesson.key]?copies(lesson.key):limits.eachCapacity)||total()>=limits.capacity));
             previewEvents(entry,lesson.key);bindCardGesture(entry,lesson.key,false,()=>add(lesson.key));library.append(entry);
+            if(!teachEntry&&hasSpace&&n===0&&available&&isAttackCard(card))teachEntry=entry;
         }
         if(!rows.length)library.append(el('p','muted','没有符合条件的卡牌'));
+        teachPointer(teachEntry,save,content);
     }
     function paintCards(){
         setText(counter,'{used}/{capacity} 张 · 单卡最多 {each}',{used:total(),capacity:limits.capacity,each:limits.eachCapacity});slots.replaceChildren();

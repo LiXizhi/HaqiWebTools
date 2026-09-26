@@ -18,6 +18,16 @@ test('startup reads guest and legacy language preferences', () => {
     assert.equal(readBootLocale(storage({ 'haqi.adventure.kids.v1': JSON.stringify({ locale: 'ja' }) })).locale, 'ja');
 });
 
+test('local display-language preference outranks the role save', () => {
+    // 首页/设置窗的选择写入 haqi.locale.v1；刷新后优先于角色存档里的 locale。
+    assert.equal(readBootLocale(storage({ 'haqi.locale.v1': 'en', 'haqi.roles.v1.guest': catalog({ locale: 'zh-CN' }) })).locale, 'en');
+    assert.equal(readBootLocale(storage({ 'haqi.locale.v1': 'ko' })).locale, 'ko');
+});
+
+test('an invalid local language preference is ignored', () => {
+    assert.equal(readBootLocale(storage({ 'haqi.locale.v1': 'bogus', 'haqi.roles.v1.guest': catalog({ locale: 'ko' }) })).locale, 'ko');
+});
+
 test('startup loads the learning target and native dictionaries', () => {
     const result = readBootLocale(storage({ 'haqi.roles.v1.guest': catalog({ locale: 'zh-CN', languageLearning: { enabled: true, target: 'en', native: 'ko' } }) }));
     assert.deepEqual(localeIdsToLoad(result), ['en', 'ko']);

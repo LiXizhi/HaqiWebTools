@@ -34,6 +34,7 @@ export function configureLocale({ locale = 'zh-CN', languageLearning = null } = 
     learning = languageLearning?.enabled ? languageLearning : null;
     display = locale || 'zh-CN';
     applyTranslator();
+    if (typeof document !== 'undefined') document.documentElement.lang = display;
     if (!learning && tooltip) tooltip.hidden = true;
     syncLocaleChrome();
     return display;

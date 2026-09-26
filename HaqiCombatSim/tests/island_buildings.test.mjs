@@ -20,13 +20,19 @@ test('五岛建筑图集大小、来源、哈希与裁剪范围有效',()=>{
         for(const {rect:[x,y,w,h]} of Object.values(row.frames))assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=row.width&&y+h<=row.height);
     }
 });
-test('五岛摆放可复现，避开道路和居民，船只在海上，营地保持原样',()=>{
+test('各岛摆放可复现，避开道路和居民，船只在海上，营地仅新增码头',()=>{
     for(const zone of ['camp','town','fire','ice','desert','dark']){
         const before=JSON.stringify(content.worldMaps[zone]),world=createWorld(zone,content);
         const buildings=world.buildings.filter(b=>b.atlas);
         assert.deepEqual(world.buildings,createWorld(zone,content).buildings);
         assert.equal(JSON.stringify(content.worldMaps[zone]),before);
-        if(zone==='camp'){assert.equal(buildings.length,0);continue;}
+        if(zone==='camp'){
+            // 营地保留自带建筑，不散布村庄；码头与小船复用小镇图集（2026-09-26）。
+            assert.ok(buildings.some(b=>b.frame==='harbor'&&b.atlas==='town'&&b.decorationOnly));
+            assert.ok(!buildings.some(b=>b.frame==='village'||b.frame==='tower'));
+            for(const b of buildings)assert.equal(onLargeIsland(world,b.x,b.y),false);
+            continue;
+        }
         assert.equal(buildings.length,13);
         for(const b of buildings){
             if(b.frame==='boat'){assert.equal(onLargeIsland(world,b.x,b.y),false);continue;}
@@ -41,7 +47,7 @@ test('五岛摆放可复现，避开道路和居民，船只在海上，营地�
 test('船坞道路连通传送点，船长可交谈且不与船坞重叠（含原版居民）',()=>{
     const catalogContent=structuredClone(content);
     installNpcCatalog(catalogContent,read('data/adventure/npc-catalog.json'));
-    for(const c of [content,catalogContent])for(const zone of ['town','fire','ice','desert','dark']){
+    for(const c of [content,catalogContent])for(const zone of ['camp','town','fire','ice','desert','dark']){
         const before=JSON.stringify(c),world=createWorld(zone,c);
         const harbor=world.buildings.find(b=>b.frame==='harbor');
         const captains=world.npcs.filter(n=>n.id===36205||n.name==='法斯特船长');

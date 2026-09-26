@@ -1,8 +1,15 @@
-// Every host defaults to permanent Keepwork CDN; source-only offline mode is explicit.
-export function assetMode(hostname, search = '') {
+// H5 builds leave this empty, so every host stays on the permanent Keepwork CDN.
+// The app build (`HAQI_TARGET=app`) replaces it with "local". A query string still wins.
+const bakedAssetMode = typeof __HAQI_ASSET_MODE__ !== 'undefined' && (__HAQI_ASSET_MODE__ === 'local' || __HAQI_ASSET_MODE__ === 'cdn')
+    ? __HAQI_ASSET_MODE__
+    : '';
+
+export function assetMode(hostname, search = '', baked = bakedAssetMode) {
     const requested = new URLSearchParams(search).get('assets');
     if (requested && !['local', 'cdn'].includes(requested)) throw new Error('资源模式无效');
-    return requested || 'cdn';
+    if (requested) return requested;
+    if (baked === 'local' || baked === 'cdn') return baked;
+    return 'cdn';
 }
 export function assetUrl(row, mode = 'cdn') {
     if (!row || !['local', 'cdn'].includes(mode)) throw new Error('缺少资源配置');

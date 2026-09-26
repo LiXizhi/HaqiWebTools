@@ -5,6 +5,7 @@ import {runeObtainLines,runeStatus} from './adventure_runes_core.js';
 import {equipmentAttributes,equipmentCards,EQUIPMENT_SLOTS} from './adventure_equipment_core.js';
 import {equipmentRequirements} from './adventure_item_rules_core.js';
 import {SCHOOL_NAMES} from './adventure_core.js';
+import {createMountPreview} from './view_adventure_mount_preview.js';
 
 // Read-only item inspection, usable before acquisition and independent of claims.
 export class ItemDetails extends DetailDialog {
@@ -47,6 +48,13 @@ export class ItemDetails extends DetailDialog {
         const cards=equipmentCards(item,c),faces=el('div','equipment-cards');
         for(const key of cards){const card=assets.dataset.cards[key];if(card&&spellFace)faces.append(spellFace(assets,card));}
         if(faces.childNodes.length)this.body.append(el('h4','','附加法术 · 装备后可用'),faces);
+        const mount=c.mountByItem?.[item.id];
+        if(mount){
+            const available=!!mount.art?.cdn;
+            this.body.append(createMountPreview(assets,{...save,mountId:available?item.id:null},{el,tile:this.ui.tile}));
+            this.body.append(el('p','muted',available?'骑乘后，这些属性加入角色战斗属性。':'这只坐骑还没有骑乘形象。'));
+            for(const row of equipmentAttributes({stats:mount.stats||{}},save,c))this.body.append(el('p','',attributeSpan(el,row)));
+        }
         if(requirements){const line=el('p','equipment-source');setText(line,'{label}：{text}',{label:requirementsLabel,text:requirements});this.body.append(line);}
         if(source){const line=el('p','equipment-source');setText(line,'获取途径：{source}',{source});this.body.append(line);}
     }

@@ -12,7 +12,7 @@ import { createCloseButton } from './view_adventure_controls.js';
 // Purchases still go through the controller and the existing BalanceParams rules.
 export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     const {save,assets}=model,c=assets.content,config=c.shopConfig;
-    const inspector=new ItemDetails(body,model,{el,spellFace});
+    const inspector=new ItemDetails(body,model,{el,spellFace,tile});
     const state=model.shopView||(model.shopView={});
     let category=config.categories.find(row=>row.id===state.category)||config.categories[0];
     let sub=state.subcategoryCategory===category.id&&Number.isInteger(state.subcategory)?state.subcategory:0;

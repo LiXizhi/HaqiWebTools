@@ -1,0 +1,27 @@
+appId: com.keepwork.haqi.adventure
+productName: 魔法哈奇
+directories:
+  output: shell-dist
+files:
+  - shell/electron/**/*
+  - package.json
+extraResources:
+  - from: app-dist
+    to: app
+win:
+  icon: shell/electron/icons/magic-haqi.ico
+  target:
+    - nsis
+    - dir
+mac:
+  icon: shell/electron/icons/magic-haqi.icns
+  category: public.app-category.games
+  target:
+    - dmg
+    - dir
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+linux:
+  icon: shell/electron/icons/magic-haqi.png

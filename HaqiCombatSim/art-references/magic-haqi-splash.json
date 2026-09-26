@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 1,
+  "sources": {
+    "landscape": {
+      "local": "art-references/magic-haqi-splash-landscape.webp",
+      "sha256": "e091c3987bd767aebabe10810a2d77f0873248585ff017da11047d08cc6f4ec2",
+      "originalPngSha256": "0cc7b931c1d4776725d57b099e2593933f640bac4da122f9cfdc4bc0267d3b06",
+      "width": 1672,
+      "height": 941,
+      "generator": "built-in imagegen",
+      "prompt": "已批准的无文字启动画面：精灵主角巫师帽标志、紫色暮空、魔法浮岛学院、瀑布、水晶、草地小径与魔法卡牌。"
+    },
+    "portrait": {
+      "local": "art-references/magic-haqi-splash-portrait.webp",
+      "sha256": "d6dbd727e34dcb6ab5a9d38db107808410e5bcd3ef4a42e2ae3a10fcff0fe8d3",
+      "originalPngSha256": "0d2d34a3a1aa2487879b1cbd7662e6488c435bef6ad803c686473f33a4269336",
+      "width": 941,
+      "height": 1672,
+      "generator": "built-in imagegen",
+      "prompt": "已批准的无文字启动画面：精灵主角巫师帽标志、紫色暮空、魔法浮岛学院、瀑布、水晶、草地小径与魔法卡牌。"
+    }
+  },
+  "resize": "center crop, preserve aspect ratio",
+  "files": [
+    {
+      "local": "assets/branding/magic-haqi-splash-landscape.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 193340,
+      "sha256": "4c4dd94a2ee9bcd36eb19e19c1aca01c8785eb663cd964314d800717433f6121",
+      "orientation": "landscape",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/splash-v1-fc214d88cef6/magic-haqi-splash-landscape.webp",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "android/app/src/main/res/drawable-land-mdpi/splash.png",
+      "width": 480,
+      "height": 320,
+      "bytes": 274661,
+      "sha256": "febc6daf067c46732f6c8794ef0a424734c464b5133e6b2ad90398cab0d8a28c",
+      "orientation": "landscape",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/drawable-land-hdpi/splash.png",
+      "width": 800,
+      "height": 480,
+      "bytes": 625698,
+      "sha256": "62669b3ab71c8bf79c96e293c180069b3c1bf524d0175d888d77b8026933ad02",
+      "orientation": "landscape",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/drawable-land-xhdpi/splash.png",
+      "width": 1280,
+      "height": 720,
+      "bytes": 1373208,
+      "sha256": "9144d5d0c55a3794415f68a3ed7f1b85ce4ede1d8559e37f8b023726c1457a71",
+      "orientation": "landscape",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/drawable-land-xxhdpi/splash.png",
+      "width": 1600,
+      "height": 960,
+      "bytes": 2128345,
+      "sha256": "682658a84f221c30b434395af21ffc447a54bfb0266d3391bf00fa0ba94ff731",
+      "orientation": "landscape",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/drawable-land-xxxhdpi/splash.png",
+      "width": 1920,
+      "height": 1280,
+      "bytes": 2974351,
+      "sha256": "fa89a8e59ca19f3ab0c38e364dd53acffeb76fe4fd011b877c42b481f9e064ca",
+      "orientation": "landscape",
+      "upload": false
+    },
+    {
+      "local": "assets/branding/magic-haqi-splash-portrait.webp",
+      "width": 941,
+      "height": 1672,
+      "bytes": 186234,
+      "sha256": "dbc64f5837770f6763ce2f7c39bbc3cd2aaf802f27b2a8c8d5cc0afca066b822",
+      "orientation": "portrait",
+      "upload": true,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/branding/splash-v1-fc214d88cef6/magic-haqi-splash-portrait.webp",
+      "verified": true,
+      "cors": "*"
+    },
+    {
+      "local": "android/app/src/main/res/drawable-port-mdpi/splash.png",
+      "width": 320,
+      "height": 480,
+      "bytes": 297597,
+      "sha256": "c4cbc612269f94001a1c685ee7ab3a529c9b348838373948c305f4beb84d3e44",
+      "orientation": "portrait",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/drawable-port-hdpi/splash.png",
+      "width": 480,
+      "height": 800,
+      "bytes": 667764,
+      "sha256": "f05310f50c4bb625dc3649c36afe3f17099fdae606bdff47cd0d8f3f46b8edc3",
+      "orientation": "portrait",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/drawable-port-xhdpi/splash.png",
+      "width": 720,
+      "height": 1280,
+      "bytes": 1441406,
+      "sha256": "c09681cce3b35eeffd3a81f2dd0ad1e10d1c25bdbed5b333cb8558db5e38d228",
+      "orientation": "portrait",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/drawable-port-xxhdpi/splash.png",
+      "width": 960,
+      "height": 1600,
+      "bytes": 2259544,
+      "sha256": "66483e9c63b065fac32fc33f0b86754c7dbe3c2901705bb1f475efcde7db7837",
+      "orientation": "portrait",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/drawable-port-xxxhdpi/splash.png",
+      "width": 1280,
+      "height": 1920,
+      "bytes": 3251222,
+      "sha256": "98e55e6975bca00c60b39620f7b58a988f762cbc209b42f1c793f7278dbd5892",
+      "orientation": "portrait",
+      "upload": false
+    },
+    {
+      "local": "android/app/src/main/res/drawable/splash.png",
+      "width": 480,
+      "height": 320,
+      "bytes": 274661,
+      "sha256": "febc6daf067c46732f6c8794ef0a424734c464b5133e6b2ad90398cab0d8a28c",
+      "orientation": "landscape",
+      "upload": false
+    }
+  ]
+}

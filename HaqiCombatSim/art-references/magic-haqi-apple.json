@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    "art-references/magic-haqi-logo.json",
+    "art-references/magic-haqi-splash.json"
+  ],
+  "files": [
+    {
+      "local": "ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-512@2x.png",
+      "width": 1024,
+      "height": 1024,
+      "sha256": "566d25770569ef9c973288dc7778ed3d3f1c078af1d7743ab84457f123677a0e",
+      "bytes": 603635,
+      "usage": "iOS通用1024图标，无alpha"
+    },
+    {
+      "local": "ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-2.png",
+      "width": 941,
+      "height": 941,
+      "sha256": "f2c007b81713791a4bb44b4d16a595a52b561426c1185f03c8a47f2c268bc0d3",
+      "bytes": 1209468,
+      "usage": "iOS默认及iPad方形启动图"
+    },
+    {
+      "local": "ios/App/App/Assets.xcassets/Splash.imageset/splash-portrait-1x.png",
+      "width": 941,
+      "height": 1672,
+      "sha256": "ec82d0d4039d32595f919eb41c313821fbf16ecbe0671ff3aa5635da71d352dd",
+      "bytes": 2273007,
+      "usage": "iPhone竖屏启动图"
+    },
+    {
+      "local": "ios/App/App/Assets.xcassets/Splash.imageset/splash-landscape-1x.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "a491fc3cb80f2418670da013b1fb473ed1725e3ecc957c68e61ece481c2a5ea5",
+      "bytes": 2173564,
+      "usage": "iPhone横屏启动图"
+    },
+    {
+      "local": "ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732-1.png",
+      "width": 941,
+      "height": 941,
+      "sha256": "f2c007b81713791a4bb44b4d16a595a52b561426c1185f03c8a47f2c268bc0d3",
+      "bytes": 1209468,
+      "usage": "iOS默认及iPad方形启动图"
+    },
+    {
+      "local": "ios/App/App/Assets.xcassets/Splash.imageset/splash-portrait-2x.png",
+      "width": 941,
+      "height": 1672,
+      "sha256": "ec82d0d4039d32595f919eb41c313821fbf16ecbe0671ff3aa5635da71d352dd",
+      "bytes": 2273007,
+      "usage": "iPhone竖屏启动图"
+    },
+    {
+      "local": "ios/App/App/Assets.xcassets/Splash.imageset/splash-landscape-2x.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "a491fc3cb80f2418670da013b1fb473ed1725e3ecc957c68e61ece481c2a5ea5",
+      "bytes": 2173564,
+      "usage": "iPhone横屏启动图"
+    },
+    {
+      "local": "ios/App/App/Assets.xcassets/Splash.imageset/splash-2732x2732.png",
+      "width": 941,
+      "height": 941,
+      "sha256": "f2c007b81713791a4bb44b4d16a595a52b561426c1185f03c8a47f2c268bc0d3",
+      "bytes": 1209468,
+      "usage": "iOS默认及iPad方形启动图"
+    },
+    {
+      "local": "ios/App/App/Assets.xcassets/Splash.imageset/splash-portrait-3x.png",
+      "width": 941,
+      "height": 1672,
+      "sha256": "ec82d0d4039d32595f919eb41c313821fbf16ecbe0671ff3aa5635da71d352dd",
+      "bytes": 2273007,
+      "usage": "iPhone竖屏启动图"
+    },
+    {
+      "local": "ios/App/App/Assets.xcassets/Splash.imageset/splash-landscape-3x.png",
+      "width": 1672,
+      "height": 941,
+      "sha256": "a491fc3cb80f2418670da013b1fb473ed1725e3ecc957c68e61ece481c2a5ea5",
+      "bytes": 2173564,
+      "usage": "iPhone横屏启动图"
+    }
+  ],
+  "macIcon": "shell/electron/icons/magic-haqi.icns",
+  "launchContentMode": "scaleAspectFit",
+  "launchBackground": "#241c5d"
+}

@@ -23,6 +23,7 @@
 7. **未支持即透明。** 未实现的 `template.type` 必须计入 `unsupported` 统计并在批量报告中展示，不得静默忽略。
 8. **开发日志写 `docs/devlog/devlog_YYYY-MM-DD.md`**，不要在 `docs/` 根目录或别处新增日志。
 9. 用户可见文案为中文；代码标识符英文；不加 emoji。
+10. **内容收录只针对儿童版（kids）。** 卡牌效果说明（`js/card_description_core.js`）、效果文案与 `data/adventure/locale/en.txt` 翻译补录等面向用户的内容工作，只覆盖 `data/kids/`；不移植、不补录、不翻译青年版（teen）内容（2026-09-26 用户约定）。teen 数据与分支保持现状即可，不为内容完整性任务去扩展它。
 
 ## 美术、Keepwork SDK 与 CDN（用户约定，2026-09-17）
 

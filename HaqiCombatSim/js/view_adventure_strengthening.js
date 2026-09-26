@@ -1,4 +1,5 @@
 import {STRENGTHENING_FILTERS,strengtheningItems,strengtheningPreview} from './adventure_strengthening_core.js';
+import {teachPointer} from './view_teaching.js';
 // Kids MCML window: selected equipment → target properties / material; 4 × 3 paged inventory.
 export function renderStrengthening(body,model,cb,{el,button,art}) {
     const {save,assets,strengtheningView:state}=model,c=assets.content;
@@ -54,6 +55,7 @@ export function renderStrengthening(body,model,cb,{el,button,art}) {
     });
     const grid=el('div','strengthening-grid'),pager=el('div','strengthening-pager');
     right.append(tabs,grid,pager);layout.append(left,right);body.append(layout);
+    teachPointer(submit,save,c);
     function paint(){
         const p=strengtheningPreview(save,c,state.guid),rows=strengtheningItems(save,c,state.filter);
         const pages=Math.max(1,Math.ceil(rows.length/12));state.page=Math.max(0,Math.min(state.page||0,pages-1));

@@ -1,7 +1,7 @@
 // Dialogue presentation only; quest actions remain in the controller.
 import { fill, setText } from './locale_runtime.js';
 import {mappingColor} from './dialogue_mapping_core.js';
-export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],readAloud,mapWords,targetLocale=lines[0]?.locale}={}) {
+export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],readAloud,mapWords,targetLocale=lines[0]?.locale,close}={}) {
     const full=text.textContent,chars=Array.from(full);
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
     let timer=0,index=0,disposed=false,ready=false,playback=null,mapping=null;
@@ -13,7 +13,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],readAlou
     function finish(){
         clearTimeout(timer);ready=true;visible.textContent=full;
         box.classList.remove('is-speaking');
-        setText(hint,'点击空白处 / 空格 · {action}',{action:defaultButton.textContent});
+        setText(hint,'空格 · {action} · 点击空白处关闭',{action:defaultButton.textContent});
     }
     function tick(){
         if(disposed||!box.isConnected)return;
@@ -21,13 +21,16 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],readAlou
         if(index>=chars.length){finish();return;}
         timer=setTimeout(tick,/[，。！？；…]/u.test(chars[index-1])?160:28);
     }
+    // 键盘空格/回车仍可触发默认操作；鼠标只允许按钮触发。
     const advance=()=>{if(!ready)finish();else defaultButton.click();};
     function click(event){
         if(event.target.closest('.dialogue-read'))return;
         // Closing is always immediate; other controls first reveal the sentence.
         if(event.target.closest('.close-button'))return;
-        if(!ready){event.preventDefault();event.stopImmediatePropagation();finish();return;}
-        if(!event.target.closest('button,a,input,select,textarea'))advance();
+        // 点击对话框外的空白区域：关闭对话。
+        if(!box.contains(event.target)){event.preventDefault();event.stopImmediatePropagation();close?.();return;}
+        // 对话框内的非控件区域：仅在对白未显示完时补全文字，其余情况无操作。
+        if(!ready){event.preventDefault();event.stopImmediatePropagation();finish();}
     }
     function keydown(event){
         if(event.target.closest('input,textarea,select,[contenteditable=true]'))return;
@@ -49,7 +52,7 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],readAlou
     root.addEventListener('keydown',keydown);
     box.tabIndex=-1;box.focus({preventScroll:true});
     defaultButton.classList.add('dialogue-default');
-    setText(hint,'点击任意位置 / 空格 · 显示完整对白');
+    setText(hint,'点击对白或空格显示全文 · 空白处关闭');
     box.classList.add('is-speaking');
     if(lines.length){
         ready=true;box.classList.remove('is-speaking');box.classList.add('dialogue-learning');text.replaceChildren();

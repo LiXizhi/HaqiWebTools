@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>玩家与好友隔离验收</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_social.css"><body class="haqi-app"><div id="root"></div><script type="module">
+import {renderSocial} from './js/view_adventure_social.js';
+const params=new URLSearchParams(location.search);
+const state={
+    owner:params.has('guest')?null:'fixture',userId:'self',chatTab:params.get('tab')==='friends'?'friends':'scene',
+    scenePlayers:[
+        {id:'p1',name:'无心插柳柳橙汁',school:'fire',level:28,position:{x:100,y:200}},
+        {id:'p2',name:'知径',school:'life',level:16,position:{x:220,y:180}},
+        {id:'p3',name:'风暴学徒',school:'storm',level:12,position:{x:340,y:260}},
+        {id:'p4',name:'寒冰旅人',school:'ice',level:22,position:{x:160,y:300}},
+        {id:'p5',name:'死亡学者',school:'death',level:35,position:{x:400,y:140}},
+    ],
+    friends:[{userId:'a',name:'安娜'},{userId:'b',name:'露娜'},{userId:'c',name:'小明'}],
+    conversations:[{peerId:'a',unread:1,latest:{text:'一起去冒险吧'}}],messages:[],
+    chatAvailable:params.has('ready'),
+};
+const drafts=new Map(),result=document.createElement('p');result.className='muted';result.style.cssText='position:fixed;left:12px;bottom:12px;z-index:9;background:#fff8df;padding:8px 12px;border:1px solid #c5a367;border-radius:8px';
+document.body.append(result);
+const paint=()=>{renderSocial(document.querySelector('#root'),state,'chat',cb);document.documentElement.dataset.fixtureReady='1';};
+const cb={
+    close:()=>{},refresh:paint,friends:()=>{result.textContent='打开好友管理';},compose:()=>{},login:()=>{result.textContent='打开登录';},
+    draft:(key,value)=>state[key]=value,chatTab:key=>{state.chatTab=key;paint();},
+    profile:p=>{result.textContent=`名片：${p.name} · ${p.level} 级`;},
+    teleportPlayer:p=>{result.textContent=`传送到 ${p.name}（${p.position.x},${p.position.y}）`;},
+    privateChat:f=>{state.chatPeer=f.userId;state.chatTab='friends';state.chatDraft=drafts.get(f.userId)||'';state.messages=state.chatAvailable?[{id:'1',senderId:f.userId,text:'一起去冒险吧'},{id:'2',senderId:'self',text:'好呀！'}]:[];paint();},
+    chatBack:()=>{drafts.set(state.chatPeer,state.chatDraft);state.chatPeer=null;state.chatTab='friends';paint();},
+    sendChat:text=>{state.messages.push({id:String(state.messages.length),senderId:'self',text});state.chatDraft='';paint();}
+};
+paint();
+</script></body></html>

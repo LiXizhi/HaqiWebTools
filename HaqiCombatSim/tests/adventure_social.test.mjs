@@ -73,10 +73,12 @@ for(const count of [2,3,4])test(`${count} player complete dungeon uses real roun
         for(let i=0;i<200&&!battle.finished;i++){const decision=bot.pick(battle,battle.unitsById.hero);P.playPveRound(battle,decision);A.recordDecision(save,decision,battle);}
         assert.equal(battle.finished,true);assert.equal(battle.winner,'near');
         const restored=checkedProgress(restoreRuntime(durableSave(save),content,runtimeValues(save)),content,dataset);
-        assert.deepEqual(restored.battle.events,battle.events);A.settleEncounter(save,content,battle);
+        assert.deepEqual(restored.battle.events,battle.events);A.settleEncounter(save,content,battle,{now});
     }
     assert.equal(dungeonProgress(save)[dungeon.id].cleared.length,dungeon.arenas.length);
     assert.equal(save.coopRun.battles.length,dungeon.arenas.length);
+    assert.equal(save.relationshipEvents.length,count-1);assert.ok(save.relationshipEvents.every(e=>e.kind==='dungeon'&&e.at===now));
+    assert.deepEqual(checkedProgress(save,content,dataset).save.relationshipEvents,save.relationshipEvents);
 });
 
 
@@ -113,13 +115,37 @@ test('only the nearest nearby bubble is clickable, never the body or a distant a
     assert.equal(socialBubble(actors,{x:600,y:600}),null);
     assert.equal(pickSocialBubble(actors,{x:600,y:600},{x:b.x+20,y:b.y+15}),null);
 });
-test('approaching stops a walking resident and holds until the player leaves',()=>{
+test('walking residents finish the path on brush-by; idle near the player holds until they leave',()=>{
     const save=A.createAdventure(content),world=createWorld('camp',content,save),[a]=createSocialActors(world,[{...profile(1),id:'p1'}],1);
-    const start={...a.position};a.path=[{x:start.x+50,y:start.y}];a.moving=true;a.wait=0;
-    const leader={x:start.x+80,y:start.y};stepSocialActors([a],world,.1,{leader});
-    assert.deepEqual(a.position,start);assert.equal(a.moving,false);assert.deepEqual(a.path,[]);
-    for(let i=0;i<1000;i++)stepSocialActors([a],world,.1,{leader});assert.deepEqual(a.position,start);
-    stepSocialActors([a],world,.1,{leader:{x:start.x+160,y:start.y}});assert.equal(a.approached,true);
-    stepSocialActors([a],world,.1,{leader:{x:start.x+200,y:start.y}});assert.equal(a.approached,false);
-    for(let i=0;i<1000;i++)stepSocialActors([a],world,.1);assert.notDeepEqual(a.position,start);
+    const start={...a.position},goal={x:start.x+50,y:start.y};a.path=[{...goal}];a.moving=true;a.wait=0;
+    const brushing={x:start.x+10,y:start.y};stepSocialActors([a],world,.1,{leader:brushing});
+    assert.ok(a.path.length||Math.hypot(a.position.x-start.x,a.position.y-start.y)>.01,'brush-by must not cancel travel');
+    for(let i=0;i<1000&&a.path.length;i++)stepSocialActors([a],world,.1,{leader:brushing});
+    assert.deepEqual(a.path,[]);
+    const arrived={...a.position};
+    for(let i=0;i<1000;i++)stepSocialActors([a],world,.1,{leader:brushing});
+    assert.deepEqual(a.position,arrived);assert.equal(a.moving,false);
+    stepSocialActors([a],world,.1,{leader:{x:arrived.x+160,y:arrived.y}});assert.equal(a.approached,true);
+    stepSocialActors([a],world,.1,{leader:{x:arrived.x+200,y:arrived.y}});assert.equal(a.approached,false);
+    for(let i=0;i<1000;i++)stepSocialActors([a],world,.1);assert.notDeepEqual(a.position,arrived);
+});
+
+test('every non-camp island fills sixteen unique companions and keeps them on walkable terrain',async()=>{
+    const {installNpcCatalog}=await import('../js/adventure_npc_core.js');
+    const {installNpcArt}=await import('../js/adventure_npc_art_core.js');
+    const fullContent=structuredClone(content),config=read('adventure/social');
+    installNpcCatalog(fullContent,read('adventure/npc-catalog'));installNpcArt(fullContent,read('adventure/npc-art'));
+    const fillers=config.personas.flatMap((p,i)=>['en','zh','ja','ko'].map((native,d)=>({...p,id:`companion:${i}:${d}`,native})));
+    for(const zone of Object.keys(fullContent.worldMapIndex.islands).filter(id=>!id.startsWith('dungeon:'))){
+        assert.equal(config.worlds[zone].enabled,true);
+        const options={world:zone,now,seed:42,capacity:socialCapacity(zone,config.worlds[zone]),fillers};
+        const roster=selectSocialRoster(options),world=createWorld(zone,fullContent);
+        assert.equal(roster.length,zone==='camp'?6:16,zone);
+        assert.equal(new Set(roster.map(p=>p.name)).size,roster.length);
+        assert.deepEqual(roster,selectSocialRoster(options));
+        const actors=createSocialActors(world,roster,42);
+        assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)),`${zone} spawn`);
+        for(let i=0;i<1200;i++)stepSocialActors(actors,world,.1);
+        assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)),`${zone} movement`);
+    }
 });

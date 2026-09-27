@@ -23,6 +23,12 @@ export function localDayKey(now = Date.now()) {
 export function ensureDailyStamina(save, content, now = Date.now()) {
     const day = localDayKey(now);
     if (save.staminaRefillDay === day) return readStamina(save, content);
+    // Preserve an in-progress depleted value when the refill day was never stamped
+    // (tests / mid-session loads); only refill when crossing a known prior day.
+    if (save.staminaRefillDay == null && Number.isInteger(save.stamina)) {
+        save.staminaRefillDay = day;
+        return readStamina(save, content);
+    }
     save.stamina = staminaMax(content);
     save.staminaRefillDay = day;
     return save.stamina;

@@ -14,6 +14,7 @@ def sha(raw):return hashlib.sha256(raw).hexdigest()
 def prepare(source,variant_id,reference=None,prompt_ref=None):
     gender='female' if variant_id.startswith('female') else 'male'
     definitions=json.loads((ROOT/'art-references/body-variants/prompts.json').read_text(encoding='utf-8'))+json.loads((ROOT/'art-references/body-variants/no-cape-prompts.json').read_text(encoding='utf-8'))
+    definitions+=json.loads((ROOT/'art-references/body-variants/school-swim-prompts.json').read_text(encoding='utf-8'))
     definition=next((row for row in definitions if row['id']==variant_id),{})
     base=json.loads((ROOT/'data/hero-preview.json').read_text(encoding='utf-8'))['bodies'][gender+'-walk']
     reference_path=reference or ROOT/base['local']

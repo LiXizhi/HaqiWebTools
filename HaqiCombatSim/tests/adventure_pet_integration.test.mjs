@@ -16,12 +16,31 @@ import {checkedProgress} from '../js/adventure_cloud_core.js';
 import {drawPetSocialEffects} from '../js/view_adventure_pet_social.js';
 import {petSceneProfiles,createPetScene} from '../js/adventure_pet_scene.js';
 import {petSummary,petFilePath} from '../js/adventure_pet_files_core.js';
+import {ISLANDS,islandSpawn} from '../js/adventure_world_map_core.js';
+import {createWorld,walkable} from '../js/adventure_world_core.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));
 const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 const T=Date.UTC(2026,8,27),D=86400000,scene={distance:10,anchor:{x:300,y:300},walkable:true};
 function hero(){const s=createAdventure(content,{starter:'dragon_green'});initializePetWorld(s,content);return s;}
 function pair(){const s=hero(),id=s.formation[0];s.pets[id]={...s.pets[id],xp:9000,level:25,gender:'female'};let result=petWorldAction(s,content,{type:'residents',residents:[{id:'fixture',school:'fire'}],now:T}).save;result.petWorld[npcPetId('fixture')].gender='male';return {save:result,id,other:npcPetId('fixture')};}
 const catalog=save=>({roles:[{id:'test',save}]});
+const islandContent={...content,worldMaps:Object.fromEntries(Object.entries(content.worldMapIndex.islands).map(([id,row])=>[id,JSON.parse(fs.readFileSync(new URL('../'+row.file,import.meta.url)))]))};
+for(const island of ISLANDS)test(`${island.name}: dialogue, food, birth and return-to-island adoption use the real map`,()=>{
+    assert.equal(read('adventure/social.json').worlds[island.id].enabled,true);
+    let save=hero(),at=T;save.zone=island.id;save.position=islandSpawn(island.id,islandContent);
+    const host=save.formation[0];save.pets[host].xp=9000;save.pets[host].level=25;save.pets[host].gender='female';save.inventory[990001]=2;
+    let world=createWorld(save.zone,islandContent,save);
+    const owner={id:'island-pet-owner',school:'fire'},other=npcPetId(owner.id);
+    const scene=createPetScene({getState:()=>({save,world,content:islandContent,scope:'all-islands',socialActors:[{profile:owner,position:{...save.position}}],loadPet:async()=>{},locked:false}),commit:next=>{save=next;},toast:()=>{},now:()=>at});
+    scene.step(0);save.petWorld[other].gender='male';
+    for(const day of [0,2,4]){at=T+day*D;scene.dialogue(owner.id);scene.step(0);}
+    const baby=scene.babies[0];assert.ok(baby,island.id);assert.equal(baby.birth.zone,island.id);assert.ok(walkable(world,baby.birth.anchor.x,baby.birth.anchor.y));
+    scene.feed(host);scene.step(0);assert.equal(save.inventory[990001],1);assert.equal(scene.babies.length,1);
+    const before=structuredClone(save.petWorld[other]);
+    save.zone=island.id==='camp'?'town':'camp';save.position=islandSpawn(save.zone,islandContent);world=createWorld(save.zone,islandContent,save);scene.step(0);assert.equal(scene.babies.length,0);assert.deepEqual(save.petWorld[other],before);
+    save.zone=island.id;save.position=islandSpawn(save.zone,islandContent);world=createWorld(save.zone,islandContent,save);scene.step(0);assert.equal(scene.babies[0].id,baby.id);
+    scene.adopt(baby.id);assert.equal(scene.babies.length,0);assert.ok(save.pets[baby.id]);assert.deepEqual(save.formation,[host,null,null,null]);
+});
 function sceneHarness(){
     let save=hero(),at=T;save.position={x:900,y:800};
     const world={zone:save.zone,w:1800,h:1600,buildings:[],trees:[],npcs:[{id:36215,name:'草莓姑娘'}]};

@@ -13,6 +13,7 @@ def calibrate(manifest):
     profiles=json.loads(PROFILE.read_text(encoding='utf-8'))
     manifest['headCalibration']=hashlib.sha256(PROFILE.read_bytes()).hexdigest()[:10]
     manifest['headTurnDrop']=profiles.get('headTurnDrop',[0,0,0])
+    manifest['sideHeadTurnDrop']=profiles.get('sideHeadTurnDrop',{})
     for key,profile in profiles['heads'].items():
         head=manifest['heads'].get(key)
         if not head: continue

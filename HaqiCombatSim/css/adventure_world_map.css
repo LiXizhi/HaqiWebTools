@@ -45,4 +45,9 @@
 .haqi-app .island-map-label{position:absolute;transform:translate(-50%,-100%);padding:3px 6px;border:1px solid #8f7f5355;border-radius:6px;background:#f5edccd9;color:#26493b;font-size:11px;white-space:nowrap;line-height:1.4;cursor:pointer;box-shadow:0 2px 6px #23402e33}
 .haqi-app .island-map-label:hover,.haqi-app .island-map-label:focus-visible{background:#fff4c5;outline:2px solid #91784b}
 .haqi-app .island-map-label:active:not(:disabled){transform:translate(-50%,-100%)}
+.haqi-app .island-map-companion{position:absolute;z-index:1;transform:translate(-50%,-50%);display:grid;place-items:center;width:24px;height:24px;min-height:0;padding:0;border:0;border-radius:50%;background:transparent;box-shadow:none;cursor:pointer}
+.haqi-app .island-map-companion::before{content:'';width:8px;height:8px;border:2px solid #fff8df;border-radius:50%;background:#7c3f9b;box-shadow:0 1px 3px #243325}
+.haqi-app .island-map-companion:hover::before,.haqi-app .island-map-companion:focus-visible::before{background:#b453ce;box-shadow:0 0 0 3px #fff4c599}
+.haqi-app .island-map-companion:focus-visible{outline:2px solid #7c3f9b;outline-offset:1px}
+.haqi-app .island-map-companion:active:not(:disabled){transform:translate(-50%,-50%)}
 @media(max-width:650px){.island-guide-chart{margin:12px 0}.haqi-app .island-map-label{font-size:9px;padding:3px}}

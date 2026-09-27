@@ -306,6 +306,14 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 
 二维坐标投影、近邻避让、路线、持久清怪和重开为Web规则。多怪奖励按各模板experience_pts和joybean_count累计（会员沿用逐怪ceil倍率），不把原宝箱/场景脚本当已实现。新检查点记录原怪物卡位，旧单怪检查点保持原行为；源码归档XML不写入检查点，避免开发/发布投影造成对比不一致。
 
+### 2026-09-27：副本精力（stamina_cost）
+
+- `arena_server.lua` L2076–2077 读取竞技场 `stamina_cost`；结算 L6035–6048：儿童版非 easy（或青年版任意难度）在 `dragon.stamina <= 0` 时标记 `InsufficientStamina` 并跳过物品掉落；有精力则记入 `stamina_costs`，L6784–6785 `PowerItemManager.CostStamina`（gsid -19）。
+- 客户端提示 `MsgHandler.lua` InsufficientStamina：「你的精力值不足，无法得到这场战斗的战利品。」入口检查 L7700–7707 仅提示，不阻止开战。
+- 上限：`Player.GetStamina` 儿童版非会员 100；魔法星能量>0 时 `100 + 10*mlel`（Web 暂用钓鱼同款上限 100）。
+- **不是**「每天 N 次」计数器：可无限再战；无精力则无战利品。普通火岩洞等多数 arena 无 `stamina_cost`，刷怪不扣精力。
+- Web：`adventure_stamina_core.js` + `settleEncounter`；与钓鱼共用 `save.stamina`（本地字段）；日历日切换补满。当前奖励面为经验+奇豆，精力不足时一并跳过（比原版「只跳过物品掉落、经验奇豆仍发」更严，因网页暂无副本物品掉落系统）。
+
 - 2026-09-25 钓鱼多轮提竿与重量是 Web 趣味规则，不对应 Lua 公式。参数集中在 BalanceParams.fishing（独立于战斗 adventure 参数，避免影响旧战斗重演）。重量用 seed + 捕获序号 + 鱼种派生独立 RNG；原 ExtendedCost 的分支、奖励 RNG、消耗及概率均保持原样。
 
 - 2026-09-25 用户要求钓鱼失误主要降低重量：新增 fishingPerformance（hits/rounds/mistakes）影响独立重量分布，手动至少命中一次不空手。场景自动捕鱼器的原空手分支有 99% 概率替换为同工具成功分支，总失败率约 0.14%；这是明确的 Web 规则覆盖，不能再声称新场景模式与 Lua 空手概率完全相同。成功分支的鱼种、数量、精力和标记仍走原导出表；旧调用保持原概率。参数集中于 BalanceParams.fishing。
@@ -328,3 +336,7 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 ## 2026-09-27：概率分析钩子
 
 `tryCriticalStrike`、`tryDodge`、`rollFizzle`、`generatePip`增加可选`rng.probability`钩子，仅供隔离预测。依据分别为card_server.lua L1310-1338、L1397-1452、L2514-2560及player_server.lua L1980-2002。概率保留闭区间边界，例如0%暴击仍有1/1001、80准确率成功81/101。普通RNG无此方法，实战取样次数/顺序不变。未修改原伤害公式。
+
+## 2026-09-27 kids赠礼资格
+
+`ItemManager.lua` GetAllCanGiftItemGUIDs L5460–5492按cangift、包范围、强化和镶嵌筛选；`paraworld.globalstore.lua` L535–554定义t[24]类、t[34]可交易、t[38]堆叠、t[40]可赠送；`GenericTooltip.lua` L505–522定义stats[223]与实例绑定。新增export_gift_rules.py保留DB哈希，仅开放class18、可堆叠、cangift=true、绑定类型0的物品；实例装备/坐骑等未完整核验类型明确禁用。好感度、异性随机偏移和活动加成为网页改编，不宣称原版公式。

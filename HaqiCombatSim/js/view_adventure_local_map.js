@@ -1,7 +1,7 @@
 import {createCloseButton} from './view_adventure_controls.js';
 import {fill, setText, tr} from './locale_runtime.js';
 // Island navigation UI: controller owns movement and all save changes.
-export function renderLocalMap(root,world,save,callbacks){
+export function renderLocalMap(root,world,save,callbacks,socialActors=[]){
     root.replaceChildren();root.className='overlay visible';
     const name=world.layout.name;
     const box=document.createElement('section');box.className='modal wide island-guide';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',tr(name));
@@ -27,6 +27,16 @@ export function renderLocalMap(root,world,save,callbacks){
         label.setAttribute('aria-label',teleport);label.title=teleport;
         label.style.left=`${region.x/world.w*100}%`;label.style.top=`${region.y/world.h*100}%`;
         label.onclick=()=>callbacks.teleport(mark.id);map.append(label);
+    }
+    // Actors pause while the map is open; use their actual positions, not spawn points.
+    for(const actor of socialActors){
+        const {x,y}=actor.position;
+        const marker=document.createElement('button');marker.type='button';marker.className='island-map-companion';
+        const label=fill('传送到{name}',{name:actor.profile.name}).text;
+        marker.setAttribute('aria-label',label);marker.title=label;
+        marker.style.left=`${x/world.w*100}%`;marker.style.top=`${y/world.h*100}%`;
+        marker.onclick=()=>callbacks.teleportToPosition(actor.position.x,actor.position.y);
+        map.append(marker);
     }
     body.append(map,list);box.append(body);root.append(box);callbacks.draw(canvas,{labels:false});close.focus();
 }

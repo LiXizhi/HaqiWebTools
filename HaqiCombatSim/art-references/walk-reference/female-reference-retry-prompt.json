@@ -1,0 +1,8 @@
+{
+  "references": [
+    "assets/hero-preview/male-walk-ref.webp",
+    "assets/hero-preview/female-walk-cycle.webp"
+  ],
+  "prompt": "制作女性中性走路参考图。第一张男性灰衣图只作为走路动作参考；第二张女性图作为女性体型、脖子位置和构图比例参考。灰色简洁长袖上衣、深灰长裤、平底鞋，无披风无武器，不要头。保留女性自然柔和的体型。7列4行：正面、向左、向右、背面，每行6幅左右腿交替走路，最后一幅站立。手臂自然伸直、与对侧腿交替摆动，不顺拐。固定每格脖子位置，完整28格，透明背景。",
+  "generatedSource": "C:\\Users\\Administrator\\.codex\\generated_images\\01a0dec0-51a7-7a03-99c6-31fd0b97722c\\exec-eb8176f8-1af5-41e1-a25d-bba139264610.png"
+}

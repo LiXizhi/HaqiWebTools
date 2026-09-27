@@ -140,10 +140,11 @@ export class HeroRenderer {
         let headRect=null;
         if(split&&!options.bodyOnly){
             const h=heads.frames[(head+heads.directionCount)%heads.directionCount],s=frame.headHeight*ratio/h.height;
-            // Compensate relative head turns, independent of gender and world facing.
+            // Side-facing profiles can refine the shared relative-turn compensation.
             // Values are body-atlas pixels, scaled with the body rather than the head art.
             const turn=Math.abs(((head-BODY_TO_HEAD[pose.rider.cell])%16+24)%16-8);
-            const drop=this.manifest.headTurnDrop||[0,0,0];
+            const side=pose.rider.cell===1||pose.rider.cell===2;
+            const drop=(side&&this.manifest.sideHeadTurnDrop?.[appearance.gender])||this.manifest.headTurnDrop||[0,0,0];
             const turnDrop=drop[Math.min(turn,drop.length-1)]||0;
             headRect={x:neck[0]-h.neck[0]*s,y:neck[1]-h.neck[1]*s+turnDrop*ratio,w:h.crop[2]*s,h:h.crop[3]*s};
             const breath=options.breath||headBreath(options.time||0,options.phase||0,options.reducedMotion||original);
@@ -196,8 +197,12 @@ export class HeroRenderer {
         let disposed=false,current=appearance,settings=options,revision=0;const actor=this.createActor(options.seed||7419);
         const reduced=typeof matchMedia==='function'?matchMedia('(prefers-reduced-motion: reduce)'):null;
         const paint=(time=0)=>{if(disposed)return;const c=canvas.getContext('2d');c.clearRect(0,0,canvas.width,canvas.height);
-            const pose=this.updateActor(actor,{time,facing:settings.facing||0,reducedMotion:reduced?.matches,lookAround:settings.lookAround});
-            this.draw(c,current,{x:canvas.width/2,y:canvas.height*.88,size:78,time,head:pose.head,breath:pose.breath,reducedMotion:reduced?.matches,...settings});};
+            const facing=settings.facing||0,lockHead=settings.lookAround===false;
+            const pose=this.updateActor(actor,{time,facing,reducedMotion:reduced?.matches,lookAround:!lockHead});
+            // Social UI portraits face forward only: no idle glance, no lateral breath tilt.
+            const head=lockHead?BODY_TO_HEAD[facing]:pose.head;
+            const breath=lockHead?{x:0,y:pose.breath.y,angle:0}:pose.breath;
+            this.draw(c,current,{x:canvas.width/2,y:canvas.height*.88,size:78,time,head,breath,reducedMotion:reduced?.matches,...settings});};
         const view={node:canvas,paint,connected:false};
         const update=async(a=current,o=settings)=>{current=a;settings=o;const rev=++revision;await this.ensure({...a,standing:o.standing});if(rev===revision&&!disposed){paint();if(settings.animate&&canvas.isConnected)scheduleView(view);}};
         return {node:canvas,update,dispose(){disposed=true;revision++;views.delete(view);},ready:update()};

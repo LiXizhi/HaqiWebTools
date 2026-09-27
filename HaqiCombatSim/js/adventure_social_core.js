@@ -33,7 +33,7 @@ export function markSocialActivity(activity,world,kind,now) {
 export function weeklyActivity(activity,world,now){return (activity?.[world]||[]).filter(d=>d>=utcWeek(now)&&d<=utcDay(now)).length;}
 export function validatePublicProfile(row,username=null) {
     if(row?.version!==SOCIAL_VERSION||!safeName(row.username)||username&&row.username!==username||!/^\d{1,20}$/.test(String(row.userId))||typeof row.name!=='string'||row.name.length>40||!schools.includes(row.school)||!['boy','girl'].includes(row.appearance)||!Number.isInteger(row.level)||row.level<1||row.level>100)return null;
-    if(!['zh','en'].includes(row.native)||!['zh','en'].includes(row.target)||row.native===row.target||row.visible!==true)return null;
+    if(!['zh','en','ja','ko'].includes(row.native)||!['zh','en','ja','ko'].includes(row.target)||row.native===row.target||row.visible!==true)return null;
     return {version:row.version,userId:String(row.userId),username:row.username,name:row.name,school:row.school,level:row.level,appearance:row.appearance,headId:row.headId,bodyId:row.bodyId,registeredAt:typeof row.registeredAt==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(row.registeredAt)&&Number.isFinite(Date.parse(row.registeredAt))?row.registeredAt:undefined,native:row.native,target:row.target,visible:true,activity:row.activity||{},snapshot:row.snapshot,id:`user:${row.userId}`,kind:'account'};
 }
 export function selectSocialRoster({candidates=[],friends=[],blocked=[],interactions={},challenges={},selfId,world='camp',native='zh',target='en',level=1,now,seed=1,capacity=6,fillers=[]}) {
@@ -49,8 +49,8 @@ export function selectSocialRoster({candidates=[],friends=[],blocked=[],interact
         rows.push({p:{...p,id:`user:${id}`,kind:'account'},priority:recent?0:reciprocal?1:2,at:recent?at:0,friend:friend?0:1,shared:challenges[id]?0:1,gap:Math.abs(p.level-level),tie:rng.float()});
     }
     rows.sort((a,b)=>a.priority-b.priority||b.at-a.at||a.friend-b.friend||a.shared-b.shared||a.gap-b.gap||a.tie-b.tie);
-    const selected=rows.slice(0,capacity).map(r=>r.p),pool=rng.shuffle(fillers.filter(p=>p.native===target&&p.target===native||p.native===native&&p.target===target).map(p=>({...p})));
-    while(selected.length<capacity&&pool.length){const counts=Object.fromEntries(schools.map(s=>[s,selected.filter(p=>p.school===s).length]));pool.sort((a,b)=>counts[a.school]-counts[b.school]);const next=pool.shift();if(!selected.some(p=>p.name===next.name))selected.push(next);}
+    const selected=rows.slice(0,capacity).map(r=>r.p),pool=rng.shuffle(fillers.filter(p=>['en','zh','ja','ko'].includes(p.native)).map(p=>({...p})));
+    while(selected.length<capacity&&pool.length){const counts=Object.fromEntries(schools.map(s=>[s,selected.filter(p=>p.school===s).length]));const languages=new Set(selected.map(p=>p.native));pool.sort((a,b)=>Number(languages.has(a.native))-Number(languages.has(b.native))||counts[a.school]-counts[b.school]);const next=pool.shift();if(!selected.some(p=>p.name===next.name))selected.push(next);}
     return selected;
 }
 export function validateSocialSnapshot(snapshot,dataset) {

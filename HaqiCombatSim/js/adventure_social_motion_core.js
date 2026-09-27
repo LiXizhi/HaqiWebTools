@@ -27,9 +27,10 @@ export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=
         // Off-camera residents idle in place; only on-screen actors walk like the hero.
         if(!socialInView(a.position,view)){a.path=[];a.moving=false;continue;}
         const distance=leader?Math.hypot(a.position.x-leader.x,a.position.y-leader.y):Infinity;
-        // Hysteresis prevents repeated start/stop at the approach boundary.
+        // Hysteresis once idle near the player; walking residents finish the current path first.
         a.approached=distance<=(a.approached?SOCIAL_DEFAULTS.approachReleaseRadius:SOCIAL_DEFAULTS.approachRadius);
-        if(a.approached){if(a.path.length)moving--;a.path=[];a.moving=false;a.wait=Math.max(a.wait,SOCIAL_DEFAULTS.followWait);a.facing=socialFacing(leader.x-a.position.x,leader.y-a.position.y);continue;}
+        // Brush-by mid-walk does not cancel travel; only an already-idle actor stays put while close.
+        if(a.approached&&!a.path.length){a.moving=false;a.wait=Math.max(a.wait,SOCIAL_DEFAULTS.followWait);a.facing=socialFacing(leader.x-a.position.x,leader.y-a.position.y);continue;}
         const index=team.indexOf(a.profile.id);a.wait-=dt;a.travel-=dt;
         if(index>=0&&leader){if(!a.path.length&&moving<limit&&a.wait<=0&&Math.hypot(a.position.x-leader.x,a.position.y-leader.y)>SOCIAL_DEFAULTS.followDistance){a.path=findPath(world,a.position,nearestWalkable(world,leader.x-SOCIAL_DEFAULTS.followSpacing*(index+1),leader.y+SOCIAL_DEFAULTS.separation));a.wait=SOCIAL_DEFAULTS.followWait;if(a.path.length)moving++;}}
         else if(!a.path.length&&a.wait<=0&&moving<limit){

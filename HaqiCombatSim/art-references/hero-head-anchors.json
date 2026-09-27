@@ -1186,10 +1186,11 @@
       ]
     }
   },
+  "sideHeadTurnDrop": {"female": [0, 0, 0]},
   "headTurnDrop": [
     0,
-    3,
-    7
+    0,
+    0
   ],
   "headTurnDropDescription": "相对身体转头0/1/2档时下移的身体图集像素，男女共用。每档22.5度。"
 }

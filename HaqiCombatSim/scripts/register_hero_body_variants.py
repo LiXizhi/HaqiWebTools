@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[1]
 path=ROOT/'art-references/hero-body-variants.json'
 source=json.loads(path.read_text(encoding='utf-8'))
 variants=source['variants']
-assert set(variants)==({f'{gender}{i}' for gender in ('male','female') for i in range(2,12)}|{'male-ref','female-ref'})
+assert set(variants)==({f'{gender}{i}' for gender in ('male','female') for i in range(2,14)}|{'male-ref','female-ref'})
 manifest=json.loads((ROOT/'data/hero-preview.json').read_text(encoding='utf-8'))
 for row in variants.values():
     raw=(ROOT/row['local']).read_bytes()

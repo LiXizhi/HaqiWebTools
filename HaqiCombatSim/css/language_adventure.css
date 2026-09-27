@@ -50,3 +50,24 @@
 .camp-chat-overlay>.camp-chat{justify-self:center}
 
 .camp-chat-reward-preview{display:block;margin-top:8px;font-size:13px;font-weight:700;color:#78521e}
+
+/* Shared free-talk controls wrap without changing the course layout. */
+.camp-chat-actions{flex-wrap:wrap;gap:8px}.camp-chat-input input{min-width:0}.relationship-gift-row{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.relationship-gift-row small{flex-basis:100%}.relationship-history{white-space:pre-wrap;overflow-wrap:anywhere}
+
+.camp-chat-input>button{flex:0 0 auto;white-space:nowrap}.camp-chat-character-art{max-width:100%;object-fit:contain;order:0}.camp-chat-portrait-frame{width:100%;min-width:0;display:flex;justify-content:center}
+@media(max-width:700px){
+    .camp-chat-character{gap:8px;min-height:64px;box-sizing:border-box;padding:6px 64px 6px 10px;text-align:left}
+    .camp-chat-character h2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:30%;font-size:16px}
+    .camp-chat-role{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:none;min-width:0;flex:1;margin:0;line-height:20px}
+    .camp-chat-portrait-frame{order:-1;position:relative;flex:0 0 48px;width:48px;height:48px;overflow:hidden;border-radius:12px;background:#fff3d41c}
+    .camp-chat-portrait-frame .camp-chat-portrait,.camp-chat-portrait-frame .camp-chat-character-art{display:block;position:absolute;left:50%;top:0;transform:translateX(-50%);width:76px!important;height:94px!important;max-width:none;max-height:none;margin:0;object-fit:contain;object-position:top}
+}
+
+
+/* Secondary free-talk actions stay behind the composer plus button. */
+.camp-chat-input-box{position:relative;display:flex;flex:1;min-width:0}
+.camp-chat-input-box input{box-sizing:border-box}.camp-chat-input-box.has-more input{padding-right:46px}
+.camp-chat-more{position:absolute;right:2px;top:0;bottom:0;margin:auto 0;width:42px;height:42px;padding:0;border:0;border-radius:10px;background:transparent;color:#315d45;font:28px/1 sans-serif;cursor:pointer}
+.camp-chat-more:hover,.camp-chat-more[aria-expanded=true]{background:#e7edce}
+.camp-chat-more-menu{position:absolute;right:0;bottom:calc(100% + 8px);z-index:5;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:240px;max-width:calc(100vw - 52px);padding:12px;box-sizing:border-box;background:var(--paper,#fff8df);border:1px solid var(--gold,#b78636);border-radius:12px;box-shadow:0 8px 24px #10291b40}
+.camp-chat-more-menu button{min-height:44px;white-space:nowrap;font-size:13px}

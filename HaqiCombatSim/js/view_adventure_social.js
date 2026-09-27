@@ -1,3 +1,5 @@
+import {renderFriendChat} from './view_friend_chat.js';
+import {languageName} from './character_relationship_core.js';
 import {defeatReviewNotes} from './view_battle_review.js';
 import {renderPartnerProfile} from './view_adventure_social_profile.js';
 import {el,button} from './view_adventure.js';
@@ -7,22 +9,16 @@ import {dungeonStaminaHint} from './adventure_stamina_core.js';
 const schoolNames={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡'};
 export function renderSocial(root,state,kind,cb){
     root.replaceChildren();root.className='overlay visible';
-    const title={mail:'邮件与好友',chat:'好友私聊','social-party':state.partyDungeon?`组队 · ${state.partyDungeon.name}`:'副本组队','social-profile':'伙伴名片','social-pvp':'红蘑菇赛场'}[kind]||'冒险伙伴';
+    const title={mail:'邮件与好友',chat:'玩家与好友','social-party':state.partyDungeon?`组队 · ${state.partyDungeon.name}`:'副本组队','social-profile':'伙伴名片','social-pvp':'红蘑菇赛场'}[kind]||'冒险伙伴';
     const box=el('section','modal social-modal');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',title);
     const body=el('div','modal-body');box.append(el('header','modal-header',el('h2','',title),createCloseButton(cb.close)),body);root.append(box);
     if(state.busy)body.append(el('p','muted','正在连接…'));
     if(state.error)body.append(el('p','social-error',state.error));
     if(kind==='social-profile'&&state.selected){box.classList.add('partner-profile-modal');renderPartnerProfile(body,state,cb);return;}
-    if(['mail','chat'].includes(kind)){
+    if(kind==='chat'){renderFriendChat(box,body,state,cb);return;}
+    if(kind==='mail'){
         if(!state.owner){body.append(el('p','','登录后可以与好友通信。'),button('登录 Keepwork',cb.login,'primary'));return;}
         body.append(button('刷新',cb.refresh,'secondary'));
-        if(kind==='chat'){
-            if(!state.chatAvailable){body.append(el('p','muted','私聊消息服务尚未完成验证。你仍可以通过邮件与好友交流。'),button('打开邮件',()=>cb.open('mail'),'secondary'));return;}
-            for(const c of state.conversations)body.append(button(`${c.name||'好友'}${c.unread?' · 未读':''}`,()=>cb.conversation(c),'secondary'));
-            for(const m of state.messages||[])body.append(el('p','',`${m.senderName||'好友'}：${m.text}`));
-            if(state.chatPeer){const text=el('textarea','social-compose');text.value=state.chatDraft||'';text.oninput=()=>cb.draft('chatDraft',text.value);body.append(text,button('发送',()=>cb.sendChat(text.value),'primary'));}
-            return;
-        }
         const tabs=el('div','gui-tabs');for(const [key,label]of [['inbox','收件箱'],['compose','写信'],['friends','好友与申请']]){const b=button(label,()=>cb.mailTab(key));b.setAttribute('aria-pressed',String((state.mailTab||'inbox')===key));tabs.append(b);}body.append(tabs);
         if(!state.mailAvailable&&state.mailTab!=='friends'){body.append(el('p','muted','邮件服务正在验证中，可先管理好友申请。'));return;}
         if(state.mailTab==='friends'){
@@ -101,10 +97,10 @@ export function renderSocial(root,state,kind,cb){
             body.append(el('h3','','主动邀请'));
             if(!canCoop)body.append(el('p','muted','当前副本不支持组队邀请。'));
             for(const p of state.roster){
-                const joined=state.team.some(t=>t.id===p.id),card=el('article','social-person',el('h3','',p.name),el('p','',`${schoolNames[p.school]||p.school} · 母语${p.native==='zh'?'中文':'英语'} · 正在学${p.target==='zh'?'中文':'英语'}`),el('p','muted',p.interest||''));
+                const joined=state.team.some(t=>t.id===p.id),card=el('article','social-person',el('h3','',p.name),el('p','',`${schoolNames[p.school]||p.school} · 母语${languageName(p.native)} · 正在学${languageName(p.target)}`),el('p','muted',p.interest||''));
                 const join=button(joined?'移出队伍':'邀请组队',()=>cb.team(p,!joined),'primary');join.disabled=!canCoop||(!joined&&state.team.length>=3);
                 card.append(button('查看名片',()=>cb.profile(p),'secondary'),join,button('交谈',()=>cb.talk(p),'secondary'));
-                if(p.kind==='account'){const friend=state.friends.find(f=>f.userId===String(p.userId));card.append(button(friend?'写信':'添加好友',()=>friend?cb.compose(friend):cb.friend(p),'secondary'));if(friend)card.append(button('私聊',()=>cb.open('chat'),'secondary'));}
+                if(p.kind==='account'){const friend=state.friends.find(f=>f.userId===String(p.userId));card.append(button(friend?'写信':'添加好友',()=>friend?cb.compose(friend):cb.friend(p),'secondary'));if(friend)card.append(button('私聊',()=>cb.privateChat(friend),'secondary'));}
                 body.append(card);
             }
         }
@@ -113,10 +109,10 @@ export function renderSocial(root,state,kind,cb){
     }
     const rows=kind==='social-profile'&&state.selected?[state.selected]:state.roster;
     for(const p of rows){
-        const card=el('article','social-person',el('h3','',p.name),el('p','',`${schoolNames[p.school]||p.school} · 母语${p.native==='zh'?'中文':'英语'} · 正在学${p.target==='zh'?'中文':'英语'}`),el('p','muted',p.interest||''));
+        const card=el('article','social-person',el('h3','',p.name),el('p','',`${schoolNames[p.school]||p.school} · 母语${languageName(p.native)} · 正在学${languageName(p.target)}`),el('p','muted',p.interest||''));
         if(kind==='social-pvp')card.append(button('开始切磋',()=>cb.challenge(p),'primary'));
         else{const joined=state.team.some(t=>t.id===p.id),join=button(joined?'移出队伍':'邀请组队',()=>cb.team(p,!joined),'primary');join.disabled=state.coopActive||!joined&&state.team.length>=3;card.append(button('查看名片',()=>cb.profile(p),'secondary'),join,button('交谈',()=>cb.talk(p),'secondary'));
-            if(p.kind==='account'){const friend=state.friends.find(f=>f.userId===String(p.userId));card.append(button(friend?'写信':'添加好友',()=>friend?cb.compose(friend):cb.friend(p),'secondary'));if(friend)card.append(button('私聊',()=>cb.open('chat'),'secondary'));}}
+            if(p.kind==='account'){const friend=state.friends.find(f=>f.userId===String(p.userId));card.append(button(friend?'写信':'添加好友',()=>friend?cb.compose(friend):cb.friend(p),'secondary'));if(friend)card.append(button('私聊',()=>cb.privateChat(friend),'secondary'));}}
         body.append(card);
     }
     if(state.dialogue){body.append(el('p','muted','AI 生成'),el('p','social-letter',state.dialogue.reply||'你好，一起冒险吧。'));const input=el('textarea','social-compose');input.setAttribute('aria-label','对伙伴说');body.append(input,button('发送',()=>cb.reply(input.value),'primary'));}

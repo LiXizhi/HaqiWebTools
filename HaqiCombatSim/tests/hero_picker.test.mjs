@@ -10,8 +10,8 @@ const read=p=>JSON.parse(readFileSync(new URL('../data/'+p,import.meta.url)));
 test('new body identifiers include both digits and reject unknown or wrong-gender values',()=>{
  for(const [gender,appearance] of [['male','boy'],['female','girl']]){
   assert.ok(validHeroBodyId(gender+'-ref',appearance));
-  for(let n=7;n<=11;n++)assert.ok(validHeroBodyId(gender+n,appearance));
-  for(const id of [gender+'12',gender+'01',gender+'0','../male7'])assert.equal(validHeroBodyId(id,appearance),false);
+  for(let n=7;n<=13;n++)assert.ok(validHeroBodyId(gender+n,appearance));
+  for(const id of [gender+'14',gender+'01',gender+'0','../male7'])assert.equal(validHeroBodyId(id,appearance),false);
  }
  assert.equal(validHeroBodyId('female11','boy'),false);
 });
@@ -54,7 +54,7 @@ test('AI costume selection is stable, gender-safe and reaches reference costumes
    assert.ok(validHeroBodyId(id,appearance));seen.add(id);
   }
   assert.ok(seen.has(appearance==='girl'?'female-ref':'male-ref'));
-  assert.equal(seen.size,12);
+  assert.equal(seen.size,14);
  }
  assert.equal(randomHeroBodyId({},'girl',1),'female');
 });

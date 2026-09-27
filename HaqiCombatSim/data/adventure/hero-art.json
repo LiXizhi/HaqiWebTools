@@ -7529,7 +7529,7 @@
       "anchorProfile": "art-references/hero-head-anchors.json#wave-girl"
     }
   },
-  "headCalibration": "29ea6cc3a6",
+  "headCalibration": "dd0d715f32",
   "bodyVariants": {
     "male2": {
       "id": "male2",
@@ -7982,16 +7982,16 @@
       "local": "assets/hero-preview/female8-walk-cycle.webp",
       "width": 1344,
       "height": 768,
-      "bytes": 191628,
-      "sha256": "6c4d81a9e9dedc7c354ef791856e40acafdcebac3a73526b8dbf793d07e18aa3",
+      "bytes": 176892,
+      "sha256": "3e8337be7cd2dfade23b36a3ec6c678e43e1e855d5f81f8dc1ed6ff7c38c646a",
       "encoding": {
         "lossless": true
       },
       "source": {
         "method": "built-in image_gen reference edit",
-        "sha256": "c858b1a585b73a2c9d00d3b8ecc499f2c672d386a77af6b02a80b49065800616",
+        "sha256": "94238fac06a0370b9358913e7028f1c0807399437ec792dabdecbd896cdec5ef",
         "reference": "assets/hero-preview/female-walk-ref.webp",
-        "referenceSha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011",
         "geometryBase": "assets/hero-preview/female-walk-cycle.webp"
       },
       "validation": {
@@ -8000,8 +8000,8 @@
         "neckPixelsExact": true,
         "unchangedGeometry": true
       },
-      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
-      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/female8-walk-cycle.webp"
+      "promptRef": "art-references/body-variants/female-mirrored-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/63f23abfe014/female8-walk-cycle.webp"
     },
     "female9": {
       "id": "female9",
@@ -8011,16 +8011,16 @@
       "local": "assets/hero-preview/female9-walk-cycle.webp",
       "width": 1344,
       "height": 768,
-      "bytes": 193106,
-      "sha256": "23c0217664339abc91827a772e38d8627d894376fdba8078597f45c145cf50a5",
+      "bytes": 176826,
+      "sha256": "81d74a1bb863eca007d745715b7c9b73d3c64517ccb5cb4c0af4aaad45d289b7",
       "encoding": {
         "lossless": true
       },
       "source": {
         "method": "built-in image_gen reference edit",
-        "sha256": "d2b340a5fd5a6b12b82e08d5efbb4692d1d5850071ffa07450fd0af263c60c22",
+        "sha256": "9b6b502f5a6a340b76d4612ba9a80fa808b221e28f9551bdcd128d92d4e1247a",
         "reference": "assets/hero-preview/female-walk-ref.webp",
-        "referenceSha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011",
         "geometryBase": "assets/hero-preview/female-walk-cycle.webp"
       },
       "validation": {
@@ -8029,8 +8029,8 @@
         "neckPixelsExact": true,
         "unchangedGeometry": true
       },
-      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
-      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/female9-walk-cycle.webp"
+      "promptRef": "art-references/body-variants/female-mirrored-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/63f23abfe014/female9-walk-cycle.webp"
     },
     "female10": {
       "id": "female10",
@@ -8040,16 +8040,16 @@
       "local": "assets/hero-preview/female10-walk-cycle.webp",
       "width": 1344,
       "height": 768,
-      "bytes": 189202,
-      "sha256": "8385992a04a0801a383e29abb679d58e2a45e7dc12edc3e13264e71e5020c82a",
+      "bytes": 161538,
+      "sha256": "ba57490b5ea1ecb62f188ec17ffc998ebaa13a71ebfff19dc3c4d0e2faa3959a",
       "encoding": {
         "lossless": true
       },
       "source": {
         "method": "built-in image_gen reference edit",
-        "sha256": "c4ff5385850c1ea8518b0d31816cd362dbe516dc83ae41b948638cf78da9e00d",
+        "sha256": "4f5e54955ff724dc1e0292038f86ba38e28577f24dd4881db34c6b97db5ba174",
         "reference": "assets/hero-preview/female-walk-ref.webp",
-        "referenceSha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011",
         "geometryBase": "assets/hero-preview/female-walk-cycle.webp"
       },
       "validation": {
@@ -8058,8 +8058,8 @@
         "neckPixelsExact": true,
         "unchangedGeometry": true
       },
-      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
-      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/female10-walk-cycle.webp"
+      "promptRef": "art-references/body-variants/female-mirrored-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/63f23abfe014/female10-walk-cycle.webp"
     },
     "female11": {
       "id": "female11",
@@ -8069,16 +8069,16 @@
       "local": "assets/hero-preview/female11-walk-cycle.webp",
       "width": 1344,
       "height": 768,
-      "bytes": 163540,
-      "sha256": "231fa4ea0ec796dff6bfd36881af604dc7d8aed1859cdf4ce65e29bb1cdf2f61",
+      "bytes": 142918,
+      "sha256": "798eb460f6ee7fedf9e3a92c95592ae97ea9506ae7b67500ba79458177b5b7be",
       "encoding": {
         "lossless": true
       },
       "source": {
         "method": "built-in image_gen reference edit",
-        "sha256": "2687f9cbd9001d3233565ae5b1a351d18bf93ebf73af9f2ea8d7c3e8a8ec0cf1",
+        "sha256": "87f32d1b44295f36c36b8ac64893d3f9bf4a094e3b5ea4cf905482db18a968f6",
         "reference": "assets/hero-preview/female-walk-ref.webp",
-        "referenceSha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011",
         "geometryBase": "assets/hero-preview/female-walk-cycle.webp"
       },
       "validation": {
@@ -8087,8 +8087,8 @@
         "neckPixelsExact": true,
         "unchangedGeometry": true
       },
-      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
-      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/female11-walk-cycle.webp"
+      "promptRef": "art-references/body-variants/female-mirrored-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/63f23abfe014/female11-walk-cycle.webp"
     },
     "male-ref": {
       "id": "male-ref",
@@ -8111,19 +8111,142 @@
       "gender": "female",
       "baseBody": "female-walk",
       "local": "assets/hero-preview/female-walk-ref.webp",
-      "sha256": "5603fe0505547120a5d172f3cb86fbb86beffc8dceafec8de16c15138017034f",
-      "bytes": 155788,
+      "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011",
+      "bytes": 131088,
       "width": 1344,
       "height": 768,
       "source": {
         "reference": "art-references/walk-reference/female-walk-ref.json"
       },
-      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/262876b00163/female-walk-ref.webp"
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/d07784d51e98/female-walk-ref.webp"
+    },
+    "male12": {
+      "id": "male12",
+      "name": "碧海逐浪",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male12-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 176728,
+      "sha256": "54c6cf617a54d3ac84c1f9536b7ef3f67c2d4560febaa2fcdc13b8961b81b289",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "9bbfc6db57e3c2e88336d9febca3a665f07fb8911140e7d63889af063760b91e",
+        "reference": "assets/hero-preview/male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "geometryBase": "assets/hero-preview/male-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "promptRef": "art-references/body-variants/school-swim-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/c3688aa0f1df/male12-walk-cycle.webp"
+    },
+    "male13": {
+      "id": "male13",
+      "name": "晨光学园",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male13-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 147894,
+      "sha256": "4fa76b56a79ae22183eec95506c105a88f7f94ac5c835b987c8a2b9fd5af7655",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "11d313d643204500dc7084df13470d4e628f0c0118ddba53c90ec6429d2bd927",
+        "reference": "assets/hero-preview/male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "geometryBase": "assets/hero-preview/male-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "promptRef": "art-references/body-variants/school-swim-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/c3688aa0f1df/male13-walk-cycle.webp"
+    },
+    "female12": {
+      "id": "female12",
+      "name": "珊瑚浪花",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female12-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 164634,
+      "sha256": "5bef045e83a72a65ebb6752a71fbc65654b72d1cdc63629ff2512a20e56d3f63",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "a64604fecfd7b10e46b5477e7a5f86e3576373aac47c737d2603836a38dbd981",
+        "reference": "assets/hero-preview/female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011",
+        "geometryBase": "assets/hero-preview/female-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "promptRef": "art-references/body-variants/school-swim-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/c3688aa0f1df/female12-walk-cycle.webp"
+    },
+    "female13": {
+      "id": "female13",
+      "name": "晴日学园",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female13-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 158872,
+      "sha256": "c7959ba40f7d935811154938e844c6f0cfecef26357c543dcb01a3b4f4c8f158",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "7fae58f8b8b2047b5c64e43d39a84093897ee08139a410c50cd6d35aab6bab64",
+        "reference": "assets/hero-preview/female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011",
+        "geometryBase": "assets/hero-preview/female-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "promptRef": "art-references/body-variants/school-swim-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/c3688aa0f1df/female13-walk-cycle.webp"
     }
   },
   "headTurnDrop": [
     0,
     3,
     7
-  ]
+  ],
+  "sideHeadTurnDrop": {
+    "female": [
+      0,
+      3,
+      5
+    ]
+  }
 }

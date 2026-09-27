@@ -1,3 +1,4 @@
+import {validateRelationshipEvents,recordRelationshipActivity} from './character_relationship_core.js';
 import {ownedPetSpecies} from './adventure_pet_files_core.js';
 import {validatePetWorld} from './adventure_pet_world_core.js';
 import {validHeroBodyId} from './hero_body_core.js';
@@ -546,7 +547,7 @@ function settleRunes(save,battle) {
     }
     pending.runesSettled=true;
 }
-export function settleEncounter(save,content,battle) {
+export function settleEncounter(save,content,battle,{now=0}={}) {
     const pending = save.pendingEncounter;
     assert(pending && battle.finished && battle.seed === pending.seed,'战斗尚未结束');
     if (save.rewardedEncounters.includes(pending.id)) { save.pendingEncounter = null; return false; }
@@ -571,6 +572,9 @@ export function settleEncounter(save,content,battle) {
         noteCatalogKills(save,content,pending.dungeonMonsterIds?pending.dungeonMonsterIds.map(id=>content.monsters[id]):[monster],createRng(hashSeed(`${save.seed}:quest:${pending.id}`)));
         syncProgression(save,content);
     } else save.position = {...mapInfo(save.zone,content).initialSpawn};
+    if(save.coopRun&&battle.winner==='near'&&dungeonProgress(save)[save.zone]?.cleared.length===dungeonFor(content,save.zone)?.arenas.length){
+        for(const member of save.coopRun.members)recordRelationshipActivity(save,{id:`dungeon:${save.coopRun.relationshipRunId||pending.id}:${member.profile.id}`,peer:member.profile,kind:'dungeon',at:now,reason:'共同通关副本'});
+    }
     if(save.coopRun){save.coopRun.battles??=[];save.coopRun.battles.push({checkpoint:clone(pending),winner:battle.winner,turns:battle.turn});}
     save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); migrateDefaultPocket(save,content); syncEquipmentInstances(save,content); save.revision++;
     return {settled:true,insufficientStamina,staminaSpent};
@@ -580,7 +584,7 @@ export function parseSave(raw,content) {
     if(s?.schemaVersion===1){s.schemaVersion=SAVE_VERSION;if(content.pets){Pets.initializePets(s,content);if(s.pet&&content.pets.legacy_gululu)Pets.addPet(s,content,'legacy_gululu',s.pet.xp);}}
     assert(s && s.schemaVersion === SAVE_VERSION && s.contentVersion === content.contentVersion,'存档版本不兼容');
     normalizeLocaleSave(s);
-    validateLearningSave(s);validateCoopRun(s);
+    validateLearningSave(s);validateCoopRun(s);validateRelationshipEvents(s);
     assert(s.defaultPocketVersion===undefined||s.defaultPocketVersion===1,'默认口袋规则版本无效');
     validateCheckin(s);
     validateFishingRecords(s);

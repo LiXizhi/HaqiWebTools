@@ -3,9 +3,9 @@ import {storyReward} from './language_encounter_core.js';
 import {createLearningChatView} from './view_learning_chat.js';
 import {storySpeechResult,storyJudgeMessages} from './language_story_core.js';
 
-export function createStoryChat({getState,commit,saveSettings=()=>{},openSettings=()=>{},voice,useReward=()=>{},viewFactory=createLearningChatView}){
+export function createStoryChat({onFreeTalk=()=>{},getState,commit,saveSettings=()=>{},openSettings=()=>{},voice,useReward=()=>{},viewFactory=createLearningChatView}){
     let session=null,recordTask=null;
-    const view=viewFactory({close,start,finish,cancel,hint,chinese,next,help,speak,useReward:()=>{const reward=session?.reward;close();if(reward?.action)useReward(reward.action,reward.guid);},challenge:()=>challenge(),settings:()=>{close();openSettings();}});
+    const view=viewFactory({free:()=>session&&onFreeTalk(session.profile),close,start,finish,cancel,hint,chinese,next,help,speak,useReward:()=>{const reward=session?.reward;close();if(reward?.action)useReward(reward.action,reward.guid);},challenge:()=>challenge(),settings:()=>{close();openSettings();}});
     const valid=s=>session===s&&!s.abort.signal.aborted&&getState().role===s.role&&getState().identity===s.identity&&getState().save.zone==='camp'&&getState().save.languageLearning.enabled&&getState().save.languageLearning.target===s.locale;
     const paint=()=>{if(session)view.render(session);};
     function close(){const old=session;session=null;clearTimeout(old?.timer);old?.abort.abort();recordTask=null;void voice.cancel();view.close();}

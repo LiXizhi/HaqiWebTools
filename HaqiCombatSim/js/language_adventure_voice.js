@@ -141,17 +141,18 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
             }finally{stop();release?.();signal.removeEventListener('abort',stop);if(speaker===stream)speaker=null;if(playback===active)playback=null;}
         },
         async judge(messages,signal,{maxTokens=800,rawText=false}={}){
-            const sdk=await load(signal);
-            if(!sdk.token)throw Error('使用AI服务需要先登录Keepwork');
+            let sdk;try{sdk=await load(signal);if(!sdk.token)throw Error('使用AI服务需要先登录Keepwork');}catch(error){error.requestUncertain=false;throw error;}
+            let received=false;
             const abortController=new AbortController(),abort=()=>abortController.abort();
             signal.addEventListener('abort',abort,{once:true});
             try{
                 const model=getSettings().model;
                 const result=await deadline(sdk.aiChat.chat({messages,...(model?{model}:{}),stream:false,tools:[],enableTools:[],needMqttTools:false,needPersonalTools:false,reasoning:false,maxTokens,abortController}),45000,signal);
+                received=true;
                 const text=typeof result==='string'?result:result?.choices?.[0]?.message?.content||result?.result;
                 if(typeof text!=='string')throw Error('对话服务未返回有效内容');
                 return rawText?text:JSON.parse(text.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,''));
-            }finally{abort();signal.removeEventListener('abort',abort);}
+            }catch(error){error.requestUncertain=!received&&![400,401,403,429].includes(Number(error.status));throw error;}finally{abort();signal.removeEventListener('abort',abort);}
         },
     };
 }

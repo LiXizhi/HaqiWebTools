@@ -7,9 +7,9 @@ import {BODY_TO_HEAD,clampHead,direction16,createHeroActor,updateHeroActor,headB
 import {resolveMountDrawPose} from '../js/adventure_mounts_core.js';
 const read=p=>JSON.parse(readFileSync(new URL(p,import.meta.url),'utf8'));
 const manifest=read('../data/hero-preview.json'),catalog=read('../data/adventure/mount-catalog.json');
-test('eleven costumes per gender share geometry and select independent cached textures',async()=>{
+test('thirteen costumes per gender share geometry and select independent cached textures',async()=>{
  for(const gender of ['male','female']){
-  const variants=Object.values(manifest.bodyVariants).filter(v=>v.gender===gender);assert.equal(variants.length,11);
+  const variants=Object.values(manifest.bodyVariants).filter(v=>v.gender===gender);assert.equal(variants.length,13);
   const r=prepared(),requested=[];r.image=async(id,art)=>{requested.push(art.local);r.images.set(id,{id});return {id};};
   for(const v of variants){
    const bytes=readFileSync(new URL('../'+v.local,import.meta.url));assert.ok(bytes.length<=200000);assert.equal(createHash('sha256').update(bytes).digest('hex'),v.sha256);
@@ -19,7 +19,7 @@ test('eleven costumes per gender share geometry and select independent cached te
     assert.ok(actual.ready);assert.deepEqual(actual,base);assert.equal(ctx.draws[0][0].id,'walk:'+v.id);
    }
   }
-  assert.equal(requested.filter(p=>p.includes('walk-cycle')).length,10);
+  assert.equal(requested.filter(p=>p.includes('walk-cycle')).length,12);
   assert.equal(r.walkKey(gender,'unknown'),'walk:'+gender);
   assert.equal(r.walkKey(gender,gender==='male'?'female2':'male2'),'walk:'+gender);
  }
@@ -98,13 +98,14 @@ function context(){const draws=[];return {draws,save(){},restore(){},translate()
 function prepared(){const r=new HeroRenderer(manifest,catalog);for(const [key,b] of Object.entries(manifest.bodies)){r.images.set('body:'+(b.atlas||key),{id:'body:'+(b.atlas||key)});if(b.walk)r.images.set('walk:'+key.split('-')[0],{id:'walk:'+key.split('-')[0]});}for(const key of Object.keys(manifest.heads))r.images.set('head:'+key,{id:'head:'+key});for(const m of catalog.mounts)r.images.set('mount:'+m.id,{id:m.id});return r;}
 
 test('relative head-turn drop is symmetric across genders and body facings without changing scale',()=>{
- const corrected=prepared(),baseline=prepared();baseline.manifest={...manifest,headTurnDrop:[0,0,0]};
+ const corrected=prepared(),baseline=prepared();baseline.manifest={...manifest,headTurnDrop:[0,0,0],sideHeadTurnDrop:{}};
  for(const gender of ['male','female'])for(let facing=0;facing<4;facing++)for(const step of [-2,-1,0,1,2])for(const size of [78,156]){
   const opts={facing,head:(BODY_TO_HEAD[facing]+step+16)%16,size,reducedMotion:true};
   const a=corrected.draw(context(),{gender},opts),b=baseline.draw(context(),{gender},opts);
   const frame=manifest.bodies[gender+'-walk'].frames[facing],crop=frame.renderCrop||frame.crop;
   const ratio=a.bodyRect.w/crop[2];
-  assert.ok(Math.abs(a.headRect.y-b.headRect.y-manifest.headTurnDrop[Math.abs(step)]*ratio)<1e-9);
+  const drop=gender==='female'&&(facing===1||facing===2)&&Math.abs(step)===2?5:manifest.headTurnDrop[Math.abs(step)];
+  assert.ok(Math.abs(a.headRect.y-b.headRect.y-drop*ratio)<1e-9);
   assert.equal(a.headRect.x,b.headRect.x);assert.equal(a.headRect.w,b.headRect.w);assert.equal(a.headRect.h,b.headRect.h);
   assert.deepEqual(a.neck,b.neck);assert.deepEqual(a.bodyRect,b.bodyRect);
  }

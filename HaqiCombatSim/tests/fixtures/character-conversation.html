@@ -1,0 +1,32 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>跨文化对话隔离验收</title>
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/language_adventure.css">
+<body class="haqi-app"><div id="fixture"></div><script type="module">
+if(new URLSearchParams(location.search).has('phone')){
+    const frame=document.createElement('iframe');frame.src='tests/fixtures/character-conversation.html';frame.style='width:390px;height:844px;border:0';document.body.append(frame);
+}else{
+    const {createCharacterConversation}=await import('./js/character_conversation.js');
+    const {fakeWorkspace}=await import('./tests/helpers/character_workspace.js');
+    const {characterProfile}=await import('./js/character_relationship_core.js');
+    const params=new URLSearchParams(location.search),portraitAssets=params.has('portraits')?await (await import('./js/adventure_assets.js')).loadResources(()=>{}):null;
+    const {heroPortrait}=await import('./js/hero_renderer.js');
+    const f=fakeWorkspace(),cached=new Map(),cache={prepare:async()=>{},get:k=>cached.get(k),set:(k,v)=>cached.set(k,v),flush:async()=>{}};
+    const rules=await fetch('data/adventure/gift-rules.json').then(r=>r.json()),[id,rule]=Object.entries(rules.items).find(([,r])=>r.canGift&&r.bindType===0&&r.stackOnly);
+    const state={owner:'alice',role:'fixture',save:{name:'我',appearance:'boy',inventory:{[id]:3},languageLearning:{native:'zh-CN',target:'en'}},assets:{content:{items:{[id]:{id:+id,name:'验收礼物',kind:rule.kind,description:'仅存在于隔离验收存档'}}}}};
+    let vip=false,calls=0,fail=false;
+    const status=document.createElement('output');status.setAttribute('aria-label','隔离验收状态');document.querySelector('#fixture').append(status);
+    function report(){status.textContent=`隔离模拟 · LLM回复 ${calls} 次 · 礼物剩余 ${state.save.inventory[id]}`;}
+    const chat=createCharacterConversation({getState:()=>state,getPortrait:source=>portraitAssets?heroPortrait(portraitAssets,source,220,270,{facing:0,lookAround:false}):null,commit:next=>{state.save=next;report();},workspace:f.workspace,cache,
+        membership:{refresh:async()=>({status:'ready',username:'alice',isVip:vip})},onUpgrade:()=>{vip=true;void chat.open(peer);},
+        voice:{cancel:async()=>{},start:async()=>{},finish:async()=>'It means hello.',speak:async()=>{},judge:async messages=>{
+            const system=messages[0].content;if(fail){fail=false;throw Object.assign(Error('模拟连接失败，草稿已保留'),{requestUncertain:false});}
+            if(system.includes('Summarize only'))return {summary:'玩家解释了中文你好。'};
+            if(system.includes('a short suggestion'))return {hint:'可以说：It means hello. 用英语解释“你好”的意思。'};
+            if(system.includes('Greet naturally'))return {reply:'Hi! I am learning Chinese. What would you like to talk about?',translation:'你好！我在学中文，你想聊些什么？'};
+            const data=JSON.parse(system.split('Character and player data: ')[1]),eventId=JSON.parse(system.match(/"eventId":("[^"]+")/)[1]);calls++;report();
+            return {reply:system.includes('confirmed gift')?'Thank you for the gift!':'What does that mean? Could you explain it in simple English?',translation:'那是什么意思？可以用简单的英语解释一下吗？',affinity:{eventId,before:data.affinity,delta:2,after:Math.min(100,data.affinity+2),reason:'耐心交流'}};
+        }},onClose:()=>{document.querySelector('#fixture').hidden=false;}});
+    const peer={id:'companion:1:0',kind:'companion',name:'安娜',native:'en',appearance:'girl'};
+    for(const [label,run]of [['伙伴直接聊天',()=>chat.open(peer)],['NPC自由交谈',()=>chat.open({id:36205,name:'导师',kind:'npc'})],['模拟下一次失败',()=>{fail=true;}],['进入会员模式',()=>{vip=true;void chat.open(peer);} ]]){const button=document.createElement('button');button.textContent=label;button.onclick=()=>void run();document.querySelector('#fixture').append(button);}
+    report();await chat.open(peer);
+}
+</script></body></html>

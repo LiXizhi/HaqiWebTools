@@ -36,6 +36,8 @@ export function defaultParams(version = 'teen') {
     const teen = version === 'teen';
     return {
         version,
+        // Web cross-cultural relationships; not original combat formula values.
+        characterRelations: {initialMin:0,initialMax:60,maxAiDelta:5,giftGain:3,dungeonGain:3,matchGain:2,dailyFreeMessages:2,recentMessages:20,compactAt:40,indexPageSize:100},
         // Web island unlock levels; original world configuration is unavailable.
         worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40 },
         petInteractions: {

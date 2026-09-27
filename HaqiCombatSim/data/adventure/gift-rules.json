@@ -1,0 +1,7099 @@
+{
+  "version": 1,
+  "source": "Database/globalstore.db.mem",
+  "sha256": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+  "mapping": "paraworld.globalstore.lua L535-554; ItemManager.lua L5460-5492; GenericTooltip.lua L505-522",
+  "items": {
+    "22333": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22302": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23217": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23186": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23283": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23252": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42151": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41156": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23159": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23128": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23450": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43142": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23326": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23423": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22225": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41159": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22260": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22101": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22167": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22136": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22458": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22365": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23249": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23315": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23218": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22400": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23284": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23125": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42153": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41158": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23191": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23160": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23424": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43131": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22323": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22292": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22133": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22168": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22397": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23281": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22463": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23250": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23316": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43130": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23157": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23126": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23223": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23192": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23421": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42138": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23456": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41147": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22258": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22355": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22324": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22165": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22134": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22231": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23313": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41146": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22398": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23379": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23282": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22464": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43194": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43132": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23189": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23158": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23255": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23224": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43334": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23422": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22123": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41149": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22321": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22290": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43197": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22387": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22356": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22197": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22166": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22263": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23116": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22232": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22461": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23314": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41148": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23411": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23380": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23221": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43134": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23190": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23287": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23256": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23454": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22155": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22124": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22000": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22353": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22322": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43137": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23113": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22229": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22295": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23148": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22264": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23377": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22462": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42145": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23443": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23412": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23253": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23319": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23222": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23288": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22121": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22187": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22156": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42144": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22385": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22354": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22451": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23145": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22261": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23114": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22230": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22327": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42131": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22296": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23180": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43122": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23378": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23444": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23285": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23254": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23320": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22153": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41139": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22122": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22219": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22188": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22386": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22452": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22293": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23146": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22262": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22359": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42195": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22328": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42133": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23212": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23119": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42335": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23441": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43124": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23317": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23383": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22185": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22154": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41141": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22251": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22220": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22127": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22449": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22325": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22294": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23209": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22391": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23275": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22360": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42197": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23244": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42135": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41140": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23151": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23120": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23442": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23318": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23415": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23384": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22217": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22186": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41143": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22252": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22159": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43129": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22128": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22450": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22357": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22326": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23307": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23210": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23276": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23117": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42199": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42137": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41142": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23183": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43128": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23381": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23416": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42198": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43115": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22249": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22218": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22315": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22284": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41145": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22125": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22191": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22160": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43193": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22389": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23273": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22358": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22455": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23339": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23242": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23308": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43114": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23149": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23118": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23184": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43192": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23413": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23382": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23448": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41131": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22281": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41333": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22250": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22347": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22316": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22157": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22126": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23107": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22223": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22192": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23305": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41130": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22390": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23274": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42451": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22456": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23340": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43178": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43116": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23181": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23247": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43380": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23414": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42186": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22115": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41195": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41133": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22313": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22282": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43181": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41335": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22379": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22348": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22189": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22158": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23139": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22255": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23108": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22224": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22453": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23337": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41132": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41334": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23182": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23248": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43382": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23446": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22116": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41135": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22345": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22314": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22411": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22380": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43121": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23105": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22221": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22190": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23140": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22256": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22454": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23338": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42129": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23435": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23245": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23311": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22113": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22179": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22148": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42190": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42128": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22377": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22346": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22443": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22412": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43185": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23137": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22253": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23106": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22222": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22319": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42115": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22288": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23203": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23172": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43106": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42193": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23467": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23436": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23343": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23246": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23312": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22145": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41123": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22114": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22211": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22180": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43171": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42192": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43191": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22409": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23211": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22378": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41199": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22444": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23280": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22285": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23169": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23138": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22254": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22351": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42179": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22320": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42117": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23204": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23111": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23433": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43108": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23468": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23309": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41138": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23344": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41151": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23279": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42178": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22177": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41187": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22146": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41125": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22243": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22212": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22119": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22441": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22410": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23453": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22317": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22286": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23201": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22383": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23267": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22352": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42181": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23236": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41186": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42119": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23143": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23112": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41450": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23465": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23434": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41332": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23341": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23310": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22289": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42180": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22209": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22178": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41189": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41127": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22244": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43190": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43113": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22120": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22442": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43188": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43146": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43377": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22349": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23233": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22415": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23299": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23202": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23268": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23109": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42183": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42114": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41188": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42121": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41126": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23175": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23144": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23466": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43174": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43112": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22275": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23342": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42182": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22241": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41191": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22276": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41129": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23447": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22117": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41124": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22183": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22152": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43177": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43164": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22381": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22199": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23469": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23265": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22350": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22447": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23234": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23300": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23141": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23306": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23110": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42185": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41190": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23207": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23176": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42449": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23440": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41115": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41379": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43362": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42184": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22242": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42450": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43167": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22308": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41193": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42448": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22215": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22184": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22413": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23297": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41114": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23266": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22448": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43162": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23173": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23142": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23239": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23208": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42164": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23437": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42170": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22107": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41179": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41117": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23445": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22305": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22368": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22274": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43165": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22371": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22340": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23115": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22181": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22150": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23131": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22247": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22216": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22445": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42173": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41178": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22414": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23298": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23395": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43156": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23179": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23205": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43102": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23174": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23271": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41380": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23240": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23438": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22139": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42110": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22108": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41119": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22306": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22403": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41383": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22372": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43105": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22213": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22182": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22279": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23163": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41137": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23132": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22248": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43109": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42174": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22446": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41180": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42113": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23427": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23396": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23237": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43451": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23303": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43450": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23206": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43449": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43448": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43383": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43381": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23272": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43379": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43366": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43365": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43364": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43363": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43335": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43333": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43332": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43331": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43199": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22105": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43198": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22171": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43195": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22140": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43189": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42112": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43187": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43186": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43184": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43183": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22369": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43182": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22338": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22435": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43180": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43179": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43176": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22404": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43173": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43172": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43169": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43170": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23129": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22245": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43168": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43166": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22311": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43163": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22280": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23164": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43160": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41108": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43157": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42363": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43151": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43150": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43149": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43148": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43147": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43145": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43144": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22396": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42177": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23459": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43135": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23428": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43133": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43127": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43126": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43125": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23269": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43123": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43120": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23238": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43119": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23304": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43117": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43111": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43110": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43107": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43104": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43103": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43101": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42383": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42382": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42381": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42380": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42379": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42377": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41107": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22137": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42362": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42366": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22203": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42365": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22172": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42364": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43155": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42334": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42176": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42333": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42332": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42331": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42194": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22401": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42191": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42189": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22370": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42188": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22467": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42187": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22436": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42172": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41449": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22277": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23161": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42171": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23130": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22246": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42169": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22343": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42163": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22312": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23227": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42101": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42167": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23196": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42165": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42116": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42159": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23103": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42158": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42157": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42156": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42155": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23425": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23394": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42152": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42150": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22102": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42148": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42146": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42143": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23460": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42142": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23301": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42141": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42140": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42139": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23367": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42134": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23270": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42132": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23336": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42130": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42127": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42126": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42125": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42124": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42123": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42122": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42120": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42162": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42111": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22169": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41171": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41109": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22138": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22235": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42109": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42108": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22204": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42107": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42106": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41198": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22111": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41128": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41451": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22402": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41448": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41382": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41381": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41377": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41365": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22309": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41364": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22278": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23193": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23162": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22375": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23259": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22344": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41331": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23228": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42103": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41197": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41194": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41192": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41185": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41184": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23135": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41183": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41182": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23104": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41181": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41177": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23457": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41176": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23426": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41122": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41170": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41169": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41168": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41167": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41166": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41165": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23302": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23399": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22291": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41161": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41160": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22337": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41153": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41152": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41150": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41144": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41134": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42102": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22201": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22170": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41173": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41121": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22267": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41120": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41116": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22236": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41113": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41112": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41111": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22366": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43159": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22143": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41106": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22465": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22112": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22434": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41102": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22341": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22310": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23225": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22407": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23194": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23291": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22376": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23260": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23101": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41172": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42105": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41110": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22273": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23136": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23458": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43158": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23431": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23400": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42166": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22233": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42104": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22202": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22299": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22268": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22109": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22175": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22144": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43161": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22466": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22373": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23257": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22342": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22439": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23226": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22408": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23455": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23292": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23133": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23231": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23102": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41174": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23199": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23168": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22334": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23397": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23432": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22384": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41363": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22265": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42168": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22234": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22331": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22300": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22141": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22110": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22207": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23147": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22176": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22405": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23289": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22374": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23258": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22440": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23324": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41362": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23165": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23166": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23134": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23200": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23429": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23398": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23470": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23463": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23464": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23461": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41163": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41101": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23439": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22468": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22297": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22151": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22266": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22363": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22399": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22332": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22173": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22392": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22388": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22142": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22239": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22208": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22318": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22437": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23321": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41162": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22406": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22283": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23387": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23170": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23290": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23197": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22198": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23263": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23232": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23171": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23430": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22131": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23195": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41103": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22329": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22298": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22395": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22364": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22205": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22174": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22271": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23124": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22240": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23241": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23167": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22469": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22438": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23322": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41164": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23419": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23388": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23155": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23177": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23235": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41366": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23198": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23264": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23294": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23293": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23462": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22163": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23123": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22132": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41105": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22361": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22330": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23213": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43153": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23121": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22237": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22206": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22303": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23277": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22272": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23187": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23156": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23295": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23278": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23385": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22470": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42161": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23451": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23420": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "41104": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23261": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23327": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23296": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43152": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23230": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22287": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22129": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22195": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23214": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22164": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43139": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "42160": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22257": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22393": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23229": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22362": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22459": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23153": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22269": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23122": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22238": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22335": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42147": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22304": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23219": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23188": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23417": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23216": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43138": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23386": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23150": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23452": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23262": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23328": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23215": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22161": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41155": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22130": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22227": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23323": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22196": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23152": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43141": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22103": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22394": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22460": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23286": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22301": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23178": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23185": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23154": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22270": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22367": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23251": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22336": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "42149": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23220": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22118": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22226": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23127": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23243": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22147": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22149": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23449": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "23418": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "43140": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22106": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22307": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22194": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "23325": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22200": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22210": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22214": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22193": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22162": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "41157": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22339": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22259": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22228": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22382": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "43143": {
+      "canGift": true,
+      "canExchange": true,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": true
+    },
+    "22135": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22457": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22104": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    },
+    "22416": {
+      "canGift": false,
+      "canExchange": false,
+      "bindType": 0,
+      "kind": 18,
+      "stackOnly": false
+    }
+  }
+}

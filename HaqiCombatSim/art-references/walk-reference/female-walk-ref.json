@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "status": "male-aligned-awaiting-review",
+  "status": "left-approved-right-mirrored",
   "local": "assets/hero-preview/female-walk-ref.webp",
-  "sha256": "5603fe0505547120a5d172f3cb86fbb86beffc8dceafec8de16c15138017034f",
-  "bytes": 155788,
+  "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011",
+  "bytes": 131088,
   "geometryBase": "assets/hero-preview/female-walk-cycle.webp",
   "geometryBaseSha256": "bc6a643bada3e71aecdde7d20e6cb33c1f167945d7770e5b407040d3c47a0dde",
-  "generatedSourceSha256": "0cd1144b6ecf8b31ebdc55c9ee6d0f4dd799bb78a5e8f9ffe7879d546c1d368b",
-  "generationReference": "assets/hero-preview/male-walk-ref.webp",
+  "generatedSourceSha256": "cf4bff9d317b388000497dd7967fe81a0b10e9f0373a13c815efba64f7a341d1",
+  "generationReference": "assets/hero-preview/female-walk-cycle.webp",
   "registration": [
     {
       "row": 0,
@@ -25,10 +25,10 @@
       "bounds": [
         45,
         72,
-        82,
+        83,
         150
       ],
-      "scale": 0.5620437956204379
+      "scale": 0.463855421686747
     },
     {
       "row": 0,
@@ -44,12 +44,12 @@
         79
       ],
       "bounds": [
-        45,
+        46,
         72,
-        83,
-        148
+        84,
+        150
       ],
-      "scale": 0.5547445255474452
+      "scale": 0.4578313253012048
     },
     {
       "row": 0,
@@ -65,12 +65,12 @@
         79
       ],
       "bounds": [
-        44,
+        45,
         72,
-        83,
+        84,
         150
       ],
-      "scale": 0.5661764705882353
+      "scale": 0.463855421686747
     },
     {
       "row": 0,
@@ -88,10 +88,10 @@
       "bounds": [
         45,
         72,
-        84,
+        83,
         150
       ],
-      "scale": 0.5620437956204379
+      "scale": 0.463855421686747
     },
     {
       "row": 0,
@@ -107,12 +107,12 @@
         79
       ],
       "bounds": [
-        44,
+        46,
         72,
-        82,
+        84,
         150
       ],
-      "scale": 0.5620437956204379
+      "scale": 0.463855421686747
     },
     {
       "row": 0,
@@ -128,12 +128,12 @@
         79
       ],
       "bounds": [
-        44,
+        45,
         72,
-        83,
+        84,
         150
       ],
-      "scale": 0.5661764705882353
+      "scale": 0.463855421686747
     },
     {
       "row": 0,
@@ -150,11 +150,11 @@
       ],
       "bounds": [
         62,
-        64,
+        65,
         101,
         143
       ],
-      "scale": 0.5652173913043478
+      "scale": 0.46987951807228917
     },
     {
       "row": 1,
@@ -170,12 +170,12 @@
         79
       ],
       "bounds": [
-        37,
-        72,
-        92,
-        149
+        38,
+        73,
+        87,
+        150
       ],
-      "scale": 0.5671641791044776
+      "scale": 0.4393063583815029
     },
     {
       "row": 1,
@@ -192,11 +192,11 @@
       ],
       "bounds": [
         49,
-        72,
-        83,
+        71,
+        82,
         150
       ],
-      "scale": 0.5661764705882353
+      "scale": 0.44
     },
     {
       "row": 1,
@@ -214,10 +214,10 @@
       "bounds": [
         35,
         73,
-        95,
+        88,
         151
       ],
-      "scale": 0.5703703703703704
+      "scale": 0.4476744186046512
     },
     {
       "row": 1,
@@ -233,12 +233,12 @@
         79
       ],
       "bounds": [
-        34,
+        36,
         72,
-        94,
+        89,
         150
       ],
-      "scale": 0.5703703703703704
+      "scale": 0.4476744186046512
     },
     {
       "row": 1,
@@ -254,12 +254,12 @@
         79
       ],
       "bounds": [
-        46,
-        73,
-        83,
-        150
+        51,
+        72,
+        77,
+        151
       ],
-      "scale": 0.5620437956204379
+      "scale": 0.4476744186046512
     },
     {
       "row": 1,
@@ -275,12 +275,12 @@
         79
       ],
       "bounds": [
-        34,
+        37,
         73,
-        93,
+        87,
         150
       ],
-      "scale": 0.5588235294117647
+      "scale": 0.4444444444444444
     },
     {
       "row": 1,
@@ -296,12 +296,12 @@
         73.38755980861242
       ],
       "bounds": [
-        73,
-        57,
-        102,
+        71,
+        56,
+        99,
         144
       ],
-      "scale": 0.6187050359712231
+      "scale": 0.5
     },
     {
       "row": 2,
@@ -317,12 +317,12 @@
         79
       ],
       "bounds": [
-        34,
+        41,
         72,
-        92,
+        93,
         150
       ],
-      "scale": 0.5703703703703704
+      "scale": 0.44508670520231214
     },
     {
       "row": 2,
@@ -338,12 +338,12 @@
         79
       ],
       "bounds": [
-        45,
+        44,
         72,
-        79,
+        81,
         150
       ],
-      "scale": 0.5620437956204379
+      "scale": 0.44
     },
     {
       "row": 2,
@@ -359,12 +359,12 @@
         79
       ],
       "bounds": [
-        34,
+        39,
         72,
-        94,
+        92,
         150
       ],
-      "scale": 0.5703703703703704
+      "scale": 0.44508670520231214
     },
     {
       "row": 2,
@@ -380,12 +380,12 @@
         79
       ],
       "bounds": [
-        34,
-        72,
-        94,
+        39,
+        71,
+        92,
         150
       ],
-      "scale": 0.5620437956204379
+      "scale": 0.4476744186046512
     },
     {
       "row": 2,
@@ -401,12 +401,12 @@
         79
       ],
       "bounds": [
-        46,
+        53,
         72,
-        82,
-        150
+        79,
+        151
       ],
-      "scale": 0.5539568345323741
+      "scale": 0.4425287356321839
     },
     {
       "row": 2,
@@ -422,12 +422,12 @@
         79
       ],
       "bounds": [
-        33,
-        72,
-        93,
-        151
+        40,
+        71,
+        92,
+        150
       ],
-      "scale": 0.5652173913043478
+      "scale": 0.4508670520231214
     },
     {
       "row": 2,
@@ -445,10 +445,10 @@
       "bounds": [
         64,
         57,
-        92,
+        91,
         145
       ],
-      "scale": 0.6056338028169014
+      "scale": 0.49710982658959535
     },
     {
       "row": 3,
@@ -464,12 +464,12 @@
         79
       ],
       "bounds": [
-        45,
-        70,
-        84,
+        43,
+        69,
+        85,
         150
       ],
-      "scale": 0.572463768115942
+      "scale": 0.4438202247191011
     },
     {
       "row": 3,
@@ -485,12 +485,12 @@
         79
       ],
       "bounds": [
-        44,
-        70,
-        84,
-        150
+        43,
+        68,
+        85,
+        151
       ],
-      "scale": 0.5755395683453237
+      "scale": 0.4624277456647399
     },
     {
       "row": 3,
@@ -506,12 +506,12 @@
         79
       ],
       "bounds": [
-        44,
-        69,
-        84,
-        150
+        41,
+        68,
+        87,
+        151
       ],
-      "scale": 0.5755395683453237
+      "scale": 0.449438202247191
     },
     {
       "row": 3,
@@ -527,12 +527,12 @@
         79
       ],
       "bounds": [
-        45,
-        69,
-        85,
-        150
+        44,
+        68,
+        87,
+        151
       ],
-      "scale": 0.5755395683453237
+      "scale": 0.449438202247191
     },
     {
       "row": 3,
@@ -548,12 +548,12 @@
         79
       ],
       "bounds": [
-        44,
-        69,
-        84,
+        42,
+        68,
+        85,
         150
       ],
-      "scale": 0.5797101449275363
+      "scale": 0.46511627906976744
     },
     {
       "row": 3,
@@ -569,12 +569,12 @@
         79
       ],
       "bounds": [
-        44,
-        69,
-        84,
-        150
+        42,
+        68,
+        85,
+        151
       ],
-      "scale": 0.5755395683453237
+      "scale": 0.449438202247191
     },
     {
       "row": 3,
@@ -591,17 +591,77 @@
       ],
       "bounds": [
         59,
-        64,
-        101,
-        144
+        62,
+        100,
+        143
       ],
-      "scale": 0.5683453237410072
+      "scale": 0.45664739884393063
     }
   ],
-  "note": "All four directions regenerated independently from male reference, preserving counter-swing; female runtime neck/crop geometry retained. Awaiting user visual review.",
+  "note": "Neutral reference aligned to original neck/ground. Walking details still require refinement in this reference only.",
   "motionReference": {
     "local": "assets/hero-preview/male-walk-ref.webp",
     "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
   },
-  "promptRef": "art-references/walk-reference/female-reference-fix-prompt.json"
+  "generationReferences": [
+    "assets/hero-preview/male-walk-ref.webp",
+    "assets/hero-preview/female-walk-cycle.webp"
+  ],
+  "promptRef": "art-references/walk-reference/female-reference-retry-prompt.json",
+  "rightMirror": {
+    "sourceSha256": "968c0e02bb6508472a1fcdf607804c3ef71517e94af1c372015ae6b78d68cab5",
+    "sourceRow": 1,
+    "targetRow": 2,
+    "registration": [
+      {
+        "column": 0,
+        "offset": [
+          1,
+          0
+        ]
+      },
+      {
+        "column": 1,
+        "offset": [
+          1,
+          0
+        ]
+      },
+      {
+        "column": 2,
+        "offset": [
+          1,
+          0
+        ]
+      },
+      {
+        "column": 3,
+        "offset": [
+          1,
+          0
+        ]
+      },
+      {
+        "column": 4,
+        "offset": [
+          1,
+          0
+        ]
+      },
+      {
+        "column": 5,
+        "offset": [
+          1,
+          0
+        ]
+      },
+      {
+        "column": 6,
+        "offset": [
+          3,
+          1
+        ]
+      }
+    ]
+  }
 }

@@ -5830,3 +5830,53 @@ AI 托管||AI control
 故事回答方式不完整||The story answer input methods are incomplete
 
 对话奖励：{amount} {currency}||Conversation reward: {amount} {currency}
+
+# 角色关系与自由对话
+关系详情||Relationship details
+所有关系||All relationships
+更早的对话||Earlier conversation
+用彼此理解的语言交流||Use a language you both understand
+跨文化自由对话||Cross-cultural conversation
+正在生成提示…||Generating a hint…
+今日2次自由对话已用完，北京时间零点恢复。||Your 2 daily messages are used. Resets at midnight Beijing time.
+确认赠送||Confirm gift
+返回物品||Back to items
+赠送数量||Gift quantity
+会员自由对话||Member conversation
+正在核验额度||Checking allowance
+赠礼回应||Gift response
+
+更多聊天操作||More chat options
+
+玩家与好友||Players & friends
+场景中的玩家||Players in scene
+我的好友||My friends
+本场景 · {count}||This scene · {count}
+搜索玩家||Search players
+没有找到玩家||No players found
+当前场景还没有其他玩家。||No other players are in this scene yet.
+传送||Teleport
+传送到{name}身边||Teleport next to {name}
+登录后可以与好友私聊。||Sign in to chat with friends.
+该玩家已离开当前场景||That player has left this scene
+暂时无法传送||Teleport is unavailable right now
+{school} · {level} 级||{school} · Lv. {level}
+
+搜索好友||Search friends
+管理好友||Manage friends
+点击开始聊天||Start chatting
+没有找到好友||No friends found
+还没有好友，可以从伙伴名片添加。||No friends yet. Add friends from their profile.
+返回好友||Back to friends
+聊天记录||Chat history
+和好友聊聊吧||Say hello to your friend
+私聊服务尚未开通，暂时无法加载或发送消息。||Private messaging is unavailable. Messages cannot be loaded or sent yet.
+输入消息||Enter a message
+私聊消息||Private message
+所有好友||All friends
+好友私聊||Friend chat
+
+# AI 聊天发送恢复
+重新连接||Reconnect
+获取回应||Get response
+有一条发送记录待核验，请点击发送继续。||A pending message needs verification. Click Send to continue.

@@ -1,4 +1,4 @@
-import { HeroRenderer } from './hero_renderer.js?v=head-turn-drop-v1';
+import { HeroRenderer } from './hero_renderer.js?v=female-side-turn-v2';
 import { BODY_TO_HEAD, clampHead } from './hero_pose_core.js';
 
 const $=id=>document.getElementById(id),local=new URLSearchParams(location.search).get('assets')==='local';

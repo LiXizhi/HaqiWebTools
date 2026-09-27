@@ -76,7 +76,7 @@ paths.shop='M3 9l2-6h14l2 6 M3 9v3h18V9 M5 12v9h14v-9 M9 21v-6h6v6';
 const mountEmojiKeys=[['狼蛛','🕷️'],['机器人','🤖'],['雪地车','🚙'],['南瓜车','🎃'],['飞毯','🪄'],['扫帚','🧹'],['凤凰','🦅'],['鹰','🦅'],['羽','🪶'],['龙','🐲'],['虎','🐯'],['狼','🐺'],['马','🐎'],['驹','🐎'],['龟','🐢'],['海豚','🐬'],['鲨','🦈'],['鲸','🐳'],['猛犸','🦣'],['狐','🦊'],['兔','🐰'],['象','🐘'],['鹿','🦌'],['鸵鸟','🦤'],['鼠','🐭'],['牛','🐂'],['蛇','🐍'],['羊','🐑'],['猴','🐒'],['鸡','🐔'],['狗','🐶'],['猪','🐷'],['鸟','🐦'],['车','🚗']];
 function mountEmoji(name) {const text=String(name||'');return (mountEmojiKeys.find(([key])=>text.includes(key))||[])[1]||'🐲';}
 function icon(kind) {const span=el('span','icon');span.dataset.uiIcon=kind;span.setAttribute('aria-hidden','true');span.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${paths[kind]||paths.book}"/></svg>`;return span;}
-function art(assets,ref,w=76,h=90,cls='') {
+export function art(assets,ref,w=76,h=90,cls='') {
     const tall=ref?.fit==='height';
     const c=el('canvas',`art ${cls}${tall?' portrait-height':''}`);
     // Height-fit portraits need a wider bitmap so wing tips are drawn, then CSS lets them overflow the slot.
@@ -395,7 +395,8 @@ export function renderHud(root,model,cb) {
     learn.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
     const socialBar=el('div','hero-social-toolbar');socialBar.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)}px`;socialBar.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
     for(const control of [...root.querySelectorAll('.mount-toggle')]){control.style.left='';control.style.top='';socialBar.append(control);}
-    socialBar.append(socialHudButton('邮件','mail',model.social?.mailUnread,cb.panel),socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));root.append(socialBar);
+    // Mail HUD entry stays hidden until dual-account mailVerified is shipped.
+    socialBar.append(socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));root.append(socialBar);
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
 }
 function modal(root,title,subtitle,cb,wide=false) {
@@ -515,7 +516,7 @@ export function renderDialogue(root,model,dialog,cb) {
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
         if(npc.id===36205)choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
-        if(model.save.languageLearning?.enabled&&model.save.zone==='camp')choices.append(button('和我聊聊',()=>cb.freeTalk(npc),'primary'));
+        choices.append(button('和我聊聊',()=>cb.freeTalk(npc),'primary'));
         choices.append(button('下次再聊',cb.close,'text-button'));content.append(choices);
     }
     const hint=el('p','dialogue-hint');

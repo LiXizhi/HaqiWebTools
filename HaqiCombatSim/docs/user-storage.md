@@ -38,7 +38,7 @@
 
 - 主角当前血量，宠物当前血量、饥饿值。
 - 恢复/饥饿计时、护理提示记录。
-- 当前坐标、朝向、钓鱼精力。
+- 当前坐标、朝向、钓鱼与副本共用的精力（含本地日历日补满标记）。
 - 签到当日在线时长；已领取及 VIP 领取标记仍在核心存档中。
 - 未结束战斗的种子、初始条件和决定序列，供本机重演恢复。
 
@@ -68,3 +68,7 @@
 ## 2026-09-26：社交与组队分层
 
 `socialActivity/socialPvpRecords/socialChallenges` 进入 records 分片。`coopRun` 与血量、逐场战斗检查点只进 IndexedDB runtime，云端保持出发岛屿，单人 dungeonRuns 不被覆盖；恢复先加载对应副本再校验并重演。通信正文不进入游戏存档；本机账号隔离的互动摘要只有好友 ID、时间及来源。公开名片是独立裁剪 JSON，不是完整角色目录。见 [社交协议与边界](island-social.md)。
+
+## 2026-09-27 角色关系表与账号额度
+
+每个角色的 `roles/<roleId>/relationships/index.json` 是独立轻量目录；对象正文、memory.md、消息与事件历史分文件按需读取，初始化游戏不加载。玩家自身 `roles/<roleId>/memory.md` 与AI固定人设独立。`relationshipEvents`进入records分片，与实际扣物/通关一起提交，远端关系以事件去重补写；已同步条目带确认标记。每日2句位于账号级 `social/free-talk/<北京时间日期>.json`，不随角色恢复回滚。此前账号根目录memory.md接口保持兼容，不自动复制。详情见[角色关系](character-conversations.md)。

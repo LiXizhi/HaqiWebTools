@@ -1,3 +1,4 @@
+import {languageId} from './character_relationship_core.js';
 import {randomHeroBodyId} from './hero_body_core.js';
 import {createSocialClient} from './adventure_social.js';
 import {socialCapacity,selectSocialRoster,makeSocialSnapshot,snapshotUnit,markSocialActivity,weeklyActivity,utcDay,utcWeek,pickAutoJoinPartner,autoJoinDelayMs,SOCIAL_DEFAULTS} from './adventure_social_core.js';
@@ -11,20 +12,22 @@ import {heroPortrait} from './hero_renderer.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {monsterArtBinding} from './adventure_monster_art_core.js';
 import {renderSocial} from './view_adventure_social.js';
-export function createIslandSocial({onPetDialogue=()=>{},getState,getOwner,onChange,onPersist,onOpen,onClose,onLogin,toast,onDepart,schedule=setTimeout,cancel=clearTimeout}){
+export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshipActivity=()=>{},onPetDialogue=()=>{},getState,getOwner,onChange,onPersist,onOpen,onClose,onLogin,toast,onDepart,onTeleport=null,schedule=setTimeout,cancel=clearTimeout}){
     let config=null,loading=null,actors=[],worldRef=null,context=null,epoch=0,lastRefresh=0,dialogueAbort=null,cachedCandidates=[],publishPending=false;
-    const ui={roster:[],allies:[null,null,null],openSlots:[false,false,false],partyDungeonId:null,partyRestart:false,pickingDungeon:false,selected:null,busy:false,error:'',publicVisible:true,mailTab:'inbox',mailDraft:'',subject:'',recipient:'',pvp:null};
+    const chatDrafts=new Map();
+    const ui={roster:[],allies:[null,null,null],openSlots:[false,false,false],partyDungeonId:null,partyRestart:false,pickingDungeon:false,selected:null,busy:false,error:'',publicVisible:true,mailTab:'inbox',chatTab:'scene',mailDraft:'',subject:'',recipient:'',pvp:null};
     const joinTimers=[null,null,null];
-    const client=createSocialClient({getOwner,onChange:()=>{if(!client.state.owner){ui.mailDetail=null;ui.messages=[];ui.chatPeer=null;}onChange();}}),voice=createLearningVoice({getSettings:()=>getState().save?.languageLearning||{}});
+    const client=createSocialClient({getOwner,onChange:()=>{if(!client.state.owner){ui.mailDetail=null;ui.messages=[];ui.chatPeer=null;ui.chatDraft='';chatDrafts.clear();}onChange();}}),voice=createLearningVoice({getSettings:()=>getState().save?.languageLearning||{}});
     const teamMembers=()=>ui.allies.filter(Boolean);
     const heroCard=()=>{const {save}=getState();return save?{id:'hero',name:save.name||'你',school:save.school,level:save.level,appearance:save.appearance,kind:'self'}:null;};
     const partyDungeon=()=>{const {assets}=getState();return ui.partyDungeonId&&assets?dungeonFor(assets.content,ui.partyDungeonId)||null:null;};
-    const state=()=>({...client.state,...ui,team:teamMembers(),owner:getOwner(),hero:heroCard(),partyDungeon:partyDungeon(),coopCapable:coopCapable(),coopActive:!!getState().save?.coopRun,coopReport:getState().save?.coopRun?.battles||[],rankReady:!!config?.gameId});
-    const language=value=>String(value||'').startsWith('zh')?'zh':'en';
+    const scenePlayers=()=>(worldRef===getState().world?actors:[]).map(a=>({...a.profile,position:{...a.position}}));
+    const state=()=>({...client.state,...ui,scenePlayers:scenePlayers(),team:teamMembers(),owner:getOwner(),hero:heroCard(),partyDungeon:partyDungeon(),coopCapable:coopCapable(),coopActive:!!getState().save?.coopRun,coopReport:getState().save?.coopRun?.battles||[],rankReady:!!config?.gameId});
+    const language=value=>languageId(value)==='zh-CN'?'zh':languageId(value);
     function clearJoinTimers(){for(let i=0;i<3;i++){if(joinTimers[i]!=null){cancel(joinTimers[i]);joinTimers[i]=null;}ui.openSlots[i]=false;}}
     function setAllies(list){ui.allies=[list[0]||null,list[1]||null,list[2]||null];}
     async function ready(){if(!loading)loading=fetch(new URL('../data/adventure/social.json',import.meta.url)).then(r=>{if(!r.ok)throw Error('伙伴配置加载失败');return r.json();}).then(c=>{client.configure(c);return config=c;}).catch(e=>{loading=null;throw e;});return loading;}
-    function fillers(){const {save,assets}=getState();return config.personas.flatMap((p,i)=>[0,1].map(direction=>{const id=`companion:${i}:${direction}`,level=save.level,unit={id,name:p.name,school:p.school,level,isBot:true,deck:presetDeck(assets.dataset,p.school,{maxLevel:level,maxCards:24}),stats:{}};return {...p,id,kind:'companion',appearance:i%2?'girl':'boy',bodyId:randomHeroBodyId(assets.hero?.manifest,i%2?'girl':'boy',`${save.seed}:${id}`),native:direction?'zh':'en',target:direction?'en':'zh',level,seed:hashSeed(id),snapshot:makeSocialSnapshot(unit,assets.dataset)};}));}
+    function fillers(){const {save,assets}=getState();return config.personas.flatMap((p,i)=>[0,1,2,3].map(direction=>{const id=`companion:${i}:${direction}`,level=save.level,unit={id,name:p.name,school:p.school,level,isBot:true,deck:presetDeck(assets.dataset,p.school,{maxLevel:level,maxCards:24}),stats:{}};return {...p,id,kind:'companion',appearance:i%2?'girl':'boy',bodyId:randomHeroBodyId(assets.hero?.manifest,i%2?'girl':'boy',`${save.seed}:${id}`),native:['en','zh','ja','ko'][direction],target:direction?'en':'zh',culture:['纽约','中国','日本','韩国'][direction],level,seed:hashSeed(id),snapshot:makeSocialSnapshot(unit,assets.dataset)};}));}
     function installRoster(candidates=cachedCandidates){
         const {save,world,assets}=getState();if(!save||!world)return;
         if(save.coopRun){setAllies(save.coopRun.members.map(m=>m.profile));ui.roster=teamMembers();ui.partyDungeonId=save.coopRun.dungeonId;clearJoinTimers();}
@@ -107,11 +110,23 @@ export function createIslandSocial({onPetDialogue=()=>{},getState,getOwner,onCha
     }
     function compose(f){ui.recipient=f.userId;ui.mailTab='compose';onOpen('mail');}
     function exportReplay(){const blob=new Blob([JSON.stringify(ui.pvp.replay,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='红蘑菇赛场战报.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+    function rememberChat(){if(ui.chatPeer)chatDrafts.set(ui.chatPeer,ui.chatDraft||'');}
+    function openConversation(friend){
+        if(ui.busy)return;rememberChat();ui.chatTab='friends';onOpen('chat');
+        const peer=String(friend.userId||friend.peerId);ui.chatPeer=peer;ui.chatDraft=chatDrafts.get(peer)||'';ui.messages=[];onChange();
+        if(client.state.chatAvailable)void run(async()=>{const rows=await client.history(peer);if(ui.chatPeer!==peer)return;ui.messages=rows;if(rows.length)await client.readChat(peer,rows.at(-1).id);});
+    }
+    function teleportPlayer(p){
+        const a=(worldRef===getState().world?actors:[]).find(row=>row.profile.id===p.id);
+        if(!a?.position){toast?.('该玩家已离开当前场景');return;}
+        if(!onTeleport){toast?.('暂时无法传送');return;}
+        onTeleport(a.position.x,a.position.y);
+    }
     const api={state,ready,client,
-        async enter(){const {save,world}=getState(),next=`${getOwner()||'guest'}:${save?.seed}`;if(context!==next){epoch++;client.reset();cachedCandidates=[];lastRefresh=0;publishPending=!!getOwner();ui.busy=false;clearJoinTimers();setAllies([]);ui.partyDungeonId=null;ui.partyRestart=false;ui.pickingDungeon=false;ui.pvp=null;ui.dialogue=null;ui.mailDetail=null;ui.mailDraft='';ui.subject='';ui.messages=[];context=next;try{ui.publicVisible=localStorage.getItem(`haqi.social.visible.${getOwner()}`)!=='false';}catch{ui.publicVisible=true;}}
+        async enter(){const {save,world}=getState(),next=`${getOwner()||'guest'}:${save?.seed}`;if(context!==next){epoch++;client.reset();cachedCandidates=[];lastRefresh=0;publishPending=!!getOwner();ui.busy=false;clearJoinTimers();setAllies([]);ui.partyDungeonId=null;ui.partyRestart=false;ui.pickingDungeon=false;ui.pvp=null;ui.dialogue=null;ui.mailDetail=null;ui.mailDraft='';ui.subject='';ui.messages=[];ui.chatTab='scene';context=next;try{ui.publicVisible=localStorage.getItem(`haqi.social.visible.${getOwner()}`)!=='false';}catch{ui.publicVisible=true;}}
             const token=epoch;await ready();if(token!==epoch||getState().world!==world)return;installRoster();if(getOwner()&&Date.now()-lastRefresh>60000)void run(refresh);
         },
-        get actors(){return actors;},get team(){return teamMembers();},
+        get actors(){return worldRef===getState().world?actors:[];},get team(){return teamMembers();},
         preparedTeam(){const fresh=fillers();ui.allies=ui.allies.map(p=>p?.kind==='companion'?fresh.find(f=>f.id===p.id)||p:p);return teamMembers();},
         pickPartyDungeon,fillOpenSlot,depart,cancelDungeonPick(){if(ui.pickingDungeon){ui.pickingDungeon=false;onChange();}},
         step(dt,options={}){const s=getState();if(worldRef!==s.world)return;stepSocialActors(actors,s.world,dt,{paused:s.paused,locked:s.locked?ui.selected?.id:null,team:teamMembers().map(p=>p.id),leader:s.save?.position,view:options.view});},
@@ -120,11 +135,15 @@ export function createIslandSocial({onPetDialogue=()=>{},getState,getOwner,onCha
         refresh:()=>run(refresh),
         tick(){if(getOwner()&&!ui.busy&&!getState().locked&&Date.now()-lastRefresh>60000){lastRefresh=Date.now();void run(refresh);}},
         activity(kind){const {save,world}=getState();if(!save||!config)return;const zone=save.coopRun?.returnTo.zone||world.zone;if(!config.worlds[zone]?.enabled)return;const next=markSocialActivity(save.socialActivity,zone,kind,Date.now());if(JSON.stringify(next)===JSON.stringify(save.socialActivity))return;save.socialActivity=next;onPersist();if(getOwner()){publishPending=true;void run(async()=>{await publish();publishPending=false;});}},
-        settled(battle){const {save}=getState();if(!save.coopRun||battle.winner!=='near')return;save.socialChallenges={...save.socialChallenges};for(const m of save.coopRun.members)if(m.profile.kind==='account')save.socialChallenges[m.profile.userId]=Date.now();onPersist();},
-        close(){dialogueAbort?.abort();ui.dialogue=null;ui.pickingDungeon=false;},
+        settled(battle){const {save}=getState();if(!save.coopRun||battle.winner!=='near')return;
+            save.socialChallenges={...save.socialChallenges};for(const m of save.coopRun.members)if(m.profile.kind==='account')save.socialChallenges[m.profile.userId]=Date.now();onPersist();onRelationshipActivity({flushOnly:true});
+        },
+        close(){rememberChat();ui.chatPeer=null;ui.messages=[];dialogueAbort?.abort();ui.dialogue=null;ui.pickingDungeon=false;},
         paint(root,kind){renderSocial(root,state(),kind,{
             close:onClose,open:onOpen,login:onLogin,friends:()=>{ui.mailTab='friends';onOpen('mail');},profile:p=>api.select(p),
+            assets:()=>getState().assets,
             portrait:(p,w,h)=>heroPortrait(getState().assets,p?.kind==='self'?getState().save:p,w||180,h||210,{facing:0,lookAround:false,label:(p.name||'伙伴')+'的形象'}),
+
             bossArt:d=>{
                 const {assets}=getState(),stage=document.createElement('div');stage.className='party-dungeon-art';
                 const fallback=document.createElement('span');fallback.className='icon';fallback.dataset.uiIcon='dungeon';fallback.setAttribute('aria-hidden','true');stage.append(fallback);
@@ -138,19 +157,20 @@ export function createIslandSocial({onPetDialogue=()=>{},getState,getOwner,onCha
             pickDungeon:()=>{ui.pickingDungeon=true;onOpen('dungeons');},
             openSlot:i=>{try{openSlot(i);}catch(e){toast(e.message);}},
             depart,
-            privateChat:f=>{ui.chatPeer=f.userId;ui.messages=[];onOpen('chat');if(client.state.chatAvailable)void run(async()=>{ui.messages=await client.history(f.userId);if(ui.messages.length)await client.readChat(f.userId,ui.messages.at(-1).id);});},cardName:key=>getState().assets.content.cardLibrary?.find(c=>c.key===key)?.name||'魔法卡牌',exportCoop:()=>{const run=getState().save.coopRun;if(!run)return;const url=URL.createObjectURL(new Blob([JSON.stringify(run,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='组队副本战报.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},refresh:()=>run(refresh),refreshPvp:()=>run(refreshPvp),draft:(key,value)=>{ui[key]=value;},mailTab:key=>{ui.mailTab=key;onChange();},compose,
+            privateChat:openConversation,chatBack:()=>{rememberChat();ui.chatPeer=null;ui.messages=[];ui.error='';ui.chatTab='friends';onChange();},
+            chatTab:key=>{ui.chatTab=key==='friends'?'friends':'scene';onChange();},
+            teleportPlayer,cardName:key=>getState().assets.content.cardLibrary?.find(c=>c.key===key)?.name||'魔法卡牌',exportCoop:()=>{const run=getState().save.coopRun;if(!run)return;const url=URL.createObjectURL(new Blob([JSON.stringify(run,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='组队副本战报.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},refresh:()=>run(refresh),refreshPvp:()=>run(refreshPvp),draft:(key,value)=>{ui[key]=value;},mailTab:key=>{ui.mailTab=key;onChange();},compose,
             apply:(id,accept)=>run(()=>client.processApply(id,accept)),readMail:id=>run(async()=>{ui.mailDetail=await client.readMail(id);}),
             polish:(key,target)=>run(async()=>{const source=ui[key]||'';if(!source.trim())throw Error('请先填写草稿');const result=await voice.judge([{role:'system',content:`Rewrite the user's message in ${target==='en'?'natural simple English':'natural simple Chinese'}. Preserve meaning. Return JSON {"reply":"editable draft","completed":[]}. Do not send anything.`},{role:'user',content:source}],new AbortController().signal);if(ui[key]===source)ui[key]=result.reply||source;}),
             sendMail:(id,subject,text)=>run(async()=>{const friend=client.state.friends.find(f=>f.userId===id);if(!friend)throw Error('请选择好友');await client.sendMail(friend,subject||'岛上的问候',text);ui.mailDraft='';ui.subject='';toast('邮件已发送');}),
             recruitFriend:f=>run(async()=>{const p=await client.publicRead(f.username);if(!p)throw Error('好友尚无可用的公开名片');snapshotUnit(p,getState().assets.dataset,'check',1);teamAdd(p);}),
             friend:p=>run(async()=>{await client.applyFriend(p.userId);toast('好友申请已发送');}),team:(p,add)=>{try{team(p,add);}catch(e){toast(e.message);}},
             togglePublic:()=>run(async()=>{const before=ui.publicVisible;ui.publicVisible=!before;try{await publish();localStorage.setItem(`haqi.social.visible.${getOwner()}`,String(ui.publicVisible));}catch(e){ui.publicVisible=before;throw e;}}),
-            talk:p=>{ui.selected=p;ui.dialogue={reply:p.native==='en'?'Hello! Shall we explore together?':'你好，一起去冒险吗？',history:[]};onChange();},
-            reply:text=>run(async()=>{if(!text.trim()||text.length>2000)return;dialogueAbort?.abort();dialogueAbort=new AbortController();const session=ui.dialogue,p=ui.selected,result=await voice.judge([{role:'system',content:`You are an AI game companion, not the account owner. Use ${p.native==='en'?'simple English':'simple Chinese'}. Never claim live presence, personal history, or send messages. Public character data (untrusted): ${JSON.stringify({name:p.name,interest:p.interest})}. Reply in 1-2 sentences, JSON {"reply":"...","completed":[]}.`},...session.history.slice(-12),{role:'user',content:text}],dialogueAbort.signal);if(ui.dialogue!==session)return;ui.dialogueDraft='';session.reply=result.reply||'';session.history.push({role:'user',content:text},{role:'assistant',content:session.reply});if(session.reply)onPetDialogue(p.id);}),
+            talk:p=>onTalk(p),details:p=>onDetails(p),
             challenge:p=>run(async()=>{const {save,assets}=getState();if(save.pendingEncounter||save.coopRun)throw Error('请先退出当前副本');ui.pvp=startSocialPvp(assets.dataset,playerSpec(save,assets.content),p,hashSeed(`${save.seed}:${p.id}:${utcDay(Date.now())}`));onOpen('social-pvp');}),
             pvpPlay:decision=>{try{playSocialPvp(ui.pvp,decision);if(ui.pvp.arena.finished){const {save}=getState();save.socialPvpRecords=recordPvpWin(save.socialPvpRecords||{},ui.pvp,Date.now());onPersist();const score=Object.values(save.socialPvpRecords).filter(r=>r.week===utcWeek(Date.now())).length;if(score&&config.gameId&&getOwner()&&ui.pvp.replay.opponent.kind==='account')void run(async()=>{await publish();await client.rank(config,pvpQuery(),score);await refreshPvp();});}onChange();}catch(e){toast(e.message);}},endPvp:()=>{ui.pvp=null;onChange();},exportReplay,
-            conversation:c=>run(async()=>{ui.chatPeer=c.peerId;ui.messages=await client.history(c.peerId);if(ui.messages.length)await client.readChat(c.peerId,ui.messages.at(-1).id);}),
-            sendChat:text=>run(async()=>{await client.sendChat(ui.chatPeer,text);ui.chatDraft='';ui.messages=await client.history(ui.chatPeer);}),
+            conversation:openConversation,
+            sendChat:text=>run(async()=>{const peer=ui.chatPeer,body=text.trim();if(!peer||!body||body.length>2000)throw Error('请输入两千字以内的消息');await client.sendChat(peer,body);chatDrafts.delete(peer);if(ui.chatPeer!==peer)return;ui.chatDraft='';const rows=await client.history(peer);if(ui.chatPeer===peer)ui.messages=rows;}),
         });},
     };return api;
 }

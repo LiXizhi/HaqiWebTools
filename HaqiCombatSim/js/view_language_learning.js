@@ -3,6 +3,7 @@ import { textFor, speakText, localeChoices } from './locale.js';
 import { recognitionLanguage } from './language_learning.js';
 import {loadLearningOptions,createLearningVoice} from './language_adventure_voice.js';
 import { createSettingsControls } from './view_settings_controls.js';
+import {acquireAudioActivity} from './audio_activity.js';
 let learningOptions={models:[],voices:[]};
 
 export function languageSettings(body, model, cb, { el, button }) {
@@ -86,14 +87,22 @@ export function renderFreeTalk(root, model, npc, cb, { el, button }) {
     let listening = false;
     const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     mic.disabled = !Recognition;
-    mic.addEventListener('pointerdown', () => {
+    mic.addEventListener('pointerdown', event => {
         if (!Recognition || listening) return;
         const session = new Recognition();
+        const release=acquireAudioActivity();
+        const stop=()=>session.stop();
+        const cancel=()=>{session.abort();cleanup();};
+        const cleanup=()=>{release();listening=false;observer.disconnect();mic.removeEventListener('pointerup',stop);mic.removeEventListener('pointercancel',cancel);};
+        const observer=new MutationObserver(()=>{if(!box.isConnected){session.abort();cleanup();}});
+        observer.observe(root,{childList:true});
+        session.onend=cleanup;session.onerror=cleanup;
         session.lang = recognitionLanguage(learning.target);
         session.onresult = event => { input.value = event.results?.[0]?.[0]?.transcript || input.value; };
-        session.start();
-        listening = true;
-        mic.addEventListener('pointerup', () => { session.stop(); listening = false; }, { once: true });
+        try{session.start();listening=true;}catch{cleanup();return;}
+        mic.setPointerCapture?.(event.pointerId);
+        mic.addEventListener('pointerup',stop,{once:true});
+        mic.addEventListener('pointercancel',cancel,{once:true});
     });
     function add(role, text) {
         log.append(el('p', role === 'user' ? 'language-user' : 'language-npc', text));

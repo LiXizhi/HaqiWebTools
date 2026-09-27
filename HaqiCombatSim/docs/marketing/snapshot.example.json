@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "metrics": {
+    "newUsers": {"status":"missing","value":null,"evidence":null,"asOf":null},
+    "totalUsers": {"status":"missing","value":null,"evidence":null,"asOf":null},
+    "aiActivated": {"status":"missing","value":null,"evidence":null,"asOf":null},
+    "d1": {"status":"missing","value":null,"evidence":null,"asOf":null},
+    "d7": {"status":"missing","value":null,"evidence":null,"asOf":null},
+    "d14": {"status":"missing","value":null,"evidence":null,"asOf":null},
+    "paidOrders": {"status":"missing","value":null,"evidence":null,"asOf":null},
+    "refunds": {"status":"missing","value":null,"evidence":null,"asOf":null},
+    "netRevenue": {"status":"missing","value":null,"evidence":null,"asOf":null},
+    "aiCost": {"status":"missing","value":null,"evidence":null,"asOf":null}
+  },
+  "feedback": [],
+  "actions": ["核验 TapTap 游戏页和首批素材", "接入 Discord 授权频道及 Bot", "核验 9.9 元商品、AI 余额和事件数据源"]
+}

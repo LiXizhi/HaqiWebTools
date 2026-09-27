@@ -1,0 +1,13 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><base href="../../">
+<title>植物图集与延迟加载验证</title>
+<style>body{background:#203c34;color:white;font:16px sans-serif}#grid{display:grid;grid-template-columns:repeat(4,180px);gap:8px}canvas{background:#719776;border:1px solid #a1c39e}button{padding:12px;margin:12px}</style>
+<h1>植物图集与延迟加载验证</h1><p id="status">正在加载</p><div id="grid"></div><button id="load">加载旧宠物和召唤回退图</button><div id="fallback"></div>
+<script type="module">
+import {loadResources} from './js/adventure_assets.js';
+const a=await loadResources(),grid=document.querySelector('#grid'),status=document.querySelector('#status');
+for(let i=0;i<16;i++){const c=document.createElement('canvas');c.width=c.height=180;grid.append(c);a.sceneryTile(c.getContext('2d'),i,0,0,180,180);c.getContext('2d').getImageData(0,0,180,180);}
+status.textContent=`${a.mode}：16 格已解码，透明像素可读；宠物预加载=${a.images.has('creatures')}，召唤预加载=${a.images.has('summons')}`;
+document.querySelector('#load').onclick=()=>{
+ for(const sheet of ['creatures','summons']){const c=document.createElement('canvas');c.width=c.height=180;document.querySelector('#fallback').append(c);a.tile(c.getContext('2d'),sheet,0,0,0,180,180);}
+};
+</script></html>

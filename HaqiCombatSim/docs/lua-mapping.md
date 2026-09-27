@@ -1,6 +1,7 @@
 # 公式与常量 ↔ Lua 源码对照表
 
 2026-09-25坐骑：paraworld.globalstore.lua 字段序中 `o[3]` 为 count（魔豆，物品984），`o[8]` 为 ebuyprice（奇豆，物品100）。NPCShopProvider.lua 在 exid==0 时按这两项直购。ItemsFilter.lua 代码91为 class 2 / subclass 6 坐骑；subclass 8 是别名。ItemManager.lua 将 stats[180]==1 标为会员物品。变身药丸的 28/46/51 只记录外形，网页不把它们当成战斗属性；可骑乘条目在 mount-catalog.json 里另有 stats，骑乘时按 combat_unit_core.js 的 statIdToEntry 加到英雄。这是网页补充，不是原药丸的战斗公式。移动加速使用 BalanceParams.adventure.mountSpeed，kids 坐骑没有单独移速属性。
+2026-09-27商城：永久坐骑一律上架。原价为 0/0 的条目（十二生肖等）使用 BalanceParams.adventure.mountUnpricedDefault（默认 100 魔豆），不是原服售价。限时 SKU 仅按名称 `（N天）` / `(N天)` 或 expire 字段排除，避免“霸天龙”被误杀。NPC 7 天直购仍走原 modou/qidou。
 
 2026-09-23起，新的野生捕获只走抓宠符文。捕获晶球不再出现在商城和战斗按钮里；未使用的晶球换成普通抓宠符文。检查点里已经记录的晶球出手仍按此前网页公式重演：`captureBase + captureWounded × 已损失生命比例`。
 
@@ -340,3 +341,5 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 ## 2026-09-27 kids赠礼资格
 
 `ItemManager.lua` GetAllCanGiftItemGUIDs L5460–5492按cangift、包范围、强化和镶嵌筛选；`paraworld.globalstore.lua` L535–554定义t[24]类、t[34]可交易、t[38]堆叠、t[40]可赠送；`GenericTooltip.lua` L505–522定义stats[223]与实例绑定。新增export_gift_rules.py保留DB哈希，仅开放class18、可堆叠、cangift=true、绑定类型0的物品；实例装备/坐骑等未完整核验类型明确禁用。好感度、异性随机偏移和活动加成为网页改编，不宣称原版公式。
+
+2026-09-27儿童版口粮：CombatPetFoodsPage.lua L138、L193列出17172/17185/17211；L272–293明确kids经验300/1200/2400，源数据库globalstore.db.mem stats[60]一致。导出器保留原始记录，自动食槽读取该值；饱食40/70/100和售价30/120/240奇豆是明确的Web改编，集中在BalanceParams.adventure.petFoodRules。无需移植teen分支高级口粮900经验。

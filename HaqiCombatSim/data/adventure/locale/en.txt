@@ -3151,6 +3151,47 @@ VIP专用仙豆礼盒||VIP Fairy Bean Gift Box
 翡翠始祖龙||Emerald Progenitor Dragon
 紫晶灵翼龙||Amethyst Wing Dragon
 魔力灵狐||Magic Fox
+鸵鸟||Ostrich
+鼠||Rat
+牛||Ox
+虎||Tiger
+兔||Rabbit
+龙||Dragon
+蛇||Snake
+马||Horse
+羊||Goat
+猴||Monkey
+鸡||Rooster
+狗||Dog
+猪||Pig
+王者金龙(珍藏版)||King Golden Dragon (Collector)
+英雄银龙(珍藏版)||Hero Silver Dragon (Collector)
+英雄白龙(珍藏版)||Hero White Dragon (Collector)
+王者玉龙(珍藏版)||King Jade Dragon (Collector)
+浴火凤凰(珍藏版)||Rebirth Phoenix (Collector)
+逐风神鹰(珍藏版)||Windchase Eagle (Collector)
+蓝血凤凰(珍藏版)||Blue Phoenix (Collector)
+圣诞麋鹿||Christmas Reindeer
+黑色小神鹰||Little Black Eagle
+蒸汽机器人||Steam Robot
+王者金龙||King Golden Dragon
+王者玉龙||King Jade Dragon
+土遁神龟||Earth Turtle
+逐梦海豚||Dream Dolphin
+机械鲨鱼||Mechanical Shark
+红玉霸天龙||Ruby Sovereign Dragon
+黄铜啸天龙||Brass Roar Dragon
+小猛犸||Little Mammoth
+白银猛犸||Silver Mammoth
+黄金猛犸||Golden Mammoth
+金色精灵羽翼||Golden Sprite Wings
+蓝色精灵羽翼||Blue Sprite Wings
+白色精灵羽翼||White Sprite Wings
+逐梦鲸鱼||Dream Whale
+造梦灵狐||Dreammaking Fox
+尤诺的雪地车||Yuno Snowmobile
+抱抱龙||Cuddle Dragon
+蓝晶神龟||Blue Crystal Turtle
 
 # pet shop schools, price line, and Magic Star
 风暴系||Storm
@@ -5861,6 +5902,9 @@ AI 托管||AI control
 该玩家已离开当前场景||That player has left this scene
 暂时无法传送||Teleport is unavailable right now
 {school} · {level} 级||{school} · Lv. {level}
+{level} 级||Lv. {level}
+男||Male
+女||Female
 
 搜索好友||Search friends
 管理好友||Manage friends
@@ -5880,3 +5924,34 @@ AI 托管||AI control
 重新连接||Reconnect
 获取回应||Get response
 有一条发送记录待核验，请点击发送继续。||A pending message needs verification. Click Send to continue.
+会员充值||Membership recharge
+会员已激活||Membership active
+会员尚未开通||Membership not active
+充值账号：{name}||Recharge account: {name}
+尚未登录||Not signed in
+VIP 到期日：{date}（北京时间）||VIP expires: {date} (Beijing time)
+开通后显示 VIP 到期日||VIP expiry appears after activation
+当前魔豆：{count}||Magic beans: {count}
+充值金额（元）||Amount (CNY)
+前往安全收银台||Open secure checkout
+前往支付 ¥{amount}||Pay ¥{amount}
+正在打开充值页面…||Opening checkout…
+登录 / 连接账号||Sign in / connect account
+开通或续费会员||Activate or renew membership
+支持自定义金额，最低金额、可购买天数及最终实付以收银台为准。||Enter a custom amount. The minimum, membership duration and final charge are confirmed at checkout.
+付款完成后返回此页，若到期日尚未更新，请点击“刷新会员状态”。||Return here after payment. If the expiry has not updated, select Refresh membership status.
+会员天数折算魔豆||Membership days to magic beans
+每新增 1 天会员有效期，自动获得 10 魔豆；会员有效期不会因此缩短。||Each additional membership day grants 10 magic beans without shortening your membership.
+首次从今天算到 VIP 到期日，按北京时间日历天数兑换。之后只计算超过已兑换日期的新增天数，同一段日期只兑换一次。||The first exchange counts Beijing calendar days from today to VIP expiry. Later exchanges count only dates beyond the recorded date. Each period is exchanged once.
+魔豆放入当前账号的当前角色背包；战斗中会在结束后兑换。||Magic beans go to the current account’s active character. During battle, the exchange waits until battle ends.
+查看会员权益||View membership benefits
+续费会员后，新增有效天数会自动兑换为魔豆。||Renewal days are automatically converted to magic beans.
+请输入大于零的金额，最多两位小数。||Enter a positive amount with up to two decimal places.
+请输入有效的充值金额。||Enter a valid recharge amount.
+充值页面正在处理中，请稍候。||Checkout is in progress. Please wait.
+请先连接当前角色所属的会员账号。||Connect the membership account that owns this character first.
+充值服务暂时不可用，请刷新页面后重试。||Recharge is unavailable. Refresh the page and try again.
+登录账号已变化，请重新确认会员状态。||The signed-in account changed. Check membership status again.
+无法确认充值账号，请重新登录。||Unable to verify the recharge account. Sign in again.
+浏览器拦截了收银台窗口，请允许弹窗后重试。||Your browser blocked checkout. Allow pop-ups and try again.
+已刷新会员状态，魔豆按实际新增到期日兑换。||Membership refreshed. Magic beans are based on the verified expiry extension.

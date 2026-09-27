@@ -143,6 +143,40 @@ export function nearestWalkable(world,x,y) {
     }
     return best;
 }
+// Map teleports snap to walkable ground, then keep clearance from NPCs / social actors
+// so sprites do not stack. Horizontal offsets are tried first for side-by-side facing.
+export function clearTeleportSpot(world,x,y,extras=[],clearance=50){
+    const base=nearestWalkable(world,x,y);
+    if(!base)return null;
+    const points=[];
+    for(const o of [...(world.npcs||[]),...extras]){
+        const p=o?.position&&Number.isFinite(o.position.x)?o.position:o;
+        if(Number.isFinite(p?.x)&&Number.isFinite(p?.y))points.push({x:p.x,y:p.y});
+    }
+    if(!points.length)return base;
+    const minDist=(px,py)=>{let d=Infinity;for(const p of points)d=Math.min(d,Math.hypot(px-p.x,py-p.y));return d;};
+    if(minDist(base.x,base.y)>=clearance)return base;
+    const maxR=Math.max(clearance*3,150),step=Math.max(10,Math.floor(clearance/4));
+    const angles=[0,Math.PI,Math.PI/6,-Math.PI/6,5*Math.PI/6,-5*Math.PI/6,Math.PI/3,-Math.PI/3,2*Math.PI/3,-2*Math.PI/3,Math.PI/2,-Math.PI/2];
+    for(let r=clearance;r<=maxR;r+=step){
+        const candidates=[[base.x+r,base.y],[base.x-r,base.y],[base.x+r,base.y-step],[base.x-r,base.y-step],[base.x+r,base.y+step],[base.x-r,base.y+step],[base.x,base.y-r],[base.x,base.y+r]];
+        for(const a of angles)candidates.push([base.x+Math.cos(a)*r,base.y+Math.sin(a)*r]);
+        for(const [px,py] of candidates){
+            if(walkable(world,px,py)&&minDist(px,py)>=clearance)return{x:px,y:py};
+        }
+    }
+    let best=base,bestScore=minDist(base.x,base.y);
+    for(let r=step;r<=maxR;r+=step){
+        for(let i=0;i<16;i++){
+            const a=i/16*Math.PI*2,px=base.x+Math.cos(a)*r,py=base.y+Math.sin(a)*r;
+            if(!walkable(world,px,py))continue;
+            const score=minDist(px,py)+Math.abs(Math.cos(a))*2;
+            if(score>bestScore){bestScore=score;best={x:px,y:py};}
+        }
+        if(bestScore>=clearance)return best;
+    }
+    return best;
+}
 export function movePosition(world,position,dx,dy) {
     // Sweep small steps to prevent tunneling through trees during a delayed frame.
     const steps=Math.max(1,Math.ceil(Math.hypot(dx,dy)/8));let {x,y}=position;

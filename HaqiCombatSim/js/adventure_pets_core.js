@@ -10,6 +10,37 @@ export const STAGE_NAMES=['幼年','青年','成年','隐藏形态'];
 export const FOOD_ID=990001, CAPTURE_ID=990002, GENERAL_CATCH_RUNE=23439;
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 export const petParams=content=>resolveParams({cards:{}},content.balanceParams||defaultParams('kids')).adventure;
+export function foodInfo(content,id){
+ const p=petParams(content);
+ if(Number(id)===FOOD_ID)return {restore:p.foodRestore,xp:0,price:p.foodPrice};
+ const rule=p.petFoodRules?.[id],item=content.petFoods?.[id];
+ return rule&&item?{...rule,xp:Number(item.stats[60]||0)}:null;
+}
+export function validateFoodSlots(save,content){
+ if(save.petFoodSlots===undefined)return;
+ check(Array.isArray(save.petFoodSlots)&&save.petFoodSlots.length===2,'宠物食槽无效');
+ for(const row of save.petFoodSlots)check(row===null||row&&Number.isSafeInteger(row.itemId)&&foodInfo(content,row.itemId)&&Number.isSafeInteger(row.count)&&row.count>0,'食槽口粮无效');
+}
+// Kids CombatPetFoodsPage.lua L272–293 and globalstore stats[60] supply XP.
+// Satiety and automatic trays are Web adaptations, controlled by BalanceParams.
+function eatFood(save,content,pet,itemId){
+ const food=foodInfo(content,itemId),before=pet.hunger;
+ pet.hunger=Math.min(100,pet.hunger+food.restore);
+ if(pet.level<petParams(content).levelCap){pet.xp+=food.xp;pet.level=petXpLevel(pet.xp,content);}
+ save.careLog.push(`${content.pets[pet.speciesId].name}吃了${content.items[itemId].name}，饱食 +${Math.round(pet.hunger-before)}`);
+}
+export function feedFromSlots(save,content){
+ if(save.pendingEncounter)return;
+ for(const id of save.formation.filter(Boolean)){
+  const pet=save.pets[id];if(!pet)continue;
+  while(pet.hunger<petParams(content).feedThreshold){
+   const index=(save.petFoodSlots||[]).findIndex(row=>row?.count>0);if(index<0)break;
+   const row=save.petFoodSlots[index];eatFood(save,content,pet,row.itemId);
+   if(--row.count===0)save.petFoodSlots[index]=null;
+  }
+ }
+ save.careLog=save.careLog.slice(-20);
+}
 export function petStage(level,content){return petParams(content).stageLevels.filter(n=>level>=n).length-1;}
 // Appearance is cosmetic; growth, cards and combat always use the actual level.
 export function petAppearanceStage(pet,content){
@@ -48,6 +79,23 @@ export function initializePets(save,content,starter=null){
 export function petAction(save,content,action,access={}){
  const p=petParams(content),pet=save.pets[action.petId];
  switch(action.type){
+ case 'pet-food-put':{
+  check(!save.pendingEncounter,'请先完成当前战斗');
+  check(Number.isInteger(action.slot)&&action.slot>=0&&action.slot<2,'食槽无效');
+  check(Number.isSafeInteger(action.itemId)&&foodInfo(content,action.itemId),'请选择宠物口粮');
+  check(Number.isSafeInteger(action.count)&&action.count>0&&(save.inventory[action.itemId]||0)>=action.count,'口粮数量不足');
+  const row=save.petFoodSlots?.[action.slot];check(!row||row.itemId===action.itemId,'请先取回食槽中的口粮');
+  check(Number.isSafeInteger((row?.count||0)+action.count),'口粮数量无效');
+  save.petFoodSlots??=[null,null];save.inventory[action.itemId]-=action.count;
+  save.petFoodSlots[action.slot]={itemId:action.itemId,count:(row?.count||0)+action.count};
+  feedFromSlots(save,content);break;
+ }
+ case 'pet-food-take':{
+  check(!save.pendingEncounter,'请先完成当前战斗');check(Number.isInteger(action.slot)&&action.slot>=0&&action.slot<2,'食槽无效');
+  const row=save.petFoodSlots?.[action.slot];check(row,'食槽已经空了');
+  check(Number.isSafeInteger((save.inventory[row.itemId]||0)+row.count),'口粮数量无效');
+  save.inventory[row.itemId]=(save.inventory[row.itemId]||0)+row.count;save.petFoodSlots[action.slot]=null;break;
+ }
  case 'pet-appearance':check(pet,'尚未拥有宠物');check(Number.isInteger(action.stage)&&action.stage>=0&&action.stage<=petStage(pet.level,content),'宠物形态尚未解锁');pet.appearanceStage=action.stage;break;
  case 'starter':{check(!save.starterChosen&&STARTERS.includes(action.petId),'已领取初始伙伴');const added=addPet(save,content,action.petId);save.formation[save.heroSlot]=save.petInstanceVersion===1?added.id:action.petId;save.starterChosen=true;break;}
  case 'formation':{
@@ -62,14 +110,16 @@ export function petAction(save,content,action,access={}){
   check(item.kind!=='pet'||!Object.values(ownedPetRecords(save)).some(p=>p.speciesId===item.petId),'已经拥有这只宠物');const cost=productPrice(item,content);
   const currency=item.kind==='mount'?item.currency:100;
   check(!action.paidByTest,'语言课程仅发放限额奖励，请使用货币购买');
-  check((save.inventory[currency]||0)>=cost,currency===984?'魔豆不足':'奇豆不足');save.inventory[currency]-=cost;
-  if(item.kind==='pet')addPet(save,content,item.petId);else save.inventory[item.itemId]=(save.inventory[item.itemId]||0)+1;
-  save.transactions.push({id:save.transactions.length+1,productId:item.id,cost,paidByTest:false});break;
+  const count=action.count??1;check(Number.isSafeInteger(count)&&count>0&&count<=999&&(count===1||!!foodInfo(content,item.itemId)),'购买数量无效');
+  check(item.kind==='pet'||Number.isSafeInteger((save.inventory[item.itemId]||0)+count),'物品数量无效');
+  check((save.inventory[currency]||0)>=cost*count,currency===984?'魔豆不足':'奇豆不足');save.inventory[currency]-=cost*count;
+  if(item.kind==='pet')addPet(save,content,item.petId);else save.inventory[item.itemId]=(save.inventory[item.itemId]||0)+count;
+  save.transactions.push({id:save.transactions.length+1,productId:item.id,cost:cost*count,count,paidByTest:false});break;
  }
  default:return false;
  }return true;
 }
-export function productPrice(item,content){const p=petParams(content);return item.kind==='mount'?item.price:item.kind==='pet'?p.petPriceBase+p.petPriceLevel*item.level:item.kind==='gear'?p.gearPriceBase+p.gearPriceLevel*item.level:item.itemId===FOOD_ID?p.foodPrice:p.capturePrice;}
+export function productPrice(item,content){const p=petParams(content);return item.kind==='mount'?item.price:item.kind==='pet'?p.petPriceBase+p.petPriceLevel*item.level:item.kind==='gear'?p.gearPriceBase+p.gearPriceLevel*item.level:foodInfo(content,item.itemId)?.price??p.capturePrice;}
 // Unused capture crystals become the general catch rune. A battle already casting crystals keeps its stock so the old checkpoint can replay.
 export function retireCaptureCrystals(save,content,{keepActiveBattle=true}={}){
  const count=save.inventory?.[CAPTURE_ID]||0;
@@ -101,9 +151,9 @@ export function tickCare(save,content,hero,now,online=false){
  if(!inDungeon)save.heroHp=Math.min(maxHp,(save.heroHp??maxHp)+maxHp*p.heroRegenPerSecond*minutes*60);
  for(const id of save.formation.filter(Boolean)){
   const pet=save.pets[id];if(online){pet.hunger=Math.max(0,pet.hunger-minutes*p.hungerPerMinute);
-   while(pet.hunger<p.feedThreshold&&(save.inventory[FOOD_ID]||0)>0){save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+p.foodRestore);save.careLog.push(`${content.pets[pet.speciesId].name}自动进食，饱食 +${p.foodRestore}`);}
   }
  }
+ if(online)feedFromSlots(save,content);
  // Web companion care: stored pets rest without consuming food, including
  // offline time (the same 24-hour elapsed cap and battle pause apply).
  const active=new Set(save.formation.filter(Boolean));
@@ -125,6 +175,7 @@ export function migratePetDeckRules(save,content){
  return content;
 }
 export function validatePets(save,content){
+ validateFoodSlots(save,content);
  check(save.pets&&typeof save.pets==='object'&&!Array.isArray(save.pets),'宠物收藏无效');
  for(const [id,pet] of Object.entries(save.pets)){
   if(save.petInstanceVersion===1){check(pet.id===id&&pet.ownerId===save.petOwnerId,'宠物身份无效');validatePetInstance(pet,content);}

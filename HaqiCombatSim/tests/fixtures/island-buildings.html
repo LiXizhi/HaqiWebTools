@@ -15,6 +15,7 @@ const content=await read('data/adventure/chapter.json');content.worldMaps={};
 const query=new URLSearchParams(location.search),mode=query.get('assets')==='local'?'local':'cdn';
 // The document base allows the normal local loader; this fixture never touches saves.
 const art=await loadEnvironmentArt(mode,read,'data/adventure/building-art.json');
+await art.warm(Object.keys(art.manifest.atlases));
 const media=await read('data/adventure/media.json'),captainImage=new Image();captainImage.crossOrigin='anonymous';
 await new Promise((resolve,reject)=>{captainImage.onload=resolve;captainImage.onerror=reject;captainImage.src=assetUrl(media.entries[content.npcs[36205].portrait.id],mode);});
 const alphaCanvas=document.createElement('canvas');alphaCanvas.width=captainImage.width;alphaCanvas.height=captainImage.height;

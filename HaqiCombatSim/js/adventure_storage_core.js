@@ -9,7 +9,7 @@ const localFields = ['heroHp','careAt','careLog','position','facing','pendingEnc
 // kept in the role's IndexedDB runtime record and restored regardless of revision.
 const prefFields = ['magicStarFollow','mountHidden'];
 const itemFields = ['petPages','petFileRefs','petWorld','pets','equipmentInstances','nextEquipmentGuid','upgrades','cards','pet'];
-const battleFields = ['inventory','equipment','equipmentGuids','mountId','formation','heroSlot','deck'];
+const battleFields = ['inventory','petFoodSlots','equipment','equipmentGuids','mountId','formation','heroSlot','deck'];
 const recordFields = ['transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
 export const storageParts = ['items','battle','records'];
 

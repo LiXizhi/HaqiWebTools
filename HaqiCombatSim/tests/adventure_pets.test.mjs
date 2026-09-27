@@ -96,9 +96,9 @@ test('purchases fail atomically and preserve original equipment restrictions',()
  assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:c.shop.find(x=>x.level>1).id}),/等级/);
 });
 test('online auto-feed, offline regeneration, hunger zero and clock rollback',()=>{
- const s=fresh(),pet=s.pets[s.formation[0]],hero=A.playerSpec(s,c);pet.hunger=29;pet.hp=10;s.heroHp=10;s.inventory[P.FOOD_ID]=2;
- P.tickCare(s,c,hero,1000,false);P.tickCare(s,c,hero,61000,true);assert.equal(s.inventory[P.FOOD_ID],1);assert.equal(pet.hunger,68);assert.ok(s.heroHp>10);
- const hunger=pet.hunger;P.tickCare(s,c,hero,121000,false);assert.equal(pet.hunger,hunger);assert.equal(s.inventory[P.FOOD_ID],1);
+ const s=fresh(),pet=s.pets[s.formation[0]],hero=A.playerSpec(s,c);pet.hunger=29;pet.hp=10;s.heroHp=10;s.inventory[P.FOOD_ID]=2;s.petFoodSlots=[{itemId:P.FOOD_ID,count:2},null];
+ P.tickCare(s,c,hero,1000,false);P.tickCare(s,c,hero,61000,true);assert.equal(s.inventory[P.FOOD_ID],2);assert.equal(s.petFoodSlots[0].count,1);assert.equal(pet.hunger,68);assert.ok(s.heroHp>10);
+ const hunger=pet.hunger;P.tickCare(s,c,hero,121000,false);assert.equal(pet.hunger,hunger);assert.equal(s.inventory[P.FOOD_ID],2);
  pet.hunger=0;const hp=pet.hp;P.tickCare(s,c,hero,181000,false);assert.equal(pet.hp,hp);P.tickCare(s,c,hero,1000,true);assert.equal(s.careAt,181000);
 });
 

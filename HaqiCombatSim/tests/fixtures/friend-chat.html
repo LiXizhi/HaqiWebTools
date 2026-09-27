@@ -4,11 +4,11 @@ const params=new URLSearchParams(location.search);
 const state={
     owner:params.has('guest')?null:'fixture',userId:'self',chatTab:params.get('tab')==='friends'?'friends':'scene',
     scenePlayers:[
-        {id:'p1',name:'无心插柳柳橙汁',school:'fire',level:28,position:{x:100,y:200}},
-        {id:'p2',name:'知径',school:'life',level:16,position:{x:220,y:180}},
-        {id:'p3',name:'风暴学徒',school:'storm',level:12,position:{x:340,y:260}},
-        {id:'p4',name:'寒冰旅人',school:'ice',level:22,position:{x:160,y:300}},
-        {id:'p5',name:'死亡学者',school:'death',level:35,position:{x:400,y:140}},
+        {id:'p1',name:'无心插柳柳橙汁',school:'fire',level:28,appearance:'boy',isVip:true,position:{x:100,y:200}},
+        {id:'p2',name:'知径',school:'life',level:16,appearance:'girl',position:{x:220,y:180}},
+        {id:'p3',name:'风暴学徒',school:'storm',level:12,appearance:'boy',isVip:true,position:{x:340,y:260}},
+        {id:'p4',name:'寒冰旅人',school:'ice',level:22,appearance:'girl',position:{x:160,y:300}},
+        {id:'p5',name:'死亡学者',school:'death',level:35,appearance:'boy',position:{x:400,y:140}},
     ],
     friends:[{userId:'a',name:'安娜'},{userId:'b',name:'露娜'},{userId:'c',name:'小明'}],
     conversations:[{peerId:'a',unread:1,latest:{text:'一起去冒险吧'}}],messages:[],

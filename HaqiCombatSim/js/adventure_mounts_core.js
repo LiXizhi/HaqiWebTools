@@ -1,13 +1,24 @@
 // Rideable mounts. Pose math matches demos/mount-lab/mount_core.js.
 // Prices: paraworld.globalstore.lua o[3] count = 魔豆, o[8] ebuyprice = 奇豆.
+import { defaultParams, resolveParams } from './combat_params_core.js';
 import { statIdToEntry } from './combat_unit_core.js';
 import { mountLayout } from './mount_layout_core.js';
 
 export const MOUNT_DIRECTIONS = ['down', 'left', 'right', 'up'];
 const FACING = ['down', 'left', 'right', 'up'];
+// Timed SKUs use names like “霸王虎(7天)” / “圣诞大麋鹿(31天)”; do not match 天 inside 霸天龙.
+const TIMED_MOUNT_NAME = /[（(]\d+天[）)]/;
 
 function finite(value, name) {
     if (!Number.isFinite(value)) throw new Error(`${name} 必须是有限数值`);
+}
+function isTimedMountRow(row) {
+    return !!(row && (row.expireTime || row.expireType || TIMED_MOUNT_NAME.test(row.name || '')));
+}
+function mallDisplayName(row, mount) {
+    const name = row?.name || '';
+    if (/变身药丸$/.test(name)) return mount.name || name;
+    return name || mount.name;
 }
 export function validateMountCatalog(catalog) {
     if (catalog?.version !== 1 || !Array.isArray(catalog.mounts) || !catalog.mounts.length) throw new Error('坐骑配置版本或列表无效');
@@ -52,11 +63,30 @@ export function resolveMountDrawPose(mount, facing, { size = 78, time = 0, movin
     };
 }
 export function mountShopPrice(row) {
-    // expiretime/expiretype are globalstore template t[27]/t[30]. Names like “（7天）” still have a real 魔豆 price.
+    // expiretime/expiretype are globalstore template t[27]/t[30].
+    // Names like “（7天）” keep their 魔豆 price for NPC direct sale; the mall skips those SKUs separately.
     if (!row || row.expireTime || row.expireType) return null;
     if (row.qidou > 0) return { currency: 100, amount: row.qidou };
     if (row.modou > 0) return { currency: 984, amount: row.modou };
     return null;
+}
+/** Mall price: original globalstore price, or BalanceParams default for permanent unpriced mounts. */
+export function mountMallPrice(row, content) {
+    if (!row || isTimedMountRow(row)) return null;
+    const priced = mountShopPrice(row);
+    if (priced) return priced;
+    const amount = resolveParams({ cards: {} }, content?.balanceParams || defaultParams('kids')).adventure.mountUnpricedDefault;
+    if (!(amount > 0)) return null;
+    return { currency: 984, amount };
+}
+/** UI icons always show the right-facing side cell from the 2×2 atlas (never front). */
+export function mountIconCrop(mount) {
+    const cols = mount.art.columns || 2;
+    const rows = mount.art.rows || 2;
+    const cw = mount.art.width / cols;
+    const ch = mount.art.height / rows;
+    const cell = mount.directions.right.cell;
+    return [cell % cols * cw, Math.floor(cell / cols) * ch, cw, ch];
 }
 export function installMountCatalog(content, catalog) {
     validateMountCatalog(catalog);
@@ -64,21 +94,23 @@ export function installMountCatalog(content, catalog) {
     content.mountByItem = {};
     for (const mount of catalog.mounts) {
         if (!mount.rideable) continue;
-        let listed = false;
+        const permanent = [];
         for (const [id, row] of Object.entries(mount.commerce || {})) {
             if (!((row.kind === 2 && row.subtype === 6) || (row.kind === 10 && row.subtype === 1))) continue;
             const itemId = Number(id);
             content.items[itemId] ??= { id: itemId, name: row.name, description: '', stats: {}, slot: 0, kind: row.kind, subtype: row.subtype };
             const item = content.items[itemId];
             item.mountId = mount.id;
-            if (mount.art?.cdn) item.art = { id: `mount:${mount.id}`, crop: [0, 0, mount.art.width / (mount.art.columns || 2), mount.art.height / (mount.art.rows || 2)] };
+            if (mount.art?.cdn) item.art = { id: `mount:${mount.id}`, crop: mountIconCrop(mount) };
             content.mountByItem[itemId] = { ...row, itemId, mountId: mount.id, stats: mount.stats, art: mount.art };
-            const price = mountShopPrice(row);
-            // The mall lists one long-term item per mount. NPC shops still sell the 7-day row at its own price.
-            if (listed || !price || /天/.test(row.name || '')) continue;
-            listed = true;
-            content.shop?.push({ id: `mount:${itemId}`, kind: 'mount', itemId, name: row.name || mount.name, level: 1, vipOnly: row.vip === true, currency: price.currency, price: price.amount, school: 'all' });
+            // Mall lists one permanent SKU. NPC shops still sell timed rows via mountShopPrice.
+            if (!isTimedMountRow(row)) permanent.push([itemId, row]);
         }
+        const pick = permanent.find(([, row]) => mountShopPrice(row)) || permanent.find(([, row]) => mountMallPrice(row, content));
+        if (!pick) continue;
+        const [itemId, row] = pick;
+        const price = mountMallPrice(row, content);
+        content.shop?.push({ id: `mount:${itemId}`, kind: 'mount', itemId, name: mallDisplayName(row, mount), level: 1, vipOnly: row.vip === true, currency: price.currency, price: price.amount, school: 'all' });
     }
     return content;
 }

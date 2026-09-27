@@ -10,9 +10,10 @@ const integer=n=>Number.isSafeInteger(n)&&n>=0;
 const identifier=id=>typeof id==='string'&&id.length>0&&id.length<=240&&!/[\u0000-\u001f]/.test(id);
 const order=(a,b)=>a<b?-1:a>b?1:0;
 export function petInteractionParams(content){
-    const params=resolveParams({cards:{}},content.balanceParams||defaultParams('kids')).petInteractions;
+    const resolved=resolveParams({cards:{}},content.balanceParams||defaultParams('kids'));
+    const params={...resolved.petInteractions,encounterDistance:defaultParams('kids').islandSocial.converseRadius*resolved.petInteractions.encounterDistanceMultiplier};
     check(['memoryCapacity','memoryProtectionMs','marksRequired','cooldownMs','indexPageSize'].every(key=>Number.isSafeInteger(params[key])&&params[key]>0),'宠物互动参数无效');
-    check(['babyScale','interactionDistance','feedingDistance','effectMs','playIntervalMs'].every(key=>Number.isFinite(params[key])&&params[key]>0),'宠物互动参数无效');
+    check(['babyScale','interactionDistance','feedingDistance','effectMs','playIntervalMs','encounterDistance','meetingSpacing','meetingArrivalDistance'].every(key=>Number.isFinite(params[key])&&params[key]>0),'宠物互动参数无效');
     return params;
 }
 export function petFriendDay(now){

@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "items": [
+    {"id":"legacy-invite-v1","channelId":"legacy","asset":"launch-kit.md#老玩家招募草稿","status":"draft","approvedAt":null,"approvedBy":null,"accountUrl":null},
+    {"id":"taptap-intro-v1","channelId":"taptap-community","asset":"launch-kit.md#老玩家招募草稿","status":"draft","approvedAt":null,"approvedBy":null,"accountUrl":null},
+    {"id":"overseas-invite-v1","channelId":"reddit","asset":"launch-kit.md#英文发布草稿","status":"draft","approvedAt":null,"approvedBy":null,"accountUrl":null}
+  ]
+}

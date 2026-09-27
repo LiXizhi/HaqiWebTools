@@ -1,4 +1,6 @@
 import {drawSocialPet,drawPetSocialEffects} from './view_adventure_pet_social.js';
+import {drawPetMood} from './view_adventure_pet_mood.js';
+import {petBattleMood} from './adventure_pet_mood_core.js';
 import {petDisplayScale} from './adventure_pet_interactions_core.js';
 import {socialBubble} from './adventure_social_motion_core.js';
 import { createHeroActor, updateHeroActor } from './hero_pose_core.js';
@@ -91,6 +93,7 @@ export function createRenderer(canvas,assets) {
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const ctx=canvas.getContext('2d'),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
     const terrainTiles=createTerrainTileCache((c,world,rect)=>paintLargeTerrain(c,world,rect,false,assets.terrainDecorationArt),()=>document.createElement('canvas'));
+    if(assets.terrainDecorationArt)assets.terrainDecorationArt.onAtlas=()=>terrainTiles.clear();
     let vignetteCanvas=null,vignetteW=0,vignetteH=0;
     let overviewWorld=null,overview=null;
     let companion=null,companionId=null,companionWorld=null,companionSave=null,lastPetTime=null,bubbleTarget=null,greetingTarget=null;
@@ -241,6 +244,11 @@ export function createRenderer(canvas,assets) {
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
             if(o.kind==='pet-social')drawSocialPet(ctx,assets,o.row,petScene.effects,time,reducedMotion.matches,petScene.now);
             if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const winter=o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
+            // Stable plant variants add visual detail without changing collision or RNG.
+            if(o.kind==='tree'&&!o.snow&&assets.sceneryTile){
+                const variant=Math.abs(Math.round(o.x*7+o.y*13))%8,size=o.size*.36;
+                assets.sceneryTile(ctx,8+variant,o.x+o.size*.18,o.y-size+14,size,size);
+            }
             if(o.kind==='building'){
                 ctx.save();
                 if(o.atlas&&Math.abs(save.position.x-o.x)<o.w*.5&&save.position.y<o.y&&save.position.y>o.y-o.h)ctx.globalAlpha=.52;
@@ -392,11 +400,12 @@ export function createRenderer(canvas,assets) {
         for(const id of Object.keys(battle.unitsById)) {
             const hp=presentation?.hp?.[id]??battle.unitsById[id].hp;
             const hit=presentation?.reactions?.find(reaction=>reaction.target===id);
-            const pose=hp>0&&hit?{action:'hit',progress:hit.progress}:battleActorAction(id,hp,ev,p);
+            const unit=battle.unitsById[id],petUnit=id!=='hero'&&!unit.isMob&&!save.coopRun?.members.some(m=>m.unit.id===id);
+            const pose=petUnit&&hp<=0?{action:'idle',progress:0}:hp>0&&hit?{action:'hit',progress:hit.progress}:battleActorAction(id,hp,ev,p);
             drawAnimatedActor(c,positions[id],pose.action,pose.progress,id==='hero'?1:-1,reducedMotion.matches,()=>{
-                if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,.70,false,updateHeroActor(battleHero,{time:t,facing:2,reducedMotion:reducedMotion.matches}));const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if(support&&assets.content.pets[support.speciesId]?.art)assets.drawPet(c,support.speciesId,petAppearanceStage(support,assets.content),12,-48,48,48);}
+                if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,.70,false,updateHeroActor(battleHero,{time:t,facing:2,reducedMotion:reducedMotion.matches}));const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if(support&&assets.content.pets[support.speciesId]?.art)(()=>{c.save();c.translate(36,0);drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,48,column=>assets.drawPet(c,support.speciesId,petAppearanceStage(support,assets.content),-24,-48,48,48,column));c.restore();})();}
                 else if(save.coopRun?.members.some(m=>m.unit.id===id)){const p=save.coopRun.members.find(m=>m.unit.id===id).profile;avatar(c,{...p,mountId:null,facing:2},0,0,t,false,.7,false);}
-                else {const unit=battle.unitsById[id],species=unit.speciesId||unit.template?.speciesId;if(unit.isMob)monster(c,unit.template,0,0,t,.95);else if(species&&assets.content.pets[species]?.art)assets.drawPet(c,species,petAppearanceStage(save.pets?.[unit.id]||save.pets?.[species]||unit,assets.content),-42,-84,84,84);else creature(c,unit.isMob?unit.template.id:'pet',0,0,t,.85);}
+                else {const unit=battle.unitsById[id],species=unit.speciesId||unit.template?.speciesId;if(unit.isMob)monster(c,unit.template,0,0,t,.95);else if(species&&assets.content.pets[species]?.art)drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,84,column=>assets.drawPet(c,species,petAppearanceStage(save.pets?.[unit.id]||save.pets?.[species]||unit,assets.content),-42,-84,84,84,column));else creature(c,unit.isMob?unit.template.id:'pet',0,0,t,.85);}
             });
         }
         const statusTargets=[];

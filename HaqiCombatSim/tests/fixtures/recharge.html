@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>会员充值隔离验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {renderPanel} from '../../js/view_adventure.js';
+// Synthetic identity, no SDK, no real orders, no player storage writes.
+const params=new URLSearchParams(location.search),guest=params.has('guest');
+const model={accountOwner:'充值验收账号',assets:{content:{},dataset:{}},save:{inventory:{984:120},pendingEncounter:params.has('battle')?{}:null},now:Date.parse('2026-09-27T00:00:00Z'),rechargeView:{amount:'4'},magicBeanExchange:{exchangedUntil:'2026-10-01'},membership:{status:guest?'guest':'ready',username:guest?null:'充值验收账号',isVip:!guest,expiresAt:'2026-10-06T00:00:00Z'}};
+const root=document.querySelector('#root');
+const cb={close:()=>root.replaceChildren(),panel:()=>{},cloud:()=>{model.membership.status='ready';model.membership.username='充值验收账号';show();},refreshMembership:()=>{model.save.inventory[984]=170;model.magicBeanExchange.exchangedUntil='2026-10-06';show();},recharge:amount=>{const status=document.createElement('p');status.setAttribute('role','status');status.textContent=`隔离验收：充值金额 ${amount} 元，未创建真实订单`;root.append(status);}};
+function show(){renderPanel(root,'recharge',model,cb);}show();
+</script></body></html>

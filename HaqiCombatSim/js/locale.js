@@ -1,3 +1,4 @@
+import {speakBrowserText} from './browser_speech.js';
 import { LOCALES, lookup, parseLocaleFile, speechCode } from './locale_core.js';
 import { setTranslator } from './locale_runtime.js';
 
@@ -76,13 +77,7 @@ export function setGlossAligner(fn) {
 export function speakText(source) {
     const spoken = textFor(source, display);
     const lang = speechCode(display);
-    if (typeof window === 'undefined' || !window.speechSynthesis) return false;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(spoken);
-    utterance.lang = lang;
-    utterance.rate = 0.9;
-    window.speechSynthesis.speak(utterance);
-    return true;
+    return speakBrowserText(spoken,lang);
 }
 
 const GLOSS_COLORS = ['#b45309', '#0f766e', '#1d4ed8', '#7c3aed', '#be123c', '#3f6212', '#c2410c'];

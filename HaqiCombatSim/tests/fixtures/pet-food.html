@@ -1,0 +1,25 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>宠物食槽验收</title><base href="../../">
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_shop.css"></head>
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,applyAction} from '../../js/adventure_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+import {loadLocaleFiles,configureLocale} from '../../js/locale.js';
+// In-memory character only: never read or write player saves.
+try {
+ const params=new URLSearchParams(location.search);
+ const lang=params.get('lang')||'zh-CN';
+ if(lang!=='zh-CN')await loadLocaleFiles([lang]);
+ configureLocale({locale:lang});
+ const assets=await loadResources(),save=createAdventure(assets.content,{name:'喂养验收',starter:'dragon_green'});
+ save.inventory[990001]=20;save.inventory[17172]=8;save.inventory[17185]=3;save.inventory[17211]=2;save.inventory[100]=5000;
+ if(!params.has('empty'))for(const item of Object.values(assets.content.items).filter(item=>assets.content.mountByItem?.[item.id]).slice(0,8))save.inventory[item.id]=1;
+ if(params.has('battle'))save.pendingEncounter={id:'fixture-battle'};
+ let panel='pet';
+ const model={assets,save,shopView:{category:'supply'},petView:{tab:params.get('tab')||'follow'}};
+ const root=document.querySelector('#root');
+ function paint(){renderPanel(root,panel,model,{close:()=>root.replaceChildren(),panel:(next,state)=>{panel=next;if(state)Object.assign(model.shopView,state);paint();},action:action=>{applyAction(save,assets.content,action);paint();}});}
+ window.petFoodFixture={save,assets,paint};paint();document.documentElement.dataset.fixtureReady='1';
+}catch(error){document.documentElement.dataset.fixtureError=error.message;throw error;}
+</script></body></html>

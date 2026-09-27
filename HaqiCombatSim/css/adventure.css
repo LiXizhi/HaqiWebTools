@@ -838,6 +838,7 @@
 .settings-toggle.on::before{background:#a5e8b5}
 .settings-toggle:focus-visible{outline:3px solid #a75b16;outline-offset:2px}
 .settings-field{display:grid;gap:6px;margin:6px 0;padding:6px 10px}
+.settings-sound-volume{min-width:0;max-width:100%;box-sizing:border-box;accent-color:var(--green,#244f3b)}
 .settings-field-label{font-size:12px;color:var(--muted,#7d6b49)}
 .settings-section .locale-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:6px 0 10px}
 .settings-note{margin:6px 10px 10px;font-size:12px}
@@ -889,3 +890,24 @@
 @media(max-width:650px){.battle-pet-hint{max-width:230px;font-size:11px;padding:8px 10px}}
 
 .battle-pet-hint:focus-visible{outline:2px solid var(--gold,#b99b54);outline-offset:3px}
+
+/* Shared pet ration trays, desktop and touch. */
+.pet-food-station{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px;border:1px solid #c5ab70;border-radius:8px;background:#fff5d8;flex:1;min-width:0}
+.pet-food-heading{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0}
+.pet-food-slots{display:flex;gap:8px}
+.pet-food-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:88px;min-height:96px;padding:6px!important}
+.pet-food-slot small{font-size:11px}.pet-food-empty{font-size:32px;line-height:48px;color:#778f62}
+.pet-food-station>small{grid-column:1 / -1}.pet-food-choice{display:flex;align-items:center;flex-wrap:wrap;gap:10px;padding:12px 0;border-bottom:1px solid #d7bd83}
+.pet-food-description{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}.pet-food-quantity{display:flex;flex-direction:column;font-size:12px;gap:3px}.pet-food-quantity input{width:66px;min-height:40px}.pet-food-buy{margin-left:auto}
+@media(max-width:600px){.pet-food-station{flex-basis:100%}.pet-food-slot{min-width:80px}.pet-food-choice>button{min-height:44px}}
+/* Membership recharge shares the existing modal, paper palette and buttons. */
+.recharge-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.recharge-summary,.recharge-form,.recharge-rules{padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.recharge-summary{display:flex;flex-direction:column;gap:12px;overflow-wrap:anywhere}
+.recharge-summary p{margin:0}.recharge-summary strong{font-size:1.15em}
+.recharge-form label{display:block;margin:12px 0 8px;font-weight:bold}
+.recharge-form input{box-sizing:border-box;width:100%;min-height:48px;font-size:1.4em;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+.recharge-amounts,.recharge-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.recharge-amounts button{flex:1;min-height:44px}.recharge-error{color:#9b2828;min-height:1.5em}
+.recharge-rules{margin:18px 0}.recharge-actions button{min-height:44px}
+@media(max-width:600px){.recharge-layout{grid-template-columns:1fr;gap:12px}.recharge-summary,.recharge-form,.recharge-rules{padding:12px}.recharge-actions button{width:100%}}

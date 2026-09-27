@@ -44,10 +44,14 @@ export function defaultParams(version = 'teen') {
             memoryCapacity:50, memoryProtectionMs:7*86400000, marksRequired:3,
             cooldownMs:3*86400000, babyScale:.5, interactionDistance:100,
             feedingDistance:180, effectMs:4500, playIntervalMs:12000,
+            encounterDistanceMultiplier:2, meetingSpacing:48, meetingArrivalDistance:64,
+            idleSleepMs:60000, idleMoveDistance:4, seriousHpRatio:.25,
+            meetingOwnerClearanceX:78, meetingOwnerClearanceY:135, meetingOffset:140, meetingTargetTolerance:12,
             indexPageSize:100,
         },
         // autoJoin* mirrors kids CombatRoom empty-seat open → delayed AI fill (RoomDetailPage 4 slots).
-        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, separation:50, npcClearance:65, followDistance:110, followSpacing:55, followWait:2, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
+        // roadSlack / portalMinActors: wander only along roads near quest hubs; keep a few residents by teleporters.
+        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, portalMinActors:2, separation:50, npcClearance:65, followDistance:110, followSpacing:55, followWait:2, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
         languageAdventure: { inviteRange:150, interactionRange:85, greetingMs:2500, basicReward:10, beginnerReward:30, intermediateReward:50, advancedReward:80, basicDailyCap:100, challengeDailyCap:200, basicCourseLimit:2, challengeCourseLimit:1, promptCooldownMs:90000, sourceCooldownMs:300000, maxTurns:8 },
         // Web progression schedule; original server training-point grant table is unavailable.
@@ -91,9 +95,11 @@ export function defaultParams(version = 'teen') {
             tauntThreatWeight:5,
             levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [2,4,6,8],
             petCopies: 3, heroRegenPerSecond: .02, regenPerMinute: .05, hungerPerMinute: 1, restingHungerPerMinute: .5, feedThreshold: 30,
-            foodRestore: 40, defeatHp: .1, captureBase: .2, captureWounded: .65,
+            foodRestore: 40, petFoodRules: {'17172':{restore:40,price:30},'17185':{restore:70,price:120},'17211':{restore:100,price:240}}, defeatHp: .1, captureBase: .2, captureWounded: .65,
             foodPrice: 10, capturePrice: 25, petPriceBase: 100, petPriceLevel: 40,
             gearPriceBase: 30, gearPriceLevel: 15, duplicateXp: 50, mountSpeed: 1.35,
+            // Permanent mounts with 0/0 globalstore prices (e.g. zodiac transform pills) list in the mall at this 魔豆 price.
+            mountUnpricedDefault: 100,
             encounterXpBase: 25, encounterXpLevel: 12, encounterCoinsBase: 30, encounterCoinsLevel: 8,
             xpGrowth: 300, petXpStep: 30,
         },

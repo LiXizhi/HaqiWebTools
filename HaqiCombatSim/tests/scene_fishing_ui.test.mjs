@@ -16,10 +16,10 @@ function setup(t,{reduced=false,fail=false,sure=false,empty=false}={}){
     globalThis.document={createElement:el,createElementNS:(ns,tag)=>el(tag)};
     globalThis.matchMedia=()=>({matches:reduced});
     t.after(()=>{if(oldDocument===undefined)delete globalThis.document;else globalThis.document=oldDocument;if(oldMedia===undefined)delete globalThis.matchMedia;else globalThis.matchMedia=oldMedia;});
-    const cameraStates=[],vibrations=[],calls=[],root=el('main');root.clientWidth=800;root.clientHeight=800;
+    const sounds=[],cameraStates=[],vibrations=[],calls=[],root=el('main');root.clientWidth=800;root.clientHeight=800;
     const save={position:{x:400,y:400},inventory:{1:empty||sure?0:3,2:empty?0:2},stamina:100};
     const model={save,assets:{draw:()=>false,content:{items:{1:{name:'普通网'},2:{name:'必中网'},3:{name:'小鱼'}},fishing:{staminaMax:100,potions:[],nets:[{id:1,staminaRequired:10},{id:2,staminaRequired:10,absolutelyHit:true}]}}}};
-    const scene=createSceneFishing(root,{activeChanged:value=>cameraStates.push(value),vibrate:p=>vibrations.push(p),isWater:p=>p.x>=0,action:value=>{calls.push(value);if(fail)return false;if(value.hit){save.inventory[value.netId]--;save.stamina-=5;return {caught:true,items:[{id:3,count:1,name:'小鱼'}],message:'捕到了小鱼'};}return {caught:false,message:'鱼影躲开了'};}},{el,button:(text,fn,cls)=>{const n=el('button',cls,text);n.onclick=fn;return n;}});
+    const scene=createSceneFishing(root,{sound:name=>sounds.push(name),activeChanged:value=>cameraStates.push(value),vibrate:p=>vibrations.push(p),isWater:p=>p.x>=0,action:value=>{calls.push(value);if(fail)return false;if(value.hit){save.inventory[value.netId]--;save.stamina-=5;return {caught:true,items:[{id:3,count:1,name:'小鱼'}],message:'捕到了小鱼'};}return {caught:false,message:'鱼影躲开了'};}},{el,button:(text,fn,cls)=>{const n=el('button',cls,text);n.onclick=fn;return n;}});
     const find=cls=>nodes.find(n=>n.className===cls);
     function tick(time){now=time;scene.update(model,now,p=>p);}
     scene.start({x:270,y:400},model);tick(0);
@@ -33,7 +33,7 @@ function setup(t,{reduced=false,fail=false,sure=false,empty=false}={}){
         for(;time<start+12000&&!calls.length;time+=25){tick(time);if(find('scene-fishing').dataset.phase==='bite'){key();presses++;}}
         return {time:time-25,presses};
     }
-    return {scene,calls,save,key,tick,find,land,vibrations,cameraStates,nodes};
+    return {scene,calls,save,key,tick,find,land,vibrations,cameraStates,nodes,sounds};
 }
 
 test('first water tap casts; bite prompt reels once and reveals actual catch',t=>{
@@ -42,7 +42,7 @@ test('first water tap casts; bite prompt reels once and reveals actual catch',t=
     const landed=ui.land();assert.ok(landed.presses>=3&&landed.presses<=5);
     assert.equal(ui.calls.length,1);assert.equal(ui.calls[0].hit,true);assert.equal(ui.calls[0].fishingPerformance.hits,landed.presses);assert.equal(ui.save.inventory[1],2);
     ui.tick(landed.time+1200);assert.equal(ui.find('scene-fishing').dataset.phase,'show');assert.equal(ui.find('fishing-catch-label').hidden,false);
-    assert.match(ui.find('fishing-catch-label').textContent,/小鱼/);assert.equal(ui.calls.length,1);
+    assert.match(ui.find('fishing-catch-label').textContent,/小鱼/);assert.equal(ui.calls.length,1);assert.deepEqual(ui.sounds,['splash','catch']);
 });
 test('early input is harmless and zero correct directions grants no reward',t=>{
     const ui=setup(t);ui.tick(800);ui.key();assert.equal(ui.calls.length,0);
@@ -66,7 +66,7 @@ test('insufficient stamina and no tools cannot start another cast',t=>{
     ui.save.inventory[1]=2;ui.save.stamina=0;ui.tick(11000);ui.key();assert.match(ui.find('fishing-status').textContent,/精力不足/);assert.equal(ui.calls.length,0);
 });
 test('failed persistence shows no catch and allows a fresh attempt',t=>{
-    const ui=setup(t,{fail:true});const landed=ui.land();assert.match(ui.find('fishing-status').textContent,/保存失败/);
+    const ui=setup(t,{fail:true});const landed=ui.land();assert.deepEqual(ui.sounds,['splash']);assert.match(ui.find('fishing-status').textContent,/保存失败/);
     assert.equal(ui.find('fishing-catch-label').hidden,true);assert.equal(ui.find('scene-fishing').dataset.phase,'idle');
     ui.calls.length=0;ui.key();ui.land(landed.time+2500);assert.equal(ui.calls.length,1);assert.equal(ui.save.inventory[1],3);
 });

@@ -126,7 +126,7 @@ export function createSceneFishing(root, cb, { el, button }) {
         pulls=0;pullGoal=fightRng.int(tuning.fishingMinPulls,tuning.fishingMaxPulls);lastPull=-Infinity;expectedDirection=null;rounds=0;mistakes=0;restPenalized=false;
         // Deterministic visual variation, independent of the reward RNG.
         biteAt=now+CAST_MS+1400+(castNumber++%3)*420;
-        state('cast',now);say('抛竿…');
+        cb.sound?.('splash');state('cast',now);say('抛竿…');
     }
     function resolvePull(correct,time){
         rounds++;if(correct){pulls++;pulse([30,35,45]);}else pulse(15);
@@ -143,6 +143,7 @@ export function createSceneFishing(root, cb, { el, button }) {
         if(result?.caught)count+=result.items.reduce((sum,item)=>sum+item.count,0);
         lastInventory='';
         if(!result){state('idle',time);say('保存失败，请重试');return;}
+        cb.sound?.(result.caught?'catch':'miss');
         state('reel',time);
         say(result.caught?'钓到了！':message||result.message||'鱼儿溜走了');
         const weighed=result?.catches||[];

@@ -1,9 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {socialCapacity,recordInteraction,selectSocialRoster,boardGroup,markSocialActivity,makeSocialSnapshot,DAY_MS,pickAutoJoinPartner,autoJoinDelayMs} from '../js/adventure_social_core.js';
+import {socialCapacity,recordInteraction,selectSocialRoster,boardGroup,markSocialActivity,makeSocialSnapshot,validatePublicProfile,DAY_MS,pickAutoJoinPartner,autoJoinDelayMs} from '../js/adventure_social_core.js';
 import {startCoopRun,dungeonProgress} from '../js/adventure_coop_core.js';
-import {createSocialActors,stepSocialActors,socialBubble,pickSocialBubble} from '../js/adventure_social_motion_core.js';
+import {createSocialActors,stepSocialActors,socialBubble,pickSocialBubble,socialActivityHubs,onActivityRoad} from '../js/adventure_social_motion_core.js';
+import {SOCIAL_DEFAULTS} from '../js/adventure_social_core.js';
 import {startSocialPvp,playSocialPvp,restoreSocialPvp,recordPvpWin} from '../js/adventure_social_pvp_core.js';
 import {durableSave,runtimeValues,restoreRuntime} from '../js/adventure_storage_core.js';
 import {installDungeons,enterDungeon,leaveDungeon} from '../js/adventure_dungeons_core.js';
@@ -16,6 +17,12 @@ import {SimpleBot} from '../js/combat_policy_core.js';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 const now=Date.parse('2026-09-26T12:00:00Z');
 const profile=(id,extra={})=>({version:1,userId:String(id),username:`user${id}`,name:`伙伴${id}`,visible:true,appearance:'boy',school:'fire',level:1,native:'en',target:'zh',activity:{camp:['2026-09-26']},...extra});
+test('public profile keeps optional VIP flag and ignores invalid values',()=>{
+    assert.equal(validatePublicProfile(profile(1,{isVip:true})).isVip,true);
+    assert.equal(validatePublicProfile(profile(1,{isVip:false})).isVip,false);
+    assert.equal(validatePublicProfile(profile(1,{isVip:'yes'})).isVip,false);
+    assert.equal(validatePublicProfile(profile(1)).isVip,false);
+});
 test('recent communicating friends override activity/language and sort by last interaction; no retention quota',()=>{
     const candidates=[profile(1),profile(2,{native:'zh',target:'en',activity:{}}),profile(3,{activity:{}})];
     const options={candidates,friends:['2','3'],interactions:{2:{at:now-2*DAY_MS},3:{at:now-DAY_MS}},now,capacity:3};
@@ -58,6 +65,23 @@ test('social actors use paths, stay walkable and are deterministic; paused scene
     for(let i=0;i<1600;i++){stepSocialActors(a,world,.1);stepSocialActors(b,world,.1);}
     assert.deepEqual(a.map(p=>p.position),b.map(p=>p.position));assert.notDeepEqual(initial,a.map(p=>p.position));assert.ok(a.every(p=>walkable(world,p.position.x,p.position.y)));
     const before=a.map(p=>({...p.position}));stepSocialActors(a,world,20,{paused:true});assert.deepEqual(before,a.map(p=>p.position));
+});
+test('social actors spawn and linger on roads near quest hubs, with residents at the teleporter',()=>{
+    const save=A.createAdventure(content),world=createWorld('camp',content,save),people=Array.from({length:6},(_,i)=>({...profile(i),id:`road${i}`}));
+    const hubs=socialActivityHubs(world),reach=SOCIAL_DEFAULTS.hotspotRadius+SOCIAL_DEFAULTS.hotspotSpread;
+    assert.ok(hubs.some(h=>h.kind==='portal'));
+    assert.ok(hubs.some(h=>h.kind==='npc'));
+    const actors=createSocialActors(world,people,11);
+    assert.ok(actors.every(a=>onActivityRoad(world,a.position)),'spawn on road');
+    assert.ok(actors.every(a=>hubs.some(h=>Math.hypot(a.position.x-h.x,a.position.y-h.y)<=reach)),'spawn near hub');
+    const portalNear=actors.filter(a=>Math.hypot(a.position.x-world.portal.x,a.position.y-world.portal.y)<=reach).length;
+    assert.ok(portalNear>=SOCIAL_DEFAULTS.portalMinActors,`portal cluster ${portalNear}`);
+    const open={x:0,y:0,w:world.w,h:world.h};
+    for(let i=0;i<2000;i++)stepSocialActors(actors,world,.1,{view:open});
+    const idle=actors.filter(a=>!a.moving&&!a.path.length);
+    assert.ok(idle.length,'some idle after travel');
+    assert.ok(idle.every(a=>onActivityRoad(world,a.position)),'idle on road');
+    assert.ok(idle.every(a=>hubs.some(h=>Math.hypot(a.position.x-h.x,a.position.y-h.y)<=reach+40)),'idle near hubs');
 });
 test('PvP replay deterministic and filler opponents never score',()=>{
     const save=A.createAdventure(content),unit=A.playerSpec(save,content),opponent={...profile(2),kind:'companion',snapshot:makeSocialSnapshot(unit,dataset)};
@@ -145,7 +169,13 @@ test('every non-camp island fills sixteen unique companions and keeps them on wa
         assert.deepEqual(roster,selectSocialRoster(options));
         const actors=createSocialActors(world,roster,42);
         assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)),`${zone} spawn`);
+        assert.ok(actors.every(a=>onActivityRoad(world,a.position)),`${zone} road spawn`);
+        const reach=SOCIAL_DEFAULTS.hotspotRadius+SOCIAL_DEFAULTS.hotspotSpread;
+        const portalNear=actors.filter(a=>Math.hypot(a.position.x-world.portal.x,a.position.y-world.portal.y)<=reach).length;
+        assert.ok(portalNear>=Math.min(SOCIAL_DEFAULTS.portalMinActors,roster.length),`${zone} portal cluster`);
         for(let i=0;i<1200;i++)stepSocialActors(actors,world,.1);
         assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)),`${zone} movement`);
+        const idle=actors.filter(a=>!a.moving&&!a.path.length);
+        assert.ok(idle.every(a=>onActivityRoad(world,a.position)),`${zone} idle on road`);
     }
 });

@@ -1,5 +1,6 @@
 import {createRng,hashSeed} from './rng_core.js';
 import {findPath,followPath,nearestWalkable,walkable} from './adventure_world_core.js';
+import {segmentDistance} from './adventure_island_layout_core.js';
 import {SOCIAL_DEFAULTS} from './adventure_social_core.js';
 // Sprite directions: down/front=0, left=1, right=2, up/back=3.
 // Keep real travel direction, but turn toward the camera or sideways while standing.
@@ -11,17 +12,113 @@ export function socialInView(position,view){
     if(!view||!(view.w>0)||!(view.h>0))return true;
     return position.x>=view.x&&position.x<=view.x+view.w&&position.y>=view.y&&position.y<=view.y+view.h;
 }
+
+function hubReach(params=SOCIAL_DEFAULTS){return params.hotspotRadius+params.hotspotSpread;}
+function roadSlack(params=SOCIAL_DEFAULTS){return params.roadSlack??16;}
+function portalMinActors(params=SOCIAL_DEFAULTS){return Math.max(0,Math.floor(params.portalMinActors??2));}
+
+export function roadClearance(world,p){
+    if(!world.paths?.length)return 0;
+    return Math.min(...world.paths.map(path=>segmentDistance(p,path.a,path.b)-(path.width||60)/2));
+}
+export function onActivityRoad(world,p,params=SOCIAL_DEFAULTS){
+    if(!world.paths?.length)return walkable(world,p.x,p.y);
+    return roadClearance(world,p)<=roadSlack(params);
+}
+
+// Activity hubs are quest-adjacent places: teleporters, landmarks, roadside NPCs and nearby mobs.
+export function socialActivityHubs(world){
+    const hubs=[];
+    const add=(point,weight,kind,id)=>{
+        if(!point||!Number.isFinite(point.x)||!Number.isFinite(point.y))return;
+        hubs.push({x:point.x,y:point.y,weight,kind,id});
+    };
+    add(world.portal,4.5,'portal','portal');
+    add(world.entrancePortal,3.5,'portal','entrance');
+    for(const landmark of world.landmarks||[]){
+        const teleport=/传送|portal|gate|码头|港口|广场/i.test(`${landmark.id||''}${landmark.name||''}`);
+        add(landmark,teleport?4:2.5,'landmark',landmark.id);
+    }
+    for(const npc of world.npcs||[]){
+        const nearPortal=world.portal&&Math.hypot(npc.x-world.portal.x,npc.y-world.portal.y)<240;
+        const guide=npc.worldMapGuide||npc.harborGuide||npc.id===36205||/船长|导师|任务|传送/i.test(npc.name||'');
+        add(npc,guide||nearPortal?3.5:2,'npc',npc.id);
+    }
+    for(const encounter of world.encounters||[])add(encounter,1.5,'encounter',encounter.id);
+    if(!hubs.length)add(world.center||world.layout?.spawn,1,'center','center');
+    return hubs;
+}
+
+function pickWeightedHub(rng,hubs){
+    const total=hubs.reduce((sum,h)=>sum+h.weight,0);
+    let roll=rng.float()*total;
+    for(const hub of hubs){roll-=hub.weight;if(roll<=0)return hub;}
+    return hubs[hubs.length-1];
+}
+
+function roadsideCandidates(world,hub,params=SOCIAL_DEFAULTS){
+    const reach=hubReach(params),paths=world.paths||[],out=[];
+    if(!paths.length){
+        for(let n=0;n<16;n++){
+            const angle=n/16*Math.PI*2,r=params.hotspotRadius+((n%4)/4)*params.hotspotSpread;
+            const p=nearestWalkable(world,hub.x+Math.cos(angle)*r,hub.y+Math.sin(angle)*r);
+            if(walkable(world,p.x,p.y))out.push(p);
+        }
+        return out;
+    }
+    for(const path of paths){
+        const dx=path.b.x-path.a.x,dy=path.b.y-path.a.y,length=Math.hypot(dx,dy)||1;
+        const step=Math.max(28,Math.min(48,path.width||40));
+        for(let d=0;d<=length;d+=step){
+            const t=d/length,cx=path.a.x+dx*t,cy=path.a.y+dy*t;
+            if(Math.hypot(cx-hub.x,cy-hub.y)>reach)continue;
+            const nx=-dy/length,ny=dx/length,half=(path.width||60)*.28;
+            for(const side of [0,-1,1]){
+                const p=nearestWalkable(world,cx+nx*half*side,cy+ny*half*side);
+                if(walkable(world,p.x,p.y)&&onActivityRoad(world,p,params)&&Math.hypot(p.x-hub.x,p.y-hub.y)<=reach)out.push(p);
+            }
+        }
+    }
+    if(!out.length){
+        const p=nearestWalkable(world,hub.x,hub.y);
+        if(walkable(world,p.x,p.y))out.push(p);
+    }
+    return out;
+}
+
+function clearsPeople(world,p,used,params=SOCIAL_DEFAULTS){
+    if(used.some(v=>Math.hypot(v.x-p.x,v.y-p.y)<=params.separation))return false;
+    return (world.npcs||[]).every(n=>Math.hypot(n.x-p.x,n.y-p.y)>params.npcClearance);
+}
+
+export function sampleActivitySpot(world,hub,rng,used=[],params=SOCIAL_DEFAULTS){
+    const shuffled=rng.shuffle(roadsideCandidates(world,hub,params).slice());
+    for(const p of shuffled)if(clearsPeople(world,p,used,params))return p;
+    for(const p of shuffled)if(used.every(v=>Math.hypot(v.x-p.x,v.y-p.y)>params.separation*.5))return p;
+    return nearestWalkable(world,hub.x+rng.float()*20-10,hub.y+rng.float()*20-10);
+}
+
+function assignHub(rng,hubs,index,portalHubs,portalQuota){
+    if(index<portalQuota&&portalHubs.length)return portalHubs[index%portalHubs.length];
+    return pickWeightedHub(rng,hubs);
+}
+
 export function createSocialActors(world,profiles,seed=1) {
-    const spots=world.npcs?.length?world.npcs:[world.center],used=[];
+    const hubs=socialActivityHubs(world);
+    const portalHubs=hubs.filter(h=>h.kind==='portal'||(h.kind==='landmark'&&/传送|portal|gate|码头|港口/i.test(`${h.id||''}`)));
+    const portalQuota=Math.min(portalMinActors(),profiles.length,Math.max(portalHubs.length?1:0,Math.floor(profiles.length/3)));
+    const used=[];
     return profiles.map((profile,i)=>{
-        const rng=createRng(hashSeed(`${seed}:${world.zone}:${profile.id}`)),hotspot=spots[i%spots.length];let position;
-        for(let n=0;n<30;n++){const angle=rng.float()*Math.PI*2,r=SOCIAL_DEFAULTS.hotspotRadius+rng.float()*SOCIAL_DEFAULTS.hotspotSpread;const p=nearestWalkable(world,hotspot.x+Math.cos(angle)*r,hotspot.y+Math.sin(angle)*r);if(walkable(world,p.x,p.y)&&used.every(v=>Math.hypot(v.x-p.x,v.y-p.y)>SOCIAL_DEFAULTS.separation)&&spots.every(v=>Math.hypot(v.x-p.x,v.y-p.y)>SOCIAL_DEFAULTS.npcClearance)){position=p;break;}}
-        position??=nearestWalkable(world,world.center.x+i*45,world.center.y+120);used.push(position);
+        const rng=createRng(hashSeed(`${seed}:${world.zone}:${profile.id}`));
+        const hotspot=assignHub(rng,hubs,i,portalHubs,portalQuota);
+        const position=sampleActivitySpot(world,hotspot,rng,used);
+        used.push(position);
         return {profile,position,rng,path:[],facing:hashSeed(profile.id)%3,moving:false,wait:rng.int(SOCIAL_DEFAULTS.idleMin,SOCIAL_DEFAULTS.idleMax),travel:rng.int(SOCIAL_DEFAULTS.travelMin,SOCIAL_DEFAULTS.travelMax),hotspot};
     });
 }
 export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=[],leader=null,speed=SOCIAL_DEFAULTS.speed,view=null}={}) {
     if(paused)return;dt=Math.max(0,Math.min(dt,.1));let moving=actors.filter(a=>a.path.length).length;const limit=Math.ceil(actors.length/4);
+    const hubs=socialActivityHubs(world);
     for(const a of actors){
         if(a.profile.id===locked){a.path=[];a.moving=false;if(leader){const dx=leader.x-a.position.x,dy=leader.y-a.position.y;a.facing=socialFacing(dx,dy);}continue;}
         // Off-camera residents idle in place; only on-screen actors walk like the hero.
@@ -34,9 +131,10 @@ export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=
         const index=team.indexOf(a.profile.id);a.wait-=dt;a.travel-=dt;
         if(index>=0&&leader){if(!a.path.length&&moving<limit&&a.wait<=0&&Math.hypot(a.position.x-leader.x,a.position.y-leader.y)>SOCIAL_DEFAULTS.followDistance){a.path=findPath(world,a.position,nearestWalkable(world,leader.x-SOCIAL_DEFAULTS.followSpacing*(index+1),leader.y+SOCIAL_DEFAULTS.separation));a.wait=SOCIAL_DEFAULTS.followWait;if(a.path.length)moving++;}}
         else if(!a.path.length&&a.wait<=0&&moving<limit){
-            if(a.travel<=0){a.hotspot=a.rng.pick(world.npcs?.length?world.npcs:[world.center]);a.travel=a.rng.int(SOCIAL_DEFAULTS.travelMin,SOCIAL_DEFAULTS.travelMax);}
-            const angle=a.rng.float()*Math.PI*2,r=SOCIAL_DEFAULTS.hotspotRadius+a.rng.float()*SOCIAL_DEFAULTS.hotspotSpread,p=nearestWalkable(world,a.hotspot.x+Math.cos(angle)*r,a.hotspot.y+Math.sin(angle)*r);
-            if((world.npcs||[]).every(n=>Math.hypot(n.x-p.x,n.y-p.y)>SOCIAL_DEFAULTS.npcClearance))a.path=findPath(world,a.position,p);
+            if(a.travel<=0){a.hotspot=pickWeightedHub(a.rng,hubs);a.travel=a.rng.int(SOCIAL_DEFAULTS.travelMin,SOCIAL_DEFAULTS.travelMax);}
+            const occupied=actors.filter(o=>o!==a).map(o=>o.position);
+            const p=sampleActivitySpot(world,a.hotspot,a.rng,occupied);
+            if(clearsPeople(world,p,[],SOCIAL_DEFAULTS))a.path=findPath(world,a.position,p);
             a.wait=a.rng.int(SOCIAL_DEFAULTS.idleMin,SOCIAL_DEFAULTS.idleMax);if(a.path.length)moving++;
         }
         const before={...a.position},next=followPath(world,a.position,a.path,speed*dt);a.position=next.position;a.path=next.path;a.moving=Math.hypot(a.position.x-before.x,a.position.y-before.y)>.01;

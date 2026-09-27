@@ -72,3 +72,7 @@
 ## 2026-09-27 角色关系表与账号额度
 
 每个角色的 `roles/<roleId>/relationships/index.json` 是独立轻量目录；对象正文、memory.md、消息与事件历史分文件按需读取，初始化游戏不加载。玩家自身 `roles/<roleId>/memory.md` 与AI固定人设独立。`relationshipEvents`进入records分片，与实际扣物/通关一起提交，远端关系以事件去重补写；已同步条目带确认标记。每日2句位于账号级 `social/free-talk/<北京时间日期>.json`，不随角色恢复回滚。此前账号根目录memory.md接口保持兼容，不自动复制。详情见[角色关系](character-conversations.md)。
+
+## 2026-09-27 自动食槽
+
+petFoodSlots为最多两个口粮堆叠（itemId/count或null），放入即从inventory转移，取回返还，吃掉才从槽内扣除。随battle分片保存、云端白名单和读档校验保留，旧存档缺省为空；不把它作为临时饥饿状态剔除。口粮经验改变宠物成长时仍由现有独立宠物文件流程记录，血量和饥饿保持仅本机。

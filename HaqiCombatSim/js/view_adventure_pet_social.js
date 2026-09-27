@@ -1,18 +1,21 @@
 import {petAppearanceStage} from './adventure_pets_core.js';
 import {petInteractionParams} from './adventure_pet_interactions_core.js';
+import {drawPetMood} from './view_adventure_pet_mood.js';
 // Called in depth order by the world renderer. Uses existing pet sheets only.
 export function drawSocialPet(ctx,assets,row,effects,time,reduced,at=Date.now()){
     const {pet,position}=row;if(!pet)return;
     const effect=effects.findLast(e=>e.ids.includes(pet.id)&&e.until>at);
-    const phase=(time/1000)+(effect?.ids.indexOf(pet.id)||0)*Math.PI;
+    const phase=(time/1000),turn=effect?.ids.indexOf(pet.id)||0;
     const scale=row.scale||1,size=64*scale;
-    const playing=!!effect;
-    const hop=reduced?0:playing?Math.abs(Math.sin(phase*5))*9:row.moving?Math.abs(Math.sin(row.phase))*5:Math.sin(phase*2)*1.5;
+    const playing=!!effect,mood=playing?'happy':row.mood||'idle';
+    const hop=reduced||mood==='sleeping'?0:playing?Math.max(0,Math.sin(phase*5+turn*Math.PI))*14:row.moving?Math.abs(Math.sin(row.phase))*5:Math.sin(phase*2)*1.5;
     ctx.save();ctx.translate(position.x,position.y);
     ctx.fillStyle='#294c3733';ctx.beginPath();ctx.ellipse(0,0,18*scale,5*scale,0,0,Math.PI*2);ctx.fill();
-    ctx.save();ctx.translate(reduced||!playing?0:Math.sin(phase*4)*5,-hop);ctx.scale(row.facing||1,1);
-    const drawn=assets.drawPet(ctx,pet.speciesId,petAppearanceStage(pet,assets.content),-size/2,-size+4,size,size);
-    if(!drawn){ctx.fillStyle='#bbd5a1';ctx.beginPath();ctx.ellipse(0,-size*.4,size*.22,size*.32,0,0,Math.PI*2);ctx.fill();}
+    ctx.save();ctx.translate(reduced||!playing?0:Math.sin(phase*4+turn*Math.PI)*6,-hop);ctx.scale(row.facing||1,1);
+    drawPetMood(ctx,mood,time,reduced,size,column=>{
+        const drawn=assets.drawPet(ctx,pet.speciesId,petAppearanceStage(pet,assets.content),-size/2,-size+4,size,size,column);
+        if(!drawn){ctx.fillStyle='#bbd5a1';ctx.beginPath();ctx.ellipse(0,-size*.4,size*.22,size*.32,0,0,Math.PI*2);ctx.fill();}
+    });
     ctx.restore();
     ctx.restore();
 }
@@ -27,6 +30,16 @@ export function drawPetSocialEffects(ctx,assets,rows,effects,time,reduced,at){
         const key=[...effect.ids].sort().join('|');if(effect.until<=at||used.has(key))continue;used.add(key);
         const pets=effect.ids.map(id=>byId.get(id)).filter(Boolean);if(!pets.length)continue;
         if(pets.length!==2||Math.hypot(pets[0].position.x-pets[1].position.x,pets[0].position.y-pets[1].position.y)>p.interactionDistance)continue;
+        // Tiny alternating scribbles: pet chatter without any human words or glyphs.
+        for(const [index,row]of pets.entries()){
+            if(!reduced&&Math.floor((at-effect.at)/650)%2!==index)continue;
+            const x=row.position.x+(index?18:-18),y=row.position.y-64*(row.scale||1)-39;
+            ctx.save();ctx.globalAlpha=.8;ctx.fillStyle='#fff9ed';ctx.strokeStyle='#b9a68a';ctx.lineWidth=1.2;
+            ctx.beginPath();ctx.roundRect(x-14,y-10,28,18,7);ctx.fill();ctx.stroke();
+            ctx.beginPath();ctx.moveTo(x-3,y+8);ctx.lineTo(x,y+12);ctx.lineTo(x+3,y+8);ctx.stroke();
+            ctx.strokeStyle='#8b9b8c';ctx.beginPath();ctx.moveTo(x-9,y);ctx.quadraticCurveTo(x-6,y-7,x-3,y);ctx.quadraticCurveTo(x,y+6,x+3,y-2);ctx.stroke();
+            ctx.beginPath();ctx.arc(x+8,y-1,1.3,0,Math.PI*2);ctx.fillStyle='#c7a478';ctx.fill();ctx.restore();
+        }
         if(effect.kind!=='proximity'||effect.babyId)for(const row of pets){
             if(used.has(row.pet.id))continue;used.add(row.pet.id);
             const y=row.position.y-64*(row.scale||1)-14,x=row.position.x,count=Math.min(p.marksRequired,effect.status?.available||0);

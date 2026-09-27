@@ -3,7 +3,7 @@ import {heroPortrait} from './hero_renderer.js';
 import { fill, setText, tr } from './locale_runtime.js';
 import {ItemDetails} from './view_adventure_item_details.js';
 import { canEquip, equipmentBlockReason, SCHOOL_NAMES } from './adventure_core.js';
-import { productPrice } from './adventure_pets_core.js';
+import { productPrice,foodInfo } from './adventure_pets_core.js';
 import { petPortrait } from './view_adventure_pets.js';
 import { showPetDetails } from './view_adventure_pet_details.js';
 import { createCloseButton } from './view_adventure_controls.js';
@@ -119,9 +119,17 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
         dialog.setAttribute('aria-label',tr('确认购买'));
         const close=()=>dialog.close();
         const exit=createCloseButton(close,'关闭购买');
-        const confirm=button('确认',()=>{close();cb.action({type:'buy',productId:item.id});},'primary');
+        const food=foodInfo(c,item.itemId),quantity=el('input','');quantity.type='number';quantity.min='1';quantity.max='999';quantity.step='1';quantity.value='1';quantity.setAttribute('aria-label','购买数量');
+        const confirm=button('确认',()=>{if(food&&!quantity.reportValidity())return;close();cb.action({type:'buy',productId:item.id,...(food?{count:Number(quantity.value)}:{})});},'primary');
         confirm.setAttribute('aria-label',`${item.name}：确认`);
         const body=el('div','modal-body pet-buy-body',el('div','shop-preview-art',picture(item,112)),el('h3','',item.name),el('p','shop-preview-price',priceLabel(item,' / 件')),confirm);
+        if(food){
+            const total=el('p','shop-preview-price');
+            const update=()=>{const count=Number(quantity.value),cost=productPrice(item,c)*count;total.textContent=`合计 ${Number.isSafeInteger(cost)&&cost>=0?cost:'—'} 奇豆`;confirm.disabled=!Number.isInteger(count)||count<1||count>999||cost>(save.inventory[100]||0);};
+            quantity.addEventListener('input',update);update();
+            body.insertBefore(el('label','pet-food-quantity',el('span','','购买数量'),quantity),confirm);body.insertBefore(total,confirm);
+            body.insertBefore(el('p','muted',`每份饱食 +${food.restore}${food.xp?`，经验 +${food.xp}`:''}。购买后到宠物页面放入食槽。`),confirm);
+        }
         const nodes=[el('header','modal-header',el('h2','','确认购买'),exit),body];
 
         dialog.append(...nodes);
@@ -170,6 +178,8 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     }
     function remember(){Object.assign(state,{category:category.id,subcategory:sub,subcategoryCategory:category.id,page,query:query.value,ownership:ownership.value,level:level.value,school:school.value,slot:''});}
     function itemMeta(item,withSchool){
+        const food=foodInfo(c,item.itemId);
+        if(food)return `饱食 +${food.restore}${food.xp?` · 经验 +${food.xp}`:''} · 背包 ${save.inventory[item.itemId]||0}`;
         const parts=[];
         if(item.vipOnly)parts.push(tr('会员专属'));
         parts.push(fill('{level}级',{level:item.level}).text);

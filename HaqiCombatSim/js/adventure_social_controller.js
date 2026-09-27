@@ -27,7 +27,7 @@ export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshi
     function clearJoinTimers(){for(let i=0;i<3;i++){if(joinTimers[i]!=null){cancel(joinTimers[i]);joinTimers[i]=null;}ui.openSlots[i]=false;}}
     function setAllies(list){ui.allies=[list[0]||null,list[1]||null,list[2]||null];}
     async function ready(){if(!loading)loading=fetch(new URL('../data/adventure/social.json',import.meta.url)).then(r=>{if(!r.ok)throw Error('伙伴配置加载失败');return r.json();}).then(c=>{client.configure(c);return config=c;}).catch(e=>{loading=null;throw e;});return loading;}
-    function fillers(){const {save,assets}=getState();return config.personas.flatMap((p,i)=>[0,1,2,3].map(direction=>{const id=`companion:${i}:${direction}`,level=save.level,unit={id,name:p.name,school:p.school,level,isBot:true,deck:presetDeck(assets.dataset,p.school,{maxLevel:level,maxCards:24}),stats:{}};return {...p,id,kind:'companion',appearance:i%2?'girl':'boy',bodyId:randomHeroBodyId(assets.hero?.manifest,i%2?'girl':'boy',`${save.seed}:${id}`),native:['en','zh','ja','ko'][direction],target:direction?'en':'zh',culture:['纽约','中国','日本','韩国'][direction],level,seed:hashSeed(id),snapshot:makeSocialSnapshot(unit,assets.dataset)};}));}
+    function fillers(){const {save,assets}=getState();return config.personas.flatMap((p,i)=>[0,1,2,3].map(direction=>{const id=`companion:${i}:${direction}`,level=save.level,unit={id,name:p.name,school:p.school,level,isBot:true,deck:presetDeck(assets.dataset,p.school,{maxLevel:level,maxCards:24}),stats:{}},appearance=i%2?'girl':'boy';return {...p,id,kind:'companion',appearance,bodyId:randomHeroBodyId(assets.hero?.manifest,appearance,`${save.seed}:${id}`),isVip:hashSeed(`${id}:vip`)%3===0,native:['en','zh','ja','ko'][direction],target:direction?'en':'zh',culture:['纽约','中国','日本','韩国'][direction],level,seed:hashSeed(id),snapshot:makeSocialSnapshot(unit,assets.dataset)};}));}
     function installRoster(candidates=cachedCandidates){
         const {save,world,assets}=getState();if(!save||!world)return;
         if(save.coopRun){setAllies(save.coopRun.members.map(m=>m.profile));ui.roster=teamMembers();ui.partyDungeonId=save.coopRun.dungeonId;clearJoinTimers();}
@@ -52,7 +52,8 @@ export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshi
     async function publish(){
         const {save,assets,world}=getState();if(!getOwner()||save.pendingEncounter)return;
         const token=epoch,s=await client.session();if(token!==epoch)return;
-        const profile={version:1,userId:s.userId,username:s.owner,name:save.name,school:save.school,level:save.level,appearance:save.appearance,headId:save.headId,bodyId:save.bodyId,registeredAt:s.registeredAt,native:language(save.languageLearning?.native||'zh'),target:language(save.languageLearning?.target||'en'),visible:ui.publicVisible,activity:save.socialActivity||{},snapshot:makeSocialSnapshot(playerSpec(save,assets.content),assets.dataset)};
+        const member=getState().membership,isVip=member?.status==='ready'&&member?.isVip===true;
+        const profile={version:1,userId:s.userId,username:s.owner,name:save.name,school:save.school,level:save.level,appearance:save.appearance,headId:save.headId,bodyId:save.bodyId,isVip,registeredAt:s.registeredAt,native:language(save.languageLearning?.native||'zh'),target:language(save.languageLearning?.target||'en'),visible:ui.publicVisible,activity:save.socialActivity||{},snapshot:makeSocialSnapshot(playerSpec(save,assets.content),assets.dataset)};
         const zone=save.coopRun?.returnTo.zone||world.zone;
         await client.publish(profile);if(token!==epoch||!ui.publicVisible||!config.gameId||!config.worlds[zone]?.enabled||!(save.socialActivity?.[zone]||[]).includes(utcDay(Date.now())))return;
         for(const type of ['daily','weekly'])await client.rank(config,{world:zone,native:profile.native,target:profile.target,now:Date.now(),type},type==='daily'?1:weeklyActivity(save.socialActivity,zone,Date.now()));
@@ -111,10 +112,15 @@ export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshi
     function compose(f){ui.recipient=f.userId;ui.mailTab='compose';onOpen('mail');}
     function exportReplay(){const blob=new Blob([JSON.stringify(ui.pvp.replay,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='红蘑菇赛场战报.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
     function rememberChat(){if(ui.chatPeer)chatDrafts.set(ui.chatPeer,ui.chatDraft||'');}
+    function loadFriendsTab(){if(!getOwner())return;void run(()=>client.refreshFriends());}
     function openConversation(friend){
         if(ui.busy)return;rememberChat();ui.chatTab='friends';onOpen('chat');
         const peer=String(friend.userId||friend.peerId);ui.chatPeer=peer;ui.chatDraft=chatDrafts.get(peer)||'';ui.messages=[];onChange();
-        if(client.state.chatAvailable)void run(async()=>{const rows=await client.history(peer);if(ui.chatPeer!==peer)return;ui.messages=rows;if(rows.length)await client.readChat(peer,rows.at(-1).id);});
+        void run(async()=>{
+            if(getOwner())await client.refreshFriends();
+            if(!client.state.chatAvailable)return;
+            const rows=await client.history(peer);if(ui.chatPeer!==peer)return;ui.messages=rows;if(rows.length)await client.readChat(peer,rows.at(-1).id);
+        });
     }
     function teleportPlayer(p){
         const a=(worldRef===getState().world?actors:[]).find(row=>row.profile.id===p.id);
@@ -157,9 +163,9 @@ export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshi
             pickDungeon:()=>{ui.pickingDungeon=true;onOpen('dungeons');},
             openSlot:i=>{try{openSlot(i);}catch(e){toast(e.message);}},
             depart,
-            privateChat:openConversation,chatBack:()=>{rememberChat();ui.chatPeer=null;ui.messages=[];ui.error='';ui.chatTab='friends';onChange();},
-            chatTab:key=>{ui.chatTab=key==='friends'?'friends':'scene';onChange();},
-            teleportPlayer,cardName:key=>getState().assets.content.cardLibrary?.find(c=>c.key===key)?.name||'魔法卡牌',exportCoop:()=>{const run=getState().save.coopRun;if(!run)return;const url=URL.createObjectURL(new Blob([JSON.stringify(run,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='组队副本战报.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},refresh:()=>run(refresh),refreshPvp:()=>run(refreshPvp),draft:(key,value)=>{ui[key]=value;},mailTab:key=>{ui.mailTab=key;onChange();},compose,
+            privateChat:openConversation,chatBack:()=>{rememberChat();ui.chatPeer=null;ui.messages=[];ui.error='';ui.chatTab='friends';onChange();loadFriendsTab();},
+            chatTab:key=>{const next=key==='friends'?'friends':'scene';ui.chatTab=next;onChange();if(next==='friends')loadFriendsTab();},
+            teleportPlayer,cardName:key=>getState().assets.content.cardLibrary?.find(c=>c.key===key)?.name||'魔法卡牌',exportCoop:()=>{const run=getState().save.coopRun;if(!run)return;const url=URL.createObjectURL(new Blob([JSON.stringify(run,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='组队副本战报.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},refresh:()=>run(async()=>{if(ui.chatTab==='friends')await client.refreshFriends();else await refresh();}),refreshPvp:()=>run(refreshPvp),draft:(key,value)=>{ui[key]=value;},mailTab:key=>{ui.mailTab=key;onChange();},compose,
             apply:(id,accept)=>run(()=>client.processApply(id,accept)),readMail:id=>run(async()=>{ui.mailDetail=await client.readMail(id);}),
             polish:(key,target)=>run(async()=>{const source=ui[key]||'';if(!source.trim())throw Error('请先填写草稿');const result=await voice.judge([{role:'system',content:`Rewrite the user's message in ${target==='en'?'natural simple English':'natural simple Chinese'}. Preserve meaning. Return JSON {"reply":"editable draft","completed":[]}. Do not send anything.`},{role:'user',content:source}],new AbortController().signal);if(ui[key]===source)ui[key]=result.reply||source;}),
             sendMail:(id,subject,text)=>run(async()=>{const friend=client.state.friends.find(f=>f.userId===id);if(!friend)throw Error('请选择好友');await client.sendMail(friend,subject||'岛上的问候',text);ui.mailDraft='';ui.subject='';toast('邮件已发送');}),

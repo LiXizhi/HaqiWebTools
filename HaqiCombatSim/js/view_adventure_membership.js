@@ -29,7 +29,7 @@ export function membershipFollowToggle(el,follow,{onChange,disabled=false}={}) {
     display();return label;
 }
 
-function showExchange(node, source) {
+export function showExchange(node, source) {
     const done=/^会员天数已兑换至 (\d+)年(\d+)月(\d+)日。之后只兑换更晚的到期日，每天 10 魔豆。$/.exec(source);
     if(done){setText(node,'会员天数已兑换至 {year}年{month}月{day}日。之后只兑换更晚的到期日，每天 10 魔豆。',{year:done[1],month:done[2],day:done[3]});return;}
     const after=/^战斗结束后自动兑换 (\d+) 天，获得 (\d+) 魔豆。$/.exec(source);
@@ -106,6 +106,6 @@ export function renderMembership(body,model,cb,ui) {
     for(const [key,title] of [['attributes','属性加成'],['growth','成长秘籍'],['features','独有功能'],['gifts','免费领取']]){const tab=button(title,()=>{model.membershipView.tab=key;select(key);});tab.dataset.key=key;tabs.append(tab);}
     model.membershipView??={tab:'attributes'};select(model.membershipView.tab);
     const refresh=button('刷新会员状态',()=>cb.refreshMembership?.(),'secondary');refresh.disabled=member.status==='loading';
-    const become=button('成为VIP',()=>cb.becomeVip?.(),'primary');
-    body.append(el('div','magic-star-layout',left,right),el('footer','magic-star-footer',el('p','muted','会员开通暂未开放，点击“成为VIP”可查看个人资料。'),refresh,become));
+    const become=button('会员充值',()=>cb.becomeVip?.(),'primary');
+    body.append(el('div','magic-star-layout',left,right),el('footer','magic-star-footer',el('p','muted','续费会员后，新增有效天数会自动兑换为魔豆。'),refresh,become));
 }

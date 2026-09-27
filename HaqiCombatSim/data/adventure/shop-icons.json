@@ -1008,6 +1008,14 @@
       "size": 13462,
       "width": 384,
       "height": 384
+    },
+    "pet-food-icons": {
+      "local": "assets/adventure/shop-icons/570b69ddac38ec99050e26d7fd9281865f34999deaaf1f387a1a60c166eaff84.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/pet-food/570b69ddac38ec99050e26d7fd9281865f34999deaaf1f387a1a60c166eaff84.webp",
+      "sha256": "570b69ddac38ec99050e26d7fd9281865f34999deaaf1f387a1a60c166eaff84",
+      "size": 12002,
+      "width": 384,
+      "height": 96
     }
   },
   "items": {
@@ -12433,10 +12441,10 @@
       ]
     },
     "17172": {
-      "id": "shop-icons:79",
+      "id": "pet-food-icons",
       "crop": [
-        96,
-        96,
+        0,
+        0,
         96,
         96
       ]
@@ -19024,6 +19032,33 @@
       "id": "shop-icons:125",
       "crop": [
         96,
+        0,
+        96,
+        96
+      ]
+    },
+    "17185": {
+      "id": "pet-food-icons",
+      "crop": [
+        96,
+        0,
+        96,
+        96
+      ]
+    },
+    "17211": {
+      "id": "pet-food-icons",
+      "crop": [
+        192,
+        0,
+        96,
+        96
+      ]
+    },
+    "990001": {
+      "id": "pet-food-icons",
+      "crop": [
+        0,
         0,
         96,
         96
@@ -29735,6 +29770,20 @@
       "size": 8997,
       "path": "texture/aries/item_teen/17297_magicbaglv1.png.p",
       "sourceSha256": "c30b6cf10474e6be851351155b2dcee468f6a3e5d0be90d30e2e4bc5a773691c"
+    },
+    "texture/aries/item/17185_seniorpetexppill.png": {
+      "entry": "texture/aries/item/17185_seniorpetexppill.png.p,42a6fd8fcca61c54d3e3b65d9d0e64e4,9355",
+      "md5": "42a6fd8fcca61c54d3e3b65d9d0e64e4",
+      "size": 9355,
+      "path": "texture/aries/item/17185_seniorpetexppill.png.p",
+      "sourceSha256": "791487937b0a589cb6cc426afefe5bb04f168d7cc98c9eb224ed80505dd72744"
+    },
+    "texture/aries/item/17211_petexppill.png": {
+      "entry": "texture/aries/item/17211_petexppill.png.p,a828c264929b9e144e10596f48322d15,9392",
+      "md5": "a828c264929b9e144e10596f48322d15",
+      "size": 9392,
+      "path": "texture/aries/item/17211_petexppill.png.p",
+      "sourceSha256": "5b3c8f07458782ab267b32e7ce6ffc6505fc7203d4fb34cce4899a4fbd0224fa"
     }
   }
 }

@@ -50,6 +50,14 @@
 .scene-player-row:hover{background:#ffffff40}
 .friend-chat-row-main{display:flex;align-items:center;gap:12px;min-width:0;flex:1;padding:6px 4px;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit}
 .friend-chat-row-main:disabled{cursor:default;opacity:1}
+.scene-player-school{flex:0 0 36px;width:36px;height:36px;display:block}
+.scene-player-title{display:flex;align-items:center;gap:6px;min-width:0;flex-wrap:wrap}
+.scene-player-title>strong{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scene-player-vip{flex:0 0 auto;padding:1px 6px;border-radius:999px;border:1px solid #c2a56b;background:#f8e8bf;color:#745124;font-size:11px;line-height:16px;font-weight:700}
+.scene-player-gender{flex:0 0 16px;width:16px;height:16px;display:inline-grid;place-items:center}
+.scene-player-gender svg{width:14px;height:14px;display:block}
+.scene-player-gender.is-boy{color:#3a6ea5}
+.scene-player-gender.is-girl{color:#c45b7a}
 .scene-player-teleport{flex:0 0 auto;min-height:36px;padding:6px 12px;font-size:13px}
 .friend-chat-messages{flex:1;min-height:0;overflow:auto;background:#faf8f0;border-radius:12px;padding:14px}.friend-chat-empty{text-align:center;color:#7b795f;font-size:13px;line-height:1.7}
 .friend-chat-message{display:flex;gap:8px;margin-bottom:16px;align-items:flex-start}.friend-chat-message.is-player{flex-direction:row-reverse}.friend-chat-bubble{max-width:75%;margin:0;padding:12px;border-radius:4px 14px 14px;background:#eaf0dc;overflow-wrap:anywhere;white-space:pre-wrap}.friend-chat-message.is-player .friend-chat-bubble{background:#d9e9d8}

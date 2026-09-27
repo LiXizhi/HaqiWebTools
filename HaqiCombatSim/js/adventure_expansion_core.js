@@ -31,6 +31,10 @@ export function installExpansion(content,dataset,catalog,candidates,kidsCards,ki
   content.shop.push({id:'gear:'+item.id,kind:'gear',vipOnly,isInternalTest:item.isInternalTest===true,itemId:item.id,name:item.name,level:requirements.level,slot:item.slot,school:Object.keys(content.schools).find(s=>content.schools[s]===requirements.school)||'all'});
  }
  for(const [id,name] of [[FOOD_ID,'宠物营养餐'],[CAPTURE_ID,'捕获晶球']]){content.items[id]={id,name,kind:0,stats:{}};content.shop.push({id:'supply:'+id,kind:'supply',itemId:id,name,level:1,retired:id===CAPTURE_ID});}
+ for(const item of Object.values(content.petFoods||{})){
+  content.items[item.id]={...structuredClone(item),description:item.description+'。网页版：放入宠物食槽，饥饿时自动食用。'};
+  content.shop.push({id:'supply:'+item.id,kind:'supply',itemId:item.id,name:item.name,level:1});
+ }
  const p=petParams(content);content.progression.levelCap=p.levelCap;
  // One extra band past the cap: the top level still needs a "next level" target so the experience bar
  // can show this level's own progress instead of a flat 100%. EXPArea.lua EXPArea.UpdateUI L86-94

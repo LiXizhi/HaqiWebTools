@@ -62,6 +62,8 @@ SDK 源码可在 `lxzsrc/keepworkSDK/`（本机 `/Users/mac/lxzsrc/keepworkSDK`�
 
 ### 第三方依赖仅限 Keepwork CDN
 
+- **平台发行包限定例外（用户确认，2026-09-27）：** TapTap、TikTok、Discord 等平台专用发行包可接入该平台强制要求的官方 SDK，先核验官方来源和版本并隔离到平台适配层；官网/H5 默认发行包保持下述 Keepwork CDN 规则，不引入无关库。发行、合同和收费仍按 `docs/marketing/operations.md` 的授权范围执行。
+
 - **只允许使用已经托管在 Keepwork CDN 的第三方库。** 所有第三方 JS、CSS、ES module、Worker/WASM 配套依赖均须使用已存在且核验过的 Keepwork CDN 地址；禁止从 unpkg、jsDelivr、cdnjs、esm.sh 等其他 CDN 导入，也不以 npm 打包或本地复制绕过此规则。
 - 缺少 Keepwork CDN 版本时，选择已有库或用原生实现；不猜 URL、不引入外部 CDN 兜底。自己编写的项目模块仍可以使用相对路径。
 - 以 Maisi `keepwork-web-dev` 技能的 CDN 库目录为准，保持已有完整版本号；实际引入前验证地址与配套版本。不要因为库可用就额外引入，继续保持无构建的 ES modules / Vanilla JS 架构。

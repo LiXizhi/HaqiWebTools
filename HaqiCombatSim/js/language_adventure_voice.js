@@ -1,3 +1,5 @@
+import {cancelBrowserSpeech} from './browser_speech.js';
+import {acquireAudioActivity} from './audio_activity.js';
 // Keepwork IO only. Microphone audio/transcripts are not persisted; completed TTS may be cached.
 import {loadKeepwork} from './adventure_cloud.js';
 import {cachedLearningAudio,rememberLearningAudio} from './learning_audio_cache.js';
@@ -34,6 +36,7 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
     let current=null,speaker=null,playback=null,epoch=0;
     async function dispose(old){
         if(current===old)current=null;
+        old?.releaseAudio?.();
         old?.unlink?.();
         old?.abort.abort();
         old?.media?.getTracks().forEach(t=>t.stop());
@@ -47,13 +50,13 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
         const old=current,oldSpeaker=speaker;speaker=null;
         await dispose(old);
         await oldSpeaker?.stop({finish:false}).catch(()=>{});
-        globalThis.speechSynthesis?.cancel();
+        cancelBrowserSpeech();
     }
     return {
         cancel,
         async start(signal){
             await cancel();
-            const state={abort:new AbortController(),text:'',error:null};current=state;
+            const state={abort:new AbortController(),text:'',error:null,releaseAudio:acquireAudioActivity()};current=state;
             const abort=()=>void dispose(state);
             state.unlink=()=>signal.removeEventListener('abort',abort);
             signal.addEventListener('abort',abort,{once:true});
@@ -107,8 +110,8 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
             const config={audioFormat:'mp3',autoPlay:false,enableSubtitle:false,speechRate:-8,...(voiceType?{voiceType}:{})};
             const key=JSON.stringify([text,locale,config]);
             let stream=null,audio=null,finishPlayback=null,release=null;
-            const request=new AbortController();
-            const stop=()=>{request.abort();audio?.pause();finishPlayback?.();void stream?.stop({finish:false}).catch(()=>{});};
+            const request=new AbortController(),releaseAudio=acquireAudioActivity();
+            const stop=()=>{releaseAudio();request.abort();audio?.pause();finishPlayback?.();void stream?.stop({finish:false}).catch(()=>{});};
             signal.addEventListener('abort',stop,{once:true});
             const active={stop};playback=active;
             try{

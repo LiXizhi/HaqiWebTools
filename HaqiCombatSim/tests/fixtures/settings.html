@@ -3,28 +3,47 @@
 <link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
 <link rel="stylesheet" href="../../css/language_adventure.css">
 <body class="haqi-app"><div id="root"></div><script type="module">
+import {createSpellSound} from '../../js/spell_sound.js';
+import {acquireAudioActivity} from '../../js/audio_activity.js';
 import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure} from '../../js/adventure_core.js';
 import {renderPanel,settingsView} from '../../js/view_adventure.js';
 // Real settings view with an in-memory character; no player storage is read or written.
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
-const assets=await loadResources(),save=createAdventure(assets.content,{name:'设置验收'});
-save.languageLearning={enabled:true,target:'en',native:'zh-CN',autoSpeak:true};
 const params=new URLSearchParams(location.search);
+const assets=params.has('soundQA')?{content:{adaptations:[]},dataset:{}}:await loadResources();
+const save=params.has('soundQA')?{music:false,locale:'zh-CN'}:createAdventure(assets.content,{name:'设置验收'});
+save.languageLearning={enabled:true,target:'en',native:'zh-CN',autoSpeak:true};
 if(params.get('tab'))settingsView.tab=params.get('tab');
 if(params.has('noatlas'))document.body.classList.remove('storybook-ui');
-const model={assets,save,soundEnabled:true};
+const sound=createSpellSound({defaultEnabled:true});
+document.addEventListener('pointerdown',()=>sound.unlock());
+document.addEventListener('keydown',()=>sound.unlock());
+document.addEventListener('visibilitychange',()=>sound.stop());
+window.addEventListener('pagehide',()=>sound.dispose());
+const model={assets,save,soundEnabled:sound.enabled,soundVolume:sound.volume};
 const root=document.querySelector('#root');
 const cb={
     close:()=>root.replaceChildren(),
     panel:()=>show(),
     cloud:()=>{},roles:()=>{},title:()=>{},
     music:()=>{save.music=!save.music;show();},
-    sound:()=>{model.soundEnabled=!model.soundEnabled;show();},
+    sound:async()=>{await sound.setEnabled(!sound.enabled);model.soundEnabled=sound.enabled;show();},
+    soundVolume:value=>{sound.setVolume(value);model.soundVolume=sound.volume;},
+    soundPreview:async()=>{await sound.unlock();sound.play('heal');},
     setLocale:id=>{save.locale=id;show();},
     setLearning:next=>{Object.assign(save.languageLearning,next);show();},
     refresh:()=>show(),
 };
 function show(){renderPanel(root,'settings',model,cb);}
 show();
+if(params.has('soundQA')){
+    const controls=document.createElement('section');controls.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#fff3d4;z-index:100;padding:8px;display:flex;gap:6px;flex-wrap:wrap';
+    const status=document.createElement('output');status.textContent='点击任意音效进行验收';
+    for(const [name,label] of Object.entries({click:'按钮',hit:'命中',heal:'治疗',shield:'防御',capture:'捕获',victory:'胜利',defeat:'失败',level:'升级',quest:'任务',reward:'奖励',teleport:'传送',splash:'水花',catch:'捕鱼',feed:'投喂',friendship:'好友',adopt:'领养'})){
+        const b=document.createElement('button');b.textContent=label;b.onclick=async()=>{await sound.unlock();status.textContent=`${label}：${sound.play(name)?'已触发':'已静音或限流'}`;};controls.append(b);
+    }
+    let release=null;const mute=document.createElement('button');mute.textContent='模拟语音占用';mute.onclick=()=>{if(release){release();release=null;mute.textContent='模拟语音占用';}else{release=acquireAudioActivity();mute.textContent='结束语音占用';}};
+    controls.append(mute,status);document.body.append(controls);
+}
 </script></body></html>

@@ -9,6 +9,7 @@ import {createFishingLoader} from './adventure_fishing_loader.js';
 import {installRuneCatalog} from './adventure_runes_core.js';
 import {installNpcArt} from './adventure_npc_art_core.js';
 import {loadEnvironmentArt} from './adventure_environment_art.js';
+import { sceneryAtlases } from './adventure_scenery_core.js';
 import { installExpansion } from './adventure_expansion_core.js';
 import { installMountCatalog } from './adventure_mounts_core.js';
 // Browser IO for the self-contained adventure package.
@@ -19,6 +20,7 @@ import { loadSkillArt } from './skill_art.js';
 import { loadUiArt } from './adventure_ui_art.js';
 export const SAVE_KEY = 'haqi.adventure.kids.v1';
 import { createJsonReader } from './runtime_data.js';
+const ESSENTIAL_SHEETS=new Set(['sprites']);
 function loadImage(url) { return new Promise((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=()=>reject(new Error(`无法加载图片 ${url}`));i.src=url;}); }
 export async function loadResources(progress) {
     const downloads = new Map();
@@ -36,28 +38,21 @@ export async function loadResources(progress) {
     content.worldMaps=Object.fromEntries(await Promise.all(Object.entries(content.worldMapIndex.islands).map(async([id,info])=>[id,await json(info.file)])));
     validateSpellEffects(effects,dataset.cards);
     const mode=assetMode(location.hostname,location.search);
-    // A failed cosmetic download must not block local saves or gameplay.
+    // Manifests only: island sheets and cards load when the current zone or UI needs them.
     const environmentReady=loadEnvironmentArt(mode,json).catch(error=>{console.warn('使用基础场景素材：',error.message);return null;});
     const buildingArtReady=loadEnvironmentArt(mode,json,'data/adventure/building-art.json').catch(error=>{console.warn('使用基础建筑素材：',error.message);return null;});
     const terrainDecorationsReady=loadEnvironmentArt(mode,json,'data/adventure/terrain-decoration-art.json').catch(error=>{console.warn('使用基础地表纹理：',error.message);return null;});
     const uiArtReady=loadUiArt(mode,json).catch(error=>console.warn('使用基础界面：',error.message));
     validateMediaManifest(media,manifest,mode);
     const images=new Map(),bounds=new Map(),failures=[],lazyImages=new Map(),imageLoading=new Map();
-    const cardImages=new Set(Object.values(dataset.cards).map(card=>card.art?.id).filter(Boolean));
-    const otherImages=new Set(Object.values(content.items).map(item=>item.art?.id).filter(Boolean));
-    const oldNpcImages=new Set(Object.values(content.npcs).map(n=>n.portrait?.id).filter(Boolean));
-    const rows=Object.entries(media.entries).filter(([id,a])=>!oldNpcImages.has(id)&&a.local.endsWith('.webp')&&(!cardImages.has(id)||otherImages.has(id)));
-    progress?.({ label: '正在加载卡牌与场景', value: null });
+    const rows=Object.entries(media.entries).filter(([id,a])=>ESSENTIAL_SHEETS.has(id)&&a.local.endsWith('.webp'));
+    for(const [id,a] of Object.entries(media.entries))if(!ESSENTIAL_SHEETS.has(id)&&a.local?.endsWith('.webp'))lazyImages.set(id,a);
+    progress?.({ label: '正在加载场景基础图', value: null });
     const skillArt=await loadSkillArt(effects,mode,json);
-    await skillArt.preload(dataset.cards);
     let cursor=0,done=0;
-    const worker=async()=>{while(cursor<rows.length){const[id,a]=rows[cursor++];try{images.set(id,await loadImage(assetUrl(a,mode)));}catch(e){if(!a.optional)failures.push(e.message);}done++;progress?.({label:'正在加载场景图片',detail:`${done} / ${rows.length}`,value:done/rows.length});}};
+    const worker=async()=>{while(cursor<rows.length){const[id,a]=rows[cursor++];try{images.set(id,await loadImage(assetUrl(a,mode)+(mode==='local'?`?v=${a.sha256}`:'')));}catch(e){if(!a.optional)failures.push(e.message);}done++;progress?.({label:'正在加载场景图片',detail:`${done} / ${rows.length}`,value:done/rows.length});}};
     await Promise.all(Array.from({length:8},worker));
     if(failures.length)throw new Error(`冒险资源缺失，请重新准备资源后重试。${failures[0]}`);
-    for(const card of Object.values(dataset.cards)) {
-        const image=images.get(card.art?.id),base=effects.cards[card.key]?.base;
-        if(image&&base)images.set('spell:'+base,image);
-    }
     function getBounds(id,rect) {
         const img=images.get(id);if(!img)return null;
         const cacheKey=id+JSON.stringify(rect||null);if(bounds.has(cacheKey))return bounds.get(cacheKey);
@@ -85,7 +80,7 @@ export async function loadResources(progress) {
     let hero=null;
     function tile(ctx,sheet,index,x,y,w,h) {
         if(hero&&sheet==='sprites'&&index>=8&&index<16)return hero.drawTile(ctx,index,x,y,w,h);
-        const img=images.get(sheet);if(!img)return;
+        const img=images.get(sheet)||media.entries[sheet];if(!img)return false;
         const cols=4,rows=sheet==='sprites'?4:2,cw=img.width/cols,ch=img.height/rows;
         const row=Math.floor(index/4), cuts=sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height];
         return draw(ctx,{id:sheet,crop:[(index%4)*cw,cuts[row],cw,cuts[row+1]-cuts[row]]},x,y,w,h,true);
@@ -133,9 +128,8 @@ export async function loadResources(progress) {
     for(const [id,entry] of Object.entries(shopIcons.entries))lazyImages.set(id,entry);
     for(const [id,ref] of Object.entries(shopIcons.items))if(content.items[id]&&!content.items[id].art){content.items[id].art=ref;content.items[id].iconFallback=!!shopIcons.fallbacks[id];}
     progress?.({ label: '正在准备世界与角色资源', value: null });
-    await skillArt.preload(dataset.cards);
     const petLoading=new Set();
-    function drawPet(ctx,id,stage,x,y,w,h){const art=content.pets[id]?.art;if(!art)return false;const key='pet:'+id;const img=images.get(key);if(!img){if(!petLoading.has(id)){petLoading.add(id);loadImage(mode==='local'?art.local:art.cdn).then(image=>images.set(key,image)).catch(()=>petLoading.delete(id));}return false;}const sw=img.width/4,sh=img.height/4;ctx.drawImage(img,0,stage*sh,sw,sh,x,y,w,h);return true;}
+    function drawPet(ctx,id,stage,x,y,w,h,column=0){const art=content.pets[id]?.art;if(!art)return false;const key='pet:'+id;const img=images.get(key);if(!img){if(!petLoading.has(id)){petLoading.add(id);loadImage(mode==='local'?art.local:art.cdn).then(image=>images.set(key,image)).catch(()=>petLoading.delete(id));}return false;}const sw=img.width/4,sh=img.height/4;ctx.drawImage(img,column*sw,stage*sh,sw,sh,x,y,w,h);return true;}
     const monsterArt=await json('data/adventure/monster-art.json');
     for(const [id,entry] of Object.entries(monsterArt.entries))lazyImages.set('monster:'+id,entry);
     const drawMonster=createMonsterArtRenderer(monsterArt,content,draw,drawPet);
@@ -143,8 +137,20 @@ export async function loadResources(progress) {
     const environmentArt=await environmentReady;
     const buildingArt=await buildingArtReady;
     const terrainDecorationArt=await terrainDecorationsReady;
-    hero=await loadHeroLibrary(json,content.mountCatalog,{local:mode==='local',sprites:media.entries.sprites,sourceImages:images,getBounds});
-    return {hero,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,terrainDecorationArt,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    async function warmScenery(world){
+        const needed=sceneryAtlases(world);
+        await Promise.all([
+            buildingArt?.warm(needed.building),
+            environmentArt?.warm(needed.environment),
+            terrainDecorationArt?.warm(needed.terrain),
+        ]);
+    }
+    hero=await loadHeroLibrary(json,content.mountCatalog,{local:mode==='local',sprites:media.entries.sprites.legacyCharacterSource||media.entries.sprites});
+    function sceneryTile(ctx,index,x,y,w,h){
+        const art=media.entries.sprites,cuts=art.rowCuts||[0,323,650,929,1254].map(v=>v*art.height/1254),row=Math.floor(index/4);
+        return draw(ctx,{id:'sprites',crop:[index%4*art.width/4,cuts[row],art.width/4,cuts[row+1]-cuts[row]]},x,y,w,h,true,false);
+    }
+    return {hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

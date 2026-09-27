@@ -2287,7 +2287,7 @@
       },
       "selfContained": true,
       "provenance": {
-        "local": "assets/adventure/webp/sprites.webp",
+        "local": "assets/adventure/webp/sprites-legacy-characters.webp",
         "sha256": "46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891",
         "size": 167752,
         "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891.webp",
@@ -3467,7 +3467,7 @@
       },
       "selfContained": true,
       "provenance": {
-        "local": "assets/adventure/webp/sprites.webp",
+        "local": "assets/adventure/webp/sprites-legacy-characters.webp",
         "sha256": "46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891",
         "size": 167752,
         "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891.webp",

@@ -1157,16 +1157,30 @@
     },
     "sprites": {
       "local": "assets/adventure/webp/sprites.webp",
-      "sha256": "46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891",
-      "size": 167752,
-      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891.webp",
+      "sha256": "d60a6e029b8323d114a0a0211826c69ece0110fa44f2f7bf85373393eddd1b51",
+      "size": 184046,
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/d60a6e029b8323d114a0a0211826c69ece0110fa44f2f7bf85373393eddd1b51.webp",
       "optional": false,
       "sourceEntry": null,
-      "sourceSha256": "389c539444a3001296b4f28c56399639ffa1fb50b67ba0cebefddb87620cd6a6",
-      "sourceBytes": 1850985,
+      "sourceSha256": "53c96335529324ff05ff507c75ef2da6f8b0a9bda9a7166f8472c1272f682270",
+      "sourceBytes": 2484231,
       "width": 642,
       "height": 642,
-      "encoder": "Pillow 11.3.0; WebP quality 85; alpha preserved; max 200000 bytes"
+      "encoder": "Pillow WebP quality 75; alpha preserved; max 200000 bytes",
+      "legacyCharacterSource": {
+        "local": "assets/adventure/webp/sprites-legacy-characters.webp",
+        "sha256": "46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891",
+        "size": 167752,
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891.webp",
+        "optional": false,
+        "sourceEntry": null,
+        "sourceSha256": "389c539444a3001296b4f28c56399639ffa1fb50b67ba0cebefddb87620cd6a6",
+        "sourceBytes": 1850985,
+        "width": 642,
+        "height": 642,
+        "encoder": "Pillow 11.3.0; WebP quality 85; alpha preserved; max 200000 bytes"
+      },
+      "provenance": "Built-in imagegen edit 2026-09-27: replace bottom eight characters with fern, flowers, tropical leaves, mushrooms, berries, lavender, reeds and golden shrub; preserve trees/buildings and transparent 4x4 layout."
     },
     "creatures": {
       "local": "assets/adventure/webp/creatures.webp",

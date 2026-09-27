@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { installExpansion } from '../js/adventure_expansion_core.js';
 import { installNpcCatalog, npcOffers, npcOfferStatus } from '../js/adventure_npc_core.js';
-import { installMountCatalog, validateMountCatalog, resolveMountDrawPose } from '../js/adventure_mounts_core.js';
+import { installMountCatalog, validateMountCatalog, resolveMountDrawPose, mountIconCrop } from '../js/adventure_mounts_core.js';
 import { projectRuntimeData } from '../scripts/package_runtime_data.mjs';
 import { applyAction, createAdventure, parseSave, playerSpec } from '../js/adventure_core.js';
 import { productPrice } from '../js/adventure_pets_core.js';
@@ -19,6 +19,23 @@ function contentFrom(source) {
     installMountCatalog(content, source);
     return content;
 }
+
+test('mount item icons crop the right-facing side cell, never the front', () => {
+    const content = contentFrom(catalog);
+    const samples = [
+        content.mountByItem[16051], // 冲锋大象 — right cell 1
+        content.mountByItem[16071], // 霸王虎 — right cell 1
+        content.mountByItem[16141], // 黄金猛犸 — right cell 2 (atlas cellOrder differs)
+    ];
+    for (const row of samples) {
+        const mount = catalog.mounts.find(entry => entry.id === row.mountId);
+        const item = content.items[row.itemId];
+        assert.equal(item.art.id, `mount:${mount.id}`);
+        assert.deepEqual(item.art.crop, mountIconCrop(mount));
+        assert.notDeepEqual(item.art.crop, [0, 0, mount.art.width / 2, mount.art.height / 2]);
+        assert.equal(item.art.crop[0] !== 0 || item.art.crop[1] !== 0, true);
+    }
+});
 
 test('packaged mount catalog drops lab fields and keeps pose, art and stats', () => {
     const packed = projectRuntimeData('adventure/mount-catalog.json', catalog);
@@ -96,4 +113,26 @@ test('mall sells one priced mount and riding adds combat stats without equipment
     assert.equal(save.mountId, null);
     assert.equal(playerSpec(save, content).stats.hpFlat, before.stats.hpFlat);
     assert.equal(parseSave(JSON.stringify({ ...save, mountId: 16071, inventory: { ...save.inventory, 16071: 1 } }), content).mountId, 16071);
+});
+
+test('mall lists zodiac and other permanent unpriced mounts without mistaking 霸天龙 for timed SKUs', () => {
+    const content = contentFrom(catalog);
+    const mounts = content.shop.filter(item => item.kind === 'mount');
+    const byId = Object.fromEntries(mounts.map(item => [item.itemId, item]));
+    const zodiac = [16033, 16034, 16035, 16036, 16037, 16038, 16039, 16040, 16041, 16042, 16043, 16044];
+    assert.equal(zodiac.every(id => byId[id]), true);
+    assert.equal(byId[16033].name, '鼠');
+    assert.equal(byId[16033].price, 100);
+    assert.equal(byId[16033].currency, 984);
+    assert.equal(byId[16128]?.name, '红玉霸天龙');
+    assert.equal(byId[16128].price, 999999);
+    assert.equal(byId[16130]?.name, '黄铜啸天龙');
+    assert.equal(content.shop.some(item => item.kind === 'mount' && (item.itemId === 16106 || /[（(]\d+天[）)]/.test(item.name || ''))), false);
+    assert.ok(mounts.length >= 60);
+    const save = createAdventure(content);
+    save.level = 1;
+    save.inventory[984] = 100;
+    applyAction(save, content, { type: 'buy', productId: byId[16033].id });
+    assert.equal(save.inventory[16033], 1);
+    assert.equal(save.inventory[984], 0);
 });

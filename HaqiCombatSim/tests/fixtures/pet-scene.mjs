@@ -9,6 +9,7 @@ import {createRoleStore} from '../../js/adventure_roles.js';
 import {petPairStatus} from '../../js/adventure_pet_interactions_core.js';
 import {configureLocale} from '../../js/locale.js';
 import {ISLANDS,islandSpawn} from '../../js/adventure_world_map_core.js';
+import {drawSocialPet} from '../../js/view_adventure_pet_social.js';
 const $=id=>document.getElementById(id),prefix='haqi.fixture.pet-scene.v1.',storage={getItem:k=>localStorage.getItem(prefix+k),setItem:(k,v)=>localStorage.setItem(prefix+k,v)};
 let offset=Number(sessionStorage.getItem(prefix+'clock'))||0;
 const now=()=>Date.now()+offset,toast=text=>$('status').textContent=text;
@@ -29,6 +30,10 @@ let setup=petWorldAction(save,content,{type:'residents',residents:world.npcs.map
 for(const n of world.npcs)setup.petWorld[npcPetId(`resident:${n.id}`)].gender='male';
 saveLocal(setup,roles.scoped());save=roles.catalog.roles.find(r=>r.id===roles.catalog.activeId).save;
 const renderer=createRenderer($('world'),assets),scene=createPetScene({now,getState:()=>({save,world,content,scope:'fixture',socialActors:[],locked:false,loadPet:async id=>{const next=roles.loadPet(save,id);Object.assign(save.pets,next.pets);Object.assign(save.petWorld,next.petWorld);}}),commit:next=>{saveLocal(next,roles.scoped());save=roles.catalog.roles.find(r=>r.id===roles.catalog.activeId).save;paint();},toast});
+const moodStrip=document.createElement('section');moodStrip.style.cssText='display:flex;gap:12px;flex-wrap:wrap;margin:12px 0';moodStrip.setAttribute('aria-label','宠物动作预览');
+const moodSamples=[['happy','高兴 · 相伴互动'],['sad','伤心 · 重伤'],['sleeping','睡觉 · 挂机或倒下']].map(([mood,label])=>{const figure=document.createElement('figure');figure.style.margin='0';const canvas=document.createElement('canvas');canvas.width=130;canvas.height=100;canvas.setAttribute('aria-label',label);const caption=document.createElement('figcaption');caption.textContent=label;figure.append(canvas,caption);moodStrip.append(figure);return {mood,canvas};});
+$('world').before(moodStrip);
+function drawMoodSamples(t){const pet=save.pets[save.formation[0]],reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;for(const {mood,canvas}of moodSamples){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,130,100);drawSocialPet(ctx,assets,{pet,position:{x:65,y:92},mood,scale:1,facing:1},mood==='happy'?[{ids:[pet.id],until:now()+1}]:[],t,reduced,now());}}
 function paint(){
     $('clock').textContent=`北京时间 ${new Date(now()).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'})} · 营养餐 ${save.inventory[990001]} 份`;
     const host=save.pets[save.formation[0]];const records=[['我的宠物',host],...world.npcs.map(n=>[`${n.name}的宠物`,save.petWorld[npcPetId(`resident:${n.id}`)]])];$('summary').replaceChildren();
@@ -45,5 +50,5 @@ $('feed').onclick=()=>{try{scene.feed(save.formation[0]);paint();}catch(e){toast
 $('day').onclick=()=>{offset+=2*86400000;sessionStorage.setItem(prefix+'clock',String(offset));paint();toast('演示时间已快进两天，再完成一次主人交谈。');};
 $('reload').onclick=()=>location.reload();
 $('world').onclick=e=>{const r=$('world').getBoundingClientRect(),id=scene.pick(renderer.screenToWorld(e.clientX-r.left,e.clientY-r.top));if(id)scene.adopt(id);};
-let previous=performance.now();function frame(t){try{scene.step(Math.min(.055,(t-previous)/1000));renderer.render(world,save,t,{petScene:scene});}catch(e){toast(e.message);console.error(e);}previous=t;requestAnimationFrame(frame);}requestAnimationFrame(frame);
+let previous=performance.now();function frame(t){try{scene.step(Math.min(.055,(t-previous)/1000));renderer.render(world,save,t,{petScene:scene});drawMoodSamples(t);}catch(e){toast(e.message);console.error(e);}previous=t;requestAnimationFrame(frame);}requestAnimationFrame(frame);
 for(const id of ['talk','feed','day'])$(id).disabled=false;paint();toast('场景准备好了。完成主人交谈，让宠物成为朋友。');

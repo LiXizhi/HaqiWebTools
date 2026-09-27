@@ -10,6 +10,7 @@ import {heroPortrait} from './hero_renderer.js';
 import {renderNpcServices} from './view_adventure_npc.js';
 import {npcServices} from './adventure_npc_core.js';
 import {renderGems} from './view_adventure_gems.js';
+import {renderRecharge} from './view_adventure_recharge.js';
 import {renderMembership} from './view_adventure_membership.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import {attachStatusTooltips} from './view_adventure_status_tooltip.js';
@@ -415,11 +416,16 @@ function spellFace(assets,card,artCard=card) {
     const cost=card.pipcost===114||card.pipcost==='X'||Number(card.pipcost)<0?'X':String(card.pipcost);
     const rounds=card.params.cooldown??0;
     const description=spellHint(card,assets.dataset);
+    const base=assets.effects.cards[card.key]?.base;
     return createCardFace({el,name:artCard.name,cost,cooldown:rounds,description,
-        draw:context=>assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description})});
+        draw:context=>assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description}),
+        retry:base?()=>assets.skillArt.ensure(base):undefined});
 }
 export function renderPanel(root,kind,model,cb) {
     const {assets,save}=model,c=assets.content,d=assets.dataset;
+    if(kind==='recharge'){
+        renderRecharge(modal(root,'会员充值','',cb,true),model,cb,{el,button});return;
+    }
     if(kind==='membership'){
         const body=modal(root,'魔法星','',cb,true);
         renderMembership(body,model,cb,{el,button,spellFace});

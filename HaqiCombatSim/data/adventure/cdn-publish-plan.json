@@ -716,10 +716,10 @@
     {
       "id": "sprites",
       "local": "assets/adventure/webp/sprites.webp",
-      "sha256": "46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891",
-      "size": 167752,
-      "key": "keepwork/haqi-adventure/v1/46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891.webp",
-      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/46c1e75ee22c7245ca347722c0eeba625818288a7137e6ef82869423eb446891.webp"
+      "sha256": "d60a6e029b8323d114a0a0211826c69ece0110fa44f2f7bf85373393eddd1b51",
+      "size": 184046,
+      "key": "keepwork/haqi-adventure/v1/d60a6e029b8323d114a0a0211826c69ece0110fa44f2f7bf85373393eddd1b51.webp",
+      "url": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/d60a6e029b8323d114a0a0211826c69ece0110fa44f2f7bf85373393eddd1b51.webp"
     },
     {
       "id": "creatures",

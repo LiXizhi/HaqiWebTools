@@ -249,6 +249,7 @@ export function createTerrainTileCache(paint,createCanvas,limit=24){
             previous={x:rect.x,y:rect.y};
             return generated;
         },
+        clear(){tiles.clear();currentWorld=null;previous=null;currentDensity=null;},
         get size(){return tiles.size;},
     };
 }

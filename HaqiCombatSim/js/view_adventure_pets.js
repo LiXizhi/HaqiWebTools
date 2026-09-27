@@ -1,4 +1,5 @@
 import {petDisplayScale} from './adventure_pet_interactions_core.js';
+import {renderPetFood} from './view_adventure_pet_food.js';
 import {ownedPetRecords} from './adventure_pet_files_core.js';
 import { setText, tr } from './locale_runtime.js';
 import {createCloseButton} from './view_adventure_controls.js';
@@ -184,7 +185,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  }
  function updatePager(){previous.disabled=shelf.scrollLeft<=1;next.disabled=shelf.scrollLeft+shelf.clientWidth>=shelf.scrollWidth-1;}
  shelf.onscroll=updatePager;query.oninput=()=>{state[state.tab==='mount'?'mountQuery':'query']=query.value;paintShelf();};paintShelf();
- const notes=el('details','pet-care-notes',el('summary','','照料与自动进食'),el('p','muted',`岛屿上非战斗时角色每秒恢复 ${p.heroRegenPerSecond*100}% 生命，宠物每分钟恢复 ${p.regenPerMinute*100}%。副本中不会自动回血。携带伙伴每分钟减少 ${p.hungerPerMinute} 饱食，低于 ${p.feedThreshold} 自动进食，每份恢复 ${p.foodRestore}。未上阵的收藏宠物不消耗饱食和口粮，每分钟恢复 ${p.restingHungerPerMinute} 饱食（离线也恢复，最多24小时）。离线生命恢复仅限岛屿。`),...save.careLog.slice(-3).map(text=>el('p','muted',text)));
+ const notes=el('details','pet-care-notes',el('summary','','照料与自动进食'),el('p','muted',`岛屿上非战斗时角色每秒恢复 ${p.heroRegenPerSecond*100}% 生命，宠物每分钟恢复 ${p.regenPerMinute*100}%。副本中不会自动回血。携带伙伴每分钟减少 ${p.hungerPerMinute} 饱食，低于 ${p.feedThreshold} 时按左、右食槽顺序自动进食，不会消耗背包中未放入的口粮。未上阵的收藏宠物不消耗饱食和口粮，每分钟恢复 ${p.restingHungerPerMinute} 饱食（离线也恢复，最多24小时）。离线生命恢复仅限岛屿。`),...save.careLog.slice(-3).map(text=>el('p','muted',text)));
  const teaching=button('咕噜噜教学',()=>{
   const dialog=el('dialog','modal pet-growth-modal'),close=()=>dialog.close();
   const exit=createCloseButton(close,'关闭教学伙伴');
@@ -195,6 +196,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  },'secondary');
  const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop',{category:state.tab==='mount'?'mount':'pet'}),'secondary'),teaching,notes);
  teachPointer(teaching,save,c);
+ footer.append(renderPetFood(body,model,cb,{el,button,art}));
  if(c.homeUrl){const link=el('a','pet-home-link',icon('shop'),el('span','','宠物家园'));link.href=c.homeUrl;link.target='_blank';link.rel='noopener noreferrer';link.title='联动筹备中，当前冒险进度不会写入家园';footer.append(link);}
  body.append(footer);
 }

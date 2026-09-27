@@ -5,7 +5,11 @@ import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {createAdventure,parseSave,beginEncounter} from '../js/adventure_core.js';
 import {initializePetWorld,petWorldAction,npcPetId} from '../js/adventure_pet_world_core.js';
-import {createPetInstance} from '../js/adventure_pet_interactions_core.js';
+import {createPetInstance,petInteractionParams} from '../js/adventure_pet_interactions_core.js';
+import {findPetMeeting,petMeetingClear} from '../js/adventure_pet_meeting_core.js';
+import {SOCIAL_DEFAULTS} from '../js/adventure_social_core.js';
+import {petBattleMood,updatePetIdle} from '../js/adventure_pet_mood_core.js';
+import {drawPetMood} from '../js/view_adventure_pet_mood.js';
 import {createRoleStore} from '../js/adventure_roles.js';
 import {createRuntimeStore} from '../js/adventure_runtime_store.js';
 import {saveLocal} from '../js/adventure_assets.js';
@@ -33,7 +37,7 @@ for(const island of ISLANDS)test(`${island.name}: dialogue, food, birth and retu
     const owner={id:'island-pet-owner',school:'fire'},other=npcPetId(owner.id);
     const scene=createPetScene({getState:()=>({save,world,content:islandContent,scope:'all-islands',socialActors:[{profile:owner,position:{...save.position}}],loadPet:async()=>{},locked:false}),commit:next=>{save=next;},toast:()=>{},now:()=>at});
     scene.step(0);save.petWorld[other].gender='male';
-    for(const day of [0,2,4]){at=T+day*D;scene.dialogue(owner.id);scene.step(0);}
+    for(const day of [0,2,4]){at=T+day*D;scene.dialogue(owner.id);for(let i=0;i<400;i++){at+=33;scene.step(.033);if(scene.effects.some(e=>e.at>=T+day*D))break;}}
     const baby=scene.babies[0];assert.ok(baby,island.id);assert.equal(baby.birth.zone,island.id);assert.ok(walkable(world,baby.birth.anchor.x,baby.birth.anchor.y));
     scene.feed(host);scene.step(0);assert.equal(save.inventory[990001],1);assert.equal(scene.babies.length,1);
     const before=structuredClone(save.petWorld[other]);
@@ -50,9 +54,48 @@ function sceneHarness(){
     const scene=createPetScene({getState:()=>({...state,save}),commit:next=>{save=next;},toast:message=>notices.push(message),now:()=>at});
     return {scene,state,notices,get save(){return save;},advance:ms=>{at+=ms;}};
 }
+test('pets approach from twice human conversation range and ordinary play earns no marks',()=>{
+    const h=sceneHarness(),p=petInteractionParams(content);assert.equal(p.encounterDistance,SOCIAL_DEFAULTS.converseRadius*2);
+    h.state.socialActors=h.state.socialActors.slice(0,1);h.state.socialActors[0].position={x:1070,y:800};
+    h.scene.step(0);h.advance(p.playIntervalMs+1);h.scene.step(0);
+    for(let i=0;i<180&&!h.scene.effects.length;i++){h.advance(50);h.scene.step(.05);}
+    assert.ok(h.scene.effects.length);assert.equal(h.scene.effects[0].kind,'proximity');
+    const [a,b]=h.scene.pets;assert.ok(Math.hypot(a.position.x-b.position.x,a.position.y-b.position.y)<=p.meetingArrivalDistance);
+    assert.equal(h.save.pets[h.save.formation[0]].memories.length,0);
+    const calls=[],ctx=new Proxy({},{get:(_,key)=>(...args)=>calls.push([key,...args]),set:()=>true});
+    drawPetSocialEffects(ctx,{content},h.scene.pets,h.scene.effects,0,false,h.scene.now);
+    assert.ok(calls.some(c=>c[0]==='quadraticCurveTo'));assert.equal(calls.filter(c=>c[0]==='fillText').length,0);
+});
+test('idle pets sleep without moving, wake on owner movement and can be invited awake',()=>{
+    const h=sceneHarness();h.scene.step(0);h.advance(60001);h.scene.step(0);
+    assert.ok(h.scene.pets.every(p=>p.mood==='sleeping'));const positions=h.scene.pets.map(p=>({...p.position}));
+    h.advance(1000);h.scene.step(.05);assert.deepEqual(h.scene.pets.map(p=>p.position),positions);assert.equal(h.scene.effects.length,0);
+    h.scene.dialogue('first');h.scene.step(.05);assert.notEqual(h.scene.pets[0].mood,'sleeping');
+    const actor={};updatePetIdle(actor,{x:0,y:0},T,content);assert.equal(updatePetIdle(actor,{x:0,y:0},T+60000,content),'sleeping');assert.equal(updatePetIdle(actor,{x:10,y:0},T+60001,content),'idle');
+});
+test('walking past an owner wakes only nearby pets; standing still allows sleep again',()=>{
+    const h=sceneHarness(),p=petInteractionParams(content);
+    h.state.socialActors[1].position={x:1500,y:800};
+    h.scene.step(0);h.advance(p.idleSleepMs+1);h.scene.step(0);
+    assert.ok(h.scene.pets.every(pet=>pet.mood==='sleeping'));
+    const before=JSON.stringify(h.save.petWorld);
+    h.save.position.x+=p.idleMoveDistance+1;h.scene.step(0);
+    assert.equal(h.scene.pets.find(pet=>pet.id===npcPetId('first')).mood,'idle');
+    assert.equal(h.scene.pets.find(pet=>pet.id===npcPetId('second')).mood,'sleeping');
+    assert.equal(JSON.stringify(h.save.petWorld),before);
+    h.advance(p.idleSleepMs+1);h.scene.step(0);
+    assert.ok(h.scene.pets.every(pet=>pet.mood==='sleeping'));
+    h.save.position.x+=p.idleMoveDistance+1;h.scene.step(0);
+    assert.equal(h.scene.pets.find(pet=>pet.id===npcPetId('first')).mood,'idle');
+});
+test('battle moods track visible HP including healing and zero HP; reduced motion stays static',()=>{
+    assert.equal(petBattleMood(26,100,content),'idle');assert.equal(petBattleMood(25,100,content),'sad');assert.equal(petBattleMood(0,100,content),'sleeping');assert.equal(petBattleMood(60,100,content),'idle');
+    const paint=time=>{const calls=[],ctx=new Proxy({},{get:(_,key)=>(...args)=>calls.push([key,...args]),set:()=>true});drawPetMood(ctx,'sleeping',time,true,64,column=>calls.push(['pet',column]));return calls;};
+    assert.deepEqual(paint(0),paint(9999));assert.ok(paint(0).some(c=>c[0]==='pet'));assert.ok(paint(0).some(c=>c[0]==='pet'&&c[1]===3));assert.ok(!paint(0).some(c=>['scale','rotate','stroke','fillText'].includes(c[0])));
+});
 test('scene keeps one follower per owner and removes a departed owner immediately',()=>{
     const h=sceneHarness();h.scene.step(.016);assert.equal(h.scene.pets.length,3);
-    h.scene.dialogue('first');h.scene.step(.016);assert.ok(h.scene.effects.length);
+    h.scene.dialogue('first');for(let i=0;i<180&&!h.scene.effects.length;i++){h.advance(33);h.scene.step(.033);}assert.ok(h.scene.effects.length);
     h.state.socialActors=[];h.scene.step(.016);assert.equal(h.scene.pets.length,1);assert.equal(h.scene.effects.length,0);
 });
 test('unavailable pet files do not freeze other followers and retry without replacing memories',async()=>{
@@ -188,4 +231,20 @@ test('manual snapshots keep individual files and restore a complete portable col
     const m=cloudMock(),client=m.client();await client.connect();const s=hero();const p=createPetInstance(content,{id:'same-species-baby',speciesId:'dragon_green',ownerId:s.petOwnerId});s.pets[p.id]={...p,hp:100,hunger:100};
     const uploaded=await client.upload(s,{roleId:id(7)});assert.equal(uploaded.snapshot.storageVersion,3);assert.deepEqual(uploaded.snapshot.save.pets,{});
     const restored=await client.read(uploaded.path);assert.equal(Object.keys(restored.save.pets).length,2);assert.equal(restored.save.petFileRefs,undefined);assert.equal(restored.save.petPages,undefined);parseSave(restored.save,content);
+});
+
+test('social pets move clear of both owners before effects and stop if an owner enters',()=>{
+    const h=sceneHarness();h.scene.step(0);h.scene.dialogue('first');h.scene.step(0);
+    assert.equal(h.scene.effects.length,0);
+    for(let i=0;i<180&&!h.scene.effects.length;i++){h.advance(33);h.scene.step(.033);}
+    assert.ok(h.scene.effects.length);
+    const ids=h.scene.effects[0].ids,participants=h.scene.pets.filter(p=>ids.includes(p.id));
+    const owners=[h.save.position,...h.state.socialActors.map(a=>a.position)];
+    assert.ok(participants.every(p=>petMeetingClear(p.position,owners,content)));
+    h.state.socialActors[0].position={...participants[0].position};h.scene.step(.016);
+    assert.equal(h.scene.effects.length,0);
+});
+test('no open meeting space never falls back to owners feet',()=>{
+    const world={w:100,h:100,buildings:[],trees:[]},point={x:50,y:50};
+    assert.equal(findPetMeeting(world,[point,point],[point],content),null);
 });

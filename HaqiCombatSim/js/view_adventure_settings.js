@@ -39,9 +39,18 @@ export function renderSettings(body, model, cb, { el, button }) {
         ui.section('离开', ui.cell({ icon: '🏠', label: '回到开始画面' }, cb.title)),
     );
 
+    const volume=el('input'),volumeLabel=el('output');
+    volume.className='settings-sound-volume';volume.type='range';volume.min='0';volume.max='100';volume.step='1';
+    volume.value=String(Math.round((model.soundVolume??.3)*100));
+    volume.setAttribute('aria-label','游戏音效音量');
+    volumeLabel.textContent=`${volume.value}%`;
+    volume.oninput=()=>{volumeLabel.textContent=`${volume.value}%`;cb.soundVolume?.(Number(volume.value)/100);};
+    const preview=button('试听音效',cb.soundPreview,'secondary small');
+    preview.disabled=!model.soundEnabled;
     panes.sound.append(ui.section('音效与音乐',
         ui.toggle({ icon: '🎵', label: '背景音乐', hint: '城镇与场景的背景音乐。' }, !!model.save.music, cb.music),
-        ui.toggle({ icon: '🔊', label: '技能音效', hint: '施法与战斗时播放音效。' }, !!model.soundEnabled, cb.sound),
+        ui.toggle({ icon: '', label: '游戏音效', hint: '战斗、奖励与冒险交互的短音效；朗读和录音时自动静音。' }, !!model.soundEnabled, cb.sound),
+        ui.field('音效音量',volume,volumeLabel,preview),
     ));
 
     languageSettings(panes.language, model, cb, { el, button });

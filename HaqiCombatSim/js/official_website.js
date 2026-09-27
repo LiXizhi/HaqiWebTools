@@ -16,8 +16,8 @@ const url=entry=>local?entry.local:entry.cdn;
 const node=(tag,content,className)=>{const el=document.createElement(tag);if(content!==undefined)el.textContent=content;if(className)el.className=className;return el;};
 function setLanguage(){
  document.documentElement.lang=lang;$('language').value=lang;
- document.title=text('魔法哈奇 · 让冒险，再次发生','Magic Haqi · Find your magic again');
- document.querySelector('meta[name=description]').content=text('导入老玩家装备与卡包，探索六座岛屿，体验五系卡牌，在冒险中一起学习外语。','Bring back your gear and cards, explore six islands, master five schools and practise languages together.');
+ document.title=text('魔法哈奇 · 宠物冒险与双语交流','Magic Haqi · Pets, adventures and conversations');
+ document.querySelector('meta[name=description]').content=text('和宠物一起冒险，在故事里练习另一种语言。探索六座岛屿，体验五系卡牌与营地中英交流；面向成年体验者的网页测试版。','Adventure with pets and practise a language through stories. Explore six islands, five schools of cards and Chinese-English conversations in an early browser adventure for adults.');
  for(const [el,original]of sourceText)el.innerHTML=lang==='en'?(english[el.dataset.t]??original):original;
  document.querySelector('nav').setAttribute('aria-label',text('主导航','Main navigation'));
  document.querySelector('.stats').setAttribute('aria-label',text('游戏内容统计','Game catalogue statistics'));
@@ -27,9 +27,8 @@ function setLanguage(){
 }
 function renderStats(){
  const values=['cards','items','quests','pets','effects','courses'];
- const labels=text(['卡牌定义','物品目录','任务收录','宠物目录','基础技能演出','营地语言课程'],['Card definitions','Item entries','Archived quests','Pet entries','Base spell effects','Camp courses']);
+ const labels=text(['卡牌定义','物品目录','任务收录','宠物目录','基础技能演出','基础课程目录'],['Card definitions','Item entries','Archived quests','Pet entries','Base spell effects','Base course entries']);
  $('stats').replaceChildren(...values.map((key,i)=>{const el=node('div',undefined,'stat');el.append(node('strong',data.stats[key].toLocaleString(lang)),node('span',labels[i]));return el;}));
- $('course-count').textContent=data.stats.courses;
 }
 function renderSchools(){
  $('school-tabs').replaceChildren(...schools[lang].map(([name],i)=>{const b=node('button',name);b.type='button';b.setAttribute('aria-pressed',String(i===selected));b.onclick=()=>{selected=i;[...$('school-tabs').children].forEach((el,j)=>el.setAttribute('aria-pressed',String(j===i)));dealHand();renderCard(true);};return b;}));
@@ -130,4 +129,4 @@ try{
  setLanguage();
  art=await loadSkillArt(data.effects,local?'local':'cdn',async path=>path.endsWith('skill-art.json')?data.art:data.frames);
  fx=createSpellEffects({effects:data.effects,skillArt:art,images:new Map()});renderCard();
-}catch{const el=$('load-error');el.hidden=false;el.textContent=text('展示资源暂时无法加载，请刷新重试。你仍可通过「开始冒险」进入游戏。','Showcase resources could not load. Refresh to retry, or use Play now to enter the game.');}
+}catch{const el=$('load-error');el.hidden=false;el.textContent=text('展示资源暂时无法加载，请刷新重试。你仍可通过「开始体验」进入游戏。','Showcase resources could not load. Refresh to retry, or use Try it now to enter the game.');}

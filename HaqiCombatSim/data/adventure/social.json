@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "gameId": null,
+  "chatVerified": false,
+  "mailVerified": false,
+  "worlds": {
+    "camp": {"enabled": true, "size": "camp", "capacity": 6},
+    "town": {"enabled": false, "size": "large", "capacity": 16},
+    "fire": {"enabled": false, "size": "medium", "capacity": 12},
+    "ice": {"enabled": false, "size": "medium", "capacity": 12},
+    "desert": {"enabled": false, "size": "large", "capacity": 16},
+    "dark": {"enabled": false, "size": "large", "capacity": 16}
+  },
+  "personas": [
+    {"name":"小枫","school":"fire","interest":"烹饪与野餐"},
+    {"name":"安娜","school":"ice","interest":"雪地旅行"},
+    {"name":"云舟","school":"storm","interest":"航海与天气"},
+    {"name":"莉莉","school":"life","interest":"花园与宠物"},
+    {"name":"墨星","school":"death","interest":"古堡故事"},
+    {"name":"艾米","school":"fire","interest":"篝火与音乐"},
+    {"name":"雪禾","school":"ice","interest":"阅读与绘画"},
+    {"name":"诺亚","school":"storm","interest":"风筝与运动"},
+    {"name":"青芽","school":"life","interest":"森林与植物"},
+    {"name":"米娅","school":"death","interest":"星空与谜题"}
+  ]
+}

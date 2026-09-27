@@ -1,4 +1,5 @@
 import { SimpleBot } from './combat_policy_core.js';
+import {ReasoningBot} from './battle_ai/policy_core.js';
 import {appendThreat,advanceThreat,threatTarget} from './combat_threat_core.js';
 // Kids PvE port for the exported opening encounters. See docs/lua-mapping.md.
 // arena_server.lua StartCombat L4208; AdvanceOneTurn L4520; PlayOneTurn L5100–5270.
@@ -225,6 +226,12 @@ function monstersAct(a,phase) {
     }
 }
 export function playPveRound(a,decision) {
+    decision=structuredClone(decision);
+    if(decision?.aiVersion!==undefined&&decision.aiVersion!==1)throw Error('战斗 AI 版本不兼容');
+    if(decision?.aiVersion===1){
+        if(decision.aiPicks!==undefined&&(!decision.aiPicks||typeof decision.aiPicks!=='object'||Array.isArray(decision.aiPicks)||Object.keys(decision.aiPicks).some(id=>!a.sides.near.some(u=>u.id===id&&u!==a.sides.near[0]))))throw Error('伙伴 AI 记录无效');
+        decision.aiPicks={...(decision.aiPicks||{})};
+    }
     if(a.finished)throw new Error('战斗已经结束');
     if(!decision||typeof decision!=='object'||Array.isArray(decision)||decision.discardSeqs!==undefined&&!Array.isArray(decision.discardSeqs))throw Error('战斗决定无效');
     const u=a.sides.near[0], discarded=decision.discardSeqs || [];
@@ -288,7 +295,15 @@ export function playPveRound(a,decision) {
             if(finished(a))return;
             if(unit.id===u.id){if(!catchFirst)playerAct();continue;}
             if(!U.isAlive(unit)||!beforeAct(a,unit))continue;
-            const pick=new SimpleBot().pick(a,unit);unit.turnsPlayed++;
+            if(a.replaying&&decision.aiVersion===1&&!decision.aiPicks[unit.id])throw Error('战报缺少伙伴行动');
+            const pick=decision.aiVersion===1?(decision.aiPicks[unit.id]||new ReasoningBot().pick(a,unit,{periodicsApplied:true})):new SimpleBot().pick(a,unit);
+            if(decision.aiVersion===1){
+                if(!pick||typeof pick!=='object'||(pick.discardSeqs!==undefined&&(!Array.isArray(pick.discardSeqs)||pick.discardSeqs.some(seq=>!Number.isInteger(seq)||unit.deckMap[seq]!==1||seq===pick.seq))))throw Error('伙伴弃牌无效');
+                if(!pick.pass&&!U.selectableCards(unit).some(h=>h.seq===pick.seq&&h.key===pick.key&&U.canCast(unit,a.resolved.cards[h.key],a.resolved)&&validTargets(a,unit,a.resolved.cards[h.key]).some(t=>t.id===pick.targetId)))throw Error('伙伴 AI 决定无效');
+                decision.aiPicks[unit.id]=structuredClone(pick);
+                for(const seq of pick.discardSeqs||[])U.discardCard(unit,seq);
+            }
+            unit.turnsPlayed++;
             if(pick.pass)emit(a,{type:'pass',caster:unit.id,reason:'pass'});
             else useCard(a,unit,a.resolved.cards[pick.key],a.unitsById[pick.targetId],pick.seq);
         }
@@ -301,12 +316,13 @@ export function playPveRound(a,decision) {
         if(!finished(a))advancePveRound(a);
     }
     a.completedDecisions++;
+    a.lastDecision=decision;
     return a;
 }
 export function restorePveBattle(dataset,content,checkpoint) {
     const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId);
     if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
     const a=createPveBattle({dataset,player:checkpoint.player,monsters:checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]],monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion});
-    for(const decision of checkpoint.decisions)playPveRound(a,decision);
+    a.replaying=true;for(const decision of checkpoint.decisions)playPveRound(a,decision);a.replaying=false;
     return a;
 }

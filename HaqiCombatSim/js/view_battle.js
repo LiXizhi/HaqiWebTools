@@ -7,6 +7,8 @@ import { createPolicy } from './combat_policy_core.js';
 import { unitSpec, presetDeck, aggregateDeck, schoolCardCatalog, SCHOOL_NAMES, SCHOOL_COLORS, MODES, defaultLevel } from './combat_presets_core.js';
 import { cardTargetKind, expectedBaseDamage, expectedBaseHeal, isSupportedType } from './combat_cards_core.js';
 import * as U from './combat_unit_core.js';
+import {coordinateTeam} from './battle_ai/policy_core.js';
+import {BattleReviewSession} from './battle_ai/session_core.js';
 import { h, svg, clear, select, numberInput, toast } from './utils.js';
 import { skillCardPreview } from './skill_card_preview.js';
 
@@ -215,7 +217,7 @@ export function renderBattle(main) {
             h('label', '模式 ', select(Object.keys(MODES), st.mode, (v) => { st.mode = v; setSetting('battle', st); renderBattle(clear(main)); })),
             h('label', '等级 ', numberInput(st.level, (v) => { st.level = v || 1; setSetting('battle', st); renderSetup(); }, { min: 1, max: 100 })),
             h('label', '我方操控位 ', select([{ value: -1, label: '全托管' }, ...Array.from({ length: teamSize }, (_, i) => ({ value: i, label: `${i + 1} 号位` }))], st.humanSlot, (v) => { st.humanSlot = Number(v); setSetting('battle', st); renderSetup(); })),
-            h('label', 'Bot 策略 ', select([{ value: 'deck_attacker', label: '官方 AI 卡组权重' }, { value: 'simple', label: '启发式' }, { value: 'random', label: '随机' }], st.botPolicy, (v) => { st.botPolicy = v; setSetting('battle', st); })),
+            h('label', 'Bot 策略 ', select([{value:'reasoning_easy',label:'推理 AI · 简单'},{value:'reasoning_normal',label:'推理 AI · 普通'},{value:'reasoning_advanced',label:'推理 AI · 高级'},{value:'reasoning_expert',label:'推理 AI · 专家'},{ value: 'deck_attacker', label: '官方 AI 卡组权重' }, { value: 'simple', label: '启发式' }, { value: 'random', label: '随机' }].filter(option=>ds.version==='kids'||!option.value.startsWith('reasoning')), st.botPolicy, (v) => { st.botPolicy = v; setSetting('battle', st); })),
             h('label', '动画 ', select(Object.keys(SPEEDS).map(k => ({ value: k, label: SPEED_LABELS[k] })), st.animSpeed, (v) => { st.animSpeed = v; setSetting('battle', st); })),
             h('label', '种子 ', h('input', { value: st.seed || '', placeholder: '留空随机', style: { width: '90px' }, onChange: (e) => { st.seed = e.target.value; setSetting('battle', st); } })),
             h('button.primary', { onClick: startGame }, game ? '重新开始' : '开始战斗'),
@@ -331,6 +333,7 @@ export function renderBattle(main) {
             u.policy = createPolicy(spec.policyName);
         }
         game = { arena, logEl, pending, selected: null, discards: new Set(), discardMode: false, auto: false, busy: false, seed, anim: null, timer: null, ui: null };
+        if(arena.resolved.version==='kids')game.reviewSession=new BattleReviewSession();
         game.ui = { renderArena, proceed, animateTurn };
         clear(deckBox);
         const pre = snapshot(arena);
@@ -402,11 +405,14 @@ export function renderBattle(main) {
         game.busy = true;
         game.timer = setTimeout(() => {
             game.timer = null;
-            const picks = {};
+            let picks = {};
+            const policies={};
             for (const u of acting) {
                 const pol = (u.policy && u.policy.name === 'human' && game.auto) ? createPolicy(st.botPolicy) : u.policy;
-                picks[u.id] = u.picked || (pol ? pol.pick(arena, u) : { pass: true });
+                policies[u.id]=pol;if(u.picked)picks[u.id]=u.picked;
             }
+            picks=coordinateTeam(arena,policies,picks);
+            const reviewer=acting.find(u=>u.side==='near');if(reviewer&&game.reviewSession)game.reviewSession.record(arena,game.reviewSession.analyze(arena,reviewer),picks[reviewer.id]);
             const pre = snapshot(arena);
             playTurn(arena, picks);
             for (const u of acting) u.picked = null;
@@ -646,6 +652,7 @@ export function renderBattle(main) {
         controls.appendChild(h('label', h('input', { type: 'checkbox', checked: game.auto, onChange: (e) => { game.auto = e.target.checked; if (game.auto) { for (const u of actingUnits(arena)) u.picked = null; } proceed(); } }), ' 托管（Bot 替我出牌）'));
         controls.appendChild(h('label', '动画 ', select(Object.keys(SPEEDS).map(k => ({ value: k, label: SPEED_LABELS[k] })), st.animSpeed, (v) => { st.animSpeed = v; setSetting('battle', st); })));
         if (arena.finished) controls.appendChild(h('button.primary', { onClick: startGame }, '再来一局'));
+        if(arena.finished&&game.reviewSession){const review=game.reviewSession.review(arena);controls.appendChild(h('details',h('summary',review.presentation.headline),...review.diagnoses.slice(0,3).map(d=>h('p',d.text))));}
 
         // 卡包计数 + 手牌
         const deckBar = h('div.deckbar');

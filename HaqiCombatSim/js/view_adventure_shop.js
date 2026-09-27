@@ -1,3 +1,4 @@
+import {ownedPetRecords} from './adventure_pet_files_core.js';
 import {heroPortrait} from './hero_renderer.js';
 import { fill, setText, tr } from './locale_runtime.js';
 import {ItemDetails} from './view_adventure_item_details.js';
@@ -87,7 +88,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
         const price=notForSale(item)?tr('非卖品'):`${fill(item.currency===984?'{count} 魔豆':'{count} 奇豆',{count:productPrice(item,c)}).text}${tr(' / 件')}`;
         return `${price}${item.vipOnly?' · '+tr('会员专属'):''}`;
     }
-    const owned=item=>item.kind==='pet'?!!save.pets[item.petId]:(save.inventory[item.itemId]||0)>0;
+    const owned=item=>item.kind==='pet'?Object.values(ownedPetRecords(save)).some(p=>p.speciesId===item.petId):(save.inventory[item.itemId]||0)>0;
     const matches=(item,filter)=>!filter||(!filter.kind||item.kind===filter.kind)&&(!filter.slots||filter.slots.includes(item.slot))&&(!filter.excludeSlots||!filter.excludeSlots.includes(item.slot))&&(!filter.school||item.school===filter.school)&&(!filter.itemIds||filter.itemIds.includes(item.itemId));
     function picture(item,size) {
         if(item.petId)return petPortrait(assets,item.petId,0,size);

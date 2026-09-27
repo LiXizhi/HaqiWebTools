@@ -241,11 +241,11 @@ export function sideHpRatio(arena, side) {
  * @param policies { [unitId]: policy } 或 unit.policy；policy.pick(arena, unit) → pick
  * @param maxTurns 安全上限
  */
-export function runToEnd(arena, policies = {}, maxTurns = 1000) {
+export function runToEnd(arena, policies = {}, maxTurns = 1000, planPicks = null) {
     if (arena.phase === 'init') startCombat(arena);
     while (!arena.finished && arena.turn < maxTurns) {
-        const picks = {};
-        for (const u of actingUnits(arena)) {
+        const picks = planPicks ? planPicks(arena,policies) : {};
+        for (const u of planPicks ? [] : actingUnits(arena)) {
             const pol = policies[u.id] || u.policy;
             picks[u.id] = pol ? pol.pick(arena, u) : { pass: true };
         }

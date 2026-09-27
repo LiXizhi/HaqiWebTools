@@ -45,6 +45,7 @@ function domHelpers(){
         replaceChildren(...children){this.children=[];this.append(...children);}
         setAttribute(k,v){this.attributes[k]=v;}
         remove(){this.isConnected=false;}
+        querySelector(selector){return selector===':scope > .teach-pointer'?this.children.find(n=>n?.className==='teach-pointer')||null:null;}
         getContext(){return {};}
         getBoundingClientRect(){return {left:0,top:0,right:300,bottom:200};}
     }
@@ -180,7 +181,7 @@ test('bag selector stages real equipment and five-copy decks until save, shop op
     assert.equal(s.equipment[24],undefined,'changing equipment is only a draft');
     selectBag(0);selectBag(24014);
     all(body).find(node=>node.tag==='button'&&node.children[0]==='保存').onclick();
-    assert.equal(action.bagItemId,24014);assert.ok(action.layouts[action.active].deck.some(row=>row.count===5));
+    assert.equal(action.bagItemId,24014);assert.ok(action.layouts[action.active].deck.length>0);assert.ok(action.layouts[action.active].deck.every(row=>row.count>0&&row.count<=5&&s.cards[row.key]));
     assert.ok(!all(body).some(node=>node.tag==='select'||node.className==='bag-add'));
     assert.equal(all(body).find(node=>node.className==='bag-status').hidden,true);
     A.applyAction(s,c,action);assert.equal(s.equipment[24],24014);

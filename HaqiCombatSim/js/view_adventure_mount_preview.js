@@ -28,7 +28,7 @@ export function createMountPreview(assets,save,{el,tile}) {
  picture.style.height=`calc(var(--pet-preview-height, 120px) * ${height/baseSize})`;
  picture.setAttribute('role','img');picture.setAttribute('aria-label',fill('{name}骑乘{mount}',{name:save.name,mount:assets.content.items[save.mountId]?.name||mount.name}).text);
  const options={width:Math.ceil(width*2),height:Math.ceil(height*2),x:-left*2,y:-top*2,size:baseSize*2,facing,animate:true};
- const view=assets.hero?.createView({gender:save.appearance==='girl'?'female':'male',headId:save.headId,mount},options);
+ const view=assets.hero?.createView({gender:save.appearance==='girl'?'female':'male',headId:save.headId,bodyId:save.bodyId,mount},options);
  const canvas=view?.node||el('canvas','pet-mount-canvas');
  canvas.className='pet-mount-canvas';canvas.style.width='100%';canvas.style.height='100%';canvas.style.display='block';
  canvas.setAttribute('aria-hidden','true');picture.append(canvas);view?.ready.catch(()=>{});

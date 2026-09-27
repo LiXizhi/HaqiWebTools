@@ -4,9 +4,22 @@ import fs from 'node:fs';
 import * as A from '../js/adventure_core.js';
 import {heroCustomizeQuote,resolvedHeadId} from '../js/adventure_hero_customize_core.js';
 import {installDragonTotemItems} from '../js/adventure_progression_bonuses_core.js';
+import {checkedProgress} from '../js/adventure_cloud_core.js';
 
 const content = JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json', import.meta.url)));
 installDragonTotemItems(content);
+
+test('body changes persist independently and head plus body costs one look change',()=>{
+ const save=A.createAdventure(content,{name:'小哈奇',appearance:'boy',headId:'jade-boy',bodyId:'male3'});
+ save.inventory[984]=150;
+ const patch={type:'customize-hero',name:save.name,appearance:'boy',headId:'jade-boy',bodyId:'male4'};
+ assert.equal(heroCustomizeQuote(save,patch).total,50);
+ A.applyAction(save,content,patch);assert.equal(save.headId,'jade-boy');assert.equal(save.bodyId,'male4');
+ A.applyAction(save,content,{...patch,headId:'elf-boy',bodyId:'male5'});assert.equal(save.inventory[984],50);
+ const cloud=checkedProgress(save,content).save;assert.equal(cloud.bodyId,'male5');assert.equal(cloud.headId,'elf-boy');
+ const before=JSON.stringify(save);assert.throws(()=>A.applyAction(save,content,{...patch,bodyId:'female2'}),/不一致/);assert.equal(JSON.stringify(save),before);
+ A.applyAction(save,content,{...patch,headId:'elf-boy',bodyId:'male'});assert.equal(save.inventory[984],0);assert.equal(save.bodyId,'male');
+});
 
 test('renaming and changing the base head charge magic beans only for what changed', () => {
     const save = A.createAdventure(content, {name: '小哈奇', appearance: 'boy'});

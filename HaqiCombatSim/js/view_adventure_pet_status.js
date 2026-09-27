@@ -4,7 +4,7 @@ function fillStatus(node,pet,content) {
  const max=petMaxHp(pet,content);
  for(const meter of node.children){
   const hunger=meter.dataset.petMeter==='hunger';
-  const value=hunger?pet.hunger:pet.hp,limit=hunger?100:max;
+  const value=hunger?(pet.hunger??100):(pet.hp??max),limit=hunger?100:max;
   meter.max=limit;meter.value=Math.max(0,Math.min(limit,value));
   const label=`${hunger?'饱食':'生命'} ${Math.floor(value)} / ${limit}`;
   meter.title=label;meter.setAttribute('aria-label',label);
@@ -12,7 +12,7 @@ function fillStatus(node,pet,content) {
 }
 
 export function createPetStatus(pet,content,el) {
- const node=el('span','pet-head-status');node.dataset.petStatus=pet.speciesId;
+ const node=el('span','pet-head-status');node.dataset.petStatus=pet.id;
  for(const kind of ['hp','hunger']){
   const meter=el('progress',`pet-meter pet-meter-${kind}`);meter.dataset.petMeter=kind;node.append(meter);
  }
@@ -21,7 +21,7 @@ export function createPetStatus(pet,content,el) {
 
 export function updatePetStatus(root,save,content) {
  for(const node of root.querySelectorAll('[data-pet-status]')){
-  const pet=save.pets[node.dataset.petStatus];if(pet)fillStatus(node,pet,content);
+  const pet=save.pets[node.dataset.petStatus]||Object.values(save.pets).find(p=>p.id===node.dataset.petStatus);if(pet)fillStatus(node,pet,content);
  }
 }
 

@@ -86,6 +86,8 @@ export function tryCriticalStrike(rng, critPercent, resiliencePercent, baseCrit 
     let ret = (critPercent || 0) - (resiliencePercent || 0) + (baseCrit || 0);
     if (ret < 0) ret = 0;
     else if (ret > 100) ret = 100;
+    // Optional analysis hook integrates this discrete Lua roll without changing live RNG.
+    if (rng.probability) return rng.probability((Math.floor(ret * 10) + 1) / 1001);
     const r = rng.int(0, 1000);
     return r <= ret * 10;
 }
@@ -117,6 +119,7 @@ export function tryDodge(rng, ctx, version) {
     if (hitWeight < 0) hitWeight = 0;
     else if (hitWeight >= 100) hitWeight = 100 + 1;
     for (const w of ctx.hitCharmBuffs || []) hitWeight += w;
+    if (rng.probability) return !rng.probability(Math.max(0, Math.min(1, Math.floor(hitWeight * 100) / 10000)));
     const r = rng.int(1, 10000);
     if (r <= hitWeight * 100) return false;
     return true;
@@ -128,6 +131,7 @@ export function tryDodge(rng, ctx, version) {
  * @return true 表示法术失误
  */
 export function rollFizzle(rng, accuracy) {
+    if (rng.probability) return !rng.probability(Math.max(0, Math.min(1, (Math.floor(accuracy) + 1) / 101)));
     const r = rng.int(0, 100);
     return r > accuracy;
 }
@@ -188,8 +192,8 @@ export function powerPipChanceByLevel(level, version) {
  * @return 'power' | 'normal'
  */
 export function generatePip(rng, pips, powerPipChance, maxPips, version) {
-    const r = rng.int(1, 100);
-    if (r <= powerPipChance) {
+    const power = rng.probability ? rng.probability(Math.max(0, Math.min(1, Math.floor(powerPipChance) / 100))) : rng.int(1, 100) <= powerPipChance;
+    if (power) {
         if (version === 'teen') {
             pips.normal += 2;
             if (pips.normal + pips.power > maxPips) pips.normal = maxPips - pips.power;

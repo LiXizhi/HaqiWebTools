@@ -1,0 +1,65 @@
+[
+  {
+    "id": "male3",
+    "gender": "male",
+    "name": "森野游侠",
+    "design": "Forest ranger: emerald green short mantle with leaf embroidery, tan leather jerkin, cream sleeves, dark green boots; held object becomes a wooden trail baton with green leaf ornament, not a wizard staff.",
+    "prompt": "Use case: identity-preserve. Edit target: attached existing male headless chibi game body sprite atlas. Edit this image, not a newly arranged illustration. Forest ranger: emerald green short mantle with leaf embroidery, tan leather jerkin, cream sleeves, dark green boots; held object becomes a wooden trail baton with green leaf ornament, not a wizard staff. Preserve exact 7 columns x 4 rows layout and original positions, scale, neck skin coordinates, silhouette, limbs, every distinct walking phase and lighting. First 6 columns are walking, last is idle; rows front,left,right,back. Keep each existing pose unchanged. Transparent background, no heads, no text, no labels, no new props outside existing silhouette. Output same aspect ratio 1344x768, all 28 frames, no cropping. All frames use consistent new costume."
+  },
+  {
+    "id": "male4",
+    "gender": "male",
+    "name": "银潮卫士",
+    "design": "Silver coastal knight: pale silver light armor breastplate, navy blue tabard and short mantle, teal trim, armored boots; held object a compact silver ceremonial mace, not a wizard staff.",
+    "prompt": "Use case: identity-preserve. Edit target: attached existing male headless chibi game body sprite atlas. Edit this image, not a newly arranged illustration. Silver coastal knight: pale silver light armor breastplate, navy blue tabard and short mantle, teal trim, armored boots; held object a compact silver ceremonial mace, not a wizard staff. Preserve exact 7 columns x 4 rows layout and original positions, scale, neck skin coordinates, silhouette, limbs, every distinct walking phase and lighting. First 6 columns are walking, last is idle; rows front,left,right,back. Keep each existing pose unchanged. Transparent background, no heads, no text, no labels, no new props outside existing silhouette. Output same aspect ratio 1344x768, all 28 frames, no cropping. All frames use consistent new costume."
+  },
+  {
+    "id": "male5",
+    "gender": "male",
+    "name": "沙海旅人",
+    "design": "Desert explorer: saffron ochre short travel mantle, ivory linen shirt, russet leather vest, dark brown boots, brass clasps; held object compact brass navigation tool, no magical gem.",
+    "prompt": "Use case: identity-preserve. Edit target: attached existing male headless chibi game body sprite atlas. Edit this image, not a newly arranged illustration. Desert explorer: saffron ochre short travel mantle, ivory linen shirt, russet leather vest, dark brown boots, brass clasps; held object compact brass navigation tool, no magical gem. Preserve exact 7 columns x 4 rows layout and original positions, scale, neck skin coordinates, silhouette, limbs, every distinct walking phase and lighting. First 6 columns are walking, last is idle; rows front,left,right,back. Keep each existing pose unchanged. Transparent background, no heads, no text, no labels, no new props outside existing silhouette. Output same aspect ratio 1344x768, all 28 frames, no cropping. All frames use consistent new costume."
+  },
+  {
+    "id": "male6",
+    "gender": "male",
+    "name": "紫夜乐师",
+    "design": "Fantasy court musician: plum purple velvet short jacket and capelet, ivory puff sleeves, charcoal trousers, silver embroidery, violet boots; held object small ornate golden musical rattle, no mage gem.",
+    "prompt": "Use case: identity-preserve. Edit target: attached existing male headless chibi game body sprite atlas. Edit this image, not a newly arranged illustration. Fantasy court musician: plum purple velvet short jacket and capelet, ivory puff sleeves, charcoal trousers, silver embroidery, violet boots; held object small ornate golden musical rattle, no mage gem. Preserve exact 7 columns x 4 rows layout and original positions, scale, neck skin coordinates, silhouette, limbs, every distinct walking phase and lighting. First 6 columns are walking, last is idle; rows front,left,right,back. Keep each existing pose unchanged. Transparent background, no heads, no text, no labels, no new props outside existing silhouette. Output same aspect ratio 1344x768, all 28 frames, no cropping. All frames use consistent new costume."
+  },
+  {
+    "id": "female2",
+    "gender": "female",
+    "name": "赤曜战法师",
+    "design": "Crimson battlemage matching a red male costume: wine-red short cape, charcoal fitted bodice, ivory skirt and sleeves, black boots, brass sun embroidery and amber staff. Feminine costume variation.",
+    "prompt": "Use case: identity-preserve. Edit target: attached existing female headless chibi game body sprite atlas. Edit this image, not a newly arranged illustration. Crimson battlemage matching a red male costume: wine-red short cape, charcoal fitted bodice, ivory skirt and sleeves, black boots, brass sun embroidery and amber staff. Feminine costume variation. Preserve exact 7 columns x 4 rows layout and original positions, scale, neck skin coordinates, silhouette, limbs, every distinct walking phase and lighting. First 6 columns are walking, last is idle; rows front,left,right,back. Keep each existing pose unchanged. Transparent background, no heads, no text, no labels, no new props outside existing silhouette. Output same aspect ratio 1344x768, all 28 frames, no cropping. All frames use consistent new costume."
+  },
+  {
+    "id": "female3",
+    "gender": "female",
+    "name": "森野游侠",
+    "design": "Forest ranger: sage and emerald short mantle with leaf embroidery, tan leather bodice, pale cream practical skirt, dark green boots; held object wooden trail baton with green leaf ornament, not wizard staff.",
+    "prompt": "Use case: identity-preserve. Edit target: attached existing female headless chibi game body sprite atlas. Edit this image, not a newly arranged illustration. Forest ranger: sage and emerald short mantle with leaf embroidery, tan leather bodice, pale cream practical skirt, dark green boots; held object wooden trail baton with green leaf ornament, not wizard staff. Preserve exact 7 columns x 4 rows layout and original positions, scale, neck skin coordinates, silhouette, limbs, every distinct walking phase and lighting. First 6 columns are walking, last is idle; rows front,left,right,back. Keep each existing pose unchanged. Transparent background, no heads, no text, no labels, no new props outside existing silhouette. Output same aspect ratio 1344x768, all 28 frames, no cropping. All frames use consistent new costume."
+  },
+  {
+    "id": "female4",
+    "gender": "female",
+    "name": "银潮卫士",
+    "design": "Silver coastal knight: pale silver light armor bodice, teal blue skirt with navy capelet, silver trim and armored boots; held object compact silver ceremonial mace, not wizard staff.",
+    "prompt": "Use case: identity-preserve. Edit target: attached existing female headless chibi game body sprite atlas. Edit this image, not a newly arranged illustration. Silver coastal knight: pale silver light armor bodice, teal blue skirt with navy capelet, silver trim and armored boots; held object compact silver ceremonial mace, not wizard staff. Preserve exact 7 columns x 4 rows layout and original positions, scale, neck skin coordinates, silhouette, limbs, every distinct walking phase and lighting. First 6 columns are walking, last is idle; rows front,left,right,back. Keep each existing pose unchanged. Transparent background, no heads, no text, no labels, no new props outside existing silhouette. Output same aspect ratio 1344x768, all 28 frames, no cropping. All frames use consistent new costume."
+  },
+  {
+    "id": "female5",
+    "gender": "female",
+    "name": "沙海旅人",
+    "design": "Desert explorer: terracotta and saffron short travel shawl, ivory linen sleeves and skirt, russet leather belt, brown boots, brass clasps; held object compact brass navigation tool, no magical gem.",
+    "prompt": "Use case: identity-preserve. Edit target: attached existing female headless chibi game body sprite atlas. Edit this image, not a newly arranged illustration. Desert explorer: terracotta and saffron short travel shawl, ivory linen sleeves and skirt, russet leather belt, brown boots, brass clasps; held object compact brass navigation tool, no magical gem. Preserve exact 7 columns x 4 rows layout and original positions, scale, neck skin coordinates, silhouette, limbs, every distinct walking phase and lighting. First 6 columns are walking, last is idle; rows front,left,right,back. Keep each existing pose unchanged. Transparent background, no heads, no text, no labels, no new props outside existing silhouette. Output same aspect ratio 1344x768, all 28 frames, no cropping. All frames use consistent new costume."
+  },
+  {
+    "id": "female6",
+    "gender": "female",
+    "name": "紫夜乐师",
+    "design": "Fantasy court musician: lavender and plum velvet short capelet, ivory puff sleeves, violet dress with silver embroidery and black boots; held object small ornate golden musical rattle, no mage gem.",
+    "prompt": "Use case: identity-preserve. Edit target: attached existing female headless chibi game body sprite atlas. Edit this image, not a newly arranged illustration. Fantasy court musician: lavender and plum velvet short capelet, ivory puff sleeves, violet dress with silver embroidery and black boots; held object small ornate golden musical rattle, no mage gem. Preserve exact 7 columns x 4 rows layout and original positions, scale, neck skin coordinates, silhouette, limbs, every distinct walking phase and lighting. First 6 columns are walking, last is idle; rows front,left,right,back. Keep each existing pose unchanged. Transparent background, no heads, no text, no labels, no new props outside existing silhouette. Output same aspect ratio 1344x768, all 28 frames, no cropping. All frames use consistent new costume."
+  }
+]

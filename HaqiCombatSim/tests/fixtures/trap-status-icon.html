@@ -1,0 +1,22 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><base href="/"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>陷阱状态图标验收</title>
+<style>body{margin:0;background:#173c43;color:#fff0b8;font:14px sans-serif}canvas{display:block;margin:24px auto;background:#1f4a52;border-radius:12px}p{text-align:center;padding:12px}#tip{white-space:pre-line;min-height:3em}</style>
+<p>头顶陷阱：带刺图标 + 学系文案（悬停说明）</p>
+<canvas id="c" width="390" height="220"></canvas>
+<p id="tip"></p>
+<script type="module">
+import {drawOverheadStatus,battleStatusEffects} from '../../js/view_adventure_overhead_status.js';
+const unit={id:'scout',name:'风暴侦察兵',hp:100,charms:[2015],wards:[{id:3024}]};
+const battle={resolved:{
+    charms:{2015:{boost_damage:55,school:'storm',positive:true,desc:'+55%风暴攻击'}},
+    wards:{3024:{boost_damage:55,school:'storm',positive:false,desc:'+55%风暴伤害'}},
+}};
+const canvas=document.querySelector('#c'),c=canvas.getContext('2d');
+c.fillStyle='#254f49';c.fillRect(0,0,390,220);
+c.fillStyle='#f4d59a';c.beginPath();c.ellipse(195,150,70,28,0,0,Math.PI*2);c.fill();
+c.fillStyle='#c45c4a';c.font='bold 14px sans-serif';c.textAlign='center';c.fillText('风暴侦察兵',195,188);
+const targets=drawOverheadStatus(c,unit,battle,{x:195,y:140},390);
+document.querySelector('#tip').textContent=battleStatusEffects(unit,battle).map(e=>e.desc).join('\n');
+document.documentElement.dataset.fixtureReady='1';
+window.__trapTargets=targets;
+</script>

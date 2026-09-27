@@ -1,8 +1,10 @@
+import {ownedPetRecords} from './adventure_pet_files_core.js';
 // Adventure adaptation; original combat formulae remain in combat_formulas_core.
 import { defaultParams, resolveParams } from './combat_params_core.js';
 import { baseMaxHp, applyHpStats } from './combat_formulas_core.js';
 import { normalizeStats } from './combat_unit_core.js';
 import { dungeonFor } from './adventure_dungeons_core.js';
+import {createPetInstance,validatePetInstance} from './adventure_pet_interactions_core.js';
 export const STARTERS=['dragon_green','dragon_purple','dragon_orange'];
 export const STAGE_NAMES=['幼年','青年','成年','隐藏形态'];
 export const FOOD_ID=990001, CAPTURE_ID=990002, GENERAL_CATCH_RUNE=23439;
@@ -31,9 +33,12 @@ export function validatePetDeck(pet,content,deck){
 }
 export function addPet(save,content,id,xp=0){
  check(Object.hasOwn(content.pets,id),'未知宠物');
- if(save.pets[id]){const pet=save.pets[id];pet.xp+=petParams(content).duplicateXp;pet.level=petXpLevel(pet.xp,content);return pet;}
+ const existing=Object.values(ownedPetRecords(save)).find(p=>p.speciesId===id);
+ if(existing){check(save.pets[save.petInstanceVersion===1?existing.id:existing.speciesId],`请先查看${content.pets[id].name}的详情，再领取重复宠物奖励`);const pet=existing;pet.xp+=petParams(content).duplicateXp;pet.level=petXpLevel(pet.xp,content);return pet;}
  const pet={id:`${save.seed}:${id}`,speciesId:id,xp,level:petXpLevel(xp,content),hunger:100,hp:0,deck:[]};
- pet.hp=petMaxHp(pet,content);pet.deck=recommendedPetDeck(pet,content);save.pets[id]=pet;return pet;
+ pet.hp=petMaxHp(pet,content);pet.deck=recommendedPetDeck(pet,content);
+ if(save.petInstanceVersion===1)Object.assign(pet,createPetInstance(content,{...pet,ownerId:save.petOwnerId}));
+ save.pets[save.petInstanceVersion===1?pet.id:id]=pet;return pet;
 }
 export function initializePets(save,content,starter=null){
  save.petDeckRulesVersion=1;
@@ -44,7 +49,7 @@ export function petAction(save,content,action,access={}){
  const p=petParams(content),pet=save.pets[action.petId];
  switch(action.type){
  case 'pet-appearance':check(pet,'尚未拥有宠物');check(Number.isInteger(action.stage)&&action.stage>=0&&action.stage<=petStage(pet.level,content),'宠物形态尚未解锁');pet.appearanceStage=action.stage;break;
- case 'starter':check(!save.starterChosen&&STARTERS.includes(action.petId),'已领取初始伙伴');addPet(save,content,action.petId);save.formation[save.heroSlot]=action.petId;save.starterChosen=true;break;
+ case 'starter':{check(!save.starterChosen&&STARTERS.includes(action.petId),'已领取初始伙伴');const added=addPet(save,content,action.petId);save.formation[save.heroSlot]=save.petInstanceVersion===1?added.id:action.petId;save.starterChosen=true;break;}
  case 'formation':{
   check(Array.isArray(action.slots)&&action.slots.length===4&&action.slots.every(id=>id===null||Object.hasOwn(save.pets,id)),'阵容无效');
   const ids=action.slots.filter(Boolean);check(new Set(ids).size===ids.length,'同一宠物不能重复上阵');
@@ -54,7 +59,7 @@ export function petAction(save,content,action,access={}){
  case 'pet-feed':check(pet&&pet.hunger<100&&(save.inventory[FOOD_ID]||0)>0,'需要食物，且宠物尚未吃饱');save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+p.foodRestore);break;
  case 'buy':{
   const item=content.shop.find(x=>x.id===action.productId);check(item,'商品不存在');check(!item.retired,'捕获晶球已停售，请使用抓宠符文');check(!item.isInternalTest,'内测道具不对外出售');check(!item.vipOnly||access.keepworkVip===true,'该商品仅限会员购买。请登录会员账号后重试。');check(save.level>=item.level,'等级尚未解锁');
-  check(item.kind!=='pet'||!save.pets[item.petId],'已经拥有这只宠物');const cost=productPrice(item,content);
+  check(item.kind!=='pet'||!Object.values(ownedPetRecords(save)).some(p=>p.speciesId===item.petId),'已经拥有这只宠物');const cost=productPrice(item,content);
   const currency=item.kind==='mount'?item.currency:100;
   check(!action.paidByTest,'语言课程仅发放限额奖励，请使用货币购买');
   check((save.inventory[currency]||0)>=cost,currency===984?'魔豆不足':'奇豆不足');save.inventory[currency]-=cost;
@@ -81,8 +86,8 @@ export function partySpecs(save,content,hero){
  const support=save.pets[save.formation[save.heroSlot]];
  if(support)hero.petCards=support.deck.map(x=>({...x}));
  return [hero,...save.formation.flatMap((id,slot)=>{
-  if(!id||slot===save.heroSlot)return [];const pet=save.pets[id],definition=content.pets[id];
-  return [{id:pet.id,name:definition.name,school:definition.school,level:pet.level,slot,speciesId:id,hp:pet.hp,stats:normalizeStats(),deck:pet.deck.map(x=>({...x})),deckCapacity:petCapacity(pet,content),deckEachCapacity:petParams(content).petCopies,isBot:true}];
+  if(!id||slot===save.heroSlot)return [];const pet=save.pets[id],definition=content.pets[pet.speciesId];
+  return [{id:pet.id,name:definition.name,school:definition.school,level:pet.level,slot,speciesId:pet.speciesId,hp:pet.hp,stats:normalizeStats(),deck:pet.deck.map(x=>({...x})),deckCapacity:petCapacity(pet,content),deckEachCapacity:petParams(content).petCopies,isBot:true}];
  })];
 }
 // Wall clock is injected by browser IO; never read during combat replay.
@@ -96,7 +101,7 @@ export function tickCare(save,content,hero,now,online=false){
  if(!inDungeon)save.heroHp=Math.min(maxHp,(save.heroHp??maxHp)+maxHp*p.heroRegenPerSecond*minutes*60);
  for(const id of save.formation.filter(Boolean)){
   const pet=save.pets[id];if(online){pet.hunger=Math.max(0,pet.hunger-minutes*p.hungerPerMinute);
-   while(pet.hunger<p.feedThreshold&&(save.inventory[FOOD_ID]||0)>0){save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+p.foodRestore);save.careLog.push(`${content.pets[id].name}自动进食，饱食 +${p.foodRestore}`);}
+   while(pet.hunger<p.feedThreshold&&(save.inventory[FOOD_ID]||0)>0){save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+p.foodRestore);save.careLog.push(`${content.pets[pet.speciesId].name}自动进食，饱食 +${p.foodRestore}`);}
   }
  }
  // Web companion care: stored pets rest without consuming food, including
@@ -122,7 +127,8 @@ export function migratePetDeckRules(save,content){
 export function validatePets(save,content){
  check(save.pets&&typeof save.pets==='object'&&!Array.isArray(save.pets),'宠物收藏无效');
  for(const [id,pet] of Object.entries(save.pets)){
-  check(Object.hasOwn(content.pets,id)&&pet.speciesId===id&&pet.id===`${save.seed}:${id}`,'宠物身份无效');
+  if(save.petInstanceVersion===1){check(pet.id===id&&pet.ownerId===save.petOwnerId,'宠物身份无效');validatePetInstance(pet,content);}
+  else check(Object.hasOwn(content.pets,id)&&pet.speciesId===id&&pet.id===`${save.seed}:${id}`,'宠物身份无效');
   check(Number.isSafeInteger(pet.xp)&&pet.xp>=0&&pet.level===petXpLevel(pet.xp,content),'宠物等级无效');
   check(pet.appearanceStage===undefined||Number.isInteger(pet.appearanceStage)&&pet.appearanceStage>=0&&pet.appearanceStage<=petStage(pet.level,content),'宠物外观无效');
   check(Number.isFinite(pet.hp)&&pet.hp>=0&&pet.hp<=petMaxHp(pet,content)&&Number.isFinite(pet.hunger)&&pet.hunger>=0&&pet.hunger<=100,'宠物状态无效');validatePetDeck(pet,content,pet.deck);
@@ -133,18 +139,19 @@ export function validatePets(save,content){
  petAction(save,content,{type:'formation',slots:save.formation,heroSlot:save.heroSlot});
 }
 export function exportPetLink(save,content){
- return {version:1,app:'HaqiAdventure',pets:Object.values(save.pets).map(p=>({instanceId:p.id,sourceId:content.pets[p.speciesId].sourceId,appearance:{dna:content.pets[p.speciesId].dna||null,imageSheetUrl:content.pets[p.speciesId].art?.cdn||null},traits:content.pets[p.speciesId].traits,stage:['baby','teen','adult','elder'][petStage(p.level,content)],adventure:{level:p.level,xp:p.xp,deck:p.deck.map(x=>({...x}))}}))};
+ check(Object.keys(ownedPetRecords(save)).length===Object.keys(save.pets).length,'请先加载完整宠物收藏再导出联动数据');
+ return {version:save.petInstanceVersion===1?2:1,app:'HaqiAdventure',pets:Object.values(save.pets).map(p=>({instanceId:p.id,sourceId:content.pets[p.speciesId].sourceId,appearance:{dna:content.pets[p.speciesId].dna||null,imageSheetUrl:content.pets[p.speciesId].art?.cdn||null},traits:content.pets[p.speciesId].traits,stage:['baby','teen','adult','elder'][petStage(p.level,content)],adventure:{level:p.level,xp:p.xp,deck:p.deck.map(x=>({...x}))}}))};
 }
 export function validatePetLink(value,content){
- check(value?.version===1&&value.app==='HaqiAdventure'&&Array.isArray(value.pets),'联动协议版本无效');const seen=new Set();
+ check([1,2].includes(value?.version)&&value.app==='HaqiAdventure'&&Array.isArray(value.pets),'联动协议版本无效');const seen=new Set();
  const pets=value.pets.map(row=>{
-  check(typeof row.instanceId==='string'&&!seen.has(row.sourceId)&&Object.hasOwn(content.pets,row.sourceId),'联动宠物身份无效');seen.add(row.sourceId);
+  check(typeof row.instanceId==='string'&&!seen.has(value.version===2?row.instanceId:row.sourceId)&&Object.hasOwn(content.pets,row.sourceId),'联动宠物身份无效');seen.add(value.version===2?row.instanceId:row.sourceId);
   check(Number.isSafeInteger(row.adventure?.xp)&&row.adventure.xp>=0&&row.adventure.level===petXpLevel(row.adventure.xp,content),'联动成长无效');
   check(row.stage===['baby','teen','adult','elder'][petStage(row.adventure.level,content)],'联动阶段无效');
   validatePetDeck({speciesId:row.sourceId,level:row.adventure.level},content,row.adventure.deck);
   const definition=content.pets[row.sourceId];
   return {instanceId:row.instanceId,sourceId:row.sourceId,appearance:{dna:definition.dna||null,imageSheetUrl:definition.art?.cdn||null},traits:definition.traits,stage:row.stage,adventure:{level:row.adventure.level,xp:row.adventure.xp,deck:row.adventure.deck.map(x=>({key:x.key,count:x.count}))}};
- });return {version:1,app:'HaqiAdventure',pets};
+ });return {version:value.version,app:'HaqiAdventure',pets};
 }
 // Future home adapter consumes this object without replacing MagicHaqi's battle level.
 export function petLinkToAdventureRecords(value,content){return validatePetLink(value,content).pets.map(row=>({id:row.instanceId,speciesId:row.sourceId,...row.adventure}));}

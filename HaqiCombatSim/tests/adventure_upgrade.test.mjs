@@ -51,16 +51,18 @@ test('six Lua strengthening contributions are cumulative target values, only equ
 test('strengthening panel exposes working button before equipment comparison and completes task',()=>{
     const s=hero();act(s,'accept',{questId:q.id,npcId:q.startNpc});
     class Element{
-        constructor(tag,cls,...children){this.tag=tag;this.children=children.flat();this.attributes={};this.style={};}
+        constructor(tag,cls,...children){this.tag=tag;this.children=children.flat();this.attributes={};this.style={};this.classList={add(){}};}
         append(...children){this.children.push(...children.flat());}
         replaceChildren(...children){this.children=children;}
         setAttribute(k,v){this.attributes[k]=v;}
+        querySelector(){return this.children.find(n=>n?.className==='teach-pointer')||null;}
     }
     const el=(...args)=>new Element(...args),button=(label,fn,cls)=>{const b=el('button',cls,label);b.onclick=fn;return b;};
     const ui={el,button,art:()=>el('canvas'),tile:()=>el('canvas'),spellFace:()=>el('canvas')};
+    const oldDocument=globalThis.document;globalThis.document={createElement:tag=>el(tag)};
     const body=el('div');
     renderStrengthening(body,{save:s,assets:{content,dataset:{cards:{}}},strengtheningView:{guid:findEquipmentInstance(s,content,1912).guid,filter:0,page:0}},{action:a=>A.applyAction(s,content,a)},ui);
     const all=node=>[node,...node.children.filter(x=>x instanceof Element).flatMap(all)];
     const b=all(body).find(node=>node.tag==='button'&&node.children[0]==='强 化');
-    assert.ok(b);assert.equal(b.disabled,false);b.onclick();assert.equal(A.questReady(s,q),true);assert.equal(s.inventory[17213],420);
+    assert.ok(b);assert.equal(b.disabled,false);b.onclick();assert.equal(A.questReady(s,q),true);assert.equal(s.inventory[17213],420);globalThis.document=oldDocument;
 });

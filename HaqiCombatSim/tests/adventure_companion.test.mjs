@@ -1,10 +1,10 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createCompanion, stepCompanion, selectCompanionId } from '../js/adventure_companion_core.js';
+import { createCompanion, stepCompanion, selectCompanionId, selectSocialPetId } from '../js/adventure_companion_core.js';
 import { walkable, distance } from '../js/adventure_world_core.js';
 
 const world={w:1800,h:1600,buildings:[],trees:[]};
-const content={pets:{dragon_green:{},dragon_purple:{},cat:{},dog:{}}};
+const content={pets:{dragon_green:{art:{},school:'life'},dragon_purple:{art:{},school:'ice'},cat:{art:{},school:'fire'},dog:{school:'storm'}}};
 test('companion prefers the shared slot, then nearest slot with stable ties',()=>{
     const save={heroSlot:2,formation:['dragon_green','cat','dog',null],pets:{dragon_green:{},cat:{},dog:{}}};
     const before=structuredClone(save);
@@ -16,6 +16,12 @@ test('companion prefers the shared slot, then nearest slot with stable ties',()=
     assert.equal(selectCompanionId(save,content),'cat');
     save.heroSlot=3;
     assert.equal(selectCompanionId(save,content),'dog');
+});
+test('social pets pick an art pet for the school and stay deterministic',()=>{
+    assert.equal(selectSocialPetId({id:'a',school:'fire'},content),'cat');
+    assert.equal(selectSocialPetId({id:'a',school:'fire'},content),selectSocialPetId({id:'a',school:'fire'},content));
+    assert.equal(selectSocialPetId({id:'b',school:'ice'},content),'dragon_purple');
+    assert.equal(selectSocialPetId({id:'c',school:'storm'},content),'dragon_green');
 });
 test('empty formations use an owned dragon, then another owned pet, then a visual default',()=>{
     const save={heroSlot:0,formation:[null,null,null,null],pets:{cat:{},dragon_purple:{}}};

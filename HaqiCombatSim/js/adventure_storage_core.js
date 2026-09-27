@@ -1,15 +1,16 @@
+import {petSummary,petContentKey} from './adventure_pet_files_core.js';
 // Persistence projections only; combat rules and live save shape stay unchanged.
 import { petMaxHp } from './adventure_pets_core.js';
 import { mapInfo } from './adventure_island_layout_core.js';
 
 const copy = value => JSON.parse(JSON.stringify(value));
-const localFields = ['heroHp','careAt','careLog','position','facing','pendingEncounter','stamina'];
+const localFields = ['heroHp','careAt','careLog','position','facing','pendingEncounter','stamina','staminaRefillDay','coopRun'];
 // Cosmetic preferences stay on this device only: stripped from durable/cloud saves,
 // kept in the role's IndexedDB runtime record and restored regardless of revision.
 const prefFields = ['magicStarFollow','mountHidden'];
-const itemFields = ['pets','equipmentInstances','nextEquipmentGuid','upgrades','cards','pet'];
+const itemFields = ['petPages','petFileRefs','petWorld','pets','equipmentInstances','nextEquipmentGuid','upgrades','cards','pet'];
 const battleFields = ['inventory','equipment','equipmentGuids','mountId','formation','heroSlot','deck'];
-const recordFields = ['transactions','rewardedEncounters','fishingRecords','learnerMemory'];
+const recordFields = ['transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges'];
 export const storageParts = ['items','battle','records'];
 
 export function stableJson(value) {
@@ -18,6 +19,8 @@ export function stableJson(value) {
 }
 export function durableSave(save) {
     const result = copy(save);
+    // A cloud-only restore returns to the island; the full cooperative run stays on this device.
+    if(save.coopRun){result.zone=save.coopRun.returnTo.zone;result.dungeonReturn=null;}
     for (const key of localFields) delete result[key];
     for (const key of prefFields) delete result[key];
     if(result.checkin?.version===2)delete result.checkin.onlineMs;
@@ -25,7 +28,7 @@ export function durableSave(save) {
     return result;
 }
 export function runtimeValues(save) {
-    return { zone:save.zone, revision:save.revision, checkinOnline:save.checkin?.version===2?{day:save.checkin.day,onlineMs:save.checkin.onlineMs}:null, values:Object.fromEntries(localFields.filter(key => save[key] !== undefined).map(key => [key,copy(save[key])])),
+    return { zone:save.coopRun?.returnTo.zone||save.zone, revision:save.revision, coopZone:save.coopRun?save.zone:null, coopReturn:save.coopRun?copy(save.dungeonReturn):null, checkinOnline:save.checkin?.version===2?{day:save.checkin.day,onlineMs:save.checkin.onlineMs}:null, values:Object.fromEntries(localFields.filter(key => save[key] !== undefined).map(key => [key,copy(save[key])])),
         prefs:Object.fromEntries(prefFields.filter(key => save[key] !== undefined).map(key => [key,copy(save[key])])),
         pets:Object.fromEntries(Object.entries(save.pets || {}).map(([id,pet]) => [id,{id:pet.id,hp:pet.hp,hunger:pet.hunger}])) };
 }
@@ -37,6 +40,7 @@ export function restoreRuntime(save, content, runtime) {
     for (const key of prefFields) { const value = runtime?.prefs?.[key]; if (value !== undefined) result[key] = copy(value); }
     if (result.pets) {result.heroHp = null;result.careAt = 0;result.careLog = [];}
     if (matching) Object.assign(result,copy(runtime.values));
+    if(matching&&result.coopRun&&runtime.coopZone){result.zone=runtime.coopZone;result.dungeonReturn=copy(runtime.coopReturn);}
     if(result.checkin?.version===2)result.checkin.onlineMs=matching&&runtime.checkinOnline?.day===result.checkin.day?runtime.checkinOnline.onlineMs:0;
     // Missing/evicted local records mean full health and hunger. No server reads.
     for (const [id,pet] of Object.entries(result.pets || {})) {
@@ -50,6 +54,7 @@ export function restoreRuntime(save, content, runtime) {
 export function coreCatalogKey(catalog) {
     return stableJson({...catalog,roles:catalog.roles.map(row => {
         const save = durableSave(row.save);delete save.revision;
+        if(save.petInstanceVersion===1){const refs={...save.petFileRefs};for(const group of ['pets','petWorld'])for(const [id,p]of Object.entries(save[group]||{}))refs[id]={group,summary:petSummary(p),contentKey:petContentKey(p)};save.petFileRefs=Object.fromEntries(Object.entries(refs).map(([id,r])=>[id,{group:r.group,summary:r.summary,contentKey:r.contentKey}]));delete save.petPages;delete save.pets;delete save.petWorld;}
         return {id:row.id,save};
     })});
 }
@@ -62,7 +67,7 @@ export function splitRoleSave(save) {
     // Small combat bag contains copies of equipped instances and at most four pets.
     const selected = new Set(Object.values(parts.battle.equipmentGuids || {}));
     parts.battle.equippedItems = copy((parts.items.equipmentInstances || []).filter(row => selected.has(row.guid)));
-    parts.battle.activePets = copy(Object.fromEntries((parts.battle.formation || []).filter(Boolean).map(id => [id,parts.items.pets[id]])));
+    parts.battle.activePets = copy(Object.fromEntries((parts.battle.formation || []).filter(Boolean).map(id => [id,parts.items.pets?.[id]||save.pets?.[id]])));
     parts.battle.mount = parts.battle.mountId == null ? null : {itemId:parts.battle.mountId,count:parts.battle.inventory?.[parts.battle.mountId] || 0};
     return {state,...parts};
 }

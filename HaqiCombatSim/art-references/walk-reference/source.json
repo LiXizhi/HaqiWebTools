@@ -1,0 +1,23 @@
+{
+  "sourcePage": "https://commons.wikimedia.org/wiki/File:Muybridge_human_male_walking_animated.gif",
+  "author": "Eadweard Muybridge, Animal Locomotion, Plate 2 (1887); GIF Jjkutch (2013)",
+  "license": "Public Domain Mark 1.0",
+  "sourceSha256": "803628a42d85e4883fea60b2b8d300954b28f14d7a5f5c445cdb77ecf3b7ab78",
+  "sourceFrameCount": 12,
+  "selectedSourceFramesOneBased": [
+    1,
+    3,
+    5,
+    7,
+    9,
+    11
+  ],
+  "transforms": "Decode GIF composited frames; select every second frame. Individual frames retain original dimensions. Contact sheet scaled uniformly. No AI alteration. Loop display speed 170ms/frame is a review setting, not original recording timing.",
+  "constraints": [
+    "Original photography has natural elbow flexion. Straight elbows are a later stylization, not a property of this reference.",
+    "Track anatomical limbs across all six frames, including hidden limbs. Do not infer limb identity from screen-left/right position.",
+    "Future rig: keep neck anchor and torso proportions of existing game body; convert reference motion to that rig before drawing clothes.",
+    "Future costume generation must preserve rig joints, near/far layer order and six-frame phase order.",
+    "Do not replace runtime sprites until visual validation of opposite arm/leg swing and two alternating steps."
+  ]
+}

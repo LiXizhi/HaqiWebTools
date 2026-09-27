@@ -1,6 +1,25 @@
 import {drawSchoolIcon} from './card_renderer.js';
 import {tr,fill} from './locale_runtime.js';
 
+const SCHOOL_LABELS={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡',balance:'平衡',all:'任意系'};
+
+// Prefer structured boost text over cryptic Lua snapshots like "+55%生命伤害".
+function statusBoostDesc(template,role) {
+    if(template?.boost_damage===undefined||template?.boost_damage===null)return null;
+    const percent=Math.abs(Number(template.boost_damage));
+    if(!Number.isFinite(percent))return null;
+    const school=tr(SCHOOL_LABELS[template.school]||SCHOOL_LABELS.all);
+    const raise=Number(template.boost_damage)>=0;
+    if(role==='ward'){
+        return fill(raise?'受到的{school}攻击加 {percent}%':'受到的{school}攻击减 {percent}%',{school,percent}).text;
+    }
+    return fill(raise?'下次{school}攻击加 {percent}%':'下次{school}攻击减 {percent}%',{school,percent}).text;
+}
+
+function statusTemplateDesc(template,role,fallback) {
+    return statusBoostDesc(template,role)||(template?.desc?tr(template.desc):fallback);
+}
+
 // ObjectManager.lua RefreshBuffs L1837+: charm / ward / overtime / miniaura
 // occupy separate attachment slots. The 2D view uses compact badges instead of 3D models.
 export function battleStatusEffects(unit,battle) {
@@ -8,15 +27,18 @@ export function battleStatusEffects(unit,battle) {
     const add=(kind,label,desc,template={},extra={})=>out.push({kind,label,desc,school:template.school,negative:template.positive===false,...extra});
     for(const w of unit.standingWards||[])if(w.rounds>0){
         const rank=(r.global?.stormChargingWardIds||[]).indexOf(w.id)+1;
-        add('ward','印',`${rank?`狂风印记 ${rank}阶`:r.wards?.[w.id]?.desc||'持续护盾'} · ${w.rounds}回合`,r.wards?.[w.id],{stackKey:`standing:${w.id}:${w.rounds}`});
+        const base=rank?fill('狂风印记 {rank}阶',{rank}).text:statusTemplateDesc(r.wards?.[w.id],'ward','持续护盾');
+        add('ward','印',`${base} · ${w.rounds}回合`,r.wards?.[w.id],{stackKey:`standing:${w.id}:${w.rounds}`});
     }
     for(const id of unit.charms||[])if(id>0){
         const effect=r.charms?.[id];
-        add('charm',effect?.dispel_school?'敌':'术',effect?.desc||`术 ${id}`,effect,{effectId:id,dispelSchool:effect?.dispel_school,school:effect?.dispel_school||effect?.school});
+        add('charm',effect?.dispel_school?'敌':'术',statusTemplateDesc(effect,'charm',`术 ${id}`),effect,{effectId:id,dispelSchool:effect?.dispel_school,school:effect?.dispel_school||effect?.school});
     }
     for(const w of unit.wards||[])if(w.absorb?w.pts>0:w.id>0){
         const tpl=r.wards?.[w.id];
-        add('ward',w.absorb?'吸':tpl?.prism_from?'棱':tpl?.positive===false?'陷':'盾',w.absorb?`吸收盾 ${w.pts}`:tpl?.desc||`护盾 ${w.id}`,tpl,{stackKey:`ward:${w.id}:${!!w.absorb}`,prism:!!tpl?.prism_from});
+        const label=w.absorb?'吸':tpl?.prism_from?'棱':tpl?.positive===false?'陷':'盾';
+        const desc=w.absorb?fill('吸收盾 {pts}',{pts:w.pts}).text:statusTemplateDesc(tpl,'ward',`护盾 ${w.id}`);
+        add('ward',label,desc,tpl,{stackKey:`ward:${w.id}:${!!w.absorb}`,prism:!!tpl?.prism_from});
     }
     // Match combat_unit_core.js dotRoundsRemaining / hotRoundsRemaining:
     // remaining ticks are the remaining duration, independently for each sequence.
@@ -46,9 +68,23 @@ export function overheadStatusEffects(unit,battle) {
     return effects;
 }
 
-// Native vector adaptation of the original FireDamageBlade circular rune,
-// IceDamageTrap triangular seal and IceGreatShield ice-emblem shield thumbnails.
+// Native vector badges: circular charms, spiky thorn traps, emblem shields.
 // Numeric badges show ward stack counts or periodic remaining duration.
+function drawTrapOutline(c) {
+    // Caltrop / thorn seal: eight outward spikes around a compact core.
+    const cx=16,cy=16,spikes=8,inner=7.2,outer=15.4;
+    c.beginPath();
+    for(let i=0;i<spikes;i++){
+        const tip=-Math.PI/2+i*Math.PI*2/spikes;
+        const left=tip-Math.PI/spikes,right=tip+Math.PI/spikes;
+        if(i===0)c.moveTo(cx+Math.cos(left)*inner,cy+Math.sin(left)*inner);
+        else c.lineTo(cx+Math.cos(left)*inner,cy+Math.sin(left)*inner);
+        c.lineTo(cx+Math.cos(tip)*outer,cy+Math.sin(tip)*outer);
+        c.lineTo(cx+Math.cos(right)*inner,cy+Math.sin(right)*inner);
+    }
+    c.closePath();
+}
+
 function drawStatusIcon(c,effect,x,y,size) {
     c.save();c.translate(x,y);c.scale(size/32,size/32);
     const school=({water:'ice',metal:'storm',wood:'life',earth:'death',all:'balance'})[effect.school]||effect.school||'balance';
@@ -59,14 +95,14 @@ function drawStatusIcon(c,effect,x,y,size) {
     if(effect.kind==='reflect'){
         c.ellipse(16,16,11,15,0,0,Math.PI*2);
     }else if(effect.kind==='ward'){
-        if(effect.negative){c.moveTo(1,4);c.lineTo(31,4);c.lineTo(16,31);c.closePath();}
+        if(effect.negative)drawTrapOutline(c);
         else{c.moveTo(16,1);c.lineTo(29,6);c.lineTo(27,21);c.quadraticCurveTo(23,27,16,31);c.quadraticCurveTo(9,27,5,21);c.lineTo(3,6);c.closePath();}
     }else c.arc(16,16,14,0,Math.PI*2);
     c.fill();c.stroke();
     c.strokeStyle=color;c.fillStyle=color;
     if(effect.kind==='charm'||effect.kind==='ward'||effect.kind==='aura'){
         if(effect.kind!=='ward'){c.beginPath();c.arc(16,16,10.5,-Math.PI*.35,Math.PI*1.35);c.stroke();}
-        drawSchoolIcon(c,school,16,effect.negative&&effect.kind==='ward'?13:16,17,color);
+        drawSchoolIcon(c,school,16,16,effect.negative&&effect.kind==='ward'?14:17,color);
         if(effect.label==='吸'){c.beginPath();c.arc(16,16,9,0,Math.PI*2);c.stroke();}
         if(effect.negative&&effect.kind==='charm'){c.strokeStyle='#ffb4a7';c.beginPath();c.moveTo(7,25);c.lineTo(25,7);c.stroke();}
     }else if(effect.kind==='hots'){

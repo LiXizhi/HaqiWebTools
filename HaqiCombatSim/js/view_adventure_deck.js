@@ -1,6 +1,7 @@
 import {createCloseButton} from './view_adventure_controls.js';
+import {recommendAdventureDeck} from './battle_ai/adventure_adapter_core.js';
 import {teachPointer} from './view_teaching.js';
-import {deckLimits,deckCardCopies,syncDeckLayouts,equipmentBlockReason,recommendedDeck,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
+import {deckLimits,deckCardCopies,syncDeckLayouts,equipmentBlockReason,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
 import {isAttackCard} from './combat_cards_core.js';
 import {skillLearningStatus,trainingPoints} from './adventure_learning_core.js';
 import { setText, tr } from './locale_runtime.js';
@@ -242,7 +243,7 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     setText(equipmentSummary,'装备附卡 {count} 张 · 不占卡位',{count:equipment.children.length});
     const equipmentPanel=el('details','bag-equipment',equipmentSummary,equipment);
     equipmentPanel.open=true;
-    const bag=el('section','bag-main',el('div','bag-section-bar',counter,button('推荐',()=>{layouts[active].deck=recommendedDeck(draftSave(),content);mark();paintCards();},'secondary')),slots,
+    const bag=el('section','bag-main',el('div','bag-section-bar',counter,button('推荐',()=>{const recommendation=recommendAdventureDeck({...draftSave(),deck:layouts[active].deck},content,assets.dataset);layouts[active].deck=recommendation.deck;mark();paintCards();say('已按当前拥有的卡牌与卡包容量生成推荐，保存后生效。');},'secondary')),slots,
         el('p','bag-hint','拖出移除；长按 / 右键查看详情'),
         equipmentPanel);
     const collection=el('section','bag-collection',el('div','bag-section-bar',el('strong','','法术牌库'),search,toggle),filters,

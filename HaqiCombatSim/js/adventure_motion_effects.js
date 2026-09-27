@@ -17,7 +17,7 @@ export function motionStyle(save, membership = {}, now = Date.now()) {
     const vip = membership.status === 'ready' && membership.isVip === true &&
         (!membership.expiresAt || Date.parse(membership.expiresAt) > now);
     return { school: MOTION_PALETTES[save.school] ? save.school : 'fire', strength, vip, mounted: !!save.mountId,
-        pose: { mountId: save.mountId, appearance: save.appearance, headId:save.headId, facing: save.facing } };
+        pose: { mountId: save.mountId, appearance: save.appearance, headId:save.headId,bodyId:save.bodyId, facing: save.facing } };
 }
 
 // Uses actual world displacement after collision resolution, independent of four-way facing.

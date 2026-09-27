@@ -1,0 +1,8 @@
+{
+  "id": "male7",
+  "tool": "builtin imagegen",
+  "reference": "assets/hero-preview/male-walk-ref.webp",
+  "prompt": "仅修改这张固定动作参考图的服装，改为男士“霓虹叛客”：黑色短款机车夹克，玫红色拼接和少量银色铆钉，黑色长裤，玫红运动鞋，无披风，无武器，无包。严格保持参考图全部28格的动作、手脚前后关系、身体比例、脖子位置和排列不变。7列4行，各行正面、左侧、右侧、背面，前6列走路、最后1列站立。不要头，真正透明背景。",
+  "generationCount": 1,
+  "scope": "single full 7x4 costume pilot"
+}

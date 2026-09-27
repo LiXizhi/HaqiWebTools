@@ -6,7 +6,7 @@ import { STARTERS } from './adventure_pets_core.js';
 // Map companionship is independent of combat participation. The four formation
 // slots are ordered left to right; equal distances prefer the lower slot.
 export function selectCompanionId(save, content) {
-    const owned=id=>!!save.pets?.[id]&&!!content.pets?.[id];
+    const owned=id=>!!save.pets?.[id]&&!!content.pets?.[save.pets[id].speciesId||id];
     const heroSlot=save.heroSlot??0;
     const slots=save.formation||[];
     let closest=null,best=Infinity;
@@ -16,6 +16,14 @@ export function selectCompanionId(save, content) {
     }
     if(closest)return closest;
     return STARTERS.find(owned)||Object.keys(save.pets||{}).find(owned)||STARTERS[0];
+}
+
+// Presentation-only species for AI island residents; never writes saves or combat state.
+export function selectSocialPetId(profile, content) {
+    const school=profile?.school||'fire';
+    const pets=Object.entries(content?.pets||{}).filter(([,row])=>row?.art&&row.school===school).map(([id])=>id);
+    if(!pets.length)return STARTERS.find(id=>content?.pets?.[id]?.art)||STARTERS[0];
+    return pets[Math.abs(hashSeed(String(profile.id||profile.name||school)))%pets.length];
 }
 
 export function createCompanion(world, hero, seed) {

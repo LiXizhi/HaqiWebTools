@@ -12,12 +12,16 @@ PROFILE=ROOT/'art-references/hero-head-anchors.json'
 def calibrate(manifest):
     profiles=json.loads(PROFILE.read_text(encoding='utf-8'))
     manifest['headCalibration']=hashlib.sha256(PROFILE.read_bytes()).hexdigest()[:10]
+    manifest['headTurnDrop']=profiles.get('headTurnDrop',[0,0,0])
     for key,profile in profiles['heads'].items():
         head=manifest['heads'].get(key)
         if not head: continue
         assert len(profile['anchors'])==len(head['frames'])==16,key
-        for frame,anchor in zip(head['frames'],profile['anchors']):
-            if anchor is not None: frame['neck']=anchor
+        offset=profiles.get('genderAnchorOffset',{}).get(head.get('gender'),[0,0])
+        direction_offsets=profiles.get('genderDirectionAnchorOffset',{}).get(head.get('gender'),{})
+        for index,(frame,anchor) in enumerate(zip(head['frames'],profile['anchors'])):
+            current_offset=direction_offsets.get(str(index),offset)
+            if anchor is not None: frame['neck']=[anchor[0]+current_offset[0],anchor[1]+current_offset[1]]
         head['anchorProfile']='art-references/hero-head-anchors.json#'+key
     return manifest
 

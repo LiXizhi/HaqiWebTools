@@ -27,7 +27,7 @@ export function renderBatch(main) {
         h('label', '模式 ', select(Object.keys(MODES), st.mode, (v) => { st.mode = v; setSetting('batch', st); })),
         h('label', '每组场次 ', numberInput(st.games, (v) => { st.games = v || 100; setSetting('batch', st); }, { min: 10, step: 50 })),
         h('label', '等级 ', numberInput(st.level, (v) => { st.level = v || 1; setSetting('batch', st); }, { min: 1, max: 100 })),
-        h('label', '策略 ', select([{ value: 'deck_attacker', label: '官方 AI 卡组权重' }, { value: 'simple', label: '启发式' }, { value: 'random', label: '随机' }], st.policy, (v) => { st.policy = v; setSetting('batch', st); })),
+        h('label', '策略 ', select([{value:'reasoning_easy',label:'推理 AI · 简单'},{value:'reasoning_normal',label:'推理 AI · 普通'},{value:'reasoning_advanced',label:'推理 AI · 高级'},{value:'reasoning_expert',label:'推理 AI · 专家'},{ value: 'deck_attacker', label: '官方 AI 卡组权重' }, { value: 'simple', label: '启发式' }, { value: 'random', label: '随机' }].filter(option=>ds.version==='kids'||!option.value.startsWith('reasoning')), st.policy, (v) => { st.policy = v; setSetting('batch', st); })),
         h('label', '种子 ', numberInput(st.seed, (v) => { st.seed = v || 1; setSetting('batch', st); })),
         h('label', 'Worker ', numberInput(st.workers, (v) => { st.workers = v || 1; setSetting('batch', st); }, { min: 1, max: 32 })),
         h('label', { title: '使用对战页“配卡”保存的自定义卡组（未自定义的系仍用官方预设）' }, h('input', { type: 'checkbox', checked: !!st.useCustomDecks, onChange: (e) => { st.useCustomDecks = e.target.checked; setSetting('batch', st); } }), ' 用对战页配卡'),

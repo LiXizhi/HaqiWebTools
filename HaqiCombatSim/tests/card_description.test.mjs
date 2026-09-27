@@ -28,7 +28,9 @@ test('variable pip cards do not pretend their sentinel cost is actual damage',()
 test('descriptions use resolved parameters and both source/resolved effect dictionaries',()=>{
     const card={...cards.Life_Absorb_Level3,params:{absorb_pts:321}};
     assert.equal(describeCard(card).summary,'吸收 321');
-    for(const dataset of [{charms},{charms:charms.charm,wards:charms.ward}])assert.equal(describeCard(cards.Fire_FireDamageBlade,{dataset}).summary,'下次烈火攻击 +45%');
+    for(const dataset of [{charms},{charms:charms.charm,wards:charms.ward}])assert.equal(describeCard(cards.Fire_FireDamageBlade,{dataset}).summary,'下次烈火攻击加 45%');
+    assert.equal(describeCard(cards.Storm_StormDamageTrap,{dataset:{charms}}).summary,'受到的风暴攻击加 40%');
+    assert.equal(describeCard(cards.Life_LifeDamageTrap,{dataset:{charms}}).summary,'受到的生命攻击加 55%');
 });
 test('prism copy matches the actual incoming school conversion and consumption',()=>{
     for(const [key,from,to] of [['Ice_IcePrism','ice','fire'],['Fire_FirePrism','fire','ice'],['Life_LifePrism','life','death'],['Death_DeathPrism','death','life']]){

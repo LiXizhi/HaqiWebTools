@@ -1,6 +1,8 @@
+import {dungeonProgress} from './adventure_coop_core.js';
 import {el,button} from './view_adventure.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
+import {dungeonStaminaHint} from './adventure_stamina_core.js';
 import {monsterArtBinding} from './adventure_monster_art_core.js';
 import {tr,setText,fill} from './locale_runtime.js';
 
@@ -22,7 +24,7 @@ function bossPortrait(assets,d){
     requestAnimationFrame(paint);return stage;
 }
 
-export function renderDungeons(root,{assets,save,dungeonLoading=null},cb){
+export function renderDungeons(root,{assets,save,dungeonLoading=null,social=null},cb){
     root.replaceChildren();root.className='overlay visible';
     const content=assets.content,active=dungeonFor(content,save.zone);
     const modal=el('section','modal wide dungeon-modal');modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label','副本冒险');
@@ -39,11 +41,12 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null},cb){
         list.replaceChildren();footer.replaceChildren();body.scrollTop=0;
         for(const b of tabs.children)b.setAttribute('aria-pressed',String(b.dataset.filter===filter));
         const rows=content.dungeons.filter(d=>d.playable&&!/Instance_Test/i.test(d.id))
-            .filter(d=>filter==='recommended'?d.recommendedLevel<=(save.level||1)+5:filter==='progress'?!!save.dungeonRuns?.[d.id]&&((save.dungeonRuns[d.id].cleared?.length||0)<d.arenas.length):true)
-            .sort((a,b)=>a.recommendedLevel-b.recommendedLevel);
+            .filter(d=>!(social?.team?.length||social?.pickingDungeon)||d.arenas.every(a=>!a.blocked?.length))
+            .filter(d=>filter==='recommended'?d.recommendedLevel<=(save.level||1)+5:filter==='progress'?!!dungeonProgress(save)?.[d.id]&&((dungeonProgress(save)[d.id].cleared?.length||0)<d.arenas.length):true)
+            .sort((a,b)=>social?.team?.length?Math.abs(a.recommendedLevel-(save.level+social.team.reduce((n,p)=>n+p.level,0))/(social.team.length+1))-Math.abs(b.recommendedLevel-(save.level+social.team.reduce((n,p)=>n+p.level,0))/(social.team.length+1)):a.recommendedLevel-b.recommendedLevel);
         const pages=Math.max(1,Math.ceil(rows.length/pageSize));page=Math.min(page,pages-1);
         for(const d of rows.slice(page*pageSize,(page+1)*pageSize)){
-            const cleared=save.dungeonRuns?.[d.id]?.cleared.length||0,total=d.arenas.length,complete=cleared===total;
+            const cleared=dungeonProgress(save)?.[d.id]?.cleared.length||0,total=d.arenas.length,complete=cleared===total;
             const card=el('article','dungeon-card');
             const picture=bossPortrait(assets,d);const levelTag=el('span','dungeon-level');setText(levelTag,'建议 {level} 级',{level:d.recommendedLevel});picture.append(levelTag);
             const monsters=d.arenas.filter(a=>!a.blocked?.length).flatMap(a=>(a.monsterIds||[]).map(id=>content.monsters[id])).filter(Boolean);
@@ -53,9 +56,22 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null},cb){
             if(cleared)picture.append(el('span','dungeon-status',complete?'已通关':'探索中'));
             const info=el('div','dungeon-card-info',el('h3','',d.name));
             info.append(el('p','dungeon-boss-name',d.boss?.name||'秘境探索'));
+            const hint=dungeonStaminaHint(d);
+            if(hint){
+                const line=el('p','dungeon-stamina');
+                setText(line,hint.min===hint.max?'战斗消耗精力 {cost}':'战斗消耗精力 {min}–{max}',hint.min===hint.max?{cost:hint.max}:{min:hint.min,max:hint.max});
+                info.append(line);
+            }
             const actions=el('div','dungeon-actions');
-            const enter=button(dungeonLoading===d.id?'正在进入…':active?.id===d.id?'返回探索':save.dungeonRuns?.[d.id]?'继续探索':'进入副本',()=>active?.id===d.id?cb.close():cb.enter(d.id,false),'primary');enter.disabled=!!dungeonLoading;actions.append(enter);
-            if(cleared){const restart=button('重新挑战',()=>cb.enter(d.id,true),'secondary');restart.disabled=!!dungeonLoading;actions.append(restart);}
+            if(social?.pickingDungeon){
+                const pick=button(social.partyDungeon?.id===d.id?'已选定 · 返回队伍':'选定组队副本',()=>cb.pick?cb.pick(d.id):cb.lobby?.(d.id),'primary');
+                pick.disabled=!!dungeonLoading;actions.append(pick);
+            }else{
+                // Entering a card opens the party lobby first; actual zone load waits for 立即出发.
+                const enter=button(dungeonLoading===d.id?'正在进入…':active?.id===d.id?'返回探索':dungeonProgress(save)?.[d.id]?'继续探索':'进入副本',()=>active?.id===d.id?cb.close():(cb.lobby?cb.lobby(d.id,false):cb.enter(d.id,false)),'primary');
+                enter.disabled=!!dungeonLoading||!!save.coopRun&&active?.id!==d.id;actions.append(enter);
+                if(cleared){const restart=button('重新挑战',()=>cb.lobby?cb.lobby(d.id,true):cb.enter(d.id,true),'secondary');restart.disabled=!!dungeonLoading||!!save.coopRun&&active?.id!==d.id;actions.append(restart);}
+            }
             info.append(actions);card.append(picture,info);list.append(card);
         }
         if(!rows.length)list.append(el('p','dungeon-empty',filter==='progress'?'还没有进行中的副本，选一个开始冒险吧。':'该分类暂无副本。'));

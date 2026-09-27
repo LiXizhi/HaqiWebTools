@@ -14,13 +14,15 @@ function scheduleView(view){views.add(view);if(!viewFrame)viewFrame=requestAnima
  * Hosts own placement, time, scene ordering and animation. UI and world use draw().
  */
 export class HeroRenderer {
-    constructor(manifest, catalog, { local = false, baseURL = new URL('../', import.meta.url) } = {}) {
+    constructor(manifest, catalog, { local = false, baseURL = new URL('../', String(import.meta.url)) } = {}) {
         this.manifest = manifest; this.catalog = catalog; this.local = local; this.baseURL = baseURL;
         this.images = new Map(); this.pending = new Map(); this.sourceBounds = new Map();
         this.prepared=new Map();
     }
     createActor(seed) { return createHeroActor(seed); }
     headId(gender,id){return this.manifest.heads[id]?.gender===gender?id:gender==='female'?'elf-girl':'elf-boy';}
+    bodyVariant(gender,id){const variant=this.manifest.bodyVariants?.[id];return variant?.gender===gender?variant:null;}
+    walkKey(gender,id){return 'walk:'+(this.bodyVariant(gender,id)?.id||gender);}
     updateActor(actor, input) { return updateHeroActor(actor, input); }
     async image(id, art, mountAsset = false) {
         if (this.images.has(id)) return this.images.get(id);
@@ -28,7 +30,9 @@ export class HeroRenderer {
             const promise = new Promise((resolve, reject) => {
                 const image = new Image(); image.crossOrigin = 'anonymous';
                 const local = mountAsset && art.local?.startsWith('assets/') ? 'demos/mount-lab/'+art.local : art.local;
-                const url = this.local ? new URL(local, this.baseURL).href : art.cdn;
+                const localURL=this.local?new URL(local,this.baseURL):null;
+                if(localURL&&art.sha256)localURL.searchParams.set('v',art.sha256);
+                const url = this.local ? localURL.href : art.cdn;
                 if (!url) { reject(new Error(`资源尚未登记 CDN：${id}`)); return; }
                 image.onload = () => {
                     if (art.width && (image.width !== art.width || image.height !== art.height)) { reject(new Error(`资源尺寸不符：${id}`)); return; }
@@ -44,29 +48,34 @@ export class HeroRenderer {
     appearance(save,{mounted=true}={}) {
         const mountId=this.catalog.mountByItem?.[save.mountId]?.mountId;
         const mount=mounted&&save.mountId?this.catalog.mounts.find(m=>m.id===mountId||Object.hasOwn(m.commerce||{},save.mountId)):null;
-        return {gender:save.appearance==='girl'?'female':'male',mount:mount||null,headId:save.headId};
+        return {gender:save.appearance==='girl'?'female':'male',mount:mount||null,headId:save.headId,bodyId:save.bodyId};
     }
     ensure(appearance){
         appearance={...appearance,headId:this.headId(appearance.gender||'male',appearance.headId)};
-        const key=[appearance.gender,appearance.mount?.id,appearance.headId].join(':');
+        const key=[appearance.gender,appearance.mount?.id,appearance.headId,appearance.bodyId,appearance.standing].join(':');
         if(!this.prepared.has(key))this.prepared.set(key,this.prepare(appearance).catch(()=>({fallback:true})));
         return this.prepared.get(key);
     }
-    async prepare({ gender = 'male', mount = null, headId = gender==='female'?'elf-girl':'elf-boy' } = {}) {
+    async prepare({ gender = 'male', mount = null, standing = false, bodyId, headId = gender==='female'?'elf-girl':'elf-boy' } = {}) {
         headId=this.headId(gender,headId);
-        const keys = [gender+'-walk', ...(gender === 'female' ? ['female-standing','female-rider'] : ['standing','rider'])];
-        const originals = keys.map(key => this.image('original:'+key,this.manifest.bodies[key].source));
+        const keys = mount ? [...new Set([0,1,2,3].map(facing=>this.layout({gender,mount},{facing}).key))]
+            : [standing?(gender==='female'?'female-standing':'standing'):gender+'-walk'];
+        const originals = keys.filter(key=>!this.manifest.bodies[key].selfContained).map(key => this.image('original:'+key,this.manifest.bodies[key].source));
         if (mount) originals.push(this.image('mount:'+mount.id,mount.art,true));
         await Promise.all(originals);
         const results = await Promise.allSettled(keys.map(async key => {
             const body=this.manifest.bodies[key];
-            if(this.manifest.heads[headId])await Promise.all([this.image('body:'+key,body),this.image('head:'+headId,this.manifest.heads[headId])]);
+            if(this.manifest.heads[headId])await Promise.all([
+                body.walk?.idleFrames ? this.image(this.walkKey(gender,bodyId),this.bodyVariant(gender,bodyId)||body.walk) : this.image('body:'+(body.atlas||key),body),
+                this.image('head:'+headId,this.manifest.heads[headId])]);
         }));
         const walk=this.manifest.bodies[gender+'-walk'].walk;
-        if(walk)await this.image('walk:'+gender,walk).catch(()=>null);
+        if(walk&&!walk.idleFrames)await this.image('walk:'+gender,walk).catch(()=>null);
         return { fallback:results.some(r => r.status==='rejected'), errors:results.filter(r=>r.status==='rejected').map(r=>r.reason.message) };
     }
     originalBounds(key, cell) {
+        const body=this.manifest.bodies[key];
+        if(body.selfContained)return body.frames[cell].layoutBounds||body.frames[cell].crop;
         const id=key+':'+cell;
         if(!this.sourceBounds.has(id)&&key.endsWith('-walk')&&this.getWalkingBounds)this.sourceBounds.set(id,this.getWalkingBounds('sprites',this.manifest.bodies[key].frames[cell].crop));
         if (!this.sourceBounds.has(id)) {
@@ -97,15 +106,24 @@ export class HeroRenderer {
         const pose=options.pose||this.layout(appearance,options),body=this.manifest.bodies[pose.key];
         let frame=body.frames[pose.rider.cell];
         const source=this.images.get('original:'+pose.key);
-        if(!source)return {ready:false};
+        if(!body.selfContained&&!source)return {ready:false};
         const headId=this.headId(appearance.gender||'male',appearance.headId||body.defaultHead);
         const heads=this.manifest.heads[headId],headImage=this.images.get('head:'+headId);
-        let bodyImage=this.images.get('body:'+pose.key);
-        const split=!original&&!!headImage&&!!bodyImage;
-        const step=walkFrameIndex(body.walk,options),walkImage=this.images.get('walk:'+(appearance.gender||'male'));
+        const combined=!!body.walk?.idleFrames;
+        const walkKey=this.walkKey(appearance.gender||'male',appearance.bodyId);
+        let bodyImage=this.images.get(combined?walkKey:'body:'+(body.atlas||pose.key));
+        if(body.selfContained&&(!bodyImage||(!headImage&&!options.bodyOnly)))return {ready:false};
+        const split=(body.selfContained||!original)&&!!bodyImage&&(!!headImage||!!options.bodyOnly);
+        const step=walkFrameIndex(body.walk,options),walkImage=this.images.get(walkKey);
         const walking=split&&step!==null&&!!walkImage;
         if(walking){frame=body.walk.frames[pose.rider.cell*body.walk.framesPerDirection+step];bodyImage=walkImage;}
-        const r=pose.rider,crop=walking?frame.crop:body.trimOriginal?this.originalBounds(pose.key,r.cell):frame.crop;
+        const r=pose.rider;
+        let crop=walking?frame.crop:frame.renderCrop|| (body.trimOriginal?this.originalBounds(pose.key,r.cell):frame.crop);
+        if(split&&combined&&!walking&&!body.selfContained){
+            const idle=body.walk.idleFrames[r.cell];
+            crop=[crop[0]+idle.crop[0]-frame.crop[0],crop[1]+idle.crop[1]-frame.crop[1],crop[2],crop[3]];
+            frame=idle;
+        }
         // Same aspect-fit and original alpha trimming as the existing game renderer.
         const ratio=Math.min(r.w/crop[2],r.h/crop[3]);
         const rect={x:r.x+(r.w-crop[2]*ratio)/2,y:r.y+(r.h-crop[3]*ratio)/2,w:crop[2]*ratio,h:crop[3]*ratio};
@@ -122,7 +140,12 @@ export class HeroRenderer {
         let headRect=null;
         if(split&&!options.bodyOnly){
             const h=heads.frames[(head+heads.directionCount)%heads.directionCount],s=frame.headHeight*ratio/h.height;
-            headRect={x:neck[0]-h.neck[0]*s,y:neck[1]-h.neck[1]*s,w:h.crop[2]*s,h:h.crop[3]*s};
+            // Compensate relative head turns, independent of gender and world facing.
+            // Values are body-atlas pixels, scaled with the body rather than the head art.
+            const turn=Math.abs(((head-BODY_TO_HEAD[pose.rider.cell])%16+24)%16-8);
+            const drop=this.manifest.headTurnDrop||[0,0,0];
+            const turnDrop=drop[Math.min(turn,drop.length-1)]||0;
+            headRect={x:neck[0]-h.neck[0]*s,y:neck[1]-h.neck[1]*s+turnDrop*ratio,w:h.crop[2]*s,h:h.crop[3]*s};
             const breath=options.breath||headBreath(options.time||0,options.phase||0,options.reducedMotion||original);
             // Pivot at the attachment point; sub-pixel breathing stays inside neck overlap.
             ctx.save();ctx.translate(neck[0]+breath.x*r.w/78,neck[1]+breath.y*r.w/78);if(breath.angle)ctx.rotate(breath.angle);
@@ -134,7 +157,7 @@ export class HeroRenderer {
             for(const polygon of pose.foreground)polygon.forEach(([u,v],i)=>ctx[i?'lineTo':'moveTo'](pose.mount.x+u*pose.mount.w,pose.mount.y+v*pose.mount.h));
             ctx.closePath();ctx.clip();drawMount();ctx.restore();
         }
-        if(overlay){ctx.save();ctx.globalAlpha=.35;sheet(source,body.trimOriginal?this.originalBounds(pose.key,r.cell):body.frames[r.cell].crop,rect);ctx.restore();}
+        if(overlay&&source&&!body.selfContained){ctx.save();ctx.globalAlpha=.35;sheet(source,body.trimOriginal?this.originalBounds(pose.key,r.cell):body.frames[r.cell].crop,rect);ctx.restore();}
         if(debug){
             ctx.lineWidth=1;ctx.strokeStyle='#40dccc';ctx.strokeRect(r.x,r.y,r.w,r.h);
             const cross=(p,color)=>{ctx.strokeStyle=color;ctx.beginPath();ctx.moveTo(p[0]-5,p[1]);ctx.lineTo(p[0]+5,p[1]);ctx.moveTo(p[0],p[1]-5);ctx.lineTo(p[0],p[1]+5);ctx.stroke();};
@@ -164,7 +187,7 @@ export class HeroRenderer {
         return { ...result, nameY:y+bottom };
     }
     drawTile(ctx,index,x,y,w,h,options={}) {
-        const appearance={gender:index>=12?'female':'male',headId:options.headId},facing=index%4;
+        const appearance={gender:index>=12?'female':'male',headId:options.headId,bodyId:options.bodyId},facing=index%4;
         this.ensure(appearance);return this.draw(ctx,appearance,{facing,bodyRect:{x,y,w,h},...options});
     }
     createView(appearance,options={}) {
@@ -173,10 +196,10 @@ export class HeroRenderer {
         let disposed=false,current=appearance,settings=options,revision=0;const actor=this.createActor(options.seed||7419);
         const reduced=typeof matchMedia==='function'?matchMedia('(prefers-reduced-motion: reduce)'):null;
         const paint=(time=0)=>{if(disposed)return;const c=canvas.getContext('2d');c.clearRect(0,0,canvas.width,canvas.height);
-            const pose=this.updateActor(actor,{time,facing:settings.facing||0,reducedMotion:reduced?.matches});
+            const pose=this.updateActor(actor,{time,facing:settings.facing||0,reducedMotion:reduced?.matches,lookAround:settings.lookAround});
             this.draw(c,current,{x:canvas.width/2,y:canvas.height*.88,size:78,time,head:pose.head,breath:pose.breath,reducedMotion:reduced?.matches,...settings});};
         const view={node:canvas,paint,connected:false};
-        const update=async(a=current,o=settings)=>{current=a;settings=o;const rev=++revision;await this.ensure(a);if(rev===revision&&!disposed){paint();if(settings.animate&&canvas.isConnected)scheduleView(view);}};
+        const update=async(a=current,o=settings)=>{current=a;settings=o;const rev=++revision;await this.ensure({...a,standing:o.standing});if(rev===revision&&!disposed){paint();if(settings.animate&&canvas.isConnected)scheduleView(view);}};
         return {node:canvas,update,dispose(){disposed=true;revision++;views.delete(view);},ready:update()};
     }
 }
@@ -199,7 +222,7 @@ export async function loadHeroLibrary(readJson,catalog,{local=false,sprites,sour
     const hero=new HeroRenderer(manifest,catalog,{local});
     hero.getWalkingBounds=getBounds;
     if(sourceImages?.has('sprites'))for(const gender of ['male','female']){
-        const key=gender+'-walk';hero.images.set('original:'+key,sourceImages.get('sprites'));
+        const key=gender+'-walk';if(!manifest.bodies[key].selfContained)hero.images.set('original:'+key,sourceImages.get('sprites'));
     }
     await Promise.allSettled(['male','female'].map(gender=>hero.ensure({gender})));
     return hero;

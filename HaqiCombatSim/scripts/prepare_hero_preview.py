@@ -56,6 +56,11 @@ def main():
  if a.verify:
   m=read(MANIFEST); checks=[]
   for key,row in m['bodies'].items():
+   if row.get('selfContained'):
+    assert sha(ROOT/row['local'])==row['sha256']
+    for frame in row['frames']:
+     x,y,w,h=frame['crop'];assert x>=0 and y>=0 and x+w<=row['width'] and y+h<=row['height']
+    continue
    original=Image.open(ROOT/row['source']['local']).convert('RGBA');body=Image.open(ROOT/row['local']).convert('RGBA')
    mask=Image.new('L',original.size);d=ImageDraw.Draw(mask)
    for frame in row['frames']: d.polygon(frame['mask'],fill=255)
@@ -81,6 +86,8 @@ def main():
   if prev.get('sha256')==row['sha256'] and prev.get('cdn'):row['cdn']=prev['cdn']
   manifest[section][key]=row
  for key,profile in PROFILES.items():
+  if old.get('bodies',{}).get(key,{}).get('selfContained'):
+   manifest['bodies'][key]=old['bodies'][key];continue
   source=dict(catalog['sheets'][key]);source['local']='demos/mount-lab/'+source['local'];src=ROOT/source['local'];im=Image.open(src).convert('RGBA');frames=[]
   for i,boundary in enumerate(profile):
    ox=i%2*384;oy=i//2*384;poly=[(ox,oy),(ox+383,oy)]+[(ox+x,oy+y) for x,y in reversed(boundary)]
@@ -92,6 +99,8 @@ def main():
  # The original walking atlas includes trees/buildings: preserve the full atlas.
  src=ROOT/'assets/adventure/webp/sprites.webp';original=Image.open(src).convert('RGBA');w,h=original.size
  for gender,rowindex in [('male',2),('female',3)]:
+  if old.get('bodies',{}).get(gender+'-walk',{}).get('selfContained'):
+   manifest['bodies'][gender+'-walk']=old['bodies'][gender+'-walk'];continue
   im=original.copy();frames=[];cuts=[0,323,650,929,1254];sy=cuts[rowindex]*h/1254;sh=(cuts[rowindex+1]-cuts[rowindex])*h/1254;cw=w/4
   # Authored against the 660px original; masks do not touch cloak/arms.
   cutoffs=[410,409,409,410] if gender=='male' else [550,549,549,552]
@@ -134,6 +143,7 @@ def main():
  for key,head in old.get('heads',{}).items():
   if key not in manifest['heads']:manifest['heads'][key]=head
  calibrate(manifest)
+ manifest['version']=old.get('version',2)
  MANIFEST.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  (ROOT/'data/adventure/hero-art.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  print('Prepared',len(manifest['bodies']),'body atlases and',len(manifest['heads']),'head atlases')

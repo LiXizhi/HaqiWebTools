@@ -1,0 +1,6 @@
+{
+  "prompt": "把第一张已校准的灰衣男性动作参考图改成女士身体参考。严格保留第一张每格的四方向动作、左右腿交替关系、手臂姿势和7列4行排列。第二张只参考女性身体大小与脖子位置，不要参考它的动作、披风或道具。女士身体肩膀稍窄、体型纤细自然，普通灰色长袖上衣、深灰长裤、灰色平底鞋，无配饰无道具。无头，仅留短脖子。每行前六格走路，最后一格站立。真正透明背景。",
+  "tool": "builtin imagegen",
+  "motionReference": "assets/hero-preview/male-walk-ref.webp",
+  "geometryReference": "assets/hero-preview/female-walk-cycle.webp"
+}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>六帧走路动作参考</title>
+<style>body{max-width:1500px;margin:24px auto;padding:0 20px;font:16px/1.7 system-ui;background:#faf8f0;color:#302b25}h1{font-size:24px}button,input{font:inherit}button{margin:5px;padding:6px 15px}#frames{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}#frames img{width:100%}figure{margin:0;text-align:center}.player{display:flex;gap:28px;align-items:center;flex-wrap:wrap}.player img{width:202px;height:363px;object-fit:contain}a{color:#12646b}.chosen{outline:3px solid #16878b} @media(max-width:650px){#frames{grid-template-columns:repeat(3,1fr)}}</style>
+<h1>真人行走：六帧动作参考</h1>
+<p>从 Muybridge 的完整 12 帧中提取原第 1、3、5、7、9、11 帧。保留原摄影姿态，未让 AI 重绘。这里是动作研究素材，尚未转换成游戏的短身比例骨架。</p>
+<p><a href="character-preview.html">查看街头晴空六帧角色样张（同步真人参考）</a></p>
+<div class="player"><img id="current" src="pose-1.webp" alt="当前动作"><div><p id="label"></p><button id="play">暂停</button><button id="prev">上一帧</button><button id="next">下一帧</button><p><label>每帧停留 <input id="speed" type="range" min="100" max="800" value="250"> <span id="ms">250</span> 毫秒</label></p><label><input id="mirror" type="checkbox">镜像查看向左（仅改变观看方向）</label><p>检查同一条腿经过落地、支撑、离地、前摆；观察同侧手臂反向摆动。<br>第 4～6 帧应与第 1～3 帧交换左右肢体的角色。</p></div></div>
+<div id="frames"></div>
+<p>原片手肘有自然微弯。后续直臂骨架需要保留肩部摆动方向、固定肢体身份，单独伸直肘部；不能把摄影帧当作已经完成的直臂模板。遮挡的关节也需要人工核对。</p>
+<p>来源：<a href="https://commons.wikimedia.org/wiki/File:Muybridge_human_male_walking_animated.gif">Muybridge · Animal Locomotion, Plate 2（1887，公有领域）</a>；原 GIF 动画由 Jjkutch 制作。方法参照 <a href="https://animation.monmouth.edu/instruct/animation/walk-cycle/">Monmouth 大学走路循环教程</a>。<a href="source.json">提帧来源与约束记录</a></p>
+<script type="module">
+const sources=[1,3,5,7,9,11], frames=document.querySelector('#frames'), current=document.querySelector('#current');let index=0,playing=true,last=0;
+sources.forEach((n,i)=>{const figure=document.createElement('figure');figure.innerHTML=`<img src="pose-${i+1}.webp" alt="第 ${i+1} 帧"><figcaption>${i+1} / 原第 ${n} 帧</figcaption>`;figure.addEventListener('click',()=>{playing=false;show(i)});frames.append(figure)});
+function show(i){index=(i+6)%6;current.src=`pose-${index+1}.webp`;document.querySelector('#label').textContent=`第 ${index+1} / 6 帧，原第 ${sources[index]} 帧`;document.querySelector('#play').textContent=playing?'暂停':'播放';[...frames.children].forEach((f,j)=>f.classList.toggle('chosen',j===index))}
+document.querySelector('#play').onclick=()=>{playing=!playing;last=performance.now();show(index)};
+document.querySelector('#prev').onclick=()=>{playing=false;show(index-1)};document.querySelector('#next').onclick=()=>{playing=false;show(index+1)};
+document.querySelector('#speed').oninput=e=>document.querySelector('#ms').textContent=e.target.value;
+document.querySelector('#mirror').onchange=e=>document.querySelectorAll('img').forEach(img=>img.style.transform=e.target.checked?'scaleX(-1)':'');
+function tick(t){if(playing&&t-last>=Number(document.querySelector('#speed').value)){show(index+1);last=t}requestAnimationFrame(tick)}show(0);requestAnimationFrame(tick);
+</script></html>

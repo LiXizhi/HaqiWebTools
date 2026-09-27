@@ -1,3 +1,5 @@
+import {packPetFilesSync,unpackPetPages,hydratePetFile} from './adventure_pet_files.js';
+import {initialPetIds} from './adventure_pet_files_core.js';
 // Local account cache is one atomic JSON write. Legacy storage calls receive a
 // role-scoped facade so cloud/debug backups never leak between roles/accounts.
 import { durableSave, runtimeValues, restoreRuntime, coreCatalogKey } from './adventure_storage_core.js';
@@ -7,16 +9,21 @@ import { emptyRoles, validateRoles, addRole, selectRole, grantMagicBeans } from 
 
 export function createRoleStore({ content, dataset, storage = localStorage, uuid = () => crypto.randomUUID(), now = () => Date.now(), prepareSaves = async () => {}, runtimeStore = createRuntimeStore() }) {
     let owner = null, state, raw, lastCoreKey;
+    const scope=(accountKey,id)=>`${accountKey}.${id}`;
+    const fileIO=scope=>({read:path=>{const text=storage.getItem(`${scope}.pet-file.${path}`);if(!text)throw Error('宠物文件尚未下载，请连接原账号后重试');return JSON.parse(text);},write:(path,value)=>{const text=JSON.stringify(value),key=`${scope}.pet-file.${path}`;if(storage.getItem(key)&&storage.getItem(key)!==text)throw Error('宠物文件版本冲突');storage.setItem(key,text);if(storage.getItem(key)!==text)throw Error('宠物文件保存失败');}});
+    function unpack(save,accountKey,id){const io=fileIO(scope(accountKey,id)),next=unpackPetPages(save,scope(accountKey,id),io.read);for(const petId of initialPetIds(next))hydratePetFile(next,petId,scope(accountKey,id),io.read,content);return next;}
     const key = () => `haqi.roles.v1.${owner === null ? 'guest' : 'account.' + encodeURIComponent(owner)}`;
     const runtimeKey = (accountKey,id) => `${accountKey}.${id}`;
     function hydrate(catalog,accountKey,localFormat) {
         return {...catalog,roles:catalog.roles.map(row=>({...row,save:localFormat===2
-            ? restoreRuntime(row.save,content,runtimeStore.get(runtimeKey(accountKey,row.id))) : row.save}))};
+            ? restoreRuntime(unpack(row.save,accountKey,row.id),content,runtimeStore.get(runtimeKey(accountKey,row.id))) : row.save}))};
     }
     function changed(catalog) {return state.dirty || coreCatalogKey(catalog)!==lastCoreKey;}
     function write(next) {
         if (storage.getItem(key()) !== raw) throw Error('角色进度已在其他页面变化，请刷新后继续。');
-        const persisted={...next,localFormat:2,catalog:{...next.catalog,roles:next.catalog.roles.map(row=>({...row,save:durableSave(row.save)}))}};
+        const packed=next.catalog.roles.map(row=>{const old=state?.catalog.roles.find(r=>r.id===row.id)?.save;const input={...row.save,...(row.save.petInstanceVersion===1?{petFileRefs:{...old?.petFileRefs,...row.save.petFileRefs},petPages:old?.petPages||row.save.petPages}:{})};if(input.petInstanceVersion===1)for(const id of [...Object.keys(input.pets||{}),...Object.keys(input.petWorld||{})])if(old?.petFileRefs?.[id])input.petFileRefs[id]=old.petFileRefs[id];return {...row,save:packPetFilesSync(durableSave(input),scope(key(),row.id),content,uuid,fileIO(scope(key(),row.id)))};});
+        const persisted={...next,localFormat:2,catalog:{...next.catalog,roles:packed}};
+        next={...next,catalog:{...next.catalog,roles:next.catalog.roles.map((row,i)=>({...row,save:{...row.save,...(row.save.petInstanceVersion===1?{petFileRefs:unpackPetPages(packed[i].save,scope(key(),row.id),fileIO(scope(key(),row.id)).read).petFileRefs,petPages:packed[i].save.petPages}:{})}}))}};
         const text=JSON.stringify(persisted);
         if(text!==raw)storage.setItem(key(),text);
         for(const row of next.catalog.roles)runtimeStore.set(runtimeKey(key(),row.id),runtimeValues(row.save));
@@ -24,6 +31,9 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
     }
     return {
         flushRuntime: () => runtimeStore.flush(),
+        petFileIO(roleId){return fileIO(scope(key(),roleId));},
+        petScope(roleId){return scope(key(),roleId);},
+        loadPet(save,id){const next=JSON.parse(JSON.stringify(save));hydratePetFile(next,id,scope(key(),state.catalog.activeId),fileIO(scope(key(),state.catalog.activeId)).read,content);return restoreRuntime(durableSave(next),content,runtimeValues(next));},
         get owner() { return owner; },
         get catalog() { return state.catalog; },
         get base() { return state.base; },
@@ -34,6 +44,7 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
             if(captured)await runtimeStore.prepare((JSON.parse(captured).catalog?.roles||[]).map(row=>runtimeKey(accountKey,row.id)));
             const saves=captured?(JSON.parse(captured).catalog?.roles||[]).map(row=>row.save):legacy?[JSON.parse(legacy)]:[];
             await prepareSaves(saves);
+            if(captured){const records=JSON.parse(captured).catalog?.roles||[];const cooperative=records.flatMap(row=>{const r=runtimeStore.get(runtimeKey(accountKey,row.id));return r?.values?.coopRun&&r.revision===row.save.revision?[{...row.save,zone:r.coopZone}]:[];});if(cooperative.length)await prepareSaves(cooperative);}
             if(storage.getItem(accountKey)!==captured||legacy!==null&&storage.getItem(SAVE_KEY)!==legacy)throw Error('角色进度已变化，请重新读取。');
         },
         open(account = null) {

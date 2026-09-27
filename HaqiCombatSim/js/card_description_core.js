@@ -80,9 +80,9 @@ export function describeCard(card,{dataset={},cooldown,translate=value=>value}={
         }
         if(effect.boost_damage!==undefined){
             const percent=Number(effect.boost_damage),vars={target:tgt,school:schoolName(effect.school||'all'),percent:Math.abs(percent)};
-            return {short:t(charm?(percent>=0?'下次{school}攻击 +{percent}%':'下次{school}攻击 -{percent}%'):(percent>=0?'下次受到{school}伤害 +{percent}%':'下次受到{school}伤害 -{percent}%'),vars),
+            return {short:t(charm?(percent>=0?'下次{school}攻击加 {percent}%':'下次{school}攻击减 {percent}%'):(percent>=0?'受到的{school}攻击加 {percent}%':'受到的{school}攻击减 {percent}%'),vars),
                 known:true,lines:[
-                    t(charm?(percent>=0?'使{target}下一次匹配的{school}攻击伤害提高 {percent}%，触发后消耗此术。':'使{target}下一次匹配的{school}攻击伤害降低 {percent}%，触发后消耗此术。'):(percent>=0?'给{target}放置陷阱，使其下一次受到的{school}伤害提高 {percent}%，触发后陷阱消失。':'为{target}施加减伤盾，使其下一次受到的{school}伤害降低 {percent}%，触发后护盾消失。'),vars),
+                    t(charm?(percent>=0?'使{target}下一次匹配的{school}攻击伤害提高 {percent}%，触发后消耗此术。':'使{target}下一次匹配的{school}攻击伤害降低 {percent}%，触发后消耗此术。'):(percent>=0?'给{target}放置陷阱，使其下一次受到的{school}攻击伤害提高 {percent}%，触发后陷阱消失。':'为{target}施加减伤盾，使其下一次受到的{school}攻击伤害降低 {percent}%，触发后护盾消失。'),vars),
                     ...(!charm&&percent<0?[t('减伤盾按比例减少一次匹配的伤害；吸收盾则有固定容量，可以分多次扣除。')]:[]),
                 ]};
         }

@@ -1,0 +1,9035 @@
+{
+  "version": 1,
+  "scope": "runtime-body-costumes",
+  "variants": {
+    "male2": {
+      "id": "male2",
+      "name": "赤曜战法师",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male2-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 132616,
+      "sha256": "98f86f23e20a96afcf2d35dd25bf2d76c01ab31fbd49ce97ad688b153bb8d4c8",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "dace60cdfbc1fe4e4f4fc55aaff1be63405529581f881e16b19272cd931518b3",
+        "reference": "assets/hero-preview/male-walk-cycle.webp",
+        "referenceSha256": "0fdae85ef672970df9b1953f3bedf835bdac63bd1d1cf743ffd4ce5a5a4e659e"
+      },
+      "validation": {
+        "sameAlpha": true,
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            74,
+            98,
+            169,
+            191
+          ],
+          "targetBounds": [
+            63,
+            82,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            75,
+            98,
+            167,
+            191
+          ],
+          "targetBounds": [
+            64,
+            82,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            78,
+            98,
+            168,
+            191
+          ],
+          "targetBounds": [
+            63,
+            82,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            80,
+            98,
+            175,
+            191
+          ],
+          "targetBounds": [
+            64,
+            82,
+            132,
+            151
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            84,
+            98,
+            178,
+            190
+          ],
+          "targetBounds": [
+            65,
+            83,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            86,
+            98,
+            180,
+            190
+          ],
+          "targetBounds": [
+            64,
+            82,
+            131,
+            149
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            85,
+            104,
+            182,
+            191
+          ],
+          "targetBounds": [
+            62,
+            85,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            75,
+            96,
+            176,
+            190
+          ],
+          "targetBounds": [
+            64,
+            82,
+            138,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            77,
+            96,
+            168,
+            190
+          ],
+          "targetBounds": [
+            65,
+            82,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            78,
+            96,
+            175,
+            189
+          ],
+          "targetBounds": [
+            62,
+            82,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            81,
+            96,
+            178,
+            190
+          ],
+          "targetBounds": [
+            64,
+            82,
+            136,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            87,
+            96,
+            178,
+            190
+          ],
+          "targetBounds": [
+            67,
+            82,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            84,
+            96,
+            182,
+            188
+          ],
+          "targetBounds": [
+            62,
+            82,
+            134,
+            148
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            82,
+            96,
+            184,
+            190
+          ],
+          "targetBounds": [
+            60,
+            81,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            65,
+            96,
+            165,
+            189
+          ],
+          "targetBounds": [
+            56,
+            82,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            74,
+            96,
+            167,
+            191
+          ],
+          "targetBounds": [
+            61,
+            82,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            65,
+            96,
+            168,
+            190
+          ],
+          "targetBounds": [
+            54,
+            81,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            70,
+            96,
+            172,
+            189
+          ],
+          "targetBounds": [
+            55,
+            82,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            77,
+            96,
+            170,
+            191
+          ],
+          "targetBounds": [
+            59,
+            82,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            73,
+            96,
+            178,
+            189
+          ],
+          "targetBounds": [
+            53,
+            82,
+            131,
+            151
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            82,
+            100,
+            177,
+            191
+          ],
+          "targetBounds": [
+            57,
+            82,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            72,
+            92,
+            167,
+            189
+          ],
+          "targetBounds": [
+            61,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            73,
+            92,
+            169,
+            189
+          ],
+          "targetBounds": [
+            62,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            75,
+            92,
+            171,
+            188
+          ],
+          "targetBounds": [
+            62,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            77,
+            92,
+            175,
+            190
+          ],
+          "targetBounds": [
+            61,
+            79,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            79,
+            92,
+            177,
+            189
+          ],
+          "targetBounds": [
+            61,
+            79,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            82,
+            92,
+            180,
+            189
+          ],
+          "targetBounds": [
+            64,
+            79,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            84,
+            101,
+            185,
+            190
+          ],
+          "targetBounds": [
+            61,
+            84,
+            133,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/male2-body-prompt.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/f8cefb464cff/male2-walk-cycle.webp"
+    },
+    "male3": {
+      "id": "male3",
+      "name": "森野游侠",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male3-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 131128,
+      "sha256": "c4a6b7aecbda0560e4c06171f587e8c610298de7206490b8c3fd37ca93d91b8e",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "1ff061f9ffeb0f267c364979330d2efddbd9c5120266939015c8f429ad991125",
+        "reference": "assets/hero-preview/male-walk-cycle.webp",
+        "referenceSha256": "0fdae85ef672970df9b1953f3bedf835bdac63bd1d1cf743ffd4ce5a5a4e659e"
+      },
+      "validation": {
+        "sameAlpha": true,
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            75,
+            97,
+            173,
+            191
+          ],
+          "targetBounds": [
+            63,
+            82,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            78,
+            98,
+            178,
+            191
+          ],
+          "targetBounds": [
+            64,
+            82,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            81,
+            98,
+            181,
+            191
+          ],
+          "targetBounds": [
+            63,
+            82,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            85,
+            98,
+            185,
+            191
+          ],
+          "targetBounds": [
+            64,
+            82,
+            132,
+            151
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            88,
+            98,
+            187,
+            190
+          ],
+          "targetBounds": [
+            65,
+            83,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            89,
+            98,
+            190,
+            191
+          ],
+          "targetBounds": [
+            64,
+            82,
+            131,
+            149
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            92,
+            103,
+            188,
+            192
+          ],
+          "targetBounds": [
+            62,
+            85,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            74,
+            101,
+            177,
+            191
+          ],
+          "targetBounds": [
+            64,
+            82,
+            138,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            79,
+            101,
+            177,
+            193
+          ],
+          "targetBounds": [
+            65,
+            82,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            80,
+            100,
+            182,
+            191
+          ],
+          "targetBounds": [
+            62,
+            82,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            83,
+            101,
+            185,
+            192
+          ],
+          "targetBounds": [
+            64,
+            82,
+            136,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            87,
+            101,
+            186,
+            193
+          ],
+          "targetBounds": [
+            67,
+            82,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            89,
+            100,
+            190,
+            189
+          ],
+          "targetBounds": [
+            62,
+            82,
+            134,
+            148
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            88,
+            101,
+            190,
+            190
+          ],
+          "targetBounds": [
+            60,
+            81,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            63,
+            96,
+            166,
+            192
+          ],
+          "targetBounds": [
+            56,
+            82,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            70,
+            95,
+            173,
+            194
+          ],
+          "targetBounds": [
+            61,
+            82,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            68,
+            95,
+            174,
+            192
+          ],
+          "targetBounds": [
+            54,
+            81,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            74,
+            95,
+            179,
+            193
+          ],
+          "targetBounds": [
+            55,
+            82,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            77,
+            95,
+            181,
+            194
+          ],
+          "targetBounds": [
+            59,
+            82,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            80,
+            95,
+            187,
+            193
+          ],
+          "targetBounds": [
+            53,
+            82,
+            131,
+            151
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            89,
+            103,
+            182,
+            194
+          ],
+          "targetBounds": [
+            57,
+            82,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            73,
+            93,
+            175,
+            192
+          ],
+          "targetBounds": [
+            61,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            73,
+            93,
+            179,
+            192
+          ],
+          "targetBounds": [
+            62,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            77,
+            93,
+            182,
+            192
+          ],
+          "targetBounds": [
+            62,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            78,
+            93,
+            185,
+            194
+          ],
+          "targetBounds": [
+            61,
+            79,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            84,
+            93,
+            187,
+            192
+          ],
+          "targetBounds": [
+            61,
+            79,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            84,
+            93,
+            191,
+            193
+          ],
+          "targetBounds": [
+            64,
+            79,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            89,
+            104,
+            191,
+            193
+          ],
+          "targetBounds": [
+            61,
+            84,
+            133,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/aef6c232b85f/male3-walk-cycle.webp"
+    },
+    "male4": {
+      "id": "male4",
+      "name": "银潮卫士",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male4-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 134384,
+      "sha256": "8f97d1d28fe2d512f184db588c912892c3a2de4c9a0becdc3b381a9cfa357646",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "62723c065782a3548e675e04962e8690fd83e158076a455b5fedafb1302d1667",
+        "reference": "assets/hero-preview/male-walk-cycle.webp",
+        "referenceSha256": "0fdae85ef672970df9b1953f3bedf835bdac63bd1d1cf743ffd4ce5a5a4e659e"
+      },
+      "validation": {
+        "sameAlpha": true,
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            67,
+            97,
+            178,
+            196
+          ],
+          "targetBounds": [
+            63,
+            82,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            69,
+            98,
+            181,
+            197
+          ],
+          "targetBounds": [
+            64,
+            82,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            73,
+            98,
+            184,
+            197
+          ],
+          "targetBounds": [
+            63,
+            82,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            79,
+            98,
+            190,
+            197
+          ],
+          "targetBounds": [
+            64,
+            82,
+            132,
+            151
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            86,
+            98,
+            193,
+            197
+          ],
+          "targetBounds": [
+            65,
+            83,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            84,
+            98,
+            196,
+            197
+          ],
+          "targetBounds": [
+            64,
+            82,
+            131,
+            149
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            85,
+            98,
+            190,
+            195
+          ],
+          "targetBounds": [
+            62,
+            85,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            71,
+            86,
+            191,
+            186
+          ],
+          "targetBounds": [
+            64,
+            82,
+            138,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            73,
+            88,
+            186,
+            189
+          ],
+          "targetBounds": [
+            65,
+            82,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            77,
+            87,
+            194,
+            188
+          ],
+          "targetBounds": [
+            62,
+            82,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            82,
+            88,
+            200,
+            188
+          ],
+          "targetBounds": [
+            64,
+            82,
+            136,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            87,
+            87,
+            201,
+            189
+          ],
+          "targetBounds": [
+            67,
+            82,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            91,
+            88,
+            207,
+            188
+          ],
+          "targetBounds": [
+            62,
+            82,
+            134,
+            148
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            77,
+            93,
+            188,
+            189
+          ],
+          "targetBounds": [
+            60,
+            81,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            55,
+            80,
+            176,
+            182
+          ],
+          "targetBounds": [
+            56,
+            82,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            69,
+            81,
+            181,
+            182
+          ],
+          "targetBounds": [
+            61,
+            82,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            67,
+            80,
+            184,
+            182
+          ],
+          "targetBounds": [
+            54,
+            81,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            77,
+            80,
+            191,
+            181
+          ],
+          "targetBounds": [
+            55,
+            82,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            83,
+            80,
+            195,
+            182
+          ],
+          "targetBounds": [
+            59,
+            82,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            80,
+            80,
+            199,
+            182
+          ],
+          "targetBounds": [
+            53,
+            82,
+            131,
+            151
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            87,
+            87,
+            192,
+            181
+          ],
+          "targetBounds": [
+            57,
+            82,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            63,
+            71,
+            177,
+            182
+          ],
+          "targetBounds": [
+            61,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            68,
+            71,
+            180,
+            181
+          ],
+          "targetBounds": [
+            62,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            71,
+            71,
+            182,
+            181
+          ],
+          "targetBounds": [
+            62,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            77,
+            71,
+            190,
+            183
+          ],
+          "targetBounds": [
+            61,
+            79,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            83,
+            71,
+            194,
+            181
+          ],
+          "targetBounds": [
+            61,
+            79,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            85,
+            71,
+            196,
+            181
+          ],
+          "targetBounds": [
+            64,
+            79,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            80,
+            73,
+            195,
+            180
+          ],
+          "targetBounds": [
+            61,
+            84,
+            133,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/aef6c232b85f/male4-walk-cycle.webp"
+    },
+    "male5": {
+      "id": "male5",
+      "name": "沙海旅人",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male5-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 141588,
+      "sha256": "325af660ea5c8cadbb8fb816a94a6ddbb5cee2ad439e729bdc8185c71dbfa11b",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "4a47e0ac0a3ceb12f02ca9cc5efcf6c39aa6b304fa7eeba40282d50adb3c076d",
+        "reference": "assets/hero-preview/male-walk-cycle.webp",
+        "referenceSha256": "0fdae85ef672970df9b1953f3bedf835bdac63bd1d1cf743ffd4ce5a5a4e659e"
+      },
+      "validation": {
+        "sameAlpha": true,
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            76,
+            97,
+            172,
+            201
+          ],
+          "targetBounds": [
+            63,
+            82,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            74,
+            98,
+            170,
+            201
+          ],
+          "targetBounds": [
+            64,
+            82,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            76,
+            98,
+            174,
+            202
+          ],
+          "targetBounds": [
+            63,
+            82,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            78,
+            98,
+            177,
+            202
+          ],
+          "targetBounds": [
+            64,
+            82,
+            132,
+            151
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            79,
+            98,
+            179,
+            202
+          ],
+          "targetBounds": [
+            65,
+            83,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            83,
+            97,
+            184,
+            202
+          ],
+          "targetBounds": [
+            64,
+            82,
+            131,
+            149
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            87,
+            102,
+            182,
+            200
+          ],
+          "targetBounds": [
+            62,
+            85,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            72,
+            93,
+            183,
+            192
+          ],
+          "targetBounds": [
+            64,
+            82,
+            138,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            73,
+            93,
+            178,
+            195
+          ],
+          "targetBounds": [
+            65,
+            82,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            76,
+            93,
+            186,
+            194
+          ],
+          "targetBounds": [
+            62,
+            82,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            77,
+            93,
+            186,
+            193
+          ],
+          "targetBounds": [
+            64,
+            82,
+            136,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            81,
+            93,
+            186,
+            195
+          ],
+          "targetBounds": [
+            67,
+            82,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            82,
+            94,
+            187,
+            193
+          ],
+          "targetBounds": [
+            62,
+            82,
+            134,
+            148
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            86,
+            95,
+            186,
+            195
+          ],
+          "targetBounds": [
+            60,
+            81,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            62,
+            91,
+            170,
+            191
+          ],
+          "targetBounds": [
+            56,
+            82,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            69,
+            91,
+            174,
+            193
+          ],
+          "targetBounds": [
+            61,
+            82,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            68,
+            91,
+            176,
+            192
+          ],
+          "targetBounds": [
+            54,
+            81,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            68,
+            91,
+            177,
+            191
+          ],
+          "targetBounds": [
+            55,
+            82,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            73,
+            89,
+            175,
+            193
+          ],
+          "targetBounds": [
+            59,
+            82,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            73,
+            91,
+            184,
+            192
+          ],
+          "targetBounds": [
+            53,
+            82,
+            131,
+            151
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            82,
+            96,
+            184,
+            193
+          ],
+          "targetBounds": [
+            57,
+            82,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            70,
+            84,
+            170,
+            190
+          ],
+          "targetBounds": [
+            61,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            71,
+            84,
+            172,
+            190
+          ],
+          "targetBounds": [
+            62,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            73,
+            84,
+            175,
+            190
+          ],
+          "targetBounds": [
+            62,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            73,
+            84,
+            176,
+            190
+          ],
+          "targetBounds": [
+            61,
+            79,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            78,
+            84,
+            179,
+            190
+          ],
+          "targetBounds": [
+            61,
+            79,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            81,
+            84,
+            184,
+            190
+          ],
+          "targetBounds": [
+            64,
+            79,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            85,
+            89,
+            185,
+            190
+          ],
+          "targetBounds": [
+            61,
+            84,
+            133,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/aef6c232b85f/male5-walk-cycle.webp"
+    },
+    "male6": {
+      "id": "male6",
+      "name": "紫夜乐师",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male6-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 134114,
+      "sha256": "574e3db5e04df170a0c72a26333c97b6432b9bbbbd9c5d5a0056b75cfaeef2d9",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "07e784f54902a02b4ccd7762db142713787ad448b3627942642c44517020e317",
+        "reference": "assets/hero-preview/male-walk-cycle.webp",
+        "referenceSha256": "0fdae85ef672970df9b1953f3bedf835bdac63bd1d1cf743ffd4ce5a5a4e659e"
+      },
+      "validation": {
+        "sameAlpha": true,
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            69,
+            92,
+            177,
+            201
+          ],
+          "targetBounds": [
+            63,
+            82,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            66,
+            91,
+            172,
+            201
+          ],
+          "targetBounds": [
+            64,
+            82,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            67,
+            92,
+            173,
+            201
+          ],
+          "targetBounds": [
+            63,
+            82,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            67,
+            90,
+            176,
+            201
+          ],
+          "targetBounds": [
+            64,
+            82,
+            132,
+            151
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            71,
+            92,
+            179,
+            201
+          ],
+          "targetBounds": [
+            65,
+            83,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            75,
+            91,
+            183,
+            201
+          ],
+          "targetBounds": [
+            64,
+            82,
+            131,
+            149
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            82,
+            96,
+            184,
+            200
+          ],
+          "targetBounds": [
+            62,
+            85,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            67,
+            88,
+            189,
+            197
+          ],
+          "targetBounds": [
+            64,
+            82,
+            138,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            71,
+            88,
+            183,
+            199
+          ],
+          "targetBounds": [
+            65,
+            82,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            72,
+            88,
+            190,
+            197
+          ],
+          "targetBounds": [
+            62,
+            82,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            74,
+            88,
+            191,
+            198
+          ],
+          "targetBounds": [
+            64,
+            82,
+            136,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            72,
+            87,
+            189,
+            199
+          ],
+          "targetBounds": [
+            67,
+            82,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            75,
+            88,
+            193,
+            197
+          ],
+          "targetBounds": [
+            62,
+            82,
+            134,
+            148
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            73,
+            88,
+            191,
+            199
+          ],
+          "targetBounds": [
+            60,
+            81,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            60,
+            82,
+            181,
+            193
+          ],
+          "targetBounds": [
+            56,
+            82,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            61,
+            83,
+            179,
+            195
+          ],
+          "targetBounds": [
+            61,
+            82,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            61,
+            82,
+            181,
+            194
+          ],
+          "targetBounds": [
+            54,
+            81,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            64,
+            82,
+            185,
+            193
+          ],
+          "targetBounds": [
+            55,
+            82,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            65,
+            82,
+            184,
+            196
+          ],
+          "targetBounds": [
+            59,
+            82,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            65,
+            83,
+            187,
+            193
+          ],
+          "targetBounds": [
+            53,
+            82,
+            131,
+            151
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            73,
+            83,
+            182,
+            198
+          ],
+          "targetBounds": [
+            57,
+            82,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            62,
+            71,
+            178,
+            190
+          ],
+          "targetBounds": [
+            61,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            64,
+            71,
+            181,
+            190
+          ],
+          "targetBounds": [
+            62,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            67,
+            71,
+            186,
+            190
+          ],
+          "targetBounds": [
+            62,
+            79,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            69,
+            71,
+            187,
+            190
+          ],
+          "targetBounds": [
+            61,
+            79,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            69,
+            71,
+            187,
+            190
+          ],
+          "targetBounds": [
+            61,
+            79,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            72,
+            71,
+            190,
+            190
+          ],
+          "targetBounds": [
+            64,
+            79,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            73,
+            77,
+            196,
+            190
+          ],
+          "targetBounds": [
+            61,
+            84,
+            133,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/aef6c232b85f/male6-walk-cycle.webp"
+    },
+    "female2": {
+      "id": "female2",
+      "name": "赤曜战法师",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female2-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 157234,
+      "sha256": "731a174f1e6061979e2b079a84bee72456604b137ed1cc66f937ccaa48031774",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "84a15e74ebf576582405f9138e2c328ef0f4d977e663b693a0fcf1d2fb6965c3",
+        "reference": "assets/hero-preview/female-walk-cycle.webp",
+        "referenceSha256": "bc6a643bada3e71aecdde7d20e6cb33c1f167945d7770e5b407040d3c47a0dde"
+      },
+      "validation": {
+        "sameAlpha": true,
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            61,
+            78,
+            173,
+            199
+          ],
+          "targetBounds": [
+            61,
+            73,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            66,
+            78,
+            179,
+            199
+          ],
+          "targetBounds": [
+            62,
+            73,
+            133,
+            149
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            73,
+            78,
+            185,
+            199
+          ],
+          "targetBounds": [
+            63,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            78,
+            78,
+            190,
+            199
+          ],
+          "targetBounds": [
+            61,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            83,
+            78,
+            195,
+            199
+          ],
+          "targetBounds": [
+            61,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            87,
+            78,
+            198,
+            199
+          ],
+          "targetBounds": [
+            60,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            62,
+            73,
+            186,
+            199
+          ],
+          "targetBounds": [
+            60,
+            72,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            59,
+            76,
+            190,
+            197
+          ],
+          "targetBounds": [
+            59,
+            74,
+            140,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            64,
+            76,
+            193,
+            197
+          ],
+          "targetBounds": [
+            60,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            69,
+            75,
+            199,
+            196
+          ],
+          "targetBounds": [
+            59,
+            74,
+            139,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            74,
+            75,
+            204,
+            197
+          ],
+          "targetBounds": [
+            59,
+            73,
+            141,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            78,
+            76,
+            207,
+            197
+          ],
+          "targetBounds": [
+            61,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            83,
+            75,
+            212,
+            196
+          ],
+          "targetBounds": [
+            58,
+            74,
+            137,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            61,
+            67,
+            193,
+            197
+          ],
+          "targetBounds": [
+            60,
+            64,
+            143,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            45,
+            72,
+            174,
+            194
+          ],
+          "targetBounds": [
+            53,
+            73,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            52,
+            72,
+            180,
+            195
+          ],
+          "targetBounds": [
+            58,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            56,
+            72,
+            184,
+            194
+          ],
+          "targetBounds": [
+            50,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            61,
+            72,
+            190,
+            194
+          ],
+          "targetBounds": [
+            48,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            67,
+            72,
+            193,
+            195
+          ],
+          "targetBounds": [
+            59,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            70,
+            72,
+            198,
+            193
+          ],
+          "targetBounds": [
+            48,
+            72,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            46,
+            65,
+            174,
+            195
+          ],
+          "targetBounds": [
+            45,
+            65,
+            129,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            58,
+            67,
+            173,
+            193
+          ],
+          "targetBounds": [
+            62,
+            71,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            62,
+            67,
+            178,
+            193
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            66,
+            68,
+            182,
+            193
+          ],
+          "targetBounds": [
+            59,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            72,
+            67,
+            187,
+            193
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            76,
+            67,
+            192,
+            193
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            81,
+            67,
+            197,
+            193
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            49,
+            62,
+            182,
+            193
+          ],
+          "targetBounds": [
+            54,
+            71,
+            132,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/aef6c232b85f/female2-walk-cycle.webp"
+    },
+    "female3": {
+      "id": "female3",
+      "name": "森野游侠",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female3-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 160250,
+      "sha256": "77ece76642f0b568270588d846f02779982deceb20720a7b27dd3925d99bf25a",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "54b7ab40fa87153e1c8c8769f4c5a82a3de0f331d2fd63344e7bad523f32f6f2",
+        "reference": "assets/hero-preview/female-walk-cycle.webp",
+        "referenceSha256": "bc6a643bada3e71aecdde7d20e6cb33c1f167945d7770e5b407040d3c47a0dde"
+      },
+      "validation": {
+        "sameAlpha": true,
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            68,
+            86,
+            173,
+            201
+          ],
+          "targetBounds": [
+            61,
+            73,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            71,
+            85,
+            179,
+            200
+          ],
+          "targetBounds": [
+            62,
+            73,
+            133,
+            149
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            76,
+            85,
+            182,
+            201
+          ],
+          "targetBounds": [
+            63,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            79,
+            85,
+            187,
+            201
+          ],
+          "targetBounds": [
+            61,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            82,
+            85,
+            190,
+            200
+          ],
+          "targetBounds": [
+            61,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            85,
+            85,
+            194,
+            200
+          ],
+          "targetBounds": [
+            60,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            86,
+            80,
+            195,
+            200
+          ],
+          "targetBounds": [
+            60,
+            72,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            69,
+            80,
+            182,
+            193
+          ],
+          "targetBounds": [
+            59,
+            74,
+            140,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            72,
+            82,
+            183,
+            195
+          ],
+          "targetBounds": [
+            60,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            76,
+            83,
+            188,
+            194
+          ],
+          "targetBounds": [
+            59,
+            74,
+            139,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            79,
+            84,
+            194,
+            194
+          ],
+          "targetBounds": [
+            59,
+            73,
+            141,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            83,
+            83,
+            194,
+            195
+          ],
+          "targetBounds": [
+            61,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            84,
+            83,
+            195,
+            193
+          ],
+          "targetBounds": [
+            58,
+            74,
+            137,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            86,
+            75,
+            195,
+            195
+          ],
+          "targetBounds": [
+            60,
+            64,
+            143,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            56,
+            77,
+            173,
+            189
+          ],
+          "targetBounds": [
+            53,
+            73,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            64,
+            79,
+            177,
+            192
+          ],
+          "targetBounds": [
+            58,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            62,
+            78,
+            180,
+            189
+          ],
+          "targetBounds": [
+            50,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            65,
+            78,
+            184,
+            189
+          ],
+          "targetBounds": [
+            48,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            72,
+            77,
+            186,
+            192
+          ],
+          "targetBounds": [
+            59,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            68,
+            77,
+            187,
+            189
+          ],
+          "targetBounds": [
+            48,
+            72,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            76,
+            75,
+            191,
+            192
+          ],
+          "targetBounds": [
+            45,
+            65,
+            129,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            72,
+            69,
+            175,
+            191
+          ],
+          "targetBounds": [
+            62,
+            71,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            72,
+            70,
+            178,
+            192
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            75,
+            69,
+            181,
+            192
+          ],
+          "targetBounds": [
+            59,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            81,
+            69,
+            186,
+            192
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            83,
+            69,
+            190,
+            192
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            84,
+            70,
+            192,
+            192
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            82,
+            71,
+            201,
+            191
+          ],
+          "targetBounds": [
+            54,
+            71,
+            132,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/aef6c232b85f/female3-walk-cycle.webp"
+    },
+    "female4": {
+      "id": "female4",
+      "name": "银潮卫士",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female4-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 154986,
+      "sha256": "d10e635b6cfd8f51b05a13707bc8fda789f5a5ab8b672e7ed990c89ca1991ddf",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "fd26b8a42179d50377f417444151525a71d0ea33088bd7babd09618b5c618817",
+        "reference": "assets/hero-preview/female-walk-cycle.webp",
+        "referenceSha256": "bc6a643bada3e71aecdde7d20e6cb33c1f167945d7770e5b407040d3c47a0dde"
+      },
+      "validation": {
+        "sameAlpha": true,
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            67,
+            87,
+            174,
+            194
+          ],
+          "targetBounds": [
+            61,
+            73,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            67,
+            87,
+            177,
+            194
+          ],
+          "targetBounds": [
+            62,
+            73,
+            133,
+            149
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            70,
+            87,
+            180,
+            194
+          ],
+          "targetBounds": [
+            63,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            70,
+            87,
+            180,
+            194
+          ],
+          "targetBounds": [
+            61,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            72,
+            87,
+            182,
+            194
+          ],
+          "targetBounds": [
+            61,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            72,
+            87,
+            182,
+            194
+          ],
+          "targetBounds": [
+            60,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            84,
+            88,
+            182,
+            194
+          ],
+          "targetBounds": [
+            60,
+            72,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            67,
+            86,
+            181,
+            188
+          ],
+          "targetBounds": [
+            59,
+            74,
+            140,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            68,
+            86,
+            181,
+            192
+          ],
+          "targetBounds": [
+            60,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            71,
+            87,
+            186,
+            189
+          ],
+          "targetBounds": [
+            59,
+            74,
+            139,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            71,
+            87,
+            188,
+            189
+          ],
+          "targetBounds": [
+            59,
+            73,
+            141,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            73,
+            87,
+            185,
+            192
+          ],
+          "targetBounds": [
+            61,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            73,
+            87,
+            189,
+            188
+          ],
+          "targetBounds": [
+            58,
+            74,
+            137,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            78,
+            86,
+            192,
+            192
+          ],
+          "targetBounds": [
+            60,
+            64,
+            143,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            62,
+            81,
+            179,
+            187
+          ],
+          "targetBounds": [
+            53,
+            73,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            68,
+            81,
+            182,
+            189
+          ],
+          "targetBounds": [
+            58,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            62,
+            82,
+            185,
+            189
+          ],
+          "targetBounds": [
+            50,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            64,
+            83,
+            186,
+            188
+          ],
+          "targetBounds": [
+            48,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            69,
+            83,
+            187,
+            189
+          ],
+          "targetBounds": [
+            59,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            66,
+            82,
+            188,
+            187
+          ],
+          "targetBounds": [
+            48,
+            72,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            73,
+            82,
+            183,
+            189
+          ],
+          "targetBounds": [
+            45,
+            65,
+            129,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            71,
+            76,
+            177,
+            187
+          ],
+          "targetBounds": [
+            62,
+            71,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            72,
+            76,
+            179,
+            187
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            72,
+            76,
+            183,
+            187
+          ],
+          "targetBounds": [
+            59,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            77,
+            76,
+            184,
+            187
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            77,
+            76,
+            185,
+            187
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            77,
+            75,
+            186,
+            187
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            84,
+            86,
+            182,
+            187
+          ],
+          "targetBounds": [
+            54,
+            71,
+            132,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/aef6c232b85f/female4-walk-cycle.webp"
+    },
+    "female5": {
+      "id": "female5",
+      "name": "沙海旅人",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female5-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 165744,
+      "sha256": "0d1eba7218e27c7492bc8338c7a12a77bdc9f6f742c54250947fdecaf0ef9630",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "f229e5cea2d77899ee4708c096a10f71ef730cd301117814528e9273684b01d0",
+        "reference": "assets/hero-preview/female-walk-cycle.webp",
+        "referenceSha256": "bc6a643bada3e71aecdde7d20e6cb33c1f167945d7770e5b407040d3c47a0dde"
+      },
+      "validation": {
+        "sameAlpha": true,
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            73,
+            88,
+            167,
+            186
+          ],
+          "targetBounds": [
+            61,
+            73,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            74,
+            88,
+            171,
+            186
+          ],
+          "targetBounds": [
+            62,
+            73,
+            133,
+            149
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            78,
+            88,
+            175,
+            186
+          ],
+          "targetBounds": [
+            63,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            78,
+            88,
+            173,
+            186
+          ],
+          "targetBounds": [
+            61,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            82,
+            88,
+            180,
+            186
+          ],
+          "targetBounds": [
+            61,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            84,
+            88,
+            180,
+            186
+          ],
+          "targetBounds": [
+            60,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            77,
+            85,
+            183,
+            186
+          ],
+          "targetBounds": [
+            60,
+            72,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            70,
+            89,
+            177,
+            188
+          ],
+          "targetBounds": [
+            59,
+            74,
+            140,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            74,
+            89,
+            176,
+            189
+          ],
+          "targetBounds": [
+            60,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            74,
+            89,
+            181,
+            188
+          ],
+          "targetBounds": [
+            59,
+            74,
+            139,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            78,
+            89,
+            184,
+            188
+          ],
+          "targetBounds": [
+            59,
+            73,
+            141,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            81,
+            89,
+            183,
+            189
+          ],
+          "targetBounds": [
+            61,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            81,
+            89,
+            186,
+            188
+          ],
+          "targetBounds": [
+            58,
+            74,
+            137,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            85,
+            79,
+            195,
+            189
+          ],
+          "targetBounds": [
+            60,
+            64,
+            143,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            62,
+            89,
+            169,
+            189
+          ],
+          "targetBounds": [
+            53,
+            73,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            69,
+            89,
+            173,
+            190
+          ],
+          "targetBounds": [
+            58,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            64,
+            89,
+            175,
+            189
+          ],
+          "targetBounds": [
+            50,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            65,
+            89,
+            176,
+            189
+          ],
+          "targetBounds": [
+            48,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            78,
+            89,
+            180,
+            189
+          ],
+          "targetBounds": [
+            59,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            69,
+            89,
+            182,
+            189
+          ],
+          "targetBounds": [
+            48,
+            72,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            66,
+            81,
+            179,
+            190
+          ],
+          "targetBounds": [
+            45,
+            65,
+            129,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            75,
+            87,
+            164,
+            188
+          ],
+          "targetBounds": [
+            62,
+            71,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            76,
+            87,
+            167,
+            188
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            75,
+            87,
+            170,
+            188
+          ],
+          "targetBounds": [
+            59,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            81,
+            87,
+            172,
+            188
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            82,
+            87,
+            176,
+            188
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            84,
+            87,
+            177,
+            188
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            75,
+            83,
+            185,
+            188
+          ],
+          "targetBounds": [
+            54,
+            71,
+            132,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/aef6c232b85f/female5-walk-cycle.webp"
+    },
+    "female6": {
+      "id": "female6",
+      "name": "紫夜乐师",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female6-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 159340,
+      "sha256": "6cdd19987c59f5d3235e8bd2e619d0e0e38f092f00202ba39b57408b35468a7b",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "e838487df5ef7d356813c7015caa8714269fd08a4acc2c3d4a039fe20d85a2aa",
+        "reference": "assets/hero-preview/female-walk-cycle.webp",
+        "referenceSha256": "bc6a643bada3e71aecdde7d20e6cb33c1f167945d7770e5b407040d3c47a0dde"
+      },
+      "validation": {
+        "sameAlpha": true,
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            65,
+            87,
+            178,
+            213
+          ],
+          "targetBounds": [
+            61,
+            73,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            53,
+            87,
+            174,
+            213
+          ],
+          "targetBounds": [
+            62,
+            73,
+            133,
+            149
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            58,
+            87,
+            177,
+            213
+          ],
+          "targetBounds": [
+            63,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            62,
+            87,
+            181,
+            213
+          ],
+          "targetBounds": [
+            61,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            72,
+            87,
+            193,
+            213
+          ],
+          "targetBounds": [
+            61,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            72,
+            87,
+            194,
+            212
+          ],
+          "targetBounds": [
+            60,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            78,
+            88,
+            197,
+            213
+          ],
+          "targetBounds": [
+            60,
+            72,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            64,
+            82,
+            190,
+            201
+          ],
+          "targetBounds": [
+            59,
+            74,
+            140,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            60,
+            82,
+            187,
+            202
+          ],
+          "targetBounds": [
+            60,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            61,
+            82,
+            188,
+            202
+          ],
+          "targetBounds": [
+            59,
+            74,
+            139,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            63,
+            82,
+            191,
+            202
+          ],
+          "targetBounds": [
+            59,
+            73,
+            141,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            71,
+            82,
+            200,
+            203
+          ],
+          "targetBounds": [
+            61,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            73,
+            82,
+            201,
+            202
+          ],
+          "targetBounds": [
+            58,
+            74,
+            137,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            82,
+            82,
+            202,
+            204
+          ],
+          "targetBounds": [
+            60,
+            64,
+            143,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            53,
+            81,
+            184,
+            201
+          ],
+          "targetBounds": [
+            53,
+            73,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            55,
+            81,
+            185,
+            204
+          ],
+          "targetBounds": [
+            58,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            52,
+            81,
+            182,
+            202
+          ],
+          "targetBounds": [
+            50,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            57,
+            81,
+            187,
+            202
+          ],
+          "targetBounds": [
+            48,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            67,
+            81,
+            196,
+            203
+          ],
+          "targetBounds": [
+            59,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            66,
+            81,
+            196,
+            201
+          ],
+          "targetBounds": [
+            48,
+            72,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            74,
+            82,
+            196,
+            207
+          ],
+          "targetBounds": [
+            45,
+            65,
+            129,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            65,
+            66,
+            188,
+            190
+          ],
+          "targetBounds": [
+            62,
+            71,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            60,
+            66,
+            179,
+            190
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            62,
+            67,
+            182,
+            190
+          ],
+          "targetBounds": [
+            59,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            65,
+            67,
+            186,
+            190
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            72,
+            66,
+            193,
+            190
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            76,
+            66,
+            197,
+            190
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            79,
+            67,
+            201,
+            190
+          ],
+          "targetBounds": [
+            54,
+            71,
+            132,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/aef6c232b85f/female6-walk-cycle.webp"
+    },
+    "male7": {
+      "id": "male7",
+      "name": "霓虹叛客",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male7-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 165358,
+      "sha256": "e646b34da67bc9ebd28a600a8e701c0d6f3f7b982486b9780ae7be1793049cab",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "3366ed8340515a337aa7456666034a09ab1dc0f0bfa3059b77f123cf35126395",
+        "reference": "assets/hero-preview/male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "geometryBase": "assets/hero-preview/male-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            80,
+            65,
+            157,
+            203
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            81,
+            65,
+            155,
+            202
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            83,
+            65,
+            162,
+            202
+          ],
+          "targetBounds": [
+            77,
+            81,
+            113,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            83,
+            65,
+            159,
+            203
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            85,
+            65,
+            160,
+            203
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            88,
+            65,
+            167,
+            202
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            89,
+            65,
+            169,
+            204
+          ],
+          "targetBounds": [
+            75,
+            84,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            68,
+            55,
+            167,
+            182
+          ],
+          "targetBounds": [
+            69,
+            80,
+            121,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            87,
+            55,
+            151,
+            183
+          ],
+          "targetBounds": [
+            81,
+            81,
+            115,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            70,
+            54,
+            174,
+            182
+          ],
+          "targetBounds": [
+            69,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            70,
+            54,
+            174,
+            182
+          ],
+          "targetBounds": [
+            69,
+            81,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            87,
+            55,
+            154,
+            182
+          ],
+          "targetBounds": [
+            78,
+            80,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            69,
+            54,
+            170,
+            182
+          ],
+          "targetBounds": [
+            69,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            103,
+            55,
+            155,
+            185
+          ],
+          "targetBounds": [
+            87,
+            80,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            72,
+            52,
+            171,
+            178
+          ],
+          "targetBounds": [
+            71,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            82,
+            52,
+            151,
+            179
+          ],
+          "targetBounds": [
+            77,
+            81,
+            111,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            70,
+            52,
+            174,
+            178
+          ],
+          "targetBounds": [
+            67,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            69,
+            51,
+            174,
+            177
+          ],
+          "targetBounds": [
+            68,
+            81,
+            123,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            90,
+            51,
+            157,
+            178
+          ],
+          "targetBounds": [
+            77,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            78,
+            51,
+            181,
+            177
+          ],
+          "targetBounds": [
+            70,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            107,
+            52,
+            157,
+            180
+          ],
+          "targetBounds": [
+            78,
+            80,
+            108,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            78,
+            38,
+            159,
+            179
+          ],
+          "targetBounds": [
+            74,
+            79,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            80,
+            38,
+            157,
+            179
+          ],
+          "targetBounds": [
+            78,
+            79,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            81,
+            38,
+            163,
+            179
+          ],
+          "targetBounds": [
+            77,
+            79,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            80,
+            38,
+            161,
+            179
+          ],
+          "targetBounds": [
+            77,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            84,
+            38,
+            161,
+            179
+          ],
+          "targetBounds": [
+            78,
+            79,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            87,
+            38,
+            167,
+            179
+          ],
+          "targetBounds": [
+            76,
+            79,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            87,
+            38,
+            170,
+            180
+          ],
+          "targetBounds": [
+            74,
+            83,
+            118,
+            151
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/male7-fixed-reference-prompt.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/69efa3c81183/male7-walk-cycle.webp"
+    },
+    "male8": {
+      "id": "male8",
+      "name": "午夜礼宾",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male8-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 128866,
+      "sha256": "9db0f2244c9101463ac1573ec4e578886bb4732834759780c2431a5ea7dafe22",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "52c340a525d1b26c93eca29c889e3b6922cd3e53c52974a875246e4c09480c36",
+        "reference": "assets/hero-preview/male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "geometryBase": "assets/hero-preview/male-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            81,
+            80,
+            155,
+            210
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            84,
+            80,
+            158,
+            208
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            85,
+            80,
+            160,
+            209
+          ],
+          "targetBounds": [
+            77,
+            81,
+            113,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            95,
+            80,
+            169,
+            210
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            99,
+            81,
+            173,
+            207
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            97,
+            80,
+            171,
+            209
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            88,
+            82,
+            162,
+            206
+          ],
+          "targetBounds": [
+            75,
+            84,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            68,
+            72,
+            170,
+            197
+          ],
+          "targetBounds": [
+            69,
+            80,
+            121,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            94,
+            72,
+            155,
+            198
+          ],
+          "targetBounds": [
+            81,
+            81,
+            115,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            67,
+            72,
+            171,
+            198
+          ],
+          "targetBounds": [
+            69,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            78,
+            72,
+            182,
+            198
+          ],
+          "targetBounds": [
+            69,
+            81,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            102,
+            72,
+            168,
+            198
+          ],
+          "targetBounds": [
+            78,
+            80,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            82,
+            72,
+            184,
+            198
+          ],
+          "targetBounds": [
+            69,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            100,
+            73,
+            149,
+            198
+          ],
+          "targetBounds": [
+            87,
+            80,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            68,
+            73,
+            174,
+            201
+          ],
+          "targetBounds": [
+            71,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            86,
+            73,
+            148,
+            200
+          ],
+          "targetBounds": [
+            77,
+            81,
+            111,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            70,
+            73,
+            175,
+            201
+          ],
+          "targetBounds": [
+            67,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            80,
+            73,
+            185,
+            201
+          ],
+          "targetBounds": [
+            68,
+            81,
+            123,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            103,
+            73,
+            170,
+            201
+          ],
+          "targetBounds": [
+            77,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            83,
+            73,
+            189,
+            201
+          ],
+          "targetBounds": [
+            70,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            103,
+            74,
+            152,
+            200
+          ],
+          "targetBounds": [
+            78,
+            80,
+            108,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            79,
+            56,
+            160,
+            189
+          ],
+          "targetBounds": [
+            74,
+            79,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            81,
+            56,
+            159,
+            187
+          ],
+          "targetBounds": [
+            78,
+            79,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            82,
+            56,
+            163,
+            189
+          ],
+          "targetBounds": [
+            77,
+            79,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            93,
+            56,
+            173,
+            189
+          ],
+          "targetBounds": [
+            77,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            94,
+            56,
+            175,
+            187
+          ],
+          "targetBounds": [
+            78,
+            79,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            94,
+            56,
+            174,
+            189
+          ],
+          "targetBounds": [
+            76,
+            79,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            84,
+            57,
+            167,
+            187
+          ],
+          "targetBounds": [
+            74,
+            83,
+            118,
+            151
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/male8-walk-cycle.webp"
+    },
+    "male9": {
+      "id": "male9",
+      "name": "街头晴空",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male9-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 176004,
+      "sha256": "77543e4ac09129d4191083d6c31d7c917fc34b22ee0750a0508d8c7eb769070c",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "b2d40546e48d384237061dc4cda5e9beba20e960c390922d657b1f260fa9e953",
+        "reference": "assets/hero-preview/male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "geometryBase": "assets/hero-preview/male-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            66,
+            74,
+            152,
+            213
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            79,
+            76,
+            163,
+            213
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            88,
+            76,
+            171,
+            216
+          ],
+          "targetBounds": [
+            77,
+            81,
+            113,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            87,
+            76,
+            168,
+            213
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            100,
+            76,
+            181,
+            213
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            105,
+            76,
+            189,
+            216
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            101,
+            76,
+            183,
+            213
+          ],
+          "targetBounds": [
+            75,
+            84,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            65,
+            70,
+            166,
+            203
+          ],
+          "targetBounds": [
+            69,
+            80,
+            121,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            95,
+            69,
+            162,
+            203
+          ],
+          "targetBounds": [
+            81,
+            81,
+            115,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            72,
+            69,
+            178,
+            203
+          ],
+          "targetBounds": [
+            69,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            76,
+            69,
+            184,
+            203
+          ],
+          "targetBounds": [
+            69,
+            81,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            105,
+            69,
+            177,
+            203
+          ],
+          "targetBounds": [
+            78,
+            80,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            90,
+            70,
+            192,
+            203
+          ],
+          "targetBounds": [
+            69,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            116,
+            66,
+            177,
+            203
+          ],
+          "targetBounds": [
+            87,
+            80,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            66,
+            58,
+            170,
+            194
+          ],
+          "targetBounds": [
+            71,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            84,
+            59,
+            151,
+            194
+          ],
+          "targetBounds": [
+            77,
+            81,
+            111,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            74,
+            59,
+            182,
+            194
+          ],
+          "targetBounds": [
+            67,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            73,
+            59,
+            181,
+            194
+          ],
+          "targetBounds": [
+            68,
+            81,
+            123,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            107,
+            59,
+            178,
+            195
+          ],
+          "targetBounds": [
+            77,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            97,
+            60,
+            201,
+            194
+          ],
+          "targetBounds": [
+            70,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            117,
+            57,
+            178,
+            195
+          ],
+          "targetBounds": [
+            78,
+            80,
+            108,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            68,
+            38,
+            160,
+            181
+          ],
+          "targetBounds": [
+            74,
+            79,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            78,
+            39,
+            167,
+            177
+          ],
+          "targetBounds": [
+            78,
+            79,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            82,
+            37,
+            174,
+            181
+          ],
+          "targetBounds": [
+            77,
+            79,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            83,
+            37,
+            175,
+            181
+          ],
+          "targetBounds": [
+            77,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            96,
+            38,
+            185,
+            178
+          ],
+          "targetBounds": [
+            78,
+            79,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            99,
+            38,
+            190,
+            181
+          ],
+          "targetBounds": [
+            76,
+            79,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            94,
+            38,
+            187,
+            178
+          ],
+          "targetBounds": [
+            74,
+            83,
+            118,
+            151
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/male9-walk-cycle.webp"
+    },
+    "male10": {
+      "id": "male10",
+      "name": "齿轮工匠",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male10-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 171470,
+      "sha256": "7bbc0ca01472405085b1cb655d05de2bdd8e7f832ee36de22b4cfc3a6e48b4c0",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "881697fec866d160b2b54b14571b86ecf856b978c97cd3335d5b755f8524d564",
+        "reference": "assets/hero-preview/male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "geometryBase": "assets/hero-preview/male-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            83,
+            92,
+            154,
+            211
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            85,
+            89,
+            158,
+            208
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            91,
+            89,
+            163,
+            211
+          ],
+          "targetBounds": [
+            77,
+            81,
+            113,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            94,
+            89,
+            166,
+            211
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            97,
+            89,
+            170,
+            211
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            98,
+            89,
+            170,
+            211
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            94,
+            87,
+            175,
+            211
+          ],
+          "targetBounds": [
+            75,
+            84,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            71,
+            80,
+            170,
+            202
+          ],
+          "targetBounds": [
+            69,
+            80,
+            121,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            96,
+            81,
+            160,
+            204
+          ],
+          "targetBounds": [
+            81,
+            81,
+            115,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            78,
+            80,
+            178,
+            202
+          ],
+          "targetBounds": [
+            69,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            81,
+            80,
+            185,
+            202
+          ],
+          "targetBounds": [
+            69,
+            81,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            100,
+            80,
+            169,
+            202
+          ],
+          "targetBounds": [
+            78,
+            80,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            83,
+            80,
+            182,
+            202
+          ],
+          "targetBounds": [
+            69,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            109,
+            76,
+            163,
+            205
+          ],
+          "targetBounds": [
+            87,
+            80,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            74,
+            68,
+            172,
+            187
+          ],
+          "targetBounds": [
+            71,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            88,
+            71,
+            150,
+            187
+          ],
+          "targetBounds": [
+            77,
+            81,
+            111,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            75,
+            69,
+            172,
+            187
+          ],
+          "targetBounds": [
+            67,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            81,
+            67,
+            180,
+            187
+          ],
+          "targetBounds": [
+            68,
+            81,
+            123,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            100,
+            69,
+            164,
+            187
+          ],
+          "targetBounds": [
+            77,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            84,
+            68,
+            183,
+            187
+          ],
+          "targetBounds": [
+            70,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            111,
+            64,
+            162,
+            187
+          ],
+          "targetBounds": [
+            78,
+            80,
+            108,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            84,
+            51,
+            156,
+            173
+          ],
+          "targetBounds": [
+            74,
+            79,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            86,
+            51,
+            158,
+            170
+          ],
+          "targetBounds": [
+            78,
+            79,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            91,
+            49,
+            163,
+            171
+          ],
+          "targetBounds": [
+            77,
+            79,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            94,
+            48,
+            167,
+            171
+          ],
+          "targetBounds": [
+            77,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            97,
+            50,
+            170,
+            170
+          ],
+          "targetBounds": [
+            78,
+            79,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            97,
+            50,
+            170,
+            172
+          ],
+          "targetBounds": [
+            76,
+            79,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            94,
+            47,
+            175,
+            170
+          ],
+          "targetBounds": [
+            74,
+            83,
+            118,
+            151
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/male10-walk-cycle.webp"
+    },
+    "male11": {
+      "id": "male11",
+      "name": "赤练武者",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male11-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 145626,
+      "sha256": "f784e041cc769af978f8e5532016a61dfd4a6fcc71db99986762cebba6b70d61",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "9f6b99a534d029fdd606441386d30ba785c00a75f9a201f3b80b77c35305e808",
+        "reference": "assets/hero-preview/male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "geometryBase": "assets/hero-preview/male-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            90,
+            90,
+            154,
+            200
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            91,
+            90,
+            152,
+            200
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            92,
+            90,
+            155,
+            200
+          ],
+          "targetBounds": [
+            77,
+            81,
+            113,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            95,
+            90,
+            158,
+            200
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            97,
+            90,
+            160,
+            200
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            99,
+            90,
+            164,
+            200
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            99,
+            90,
+            169,
+            200
+          ],
+          "targetBounds": [
+            75,
+            84,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            77,
+            85,
+            162,
+            188
+          ],
+          "targetBounds": [
+            69,
+            80,
+            121,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            101,
+            85,
+            155,
+            190
+          ],
+          "targetBounds": [
+            81,
+            81,
+            115,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            79,
+            85,
+            167,
+            187
+          ],
+          "targetBounds": [
+            69,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            82,
+            85,
+            171,
+            189
+          ],
+          "targetBounds": [
+            69,
+            81,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            100,
+            85,
+            152,
+            189
+          ],
+          "targetBounds": [
+            78,
+            80,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            85,
+            85,
+            175,
+            188
+          ],
+          "targetBounds": [
+            69,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            116,
+            85,
+            161,
+            190
+          ],
+          "targetBounds": [
+            87,
+            80,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            78,
+            78,
+            165,
+            181
+          ],
+          "targetBounds": [
+            71,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            88,
+            78,
+            145,
+            181
+          ],
+          "targetBounds": [
+            77,
+            81,
+            111,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            81,
+            78,
+            170,
+            181
+          ],
+          "targetBounds": [
+            67,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            82,
+            78,
+            172,
+            181
+          ],
+          "targetBounds": [
+            68,
+            81,
+            123,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            108,
+            78,
+            157,
+            182
+          ],
+          "targetBounds": [
+            77,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            92,
+            78,
+            182,
+            181
+          ],
+          "targetBounds": [
+            70,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            112,
+            78,
+            158,
+            184
+          ],
+          "targetBounds": [
+            78,
+            80,
+            108,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            90,
+            61,
+            155,
+            170
+          ],
+          "targetBounds": [
+            74,
+            79,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            91,
+            61,
+            155,
+            170
+          ],
+          "targetBounds": [
+            78,
+            79,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            93,
+            61,
+            159,
+            170
+          ],
+          "targetBounds": [
+            77,
+            79,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            95,
+            61,
+            160,
+            170
+          ],
+          "targetBounds": [
+            77,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            97,
+            61,
+            162,
+            170
+          ],
+          "targetBounds": [
+            78,
+            79,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            101,
+            61,
+            165,
+            170
+          ],
+          "targetBounds": [
+            76,
+            79,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            99,
+            61,
+            169,
+            170
+          ],
+          "targetBounds": [
+            74,
+            83,
+            118,
+            151
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/male11-walk-cycle.webp"
+    },
+    "female7": {
+      "id": "female7",
+      "name": "樱桃舞会",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female7-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 161706,
+      "sha256": "dd41a45b44105af831c0431b9110831c7d110d03cd4ec3140c7442325680531f",
+      "encoding": {
+        "quality": 98
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "cd2840deb2295606e50c7ff6ae58bb560289c735038ab7ea671192961fb25a86",
+        "reference": "assets/hero-preview/female-walk-cycle.webp",
+        "referenceSha256": "bc6a643bada3e71aecdde7d20e6cb33c1f167945d7770e5b407040d3c47a0dde"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": false,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            74,
+            78,
+            175,
+            206
+          ],
+          "targetBounds": [
+            61,
+            73,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            77,
+            78,
+            180,
+            207
+          ],
+          "targetBounds": [
+            62,
+            73,
+            133,
+            149
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            81,
+            78,
+            185,
+            206
+          ],
+          "targetBounds": [
+            63,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            83,
+            78,
+            191,
+            207
+          ],
+          "targetBounds": [
+            61,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            83,
+            78,
+            190,
+            207
+          ],
+          "targetBounds": [
+            61,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            85,
+            78,
+            189,
+            207
+          ],
+          "targetBounds": [
+            60,
+            73,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            77,
+            78,
+            187,
+            207
+          ],
+          "targetBounds": [
+            60,
+            72,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            72,
+            75,
+            177,
+            205
+          ],
+          "targetBounds": [
+            59,
+            74,
+            140,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            79,
+            76,
+            181,
+            206
+          ],
+          "targetBounds": [
+            60,
+            73,
+            135,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            78,
+            75,
+            185,
+            205
+          ],
+          "targetBounds": [
+            59,
+            74,
+            139,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            81,
+            75,
+            191,
+            205
+          ],
+          "targetBounds": [
+            59,
+            73,
+            141,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            82,
+            75,
+            191,
+            207
+          ],
+          "targetBounds": [
+            61,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            83,
+            76,
+            190,
+            205
+          ],
+          "targetBounds": [
+            58,
+            74,
+            137,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            91,
+            76,
+            171,
+            207
+          ],
+          "targetBounds": [
+            60,
+            64,
+            143,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            63,
+            76,
+            176,
+            206
+          ],
+          "targetBounds": [
+            53,
+            73,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            68,
+            76,
+            172,
+            208
+          ],
+          "targetBounds": [
+            58,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            69,
+            76,
+            177,
+            206
+          ],
+          "targetBounds": [
+            50,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            71,
+            76,
+            181,
+            206
+          ],
+          "targetBounds": [
+            48,
+            73,
+            133,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            72,
+            76,
+            183,
+            208
+          ],
+          "targetBounds": [
+            59,
+            73,
+            134,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            74,
+            76,
+            182,
+            206
+          ],
+          "targetBounds": [
+            48,
+            72,
+            132,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            92,
+            76,
+            173,
+            208
+          ],
+          "targetBounds": [
+            45,
+            65,
+            129,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            65,
+            65,
+            176,
+            197
+          ],
+          "targetBounds": [
+            62,
+            71,
+            129,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            65,
+            66,
+            178,
+            197
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            69,
+            66,
+            183,
+            197
+          ],
+          "targetBounds": [
+            59,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            71,
+            66,
+            189,
+            197
+          ],
+          "targetBounds": [
+            61,
+            70,
+            130,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            70,
+            66,
+            188,
+            197
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            74,
+            66,
+            188,
+            197
+          ],
+          "targetBounds": [
+            60,
+            70,
+            131,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            74,
+            64,
+            188,
+            197
+          ],
+          "targetBounds": [
+            54,
+            71,
+            132,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/no-cape-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/dd3355940c9f/female7-walk-cycle.webp"
+    },
+    "female8": {
+      "id": "female8",
+      "name": "珍珠花嫁",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female8-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 191628,
+      "sha256": "6c4d81a9e9dedc7c354ef791856e40acafdcebac3a73526b8dbf793d07e18aa3",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "c858b1a585b73a2c9d00d3b8ecc499f2c672d386a77af6b02a80b49065800616",
+        "reference": "assets/hero-preview/female-walk-ref.webp",
+        "referenceSha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "geometryBase": "assets/hero-preview/female-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            77,
+            52,
+            167,
+            210
+          ],
+          "targetBounds": [
+            76,
+            73,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            79,
+            51,
+            169,
+            210
+          ],
+          "targetBounds": [
+            76,
+            72,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            76,
+            52,
+            167,
+            210
+          ],
+          "targetBounds": [
+            78,
+            73,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            73,
+            52,
+            164,
+            210
+          ],
+          "targetBounds": [
+            77,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            70,
+            51,
+            160,
+            210
+          ],
+          "targetBounds": [
+            78,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            68,
+            51,
+            158,
+            210
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            72,
+            51,
+            162,
+            210
+          ],
+          "targetBounds": [
+            77,
+            71,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            73,
+            32,
+            180,
+            199
+          ],
+          "targetBounds": [
+            70,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            84,
+            31,
+            183,
+            199
+          ],
+          "targetBounds": [
+            84,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            68,
+            32,
+            184,
+            198
+          ],
+          "targetBounds": [
+            66,
+            73,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            69,
+            31,
+            185,
+            199
+          ],
+          "targetBounds": [
+            65,
+            72,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            79,
+            32,
+            174,
+            200
+          ],
+          "targetBounds": [
+            79,
+            72,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            66,
+            30,
+            176,
+            199
+          ],
+          "targetBounds": [
+            67,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            87,
+            27,
+            168,
+            199
+          ],
+          "targetBounds": [
+            92,
+            62,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            69,
+            30,
+            178,
+            198
+          ],
+          "targetBounds": [
+            69,
+            72,
+            126,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            67,
+            31,
+            164,
+            200
+          ],
+          "targetBounds": [
+            75,
+            72,
+            108,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            63,
+            30,
+            178,
+            198
+          ],
+          "targetBounds": [
+            68,
+            72,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            65,
+            30,
+            178,
+            198
+          ],
+          "targetBounds": [
+            67,
+            72,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            68,
+            31,
+            163,
+            200
+          ],
+          "targetBounds": [
+            73,
+            72,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            73,
+            31,
+            180,
+            198
+          ],
+          "targetBounds": [
+            67,
+            71,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            80,
+            30,
+            160,
+            199
+          ],
+          "targetBounds": [
+            78,
+            64,
+            103,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            73,
+            34,
+            168,
+            196
+          ],
+          "targetBounds": [
+            74,
+            71,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            75,
+            34,
+            170,
+            196
+          ],
+          "targetBounds": [
+            75,
+            69,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            73,
+            34,
+            168,
+            196
+          ],
+          "targetBounds": [
+            76,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            70,
+            34,
+            166,
+            196
+          ],
+          "targetBounds": [
+            75,
+            69,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            66,
+            34,
+            161,
+            196
+          ],
+          "targetBounds": [
+            76,
+            70,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            66,
+            34,
+            160,
+            196
+          ],
+          "targetBounds": [
+            74,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            70,
+            34,
+            164,
+            194
+          ],
+          "targetBounds": [
+            74,
+            70,
+            117,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/female8-walk-cycle.webp"
+    },
+    "female9": {
+      "id": "female9",
+      "name": "牛仔日记",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female9-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 193106,
+      "sha256": "23c0217664339abc91827a772e38d8627d894376fdba8078597f45c145cf50a5",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "d2b340a5fd5a6b12b82e08d5efbb4692d1d5850071ffa07450fd0af263c60c22",
+        "reference": "assets/hero-preview/female-walk-ref.webp",
+        "referenceSha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "geometryBase": "assets/hero-preview/female-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            87,
+            54,
+            163,
+            194
+          ],
+          "targetBounds": [
+            76,
+            73,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            87,
+            54,
+            163,
+            194
+          ],
+          "targetBounds": [
+            76,
+            72,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            88,
+            54,
+            164,
+            194
+          ],
+          "targetBounds": [
+            78,
+            73,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            90,
+            54,
+            165,
+            194
+          ],
+          "targetBounds": [
+            77,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            87,
+            54,
+            164,
+            194
+          ],
+          "targetBounds": [
+            78,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            84,
+            55,
+            161,
+            194
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            81,
+            53,
+            149,
+            194
+          ],
+          "targetBounds": [
+            77,
+            71,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            66,
+            45,
+            170,
+            186
+          ],
+          "targetBounds": [
+            70,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            97,
+            45,
+            164,
+            188
+          ],
+          "targetBounds": [
+            84,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            69,
+            46,
+            178,
+            187
+          ],
+          "targetBounds": [
+            66,
+            73,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            72,
+            45,
+            182,
+            187
+          ],
+          "targetBounds": [
+            65,
+            72,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            92,
+            45,
+            163,
+            188
+          ],
+          "targetBounds": [
+            79,
+            72,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            67,
+            45,
+            174,
+            186
+          ],
+          "targetBounds": [
+            67,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            100,
+            38,
+            144,
+            188
+          ],
+          "targetBounds": [
+            92,
+            62,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            72,
+            37,
+            181,
+            175
+          ],
+          "targetBounds": [
+            69,
+            72,
+            126,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            86,
+            38,
+            153,
+            176
+          ],
+          "targetBounds": [
+            75,
+            72,
+            108,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            72,
+            37,
+            181,
+            175
+          ],
+          "targetBounds": [
+            68,
+            72,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            76,
+            37,
+            184,
+            175
+          ],
+          "targetBounds": [
+            67,
+            72,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            87,
+            37,
+            158,
+            176
+          ],
+          "targetBounds": [
+            73,
+            72,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            71,
+            37,
+            182,
+            176
+          ],
+          "targetBounds": [
+            67,
+            71,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            96,
+            28,
+            140,
+            176
+          ],
+          "targetBounds": [
+            78,
+            64,
+            103,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            82,
+            19,
+            164,
+            161
+          ],
+          "targetBounds": [
+            74,
+            71,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            85,
+            19,
+            169,
+            161
+          ],
+          "targetBounds": [
+            75,
+            69,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            85,
+            20,
+            164,
+            161
+          ],
+          "targetBounds": [
+            76,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            85,
+            19,
+            168,
+            161
+          ],
+          "targetBounds": [
+            75,
+            69,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            85,
+            18,
+            168,
+            161
+          ],
+          "targetBounds": [
+            76,
+            70,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            80,
+            18,
+            165,
+            161
+          ],
+          "targetBounds": [
+            74,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            76,
+            16,
+            154,
+            159
+          ],
+          "targetBounds": [
+            74,
+            70,
+            117,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/female9-walk-cycle.webp"
+    },
+    "female10": {
+      "id": "female10",
+      "name": "薄荷竞速",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female10-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 189202,
+      "sha256": "8385992a04a0801a383e29abb679d58e2a45e7dc12edc3e13264e71e5020c82a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "c4ff5385850c1ea8518b0d31816cd362dbe516dc83ae41b948638cf78da9e00d",
+        "reference": "assets/hero-preview/female-walk-ref.webp",
+        "referenceSha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "geometryBase": "assets/hero-preview/female-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            74,
+            56,
+            154,
+            203
+          ],
+          "targetBounds": [
+            76,
+            73,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            84,
+            53,
+            160,
+            203
+          ],
+          "targetBounds": [
+            76,
+            72,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            88,
+            55,
+            168,
+            202
+          ],
+          "targetBounds": [
+            78,
+            73,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            90,
+            53,
+            170,
+            202
+          ],
+          "targetBounds": [
+            77,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            95,
+            54,
+            174,
+            203
+          ],
+          "targetBounds": [
+            78,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            97,
+            52,
+            175,
+            203
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            106,
+            52,
+            176,
+            203
+          ],
+          "targetBounds": [
+            77,
+            71,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            63,
+            52,
+            164,
+            195
+          ],
+          "targetBounds": [
+            70,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            99,
+            51,
+            158,
+            196
+          ],
+          "targetBounds": [
+            84,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            67,
+            50,
+            173,
+            195
+          ],
+          "targetBounds": [
+            66,
+            73,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            70,
+            50,
+            177,
+            195
+          ],
+          "targetBounds": [
+            65,
+            72,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            109,
+            51,
+            174,
+            194
+          ],
+          "targetBounds": [
+            79,
+            72,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            79,
+            52,
+            184,
+            195
+          ],
+          "targetBounds": [
+            67,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            122,
+            42,
+            169,
+            199
+          ],
+          "targetBounds": [
+            92,
+            62,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            69,
+            48,
+            172,
+            189
+          ],
+          "targetBounds": [
+            69,
+            72,
+            126,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            84,
+            48,
+            150,
+            192
+          ],
+          "targetBounds": [
+            75,
+            72,
+            108,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            78,
+            48,
+            187,
+            192
+          ],
+          "targetBounds": [
+            68,
+            72,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            81,
+            48,
+            191,
+            192
+          ],
+          "targetBounds": [
+            67,
+            72,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            96,
+            48,
+            166,
+            192
+          ],
+          "targetBounds": [
+            73,
+            72,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            86,
+            48,
+            193,
+            192
+          ],
+          "targetBounds": [
+            67,
+            71,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            118,
+            37,
+            166,
+            196
+          ],
+          "targetBounds": [
+            78,
+            64,
+            103,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            71,
+            17,
+            162,
+            178
+          ],
+          "targetBounds": [
+            74,
+            71,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            80,
+            16,
+            171,
+            178
+          ],
+          "targetBounds": [
+            75,
+            69,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            81,
+            16,
+            173,
+            178
+          ],
+          "targetBounds": [
+            76,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            86,
+            16,
+            177,
+            178
+          ],
+          "targetBounds": [
+            75,
+            69,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            92,
+            17,
+            181,
+            178
+          ],
+          "targetBounds": [
+            76,
+            70,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            94,
+            17,
+            184,
+            178
+          ],
+          "targetBounds": [
+            74,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            99,
+            16,
+            183,
+            180
+          ],
+          "targetBounds": [
+            74,
+            70,
+            117,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/female10-walk-cycle.webp"
+    },
+    "female11": {
+      "id": "female11",
+      "name": "紫电摇滚",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female11-walk-cycle.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 163540,
+      "sha256": "231fa4ea0ec796dff6bfd36881af604dc7d8aed1859cdf4ce65e29bb1cdf2f61",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "2687f9cbd9001d3233565ae5b1a351d18bf93ebf73af9f2ea8d7c3e8a8ec0cf1",
+        "reference": "assets/hero-preview/female-walk-ref.webp",
+        "referenceSha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "geometryBase": "assets/hero-preview/female-walk-cycle.webp"
+      },
+      "validation": {
+        "sameAlpha": false,
+        "registrationMode": "neck-anchored",
+        "neckPixelsExact": true,
+        "unchangedGeometry": true
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            79,
+            58,
+            164,
+            222
+          ],
+          "targetBounds": [
+            76,
+            73,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            75,
+            59,
+            160,
+            218
+          ],
+          "targetBounds": [
+            76,
+            72,
+            114,
+            149
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            78,
+            59,
+            163,
+            223
+          ],
+          "targetBounds": [
+            78,
+            73,
+            115,
+            151
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            78,
+            58,
+            163,
+            222
+          ],
+          "targetBounds": [
+            77,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            83,
+            58,
+            168,
+            222
+          ],
+          "targetBounds": [
+            78,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            88,
+            58,
+            175,
+            223
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            92,
+            58,
+            175,
+            221
+          ],
+          "targetBounds": [
+            77,
+            71,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            61,
+            53,
+            171,
+            220
+          ],
+          "targetBounds": [
+            70,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            87,
+            53,
+            167,
+            218
+          ],
+          "targetBounds": [
+            84,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            55,
+            53,
+            173,
+            217
+          ],
+          "targetBounds": [
+            66,
+            73,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            56,
+            53,
+            175,
+            218
+          ],
+          "targetBounds": [
+            65,
+            72,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            88,
+            53,
+            166,
+            218
+          ],
+          "targetBounds": [
+            79,
+            72,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            65,
+            53,
+            183,
+            217
+          ],
+          "targetBounds": [
+            67,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            112,
+            53,
+            171,
+            217
+          ],
+          "targetBounds": [
+            92,
+            62,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            59,
+            36,
+            183,
+            203
+          ],
+          "targetBounds": [
+            69,
+            72,
+            126,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            73,
+            36,
+            159,
+            203
+          ],
+          "targetBounds": [
+            75,
+            72,
+            108,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            58,
+            36,
+            183,
+            203
+          ],
+          "targetBounds": [
+            68,
+            72,
+            128,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            57,
+            37,
+            184,
+            202
+          ],
+          "targetBounds": [
+            67,
+            72,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            81,
+            36,
+            162,
+            203
+          ],
+          "targetBounds": [
+            73,
+            72,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            69,
+            36,
+            195,
+            203
+          ],
+          "targetBounds": [
+            67,
+            71,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            104,
+            34,
+            163,
+            202
+          ],
+          "targetBounds": [
+            78,
+            64,
+            103,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            75,
+            23,
+            166,
+            195
+          ],
+          "targetBounds": [
+            74,
+            71,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            74,
+            23,
+            164,
+            194
+          ],
+          "targetBounds": [
+            75,
+            69,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            73,
+            23,
+            167,
+            195
+          ],
+          "targetBounds": [
+            76,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            73,
+            22,
+            166,
+            195
+          ],
+          "targetBounds": [
+            75,
+            69,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            79,
+            22,
+            169,
+            194
+          ],
+          "targetBounds": [
+            76,
+            70,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            83,
+            22,
+            175,
+            195
+          ],
+          "targetBounds": [
+            74,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            89,
+            22,
+            179,
+            193
+          ],
+          "targetBounds": [
+            74,
+            70,
+            117,
+            150
+          ]
+        }
+      ],
+      "promptRef": "art-references/body-variants/phase2-fixed-reference-prompts.json",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/e9c35759a6f8/female11-walk-cycle.webp"
+    },
+    "male-ref": {
+      "id": "male-ref",
+      "name": "男性动作参考",
+      "gender": "male",
+      "baseBody": "male-walk",
+      "local": "assets/hero-preview/male-walk-ref.webp",
+      "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+      "bytes": 115802,
+      "width": 1344,
+      "height": 768,
+      "source": {
+        "reference": "art-references/walk-reference/male-walk-ref.json"
+      },
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/24a4139ee7bd/male-walk-ref.webp"
+    },
+    "female-ref": {
+      "id": "female-ref",
+      "name": "女性动作参考",
+      "gender": "female",
+      "baseBody": "female-walk",
+      "local": "assets/hero-preview/female-walk-ref.webp",
+      "sha256": "5603fe0505547120a5d172f3cb86fbb86beffc8dceafec8de16c15138017034f",
+      "bytes": 155788,
+      "width": 1344,
+      "height": 768,
+      "source": {
+        "reference": "art-references/walk-reference/female-walk-ref.json"
+      },
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/body-variants/262876b00163/female-walk-ref.webp"
+    }
+  }
+}

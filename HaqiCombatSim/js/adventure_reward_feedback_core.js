@@ -8,6 +8,6 @@ export function rewardChanges(before,save,content) {
         return gained>0&&item?[{kind:'item',id:Number(id),count:gained,name:item.name,gear:(item.kind===1||item.slot===24)&&item.slot>0}]:[];
     });
     const cards=Object.keys(save.cards).filter(key=>save.cards[key]>0&&!before.cards[key]).map(key=>({kind:'card',key,count:1,name:content.cards?.[key]?.name||content.cardLibrary?.find(row=>row.key===key)?.name||key}));
-    const pets=Object.keys(save.pets||{}).filter(id=>!before.pets.includes(id)).map(id=>({kind:'pet',id,count:1,name:content.pets?.[id]?.name||save.pets[id].name||'新伙伴'}));
+    const pets=Object.keys(save.pets||{}).filter(id=>!before.pets.includes(id)).map(id=>({kind:'pet',id,count:1,name:content.pets?.[save.pets[id].speciesId]?.name||save.pets[id].name||'新伙伴'}));
     return {xp:Math.max(0,save.xp-before.xp),fromLevel:before.level,level:save.level>before.level?save.level:null,items:[...items,...cards,...pets]};
 }

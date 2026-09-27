@@ -8,6 +8,9 @@ ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser();parser.add_argument('--uploader',type=Path);parser.add_argument('--verify',action='store_true');args=parser.parse_args()
 path=ROOT/'data/hero-preview.json';manifest=json.loads(path.read_text(encoding='utf-8'));rows=[*manifest['bodies'].values(),*manifest['heads'].values()]
 rows.extend(body['walk'] for body in manifest['bodies'].values() if body.get('walk'))
+rows.extend(manifest.get('bodyVariants',{}).values())
+all_rows=rows
+rows=list({row['local']:row for row in all_rows}.values())
 if not args.verify:
  if not args.uploader or not args.uploader.is_file():raise ValueError('Pass the existing qiniu_upload_local_files.py path')
  pending=[row for row in rows if not row.get('cdn')]
@@ -31,6 +34,7 @@ for row in rows:
  checks.append({'local':row['local'],'cdn':row['cdn'],'bytes':len(data),'sha256':row['sha256'],'cors':cors})
  print(row['cdn'])
 if not args.verify:
+ for row in all_rows:row['cdn']=next(r['cdn'] for r in rows if r['local']==row['local'])
  text=json.dumps(manifest,ensure_ascii=False,indent=2)+'\n';path.write_text(text,encoding='utf-8')
  (ROOT/'data/adventure/hero-art.json').write_text(text,encoding='utf-8')
 report=ROOT/'.asset-cache/hero-preview-cdn-verification.json';report.parent.mkdir(exist_ok=True);report.write_text(json.dumps(checks,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

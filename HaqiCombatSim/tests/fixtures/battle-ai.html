@@ -1,0 +1,24 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>战斗 AI 隔离验收</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css">
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,playerSpec} from '../../js/adventure_core.js';
+import {createPveBattle,playPveRound} from '../../js/combat_pve_core.js';
+import {renderBattle,updateBattlePetHint} from '../../js/view_adventure.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {petAction} from '../../js/adventure_pets_core.js';
+import {BattleReviewSession} from '../../js/battle_ai/session_core.js';
+import {BattleAIClient} from '../../js/battle_ai/client.js';
+import {observeBattle} from '../../js/battle_ai/haqi_adapter_core.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+// Entirely in memory: never loads, writes or submits a player's progress.
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'推理验收'});
+if(!save.starterChosen)petAction(save,assets.content,{type:'starter',petId:'dragon_green'});
+const battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters:[assets.content.monsters['fire-scout']],seed:9});
+const session=new BattleReviewSession(),client=new BattleAIClient(),root=document.querySelector('#root'),renderer=createRenderer(document.createElement('canvas'),assets);let muted=false,selected=null,hint=null;
+async function refresh(){hint=null;paint();if(!battle.finished){hint=(await client.analyze(observeBattle(battle,battle.sides.near[0].id),{difficulty:'expert'})).candidates[0];paint();}}
+async function step(action){const analysis=await client.analyze(observeBattle(battle,battle.sides.near[0].id),{difficulty:'expert'});const pick=action;session.record(battle,analysis,pick);playPveRound(battle,{...pick,aiVersion:1});selected=null;await refresh();}
+function paint(){renderBattle(root,{assets,save,battle,selected,discarded:[],animating:false,soundEnabled:false,aiHint:hint,aiHintsMuted:muted,aiReview:battle.finished?session.review(battle):null},{sound:()=>{},retreat:()=>{root.textContent='已退出隔离战斗';},pass:()=>step({pass:true}),aiHintsToggle:()=>{muted=!muted;void refresh();},aiHintDismiss:()=>{hint=null;},select:pick=>{selected=pick;paint();},reselect:()=>{selected=null;paint();},target:id=>selected&&step({...selected,targetId:id}),discard:()=>{},toggleRunes:()=>{},togglePetCards:()=>{},finish:()=>{root.textContent='验收完成，未保存角色';}});}
+function frame(time){const canvas=document.querySelector('#battle-canvas');if(canvas){canvas.battlePositions=renderer.renderBattle(canvas,battle,save,time);updateBattlePetHint(root,battle,save,assets.content,canvas);}requestAnimationFrame(frame);}
+await refresh();requestAnimationFrame(frame);document.documentElement.dataset.fixtureReady='1';
+</script></body></html>

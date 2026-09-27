@@ -39,20 +39,23 @@ export function createLearningChatView(cb){
     const chinese=button('隐藏释义',()=>cb.chinese(),'secondary small'),change=button('换个故事',()=>cb.next(),'secondary small');
     const settings=button('设置',()=>cb.settings(),'secondary small'),close=createCloseButton(cb.close,'关闭营地对话');
     header.append(title,progress,chinese,change,settings);room.append(close);
-    const reward=el('section','camp-chat-reward');
+    const celebration=el('div','camp-chat-celebration');celebration.hidden=true;
+    celebration.setAttribute('role','status');celebration.setAttribute('aria-live','polite');
+    const completedActions=el('div','camp-chat-completed-actions');completedActions.hidden=true;
     const log=el('div','camp-chat-log');log.setAttribute('role','log');log.setAttribute('aria-live','polite');
     const hint=el('div','camp-chat-hint');hint.hidden=true;
     const footer=el('footer','camp-chat-footer'),status=el('p','camp-chat-status');status.setAttribute('role','status');
     const form=el('form','camp-chat-input');form.hidden=true;
-    const input=el('input');input.placeholder='输入问题或请求帮助（不能代替口语通关）';input.maxLength=500;input.setAttribute('aria-label','文字求助');
+    const input=el('input');input.placeholder=tr('输入你的回答，答对即可继续');input.maxLength=500;input.setAttribute('aria-label',tr('文字回答'));
     const send=button('发送',()=>{const text=input.value.trim();if(text){input.value='';cb.help(text);}});form.onsubmit=e=>{e.preventDefault();send.click();};form.append(input,send);
     const actions=el('div','camp-chat-actions');
     const typing=button('输入',()=>{form.hidden=!form.hidden;if(!form.hidden)input.focus();},'secondary');
     const mic=button('录音',()=>{},'camp-chat-mic');mic.setAttribute('aria-label','点击录制，再次点击结束；也可以按住对话');
     const hints=button('提示',()=>cb.hint(),'secondary');
     actions.append(typing,mic,hints);const caption=el('p','camp-chat-caption','按住对话，松开发送 · 点击录制，再点结束');
-    footer.append(hint,form,actions,caption,status);panel.append(header,reward,log,footer);room.append(aside,panel);root.append(room);document.body.append(root);
-    let state=null,trigger=null,key='',fingerprint='';
+    footer.append(hint,form,actions,caption,status,completedActions);panel.append(header,log,footer);room.append(aside,panel,celebration);root.append(room);document.body.append(root);
+    let state=null,trigger=null,key='',fingerprint='',celebrated=null,celebrationTimer=null;
+    function hideCelebration(){clearTimeout(celebrationTimer);celebration.hidden=true;}
     const clearPress=bindChatMicrophone(mic,{isRecording:()=>!!state?.recording,start:cb.start,finish:cb.finish,cancel:cb.cancel});
     root.onkeydown=e=>{
         e.stopPropagation();if(e.key==='Escape'){e.preventDefault();cb.close();}
@@ -70,11 +73,13 @@ export function createLearningChatView(cb){
         const translation=typeof row.text==='object'?row.text[s.locale==='en'?'zh-CN':'en']:row.translation;
         if(translation&&s.showChinese)content.append(el('p','camp-chat-translation',translation));
         if(row.role!=='user'&&text){const listen=button('再听一次',()=>cb.speak(text),'camp-chat-replay');listen.disabled=s.busy||s.recording;content.append(listen);}
-        if(row.label)content.append(el('small','camp-chat-message-label',row.label));
+        if(row===s.messages[0]&&row.role!=='user'&&s.reward?.amount!==undefined)content.append(el('small','camp-chat-reward-preview',fill('对话奖励：{amount} {currency}',{amount:s.reward.amount,currency:tr(s.reward.currency===100?'奇豆':'仙豆')}).text));
+        if(row.feedback)content.append(el('small','camp-chat-answer-feedback',row.feedback));
+        if(row.label&&!row.feedback)content.append(el('small','camp-chat-message-label',row.label));
         item.append(avatar,content);return item;
     }
     return {
-        close(){clearPress();root.hidden=true;state=null;key='';fingerprint='';form.hidden=true;if(trigger?.isConnected)trigger.focus();},
+        close(){hideCelebration();celebrated=null;clearPress();root.hidden=true;state=null;key='';fingerprint='';form.hidden=true;if(trigger?.isConnected)trigger.focus();},
         render(s){
             state=s;const fresh=root.hidden;if(fresh){trigger=document.activeElement;root.hidden=false;}
             if(key!==s.story.id){key=s.story.id;name.textContent=tr(s.profile.name);role.textContent=tr(s.profile.role);context.textContent=tr(s.story.context);title.textContent=tr(s.story.title);
@@ -82,7 +87,7 @@ export function createLearningChatView(cb){
             }
             progress.textContent=s.done?tr('交流完成'):fill('第 {turn} / {total} 轮',{turn:s.index+1,total:s.story.turns.length}).text;
             chinese.textContent=tr(s.showChinese?'隐藏释义':'显示释义');chinese.setAttribute('aria-pressed',String(!s.showChinese));
-            const print=JSON.stringify([s.messages,s.showChinese,s.locale]);
+            const print=JSON.stringify([s.messages,s.showChinese,s.locale,s.reward?.amount,s.reward?.currency]);
             if(print!==fingerprint){const bottom=log.scrollHeight-log.scrollTop-log.clientHeight<70;fingerprint=print;log.replaceChildren(...s.messages.map(row=>message(row,s)));if(bottom||fresh)log.scrollTop=log.scrollHeight;}
             for(const replay of log.querySelectorAll('button'))replay.disabled=s.busy||s.recording;
             hint.hidden=!s.hintLevel||s.done;
@@ -94,14 +99,20 @@ export function createLearningChatView(cb){
             mic.disabled=s.done||(s.busy&&!s.recording&&s.phase!=='connecting');mic.classList.toggle('is-recording',!!s.recording);mic.textContent=tr(s.recording?'结束':s.phase==='connecting'?'连接中':'录音');
             change.disabled=s.busy||s.recording;settings.disabled=s.busy||s.recording;hints.disabled=s.done;send.disabled=s.busy||s.recording||s.done;
             const r=s.reward;
-            if(r){
-                const currency=r.currency===100?'奇豆':'仙豆';
-                reward.replaceChildren(el('strong','',fill('{title} · 三轮交流',{title:s.story.title}).text),el('p','',s.done?fill('本次到账 {amount} {currency} · 当前余额 {balance}',{amount:s.received||0,currency,balance:r.balance}).text:fill('本次可得 {amount} {currency}',{amount:r.amount,currency}).text+(r.reason?' · '+tr(r.reason):'')),el('p','',r.useKey?fill(r.useKey,r.useVars).text:r.use));
-                reward.append(el('p','',fill('同组今日剩余 {count} 次 · 今日共享余量 {amount} {currency}',{count:r.remaining,amount:r.dailyRemaining,currency}).text));
-                if(s.memento)reward.append(el('p','',fill('首次交流纪念 · {kind} · 已交流 {count} 次',{kind:s.memento.independent?'曾独立表达':'参考提示完成',count:s.memento.completed}).text));
-                if(s.done&&r.action)reward.append(button('去使用',cb.useReward,'secondary small'));
-                if(s.done&&(s.story.mode||'basic')==='basic')reward.append(button('试试独立表达挑战',cb.challenge,'secondary small'));
-            }
+            completedActions.hidden=!s.done;
+            actions.hidden=s.done;caption.hidden=s.done;form.hidden=s.done||form.hidden;
+            completedActions.replaceChildren();
+            if(s.done){
+                if(r?.action&&s.received>0)completedActions.append(button('去使用',cb.useReward,'secondary small'));
+                if((s.story.mode||'basic')==='basic')completedActions.append(button('试试独立表达挑战',cb.challenge,'secondary small'));
+                for(const action of completedActions.querySelectorAll('button'))action.disabled=s.busy||s.recording;
+                const completionKey=s.attemptId||s.story;
+                if(celebrated!==completionKey){
+                    hideCelebration();celebrated=completionKey;
+                    celebration.replaceChildren(el('strong','','表现真棒，给你点赞！'),el('p','camp-chat-celebration-amount',s.received>0?fill('+{amount} {currency}',{amount:s.received,currency:tr(r?.currency===100?'奇豆':'仙豆')}).text:tr('练习完成，继续加油！')));
+                    celebration.hidden=false;celebrationTimer=setTimeout(hideCelebration,2800);
+                }
+            }else{hideCelebration();celebrated=null;}
             status.textContent=tr(s.status);caption.textContent=tr(s.recording?'正在录音 · 松开发送，滑出取消':'按住对话，松开发送 · 点击录制，再点结束');
             if(fresh)close.focus({preventScroll:true});
         },

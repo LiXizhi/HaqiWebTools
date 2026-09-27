@@ -9,7 +9,7 @@ import {createStoryChat} from './language_story.js';
 import {assetMode,assetUrl} from './adventure_media_core.js';
 import {selectCompanionId} from './adventure_companion_core.js';
 
-const companionName=current=>current.content.pets?.[selectCompanionId(current.save,current.content)]?.name||'抱抱龙';
+const companionName=current=>current.content.pets?.[current.save.pets?.[selectCompanionId(current.save,current.content)]?.speciesId||selectCompanionId(current.save,current.content)]?.name||'抱抱龙';
 
 export async function loadLearningCatalog(read=createJsonReader(),request=(url)=>fetch(url)) {
     const catalog=await read('data/adventure/language-courses.json');
@@ -43,6 +43,12 @@ export function createLanguageAdventure({getState,commit,notify,saveSettings=()=
         return pendingLoad;
     }
     function close(){opening++;greeting?.abort.abort();greeting=null;chat?.close();clearTimeout(session?.recordTimer);session?.abort.abort();session=null;void voice.cancel();view.close();}
+    function suspend(){
+        if(chat?.active){chat.suspend();return;}
+        if(!session){close();return;}
+        // Keep the lesson on screen; backgrounding must not discard progress.
+        if(session.recording){clearTimeout(session.recordTimer);session.recording=false;session.busy=false;session.status='已取消录音，可重新说。';void voice.cancel();paint();}
+    }
     // Only an eligible nearby NPC can produce the companion dots.
     function bubbleLabel(){return invitation?.target?'…':null;}
     function storyTarget(context,source){
@@ -187,10 +193,10 @@ export function createLanguageAdventure({getState,commit,notify,saveSettings=()=
         if(!preparedValid(p))return;
         const current=getState(),abort=new AbortController(),line=p.story.turns[0].question;
         greeting={...p,abort,until:now+learningParams(current.content).greetingMs,text:line[p.locale],translation:current.save.languageLearning.showChinese!==false?line[p.locale==='en'?'zh-CN':'en']:''};
-        if(current.save.languageLearning.autoSpeak){const active=greeting;active.speaking=true;void voice.speak(line[p.locale],p.locale,abort.signal).catch(()=>{}).finally(()=>{active.speaking=false;});}
+        {const active=greeting;active.speaking=true;void voice.speak(line[p.locale],p.locale,abort.signal).then(()=>{if(!abort.signal.aborted)active.spoken=true;}).catch(()=>{}).finally(()=>{active.speaking=false;});}
         inviteLabel=null;
     }
-    function enterGreeting(){const g=greeting;if(!g||!preparedValid(g))return;greeting=null;g.abort.abort();void open(g.npc,{prepared:g,greeted:true});}
+    function enterGreeting(){const g=greeting;if(!g||!preparedValid(g))return;greeting=null;g.abort.abort();void open(g.npc,{prepared:g,greeted:!!g.spoken});}
     function tick(now){
         const current=getState();chat?.tick();
         if(greeting){if(!preparedValid(greeting)||current.busy){close();}else if(now>=greeting.until&&!greeting.speaking)enterGreeting();}
@@ -203,5 +209,5 @@ export function createLanguageAdventure({getState,commit,notify,saveSettings=()=
         invitation=near?{source:near.instanceId||near.id,target:{npcId:near.id,instanceId:near.instanceId,name:near.name,position:{x:near.x,y:near.y}}}:null;
         inviteLabel=bubbleLabel(current);
     }
-    return {open,close,emit,tick,prepare,preparedValid,greet,enterGreeting,get greeting(){return greeting;},get active(){return !!session||!!chat?.active;},get bubble(){return inviteLabel;},get invitation(){return invitation?.target?{...invitation.target}:null;}};
+    return {open,close,suspend,resume(){chat?.resume();},emit,tick,prepare,preparedValid,greet,enterGreeting,get greeting(){return greeting;},get active(){return !!session||!!chat?.active;},get bubble(){return inviteLabel;},get invitation(){return invitation?.target?{...invitation.target}:null;}};
 }

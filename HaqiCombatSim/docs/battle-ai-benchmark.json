@@ -1,0 +1,523 @@
+{
+  "note": "固定种子离线对照。4v4为优化期间的小样本；不代表所有玩家阵容。对手为官方卡组权重策略。",
+  "reports": [
+    {
+      "policy": "reasoning_expert",
+      "size": 1,
+      "seeds": [
+        4711,
+        12630,
+        20549,
+        28468
+      ],
+      "elapsedMs": 14220,
+      "games": 100,
+      "wins": 75,
+      "baselineWins": 40,
+      "reports": [
+        {
+          "id": "fire-fire",
+          "games": 4,
+          "wins": 2,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.5,
+          "winInterval": [
+            0.15003570882017148,
+            0.8499642911798285
+          ],
+          "meanTurns": 12.25,
+          "baselineWinRate": 0,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "fire-ice",
+          "games": 4,
+          "wins": 3,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.75,
+          "winInterval": [
+            0.3006360524426366,
+            0.9544139373553637
+          ],
+          "meanTurns": 12.25,
+          "baselineWinRate": 0.25,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "fire-storm",
+          "games": 4,
+          "wins": 3,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.75,
+          "winInterval": [
+            0.3006360524426366,
+            0.9544139373553637
+          ],
+          "meanTurns": 11.5,
+          "baselineWinRate": 0,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "fire-life",
+          "games": 4,
+          "wins": 3,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.75,
+          "winInterval": [
+            0.3006360524426366,
+            0.9544139373553637
+          ],
+          "meanTurns": 18.25,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "fire-death",
+          "games": 4,
+          "wins": 2,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.5,
+          "winInterval": [
+            0.15003570882017148,
+            0.8499642911798285
+          ],
+          "meanTurns": 16,
+          "baselineWinRate": 0,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "ice-fire",
+          "games": 4,
+          "wins": 3,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.75,
+          "winInterval": [
+            0.3006360524426366,
+            0.9544139373553637
+          ],
+          "meanTurns": 13.75,
+          "baselineWinRate": 0.25,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "ice-ice",
+          "games": 4,
+          "wins": 2,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.5,
+          "winInterval": [
+            0.15003570882017148,
+            0.8499642911798285
+          ],
+          "meanTurns": 14,
+          "baselineWinRate": 0.25,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "ice-storm",
+          "games": 4,
+          "wins": 4,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.5100999795960008,
+            1
+          ],
+          "meanTurns": 12,
+          "baselineWinRate": 1,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "ice-life",
+          "games": 4,
+          "wins": 3,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.75,
+          "winInterval": [
+            0.3006360524426366,
+            0.9544139373553637
+          ],
+          "meanTurns": 27.25,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "ice-death",
+          "games": 4,
+          "wins": 4,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.5100999795960008,
+            1
+          ],
+          "meanTurns": 13.5,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "storm-fire",
+          "games": 4,
+          "wins": 4,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.5100999795960008,
+            1
+          ],
+          "meanTurns": 10,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "storm-ice",
+          "games": 4,
+          "wins": 4,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.5100999795960008,
+            1
+          ],
+          "meanTurns": 12.5,
+          "baselineWinRate": 0.25,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "storm-storm",
+          "games": 4,
+          "wins": 3,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.75,
+          "winInterval": [
+            0.3006360524426366,
+            0.9544139373553637
+          ],
+          "meanTurns": 7.75,
+          "baselineWinRate": 0.25,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "storm-life",
+          "games": 4,
+          "wins": 2,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.5,
+          "winInterval": [
+            0.15003570882017148,
+            0.8499642911798285
+          ],
+          "meanTurns": 16,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "storm-death",
+          "games": 4,
+          "wins": 3,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.75,
+          "winInterval": [
+            0.3006360524426366,
+            0.9544139373553637
+          ],
+          "meanTurns": 13.25,
+          "baselineWinRate": 0.25,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "life-fire",
+          "games": 4,
+          "wins": 3,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.75,
+          "winInterval": [
+            0.3006360524426366,
+            0.9544139373553637
+          ],
+          "meanTurns": 17.75,
+          "baselineWinRate": 0,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "life-ice",
+          "games": 4,
+          "wins": 3,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.75,
+          "winInterval": [
+            0.3006360524426366,
+            0.9544139373553637
+          ],
+          "meanTurns": 21.75,
+          "baselineWinRate": 0.75,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "life-storm",
+          "games": 4,
+          "wins": 4,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.5100999795960008,
+            1
+          ],
+          "meanTurns": 11.75,
+          "baselineWinRate": 1,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "life-life",
+          "games": 4,
+          "wins": 2,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.5,
+          "winInterval": [
+            0.15003570882017148,
+            0.8499642911798285
+          ],
+          "meanTurns": 27.75,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "life-death",
+          "games": 4,
+          "wins": 1,
+          "losses": 3,
+          "draws": 0,
+          "winRate": 0.25,
+          "winInterval": [
+            0.045586062644636216,
+            0.6993639475573634
+          ],
+          "meanTurns": 13.25,
+          "baselineWinRate": 0.25,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "death-fire",
+          "games": 4,
+          "wins": 4,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.5100999795960008,
+            1
+          ],
+          "meanTurns": 10,
+          "baselineWinRate": 0.25,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "death-ice",
+          "games": 4,
+          "wins": 4,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.5100999795960008,
+            1
+          ],
+          "meanTurns": 9,
+          "baselineWinRate": 0.75,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "death-storm",
+          "games": 4,
+          "wins": 2,
+          "losses": 2,
+          "draws": 0,
+          "winRate": 0.5,
+          "winInterval": [
+            0.15003570882017148,
+            0.8499642911798285
+          ],
+          "meanTurns": 10,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "death-life",
+          "games": 4,
+          "wins": 4,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.5100999795960008,
+            1
+          ],
+          "meanTurns": 11.5,
+          "baselineWinRate": 1,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "death-death",
+          "games": 4,
+          "wins": 3,
+          "losses": 1,
+          "draws": 0,
+          "winRate": 0.75,
+          "winInterval": [
+            0.3006360524426366,
+            0.9544139373553637
+          ],
+          "meanTurns": 15.75,
+          "baselineWinRate": 0,
+          "unsupported": {},
+          "reviews": []
+        }
+      ],
+      "coverage": {
+        "approximate": 668,
+        "unsupported": 33
+      }
+    },
+    {
+      "policy": "reasoning_expert",
+      "size": 4,
+      "seeds": [
+        7301,
+        15220
+      ],
+      "elapsedMs": 53729,
+      "games": 10,
+      "wins": 10,
+      "baselineWins": 6,
+      "reports": [
+        {
+          "id": "fire-ice",
+          "games": 2,
+          "wins": 2,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.34237195288961925,
+            1
+          ],
+          "meanTurns": 18.5,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "ice-storm",
+          "games": 2,
+          "wins": 2,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.34237195288961925,
+            1
+          ],
+          "meanTurns": 10.5,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "storm-life",
+          "games": 2,
+          "wins": 2,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.34237195288961925,
+            1
+          ],
+          "meanTurns": 10.5,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "life-death",
+          "games": 2,
+          "wins": 2,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.34237195288961925,
+            1
+          ],
+          "meanTurns": 33.5,
+          "baselineWinRate": 0.5,
+          "unsupported": {},
+          "reviews": []
+        },
+        {
+          "id": "death-fire",
+          "games": 2,
+          "wins": 2,
+          "losses": 0,
+          "draws": 0,
+          "winRate": 1,
+          "winInterval": [
+            0.34237195288961925,
+            1
+          ],
+          "meanTurns": 14.5,
+          "baselineWinRate": 1,
+          "unsupported": {},
+          "reviews": []
+        }
+      ],
+      "coverage": {
+        "approximate": 668,
+        "unsupported": 33
+      }
+    }
+  ]
+}

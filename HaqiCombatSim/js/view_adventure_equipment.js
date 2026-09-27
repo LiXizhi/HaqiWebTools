@@ -41,7 +41,7 @@ export function renderEquipment(body,model,cb,ui) {
     if(save.pendingEncounter)edit.title=tr('战斗中无法修改名字和形象');
     const identity=el('div','equipment-identity',el('div','equipment-name-row',el('h3','',save.name),edit),el('p','muted',`${SCHOOL_NAMES[save.school]}学徒 · 等级 ${save.level}`));
     function openCustomize(trigger){
-        const draft={name:save.name,appearance:save.appearance==='girl'?'girl':'boy',headId:resolvedHeadId(save)};
+        const draft={name:save.name,appearance:save.appearance==='girl'?'girl':'boy',headId:resolvedHeadId(save),bodyId:save.bodyId};
         const dialog=new DetailDialog(body,{el,title:'修改名字和形象',className:'equipment-item-dialog hero-customize-dialog'});
         dialog.closeButton.setAttribute('aria-label',tr('关闭修改名字和形象'));
         dialog.closeButton.title=dialog.closeButton.getAttribute('aria-label');
@@ -64,12 +64,12 @@ export function renderEquipment(body,model,cb,ui) {
             else{setText(confirm,'花费 {count} 魔豆确认',{count:quote.total});confirm.disabled=false;}
         }
         name.oninput=refresh;
-        picker.addEventListener('click',()=>refresh());
+        picker.addEventListener('change',()=>refresh());
         confirm.onclick=()=>{
-            const quote=heroCustomizeQuote(save,{name:name.value,appearance:draft.appearance,headId:draft.headId});
+            const quote=heroCustomizeQuote(save,{name:name.value,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId});
             if(confirm.disabled||!quote.total)return;
             dialog.close();
-            cb.action({type:'customize-hero',name:name.value,appearance:draft.appearance,headId:draft.headId});
+            cb.action({type:'customize-hero',name:name.value,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId});
         };
         dialog.body.append(picker,label,name,hint);
         dialog.footer.append(confirm);

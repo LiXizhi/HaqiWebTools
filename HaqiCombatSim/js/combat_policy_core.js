@@ -4,6 +4,7 @@
 // - DeckAttackerBot：移植 mob_server.lua GetCardAndTarget_Deck_Attacker(L5042) + card_server.lua GetDeckAttackerAIWeightTarget(L315) / MatchCondition(L373)
 // - SimpleBot：不依赖 CSV 的通用启发式（贪心伤害 / 低血治疗 / 起手 blade）
 import * as U from './combat_unit_core.js';
+import {ReasoningBot} from './battle_ai/policy_core.js';
 import { castableCards, validTargets, enemiesOf, alliesOf } from './combat_arena_core.js';
 import { expectedBaseDamage, expectedBaseHeal, isAttackCard, isHealCard, cardTargetKind } from './combat_cards_core.js';
 
@@ -228,6 +229,7 @@ export class RandomBot {
 }
 
 export function createPolicy(name, opts) {
+    if (String(name).startsWith('reasoning')) return new ReasoningBot({difficulty:String(name).split('_')[1]||'advanced',fallback:new SimpleBot(opts),...opts});
     switch (name) {
         case 'human': return new HumanPolicy();
         case 'deck_attacker': return new DeckAttackerBot(opts);

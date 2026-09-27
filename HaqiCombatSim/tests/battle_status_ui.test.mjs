@@ -27,7 +27,10 @@ test('four combatants per side retain separate status, targeting, mana and self 
 });
 test('corner status preserves charm, ward, periodic and stun information',()=>{
     const u={...unit('hero','near'),charms:[1],wards:[{id:2}],dots:[{ticks:[{dmg:10},{dmg:10}]}],hots:[{ticks:[20]}],stunned:true};
-    assert.deepEqual(battleStatusLabels(u,{resolved:{charms:{1:{desc:'提升攻击'}},wards:{2:{desc:'抵御伤害'}}}}),['提升攻击','抵御伤害','持续伤害 · 剩余2回合','持续治疗 · 剩余1回合','眩晕']);
+    assert.deepEqual(battleStatusLabels(u,{resolved:{
+        charms:{1:{boost_damage:45,school:'fire',positive:true,desc:'提升攻击'}},
+        wards:{2:{boost_damage:-80,school:'ice',positive:true,desc:'抵御伤害'}},
+    }}),['下次烈火攻击加 45%','受到的寒冰攻击减 80%','持续伤害 · 剩余2回合','持续治疗 · 剩余1回合','眩晕']);
 });
 test('corner status exposes reflection capacity and remaining stealth rounds',()=>{
     const current={...unit('hero','near'),reflectAmount:250,stealth:true,stealthRounds:2};

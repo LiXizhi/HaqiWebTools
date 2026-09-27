@@ -105,13 +105,14 @@ export function rewardStatus(save, content, course, mode, now) {
     return {ledger,currency,key,count,limit,amount:mode==='listening'||count>=limit?0:Math.max(0,Math.min(amount,cap-(ledger.totals[currency]||0)))};
 }
 export function recordLearningCompletion(save, content, completion, access) {
-    assert(access?.learningCompletion===completion,'缺少当次口语完成记录');
+    assert(access?.learningCompletion===completion,'缺少当次学习完成记录');
     const {course,mode,locale,attemptId,now,score,spoken}=completion;
     assert(save.zone==='camp'&&save.languageLearning?.enabled&&save.languageLearning.target===locale,'学习场景已变化');
-    assert((mode==='listening'?completion.heard===true:spoken===true)&&score===100&&/^[\w-]{1,80}$/.test(attemptId),'口语任务尚未完成');
+    assert((mode==='listening'?completion.heard===true:(spoken===true||completion.answered===true&&!!completion.story))&&score===100&&/^[\w-]{1,80}$/.test(attemptId),'学习任务尚未完成');
     if(completion.story){
         const s=completion.story;
-        assert(typeof s.id==='string'&&s.id.length<100&&Array.isArray(s.turnIds)&&s.turnIds.length===3&&new Set(s.turnIds).size===3&&Array.isArray(s.proof)&&s.proof.length===3&&s.proof.every((p,i)=>p.turnId===s.turnIds[i]&&typeof p.quote==='string'&&p.quote.trim()&&typeof p.hinted==='boolean'),'故事口语记录不完整');
+        if(completion.answered===true)assert(Array.isArray(s.proof)&&s.proof.every(p=>p.input==='speech'||p.input==='text'),'故事回答方式不完整');
+        assert(typeof s.id==='string'&&s.id.length<100&&Array.isArray(s.turnIds)&&s.turnIds.length===3&&new Set(s.turnIds).size===3&&Array.isArray(s.proof)&&s.proof.length===3&&s.proof.every((p,i)=>p.turnId===s.turnIds[i]&&typeof p.quote==='string'&&p.quote.trim()&&typeof p.hinted==='boolean'),'故事回答记录不完整');
     }
     const status=rewardStatus(save,content,course,mode,now);
     if(status.ledger.attempts.includes(attemptId))return {amount:0,currency:status.currency,duplicate:true};

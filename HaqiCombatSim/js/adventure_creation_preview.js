@@ -27,7 +27,7 @@ export function createCreationPreview(assets) {
         if (!canvas) return;
         const card = (assets.previewCards || assets.dataset.cards)[key], spec = spellEffect(assets.effects, card);
         status('正在准备技能演出…');
-        try { await Promise.all([assets.skillArt.ensure(spec.base),assets.hero?.ensure({gender:appearance==='girl'?'female':'male',headId:selection.headId})]); }
+        try { await Promise.all([assets.skillArt.ensure(spec.base),assets.hero?.ensure({gender:appearance==='girl'?'female':'male',headId:selection.headId,bodyId:selection.bodyId})]); }
         catch { if (current === generation) status('动画暂时无法加载，可重播重试或继续选择系别。');return; }
         if (current !== generation || !canvas.isConnected) return;
         const duration = effectDuration(assets.effects, card, reduced.matches), ctx = canvas.getContext('2d');
@@ -48,7 +48,7 @@ export function createCreationPreview(assets) {
             const size = Math.min(68, w * .15), targets = spec.area ? [{ x: w * .68, y: h * .5 }, to, { x: w * .85, y: h * .85 }] : [spec.friendly ? from : to];
             const pose = previewTargetAction(spec, assets.effects.timeline, elapsed, duration, 'auto');
             const actor = (at, sheet, index, action, progress, direction) => drawAnimatedActor(ctx, at, action, progress, direction, reduced.matches, () => {
-                if(sheet==='sprites'&&index>=8&&index<16&&assets.hero){const pose=assets.hero.updateActor(hero,{time:elapsed/1000,facing:index%4,reducedMotion:reduced.matches});assets.hero.drawTile(ctx,index,-size/2,-size,size,size,{time:elapsed/1000,head:pose.head,breath:pose.breath,headId:selection.headId});}
+                if(sheet==='sprites'&&index>=8&&index<16&&assets.hero){const pose=assets.hero.updateActor(hero,{time:elapsed/1000,facing:index%4,reducedMotion:reduced.matches});assets.hero.drawTile(ctx,index,-size/2,-size,size,size,{time:elapsed/1000,head:pose.head,breath:pose.breath,headId:selection.headId,bodyId:selection.bodyId});}
                 else assets.tile(ctx,sheet,index,-size/2,-size,size,size);
             });
             actor(from, 'sprites', appearance === 'girl' ? 14 : 10, 'cast', Math.min(1, p / .45), 1);

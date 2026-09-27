@@ -1,3 +1,4 @@
+import {packPetFilesAsync,openPetFiles,hydratePetFile} from './adventure_pet_files.js';
 // Optional browser IO adapter. PersonalPageStore owns the workspace and writes;
 // Server pageCache reads verify acknowledged writes without the store's local fallback.
 import { makeCloudSnapshot, parseCloudSnapshot, snapshotPath, checkpointPaths } from './adventure_cloud_core.js';
@@ -22,7 +23,7 @@ export function loadKeepwork() {
     }).catch(error => { sdkLoading = null;throw error; });
     return timeout(sdkLoading);
 }
-export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, now = () => new Date().toISOString(), uuid = () => crypto.randomUUID(), onAccountChange = () => {}, prepareSaves = async () => {} }) {
+export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, now = () => new Date().toISOString(), uuid = () => crypto.randomUUID(), onAccountChange = () => {}, prepareSaves = async () => {}, petFileStore = () => null }) {
     let sdk, store, owner = null, authVersion = 0, unsubscribe;
     const partCache = new Map();
     const check = session => {
@@ -52,6 +53,17 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         if (typeof text !== 'string' || !text) throw new CloudError('无法从云端读取记录，请检查网络后重试。');
         return text;
     }
+    const petScope=(owner,id)=>`haqi.roles.v1.account.${encodeURIComponent(owner)}.${id}`;
+    const petIO=(roleId,current,known=null)=>({
+        async read(path){
+            if(!/^(pets\/[0-9a-f-]+\/[a-zA-Z0-9_-]+|pet-pages\/[a-zA-Z0-9_-]+)\.json$/.test(path))throw new CloudError('宠物文件路径无效');
+            if(known&&!known.has(path)){const local=petFileStore(roleId);if(local){const value=local.read(path);await writeVerified(`roles/${roleId}/${path}`,JSON.stringify(value),current);known.add(path);return value;}}
+            const value=JSON.parse(await remoteText(`roles/${roleId}/${path}`,current));
+            if(value.scope!==petScope(current.owner,roleId))throw new CloudError('宠物文件账号不一致');
+            petFileStore(roleId)?.write(path,value);return value;
+        },
+        async write(path,value){await writeVerified(`roles/${roleId}/${path}`,JSON.stringify(value),current);petFileStore(roleId)?.write(path,value);known?.add(path);}
+    });
     const rolesPath = 'roles/index.json';
     async function readEnvelope(current) {
         // Only an explicit missing-page response means a new account.
@@ -102,6 +114,7 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
                 if(!roleIdValid(row.id))throw new CloudError('角色编号无效');
                 const parts=Object.fromEntries(await Promise.all(storageParts.map(async part=>[part,await readPart(row.files?.[part],row.id,part,current)])));
                 await prepareSaves([row.state]);check(current);
+                if(parts.items.petPages){const opened=await openPetFiles({...row.state,...parts.items,...parts.battle},petScope(current.owner,row.id),content,petIO(row.id,current));Object.assign(parts.items,{pets:opened.pets,petWorld:opened.petWorld,petFileRefs:opened.petFileRefs});}
                 const joined=joinRemote(row,parts);
                 return {id:row.id,lastPlayedAt:row.lastPlayedAt,save:joined.save,stale:joined.stale};
             }));
@@ -122,6 +135,7 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
     }
     return {
         get owner() { return owner; },
+        petFile:(roleId,path)=>guarded(async()=>petIO(roleId,await session()).read(path)),
         roles: () => guarded(async () => readRoles(await session())),
         roleAncestor: (base, head) => guarded(async () => {
             const current = await session();let revision = head;
@@ -147,9 +161,12 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
             if(previous.manifest?.schemaVersion===2&&staleParts.size===0&&coreCatalogKey(clean)===coreCatalogKey(previous.catalog))return previous.revision;
             const revision=uuid(),rows=[];
             for(const row of clean.roles){
-                const split=splitRoleSave(row.save),files={};
+                let split=splitRoleSave(row.save);const files={};
                 const old=previous.catalog.roles.find(other=>other.id===row.id);
+                const known=new Set([...(old?.petPages||[]),...Object.values(old?.petFileRefs||{}).map(r=>r.path)]);
+                if(row.save.petInstanceVersion===1){for(const ref of Object.values(row.save.petFileRefs||{}))if(!known.has(ref.path))await petIO(row.id,current,known).read(ref.path);const packed=await packPetFilesAsync(row.save,petScope(current.owner,row.id),content,uuid,petIO(row.id,current,known));const active=split.battle.activePets;split=splitRoleSave(packed);split.battle.activePets=active;}
                 const oldParts=old&&splitRoleSave(old.save);
+                if(oldParts?.items.petPages){oldParts.items.pets={};oldParts.items.petWorld={};delete oldParts.items.petFileRefs;}
                 const oldFiles=previous.manifest?.schemaVersion===2?previous.manifest.catalog.roles.find(other=>other.id===row.id)?.files:null;
                 const drifted=staleParts.has(row.id);
                 for(const part of storageParts){
@@ -204,11 +221,12 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
             // SDK listing may return empty on failure: UI deliberately offers refresh, not a claim that no saves exist.
             return checkpointPaths(listing);
         }),
-        upload: save => guarded(async () => {
+        upload: (save,{roleId}={}) => guarded(async () => {
             // Capture the complete checkpoint before asynchronous work; gameplay RNG is untouched.
             if(save.pendingEncounter)throw new CloudError('战斗尚未结束，请结算后再保存云端快照。');
             const snapshot = makeCloudSnapshot(restoreRuntime(durableSave(save),content), content, dataset, now(), uuid());
             snapshot.save=durableSave(snapshot.save);snapshot.storageVersion=2;
+            if(save.petInstanceVersion===1){if(!roleIdValid(roleId))throw new CloudError('请选择角色后保存宠物快照');const current=await session(),known=new Set(),io=petIO(roleId,current,known);for(const ref of Object.values(save.petFileRefs||{}))if(!known.has(ref.path))await io.read(ref.path);snapshot.save=await packPetFilesAsync(snapshot.save,petScope(current.owner,roleId),content,uuid,io);snapshot.storageVersion=3;snapshot.petRoleId=roleId;}
             const text = JSON.stringify(snapshot), path = snapshotPath(snapshot), current = await session();
             const targetStore = store;
             // Stage without background flush, then await the server cache write
@@ -225,10 +243,11 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
             const raw=await remoteText(path,current);
             if(raw.length>1024*1024)throw new CloudError('存档文件过大');
             await prepareSaves([JSON.parse(raw).save]);check(current);
-            const envelope=JSON.parse(raw);
-            if(envelope.storageVersion!==undefined&&envelope.storageVersion!==2)throw new CloudError('云端记录存储版本不兼容');
+            const envelope=JSON.parse(raw),splitPetSnapshot=JSON.parse(raw).storageVersion===3;
+            if(envelope.storageVersion!==undefined&&![2,3].includes(envelope.storageVersion))throw new CloudError('云端记录存储版本不兼容');
+            if(envelope.storageVersion===3){if(!roleIdValid(envelope.petRoleId))throw new CloudError('宠物快照角色无效');const io=petIO(envelope.petRoleId,current),scope=petScope(current.owner,envelope.petRoleId);envelope.save=await openPetFiles(envelope.save,scope,content,io);for(const [id,ref]of Object.entries(envelope.save.petFileRefs||{})){if(!envelope.save[ref.group][id]){const file=await io.read(ref.path);hydratePetFile(envelope.save,id,scope,()=>file,content);}}delete envelope.save.petFileRefs;delete envelope.save.petPages;envelope.storageVersion=2;}
             const normalized=envelope.storageVersion===2?JSON.stringify({...envelope,save:restoreRuntime(envelope.save,content)}):raw;
-            const result = parseCloudSnapshot(normalized, content, dataset);
+            const result = parseCloudSnapshot(splitPetSnapshot?{...envelope,save:restoreRuntime(envelope.save,content)}:normalized, content, dataset);
             if (snapshotPath(result.snapshot) !== path) throw new CloudError('云端记录与文件编号不一致');
             return { ...result, owner: current.owner, authVersion: current.version };
         }),

@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>语言奖励隔离验收</title>
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/language_adventure.css">
+<body class="haqi-app"><script type="module">
+if(new URLSearchParams(location.search).has('phone')){
+ const frame=document.createElement('iframe');frame.src='tests/fixtures/learning-reward.html';frame.style='width:390px;height:844px;border:0';document.body.append(frame);
+}else{
+ const {createStoryChat}=await import(/* @vite-ignore */ new URL('js/language_story.js',document.baseURI).href);
+ const {recordLearningCompletion}=await import(/* @vite-ignore */ new URL('js/language_adventure_core.js',document.baseURI).href);
+ const catalog=await fetch('data/adventure/camp-conversations.json').then(r=>r.json());
+ const profile=catalog.profiles.find(p=>p.npcId===36205),story=profile.stories[0];
+ const state={save:{zone:'camp',inventory:{},languageLearning:{enabled:true,target:'en',native:'zh-CN'},languageAdventure:{version:1,progress:{}}},content:{},role:'fixture',identity:'fixture'};
+ const speechLog=document.createElement('output');speechLog.style='position:fixed;right:8px;bottom:8px;z-index:300;max-width:180px;background:white;color:#234;padding:6px;font-size:12px';speechLog.setAttribute('aria-label','模拟朗读记录');document.body.append(speechLog);
+ let turn=0,spoken=[];
+ const chat=createStoryChat({getState:()=>state,voice:{start:async()=>{},finish:async()=>story.turns[(turn++)%3].answer.en,cancel:async()=>{},speak:async text=>{spoken.push(text);speechLog.textContent='模拟朗读 '+spoken.length+'：'+text;}},commit:c=>recordLearningCompletion(state.save,{},c,{learningCompletion:c})});
+ chat.open(profile,story,null);
+}
+</script></body></html>

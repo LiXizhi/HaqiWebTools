@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><base href="../../"><meta name="viewport" content="width=device-width,initial-scale=1"><title>头身独立换装预览</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><style>body{background:#244b42;padding:20px}#panel{max-width:800px;margin:auto;background:#fff9e9;padding:20px}#result{color:white}</style></head><body class="haqi-app"><p id="result">此页只使用内存测试角色，不读取或写入玩家存档。</p><div id="panel"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,applyAction} from '../../js/adventure_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+try{
+ const assets=await loadResources(p=>document.querySelector('#result').textContent='内存测试角色：'+p.label+' '+(p.detail||'')),save=createAdventure(assets.content,{name:'换装预览',headId:'elf-boy',bodyId:'male4'});save.inventory[984]=1000;
+ const root=document.querySelector('#panel');
+ function render(){root.replaceChildren();renderPanel(root,'equipment',{assets,save,equipmentView:{tab:'gear',slot:0,page:0,query:'',item:null,guid:null}},{close:()=>{},action:action=>{applyAction(save,assets.content,action);document.querySelector('#result').textContent=`内存角色：${save.headId} / ${save.bodyId}；剩余 ${save.inventory[984]} 魔豆。未写入玩家存档。`;render();}});}
+ render();document.querySelector('#result').textContent='此页只使用内存测试角色，不读取或写入玩家存档。';
+}catch(error){document.querySelector('#result').textContent=error.stack;}
+</script></body></html>

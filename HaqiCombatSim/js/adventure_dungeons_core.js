@@ -1,6 +1,8 @@
 // Original identities, formations and positions are exported by export_dungeons.py.
 // Ordered roads and persistent solo clear progress are explicit Web adaptations.
 import {isSupportedType} from './combat_cards_core.js';
+import {dungeonProgress} from './adventure_coop_core.js';
+import {parseArenaStaminaCost} from './adventure_stamina_core.js';
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 const targets=new Set(['self','max_max_hp','lowest_hp','random_friendly','random_hostile','threat_highest','threat_lowest']);
 export function dungeonFor(content,id){return content.dungeons?.find(d=>d.id===id);}
@@ -31,7 +33,8 @@ export function installDungeons(content,dataset,catalog,kidsCards,cardNames={}){
                     if(kidsCards[key]&&isSupportedType(kidsCards[key].type))dataset.cards[key]??={...kidsCards[key],name:cardNames[key]||key};
                 }
             }
-            return {...a,blocked,monsterIds:a.slots.filter(Boolean)};
+            const staminaCost=parseArenaStaminaCost(a);
+            return {...a,blocked,monsterIds:a.slots.filter(Boolean),staminaCost};
         });
         d.loaded=true;
         const leader=d.arenas.flatMap(a=>a.monsterIds).map(id=>catalog.monsters[id]).filter(Boolean).sort((a,b)=>b.hp-a.hp)[0];
@@ -44,7 +47,7 @@ export function installDungeons(content,dataset,catalog,kidsCards,cardNames={}){
             const layout=projectDungeon(d,content.worldMaps.camp.rules);
             content.worldMaps[d.id]=layout;
             content.worldMapIndex.islands[d.id]={w:layout.w,h:layout.h,spawn:layout.spawn,initialSpawn:layout.spawn,retainPreviousPosition:true};
-            for(const a of d.arenas)content.encounters.push({id:a.id,zone:d.id,monsterId:a.monsterIds[0],monsterIds:a.monsterIds,monsterSlots:a.slots.flatMap((id,i)=>id?[i]:[]),blocked:a.blocked,sourceArenaId:a.sourceId,x:layout.encounterPositions[a.id][0],y:layout.encounterPositions[a.id][1]});
+            for(const a of d.arenas)content.encounters.push({id:a.id,zone:d.id,monsterId:a.monsterIds[0],monsterIds:a.monsterIds,monsterSlots:a.slots.flatMap((id,i)=>id?[i]:[]),blocked:a.blocked,sourceArenaId:a.sourceId,staminaCost:a.staminaCost,x:layout.encounterPositions[a.id][0],y:layout.encounterPositions[a.id][1]});
         }
         return d;
     });
@@ -88,31 +91,31 @@ export function projectDungeon(d,baseRules){
 }
 export function enterDungeon(save,content,id,{restart=false}={}){
     const d=dungeonFor(content,id);assert(d?.playable,'这个副本尚未开放');assert(d.loaded!==false&&content.worldMaps[id],'副本数据尚未加载');assert(!save.pendingEncounter,'请先完成当前战斗');
-    save.dungeonRuns??={};
+    save.dungeonRuns??={};const runs=dungeonProgress(save);
     if(!dungeonFor(content,save.zone))save.dungeonReturn={zone:save.zone,position:{...save.position}};
-    else if(save.dungeonRuns[save.zone])save.dungeonRuns[save.zone].position={...save.position};
-    if(restart||!save.dungeonRuns[id])save.dungeonRuns[id]={cleared:[]};
+    else if(runs[save.zone])runs[save.zone].position={...save.position};
+    if(restart||!runs[id])runs[id]={cleared:[]};
     const layout=content.worldMaps[id];
-    save.zone=id;save.position={...(save.dungeonRuns[id].position||layout.spawn)};
+    save.zone=id;save.position={...(runs[id].position||layout.spawn)};
     // Re-entry must not immediately trigger the portal used to leave last time.
     if([layout.entrancePortal,layout.portal].some(p=>p&&Math.hypot(p.x-save.position.x,p.y-save.position.y)<90))save.position={...layout.spawn};
     save.revision++;
 }
 export function leaveDungeon(save,content){
     assert(dungeonFor(content,save.zone),'当前不在副本中');assert(!save.pendingEncounter,'请先完成当前战斗');
-    save.dungeonRuns[save.zone].position={...save.position};
+    dungeonProgress(save)[save.zone].position={...save.position};
     const target=save.dungeonReturn||{zone:'camp',position:content.worldMaps.camp.spawn};
-    save.zone=target.zone;save.position={...target.position};save.dungeonReturn=null;save.revision++;
+    save.zone=target.zone;save.position={...target.position};save.dungeonReturn=null;delete save.coopRun;save.revision++;
 }
 export function validateDungeons(save,content){
     save.dungeonRuns??={};save.dungeonReturn??=null;
     assert(save.dungeonRuns&&typeof save.dungeonRuns==='object'&&!Array.isArray(save.dungeonRuns),'副本进度无效');
     const position=(p,id)=>{const info=content.worldMapIndex.islands[id];return info&&Number.isFinite(p?.x)&&Number.isFinite(p?.y)&&p.x>=0&&p.y>=0&&p.x<=info.w&&p.y<=info.h;};
-    for(const [id,run]of Object.entries(save.dungeonRuns)){
+    for(const [id,run]of [...Object.entries(save.dungeonRuns),...Object.entries(save.coopRun?.runs||{})]){
         const d=dungeonFor(content,id);
         assert(d?.playable&&run&&Array.isArray(run.cleared)&&new Set(run.cleared).size===run.cleared.length&&run.cleared.every(e=>d.arenas.some(a=>a.id===e&&!a.blocked.length)),'副本清怪记录无效');
         assert(run.position===undefined||position(run.position,id),'副本返回位置无效');
     }
     if(save.dungeonReturn)assert(!dungeonFor(content,save.dungeonReturn.zone)&&position(save.dungeonReturn.position,save.dungeonReturn.zone),'副本出口无效');
-    if(dungeonFor(content,save.zone))assert(save.dungeonRuns[save.zone]&&save.dungeonReturn,'副本记录不完整');
+    if(dungeonFor(content,save.zone))assert(dungeonProgress(save)[save.zone]&&save.dungeonReturn,'副本记录不完整');
 }

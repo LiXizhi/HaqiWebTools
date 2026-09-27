@@ -1,10 +1,11 @@
+import {petDisplayScale} from './adventure_pet_interactions_core.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import { petParams, STAGE_NAMES, petAppearanceStage, petCapacity, petMaxHp, FOOD_ID } from './adventure_pets_core.js';
 import { createCardFace } from './view_adventure_card.js';
 import { createPetEvolution } from './view_adventure_pet_status.js';
 // A native nested dialog keeps the shop filters, page and scroll position intact.
 export function showPetDetails(assets,id,portrait,{el,button,spellFace},options={}) {
-    const def=assets.content.pets[id];
+    const speciesId=options.save?.pets[id]?.speciesId||id,def=assets.content.pets[speciesId];
     const trigger=document.activeElement,dialog=el('dialog','modal pet-growth-modal');
     dialog.setAttribute('aria-label',`${def.name} · 四阶段与卡片`);
     const close=()=>dialog.close();
@@ -30,13 +31,13 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
                 const meter=el('progress',`pet-meter pet-meter-${label==='饱食'?'hunger':'hp'}`);meter.max=max;meter.value=value;meter.setAttribute('aria-label',label);
                 info.append(el('label','pet-stat',el('span','',`${label} ${Math.floor(value)} / ${max}`),meter));
             }
-            const feed=button(`喂食 · 营养餐 ${options.save.inventory[FOOD_ID]||0}`,()=>perform({type:'pet-feed',petId:id}),'primary');feed.disabled=pet.hunger>=100||!(options.save.inventory[FOOD_ID]>0);info.append(feed);
+            const feed=button(`分享营养餐 · 消耗 1 份（剩余 ${options.save.inventory[FOOD_ID]||0}）`,()=>perform({type:'pet-feed',petId:id}),'primary');feed.disabled=!!options.save.pendingEncounter||!(options.save.inventory[FOOD_ID]>0);info.append(feed);if(pet.gender)info.append(el('p','muted',`${pet.gender==='male'?'公':'母'} · 记住 ${pet.memories.length} 位伙伴${pet.cooldownUntil>Date.now()?' · 繁育冷却中':''}`));
             if(pet.hunger===0)info.append(el('p','pet-supply-notice','饥饿中 · 已暂停自然回血'));
             if(!(options.save.inventory[FOOD_ID]>0))info.append(button('购买营养餐',()=>{close();options.shop();},'secondary'));
-            content.append(el('div','pet-profile-overview',el('div','pet-profile-portrait',portrait(assets,id,stage,180)),info));
-            content.append(el('h3','','进化路径'),createPetEvolution(assets,id,pet,portrait,el,selectAppearance));
+            content.append(el('div','pet-profile-overview',el('div','pet-profile-portrait',portrait(assets,speciesId,stage,180*petDisplayScale(pet,assets.content))),info));
+            content.append(el('h3','','进化路径'),createPetEvolution(assets,speciesId,pet,portrait,el,selectAppearance));
         }else{
-            const stages=createPetEvolution(assets,id,pet,portrait,el,selectAppearance);
+            const stages=createPetEvolution(assets,speciesId,pet,portrait,el,selectAppearance);
             content.append(stages);
             const count=el('strong',''),pack=el('div','pet-pack-emblem',el('span','','魔法'),el('strong','','卡包'));
             const heading=el('div','pet-deck-heading',pack,count),cards=el('div','pet-spell-shelf');

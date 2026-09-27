@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "tool": "built-in image_gen",
+  "sideRepairPrompt": "Use case: precise-object-edit. Asset type: production game animation spritesheet. References: image 1 male blue-caped elf body, image 2 female blue-caped elf body. Create a NEW transparent RGBA sprite sheet, exactly SIX columns by FOUR rows, evenly spaced uniform cells. ONLY HEADLESS bodies with short exposed neck, same cute detailed 3D painted game aesthetic and identical clothing, blue gold-trimmed cape, brown boots, cream tunic (male) / skirt (female), blue crystal staff. Row 1 male LEFT-facing strict side view; row 2 male RIGHT-facing strict side view; row 3 female LEFT-facing; row 4 female RIGHT-facing. No front/back rows. The existing side poses are too similar: REPLACE with a real six-frame seamless walking cycle. Each row columns: 1 left leg far forward and right leg far back (contact), 2 legs passing with right knee lifted beneath torso, 3 right leg swinging forward, 4 right leg far forward and left leg far back (opposite contact), 5 legs passing with left knee lifted, 6 left leg swinging forward ready to return to column 1. Near and far legs MUST exchange positions; widely separated feet at frames 1 and 4, narrow at frames 2 and 5. Do not repeat the same foot-forward silhouette in all six cells. Arms and cape follow alternate steps; preserve crystal staff hand, costume, size, facing within row. Fixed orthographic camera, same scale and neck anchor within each row; feet aligned to the same ground height in all cells. Each sprite completely isolated within its own cell, generous transparent margins, no overlapping cells. Transparent background with actual alpha, no checkerboard, shadows, ground, text, labels, borders, heads, hair or faces. High detail approximately 1536 by 1024.",
+  "batchTemplate": {
+    "id": "<stable-character-id>",
+    "gender": "male|female",
+    "reference": "Use only the approved complete 7x4 body atlas for the character; no separate idle or original whole-body texture",
+    "layout": {
+      "columns": 7,
+      "rows": 4,
+      "directions": [
+        "down",
+        "left",
+        "right",
+        "up"
+      ],
+      "walkColumns": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "idleColumn": 6
+    },
+    "prompt": "Create a transparent RGBA 7-column x 4-row HEADLESS character sprite sheet matching the approved costume reference. Rows down/front, left, right, up/back. Columns 1-6: a complete alternating-leg walk loop (contact A, passing A, swing B, contact B, passing B, swing A); column 7: neutral standing pose facing the same direction. Opposite contact poses must exchange near/far legs. Same orthographic camera, costume, staff hand, body size and exposed neck for every cell. Align feet to the same baseline within each row. Genuine transparent alpha; no shadow, ground, checkerboard, heads, labels or frame borders. Each cell isolated with transparent margins.",
+    "acceptance": [
+      "Verify actual alpha and no clipped cells",
+      "Register neck anchors and foot baselines; do not infer attachment from hair",
+      "Measure lower-leg silhouettes; differing image hashes alone do not prove motion",
+      "Inspect each direction in a continuous loop, including frame 6 to frame 1",
+      "Inspect idle/walk switch with all supported heads",
+      "Encode WebP <=200000 bytes, then upload and verify SHA-256/CORS"
+    ]
+  },
+  "riderTemplate": {
+    "layout": {
+      "columns": 4,
+      "rows": 2,
+      "directions": [
+        "down",
+        "left",
+        "right",
+        "up"
+      ],
+      "rowPoses": [
+        "sitting",
+        "standing"
+      ]
+    },
+    "constraints": "One transparent body atlas containing all eight poses; same neck anchors, body scale and mount seat geometry as the approved reference. No heads.",
+    "references": {
+      "male": "assets/hero-preview/male-rider.webp",
+      "female": "assets/hero-preview/female-rider.webp"
+    }
+  }
+}

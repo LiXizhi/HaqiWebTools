@@ -58,3 +58,44 @@ test('identical wards share one counted icon while different wards and periodic 
     drawOverheadStatus(context,unit,battle,{x:100,y:180},390);
     assert.deepEqual(texts,['2','1']);
 });
+
+test('trap and blade boost text prefer school phrasing over cryptic Lua snapshots',()=>{
+    const unit={hp:10,charms:[2015],wards:[{id:3024},{id:36}]};
+    const battle={resolved:{
+        charms:{2015:{boost_damage:55,school:'storm',positive:true,desc:'+55%风暴攻击'}},
+        wards:{
+            3024:{boost_damage:55,school:'storm',positive:false,desc:'+55%风暴伤害'},
+            36:{boost_damage:55,school:'life',positive:false,desc:'+55%生命伤害'},
+        },
+    }};
+    assert.deepEqual(battleStatusEffects(unit,battle).map(e=>e.desc),[
+        '下次风暴攻击加 55%',
+        '受到的风暴攻击加 55%',
+        '受到的生命攻击加 55%',
+    ]);
+});
+
+test('negative wards draw a spiky trap outline instead of an inverted triangle',()=>{
+    const moves=[];
+    const context=new Proxy({
+        beginPath(){moves.push('begin');},
+        moveTo(x,y){moves.push(['m',Math.round(x),Math.round(y)]);},
+        lineTo(x,y){moves.push(['l',Math.round(x),Math.round(y)]);},
+        closePath(){moves.push('close');},
+        fill(){moves.push('fill');},
+        stroke(){moves.push('stroke');},
+        arc(){moves.push('arc');},
+        ellipse(){},
+        quadraticCurveTo(){},
+        bezierCurveTo(){},
+        createLinearGradient(){return {addColorStop(){}};},
+        save(){},restore(){},translate(){},scale(){},
+        roundRect(){},
+        fillText(){},
+        strokeText(){},
+    }, {get:(o,k)=>k in o?o[k]:()=>{}});
+    drawOverheadStatus(context,{hp:10,wards:[{id:1}]},{resolved:{wards:{1:{school:'storm',positive:false,boost_damage:55}}}},{x:100,y:120},390);
+    assert.ok(moves.includes('close'));
+    assert.ok(moves.filter(m=>Array.isArray(m)&&m[0]==='l').length>=16);
+    assert.equal(moves.some(m=>Array.isArray(m)&&m[0]==='m'&&m[1]===1&&m[2]===4),false);
+});

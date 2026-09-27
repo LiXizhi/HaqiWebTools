@@ -1,3 +1,16 @@
+import {ownedPetRecords} from './adventure_pet_files_core.js';
+import {initializePetWorld} from './adventure_pet_world_core.js';
+import {createPetScene} from './adventure_pet_scene.js';
+import {createIslandSocial} from './adventure_social_controller.js';
+import {BattleReviewSession} from './battle_ai/session_core.js';
+import {recommendProgression} from './battle_ai/review_core.js';
+import {adventureProgressionRoutes} from './battle_ai/adventure_adapter_core.js';
+import {BattleAIClient} from './battle_ai/client.js';
+import {observeBattle,haqiRulesAdapter} from './battle_ai/haqi_adapter_core.js';
+const battleAIClient=new BattleAIClient();
+const battleAdvisors=new WeakMap();
+function advisorFor(value){if(!battleAdvisors.has(value))battleAdvisors.set(value,{session:new BattleReviewSession(),muted:false});return battleAdvisors.get(value);}
+import {startCoopRun} from './adventure_coop_core.js';
 import {learningParams} from './language_adventure_core.js';
 import {mapDialogue} from './dialogue_mapping.js';
 import {captureBattlePresentation,battleStatusChanges} from './view_battle_presentation.js';
@@ -85,7 +98,18 @@ const autoSave=createAutoSave({
     onError:error=>{if(cloud.error!==error.message)toast('云存档暂未完成，本地进度已保留，将自动重试。');cloud.error=error.message;},
 });
 function queueCloudSave(){autoSave.request();}
-setInterval(()=>void autoSave.tick(),15000);
+const petLoads=new Map();
+async function loadPet(id){
+    if(save.pets[id]||save.petWorld?.[id])return save.pets[id]||save.petWorld[id];
+    const current=save,roleId=roleStore.catalog.activeId,owner=roleStore.owner,ref=save.petFileRefs?.[id];if(!ref)throw Error('找不到宠物引用');
+    const key=JSON.stringify([owner,roleId,id,ref.path]);if(petLoads.has(key))return petLoads.get(key);
+    const task=(async()=>{try{roleStore.petFileIO(roleId).read(ref.path);}catch(error){if(!owner||cloudClient.owner!==owner)throw error;await cloudClient.petFile(roleId,ref.path);}
+        if(save!==current||roleStore.catalog.activeId!==roleId||roleStore.owner!==owner)return null;
+        const next=roleStore.loadPet(current,id),pet=next[ref.group][id];current[ref.group][id]=pet;return pet;
+    })().finally(()=>petLoads.delete(key));petLoads.set(key,task);return task;
+}
+const petScene=createPetScene({getState:()=>({loadPet,save,world,content:assets?.content,socialActors:islandSocial.actors,scope:`${roleStore?.owner||'guest'}:${roleStore?.catalog.activeId}`,locked:stage!=='world'||document.hidden||!!save?.pendingEncounter}),commit:next=>{saveLocal(next,roleStorage);save=roleStore.catalog.roles.find(r=>r.id===roleStore.catalog.activeId).save;queueCloudSave();paintHud();if(panel)paintPanel();},toast:message=>toast(message)});
+setInterval(()=>{void autoSave.tick();if(stage==='world')islandSocial.tick();},15000);
 
 const membership=createMembershipClient({onChange:()=>{if(!assets||!save)return;if(stage==='world'&&!save.pendingEncounter)maybeExchangeMagicBeans();if(stage==='world'){paintHud();if(['shop','npc-services','membership','checkin'].includes(panel))paintPanel();}}});
 let buyingVip=false;
@@ -114,7 +138,8 @@ const gemView={guid:null,gemId:null,runes:[null,null,null],runeIndex:0,step:'equ
 const strengtheningView={guid:null,filter:0,page:0,pending:false,message:''};
 let serviceNpc=null;
 const npcServiceView={query:'',page:0};
-const model=()=>({assets,save,displayLocale:displayLocale(),dungeonLoading,serviceNpc,npcServiceView,membership:membership.state,membershipView,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp,status:animation.status}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled,learningProgress:battle?.learningProgress||0,autoWalk:!!destination});
+const islandSocial=createIslandSocial({onPetDialogue:owner=>petScene.dialogue(owner),getState:()=>({save,world,assets,paused:stage!=='world'||document.hidden||!!panel||!!dialog,locked:!!panel||!!dialog}),getOwner:()=>roleStore?.owner,onChange:()=>{if(stage==='world'&&save){paintHud();if(['mail','chat','social-party','social-profile','social-pvp'].includes(panel))paintPanel();}},onPersist:()=>{persist();queueCloudSave();},onOpen:openPanel,onClose:close,onLogin:openCloud,toast,onDepart:(id,restart)=>void loadAndEnterDungeon(id,!!restart)});
+const model=()=>({assets,save,social:islandSocial.state(),displayLocale:displayLocale(),dungeonLoading,serviceNpc,npcServiceView,membership:membership.state,membershipView,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp,status:animation.status}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled,learningProgress:battle?.learningProgress||0,autoWalk:!!destination});
 const languageAdventure=createLanguageAdventure({
     saveSettings:next=>{const before=save.languageLearning;save.languageLearning={...before,...next};persist();if(storageWarning){save.languageLearning=before;throw Error('设置未能保存，请重试。');}queueCloudSave();},
     openSettings:()=>openPanel('settings'),
@@ -122,7 +147,7 @@ const languageAdventure=createLanguageAdventure({
     getState:()=>({save,content:assets?.content,role:roleStorage,identity:roleStore?.owner,stage,battle,animating:!!animation,npcs:world?.npcs||[],busy:!!panel||!!dialog||!!animation||document.hidden||!!document.querySelector('dialog[open]'),near:world&&save&&stage==='world'&&!panel&&!dialog?W.nearestInteraction(world,save.position):null}),
     commit:completion=>{
         const committed=persistReward(save,assets.content,{type:'language-complete',completion},{learningCompletion:completion},roleStorage);
-        save=committed.save;storageWarning=false;queueCloudSave();if(stage==='world')paintHud();return committed.result;
+        save=committed.save;storageWarning=false;queueCloudSave();islandSocial.activity('learning');if(stage==='world')paintHud();return committed.result;
     },notify:message=>toast(message),
 });
 const tutor=createTutor();
@@ -160,7 +185,7 @@ async function applyLearningMode(draft){
     try{localStorage.setItem(LOCALE_PREF_KEY,draft.locale);}catch{}
     await applyLocale();queueCloudSave();close();paintHud();
 }
-function openFreeTalk(npc){void languageAdventure.open(npc);}
+function openFreeTalk(npc){close();void languageAdventure.open(npc);}
 function openLanguageTest(){void languageAdventure.open();}
 const rewardRoot=V.el('div','reward-feedback');nodes.world.parentElement.append(rewardRoot);
 const rewardFeedback=createRewardFeedback(rewardRoot,{
@@ -197,22 +222,23 @@ function queuePersist() {
 }
 function persist() {
     if(!save||stage==='title')return;
-    try {if(!roleStorage)throw Error('尚未选择角色');saveLocal(save,roleStorage);storageWarning=false;}catch {if(!storageWarning)toast('进度未能保存，可能是其他页面已更新。请勿关闭页面，检查存储后重试。');storageWarning=true;}
+    try {if(!roleStorage)throw Error('尚未选择角色');saveLocal(save,roleStorage);if(save.petInstanceVersion===1){const stored=roleStore.catalog.roles.find(r=>r.id===roleStore.catalog.activeId).save;save.petFileRefs=stored.petFileRefs;save.petPages=stored.petPages;}storageWarning=false;}catch {if(!storageWarning)toast('进度未能保存，可能是其他页面已更新。请勿关闭页面，检查存储后重试。');storageWarning=true;}
     const indicator=document.querySelector('.save-indicator');if(indicator){setText(indicator,storageWarning?'存档未保存':'');indicator.hidden=!storageWarning;}
     lastSave=performance.now();
 }
-function close() {fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
+function close() {islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>openPanel('membership'),cloud:openCloud,track,untrack,interact:interactNearest,mountToggle:()=>performAction({type:'mount-visibility',hidden:!save?.mountHidden})});}
 function paintPanel() {
+    if(['mail','chat','social-party','social-profile','social-pvp'].includes(panel)){islandSocial.paint(nodes.overlay,panel);return;}
     if(['map','worldmap','localmap'].includes(panel)&&world.layout){renderMaps(nodes.overlay,world,model(),{close,track,travel,draw:(canvas,options)=>renderer.minimap(canvas,world,save,options),teleport:teleportToLandmark,teleportToPosition,switchMap:view=>openPanel(view==='world'?'worldmap':'map')},panel==='worldmap'?'world':'local');return;}
     if(panel==='cloud'){paintCloud();return;}
-    if(panel==='dungeons'){renderDungeons(nodes.overlay,model(),{close,enter:loadAndEnterDungeon,leave:exitDungeon});return;}
+    if(panel==='dungeons'){renderDungeons(nodes.overlay,model(),{close:()=>{if(islandSocial.state().pickingDungeon){islandSocial.cancelDungeonPick();openPanel('social-party');return;}close();},enter:loadAndEnterDungeon,leave:exitDungeon,pick:id=>{try{islandSocial.pickPartyDungeon(id);}catch(e){toast(e.message);}},lobby:(id,restart=false)=>{try{islandSocial.pickPartyDungeon(id,{restart});}catch(e){toast(e.message);}}});return;}
     if(!panel)return;
     const equipment=['equipment','inventory','shop','pet'].includes(panel);
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
     const focusedMount=panel==='pet'&&nodes.overlay.contains(document.activeElement)?document.activeElement.dataset.mountId:null;
-    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId,pinJournalQuest},{close,action,track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,learningEvent:(event,context)=>languageAdventure.emit(event,event,context),cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true),refreshMembership,becomeVip:()=>membership.openProfile().catch(error=>toast(error.message)),setLocale,setLearning,applyLearningMode,disableLearning:()=>{setLearning({enabled:false});close();paintHud();},languageTest:openLanguageTest});
+    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId,pinJournalQuest},{close,action,loadPet:id=>loadPet(id).catch(e=>{toast(e.message);return null;}),track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,learningEvent:(event,context)=>languageAdventure.emit(event,event,context),cloud:openCloud,music:toggleMusic,sound:toggleSound,title:()=>showTitle(),roles:()=>showTitle(true),refreshMembership,becomeVip:()=>membership.openProfile().catch(error=>toast(error.message)),setLocale,setLearning,applyLearningMode,disableLearning:()=>{setLearning({enabled:false});close();paintHud();},languageTest:openLanguageTest});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
@@ -237,6 +263,7 @@ function openPanel(kind,options={}) {
     paintPanel();
     if(['inventory','equipment'].includes(kind))languageAdventure.emit('inventory','inventory');
     if(['shop','membership','checkin'].includes(kind))refreshMembership();
+    if(['mail','chat'].includes(kind))void islandSocial.refresh();
 }
 function applyDebug(patch) {safely(()=>{
     if(stage!=='world')throw Error('请先完成当前战斗');
@@ -265,7 +292,7 @@ function paintCloud() {
         connect:()=>{showTitle(true);if(stage==='title')connectRoles();},
         logout:()=>changeCloudAccount(false),switchAccount:()=>changeCloudAccount(true),
         refresh:()=>cloudAction('正在读取云端目录…',async()=>{cloud.paths=await cloudClient.list();cloud.message=cloud.paths.length?'云端目录已刷新。':'未找到云端记录，可刷新重试。';}),
-        upload:()=>cloudAction('正在保存并核验云端进度…',async()=>{const current=cloudLocal();if(!current)throw new Error('请先开始一段冒险。');const result=await cloudClient.upload(current);cloud.paths=[result.path,...cloud.paths.filter(p=>p!==result.path)].sort().reverse().slice(0,30);cloud.message='已保存到云端，并核验远端内容。';}),
+        upload:()=>cloudAction('正在保存并核验云端进度…',async()=>{const current=cloudLocal();if(!current)throw new Error('请先开始一段冒险。');const result=await cloudClient.upload(current,{roleId:roleStore.catalog.activeId});cloud.paths=[result.path,...cloud.paths.filter(p=>p!==result.path)].sort().reverse().slice(0,30);cloud.message='已保存到云端，并核验远端内容。';}),
         preview:path=>cloudAction('正在校验存档与战斗记录…',async()=>{if(!roleStorage)throw Error('请先新建或选择一个角色。');const target=roleStorage,localRaw=readLocal(target);const preview=await cloudClient.read(path);if(roleStorage!==target||readLocal(target)!==localRaw)throw new Error('本地进度已变化，请重新查看这份记录。');cloud.preview={...preview,localRaw};cloud.message='请比较两份进度，确认后恢复。';}),
         cancelPreview:()=>{cloud.preview=null;paintCloud();},restore:()=>safely(()=>{
             cloudClient.assertPreview(cloud.preview);
@@ -292,7 +319,10 @@ async function changeCloudAccount(reconnect) {
     });
     if(reconnect&&disconnected)await connectRoles();
 }
+function missingRewardPets(quest){if(!quest)return [];const species=new Set(A.rewardsFor(save,assets.content,quest).filter(r=>r.kind==='pet').map(r=>r.petId));return Object.values(ownedPetRecords(save)).filter(p=>species.has(p.speciesId)&&!save.pets[p.id]).map(p=>p.id);}
 function action(value) {
+    if(value.type==='feed'){const legacy=Object.values(ownedPetRecords(save)).find(p=>p.speciesId==='legacy_gululu');if(legacy&&!save.pets[legacy.id]){const current=save;return loadPet(legacy.id).then(()=>{if(save===current)return action(value);}).catch(e=>toast(e.message));}}
+    if(value.type==='claim'){const ids=missingRewardPets(assets.content.quests.find(q=>q.id===value.questId));if(ids.length){const current=save;return Promise.all(ids.map(loadPet)).then(()=>{if(save===current)return action(value);}).catch(e=>toast(e.message));}}
     if(panel==='quests'&&(value?.type==='abandon-quest'||(value?.type==='track-catalog'&&value.remove)))selectedQuestId=Number(value.questId);
     const product=value.type==='buy'&&assets.content.shop.find(item=>item.id===value.productId);
     const resident=value.type==='npc-purchase'&&assets.content.npcCatalog?.npcs.find(npc=>npc.instanceId===value.npcInstanceId);
@@ -328,7 +358,7 @@ function setMountVisibility(hidden) {
     toast(save.mountHidden ? '坐骑已在场景中隐藏，战斗时仍会出现。' : '坐骑会跟随主角一起行动。');
     return true;
 }
-function performAction(value,access={}) {return safely(()=>{if(value.type==='magic-star-follow')return setMagicStarFollow(value.follow!==false);if(value.type==='mount-visibility')return setMountVisibility(value.hidden===true);const sceneFeedback=value.type==='fish'&&sceneFishing.active;const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['npc-purchase','checkin','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}if(!sceneFeedback)showRewards(before);queueCloudSave();paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',ride:'已经骑上坐骑。属性将在下一场战斗中生效。',dismount:'已经下来了。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};if(!sceneFeedback)toast(result?.message||text[value.type]||'进度已保存');if(value.type==='fish')languageAdventure.emit('fish','camp-coast',{caught:!!result?.caught,itemId:result?.items?.[0]?.id});else if(['equip','unequip','ride','dismount'].includes(value.type))languageAdventure.emit('equipment','equipment',{itemId:value.itemId});else if(['buy','npc-purchase','claim','claim-catalog'].includes(value.type))languageAdventure.emit('item-gained','inventory');return result?.message?result:true;});}
+function performAction(value,access={}) {return safely(()=>{if(value.type==='pet-feed'&&save.petInstanceVersion===1){petScene.feed(value.petId);paintPanel();return true;}if(value.type==='magic-star-follow')return setMagicStarFollow(value.follow!==false);if(value.type==='mount-visibility')return setMountVisibility(value.hidden===true);const sceneFeedback=value.type==='fish'&&sceneFishing.active;const before=rewardSnapshot(save);const request=value.type==='checkin'?{...value,now:Date.now()}:value;let result;if(['npc-purchase','checkin','magic-star-claim','choose-totem','use-totem-item','fish','stamina-potion'].includes(value.type)){const committed=persistReward(save,assets.content,request,access,roleStorage);save=committed.save;result=committed.result;storageWarning=false;}else{result=A.applyAction(save,assets.content,request,access);persist();}if(!sceneFeedback)showRewards(before);if(['claim','claim-catalog'].includes(value.type))islandSocial.activity('quest');queueCloudSave();paintHud();paintPanel();const text={checkin:'领取成功，奖励已放入背包！',unequip:'装备已卸下，属性与配卡已更新。',equip:'已经装备。属性将在下一场战斗中生效。',ride:'已经骑上坐骑。属性将在下一场战斗中生效。',dismount:'已经下来了。',upgrade:'装备强化成功！',hatch:'咕噜噜从蛋里探出了头，开始跟随你。',feed:'咕噜噜吃饱了，获得了经验！',deck:'卡包已保存。'};if(!sceneFeedback)toast(result?.message||text[value.type]||'进度已保存');if(value.type==='fish')languageAdventure.emit('fish','camp-coast',{caught:!!result?.caught,itemId:result?.items?.[0]?.id});else if(['equip','unequip','ride','dismount'].includes(value.type))languageAdventure.emit('equipment','equipment',{itemId:value.itemId});else if(['buy','npc-purchase','claim','claim-catalog'].includes(value.type))languageAdventure.emit('item-gained','inventory');return result?.message?result:true;});}
 let exchangingBeans=false;
 function maybeExchangeMagicBeans({announce=true}={}) {
     if(exchangingBeans||!assets||!save||!roleStore?.owner||save.pendingEncounter)return;
@@ -357,11 +387,12 @@ function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     runeCardsOpen=false;
     creationPreview?.stop();
     save=newSave;
+    initializePetWorld(save,assets.content);
     const reveal=()=>{
     if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=W.createWorld(save.zone,assets.content,save);stage='world';path=[];destination=null;animation=null;close();
     if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};
     nodes.entry.replaceChildren();nodes.entry.className='';nodes.entry.hidden=true;nodes.hud.hidden=false;
-    nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';battle=null;paintHud();
+    nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';battle=null;paintHud();void islandSocial.enter().catch(e=>toast(e.message));
     if(save.pendingEncounter){battle=restoredBattle||P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';nodes.hud.hidden=true;paintBattle();}
     else maybeExchangeMagicBeans({announce:announceBeans});
     persist();queueCloudSave();updateMusic();
@@ -530,12 +561,17 @@ function teleportToPosition(x,y){safely(()=>{
 async function loadAndEnterDungeon(id,restart=false){
     if(dungeonLoading||stage!=='world')return;
     if(restart&&!confirm(tr('重新开启会重置该副本的清怪进度，确定继续吗？')))return;
-    const target=save,epoch=roleEpoch,zone=save.zone;
+    const target=save,epoch=roleEpoch,zone=save.zone,fromParty=panel==='social-party';
     dungeonLoading=id;paintPanel();
     try{
         await assets.dungeons.load(id);
-        if(save!==target||epoch!==roleEpoch||stage!=='world'||panel!=='dungeons'||save.zone!==zone)return;
-        enterDungeon(save,assets.content,id,{restart});enterWorld(save);queueCloudSave();
+        if(save!==target||epoch!==roleEpoch||stage!=='world'||!['dungeons','social-party'].includes(panel)||save.zone!==zone)return;
+        if(save.coopRun&&save.coopRun.dungeonId!==id)throw Error('请先暂离当前组队副本');
+        const next=structuredClone(save);
+        if(islandSocial.team.length&&!next.coopRun){if(dungeonFor(assets.content,next.zone))leaveDungeon(next,assets.content);startCoopRun(next,islandSocial.preparedTeam(),assets.dataset,dungeonFor(assets.content,id),A.playerSpec(next,assets.content));}
+        if(restart&&next.coopRun){const members=next.coopRun.members.map(m=>m.profile),hero=next.coopRun.hero;leaveDungeon(next,assets.content);startCoopRun(next,members,assets.dataset,dungeonFor(assets.content,id),hero);}
+        enterDungeon(next,assets.content,id,{restart});Object.assign(save,next);enterWorld(save);queueCloudSave();
+        if(fromParty)close();
     }catch(error){toast('副本加载失败：{message}，请重试。',{message:error.message});}
     finally{dungeonLoading=null;if(panel==='dungeons')paintPanel();}
 }
@@ -551,14 +587,14 @@ function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog
     const result=A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(result.full?'已接取：{title}。追踪已满3个，请先取消一条。':'已接取：{title}',{title:q.title});
 }),finishQuest:q=>startLines(q.endDialog,'领取奖励',()=>{
     const before=rewardSnapshot(save);
-    A.applyAction(save,assets.content,{type:'claim',questId:q.id,npcId:q.endNpc});
+    A.applyAction(save,assets.content,{type:'claim',questId:q.id,npcId:q.endNpc});islandSocial.activity('quest');
     showRewards(before);return 'reward';
 }),startCatalog:q=>{
     const result=A.applyAction(save,assets.content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});persist();toast(result.full?'已接取：{title}。追踪已满3个，请先取消一条。':'已接取：{title}',{title:q.title});paintDialogue();paintHud();
 },finishCatalog:q=>{
     const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});
-    persist();showRewards(before);toast('已完成：{title}',{title:q.title});close();paintHud();
+    persist();islandSocial.activity('quest');showRewards(before);toast('已完成：{title}',{title:q.title});close();paintHud();
 },questTalk:(q,talk)=>startQuestTalk(talk),panel:openPanel,travel,track,freeTalk:openFreeTalk});}
 function startQuestTalk(talk) {
     startLines(talk.dialog,talk.dialog.at(-1)?.buttons?.[0]?.label||'谢谢你',()=>{
@@ -570,11 +606,12 @@ function startLines(lines,finishLabel,done) {
     dialog.lines=lines;dialog.index=0;dialog.finishLabel=finishLabel;dialogDone=done;
     if(!lines.length)nextDialogue();else paintDialogue();
 }
-function nextDialogue() {
+async function nextDialogue() {
     if(!dialog)return;
     if(dialog.index+1<dialog.lines.length){dialog.index++;paintDialogue();return;}
+    const current=dialog;try{await Promise.all(missingRewardPets(A.currentQuest(save,assets.content)).map(loadPet));}catch(error){toast(error.message);return;}if(dialog!==current)return;
     safely(()=>{
-        const npcId=dialog.npcId,advance=dialogDone?.();dialogDone=null;persist();queueCloudSave();paintHud();
+        const npcId=dialog.npcId,advance=dialogDone?.();petScene.dialogue(`resident:${npcId}`);dialogDone=null;persist();queueCloudSave();paintHud();
         if(advance){
             close();
             if(advance==='reward')return;
@@ -691,10 +728,26 @@ function track(questId, options={}) {
     }
     if(goal.kind==='action')openPanel(goal.id===79016?'upgrade':goal.id==='hatch-pet'||goal.id===79019?'pet':goal.id===79037&&save.equipment[24]===24003?'deck':'inventory');
 }
+function refreshPetHint(){
+    if(!battle||battle.finished||animation)return;
+    const current=battle,advisor=advisorFor(current);
+    if(advisor.muted)return;
+    const observation=observeBattle(current,current.sides.near[0].id),stateId=haqiRulesAdapter.stateId(observation);
+    if(advisor.hintState===stateId||advisor.hintLoading===stateId)return;
+    advisor.hintAnalysis=null;advisor.hintLoading=stateId;
+    battleAIClient.analyze(observation,{difficulty:'expert',memory:advisor.strategyMemory||{}}).then(analysis=>{
+        if(advisor.hintLoading===stateId)advisor.hintLoading=null;
+        if(stage!=='battle'||battle!==current||battle.finished||animation||advisor.muted||haqiRulesAdapter.stateId(observeBattle(current,current.sides.near[0].id))!==stateId)return;
+        advisor.hintState=stateId;advisor.hintAnalysis=analysis;advisor.strategyMemory=analysis.memory;paintBattle();
+    }).catch(()=>{if(advisor.hintLoading===stateId)advisor.hintLoading=null;advisor.hintState=stateId;});
+}
 function paintBattle(){
+    refreshPetHint();
+    const advisor=advisorFor(battle),aiReview=battle.finished?advisor.session.review(battle):null;
+    const growth=aiReview?recommendProgression(aiReview,{routes:adventureProgressionRoutes(save,assets.content)}):[];
     const hero=battle.sides.near[0],hand=[...selectableCards(hero),...P.runeCardsInHand(battle)];
     if(selected&&(discarded.includes(selected.seq)||!hand.some(h=>h.seq===selected.seq&&h.key===selected.key)))selected=null;
-    V.renderBattle(nodes.battle,{...model(),petCardsOpen,runeCardsOpen,runeHand:P.runeCardsInHand(battle)},{toggleRunes:()=>{if(animation||battle.finished)return;runeCardsOpen=!runeCardsOpen;petCardsOpen=false;selected=null;paintBattle();},togglePetCards:()=>{if(animation||battle.finished)return;petCardsOpen=!petCardsOpen;runeCardsOpen=false;selected=null;paintBattle();},sound:toggleSound,cloud:openCloud,swipePlay:h=>{
+    V.renderBattle(nodes.battle,{...model(),aiReview,aiHintsMuted:advisor.muted,aiHint:advisor.dismissedHintState===advisor.hintState?null:advisor.hintAnalysis?.candidates.find(row=>!discarded.includes(row.action.seq)),aiGrowth:growth,petCardsOpen,runeCardsOpen,runeHand:P.runeCardsInHand(battle)},{aiHintsToggle:()=>{advisor.muted=!advisor.muted;advisor.dismissedHintState=null;paintBattle();},aiHintDismiss:()=>{advisor.dismissedHintState=advisor.hintState;},aiNavigate:entry=>{if(!battle.finished)return;const before=rewardSnapshot(save);const settle=A.settleEncounter(save,assets.content,battle);islandSocial.settled(battle);enterWorld(save,null,{announceBeans:false});showRewards(before);if(settle?.insufficientStamina)toast('你的精力值不足，无法得到这场战斗的战利品。');openPanel(entry);},toggleRunes:()=>{if(animation||battle.finished)return;runeCardsOpen=!runeCardsOpen;petCardsOpen=false;selected=null;paintBattle();},togglePetCards:()=>{if(animation||battle.finished)return;petCardsOpen=!petCardsOpen;runeCardsOpen=false;selected=null;paintBattle();},sound:toggleSound,cloud:openCloud,swipePlay:h=>{
         if(animation)return;
         const intent=resolveHandSwipe(battle,h,discarded);
         if(!intent)return;
@@ -713,14 +766,30 @@ function paintBattle(){
 },openRunes:()=>{if(animation||battle.finished)return;runeCardsOpen=true;petCardsOpen=false;selected=null;paintBattle();},pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
     if(assets.content.pets)A.settleParty(save,assets.content,battle,{retreat:true});
     A.applyAction(save,assets.content,{type:'retreat'});save.careAt=Date.now();enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
-},finish:()=>safely(()=>{const before=rewardSnapshot(save);A.settleEncounter(save,assets.content,battle);save.careAt=Date.now();enterWorld(save,null,{announceBeans:false});showRewards(before);}),battleTalk:()=>void languageAdventure.open()});}
-function playRound(decision) {
+},finish:()=>safely(()=>{const before=rewardSnapshot(save);const settle=A.settleEncounter(save,assets.content,battle);islandSocial.settled(battle);if(battle.winner==='near')islandSocial.activity('battle');save.careAt=Date.now();enterWorld(save,null,{announceBeans:false});showRewards(before);if(settle?.insufficientStamina)toast('你的精力值不足，无法得到这场战斗的战利品。');if(save.coopRun&&save.coopRun.runs[save.zone]?.cleared.length===dungeonFor(assets.content,save.zone)?.arenas.length)openPanel('social-party');}),battleTalk:()=>void languageAdventure.open()});}
+function playRound(decision,readyAnalysis=null) {
     if(animation||battle.finished)return;
+    const advisor=advisorFor(battle);
+    if(!readyAnalysis&&advisor.hintAnalysis?.stateId===haqiRulesAdapter.stateId(observeBattle(battle,battle.sides.near[0].id)))readyAnalysis=advisor.hintAnalysis;
+    if(!readyAnalysis){
+        if(advisor.analyzing)return;
+        const currentBattle=battle,observation=observeBattle(battle,battle.sides.near[0].id);
+        advisor.analyzing=true;
+        battleAIClient.analyze(observation,{difficulty:'expert',memory:advisor.strategyMemory||{}}).then(analysis=>{
+            advisor.analyzing=false;
+            if(battle!==currentBattle||battle.finished||animation||haqiRulesAdapter.stateId(observeBattle(battle,battle.sides.near[0].id))!==analysis.stateId)return;
+            playRound(decision,analysis);
+        }).catch(()=>{advisor.analyzing=false;if(battle===currentBattle&&!animation&&!battle.finished){toast('分析暂时不可用，按原选择继续。');playRound(decision,{candidates:[],evaluated:[],settings:battle.resolved.battleAI});}});
+        return;
+    }
     safely(()=>{
+        const analysis=readyAnalysis;advisor.strategyMemory=analysis.memory||advisor.strategyMemory;
+        advisor.session.record(battle,analysis,decision);
+        decision={...decision,aiVersion:1};
         const hp=Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,u.hp])),aura=battle.aura?{...battle.aura}:null;
         const hand=cardsInHand(battle.sides.near[0]),previous=nextBattlePointer(battle);
         const playback=captureBattlePresentation(battle,()=>P.playPveRound(battle,decision));
-        A.recordDecision(save,decision,battle);persist();selected=null;discarded=[];petCardsOpen=false;runeCardsOpen=false;
+        A.recordDecision(save,battle.lastDecision||decision,battle);persist();selected=null;discarded=[];petCardsOpen=false;runeCardsOpen=false;
         const events=playback.events;
         // Preserve surviving hand IDs while hidden, so only new cards deal in after ALL events.
         animation={events:withBattlePointer(events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),previous,nextBattlePointer(battle)),pointer:previous,index:0,start:performance.now(),hp,aura,status:playback.initial,statusFeedback:[],entered:-1,hand:hand.filter(h=>(decision.pass||decision.capture||h.seq!==decision.seq)&&!decision.discardSeqs?.includes(h.seq))};paintBattle();
@@ -769,9 +838,9 @@ window.addEventListener('keydown',e=>{
     if(key==='r')openPanel('equipment');if(key==='j')openPanel('quests');if(key==='b'||key==='i')openPanel('inventory');if(key==='c')openPanel('deck');if(key==='p')openPanel('pet');
 });
 window.addEventListener('keyup',e=>{keys.delete(directionKeys[e.key.toLowerCase()]);});
-window.addEventListener('blur',()=>{languageAdventure.close();talkApproach=null;fishingLoadEpoch++;fishingApproach=null;sceneFishing.stop(false);resetMovementInput();path=[];destination=null;persist();});
+window.addEventListener('blur',()=>{if(!languageAdventure.active)languageAdventure.close();talkApproach=null;fishingLoadEpoch++;fishingApproach=null;sceneFishing.stop(false);resetMovementInput();path=[];destination=null;persist();});
 window.addEventListener('pagehide',()=>{persist();void roleStore?.flushRuntime();});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)languageAdventure.close();spellSound.stop();if(document.hidden){fishingApproach=null;sceneFishing.stop(false);resetMovementInput();path=[];destination=null;persist();music?.pause();}else{if(stage==='world'&&save?.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);updateMusic();}});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)languageAdventure.suspend();spellSound.stop();if(document.hidden){fishingApproach=null;sceneFishing.stop(false);resetMovementInput();path=[];destination=null;persist();music?.pause();}else{languageAdventure.resume();if(stage==='world'&&save?.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);updateMusic();}});
 window.addEventListener('pagehide',()=>spellSound.stop());
 async function startFishing(water) {
     const epoch=++fishingLoadEpoch, currentSave=save, currentWorld=world, position={...save.position};
@@ -785,6 +854,8 @@ async function startFishing(water) {
 function clickWorld(clientX,clientY) {
     fishingLoadEpoch++;
     const {p,target}=pickWorldTarget(clientX,clientY);
+    const babyId=stage==='world'&&petScene.pick(p);if(babyId){safely(()=>petScene.adopt(babyId));return false;}
+    const socialTarget=islandSocial.pick(p);if(socialTarget){path=[];destination=null;islandSocial.select(socialTarget);return false;}
     if(languageAdventure.greeting){
         const rect=renderer.greetingTarget();
         if(rect&&p.x>=rect.x&&p.x<=rect.x+rect.w&&p.y>=rect.y&&p.y<=rect.y+rect.h){languageAdventure.enterGreeting();return false;}
@@ -795,7 +866,7 @@ function clickWorld(clientX,clientY) {
     // While the invite bubble is up, clicking the pet itself opens the same chat;
     // without a bubble the click falls through to the ground as usual.
     if(bubble){
-        const pet=renderer.companionTarget&&renderer.companionTarget();
+        const pet=save.petInstanceVersion===1?petScene.pets.find(row=>row.pet.ownerId===save.petOwnerId)?.position:renderer.companionTarget&&renderer.companionTarget();
         if(pet&&Math.abs(p.x-pet.x)<22&&p.y>pet.y-56&&p.y<pet.y+12){approachInvite();return false;}
     }
     if(!target&&!dungeonFor(assets.content,world.zone)&&isOcean(world,p.x,p.y)){
@@ -905,7 +976,9 @@ function frame(now) {
             const prepared=talkApproach;talkApproach=null;path=[];moving=false;languageAdventure.greet(prepared,now);
         }else if(!path.length){talkApproach=null;toast('这里暂时走不过去，试试旁边的小路。');}
     }
-    renderer.render(world,save,now,{moving,path,title:stage==='title',rewardEffect,teleportEffect,fishingPose:sceneFishing.pose(now),membership:membership.state,motionHidden:stage!=='world'||document.hidden,learningGreeting:languageAdventure.greeting,companionBubble:stage==='world'&&!panel&&!dialog&&!languageAdventure.active&&!sceneFishing.active?languageAdventure.bubble:null});
+    islandSocial.step(Math.min(.1,(now-(islandSocial.lastFrame||now))/1000),{view:renderer.viewRect?.()});islandSocial.lastFrame=now;
+    if(stage==='world')try{petScene.step(Math.min(.055,(now-(petScene.lastFrame||now))/1000));}catch(error){if(petScene.error!==error.message){toast(error.message);petScene.error=error.message;}}petScene.lastFrame=now;
+    renderer.render(world,save,now,{petScene:save.petInstanceVersion===1&&stage==='world'?petScene:null,socialActors:islandSocial.actors,moving,path,title:stage==='title',rewardEffect,teleportEffect,fishingPose:sceneFishing.pose(now),membership:membership.state,motionHidden:stage!=='world'||document.hidden,learningGreeting:languageAdventure.greeting,companionBubble:stage==='world'&&!panel&&!dialog&&!languageAdventure.active&&!sceneFishing.active?languageAdventure.bubble:null});
     if(sceneFishing.active){
         if(stage!=='world'||panel||dialog||moving||keys.size||joystick.x||joystick.y||heldPointer?.active||document.hidden)sceneFishing.stop(false);
         else{
@@ -913,7 +986,7 @@ function frame(now) {
             sceneFishing.update(model(),now,p=>({x:(p.x-origin.x)/(unit.x-origin.x),y:(p.y-origin.y)/(unit.y-origin.y)}));
         }
     }
-    if(stage==='battle'){const presentation=tickAnimation(now),canvas=$('battle-canvas');V.updateBattleRoster(nodes.battle.battleStatusEntries,presentation);if(canvas)canvas.battlePositions=renderer.renderBattle(canvas,battle,save,now,presentation);}
+    if(stage==='battle'){const presentation=tickAnimation(now),canvas=$('battle-canvas');V.updateBattleRoster(nodes.battle.battleStatusEntries,presentation);if(canvas){canvas.battlePositions=renderer.renderBattle(canvas,battle,save,now,presentation);V.updateBattlePetHint(nodes.battle,battle,save,assets.content,canvas);}}
 }
 async function boot(){
     try {
@@ -933,7 +1006,7 @@ async function boot(){
         installLocaleTooltip();
         roleStore=createRoleStore({content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves});await roleStore.prepareOpen();roleStore.open();
         roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
-        cloudClient=createCloudClient({content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves,onAccountChange:()=>{resetRoleAccount();cloud.message='登录状态已变化，请重新连接。';}});
+        cloudClient=createCloudClient({petFileStore:id=>roleStore?.petFileIO(id),content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves,onAccountChange:()=>{resetRoleAccount();cloud.message='登录状态已变化，请重新连接。';}});
         creationPreview=createCreationPreview(assets);
         renderer=createRenderer(nodes.world,assets);requestAnimationFrame(frame);
         // Keep the loading screen until session restoration chooses the final screen.

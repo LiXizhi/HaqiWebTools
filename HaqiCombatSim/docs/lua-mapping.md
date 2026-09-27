@@ -324,3 +324,7 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 
 | 2026-09-26 | kids 姿态同队加成 | `player_server.lua` 各 Get* 内 kids 分支：任一同侧单位持有 `storm_kids` → 全队暴击 +20（L2660-2686）且暴击伤害比 +0.2（GetStatsSum stat376 +200，L3621-3641）；`death_kids` → 全队韧性 +20（L2759-2784）、命中 +10（L2816-2840）、受到治疗 +30（L3045-3069）；`life_kids` → 全队穿透 +15（L2945-2969）。此前 JS 未移植 | `getCriticalStrike` / `getResilience` / `getHitChance` / `getSpellPenetration` / `getInputHealBoost` 增加 `arena` 参数并经 `stanceSibling` 判定；新增 `getCriticalStrikeDamageRatioBonus`（替代直接读 `caster.stats.critRatioBonus`），`combat_cards_core.js` 全部调用点同步。守护测试 `tests/stance_sibling.test.mjs` |
 | 2026-09-26 | `SingleAttackWithPercent` 上限 | `card_server.lua` L3281-3290：上限按目标类型选 `damage_max_mob` / `damage_max_player`，此前 JS 只读 `damage_max_player` | `singleAttack` 的 `maxDamage` 按 `target.isMob` 选择；守护测试同上 |
+
+## 2026-09-27：概率分析钩子
+
+`tryCriticalStrike`、`tryDodge`、`rollFizzle`、`generatePip`增加可选`rng.probability`钩子，仅供隔离预测。依据分别为card_server.lua L1310-1338、L1397-1452、L2514-2560及player_server.lua L1980-2002。概率保留闭区间边界，例如0%暴击仍有1/1001、80准确率成功81/101。普通RNG无此方法，实战取样次数/顺序不变。未修改原伤害公式。

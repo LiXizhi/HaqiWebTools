@@ -4,6 +4,7 @@ import { createPolicy } from './combat_policy_core.js';
 import { unitSpec, matchupMatrix, MODES } from './combat_presets_core.js';
 import { SCHOOLS } from './combat_params_core.js';
 import { hashSeed } from './rng_core.js';
+import {coordinateTeam} from './battle_ai/policy_core.js';
 
 /**
  * 生成任务列表：每个 matchup 一个 job（可再按 chunk 拆分给多个 worker）
@@ -75,7 +76,7 @@ export function runJob(resolved, job, onProgress) {
             const spec = u.side === 'near' ? job.near[u.slot] : job.far[u.slot];
             policies[u.id] = createPolicy(spec.policyName || job.policy);
         }
-        const r = runToEnd(arena, policies);
+        const r = runToEnd(arena, policies,1000,Object.values(policies).some(p=>p.name==='reasoning')?coordinateTeam:null);
         accumulate(st, r);
         if (onProgress && (g % 10 === 9 || g === job.games - 1)) onProgress(g + 1, job.games);
     }

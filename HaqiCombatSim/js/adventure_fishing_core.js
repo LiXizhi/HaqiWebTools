@@ -5,6 +5,7 @@ import { onLargeIsland } from './adventure_island_layout_core.js';
 import { onIsland } from './adventure_world_core.js';
 import { recordFishingCatch, fishingQuality, fishingSpecies, fishingTuning } from './adventure_fishing_records_core.js';
 import {createRng,hashSeed} from './rng_core.js';
+import { readStamina as readSharedStamina, ensureDailyStamina, staminaMax } from './adventure_stamina_core.js';
 
 export const SHADOW_COUNT = 5;
 const LANES = [0.28, 0.42, 0.55, 0.68, 0.8];
@@ -22,8 +23,7 @@ export function isOcean(world, x, y) {
     return world.layout ? !onLargeIsland(world, x, y, 0) : !onIsland(x, y, 0);
 }
 export function readStamina(save, content) {
-    const max = content.fishing.staminaMax;
-    return Number.isInteger(save.stamina) ? Math.max(0, Math.min(max, save.stamina)) : max;
+    return readSharedStamina(save, content);
 }
 export function shadowPosition(index, elapsedMs, width, height) {
     const phase = PHASES[index];
@@ -72,7 +72,8 @@ export function castFishing(save, content, action, rng) {
     if (save.pendingEncounter) throw Error('请先完成当前战斗');
     const owned = save.inventory[net.id] || 0;
     if (owned < 1) throw Error(`没有${content.items[net.id]?.name || '渔网'}`);
-    const stamina = readStamina(save, content);
+    const now = Number.isFinite(action.now) ? action.now : Date.now();
+    const stamina = ensureDailyStamina(save, content, now);
     if (stamina < net.staminaRequired) throw Error(`精力值低于${net.staminaRequired}，现在不能捕鱼`);
     const contacted = (quality===null?action.hit===true:action.fishingPerformance.hits>0) || net.absolutelyHit;
     if (!contacted) return { caught: false, message: '鱼影躲开了，渔网还在。' };
@@ -101,6 +102,6 @@ export function useStaminaPotion(save, content, itemId) {
     if (potion.blocked) throw Error(potion.blocked);
     if ((save.inventory[potion.id] || 0) < 1) throw Error(`没有${content.items[potion.id]?.name || '药剂'}`);
     save.inventory[potion.id] -= 1;
-    save.stamina = Math.min(content.fishing.staminaMax, readStamina(save, content) + potion.restore);
+    save.stamina = Math.min(staminaMax(content), readStamina(save, content) + potion.restore);
     return { message: `精力恢复到${save.stamina}。`, stamina: save.stamina };
 }

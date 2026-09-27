@@ -1,0 +1,6 @@
+{
+  "prompt": "保持参考图中街头晴空男角色的服装和身体比例，生成走路动作图集，6列2行。第一行正面，第二行背面，每行六幅连续走路图。左右腿交替迈步，动作左右对称，自然循环。手臂伸直自然摆动。不要头，保留脖子。每格人物大小和脖子位置一致。透明背景。",
+  "tool": "builtin imagegen",
+  "status": "preview only",
+  "output": "C:/Users/Administrator/.codex/generated_images/01a0dec0-51a7-7a03-99c6-31fd0b97722c/exec-6a29cade-fda0-4546-9cf5-dac852924382.png"
+}

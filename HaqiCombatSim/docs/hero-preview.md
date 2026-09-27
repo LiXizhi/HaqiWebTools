@@ -2,6 +2,15 @@
 
 独立入口：`HaqiHeroPreview.html`。用户于2026-09-26确认正式接入；场景、战斗、角色与坐骑UI、技能预览统一使用分层渲染，坐骑配置与原整身源文件保持不变。
 
+## 当前身体资源（2026-09-27，v3）
+
+- 男女步行身体各只有一张 `male-walk-cycle.webp` / `female-walk-cycle.webp`，包含六帧行走和最后一列静止。旧 `male-walk.webp`、`female-walk.webp` 已删除。头部仍为可复用的独立图集。
+- `female-rider.webp` 与 `male-rider.webp` 均为1536×768、4列×2行：第一行为坐姿骑手，第二行为站姿骑手；每行按前、左、右、后排列。旧 `female-standing.webp`、`rider.webp`、`standing.webp` 已删除；清单的站姿键只是对应图集第二行的别名，男坐姿键 `rider` 也复用 `male-rider` 图片缓存。
+- 所有正常身体记录使用 `selfContained`，裁剪及布局边界预先存入清单，不加载原整身图片计算边界，也不依赖原图回退。未加载成功时等待/报告资源失败；旧版清单缺失的兼容路径仍保留。
+- 预览仅显示合并角色，已移除原图对照和叠加原图；本地图片URL包含SHA-256版本，避免覆盖同名图后沿用旧尺寸缓存。
+- 新步行生成输入统一为**单张7×4透明图**，包括最后一列静止。`python scripts/prepare_hero_walk.py --female <完整图集>` 或 `--male` 可独立更新，不再读取旧静止图。旧6×4加静止图流程及下文早期原图比较说明仅作历史记录。
+- 女骑手合并资源173,592字节，男骑手173,706字节，WebP quality 98，alpha保留；已上传并验证永久CDN。坐骑布局、遮挡及头部锚点保持。
+
 ## 查看
 
 在项目目录运行 `python -m http.server 8792 --bind 127.0.0.1`，打开：
@@ -62,6 +71,30 @@ headId随角色持久化并进入云端小型角色状态，旧存档无此字�
 
 ## 四向逐帧步行（2026-09-26）
 
+2026-09-27 后续修正：最终图集改为1344×768，7×4格，每格192×192。各列水平居中，最后一列按同方向六个行走帧的脚底中位数对齐；移动裁剪矩形而不改变静止身体的屏幕缩放和头颈锚点。修复旧166px高女站姿超过160px行高的问题。男女左右步态用内置image_gen重绘，保留前后方向和旧静止身体。最终男129,926字节、女148,864字节，CDN目录为 `keepwork/haqi/hero-preview/20260926/981f3187c652/`。
+
+预览页新增“原地循环行走”和当前帧号。选择左右方向后勾选可持续检查6→1衔接，不受预览区域边界阻挡；关闭后恢复实际位移驱动。正式游戏碰到障碍时仍停步。
+
+### 批量AI角色制作约定
+
+`art-references/hero-body-generation.json` 保存本次完整提示词及可复用7×4模板。后续以稳定角色ID、性别、已确认服饰参考图为一条输入；每个角色单独生成，统一四方向、六帧动作加一列站姿。先生成小批预览并验收动作，再登记运行时清单和上传；本轮只建立规范和校验入口，不新增角色选择/服装运行时系统。
+
+不能只用六张图的哈希不同来判定行走有效：纹理细微变化也会通过。应检查脚部轮廓的跨步/收腿差异，并在原地循环中观察双腿交替及首尾衔接。程序检查只能发现明显失败，不能代替动作美术验收。
+
+本次侧向生成源已归档为 `art-references/hero-side-walk-source.webp`（非运行时原图）；源图四行依次为男左、男右、女左、女右，每行六帧。复现与检查：
+
+```text
+python scripts/prepare_hero_side_walk.py --source art-references/hero-side-walk-source.webp
+python scripts/verify_hero_body_atlases.py
+node --test tests/hero_preview.test.mjs tests/mount_rider_scale.test.mjs
+```
+
+批量清单可传 `verify_hero_body_atlases.py --manifest <清单JSON>`，结构沿用 `bodies[角色ID].walk`。检查字节/哈希/alpha、站立脚底基线、侧向腿部轮廓；生成或重打包后须重新上传并验证CDN。打包脚本仅裁剪、统一缩放和锚点平移，不用代码合成迈步姿势。
+
+2026-09-27 更新：男女 `*-walk-cycle.webp` 都合并为7列×4行（1127×640，每列161px）。前六列仍为每向六帧步态，第七列为对应方向的静止身体；`walk.idleFrames`记录站立裁剪和连接点。运行时不再加载 `male-walk.webp` / `female-walk.webp`，旧文件仅作打包输入归档。保留原始站立比例、亚像素裁剪和头颈位置，不参与行走循环。合并图无法加载时回退原整身。
+
+合并脚本为 `python scripts/merge_hero_idle.py`，步态重新生成时也自动合并。无损编码超限后采用WebP quality 98并保留alpha，男127,876字节、女143,928字节；CDN目录 `keepwork/haqi/hero-preview/20260926/d52139ebb907/`，远端SHA-256/CORS已核验。下文6列/两纹理描述为初版历史。
+
 `male-walk.webp` / `female-walk.webp` 保留为四向静止身体与加载失败回退。移动时改用 `male-walk-cycle.webp` / `female-walk-cycle.webp`：每张6列×4行，方向顺序前、左、右、后，每向6帧，768×640。以原身体为参考通过内置 image_gen 绘制迈步、摆臂和披风变化，属于绘制步态，不是原生模型动画导出。生成源与参考哈希记录于 `bodies[gender+'-walk'].walk.source`。
 
 新图集为无损透明WebP，男175,884字节、女195,854字节。单帧128×160预留头部空间，统一缩放、按脖子锚点对齐，保留所有可选头部。播放由实际移动距离推进（90世界单位对应1秒，10帧/秒），无位移时回静止身体；减少动态效果时不播步态。骑乘与站姿使用原素材。步态未加载时回退原分层身体，缺头部时仍回退完整原角色。
@@ -105,3 +138,27 @@ CDN资源位于 `keepwork/haqi/hero-preview/20260926/1012b7632245/`，实际地�
 - 栗发少女右侧再向右微移，锚点从 `[84,110]` 改为 `[78,110]`，高度不变；邻近索引10–14的水平修正为2/4/6/4/2。
 - 男女朝前走仍露颈时，改的是身体：前向六帧 `bodyOffsetY=-5`，默认78px角色约上移2.44px，头部不动；其他方向、静止及骑乘保持原样。
 - 用户总体认可当前效果，仍有个别头型可微调。后续以当前配置为基线，避免再整体调整所有角色。详细历史见 [当天开发日志](devlog/devlog_2026-09-26.md)。
+
+### AI 身体试装（2026-09-27）
+
+HaqiHeroPreview.html?body=male2 默认展示赤曜战法师；身体试装选择器可切回原配色。只用于男主角步行与站立，骑乘仍沿用原资源。新增款式清单位于 art-references/hero-body-variants.json，使用同一套裁剪与连接点；不改正式游戏 JSON。
+
+可复用准备步骤：内置 image_gen 参考原 WebP 编辑 → scripts/prepare_hero_body_variant.py --source <生成 PNG> --id male2 → scripts/publish_hero_body_variants.py --uploader <已有七牛上传器>。发布脚本仅写预览款式清单，并核验远程哈希和 CORS。提示词与来源哈希随样例留档。每格原 alpha 保持一致，WebP 高质量有损编码可能轻微改变颈部颜色值，不改变位置。
+
+
+### 男女五组身体换装（2026-09-27）
+
+`bodyVariants` 只替换纹理，几何仍取 `bodies.male-walk` / `bodies.female-walk`。经典身体 ID 为 `male` / `female`，新增服装为 `male2`–`male6` / `female2`–`female6`。每套包含四方向六帧步行与第七列站姿；骑乘使用原 Rider。
+
+`HaqiHeroPreview.html?body=female4` 可独立选择头部与身体。`tests/fixtures/hero-creation.html` 和 `tests/fixtures/hero-customize.html` 使用实际选角、背包换装组件及内存角色，不读写玩家存档。
+
+新增服装保存为 `save.bodyId`；头部仍为 `save.headId`。原存档没有 bodyId 时使用经典身体。头部、身体或性别一起修改按一次外观变化收费（50 魔豆）；改名另外计算。
+
+批量生成提示词见 `art-references/body-variants/prompts.json`，每项以原始同性别角色 WebP 为参考进行 AI 编辑。`prepare_hero_body_variant.py` 按每格原 alpha 轮廓配准，复用既有连接点，再编码为小于 200KB 的 WebP。上传验证后运行 `register_hero_body_variants.py` 同步实验室和游戏清单。
+
+
+### 无披风版型扩展
+
+新增 `male7`–`male11`、`female7`–`female11`。男款为霓虹叛客、午夜礼宾、街头晴空、齿轮工匠、赤练武者；女款为樱桃舞会、珍珠花嫁、牛仔日记、薄荷竞速、紫电摇滚。原款保留，男女各有经典款加十套变体。
+
+新提示词记录在 `art-references/body-variants/no-cape-prompts.json`。这些条目标记 `registrationMode: neck-anchored`：保留 AI 生成的新透明轮廓，根据原身体高度和颈部锚点配准，并在原渲染裁剪范围内适配衣宽。不能恢复原 alpha，否则会把披风轮廓重新补回。原 frame/crop/neck 配置不变，衣服形状可以不同。`verify_hero_body_variants.py` 校验 280 帧、透明背景、颈部存在、尺寸、哈希与体积预算。

@@ -5450,8 +5450,14 @@ S4死亡装供货商||S4 Death gear supplier
 对{target}施加持续效果：{effect}，持续 {rounds} 回合。||Apply {effect} to {target} for {rounds} turns.
 下次{school}攻击 +{percent}%||Next {school} attack +{percent}%
 下次{school}攻击 -{percent}%||Next {school} attack -{percent}%
+下次{school}攻击加 {percent}%||Next {school} attack +{percent}%
+下次{school}攻击减 {percent}%||Next {school} attack -{percent}%
 下次受到{school}伤害 +{percent}%||Next incoming {school} damage +{percent}%
 下次受到{school}伤害 -{percent}%||Next incoming {school} damage -{percent}%
+受到的{school}攻击加 {percent}%||Incoming {school} attacks +{percent}%
+受到的{school}攻击减 {percent}%||Incoming {school} attacks -{percent}%
+给{target}放置陷阱，使其下一次受到的{school}攻击伤害提高 {percent}%，触发后陷阱消失。||Place a trap on {target} that increases the next incoming {school} attack damage by {percent}%. The trap disappears when triggered.
+为{target}施加减伤盾，使其下一次受到的{school}攻击伤害降低 {percent}%，触发后护盾消失。||Give {target} a damage shield that reduces the next incoming {school} attack damage by {percent}%. The shield disappears when triggered.
 使{target}下一次匹配的{school}攻击伤害提高 {percent}%，触发后消耗此术。||Increase the next matching {school} attack by {target} by {percent}%. The charm is consumed when triggered.
 使{target}下一次匹配的{school}攻击伤害降低 {percent}%，触发后消耗此术。||Reduce the next matching {school} attack by {target} by {percent}%. The charm is consumed when triggered.
 给{target}放置陷阱，使其下一次受到的{school}伤害提高 {percent}%，触发后陷阱消失。||Place a trap on {target} that increases the next incoming {school} damage by {percent}%. The trap disappears when triggered.
@@ -5764,3 +5770,63 @@ S4死亡装供货商||S4 Death gear supplier
 同组今日剩余 {count} 次 · 今日共享余量 {amount} {currency}||{count} rewards left for this lesson group today · Shared allowance left: {amount} {currency}
 
 双语学习 · 已关闭||Bilingual learning · Off
+头部||Head
+身体||Body
+经典蓝金||Classic Blue and Gold
+赤曜战法师||Crimson Battlemage
+森野游侠||Forest Ranger
+银潮卫士||Silver Tide Guardian
+沙海旅人||Desert Traveler
+紫夜乐师||Violet Night Bard
+霓虹叛客||Neon Rebel
+午夜礼宾||Midnight Tuxedo
+街头晴空||Skyline Streetwear
+齿轮工匠||Gear Mechanic
+赤练武者||Crimson Martial Artist
+樱桃舞会||Cherry Party Dress
+珍珠花嫁||Pearl Wedding Dress
+牛仔日记||Denim Days
+薄荷竞速||Mint Racer
+紫电摇滚||Violet Rock
+
+AI 配包||AI deck builder
+AI 托管||AI control
+停止 AI 托管||Stop AI control
+查看复盘||Review battle
+这个选择值得再考虑||Consider this choice again
+改用建议||Use suggestion
+仍然出牌||Play anyway
+本场不再提醒||Mute tips for this battle
+这是根据当前公开状态的预测，不保证后续结果。||This prediction uses currently visible information; future results are not guaranteed.
+已保留你的物品与任务进度。||Your items and quest progress have been kept.
+当前记录不足，暂不判断双方实力差距。||There is not enough recorded information to assess the strength difference.
+目前没有足够证据建议更换卡包、升级或调整阵容。||There is not enough evidence to recommend a new deck, upgrades, or a different lineup.
+没有足够证据建议升级或更换阵容。||There is not enough evidence to recommend upgrades or a different lineup.
+分析暂时不可用，按原选择继续。||Analysis is unavailable. Continuing with your original choice.
+
+战宠建议||Pet advice
+选卡提示||Card suggestion
+选中建议卡牌||Select suggested card
+关闭本场宠物提示||Turn off pet tips for this battle
+开启本场宠物提示||Turn on pet tips for this battle
+可以先保留魔力，等待下一次机会。||You can save your magic points and wait for the next opportunity.
+已按当前拥有的卡牌与卡包容量生成推荐，保存后生效。||A deck has been suggested using your owned cards and bag capacity. Save to apply it.
+
+答对了||Correct!
+答对了 · +{amount} {currency}||Correct! · +{amount} {currency}
+答对了 · 今日奖励已领完，练习已记录||Correct! · Daily rewards claimed; practice recorded
+表现真棒，给你点赞！||Great job! Well done!
++{amount} {currency}||+{amount} {currency}
+练习完成，继续加油！||Practice complete. Keep it up!
+
+输入你的回答，答对即可继续||Type your answer to continue when correct
+文字回答||Typed answer
+听问题，参考提示，用语音或文字回答。||Listen to the question and use the hints to answer by voice or text.
+请用语音或文字回答。||Please answer by voice or text.
+还没有通过，参考回答提示再试一次。||Not quite yet. Check the hint and try again.
+缺少当次学习完成记录||The current learning completion record is missing
+学习任务尚未完成||The learning task is not complete
+故事回答记录不完整||The story answer record is incomplete
+故事回答方式不完整||The story answer input methods are incomplete
+
+对话奖励：{amount} {currency}||Conversation reward: {amount} {currency}

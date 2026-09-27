@@ -1,0 +1,272 @@
+{
+  "version": 1,
+  "mode": "independent-edits-from-fixed-base",
+  "references": {
+    "male": {
+      "local": "assets/hero-preview/male-walk-ref.webp",
+      "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+      "motionReview": "user-approved"
+    },
+    "female": {
+      "local": "assets/hero-preview/female-walk-ref.webp",
+      "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+      "motionReview": "draft-motion-not-approved"
+    }
+  },
+  "requests": [
+    {
+      "id": "male3",
+      "name": "森野游侠",
+      "gender": "male",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "motionReview": "user-approved"
+      },
+      "design": "Forest ranger: emerald green short mantle with leaf embroidery, tan leather jerkin, cream sleeves, dark green boots; held object becomes a wooden trail baton with green leaf ornament, not a wizard staff.",
+      "prompt": "仅修改参考图中角色的服装：Forest ranger: emerald green short mantle with leaf embroidery, tan leather jerkin, cream sleeves, dark green boots; held object becomes a wooden trail baton with green leaf ornament, not a wizard staff.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/male3-walk-cycle.webp"
+    },
+    {
+      "id": "male4",
+      "name": "银潮卫士",
+      "gender": "male",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "motionReview": "user-approved"
+      },
+      "design": "Silver coastal knight: pale silver light armor breastplate, navy blue tabard and short mantle, teal trim, armored boots; held object a compact silver ceremonial mace, not a wizard staff.",
+      "prompt": "仅修改参考图中角色的服装：Silver coastal knight: pale silver light armor breastplate, navy blue tabard and short mantle, teal trim, armored boots; held object a compact silver ceremonial mace, not a wizard staff.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/male4-walk-cycle.webp"
+    },
+    {
+      "id": "male5",
+      "name": "沙海旅人",
+      "gender": "male",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "motionReview": "user-approved"
+      },
+      "design": "Desert explorer: saffron ochre short travel mantle, ivory linen shirt, russet leather vest, dark brown boots, brass clasps; held object compact brass navigation tool, no magical gem.",
+      "prompt": "仅修改参考图中角色的服装：Desert explorer: saffron ochre short travel mantle, ivory linen shirt, russet leather vest, dark brown boots, brass clasps; held object compact brass navigation tool, no magical gem.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/male5-walk-cycle.webp"
+    },
+    {
+      "id": "male6",
+      "name": "紫夜乐师",
+      "gender": "male",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "motionReview": "user-approved"
+      },
+      "design": "Fantasy court musician: plum purple velvet short jacket and capelet, ivory puff sleeves, charcoal trousers, silver embroidery, violet boots; held object small ornate golden musical rattle, no mage gem.",
+      "prompt": "仅修改参考图中角色的服装：Fantasy court musician: plum purple velvet short jacket and capelet, ivory puff sleeves, charcoal trousers, silver embroidery, violet boots; held object small ornate golden musical rattle, no mage gem.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/male6-walk-cycle.webp"
+    },
+    {
+      "id": "female2",
+      "name": "赤曜战法师",
+      "gender": "female",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "motionReview": "draft-motion-not-approved"
+      },
+      "design": "Crimson battlemage matching a red male costume: wine-red short cape, charcoal fitted bodice, ivory skirt and sleeves, black boots, brass sun embroidery and amber staff. Feminine costume variation.",
+      "prompt": "仅修改参考图中角色的服装：Crimson battlemage matching a red male costume: wine-red short cape, charcoal fitted bodice, ivory skirt and sleeves, black boots, brass sun embroidery and amber staff. Feminine costume variation.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/female2-walk-cycle.webp"
+    },
+    {
+      "id": "female3",
+      "name": "森野游侠",
+      "gender": "female",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "motionReview": "draft-motion-not-approved"
+      },
+      "design": "Forest ranger: sage and emerald short mantle with leaf embroidery, tan leather bodice, pale cream practical skirt, dark green boots; held object wooden trail baton with green leaf ornament, not wizard staff.",
+      "prompt": "仅修改参考图中角色的服装：Forest ranger: sage and emerald short mantle with leaf embroidery, tan leather bodice, pale cream practical skirt, dark green boots; held object wooden trail baton with green leaf ornament, not wizard staff.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/female3-walk-cycle.webp"
+    },
+    {
+      "id": "female4",
+      "name": "银潮卫士",
+      "gender": "female",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "motionReview": "draft-motion-not-approved"
+      },
+      "design": "Silver coastal knight: pale silver light armor bodice, teal blue skirt with navy capelet, silver trim and armored boots; held object compact silver ceremonial mace, not wizard staff.",
+      "prompt": "仅修改参考图中角色的服装：Silver coastal knight: pale silver light armor bodice, teal blue skirt with navy capelet, silver trim and armored boots; held object compact silver ceremonial mace, not wizard staff.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/female4-walk-cycle.webp"
+    },
+    {
+      "id": "female5",
+      "name": "沙海旅人",
+      "gender": "female",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "motionReview": "draft-motion-not-approved"
+      },
+      "design": "Desert explorer: terracotta and saffron short travel shawl, ivory linen sleeves and skirt, russet leather belt, brown boots, brass clasps; held object compact brass navigation tool, no magical gem.",
+      "prompt": "仅修改参考图中角色的服装：Desert explorer: terracotta and saffron short travel shawl, ivory linen sleeves and skirt, russet leather belt, brown boots, brass clasps; held object compact brass navigation tool, no magical gem.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/female5-walk-cycle.webp"
+    },
+    {
+      "id": "female6",
+      "name": "紫夜乐师",
+      "gender": "female",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "motionReview": "draft-motion-not-approved"
+      },
+      "design": "Fantasy court musician: lavender and plum velvet short capelet, ivory puff sleeves, violet dress with silver embroidery and black boots; held object small ornate golden musical rattle, no mage gem.",
+      "prompt": "仅修改参考图中角色的服装：Fantasy court musician: lavender and plum velvet short capelet, ivory puff sleeves, violet dress with silver embroidery and black boots; held object small ornate golden musical rattle, no mage gem.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/female6-walk-cycle.webp"
+    },
+    {
+      "id": "male7",
+      "name": "霓虹叛客",
+      "gender": "male",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "motionReview": "user-approved"
+      },
+      "design": "Neon punk Shamate streetwear: fitted black biker jacket, asymmetric hot-pink panels and silver studs, black skinny full-length trousers with a small chain, chunky magenta sneakers. Short fitted jacket sleeves; visible separate arms.",
+      "prompt": "仅修改参考图中角色的服装：Neon punk Shamate streetwear: fitted black biker jacket, asymmetric hot-pink panels and silver studs, black skinny full-length trousers with a small chain, chunky magenta sneakers. Short fitted jacket sleeves; visible separate arms.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/male7-walk-cycle.webp"
+    },
+    {
+      "id": "male8",
+      "name": "午夜礼宾",
+      "gender": "male",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "motionReview": "user-approved"
+      },
+      "design": "Elegant groom tuxedo: sharply tailored midnight blue short suit jacket, white shirt, bow tie, narrow straight black trousers, black formal shoes, single small white boutonniere. No coattails.",
+      "prompt": "仅修改参考图中角色的服装：Elegant groom tuxedo: sharply tailored midnight blue short suit jacket, white shirt, bow tie, narrow straight black trousers, black formal shoes, single small white boutonniere. No coattails.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/male8-walk-cycle.webp"
+    },
+    {
+      "id": "male9",
+      "name": "街头晴空",
+      "gender": "male",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "motionReview": "user-approved"
+      },
+      "design": "Relaxed casual streetwear: oversized pale cyan sweatshirt, orange crossbody small pouch on chest, baggy cream cargo trousers, large white-and-orange sneakers. Round loose sweatshirt silhouette with no hood or trailing fabric.",
+      "prompt": "仅修改参考图中角色的服装：Relaxed casual streetwear: oversized pale cyan sweatshirt, orange crossbody small pouch on chest, baggy cream cargo trousers, large white-and-orange sneakers. Round loose sweatshirt silhouette with no hood or trailing fabric.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/male9-walk-cycle.webp"
+    },
+    {
+      "id": "male10",
+      "name": "齿轮工匠",
+      "gender": "male",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "motionReview": "user-approved"
+      },
+      "design": "Industrial mechanic: ochre work coveralls with rolled sleeves, dark brown utility belt and stitched knee patches, chunky dark safety boots, tiny tool pockets. Broad practical trouser silhouette, full coverage.",
+      "prompt": "仅修改参考图中角色的服装：Industrial mechanic: ochre work coveralls with rolled sleeves, dark brown utility belt and stitched knee patches, chunky dark safety boots, tiny tool pockets. Broad practical trouser silhouette, full coverage.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/male10-walk-cycle.webp"
+    },
+    {
+      "id": "male11",
+      "name": "赤练武者",
+      "gender": "male",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659",
+        "motionReview": "user-approved"
+      },
+      "design": "Chinese martial artist: short fitted red frog-button sleeveless vest over black undershirt, loose black martial arts trousers, white forearm wraps, flat black cloth shoes. Clean compact silhouette, no scarf or waist tails.",
+      "prompt": "仅修改参考图中角色的服装：Chinese martial artist: short fitted red frog-button sleeveless vest over black undershirt, loose black martial arts trousers, white forearm wraps, flat black cloth shoes. Clean compact silhouette, no scarf or waist tails.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/male11-walk-cycle.webp"
+    },
+    {
+      "id": "female7",
+      "name": "樱桃舞会",
+      "gender": "female",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "motionReview": "draft-motion-not-approved"
+      },
+      "design": "Retro cherry-red party dress: modest fitted bodice with short puff sleeves, white Peter Pan collar, knee-length bell skirt with tiny white polka dots, opaque cream tights, glossy red Mary Jane shoes. Playful elegant fashion, age-appropriate and nonsexual.",
+      "prompt": "仅修改参考图中角色的服装：Retro cherry-red party dress: modest fitted bodice with short puff sleeves, white Peter Pan collar, knee-length bell skirt with tiny white polka dots, opaque cream tights, glossy red Mary Jane shoes. Playful elegant fashion, age-appropriate and nonsexual.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/female7-walk-cycle.webp"
+    },
+    {
+      "id": "female8",
+      "name": "珍珠花嫁",
+      "gender": "female",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "motionReview": "draft-motion-not-approved"
+      },
+      "design": "Wedding-inspired ceremonial white dress: fully covered lace short sleeves, high pearl neckline, softly flared tea-length layered ivory skirt with tiny blush flower accents at waist, white tights, pearl shoes. No veil, no train, no wings. Modest and age-appropriate.",
+      "prompt": "仅修改参考图中角色的服装：Wedding-inspired ceremonial white dress: fully covered lace short sleeves, high pearl neckline, softly flared tea-length layered ivory skirt with tiny blush flower accents at waist, white tights, pearl shoes. No veil, no train, no wings. Modest and age-appropriate.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/female8-walk-cycle.webp"
+    },
+    {
+      "id": "female9",
+      "name": "牛仔日记",
+      "gender": "female",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "motionReview": "draft-motion-not-approved"
+      },
+      "design": "Contemporary casual denim dungarees: blue bib overalls over a yellow striped short-sleeve T-shirt, full-length slightly cuffed denim trousers, red high-top sneakers, practical square pockets. Distinct rectangular trouser silhouette, no skirt.",
+      "prompt": "仅修改参考图中角色的服装：Contemporary casual denim dungarees: blue bib overalls over a yellow striped short-sleeve T-shirt, full-length slightly cuffed denim trousers, red high-top sneakers, practical square pockets. Distinct rectangular trouser silhouette, no skirt.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/female9-walk-cycle.webp"
+    },
+    {
+      "id": "female10",
+      "name": "薄荷竞速",
+      "gender": "female",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "motionReview": "draft-motion-not-approved"
+      },
+      "design": "Sporty mint and coral tracksuit: short zip-up mint athletic jacket, coral side-striped tapered full-length track pants, white athletic sneakers, wristbands. Fully covered stylish sporty design, no cape or skirt.",
+      "prompt": "仅修改参考图中角色的服装：Sporty mint and coral tracksuit: short zip-up mint athletic jacket, coral side-striped tapered full-length track pants, white athletic sneakers, wristbands. Fully covered stylish sporty design, no cape or skirt.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/female10-walk-cycle.webp"
+    },
+    {
+      "id": "female11",
+      "name": "紫电摇滚",
+      "gender": "female",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "sha256": "93637ecfa2f4c25f56711d372b18d7283b518c88b24988986881f8c5620df30a",
+        "motionReview": "draft-motion-not-approved"
+      },
+      "design": "Alternative punk fashion: black and purple plaid knee-length pleated skirt, short structured purple jacket with silver zipper over a fully covered striped top, opaque black leggings, chunky lace-up boots, small studded wrist cuff. Bold modest age-appropriate rock fashion.",
+      "prompt": "仅修改参考图中角色的服装：Alternative punk fashion: black and purple plaid knee-length pleated skirt, short structured purple jacket with silver zipper over a fully covered striped top, opaque black leggings, chunky lace-up boots, small studded wrist cuff. Bold modest age-appropriate rock fashion.。保留参考图全部动作、朝向、身体比例、脖子位置和帧排列。服装轮廓可以改变，肢体姿势不变。7列4行，前6列走路，最后1列站立；各行正面、左侧、右侧、背面。不要头，透明背景。",
+      "output": "assets/hero-preview/female11-walk-cycle.webp"
+    }
+  ],
+  "rules": [
+    "Reference inputs are the fixed gender base only, never another costume or failed generation.",
+    "Review base motion once before batch generation; costume prompts do not redesign motion.",
+    "Retry a failed costume from the same base and design, not from the failed image.",
+    "Record actual reference hash and prompt for every generation; packing base is not proof of generation reference.",
+    "A base revision creates a new batch; do not mix reference hashes within one batch."
+  ]
+}

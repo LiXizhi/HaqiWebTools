@@ -1,3 +1,8 @@
+import {defeatReviewNotes} from './view_battle_review.js';
+import {createBattlePetHint} from './view_battle_pet_hint.js';
+export {updateBattlePetHint} from './view_battle_pet_hint.js';
+import {socialHudButton,bindDungeonMenu} from './view_adventure_social_hud.js';
+import {dungeonProgress} from './adventure_coop_core.js';
 import {renderLearningMode} from './view_learning_mode.js';
 import {createHeroPicker} from './view_hero_picker.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
@@ -135,7 +140,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
             const choices=cb.previewChoices(draft.school),cards=el('div','creation-skill-choices');
             if(!choices.some(c=>c.key===draft.previewKey))draft.previewKey=choices[0]?.key;
             let pause;
-            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}setText(pause,'暂停');if(!cb.busy)cb.preview(canvas,key,{appearance:draft.appearance,headId:draft.headId},text=>{setText(status,text);},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
+            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}setText(pause,'暂停');if(!cb.busy)cb.preview(canvas,key,{appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId},text=>{setText(status,text);},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
             for(const choice of choices){
                 const face=el('canvas','creation-skill-card');face.width=112;face.height=112;face.setAttribute('aria-hidden','true');
                 const base=assets.effects.cards[choice.key]?.base;
@@ -160,7 +165,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
         if(error){const status=el('p','error-text',error);status.setAttribute('role','alert');form.append(status);}
         if(cb.busy)for(const node of root.querySelectorAll('button,input'))node.disabled=true;
     }
-    form.onsubmit=e=>{e.preventDefault();if(cb.busy)return;if(draft.step<3){draft.name=draft.name.trim()||'小哈奇';draft.step++;paint();root.scrollTop=0;}else cb.create({name:draft.name,school:draft.school,appearance:draft.appearance,headId:draft.headId,starter:draft.starter});};
+    form.onsubmit=e=>{e.preventDefault();if(cb.busy)return;if(draft.step<3){draft.name=draft.name.trim()||'小哈奇';draft.step++;paint();root.scrollTop=0;}else cb.create({name:draft.name,school:draft.school,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,starter:draft.starter});};
     paint();
 }
 function withName(pattern, name) {
@@ -330,6 +335,8 @@ export function renderHud(root,model,cb) {
     utilities.append(checkin);
     for(const [label,key,action]of [['世界地图','map',()=>cb.panel('map')],['副本','dungeon',()=>cb.panel('dungeons')],['设置','settings',()=>cb.panel('settings')]])utilities.append(button([icon(key),el('span','utility-label',label)],action,'utility-button'));
     root.append(utilities);
+    const dungeonButton=[...utilities.querySelectorAll('button')].find(b=>b.querySelector('[data-ui-icon="dungeon"]')||b.textContent==='副本');
+    if(dungeonButton)bindDungeonMenu(dungeonButton,cb.panel);
 
     updateCheckin(root,model);
     const chapterDone=c.quests.filter(quest=>save.quests[quest.id]?.claimed).length;
@@ -338,7 +345,7 @@ export function renderHud(root,model,cb) {
     const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),chapterCount));
     const dungeon=dungeonFor(c,save.zone);
     if(dungeon){
-        const cleared=save.dungeonRuns?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!save.dungeonRuns?.[save.zone]?.cleared.includes(a.id)).length;
+        const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
         tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，沿路走向出口即可离开。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可在副本菜单暂离。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button(remaining?'寻找下一组':'返回出口',cb.track,'track-button'));
     }else{
         const entries=trackerEntries(save,c);
@@ -386,6 +393,9 @@ export function renderHud(root,model,cb) {
     const localeControl=document.querySelector('.locale-launch');
     learn.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)+(save.mountId?44:0)}px`;
     learn.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
+    const socialBar=el('div','hero-social-toolbar');socialBar.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)}px`;socialBar.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
+    for(const control of [...root.querySelectorAll('.mount-toggle')]){control.style.left='';control.style.top='';socialBar.append(control);}
+    socialBar.append(socialHudButton('邮件','mail',model.social?.mailUnread,cb.panel),socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));root.append(socialBar);
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
 }
 function modal(root,title,subtitle,cb,wide=false) {
@@ -615,6 +625,15 @@ function renderBattleContent(root,model,cb) {
         hand.append(node);
     }
     const pass=button('跳过本回合',cb.pass,'secondary');pass.disabled=animating||battle.finished;
+    if(cb.aiHintsToggle){
+        const hintIcon=icon('pet');delete hintIcon.dataset.uiIcon;
+        const toggle=button(hintIcon,cb.aiHintsToggle,'battle-sound battle-pet-hint-toggle');
+        toggle.title=model.aiHintsMuted?'开启本场宠物提示':'关闭本场宠物提示';
+        toggle.setAttribute('aria-label',toggle.title);toggle.setAttribute('aria-pressed',String(!model.aiHintsMuted));toggle.disabled=battle.finished;
+        top.lastChild.insertBefore(toggle,sound);
+    }
+    root.battlePetHint=createBattlePetHint(model,{el,onDismiss:cb.aiHintDismiss});
+    if(root.battlePetHint)root.append(root.battlePetHint);
     const legalTargets=selected?validTargets(battle,hero,battle.resolved.cards[selected.key]):[];
     const targetEnemy=button('对敌方施法',()=>cb.target(legalTargets[0]?.id),'primary'),targetSelf=button(legalTargets[0]?.id===hero.id?'对自己施法':'对友方施法',()=>cb.target(legalTargets[0]?.id),'primary');
     const kind=selected&&cardTargetKind(battle.resolved.cards[selected.key]),canPlay=selected&&!discarded.includes(selected.seq)&&U.isAlive(hero);targetEnemy.hidden=legalTargets.length!==1||kind==='friendly'||kind==='self';targetSelf.hidden=legalTargets.length!==1||kind==='hostile'||kind==='all';targetEnemy.disabled=targetSelf.disabled=animating||battle.finished||!canPlay;
@@ -635,8 +654,7 @@ function renderBattleContent(root,model,cb) {
         targets.append(capture);
     }
     bottom.append(targets,runePager);
-    const challenge=null;
-    root.append(top,canvas,status,challenge,hand,bottom);
+    root.append(top,canvas,status,hand,bottom);
     attachStatusTooltips(root,canvas);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
     root.oncontextmenu=e=>{
@@ -671,8 +689,18 @@ function renderBattleContent(root,model,cb) {
             const xp=battle.monsterTemplates.reduce((sum,m)=>sum+Math.ceil(m.xp*(save.pendingEncounter?.magicStarExperiencePercent??100)/100),0);
             const coins=battle.monsterTemplates.reduce((sum,m)=>sum+m.coins,0);
             setText(rewardLine,'获得 {xp} 经验 · {coins} 奇豆',{xp,coins});
-        }else setText(rewardLine,'已保留你的物品与任务进度。调整卡包，再来试试吧。');
+        }else setText(rewardLine,'已保留你的物品与任务进度。');
         const result=el('div','result-card',el('p','eyebrow',won?'对决胜利':'继续加油'),el('h2','',won?'魔法的力量，属于你！':'休息一下，再来挑战'),rewardLine,button(won?'收下奖励，继续冒险':'回到安全地点',cb.finish,'primary'));root.append(result);
+        if(model.aiReview){
+            const review=model.aiReview,p=review.presentation;
+            result.querySelector('h2').textContent=p.headline;
+            const notes=defeatReviewNotes(review,battle.winner);
+            if(notes.length){
+                const details=el('details','',el('summary','','查看复盘'),...notes.map(note=>el('p','',note)));
+                result.insertBefore(details,result.lastChild);
+                for(const route of model.aiGrowth||[])result.insertBefore(button(route.title,()=>cb.aiNavigate(route.entry),'secondary'),result.lastChild);
+            }
+        }
         if(battle.captured?.length)result.insertBefore(el('p','',`捕获伙伴：${battle.captured.map(id=>assets.content.pets[id]?.name||id).join('、')}（已拥有的伙伴转为经验）`),result.lastChild);
     }
 }

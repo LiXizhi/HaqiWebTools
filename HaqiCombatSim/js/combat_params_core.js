@@ -38,6 +38,14 @@ export function defaultParams(version = 'teen') {
         version,
         // Web island unlock levels; original world configuration is unavailable.
         worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40 },
+        petInteractions: {
+            memoryCapacity:50, memoryProtectionMs:7*86400000, marksRequired:3,
+            cooldownMs:3*86400000, babyScale:.5, interactionDistance:100,
+            feedingDistance:180, effectMs:4500, playIntervalMs:12000,
+            indexPageSize:100,
+        },
+        // autoJoin* mirrors kids CombatRoom empty-seat open → delayed AI fill (RoomDetailPage 4 slots).
+        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, separation:50, npcClearance:65, followDistance:110, followSpacing:55, followWait:2, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
         languageAdventure: { inviteRange:150, interactionRange:85, greetingMs:2500, basicReward:10, beginnerReward:30, intermediateReward:50, advancedReward:80, basicDailyCap:100, challengeDailyCap:200, basicCourseLimit:2, challengeCourseLimit:1, promptCooldownMs:90000, sourceCooldownMs:300000, maxTurns:8 },
         // Web progression schedule; original server training-point grant table is unavailable.
@@ -107,6 +115,22 @@ export function defaultParams(version = 'teen') {
         },
         perSchool: perSchoolDefaults(),
         cardOverrides: {},
+        battleAI: {
+            branches: 12, candidateCount: 3, chainCandidates: 3, chainDiscount: 0.65,
+            lethalValue: 600, pipValue: 24, reserveValue: 0.25, survivalValue: 1.6,
+            severeGap: 0.25, confidenceThreshold: 0.9, nearTie: 0.08,
+            temperatures: { easy: 0.7, normal: 0.3, advanced: 0.12, expert: 0 },
+            closeMargin: 0.25, minimumCloseFrames: 3,
+            deckSupportShare: 0.45, deckBurstThreshold: 0.75, deckSetupDiscount: 0.8,
+            deckAttackShare: 0.4, deckCounterCopies: 2, deckHealCopies: 2,
+            pipEfficiencyWeight: 0.25,
+            tacticalSetupLimit: 3, tacticalSetupMaxCost: 1, tacticalDrawCandidates: 8,
+            tacticalMissingAttackCandidates: 1,
+            tacticalWaitCost: 0.12, tacticalSetupCost: 0.08, tacticalFocusRetention: 0.08,
+            tacticalProgressWeight: 1.2, tacticalEarlyReleaseCost: 0.9,
+            tacticalCapReserve: 2, tacticalOverflowCost: 0.7,
+            tacticalMaxDiscards: 2, tacticalDrawWeight: 0.5, tacticalDiscardCost: 6,
+        },
         fairPlay: null,
     };
 }
@@ -232,8 +256,10 @@ export function resolveParams(dataset, params) {
     return {
         version,
         global: { ...params.global },
+        battleAI: { ...defaultParams(version).battleAI, ...params.battleAI },
         // Web island unlock levels; original world configuration is unavailable.
         worldTravel: { ...defaultParams(version).worldTravel, ...params.worldTravel },
+        petInteractions: { ...defaultParams(version).petInteractions, ...params.petInteractions },
         checkin: { ...defaultParams(version).checkin, ...params.checkin },
         languageAdventure: { ...defaultParams(version).languageAdventure, ...params.languageAdventure },
         fishing: { ...defaultParams(version).fishing, ...params.fishing },

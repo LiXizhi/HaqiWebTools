@@ -14,7 +14,7 @@ export function checkedProgress(raw, content, dataset) {
     // IndexedDB runtime record. They are listed here only so role reloads keep them;
     // durableSave() removes them before every durable or cloud write, so they never
     // leave the device.
-    const keys=[...Object.keys(createAdventure(content)),'magicStarClaims','checkin','fishingRecords','magicStarFollow','mountHidden'];
+    const keys=[...Object.keys(createAdventure(content)),'headId','bodyId','magicStarClaims','checkin','fishingRecords','magicStarFollow','mountHidden','coopRun','socialActivity','socialPvpRecords','socialChallenges','petInstanceVersion','petOwnerId','petWorld','petFileRefs','petPages'];
     const save = Object.fromEntries(keys.filter(key=>parsed[key]!==undefined).map(key => [key, parsed[key]]));
     const battle = save.pendingEncounter ? restorePveBattle(dataset, content, save.pendingEncounter) : null;
     for(const rune of save.pendingEncounter?.runes||[]){
@@ -31,8 +31,8 @@ export function makeCloudSnapshot(save, content, dataset, updatedAt, id) {
     return { schemaVersion: CLOUD_VERSION, app: 'HaqiAdventure', id, updatedAt, save: checkedProgress(save, content, dataset).save };
 }
 export function parseCloudSnapshot(raw, content, dataset) {
-    requireValue(typeof raw === 'string' && raw.length <= 1024 * 1024, '云端记录无法读取或文件过大');
-    const value = JSON.parse(raw);
+    requireValue(typeof raw === 'string' ? raw.length <= 1024 * 1024 : raw && typeof raw === 'object' && !Array.isArray(raw), '云端记录无法读取或文件过大');
+    const value = typeof raw === 'string' ? JSON.parse(raw) : raw;
     requireValue(value?.schemaVersion === CLOUD_VERSION && value.app === 'HaqiAdventure', '云端记录版本不兼容');
     const snapshot = makeCloudSnapshot(value.save, content, dataset, value.updatedAt, value.id);
     return { snapshot, ...checkedProgress(snapshot.save, content, dataset) };

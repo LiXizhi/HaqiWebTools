@@ -36,3 +36,17 @@
 .camp-chat [hidden],.camp-chat-overlay[hidden]{display:none!important}.learning-settings{display:grid;gap:12px;padding:16px 0}.learning-settings label{display:grid;gap:7px}.learning-settings select{width:100%;min-height:44px;max-width:100%;padding:8px;background:var(--paper,#fff8df);color:var(--ink,#392719);border:1px solid var(--gold,#b78636);border-radius:8px}
 @media(max-width:700px){.camp-chat-overlay{padding:6px}.camp-chat{height:97dvh;border-radius:16px;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}.camp-chat-character{padding:10px 64px 10px 16px;flex-direction:row;justify-content:flex-start;gap:10px}.camp-chat-character::before,.camp-chat-context{display:none}.camp-chat-character h2{font-size:17px;margin:0}.camp-chat-role{font-size:11px;max-width:120px;flex-shrink:1}.camp-chat-character h2{flex-shrink:0}.camp-chat-portrait{flex-shrink:0}.camp-chat-portrait{order:-1;width:48px;height:48px;margin:0}.camp-chat-header{padding:10px 14px;gap:6px}.camp-chat-header h3{font-size:16px;padding-right:0;min-height:0}.camp-chat-header .small{padding:6px;font-size:11px}.camp-chat-log{padding:14px}.camp-chat-bubble{padding:10px 12px}.camp-chat-original{font-size:16px}.camp-chat-message{gap:7px;margin-bottom:15px}.camp-chat-footer{padding:10px 12px}.camp-chat-actions{gap:36px}.camp-chat-hint{max-height:135px}.camp-chat-caption,.camp-chat-status{font-size:11px}}
 @media(max-height:550px){.camp-chat-character{display:none}.camp-chat{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr)}.camp-chat-header{padding:6px 12px;gap:3px}.camp-chat-header h3{grid-column:1/-1;grid-row:1;padding-right:52px;min-height:44px}.camp-chat>.close-button{top:4px;right:8px}.camp-chat-footer{padding:6px 12px}.camp-chat-mic{width:48px;height:48px}.camp-chat-hint{max-height:80px}}
+
+.camp-chat-answer-feedback{display:block;margin-top:6px;color:#32612d;font-size:13px;font-weight:700}
+.camp-chat-completed-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
+.camp-chat-status:empty{display:none}
+.camp-chat-celebration{position:fixed;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);box-sizing:border-box;width:max-content;max-width:calc(100vw - 40px);padding:22px 30px;border:2px solid var(--gold,#b78636);border-radius:22px;background:#fff8df;color:#244f3b;box-shadow:0 12px 48px #193b3950;text-align:center;pointer-events:none;animation:camp-reward-pop .32s ease-out}
+.camp-chat-celebration[hidden]{display:none!important}
+.camp-chat-celebration strong{font-size:19px}.camp-chat-celebration-amount{font-size:28px;font-weight:800;color:#976018;margin:10px 0 0}
+@keyframes camp-reward-pop{from{opacity:0;transform:translate(-50%,-40%) scale(.82)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@media(prefers-reduced-motion:reduce){.camp-chat-celebration{animation:none}}
+
+.camp-chat-overlay{grid-template-columns:minmax(0,1fr)}
+.camp-chat-overlay>.camp-chat{justify-self:center}
+
+.camp-chat-reward-preview{display:block;margin-top:8px;font-size:13px;font-weight:700;color:#78521e}

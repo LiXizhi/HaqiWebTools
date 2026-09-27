@@ -1,0 +1,42 @@
+{
+  "method": "内置 image_gen 原图编辑；按原脖子区域配准并无损保存。",
+  "scope": "独立四向站姿服装预览，不接入正式换装或新增骑乘服装。",
+  "outfits": [
+    {
+      "id": "academy-boy",
+      "name": "蓝白学院装",
+      "gender": "male",
+      "prompt": "Edit original male headless 2×2 standing atlas. Sapphire blue and ivory academy mage outfit, gold piping and star embroidery, indigo scarf, navy boots. Preserve original body poses, scale, cell positions and exact neck pixels/coordinates; genuine transparency."
+    },
+    {
+      "id": "academy-girl",
+      "name": "蓝白学院装",
+      "gender": "female",
+      "prompt": "Edit target: attached female headless 2x2 clothing atlas. Design sapphire blue and ivory academy mage costume: fitted short blue tunic, ivory puff sleeves and bloomers, gold star embroidery and piping, navy scarf, navy knee boots and gold buckles. Preserve original cute painted fantasy style, body shape, ALL four original poses and their order. Strict exact sprite registration: 2x2 equally spaced grid on transparent canvas, same normalized original positions, same body scale, same feet baselines. Exposed neck and neckline must stay at EXACT same position in EACH cell as reference, no shifting or recentering, preserve its skin and size. No heads/hair, no hats, no text or decoration outside clothes. Only redesign clothing below existing neck. Real transparent background."
+    },
+    {
+      "id": "adventurer-boy",
+      "name": "红黑冒险装",
+      "gender": "male",
+      "prompt": "Edit target is this existing male headless fantasy game clothing atlas. Change clothing ONLY into crimson-and-charcoal adventurer outfit: red fitted short jacket with charcoal panels and antique brass clasps, cream rolled sleeves, charcoal knee trousers, dark brown leather boots, dark red scarf, small leather belt pouch. Preserve cute original painted game style and original body silhouette, hands, ALL four poses front/right/left/back, exact per-cell body scale and normalized location in same 2x2 grid. Absolutely NEVER move the neck or neckline: same exposed neck size, color, position in each cell; no recentering. Same canvas framing and full transparent background. No head, hair, hat, labels or extra objects. Only clothing design, color and details may change."
+    },
+    {
+      "id": "adventurer-girl",
+      "name": "红黑冒险装",
+      "gender": "female",
+      "prompt": "Precisely edit the provided ORIGINAL female 2x2 headless outfit sprite atlas. Recolor and re-detail ONLY existing clothing into crimson-and-charcoal adventurer fashion: dark red short fitted tunic, charcoal paneling, brass clasps and belt pouch, cream puff sleeves and bloomers, dark brown boots, charcoal scarf. Do NOT redesign pose or relocate any body. Keep original shading style and clothing silhouette. Pixel registration is mandatory: each character must occupy exactly the same normalized pixel coordinates as its counterpart in the input. Especially DO NOT move, redraw, enlarge, lengthen or shorten ANY exposed neck stump; keep neckline and collar junction fixed. Keep all four original camera directions and hands/feet poses, exact same grid and blank padding. Genuine transparent background, no heads, no text."
+    },
+    {
+      "id": "moon-boy",
+      "name": "紫金星月装",
+      "gender": "male",
+      "prompt": "Precisely edit this ORIGINAL male headless clothing atlas, retaining its pixels' layout. Recolor and re-detail existing garments into violet-and-gold moon mage costume: plum purple short tunic with navy inset panels, delicate gold crescent moons and thin constellation embroidery, soft lavender sleeves and knee trousers, navy scarf with gold edging, plum boots with antique gold buckles. Same cute painted fantasy game style, same original clothing silhouette, body proportions, hands, legs, boots placements and all four original poses. CRITICAL: NO movement of any neck or collar! Exact same exposed neck size and normalized coordinates in every original 2x2 cell, same amount of empty space above each. Do not recenter bodies or redraw necks. Keep transparent background, four headless bodies only, no text, no hats or heads."
+    },
+    {
+      "id": "moon-girl",
+      "name": "紫金星月装",
+      "gender": "female",
+      "prompt": "Precisely edit original female headless 2x2 atlas. Plum purple fitted short tunic, navy inset panels, delicate gold crescent moon and constellation embroidery, lavender sleeves and bloomers, navy scarf with gold edging, plum knee boots. Preserve original neck, collar, scale, positions, four poses and transparent canvas."
+    }
+  ]
+}

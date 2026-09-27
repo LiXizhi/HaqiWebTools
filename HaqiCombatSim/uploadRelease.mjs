@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
-import { maisiCandidates, syncMaisiRelease } from './scripts/sync_maisi_release.mjs';
+import { maisiCandidates, syncMaisiRelease, syncAppsRelease } from './scripts/sync_keepwork_apps_release.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const dist = path.join(root, 'dist');
@@ -93,11 +93,17 @@ if (manifest.verified || args.has('--dry-run')) {
         const output = html.replace(/<head>/i, `<head>\n  <base href="${base}">\n  ${fragmentRouting}`);
         const suffix = manifest.verified ? '_v1' : '_preview';
         fs.writeFileSync(path.join(release, `${page}${suffix}.html`), output);
+        if (manifest.verified && page === 'HaqiOfficialWebsite') fs.writeFileSync(path.join(release, `${page}.html`), output);
         console.log(`${manifest.verified ? '已验证' : '仅预览，尚未上传'}：${base}${page}.html`);
     }
 }
 
 if (manifest.verified) {
+    const appsDestination = await syncAppsRelease({ projectRoot: root, releaseDir: release, pages, verified: true, publish: true });
+    console.log(`已同步发布入口到：${appsDestination}，并推送 apps origin/master 与 keepwork/master。`);
     const destination = syncMaisiRelease({ projectRoot: root, releaseDir: release, pages, verified: true });
     console.log(destination ? `已同步发布入口到：${destination}` : '未找到本机Maisi仓库，跳过发布入口复制。');
+    console.log('\nHaqi 最终发布入口（Maisi 托管页仍需另行发布；apps 已推送）：');
+    console.log('Maisi: https://keepwork.com/maisi/maisi/webgames/MagicHaqi/release/Haqi_v1.html');
+    console.log('Official apps: https://keepwork.com/api/raw/official/apps/MagicHaqi/release/Haqi_v1.html');
 }

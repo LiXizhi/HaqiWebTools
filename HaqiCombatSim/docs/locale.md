@@ -18,10 +18,10 @@
 |---------|------|----------|
 | `zh-CN` | 无 | `zh-CN` |
 | `en` | `data/adventure/locale/en.txt` | `en-US` |
-| `ja` | `data/adventure/locale/ja.txt`（可选，目前没有） | `ja-JP` |
-| `ko` | `data/adventure/locale/ko.txt`（可选，目前没有） | `ko-KR` |
+| `ja` | `data/adventure/locale/ja.txt` | `ja-JP` |
+| `ko` | `data/adventure/locale/ko.txt` | `ko-KR` |
 
-语言列表在 `js/locale_core.js` 的 `LOCALES`。日语和韩语已经在设置里，文件不存在时该语言的查表结果仍是中文。
+语言列表在 `js/locale_core.js` 的 `LOCALES`。中文 / English / 日本語 / 한국어均有词典（`zh-CN` 无文件，键即原文）。缺译文或文件未加载时回退中文。
 
 `en.txt` 一行一条，空行忽略。以 `#` 开头且不含 `|` 的行是注释，用来标明后面的句子来自哪个源码文件，不参与查表。打包进 `dist` 时这些注释会被去掉。开发时直接读源码文件，解析器同样跳过注释。
 

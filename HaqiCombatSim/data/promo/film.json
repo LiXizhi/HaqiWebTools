@@ -1,0 +1,382 @@
+{
+  "version": 1,
+  "title": "魔法哈奇 · 从一次相遇开始",
+  "seed": 530,
+  "shots": [
+    {
+      "id": "welcome",
+      "scene": "world",
+      "title": {
+        "zh-CN": "从一次相遇开始",
+        "en": "A new adventure"
+      },
+      "subtitle": {
+        "zh-CN": "带上好奇心，和宠物一起冒险，在故事里练习另一种语言。",
+        "en": "Adventure with pets, explore new places, and practise a language through stories."
+      },
+      "duration": {
+        "long": 12,
+        "short": 7
+      },
+      "cues": []
+    },
+    {
+      "id": "create",
+      "scene": "create",
+      "title": {
+        "zh-CN": "你的名字，你的旅程",
+        "en": "Your story begins"
+      },
+      "subtitle": {
+        "zh-CN": "从一个名字、一位抱抱龙伙伴，开始属于你的魔法旅程。",
+        "en": "Choose your name and your dragon companion. Your magical journey starts here."
+      },
+      "duration": {
+        "long": 18,
+        "short": 7
+      },
+      "cues": [
+        {
+          "at": 0.3,
+          "action": "creation",
+          "step": 2
+        },
+        {
+          "at": 0.65,
+          "action": "creation",
+          "step": 3
+        }
+      ]
+    },
+    {
+      "id": "account",
+      "scene": "account",
+      "title": {
+        "zh-CN": "随时回来，继续冒险",
+        "en": "Return to your adventure"
+      },
+      "subtitle": {
+        "zh-CN": "可以先以访客体验；登录与注册通过 Keepwork 完成，云端旅途随账号继续。",
+        "en": "Try the game as a guest. Keepwork sign-in and registration connect your cloud journey."
+      },
+      "duration": {
+        "long": 12,
+        "short": 0
+      },
+      "cues": [],
+      "fixture": true
+    },
+    {
+      "id": "skills",
+      "scene": "skills",
+      "title": {
+        "zh-CN": "五系魔法，各有所长",
+        "en": "Five schools of magic"
+      },
+      "subtitle": {
+        "zh-CN": "烈火、寒冰、风暴、生命、死亡。选一门魔法，发现你的战斗风格。",
+        "en": "Fire, Ice, Storm, Life and Death. Find the magic that suits your style."
+      },
+      "duration": {
+        "long": 22,
+        "short": 10
+      },
+      "cues": [
+        {
+          "at": 0.2,
+          "action": "school",
+          "school": "ice"
+        },
+        {
+          "at": 0.4,
+          "action": "school",
+          "school": "storm"
+        },
+        {
+          "at": 0.6,
+          "action": "school",
+          "school": "life"
+        },
+        {
+          "at": 0.8,
+          "action": "school",
+          "school": "death"
+        }
+      ]
+    },
+    {
+      "id": "deck",
+      "scene": "deck",
+      "title": {
+        "zh-CN": "把策略装进卡包",
+        "en": "Build your strategy"
+      },
+      "subtitle": {
+        "zh-CN": "搭配你的魔法卡包，为下一场对决做好准备。",
+        "en": "Build your deck and prepare for the next encounter."
+      },
+      "duration": {
+        "long": 13,
+        "short": 5
+      },
+      "cues": [
+        {
+          "at": 0.65,
+          "action": "save-deck"
+        }
+      ]
+    },
+    {
+      "id": "battle",
+      "scene": "battle",
+      "title": {
+        "zh-CN": "每一回合，都有选择",
+        "en": "Make every turn count"
+      },
+      "subtitle": {
+        "zh-CN": "积攒魔力，选择时机，让卡牌与伙伴一起发挥力量。",
+        "en": "Gather pips, choose your moment, and combine the power of cards and companions."
+      },
+      "duration": {
+        "long": 24,
+        "short": 10
+      },
+      "cues": []
+    },
+    {
+      "id": "pets",
+      "scene": "pet",
+      "title": {
+        "zh-CN": "一路相伴的小伙伴",
+        "en": "Companions for the journey"
+      },
+      "subtitle": {
+        "zh-CN": "认识你的宠物，照顾它们的成长，搭配自己的冒险小队。",
+        "en": "Meet your pets, care for them, and build your own adventuring team."
+      },
+      "duration": {
+        "long": 15,
+        "short": 6
+      },
+      "cues": []
+    },
+    {
+      "id": "equipment",
+      "scene": "equipment",
+      "title": {
+        "zh-CN": "为下一程做好准备",
+        "en": "Prepare for the road ahead"
+      },
+      "subtitle": {
+        "zh-CN": "整理装备和行囊，带着新的目标继续出发。",
+        "en": "Check your equipment and pack for the next adventure."
+      },
+      "duration": {
+        "long": 10,
+        "short": 0
+      },
+      "cues": []
+    },
+    {
+      "id": "friends",
+      "scene": "friends",
+      "title": {
+        "zh-CN": "把相遇变成朋友",
+        "en": "Turn encounters into friendships"
+      },
+      "subtitle": {
+        "zh-CN": "在岛上认识伙伴，通过好友申请建立联系，再相约下一段旅程。",
+        "en": "Meet fellow adventurers, connect through friend requests, and plan your next journey."
+      },
+      "duration": {
+        "long": 15,
+        "short": 5
+      },
+      "cues": [
+        {
+          "at": 0.55,
+          "action": "friend-accept"
+        }
+      ],
+      "fixture": true
+    },
+    {
+      "id": "dungeons",
+      "scene": "dungeons",
+      "title": {
+        "zh-CN": "走向更深处",
+        "en": "Into the dungeons"
+      },
+      "subtitle": {
+        "zh-CN": "选择一座副本，穿过入口，挑战挡在前方的怪物。",
+        "en": "Choose a dungeon, cross its threshold, and face the creatures ahead."
+      },
+      "duration": {
+        "long": 16,
+        "short": 5
+      },
+      "cues": [
+        {
+          "at": 0.4,
+          "action": "enter-dungeon"
+        },
+        {
+          "at": 0.7,
+          "action": "dungeon-battle"
+        }
+      ]
+    },
+    {
+      "id": "town",
+      "scene": "island",
+      "title": {
+        "zh-CN": "哈奇岛 · 熟悉的起点",
+        "en": "Haqi Island"
+      },
+      "subtitle": {
+        "zh-CN": "回到阳光与绿意中的哈奇岛，和熟悉的居民打个招呼。",
+        "en": "Return to the sunshine of Haqi Island and greet its residents."
+      },
+      "duration": {
+        "long": 11,
+        "short": 3
+      },
+      "cues": [],
+      "zone": "town"
+    },
+    {
+      "id": "fire",
+      "scene": "island",
+      "title": {
+        "zh-CN": "火鸟岛 · 炽热的远方",
+        "en": "Firebird Island"
+      },
+      "subtitle": {
+        "zh-CN": "沿着火山与海岸，走向炽热的火鸟岛。",
+        "en": "Follow volcanic shores into Firebird Island."
+      },
+      "duration": {
+        "long": 11,
+        "short": 3
+      },
+      "cues": [],
+      "zone": "fire"
+    },
+    {
+      "id": "ice",
+      "scene": "island",
+      "title": {
+        "zh-CN": "寒冰岛 · 雪中的旅途",
+        "en": "Frost Island"
+      },
+      "subtitle": {
+        "zh-CN": "穿过冰蓝的山峰，在寒冰岛寻找下一次挑战。",
+        "en": "Travel through icy peaks and discover your next challenge."
+      },
+      "duration": {
+        "long": 11,
+        "short": 3
+      },
+      "cues": [],
+      "zone": "ice"
+    },
+    {
+      "id": "desert",
+      "scene": "island",
+      "title": {
+        "zh-CN": "沙漠岛 · 沙丘与绿洲",
+        "en": "Desert Island"
+      },
+      "subtitle": {
+        "zh-CN": "金色沙丘的另一边，是等待发现的绿洲与故事。",
+        "en": "Beyond the golden dunes, an oasis and new stories await."
+      },
+      "duration": {
+        "long": 11,
+        "short": 3
+      },
+      "cues": [],
+      "zone": "desert"
+    },
+    {
+      "id": "dark",
+      "scene": "island",
+      "title": {
+        "zh-CN": "幽暗岛 · 密林深处",
+        "en": "Dark Forest Island"
+      },
+      "subtitle": {
+        "zh-CN": "走进幽暗的密林，让好奇心带你再往前一步。",
+        "en": "Step into the dark forest and let curiosity guide you onward."
+      },
+      "duration": {
+        "long": 11,
+        "short": 3
+      },
+      "cues": [],
+      "zone": "dark"
+    },
+    {
+      "id": "camp",
+      "scene": "island",
+      "title": {
+        "zh-CN": "魔法营地 · 再次相遇",
+        "en": "Magic Camp"
+      },
+      "subtitle": {
+        "zh-CN": "回到魔法营地，冒险之外，也有值得慢慢聊的故事。",
+        "en": "Back at Magic Camp, take time for stories beyond the battles."
+      },
+      "duration": {
+        "long": 10,
+        "short": 0
+      },
+      "cues": [],
+      "zone": "camp"
+    },
+    {
+      "id": "learning",
+      "scene": "learning",
+      "title": {
+        "zh-CN": "聊几句，打开新世界",
+        "en": "A conversation opens a world"
+      },
+      "subtitle": {
+        "zh-CN": "从问候和求助开始，在营地的中英短故事里练习表达。",
+        "en": "Start with greetings and requests, and practise Chinese and English through short camp stories."
+      },
+      "duration": {
+        "long": 20,
+        "short": 7
+      },
+      "cues": [
+        {
+          "at": 0.35,
+          "action": "learning-reply"
+        },
+        {
+          "at": 0.7,
+          "action": "learning-next"
+        }
+      ],
+      "fixture": true
+    },
+    {
+      "id": "ending",
+      "scene": "world",
+      "title": {
+        "zh-CN": "新的伙伴，新的故事",
+        "en": "New companions. New stories."
+      },
+      "subtitle": {
+        "zh-CN": "魔法哈奇网页测试版。打开浏览器，从一次相遇，开始你的故事。",
+        "en": "Magic Haqi, an early browser adventure. Open your browser and begin your story."
+      },
+      "duration": {
+        "long": 12,
+        "short": 3
+      },
+      "cues": []
+    }
+  ]
+}

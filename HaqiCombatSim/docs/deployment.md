@@ -44,11 +44,22 @@ npm run verify:release # 对当前dist重新核验，不上传
 
 发布不会自动同步 `digitalhuman-resource` Git镜像；该可选副本按Maisi上传技能另行征询。美术清单预算、原图来源与独立哈希仍按现有资源准备测试维护。
 
-## 同步到本机Maisi
+## 同步到 apps 和本机 Maisi
+
+同步工具为 `scripts/sync_keepwork_apps_release.mjs`。执行顺序为：CDN 核验通过 → apps 入口复制、提交及双远端推送 → Maisi 本地入口复制。apps 步骤失败时不会继续复制到 Maisi。
 
 `upload`或`verify:release`远端核验成功并生成正式入口后，自动查找祖先目录下的 `maisi` checkout（例如 `lxzsrc/maisi`），优先使用 `MAISI_ROOT`。确认仓库Git标记及MagicHaqi入口存在后，将本次四个 `release/Haqi*_v1.html` 复制到 `<maisi>/maisi/maisi/webgames/MagicHaqi/release/`，更新同名文件并逐字节核验。其他文件保持原样；不复制美术、预览HTML或manifest，不替Maisi执行Git提交/推送。
 
 未找到Maisi时打印跳过信息，不影响CDN发布；`plan:release`和失败的上传/核验不会复制。若复制发生IO错误则命令报错，可修复后运行 `verify:release`重新核验并复制。
+
+`upload` 或 `verify:release` 成功结束时，还会输出 Haqi 的两个最终托管入口：
+
+- Maisi: https://keepwork.com/maisi/maisi/webgames/MagicHaqi/release/Haqi_v1.html
+- Official apps: https://keepwork.com/api/raw/official/apps/MagicHaqi/release/Haqi_v1.html
+
+核验完成后首先查找同级 `apps` 仓库（可通过 `APPS_ROOT` 指定），将五个正式入口复制到 `official/apps/MagicHaqi/release/`。apps 必须在 `master` 且工作区干净；发布前检查两个远端及快进关系，仅提交本次入口文件，再复用 apps 的批量发布器依次推送 `origin/master`（开发服务器）与 `keepwork/master` 并核对远端提交。不会推送其他兼容目录或替 Maisi 提交、推送。未找到 apps 或安全检查失败时命令报错，不宣称发布完成；已经完成的 CDN 上传不回滚。
+
+`upload` 和 `verify:release` 都会执行上述 apps 发布步骤。Maisi 托管页仍需另行发布；apps 网站可能有刷新延迟。CDN 本次版本地址在前面的核验输出中显示。
 
 ## 本地美术独立包（Steam / 桌面 / 手机）
 

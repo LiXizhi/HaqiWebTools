@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#204d4d">
+  <meta name="description" content="魔法哈奇初心之旅：探索魔法营地、结识原版NPC、收集卡牌，开启一场二维魔法冒险。">
+  <title>魔法哈奇 · 初心之旅</title>
+  <link rel="stylesheet" href="css/adventure.css">
+  <link rel="stylesheet" href="css/adventure_storybook.css">
+  <link rel="stylesheet" href="css/adventure_social.css">
+  <link rel="stylesheet" href="css/adventure_dialogue.css">
+  <link rel="stylesheet" href="css/adventure_rewards.css">
+  <link rel="stylesheet" href="css/adventure_world_map.css">
+  <link rel="stylesheet" href="css/adventure_strengthening.css">
+  <link rel="stylesheet" href="css/adventure_shop.css">
+<link rel="stylesheet" href="css/adventure_gems.css">
+  <link rel="stylesheet" href="css/adventure_fishing.css">
+  <link rel="stylesheet" href="css/adventure_loading.css">
+<link rel="stylesheet" href="css/language_adventure.css">
+<style>body{pointer-events:none}#hud{display:none!important}.entry-intro{padding-top:45px}.modal{max-height:78vh!important}.overlay{padding-bottom:65px!important}.entry-wizard{padding-bottom:70px}.promo-note{color:#526854;font-size:13px}.battle-layer{padding-bottom:55px!important}</style></head>
+<body class="haqi-app">
+  <main id="game" aria-label="魔法哈奇冒险">
+    <canvas id="world" aria-label="魔法世界，点击地面移动，点击居民交谈" tabindex="0"></canvas>
+    <div id="hud"></div>
+    <div id="battle-layer"></div>
+    <div id="overlay"></div>
+    <div id="entry"><section id="boot-loading" class="boot-loading" aria-busy="true" hidden>
+      <svg class="boot-emblem" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="35" fill="none" stroke="currentColor" opacity=".3"/><circle cx="40" cy="40" r="29" fill="none" stroke="currentColor" opacity=".5"/><path d="M40 13 47 33 67 40 47 47 40 67 33 47 13 40 33 33Z" fill="currentColor"/><path d="m40 29 11 11-11 11-11-11Z" fill="#315952"/></svg>
+      <h1 id="load-title"></h1><p id="load-caption" class="boot-caption"></p>
+      <p id="load-status" class="boot-status" role="status"></p>
+      <progress id="load-progress" max="1"></progress>
+      <p id="load-detail" class="boot-detail"></p>
+    </section></div>
+    <div id="toast" role="status" aria-live="polite"></div>
+  </main>
+  <noscript>请开启 JavaScript 后开始冒险。</noscript>
+  <script type="module" src="js/promo_stage.js"></script>
+</body>
+</html>

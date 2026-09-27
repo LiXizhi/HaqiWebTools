@@ -3,15 +3,43 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import vm from 'node:vm';
 import { spawn } from 'node:child_process';
-import { syncMaisiRelease } from '../scripts/sync_maisi_release.mjs';
+import { syncMaisiRelease, syncAppsRelease } from '../scripts/sync_keepwork_apps_release.mjs';
+
+test('verified release awaits apps publication before Maisi and stops if apps fails', async () => {
+    const source = fs.readFileSync(new URL('../uploadRelease.mjs', import.meta.url), 'utf8');
+    const block = source.slice(source.lastIndexOf('if (manifest.verified) {'));
+    for (const failApps of [false, true]) {
+        const calls = [];
+        const result = vm.runInNewContext(`(async () => {${block}})()`, {
+            manifest: { verified: true }, root: '', release: '', pages: [],
+            console: { log() {} },
+            syncAppsRelease: async () => {
+                calls.push('apps-start');
+                await Promise.resolve();
+                if (failApps) throw new Error('apps failed');
+                calls.push('apps-done');
+                return 'apps';
+            },
+            syncMaisiRelease: () => { calls.push('maisi'); return 'maisi'; },
+        });
+        if (failApps) {
+            await assert.rejects(result, /apps failed/);
+            assert.deepEqual(calls, ['apps-start']);
+        } else {
+            await result;
+            assert.deepEqual(calls, ['apps-start', 'apps-done', 'maisi']);
+        }
+    }
+});
 
 test('release hashes all runtime data, is repeatable, and distinguishes previews from verified releases', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-release-'));
     try {
         fs.copyFileSync(new URL('../uploadRelease.mjs', import.meta.url), path.join(root, 'uploadRelease.mjs'));
         fs.mkdirSync(path.join(root, 'scripts'));
-        fs.copyFileSync(new URL('../scripts/sync_maisi_release.mjs', import.meta.url), path.join(root, 'scripts/sync_maisi_release.mjs'));
+        fs.copyFileSync(new URL('../scripts/sync_keepwork_apps_release.mjs', import.meta.url), path.join(root, 'scripts/sync_keepwork_apps_release.mjs'));
         fs.mkdirSync(path.join(root, 'dist/data'), { recursive: true });
         for (const page of ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite']) {
             fs.writeFileSync(path.join(root, `dist/${page}.html`), '<html><head></head><body></body></html>');
@@ -58,7 +86,7 @@ test('release hashes all runtime data, is repeatable, and distinguishes previews
     }
 });
 
-test('verified release copies only its entry wrappers into a sibling Maisi checkout', () => {
+test('verified release copies only its entry wrappers into sibling Maisi and apps checkouts', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-maisi-sync-'));
     try {
         const projectRoot = path.join(root, 'ParaEngine/paraworld/web/HaqiCombatSim');
@@ -80,10 +108,23 @@ test('verified release copies only its entry wrappers into a sibling Maisi check
         fs.writeFileSync(path.join(game, 'release/Haqi_v1.html'), 'old version');
         const destination = syncMaisiRelease(options);
         assert.equal(destination, path.join(game, 'release'));
+        assert.equal(fs.readFileSync(path.join(destination, 'HaqiOfficialWebsite.html'), 'utf8'), 'new HaqiOfficialWebsite release');
         for (const page of pages) assert.equal(fs.readFileSync(path.join(destination, `${page}_v1.html`), 'utf8'), `new ${page} release`);
         assert.equal(fs.existsSync(path.join(destination, 'Haqi_preview.html')), false);
         assert.equal(fs.readFileSync(path.join(destination, 'MagicHaqi_v1.html'), 'utf8'), 'existing game');
         assert.equal(syncMaisiRelease({ ...options, projectRoot: path.join(root, 'unrelated/deep/project'), configuredRoot: repo }), destination);
+        assert.equal(await syncAppsRelease(options), null);
+        const apps = path.join(root, 'apps');
+        const appsGame = path.join(apps, 'official/apps/MagicHaqi');
+        fs.mkdirSync(path.join(apps, '.git'), { recursive: true });
+        fs.mkdirSync(appsGame, { recursive: true });
+        fs.writeFileSync(path.join(appsGame, 'MagicHaqi.html'), '<html></html>');
+        assert.equal(await syncAppsRelease({ ...options, verified: false }), null);
+        assert.equal(await syncAppsRelease(options), path.join(appsGame, 'release'));
+        assert.equal(fs.readFileSync(path.join(appsGame, 'release/HaqiOfficialWebsite.html'), 'utf8'), 'new HaqiOfficialWebsite release');
+        for (const page of pages) assert.equal(fs.readFileSync(path.join(appsGame, `release/${page}_v1.html`), 'utf8'), `new ${page} release`);
+        assert.equal(fs.existsSync(path.join(appsGame, 'release/Haqi_preview.html')), false);
+        assert.equal(await syncAppsRelease({ ...options, projectRoot: path.join(root, 'unrelated/deep/project'), configuredRoot: apps }), path.join(appsGame, 'release'));
     } finally {
         assert.ok(path.resolve(root).startsWith(path.resolve(os.tmpdir()) + path.sep));
         fs.rmSync(root, { recursive: true, force: true });

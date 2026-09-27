@@ -19,5 +19,6 @@ ios/DerivedData/
 .cache/
 .trash/
 .tmp-diag/
+/tmp/
 
 *.log

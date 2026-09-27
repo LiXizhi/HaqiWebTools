@@ -5,11 +5,12 @@ import { packageRuntimeData } from './scripts/package_runtime_data.mjs';
 import { prepareDungeonFiles } from './scripts/package_dungeons.mjs';
 import { localePackageFiles } from './scripts/package_locale.mjs';
 import path from 'node:path';
+import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
-const entries = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite'];
+const entries = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite', 'HaqiPromo', 'HaqiPromoStage'];
 
 export default defineConfig(({ command }) => {
     // H5 publishes dist/ with CDN art URLs. Store shells use app-dist/ and bake local mode.
@@ -50,6 +51,7 @@ export default defineConfig(({ command }) => {
                 prepareMonsterArt(root);
             },
             generateBundle() {
+                this.emitFile({type:'asset',fileName:'data/promo/film.json',source:fs.readFileSync(path.join(root,'data/promo/film.json'),'utf8')});
                 this.emitFile({type: 'asset', fileName: 'data/official-website.json', source: officialPayload});
                 this.emitFile({
                     type: 'asset',

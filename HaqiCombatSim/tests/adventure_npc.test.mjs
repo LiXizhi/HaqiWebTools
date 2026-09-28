@@ -38,8 +38,8 @@ test('real material exchanges grant permanent hats and eggs with limits and runt
             save.inventory[costId]=count;
             assert.equal(npcOfferStatus(save,content,offer).allowed,true);
             applyAction(save,content,action(resident,offer));
-            assert.equal(save.inventory[costId],0);assert.equal(save.inventory[itemId],1);
-            assert.equal(parseSave(JSON.stringify(save),content).inventory[itemId],1);
+            assert.equal(save.inventory[costId],0);assert.equal(save.inventory[itemId],itemId===17307?0:1);if(itemId===17307)assert.ok(save.pet&&Object.values(save.pets).some(p=>p.speciesId==='legacy_gululu'));
+            assert.equal(parseSave(JSON.stringify(save),content).inventory[itemId],itemId===17307?0:1);
             if(itemId!==17307){
                 assert.ok(save.equipmentInstances.some(row=>row.gsid===itemId));
                 save.inventory[costId]=count;
@@ -104,8 +104,8 @@ test('original fisherman magic-bean prices and veteran ownership conditions work
             const save=createAdventure(content);save.zone=resident.zone;save.inventory[984]=price;
             assert.equal(npcOfferStatus(save,content,offer).allowed,true);
             applyAction(save,content,action(resident,offer));
-            assert.equal(save.inventory[984],0);assert.equal(save.inventory[itemId],1);
-            assert.equal(parseSave(JSON.stringify(save),content).inventory[itemId],1);
+            assert.equal(save.inventory[984],0);assert.equal(save.inventory[itemId],itemId===17307?0:1);if(itemId===17307)assert.ok(save.pet&&Object.values(save.pets).some(p=>p.speciesId==='legacy_gululu'));
+            assert.equal(parseSave(JSON.stringify(save),content).inventory[itemId],itemId===17307?0:1);
             assert.throws(()=>applyAction(save,content,action(resident,offer)),/需要/);
         }
         const resident=npc(30550),offer=npcOffers(content,resident).find(row=>row.itemId===2234);

@@ -269,8 +269,11 @@ export function catalogStatSnapshot(save, content) {
 }
 function syncGoals(save,content) {
     if (save.equipment[11] === 1912) signal(save,content,'action','equip-staff');
-    if (save.pet) signal(save,content,'action','hatch-pet');
-    if (save.pet?.xp > 0) signal(save,content,'action',79019);
+    if (content.pets ? ownedPetSpecies(save).includes('legacy_gululu') : save.pet) signal(save,content,'action','hatch-pet');
+    if (save.tips.petFed || (!content.pets && save.pet?.xp > 0)) {
+        const q=currentQuest(save,content);
+        if(q&&save.quests[q.id]?.accepted)for(const goal of q.goals)if(goal.kind==='action'&&Number(goal.id)===79019)save.quests[q.id].progress['action:79019']=goal.count;
+    }
     if (save.equipment[24] === 24003 && save.tips.deckEditedWithBag) signal(save,content,'action',79037);
 }
 // CombatPetProvider.lua GetLevelInfo L749–780: XML max_level is zero-based.
@@ -324,7 +327,23 @@ function offsetBeside(player,target,spawn){
     if(len<8){dx=spawn.x-target.x;dy=spawn.y-target.y;len=Math.hypot(dx,dy)||1;}
     return {x:target.x+dx/len*120,y:target.y+dy/len*120};
 }
+function grantEggCompanion(save,content){
+    if(!content.pets||save.pendingEncounter||save.pet||!owns(save,17307))return;
+    save.inventory[17307]--;save.inventory[content.pet.itemId]=1;
+    save.pet={itemId:content.pet.itemId,name:content.pet.name,xp:0,level:0};
+    Pets.addPet(save,content,'legacy_gululu');
+}
 export function applyAction(save, content, action, access={}) {
+    const before={...save.inventory};
+    const result=applyAdventureAction(save,content,action,access);
+    if(result.changed){
+        grantEggCompanion(save,content);
+        if(action.type!=='pet-food-take')Pets.autoStockPetFood(save,content,before);
+        syncGoals(save,content);
+    }
+    return result;
+}
+function applyAdventureAction(save, content, action, access={}) {
     assert(!action.paidByTest, '语言课程仅发放限额奖励，请使用货币购买');
     assert(!save.pendingEncounter || ['settle-encounter','retreat','language-complete'].includes(action.type), '请先完成当前战斗');
     if(content.pets&&Pets.petAction(save,content,action,access)){syncEquipmentInstances(save,content);save.revision++;return {changed:true};}
@@ -701,6 +720,7 @@ export function parseSave(raw,content) {
     migrateDefaultPocket(s,content);
     syncDeckLayouts(s,content);
     migrateQuestPetRewards(s,content,rewardsFor);
+    grantEggCompanion(s,content);
     syncEquipmentInstances(s,content);
     return s;
 }

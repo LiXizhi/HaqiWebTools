@@ -34,6 +34,8 @@ import { createSignpostPainter } from './adventure_signposts.js';
 import { paintLargeTerrain,createTerrainTileCache } from './adventure_large_terrain.js';
 export const COLORS={fire:'#e98f44',ice:'#6ecbdc',storm:'#b39aea',life:'#84bd59',death:'#a887c7'};
 const TAU=Math.PI*2;
+// Battle heroes share a 90px nominal height, close to the 99px monster frame.
+const BATTLE_HERO_SCALE=90/78;
 function ellipse(c,x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,TAU);c.fill();}
 function text(c,value,x,y,size=13,color='#fff',align='center') {const shown=tr(value);c.font=`600 ${size}px "PingFang SC", "Microsoft YaHei", sans-serif`;c.textAlign=align;c.fillStyle=color;c.fillText(shown,x,y);}
 // Soft scene palette restored by user preference (2026-09-27).
@@ -403,8 +405,8 @@ export function createRenderer(canvas,assets) {
             const unit=battle.unitsById[id],petUnit=id!=='hero'&&!unit.isMob&&!save.coopRun?.members.some(m=>m.unit.id===id);
             const pose=petUnit&&hp<=0?{action:'idle',progress:0}:hp>0&&hit?{action:'hit',progress:hit.progress}:battleActorAction(id,hp,ev,p);
             drawAnimatedActor(c,positions[id],pose.action,pose.progress,id==='hero'?1:-1,reducedMotion.matches,()=>{
-                if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,.70,false,updateHeroActor(battleHero,{time:t,facing:2,reducedMotion:reducedMotion.matches}));const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if(support&&assets.content.pets[support.speciesId]?.art)(()=>{c.save();c.translate(36,0);drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,48,column=>assets.drawPet(c,support.speciesId,petAppearanceStage(support,assets.content),-24,-48,48,48,column));c.restore();})();}
-                else if(save.coopRun?.members.some(m=>m.unit.id===id)){const p=save.coopRun.members.find(m=>m.unit.id===id).profile;avatar(c,{...p,mountId:null,facing:2},0,0,t,false,.7,false);}
+                if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,BATTLE_HERO_SCALE,false,updateHeroActor(battleHero,{time:t,facing:2,reducedMotion:reducedMotion.matches}));const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if(support&&assets.content.pets[support.speciesId]?.art)(()=>{c.save();c.translate(36,0);drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,48,column=>assets.drawPet(c,support.speciesId,petAppearanceStage(support,assets.content),-24,-48,48,48,column));c.restore();})();}
+                else if(save.coopRun?.members.some(m=>m.unit.id===id)){const p=save.coopRun.members.find(m=>m.unit.id===id).profile;avatar(c,{...p,mountId:null,facing:2},0,0,t,false,BATTLE_HERO_SCALE,false);}
                 else {const unit=battle.unitsById[id],species=unit.speciesId||unit.template?.speciesId;if(unit.isMob)monster(c,unit.template,0,0,t,.95);else if(species&&assets.content.pets[species]?.art)drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,84,column=>assets.drawPet(c,species,petAppearanceStage(save.pets?.[unit.id]||save.pets?.[species]||unit,assets.content),-42,-84,84,84,column));else creature(c,unit.isMob?unit.template.id:'pet',0,0,t,.85);}
             });
         }

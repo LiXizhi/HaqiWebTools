@@ -15,7 +15,7 @@ import {renderDungeons} from './view_adventure_dungeons.js';
 import {enterDungeon} from './adventure_dungeons_core.js';
 import {createLearningChatView} from './view_learning_chat.js';
 import {createJsonReader} from './runtime_data.js';
-import {samplePromoMotion} from './promo_motion_core.js';
+import {samplePromoMotion,planPromoPath,samplePromoZoom} from './promo_motion_core.js';
 import {presentationEventDurationMs,samplePresentationClock} from './battle_presentation_core.js';
 
 const $=id=>document.getElementById(id), noop=()=>{};
@@ -23,13 +23,13 @@ const nodes={entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer')};
 const callbacks=new Proxy({close:noop},{get:(target,key)=>target[key]||noop});
 let assets,renderer,preview,save,world,shot,draft,learning,chatState,social,dungeon;
 let frames=[],battleStart=0,lastBattleFrame=-1,path=[],origin,paused=true,previewPaused=false;
-let checks=[];
+let checks=[],shownZoom=1;
 function check(ok,message){if(!ok)throw Error(message);checks.push(message);}
 function model(battle=null){return {assets,save,battle,selected:null,discarded:[],animating:false,membership:{},equipmentView:{tab:'gear',slot:0,item:null,query:''},petView:{tab:'follow',selected:null},shopView:{category:'pet',page:0,query:''},displayLocale:'zh-CN',social:null};}
 function clear(){preview.stop();previewPaused=false;learning.close();for(const node of Object.values(nodes)){node.disposeDialogue?.();node.disposeHandGesture?.();node.disposeStatusTooltips?.();node.battleLayoutObserver?.disconnect();node.replaceChildren();node.className='';}nodes.entry.hidden=true;}
-async function scene(){world=W.createWorld(save.zone,assets.content,save);if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};origin={...save.position};await assets.warmScenery(world);const target=world.npcs.find(n=>W.findPath(world,origin,n).length>2);path=target?W.findPath(world,origin,target):[];check(!!world.layout,`地图可渲染：${save.zone}`);}
-function creation(step=1,school='fire'){
-    preview.stop();previewPaused=false;nodes.entry.hidden=false;draft={name:'小星',appearance:'girl',starter:'dragon_green',step,school};
+async function scene(){world=W.createWorld(save.zone,assets.content,save);if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};save.position=W.clearTeleportSpot(world,save.position.x,save.position.y,world.encounters,120)||save.position;origin={...save.position};await assets.warmScenery(world);path=['world','island'].includes(shot.scene)?planPromoPath(world,origin):[];check(!!world.layout,`地图可渲染：${save.zone}`);}
+function creation(step=1,school='fire',changes={}){
+    preview.stop();previewPaused=false;nodes.entry.hidden=false;draft={name:'小星',appearance:'girl',starter:'dragon_green',...draft,...changes,step,school};
     V.renderEntry(nodes.entry,assets,null,{...callbacks,draft,previewChoices:s=>tutorialCards(assets,s),preview:(...args)=>preview.play(...args),stopPreview:()=>preview.stop(),pausePreview:()=>preview.togglePause()});
     check(!!nodes.entry.querySelector('form'),'角色创建表单已显示');
 }
@@ -63,11 +63,15 @@ function filmBattle(id,start=0){
     remember(null);battleStart=start;lastBattleFrame=-1;
 }
 async function prepare(next,seed){
-    clear();shot=next;checks=[];frames=[];path=[];lastBattleFrame=-1;
+    clear();shot=next;checks=[];frames=[];path=[];draft=null;lastBattleFrame=-1;
     save=A.createAdventure(assets.content,{name:'小星',appearance:'girl',seed});
     if(!['create','account','skills','world','learning','battle'].includes(shot.scene))save=prepareDebugEdit(save,assets.content,{level:15}).save;
     if(shot.zone)A.applyAction(save,assets.content,{type:'travel',zone:shot.zone});
     await scene();
+    if(shot.scene==='create')await Promise.all(shot.cues.flatMap(cue=>['boy','girl'].flatMap(appearance=>{
+        const bodyId=cue.look?.bodyChoices?.[appearance],headId=cue.look?.headChoices?.[appearance];
+        return bodyId?[assets.hero.ensure({gender:appearance==='girl'?'female':'male',bodyId,headId})]:[];
+    })));
     switch(shot.scene){
         case 'world':case 'island':break;
         case 'create':creation();break;
@@ -87,7 +91,7 @@ async function prepare(next,seed){
 }
 async function action(cue){
     switch(cue.action){
-        case 'creation':creation(cue.step);break;
+        case 'creation':creation(cue.step,'fire',cue.look||{});break;
         case 'school':creation(3,cue.school);check(tutorialCards(assets,cue.school).length>0,`${cue.school} 技能可预览`);break;
         case 'save-deck':A.applyAction(save,assets.content,{type:'deck',deck:save.deck.map(c=>({...c}))});panel('deck');check(save.tips.deckEdited,'卡包通过规则校验并保存至演示内存');break;
         case 'friend-accept':social.applies=[];social.friends=[{name:'小月（演示伙伴）',userId:'promo-friend'}];friends();check(nodes.overlay.textContent.includes('邀请组队'),'好友列表视图切换（未发送好友请求）');break;
@@ -106,6 +110,8 @@ async function warmArt(){
 }
 function tick(elapsed){
     if(!renderer||!save)return;
+    const zoom=samplePromoZoom(elapsed,shot.duration,shot.camera?.zoomIn||0,matchMedia('(prefers-reduced-motion: reduce)').matches);
+    shownZoom=renderer.zoomBy(zoom/shownZoom);
     if(path.length&&!frames.length&&['world','island'].includes(shot.scene)){
         const moved=samplePromoMotion(world,origin,path,elapsed,{mountId:save.mountId,balanceParams:assets.content.balanceParams});
         save.position=moved.position;save.facing=moved.facing;

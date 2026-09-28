@@ -47,10 +47,11 @@ test('visible hero support pet can speak, but a missing pet or fallen hero canno
 });
 import {createBattlePetHint} from '../js/view_battle_pet_hint.js';
 test('pet speech is passive plain text, suppressed while choosing or muted',()=>{
- const el=(tag,className,...children)=>({tag,className,children,setAttribute(){}});
+ const el=(tag,className,...children)=>({tag,className,children,style:{setProperty(name,value){this[name]=value;}},setAttribute(){}});
  const hero={id:'hero',side:'near',hp:100,school:'fire',pips:{normal:1,power:0},cooldowns:{},deckSeq:['hit'],deckMap:[1]},enemy={id:'enemy',side:'far',hp:100,name:'侦察兵'};
  const model={assets:{dataset:{cards:{hit:{name:'烈火魔光'}}}},battle:{resolved:{version:'kids',cards:{hit:{type:'SingleAttack',spellSchool:'fire',pipcost:0,spellName:'hit'}}},unitsById:{hero,enemy},sides:{near:[hero],far:[enemy]}},aiHint:{action:{seq:0,key:'hit',targetId:'enemy'}}};
  let dismissed=0;const bubble=createBattlePetHint(model,{el,onDismiss:()=>dismissed++});
+ assert.equal(bubble.style['--pet-hint-tail'],'14px');
  bubble.onclick({stopPropagation(){}});assert.equal(dismissed,1);assert.equal(bubble.hidden,true);assert.equal(bubble.hintDismissed,true);
  assert.deepEqual(bubble.children.map(child=>child.tag),['p']);
  const message=m=>createBattlePetHint(m,{el})?.children[0].children[0];
@@ -72,6 +73,23 @@ test('pet speech is passive plain text, suppressed while choosing or muted',()=>
  assert.equal(createBattlePetHint({...model,aiHint:{action:{pass:true}}},{el}).children[0].children[0],'先攒点魔力，等机会再出手。');
 });
 import {updateBattlePetHint} from '../js/view_battle_pet_hint.js';
+test('pet tail stays at the pet while enemy speech appears and disappears on mobile and desktop',()=>{
+ for(const width of [390,1280]){
+  const bubble={style:{setProperty(name,value){this[name]=value;}},dataset:{},offsetWidth:230,offsetHeight:56};
+  const enemy={hidden:false,style:{left:'300px',top:'135px'},offsetWidth:76,offsetHeight:40};
+  const root={battlePetHint:bubble,clientWidth:width,clientHeight:500,querySelectorAll:()=>[enemy]};
+  const battle={sides:{near:[{id:'hero',hp:100}]}};
+  const canvas={clientHeight:300,offsetLeft:0,offsetTop:0,battlePositions:{hero:{x:86,y:280}}};
+  const save={heroSlot:0,formation:['pet'],pets:{pet:{id:'pet'}}},content={pets:{pet:{art:{}}}};
+  for(const hidden of [false,true,false]){
+   enemy.hidden=hidden;updateBattlePetHint(root,battle,save,content,canvas);
+   assert.equal(bubble.hidden,false);
+   const tail=parseFloat(bubble.style['--pet-hint-tail']);
+   assert.equal(tail,Math.max(14,Math.min(216,122-parseFloat(bubble.style.left))));
+   assert.notEqual(tail,115);
+  }
+ }
+});
 test('balloon grows right of support pet and a dismissed balloon stays hidden across frames',()=>{
  const bubble={style:{setProperty(name,value){this[name]=value;}},dataset:{},offsetWidth:180,offsetHeight:50};
  const root={battlePetHint:bubble,clientWidth:390};

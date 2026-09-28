@@ -1158,6 +1158,12 @@
     "sprites": {
       "local": "assets/adventure/webp/sprites.webp",
       "sha256": "d60a6e029b8323d114a0a0211826c69ece0110fa44f2f7bf85373393eddd1b51",
+      "frames": {
+        "0": [0, 0, 176, 164],
+        "1": [176, 0, 145, 164],
+        "2": [321, 0, 160, 166],
+        "3": [481, 0, 161, 166]
+      },
       "size": 184046,
       "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/v1/d60a6e029b8323d114a0a0211826c69ece0110fa44f2f7bf85373393eddd1b51.webp",
       "optional": false,

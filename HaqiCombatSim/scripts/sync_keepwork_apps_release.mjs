@@ -38,6 +38,35 @@ function copyRelease(releaseDir, destination, pages) {
     return destination;
 }
 
+export function prepareAppsRelease(repo, { localTest = false } = {}) {
+    const git = args => execFileSync('git', args, { cwd: repo, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+    if (git(['branch', '--show-current']) !== 'master') throw new Error('apps 必须在 master 分支发布。');
+    if (git(['status', '--porcelain'])) throw new Error('apps 存在未提交修改，请先处理后再发布。');
+    const expected = { origin: 'https://code.kp-para.cn/paracraft/apps', keepwork: 'https://git.keepwork.com/official/apps' };
+    for (const [remote, url] of Object.entries(expected)) {
+        for (const flags of [[], ['--push']]) {
+            const actual = git(['remote', 'get-url', ...flags, '--all', remote]);
+            if (!localTest && actual.replace(/\.git\/?$/, '').replace(/\/$/, '') !== url) throw new Error(`Unexpected ${remote} URL; configure it to ${url}.`);
+        }
+    }
+    if (git(['rev-parse', '--is-shallow-repository']) === 'true') throw new Error('apps 发布需要完整 Git 历史。');
+    git(['fetch', '--no-tags', 'origin', 'refs/heads/master']);
+    const upstream = git(['rev-parse', 'FETCH_HEAD']);
+    try {
+        git(['merge-base', '--is-ancestor', upstream, 'HEAD']);
+    } catch (error) {
+        if (error.status !== 1) throw error;
+        try {
+            git(['merge-base', '--is-ancestor', 'HEAD', upstream]);
+        } catch (ancestryError) {
+            if (ancestryError.status !== 1) throw ancestryError;
+            throw new Error('apps/master 与 origin/master 已分叉，请人工合并后重试；未复制发布文件，未推送。');
+        }
+        git(['merge', '--ff-only', upstream]);
+        console.log(`apps/master 已快进至 ${upstream}`);
+    }
+}
+
 export async function syncAppsRelease({ projectRoot, releaseDir, pages, verified, configuredRoot = process.env.APPS_ROOT, publish = false }) {
     if (!verified) return null;
     const candidates = maisiCandidates(projectRoot, '').map(candidate => path.join(path.dirname(candidate), 'apps'));
@@ -51,8 +80,7 @@ export async function syncAppsRelease({ projectRoot, releaseDir, pages, verified
     const git = args => execFileSync('git', args, { cwd: repo, encoding: 'utf8' }).trim();
     let publisher;
     if (publish) {
-        if (git(['branch', '--show-current']) !== 'master') throw new Error('apps 必须在 master 分支发布。');
-        if (git(['status', '--porcelain'])) throw new Error('apps 存在未提交修改，请先处理后再发布。');
+        prepareAppsRelease(repo);
         publisher = await import(pathToFileURL(path.join(repo, '.github/skills/publish-repo/scripts/publish-repo.mjs')).href);
         publisher.publishRepo(repo, { publish: false, compatibility: { files: [] } });
     }

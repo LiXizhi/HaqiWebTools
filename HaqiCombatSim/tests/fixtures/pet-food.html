@@ -16,6 +16,7 @@ try {
  save.inventory[990001]=20;save.inventory[17172]=8;save.inventory[17185]=3;save.inventory[17211]=2;save.inventory[100]=5000;
  if(!params.has('empty'))for(const item of Object.values(assets.content.items).filter(item=>assets.content.mountByItem?.[item.id]).slice(0,8))save.inventory[item.id]=1;
  if(params.has('battle'))save.pendingEncounter={id:'fixture-battle'};
+ if(params.has('hungry'))save.pets[save.formation[0]].hunger=5;
  let panel='pet';
  const model={assets,save,shopView:{category:'supply'},petView:{tab:params.get('tab')||'follow'}};
  const root=document.querySelector('#root');

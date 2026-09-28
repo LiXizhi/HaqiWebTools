@@ -20,6 +20,8 @@
 
 ## 运行与重新导出
 
+`npm run build` 与 `npm run build:app` 会先生成六岛地图，再执行严格一致性及遭遇配置检查；`upload` 和各平台构建沿用此流程。地图源数据或生成算法变化后无需手动补跑 `generate:maps`。单独的 `npm run check:maps` 仍是只读检查。生成器按 JSON 字段更新章节索引，不要求 `worldMapIndex` 位于最后；索引未变化时不重写章节文件。
+
 ```bash
 cd web/HaqiCombatSim
 python3 -m http.server 8791 --bind 127.0.0.1

@@ -3,7 +3,20 @@ const $=id=>document.getElementById(id),query=new URLSearchParams(location.searc
 let loaded=false;
 let script,film,stage,time=0,index=-1,cueIndex=0,playing=false,busy=true,checking=false,last=0;
 let report={version:1,status:'未运行',results:[],excluded:['真实账号登录注册','云端存储','真实好友请求与通信','AI 与语音服务','支付','剧本外游戏功能']};
-new ResizeObserver(entries=>{const width=entries[0].contentRect.width;$('stage').style.transform=`scale(${width/1280})`;}).observe(document.querySelector('.screen'));
+// Fixed logical viewports also exercise the real phone layout, rather than
+// squeezing a desktop interface into a portrait crop.
+const formats={wide:{width:1600,height:900},classic:{width:1200,height:900},phone:{width:390,height:693.3333333333}};
+function resizeScreen(){
+    const {width,height}=formats[$('format').value],cinema=$('cinema'),screen=document.querySelector('.screen'),frame=$('stage');
+    const scale=Math.min(cinema.clientWidth/width,cinema.clientHeight/height);
+    if(!scale)return;
+    screen.dataset.format=$('format').value;
+    screen.style.width=`${width*scale}px`;screen.style.height=`${height*scale}px`;
+    frame.style.width=`${width}px`;frame.style.height=`${height}px`;frame.style.transform=`scale(${scale})`;
+    if(loaded&&!busy)stage.tick(locateShot(film,time).elapsed);
+}
+new ResizeObserver(resizeScreen).observe($('cinema'));
+$('format').onchange=resizeScreen;
 const language=()=>$('language').value,clock=n=>`${String(Math.floor(n/60)).padStart(2,'0')}:${String(Math.floor(n%60)).padStart(2,'0')}`;
 function download(name,text,type){const url=URL.createObjectURL(new Blob([text],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 function controls(){for(const id of ['play','restart','check','seek','edition','chapters']){const node=$(id);if(id==='chapters')for(const b of node.children)b.disabled=!loaded||busy||checking;else node.disabled=!loaded||busy||checking;}$('play').textContent=playing?'暂停':'播放';stage?.setPaused(!playing||busy);}

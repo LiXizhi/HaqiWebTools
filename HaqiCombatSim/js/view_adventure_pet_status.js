@@ -20,6 +20,7 @@ export function createPetStatus(pet,content,el) {
 }
 
 export function updatePetStatus(root,save,content) {
+ for(const node of root.querySelectorAll('.pet-food-station'))node.refresh?.();
  for(const node of root.querySelectorAll('[data-pet-status]')){
   const pet=save.pets[node.dataset.petStatus]||Object.values(save.pets).find(p=>p.id===node.dataset.petStatus);if(pet)fillStatus(node,pet,content);
  }

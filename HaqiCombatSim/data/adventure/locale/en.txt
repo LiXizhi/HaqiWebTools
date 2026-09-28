@@ -1,4 +1,11 @@
 # js/adventure_app.js
+删除当前角色||Delete current character
+确定删除当前角色吗？||Delete the current character?
+删除后无法撤销；云端角色的删除也会同步到账号。||Deletion cannot be undone. Cloud character deletion will also sync to your account.
+当前无法删除角色，请结束战斗或处理云端同步后重试。||Cannot delete now. Finish the battle or resolve cloud synchronization and try again.
+正在删除角色…||Deleting character...
+角色已删除。||Character deleted.
+角色已从本机删除，云端删除尚未同步，请在角色列表重试同步。||Character deleted locally. Cloud deletion is still pending; retry synchronization from the character list.
 本地存档失败，云端同步已暂停||Local save failed; cloud sync paused.
 正在自动保存…||Auto-saving…
 云存档暂未完成，本地进度已保留，将自动重试。||Cloud save not finished yet; local progress is kept and will retry automatically.
@@ -5966,3 +5973,8 @@ VIP 到期日：{date}（北京时间）||VIP expires: {date} (Beijing time)
 离线角色暂时无法使用大模型。登录后会自动将当前本地角色转为云端角色，保留冒险进度。||AI chat requires a KeepWork account. Sign in to automatically save this local character to the cloud and keep your adventure progress.
 登录并转为云端角色||Sign in and save character to cloud
 登录后可使用 AI 对话||Sign in to use AI chat
+
+伙伴饿了，点击喂养||Your companion is hungry. Tap to feed.
+获得出奇蛋中的伙伴||Receive the companion from the Surprise Egg
+获得出奇蛋中的伙伴，再与杰西卡交谈。||Receive your companion from the Surprise Egg, then talk to Jessica.
+让任意伙伴实际吃一份口粮，手动喂养或自动进食均可。||Have any companion eat one ration, manually or automatically.

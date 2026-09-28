@@ -1023,13 +1023,6 @@
       "snow": false
     },
     {
-      "x": 445,
-      "y": 1222,
-      "tile": 0,
-      "size": 140,
-      "snow": false
-    },
-    {
       "x": 1508,
       "y": 507,
       "tile": 0,
@@ -1128,13 +1121,6 @@
       "snow": false
     },
     {
-      "x": 1497,
-      "y": 947,
-      "tile": 1,
-      "size": 145,
-      "snow": false
-    },
-    {
       "x": 1588,
       "y": 590,
       "tile": 1,
@@ -1163,24 +1149,10 @@
       "snow": false
     },
     {
-      "x": 1307,
-      "y": 927,
-      "tile": 0,
-      "size": 144,
-      "snow": false
-    },
-    {
       "x": 926,
       "y": 275,
       "tile": 0,
       "size": 169,
-      "snow": false
-    },
-    {
-      "x": 1166,
-      "y": 1089,
-      "tile": 2,
-      "size": 162,
       "snow": false
     },
     {
@@ -1212,10 +1184,10 @@
       "snow": false
     },
     {
-      "x": 1087,
-      "y": 1038,
-      "tile": 0,
-      "size": 152,
+      "x": 370,
+      "y": 591,
+      "tile": 2,
+      "size": 112,
       "snow": false
     },
     {
@@ -1226,31 +1198,10 @@
       "snow": false
     },
     {
-      "x": 1309,
-      "y": 1037,
-      "tile": 0,
-      "size": 111,
-      "snow": false
-    },
-    {
-      "x": 373,
-      "y": 609,
-      "tile": 2,
-      "size": 153,
-      "snow": false
-    },
-    {
       "x": 960,
       "y": 245,
       "tile": 1,
       "size": 153,
-      "snow": false
-    },
-    {
-      "x": 305,
-      "y": 445,
-      "tile": 0,
-      "size": 135,
       "snow": false
     },
     {
@@ -1265,20 +1216,6 @@
       "y": 1097,
       "tile": 0,
       "size": 147,
-      "snow": false
-    },
-    {
-      "x": 369,
-      "y": 986,
-      "tile": 2,
-      "size": 153,
-      "snow": false
-    },
-    {
-      "x": 1322,
-      "y": 986,
-      "tile": 0,
-      "size": 124,
       "snow": false
     }
   ],
@@ -1660,142 +1597,130 @@
   ],
   "details": [
     {
-      "x": 1524,
-      "y": 821,
-      "biome": "forest",
-      "size": 8
-    },
-    {
-      "x": 915,
-      "y": 641,
+      "x": 342,
+      "y": 610,
       "biome": "town",
       "size": 12
     },
     {
-      "x": 944,
-      "y": 849,
-      "biome": "town",
-      "size": 5
-    },
-    {
-      "x": 982,
-      "y": 191,
-      "biome": "forest",
-      "size": 10
-    },
-    {
-      "x": 544,
-      "y": 685,
+      "x": 924,
+      "y": 857,
       "biome": "town",
       "size": 6
     },
     {
-      "x": 1532,
-      "y": 715,
+      "x": 955,
+      "y": 183,
       "biome": "forest",
-      "size": 11
+      "size": 8
     },
     {
-      "x": 1447,
-      "y": 596,
+      "x": 1488,
+      "y": 646,
       "biome": "forest",
-      "size": 11
+      "size": 10
     },
     {
-      "x": 1388,
-      "y": 341,
-      "biome": "forest",
-      "size": 5
-    },
-    {
-      "x": 438,
-      "y": 1158,
+      "x": 1366,
+      "y": 1075,
       "biome": "town",
-      "size": 5
+      "size": 6
     },
     {
-      "x": 1122,
-      "y": 1118,
+      "x": 590,
+      "y": 1194,
+      "biome": "town",
+      "size": 11
+    },
+    {
+      "x": 804,
+      "y": 1256,
+      "biome": "town",
+      "size": 4
+    },
+    {
+      "x": 1501,
+      "y": 668,
+      "biome": "forest",
+      "size": 9
+    },
+    {
+      "x": 671,
+      "y": 1302,
       "biome": "town",
       "size": 10
     },
     {
-      "x": 512,
+      "x": 1303,
+      "y": 340,
+      "biome": "forest",
+      "size": 9
+    },
+    {
+      "x": 955,
+      "y": 1079,
+      "biome": "town",
+      "size": 4
+    },
+    {
+      "x": 720,
+      "y": 1367,
+      "biome": "town",
+      "size": 6
+    },
+    {
+      "x": 571,
+      "y": 305,
+      "biome": "town",
+      "size": 8
+    },
+    {
+      "x": 1137,
+      "y": 556,
+      "biome": "forest",
+      "size": 12
+    },
+    {
+      "x": 299,
       "y": 508,
       "biome": "town",
-      "size": 5
+      "size": 9
     },
     {
-      "x": 907,
-      "y": 487,
+      "x": 782,
+      "y": 1210,
       "biome": "town",
-      "size": 8
+      "size": 9
     },
     {
-      "x": 536,
-      "y": 534,
+      "x": 430,
+      "y": 747,
       "biome": "town",
       "size": 6
     },
     {
-      "x": 1099,
-      "y": 1011,
-      "biome": "town",
-      "size": 7
-    },
-    {
-      "x": 680,
-      "y": 1304,
-      "biome": "town",
-      "size": 12
-    },
-    {
-      "x": 1353,
-      "y": 309,
+      "x": 1468,
+      "y": 813,
       "biome": "forest",
-      "size": 12
+      "size": 6
     },
     {
-      "x": 1063,
-      "y": 695,
-      "biome": "town",
-      "size": 10
-    },
-    {
-      "x": 1043,
-      "y": 309,
+      "x": 1331,
+      "y": 1001,
       "biome": "forest",
-      "size": 5
+      "size": 11
     },
     {
-      "x": 488,
-      "y": 1322,
-      "biome": "town",
-      "size": 4
-    },
-    {
-      "x": 277,
-      "y": 642,
-      "biome": "town",
-      "size": 4
-    },
-    {
-      "x": 1125,
-      "y": 1310,
+      "x": 276,
+      "y": 820,
       "biome": "town",
       "size": 12
     },
     {
-      "x": 847,
-      "y": 1334,
-      "biome": "town",
-      "size": 8
-    },
-    {
-      "x": 1004,
-      "y": 841,
-      "biome": "town",
-      "size": 9
+      "x": 1266,
+      "y": 606,
+      "biome": "forest",
+      "size": 6
     }
   ],
   "sourceHash": "1c49edae39be0a838cf5a4c901014e4f6e68af821251e6cf551672f8492aab92"

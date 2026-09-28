@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import {spawnSync} from 'node:child_process';
 import {generateIsland} from '../js/adventure_map_generator_core.js';
 import {createWorld,walkable,findPath,followPath,distance} from '../js/adventure_world_core.js';
 import {createAdventure,parseSave,syncProgression} from '../js/adventure_core.js';
@@ -9,6 +12,35 @@ const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url)));
 const rules=read('config/maps/generator.json'),content=read('data/adventure/chapter.json');
 const ids=Object.keys(content.worldMapIndex.islands);
 content.worldMaps=Object.fromEntries(ids.map(id=>[id,read(`data/adventure/maps/${id}.json`)]));
+
+test('map generation updates a non-final chapter index and is repeatable',()=>{
+    const root=fs.mkdtempSync(path.join(os.tmpdir(),'haqi-maps-'));
+    try{
+        for(const directory of ['js','config/maps'])fs.cpSync(new URL('../'+directory,import.meta.url),path.join(root,directory),{recursive:true});
+        fs.mkdirSync(path.join(root,'scripts'),{recursive:true});
+        fs.mkdirSync(path.join(root,'data/adventure'),{recursive:true});
+        fs.copyFileSync(new URL('../scripts/generate_island_maps.mjs',import.meta.url),path.join(root,'scripts/generate_island_maps.mjs'));
+        fs.writeFileSync(path.join(root,'package.json'),JSON.stringify({type:'module'}));
+        const chapter=read('data/adventure/chapter.json');
+        chapter.worldMapIndex.islands.camp.w=1;
+        chapter.afterMapIndex={preserve:['chapter data',42]};
+        const chapterFile=path.join(root,'data/adventure/chapter.json');
+        fs.writeFileSync(chapterFile,JSON.stringify(chapter,null,2)+'\n');
+        const run=(...args)=>{
+            const result=spawnSync(process.execPath,['scripts/generate_island_maps.mjs',...args],{cwd:root,encoding:'utf8'});
+            assert.equal(result.status,0,result.stdout+result.stderr);
+        };
+        run();
+        const updated=JSON.parse(fs.readFileSync(chapterFile,'utf8'));
+        assert.deepEqual(updated.worldMapIndex,read('data/adventure/maps/index.json'));
+        delete updated.worldMapIndex;delete chapter.worldMapIndex;
+        assert.deepEqual(updated,chapter);
+        const files=[chapterFile,...ids.map(id=>path.join(root,`data/adventure/maps/${id}.json`))];
+        const before=files.map(file=>fs.readFileSync(file,'utf8'));
+        run();run('--check');
+        assert.deepEqual(files.map(file=>fs.readFileSync(file,'utf8')),before);
+    }finally{fs.rmSync(root,{recursive:true,force:true});}
+});
 
 test('shared road, forest and snow rules compile deterministically without mutating sources',()=>{
     const source=read('config/maps/islands/ice.json'),before=JSON.stringify({source,rules,content});

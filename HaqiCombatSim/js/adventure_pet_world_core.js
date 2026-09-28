@@ -1,7 +1,8 @@
+import {recordPetMeal} from './adventure_pet_quests_core.js';
 import {validPetFileRef} from './adventure_pet_files_core.js';
 // Whole-game transaction rules. Persist the returned save before replacing live state.
 import {createPetInstance,migratePetInstances,validatePetInstance,interactPets,breedPets,adoptPet,prunePetMemories,petInteractionParams} from './adventure_pet_interactions_core.js';
-import {petMaxHp,petParams,FOOD_ID} from './adventure_pets_core.js';
+import {petMaxHp,petParams,nutritionStock,consumeNutrition} from './adventure_pets_core.js';
 import {selectSocialPetId} from './adventure_companion_core.js';
 import {hashSeed} from './rng_core.js';
 const copy=x=>JSON.parse(JSON.stringify(x));
@@ -41,8 +42,8 @@ export function petWorldAction(source,content,action){
         const now=action.now;
         for(const profile of action.residents||[]){const id=npcPetId(profile.id);if(!save.petWorld[id]){check(!save.petFileRefs?.[id],'请先读取居民的宠物文件');save.petWorld[id]={...createNpcPet(profile,content),homeZone:save.zone};}}
         if(action.type==='feed'){
-            const pet=save.pets[action.hostId];check(pet&&(save.inventory[FOOD_ID]||0)>0,'需要一份营养餐');
-            save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+petParams(content).foodRestore);
+            const pet=save.pets[action.hostId];check(pet&&nutritionStock(save)>0,'需要一份营养餐');
+            recordPetMeal(save,content);consumeNutrition(save);pet.hunger=Math.min(100,pet.hunger+petParams(content).foodRestore);
         }
         const seen=new Set(),pairs=[];
         for(const pair of action.pairs||[]){const key=JSON.stringify([...pair.ids].sort());if(!seen.has(key)){seen.add(key);pairs.push(pair);}}

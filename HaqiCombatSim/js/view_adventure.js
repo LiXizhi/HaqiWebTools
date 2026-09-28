@@ -238,7 +238,7 @@ function withName(pattern, name) {
 export function objectiveLabel(g,c) {
     if(g.kind==='talk')return withName('与{name}交谈', c.npcs[g.id]?.name||String(g.id));
     if(g.kind==='defeat')return withName('击败{name}', Object.values(c.monsters).find(m=>m.goalId===g.id)?.name||'训练敌人');
-    return ({79016:'强化一件装备（点击追踪进入强化）',79019:'喂养你的宠物',79037:'装备翡翠口袋并保存配卡','hatch-pet':'打开出奇蛋，获得宠物','equip-staff':'装备晶石法杖'})[g.id]||'完成导师的指导';
+    return ({79016:'强化一件装备（点击追踪进入强化）',79019:'喂养你的宠物',79037:'装备翡翠口袋并保存配卡','hatch-pet':'获得出奇蛋中的伙伴','equip-staff':'装备晶石法杖'})[g.id]||'完成导师的指导';
 }
 // 每帧同步教学指针：自动寻路（点过追踪）期间隐藏手指与按钮脉冲，寻路结束由下一次 HUD 渲染重新判定。
 export function syncTeachPointer(root,walking) {

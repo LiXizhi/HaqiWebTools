@@ -78,18 +78,23 @@ export async function loadResources(progress) {
         ctx.drawImage(img,...rect,x+(w-dw)/2,y+(h-dh)/2,dw,dh);return true;
     }
     let hero=null;
+    function tileRect(sheet,index,img) {
+        // Generated scenery is not aligned exactly to the legacy character grid.
+        const art=media.entries[sheet],frame=art?.frames?.[index];
+        if(frame)return frame;
+        const row=Math.floor(index/4),ch=img.height/(sheet==='sprites'?4:2);
+        const cuts=art?.rowCuts||(sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height]);
+        return [(index%4)*img.width/4,cuts[row],img.width/4,cuts[row+1]-cuts[row]];
+    }
     function tile(ctx,sheet,index,x,y,w,h) {
         if(hero&&sheet==='sprites'&&index>=8&&index<16)return hero.drawTile(ctx,index,x,y,w,h);
         const img=images.get(sheet)||media.entries[sheet];if(!img)return false;
-        const cols=4,rows=sheet==='sprites'?4:2,cw=img.width/cols,ch=img.height/rows;
-        const row=Math.floor(index/4), cuts=sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height];
-        return draw(ctx,{id:sheet,crop:[(index%4)*cw,cuts[row],cw,cuts[row+1]-cuts[row]]},x,y,w,h,true);
+        return draw(ctx,{id:sheet,crop:tileRect(sheet,index,img)},x,y,w,h,true);
     }
     if(typeof document!=='undefined')for(const sheet of ['sprites','creatures']){
         const img=images.get(sheet);if(!img)continue;
-        const cols=4,rows=sheet==='sprites'?4:2,cw=img.width/cols,ch=img.height/rows;
-        const cuts=sheet==='sprites'?[0,323,650,929,1254].map(v=>v*img.height/1254):[0,ch,img.height];
-        for(let index=0;index<cols*rows;index++){const row=Math.floor(index/4);getBounds(sheet,[(index%4)*cw,cuts[row],cw,cuts[row+1]-cuts[row]]);}
+        const rows=sheet==='sprites'?4:2;
+        for(let index=0;index<4*rows;index++)getBounds(sheet,tileRect(sheet,index,img));
     }
     const [catalog,candidates,kidsCards,kidsCharms,cardNames]=await Promise.all([json('data/adventure/pets.json'),json('data/adventure/shop-candidates.json'),json('data/kids/cards.json'),json('data/kids/charms.json'),json('data/kids/card_names.json')]);
     installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames);
@@ -147,8 +152,7 @@ export async function loadResources(progress) {
     }
     hero=await loadHeroLibrary(json,content.mountCatalog,{local:mode==='local',sprites:media.entries.sprites.legacyCharacterSource||media.entries.sprites});
     function sceneryTile(ctx,index,x,y,w,h){
-        const art=media.entries.sprites,cuts=art.rowCuts||[0,323,650,929,1254].map(v=>v*art.height/1254),row=Math.floor(index/4);
-        return draw(ctx,{id:'sprites',crop:[index%4*art.width/4,cuts[row],art.width/4,cuts[row+1]-cuts[row]]},x,y,w,h,true,false);
+        return draw(ctx,{id:'sprites',crop:tileRect('sprites',index,media.entries.sprites)},x,y,w,h,true,false);
     }
     return {hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }

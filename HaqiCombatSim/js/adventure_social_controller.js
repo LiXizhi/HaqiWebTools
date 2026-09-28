@@ -15,6 +15,8 @@ import {renderSocial} from './view_adventure_social.js';
 export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshipActivity=()=>{},onPetDialogue=()=>{},getState,getOwner,onChange,onPersist,onOpen,onClose,onLogin,toast,onDepart,onTeleport=null,schedule=setTimeout,cancel=clearTimeout}){
     let config=null,loading=null,actors=[],worldRef=null,context=null,epoch=0,lastRefresh=0,dialogueAbort=null,cachedCandidates=[],publishPending=false;
     const chatDrafts=new Map();
+    const visitRng=createRng(hashSeed(`${Date.now()}:${performance.now()}`));
+    let placementSeed=0;
     const ui={roster:[],allies:[null,null,null],openSlots:[false,false,false],partyDungeonId:null,partyRestart:false,pickingDungeon:false,selected:null,busy:false,error:'',publicVisible:true,mailTab:'inbox',chatTab:'scene',mailDraft:'',subject:'',recipient:'',pvp:null};
     const joinTimers=[null,null,null];
     const client=createSocialClient({getOwner,onChange:()=>{if(!client.state.owner){ui.mailDetail=null;ui.messages=[];ui.chatPeer=null;ui.chatDraft='';chatDrafts.clear();}onChange();}}),voice=createLearningVoice({getSettings:()=>getState().save?.languageLearning||{}});
@@ -36,7 +38,8 @@ export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshi
         // An accepted local team is stable until the player removes it.
         for(const p of teamMembers())if(!ui.roster.some(r=>r.id===p.id)){if(ui.roster.length>=socialCapacity(world.zone,config.worlds[world.zone]||{}))ui.roster.pop();ui.roster.unshift(p);}
         const previous=worldRef===world?new Map(actors.map(a=>[a.profile.id,a])):new Map();
-        actors=createSocialActors(world,ui.roster,save.seed).map(a=>previous.has(a.profile.id)?{...previous.get(a.profile.id),profile:a.profile}:a);worldRef=world;onChange();
+        if(worldRef!==world)placementSeed=visitRng.int(1,0x7fffffff);
+        actors=createSocialActors(world,ui.roster,`${save.seed}:${placementSeed}`).map(a=>previous.has(a.profile.id)?{...previous.get(a.profile.id),profile:a.profile}:a);worldRef=world;onChange();
     }
     async function run(fn){if(ui.busy)return;const token=epoch;ui.busy=true;ui.error='';onChange();try{await fn();}catch(e){if(token===epoch)ui.error=e.message;}finally{if(token===epoch){ui.busy=false;onChange();}}}
     async function refresh(){

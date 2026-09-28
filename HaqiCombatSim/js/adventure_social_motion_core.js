@@ -15,7 +15,7 @@ export function socialInView(position,view){
 
 function hubReach(params=SOCIAL_DEFAULTS){return params.hotspotRadius+params.hotspotSpread;}
 function roadSlack(params=SOCIAL_DEFAULTS){return params.roadSlack??16;}
-function portalMinActors(params=SOCIAL_DEFAULTS){return Math.max(0,Math.floor(params.portalMinActors??2));}
+function spawnMinActors(params=SOCIAL_DEFAULTS){return Math.max(0,Math.floor(params.spawnMinActors??2));}
 
 export function roadClearance(world,p){
     if(!world.paths?.length)return 0;
@@ -33,16 +33,17 @@ export function socialActivityHubs(world){
         if(!point||!Number.isFinite(point.x)||!Number.isFinite(point.y))return;
         hubs.push({x:point.x,y:point.y,weight,kind,id});
     };
-    add(world.portal,4.5,'portal','portal');
-    add(world.entrancePortal,3.5,'portal','entrance');
+    const plaza=world.zone==='town'?(world.landmarks||[]).find(p=>/广场|plaza/i.test(`${p.id||''}${p.name||''}`)):null;
+    add(plaza||world.layout?.spawn||world.center,4,'spawn','spawn');
+    add(world.portal,1,'portal','portal');
+    add(world.entrancePortal,1,'portal','entrance');
     for(const landmark of world.landmarks||[]){
-        const teleport=/传送|portal|gate|码头|港口|广场/i.test(`${landmark.id||''}${landmark.name||''}`);
-        add(landmark,teleport?4:2.5,'landmark',landmark.id);
+        if(landmark===plaza)continue;
+        add(landmark,2.5,'landmark',landmark.id);
     }
     for(const npc of world.npcs||[]){
-        const nearPortal=world.portal&&Math.hypot(npc.x-world.portal.x,npc.y-world.portal.y)<240;
-        const guide=npc.worldMapGuide||npc.harborGuide||npc.id===36205||/船长|导师|任务|传送/i.test(npc.name||'');
-        add(npc,guide||nearPortal?3.5:2,'npc',npc.id);
+        const guide=/导师|任务/i.test(npc.name||'');
+        add(npc,guide?3.5:2,'npc',npc.id);
     }
     for(const encounter of world.encounters||[])add(encounter,1.5,'encounter',encounter.id);
     if(!hubs.length)add(world.center||world.layout?.spawn,1,'center','center');
@@ -98,19 +99,19 @@ export function sampleActivitySpot(world,hub,rng,used=[],params=SOCIAL_DEFAULTS)
     return nearestWalkable(world,hub.x+rng.float()*20-10,hub.y+rng.float()*20-10);
 }
 
-function assignHub(rng,hubs,index,portalHubs,portalQuota){
-    if(index<portalQuota&&portalHubs.length)return portalHubs[index%portalHubs.length];
+function assignHub(rng,hubs,index,spawnHub,spawnQuota){
+    if(index<spawnQuota&&spawnHub)return spawnHub;
     return pickWeightedHub(rng,hubs);
 }
 
 export function createSocialActors(world,profiles,seed=1) {
     const hubs=socialActivityHubs(world);
-    const portalHubs=hubs.filter(h=>h.kind==='portal'||(h.kind==='landmark'&&/传送|portal|gate|码头|港口/i.test(`${h.id||''}`)));
-    const portalQuota=Math.min(portalMinActors(),profiles.length,Math.max(portalHubs.length?1:0,Math.floor(profiles.length/3)));
+    const spawnHub=hubs.find(h=>h.kind==='spawn');
+    const spawnQuota=Math.min(spawnMinActors(),profiles.length);
     const used=[];
     return profiles.map((profile,i)=>{
         const rng=createRng(hashSeed(`${seed}:${world.zone}:${profile.id}`));
-        const hotspot=assignHub(rng,hubs,i,portalHubs,portalQuota);
+        const hotspot=assignHub(rng,hubs,i,spawnHub,spawnQuota);
         const position=sampleActivitySpot(world,hotspot,rng,used);
         used.push(position);
         return {profile,position,rng,path:[],facing:hashSeed(profile.id)%3,moving:false,wait:rng.int(SOCIAL_DEFAULTS.idleMin,SOCIAL_DEFAULTS.idleMax),travel:rng.int(SOCIAL_DEFAULTS.travelMin,SOCIAL_DEFAULTS.travelMax),hotspot};

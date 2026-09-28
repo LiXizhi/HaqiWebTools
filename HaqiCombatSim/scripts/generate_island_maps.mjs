@@ -40,16 +40,8 @@ for(const [file,data] of Object.entries(outputs)){
     else{fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,text);}
 }
 if(check){if(JSON.stringify(chapter.worldMapIndex)!==JSON.stringify(index))throw Error('章节地图索引过期');}
-else{
-    // Keep Python-exported numeric key ordering and untouched chapter text.
-    // This generated field is always appended last by this script.
-    const file=path.join(root,'data/adventure/chapter.json');
-    let text=fs.readFileSync(file,'utf8').trimEnd();
-    if(chapter.worldMapIndex){
-        if(Object.keys(chapter).at(-1)!=='worldMapIndex')throw Error('worldMapIndex 必须位于章节末尾');
-        text=text.replace(/,\r?\n  "worldMapIndex": [\s\S]*$/, '\n}');
-    }
-    const field=JSON.stringify(index,null,2).split('\n').map((line,i)=>i?`  ${line}`:line).join('\n');
-    fs.writeFileSync(file,text.replace(/\s*}$/,',\n  "worldMapIndex": '+field+'\n}\n'));
+else if(JSON.stringify(chapter.worldMapIndex)!==JSON.stringify(index)){
+    chapter.worldMapIndex=index;
+    fs.writeFileSync(path.join(root,'data/adventure/chapter.json'),JSON.stringify(chapter,null,2)+'\n');
 }
 console.log(check?'六岛配置与源文件一致。':'已生成六岛运行时JSON与章节出生点索引。');

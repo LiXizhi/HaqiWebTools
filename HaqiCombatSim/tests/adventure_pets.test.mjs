@@ -201,14 +201,14 @@ test('level 10/25/40/50 formations have playable cards and deterministic victori
   assert.equal(b.winner,'near',`level ${level}`);assert.deepEqual(B.restorePveBattle(d,c,s.pendingEncounter).events,b.events);
  }
 });
-test('original fourteen quests still complete with expansion and separate teaching pet',()=>{
+test('original fourteen quests complete with directly granted pet and real tray feeding',()=>{
  for(const school of ['fire','ice','storm','life','death']){
   const s=A.createAdventure(c,{school,seed:530});let now=1000;
   const act=(type,props={})=>A.applyAction(s,c,{type,...props});
   for(const q of c.quests){
    act('accept',{questId:q.id,npcId:q.startNpc});for(const talk of q.talks)act('talk',{npcId:talk.npcId});
    if(q.id===63007){act('equip',{itemId:1912});act('upgrade',{itemId:1912});}
-   if(q.id===63008)act('hatch');if(q.id===63009)act('feed');if(q.id===63012)act('equip',{itemId:24003});
+   if(q.id===63008)assert.ok(s.pet&&s.pets.legacy_gululu);if(q.id===63009){s.pets[s.formation[0]].hunger=20;act('pet-food-feed',{slot:0,petId:s.formation[0]});}if(q.id===63012)act('equip',{itemId:24003});
    act('deck',{deck:A.recommendedDeck(s,c)});
    for(const goal of q.goals.filter(x=>x.kind==='defeat')){
     P.tickCare(s,c,A.playerSpec(s,c),now,false);now+=1200000;P.tickCare(s,c,A.playerSpec(s,c),now,false);
@@ -218,7 +218,7 @@ test('original fourteen quests still complete with expansion and separate teachi
    }
    assert.ok(A.questReady(s,q));act('claim',{questId:q.id,npcId:q.endNpc});for(const id of Object.keys(s.inventory))if(A.canEquip(s,c.items[id],c))act('equip',{itemId:id});A.parseSave(s,c);
   }
-  assert.ok(s.graduated&&s.pets.legacy_gululu&&s.pet.xp>0);
+  assert.ok(s.graduated&&s.pets.legacy_gululu&&s.tips.petFed);
  }
 });
 test('capture resolves before companions even when the hero stands in the fourth slot',()=>{

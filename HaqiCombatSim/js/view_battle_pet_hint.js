@@ -33,6 +33,7 @@ export function createBattlePetHint(model,{el,onDismiss}){
         :cardName?`${petCard?(model.petCardsOpen?'可以试试宠物卡':'打开“使用宠物卡”，试试'):'可以试试'}「${cardName}」${target?`，目标选${target}`:''}。`:null;
     if(!message)return null;
     const bubble=el('aside','battle-pet-hint',el('p','',message));
+    bubble.style.setProperty('--pet-hint-tail','14px');
     bubble.setAttribute('aria-live','polite');bubble.hidden=true;
     bubble.setAttribute('role','button');bubble.setAttribute('tabindex','0');
     bubble.setAttribute('aria-label',`${message} 点击收起提示`);
@@ -59,8 +60,7 @@ export function updateBattlePetHint(root,battle,save,content,canvas){
     const obstacles=(canvas.battleStatusRects||[]).map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));
     for(const node of root.querySelectorAll?.('.actor-speech')||[])if(!node.hidden)obstacles.push({x:parseFloat(node.style.left),y:parseFloat(node.style.top),width:node.offsetWidth,height:node.offsetHeight});
     if(obstacles.length){
-        const rect=placeActorSpeech(bubble,root,{x:left+width/2,y},obstacles);
-        if(rect)bubble.style.setProperty('--pet-hint-tail',`${Math.max(14,Math.min(rect.width-14,x-rect.x))}px`);
+        placeActorSpeech(bubble,root,{x:left+width/2,y},obstacles,{x,y});
     }
 }
 

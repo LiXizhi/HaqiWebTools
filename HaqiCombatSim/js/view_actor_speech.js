@@ -15,12 +15,12 @@ export function speechPlacement(anchor,size,bounds,obstacles=[]){
     return null;
 }
 
-export function placeActorSpeech(bubble,root,anchor,obstacles=[]){
+export function placeActorSpeech(bubble,root,anchor,obstacles=[],tailAnchor=anchor){
     const rect=speechPlacement(anchor,{width:bubble.offsetWidth,height:bubble.offsetHeight},{width:root.clientWidth,height:root.clientHeight||10000},obstacles);
     bubble.hidden=!rect;
     if(!rect)return null;
     bubble.style.left=`${rect.x}px`;bubble.style.top=`${rect.y}px`;
-    bubble.style.setProperty('--pet-hint-tail',`${Math.max(14,Math.min(rect.width-14,anchor.x-rect.x))}px`);
+    bubble.style.setProperty('--pet-hint-tail',`${Math.max(14,Math.min(rect.width-14,tailAnchor.x-rect.x))}px`);
     return rect;
 }
 

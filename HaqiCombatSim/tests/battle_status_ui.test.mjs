@@ -15,6 +15,12 @@ test('four combatants per side retain separate status, targeting, mana and self 
     const calls=[],options={heroId:'hero0',canTarget:u=>u.side==='far',target:id=>calls.push(id),el,button:(children,fn,cls)=>Object.assign(el('button',cls,children),{click:fn}),schoolNames:{ice:'寒冰'},colors:{ice:'#6ecbdc'}};
     const near=createBattleRoster(battle,'near',options),far=createBattleRoster(battle,'far',options);
     assert.equal(near.entries.length,4);assert.equal(far.entries.length,4);
+    for(const row of [...near.entries,...far.entries]){
+        const heading=row.node.firstChild;
+        assert.equal(heading.firstChild.cls,'combatant-school');
+        assert.equal(heading.firstChild.attrs['aria-label'],'寒冰');
+        assert.equal(heading.children[1].children[0],row.unit.name);
+    }
     assert.equal(near.entries.filter(r=>r.node.cls.includes('is-self')).length,1);
     assert.ok(near.entries.every(r=>r.node.disabled));assert.ok(far.entries.every(r=>!r.node.disabled));
     far.entries[2].node.click();assert.deepEqual(calls,['mob2']);

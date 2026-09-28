@@ -6,12 +6,13 @@ import {createWorld} from '../../js/adventure_world_core.js';
 import {createRenderer} from '../../js/adventure_renderer.js';
 import {createPveBattle} from '../../js/combat_pve_core.js';
 import {createCreationPreview,tutorialCards} from '../../js/adventure_creation_preview.js';
+import {createHeroDraft} from '../../js/hero_body_core.js';
 import {loadLocaleFiles,configureLocale,displayLocale} from '../../js/locale.js';
 const result=document.querySelector('#result');
 try{
  const params=new URLSearchParams(location.search);
  const assets=await loadResources(),preview=createCreationPreview(assets);
- const draft={name:params.has('blank')?'':'形象预览',school:'fire',appearance:'boy',starter:'dragon_green',step:1};
+ const draft={...createHeroDraft(assets.hero?.manifest,Number(params.get('seed'))||Date.now()),name:params.has('blank')?'':'形象预览'};
  let locale=params.get('lang')||'zh-CN',second=locale==='en'?'zh-CN':'en';
  if(locale!=='zh-CN')await loadLocaleFiles([locale]);
  configureLocale({locale});

@@ -5,7 +5,7 @@ import {createHeroPicker} from '../js/view_hero_picker.js';
 import {createAdventure,parseSave} from '../js/adventure_core.js';
 import {durableSave,splitRoleSave,joinRoleSave} from '../js/adventure_storage_core.js';
 import {installExpansion} from '../js/adventure_expansion_core.js';
-import {validHeroBodyId,randomHeroBodyId} from '../js/hero_body_core.js';
+import {validHeroBodyId,randomHeroBodyId,DEFAULT_HEAD_EXCLUDE,createHeroDraft} from '../js/hero_body_core.js';
 const read=p=>JSON.parse(readFileSync(new URL('../data/'+p,import.meta.url)));
 test('new body identifiers include both digits and reject unknown or wrong-gender values',()=>{
  for(const [gender,appearance] of [['male','boy'],['female','girl']]){
@@ -57,4 +57,28 @@ test('AI costume selection is stable, gender-safe and reaches reference costumes
   assert.equal(seen.size,14);
  }
  assert.equal(randomHeroBodyId({},'girl',1),'female');
+});
+
+test('new character draft randomises head and outfit for both genders without a dark default',()=>{
+ const manifest=read('adventure/hero-art.json');
+ const heads=new Set(),bodies=new Set();
+ for(let i=0;i<200;i++){
+  const draft=createHeroDraft(manifest,1000+i);
+  assert.equal(JSON.stringify(createHeroDraft(manifest,1000+i)),JSON.stringify(draft));
+  assert.deepEqual(Object.keys(draft.headChoices).sort(),['boy','girl']);
+  assert.deepEqual(Object.keys(draft.bodyChoices).sort(),['boy','girl']);
+  assert.equal(draft.headId,draft.headChoices[draft.appearance]);
+  assert.equal(draft.bodyId,draft.bodyChoices[draft.appearance]);
+  assert.equal(manifest.heads[draft.headChoices.boy].gender,'male');
+  assert.equal(manifest.heads[draft.headChoices.girl].gender,'female');
+  assert.equal(DEFAULT_HEAD_EXCLUDE.test(draft.headId),false);
+  assert.equal(validHeroBodyId(draft.bodyId,draft.appearance),true);
+  heads.add(draft.headId);bodies.add(draft.bodyId);
+ }
+ assert.equal([...heads].some(id=>DEFAULT_HEAD_EXCLUDE.test(id)),false);
+ assert.ok(heads.size>=4,'default heads should vary');
+ assert.ok(bodies.size>=8,'default outfits should vary across both genders');
+ // Missing manifest still yields a valid, non-African default.
+ const fallback=createHeroDraft(undefined,7);
+ assert.equal(fallback.headId,'elf-boy');assert.equal(fallback.bodyId,'male');
 });

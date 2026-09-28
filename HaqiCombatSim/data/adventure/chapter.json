@@ -944,7 +944,7 @@
       "replacement": [
         {
           "npcId": 36211,
-          "text": "强化成功了！送你一枚出奇蛋。打开它，看看哪位小伙伴会加入你的旅程吧。",
+          "text": "强化成功了！出奇蛋中的小伙伴已经加入你的旅程，去宠物面板看看吧。",
           "buttons": [
             {
               "action": "dofinished",
@@ -959,7 +959,7 @@
       "questId": 63008,
       "section": "description",
       "original": "去找杰西卡了解宠物口粮的事情。",
-      "replacement": "打开出奇蛋，再与杰西卡交谈。",
+      "replacement": "获得出奇蛋中的伙伴，再与杰西卡交谈。",
       "reason": "compact-web-opening"
     },
     {
@@ -980,7 +980,7 @@
       "replacement": [
         {
           "npcId": 36211,
-          "text": "打开“宠物”，孵化出奇蛋，再去找杰西卡。她会教你照顾这位新伙伴。",
+          "text": "出奇蛋中的伙伴已经加入旅程，去找杰西卡学习照料吧。",
           "buttons": [
             {
               "action": "doaccept",
@@ -1064,7 +1064,7 @@
       "questId": 63009,
       "section": "description",
       "original": "杰西卡给了我一些战宠口粮，并教我如何喂养宠物。",
-      "replacement": "在宠物面板喂养一包战宠口粮。",
+      "replacement": "让任意伙伴实际吃一份口粮，手动喂养或自动进食均可。",
       "reason": "compact-web-opening"
     },
     {
@@ -1095,7 +1095,7 @@
       "replacement": [
         {
           "npcId": 36202,
-          "text": "打开“宠物”，点击“喂养一包战宠口粮”。让新伙伴吃饱，它就有精神陪你冒险啦！",
+          "text": "打开“宠物”，点击食槽喂养饥饿的伙伴；伙伴自动进食或分享营养餐也能完成任务。",
           "buttons": [
             {
               "action": "doaccept",
@@ -2888,7 +2888,7 @@
       "endDialog": [
         {
           "npcId": 36211,
-          "text": "强化成功了！送你一枚出奇蛋。打开它，看看哪位小伙伴会加入你的旅程吧。",
+          "text": "强化成功了！出奇蛋中的小伙伴已经加入你的旅程，去宠物面板看看吧。",
           "buttons": [
             {
               "action": "dofinished",
@@ -2902,7 +2902,7 @@
     {
       "id": 63008,
       "title": "明星宠物商人",
-      "description": "打开出奇蛋，再与杰西卡交谈。",
+      "description": "获得出奇蛋中的伙伴，再与杰西卡交谈。",
       "startNpc": 36211,
       "endNpc": 36202,
       "requires": [
@@ -2952,7 +2952,7 @@
       "startDialog": [
         {
           "npcId": 36211,
-          "text": "打开“宠物”，孵化出奇蛋，再去找杰西卡。她会教你照顾这位新伙伴。",
+          "text": "出奇蛋中的伙伴已经加入旅程，去找杰西卡学习照料吧。",
           "buttons": [
             {
               "action": "doaccept",
@@ -2978,7 +2978,7 @@
     {
       "id": 63009,
       "title": "喂养明星宠物",
-      "description": "在宠物面板喂养一包战宠口粮。",
+      "description": "让任意伙伴实际吃一份口粮，手动喂养或自动进食均可。",
       "startNpc": 36202,
       "endNpc": 36211,
       "requires": [
@@ -3024,7 +3024,7 @@
       "startDialog": [
         {
           "npcId": 36202,
-          "text": "打开“宠物”，点击“喂养一包战宠口粮”。让新伙伴吃饱，它就有精神陪你冒险啦！",
+          "text": "打开“宠物”，点击食槽喂养饥饿的伙伴；伙伴自动进食或分享营养餐也能完成任务。",
           "buttons": [
             {
               "action": "doaccept",

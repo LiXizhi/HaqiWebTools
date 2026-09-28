@@ -68,6 +68,7 @@ import { isOcean } from './adventure_fishing_core.js';
 import { createSceneFishing } from './view_adventure_scene_fishing.js';
 import { fishingSpot } from './adventure_fishing_spot_core.js';
 import { createRoleStore } from './adventure_roles.js';
+import { createHeroDraft } from './hero_body_core.js';
 import { MAX_ROLES, directSignInRequested, startupRoleId } from './adventure_roles_core.js';
 import { renderRoles } from './view_adventure_roles.js';
 import { createCreationPreview, tutorialCards } from './adventure_creation_preview.js';
@@ -294,7 +295,7 @@ function paintPanel() {
     const scroll=equipment?nodes.overlay.querySelector('.modal-body')?.scrollTop||0:0;
     const focusLabel=equipment&&nodes.overlay.contains(document.activeElement)?document.activeElement.getAttribute('aria-label')||document.activeElement.textContent:null;
     const focusedMount=panel==='pet'&&nodes.overlay.contains(document.activeElement)?document.activeElement.dataset.mountId:null;
-    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId,pinJournalQuest},{close,action,seenGuide,loadPet:id=>loadPet(id).catch(e=>{toast(e.message);return null;}),track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,learningEvent:(event,context)=>languageAdventure.emit(event,event,context),cloud:()=>void loginRoles(),music:toggleMusic,sound:toggleSound,soundVolume:value=>spellSound.setVolume(value),soundPreview:async()=>{await spellSound.unlock();spellSound.play('heal');},title:()=>showTitle(),roles:()=>showTitle(),refreshMembership,becomeVip:()=>openPanel('recharge'),recharge:rechargeMembership,setLocale,setLearning,applyLearningMode,disableLearning:()=>{setLearning({enabled:false});close();paintHud();},languageTest:openLanguageTest});
+    V.renderPanel(nodes.overlay,panel,{...model(),selectedQuestId,pinJournalQuest},{close,action,seenGuide,deleteRole:deleteCurrentRole,loadPet:id=>loadPet(id).catch(e=>{toast(e.message);return null;}),track,travel,refresh:paintPanel,encounter:id=>interact({kind:'encounter',id}),panel:openPanel,applyDebug,restoreDebug,learningEvent:(event,context)=>languageAdventure.emit(event,event,context),cloud:()=>void loginRoles(),music:toggleMusic,sound:toggleSound,soundVolume:value=>spellSound.setVolume(value),soundPreview:async()=>{await spellSound.unlock();spellSound.play('heal');},title:()=>showTitle(),roles:()=>showTitle(),refreshMembership,becomeVip:()=>openPanel('recharge'),recharge:rechargeMembership,setLocale,setLearning,applyLearningMode,disableLearning:()=>{setLearning({enabled:false});close();paintHud();},languageTest:openLanguageTest});
     if(equipment){
         nodes.overlay.querySelector('.modal-body').scrollTop=scroll;
         if(focusLabel){
@@ -496,9 +497,25 @@ async function showTitle() {
     titleView=roleStore.catalog.roles.length?'roles':'create';
     if(titleView==='create')roleDraft=null;paintTitle();
 }
+function deleteCurrentRole() {
+    if (roles.busy || cloud.busy || roles.conflict || stage !== 'world' || save?.pendingEncounter) {
+        toast('当前无法删除角色，请结束战斗或处理云端同步后重试。');return;
+    }
+    return roleOperation('正在删除角色…', async () => {
+        roleStore.remove(roleStore.catalog.activeId);
+        autoSave.reset();roleEpoch++;roleStorage=null;stage='title';
+        await showTitle();
+        try {
+            await syncRoles();
+            roles.message=roleStore.owner&&roleStore.dirty?'角色已从本机删除，云端删除尚未同步，请在角色列表重试同步。':'角色已删除。';
+        } catch (error) {
+            throw Error(`${tr('角色已从本机删除，云端删除尚未同步，请在角色列表重试同步。')} ${error.message}`);
+        }
+    });
+}
 function paintTitle() {
     if(stage!=='title')return;
-    if(roles.conflict)titleView='roles';
+    if(roles.conflict || (roleStore.owner && roleStore.dirty && !roleStore.catalog.roles.length))titleView='roles';
     if(titleView==='create')paintCreation();else paintRoles();
 }
 function paintRoles() {
@@ -555,7 +572,7 @@ function newRoleForm() {
 }
 function paintCreation() {
     creationPreview?.stop();
-    roleDraft||={name:'',school:'fire',appearance:'boy',starter:'dragon_green',step:1};
+    roleDraft||=createHeroDraft(assets.hero?.manifest);
     V.renderEntry(nodes.entry,assets,null,{
         draft:roleDraft,busy:roles.busy,owner:roleStore.owner,
         setLocale:setEntryNative,setSecondLocale,locale:displayLocale(),secondLocale:secondLocaleFor(displayLocale()),

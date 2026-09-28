@@ -249,14 +249,14 @@ test('deck arrow stays on the next owned card while the deck is under 8, even af
     renderDeckEditor(townBody,{save:town,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action(){}},h);
     assert.equal(all(townBody).find(node=>node.children?.some(child=>child?.className==='teach-pointer'))?.attributes['aria-label'],'放入烈火术');
 });
-test('closing a changed deck asks whether to save',()=>{
+test('close and save both commit clean or changed decks without a prompt and retain failed drafts',()=>{
     const {content:c,dataset}=expanded(),s=A.createAdventure(c),h=domHelpers();
-    const open=()=>{
+    const open=(fail=false)=>{
         const modal=h.el('section','modal'),body=h.el('section');
         let closed=0;const close=h.button('',()=>{closed++;},'close-button');
         modal.append(close,body);
         let saved=0;
-        renderDeckEditor(body,{save:s,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action(){saved++;return true;},panel(){}},h);
+        renderDeckEditor(body,{save:s,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action(action){saved++;if(fail)return false;A.applyAction(s,c,action);return true;},close:()=>{closed++;},panel(){}},h);
         const prompt=()=>modal.querySelector('.bag-save-prompt');
         const text=node=>node?.children?.[0];
         return {close,prompt,text,closed:()=>closed,saved:()=>saved,modal};
@@ -265,22 +265,27 @@ test('closing a changed deck asks whether to save',()=>{
     const clean=open();
     clean.close.onclick();
     assert.equal(clean.closed(),1);
+    assert.equal(clean.saved(),1);
+    assert.equal(s.tips.deckEdited,true);
     assert.equal(clean.prompt(),null);
     const dirty=open();
     const nodes=[dirty.modal];for(let i=0;i<nodes.length;i++)for(const child of nodes[i].children||[])if(child&&typeof child==='object')nodes.push(child);
     const card=nodes.find(node=>node.children?.some(child=>child?.className==='teach-pointer'));
     assert.ok(card, `no pointer among ${nodes.length} nodes`);
+    const before=s.deck.reduce((sum,row)=>sum+row.count,0);
     card.onclick();
     dirty.close.onclick();
-    assert.equal(dirty.closed(),0);
-    assert.equal(dirty.prompt().children[0].children[0],'卡包还有未保存的修改，要保存吗？');
-    dirty.prompt().children[1].children.find(node=>node.children[0]==='取消').onclick();
     assert.equal(dirty.prompt(),null);
-    assert.equal(dirty.closed(),0);
-    dirty.close.onclick();
-    dirty.prompt().children[1].children.find(node=>node.children[0]==='保存').onclick();
     assert.equal(dirty.saved(),1);
     assert.equal(dirty.closed(),1);
+    assert.equal(s.deck.reduce((sum,row)=>sum+row.count,0),before+1);
+    const findSave=node=>node?.tag==='button'&&node.children[0]==='保存'?node:node?.children?.map(findSave).find(Boolean);
+    s.tips.deckEdited=false;
+    const explicit=open();findSave(explicit.modal).onclick();
+    assert.equal(explicit.saved(),1);assert.equal(explicit.closed(),1);assert.equal(s.tips.deckEdited,true);
+    const failed=open(true);failed.close.onclick();
+    assert.equal(failed.saved(),1);assert.equal(failed.closed(),0);assert.equal(failed.prompt(),null);
+    findSave(failed.modal).onclick();assert.equal(failed.saved(),2);assert.equal(failed.closed(),0);
 });
 test('hover card is fully visible above/below the icon row, including viewport edges and short screens',()=>{
     for(const [rect,w,h]of [

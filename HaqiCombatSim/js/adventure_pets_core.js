@@ -1,3 +1,4 @@
+import {recordPetMeal} from './adventure_pet_quests_core.js';
 import {ownedPetRecords} from './adventure_pet_files_core.js';
 // Adventure adaptation; original combat formulae remain in combat_formulas_core.
 import { defaultParams, resolveParams } from './combat_params_core.js';
@@ -16,6 +17,26 @@ export function foodInfo(content,id){
  const rule=p.petFoodRules?.[id],item=content.petFoods?.[id];
  return rule&&item?{...rule,xp:Number(item.stats[60]||0)}:null;
 }
+// Newly received stock fills empty trays only; withdrawals are never re-deposited.
+export function autoStockPetFood(save,content,before){
+ if(!content.pets||save.pendingEncounter)return;
+ for(const [key,count] of Object.entries(save.inventory)){
+  const itemId=Number(key),gained=count-(before[key]||0);
+  if(gained<=0||!foodInfo(content,itemId))continue;
+  save.petFoodSlots??=[null,null];
+  const slot=save.petFoodSlots.findIndex(row=>!row);if(slot<0)break;
+  save.inventory[key]-=gained;save.petFoodSlots[slot]={itemId,count:gained};
+ }
+}
+export function nutritionStock(save){return (save.inventory[FOOD_ID]||0)+(save.petFoodSlots||[]).reduce((n,row)=>n+(row?.itemId===FOOD_ID?row.count:0),0);}
+export function consumeNutrition(save){
+ if(save.inventory[FOOD_ID]>0){save.inventory[FOOD_ID]--;return;}
+ const slot=(save.petFoodSlots||[]).findIndex(row=>row?.itemId===FOOD_ID&&row.count>0);
+ check(slot>=0,'需要一份营养餐');if(--save.petFoodSlots[slot].count===0)save.petFoodSlots[slot]=null;
+}
+export function hungryPets(save,content){
+ return Object.entries(save.pets||{}).filter(([,pet])=>(pet.hunger??100)<petParams(content).feedThreshold).sort((a,b)=>a[1].hunger-b[1].hunger);
+}
 export function validateFoodSlots(save,content){
  if(save.petFoodSlots===undefined)return;
  check(Array.isArray(save.petFoodSlots)&&save.petFoodSlots.length===2,'宠物食槽无效');
@@ -25,6 +46,7 @@ export function validateFoodSlots(save,content){
 // Satiety and automatic trays are Web adaptations, controlled by BalanceParams.
 function eatFood(save,content,pet,itemId){
  const food=foodInfo(content,itemId),before=pet.hunger;
+ recordPetMeal(save,content);
  pet.hunger=Math.min(100,pet.hunger+food.restore);
  if(pet.level<petParams(content).levelCap){pet.xp+=food.xp;pet.level=petXpLevel(pet.xp,content);}
  save.careLog.push(`${content.pets[pet.speciesId].name}吃了${content.items[itemId].name}，饱食 +${Math.round(pet.hunger-before)}`);
@@ -90,6 +112,13 @@ export function petAction(save,content,action,access={}){
   save.petFoodSlots[action.slot]={itemId:action.itemId,count:(row?.count||0)+action.count};
   feedFromSlots(save,content);break;
  }
+ case 'pet-food-feed':{
+  const row=save.petFoodSlots?.[action.slot];
+  check(pet&&row&&pet.hunger<100,'需要槽内口粮，且宠物尚未吃饱');
+  eatFood(save,content,pet,row.itemId);
+  if(--row.count===0)save.petFoodSlots[action.slot]=null;
+  break;
+ }
  case 'pet-food-take':{
   check(!save.pendingEncounter,'请先完成当前战斗');check(Number.isInteger(action.slot)&&action.slot>=0&&action.slot<2,'食槽无效');
   const row=save.petFoodSlots?.[action.slot];check(row,'食槽已经空了');
@@ -104,7 +133,7 @@ export function petAction(save,content,action,access={}){
   check(Number.isInteger(action.heroSlot)&&action.heroSlot>=0&&action.heroSlot<4,'主角卡位无效');save.formation=[...action.slots];save.heroSlot=action.heroSlot;break;
  }
  case 'pet-deck':check(pet,'尚未拥有宠物');validatePetDeck(pet,content,action.deck);pet.deck=action.deck.map(x=>({...x}));break;
- case 'pet-feed':check(pet&&pet.hunger<100&&(save.inventory[FOOD_ID]||0)>0,'需要食物，且宠物尚未吃饱');save.inventory[FOOD_ID]--;pet.hunger=Math.min(100,pet.hunger+p.foodRestore);break;
+ case 'pet-feed':check(pet&&pet.hunger<100&&nutritionStock(save)>0,'需要食物，且宠物尚未吃饱');consumeNutrition(save);pet.hunger=Math.min(100,pet.hunger+p.foodRestore);recordPetMeal(save,content);break;
  case 'buy':{
   const item=content.shop.find(x=>x.id===action.productId);check(item,'商品不存在');check(!item.retired,'捕获晶球已停售，请使用抓宠符文');check(!item.isInternalTest,'内测道具不对外出售');check(!item.vipOnly||access.keepworkVip===true,'该商品仅限会员购买。请登录会员账号后重试。');check(save.level>=item.level,'等级尚未解锁');
   check(item.kind!=='pet'||!Object.values(ownedPetRecords(save)).some(p=>p.speciesId===item.petId),'已经拥有这只宠物');const cost=productPrice(item,content);

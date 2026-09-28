@@ -4,10 +4,53 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
-import { spawn } from 'node:child_process';
+import { spawn, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import viteConfig from '../vite.config.mjs';
-import { syncMaisiRelease, syncAppsRelease } from '../scripts/sync_keepwork_apps_release.mjs';
+import { syncMaisiRelease, syncAppsRelease, prepareAppsRelease } from '../scripts/sync_keepwork_apps_release.mjs';
+
+test('apps release preparation fast-forwards behind origin and preserves safety boundaries', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-apps-git-'));
+    const repo = path.join(root, 'work');
+    fs.mkdirSync(repo);
+    const git = (...args) => execFileSync('git', args, { cwd: repo, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+    try {
+        git('init', '-b', 'master');
+        git('config', 'user.name', 'Release Test');
+        git('config', 'user.email', 'release@example.invalid');
+        git('config', 'commit.gpgsign', 'false');
+        fs.writeFileSync(path.join(repo, 'page.txt'), 'base');
+        git('add', '.'); git('commit', '-m', 'base');
+        const base = git('rev-parse', 'HEAD');
+        const tree = git('rev-parse', 'HEAD^{tree}');
+        for (const remote of ['origin', 'keepwork']) {
+            const target = path.join(root, remote + '.git');
+            git('init', '--bare', target); git('remote', 'add', remote, target); git('push', remote, 'master');
+        }
+        const upstream = git('commit-tree', tree, '-p', base, '-m', 'colleague update');
+        git('push', 'origin', `${upstream}:refs/heads/master`);
+        assert.throws(() => prepareAppsRelease(repo), /Unexpected origin URL/);
+        const prepare = () => prepareAppsRelease(repo, { localTest: true });
+        prepare();
+        assert.equal(git('rev-parse', 'HEAD'), upstream);
+        prepare();
+        assert.equal(git('rev-parse', 'HEAD'), upstream);
+        fs.writeFileSync(path.join(repo, 'page.txt'), 'local edit');
+        assert.throws(prepare, /未提交修改/);
+        assert.equal(fs.readFileSync(path.join(repo, 'page.txt'), 'utf8'), 'local edit');
+        git('add', '.'); git('commit', '-m', 'local release');
+        const local = git('rev-parse', 'HEAD');
+        prepare();
+        assert.equal(git('rev-parse', 'HEAD'), local);
+        const divergent = git('commit-tree', tree, '-p', upstream, '-m', 'other update');
+        git('push', 'origin', `${divergent}:refs/heads/master`);
+        assert.throws(prepare, /已分叉/);
+        assert.equal(git('rev-parse', 'HEAD'), local);
+        git('switch', '-c', 'feature');
+        assert.throws(prepare, /master 分支/);
+        assert.equal(git('ls-remote', 'keepwork', 'refs/heads/master').split(/\s/)[0], base);
+    } finally { fs.rmSync(root, { recursive: true, force: true }); }
+});
 
 test('CDN release inlines both Workers including Windows path casing variants', () => {
     const plugin = viteConfig({ command: 'build' }).plugins.find(plugin => plugin.name === 'inline-cdn-worker');

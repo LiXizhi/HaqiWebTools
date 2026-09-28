@@ -5,6 +5,9 @@
   "shots": [
     {
       "id": "welcome",
+      "camera": {
+        "zoomIn": 0.3
+      },
       "scene": "world",
       "title": {
         "zh-CN": "从一次相遇开始",
@@ -32,19 +35,120 @@
         "en": "Choose your name and your dragon companion. Your magical journey starts here."
       },
       "duration": {
-        "long": 14,
+        "long": 10,
         "short": 7
       },
       "cues": [
         {
-          "at": 0.3,
+          "at": 0.08,
+          "action": "creation",
+          "step": 1,
+          "look": {
+            "appearance": "girl",
+            "headId": "jade-girl",
+            "bodyId": "female2",
+            "headChoices": {
+              "boy": "jade-boy",
+              "girl": "jade-girl"
+            },
+            "bodyChoices": {
+              "boy": "male2",
+              "girl": "female2"
+            }
+          }
+        },
+        {
+          "at": 0.16,
+          "action": "creation",
+          "step": 1,
+          "look": {
+            "appearance": "girl",
+            "headId": "sun-girl",
+            "bodyId": "female3",
+            "headChoices": {
+              "boy": "sun-boy",
+              "girl": "sun-girl"
+            },
+            "bodyChoices": {
+              "boy": "male3",
+              "girl": "female3"
+            }
+          }
+        },
+        {
+          "at": 0.24,
+          "action": "creation",
+          "step": 1,
+          "look": {
+            "appearance": "girl",
+            "headId": "copper-girl",
+            "bodyId": "female7",
+            "headChoices": {
+              "boy": "copper-boy",
+              "girl": "copper-girl"
+            },
+            "bodyChoices": {
+              "boy": "male7",
+              "girl": "female7"
+            }
+          }
+        },
+        {
+          "at": 0.32,
+          "action": "creation",
+          "step": 1,
+          "look": {
+            "appearance": "girl",
+            "headId": "wave-girl",
+            "bodyId": "female10",
+            "headChoices": {
+              "boy": "wave-boy",
+              "girl": "wave-girl"
+            },
+            "bodyChoices": {
+              "boy": "male10",
+              "girl": "female10"
+            }
+          }
+        },
+        {
+          "at": 0.4,
+          "action": "creation",
+          "step": 1,
+          "look": {
+            "appearance": "girl",
+            "headId": "elf-girl",
+            "bodyId": "female12",
+            "headChoices": {
+              "boy": "elf-boy",
+              "girl": "elf-girl"
+            },
+            "bodyChoices": {
+              "boy": "male12",
+              "girl": "female12"
+            }
+          }
+        },
+        {
+          "at": 0.5,
           "action": "creation",
           "step": 2
         },
         {
-          "at": 0.65,
+          "at": 0.66,
           "action": "creation",
-          "step": 3
+          "step": 2,
+          "look": {
+            "starter": "dragon_purple"
+          }
+        },
+        {
+          "at": 0.82,
+          "action": "creation",
+          "step": 2,
+          "look": {
+            "starter": "dragon_orange"
+          }
         }
       ]
     },
@@ -246,6 +350,9 @@
     },
     {
       "id": "ice",
+      "camera": {
+        "zoomIn": 0.22
+      },
       "scene": "island",
       "title": {
         "zh-CN": "寒冰岛 · 雪中的旅途",
@@ -300,6 +407,9 @@
     },
     {
       "id": "camp",
+      "camera": {
+        "zoomIn": 0.22
+      },
       "scene": "island",
       "title": {
         "zh-CN": "魔法营地 · 再次相遇",
@@ -345,6 +455,9 @@
     },
     {
       "id": "ending",
+      "camera": {
+        "zoomIn": 0.22
+      },
       "scene": "world",
       "title": {
         "zh-CN": "新的伙伴，新的故事",

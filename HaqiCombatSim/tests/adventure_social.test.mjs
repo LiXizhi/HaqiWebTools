@@ -66,7 +66,7 @@ test('social actors use paths, stay walkable and are deterministic; paused scene
     assert.deepEqual(a.map(p=>p.position),b.map(p=>p.position));assert.notDeepEqual(initial,a.map(p=>p.position));assert.ok(a.every(p=>walkable(world,p.position.x,p.position.y)));
     const before=a.map(p=>({...p.position}));stepSocialActors(a,world,20,{paused:true});assert.deepEqual(before,a.map(p=>p.position));
 });
-test('social actors spawn and linger on roads near quest hubs, with residents at the teleporter',()=>{
+test('social actors spawn and linger on roads near quest hubs, with residents at the spawn',()=>{
     const save=A.createAdventure(content),world=createWorld('camp',content,save),people=Array.from({length:6},(_,i)=>({...profile(i),id:`road${i}`}));
     const hubs=socialActivityHubs(world),reach=SOCIAL_DEFAULTS.hotspotRadius+SOCIAL_DEFAULTS.hotspotSpread;
     assert.ok(hubs.some(h=>h.kind==='portal'));
@@ -74,8 +74,8 @@ test('social actors spawn and linger on roads near quest hubs, with residents at
     const actors=createSocialActors(world,people,11);
     assert.ok(actors.every(a=>onActivityRoad(world,a.position)),'spawn on road');
     assert.ok(actors.every(a=>hubs.some(h=>Math.hypot(a.position.x-h.x,a.position.y-h.y)<=reach)),'spawn near hub');
-    const portalNear=actors.filter(a=>Math.hypot(a.position.x-world.portal.x,a.position.y-world.portal.y)<=reach).length;
-    assert.ok(portalNear>=SOCIAL_DEFAULTS.portalMinActors,`portal cluster ${portalNear}`);
+    const spawnNear=actors.filter(a=>Math.hypot(a.position.x-hubs.find(h=>h.kind==='spawn').x,a.position.y-hubs.find(h=>h.kind==='spawn').y)<=reach).length;
+    assert.ok(spawnNear>=SOCIAL_DEFAULTS.spawnMinActors,`spawn cluster ${spawnNear}`);
     const open={x:0,y:0,w:world.w,h:world.h};
     for(let i=0;i<2000;i++)stepSocialActors(actors,world,.1,{view:open});
     const idle=actors.filter(a=>!a.moving&&!a.path.length);
@@ -154,6 +154,26 @@ test('walking residents finish the path on brush-by; idle near the player holds 
     for(let i=0;i<1000;i++)stepSocialActors([a],world,.1);assert.notDeepEqual(a.position,arrived);
 });
 
+test('visit seeds change positions while the plaza/spawn receives the reserved residents',()=>{
+    const people=Array.from({length:16},(_,i)=>({...profile(i),id:`visit${i}`}));
+    for(const zone of ['camp','town','firebird','frost','desert','red-mushroom']){
+        if(!content.worldMaps[zone])continue;
+        const world=createWorld(zone,content),hub=socialActivityHubs(world).find(h=>h.kind==='spawn');
+        assert.deepEqual({x:hub.x,y:hub.y},world.layout.spawn);
+        const first=createSocialActors(world,people,'visit:1');
+        assert.deepEqual(first.map(a=>a.position),createSocialActors(world,people,'visit:1').map(a=>a.position));
+        for(let visit=2;visit<=20;visit++){
+            const next=createSocialActors(world,people,`visit:${visit}`);
+            assert.notDeepEqual(next.map(a=>a.position),first.map(a=>a.position));
+            assert.ok(next.every(a=>walkable(world,a.position.x,a.position.y)));
+            assert.ok(next.slice(0,SOCIAL_DEFAULTS.spawnMinActors).every(a=>a.hotspot.kind==='spawn'));
+        }
+    }
+    const world=createWorld('town',content);
+    world.landmarks=[...world.landmarks,{id:'plaza',name:'小镇广场',x:3500,y:3000}];
+    assert.deepEqual(socialActivityHubs(world).find(h=>h.kind==='spawn'),{x:3500,y:3000,weight:4,kind:'spawn',id:'spawn'});
+});
+
 test('every non-camp island fills sixteen unique companions and keeps them on walkable terrain',async()=>{
     const {installNpcCatalog}=await import('../js/adventure_npc_core.js');
     const {installNpcArt}=await import('../js/adventure_npc_art_core.js');
@@ -170,9 +190,9 @@ test('every non-camp island fills sixteen unique companions and keeps them on wa
         const actors=createSocialActors(world,roster,42);
         assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)),`${zone} spawn`);
         assert.ok(actors.every(a=>onActivityRoad(world,a.position)),`${zone} road spawn`);
-        const reach=SOCIAL_DEFAULTS.hotspotRadius+SOCIAL_DEFAULTS.hotspotSpread;
-        const portalNear=actors.filter(a=>Math.hypot(a.position.x-world.portal.x,a.position.y-world.portal.y)<=reach).length;
-        assert.ok(portalNear>=Math.min(SOCIAL_DEFAULTS.portalMinActors,roster.length),`${zone} portal cluster`);
+        const hubs=socialActivityHubs(world),reach=SOCIAL_DEFAULTS.hotspotRadius+SOCIAL_DEFAULTS.hotspotSpread;
+        const spawnNear=actors.filter(a=>Math.hypot(a.position.x-hubs.find(h=>h.kind==='spawn').x,a.position.y-hubs.find(h=>h.kind==='spawn').y)<=reach).length;
+        assert.ok(spawnNear>=Math.min(SOCIAL_DEFAULTS.spawnMinActors,roster.length),`${zone} spawn cluster`);
         for(let i=0;i<1200;i++)stepSocialActors(actors,world,.1);
         assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)),`${zone} movement`);
         const idle=actors.filter(a=>!a.moving&&!a.path.length);

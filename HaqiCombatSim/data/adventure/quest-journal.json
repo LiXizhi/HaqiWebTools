@@ -21187,7 +21187,7 @@
     {
       "id": 63008,
       "title": "明星宠物商人",
-      "description": "打开出奇蛋，再与杰西卡交谈。",
+      "description": "获得出奇蛋中的伙伴，再与杰西卡交谈。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "青龙",
@@ -21242,7 +21242,7 @@
     {
       "id": 63009,
       "title": "喂养明星宠物",
-      "description": "在宠物面板喂养一包战宠口粮。",
+      "description": "让任意伙伴实际吃一份口粮，手动喂养或自动进食均可。",
       "region": "camp",
       "obsolete": false,
       "startNpc": "杰西卡",

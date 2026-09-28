@@ -96,6 +96,11 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         },
         create(save) { const next = addRole(state.catalog, uuid(), save, now());write({ ...state, catalog: next, dirty: true });return next.activeId; },
         select(id) { const catalog=selectRole(state.catalog,id,now());write({...state,catalog,dirty:changed(catalog)}); },
+        remove(id) {
+            if (!state.catalog.roles.some(row => row.id === id)) throw Error('角色不存在');
+            const catalog = {...state.catalog, roles: state.catalog.roles.filter(row => row.id !== id), activeId: state.catalog.activeId === id ? null : state.catalog.activeId};
+            write({...state, catalog, dirty: true});
+        },
         commitMagicBeanExchange(nextSave, exchangedUntil) {
             const id = state.catalog.activeId;
             const catalog = validateRoles(grantMagicBeans(state.catalog, id, nextSave, exchangedUntil), content, dataset);

@@ -39,6 +39,45 @@ test('legacy saves do not auto-spend backpack; slots survive validated cloud and
 test('ration bulk buying has exact cost and failed persistence leaves live inventory intact',()=>{
  const s=fresh();s.inventory[100]=1000;const before=structuredClone(s),action={type:'pet-food-put',slot:0,itemId:17172,count:2};
  assert.throws(()=>persistReward(s,c,action,{}, {getItem:()=>null,setItem:()=>{throw Error('quota');}}));assert.deepEqual(s,before);
- applyAction(s,c,{type:'buy',productId:'supply:17172',count:10});assert.equal(s.inventory[100],1000-foodInfo(c,17172).price*10);assert.equal(s.inventory[17172],15);
+ applyAction(s,c,{type:'buy',productId:'supply:17172',count:10});assert.equal(s.inventory[100],1000-foodInfo(c,17172).price*10);assert.equal(s.inventory[17172],5);assert.deepEqual(s.petFoodSlots[0],{itemId:17172,count:10});
  assert.equal(s.transactions.at(-1).count,10);assert.doesNotThrow(()=>parseSave(s,c));
+});
+
+test('new rations fill only empty trays and returned food stays in backpack',()=>{
+ const s=fresh();s.inventory[100]=10000;
+ for(const id of [17172,17185,17211])applyAction(s,c,{type:'buy',productId:'supply:'+id,count:2});
+ assert.deepEqual(s.petFoodSlots,[{itemId:17172,count:2},{itemId:17185,count:2}]);
+ assert.equal(s.inventory[17211],4);
+ applyAction(s,c,{type:'pet-food-take',slot:0});assert.equal(s.petFoodSlots[0],null);
+ s.mountId=1;applyAction(s,c,{type:'dismount'});
+ assert.equal(s.petFoodSlots[0],null);
+});
+test('real meals complete camp feeding, XP alone does not, and early meals survive reload',()=>{
+ const s=fresh();for(let id=63000;id<=63008;id++)s.quests[id]={accepted:true,claimed:true,progress:{}};
+ const pet=s.pets[s.formation[0]];pet.xp=300;pet.level=petXpLevel(pet.xp,c);
+ applyAction(s,c,{type:'accept',questId:63009,npcId:36202});
+ assert.equal(s.quests[63009].progress['action:79019'],undefined);
+ pet.hunger=20;applyAction(s,c,{type:'pet-food-put',slot:0,itemId:17172,count:2});
+ assert.equal(s.quests[63009].progress['action:79019'],1);
+ const reload=structuredClone(s);reload.quests={};assert.equal(parseSave(reload,c).tips.petFed,true);
+ const early=fresh();early.pets[early.formation[0]].hunger=20;
+ applyAction(early,c,{type:'pet-food-put',slot:0,itemId:17172,count:1});
+ for(let id=63000;id<=63008;id++)early.quests[id]={accepted:true,claimed:true,progress:{}};
+ applyAction(early,c,{type:'accept',questId:63009,npcId:36202});
+ assert.equal(early.quests[63009].progress['action:79019'],1);
+});
+test('egg reward grants companion directly; old egg migrates once and hatch goal uses possession',()=>{
+ const s=fresh();s.inventory[17307]=1;
+ const loaded=parseSave(s,c);assert.ok(loaded.pet);assert.equal(loaded.inventory[17307],0);
+ assert.equal(Object.values(loaded.pets).filter(p=>p.speciesId==='legacy_gululu').length,1);
+ assert.deepEqual(parseSave(loaded,c).pets,loaded.pets);
+ for(let id=63000;id<=63007;id++)loaded.quests[id]={accepted:true,claimed:true,progress:{}};
+ applyAction(loaded,c,{type:'accept',questId:63008,npcId:36211});
+ assert.equal(loaded.quests[63008].progress['action:hatch-pet'],1);
+});
+test('tray can feed a hungry resting pet without changing formation',()=>{
+ const s=fresh(),pet=addPet(s,c,'dragon_purple');pet.hunger=0;
+ applyAction(s,c,{type:'pet-food-put',slot:0,itemId:17172,count:2});
+ applyAction(s,c,{type:'pet-food-feed',slot:0,petId:'dragon_purple'});
+ assert.equal(pet.hunger,40);assert.equal(s.petFoodSlots[0].count,1);assert.equal(s.tips.petFed,true);
 });

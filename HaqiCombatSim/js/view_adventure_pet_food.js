@@ -1,10 +1,9 @@
 import {DetailDialog} from './view_detail_dialog.js';
-import {FOOD_ID,foodInfo,petParams} from './adventure_pets_core.js';
+import {FOOD_ID,foodInfo,hungryPets} from './adventure_pets_core.js';
 
 export function renderPetFood(parent,model,cb,{el,button,art}){
- const {save,assets}=model,c=assets.content,p=petParams(c);
+ const {save,assets}=model,c=assets.content;
  const box=el('section','pet-food-station');box.setAttribute('aria-label','宠物自动食槽');
- const label=el('div','pet-food-heading',el('strong','','自动食槽'),el('small','muted',`上阵伙伴共享 · 饱食低于 ${p.feedThreshold} 时进食`));
  const slots=el('div','pet-food-slots');
  let dialog;
  const ids=[FOOD_ID,...Object.keys(c.petFoods||{}).map(Number)];
@@ -14,6 +13,8 @@ export function renderPetFood(parent,model,cb,{el,button,art}){
   dialog.body.append(el('p','muted','先吃左槽，再吃右槽。只消耗放入食槽的口粮；战斗和离线期间暂停。'));
   if(current){
    dialog.body.append(el('p','',`槽内：${c.items[current.itemId].name} × ${current.count}`));
+   const hungry=hungryPets(save,c)[0];
+   if(hungry)dialog.footer.append(button('喂养'+c.pets[hungry[1].speciesId].name,()=>{dialog.close();cb.action({type:'pet-food-feed',slot:index,petId:hungry[0]});},'primary'));
    dialog.footer.append(button('全部取回背包',()=>{dialog.close();cb.action({type:'pet-food-take',slot:index});},'secondary'));
   }
   for(const id of ids){
@@ -30,13 +31,26 @@ export function renderPetFood(parent,model,cb,{el,button,art}){
   dialog.footer.append(button('前往补给商店',()=>{dialog.close();cb.panel('shop',{category:'supply'});},'secondary'));
   dialog.open(trigger);
  }
- for(let index=0;index<2;index++){
-  const row=save.petFoodSlots?.[index],item=row&&c.items[row.itemId];
-  const b=button([item?art(assets,item.art,48,48):el('span','pet-food-empty','+'),el('small','',item?item.name:'放入口粮'),el('strong','',row?`× ${row.count}`:'空槽')],()=>open(index,b),'secondary pet-food-slot');
-  b.dataset.foodSlot=index;b.disabled=!!save.pendingEncounter;b.setAttribute('aria-label',`食槽 ${index+1}，${item?`${item.name}，剩余 ${row.count} 份`:'空槽，点击放入口粮'}`);slots.append(b);
- }
- const total=(save.petFoodSlots||[]).reduce((sum,row)=>sum+(row?.count||0),0);
- box.append(label,slots,el('small','muted',save.pendingEncounter?'战斗中暂停进食':total?'口粮已备好，可随时取回':'食槽空了，放入口粮后自动进食'));
- box.dataset.foodState=JSON.stringify(save.petFoodSlots);
+ const hint=el('small','pet-food-hint');hint.setAttribute('aria-live','polite');
+ box.append(slots,hint);
+ let signature;
+ box.refresh=()=>{
+  const hungry=hungryPets(save,c)[0];
+  const next=JSON.stringify([save.petFoodSlots,!!save.pendingEncounter,hungry?.[0]]);
+  if(signature===next)return;signature=next;
+  slots.replaceChildren();
+  for(let index=0;index<2;index++){
+   const row=save.petFoodSlots?.[index],item=row&&c.items[row.itemId];
+   const b=button([item?art(assets,item.art,48,48):el('span','pet-food-empty','+'),...(row?[el('strong','',`× ${row.count}`)]:[])],()=>open(index,b),'secondary pet-food-slot');
+   b.dataset.foodSlot=index;b.disabled=!!save.pendingEncounter;
+   const label=`食槽 ${index+1}，${item?`${item.name}，剩余 ${row.count} 份`:'空槽，点击放入口粮'}`;
+   b.title=label;b.setAttribute('aria-label',label);slots.append(b);
+  }
+  const needsFood=!!hungry&&!save.pendingEncounter;
+  box.classList.toggle('needs-food',needsFood);hint.hidden=!needsFood;
+  hint.textContent=needsFood?'伙伴饿了，点击喂养':'';
+  box.dataset.foodState=JSON.stringify(save.petFoodSlots);
+ };
+ box.refresh();
  return box;
 }

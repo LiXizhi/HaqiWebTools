@@ -87,6 +87,35 @@ function cloudMock() {
     return { sdk, store, remote, setReadFailure: v => readFailure = v, setSyncFailure: v => syncFailure = v,
         client: () => createCloudClient({ content, dataset, loadSDK: async () => sdk, uuid: () => id(++serial) }) };
 }
+test('role deletion persists, isolates accounts and rejects stale writes', () => {
+    const localStore=local(),store=localStore.make();store.open();
+    saveLocal(hero('旧角色'),localStore.storage);
+    const first=store.create(hero('删除')),stale=store.scoped();
+    const second=store.create(hero('保留'));store.select(first);
+    store.remove(first);
+    assert.equal(store.catalog.activeId,null);
+    assert.deepEqual(store.catalog.roles.map(row=>row.id),[second]);
+    assert.throws(()=>saveLocal(hero('迟到写入'),stale),/切换/);
+    assert.equal(store.dirty,true);
+    store.open('alice');store.create(hero('其他账号'));
+    store.open();store.remove(second);store.open();
+    assert.equal(store.catalog.roles.length,0);
+    store.open('alice');assert.equal(store.catalog.roles[0].save.name,'其他账号');
+});
+test('deleted role disappears from verified cloud catalog while account grants survive',async()=>{
+    const localStore=local(),store=localStore.make();store.open('alice');
+    const role=store.create(hero('删除'));
+    const catalog={...store.catalog,magicBeanExchange:{exchangedUntil:'2026-10-01'}};
+    store.replace(catalog,null,true);
+    const mock=cloudMock(),client=mock.client();await client.connect();
+    const captured=store.checkpoint(),revision=await client.saveRoles(store.catalog,null);store.markSynced(revision,captured);
+    store.remove(role);
+    await client.saveRoles(store.catalog,store.base);
+    const remote=await client.roles();
+    assert.equal(remote.catalog.roles.length,0);
+    assert.equal(remote.catalog.activeId,null);
+    assert.deepEqual(remote.catalog.magicBeanExchange,catalog.magicBeanExchange);
+});
 test('fishing species rankings survive role reload and verified workspace file sync',async()=>{
     const l=local(),s=l.make();s.open('alice');const save=hero('钓鱼者');
     recordFishingCatch(save,[{id:17108,count:15},{id:17111,count:2}]);s.create(save);

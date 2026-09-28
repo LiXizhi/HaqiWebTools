@@ -1,8 +1,16 @@
-// Presentation only: arena_server.lua L82, L5224-5232 inserts movearrow before UseCard.
 export const POINTER_TURN_MS=200;
 const actions=new Set(['cast','fizzle','pass','capture']);
 export function nextBattlePointer(battle) {
     if(battle.finished)return null;
+    const opening=battle.sides.far.find(unit=>{
+        if(unit.hp<=0)return false;
+        const sequences=(unit.template?.sequences||[]).filter(rows=>rows.some(row=>String(row.round).endsWith('-')));
+        const index=unit.aiMemory?.sequence_before;
+        const candidates=index===undefined?sequences:[sequences[index]];
+        const round=`${(unit.aiMemory?.round||0)+1}-`;
+        return candidates.length>0&&candidates.every(rows=>rows?.some(row=>row.round===round&&row.card));
+    });
+    if(opening)return opening.id;
     const near=[...battle.sides.near].sort((a,b)=>(a.slot??0)-(b.slot??0));
     const order=battle.firstActingSide==='far'?[...battle.sides.far,...near]:[...near,...battle.sides.far];
     return order.find(unit=>unit.hp>0)?.id||null;

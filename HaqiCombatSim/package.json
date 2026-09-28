@@ -7,8 +7,8 @@
     "main": "shell/electron/main.js",
     "scripts": {
         "dev": "vite --host 127.0.0.1 --open /Haqi.html",
-        "build": "npm run check:maps && node scripts/package_island_encounters.mjs --check && vite build",
-        "build:app": "npm run check:maps && node scripts/package_island_encounters.mjs --check && node scripts/build_app.mjs",
+        "build": "npm run generate:maps && npm run check:maps && node scripts/package_island_encounters.mjs --check && vite build",
+        "build:app": "npm run generate:maps && npm run check:maps && node scripts/package_island_encounters.mjs --check && node scripts/build_app.mjs",
         "desktop": "electron shell/electron/main.js",
         "build:desktop": "npm run build:app && node scripts/build_desktop.mjs",
         "build:steam": "npm run build:desktop && node scripts/stage_steam_depot.mjs",

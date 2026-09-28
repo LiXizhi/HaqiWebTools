@@ -2,13 +2,31 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {compileFilm,locateShot,filmText,srtFor,frameDelta} from '../js/promo_timeline_core.js';
-import {samplePromoMotion} from '../js/promo_motion_core.js';
+import {samplePromoMotion,planPromoPath,samplePromoZoom} from '../js/promo_motion_core.js';
 import {presentationEventDurationMs,samplePresentationClock} from '../js/battle_presentation_core.js';
 import {WALK_SPEED} from '../js/adventure_world_core.js';
 const effects={cards:{bolt:{base:'bolt',name:'火弹',variant:{rank:'normal',level:0}}},bases:{bolt:{duration:1800,scale:1,kind:'bolt',count:8}},palettes:{fire:['#f00','#faa','#800']},variantAuras:{normal:{color:null,rings:0}},summons:{}};
 const spell={key:'bolt',spellSchool:'fire',pipcost:1,type:'SingleAttack'},quick={...spell,pipcost:0};
 const script=JSON.parse(fs.readFileSync(new URL('../data/promo/film.json',import.meta.url)));
 const motionWorld={layout:{route:[{x:0,y:0},{x:10000,y:0}]},paths:[{a:{x:0,y:0},b:{x:10000,y:0},width:20000}],encounters:[]};
+test('宣传片路线途中和停步都与居民保持距离',()=>{
+    const world={...motionWorld,npcs:[{x:500,y:0}],center:{x:1000,y:0}},origin={x:0,y:0};
+    const path=planPromoPath(world,origin);
+    assert.ok(path.length>0);
+    for(let t=0;t<=10;t+=.1){
+        const {position}=samplePromoMotion(world,origin,path,t);
+        assert.ok(Math.hypot(position.x-500,position.y)>=110);
+    }
+    assert.deepEqual(planPromoPath(world,origin),path);
+});
+test('镜头推近按时间采样，暂停和倒退无累计误差，减少动态时关闭',()=>{
+    assert.equal(samplePromoZoom(0,8,.3),1);
+    assert.equal(samplePromoZoom(8,8,.3),1.3);
+    const mid=samplePromoZoom(3,8,.3);assert.ok(mid>1&&mid<1.3);
+    assert.equal(samplePromoZoom(3,8,.3),mid);
+    assert.equal(samplePromoZoom(8,8,.3,true),1);
+    assert.equal(samplePromoZoom(8,8),1);
+});
 test('宣传片移动使用正式步行速度、坐骑倍率与四方向',()=>{
     const world=motionWorld,origin={x:5000,y:5000};
     for(const [dx,dy,facing] of [[0,1,0],[-1,0,1],[1,0,2],[0,-1,3]]){
@@ -54,7 +72,7 @@ test('异步镜头准备之后旧动画时间戳不能倒退播放时间',()=>{
 });
 test('宣传片两个版本时长、语言和六岛覆盖完整',()=>{
     const long=compileFilm(script),short=compileFilm(script,'short');
-    assert.equal(long.shots.length,17);assert.equal(long.duration,183);assert.equal(long.shots.some(s=>s.scene==='account'),false);
+    assert.equal(long.shots.length,17);assert.equal(long.duration,179);assert.equal(long.shots.some(s=>s.scene==='account'),false);
     assert.equal(short.shots.length,15);assert.equal(short.duration,80);
     for(const film of [long,short])for(const shot of film.shots){assert.ok(shot.subtitle.en);assert.ok(shot.title.en);for(const cue of shot.cues)assert.ok(cue.time<shot.duration);}
     assert.deepEqual(script.shots.filter(s=>s.zone).map(s=>s.zone).sort(),['camp','dark','desert','fire','ice','town']);

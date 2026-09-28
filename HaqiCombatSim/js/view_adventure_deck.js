@@ -33,9 +33,6 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     let active=draft.activeDeckLayout,school='all',page=0,query='',ownedOnly=true,previewPinned=false,hoverTimer;
     const owned={...save.cards},learned=new Set(),lessons=availableCardLessons(save,content),lessonMap=new Map(lessons.map(row=>[row.key,row]));
     layouts[active].deck=save.deck.map(row=>({...row}));
-    const deckFingerprint=()=>JSON.stringify({active,bag:bagItemId||0,spent:trainingPointsSpent,learned:[...learned].sort(),layouts:layouts.map(layout=>({name:layout.name,bag:layout.bagItemId||0,deck:layout.deck.map(row=>({key:row.key,count:row.count}))}))});
-    const cleanDeck=deckFingerprint();
-    const deckDirty=()=>deckFingerprint()!==cleanDeck;
     const tabs=el('div','bag-tabs'),slots=el('div','bag-slots'),library=el('div','bag-library'),detail=el('div','bag-detail');
     detail.hidden=true;detail.setAttribute('role','dialog');detail.setAttribute('aria-label','卡牌预览');
     const status=el('span','bag-status');status.setAttribute('aria-live','polite');status.hidden=true;
@@ -276,15 +273,7 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     if(closeButton?.onclick){
         const leave=closeButton.onclick;
         closeButton.onclick=()=>{
-            if(!deckDirty()){leave();return;}
-            if(shell.querySelector('.bag-save-prompt'))return;
-            const prompt=el('div','bag-save-prompt',el('p','','卡包还有未保存的修改，要保存吗？'));
-            const actions=el('div','bag-save-actions');
-            actions.append(
-                button('保存',()=>{if(commitDeck()){prompt.remove();leave();}},'primary'),
-                button('不保存',()=>{prompt.remove();leave();},'secondary'),
-                button('取消',()=>prompt.remove(),'secondary'));
-            prompt.append(actions);shell.append(prompt);
+            if(commitDeck())leave();
         };
     }
     paintTabs();paintCards();

@@ -15,6 +15,7 @@ import {renderDungeons} from './view_adventure_dungeons.js';
 import {enterDungeon} from './adventure_dungeons_core.js';
 import {createLearningChatView} from './view_learning_chat.js';
 import {createJsonReader} from './runtime_data.js';
+import {samplePromoMotion} from './promo_motion_core.js';
 
 const $=id=>document.getElementById(id), noop=()=>{};
 const nodes={entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer')};
@@ -98,7 +99,11 @@ async function warmArt(){
 }
 function tick(elapsed){
     if(!renderer||!save)return;
-    if(path.length&&!frames.length&&['world','island'].includes(shot.scene)){const moved=W.followPath(world,origin,path,elapsed*45);save.position=moved.position;save.facing=3;renderer.render(world,save,elapsed*1000,{moving:moved.path.length>0});}
+    if(path.length&&!frames.length&&['world','island'].includes(shot.scene)){
+        const moved=samplePromoMotion(world,origin,path,elapsed,{mountId:save.mountId,balanceParams:assets.content.balanceParams});
+        save.position=moved.position;save.facing=moved.facing;
+        renderer.render(world,save,elapsed*1000,{moving:moved.moving});
+    }
     else renderer.render(world,save,elapsed*1000);
     if(frames.length){
         const length=Math.max(1,shot.duration-battleStart-1),position=Math.max(0,Math.min(frames.length-1,(elapsed-battleStart)/length*(frames.length-1))),index=Math.floor(position),f=frames[index];

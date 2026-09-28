@@ -2,7 +2,32 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {compileFilm,locateShot,filmText,srtFor,frameDelta} from '../js/promo_timeline_core.js';
+import {samplePromoMotion} from '../js/promo_motion_core.js';
+import {WALK_SPEED} from '../js/adventure_world_core.js';
 const script=JSON.parse(fs.readFileSync(new URL('../data/promo/film.json',import.meta.url)));
+const motionWorld={layout:{route:[{x:0,y:0},{x:10000,y:0}]},paths:[{a:{x:0,y:0},b:{x:10000,y:0},width:20000}],encounters:[]};
+test('宣传片移动使用正式步行速度、坐骑倍率与四方向',()=>{
+    const world=motionWorld,origin={x:5000,y:5000};
+    for(const [dx,dy,facing] of [[0,1,0],[-1,0,1],[1,0,2],[0,-1,3]]){
+        const path=[{x:origin.x+dx*4000,y:origin.y+dy*4000}];
+        for(const [mountId,multiplier] of [[null,1],['mount',1.35]]){
+            const state=samplePromoMotion(world,origin,path,1,{mountId});
+            assert.ok(Math.abs(Math.hypot(state.position.x-origin.x,state.position.y-origin.y)-WALK_SPEED*multiplier)<1e-6);
+            assert.equal(state.facing,facing);assert.equal(state.moving,true);
+        }
+    }
+});
+test('宣传片转弯、停止和倒退跳转的朝向保持确定性',()=>{
+    const world=motionWorld,origin={x:1000,y:1000};
+    const path=[{x:1100,y:1000},{x:1100,y:2000}];
+    const early=samplePromoMotion(world,origin,path,50/WALK_SPEED);
+    assert.equal(early.facing,2);
+    assert.equal(samplePromoMotion(world,origin,path,200/WALK_SPEED).facing,0);
+    const end=samplePromoMotion(world,origin,path,2000/WALK_SPEED);
+    assert.deepEqual(end.position,path[1]);assert.equal(end.facing,0);assert.equal(end.moving,false);
+    assert.deepEqual(samplePromoMotion(world,origin,path,50/WALK_SPEED),early);
+    assert.deepEqual(samplePromoMotion(world,origin,path,0),{position:origin,facing:0,moving:false});
+});
 test('异步镜头准备之后旧动画时间戳不能倒退播放时间',()=>{
     assert.equal(frameDelta(100,130,8),0);assert.equal(frameDelta(116,100,1),.016);assert.equal(frameDelta(10000,100,8),.8);
 });

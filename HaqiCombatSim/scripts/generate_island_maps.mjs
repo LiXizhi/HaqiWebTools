@@ -36,7 +36,7 @@ outputs['data/adventure/maps/index.json']=index;
 const check=process.argv.includes('--check');
 for(const [file,data] of Object.entries(outputs)){
     const text=JSON.stringify(data,null,2)+'\n',target=path.join(root,file);
-    if(check){if(!fs.existsSync(target)||fs.readFileSync(target,'utf8')!==text)throw Error(`地图配置过期：${file}，请运行 npm run generate:maps`);}
+    if(check){if(!fs.existsSync(target)||fs.readFileSync(target,'utf8').replace(/\r\n/g,'\n')!==text)throw Error(`地图配置过期：${file}，请运行 npm run generate:maps`);}
     else{fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,text);}
 }
 if(check){if(JSON.stringify(chapter.worldMapIndex)!==JSON.stringify(index))throw Error('章节地图索引过期');}

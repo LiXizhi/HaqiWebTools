@@ -86,6 +86,6 @@ for (const [zone, originalWorld] of Object.entries(worlds)) {
 }
 const file = new URL('data/adventure/island-encounters.json',root), text = JSON.stringify(output,null,2)+'\n';
 if (process.argv.includes('--check')) {
-    if (fs.readFileSync(file,'utf8') !== text) throw Error('岛屿怪物配置过期，请运行 npm run prepare:island-encounters');
+    if (fs.readFileSync(file,'utf8').replace(/\r\n/g,'\n') !== text) throw Error('岛屿怪物配置过期，请运行 npm run prepare:island-encounters');
 } else fs.writeFileSync(file,text);
 console.log(`${fileURLToPath(file)}：${output.encounters.length} 处岛屿遭遇，可达性通过`);

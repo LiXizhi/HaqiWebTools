@@ -1,6 +1,20 @@
 {
   "regressions": [
     {
+      "id": "release-cross-origin-workers",
+      "date": "2026-09-28",
+      "cause": "Battle AI was not inlined and Windows path casing skipped the simulator inline transform.",
+      "trigger": "Keepwork HTML loads a production bundle from the CDN on a different origin.",
+      "expected": "Both default Workers are inlined; Windows casing variations do not skip the transform; custom workerUrl stays intact.",
+      "sources": ["vite.config.mjs"],
+      "tests": ["tests/release.test.mjs"],
+      "evidence": {
+        "build": "Production build passed and emitted no standalone Worker entries",
+        "mutation": "Not run; intermediate build reproduced skipped transforms before path normalization",
+        "limitations": "Not republished or verified in the live browser"
+      }
+    },
+    {
       "id": "cloud-auth-legacy-threat-params",
       "date": "2026-09-21",
       "cause": "New threat defaults made version-two cloud battle snapshots fail strict parameter equality; generic error wrapping disguised this as login failure.",

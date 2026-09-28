@@ -3,7 +3,7 @@ import {dungeonFor} from './adventure_dungeons_core.js';
 import {islandBuildings,harborAccess} from './adventure_buildings_core.js';
 // Compact authored maps. The original NPC coordinates remain in AdventureContent for provenance.
 import { islandFor } from './adventure_world_map_core.js';
-import { onLargeIsland, riverBlocks } from './adventure_island_layout_core.js';
+import { onLargeIsland, riverBlocks, sceneryCoversActor, separateBuilding } from './adventure_island_layout_core.js';
 export const WALK_SPEED = 210;
 export function createWorld(zone,content,save=null) {
     if(!islandFor(zone)&&!dungeonFor(content,zone))throw new Error('目的地不存在');
@@ -64,8 +64,29 @@ export function createWorld(zone,content,save=null) {
             world.npcs=world.npcs.filter(n=>!captains.includes(n)||n===captain);
         }
     }
+    // Canopies and roofs paint over anyone with a smaller foot Y. Drop trees and
+    // slide buildings so resident and monster sprites, names and quest marks stay visible.
+    const actors=sceneActors(world,content);
+    const onLand=(x,y)=>onLargeIsland(world,x,y)&&!riverBlocks(world,x,y);
+    const placed=world.buildings.map(b=>separateBuilding(b,actors,onLand));
+    const moved=placed.filter((b,i)=>b.x!==world.buildings[i].x||b.y!==world.buildings[i].y);
+    world.buildings=placed;
+    if(moved.length)world.trees=world.trees.filter(t=>!moved.some(b=>Math.abs(t.x-b.x)<b.w*.55&&t.y>b.y-b.h*.5&&t.y<b.y+45));
+    world.trees=world.trees.filter(t=>actors.every(a=>!sceneryCoversActor(t,a)));
     objectIndices.delete(world);
     return world;
+}
+export function sceneActors(world,content) {
+    const actors=(world.npcs||[]).map(n=>({...n,label:n.name||''}));
+    for(const e of world.encounters||[]){
+        const ids=e.monsterIds?.length?e.monsterIds:(e.monsterId?[e.monsterId]:[]);
+        const name=content?.monsters?.[ids[0]]?.name||e.name||'';
+        let label=name;
+        if(ids.length>1)label+=` · ${ids.length}只`;
+        if(e.blocked?.length)label+=' · 待迁移';
+        actors.push({...e,label});
+    }
+    return actors;
 }
 export const distance=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 export function onIsland(x,y,padding=0) { return ((x-900)/(805-padding))**2+((y-800)/(715-padding))**2<1; }
@@ -96,6 +117,32 @@ export function dungeonAutoInteraction(world,p){
     if(next&&!next.blocked?.length&&distance(p,next)<84)return {...next,kind:'encounter'};
     if(!world.portal.hidden&&distance(p,world.portal)<70)return {...world.portal,kind:'portal'};
     return null;
+}
+// Stand just outside touch and dungeon aggro, on the side the player approached from.
+export function retreatBeside(world,player,target){
+    const origin={x:target.x,y:target.y};
+    const legal=p=>p&&walkable(world,p.x,p.y)&&distance(p,origin)>=100&&distance(p,origin)<=220&&!dungeonAutoInteraction(world,p);
+    if(world.layout?.route){
+        const at=routeLocation(world,origin),limit=dungeonLimit(world);
+        for(let back=96;back<=360;back+=8){
+            const point=routePoint(world,Math.max(0,at.progress-back));
+            if(routeLocation(world,point).progress<=limit+0.5&&legal(point))return point;
+        }
+        return {...world.layout.spawn};
+    }
+    const dx=player.x-origin.x,dy=player.y-origin.y,len=Math.hypot(dx,dy);
+    const spawn=world.layout?.spawn||world.center||{x:origin.x+1,y:origin.y};
+    const dir=len>=8?Math.atan2(dy,dx):Math.atan2(spawn.y-origin.y,spawn.x-origin.x);
+    const turns=[0];
+    for(let i=1;i<=8;i++)turns.push(i*Math.PI/8,-i*Math.PI/8);
+    for(const radius of [120,140,160,180,200])for(const turn of turns){
+        const point={x:origin.x+Math.cos(dir+turn)*radius,y:origin.y+Math.sin(dir+turn)*radius};
+        if(legal(point))return point;
+    }
+    const near=nearestWalkable(world,origin.x+Math.cos(dir)*120,origin.y+Math.sin(dir)*120);
+    if(legal(near))return near;
+    if(legal(player))return {x:player.x,y:player.y};
+    return near&&walkable(world,near.x,near.y)?near:{x:player.x,y:player.y};
 }
 export function walkable(world,x,y) {
     if(!Number.isFinite(x)||!Number.isFinite(y))return false;

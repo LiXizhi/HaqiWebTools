@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createCharacterConversation} from '../js/character_conversation.js';
 import {fakeWorkspace} from './helpers/character_workspace.js';
 
-function setup(){
+function setup(options={}){
     const f=fakeWorkspace(),cacheRows=new Map(),cache={prepare:async()=>{},get:k=>cacheRows.get(k),set:(k,v)=>cacheRows.set(k,v),flush:async()=>{}};
     let state,callbacks,replyCalls=0,error=null,answerGate=null;
     const app={owner:'alice',role:'r',save:{name:'我',appearance:'boy',inventory:{},languageLearning:{native:'zh-CN',target:'en'}},assets:{content:{items:{}}}};
@@ -17,7 +17,7 @@ function setup(){
         const json=JSON.parse(system.split('Character and player data: ')[1]);const eventId=JSON.parse(system.match(/"eventId":("[^"]+")/)[1]);
         return {reply:'What does that mean?',translation:'那是什么意思？',affinity:{eventId,before:json.affinity,delta:2,after:Math.min(100,json.affinity+2),reason:'共同学习'}};
     }};
-    const chat=createCharacterConversation({getState:()=>app,commit:next=>{app.save=next;},membership:member,cache,workspace:f.workspace,voice,now:()=>Date.parse('2026-09-27T00:00:00Z'),read:async()=>({entries:{}}),viewFactory:cb=>{callbacks=cb;return {render:s=>{state=structuredClone({...s,io:null,abort:null});},close(){},root:{}};},detailsFactory:()=>({close(){},relation(){},gifts(){}})});
+    const chat=createCharacterConversation({...options,getState:()=>app,commit:next=>{app.save=next;},membership:member,cache,workspace:f.workspace,voice,now:()=>Date.parse('2026-09-27T00:00:00Z'),read:async()=>({entries:{}}),viewFactory:cb=>{callbacks=cb;return {render:s=>{state=structuredClone({...s,io:null,abort:null});},close(){},root:{}};},detailsFactory:()=>({close(){},relation(){},gifts(){}})});
     return {f,app,chat,cacheRows,member,get state(){return state;},get callbacks(){return callbacks;},get calls(){return replyCalls;},error:e=>{error=e;},gate:g=>{answerGate=g;}};
 }
 const peer={id:'a',kind:'companion',name:'安娜',native:'en'};
@@ -81,4 +81,16 @@ test('failed initial entitlement stays unready and reconnect verifies it before 
     t.member.refresh=refresh;await t.callbacks.retry();
     assert.equal(t.state.ready,true);assert.equal(t.state.remaining,2);
     assert.equal(t.state.messages.length,1);t.chat.close();
+});
+
+test('guest sees login action before workspace, quota or model requests; resumes same encounter after login',async()=>{
+    let requests=0,login;
+    const t=setup({onLogin:async(source,options)=>{login={source,options};t.app.owner='alice';await t.chat.open(source,options);}});
+    t.app.owner=null;t.f.workspace.connect=async()=>{requests++;throw Error('unexpected cloud access');};
+    await t.chat.open(peer,{returnPanel:'social-profile'});
+    assert.equal(t.state.loginRequired,true);assert.equal(t.state.busy,false);assert.equal(t.state.retryable,false);
+    assert.equal(requests,0);assert.equal(t.calls,0);assert.match(t.state.status,/登录 KeepWork/);
+    const original=fakeWorkspace();t.f.workspace.connect=original.workspace.connect;
+    await t.callbacks.login();assert.equal(login.source,peer);assert.equal(login.options.returnPanel,'social-profile');
+    assert.equal(t.state.ready,true);assert.equal(t.state.loginRequired,undefined);t.chat.close();
 });

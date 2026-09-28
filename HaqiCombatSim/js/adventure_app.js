@@ -40,14 +40,14 @@ import { DEBUG_BACKUP_KEY, hasDebugBackup, storeDebugEdit, restoreDebugBackup } 
 import { tickCare, productPrice } from './adventure_pets_core.js';
 import { updatePetStatus } from './view_adventure_pet_status.js';
 // Browser controller: input, rendering, audio and persistence live outside the pure rules.
-import { effectDuration } from './spell_effects_core.js';
 import { createSpellSound } from './spell_sound.js';
 import {rewardSound,battleEventSound} from './game_sound_core.js';
-import { HIT_DURATION_MS,castHitReactions } from './actor_animation_core.js';
-import { POINTER_TURN_MS,withBattlePointer,nextBattlePointer } from './battle_pointer_core.js';
+import { castHitReactions } from './actor_animation_core.js';
+import { withBattlePointer,nextBattlePointer } from './battle_pointer_core.js';
+import { presentationEventDurationMs } from './battle_presentation_core.js';
 import {presentedEnvironment} from './spell_environment_core.js';
 import * as A from './adventure_core.js';
-import {catalogAcceptBlock,catalogGoalRows,catalogQuestReady} from './adventure_catalog_quests_core.js';
+import {catalogAcceptBlock,catalogGoalRows,catalogQuestReady,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import * as W from './adventure_world_core.js';
 import { SOCIAL_DEFAULTS } from './adventure_social_core.js';
 import * as P from './combat_pve_core.js';
@@ -169,7 +169,7 @@ const characterChat=createCharacterConversation({
     getPortrait:source=>{if(source.kind&&source.kind!=='npc')return heroPortrait(assets,source,220,270,{facing:0,lookAround:false});const npc=assets.content.npcs[source.id]||source;return npc.portrait?V.art(assets,npc.portrait,220,270,'camp-chat-character-art'):null;},
     commit:next=>{saveLocal(next,roleStorage);save=roleStore.catalog.roles.find(r=>r.id===roleStore.catalog.activeId).save;queueCloudSave();paintHud();},
     onClose:options=>{if(options?.returnPanel)openPanel(options.returnPanel);else if(options?.npc){dialog={npcId:options.npc.id,npc:options.npc};paintDialogue();}},
-    onSettings:()=>openPanel('settings'),onUpgrade:()=>openPanel('membership'),onDialogue:id=>petScene.dialogue(id),notify:toast,
+    onLogin:loginForCharacterChat,onSettings:()=>openPanel('settings'),onUpgrade:()=>openPanel('membership'),onDialogue:id=>petScene.dialogue(id),notify:toast,
 });
 function recordRelationshipActivity(event){
     if(event.flushOnly){void characterChat.syncActivities();return;}
@@ -342,8 +342,24 @@ async function restoreDebug() {
 }
 function cloudLocal() {if(stage!=='title')return save;try{const raw=roleStorage&&readLocal(roleStorage);return raw?A.parseSave(raw,assets.content):null;}catch{return null;}}
 function openCloud() {persist();close();path=[];destination=null;if(!cloud.busy){cloud.preview=null;cloud.error='';cloud.message=cloud.owner?'请选择一份记录查看，或保存当前旅程。':'';}panel='cloud';paintCloud();}
+async function loginForCharacterChat(source,options) {
+    if(roles.busy||cloud.busy)return;
+    persist();if(storageWarning){toast('当前进度尚未保存，请先重试保存。');return;}
+    let transfer;
+    try{transfer=roleStore.guestTransfer();}catch(e){toast(e.message);return;}
+    const originalId=roleStore.catalog.activeId;
+    await showTitle();if(stage!=='title')return;
+    await connectRoles(true,{enter:true,transfer});
+    if(roles.error||roles.conflict){
+        // Cancellation leaves the guest untouched and returns to the same encounter.
+        if(!roleStore.owner&&roleStore.catalog.activeId===originalId){await activateRole(originalId);await characterChat.open(source,options);}
+        return;
+    }
+    if(stage==='world'&&roleStore.owner)await characterChat.open(source,options);
+}
 async function loginRoles() {
     if(stage!=='title'){await showTitle();if(stage!=='title')return;}
+    // 先停在角色选择；账号里还没有角色时才进入新建。
     await connectRoles(true,{enter:false});
 }
 function paintCloud() {
@@ -544,6 +560,7 @@ function paintCreation() {
         draft:roleDraft,busy:roles.busy,owner:roleStore.owner,
         setLocale:setEntryNative,setSecondLocale,locale:displayLocale(),secondLocale:secondLocaleFor(displayLocale()),
         roles:roleStore.catalog.roles.length?()=>{titleView='roles';paintRoles();}:null,
+        accountChoice:!roleStore.owner&&!roleStore.catalog.roles.length,
         login:()=>void loginRoles(),cloud:()=>void loginRoles(),
         importOriginal:beginOriginalImport,
         previewChoices:school=>tutorialCards(assets,school),
@@ -580,7 +597,7 @@ async function reconcileRoles(remote) {
     if(!roleStore.dirty)roleStore.replace(remote.catalog,remote.revision);
     roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;roles.conflict=null;
 }
-function connectRoles(interactive=true, {enter=false}={}) {
+function connectRoles(interactive=true, {enter=false,transfer=null}={}) {
     return roleOperation('正在登录并读取角色…',async()=>{
         const owner=await cloudClient.connect({interactive});
         cloud.owner=owner;cloud.preview=null;cloud.paths=[];
@@ -592,7 +609,8 @@ function connectRoles(interactive=true, {enter=false}={}) {
         await reconcileRoles(remote);
         if(roles.conflict)return;
         const stale=remote.partsStale?.length>0;
-        const id=startupRoleId(roleStore.catalog,{direct:enter});
+        const id=transfer?roleStore.adoptGuest(transfer):startupRoleId(roleStore.catalog,{direct:enter});
+        if(transfer){await syncRoles(true);if(roleStore.dirty)throw Error('角色尚未完成云端同步，请重试。');}
         if(id){await activateRole(id);await syncRoles(stale);return;}
         titleView=roleStore.catalog.roles.length?'roles':'create';
         if(titleView==='create')roleDraft=null;
@@ -603,7 +621,7 @@ function resetRoleAccount() {
     // Persist against the old scope before changing identity. Never assign an
     // account's active save to the guest namespace on logout/auth expiration.
     persist();autoSave.reset();roleEpoch++;roleStore.open(null);roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
-    roles.conflict=null;roles.message='当前为访客角色。';cloud.owner=null;cloud.paths=[];cloud.preview=null;
+    roles.conflict=null;roles.message='';cloud.owner=null;cloud.paths=[];cloud.preview=null;
     stage='title';showTitle();
 }
 function updateMusic() {
@@ -667,6 +685,16 @@ function travel(zone){safely(()=>{
     A.applyAction(save,assets.content,{type:'travel',zone});enterWorld(save);showTeleportEffect();toast('已抵达{name}。',{name:islandName(zone)});
 });}
 const dialogueVoice=createLearningVoice({getSettings:()=>save?.languageLearning||{}});
+function finishTrackedDialogue() {
+    if(!dialog?.fromQuestTracking)return false;
+    close();
+    if(rewardFeedback.hasPendingItems)return true;
+    const content=assets.content;
+    const ids=trackedQuestIds(save).filter(id=>content.quests.some(quest=>quest.id===id)||content.catalogQuests?.byId[id]);
+    if(!ids.length){const quest=A.currentQuest(save,content);if(quest)ids.push(quest.id);}
+    if(ids.length===1)track(ids[0],{pin:false});
+    return true;
+}
 function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog,{close,mapDialogue,readDialogue:(text,locale,signal)=>dialogueVoice.speak(text,locale,signal),next:nextDialogue,startQuest:q=>startLines(q.startDialog,'接取任务',()=>{
     const result=A.applyAction(save,assets.content,{type:'accept',questId:q.id,npcId:q.startNpc});toast(result.full?'已接取：{title}。追踪已满3个，请先取消一条。':'已接取：{title}',{title:q.title});
 }),finishQuest:q=>startLines(q.endDialog,'领取奖励',()=>{
@@ -674,11 +702,11 @@ function paintDialogue(){if(dialog)V.renderDialogue(nodes.overlay,model(),dialog
     A.applyAction(save,assets.content,{type:'claim',questId:q.id,npcId:q.endNpc});islandSocial.activity('quest');
     persist();showRewards(before,'claim');return 'reward';
 }),startCatalog:q=>{
-    const result=A.applyAction(save,assets.content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});persist();toast(result.full?'已接取：{title}。追踪已满3个，请先取消一条。':'已接取：{title}',{title:q.title});paintDialogue();paintHud();
+    const result=A.applyAction(save,assets.content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});persist();toast(result.full?'已接取：{title}。追踪已满3个，请先取消一条。':'已接取：{title}',{title:q.title});paintHud();if(!finishTrackedDialogue())paintDialogue();
 },finishCatalog:q=>{
     const before=rewardSnapshot(save);
     A.applyAction(save,assets.content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});
-    persist();islandSocial.activity('quest');showRewards(before,'claim-catalog');toast('已完成：{title}',{title:q.title});close();paintHud();
+    persist();islandSocial.activity('quest');showRewards(before,'claim-catalog');toast('已完成：{title}',{title:q.title});paintHud();if(!finishTrackedDialogue())close();
 },questTalk:(q,talk)=>startQuestTalk(talk),panel:openPanel,travel,track});}
 function startQuestTalk(talk) {
     startLines(talk.dialog,talk.dialog.at(-1)?.buttons?.[0]?.label||'谢谢你',()=>{
@@ -696,6 +724,7 @@ async function nextDialogue() {
     const current=dialog;try{await Promise.all(missingRewardPets(A.currentQuest(save,assets.content)).map(loadPet));}catch(error){toast(error.message);return;}if(dialog!==current)return;
     safely(()=>{
         const npcId=dialog.npcId,advance=dialogDone?.();petScene.dialogue(`resident:${npcId}`);dialogDone=null;persist();queueCloudSave();paintHud();
+        if(finishTrackedDialogue())return;
         if(advance){
             close();
             if(advance==='reward')return;
@@ -711,7 +740,7 @@ function interact(target) {
     path=[];destination=null;keys.clear();persist();
     if(target.kind==='npc'){
         if((target.id===36205||target.name==='法斯特船长')&&!(save.zone==='camp'&&save.languageLearning?.enabled)){openPanel('worldmap');return;}
-        close();dialog={npcId:target.id,npc:target};
+        close();dialog={npcId:target.id,npc:target,questDialogue:target.questDialogue===true,fromQuestTracking:target.questDialogue===true};
         const talk=target.questDialogue&&A.pendingQuestTalk(save,A.currentQuest(save,assets.content),target.id);
         if(talk)startQuestTalk(talk);else paintDialogue();
     }
@@ -850,7 +879,7 @@ function paintBattle(){
     playRound({...selected,targetId:id,discardSeqs:discarded});
 },openRunes:()=>{if(animation||battle.finished)return;runeCardsOpen=true;petCardsOpen=false;selected=null;paintBattle();},pass:()=>playRound({pass:true,discardSeqs:discarded}),retreat:()=>{
     if(assets.content.pets)A.settleParty(save,assets.content,battle,{retreat:true});
-    A.applyAction(save,assets.content,{type:'retreat'});save.careAt=Date.now();enterWorld(save);toast('你回到了安全地点。已保留物品与任务进度。');
+    const result=A.applyAction(save,assets.content,{type:'retreat'});save.careAt=Date.now();enterWorld(save);toast(result?.message||'你撤到了怪物附近。已保留物品与任务进度。');
 },finish:()=>safely(()=>{const before=rewardSnapshot(save);const settle=A.settleEncounter(save,assets.content,battle,{now:Date.now()});islandSocial.settled(battle);if(battle.winner==='near')islandSocial.activity('battle');save.careAt=Date.now();enterWorld(save,null,{announceBeans:false});showRewards(before);if(settle?.insufficientStamina)toast('你的精力值不足，无法得到这场战斗的战利品。');if(save.coopRun&&save.coopRun.runs[save.zone]?.cleared.length===dungeonFor(assets.content,save.zone)?.arenas.length)openPanel('social-party');}),battleTalk:()=>void languageAdventure.open()});}
 function playRound(decision,readyAnalysis=null) {
     if(animation||battle.finished)return;
@@ -893,10 +922,10 @@ function tickAnimation(now) {
         }
         if(e.type==='damage')a.hp[e.target]=Math.max(0,a.hp[e.target]-e.amount);
         if(e.type==='heal')a.hp[e.target]=Math.min(battle.unitsById[e.target].maxHp,a.hp[e.target]+e.amount);
-        const text=V.eventLabel(e,battle,assets);if(text)$('cast-announcement').textContent=text;
+        const text=e.type==='speak'?'':V.eventLabel(e,battle,assets);if(text||e.type==='speak')$('cast-announcement').textContent=text;
     }
     a.statusFeedback=a.statusFeedback.filter(change=>now-change.start<700);
-    const duration=e.type==='movearrow'?POINTER_TURN_MS:e.type==='status'?700:e.type==='aura'?1:e.type==='speak'?1300:e.type==='cast'?effectDuration(assets.effects,battle.resolved.cards[e.card],matchMedia('(prefers-reduced-motion: reduce)').matches):e.type==='pass'?300:e.type==='damage'&&a.hp[e.target]>0?HIT_DURATION_MS:600;
+    const duration=presentationEventDurationMs(e,{effects:assets.effects,card:battle.resolved.cards[e.card],hp:a.hp[e.target],reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
     const progress=Math.min(1,(now-a.start)/duration);
     const card=battle.resolved.cards[e.card],spec=card&&assets.effects.bases[assets.effects.cards[card.key]?.base];
     const impact=spec?.kind==='summon'?assets.effects.timeline.summonImpact:assets.effects.timeline.impact;
@@ -1073,7 +1102,7 @@ function frame(now) {
             sceneFishing.update(model(),now,p=>({x:(p.x-origin.x)/(unit.x-origin.x),y:(p.y-origin.y)/(unit.y-origin.y)}));
         }
     }
-    if(stage==='battle'){const presentation=tickAnimation(now),canvas=$('battle-canvas');V.updateBattleRoster(nodes.battle.battleStatusEntries,presentation);if(canvas){canvas.battlePositions=renderer.renderBattle(canvas,battle,save,now,presentation);V.updateBattlePetHint(nodes.battle,battle,save,assets.content,canvas);}}
+    if(stage==='battle'){const speechEvent=animation?.events[animation.index],presentation=tickAnimation(now),canvas=$('battle-canvas');V.updateBattleRoster(nodes.battle.battleStatusEntries,presentation);if(canvas){canvas.battlePositions=renderer.renderBattle(canvas,battle,save,now,presentation);V.updateBattleSpeech(nodes.battle,battle,canvas,now,speechEvent);V.updateBattlePetHint(nodes.battle,battle,save,assets.content,canvas);}}
 }
 async function boot(){
     try {
@@ -1093,7 +1122,7 @@ async function boot(){
         installLocaleTooltip();
         roleStore=createRoleStore({content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves});await roleStore.prepareOpen();roleStore.open();
         roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
-        cloudClient=createCloudClient({petFileStore:id=>roleStore?.petFileIO(id),content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves,onAccountChange:()=>{resetRoleAccount();cloud.message='登录状态已变化，请重新连接。';}});
+        cloudClient=createCloudClient({petFileStore:id=>roleStore?.petFileIOFor(cloudClient.owner,id),content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves,onAccountChange:()=>{resetRoleAccount();cloud.message='登录状态已变化，请重新连接。';}});
         creationPreview=createCreationPreview(assets);
         renderer=createRenderer(nodes.world,assets);requestAnimationFrame(frame);
         // Keep the loading screen until session restoration chooses the final screen.

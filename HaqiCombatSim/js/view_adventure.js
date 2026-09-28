@@ -1,6 +1,6 @@
 import {defeatReviewNotes} from './view_battle_review.js';
 import {createBattlePetHint} from './view_battle_pet_hint.js';
-export {updateBattlePetHint} from './view_battle_pet_hint.js';
+export {updateBattlePetHint,updateBattleSpeech,battleSpeechController} from './view_battle_pet_hint.js';
 import {socialHudButton,bindDungeonMenu} from './view_adventure_social_hud.js';
 import {dungeonProgress} from './adventure_coop_core.js';
 import {renderLearningMode} from './view_learning_mode.js';
@@ -120,7 +120,7 @@ export function renderEntryLocale(locale, secondLocale, onLocale, onSecond) {
     const second=el('div','entry-locale',el('span','entry-locale-label','第二语言'),select);
     return {root:el('div','entry-locale-stack',native,second),controls:[...native.querySelectorAll('button'),select]};
 }
-// 标题页左栏：大标题与语言选择。创建页额外放登录按钮；角色列表页把账号操作留在右侧。
+// 标题页左栏：大标题与语言选择。已有角色时登录留在右侧列表；没有离线角色时，右侧先选择登录或本地访客。
 export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocale,setSecondLocale}={}) {
     const intro=el('div','entry-intro',el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。'));
     const controls=[];
@@ -138,13 +138,24 @@ export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocal
 export function renderEntry(root,assets,stored,cb,error='') {
     const draft=cb.draft||{name:'',school:'fire',appearance:'boy',starter:'dragon_green',step:1};
     root.replaceChildren();root.className='entry-screen entry-wizard';
-    const introPane=createEntryIntro({owner:cb.owner,login:cb.login,cloud:cb.cloud,locale:cb.locale,secondLocale:cb.secondLocale,setLocale:cb.setLocale,setSecondLocale:cb.setSecondLocale});
+    const accountChoice=!!cb.accountChoice;
+    const introPane=createEntryIntro({owner:cb.owner,login:accountChoice?null:cb.login,cloud:accountChoice?null:cb.cloud,locale:cb.locale,secondLocale:cb.secondLocale,setLocale:cb.setLocale,setSecondLocale:cb.setSecondLocale});
     const intro=introPane.root;
     const form=el('form','character-form creation-form');
     root.append(el('div','entry-layout',intro,form));
     introPane.fit();
     function paint() {
-        cb.stopPreview?.();form.replaceChildren();root.classList.toggle('school-step',draft.step===3);root.classList.toggle('companion-step',draft.step===2);
+        cb.stopPreview?.();form.replaceChildren();
+        if(accountChoice&&draft.account!=='guest'){
+            root.classList.remove('school-step','companion-step');
+            const choices=el('div','entry-account-choices',
+                button('登录 Keepwork',()=>cb.login?.(),'primary entry-account-choice'),
+                button('本地访客',()=>{draft.account='guest';paint();root.scrollTop=0;},'secondary entry-account-choice'));
+            form.append(el('h2','','选择进入方式'),choices);
+            if(cb.busy)for(const node of form.querySelectorAll('button'))node.disabled=true;
+            return;
+        }
+        root.classList.toggle('school-step',draft.step===3);root.classList.toggle('companion-step',draft.step===2);
         const steps=el('div','creation-steps');
         for(const [index,label]of ['起名字','选择抱抱龙','选择系别'].entries()){
             if(index)steps.append(el('i',''));
@@ -208,6 +219,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
         form.append(submit);
         if(draft.step===1)form.append(button('导入魔法哈奇角色',cb.importOriginal,'text-button creation-import'));
         if(draft.step>1)form.append(button('上一步',()=>{draft.step--;paint();root.scrollTop=0;},'text-button creation-back'));
+        else if(accountChoice)form.append(button('返回',()=>{draft.account=undefined;paint();root.scrollTop=0;},'text-button creation-back'));
         if(cb.roles)form.append(button('返回我的角色',cb.roles,'text-button creation-back'));
         if(error){const status=el('p','error-text',error);status.setAttribute('role','alert');form.append(status);}
         if(cb.busy)for(const node of root.querySelectorAll('button,input,select'))node.disabled=true;
@@ -566,6 +578,10 @@ export function renderDialogue(root,model,dialog,cb) {
         if(q&&ready&&q.endNpc===npc.id){const claim=button('',()=>cb.finishQuest(q),'primary');setText(claim,'完成任务 · {title}',{title:q.title});choices.append(claim);}
         for(const quest of here.accept){const accept=button('',()=>cb.startCatalog(quest),'primary');setText(accept,'接取任务 · {title}',{title:quest.title});choices.append(accept);}
         for(const quest of here.claim){const claim=button('',()=>cb.finishCatalog(quest),'primary');setText(claim,'完成任务 · {title}',{title:quest.title});choices.append(claim);}
+        if(dialog.questDialogue){
+            dialog.questDialogue=false;
+            if(choices.children.length===1){choices.children[0].click();return;}
+        }
         const talk=pendingQuestTalk(save,q,npc.id);
         if(talk)choices.append(button(talk.label||'我想了解更多魔法',()=>cb.questTalk(q,talk),'primary'));
         if(q&&state.accepted&&!(ready&&q.endNpc===npc.id))choices.append(button(ready?'前往回报任务':'查看任务目标',()=>{cb.close();cb.track();},'secondary'));

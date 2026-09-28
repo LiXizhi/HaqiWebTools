@@ -227,6 +227,18 @@ test('first cloud sync uploads unloaded local pets; another device can open just
     const receiving=m.client({petFileStore:id=>incoming.petFileIO(id)});await receiving.connect();const received=await receiving.roles();incoming.replace(received.catalog,received.revision);assert.equal(incoming.catalog.roles[0].save.formation[0],save.formation[0]);
 });
 
+test('login downloads pet files into the account scope while the store is still a guest',async()=>{
+    const data=new Map();let serial=2000;const storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
+    const make=()=>createRoleStore({content,dataset,storage,runtimeStore:createRuntimeStore({indexedDB:null}),uuid:()=>id(++serial)});
+    const source=make();source.open('alice');const save=hero();source.create(save);
+    const m=cloudMock(),uploaded=m.client({petFileStore:id=>source.petFileIO(id)});await uploaded.connect();await uploaded.saveRoles(source.catalog,null);
+    const guest=make();guest.open();assert.equal(guest.owner,null);
+    const receiving=m.client({petFileStore:id=>guest.petFileIOFor('alice',id)});await receiving.connect();
+    const received=await receiving.roles();
+    guest.open('alice');guest.replace(received.catalog,received.revision);
+    assert.equal(guest.catalog.roles[0].save.formation[0],save.formation[0]);
+});
+
 test('manual snapshots keep individual files and restore a complete portable collection',async()=>{
     const m=cloudMock(),client=m.client();await client.connect();const s=hero();const p=createPetInstance(content,{id:'same-species-baby',speciesId:'dragon_green',ownerId:s.petOwnerId});s.pets[p.id]={...p,hp:100,hunger:100};
     const uploaded=await client.upload(s,{roleId:id(7)});assert.equal(uploaded.snapshot.storageVersion,3);assert.deepEqual(uploaded.snapshot.save.pets,{});
@@ -247,4 +259,16 @@ test('social pets move clear of both owners before effects and stop if an owner 
 test('no open meeting space never falls back to owners feet',()=>{
     const world={w:100,h:100,buildings:[],trees:[]},point={x:50,y:50};
     assert.equal(findPetMeeting(world,[point,point],[point],content),null);
+});
+
+test('guest-to-account transfer hydrates lazy pets and rewrites files under the account scope',()=>{
+    const rows=new Map(),storage={getItem:k=>rows.get(k)??null,setItem:(k,v)=>rows.set(k,v)};let n=0;
+    const store=createRoleStore({content,dataset,storage,runtimeStore:createRuntimeStore({indexedDB:null}),uuid:()=>`12345678-1234-1234-1234-${String(++n).padStart(12,'0')}`});
+    store.open();const save=hero();save.pets['extra-pet']=createPetInstance(content,{id:'extra-pet',ownerId:save.petOwnerId,speciesId:'dragon_green',xp:9000});
+    const id=store.create(save);store.open();assert.equal(store.catalog.roles[0].save.pets['extra-pet'],undefined);
+    const transfer=store.guestTransfer();assert.equal(transfer.save.pets['extra-pet'].xp,9000);assert.equal(transfer.save.petPages,undefined);
+    store.open('alice');store.adoptGuest(transfer);store.open('alice');store.select(id);
+    const loaded=store.loadPet(store.catalog.roles[0].save,'extra-pet');assert.equal(loaded.pets['extra-pet'].xp,9000);
+    const ref=loaded.petFileRefs['extra-pet'];assert.equal(store.petFileIO(id).read(ref.path).scope,store.petScope(id));
+    store.open();assert.equal(store.loadPet(store.catalog.roles[0].save,'extra-pet').pets['extra-pet'].xp,9000);
 });

@@ -64,6 +64,7 @@ export function createRewardFeedback(root,{describe,activate}) {
     function next(){active.items.shift();paint();}
     function actionable(item){return item.gear||item.kind==='card'||item.kind==='pet';}
     return {
+        get hasPendingItems(){return !!active?.items.length||queue.some(event=>event.items.some(actionable));},
         push(event){if(event.xp||event.level||event.items.length)queue.push({...event,items:[...event.items]});},
         reset(){queue.length=0;shown=null;dismiss();root.hidden=true;banner.replaceChildren();banner.classList.remove('reward-stack-dense');lastTick=null;},
         tick(now,visible){

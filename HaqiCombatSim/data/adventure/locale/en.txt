@@ -319,6 +319,9 @@ AIChat 请求失败||AIChat request failed
 第二语言||Second language
 带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。||Bring your pet and players from around the world on a magical journey.\nPractice your second language.
 登录 Keepwork||Sign in to Keepwork
+选择进入方式||Choose how to enter
+本地访客||Local guest
+返回||Back
 我的云端旅途||My cloud journey
 起名字||Pick a name
 选择抱抱龙||Choose your Cuddle Dragon
@@ -887,7 +890,9 @@ Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the e
 # js/view_adventure_roles.js
 魔法哈奇 · 你的主角||Magic Haqi · your hero
 Keepwork：{owner}||Keepwork: {owner}
-访客角色 · 保存在当前浏览器||Guest character · saved in this browser
+当前为本地访客模式，角色只保存在这台浏览器。||Local guest mode: this character stays in this browser only.
+请登录 Keepwork 云端账号。||Please sign in to a Keepwork cloud account.
+登录 Keepwork 云端账号||Sign in to a Keepwork cloud account
 选择角色||Choose a character
 当前有本地进度待同步。游玩时每分钟自动同步，也可手动保存。||Local progress is waiting to sync. It syncs every minute while playing, or you can save manually.
 角色云端记录已同步。||Cloud character records synced.
@@ -5956,3 +5961,8 @@ VIP 到期日：{date}（北京时间）||VIP expires: {date} (Beijing time)
 无法确认充值账号，请重新登录。||Unable to verify the recharge account. Sign in again.
 浏览器拦截了收银台窗口，请允许弹窗后重试。||Your browser blocked checkout. Allow pop-ups and try again.
 已刷新会员状态，魔豆按实际新增到期日兑换。||Membership refreshed. Magic beans are based on the verified expiry extension.
+
+登录 KeepWork，开启 AI 对话||Sign in to KeepWork to chat with AI
+离线角色暂时无法使用大模型。登录后会自动将当前本地角色转为云端角色，保留冒险进度。||AI chat requires a KeepWork account. Sign in to automatically save this local character to the cloud and keep your adventure progress.
+登录并转为云端角色||Sign in and save character to cloud
+登录后可使用 AI 对话||Sign in to use AI chat

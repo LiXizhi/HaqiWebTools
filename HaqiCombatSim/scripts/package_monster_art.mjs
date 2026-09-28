@@ -28,6 +28,26 @@ export function prepareMonsterArt(root){
         bindings[source+'|'+model]=binding;
         models[model]??=binding;
     }
+    // Camp scouts only. Shared model families stay on their existing pets.
+    const campScoutPets={
+        'mobtemplate_fire_firescout.xml':'flame_puppy_doudou',
+        'mobtemplate_ice_icescout.xml':'fenrir_snow_bite',
+        'mobtemplate_storm_stormscout.xml':'hu_po_jiao_long',
+        'mobtemplate_life_lifescout.xml':'nono_leaf_guardian',
+        'mobtemplate_death_deatgscout.xml':'anubis_cocoa_pup',
+    };
+    for(const [key,binding] of Object.entries(bindings)){
+        const source=key.split('|')[0];
+        const petId=Object.entries(campScoutPets).find(([file])=>source.endsWith('/'+file))?.[1];
+        if(!petId||binding.kind!=='pet')continue;
+        if(!pets[petId])throw Error('缺少营地侦察兵宠物 '+petId);
+        assetUrl(pets[petId].art);
+        bindings[key]={kind:'pet',petId};
+        const monster=catalog.monsters.find(m=>normalize(m.source)+'|'+normalize(m.model)===key);
+        const note={source:monster?.source||source,model:monster?.model||key.split('|')[1],petId,reason:'魔法营地侦察兵改用系别对应的完整宠物形象'};
+        const existing=adaptations.findIndex(a=>normalize(a.source)+'|'+normalize(a.model)===key);
+        if(existing>=0)adaptations[existing]=note;else adaptations.push(note);
+    }
     const result={version:1,entries,bindings,models,adaptations};
     fs.writeFileSync(path.join(root,'data/adventure/monster-art.json'),JSON.stringify(result,null,2)+'\n');
     return result;

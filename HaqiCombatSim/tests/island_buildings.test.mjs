@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createHash} from 'node:crypto';
-import {createWorld,walkable,clearSegment,findPath,nearestInteraction} from '../js/adventure_world_core.js';
+import {createWorld,sceneActors,walkable,clearSegment,findPath,nearestInteraction} from '../js/adventure_world_core.js';
 import {installNpcCatalog} from '../js/adventure_npc_core.js';
-import {onLargeIsland,segmentDistance} from '../js/adventure_island_layout_core.js';
+import {onLargeIsland,sceneryCoversActor,segmentDistance,separateBuilding} from '../js/adventure_island_layout_core.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url)));
 const content=read('data/adventure/chapter.json');content.worldMaps={};
 for(const z of ['camp','town','fire','ice','desert','dark'])content.worldMaps[z]=read('data/adventure/maps/'+z+'.json');
@@ -68,5 +68,28 @@ test('船坞道路连通传送点，船长可交谈且不与船坞重叠（含�
             assert.ok(walkable(world,x,y),zone);
         }
         assert.equal(JSON.stringify(c),before,'创建世界不修改源地图或居民目录');
+    }
+});
+
+test('前方树冠压住名字算挡住，身后和侧旁不算',()=>{
+    const npc={x:100,y:100,name:'火侦察兵'};
+    assert.equal(sceneryCoversActor({x:100,y:200,size:160},npc),true);
+    assert.equal(sceneryCoversActor({x:100,y:40,size:160},npc),false);
+    assert.equal(sceneryCoversActor({x:400,y:200,size:160},npc),false);
+    const building={x:1130,y:850,w:175,h:165};
+    const resident={x:1110,y:670,name:'小哈奇'};
+    assert.equal(sceneryCoversActor(building,resident),true);
+    const moved=separateBuilding(building,[resident],()=>true);
+    assert.equal(sceneryCoversActor(moved,resident),false);
+    assert.ok(Math.hypot(moved.x-building.x,moved.y-building.y)<80);
+});
+
+test('各岛树木和建筑不挡住居民与怪物',()=>{
+    const catalogContent=structuredClone(content);
+    installNpcCatalog(catalogContent,read('data/adventure/npc-catalog.json'));
+    for(const source of [content,catalogContent])for(const zone of ['camp','town','fire','ice','desert','dark']){
+        const world=createWorld(zone,source),actors=sceneActors(world,source);
+        for(const tree of world.trees)assert.equal(actors.some(a=>sceneryCoversActor(tree,a)),false,`${zone} tree ${tree.x},${tree.y}`);
+        for(const building of world.buildings)if(!building.decorationOnly)assert.equal(actors.some(a=>sceneryCoversActor(building,a)),false,`${zone} ${building.frame||'building'} ${building.x},${building.y}`);
     }
 });

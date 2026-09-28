@@ -11,6 +11,7 @@ import {customizeHero} from './adventure_hero_customize_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { worldDimensions, mapInfo } from './adventure_island_layout_core.js';
+import { createWorld, retreatBeside } from './adventure_world_core.js';
 import { SCHOOLS } from './combat_params_core.js';
 import { normalizeLocaleSave } from './locale_core.js';
 import {recordLearningCompletion, validateLearningSave} from './language_adventure_core.js';
@@ -304,6 +305,25 @@ function grantQuestRewards(save, content, quest) {
         save.questPetConversions[r.id] = (save.questPetConversions[r.id] || 0) + r.count;
     }
 }
+function retreatLanding(save,content){
+    const pending=save.pendingEncounter;
+    const safe={position:{...mapInfo(save.zone,content).initialSpawn},message:'你回到了安全地点。已保留物品与任务进度。'};
+    if(!pending)return safe;
+    const encounter=content.encounters.find(e=>e.id===pending.encounterId);
+    const laid=content.worldMaps?.[save.zone]?.encounterPositions?.[encounter?.id];
+    const target=laid?{x:laid[0],y:laid[1]}:(Number.isFinite(encounter?.x)&&Number.isFinite(encounter?.y)?{x:encounter.x,y:encounter.y}:null);
+    if(!target)return {position:{...save.position},message:'你离开了战斗。已保留物品与任务进度。'};
+    const info=mapInfo(save.zone,content);
+    const spot=content.worldMaps?.[save.zone]
+        ?retreatBeside(createWorld(save.zone,content,{...save,position:{...save.position}}),save.position,target)
+        :offsetBeside(save.position,target,info.spawn);
+    return {position:{x:Math.min(info.w,Math.max(0,spot.x)),y:Math.min(info.h,Math.max(0,spot.y))},message:'你撤到了怪物附近。已保留物品与任务进度。'};
+}
+function offsetBeside(player,target,spawn){
+    let dx=player.x-target.x,dy=player.y-target.y,len=Math.hypot(dx,dy);
+    if(len<8){dx=spawn.x-target.x;dy=spawn.y-target.y;len=Math.hypot(dx,dy)||1;}
+    return {x:target.x+dx/len*120,y:target.y+dy/len*120};
+}
 export function applyAction(save, content, action, access={}) {
     assert(!action.paidByTest, '语言课程仅发放限额奖励，请使用货币购买');
     assert(!save.pendingEncounter || ['settle-encounter','retreat','language-complete'].includes(action.type), '请先完成当前战斗');
@@ -470,9 +490,11 @@ export function applyAction(save, content, action, access={}) {
         if (previous !== action.zone) supplementIslandTrack(save, content, action.zone, catalogStatSnapshot(save, content));
         break;
     }
-    case 'retreat':
+    case 'retreat': {
         settleRunes(save);
-        save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); save.position = {...mapInfo(save.zone,content).initialSpawn}; break;
+        const landing=retreatLanding(save,content);
+        save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); save.position = landing.position; notice=landing.message; break;
+    }
     default: throw new Error('未知操作');
     }
     migrateBagRules(save,content);

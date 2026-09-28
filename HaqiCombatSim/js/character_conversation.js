@@ -6,12 +6,12 @@ import {createLearningChatView} from './view_learning_chat.js';
 import {createCharacterDetails} from './view_character_details.js';
 import {createJsonReader} from './runtime_data.js';
 
-export function createCharacterConversation({getState,commit,membership,getPortrait=()=>null,onClose=()=>{},onSettings=()=>{},onUpgrade=()=>{},onDialogue=()=>{},notify=()=>{},cache=createRuntimeStore({databaseName:'haqi-character-cache-v1'}),workspace,voice,viewFactory=createLearningChatView,detailsFactory=createCharacterDetails,read=createJsonReader(),now=Date.now,uuid=()=>crypto.randomUUID()}){
+export function createCharacterConversation({getState,commit,membership,getPortrait=()=>null,onClose=()=>{},onSettings=()=>{},onUpgrade=()=>{},onLogin=()=>{},onDialogue=()=>{},notify=()=>{},cache=createRuntimeStore({databaseName:'haqi-character-cache-v1'}),workspace,voice,viewFactory=createLearningChatView,detailsFactory=createCharacterDetails,read=createJsonReader(),now=Date.now,uuid=()=>crypto.randomUUID()}){
     workspace??=createCharacterWorkspace({getOwner:()=>getState().owner,cache});
     voice??=createLearningVoice({getSettings:()=>getState().save?.languageLearning||{}});
     let session=null,epoch=0,catalog=null,giftRules=null,syncTask=null;
     const view=viewFactory({close:()=>close(true),help:text=>void send(text),draft:text=>{if(session){session.draft=text;paint();}},start,finish,cancel,hint,chinese:()=>{if(session){session.showChinese=!session.showChinese;paint();}},speak,
-        details:()=>void details(),gift:()=>void gifts(),upgrade:()=>{close();onUpgrade();},settings:()=>{close();onSettings();},retry:()=>{if(!session)return;if(session.giftReply){void respondGift(session);return;}if(session.pending)return send(session.pending.text);if(session.ready&&session.draft.trim())return send(session.draft);if(session.ready)return greet();return open(session.source,session.options);}});
+        login:()=>{const s=session;if(!s||s.busy)return;close();return onLogin(s.source,s.options);},details:()=>void details(),gift:()=>void gifts(),upgrade:()=>{close();onUpgrade();},settings:()=>{close();onSettings();},retry:()=>{if(!session)return;if(session.giftReply){void respondGift(session);return;}if(session.pending)return send(session.pending.text);if(session.ready&&session.draft.trim())return send(session.draft);if(session.ready)return greet();return open(session.source,session.options);}});
     const detail=detailsFactory(view.root,{getModel:()=>getState(),onGift:gift,onHistory:path=>session.io.history(path),onList:cursor=>session.io.list(cursor),onSelect:async id=>{try{const s=session,row=await s.io.load(id);if(valid(s)&&row)detail.relation(row);}catch(e){notify(e.message);}}});
     function valid(s){const state=getState();return session===s&&!s.abort.signal.aborted&&state.owner===s.owner&&state.role===s.role&&!state.save?.pendingEncounter;}
     const paint=()=>{if(session)view.render(session);};
@@ -21,7 +21,7 @@ export function createCharacterConversation({getState,commit,membership,getPortr
         close();const current=getState(),profile=characterProfile(source),ticket=epoch;
         const s=session={mode:'free',profile:{...profile,role:`${profile.culture} · 母语${languageName(profile.native)} · AI 角色`},source,options,portraitNode:getPortrait(source),story:{id:`free:${profile.id}`,title:'自由交谈',context:'跨文化交流 · 互相学习',turns:[]},role:current.role,owner:current.owner,abort:new AbortController(),locale:profile.native,showChinese:true,messages:[],draft:'',index:0,phase:'ready',ready:false,busy:true,remaining:null,status:'正在读取关系档案…',canGift:['npc','companion'].includes(profile.kind),hintLevel:0,retryable:false};paint();
         try{
-            if(!s.role||!s.owner)throw Error('请先登录并选择账号角色');
+            if(!s.role||!s.owner){s.loginRequired=true;s.status='离线角色暂时无法使用大模型。登录 KeepWork 后，将自动把当前本地角色保存到云端，再继续对话。';return;}
             s.io=await workspace.connect(s.role);if(ticket!==epoch)return;
             catalog??=await read('data/adventure/character-memories.json');if(!valid(s))return;
             s.fixedMemory=catalog.entries[profile.id]?.memory||fixedCharacterMemory(profile);

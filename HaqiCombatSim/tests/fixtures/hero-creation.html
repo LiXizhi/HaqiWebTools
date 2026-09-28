@@ -24,7 +24,7 @@ try{
   const ride=document.createElement('button');ride.textContent='切换骑乘';ride.onclick=()=>{save.mountId=save.mountId?null:Number(Object.keys(assets.content.mountByItem)[0]);};result.prepend(ride);
   const battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters:[{id:'preview',name:'测试目标',school:'fire',level:1,hp:100,attributes:{},pool:[],sequences:[],genes:[],cardsets:{}}],seed:1});
   function frame(t){renderer.render(world,save,t);renderer.renderBattle(battleCanvas,battle,save,t);requestAnimationFrame(frame);}requestAnimationFrame(frame);
- },login:()=>{},importOriginal:()=>{}});
+ },login:()=>{root.dataset.loginClicked='1';},importOriginal:()=>{},accountChoice:params.has('gate')});
  show();
  result.textContent='左右点击或滑动切换形象；此页不读写玩家存档。';
  document.documentElement.dataset.fixtureReady='1';

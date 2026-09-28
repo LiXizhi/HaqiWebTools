@@ -40,7 +40,7 @@ npm run verify:release # 对当前dist重新核验，不上传
 
 核验通过后生成 `release/Haqi_v1.html`、`HaqiCombatSim_v1.html`、`HaqiCards_v1.html`、`HaqiEffects_v1.html`，它们在head首部插入该版本CDN目录的base标签，可放到Keepwork页面托管环境；也可直接访问命令输出的CDN HTML地址。仅规划时生成 `_preview.html`，其CDN地址尚未保证存在。`dist/`、`release/`与上传日志不提交Git；正式发布需以当前manifest核验状态为准，不使用以前遗留的入口文件。
 
-批量模拟Worker在生产构建时由Vite打包为内联Blob Worker，支持“HTML在Keepwork、脚本在CDN”的跨域组合。发布HTML把页内链接解析到实际宿主页面，避免base把模拟器页签导航带到CDN目录。开发源码保留标准module Worker，调用方自定义workerUrl保持有效。localhost验证发布HTML无需添加资源参数，默认即为CDN。
+批量模拟与战斗AI的Worker在生产构建时均由Vite打包为内联Blob Worker，支持“HTML在Keepwork、脚本在CDN”的跨域组合。构建插件在Windows上忽略路径大小写，避免盘符大小写导致转换被跳过；已登记的Worker构造代码变化时构建会报错，不静默退回跨域URL。发布HTML把页内链接解析到实际宿主页面，避免base把模拟器页签导航带到CDN目录。开发源码保留标准module Worker，调用方自定义workerUrl保持有效。localhost验证发布HTML无需添加资源参数，默认即为CDN。
 
 发布不会自动同步 `digitalhuman-resource` Git镜像；该可选副本按Maisi上传技能另行征询。美术清单预算、原图来源与独立哈希仍按现有资源准备测试维护。
 

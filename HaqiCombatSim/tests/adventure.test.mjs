@@ -293,6 +293,24 @@ test('completed encounter checkpoints settle only once, including a reload at vi
     s.pendingEncounter=checkpoint;assert.equal(A.settleEncounter(s,content,b),false);
     assert.equal(s.inventory[100],coins);assert.equal(s.xp,xp);
 });
+test('retreat stands beside the fought monster instead of the birth point',()=>{
+    const s=A.createAdventure(content);
+    const scout=content.encounters.find(e=>e.id==='storm-scout');
+    const birth={...content.worldMapIndex.islands.camp.initialSpawn};
+    s.position={x:scout.x+40,y:scout.y-50};
+    A.beginEncounter(s,content,'storm-scout');
+    const result=act(s,'retreat');
+    assert.equal(s.pendingEncounter,null);
+    assert.match(result.message,/怪物附近/);
+    const gap=Math.hypot(s.position.x-scout.x,s.position.y-scout.y);
+    assert.ok(gap>=100&&gap<=220,`gap ${gap}`);
+    assert.ok(Math.hypot(s.position.x-birth.x,s.position.y-birth.y)>250);
+    const parked={...s.position};
+    const world=W.createWorld('camp',content,s);
+    assert.deepEqual(s.position,parked);
+    assert.equal(W.walkable(world,s.position.x,s.position.y),true);
+    assert.notEqual(W.nearestInteraction(world,s.position)?.id,'storm-scout');
+});
 test('defeat returns to a safe checkpoint with quest and inventory state intact',()=>{
     const s=A.createAdventure(content);act(s,'accept',{questId:63000,npcId:36211});act(s,'claim',{questId:63000,npcId:36211});
     s.position={x:360,y:880};const {checkpoint}=A.beginEncounter(s,content,'fire-scout'),b=P.restorePveBattle(dataset,content,checkpoint);

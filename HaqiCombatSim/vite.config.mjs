@@ -30,13 +30,23 @@ export default defineConfig(({ command }) => {
             apply: 'build',
             enforce: 'pre',
             transform(code, id) {
-                if (id !== path.join(root, 'js/sim_pool.js').replaceAll('\\', '/')) return null;
+                const workers = [
+                    ['js/sim_pool.js', './sim_worker.js', "new Worker(new URL('./sim_worker.js', import.meta.url), { type: 'module' })"],
+                    ['js/battle_ai/client.js', './worker.js', "new Worker(new URL('./worker.js',import.meta.url),{type:'module'})"],
+                ];
+                const normalizeId = value => process.platform === 'win32'
+                    ? value.replaceAll('\\', '/').toLowerCase()
+                    : value.replaceAll('\\', '/');
+                const worker = workers.find(([file]) => normalizeId(id) === normalizeId(path.join(root, file)));
+                if (!worker) return null;
+                const [, workerPath, constructor] = worker;
+                if (!code.includes(constructor)) this.error(`Inline Worker constructor not found in ${id}`);
                 // A release HTML may be hosted on Keepwork while its JS lives on CDN.
                 // Vite's inline worker uses a Blob, avoiding cross-origin Worker URLs.
                 return {
-                    code: "import InlineSimWorker from './sim_worker.js?worker&inline';\n" + code.replace(
-                        "new Worker(new URL('./sim_worker.js', import.meta.url), { type: 'module' })",
-                        'new InlineSimWorker()',
+                    code: `import InlineCdnWorker from '${workerPath}?worker&inline';\n` + code.replace(
+                        constructor,
+                        'new InlineCdnWorker()',
                     ),
                     map: null,
                 };

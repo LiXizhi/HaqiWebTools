@@ -1,4 +1,4 @@
-import {onLargeIsland, riverBlocks, segmentDistance} from './adventure_island_layout_core.js';
+import {onLargeIsland, riverBlocks, sceneryCoversActor, segmentDistance} from './adventure_island_layout_core.js';
 
 // Cosmetic island architecture. Fixed geometry, independent of saves and gameplay RNG.
 export function islandBuildings(world) {
@@ -8,12 +8,14 @@ export function islandBuildings(world) {
     const scattered=world.zone!=='camp',atlas=world.zone==='camp'?'town':world.zone;
     const result=[],layout=world.layout;
     const occupied=[...world.npcs,...world.encounters,...world.landmarks,...world.buildings,world.portal,layout.spawn];
+    const actors=[...world.npcs,...world.encounters];
     const clear=(x,y)=>onLargeIsland(world,x,y,45)&&!riverBlocks(world,x,y);
     // Prefer space beside a road; reserve its full width, residents and encounter areas.
     const candidates=[];
     if(scattered)for(let y=300;y<world.h-200;y+=140)for(let x=300;x<world.w-200;x+=140){
         const road=Math.min(...world.paths.map(p=>segmentDistance({x,y},p.a,p.b)-(p.width||60)/2));
         if(road<190||road>440||occupied.some(p=>Math.hypot(x-p.x,y-p.y)<300))continue;
+        if(actors.some(a=>sceneryCoversActor({x,y,w:230,h:220},a)))continue;
         if(![-110,0,110].every(dx=>[-100,0,25].every(dy=>clear(x+dx,y+dy))))continue;
         candidates.push({x,y,road});
     }
@@ -33,7 +35,7 @@ export function islandBuildings(world) {
         }
     }
     coast.sort((a,b)=>Math.hypot(a.x-world.portal.x,a.y-world.portal.y)-Math.hypot(b.x-world.portal.x,b.y-world.portal.y));
-    const harbor=coast[0];
+    const harbor=coast.find(p=>actors.every(a=>!sceneryCoversActor({x:p.x,y:p.y+35,w:240,h:225},a)))||coast[0];
     if(harbor){
         result.push({...harbor,y:harbor.y+35,w:240,h:225,atlas,frame:'harbor',decorationOnly:true});
         // The camp island stops just below its beach; clamp the moored boats into

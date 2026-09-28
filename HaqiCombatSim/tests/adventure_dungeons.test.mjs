@@ -67,6 +67,22 @@ test('source and release-projected catalogues preserve identical checkpoint temp
 });
 
 
+test('dungeon retreat stands in front of the monster without restarting combat',()=>{
+    const save=A.createAdventure(content);enterDungeon(save,content,id);
+    const entered=createWorld(id,content,save),monster=entered.encounters[0],birth={...entered.layout.spawn};
+    save.position={x:monster.x,y:monster.y-50};
+    A.beginEncounter(save,content,monster.id);
+    const result=A.applyAction(save,content,{type:'retreat'});
+    assert.match(result.message,/怪物附近/);
+    const parked={...save.position};
+    const world=createWorld(id,content,save);
+    assert.deepEqual(save.position,parked);
+    assert.equal(dungeonAutoInteraction(world,save.position),null);
+    assert.equal(walkable(world,save.position.x,save.position.y),true);
+    const gap=Math.hypot(save.position.x-monster.x,save.position.y-monster.y);
+    assert.ok(gap>=100&&gap<=220,`gap ${gap}`);
+    assert.ok(Math.hypot(save.position.x-birth.x,save.position.y-birth.y)>80);
+});
 test('dungeon roads block shortcuts and skipping; only defeating the last Boss opens the exit',()=>{
     const save=A.createAdventure(content);enterDungeon(save,content,id);
     let world=createWorld(id,content,save);

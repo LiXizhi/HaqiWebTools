@@ -302,6 +302,9 @@
 .role-backup-import { display:grid; gap:8px; margin-top:16px; font-size:13px; }
 .role-backup-import input { max-width:100%; }
 .role-status { color:#24533d; }
+.role-guest-note { color:#c4312a; font-size:13px; font-weight:700; line-height:1.55; margin:0; }
+.role-guest-note + .role-guest-note { margin-top:2px; margin-bottom:10px; }
+.role-create .role-cloud-login { margin-left:auto; flex:1 1 12em; min-height:44px; }
 @media(max-width:480px) { .role-manager { padding:18px; } .role-card { gap:8px; flex-wrap:wrap; } .role-card button { margin-left:auto; } }
 
 
@@ -328,6 +331,8 @@
 .entry-second-locale{font:inherit;font-size:12px;color:#345d50;background:#f3eedc;border:1px solid #d9d1b9;border-radius:7px;padding:7px 28px 7px 12px;min-height:32px;min-width:7.5em;max-width:100%;}
 .entry-second-locale:focus-visible{outline:3px solid #d9bc65;outline-offset:3px;}
 .entry-wizard .creation-form{width:100%;margin:0;padding:26px;min-width:0;}
+.entry-account-choices{display:grid;gap:12px;margin-top:8px;}
+.entry-account-choices .entry-account-choice{width:100%;min-height:48px;}
 .creation-steps{display:flex;align-items:center;gap:12px;font-size:11px;color:#8e9484;margin-bottom:20px;}
 .creation-steps i{height:1px;background:#d9d2ba;flex:1;}
 .creation-steps .current{color:#315e4d;font-weight:700;}

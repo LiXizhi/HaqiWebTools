@@ -1,6 +1,36 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {nearestBattlePet} from '../js/view_battle_pet_hint.js';
+import {battleSpeech,updateBattleSpeech} from '../js/view_battle_pet_hint.js';
+test('NPC speech follows its head on desktop and mobile and survives UI reconstruction',()=>{
+ for(const width of [1280,390]){
+  const battle={sides:{far:[{id:'mob0',template:{sequences:[[{round:'1-',speak:'请选择目标。'}]]}}]}};
+    const bubble={style:{setProperty(name,value){this[name]=value;}},dataset:{caster:'mob0'},offsetWidth:230,offsetHeight:50,remove(){this.hidden=true;}};
+    const root={clientWidth:width,querySelectorAll:()=>[bubble]};
+  const canvas={clientHeight:300,offsetLeft:0,offsetTop:0,battlePositions:{mob0:{x:width-70,y:250}}};
+  updateBattleSpeech(root,battle,canvas,0);
+  assert.equal(bubble.textContent,'请选择目标。');
+  assert.equal(bubble.dataset.caster,'mob0');
+  assert.ok(parseFloat(bubble.style.left)>=8);
+  assert.ok(parseFloat(bubble.style.left)+bubble.offsetWidth<=width-8);
+    assert.equal(bubble.style.top,'86px');
+  updateBattleSpeech({...root},battle,canvas,1000);
+  assert.equal(bubble.hidden,false);
+  updateBattleSpeech(root,battle,canvas,5000);
+  assert.equal(bubble.hidden,true);
+ }
+});
+test('configured opening speech appears before a decision and is not repeated by the first cast',()=>{
+ const battle={completedDecisions:0,sides:{far:[{id:'mob0',template:{sequences:[[{round:'1',speak:'先选卡牌。'},{round:'2',speak:'继续！'}]]}}]}};
+ assert.deepEqual(battleSpeech(battle,0),{caster:'mob0',text:'先选卡牌。'});
+ assert.equal(battleSpeech(battle,5000),null);
+ const first={type:'speak',caster:'mob0',text:'先选卡牌。'};
+ assert.equal(battleSpeech(battle,5100,first),null);
+ const next={type:'speak',caster:'mob0',text:'继续！'};
+ assert.equal(battleSpeech(battle,5200,next).text,'继续！');
+ assert.equal(battleSpeech(battle,10000,next),null);
+ assert.equal(battleSpeech({...battle,completedDecisions:1},0),null);
+});
 test('pet hint follows nearest living friendly pet, independent of roster order',()=>{
  const hero={id:'hero',hp:100},far={id:'a',hp:40,speciesId:'dragon'},near={id:'b',hp:20,speciesId:'dragon'},dead={id:'c',hp:0,speciesId:'dragon'};
  const battle={sides:{near:[hero,far,near,dead]}},positions={hero:{x:100,y:100},a:{x:250,y:100},b:{x:110,y:110},c:{x:100,y:100}};
@@ -43,7 +73,7 @@ test('pet speech is passive plain text, suppressed while choosing or muted',()=>
 });
 import {updateBattlePetHint} from '../js/view_battle_pet_hint.js';
 test('balloon grows right of support pet and a dismissed balloon stays hidden across frames',()=>{
- const bubble={style:{setProperty(){}},dataset:{},offsetWidth:180,offsetHeight:50};
+ const bubble={style:{setProperty(name,value){this[name]=value;}},dataset:{},offsetWidth:180,offsetHeight:50};
  const root={battlePetHint:bubble,clientWidth:390};
  const battle={sides:{near:[{id:'hero',hp:100}]}};
  const canvas={clientHeight:300,offsetLeft:0,offsetTop:0,battlePositions:{hero:{x:100,y:200}}};
@@ -51,5 +81,10 @@ test('balloon grows right of support pet and a dismissed balloon stays hidden ac
  updateBattlePetHint(root,battle,save,content,canvas);
  assert.equal(bubble.style.left,'136px');assert.equal(bubble.hidden,false);
  assert.ok(parseFloat(bubble.style.maxWidth)<=390-136-8);
+ canvas.battleStatusRects=[{x:280,y:50,width:28,height:28}];
+ updateBattlePetHint(root,battle,save,content,canvas);
+ assert.equal(bubble.hidden,false);
+ assert.equal(parseFloat(bubble.style.left)+parseFloat(bubble.style['--pet-hint-tail']),136);
+ assert.notEqual(bubble.style['--pet-hint-tail'],'90px');
  bubble.hintDismissed=true;updateBattlePetHint(root,battle,save,content,canvas);assert.equal(bubble.hidden,true);
 });

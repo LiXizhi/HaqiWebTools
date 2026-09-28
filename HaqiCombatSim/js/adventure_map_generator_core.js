@@ -1,6 +1,6 @@
 // Offline, deterministic map compilation. The browser reads the generated JSON.
 import { createRng } from './rng_core.js';
-import { onLargeIsland, riverBlocks, regionAt, segmentDistance } from './adventure_island_layout_core.js';
+import { onLargeIsland, riverBlocks, regionAt, sceneryCoversActor, segmentDistance } from './adventure_island_layout_core.js';
 
 const point=([x,y])=>({x,y});
 const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -75,8 +75,10 @@ export function generateIsland(spec,shared,content){
             angle:Math.atan2(road.b.y-road.a.y,road.b.x-road.a.x),generated:true});
     }
     layout.landmarks=spec.landmarks??layout.regions.map(r=>({id:r.id,name:r.name,...point(r.sign||[r.x+100,r.y+60]),description:r.description}));
-    const npcs=Object.values(content.npcs).filter(n=>n.zone===spec.id).map(n=>point(spec.npcPositions[n.id]||[n.x,n.y]));
-    const encounters=content.encounters.filter(n=>n.zone===spec.id).map(n=>point(spec.encounterPositions[n.id]||[n.x,n.y]));
+    const npcRows=Object.values(content.npcs).filter(n=>n.zone===spec.id);
+    const npcs=npcRows.map(n=>point(spec.npcPositions[n.id]||[n.x,n.y]));
+    const encounterRows=content.encounters.filter(n=>n.zone===spec.id);
+    const encounters=encounterRows.map(n=>point(spec.encounterPositions[n.id]||[n.x,n.y]));
     const visiting=(spec.visitingNpcs||[]).map(n=>{assert(content.npcs[n.sourceId],`居民来源 ${n.sourceId}`);return point(n.position);});
     const clearings=[...npcs,...visiting,...encounters,...layout.landmarks,spec.portal,spec.spawn,spec.initialSpawn||spec.spawn,spec.center||spec.spawn];
     layout.paths=[...roads];
@@ -89,6 +91,11 @@ export function generateIsland(spec,shared,content){
         }
         if(best>.1)layout.paths.push({a:nearest,b:{x:p.x,y:p.y},width:rules.roads.spurWidth});
     }
+    const actors=[
+        ...npcRows.map(n=>({...point(spec.npcPositions[n.id]||[n.x,n.y]),id:n.id,name:n.name})),
+        ...(spec.visitingNpcs||[]).map(n=>({...point(n.position),name:content.npcs[n.sourceId]?.name||''})),
+        ...encounterRows.map(n=>({...point(spec.encounterPositions[n.id]||[n.x,n.y]),monsterId:n.monsterId,monsterIds:n.monsterIds,label:content.monsters?.[n.monsterId]?.name||''})),
+    ];
     const rng=createRng(spec.seed),f=rules.forest,attempts=Math.ceil(spec.w*spec.h/1e6*f.attemptsPerMillion);
     for(let i=0;i<attempts&&layout.trees.length<f.maxTrees;i++){
         const p={x:rng.int(0,spec.w),y:rng.int(0,spec.h)};
@@ -97,6 +104,7 @@ export function generateIsland(spec,shared,content){
         if(rng.float()>forest.density)continue;
         if(clearings.some(n=>dist(p,n)<f.clearingRadius)||(spec.buildings||[]).some(b=>Math.abs(p.x-b.x)<b.w&&Math.abs(p.y-b.y)<b.h))continue;
         if(layout.paths.some(r=>segmentDistance(p,r.a,r.b)<r.width/2+rules.roads.treeClearance)||layout.trees.some(t=>dist(t,p)<f.spacing))continue;
+        if(actors.some(a=>sceneryCoversActor({...p,size:f.size[1],snow:!!biome.snow},a)))continue;
         layout.trees.push({...p,tile:rng.pick(forest.tiles),size:rng.int(...f.size),snow:!!biome.snow});
     }
     // Ground detail positions are baked once; the runtime does no procedural spawning.

@@ -1,5 +1,6 @@
 import {selectableCards,canCast,PET_CARD_SEQ_BASE} from './combat_unit_core.js';
 import {validTargets} from './combat_arena_core.js';
+import {createActorSpeech,placeActorSpeech} from './view_actor_speech.js';
 // DOM speech balloon anchored to the same screen positions as battle actors.
 export function nearestBattlePet(battle,save,content,positions,scale=1){
     const hero=battle.sides.near[0],origin=positions[hero.id];
@@ -55,4 +56,43 @@ export function updateBattlePetHint(root,battle,save,content,canvas){
     const width=bubble.offsetWidth,height=bubble.offsetHeight;
     bubble.style.left=`${left}px`;bubble.style.top=`${Math.max(8,y-height-8)}px`;
     bubble.style.setProperty('--pet-hint-tail',`${Math.max(14,Math.min(width-14,x-left))}px`);
+    const obstacles=(canvas.battleStatusRects||[]).map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));
+    for(const node of root.querySelectorAll?.('.actor-speech')||[])if(!node.hidden)obstacles.push({x:parseFloat(node.style.left),y:parseFloat(node.style.top),width:node.offsetWidth,height:node.offsetHeight});
+    if(obstacles.length){
+        const rect=placeActorSpeech(bubble,root,{x:left+width/2,y},obstacles);
+        if(rect)bubble.style.setProperty('--pet-hint-tail',`${Math.max(14,Math.min(rect.width-14,x-rect.x))}px`);
+    }
+}
+
+const battleSpeechStates=new WeakMap();
+export function battleSpeech(battle,now,event=null){
+    let state=battleSpeechStates.get(battle);
+    if(!state){
+        const queue=[];
+        if(!battle.finished&&!(battle.completedDecisions>0))for(const unit of battle.sides.far){
+            const lines=(unit.template?.sequences||[]).flat().filter(row=>['1','1-'].includes(String(row.round))&&row.speak);
+            for(const text of new Set(lines.map(row=>row.speak)))queue.push({caster:unit.id,text});
+        }
+        state={speech:createActorSpeech(),seen:new WeakSet(),opening:new Set(queue.map(row=>`${row.caster}:${row.text}`))};
+        for(const row of queue)state.speech.say(row.caster,row.text);
+        battleSpeechStates.set(battle,state);
+    }
+    if(event?.type==='speak'&&!state.seen.has(event)){
+        state.seen.add(event);
+        const key=`${event.caster}:${event.text}`;
+        if(state.opening.has(key))state.opening.delete(key);
+        else state.speech.say(event.caster,event.text);
+    }
+    const current=now===null?null:state.speech.messages(now)[0];
+    return current?{caster:current.actorId,text:current.text}:null;
+}
+export function battleSpeechController(battle){
+    if(!battleSpeechStates.has(battle))battleSpeech(battle,null);
+    return battleSpeechStates.get(battle).speech;
+}
+export function updateBattleSpeech(root,battle,canvas,now,event=null){
+    battleSpeech(battle,now,event);
+    const anchors=Object.fromEntries(Object.entries(canvas.battlePositions||{}).map(([id,at])=>[id,{x:canvas.offsetLeft+at.x,y:canvas.offsetTop+at.y-104*Math.min(1,canvas.clientHeight/270)}]));
+    const obstacles=(canvas.battleStatusRects||[]).map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));
+    battleSpeechController(battle).render(root,anchors,now,obstacles);
 }

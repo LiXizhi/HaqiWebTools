@@ -335,3 +335,31 @@ test('concurrent manifest update prevents publication of newly written parts',as
     await assert.rejects(c.saveRoles(catalog,first),/冲突/);
     assert.equal(JSON.parse(m.remote.get(path)).revision,id(999));
 });
+
+test('guest transfer preserves progress, existing account roles and guest backup; retry is idempotent',()=>{
+    const l=local(),store=l.make();store.open();const guest=hero('本地主角');guest.inventory[100]=123;
+    const guestId=store.create(guest),before=store.checkpoint(),transfer=store.guestTransfer();
+    store.open('alice');const existing=store.create(hero('云端主角'));
+    assert.equal(store.adoptGuest(transfer),guestId);assert.equal(store.catalog.roles.length,2);
+    assert.equal(store.catalog.roles.find(r=>r.id===guestId).save.inventory[100],123);
+    assert.equal(store.catalog.roles.find(r=>r.id===existing).save.name,'云端主角');
+    const adopted=store.checkpoint();store.adoptGuest(transfer);assert.equal(store.checkpoint(),adopted);
+    store.open();assert.deepEqual(JSON.parse(store.checkpoint()),JSON.parse(before));assert.throws(()=>store.adoptGuest(transfer),/登录/);
+});
+test('full account rejects guest migration without changing either catalog',()=>{
+    const l=local(),store=l.make();store.open();store.create(hero('本地'));const transfer=store.guestTransfer(),backup=store.checkpoint();
+    store.open('alice');for(let i=0;i<5;i++)store.create(hero('云端'+i));const before=store.checkpoint();
+    assert.throws(()=>store.adoptGuest(transfer),/5/);assert.equal(store.checkpoint(),before);
+    store.open();assert.deepEqual(JSON.parse(store.checkpoint()),JSON.parse(backup));
+});
+
+test('guest migration retries failed cloud verification without duplicate roles or losing the guest',async()=>{
+    const l=local(),store=l.make();store.open();const guestId=store.create(hero('待迁移'));const transfer=store.guestTransfer();
+    const mock=cloudMock(),client=mock.client();await client.connect();store.open('alice');store.adoptGuest(transfer);
+    mock.setSyncFailure(true);await assert.rejects(client.saveRoles(store.catalog,store.base));assert.equal(store.dirty,true);
+    assert.equal(mock.remote.has(mock.store.getRemotePagePath('roles/index.json')),false);
+    store.adoptGuest(transfer);mock.setSyncFailure(false);const captured=store.checkpoint();
+    const revision=await client.saveRoles(JSON.parse(captured),store.base);store.markSynced(revision,captured);
+    const remote=await client.roles();assert.equal(remote.catalog.roles.length,1);assert.equal(remote.catalog.roles[0].id,guestId);assert.equal(store.dirty,false);
+    store.open();assert.equal(store.catalog.roles[0].save.name,'待迁移');
+});

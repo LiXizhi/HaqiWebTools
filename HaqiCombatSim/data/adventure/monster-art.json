@@ -2157,23 +2157,23 @@
     },
     "config/aries/mob/newislandmonster/mobtemplate_death_deatgscout.xml|character/v5/10mobs/haqitown/deathbubble/deathbubble.x": {
       "kind": "pet",
-      "petId": "pili_doumo"
+      "petId": "anubis_cocoa_pup"
     },
     "config/aries/mob/newislandmonster/mobtemplate_fire_firescout.xml|character/v5/10mobs/haqitown/blazehairmonster/blazehairmonster.x": {
       "kind": "pet",
-      "petId": "bronze_lulu_teen"
+      "petId": "flame_puppy_doudou"
     },
     "config/aries/mob/newislandmonster/mobtemplate_ice_icescout.xml|character/v5/10mobs/haqitown/icepangolin/icepangolin.x": {
       "kind": "pet",
-      "petId": "yogurt_armadillo_fish"
+      "petId": "fenrir_snow_bite"
     },
     "config/aries/mob/newislandmonster/mobtemplate_life_lifescout.xml|character/v5/10mobs/haqitown/forestspikyogre/forestspikyogre.x": {
       "kind": "pet",
-      "petId": "bronze_lulu_teen"
+      "petId": "nono_leaf_guardian"
     },
     "config/aries/mob/newislandmonster/mobtemplate_storm_stormscout.xml|character/v5/10mobs/haqitown/manekineko/manekineko.x": {
       "kind": "pet",
-      "petId": "pixel_orange_cat_pudding"
+      "petId": "hu_po_jiao_long"
     },
     "config/aries/mob/pharaohfortress/mobtemplate_anubis.xml|character/v5/10mobs/haqitown/anubis/anubis.x": {
       "kind": "pet",
@@ -3384,6 +3384,36 @@
       "model": "character/v3/GameNpc/GTCK/GTCK.x",
       "petId": "dragon_green",
       "reason": "未匹配模型族的二维宠物外观改编"
+    },
+    {
+      "source": "config/Aries/Mob/NewIslandMonster/MobTemplate_Death_DeatgScout.xml",
+      "model": "character/v5/10mobs/HaqiTown/DeathBubble/DeathBubble.x",
+      "petId": "anubis_cocoa_pup",
+      "reason": "魔法营地侦察兵改用系别对应的完整宠物形象"
+    },
+    {
+      "source": "config/Aries/Mob/NewIslandMonster/MobTemplate_Fire_FireScout.xml",
+      "model": "character/v5/10mobs/HaqiTown/BlazeHairMonster/BlazeHairMonster.x",
+      "petId": "flame_puppy_doudou",
+      "reason": "魔法营地侦察兵改用系别对应的完整宠物形象"
+    },
+    {
+      "source": "config/Aries/Mob/NewIslandMonster/MobTemplate_Ice_IceScout.xml",
+      "model": "character/v5/10mobs/HaqiTown/IcePangolin/IcePangolin.x",
+      "petId": "fenrir_snow_bite",
+      "reason": "魔法营地侦察兵改用系别对应的完整宠物形象"
+    },
+    {
+      "source": "config/Aries/Mob/NewIslandMonster/MobTemplate_Life_LifeScout.xml",
+      "model": "character/v5/10mobs/HaqiTown/ForestSpikyOgre/ForestSpikyOgre.x",
+      "petId": "nono_leaf_guardian",
+      "reason": "魔法营地侦察兵改用系别对应的完整宠物形象"
+    },
+    {
+      "source": "config/Aries/Mob/NewIslandMonster/MobTemplate_Storm_StormScout.xml",
+      "model": "character/v5/10mobs/HaqiTown/ManekiNeko/ManekiNeko.x",
+      "petId": "hu_po_jiao_long",
+      "reason": "魔法营地侦察兵改用系别对应的完整宠物形象"
     }
   ]
 }

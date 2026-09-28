@@ -17,6 +17,8 @@ const base=document.createElement('base');base.href=new URL('../../',location.hr
 // Entire fixture is in memory. No real account, player save or remote message writes.
 const assets=await loadResources(p=>document.querySelector('#result').textContent=p.label),save=createAdventure(assets.content,{name:'社交验收'}),world=createWorld(params.get('zone')||'camp',assets.content,save),renderer=createRenderer(document.querySelector('#world'),assets);
 save.zone=world.zone;save.position={...world.layout.spawn};
+const at=params.get('at')?.split(',').map(Number);
+if(at?.length===2&&at.every(Number.isFinite))save.position=nearestWalkable(world,at[0],at[1]);
 const hud=document.querySelector('#hud'),overlay=document.querySelector('#overlay'),result=document.querySelector('#result');let panel=null;
 const model=()=>({assets,save,social:social.state(),socialActors:social.actors,membership:{},now:Date.now()});
 function close(){social.close();panel=null;overlay.replaceChildren();overlay.className='overlay';}
@@ -37,5 +39,13 @@ document.querySelector('#world').addEventListener('click',event=>{const point=re
 const launch=document.createElement('button');launch.textContent='组队房间';launch.style='position:fixed;bottom:30px;left:5px;z-index:100';launch.onclick=()=>open('social-party');document.body.append(launch);
 const approach=document.createElement('button');approach.textContent='靠近伙伴';approach.style='position:fixed;bottom:30px;left:90px;z-index:100';approach.onclick=()=>{close();const a=social.actors[0];save.position=nearestWalkable(world,a.position.x+60,a.position.y);};document.body.append(approach);
 result.textContent=`隔离验收已就绪 · ${social.actors.length}位伙伴`;
-document.documentElement.dataset.fixtureReady='1';
+if(at){
+    const probe=document.createElement('canvas').getContext('2d');
+    const ids=['fire-scout','ice-scout','storm-scout','life-scout','death-scout'];
+    const waitArt=()=>{
+        if(!ids.every(id=>assets.drawMonster(probe,assets.content.monsters[id],0,0,80,80))){setTimeout(waitArt,200);return;}
+        requestAnimationFrame(()=>requestAnimationFrame(()=>{document.documentElement.dataset.fixtureReady='1';}));
+    };
+    waitArt();
+}else document.documentElement.dataset.fixtureReady='1';
 </script></body></html>

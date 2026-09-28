@@ -71,6 +71,14 @@ header.append(createCloseButton(closeDetails, '关闭物品详情'));
 
 ## 美术与性能
 
+### 角色头顶对白接口（2026-09-28）
+
+`js/view_actor_speech.js` 的 `createActorSpeech()` 是独立表现层接口：`say(actorId,text,{duration})` 按角色排队，`clear(actorId)` 清除单个角色，`clear()` 清空；`render(root,anchors,now,obstacles)` 使用容器内的 CSS 像素坐标，anchors 为角色 ID 到头顶 `{x,y}` 的映射，obstacles 为必须避让的 `{x,y,width,height}`。now 使用同一单调毫秒时钟。内容通过 textContent 写入，不解析 HTML；不同角色可同时发言，同一角色按序展示。
+
+战斗调用 `battleSpeechController(battle).say(unit.id,text)`（从 `view_battle_pet_hint.js` 或 `view_adventure.js` 导入），适用于主角、队友、上阵宠物和怪物。战斗每帧自动渲染，不需要另建 DOM 或定时器。开场对白和 speak 事件已接入。未来聊天房间可直接使用 createActorSpeech，并传入三维角色投影后的头顶坐标；此接口不提供网络聊天传输。
+
+Buff 绘制返回的实际图标矩形供气泡避让，气泡之间也避让；战宠建议复用相同布局函数。空间不足则暂时隐藏，不覆盖 Buff。容器重绘不重置队列；结束场景应丢弃控制器或 clear。对白至少4秒，默认按文本长度延长，可通过 duration 覆盖。
+
 复用 `ui-art.json` 已有图集与 Keepwork CDN，不为单个窗口下载一套不同皮肤，不把本地绝对路径写进运行时代码。新增资源保留 WebP、alpha、尺寸、来源和哈希，并遵守 AGENTS.md 的字节上限。图标失败时仍应能辨认操作。动画遵循 `prefers-reduced-motion`，避免为 hover 引入持续绘制。
 
 ## 修改后的核验

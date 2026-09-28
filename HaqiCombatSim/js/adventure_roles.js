@@ -10,9 +10,10 @@ import { emptyRoles, validateRoles, addRole, selectRole, grantMagicBeans } from 
 export function createRoleStore({ content, dataset, storage = localStorage, uuid = () => crypto.randomUUID(), now = () => Date.now(), prepareSaves = async () => {}, runtimeStore = createRuntimeStore() }) {
     let owner = null, state, raw, lastCoreKey;
     const scope=(accountKey,id)=>`${accountKey}.${id}`;
+    const accountKey=account=>`haqi.roles.v1.${account===null?'guest':'account.'+encodeURIComponent(account)}`;
     const fileIO=scope=>({read:path=>{const text=storage.getItem(`${scope}.pet-file.${path}`);if(!text)throw Error('宠物文件尚未下载，请连接原账号后重试');return JSON.parse(text);},write:(path,value)=>{const text=JSON.stringify(value),key=`${scope}.pet-file.${path}`;if(storage.getItem(key)&&storage.getItem(key)!==text)throw Error('宠物文件版本冲突');storage.setItem(key,text);if(storage.getItem(key)!==text)throw Error('宠物文件保存失败');}});
     function unpack(save,accountKey,id){const io=fileIO(scope(accountKey,id)),next=unpackPetPages(save,scope(accountKey,id),io.read);for(const petId of initialPetIds(next))hydratePetFile(next,petId,scope(accountKey,id),io.read,content);return next;}
-    const key = () => `haqi.roles.v1.${owner === null ? 'guest' : 'account.' + encodeURIComponent(owner)}`;
+    const key = () => accountKey(owner);
     const runtimeKey = (accountKey,id) => `${accountKey}.${id}`;
     function hydrate(catalog,accountKey,localFormat) {
         return {...catalog,roles:catalog.roles.map(row=>({...row,save:localFormat===2
@@ -32,6 +33,8 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
     return {
         flushRuntime: () => runtimeStore.flush(),
         petFileIO(roleId){return fileIO(scope(key(),roleId));},
+        // Cloud downloads can arrive before this store switches off the guest account.
+        petFileIOFor(account,roleId){return fileIO(scope(accountKey(account),roleId));},
         petScope(roleId){return scope(key(),roleId);},
         loadPet(save,id){const next=JSON.parse(JSON.stringify(save));hydratePetFile(next,id,scope(key(),state.catalog.activeId),fileIO(scope(key(),state.catalog.activeId)).read,content);return restoreRuntime(durableSave(next),content,runtimeValues(next));},
         get owner() { return owner; },
@@ -39,16 +42,16 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         get base() { return state.base; },
         get dirty() { return state.dirty; },
         async prepareOpen(account = null) {
-            const accountKey=`haqi.roles.v1.${account===null?'guest':'account.'+encodeURIComponent(account)}`;
-            const captured=storage.getItem(accountKey),legacy=!captured&&account===null?storage.getItem(SAVE_KEY):null;
-            if(captured)await runtimeStore.prepare((JSON.parse(captured).catalog?.roles||[]).map(row=>runtimeKey(accountKey,row.id)));
+            const storageKey=accountKey(account);
+            const captured=storage.getItem(storageKey),legacy=!captured&&account===null?storage.getItem(SAVE_KEY):null;
+            if(captured)await runtimeStore.prepare((JSON.parse(captured).catalog?.roles||[]).map(row=>runtimeKey(storageKey,row.id)));
             const saves=captured?(JSON.parse(captured).catalog?.roles||[]).map(row=>row.save):legacy?[JSON.parse(legacy)]:[];
             await prepareSaves(saves);
-            if(captured){const records=JSON.parse(captured).catalog?.roles||[];const cooperative=records.flatMap(row=>{const r=runtimeStore.get(runtimeKey(accountKey,row.id));return r?.values?.coopRun&&r.revision===row.save.revision?[{...row.save,zone:r.coopZone}]:[];});if(cooperative.length)await prepareSaves(cooperative);}
-            if(storage.getItem(accountKey)!==captured||legacy!==null&&storage.getItem(SAVE_KEY)!==legacy)throw Error('角色进度已变化，请重新读取。');
+            if(captured){const records=JSON.parse(captured).catalog?.roles||[];const cooperative=records.flatMap(row=>{const r=runtimeStore.get(runtimeKey(storageKey,row.id));return r?.values?.coopRun&&r.revision===row.save.revision?[{...row.save,zone:r.coopZone}]:[];});if(cooperative.length)await prepareSaves(cooperative);}
+            if(storage.getItem(storageKey)!==captured||legacy!==null&&storage.getItem(SAVE_KEY)!==legacy)throw Error('角色进度已变化，请重新读取。');
         },
         open(account = null) {
-            const nextKey = `haqi.roles.v1.${account === null ? 'guest' : 'account.' + encodeURIComponent(account)}`;
+            const nextKey = accountKey(account);
             const nextRaw = storage.getItem(nextKey);
             const next = nextRaw ? JSON.parse(nextRaw) : { catalog: emptyRoles(), base: null, dirty: false };
             next.catalog = validateRoles(hydrate(next.catalog,nextKey,next.localFormat), content, dataset);
@@ -72,6 +75,24 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
                 return {...row,save:restoreRuntime(durable,content,same?(runtimeStore.get(runtimeKey(key(),row.id))||runtimeValues(previous.save)):row.save.pendingEncounter?runtimeValues(row.save):null)};
             })};
             write({catalog:validateRoles(hydrated,content,dataset),base,dirty});
+        },
+        // Fully hydrate lazy pet files before moving a guest save to another scope.
+        guestTransfer() {
+            if(owner!==null) return null;
+            const row=state.catalog.roles.find(r=>r.id===state.catalog.activeId);
+            if(!row)throw Error('请先选择本地角色。');
+            const save=JSON.parse(JSON.stringify(row.save));
+            for(const id of Object.keys(save.petFileRefs||{}))hydratePetFile(save,id,scope(key(),row.id),fileIO(scope(key(),row.id)).read,content);
+            delete save.petFileRefs;delete save.petPages;
+            return {id:row.id,save:restoreRuntime(durableSave(save),content,runtimeValues(row.save))};
+        },
+        adoptGuest(row) {
+            if(!owner)throw Error('请先登录 KeepWork。');
+            // Stable role IDs make retries idempotent; never overwrite an existing cloud role.
+            if(state.catalog.roles.some(r=>r.id===row.id))return row.id;
+            const next=addRole(state.catalog,row.id,row.save,now());
+            write({...state,catalog:validateRoles(next,content,dataset),dirty:true});
+            return row.id;
         },
         create(save) { const next = addRole(state.catalog, uuid(), save, now());write({ ...state, catalog: next, dirty: true });return next.activeId; },
         select(id) { const catalog=selectRole(state.catalog,id,now());write({...state,catalog,dirty:changed(catalog)}); },

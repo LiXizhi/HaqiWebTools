@@ -1,6 +1,85 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {bindDialogue} from '../js/view_adventure_dialogue.js';
+import fs from 'node:fs';
+import vm from 'node:vm';
+
+test('tracked NPC dialogue executes only one available quest choice and consumes intent',()=>{
+    const source=fs.readFileSync(new URL('../js/view_adventure.js',import.meta.url),'utf8');
+    const renderSource=source.slice(source.indexOf('export function renderDialogue('),source.indexOf('// 战斗卡牌说明')).replace('export function','function');
+    const quest={id:1,title:'Quest',startNpc:10,endNpc:10};
+    const npc={id:10,name:'NPC',zone:'camp',description:'Default greeting'};
+    const element=(tag,cls,...children)=>({tag,children,dataset:{},textContent:'text',classList:{toggle(){}},style:{setProperty(){}},setAttribute(){},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},querySelector(){return element('button');}});
+    for(const scenario of [
+        {name:'tracked accept',tracked:true,chapter:quest,accepted:false,expected:'startQuest'},
+        {name:'tracked claim',tracked:true,chapter:quest,accepted:true,ready:true,expected:'finishQuest'},
+        {name:'catalog accept',tracked:true,accept:[quest],expected:'startCatalog'},
+        {name:'catalog claim',tracked:true,claim:[quest],expected:'finishCatalog'},
+        {name:'ordinary NPC click',chapter:quest,accepted:false},
+        {name:'multiple choices',tracked:true,chapter:quest,accepted:false,accept:[{...quest,id:2}]},
+        {name:'no available choices',tracked:true},
+    ]){
+        const calls=[],root=element('div'),dialog={npcId:10,questDialogue:!!scenario.tracked};
+        const callbacks=Object.fromEntries(['startQuest','finishQuest','startCatalog','finishCatalog'].map(name=>[name,value=>calls.push([name,value.id])]));
+        let bound=0;
+        const context=vm.createContext({
+            el:element,art:()=>element('canvas'),fill:()=>({text:'NPC'}),islandName:()=>'',createCloseButton:()=>element('button'),
+            currentQuest:()=>scenario.chapter,questState:()=>({accepted:!!scenario.accepted}),questReady:()=>!!scenario.ready,
+            catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:scenario.accept||[],claim:scenario.claim||[]}),
+            rewardsFor:()=>[],pendingQuestTalk:()=>null,npcServices:()=>['shop'],setText(){},
+            button:(label,action)=>({...element('button'),click:action}),dialogueLearningLines:()=>[],bindDialogue:()=>bound++,
+        });
+        vm.runInContext(renderSource,context);
+        const model={assets:{content:{npcs:{10:npc}}},save:{languageLearning:{}}};
+        context.renderDialogue(root,model,dialog,callbacks);
+        assert.deepEqual(calls,scenario.expected?[[scenario.expected,1]]:[],scenario.name);
+        assert.equal(bound,scenario.expected?0:1,scenario.name);
+        assert.equal(dialog.questDialogue,false,scenario.name);
+        if(scenario.expected){
+            context.renderDialogue(root,model,dialog,callbacks);
+            assert.equal(calls.length,1,'refresh must not auto-execute again');
+            assert.equal(bound,1);
+        }
+    }
+    const controller=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
+    assert.match(controller,/dialog=\{npcId:target.id,npc:target,questDialogue:target.questDialogue===true,fromQuestTracking:target.questDialogue===true\}/);
+});
+
+test('tracking dialogue closes after success and follows only the sole updated tracker entry',async()=>{
+    const source=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
+    const controller=source.slice(source.indexOf('function finishTrackedDialogue()'),source.indexOf('function interact(target)'));
+    for(const scenario of [
+        {name:'accept and follow objective',tracked:true,ids:[1],expected:1},
+        {name:'claim opens next chapter',tracked:true,ids:[],chapter:2,expected:2,advance:'reward'},
+        {name:'talk continues to next destination',tracked:true,ids:[1],expected:1,advance:true},
+        {name:'multiple tracks only close',tracked:true,ids:[1,2]},
+        {name:'finished all tasks only close',tracked:true,ids:[]},
+        {name:'ordinary accept keeps menu',ids:[1]},
+        {name:'catalog accept continues',tracked:true,ids:[1],expected:1,catalog:'startCatalog'},
+        {name:'catalog claim follows successor',tracked:true,ids:[2],expected:2,catalog:'finishCatalog'},
+        {name:'chapter reward popup prevents following successor',tracked:true,ids:[],chapter:2,advance:'reward',rewards:true},
+        {name:'catalog reward popup prevents following successor',tracked:true,ids:[2],catalog:'finishCatalog',rewards:true},
+        {name:'existing reward popup prevents following accepted quest',tracked:true,ids:[1],rewards:true},
+    ]){
+        const calls=[],quest={id:1,startNpc:10,endNpc:10,title:'Quest'},save={ids:[]};
+        let callbacks;
+        const update=()=>{save.ids=scenario.ids;return scenario.advance;};
+        const context=vm.createContext({
+            dialog:{npcId:10,fromQuestTracking:!!scenario.tracked,questDialogue:false,lines:[{}],index:0},dialogDone:update,
+            save,assets:{content:{quests:[quest,{id:2}]}},trackedQuestIds:state=>state.ids,
+            rewardFeedback:{hasPendingItems:!!scenario.rewards},
+            A:{currentQuest:()=>scenario.chapter?{id:scenario.chapter}:null,applyAction:()=>{update();return {}; }},
+            close:()=>{calls.push('close');context.dialog=null;},track:(id,options)=>{assert.equal(context.dialog,null);assert.equal(options.pin,false);calls.push(id);},
+            persist(){},queueCloudSave(){},paintHud(){},petScene:{dialogue(){}},missingRewardPets:()=>[],loadPet(){},safely:callback=>callback(),
+            nodes:{overlay:{}},model:()=>({}),V:{renderDialogue:(_root,_model,_dialog,cb)=>{callbacks=cb;calls.push('render');}},
+            mapDialogue(){},dialogueVoice:{},openPanel(){},travel(){},toast(){},rewardSnapshot(){},showRewards(){},islandSocial:{activity(){}},
+        });
+        vm.runInContext(controller,context);
+        if(scenario.catalog){context.paintDialogue();calls.length=0;callbacks[scenario.catalog](quest);}
+        else await context.nextDialogue();
+        assert.deepEqual(calls,scenario.tracked?['close',...(scenario.expected?[scenario.expected]:[])]:['render'],scenario.name);
+    }
+});
 
 function setup(t,reduced=false,options={}){
     const listeners=new Map(),classes=new Set();let calls=0;

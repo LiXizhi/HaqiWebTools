@@ -76,3 +76,7 @@
 .camp-chat-more:hover,.camp-chat-more[aria-expanded=true]{background:#e7edce}
 .camp-chat-more-menu{position:absolute;right:0;bottom:calc(100% + 8px);z-index:5;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;width:240px;max-width:calc(100vw - 52px);padding:12px;box-sizing:border-box;background:var(--paper,#fff8df);border:1px solid var(--gold,#b78636);border-radius:12px;box-shadow:0 8px 24px #10291b40}
 .camp-chat-more-menu button{min-height:44px;white-space:nowrap;font-size:13px}
+
+.camp-chat-login{margin:24px;padding:24px;border:2px solid #b78636;border-radius:16px;background:#fff2cd;color:#283d32;overflow:auto;line-height:1.7}
+.camp-chat-login[hidden]{display:none!important}.camp-chat-login h3{margin:0 0 12px;font-size:22px}.camp-chat-login p{margin:0 0 20px}.camp-chat-login button{min-height:48px;max-width:100%;white-space:normal}
+@media(max-width:480px){.camp-chat-login{margin:12px;padding:16px}.camp-chat-login h3{font-size:19px}}

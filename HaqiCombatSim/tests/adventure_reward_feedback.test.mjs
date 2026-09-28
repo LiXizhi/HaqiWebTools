@@ -61,6 +61,25 @@ test('idle, consumed, reset and delayed reward popups never leave an empty frame
   feedback.push({xp:10,items:[]});feedback.reset();feedback.tick(6000,true);assert.equal(popup.hidden,true);assert.equal(banner.hidden,true);
  }finally{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;}
 });
+test('pending popup items include queued cards, equipment and pets until handled or reset',()=>{
+ const previous=globalThis.document;globalThis.document={createElement:()=>new NodeStub()};
+ try{
+  const root=new NodeStub(),feedback=createRewardFeedback(root,{describe:()=>({label:'Inspect'}),activate:()=>true});
+  assert.equal(feedback.hasPendingItems,false);
+  feedback.push({xp:10,items:[{kind:'item',id:100,count:1}]});
+  assert.equal(feedback.hasPendingItems,false);
+  for(const item of [{kind:'card',key:'fire'},{kind:'item',gear:true,id:1912},{kind:'pet',id:1}]){
+   feedback.push({items:[{...item,name:'Reward',count:1}]});
+   assert.equal(feedback.hasPendingItems,true);
+   feedback.tick(100,false);assert.equal(feedback.hasPendingItems,true);
+   feedback.tick(200,true);assert.equal(feedback.hasPendingItems,true);
+   root.children[1].children.find(node=>node.textContent==='Inspect').onclick();
+   assert.equal(feedback.hasPendingItems,false);
+  }
+  feedback.push({items:[{kind:'card',key:'ice'}]});feedback.reset();
+  assert.equal(feedback.hasPendingItems,false);
+ }finally{if(previous===undefined)delete globalThis.document;else globalThis.document=previous;}
+});
 test('items already waiting in the queue stack by kind instead of one tip each',()=>{
  const previous=globalThis.document;globalThis.document={createElement:()=>new NodeStub()};
  try{

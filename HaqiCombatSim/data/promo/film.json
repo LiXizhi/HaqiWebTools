@@ -15,7 +15,7 @@
         "en": "Adventure with pets, explore new places, and practise a language through stories."
       },
       "duration": {
-        "long": 12,
+        "long": 8,
         "short": 7
       },
       "cues": []
@@ -32,7 +32,7 @@
         "en": "Choose your name and your dragon companion. Your magical journey starts here."
       },
       "duration": {
-        "long": 18,
+        "long": 14,
         "short": 7
       },
       "cues": [
@@ -49,24 +49,6 @@
       ]
     },
     {
-      "id": "account",
-      "scene": "account",
-      "title": {
-        "zh-CN": "随时回来，继续冒险",
-        "en": "Return to your adventure"
-      },
-      "subtitle": {
-        "zh-CN": "可以先以访客体验；登录与注册通过 Keepwork 完成，云端旅途随账号继续。",
-        "en": "Try the game as a guest. Keepwork sign-in and registration connect your cloud journey."
-      },
-      "duration": {
-        "long": 12,
-        "short": 0
-      },
-      "cues": [],
-      "fixture": true
-    },
-    {
       "id": "skills",
       "scene": "skills",
       "title": {
@@ -78,7 +60,7 @@
         "en": "Fire, Ice, Storm, Life and Death. Find the magic that suits your style."
       },
       "duration": {
-        "long": 22,
+        "long": 18,
         "short": 10
       },
       "cues": [
@@ -116,7 +98,7 @@
         "en": "Build your deck and prepare for the next encounter."
       },
       "duration": {
-        "long": 13,
+        "long": 9,
         "short": 5
       },
       "cues": [
@@ -138,7 +120,7 @@
         "en": "Gather pips, choose your moment, and combine the power of cards and companions."
       },
       "duration": {
-        "long": 24,
+        "long": 9,
         "short": 10
       },
       "cues": []
@@ -155,7 +137,7 @@
         "en": "Meet your pets, care for them, and build your own adventuring team."
       },
       "duration": {
-        "long": 15,
+        "long": 12,
         "short": 6
       },
       "cues": []
@@ -172,7 +154,7 @@
         "en": "Check your equipment and pack for the next adventure."
       },
       "duration": {
-        "long": 10,
+        "long": 8,
         "short": 0
       },
       "cues": []
@@ -189,7 +171,7 @@
         "en": "Meet fellow adventurers, connect through friend requests, and plan your next journey."
       },
       "duration": {
-        "long": 15,
+        "long": 12,
         "short": 5
       },
       "cues": [
@@ -212,7 +194,7 @@
         "en": "Choose a dungeon, cross its threshold, and face the creatures ahead."
       },
       "duration": {
-        "long": 16,
+        "long": 14,
         "short": 5
       },
       "cues": [
@@ -238,7 +220,7 @@
         "en": "Return to the sunshine of Haqi Island and greet its residents."
       },
       "duration": {
-        "long": 11,
+        "long": 9,
         "short": 3
       },
       "cues": [],
@@ -256,7 +238,7 @@
         "en": "Follow volcanic shores into Firebird Island."
       },
       "duration": {
-        "long": 11,
+        "long": 9,
         "short": 3
       },
       "cues": [],
@@ -274,7 +256,7 @@
         "en": "Travel through icy peaks and discover your next challenge."
       },
       "duration": {
-        "long": 11,
+        "long": 9,
         "short": 3
       },
       "cues": [],
@@ -292,7 +274,7 @@
         "en": "Beyond the golden dunes, an oasis and new stories await."
       },
       "duration": {
-        "long": 11,
+        "long": 9,
         "short": 3
       },
       "cues": [],
@@ -310,7 +292,7 @@
         "en": "Step into the dark forest and let curiosity guide you onward."
       },
       "duration": {
-        "long": 11,
+        "long": 9,
         "short": 3
       },
       "cues": [],
@@ -328,7 +310,7 @@
         "en": "Back at Magic Camp, take time for stories beyond the battles."
       },
       "duration": {
-        "long": 10,
+        "long": 8,
         "short": 0
       },
       "cues": [],
@@ -346,7 +328,7 @@
         "en": "Start with greetings and requests, and practise Chinese and English through short camp stories."
       },
       "duration": {
-        "long": 20,
+        "long": 16,
         "short": 7
       },
       "cues": [
@@ -373,7 +355,7 @@
         "en": "Magic Haqi, an early browser adventure. Open your browser and begin your story."
       },
       "duration": {
-        "long": 12,
+        "long": 10,
         "short": 3
       },
       "cues": []

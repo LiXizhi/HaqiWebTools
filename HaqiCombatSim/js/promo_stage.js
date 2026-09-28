@@ -16,6 +16,7 @@ import {enterDungeon} from './adventure_dungeons_core.js';
 import {createLearningChatView} from './view_learning_chat.js';
 import {createJsonReader} from './runtime_data.js';
 import {samplePromoMotion} from './promo_motion_core.js';
+import {presentationEventDurationMs,samplePresentationClock} from './battle_presentation_core.js';
 
 const $=id=>document.getElementById(id), noop=()=>{};
 const nodes={entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer')};
@@ -39,11 +40,17 @@ function digest(b){return JSON.stringify([b.winner,b.turn,Object.values(b.unitsB
 function filmBattle(id,start=0){
     A.beginEncounter(save,assets.content,id);const arena=P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter),bot=new SimpleBot();frames=[];
     const snap=()=>JSON.parse(JSON.stringify(arena));
-    frames.push({arena:snap(),event:null});
+    const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const remember=event=>{
+        const card=event?.card?arena.resolved.cards[event.card]:null;
+        const hp=event?.type==='damage'?arena.unitsById[event.target]?.hp??0:0;
+        frames.push({arena:snap(),event:event??null,duration:presentationEventDurationMs(event,{effects:assets.effects,card,hp,reducedMotion})});
+    };
+    remember(null);
     for(let round=0;!arena.finished&&round<100;round++){
         const decision=bot.pick(arena,arena.sides.near[0]);
         arena.onEvent=event=>{
-            if(['cast','damage','heal','fizzle','combat_end'].includes(event.type))frames.push({arena:snap(),event});
+            if(['cast','damage','heal','fizzle','combat_end'].includes(event.type))remember(event);
         };
         try{P.playPveRound(arena,decision);}finally{delete arena.onEvent;}
         A.recordDecision(save,decision,arena);
@@ -53,7 +60,7 @@ function filmBattle(id,start=0){
     check(digest(P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter))===digest(arena),'固定种子与决定序列重演一致');
     const settled=structuredClone(save);A.settleEncounter(settled,assets.content,arena);
     check(!settled.pendingEncounter,'战斗结算清除检查点');
-    frames.push({arena:snap(),event:null});battleStart=start;lastBattleFrame=-1;
+    remember(null);battleStart=start;lastBattleFrame=-1;
 }
 async function prepare(next,seed){
     clear();shot=next;checks=[];frames=[];path=[];lastBattleFrame=-1;
@@ -106,9 +113,9 @@ function tick(elapsed){
     }
     else renderer.render(world,save,elapsed*1000);
     if(frames.length){
-        const length=Math.max(1,shot.duration-battleStart-1),position=Math.max(0,Math.min(frames.length-1,(elapsed-battleStart)/length*(frames.length-1))),index=Math.floor(position),f=frames[index];
-        if(index!==lastBattleFrame){V.renderBattle(nodes.battle,model(f.arena),callbacks);lastBattleFrame=index;check(!!$('battle-canvas')||f.arena.finished,'战斗界面可渲染');}
-        const canvas=$('battle-canvas');if(canvas)renderer.renderBattle(canvas,f.arena,save,elapsed*1000,{event:f.event,progress:position-index,hp:f.hp});
+        const played=samplePresentationClock(frames,elapsed-battleStart),f=frames[played.index];
+        if(played.index!==lastBattleFrame){V.renderBattle(nodes.battle,model(f.arena),callbacks);lastBattleFrame=played.index;check(!!$('battle-canvas')||f.arena.finished,'战斗界面可渲染');}
+        const canvas=$('battle-canvas');if(canvas)renderer.renderBattle(canvas,f.arena,save,elapsed*1000,{event:f.event,progress:played.progress,hp:f.hp});
     }
 }
 function validateFrames(){for(const fraction of [0,.2,.5,.8,1])tick(battleStart+(shot.duration-battleStart-.01)*fraction);return result();}

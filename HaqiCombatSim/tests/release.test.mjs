@@ -5,7 +5,29 @@ import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
 import { spawn } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import viteConfig from '../vite.config.mjs';
 import { syncMaisiRelease, syncAppsRelease } from '../scripts/sync_keepwork_apps_release.mjs';
+
+test('CDN release inlines both Workers including Windows path casing variants', () => {
+    const plugin = viteConfig({ command: 'build' }).plugins.find(plugin => plugin.name === 'inline-cdn-worker');
+    for (const file of ['js/sim_pool.js', 'js/battle_ai/client.js']) {
+        const url = new URL(`../${file}`, import.meta.url);
+        const source = fs.readFileSync(url, 'utf8');
+        const id = fileURLToPath(url).replaceAll('\\', '/');
+        const ids = process.platform === 'win32' ? [id, id.toUpperCase()] : [id];
+        for (const variant of ids) {
+            const result = plugin.transform.call({ error(message) { throw Error(message); } }, source, variant);
+            assert.ok(result, `${file} must be transformed for ${variant}`);
+            assert.match(result.code, /\?worker&inline/);
+            assert.match(result.code, /new InlineCdnWorker\(\)/);
+            assert.doesNotMatch(result.code, /new Worker\(new URL/);
+            if (file === 'js/sim_pool.js') assert.match(result.code, /new Worker\(this.workerUrl/);
+        }
+        assert.throws(() => plugin.transform.call({ error(message) { throw Error(message); } }, '', id), /constructor not found/);
+    }
+    assert.equal(plugin.transform('', '/unrelated.js'), null);
+});
 
 test('verified release awaits apps publication before Maisi and stops if apps fails', async () => {
     const source = fs.readFileSync(new URL('../uploadRelease.mjs', import.meta.url), 'utf8');

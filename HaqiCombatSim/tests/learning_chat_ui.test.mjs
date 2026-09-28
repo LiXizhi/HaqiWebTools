@@ -43,4 +43,13 @@ test('English UI never translates Chinese teaching text; translation toggle work
     view.render({...done,received:0});
     assert.ok(nodes().some(n=>n.textContent==='练习完成，继续加油！'));
     view.close();
+    view.render({...state,mode:'free',loginRequired:true,ready:false,remaining:null,hintLevel:0});
+    assert.equal(nodes().find(n=>n.className==='camp-chat-login').hidden,false);
+    assert.equal(nodes().find(n=>n.className==='camp-chat-input').hidden,true);
+    assert.equal(nodes().find(n=>n.className==='camp-chat-actions').hidden,true);
+    assert.equal(nodes().find(n=>n.className==='camp-chat-progress').textContent,'登录后可使用 AI 对话');
+    view.render({...state,mode:'free',ready:true,remaining:2,hintLevel:0});
+    assert.equal(nodes().find(n=>n.className==='camp-chat-login').hidden,true);
+    assert.equal(nodes().find(n=>n.className==='camp-chat-input').hidden,false);
+    view.close();
 });

@@ -423,7 +423,8 @@ export function createRenderer(canvas,assets) {
         }
         if(ev?.type==='fizzle')drawSpellMiss(c,positions[ev.caster],p,reducedMotion.matches);
         for(const u of Object.values(battle.unitsById))drawStatusFeedback(c,(presentation?.statusFeedback||[]).filter(change=>change.id===u.id),positions[u.id],time,reducedMotion.matches,w);
-        target.updateStatusTargets?.(statusTargets.map(hit=>({...hit,x:hit.x*scale,y:hit.y*scale,width:hit.width*scale,height:hit.height*scale})));
+        target.battleStatusRects=statusTargets.map(hit=>({...hit,x:hit.x*scale,y:hit.y*scale,width:hit.width*scale,height:hit.height*scale}));
+        target.updateStatusTargets?.(target.battleStatusRects);
         return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:at.x*scale,y:at.y*scale}]));
     }
     return {render,minimap,screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};

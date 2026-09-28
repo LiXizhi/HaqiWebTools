@@ -23,6 +23,15 @@ test('all 23 original bosses resolve to their own verified transparent WebP arch
   assert.equal(art.entries[id].cdn,e.cdn);
  }
 });
+test('magic camp scouts use a distinct complete pet for each school',()=>{
+ const expected={'fire-scout':'flame_puppy_doudou','ice-scout':'fenrir_snow_bite','storm-scout':'hu_po_jiao_long','life-scout':'nono_leaf_guardian','death-scout':'anubis_cocoa_pup'};
+ const chapter=read('chapter');
+ for(const [id,petId] of Object.entries(expected))assert.equal(monsterArtBinding(chapter.monsters[id],art)?.petId,petId,id);
+ assert.equal(new Set(Object.values(expected)).size,5);
+ const fireModel=chapter.monsters['fire-scout'].attributes.asset;
+ const shared=read('monster-catalog').monsters.find(m=>m.model.toLowerCase()===fireModel.toLowerCase()&&!m.source.toLowerCase().endsWith('mobtemplate_fire_firescout.xml'));
+ assert.notEqual(monsterArtBinding(shared,art)?.petId,'flame_puppy_doudou');
+});
 test('renderer uses boss portraits and pet atlases, and rejects missing references',()=>{
  const calls=[],content={...read('pets'),pets};
  const draw=createMonsterArtRenderer(art,content,(...args)=>{calls.push(['boss',args]);return true;},(...args)=>{calls.push(['pet',args]);return true;});

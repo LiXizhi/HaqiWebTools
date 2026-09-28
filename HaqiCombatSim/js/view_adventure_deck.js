@@ -2,7 +2,6 @@ import {createCloseButton} from './view_adventure_controls.js';
 import {recommendAdventureDeck} from './battle_ai/adventure_adapter_core.js';
 import {teachPointer} from './view_teaching.js';
 import {deckLimits,deckCardCopies,syncDeckLayouts,equipmentBlockReason,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
-import {isAttackCard} from './combat_cards_core.js';
 import {skillLearningStatus,trainingPoints} from './adventure_learning_core.js';
 import { setText, tr } from './locale_runtime.js';
 const SCHOOL_LABELS={...SCHOOL_NAMES,balance:'平衡'};
@@ -34,6 +33,9 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     let active=draft.activeDeckLayout,school='all',page=0,query='',ownedOnly=true,previewPinned=false,hoverTimer;
     const owned={...save.cards},learned=new Set(),lessons=availableCardLessons(save,content),lessonMap=new Map(lessons.map(row=>[row.key,row]));
     layouts[active].deck=save.deck.map(row=>({...row}));
+    const deckFingerprint=()=>JSON.stringify({active,bag:bagItemId||0,spent:trainingPointsSpent,learned:[...learned].sort(),layouts:layouts.map(layout=>({name:layout.name,bag:layout.bagItemId||0,deck:layout.deck.map(row=>({key:row.key,count:row.count}))}))});
+    const cleanDeck=deckFingerprint();
+    const deckDirty=()=>deckFingerprint()!==cleanDeck;
     const tabs=el('div','bag-tabs'),slots=el('div','bag-slots'),library=el('div','bag-library'),detail=el('div','bag-detail');
     detail.hidden=true;detail.setAttribute('role','dialog');detail.setAttribute('aria-label','卡牌预览');
     const status=el('span','bag-status');status.setAttribute('aria-live','polite');status.hidden=true;
@@ -185,10 +187,19 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
         const rows=lessons.filter(row=>(school==='all'||row.school===school)&&(!ownedOnly||owned[row.key])&&(!query||`${cards[row.key]?.name||row.name||''} ${row.key}`.toLowerCase().includes(query)));
         const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));page=Math.max(0,Math.min(page,pages-1));
         setText(countLabel,'{count} 张 · {page}/{pages}',{count:rows.length,page:page+1,pages});previous.disabled=page===0;next.disabled=page>=pages-1;
+        const guide=total()<8;
+        let guideKey=null;
+        if(guide){
+            const missing=rows.find(lesson=>canPlace(lesson)&&placed(lesson.key)===0);
+            const next=missing||rows.find(lesson=>canPlace(lesson));
+            if(next){
+                const guidePage=Math.floor(rows.indexOf(next)/PAGE_SIZE);
+                if(guidePage!==page){page=guidePage;paintLibrary();return;}
+                guideKey=next.key;
+            }
+        }
         library.replaceChildren();
-        // 教学模式：卡包有空位时，挑第一张尚未放入且当前可加入的攻击类卡牌挂悬浮指针。
         let teachEntry=null;
-        const hasSpace=total()<limits.capacity;
         for(const lesson of rows.slice(page*PAGE_SIZE,(page+1)*PAGE_SIZE)){
             const card=cards[lesson.key];if(!card)continue;
             const n=layouts[active].deck.find(row=>row.key===lesson.key)?.count||0;
@@ -201,10 +212,18 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
             entry.setAttribute('aria-label',`${owned[lesson.key]?'放入':'学习并放入'}${card.name}`);
             entry.setAttribute('aria-disabled',String(!available||n>=(owned[lesson.key]?copies(lesson.key):limits.eachCapacity)||total()>=limits.capacity));
             previewEvents(entry,lesson.key);bindCardGesture(entry,lesson.key,false,()=>add(lesson.key));library.append(entry);
-            if(!teachEntry&&hasSpace&&n===0&&available&&isAttackCard(card))teachEntry=entry;
+            if(lesson.key===guideKey)teachEntry=entry;
         }
         if(!rows.length)library.append(el('p','muted','没有符合条件的卡牌'));
-        teachPointer(teachEntry,save,content);
+        // 不自动放牌。任意岛屿，卡包少于 8 张时箭头一直指向下一张已学、还能放的牌，点击不会消失。
+        teachPointer(teachEntry,save,content,{guide:true});
+    }
+    function placed(key){return layouts[active].deck.find(row=>row.key===key)?.count||0;}
+    function canPlace(lesson){
+        if(!owned[lesson.key]||!cards[lesson.key]||total()>=limits.capacity)return false;
+        if(!skillLearningStatus(draftSave(),content,lesson).allowed)return false;
+        const cap=copies(lesson.key);
+        return placed(lesson.key)<cap;
     }
     function paintCards(){
         setText(counter,'{used}/{capacity} 张 · 单卡最多 {each}',{used:total(),capacity:limits.capacity,each:limits.eachCapacity});slots.replaceChildren();
@@ -236,9 +255,11 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     for(const row of playerSpec(save,content).fixedCards)for(let i=0;i<row.count;i++){
         const card=cards[row.key];if(!card)continue;const slot=button(subject(card),()=>{},'bag-slot');slot.setAttribute('aria-label',card.name+'，装备附卡');previewEvents(slot,row.key);equipment.append(slot);
     }
-    const saveButton=button('保存',()=>{
-        cb.action({type:'deck-layouts',layouts,active,learnedKeys:[...learned],...(bagItemId?{bagItemId}:{})});
-    },'primary');
+    const commitDeck=()=>{
+        const saved=cb.action({type:'deck-layouts',layouts,active,learnedKeys:[...learned],...(bagItemId?{bagItemId}:{})});
+        return saved!==false;
+    };
+    const saveButton=button('保存',()=>{if(commitDeck())cb.close?.();},'primary');
     const equipmentSummary=el('summary','');
     setText(equipmentSummary,'装备附卡 {count} 张 · 不占卡位',{count:equipment.children.length});
     const equipmentPanel=el('details','bag-equipment',equipmentSummary,equipment);
@@ -251,5 +272,20 @@ export function renderDeckEditor(body,{assets,save,shopView},cb,{el,button,spell
     const shop=button('购买卡包',()=>{if(shopView)Object.assign(shopView,{category:'bag',subcategory:0,selected:null,query:'',school:'',slot:'',ownership:'',level:'',page:0});cb.panel('shop');},'secondary');
     shop.title='前往商店购买卡包；当前修改需先保存';
     body.append(el('div','bag-toolbar',tabs,shop),el('div','bag-workspace',bag,collection),status,detail);
+    const shell=body.closest?.('.modal'),closeButton=shell?.querySelector?.('.close-button');
+    if(closeButton?.onclick){
+        const leave=closeButton.onclick;
+        closeButton.onclick=()=>{
+            if(!deckDirty()){leave();return;}
+            if(shell.querySelector('.bag-save-prompt'))return;
+            const prompt=el('div','bag-save-prompt',el('p','','卡包还有未保存的修改，要保存吗？'));
+            const actions=el('div','bag-save-actions');
+            actions.append(
+                button('保存',()=>{if(commitDeck()){prompt.remove();leave();}},'primary'),
+                button('不保存',()=>{prompt.remove();leave();},'secondary'),
+                button('取消',()=>prompt.remove(),'secondary'));
+            prompt.append(actions);shell.append(prompt);
+        };
+    }
     paintTabs();paintCards();
 }

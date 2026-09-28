@@ -5,6 +5,7 @@ import * as A from '../js/adventure_core.js';
 import {upgradeLevels,upgradeAt,applyUpgradeStats} from '../js/adventure_upgrade_core.js';
 import {normalizeStats} from '../js/combat_unit_core.js';
 import {renderStrengthening} from '../js/view_adventure_strengthening.js';
+import {affordableUnstrengthenedGear} from '../js/adventure_strengthening_core.js';
 import {findEquipmentInstance} from '../js/adventure_equipment_instances_core.js';
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
 const q=content.quests.find(q=>q.id===63007);
@@ -51,18 +52,59 @@ test('six Lua strengthening contributions are cumulative target values, only equ
 test('strengthening panel exposes working button before equipment comparison and completes task',()=>{
     const s=hero();act(s,'accept',{questId:q.id,npcId:q.startNpc});
     class Element{
-        constructor(tag,cls,...children){this.tag=tag;this.children=children.flat();this.attributes={};this.style={};this.classList={add(){}};}
-        append(...children){this.children.push(...children.flat());}
-        replaceChildren(...children){this.children=children;}
-        setAttribute(k,v){this.attributes[k]=v;}
-        querySelector(){return this.children.find(n=>n?.className==='teach-pointer')||null;}
-    }
-    const el=(...args)=>new Element(...args),button=(label,fn,cls)=>{const b=el('button',cls,label);b.onclick=fn;return b;};
-    const ui={el,button,art:()=>el('canvas'),tile:()=>el('canvas'),spellFace:()=>el('canvas')};
+            constructor(tag,cls,...children){this.tag=tag;this.children=children.flat();this.attributes={};this.style={};this.classList={add(){}};}
+            append(...children){this.children.push(...children.flat());}
+            replaceChildren(...children){this.children=children;}
+            setAttribute(k,v){this.attributes[k]=v;}
+            addEventListener(type,fn,options){(this.listeners||=[]).push({type,fn,options});}
+            remove(){this.isConnected=false;}
+            querySelector(){return this.children.find(n=>n?.className==='teach-pointer')||null;}
+        }
+        const el=(...args)=>new Element(...args),button=(label,fn,cls)=>{const b=el('button',cls,label);b.onclick=fn;return b;};
+        const ui={el,button,art:()=>el('canvas'),tile:()=>el('canvas'),spellFace:()=>el('canvas')};
     const oldDocument=globalThis.document;globalThis.document={createElement:tag=>el(tag)};
     const body=el('div');
     renderStrengthening(body,{save:s,assets:{content,dataset:{cards:{}}},strengtheningView:{guid:findEquipmentInstance(s,content,1912).guid,filter:0,page:0}},{action:a=>A.applyAction(s,content,a)},ui);
     const all=node=>[node,...node.children.filter(x=>x instanceof Element).flatMap(all)];
     const b=all(body).find(node=>node.tag==='button'&&node.children[0]==='强 化');
     assert.ok(b);assert.equal(b.disabled,false);b.onclick();assert.equal(A.questReady(s,q),true);assert.equal(s.inventory[17213],420);globalThis.document=oldDocument;
+});
+test('strengthening arrow stays while worn gear can take its first upgrade and materials are enough',()=>{
+    const paint=(save,guid=null)=>{
+        class Element{
+            constructor(tag,cls,...children){this.tag=tag;this.children=children.flat();this.attributes={};this.style={};this.classList={add(){},remove(){}};}
+            append(...children){this.children.push(...children.flat());}
+            replaceChildren(...children){this.children=children;}
+            setAttribute(k,v){this.attributes[k]=v;}
+            getAttribute(k){return this.attributes[k];}
+            remove(){this.isConnected=false;}
+            querySelector(){return this.children.find(n=>n?.className==='teach-pointer')||null;}
+        }
+        const el=(...args)=>new Element(...args),button=(label,fn,cls)=>{const b=el('button',cls,label);b.onclick=fn;return b;};
+        const ui={el,button,art:()=>el('canvas')};
+        const oldDocument=globalThis.document;globalThis.document={createElement:tag=>el(tag)};
+        const body=el('div');
+        renderStrengthening(body,{save,assets:{content,dataset:{cards:{}}},strengtheningView:{guid,filter:0,page:0}},{action(){}},ui);
+        globalThis.document=oldDocument;
+        const nodes=[body];
+        for(let i=0;i<nodes.length;i++)for(const child of nodes[i].children||[])if(child instanceof Element)nodes.push(child);
+        return nodes.find(node=>node.children?.some(child=>child?.className==='teach-pointer'));
+    };
+    const fresh=hero();fresh.zone='town';fresh.tips.teachUpgrade=true;
+    assert.equal(affordableUnstrengthenedGear(fresh,content),null);
+    assert.equal(paint(fresh),undefined);
+    act(fresh,'equip',{itemId:1912});
+    const guide=affordableUnstrengthenedGear(fresh,content);
+    assert.equal(guide.gsid,1912);
+    const pointed=paint(fresh,guide.guid);
+    assert.equal(pointed.children[0],'强 化');
+    pointed.onclick();
+    assert.equal(paint(fresh,guide.guid).children[0],'强 化');
+    fresh.inventory[17213]=0;
+    assert.equal(affordableUnstrengthenedGear(fresh,content),null);
+    assert.equal(paint(fresh,guide.guid),undefined);
+    fresh.inventory[17213]=490;
+    fresh.equipmentInstances.find(row=>row.gsid===1912).serverdata.addlel=1;
+    assert.equal(affordableUnstrengthenedGear(fresh,content),null);
+    assert.equal(paint(fresh,guide.guid),undefined);
 });

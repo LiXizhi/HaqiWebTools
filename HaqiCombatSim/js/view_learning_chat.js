@@ -39,7 +39,41 @@ export function createLearningChatView(cb){
     const panel=el('div','camp-chat-panel'),header=el('header','camp-chat-header'),title=el('h3'),progress=el('span','camp-chat-progress');
     const chinese=button('隐藏释义',()=>cb.chinese(),'secondary small'),change=button('换个故事',()=>cb.next(),'secondary small');
     const settings=button('设置',()=>cb.settings(),'secondary small'),close=createCloseButton(cb.close,'关闭营地对话');
-    const freeTalk=button('自由交谈',()=>cb.free?.(),'secondary small');header.append(title,progress,chinese,change,freeTalk,settings);room.append(close);
+    const freeTalk=button('自由交谈',()=>cb.free?.(),'secondary small');
+    const toolbar=el('div','camp-chat-toolbar'),headerActions=el('div','camp-chat-toolbar-actions');
+    const headerMenu=el('div','camp-chat-toolbar-menu');headerMenu.hidden=true;headerMenu.setAttribute('role','menu');headerMenu.setAttribute('aria-label',tr('更多聊天操作'));
+    const headerMore=button('...',()=>setHeaderMenu(headerMenu.hidden),'secondary small camp-chat-toolbar-more');
+    headerMore.hidden=true;headerMore.title=tr('更多聊天操作');headerMore.setAttribute('aria-label',tr('更多聊天操作'));headerMore.setAttribute('aria-expanded','false');headerMore.setAttribute('aria-haspopup','menu');
+    headerActions.append(chinese,change,freeTalk,settings,headerMore,headerMenu);toolbar.append(progress,headerActions);header.append(title,toolbar);room.append(close);
+    function setHeaderMenu(open,focus=false){headerMenu.hidden=!open;headerMore.setAttribute('aria-expanded',String(open));if(focus)headerMore.focus();}
+    // Header actions stay on one row. Labels that do not fit move into the ... menu.
+    function fitHeaderActions(){
+        if(!toolbar.isConnected||!toolbar.clientWidth)return;
+        const items=[chinese,change,freeTalk,settings].filter(n=>!n.hidden);
+        const gap=8,floor=48;
+        headerActions.replaceChildren(...items,headerMore,headerMenu);
+        headerMenu.replaceChildren();headerMore.hidden=true;
+        const width=n=>n.getBoundingClientRect().width;
+        const natural=items.reduce((sum,n,i)=>sum+width(n)+(i?gap:0),0);
+        const available=toolbar.clientWidth-floor-gap;
+        let fit=items.length;
+        if(natural>available+0.5){
+            headerMore.hidden=false;
+            const reserve=width(headerMore)+gap;
+            let used=0;fit=0;
+            for(const n of items){
+                const next=used+(fit?gap:0)+width(n);
+                if(next+reserve>available+0.5)break;
+                used=next;fit++;
+            }
+        }
+        headerActions.replaceChildren(...items.slice(0,fit),headerMore,headerMenu);
+        headerMenu.replaceChildren(...items.slice(fit));
+        headerMore.hidden=fit===items.length;
+        if(headerMore.hidden)setHeaderMenu(false);
+    }
+    if(typeof ResizeObserver==='function'&&typeof toolbar.getBoundingClientRect==='function')new ResizeObserver(()=>fitHeaderActions()).observe(toolbar);
+    headerMenu.addEventListener('click',e=>{if(e.target.closest('button'))setHeaderMenu(false,true);},true);
     const celebration=el('div','camp-chat-celebration');celebration.hidden=true;
     celebration.setAttribute('role','status');celebration.setAttribute('aria-live','polite');
     const completedActions=el('div','camp-chat-completed-actions');completedActions.hidden=true;
@@ -59,15 +93,21 @@ export function createLearningChatView(cb){
     const menu=el('div','camp-chat-more-menu');menu.hidden=true;menu.setAttribute('role','group');menu.setAttribute('aria-label',tr('更多聊天操作'));menu.append(details,gift,upgrade);inputBox.append(more,menu);
     function setMore(open,focus=false){menu.hidden=!open;more.setAttribute('aria-expanded',String(open));if(focus)more.focus();}
     menu.addEventListener('click',e=>{if(e.target.closest('button'))setMore(false,true);},true);
-    root.addEventListener('pointerdown',e=>{if(!menu.hidden&&!menu.contains(e.target)&&!more.contains(e.target))setMore(false);});
-    root.addEventListener('focusin',e=>{if(!menu.hidden&&!menu.contains(e.target)&&!more.contains(e.target))setMore(false);});
+    root.addEventListener('pointerdown',e=>{
+        if(!menu.hidden&&!menu.contains(e.target)&&!more.contains(e.target))setMore(false);
+        if(!headerMenu.hidden&&!headerMenu.contains(e.target)&&!headerMore.contains(e.target))setHeaderMenu(false);
+    });
+    root.addEventListener('focusin',e=>{
+        if(!menu.hidden&&!menu.contains(e.target)&&!more.contains(e.target))setMore(false);
+        if(!headerMenu.hidden&&!headerMenu.contains(e.target)&&!headerMore.contains(e.target))setHeaderMenu(false);
+    });
     actions.append(typing,mic,hints);const caption=el('p','camp-chat-caption','按住对话，松开发送 · 点击录制，再点结束');
     footer.append(hint,form,actions,caption,status,completedActions);panel.append(header,log,footer);room.append(aside,panel,celebration);root.append(room);document.body.append(root);
     let portraitNode=null,state=null,trigger=null,key='',fingerprint='',celebrated=null,celebrationTimer=null;
     function hideCelebration(){clearTimeout(celebrationTimer);celebration.hidden=true;}
     const clearPress=bindChatMicrophone(mic,{isRecording:()=>!!state?.recording,start:cb.start,finish:cb.finish,cancel:cb.cancel});
     root.onkeydown=e=>{
-        e.stopPropagation();if(e.key==='Escape'){e.preventDefault();if(!menu.hidden){setMore(false,true);return;}cb.close();}
+        e.stopPropagation();if(e.key==='Escape'){e.preventDefault();if(!headerMenu.hidden){setHeaderMenu(false,true);return;}if(!menu.hidden){setMore(false,true);return;}cb.close();}
         if(e.key==='Tab'){
             const nodes=[...room.querySelectorAll('button:not(:disabled),input')].filter(n=>n.getClientRects().length);
             if(e.shiftKey&&document.activeElement===nodes[0]){e.preventDefault();nodes.at(-1)?.focus();}
@@ -89,7 +129,7 @@ export function createLearningChatView(cb){
     }
     return {
         root,
-        close(){setMore(false);hideCelebration();celebrated=null;clearPress();root.hidden=true;portraitNode?.remove();portraitNode=null;state=null;key='';fingerprint='';form.hidden=true;if(trigger?.isConnected)trigger.focus();},
+        close(){setMore(false);setHeaderMenu(false);hideCelebration();celebrated=null;clearPress();root.hidden=true;portraitNode?.remove();portraitNode=null;state=null;key='';fingerprint='';form.hidden=true;if(trigger?.isConnected)trigger.focus();},
         render(s){
             state=s;const fresh=root.hidden;if(fresh){trigger=document.activeElement;root.hidden=false;}
             if(key!==s.story.id){setMore(false);key=s.story.id;name.textContent=tr(s.profile.name);role.textContent=tr(s.profile.role);context.textContent=tr(s.story.context);title.textContent=tr(s.story.title);
@@ -132,6 +172,8 @@ export function createLearningChatView(cb){
                 }
             }else{hideCelebration();celebrated=null;}
             status.textContent=tr(s.status);caption.textContent=tr(s.recording?'正在录音 · 松开发送，滑出取消':'按住对话，松开发送 · 点击录制，再点结束');
+            const moreLabel=tr('更多聊天操作');headerMore.title=moreLabel;headerMore.setAttribute('aria-label',moreLabel);
+            fitHeaderActions();
             if(fresh)close.focus({preventScroll:true});
         },
     };

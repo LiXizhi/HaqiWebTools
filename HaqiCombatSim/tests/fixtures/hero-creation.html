@@ -6,11 +6,17 @@ import {createWorld} from '../../js/adventure_world_core.js';
 import {createRenderer} from '../../js/adventure_renderer.js';
 import {createPveBattle} from '../../js/combat_pve_core.js';
 import {createCreationPreview,tutorialCards} from '../../js/adventure_creation_preview.js';
+import {loadLocaleFiles,configureLocale,displayLocale} from '../../js/locale.js';
 const result=document.querySelector('#result');
 try{
- const assets=await loadResources(),preview=createCreationPreview(assets),draft={name:'形象预览',school:'fire',appearance:'boy',starter:'dragon_green',step:1};
+ const params=new URLSearchParams(location.search);
+ const assets=await loadResources(),preview=createCreationPreview(assets);
+ const draft={name:params.has('blank')?'':'形象预览',school:'fire',appearance:'boy',starter:'dragon_green',step:1};
+ let locale=params.get('lang')||'zh-CN',second=locale==='en'?'zh-CN':'en';
+ if(locale!=='zh-CN')await loadLocaleFiles([locale]);
+ configureLocale({locale});
  const root=document.querySelector('#entry');
- renderEntry(root,assets,null,{draft,previewChoices:s=>tutorialCards(assets,s),preview:(...args)=>preview.play(...args),stopPreview:()=>preview.stop(),pausePreview:()=>preview.togglePause(),create:options=>{
+ const show=()=>renderEntry(root,assets,null,{draft,locale:displayLocale(),secondLocale:second,setLocale:async id=>{if(id!=='zh-CN')await loadLocaleFiles([id]);if(second===id)second=id==='en'?'zh-CN':'en';configureLocale({locale:id});show();},setSecondLocale:id=>{second=id;show();},previewChoices:s=>tutorialCards(assets,s),preview:(...args)=>preview.play(...args),stopPreview:()=>preview.stop(),pausePreview:()=>preview.togglePause(),create:options=>{
   preview.stop();const original=createAdventure(assets.content,options),save=parseSave(JSON.stringify(original),assets.content,assets.dataset);root.replaceChildren();root.className='';
   result.textContent=`内存存档往返核验：${save.headId} · ${save.appearance}。未写入玩家存档。`;
   const worldCanvas=document.createElement('canvas'),battleCanvas=document.createElement('canvas');for(const c of [worldCanvas,battleCanvas]){c.style.width='100%';c.style.height='340px';result.append(c);}
@@ -19,6 +25,8 @@ try{
   const battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters:[{id:'preview',name:'测试目标',school:'fire',level:1,hp:100,attributes:{},pool:[],sequences:[],genes:[],cardsets:{}}],seed:1});
   function frame(t){renderer.render(world,save,t);renderer.renderBattle(battleCanvas,battle,save,t);requestAnimationFrame(frame);}requestAnimationFrame(frame);
  },login:()=>{},importOriginal:()=>{}});
+ show();
  result.textContent='左右点击或滑动切换形象；此页不读写玩家存档。';
-}catch(error){result.textContent=error.stack;}
+ document.documentElement.dataset.fixtureReady='1';
+}catch(error){result.textContent=error.stack;document.documentElement.dataset.fixtureError=error.message;}
 </script></body></html>

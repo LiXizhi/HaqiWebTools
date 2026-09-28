@@ -37,6 +37,8 @@
 .shop-product-icon[aria-pressed=true]{outline:2px solid var(--green);outline-offset:1px}
 .shop-good-price,.shop-good-level{font-size:11px;overflow-wrap:anywhere;align-self:center}
 .shop-good-price,.shop-preview-price,.shop-bean-price{display:inline-flex;align-items:center;justify-content:center;gap:3px;color:#936223;font-weight:bold;flex-wrap:nowrap}
+/* 商品卡内的价格紧跟图标左对齐，与下方的等级列对齐（侧栏预览的价格仍保持居中）。 */
+.shop-good .shop-good-price{justify-content:flex-start}
 .shop-bean-price>span{white-space:nowrap}
 .shop-bean-price.shop-not-for-sale,.equipment-detail-footer .shop-not-for-sale{color:#8a3d32}
 .shop-bean{position:relative;display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;padding:0;border:0;background:transparent;color:inherit;vertical-align:middle}

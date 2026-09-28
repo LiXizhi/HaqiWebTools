@@ -41,11 +41,19 @@ import {renderDeckEditor,hoverPreviewPosition} from '../js/view_adventure_deck.j
 function domHelpers(){
     class Element {
         constructor(tag,cls='',...children){this.tag=tag;this.className=cls;this.children=[];this.attributes={};this.dataset={};this.style={};this.isConnected=true;this.classList={add(){},remove(){}};this.append(...children);}
-        append(...children){this.children.push(...children.flat().filter(x=>x!==null&&x!==undefined));}
+        append(...children){for(const child of children.flat().filter(x=>x!==null&&x!==undefined)){if(child&&typeof child==='object')child.parentElement=this;this.children.push(child);}}
         replaceChildren(...children){this.children=[];this.append(...children);}
         setAttribute(k,v){this.attributes[k]=v;}
-        remove(){this.isConnected=false;}
-        querySelector(selector){return selector===':scope > .teach-pointer'?this.children.find(n=>n?.className==='teach-pointer')||null:null;}
+        getAttribute(k){return this.attributes[k];}
+        remove(){this.isConnected=false;if(this.parentElement?.children)this.parentElement.children=this.parentElement.children.filter(child=>child!==this);}
+        addEventListener(type,fn,options){(this.listeners||=[]).push({type,fn,options});}
+        closest(selector){const cls=selector.startsWith('.')?selector.slice(1):selector;for(let node=this;node;node=node.parentElement)if(String(node.className||'').split(/\s+/).includes(cls))return node;return null;}
+        querySelector(selector){
+            if(selector===':scope > .teach-pointer')return this.children.find(n=>n?.className==='teach-pointer')||null;
+            const cls=selector.startsWith('.')?selector.slice(1):null;if(!cls)return null;
+            const walk=node=>{if(String(node.className||'').split(/\s+/).includes(cls))return node;for(const child of node.children||[])if(child&&typeof child==='object'){const found=walk(child);if(found)return found;}return null;};
+            return walk(this);
+        }
         getContext(){return {};}
         getBoundingClientRect(){return {left:0,top:0,right:300,bottom:200};}
     }
@@ -214,6 +222,66 @@ test('learning and deck changes commit atomically, respecting required levels an
     assert.deepEqual(s,before);
 });
 
+test('deck arrow stays on the next owned card while the deck is under 8, even after a click',()=>{
+    const {content:c,dataset}=expanded(),s=A.createAdventure(c),key='Fire_FireDamageBlade';
+    assert.equal(dataset.cards[key].name,'烈火术');
+    assert.ok(s.deck.reduce((n,row)=>n+row.count,0)<8);
+    s.cards[key]=1;s.tips.teachDeck=true;
+    const h=domHelpers(),body=h.el('section');
+    renderDeckEditor(body,{save:s,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action(){}},h);
+    const all=node=>[node,...(node?.children||[]).flatMap(child=>typeof child==='object'?all(child):[])];
+    const nodes=()=>all(body);
+    const pointed=()=>nodes().find(node=>node.children?.some(child=>child?.className==='teach-pointer'));
+    assert.equal(pointed().attributes['aria-label'],'放入烈火术');
+    assert.equal(nodes().some(node=>node.attributes?.['aria-label']?.startsWith('烈火术，第')),false);
+    pointed().onclick();
+    assert.ok(nodes().some(node=>node.attributes?.['aria-label']?.startsWith('烈火术，第 1 张')));
+    assert.equal(s.deck.some(row=>row.key===key),false);
+    assert.equal(pointed().attributes['aria-label'],'放入烈火术');
+    const full=A.createAdventure(c);full.cards[key]=1;
+    full.deck=[{key:full.deck[0].key,count:8}];full.deckLayouts[full.activeDeckLayout].deck=full.deck.map(row=>({...row}));
+    const fullBody=h.el('section');
+    renderDeckEditor(fullBody,{save:full,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action(){}},h);
+    const fullNodes=all(fullBody);
+    assert.equal(fullNodes.some(node=>node.children?.some(child=>child?.className==='teach-pointer')),false);
+    const town=A.createAdventure(c);town.zone='town';town.cards[key]=1;
+    const townBody=h.el('section');
+    renderDeckEditor(townBody,{save:town,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action(){}},h);
+    assert.equal(all(townBody).find(node=>node.children?.some(child=>child?.className==='teach-pointer'))?.attributes['aria-label'],'放入烈火术');
+});
+test('closing a changed deck asks whether to save',()=>{
+    const {content:c,dataset}=expanded(),s=A.createAdventure(c),h=domHelpers();
+    const open=()=>{
+        const modal=h.el('section','modal'),body=h.el('section');
+        let closed=0;const close=h.button('',()=>{closed++;},'close-button');
+        modal.append(close,body);
+        let saved=0;
+        renderDeckEditor(body,{save:s,assets:{content:c,dataset,effects:{cards:{}},skillArt:{}}},{action(){saved++;return true;},panel(){}},h);
+        const prompt=()=>modal.querySelector('.bag-save-prompt');
+        const text=node=>node?.children?.[0];
+        return {close,prompt,text,closed:()=>closed,saved:()=>saved,modal};
+    };
+    s.cards.Fire_FireDamageBlade=1;
+    const clean=open();
+    clean.close.onclick();
+    assert.equal(clean.closed(),1);
+    assert.equal(clean.prompt(),null);
+    const dirty=open();
+    const nodes=[dirty.modal];for(let i=0;i<nodes.length;i++)for(const child of nodes[i].children||[])if(child&&typeof child==='object')nodes.push(child);
+    const card=nodes.find(node=>node.children?.some(child=>child?.className==='teach-pointer'));
+    assert.ok(card, `no pointer among ${nodes.length} nodes`);
+    card.onclick();
+    dirty.close.onclick();
+    assert.equal(dirty.closed(),0);
+    assert.equal(dirty.prompt().children[0].children[0],'卡包还有未保存的修改，要保存吗？');
+    dirty.prompt().children[1].children.find(node=>node.children[0]==='取消').onclick();
+    assert.equal(dirty.prompt(),null);
+    assert.equal(dirty.closed(),0);
+    dirty.close.onclick();
+    dirty.prompt().children[1].children.find(node=>node.children[0]==='保存').onclick();
+    assert.equal(dirty.saved(),1);
+    assert.equal(dirty.closed(),1);
+});
 test('hover card is fully visible above/below the icon row, including viewport edges and short screens',()=>{
     for(const [rect,w,h]of [
         [{left:10,right:54,top:100,bottom:144},1280,720],

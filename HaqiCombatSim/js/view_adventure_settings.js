@@ -34,7 +34,7 @@ export function renderSettings(body, model, cb, { el, button }) {
     }
 
     panes.journey.append(
-        ui.section('存档与云端', ui.cell({ icon: '☁️', label: '云端旅途 · 跨设备继续冒险', hint: '本地进度自动保存。登录后，升级、重要操作和每十分钟自动同步云端；网络失败会重试。' }, cb.cloud)),
+        ui.section('存档与云端', ui.cell({ icon: '☁️', label: '登录 Keepwork', hint: '直接打开 Keepwork 登录。登录后回到开始画面，列出该账号的全部云端角色，不会自动进入世界。' }, cb.cloud)),
         ui.section('角色', ui.cell({ icon: '🧙', label: '切换 / 新建角色', hint: '回到开始画面，选择或创建新的冒险角色。' }, cb.roles)),
         ui.section('离开', ui.cell({ icon: '🏠', label: '回到开始画面' }, cb.title)),
     );

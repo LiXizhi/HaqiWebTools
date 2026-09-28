@@ -316,7 +316,8 @@ AIChat 请求失败||AIChat request failed
 初心之旅||Beginner's Journey
 魔法哈奇||Magic Haqi
 魔法哈奇 · 第一章||Magic Haqi · Chapter 1
-选一门魔法，遇见你的伙伴。\n从这里，开始一段新的旅程。||Pick a school of magic and meet your companion.\nA new journey starts here.
+第二语言||Second language
+带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。||Bring your pet and players from around the world on a magical journey.\nPractice your second language.
 登录 Keepwork||Sign in to Keepwork
 我的云端旅途||My cloud journey
 起名字||Pick a name

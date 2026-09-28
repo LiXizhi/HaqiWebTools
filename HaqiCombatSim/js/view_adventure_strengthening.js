@@ -1,4 +1,4 @@
-import {STRENGTHENING_FILTERS,strengtheningItems,strengtheningPreview} from './adventure_strengthening_core.js';
+import {STRENGTHENING_FILTERS,affordableUnstrengthenedGear,strengtheningItems,strengtheningPreview} from './adventure_strengthening_core.js';
 import {teachPointer} from './view_teaching.js';
 // Kids MCML window: selected equipment → target properties / material; 4 × 3 paged inventory.
 export function renderStrengthening(body,model,cb,{el,button,art}) {
@@ -55,9 +55,24 @@ export function renderStrengthening(body,model,cb,{el,button,art}) {
     });
     const grid=el('div','strengthening-grid'),pager=el('div','strengthening-pager');
     right.append(tabs,grid,pager);layout.append(left,right);body.append(layout);
-    teachPointer(submit,save,c);
+    let guideTarget=null;
+    function showGuide(target){
+        if(guideTarget===target)return;
+        guideTarget?._teachFloat?.();
+        guideTarget?.querySelector?.(':scope > .teach-pointer')?.remove();
+        guideTarget=target;
+        if(target)teachPointer(target,save,c,{guide:true});
+    }
     function paint(){
-        const p=strengtheningPreview(save,c,state.guid),rows=strengtheningItems(save,c,state.filter);
+        const p=strengtheningPreview(save,c,state.guid);
+        const guide=affordableUnstrengthenedGear(save,c);
+        let rows=strengtheningItems(save,c,state.filter);
+        if(guide&&!rows.some(row=>row.guid===guide.guid)&&state.filter!==0){state.filter=0;state.page=0;paint();return;}
+        if(guide){
+            const index=rows.findIndex(row=>row.guid===guide.guid);
+            const guidePage=index<0?state.page:Math.floor(index/12);
+            if(guidePage!==state.page){state.page=guidePage;paint();return;}
+        }
         const pages=Math.max(1,Math.ceil(rows.length/12));state.page=Math.max(0,Math.min(state.page||0,pages-1));
         [...tabs.children].forEach((b,i)=>b.setAttribute('aria-pressed',String(i===state.filter)));
         slot.replaceChildren();preview.replaceChildren();material.replaceChildren();grid.replaceChildren();pager.replaceChildren();
@@ -85,6 +100,7 @@ export function renderStrengthening(body,model,cb,{el,button,art}) {
         for(const instance of rows.slice(state.page*12,state.page*12+12)) {
             const item=c.items[instance.gsid],equipped=save.equipmentGuids?.[item.slot]===instance.guid;
             const b=button([art(assets,item.art,64,64),el('span','strengthening-level',`+${instance.serverdata.addlel}`),equipped?el('small','strengthening-equipped','已装备'):null],()=>{state.guid=instance.guid;state.message='';paint();},'strengthening-grid-slot');
+            b.setAttribute('data-guid',instance.guid);
             b.setAttribute('aria-label',`${item.name} +${instance.serverdata.addlel}${equipped?' 已装备':''}，放入强化栏`);
             b.setAttribute('aria-pressed',String(instance.guid===state.guid));b.title=`${item.name} +${instance.serverdata.addlel}\n${String(item.description||'').replaceAll('#','\n')}`;grid.append(b);
         }
@@ -93,6 +109,8 @@ export function renderStrengthening(body,model,cb,{el,button,art}) {
         const previous=button('上一页',()=>{state.page--;paint();},'secondary strengthening-previous'),next=button('下一页',()=>{state.page++;paint();},'secondary strengthening-next');
         previous.disabled=state.page===0;next.disabled=state.page===pages-1;
         pager.append(previous,el('span','',`${state.page+1} / ${pages}`),next);
+        const visible=guide&&[...grid.children].find(node=>node.getAttribute?.('data-guid')===guide.guid);
+        showGuide(guide?(state.guid===guide.guid?submit:visible||submit):null);
     }
     paint();
 }

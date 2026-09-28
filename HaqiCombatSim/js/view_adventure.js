@@ -47,7 +47,7 @@ import { renderSettings, settingsView } from './view_adventure_settings.js';
 export { settingsView } from './view_adventure_settings.js';
 import { createSettingsControls } from './view_settings_controls.js';
 import { tr, setText, fill } from './locale_runtime.js';
-import { syncLocaleChrome,dialogueLearningLines } from './locale.js';
+import { syncLocaleChrome,dialogueLearningLines,localeChoices } from './locale.js';
 export function el(tag,cls,...children) {
     const n=document.createElement(tag);if(cls)n.className=cls;
     const sources=[];
@@ -88,15 +88,61 @@ export function art(assets,ref,w=76,h=90,cls='') {
 function tile(assets,sheet,index,w=90,h=95) {if(sheet==='sprites'&&index>=8&&index<16)return heroPortrait(assets,{appearance:index>=12?'girl':'boy'},w,h,{facing:index%4});const c=el('canvas','art');c.width=w*2;c.height=h*2;c.style.width=`${w}px`;c.style.height=`${h}px`;assets.tile(c.getContext('2d'),sheet,index,0,0,c.width,c.height);return c;}
 function badge(text,cls=''){return el('span',`badge ${cls}`,text);}
 const schoolDescription={fire:'火焰与持续伤害，点燃你的热情。',ice:'坚固的护盾与寒冰魔法，稳步迎战。',storm:'强力的单体攻击，让雷霆为你而鸣。',life:'治疗与自然的力量，守护生命。',death:'吸取生命、布下陷阱，掌握幽暗魔法。'};
+// 标题按设计字号排成一行；超出左栏时再缩小字号和字距，避免日语等较长译名折行。
+function fitGameTitle(title) {
+    const box=title?.parentElement;if(!box)return;
+    let observer;
+    const apply=()=>{
+        if(!title.isConnected){observer?.disconnect();return;}
+        title.style.fontSize='';title.style.letterSpacing='';
+        const limit=box.clientWidth;if(limit<8||title.scrollWidth<=limit+1)return;
+        const size=parseFloat(getComputedStyle(title).fontSize)||32;
+        const spacing=parseFloat(getComputedStyle(title).letterSpacing);
+        const ratio=limit/title.scrollWidth;
+        title.style.fontSize=`${Math.max(22,Math.floor(size*ratio))}px`;
+        title.style.letterSpacing=`${Math.max(0,(Number.isFinite(spacing)?spacing:0)*ratio)}px`;
+        if(title.scrollWidth>limit+1)title.style.fontSize=`${Math.max(22,Math.floor(parseFloat(title.style.fontSize)*limit/title.scrollWidth))}px`;
+    };
+    apply();
+    if(typeof ResizeObserver==='function'){observer=new ResizeObserver(apply);observer.observe(box);}
+}
+// 第一行是母语按钮，第二行是第二语言下拉。母语不出现在下拉里。
+export function renderEntryLocale(locale, secondLocale, onLocale, onSecond) {
+    const chosen=localeChoices().some(row=>row.id===secondLocale&&row.id!==locale)?secondLocale:locale==='en'?'zh-CN':'en';
+    const select=document.createElement('select');select.className='entry-second-locale';
+    for(const row of localeChoices()){
+        if(row.id===locale)continue;
+        const option=new Option(row.name,row.id);option.lang=row.id;select.append(option);
+    }
+    select.value=chosen;select.setAttribute('aria-label',tr('第二语言'));
+    select.onchange=()=>onSecond?.(select.value);
+    const native=el('div','entry-locale',el('span','entry-locale-label','母语'),createSettingsControls({el,button}).localeSelector(locale,onLocale));
+    const second=el('div','entry-locale',el('span','entry-locale-label','第二语言'),select);
+    return {root:el('div','entry-locale-stack',native,second),controls:[...native.querySelectorAll('button'),select]};
+}
+// 标题页左栏：大标题与语言选择。创建页额外放登录按钮；角色列表页把账号操作留在右侧。
+export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocale,setSecondLocale}={}) {
+    const intro=el('div','entry-intro',el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。'));
+    const controls=[];
+    if(login||cloud){
+        const cloudButton=button(owner?'我的云端旅途':'登录 Keepwork',login||cloud,'secondary cloud-entry-button');
+        intro.append(cloudButton);controls.push(cloudButton);
+    }
+    if(setLocale&&locale){
+        const picker=renderEntryLocale(locale,secondLocale,setLocale,setSecondLocale);
+        intro.append(picker.root);controls.push(...picker.controls);
+    }
+    const title=intro.querySelector('.game-title');
+    return {root:intro,controls,fit:()=>fitGameTitle(title)};
+}
 export function renderEntry(root,assets,stored,cb,error='') {
-    const draft=cb.draft||{name:'小哈奇',school:'fire',appearance:'boy',starter:'dragon_green',step:1};
+    const draft=cb.draft||{name:'',school:'fire',appearance:'boy',starter:'dragon_green',step:1};
     root.replaceChildren();root.className='entry-screen entry-wizard';
-    const intro=el('div','entry-intro',el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','选一门魔法，遇见你的伙伴。\n从这里，开始一段新的旅程。'));
-    intro.append(button(cb.owner?'我的云端旅途':'登录 Keepwork',cb.login||cb.cloud,'secondary cloud-entry-button'));
-    // 首页可直接切换界面语言；控制器切换后整页重绘，无需本视图自行刷新。
-    if(cb.setLocale&&cb.locale)intro.append(el('div','entry-locale',el('span','entry-locale-label','界面语言'),createSettingsControls({el,button}).localeSelector(cb.locale,cb.setLocale)));
+    const introPane=createEntryIntro({owner:cb.owner,login:cb.login,cloud:cb.cloud,locale:cb.locale,secondLocale:cb.secondLocale,setLocale:cb.setLocale,setSecondLocale:cb.setSecondLocale});
+    const intro=introPane.root;
     const form=el('form','character-form creation-form');
     root.append(el('div','entry-layout',intro,form));
+    introPane.fit();
     function paint() {
         cb.stopPreview?.();form.replaceChildren();root.classList.toggle('school-step',draft.step===3);root.classList.toggle('companion-step',draft.step===2);
         const steps=el('div','creation-steps');
@@ -111,7 +157,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
         form.append(steps,el('h2','',titles[draft.step-1]),el('p','creation-caption',captions[draft.step-1]));
         if(draft.step===1) {
             const preview=createHeroPicker(assets,draft);
-            const name=el('input','name-input');name.id='hero-name';name.name='name';name.value=draft.name;name.maxLength=16;name.autocomplete='off';name.required=true;name.oninput=()=>{draft.name=name.value;};
+            const name=el('input','name-input');name.id='hero-name';name.name='name';name.value=draft.name;name.maxLength=16;name.autocomplete='off';name.required=true;name.placeholder='';name.oninput=()=>{draft.name=name.value;};
             const label=el('label','field-label','你的名字');label.htmlFor=name.id;
             form.append(preview,label,name);
         } else if(draft.step===2) {
@@ -164,9 +210,14 @@ export function renderEntry(root,assets,stored,cb,error='') {
         if(draft.step>1)form.append(button('上一步',()=>{draft.step--;paint();root.scrollTop=0;},'text-button creation-back'));
         if(cb.roles)form.append(button('返回我的角色',cb.roles,'text-button creation-back'));
         if(error){const status=el('p','error-text',error);status.setAttribute('role','alert');form.append(status);}
-        if(cb.busy)for(const node of root.querySelectorAll('button,input'))node.disabled=true;
+        if(cb.busy)for(const node of root.querySelectorAll('button,input,select'))node.disabled=true;
     }
-    form.onsubmit=e=>{e.preventDefault();if(cb.busy)return;if(draft.step<3){draft.name=draft.name.trim()||'小哈奇';draft.step++;paint();root.scrollTop=0;}else cb.create({name:draft.name,school:draft.school,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,starter:draft.starter});};
+    form.onsubmit=e=>{
+        e.preventDefault();if(cb.busy)return;
+        if(draft.step===1){draft.name=draft.name.trim();if(!draft.name){paint();root.querySelector('#hero-name')?.focus();return;}}
+        if(draft.step<3){draft.step++;paint();root.scrollTop=0;}
+        else cb.create({name:draft.name.trim(),school:draft.school,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,starter:draft.starter});
+    };
     paint();
 }
 function withName(pattern, name) {
@@ -522,7 +573,6 @@ export function renderDialogue(root,model,dialog,cb) {
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
         if(npc.id===36205)choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
-        choices.append(button('和我聊聊',()=>cb.freeTalk(npc),'primary'));
         choices.append(button('下次再聊',cb.close,'text-button'));content.append(choices);
     }
     const hint=el('p','dialogue-hint');

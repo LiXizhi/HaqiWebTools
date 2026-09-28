@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import { createAdventure, beginEncounter, recordDecision } from '../js/adventure_core.js';
 import { restorePveBattle, playPveRound } from '../js/combat_pve_core.js';
 import { createRoleStore } from '../js/adventure_roles.js';
-import { validateRoles, emptyRoles, addRole } from '../js/adventure_roles_core.js';
+import { validateRoles, emptyRoles, addRole, directSignInRequested, startupRoleId } from '../js/adventure_roles_core.js';
 import { SAVE_KEY, saveLocal, readLocal, replaceLocalWithBackup, readBackup } from '../js/adventure_assets.js';
 import { storeDebugEdit, restoreDebugBackup, hasDebugBackup } from '../js/adventure_debug.js';
 import { createCloudClient } from '../js/adventure_cloud.js';
@@ -310,6 +310,19 @@ test('incomplete or cross-role cloud parts fail closed without replacing the man
     const reader=m.client();await reader.connect();await assert.rejects(reader.roles());assert.equal(m.remote.get(path),text);
     manifest.catalog.roles[0].files.items=`roles/${id(999)}/items/${id(3)}.json`;
     m.remote.set(path,JSON.stringify(manifest));await assert.rejects(reader.roles(),/路径/);
+});
+
+test('startup stays on the title unless signin=direct names a playable role', () => {
+    const catalog = { activeId: 'recent', roles: [{ id: 'recent' }, { id: 'other' }] };
+    assert.equal(directSignInRequested(''), false);
+    assert.equal(directSignInRequested('?lang=zh-CN'), false);
+    assert.equal(directSignInRequested('?signin=direct&lang=zh-CN'), true);
+    assert.equal(startupRoleId(catalog, { direct: false }), null);
+    assert.equal(startupRoleId(catalog, { direct: true }), 'recent');
+    assert.equal(startupRoleId(catalog, { direct: true, blocked: true }), null);
+    assert.equal(startupRoleId({ activeId: null, roles: [{ id: 'only' }] }, { direct: true }), 'only');
+    assert.equal(startupRoleId({ activeId: null, roles: [{ id: 'a' }, { id: 'b' }] }, { direct: true }), null);
+    assert.equal(startupRoleId({ activeId: null, roles: [] }, { direct: true }), null);
 });
 
 test('concurrent manifest update prevents publication of newly written parts',async()=>{

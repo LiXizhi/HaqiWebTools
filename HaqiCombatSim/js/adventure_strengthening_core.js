@@ -18,6 +18,19 @@ export function strengtheningItems(save,content,filter=0) {
 export function initialStrengtheningSelection(save,content,itemId,guid) {
     return findEquipmentInstance(save,content,itemId||(save.level<=10?1912:0),guid)?.guid||null;
 }
+// Worn gear that can still take its first upgrade, and the player can pay for it.
+export function affordableUnstrengthenedGear(save,content) {
+    for(const [slot,id] of Object.entries(save?.equipment||{})){
+        if(!Number(id))continue;
+        const instance=findEquipmentInstance(save,content,id,save.equipmentGuids?.[slot]);
+        const level=instance?.serverdata?.addlel||0;
+        if(!instance||level>0)continue;
+        const next=upgradeAt(content,instance.gsid,1);
+        if(!next||(save.inventory?.[next.cost[0]]||0)<next.cost[1])continue;
+        return {guid:instance.guid,gsid:instance.gsid};
+    }
+    return null;
+}
 export function strengtheningPreview(save,content,guid) {
     const instance=findEquipmentInstance(save,content,null,guid);
     if(!instance)return {error:'请先放入你的装备再进行强化。'};

@@ -87,16 +87,43 @@ function roadsideCandidates(world,hub,params=SOCIAL_DEFAULTS){
     return out;
 }
 
+export function socialMonsterGap(encounter,params=SOCIAL_DEFAULTS){
+    const count=encounter.monsterIds?.length||1;
+    const spread=count>1?(count-1)/2*42:0;
+    return (params.monsterClearance??96)+spread;
+}
+function clearsMonsters(world,p,params=SOCIAL_DEFAULTS){
+    return (world.encounters||[]).every(e=>Math.hypot(e.x-p.x,e.y-p.y)>socialMonsterGap(e,params));
+}
 function clearsPeople(world,p,used,params=SOCIAL_DEFAULTS){
+    if(!clearsMonsters(world,p,params))return false;
     if(used.some(v=>Math.hypot(v.x-p.x,v.y-p.y)<=params.separation))return false;
     return (world.npcs||[]).every(n=>Math.hypot(n.x-p.x,n.y-p.y)>params.npcClearance);
+}
+// Keep the companion on the road, but far enough along it that sprites do not stack.
+function standClearOfMonsters(world,origin,params=SOCIAL_DEFAULTS){
+    if(clearsMonsters(world,origin,params)&&walkable(world,origin.x,origin.y))return origin;
+    const paths=world.paths||[];
+    let best=null,bestDist=Infinity;
+    for(const path of paths){
+        const length=Math.hypot(path.b.x-path.a.x,path.b.y-path.a.y)||1;
+        const steps=Math.ceil(length/28);
+        for(let i=0;i<=steps;i++){
+            const t=i/steps,p={x:path.a.x+(path.b.x-path.a.x)*t,y:path.a.y+(path.b.y-path.a.y)*t};
+            if(!walkable(world,p.x,p.y)||!onActivityRoad(world,p,params)||!clearsMonsters(world,p,params))continue;
+            const d=Math.hypot(p.x-origin.x,p.y-origin.y);
+            if(d<bestDist){bestDist=d;best=p;}
+        }
+    }
+    return best||origin;
 }
 
 export function sampleActivitySpot(world,hub,rng,used=[],params=SOCIAL_DEFAULTS){
     const shuffled=rng.shuffle(roadsideCandidates(world,hub,params).slice());
     for(const p of shuffled)if(clearsPeople(world,p,used,params))return p;
-    for(const p of shuffled)if(used.every(v=>Math.hypot(v.x-p.x,v.y-p.y)>params.separation*.5))return p;
-    return nearestWalkable(world,hub.x+rng.float()*20-10,hub.y+rng.float()*20-10);
+    for(const p of shuffled)if(clearsMonsters(world,p,params)&&used.every(v=>Math.hypot(v.x-p.x,v.y-p.y)>params.separation*.5))return p;
+    const aside=standClearOfMonsters(world,nearestWalkable(world,hub.x+rng.float()*20-10,hub.y+rng.float()*20-10),params);
+    return clearsMonsters(world,aside,params)?aside:shuffled.find(p=>clearsMonsters(world,p,params))||aside;
 }
 
 function assignHub(rng,hubs,index,spawnHub,spawnQuota){
@@ -122,6 +149,7 @@ export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=
     const hubs=socialActivityHubs(world);
     for(const a of actors){
         if(a.profile.id===locked){a.path=[];a.moving=false;if(leader){const dx=leader.x-a.position.x,dy=leader.y-a.position.y;a.facing=socialFacing(dx,dy);}continue;}
+        if(!a.path.length&&!clearsMonsters(world,a.position)){const aside=standClearOfMonsters(world,a.position);if(aside)a.position=aside;}
         // Off-camera residents idle in place; only on-screen actors walk like the hero.
         if(!socialInView(a.position,view)){a.path=[];a.moving=false;continue;}
         const distance=leader?Math.hypot(a.position.x-leader.x,a.position.y-leader.y):Infinity;
@@ -130,7 +158,7 @@ export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=
         // Brush-by mid-walk does not cancel travel; only an already-idle actor stays put while close.
         if(a.approached&&!a.path.length){a.moving=false;a.wait=Math.max(a.wait,SOCIAL_DEFAULTS.followWait);a.facing=socialFacing(leader.x-a.position.x,leader.y-a.position.y);continue;}
         const index=team.indexOf(a.profile.id);a.wait-=dt;a.travel-=dt;
-        if(index>=0&&leader){if(!a.path.length&&moving<limit&&a.wait<=0&&Math.hypot(a.position.x-leader.x,a.position.y-leader.y)>SOCIAL_DEFAULTS.followDistance){a.path=findPath(world,a.position,nearestWalkable(world,leader.x-SOCIAL_DEFAULTS.followSpacing*(index+1),leader.y+SOCIAL_DEFAULTS.separation));a.wait=SOCIAL_DEFAULTS.followWait;if(a.path.length)moving++;}}
+        if(index>=0&&leader){if(!a.path.length&&moving<limit&&a.wait<=0&&Math.hypot(a.position.x-leader.x,a.position.y-leader.y)>SOCIAL_DEFAULTS.followDistance){a.path=findPath(world,a.position,standClearOfMonsters(world,nearestWalkable(world,leader.x-SOCIAL_DEFAULTS.followSpacing*(index+1),leader.y+SOCIAL_DEFAULTS.separation)));a.wait=SOCIAL_DEFAULTS.followWait;if(a.path.length)moving++;}}
         else if(!a.path.length&&a.wait<=0&&moving<limit){
             if(a.travel<=0){a.hotspot=pickWeightedHub(a.rng,hubs);a.travel=a.rng.int(SOCIAL_DEFAULTS.travelMin,SOCIAL_DEFAULTS.travelMax);}
             const occupied=actors.filter(o=>o!==a).map(o=>o.position);

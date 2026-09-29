@@ -1,3 +1,4 @@
+import {warmSceneActors} from './adventure_actor_assets.js';
 import {createMonsterArtRenderer} from './adventure_monster_art.js';
 import {loadHeroLibrary} from './hero_renderer.js';
 import {createQuestJournalLoader} from './adventure_quest_journal.js';
@@ -62,12 +63,23 @@ export async function loadResources(progress) {
         for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++)if(data[(y*c.width+x)*4+3]>20){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y);}
         const value=left>right?[sx,sy,sw,sh]:[sx+left,sy+top,right-left+1,bottom-top+1];bounds.set(cacheKey,value);return value;
     }
+    // Shared by lazy drawing and explicit scene preparation. Failed loads may be retried.
+    function ensureImage(id) {
+        if(images.has(id))return Promise.resolve(images.get(id));
+        if(!lazyImages.has(id))return Promise.reject(new Error(`角色图片未登记：${id}`));
+        if(!imageLoading.has(id)){
+            const loading=loadImage(assetUrl(lazyImages.get(id),mode)).then(image=>{images.set(id,image);return image;});
+            imageLoading.set(id,loading);
+            loading.catch(()=>imageLoading.delete(id));
+        }
+        return imageLoading.get(id);
+    }
     function draw(ctx,ref,x,y,w,h,trim=true,repaint=true) {
         const id=typeof ref==='string'?ref:ref?.id,img=images.get(id);
         if(!img){
             if(lazyImages.has(id)){
-                if(!imageLoading.has(id))imageLoading.set(id,loadImage(assetUrl(lazyImages.get(id),mode)).then(image=>{images.set(id,image);return image;}).catch(()=>null));
-                if(repaint)imageLoading.get(id).then(image=>{if(image&&ctx.canvas.isConnected){ctx.clearRect(x,y,w,h);draw(ctx,ref,x,y,w,h,trim);}});
+                const loading=ensureImage(id).catch(()=>null);
+                if(repaint)loading.then(image=>{if(image&&ctx.canvas.isConnected){ctx.clearRect(x,y,w,h);draw(ctx,ref,x,y,w,h,trim);}});
             }
             return false;
         }
@@ -133,8 +145,8 @@ export async function loadResources(progress) {
     for(const [id,entry] of Object.entries(shopIcons.entries))lazyImages.set(id,entry);
     for(const [id,ref] of Object.entries(shopIcons.items))if(content.items[id]&&!content.items[id].art){content.items[id].art=ref;content.items[id].iconFallback=!!shopIcons.fallbacks[id];}
     progress?.({ label: '正在准备世界与角色资源', value: null });
-    const petLoading=new Set();
-    function drawPet(ctx,id,stage,x,y,w,h,column=0){const art=content.pets[id]?.art;if(!art)return false;const key='pet:'+id;const img=images.get(key);if(!img){if(!petLoading.has(id)){petLoading.add(id);loadImage(mode==='local'?art.local:art.cdn).then(image=>images.set(key,image)).catch(()=>petLoading.delete(id));}return false;}const sw=img.width/4,sh=img.height/4;ctx.drawImage(img,column*sw,stage*sh,sw,sh,x,y,w,h);return true;}
+    for(const [id,pet] of Object.entries(content.pets))if(pet.art)lazyImages.set('pet:'+id,pet.art);
+    function drawPet(ctx,id,stage,x,y,w,h,column=0){const art=content.pets[id]?.art;if(!art)return false;const key='pet:'+id;const img=images.get(key);if(!img){void ensureImage(key).catch(()=>{});return false;}const sw=img.width/4,sh=img.height/4;ctx.drawImage(img,column*sw,stage*sh,sw,sh,x,y,w,h);return true;}
     const monsterArt=await json('data/adventure/monster-art.json');
     for(const [id,entry] of Object.entries(monsterArt.entries))lazyImages.set('monster:'+id,entry);
     const drawMonster=createMonsterArtRenderer(monsterArt,content,draw,drawPet);
@@ -154,7 +166,8 @@ export async function loadResources(progress) {
     function sceneryTile(ctx,index,x,y,w,h){
         return draw(ctx,{id:'sprites',crop:tileRect('sprites',index,media.entries.sprites)},x,y,w,h,true,false);
     }
-    return {hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    const warmActors=(world,save,socialActors=[])=>warmSceneActors({world,save,socialActors,content,monsterArt,hero,ensureImage});
+    return {warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

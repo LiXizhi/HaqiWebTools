@@ -9,18 +9,23 @@ import {createAdventure} from '../../js/adventure_core.js';
 import {createRenderer} from '../../js/adventure_renderer.js';
 try {
  const assets=await loadResources(),save=createAdventure(assets.content),renderer=createRenderer(document.querySelector('#world'),assets);
+ const params=new URLSearchParams(location.search);
  let world,previews=[];
  function select(zone){
-  save.zone=zone;world=createWorld(zone,assets.content);save.position={x:world.encounters[0].x,y:world.encounters[0].y+80};
+  save.zone=zone;world=createWorld(zone,assets.content);
+  const x=Number(params.get('x')),y=Number(params.get('y'));
+  save.position=Number.isFinite(x)&&Number.isFinite(y)?{x,y}:{x:world.encounters[0].x,y:world.encounters[0].y+80};
   document.querySelector('#gallery').replaceChildren();
   previews=world.encounters.map(e=>{const m=assets.content.monsters[e.monsterId],figure=document.createElement('figure'),canvas=document.createElement('canvas'),label=document.createElement('figcaption');canvas.width=260;canvas.height=260;label.textContent=m.name+(e.blocked.length?'（待迁移）':'');figure.append(canvas,label);document.querySelector('#gallery').append(figure);return {canvas,m};});
  }
  for(const [zone,name] of Object.entries({fire:'火鸟岛',ice:'寒冰岛',desert:'沙漠岛',dark:'幽暗岛'})){const button=document.createElement('button');button.textContent=name;button.onclick=()=>select(zone);document.querySelector('nav').append(button);}
- select('fire');
+ select(params.get('zone')||'fire');
+ let frames=0;
  function frame(t){
   renderer.render(world,save,t);let loaded=0;
   for(const {canvas,m} of previews){const ctx=canvas.getContext('2d');ctx.clearRect(0,0,260,260);if(assets.drawMonster(ctx,m,10,10,240,240))loaded++;ctx.getImageData(0,0,1,1);}
   document.querySelector('#status').textContent=`${world.layout.name}：${world.encounters.length}处遭遇，${world.encounters.filter(e=>!e.blocked.length).length}处可挑战；WebP ${loaded}/${previews.length}；${assets.mode}，Canvas可读；不读写玩家存档。`;
+  if(++frames===45)document.documentElement.dataset.fixtureReady='1';
   requestAnimationFrame(frame);
  }
  requestAnimationFrame(frame);

@@ -72,8 +72,8 @@ test('异步镜头准备之后旧动画时间戳不能倒退播放时间',()=>{
 });
 test('宣传片两个版本时长、语言和六岛覆盖完整',()=>{
     const long=compileFilm(script),short=compileFilm(script,'short');
-    assert.equal(long.shots.length,17);assert.equal(long.duration,179);assert.equal(long.shots.some(s=>s.scene==='account'),false);
-    assert.equal(short.shots.length,15);assert.equal(short.duration,80);
+    assert.equal(long.shots.length,17);assert.equal(long.duration,182);assert.equal(long.shots.some(s=>s.scene==='account'),false);
+    assert.equal(short.shots.length,15);assert.equal(short.duration,85);
     for(const film of [long,short])for(const shot of film.shots){assert.ok(shot.subtitle.en);assert.ok(shot.title.en);for(const cue of shot.cues)assert.ok(cue.time<shot.duration);}
     assert.deepEqual(script.shots.filter(s=>s.zone).map(s=>s.zone).sort(),['camp','dark','desert','fire','ice','town']);
 });
@@ -84,7 +84,7 @@ test('时间轴精确边界与拖动越界不遗漏最后镜头',()=>{
 });
 test('未知语言回退中文，SRT 使用各版本连续时间码',()=>{
     assert.equal(filmText({en:'Hello','zh-CN':'你好'},'fr'),'你好');
-    const film=compileFilm(script,'short'),srt=srtFor(film,'en');assert.match(srt,/00:00:00,000 --> 00:00:07,000/);assert.match(srt,/00:01:20,000/);assert.ok(srt.includes(script.shots[0].subtitle.en));
+    const film=compileFilm(script,'short'),srt=srtFor(film,'en');assert.match(srt,/00:00:00,000 --> 00:00:07,000/);assert.match(srt,/00:01:25,000/);assert.ok(srt.includes(script.shots[0].subtitle.en));
 });
 test('不接受重名、无时长、缺字幕和镜头外动作',()=>{
     const change=fn=>{const copy=structuredClone(script);fn(copy);assert.throws(()=>compileFilm(copy));};

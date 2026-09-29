@@ -534,7 +534,7 @@ export function renderPanel(root,kind,model,cb) {
             else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
         });
     }
-    if(kind==='deck') renderDeckEditor(body,model,cb,{el,button,spellFace});
+    if(kind==='deck') root.deckPreview=renderDeckEditor(body,model,cb,{el,button,spellFace});
     if(kind==='pet'&&!c.pets){
         body.append(el('h3','','初心之旅 · 咕噜噜教学'));
         body.append(el('div','pet-portrait',tile(assets,'creatures',save.pet?6:7,170,180)));

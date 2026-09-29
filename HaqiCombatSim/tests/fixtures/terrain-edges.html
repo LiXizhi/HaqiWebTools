@@ -9,6 +9,7 @@ body{margin:16px;background:#203d47;color:#fff;font:16px system-ui}canvas{displa
 <label>岛屿 <select id="island"></select></label>
 <button id="crossing">道路与河流</button>
 <button id="shore">海岸</button>
+<label>桥梁位置 <select id="bridge"><option value="last">默认</option><option value="2010,2375">西部分叉</option><option value="3230,2210">北部分叉</option><option value="2400,3100">南部转弯</option><option value="4530,2415">东部斜桥</option></select></label>
 <pre id="result">检查中</pre>
 <canvas id="terrain" width="1000" height="720"></canvas>
 <script type="module">
@@ -23,13 +24,16 @@ for(const [id,island] of Object.entries(content.worldMapIndex.islands)){
     select.add(new Option(island.name,id));
 }
 const query=new URLSearchParams(location.search);
+const bridgeSelect=document.querySelector('#bridge');
+if(query.has('bridge'))bridgeSelect.value=query.get('bridge');
 select.value=content.worldMaps[query.get('island')]?query.get('island'):'town';
 let mode=query.get('view')==='shore'?'shore':'crossing';
 const make=()=>document.createElement('canvas');
 function render(){
     const world=createWorld(select.value,content),layout=world.layout;
     const point=mode==='shore'?layout.coast[Math.floor(layout.coast.length/2)]:null;
-    const bridge=layout.bridges.at(-1)||layout.spawn;
+    const selected=bridgeSelect.value.split(',').map(Number);
+    const bridge=selected.length===2?{x:selected[0],y:selected[1]}:layout.bridges.at(-1)||layout.spawn;
     const center=point?{x:point[0]-100,y:point[1]+40}:bridge;
     const rect={x:Math.round(center.x-500),y:Math.round(center.y-360),w:1000,h:720};
     const c=canvas.getContext('2d',{willReadFrequently:true});
@@ -53,6 +57,7 @@ function render(){
     document.querySelector('#result').textContent=JSON.stringify({island:world.zone,stable,bakeMs:Math.round(bakeMs),tileMaxDelta:maxDelta,tilePixelsOver3:changed},null,2);
 }
 select.onchange=render;
+bridgeSelect.onchange=()=>{mode='crossing';render();};
 document.querySelector('#crossing').onclick=()=>{mode='crossing';render();};
 document.querySelector('#shore').onclick=()=>{mode='shore';render();};
 render();

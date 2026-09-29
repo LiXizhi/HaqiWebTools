@@ -935,3 +935,7 @@
 @media(max-width:600px){.recharge-layout{grid-template-columns:1fr;gap:12px}.recharge-summary,.recharge-form,.recharge-rules{padding:12px}.recharge-actions button{width:100%}}
 
 .pet-food-hint{color:#864218;font-weight:600}.pet-food-station.needs-food .pet-food-slot{outline:2px solid #b87524;outline-offset:2px}
+
+/* A successful collection click flies to its actual destination slot. */
+.bag-add-flight{position:fixed;left:0;top:0;width:48px;height:48px;padding:2px;border:2px solid #ffd46b;border-radius:4px;background:#fff1d1;box-shadow:0 2px 12px #45301877;z-index:1000;pointer-events:none}.bag-add-flight .bag-subject{width:100%;height:100%}
+

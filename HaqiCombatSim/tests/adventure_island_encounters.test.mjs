@@ -8,6 +8,8 @@ import * as A from '../js/adventure_core.js';
 import * as P from '../js/combat_pve_core.js';
 import {SimpleBot} from '../js/combat_policy_core.js';
 import {createWorld,walkable,findPath,followPath,distance} from '../js/adventure_world_core.js';
+import {segmentDistance} from '../js/adventure_island_layout_core.js';
+import {onAnyBridge} from '../js/adventure_bridge_core.js';
 import {installNpcCatalog} from '../js/adventure_npc_core.js';
 import {replaceMonsterCards} from '../js/adventure_monster_cards_core.js';
 import {validateSpellEffects} from '../js/spell_effects_core.js';
@@ -75,6 +77,20 @@ test('four islands have reachable original monsters with existing WebP appearanc
         for(const q of content.catalogQuests.quests.filter(q=>q.region===zone))for(const g of q.groups)for(const i of g.items){
             const ids=g.kind==='kill'?[i.id]:g.kind==='loot'?i.producers:[];
             for(const id of ids)assert.ok(rows.some(e=>(e.monsterIds||[e.monsterId]).some(mid=>content.catalogQuests.paths[content.monsters[mid].source.toLowerCase()]===id)),`${zone}/${q.id}/${id}`);
+        }
+    }
+});
+test('island monsters stand on open ground beside roads',()=>{
+    const {content}=setup();
+    installNpcCatalog(content,read('adventure/npc-catalog'));
+    for(const zone of zones){
+        const world=createWorld(zone,content);
+        assert.ok(world.encounters.length>10,zone);
+        for(const e of world.encounters){
+            const clearance=Math.min(...world.paths.map(p=>segmentDistance(e,p.a,p.b)-(p.width||60)/2));
+            assert.ok(clearance>=32,`${zone}/${e.id} 仍在道路上：${clearance.toFixed(1)}`);
+            assert.ok(clearance<=280,`${zone}/${e.id} 离路过远：${clearance.toFixed(1)}`);
+            assert.equal(onAnyBridge(world,e.x,e.y,64),false,`${zone}/${e.id} 站在桥上`);
         }
     }
 });

@@ -1,5 +1,6 @@
 // Offline, deterministic map compilation. The browser reads the generated JSON.
 import { createRng } from './rng_core.js';
+import { generateRoadBridges } from './adventure_bridge_core.js';
 import { onLargeIsland, riverBlocks, regionAt, sceneryCoversActor, segmentDistance } from './adventure_island_layout_core.js';
 
 const point=([x,y])=>({x,y});
@@ -28,6 +29,8 @@ export function validateMapSource(spec,rules){
     assert(Number.isFinite(texture.cell)&&texture.cell>=32&&texture.cell<=256&&Number.isInteger(texture.count)&&texture.count>=0&&texture.count<=32,'地面纹理预算');
     assert(Number.isInteger(rules.mountain.layers)&&rules.mountain.layers>=1&&rules.mountain.layers<=12,'山体层数');
     assert(rules.roads.width>=20&&rules.roads.width<=200&&rules.roads.spurWidth>=20,'道路宽度');
+    assert(Number.isFinite(rules.bridge.sideMargin)&&rules.bridge.sideMargin>=4&&rules.bridge.sideMargin<=12&&
+        Number.isFinite(rules.bridge.landing)&&rules.bridge.landing>=0&&rules.bridge.landing<=20,'桥梁边距');
     for(const [id,b] of Object.entries(rules.biomes)){
         assert(/^#[a-f\d]{6}$/i.test(b.color)&&b.forest.density>=0&&b.forest.density<=1,`地域 ${id}`);
         assert(b.forest.tiles.length&&b.forest.tiles.every(n=>Number.isInteger(n)&&n>=0&&n<=3),`树种 ${id}`);
@@ -47,14 +50,6 @@ export function validateMapSource(spec,rules){
     return true;
 }
 
-function crossing(a,b,c,d){
-    const ax=b.x-a.x,ay=b.y-a.y,bx=d.x-c.x,by=d.y-c.y,cross=ax*by-ay*bx;
-    if(Math.abs(cross)<1e-8)return null;
-    const t=((c.x-a.x)*by-(c.y-a.y)*bx)/cross,u=((c.x-a.x)*ay-(c.y-a.y)*ax)/cross;
-    if(t<0||t>1||u<0||u>1)return null;
-    return {x:a.x+t*ax,y:a.y+t*ay,sine:Math.abs(cross)/(Math.hypot(ax,ay)*Math.hypot(bx,by))};
-}
-
 export function generateIsland(spec,shared,content){
     assert(!spec.theme||shared.themes?.[spec.theme],`未知主题 ${spec.theme}`);
     const rules=mergeMapRules(mergeMapRules(shared,shared.themes?.[spec.theme]||{}),spec.overrides);
@@ -66,14 +61,6 @@ export function generateIsland(spec,shared,content){
     delete layout.overrides;
     const world={layout};
     const roads=spec.routes.flatMap(route=>route.slice(1).map((p,i)=>({a:point(route[i]),b:point(p),width:rules.roads.width})));
-    if(spec.autoBridges!==false&&rules.bridge.auto)for(const road of roads)for(const river of spec.rivers||[])for(let i=1;i<river.points.length;i++){
-        const cross=crossing(road.a,road.b,point(river.points[i-1]),point(river.points[i]));
-        if(!cross||layout.bridges.some(b=>dist(b,cross)<50))continue;
-        assert(cross.sine>.2,`${spec.id} 道路沿河过近，请调整交角`);
-        const length=Math.ceil((river.width+24)/cross.sine+rules.bridge.margin*2);
-        layout.bridges.push({x:Math.round(cross.x),y:Math.round(cross.y),w:length,h:road.width+rules.bridge.margin,
-            angle:Math.atan2(road.b.y-road.a.y,road.b.x-road.a.x),generated:true});
-    }
     layout.landmarks=spec.landmarks??layout.regions.map(r=>({id:r.id,name:r.name,...point(r.sign||[r.x+100,r.y+60]),description:r.description}));
     const npcRows=Object.values(content.npcs).filter(n=>n.zone===spec.id);
     const npcs=npcRows.map(n=>point(spec.npcPositions[n.id]||[n.x,n.y]));
@@ -91,6 +78,8 @@ export function generateIsland(spec,shared,content){
         }
         if(best>.1)layout.paths.push({a:nearest,b:{x:p.x,y:p.y},width:rules.roads.spurWidth});
     }
+    if(spec.autoBridges!==false&&rules.bridge.auto)
+        layout.bridges.push(...generateRoadBridges(layout.paths,spec.rivers||[],rules.bridge));
     const actors=[
         ...npcRows.map(n=>({...point(spec.npcPositions[n.id]||[n.x,n.y]),id:n.id,name:n.name})),
         ...(spec.visitingNpcs||[]).map(n=>({...point(n.position),name:content.npcs[n.sourceId]?.name||''})),

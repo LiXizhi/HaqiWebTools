@@ -1,6 +1,8 @@
 import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {createWorld, walkable, findPath, followPath, distance} from '../js/adventure_world_core.js';
+import {segmentDistance} from '../js/adventure_island_layout_core.js';
+import {onAnyBridge} from '../js/adventure_bridge_core.js';
 import {installNpcCatalog} from '../js/adventure_npc_core.js';
 import {replaceMonsterCards} from '../js/adventure_monster_cards_core.js';
 import {validateSpellEffects} from '../js/spell_effects_core.js';
@@ -19,7 +21,68 @@ const children = (node, tag) => (node?.children || []).filter(n => n.tag === tag
 const child = (node, tag) => children(node, tag)[0];
 const card = id => chapter.cardItems[id] || id;
 const pool = value => [...(value || '').matchAll(/\((\d+),(\d+)\)/g)].map(m => ({key:card(m[1]), weight:Number(m[2])}));
-const output = {version:1, adaptation:'保留原岛屿法阵的全部怪物与卡位；道路位置为二维改编，子场景任务目标保留单怪入口。', monsters:{}, encounters:[]};
+const output = {version:1, adaptation:'保留原岛屿法阵的全部怪物与卡位；野外站在路边空地，只有副本怪物站在道路上。子场景任务目标保留单怪入口。', monsters:{}, encounters:[]};
+
+// Painted roads extend about 13px past the geometric half-width. Feet sit in the
+// open shoulder beyond that, as close to the road as the ground allows.
+const SHOULDER_GAPS = [48, 76, 108, 148, 190];
+function roadClearance(paths, p) {
+    let best = Infinity;
+    for (const path of paths) best = Math.min(best, segmentDistance(p, path.a, path.b) - (path.width || 60) / 2);
+    return best;
+}
+function reachable(world, p) {
+    const end = followPath(world, world.layout.spawn, findPath(world, world.layout.spawn, p), 100000);
+    return !end.blocked && distance(end.position, p) <= 1;
+}
+function openGroundSpots(world, occupied) {
+    const spots = [];
+    const blocked = p => [...occupied, ...spots].some(o => distance(o, p) < 108);
+    for (const path of world.paths) {
+        const length = distance(path.a, path.b);
+        if (length < 110) continue;
+        const dx = (path.b.x - path.a.x) / length, dy = (path.b.y - path.a.y) / length;
+        const nx = -dy, ny = dx, half = (path.width || 60) / 2;
+        for (let d = 70; d < length - 50; d += 100) {
+            for (const side of [-1, 1]) {
+                let chosen = null;
+                for (const gap of SHOULDER_GAPS) {
+                    const p = {
+                        x: Math.round(path.a.x + dx * d + nx * (half + gap) * side),
+                        y: Math.round(path.a.y + dy * d + ny * (half + gap) * side),
+                    };
+                    if (!walkable(world, p.x, p.y) || blocked(p)) continue;
+                    const clearance = roadClearance(world.paths, p);
+                    if (clearance < 32 || onAnyBridge(world, p.x, p.y, 88) || !reachable(world, p)) continue;
+                    chosen = {...p, clearance};
+                    break;
+                }
+                if (chosen) spots.push(chosen);
+            }
+        }
+    }
+    return spots;
+}
+function bodyClearance(encounter) {
+    const count = encounter.monsterIds?.length || 1;
+    const scale = encounter.monsterIds ? .7 : .8;
+    const half = 52 * scale + (count > 1 ? (count - 1) / 2 * 42 : 0);
+    return Math.max(40, half + 8);
+}
+function claimSpot(spots, prefer, need) {
+    let best = -1, score = Infinity;
+    for (let i = 0; i < spots.length; i++) {
+        const spot = spots[i];
+        if (!spot || spot.used) continue;
+        const miss = Math.max(0, need - spot.clearance);
+        const away = Math.min(Math.abs(i - prefer), spots.length - Math.abs(i - prefer));
+        const rank = miss * 1000 + away;
+        if (rank < score) { score = rank; best = i; }
+    }
+    if (best < 0) return null;
+    spots[best].used = true;
+    return spots[best];
+}
 for (const [zone, originalWorld] of Object.entries(worlds)) {
     const templates = new Set(source.placements.filter(p => p.world === originalWorld).flatMap(p => p.templates));
     const goals = new Set(quests.quests.filter(q => q.region === zone).flatMap(q => q.groups.flatMap(g =>
@@ -31,16 +94,9 @@ for (const [zone, originalWorld] of Object.entries(worlds)) {
         templates.add(original);
     }
     const world = createWorld(zone, chapter), occupied = [...world.npcs, ...world.landmarks, world.portal, world.layout.spawn];
-    const spots = [];
-    for (const path of world.paths) {
-        const length = distance(path.a, path.b);
-        for (let d = 90; d < length - 40; d += 125) {
-            const p = {x:Math.round(path.a.x + (path.b.x-path.a.x)*d/length), y:Math.round(path.a.y + (path.b.y-path.a.y)*d/length)};
-            if (walkable(world,p.x,p.y) && [...occupied,...spots].every(o => distance(o,p) > 100)) spots.push(p);
-        }
-    }
+    const spots = openGroundSpots(world, occupied);
     const paths = [...templates].sort();
-    if (spots.length < paths.length) throw Error(`岛屿道路位置不足：${zone}`);
+    if (spots.length < paths.length) throw Error(`岛屿路边空地不足：${zone}`);
     for (const [index, path] of paths.entries()) {
         const tree = source.templates[path], attributes = child(tree,'mob')?.attributes;
         if (!attributes) throw Error(`怪物数据缺失：${path}`);
@@ -53,11 +109,11 @@ for (const [zone, originalWorld] of Object.entries(worlds)) {
             cardsets:Object.fromEntries(children(child(tree,'cardsets'),'set').map(n => [n.attributes.id, pool(n.attributes.cards)]))};
         const adapted = replaceMonsterCards(monster, replacements, cards);
         output.monsters[adapted.id] = adapted;
-        const position = spots[Math.floor(index * spots.length / paths.length)];
+        const position = claimSpot(spots, Math.floor(index * spots.length / paths.length), bodyClearance({monsterId:adapted.id}));
         const route = findPath(world, world.layout.spawn, position);
         const end = followPath(world, world.layout.spawn, route, 100000);
         if (!route.length || end.blocked || distance(end.position, position) > 1) throw Error(`怪物位置不可达：${zone}/${path}`);
-        output.encounters.push({id:`island:${zone}:${path}`, zone, monsterId:adapted.id, ...position});
+        output.encounters.push({id:`island:${zone}:${path}`, zone, monsterId:adapted.id, x:position.x, y:position.y});
     }
     const placements = source.placements.filter(p => p.world === originalWorld);
     const placed = new Set(placements.flatMap(p => p.templates));
@@ -76,9 +132,11 @@ for (const [zone, originalWorld] of Object.entries(worlds)) {
             source:p.source, arenaAttributes:p.data.attributes};
     });
     const visible = [...formations, ...legacy.filter(e => !e.legacyOnly)];
-    if (spots.length < visible.length) throw Error(`岛屿法阵道路位置不足：${zone}`);
+    for (const spot of spots) delete spot.used;
+    if (spots.length < visible.length) throw Error(`岛屿法阵路边空地不足：${zone}`);
     for (const [i,e] of visible.entries()) {
-        Object.assign(e, spots[Math.floor(i * spots.length / visible.length)]);
+        const spot = claimSpot(spots, Math.floor(i * spots.length / visible.length), bodyClearance(e));
+        Object.assign(e, {x:spot.x, y:spot.y});
         const end = followPath(world, world.layout.spawn, findPath(world,world.layout.spawn,e),100000);
         if (end.blocked || distance(end.position,e)>1) throw Error(`法阵不可达：${e.id}`);
     }

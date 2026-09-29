@@ -51,7 +51,7 @@ export function defaultParams(version = 'teen') {
         },
         // autoJoin* mirrors kids CombatRoom empty-seat open → delayed AI fill (RoomDetailPage 4 slots).
         // roadSlack / spawnMinActors: wander along roads near quest hubs; keep a few residents by the world spawn/plaza.
-        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, spawnMinActors:2, separation:50, npcClearance:65, followDistance:110, followSpacing:55, followWait:2, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
+        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, spawnMinActors:2, separation:50, npcClearance:65, monsterClearance:96, followDistance:110, followSpacing:55, followWait:2, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
         languageAdventure: { inviteRange:150, interactionRange:85, greetingMs:2500, basicReward:10, beginnerReward:30, intermediateReward:50, advancedReward:80, basicDailyCap:100, challengeDailyCap:200, basicCourseLimit:2, challengeCourseLimit:1, promptCooldownMs:90000, sourceCooldownMs:300000, maxTurns:8 },
         // Web progression schedule; original server training-point grant table is unavailable.

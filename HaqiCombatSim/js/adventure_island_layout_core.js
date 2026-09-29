@@ -1,4 +1,5 @@
 // Pure geometry shared by the offline generator, collision and rendering.
+import { onBridge } from './adventure_bridge_core.js';
 export function mapInfo(zone,content) {
     const info=content?.worldMapIndex?.islands?.[zone];
     if(!info)throw Error('缺少岛屿配置：'+zone+'，请运行 npm run generate:maps');
@@ -25,7 +26,7 @@ export function onLargeIsland(world,x,y,padding=0) {
 export function riverBlocks(world,x,y) {
     if(!world.layout)return false;
     if(world.layout.lakes?.some(l=>((x-l.x)/(l.rx+12))**2+((y-l.y)/(l.ry+12))**2<1))return true;
-    if(world.layout.bridges.some(b=>{const a=b.angle||0,dx=x-b.x,dy=y-b.y;return Math.abs(dx*Math.cos(a)+dy*Math.sin(a))<b.w/2-10&&Math.abs(-dx*Math.sin(a)+dy*Math.cos(a))<b.h/2-10;}))return false;
+    if(world.layout.bridges.some(b=>onBridge(b,x,y,7)))return false;
     return world.layout.rivers.some(r=>r.points.slice(1).some(([bx,by],i)=>segmentDistance({x,y},{x:r.points[i][0],y:r.points[i][1]},{x:bx,y:by})<r.width/2+12));
 }
 export function regionAt(world,p) {

@@ -5978,3 +5978,14 @@ VIP 到期日：{date}（北京时间）||VIP expires: {date} (Beijing time)
 获得出奇蛋中的伙伴||Receive the companion from the Surprise Egg
 获得出奇蛋中的伙伴，再与杰西卡交谈。||Receive your companion from the Surprise Egg, then talk to Jessica.
 让任意伙伴实际吃一份口粮，手动喂养或自动进食均可。||Have any companion eat one ration, manually or automatically.
+
+中文||Chinese
+英语||English
+剧本对话演示||Scripted conversation demo
+私聊||Private chat
+魔法哈奇冒险||Magic Haqi adventure
+魔法世界，点击地面移动，点击居民交谈||Magic world: click the ground to move or a resident to talk
+
+{name} · 演示中||{name} · Playing
+{name} · 稍后播放下一个技能||{name} · Next spell coming up
+{name} · 可重播或选择其他技能||{name} · Replay or choose another spell

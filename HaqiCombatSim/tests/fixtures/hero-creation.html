@@ -13,6 +13,8 @@ try{
  const params=new URLSearchParams(location.search);
  const assets=await loadResources(),preview=createCreationPreview(assets);
  const draft={...createHeroDraft(assets.hero?.manifest,Number(params.get('seed'))||Date.now()),name:params.has('blank')?'':'形象预览'};
+ if(params.has('step'))draft.step=Number(params.get('step'));
+ if(params.get('school'))draft.school=params.get('school');
  let locale=params.get('lang')||'zh-CN',second=locale==='en'?'zh-CN':'en';
  if(locale!=='zh-CN')await loadLocaleFiles([locale]);
  configureLocale({locale});
@@ -28,6 +30,7 @@ try{
  },login:()=>{root.dataset.loginClicked='1';},importOriginal:()=>{},accountChoice:params.has('gate')});
  show();
  result.textContent='左右点击或滑动切换形象；此页不读写玩家存档。';
+ if(draft.step===3)await new Promise(resolve=>setTimeout(resolve,900));
  document.documentElement.dataset.fixtureReady='1';
 }catch(error){result.textContent=error.stack;document.documentElement.dataset.fixtureError=error.message;}
 </script></body></html>

@@ -3,6 +3,7 @@ import {dungeonFor} from './adventure_dungeons_core.js';
 import {islandBuildings,harborAccess} from './adventure_buildings_core.js';
 // Compact authored maps. The original NPC coordinates remain in AdventureContent for provenance.
 import { islandFor } from './adventure_world_map_core.js';
+import { onAnyBridge } from './adventure_bridge_core.js';
 import { onLargeIsland, riverBlocks, sceneryCoversActor, separateBuilding } from './adventure_island_layout_core.js';
 export const WALK_SPEED = 210;
 export function createWorld(zone,content,save=null) {
@@ -23,21 +24,28 @@ export function createWorld(zone,content,save=null) {
         if(save&&(!walkable(world,save.position.x,save.position.y)||routeLocation(world,save.position).progress>dungeonLimit(world)))save.position={...layout.spawn};
     }
     if(originals){
-        // Original 3D coordinates are retained in the catalogue. Roadside positions are a 2D adaptation.
+        // Original 3D coordinates stay in the catalogue. Residents stand beside the
+        // road, and bridge decks stay empty. AI companions may still use the road.
         const candidates=[];
         for(const path of layout.paths){
-            const a=[path.a.x,path.a.y],b=[path.b.x,path.b.y],length=Math.hypot(b[0]-a[0],b[1]-a[1]);
-            for(let d=0;d<length;d+=80)for(const side of [-1,1]){
-                const x=a[0]+(b[0]-a[0])*d/length-(b[1]-a[1])/length*48*side;
-                const y=a[1]+(b[1]-a[1])*d/length+(b[0]-a[0])/length*48*side;
-                if(walkable(world,x,y))candidates.push({x,y});
+            const ax=path.a.x,ay=path.a.y,bx=path.b.x,by=path.b.y,length=Math.hypot(bx-ax,by-ay);
+            if(length<50)continue;
+            const dx=(bx-ax)/length,dy=(by-ay)/length,nx=-dy,ny=dx,half=(path.width||60)/2;
+            for(let d=40;d<length-24;d+=72)for(const side of [-1,1]){
+                for(const gap of [40,68,100]){
+                    const x=ax+dx*d+nx*(half+gap)*side,y=ay+dy*d+ny*(half+gap)*side;
+                    if(!walkable(world,x,y)||onAnyBridge(world,x,y,88))continue;
+                    candidates.push({x,y});
+                    break;
+                }
             }
         }
-        const placed=npcs.filter(n=>Number.isFinite(n.x)&&Number.isFinite(n.y));
-        for(const n of npcs.filter(n=>!Number.isFinite(n.x)||!Number.isFinite(n.y))){
+        const clear=(p,placed)=>placed.every(other=>distance(p,other)>68)&&world.encounters.every(e=>distance(p,e)>108)&&!onAnyBridge(world,p.x,p.y,88);
+        const placed=npcs.filter(n=>Number.isFinite(n.x)&&Number.isFinite(n.y)&&!onAnyBridge(world,n.x,n.y,88));
+        for(const n of npcs.filter(n=>!placed.includes(n))){
             const index=(n.id*31)%Math.max(1,candidates.length);
             const ordered=[...candidates.slice(index),...candidates.slice(0,index)];
-            const spot=ordered.find(p=>placed.every(other=>distance(p,other)>68));
+            const spot=ordered.find(p=>clear(p,placed));
             if(!spot)throw Error('居民道路位置不足：'+zone);
             Object.assign(n,spot);placed.push(n);
         }
@@ -72,7 +80,9 @@ export function createWorld(zone,content,save=null) {
     const moved=placed.filter((b,i)=>b.x!==world.buildings[i].x||b.y!==world.buildings[i].y);
     world.buildings=placed;
     if(moved.length)world.trees=world.trees.filter(t=>!moved.some(b=>Math.abs(t.x-b.x)<b.w*.55&&t.y>b.y-b.h*.5&&t.y<b.y+45));
-    world.trees=world.trees.filter(t=>actors.every(a=>!sceneryCoversActor(t,a)));
+    // A tree behind an actor can leave its sprite visible while its 20-unit
+    // trunk collision still blocks the interaction point after map rebaking.
+    world.trees=world.trees.filter(t=>actors.every(a=>distance(t,a)>=20&&!sceneryCoversActor(t,a)));
     objectIndices.delete(world);
     return world;
 }

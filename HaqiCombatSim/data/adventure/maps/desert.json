@@ -492,7 +492,8 @@
     },
     "bridge": {
       "auto": true,
-      "margin": 30,
+      "sideMargin": 6,
+      "landing": 4,
       "edge": "#796c4d",
       "fill": "#c4b88c",
       "seam": "#857a5855"
@@ -3288,5 +3289,5 @@
       "size": 12
     }
   ],
-  "sourceHash": "7cf7d4c051669b2701a3792da56d216a51f57627fb9d690bc81c1feef1be6121"
+  "sourceHash": "c0e0b3ac35526c247c8f4f4cc0a81a079733d3833b200a797f2c2622ec5eac26"
 }

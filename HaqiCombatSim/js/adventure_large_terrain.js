@@ -1,6 +1,7 @@
 import { paintSoftShadow, paintStaticShadows } from './adventure_shadows.js';
 import { paintGroundDetail, paintWaterDetail, paintRoadDetail, paintRiverBank, paintShoreDetail } from './adventure_terrain_detail.js';
 import { groundDecorations } from './adventure_ground_decorations_core.js';
+import { paintBridges } from './adventure_bridge.js';
 
 function polygon(c,points){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();}
 function line(c,points,width,color){c.strokeStyle=color;c.lineWidth=width;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();}
@@ -146,15 +147,11 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         }
     }
     if(!overview)paintRoadDetail(c,world,rect);
-    for(const b of layout.bridges){
-        const reach=Math.hypot(b.w,b.h)/2;
-        if(!hits(rect,b.x-reach,b.y-reach,b.x+reach,b.y+reach))continue;
-        c.save();c.translate(b.x,b.y);c.rotate(b.angle||0);
-        c.fillStyle=rules.bridge.edge;c.fillRect(-b.w/2,-b.h/2,b.w,b.h);
-        c.fillStyle=rules.bridge.fill;c.fillRect(-b.w/2+7,-b.h/2+7,b.w-14,b.h-14);
-        for(let x=-b.w/2+15;x<b.w/2;x+=17)line(c,[[x,-b.h/2+8],[x,b.h/2-8]],2,rules.bridge.seam);
-        c.restore();
-    }
+    const visibleBridges=layout.bridges.filter(b=>{
+        const reach=Math.hypot(b.w,b.h)/2+24;
+        return hits(rect,b.x-reach,b.y-reach,b.x+reach,b.y+reach);
+    });
+    paintBridges(c,visibleBridges,rules.bridge,overview);
     for(const d of layout.details||[]){
         if(d.x<rect.x-20||d.x>rect.x+rect.w+20||d.y<rect.y-20||d.y>rect.y+rect.h+20)continue;
         oval(c,d.x,d.y,d.size,d.size*.5,rules.biomes[d.biome].color);oval(c,d.x-1,d.y-2,d.size*.7,d.size*.25,'#fff2ce30');

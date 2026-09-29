@@ -198,16 +198,66 @@
         "en": "Build your strategy"
       },
       "subtitle": {
-        "zh-CN": "搭配你的魔法卡包，为下一场对决做好准备。",
-        "en": "Build your deck and prepare for the next encounter."
+        "zh-CN": "超强策略性：术、陷阱、反射、增益与减益——亲手配出你的制胜卡组。",
+        "en": "Deep strategy: spells, traps, reflection, buffs and debuffs. Build your winning deck."
       },
       "duration": {
-        "long": 9,
-        "short": 5
+        "long": 12,
+        "short": 10
       },
       "cues": [
         {
+          "at": 0.05,
+          "action": "deck-hover",
+          "card": 0
+        },
+        {
+          "at": 0.14,
+          "action": "deck-click",
+          "card": 0
+        },
+        {
+          "at": 0.22,
+          "action": "deck-hover",
+          "card": 1
+        },
+        {
+          "at": 0.31,
+          "action": "deck-click",
+          "card": 1
+        },
+        {
+          "at": 0.39,
+          "action": "deck-hover",
+          "card": 2
+        },
+        {
+          "at": 0.48,
+          "action": "deck-click",
+          "card": 2
+        },
+        {
+          "at": 0.56,
+          "action": "deck-hover",
+          "card": 3
+        },
+        {
           "at": 0.65,
+          "action": "deck-click",
+          "card": 3
+        },
+        {
+          "at": 0.73,
+          "action": "deck-hover",
+          "card": 4
+        },
+        {
+          "at": 0.82,
+          "action": "deck-click",
+          "card": 4
+        },
+        {
+          "at": 0.94,
           "action": "save-deck"
         }
       ]

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {socialCapacity,recordInteraction,selectSocialRoster,boardGroup,markSocialActivity,makeSocialSnapshot,validatePublicProfile,DAY_MS,pickAutoJoinPartner,autoJoinDelayMs} from '../js/adventure_social_core.js';
 import {startCoopRun,dungeonProgress} from '../js/adventure_coop_core.js';
-import {createSocialActors,stepSocialActors,socialBubble,pickSocialBubble,socialActivityHubs,onActivityRoad} from '../js/adventure_social_motion_core.js';
+import {createSocialActors,stepSocialActors,socialBubble,pickSocialBubble,socialActivityHubs,onActivityRoad,socialMonsterGap} from '../js/adventure_social_motion_core.js';
 import {SOCIAL_DEFAULTS} from '../js/adventure_social_core.js';
 import {startSocialPvp,playSocialPvp,restoreSocialPvp,recordPvpWin} from '../js/adventure_social_pvp_core.js';
 import {durableSave,runtimeValues,restoreRuntime} from '../js/adventure_storage_core.js';
@@ -198,4 +198,16 @@ test('every non-camp island fills sixteen unique companions and keeps them on wa
         const idle=actors.filter(a=>!a.moving&&!a.path.length);
         assert.ok(idle.every(a=>onActivityRoad(world,a.position)),`${zone} idle on road`);
     }
+});
+
+test('companions stay off monster sprites while standing on the road',()=>{
+    const world=createWorld('fire',content);
+    const road=world.paths[0],mid={x:(road.a.x+road.b.x)/2,y:(road.a.y+road.b.y)/2};
+    world.encounters=[{id:'stack',x:mid.x,y:mid.y,monsterId:'mob',monsterIds:['mob','mob','mob']}];
+    const people=Array.from({length:8},(_,i)=>({...profile(i),id:`gap${i}`}));
+    const clear=a=>world.encounters.every(e=>Math.hypot(a.position.x-e.x,a.position.y-e.y)>socialMonsterGap(e));
+    const actors=createSocialActors(world,people,'stack');
+    assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)&&onActivityRoad(world,a.position)&&clear(a)));
+    for(let i=0;i<600;i++)stepSocialActors(actors,world,.1);
+    assert.ok(actors.filter(a=>!a.path.length).every(a=>clear(a)&&onActivityRoad(world,a.position)));
 });

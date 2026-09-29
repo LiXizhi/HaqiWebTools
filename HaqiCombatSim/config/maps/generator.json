@@ -98,7 +98,8 @@
   },
   "bridge": {
     "auto": true,
-    "margin": 30,
+    "sideMargin": 6,
+    "landing": 4,
     "edge": "#796c4d",
     "fill": "#c4b88c",
     "seam": "#857a5855"

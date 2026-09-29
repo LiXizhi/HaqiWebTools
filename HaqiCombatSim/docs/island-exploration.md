@@ -32,7 +32,7 @@ npm run check:maps
 
 例如：调整 `roads.width` 改所有主岛主路宽度；调整 `forest.spacing` 和 `biomes.forest.forest.density` 改树间距及森林密度；调整 `biomes.snow.weather.count/speed/wind` 改雪量与飘落速度。`biomes.snow.mountain` 是雪山层级配色，`mountain` 是统一山体形状参数。`themes.fire/ice/desert/dark` 集中保存岛屿主题差异。优先级为共享规则 → 岛屿引用的 theme → 岛内 overrides；营地保留较窄道路和低树木预算。单一区域可覆盖自己的 weather/forest，因此覆盖过的字段不会随全局同字段改变。
 
-岛内 `routes` 是坐标折线，主路与支路可形成回环；`rivers`/`lakes` 的 material 可选 water、ice、lava、dark。生成器为道路与河流交叉点生成沿道路方向的桥，碰撞与画面共用旋转几何；湖泊必须绕行。哈奇岛保留已手工设置的桥。区域名为网页版概括性名称，地图是参考原图空间关系的二维改编，并非原版3D地形精确转换。
+岛内 `routes` 是坐标折线，主路与支路可形成回环；`rivers`/`lakes` 的 material 可选 water、ice、lava、dark。生成器按道路在河岸范围内的实际走向生成桥，包括哈奇岛的转弯与分叉；湖泊必须绕行。桥面宽度为道路宽度加两侧 `bridge.sideMargin`（默认各6，82宽主路对应94宽桥面），`bridge.landing` 控制额外上岸余量。分叉采用角平分线拼接木板，边梁仅绘制桥面并集的外沿，交汇处不横穿边梁；渲染和碰撞共用 `adventure_bridge_core.js` 生成的多边形。统计里的桥梁数为桥面分段数，不是独立过河点数。区域名为网页版概括性名称，地图是参考原图空间关系的二维改编，并非原版3D地形精确转换。
 
 | ID | 地图 | 世界尺寸 | 区域特色 |
 | --- | --- | --- | --- |

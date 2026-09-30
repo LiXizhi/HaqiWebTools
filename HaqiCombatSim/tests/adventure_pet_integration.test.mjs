@@ -326,3 +326,19 @@ test('guest-to-account transfer hydrates lazy pets and rewrites files under the 
     const ref=loaded.petFileRefs['extra-pet'];assert.equal(store.petFileIO(id).read(ref.path).scope,store.petScope(id));
     store.open();assert.equal(store.loadPet(store.catalog.roles[0].save,'extra-pet').pets['extra-pet'].xp,9000);
 });
+
+test('grouping cancels pet meetings and blocks proximity, dialogue and shared meals',()=>{
+    const h=sceneHarness(),p=petInteractionParams(content),host=h.save.formation[0];
+    h.scene.step(0);h.advance(p.playIntervalMs+1);h.scene.step(0);
+    h.state.team=['first','second'];
+    h.scene.step(.05);
+    h.scene.dialogue('first');
+    for(let i=0;i<300;i++){h.advance(50);h.scene.step(.05);}
+    assert.equal(h.scene.effects.length,0);assert.equal(h.scene.food,null);assert.equal(h.meetings.length,0);
+    h.save.inventory[990001]=2;h.scene.feed(host);
+    assert.equal(h.save.inventory[990001],1);assert.equal(h.scene.food,null);
+    assert.equal(h.save.pets[host].memories.length,0);
+    h.state.team=[];h.advance(p.playIntervalMs+1);
+    for(let i=0;i<300&&!h.scene.effects.length;i++){h.advance(50);h.scene.step(.05);}
+    assert.ok(h.scene.effects.length,'solo pet interaction resumes after leaving party');
+});

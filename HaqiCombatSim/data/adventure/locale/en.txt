@@ -5387,11 +5387,42 @@ S4死亡装供货商||S4 Death gear supplier
 这里离水边太远，换一处海岸试试。||You're too far from the water. Try another spot on the coast.
 这处岸边暂时走不到，换个位置吧。||You can't reach this part of the shore right now. Try another spot.
 没能走到水边，换个位置再试试。||Couldn't reach the water. Try another spot.
+部分角色暂时无法读取，原存档已保留。请选择其他角色，或新建角色继续游玩。||Some characters cannot be read right now. Your original save was kept. Choose another character or create a new one to keep playing.
+找不到宠物引用||Pet reference not found
+设置未能保存，请重试。||Settings could not be saved. Please try again.
+当前进度尚未保存，请先重试保存。||Progress is not saved yet. Retry saving first.
+正在保存云端进度…||Saving cloud progress…
+已保存到云端。||Saved to the cloud.
+正在保存角色…||Saving character…
+角色恢复失败||Character restore failed
+角色已保存到云端。||Character saved to the cloud.
+本地有未同步进度，与本次读取的云端版本不同，请先备份再加载云端。||Local unsynced progress differs from the cloud version just read. Back it up before loading the cloud save.
+云端角色读取失败||Failed to read the cloud character
+云端角色暂时无法读取，可选择本地角色或新建角色继续游玩。||The cloud character cannot be read right now. You can choose a local character or create a new one.
+角色尚未完成云端同步，请重试。||The character has not finished syncing to the cloud. Please try again.
+请先暂离当前组队副本||Leave the current party dungeon first
+你的精力值不足，无法得到这场战斗的战利品。||You don't have enough stamina, so this battle gives no loot.
+你撤到了怪物附近。已保留物品与任务进度。||You retreated near the monster. Items and quest progress were kept.
+正在准备钓鱼…||Preparing to fish…
+钓鱼数据加载失败，请再次点击海面重试。||Fishing data failed to load. Click the sea again to retry.
+游戏初始化失败||The game failed to start
+游戏资源暂时未能加载||Game resources could not be loaded
+请检查网络连接后重试，你的角色存档不会被删除。||Check your connection and try again. Your character save will not be deleted.
+重新加载||Reload
 # js/adventure_core.js
 语言课程仅发放限额奖励，请使用货币购买||Language lessons only grant limited rewards. Please use currency to make purchases.
 尚未获得这只坐骑||You don't own this mount yet.
 当前没有骑乘坐骑||You aren't riding a mount.
 存档坐骑无效||Invalid mount in save data.
+你离开了战斗。已保留物品与任务进度。||You left the battle. Items and quest progress were kept.
+怪物尚未刷新，请稍后再挑战||The monster has not respawned yet. Try again later.
+共同通关副本||Cleared the dungeon together
+怪物刷新记录无效||Invalid monster respawn record
+存档身体形象无效||Invalid body appearance in save data
+存档头部形象无效||Invalid head appearance in save data
+语言加成版本无效||Invalid language bonus version
+副本语言加成检查点无效||Invalid dungeon language bonus checkpoint
+之敌规则版本无效||Invalid cleanse rule version
 # js/view_adventure_equipment.js
 属性加成包含装备、强化、宝石和骑乘中的坐骑；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。||Stat bonuses include equipment, upgrades, gems, and your current mount. Stats for other schools and additional attributes are shown only when nonzero. Maximum health and power pip rate include base values from your level. Equipment cards do not count toward your regular deck capacity.
 骑乘后，这些属性加入角色战斗属性。||These bonuses are added to your combat stats while riding.
@@ -5411,17 +5442,27 @@ S4死亡装供货商||S4 Death gear supplier
 伤||Damage
 晕||Stun
 反||Reflect
+镜||Reflect
+敌||Foe
+棱||Prism
 隐||Stealth
 环||Aura
+狂风印记 {rank}阶||Storm mark rank {rank}
+吸收盾 {pts}||Absorb shield {pts}
 # js/view_adventure_pet_details.js
 进化路径||Evolution path
+形象||Appearance
 # js/view_adventure_pet_status.js
 四阶段进化路径||Four-stage evolution path
 当前形态||Current form
 进化形态||Evolved form
 已解锁||Unlocked
+原版形象||Original appearance
+外观不随等级变化||Appearance does not change with level
+没有四套动作||No four-direction animations
 # js/view_adventure_pets.js
 查看详情||View details
+说明||Details
 # js/view_adventure_scene_fishing.js
 上||Up
 下||Down
@@ -5467,6 +5508,11 @@ S4死亡装供货商||S4 Death gear supplier
 再来一竿？||Cast again?
 # js/view_adventure.js
  · 向下拖动或右键弃牌|| · Drag down or right-click to discard
+施法中…||Casting…
+宠物卡||Pet cards
+本场平局，战绩已更新。||This match is a draw. Your record has been updated.
+比赛结束，战绩已更新。||Match over. Your record has been updated.
+返回红蘑菇赛场||Return to the Red Mushroom arena
 
 # js/card_description_core.js — templates are translated before substituting values
 {amount}×魔力||{amount}×pips
@@ -5992,3 +6038,192 @@ VIP 到期日：{date}（北京时间）||VIP expires: {date} (Beijing time)
 {name} · 演示中||{name} · Playing
 {name} · 稍后播放下一个技能||{name} · Next spell coming up
 {name} · 可重播或选择其他技能||{name} · Replay or choose another spell
+
+对手登场||Opponents Arrive
+准备迎战||Prepare for battle
+跳过登场||Skip intro
+未知系别||Unknown school
+
+# js/view_language_learning.js
+已保存的音色（加载列表查看名称）||Saved voice (load the list to see its name)
+默认对话模型||Default chat model
+默认音色||Default voice
+对话评判模型||Conversation judge model
+朗读音色||Read-aloud voice
+加载可用模型和音色||Load available models and voices
+正在加载…||Loading…
+选择后点击保存；下次对话判断和朗读时生效。||Choose, then click Save. It applies to the next conversation judgement and read-aloud.
+试听音色||Preview voice
+你好！欢迎来到魔法营地。||Hello! Welcome to the Magic Camp.
+保存模型和音色||Save models and voices
+
+# js/adventure_hero_customize_core.js
+身体形象和性别不一致||Body appearance and gender do not match
+
+# js/adventure_cloud.js
+宠物文件路径无效||Invalid pet file path
+宠物文件账号不一致||Pet file belongs to a different account
+试炼塔文件索引无效||Invalid trial tower file index
+试炼塔编号无效||Invalid trial tower number
+角色版本已更新，请重试保存或刷新角色列表处理冲突。||The character version has changed. Retry saving or refresh the character list to resolve the conflict.
+请选择角色后保存宠物快照||Select a character before saving the pet snapshot
+宠物快照角色无效||Invalid character for the pet snapshot
+
+# js/view_adventure_debug.js
+调试修改会保存到当前旅程。等级与经验联动；修改前自动保留一份备份，可恢复上一次修改前的状态。一键充值点击后立即生效，其余修改需点「保存并生效」。战斗中不可修改。||Debug edits save to the current journey. Level and experience are linked; a backup is kept automatically before each edit so you can undo the last change. One-click recharge applies immediately; other edits need Save and apply. Not available during battle.
+
+# js/view_adventure_dialogue.js
+点击喇叭朗读，点击译文映射词义；相近颜色表示近似对应。||Click the speaker to read aloud, or click a translation to map word meanings. Similar colors mean approximate matches.
+近似词义对应||Approximate meaning matches
+相同颜色表示对应词义||The same color marks matching meanings
+已映射||Mapped
+词义映射||Meaning mapping
+点击映射上下两行词义||Click to map meanings between the top and bottom lines
+映射中…||Mapping…
+正在映射词义…||Mapping meanings…
+词义映射暂时不可用，请稍后重试。||Meaning mapping is unavailable right now. Please try again later.
+词义映射失败，请重试。||Meaning mapping failed. Please try again.
+重试映射||Retry mapping
+朗读暂时不可用，请稍后重试。||Read-aloud is unavailable right now. Please try again later.
+朗读失败，请点击台词重试。||Read-aloud failed. Click the line to try again.
+
+# js/view_adventure_dungeons.js
+本岛秘境||Island dungeons
+剧情精英||Story elites
+战斗消耗精力 {cost}||Battle costs {cost} stamina
+战斗消耗精力 {min}–{max}||Battle costs {min}–{max} stamina
+已选定 · 返回队伍||Selected · Back to party
+选定组队副本||Select a party dungeon
+
+# js/view_adventure_pet_food.js
+宠物自动食槽||Pet auto feeder
+放入口粮||Add food
+先吃左槽，再吃右槽。只消耗放入食槽的口粮；战斗和离线期间暂停。||Eats from the left slot first, then the right. Only food placed in the feeder is consumed; paused during battle and while offline.
+喂养||Feed
+全部取回背包||Take all back to bag
+放入||Add
+数量||Quantity
+原版口粮保留经验值；饱食效果与奇豆售价采用网页版规则。满级宠物仍会吃已放入的口粮，但不再获得经验。||Original food keeps its experience value; fullness effects and qi-bean prices follow the web rules. A max-level pet still eats food placed in the feeder but gains no more experience.
+前往补给商店||Go to the supply shop
+
+# js/view_adventure_pet_social.js
+待领养||Available for adoption
+
+# js/view_adventure_quests.js
+前往红蘑菇赛场||Go to the Red Mushroom arena
+网页赛场任务积分：胜利 +25，平局 +10；完成2对2计一次参赛。||Web arena quest points: +25 for a win and +10 for a draw; a finished 2v2 counts as one entry.
+
+# js/view_adventure_roles.js
+部分角色暂时无法读取，原存档已保留。可以选择其他角色或新建角色继续游玩。当前进度仅保存在本机，云端同步暂时暂停。||Some characters cannot be read right now. Your original save was kept. You can choose another character or create a new one. Progress is saved on this device only and cloud sync is paused.
+
+# js/view_adventure_settings.js
+直接打开 Keepwork 登录。登录后回到开始画面，列出该账号的全部云端角色，不会自动进入世界。||Opens Keepwork sign-in directly. After signing in you return to the start screen with all cloud characters for that account listed; you are not taken into the world automatically.
+游戏音效音量||Game sound volume
+试听音效||Preview sound
+背景音乐||Background music
+游戏音效||Game sound
+战斗、奖励与冒险交互的短音效；朗读和录音时自动静音。||Short sounds for battles, rewards and adventure interactions; muted while reading aloud or recording.
+音效音量||Sound volume
+
+# js/view_adventure_shop.js
+购买数量||Purchase quantity
+
+# js/view_adventure_social.js
+邮件与好友||Mail & friends
+副本组队||Dungeon party
+伙伴名片||Companion profile
+红蘑菇赛场||Red Mushroom arena
+冒险伙伴||Adventure companions
+正在准备赛场…||Preparing the arena…
+正在连接…||Connecting…
+登录后可以与好友通信。||Sign in to message friends.
+刷新||Refresh
+收件箱||Inbox
+写信||Write
+好友与申请||Friends & requests
+邮件服务正在验证中，可先管理好友申请。||Mail service is still verifying. You can manage friend requests in the meantime.
+好友申请||Friend requests
+同意||Accept
+拒绝||Decline
+邀请组队||Invite to party
+在岛上认识伙伴后，可以从人物资料添加好友。||Meet companions on the island, then add them as friends from their profile.
+收件人||To
+请选择好友||Choose a friend
+标题||Subject
+给朋友写几句话吧||Write a few words to your friend
+发送邮件||Send mail
+翻译成英文草稿||Draft in English
+润色中文草稿||Polish the Chinese draft
+AI 生成草稿，可修改后自行发送。||AI writes a draft; edit it before sending.
+暂无来信。||No messages yet.
+查看列表||View list
+更换副本||Change dungeon
+按阵位顺序选取出战单位，多余伙伴作为候补；没有组队伙伴时使用当前宠物阵容。||Pick battle units in slot order; extra companions become reserves. With no party companions, your current pet lineup is used.
+开放空位后，伙伴会自动加入；也可在下方主动邀请。||Companions join automatically once a slot is open; you can also invite them below.
+此副本暂仅支持单人出发。||This dungeon currently supports solo runs only.
+尚未选择副本||No dungeon selected
+选择副本||Choose dungeon
+队伍已冻结。退出当前副本后才能更换伙伴。||The party is locked. Leave the dungeon before changing companions.
+你||You
+队长||Leader
+队员||Member
+AI 伙伴||AI companion
+名片||Profile
+移出||Remove
+等候中||Waiting
+席位已开放||Slot open
+伙伴即将自动加入…||A companion is about to join…
+取消开放||Close slot
+空位||Open slot
+点击开放，等候加入||Click to open a slot and wait for someone to join
+单人副本无需组队||Solo dungeons need no party
+请先选择副本||Choose a dungeon first
+开放||Open
+立即出发||Set off now
+调整宠物阵容||Adjust pet lineup
+队伍战报||Party battle report
+保存队伍战报||Save party battle report
+开启公开展示||Make public
+关闭公开展示||Stop sharing
+主动邀请||Invite directly
+当前副本不支持组队邀请。||This dungeon does not support party invites.
+移出队伍||Remove from party
+查看名片||View profile
+添加好友||Add friend
+AI 生成||AI draft
+你好，一起冒险吧。||Hi, let's go on an adventure together.
+对伙伴说||Say to companion
+开始切磋||Start a friendly duel
+
+# js/view_adventure_social_hud.js
+PvE 组队副本||PvE party dungeon
+PvP 红蘑菇赛场||PvP Red Mushroom arena
+
+# js/view_adventure_social_profile.js
+注册日期||Joined
+暂无资料||No profile yet
+在旅途中相遇，一起开启新的冒险。||Met on the journey — start a new adventure together.
+直接聊天||Chat now
+聊聊冒险，也练练语言||Talk about the adventure and practise a language
+组队出发||Set off together
+组队下副本||Run a dungeon together
+正在组队挑战||Party challenge in progress
+队伍已满||Party is full
+一起挑战 PvE 副本||Take on a PvE dungeon together
+PvP 切磋||PvP duel
+红蘑菇赛场 · 1 对 1||Red Mushroom arena · 1v1
+已是好友||Already friends
+加好友||Add friend
+此伙伴暂无通信账号||This companion has no messaging account
+打开好友列表||Open friend list
+认识彼此，保持联系||Get to know each other and stay in touch
+成为好友后可写信||Become friends to write letters
+给朋友留一封信||Leave a letter for your friend
+邮件暂未开放||Mail is not open yet
+已在你的队伍中||Already in your party
+管理队伍||Manage party
+
+# data/adventure/chapter.json
+强化成功了！出奇蛋中的小伙伴已经加入你的旅程，去宠物面板看看吧。||Upgrade succeeded! The companion from the Surprise Egg has joined your journey. Check the pet panel.
+出奇蛋中的伙伴已经加入旅程，去找杰西卡学习照料吧。||The companion from the Surprise Egg has joined your journey. Find Jessica to learn how to care for it.
+打开“宠物”，点击食槽喂养饥饿的伙伴；伙伴自动进食或分享营养餐也能完成任务。||Open Pet and click the feeder to feed a hungry companion. Automatic feeding or sharing a nutrition meal also completes the task.

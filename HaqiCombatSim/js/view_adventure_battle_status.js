@@ -7,7 +7,8 @@ export function battleStatusLabels(unit,battle) {
 }
 
 export function createBattleRoster(battle,side,{heroId,canTarget,target,el,button,schoolNames}) {
-    const roster=el('div',`battle-roster roster-${side}`);
+    const crowded=Object.values(battle.sides).some(units=>units.length>=3);
+    const roster=el('div',`battle-roster roster-${side}${crowded?' roster-crowded':''}`);
     roster.setAttribute('aria-label',side==='far'?'敌方队伍状态':'我方队伍状态');
     const entries=[];
     for(const unit of battle.sides[side]){
@@ -47,6 +48,6 @@ export function updateBattleRoster(entries,presentation) {
         row.lastHp=hp;row.fill.style.width=`${Math.max(0,Math.min(100,hp/row.unit.maxHp*100))}%`;
         row.value.textContent=`${Math.max(0,Math.floor(hp))} / ${row.unit.maxHp}`;
         row.node.classList.toggle('is-defeated',hp<=0);
-        row.node.setAttribute('aria-label',`${row.unit.name}，生命 ${row.value.textContent}${hp<=0?'，已倒下':''}`);
+        row.node.setAttribute('aria-label',`${row.unit.name}，生命 ${row.value.textContent}，${row.manaLabel}${hp<=0?'，已倒下':''}`);
     }
 }

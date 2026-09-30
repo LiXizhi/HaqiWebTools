@@ -1,3 +1,4 @@
+import {monsterScenePositions,stepMonsterWander,monsterTerritoryWarning,monsterSceneParams} from './adventure_monster_motion_core.js';
 import {drawDungeonEntrance} from './view_dungeon_entrance.js';
 import {drawSchoolIcon} from './card_renderer.js';
 import {battleTargetRects} from './battle_target_pick_core.js';
@@ -28,10 +29,11 @@ import { createSpellEffects } from './spell_effects.js';
 import { drawAnimatedActor } from './actor_animation.js';
 import { battleActorAction } from './actor_animation_core.js';
 import { drawBattlePointer } from './battle_pointer.js';
+import {drawBattlePips} from './view_battle_pips.js';
 import { nextBattlePointer } from './battle_pointer_core.js';
 import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES,catalogStatSnapshot } from './adventure_core.js';
 import {catalogNpcMarker,catalogTracksMonster,trackedQuestIds} from './adventure_catalog_quests_core.js';
-import { onIsland,distance,nearbyWorldObjects } from './adventure_world_core.js';
+import { onIsland,distance,nearbyWorldObjects,walkable } from './adventure_world_core.js';
 import { OCEAN_COLOR, paintTerrain } from './adventure_terrain.js';
 import { tr } from './locale_runtime.js';
 import { createSignpostPainter } from './adventure_signposts.js';
@@ -113,7 +115,7 @@ export function createRenderer(canvas,assets) {
     const cameraZoom=createCameraZoom();let weatherFade=null;
     const motionTrail=createMotionTrail();
     const socialFx=new Map();
-    let viewRect=null;
+    let viewRect=null,lastMonsterTime=null;
     let heroActor=null,heroPrevious=null,heroScope=null,heroIdentity=null;
     const battleHero=createHeroActor(9271);
     const starFollower=createStarFollower();
@@ -175,12 +177,14 @@ export function createRenderer(canvas,assets) {
         const index={'fire-scout':0,'ice-scout':1,'storm-scout':2,'life-scout':3,'death-scout':4,'water-bubble':5,'death-bubble':4,pet:6}[id]??5;
         const bob=Math.sin(t*2.8+x)*3;if(groundShadow)shadow(c,x,y,27*scale);assets.tile(c,'creatures',index,x-45*scale,y-84*scale+bob,90*scale,88*scale);
     }
-    function monster(c,m,x,y,t,scale=1){
-        const bob=reducedMotion.matches?0:Math.sin(t*2.8+x)*2;
+    function monster(c,m,x,y,t,scale=1,pose=null){
+        const bob=reducedMotion.matches?0:pose?.moving?-Math.abs(Math.sin(t*10))*3:Math.sin(t*2.8+x)*2;
         shadow(c,x,y,27*scale);
-        if(!assets.drawMonster?.(c,m,x-52*scale,y-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',x,y,t,scale,false);
+        c.save();c.translate(x,y);c.scale(pose?.facing||1,1);
+        if(!assets.drawMonster?.(c,m,-52*scale,-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',0,bob,t,scale,false);
+        c.restore();
     }
-    function render(world,save,time,{petScene=null,socialActors=[],moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
+    function render(world,save,time,{petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
         const {w,h}=size(),t=time/1000;bubbleTarget=null;greetingTarget=null;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         cameraZoom.tick(time,reducedMotion.matches);
         const baseScale=w<650?.82:1,sceneZoom=title?1:cameraZoom.value;
@@ -216,14 +220,33 @@ export function createRenderer(canvas,assets) {
         const starLevel=magicStarStatus(membership,Date.now()).level;
         drawMotionTrail(ctx,motion,time,(c,p)=>avatar(c,p.pose,p.x,p.y,p.born/1000,true,1,false));
         viewRect={x:cam.x-200,y:cam.y-50,w:w/cam.scale+400,h:h/cam.scale+280};
-        const objects=[...nearbyWorldObjects(world,{x:cam.x-240,y:cam.y-60,w:w/cam.scale+480,h:h/cam.scale+320}),{...save.position,kind:'hero'}];
+        // Query by fixed spawns, expanded to include sprites that wandered into view.
+        const monsterRadius=monsterSceneParams(world).territoryRadius,padding=Math.max(320,monsterRadius+110);
+        const nearby=nearbyWorldObjects(world,{x:cam.x-padding,y:cam.y-padding,w:w/cam.scale+padding*2,h:h/cam.scale+padding*2});
+        const monsterDt=lastMonsterTime!==null&&time-lastMonsterTime<250?(time-lastMonsterTime)/1000:0;
+        lastMonsterTime=time;
+        const viewport={x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale};
+        const objects=[];
+        for(const o of nearby){
+            if(o.kind!=='mob'){objects.push(o);continue;}
+            stepMonsterWander(world,o,monsterDt,viewport,{enabled:!title&&!motionHidden,ambient:!reducedMotion.matches,hero:save.position,canWalk:(x,y)=>walkable(world,x,y)});
+            const warning=!title&&!motionHidden&&monsterTerritoryWarning(world,o,save.position);
+            if(warning){
+                ctx.save();ctx.beginPath();ctx.arc(o.x,o.y,monsterRadius,0,TAU);
+                const danger=warning==='danger';
+                ctx.fillStyle=danger?'#d83a3424':'#55c58a12';ctx.fill();ctx.strokeStyle=danger?'#ff6255':'#72dca2';ctx.lineWidth=(danger?2.5:2)/cam.scale;ctx.stroke();
+                ctx.restore();
+            }
+            if(!o.hidden)for(const pose of monsterScenePositions(world,o))objects.push({...o,...pose,monsterIds:null,groupSize:o.monsterIds?.length||1});
+        }
+        objects.push({...save.position,kind:'hero'});
         const petId=selectCompanionId(save,assets.content);
         if(petId&&!petScene){
             if(!companion||companionId!==petId||companionWorld!==world||companionSave!==save){
                 companion=createCompanion(world,save.position,`${save.seed}:${world.zone}:${petId}`);
                 companionId=petId;companionWorld=world;companionSave=save;lastPetTime=time;
             }
-            stepCompanion(companion,world,save.position,(time-lastPetTime)/1000,{deferSearch:coldTiles>0});
+            stepCompanion(companion,world,save.position,(time-lastPetTime)/1000,{deferSearch:coldTiles>0,inParty});
             objects.push({...companion.position,kind:'pet'});
         }else companion=petScene?.pets.find(row=>row.pet.id===petId)||null;
         lastPetTime=time;
@@ -248,7 +271,7 @@ export function createRenderer(canvas,assets) {
             socialStyle.pose={...socialStyle.pose,facing:socialPose.facing,visualHead:socialPose.head,visualBreath:{...socialPose.breath}};
             const hidden=title||motionHidden||!onScreen;
             if(onScreen&&!title&&!petScene){
-                stepCompanion(fx.companion,world,actor.position,(time-fx.lastTime)/1000,{deferSearch:coldTiles>0});
+                stepCompanion(fx.companion,world,actor.position,(time-fx.lastTime)/1000,{deferSearch:coldTiles>0,inParty:!!actor.inParty});
                 objects.push({...fx.companion.position,kind:'social-pet',fx,actor});
             }
             const socialMotion=fx.trail.step(actor.position,time,socialStyle,{moving:!!actor.moving&&onScreen,scope:world,reducedMotion:reducedMotion.matches,hidden});
@@ -292,11 +315,19 @@ export function createRenderer(canvas,assets) {
             }
             if(o.kind==='mob') {
                 const m=assets.content.monsters[o.monsterId]||{name:'缺失怪物'};
-                if(o.monsterIds){for(const [i,id]of o.monsterIds.entries()){const mob=assets.content.monsters[id];monster(ctx,mob,o.x+(i-(o.monsterIds.length-1)/2)*42,o.y-(i%2)*16,t,.7);}plate(ctx,`${tr(m.name)}${o.monsterIds.length>1?` · ${tr(`${o.monsterIds.length}只`)}`:""}${o.blocked?.length?` · ${tr('待迁移')}`:''}`,o.x,o.y+18,PLATE.mob);}
-                else {monster(ctx,m,o.x,o.y,t,.8);plate(ctx,tr(m.name)+(o.blocked?.length?` · ${tr('待迁移')}`:''),o.x,o.y+18,PLATE.mob);}
+                monster(ctx,m,o.x,o.y,t,o.scale,o);
+                if(o.index===0)plate(ctx,tr(m.name)+(o.groupSize>1?` · ${tr(`${o.groupSize}只`)}`:'')+(o.blocked?.length?` · ${tr('待迁移')}`:''),o.x,o.y+18,PLATE.mob);
                 const q=currentQuest(save,assets.content),goal=q&&questProgress(save,q).find(g=>g.kind==='defeat'&&g.id===m.goalId&&g.value<g.count);
                 const trackedMob=(o.monsterIds||[o.monsterId]).some(id=>catalogTracksMonster(save,assets.content,assets.content.monsters[id]));
-                if((goal&&questState(save,q.id).accepted)||trackedMob)text(ctx,'◇',o.x,o.y-90+Math.sin(t*3)*3,25,'#fff2a9');
+                if(o.mode==='warning'){
+                    const progress=1-o.alertRemaining/o.alertDuration;
+                    const pop=reducedMotion.matches?1:.8+Math.min(1,progress*6)*.2+Math.sin(progress*Math.PI*4)*.06;
+                    ctx.save();ctx.translate(o.x,o.y-104*o.scale-22);ctx.scale(pop,pop);
+                    ellipse(ctx,0,0,13,13,'#fff4ce');ctx.strokeStyle='#a43b2a';ctx.lineWidth=1.5;
+                    ctx.beginPath();ctx.arc(0,0,13,0,TAU);ctx.stroke();
+                    ctx.strokeStyle='#ff7953';ctx.lineWidth=3;ctx.beginPath();ctx.arc(0,0,17,-Math.PI/2,-Math.PI/2+TAU*progress);ctx.stroke();
+                    text(ctx,'!',0,7,23,'#a43b2a');ctx.restore();
+                }else if((goal&&questState(save,q.id).accepted)||trackedMob)text(ctx,'◇',o.x,o.y-90+Math.sin(t*3)*3,25,'#fff2a9');
             }
             if(o.kind==='social'){
                 const a=o.actor,p=a.profile,fx=o.fx,pose=fx?.poseOut;
@@ -449,6 +480,7 @@ export function createRenderer(canvas,assets) {
         }
         if(ev?.type==='fizzle')drawSpellMiss(c,positions[ev.caster],p,reducedMotion.matches);
         for(const u of Object.values(battle.unitsById))drawStatusFeedback(c,(presentation?.statusFeedback||[]).filter(change=>change.id===u.id),positions[u.id],time,reducedMotion.matches,w);
+        for(const u of Object.values(battle.unitsById))drawBattlePips(c,positions[u.id],presentation?.pips?.[u.id]??u.pips,{hp:presentation?.hp?.[u.id]??u.hp});
         target.battleTargetRects=battleTargetRects(positions,actorBounds,scale);
         target.battleStatusRects=statusTargets.map(hit=>({...hit,x:hit.x*scale,y:hit.y*scale,width:hit.width*scale,height:hit.height*scale}));
         target.updateStatusTargets?.(target.battleStatusRects);

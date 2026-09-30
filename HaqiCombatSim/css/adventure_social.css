@@ -51,6 +51,15 @@
 .arena-mode strong{font-size:28px;color:#9b4239}.arena-mode span{font-weight:700}.arena-mode small{font-size:11px;line-height:1.7}.arena-mode:hover,.arena-mode:focus-visible{outline:3px solid #ba7c41;outline-offset:2px;background:#fff6dc}
 .arena-rules{padding:16px 20px;border-radius:10px;background:#e5e8cb80;border:1px solid #bac295}.arena-rules h4{margin:0 0 8px;color:#596440}.arena-rules p{font-size:13px;line-height:1.8;margin:6px 0}
 .arena-seats{margin:0!important}.arena-seat{min-width:0}.arena-rest{opacity:.55;background:repeating-linear-gradient(135deg,#e8dec1,#e8dec1 8px,#e2d7b8 8px,#e2d7b8 9px)!important}.arena-rest .party-seat-portrait{filter:grayscale(1)}
+.arena-rest-pet{opacity:.92}.arena-rest-pet .party-seat-portrait{filter:none}
+.party-seat-meta{display:flex;align-items:center;gap:4px;min-height:22px}.party-seat-meta .arena-name-school,.arena-invite .arena-name-school{width:22px;height:22px;flex-basis:22px}
+.arena-seat .party-seat-portrait{position:relative;overflow:visible}
+.party-seat-pet{position:absolute;right:-2px;bottom:-4px;width:44px;height:44px;z-index:2;pointer-events:none}
+.party-seat-pet .pet-sheet{width:44px!important;height:44px!important;filter:drop-shadow(0 2px 1px #59432340)}
+.arena-extra-pets{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:#74603b}
+.arena-extra-pet{width:40px;height:40px;display:grid;place-items:end center}
+.arena-extra-pet .pet-sheet{width:40px!important;height:40px!important}
+.arena-invite{display:inline-flex;align-items:center;gap:6px}
 .arena-recruit{display:flex;gap:8px;flex-wrap:wrap;padding:16px;background:#fff9e7;border:1px solid #c3ad78;border-radius:10px}.arena-recruit h4,.arena-recruit p{width:100%;margin:2px 0 8px}
 .arena-field{display:grid;grid-template-columns:1fr 1fr;gap:16px}.arena-team{min-width:0;border-radius:12px;padding:12px;background:#e0e8d0;border:1px solid #9ba980}.arena-team.far{background:#eddbcc;border-color:#c49b80}.arena-team h4{margin:0 0 12px;text-align:center;color:#45634a}.arena-team.far h4{color:#934539}
 .arena-fighters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.arena-fighter:only-child{grid-column:1/-1}.arena-fighter{display:flex;align-items:center;flex-direction:column;gap:5px;min-width:0;padding:10px 4px;border-radius:8px;background:#fffaf0b0}.arena-fighter-art{height:98px;display:grid;place-items:center}.arena-fighter strong{font-size:12px;text-align:center;overflow-wrap:anywhere}.arena-fighter small{font-size:10px}.arena-fighter progress{height:10px;width:90%;accent-color:#668752}.arena-fighter.defeated{filter:grayscale(1);opacity:.55}.arena-team.far progress{accent-color:#b45a46}

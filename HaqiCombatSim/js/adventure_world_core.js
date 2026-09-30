@@ -1,3 +1,4 @@
+import {monsterInteractionTargets,monsterContactDistance,inMonsterTerritory} from './adventure_monster_motion_core.js';
 import {dungeonProgress} from './adventure_coop_core.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {islandBuildings,harborAccess} from './adventure_buildings_core.js';
@@ -21,14 +22,15 @@ export function createWorld(zone,content,save=null) {
     if(!islandFor(zone)&&!dungeonFor(content,zone))throw new Error('目的地不存在');
     const layout=content.worldMaps?.[zone];
     if(!layout)throw Error('缺少岛屿地图：'+zone);
-    const interactionParams=resolveParams({version:'kids'},content.balanceParams||defaultParams('kids')).adventure;
+    const resolvedParams=resolveParams({version:'kids'},content.balanceParams||defaultParams('kids'));
+    const interactionParams=resolvedParams.adventure;
     const point=([x,y])=>({x,y});
     const originals=content.npcCatalog?.npcs.filter(n=>n.zone===zone&&n.enabled!=='0'&&n.artVisible!==false&&n.hidden!==true);
     const npcs=(originals||Object.values(content.npcs).filter(n=>n.zone===zone&&n.hidden!==true)).map(n=>({...content.npcs[n.id],...n,...point(layout.npcPositions[n.id]||[n.x,n.y])}));
     if(!originals)for(const row of layout.visitingNpcs||[]){const source=content.npcs[row.sourceId];if(!source)throw Error('缺少居民来源');if(source.hidden===true||row.hidden===true)continue;npcs.push({...source,zone,...(row.sourceId===36205?layout.portal:point(row.position))});}
     const encounters=content.encounters.filter(e=>e.zone===zone&&!e.legacyOnly&&!dungeonProgress(save)?.[zone]?.cleared.includes(e.id)).map(e=>({...e,...point(layout.encounterPositions[e.id]||[e.x,e.y])}));
     const world={zone,isDungeon:!!dungeonFor(content,zone),w:layout.w,h:layout.h,layout,npcs,encounters,portal:{id:'portal',...layout.portal,zone:zone==='camp'?'town':'camp',name:dungeonFor(content,zone)?'离开副本':'查看世界地图'},
-        interactionParams,landmarks:layout.landmarks,buildings:layout.buildings||[],paths:layout.paths,trees:layout.trees,decorations:[],center:{...(layout.center||layout.spawn)}};
+        interactionParams,monsterSceneParams:resolvedParams.monsterScene,landmarks:layout.landmarks,buildings:layout.buildings||[],paths:layout.paths,trees:layout.trees,decorations:[],center:{...(layout.center||layout.spawn)}};
     if(layout.route){
         world.encounters.forEach((e,i)=>{e.hidden=i>0;});
         world.portal.hidden=!dungeonProgress(save)?.[zone]?.cleared.includes(layout.bossArenaId);
@@ -174,8 +176,8 @@ export function dungeonAutoInteraction(world,p){
 export function autoInteraction(world,p){
     if(world.isDungeon)return dungeonAutoInteraction(world,p);
     const radius=(world.interactionParams||interactionDefaults).fieldEncounterRadius;
-    const target=world.encounters.filter(e=>!e.hidden&&!e.blocked?.length&&distance(p,e)<radius)
-        .sort((a,b)=>distance(p,a)-distance(p,b))[0];
+    const target=world.encounters.filter(e=>inMonsterTerritory(world,e,p)&&monsterContactDistance(world,e,p)<radius)
+        .sort((a,b)=>monsterContactDistance(world,a,p)-monsterContactDistance(world,b,p))[0];
     return target?{...target,kind:'encounter'}:null;
 }
 export function resetAutoInteraction(world,p){
@@ -376,7 +378,7 @@ export function findPath(world,start,destination) {
     return [];
 }
 export function nearestInteraction(world,p) {
-    return [...world.npcs.map(n=>({...n,kind:'npc'})),...world.encounters.map(e=>({...e,kind:'encounter'})),...(world.landmarks||[]).map(e=>({...e,kind:'landmark'})),...(world.entrancePortal?[{...world.entrancePortal,kind:'portal'}]:[]),{...world.portal,kind:'portal'}]
+    return [...world.npcs.map(n=>({...n,kind:'npc'})),...world.encounters.flatMap(e=>monsterInteractionTargets(world,e)),...(world.landmarks||[]).map(e=>({...e,kind:'landmark'})),...(world.entrancePortal?[{...world.entrancePortal,kind:'portal'}]:[]),{...world.portal,kind:'portal'}]
         .filter(e=>!e.hidden&&distance(e,p)<90).sort((a,b)=>distance(a,p)-distance(b,p))[0]||null;
 }
 

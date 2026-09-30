@@ -15,6 +15,7 @@ test('four combatants per side retain separate status, targeting, mana and self 
     const calls=[],options={heroId:'hero0',canTarget:u=>u.side==='far',target:id=>calls.push(id),el,button:(children,fn,cls)=>Object.assign(el('button',cls,children),{click:fn}),schoolNames:{ice:'寒冰'},colors:{ice:'#6ecbdc'}};
     const near=createBattleRoster(battle,'near',options),far=createBattleRoster(battle,'far',options);
     assert.equal(near.entries.length,4);assert.equal(far.entries.length,4);
+    assert.ok(near.roster.cls.includes('roster-crowded'));assert.ok(far.roster.cls.includes('roster-crowded'));
     for(const row of [...near.entries,...far.entries]){
         const heading=row.node.firstChild;
         assert.equal(heading.firstChild.cls,'combatant-school');
@@ -30,6 +31,13 @@ test('four combatants per side retain separate status, targeting, mana and self 
     assert.equal(row.value.textContent,'180 / 200');assert.equal(row.fill.style.width,'90%');
     updateBattleRoster([row],{hp:{hero0:0}});assert.equal(row.node['is-defeated'],true);
     updateBattleRoster([row],null);assert.equal(row.value.textContent,'100 / 200');assert.equal(row.node['is-defeated'],false);
+});
+test('compact roster eligibility follows both teams, including asymmetric battles',()=>{
+    const options={heroId:'hero',canTarget:()=>false,target:()=>{},el,button:(kids,fn,cls)=>el('button',cls,kids),schoolNames:{ice:'寒冰'}};
+    for(const [nearCount,farCount,crowded] of [[1,1,false],[2,2,false],[1,3,true],[4,1,true],[4,4,true]]){
+        const battle={sides:{near:Array.from({length:nearCount},(_,i)=>unit(`hero${i}`,'near')),far:Array.from({length:farCount},(_,i)=>unit(`mob${i}`,'far'))},resolved:{}};
+        for(const side of ['near','far'])assert.equal(createBattleRoster(battle,side,options).roster.cls.includes('roster-crowded'),crowded);
+    }
 });
 test('corner status preserves charm, ward, periodic and stun information',()=>{
     const u={...unit('hero','near'),charms:[1],wards:[{id:2}],dots:[{ticks:[{dmg:10},{dmg:10}]}],hots:[{ticks:[20]}],stunned:true};

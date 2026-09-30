@@ -36,16 +36,27 @@ export function arenaSeats(save,content,dataset,allies=[],mode=1){
     const opponentMountId=save.mountId||Object.keys(content.mountByItem||{}).sort().find(id=>content.mountByItem[id].art?.cdn)||null;
     const hero={...playerSpec(save,content),id:'hero',kind:'self',appearance:save.appearance,bodyId:save.bodyId,mountId:save.mountId,opponentMountId};
     if(save.dailyLanguageBuff)hero.dailyLanguageBuff=dailyBuffs(save);
-    const ids=[...new Set([...(save.formation||[]),...Object.keys(save.pets||{})].filter(id=>id&&save.pets?.[id]?.deck))].slice(0,3);
-    const prepared={...save,heroSlot:0,formation:[null,...ids]};
-    const pets=content.pets?partySpecs(prepared,content,hero).slice(1):[];
+    const pets=arenaPetRoster(save,content,hero);
     const used=new Set();
     return [hero,...[0,1,2].map(i=>{
         if(i>=mode-1)return null;
         const ally=allies[i];
         if(ally){check(!used.has(ally.id),'不能重复招募同一伙伴');used.add(ally.id);return {...snapshotUnit(ally,dataset,`ally${i+1}`,i+1),kind:'ally',appearance:ally.appearance,bodyId:ally.bodyId,mountId:ally.mountId,profileId:ally.id};}
-        return pets[i]?{...pets[i],kind:'pet',appearanceStage:petAppearanceStage(save.pets[pets[i].id],content)}:null;
+        return pets[i]||null;
     })];
+}
+function arenaPetRoster(save,content,hero){
+    const ids=[...new Set([...(save.formation||[]),...Object.keys(save.pets||{})].filter(id=>id&&save.pets?.[id]?.deck))].slice(0,3);
+    const prepared={...save,heroSlot:0,formation:[null,...ids]};
+    const pets=content.pets?partySpecs(prepared,content,hero).slice(1):[];
+    return pets.map(pet=>{
+        const record=save.pets[pet.id]||Object.values(save.pets||{}).find(row=>row.id===pet.id);
+        return {...pet,kind:'pet',appearanceStage:petAppearanceStage(record,content)};
+    });
+}
+export function arenaBenchPets(save,content,seats=[]){
+    const active=new Set(seats.filter(pet=>pet?.kind==='pet').map(pet=>pet.id));
+    return arenaPetRoster(save,content,playerSpec(save,content)).filter(pet=>!active.has(pet.id));
 }
 export function startRedMushroom(dataset,seats,mode,seed,difficulty,params=defaultParams('kids')){
     check(ARENA_MODES.includes(mode)&&seats.slice(0,mode).filter(Boolean).length===mode,'请先补齐出战席位');

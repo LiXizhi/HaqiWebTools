@@ -524,6 +524,19 @@
  .battle-roster-controls .battle-actions{flex-direction:row}
 }
 
+/* Mana is drawn on the screen-facing half of each actor's foot ring. */
+.battle-roster .combatant-pips{display:none}
+/* Crowded small arenas keep only school and name on the corner plates. */
+@media(max-width:900px),(max-height:600px){
+ .battle-roster.roster-crowded{display:grid;grid-template-columns:repeat(2,minmax(0,184px));gap:4px}
+ .roster-crowded .combatant-status{width:100%;min-height:44px;padding:3px 6px}
+ .roster-crowded .combatant-heading{margin-bottom:0;gap:4px}
+ .roster-crowded .combatant-school{width:22px;height:22px;flex-basis:22px}
+ .roster-crowded .combatant-heading small,
+ .roster-crowded .combatant-health,
+ .roster-crowded .combatant-effects{display:none}
+}
+
 /* Full-screen arena stays fixed through selection, the entire round and the next deal. */
 .battle-layer .battle-canvas{inset:0;width:100%;height:100%;z-index:0}
 .battle-status-targets{position:absolute;inset:0;z-index:2;pointer-events:none}

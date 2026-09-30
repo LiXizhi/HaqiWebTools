@@ -45,6 +45,15 @@ HAQI_URL=http://127.0.0.1:8788/Haqi.html PLAYWRIGHT_ROOT=$TEMP/pw-haqi/node_modu
 
 JSON line numbers are occurrence order, not file lines.
 
+### Known false positives
+
+These stay in the report after a full translation pass. Do not add them; they are never used as dictionary keys.
+
+- `js/view_adventure.js` mount emoji keyword table. The names are matched with `String.includes` to pick an emoji and are never rendered.
+- `data/adventure/npc-catalog.json` `subtitle` values. `view_adventure_npc.js` strips `()`/`（）` before the lookup, so the paren-free key is the real one and it is already in the dictionary.
+- Code fragments used only in comparisons, such as `出战单位` in `adventure_app.js` `error.message.includes(...)`.
+- Fragments concatenated into a longer key at runtime, such as `。网页版：放入宠物食槽，饥饿时自动食用。` appended to a pet-food description. Item descriptions are rendered without `tr()`, so the fragment is never a key on its own.
+
 ## Change the file list
 
 Edit `scan-paths.json` only.

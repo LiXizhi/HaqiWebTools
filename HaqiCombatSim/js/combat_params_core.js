@@ -52,7 +52,8 @@ export function defaultParams(version = 'teen') {
         },
         // autoJoin* mirrors kids CombatRoom empty-seat open → delayed AI fill (RoomDetailPage 4 slots).
         // roadSlack / spawnMinActors: wander along roads near quest hubs; keep a few residents by the world spawn/plaza.
-        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, spawnMinActors:2, separation:50, npcClearance:65, monsterClearance:96, entranceClearance:115, followDistance:110, followSpacing:55, followWait:2, dungeonFollowSpeed:262.5, dungeonRegroupDistance:280, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
+        // actorSeparation is the standing hero box (78) plus a visible gap, so two AI sprites do not touch.
+        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, spawnMinActors:2, separation:50, actorSeparation:120, npcClearance:65, monsterClearance:96, entranceClearance:115, followDistance:110, followSpacing:42, partyIdleDelay:1.2, partyIdleRadius:5, partyPetOffsetX:32, partyPetOffsetY:18, followWait:2, dungeonFollowSpeed:262.5, dungeonRegroupDistance:280, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
         dailyLanguage: {percentPerLine:1,maxPercent:10},
         dungeonLanguage: {recordMaxMs:20000,percentPerLine:1,maxPercent:3},
@@ -74,6 +75,8 @@ export function defaultParams(version = 'teen') {
         // Web red-mushroom matchmaking, not original server ranking rules.
         // arena_server.lua L69–73: PvP pickcard_timeout_time_pvp = 30000; readyMs is the web match confirmation.
         redMushroom: { arrivalMinMs:3000, arrivalMaxMs:5000, readyMs:15000, pickMs:30000, firstMin:.55, firstMax:.7, min:.5, max:1.6, jitter:.08, feedback:1.2, window:20, winPoints:25, drawPoints:10 },
+        // Scene motion stays outside adventureParams saved in battle checkpoints.
+        monsterScene: { territoryRadius:84, perceptionMultiplier:2, alertDelay:1.5, dungeonWanderRadius:22, wanderSpeed:15, chaseSpeed:115, returnSpeed:45, restMin:2.5, restMax:6.5 },
         adventure: {
             monsterRespawnMs:30000,
             fieldEncounterRadius:24,
@@ -284,6 +287,7 @@ export function resolveParams(dataset, params) {
         languageAdventure: { ...defaultParams(version).languageAdventure, ...params.languageAdventure },
         fishing: { ...defaultParams(version).fishing, ...params.fishing },
         adventure: { ...defaultParams(version).adventure, ...params.adventure },
+        monsterScene: { ...defaultParams(version).monsterScene, ...params.monsterScene },
         redMushroom: { ...defaultParams(version).redMushroom, ...params.redMushroom },
         perSchool: params.perSchool,
         fairPlay: params.fairPlay || null,

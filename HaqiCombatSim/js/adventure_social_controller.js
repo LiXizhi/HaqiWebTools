@@ -4,9 +4,11 @@ import {randomHeroBodyId} from './hero_body_core.js';
 import {createSocialClient} from './adventure_social.js';
 import {socialCapacity,selectSocialRoster,makeSocialSnapshot,snapshotUnit,markSocialActivity,weeklyActivity,utcDay,utcWeek,pickAutoJoinPartner,autoJoinDelayMs,SOCIAL_DEFAULTS} from './adventure_social_core.js';
 import {createSocialActors,stepSocialActors,socialFacing,pickSocialBubble} from './adventure_social_motion_core.js';
-import {arenaSeats,arenaDifficulty,emptyArenaRecord,beginArenaRecord,finishArenaRecord,startRedMushroom,playRedMushroom,settleArenaQuests} from './adventure_red_mushroom_core.js';
+import {arenaSeats,arenaBenchPets,arenaDifficulty,emptyArenaRecord,beginArenaRecord,finishArenaRecord,startRedMushroom,playRedMushroom,settleArenaQuests} from './adventure_red_mushroom_core.js';
 import {createRuntimeStore} from './adventure_runtime_store.js';
 import {defaultParams} from './combat_params_core.js';
+import {selectCompanionId} from './adventure_companion_core.js';
+import {petAppearanceStage} from './adventure_pets_core.js';
 import {ownedPetRecords} from './adventure_pet_files_core.js';
 import {presetDeck} from './combat_presets_core.js';
 import {createRng,hashSeed} from './rng_core.js';
@@ -80,7 +82,19 @@ export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshi
     const partyDungeon=()=>{const {assets}=getState();return ui.partyDungeonId&&assets?dungeonFor(assets.content,ui.partyDungeonId)||null:null;};
     const scenePlayers=()=>(worldRef===getState().world?actors:[]).map(a=>({...a.profile,position:{...a.position}}));
     const lineupCount=()=>{const allies=teamMembers().length;if(allies)return Math.min(4,1+allies);const save=getState().save;if(!save?.formation)return 1;return Math.min(4,1+save.formation.filter((id,i)=>id&&i!==save.heroSlot).length);};
-    const state=()=>({...client.state,...ui,dungeonMode:getState().save?.dungeonMode||1,lineupCount:lineupCount(),arenaSeats:ui.arenaStep==='team'&&getState().save?arenaSeats(getState().save,getState().assets.content,getState().assets.dataset,ui.arenaAllies,ui.arenaMode):[],scenePlayers:scenePlayers(),team:teamMembers(),owner:getOwner(),hero:heroCard(),partyDungeon:partyDungeon(),coopCapable:coopCapable(),coopActive:!!getState().save?.coopRun,coopReport:getState().save?.coopRun?.battles||[],rankReady:!!config?.gameId});
+    function arenaLobby(){
+        const {save,assets}=getState();
+        if(ui.arenaStep!=='team'||!save||!assets)return {seats:[],bench:[]};
+        const seats=arenaSeats(save,assets.content,assets.dataset,ui.arenaAllies,ui.arenaMode);
+        return {seats,bench:arenaBenchPets(save,assets.content,seats)};
+    }
+    function followPetCard(){
+        const {save,assets}=getState();if(!save?.pets||!assets?.content?.pets)return null;
+        const key=selectCompanionId(save,assets.content),record=save.pets[key];if(!record)return null;
+        const speciesId=record.speciesId||key;if(!assets.content.pets[speciesId]?.art)return null;
+        return {id:record.id||key,key,speciesId,stage:petAppearanceStage(record,assets.content)};
+    }
+    const state=()=>{const lobby=arenaLobby();return {...client.state,...ui,dungeonMode:getState().save?.dungeonMode||1,lineupCount:lineupCount(),arenaSeats:lobby.seats,arenaBench:lobby.bench,followPet:followPetCard(),scenePlayers:scenePlayers(),team:teamMembers(),owner:getOwner(),hero:heroCard(),partyDungeon:partyDungeon(),coopCapable:coopCapable(),coopActive:!!getState().save?.coopRun,coopReport:getState().save?.coopRun?.battles||[],rankReady:!!config?.gameId};};
     const language=value=>languageId(value)==='zh-CN'?'zh':languageId(value);
     function clearJoinTimers(){for(let i=0;i<3;i++){if(joinTimers[i]!=null){cancel(joinTimers[i]);joinTimers[i]=null;}ui.openSlots[i]=false;}}
     function setAllies(list){ui.allies=[list[0]||null,list[1]||null,list[2]||null];}

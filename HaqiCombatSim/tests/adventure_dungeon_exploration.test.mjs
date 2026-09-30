@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {projectDungeon} from '../js/adventure_dungeons_core.js';
 import {dungeonBiome} from '../js/adventure_dungeon_scenery_core.js';
-import {stepSocialActors} from '../js/adventure_social_motion_core.js';
+import {stepSocialActors,socialTrailGap} from '../js/adventure_social_motion_core.js';
 import {routePoint,routeLocation,walkable} from '../js/adventure_world_core.js';
 import {SOCIAL_DEFAULTS} from '../js/adventure_social_core.js';
 import {groundDecorations} from '../js/adventure_ground_decorations_core.js';
@@ -31,12 +31,12 @@ test('all three party members follow turns, remain on the trail, pause and regro
     const opts={team:actors.map(a=>a.profile.id),view:{x:-900,y:-900,w:1,h:1}};
     let leader;
     for(let progress=150;progress<1300;progress+=7){leader=routePoint(world,progress);stepSocialActors(actors,world,1/30,{...opts,leader});assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)));}
-    actors.forEach((a,i)=>assert.ok(Math.abs(routeLocation(world,a.position).progress-(routeLocation(world,leader).progress-SOCIAL_DEFAULTS.followSpacing*(i+1)))<30));
+    actors.forEach((a,i)=>assert.ok(Math.abs(routeLocation(world,a.position).progress-(routeLocation(world,leader).progress-socialTrailGap()*(i+1)))<30));
     const before=structuredClone(actors);stepSocialActors(actors,world,.1,{...opts,leader:routePoint(world,1400),paused:true});assert.deepEqual(actors,before);
     // Reverse direction while walking; all members keep moving even outside the viewport.
     for(let progress=1290;progress>850;progress-=7){leader=routePoint(world,progress);stepSocialActors(actors,world,1/30,{...opts,leader});}
     assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)));
-    assert.ok(actors.every(a=>Math.hypot(a.position.x-leader.x,a.position.y-leader.y)<230));
+    assert.ok(actors.every(a=>Math.hypot(a.position.x-leader.x,a.position.y-leader.y)<socialTrailGap()*(actors.length+1)));
     leader=routePoint(world,200);stepSocialActors(actors,world,.05,{...opts,leader});
     assert.ok(actors.every(a=>routeLocation(world,a.position).progress<=200));
 });

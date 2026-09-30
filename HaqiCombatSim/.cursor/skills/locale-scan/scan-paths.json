@@ -19,7 +19,8 @@
     "js/adventure_cloud.js",
     "js/adventure_expansion_core.js",
     "js/language_learning.js",
-    "js/language_learning_core.js"
+    "js/language_learning_core.js",
+    "js/view_battle_intro.js"
   ],
   "dirs": [
     {

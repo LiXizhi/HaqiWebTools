@@ -108,10 +108,52 @@ export function socialMonsterGap(encounter,params=SOCIAL_DEFAULTS){
 function clearsMonsters(world,p,params=SOCIAL_DEFAULTS){
     return (world.encounters||[]).every(e=>Math.hypot(e.x-p.x,e.y-p.y)>socialMonsterGap(e,params));
 }
+function actorGap(params=SOCIAL_DEFAULTS){return params.actorSeparation??120;}
+// Party members deliberately overlap sprite bounds: feet follow a compact train.
+export function socialTrailGap(params=SOCIAL_DEFAULTS){return params.followSpacing;}
+export function actorsApart(a,b,gap=actorGap()){return Math.abs(a.x-b.x)>=gap||Math.abs(a.y-b.y)>=gap;}
 function clearsPeople(world,p,used,params=SOCIAL_DEFAULTS){
     if(!clearsMonsters(world,p,params))return false;
-    if(used.some(v=>Math.hypot(v.x-p.x,v.y-p.y)<=params.separation))return false;
+    if(used.some(v=>!actorsApart(v,p,actorGap(params))))return false;
     return (world.npcs||[]).every(n=>Math.hypot(n.x-p.x,n.y-p.y)>params.npcClearance);
+}
+// Nearest road point whose sprite box misses every occupied companion, monster and NPC.
+function nearestActorStand(world,origin,occupied,params=SOCIAL_DEFAULTS,maxDist=Infinity){
+    const ok=(p,onRoad)=>p&&Number.isFinite(p.x)&&Math.hypot(p.x-origin.x,p.y-origin.y)<=maxDist+1e-6&&walkable(world,p.x,p.y)&&(onRoad||onActivityRoad(world,p,params))&&clearsPeople(world,p,occupied,params);
+    if(ok(origin,false))return {x:origin.x,y:origin.y};
+    let best=null,bestD=Infinity;
+    const consider=(p,onRoad)=>{if(!ok(p,onRoad))return;const d=Math.hypot(p.x-origin.x,p.y-origin.y);if(d<bestD){bestD=d;best={x:p.x,y:p.y};}};
+    for(const path of world.paths||[]){
+        const dx=path.b.x-path.a.x,dy=path.b.y-path.a.y,length=Math.hypot(dx,dy)||1,steps=Math.ceil(length/20);
+        for(let i=0;i<=steps;i++){const t=i/steps;consider({x:path.a.x+dx*t,y:path.a.y+dy*t},true);}
+    }
+    if(best||world.paths?.length)return best;
+    for(let r=actorGap(params);r<=Math.min(maxDist,actorGap(params)*8);r+=16){
+        for(let i=0;i<16;i++){const a=i/16*Math.PI*2;consider(nearestWalkable(world,origin.x+Math.cos(a)*r,origin.y+Math.sin(a)*r),false);}
+        if(best)return best;
+    }
+    return best;
+}
+function separateVisibleActors(actors,world,{locked=null,view=null}={}){
+    const gap=actorGap();
+    for(let pass=0;pass<actors.length;pass++){
+        let moved=false;
+        for(let j=1;j<actors.length;j++)for(let i=0;i<j;i++){
+            const a=actors[i],b=actors[j];
+            if(actorsApart(a.position,b.position,gap))continue;
+            const aFree=a.profile.id!==locked&&socialInView(a.position,view);
+            const bFree=b.profile.id!==locked&&socialInView(b.position,view);
+            const mover=bFree?b:aFree?a:null;
+            if(!mover)continue;
+            const next=nearestActorStand(world,mover.position,actors.filter(o=>o!==mover).map(o=>o.position));
+            if(!next||(next.x===mover.position.x&&next.y===mover.position.y))continue;
+            const before=mover.position;
+            mover.position=next;mover.path=[];mover.moving=false;mover.wait=Math.max(mover.wait,SOCIAL_DEFAULTS.followWait);
+            mover.facing=socialFacing(next.x-before.x,next.y-before.y);
+            moved=true;
+        }
+        if(!moved)break;
+    }
 }
 // Keep the companion on the road, but far enough along it that sprites do not stack.
 function standClearOfMonsters(world,origin,params=SOCIAL_DEFAULTS){
@@ -135,7 +177,10 @@ export function sampleActivitySpot(world,hub,rng,used=[],params=SOCIAL_DEFAULTS)
     world=socialNavigationWorld(world);
     const shuffled=rng.shuffle(roadsideCandidates(world,hub,params).slice());
     for(const p of shuffled)if(clearsPeople(world,p,used,params))return p;
-    for(const p of shuffled)if(clearsMonsters(world,p,params)&&used.every(v=>Math.hypot(v.x-p.x,v.y-p.y)>params.separation*.5))return p;
+    const near=nearestActorStand(world,hub,used,params,hubReach(params));
+    if(near)return near;
+    const anywhere=nearestActorStand(world,hub,used,params);
+    if(anywhere)return anywhere;
     const aside=standClearOfMonsters(world,nearestWalkable(world,hub.x+rng.float()*20-10,hub.y+rng.float()*20-10),params);
     return clearsMonsters(world,aside,params)?aside:shuffled.find(p=>clearsMonsters(world,p,params))||aside;
 }
@@ -151,57 +196,75 @@ export function createSocialActors(world,profiles,seed=1) {
     const spawnHub=hubs.find(h=>h.kind==='spawn');
     const spawnQuota=Math.min(spawnMinActors(),profiles.length);
     const used=[];
-    return profiles.map((profile,i)=>{
+    const actors=profiles.map((profile,i)=>{
         const rng=createRng(hashSeed(`${seed}:${world.zone}:${profile.id}`));
         const hotspot=assignHub(rng,hubs,i,spawnHub,spawnQuota);
         const position=sampleActivitySpot(world,hotspot,rng,used);
         used.push(position);
         return {profile,position,rng,path:[],facing:hashSeed(profile.id)%3,moving:false,wait:rng.int(SOCIAL_DEFAULTS.idleMin,SOCIAL_DEFAULTS.idleMax),travel:rng.int(SOCIAL_DEFAULTS.travelMin,SOCIAL_DEFAULTS.travelMax),hotspot};
     });
+    separateVisibleActors(actors,world);
+    return actors;
 }
-// Dungeon members follow the captain's actual trail, including turns and retreats.
+// Arc-length samples preserve the captain's actual turns, including loops and reversals.
+// Never run shortest-path navigation or resident separation on this ordered train.
 const partyTrails=new WeakMap();
-export function stepDungeonParty(actors,world,leader,dt){
-    if(!leader||!world.layout?.route)return;
-    let trail=partyTrails.get(actors);
-    const gap=SOCIAL_DEFAULTS.followSpacing;
-    if(!trail||trail.world!==world||Math.hypot(leader.x-trail.points[0].x,leader.y-trail.points[0].y)>SOCIAL_DEFAULTS.dungeonRegroupDistance){
-        const progress=routeLocation(world,leader).progress;
-        trail={world,points:[{...leader}]};
-        for(let back=8;back<=gap*(actors.length+2);back+=8)trail.points.push(routePoint(world,Math.max(0,progress-back)));
-        partyTrails.set(actors,trail);
-        actors.forEach((a,i)=>{a.position=routePoint(world,Math.max(0,progress-gap*(i+1)));a.path=[];});
+export function stepDungeonParty(actors,world,leader,dt,{key=actors}={}){
+    if(!leader||!actors.length)return;
+    let trail=partyTrails.get(key);
+    const gap=socialTrailGap(),signature=actors.map(a=>a.profile.id).join('|');
+    if(!trail||trail.world!==world||trail.signature!==signature||Math.hypot(leader.x-trail.points[0].x,leader.y-trail.points[0].y)>SOCIAL_DEFAULTS.dungeonRegroupDistance){
+        trail={world,signature,points:[{...leader}],idle:0};
+        if(world.layout?.route){
+            const progress=routeLocation(world,leader).progress;
+            for(let back=8;back<=gap*(actors.length+2);back+=8)trail.points.push(routePoint(world,Math.max(0,progress-back)));
+        }
+        partyTrails.set(key,trail);
     }
-    if(Math.hypot(leader.x-trail.points[0].x,leader.y-trail.points[0].y)>=2)trail.points.unshift({...leader});
+    const moved=Math.hypot(leader.x-trail.points[0].x,leader.y-trail.points[0].y)>.001;
+    if(moved){trail.points.unshift({...leader});trail.idle=0;}
+    else trail.idle+=Math.max(0,Math.min(.1,dt));
     function behind(distance){
         for(let i=1;i<trail.points.length;i++){
             const a=trail.points[i-1],b=trail.points[i],length=Math.hypot(b.x-a.x,b.y-a.y);
-            if(length>=distance)return {x:a.x+(b.x-a.x)*distance/length,y:a.y+(b.y-a.y)*distance/length};
+            if(length>=distance&&length>0)return {x:a.x+(b.x-a.x)*distance/length,y:a.y+(b.y-a.y)*distance/length};
             distance-=length;
         }
-        return trail.points.at(-1);
+        return {...trail.points.at(-1)};
     }
     let length=0;
     for(let i=1;i<trail.points.length;i++){length+=Math.hypot(trail.points[i].x-trail.points[i-1].x,trail.points[i].y-trail.points[i-1].y);if(length>gap*(actors.length+3)){trail.points.length=i+1;break;}}
     actors.forEach((a,i)=>{
         const before=a.position,target=behind(gap*(i+1));
-        const next=followPath(world,before,findPath(world,before,target),SOCIAL_DEFAULTS.dungeonFollowSpeed*Math.max(0,Math.min(.1,dt)));
-        a.position=next.position;a.path=[];a.moving=Math.hypot(a.position.x-before.x,a.position.y-before.y)>.1;
-        if(a.moving)a.facing=socialFacing(a.position.x-before.x,a.position.y-before.y,true);
+        // Small, deterministic movement around each slot only after the captain stops.
+        const idle=Math.max(0,trail.idle-SOCIAL_DEFAULTS.partyIdleDelay);
+        if(idle){
+            const radius=SOCIAL_DEFAULTS.partyIdleRadius*Math.min(1,idle);
+            const p={x:target.x+Math.sin(idle+i)*radius,y:target.y+Math.sin(idle*.7+i)*radius};
+            if(walkable(world,p.x,p.y))Object.assign(target,p);
+        }
+        a.position=target;a.path=[];a.inParty=true;a.moving=Math.hypot(target.x-before.x,target.y-before.y)>.1;
+        if(a.moving)a.facing=socialFacing(target.x-before.x,target.y-before.y,true);
     });
 }
 export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=[],leader=null,speed=SOCIAL_DEFAULTS.speed,view=null}={}) {
     if(paused)return;
     if(world.layout?.route){stepDungeonParty(actors,world,leader,dt);return;}
+    const members=team.map(id=>actors.find(a=>a.profile.id===id)).filter(Boolean);
+    for(const a of actors)a.inParty=members.includes(a);
+    if(members.length)stepDungeonParty(members,world,leader,dt,{key:actors});
+    else partyTrails.delete(actors);
     world=socialNavigationWorld(world);
     dt=Math.max(0,Math.min(dt,.1));let moving=actors.filter(a=>a.path.length).length;const limit=Math.ceil(actors.length/4);
     const hubs=socialActivityHubs(world);
     for(const a of actors){
+        if(a.inParty)continue;
         if(!walkable(world,a.position.x,a.position.y)){
-            a.position=standClearOfMonsters(world,nearestWalkable(world,a.position.x,a.position.y));a.path=[];
+            const occupied=actors.filter(o=>o!==a).map(o=>o.position);
+            a.position=nearestActorStand(world,nearestWalkable(world,a.position.x,a.position.y)||a.position,occupied)||standClearOfMonsters(world,nearestWalkable(world,a.position.x,a.position.y));a.path=[];
         }
         if(a.profile.id===locked){a.path=[];a.moving=false;if(leader){const dx=leader.x-a.position.x,dy=leader.y-a.position.y;a.facing=socialFacing(dx,dy);}continue;}
-        if(!a.path.length&&!clearsMonsters(world,a.position)){const aside=standClearOfMonsters(world,a.position);if(aside)a.position=aside;}
+        if(!a.path.length&&!clearsMonsters(world,a.position)){const occupied=actors.filter(o=>o!==a).map(o=>o.position);const aside=nearestActorStand(world,a.position,occupied)||standClearOfMonsters(world,a.position);if(aside)a.position=aside;}
         // Off-camera residents idle in place; only on-screen actors walk like the hero.
         if(!socialInView(a.position,view)){a.path=[];a.moving=false;continue;}
         const distance=leader?Math.hypot(a.position.x-leader.x,a.position.y-leader.y):Infinity;
@@ -209,19 +272,19 @@ export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=
         a.approached=distance<=(a.approached?SOCIAL_DEFAULTS.approachReleaseRadius:SOCIAL_DEFAULTS.approachRadius);
         // Brush-by mid-walk does not cancel travel; only an already-idle actor stays put while close.
         if(a.approached&&!a.path.length){a.moving=false;a.wait=Math.max(a.wait,SOCIAL_DEFAULTS.followWait);a.facing=socialFacing(leader.x-a.position.x,leader.y-a.position.y);continue;}
-        const index=team.indexOf(a.profile.id);a.wait-=dt;a.travel-=dt;
-        if(index>=0&&leader){if(!a.path.length&&moving<limit&&a.wait<=0&&Math.hypot(a.position.x-leader.x,a.position.y-leader.y)>SOCIAL_DEFAULTS.followDistance){a.path=findPath(world,a.position,standClearOfMonsters(world,nearestWalkable(world,leader.x-SOCIAL_DEFAULTS.followSpacing*(index+1),leader.y+SOCIAL_DEFAULTS.separation)));a.wait=SOCIAL_DEFAULTS.followWait;if(a.path.length)moving++;}}
-        else if(!a.path.length&&a.wait<=0&&moving<limit){
+        a.wait-=dt;a.travel-=dt;
+        if(!a.path.length&&a.wait<=0&&moving<limit){
             if(a.travel<=0){a.hotspot=pickWeightedHub(a.rng,hubs);a.travel=a.rng.int(SOCIAL_DEFAULTS.travelMin,SOCIAL_DEFAULTS.travelMax);}
             const occupied=actors.filter(o=>o!==a).map(o=>o.position);
             const p=sampleActivitySpot(world,a.hotspot,a.rng,occupied);
-            if(clearsPeople(world,p,[],SOCIAL_DEFAULTS))a.path=findPath(world,a.position,p);
+            if(clearsPeople(world,p,occupied))a.path=findPath(world,a.position,p);
             a.wait=a.rng.int(SOCIAL_DEFAULTS.idleMin,SOCIAL_DEFAULTS.idleMax);if(a.path.length)moving++;
         }
         const before={...a.position},next=followPath(world,a.position,a.path,speed*dt);a.position=next.position;a.path=next.path;a.moving=Math.hypot(a.position.x-before.x,a.position.y-before.y)>.01;
         if(a.moving)a.facing=socialFacing(a.position.x-before.x,a.position.y-before.y,true);
         else if(a.facing===3)a.facing=hashSeed(a.profile.id)%2+1;
     }
+    separateVisibleActors(actors.filter(a=>!a.inParty),world,{locked,view});
 }
 
 // One nearby invitation keeps crowded scenes quiet; body/name clicks never select.

@@ -1,6 +1,7 @@
 // Presentation-only companion motion; never consumes combat RNG or changes saves.
 import { createRng, hashSeed } from './rng_core.js';
 import { clearSegment, distance, findPath, followPath, walkable, WALK_SPEED } from './adventure_world_core.js';
+import { SOCIAL_DEFAULTS } from './adventure_social_core.js';
 import { STARTERS } from './adventure_pets_core.js';
 
 // Map companionship is independent of combat participation. The four formation
@@ -34,6 +35,21 @@ export function createCompanion(world, hero, seed) {
 
 export function stepCompanion(pet,world,hero,dt,options={}) {
     dt=Math.max(0,Math.min(.055,dt));
+    if(options.inParty){
+        // The same world-space offset for every owner makes a parallel pet train.
+        // Use the owner's walkable foot position if the side lane meets a wall.
+        const previous=pet.position,moved=distance(hero,pet.lastHero)>.001;
+        pet.partyIdle=moved?0:(pet.partyIdle||0)+dt;
+        const idle=Math.max(0,pet.partyIdle-SOCIAL_DEFAULTS.partyIdleDelay);
+        const radius=SOCIAL_DEFAULTS.partyIdleRadius*Math.min(1,idle);
+        const target={x:hero.x+SOCIAL_DEFAULTS.partyPetOffsetX+Math.sin(idle)*radius,y:hero.y+SOCIAL_DEFAULTS.partyPetOffsetY+Math.sin(idle*.7)*radius};
+        pet.position=walkable(world,target.x,target.y)?target:{...hero};
+        pet.lastHero={...hero};pet.path=[];pet.following=true;
+        pet.moving=distance(previous,pet.position)>.01;
+        if(pet.moving){pet.phase+=distance(previous,pet.position)*.1;if(Math.abs(pet.position.x-previous.x)>.01)pet.facing=pet.position.x>previous.x?1:-1;}
+        return pet;
+    }
+    pet.partyIdle=0;
     const deferSearch=!!options.deferSearch;
     function route(from,to){
         if(deferSearch&&!clearSegment(world,from,to))return null;

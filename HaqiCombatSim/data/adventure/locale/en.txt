@@ -396,12 +396,15 @@ AIChat 请求失败||AIChat request failed
 世界地图||World map
 冒险手记||Adventure journal
 返回出口||Back to the exit
+退出副本||Exit dungeon
 副本探索||Dungeon exploration
 副本中不会自动回血，请用现有生命通关。||Health does not regenerate in dungeons; finish with the health you have.
 前路暂未开放，可在副本菜单暂离。||The path ahead is not open yet; you can leave from the dungeon menu.
 寻找下一组||Find the next group
 沿道路前进，遇到怪物自动开始战斗。||Move along the road; battles start automatically on contact.
 Boss 已击败，沿路走向出口即可离开。||Boss defeated; walk to the exit to leave.
+Boss 已击败，可以退出副本。||Boss defeated. You can exit the dungeon.
+前路暂未开放，可以退出副本。||The path ahead is not open yet. You can exit the dungeon.
 你通过了毕业考核！前往营地南边的传送阵，探索哈奇小镇。||You passed the graduation exam! Head to the teleporter south of camp to explore Haqi Town.
 你已完成第一章。和镇上的居民聊聊，或到郊外练习魔法吧。||You finished Chapter 1. Chat with the townsfolk or practice magic outside town.
 前往传送阵||Go to the teleporter

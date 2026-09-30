@@ -54,9 +54,9 @@ SDK 源码可在 `lxzsrc/keepworkSDK/`（本机 `/Users/mac/lxzsrc/keepworkSDK`�
 
 ### Keepwork SDK 存储
 
-- 需要登录或跨设备存储时，优先使用 **Keepwork SDK**，不另造后端。云端进度使用 `sdk.personalPageStore.withWorkspace('HaqiAdventure')` 的作用域实例，保存和读取版本化 JSON。通用接口为 `createFile` / `readFile`；本游戏使用下述服务器 cache API 写入及缓存核验路径（2026-09-25 用户更新）。
+- 需要登录或跨设备存储时，优先使用 **Keepwork SDK**，不另造后端。云端进度使用 `sdk.personalPageStore.withWorkspace('HaqiAdventure')` 的作用域实例，保存和读取版本化 JSON。通用接口为 `createFile` / `readFile`；本游戏使用下述服务器 cache API 写入及成功应答路径（2026-09-30 用户更新）。
 - Keepwork 适配器放在浏览器 IO 层，保持 `*_core.js` 纯净。保留当前本地自动存档、JSON 导入/导出和访客体验；登录取消、网络失败不能阻断游戏。
-- personal workspace 的读写统一开启 cache API：`savePageData(path, 'content', text, false, true)` 暂存、`syncToGit(path, true)` 等待服务器缓存写入，再用 `getFileByFullPath(fullPath, undefined, true)` 核验；角色目录使用 `loadPage({useCache:true,useServerCache:true,...})`。保留版本冲突和账号校验，不再强制绕过缓存读取 Git。非启动必需数据首次使用时加载；钓鱼镜像仅在纪录变化时同步。
+- personal workspace 使用 Cache 接口（2026-09-30 用户更新）：游戏采用单客户端写入假设，登录读取服务器最新状态，后续读取以内存为主；未加载文件首次使用才读，主动刷新/重新登录才重新读取。整文件保存通过作用域 store 的 `savePageData(path, 'content', text, true, true, {directWrite:true})`，此 SDK option 默认关闭，仅本游戏启用；直接等待 pageCache PUT 成功，不做写前 GET 合并或写后 GET 核验，不再在每次保存时检查远端版本。能力标志 `supportsDirectCacheWrite` 缺失时兼容原 `savePageData(...,false,true)` + `syncToGit(path,true)` Cache 链路，待新版 SDK 发布后自动启用减请求路径。失败/超时/身份变化不清除本地待同步状态；保留账号隔离、同客户端写入顺序及本地未同步进度保护。
 - 同步记录存档版本与更新时间；加载云端存档仍走现有校验和战斗重演，处理本地/云端冲突后再替换进度，不能悄悄覆盖较新的进度。SDK token、密码和密钥不得进入游戏存档。
 - 按需加载 SDK，不为只使用本地存档的启动流程增加必需网络依赖。引入前核对登录和存储接口；实际账号的远端读写仍需按 QA 记录验证。
 
@@ -81,6 +81,9 @@ Maisi 技能中已登记的相关地址（按需要选择，不要求全部加�
 Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 2D 场景无需为遵守本约定改用 Three.js。
 
 ## 验证
+
+- **战斗修改必跑快速回归（用户约定，2026-09-30）：** 每次修改战斗引擎、目标选择、卡牌交互、AI、宠物/坐骑、状态图标、倒计时、结算，或影响战斗的共享 UI/CSS 后，运行 `npm run test:battle`。新增战斗用例使用 `battle_*.test.mjs` 或更新脚本的收录规则；修复回归应补充可复现的行为测试。失败不得跳过或称作通过。
+- **日常和发布前分层：** 日常先跑上述 Node 脚本，不默认启动浏览器或构建。发布前使用整体产品黑盒技能 `haqi-release-qa`（旧名 `haqi-battle-release-qa` 保留兼容入口），启动时选择简单（10 分钟内）、核心（约 30 分钟）或全部（约 90 分钟）；用户已指定范围则直接采用。档位范围见 [docs/product-release-qa.md](docs/product-release-qa.md)，日常战斗覆盖见 [docs/battle-regression.md](docs/battle-regression.md)。此分层覆盖下面日常浏览器检查的默认时机；简单冒烟不代替完整发布验收。
 
 - 卡牌美术约定（2026-09-18）：新技能主体和专属动作图集以100KB为预算，当前打包器严格限制为100,000字节；卡牌背景仍严格小于24,000字节。其他资源保持原200,000字节上限。使用 `scripts/prepare_skill_art.py` 准备共享格图，并核验 `data/adventure/skill-art.json` 的来源、哈希、格号和CDN。
 

@@ -13,7 +13,9 @@ export function petPortrait(assets,id,stage=0,size=96){
  const box=document.createElement('div');box.className='pet-sheet';box.style.width=box.style.height=`${size}px`;
  const art=assets.content.pets[id]?.art;if(!art)return box;
  box.style.backgroundImage=`url("${assets.mode==='local'?art.local:art.cdn}")`;
- box.style.backgroundSize='400% 400%';box.style.backgroundPosition=`0% ${stage*100/3}%`;box.setAttribute('role','img');box.setAttribute('aria-label',assets.content.pets[id].name);return box;
+ if(art.static){box.classList.add('is-static');box.style.backgroundSize='contain';box.style.backgroundPosition='center';}
+ else{box.style.backgroundSize='400% 400%';box.style.backgroundPosition=`0% ${stage*100/3}%`;}
+ box.setAttribute('role','img');box.setAttribute('aria-label',assets.content.pets[id].name);return box;
 }
 export function starterPicker(assets,onSelect,{el,button}){
  const row=el('div','starter-choices');for(const id of STARTERS){const b=button([petPortrait(assets,id,0,72),el('span','',assets.content.pets[id].name)],()=>{for(const child of row.children){child.classList.remove('selected');child.setAttribute('aria-pressed','false');}b.classList.add('selected');b.setAttribute('aria-pressed','true');onSelect(id);},'secondary');b.dataset.petId=id;b.setAttribute('aria-pressed',String(id===STARTERS[0]));if(id===STARTERS[0])b.classList.add('selected');row.append(b);}return row;
@@ -117,7 +119,8 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  for(let index=0;index<4;index++){
   const id=save.formation[index],pet=save.pets[id],isHero=index===save.heroSlot;
   const slot=el('section',`pet-stage-slot${isHero?' is-hero':''}`);slot.dataset.slot=index;
-  const stand=button([pet?el('span','pet-standing-art',el('span','pet-status-portrait',createPetStatus(pet,c,el),petPortrait(assets,pet.speciesId,petAppearanceStage(pet,c),120*petDisplayScale(pet,c)))):el('span','pet-empty','+'),...(pet?[el('strong','',c.pets[records[id]?.speciesId||id].name),el('small','pet-stage-level',`等级 ${pet.level} · ${STAGE_NAMES[petAppearanceStage(pet,c)]}`)]:[])],()=>{if(id)open(id);else{state.targetSlot=index;paintShelf();shelf.querySelector('button')?.focus();}},'pet-stand');
+  const stageLabel=pet?(c.pets[pet.speciesId]?.staticAppearance?'原版形象':STAGE_NAMES[petAppearanceStage(pet,c)]):'';
+  const stand=button([pet?el('span','pet-standing-art',el('span','pet-status-portrait',createPetStatus(pet,c,el),petPortrait(assets,pet.speciesId,petAppearanceStage(pet,c),120*petDisplayScale(pet,c)))):el('span','pet-empty','+'),...(pet?[el('strong','',c.pets[records[id]?.speciesId||id].name),el('small','pet-stage-level',`等级 ${pet.level} · ${stageLabel}`)]:[])],()=>{if(id)open(id);else{state.targetSlot=index;paintShelf();shelf.querySelector('button')?.focus();}},'pet-stand');
   stand.setAttribute('aria-label',`卡位 ${index+1}：${pet?c.pets[records[id]?.speciesId||id].name:'空位'}`);
     if(id){bindDrag(stand,id);stand.addEventListener('keydown',event=>{if(event.key==='Delete'||event.key==='Backspace'){event.preventDefault();rest(id);}});}
   slot.ondragover=event=>{event.preventDefault();slot.classList.add('drop-ready');};

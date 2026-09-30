@@ -17,8 +17,8 @@ function setup(options={}){
         const json=JSON.parse(system.split('Character and player data: ')[1]);const eventId=JSON.parse(system.match(/"eventId":("[^"]+")/)[1]);
         return {reply:'What does that mean?',translation:'那是什么意思？',affinity:{eventId,before:json.affinity,delta:2,after:Math.min(100,json.affinity+2),reason:'共同学习'}};
     }};
-    const chat=createCharacterConversation({...options,getState:()=>app,commit:next=>{app.save=next;},membership:member,cache,workspace:f.workspace,voice,now:()=>Date.parse('2026-09-27T00:00:00Z'),read:async()=>({entries:{}}),viewFactory:cb=>{callbacks=cb;return {render:s=>{state=structuredClone({...s,io:null,abort:null});},close(){},root:{}};},detailsFactory:()=>({close(){},relation(){},gifts(){}})});
-    return {f,app,chat,cacheRows,member,get state(){return state;},get callbacks(){return callbacks;},get calls(){return replyCalls;},error:e=>{error=e;},gate:g=>{answerGate=g;}};
+    const chat=createCharacterConversation({...options,getState:()=>app,commit:next=>{app.save=next;},membership:member,cache,workspace:f.workspace,voice,now:()=>Date.parse('2026-09-27T00:00:00Z'),read:async()=>({entries:{}}),viewFactory:cb=>{callbacks=cb;return {render:s=>{state=structuredClone({...s,io:null,abort:null,timer:null});},close(){},root:{}};},detailsFactory:()=>({close(){},relation(){},gifts(){}})});
+    return {f,app,chat,cacheRows,member,voice,get state(){return state;},get callbacks(){return callbacks;},get calls(){return replyCalls;},error:e=>{error=e;},gate:g=>{answerGate=g;}};
 }
 const peer={id:'a',kind:'companion',name:'安娜',native:'en'};
 test('two successful free messages, role switch cannot refill, hints and compact are free, VIP bypasses',async()=>{
@@ -93,4 +93,12 @@ test('guest sees login action before workspace, quota or model requests; resumes
     const original=fakeWorkspace();t.f.workspace.connect=original.workspace.connect;
     await t.callbacks.login();assert.equal(login.source,peer);assert.equal(login.options.returnPanel,'social-profile');
     assert.equal(t.state.ready,true);assert.equal(t.state.loginRequired,undefined);t.chat.close();
+});
+
+test('global daily speech hook ignores typing, duplicate finish and cancelled recognition',async()=>{
+ const earned=[],t=setup({onSpeech:id=>earned.push(id)});t.app.save.languageLearning.enabled=true;t.member.vip=true;await t.chat.open(peer);
+ await t.chat.send('typed');assert.equal(earned.length,0);
+ await t.callbacks.start();await t.callbacks.finish();await t.callbacks.finish();assert.equal(earned.length,1);
+ let resolve;t.voice.finish=()=>new Promise(r=>resolve=r);
+ await t.callbacks.start();const pending=t.callbacks.finish();await t.callbacks.cancel();resolve('late voice');await pending;assert.equal(earned.length,1);t.chat.close();
 });

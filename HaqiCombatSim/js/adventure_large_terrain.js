@@ -22,17 +22,6 @@ function bands(stops,overview=false){
     }
     return result;
 }
-function riverClip(c,points,radius){
-    c.beginPath();
-    for(let i=1;i<points.length;i++){
-        const [ax,ay]=points[i-1],[bx,by]=points[i],length=Math.hypot(bx-ax,by-ay)||1;
-        const nx=-(by-ay)/length*radius,ny=(bx-ax)/length*radius;
-        c.moveTo(ax-nx,ay-ny);c.lineTo(bx-nx,by-ny);c.lineTo(bx+nx,by+ny);c.lineTo(ax+nx,ay+ny);c.closePath();
-    }
-    for(const [x,y] of points){c.moveTo(x+radius,y);c.arc(x,y,radius,0,Math.PI*2);}
-    c.clip();
-}
-
 // A deterministic, world-space painter. It paints either one small terrain tile
 // or a low-resolution overview; it never allocates a world-sized bitmap.
 export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},overview=false,decorationArt=null){
@@ -92,34 +81,35 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         for(let j=1;j<6;j++)line(c,[[x+6,y+j*11],[x+107,y+j*11]],3,'#e0cd8a66');
         }
     }
-    for(const river of layout.rivers){
-        const pad=(river.width+48)/2;let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
-        for(const [x,y] of river.points){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);}
-        if(!hits(rect,x0-pad,y0-pad,x1+pad,y1+pad))continue;
-        const palette=rules.water[river.material||'water'];
-        for(let fringe=48;fringe>24;fringe-=4)line(c,river.points,river.width+fringe,palette.bank+'24');
-        for(const [width,color] of bands([
-            [river.width+24,palette.bank],
-            [river.width+8,blend(palette.bank,palette.edge,.6)],
-            [river.width-6,palette.fill],
-            [river.width*.55,blend(palette.fill,palette.center,.6)],
-            [river.width*.18,blend(palette.fill,palette.center,.75)],
-        ],overview))line(c,river.points,width,color);
-        if(!overview){
-            c.save();riverClip(c,river.points,river.width/2);
-            paintWaterDetail(c,world,rect,river.material||'water');c.restore();
-            paintRiverBank(c,world,rect,river,palette);
+    // Paint the entire water network one band at a time. Inner water covers all
+    // banks at lake/river junctions, including across independently baked tiles.
+    for(const material of new Set([...layout.rivers,...(layout.lakes||[])].map(w=>w.material||'water'))){
+        const palette=rules.water[material];
+        const rivers=layout.rivers.filter(r=>{if((r.material||'water')!==material)return false;const pad=r.width/2+24,xs=r.points.map(p=>p[0]),ys=r.points.map(p=>p[1]);return hits(rect,Math.min(...xs)-pad,Math.min(...ys)-pad,Math.max(...xs)+pad,Math.max(...ys)+pad);});
+        const lakes=(layout.lakes||[]).filter(l=>(l.material||'water')===material);
+        const waterBands=[...Array.from({length:6},(_,i)=>[24-i*2,palette.bank+'24']),
+            ...bands([[12,palette.bank],[4,blend(palette.bank,palette.edge,.6)],[-3,palette.fill],[-12,blend(palette.fill,palette.center,.6)]],overview)];
+        for(const [inset,color] of waterBands){
+            for(const r of rivers)line(c,r.points,Math.max(4,r.width+inset*2),color);
+            for(const l of lakes)if(hits(rect,l.x-l.rx-24,l.y-l.ry-24,l.x+l.rx+24,l.y+l.ry+24))
+                oval(c,l.x,l.y,Math.max(2,l.rx+inset),Math.max(2,l.ry+inset),color);
         }
-    }
-    for(const l of layout.lakes||[]){
-        if(!hits(rect,l.x-l.rx-18,l.y-l.ry-18,l.x+l.rx+18,l.y+l.ry+18))continue;
-        const palette=rules.water[l.material||'water'];
-        oval(c,l.x,l.y,l.rx+18,l.ry+18,palette.bank);oval(c,l.x,l.y,l.rx+6,l.ry+6,palette.edge);
-        oval(c,l.x,l.y,l.rx,l.ry,palette.fill);
-        c.save();c.translate(l.x,l.y);c.scale(l.rx,l.ry);
-        const depth=c.createRadialGradient(-.15,-.2,0,0,0,1);depth.addColorStop(0,palette.center);depth.addColorStop(1,palette.fill);
-        oval(c,0,0,1,1,depth);c.restore();
-        if(!overview){c.save();c.beginPath();c.ellipse(l.x,l.y,l.rx,l.ry,0,0,Math.PI*2);c.clip();paintWaterDetail(c,world,rect,l.material||'water');c.restore();}
+        if(!overview){
+            // One union clip gives continuous ripples, with no doubled detail at joins.
+            c.save();c.beginPath();
+            for(const r of rivers){
+                const radius=Math.max(2,r.width/2-3);
+                for(let i=1;i<r.points.length;i++){
+                    const [ax,ay]=r.points[i-1],[bx,by]=r.points[i],length=Math.hypot(bx-ax,by-ay)||1;
+                    const nx=-(by-ay)/length*radius,ny=(bx-ax)/length*radius;
+                    c.moveTo(ax+nx,ay+ny);c.lineTo(ax-nx,ay-ny);c.lineTo(bx-nx,by-ny);c.lineTo(bx+nx,by+ny);c.closePath();
+                }
+                for(const [x,y] of r.points){c.moveTo(x+radius,y);c.arc(x,y,radius,0,Math.PI*2);}
+            }
+            for(const l of lakes){c.moveTo(l.x+l.rx,l.y);c.ellipse(l.x,l.y,l.rx,l.ry,0,0,Math.PI*2);}
+            c.clip();paintWaterDetail(c,world,rect,material);c.restore();
+            for(const r of rivers)if(!lakes.length)paintRiverBank(c,world,rect,r,palette);
+        }
     }
     if(!overview&&decorationArt)for(const d of groundDecorations(world,rect)){
         // Small contact shade stays lighter than trees and buildings. Floating
@@ -172,7 +162,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
     if(hits(rect,world.center.x-plaza.radiusX,world.center.y-plaza.radiusY,world.center.x+plaza.radiusX,world.center.y+plaza.radiusY)){
         oval(c,world.center.x,world.center.y,plaza.radiusX,plaza.radiusY,plaza.edge);oval(c,world.center.x,world.center.y,plaza.radiusX-11,plaza.radiusY-9,plaza.fill);
         c.strokeStyle=plaza.line;c.lineWidth=2;
-        for(let i=0;i<3;i++){c.beginPath();c.ellipse(world.center.x,world.center.y,145-i*36,83-i*20,0,0,Math.PI*2);c.stroke();}
+        for(let i=0;i<3;i++){c.beginPath();c.ellipse(world.center.x,world.center.y,(layout.route?72:145)-i*(layout.route?18:36),(layout.route?40:83)-i*(layout.route?10:20),0,0,Math.PI*2);c.stroke();}
     }
     // Bake after roads and plaza so their surfaces receive shade too.
     paintStaticShadows(c,world,rect);

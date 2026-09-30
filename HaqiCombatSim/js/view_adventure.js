@@ -1,3 +1,4 @@
+import {dailyBuffs,dailyBuffDescription} from './language_daily_buff_core.js';
 import {defeatReviewNotes} from './view_battle_review.js';
 import {createBattlePetHint} from './view_battle_pet_hint.js';
 export {updateBattlePetHint,updateBattleSpeech,battleSpeechController} from './view_battle_pet_hint.js';
@@ -18,6 +19,7 @@ import {attachStatusTooltips} from './view_adventure_status_tooltip.js';
 import {renderQuestJournal,translatedGoal,rewardChip} from './view_adventure_quests.js';
 import { islandName } from './adventure_world_map_core.js';
 import { drawSchoolIcon } from './card_renderer.js';
+import {bindBattleTargeting} from './view_battle_targeting.js';
 import { renderWorldMap } from './view_adventure_world_map.js';
 import { castBlockedMessage } from './adventure_cast_feedback_core.js';
 import { createCardFace } from './view_adventure_card.js';
@@ -410,7 +412,7 @@ export function renderHud(root,model,cb) {
     const dungeon=dungeonFor(c,save.zone);
     if(dungeon){
         const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
-        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，沿路走向出口即可离开。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可在副本菜单暂离。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button(remaining?'寻找下一组':'返回出口',cb.track,'track-button'));
+        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
     }else{
         const entries=trackerEntries(save,c);
         // 教学模式统一走 adventure_core 的 teachingMode（营地 + 营地任务链未全部交付）；
@@ -451,7 +453,9 @@ export function renderHud(root,model,cb) {
     learningMark.append(el('span','learning-chat-emoji','💬'));
     if(!learningEnabled)learningMark.append(disabledModeMark());
     const learn=button([learningMark],()=>cb.panel('learning-mode'),'mount-toggle learning-mode-launch');
-    learn.title=tr(learningEnabled?'双语学习 · 已开启':'双语学习 · 已关闭');
+    const layers=Object.values(dailyBuffs(save)).reduce((a,b)=>a+b,0);
+    learningMark.append(el('span','language-buff-count',`+${layers}`));
+    learn.title=tr(learningEnabled?'双语学习 · 已开启':'双语学习 · 已关闭')+'\n'+dailyBuffDescription(save);
     learn.setAttribute('aria-label',learn.title);
     learn.setAttribute('aria-pressed',String(learningEnabled));root.append(learn);
     const localeControl=document.querySelector('.locale-launch');
@@ -632,8 +636,9 @@ function renderBattleContent(root,model,cb) {
     sound.title=model.soundEnabled?'关闭音效':'开启音效';
     sound.setAttribute('aria-label',sound.title);
     sound.setAttribute('aria-pressed',String(!!model.soundEnabled));
-    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,(()=>{const turn=el('span','badge');setText(turn,'第 {turn} 回合',{turn:battle.turn});return turn;})(),model.save.zone==='camp'&&model.save.languageLearning?.enabled?button('对话挑战',cb.battleTalk,'secondary small'):null,button('撤退',cb.retreat,'secondary small')));
-    const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');canvas.onclick=e=>{const point=Object.entries(canvas.battlePositions||{}).sort((a,b)=>Math.hypot(a[1].x-e.offsetX,a[1].y-e.offsetY)-Math.hypot(b[1].x-e.offsetX,b[1].y-e.offsetY))[0];if(point)cb.target(point[0]);};
+    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.redMushroom?`红蘑菇赛场 · ${battle.sides.near.length} 对 ${battle.sides.far.length}`:battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,(()=>{const turn=el('span','badge');setText(turn,'第 {turn} 回合',{turn:battle.turn});return turn;})(),model.save.zone==='camp'&&model.save.languageLearning?.enabled?button('对话挑战',cb.battleTalk,'secondary small'):null,button('撤退',cb.retreat,'secondary small')));
+    if(battle.redMushroom&&!battle.finished){const timer=el('span','badge arena-countdown',animating?'施法中…':`选牌剩余 ${model.arenaCountdown??30} 秒`);timer.dataset.arenaCountdown='';root.append(timer);}
+    const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');bindBattleTargeting(canvas,cb.target);
     const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');setText(status,battle.finished?'对决结束':animating?'魔法正在生效…':blockedMessage);
     status.classList.toggle('cast-blocked',!!blockedMessage&&!animating&&!battle.finished);
@@ -654,7 +659,7 @@ function renderBattleContent(root,model,cb) {
     togglePets.hidden=animating||battle.finished||!hero.petDeckSeq?.length;
     const toggleRunes=button(runeCardsOpen?'返回玩家卡':`符文卡（${(model.runeHand||[]).reduce((total,row)=>total+row.count,0)}）`,cb.toggleRunes,'secondary');
     toggleRunes.setAttribute('aria-pressed',String(runeCardsOpen));
-    toggleRunes.hidden=animating||battle.finished;
+    toggleRunes.hidden=animating||battle.finished||battle.redMushroom;
     toggleRunes.disabled=!runeCardsOpen&&!model.runeHand?.length;
     const runePager=el('div','battle-hand-actions');
     runePager.hidden=!runeCardsOpen||runePages===1||animating||battle.finished;
@@ -698,7 +703,7 @@ function renderBattleContent(root,model,cb) {
         hand.append(node);
     }
     const pass=button('跳过本回合',cb.pass,'secondary');pass.disabled=animating||battle.finished;
-    if(cb.aiHintsToggle){
+    if(cb.aiHintsToggle&&!battle.redMushroom){
         const hintIcon=icon('pet');delete hintIcon.dataset.uiIcon;
         const toggle=button(hintIcon,cb.aiHintsToggle,'battle-sound battle-pet-hint-toggle');
         toggle.title=model.aiHintsMuted?'开启本场宠物提示':'关闭本场宠物提示';
@@ -719,7 +724,7 @@ function renderBattleContent(root,model,cb) {
     top.firstChild.replaceChildren(foes.roster);
     top.classList.add('battle-roster-heading');bottom.classList.add('battle-roster-controls');
     const targets=el('div','battle-party-controls',allies.roster);
-    if(battle.monsterTemplates.some(row=>row.speciesId)){
+    if(!battle.redMushroom&&battle.monsterTemplates.some(row=>row.speciesId)){
         const catchStock=(model.runeHand||[]).filter(row=>battle.resolved.cards[row.key]?.type==='CatchPet').reduce((sum,row)=>sum+row.count,0);
         const capture=button(catchStock?`抓宠符文（${catchStock}）`:'没有抓宠符文',()=>cb.openRunes?.(),'secondary');
         capture.disabled=animating||battle.finished||hero.hp<=0||!catchStock;
@@ -758,12 +763,13 @@ function renderBattleContent(root,model,cb) {
     if(battle.finished&&!animating){
         const won=battle.winner==='near';
         const rewardLine=el('p','');
-        if(won){
+        if(battle.redMushroom){setText(rewardLine,battle.winner==null?'本场平局，战绩已更新。':'比赛结束，战绩已更新。');}
+        else if(won){
             const xp=battle.monsterTemplates.reduce((sum,m)=>sum+Math.ceil(m.xp*(save.pendingEncounter?.magicStarExperiencePercent??100)/100),0);
             const coins=battle.monsterTemplates.reduce((sum,m)=>sum+m.coins,0);
             setText(rewardLine,'获得 {xp} 经验 · {coins} 奇豆',{xp,coins});
         }else setText(rewardLine,'已保留你的物品与任务进度。');
-        const result=el('div','result-card',el('p','eyebrow',won?'对决胜利':'继续加油'),el('h2','',won?'魔法的力量，属于你！':'休息一下，再来挑战'),rewardLine,button(won?'收下奖励，继续冒险':'回到安全地点',cb.finish,'primary'));root.append(result);
+        const result=el('div','result-card',el('p','eyebrow',won?'对决胜利':'继续加油'),el('h2','',won?'魔法的力量，属于你！':'休息一下，再来挑战'),rewardLine,button(battle.redMushroom?'返回红蘑菇赛场':won?'收下奖励，继续冒险':'回到安全地点',cb.finish,'primary'));root.append(result);
         if(model.aiReview){
             const review=model.aiReview,p=review.presentation;
             result.querySelector('h2').textContent=p.headline;

@@ -1,0 +1,20 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>骑乘目标选择验收</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><body class="haqi-app"><div id="root"></div><output id="result" style="position:fixed;top:80px;left:40%;z-index:100;color:white"></output><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,playerSpec} from '../../js/adventure_core.js';
+import {createPveBattle,playPveRound} from '../../js/combat_pve_core.js';
+import {validTargets} from '../../js/combat_arena_core.js';
+import {renderBattle} from '../../js/view_adventure.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'骑乘目标验收'});
+save.mountId=Object.keys(assets.content.mountByItem).find(id=>assets.content.mountByItem[id].art?.cdn);
+const spec={...playerSpec(save,assets.content),deck:[{key:'Fire_FireDamageBlade',count:2},{key:'Fire_SingleAttack_Level0_120_adv',count:2}]};
+const battle=createPveBattle({dataset:assets.dataset,player:spec,monsters:[assets.content.monsters['fire-scout']],seed:9});
+const root=document.querySelector('#root'),result=document.querySelector('#result'),renderer=createRenderer(document.createElement('canvas'),assets);let selected=null;
+function paint(){renderBattle(root,{assets,save,battle,selected,discarded:[],animating:false,soundEnabled:false},{sound:()=>{},retreat:()=>{},pass:()=>{},select:pick=>{selected=pick;paint();},reselect:()=>{selected=null;paint();},target:id=>{
+ if(!selected)return;const card=battle.resolved.cards[selected.key];
+ if(!validTargets(battle,battle.sides.near[0],card).some(u=>u.id===id)){result.textContent='错误目标：'+id;return;}
+ playPveRound(battle,{...selected,targetId:id});result.textContent='施法成功：'+assets.dataset.cards[selected.key].name+' → '+battle.unitsById[id].name;selected=null;paint();
+},discard:()=>{},toggleRunes:()=>{},togglePetCards:()=>{},finish:()=>{}});}
+function frame(time){const c=document.querySelector('#battle-canvas');if(c)c.battlePositions=renderer.renderBattle(c,battle,save,time);requestAnimationFrame(frame);}paint();requestAnimationFrame(frame);
+</script></body></html>

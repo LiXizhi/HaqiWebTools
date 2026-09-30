@@ -1,18 +1,21 @@
+import {renderRedMushroom} from './view_red_mushroom.js';
 import {renderFriendChat} from './view_friend_chat.js';
 import {languageName} from './character_relationship_core.js';
-import {defeatReviewNotes} from './view_battle_review.js';
 import {renderPartnerProfile} from './view_adventure_social_profile.js';
 import {el,button} from './view_adventure.js';
 import {createCloseButton} from './view_adventure_controls.js';
-import {castableCards,validTargets} from './combat_arena_core.js';
 import {dungeonStaminaHint} from './adventure_stamina_core.js';
 const schoolNames={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡'};
 export function renderSocial(root,state,kind,cb){
+    const sameMatch=kind==='social-pvp'&&state.pvp?.matchId&&root.dataset.arenaMatch===state.pvp.matchId;
+    const arenaScroll=sameMatch?(root.querySelector('.modal-body')?.scrollTop||0):0;
+    const arenaFocus=sameMatch&&root.contains(document.activeElement);
+    root.dataset.arenaMatch=kind==='social-pvp'?state.pvp?.matchId||'':'';
     root.replaceChildren();root.className='overlay visible';
     const title={mail:'邮件与好友',chat:'玩家与好友','social-party':state.partyDungeon?`组队 · ${state.partyDungeon.name}`:'副本组队','social-profile':'伙伴名片','social-pvp':'红蘑菇赛场'}[kind]||'冒险伙伴';
     const box=el('section','modal social-modal');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',title);
     const body=el('div','modal-body');box.append(el('header','modal-header',el('h2','',title),createCloseButton(cb.close)),body);root.append(box);
-    if(state.busy)body.append(el('p','muted','正在连接…'));
+    if(state.busy)body.append(el('p','muted',kind==='social-pvp'?'正在准备赛场…':'正在连接…'));
     if(state.error)body.append(el('p','social-error',state.error));
     if(kind==='social-profile'&&state.selected){box.classList.add('partner-profile-modal');renderPartnerProfile(body,state,cb);return;}
     if(kind==='chat'){renderFriendChat(box,body,state,cb);return;}
@@ -37,20 +40,19 @@ export function renderSocial(root,state,kind,cb){
         }
         return;
     }
-    if(kind==='social-pvp'&&state.pvp){
-        const a=state.pvp.arena;body.append(el('p','',`第 ${a.turn} 回合 · ${a.sides.near[0].hp} / ${a.sides.near[0].maxHp} 生命 · 对手 ${a.sides.far[0].hp} / ${a.sides.far[0].maxHp}`));
-        if(a.finished){const review=state.pvp.review;body.append(el('h3','',review?.presentation?.headline||(a.winner==='near'?'切磋获胜':a.winner==='far'?'再接再厉':'本场平局')));const notes=defeatReviewNotes(review,a.winner);if(notes.length)body.append(el('details','',el('summary','','查看复盘'),...notes.map(note=>el('p','',note))));body.append(button('保存战报',cb.exportReplay,'secondary'),button('返回赛场',cb.endPvp,'primary'));return;}
-        const hero=a.unitsById.hero;
-        for(const c of castableCards(a,hero))for(const target of validTargets(a,hero,c.card))body.append(button(`${cb.cardName(c.key)} → ${target.name}`,()=>cb.pvpPlay({key:c.key,seq:c.seq,targetId:target.id}),'secondary'));
-        body.append(button('跳过回合',()=>cb.pvpPlay({pass:true}),'secondary'));return;
+    if(kind==='social-pvp'){
+        renderRedMushroom(box,body,state,cb);
+        if(sameMatch&&!state.pvp.arena.finished){body.scrollTop=arenaScroll;if(arenaFocus)body.querySelector('.arena-card,.arena-actions>button')?.focus({preventScroll:true});}
+        return;
     }
-    if(kind==='social-pvp'){body.append(el('p','muted','1 对 1 快照切磋，不消耗物品。补位伙伴不计榜。'),el('p','muted',state.rankReady?'娱乐周榜：同一对手每日最多计一次胜场。':'娱乐周榜尚未配置，当前可进行练习切磋。'));if(state.rankReady){body.append(button('刷新周榜',cb.refreshPvp,'secondary'));for(const row of state.pvpRows||[])body.append(el('p','',`${row.name} · ${row.score} 胜场`));}}
-    else if(kind==='social-party'){
+    if(kind==='social-party'){
         box.classList.add('party-room-modal');
         const dungeon=state.partyDungeon,frozen=state.coopActive,canCoop=state.coopCapable!==false&&!!dungeon;
         if(dungeon){
             const change=button(frozen?'查看列表':'更换副本',frozen?()=>cb.open('dungeons'):cb.pickDungeon,'secondary party-dungeon-switch');
             const hint=dungeonStaminaHint(dungeon);
+            if(dungeon.kind)body.append(el('p','',dungeon.kind==='tower'?`本次 ${(state.lineupCount||1)}v${state.lineupCount||1} · 层数跨模式共享`:`固定 ${dungeon.partySize}v${dungeon.partySize} · 可使用宠物或组队`));
+            if(dungeon.kind)body.append(el('p','muted','按阵位顺序选取出战单位，多余伙伴作为候补；没有组队伙伴时使用当前宠物阵容。'));
             const detail=el('div','party-dungeon-detail',cb.bossArt?.(dungeon)||el('div','party-dungeon-art'),el('div','party-dungeon-copy',
                 el('h3','',dungeon.name),
                 el('p','',`首领：${dungeon.boss?.name||'未知'} · 建议 ${dungeon.recommendedLevel||1} 级`),
@@ -89,6 +91,7 @@ export function renderSocial(root,state,kind,cb){
             const go=button(state.partyRestart?'重新挑战':'立即出发',cb.depart,'primary');
             go.disabled=!dungeon||state.openSlots.some(Boolean);
             footer.append(go);
+            if(dungeon?.kind&&!state.allies.some(Boolean))footer.append(button('调整宠物阵容',()=>cb.open('pet'),'secondary'));
         }
         if(state.coopReport?.length){body.append(el('h3','','队伍战报'));for(const [i,r]of state.coopReport.entries())body.append(el('p','',`第 ${i+1} 场 · ${r.winner==='near'?'获胜':'未获胜'} · ${r.turns} 回合`));footer.append(button('保存队伍战报',cb.exportCoop,'secondary'));}
         if(state.owner)footer.append(button(state.publicVisible===false?'开启公开展示':'关闭公开展示',cb.togglePublic,'secondary'));

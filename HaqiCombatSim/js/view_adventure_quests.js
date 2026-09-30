@@ -102,6 +102,7 @@ export function renderQuestJournal(body,model,cb,ui) {
         else {
             const rowsNow=catalogGoalRows(save,c,runtime,stats());
             const block=catalogAcceptBlock(save,c,runtime,stats());
+            if(rowsNow.some(g=>g.kind==='custom'&&[20046,20048,52212].includes(g.id)))detail.append(button('前往红蘑菇赛场',()=>cb.panel('social-pvp'),'primary'),el('p','muted','网页赛场任务积分：胜利 +25，平局 +10；完成2对2计一次参赛。'));
             detail.append(section('任务目标',...(rowsNow.length?rowsNow.map(g=>el('div',`journal-objective ${g.value>=g.count?'complete':''}`,el('span','',translatedGoal(g)),el('strong','',`${g.value} / ${g.count}`))):[el('p','','与任务居民交谈后即可交付。')])));
             detail.append(el('div','journal-contacts',el('p','',el('span','','任务接取'),q.startNpc),el('p','',el('span','','任务交付'),q.endNpc)));
             if(q.prerequisites.length)detail.append(section('前置任务',...q.prerequisites.map(p=>{

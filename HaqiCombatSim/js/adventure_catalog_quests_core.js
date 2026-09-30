@@ -12,12 +12,10 @@ const num = (value, fallback = 0) => {
     return Number.isFinite(parsed) ? parsed : fallback;
 };
 const STAT_IDS = new Set([214, 79030, 79031, 79032, 79033, 79034]);
-const EVENT_IDS = new Set([79016, 79017, 79019, 79025, 79026, 79037]);
+const EVENT_IDS = new Set([79016, 79017, 79019, 79025, 79026, 79037, 20046, 20048, 52212]);
 const BLOCKED = {
     79035: '充值次数在单人冒险中不计数',
     79038: '给人气需要其他玩家',
-    20046: '红蘑菇1v1尚未开放',
-    52212: '红蘑菇2v2尚未开放',
     20117: '拉斐尔3v3尚未开放',
     79101: '试炼徽章需要原服竞技',
     79102: '赛场徽章需要原服竞技',
@@ -75,6 +73,7 @@ const progressKey = (kind, id) => `${kind}:${id}`;
 function questRecord(save, id) { return save.quests[id] || { accepted: false, claimed: false, progress: {} }; }
 function customLive(save, content, id, stats) {
     if (STAT_IDS.has(id)) return { support: 'stat', value: stats?.[id] ?? (id === 214 || id === 79031 ? save.level : 0) };
+    if ([20046, 20048, 52212].includes(id)) return { support: 'event', value: null };
     if (content.items?.[id]) return { support: 'item', value: save.inventory[id] || 0 };
     if (EVENT_IDS.has(id)) return { support: 'event', value: null };
     return { support: 'unsupported', value: 0 };

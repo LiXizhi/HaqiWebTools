@@ -1,3 +1,4 @@
+import {restoreRedMushroom} from './adventure_red_mushroom_core.js';
 import {createArena,startCombat,playTurn,castableCards,validTargets} from './combat_arena_core.js';
 import {defaultParams,resolveParams} from './combat_params_core.js';
 import {SimpleBot} from './combat_policy_core.js';
@@ -24,6 +25,7 @@ export function playSocialPvp(state,decision){
     return state;
 }
 export function restoreSocialPvp(dataset,replay){
+    if(replay?.version===3)return restoreRedMushroom(dataset,replay);
     if(![1,2].includes(replay?.version)||replay.dataHash!==socialDataHash(dataset)||!Array.isArray(replay.actions)||replay.actions.length>200)throw Error('赛场战报版本不兼容');
     const state=startSocialPvp(dataset,replay.player,replay.opponent,replay.seed,{version:replay.version});state.restoring=true;for(const action of replay.actions)playSocialPvp(state,action);state.restoring=false;return state;
 }

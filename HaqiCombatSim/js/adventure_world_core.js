@@ -5,19 +5,32 @@ import {islandBuildings,harborAccess} from './adventure_buildings_core.js';
 import { islandFor } from './adventure_world_map_core.js';
 import { onAnyBridge } from './adventure_bridge_core.js';
 import { onLargeIsland, riverBlocks, sceneryCoversActor, separateBuilding } from './adventure_island_layout_core.js';
+import {encounterCoolingDown} from './adventure_encounter_cooldown_core.js';
+import {defaultParams,resolveParams} from './combat_params_core.js';
+const interactionDefaults=defaultParams('kids').adventure;
 export const WALK_SPEED = 210;
+export function updateEncounterVisibility(world,save,now) {
+    let changed=false;
+    world.encounters.forEach((e,i)=>{
+        const hidden=!!(world.layout.route&&i>0)||encounterCoolingDown(save,e.id,now);
+        if(!!e.hidden!==hidden){e.hidden=hidden;changed=true;}
+    });
+    if(changed)objectIndices.delete(world);
+}
 export function createWorld(zone,content,save=null) {
     if(!islandFor(zone)&&!dungeonFor(content,zone))throw new Error('目的地不存在');
     const layout=content.worldMaps?.[zone];
     if(!layout)throw Error('缺少岛屿地图：'+zone);
+    const interactionParams=resolveParams({version:'kids'},content.balanceParams||defaultParams('kids')).adventure;
     const point=([x,y])=>({x,y});
     const originals=content.npcCatalog?.npcs.filter(n=>n.zone===zone&&n.enabled!=='0'&&n.artVisible!==false&&n.hidden!==true);
     const npcs=(originals||Object.values(content.npcs).filter(n=>n.zone===zone&&n.hidden!==true)).map(n=>({...content.npcs[n.id],...n,...point(layout.npcPositions[n.id]||[n.x,n.y])}));
     if(!originals)for(const row of layout.visitingNpcs||[]){const source=content.npcs[row.sourceId];if(!source)throw Error('缺少居民来源');if(source.hidden===true||row.hidden===true)continue;npcs.push({...source,zone,...(row.sourceId===36205?layout.portal:point(row.position))});}
     const encounters=content.encounters.filter(e=>e.zone===zone&&!e.legacyOnly&&!dungeonProgress(save)?.[zone]?.cleared.includes(e.id)).map(e=>({...e,...point(layout.encounterPositions[e.id]||[e.x,e.y])}));
-    const world={zone,w:layout.w,h:layout.h,layout,npcs,encounters,portal:{id:'portal',...layout.portal,zone:zone==='camp'?'town':'camp',name:dungeonFor(content,zone)?'离开副本':'查看世界地图'},
-        landmarks:layout.landmarks,buildings:layout.buildings||[],paths:layout.paths,trees:layout.trees,decorations:[],center:{...(layout.center||layout.spawn)}};
+    const world={zone,isDungeon:!!dungeonFor(content,zone),w:layout.w,h:layout.h,layout,npcs,encounters,portal:{id:'portal',...layout.portal,zone:zone==='camp'?'town':'camp',name:dungeonFor(content,zone)?'离开副本':'查看世界地图'},
+        interactionParams,landmarks:layout.landmarks,buildings:layout.buildings||[],paths:layout.paths,trees:layout.trees,decorations:[],center:{...(layout.center||layout.spawn)}};
     if(layout.route){
+        world.encounters.forEach((e,i)=>{e.hidden=i>0;});
         world.portal.hidden=!dungeonProgress(save)?.[zone]?.cleared.includes(layout.bossArenaId);
         world.entrancePortal={id:'dungeon-entrance',...layout.entrancePortal,name:'离开副本',zone:world.portal.zone};
         // Old free-roaming checkpoints resume safely on the new road.
@@ -83,6 +96,24 @@ export function createWorld(zone,content,save=null) {
     // A tree behind an actor can leave its sprite visible while its 20-unit
     // trunk collision still blocks the interaction point after map rebaking.
     world.trees=world.trees.filter(t=>actors.every(a=>distance(t,a)>=20&&!sceneryCoversActor(t,a)));
+    if(!layout.route){
+        const used=[...world.npcs,...world.encounters,...world.landmarks,world.portal];
+        const entrances=[];
+        for(const d of (content.dungeons||[]).filter(d=>d.island===zone)){
+            const candidates=[];
+            for(const p of world.paths){
+                const length=distance(p.a,p.b),dx=(p.b.x-p.a.x)/(length||1),dy=(p.b.y-p.a.y)/(length||1);
+                for(let along=40;along<length-30;along+=60)for(const side of [-1,1])for(const gap of [55,105,155,215]){
+                    const x=p.a.x+dx*along-dy*side*(p.width/2+gap),y=p.a.y+dy*along+dx*side*(p.width/2+gap);
+                    if(onLargeIsland(world,x,y,40)&&!riverBlocks(world,x,y)&&!world.buildings.some(b=>Math.abs(b.x-x)<b.w/2+80&&y-180<b.y+40&&y+65>b.y-b.h)&&!onAnyBridge(world,x,y,100)&&used.every(o=>distance(o,{x,y})>140))candidates.push({x,y});
+                }
+            }
+            const target=candidates[Math.floor(candidates.length*(entrances.length+1)/4)%Math.max(1,candidates.length)];
+            if(target){const mark={...target,id:d.id,dungeonId:d.id,entranceKind:d.kind,name:d.name,recommendedLevel:d.recommendedLevel};entrances.push(mark);used.push(mark);}
+        }
+        world.landmarks=[...world.landmarks,...entrances];
+        world.trees=world.trees.filter(t=>entrances.every(e=>distance(t,e)>110&&!sceneryCoversActor(t,{...e,label:e.name})));
+    }
     objectIndices.delete(world);
     return world;
 }
@@ -104,7 +135,7 @@ function segmentDistance(p,a,b) {
     const dx=b.x-a.x,dy=b.y-a.y,t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy||1)));
     return Math.hypot(p.x-a.x-t*dx,p.y-a.y-t*dy);
 }
-function routeLocation(world,p){
+export function routeLocation(world,p){
     let offset=0,best={distance:Infinity,progress:0,index:0,point:world.layout.route[0]};
     for(const [index,path]of world.paths.entries()){
         const {a,b}=path,dx=b.x-a.x,dy=b.y-a.y,length=Math.hypot(dx,dy);
@@ -115,23 +146,52 @@ function routeLocation(world,p){
     }
     return best;
 }
+// Local exploration records only the farthest point of this linear dungeon trail.
+// It is independent of combat clears and never shrinks when the captain retreats.
+export function updateDungeonExploration(world,save){
+    if(!world.layout?.route||!save)return;
+    const current=routeLocation(world,save.position).progress;
+    const total=world.paths.reduce((sum,p)=>sum+distance(p.a,p.b),0);
+    const stored=save.dungeonExploration?.[world.zone];
+    const previous=Number.isFinite(stored)?Math.max(0,Math.min(total,stored)):0;
+    save.dungeonExploration??={};
+    save.dungeonExploration[world.zone]=Math.max(previous,current);
+}
 function dungeonLimit(world){return world.encounters.length?routeLocation(world,world.encounters[0]).progress-60:Infinity;}
-function routePoint(world,progress){
+export function routePoint(world,progress){
     for(const path of world.paths){const length=distance(path.a,path.b);if(progress<=length)return {x:path.a.x+(path.b.x-path.a.x)*progress/length,y:path.a.y+(path.b.y-path.a.y)*progress/length};progress-=length;}
     return {...world.layout.route.at(-1)};
 }
 export function dungeonAutoInteraction(world,p){
-    if(!world.layout.route)return null;
+    if(!world.isDungeon||!world.layout.route)return null;
     if(world.entrancePortal&&distance(p,world.entrancePortal)<70)return {...world.entrancePortal,kind:'portal'};
     const next=world.encounters[0];
-    if(next&&!next.blocked?.length&&distance(p,next)<84)return {...next,kind:'encounter'};
+    if(next&&!next.hidden&&!next.blocked?.length&&distance(p,next)<(world.interactionParams||interactionDefaults).dungeonEncounterRadius)return {...next,kind:'encounter'};
     if(!world.portal.hidden&&distance(p,world.portal)<70)return {...world.portal,kind:'portal'};
     return null;
+}
+// Returning from combat must not count as walking into an existing contact.
+export function autoInteraction(world,p){
+    if(world.isDungeon)return dungeonAutoInteraction(world,p);
+    const radius=(world.interactionParams||interactionDefaults).fieldEncounterRadius;
+    const target=world.encounters.filter(e=>!e.hidden&&!e.blocked?.length&&distance(p,e)<radius)
+        .sort((a,b)=>distance(p,a)-distance(p,b))[0];
+    return target?{...target,kind:'encounter'}:null;
+}
+export function resetAutoInteraction(world,p){
+    world.autoContact=autoInteraction(world,p)?.id??null;
+}
+export function takeAutoInteraction(world,p){
+    const target=autoInteraction(world,p);
+    if(!target){world.autoContact=null;return null;}
+    if(world.autoContact===target.id)return null;
+    world.autoContact=target.id;
+    return target;
 }
 // Stand just outside touch and dungeon aggro, on the side the player approached from.
 export function retreatBeside(world,player,target){
     const origin={x:target.x,y:target.y};
-    const legal=p=>p&&walkable(world,p.x,p.y)&&distance(p,origin)>=100&&distance(p,origin)<=220&&!dungeonAutoInteraction(world,p);
+    const legal=p=>p&&walkable(world,p.x,p.y)&&distance(p,origin)>=100&&world.encounters.every(e=>distance(p,e)>=100)&&!dungeonAutoInteraction(world,p);
     if(world.layout?.route){
         const at=routeLocation(world,origin),limit=dungeonLimit(world);
         for(let back=96;back<=360;back+=8){
@@ -152,9 +212,15 @@ export function retreatBeside(world,player,target){
     const near=nearestWalkable(world,origin.x+Math.cos(dir)*120,origin.y+Math.sin(dir)*120);
     if(legal(near))return near;
     if(legal(player))return {x:player.x,y:player.y};
-    return near&&walkable(world,near.x,near.y)?near:{x:player.x,y:player.y};
+    // Crowded placements may need a wider ring; never fall back inside a monster.
+    for(let radius=240;radius<=Math.max(world.w,world.h);radius+=40)for(const turn of turns){
+        const point={x:origin.x+Math.cos(dir+turn)*radius,y:origin.y+Math.sin(dir+turn)*radius};
+        if(legal(point))return point;
+    }
+    return {...spawn};
 }
 export function walkable(world,x,y) {
+    if(world.movementExclusions?.some(o=>Math.hypot(x-o.x,y-o.y)<o.radius))return false;
     if(!Number.isFinite(x)||!Number.isFinite(y))return false;
     if(world.layout?.route)return routeLocation(world,{x,y}).distance<=world.paths[0].width/2-8;
     if(world.layout?!onLargeIsland(world,x,y,26)||riverBlocks(world,x,y):!onIsland(x,y,26))return false;

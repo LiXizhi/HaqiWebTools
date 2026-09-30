@@ -1,5 +1,5 @@
 import {createRng,hashSeed} from './rng_core.js';
-import {findPath,followPath,nearestWalkable,walkable} from './adventure_world_core.js';
+import {findPath,followPath,nearestWalkable,walkable,routeLocation,routePoint} from './adventure_world_core.js';
 import {segmentDistance} from './adventure_island_layout_core.js';
 import {SOCIAL_DEFAULTS} from './adventure_social_core.js';
 // Sprite directions: down/front=0, left=1, right=2, up/back=3.
@@ -16,6 +16,18 @@ export function socialInView(position,view){
 function hubReach(params=SOCIAL_DEFAULTS){return params.hotspotRadius+params.hotspotSpread;}
 function roadSlack(params=SOCIAL_DEFAULTS){return params.roadSlack??16;}
 function spawnMinActors(params=SOCIAL_DEFAULTS){return Math.max(0,Math.floor(params.spawnMinActors??2));}
+
+// Only social actors use this navigation view. Player entrance interactions stay reachable.
+const socialWorlds=new WeakMap();
+function socialNavigationWorld(world){
+    if(world.movementExclusions)return world;
+    const entrances=(world.landmarks||[]).filter(p=>p.dungeonId);
+    if(!entrances.length)return world;
+    if(!socialWorlds.has(world))socialWorlds.set(world,{...world,movementExclusions:entrances.map(p=>({
+        x:p.x,y:p.y-(p.entranceKind==='tower'?25:0),radius:SOCIAL_DEFAULTS.entranceClearance,
+    }))});
+    return socialWorlds.get(world);
+}
 
 export function roadClearance(world,p){
     if(!world.paths?.length)return 0;
@@ -38,6 +50,7 @@ export function socialActivityHubs(world){
     add(world.portal,1,'portal','portal');
     add(world.entrancePortal,1,'portal','entrance');
     for(const landmark of world.landmarks||[]){
+        if(landmark.dungeonId)continue;
         if(landmark===plaza)continue;
         add(landmark,2.5,'landmark',landmark.id);
     }
@@ -119,6 +132,7 @@ function standClearOfMonsters(world,origin,params=SOCIAL_DEFAULTS){
 }
 
 export function sampleActivitySpot(world,hub,rng,used=[],params=SOCIAL_DEFAULTS){
+    world=socialNavigationWorld(world);
     const shuffled=rng.shuffle(roadsideCandidates(world,hub,params).slice());
     for(const p of shuffled)if(clearsPeople(world,p,used,params))return p;
     for(const p of shuffled)if(clearsMonsters(world,p,params)&&used.every(v=>Math.hypot(v.x-p.x,v.y-p.y)>params.separation*.5))return p;
@@ -132,6 +146,7 @@ function assignHub(rng,hubs,index,spawnHub,spawnQuota){
 }
 
 export function createSocialActors(world,profiles,seed=1) {
+    world=socialNavigationWorld(world);
     const hubs=socialActivityHubs(world);
     const spawnHub=hubs.find(h=>h.kind==='spawn');
     const spawnQuota=Math.min(spawnMinActors(),profiles.length);
@@ -144,10 +159,47 @@ export function createSocialActors(world,profiles,seed=1) {
         return {profile,position,rng,path:[],facing:hashSeed(profile.id)%3,moving:false,wait:rng.int(SOCIAL_DEFAULTS.idleMin,SOCIAL_DEFAULTS.idleMax),travel:rng.int(SOCIAL_DEFAULTS.travelMin,SOCIAL_DEFAULTS.travelMax),hotspot};
     });
 }
+// Dungeon members follow the captain's actual trail, including turns and retreats.
+const partyTrails=new WeakMap();
+export function stepDungeonParty(actors,world,leader,dt){
+    if(!leader||!world.layout?.route)return;
+    let trail=partyTrails.get(actors);
+    const gap=SOCIAL_DEFAULTS.followSpacing;
+    if(!trail||trail.world!==world||Math.hypot(leader.x-trail.points[0].x,leader.y-trail.points[0].y)>SOCIAL_DEFAULTS.dungeonRegroupDistance){
+        const progress=routeLocation(world,leader).progress;
+        trail={world,points:[{...leader}]};
+        for(let back=8;back<=gap*(actors.length+2);back+=8)trail.points.push(routePoint(world,Math.max(0,progress-back)));
+        partyTrails.set(actors,trail);
+        actors.forEach((a,i)=>{a.position=routePoint(world,Math.max(0,progress-gap*(i+1)));a.path=[];});
+    }
+    if(Math.hypot(leader.x-trail.points[0].x,leader.y-trail.points[0].y)>=2)trail.points.unshift({...leader});
+    function behind(distance){
+        for(let i=1;i<trail.points.length;i++){
+            const a=trail.points[i-1],b=trail.points[i],length=Math.hypot(b.x-a.x,b.y-a.y);
+            if(length>=distance)return {x:a.x+(b.x-a.x)*distance/length,y:a.y+(b.y-a.y)*distance/length};
+            distance-=length;
+        }
+        return trail.points.at(-1);
+    }
+    let length=0;
+    for(let i=1;i<trail.points.length;i++){length+=Math.hypot(trail.points[i].x-trail.points[i-1].x,trail.points[i].y-trail.points[i-1].y);if(length>gap*(actors.length+3)){trail.points.length=i+1;break;}}
+    actors.forEach((a,i)=>{
+        const before=a.position,target=behind(gap*(i+1));
+        const next=followPath(world,before,findPath(world,before,target),SOCIAL_DEFAULTS.dungeonFollowSpeed*Math.max(0,Math.min(.1,dt)));
+        a.position=next.position;a.path=[];a.moving=Math.hypot(a.position.x-before.x,a.position.y-before.y)>.1;
+        if(a.moving)a.facing=socialFacing(a.position.x-before.x,a.position.y-before.y,true);
+    });
+}
 export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=[],leader=null,speed=SOCIAL_DEFAULTS.speed,view=null}={}) {
-    if(paused)return;dt=Math.max(0,Math.min(dt,.1));let moving=actors.filter(a=>a.path.length).length;const limit=Math.ceil(actors.length/4);
+    if(paused)return;
+    if(world.layout?.route){stepDungeonParty(actors,world,leader,dt);return;}
+    world=socialNavigationWorld(world);
+    dt=Math.max(0,Math.min(dt,.1));let moving=actors.filter(a=>a.path.length).length;const limit=Math.ceil(actors.length/4);
     const hubs=socialActivityHubs(world);
     for(const a of actors){
+        if(!walkable(world,a.position.x,a.position.y)){
+            a.position=standClearOfMonsters(world,nearestWalkable(world,a.position.x,a.position.y));a.path=[];
+        }
         if(a.profile.id===locked){a.path=[];a.moving=false;if(leader){const dx=leader.x-a.position.x,dy=leader.y-a.position.y;a.facing=socialFacing(dx,dy);}continue;}
         if(!a.path.length&&!clearsMonsters(world,a.position)){const aside=standClearOfMonsters(world,a.position);if(aside)a.position=aside;}
         // Off-camera residents idle in place; only on-screen actors walk like the hero.

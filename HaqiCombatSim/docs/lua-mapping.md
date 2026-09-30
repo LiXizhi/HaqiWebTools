@@ -343,3 +343,12 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 `ItemManager.lua` GetAllCanGiftItemGUIDs L5460–5492按cangift、包范围、强化和镶嵌筛选；`paraworld.globalstore.lua` L535–554定义t[24]类、t[34]可交易、t[38]堆叠、t[40]可赠送；`GenericTooltip.lua` L505–522定义stats[223]与实例绑定。新增export_gift_rules.py保留DB哈希，仅开放class18、可堆叠、cangift=true、绑定类型0的物品；实例装备/坐骑等未完整核验类型明确禁用。好感度、异性随机偏移和活动加成为网页改编，不宣称原版公式。
 
 2026-09-27儿童版口粮：CombatPetFoodsPage.lua L138、L193列出17172/17185/17211；L272–293明确kids经验300/1200/2400，源数据库globalstore.db.mem stats[60]一致。导出器保留原始记录，自动食槽读取该值；饱食40/70/100和售价30/120/240奇豆是明确的Web改编，集中在BalanceParams.adventure.petFoodRules。无需移植teen分支高级口粮900经验。
+
+## 2026-09-30：副本序章语言奖励（网页覆盖层）
+
+本次语言buff并非原版Lua公式：BalanceParams.dungeonLanguage定义5秒开始窗口、20秒录音上限、每句1%、单项最高3%。当前18个故事各有三句，生命/攻击/防御各一句。createPveBattle创建完成英雄后增加生命上限并保持生命比例，向damagePct.all/resistPct.all各加奖励百分点，沿用原版伤害/抗性公式；怪物、宠物、其他伙伴与PvP均不加。战后按基础生命上限折算，退出副本删除记录。检查点冻结数值，重演核验；不修改combat_formulas_core.js。
+
+
+## 2026-09-30：每日全局语言加成
+
+更新此前副本序章奖励规则：BalanceParams.dailyLanguage每句1%、单项10%；dungeonLanguage仅保留5秒窗口、录音时限及旧检查点兼容。每日奖励是Web覆盖层，沿用原damagePct.all/resistPct.all/powerPipPct公式，生命保持比例，结算折回基础上限；不改原Lua公式。覆盖冒险PvE及红蘑菇赛场本方英雄，伙伴/对手与公开角色快照不含此加成。

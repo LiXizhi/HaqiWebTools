@@ -5,6 +5,7 @@ export function gameSoundRecipe(name){
     const recipes={
         click:[tone(620,780,.055,0,.055)],open:[tone(360,640,.13)],close:[tone(540,320,.1)],
         select:[tone(740,960,.09)],discard:[tone(400,220,.12,0,.07,.15)],
+        countdown:[tone(880,880,.13,0,.16)],countdownFinal:[tone(1175,1175,.22,0,.18)],
         hit:[tone(140,65,.18,0,.11,.24)],heal:chime([660,880]),shield:[tone(440,700,.22,0,.1,.04)],
         fizzle:[tone(200,85,.22,0,.08,.1)],capture:chime([523,659,784]),miss:[tone(330,220,.2)],
         victory:chime([523,659,784,1047],.32),defeat:chime([392,330,262],.3),

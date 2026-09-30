@@ -3,8 +3,8 @@ import {updatePetIdle} from './adventure_pet_mood_core.js';
 import {findPetMeeting,petMeetingClear,petMeetingTargets,petMeetingPath} from './adventure_pet_meeting_core.js';
 // Browser scene coordinator: movement is transient; the controller commits rules synchronously.
 import {createCompanion,stepCompanion,selectCompanionId} from './adventure_companion_core.js';
-import {petWorldAction,npcPetId} from './adventure_pet_world_core.js';
-import {petInteractionParams,petDisplayScale} from './adventure_pet_interactions_core.js';
+import {petWorldAction,npcPetId,createNpcPet} from './adventure_pet_world_core.js';
+import {petInteractionParams,petDisplayScale,recordPetMeeting} from './adventure_pet_interactions_core.js';
 import {walkable,distance,followPath,WALK_SPEED} from './adventure_world_core.js';
 // Story residents include creatures and props; do not give every map NPC a pet.
 // Only roaming characters (or explicitly configured pet owners) participate.
@@ -14,9 +14,9 @@ export function petSceneProfiles(state){
     for(const a of state.socialActors||[])owners.set(a.profile.id,{...a.profile,position:a.position});
     return [...owners.values()];
 }
-export function createPetScene({getState,commit,toast,sound=()=>{},now=()=>Date.now()}){
-    let context=null,contextWorld=null,actors=new Map(),effects=[],meeting=null,lastPlay=0,lastPrune=0,food=null,loadRetryAt=0,loadEpoch=0,loading=new Set(),heroWakeAnchor=null;
-    const run=action=>{const {save,content}=getState(),result=petWorldAction(save,content,{...action,now:now()});if(result.changed){commit(result.save);if(action.type==='adopt')sound('adopt');else if(action.type==='feed')sound('feed');else if(result.effects?.some(effect=>effect.markAdded))sound('friendship');}return result;};
+export function createPetScene({getState,commit,toast,sound=()=>{},noteMeeting=()=>{},now=()=>Date.now()}){
+    let context=null,contextWorld=null,actors=new Map(),visitors=new Map(),effects=[],meeting=null,lastPlay=0,lastPrune=0,food=null,loadRetryAt=0,loadEpoch=0,loading=new Set(),heroWakeAnchor=null;
+    const run=action=>{const {save,content}=getState(),result=petWorldAction(save,content,{...action,visitors:[...visitors.values()],now:now()});if(result.changed){commit(result.save);if(action.type==='adopt')sound('adopt');else if(action.type==='feed')sound('feed');else if(result.effects?.some(effect=>effect.markAdded))sound('friendship');}for(const effect of result.effects||[])if(effect.play&&!effect.markAdded){const petId=effect.ids.find(id=>save.pets[id]),otherId=effect.ids.find(id=>id!==petId);if(petId&&otherId)noteMeeting(recordPetMeeting(save.petMeetings,{petId,otherId,at:now()},content));}return result;};
     const profiles=petSceneProfiles;
     const people=()=>{const s=getState();return [s.save.position,...s.world.npcs,...(s.socialActors||[]).map(a=>a.position)];};
     function startMeeting(type,hostId,guests){
@@ -37,7 +37,7 @@ export function createPetScene({getState,commit,toast,sound=()=>{},now=()=>Date.
         get now(){return now();},
         get food(){return food&&{...food.anchor};},
         get effects(){return effects;},
-        get pets(){const {save,content}=getState();return [...actors.values()].map(a=>({...a,pet:save.pets[a.id]||save.petWorld[a.id],scale:petDisplayScale(save.pets[a.id]||save.petWorld[a.id],content)}));},
+        get pets(){const {save,content}=getState();return [...actors.values()].map(a=>{const pet=save.pets[a.id]||save.petWorld[a.id]||visitors.get(a.id);return {...a,pet,scale:petDisplayScale(pet,content)};});},
         get babies(){return Object.values(getState().save?.petWorld||{}).filter(p=>p.ownerId===null&&p.birth.zone===getState().world?.zone);},
         dialogue(owner){const {save,content}=getState(),host=selectCompanionId(save,content),other=npcPetId(owner),a=actors.get(host),b=actors.get(other);if(a&&b&&distance(a.position,b.position)<=petInteractionParams(content).encounterDistance)startMeeting('dialogue',host,[other]);},
         feed(id){
@@ -58,13 +58,15 @@ export function createPetScene({getState,commit,toast,sound=()=>{},now=()=>Date.
         step(dt){
             const state=getState(),{save,world,content}=state;if(!save?.petInstanceVersion||!world)return;
             const token=`${state.scope}:${world.zone}`;
-            if(context!==token||contextWorld!==world){context=token;contextWorld=world;actors=new Map();effects=[];meeting=null;food=null;lastPlay=now();lastPrune=0;heroWakeAnchor=null;loadEpoch++;loading=new Set();loadRetryAt=0;
-                const keep=new Set([selectCompanionId(save,content),...(save.formation||[]),...profiles(state).map(r=>npcPetId(r.id))]);
+            if(context!==token||contextWorld!==world){context=token;contextWorld=world;actors=new Map();visitors=new Map();effects=[];meeting=null;food=null;lastPlay=now();lastPrune=0;heroWakeAnchor=null;loadEpoch++;loading=new Set();loadRetryAt=0;
+                const keep=new Set([selectCompanionId(save,content),...(save.formation||[])]);
                 for(const group of ['pets','petWorld'])for(const [id,pet]of Object.entries(save[group]||{})){const ref=save.petFileRefs?.[id];if(ref&&!keep.has(id)&&!(pet.ownerId===null&&pet.birth.zone===world.zone)&&ref.contentKey===petContentKey(pet))delete save[group][id];}
             }
             if(state.locked||save.pendingEncounter){meeting=null;food=null;heroWakeAnchor=null;return;}
             const p=petInteractionParams(content),residents=profiles(state);
-            const needed=Object.entries(save.petFileRefs||{}).filter(([id,r])=>r.group==='petWorld'&&(r.summary.ownerId===null&&r.summary.zone===world.zone||residents.some(n=>npcPetId(n.id)===id))&&!save.petWorld[id]);
+            for(const profile of residents){const id=npcPetId(profile.id);if(!visitors.has(id))visitors.set(id,{...createNpcPet(profile,content),homeZone:world.zone});}
+            for(const id of visitors.keys())if(!residents.some(profile=>npcPetId(profile.id)===id))visitors.delete(id);
+            const needed=Object.entries(save.petFileRefs||{}).filter(([id,r])=>r.group==='petWorld'&&r.summary.ownerId===null&&r.summary.zone===world.zone&&!String(id).startsWith('npc-pet:')&&!save.petWorld[id]);
             if(needed.length&&now()>=loadRetryAt){
                 loadRetryAt=now()+p.playIntervalMs;const epoch=loadEpoch;
                 for(const [id]of needed)if(!loading.has(id)){
@@ -72,9 +74,9 @@ export function createPetScene({getState,commit,toast,sound=()=>{},now=()=>Date.
                     Promise.resolve().then(()=>state.loadPet(id)).catch(error=>{if(epoch===loadEpoch)toast(error.message);}).finally(()=>{if(epoch===loadEpoch)loading.delete(id);});
                 }
             }
-            const missing=residents.filter(r=>!save.petWorld[npcPetId(r.id)]&&!save.petFileRefs?.[npcPetId(r.id)]);
-            if(missing.length)run({type:'residents',residents:missing});
-            const current=getState().save,leader=selectCompanionId(current,content),entries=[...(current.pets[leader]?[{id:leader,position:current.position}]:[]),...residents.filter(r=>current.petWorld[npcPetId(r.id)]).map(r=>({id:npcPetId(r.id),position:r.position}))];
+            const stale=[...Object.keys(save.petWorld||{}),...Object.keys(save.petFileRefs||{})].some(id=>String(id).startsWith('npc-pet:'));
+            if(stale)run({type:'residents',residents});
+            const current=getState().save,leader=selectCompanionId(current,content),entries=[...(current.pets[leader]?[{id:leader,position:current.position}]:[]),...residents.map(r=>({id:npcPetId(r.id),position:r.position}))];
             const heroMoved=!!heroWakeAnchor&&distance(current.position,heroWakeAnchor)>p.idleMoveDistance;
             if(!heroWakeAnchor||heroMoved)heroWakeAnchor={...current.position};
             const live=new Set(entries.map(e=>e.id));for(const id of actors.keys())if(!live.has(id))actors.delete(id);

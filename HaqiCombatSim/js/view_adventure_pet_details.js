@@ -7,7 +7,7 @@ import { createPetEvolution } from './view_adventure_pet_status.js';
 export function showPetDetails(assets,id,portrait,{el,button,spellFace},options={}) {
     const speciesId=options.save?.pets[id]?.speciesId||id,def=assets.content.pets[speciesId];
     const trigger=document.activeElement,dialog=el('dialog','modal pet-growth-modal');
-    dialog.setAttribute('aria-label',`${def.name} · 四阶段与卡片`);
+    dialog.setAttribute('aria-label',`${def.name} · ${def.staticAppearance?'形象与卡片':'四阶段与卡片'}`);
     const close=()=>dialog.close();
     const exit=createCloseButton(close,'关闭宠物详情');
     dialog.append(el('header','modal-header',el('div','',el('p','eyebrow','宠物图鉴 · 成长与魔法'),el('h2','',def.name)),exit));
@@ -17,7 +17,7 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
     let draft=pet?.deck.map(row=>({...row}))||[],active=pet?'care':'growth';
     const total=()=>draft.reduce((sum,row)=>sum+row.count,0);
     const perform=action=>{close();options.action(action);};
-    const selectAppearance=pet&&options.action&&!options.save.pendingEncounter?stage=>{
+    const selectAppearance=pet&&options.action&&!options.save.pendingEncounter&&!def.staticAppearance?stage=>{
         if(options.action({type:'pet-appearance',petId:id,stage})===false)return;
         paint();content.querySelector('.pet-growth-stage[aria-pressed="true"]')?.focus({preventScroll:true});
     }:undefined;
@@ -26,7 +26,7 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
         for(const tab of tabs.children){const selected=tab.dataset.tab===active;tab.setAttribute('aria-pressed',String(selected));}
         if(active==='care'){
             const stage=petAppearanceStage(pet,assets.content),info=el('div','pet-profile-info');
-            info.append(el('h3','',`${def.traits.elementalAttribute}系 · ${STAGE_NAMES[stage]}`),el('p','',`等级 ${pet.level} · 经验 ${pet.xp}`));
+            info.append(el('h3','',def.staticAppearance?`${def.traits.elementalAttribute}系 · 原版形象`:`${def.traits.elementalAttribute}系 · ${STAGE_NAMES[stage]}`),el('p','',`等级 ${pet.level} · 经验 ${pet.xp}`));
             for(const [label,value,max] of [['生命',pet.hp,petMaxHp(pet,assets.content)],['饱食',pet.hunger,100]]){
                 const meter=el('progress',`pet-meter pet-meter-${label==='饱食'?'hunger':'hp'}`);meter.max=max;meter.value=value;meter.setAttribute('aria-label',label);
                 info.append(el('label','pet-stat',el('span','',`${label} ${Math.floor(value)} / ${max}`),meter));
@@ -35,7 +35,7 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
             if(pet.hunger===0)info.append(el('p','pet-supply-notice','饥饿中 · 已暂停自然回血'));
             if(!(nutritionStock(options.save)>0))info.append(button('购买营养餐',()=>{close();options.shop();},'secondary'));
             content.append(el('div','pet-profile-overview',el('div','pet-profile-portrait',portrait(assets,speciesId,stage,180*petDisplayScale(pet,assets.content))),info));
-            content.append(el('h3','','进化路径'),createPetEvolution(assets,speciesId,pet,portrait,el,selectAppearance));
+            content.append(el('h3','',def.staticAppearance?'形象':'进化路径'),createPetEvolution(assets,speciesId,pet,portrait,el,selectAppearance));
         }else{
             const stages=createPetEvolution(assets,speciesId,pet,portrait,el,selectAppearance);
             content.append(stages);
@@ -67,7 +67,7 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
         }
     }
     tabs.setAttribute('aria-label','宠物详情分类');
-    for(const [key,label] of [...(pet?[['care','养成']]:[]),['growth','形态与卡牌']]){const tab=button(label,()=>{active=key;paint();},'secondary');tab.dataset.tab=key;tabs.append(tab);}
+    for(const [key,label] of [...(pet?[['care','养成']]:[]),[ 'growth', def.staticAppearance?'卡牌':'形态与卡牌']]){const tab=button(label,()=>{active=key;paint();},'secondary');tab.dataset.tab=key;tabs.append(tab);}
     if(pet)body.append(tabs);body.append(content);dialog.append(body);document.body.append(dialog);paint();
     dialog.addEventListener('keydown',event=>{event.stopPropagation();if(event.key==='Escape'){event.preventDefault();close();}});
     dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)close();}});

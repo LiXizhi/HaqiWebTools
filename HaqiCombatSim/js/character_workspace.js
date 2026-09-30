@@ -1,4 +1,5 @@
 import {loadKeepwork} from './adventure_cloud.js';
+import {saveWorkspaceFile} from './keepwork_file_io.js';
 import {hashSeed} from './rng_core.js';
 import {relationshipParams,validateRelationship,quotaState,beijingDay,reserveQuota,finishQuota,quotaRemaining} from './character_relationship_core.js';
 
@@ -8,20 +9,30 @@ const segment=value=>encodeURIComponent(value).replaceAll('.', '%2E');
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 const deadline=async promise=>{let timer;try{return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('关系档案连接超时，请重试')),25000);})]);}finally{clearTimeout(timer);}};
 
-// No CAS exists in the inspected PersonalPageStore API. Read/check/write/readback
-// detects witnessed conflicts, but does not promise atomic cross-device quota.
+// Single-client ownership: first-use reads populate account memory; acknowledged
+// writes update it. Quota/relationship operations serialize locally, not across devices.
 export function createCharacterWorkspace({getOwner,loadSDK=loadKeepwork,cache,locks=globalThis.navigator?.locks,uuid=()=>crypto.randomUUID(),now=Date.now}={}){
-    const chains=new Map();
+    const chains=new Map(),files=new Map(),subscribed=new WeakSet();let cacheIdentity=null,generation=0;
     function serial(key,fn){const previous=chains.get(key)||Promise.resolve();const task=previous.catch(()=>{}).then(()=>locks?locks.request(`haqi-character:${key}`,fn):fn());chains.set(key,task);return task.finally(()=>{if(chains.get(key)===task)chains.delete(key);});}
     async function connect(role){
         const owner=getOwner();check(owner,'请先登录并选择账号角色');
         const sdk=await loadSDK(),token=sdk.token;check(token,'请先登录');
+        if(!subscribed.has(sdk)){sdk.onAuthStateChange?.(()=>{generation++;files.clear();cacheIdentity=null;});subscribed.add(sdk);}
+        const epoch=generation;
+        const identity=`${owner}:${token}`;if(cacheIdentity!==identity){files.clear();cacheIdentity=identity;}
         const profile=await deadline(sdk.getUserProfile({useCache:true}));
         check(profile?.username===owner&&getOwner()===owner,'登录账号已变化');
         const store=sdk.personalPageStore.withWorkspace('HaqiAdventure');
-        const valid=()=>check(getOwner()===owner&&sdk.token===token,'登录账号已变化，操作已取消');
+        const valid=()=>check(epoch===generation&&getOwner()===owner&&sdk.token===token,'登录账号已变化，操作已取消');
         const prefix=`roles/${segment(role)}/relationships/`,scope=`${owner}:${role}`;
         async function read(path,optional=false){
+            valid();const key=`${owner}:${path}`;
+            if(!files.has(key)){
+                const task=fetchFile(path,optional).catch(error=>{if(files.get(key)===task)files.delete(key);throw error;});files.set(key,task);
+            }
+            const raw=await files.get(key);valid();if(raw===null&&!optional)throw Error('关系档案尚未加载，请重试');return raw;
+        }
+        async function fetchFile(path,optional=false){
             valid();const full=store.getRemotePagePath(path);check(full.startsWith(owner+'/'),'关系文件账号不一致');
             let raw;
             if(optional){
@@ -36,9 +47,8 @@ export function createCharacterWorkspace({getOwner,loadSDK=loadKeepwork,cache,lo
             cache?.set(`${owner}:${path}`,raw);return raw;
         }
         async function write(path,raw){
-            valid();await deadline(store.savePageData(path,'content',raw,false,true));valid();
-            check(await deadline(store.syncToGit(path,true)),'关系档案尚未同步');valid();
-            check(await read(path)===raw,'关系档案写入核验失败，请重新加载');
+            await deadline(saveWorkspaceFile({store,owner,path,text:raw,check:valid}));
+            files.set(`${owner}:${path}`,Promise.resolve(raw));cache?.set(`${owner}:${path}`,raw);
         }
         async function json(path,optional=false){const raw=await read(path,optional);return raw===null?null:JSON.parse(raw);}
         async function index(){const row=await json(prefix+'index.json',true);check(!row||row.version===1&&row.scope===scope&&row.buckets,'关系目录账号或格式无效');return row||{version:1,scope,revision:null,buckets:{}};}

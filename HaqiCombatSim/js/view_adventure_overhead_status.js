@@ -133,7 +133,7 @@ function drawStatusIcon(c,effect,x,y,size) {
 
 function statusPosition(at,width,total,index) {
     const size=28,gap=4,columns=4,rows=Math.ceil(total/columns);
-    const bottom=Math.max(rows*(size+gap)+4,at.y-110);
+    const bottom=Math.max(rows*(size+gap)+4,Math.min(at.y-110,at.statusBottom??Infinity));
     const row=Math.floor(index/columns),n=Math.min(columns,total-row*columns),span=n*(size+gap)-gap;
     const left=Math.max(4,Math.min(width-span-4,at.x-span/2));
     return {x:left+(index%columns)*(size+gap),y:bottom-(rows-row)*(size+gap)};

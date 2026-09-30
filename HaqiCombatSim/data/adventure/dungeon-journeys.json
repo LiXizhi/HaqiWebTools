@@ -1,0 +1,1266 @@
+{
+  "version": 1,
+  "source": "儿童版已有可运行副本；故事、阵容与塔层为网页改编",
+  "entries": [
+    {
+      "id": "journey:tower-camp",
+      "kind": "tower",
+      "island": "camp",
+      "name": "晨光试炼塔",
+      "recommendedLevel": 1,
+      "floors": 10,
+      "sourceId": "dungeon:HaqiTown_LightHouse_S1",
+      "story": [
+        {
+          "id": "journey:tower-camp:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "晨光落在石阶上。塔门缓缓打开，守塔人放下手中的书。",
+          "en": "Morning light falls on the stone steps. The tower door opens, and the keeper puts down a book."
+        },
+        {
+          "id": "journey:tower-camp:line-2",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "你为什么来到这里？为了赢过别人，还是遇见更勇敢的自己？",
+          "en": "Why are you here? To beat others, or to become a little braver?"
+        },
+        {
+          "id": "journey:tower-camp:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我想试一试，慢慢进步。",
+          "en": "I want to try and get better.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:tower-camp:line-4",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "第一步不必很大，愿意尝试就很好。",
+          "en": "Your first step can be small. It is good to try."
+        },
+        {
+          "id": "journey:tower-camp:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会小心，也会照顾朋友。",
+          "en": "I will be careful and help my friends.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:tower-camp:line-6",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "这座塔有10层。今天走到哪里都没关系，记住你学到的东西。",
+          "en": "This tower has 10 floors. It is all right to stop. Remember what you learn."
+        },
+        {
+          "id": "journey:tower-camp:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我准备好了，先走一步。",
+          "en": "I am ready to take the first step.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:tower-camp:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "守塔人点亮了第一阶的蓝灯。新的试炼，从一句勇敢的回答开始。",
+          "en": "The keeper lights the first blue lamp. A new trial begins with a brave answer."
+        }
+      ]
+    },
+    {
+      "id": "journey:first-watch",
+      "kind": "elite",
+      "island": "camp",
+      "name": "晨雾中的巡夜灯",
+      "recommendedLevel": 1,
+      "sourceId": "dungeon:HaqiTown_YYsDream_S1",
+      "partySize": 1,
+      "story": [
+        {
+          "id": "journey:first-watch:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "夜色落进营地，最后一盏巡夜灯也暗了。草丛里传来细小的脚步声。",
+          "en": "Night falls over the camp. The last watch light goes out. Small footsteps rustle in the grass."
+        },
+        {
+          "id": "journey:first-watch:line-2",
+          "role": "npc",
+          "speaker": "营地向导",
+          "text": "别怕，是我。你愿意陪我找回灯里的光吗？",
+          "en": "Do not be afraid. It is me. Will you help me find the light?"
+        },
+        {
+          "id": "journey:first-watch:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我在这里。我会帮助你。",
+          "en": "I am here. I will help you.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:first-watch:line-4",
+          "role": "npc",
+          "speaker": "营地向导",
+          "text": "谢谢。听，桥那边有铃声。我们要慢慢走，别惊醒小动物。",
+          "en": "Thank you. Listen! A bell is ringing across the bridge. Let us walk slowly."
+        },
+        {
+          "id": "journey:first-watch:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们一起过桥吧。",
+          "en": "Let us cross the bridge together.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:first-watch:line-6",
+          "role": "npc",
+          "speaker": "营地向导",
+          "text": "守卫把光藏在了门后。门一打开，我来点灯，你照顾大家。",
+          "en": "The guard hid the light behind the door. I will light the lamp. Please keep everyone safe."
+        },
+        {
+          "id": "journey:first-watch:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会保护大家。",
+          "en": "I will keep everyone safe.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:first-watch:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "两人的影子沿着小路前进。黑暗里，一点蓝光回应了他们。",
+          "en": "Two shadows move down the path. A tiny blue light answers them in the dark."
+        }
+      ]
+    },
+    {
+      "id": "journey:lost-spark",
+      "kind": "elite",
+      "island": "camp",
+      "name": "走失的火种",
+      "recommendedLevel": 3,
+      "sourceId": "dungeon:HaqiTown_FireCavern_110527_1",
+      "partySize": 2,
+      "story": [
+        {
+          "id": "journey:lost-spark:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "练习课结束后，一颗小火种滚进裂隙。它的光正在变弱。",
+          "en": "After class, a little spark rolls into a crack. Its light is fading."
+        },
+        {
+          "id": "journey:lost-spark:line-2",
+          "role": "npc",
+          "speaker": "火种看守",
+          "text": "我听见火种在哭。它不是想烧东西，它只是迷路了。",
+          "en": "I can hear the spark crying. It does not want to burn anything. It is lost."
+        },
+        {
+          "id": "journey:lost-spark:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "别害怕，我们来帮你。",
+          "en": "Do not be afraid. We are here to help.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:lost-spark:line-4",
+          "role": "npc",
+          "speaker": "火种看守",
+          "text": "裂隙里很热。你拿着水壶，我拿着灯，我们互相照应。",
+          "en": "It is hot inside. You take the water. I will take the lamp. We can help each other."
+        },
+        {
+          "id": "journey:lost-spark:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "给你一些水。",
+          "en": "Here is some water for you.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:lost-spark:line-6",
+          "role": "npc",
+          "speaker": "火种看守",
+          "text": "前面的守卫不肯让路。救出火种后，要把它送回课堂。",
+          "en": "The guard will not let us pass. After we save the spark, we must take it back to class."
+        },
+        {
+          "id": "journey:lost-spark:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们会带你回家。",
+          "en": "We will take you home.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:lost-spark:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "火种闪了两下。它听见了那句“回家”，终于不再发抖。",
+          "en": "The spark flashes twice. It hears the word home and stops shaking."
+        }
+      ]
+    },
+    {
+      "id": "journey:tower-town",
+      "kind": "tower",
+      "island": "town",
+      "name": "灯塔试炼塔",
+      "recommendedLevel": 5,
+      "floors": 20,
+      "sourceId": "dungeon:HaqiTown_LightHouse_S2",
+      "story": [
+        {
+          "id": "journey:tower-town:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "海风落在石阶上。塔门缓缓打开，守塔人放下手中的书。",
+          "en": "Sea breeze falls on the stone steps. The tower door opens, and the keeper puts down a book."
+        },
+        {
+          "id": "journey:tower-town:line-2",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "你为什么来到这里？为了赢过别人，还是遇见更勇敢的自己？",
+          "en": "Why are you here? To beat others, or to become a little braver?"
+        },
+        {
+          "id": "journey:tower-town:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我想试一试，慢慢进步。",
+          "en": "I want to try and get better.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:tower-town:line-4",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "登得再高，也别忘了帮后来的人照亮阶梯。",
+          "en": "However high you climb, leave a light for others."
+        },
+        {
+          "id": "journey:tower-town:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会小心，也会照顾朋友。",
+          "en": "I will be careful and help my friends.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:tower-town:line-6",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "这座塔有20层。今天走到哪里都没关系，记住你学到的东西。",
+          "en": "This tower has 20 floors. It is all right to stop. Remember what you learn."
+        },
+        {
+          "id": "journey:tower-town:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我准备好了，先走一步。",
+          "en": "I am ready to take the first step.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:tower-town:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "守塔人点亮了第一阶的蓝灯。新的试炼，从一句勇敢的回答开始。",
+          "en": "The keeper lights the first blue lamp. A new trial begins with a brave answer."
+        }
+      ]
+    },
+    {
+      "id": "journey:vault-lamp",
+      "kind": "elite",
+      "island": "town",
+      "name": "宝库里的求救灯",
+      "recommendedLevel": 5,
+      "sourceId": "dungeon:HaqiTown_FireCavern",
+      "partySize": 2,
+      "story": [
+        {
+          "id": "journey:vault-lamp:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "宝库深处闪着微弱的灯光。每亮三下，就停一会儿，像是在求救。",
+          "en": "A weak light flashes deep in the vault. Three flashes, then a pause. Someone needs help."
+        },
+        {
+          "id": "journey:vault-lamp:line-2",
+          "role": "npc",
+          "speaker": "宝库侦察员",
+          "text": "这不是宝石的光。那是守库人的求救灯，我们不能走开。",
+          "en": "That is not a jewel. It is the keeper asking for help. We cannot leave."
+        },
+        {
+          "id": "journey:vault-lamp:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "有人需要我们的帮助。",
+          "en": "Someone needs our help.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:vault-lamp:line-4",
+          "role": "npc",
+          "speaker": "宝库侦察员",
+          "text": "门上的三把锁会依次亮起。先看清楚，再一起行动。",
+          "en": "Three locks light up one by one. Watch carefully. Then we will act together."
+        },
+        {
+          "id": "journey:vault-lamp:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "先等一下，仔细看。",
+          "en": "Wait a moment. Look carefully.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:vault-lamp:line-6",
+          "role": "npc",
+          "speaker": "宝库侦察员",
+          "text": "里面的守卫很强。宝物可以等，救人最重要。",
+          "en": "The guard inside is strong. The treasure can wait. We must save the keeper first."
+        },
+        {
+          "id": "journey:vault-lamp:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "先救人，再找宝物。",
+          "en": "Let us save the keeper first.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:vault-lamp:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "灯又亮了三下。这一次，门外也亮起了回应的光。",
+          "en": "The light flashes three times again. This time, a light outside answers it."
+        }
+      ]
+    },
+    {
+      "id": "journey:dream-feather",
+      "kind": "elite",
+      "island": "town",
+      "name": "梦中遗落的羽毛",
+      "recommendedLevel": 7,
+      "sourceId": "dungeon:HaqiTown_YYsDream_S1",
+      "partySize": 3,
+      "story": [
+        {
+          "id": "journey:dream-feather:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "一片羽毛落在梦里的湖上。湖水没有倒影，只有一声轻轻的呼唤。",
+          "en": "A feather lands on a lake in a dream. There is no reflection, only a quiet call."
+        },
+        {
+          "id": "journey:dream-feather:line-2",
+          "role": "npc",
+          "speaker": "梦境引路人",
+          "text": "那是我的羽毛。少了它，我就找不到醒来的路。",
+          "en": "That is my feather. Without it, I cannot find my way out of this dream."
+        },
+        {
+          "id": "journey:dream-feather:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会帮你找到路。",
+          "en": "I will help you find the way.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:dream-feather:line-4",
+          "role": "npc",
+          "speaker": "梦境引路人",
+          "text": "梦里会出现很多假羽毛。真正的那片，会随着心跳发光。",
+          "en": "There are many false feathers here. The real one glows with each heartbeat."
+        },
+        {
+          "id": "journey:dream-feather:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "听，是心跳的声音。",
+          "en": "Listen. That is a heartbeat.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:dream-feather:line-6",
+          "role": "npc",
+          "speaker": "梦境引路人",
+          "text": "如果我忘记自己是谁，请叫我的名字。不要让我一个人留下。",
+          "en": "If I forget who I am, please call my name. Do not leave me here alone."
+        },
+        {
+          "id": "journey:dream-feather:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我不会把你留下。",
+          "en": "I will not leave you behind.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:dream-feather:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "湖面泛起一圈光。梦中的旅人记住了这个声音。",
+          "en": "A ring of light spreads across the lake. The dreamer remembers that voice."
+        }
+      ]
+    },
+    {
+      "id": "journey:tower-fire",
+      "kind": "tower",
+      "island": "fire",
+      "name": "赤焰试炼塔",
+      "recommendedLevel": 10,
+      "floors": 30,
+      "sourceId": "dungeon:HaqiTown_LightHouse_S3",
+      "story": [
+        {
+          "id": "journey:tower-fire:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "火光落在石阶上。塔门缓缓打开，守塔人放下手中的书。",
+          "en": "Firelight falls on the stone steps. The tower door opens, and the keeper puts down a book."
+        },
+        {
+          "id": "journey:tower-fire:line-2",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "你为什么来到这里？为了赢过别人，还是遇见更勇敢的自己？",
+          "en": "Why are you here? To beat others, or to become a little braver?"
+        },
+        {
+          "id": "journey:tower-fire:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我想试一试，慢慢进步。",
+          "en": "I want to try and get better.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:tower-fire:line-4",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "勇敢不是不害怕，而是害怕时仍知道怎样照顾自己。",
+          "en": "Being brave means taking care of yourself, even when you are afraid."
+        },
+        {
+          "id": "journey:tower-fire:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会小心，也会照顾朋友。",
+          "en": "I will be careful and help my friends.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:tower-fire:line-6",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "这座塔有30层。今天走到哪里都没关系，记住你学到的东西。",
+          "en": "This tower has 30 floors. It is all right to stop. Remember what you learn."
+        },
+        {
+          "id": "journey:tower-fire:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我准备好了，先走一步。",
+          "en": "I am ready to take the first step.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:tower-fire:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "守塔人点亮了第一阶的蓝灯。新的试炼，从一句勇敢的回答开始。",
+          "en": "The keeper lights the first blue lamp. A new trial begins with a brave answer."
+        }
+      ]
+    },
+    {
+      "id": "journey:gold-bell",
+      "kind": "elite",
+      "island": "fire",
+      "name": "金库失窃的风铃",
+      "recommendedLevel": 10,
+      "sourceId": "dungeon:FlamingPhoenixIsland_GoldenOgreTreasureHouse",
+      "partySize": 3,
+      "story": [
+        {
+          "id": "journey:gold-bell:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "金库的风铃不见了。没有铃声，山谷里的送货鸟纷纷迷路。",
+          "en": "The vault wind chime is gone. Without its sound, the delivery birds are getting lost."
+        },
+        {
+          "id": "journey:gold-bell:line-2",
+          "role": "npc",
+          "speaker": "火鸟信使",
+          "text": "小偷没有拿金币，只拿走了风铃。我们得先弄清为什么。",
+          "en": "The thief left the coins and took only the chime. We need to find out why."
+        },
+        {
+          "id": "journey:gold-bell:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们先听听他的故事。",
+          "en": "Let us hear his story first.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:gold-bell:line-4",
+          "role": "npc",
+          "speaker": "火鸟信使",
+          "text": "你看，地上有一条拖痕，通向那扇铜门。",
+          "en": "Look! There is a mark on the ground. It leads to the bronze door."
+        },
+        {
+          "id": "journey:gold-bell:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "线索就在这里。",
+          "en": "The clue is right here.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:gold-bell:line-6",
+          "role": "npc",
+          "speaker": "火鸟信使",
+          "text": "如果守卫拦路，我们一起面对。拿回风铃，也要问清缘由。",
+          "en": "If the guard stops us, we will face it together. We will bring back the chime and ask what happened."
+        },
+        {
+          "id": "journey:gold-bell:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们会把风铃带回来。",
+          "en": "We will bring the chime back.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:gold-bell:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "远处传来一声轻响。那不是风，是风铃在等待回答。",
+          "en": "A soft note rings far away. It is not the wind. The chime is waiting for an answer."
+        }
+      ]
+    },
+    {
+      "id": "journey:ember-night",
+      "kind": "elite",
+      "island": "fire",
+      "name": "篝火守夜人",
+      "recommendedLevel": 12,
+      "sourceId": "dungeon:HaqiTown_CampfireChallenge",
+      "partySize": 4,
+      "story": [
+        {
+          "id": "journey:ember-night:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "夜里的山谷越来越冷，营地的篝火却突然变成了蓝色。",
+          "en": "The valley grows cold at night. Suddenly, the campfire turns blue."
+        },
+        {
+          "id": "journey:ember-night:line-2",
+          "role": "npc",
+          "speaker": "守夜队长",
+          "text": "火没有熄灭，是有人把温暖锁住了。帐篷里的孩子还在睡。",
+          "en": "The fire is still burning, but someone has locked away its warmth. The children are asleep."
+        },
+        {
+          "id": "journey:ember-night:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们要让大家暖和起来。",
+          "en": "We must keep everyone warm.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:ember-night:line-4",
+          "role": "npc",
+          "speaker": "守夜队长",
+          "text": "四个人要互相照看。你守住小路，我去找干柴。",
+          "en": "We must look after each other. Watch the path while I find dry wood."
+        },
+        {
+          "id": "journey:ember-night:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "放心，我会守住这里。",
+          "en": "Do not worry. I will stay here.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:ember-night:line-6",
+          "role": "npc",
+          "speaker": "守夜队长",
+          "text": "前面的影子带走了火光。让我们在天亮前把它找回来。",
+          "en": "That shadow took the firelight. Let us bring it back before morning."
+        },
+        {
+          "id": "journey:ember-night:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "天亮前，我们一起回来。",
+          "en": "We will come back together before morning.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:ember-night:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "守夜人添上最后一根木柴。小小的暖光，为归来的人留着。",
+          "en": "The watcher adds the last piece of wood. A small warm light waits for their return."
+        }
+      ]
+    },
+    {
+      "id": "journey:tower-ice",
+      "kind": "tower",
+      "island": "ice",
+      "name": "霜晶试炼塔",
+      "recommendedLevel": 20,
+      "floors": 50,
+      "sourceId": "dungeon:HaqiTown_LightHouse_S4",
+      "story": [
+        {
+          "id": "journey:tower-ice:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "霜雪落在石阶上。塔门缓缓打开，守塔人放下手中的书。",
+          "en": "Frost and snow falls on the stone steps. The tower door opens, and the keeper puts down a book."
+        },
+        {
+          "id": "journey:tower-ice:line-2",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "你为什么来到这里？为了赢过别人，还是遇见更勇敢的自己？",
+          "en": "Why are you here? To beat others, or to become a little braver?"
+        },
+        {
+          "id": "journey:tower-ice:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我想试一试，慢慢进步。",
+          "en": "I want to try and get better.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:tower-ice:line-4",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "冰上留下的每个脚印，都是一次认真选择。",
+          "en": "Every footprint on the ice is a careful choice."
+        },
+        {
+          "id": "journey:tower-ice:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会小心，也会照顾朋友。",
+          "en": "I will be careful and help my friends.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:tower-ice:line-6",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "这座塔有50层。今天走到哪里都没关系，记住你学到的东西。",
+          "en": "This tower has 50 floors. It is all right to stop. Remember what you learn."
+        },
+        {
+          "id": "journey:tower-ice:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我准备好了，先走一步。",
+          "en": "I am ready to take the first step.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:tower-ice:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "守塔人点亮了第一阶的蓝灯。新的试炼，从一句勇敢的回答开始。",
+          "en": "The keeper lights the first blue lamp. A new trial begins with a brave answer."
+        }
+      ]
+    },
+    {
+      "id": "journey:frozen-letter",
+      "kind": "elite",
+      "island": "ice",
+      "name": "冰封的回信",
+      "recommendedLevel": 20,
+      "sourceId": "dungeon:Global_FrostRoarIsland_TreasureHouse",
+      "partySize": 2,
+      "story": [
+        {
+          "id": "journey:frozen-letter:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "一封回信冻在冰层里。信封上写着：“我会在春天回来。”",
+          "en": "A letter is frozen in the ice. On it are the words: I will come back in spring."
+        },
+        {
+          "id": "journey:frozen-letter:line-2",
+          "role": "npc",
+          "speaker": "雪原邮差",
+          "text": "这是给山下奶奶的信。她每天都在窗边等，可邮路被风雪封住了。",
+          "en": "This letter is for a grandmother in the village. She waits by her window, but snow blocks the road."
+        },
+        {
+          "id": "journey:frozen-letter:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们会把信送到。",
+          "en": "We will deliver the letter.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:frozen-letter:line-4",
+          "role": "npc",
+          "speaker": "雪原邮差",
+          "text": "不要敲碎冰块，信纸会受伤。先找暖石，让冰慢慢融化。",
+          "en": "Do not break the ice. It may damage the letter. Find a warm stone and let the ice melt slowly."
+        },
+        {
+          "id": "journey:frozen-letter:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "慢慢来，小心一点。",
+          "en": "Take your time. Be careful.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:frozen-letter:line-6",
+          "role": "npc",
+          "speaker": "雪原邮差",
+          "text": "冰门后的守卫听不懂我的话。请站在我身边，我们一起守住这封信。",
+          "en": "The guard behind the ice gate will not listen. Stay beside me. We will protect the letter together."
+        },
+        {
+          "id": "journey:frozen-letter:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我就在你身边。",
+          "en": "I am right beside you.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:frozen-letter:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "冰下的字渐渐清晰。远方的约定，终于有了走向家门的路。",
+          "en": "The words become clear under the ice. A promise from far away has found its way home."
+        }
+      ]
+    },
+    {
+      "id": "journey:storm-compass",
+      "kind": "elite",
+      "island": "ice",
+      "name": "风暴中心的罗盘",
+      "recommendedLevel": 22,
+      "sourceId": "dungeon:FrostRoarIsland_StormEye",
+      "partySize": 4,
+      "story": [
+        {
+          "id": "journey:storm-compass:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "风暴把罗盘的指针转个不停。只有风眼里，传来规律的滴答声。",
+          "en": "The storm keeps spinning the compass needle. Only the eye of the storm holds a steady ticking sound."
+        },
+        {
+          "id": "journey:storm-compass:line-2",
+          "role": "npc",
+          "speaker": "观风学者",
+          "text": "别追着指针跑。闭上眼睛，听听哪边的声音最清楚。",
+          "en": "Do not chase the needle. Close your eyes. Where is the sound clearest?"
+        },
+        {
+          "id": "journey:storm-compass:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我听见右边有声音。",
+          "en": "I can hear a sound on the right.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:storm-compass:line-4",
+          "role": "npc",
+          "speaker": "观风学者",
+          "text": "对。我们沿着石墙走，风大的时候就停下来。",
+          "en": "Yes. Let us follow the stone wall. Stop when the wind is too strong."
+        },
+        {
+          "id": "journey:storm-compass:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "风太大了，我们先停下。",
+          "en": "The wind is too strong. Let us stop.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:storm-compass:line-6",
+          "role": "npc",
+          "speaker": "观风学者",
+          "text": "找到罗盘的心，我们就能让船安全靠岸。准备一起进去吗？",
+          "en": "Find the heart of the compass and the ships can come home safely. Are you ready?"
+        },
+        {
+          "id": "journey:storm-compass:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "准备好了，我们一起走。",
+          "en": "I am ready. Let us go together.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:storm-compass:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "滴答声越来越近。四个人的脚步，终于有了同一个方向。",
+          "en": "The ticking grows closer. Their footsteps now share one direction."
+        }
+      ]
+    },
+    {
+      "id": "journey:tower-desert",
+      "kind": "tower",
+      "island": "desert",
+      "name": "流沙试炼塔",
+      "recommendedLevel": 30,
+      "floors": 70,
+      "sourceId": "dungeon:HaqiTown_LightHouse_S4",
+      "story": [
+        {
+          "id": "journey:tower-desert:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "流沙落在石阶上。塔门缓缓打开，守塔人放下手中的书。",
+          "en": "Shifting sand falls on the stone steps. The tower door opens, and the keeper puts down a book."
+        },
+        {
+          "id": "journey:tower-desert:line-2",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "你为什么来到这里？为了赢过别人，还是遇见更勇敢的自己？",
+          "en": "Why are you here? To beat others, or to become a little braver?"
+        },
+        {
+          "id": "journey:tower-desert:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我想试一试，慢慢进步。",
+          "en": "I want to try and get better.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:tower-desert:line-4",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "走得快不一定走得远。累了，就停下来喝口水。",
+          "en": "Fast steps do not always take you far. Rest and drink when you are tired."
+        },
+        {
+          "id": "journey:tower-desert:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会小心，也会照顾朋友。",
+          "en": "I will be careful and help my friends.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:tower-desert:line-6",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "这座塔有70层。今天走到哪里都没关系，记住你学到的东西。",
+          "en": "This tower has 70 floors. It is all right to stop. Remember what you learn."
+        },
+        {
+          "id": "journey:tower-desert:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我准备好了，先走一步。",
+          "en": "I am ready to take the first step.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:tower-desert:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "守塔人点亮了第一阶的蓝灯。新的试炼，从一句勇敢的回答开始。",
+          "en": "The keeper lights the first blue lamp. A new trial begins with a brave answer."
+        }
+      ]
+    },
+    {
+      "id": "journey:oasis-key",
+      "kind": "elite",
+      "island": "desert",
+      "name": "绿洲的最后一把钥匙",
+      "recommendedLevel": 30,
+      "sourceId": "dungeon:Global_AncientEgyptIsland_TreasureHouse",
+      "partySize": 3,
+      "story": [
+        {
+          "id": "journey:oasis-key:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "绿洲的水门紧紧关着。最后一把钥匙，被埋在了沙下的旧城。",
+          "en": "The oasis water gate is locked. The last key lies in an old city under the sand."
+        },
+        {
+          "id": "journey:oasis-key:line-2",
+          "role": "npc",
+          "speaker": "绿洲守望者",
+          "text": "水只够喝一天了。我们要找钥匙，但不能浪费路上的每一滴水。",
+          "en": "We have water for only one more day. We must find the key and save every drop."
+        },
+        {
+          "id": "journey:oasis-key:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们一起节约用水。",
+          "en": "Let us save water together.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:oasis-key:line-4",
+          "role": "npc",
+          "speaker": "绿洲守望者",
+          "text": "墙上有一片叶子的图案。钥匙不是金色的，是绿色的。",
+          "en": "There is a leaf on the wall. The key is not gold. It is green."
+        },
+        {
+          "id": "journey:oasis-key:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们要找绿色的钥匙。",
+          "en": "We are looking for the green key.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:oasis-key:line-6",
+          "role": "npc",
+          "speaker": "绿洲守望者",
+          "text": "开门后，先让最小的树喝到水。它已经等了很久。",
+          "en": "When the gate opens, let the smallest tree drink first. It has waited a long time."
+        },
+        {
+          "id": "journey:oasis-key:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "先把水留给小树。",
+          "en": "Let us give the little tree water first.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:oasis-key:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "一片干叶从门缝飘出。它还保留着一点点绿色。",
+          "en": "A dry leaf drifts through the gate. A little green still remains."
+        }
+      ]
+    },
+    {
+      "id": "journey:sand-echo",
+      "kind": "elite",
+      "island": "desert",
+      "name": "沙海回声",
+      "recommendedLevel": 32,
+      "sourceId": "dungeon:CrazyTower_21_to_25",
+      "partySize": 1,
+      "story": [
+        {
+          "id": "journey:sand-echo:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "沙海里有人呼唤你的名字。回过头，却只看见一串旧脚印。",
+          "en": "Someone calls your name in the desert. You turn around and see only old footprints."
+        },
+        {
+          "id": "journey:sand-echo:line-2",
+          "role": "npc",
+          "speaker": "遗迹记录员",
+          "text": "不是每个回声都可信。跟着我的灯，不要追着声音走。",
+          "en": "Not every echo is true. Follow my lamp. Do not follow the voices."
+        },
+        {
+          "id": "journey:sand-echo:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会跟着你的灯。",
+          "en": "I will follow your lamp.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:sand-echo:line-4",
+          "role": "npc",
+          "speaker": "遗迹记录员",
+          "text": "如果我们走散，就说约好的话：星星在上面，朋友在身边。",
+          "en": "If we lose each other, say our secret words: Stars above, friends beside us."
+        },
+        {
+          "id": "journey:sand-echo:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "星星在上面，朋友在身边。",
+          "en": "Stars above, friends beside us.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:sand-echo:line-6",
+          "role": "npc",
+          "speaker": "遗迹记录员",
+          "text": "前面的门只会为真实的声音打开。把你的话说清楚。",
+          "en": "The door ahead opens only for a real voice. Speak clearly."
+        },
+        {
+          "id": "journey:sand-echo:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "是我，我来找你了。",
+          "en": "It is me. I am here to find you.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:sand-echo:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "这一次，沙海没有重复那句话。门后传来一声真正的回应。",
+          "en": "This time, the desert does not echo. A real voice answers from behind the door."
+        }
+      ]
+    },
+    {
+      "id": "journey:tower-dark",
+      "kind": "tower",
+      "island": "dark",
+      "name": "幽月试炼塔",
+      "recommendedLevel": 40,
+      "floors": 100,
+      "sourceId": "dungeon:HaqiTown_LightHouse_S4",
+      "story": [
+        {
+          "id": "journey:tower-dark:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "月光落在石阶上。塔门缓缓打开，守塔人放下手中的书。",
+          "en": "Moonlight falls on the stone steps. The tower door opens, and the keeper puts down a book."
+        },
+        {
+          "id": "journey:tower-dark:line-2",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "你为什么来到这里？为了赢过别人，还是遇见更勇敢的自己？",
+          "en": "Why are you here? To beat others, or to become a little braver?"
+        },
+        {
+          "id": "journey:tower-dark:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我想试一试，慢慢进步。",
+          "en": "I want to try and get better.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:tower-dark:line-4",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "黑暗不会因为你闭眼而消失，但朋友可以陪你面对。",
+          "en": "Closing your eyes will not end the dark. A friend can face it with you."
+        },
+        {
+          "id": "journey:tower-dark:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会小心，也会照顾朋友。",
+          "en": "I will be careful and help my friends.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:tower-dark:line-6",
+          "role": "npc",
+          "speaker": "守塔人",
+          "text": "这座塔有100层。今天走到哪里都没关系，记住你学到的东西。",
+          "en": "This tower has 100 floors. It is all right to stop. Remember what you learn."
+        },
+        {
+          "id": "journey:tower-dark:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我准备好了，先走一步。",
+          "en": "I am ready to take the first step.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:tower-dark:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "守塔人点亮了第一阶的蓝灯。新的试炼，从一句勇敢的回答开始。",
+          "en": "The keeper lights the first blue lamp. A new trial begins with a brave answer."
+        }
+      ]
+    },
+    {
+      "id": "journey:marsh-beacon",
+      "kind": "elite",
+      "island": "dark",
+      "name": "沼泽中的航标",
+      "recommendedLevel": 40,
+      "sourceId": "dungeon:DarkForestIsland_MarshNest",
+      "partySize": 4,
+      "story": [
+        {
+          "id": "journey:marsh-beacon:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "浓雾吞没了航标，船上的灯在沼泽深处徘徊。",
+          "en": "Thick mist hides the beacon. Ship lights wander deep in the marsh."
+        },
+        {
+          "id": "journey:marsh-beacon:line-2",
+          "role": "npc",
+          "speaker": "夜航领航员",
+          "text": "船长看不见岸。我们要找到三个灯座，让蓝光连成一条路。",
+          "en": "The captain cannot see the shore. We must find three lamps and make a path of blue light."
+        },
+        {
+          "id": "journey:marsh-beacon:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们来照亮回家的路。",
+          "en": "Let us light the way home.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:marsh-beacon:line-4",
+          "role": "npc",
+          "speaker": "夜航领航员",
+          "text": "脚下很软，踩着石头走。看到同伴落后，就等一等。",
+          "en": "The ground is soft. Step on the stones. Wait if a friend falls behind."
+        },
+        {
+          "id": "journey:marsh-beacon:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会等你，不要着急。",
+          "en": "I will wait for you. Take your time.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:marsh-beacon:line-6",
+          "role": "npc",
+          "speaker": "夜航领航员",
+          "text": "最后一座灯台就在守卫身后。我们一起点亮它。",
+          "en": "The last lamp is behind the guard. Let us light it together."
+        },
+        {
+          "id": "journey:marsh-beacon:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "大家一起，点亮航标。",
+          "en": "Together, let us light the beacon.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:marsh-beacon:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "雾里响起船笛。那艘迷路的船，还没有放弃等待。",
+          "en": "A ship horn sounds in the mist. The lost ship is still waiting."
+        }
+      ]
+    },
+    {
+      "id": "journey:night-promise",
+      "kind": "elite",
+      "island": "dark",
+      "name": "梦魇尽头的约定",
+      "recommendedLevel": 42,
+      "sourceId": "dungeon:HaqiTown_YYsDream_S4",
+      "partySize": 2,
+      "story": [
+        {
+          "id": "journey:night-promise:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "这里的钟永远停在午夜。有人握着半条手绳，在梦里等一个朋友。",
+          "en": "The clock here is always at midnight. Someone holds half a friendship bracelet and waits in a dream."
+        },
+        {
+          "id": "journey:night-promise:line-2",
+          "role": "npc",
+          "speaker": "守梦人",
+          "text": "梦魇会学朋友的声音。别只听它说什么，要记住真正的约定。",
+          "en": "The nightmare can copy a friend’s voice. Remember your real promise."
+        },
+        {
+          "id": "journey:night-promise:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我答应过，不会离开。",
+          "en": "I promised I would not leave.",
+          "reward": "hp"
+        },
+        {
+          "id": "journey:night-promise:line-4",
+          "role": "npc",
+          "speaker": "守梦人",
+          "text": "如果你看见两扇门，选有晨光的那扇。我们约好了在清晨相见。",
+          "en": "If you see two doors, choose the one with morning light. We promised to meet at dawn."
+        },
+        {
+          "id": "journey:night-promise:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们在清晨相见。",
+          "en": "We will meet at dawn.",
+          "reward": "attack"
+        },
+        {
+          "id": "journey:night-promise:line-6",
+          "role": "npc",
+          "speaker": "守梦人",
+          "text": "谢谢你还记得。现在握紧手绳，我们一起走到梦的尽头。",
+          "en": "Thank you for remembering. Hold the bracelet. Let us reach the end of the dream together."
+        },
+        {
+          "id": "journey:night-promise:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "无论多远，我们一起走。",
+          "en": "However far it is, we will go together.",
+          "reward": "defense"
+        },
+        {
+          "id": "journey:night-promise:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "停住的钟轻轻跳了一下。午夜之后，终于可能有明天。",
+          "en": "The silent clock ticks once. After midnight, there may finally be a tomorrow."
+        }
+      ]
+    }
+  ]
+}

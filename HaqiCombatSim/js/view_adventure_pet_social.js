@@ -20,7 +20,11 @@ export function drawSocialPet(ctx,assets,row,effects,time,reduced,at=Date.now())
     ctx.restore();
 }
 
+function drawPinkMark(ctx,x,y,time,reduced){
+    ctx.save();ctx.translate(x,y-(reduced?0:Math.sin(time/300)*2));ctx.fillStyle='#f48cb0';ctx.beginPath();ctx.arc(0,0,5.5,0,Math.PI*2);ctx.fill();ctx.restore();
+}
 // No overhead social text. Both pets briefly show marks/hearts while together.
+// Pets already in the player's affinity memory also keep a pink mark while close.
 export function drawPetSocialEffects(ctx,assets,rows,effects,time,reduced,at){
     const byId=new Map(rows.map(row=>[row.pet.id,row])),used=new Set(),p=petInteractionParams(assets.content);
     ctx.save();ctx.textAlign='center';ctx.font='12px "Microsoft YaHei",sans-serif';
@@ -47,5 +51,12 @@ export function drawPetSocialEffects(ctx,assets,rows,effects,time,reduced,at){
             ctx.save();ctx.translate(x,y-15-(reduced?0:Math.sin(time/300)*3));ctx.scale(9,9);ctx.fillStyle='#e9859a';ctx.beginPath();ctx.moveTo(0,.7);ctx.bezierCurveTo(-1.6,-.2,-.7,-1.4,0,-.6);ctx.bezierCurveTo(.7,-1.4,1.6,-.2,0,.7);ctx.fill();ctx.restore();
         }
     }
+    const marked=new Set();
+    for(const row of rows){
+        const friends=new Set((row.pet?.memories||[]).filter(memory=>memory.total>0).sort((a,b)=>b.lastAt-a.lastAt||String(a.otherId).localeCompare(String(b.otherId))).slice(0,p.memoryCapacity).map(memory=>memory.otherId));
+        if(!friends.size)continue;
+        for(const other of rows)if(other!==row&&friends.has(other.pet?.id)&&Math.hypot(row.position.x-other.position.x,row.position.y-other.position.y)<=p.interactionDistance){marked.add(row);marked.add(other);}
+    }
+    for(const row of marked)drawPinkMark(ctx,row.position.x,row.position.y-64*(row.scale||1)-8,time,reduced);
     ctx.restore();
 }

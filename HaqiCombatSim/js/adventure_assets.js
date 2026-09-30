@@ -1,5 +1,6 @@
 import {warmSceneActors} from './adventure_actor_assets.js';
 import {createMonsterArtRenderer} from './adventure_monster_art.js';
+import {installModelPets} from './adventure_monster_pets_core.js';
 import {loadHeroLibrary} from './hero_renderer.js';
 import {createQuestJournalLoader} from './adventure_quest_journal.js';
 import {installDungeonIndex} from './adventure_dungeons_core.js';
@@ -42,6 +43,7 @@ export async function loadResources(progress) {
     // Manifests only: island sheets and cards load when the current zone or UI needs them.
     const environmentReady=loadEnvironmentArt(mode,json).catch(error=>{console.warn('使用基础场景素材：',error.message);return null;});
     const buildingArtReady=loadEnvironmentArt(mode,json,'data/adventure/building-art.json').catch(error=>{console.warn('使用基础建筑素材：',error.message);return null;});
+    const entranceArtReady=loadEnvironmentArt(mode,json,'data/adventure/entrance-art.json').catch(error=>{console.warn('使用基础副本入口：',error.message);return null;});
     const terrainDecorationsReady=loadEnvironmentArt(mode,json,'data/adventure/terrain-decoration-art.json').catch(error=>{console.warn('使用基础地表纹理：',error.message);return null;});
     const uiArtReady=loadUiArt(mode,json).catch(error=>console.warn('使用基础界面：',error.message));
     validateMediaManifest(media,manifest,mode);
@@ -112,7 +114,8 @@ export async function loadResources(progress) {
     installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames);
     installIslandEncounters(content,dataset,await json('data/adventure/island-encounters.json'),kidsCards,cardNames);
     const dungeonJson=createJsonReader({packed:false});
-    installDungeonIndex(content,await json('data/adventure/dungeon-index.json'));
+    const [dungeonIndex,dungeonJourneys]=await Promise.all([json('data/adventure/dungeon-index.json'),json('data/adventure/dungeon-journeys.json')]);
+    content.dungeonJourneys=dungeonJourneys;installDungeonIndex(content,dungeonIndex);
     const dungeons=createDungeonLoader({content,dataset,cards:kidsCards,names:cardNames,readJson:dungeonJson});
     installNpcCatalog(content,await json('data/adventure/npc-catalog.json'));
     installMountCatalog(content,await json('data/adventure/mount-catalog.json'));
@@ -146,17 +149,22 @@ export async function loadResources(progress) {
     for(const [id,ref] of Object.entries(shopIcons.items))if(content.items[id]&&!content.items[id].art){content.items[id].art=ref;content.items[id].iconFallback=!!shopIcons.fallbacks[id];}
     progress?.({ label: '正在准备世界与角色资源', value: null });
     for(const [id,pet] of Object.entries(content.pets))if(pet.art)lazyImages.set('pet:'+id,pet.art);
-    function drawPet(ctx,id,stage,x,y,w,h,column=0){const art=content.pets[id]?.art;if(!art)return false;const key='pet:'+id;const img=images.get(key);if(!img){void ensureImage(key).catch(()=>{});return false;}const sw=img.width/4,sh=img.height/4;ctx.drawImage(img,column*sw,stage*sh,sw,sh,x,y,w,h);return true;}
+    function drawPet(ctx,id,stage,x,y,w,h,column=0){const art=content.pets[id]?.art;if(!art)return false;const key='pet:'+id;if(!lazyImages.has(key))lazyImages.set(key,art);const img=images.get(key);if(!img){void ensureImage(key).catch(()=>{});return false;}if(art.static){ctx.drawImage(img,x,y,w,h);return true;}const sw=img.width/4,sh=img.height/4;ctx.drawImage(img,column*sw,stage*sh,sw,sh,x,y,w,h);return true;}
     const monsterArt=await json('data/adventure/monster-art.json');
+    content.monsterArt=monsterArt;
+    installModelPets(content,monsterArt,dataset.cards);
+    for(const [id,pet] of Object.entries(content.pets))if(pet.staticAppearance&&pet.art)lazyImages.set('pet:'+id,pet.art);
     for(const [id,entry] of Object.entries(monsterArt.entries))lazyImages.set('monster:'+id,entry);
     const drawMonster=createMonsterArtRenderer(monsterArt,content,draw,drawPet);
     await uiArtReady;
     const environmentArt=await environmentReady;
     const buildingArt=await buildingArtReady;
+    const entranceArt=await entranceArtReady;
     const terrainDecorationArt=await terrainDecorationsReady;
     async function warmScenery(world){
         const needed=sceneryAtlases(world);
         await Promise.all([
+            world.landmarks?.some(o=>o.dungeonId)?entranceArt?.warm(['shared']):null,
             buildingArt?.warm(needed.building),
             environmentArt?.warm(needed.environment),
             terrainDecorationArt?.warm(needed.terrain),
@@ -167,7 +175,7 @@ export async function loadResources(progress) {
         return draw(ctx,{id:'sprites',crop:tileRect('sprites',index,media.entries.sprites)},x,y,w,h,true,false);
     }
     const warmActors=(world,save,socialActors=[])=>warmSceneActors({world,save,socialActors,content,monsterArt,hero,ensureImage});
-    return {warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    return {warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

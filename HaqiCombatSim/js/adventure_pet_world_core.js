@@ -32,7 +32,14 @@ export function validatePetWorld(save,content){
 export function petWorldAction(source,content,action){
     check(source.petInstanceVersion===1&&!source.pendingEncounter,'请先结束战斗');
     const save=copy(source),effects=[],babies=[];
-    const set=p=>{if(p.ownerId===save.petOwnerId)save.pets[p.id]={...p,hp:save.pets[p.id]?.hp??petMaxHp(p,content),hunger:save.pets[p.id]?.hunger??100};else save.petWorld[p.id]=p;};
+    const own=p=>p.ownerId===save.petOwnerId||p.ownerId===null;
+    for(const id of Object.keys(save.petWorld))if(String(id).startsWith('npc-pet:'))delete save.petWorld[id];
+    if(save.petFileRefs)for(const id of Object.keys(save.petFileRefs))if(String(id).startsWith('npc-pet:'))delete save.petFileRefs[id];
+    const visitors=new Map();
+    for(const pet of action.visitors||[]){check(pet?.id&&String(pet.id).startsWith('npc-pet:')&&pet.ownerId!==save.petOwnerId,'来访宠物无效');visitors.set(pet.id,copy(pet));}
+    for(const profile of action.residents||[]){const id=npcPetId(profile.id);if(!visitors.has(id))visitors.set(id,{...createNpcPet(profile,content),homeZone:save.zone});}
+    const set=p=>{if(!own(p))return;if(p.ownerId===save.petOwnerId)save.pets[p.id]={...p,hp:save.pets[p.id]?.hp??petMaxHp(p,content),hunger:save.pets[p.id]?.hunger??100};else save.petWorld[p.id]=p;};
+    const lookup=id=>save.pets[id]||save.petWorld[id]||visitors.get(id);
     if(action.type==='adopt'){
         const baby=save.petWorld[action.id]||save.pets[action.id];if(!baby&&save.petFileRefs?.[action.id]?.group==='pets')return {save:source,effects,babies,changed:false};check(baby,'宝宝已不在场景');
         const result=adoptPet(baby,{ownerId:save.petOwnerId,now:action.now,zone:save.zone},content);
@@ -40,7 +47,6 @@ export function petWorldAction(source,content,action){
         delete save.petWorld[action.id];set(result.pet);
     }else{
         const now=action.now;
-        for(const profile of action.residents||[]){const id=npcPetId(profile.id);if(!save.petWorld[id]){check(!save.petFileRefs?.[id],'请先读取居民的宠物文件');save.petWorld[id]={...createNpcPet(profile,content),homeZone:save.zone};}}
         if(action.type==='feed'){
             const pet=save.pets[action.hostId];check(pet&&nutritionStock(save)>0,'需要一份营养餐');
             recordPetMeal(save,content);consumeNutrition(save);pet.hunger=Math.min(100,pet.hunger+petParams(content).foodRestore);
@@ -49,20 +55,20 @@ export function petWorldAction(source,content,action){
         for(const pair of action.pairs||[]){const key=JSON.stringify([...pair.ids].sort());if(!seen.has(key)){seen.add(key);pairs.push(pair);}}
         const ordered=pairs.length?[pairs[0],...pairs.slice(1).sort((a,b)=>JSON.stringify([...a.ids].sort()).localeCompare(JSON.stringify([...b.ids].sort())))]:[];
         for(const pair of ordered){
-            let [a,b]=pair.ids.map(id=>save.pets[id]||save.petWorld[id]);check(a&&b,'互动宠物尚未加载');
+            let [a,b]=pair.ids.map(lookup);check(a&&b,'互动宠物尚未加载');
             if(a.ownerId!==save.petOwnerId&&b.ownerId!==save.petOwnerId)continue;
             if(['feed','meal-arrival'].includes(action.type))check(pair.ids.includes(action.hostId),'分享只能建立主人宠物与来访宠物的关系');
             const scene={...pair.scene,zone:save.zone,inBattle:false};
             const interaction=interactPets(a,b,{kind:['feed','meal-arrival'].includes(action.type)?'manual-feed':action.type==='dialogue'?'owner-dialogue':'proximity',now,scene,completed:['feed','meal-arrival','dialogue'].includes(action.type)},content);
             [a,b]=interaction.pets;
-            const key=JSON.stringify([a,b].sort((a,b)=>a.id.localeCompare(b.id)).map(p=>[p.id,p.birthSerial+1]));
+            const key=JSON.stringify([a,b].sort((x,y)=>x.id.localeCompare(y.id)).map(p=>[p.id,p.birthSerial+1]));
             const babyId=`baby:${save.seed}:${hashSeed(key)}:${hashSeed('birth:'+key)}`;
             const birth=breedPets(a,b,{now,scene,babyId},content);
-            birth.pets.forEach(set);
+            if(interaction.markAdded||birth.baby)for(const pet of birth.pets)if(pet.ownerId===save.petOwnerId)set(pet);
             if(birth.baby){check(!save.pets[babyId]&&!save.petWorld[babyId]&&!save.petFileRefs?.[babyId],'宝宝编号冲突');set(birth.baby);babies.push(birth.baby);}
             effects.push({ids:pair.ids,markAdded:interaction.markAdded,play:interaction.play,status:birth.status,babyId:birth.baby?.id});
         }
-        if(action.type==='prune')for(const id of action.ids||[]){const p=save.pets[id]||save.petWorld[id];if(p)set(prunePetMemories(p,now,content));}
+        if(action.type==='prune')for(const id of action.ids||[]){const p=lookup(id);if(p?.ownerId===save.petOwnerId)set(prunePetMemories(p,now,content));}
     }
     const changed=JSON.stringify(save)!==JSON.stringify(source);
     if(changed)save.revision++;

@@ -82,7 +82,9 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
             const row=state.catalog.roles.find(r=>r.id===state.catalog.activeId);
             if(!row)throw Error('请先选择本地角色。');
             const save=JSON.parse(JSON.stringify(row.save));
-            for(const id of Object.keys(save.petFileRefs||{}))hydratePetFile(save,id,scope(key(),row.id),fileIO(scope(key(),row.id)).read,content);
+            for(const id of Object.keys(save.petFileRefs||{}))if(!String(id).startsWith('npc-pet:'))hydratePetFile(save,id,scope(key(),row.id),fileIO(scope(key(),row.id)).read,content);
+            for(const id of Object.keys(save.petFileRefs||{}))if(String(id).startsWith('npc-pet:'))delete save.petFileRefs[id];
+            for(const id of Object.keys(save.petWorld||{}))if(String(id).startsWith('npc-pet:'))delete save.petWorld[id];
             delete save.petFileRefs;delete save.petPages;
             return {id:row.id,save:restoreRuntime(durableSave(save),content,runtimeValues(row.save))};
         },

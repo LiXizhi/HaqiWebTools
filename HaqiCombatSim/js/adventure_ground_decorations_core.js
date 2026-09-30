@@ -15,7 +15,7 @@ const cell=112,padding=80;
 
 export function groundDecorations(world,rect){
     const l=world.layout;
-    if(!l||l.route)return [];
+    if(!l)return [];
     const result=[];
     for(let gy=Math.floor((rect.y-padding)/cell);gy<=Math.floor((rect.y+rect.h+padding)/cell);gy++){
         for(let gx=Math.floor((rect.x-padding)/cell);gx<=Math.floor((rect.x+rect.w+padding)/cell);gx++){

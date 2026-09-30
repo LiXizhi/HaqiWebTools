@@ -21,7 +21,7 @@ export function selectCompanionId(save, content) {
 // Presentation-only species for AI island residents; never writes saves or combat state.
 export function selectSocialPetId(profile, content) {
     const school=profile?.school||'fire';
-    const pets=Object.entries(content?.pets||{}).filter(([,row])=>row?.art&&row.school===school).map(([id])=>id);
+    const pets=Object.entries(content?.pets||{}).filter(([,row])=>row?.art&&!row.staticAppearance&&row.school===school).map(([id])=>id);
     if(!pets.length)return STARTERS.find(id=>content?.pets?.[id]?.art)||STARTERS[0];
     return pets[Math.abs(hashSeed(String(profile.id||profile.name||school)))%pets.length];
 }

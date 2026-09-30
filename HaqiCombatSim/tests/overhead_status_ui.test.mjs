@@ -99,3 +99,17 @@ test('negative wards draw a spiky trap outline instead of an inverted triangle',
     assert.ok(moves.filter(m=>Array.isArray(m)&&m[0]==='l').length>=16);
     assert.equal(moves.some(m=>Array.isArray(m)&&m[0]==='m'&&m[1]===1&&m[2]===4),false);
 });
+
+test('mounted status rows clear the rider bounds and keep tooltip hitboxes aligned',()=>{
+    const c=new Proxy({}, {get:()=>()=>{}}),unit={id:'hero',hp:10,charms:[1,1,1,1,1]},battle={resolved:{charms:{1:{desc:'增益'}}}};
+    const normal=drawOverheadStatus(c,unit,battle,{x:200,y:350},800);
+    const mounted=drawOverheadStatus(c,unit,battle,{x:200,y:350,statusBottom:185},800);
+    assert.equal(mounted.length,5);
+    for(let i=0;i<mounted.length;i++){
+        assert.equal(mounted[i].x,normal[i].x);
+        assert.ok(mounted[i].y<normal[i].y);
+        assert.ok(mounted[i].y+mounted[i].height<185);
+    }
+    const edge=drawOverheadStatus(c,unit,battle,{x:5,y:80,statusBottom:-20},390);
+    assert.ok(edge.every(r=>r.y>=4&&r.x>=4));
+});

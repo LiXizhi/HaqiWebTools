@@ -24,11 +24,11 @@ test('authored catalog traces 900 templates to 150 constructions and covers each
 });
 function harness(){
     const state={save:{zone:'camp',inventory:{},languageLearning:{enabled:true,target:'en',native:'zh-CN'},languageAdventure:{version:1,progress:{}}},content:{},role:'test',identity:'test'};
-    let cb,ui,transcript='',claims=0;
+    let cb,ui,transcript='',claims=0;const speech=[];
     const voice={start:async()=>{},finish:async()=>transcript,cancel:async()=>{},speak:async()=>{},judge:async()=>({correct:false,patternMet:false,quote:'',branch:'retry',feedback:'请再说一次。'})};
-    const chat=createStoryChat({getState:()=>state,voice,saveSettings:next=>Object.assign(state.save.languageLearning,next),commit:completion=>{claims++;return recordLearningCompletion(state.save,{},completion,{learningCompletion:completion});},viewFactory:callbacks=>{cb=callbacks;return {render:s=>{ui=s;},close:()=>{}};}});
+    const chat=createStoryChat({onSpeech:id=>speech.push(id),getState:()=>state,voice,saveSettings:next=>Object.assign(state.save.languageLearning,next),commit:completion=>{claims++;return recordLearningCompletion(state.save,{},completion,{learningCompletion:completion});},viewFactory:callbacks=>{cb=callbacks;return {render:s=>{ui=s;},close:()=>{}};}});
     chat.open(profile,story,null);
-    return {chat,state,voice,get cb(){return cb;},get ui(){return ui;},get claims(){return claims;},async say(text){transcript=text;await cb.start();await cb.finish();}};
+    return {chat,state,voice,speech,get cb(){return cb;},get ui(){return ui;},get claims(){return claims;},async say(text){transcript=text;await cb.start();await cb.finish();}};
 }
 test('wrong typed answers never advance; three voice results complete with shared reward group and story progress',async()=>{
     const h=harness();await flush();assert.equal(h.ui.showChinese,true);h.cb.chinese();assert.equal(h.state.save.languageLearning.showChinese,false);
@@ -142,4 +142,12 @@ test('typed semantic answers use the same evidence judge and double submit canno
     await h.cb.help(story.turns[0].answer.en);assert.equal(h.ui.index,0);
     resolve({correct:true,patternMet:false,quote:text,branch:'pass',feedback:''});await pending;
     assert.equal(h.ui.index,1);assert.equal(h.ui.proof.length,1);assert.equal(h.ui.proof[0].input,'text');h.chat.close();
+});
+
+test('daily reward hook counts only passed spoken turns, never text, listening or late callbacks',async()=>{
+ const h=harness();await flush();
+ await h.cb.help(story.turns[0].answer.en);assert.equal(h.speech.length,0);
+ await h.say('irrelevant');assert.equal(h.speech.length,0);
+ await h.say(story.turns[1].answer.en);assert.equal(h.speech.length,1);
+ await h.cb.finish();assert.equal(h.speech.length,1);h.chat.close();
 });

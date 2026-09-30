@@ -1,3 +1,5 @@
+import {dailyBuffParams} from './language_daily_buff_core.js';
+import {applyDungeonLanguageBuff,dungeonLanguageParams} from './adventure_dungeon_language_core.js';
 import { SimpleBot } from './combat_policy_core.js';
 import {ReasoningBot} from './battle_ai/policy_core.js';
 import {appendThreat,advanceThreat,threatTarget} from './combat_threat_core.js';
@@ -8,6 +10,7 @@ import { defaultParams, resolveParams } from './combat_params_core.js';
 import { generatePip } from './combat_formulas_core.js';
 import { useCard, tickDots, tickHots, cardTargetKind, isSupportedType } from './combat_cards_core.js';
 import { catchChanceMilli, isCatchRuneCard } from './adventure_runes_core.js';
+import { stampBattleMonsters } from './adventure_monster_pets_core.js';
 import * as U from './combat_unit_core.js';
 
 const emit = (a,e) => { const event={turn:a.turn,...e};a.events.push(event);a.onEvent?.(event); };
@@ -18,7 +21,7 @@ function runeCardReady(battle, row) {
 export function runeCardsInHand(battle) {
     return (battle.runes||[]).filter(row=>row.count>(battle.runeUsed[row.itemId]||0)&&runeCardReady(battle,row)).map(row=>({key:row.key,runeId:row.itemId,seq:-row.itemId,count:row.count-(battle.runeUsed[row.itemId]||0)}));
 }
-export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0 }) {
+export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0, languageBuff = null, languageBuffLimits = null }) {
     if(monsterSlots&&(!Array.isArray(monsterSlots)||monsterSlots.length!==monsters.length||new Set(monsterSlots).size!==monsterSlots.length||monsterSlots.some(n=>!Number.isInteger(n)||n<0||n>3)))throw Error('怪物卡位无效');
     if(![0,1].includes(dispelRulesVersion))throw Error('之敌规则版本无效');
     if(![0,1].includes(stealthRulesVersion))throw Error('隐身规则版本无效');
@@ -93,6 +96,7 @@ export function createPveBattle({ dataset, player, monsters, monsterSlots = null
     };
     arena.monsterTemplates = monsters;arena.captureStock=captureStock;arena.captureUsed=0;arena.captured=[];arena.ownedPets=[...ownedPets];arena.heroLevel=heroLevel;
     for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];unit.slot=spec.slot??i;unit.speciesId=spec.speciesId;if(Number.isFinite(spec.hp))unit.hp=Math.max(0,Math.min(unit.maxHp,Math.floor(spec.hp)));}
+    applyDungeonLanguageBuff(arena.sides.near[0],languageBuff,languageBuffLimits||resolved.dungeonLanguage);
     monsters.forEach((m,i) => {
         const u = arena.sides.far[i]; if(monsterSlots)u.slot=monsterSlots[i]; u.isMob = true; u.maxHp = Number(m.maxHp||m.hp); u.hp = Math.min(u.maxHp, Number(m.hp));
         u.template = m; u.aiMemory = { round:0, lastHp:m.hp };
@@ -322,7 +326,8 @@ export function playPveRound(a,decision) {
 export function restorePveBattle(dataset,content,checkpoint) {
     const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId);
     if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
-    const a=createPveBattle({dataset,player:checkpoint.player,monsters:checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]],monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion});
+    const templates=checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]];
+    const a=createPveBattle({dataset,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});
     a.replaying=true;for(const decision of checkpoint.decisions)playPveRound(a,decision);a.replaying=false;
     return a;
 }

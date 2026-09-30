@@ -39,9 +39,10 @@ export function defaultParams(version = 'teen') {
         // Web cross-cultural relationships; not original combat formula values.
         characterRelations: {initialMin:0,initialMax:60,maxAiDelta:5,giftGain:3,dungeonGain:3,matchGain:2,dailyFreeMessages:2,recentMessages:20,compactAt:40,indexPageSize:100},
         // Web island unlock levels; original world configuration is unavailable.
+        dungeonJourney: { hpGrowth:.055, rewardPerFloor:30, summitMultiplier:5 },
         worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40 },
         petInteractions: {
-            memoryCapacity:50, memoryProtectionMs:7*86400000, marksRequired:3,
+            memoryCapacity:10, memoryProtectionMs:7*86400000, marksRequired:3,
             cooldownMs:3*86400000, babyScale:.5, interactionDistance:100,
             feedingDistance:180, effectMs:4500, playIntervalMs:12000,
             encounterDistanceMultiplier:2, meetingSpacing:48, meetingArrivalDistance:64,
@@ -51,8 +52,10 @@ export function defaultParams(version = 'teen') {
         },
         // autoJoin* mirrors kids CombatRoom empty-seat open → delayed AI fill (RoomDetailPage 4 slots).
         // roadSlack / spawnMinActors: wander along roads near quest hubs; keep a few residents by the world spawn/plaza.
-        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, spawnMinActors:2, separation:50, npcClearance:65, monsterClearance:96, followDistance:110, followSpacing:55, followWait:2, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
+        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, spawnMinActors:2, separation:50, npcClearance:65, monsterClearance:96, entranceClearance:115, followDistance:110, followSpacing:55, followWait:2, dungeonFollowSpeed:262.5, dungeonRegroupDistance:280, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
+        dailyLanguage: {percentPerLine:1,maxPercent:10},
+        dungeonLanguage: {recordMaxMs:20000,percentPerLine:1,maxPercent:3},
         languageAdventure: { inviteRange:150, interactionRange:85, greetingMs:2500, basicReward:10, beginnerReward:30, intermediateReward:50, advancedReward:80, basicDailyCap:100, challengeDailyCap:200, basicCourseLimit:2, challengeCourseLimit:1, promptCooldownMs:90000, sourceCooldownMs:300000, maxTurns:8 },
         // Web progression schedule; original server training-point grant table is unavailable.
         skillLearning: { pointLevels: [4,8,12,16,20,25,30,35,40,45,50] },
@@ -68,7 +71,13 @@ export function defaultParams(version = 'teen') {
             fishingPerfectWeightFloor:.25, fishingLargeGrams:6000, fishingHugeGrams:12000,
             fishingAutoEscapeChance:.01,
         },
+        // Web red-mushroom matchmaking, not original server ranking rules.
+        // arena_server.lua L69–73: PvP pickcard_timeout_time_pvp = 30000; readyMs is the web match confirmation.
+        redMushroom: { arrivalMinMs:3000, arrivalMaxMs:5000, readyMs:15000, pickMs:30000, firstMin:.55, firstMax:.7, min:.5, max:1.6, jitter:.08, feedback:1.2, window:20, winPoints:25, drawPoints:10 },
         adventure: {
+            monsterRespawnMs:30000,
+            fieldEncounterRadius:24,
+            dungeonEncounterRadius:84,
             iceAreaAttackThreatRatio:2,
             damageThreatRatio:1, splashDamageThreatRatio:0.05,
             singleHealThreatRatio:0.3,
@@ -266,12 +275,16 @@ export function resolveParams(dataset, params) {
         global: { ...params.global },
         battleAI: { ...defaultParams(version).battleAI, ...params.battleAI },
         // Web island unlock levels; original world configuration is unavailable.
+        dungeonJourney: { ...defaultParams(version).dungeonJourney, ...params.dungeonJourney },
+        dailyLanguage: { ...defaultParams(version).dailyLanguage, ...params.dailyLanguage },
+        dungeonLanguage: { ...defaultParams(version).dungeonLanguage, ...params.dungeonLanguage },
         worldTravel: { ...defaultParams(version).worldTravel, ...params.worldTravel },
         petInteractions: { ...defaultParams(version).petInteractions, ...params.petInteractions },
         checkin: { ...defaultParams(version).checkin, ...params.checkin },
         languageAdventure: { ...defaultParams(version).languageAdventure, ...params.languageAdventure },
         fishing: { ...defaultParams(version).fishing, ...params.fishing },
         adventure: { ...defaultParams(version).adventure, ...params.adventure },
+        redMushroom: { ...defaultParams(version).redMushroom, ...params.redMushroom },
         perSchool: params.perSchool,
         fairPlay: params.fairPlay || null,
         cards,

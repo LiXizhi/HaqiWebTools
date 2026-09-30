@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="../../css/adventure_world_map.css">
 <body class="haqi-app"><canvas id="world" tabindex="0"></canvas><div id="hud"></div><div id="overlay"></div><output id="result" style="position:fixed;bottom:4px;left:4px;z-index:100;background:white;color:black"></output>
 <script type="module">
+import {createRuntimeStore} from '../../js/adventure_runtime_store.js';
 import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure} from '../../js/adventure_core.js';
 import {renderHud} from '../../js/view_adventure.js';
@@ -14,16 +15,19 @@ import {renderDungeons} from '../../js/view_adventure_dungeons.js';
 import {renderMaps} from '../../js/view_adventure_maps.js';
 const params=new URLSearchParams(location.search);
 const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
-// Entire fixture is in memory. No real account, player save or remote message writes.
+// No real account, player save or remote writes. Default is memory-only; storage=arena enables a dedicated QA IndexedDB for arena reload checks.
 const assets=await loadResources(p=>document.querySelector('#result').textContent=p.label),save=createAdventure(assets.content,{name:'社交验收'}),world=createWorld(params.get('zone')||'camp',assets.content,save),renderer=createRenderer(document.querySelector('#world'),assets);
 save.zone=world.zone;save.position={...world.layout.spawn};
 const at=params.get('at')?.split(',').map(Number);
 if(at?.length===2&&at.every(Number.isFinite))save.position=nearestWalkable(world,at[0],at[1]);
+const entrance=world.landmarks.find(p=>p.entranceKind===params.get('entrance'));
+if(entrance)save.position=nearestWalkable(world,entrance.x+150,entrance.y+30);
+await assets.warmScenery(world);
 const hud=document.querySelector('#hud'),overlay=document.querySelector('#overlay'),result=document.querySelector('#result');let panel=null;
 const model=()=>({assets,save,social:social.state(),socialActors:social.actors,membership:{},now:Date.now()});
 function close(){social.close();panel=null;overlay.replaceChildren();overlay.className='overlay';}
 function open(kind){panel=kind;paint();}
-const social=createIslandSocial({getState:()=>({save,assets,world,paused:!!panel,locked:!!panel}),getOwner:()=>null,onChange:paint,onPersist:()=>{},onOpen:open,onClose:close,onLogin:()=>result.textContent='登录提示：访客未发送消息',toast:message=>result.textContent=message});
+const social=createIslandSocial({arenaStore:createRuntimeStore(params.get('storage')==='arena'?{databaseName:'haqi-red-mushroom-qa-v1'}:{indexedDB:null}),getState:()=>({save,assets,world,paused:!!panel,locked:!!panel}),getOwner:()=>null,onChange:paint,onPersist:()=>{},onOpen:open,onClose:close,onLogin:()=>result.textContent='登录提示：访客未发送消息',toast:message=>result.textContent=message});
 function teleportToPosition(x,y){save.position=nearestWalkable(world,x,y);close();result.textContent=`已传送：${save.position.x}, ${save.position.y}`;}
 function paint(){renderHud(hud,model(),{panel:open,membership:()=>{},track:()=>{},untrack:()=>{},interact:()=>{},mountToggle:()=>{save.mountHidden=!save.mountHidden;paint();}});if(panel==='dungeons')renderDungeons(overlay,model(),{close:()=>{if(social.state().pickingDungeon){social.cancelDungeonPick();open('social-party');return;}close();},pick:id=>{try{social.pickPartyDungeon(id);}catch(e){result.textContent=e.message;}},lobby:(id,restart=false)=>{try{social.pickPartyDungeon(id,{restart});}catch(e){result.textContent=e.message;}},enter:()=>result.textContent='副本选择成功（隔离模式）',leave:()=>{}});else if(['map','worldmap'].includes(panel))renderMaps(overlay,world,model(),{close,draw:(canvas,options)=>renderer.minimap(canvas,world,save,options),teleport:id=>{const p=world.landmarks.find(m=>m.id===id);teleportToPosition(p.x,p.y);},teleportToPosition,switchMap:view=>open(view==='world'?'worldmap':'map')},panel==='worldmap'?'world':'local');else if(panel)social.paint(overlay,panel);}
 await social.enter();
@@ -33,7 +37,7 @@ if(params.get('panel')==='social-party'){
     else open('social-party');
 }else if(params.get('panel')==='social-profile'){
     const actor=social.actors[0];if(actor)social.select(actor.profile);else paint();
-}else if(params.get('panel')==='map')open('map');else paint();
+}else if(params.get('panel')==='social-pvp')open('social-pvp');else if(params.get('panel')==='map')open('map');else paint();
 let last=0;function frame(now){social.step(Math.min(.1,(now-last)/1000));last=now;renderer.render(world,save,now,{socialActors:social.actors});requestAnimationFrame(frame);}requestAnimationFrame(frame);
 document.querySelector('#world').addEventListener('click',event=>{const point=renderer.screenToWorld(event.clientX,event.clientY),p=social.pick(point);if(p)social.select(p);});
 const launch=document.createElement('button');launch.textContent='组队房间';launch.style='position:fixed;bottom:30px;left:5px;z-index:100';launch.onclick=()=>open('social-party');document.body.append(launch);

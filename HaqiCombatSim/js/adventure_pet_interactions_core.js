@@ -36,7 +36,7 @@ export function validatePetInstance(pet,content){
     check(['male','female'].includes(pet.gender),'宠物性别无效');
     check(integer(pet.xp)&&pet.level===petXpLevel(pet.xp,content),'宠物等级无效');
     check(['cooldownUntil','birthSerial','memorySerial','memoryClock'].every(key=>integer(pet[key])),'宠物关系计数无效');
-    check(pet.appearanceStage===undefined||Number.isInteger(pet.appearanceStage)&&pet.appearanceStage>=0&&pet.appearanceStage<petParams(content).stageLevels.filter(n=>pet.level>=n).length,'宠物外观无效');
+    check(content.pets[pet.speciesId]?.staticAppearance?pet.appearanceStage===undefined||pet.appearanceStage===0:pet.appearanceStage===undefined||Number.isInteger(pet.appearanceStage)&&pet.appearanceStage>=0&&pet.appearanceStage<petParams(content).stageLevels.filter(n=>pet.level>=n).length,'宠物外观无效');
     validatePetDeck(pet,content,pet.deck);
     check(Array.isArray(pet.memories),'宠物记忆无效');
     const seen=new Set();
@@ -55,14 +55,11 @@ export function validatePetInstance(pet,content){
     }else check(pet.ownerId!==null,'无主宠物缺少出生记录');
     return pet;
 }
-// Pruning is local to one loaded instance. Protected memories may exceed the normal capacity.
+// Each pet keeps the most recent relationships, capped by memoryCapacity. Recency is lastAt.
 export function prunePetMemories(pet,now,content){
     check(integer(now),'宠物互动时间无效');
     const p=petInteractionParams(content),at=Math.max(now,pet.memoryClock);
-    const protectedRows=pet.memories.filter(row=>at-row.lastAt<=p.memoryProtectionMs);
-    const older=pet.memories.filter(row=>at-row.lastAt>p.memoryProtectionMs)
-        .sort((a,b)=>b.level-a.level||b.lastAt-a.lastAt||order(a.otherId,b.otherId));
-    const keep=[...protectedRows,...older.slice(0,Math.max(0,p.memoryCapacity-protectedRows.length))]
+    const keep=[...pet.memories].sort((a,b)=>b.lastAt-a.lastAt||order(a.otherId,b.otherId)).slice(0,p.memoryCapacity)
         .sort((a,b)=>order(a.otherId,b.otherId));
     const changed=JSON.stringify(keep)!==JSON.stringify(pet.memories);
     // Reading a pet alone never creates a time-only durable write.
@@ -70,6 +67,8 @@ export function prunePetMemories(pet,now,content){
 }
 function pairRows(a,b){return [a.memories.find(row=>row.otherId===b.id),b.memories.find(row=>row.otherId===a.id)];}
 function sameRelationship(left,right){return left&&right&&left.epoch===right.epoch;}
+function rememberedRow(left,right){return sameRelationship(left,right)||!!left!==!!right?left||right:null;}
+function mirrorRow(row,other){return {...row,otherId:other.id,ownerId:other.ownerId,level:other.level};}
 function reconcile(left,right){
     // A matching epoch must be atomically saved on both pets. A mismatch is a conflict, not bonus progress.
     check(left.total===right.total&&left.available===right.available&&left.lastMarkDay===right.lastMarkDay,'宠物关系版本冲突，请重新读取');
@@ -90,6 +89,8 @@ export function interactPets(left,right,{kind,now,scene,completed=false},content
     let [ra,rb]=pairRows(a,b);
     const priorDay=Math.max(ra?.lastMarkDay??-1,rb?.lastMarkDay??-1);
     if(sameRelationship(ra,rb))reconcile(ra,rb);
+    else if(ra&&!rb){rb=mirrorRow(ra,a);b.memories=b.memories.filter(r=>r.otherId!==a.id);b.memories.push(rb);}
+    else if(rb&&!ra){ra=mirrorRow(rb,b);a.memories=a.memories.filter(r=>r.otherId!==b.id);a.memories.push(ra);}
     else{
         a.memorySerial++;b.memorySerial++;
         // Epoch includes complete participant identities without growing through generations.
@@ -111,9 +112,9 @@ export function interactPets(left,right,{kind,now,scene,completed=false},content
 export function petPairStatus(a,b,{now,scene},content){
     check(integer(now),'宠物互动时间无效');
     const [ra,rb]=pairRows(a,b),p=petInteractionParams(content);
-    const same=sameRelationship(ra,rb);
+    const same=sameRelationship(ra,rb),remembered=rememberedRow(ra,rb);
     if(same)reconcile(ra,rb);
-    const available=same?ra.available:0,at=Math.max(now,a.memoryClock,b.memoryClock);
+    const available=remembered?remembered.available:0,at=Math.max(now,a.memoryClock,b.memoryClock);
     const base={available,progress:Math.min(1,available/p.marksRequired),canBreed:false};
     if(!sceneEligible(a,b,scene,content))return {...base,reason:'需要在场景中靠近'};
     if(a.gender===b.gender||Math.min(a.level,b.level)<petParams(content).stageLevels[2])return {...base,reason:'玩伴'};
@@ -128,7 +129,7 @@ export function breedPets(left,right,{now,scene,babyId},content){
     if(!status.canBreed)return {pets:[copy(left),copy(right)],baby:null,status};
     check(identifier(babyId)&&babyId!==left.id&&babyId!==right.id,'宝宝实例编号无效');
     check(Number.isFinite(scene.anchor?.x)&&Number.isFinite(scene.anchor?.y)&&scene.walkable===true,'宝宝出生位置不可行走');
-    const candidates=Object.keys(content.pets).filter(id=>!content.pets[id].legacy&&[content.pets[left.speciesId].school,content.pets[right.speciesId].school].includes(content.pets[id].school)).sort(order);
+    const candidates=Object.keys(content.pets).filter(id=>!content.pets[id].legacy&&!content.pets[id].staticAppearance&&[content.pets[left.speciesId].school,content.pets[right.speciesId].school].includes(content.pets[id].school)).sort(order);
     check(candidates.length,'父母系别没有可用宝宝');
     const a=copy(left),b=copy(right),at=Math.max(now,a.memoryClock,b.memoryClock),p=petInteractionParams(content);
     const ids=[a,b].sort((x,y)=>order(x.id,y.id));
@@ -136,7 +137,7 @@ export function breedPets(left,right,{now,scene,babyId},content){
     const baby=createPetInstance(content,{id:babyId,speciesId:rng.pick(candidates),ownerId:'birth',gender:rng.pick(ids).gender});
     baby.ownerId=null;baby.birth={parents:ids.map(p=>p.id),at,seed,zone:scene.zone,anchor:{x:scene.anchor.x,y:scene.anchor.y},adoptedAt:null};
     for(const pet of [a,b]){pet.birthSerial++;pet.cooldownUntil=at+p.cooldownMs;pet.memoryClock=at;}
-    for(const row of pairRows(a,b))row.available-=p.marksRequired;
+    for(const row of pairRows(a,b))if(row)row.available-=p.marksRequired;
     validatePetInstance(baby,content);return {pets:[a,b],baby,status};
 }
 export function adoptPet(baby,{ownerId,now,zone,inBattle=false},content){
@@ -146,6 +147,24 @@ export function adoptPet(baby,{ownerId,now,zone,inBattle=false},content){
     check(now>=baby.birth.at,'领养时间无效');
     const pet=copy(baby);pet.ownerId=ownerId;pet.birth.adoptedAt=now;
     return {pet,adopted:true};
+}
+export function recordPetMeeting(current,{petId,otherId,at},content){
+    check(identifier(petId)&&identifier(otherId)&&petId!==otherId&&integer(at),'宠物相遇记录无效');
+    const cap=petInteractionParams(content).memoryCapacity;
+    const book=current&&typeof current==='object'&&!Array.isArray(current)?copy(current):{};
+    const rows=(Array.isArray(book[petId])?book[petId]:[]).filter(row=>row?.otherId!==otherId);
+    rows.unshift({otherId,at});
+    book[petId]=rows.slice(0,cap);
+    return book;
+}
+export function validatePetMeetings(save){
+    if(save.petMeetings===undefined)return;
+    check(save.petMeetings&&typeof save.petMeetings==='object'&&!Array.isArray(save.petMeetings),'宠物相遇记录无效');
+    const cap=petInteractionParams({}).memoryCapacity;
+    for(const [id,rows] of Object.entries(save.petMeetings)){
+        check(identifier(id)&&Array.isArray(rows)&&rows.length<=cap,'宠物相遇记录无效');
+        for(const row of rows)check(row&&identifier(row.otherId)&&row.otherId!==id&&integer(row.at),'宠物相遇记录无效');
+    }
 }
 export function petDisplayScale(pet,content){
     return pet.birth&&pet.level<petParams(content).stageLevels[1]?petInteractionParams(content).babyScale:1;

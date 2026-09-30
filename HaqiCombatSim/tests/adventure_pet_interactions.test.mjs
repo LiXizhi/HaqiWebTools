@@ -29,28 +29,27 @@ test('one mark per Beijing day across dialogue and feeding, no consecutive-day r
     pair=touch(...pair,Date.UTC(2026,8,27,16)).pets;
     assert.equal(touch(...pair,Date.UTC(2026,8,27,15)).markAdded,false);
 });
-test('all 51 recent memories survive; older ranking fills only remaining capacity',()=>{
+test('a pet keeps only the ten most recent relationships',()=>{
     let a=pet();
-    for(let i=0;i<51;i++)a=touch(a,pet(`peer${String(i).padStart(2,'0')}`,'male',1+i%50),T+i).pets[0];
-    assert.equal(a.memories.length,51);assert.equal(a.memories.at(-1).available,1);
-    assert.equal(P.prunePetMemories(a,T+7*DAY,content).memories.length,51);
-    const older=P.prunePetMemories(a,T+8*DAY,content);
-    assert.equal(older.memories.length,50);assert(!older.memories.some(r=>r.otherId==='peer00'));
-    const mixed=structuredClone(a);mixed.memories.forEach((r,i)=>{r.lastAt=i<20?T+8*DAY:T;});mixed.memoryClock=T+8*DAY;
-    assert.equal(P.prunePetMemories(mixed,T+8*DAY,content).memories.length,50);
-    assert(mixed.memories.slice(0,20).every(r=>P.prunePetMemories(mixed,T+8*DAY,content).memories.some(x=>x.otherId===r.otherId)));
+    for(let i=0;i<11;i++)a=touch(a,pet(`peer${String(i).padStart(2,'0')}`,'male'),T+i*DAY).pets[0];
+    assert.equal(a.memories.length,10);
+    assert.equal(a.memories.some(row=>row.otherId==='peer00'),false);
+    assert.equal(a.memories.some(row=>row.otherId==='peer10'),true);
+    assert.deepEqual(P.prunePetMemories(a,T+30*DAY,content).memories.map(row=>row.otherId).sort(),a.memories.map(row=>row.otherId).sort());
 });
 test('loading unchanged memory does not dirty time; clock rollback does not evade protection',()=>{
     const a=touch(pet(),pet('b','male')).pets[0];
     assert.deepEqual(P.prunePetMemories(a,T+DAY,content),a);
     assert.deepEqual(P.prunePetMemories(a,T-DAY,content),a);
 });
-test('one-sided forgetting starts a new epoch and cannot restore progress or grant same-day marks',()=>{
-    const [a,b]=ready(),epoch=b.memories[0].epoch;a.memories=[];
-    const result=touch(a,b,T+4*DAY);
-    assert.equal(result.markAdded,false);assert.equal(result.pets[0].memories[0].available,0);
-    assert.notEqual(result.pets[0].memories[0].epoch,epoch);
-    const next=touch(...result.pets,T+5*DAY);assert.equal(next.pets[0].memories[0].available,1);
+test('one stored memory keeps the relationship when the other pet is not recorded',()=>{
+    const [a,b]=ready(),epoch=a.memories[0].epoch,blank={...b,memories:[],memorySerial:0};
+    const sameDay=touch(a,blank,T+4*DAY);
+    assert.equal(sameDay.markAdded,false);assert.equal(sameDay.pets[0].memories[0].available,3);assert.equal(sameDay.pets[0].memories[0].epoch,epoch);
+    const next=touch(a,{...blank},T+5*DAY);
+    assert.equal(next.markAdded,true);assert.equal(next.pets[0].memories[0].available,4);assert.equal(next.pets[0].memories[0].epoch,epoch);
+    const born=P.breedPets(sameDay.pets[0],{...blank},{now:T+4*DAY,scene,babyId:'baby-remembered'},content);
+    assert.ok(born.baby);assert.equal(born.pets[0].memories[0].available,0);
 });
 test('corrupt matching pair versions reject instead of duplicating progress',()=>{
     const [a,b]=ready();b.memories[0].available--;

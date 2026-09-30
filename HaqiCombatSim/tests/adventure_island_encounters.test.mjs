@@ -128,7 +128,8 @@ test('island battle replay, victory quest credit and repeated encounters do not 
         A.settleEncounter(save,content,battle);
         for(const q of quests)for(const row of catalogGoalRows(save,content,q))if(row.kind==='kill'&&row.id===goal)assert.equal(row.value,1);
         assert.equal(save.dungeonRuns?.[zone],undefined);
-        assert.doesNotThrow(()=>A.beginEncounter(save,content,e.id));
+        assert.throws(()=>A.beginEncounter(save,content,e.id,{now:29999}),/尚未刷新/);
+        assert.doesNotThrow(()=>A.beginEncounter(save,content,e.id,{now:30000}));
     }
 });
 
@@ -167,7 +168,8 @@ test('mixed field battles replay and settle every monster without creating dunge
         assert.equal(save.xp-xp,e.monsterIds.reduce((n,id)=>n+content.monsters[id].xp,0));
         assert.equal(save.inventory[100]-coins,e.monsterIds.reduce((n,id)=>n+content.monsters[id].coins,0));
         assert.equal(save.dungeonRuns?.[e.zone],undefined);
-        assert.doesNotThrow(()=>A.beginEncounter(save,content,e.id));
+        assert.throws(()=>A.beginEncounter(save,content,e.id,{now:29999}),/尚未刷新/);
+        assert.doesNotThrow(()=>A.beginEncounter(save,content,e.id,{now:30000}));
     }
 });
 

@@ -1,3 +1,7 @@
+import {drawDungeonEntrance} from './view_dungeon_entrance.js';
+import {drawSchoolIcon} from './card_renderer.js';
+import {battleTargetRects} from './battle_target_pick_core.js';
+import {createDungeonFog} from './view_adventure_dungeon_fog.js';
 import {drawSocialPet,drawPetSocialEffects} from './view_adventure_pet_social.js';
 import {drawPetMood} from './view_adventure_pet_mood.js';
 import {petBattleMood} from './adventure_pet_mood_core.js';
@@ -47,8 +51,14 @@ const PLATE={
     place:{text:'#fbf6d7',bg:'rgba(24,55,46,.78)'},
 };
 const plateWidths=new Map();
-function plate(c,label,x,y,style=PLATE.place) {
+function plate(c,label,x,y,style=PLATE.place,school=null) {
     const shown=tr(label);
+    if(school){
+        c.save();c.font='600 12px "PingFang SC", "Microsoft YaHei", sans-serif';
+        const width=c.measureText(shown).width,iconX=x-(width+22)/2+8;
+        ellipse(c,iconX,y-3,9,9,'#fff5d9');drawSchoolIcon(c,school,iconX,y-3,13);
+        c.restore();x+=11;
+    }
     if(!style.bg){c.save();c.shadowColor='#10251f';c.shadowBlur=4;c.shadowOffsetX=0;c.shadowOffsetY=2;text(c,shown,x,y+2,12,style.text);c.restore();return;}
     c.font='600 12px "PingFang SC", sans-serif';
     let width=plateWidths.get(shown);
@@ -92,6 +102,7 @@ export function questMarker(save,content,npcId) {
 }
 export function createRenderer(canvas,assets) {
     const drawSignpost=createSignpostPainter();
+    const dungeonFog=createDungeonFog(),mapFog=createDungeonFog();
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const ctx=canvas.getContext('2d'),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
     const terrainTiles=createTerrainTileCache((c,world,rect)=>paintLargeTerrain(c,world,rect,false,assets.terrainDecorationArt),()=>document.createElement('canvas'));
@@ -136,13 +147,19 @@ export function createRenderer(canvas,assets) {
         return backing;
     }
     function shadow(c,x,y,w=24) {paintSoftShadow(c,x,y,w*1.18,w*.4,.3);}
-    function avatar(c,save,x,y,time,moving,scale=1,nameBounds=true,headPose=null) {
+    function avatar(c,save,x,y,time,moving,scale=1,nameBounds=true,headPose=null,bounds=null) {
         shadow(c,x,y,(save.mountId?28:23)*scale);
         const result=assets.hero.drawSave(c,save,x,y,time,moving,scale,{
             head:save.visualHead??headPose?.head,breath:save.visualBreath??headPose?.breath,
             reducedMotion:reducedMotion.matches,nameBounds,
             ...(headPose?{moving:moving&&headPose.moving,walkTime:headPose.walkTime,facing:headPose.facing}:{}),
         });
+        if(bounds&&result.ready){
+            const rects=[result.headRect,result.bodyRect,result.pose?.mount].filter(Boolean);
+            bounds.left=Math.min(...rects.map(r=>r.x));bounds.right=Math.max(...rects.map(r=>r.x+r.w));
+            bounds.hitTop=Math.min(...rects.map(r=>r.y));bounds.bottom=Math.max(...rects.map(r=>r.y+r.h));
+            if(result.pose?.mount)bounds.top=bounds.hitTop-8;
+        }
         return result.nameY;
     }
     function starAnchor(save,time,moving){
@@ -243,6 +260,7 @@ export function createRenderer(canvas,assets) {
         if(petScene&&!title){for(const row of petScene.pets)objects.push({...row.position,kind:'pet-social',row});for(const pet of petScene.babies)objects.push({...pet.birth.anchor,kind:'pet-social',row:{pet,position:pet.birth.anchor,scale:petDisplayScale(pet,assets.content)}});}
         objects.sort((a,b)=>a.y-b.y);
         for(const o of objects) {
+            if(o.hidden)continue;
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
             if(o.kind==='pet-social')drawSocialPet(ctx,assets,o.row,petScene.effects,time,reducedMotion.matches,petScene.now);
             if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const winter=o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
@@ -260,7 +278,7 @@ export function createRenderer(canvas,assets) {
                 ctx.restore();
             }
             if(o.kind==='landmark'){
-                drawSignpost(ctx,o.name,o.x,o.y);
+                if(o.dungeonId)drawDungeonEntrance(ctx,o,t,reducedMotion.matches,assets.entranceArt);else drawSignpost(ctx,o.name,o.x,o.y);
             }
             if(o.kind==='npc') {
                 shadow(ctx,o.x,o.y,25);const dragon=[36211,30112].includes(o.id),sw=dragon?100:64,sh=dragon?104:86;
@@ -355,6 +373,7 @@ export function createRenderer(canvas,assets) {
         if(world.entrancePortal)plate(ctx,world.entrancePortal.name,world.entrancePortal.x,world.entrancePortal.y+48);
         if(!title)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);
         if(!title)drawTeleportEffect(ctx,teleportEffect,time,reducedMotion.matches);
+        dungeonFog(ctx,world,save.position,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale},cam.scale,save.dungeonExploration?.[world.zone]);
         } finally {ctx.restore();}
         const liveWeather=weatherOverride||world.layout&&regionAt(world,save.position)?.weather||null;
         weatherFade=stepWeatherFade(weatherFade,liveWeather,weatherTime,!!weatherOverride);
@@ -373,9 +392,11 @@ export function createRenderer(canvas,assets) {
         const sx=w/world.w,sy=h/world.h;c.save();c.scale(sx,sy);c.drawImage(ground(world),0,0,world.w,world.h);
         for(const b of world.buildings){c.fillStyle='#627b83';c.fillRect(b.x-45,b.y-60,90,65);}
         for(const n of world.npcs)ellipse(c,n.x,n.y,questMarker(save,assets.content,n.id)?22:13,questMarker(save,assets.content,n.id)?22:13,questMarker(save,assets.content,n.id)?'#ffe89c':'#f6f3d9');
+        for(const e of world.landmarks||[])if(e.dungeonId){ellipse(c,e.x,e.y,30,30,e.entranceKind==='tower'?'#f8dc80':'#67dfff');}
+        mapFog(c,world,save.position,{x:0,y:0,w:world.w,h:world.h},Math.max(sx,sy),save.dungeonExploration?.[world.zone]);
         ellipse(c,save.position.x,save.position.y,25,25,'#184f73');ellipse(c,save.position.x,save.position.y,13,13,'#fff');c.restore();
         if(world.layout){
-            if(labels)for(const r of world.layout.regions){ellipse(c,r.x*sx,r.y*sy,3,3,'#fff3c3');text(c,r.name,r.x*sx,r.y*sy-9,11,'#25483b');}
+            if(labels&&!world.layout.route)for(const r of world.layout.regions){ellipse(c,r.x*sx,r.y*sy,3,3,'#fff3c3');text(c,r.name,r.x*sx,r.y*sy-9,11,'#25483b');}
             ellipse(c,save.position.x*sx,save.position.y*sy,5,5,'#fff');ellipse(c,save.position.x*sx,save.position.y*sy,3,3,'#205c99');
         }
     }
@@ -399,13 +420,16 @@ export function createRenderer(canvas,assets) {
         for(const side of ['near','far'])for(const [i,unit] of battle.sides[side].entries())positions[unit.id]=slotPoint(side,unit.slot??i);
         const pointer=presentation?.pointer||{to:nextBattlePointer(battle)};
         if(!battle.finished||presentation)drawBattlePointer(c,{center:{x:cx,y:cy},radius:r,from:positions[pointer.from],to:positions[pointer.to],progress:pointer.progress,reduced:reducedMotion.matches});
+        const actorBounds={};
         for(const id of Object.keys(battle.unitsById)) {
+            const bounds=actorBounds[id]={};
             const hp=presentation?.hp?.[id]??battle.unitsById[id].hp;
             const hit=presentation?.reactions?.find(reaction=>reaction.target===id);
-            const unit=battle.unitsById[id],petUnit=id!=='hero'&&!unit.isMob&&!save.coopRun?.members.some(m=>m.unit.id===id);
+            const unit=battle.unitsById[id],petUnit=id!=='hero'&&!unit.arenaProfile&&!unit.isMob&&!save.coopRun?.members.some(m=>m.unit.id===id);
             const pose=petUnit&&hp<=0?{action:'idle',progress:0}:hp>0&&hit?{action:'hit',progress:hit.progress}:battleActorAction(id,hp,ev,p);
             drawAnimatedActor(c,positions[id],pose.action,pose.progress,id==='hero'?1:-1,reducedMotion.matches,()=>{
-                if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,BATTLE_HERO_SCALE,false,updateHeroActor(battleHero,{time:t,facing:2,reducedMotion:reducedMotion.matches}));const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if(support&&assets.content.pets[support.speciesId]?.art)(()=>{c.save();c.translate(36,0);drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,48,column=>assets.drawPet(c,support.speciesId,petAppearanceStage(support,assets.content),-24,-48,48,48,column));c.restore();})();}
+                if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,BATTLE_HERO_SCALE,false,updateHeroActor(battleHero,{time:t,facing:2,reducedMotion:reducedMotion.matches}),bounds);const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if(!battle.redMushroom&&support&&assets.content.pets[support.speciesId]?.art)(()=>{c.save();c.translate(36,0);drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,48,column=>assets.drawPet(c,support.speciesId,petAppearanceStage(support,assets.content),-24,-48,48,48,column));c.restore();})();}
+                else if(unit.arenaProfile){avatar(c,{...unit.arenaProfile,facing:unit.side==='far'?1:2},0,0,t,false,BATTLE_HERO_SCALE,false,null,bounds);}
                 else if(save.coopRun?.members.some(m=>m.unit.id===id)){const p=save.coopRun.members.find(m=>m.unit.id===id).profile;avatar(c,{...p,mountId:null,facing:2},0,0,t,false,BATTLE_HERO_SCALE,false);}
                 else {const unit=battle.unitsById[id],species=unit.speciesId||unit.template?.speciesId;if(unit.isMob)monster(c,unit.template,0,0,t,.95);else if(species&&assets.content.pets[species]?.art)drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,84,column=>assets.drawPet(c,species,petAppearanceStage(save.pets?.[unit.id]||save.pets?.[species]||unit,assets.content),-42,-84,84,84,column));else creature(c,unit.isMob?unit.template.id:'pet',0,0,t,.85);}
             });
@@ -413,8 +437,8 @@ export function createRenderer(canvas,assets) {
         const statusTargets=[];
         for(const u of [...battle.sides.near,...battle.sides.far]) {
             const at=positions[u.id],hp=presentation?.hp?.[u.id]??u.hp,bw=Math.min(115,w*.20);
-            statusTargets.push(...drawOverheadStatus(c,u,battle,at,w,hp,presentation?.status?.[u.id]));
-            plate(c,w<650?u.name.slice(0,6):u.name,at.x,at.y+25,u.id==='hero'?PLATE.hero:u.isMob?PLATE.mob:save.coopRun?.members.some(m=>m.unit.id===u.id)?PLATE.social:PLATE.npc);c.fillStyle='#173843';c.beginPath();c.roundRect(at.x-bw/2,at.y+38,bw,10,5);c.fill();
+            statusTargets.push(...drawOverheadStatus(c,u,battle,{...at,statusBottom:Number.isFinite(actorBounds[u.id]?.top)?at.y+actorBounds[u.id].top-12:undefined},w,hp,presentation?.status?.[u.id]));
+            plate(c,w<650?u.name.slice(0,6):u.name,at.x,at.y+25,u.id==='hero'?PLATE.hero:u.isMob?PLATE.mob:save.coopRun?.members.some(m=>m.unit.id===u.id)?PLATE.social:PLATE.npc,u.school||'balance');c.fillStyle='#173843';c.beginPath();c.roundRect(at.x-bw/2,at.y+38,bw,10,5);c.fill();
             c.fillStyle=u.isMob?'#d39a7a':'#8ccc8a';c.beginPath();c.roundRect(at.x-bw/2+2,at.y+40,Math.max(0,(bw-4)*hp/u.maxHp),6,3);c.fill();
         }
         if(ev?.type==='cast'||ev?.type==='fizzle') {
@@ -425,6 +449,7 @@ export function createRenderer(canvas,assets) {
         }
         if(ev?.type==='fizzle')drawSpellMiss(c,positions[ev.caster],p,reducedMotion.matches);
         for(const u of Object.values(battle.unitsById))drawStatusFeedback(c,(presentation?.statusFeedback||[]).filter(change=>change.id===u.id),positions[u.id],time,reducedMotion.matches,w);
+        target.battleTargetRects=battleTargetRects(positions,actorBounds,scale);
         target.battleStatusRects=statusTargets.map(hit=>({...hit,x:hit.x*scale,y:hit.y*scale,width:hit.width*scale,height:hit.height*scale}));
         target.updateStatusTargets?.(target.battleStatusRects);
         return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:at.x*scale,y:at.y*scale}]));

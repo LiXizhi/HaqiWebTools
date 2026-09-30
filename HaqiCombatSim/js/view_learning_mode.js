@@ -1,3 +1,4 @@
+import {dailyBuffDescription} from './language_daily_buff_core.js';
 import {tr,setText} from './locale_runtime.js';
 import {localeChoices} from './locale.js';
 import {learningModeDraft} from './language_encounter_core.js';
@@ -7,6 +8,8 @@ export function renderLearningMode(body,model,cb,{el,button}) {
     const draft=learningModeDraft(model.save,model.displayLocale||model.save.locale),ui=createSettingsControls({el,button});
     let picked=draft.selectionConfirmed;
     body.append(ui.section('在冒险中开口',el('p','','遇到营地居民，聊三句，练习问好、认识伙伴和请求帮助。没有固定顺序，随时可以离开。'),el('p','','说出的意思基本正确即可通过，不评测发音。可以听示范、看提示；文字求助不能代替口语。'),el('p','','完成交流可获得奇豆，用来购买宠物营养餐；后续挑战可获得用于强化装备的仙豆。具体金额与今日可领次数会在交流前显示。')));
+    const details=el('p','language-buff-details',dailyBuffDescription(model.save));
+    body.append(ui.section('今日语言学习加成',details,el('p','','每成功说一句话，随机获得一层 +1% 加成。生命、攻击、防御各最多 +10%，30 句可叠满；之后继续练习可增加超级魔力生成率，最多 +10%。'),el('p','','与场景角色口语交流、跟读副本剧情均可累积；文字回答和听示范不增加层数。剧情可随时配音，点击继续或录音完成后推进。'),el('p','','加成仅保存在本机当前角色，换地图和离开副本仍有效，不上传服务器。本机时间次日 00:00 清零；已开始的战斗保留入场加成，新战斗使用当天加成。')));
     const display=document.createElement('select'),target=document.createElement('select');
     for(const l of localeChoices()){display.add(new Option(l.name,l.id));target.add(new Option(l.name+(!['en','zh-CN'].includes(l.id)?tr('（营地课程尚未开放）'):''),l.id));}
     display.value=draft.locale;target.value=draft.target;display.setAttribute('aria-label',tr('显示语言'));target.setAttribute('aria-label',tr('目标语言'));

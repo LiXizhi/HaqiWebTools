@@ -12,6 +12,23 @@ const content=read('adventure/chapter'),dataset=read('adventure/combat'),catalog
 content.worldMaps=Object.fromEntries(Object.entries(content.worldMapIndex.islands).map(([id,row])=>[id,JSON.parse(fs.readFileSync(new URL('../'+row.file,import.meta.url)))]));
 installDungeons(content,dataset,catalog,read('kids/cards'));
 const id='dungeon:HaqiTown_FireCavern';
+test('dungeon victory and defeat both land beside the fought group without auto contact',()=>{
+    for(const winner of ['near','far']){
+        const save=A.createAdventure(content);enterDungeon(save,content,id);
+        const before=createWorld(id,content,save),mob=before.encounters[1];
+        save.dungeonRuns[id].cleared=[before.encounters[0].id];
+        save.position={x:mob.x,y:mob.y};
+        A.beginEncounter(save,content,mob.id);
+        const battle=P.restorePveBattle(dataset,content,save.pendingEncounter);
+        battle.finished=true;battle.winner=winner;A.settleEncounter(save,content,battle);
+        const parked={...save.position},world=createWorld(id,content,save);
+        assert.deepEqual(save.position,parked);
+        assert.equal(walkable(world,parked.x,parked.y),true);
+        const gap=Math.hypot(parked.x-mob.x,parked.y-mob.y);
+        assert.ok(gap>=100&&gap<=220,`${winner}: ${gap}`);
+        assert.equal(dungeonAutoInteraction(world,parked),null);
+    }
+});
 test('all exported dungeon spawns, formations and exits are reachable; supported battles execute and replay',()=>{
     assert.equal(content.dungeons.length,catalog.worlds.length);
     for(const d of content.dungeons.filter(d=>d.playable)){
@@ -95,6 +112,7 @@ test('dungeon roads block shortcuts and skipping; only defeating the last Boss o
     const ordered=world.encounters.map(e=>e.id);
     for(const encounterId of ordered){
         const next=world.encounters[0];
+        assert.deepEqual(world.encounters.filter(e=>!e.hidden).map(e=>e.id),[encounterId]);
         const walk=followPath(world,save.position,findPath(world,save.position,world.portal),100000);
         save.position=walk.position;
         assert.equal(dungeonAutoInteraction(world,save.position)?.id,encounterId);

@@ -1,34 +1,10 @@
+import {createDialogueMicrophone} from './view_dialogue_microphone.js';
+export {bindChatMicrophone} from './view_dialogue_microphone.js';
 import {tr,fill} from './locale_runtime.js';
 import {createCloseButton} from './view_adventure_controls.js';
 
 const el=(tag,cls='',text)=>{const n=document.createElement(tag);n.className=cls;if(text!==undefined)n.textContent=['camp-chat-original','camp-chat-translation'].includes(cls)?text:tr(text);return n;};
 const button=(text,run,cls='secondary')=>{const n=el('button',cls,text);n.type='button';n.onclick=run;return n;};
-
-// Keep the microphone node mounted while permission/ASR requests are pending.
-// HelloLearner uses the same 350ms boundary between click and hold.
-export function bindChatMicrophone(node,actions){
-    let press=null;
-    const down=e=>{
-        if(e.button!==undefined&&e.button!==0||press||node.disabled)return;
-        e.preventDefault();node.focus?.({preventScroll:true});node.setPointerCapture?.(e.pointerId);
-        press={id:e.pointerId,at:e.timeStamp,stopping:actions.isRecording()};
-        if(press.stopping)void actions.finish();else void actions.start();
-    };
-    const up=e=>{
-        if(!press||press.id!==e.pointerId)return;
-        const old=press;press=null;
-        const r=node.getBoundingClientRect();
-        const outside=e.clientX!==undefined&&(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom);
-        if(!old.stopping){
-            if(e.type!=='pointerup'||outside)void actions.cancel();
-            else if(e.timeStamp-old.at>=350)void actions.finish();
-        }
-    };
-    node.addEventListener('pointerdown',down);node.addEventListener('pointerup',up);node.addEventListener('pointercancel',up);node.addEventListener('lostpointercapture',up);
-    node.addEventListener('click',e=>{if(e.detail===0&&!node.disabled)void(actions.isRecording()?actions.finish():actions.start());});
-    node.addEventListener('contextmenu',e=>e.preventDefault());
-    return ()=>{press=null;};
-}
 
 export function createLearningChatView(cb){
     const root=el('div','overlay learning-overlay camp-chat-overlay');root.hidden=true;
@@ -89,7 +65,7 @@ export function createLearningChatView(cb){
     function needsRecovery(s){return s?.mode==='free'&&s.retryable&&(!s.ready||s.giftReply||!s.draft?.trim());}
     const actions=el('div','camp-chat-actions');
     const typing=button('输入',()=>{form.hidden=!form.hidden;if(!form.hidden)input.focus();},'secondary');
-    const mic=button('录音',()=>{},'camp-chat-mic');mic.setAttribute('aria-label','点击录制，再次点击结束；也可以按住对话');
+    const microphone=createDialogueMicrophone(button,{isRecording:()=>!!state?.recording,start:cb.start,finish:cb.finish,cancel:cb.cancel}),mic=microphone.node;
     const hints=button('提示',()=>cb.hint(),'secondary');
     const details=button('关系详情',()=>cb.details?.()),gift=button('送礼物',()=>cb.gift?.()),upgrade=button('升级会员',()=>cb.upgrade?.());
     const more=button('+',()=>setMore(menu.hidden),'camp-chat-more');more.title=tr('更多聊天操作');more.setAttribute('aria-label',tr('更多聊天操作'));more.setAttribute('aria-expanded','false');
@@ -108,7 +84,7 @@ export function createLearningChatView(cb){
     footer.append(hint,form,actions,caption,status,completedActions);panel.append(header,loginNotice,log,footer);room.append(aside,panel,celebration);root.append(room);document.body.append(root);
     let portraitNode=null,state=null,trigger=null,key='',fingerprint='',celebrated=null,celebrationTimer=null;
     function hideCelebration(){clearTimeout(celebrationTimer);celebration.hidden=true;}
-    const clearPress=bindChatMicrophone(mic,{isRecording:()=>!!state?.recording,start:cb.start,finish:cb.finish,cancel:cb.cancel});
+    const clearPress=microphone.reset;
     root.onkeydown=e=>{
         e.stopPropagation();if(e.key==='Escape'){e.preventDefault();if(!headerMenu.hidden){setHeaderMenu(false,true);return;}if(!menu.hidden){setMore(false,true);return;}cb.close();}
         if(e.key==='Tab'){
@@ -155,7 +131,7 @@ export function createLearningChatView(cb){
                 if(s.hintLevel>=2)hint.append(el('p','camp-chat-original',s.locale==='en'?turn.pattern.replace(/\{\w+\}/g,'…'):turn.answer['zh-CN']));
                 if(s.hintLevel>=3){hint.append(el('p','camp-chat-original',turn.answer[s.locale]));if(s.showChinese)hint.append(el('p','camp-chat-translation',turn.answer[s.locale==='en'?'zh-CN':'en']));const sample=button('听示范',()=>cb.speak(turn.answer[s.locale]),'secondary small');sample.disabled=s.busy||s.recording;hint.append(sample);}
             }
-            mic.disabled=(free&&(!s.ready||(!s.vip&&s.remaining===0)))||s.done||(s.busy&&!s.recording&&s.phase!=='connecting');mic.classList.toggle('is-recording',!!s.recording);mic.textContent=tr(s.recording?'结束':s.phase==='connecting'?'连接中':'录音');
+            mic.disabled=(free&&(!s.ready||(!s.vip&&s.remaining===0)))||s.done||(s.busy&&!s.recording&&s.phase!=='connecting');microphone.update({phase:s.recording?'recording':s.phase,disabled:mic.disabled});
             change.disabled=s.busy||s.recording;settings.disabled=s.busy||s.recording;hints.disabled=s.done;send.disabled=s.busy||s.recording||s.done||(free&&(!s.ready||(!s.vip&&s.remaining===0)&&s.draft?.trim()!=='/compact'));hints.disabled=s.busy||s.recording||!s.ready&&free;
             send.textContent=tr(needsRecovery(s)?(!s.ready?'重新连接':'获取回应'):'发送');
             if(needsRecovery(s)||free&&s.pending)send.disabled=s.busy||s.recording||s.done;

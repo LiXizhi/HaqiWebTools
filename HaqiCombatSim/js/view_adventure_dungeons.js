@@ -6,7 +6,7 @@ import {dungeonStaminaHint} from './adventure_stamina_core.js';
 import {monsterArtBinding} from './adventure_monster_art_core.js';
 import {tr,setText,fill} from './locale_runtime.js';
 
-function bossPortrait(assets,d){
+export function bossPortrait(assets,d){
     const stage=el('div','dungeon-portrait'),fallback=el('span','icon');
     fallback.dataset.uiIcon='dungeon';fallback.setAttribute('aria-hidden','true');stage.append(fallback);
     const binding=monsterArtBinding(d.boss,assets.monsterArt);
@@ -31,8 +31,8 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null,social=null
     const header=el('header','modal-header',el('h2','','副本冒险'),createCloseButton(cb.close));
     const body=el('div','modal-body'),toolbar=el('div','dungeon-toolbar'),tabs=el('div','gui-tabs dungeon-tabs');
     const list=el('div','dungeon-list'),footer=el('div','dungeon-pagination');
-    let filter='all',page=0;const pageSize=6;
-    const filters=[['all','全部副本'],['recommended','适合我'],['progress','进行中']];
+    let filter='island',page=0;const pageSize=6;
+    const filters=[['island','本岛秘境'],['tower','试炼之塔'],['elite','剧情精英'],['all','全部副本'],['recommended','适合我'],['progress','进行中']];
     for(const [key,label]of filters){const b=button(label,()=>{filter=key;page=0;draw();});b.dataset.filter=key;tabs.append(b);}
     toolbar.append(tabs,el('p','muted','副本中不会自动回血，进入后需用现有生命通关。'));modal.append(header,toolbar);
     if(active){const cur=el('span','');setText(cur,'正在探索：{name}',{name:active.name});modal.append(el('div','dungeon-current',cur,button('返回探索',cb.close,'secondary'),button('暂离副本',cb.leave,'secondary')));}
@@ -42,6 +42,7 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null,social=null
         for(const b of tabs.children)b.setAttribute('aria-pressed',String(b.dataset.filter===filter));
         const rows=content.dungeons.filter(d=>d.playable&&!/Instance_Test/i.test(d.id))
             .filter(d=>!(social?.team?.length||social?.pickingDungeon)||d.arenas.every(a=>!a.blocked?.length))
+            .filter(d=>filter==='island'?d.island===(save.dungeonReturn?.zone||save.zone):filter==='tower'?d.kind==='tower':filter==='elite'?d.kind==='elite':true)
             .filter(d=>filter==='recommended'?d.recommendedLevel<=(save.level||1)+5:filter==='progress'?!!dungeonProgress(save)?.[d.id]&&((dungeonProgress(save)[d.id].cleared?.length||0)<d.arenas.length):true)
             .sort((a,b)=>social?.team?.length?Math.abs(a.recommendedLevel-(save.level+social.team.reduce((n,p)=>n+p.level,0))/(social.team.length+1))-Math.abs(b.recommendedLevel-(save.level+social.team.reduce((n,p)=>n+p.level,0))/(social.team.length+1)):a.recommendedLevel-b.recommendedLevel);
         const pages=Math.max(1,Math.ceil(rows.length/pageSize));page=Math.min(page,pages-1);
@@ -55,7 +56,7 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null,social=null
             if(rewardNames.length){const sep=tr('、'),joined=rewardNames.join(sep);const reward=el('span','dungeon-rewards',joined);reward.title=fill('战斗奖励：{rewards}',{rewards:joined}).text;picture.append(reward);}
             if(cleared)picture.append(el('span','dungeon-status',complete?'已通关':'探索中'));
             const info=el('div','dungeon-card-info',el('h3','',d.name));
-            info.append(el('p','dungeon-boss-name',d.boss?.name||'秘境探索'));
+            info.append(el('p','dungeon-boss-name',d.kind==='tower'?`${d.floors}层 · 已通过 ${save.towerRecords?.[d.id]?.floor||0}层`:d.kind==='elite'?`剧情精英 · ${d.partySize}v${d.partySize}`:d.boss?.name||'秘境探索'));
             const hint=dungeonStaminaHint(d);
             if(hint){
                 const line=el('p','dungeon-stamina');
@@ -68,9 +69,9 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null,social=null
                 pick.disabled=!!dungeonLoading;actions.append(pick);
             }else{
                 // Entering a card opens the party lobby first; actual zone load waits for 立即出发.
-                const enter=button(dungeonLoading===d.id?'正在进入…':active?.id===d.id?'返回探索':dungeonProgress(save)?.[d.id]?'继续探索':'进入副本',()=>active?.id===d.id?cb.close():(cb.lobby?cb.lobby(d.id,false):cb.enter(d.id,false)),'primary');
+                const enter=button(dungeonLoading===d.id?'正在进入…':active?.id===d.id&&d.kind!=='tower'?'返回探索':dungeonProgress(save)?.[d.id]?'继续探索':'进入副本',()=>active?.id===d.id&&d.kind!=='tower'?cb.close():(cb.lobby?cb.lobby(d.id,false):cb.enter(d.id,false)),'primary');
                 enter.disabled=!!dungeonLoading||!!save.coopRun&&active?.id!==d.id;actions.append(enter);
-                if(cleared){const restart=button('重新挑战',()=>cb.lobby?cb.lobby(d.id,true):cb.enter(d.id,true),'secondary');restart.disabled=!!dungeonLoading||!!save.coopRun&&active?.id!==d.id;actions.append(restart);}
+                if(cleared&&d.kind!=='tower'){const restart=button('重新挑战',()=>cb.lobby?cb.lobby(d.id,true):cb.enter(d.id,true),'secondary');restart.disabled=!!dungeonLoading||!!save.coopRun&&active?.id!==d.id;actions.append(restart);}
             }
             info.append(actions);card.append(picture,info);list.append(card);
         }

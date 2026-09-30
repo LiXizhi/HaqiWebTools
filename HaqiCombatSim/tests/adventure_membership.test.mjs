@@ -30,7 +30,7 @@ test('account switch, network failure and stale responses cannot grant VIP',asyn
     const {client,sdk,change}=harness({username:'test',vip:1});
     await client.refresh();
     let finish;sdk.getUserProfile=()=>new Promise(resolve=>{finish=resolve;});
-    const pending=client.refresh();await Promise.resolve();
+    const pending=client.refresh({force:true});await Promise.resolve();
     sdk.token='other-account';change();finish({username:'test',vip:1});
     await assert.rejects(pending,/无法确认/);assert.equal(client.state.isVip,false);
     sdk.getUserProfile=async()=>{throw Error('offline');};
@@ -45,4 +45,12 @@ test('profile UI opens via the SDK and refreshes membership on close',async()=>{
  const {client,sdk}=harness({username:'test',commonVip:1,commonVipDeadline:'2027-01-01',vip:1,vipDeadline:'2027-09-21'});
  let opened=false;sdk.showProfileWindow=async options=>{opened=true;assert.equal(options.title,'个人资料');};
  const status=await client.openProfile();assert.equal(opened,true);assert.equal(status.expiresAt,'2027-09-21T00:00:00.000Z');
+});
+
+
+test('ordinary membership reads reuse account memory; explicit refresh still fetches',async()=>{
+    const {client,sdk}=harness({username:'test',vip:1});let calls=0;const read=sdk.getUserProfile;
+    sdk.getUserProfile=async(...args)=>{calls++;return read(...args);};
+    await Promise.all([client.refresh(),client.refresh(),client.refresh()]);assert.equal(calls,1);
+    await client.refresh();assert.equal(calls,1);await client.refresh({force:true});assert.equal(calls,2);
 });

@@ -311,12 +311,15 @@ test('retreat stands beside the fought monster instead of the birth point',()=>{
     assert.equal(W.walkable(world,s.position.x,s.position.y),true);
     assert.notEqual(W.nearestInteraction(world,s.position)?.id,'storm-scout');
 });
-test('defeat returns to a safe checkpoint with quest and inventory state intact',()=>{
+test('defeat returns beside the monster with quest and inventory state intact',()=>{
     const s=A.createAdventure(content);act(s,'accept',{questId:63000,npcId:36211});act(s,'claim',{questId:63000,npcId:36211});
     s.position={x:360,y:880};const {checkpoint}=A.beginEncounter(s,content,'fire-scout'),b=P.restorePveBattle(dataset,content,checkpoint);
     while(!b.finished)P.playPveRound(b,{pass:true});assert.equal(b.winner,'far');
     const inv=structuredClone(s.inventory),q=structuredClone(s.quests);A.settleEncounter(s,content,b);
-    assert.deepEqual(s.inventory,inv);assert.deepEqual(s.quests,q);assert.deepEqual(s.position,{x:860,y:850});
+    assert.deepEqual(s.inventory,inv);assert.deepEqual(s.quests,q);
+    const world=W.createWorld(s.zone,content,s),monster=world.encounters.find(e=>e.id==='fire-scout');
+    assert.equal(W.walkable(world,s.position.x,s.position.y),true);
+    assert.ok(W.distance(s.position,monster)>=100&&W.distance(s.position,monster)<=220);
     assert.ok(A.beginEncounter(s,content,'fire-scout'));
 });
 test('invalid battle snapshots, upgrades and pet values cannot replace a save',()=>{

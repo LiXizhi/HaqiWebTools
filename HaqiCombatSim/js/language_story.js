@@ -3,7 +3,7 @@ import {storyReward} from './language_encounter_core.js';
 import {createLearningChatView} from './view_learning_chat.js';
 import {storySpeechResult,storyJudgeMessages} from './language_story_core.js';
 
-export function createStoryChat({onFreeTalk=()=>{},getState,commit,saveSettings=()=>{},openSettings=()=>{},voice,useReward=()=>{},viewFactory=createLearningChatView}){
+export function createStoryChat({onSpeech=()=>{},onFreeTalk=()=>{},getState,commit,saveSettings=()=>{},openSettings=()=>{},voice,useReward=()=>{},viewFactory=createLearningChatView}){
     let session=null,recordTask=null;
     const view=viewFactory({free:()=>session&&onFreeTalk(session.profile),close,start,finish,cancel,hint,chinese,next,help,speak,useReward:()=>{const reward=session?.reward;close();if(reward?.action)useReward(reward.action,reward.guid);},challenge:()=>challenge(),settings:()=>{close();openSettings();}});
     const valid=s=>session===s&&!s.abort.signal.aborted&&getState().role===s.role&&getState().identity===s.identity&&getState().save.zone==='camp'&&getState().save.languageLearning.enabled&&getState().save.languageLearning.target===s.locale;
@@ -64,6 +64,7 @@ export function createStoryChat({onFreeTalk=()=>{},getState,commit,saveSettings=
             if(!outcome.passed){const retry={en:'Let us try that again.','zh-CN':'我们再试一次。'};s.messages.push({role:'npc',text:retry,label:outcome.feedback});await readLine(s,retry[s.locale]);if(valid(s))s.status='还没有通过，参考回答提示再试一次。';return;}
             if(transcript.toLowerCase().replace(/[.,!?]/g,'').trim()===turn.answer[s.locale].toLowerCase().replace(/[.,!?]/g,'').trim())userMessage.translation=turn.answer[s.locale==='en'?'zh-CN':'en'];
             userMessage.feedback='答对了';
+            if(input==='speech')onSpeech(`${s.attemptId}:${turn.id}`);
             s.proof.push({turnId:turn.id,quote:outcome.quote,hinted:s.hintLevel>0,input});
             if(s.index+1<s.story.turns.length){s.index++;s.hintLevel=s.story.mode==='challenge'?0:3;if(s.hintLevel)s.hintsUsed=true;s.messages.push({role:'npc',text:s.story.turns[s.index].question});s.status='这句通过了，继续聊下一句。';}
             else{

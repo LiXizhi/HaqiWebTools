@@ -27,6 +27,13 @@ export function updatePetStatus(root,save,content) {
 }
 
 export function createPetEvolution(assets,id,pet,portrait,el,onSelect) {
+ const def=assets.content.pets[id];
+ if(def?.staticAppearance){
+  const path=el('div','pet-growth-stages pet-growth-static');
+  path.setAttribute('aria-label','原版形象');
+  path.append(el('section','pet-growth-stage is-current',portrait(assets,id,0,96),el('h3','','原版形象'),el('p','muted','外观不随等级变化'),el('small','pet-growth-state','没有四套动作')));
+  return path;
+ }
  const p=petParams(assets.content),current=pet?petAppearanceStage(pet,assets.content):-1;
  const path=el('div','pet-growth-stages');path.setAttribute('aria-label','四阶段进化路径');
  for(let index=0;index<4;index++){

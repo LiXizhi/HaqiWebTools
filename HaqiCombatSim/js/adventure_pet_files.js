@@ -22,7 +22,9 @@ export function hydratePetFile(save,id,scope,read,content){
 export function* packPetFiles(source,scope,content,uuid){
     if(source.petInstanceVersion!==1)return clone(source);
     const save=clone(source),refs=clone(save.petFileRefs||{});
+    for(const id of Object.keys(refs))if(String(id).startsWith('npc-pet:'))delete refs[id];
     for(const group of ['pets','petWorld'])for(const [id,pet]of Object.entries(save[group]||{})){
+        if(String(id).startsWith('npc-pet:')){delete save[group][id];continue;}
         delete pet.hp;delete pet.hunger;
         validatePetInstance(pet,content);
         const old=refs[id],file=old?yield {read:old.path}:null;

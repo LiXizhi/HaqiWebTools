@@ -19,7 +19,7 @@ test('lazy relationship index, immutable data, stale conflict, history and fresh
 test('failed immutable file write never publishes index and network failures never initialize empty',async()=>{
     const f=fakeWorkspace(),io=await f.workspace.connect('r'),a=await io.save(newRelationship(io.scope,{},profile('a'),0)),head=f.files.get('alice/workspace/roles/r/relationships/index.json');
     f.fail('write');await assert.rejects(io.save({...a,summary:'new'}));assert.equal(f.files.get('alice/workspace/roles/r/relationships/index.json'),head);
-    f.fail('read');await assert.rejects(io.load('a'));await assert.rejects(io.reserve('x','a',false));
+    f.fail('read');assert.deepEqual(await io.load('a'),a);const unloaded=await f.workspace.connect('not-loaded');await assert.rejects(unloaded.load('a'));await assert.rejects(io.reserve('x','a',false));
 });
 test('account quota shared across roles, released errors, membership bypass and account switch protection',async()=>{
     const f=fakeWorkspace(),a=await f.workspace.connect('a'),b=await f.workspace.connect('b');
@@ -31,4 +31,22 @@ test('archived events still deduplicate after page rotation',async()=>{
     const f=fakeWorkspace(),io=await f.workspace.connect('r');let row=newRelationship(io.scope,{},profile('a'),0);
     for(let i=0;i<105;i++)row=applyAffinity(row,{eventId:`e${i}`,before:row.affinity,delta:0,after:row.affinity},{eventId:`e${i}`,now:i});
     row=await io.save(row);assert.equal(row.events.length,50);assert.ok(await io.hasEvent(row,'e0'));assert.ok(await io.hasEvent(row,'e104'));assert.equal(await io.hasEvent(row,'absent'),false);
+});
+
+
+test('relationship PUT acknowledgements avoid all write-only file GETs',async()=>{
+    const f=fakeWorkspace(),io=await f.workspace.connect('r');
+    await io.save(newRelationship(io.scope,{},profile('a'),0));
+    assert.equal(f.writes.length,4);
+    assert.deepEqual(f.reads,['alice/workspace/roles/r/relationships/index.json']);
+});
+
+
+test('relationship and quota reads reuse acknowledged memory across connections',async()=>{
+    const f=fakeWorkspace(),io=await f.workspace.connect('r');
+    const a=await io.save(newRelationship(io.scope,{},profile('a'),0));
+    await io.reserve('first','a',false);f.reads.length=0;
+    assert.deepEqual(await (await f.workspace.connect('r')).load('a'),a);
+    await io.finish('first','released','2026-09-27');await io.reserve('second','a',false);
+    assert.deepEqual(f.reads,[]);
 });

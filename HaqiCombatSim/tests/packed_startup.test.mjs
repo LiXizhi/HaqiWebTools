@@ -42,7 +42,8 @@ test('adventure startup loads two published packs with CDN images and no loose J
         await new Promise(resolve=>setTimeout(resolve,0));
         assert.equal(images.filter(url=>url===resources.media.entries.creatures.cdn).length,1);
         assert.ok(resources.images.has('creatures'));
-        assert.equal(Object.keys(resources.content.pets).length, 360);
+        assert.equal(Object.values(resources.content.pets).filter(pet => !pet.staticAppearance).length, 360);
+        assert.ok(Object.values(resources.content.pets).some(pet => pet.staticAppearance));
         assert.ok(resources.content.shop.length > 1000);
         // Startup keeps only essential sheets + school frames; cards and other-island scenery stay lazy.
         assert.ok(images.length >= 3 && images.length < 40);

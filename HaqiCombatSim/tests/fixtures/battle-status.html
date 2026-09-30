@@ -5,6 +5,7 @@ import {createAdventure,playerSpec} from '../../js/adventure_core.js';
 import {createPveBattle} from '../../js/combat_pve_core.js';
 import {createBattleRoster,updateBattleRoster} from '../../js/view_adventure_battle_status.js';
 const assets=await loadResources(),save=createAdventure(assets.content),canvas=document.querySelector('#battle'),renderer=createRenderer(canvas,assets);
+if(new URLSearchParams(location.search).has('mounted')){save.mountId=Object.keys(assets.content.mountByItem).find(id=>assets.content.mountByItem[id].art?.cdn);canvas.style.height='720px';}
 const catalog=await(await fetch('data/adventure/monster-catalog.json')).json();
 const monsters=catalog.monsters.filter(m=>m.name.includes('章鱼')).slice(0,3).map((m,i)=>({...m,id:'preview'+i,school:'storm',level:1,hp:100,pool:[],sequences:[],genes:[],cardsets:{}}));
 const battle=createPveBattle({dataset:assets.dataset,player:playerSpec(save,assets.content),monsters,seed:1});

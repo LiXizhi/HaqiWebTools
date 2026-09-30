@@ -209,9 +209,11 @@ export class HeroRenderer {
     }
 }
 
-export function heroPortrait(assets,save,w=90,h=95,{facing=0,...options}={}){
+export function heroPortrait(assets,save,w=90,h=95,{facing=0,mounted=false,...options}={}){
     if(!assets.hero){const canvas=document.createElement('canvas');canvas.width=w*2;canvas.height=h*2;assets.tile?.(canvas.getContext('2d'),'sprites',(save.appearance==='girl'?12:8)+facing,0,0,w*2,h*2);return canvas;}
-    const view=assets.hero.createView(assets.hero.appearance(save,{mounted:false}),{width:w*2,height:h*2,x:0,y:0,bodyRect:{x:0,y:0,w:w*2,h:h*2},facing,animate:true,...options});
+    const appearance=assets.hero.appearance(save,{mounted});
+    const framing=appearance.mount?{x:w,y:h*1.65,size:w}:{x:0,y:0,bodyRect:{x:0,y:0,w:w*2,h:h*2}};
+    const view=assets.hero.createView(appearance,{width:w*2,height:h*2,...framing,facing,animate:true,...options});
     view.node.className='art';view.node.style.width=w+'px';view.node.style.height=h+'px';view.ready.catch(()=>{});return view.node;
 }
 
@@ -231,4 +233,18 @@ export async function loadHeroLibrary(readJson,catalog,{local=false,sprites,sour
     }
     await Promise.allSettled(['male','female'].map(gender=>hero.ensure({gender})));
     return hero;
+}
+
+// Static UI avatar: draw the selected head atlas directly, without body or animation.
+export function heroHeadPortrait(assets,save,size=52){
+    const canvas=document.createElement('canvas');canvas.width=canvas.height=size*2;
+    canvas.style.width=canvas.style.height=size+'px';canvas.setAttribute('role','img');canvas.setAttribute('aria-label',save.name||'我');
+    const hero=assets.hero;if(!hero)return canvas;
+    const appearance=hero.appearance(save,{mounted:false}),id=hero.headId(appearance.gender,appearance.headId),sheet=hero.manifest.heads[id];
+    if(!sheet)return canvas;
+    void hero.image('head:'+id,sheet).then(image=>{
+        const frame=sheet.frames[BODY_TO_HEAD[0]],crop=frame.crop,scale=Math.min(canvas.width/crop[2],canvas.height/crop[3]);
+        canvas.getContext('2d').drawImage(image,...crop,(canvas.width-crop[2]*scale)/2,(canvas.height-crop[3]*scale)/2,crop[2]*scale,crop[3]*scale);
+    }).catch(()=>{});
+    return canvas;
 }

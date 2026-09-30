@@ -66,6 +66,7 @@ export function feedFromSlots(save,content){
 export function petStage(level,content){return petParams(content).stageLevels.filter(n=>level>=n).length-1;}
 // Appearance is cosmetic; growth, cards and combat always use the actual level.
 export function petAppearanceStage(pet,content){
+ if(content.pets[pet.speciesId]?.staticAppearance)return 0;
  const unlocked=petStage(pet.level,content);
  return Number.isInteger(pet.appearanceStage)&&pet.appearanceStage>=0&&pet.appearanceStage<=unlocked?pet.appearanceStage:unlocked;
 }
@@ -125,7 +126,7 @@ export function petAction(save,content,action,access={}){
   check(Number.isSafeInteger((save.inventory[row.itemId]||0)+row.count),'口粮数量无效');
   save.inventory[row.itemId]=(save.inventory[row.itemId]||0)+row.count;save.petFoodSlots[action.slot]=null;break;
  }
- case 'pet-appearance':check(pet,'尚未拥有宠物');check(Number.isInteger(action.stage)&&action.stage>=0&&action.stage<=petStage(pet.level,content),'宠物形态尚未解锁');pet.appearanceStage=action.stage;break;
+ case 'pet-appearance':check(pet,'尚未拥有宠物');check(!content.pets[pet.speciesId]?.staticAppearance,'这只宠物的外观不随等级变化');check(Number.isInteger(action.stage)&&action.stage>=0&&action.stage<=petStage(pet.level,content),'宠物形态尚未解锁');pet.appearanceStage=action.stage;break;
  case 'starter':{check(!save.starterChosen&&STARTERS.includes(action.petId),'已领取初始伙伴');const added=addPet(save,content,action.petId);save.formation[save.heroSlot]=save.petInstanceVersion===1?added.id:action.petId;save.starterChosen=true;break;}
  case 'formation':{
   check(Array.isArray(action.slots)&&action.slots.length===4&&action.slots.every(id=>id===null||Object.hasOwn(save.pets,id)),'阵容无效');
@@ -210,7 +211,7 @@ export function validatePets(save,content){
   if(save.petInstanceVersion===1){check(pet.id===id&&pet.ownerId===save.petOwnerId,'宠物身份无效');validatePetInstance(pet,content);}
   else check(Object.hasOwn(content.pets,id)&&pet.speciesId===id&&pet.id===`${save.seed}:${id}`,'宠物身份无效');
   check(Number.isSafeInteger(pet.xp)&&pet.xp>=0&&pet.level===petXpLevel(pet.xp,content),'宠物等级无效');
-  check(pet.appearanceStage===undefined||Number.isInteger(pet.appearanceStage)&&pet.appearanceStage>=0&&pet.appearanceStage<=petStage(pet.level,content),'宠物外观无效');
+  check(content.pets[pet.speciesId]?.staticAppearance?pet.appearanceStage===undefined||pet.appearanceStage===0:pet.appearanceStage===undefined||Number.isInteger(pet.appearanceStage)&&pet.appearanceStage>=0&&pet.appearanceStage<=petStage(pet.level,content),'宠物外观无效');
   check(Number.isFinite(pet.hp)&&pet.hp>=0&&pet.hp<=petMaxHp(pet,content)&&Number.isFinite(pet.hunger)&&pet.hunger>=0&&pet.hunger<=100,'宠物状态无效');validatePetDeck(pet,content,pet.deck);
  }
  check(Number.isFinite(save.careAt)&&save.careAt>=0&&typeof save.starterChosen==='boolean'&&Array.isArray(save.careLog)&&save.careLog.every(x=>typeof x==='string')&&Array.isArray(save.transactions),'养成记录无效');

@@ -4,6 +4,7 @@
 <body class="haqi-app"><div id="root"></div><script type="module">
 import {loadResources} from '../../js/adventure_assets.js';
 import {createAdventure,applyAction} from '../../js/adventure_core.js';
+import {addPet} from '../../js/adventure_pets_core.js';
 import {renderPanel} from '../../js/view_adventure.js';
 import {loadLocaleFiles,configureLocale} from '../../js/locale.js';
 // In-memory character only: never read or write player saves.
@@ -17,6 +18,11 @@ try {
  if(!params.has('empty'))for(const item of Object.values(assets.content.items).filter(item=>assets.content.mountByItem?.[item.id]).slice(0,8))save.inventory[item.id]=1;
  if(params.has('battle'))save.pendingEncounter={id:'fixture-battle'};
  if(params.has('hungry'))save.pets[save.formation[0]].hunger=5;
+ if(params.has('modelPet')){
+  const species=Object.keys(assets.content.pets).find(id=>assets.content.pets[id].staticAppearance);
+  const pet=addPet(save,assets.content,species,20000);
+  save.formation[1]=Object.keys(save.pets).find(id=>save.pets[id].speciesId===species);
+ }
  let panel='pet';
  const model={assets,save,shopView:{category:'supply'},petView:{tab:params.get('tab')||'follow'}};
  const root=document.querySelector('#root');

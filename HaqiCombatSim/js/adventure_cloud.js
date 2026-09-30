@@ -7,9 +7,9 @@ import { tr } from './locale_runtime.js';
 import { validateRoles, emptyRoles, roleIdValid } from './adventure_roles_core.js';
 import { splitRoleSave, joinRoleSave, storageParts, stableJson, coreCatalogKey, durableSave, restoreRuntime } from './adventure_storage_core.js';
 
-// CDN serves this stable filename with a one-year browser cache. Bump the
-// application version marker when requiring a newer SDK storage capability.
-export const SDK_URL = 'https://cdn.keepwork.com/sdk/keepworkSDK.core.iife.js?haqi-storage=20260930';
+export const SDK_URL = typeof __HAQI_SDK_URL__ !== 'undefined'
+    ? __HAQI_SDK_URL__
+    : 'https://cdn.keepwork.com/sdk/keepworkSDK.core.iife.js?v=6524b8f78261';
 let sdkLoading;
 class CloudError extends Error {}
 function timeout(promise, ms = 25000) {

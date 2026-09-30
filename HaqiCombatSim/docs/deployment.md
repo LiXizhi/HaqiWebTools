@@ -16,6 +16,10 @@ npm run preview
 
 ## 上传
 
+### SDK 构建版本
+
+Vite 生产构建（包括 `HAQI_TARGET=app`）先用随机查询参数和 `cache: no-store` 下载 Keepwork core SDK，以响应字节的 SHA-256 前 12 位生成 `keepworkSDK.core.iife.js?v=<hash>`，通过 `__HAQI_SDK_URL__` 注入加载器。相同内容保持相同 URL，SDK 内容改变则自动更新版本，不再维护日期。写出构建产物时，`writeBundle` 将该 URL 保存到 `js/adventure_cloud.js` 的默认值；Vite dev 与普通静态源码沿用上次构建的哈希，不加载裸 CDN URL，也不在启动时执行构建期下载。请求超时为 30 秒；网络失败、非成功 HTTP 状态或空响应会中止构建并保留原默认值。该查询参数用于缓存更新，并非 SDK 完整性校验或不可变版本托管。
+
 2026-09-24：`dungeon-index.json`、`monster-art.json`、`quest-journal.json`、`quest-runtime.json` 统一经过构建期字段白名单并进入 `data/adventure.json`，不再单独输出两个任务文件。任务窗口复用启动阶段的读取器与缓存，因此冒险启动及首次打开任务窗口合计只请求 adventure/kids 两个配置包。代价是任务手记随启动包下载，不再延迟到打开窗口时下载。完整 `dungeons.json` 仍独立按需加载，不并入启动包。
 
 怪物美术移除 adaptations 溯源记录，保留外观绑定和验证所需哈希、尺寸、大小；任务手记移除未使用的 repeat、目标 id 和前置 value；任务运行表移除未使用的条件 name。副本轻量索引已有字段均被实际功能使用，保持其菜单、外观和存档校验信息。源码 JSON 不做裁剪，普通 HTTP/Vite dev 仍按原路径读取。

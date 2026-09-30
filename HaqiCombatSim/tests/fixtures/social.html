@@ -24,7 +24,7 @@ const entrance=world.landmarks.find(p=>p.entranceKind===params.get('entrance'));
 if(entrance)save.position=nearestWalkable(world,entrance.x+150,entrance.y+30);
 await assets.warmScenery(world);
 const hud=document.querySelector('#hud'),overlay=document.querySelector('#overlay'),result=document.querySelector('#result');let panel=null;
-const model=()=>({assets,save,social:social.state(),socialActors:social.actors,membership:{},now:Date.now()});
+const model=()=>({assets,save,social:social.state(),socialGesture:social.gesture,socialActors:social.actors,membership:{},now:Date.now()});
 function close(){social.close();panel=null;overlay.replaceChildren();overlay.className='overlay';}
 function open(kind){panel=kind;paint();}
 const social=createIslandSocial({arenaStore:createRuntimeStore(params.get('storage')==='arena'?{databaseName:'haqi-red-mushroom-qa-v1'}:{indexedDB:null}),getState:()=>({save,assets,world,paused:!!panel,locked:!!panel}),getOwner:()=>null,onChange:paint,onPersist:()=>{},onOpen:open,onClose:close,onLogin:()=>result.textContent='登录提示：访客未发送消息',toast:message=>result.textContent=message});
@@ -37,9 +37,11 @@ if(params.get('panel')==='social-party'){
     else open('social-party');
 }else if(params.get('panel')==='social-profile'){
     const actor=social.actors[0];if(actor)social.select(actor.profile);else paint();
+}else if(params.get('panel')==='social-actions'){
+    const actor=social.actors[0];if(actor)social.select(actor.profile,'social-actions');else paint();
 }else if(params.get('panel')==='social-pvp')open('social-pvp');else if(params.get('panel')==='map')open('map');else paint();
-let last=0;function frame(now){social.step(Math.min(.1,(now-last)/1000));last=now;renderer.render(world,save,now,{socialActors:social.actors});requestAnimationFrame(frame);}requestAnimationFrame(frame);
-document.querySelector('#world').addEventListener('click',event=>{const point=renderer.screenToWorld(event.clientX,event.clientY),p=social.pick(point);if(p)social.select(p);});
+let last=0;function frame(now){social.step(Math.min(.1,(now-last)/1000));last=now;renderer.render(world,save,now,{socialGesture:social.gesture,socialActors:social.actors});requestAnimationFrame(frame);}requestAnimationFrame(frame);
+document.querySelector('#world').addEventListener('click',event=>{const point=renderer.screenToWorld(event.clientX,event.clientY),p=social.pick(point);if(p)social.select(p,'social-actions');});
 const launch=document.createElement('button');launch.textContent='组队房间';launch.style='position:fixed;bottom:30px;left:5px;z-index:100';launch.onclick=()=>open('social-party');document.body.append(launch);
 const approach=document.createElement('button');approach.textContent='靠近伙伴';approach.style='position:fixed;bottom:30px;left:90px;z-index:100';approach.onclick=()=>{close();const a=social.actors[0];save.position=nearestWalkable(world,a.position.x+60,a.position.y);};document.body.append(approach);
 result.textContent=`隔离验收已就绪 · ${social.actors.length}位伙伴`;

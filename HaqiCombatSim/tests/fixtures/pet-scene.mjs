@@ -25,7 +25,7 @@ function previewWorld(){
     next.npcs=previewOwners.map((n,i)=>({...n,petCompanion:true,...spot(i?75:35)}));next.encounters=[];return {...next};
 }
 let world=previewWorld();
-const renderer=createRenderer($('world'),assets),scene=createPetScene({now,getState:()=>({save,world,content,scope:'fixture',socialActors:[],locked:false,loadPet:async id=>{const next=roles.loadPet(save,id);Object.assign(save.pets,next.pets);Object.assign(save.petWorld,next.petWorld);}}),commit:next=>{saveLocal(next,roles.scoped());save=roles.catalog.roles.find(r=>r.id===roles.catalog.activeId).save;paint();},noteMeeting:meetings=>{save.petMeetings=meetings;saveLocal(save,roles.scoped());},toast});
+const renderer=createRenderer($('world'),assets),scene=createPetScene({now,getState:()=>({save,world,content,scope:'fixture',socialActors:[],locked:false,loadPet:async id=>{const next=roles.loadPet(save,id);Object.assign(save.pets,next.pets);Object.assign(save.petWorld,next.petWorld);}}),commit:next=>{saveLocal(next,roles.scoped());save=roles.catalog.roles.find(r=>r.id===roles.catalog.activeId).save;paint();},toast});
 function presentResidents(){scene.step(0);for(const row of scene.pets)if(row.pet&&row.pet.ownerId!==save.petOwnerId)row.pet.gender='male';}
 presentResidents();
 const moodStrip=document.createElement('section');moodStrip.style.cssText='display:flex;gap:12px;flex-wrap:wrap;margin:12px 0';moodStrip.setAttribute('aria-label','宠物动作预览');

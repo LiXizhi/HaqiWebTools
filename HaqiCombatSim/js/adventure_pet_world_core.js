@@ -1,7 +1,7 @@
 import {recordPetMeal} from './adventure_pet_quests_core.js';
 import {validPetFileRef} from './adventure_pet_files_core.js';
 // Whole-game transaction rules. Persist the returned save before replacing live state.
-import {createPetInstance,migratePetInstances,validatePetInstance,interactPets,breedPets,adoptPet,prunePetMemories,petInteractionParams} from './adventure_pet_interactions_core.js';
+import {createPetInstance,migratePetInstances,validatePetInstance,interactPets,breedPets,adoptPet,prunePetMemories,petInteractionParams,petPairStatus} from './adventure_pet_interactions_core.js';
 import {petMaxHp,petParams,nutritionStock,consumeNutrition} from './adventure_pets_core.js';
 import {selectSocialPetId} from './adventure_companion_core.js';
 import {hashSeed} from './rng_core.js';
@@ -31,7 +31,7 @@ export function validatePetWorld(save,content){
 }
 export function petWorldAction(source,content,action){
     check(source.petInstanceVersion===1&&!source.pendingEncounter,'请先结束战斗');
-    const save=copy(source),effects=[],babies=[];
+    const save=copy(source),effects=[],babies=[],temporaryPairs={...action.temporaryPairs};
     const own=p=>p.ownerId===save.petOwnerId||p.ownerId===null;
     for(const id of Object.keys(save.petWorld))if(String(id).startsWith('npc-pet:'))delete save.petWorld[id];
     if(save.petFileRefs)for(const id of Object.keys(save.petFileRefs))if(String(id).startsWith('npc-pet:'))delete save.petFileRefs[id];
@@ -58,19 +58,25 @@ export function petWorldAction(source,content,action){
             let [a,b]=pair.ids.map(lookup);check(a&&b,'互动宠物尚未加载');
             if(a.ownerId!==save.petOwnerId&&b.ownerId!==save.petOwnerId)continue;
             if(['feed','meal-arrival'].includes(action.type))check(pair.ids.includes(action.hostId),'分享只能建立主人宠物与来访宠物的关系');
+            const pairKey=JSON.stringify([...pair.ids].sort()),persistent=pair.ids.some(id=>action.friendPetIds?.includes(id));
+            if(!persistent){
+                [a,b]=[a,b].map(p=>{const old=temporaryPairs[pairKey]?.find(row=>row.id===p.id);return {...p,memories:copy(old?.memories||[]),memoryClock:old?.memoryClock||0,memorySerial:old?.memorySerial||0};});
+            }
             const scene={...pair.scene,zone:save.zone,inBattle:false};
-            const interaction=interactPets(a,b,{kind:['feed','meal-arrival'].includes(action.type)?'manual-feed':action.type==='dialogue'?'owner-dialogue':'proximity',now,scene,completed:['feed','meal-arrival','dialogue'].includes(action.type)},content);
+            const confirmed=action.type==='dialogue'||(['feed','meal-arrival'].includes(action.type)&&pair.ids.some(id=>action.confirmedOwners?.includes(id)));
+            const interaction=interactPets(a,b,{kind:confirmed?(action.type==='dialogue'?'owner-dialogue':'manual-feed'):'proximity',now,scene,completed:confirmed},content);
             [a,b]=interaction.pets;
             const key=JSON.stringify([a,b].sort((x,y)=>x.id.localeCompare(y.id)).map(p=>[p.id,p.birthSerial+1]));
             const babyId=`baby:${save.seed}:${hashSeed(key)}:${hashSeed('birth:'+key)}`;
-            const birth=breedPets(a,b,{now,scene,babyId},content);
-            if(interaction.markAdded||birth.baby)for(const pet of birth.pets)if(pet.ownerId===save.petOwnerId)set(pet);
+            const birth=confirmed&&persistent?breedPets(a,b,{now,scene,babyId},content):{pets:[a,b],baby:null,status:petPairStatus(a,b,{now,scene},content)};
+            if(!persistent&&confirmed)temporaryPairs[pairKey]=copy(interaction.pets);
+            if(persistent&&(interaction.markAdded||birth.baby))for(const pet of birth.pets)if(pet.ownerId===save.petOwnerId)set(pet);
             if(birth.baby){check(!save.pets[babyId]&&!save.petWorld[babyId]&&!save.petFileRefs?.[babyId],'宝宝编号冲突');set(birth.baby);babies.push(birth.baby);}
-            effects.push({ids:pair.ids,markAdded:interaction.markAdded,play:interaction.play,status:birth.status,babyId:birth.baby?.id});
+            effects.push({temporary:!persistent,ids:pair.ids,markAdded:interaction.markAdded,play:interaction.play,status:birth.status,babyId:birth.baby?.id});
         }
         if(action.type==='prune')for(const id of action.ids||[]){const p=lookup(id);if(p?.ownerId===save.petOwnerId)set(prunePetMemories(p,now,content));}
     }
-    const changed=JSON.stringify(save)!==JSON.stringify(source);
+    const changed=!['proximity','gesture'].includes(action.type)&&JSON.stringify(save)!==JSON.stringify(source);
     if(changed)save.revision++;
-    return {save:changed?save:source,effects,babies,changed};
+    return {save:changed?save:source,effects,babies,changed,temporaryPairs};
 }

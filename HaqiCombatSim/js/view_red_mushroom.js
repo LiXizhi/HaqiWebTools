@@ -1,7 +1,7 @@
 import {el,button} from './view_adventure.js';
 import {petPortrait} from './view_adventure_pets.js';
 import {drawSchoolIcon} from './card_renderer.js';
-import {selectSocialPetId} from './adventure_companion_core.js';
+import {companionPet} from './view_party_companion_pet.js';
 
 const schools={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡'};
 const modes=['独当一面','双星并肩','三人协作','全队出击'];
@@ -12,21 +12,7 @@ function schoolIcon(school,cls='arena-name-school'){
     const context=canvas.getContext('2d');if(context)drawSchoolIcon(context,school||'balance',16,16,24);return canvas;
 }
 function levelLine(p){return el('p','party-seat-meta',schoolIcon(p.school),el('span','',`${p.level} 级`));}
-function companionPet(p,state,cb,shownSpecies){
-    if(p?.speciesId)return null;
-    const assets=cb.assets?.(),content=assets?.content;if(!content?.pets)return null;
-    let speciesId,stage;
-    if(p.kind==='self'||p.id==='hero'){
-        const follow=state.followPet;
-        if(!follow||shownSpecies.has(follow.speciesId))return null;
-        speciesId=follow.speciesId;stage=follow.stage;
-    }else{
-        speciesId=selectSocialPetId({id:p.profileId||p.id,school:p.school,name:p.name},content);stage=2;
-    }
-    if(!content.pets[speciesId]?.art)return null;
-    const badge=el('div','party-seat-pet',petPortrait(assets,speciesId,stage??2,48));
-    badge.setAttribute('aria-label',content.pets[speciesId].name||'宠物');return badge;
-}
+
 function stats(state){
     const r=state.arenaRecord,recent=r.recent||[],wins=recent.filter(p=>p.result==='win').length;
     return el('div','arena-record',el('span','',`已赛 ${r.total} 场`),el('strong','',`胜率 ${r.total?Math.round(r.wins/r.total*100)+'%':'—'}`),el('span','',`${r.wins} 胜 / ${r.draws} 平 / ${r.losses} 负`),el('span','',`近期 ${recent.length} 场 · ${recent.length?Math.round(wins/recent.length*100)+'%':'—'}`));

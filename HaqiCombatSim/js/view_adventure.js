@@ -2,7 +2,7 @@ import {dailyBuffs,dailyBuffDescription} from './language_daily_buff_core.js';
 import {defeatReviewNotes} from './view_battle_review.js';
 import {createBattlePetHint} from './view_battle_pet_hint.js';
 export {updateBattlePetHint,updateBattleSpeech,battleSpeechController} from './view_battle_pet_hint.js';
-import {socialHudButton,bindDungeonMenu} from './view_adventure_social_hud.js';
+import {socialHudButton,teamHudButton,bindDungeonMenu} from './view_adventure_social_hud.js';
 import {dungeonProgress} from './adventure_coop_core.js';
 import {renderLearningMode} from './view_learning_mode.js';
 import {createHeroPicker} from './view_hero_picker.js';
@@ -464,7 +464,10 @@ export function renderHud(root,model,cb) {
     const socialBar=el('div','hero-social-toolbar');socialBar.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)}px`;socialBar.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
     for(const control of [...root.querySelectorAll('.mount-toggle')]){control.style.left='';control.style.top='';socialBar.append(control);}
     // Mail HUD entry stays hidden until dual-account mailVerified is shipped.
-    socialBar.append(socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));root.append(socialBar);
+    socialBar.append(socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));
+    const teamControl=teamHudButton(model.social?.team,save.coopRun,cb.panel);
+    if(teamControl)socialBar.append(teamControl);
+    root.append(socialBar);
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
 }
 function modal(root,title,subtitle,cb,wide=false) {

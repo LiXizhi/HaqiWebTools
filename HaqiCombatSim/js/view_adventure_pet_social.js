@@ -1,3 +1,4 @@
+import {socialActions} from './adventure_social_actions_core.js';
 import {petAppearanceStage} from './adventure_pets_core.js';
 import {petInteractionParams} from './adventure_pet_interactions_core.js';
 import {drawPetMood} from './view_adventure_pet_mood.js';
@@ -34,6 +35,8 @@ export function drawPetSocialEffects(ctx,assets,rows,effects,time,reduced,at){
         const key=[...effect.ids].sort().join('|');if(effect.until<=at||used.has(key))continue;used.add(key);
         const pets=effect.ids.map(id=>byId.get(id)).filter(Boolean);if(!pets.length)continue;
         if(pets.length!==2||Math.hypot(pets[0].position.x-pets[1].position.x,pets[0].position.y-pets[1].position.y)>p.interactionDistance)continue;
+        const action=socialActions.find(a=>a.id===effect.action);
+        if(action)for(const row of pets){ctx.save();ctx.font='24px sans-serif';ctx.fillText(action.icon,row.position.x,row.position.y-64*(row.scale||1)-60);ctx.restore();}
         // Tiny alternating scribbles: pet chatter without any human words or glyphs.
         for(const [index,row]of pets.entries()){
             if(!reduced&&Math.floor((at-effect.at)/650)%2!==index)continue;
@@ -44,7 +47,7 @@ export function drawPetSocialEffects(ctx,assets,rows,effects,time,reduced,at){
             ctx.strokeStyle='#8b9b8c';ctx.beginPath();ctx.moveTo(x-9,y);ctx.quadraticCurveTo(x-6,y-7,x-3,y);ctx.quadraticCurveTo(x,y+6,x+3,y-2);ctx.stroke();
             ctx.beginPath();ctx.arc(x+8,y-1,1.3,0,Math.PI*2);ctx.fillStyle='#c7a478';ctx.fill();ctx.restore();
         }
-        if(effect.kind!=='proximity'||effect.babyId)for(const row of pets){
+        if(['dialogue','meal-arrival'].includes(effect.kind)||effect.babyId)for(const row of pets){
             if(used.has(row.pet.id))continue;used.add(row.pet.id);
             const y=row.position.y-64*(row.scale||1)-14,x=row.position.x,count=Math.min(p.marksRequired,effect.status?.available||0);
             for(let i=0;i<p.marksRequired;i++){ctx.fillStyle=i<count?'#e5839b':'#fff4da';ctx.fillRect(x-p.marksRequired*9+i*18,y,15,6);}

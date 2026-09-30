@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {createAdventure,parseSave,beginEncounter} from '../js/adventure_core.js';
-import {initializePetWorld,petWorldAction,npcPetId,createNpcPet} from '../js/adventure_pet_world_core.js';
+import {initializePetWorld,petWorldAction as rawPetWorldAction,npcPetId,createNpcPet} from '../js/adventure_pet_world_core.js';
 import {createPetInstance,petInteractionParams} from '../js/adventure_pet_interactions_core.js';
 import {findPetMeeting,petMeetingClear} from '../js/adventure_pet_meeting_core.js';
 import {SOCIAL_DEFAULTS} from '../js/adventure_social_core.js';
@@ -24,12 +24,15 @@ import {petFilePath,petContentKey} from '../js/adventure_pet_files_core.js';
 import {durableSave} from '../js/adventure_storage_core.js';
 import {ISLANDS,islandSpawn} from '../js/adventure_world_map_core.js';
 import {createWorld,walkable} from '../js/adventure_world_core.js';
+import {projectDungeon} from '../js/adventure_dungeons_core.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));
 const {content,dataset}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),read('adventure/pets.json'),read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 const T=Date.UTC(2026,8,27),D=86400000,scene={distance:10,anchor:{x:300,y:300},walkable:true};
 function hero(){const s=createAdventure(content,{starter:'dragon_green'});initializePetWorld(s,content);return s;}
 function visitor(id,gender='male'){const pet=createNpcPet({id,school:'fire'},content);pet.gender=gender;return pet;}
 function pair(){const s=hero(),id=s.formation[0];s.pets[id]={...s.pets[id],xp:9000,level:25,gender:'female'};const other=visitor('fixture');return {save:s,id,other:other.id,visitors:[other]};}
+// Existing durability/breeding scenarios explicitly represent confirmed friends.
+const petWorldAction=(save,content,action)=>rawPetWorldAction(save,content,{friendPetIds:(action.visitors||[]).map(p=>p.id),...action});
 const catalog=save=>({roles:[{id:'test',save}]});
 const islandContent={...content,worldMaps:Object.fromEntries(Object.entries(content.worldMapIndex.islands).map(([id,row])=>[id,JSON.parse(fs.readFileSync(new URL('../'+row.file,import.meta.url)))]))};
 for(const island of ISLANDS)test(`${island.name}: dialogue, food, birth and return-to-island adoption use the real map`,()=>{
@@ -38,7 +41,7 @@ for(const island of ISLANDS)test(`${island.name}: dialogue, food, birth and retu
     const host=save.formation[0];save.pets[host].xp=9000;save.pets[host].level=25;save.pets[host].gender='female';save.inventory[990001]=2;
     let world=createWorld(save.zone,islandContent,save);
     const owner={id:'island-pet-owner',school:'fire'},other=npcPetId(owner.id);
-    const scene=createPetScene({getState:()=>({save,world,content:islandContent,scope:'all-islands',socialActors:[{profile:owner,position:{...save.position}}],loadPet:async()=>{},locked:false}),commit:next=>{save=next;},toast:()=>{},now:()=>at});
+    const scene=createPetScene({isFriend:()=>true,getState:()=>({save,world,content:islandContent,scope:'all-islands',socialActors:[{profile:owner,position:{...save.position}}],loadPet:async()=>{},locked:false}),commit:next=>{save=next;},toast:()=>{},now:()=>at});
     scene.step(0);scene.pets.find(pet=>pet.id===other).pet.gender='male';
     for(const day of [0,2,4]){at=T+day*D;scene.dialogue(owner.id);for(let i=0;i<400;i++){at+=33;scene.step(.033);if(scene.effects.some(e=>e.at>=T+day*D))break;}}
     const baby=scene.babies[0];assert.ok(baby,island.id);assert.equal(baby.birth.zone,island.id);assert.ok(walkable(world,baby.birth.anchor.x,baby.birth.anchor.y));
@@ -48,15 +51,38 @@ for(const island of ISLANDS)test(`${island.name}: dialogue, food, birth and retu
     save.zone=island.id;save.position=islandSpawn(save.zone,islandContent);world=createWorld(save.zone,islandContent,save);scene.step(0);assert.equal(scene.babies[0].id,baby.id);
     scene.adopt(baby.id);assert.equal(scene.babies.length,0);assert.ok(save.pets[baby.id]);assert.deepEqual(save.formation,[host,null,null,null]);
 });
-function sceneHarness(){
+function sceneHarness(isFriend=()=>true){
     let save=hero(),at=T;save.position={x:900,y:800};
     const world={zone:save.zone,w:1800,h:1600,buildings:[],trees:[],npcs:[{id:36215,name:'草莓姑娘'}]};
     const actor=id=>({profile:{id,school:'fire'},position:{x:925,y:800}});
     const state={world,content,scope:'test',socialActors:[actor('first'),actor('second')],locked:false,loadPet:async()=>{throw Error('读取失败');}};
     const notices=[],meetings=[];
-    const scene=createPetScene({getState:()=>({...state,save}),commit:next=>{save=next;},noteMeeting:book=>{save.petMeetings=book;meetings.push(book);},toast:message=>notices.push(message),now:()=>at});
+    const scene=createPetScene({isFriend,getState:()=>({...state,save}),commit:next=>{save=next;},toast:message=>notices.push(message),now:()=>at});
     return {scene,state,notices,meetings,get save(){return save;},advance:ms=>{at+=ms;}};
 }
+
+test('real dungeon edge keeps both the hero pet and party member pet continuous through scene updates',()=>{
+    const h=sceneHarness(),d=read('adventure/dungeons.json').worlds.find(d=>d.id==='dungeon:Global_FrostRoarIsland_TreasureHouse');
+    const layout=projectDungeon(d,read('adventure/maps/camp.json').rules);
+    h.state.world={...h.state.world,zone:d.id,layout,paths:layout.paths};
+    h.state.socialActors=h.state.socialActors.slice(0,1);
+    h.state.socialActors[0].inParty=true;h.state.team=['first'];
+    h.save.zone=d.id;
+    const positions=[{x:887.3211661612374,y:605.5629509730021},{x:888.2302225533012,y:605.9796240775433}];
+    const place=p=>{h.save.position={...p};h.state.socialActors[0].position={...p};};
+    place(positions[0]);h.scene.step(1/60);
+    for(let i=0;i<180;i++){
+        const before=new Map(h.scene.pets.map(p=>[p.id,p.position]));
+        place(positions[(i+1)%2]);h.advance(1000/60);h.scene.step(1/60);
+        assert.equal(h.scene.pets.length,2);
+        for(const pet of h.scene.pets){
+            const previous=before.get(pet.id);
+            assert.ok(previous,'scene pet identity must remain stable');
+            assert.ok(walkable(h.state.world,pet.position.x,pet.position.y));
+            assert.ok(Math.hypot(pet.position.x-previous.x,pet.position.y-previous.y)<=SOCIAL_DEFAULTS.dungeonFollowSpeed/60+1e-6);
+        }
+    }
+});
 test('pets approach from twice human conversation range and ordinary play earns no marks',()=>{
     const h=sceneHarness(),p=petInteractionParams(content);assert.equal(p.encounterDistance,SOCIAL_DEFAULTS.converseRadius*2);
     h.state.socialActors=h.state.socialActors.slice(0,1);h.state.socialActors[0].position={x:1070,y:800};
@@ -65,7 +91,7 @@ test('pets approach from twice human conversation range and ordinary play earns 
     assert.ok(h.scene.effects.length);assert.equal(h.scene.effects[0].kind,'proximity');
     const [a,b]=h.scene.pets;assert.ok(Math.hypot(a.position.x-b.position.x,a.position.y-b.position.y)<=p.meetingArrivalDistance);
     assert.equal(h.save.pets[h.save.formation[0]].memories.length,0);
-    assert.equal(h.meetings.at(-1)[h.save.formation[0]].length,1);assert.equal(durableSave(h.save).petMeetings,undefined);
+    assert.equal(h.scene.meetings[h.save.formation[0]].length,1);assert.equal(durableSave(h.save).petMeetings,undefined);
     const calls=[],ctx=new Proxy({},{get:(_,key)=>(...args)=>calls.push([key,...args]),set:()=>true});
     drawPetSocialEffects(ctx,{content},h.scene.pets,h.scene.effects,0,false,h.scene.now);
     assert.ok(calls.some(c=>c[0]==='quadraticCurveTo'));assert.equal(calls.filter(c=>c[0]==='fillText').length,0);
@@ -161,8 +187,8 @@ test('social feedback has no overhead text and disappears on separation or expir
 test('paid feeding permits full hunger and arrival rewards do not debit again',()=>{
     let {save,id,other,visitors}=pair();save.inventory[990001]=2;const before=JSON.stringify(save);
     const fed=petWorldAction(save,content,{type:'feed',hostId:id,now:T,visitors,pairs:[]}).save;assert.equal(fed.inventory[990001],1);assert.equal(JSON.stringify(save),before);
-    const arrived=petWorldAction(fed,content,{type:'meal-arrival',hostId:id,now:T,visitors,pairs:[{ids:[id,other],scene}]}).save;assert.equal(arrived.inventory[990001],1);assert.equal(arrived.pets[id].memories[0].total,1);assert.equal(arrived.petWorld[other],undefined);
-    const again=petWorldAction(arrived,content,{type:'meal-arrival',hostId:id,now:T,visitors,pairs:[{ids:[id,other],scene}]}).save;assert.equal(petContentKey(again.pets[id]),petContentKey(arrived.pets[id]));
+    const arrived=petWorldAction(fed,content,{type:'meal-arrival',hostId:id,now:T,visitors,confirmedOwners:[other],pairs:[{ids:[id,other],scene}]}).save;assert.equal(arrived.inventory[990001],1);assert.equal(arrived.pets[id].memories[0].total,1);assert.equal(arrived.petWorld[other],undefined);
+    const again=petWorldAction(arrived,content,{type:'meal-arrival',hostId:id,now:T,visitors,confirmedOwners:[other],pairs:[{ids:[id,other],scene}]}).save;assert.equal(petContentKey(again.pets[id]),petContentKey(arrived.pets[id]));
 });
 test('nearby pets with affinity show a pink mark above both heads',()=>{
     const {save,id,other,visitors}=pair();
@@ -327,7 +353,7 @@ test('guest-to-account transfer hydrates lazy pets and rewrites files under the 
     store.open();assert.equal(store.loadPet(store.catalog.roles[0].save,'extra-pet').pets['extra-pet'].xp,9000);
 });
 
-test('grouping cancels pet meetings and blocks proximity, dialogue and shared meals',()=>{
+test('grouping blocks ambient play but explicit owner interaction still settles pets',()=>{
     const h=sceneHarness(),p=petInteractionParams(content),host=h.save.formation[0];
     h.scene.step(0);h.advance(p.playIntervalMs+1);h.scene.step(0);
     h.state.team=['first','second'];
@@ -337,8 +363,74 @@ test('grouping cancels pet meetings and blocks proximity, dialogue and shared me
     assert.equal(h.scene.effects.length,0);assert.equal(h.scene.food,null);assert.equal(h.meetings.length,0);
     h.save.inventory[990001]=2;h.scene.feed(host);
     assert.equal(h.save.inventory[990001],1);assert.equal(h.scene.food,null);
-    assert.equal(h.save.pets[host].memories.length,0);
+    assert.equal(h.save.pets[host].memories.length,1);
     h.state.team=[];h.advance(p.playIntervalMs+1);
     for(let i=0;i<300&&!h.scene.effects.length;i++){h.advance(50);h.scene.step(.05);}
     assert.ok(h.scene.effects.length,'solo pet interaction resumes after leaving party');
+});
+
+test('stranger greetings animate pets without marks, local writes or later meal rewards',()=>{
+    const h=sceneHarness(),host=h.save.formation[0];h.scene.step(0);
+    const before=JSON.stringify(h.save);
+    h.scene.dialogue('first','greet',false);
+    for(let i=0;i<240&&!h.scene.effects.length;i++){h.advance(33);h.scene.step(.033);}
+    assert.ok(h.scene.effects.some(e=>e.action==='greet'&&e.kind==='gesture'));
+    assert.equal(JSON.stringify(h.save),before);
+    assert.equal(h.save.pets[host].memories.length,0);
+    assert.equal(h.save.petMeetings,undefined);
+    h.save.inventory[990001]=1;h.scene.feed(host);
+    for(let i=0;i<350;i++){h.advance(33);h.scene.step(.033);}
+    assert.equal(h.save.pets[host].memories.length,0);
+});
+
+test('ambient and unconfirmed meal encounters cannot settle an already eligible pair',()=>{
+    const h=pair();let source=h.save;
+    for(let day=0;day<3;day++){
+        // Keep the host young while accumulating confirmed marks, then mature it.
+        source.pets[h.id].level=1;source.pets[h.id].xp=0;
+        source=petWorldAction(source,content,{type:'dialogue',now:T+day*D,visitors:h.visitors,pairs:[{ids:[h.id,h.other],scene}]}).save;
+    }
+    source.pets[h.id].level=25;source.pets[h.id].xp=9000;
+    for(const type of ['proximity','gesture','meal-arrival']){
+        const result=petWorldAction(source,content,{type,hostId:h.id,now:T+3*D,visitors:h.visitors,pairs:[{ids:[h.id,h.other],scene}]});
+        assert.equal(result.changed,false);assert.equal(result.babies.length,0);
+    }
+    const confirmed=petWorldAction(source,content,{type:'dialogue',now:T+3*D,visitors:h.visitors,pairs:[{ids:[h.id,h.other],scene}]});
+    assert.equal(confirmed.babies.length,1);
+});
+
+import {runtimeValues,restoreRuntime} from '../js/adventure_storage_core.js';
+test('legacy pet encounter memory is neither persisted nor restored',()=>{
+    const save=hero();save.petMeetings={[save.formation[0]]:[{otherId:'npc-pet:old',at:T}]};
+    assert.equal(runtimeValues(save).petMeetings,undefined);
+    assert.equal(durableSave(save).petMeetings,undefined);
+    const runtime={...runtimeValues(save),petMeetings:save.petMeetings};
+    assert.equal(restoreRuntime(save,content,runtime).petMeetings,undefined);
+});
+
+test('non-friend pet affinity temporarily accumulates but never writes or breeds, confirmed friendship enables future writes',()=>{
+    const h=pair(),before=JSON.stringify(h.save);let temporaryPairs={};
+    for(let day=0;day<4;day++){
+        const result=rawPetWorldAction(h.save,content,{type:'dialogue',now:T+day*D,visitors:h.visitors,temporaryPairs,pairs:[{ids:[h.id,h.other],scene}]});
+        temporaryPairs=result.temporaryPairs;
+        assert.equal(result.changed,false);assert.equal(result.babies.length,0);assert.equal(JSON.stringify(result.save),before);
+        assert.equal(result.effects[0].temporary,true);assert.equal(result.effects[0].status.available,day+1);
+    }
+    const friend=rawPetWorldAction(h.save,content,{type:'dialogue',friendPetIds:[h.other],now:T+4*D,visitors:h.visitors,temporaryPairs,pairs:[{ids:[h.id,h.other],scene}]});
+    assert.equal(friend.changed,true);assert.equal(friend.save.pets[h.id].memories[0].total,1,'temporary marks are not silently replayed into storage');
+    assert.equal(friend.babies.length,0);
+});
+
+test('scene non-friend team interaction stays temporary and resets with role',()=>{
+    const h=sceneHarness(()=>false);h.scene.step(0);h.state.team=['first'];const before=JSON.stringify(h.save);
+    h.scene.dialogue('first','smile');for(let i=0;i<240&&!h.scene.effects.length;i++){h.advance(33);h.scene.step(.033);}
+    assert.ok(Object.keys(h.scene.temporaryRelations).length>0);assert.equal(JSON.stringify(h.save),before);
+    h.state.scope='another-role';h.scene.step(0);assert.deepEqual(h.scene.temporaryRelations,{});
+});
+
+test('friendship is checked again when pets arrive, not only when owners interact',()=>{
+    let friend=true;const h=sceneHarness(()=>friend);h.scene.step(0);
+    const before=JSON.stringify(h.save);h.scene.dialogue('first','heart');friend=false;
+    for(let i=0;i<240&&!h.scene.effects.length;i++){h.advance(33);h.scene.step(.033);}
+    assert.ok(h.scene.effects.some(e=>e.temporary));assert.equal(JSON.stringify(h.save),before);
 });

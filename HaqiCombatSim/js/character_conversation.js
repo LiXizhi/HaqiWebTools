@@ -1,5 +1,6 @@
+import {createTemporaryRelations} from './character_temporary_relations.js';
 import {createDialogueVoiceSession} from './dialogue_voice_session.js';
-import {relationshipParams,characterProfile,languageName,fixedCharacterMemory,newRelationship,applyAffinity,activityChange,conversationMessages,beijingDay,quotaRemaining,stageGift} from './character_relationship_core.js';
+import {relationshipParams,characterProfile,languageName,fixedCharacterMemory,newRelationship,applyAffinity,activityChange,conversationMessages,beijingDay,quotaRemaining,stageGift,playerGloss} from './character_relationship_core.js';
 import {createCharacterWorkspace} from './character_workspace.js';
 import {createRuntimeStore} from './adventure_runtime_store.js';
 import {createLearningVoice} from './language_adventure_voice.js';
@@ -7,9 +8,12 @@ import {createLearningChatView} from './view_learning_chat.js';
 import {createCharacterDetails} from './view_character_details.js';
 import {createJsonReader} from './runtime_data.js';
 
-export function createCharacterConversation({onSpeech=()=>{},getState,commit,membership,getPortrait=()=>null,onClose=()=>{},onSettings=()=>{},onUpgrade=()=>{},onLogin=()=>{},onDialogue=()=>{},notify=()=>{},cache=createRuntimeStore({databaseName:'haqi-character-cache-v1'}),workspace,voice,viewFactory=createLearningChatView,detailsFactory=createCharacterDetails,read=createJsonReader(),now=Date.now,uuid=()=>crypto.randomUUID()}){
+export function createCharacterConversation({isFriend=()=>false,onSpeech=()=>{},getState,commit,membership,getPortrait=()=>null,onClose=()=>{},onSettings=()=>{},onUpgrade=()=>{},onLogin=()=>{},onDialogue=()=>{},notify=()=>{},cache=createRuntimeStore({databaseName:'haqi-character-cache-v1'}),workspace,voice,viewFactory=createLearningChatView,detailsFactory=createCharacterDetails,read=createJsonReader(),now=Date.now,uuid=()=>crypto.randomUUID()}){
     workspace??=createCharacterWorkspace({getOwner:()=>getState().owner,cache});
     voice??=createLearningVoice({getSettings:()=>getState().save?.languageLearning||{}});
+    const temporary=createTemporaryRelations();
+    function tempScope(){const s=getState();temporary.enter(JSON.stringify([s.owner||'guest',s.role]));}
+    const persistSession=s=>s.persistent&&isFriend(s.source);
     const speech=createDialogueVoiceSession(voice);
     let session=null,epoch=0,catalog=null,giftRules=null,syncTask=null;
     const view=viewFactory({close:()=>close(true),help:text=>void send(text),draft:text=>{if(session){session.draft=text;paint();}},start,finish,cancel,hint,chinese:()=>{if(session){session.showChinese=!session.showChinese;paint();}},speak,
@@ -20,18 +24,19 @@ export function createCharacterConversation({onSpeech=()=>{},getState,commit,mem
     function close(returnTo=false){epoch++;const s=session;session=null;s?.abort.abort();clearTimeout(s?.timer);void speech.dispose();detail.close();view.close();if(returnTo)onClose(s?.options);}
     async function entitlement(s){const value=await membership.refresh();if(!valid(s))throw Error('角色已切换');if(value.status!=='ready'||value.username!==s.owner)throw Error('请先登录并核验会员状态');s.vip=value.isVip===true&&(!value.expiresAt||Date.parse(value.expiresAt)>now());s.remaining=quotaRemaining(await s.io.quota());s.quotaCheckedAt=now();return s.vip;}
     async function open(source,options={}){
-        close();const current=getState(),profile=characterProfile(source),ticket=epoch;
-        const s=session={mode:'free',profile:{...profile,role:`${profile.culture} · 母语${languageName(profile.native)} · AI 角色`},source,options,portraitNode:getPortrait(source),story:{id:`free:${profile.id}`,title:'自由交谈',context:'跨文化交流 · 互相学习',turns:[]},role:current.role,owner:current.owner,abort:new AbortController(),locale:profile.native,showChinese:true,messages:[],draft:'',index:0,phase:'ready',ready:false,busy:true,remaining:null,status:'正在读取关系档案…',canGift:['npc','companion'].includes(profile.kind),hintLevel:0,retryable:false};paint();
+        close();tempScope();const current=getState(),profile=characterProfile(source),ticket=epoch;
+        const s=session={persistent:isFriend(source),mode:'free',profile:{...profile,role:`${profile.culture} · 母语${languageName(profile.native)} · AI 角色`},source,options,portraitNode:getPortrait(source),story:{id:`free:${profile.id}`,title:'自由交谈',context:'跨文化交流 · 互相学习',turns:[]},role:current.role,owner:current.owner,abort:new AbortController(),locale:profile.native,native:current.save?.languageLearning?.native||'zh-CN',showChinese:true,messages:[],draft:'',index:0,phase:'ready',ready:false,busy:true,remaining:null,status:'正在读取关系档案…',canGift:['npc','companion'].includes(profile.kind),hintLevel:0,retryable:false};paint();
         try{
             if(!s.role||!s.owner){s.loginRequired=true;s.status='离线角色暂时无法使用大模型。登录 KeepWork 后，将自动把当前本地角色保存到云端，再继续对话。';return;}
-            s.io=await workspace.connect(s.role);if(ticket!==epoch)return;
+            const base=await workspace.connect(s.role,{cacheReads:s.persistent});if(ticket!==epoch)return;
+            s.io=temporary.wrap(base,()=>persistSession(s));
             catalog??=await read('data/adventure/character-memories.json');if(!valid(s))return;
             s.fixedMemory=catalog.entries[profile.id]?.memory||fixedCharacterMemory(profile);
             s.playerMemory=await s.io.playerMemory(current.save);if(!valid(s))return;
             s.record=await s.io.load(profile.id)||newRelationship(s.io.scope,current.save,profile,now());if(!valid(s))return;
             await mergeActivities(s);if(!valid(s))return;
             s.pendingKey=`${s.io.scope}:${profile.id}:pending`;
-            await cache.prepare([s.pendingKey]);s.pending=cache.get(s.pendingKey)||null;if(s.pending&&s.pending.day!==beijingDay(now())&&!s.pending.result){cache.set(s.pendingKey+':'+s.pending.day,s.pending);await rememberPending(s,null);}const day=beijingDay(now()),quota=await s.io.quota(day);
+            if(persistSession(s))await cache.prepare([s.pendingKey]);s.pending=(persistSession(s)?cache.get(s.pendingKey):temporary.pending.get(s.pendingKey))||null;if(s.pending&&s.pending.day!==beijingDay(now())&&!s.pending.result){if(persistSession(s))cache.set(s.pendingKey+':'+s.pending.day,s.pending);await rememberPending(s,null);}const day=beijingDay(now()),quota=await s.io.quota(day);
             const remote=Object.entries(quota.requests).find(([,r])=>r.status==='pending'&&r.role===s.role&&r.peer===profile.id);
             if(remote){const [id,r]=remote;if(!s.pending||s.pending.id===id)s.pending={...(s.pending||{}),id,day,text:r.text||s.pending?.text||'',sent:!!r.dispatched,result:r.response||s.pending?.result};}
             if(s.pending)s.draft=s.pending.text;
@@ -42,7 +47,7 @@ export function createCharacterConversation({onSpeech=()=>{},getState,commit,mem
         finally{if(valid(s)){s.busy=false;paint();}}
     }
     async function mergeActivities(s){
-        const pending=(getState().save.relationshipEvents||[]).filter(e=>e.peer.id===s.profile.id);
+        const pending=(getState().save.relationshipEvents||[]).filter(e=>e.peer.id===s.profile.id&&isFriend(e.peer));
         let next=s.record;
         for(const event of pending){if(await s.io.hasEvent(next,event.id))continue;next=applyAffinity(next,activityChange(next,event),{eventId:event.id,now:event.at,activity:true});}
         if(next!==s.record){s.record=await s.io.save(next);}
@@ -51,8 +56,8 @@ export function createCharacterConversation({onSpeech=()=>{},getState,commit,mem
         const result=await voice.judge(conversationMessages({profile:s.profile,fixedMemory:s.fixedMemory,playerMemory:s.playerMemory,record:s.record,text,eventId,mode,native:getState().save.languageLearning?.native||'zh-CN'}),s.abort.signal,{maxTokens:mode==='compact'?2400:1000});
         if(!valid(s))throw Error('对话已结束');return result;
     }
-    async function greet(){const s=session;if(!s||s.busy||!s.ready)return;s.busy=true;s.retryable=false;paint();try{const result=await model(s,'Begin this encounter naturally.',uuid(),'greet');if(typeof result.reply!=='string'||!result.reply.trim())throw Error('没有收到有效回复');s.record=await s.io.save({...s.record,messages:[...s.record.messages,{role:'assistant',text:result.reply,translation:result.translation,at:now()}],updatedAt:now()});if(valid(s)){s.messages=s.record.messages;s.status='';}}catch(e){if(valid(s)){s.status=e.message;s.retryable=true;}}finally{if(valid(s)){s.busy=false;paint();}}}
-    async function rememberPending(s,value){s.pending=value;cache.set(s.pendingKey,value);await cache.flush();}
+    async function greet(){const s=session;if(!s||s.busy||!s.ready)return;s.busy=true;s.retryable=false;paint();try{const result=await model(s,'Begin this encounter naturally.',uuid(),'greet');if(typeof result.reply!=='string'||!result.reply.trim())throw Error('没有收到有效回复');s.record=await s.io.save({...s.record,messages:[...s.record.messages,{role:'assistant',text:result.reply,translation:playerGloss(result.reply,result.translation,s.native),at:now()}],updatedAt:now()});if(valid(s)){s.messages=s.record.messages;s.status='';}}catch(e){if(valid(s)){s.status=e.message;s.retryable=true;}}finally{if(valid(s)){s.busy=false;paint();}}}
+    async function rememberPending(s,value){s.pending=value;if(persistSession(s)){cache.set(s.pendingKey,value);await cache.flush();}else{tempScope();if(valid(s))temporary.pending.set(s.pendingKey,value);}}
     async function send(value){
         const s=session,text=String(value||'').trim();if(!s||s.busy||s.recording||!s.ready||!text)return;
         if(text==='/compact'){await compact();return;}
@@ -75,7 +80,7 @@ export function createCharacterConversation({onSpeech=()=>{},getState,commit,mem
             const result=request.result;if(typeof result.reply!=='string'||!result.reply.trim()){await s.io.finish(request.id,'released',request.day);await rememberPending(s,null);throw Error('回复格式无效，请重试。');}
             let next=s.record;
             try{next=applyAffinity(next,result.affinity,{eventId:request.id,now:now()});}catch{next=applyAffinity(next,{eventId:request.id,before:next.affinity,delta:0,after:next.affinity,reason:'回复已收到，好感度更新未通过校验'},{eventId:request.id,now:now()});}
-            next={...next,messages:[...next.messages,{role:'user',text:request.text,at:now()},{role:'assistant',text:result.reply,translation:typeof result.translation==='string'?result.translation:'',at:now()}]};
+            next={...next,messages:[...next.messages,{role:'user',text:request.text,at:now()},{role:'assistant',text:result.reply,translation:playerGloss(result.reply,result.translation,s.native),at:now()}]};
             s.record=await s.io.save(next);await s.io.finish(request.id,'used',request.day);await rememberPending(s,null);
             if(!valid(s))return;s.messages=s.record.messages;s.draft='';s.status='';onDialogue(s.profile.id);
             if(s.record.messages.length>relationshipParams().compactAt)await compactRecord(s);
@@ -107,33 +112,44 @@ export function createCharacterConversation({onSpeech=()=>{},getState,commit,mem
     async function details(){const s=session;if(!s?.ready||s.busy)return;s.busy=true;paint();try{s.record=await s.io.load(s.profile.id)||s.record;await mergeActivities(s);if(valid(s))detail.relation(s.record);}catch(e){if(valid(s))s.status=e.message;}finally{if(valid(s)){s.busy=false;paint();}}}
     async function gifts(){const s=session;if(!s?.ready||s.busy)return;try{giftRules??=await read('data/adventure/gift-rules.json');if(valid(s))detail.gifts(s.profile,giftRules);}catch(e){notify(e.message);}}
     async function gift(itemId,count){const s=session;if(!s||!valid(s))throw Error('对话已结束');
-        const eventId=uuid(),state=getState(),next=stageGift(state.save,state.assets.content,giftRules,s.profile,itemId,count,eventId,now());commit(next);
-        s.giftReply=next.relationshipEvents.find(e=>e.id===eventId);await respondGift(s);
+        const eventId=uuid(),state=getState(),next=stageGift(state.save,state.assets.content,giftRules,s.profile,itemId,count,eventId,now());
+        const event=next.relationshipEvents.find(e=>e.id===eventId);
+        if(!isFriend(s.source)){next.relationshipEvents=next.relationshipEvents.filter(e=>e.id!==eventId);temporary.activity(state.save,event,now());}
+        commit(next);s.record=await s.io.load(s.profile.id)||s.record;
+        s.giftReply=event;await respondGift(s);
     }
     async function respondGift(s){
         s.busy=true;s.retryable=false;s.status='礼物已送出，正在同步关系…';paint();
         try{await mergeActivities(s);if(!valid(s))return;const event=s.giftReply,result=await model(s,JSON.stringify({confirmedGift:event.reason}),event.id,'gift');
             if(typeof result.reply!=='string'||!result.reply.trim())throw Error('没有收到赠礼回应');
-            s.record=await s.io.save({...s.record,messages:[...s.record.messages,{role:'assistant',text:result.reply,translation:result.translation,label:'赠礼回应',eventId:event.id,at:now()}]});
+            s.record=await s.io.save({...s.record,messages:[...s.record.messages,{role:'assistant',text:result.reply,translation:playerGloss(result.reply,result.translation,s.native),label:'赠礼回应',eventId:event.id,at:now()}]});
             if(valid(s)){s.messages=s.record.messages;s.status='赠送成功';s.giftReply=null;}
         }catch(e){if(valid(s)){s.status=`礼物已送出；${e.message}`;s.retryable=true;}}finally{if(valid(s)){s.busy=false;paint();}}
     }
     function syncActivities(){
-        if(syncTask)return syncTask;
+        tempScope();if(syncTask)return syncTask;
         const current=getState();if(!current.owner)return Promise.resolve();const scope=`${current.owner}:${current.role}`;
         const same=()=>`${getState().owner}:${getState().role}`===scope;
-        syncTask=(async()=>{try{const io=await workspace.connect(current.role);
+        syncTask=(async()=>{try{if(!(current.save.relationshipEvents||[]).some(e=>!e.synced&&isFriend(e.peer)))return;const io=await workspace.connect(current.role);
             while(same()){
-                const pending=(getState().save.relationshipEvents||[]).filter(e=>!e.synced);if(!pending.length)return;
+                const pending=(getState().save.relationshipEvents||[]).filter(e=>!e.synced&&isFriend(e.peer));if(!pending.length)return;
                 const profile=pending[0].peer,ids=new Set(pending.filter(e=>e.peer.id===profile.id).map(e=>e.id));
-                const s={io,profile,record:await io.load(profile.id)||newRelationship(io.scope,current.save,profile,now())};if(!same())return;
-                await mergeActivities(s);if(!same())return;
+                const guarded=temporary.wrap(io,()=>same()&&isFriend(profile));const s={io:guarded,profile,record:await guarded.load(profile.id)||newRelationship(io.scope,current.save,profile,now())};if(!same())return;
+                await mergeActivities(s);if(!same()||!isFriend(profile))return;
                 const next=structuredClone(getState().save);next.relationshipEvents=next.relationshipEvents.map(e=>ids.has(e.id)?{...e,synced:true}:e);next.revision=(next.revision||0)+1;commit(next);
             }
         }catch(e){notify('关系活动已保留，稍后同步：'+e.message);}})().finally(()=>{syncTask=null;});return syncTask;
     }
 
-    return {open,close,send,compact,get active(){return !!session;},tick(){if(session&&!valid(session)){close();return;}const s=session;if(s?.ready&&!s.busy&&!s.recording&&now()-(s.quotaCheckedAt||0)>60000){s.quotaCheckedAt=now();void entitlement(s).then(()=>{if(valid(s))paint();}).catch(e=>{if(valid(s)){s.status=e.message;paint();}});}},suspend(){if(session&&['recording','connecting','judging','speaking'].includes(session.phase))void cancel();},
+    return {open,close,send,compact,get active(){return !!session;},tick(){tempScope();if(session&&!valid(session)){close();return;}const s=session;if(s?.ready&&!s.busy&&!s.recording&&now()-(s.quotaCheckedAt||0)>60000){s.quotaCheckedAt=now();void entitlement(s).then(()=>{if(valid(s))paint();}).catch(e=>{if(valid(s)){s.status=e.message;paint();}});}},suspend(){if(session&&['recording','connecting','judging','speaking'].includes(session.phase))void cancel();},
+        async affinity(source){
+            tempScope();const current=getState(),profile=characterProfile(source);
+            if(!isFriend(source))return temporary.load(profile.id)?.affinity??null;
+            if(!current.owner||!current.role)return null;
+            const io=await workspace.connect(current.role,{cacheReads:false}),row=await io.load(profile.id);
+            return row?.affinity??null;
+        },
+        activity(event){tempScope();return temporary.activity(getState().save,{...event,peer:characterProfile(event.peer)},now());},
         syncActivities,
     };
 }

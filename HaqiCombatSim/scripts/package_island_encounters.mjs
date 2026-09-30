@@ -23,9 +23,7 @@ const card = id => chapter.cardItems[id] || id;
 const pool = value => [...(value || '').matchAll(/\((\d+),(\d+)\)/g)].map(m => ({key:card(m[1]), weight:Number(m[2])}));
 const output = {version:1, adaptation:'保留原岛屿法阵的全部怪物与卡位；野外站在路边空地，只有副本怪物站在道路上。子场景任务目标保留单怪入口。', monsters:{}, encounters:[]};
 
-// Painted roads extend about 13px past the geometric half-width. Feet sit in the
-// open shoulder beyond that, as close to the road as the ground allows.
-const SHOULDER_GAPS = [48, 76, 108, 148, 190];
+const SHOULDER_GAPS = [32, 48, 76, 108, 148, 190];
 function roadClearance(paths, p) {
     let best = Infinity;
     for (const path of paths) best = Math.min(best, segmentDistance(p, path.a, path.b) - (path.width || 60) / 2);
@@ -37,7 +35,10 @@ function reachable(world, p) {
 }
 function openGroundSpots(world, occupied) {
     const spots = [];
-    const blocked = p => [...occupied, ...spots].some(o => distance(o, p) < 108);
+    const radius = world.monsterSceneParams.territoryRadius;
+    const landings = [world.layout.spawn, world.layout.initialSpawn || world.layout.spawn];
+    const blocked = p => [...occupied, ...spots].some(o => distance(o, p) < 108)
+        || landings.some(spawn => distance(spawn, p) < radius + 48);
     for (const path of world.paths) {
         const length = distance(path.a, path.b);
         if (length < 110) continue;
@@ -48,12 +49,12 @@ function openGroundSpots(world, occupied) {
                 let chosen = null;
                 for (const gap of SHOULDER_GAPS) {
                     const p = {
-                        x: Math.round(path.a.x + dx * d + nx * (half + gap) * side),
-                        y: Math.round(path.a.y + dy * d + ny * (half + gap) * side),
+                        x: Math.round(path.a.x + dx * d + nx * (half + radius + gap) * side),
+                        y: Math.round(path.a.y + dy * d + ny * (half + radius + gap) * side),
                     };
                     if (!walkable(world, p.x, p.y) || blocked(p)) continue;
                     const clearance = roadClearance(world.paths, p);
-                    if (clearance < 32 || onAnyBridge(world, p.x, p.y, 88) || !reachable(world, p)) continue;
+                    if (clearance < radius + 16 || onAnyBridge(world, p.x, p.y, 88) || !reachable(world, p)) continue;
                     chosen = {...p, clearance};
                     break;
                 }
@@ -141,6 +142,25 @@ for (const [zone, originalWorld] of Object.entries(worlds)) {
         if (end.blocked || distance(end.position,e)>1) throw Error(`法阵不可达：${e.id}`);
     }
     output.encounters.push(...formations);
+    const populated = {...chapter, monsters:{...chapter.monsters,...output.monsters},
+        encounters:[...chapter.encounters.filter(e=>e.zone!==zone),...output.encounters.filter(e=>e.zone===zone)]};
+    let finalWorld = createWorld(zone, populated);
+    for (const encounter of visible) {
+        if (reachable(finalWorld, encounter)) continue;
+        let replacement = null;
+        for (const spot of spots) {
+            if (spot.used) continue;
+            const previous = {x:encounter.x,y:encounter.y};
+            Object.assign(encounter,{x:spot.x,y:spot.y});
+            const candidateWorld = createWorld(zone,populated);
+            if (visible.every(row=>reachable(candidateWorld,row))) {
+                replacement = spot;finalWorld = candidateWorld;break;
+            }
+            Object.assign(encounter,previous);
+        }
+        if (!replacement) throw Error(`完整场景法阵不可达：${encounter.id}`);
+        replacement.used = true;
+    }
 }
 const file = new URL('data/adventure/island-encounters.json',root), text = JSON.stringify(output,null,2)+'\n';
 if (process.argv.includes('--check')) {

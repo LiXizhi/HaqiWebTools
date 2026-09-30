@@ -14,7 +14,7 @@ const deadline=async promise=>{let timer;try{return await Promise.race([promise,
 export function createCharacterWorkspace({getOwner,loadSDK=loadKeepwork,cache,locks=globalThis.navigator?.locks,uuid=()=>crypto.randomUUID(),now=Date.now}={}){
     const chains=new Map(),files=new Map(),subscribed=new WeakSet();let cacheIdentity=null,generation=0;
     function serial(key,fn){const previous=chains.get(key)||Promise.resolve();const task=previous.catch(()=>{}).then(()=>locks?locks.request(`haqi-character:${key}`,fn):fn());chains.set(key,task);return task.finally(()=>{if(chains.get(key)===task)chains.delete(key);});}
-    async function connect(role){
+    async function connect(role,{cacheReads=true}={}){
         const owner=getOwner();check(owner,'请先登录并选择账号角色');
         const sdk=await loadSDK(),token=sdk.token;check(token,'请先登录');
         if(!subscribed.has(sdk)){sdk.onAuthStateChange?.(()=>{generation++;files.clear();cacheIdentity=null;});subscribed.add(sdk);}
@@ -44,7 +44,7 @@ export function createCharacterWorkspace({getOwner,loadSDK=loadKeepwork,cache,lo
                 check(result?.success===true&&result.fromServerCache===true&&typeof result?.content==='string','无法核验关系目录');raw=result.content;
             }else raw=await deadline(sdk.getFileByFullPath(full,undefined,true));valid();
             check(typeof raw==='string'&&raw.length>0,'无法核验关系档案，请重试');
-            cache?.set(`${owner}:${path}`,raw);return raw;
+            if(cacheReads)cache?.set(`${owner}:${path}`,raw);return raw;
         }
         async function write(path,raw){
             await deadline(saveWorkspaceFile({store,owner,path,text:raw,check:valid}));

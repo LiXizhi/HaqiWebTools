@@ -54,7 +54,7 @@ test('returning inside a dungeon contact does not immediately start another batt
 test('ordinary scenes require near-touch contact, much closer than dungeon contact',()=>{
     const world=W.createWorld('camp',content),mob=world.encounters[0];
     const at=d=>({x:mob.x+d,y:mob.y});
-    assert.equal(W.takeAutoInteraction(world,at(23))?.id,mob.id,'direct contact starts immediately');
+    assert.equal(W.takeAutoInteraction(world,at(23)),null,'field contact waits for the overhead countdown');
     W.takeAutoInteraction(world,at(30));
     for(let i=0;i<30;i++)stepMonsterWander(world,mob,.05,{x:mob.x-200,y:mob.y-200,w:400,h:400},{hero:at(23)});
     assert.equal(W.takeAutoInteraction(world,at(83)),null);

@@ -6,6 +6,31 @@
 .social-modal.party-room-modal{max-width:760px}.party-dungeon-line{margin:0;font-weight:700;color:#523c24}.party-dungeon-detail{position:relative;display:grid;grid-template-columns:110px minmax(0,1fr);gap:12px;align-items:center;padding:10px 96px 10px 10px;border:1px solid var(--gold,#ab894e);border-radius:10px;background:linear-gradient(180deg,#fff8e4,#f3e0b0)}.party-dungeon-detail.party-dungeon-empty{grid-template-columns:1fr auto;padding:10px;align-items:center}.party-dungeon-switch{position:absolute;top:8px;right:8px;margin:0;padding:4px 10px;font-size:12px;line-height:1.2;white-space:nowrap}.party-dungeon-art{position:relative;height:96px;display:grid;place-items:center;border-radius:8px;background:radial-gradient(ellipse at 50% 78%,#f7dda0 0%,#d8c490 42%,#859e83 100%);overflow:hidden}.party-dungeon-art canvas{width:100px;height:100px;position:absolute;bottom:-4px;filter:drop-shadow(0 2px 2px #35291330)}.party-dungeon-art>.icon{width:48px;height:48px;opacity:.7}.party-dungeon-copy h3{margin:0 0 4px;font-size:18px;padding-right:4px}.party-dungeon-copy p{margin:0 0 4px;font-size:13px}.party-seats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.party-seat{min-width:0;display:flex;flex-direction:column;gap:4px;padding:12px 10px;border:1px solid var(--gold,#ab894e);border-radius:10px;background:var(--paper,#fff3d4);min-height:210px}.party-seat.captain{box-shadow:inset 0 0 0 2px #c49a45}.party-seat.open{background:#eef6e8;border-style:dashed}.party-seat.empty{background:#fffaf0;opacity:.92}.party-seat-tag{align-self:flex-start;font-size:11px;padding:2px 8px;border-radius:10px;background:#624a2b;color:#fff3ce}.party-seat.open .party-seat-tag{background:#3f6b45}.party-seat-portrait{height:84px;display:grid;place-items:center;margin:2px 0}.party-seat-portrait .art,.party-seat-portrait canvas{max-width:72px;max-height:84px;object-fit:contain;filter:drop-shadow(0 4px 3px #59432335)}.party-seat-waiting,.party-seat-empty{border:1px dashed #c3a268;border-radius:8px;background:#fff9ea88}.party-seat h3{margin:6px 0 0;font-size:15px;overflow-wrap:anywhere}.party-seat p{margin:0;font-size:12px}.party-seat-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:8px}.party-seat-actions button{margin:0;flex:1 1 auto}.party-room-footer{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 @media(max-width:640px){.party-seats{grid-template-columns:repeat(2,minmax(0,1fr))}.party-dungeon-detail{grid-template-columns:88px minmax(0,1fr);padding-right:88px}.party-dungeon-switch{padding:3px 8px;font-size:11px}}
 @media(max-width:480px){.hero-social-toolbar{max-width:260px}.social-modal{width:calc(100vw - 16px)}.dungeon-entry-menu{max-width:calc(100vw - 20px)}.party-seats{grid-template-columns:1fr 1fr}}
+.party-room-modal .modal-header{padding:4px 8px 4px 14px;gap:8px}
+.party-room-modal .modal-body{padding:8px 12px 10px;gap:8px}
+.party-room-modal .modal-body>h3{margin:0;font-size:15px;line-height:1.3}
+.party-room-modal .modal-body>p{margin:0;font-size:12px;line-height:1.35}
+.party-room-heading{position:relative;flex:1;min-width:0}
+.party-room-heading h2{margin:0;font-size:22px;line-height:1.25}
+.party-room-title{display:block;width:100%;margin:0;padding:4px 0;background:none;border:0;box-shadow:none;color:inherit;font:inherit;text-align:left;cursor:help;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.party-room-title:active{transform:none}
+.party-room-hint{display:none;position:absolute;z-index:5;left:0;top:100%;width:min(440px,calc(100vw - 72px));padding:8px 10px;border:1px solid var(--gold,#ab894e);border-radius:8px;background:#fff8e4;box-shadow:0 4px 14px #35291333}
+.party-room-hint p{margin:0;font-size:12px;line-height:1.4;color:#523c24}
+.party-room-hint p+p{margin-top:2px}
+.party-room-heading:hover .party-room-hint,.party-room-heading.open .party-room-hint{display:block}
+.party-room-modal .party-seats{gap:8px;align-items:stretch}
+.party-room-modal .party-seat{min-height:0;gap:2px;padding:6px 6px 8px}
+.party-room-modal .party-seat-tag{padding:1px 6px}
+.party-room-modal .party-seat-portrait{height:72px;margin:0}
+.party-room-modal .party-seat-portrait .art,.party-room-modal .party-seat-portrait canvas{max-width:62px;max-height:72px}
+.party-room-modal .party-seat h3{margin:2px 0 0;font-size:14px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.party-room-modal .party-seat p{font-size:12px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.party-room-modal .party-seat p.party-seat-meta{display:flex;align-items:center;gap:4px;min-height:22px;overflow:visible}
+.party-room-modal .party-seat-school{width:18px;height:18px;flex:0 0 18px;display:block}
+.party-room-modal .party-seat-actions{padding-top:4px}
+.party-room-modal .party-seat-actions button{padding:4px 8px;min-height:32px;font-size:12px;line-height:1.2}
+@media(max-width:650px){.party-room-modal .party-seat-actions .primary,.party-room-modal .party-seat-actions .secondary{min-height:32px;padding:4px 8px}}
+@media(max-width:640px){.party-room-modal .party-seats{grid-template-columns:repeat(4,minmax(0,1fr))}}
 #hud .utility-nav{z-index:5}
 
 /* Partner character sheet: portrait first, compact game actions alongside. */
@@ -53,7 +78,7 @@
 .arena-seats{margin:0!important}.arena-seat{min-width:0}.arena-rest{opacity:.55;background:repeating-linear-gradient(135deg,#e8dec1,#e8dec1 8px,#e2d7b8 8px,#e2d7b8 9px)!important}.arena-rest .party-seat-portrait{filter:grayscale(1)}
 .arena-rest-pet{opacity:.92}.arena-rest-pet .party-seat-portrait{filter:none}
 .party-seat-meta{display:flex;align-items:center;gap:4px;min-height:22px}.party-seat-meta .arena-name-school,.arena-invite .arena-name-school{width:22px;height:22px;flex-basis:22px}
-.arena-seat .party-seat-portrait{position:relative;overflow:visible}
+.party-room-modal .party-seat-portrait{position:relative;overflow:visible}
 .party-seat-pet{position:absolute;right:-2px;bottom:-4px;width:44px;height:44px;z-index:2;pointer-events:none}
 .party-seat-pet .pet-sheet{width:44px!important;height:44px!important;filter:drop-shadow(0 2px 1px #59432340)}
 .arena-extra-pets{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:#74603b}
@@ -106,3 +131,23 @@
 @media(prefers-reduced-motion:reduce){.journey-cinematic,.journey-cinematic .dungeon-portrait,.journey-script{animation:none}}
 .arena-fighter-name{display:flex;align-items:center;justify-content:center;gap:4px}.arena-name-school{width:18px;height:18px;flex:0 0 18px;border-radius:50%;background:#fff5d9}
 .dungeon-journey-modal .gui-tabs button{min-width:64px;min-height:44px}
+/* Compact scene interaction dock; local styles do not affect battle controls. */
+.social-actions-modal{width:min(330px,calc(100vw - 24px));max-height:calc(100dvh - 32px);margin:auto 20px 16px auto;animation:social-dock-enter .18s ease-out}
+.social-actions-modal .modal-header{padding:10px 12px 8px 16px}
+.social-actions-modal .modal-header h2{margin:0;font-size:18px;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.social-actions-modal .modal-body{padding:8px 14px 14px;overflow-y:auto}
+.social-actions-note{display:block;margin:0 0 6px}
+.social-action-list{display:grid;gap:5px;margin-top:0}
+.social-action-item{display:flex;align-items:center;gap:12px;width:100%;min-height:51px;padding:6px 12px;border:1px solid #b99a6166;border-radius:14px;background:#fff9e9;color:var(--ink);text-align:left;cursor:pointer}
+.social-action-icon{display:grid;place-items:center;flex:0 0 38px;height:38px;border-radius:12px;background:#f3e5bc;font-size:25px;transition:transform .16s ease}
+.social-action-copy{display:grid;gap:2px}.social-action-copy small{font-size:11px;color:var(--muted)}
+.social-action-item:hover:not(:disabled),.social-action-item:focus-visible{background:#fff1cc;border-color:var(--gold);outline:2px solid var(--gold);outline-offset:1px}
+.social-action-item:hover:not(:disabled) .social-action-icon,.social-action-item:focus-visible .social-action-icon{transform:scale(1.15) rotate(-4deg)}
+.social-action-item:disabled{opacity:.55;cursor:default}
+.social-action-item:last-child{margin-top:5px;border-top:2px solid var(--gold)}
+@keyframes social-dock-enter{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:none}}
+@media(max-width:600px){.social-actions-modal{margin:auto 12px 12px auto;max-height:calc(100dvh - 24px)}}
+@media(prefers-reduced-motion:reduce){.social-actions-modal{animation:none}.social-action-icon{transition:none}.social-action-item:hover .social-action-icon{transform:none}}
+.social-actions-overlay{background:transparent;backdrop-filter:none;padding:0}
+
+.team-hud-count{position:absolute;right:-2px;top:-3px;min-width:17px;height:17px;padding:0 3px;box-sizing:border-box;border:1px solid #fff3d4;border-radius:9px;background:#315c43;color:#fff3d4;font:700 11px/15px sans-serif;text-align:center;pointer-events:none}

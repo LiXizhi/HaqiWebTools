@@ -32,7 +32,7 @@ export function renderPartnerProfile(body,state,cb){
     actions.append(action('直接聊天','聊聊冒险，也练练语言','chat',()=>cb.talk(p),{primary:true}),
         action(joined?'组队出发':'组队下副本',state.coopActive?'正在组队挑战':full?'队伍已满':'一起挑战 PvE 副本','dungeon',()=>cb.teamDungeon(p),{disabled:state.coopActive||full}),
         action('PvP 切磋','红蘑菇赛场 · 1 对 1','pvp',()=>cb.challenge(p),{disabled:state.coopActive||state.busy}),
-        action(friend?'已是好友':'加好友',!real?'此伙伴暂无通信账号':friend?'打开好友列表':'认识彼此，保持联系','friend',()=>friend?cb.friends():state.owner?cb.friend(p):cb.login(),{disabled:!real||state.busy}),
+        ...(real?[action(friend?'已是好友':'加好友',!real?'此伙伴暂无通信账号':friend?'打开好友列表':'认识彼此，保持联系','friend',()=>friend?cb.friends():state.owner?cb.friend(p):cb.login(),{disabled:state.busy})]:[]),
         action('写信',!real?'此伙伴暂无通信账号':!friend?'成为好友后可写信':state.mailAvailable?'给朋友留一封信':'邮件暂未开放','mail',()=>state.owner?cb.compose(friend):cb.login(),{disabled:!real||!friend}));
     content.append(actions);
     const footer=el('div','partner-footer',el('span','',joined?'已在你的队伍中':`队伍 ${state.team.length+1} / 4 人`),button('管理队伍',()=>cb.open('social-party'),'text-button'));

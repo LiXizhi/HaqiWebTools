@@ -53,10 +53,11 @@ export function defaultParams(version = 'teen') {
         // autoJoin* mirrors kids CombatRoom empty-seat open → delayed AI fill (RoomDetailPage 4 slots).
         // roadSlack / spawnMinActors: wander along roads near quest hubs; keep a few residents by the world spawn/plaza.
         // actorSeparation is the standing hero box (78) plus a visible gap, so two AI sprites do not touch.
+        socialActions: { durationMs:3600, cooldownMs:4000, danceAffinity:30, heartAffinity:60 },
         islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, spawnMinActors:2, separation:50, actorSeparation:120, npcClearance:65, monsterClearance:96, entranceClearance:115, followDistance:110, followSpacing:42, partyIdleDelay:1.2, partyIdleRadius:5, partyPetOffsetX:32, partyPetOffsetY:18, followWait:2, dungeonFollowSpeed:262.5, dungeonRegroupDistance:280, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
-        dailyLanguage: {percentPerLine:1,maxPercent:10},
-        dungeonLanguage: {recordMaxMs:20000,percentPerLine:1,maxPercent:3},
+        dailyLanguage: {percentPerLine:1,maxPercent:10,rewardSteps:[5,10,20,30,40],rewardItems:[100,100,100,17213,17213],rewardAmounts:[10,20,30,5,10]},
+        dungeonLanguage: {recordMaxMs:20000,percentPerLine:1,maxPercent:3,minSpeechAccuracy:0.3,speechPracticeCount:3},
         languageAdventure: { inviteRange:150, interactionRange:85, greetingMs:2500, basicReward:10, beginnerReward:30, intermediateReward:50, advancedReward:80, basicDailyCap:100, challengeDailyCap:200, basicCourseLimit:2, challengeCourseLimit:1, promptCooldownMs:90000, sourceCooldownMs:300000, maxTurns:8 },
         // Web progression schedule; original server training-point grant table is unavailable.
         skillLearning: { pointLevels: [4,8,12,16,20,25,30,35,40,45,50] },

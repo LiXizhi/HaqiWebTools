@@ -1,135 +1,139 @@
-# HaqiCombatSim — 魔法哈奇 2D 网页战斗模拟器
+# 魔法哈奇 · Haqi
 
-一个自包含的 H5 应用：把魔法哈奇（Haqi MMO）回合制卡牌战斗的服务端数值逐行移植到浏览器，用来
+魔法哈奇的 2D 网页角色扮演游戏：在六座岛屿中探索、结识居民、完成任务，学习五系魔法，收集装备、培养宠物，与伙伴一起挑战副本和赛场。在冒险途中，还可以通过双语故事与语音交流学习语言。
 
-- **人机对战**：在 2D 决斗圆盘上以寒冰 / 烈火 / 风暴 / 生命 / 死亡任一系与 AI 打 1v1、2v2、3v3、4v4；支持配卡（卡包容量 40 / 单卡 6 可调，带满不一定最好）、每回合补牌、弃牌、卡包打空；魔力点 / 超级魔力点分色；出牌动画显示卡面、谁对谁施放、伤害 / 治疗飘字与全部 buff / debuff；
-- **批量模拟**：在 Web Worker 中几秒内跑几千场对局，得到五系胜率矩阵、平均回合数、卡牌使用统计；
-- **数值调参**：在页面中直接修改 HP 曲线、卡牌伤害、能量球概率等参数，即时重跑；
-- **AI 建议**：内置自动调参器（把各系胜率收敛到 50%）+ 可接大模型输出自然语言调整建议。
+**游戏主入口是 [Haqi.html](Haqi.html)。** 项目已从战斗模拟器发展为涵盖探索、成长、战斗、宠物、社交与语言学习的完整游戏。沿用的 `HaqiCombatSim/` 目录名和 npm 包名属于历史命名；原战斗模拟器保留为开发与数值验证工具。
 
-战斗引擎与 UI 完全解耦（`js/*_core.js`），可在浏览器和 Node 中无 UI 运行。
+本项目以原版魔法哈奇儿童版（kids）的内容与规则为基础，面向桌面和手机浏览器进行二维改编。以下介绍对应当前源码（2026-09-30）；实际线上版本以发布记录为准。
 
-## 新入口：魔法哈奇单人冒险
+## 游戏内容
 
-[`Haqi.html`](Haqi.html) 是可玩的 kids 开篇章节：魔法营地原任务63000–63013、五系角色、装备强化、宠物喂养、配卡、毕业战及哈奇小镇。键盘、点击与触摸操作；本地自动存档与JSON导入导出。包含原版卡面、立绘、图标和音乐，以及新绘制的场景精灵。
+| 玩法 | 当前内容 |
+| --- | --- |
+| 世界探索 | 魔法营地、哈奇岛、火鸟岛、寒冰岛、沙漠岛、幽暗岛；世界地图、岛内导览、自动寻路、区域天气、居民与野外遭遇 |
+| 任务与成长 | 营地教学、全岛任务手记、接取与交付、1–50 级成长、五系技能学习、NPC 商店与海上捕鱼 |
+| 卡牌战斗 | 烈火、寒冰、风暴、生命、死亡五系；多套配卡、装备附卡、符文、目标选择、宠物出战与技能演出 |
+| 装备与收藏 | 背包、独立装备实例、穿戴、强化、宝石镶嵌、属性预览与卡包管理 |
+| 宠物与坐骑 | 抱抱龙与宠物收集、捕获、成长、编队、随行、骑乘、口粮与共享食槽，以及宠物互动、好友印记、繁育与领养 |
+| 副本与试炼 | 原版副本内容、岛屿剧情秘境、试炼塔、多场连续战斗与首领挑战；支持宠物阵容和伙伴组队 |
+| 岛屿伙伴与赛场 | 六岛伙伴漫游、交谈、招募、快照组队 PvE；红蘑菇赛场支持 1v1–4v4、宠物与伙伴备战、AI 战队对手 |
+| 语言学习 | 界面语言、母语与目标语言独立选择；双语对白、示范朗读、提示、主动录音与剧情交流，当前教学内容以中英双向为主；可关闭学习或跳过剧情 |
+| 角色与存档 | 多角色管理、本地自动存档、Keepwork 登录与云同步，以及原服装备和卡包的预览式导入 |
 
-使用下面同一个静态服务器，打开 `http://127.0.0.1:8791/Haqi.html`。资源已放在项目内，无运行时构建或外部服务。内容来源、准备命令、操作和改编边界见 [冒险说明](docs/adventure.md)。
+原版内容按网页版支持范围接入；任务目录收录不代表全部原服脚本都可执行。原服导入会说明转换差异，确认后创建独立角色，具体范围见 [原服角色导入](docs/player-import.md)。
 
-## 运行
+组队使用伙伴快照与 AI 行动，红蘑菇当前对手为 AI 战队。真人实时联机、私聊、邮件和远端排行榜的开放状态应分别确认；当前配置尚未开启私聊与邮件服务，排行榜仍待独立 gameId。详见 [岛屿社交](docs/island-social.md) 和 [红蘑菇赛场](docs/red-mushroom-arena.md)。
 
-用任意静态 http 服务打开 [`HaqiCombatSim.html`](HaqiCombatSim.html)（需要 `fetch` 同目录 JSON 与 Web Worker，`file://` 下不可用）。**不需要构建，零 npm 依赖。**
+## 本地运行
 
-```bash
-cd web/HaqiCombatSim
-python3 -m http.server 8791 --bind 127.0.0.1      # 或 VS Code Live Preview
-# 浏览器打开 http://127.0.0.1:8791/HaqiCombatSim.html
+在本项目目录使用 Node.js 20.19.x 或更新的 20.x，或 Node.js 22.12+（推荐 24）：
+
+```sh
+npm ci
+npm run dev
 ```
 
-`data/kids/` 与 `data/teen/` 已随仓库提供，打开页面即可用。需要从本机 Haqi 根目录刷新快照时（读取 `paraworld/config/Aries/`）：
+开发服务器会打开 `Haqi.html`。源码使用原生 ES Modules 和 Vanilla JS，也可以不安装构建工具，直接运行静态 HTTP 服务：
 
-```bash
-npm run export       # scripts/export_data.mjs → data/kids/*.json 与 data/teen/*.json
-npm test             # node --test tests/*.test.mjs（包含原34例及冒险章节测试）
-npm run sim -- --data data/teen --mode 1v1 --games 1000 --level 60 --seed 1 [--params p.json] [--json out.json]
+```sh
+python -m http.server 8791 --bind 127.0.0.1
 ```
 
-没有 kids/teen 数据时页面回退到 `data/sample/`（极小示例卡组，仅供演示与测试）。
+随后打开 [本地游戏入口](http://127.0.0.1:8791/Haqi.html)。需要 HTTP 服务读取 JSON 和加载模块，不能直接双击 HTML 使用 `file://` 运行。
 
-四个页面（hash 路由）：
+- **默认资源：** 所有域名（包括 localhost）使用资源清单中的永久 Keepwork CDN 图片与音频，需要网络。
+- **本地资源：** 源码静态服务可打开 `Haqi.html?assets=local`，使用仓库归档资源；此模式不适用于普通 H5 的 `dist/`。
+- **账号服务：** 访客可使用本地角色与自动存档；云同步、原服读取和在线语言服务需要相应网络服务。Keepwork SDK 按需加载。
 
-| 路由 | 页面 | 作用 |
-|------|------|------|
-| `#battle` | 人机对战 | 1v1~4v4 决斗圆盘；每槽位「配卡」（容量 / 单卡上限来自数值面板）；我方可选一个操控位手动出牌（点卡 → 点目标）、右键弃牌，其余由 Bot 托管；出牌动画（卡面 + 施法者→目标能量束 + 飘字）、状态明细板、事件日志 |
-| `#batch` | 批量模拟 | 五系两两对战（含镜像）25 组 × N 场，Worker 池并行，胜率热力图 / Wilson 区间 / 卡牌统计 / 导出 |
-| `#params` | 数值面板 | 全局常量、各系乘子、公平模式、单卡覆盖，diff 高亮，JSON 导入导出 |
-| `#advisor` | AI 建议 | 规则化建议、启发式自动调参（比例控制 / 坐标下降）、OpenAI 兼容 API 大模型建议 + 一键应用参数块 |
+运行时数据已随仓库提供，正常游玩不需要原版客户端或重新导出数据。
 
-## 目录结构
+## 存档与角色
 
-```
-web/HaqiCombatSim/
-  HaqiCombatSim.html          # 入口（顶栏 / #main / 底栏，<script type=module src=js/app.js>）
-  css/style.css               # 全部样式（含 ≤600px 手机适配）
-  js/
-    app.js                    # 数据集发现 / 加载、hash 路由、顶栏
-    state.js                  # 单一状态源 + localStorage 持久化（params、settings、lastBatch）
-    utils.js                  # h() DOM 构建、格式化、下载 / 读文件、toast
-    data_core.js              # loadDataset(readJson 注入)、normalizeDataset、discoverDatasets
-    rng_core.js               # 可播种 PRNG（mulberry32），int(min,max) 闭区间
-    combat_params_core.js     # BalanceParams：默认值、合并、diff、序列化、resolveParams、inferTargetKind
-    combat_formulas_core.js   # damage/heal/crit/dodge/accuracy/HP 曲线/pip —— 与 Lua 1:1，逐函数标注行号
-    combat_unit_core.js       # 单位状态：HP/pips/charms/wards/auras/DOT/HOT/stun/手牌/冷却 + 属性查询
-    combat_cards_core.js      # 按 template.type 分发的卡牌效果处理器（50+ type）+ UNSUPPORTED_TYPES
-    combat_arena_core.js      # free_pvp 半回合状态机 + CombatEvent 事件流 + runToEnd
-    combat_policy_core.js     # DeckAttackerBot（官方 CSV 情境权重）/ SimpleBot / RandomBot / HumanPolicy
-    combat_presets_core.js    # presetDeck / gearStats / unitSpec / matchupMatrix / SCHOOL_NAMES
-    sim_batch_core.js         # buildJobs / runJob / mergeStats / wilson / aggregateMatrix（纯函数）
-    sim_worker.js             # Web Worker：接收任务、流式回报进度
-    sim_pool.js               # Worker 池调度（无 Worker 时主线程回退）
-    sim_tuner_core.js         # 自动调参器：tuneProportional / tuneCoordinate
-    llm_advisor.js            # buildPrompt / requestAdvice / parseParamPatch / heuristicAdvice
-    view_battle.js            # 2D 对战页（配卡 / SVG 决斗圆盘 / 分步动画 / 弃牌）
-    view_batch.js             # 批量模拟页（热力图 + 表格 + 导出）
-    view_params.js            # 数值面板
-    view_advisor.js           # AI 建议页
-  data/
-    sample/                   # 已入库的极小示例数据集（52 卡）
-    kids/  teen/              # 应用运行时数据（可由 npm run export 从 config/Aries 刷新）
-  scripts/
-    export_data.mjs           # config/Aries XML/CSV → JSON 导出器
-    run_batch.mjs             # CLI 批量模拟（与页面共用 sim_batch_core）
-    lib/xml_lite.mjs          # 零依赖 XML 解析器
-  tests/                      # node:test，*.test.mjs
-  docs/
-    plan.md                   # 总体计划与阶段任务（已全部完成，含「实际」偏差标注）；文末为 2026-09-18 计划需求
-    design.md                 # 产品设计：页面、交互、统计口径
-    architecture.md           # 技术架构：模块、数据流、引擎细节、意图 vs 现实
-    player-import.md          # 计划需求：线上卡包/装备/VIP 导入（尚未实现）
-    async-pvp.md              # 计划需求：异步 PVP（尚未实现）
-    pets-vip-innovation.md    # 计划需求：帕鲁式宠物与 VIP 口粮/治疗（尚未实现）
-    card-i18n.md              # 计划需求：卡牌多语言与海外运营（尚未实现）
-    lua-mapping.md            # 公式/常量 ↔ Lua 源码行号对照表
-    data-export.md            # 数据导出器规格
-    qa-report.md              # 验收记录：真实数据五系胜率基线、引擎修正、性能
-    devlog/                   # 开发日志，每天一个文件
-  AGENTS.md                   # 给编码代理的硬规则
+访客与各 Keepwork 账号的角色相互隔离，每个作用域最多五个主角。标题页选择或新建角色；登录后可使用云端角色与跨设备进度。
+
+云端保存成长、任务领取、物品、装备、卡包、宠物等核心数据，按变化拆分文件并复用未变化内容。当前生命、宠物饥饿与生命、位置、计时及未结束战斗保存在本机 IndexedDB；切换设备不会接续这些临时状态。网络失败保留本地待同步进度，恢复时校验存档并保护尚未同步的数据。
+
+当前云同步采用单客户端写入模式。完整协议与恢复规则见 [用户存储](docs/user-storage.md)。游戏界面已移除旧的存档 JSON 导入／导出入口，原服角色导入是独立功能。
+
+## 页面与开发工具
+
+| 入口 | 用途 |
+| --- | --- |
+| [Haqi.html](Haqi.html) | 正式游戏：探索、任务、战斗、养成、组队与语言学习 |
+| [HaqiOfficialWebsite.html](HaqiOfficialWebsite.html) | 多语言产品官网 |
+| [HaqiPromo.html](HaqiPromo.html) | 宣传片放映室与录屏入口 |
+| [HaqiCombatSim.html](HaqiCombatSim.html) | 战斗实验室：本地人机对战、批量胜率模拟、数值调参与 AI 建议 |
+| [HaqiCards.html](HaqiCards.html) | 卡牌浏览与研究 |
+| [HaqiEffects.html](HaqiEffects.html) | 技能特效工坊与时间轴预览 |
+| [HaqiHeroPreview.html](HaqiHeroPreview.html) | 角色外观预览 |
+| [HaqiImportTest.html](HaqiImportTest.html) | 原服角色读取诊断 |
+
+战斗实验室保留 `#battle`、`#batch`、`#params`、`#advisor` 四个页面，以及 kids、teen、sample 数据集。面向玩家的新内容与翻译以 kids 为范围，teen 保留用于既有模拟与回归。
+
+## 开发与验证
+
+源码保持原生 JavaScript，Vite 用于开发与发布。战斗和玩法规则放在不依赖 DOM、网络或存储的 `js/*_core.js` 中，界面与 IO 单独分层；规则随机数使用可复现种子，数值覆盖统一通过 BalanceParams。
+
+```sh
+npm run test:battle       # 战斗相关修改的快速回归
+npm test                 # 全量 Node 测试
+npm run check:maps       # 地图源与生成数据一致性
+npm run check:adventure  # 冒险内容及本地资源检查
+npm run audit:effects    # 技能特效覆盖检查
 ```
 
-## 数据来源
+日常按改动范围运行检查；战斗引擎、卡牌交互、AI、宠物／坐骑、状态、倒计时、结算及影响战斗的共享 UI 修改必须执行快速战斗回归。发布前按 [产品发布验收](docs/product-release-qa.md) 选择简单、核心或全部黑盒流程。验证记录见 [QA 报告](docs/qa-report.md)，开发过程记录在 `docs/devlog/`。
 
-引擎公式移植自 `script/apps/Aries/Combat/ServerObject/`（`card_server.lua`、`player_server.lua`、`arena_server.lua`），对照表见 [docs/lua-mapping.md](docs/lua-mapping.md)。卡牌与预设数据来自本机 `config/Aries/`：
+需要从本机原版 `config/Aries/` 刷新战斗数据，或在命令行运行数值实验时：
 
-| 文件 | 用途 |
-|------|------|
-| `Cards/CardList.xml` / `CardList.teen.xml` + 单卡 XML | 卡牌模板（type、pipcost、accuracy、damage_min/max…） |
-| `Cards/CharmWardList(.teen).xml` | charm / ward / miniaura / globalaura 数值 |
-| `Combat/MobStatsByGearScore(.teen).xml` | 各系按装备分数区间的 HP / 伤害 / 抗性 / 暴击预设 |
-| `Combat/deck_attacker_ai/Aggressive{School}.csv` | 官方 Deck_Attacker AI 的情境权重卡组（Bot 出牌策略） |
-| `Combat/MobAIDeckByGearScore(.teen).xml` | 按装备分数的 AI 卡组（gsid 形式，尽力映射） |
-| `HP/HP_level_mapping.xml` | 旧 HP 表（参考） |
+```sh
+npm run export
+npm run sim -- --data data/kids --mode 1v1 --games 1000 --level 50 --seed 1
+```
 
-## 计划需求（尚未实现）
+数据导出依赖原版源码与配置目录，详见 [数据导出](docs/data-export.md)。战斗公式来源与 kids／teen 差异见 [Lua 对照表](docs/lua-mapping.md)。
 
-2026-09-18 产品负责人李西峙提出四项后续能力，文档已入库，**代码未做**：
+## 构建与发布
 
-1. [拉取真实用户数据](docs/player-import.md) — 卡包、装备、VIP 与成长字段；对照现有导出/存档/Keepwork 登录，标出接口与鉴权等开放问题。
-2. [异步 PVP](docs/async-pvp.md) — 非实时对战的匹配、超时、回放，以及与现有 1v1–4v4 人机 `free_pvp` 的关系；附排行榜与「网页包先测新技能/参数」的运营备注。
-3. [帕鲁式宠物与 VIP 口粮](docs/pets-vip-innovation.md) — 在已有捕获/四卡位/饱食上对照帕鲁世界方向；治疗与口粮是否 VIP 化仍为开放问题。
-4. [卡牌多语言 / 海外](docs/card-i18n.md) — 卡面说明由程序生成；记录现有中文名表与本地化选项，不在本仓库做完整 i18n。
+```sh
+npm run build           # H5 构建，输出 dist/
+npm run preview         # 预览构建后的游戏
+npm run plan:release    # 构建并生成发布计划，不上传
+```
 
-当前对战仍是本机 Bot；现有 Keepwork 登录只服务 `Haqi.html` 云端检查点，不读取魔法哈奇角色。冒险宠物已可捕获养成，但无会员门槛、无多语言卡面。
+H5 发布包包含页面、脚本、样式及运行配置／词典，不重复打包图片和音频；美术通过独立资源流程上传至 Keepwork CDN。资源清单维护本地路径、CDN 地址、裁剪信息、来源和哈希。
 
-## 相关文档
+正式发布使用 `npm run upload`，详细凭据、核验与入口同步流程见 [部署说明](docs/deployment.md)。**`upload` 和 `verify:release` 还会执行 apps 仓库入口同步、提交与推送，不是单纯的本地检查命令。** 只有明确需要发布时才运行。
 
-- 仓库 wiki：[docs/aries/combat-system.md](../../docs/aries/combat-system.md)、[docs/config/aries-haqi-data.md](../../docs/config/aries-haqi-data.md)
-- 仓库 wiki 入口：[docs/aries/haqi-combat-sim.md](../../docs/aries/haqi-combat-sim.md)
-- 本项目：[docs/plan.md](docs/plan.md) → [docs/architecture.md](docs/architecture.md) → [docs/lua-mapping.md](docs/lua-mapping.md) → [docs/qa-report.md](docs/qa-report.md)
-- 计划需求：[docs/player-import.md](docs/player-import.md)、[docs/async-pvp.md](docs/async-pvp.md)、[docs/pets-vip-innovation.md](docs/pets-vip-innovation.md)、[docs/card-i18n.md](docs/card-i18n.md)
+项目也提供 Electron 桌面、Steam 文件暂存及 Capacitor Android／iOS 工程。`npm run build:app` 生成包含本地美术的 `app-dist/`；平台打包、签名与发行条件见同一部署文档。构建脚本可用不代表已在对应商店上线。
 
-## Haqi.html：WebP / Keepwork 云端旅途
+## 目录导航
 
-独立单人入口运行方法见 [adventure.md](docs/adventure.md)。本机默认本地WebP；线上域名默认永久Keepwork CDN，可用 `Haqi.html?assets=cdn` 验收。开始画面、设置、战斗均可打开可选云端检查点，保留本地自动存档与导入导出。`npm test` 共75例，`npm run check:adventure` 验证章节和本地美术，`npm run verify:adventure-cdn` 验证发布资源。仅按需加载Keepwork CDN上的SDK core，无运行时构建或额外框架。
+```text
+HaqiCombatSim/
+  Haqi.html                 游戏入口
+  HaqiCombatSim.html        战斗实验室入口
+  js/                       启动、玩法核心、渲染、界面与 IO 模块
+  css/                      游戏与工具页面样式
+  config/maps/              六岛布局源与地图生成配置
+  data/adventure/           任务、地图、副本、宠物、商店、资源清单与词典
+  data/kids/                儿童版战斗数据
+  data/teen/                既有青年版模拟数据
+  data/sample/              示例与测试数据
+  assets/                   本地资源归档
+  scripts/                  导出、生成、资源准备、构建与验证工具
+  tests/                    规则回归与隔离验收页面
+  shell/                    桌面应用外壳
+  android/  ios/            移动平台工程
+  docs/                     功能说明、架构、验收与开发日志
+```
 
-技能粒子与召唤预览：[`HaqiEffects.html`](HaqiEffects.html)。完整本地kids卡库701条定义共享225套基础演出，统一在一个[特效配置](data/adventure/spell-effects.json)，可逐张播放和拖动时间轴；见[开发说明](docs/spell-effects.md)。
+## 文档导航
 
-工坊支持学派 → 基础技能 → 等级/品质变体选择。`npm run audit:effects`检查全卡库覆盖；`npm run prepare:effects`维护共享配置。特效库扩展不自动解锁开篇之外的玩法。
+- **世界与任务：** [冒险说明](docs/adventure.md)、[六岛探索](docs/island-exploration.md)、[任务目录](docs/quest-catalog.md)、[副本目录](docs/dungeon-catalog.md)、[剧情秘境与试炼塔](docs/dungeon-journeys.md)。
+- **角色与伙伴：** [宠物与商店](docs/pets-and-shop.md)、[宠物互动与繁育](docs/pet-interactions.md)、[岛屿社交](docs/island-social.md)、[红蘑菇赛场](docs/red-mushroom-arena.md)。
+- **语言与账号：** [语言学习](docs/language-learning.md)、[界面本地化](docs/locale.md)、[原服角色导入](docs/player-import.md)、[用户存储](docs/user-storage.md)。
+- **开发与美术：** [技术架构](docs/architecture.md)、[Lua 公式对照](docs/lua-mapping.md)、[GUI 规范](docs/gui-style-guide.md)、[卡牌美术](docs/card-study.md)、[技能特效](docs/spell-effects.md)。
+- **进度与交付：** [阶段计划](docs/plan.md)、[快速战斗回归](docs/battle-regression.md)、[产品发布验收](docs/product-release-qa.md)、[QA 记录](docs/qa-report.md)、[部署](docs/deployment.md)、[宣传片](docs/promo.md)。
+
+部分专题文档保留早期设计与按日期追加的历史记录；判断当前范围时以其最新实施说明、运行配置和代码为准。

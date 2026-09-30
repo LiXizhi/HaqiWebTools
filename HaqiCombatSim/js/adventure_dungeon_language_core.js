@@ -1,9 +1,9 @@
 import {resolveParams} from './combat_params_core.js';
-import {matchesSpeech} from './language_adventure_core.js';
+import {compareDungeonSpeech} from './dungeon_speech_core.js';
 
 export const LANGUAGE_REWARD_NAMES={hp:'生命',attack:'攻击',defense:'防御',powerPip:'超级魔力生成率'};
 export function dungeonLanguageParams(content={}){return resolveParams({cards:{},version:'kids'},content.balanceParams||{}).dungeonLanguage;}
-export function createLineAttempt(line,now,content){return {id:line.id,reward:line.reward,phase:'waiting'};}
+export function createLineAttempt(line,now,content){return {id:line.id,reward:line.reward,phase:'waiting',qualified:0,params:dungeonLanguageParams(content)};}
 export function startLineAttempt(attempt,now){
     if(attempt.phase!=='waiting')return false;
     attempt.phase='recording';return true;
@@ -11,8 +11,10 @@ export function startLineAttempt(attempt,now){
 export function finishLineAttempt(attempt,transcript,expected,locale){
     if(attempt.phase!=='recording')return false;
     // ASR validates a spoken line, not pronunciation. Empty/irrelevant speech never earns a buff.
-    const passed=!!transcript?.trim()&&matchesSpeech(transcript,[expected],locale);
-    attempt.phase=passed?'awarded':'failed';return passed;
+    attempt.feedback=compareDungeonSpeech(transcript,expected,locale);
+    if(attempt.feedback.accuracy>=attempt.params.minSpeechAccuracy)attempt.qualified++;
+    const passed=attempt.feedback.accuracy===1||(attempt.feedback.accuracy>=attempt.params.minSpeechAccuracy&&attempt.qualified>=attempt.params.speechPracticeCount);
+    attempt.phase=passed?'awarded':'waiting';return passed;
 }
 export function dungeonLanguageBuff(save,content){
     const record=save.dungeonLanguageBuff;

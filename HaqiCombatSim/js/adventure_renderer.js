@@ -1,4 +1,6 @@
+import {socialGesturePose,socialHeadAnchor} from './adventure_social_actions_core.js';
 import {monsterScenePositions,stepMonsterWander,monsterTerritoryWarning,monsterSceneParams} from './adventure_monster_motion_core.js';
+import {drawMonsterTerritory} from './view_monster_territory.js';
 import {drawDungeonEntrance} from './view_dungeon_entrance.js';
 import {drawSchoolIcon} from './card_renderer.js';
 import {battleTargetRects} from './battle_target_pick_core.js';
@@ -7,7 +9,7 @@ import {drawSocialPet,drawPetSocialEffects} from './view_adventure_pet_social.js
 import {drawPetMood} from './view_adventure_pet_mood.js';
 import {petBattleMood} from './adventure_pet_mood_core.js';
 import {petDisplayScale} from './adventure_pet_interactions_core.js';
-import {socialBubble} from './adventure_social_motion_core.js';
+import {socialBubble,heroSocialLookPeers} from './adventure_social_motion_core.js';
 import { createHeroActor, updateHeroActor } from './hero_pose_core.js';
 import { paintSoftShadow, paintStaticShadows } from './adventure_shadows.js';
 import { createMotionTrail, motionStyle, drawMotionTrail, drawMotionAccessory } from './adventure_motion_effects.js';
@@ -21,7 +23,7 @@ import { drawRewardEffect } from './view_adventure_rewards.js';
 import { drawOverheadStatus,drawStatusFeedback,drawSpellMiss } from './view_adventure_overhead_status.js';
 import { drawTeleportEffect } from './view_adventure_teleport.js';
 import { petAppearanceStage } from './adventure_pets_core.js';
-import { resolveMountDrawPose } from './adventure_mounts_core.js';
+import { resolveMountDrawPose, sceneMountSave } from './adventure_mounts_core.js';
 import { createCompanion, stepCompanion, selectCompanionId, selectSocialPetId } from './adventure_companion_core.js';
 import { hashSeed } from './rng_core.js';
 // Canvas presentation only. Visual motion uses time/seeded map decorations, never gameplay RNG.
@@ -184,8 +186,8 @@ export function createRenderer(canvas,assets) {
         if(!assets.drawMonster?.(c,m,-52*scale,-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',0,bob,t,scale,false);
         c.restore();
     }
-    function render(world,save,time,{petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
-        const {w,h}=size(),t=time/1000;bubbleTarget=null;greetingTarget=null;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
+    function render(world,save,time,{socialGesture=null,petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
+        const {w,h}=size(),t=time/1000,gestureAt=Date.now();bubbleTarget=null;greetingTarget=null;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         cameraZoom.tick(time,reducedMotion.matches);
         const baseScale=w<650?.82:1,sceneZoom=title?1:cameraZoom.value;
         cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:save.position;
@@ -209,11 +211,11 @@ export function createRenderer(canvas,assets) {
             heroActor=createHeroActor(Number(save.seed)||7419);heroActor.facing=save.facing||0;heroActor.head=[0,4,12,8][heroActor.facing];heroPrevious={...save.position,time};heroScope=world;heroIdentity=identity;
         }
         // Head-turnable peers: hero + idle social AI. Static world NPCs cannot turn and stay one-way fallbacks.
-        const turnableSocial=socialActors.filter(a=>!a.moving).map(a=>({id:a.profile.id,x:a.position.x,y:a.position.y}));
+        const turnableSocial=heroSocialLookPeers(socialActors,{inParty:inParty||!!save.coopRun});
         const heroPose=updateHeroActor(heroActor,{id:'hero',dx:save.position.x-heroPrevious.x,dy:save.position.y-heroPrevious.y,x:save.position.x,y:save.position.y,time:t,facing:save.facing||0,lookPeers:turnableSocial,npcs:world.npcs,reducedMotion:reducedMotion.matches});
         heroPrevious={...save.position,time};
         // 坐骑显隐只影响漫游场景；renderBattle 直接用原 save，战斗中坐骑恒显示。
-        const visualSave=save.mountHidden?{...save,mountId:null}:save;
+        const visualSave=sceneMountSave(save,{inParty:inParty||socialActors.some(actor=>actor.inParty)});
         const style=motionStyle(visualSave,membership);style.pose={...style.pose,facing:heroPose.facing,visualHead:heroPose.head,visualBreath:{...heroPose.breath}};
         const motion=motionTrail.step(save.position,time,style,{moving,scope:world,reducedMotion:reducedMotion.matches,hidden:title||motionHidden||!!fishingPose||!!teleportEffect});
         const star=starFollower.step(starAnchor({...visualSave,facing:heroPose.facing},t,moving),time,{enabled:starCompanionVisible(save,motion.style,{title,motionHidden,fishingPose:!!fishingPose,teleportEffect:!!teleportEffect}),reducedMotion:reducedMotion.matches,scope:world});
@@ -232,10 +234,7 @@ export function createRenderer(canvas,assets) {
             stepMonsterWander(world,o,monsterDt,viewport,{enabled:!title&&!motionHidden,ambient:!reducedMotion.matches,hero:save.position,canWalk:(x,y)=>walkable(world,x,y)});
             const warning=!title&&!motionHidden&&monsterTerritoryWarning(world,o,save.position);
             if(warning){
-                ctx.save();ctx.beginPath();ctx.arc(o.x,o.y,monsterRadius,0,TAU);
-                const danger=warning==='danger';
-                ctx.fillStyle=danger?'#d83a3424':'#55c58a12';ctx.fill();ctx.strokeStyle=danger?'#ff6255':'#72dca2';ctx.lineWidth=(danger?2.5:2)/cam.scale;ctx.stroke();
-                ctx.restore();
+                drawMonsterTerritory(ctx,o,save.position,monsterSceneParams(world),t,reducedMotion.matches);
             }
             if(!o.hidden)for(const pose of monsterScenePositions(world,o))objects.push({...o,...pose,monsterIds:null,groupSize:o.monsterIds?.length||1});
         }
@@ -331,10 +330,13 @@ export function createRenderer(canvas,assets) {
             }
             if(o.kind==='social'){
                 const a=o.actor,p=a.profile,fx=o.fx,pose=fx?.poseOut;
+                const gesturePose=socialGesturePose(socialGesture,p.id,gestureAt,reducedMotion.matches);
+                ctx.save();ctx.translate(0,-(gesturePose?.hop||0));
                 if(fx?.motion&&!title&&!motionHidden)drawMotionAccessory(ctx,fx.motion,o,time,reducedMotion.matches);
                 const nameY=avatar(ctx,{...p,mountId:null,facing:pose?.facing??a.facing},o.x,o.y,t,a.moving,1,false,pose||null);
                 if(fx?.motion&&!title&&!motionHidden)drawMotionAccessory(ctx,fx.motion,o,time,reducedMotion.matches,true);
                 plate(ctx,`${tr(p.name)} · ${tr(p.native==='zh'?'中文':'英语')}`,o.x,nameY+16,PLATE.social);
+                if(gesturePose){const head=socialHeadAnchor(o);text(ctx,gesturePose.icon,head.x,head.y+9,27,'#fff');}ctx.restore();
             }
             if(o.kind==='social-pet'){
                 const fx=o.fx,id=fx.petId,pet=fx.companion;
@@ -345,6 +347,8 @@ export function createRenderer(canvas,assets) {
                 ctx.restore();
             }
             if(o.kind==='hero'){
+                const gesturePose=socialGesturePose(socialGesture,'hero',gestureAt,reducedMotion.matches);
+                ctx.save();ctx.translate(0,-(gesturePose?.hop||0));
                 if(!star.front)drawMagicStar(ctx,star,assets,starLevel);
                 circleRune(ctx,o.x,o.y+2,24,t,'#f7e6a088');
                 let nameY;
@@ -361,6 +365,7 @@ export function createRenderer(canvas,assets) {
                 }
                 if(star.front)drawMagicStar(ctx,star,assets,starLevel);
                 if(!title)plate(ctx,save.name,o.x,nameY,PLATE.hero);
+                if(gesturePose){const head=socialHeadAnchor(o);text(ctx,gesturePose.icon,head.x,head.y+9,27,'#fff');}ctx.restore();
             }
             if(o.kind==='pet'){
                 const pet=save.pets?.[petId],id=pet?.speciesId||petId;
@@ -391,7 +396,7 @@ export function createRenderer(canvas,assets) {
             const head=starAnchor(visualSave,t,false);
             drawSpeechBubble(ctx,{x:head.x,y:head.y+50},t,true);
         }
-        const nearbyPartnerBubble=socialBubble(socialActors,save.position);
+        const nearbyPartnerBubble=socialBubble(socialActors,save.position,{gesture:socialGesture,at:gestureAt,inParty:inParty||!!save.coopRun});
         if(!title&&!motionHidden){const b=nearbyPartnerBubble;if(b){
             ctx.save();ctx.fillStyle='#fffbe9';ctx.strokeStyle='#7a6335';ctx.lineWidth=1.5;
             ctx.shadowColor='#173b3655';ctx.shadowBlur=4;ctx.beginPath();ctx.roundRect(b.x,b.y,b.w,b.h,10);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
@@ -399,7 +404,7 @@ export function createRenderer(canvas,assets) {
             ctx.fillStyle='#7a6335';for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(b.x+12+i*8,b.y+15,2,0,TAU);ctx.fill();}ctx.restore();
         }}
         // Partner invitation takes priority; bubbleTarget stays null so hidden pet invites cannot be clicked.
-        if(companionBubble&&companion&&!title&&!nearbyPartnerBubble)bubbleTarget=drawSpeechBubble(ctx,companion.position,t,reducedMotion.matches);
+        if(companionBubble&&companion&&!title&&!nearbyPartnerBubble&&!socialGesturePose(socialGesture,'hero',gestureAt))bubbleTarget=drawSpeechBubble(ctx,companion.position,t,reducedMotion.matches);
         if(!world.portal.hidden)plate(ctx,world.portal.name,world.portal.x,world.portal.y+48);
         if(world.entrancePortal)plate(ctx,world.entrancePortal.name,world.entrancePortal.x,world.entrancePortal.y+48);
         if(!title)drawRewardEffect(ctx,save.position.x,save.position.y,rewardEffect,reducedMotion.matches);

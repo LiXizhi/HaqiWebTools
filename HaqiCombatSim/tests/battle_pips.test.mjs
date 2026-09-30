@@ -5,13 +5,14 @@ import {captureBattlePresentation} from '../js/view_battle_presentation.js';
 
 function dots(pips,hp=100){
     const marks=[];
-    const ctx={save(){},restore(){},beginPath(){},stroke(){},arc(x,y,r){this.point={x,y,r};},fill(){marks.push({...this.point,color:this.fillStyle});}};
+    const ctx={globalAlpha:1,save(){},restore(){},beginPath(){},stroke(){},arc(x,y,r){this.point={x,y,r};},fill(){marks.push({...this.point,color:this.fillStyle,opacity:this.globalAlpha});}};
     drawBattlePips(ctx,{x:100,y:200},pips,{hp});return marks;
 }
 test('seven foot markers stay in front, distinguish mana types and dim empty slots',()=>{
     const marks=dots({normal:2,power:3});
     assert.equal(marks.length,7);
-    assert.ok(marks.every(p=>p.y>200&&p.y<=213));
+    assert.ok(marks.every(p=>p.y>192&&p.y<=205));
+    assert.ok(marks.every(p=>p.opacity===(p.color==='#28474b'?.35:1)));
     assert.ok(marks.every((p,i)=>!i||p.x>marks[i-1].x));
     assert.equal(marks.filter(p=>p.color==='#99eaff').length,2);
     assert.equal(marks.filter(p=>p.color==='#ffdc69').length,3);

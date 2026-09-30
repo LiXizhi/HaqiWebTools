@@ -34,7 +34,6 @@ export function durableSave(save) {
 export function runtimeValues(save) {
     return { dailyLanguageBuff:save.dailyLanguageBuff?copy(save.dailyLanguageBuff):null, zone:save.coopRun?.returnTo.zone||save.zone, revision:save.revision, coopZone:save.coopRun?save.zone:null, coopReturn:save.coopRun?copy(save.dungeonReturn):null, checkinOnline:save.checkin?.version===2?{day:save.checkin.day,onlineMs:save.checkin.onlineMs}:null, values:Object.fromEntries(localFields.filter(key => save[key] !== undefined).map(key => [key,copy(save[key])])),
         prefs:Object.fromEntries(prefFields.filter(key => save[key] !== undefined).map(key => [key,copy(save[key])])),
-        petMeetings:save.petMeetings?copy(save.petMeetings):null,
         pets:Object.fromEntries(Object.entries(save.pets || {}).map(([id,pet]) => [id,{id:pet.id,hp:pet.hp,hunger:pet.hunger}])) };
 }
 export function restoreRuntime(save, content, runtime) {
@@ -43,7 +42,7 @@ export function restoreRuntime(save, content, runtime) {
     result.position = {...mapInfo(save.zone,content).initialSpawn};
     result.facing = 3;result.pendingEncounter = null;
     for (const key of prefFields) { const value = runtime?.prefs?.[key]; if (value !== undefined) result[key] = copy(value); }
-    if(runtime?.petMeetings)result.petMeetings=copy(runtime.petMeetings);
+    delete result.petMeetings; // Legacy device meetings are deliberately discarded.
     if (result.pets) {result.heroHp = null;result.careAt = 0;result.careLog = [];}
     if (matching) Object.assign(result,copy(runtime.values));
     delete result.dailyLanguageBuff;

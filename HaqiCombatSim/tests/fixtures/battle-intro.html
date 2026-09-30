@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="zh-CN"><head><meta charset="utf-8"><base href="../../"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>对手登场预览</title>
-<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_battle_intro.css">
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_battle_intro.css">
 <style>#preview-controls{padding:24px;color:#fff4da;background:#182636;height:100%;box-sizing:border-box}#preview-controls button{margin:8px}#preview-controls p{max-width:640px;line-height:1.7}</style></head>
 <body class="haqi-app"><main id="game"><section id="preview-controls"><h1>对手登场预览</h1><p>单怪大立绘，多怪按系别分镜入场。手机四怪为两行。仅加载现有资源，不读取或保存玩家进度。</p><nav></nav><p id="status">正在准备怪物立绘…</p></section><div id="overlay" class="overlay"></div></main>
 <script type="module">
-import {loadResources} from '../../js/adventure_assets.js';
-import {createBattleIntro} from '../../js/adventure_battle_intro.js';
-import {createBattleIntroView} from '../../js/view_battle_intro.js';
-import {battleIntroRoster,battleIntroFrame} from '../../js/battle_intro_core.js';
+import {loadResources} from './js/adventure_assets.js';
+import {createBattleIntro} from './js/adventure_battle_intro.js';
+import {createBattleIntroView} from './js/view_battle_intro.js';
+import {battleIntroRoster,battleIntroFrame} from './js/battle_intro_core.js';
 const query=new URLSearchParams(location.search),root=document.querySelector('#overlay'),status=document.querySelector('#status');
 try{
  const assets=await loadResources();
@@ -21,7 +21,8 @@ try{
  const count=Math.max(1,Math.min(4,Number(query.get('count'))||4));
  let frozen=null;
  if(query.has('time')){frozen=createBattleIntroView(root,{skip:()=>{frozen.close();frozen=null;}});frozen.open({assets,roster:battleIntroRoster(model(count))});}else open(count);
- function frame(now){if(frozen)frozen.update(battleIntroFrame(Math.max(0,Number(query.get('time'))||0),count,reduced));else intro.tick(now,{paused:document.hidden});requestAnimationFrame(frame);}
- document.addEventListener('visibilitychange',()=>{if(document.hidden)intro.suspend();});requestAnimationFrame(frame);
-}catch(error){status.textContent=error.message;}
+ const started=performance.now();
+ function frame(now){if(frozen)frozen.update(battleIntroFrame(Math.max(0,Number(query.get('time'))||0),count,reduced));else intro.tick(now,{paused:document.hidden});if(!document.documentElement.dataset.fixtureReady&&performance.now()-started>600)document.documentElement.dataset.fixtureReady='1';requestAnimationFrame(frame);}
+ document.addEventListener('visibilitychange',()=>{if(document.hidden)intro.suspend();}); requestAnimationFrame(frame);
+}catch(error){status.textContent=error.message;document.documentElement.dataset.fixtureError=error.message;}
 </script></body></html>

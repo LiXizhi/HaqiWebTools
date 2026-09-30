@@ -1,12 +1,15 @@
 import {createDialogueVoiceSession} from './dialogue_voice_session.js';
-import {dailyBuffs,previewDailySpeech} from './language_daily_buff_core.js';
+import {dailyBuffs,previewDailySpeech,localBuffDay} from './language_daily_buff_core.js';
 import {createDungeonStoryView} from './view_dungeon_story.js';
 import {createLearningVoice} from './language_adventure_voice.js';
 import {createLineAttempt,startLineAttempt,finishLineAttempt,dungeonLanguageParams} from './adventure_dungeon_language_core.js';
 
 // One disposable session owns every timer and microphone request. No raw audio or transcript is saved.
-export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},voice=createLearningVoice({getSettings:()=>getState().save?.languageLearning||{}}),viewFactory=createDungeonStoryView,now=()=>performance.now()}){
+export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},voice=createLearningVoice({getSettings:()=>getState().save?.languageLearning||{}}),viewFactory=createDungeonStoryView,now=()=>performance.now(),dateNow=()=>Date.now()}){
     const speech=createDialogueVoiceSession(voice);
+    // Only this controller's memory: never put per-entry claims in saves or storage.
+    const claimed=new Set();let claimDay=localBuffDay(dateNow());
+    function claimKey(s){const day=localBuffDay(dateNow());if(day!==claimDay){claimed.clear();claimDay=day;}return JSON.stringify([s.owner,s.role,s.d.id,s.row.id]);}
     let session=null;
     const view=viewFactory(root,{login:()=>{const s=session;if(s&&valid(s))onLogin({dungeon:s.d,index:s.index});},start,finish,cancel,next,skip:()=>complete(),read,isRecording:()=>['connecting','recording'].includes(session?.phase)});
     const valid=s=>session===s&&!s.abort.signal.aborted&&getState().save===s.save&&getState().save.zone===s.d.id&&getState().owner===s.owner&&getState().role===s.role;
@@ -15,7 +18,7 @@ export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},vo
     function complete(){const s=session;if(!s)return;close();onDone(s.d);}
     function paint(message=''){
         const s=session;if(!s)return;
-        view.update({message,phase:s.phase,loginRequired:s.learning&&!s.owner,rewardKey:s.rewardKey,buffs:dailyBuffs(s.save)});
+        view.update({message,phase:s.phase,loginRequired:s.learning&&!s.owner,rewardKey:s.rewardKey,buffs:dailyBuffs(s.save),claimed:claimed.has(claimKey(s)),feedback:s.attempt?.feedback,practiceCount:s.attempt?.qualified||0,practiceTarget:s.params.speechPracticeCount,minSpeechAccuracy:s.params.minSpeechAccuracy,practiceProgress:s.phase==='awarded'||s.phase==='capped'||claimed.has(claimKey(s))?1:Math.min(1,(s.attempt?.qualified||0)/s.params.speechPracticeCount)});
     }
     function next(){const s=session;if(!s||['connecting','recording','judging','speaking'].includes(s.phase))return;timers(s);void speech.dispose();s.operation++;s.index++;if(s.index>=s.d.story.length){complete();return;}line();}
     function line(){
@@ -44,9 +47,15 @@ export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},vo
             onCancel:()=>{s.attempt.phase='waiting';s.phase='waiting';paint('配音已取消，本句未获得奖励。');},
             onText:text=>{
                 const passed=finishLineAttempt(s.attempt,text,s.target,s.locale);
-                if(passed){const reward=award(`${s.rewardId}:${s.row.id}`,s.rewardKey);if(reward?.key)s.rewardKey=reward.key;s.phase=reward===null?'capped':'awarded';paint(reward===null?'配音完成，今日语言加成已满。':'配音完成，已获得本句语言加成。');}
-                else{s.phase='failed';paint('这次没有听到完整台词，本句未获得奖励。');}
-                s.timer=setTimeout(next,1800);
+                if(passed){
+                    const key=claimKey(s),already=claimed.has(key);
+                    const reward=already?null:award(`${s.rewardId}:${s.row.id}`,s.rewardKey);
+                    if(reward?.key)s.rewardKey=reward.key;
+                    if(!already&&reward!==null)claimed.add(key);
+                    s.phase=already||reward!==null?'awarded':'capped';
+                    paint(already?'本词条今天已经拿过奖励了。':reward===null?'配音完成，今日语言加成已满。':'配音完成，已获得本句语言加成。');
+                    s.timer=setTimeout(next,1800);
+                }else{s.phase='waiting';paint(s.attempt.feedback.accuracy>=s.params.minSpeechAccuracy?'已累计，再读一次吧。':'再试一次，读出标出的词吧。');}
             }});
     }
     function finish(){return speech.finish();}

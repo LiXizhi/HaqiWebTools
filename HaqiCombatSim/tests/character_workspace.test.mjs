@@ -50,3 +50,14 @@ test('relationship and quota reads reuse acknowledged memory across connections'
     await io.finish('first','released','2026-09-27');await io.reserve('second','a',false);
     assert.deepEqual(f.reads,[]);
 });
+
+import {createCharacterWorkspace} from '../js/character_workspace.js';
+test('menu affinity reads do not populate persistent local cache or write remote files',async()=>{
+    let localWrites=0,remoteWrites=0;
+    const sdk={token:'test',getUserProfile:async()=>({username:'alice'}),
+        loadPage:async()=>({success:true,fromServerCache:true,content:JSON.stringify({version:1,scope:'alice:r',buckets:{}})}),
+        personalPageStore:{withWorkspace:()=>({getRemotePagePath:path=>'alice/workspace/'+path,savePageData:()=>{remoteWrites++;}})}};
+    const workspace=createCharacterWorkspace({getOwner:()=> 'alice',loadSDK:async()=>sdk,cache:{set(){localWrites++;}}});
+    const io=await workspace.connect('r',{cacheReads:false});assert.equal(await io.load('stranger'),null);
+    assert.equal(localWrites,0);assert.equal(remoteWrites,0);
+});

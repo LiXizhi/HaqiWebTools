@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>开口有礼 · 隔离预览</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><style>body{padding:18px;background:#325b4c}main{margin:20px auto;width:min(580px,100%)}.preview-body{padding:14px;background:#f8eac0;border:2px solid #c49a50;border-radius:12px}.preview-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}body.phone main{width:354px;max-width:100%}body.phone{padding:0;width:390px;max-width:100%}</style></head>
+<body class="haqi-app"><main><div class="preview-controls"></div><div class="preview-body"></div></main><script type="module">
+import {renderLearningMode} from '../../js/view_learning_mode.js';
+import {awardDailySpeech} from '../../js/language_daily_buff_core.js';
+import {claimSpeechReward} from '../../js/language_speech_rewards_core.js';
+import {el,button} from '../../js/view_adventure.js';
+const body=document.querySelector('.preview-body'),controls=document.querySelector('.preview-controls');
+const content={items:{100:{},17213:{}}},save={seed:42,inventory:{},locale:'zh-CN',languageLearning:{enabled:true,target:'en',native:'zh-CN',selectionConfirmed:true}};
+let serial=0;
+function draw(){body.replaceChildren();renderLearningMode(body,{save,assets:{content}},{action:a=>{claimSpeechReward(save,content,a.index);draw();},applyLearningMode:()=>{},disableLearning:()=>{},panel:()=>{}},{el,button});}
+for(const n of [0,5,30,40])controls.append(button(n+'句',()=>{save.dailyLanguageBuff=null;delete save.languageSpeechClaims;for(let i=0;i<n;i++)awardDailySpeech(save,content,String(serial++));draw();},'secondary'));
+controls.append(button('手机宽度',()=>{document.body.classList.toggle('phone');},'secondary'));draw();
+</script></body></html>

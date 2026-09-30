@@ -17,7 +17,7 @@ function setup(options={}){
         const json=JSON.parse(system.split('Character and player data: ')[1]);const eventId=JSON.parse(system.match(/"eventId":("[^"]+")/)[1]);
         return {reply:'What does that mean?',translation:'那是什么意思？',affinity:{eventId,before:json.affinity,delta:2,after:Math.min(100,json.affinity+2),reason:'共同学习'}};
     }};
-    const chat=createCharacterConversation({...options,getState:()=>app,commit:next=>{app.save=next;},membership:member,cache,workspace:f.workspace,voice,now:()=>Date.parse('2026-09-27T00:00:00Z'),read:async()=>({entries:{}}),viewFactory:cb=>{callbacks=cb;return {render:s=>{state=structuredClone({...s,io:null,abort:null,timer:null});},close(){},root:{}};},detailsFactory:()=>({close(){},relation(){},gifts(){}})});
+    const chat=createCharacterConversation({isFriend:()=>true,...options,getState:()=>app,commit:next=>{options.onCommit?.(next);app.save=next;},membership:member,cache,workspace:f.workspace,voice,now:()=>Date.parse('2026-09-27T00:00:00Z'),read:options.read|| (async()=>({entries:{}})),viewFactory:cb=>{callbacks=cb;return {render:s=>{state=structuredClone({...s,io:null,abort:null,timer:null});},close(){},root:{}};},detailsFactory:options.detailsFactory||(()=>({close(){},relation(){},gifts(){}}))});
     return {f,app,chat,cacheRows,member,voice,get state(){return state;},get callbacks(){return callbacks;},get calls(){return replyCalls;},error:e=>{error=e;},gate:g=>{answerGate=g;}};
 }
 const peer={id:'a',kind:'companion',name:'安娜',native:'en'};
@@ -101,4 +101,47 @@ test('global daily speech hook ignores typing, duplicate finish and cancelled re
  await t.callbacks.start();await t.callbacks.finish();await t.callbacks.finish();assert.equal(earned.length,1);
  let resolve;t.voice.finish=()=>new Promise(r=>resolve=r);
  await t.callbacks.start();const pending=t.callbacks.finish();await t.callbacks.cancel();resolve('late voice');await pending;assert.equal(earned.length,1);t.chat.close();
+});
+
+test('non-friend chat affinity accumulates only in memory across reopening, with no affinity in quota receipts',async()=>{
+    const t=setup({isFriend:()=>false});await t.chat.open(peer);
+    const initial=t.state.record.affinity;await t.chat.send('hello');
+    assert.equal(t.state.record.affinity,initial+2);assert.equal(await t.chat.affinity(peer),initial+2);
+    t.chat.close();await t.chat.open(peer);assert.equal(t.state.record.affinity,initial+2);
+    await t.chat.send('again');assert.equal(t.state.record.affinity,initial+4);
+    assert.equal(t.cacheRows.size,0);
+    assert.ok(t.f.writes.every(path=>!path.startsWith('roles/')));
+    assert.ok([...t.f.files.values()].every(text=>!text.includes('"affinity"')));
+    assert.equal(t.app.save.relationshipEvents,undefined);
+    t.chat.close();t.app.role='other';await t.chat.open(peer);t.chat.close();
+    t.app.role='r';assert.equal(await t.chat.affinity(peer),null,'switching roles clears temporary accumulation');
+});
+
+test('non-friend activities never enter the durable affinity outbox',async()=>{
+    const t=setup({isFriend:()=>false}),event={id:'win',peer,kind:'dungeon',at:1,reason:'一起通关'};
+    const first=t.chat.activity(event);t.chat.activity(event);assert.equal(await t.chat.affinity(peer),first.affinity);
+    assert.equal(t.app.save.relationshipEvents,undefined);assert.equal(t.f.writes.length,0);
+    // A legacy stranger outbox is not synchronized into a relationship file.
+    t.app.save.relationshipEvents=[event];await t.chat.syncActivities();assert.equal(t.f.writes.length,0);
+});
+
+test('losing friendship during a reply blocks relationship and pending-cache persistence',async()=>{
+    let friend=true;const t=setup({isFriend:()=>friend});await t.chat.open(peer);
+    let resolve;t.gate(new Promise(r=>{resolve=r;}));const sending=t.chat.send('late');
+    while(!t.calls)await new Promise(r=>setTimeout(r,1));
+    friend=false;const before=t.f.writes.filter(path=>path.startsWith('roles/')).length;
+    resolve();await sending;
+    assert.equal(t.f.writes.filter(path=>path.startsWith('roles/')).length,before);
+    assert.equal(t.state.messages.length,3);t.chat.close();
+});
+
+test('gifting an AI persists inventory consumption but never temporary relationship events',async()=>{
+    let give;const commits=[],rules={items:{1:{canGift:true,bindType:0,stackOnly:true,kind:'consumable'}}};
+    const t=setup({isFriend:()=>false,onCommit:row=>commits.push(structuredClone(row)),read:async path=>path.includes('gift-rules')?rules:{entries:{}},detailsFactory:(_,cb)=>{give=cb.onGift;return {close(){},relation(){},gifts(){}};}});
+    t.app.save.inventory[1]=3;t.app.assets.content.items[1]={id:1,name:'礼物',kind:'consumable'};
+    await t.chat.open(peer);const before=t.state.record.affinity;
+    t.callbacks.gift();await new Promise(r=>setImmediate(r));await give(1,1);
+    assert.equal(t.app.save.inventory[1],2);assert.ok((await t.chat.affinity(peer))>before);
+    assert.ok(commits.every(row=>!row.relationshipEvents?.length));assert.equal(t.f.writes.length,0);assert.equal(t.cacheRows.size,0);
+    t.chat.close();
 });

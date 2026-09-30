@@ -14,14 +14,15 @@ export function petSceneProfiles(state){
     for(const a of state.socialActors||[])owners.set(a.profile.id,{...a.profile,position:a.position});
     return [...owners.values()];
 }
-export function createPetScene({getState,commit,toast,sound=()=>{},noteMeeting=()=>{},now=()=>Date.now()}){
+export function createPetScene({isFriend=()=>false,getState,commit,toast,sound=()=>{},now=()=>Date.now()}){
     let context=null,contextWorld=null,actors=new Map(),visitors=new Map(),effects=[],meeting=null,lastPlay=0,lastPrune=0,food=null,loadRetryAt=0,loadEpoch=0,loading=new Set(),heroWakeAnchor=null;
-    const run=action=>{const {save,content}=getState(),result=petWorldAction(save,content,{...action,visitors:[...visitors.values()],now:now()});if(result.changed){commit(result.save);if(action.type==='adopt')sound('adopt');else if(action.type==='feed')sound('feed');else if(result.effects?.some(effect=>effect.markAdded))sound('friendship');}for(const effect of result.effects||[])if(effect.play&&!effect.markAdded){const petId=effect.ids.find(id=>save.pets[id]),otherId=effect.ids.find(id=>id!==petId);if(petId&&otherId)noteMeeting(recordPetMeeting(save.petMeetings,{petId,otherId,at:now()},content));}return result;};
+    let meetings={},temporaryPairs={},ownerActions=new Map();
+    const run=action=>{const {save,content}=getState(),result=petWorldAction(save,content,{...action,visitors:[...visitors.values()],temporaryPairs,friendPetIds:petSceneProfiles(getState()).filter(p=>isFriend(p.id)).map(p=>npcPetId(p.id)),now:now()});temporaryPairs=result.temporaryPairs||temporaryPairs;if(result.changed){commit(result.save);if(action.type==='adopt')sound('adopt');else if(action.type==='feed')sound('feed');else if(result.effects?.some(effect=>effect.markAdded))sound('friendship');}for(const effect of result.effects||[])if(effect.play&&!effect.markAdded){const petId=effect.ids.find(id=>save.pets[id]),otherId=effect.ids.find(id=>id!==petId);if(petId&&otherId)meetings=recordPetMeeting(meetings,{petId,otherId,at:now()},content);}return result;};
     const grouped=()=>{const s=getState();return !!s.team?.length||!!s.save?.coopRun||!!s.socialActors?.some(a=>a.inParty);};
     const profiles=petSceneProfiles;
     const people=()=>{const s=getState();return [s.save.position,...s.world.npcs,...(s.socialActors||[]).map(a=>a.position)];};
     function startMeeting(type,hostId,guests){
-        if(grouped())return false;
+        if(grouped()&&!['dialogue','gesture'].includes(type))return false;
         const {world,content}=getState(),ids=[hostId,...guests];
         const anchor=findPetMeeting(world,ids.map(id=>actors.get(id).position),people(),content);
         if(!anchor)return false;
@@ -36,12 +37,14 @@ export function createPetScene({getState,commit,toast,sound=()=>{},noteMeeting=(
         return result;
     }
     return {
+        get temporaryRelations(){return structuredClone(temporaryPairs);},
+        get meetings(){return structuredClone(meetings);},
         get now(){return now();},
         get food(){return food&&{...food.anchor};},
         get effects(){return effects;},
         get pets(){const {save,content}=getState();return [...actors.values()].map(a=>{const pet=save.pets[a.id]||save.petWorld[a.id]||visitors.get(a.id);return {...a,pet,scale:petDisplayScale(pet,content)};});},
         get babies(){return Object.values(getState().save?.petWorld||{}).filter(p=>p.ownerId===null&&p.birth.zone===getState().world?.zone);},
-        dialogue(owner){const {save,content}=getState(),host=selectCompanionId(save,content),other=npcPetId(owner),a=actors.get(host),b=actors.get(other);if(a&&b&&distance(a.position,b.position)<=petInteractionParams(content).encounterDistance)startMeeting('dialogue',host,[other]);},
+        dialogue(owner,action='greet',settle=true){const {save,content}=getState(),host=selectCompanionId(save,content),other=npcPetId(owner),a=actors.get(host),b=actors.get(other);if(a&&b&&distance(a.position,b.position)<=petInteractionParams(content).encounterDistance){if(settle)ownerActions.set(other,action);if(startMeeting(settle?'dialogue':'gesture',host,[other]))meeting.action=action;}},
         feed(id){
             const {save,content,locked}=getState();if(locked||save.pendingEncounter)throw Error('请先结束当前互动或战斗');
             if(grouped()){meeting=null;food=null;effects=[];run({type:'feed',hostId:id,pairs:[]});toast('宠物吃下了一份营养餐。');return;}
@@ -61,12 +64,12 @@ export function createPetScene({getState,commit,toast,sound=()=>{},noteMeeting=(
         step(dt){
             const state=getState(),{save,world,content}=state;if(!save?.petInstanceVersion||!world)return;
             const token=`${state.scope}:${world.zone}`;
-            if(context!==token||contextWorld!==world){context=token;contextWorld=world;actors=new Map();visitors=new Map();effects=[];meeting=null;food=null;lastPlay=now();lastPrune=0;heroWakeAnchor=null;loadEpoch++;loading=new Set();loadRetryAt=0;
+            if(context!==token||contextWorld!==world){context=token;contextWorld=world;actors=new Map();visitors=new Map();meetings={};temporaryPairs={};ownerActions=new Map();effects=[];meeting=null;food=null;lastPlay=now();lastPrune=0;heroWakeAnchor=null;loadEpoch++;loading=new Set();loadRetryAt=0;
                 const keep=new Set([selectCompanionId(save,content),...(save.formation||[])]);
                 for(const group of ['pets','petWorld'])for(const [id,pet]of Object.entries(save[group]||{})){const ref=save.petFileRefs?.[id];if(ref&&!keep.has(id)&&!(pet.ownerId===null&&pet.birth.zone===world.zone)&&ref.contentKey===petContentKey(pet))delete save[group][id];}
             }
             const inParty=grouped();
-            if(inParty){meeting=null;food=null;effects=[];}
+            if(inParty&&!['dialogue','gesture'].includes(meeting?.type)&&!effects.some(e=>['dialogue','gesture'].includes(e.kind)&&e.until>now())){meeting=null;food=null;effects=[];}
             if(state.locked||save.pendingEncounter){meeting=null;food=null;heroWakeAnchor=null;return;}
             const p=petInteractionParams(content),residents=profiles(state);
             for(const profile of residents){const id=npcPetId(profile.id);if(!visitors.has(id))visitors.set(id,{...createNpcPet(profile,content),homeZone:world.zone});}
@@ -91,7 +94,7 @@ export function createPetScene({getState,commit,toast,sound=()=>{},noteMeeting=(
             for(const row of entries){
                 let actor=actors.get(row.id);if(!actor){actor={id:row.id,...createCompanion(world,row.position,`${save.seed}:${row.id}`)};actors.set(row.id,actor);}
                 const ownerId=residents.find(r=>npcPetId(r.id)===row.id)?.id;
-                const queued=inParty&&(row.id===leader||state.team?.includes(ownerId)||state.socialActors?.some(a=>a.profile.id===ownerId&&a.inParty)||!!save.coopRun?.members?.some(m=>m.profile.id===ownerId));
+                const queued=inParty&&!['dialogue','gesture'].includes(meeting?.type)&&!effects.some(e=>['dialogue','gesture'].includes(e.kind)&&e.until>now()&&e.ids.includes(row.id))&&(row.id===leader||state.team?.includes(ownerId)||state.socialActors?.some(a=>a.profile.id===ownerId&&a.inParty)||!!save.coopRun?.members?.some(m=>m.profile.id===ownerId));
                 if(queued){updatePetIdle(actor,row.position,now(),content,{wake:true});stepCompanion(actor,world,row.position,dt,{inParty:true});continue;}
                 const playing=effects.find(e=>e.until>now()&&e.ids.includes(row.id)&&e.ids.every(id=>actors.has(id)));
                 const invited=meeting&&(meeting.hostId===row.id||meeting.guests.includes(row.id));
@@ -117,8 +120,8 @@ export function createPetScene({getState,commit,toast,sound=()=>{},noteMeeting=(
                     // A paid meal uses the manual-feed event without another food debit.
                     const pairs=arrived.map(id=>({ids:[host.id,id],scene:scene(host,actors.get(id))}));
                     const type=meeting.type==='shared-meal'?'meal-arrival':meeting.type;
-                    const result=run({type,pairs,hostId:meeting.hostId});
-                    effects.push(...result.effects.filter(e=>e.play).map(e=>({...e,at,until:at+p.effectMs,kind:type})));
+                    const result=run({type,pairs,hostId:meeting.hostId,confirmedOwners:[...ownerActions.keys()]});
+                    effects.push(...result.effects.filter(e=>e.play).map(e=>({...e,at,until:at+p.effectMs,kind:type,action:meeting.action||ownerActions.get(e.ids.find(id=>id!==leader))})));
                     if(result.babies.length)toast('新宝宝出生了！点击“待领养”即可领养。');
                     meeting.guests=meeting.guests.filter(id=>!arrived.includes(id));
                 }

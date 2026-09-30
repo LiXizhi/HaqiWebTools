@@ -14,7 +14,7 @@ export function checkedProgress(raw, content, dataset) {
     // runtime record. They are listed here only so role reloads keep them;
     // durableSave() removes them before every durable or cloud write, so they never
     // leave the device. Ordinary pet meetings are not long-term memories.
-    const keys=[...Object.keys(createAdventure(content)),'towerRecords','dungeonMode','petFoodSlots','headId','bodyId','magicStarClaims','checkin','fishingRecords','magicStarFollow','mountHidden','petMeetings','dungeonExploration','coopRun','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents','petInstanceVersion','petOwnerId','petWorld','petFileRefs','petPages'];
+    const keys=[...Object.keys(createAdventure(content)),'towerRecords','dungeonMode','petFoodSlots','headId','bodyId','magicStarClaims','languageSpeechClaims','checkin','fishingRecords','magicStarFollow','mountHidden','petMeetings','dungeonExploration','coopRun','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents','petInstanceVersion','petOwnerId','petWorld','petFileRefs','petPages'];
     const save = Object.fromEntries(keys.filter(key=>parsed[key]!==undefined).map(key => [key, parsed[key]]));
     const battle = save.pendingEncounter ? restorePveBattle(dataset, content, save.pendingEncounter) : null;
     for(const rune of save.pendingEncounter?.runes||[]){

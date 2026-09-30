@@ -91,17 +91,18 @@ test('PvP replay deterministic and filler opponents never score',()=>{
 });
 
 for(const count of [2,3,4])test(`${count} player complete dungeon uses real rounds and replay checkpoints`,()=>{
-    const save=setup(count,50),bot=new SimpleBot();
+    const save=setup(count,50),bot=new SimpleBot(),relationshipEvents=[];
     for(const encounter of dungeon.arenas){
         A.beginEncounter(save,content,encounter.id);const battle=P.restorePveBattle(dataset,content,save.pendingEncounter);
         for(let i=0;i<200&&!battle.finished;i++){const decision=bot.pick(battle,battle.unitsById.hero);P.playPveRound(battle,decision);A.recordDecision(save,decision,battle);}
         assert.equal(battle.finished,true);assert.equal(battle.winner,'near');
         const restored=checkedProgress(restoreRuntime(durableSave(save),content,runtimeValues(save)),content,dataset);
-        assert.deepEqual(restored.battle.events,battle.events);A.settleEncounter(save,content,battle,{now});
+        assert.deepEqual(restored.battle.events,battle.events);relationshipEvents.push(...A.settleEncounter(save,content,battle,{now}).relationshipEvents);
     }
     assert.equal(dungeonProgress(save)[dungeon.id].cleared.length,dungeon.arenas.length);
     assert.equal(save.coopRun.battles.length,dungeon.arenas.length);
-    assert.equal(save.relationshipEvents.length,count-1);assert.ok(save.relationshipEvents.every(e=>e.kind==='dungeon'&&e.at===now));
+    assert.equal(relationshipEvents.length,count-1);assert.ok(relationshipEvents.every(e=>e.kind==='dungeon'&&e.at===now));
+    assert.equal(save.relationshipEvents,undefined,'core settlement does not persist unverified friendships');
     assert.deepEqual(checkedProgress(save,content,dataset).save.relationshipEvents,save.relationshipEvents);
 });
 

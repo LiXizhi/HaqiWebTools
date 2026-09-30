@@ -1,7 +1,8 @@
 import {dailyBuffs,validateDailyBuff} from './language_daily_buff_core.js';
+import {claimSpeechReward,validateSpeechClaims} from './language_speech_rewards_core.js';
 import {dungeonLanguageBuff,dungeonLanguageBaseHp} from './adventure_dungeon_language_core.js';
 import {encounterCoolingDown,markEncounterDefeated} from './adventure_encounter_cooldown_core.js';
-import {validateRelationshipEvents,recordRelationshipActivity} from './character_relationship_core.js';
+import {validateRelationshipEvents} from './character_relationship_core.js';
 import {ownedPetSpecies} from './adventure_pet_files_core.js';
 import {validatePetWorld} from './adventure_pet_world_core.js';
 import {validatePetMeetings} from './adventure_pet_interactions_core.js';
@@ -368,6 +369,7 @@ function applyAdventureAction(save, content, action, access={}) {
     }
     case 'use-totem-item': useDragonTotemItem(save,content,action.itemId);break;
     case 'checkin': claimCheckin(save, content, action.now, action.index, access, action.bonus===true); break;
+    case 'speech-reward': claimSpeechReward(save,content,action.index,action.now);notice='领取成功，奖励已放入背包！';break;
     case 'accept': {
         assert(q && q.id === Number(action.questId) && q.startNpc === Number(action.npcId), '当前没有可接取的任务');
         if (!save.quests[q.id]) save.quests[q.id] = { accepted: true, claimed: false, progress: {} };
@@ -626,12 +628,13 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
     }
     // Both outcomes leave the hero beside this encounter, outside contact range.
     save.position=retreatLanding(save,content).position;
+    const relationshipEvents=[];
     if(save.coopRun&&battle.winner==='near'&&dungeonProgress(save)[save.zone]?.cleared.length===dungeonFor(content,save.zone)?.arenas.length){
-        for(const member of save.coopRun.members)recordRelationshipActivity(save,{id:`dungeon:${save.coopRun.relationshipRunId||pending.id}:${member.profile.id}`,peer:member.profile,kind:'dungeon',at:now,reason:'共同通关副本'});
+        for(const member of save.coopRun.members)relationshipEvents.push({id:`dungeon:${save.coopRun.relationshipRunId||pending.id}:${member.profile.id}`,peer:member.profile,kind:'dungeon',at:now,reason:'共同通关副本'});
     }
     if(save.coopRun){save.coopRun.battles??=[];save.coopRun.battles.push({checkpoint:clone(pending),winner:battle.winner,turns:battle.turn});}
     save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); migrateDefaultPocket(save,content); syncEquipmentInstances(save,content); save.revision++;
-    return {settled:true,insufficientStamina,staminaSpent};
+    return {settled:true,insufficientStamina,staminaSpent,relationshipEvents};
 }
 export function parseSave(raw,content) {
     const s = typeof raw === 'string' ? JSON.parse(raw) : clone(raw);
@@ -642,6 +645,7 @@ export function parseSave(raw,content) {
     validateLearningSave(s);validateCoopRun(s);validateRelationshipEvents(s);
     assert(s.defaultPocketVersion===undefined||s.defaultPocketVersion===1,'默认口袋规则版本无效');
     validateCheckin(s);
+    validateSpeechClaims(s);
     validateFishingRecords(s);
     validateMagicStarClaims(s,content);
     assert(SCHOOLS.includes(s.school) && (islandFor(s.zone)||dungeonFor(content,s.zone)?.playable),'存档角色无效');

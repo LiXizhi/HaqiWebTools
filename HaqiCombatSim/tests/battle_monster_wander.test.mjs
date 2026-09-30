@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {defaultParams} from '../js/combat_params_core.js';
 import {monsterScenePositions,stepMonsterWander,monsterInteractionTargets,monsterInViewport,inMonsterTerritory,monsterTerritoryWarning} from '../js/adventure_monster_motion_core.js';
-import {autoInteraction,nearbyWorldObjects} from '../js/adventure_world_core.js';
+import {autoInteraction,takeAutoInteraction,nearbyWorldObjects} from '../js/adventure_world_core.js';
 const view={x:0,y:0,w:800,h:600};
 function setup(group=false){
     const encounter={id:'guard',monsterId:'fire',x:300,y:300,...(group?{monsterIds:['fire','ice','life']}: {})};
@@ -75,7 +75,7 @@ test('touch follows the moved sprite instead of an invisible spawn point',()=>{
     const pose=monsterScenePositions(world,encounter)[0];
     assert.ok(Math.hypot(pose.x-encounter.x,pose.y-encounter.y)>1);
     assert.equal(autoInteraction(world,encounter),null);
-    assert.equal(autoInteraction(world,pose)?.id,encounter.id,'direct contact does not wait for pursuit');
+    assert.equal(autoInteraction(world,pose),null,'direct contact waits for the warning countdown');
     step(world,encounter,30,{hero:{x:pose.x,y:pose.y}});
     assert.equal(autoInteraction(world,pose)?.id,encounter.id);
 });
@@ -156,19 +156,46 @@ test('outer perception reveals the activity circle in green without starting a w
     encounter.hidden=false;encounter.blocked=['unsupported'];assert.equal(monsterTerritoryWarning(world,encounter,hero),null);
     encounter.blocked=[];world.isDungeon=true;assert.equal(monsterTerritoryWarning(world,encounter,hero),null);
 });
-test('warning delays pursuit and pauses offscreen while direct touch starts immediately',()=>{
+test('warning delays both pursuit and direct touch, and pauses offscreen',()=>{
     const {world,encounter}=setup(),hero={x:300,y:300};let checks=0;
     const options={hero,canWalk:()=>{checks++;return true;}};
-    assert.equal(autoInteraction(world,hero)?.id,encounter.id,'direct touch before motion starts battle');
+    assert.equal(autoInteraction(world,hero),null,'direct touch before motion must wait');
     step(world,encounter,10,options);
     const pose=monsterScenePositions(world,encounter)[0],remaining=pose.alertRemaining;
-    assert.equal(pose.mode,'warning');assert.equal(pose.moving,false);assert.equal(autoInteraction(world,hero)?.id,encounter.id);
+    assert.equal(pose.mode,'warning');assert.equal(pose.moving,false);assert.equal(autoInteraction(world,hero),null);
     assert.equal(checks,0,'warning has no movement or path checks');
     step(world,encounter,100,options,{x:1000,y:1000,w:200,h:200});
     step(world,encounter,100,{...options,enabled:false});
     assert.equal(pose.alertRemaining,remaining);
-    step(world,encounter,19,options);assert.equal(pose.mode,'warning');assert.equal(pose.x,300);
+    step(world,encounter,19,options);assert.equal(pose.mode,'warning');assert.equal(pose.x,300);assert.equal(autoInteraction(world,hero),null);
     step(world,encounter,1,options);assert.equal(autoInteraction(world,hero)?.id,encounter.id);
+});
+
+test('running through a field monster never bypasses its countdown; re-entry grants the full delay',()=>{
+    const {world,encounter}=setup();
+    for(let x=200;x<=400;x+=10){
+        const hero={x,y:300};
+        assert.equal(takeAutoInteraction(world,hero),null,'movement checks contact before rendering');
+        step(world,encounter,1,{hero});
+        assert.equal(takeAutoInteraction(world,hero),null);
+    }
+    const hero={x:300,y:300};
+    step(world,encounter,29,{hero});
+    const pose=monsterScenePositions(world,encounter)[0];
+    assert.equal(pose.mode,'warning');assert.equal(takeAutoInteraction(world,hero),null);
+    step(world,encounter,1,{hero});
+    assert.equal(pose.mode,'chase');assert.equal(takeAutoInteraction(world,hero)?.id,encounter.id);
+    assert.equal(takeAutoInteraction(world,hero),null,'the completed countdown triggers once');
+});
+
+test('touching a warning group member cannot borrow a different member\'s completed countdown',()=>{
+    const {world,encounter}=setup(true);
+    step(world,encounter,30,{hero:encounter},{x:210,y:210,w:15,h:120});
+    const poses=monsterScenePositions(world,encounter);
+    assert.equal(poses[0].mode,'chase');
+    assert.equal(poses[2].mode,'idle');
+    assert.equal(autoInteraction(world,poses[2]),null);
+    assert.equal(autoInteraction(world,poses[0])?.id,encounter.id);
 });
 test('escaping during the warning cancels it and re-entry restarts the full countdown',()=>{
     const {world,encounter}=setup(),hero={x:330,y:300};

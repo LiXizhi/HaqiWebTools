@@ -318,11 +318,12 @@
 /* 宽屏角色卡限制在视口内，窗口不够高时只滚动角色列表，标题和底部按钮保持可见。 */
 .role-head,.role-foot{flex:none}
 .role-foot .role-create,.role-foot .role-actions{margin-bottom:0}
-@media(min-width:721px){
- .entry-screen.role-screen.entry-wizard{display:flex;flex-direction:column;overflow:hidden;box-sizing:border-box}
- .entry-screen.role-screen.entry-wizard .entry-layout{flex:1 1 auto;width:100%;height:auto;min-height:0;max-height:100%;align-items:center;grid-template-rows:minmax(0,1fr)}
- .role-screen .role-manager{max-height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden}
- .role-screen .role-list{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+.entry-screen.role-screen.entry-wizard{display:flex;flex-direction:column;overflow:hidden;box-sizing:border-box}
+.entry-screen.role-screen.entry-wizard .entry-layout{flex:1 1 auto;width:100%;height:auto;min-height:0;max-height:100%;align-items:center;grid-template-rows:minmax(0,1fr)}
+.role-screen .role-manager{max-height:100%;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.role-screen .role-list{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain}
+@media(max-width:720px){
+ .entry-screen.role-screen.entry-wizard .entry-layout{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
 }
 /* 首页语言：第一行母语按钮，第二行第二语言下拉。标签颜色随深色题头或纸色角色卡继承。 */
 .entry-locale-stack{display:grid;grid-template-columns:max-content minmax(0,max-content);column-gap:10px;row-gap:8px;align-items:center;margin-top:14px;max-width:100%;}
@@ -713,6 +714,11 @@
 .npc-service-footer{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-shrink:0;padding:8px 16px;border-top:1px solid var(--line);background:var(--paper)}
 .npc-pager{display:flex;align-items:center;justify-content:center;gap:8px;flex-shrink:0;font-size:12px;white-space:nowrap}.npc-pager button{min-height:36px;padding:6px 10px;font-size:12px}.npc-empty{grid-column:1/-1;margin:12px 0}
 .npc-wallet{display:flex;flex-wrap:wrap;gap:4px 12px;min-width:0;font-size:12px}.npc-wallet>span{white-space:nowrap}
+.npc-buy-count{margin:8px 0 2px;font-weight:700}.npc-buy-price p{margin:0}
+.npc-buy-qty{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 4px}
+.npc-buy-slider{display:block;width:100%;height:36px;margin:2px 0 8px;accent-color:#28553f}
+.storybook-ui .npc-buy-qty :is(.primary,.secondary){min-height:40px;min-width:52px;padding:8px 14px}
+.storybook-ui .npc-buy-qty button[aria-pressed="true"]{outline:3px solid #346750;outline-offset:2px}
 @media(max-width:520px){.npc-service-footer{padding:6px 8px;gap:4px}.npc-pager{gap:4px;font-size:11px}.npc-pager button{padding:6px;font-size:11px}.npc-wallet{font-size:11px}}
 .npc-card-preview{position:fixed;z-index:80;width:151px;pointer-events:none}.npc-card-preview .spell-face{display:block;width:151px;height:230px}.npc-card-preview .spell-art{width:100%;height:100%}
 @media(max-width:520px){.npc-goods{grid-template-columns:minmax(0,1fr)}.npc-skill{grid-template-columns:40px minmax(0,1fr) auto;row-gap:2px}.npc-skill>.npc-thumb{grid-row:1/3}.npc-skill-text{grid-column:2;grid-row:1}.npc-skill-status{grid-column:2;grid-row:2}.npc-skill>.npc-action{grid-column:3;grid-row:1/3}}
@@ -969,7 +975,22 @@
 .dungeon-story-stage:before{content:'';position:absolute;width:140%;height:65%;left:-20%;bottom:-32%;border-radius:50%;background:#152d3e;box-shadow:0 -3px 0 #8dced733}
 .story-landmark{position:absolute;top:3%;left:calc(50% - 90px);opacity:.65}
 
-.dungeon-story-log{flex:1;min-height:0;overflow:auto;width:min(820px,90%);margin:0 auto;padding:30px 0;scrollbar-width:thin;display:flex;flex-direction:column;gap:18px}
+.dungeon-story-log{flex:1;min-height:0;overflow:auto;width:min(820px,90%);margin:0 auto;padding:30px 0;scrollbar-width:none;display:flex;flex-direction:column;gap:18px}
+.dungeon-story-screen .dungeon-story-log{scrollbar-width:none}
+.dungeon-story-screen .dungeon-story-log::-webkit-scrollbar{display:none;width:0;height:0}
+.story-mic-progress{position:relative;display:grid;place-items:center;width:108px;height:108px;flex:0 0 108px;margin:4px 0 16px}
+.story-mic-progress[hidden]{display:none}
+.story-mic-progress svg{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg);pointer-events:none}
+.story-mic-progress circle{fill:none;stroke-width:5}
+.story-ring-track{stroke:#ffffff30}.story-ring-fill{stroke:#f4ca69;stroke-linecap:round;stroke-dasharray:100;stroke-dashoffset:100;transition:stroke-dashoffset .7s ease-out}
+.story-mic-progress::after{content:'';position:absolute;inset:-4px;border:2px solid #f4ca6933;border-top-color:#f4ca69;border-radius:50%;pointer-events:none}
+.story-mic-progress.is-active::after{animation:story-ring-spin 1.8s linear infinite}
+.story-mic-progress.is-complete .story-ring-fill{stroke:#9be3a1}
+.story-mic-progress .story-microphone{margin:0;width:72px;height:72px;min-width:0;flex:none}
+.story-ring-label{position:absolute;bottom:-13px;left:50%;transform:translateX(-50%);padding:0 7px;border-radius:8px;background:#17303a;color:#f4dfa2;font-size:14px;font-variant-numeric:tabular-nums;pointer-events:none}
+.story-speech-feedback{font-size:12px;line-height:1.5;margin-top:8px}.story-speech-feedback p{margin:4px 0}.story-speech-differences{color:#803720}
+@keyframes story-ring-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.story-mic-progress.is-active::after{animation:none}.story-ring-fill{transition:none}}
 .dungeon-story-bubble{max-width:76%;align-self:flex-start;background:#edf3e8;color:#21383c;border-radius:4px 18px 18px 18px;padding:16px 20px;box-shadow:0 5px 16px #07172133;animation:story-bubble-in .25s ease-out;overflow-wrap:anywhere}
 .dungeon-story-bubble.player{align-self:flex-end;background:#cce9c0;border-radius:18px 4px 18px 18px}.dungeon-story-bubble.narrator{align-self:center;max-width:92%;background:#0e263cc9;color:#e6eadd;border-radius:12px}
 .story-speaker{font-size:12px;opacity:.72}.story-script{font-size:19px;line-height:1.65;margin-top:6px}.story-translation{font-size:14px;opacity:.76;margin-top:6px}.story-line-reward{display:block;margin-top:10px;color:#285c38}
@@ -998,3 +1019,18 @@
 .story-message .dungeon-story-bubble{max-width:100%;align-self:auto}
 .story-message.narrator{justify-content:center}.story-message.narrator .story-message-content{max-width:92%;align-items:center}
 @media(max-width:600px){.story-avatar{width:42px;height:42px;flex-basis:42px}.story-message{gap:8px}.story-message-content{max-width:calc(100% - 50px)}.story-message .dungeon-story-bubble{padding:10px 12px}}
+
+/* Daily speaking rewards: scoped game panel, shared button skin stays intact. */
+.speech-adventure{padding:16px;margin-bottom:14px;border:2px solid #c49a50;border-radius:14px;background:radial-gradient(ellipse at top right,#f7d88466,transparent 60%),#fff8e4;box-shadow:inset 0 0 0 3px #fffdf080,0 4px 12px #79541b16;color:var(--ink)}
+.speech-hero{display:flex;align-items:center;gap:16px;margin-bottom:16px}.speech-seal{flex:none;width:84px;height:84px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px double #ecc66c;border-radius:50%;background:linear-gradient(135deg,#376b52,#193f36);color:#fff2c7;box-shadow:0 3px 0 #9a7436,0 5px 12px #2b4a3926}.speech-count{font-size:32px;line-height:1.1;font-variant-numeric:tabular-nums}.speech-seal small{font-size:11px;margin-top:4px}.speech-heading h3{font-size:25px;color:#705021}.speech-heading p{font-weight:700;color:var(--green);font-size:15px}.speech-heading small{font-size:12px;color:var(--muted)}
+.speech-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.speech-stat{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 3px;background:#ffffff70;border:1px solid #dcc997;border-radius:8px;text-align:center}.speech-stat span{font-size:11px}.speech-stat strong{font-size:21px;color:var(--green);font-variant-numeric:tabular-nums}.speech-track{margin:14px 0}.speech-next{font-size:12px;font-weight:700}.speech-progress{display:block;width:100%;height:12px;margin-top:6px;border:1px solid #b99f67;border-radius:8px;overflow:hidden;background:#dcd4b7;accent-color:#50815d}.speech-progress::-webkit-progress-bar{background:#dcd4b7}.speech-progress::-webkit-progress-value{background:linear-gradient(90deg,#36674c,#90b668);border-radius:8px}.speech-progress::-moz-progress-bar{background:#50815d}
+.speech-rewards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.speech-reward{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:10px 4px;border:1px solid #d3c39b;border-radius:10px;background:#eee7d2}.speech-threshold{font-size:12px;color:#71552d}.speech-coin{display:grid;place-items:center;width:40px;height:40px;border:4px double #be872e;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff6b3,#e9b64c);box-shadow:0 3px 0 #aa772d;color:#805111;font-size:18px;font-weight:700}.speech-coin.fairy{border-color:#558669;background:radial-gradient(circle at 35% 25%,#e0f4ba,#87bb88);box-shadow:0 3px 0 #4d7657;color:#315d40}.speech-amount{font-size:12px;white-space:nowrap}.speech-adventure .speech-claim{padding:7px 3px;width:100%;font-size:12px;min-height:36px}.speech-reward.ready{border-color:#bb8c36;background:linear-gradient(#fff9d3,#f5e2a5);box-shadow:0 0 0 1px #e8c461,0 3px 8px #aa782e20}.speech-reward.claimed{background:#e5ead9}.speech-reward.claimed .speech-coin{opacity:.6}.speech-rules{margin-top:14px;font-size:12px;color:var(--muted)}.speech-rules summary{cursor:pointer;padding:5px 0}.speech-rules p{margin-top:8px;line-height:1.65}
+@media(max-width:520px){.speech-adventure{padding:12px}.speech-hero{gap:12px}.speech-seal{width:70px;height:70px}.speech-heading h3{font-size:22px}.speech-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.speech-stat{flex-direction:row;justify-content:space-between;padding:8px}.speech-rewards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+.dungeon-story-bubble .story-speech-missing{color:#9c351e;text-decoration:underline wavy;text-underline-offset:4px}
+
+.dungeon-story-heading .story-reward-info{position:relative;margin-left:auto;max-width:100%}
+.dungeon-story-heading .story-reward-summary{border:0;border-radius:3px;background:none;box-shadow:none;padding:4px 0;min-height:0;color:#bde7ed;font:inherit;font-size:13px;cursor:help;text-align:left}
+.dungeon-story-heading .story-reward-summary:focus-visible{outline:2px solid #f4ca69;outline-offset:3px}
+.dungeon-story-heading .story-reward-tip{position:absolute;right:0;top:calc(100% + 6px);z-index:5;width:max-content;max-width:min(280px,80vw);padding:8px 12px;border:1px solid #b39b62;border-radius:6px;background:#fff3d4;color:#342a1b;font-size:13px;box-shadow:0 3px 12px #0005}
+@media(max-width:600px){.dungeon-story-heading .story-reward-info{width:100%;margin:0}.dungeon-story-heading .story-reward-tip{left:0;right:auto}}

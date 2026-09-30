@@ -1,3 +1,4 @@
+import {socialActionOptions,socialActionParams} from './adventure_social_actions_core.js';
 import {createArenaClock,createArenaArrivals} from './adventure_arena_clock.js';
 import {languageId} from './character_relationship_core.js';
 import {randomHeroBodyId} from './hero_body_core.js';
@@ -16,9 +17,8 @@ import {playerSpec} from './adventure_core.js';
 import {createLearningVoice} from './language_adventure_voice.js';
 import {heroPortrait} from './hero_renderer.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
-import {monsterArtBinding} from './adventure_monster_art_core.js';
 import {renderSocial} from './view_adventure_social.js';
-export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshipActivity=()=>{},onPetDialogue=()=>{},getState,getOwner,onChange,onPersist,onOpen,onClose,onLogin,toast,onDepart,onTeleport=null,schedule=setTimeout,cancel=clearTimeout,arenaStore=null,onArenaEnter=()=>{},onArenaCountdown=null}){
+export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDetails=()=>{},onRelationshipActivity=()=>{},onPetDialogue=()=>{},getState,getOwner,onChange,onPersist,onOpen,onClose,onLogin,toast,onDepart,onTeleport=null,schedule=setTimeout,cancel=clearTimeout,arenaStore=null,onArenaEnter=()=>{},onArenaCountdown=null}){
     let config=null,loading=null,actors=[],worldRef=null,context=null,epoch=0,lastRefresh=0,dialogueAbort=null,cachedCandidates=[],publishPending=false;
     const readyClock=createArenaClock({schedule,cancel,onSecond:seconds=>{ui.arenaReadySeconds=seconds;if(onArenaCountdown)onArenaCountdown(seconds);else onChange();},onExpire:()=>enterReadyArena()});
     const arenaArrivals=createArenaArrivals({schedule,cancel,onJoin:count=>{ui.arenaJoined=count;ui.arenaJoinedAt[count-1]=Date.now();onChange();},onReady:()=>{ui.arenaMatching=false;readyClock.start(arenaRules().readyMs);onChange();}});
@@ -73,8 +73,8 @@ export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshi
     }
 
     const visitRng=createRng(hashSeed(`${Date.now()}:${performance.now()}`));
-    let placementSeed=0;
-    const ui={roster:[],allies:[null,null,null],openSlots:[false,false,false],partyDungeonId:null,partyRestart:false,pickingDungeon:false,selected:null,busy:false,error:'',publicVisible:true,mailTab:'inbox',chatTab:'scene',mailDraft:'',subject:'',recipient:'',pvp:null,arenaStep:'mode',arenaMode:1,arenaAllies:[null,null,null],arenaRecruit:null,arenaRecord:emptyArenaRecord(),arenaStorageWarning:!globalThis.indexedDB};
+    let placementSeed=0,gesture=null,actionTicket=0,lastGesture=-Infinity,friendsReady=false;
+    const ui={roster:[],allies:[null,null,null],openSlots:[false,false,false],partyDungeonId:null,partyRestart:false,pickingDungeon:false,selected:null,actionAffinity:null,busy:false,error:'',publicVisible:true,mailTab:'inbox',chatTab:'scene',mailDraft:'',subject:'',recipient:'',pvp:null,arenaStep:'mode',arenaMode:1,arenaAllies:[null,null,null],arenaRecruit:null,arenaRecord:emptyArenaRecord(),arenaStorageWarning:!globalThis.indexedDB};
     const joinTimers=[null,null,null];
     const client=createSocialClient({getOwner,onChange:()=>{if(!client.state.owner){ui.mailDetail=null;ui.messages=[];ui.chatPeer=null;ui.chatDraft='';chatDrafts.clear();}onChange();}}),voice=createLearningVoice({getSettings:()=>getState().save?.languageLearning||{}});
     const teamMembers=()=>ui.allies.filter(Boolean);
@@ -142,7 +142,7 @@ export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshi
         if(empty<0)empty=ui.allies.findIndex(a=>!a);
         if(empty<0)throw Error('队伍已满');
         ui.allies[empty]=p;ui.openSlots[empty]=false;if(joinTimers[empty]!=null){cancel(joinTimers[empty]);joinTimers[empty]=null;}
-        onChange();toast?.(`${p.name}加入了队伍`);
+        onPetDialogue(p.id,'greet');onChange();toast?.(`${p.name}加入了队伍`);
     }
     function teamRemove(p){
         if(getState().save.coopRun)throw Error('请先退出组队副本');
@@ -201,52 +201,70 @@ export function createIslandSocial({onTalk=()=>{},onDetails=()=>{},onRelationshi
         if(!onTeleport){toast?.('暂时无法传送');return;}
         onTeleport(a.position.x,a.position.y);
     }
+    function performGesture(id){
+        const p=ui.selected,{save,world,assets}=getState(),at=Date.now();
+        const actor=actors.find(a=>a.profile.id===p?.id),rules=socialActionParams(assets.content);
+        if(ui.busy||save.pendingEncounter||world!==worldRef||!actor||Math.hypot(actor.position.x-save.position.x,actor.position.y-save.position.y)>SOCIAL_DEFAULTS.converseRadius){toast('请靠近伙伴再互动');return;}
+        const friend=p.kind==='account'&&client.state.friends.some(f=>f.userId===String(p.userId));
+        const action=socialActionOptions({profile:p,friend,affinity:ui.actionAffinity,content:assets.content}).find(a=>a.id===id);
+        if(!action||action.disabled){toast(action?.detail||'动作尚未解锁');return;}
+        if(at-lastGesture<rules.cooldownMs){toast('稍等一下，再与伙伴互动');return;}
+        lastGesture=at;gesture={ids:['hero',p.id],action:id,at,until:at+rules.durationMs,world};
+        onClose();onPetDialogue(p.id,id,id!=='greet'||friend);
+    }
+    async function requestFriend(p){
+        const token=epoch;await client.applyFriend(p.userId);if(token!==epoch)return;
+        onPetDialogue(p.id,'heart');toast('好友申请已发送');
+    }
     const api={state,ready,client,
+        isFriend(peer){
+            const id=typeof peer==='string'?peer:peer?.id;
+            const userId=typeof peer==='object'&&peer?.kind==='account'?String(peer.userId||String(id).replace(/^user:/,'')):String(id||'').startsWith('user:')?String(id).slice(5):null;
+            return !!userId&&!!getOwner()&&client.state.owner===getOwner()&&client.state.friends.some(f=>f.userId===userId)&&!client.state.blocked.some(f=>f.userId===userId);
+        },
         playArena(decision){if(!ui.pvp?.entered)throw Error('请先进入赛场');playRedMushroom(ui.pvp,decision);finishArena();},
         leaveArena(){arenaArrivals.stop();readyClock.stop();finishArena(true);ui.pvp=null;ui.arenaStep='team';onChange();},
-        async enter(){const {save,world}=getState(),next=JSON.stringify([getOwner()||'guest',getState().roleId||save?.seed]);if(context!==next){arenaArrivals.stop();readyClock.stop();finishArena(true);arenaKey=next;epoch++;client.reset();cachedCandidates=[];lastRefresh=0;publishPending=!!getOwner();ui.busy=false;clearJoinTimers();setAllies([]);ui.partyDungeonId=null;ui.partyRestart=false;ui.pickingDungeon=false;ui.pvp=null;ui.arenaStep='mode';ui.arenaAllies=[null,null,null];ui.arenaRecord=emptyArenaRecord();ui.dialogue=null;ui.mailDetail=null;ui.mailDraft='';ui.subject='';ui.messages=[];ui.chatTab='scene';context=next;try{ui.publicVisible=localStorage.getItem(`haqi.social.visible.${getOwner()}`)!=='false';}catch{ui.publicVisible=true;}}
+        async enter(){const {save,world}=getState(),next=JSON.stringify([getOwner()||'guest',getState().roleId||save?.seed]);if(context!==next){arenaArrivals.stop();readyClock.stop();finishArena(true);arenaKey=next;epoch++;friendsReady=false;gesture=null;lastGesture=-Infinity;actionTicket++;client.reset();cachedCandidates=[];lastRefresh=0;publishPending=!!getOwner();ui.busy=false;clearJoinTimers();setAllies([]);ui.partyDungeonId=null;ui.partyRestart=false;ui.pickingDungeon=false;ui.pvp=null;ui.arenaStep='mode';ui.arenaAllies=[null,null,null];ui.arenaRecord=emptyArenaRecord();ui.dialogue=null;ui.mailDetail=null;ui.mailDraft='';ui.subject='';ui.messages=[];ui.chatTab='scene';context=next;try{ui.publicVisible=localStorage.getItem(`haqi.social.visible.${getOwner()}`)!=='false';}catch{ui.publicVisible=true;}}
             const token=epoch;await ready();await localArena.prepare([arenaKey]);if(token!==epoch||getState().world!==world)return;ui.arenaRecord=localArena.get(arenaKey)||emptyArenaRecord();if(ui.arenaRecord.active&&!ui.pvp)saveArena(finishArenaRecord(ui.arenaRecord,ui.arenaRecord.active.id,'loss',arenaRules()));installRoster();if(getOwner()&&Date.now()-lastRefresh>60000)void run(refresh);
         },
+        get gesture(){return gesture?.world===getState().world&&gesture.until>Date.now()?gesture:null;},
         get actors(){return worldRef===getState().world?actors:[];},get team(){return teamMembers();},
         preparedTeam(){const fresh=fillers();ui.allies=ui.allies.map(p=>p?.kind==='companion'?fresh.find(f=>f.id===p.id)||p:p);return teamMembers();},
         pickPartyDungeon,fillOpenSlot,depart,cancelDungeonPick(){if(ui.pickingDungeon){ui.pickingDungeon=false;onChange();}},
         step(dt,options={}){const s=getState();if(worldRef!==s.world)return;stepSocialActors(actors,s.world,dt,{paused:s.paused,locked:s.locked?ui.selected?.id:null,team:teamMembers().map(p=>p.id),leader:s.save?.position,view:options.view});},
-        pick(p){return pickSocialBubble(actors,getState().save?.position,p);},
-        select(p){const a=actors.find(a=>a.profile.id===p.id),leader=getState().save.position;if(a){a.path=[];a.moving=false;const dx=leader.x-a.position.x,dy=leader.y-a.position.y;a.facing=socialFacing(dx,dy);}ui.selected=p;ui.dialogue=null;ui.dialogueDraft='';onOpen('social-profile');},
+        pick(p){return pickSocialBubble(actors,getState().save?.position,p,{gesture:api.gesture,at:Date.now(),inParty:teamMembers().length>0||!!getState().save?.coopRun});},
+        select(p,kind='social-profile'){const a=actors.find(a=>a.profile.id===p.id),leader=getState().save.position;if(a){a.path=[];a.moving=false;const dx=leader.x-a.position.x,dy=leader.y-a.position.y;a.facing=socialFacing(dx,dy);}ui.selected=p;ui.dialogue=null;ui.dialogueDraft='';ui.actionAffinity=null;onOpen(kind);const ticket=++actionTicket,token=epoch;
+            if(kind==='social-actions')void (async()=>{
+                if(p.kind==='account'&&getOwner()&&!friendsReady){try{await client.refreshFriends();if(token===epoch)friendsReady=true;}catch{/* Unknown friendship stays temporary. */}}
+                if(ticket!==actionTicket||token!==epoch)return;
+                const value=await getAffinity(p);if(ticket===actionTicket&&token===epoch&&ui.selected===p){ui.actionAffinity=value;onChange();}
+            })().catch(()=>{});
+        },
         refresh:()=>run(async()=>{client.clearProfiles();await refresh();}),
         loadMail:()=>run(()=>client.refresh()),
         tick(){/* User data refreshes on entry or an explicit panel action, never while idle. */},
         activity(kind){const {save,world}=getState();if(!save||!config)return;const zone=save.coopRun?.returnTo.zone||world.zone;if(!config.worlds[zone]?.enabled)return;const next=markSocialActivity(save.socialActivity,zone,kind,Date.now());if(JSON.stringify(next)===JSON.stringify(save.socialActivity))return;save.socialActivity=next;onPersist();if(getOwner()){publishPending=true;void run(async()=>{await publish();publishPending=false;});}},
-        settled(battle){const {save}=getState();if(!save.coopRun||battle.winner!=='near')return;
-            save.socialChallenges={...save.socialChallenges};for(const m of save.coopRun.members)if(m.profile.kind==='account')save.socialChallenges[m.profile.userId]=Date.now();onPersist();onRelationshipActivity({flushOnly:true});
+        settled(battle,result){const {save}=getState();if(!save.coopRun||battle.winner!=='near')return;
+            save.socialChallenges={...save.socialChallenges};for(const m of save.coopRun.members)if(m.profile.kind==='account')save.socialChallenges[m.profile.userId]=Date.now();onPersist();for(const event of result?.relationshipEvents||[])onRelationshipActivity(event);onRelationshipActivity({flushOnly:true});
         },
-        close(){rememberChat();ui.chatPeer=null;ui.messages=[];dialogueAbort?.abort();ui.dialogue=null;ui.pickingDungeon=false;},
+        close(){actionTicket++;rememberChat();ui.chatPeer=null;ui.messages=[];dialogueAbort?.abort();ui.dialogue=null;ui.pickingDungeon=false;},
         paint(root,kind){renderSocial(root,state(),kind,{
+            gesture:performGesture,invite:p=>{try{teamAdd(p);onClose();}catch(e){toast(e.message);}},
             close:onClose,open:onOpen,login:onLogin,friends:()=>{ui.mailTab='friends';onOpen('mail');},profile:p=>api.select(p),
             assets:()=>getState().assets,
             portrait:(p,w,h)=>heroPortrait(getState().assets,p?.kind==='self'?getState().save:p,w||180,h||210,{facing:0,mounted:p.kind==='rival',lookAround:false,label:(p.name||'伙伴')+'的形象'}),
-
-            bossArt:d=>{
-                const {assets}=getState(),stage=document.createElement('div');stage.className='party-dungeon-art';
-                const fallback=document.createElement('span');fallback.className='icon';fallback.dataset.uiIcon='dungeon';fallback.setAttribute('aria-hidden','true');stage.append(fallback);
-                if(!d?.boss||!assets.drawMonster||!monsterArtBinding(d.boss,assets.monsterArt))return stage;
-                const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;canvas.setAttribute('role','img');canvas.setAttribute('aria-label',d.boss.name);stage.append(canvas);
-                const ctx=canvas.getContext('2d');let tries=0;
-                const paint=()=>{if(!canvas.isConnected)return;ctx.clearRect(0,0,256,256);if(assets.drawMonster(ctx,d.boss,12,12,232,232)){fallback.hidden=true;return;}if(++tries<40)setTimeout(paint,200);};
-                requestAnimationFrame(paint);return stage;
-            },
             teamDungeon:p=>{try{if(seatOf(p)<0)teamAdd(p);ui.pickingDungeon=true;onOpen('dungeons');}catch(e){toast(e.message);}},
             pickDungeon:()=>{ui.pickingDungeon=true;onOpen('dungeons');},
             openSlot:i=>{try{openSlot(i);}catch(e){toast(e.message);}},
             depart,
             privateChat:openConversation,chatBack:()=>{rememberChat();ui.chatPeer=null;ui.messages=[];ui.error='';ui.chatTab='friends';onChange();loadFriendsTab();},
             chatTab:key=>{const next=key==='friends'?'friends':'scene';ui.chatTab=next;onChange();if(next==='friends')loadFriendsTab();},
-            teleportPlayer,cardName:key=>getState().assets.content.cardLibrary?.find(c=>c.key===key)?.name||'魔法卡牌',exportCoop:()=>{const run=getState().save.coopRun;if(!run)return;const url=URL.createObjectURL(new Blob([JSON.stringify(run,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='组队副本战报.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},refresh:()=>run(async()=>{if(ui.chatTab==='friends')await client.refreshFriends();else await refresh();}),refreshPvp:()=>run(refreshPvp),draft:(key,value)=>{ui[key]=value;},mailTab:key=>{ui.mailTab=key;onChange();},compose,
+            teleportPlayer,cardName:key=>getState().assets.content.cardLibrary?.find(c=>c.key===key)?.name||'魔法卡牌',refresh:()=>run(async()=>{if(ui.chatTab==='friends')await client.refreshFriends();else await refresh();}),refreshPvp:()=>run(refreshPvp),draft:(key,value)=>{ui[key]=value;},mailTab:key=>{ui.mailTab=key;onChange();},compose,
             apply:(id,accept)=>run(()=>client.processApply(id,accept)),readMail:id=>run(async()=>{ui.mailDetail=await client.readMail(id);}),
             polish:(key,target)=>run(async()=>{const source=ui[key]||'';if(!source.trim())throw Error('请先填写草稿');const result=await voice.judge([{role:'system',content:`Rewrite the user's message in ${target==='en'?'natural simple English':'natural simple Chinese'}. Preserve meaning. Return JSON {"reply":"editable draft","completed":[]}. Do not send anything.`},{role:'user',content:source}],new AbortController().signal);if(ui[key]===source)ui[key]=result.reply||source;}),
             sendMail:(id,subject,text)=>run(async()=>{const friend=client.state.friends.find(f=>f.userId===id);if(!friend)throw Error('请选择好友');await client.sendMail(friend,subject||'岛上的问候',text);ui.mailDraft='';ui.subject='';toast('邮件已发送');}),
             recruitFriend:f=>run(async()=>{const p=await client.publicRead(f.username);if(!p)throw Error('好友尚无可用的公开名片');snapshotUnit(p,getState().assets.dataset,'check',1);teamAdd(p);}),
-            friend:p=>run(async()=>{await client.applyFriend(p.userId);toast('好友申请已发送');}),team:(p,add)=>{try{team(p,add);}catch(e){toast(e.message);}},
+            friend:p=>run(()=>requestFriend(p)),team:(p,add)=>{try{team(p,add);}catch(e){toast(e.message);}},
             togglePublic:()=>run(async()=>{const before=ui.publicVisible;ui.publicVisible=!before;try{await publish();localStorage.setItem(`haqi.social.visible.${getOwner()}`,String(ui.publicVisible));}catch(e){ui.publicVisible=before;throw e;}}),
             talk:p=>onTalk(p),details:p=>onDetails(p),
             challenge:()=>{ui.arenaStep='mode';onOpen('social-pvp');},

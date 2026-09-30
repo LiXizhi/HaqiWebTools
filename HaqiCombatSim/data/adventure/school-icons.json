@@ -1,0 +1,78 @@
+{
+  "version": 1,
+  "local": "assets/adventure/ui/school-icons-9b10fda1e013.webp",
+  "cdn": null,
+  "sha256": "9b10fda1e01383930b891bf7334937638bab6f1c595ab3fcad53d5c7c03bd96f",
+  "size": 6016,
+  "width": 192,
+  "height": 32,
+  "encoding": "lossless",
+  "frames": {
+    "fire": {
+      "rect": [
+        0,
+        0,
+        32,
+        32
+      ],
+      "source": "Texture/Aries/Combat/HPSlots/fire_32bits.png",
+      "sourceEntry": "texture/aries/combat/hpslots/fire_32bits.png.p,a43e113e8549121676efab7df6dd5c18,4248",
+      "sourceSha256": "e7ed0453c93bd0a15d4b11ebc48398b6c522c0324084dcb6d68737af454dd4b1"
+    },
+    "ice": {
+      "rect": [
+        32,
+        0,
+        32,
+        32
+      ],
+      "source": "Texture/Aries/Combat/HPSlots/ice_32bits.png",
+      "sourceEntry": "texture/aries/combat/hpslots/ice_32bits.png.p,4e2c2e766e17f56cbeeb923e837463a9,4307",
+      "sourceSha256": "383ee9ae11e81007f480ee325ecc10a03b0f22b4bd97595c8c4751ec1331db3e"
+    },
+    "storm": {
+      "rect": [
+        64,
+        0,
+        32,
+        32
+      ],
+      "source": "Texture/Aries/Combat/HPSlots/storm_32bits.png",
+      "sourceEntry": "texture/aries/combat/hpslots/storm_32bits.png.p,8cdf5261890a19cbd2669bdb1014d040,4371",
+      "sourceSha256": "06c3321cda780ce6802f0714fbe724374a737643d6d5efa7d364c13754293b5f"
+    },
+    "life": {
+      "rect": [
+        96,
+        0,
+        32,
+        32
+      ],
+      "source": "Texture/Aries/Combat/HPSlots/life_32bits.png",
+      "sourceEntry": "texture/aries/combat/hpslots/life_32bits.png.p,8ba8114bb7e88195000a2e7c9eb7ef6f,4235",
+      "sourceSha256": "e37163a45b7a760ecfdede6cd03bb0006cd90fe0aa74e578c6b627786c0f1182"
+    },
+    "death": {
+      "rect": [
+        128,
+        0,
+        32,
+        32
+      ],
+      "source": "Texture/Aries/Combat/HPSlots/death_32bits.png",
+      "sourceEntry": "texture/aries/combat/hpslots/death_32bits.png.p,3d9ee9833a85a7fbf1865425bd70b32b,4406",
+      "sourceSha256": "a07e1ae0cd7ff541ebeb038c11e1bca9ef60d377616f50ce965bad0926d635ba"
+    },
+    "balance": {
+      "rect": [
+        160,
+        0,
+        32,
+        32
+      ],
+      "source": "Texture/Aries/Combat/HPSlots/balance_32bits.png",
+      "sourceEntry": "texture/aries/combat/hpslots/balance_32bits.png.p,14b69ac61773063ab86138f648cd62a5,4317",
+      "sourceSha256": "4f444e77c6d4873d7a7cf73a2d15fffb9eeccd1011184658cb212b0e38df3203"
+    }
+  }
+}

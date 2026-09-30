@@ -1,3 +1,4 @@
+import {socialGesturePose,socialHeadAnchor} from './adventure_social_actions_core.js';
 import {createRng,hashSeed} from './rng_core.js';
 import {findPath,followPath,nearestWalkable,walkable,routeLocation,routePoint} from './adventure_world_core.js';
 import {segmentDistance} from './adventure_island_layout_core.js';
@@ -288,9 +289,16 @@ export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=
 }
 
 // One nearby invitation keeps crowded scenes quiet; body/name clicks never select.
-export function socialBubble(actors,leader){
-    if(!leader)return null;
-    const near=actors.map(actor=>({actor,d:Math.hypot(actor.position.x-leader.x,actor.position.y-leader.y)})).filter(v=>v.d<=SOCIAL_DEFAULTS.converseRadius).sort((a,b)=>a.d-b.d||a.actor.profile.id.localeCompare(b.actor.profile.id))[0]?.actor;
-    return near?{profile:near.profile,x:near.position.x-20,y:near.position.y-110,w:40,h:30}:null;
+export function socialBubble(actors,leader,{gesture=null,at=0}={}){
+    if(!leader||socialGesturePose(gesture,'hero',at))return null;
+    const near=actors.filter(actor=>!actor.inParty).map(actor=>({actor,d:Math.hypot(actor.position.x-leader.x,actor.position.y-leader.y)})).filter(v=>v.d<=SOCIAL_DEFAULTS.converseRadius).sort((a,b)=>a.d-b.d||a.actor.profile.id.localeCompare(b.actor.profile.id))[0]?.actor;
+    if(!near)return null;const head=socialHeadAnchor(near.position);
+    return {profile:near.profile,x:head.x-20,y:head.y-15,w:40,h:30};
 }
-export function pickSocialBubble(actors,leader,point){const b=socialBubble(actors,leader);return b&&point.x>=b.x&&point.x<=b.x+b.w&&point.y>=b.y&&point.y<=b.y+b.h?b.profile:null;}
+export function pickSocialBubble(actors,leader,point,options){const b=socialBubble(actors,leader,options);return b&&point.x>=b.x&&point.x<=b.x+b.w&&point.y>=b.y&&point.y<=b.y+b.h?b.profile:null;}
+
+// The captain keeps the travel facing instead of looking back at following peers.
+export function heroSocialLookPeers(actors,{inParty=false}={}){
+    if(inParty||actors.some(actor=>actor.inParty))return [];
+    return actors.filter(actor=>!actor.moving).map(actor=>({id:actor.profile.id,x:actor.position.x,y:actor.position.y}));
+}

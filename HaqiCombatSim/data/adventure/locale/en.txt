@@ -6227,3 +6227,49 @@ PvP 切磋||PvP duel
 强化成功了！出奇蛋中的小伙伴已经加入你的旅程，去宠物面板看看吧。||Upgrade succeeded! The companion from the Surprise Egg has joined your journey. Check the pet panel.
 出奇蛋中的伙伴已经加入旅程，去找杰西卡学习照料吧。||The companion from the Surprise Egg has joined your journey. Find Jessica to learn how to care for it.
 打开“宠物”，点击食槽喂养饥饿的伙伴；伙伴自动进食或分享营养餐也能完成任务。||Open Pet and click the feeder to feed a hungry companion. Automatic feeding or sharing a nutrition meal also completes the task.
+
+# 副本跟读进度（2026-09-30）
+朗读通过进度||Reading progress
+本词条今天已经拿过奖励了||You have already received today's reward for this entry
+本词条今天已经拿过奖励了。||You have already received today's reward for this entry.
+已累计一次有效朗读，再读一次继续推进。||One qualifying reading counted. Read again to keep progressing.
+文本匹配率未达到80%，可以继续重读；识别差异也可能来自收音。||Text match is below 80%. Try again; differences may come from microphone reception.
+识别差异可能来自收音，可继续重读。||Recognition differences may come from microphone reception. You can try again.
+未听清，请重读||Could not hear clearly. Please read again.
+（多读）||(extra word)
+（未听到）||(not heard)
+
+# js/view_adventure_npc.js
+最大||Max
+购买数量无效||Invalid purchase quantity
+最多可买 {count} 件||You can buy up to {count}
+
+# 开口有礼
+开口有礼||Speak and Earn
+今日开口||Spoken today
+说一句，变强一点！||Speak a little, grow stronger!
+找居民聊聊，或为副本剧情配音。||Chat with residents or voice dungeon story lines.
+今日开口奖励进度||Today's speaking reward progress
+有奖励可以领取！||Rewards are ready to claim!
+再说 {count} 句，解锁下一份奖励||Speak {count} more lines to unlock your next reward
+今日奖励已全部领取||All of today's rewards claimed
+{count} 句||{count} lines
+{amount} 奇豆||{amount} Qidou
+{amount} 仙豆||{amount} Xiandou
+玩法与奖励规则||How to play and earn rewards
+每次有效开口随机增加 1% 属性，生命、攻击、防御各最多 +10%；叠满后增加超级魔力生成率，最多 +10%。||Each successful spoken line adds 1% to a random stat. Health, attack and defense each cap at +10%, followed by power pip chance up to +10%.
+口语交流或剧情跟读通过后计数；听示范、文字回答不计数。奇豆可买宠物口粮，仙豆可强化装备。||Successful spoken conversations and story readings count; listening and typing do not. Spend Qidou on pet food and Xiandou on equipment upgrades.
+每天本机时间 00:00 重置，每档奖励限领一次。加成与开口进度仅保存在本机当前角色；换地图仍有效，新战斗生效。领取记录随角色保存。||Resets at local midnight. Each tier can be claimed once daily. Buffs and speaking progress stay on this device for this character, persist across maps and apply to new battles. Claims are saved with your character.
+从简单短句开始，点击录音才会开启麦克风。||Start with short phrases. Your microphone turns on only when you record.
+请选择开口奖励||Choose a speaking reward
+这份奖励今天已领取||This reward has already been claimed today
+再开口练习几句，就能领取了||Practice a few more lines to claim this reward
+开口奖励配置无效||Invalid speaking reward configuration
+开口奖励记录无效||Invalid speaking reward record
+{count}句奖励：{amount}{currency}，{state}||{count}-line reward: {amount} {currency}, {state}
+
+已累计，再读一次吧。||Counted. Read it once more.
+再试一次，读出标出的词吧。||Try again with the highlighted words.
+未听清，再读读这个词||Not heard clearly. Try this word again.
+
+语言加成按本机时间每天 00:00 清零。||Language bonuses reset daily at 00:00 local time.

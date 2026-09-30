@@ -18,6 +18,7 @@ test('English UI never translates Chinese teaching text; translation toggle work
     const noop=()=>{},view=createLearningChatView({close:noop,start:noop,finish:noop,cancel:noop,hint:noop,chinese:noop,next:noop,help:noop,speak:noop,settings:noop,useReward:noop,challenge:noop});
     const state={profile:{name:'导师',role:'居民'},story:{id:'one',title:'入门',context:'',turns:[{hint:'提示',pattern:'Hello.',answer:{en:'Hello!','zh-CN':'你好！'}}]},locale:'zh-CN',showChinese:true,messages:[{role:'npc',text:{en:'Hello!','zh-CN':'你好！'}}],index:0,hintLevel:3,status:'',busy:false,recording:false,done:false};
     const nodes=()=>document.body.querySelectorAll('*');
+    const bubbleGloss=()=>nodes().filter(n=>String(n.className).includes('camp-chat-bubble')).flatMap(n=>n.children).filter(n=>n.className==='camp-chat-translation');
     view.render(state);
     assert.equal(nodes().some(n=>n.className==='camp-chat-reward'),false);
     assert.ok(nodes().filter(n=>n.className==='camp-chat-original').every(n=>n.textContent==='你好！'));
@@ -48,6 +49,10 @@ test('English UI never translates Chinese teaching text; translation toggle work
     assert.equal(nodes().find(n=>n.className==='camp-chat-input').hidden,true);
     assert.equal(nodes().find(n=>n.className==='camp-chat-actions').hidden,true);
     assert.equal(nodes().find(n=>n.className==='camp-chat-progress').textContent,'登录后可使用 AI 对话');
+    view.render({...state,mode:'free',ready:true,remaining:2,hintLevel:0,native:'zh-CN',vip:true,messages:[{role:'assistant',text:'你好呀～我是晴川。',translation:'你好呀～我是晴川。'}]});
+    assert.equal(bubbleGloss().length,0);
+    view.render({...state,mode:'free',ready:true,remaining:2,hintLevel:0,native:'zh-CN',vip:true,messages:[{role:'assistant',text:'Hello! I bake bread.',translation:'你好！我烤面包。'}]});
+    assert.ok(bubbleGloss().some(n=>n.textContent==='你好！我烤面包。'));
     view.render({...state,mode:'free',ready:true,remaining:2,hintLevel:0});
     assert.equal(nodes().find(n=>n.className==='camp-chat-login').hidden,true);
     assert.equal(nodes().find(n=>n.className==='camp-chat-input').hidden,false);

@@ -1,3 +1,4 @@
+import {playerGloss} from './character_relationship_core.js';
 import {createDialogueMicrophone} from './view_dialogue_microphone.js';
 export {bindChatMicrophone} from './view_dialogue_microphone.js';
 import {tr,fill} from './locale_runtime.js';
@@ -98,7 +99,8 @@ export function createLearningChatView(cb){
         const avatar=el('span','camp-chat-avatar',row.role==='user'?'我':s.profile.name.slice(0,1));
         const content=el('div','camp-chat-bubble'),text=typeof row.text==='string'?row.text:row.text?.[s.locale]||'';
         content.append(el('p','camp-chat-original',text));
-        const translation=typeof row.text==='object'?row.text[s.locale==='en'?'zh-CN':'en']:row.translation;
+        const raw=typeof row.text==='object'?row.text[s.locale==='en'?'zh-CN':'en']:row.translation;
+        const translation=s.mode==='free'?playerGloss(text,raw,s.native||'zh-CN'):(raw&&String(raw).replace(/\s+/g,'')===String(text).replace(/\s+/g,'')?'':raw);
         if(translation&&s.showChinese)content.append(el('p','camp-chat-translation',translation));
         if(row.role!=='user'&&text){const listen=button('再听一次',()=>cb.speak(text),'camp-chat-replay');listen.disabled=s.busy||s.recording;content.append(listen);}
         if(row===s.messages[0]&&row.role!=='user'&&s.reward?.amount!==undefined)content.append(el('small','camp-chat-reward-preview',fill('对话奖励：{amount} {currency}',{amount:s.reward.amount,currency:tr(s.reward.currency===100?'奇豆':'仙豆')}).text));

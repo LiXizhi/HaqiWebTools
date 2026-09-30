@@ -116,22 +116,45 @@ function checkNpcOffer(save,content,offer,access) {
         if(offer.kind==='shop'&&id===22000)return deny('特殊兑换费用尚未接入');
         costs.set(id,(costs.get(id)||0)+count);
     }
-    const price=[...costs].map(([id,count])=>`${count}${id===22000?'训练点':content.items[id]?.name||'货币'}`).join('、')||'免费';
+    const price=formatNpcCosts(content,[...costs]);
     for(const [id,count] of costs)if((id===22000?trainingPoints(save,content):save.inventory[id]||0)<count)return {...deny(`需要${price}`),price,costs:[...costs],reward,key};
     return {allowed:true,reason:price,price,costs:[...costs],reward,key};
+}
+export function formatNpcCosts(content,costs,times=1) {
+    return (costs||[]).map(([id,count])=>`${count*times}${id===22000?'训练点':content.items[id]?.name||'货币'}`).join('、')||'免费';
+}
+// How many times this exchange can be repeated: the tighter of the wallet and the remaining hold cap.
+export function npcPurchaseBounds(save,content,offer,access={}) {
+    const status=npcOfferStatus(save,content,offer,access);
+    if(!status.allowed||offer.kind!=='shop')return {...status,maxCount:status.allowed?1:0};
+    const unit=status.reward.cnt;
+    let max=Number.MAX_SAFE_INTEGER;
+    for(const [id,count] of status.costs){
+        const held=id===22000?trainingPoints(save,content):(save.inventory[id]||0);
+        max=Math.min(max,Math.floor(held/count));
+        max=Math.min(max,Math.floor(Number.MAX_SAFE_INTEGER/count));
+    }
+    const limits=npcItemLimits(content.npcCatalog.items[offer.itemId]);
+    max=Math.min(max,Math.floor((limits.maxCount-(save.inventory[offer.itemId]||0))/unit));
+    max=Math.min(max,Math.floor(Number.MAX_SAFE_INTEGER/unit));
+    if(!Number.isSafeInteger(max)||max<1)max=1;
+    return {...status,maxCount:max};
 }
 export function purchaseNpcOffer(save,content,action,access={}) {
     const npc=content.npcCatalog?.npcs.find(n=>n.instanceId===action.npcInstanceId&&n.zone===save.zone);
     if(!npc)throw Error('请前往这位居民所在的岛屿');
     const offer=npcOffers(content,npc).find(r=>r.id===action.offerId);
     if(!offer)throw Error('商品或课程不存在');
-    const status=npcOfferStatus(save,content,offer,access);
+    const status=npcPurchaseBounds(save,content,offer,access);
     if(action.paidByTest)throw Error('语言课程仅发放限额奖励，请使用货币购买');
     if(!status.allowed)throw Error(status.reason);
-    for(const [id,count] of status.costs){
-        if(id===22000)save.trainingPointsSpent=(save.trainingPointsSpent||0)+count;
-        else save.inventory[id]-=count;
+    const count=action.count??1;
+    if(!Number.isSafeInteger(count)||count<1||count>status.maxCount)throw Error('购买数量无效');
+    for(const [id,unitCost] of status.costs){
+        const total=unitCost*count;
+        if(id===22000)save.trainingPointsSpent=(save.trainingPointsSpent||0)+total;
+        else save.inventory[id]-=total;
     }
     if(offer.kind==='mentor')save.cards[status.key]=content.cardLibrary.find(r=>r.key===status.key).copies;
-    else save.inventory[offer.itemId]=(save.inventory[offer.itemId]||0)+status.reward.cnt;
+    else save.inventory[offer.itemId]=(save.inventory[offer.itemId]||0)+status.reward.cnt*count;
 }

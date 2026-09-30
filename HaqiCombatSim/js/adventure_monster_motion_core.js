@@ -133,5 +133,9 @@ export function monsterInteractionTargets(world,encounter) {
     return monsterScenePositions(world,encounter).map(p=>({...encounter,x:p.x,y:p.y,kind:'encounter'}));
 }
 export function monsterContactDistance(world,encounter,point) {
-    return Math.min(...monsterScenePositions(world,encounter).map(p=>Math.hypot(point.x-p.x,point.y-p.y)));
+    // Field auto-contact must wait for the same countdown shown above the sprite.
+    // Check the touching member, not another already-alerted member of its group.
+    return Math.min(...monsterScenePositions(world,encounter)
+        .filter(p=>world.isDungeon||p.mode==='chase')
+        .map(p=>Math.hypot(point.x-p.x,point.y-p.y)));
 }

@@ -262,6 +262,60 @@ test('a corrupt account cache cannot replace the current guest identity or catal
     l.data.set('haqi.roles.v1.account.bad', '{"catalog":{"roles":null}}');
     assert.throws(() => store.open('bad'));assert.equal(store.owner, null);assert.equal(store.catalog.roles[0].save.name, '访客');
 });
+test('recovery isolates incompatible roles and preserves original bytes while selecting and creating', async()=>{
+    const l=local(),store=l.make();store.open();
+    const good=store.create(hero('可用角色')),bad=store.create(hero('不兼容角色'));
+    const key='haqi.roles.v1.guest',value=JSON.parse(l.storage.getItem(key));
+    value.catalog.roles.find(row=>row.id===bad).save.contentVersion='incompatible';
+    const original=JSON.stringify(value);l.storage.setItem(key,original);
+    const recovered=l.make();await recovered.prepareOpen(null,{recover:true});recovered.open(null,{recover:true});
+    assert.equal(recovered.recovering,true);assert.equal(recovered.catalog.activeId,null);
+    assert.deepEqual(recovered.catalog.roles.map(row=>row.id),[good]);
+    assert.equal(l.storage.getItem(key),original,'opening recovery must not overwrite storage');
+    recovered.select(good);assert.equal(recovered.catalog.activeId,good);
+    const created=recovered.create(hero('新旅程'));assert.equal(recovered.catalog.activeId,created);
+    assert.equal(JSON.parse(l.storage.getItem(key)).recoveryBackup.raw,original);
+    const reopened=l.make();reopened.open(null,{recover:true});
+    assert.equal(reopened.recovering,true);assert.equal(reopened.catalog.roles.length,2);
+    assert.equal(JSON.parse(l.storage.getItem(key)).recoveryBackup.raw,original);
+});
+test('malformed catalogs and legacy saves allow creation without deleting their source',async()=>{
+    for(const key of ['haqi.roles.v1.guest',SAVE_KEY]){
+        const l=local();l.storage.setItem(key,'{broken JSON');
+        const store=l.make();await store.prepareOpen(null,{recover:true});store.open(null,{recover:true});
+        assert.equal(store.recovering,true);assert.equal(store.catalog.roles.length,0);
+        store.create(hero('重新启程'));
+        const persisted=JSON.parse(l.storage.getItem('haqi.roles.v1.guest'));
+        assert.equal(key===SAVE_KEY?persisted.recoveryBackup.legacy:persisted.recoveryBackup.raw,'{broken JSON');
+        if(key===SAVE_KEY)assert.equal(l.storage.getItem(SAVE_KEY),'{broken JSON');
+    }
+});
+test('one role resource preparation failure does not block other roles or lose account isolation',async()=>{
+    const l=local(),store=l.make();store.open('alice');store.create(hero('缺少资源'));const good=store.create(hero('可用角色'));
+    const recovered=createRoleStore({content,dataset,storage:l.storage,runtimeStore:createRuntimeStore({indexedDB:null}),prepareSaves:async saves=>{if(saves[0].name==='缺少资源')throw Error('resource unavailable');}});
+    await recovered.prepareOpen('alice',{recover:true});recovered.open('alice',{recover:true});
+    assert.equal(recovered.owner,'alice');assert.equal(recovered.recovering,true);
+    assert.deepEqual(recovered.catalog.roles.map(row=>row.id),[good]);
+    recovered.open(null,{recover:true});assert.equal(recovered.recovering,false);assert.equal(recovered.catalog.roles.length,0);
+});
+test('incompatible runtime battles are backed up and failed recovery writes leave original storage intact',()=>{
+    const l=local(),runtimeStore=createRuntimeStore({indexedDB:null});let serial=200;
+    const make=()=>createRoleStore({content,dataset,storage:l.storage,runtimeStore,uuid:()=>id(++serial)});
+    const store=make();store.open();const save=hero('战斗中');beginEncounter(save,content,'ice-scout');
+    const role=store.create(save),key='haqi.roles.v1.guest',original=l.storage.getItem(key);
+    const runtime=runtimeStore.get(`${key}.${role}`);
+    runtime.values.pendingEncounter.player.level=999;
+    runtimeStore.set(`${key}.${role}`,runtime);
+    const recovered=make();recovered.open(null,{recover:true});
+    assert.equal(recovered.recovering,true);assert.equal(recovered.catalog.roles.length,0);
+    const write=l.storage.setItem;l.storage.setItem=()=>{throw Error('quota');};
+    assert.throws(()=>recovered.create(hero('新角色')),/quota/);
+    assert.equal(l.storage.getItem(key),original);assert.equal(recovered.catalog.roles.length,0);
+    l.storage.setItem=write;recovered.create(hero('新角色'));
+    const backup=JSON.parse(l.storage.getItem(key)).recoveryBackup;
+    assert.equal(backup.raw,original);assert.equal(backup.runtime,undefined);
+    assert.deepEqual(runtimeStore.get(`${key}.${role}`),runtime);
+});
 test('switching and reloading preserves each role combat checkpoint and deterministic replay', () => {
     const l = local(), store = l.make();store.open('alice');
     const save = hero('战斗角色');beginEncounter(save, content, 'ice-scout');

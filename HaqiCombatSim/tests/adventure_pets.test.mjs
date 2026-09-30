@@ -12,6 +12,25 @@ const read=path=>JSON.parse(fs.readFileSync(new URL('../data/'+path,import.meta.
 const catalog=read('adventure/pets.json');
 const {content:c,dataset:d}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),catalog,read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 const fresh=starter=>A.createAdventure(c,{starter,seed:812});
+test('active saves predating exploration defaults reload and replay without losing progress',()=>{
+ const save=fresh('dragon_green');A.beginEncounter(save,c,'trial:1');
+ const original=B.restorePveBattle(d,c,save.pendingEncounter);
+ const decision={pass:true};B.playPveRound(original,decision);A.recordDecision(save,decision);
+ for(const key of ['monsterRespawnMs','fieldEncounterRadius','dungeonEncounterRadius'])delete save.pendingEncounter.adventureParams[key];
+ const before=structuredClone(save);
+ const restored=checkedProgress(JSON.stringify(save),c,d);
+ assert.deepEqual(save,before);
+ assert.deepEqual(restored.save.pendingEncounter,before.pendingEncounter);
+ assert.deepEqual(restored.save.inventory,before.inventory);
+ assert.deepEqual(restored.battle.events,original.events);
+ assert.equal(restored.battle.rng.state(),original.rng.state());
+ for(const key of ['monsterRespawnMs','fieldEncounterRadius','dungeonEncounterRadius','captureBase']){
+  const bad=structuredClone(save);bad.pendingEncounter.adventureParams[key]=-1;
+  assert.throws(()=>A.parseSave(bad,c),/养成参数/);
+ }
+ const unknown=structuredClone(save);unknown.pendingEncounter.adventureParams.unknownParameter=1;
+ assert.throws(()=>A.parseSave(unknown,c),/养成参数/);
+});
 test('version two cloud battles survive added threat defaults without accepting altered parameters',()=>{
  const save=fresh('dragon_green');A.beginEncounter(save,c,'trial:1');
  save.pendingEncounter.threatRulesVersion=2;

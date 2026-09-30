@@ -728,6 +728,9 @@ export function parseSave(raw,content) {
                 ...(threatVersion<2?['singleHealThreatRatio']:[]),
                 ...(threatVersion<3?['areaHealThreatRatio','effectThreatGlobal','effectThreatMiniAura','effectThreatRemovePositiveCharm','effectThreatRemoveNegativeCharm','effectThreatStealCharm','effectThreatCharms','effectThreatWards','effectThreatAreaCharm','effectThreatAreaWard','effectThreatAbsorb']:[]),
                 'mountSpeed',
+                // Added exploration-only defaults do not affect an already-started battle.
+                // Older checkpoints may omit them; present values still require validation.
+                'monsterRespawnMs','fieldEncounterRadius','dungeonEncounterRadius',
                 ...(threatVersion<4?['splashManipulationThreatRatio','effectThreatStun','effectThreatRemovePositiveWard','effectThreatStealWard','effectThreatSymmetryWards','effectThreatReflectionShield','effectThreatAreaPowerPipBoost','effectThreatAreaCleanse','defensiveThreatWeight','tauntThreatWeight']:[]),
             ]);
             assert(Object.keys(saved).every(key=>Object.hasOwn(expected,key))&&Object.entries(expected).every(([key,value])=>!Object.hasOwn(saved,key)?optional.has(key):JSON.stringify(saved[key])===JSON.stringify(value)),'存档养成参数无效');

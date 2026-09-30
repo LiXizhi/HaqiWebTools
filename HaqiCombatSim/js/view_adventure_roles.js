@@ -25,7 +25,8 @@ export function renderRoles(root, assets, model, cb) {
     if (model.busy) head.append(el('p', 'role-status', model.busy));
     if (model.error) { const error = el('p', 'error-text', model.error);error.setAttribute('role', 'alert');head.append(error); }
     if (model.message) head.append(el('p', 'muted', model.message));
-    if (model.owner) head.append(el('p', 'muted', model.dirty ? '当前有本地进度待同步。游玩时每分钟自动同步，也可手动保存。' : '角色云端记录已同步。'));
+    if (model.recovering) head.append(el('p', 'role-status', '部分角色暂时无法读取，原存档已保留。可以选择其他角色或新建角色继续游玩。当前进度仅保存在本机，云端同步暂时暂停。'));
+    if (model.owner&&!model.recovering) head.append(el('p', 'muted', model.dirty ? '当前有本地进度待同步。游玩时每分钟自动同步，也可手动保存。' : '角色云端记录已同步。'));
     const box = el('section', 'character-form role-manager', head);
     const rows = el('div', 'role-list');
     const ordered = [...model.catalog.roles].sort((a, b) => (b.id === model.catalog.activeId) - (a.id === model.catalog.activeId));
@@ -46,7 +47,8 @@ export function renderRoles(root, assets, model, cb) {
     if (!model.owner) createRow.append(addButton('登录 Keepwork 云端账号', cb.login, 'primary role-cloud-login'));
     foot.append(countLine, createRow);
     if (model.owner) {
-        foot.append(el('div', 'role-actions', addButton('保存角色到云端', cb.sync), addButton('刷新云端角色', cb.refresh), addButton('退出 Keepwork', cb.logout)));
+        const sync=addButton('保存角色到云端', cb.sync);sync.disabled=!!model.recovering;
+        foot.append(el('div', 'role-actions', sync, addButton('刷新云端角色', cb.refresh), addButton('退出 Keepwork', cb.logout)));
         if (model.conflict) foot.append(el('div', 'role-conflict', el('p', '', '云端已有不同的角色进度。加载前会在浏览器自动保留本地副本。'),
             ...model.conflict.catalog.roles.map(row => { const line = el('p', 'muted');setText(line, '{name} · 等级 {level} · {school}', { name: row.save.name, level: row.save.level, school: SCHOOL_NAMES[row.save.school] });return line; }),
             addButton('备份本地并加载云端', cb.useRemote)));

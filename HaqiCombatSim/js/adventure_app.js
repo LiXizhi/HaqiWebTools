@@ -102,7 +102,8 @@ let petCardsOpen=false;
 let runeCardsOpen=false;
 let cloudClient;
 let roleStore,roleStorage=null,roleEpoch=0,lastRoleSync=0;
-const roles={busy:'',error:'',message:'',conflict:null};
+const roles={busy:'',error:'',message:'',conflict:null,localOnly:false};
+const roleRecoveryMessage='部分角色暂时无法读取，原存档已保留。请选择其他角色，或新建角色继续游玩。';
 let titleView='create',roleDraft=null,creationPreview=null;
 const LAST_ACCOUNT_KEY='haqi.roles.last-account.v1';
 // 本机显示语言偏好：首页与设置窗每次切换都会写入；优先于角色存档里的 locale，
@@ -122,7 +123,7 @@ function secondLocaleFor(native){
 }
 const cloud={owner:null,busy:'',error:'',message:'',paths:[],preview:null};
 const autoSave=createAutoSave({
-    eligible:()=>stage==='world'&&!save?.pendingEncounter&&roleStore?.owner&&roleStore.dirty&&!roles.busy&&!cloud.busy&&!roles.conflict,
+    eligible:()=>stage==='world'&&!save?.pendingEncounter&&roleStore?.owner&&roleStore.dirty&&!roleStore.recovering&&!roles.localOnly&&!roles.busy&&!cloud.busy&&!roles.conflict,
     save:async()=>{roles.busy='正在自动保存…';try{persist();if(storageWarning)throw Error('本地存档失败，云端同步已暂停');await syncRoles();cloud.error='';}finally{roles.busy='';}},
     onError:error=>{if(cloud.error!==error.message)toast('云存档暂未完成，本地进度已保留，将自动重试。');cloud.error=error.message;},
 });
@@ -530,7 +531,7 @@ async function showTitle() {
     nodes.entry.hidden=false;
     world=W.createWorld(save.zone,assets.content,save);
     void assets.warmScenery?.(world);
-    titleView=roleStore.catalog.roles.length?'roles':'create';
+    titleView=roleStore.catalog.roles.length||roleStore.recovering||roles.localOnly?'roles':'create';
     if(titleView==='create')roleDraft=null;paintTitle();
 }
 function deleteCurrentRole() {
@@ -557,7 +558,7 @@ function paintTitle() {
 function paintRoles() {
     if(stage!=='title')return;
     creationPreview?.stop();
-    renderRoles(nodes.entry,assets,{...roles,owner:roleStore.owner,catalog:roleStore.catalog,dirty:roleStore.dirty,locale:displayLocale()},{
+    renderRoles(nodes.entry,assets,{...roles,recovering:roleStore.recovering||roles.localOnly,owner:roleStore.owner,catalog:roleStore.catalog,dirty:roleStore.dirty,locale:displayLocale()},{
         setLocale:setEntryNative,setSecondLocale,secondLocale:secondLocaleFor(displayLocale()),
         select:id=>roleOperation('正在进入角色…',async()=>{await activateRole(id);await syncRoles();}),
         create:newRoleForm,login:()=>void loginRoles(),logout:()=>roleOperation('正在退出…',async()=>{
@@ -566,7 +567,7 @@ function paintRoles() {
             if(pending)roles.message='已退出账号。未同步进度仍保留在该账号的本机缓存，下次登录可继续。';
         }),
         sync:()=>roleOperation('正在保存角色…',syncRoles),
-        refresh:()=>roleOperation('正在读取角色…',async()=>{const remote=await cloudClient.roles({refresh:true});await reconcileRoles(remote);if(!roles.conflict&&remote.partsStale?.length)await syncRoles(true);}),
+        refresh:()=>roleOperation('正在读取角色…',async()=>{const remote=await cloudClient.roles({refresh:true});await reconcileRoles(remote);roles.localOnly=false;if(!roles.conflict&&remote.partsStale?.length)await syncRoles(true);}),
         useRemote:()=>roleOperation('正在备份并加载云端…',async()=>{
             if(!roles.conflict)return;
             localStorage.setItem(`haqi.roles.conflict.${encodeURIComponent(roleStore.owner)}.${Date.now()}`,JSON.stringify(roleStore.catalog));
@@ -584,7 +585,8 @@ async function roleOperation(label,fn) {
 function activateRole(id) {
     const row=roleStore.catalog.roles.find(row=>row.id===id);
     if(!row)throw Error('角色不存在');
-    const restored=checkedProgress(row.save,assets.content,assets.dataset);
+    let restored;
+    try{restored=checkedProgress(row.save,assets.content,assets.dataset);}catch(error){console.warn('角色恢复失败',error);throw Error(roleRecoveryMessage);}
     autoSave.reset();roleStore.select(id);roleStorage=roleStore.scoped();
     selected=null;discarded=[];shopView.page=0;petView.selected=null;
     return enterWorld(restored.save,restored.battle);
@@ -612,23 +614,24 @@ function paintCreation() {
     V.renderEntry(nodes.entry,assets,null,{
         draft:roleDraft,busy:roles.busy,owner:roleStore.owner,
         setLocale:setEntryNative,setSecondLocale,locale:displayLocale(),secondLocale:secondLocaleFor(displayLocale()),
-        roles:roleStore.catalog.roles.length?()=>{titleView='roles';paintRoles();}:null,
+        roles:roleStore.catalog.roles.length||roleStore.recovering||roles.localOnly?()=>{titleView='roles';paintRoles();}:null,
         accountChoice:!roleStore.owner&&!roleStore.catalog.roles.length,
         login:()=>void loginRoles(),cloud:()=>void loginRoles(),
         importOriginal:beginOriginalImport,
         previewChoices:school=>tutorialCards(assets,school),
         preview:(...args)=>creationPreview.play(...args),stopPreview:()=>creationPreview.stop(),pausePreview:()=>creationPreview.togglePause(),
         create:options=>roleOperation('正在创建角色…',async()=>{
-            if(roleStore.owner){await reconcileRoles(await cloudClient.roles());if(roles.conflict)throw Error('请先处理角色云端冲突，再新建角色。');}
+            if(roleStore.owner&&!roleStore.recovering&&!roles.localOnly){await reconcileRoles(await cloudClient.roles());if(roles.conflict)throw Error('请先处理角色云端冲突，再新建角色。');}
             const next=A.createAdventure(assets.content,{...options,seed:Date.now()});
             const native=displayLocale(),target=secondLocaleFor(native);
             next.locale=native;
             next.languageLearning={...next.languageLearning,native,target,selectionConfirmed:true};
-            const id=roleStore.create(next);activateRole(id);await syncRoles();
+            const id=roleStore.create(next);await activateRole(id);await syncRoles();
         })
     },roles.error);
 }
 async function syncRoles(force = false) {
+    if(roleStore.recovering||roles.localOnly)return;
     // force rewrites cloud part files whose old-format witnesses failed the strict join,
     // even when durable progress is unchanged; normal saves stay gated on dirty.
     if(!roleStore.owner||(!force&&!roleStore.dirty)||roleStore.catalog.roles.some(row=>row.save.pendingEncounter))return;
@@ -646,6 +649,7 @@ async function syncRoles(force = false) {
 async function reconcileRoles(remote) {
     const epoch=roleEpoch;
     if(remote.owner!==roleStore.owner||remote.owner!==cloudClient.owner)throw Error('账号已变化，请重新登录。');
+    if(roleStore.recovering){roles.message=roleRecoveryMessage;return;}
     if(roleStore.dirty&&roleStore.base!==remote.revision){roles.conflict=remote;roles.error='本地有未同步进度，与本次读取的云端版本不同，请先备份再加载云端。';return;}
     if(epoch!==roleEpoch)throw Error('账号已变化，请重新登录。');
     if(!roleStore.dirty)roleStore.replace(remote.catalog,remote.revision);
@@ -656,17 +660,20 @@ function connectRoles(interactive=true, {enter=false,transfer=null}={}) {
         const owner=await cloudClient.connect({interactive});
         cloud.owner=owner;cloud.preview=null;cloud.paths=[];
         refreshMembership();
-        const remote=await cloudClient.roles();
-        await roleStore.prepareOpen(owner);
-        roleEpoch++;roleStore.open(owner);roleStorage=null;cloud.owner=owner;cloud.preview=null;cloud.paths=[];
+        let remote;
+        try{remote=await cloudClient.roles();}catch(error){console.warn('云端角色读取失败',error);}
+        await roleStore.prepareOpen(owner,{recover:true});
+        roleEpoch++;roleStore.open(owner,{recover:true});roleStorage=null;cloud.owner=owner;cloud.preview=null;cloud.paths=[];
         localStorage.setItem(LAST_ACCOUNT_KEY,owner);
+        roles.localOnly=!remote;
+        if(!remote){titleView='roles';roles.message='云端角色暂时无法读取，可选择本地角色或新建角色继续游玩。';return;}
         await reconcileRoles(remote);
         if(roles.conflict)return;
         const stale=remote.partsStale?.length>0;
-        const id=transfer?roleStore.adoptGuest(transfer):startupRoleId(roleStore.catalog,{direct:enter});
+        const id=transfer?roleStore.adoptGuest(transfer):startupRoleId(roleStore.catalog,{direct:enter,blocked:roleStore.recovering});
         if(transfer){await syncRoles(true);if(roleStore.dirty)throw Error('角色尚未完成云端同步，请重试。');}
         if(id){await activateRole(id);await syncRoles(stale);return;}
-        titleView=roleStore.catalog.roles.length?'roles':'create';
+        titleView=roleStore.catalog.roles.length||roleStore.recovering?'roles':'create';
         if(titleView==='create')roleDraft=null;
         if(stale)await syncRoles(true);
     });
@@ -674,8 +681,8 @@ function connectRoles(interactive=true, {enter=false,transfer=null}={}) {
 function resetRoleAccount() {
     // Persist against the old scope before changing identity. Never assign an
     // account's active save to the guest namespace on logout/auth expiration.
-    persist();autoSave.reset();roleEpoch++;roleStore.open(null);roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
-    roles.conflict=null;roles.message='';cloud.owner=null;cloud.paths=[];cloud.preview=null;
+    persist();autoSave.reset();roleEpoch++;roleStore.open(null,{recover:true});roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
+    roles.conflict=null;roles.message='';roles.localOnly=false;cloud.owner=null;cloud.paths=[];cloud.preview=null;
     stage='title';showTitle();
 }
 function updateMusic() {
@@ -1197,7 +1204,7 @@ async function boot(){
         $('load-progress').removeAttribute('value');
         if(assets.content.schemaVersion!==1||!assets.content.quests?.length||!assets.dataset.cards)throw new Error('章节数据格式不正确，请重新导出并检查资源。');
         installLocaleTooltip();
-        roleStore=createRoleStore({content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves});await roleStore.prepareOpen();roleStore.open();
+        roleStore=createRoleStore({content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves});await roleStore.prepareOpen(null,{recover:true});roleStore.open(null,{recover:true});
         roleStorage=roleStore.catalog.activeId?roleStore.scoped():null;
         cloudClient=createCloudClient({petFileStore:id=>roleStore?.petFileIOFor(cloudClient.owner,id),content:assets.content,dataset:assets.dataset,prepareSaves:assets.dungeons.prepareSaves,onAccountChange:()=>{resetRoleAccount();cloud.message='登录状态已变化，请重新连接。';}});
         creationPreview=createCreationPreview(assets);
@@ -1210,10 +1217,10 @@ async function boot(){
             await connectRoles(false,{enter:direct});
         }
         if(stage==='loading'){
-            const resume=!localStorage.getItem(LAST_ACCOUNT_KEY)&&startupRoleId(roleStore.catalog,{direct,blocked:!!roles.conflict||!!roles.error});
+            const resume=!localStorage.getItem(LAST_ACCOUNT_KEY)&&startupRoleId(roleStore.catalog,{direct,blocked:!!roles.conflict||!!roles.error||roleStore.recovering});
             if(resume){try{await activateRole(resume);}catch(error){roles.error=error.message;await showTitle();}}
             else await showTitle();
         }
-    }catch(e){stage='error';nodes.entry.replaceChildren(V.el('section','loading-card',V.el('h1','','冒险暂时无法开始'),V.el('p','',e.message),V.el('p','muted','请通过 HTTP 静态服务器打开游戏；恢复 data/adventure 中的章节文件，并运行 npm run assets:adventure 检查美术资源。'),V.button('重新尝试',()=>location.reload(),'primary')));}
+    }catch(e){console.error('游戏初始化失败',e);stage='error';nodes.entry.replaceChildren(V.el('section','loading-card',V.el('h1','','游戏资源暂时未能加载'),V.el('p','','请检查网络连接后重试，你的角色存档不会被删除。'),V.button('重新加载',()=>location.reload(),'primary')));}
 }
 boot();

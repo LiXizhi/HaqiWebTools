@@ -450,7 +450,9 @@ export function renderHud(root,model,cb) {
     const learningEnabled=save.languageLearning?.enabled===true;
     const learningMark=el('span','mount-mark learning-chat-mark');
     learningMark.setAttribute('aria-hidden','true');
-    learningMark.append(el('span','learning-chat-emoji','💬'));
+    const mouth=el('span','learning-mouth');
+    mouth.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 11c3-1 5-5 8-3l2 1 2-1c3-2 5 2 8 3-4 9-16 9-20 0Z M2 11q10 4 20 0"/></svg>';
+    learningMark.append(mouth);
     if(!learningEnabled)learningMark.append(disabledModeMark());
     const learn=button([learningMark],()=>cb.panel('learning-mode'),'mount-toggle learning-mode-launch');
     const layers=Object.values(dailyBuffs(save)).reduce((a,b)=>a+b,0);

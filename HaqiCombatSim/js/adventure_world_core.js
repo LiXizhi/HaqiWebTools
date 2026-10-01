@@ -314,8 +314,30 @@ export function clearSegment(world,a,b) {
     for(let i=0;i<=steps;i++){const t=i/steps;if(!walkable(world,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t))return false;}
     return true;
 }
+// Drop a road or grid waypoint when a later one is already in line of sight.
+// Otherwise the walker goes all the way to the next vertex, then makes a wide turn.
+function shortcutPath(world,origin,points){
+    const raw=[];
+    for(const p of points){
+        if(!Number.isFinite(p?.x)||!Number.isFinite(p?.y))continue;
+        const prev=raw.at(-1);
+        if(prev&&distance(prev,p)<.5)continue;
+        raw.push(p);
+    }
+    if(!raw.length)return [];
+    const out=[];
+    let anchor=origin,index=0;
+    while(index<raw.length){
+        let next=index;
+        for(let j=raw.length-1;j>index;j--)if(clearSegment(world,anchor,raw[j])){next=j;break;}
+        out.push({x:raw[next].x,y:raw[next].y});
+        anchor=raw[next];
+        index=next+1;
+    }
+    return out;
+}
 export function followPath(world,position,path,budget) {
-    const remaining=[...path];let p={...position};
+    const remaining=shortcutPath(world,position,path);let p={...position};
     while(remaining.length&&budget>0){
         const target=remaining[0],length=distance(p,target);
         if(length<.01){remaining.shift();continue;}
@@ -331,11 +353,11 @@ export function findPath(world,start,destination) {
         const end=routeLocation(world,routePoint(world,Math.min(to.progress,limit)));
         const points=world.layout.route.slice(from.index+1,end.index+1);
         if(end.progress<from.progress)points.splice(0,points.length,...world.layout.route.slice(end.index+1,from.index+1).reverse());
-        return [...points,end.point].map(p=>({...p}));
+        return shortcutPath(world,start,[...points,end.point]);
     }
     // Start from the actual position, without a detour to the current grid center.
     if(clearSegment(world,start,destination))return [{x:destination.x,y:destination.y}];
-    if(world.layout){const road=roadPath(world,start,destination);if(road.length)return road;}
+    if(world.layout){const road=shortcutPath(world,start,roadPath(world,start,destination));if(road.length)return road;}
     const size=24,cols=Math.ceil(world.w/size),rows=Math.ceil(world.h/size);
     const cell=p=>({x:Math.floor(p.x/size),y:Math.floor(p.y/size)}),point=p=>({x:p.x*size+size/2,y:p.y*size+size/2});
     let from=cell(start);const target=cell(destination),key=p=>p.y*cols+p.x;
@@ -363,9 +385,11 @@ export function findPath(world,start,destination) {
             const out=[];let n=p;
             while(key(n)!==key(from)) {out.push(point(n));n=parent.get(key(n));if(!n)return [];}
             out.push(point(from));out.reverse();
-            // Skip only grid waypoints reachable directly from the real starting position.
-            while(out.length>1&&clearSegment(world,start,out[1]))out.shift();
-            return out;
+            if(walkable(world,destination.x,destination.y)){
+                const last=out.at(-1);
+                if(last&&clearSegment(world,last,destination)&&distance(last,destination)>.5)out.push({x:destination.x,y:destination.y});
+            }
+            return shortcutPath(world,start,out);
         }
         for(const [dx,dy] of dirs) {
             const n={x:p.x+dx,y:p.y+dy},v=point(n),nk=key(n);
@@ -395,7 +419,12 @@ function roadPath(world,start,destination){
         }
         graph={nodes,links};roadGraphs.set(world,graph);
     }
-    const {nodes,links}=graph,near=p=>nodes.map((n,i)=>({i,d:distance(n,p)})).sort((a,b)=>a.d-b.d).slice(0,10).filter(n=>clearSegment(world,p,nodes[n.i]));
+    // Keep the nearest vertices, and also any vertex close enough to cut the corner.
+    // A hard cap of 10 misses a visible junction when a plaza has many nearer nodes.
+    const {nodes,links}=graph,near=p=>{
+        const ranked=nodes.map((n,i)=>({i,d:distance(n,p)})).sort((a,b)=>a.d-b.d);
+        return ranked.filter((n,index)=>(index<10||n.d<=960)&&clearSegment(world,p,nodes[n.i]));
+    };
     const starts=near(start),goals=new Map(near(destination).map(n=>[n.i,n.d]));
     const costs=new Map(starts.map(n=>[n.i,n.d])),parents=new Map(),open=starts.map(n=>n.i),closed=new Set();
     let goal=null,best=Infinity;

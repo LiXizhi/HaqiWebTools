@@ -1,78 +1,115 @@
 {
   "version": 1,
-  "local": "assets/adventure/ui/school-icons-9b10fda1e013.webp",
-  "cdn": null,
-  "sha256": "9b10fda1e01383930b891bf7334937638bab6f1c595ab3fcad53d5c7c03bd96f",
-  "size": 6016,
-  "width": 192,
-  "height": 32,
-  "encoding": "lossless",
+  "local": "assets/adventure/ui/school-icons-dfd6ead1e85b.webp",
+  "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/ui/school-icons-dfd6ead1e85b.webp",
+  "sha256": "dfd6ead1e85b511344dea9a6b868aee555dafc4887b5c764979e173a7baa575f",
+  "size": 31758,
+  "width": 768,
+  "height": 128,
+  "encoding": "quality-80",
   "frames": {
     "fire": {
       "rect": [
         0,
         0,
+        128,
+        128
+      ],
+      "source": "Texture/Aries/Common/ThemeKid/character/fire_32bits.png",
+      "sourceEntry": "texture/aries/common/themekid/character/fire_32bits.png.p,6cda5b9bc5cb39becafd9e3ee06495f6,4274",
+      "sourceSize": [
         32,
         32
       ],
-      "source": "Texture/Aries/Combat/HPSlots/fire_32bits.png",
-      "sourceEntry": "texture/aries/combat/hpslots/fire_32bits.png.p,a43e113e8549121676efab7df6dd5c18,4248",
-      "sourceSha256": "e7ed0453c93bd0a15d4b11ebc48398b6c522c0324084dcb6d68737af454dd4b1"
+      "sourceSha256": "95577973c27daa24f9efa3ddab538bcd279962fe0bfa2c636e87a7611f468e5f"
     },
     "ice": {
       "rect": [
-        32,
+        128,
         0,
+        128,
+        128
+      ],
+      "source": "Texture/Aries/Common/ThemeKid/character/ice_32bits.png",
+      "sourceEntry": "texture/aries/common/themekid/character/ice_32bits.png.p,2dc9d4b63ac81c55f6f51374280f3418,4683",
+      "sourceSize": [
         32,
         32
       ],
-      "source": "Texture/Aries/Combat/HPSlots/ice_32bits.png",
-      "sourceEntry": "texture/aries/combat/hpslots/ice_32bits.png.p,4e2c2e766e17f56cbeeb923e837463a9,4307",
-      "sourceSha256": "383ee9ae11e81007f480ee325ecc10a03b0f22b4bd97595c8c4751ec1331db3e"
+      "sourceSha256": "1e9f9dfae466e4b244add9f287d8b1c88e8011f16cacea2e351394f6a752c9a3"
     },
     "storm": {
       "rect": [
-        64,
+        256,
         0,
+        128,
+        128
+      ],
+      "source": "Texture/Aries/Common/ThemeKid/character/storm_32bits.png",
+      "sourceEntry": "texture/aries/common/themekid/character/storm_32bits.png.p,655c5b028d81e51fd1758e70e3df7cb1,4472",
+      "sourceSize": [
         32,
         32
       ],
-      "source": "Texture/Aries/Combat/HPSlots/storm_32bits.png",
-      "sourceEntry": "texture/aries/combat/hpslots/storm_32bits.png.p,8cdf5261890a19cbd2669bdb1014d040,4371",
-      "sourceSha256": "06c3321cda780ce6802f0714fbe724374a737643d6d5efa7d364c13754293b5f"
+      "sourceSha256": "40a90846a81974e0b725ef5269fc38b1af74579785c6c7ed45b28c3857ace829"
     },
     "life": {
       "rect": [
-        96,
+        384,
         0,
+        128,
+        128
+      ],
+      "source": "Texture/Aries/Common/ThemeKid/character/life_32bits.png",
+      "sourceEntry": "texture/aries/common/themekid/character/life_32bits.png.p,ee2ad26c8a783fcf5332bc4bb7f566a0,4561",
+      "sourceSize": [
         32,
         32
       ],
-      "source": "Texture/Aries/Combat/HPSlots/life_32bits.png",
-      "sourceEntry": "texture/aries/combat/hpslots/life_32bits.png.p,8ba8114bb7e88195000a2e7c9eb7ef6f,4235",
-      "sourceSha256": "e37163a45b7a760ecfdede6cd03bb0006cd90fe0aa74e578c6b627786c0f1182"
+      "sourceSha256": "98caedeb439d7043dbde2f4604984e8e840d124c7176e8f153b08aa1e14a06e1"
     },
     "death": {
       "rect": [
-        128,
+        512,
         0,
+        128,
+        128
+      ],
+      "source": "Texture/Aries/Common/ThemeKid/character/death_32bits.png",
+      "sourceEntry": "texture/aries/common/themekid/character/death_32bits.png.p,e54e96472b40865bb7e5f88e7242e74d,4705",
+      "sourceSize": [
         32,
         32
       ],
-      "source": "Texture/Aries/Combat/HPSlots/death_32bits.png",
-      "sourceEntry": "texture/aries/combat/hpslots/death_32bits.png.p,3d9ee9833a85a7fbf1865425bd70b32b,4406",
-      "sourceSha256": "a07e1ae0cd7ff541ebeb038c11e1bca9ef60d377616f50ce965bad0926d635ba"
+      "sourceSha256": "697a1a33f5225e1de3d01cdcd14d58e57d31eb4fd151cc3d236d5a2319667984"
     },
     "balance": {
       "rect": [
-        160,
+        640,
         0,
-        32,
-        32
+        128,
+        128
       ],
-      "source": "Texture/Aries/Combat/HPSlots/balance_32bits.png",
-      "sourceEntry": "texture/aries/combat/hpslots/balance_32bits.png.p,14b69ac61773063ab86138f648cd62a5,4317",
-      "sourceSha256": "4f444e77c6d4873d7a7cf73a2d15fffb9eeccd1011184658cb212b0e38df3203"
+      "source": "Texture/Aries/Team/balance_32bits.png",
+      "sourceEntry": "texture/aries/team/balance_32bits.png.p,0b5943c69e110d8084ebf677fde66967,3675",
+      "sourceSize": [
+        16,
+        16
+      ],
+      "sourceSha256": "c658d0b242da8c87d0e6c1226cafd7b790c014c55a5e61485ddbc7235351cc4b"
     }
+  },
+  "generation": {
+    "method": "imagegen-reference-redraw",
+    "sourceSha256": "c21d1906a7ea4e91dfea88d532130385b24bf14b0657de63b60df6a83f0989f8",
+    "sourceSize": [
+      1536,
+      1024
+    ],
+    "layout": [
+      3,
+      2
+    ],
+    "note": "AI redraw based on the recorded original symbols; not original game pixels"
   }
 }

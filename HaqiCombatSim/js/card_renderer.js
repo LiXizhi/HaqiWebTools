@@ -1,10 +1,16 @@
 import {expectedBaseDamage} from './combat_cards_core.js';
 import {describeCard} from './card_description_core.js';
 import { tr } from './locale_runtime.js';
+import {drawSchoolAtlas,loadSchoolIcons} from './school_icons.js';
+// Prepare the small shared atlas before any consumer paints a one-shot canvas.
+// Node imports stay IO-free; missing art retains the existing vector fallback.
+if(typeof Image!=='undefined')await loadSchoolIcons().catch(error=>console.warn(error.message));
 const TAU=Math.PI*2;
 const colors={ice:'#70d9ff',fire:'#ff9749',storm:'#ffdc68',life:'#8fe88c',death:'#c795fa',balance:'#e8cc84'};
 function path(c,points,fill,stroke='#fcf3bf',width=2){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();c.fillStyle=fill;c.fill();c.lineWidth=width;c.strokeStyle=stroke;c.stroke();}
-export function drawSchoolIcon(c,school,x,y,size,color=colors[school]){c.save();c.translate(x,y);c.scale(size/24,size/24);c.lineJoin='round';c.lineCap='round';c.strokeStyle=color;c.fillStyle=color;c.lineWidth=2.5;
+export function drawSchoolIcon(c,school,x,y,size,color=colors[school]){
+ if(drawSchoolAtlas(c,school,x,y,size))return;
+ c.save();c.translate(x,y);c.scale(size/24,size/24);c.lineJoin='round';c.lineCap='round';c.strokeStyle=color;c.fillStyle=color;c.lineWidth=2.5;
  if(school==='ice'){for(const [dx,dy,r]of [[0,-2,10],[-8,6,4],[8,6,4]]){path(c,[[dx,dy-r],[dx+r*.6,dy],[dx,dy+r],[dx-r*.6,dy]],color,'#fff2a9',1.2);path(c,[[dx,dy-r],[dx,dy+r],[dx-r*.6,dy]],'#0874bd','#fff2a9',.5);}}
  if(school==='fire'){c.beginPath();c.moveTo(0,-12);c.bezierCurveTo(-2,-3,-11,-4,-10,4);c.bezierCurveTo(-8,15,10,13,10,3);c.bezierCurveTo(9,-2,5,-6,5,-8);c.bezierCurveTo(5,-2,0,0,0,-12);c.fill();}
  if(school==='storm')path(c,[[3,-12],[-10,2],[-1,2],[-4,12],[11,-4],[2,-4]],color,color,1);

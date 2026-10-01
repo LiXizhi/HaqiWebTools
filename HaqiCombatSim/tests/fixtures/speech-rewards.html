@@ -7,8 +7,12 @@ import {claimSpeechReward} from '../../js/language_speech_rewards_core.js';
 import {el,button} from '../../js/view_adventure.js';
 const body=document.querySelector('.preview-body'),controls=document.querySelector('.preview-controls');
 const content={items:{100:{},17213:{}}},save={seed:42,inventory:{},locale:'zh-CN',languageLearning:{enabled:true,target:'en',native:'zh-CN',selectionConfirmed:true}};
+const currencyIcons=await fetch('../../data/adventure/currency-icons.json').then(r=>r.json()),currencyImage=new Image();
+currencyImage.crossOrigin='anonymous';currencyImage.src=currencyIcons.entries['currency-icons'].cdn;
+await currencyImage.decode();content.currencyIcons=currencyIcons.items;
+const assets={content,draw:(ctx,ref,x,y,w,h)=>ctx.drawImage(currencyImage,...ref.crop,x,y,w,h)};
 let serial=0;
-function draw(){body.replaceChildren();renderLearningMode(body,{save,assets:{content}},{action:a=>{claimSpeechReward(save,content,a.index);draw();},applyLearningMode:()=>{},disableLearning:()=>{},panel:()=>{}},{el,button});}
+function draw(){body.replaceChildren();renderLearningMode(body,{save,assets},{action:a=>{claimSpeechReward(save,content,a.index);draw();},applyLearningMode:()=>{},disableLearning:()=>{},panel:()=>{}},{el,button});}
 for(const n of [0,5,30,40])controls.append(button(n+'句',()=>{save.dailyLanguageBuff=null;delete save.languageSpeechClaims;for(let i=0;i<n;i++)awardDailySpeech(save,content,String(serial++));draw();},'secondary'));
 controls.append(button('手机宽度',()=>{document.body.classList.toggle('phone');},'secondary'));draw();
 </script></body></html>

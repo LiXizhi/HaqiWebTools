@@ -19,7 +19,10 @@ export function renderLearningMode(body,model,cb,{el,button}) {
     setText(hint,next?(next.ready?'有奖励可以领取！':'再说 {count} 句，解锁下一份奖励'):'今日奖励已全部领取',next?{count:Math.max(0,next.target-statusRewards.count)}:{});
     const rewards=el('div','speech-rewards');
     for(const row of statusRewards.rewards){
-        const currency=row.itemId===100?'奇豆':'仙豆',coin=el('span',`speech-coin ${row.itemId===100?'':'fairy'}`,row.itemId===100?'奇':'仙');coin.setAttribute('aria-hidden','true');
+        const currency=row.itemId===100?'奇豆':'仙豆',coin=el('canvas','speech-coin');
+        coin.width=80;coin.height=80;coin.setAttribute('aria-hidden','true');
+        const ref=model.assets?.content.currencyIcons?.[row.itemId];
+        if(ref)model.assets.draw(coin.getContext('2d'),ref,0,0,coin.width,coin.height);
         const threshold=el('small','speech-threshold');setText(threshold,'{count} 句',{count:row.target});
         const amount=el('strong','speech-amount');setText(amount,'{amount} '+currency,{amount:row.amount});
         const claim=button(row.claimed?'已领取':row.ready?'领取':'未解锁',()=>cb.action({type:'speech-reward',index:row.index}),'primary speech-claim');

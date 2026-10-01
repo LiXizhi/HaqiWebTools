@@ -1,0 +1,14 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><base href="../../"><meta name="viewport" content="width=device-width,initial-scale=1"><title>原版系别图标</title>
+<style>body{font:16px sans-serif;background:#fff4da;color:#352a20;margin:24px}section{display:flex;flex-wrap:wrap;gap:16px;margin:20px 0}article{text-align:center}canvas{display:block}.dark{background:#203542;color:white;padding:16px}</style></head>
+<body><h1>六系高清透明图标</h1><p>参考原版由模型重绘；每格 128×128，图集 31,758 字节，无圆框或背景底板。</p><img src="assets/adventure/ui/school-icons-dfd6ead1e85b.webp" style="max-width:100%;height:auto" alt="火、冰、风暴、生命、死亡、平衡透明图集"><main></main><output></output>
+<script type="module">
+import {drawSchoolIcon} from './js/card_renderer.js';
+for(const size of [16,24,32,48]){
+ const row=document.createElement('section');if(size===24||size===48)row.className='dark';
+ for(const [school,label]of Object.entries({fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡',balance:'平衡'})){
+  const article=document.createElement('article'),c=document.createElement('canvas');c.width=c.height=size*2;c.style.width=c.style.height=size+'px';
+  drawSchoolIcon(c.getContext('2d'),school,size,size,size*2);article.append(c,document.createTextNode(label));row.append(article);
+ }document.querySelector('main').append(row);
+}
+try{for(const c of document.querySelectorAll('canvas'))c.getContext('2d').getImageData(0,0,c.width,c.height);document.querySelector('output').textContent='六系裁剪与 Canvas 跨域像素读取通过';}catch(e){document.querySelector('output').textContent=e.message;}
+</script></body></html>

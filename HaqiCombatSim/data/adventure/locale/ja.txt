@@ -892,7 +892,8 @@ Boss 已击败，可以退出副本。||Bossを倒しました。ダンジョン
 
 # js/view_adventure_roles.js
 魔法哈奇 · 你的主角||魔法ハ奇 · あなたの主人公
-Keepwork：{owner}||Keepwork：{owner}
+{owner}已登录||{owner}はログイン済み
+{owner}已登录 · {status}||{owner}はログイン済み · {status}
 当前为本地访客模式，角色只保存在这台浏览器。||現在はローカルゲストモードです。キャラはこのブラウザにだけ保存されます。
 请登录 Keepwork 云端账号。||Keepwork のクラウドアカウントにログインしてください。
 登录 Keepwork 云端账号||Keepwork クラウドアカウントにログイン

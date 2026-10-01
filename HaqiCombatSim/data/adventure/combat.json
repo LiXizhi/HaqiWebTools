@@ -6,7 +6,4512 @@
       95,
       96,
       97
-    ]
+    ],
+    "enrage": {
+      "version": 1,
+      "sources": {
+        "Database/globalstore.db.mem": "7f376539f9be2410bd3bebb80fffa16080bb562489fa4fa15a519c9a63df98e8",
+        "config/Aries/EnrageStats.xml": "328fddd0ba0281df000959b5e8081105e7af44f053a480009b78926cf280ed83",
+        "config/Aries/EnrageAICards.xml": "3a01bd9c5d60bcbb7084ee443b0aa80faa3845a6038f7e1a7d4d9839754ed5e5"
+      },
+      "stats": {
+        "Level8_Mobs": {
+          "power_pip_percent": 50,
+          "damage_fire_percent": 7,
+          "damage_ice_percent": 0,
+          "damage_storm_percent": 0,
+          "damage_life_percent": 5,
+          "damage_death_percent": 10,
+          "hp": 500,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level10_Mobs": {
+          "power_pip_percent": 50,
+          "damage_fire_percent": 15,
+          "damage_ice_percent": 0,
+          "damage_storm_percent": 0,
+          "damage_life_percent": 5,
+          "damage_death_percent": 15,
+          "hp": 700,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level13_Mobs": {
+          "power_pip_percent": 60,
+          "damage_fire_percent": 15,
+          "damage_ice_percent": 0,
+          "damage_storm_percent": 0,
+          "damage_life_percent": 10,
+          "damage_death_percent": 15,
+          "hp": 840,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level15_Mobs": {
+          "power_pip_percent": 60,
+          "damage_fire_percent": 23,
+          "damage_ice_percent": 0,
+          "damage_storm_percent": 0,
+          "damage_life_percent": 10,
+          "damage_death_percent": 20,
+          "hp": 1160,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level18_Mobs": {
+          "power_pip_percent": 70,
+          "damage_fire_percent": 26,
+          "damage_ice_percent": 0,
+          "damage_storm_percent": 10,
+          "damage_life_percent": 15,
+          "damage_death_percent": 20,
+          "hp": 3280,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level20_Mobs": {
+          "power_pip_percent": 70,
+          "damage_fire_percent": 35,
+          "damage_ice_percent": 0,
+          "damage_storm_percent": 10,
+          "damage_life_percent": 15,
+          "damage_death_percent": 25,
+          "hp": 3920,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level23_Mobs": {
+          "power_pip_percent": 80,
+          "damage_fire_percent": 35,
+          "damage_ice_percent": 1,
+          "damage_storm_percent": 20,
+          "damage_life_percent": 20,
+          "damage_death_percent": 25,
+          "hp": 4880,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level25_Mobs": {
+          "power_pip_percent": 80,
+          "damage_fire_percent": 43,
+          "damage_ice_percent": 6,
+          "damage_storm_percent": 20,
+          "damage_life_percent": 20,
+          "damage_death_percent": 30,
+          "hp": 5520,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level28_Mobs": {
+          "power_pip_percent": 90,
+          "damage_fire_percent": 49,
+          "damage_ice_percent": 6,
+          "damage_storm_percent": 30,
+          "damage_life_percent": 25,
+          "damage_death_percent": 30,
+          "hp": 9720,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level30_Mobs": {
+          "power_pip_percent": 90,
+          "damage_fire_percent": 58,
+          "damage_ice_percent": 11,
+          "damage_storm_percent": 30,
+          "damage_life_percent": 25,
+          "damage_death_percent": 35,
+          "hp": 10680,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level33_Mobs": {
+          "power_pip_percent": 100,
+          "damage_fire_percent": 58,
+          "damage_ice_percent": 11,
+          "damage_storm_percent": 40,
+          "damage_life_percent": 30,
+          "damage_death_percent": 35,
+          "hp": 12120,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level35_Mobs": {
+          "power_pip_percent": 100,
+          "damage_fire_percent": 68,
+          "damage_ice_percent": 16,
+          "damage_storm_percent": 40,
+          "damage_life_percent": 30,
+          "damage_death_percent": 40,
+          "hp": 13080,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level38_Mobs": {
+          "power_pip_percent": 110,
+          "damage_fire_percent": 75,
+          "damage_ice_percent": 18,
+          "damage_storm_percent": 50,
+          "damage_life_percent": 35,
+          "damage_death_percent": 40,
+          "hp": 19360,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level40_Mobs": {
+          "power_pip_percent": 110,
+          "damage_fire_percent": 86,
+          "damage_ice_percent": 23,
+          "damage_storm_percent": 50,
+          "damage_life_percent": 35,
+          "damage_death_percent": 45,
+          "hp": 20640,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level43_Mobs": {
+          "power_pip_percent": 120,
+          "damage_fire_percent": 107,
+          "damage_ice_percent": 23,
+          "damage_storm_percent": 60,
+          "damage_life_percent": 40,
+          "damage_death_percent": 45,
+          "hp": 22560,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level45_Mobs": {
+          "power_pip_percent": 120,
+          "damage_fire_percent": 130,
+          "damage_ice_percent": 72,
+          "damage_storm_percent": 115,
+          "damage_life_percent": 96,
+          "damage_death_percent": 67,
+          "hp": 27840,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level48_Mobs": {
+          "power_pip_percent": 135,
+          "damage_fire_percent": 167,
+          "damage_ice_percent": 93,
+          "damage_storm_percent": 145,
+          "damage_life_percent": 112,
+          "damage_death_percent": 105,
+          "hp": 37200,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level50_Mobs": {
+          "power_pip_percent": 135,
+          "damage_fire_percent": 189,
+          "damage_ice_percent": 118,
+          "damage_storm_percent": 175,
+          "damage_life_percent": 134,
+          "damage_death_percent": 123,
+          "hp": 38800,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level53_Mobs": {
+          "power_pip_percent": 150,
+          "damage_fire_percent": 236,
+          "damage_ice_percent": 153,
+          "damage_storm_percent": 210,
+          "damage_life_percent": 168,
+          "damage_death_percent": 149,
+          "hp": 45320,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Level55_Mobs": {
+          "power_pip_percent": 150,
+          "damage_fire_percent": 268,
+          "damage_ice_percent": 178,
+          "damage_storm_percent": 249,
+          "damage_life_percent": 195,
+          "damage_death_percent": 172,
+          "hp": 47080,
+          "accuracy_fire_percent": 150,
+          "accuracy_ice_percent": 150,
+          "accuracy_storm_percent": 150,
+          "accuracy_life_percent": 150,
+          "accuracy_death_percent": 150
+        },
+        "Baron_Enrage": {
+          "power_pip_percent": 500,
+          "damage_fire_percent": 4000,
+          "damage_ice_percent": 4000,
+          "damage_storm_percent": 4000,
+          "damage_life_percent": 4000,
+          "damage_death_percent": 4000,
+          "hp": 131200,
+          "accuracy_fire_percent": 1000,
+          "accuracy_ice_percent": 1000,
+          "accuracy_storm_percent": 1000,
+          "accuracy_life_percent": 1000,
+          "accuracy_death_percent": 1000
+        }
+      },
+      "ai": {
+        "Level8_Mobs": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Fire_SingleAttackWithDOT_Level2",
+              "weight": 30
+            },
+            {
+              "key": "Fire_SingleAttackWithDOT_Level1",
+              "weight": 5
+            },
+            {
+              "key": "Storm_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Storm_SingleAttack_Level2",
+              "weight": 30
+            },
+            {
+              "key": "Storm_SingleAttack_Level1",
+              "weight": 5
+            },
+            {
+              "key": "Ice_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Ice_SingleAttack_Level2",
+              "weight": 30
+            },
+            {
+              "key": "Ice_SingleAttack_Level1",
+              "weight": 5
+            },
+            {
+              "key": "Life_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Life_SingleAttack_Level2",
+              "weight": 30
+            },
+            {
+              "key": "Life_SingleAttack_Level1",
+              "weight": 5
+            },
+            {
+              "key": "Death_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Death_SingleAttackWithLifeTap_Level2",
+              "weight": 30
+            },
+            {
+              "key": "Death_SingleAttack_Level1",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Fire_SingleAttackWithDOT_Level2",
+                "weight": 30
+              },
+              {
+                "key": "Fire_SingleAttackWithDOT_Level1",
+                "weight": 5
+              },
+              {
+                "key": "Storm_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Storm_SingleAttack_Level2",
+                "weight": 30
+              },
+              {
+                "key": "Storm_SingleAttack_Level1",
+                "weight": 5
+              },
+              {
+                "key": "Ice_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Ice_SingleAttack_Level2",
+                "weight": 30
+              },
+              {
+                "key": "Ice_SingleAttack_Level1",
+                "weight": 5
+              },
+              {
+                "key": "Life_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Life_SingleAttack_Level2",
+                "weight": 30
+              },
+              {
+                "key": "Life_SingleAttack_Level1",
+                "weight": 5
+              },
+              {
+                "key": "Death_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Death_SingleAttackWithLifeTap_Level2",
+                "weight": 30
+              },
+              {
+                "key": "Death_SingleAttack_Level1",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level10_Mobs_fire": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Fire_SingleAttackWithDOT_Level2",
+              "weight": 30
+            },
+            {
+              "key": "Fire_SingleAttackWithDOT_Level1",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Fire_SingleAttackWithDOT_Level2",
+                "weight": 30
+              },
+              {
+                "key": "Fire_SingleAttackWithDOT_Level1",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Fire_FireGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Fire_AreaAttackWithDOT_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Fire_FireGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Fire_AreaAttackWithDOT_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level10_Mobs_ice": {
+          "pool": [
+            {
+              "key": "Ice_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Ice_SingleAttack_Level2",
+              "weight": 30
+            },
+            {
+              "key": "Ice_SingleAttack_Level1",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Ice_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Ice_SingleAttack_Level2",
+                "weight": 30
+              },
+              {
+                "key": "Ice_SingleAttack_Level1",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Ice_IceGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Ice_AreaAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Ice_IceGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Ice_AreaAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level10_Mobs_storm": {
+          "pool": [
+            {
+              "key": "Storm_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Storm_SingleAttack_Level2",
+              "weight": 30
+            },
+            {
+              "key": "Storm_SingleAttack_Level1",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Storm_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Storm_SingleAttack_Level2",
+                "weight": 30
+              },
+              {
+                "key": "Storm_SingleAttack_Level1",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Storm_StormGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Storm_SingleAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Storm_StormGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Storm_SingleAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level10_Mobs_life": {
+          "pool": [
+            {
+              "key": "Life_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Life_SingleAttack_Level2",
+              "weight": 30
+            },
+            {
+              "key": "Life_SingleAttack_Level1",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Life_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Life_SingleAttack_Level2",
+                "weight": 30
+              },
+              {
+                "key": "Life_SingleAttack_Level1",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Life_SingleAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Life_SingleAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level10_Mobs_death": {
+          "pool": [
+            {
+              "key": "Death_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Death_SingleAttackWithLifeTap_Level2",
+              "weight": 30
+            },
+            {
+              "key": "Death_SingleAttack_Level1",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Death_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Death_SingleAttackWithLifeTap_Level2",
+                "weight": 30
+              },
+              {
+                "key": "Death_SingleAttack_Level1",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_Pet_DeathGlobalAuraDamage",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Death_SingleAttackWithLifeTap_Level2",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Death_Pet_DeathGlobalAuraDamage",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Death_SingleAttackWithLifeTap_Level2",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level13_Mobs": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Fire_SingleAttackWithDOT_Level3",
+              "weight": 30
+            },
+            {
+              "key": "Fire_SingleAttackWithDOT_Level2",
+              "weight": 10
+            },
+            {
+              "key": "Ice_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Ice_SingleAttack_Level3",
+              "weight": 30
+            },
+            {
+              "key": "Ice_SingleAttack_Level2",
+              "weight": 10
+            },
+            {
+              "key": "Storm_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Storm_SingleAttack_Level3",
+              "weight": 30
+            },
+            {
+              "key": "Storm_SingleAttack_Level2",
+              "weight": 10
+            },
+            {
+              "key": "Life_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Life_SingleAttack_Level3",
+              "weight": 30
+            },
+            {
+              "key": "Life_SingleAttack_Level2",
+              "weight": 10
+            },
+            {
+              "key": "Death_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Death_SingleAttack_Level3",
+              "weight": 30
+            },
+            {
+              "key": "Death_SingleAttackWithLifeTap_Level2",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Fire_SingleAttackWithDOT_Level3",
+                "weight": 30
+              },
+              {
+                "key": "Fire_SingleAttackWithDOT_Level2",
+                "weight": 10
+              },
+              {
+                "key": "Ice_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Ice_SingleAttack_Level3",
+                "weight": 30
+              },
+              {
+                "key": "Ice_SingleAttack_Level2",
+                "weight": 10
+              },
+              {
+                "key": "Storm_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Storm_SingleAttack_Level3",
+                "weight": 30
+              },
+              {
+                "key": "Storm_SingleAttack_Level2",
+                "weight": 10
+              },
+              {
+                "key": "Life_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Life_SingleAttack_Level3",
+                "weight": 30
+              },
+              {
+                "key": "Life_SingleAttack_Level2",
+                "weight": 10
+              },
+              {
+                "key": "Death_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Death_SingleAttack_Level3",
+                "weight": 30
+              },
+              {
+                "key": "Death_SingleAttackWithLifeTap_Level2",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level15_Mobs_fire": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Fire_SingleAttackWithDOT_Level3",
+              "weight": 30
+            },
+            {
+              "key": "Fire_SingleAttackWithDOT_Level2",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Fire_SingleAttackWithDOT_Level3",
+                "weight": 30
+              },
+              {
+                "key": "Fire_SingleAttackWithDOT_Level2",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Fire_FireGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Fire_AreaAttackWithDOT_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Fire_FireGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Fire_AreaAttackWithDOT_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level15_Mobs_ice": {
+          "pool": [
+            {
+              "key": "Ice_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Ice_SingleAttack_Level3",
+              "weight": 30
+            },
+            {
+              "key": "Ice_SingleAttack_Level2",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Ice_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Ice_SingleAttack_Level3",
+                "weight": 30
+              },
+              {
+                "key": "Ice_SingleAttack_Level2",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Ice_IceGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Ice_AreaAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Ice_IceGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Ice_AreaAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level15_Mobs_storm": {
+          "pool": [
+            {
+              "key": "Storm_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Storm_SingleAttack_Level3",
+              "weight": 30
+            },
+            {
+              "key": "Storm_SingleAttack_Level2",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Storm_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Storm_SingleAttack_Level3",
+                "weight": 30
+              },
+              {
+                "key": "Storm_SingleAttack_Level2",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Storm_StormGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Storm_SingleAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Storm_StormGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Storm_SingleAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level15_Mobs_life": {
+          "pool": [
+            {
+              "key": "Life_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Life_SingleAttack_Level3",
+              "weight": 30
+            },
+            {
+              "key": "Life_SingleAttack_Level2",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Life_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Life_SingleAttack_Level3",
+                "weight": 30
+              },
+              {
+                "key": "Life_SingleAttack_Level2",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Life_SingleAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Life_SingleAttack_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level15_Mobs_death": {
+          "pool": [
+            {
+              "key": "Death_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Death_SingleAttack_Level3",
+              "weight": 30
+            },
+            {
+              "key": "Death_SingleAttackWithLifeTap_Level2",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Death_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Death_SingleAttack_Level3",
+                "weight": 30
+              },
+              {
+                "key": "Death_SingleAttackWithLifeTap_Level2",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_Pet_DeathGlobalAuraDamage",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Death_SingleAttackWithLifeTap_Level2",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Death_Pet_DeathGlobalAuraDamage",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Death_SingleAttackWithLifeTap_Level2",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level23_Mobs": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Fire_AreaAttackWithDOT_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Fire_SingleAttackWithImmolate_Level4",
+              "weight": 5
+            },
+            {
+              "key": "Ice_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Ice_SingleAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Ice_SingleAttack_Level3",
+              "weight": 5
+            },
+            {
+              "key": "Storm_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Storm_SingleAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Storm_SingleAttack_Level3",
+              "weight": 5
+            },
+            {
+              "key": "Life_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Life_SingleAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Life_SingleAttack_Level3",
+              "weight": 5
+            },
+            {
+              "key": "Death_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Death_SingleAttackWithLifeTap_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Death_SingleAttack_Level3",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Fire_AreaAttackWithDOT_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Fire_SingleAttackWithImmolate_Level4",
+                "weight": 5
+              },
+              {
+                "key": "Ice_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Ice_SingleAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Ice_SingleAttack_Level3",
+                "weight": 5
+              },
+              {
+                "key": "Storm_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Storm_SingleAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Storm_SingleAttack_Level3",
+                "weight": 5
+              },
+              {
+                "key": "Life_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Life_SingleAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Life_SingleAttack_Level3",
+                "weight": 5
+              },
+              {
+                "key": "Death_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Death_SingleAttackWithLifeTap_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Death_SingleAttack_Level3",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level25_Mobs_fire": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Fire_AreaAttackWithDOT_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Fire_SingleAttackWithImmolate_Level4",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Fire_AreaAttackWithDOT_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Fire_SingleAttackWithImmolate_Level4",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Fire_FireGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Fire_Pet_AreaAttackWithDOT_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Fire_FireGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Fire_Pet_AreaAttackWithDOT_Level4",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level25_Mobs_ice": {
+          "pool": [
+            {
+              "key": "Ice_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Ice_SingleAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Ice_SingleAttack_Level3",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Ice_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Ice_SingleAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Ice_SingleAttack_Level3",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Ice_IceGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Ice_ReflectionShield",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Ice_IceGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Ice_SingleAttackWithDOT_Level5",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level25_Mobs_storm": {
+          "pool": [
+            {
+              "key": "Storm_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Storm_SingleAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Storm_SingleAttack_Level3",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Storm_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Storm_SingleAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Storm_SingleAttack_Level3",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Storm_StormGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Storm_SingleAttack_Level5",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Storm_StormGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Storm_SingleAttack_Level5",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level25_Mobs_life": {
+          "pool": [
+            {
+              "key": "Life_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Life_SingleAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Life_SingleAttack_Level3",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Life_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Life_SingleAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Life_SingleAttack_Level3",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Life_SingleAttack_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Life_SingleAttack_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level25_Mobs_death": {
+          "pool": [
+            {
+              "key": "Death_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Death_SingleAttackWithLifeTap_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Death_SingleAttack_Level3",
+              "weight": 5
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Death_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Death_SingleAttackWithLifeTap_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Death_SingleAttack_Level3",
+                "weight": 5
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_Pet_DeathGlobalAuraDamage",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Death_SingleAttackWithDisabledHeal",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Death_Pet_DeathGlobalAuraDamage",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Death_SingleAttackWithDisabledHeal",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level33_Mobs": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Fire_AreaDOTAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Fire_SingleAttackWithImmolate_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Ice_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Ice_AreaAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Ice_SingleAttack_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Storm_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Storm_SingleAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Storm_SingleAttack_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Life_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Life_SingleAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Life_SingleAttack_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Death_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Death_SingleAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Death_SingleAttackWithLifeTap_Level4",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Fire_AreaDOTAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Fire_SingleAttackWithImmolate_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Ice_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Ice_AreaAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Ice_SingleAttack_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Storm_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Storm_SingleAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Storm_SingleAttack_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Life_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Life_SingleAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Life_SingleAttack_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Death_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Death_SingleAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Death_SingleAttackWithLifeTap_Level4",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level35_Mobs_fire": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Fire_AreaDOTAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Fire_SingleAttackWithImmolate_Level4",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Fire_AreaDOTAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Fire_SingleAttackWithImmolate_Level4",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Fire_FireDamageBlade",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Fire_DOTAttackWithSplash_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3-",
+                "card": "Fire_FireGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3",
+                "card": "Fire_SingleAttackWithDOT_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level35_Mobs_ice": {
+          "pool": [
+            {
+              "key": "Ice_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Ice_AreaAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Ice_SingleAttack_Level4",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Ice_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Ice_AreaAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Ice_SingleAttack_Level4",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Ice_IceGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Ice_ReflectionShield",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3-",
+                "card": "Ice_IceDamageBlade",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3",
+                "card": "Ice_SingleAttack_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level35_Mobs_storm": {
+          "pool": [
+            {
+              "key": "Storm_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Storm_SingleAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Storm_SingleAttack_Level4",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Storm_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Storm_SingleAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Storm_SingleAttack_Level4",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Storm_StormGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Storm_SingleAttack_WildBolt_Level2",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3-",
+                "card": "Storm_StormDamageBlade",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3",
+                "card": "Storm_SingleAttack_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level35_Mobs_life": {
+          "pool": [
+            {
+              "key": "Life_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Life_SingleAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Life_SingleAttack_Level4",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Life_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Life_SingleAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Life_SingleAttack_Level4",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Life_SingleAttack_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Life_HealBlade",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Life_SingleHeal_LevelX",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level35_Mobs_death": {
+          "pool": [
+            {
+              "key": "Death_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Death_SingleAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Death_SingleAttackWithLifeTap_Level4",
+              "weight": 10
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Death_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Death_SingleAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Death_SingleAttackWithLifeTap_Level4",
+                "weight": 10
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_Pet_DeathGlobalAuraDamage",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Death_SingleAttackWithDisabledHeal",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3-",
+                "card": "Death_DeathDamageBlade",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3",
+                "card": "Death_SingleAttackWithLifeTap_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level43_Mobs": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Fire_AreaDOTAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Fire_SingleAttackWithImmolate_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Ice_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Ice_AreaAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Ice_SingleAttack_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Storm_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Storm_SingleAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Storm_SingleAttack_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Life_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Life_SingleAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Life_SingleAttack_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Death_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Death_SingleAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Death_SingleAttackWithLifeTap_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Fire_SingleAttack_Level1_Crazy",
+              "weight": 2
+            },
+            {
+              "key": "Ice_SingleAttack_Level1_Crazy",
+              "weight": 2
+            },
+            {
+              "key": "Storm_SingleAttack_Level1_Crazy",
+              "weight": 2
+            },
+            {
+              "key": "Life_SingleAttack_Level1_Crazy",
+              "weight": 2
+            },
+            {
+              "key": "Death_SingleAttack_Level1_Crazy",
+              "weight": 2
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Fire_AreaDOTAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Fire_SingleAttackWithImmolate_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Ice_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Ice_AreaAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Ice_SingleAttack_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Storm_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Storm_SingleAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Storm_SingleAttack_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Life_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Life_SingleAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Life_SingleAttack_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Death_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Death_SingleAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Death_SingleAttackWithLifeTap_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Fire_SingleAttack_Level1_Crazy",
+                "weight": 2
+              },
+              {
+                "key": "Ice_SingleAttack_Level1_Crazy",
+                "weight": 2
+              },
+              {
+                "key": "Storm_SingleAttack_Level1_Crazy",
+                "weight": 2
+              },
+              {
+                "key": "Life_SingleAttack_Level1_Crazy",
+                "weight": 2
+              },
+              {
+                "key": "Death_SingleAttack_Level1_Crazy",
+                "weight": 2
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Ice_GlobalShield",
+                "speak": "看你还打的动我么？~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level45_Mobs_fire": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Fire_AreaDOTAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Fire_SingleAttackWithImmolate_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Fire_SingleAttack_Level1_Crazy",
+              "weight": 2
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Fire_AreaDOTAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Fire_SingleAttackWithImmolate_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Fire_SingleAttack_Level1_Crazy",
+                "weight": 2
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Fire_FireDamageBlade",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Fire_Pet_DOTAttackWithSplash_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3-",
+                "card": "Fire_FireGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3",
+                "card": "Fire_Pet_SingleAttackWithDOT_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level45_Mobs_ice": {
+          "pool": [
+            {
+              "key": "Ice_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Ice_AreaAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Ice_SingleAttack_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Ice_SingleAttack_Level1_Crazy",
+              "weight": 2
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Ice_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Ice_AreaAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Ice_SingleAttack_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Ice_SingleAttack_Level1_Crazy",
+                "weight": 2
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Ice_IceGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Ice_ReflectionShield",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3-",
+                "card": "Ice_IceDamageBlade",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3",
+                "card": "Ice_Pet_AreaAttack_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level45_Mobs_storm": {
+          "pool": [
+            {
+              "key": "Storm_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Storm_SingleAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Storm_SingleAttack_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Storm_SingleAttack_Level1_Crazy",
+              "weight": 2
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Storm_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Storm_SingleAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Storm_SingleAttack_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Storm_SingleAttack_Level1_Crazy",
+                "weight": 2
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Storm_StormGlobalAura",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Storm_SingleAttack_WildBolt_Level2",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3-",
+                "card": "Storm_StormDamageBlade",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3",
+                "card": "Storm_SingleAttack_Level6_VIP",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level45_Mobs_life": {
+          "pool": [
+            {
+              "key": "Life_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Life_SingleAttack_Level4",
+              "weight": 30
+            },
+            {
+              "key": "Life_SingleAttack_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Life_SingleAttack_Level1_Crazy",
+              "weight": 2
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Life_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Life_SingleAttack_Level4",
+                "weight": 30
+              },
+              {
+                "key": "Life_SingleAttack_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Life_SingleAttack_Level1_Crazy",
+                "weight": 2
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Life_SingleAttack_Level6",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5-",
+                "card": "Life_HealBlade",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Life_SingleHeal_LevelX",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "10-",
+                "card": "Life_HealBlade",
+                "speak": "你确定对我有用么？~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "10",
+                "card": "Balance_Rune_SingleHeal_LongCD",
+                "speak": "看看谁更厉害一些~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Level45_Mobs_death": {
+          "pool": [
+            {
+              "key": "Death_SingleAttack_Level0_120_adv",
+              "weight": 20
+            },
+            {
+              "key": "Death_SingleAttack_Level5",
+              "weight": 30
+            },
+            {
+              "key": "Death_SingleAttackWithLifeTap_Level4",
+              "weight": 10
+            },
+            {
+              "key": "Death_SingleAttack_Level1_Crazy",
+              "weight": 2
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Death_SingleAttack_Level0_120_adv",
+                "weight": 20
+              },
+              {
+                "key": "Death_SingleAttack_Level5",
+                "weight": 30
+              },
+              {
+                "key": "Death_SingleAttackWithLifeTap_Level4",
+                "weight": 10
+              },
+              {
+                "key": "Death_SingleAttack_Level1_Crazy",
+                "weight": 2
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_Pet_DeathGlobalAuraDamage",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Death_Pet_DeathSingleAttack_UndeadMonkey_Boss",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "可恶的小哈奇，你竟然敢激怒我！！~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3",
+                "card": "Death_SingleAttackWithDisabledHeal",
+                "speak": "哈哈哈！！来试试我的厉害吧~！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        },
+        "Baron_Enrage": {
+          "pool": [
+            {
+              "key": "Fire_SingleAttack_Level1_Crazy",
+              "weight": 10
+            },
+            {
+              "key": "Ice_SingleAttack_Level1_Crazy",
+              "weight": 10
+            },
+            {
+              "key": "Storm_SingleAttack_Level1_Crazy",
+              "weight": 10
+            },
+            {
+              "key": "Life_SingleAttack_Level1_Crazy",
+              "weight": 10
+            },
+            {
+              "key": "Death_SingleAttack_Level1_Crazy",
+              "weight": 10
+            },
+            {
+              "key": "Death_GlobalDamageTrap",
+              "weight": 2
+            }
+          ],
+          "cardsets": {
+            "1": [
+              {
+                "key": "Fire_SingleAttack_Level1_Crazy",
+                "weight": 10
+              },
+              {
+                "key": "Ice_SingleAttack_Level1_Crazy",
+                "weight": 10
+              },
+              {
+                "key": "Storm_SingleAttack_Level1_Crazy",
+                "weight": 10
+              },
+              {
+                "key": "Life_SingleAttack_Level1_Crazy",
+                "weight": 10
+              },
+              {
+                "key": "Death_SingleAttack_Level1_Crazy",
+                "weight": 10
+              },
+              {
+                "key": "Death_GlobalDamageTrap",
+                "weight": 2
+              }
+            ]
+          },
+          "sequences": [
+            [
+              {
+                "round": "1-",
+                "card": "Death_Pet_DeathGlobalAuraDamage",
+                "speak": "我感受到了久违的力量！这是来自恶魔的召唤吧？~~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "1",
+                "card": "Death_Rune_AreaAttack_DoomLordsWrath",
+                "speak": "让我先活动一下筋骨~！这个恶魔之躯的强大能力超乎了我的想象！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "2-",
+                "card": "Fire_AreaStun",
+                "speak": "让你们晚点死吧，我要先熟悉一下这强大的力量。",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "2",
+                "card": "Balance_Rune_AreaStunAbsorb",
+                "speak": "感觉好像熟悉的差不多了~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "2+",
+                "card": "Fire_SingleAttackWithDOT_Level5",
+                "speak": "生命只有一次，你们确定不选择逃跑么？哈哈哈！！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3-",
+                "card": "Death_DeathDamageBlade",
+                "speak": "那接下来，好戏登场了……",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3",
+                "card": "Death_DeathDamageBlade_Adv",
+                "speak": "你根本无法抗衡我的力量~",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "3+",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "世间的所有黑暗力量，都聆听我男爵的召唤吧！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "4",
+                "card": "Death_SingleAttackWithLifeTap_Level6_OutStandingCard",
+                "speak": "游戏结束了吗？",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "5",
+                "card": "Balance_AreaGlobalShield_Pandora_03",
+                "speak": "想不到你还可以支持那么久！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "6",
+                "card": "Death_Rune_AreaAttack_Level2",
+                "speak": "你们渺小的哈奇为什么一定要和魔王作对呢？",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "7",
+                "card": "Balance_Rune_AreaAttackCard_High",
+                "speak": "你们不要在做无谓的反抗，这真的没有任何意义。",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "8",
+                "card": "Death_GlobalDamageTrap",
+                "speak": "我真替你们感到悲哀。",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "9",
+                "card": "Death_Pet_DeathGlobalAuraDamage",
+                "speak": "仔细听，这是恶魔愤怒时嘶吼的镇魂曲。",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "10-",
+                "card": "Death_SymmetryGlobalTrap",
+                "speak": "这首曲子的意思是“安息吧，灵魂”，你听到了吗？",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "11",
+                "card": "Fire_FireDamageBlade",
+                "speak": "我真的不愿意再折磨你们了……",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "12",
+                "card": "Ice_IceDamageBlade",
+                "speak": "我记得我小时候，曾经喜欢过一个女孩，但是从未跟她提起过。",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "13",
+                "card": "Storm_StormDamageBlade",
+                "speak": "后来她的灵魂被恶魔夺取了，我为此悲痛了整整一年的时间。",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "14",
+                "card": "Life_LifeDamageBlade",
+                "speak": "如果上天能让她回到我的身边，我一定会立刻向她表白！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "15",
+                "card": "Death_DeathDamageBlade",
+                "speak": "这是一个多么凄美的故事，你能理解吗？你可以理解我的愤怒吗？",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "16",
+                "card": "Death_Rune_SingleAttackWithPercent",
+                "speak": "最后我和恶魔签订了灵魂的契约，成为了魔王的义子。",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "17",
+                "card": "Life_Rune_PowerPipTrap_Standing",
+                "speak": "如同今天一样，我已经完全没有了虐杀的兴趣。",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "18",
+                "card": "Life_Rune_AreaPowerPipBoost",
+                "speak": "快点离开这里，我感觉已经无法控制自己了！！",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              },
+              {
+                "round": "19",
+                "card": "Storm_SingleAttack_Level6_OutStandingCard",
+                "speak": "Remettez votre âme!(恶魔语)",
+                "accuracy_boost": "1000",
+                "target_hostile": "threat_highest",
+                "target_friendly": "self"
+              }
+            ]
+          ],
+          "genes": [
+            {
+              "hp_range": "0,100",
+              "priority": "10",
+              "card_set": "1",
+              "target_hostile": "threat_highest",
+              "target_friendly": "self"
+            }
+          ]
+        }
+      },
+      "cards": {
+        "Balance_AreaGlobalShield_Pandora_03": {
+          "key": "Balance_AreaGlobalShield_Pandora_03",
+          "spellName": "Balance_GlobalShield",
+          "type": "AreaWard",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "balance",
+          "params": {
+            "ward": 79
+          },
+          "target": "friendly",
+          "datafile": "config/Aries/Cards/Balance_AreaGlobalShield_Pandora_03.xml"
+        },
+        "Balance_Rune_AreaAttackCard_High": {
+          "key": "Balance_Rune_AreaAttackCard_High",
+          "spellName": "Balance_Rune_AreaAttackCard_High",
+          "type": "AreaAttack",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "balance",
+          "params": {
+            "damage_min": 800,
+            "damage_max": 800,
+            "damage_school": "balance",
+            "cooldown": 50
+          },
+          "datafile": "config/Aries/Cards/Balance_Rune_AreaAttackCard_High.xml"
+        },
+        "Balance_Rune_AreaStunAbsorb": {
+          "key": "Balance_Rune_AreaStunAbsorb",
+          "spellName": "Balance_Rune_AreaStunAbsorb",
+          "type": "AreaWard",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "balance",
+          "params": {
+            "ward": 31,
+            "cooldown": 9
+          },
+          "datafile": "config/Aries/Cards/Balance_Rune_AreaStunAbsorb.xml"
+        },
+        "Balance_Rune_SingleHeal_LongCD": {
+          "key": "Balance_Rune_SingleHeal_LongCD",
+          "spellName": "Balance_Rune_SingleHeal_LongCD",
+          "type": "SingleHealWithCleanse",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "balance",
+          "params": {
+            "heal_min": 880,
+            "heal_max": 880,
+            "cooldown": 20
+          },
+          "datafile": "config/Aries/Cards/Balance_Rune_SingleHeal_LongCD.xml"
+        },
+        "Death_DeathDamageBlade": {
+          "key": "Death_DeathDamageBlade",
+          "spellName": "Death_DeathDamageBlade",
+          "type": "Charms",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "death",
+          "params": {
+            "charms": 23
+          },
+          "datafile": "config/Aries/Cards/Death_DeathDamageBlade.xml"
+        },
+        "Death_DeathDamageBlade_Adv": {
+          "key": "Death_DeathDamageBlade_Adv",
+          "spellName": "Death_DeathDamageBlade",
+          "type": "Charms",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "death",
+          "params": {
+            "charms": 35,
+            "cooldown": 1
+          },
+          "datafile": "config/Aries/Cards/Death_DeathDamageBlade_Adv.xml"
+        },
+        "Death_GlobalDamageTrap": {
+          "key": "Death_GlobalDamageTrap",
+          "spellName": "Death_GlobalDamageTrap",
+          "type": "Wards",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "death",
+          "params": {
+            "wards": 42
+          },
+          "datafile": "config/Aries/Cards/Death_GlobalDamageTrap.xml"
+        },
+        "Death_Pet_DeathGlobalAuraDamage": {
+          "key": "Death_Pet_DeathGlobalAuraDamage",
+          "spellName": "Death_Pet_DeathGlobalAuraDamage",
+          "type": "Global",
+          "pipcost": 2,
+          "accuracy": 100,
+          "spellSchool": "death",
+          "params": {
+            "boost_damage": 25,
+            "school": "death",
+            "cooldown": 2
+          },
+          "datafile": "config/Aries/Cards/Death_Pet_DeathGlobalAuraDamage.xml"
+        },
+        "Death_Pet_DeathSingleAttack_UndeadMonkey_Boss": {
+          "key": "Death_Pet_DeathSingleAttack_UndeadMonkey_Boss",
+          "spellName": "Death_Pet_DeathSingleAttack_UndeadMonkey_Boss",
+          "type": "SingleAttack",
+          "pipcost": 6,
+          "accuracy": 85,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 700,
+            "damage_max": 700,
+            "damage_school": "death"
+          },
+          "datafile": "config/Aries/Cards/Death_Pet_DeathSingleAttack_UndeadMonkey_Boss.xml"
+        },
+        "Death_Rune_AreaAttack_DoomLordsWrath": {
+          "key": "Death_Rune_AreaAttack_DoomLordsWrath",
+          "spellName": "Death_AreaAttack_DoomLordsWrath",
+          "type": "AreaAttack",
+          "pipcost": 6,
+          "accuracy": 85,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 456,
+            "damage_max": 504,
+            "damage_school": "death",
+            "cooldown": 30
+          },
+          "requireLevel": 46,
+          "datafile": "config/Aries/Cards/Death_Rune_AreaAttack_DoomLordsWrath.xml"
+        },
+        "Death_Rune_AreaAttack_Level2": {
+          "key": "Death_Rune_AreaAttack_Level2",
+          "spellName": "Death_Rune_AreaAttack_Level2",
+          "type": "AreaAttackWithExtraThreat",
+          "pipcost": 3,
+          "accuracy": 100,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 228,
+            "damage_max": 252,
+            "damage_school": "death",
+            "threat_ratio": 10,
+            "cooldown": 8
+          },
+          "requireLevel": 18,
+          "datafile": "config/Aries/Cards/Death_Rune_AreaAttack_Level2.xml"
+        },
+        "Death_Rune_SingleAttackWithPercent": {
+          "key": "Death_Rune_SingleAttackWithPercent",
+          "spellName": "Death_SingleAttackWithPercent",
+          "type": "SingleAttackWithPercent",
+          "pipcost": 5,
+          "accuracy": 85,
+          "spellSchool": "balance",
+          "params": {
+            "damage_percent": 30,
+            "damage_school": "Balance",
+            "immolate_damage_percent": 30,
+            "immolate_damage_school": "Balance",
+            "damage_max_mob": 10000,
+            "damage_max_player": 5000,
+            "cooldown": 12
+          },
+          "requireLevel": 46,
+          "datafile": "config/Aries/Cards/Death_Rune_SingleAttackWithPercent.xml"
+        },
+        "Death_SingleAttackWithDisabledHeal": {
+          "key": "Death_SingleAttackWithDisabledHeal",
+          "spellName": "Death_SingleAttackWithDisabledHeal",
+          "type": "SingleAttackWithLifeTapAndStandingWards",
+          "pipcost": 6,
+          "accuracy": 85,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 650,
+            "damage_max": 800,
+            "convert_rate": 1,
+            "damage_school": "death",
+            "wards": 53,
+            "rounds": 3,
+            "cooldown": 3
+          },
+          "datafile": "config/Aries/Cards/Death_SingleAttackWithDisabledHeal.xml"
+        },
+        "Death_SingleAttackWithLifeTap_Level2": {
+          "key": "Death_SingleAttackWithLifeTap_Level2",
+          "spellName": "Death_SingleAttackWithLifeTap_Level2",
+          "type": "SingleAttackWithLifeTap",
+          "pipcost": 2,
+          "accuracy": 100,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 190,
+            "damage_max": 210,
+            "convert_rate": 40,
+            "damage_school": "death"
+          },
+          "datafile": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level2.xml"
+        },
+        "Death_SingleAttackWithLifeTap_Level4": {
+          "key": "Death_SingleAttackWithLifeTap_Level4",
+          "spellName": "Death_SingleAttackWithLifeTap_Level4",
+          "type": "SingleAttackWithLifeTap",
+          "pipcost": 4,
+          "accuracy": 95,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 380,
+            "damage_max": 420,
+            "convert_rate": 40,
+            "damage_school": "death"
+          },
+          "datafile": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level4.xml"
+        },
+        "Death_SingleAttackWithLifeTap_Level6": {
+          "key": "Death_SingleAttackWithLifeTap_Level6",
+          "spellName": "Death_SingleAttackWithLifeTap_Level6",
+          "type": "SingleAttackWithLifeTap",
+          "pipcost": 6,
+          "accuracy": 85,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 570,
+            "damage_max": 630,
+            "convert_rate": 40,
+            "damage_school": "death"
+          },
+          "datafile": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level6.xml"
+        },
+        "Death_SingleAttackWithLifeTap_Level6_OutStandingCard": {
+          "key": "Death_SingleAttackWithLifeTap_Level6_OutStandingCard",
+          "spellName": "Death_SingleAttackWithLifeTap_Level6_OutStandingCard",
+          "type": "SingleAttackWithLifeTap",
+          "pipcost": 6,
+          "accuracy": 85,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 830,
+            "damage_max": 830,
+            "convert_rate": 30,
+            "damage_school": "death"
+          },
+          "datafile": "config/Aries/Cards/Death_SingleAttackWithLifeTap_Level6_OutStandingCard.xml"
+        },
+        "Death_SingleAttack_Level0_120_adv": {
+          "key": "Death_SingleAttack_Level0_120_adv",
+          "spellName": "Death_SingleAttack_Level0_1_20",
+          "type": "SingleAttack",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 50,
+            "damage_max": 50,
+            "damage_school": "death"
+          },
+          "datafile": "config/Aries/Cards/Death_SingleAttack_Level0_120_adv.xml"
+        },
+        "Death_SingleAttack_Level1": {
+          "key": "Death_SingleAttack_Level1",
+          "spellName": "Death_SingleAttack_Level1",
+          "type": "SingleAttack",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 95,
+            "damage_max": 105,
+            "damage_school": "death"
+          },
+          "datafile": "config/Aries/Cards/Death_SingleAttack_Level1.xml"
+        },
+        "Death_SingleAttack_Level1_Crazy": {
+          "key": "Death_SingleAttack_Level1_Crazy",
+          "spellName": "Death_SingleAttack_Level1_Crazy",
+          "type": "SingleAttack",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 2200,
+            "damage_max": 2200,
+            "damage_school": "death"
+          },
+          "datafile": "config/Aries/Cards/Death_SingleAttack_Level1_Crazy.xml"
+        },
+        "Death_SingleAttack_Level3": {
+          "key": "Death_SingleAttack_Level3",
+          "spellName": "Death_SingleAttack_Level3",
+          "type": "SingleAttack",
+          "pipcost": 3,
+          "accuracy": 95,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 285,
+            "damage_max": 315,
+            "damage_school": "death"
+          },
+          "datafile": "config/Aries/Cards/Death_SingleAttack_Level3.xml"
+        },
+        "Death_SingleAttack_Level5": {
+          "key": "Death_SingleAttack_Level5",
+          "spellName": "Death_SingleAttack_Level5",
+          "type": "SingleAttack",
+          "pipcost": 5,
+          "accuracy": 85,
+          "spellSchool": "death",
+          "params": {
+            "damage_min": 475,
+            "damage_max": 525,
+            "damage_school": "death"
+          },
+          "datafile": "config/Aries/Cards/Death_SingleAttack_Level5.xml"
+        },
+        "Death_SymmetryGlobalTrap": {
+          "key": "Death_SymmetryGlobalTrap",
+          "spellName": "Death_SymmetryGlobalTrap",
+          "type": "SymmetryWards",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "death",
+          "params": {
+            "target_wards": 38,
+            "cooldown": 2,
+            "caster_wards": 39
+          },
+          "datafile": "config/Aries/Cards/Death_SymmetryGlobalTrap.xml"
+        },
+        "Fire_AreaAttackWithDOT_Level4": {
+          "key": "Fire_AreaAttackWithDOT_Level4",
+          "spellName": "Fire_AreaAttack_Level4",
+          "type": "AreaAttackWithDOT",
+          "pipcost": 4,
+          "accuracy": 75,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 268,
+            "damage_max": 296,
+            "damage_school": "fire",
+            "dots": 88,
+            "icon_gsid": 22105,
+            "dots_damage_school": "balance"
+          },
+          "datafile": "config/Aries/Cards/Fire_AreaAttackWithDOT_Level4.xml"
+        },
+        "Fire_AreaDOTAttack_Level5": {
+          "key": "Fire_AreaDOTAttack_Level5",
+          "spellName": "Fire_AreaDOTAttack_Level5",
+          "type": "AreaDOTAttack",
+          "pipcost": 5,
+          "accuracy": 75,
+          "spellSchool": "fire",
+          "params": {
+            "dots": "132,132,132",
+            "icon_gsid": 22115,
+            "damage_school": "fire",
+            "cooldown": 4
+          },
+          "datafile": "config/Aries/Cards/Fire_AreaDOTAttack_Level5.xml"
+        },
+        "Fire_AreaStun": {
+          "key": "Fire_AreaStun",
+          "spellName": "Fire_AreaStun",
+          "type": "AreaStun",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "fire",
+          "params": {
+            "cooldown": 8
+          },
+          "datafile": "config/Aries/Cards/Fire_AreaStun.xml"
+        },
+        "Fire_DOTAttackWithSplash_Level6": {
+          "key": "Fire_DOTAttackWithSplash_Level6",
+          "spellName": "Fire_DOTAttackWithSplash_Level6",
+          "type": "DOTAttack",
+          "pipcost": 6,
+          "accuracy": 75,
+          "spellSchool": "fire",
+          "params": {
+            "dots": "-800,0,0",
+            "damage_school": "fire",
+            "icon_gsid": 22331,
+            "cooldown": 8
+          },
+          "datafile": "config/Aries/Cards/Fire_DOTAttackWithSplash_Level6.xml"
+        },
+        "Fire_FireDamageBlade": {
+          "key": "Fire_FireDamageBlade",
+          "spellName": "Fire_FireDamageBlade",
+          "type": "Charms",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "fire",
+          "params": {
+            "charms": 11
+          },
+          "datafile": "config/Aries/Cards/Fire_FireDamageBlade.xml"
+        },
+        "Fire_FireGlobalAura": {
+          "key": "Fire_FireGlobalAura",
+          "spellName": "Fire_FireGlobalAura",
+          "type": "Global",
+          "pipcost": 2,
+          "accuracy": 100,
+          "spellSchool": "fire",
+          "params": {
+            "boost_damage": 15,
+            "school": "fire",
+            "icon_gsid": 22106,
+            "cooldown": 2
+          },
+          "datafile": "config/Aries/Cards/Fire_FireGlobalAura.xml"
+        },
+        "Fire_Pet_AreaAttackWithDOT_Level4": {
+          "key": "Fire_Pet_AreaAttackWithDOT_Level4",
+          "spellName": "Fire_AreaAttack_Level4",
+          "type": "AreaAttackWithDOT",
+          "pipcost": 4,
+          "accuracy": 85,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 480,
+            "damage_max": 480,
+            "damage_school": "fire",
+            "cooldown": 1,
+            "dots": 40,
+            "icon_gsid": 22359,
+            "dots_damage_school": "balance"
+          },
+          "requireLevel": 46,
+          "datafile": "config/Aries/Cards/Fire_Pet_AreaAttackWithDOT_Level4.xml"
+        },
+        "Fire_Pet_DOTAttackWithSplash_Level6": {
+          "key": "Fire_Pet_DOTAttackWithSplash_Level6",
+          "spellName": "Fire_DOTAttackWithSplash_Level6",
+          "type": "DOTAttack",
+          "pipcost": 6,
+          "accuracy": 85,
+          "spellSchool": "fire",
+          "params": {
+            "dots": "-690,0,0",
+            "damage_school": "fire",
+            "icon_gsid": 22358,
+            "cooldown": 1
+          },
+          "requireLevel": 46,
+          "datafile": "config/Aries/Cards/Fire_Pet_DOTAttackWithSplash_Level6.xml"
+        },
+        "Fire_Pet_SingleAttackWithDOT_Level6": {
+          "key": "Fire_Pet_SingleAttackWithDOT_Level6",
+          "spellName": "Fire_SingleAttack_Level6",
+          "type": "SingleAttackWithDOT",
+          "pipcost": 6,
+          "accuracy": 75,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 720,
+            "damage_max": 800,
+            "damage_school": "fire",
+            "dots": 60,
+            "icon_gsid": 22329,
+            "dots_damage_school": "balance"
+          },
+          "datafile": "config/Aries/Cards/Fire_Pet_SingleAttackWithDOT_Level6.xml"
+        },
+        "Fire_SingleAttackWithDOT_Level1": {
+          "key": "Fire_SingleAttackWithDOT_Level1",
+          "spellName": "Fire_SingleAttack_Level1",
+          "type": "SingleAttackWithDOT",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 84,
+            "damage_max": 92,
+            "damage_school": "fire",
+            "dots": 22,
+            "icon_gsid": 22101,
+            "dots_damage_school": "balance"
+          },
+          "datafile": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level1.xml"
+        },
+        "Fire_SingleAttackWithDOT_Level2": {
+          "key": "Fire_SingleAttackWithDOT_Level2",
+          "spellName": "Fire_SingleAttackWithDOT_Level2",
+          "type": "SingleAttackWithDOT",
+          "pipcost": 2,
+          "accuracy": 100,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 44,
+            "damage_max": 44,
+            "dots": "44,44,44",
+            "icon_gsid": 22102,
+            "cooldown": 1,
+            "damage_school": "fire"
+          },
+          "datafile": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level2.xml"
+        },
+        "Fire_SingleAttackWithDOT_Level3": {
+          "key": "Fire_SingleAttackWithDOT_Level3",
+          "spellName": "Fire_SingleAttack_Level3",
+          "type": "SingleAttackWithDOT",
+          "pipcost": 3,
+          "accuracy": 85,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 251,
+            "damage_max": 277,
+            "damage_school": "fire",
+            "dots": 66,
+            "icon_gsid": 22103,
+            "dots_damage_school": "balance"
+          },
+          "datafile": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level3.xml"
+        },
+        "Fire_SingleAttackWithDOT_Level5": {
+          "key": "Fire_SingleAttackWithDOT_Level5",
+          "spellName": "Fire_SingleAttack_Level5",
+          "type": "SingleAttackWithDOT",
+          "pipcost": 5,
+          "accuracy": 75,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 418,
+            "damage_max": 462,
+            "damage_school": "fire",
+            "dots": 110,
+            "icon_gsid": 22107,
+            "dots_damage_school": "balance"
+          },
+          "datafile": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level5.xml"
+        },
+        "Fire_SingleAttackWithDOT_Level6": {
+          "key": "Fire_SingleAttackWithDOT_Level6",
+          "spellName": "Fire_SingleAttack_Level6",
+          "type": "SingleAttackWithDOT",
+          "pipcost": 6,
+          "accuracy": 75,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 502,
+            "damage_max": 554,
+            "damage_school": "fire",
+            "dots": 132,
+            "icon_gsid": 22108,
+            "dots_damage_school": "balance"
+          },
+          "datafile": "config/Aries/Cards/Fire_SingleAttackWithDOT_Level6.xml"
+        },
+        "Fire_SingleAttackWithImmolate_Level4": {
+          "key": "Fire_SingleAttackWithImmolate_Level4",
+          "spellName": "Fire_SingleAttackWithImmolate_Level4",
+          "type": "SingleAttackWithImmolate",
+          "pipcost": 4,
+          "accuracy": 85,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 627,
+            "damage_max": 693,
+            "damage_school": "fire",
+            "immolate_damage_min": 209,
+            "immolate_damage_max": 231,
+            "immolate_damage_school": "fire"
+          },
+          "datafile": "config/Aries/Cards/Fire_SingleAttackWithImmolate_Level4.xml"
+        },
+        "Fire_SingleAttack_Level0_120_adv": {
+          "key": "Fire_SingleAttack_Level0_120_adv",
+          "spellName": "Fire_SingleAttack_Level0_1_20",
+          "type": "SingleAttack",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 55,
+            "damage_max": 55,
+            "damage_school": "fire"
+          },
+          "datafile": "config/Aries/Cards/Fire_SingleAttack_Level0_120_adv.xml"
+        },
+        "Fire_SingleAttack_Level1_Crazy": {
+          "key": "Fire_SingleAttack_Level1_Crazy",
+          "spellName": "Fire_SingleAttack_Level1_Crazy",
+          "type": "SingleAttack",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "fire",
+          "params": {
+            "damage_min": 2200,
+            "damage_max": 2200,
+            "damage_school": "fire"
+          },
+          "datafile": "config/Aries/Cards/Fire_SingleAttack_Level1_Crazy.xml"
+        },
+        "Ice_AreaAttack_Level4": {
+          "key": "Ice_AreaAttack_Level4",
+          "spellName": "Ice_AreaAttack_Level4",
+          "type": "AreaAttack",
+          "pipcost": 4,
+          "accuracy": 80,
+          "spellSchool": "ice",
+          "params": {
+            "damage_min": 310,
+            "damage_max": 330,
+            "damage_school": "ice",
+            "cooldown": 5
+          },
+          "datafile": "config/Aries/Cards/Ice_AreaAttack_Level4.xml"
+        },
+        "Ice_GlobalShield": {
+          "key": "Ice_GlobalShield",
+          "spellName": "Ice_GlobalShield",
+          "type": "Wards",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "ice",
+          "params": {
+            "wards": 27,
+            "cooldown": 2
+          },
+          "datafile": "config/Aries/Cards/Ice_GlobalShield.xml"
+        },
+        "Ice_IceDamageBlade": {
+          "key": "Ice_IceDamageBlade",
+          "spellName": "Ice_IceDamageBlade",
+          "type": "Charms",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "ice",
+          "params": {
+            "charms": 17
+          },
+          "datafile": "config/Aries/Cards/Ice_IceDamageBlade.xml"
+        },
+        "Ice_IceGlobalAura": {
+          "key": "Ice_IceGlobalAura",
+          "spellName": "Ice_IceGlobalAura",
+          "type": "Global",
+          "pipcost": 2,
+          "accuracy": 100,
+          "spellSchool": "ice",
+          "params": {
+            "boost_damage": 35,
+            "school": "ice",
+            "icon_gsid": 22145,
+            "cooldown": 2
+          },
+          "datafile": "config/Aries/Cards/Ice_IceGlobalAura.xml"
+        },
+        "Ice_Pet_AreaAttack_Level6": {
+          "key": "Ice_Pet_AreaAttack_Level6",
+          "spellName": "Ice_Pet_AreaAttack_Level6",
+          "type": "AreaAttack",
+          "pipcost": 6,
+          "accuracy": 80,
+          "spellSchool": "ice",
+          "params": {
+            "damage_min": 630,
+            "damage_max": 630,
+            "damage_school": "ice"
+          },
+          "datafile": "config/Aries/Cards/Ice_Pet_AreaAttack_Level6.xml"
+        },
+        "Ice_ReflectionShield": {
+          "key": "Ice_ReflectionShield",
+          "spellName": "Ice_ReflectionShield",
+          "type": "ReflectionShield",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "ice",
+          "params": {
+            "wards": 54,
+            "reflect_amount": 350,
+            "cooldown": 5,
+            "rounds": 3
+          },
+          "datafile": "config/Aries/Cards/Ice_ReflectionShield.xml"
+        },
+        "Ice_SingleAttackWithDOT_Level5": {
+          "key": "Ice_SingleAttackWithDOT_Level5",
+          "spellName": "Ice_SingleAttackWithDOT_Level5",
+          "type": "SingleAttackWithDOT",
+          "pipcost": 4,
+          "accuracy": 80,
+          "spellSchool": "ice",
+          "params": {
+            "damage_min": 90,
+            "damage_max": 90,
+            "dots": "90,90,90",
+            "icon_gsid": 22152,
+            "damage_school": "ice",
+            "cooldown": 4
+          },
+          "datafile": "config/Aries/Cards/Ice_SingleAttackWithDOT_Level5.xml"
+        },
+        "Ice_SingleAttack_Level0_120_adv": {
+          "key": "Ice_SingleAttack_Level0_120_adv",
+          "spellName": "Ice_SingleAttack_Level0_1_20",
+          "type": "SingleAttack",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "ice",
+          "params": {
+            "damage_min": 50,
+            "damage_max": 50,
+            "damage_school": "ice"
+          },
+          "datafile": "config/Aries/Cards/Ice_SingleAttack_Level0_120_adv.xml"
+        },
+        "Ice_SingleAttack_Level1": {
+          "key": "Ice_SingleAttack_Level1",
+          "spellName": "Ice_SingleAttack_Level1",
+          "type": "SingleAttack",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "ice",
+          "params": {
+            "damage_min": 97,
+            "damage_max": 103,
+            "damage_school": "ice"
+          },
+          "datafile": "config/Aries/Cards/Ice_SingleAttack_Level1.xml"
+        },
+        "Ice_SingleAttack_Level1_Crazy": {
+          "key": "Ice_SingleAttack_Level1_Crazy",
+          "spellName": "Ice_SingleAttack_Level1_Crazy",
+          "type": "SingleAttack",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "ice",
+          "params": {
+            "damage_min": 2200,
+            "damage_max": 2200,
+            "damage_school": "ice"
+          },
+          "datafile": "config/Aries/Cards/Ice_SingleAttack_Level1_Crazy.xml"
+        },
+        "Ice_SingleAttack_Level2": {
+          "key": "Ice_SingleAttack_Level2",
+          "spellName": "Ice_SingleAttack_Level2",
+          "type": "SingleAttack",
+          "pipcost": 2,
+          "accuracy": 100,
+          "spellSchool": "ice",
+          "params": {
+            "damage_min": 194,
+            "damage_max": 206,
+            "damage_school": "ice"
+          },
+          "datafile": "config/Aries/Cards/Ice_SingleAttack_Level2.xml"
+        },
+        "Ice_SingleAttack_Level3": {
+          "key": "Ice_SingleAttack_Level3",
+          "spellName": "Ice_SingleAttack_Level3",
+          "type": "SingleAttack",
+          "pipcost": 3,
+          "accuracy": 90,
+          "spellSchool": "ice",
+          "params": {
+            "damage_min": 291,
+            "damage_max": 309,
+            "damage_school": "ice"
+          },
+          "datafile": "config/Aries/Cards/Ice_SingleAttack_Level3.xml"
+        },
+        "Ice_SingleAttack_Level4": {
+          "key": "Ice_SingleAttack_Level4",
+          "spellName": "Ice_SingleAttack_Level4",
+          "type": "SingleAttack",
+          "pipcost": 4,
+          "accuracy": 80,
+          "spellSchool": "ice",
+          "params": {
+            "damage_min": 388,
+            "damage_max": 412,
+            "damage_school": "ice"
+          },
+          "datafile": "config/Aries/Cards/Ice_SingleAttack_Level4.xml"
+        },
+        "Ice_SingleAttack_Level6": {
+          "key": "Ice_SingleAttack_Level6",
+          "spellName": "Ice_SingleAttack_Level6",
+          "type": "SingleAttack",
+          "pipcost": 6,
+          "accuracy": 80,
+          "spellSchool": "ice",
+          "params": {
+            "damage_min": 582,
+            "damage_max": 618,
+            "damage_school": "ice"
+          },
+          "datafile": "config/Aries/Cards/Ice_SingleAttack_Level6.xml"
+        },
+        "Life_HealBlade": {
+          "key": "Life_HealBlade",
+          "spellName": "Life_HealBlade",
+          "type": "Charms",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "life",
+          "params": {
+            "charms": 21
+          },
+          "datafile": "config/Aries/Cards/Life_HealBlade.xml"
+        },
+        "Life_LifeDamageBlade": {
+          "key": "Life_LifeDamageBlade",
+          "spellName": "Life_LifeDamageBlade",
+          "type": "Charms",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "life",
+          "params": {
+            "charms": 19
+          },
+          "datafile": "config/Aries/Cards/Life_LifeDamageBlade.xml"
+        },
+        "Life_Rune_AreaPowerPipBoost": {
+          "key": "Life_Rune_AreaPowerPipBoost",
+          "spellName": "Life_AreaPowerPipBoost",
+          "type": "AreaPowerPipBoost",
+          "pipcost": 5,
+          "accuracy": 100,
+          "spellSchool": "life",
+          "params": {
+            "powerpips": 2,
+            "cooldown": 10
+          },
+          "requireLevel": 46,
+          "datafile": "config/Aries/Cards/Life_Rune_AreaPowerPipBoost.xml"
+        },
+        "Life_Rune_PowerPipTrap_Standing": {
+          "key": "Life_Rune_PowerPipTrap_Standing",
+          "spellName": "Life_Rune_PowerPipTrap_Standing",
+          "type": "StandingWards",
+          "pipcost": 2,
+          "accuracy": 100,
+          "spellSchool": "life",
+          "params": {
+            "wards": 56,
+            "rounds": 4,
+            "cooldown": 14
+          },
+          "requireLevel": 45,
+          "datafile": "config/Aries/Cards/Life_Rune_PowerPipTrap_Standing.xml"
+        },
+        "Life_SingleAttack_Level0_120_adv": {
+          "key": "Life_SingleAttack_Level0_120_adv",
+          "spellName": "Life_SingleAttack_Level0_1_20",
+          "type": "SingleAttack",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "life",
+          "params": {
+            "damage_min": 50,
+            "damage_max": 50,
+            "damage_school": "life"
+          },
+          "datafile": "config/Aries/Cards/Life_SingleAttack_Level0_120_adv.xml"
+        },
+        "Life_SingleAttack_Level1": {
+          "key": "Life_SingleAttack_Level1",
+          "spellName": "Life_SingleAttack_Level1",
+          "type": "SingleAttack",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "life",
+          "params": {
+            "damage_min": 97,
+            "damage_max": 103,
+            "damage_school": "life"
+          },
+          "datafile": "config/Aries/Cards/Life_SingleAttack_Level1.xml"
+        },
+        "Life_SingleAttack_Level1_Crazy": {
+          "key": "Life_SingleAttack_Level1_Crazy",
+          "spellName": "Life_SingleAttack_Level1_Crazy",
+          "type": "SingleAttack",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "life",
+          "params": {
+            "damage_min": 2200,
+            "damage_max": 2200,
+            "damage_school": "life"
+          },
+          "datafile": "config/Aries/Cards/Life_SingleAttack_Level1_Crazy.xml"
+        },
+        "Life_SingleAttack_Level2": {
+          "key": "Life_SingleAttack_Level2",
+          "spellName": "Life_SingleAttack_Level2",
+          "type": "SingleAttack",
+          "pipcost": 2,
+          "accuracy": 100,
+          "spellSchool": "life",
+          "params": {
+            "damage_min": 194,
+            "damage_max": 206,
+            "damage_school": "life"
+          },
+          "datafile": "config/Aries/Cards/Life_SingleAttack_Level2.xml"
+        },
+        "Life_SingleAttack_Level3": {
+          "key": "Life_SingleAttack_Level3",
+          "spellName": "Life_SingleAttack_Level3",
+          "type": "SingleAttack",
+          "pipcost": 3,
+          "accuracy": 100,
+          "spellSchool": "life",
+          "params": {
+            "damage_min": 291,
+            "damage_max": 309,
+            "damage_school": "life"
+          },
+          "datafile": "config/Aries/Cards/Life_SingleAttack_Level3.xml"
+        },
+        "Life_SingleAttack_Level4": {
+          "key": "Life_SingleAttack_Level4",
+          "spellName": "Life_SingleAttack_Level4",
+          "type": "SingleAttackWithDOT",
+          "pipcost": 4,
+          "accuracy": 90,
+          "spellSchool": "life",
+          "params": {
+            "damage_min": 180,
+            "damage_max": 180,
+            "dots": "180,0",
+            "icon_gsid": 22163,
+            "damage_school": "life"
+          },
+          "datafile": "config/Aries/Cards/Life_SingleAttack_Level4.xml"
+        },
+        "Life_SingleAttack_Level6": {
+          "key": "Life_SingleAttack_Level6",
+          "spellName": "Life_SingleAttack_Level6",
+          "type": "SingleAttack",
+          "pipcost": 6,
+          "accuracy": 90,
+          "spellSchool": "life",
+          "params": {
+            "damage_min": 582,
+            "damage_max": 618,
+            "damage_school": "life"
+          },
+          "datafile": "config/Aries/Cards/Life_SingleAttack_Level6.xml"
+        },
+        "Life_SingleHeal_LevelX": {
+          "key": "Life_SingleHeal_LevelX",
+          "spellName": "Life_SingleHeal_LevelX",
+          "type": "SingleHeal",
+          "pipcost": -14,
+          "accuracy": 100,
+          "spellSchool": "life",
+          "params": {
+            "heal_min": "200p",
+            "heal_max": "200p",
+            "cooldown": 20
+          },
+          "datafile": "config/Aries/Cards/Life_SingleHeal_LevelX.xml"
+        },
+        "Storm_SingleAttack_Level0_120_adv": {
+          "key": "Storm_SingleAttack_Level0_120_adv",
+          "spellName": "Storm_SingleAttack_Level0_1_20",
+          "type": "SingleAttack",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 65,
+            "damage_max": 65,
+            "damage_school": "storm"
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_Level0_120_adv.xml"
+        },
+        "Storm_SingleAttack_Level1": {
+          "key": "Storm_SingleAttack_Level1",
+          "spellName": "Storm_SingleAttack_Level1",
+          "type": "SingleAttack",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 120,
+            "damage_max": 140,
+            "damage_school": "storm",
+            "bCharging": true
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_Level1.xml"
+        },
+        "Storm_SingleAttack_Level1_Crazy": {
+          "key": "Storm_SingleAttack_Level1_Crazy",
+          "spellName": "Storm_SingleAttack_Level1_Crazy",
+          "type": "SingleAttack",
+          "pipcost": 1,
+          "accuracy": 100,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 2200,
+            "damage_max": 2200,
+            "damage_school": "storm"
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_Level1_Crazy.xml"
+        },
+        "Storm_SingleAttack_Level2": {
+          "key": "Storm_SingleAttack_Level2",
+          "spellName": "Storm_SingleAttack_Level2",
+          "type": "SingleAttack",
+          "pipcost": 2,
+          "accuracy": 100,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 239,
+            "damage_max": 281,
+            "damage_school": "storm",
+            "bCharging": true
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_Level2.xml"
+        },
+        "Storm_SingleAttack_Level3": {
+          "key": "Storm_SingleAttack_Level3",
+          "spellName": "Storm_SingleAttack_Level3",
+          "type": "SingleAttack",
+          "pipcost": 3,
+          "accuracy": 80,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 359,
+            "damage_max": 421,
+            "damage_school": "storm",
+            "bCharging": true
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_Level3.xml"
+        },
+        "Storm_SingleAttack_Level4": {
+          "key": "Storm_SingleAttack_Level4",
+          "spellName": "Storm_SingleAttack_Level4",
+          "type": "SingleAttack",
+          "pipcost": 4,
+          "accuracy": 70,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 478,
+            "damage_max": 562,
+            "damage_school": "storm",
+            "cooldown": 1,
+            "bCharging": true
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_Level4.xml"
+        },
+        "Storm_SingleAttack_Level5": {
+          "key": "Storm_SingleAttack_Level5",
+          "spellName": "Storm_SingleAttack_Level5",
+          "type": "SingleAttackWithMultipleDamage",
+          "pipcost": 5,
+          "accuracy": 70,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 269,
+            "damage_max": 316,
+            "damage_school": "storm",
+            "damage_equal": true,
+            "times": 2,
+            "cooldown": 2
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_Level5.xml"
+        },
+        "Storm_SingleAttack_Level6": {
+          "key": "Storm_SingleAttack_Level6",
+          "spellName": "Storm_SingleAttack_Level6",
+          "type": "SingleAttack",
+          "pipcost": 6,
+          "accuracy": 70,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 718,
+            "damage_max": 842,
+            "damage_school": "storm",
+            "bCharging": true
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_Level6.xml"
+        },
+        "Storm_SingleAttack_Level6_OutStandingCard": {
+          "key": "Storm_SingleAttack_Level6_OutStandingCard",
+          "spellName": "Storm_SingleAttack_Level6_OutStandingCard",
+          "type": "SingleAttack",
+          "pipcost": 6,
+          "accuracy": 70,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 980,
+            "damage_max": 1080,
+            "damage_school": "storm",
+            "bCharging": true
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_Level6_OutStandingCard.xml"
+        },
+        "Storm_SingleAttack_Level6_VIP": {
+          "key": "Storm_SingleAttack_Level6_VIP",
+          "spellName": "Storm_SingleAttack_Level6",
+          "type": "SingleAttack",
+          "pipcost": 6,
+          "accuracy": 70,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 890,
+            "damage_max": 890,
+            "damage_school": "storm"
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_Level6_VIP.xml"
+        },
+        "Storm_SingleAttack_WildBolt_Level2": {
+          "key": "Storm_SingleAttack_WildBolt_Level2",
+          "spellName": "Storm_SingleAttack_WildBolt_Level2",
+          "type": "SingleAttackWithMultipleDamage",
+          "pipcost": 6,
+          "accuracy": 40,
+          "spellSchool": "storm",
+          "params": {
+            "damage_min": 180,
+            "damage_max": 180,
+            "damage_school": "storm",
+            "random_times": "1,10",
+            "damage_equal": true,
+            "cooldown": 4
+          },
+          "datafile": "config/Aries/Cards/Storm_SingleAttack_WildBolt_Level2.xml"
+        },
+        "Storm_StormDamageBlade": {
+          "key": "Storm_StormDamageBlade",
+          "spellName": "Storm_StormDamageBlade",
+          "type": "Charms",
+          "pipcost": 0,
+          "accuracy": 100,
+          "spellSchool": "storm",
+          "params": {
+            "charms": 15
+          },
+          "datafile": "config/Aries/Cards/Storm_StormDamageBlade.xml"
+        },
+        "Storm_StormGlobalAura": {
+          "key": "Storm_StormGlobalAura",
+          "spellName": "Storm_StormGlobalAura",
+          "type": "Global",
+          "pipcost": 2,
+          "accuracy": 100,
+          "spellSchool": "storm",
+          "params": {
+            "boost_damage": 15,
+            "school": "storm",
+            "icon_gsid": 22127,
+            "cooldown": 2
+          },
+          "datafile": "config/Aries/Cards/Storm_StormGlobalAura.xml"
+        }
+      }
+    }
   },
   "version": "kids",
   "cards": {

@@ -315,28 +315,29 @@ export function describeCard(card,{dataset={},cooldown,translate=value=>value}={
     }
     if(type==='CatchPet'){summary.push(t('捕捉野生宠物'));lines.push(t('尝试捕捉选中的野生宠物；成功率受符文、目标剩余生命和等级差影响，成功或失败均消耗一张符文。'));complete=true;}
 
-    // 引擎未实现的卡（combat_cards_core.js UNSUPPORTED_TYPES）：描述原版效果并明确标注
-    const unimplementedNote=()=>lines.push(t('当前模拟器未实现此卡，施放时不产生任何效果。'));
+    // 儿童版特殊效果：按原 Lua 规则展示。
     if(type==='SingleFreeze'){
         summary.push(t('冰封{target}',{target}));
+        lines.push(t('冰封期间额外减伤{percent}%，并附加全系护盾；受攻击解除冰封后，防连续冰封保护仍保留。',{percent:dataset.global?.freezeResistPercent??80}));
         lines.push(t('冰封{target}，使其无法行动，直到其受到伤害或 {rounds} 回合后解除。',{target,rounds:p.rounds||2}));
-        unimplementedNote();complete=true;
+        complete=true;
     }
     if(type==='ConversePositiveWard'){
         const from=wards[p.fromward],to=wards[p.toward];
         summary.push(t('护盾转换为诅咒'));
+        lines.push(t('仅转换带品质的对应护盾，按绿、蓝、紫、橙顺序转换一层；基础护盾按原版规则不转换。'));
         if(from&&to)lines.push(t('将{target}身上的「{from}」护盾转换为「{to}」诅咒。',{target,from:t(from.desc||'护盾'),to:t(to.desc||'诅咒')}));
-        unimplementedNote();complete=true;
+        complete=true;
     }
     if(type==='SingleGuardianWithImmolate'){
         summary.push(t('替身守护'));
-        lines.push(t('对自己造成 {amount} 点死亡伤害，并为一名队友创造替身：其死亡后立即复活并恢复 {amount} 点生命。',{amount:range(p.immolate_damage_min,p.immolate_damage_max)}));
-        unimplementedNote();complete=true;
+        lines.push(t('对自己造成 {amount} 点死亡伤害，为自己或一名非宠物队友附加一次替身守护；倒下后恢复 {hp} 点生命，不超过生命上限。',{amount:range(p.immolate_damage_min,p.immolate_damage_max),hp:dataset.global?.guardianReviveHp??2000}));
+        complete=true;
     }
     if(type==='Enrage'){
         summary.push(t('激怒怪物'));
-        lines.push(t('激怒 {min}~{max} 级的野生怪物，使其立即加入战斗。',{min:p.can_enrage_minlevel||1,max:p.can_enrage_maxlevel||1}));
-        unimplementedNote();complete=true;
+        lines.push(t('激怒 {min}~{max} 级且允许激怒的战斗中怪物，切换原版激怒属性与技能并回满生命；每只限一次，激怒后不能捕捉。',{min:p.can_enrage_minlevel||1,max:p.can_enrage_maxlevel||1}));
+        complete=true;
     }
     // 系统 / 过程卡：不出现在玩家卡组
     if(['Dead','PickPet','Fizzle','HoT','DoT'].includes(type)){

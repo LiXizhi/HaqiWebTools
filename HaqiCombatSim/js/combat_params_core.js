@@ -98,6 +98,8 @@ export function defaultParams(version = 'teen') {
             effectThreatAreaWard:60,
             effectThreatAbsorb:400,
             effectThreatStun:500,
+            effectThreatSingleFreeze:200,
+            effectThreatConversePositiveWard:200,
             effectThreatRemovePositiveWard:100,
             effectThreatStealWard:100,
             effectThreatSymmetryWards:200,
@@ -117,6 +119,12 @@ export function defaultParams(version = 'teen') {
             xpGrowth: 300, petXpStep: 30,
         },
         global: {
+            // kids card_server.lua L5967–5993; player_server.lua L187, L2465.
+            freezeProtectionRounds: 8,
+            freezeSiblingProtectionRounds: 3,
+            freezeResistPercent: 80,
+            freezeWardId: 27,
+            guardianReviveHp: 2000,
             maxReflectDamage: teen ? 5000 : 4500,
             maxPips: teen ? 14 : 7,
             maxRounds: teen ? 80 : 100,
@@ -277,6 +285,7 @@ export function resolveParams(dataset, params) {
     return {
         version,
         global: { ...params.global },
+        enrage: dataset.pve?.enrage,
         battleAI: { ...defaultParams(version).battleAI, ...params.battleAI },
         // Web island unlock levels; original world configuration is unavailable.
         dungeonJourney: { ...defaultParams(version).dungeonJourney, ...params.dungeonJourney },

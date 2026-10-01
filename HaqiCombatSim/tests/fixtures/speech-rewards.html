@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>开口有礼 · 隔离预览</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><style>body{padding:18px;background:#325b4c}main{margin:20px auto;width:min(580px,100%)}.preview-body{padding:14px;background:#f8eac0;border:2px solid #c49a50;border-radius:12px}.preview-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}body.phone main{width:354px;max-width:100%}body.phone{padding:0;width:390px;max-width:100%}</style></head>
-<body class="haqi-app"><main><div class="preview-controls"></div><div class="preview-body"></div></main><script type="module">
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>开口有礼 · 隔离预览</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><style>html,body{height:100%;margin:0}body{padding:12px;background:#325b4c;box-sizing:border-box}main{height:100%;display:flex;flex-direction:column;margin:0 auto;width:min(620px,100%)}.preview-controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;flex:none}.modal.learning-mode-modal{width:100%;flex:1;min-height:0;height:auto;max-height:none}body.phone main{width:390px;max-width:100%}body.phone{padding:0;width:390px}</style></head>
+<body class="haqi-app"><main><div class="preview-controls"></div><section class="modal learning-mode-modal" role="dialog" aria-label="双语学习"><header class="modal-header"><div><p class="eyebrow">遇见居民 · 开口交流</p><h2>双语学习</h2></div></header><div class="modal-body preview-body"></div></section></main><script type="module">
 import {renderLearningMode} from '../../js/view_learning_mode.js';
 import {awardDailySpeech} from '../../js/language_daily_buff_core.js';
 import {claimSpeechReward} from '../../js/language_speech_rewards_core.js';
@@ -15,4 +15,5 @@ let serial=0;
 function draw(){body.replaceChildren();renderLearningMode(body,{save,assets},{action:a=>{claimSpeechReward(save,content,a.index);draw();},applyLearningMode:()=>{},disableLearning:()=>{},panel:()=>{}},{el,button});}
 for(const n of [0,5,30,40])controls.append(button(n+'句',()=>{save.dailyLanguageBuff=null;delete save.languageSpeechClaims;for(let i=0;i<n;i++)awardDailySpeech(save,content,String(serial++));draw();},'secondary'));
 controls.append(button('手机宽度',()=>{document.body.classList.toggle('phone');},'secondary'));draw();
+document.documentElement.dataset.fixtureReady='1';
 </script></body></html>

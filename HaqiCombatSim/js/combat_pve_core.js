@@ -8,7 +8,7 @@ import {appendThreat,advanceThreat,threatTarget} from './combat_threat_core.js';
 import { createArena, validTargets } from './combat_arena_core.js';
 import { defaultParams, resolveParams } from './combat_params_core.js';
 import { generatePip } from './combat_formulas_core.js';
-import { useCard, tickDots, tickHots, cardTargetKind, isSupportedType } from './combat_cards_core.js';
+import { useCard, tickDots, tickHots, cardTargetKind, isSupportedType, reviveGuardians } from './combat_cards_core.js';
 import { catchChanceMilli, isCatchRuneCard } from './adventure_runes_core.js';
 import { stampBattleMonsters } from './adventure_monster_pets_core.js';
 import * as U from './combat_unit_core.js';
@@ -21,8 +21,9 @@ function runeCardReady(battle, row) {
 export function runeCardsInHand(battle) {
     return (battle.runes||[]).filter(row=>row.count>(battle.runeUsed[row.itemId]||0)&&runeCardReady(battle,row)).map(row=>({key:row.key,runeId:row.itemId,seq:-row.itemId,count:row.count-(battle.runeUsed[row.itemId]||0)}));
 }
-export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0, languageBuff = null, languageBuffLimits = null }) {
+export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0, specialCardRulesVersion = 0, languageBuff = null, languageBuffLimits = null }) {
     if(monsterSlots&&(!Array.isArray(monsterSlots)||monsterSlots.length!==monsters.length||new Set(monsterSlots).size!==monsterSlots.length||monsterSlots.some(n=>!Number.isInteger(n)||n<0||n>3)))throw Error('怪物卡位无效');
+    if(![0,1].includes(specialCardRulesVersion))throw Error('特殊卡牌规则版本无效');
     if(![0,1].includes(dispelRulesVersion))throw Error('之敌规则版本无效');
     if(![0,1].includes(stealthRulesVersion))throw Error('隐身规则版本无效');
     if(![0,1].includes(reflectionRulesVersion))throw Error('反射规则版本无效');
@@ -39,7 +40,9 @@ export function createPveBattle({ dataset, player, monsters, monsterSlots = null
     params.global.stormChargingWardIds = dataset.pve?.stormChargingWardIds || [];
     params.global.deckCapacity = player.deckCapacity;
     params.global.deckEachCapacity = player.deckEachCapacity;
-    const resolved = resolveParams(dataset,params);
+    const combatDataset = specialCardRulesVersion === 1 && dataset.pve?.enrage
+        ? {...dataset,cards:{...dataset.pve.enrage.cards,...dataset.cards}} : dataset;
+    const resolved = resolveParams(combatDataset,params);
     const far = monsters.map((m,i) => {
         const stats = U.normalizeStats();
         for (const school of ['fire','ice','storm','life','death','all']) {
@@ -51,6 +54,7 @@ export function createPveBattle({ dataset, player, monsters, monsterSlots = null
     });
     const arena = createArena({ resolved, near:party||[player], far, seed, firstSide });
     arena.mode = 'pve'; arena.currentSide = 'near'; arena.firstActingSide = firstSide;
+    arena.specialCardRulesVersion=specialCardRulesVersion;
     arena.threatRulesVersion=threatRulesVersion;
     arena.reflectionRulesVersion=reflectionRulesVersion;
     arena.stealthRulesVersion=stealthRulesVersion;arena.dispelRulesVersion=dispelRulesVersion;
@@ -148,7 +152,8 @@ export function pickMonsterCard(a,u,phase='normal') {
     const indexKey=`sequence_${phase}`;
     if (candidates.length) {
         if (memory[indexKey] === undefined) memory[indexKey]=a.rng.int(0,candidates.length-1);
-        const entry=candidates[memory[indexKey]].find(r=>r.round===String(round)+suffix);
+        // mob_server.lua L4797 / L4883 guards a missing retained sequence after enrage.
+        const entry=candidates[memory[indexKey]]?.find(r=>r.round===String(round)+suffix);
         if (entry) { memory.lastHp=u.hp; return { ...entry, key:entry.card, scripted:true }; }
     }
     if (phase!=='normal')return null;
@@ -201,6 +206,7 @@ export function applyLearningSpeech(a, progress) {
 }
 function finished(a) {
     if(a.finished)return true;
+    reviveGuardians(a);
     if(!a.sides.near.some(U.isAlive))a.winner='far';
     else if(!a.sides.far.some(U.isAlive))a.winner='near';
     else if(a.remainingRounds<=0)a.winner=null;
@@ -208,9 +214,12 @@ function finished(a) {
     a.finished=true;a.phase='done';emit(a,{type:'combat_end',winner:a.winner});return true;
 }
 function beforeAct(a,u) {
-    tickDots(a,u); if(finished(a))return false;
+    tickDots(a,u);
+    const diedFromDot = !U.isAlive(u);
+    if(finished(a)||diedFromDot)return false;
     tickHots(a,u);
     if(u.stunned) {u.stunned=false;emit(a,{type:'pass',caster:u.id,reason:'stunned'});return false;}
+    if(u.freezeRounds>0){emit(a,{type:'pass',caster:u.id,reason:'frozen'});return false;}
     return U.isAlive(u);
 }
 function monstersAct(a,phase) {
@@ -269,7 +278,7 @@ export function playPveRound(a,decision) {
         else if(rune&&isCatchRuneCard(a.resolved.cards[decision.key])){
             const target=a.unitsById[decision.targetId];
             // card_server.lua L2298 returns before CatchPet when the mob is already dead, so the rune stays.
-            if(!U.isAlive(target))emit(a,{type:'pass',caster:u.id,reason:'dead_target'});
+            if(!U.isAlive(target)||target.enragedBy)emit(a,{type:'pass',caster:u.id,reason:target.enragedBy?'enraged_target':'dead_target'});
             else {
                 const card=a.resolved.cards[decision.key];
                 const force=target.template.attributes?.catch_pet_force_chance_percent;
@@ -327,7 +336,7 @@ export function restorePveBattle(dataset,content,checkpoint) {
     const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId);
     if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
     const templates=checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]];
-    const a=createPveBattle({dataset,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});
+    const a=createPveBattle({dataset,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,specialCardRulesVersion:checkpoint.specialCardRulesVersion,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});
     a.replaying=true;for(const decision of checkpoint.decisions)playPveRound(a,decision);a.replaying=false;
     return a;
 }

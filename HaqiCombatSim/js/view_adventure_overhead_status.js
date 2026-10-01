@@ -46,6 +46,10 @@ export function battleStatusEffects(unit,battle) {
         const rounds=sequence.ticks?.length||0;
         if(rounds>0)add(kind,kind==='dots'?'伤':'疗',`${kind==='dots'?'持续伤害':'持续治疗'} · 剩余${rounds}回合`,{}, {negative:kind==='dots',rounds,effectId:`${sequence.cardKey||''}:${sequence.casterId||''}`});
     }
+    if(unit.freezeRounds>0)add('freeze','冻',fill('冰封 · {rounds}回合',{rounds:unit.freezeRounds}).text,{school:'ice'},{negative:true});
+    if(unit.antiFreezeRounds>0)add('antifreeze','抗',fill('防冰封 · {rounds}回合',{rounds:unit.antiFreezeRounds}).text,{school:'ice'});
+    if(unit.enragedBy)add('enrage','怒',tr('激怒：已切换激怒属性与技能'),{}, {negative:true});
+    if(unit.guardian)add('guardian','护',tr('替身守护：倒下后复活一次'));
     if(unit.stunned)add('stun','晕','眩晕',{}, {negative:true});
     if(unit.reflectAmount>0)add('reflect','镜',`反射盾 ${unit.reflectAmount}`,{school:'ice'});
     if(unit.stealth)add('stealth','隐',`隐身${unit.stealthRounds>0?` · ${unit.stealthRounds}回合`:''}`);

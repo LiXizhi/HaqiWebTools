@@ -59,9 +59,10 @@ function plate(c,label,x,y,style=PLATE.place,school=null) {
     const shown=tr(label);
     if(school){
         c.save();c.font='600 12px "PingFang SC", "Microsoft YaHei", sans-serif';
-        const width=c.measureText(shown).width,iconX=x-(width+22)/2+8;
-        ellipse(c,iconX,y-3,9,9,'#fff5d9');drawSchoolIcon(c,school,iconX,y-3,13);
-        c.restore();x+=11;
+        const iconSize=26,iconGap=6,width=c.measureText(shown).width;
+        const iconX=x-(width+iconSize+iconGap)/2+iconSize/2;
+        drawSchoolIcon(c,school,iconX,y-3,iconSize);
+        c.restore();x+=(iconSize+iconGap)/2;
     }
     if(!style.bg){c.save();c.shadowColor='#10251f';c.shadowBlur=4;c.shadowOffsetX=0;c.shadowOffsetY=2;text(c,shown,x,y+2,12,style.text);c.restore();return;}
     c.font='600 12px "PingFang SC", sans-serif';

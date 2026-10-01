@@ -25,7 +25,7 @@ test('environment atlases retain alpha, provenance and bounded nonoverlapping cr
 
 test('weather atlas replaces vector particles, keeps its budget and can be suppressed',()=>{
     const calls=[],c={save(){},restore(){},beginPath(){throw Error('Unexpected fallback');}},art={draw(...args){calls.push(args);return true;}};
-    for(const kind of ['embers','mist','ash','motes']){
+    for(const kind of ['embers','mist','motes']){
         calls.length=0;const weather={kind,count:100,speed:20,wind:4,color:'#fff'};
         drawIslandWeather(c,{},null,10,1280,720,false,art,weather);
         assert.equal(calls.length,64);assert.ok(calls.every(a=>a[1]==='weather'&&a[2]===kind));
@@ -53,6 +53,26 @@ test('weather atlas replaces vector particles, keeps its budget and can be suppr
     const alphas=[];
     drawIslandWeather({save(){},restore(){},beginPath(){},ellipse(){},fill(){},stroke(){},moveTo(){},lineTo(){},rotate(){},translate(){},set globalAlpha(v){alphas.push(v);},get globalAlpha(){return alphas.at(-1)??1;}},{},null,10,1280,720,false,null,{kind:'snow',count:8,speed:20,wind:4,color:'#fff'},null,.4);
     assert.ok(alphas.length>0&&alphas.every(v=>v<=.4+1e-6));
+});
+
+test('fire island landing renders visible ash flakes instead of the smoke atlas',()=>{
+    const map=JSON.parse(fs.readFileSync(new URL('data/adventure/maps/fire.json',root)));
+    const landing=map.regions.find(region=>region.id==='landing');
+    assert.equal(landing.weather.kind,'ash');
+    const commands=[];
+    const context=new Proxy({},{get:(_,key)=>(...args)=>commands.push([key,...args])});
+    const art={draw(){throw Error('Fire landing must not use the faint smoke atlas');}};
+    const world={layout:map};
+    drawIslandWeather(context,world,landing,10,900,540,false,art);
+    assert.equal(commands.filter(call=>call[0]==='ellipse').length,landing.weather.count);
+    assert.ok(commands.some(call=>call[0]==='lineTo'));
+    const first=structuredClone(commands);
+    commands.length=0;
+    drawIslandWeather(context,world,landing,11,900,540,false,art);
+    assert.notDeepEqual(commands,first);
+    commands.length=0;
+    drawIslandWeather(context,world,landing,11,900,540,true,art);
+    assert.equal(commands.length,0);
 });
 
 test('snow fades in when a region starts snowing and fades out when it stops',()=>{

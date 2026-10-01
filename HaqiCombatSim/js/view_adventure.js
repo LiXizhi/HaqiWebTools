@@ -551,7 +551,7 @@ export function renderPanel(root,kind,model,cb) {
         else body.append(el('h3','center','等待与你相遇'),el('p','center muted','完成青龙的强化指导，即可获得一枚出奇蛋。'),ownsEgg(save)?button('打开出奇蛋',()=>cb.action({type:'hatch'}),'primary centered'):el('p','center','继续你的冒险吧。'));
     }
     if(kind==='debug'){body.closest('.modal').classList.add('debug-modal');renderDebugEditor(body,model,cb,{el,button});}
-    if(kind==='learning-mode')renderLearningMode(body,model,cb,{el,button});
+    if(kind==='learning-mode'){body.closest('.modal').classList.add('learning-mode-modal');renderLearningMode(body,model,cb,{el,button});}
     if(kind==='settings') {
         renderSettings(body,model,cb,{el,button});
     }
@@ -829,6 +829,11 @@ export function animatePlayedCard(root,card,duration) {
 }
 export function eventLabel(e,battle,assets) {
     const caster=battle.unitsById[e.caster]?.name||'',target=battle.unitsById[e.target]?.name||'',card=assets.dataset.cards[e.card]?.name||'';
+    if(e.type==='freeze')return fill(e.success?'{target} 被冰封了':'{target} 抵抗了冰封',{target}).text;
+    if(e.type==='guardian')return fill('{target} 获得一次替身守护',{target}).text;
+    if(e.type==='enrage')return fill('{target} 被激怒了',{target}).text;
+    if(e.revived)return fill('{target} 受到守护，复活并恢复 {amount} 点生命',{target,amount:e.amount}).text;
+    if(e.type==='pass'&&e.reason==='frozen')return fill('{caster} 被冰封，无法行动',{caster}).text;
     if(e.label==='reflection'&&['cast','damage'].includes(e.type))return fill(e.type==='cast'?'{caster} 的魔镜反弹 {card} → {target}':'{target} 受到魔镜反弹的 {amount} 点伤害',{caster,target,card,amount:e.amount}).text;
     if(e.type==='cast')return fill('{caster} → {target} · {card}',{caster,target,card}).text;
     if(e.type==='damage'||e.type==='dot')return fill('{target} 受到 {amount} 点伤害',{target,amount:e.amount}).text;

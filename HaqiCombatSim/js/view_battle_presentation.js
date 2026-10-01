@@ -28,7 +28,7 @@ export function captureBattlePresentation(battle,resolve) {
         if(ownedStatus)battle.onStatusEffect=previousStatus;else delete battle.onStatusEffect;
     }
     flush();
-    const visible=new Set(['cast','damage','heal','dot','hot','speak','fizzle','pass','capture','aura']);
+    const visible=new Set(['cast','damage','heal','dot','hot','speak','fizzle','pass','capture','aura','freeze','guardian','enrage']);
     const events=[];let status=initial;
     for(const {event,status:next,pips} of timeline){
         const changed=JSON.stringify(next)!==JSON.stringify(status);

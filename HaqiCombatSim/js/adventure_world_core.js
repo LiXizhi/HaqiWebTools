@@ -336,6 +336,56 @@ function shortcutPath(world,origin,points){
     }
     return out;
 }
+function pathLength(origin,points){
+    let total=0,cursor=origin;
+    for(const point of points){total+=distance(cursor,point);cursor=point;}
+    return total;
+}
+function gridPath(world,start,destination,bounds=null){
+    const size=24,cols=Math.ceil(world.w/size),rows=Math.ceil(world.h/size);
+    const cell=p=>({x:Math.floor(p.x/size),y:Math.floor(p.y/size)}),point=p=>({x:p.x*size+size/2,y:p.y*size+size/2});
+    const inside=p=>!bounds||(p.x>=bounds.minX&&p.y>=bounds.minY&&p.x<=bounds.maxX&&p.y<=bounds.maxY);
+    let from=cell(start);const target=cell(destination),key=p=>p.y*cols+p.x;
+    const starts=[];
+    for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const p={x:from.x+dx,y:from.y+dy};if(inside(point(p))&&clearSegment(world,start,point(p)))starts.push(p);}
+    starts.sort((a,b)=>distance(start,point(a))-distance(start,point(b)));
+    from=starts[0];if(!from)return [];
+    // A blocked click resolves to the closest reachable neighboring tile.
+    let goal=target;
+    if(!inside(point(goal))||!walkable(world,point(goal).x,point(goal).y)) {
+        const options=[];
+        for(let y=-4;y<=4;y++)for(let x=-4;x<=4;x++) {
+            const p={x:target.x+x,y:target.y+y},wp=point(p);
+            if(inside(wp)&&walkable(world,wp.x,wp.y))options.push(p);
+        }
+        options.sort((a,b)=>distance(point(a),destination)-distance(point(b),destination));goal=options[0];
+    }
+    if(!goal)return [];
+    const open=[from],cost=new Map([[key(from),0]]),parent=new Map(),closed=new Set();
+    const dirs=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+    while(open.length) {
+        open.sort((a,b)=>(cost.get(key(a))+distance(a,goal))-(cost.get(key(b))+distance(b,goal)));
+        const p=open.shift(),k=key(p);if(closed.has(k))continue;closed.add(k);
+        if(k===key(goal)) {
+            const out=[];let n=p;
+            while(key(n)!==key(from)) {out.push(point(n));n=parent.get(key(n));if(!n)return [];}
+            out.push(point(from));out.reverse();
+            if(walkable(world,destination.x,destination.y)&&inside(destination)){
+                const last=out.at(-1);
+                if(last&&clearSegment(world,last,destination)&&distance(last,destination)>.5)out.push({x:destination.x,y:destination.y});
+            }
+            return shortcutPath(world,start,out);
+        }
+        for(const [dx,dy] of dirs) {
+            const n={x:p.x+dx,y:p.y+dy},v=point(n),nk=key(n);
+            if(!inside(v)||n.x<0||n.y<0||n.x>=cols||n.y>=rows||closed.has(nk)||!walkable(world,v.x,v.y)||!clearSegment(world,point(p),v))continue;
+            if(dx&&dy&&(!walkable(world,point({x:p.x+dx,y:p.y}).x,point({x:p.x+dx,y:p.y}).y)||!walkable(world,point({x:p.x,y:p.y+dy}).x,point({x:p.x,y:p.y+dy}).y)))continue;
+            const score=cost.get(k)+Math.hypot(dx,dy);
+            if(score<(cost.get(nk)??Infinity)) {cost.set(nk,score);parent.set(nk,p);open.push(n);}
+        }
+    }
+    return [];
+}
 export function followPath(world,position,path,budget) {
     const remaining=shortcutPath(world,position,path);let p={...position};
     while(remaining.length&&budget>0){
@@ -357,49 +407,19 @@ export function findPath(world,start,destination) {
     }
     // Start from the actual position, without a detour to the current grid center.
     if(clearSegment(world,start,destination))return [{x:destination.x,y:destination.y}];
-    if(world.layout){const road=shortcutPath(world,start,roadPath(world,start,destination));if(road.length)return road;}
-    const size=24,cols=Math.ceil(world.w/size),rows=Math.ceil(world.h/size);
-    const cell=p=>({x:Math.floor(p.x/size),y:Math.floor(p.y/size)}),point=p=>({x:p.x*size+size/2,y:p.y*size+size/2});
-    let from=cell(start);const target=cell(destination),key=p=>p.y*cols+p.x;
-    const starts=[];
-    for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const p={x:from.x+dx,y:from.y+dy};if(clearSegment(world,start,point(p)))starts.push(p);}
-    starts.sort((a,b)=>distance(start,point(a))-distance(start,point(b)));
-    from=starts[0];if(!from)return [];
-    // A blocked click resolves to the closest reachable neighboring tile.
-    let goal=target;
-    if(!walkable(world,point(goal).x,point(goal).y)) {
-        const options=[];
-        for(let y=-4;y<=4;y++)for(let x=-4;x<=4;x++) {
-            const p={x:target.x+x,y:target.y+y},wp=point(p);
-            if(walkable(world,wp.x,wp.y))options.push(p);
-        }
-        options.sort((a,b)=>distance(point(a),destination)-distance(point(b),destination));goal=options[0];
-    }
-    if(!goal)return [];
-    const open=[from],cost=new Map([[key(from),0]]),parent=new Map(),closed=new Set();
-    const dirs=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
-    while(open.length) {
-        open.sort((a,b)=>(cost.get(key(a))+distance(a,goal))-(cost.get(key(b))+distance(b,goal)));
-        const p=open.shift(),k=key(p);if(closed.has(k))continue;closed.add(k);
-        if(k===key(goal)) {
-            const out=[];let n=p;
-            while(key(n)!==key(from)) {out.push(point(n));n=parent.get(key(n));if(!n)return [];}
-            out.push(point(from));out.reverse();
-            if(walkable(world,destination.x,destination.y)){
-                const last=out.at(-1);
-                if(last&&clearSegment(world,last,destination)&&distance(last,destination)>.5)out.push({x:destination.x,y:destination.y});
-            }
-            return shortcutPath(world,start,out);
-        }
-        for(const [dx,dy] of dirs) {
-            const n={x:p.x+dx,y:p.y+dy},v=point(n),nk=key(n);
-            if(n.x<0||n.y<0||n.x>=cols||n.y>=rows||closed.has(nk)||!walkable(world,v.x,v.y)||!clearSegment(world,point(p),v))continue;
-            if(dx&&dy&&(!walkable(world,point({x:p.x+dx,y:p.y}).x,point({x:p.x+dx,y:p.y}).y)||!walkable(world,point({x:p.x,y:p.y+dy}).x,point({x:p.x,y:p.y+dy}).y)))continue;
-            const score=cost.get(k)+Math.hypot(dx,dy);
-            if(score<(cost.get(nk)??Infinity)) {cost.set(nk,score);parent.set(nk,p);open.push(n);}
+    if(world.layout){
+        const road=shortcutPath(world,start,roadPath(world,start,destination));
+        if(road.length){
+            const straight=distance(start,destination),roadLen=pathLength(start,road);
+            // A long trip stays on the road. A short hook yields to a tighter walk around the obstacle.
+            if(straight>1400||roadLen<=straight*1.2+48)return road;
+            const xs=[start.x,destination.x,...road.map(p=>p.x)],ys=[start.y,destination.y,...road.map(p=>p.y)];
+            const around=gridPath(world,start,destination,{minX:Math.min(...xs)-160,minY:Math.min(...ys)-160,maxX:Math.max(...xs)+160,maxY:Math.max(...ys)+160});
+            if(around.length&&pathLength(start,around)+16<roadLen)return around;
+            return road;
         }
     }
-    return [];
+    return gridPath(world,start,destination);
 }
 export function nearestInteraction(world,p) {
     return [...world.npcs.map(n=>({...n,kind:'npc'})),...world.encounters.flatMap(e=>monsterInteractionTargets(world,e)),...(world.landmarks||[]).map(e=>({...e,kind:'landmark'})),...(world.entrancePortal?[{...world.entrancePortal,kind:'portal'}]:[]),{...world.portal,kind:'portal'}]

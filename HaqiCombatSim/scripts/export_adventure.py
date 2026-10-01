@@ -262,6 +262,7 @@ for name,obj in [('chapter.json',content),('combat.json',dataset),('assets.json'
 print(f'Exported {len(quests)} quests, {len(npcs)} NPCs, {len(monsters)} monsters, {len(used_cards)} cards, {len(assets)} assets.')
 # Refresh learning rules after the chapter/card-item mapping has been exported.
 import subprocess, sys
+subprocess.run([sys.executable, str(APP/'scripts/export_special_cards.py'), '--root', str(ROOT)], check=True)
 subprocess.run([sys.executable, str(APP/'scripts/prepare_pet_food.py')], check=True)
 subprocess.run([sys.executable, str(APP/'scripts/export_skill_learning.py'), '--root', str(ROOT)], check=True)
 subprocess.run([sys.executable, str(APP/'scripts/export_npc_catalog.py'), '--root', str(ROOT)], check=True)

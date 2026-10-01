@@ -352,3 +352,19 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 ## 2026-09-30：每日全局语言加成
 
 更新此前副本序章奖励规则：BalanceParams.dailyLanguage每句1%、单项10%；dungeonLanguage仅保留5秒窗口、录音时限及旧检查点兼容。每日奖励是Web覆盖层，沿用原damagePct.all/resistPct.all/powerPipPct公式，生命保持比例，结算折回基础上限；不改原Lua公式。覆盖冒险PvE及红蘑菇赛场本方英雄，伙伴/对手与公开角色快照不含此加成。
+
+
+## 2026-10-01：儿童版特殊卡牌效果
+
+本节覆盖旧记录中冰封、替身守护、护盾转换及激怒“未支持”的状态，范围为当前kids导出的4类18张卡，不扩展teen内容。
+
+- 冰封：`card_server.lua L5932–6041`。检查怪物 `is_immune_to_freeze`、自身/同伴防冰封回合；通常设置 `rounds+1` 与9回合防冰封，PvE玩家先手为 `rounds` 与8回合。附加27号全系盾。`player_server.lua L2465–2468`、`mob_server.lua L2081–2085`将抗性增加为 `100-(100-resist)*0.2`；不是直接从最终伤害减80个百分点。`card_server.lua L1915/L2082/L3467/L4621`受攻击或非零DOT段破冰，即使伤害被吸收也解除，防连续冰封不解除。`ValidateFreezeRounds`在行动轮开始递减。红蘑菇按原 `HaqiTown_RedMushroomArena_4v4.Arenas_Mobs.xml` 等配置启用同伴3回合临时保护。
+- 守护：`card_server.lua L3916–4040`。自伤消耗死亡系护符和盾、计算绝对攻防及最终权重，忽略人物百分比攻防，无暴击/闪避；普通吸收盾可吸收，不触发反射。目标保留一个布尔守护标志，不叠层。`L6833–6857`在施法处理后检查倒下单位；`player_server.lua L187/L3760–3763`及`mob_server.lua L98/L2379–2383`规定kids复活2000生命，封顶最大生命，清除守护。它与2000/2100/2200/2300的自伤量分别计算。`arena_server.lua L8867–8878`拒绝宠物随从目标。DOT致死后受守护复活，当前被打断行动仍跳过。
+- 转换：`card_server.lua L2355–2365`前检普通护盾及四档品质；没有对应盾时不掷命中、不扣魔力、不进冷却。`L6247–6266`的普通盾转换代码被原版注释，实际只依次尝试 `fromward+1000/+2000/+3000/+4000`，首个成功后追加基础 `toward`。因此只有基础盾时会施法/扣费但不转换，本地明确保留并在说明中解释，未擅自修正规则。
+- 仇恨：`CombatThreatConfig.xml`的`singlefreeze=200`（抵抗也产生）、`conversepositiveward=200`，目标/其他怪物按既有20%溅射；守护使用`areaward=60`全体仇恨。新增数值、冰封保护/抗性及守护复活量集中在BalanceParams。
+- 激怒：`card_server.lua L2442–2511`及`player_server.lua L1142–1149`要求同场存活怪物、允许激怒、等级区间、首领许可和难度条件，只允许一次。`mob_server.lua L1250–1279/L3923–3937/L4750–4755/L5231–5380`切换激怒属性/AI，重置AI轮数和上次血量，保留既有序列编号及kids身上状态。若新AI没有旧编号，对照`L4797/L4883`跳过序列进入后续AI，不能重新随机或崩溃。激怒切换与回满生命发生在命中判定之前，保留原时序；`CanCatchPet L1345+`拒绝已激怒怪物。
+- `scripts/export_special_cards.py`解析原kids `EnrageStats.xml`（按组顺序覆盖）和`EnrageAICards.xml`，通过原物品缓存映射卡牌；输出在`data/adventure/combat.json`的`pve.enrage`，保留三个源文件SHA-256、21组属性、31套AI和79张引用卡。只在新版PvE构造时合并激怒牌库，不扩充开篇45张展示牌，重新导出应逐字节一致。
+
+新PvE检查点和社交/红蘑菇战报记录 `specialCardRulesVersion=1`；缺失字段按0保留旧卡型行为，非法版本拒绝。该标志不替代原有数据哈希校验，旧PvP战报仍须匹配原数据集。运行中的冰封、守护、激怒状态通过种子与决定重演，不向云端增加临时战斗状态。复活沿用治疗事件播放，冰封抵抗、无法行动和激怒有中文反馈，状态可由AI观察。
+
+覆盖审计：当前kids无Random、AreaControl、独立Revive卡模板，不从teen补造；Dead/Fizzle/PickPet是系统/客户端流程，CatchPet已有专属符文捕获结算。激怒的原服掉落和服务器奖励不在本次效果处理中新增。

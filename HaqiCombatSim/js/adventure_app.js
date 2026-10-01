@@ -1005,7 +1005,7 @@ function tickAnimation(now) {
         }
         if(e.pips)a.pips=e.pips;
         if(e.type==='damage')a.hp[e.target]=Math.max(0,a.hp[e.target]-e.amount);
-        if(e.type==='heal')a.hp[e.target]=Math.min(battle.unitsById[e.target].maxHp,a.hp[e.target]+e.amount);
+        if(e.type==='heal')a.hp[e.target]=Math.min(battle.unitsById[e.target].maxHp,Number.isFinite(e.hp)?e.hp:a.hp[e.target]+e.amount);
         const text=e.type==='speak'?'':V.eventLabel(e,battle,assets);if(text||e.type==='speak')$('cast-announcement').textContent=text;
     }
     a.statusFeedback=a.statusFeedback.filter(change=>now-change.start<700);

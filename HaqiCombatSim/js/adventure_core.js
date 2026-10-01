@@ -547,7 +547,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
     if(initialParty)assert(initialParty.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
-        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1 };
+        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1 };
     if(encounter.monsterIds){const formation=journeyEnemyFormation(encounter,dungeon,initialParty);save.pendingEncounter.dungeonMonsterIds=[...formation.ids];save.pendingEncounter.dungeonMonsterSlots=[...formation.slots];}
     const languageBuff=save.dailyLanguageBuff?dailyBuffs(save):dungeonLanguageBuff(save,content);
     if(save.dailyLanguageBuff)save.pendingEncounter.dailyLanguageVersion=1;
@@ -698,6 +698,7 @@ export function parseSave(raw,content) {
         if(s.pendingEncounter.languageBuff!==undefined&&!s.pendingEncounter.dailyLanguageVersion)assert(JSON.stringify(s.pendingEncounter.languageBuff)===JSON.stringify(dungeonLanguageBuff(s,content)),'副本语言加成检查点无效');
         assert(s.pendingEncounter.equipmentStatsVersion===undefined||s.pendingEncounter.equipmentStatsVersion===1,'装备属性规则版本无效');
         assert(s.pendingEncounter.reflectionRulesVersion===undefined||s.pendingEncounter.reflectionRulesVersion===1,'反射规则版本无效');
+        assert(s.pendingEncounter.specialCardRulesVersion===undefined||s.pendingEncounter.specialCardRulesVersion===1,'特殊卡牌规则版本无效');
         assert(s.pendingEncounter.dispelRulesVersion===undefined||s.pendingEncounter.dispelRulesVersion===1,'之敌规则版本无效');
         assert(s.pendingEncounter.stealthRulesVersion===undefined||s.pendingEncounter.stealthRulesVersion===1,'隐身规则版本无效');
         assert(s.pendingEncounter.progressionRulesVersion===undefined||[1,2,3].includes(s.pendingEncounter.progressionRulesVersion),'成长属性规则版本无效');
@@ -727,6 +728,7 @@ export function parseSave(raw,content) {
             const expected=Pets.petParams(petContent),saved=s.pendingEncounter.adventureParams;
             const threatVersion=s.pendingEncounter.threatRulesVersion||0;
             const optional=new Set([
+                ...(s.pendingEncounter.specialCardRulesVersion!==1||threatVersion<3?['effectThreatSingleFreeze','effectThreatConversePositiveWard']:[]),
                 ...(threatVersion<5?['iceAreaAttackThreatRatio']:[]),
                 ...(threatVersion<1?['damageThreatRatio','splashDamageThreatRatio']:[]),
                 ...(threatVersion<2?['singleHealThreatRatio']:[]),

@@ -39,7 +39,7 @@ export function drawIslandWeather(c,world,position,time,w,h,reducedMotion=false,
     const wrap=(n,max)=>((n%max)+max)%max;
     const scale=camera?.scale>0?camera.scale:1;
     const scrollX=(camera?.x||0)*scale,scrollY=(camera?.y||0)*scale;
-    const speckSize=kind==='mist'?180:kind==='ash'?38:18;
+    const speckSize=kind==='mist'?180:18;
     const alphaScale=kind==='mist'?.08:1;
     c.save();c.fillStyle=kind==='snow'?'#f7fbff':color;c.strokeStyle=kind==='snow'?'#f7fbff':color;c.lineWidth=1;
     for(let i=0;i<count;i++){
@@ -90,6 +90,23 @@ export function drawIslandWeather(c,world,position,time,w,h,reducedMotion=false,
         const x=wrap(speck.x+time*wind+Math.sin(time*.6+speck.sway)*9-scrollX,w+40)-20;
         const y=wrap(speck.y+time*speed-scrollY,h+40)-20;
         c.globalAlpha=(kind==='mist'?alphaScale:speck.alpha)*opacity;
+        if(kind==='ash'){
+            // Fire-island ash used to be a faint smoke sprite. Crisp tumbling
+            // flakes retain a visible silhouette against both roads and lava rock.
+            const size=7+speck.depth*10;
+            c.globalAlpha=(.55+speck.depth*.3)*opacity;
+            c.fillStyle='#51474b';
+            c.beginPath();c.ellipse(x,y,size*.8,size*.45,0,0,Math.PI*2);c.fill();
+            c.save();c.translate(x,y);c.rotate(time*(.35+speck.spin*.6)+speck.spin*6);
+            c.scale(.55+.45*Math.abs(Math.sin(time*.9+speck.sway)),1);
+            c.beginPath();c.moveTo(-size*.8,-size*.2);c.lineTo(-size*.3,-size*.6);
+            c.lineTo(size*.65,-size*.35);c.lineTo(size*.8,size*.15);
+            c.lineTo(size*.1,size*.5);c.lineTo(-size*.65,size*.3);c.closePath();
+            c.fillStyle='#e4d7c9';c.fill();c.strokeStyle='#695652';c.lineWidth=1.3;c.stroke();
+            c.beginPath();c.moveTo(-size*.45,-size*.1);c.lineTo(size*.4,size*.1);
+            c.strokeStyle='#fff0d9';c.lineWidth=1.5;c.stroke();
+            c.restore();continue;
+        }
         if(art){
             const size=speckSize||speck.size;
             c.globalAlpha*=kind==='mist'?.8:.85;

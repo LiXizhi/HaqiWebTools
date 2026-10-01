@@ -16,7 +16,7 @@ try{
   {id:'e',save:{name:'deluca',level:50,school:'fire',appearance:'boy'}},
  ];
  const root=document.querySelector('#entry');
- renderRoles(root,assets,{owner:'',catalog:{roles,activeId:'e'},dirty:false,locale,busy:'',error:'',message:''},{
+ renderRoles(root,assets,{owner:params.get('owner')||'',catalog:{roles,activeId:'e'},dirty:params.get('dirty')==='1',locale,busy:'',error:'',message:params.get('message')||''},{
   secondLocale:locale==='en'?'zh-CN':'en',setLocale(){},setSecondLocale(){},select(){},create(){},login(){},
  });
  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));

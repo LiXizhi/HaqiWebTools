@@ -2234,7 +2234,6 @@
         {
           "id": "dungeon:HaqiTown_GraduateExam_54_55:0",
           "blocked": [
-            "未支持卡牌：Storm_Rune_StormConversePositiveWard",
             "未支持卡牌：Life_SingleHeal_Level4",
             "未支持卡牌：22023"
           ]
@@ -2665,9 +2664,7 @@
         },
         {
           "id": "dungeon:CrazyTower_16_to_20:4",
-          "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze"
-          ]
+          "blocked": []
         }
       ],
       "loaded": false
@@ -3043,9 +3040,7 @@
       "arenas": [
         {
           "id": "dungeon:CrazyTower_51_to_55:0",
-          "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze"
-          ]
+          "blocked": []
         },
         {
           "id": "dungeon:CrazyTower_51_to_55:1",
@@ -3192,7 +3187,6 @@
         {
           "id": "dungeon:CrazyTower_61_to_65:4",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         }
@@ -3235,35 +3229,30 @@
         {
           "id": "dungeon:CrazyTower_66_to_70:0",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         },
         {
           "id": "dungeon:CrazyTower_66_to_70:1",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         },
         {
           "id": "dungeon:CrazyTower_66_to_70:2",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         },
         {
           "id": "dungeon:CrazyTower_66_to_70:3",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         },
         {
           "id": "dungeon:CrazyTower_66_to_70:4",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         }
@@ -3385,7 +3374,6 @@
           "id": "dungeon:CrazyTower_76_to_80:2",
           "blocked": [
             "未支持卡牌：22295",
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         },
@@ -3399,7 +3387,6 @@
         {
           "id": "dungeon:CrazyTower_76_to_80:4",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         }
@@ -3442,14 +3429,12 @@
         {
           "id": "dungeon:CrazyTower_81_to_85:0",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         },
         {
           "id": "dungeon:CrazyTower_81_to_85:1",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         },
@@ -3468,7 +3453,6 @@
         {
           "id": "dungeon:CrazyTower_81_to_85:4",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         }
@@ -3511,14 +3495,12 @@
         {
           "id": "dungeon:CrazyTower_86_to_90:0",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         },
         {
           "id": "dungeon:CrazyTower_86_to_90:1",
           "blocked": [
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         },
@@ -3526,7 +3508,6 @@
           "id": "dungeon:CrazyTower_86_to_90:2",
           "blocked": [
             "未支持卡牌：22295",
-            "未支持卡牌：Ice_Rune_SingleFreeze",
             "怪物先手尚未迁移"
           ]
         },

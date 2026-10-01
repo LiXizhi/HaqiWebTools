@@ -289,7 +289,8 @@
 @media(min-width:721px){
  .role-screen.entry-wizard .entry-layout{grid-template-columns:minmax(0,1fr) minmax(360px,520px);max-width:1120px;align-items:safe center;}
 }
-.role-manager h1 { margin:0 0 12px; }
+.role-manager h1 { margin:0 0 6px; }
+.role-head .role-account { line-height:1.35; margin:0 0 8px; }
 .role-list { display:grid; gap:10px; }
 .role-card { display:flex; align-items:center; gap:14px; padding:10px; border:1px solid #b9cbbb; border-radius:12px; }
 .role-card.recent { border-color:#548769; background:#e7efe4; }
@@ -667,7 +668,8 @@
 .journal-entry-text{display:grid;gap:5px;min-width:0}
 .journal-entry strong{font-size:14px;font-weight:600;line-height:1.45}
 .journal-entry small{font-size:11px;color:var(--muted)}
-.journal-detail{overflow:auto;min-width:0;padding:12px 14px 10px 0;overscroll-behavior:contain;color:var(--ink)}
+.journal-detail{display:flex;flex-direction:column;overflow:hidden;min-width:0;min-height:0;padding:12px 14px 10px 0;color:var(--ink)}
+.journal-detail-body{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;padding-right:6px}
 .journal-detail-heading{border-bottom:1px solid var(--line);padding-bottom:14px}
 .journal-detail-heading h3{margin:8px 0 0;font-size:24px;line-height:1.4}
 .journal-status{font-size:12px;color:var(--green);font-weight:700}
@@ -683,7 +685,7 @@
 .journal-contacts span{color:var(--muted);margin-right:12px}
 .journal-rewards{display:flex;flex-wrap:wrap;gap:8px}
 .journal-reward{padding:8px 10px;border:1px solid var(--line);background:#fff9df88;border-radius:4px;font-size:13px}
-.journal-footer{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-top:1px solid var(--line);padding-top:14px;margin-top:22px}
+.journal-footer{flex:none;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-top:1px solid var(--line);margin-top:12px;padding-top:12px;background:var(--paper)}
 .journal-footer p{flex-basis:100%;color:var(--muted);margin:0;font-size:13px}
 .journal-entry:focus-visible{outline:2px solid var(--green);outline-offset:-2px}
 @media(max-width:600px){
@@ -1026,6 +1028,23 @@
 .speech-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.speech-stat{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 3px;background:#ffffff70;border:1px solid #dcc997;border-radius:8px;text-align:center}.speech-stat span{font-size:11px}.speech-stat strong{font-size:21px;color:var(--green);font-variant-numeric:tabular-nums}.speech-track{margin:14px 0}.speech-next{font-size:12px;font-weight:700}.speech-progress{display:block;width:100%;height:12px;margin-top:6px;border:1px solid #b99f67;border-radius:8px;overflow:hidden;background:#dcd4b7;accent-color:#50815d}.speech-progress::-webkit-progress-bar{background:#dcd4b7}.speech-progress::-webkit-progress-value{background:linear-gradient(90deg,#36674c,#90b668);border-radius:8px}.speech-progress::-moz-progress-bar{background:#50815d}
 .speech-rewards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}.speech-reward{display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0;padding:10px 4px;border:1px solid #d3c39b;border-radius:10px;background:#eee7d2}.speech-threshold{font-size:12px;color:#71552d}.speech-coin{display:block;width:40px;height:40px;flex:none;object-fit:contain}.speech-amount{font-size:12px;white-space:nowrap}.speech-adventure .speech-claim{padding:7px 3px;width:100%;font-size:12px;min-height:36px}.speech-reward.ready{border-color:#bb8c36;background:linear-gradient(#fff9d3,#f5e2a5);box-shadow:0 0 0 1px #e8c461,0 3px 8px #aa782e20}.speech-reward.claimed{background:#e5ead9}.speech-reward.claimed .speech-coin{opacity:.6}.speech-rules{margin-top:14px;font-size:12px;color:var(--muted)}.speech-rules summary{cursor:pointer;padding:5px 0}.speech-rules p{margin-top:8px;line-height:1.65}
 @media(max-width:520px){.speech-adventure{padding:12px}.speech-hero{gap:12px}.speech-seal{width:70px;height:70px}.speech-heading h3{font-size:22px}.speech-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.speech-stat{flex-direction:row;justify-content:space-between;padding:8px}.speech-rewards{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
+/* Bilingual-learning dock stays at the dialog bottom; rewards scroll above it. */
+.modal.learning-mode-modal{height:min(680px,88dvh)}
+.learning-mode-modal .modal-header{flex:none}
+.modal.learning-mode-modal .modal-body{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;padding:0}
+.learning-scroll{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:16px 18px 10px}
+.learning-scroll .speech-adventure{margin-bottom:0}
+.learning-dock{flex:none;padding:10px 18px 14px;border-top:1px solid var(--line);background:var(--paper)}
+.learning-langs{display:flex;align-items:center;gap:18px;min-width:0}
+.learning-lang{display:flex;align-items:center;gap:6px;flex:1;min-width:0;color:var(--ink);font-size:14px;font-weight:600;white-space:nowrap}
+.learning-lang-name{flex:none}
+.learning-lang-name::after{content:'：'}
+.learning-lang select{flex:1 1 auto;width:0;min-width:0;max-width:100%;box-sizing:border-box;min-height:40px;padding:6px 8px}
+.learning-dock .settings-note{margin:6px 0 0;line-height:1.45}
+.learning-dock-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.learning-dock-actions :is(.primary,.secondary){margin:0}
+@media(max-width:520px){.learning-scroll{padding:12px 12px 8px}.learning-dock{padding:8px 12px 12px}.learning-langs{gap:8px}.learning-lang{gap:4px;font-size:13px}.learning-dock-actions{gap:6px}}
 
 .dungeon-story-bubble .story-speech-missing{color:#9c351e;text-decoration:underline wavy;text-underline-offset:4px}
 

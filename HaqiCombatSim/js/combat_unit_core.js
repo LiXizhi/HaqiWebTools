@@ -269,7 +269,9 @@ export function getResist(unit, school, resolved) {
     if (resolved.fairPlay && resolved.fairPlay.forceResist !== undefined && resolved.fairPlay.forceResist !== null) {
         return -resolved.fairPlay.forceResist;
     }
-    const stat = schoolStat(unit, 'resistPct', school) + (schoolFactor(resolved, unit.school).resist || 0);
+    let stat = schoolStat(unit, 'resistPct', school) + (schoolFactor(resolved, unit.school).resist || 0);
+    // player_server.lua L2465–2468; mob_server.lua L2081–2085.
+    if (unit.freezeRounds > 0) stat = 100 - (100 - stat) * (100 - resolved.global.freezeResistPercent) / 100;
     return -stat;
 }
 
@@ -418,6 +420,10 @@ export function takeDamage(unit, points) {
         unit.miniaura = null;
         unit.stance = null;
         unit.stunned = false;
+        if (unit.freezeRounds !== undefined) {
+            unit.freezeRounds = 0; unit.antiFreezeRounds = 0; unit.antiFreezeSiblingRounds = 0;
+        }
+        // bWithGuardian survives death until Card.CheckGuardian revives the unit.
         if(unit.reflectAmount!==undefined)unit.reflectAmount=0;
         if(unit.stealth!==undefined){unit.stealth=false;unit.stealthRounds=null;}
         unit.pips.normal = 0;
@@ -865,6 +871,7 @@ export function validateCooldown(unit) {
 
 /** ValidateMiniAura / ValidateStandingEffects / ValidateStance / ValidateProtectRounds */
 export function validateRounds(unit) {
+    for (const key of ['freezeRounds', 'antiFreezeRounds', 'antiFreezeSiblingRounds']) if (unit[key] > 0) unit[key]--;
     if(unit.stealthRounds>0&&--unit.stealthRounds===0){unit.stealth=false;unit.stealthRounds=null;}
     if (unit.miniaura) {
         unit.miniaura.rounds -= 1;
@@ -885,6 +892,7 @@ export function summarizeUnit(unit, resolved) {
     return {
         id: unit.id, name: unit.name, side: unit.side, slot: unit.slot, school: unit.school, level: unit.level,
         hp: unit.hp, maxHp: unit.maxHp, pips: { ...unit.pips }, stunned: unit.stunned,
+        ...Object.fromEntries(['freezeRounds','antiFreezeRounds','antiFreezeSiblingRounds','guardian','enragedBy'].filter(key=>unit[key]!==undefined).map(key=>[key,unit[key]])),
         charms: unit.charms.filter(id => id > 0).map(id => ({ id, ...(resolved.charms[id] || {}) })),
         wards: unit.wards.filter(w => w.id > 0).map(w => ({ id: w.id, pts: w.pts, ...(resolved.wards[w.id] || {}) })),
         standingWards: unit.standingWards.filter(s => s.rounds > 0).map(s => ({ ...s })),

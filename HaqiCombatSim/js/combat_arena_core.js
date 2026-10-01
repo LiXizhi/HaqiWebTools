@@ -2,8 +2,9 @@
 // StartCombat_v(L4258) → AdvanceOneTurn_v(L4775) → PlayOneTurn_v(L5401) → FinishOneTurn_v(L5740) → FinishCombat_v
 // PvP 每个 turn 只有一方行动（currentPlayingSide 交替）；nRemainingRounds 每 turn 减 1。
 import { createRng, hashSeed } from './rng_core.js';
+import {canEnrageTarget} from './combat_enrage_core.js';
 import * as U from './combat_unit_core.js';
-import { useCard, tickDots, tickHots, cardTargetKind, canTargetStealth } from './combat_cards_core.js';
+import { useCard, tickDots, tickHots, cardTargetKind, canTargetStealth, specialCardsEnabled, hasConvertibleWard, reviveGuardians } from './combat_cards_core.js';
 
 export const SIDES = ['near', 'far'];
 
@@ -17,6 +18,7 @@ function emit(arena, ev) {
  * @param opts { resolved, near: unitSpec[], far: unitSpec[], seed?, firstSide?: 'near'|'far'|'random', onEvent?, keepEvents? }
  */
 export function createArena(opts) {
+    if (opts.specialCardRulesVersion !== undefined && ![0,1].includes(opts.specialCardRulesVersion)) throw Error('特殊卡牌规则版本无效');
     const seed = opts.seed ?? 1;
     const rng = createRng(typeof seed === 'string' ? hashSeed(seed) : seed);
     const arena = {
@@ -24,6 +26,8 @@ export function createArena(opts) {
         rng,
         seed,
         mode: 'free_pvp',
+        specialCardRulesVersion: opts.specialCardRulesVersion ?? (opts.resolved.version === 'kids' ? 1 : 0),
+        applyTempAntiFreezeForPartners: opts.applyTempAntiFreezeForPartners === true,
         turn: 0,
         remainingRounds: opts.resolved.global.maxRounds,
         currentSide: null,
@@ -107,12 +111,15 @@ export function actingUnits(arena) {
 /** 目标是否对该卡合法 */
 export function validTargets(arena, unit, card) {
     const kind = cardTargetKind(card);
-    const available=target=>U.isAlive(target)&&(arena.stealthRulesVersion!==1||canTargetStealth(card,target));
+    const available=target=>U.isAlive(target)&&(arena.stealthRulesVersion!==1||canTargetStealth(card,target))&&
+        (!specialCardsEnabled(arena) || (card.type !== 'ConversePositiveWard' || hasConvertibleWard(target,card)) &&
+        (card.type !== 'SingleGuardianWithImmolate' || !target.speciesId || target.isMob));
     if (kind === 'self') return available(unit)?[unit]:[];
     if (kind === 'friendly') return alliesOf(arena, unit).filter(available);
     if (kind === 'all') return [...enemiesOf(arena, unit).filter(available), ...alliesOf(arena, unit).filter(available)];
     const enemies = enemiesOf(arena, unit).filter(available);
-    if (card.type === 'CatchPet') return enemies.filter(target => target.template?.speciesId && !arena.ownedPets?.includes(target.template.speciesId) && !arena.captured?.includes(target.template.speciesId));
+    if (card.type === 'Enrage' && specialCardsEnabled(arena)) return enemies.filter(target=>canEnrageTarget(arena,unit,card,target));
+    if (card.type === 'CatchPet') return enemies.filter(target => !target.enragedBy && target.template?.speciesId && !arena.ownedPets?.includes(target.template.speciesId) && !arena.captured?.includes(target.template.speciesId));
     return enemies;
 }
 
@@ -140,12 +147,19 @@ export function playTurn(arena, picks = {}) {
         u.turnsPlayed++;
         // 行动前结算自身 DOT / HOT（card_server.lua L1841 / L2173）
         tickDots(arena, u);
-        if (!U.isAlive(u)) { checkFinish(arena); if (arena.finished) return; continue; }
+        const diedFromDot = !U.isAlive(u);
+        reviveGuardians(arena);
+        if (diedFromDot) { checkFinish(arena); if (arena.finished) return; continue; }
         tickHots(arena, u);
         if (u.stunned) {
             u.stunned = false;
             u.totals.passes++;
             emit(arena, { type: 'pass', caster: u.id, reason: 'stunned' });
+            continue;
+        }
+        if (u.freezeRounds > 0) {
+            u.totals.passes++;
+            emit(arena, {type:'pass', caster:u.id, reason:'frozen'});
             continue;
         }
         const pick = picks[u.id] || u.picked;
@@ -189,6 +203,7 @@ export function playTurn(arena, picks = {}) {
 /** arena_server.lua IsCombatFinished_v + nRemainingRounds<=0 */
 export function checkFinish(arena) {
     if (arena.finished) return true;
+    reviveGuardians(arena);
     const nearAlive = arena.sides.near.some(U.isAlive);
     const farAlive = arena.sides.far.some(U.isAlive);
     if (!nearAlive || !farAlive) {

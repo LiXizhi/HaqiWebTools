@@ -13,8 +13,12 @@ export function renderRoles(root, assets, model, cb) {
     const addButton = (label, fn, cls = 'secondary') => { const b = button(label, fn, cls);controls.push(b);return b; };
     const head = el('div', 'role-head', el('h1', '', '选择角色'));
     if (model.owner) {
-        const subtitle = el('p', 'muted');
-        setText(subtitle, 'Keepwork：{owner}', { owner: model.owner });
+        const subtitle = el('p', 'muted role-account');
+        const status = model.message || (!model.recovering && (model.dirty
+            ? '当前有本地进度待同步。游玩时每分钟自动同步，也可手动保存。'
+            : '角色云端记录已同步。'));
+        if (status) setText(subtitle, '{owner}已登录 · {status}', { owner: model.owner, status });
+        else setText(subtitle, '{owner}已登录', { owner: model.owner });
         head.append(subtitle);
     } else {
         head.append(
@@ -24,9 +28,8 @@ export function renderRoles(root, assets, model, cb) {
     }
     if (model.busy) head.append(el('p', 'role-status', model.busy));
     if (model.error) { const error = el('p', 'error-text', model.error);error.setAttribute('role', 'alert');head.append(error); }
-    if (model.message) head.append(el('p', 'muted', model.message));
+    if (model.message && !model.owner) head.append(el('p', 'muted', model.message));
     if (model.recovering) head.append(el('p', 'role-status', '部分角色暂时无法读取，原存档已保留。可以选择其他角色或新建角色继续游玩。当前进度仅保存在本机，云端同步暂时暂停。'));
-    if (model.owner&&!model.recovering) head.append(el('p', 'muted', model.dirty ? '当前有本地进度待同步。游玩时每分钟自动同步，也可手动保存。' : '角色云端记录已同步。'));
     const box = el('section', 'character-form role-manager', head);
     const rows = el('div', 'role-list');
     const ordered = [...model.catalog.roles].sort((a, b) => (b.id === model.catalog.activeId) - (a.id === model.catalog.activeId));

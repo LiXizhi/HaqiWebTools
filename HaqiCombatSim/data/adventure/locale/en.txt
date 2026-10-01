@@ -899,7 +899,8 @@ Boss 已击败，可以退出副本。||Boss defeated. You can exit the dungeon.
 
 # js/view_adventure_roles.js
 魔法哈奇 · 你的主角||Magic Haqi · your hero
-Keepwork：{owner}||Keepwork: {owner}
+{owner}已登录||{owner} signed in
+{owner}已登录 · {status}||{owner} signed in · {status}
 当前为本地访客模式，角色只保存在这台浏览器。||Local guest mode: this character stays in this browser only.
 请登录 Keepwork 云端账号。||Please sign in to a Keepwork cloud account.
 登录 Keepwork 云端账号||Sign in to a Keepwork cloud account
@@ -6273,3 +6274,20 @@ PvP 切磋||PvP duel
 未听清，再读读这个词||Not heard clearly. Try this word again.
 
 语言加成按本机时间每天 00:00 清零。||Language bonuses reset daily at 00:00 local time.
+
+冰封 · {rounds}回合||Frozen · {rounds} turns
+防冰封 · {rounds}回合||Freeze protection · {rounds} turns
+替身守护：倒下后复活一次||Guardian: revive once after falling
+冰封期间额外减伤{percent}%，并附加全系护盾；受攻击解除冰封后，防连续冰封保护仍保留。||While frozen, gain {percent}% additional resistance and an all-school shield. Attacks break the freeze but leave freeze protection in place.
+仅转换带品质的对应护盾，按绿、蓝、紫、橙顺序转换一层；基础护盾按原版规则不转换。||Converts one matching quality shield, checking green, blue, purple, then orange. Base shields are not converted under the original rules.
+对自己造成 {amount} 点死亡伤害，为自己或一名非宠物队友附加一次替身守护；倒下后恢复 {hp} 点生命，不超过生命上限。||Deal {amount} Death damage to yourself and grant yourself or a non-pet ally one guardian revival. On falling, restore {hp} health, capped at maximum health.
+
+激怒 {min}~{max} 级且允许激怒的战斗中怪物，切换原版激怒属性与技能并回满生命；每只限一次，激怒后不能捕捉。||Enrage an eligible level {min}–{max} monster already in battle, switch to its original enraged stats and skills, and restore full health. Each monster can be enraged once and cannot be captured afterward.
+激怒：已切换激怒属性与技能||Enraged: stats and skills changed
+
+{target} 被冰封了||{target} is frozen
+{target} 抵抗了冰封||{target} resisted freezing
+{target} 获得一次替身守护||{target} gains one guardian revival
+{target} 被激怒了||{target} is enraged
+{target} 受到守护，复活并恢复 {amount} 点生命||{target} is revived by the guardian and regains {amount} health
+{caster} 被冰封，无法行动||{caster} is frozen and cannot act

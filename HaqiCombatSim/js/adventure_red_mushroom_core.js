@@ -75,11 +75,11 @@ export function startRedMushroom(dataset,seats,mode,seed,difficulty,params=defau
         delete opponent.profileId;delete opponent.opponentMountId;delete opponent.dailyLanguageBuff;
         return opponent;
     });
-    const replay={version:3,dataHash:socialDataHash(dataset),mode,seed,params:structuredClone(params),difficulty:structuredClone(difficulty),near,far,actions:[]};
+    const replay={version:3,specialCardRulesVersion:1,dataHash:socialDataHash(dataset),mode,seed,params:structuredClone(params),difficulty:structuredClone(difficulty),near,far,actions:[]};
     return createMatch(dataset,replay);
 }
 function createMatch(dataset,replay){
-    const arena=createArena({resolved:resolveParams(dataset,replay.params),near:replay.near,far:replay.far,seed:replay.seed,firstSide:'near'});
+    const arena=createArena({resolved:resolveParams(dataset,replay.params),near:replay.near,far:replay.far,seed:replay.seed,firstSide:'near',specialCardRulesVersion:replay.specialCardRulesVersion??0,applyTempAntiFreezeForPartners:replay.specialCardRulesVersion===1});
     if(replay.near[0].dailyLanguageBuff)applyDungeonLanguageBuff(arena.unitsById.hero,validateDailyBuff(replay.near[0].dailyLanguageBuff),arena.resolved.dailyLanguage);
     arena.redMushroom=true;
     for(const spec of [...replay.near,...replay.far]){

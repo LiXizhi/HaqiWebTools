@@ -46,6 +46,14 @@ export function renderQuestJournal(body,model,cb,ui) {
     let locate=true;
     const list=el('nav','journal-directory');list.setAttribute('aria-label','全岛任务');
     const detail=el('article','journal-detail');detail.id='journal-detail';
+    function pinFooter(){
+        const footer=[...detail.children].find(node=>node.classList.contains('journal-footer'));
+        const body=el('div','journal-detail-body');
+        for(const node of [...detail.childNodes]) if(node!==footer) body.append(node);
+        detail.replaceChildren(body);
+        if(footer) detail.append(footer);
+        body.scrollTop=0;
+    }
     const counter=el('span','');
     const pager=el('div','journal-pagination');
     const sidebar=el('aside','journal-sidebar',el('div','journal-chapter',el('strong','','任务清单'),counter),list,pager);
@@ -89,7 +97,7 @@ export function renderQuestJournal(body,model,cb,ui) {
             if(state.accepted)footer.append(abandonQuestButton(q));
         }
         else footer.append(el('p','',state.claimed?'任务已完成，奖励已领取。':'完成前置任务后开启。'));
-        detail.append(footer);detail.scrollTop=0;
+        detail.append(footer);pinFooter();
     }
     function highlight(id){for(const [qid,b] of entries){b.classList.toggle('selected',qid===id);if(qid===id)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');}}
     function selectCatalog(q){
@@ -124,7 +132,7 @@ export function renderQuestJournal(body,model,cb,ui) {
             if(accepted)footer.append(abandonQuestButton(q));
             else if(state==='已完成')footer.append(el('p','','任务已完成，奖励已领取。'));
             else if(!footer.childElementCount)footer.append(el('p','',block||'这个目标依赖尚未接入的原服功能。'));
-            detail.append(footer);detail.scrollTop=0;return;
+            detail.append(footer);pinFooter();return;
         }
         detail.append(section('任务目标',...(q.objectives.length?q.objectives.map(g=>el('div','journal-objective',el('span','',`${g.type==='ClientDialogNPC'?'交谈：':''}${g.name}`),el('strong','',`× ${g.count}`))):[el('p','','与任务居民交谈。')])));
         detail.append(el('div','journal-contacts',el('p','',el('span','','任务接取'),q.startNpc),el('p','',el('span','','任务交付'),q.endNpc)));
@@ -134,7 +142,7 @@ export function renderQuestJournal(body,model,cb,ui) {
         })));
         if(q.requirements.length||q.validDate)detail.append(section('原版接取条件',...q.requirements.map(r=>el('p','',`${r.name}：${r.min||'0'}${r.max&&r.max!=='-1'?` ～ ${r.max}`:''}`)),...(q.validDate?[el('p','',q.validDate)]:[])));
         detail.append(section('任务奖励',...(q.rewards.length?q.rewards.map(group=>el('div','journal-reward-group',rewardGroupCaption(group,el),el('div','journal-rewards',...group.items.map(r=>{const item=c.items[r.id];if(!item||r.id===113)return rewardChip(c,r,{el,className:'journal-reward'});const inspect=rewardChip(c,r,{el,button,onClick:()=>inspector.show(item,{trigger:inspect,source:q.title}),className:'journal-reward item-inspect-button'});inspect.setAttribute('aria-haspopup','dialog');inspect.setAttribute('aria-label',fill('查看{name}详情',{name:item.name}).text);return inspect;})))):[el('p','','无物品奖励')])));
-        detail.append(el('footer','journal-footer',el('p','',`任务编号 ${q.id} · 开放后可接取`)));detail.scrollTop=0;
+        detail.append(el('footer','journal-footer',el('p','',`任务编号 ${q.id} · 开放后可接取`)));pinFooter();
     }
     function renderList(){
         if(locate){

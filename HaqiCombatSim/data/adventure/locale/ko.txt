@@ -892,7 +892,8 @@ Boss 已击败，可以退出副本。||보스를 처치했습니다. 던전에�
 
 # js/view_adventure_roles.js
 魔法哈奇 · 你的主角||매직 하奇 · 내 주인공
-Keepwork：{owner}||Keepwork: {owner}
+{owner}已登录||{owner} 로그인됨
+{owner}已登录 · {status}||{owner} 로그인됨 · {status}
 当前为本地访客模式，角色只保存在这台浏览器。||현재 로컬 게스트 모드입니다. 캐릭터는 이 브라우저에만 저장됩니다.
 请登录 Keepwork 云端账号。||Keepwork 클라우드 계정에 로그인해 주세요.
 登录 Keepwork 云端账号||Keepwork 클라우드 계정 로그인

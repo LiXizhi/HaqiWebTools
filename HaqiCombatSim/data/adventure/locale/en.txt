@@ -816,6 +816,14 @@ Boss 已击败，可以退出副本。||Boss defeated. You can exit the dungeon.
 饱食||Full
 饥饿中 · 已暂停自然回血||Hungry · natural healing paused
 购买营养餐||Buy nutrition meals
+上阵||Join lineup
+下阵||Leave lineup
+上阵到下一个空位||Join the next empty slot
+已在阵容中||Already in the lineup
+阵容已满||Lineup is full
+从阵容中休息||Rest from the lineup
+当前未上阵||Not in the lineup
+战斗中无法调整阵容||Cannot change lineup during battle
 休息||Rest
 魔法||Magic
 保存宠物卡包||Save pet deck
@@ -825,6 +833,7 @@ Boss 已击败，可以退出副本。||Boss defeated. You can exit the dungeon.
 养成||Nurturing
 
 # js/view_adventure_pets.js
+拖动移动角色||Drag to move characters
 拖动角色||Drag characters
 拖动主角换位||Drag the hero to swap positions
 领取初始抱抱龙（选择后立即领取）||Claim your starting Cuddle Dragon (claimed right after choosing)
@@ -908,6 +917,7 @@ Boss 已击败，可以退出副本。||Boss defeated. You can exit the dungeon.
 当前有本地进度待同步。游玩时每分钟自动同步，也可手动保存。||Local progress is waiting to sync. It syncs every minute while playing, or you can save manually.
 角色云端记录已同步。||Cloud character records synced.
 等级 {level} · {school}||Level {level} · {school}
+等级 {level}||Level {level}
 最近使用||Recently used
 继续旅程||Continue journey
 进入角色||Enter character
@@ -6291,3 +6301,64 @@ PvP 切磋||PvP duel
 {target} 被激怒了||{target} is enraged
 {target} 受到守护，复活并恢复 {amount} 点生命||{target} is revived by the guardian and regains {amount} health
 {caster} 被冰封，无法行动||{caster} is frozen and cannot act
+
+# Battle quick chat
+对白与表情||Chat & emotes
+求助影响下一回合，队友会按可用卡牌响应。||Requests guide allies next round, depending on available cards.
+给我加血||Heal me, please!
+救我||Help me!
+我在憋大招||I’m charging up a big spell!
+一起进攻吧||Let’s attack together!
+加油||You can do it!
+微笑||Smile
+爱心||Love
+干得漂亮||Well done!
+哭泣||Crying
+语音暂时不可用，对白已发送。||Voice is unavailable. Your message was sent.
+
+内置对话已完成，可以继续自由交谈，或点击关闭。||The scripted conversation is complete. Keep chatting freely, or close when you are ready.
+继续自由交谈，由大模型回应||Keep chatting with the AI
+继续自由交谈||Continue chatting
+结束对话||End conversation
+答对了 · 已完成的故事不重复领奖||Correct · Completed stories do not grant rewards again
+本次表达暂未获得学习加分。||This response has not earned learning credit.
+
+对话奖励已到账||Conversation reward received
+对话已完成||Conversation complete
+本次未新增货币||No new currency this time
+已放入背包，无需再领取||Added to your bag automatically
+已领过或今日额度已用完，练习已记录||Already claimed or daily limit reached. Practice recorded.
+学习奖励已生效||Learning bonus applied
+本次学习评价||Learning feedback
+{attribute} +1%||{attribute} +1%
+今日累计 {total} 层 · {attribute}累计 +{percent}%||Today: {total} stacks · Total {attribute} +{percent}%
+本次未新增学习加成||No new learning bonus this time
+该表达已记录，不重复加分||This expression is already recorded; no repeat bonus
+
+学习加成已生效||Learning bonus applied
+装备属性提升||Equipment stats improved
+
+想聊些什么？||What would you like to talk about?
+对话回复格式不完整，请重试。||The reply format is incomplete. Please try again.
+
+今日：{attribute} +1%||Today: {attribute} +1%
+攻击力||Attack
+
+朗读示范：{text}||Read example: {text}
+
+游戏||Game
+画面||Graphics
+场景粒子||Scene particles
+角色足迹与拖尾||Character footprints and trails
+自动||Auto
+开启||On
+关闭||Off
+自动：为保持流畅，已关闭||Auto: disabled to keep gameplay smooth
+自动：已开启||Auto: enabled
+操作||Controls
+重置场景缩放||Reset scene zoom
+WASD 或方向键移动；点击地面寻路，按住鼠标跟随。||Move with WASD or arrow keys; click to walk, hold the mouse to follow.
+触屏轻点寻路，拖动摇杆移动，双指缩放。||Tap to walk, drag for the joystick, pinch to zoom.
+E 交谈，B / I 背包，C 卡包，J 任务，P 宠物，Esc 关闭或打开设置。||E: talk, B / I: inventory, C: cards, J: quests, P: pets, Esc: close or open settings.
+
+仅保存在此设备，不同步到云端。||Saved on this device only; never synced to the cloud.

@@ -1,0 +1,52 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>性能与画面验收</title>
+<style>body{font:15px sans-serif;background:#f5efdf;color:#24332d}canvas{max-width:100%;border:1px solid #777}pre{white-space:pre-wrap}iframe{width:390px;height:740px;border:0}button{padding:10px}</style>
+<h1>性能与画面验收</h1><p>隔离内存角色；不会写入玩家存档。</p><button id="run">运行地形对照</button><button id="scene">加载完整场景</button><pre id="result">准备就绪</pre><canvas id="world" width="1280" height="720" style="width:1280px;height:720px"></canvas>
+<h2>390px 设置</h2><iframe src="settings.html?tab=game&soundQA=1"></iframe>
+<script type="module">
+import {paintLargeTerrain,paintLargeTerrainSteps,createTerrainTileCache} from '../../js/adventure_large_terrain.js';
+import {createScheduledTerrainCache} from '../../js/terrain_tile_scheduler.js';
+import {createWorld,movePosition} from '../../js/adventure_world_core.js';
+import {createAdventure,beginEncounter,applyAction} from '../../js/adventure_core.js';
+import {loadResources} from '../../js/adventure_assets.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {restorePveBattle} from '../../js/combat_pve_core.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href);document.head.append(base);
+const output=document.querySelector('#result'),canvas=document.querySelector('#world'),c=canvas.getContext('2d');
+let frameHandle=null;
+const next=()=>new Promise(resolve=>requestAnimationFrame(resolve));
+const json=p=>fetch(p).then(r=>r.json());
+const summary=values=>{const s=[...values].sort((a,b)=>a-b);return {mean:+(s.reduce((a,b)=>a+b,0)/s.length).toFixed(2),p95:+s[Math.floor((s.length-1)*.95)].toFixed(2),max:+s.at(-1).toFixed(2)};};
+document.querySelector('#run').onclick=async()=>{try{if(frameHandle!==null)cancelAnimationFrame(frameHandle);
+ output.textContent='测量中…';const chapter=await json('data/adventure/chapter.json'),layout=await json('data/adventure/maps/town.json');chapter.worldMaps={town:layout};const world=createWorld('town',chapter),rows=[];
+ for(const width of [390,1280])for(const kind of ['synchronous','scheduled']){
+ const slices=[],frames=[],times=[],allocations=[];const factory=()=>{const x=document.createElement('canvas');allocations.push(x);return x;};
+ const cache=kind==='synchronous'?createTerrainTileCache(paintLargeTerrain,factory):createScheduledTerrainCache({paint:(...args)=>paintLargeTerrainSteps(...args.slice(0,3)),createCanvas:factory,onMetric:(name,value)=>{if(name==='tile-slice')slices.push(value);}});
+ let prior=null;const rect={x:world.center.x-width/2,y:world.center.y-260,w:width,h:520};
+ for(let i=0;i<100;i++){const t=await next();if(prior!==null)frames.push(t-prior);prior=t;const start=performance.now();c.save();c.clearRect(0,0,canvas.width,canvas.height);c.translate(-rect.x,-rect.y);cache.draw(c,world,rect,(ctx,x,y,size)=>{ctx.fillStyle='#8ca46b';ctx.fillRect(x,y,size,size);},1);c.restore();times.push(performance.now()-start);rect.x+=4;rect.y+=2;}
+ // Wait for preparation, then measure an equivalent reconstructed-world return.
+ if(kind==='scheduled')while(cache.pending)await next();
+ const before=allocations.length,start=performance.now();cache.draw(c,{...world},rect,()=>{},1);const returnMs=performance.now()-start;if(kind==='scheduled')while(cache.pending)await next();
+ rows.push({width,kind,drawMs:summary(times),frameMs:summary(frames),sliceMs:slices.length?summary(slices):null,returnDrawMs:+returnMs.toFixed(2),returnAllocations:allocations.length-before,cacheTiles:cache.size,liveBytes:allocations.reduce((n,a)=>n+a.width*a.height*4,0)});cache.clear();output.textContent=JSON.stringify(rows,null,2);
+ }
+ // Identical commands in synchronous and cooperative painters must produce identical pixels.
+ const a=document.createElement('canvas'),b=document.createElement('canvas');a.width=b.width=516;a.height=b.height=516;
+ const rect={x:world.center.x-258,y:world.center.y-258,w:516,h:516};for(const x of [a,b])x.getContext('2d').translate(-rect.x,-rect.y);
+ paintLargeTerrain(a.getContext('2d'),world,rect);for(const step of paintLargeTerrainSteps(b.getContext('2d'),world,rect)){}
+ const aa=a.getContext('2d').getImageData(0,0,516,516).data,bb=b.getContext('2d').getImageData(0,0,516,516).data;
+ output.textContent=JSON.stringify({rows,pixelParity:aa.every((v,i)=>v===bb[i])},null,2);
+ }catch(e){output.textContent=e.stack;}};
+document.querySelector('#scene').onclick=async()=>{try{
+ if(frameHandle!==null)cancelAnimationFrame(frameHandle);
+ const started=performance.now();output.textContent='加载场景…';const assets=await loadResources(),save=createAdventure(assets.content,{name:'性能验收'});let world=createWorld(save.zone,assets.content,save),battle=null,moving=false,graphics={particles:true,trails:true};
+ await assets.warmScenery(world);await assets.warmNearby(world,save);const renderer=createRenderer(canvas,assets);renderer.prepareScene(world,save);output.textContent='完整场景加载 '+Math.round(performance.now()-started)+' ms';
+ document.querySelector('#scene-controls')?.remove();const controls=document.createElement('div');controls.id='scene-controls';canvas.before(controls);
+ const button=(label,action)=>{const b=document.createElement('button');b.textContent=label;b.onclick=action;controls.append(b);};
+ button('行走 / 停止',()=>{moving=!moving;});
+ button('粒子与足迹开关',()=>{graphics={particles:!graphics.particles,trails:!graphics.trails};output.textContent=JSON.stringify(graphics);});
+ button('进入战斗',()=>{try{if(battle)return;const start=performance.now();beginEncounter(save,assets.content,world.encounters.find(e=>e.id!=='death-scout').id);battle=restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);void assets.warmBattle(battle);output.textContent='战斗准备 '+(performance.now()-start).toFixed(1)+' ms';}catch(e){output.textContent=e.stack;}});
+ button('撤退返回',()=>{if(!battle)return;const start=performance.now();applyAction(save,assets.content,{type:'retreat'});battle=null;world=createWorld(save.zone,assets.content,save);renderer.prepareScene(world,save);output.textContent='返回准备 '+(performance.now()-start).toFixed(1)+' ms；'+JSON.stringify(renderer.terrainStats());});
+ button('缩放',()=>renderer.zoomBy(.9));button('重置缩放',()=>renderer.resetZoom());
+ const islands=document.createElement('select');islands.setAttribute('aria-label','验收岛屿');for(const [id,layout]of Object.entries(assets.content.worldMaps)){const o=document.createElement('option');o.value=id;o.textContent=id;islands.append(o);}islands.value=save.zone;controls.append(islands);islands.onchange=()=>{battle=null;save.pendingEncounter=null;save.zone=islands.value;world=createWorld(save.zone,assets.content,save);save.position={...world.center};void assets.warmScenery(world);void assets.warmNearby(world,save);renderer.prepareScene(world,save);};
+ let previous=null;function frame(t){const dt=Math.min(.05,previous===null?0:(t-previous)/1000);previous=t;if(battle)renderer.renderBattle(canvas,battle,save,t);else{if(moving){save.position=movePosition(world,save.position,210*dt,105*dt);save.facing=2;}renderer.render(world,save,t,{moving,graphics});}frameHandle=requestAnimationFrame(frame);}frameHandle=requestAnimationFrame(frame);
+ }catch(e){output.textContent=e.stack;}};
+</script></html>

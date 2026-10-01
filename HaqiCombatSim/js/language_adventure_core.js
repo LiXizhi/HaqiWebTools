@@ -117,6 +117,7 @@ export function recordLearningCompletion(save, content, completion, access) {
     const status=rewardStatus(save,content,course,mode,now);
     if(status.ledger.attempts.includes(attemptId))return {amount:0,currency:status.currency,duplicate:true};
     const state=save.languageAdventure||{version:1,progress:{}};
+    if(completion.story&&state.stories?.[locale]?.[completion.story.id]?.completed)status.amount=0;
     const byLanguage={...(state.progress[locale]||{})};
     const old=byLanguage[course.id]||{basic:0,challenge:0,lastAt:0};
     byLanguage[course.id]={...old,listening:old.listening||0,[mode]:(old[mode]||0)+1,lastAt:now};

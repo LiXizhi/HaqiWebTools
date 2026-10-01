@@ -1,0 +1,4 @@
+interface:
+  display_name: "哈奇故事创作"
+  short_description: "阅读、创作和维护哈奇章节、支线与对话剧本，保持简明语言和稳定编号"
+  default_prompt: "使用 $haqi-story 阅读相关章节，按简明写作规范创作或更新剧本，并核对编号、来源与任务事实。"

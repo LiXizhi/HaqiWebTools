@@ -18,7 +18,7 @@ export function createDialogueVoiceSession(voice){
         const op=active={...options,phase:'connecting',release:false};op.onState('connecting');
         try{
             if(op.before)await op.before();if(!live(op))return;
-            await voice.start(op.signal);if(!live(op))return;
+            await voice.start(op.signal,{onPartial:text=>{if(live(op)&&['connecting','recording'].includes(op.phase))op.onPartial?.(text);}});if(!live(op))return;
             op.phase='recording';op.onState('recording');op.timer=setTimeout(()=>void finish(),op.maxMs);
             if(op.release)await finish();
         }catch(error){if(live(op)){active=null;op.onError(error);}}
@@ -28,7 +28,7 @@ export function createDialogueVoiceSession(voice){
     async function speak(options){
         if(active)return;
         const op=active={...options,phase:'speaking'};op.onState('speaking');
-        try{await voice.speak(op.text,op.locale,op.signal);}
+        try{await voice.speak(op.text,op.locale,op.signal,op.speaker);}
         catch(error){if(live(op))op.onError(error);}
         finally{if(live(op)){active=null;op.onDone();}else if(active===op)active=null;}
     }

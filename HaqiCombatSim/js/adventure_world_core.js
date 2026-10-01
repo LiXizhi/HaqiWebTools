@@ -18,6 +18,11 @@ export function updateEncounterVisibility(world,save,now) {
     });
     if(changed)objectIndices.delete(world);
 }
+// Only an unchanged island session can resume after combat. Dungeon progress
+// removes encounters and changes portals, so its dynamic world must be rebuilt.
+export function canResumeWorld(world,previousSave,nextSave,content){
+    return !!world&&!world.isDungeon&&previousSave===nextSave&&world.zone===nextSave?.zone&&world.layout===content.worldMaps?.[world.zone];
+}
 export function createWorld(zone,content,save=null) {
     if(!islandFor(zone)&&!dungeonFor(content,zone))throw new Error('目的地不存在');
     const layout=content.worldMaps?.[zone];
@@ -38,7 +43,7 @@ export function createWorld(zone,content,save=null) {
         // Old free-roaming checkpoints resume safely on the new road.
         if(save&&(!walkable(world,save.position.x,save.position.y)||routeLocation(world,save.position).progress>dungeonLimit(world)))save.position={...layout.spawn};
     }
-    if(originals){
+    if(originals&&npcs.some(n=>!Number.isFinite(n.x)||!Number.isFinite(n.y)||onAnyBridge(world,n.x,n.y,88))){
         // Original 3D coordinates stay in the catalogue. Residents stand beside the
         // road, and bridge decks stay empty. AI companions may still use the road.
         const candidates=[];

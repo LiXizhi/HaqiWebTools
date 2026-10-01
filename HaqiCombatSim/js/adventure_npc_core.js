@@ -2,6 +2,18 @@ import {trainingPoints} from './adventure_learning_core.js';
 import {mountDirectSale} from './adventure_mounts_core.js';
 
 const schools={fire:986,ice:987,storm:988,life:990,death:991};
+// Accepted quests take priority over optional chat, even when not tracked.
+export function npcHasActiveQuest(save,content,npcId) {
+    const matches=id=>id!=null&&String(id)===String(npcId);
+    return [...(content.quests||[]),...(content.catalogQuests?.quests||[])].some(quest=>{
+        const state=save.quests?.[quest.id];
+        if(!state?.accepted||state.claimed)return false;
+        return matches(quest.startNpc)||matches(quest.endNpc)
+            ||quest.goals?.some(goal=>goal.kind==='talk'&&matches(goal.id))
+            ||quest.groups?.some(group=>group.kind==='talk'&&group.items.some(item=>matches(item.id)))
+            ||quest.talks?.some(talk=>matches(talk.npcId));
+    });
+}
 export function npcItemLimits(item) {
     if(item?.exchangeLimits)return item.exchangeLimits;
     const row=item?.sourceRecord,template=row?.[18];
@@ -15,7 +27,7 @@ export function installNpcCatalog(content,catalog) {
     for(const npc of catalog.npcs){
         npc.hidden??=npc.zone==='town'&&!chapterNpcIds.has(npc.id)&&!npcServices(content,npc).length;
         content.npcs[npc.id]??=structuredClone(npc);
-        if(content.npcs[npc.id].zone===npc.zone)Object.assign(content.npcs[npc.id],{buttons:npc.buttons,instanceId:npc.instanceId});
+        if(content.npcs[npc.id].zone===npc.zone)Object.assign(content.npcs[npc.id],{buttons:npc.buttons,instanceId:npc.instanceId,sex:npc.sex,age:npc.age});
     }
 }
 export function npcServices(content,npc) {

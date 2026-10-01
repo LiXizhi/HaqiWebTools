@@ -67,7 +67,7 @@ header.append(createCloseButton(closeDetails, '关闭物品详情'));
 
 - 页签条吸顶于 `.modal-body`，容器加 `.gui-tabs`，选中态沿用 Shared tabs；页签切换原地显隐内容区（`hidden`），不整面板重绘，焦点留在页签上；因开关触发的重绘通过模块级 `settingsView.tab` 保持当前页签，控制器打开窗口时重置。
 - 内容按 `.settings-section` 分区卡片组织；动作与链接用整行可点的 `.settings-cell`（emoji 图标 + 标题/说明 + CSS 箭头），开关用 `.settings-row` 右侧药丸 `.settings-toggle`（已开启/已关闭 + `aria-pressed`），标签在上、选择组在下的用 `.settings-field`。
-- 控件只依赖注入的 `el/button`，验收页可复用；核验入口 `tests/fixtures/settings.html?tab=journey|sound|language|about`。新增文案同步 `data/adventure/locale/en.txt`。
+- 控件只依赖注入的 `el/button`，验收页可复用；核验入口 `tests/fixtures/settings.html?tab=journey|game|language|about`。新增文案同步 `data/adventure/locale/en.txt`。
 
 ## 美术与性能
 
@@ -183,3 +183,18 @@ HUD 经验条（`.xp-bar`）必须同时可见"已获得"与"未填满"两种颜
 ### 系别图标（2026-10-01）
 
 六系共用 `card_renderer.js` 的 `drawSchoolIcon`，使用 `data/adventure/school-icons.json` 登记的高清透明符号：参考原版由 imagegen 重绘，768×128 横排 WebP，每格 128×128，共 31,758 字节（预算严格小于32,000字节）。不得带 HP 槽圆形底板或金色圆框。入口仍为 Canvas 绘制，实际图形从共享图片裁剪；不按调用方颜色重染原版图标。禁止在各窗口另绘一套系别符号。默认永久 Keepwork CDN，明确本地资源模式才读取仓库副本，加载失败沿用原路径兜底。预览见 `tests/fixtures/school-icons.html`。
+
+
+## 全局奖励提示（2026-10-01）
+
+奖励到账和属性提升统一使用 `GlobalRewardNotice.show({title,lines})`，在实际操作成功后调用，禁止从视图重绘重复发出。组件挂载 body，以原生 popover 顶层显示在屏幕中上方，不抢焦点、不挡操作，3 秒后收起，连续事件排队。会话/账号退出调用 reset。副本前奖励、学习加成和装备提升不得各自再造局部横幅或弹层；原因与历史结果可留在正文。
+
+### 战斗快捷对白与骑乘头顶定位（2026-10-01）
+
+对白入口使用无文字的笑脸对话框 SVG 图标，48px 点击区，提供 aria-label 和 title。战斗 Canvas 的 battleSpeechAnchors 输出实际人物头部顶点的 CSS 坐标（含骑乘、动画和缩放），缺少人物图集时才回退固定高度。每帧先放置宠物提示，再布局角色对白；主角与宠物气泡横向重叠时，主角气泡位于上方。空间不足时优先隐藏宠物提示，仍保留状态图标避让。
+
+### 2026-10-01 NPC 对话入口位置
+
+附近居民的省略号邀请显示在该 NPC 头顶，不再放在主角随行宠物上；点击 NPC 保留原对白，点击省略号进入该居民的对话交互。NPC 对话框立绘区右上角提供同义省略号入口，48px 点击区、中文无障碍名称，窄屏随立绘区收紧位置。此约定替代早期宠物陪聊邀请的位置描述。
+
+NPC 任务提示优先（2026-10-01 补充）：NPC 关联已接取但未交付的主线或目录任务时，隐藏头顶及对白窗口的省略号入口，不受是否追踪影响；领取后恢复。头顶已有任务标记时也隐藏可选会话邀请，隐藏时不保留命中区域。

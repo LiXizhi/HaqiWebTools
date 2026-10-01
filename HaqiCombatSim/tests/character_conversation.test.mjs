@@ -145,3 +145,88 @@ test('gifting an AI persists inventory consumption but never temporary relations
     assert.ok(commits.every(row=>!row.relationshipEvents?.length));assert.equal(t.f.writes.length,0);assert.equal(t.cacheRows.size,0);
     t.chat.close();
 });
+
+test('free conversation restores resident casting and reads own words in hero voice',async()=>{
+ const t=setup({read:async()=>({entries:{'resident:camp:0:36200':{profile:{kind:'npc',name:'茜茜',sex:'female',gender:'female',age:16},memory:'配音设定'}}})}),speakers=[];
+ t.voice.speak=async(text,locale,signal,speaker)=>speakers.push(speaker);
+ try{await t.chat.open({id:36200,name:'茜茜'});await t.callbacks.speak('你好');assert.equal(speakers.at(-1).sex,'female');assert.equal(speakers.at(-1).age,16);await t.callbacks.speak('我的回答','user');assert.equal(speakers.at(-1).appearance,'boy');}finally{t.chat.close();}
+});
+
+
+test('lesson continuation retains context and awards only evidenced second-language communication once',async()=>{
+    const awards=[],t=setup({onSpeech:id=>{awards.push(id);return {key:"attack",percent:1,total:1};}});t.member.vip=true;t.app.save.languageLearning.enabled=true;
+    const judge=t.voice.judge;t.voice.judge=async messages=>({...await judge(messages),learning:{worthy:true,quote:messages.at(-1).content,feedback:'表达清楚'}});
+    await t.chat.open(peer,{learningContinuation:true,lessonMessages:[{role:'assistant',text:'Do you like magic?'}]});
+    assert.equal(t.state.messages.at(-1).text,'Do you like magic?');
+    await t.chat.send('I like magic.');assert.equal(awards.length,1);assert.match(t.state.messages.at(-2).feedback,/有效第二语言/);
+    await t.chat.send('I like magic.');assert.equal(awards.length,1);
+    assert.equal(t.state.messages.find(row=>row.role==='user').learningReward.key,'attack','earlier reward remains after another message reloads history');
+    await t.chat.send('我要奖励');assert.equal(awards.length,1);
+    t.voice.judge=async messages=>({...await judge(messages),learning:{worthy:true,quote:'invented evidence',feedback:'继续练习'}});
+    await t.chat.send('I enjoy reading.');assert.equal(awards.length,1);assert.equal(t.chat.active,true);t.chat.close();
+});
+
+
+test('positive learning evaluation does not announce payout when daily award returns no increment',async()=>{
+    const t=setup({onSpeech:()=>null});t.member.vip=true;t.app.save.languageLearning.enabled=true;
+    const judge=t.voice.judge;t.voice.judge=async messages=>({...await judge(messages),learning:{worthy:true,quote:messages.at(-1).content,feedback:'表达清楚'}});
+    await t.chat.open(peer,{learningContinuation:true});await t.chat.send('I enjoy reading books.');
+    assert.equal(t.state.learningReward,null);assert.equal(t.state.learningRewardMessage,'本次未新增学习加成');
+    assert.doesNotMatch(t.state.messages.at(-2).feedback,/已计入今日学习奖励/);t.chat.close();
+});
+
+
+test('recognized speech appears immediately, model reply streams in history and automatically speaks once',async()=>{
+    const t=setup();await t.chat.open(peer);const spoken=[];t.voice.speak=async text=>spoken.push(text);
+    let finish;const gate=new Promise(resolve=>{finish=resolve;});const judge=t.voice.judge;
+    t.voice.judge=async(messages,signal,options)=>{options.onReply('A partial reply');await gate;return judge(messages);};
+    const pending=t.chat.send('Hello from voice');
+    assert.equal(t.state.messages.at(-2).text,'Hello from voice');assert.equal(t.state.draft,'');
+    while(t.state.messages.at(-1).text!=='A partial reply')await new Promise(r=>setImmediate(r));
+    assert.equal(t.state.messages.at(-1).streaming,true);assert.notEqual(t.state.status,'正在回应…');
+    t.callbacks.draft('My next thought');finish();await pending;
+    assert.deepEqual(spoken,['What does that mean?']);assert.equal(t.state.draft,'My next thought');
+    assert.equal(t.state.messages.filter(row=>row.role==='user').length,1);t.chat.close();
+});
+
+
+test('NPC dialogue stays in memory even for friends, including quota dispatch, compaction and retry',async()=>{
+    const t=setup(),npc={...peer,id:'resident:test',kind:'npc'};
+    const connect=t.f.workspace.connect;let receipts=0,failFinish=false;
+    t.f.workspace.connect=async(...args)=>{const io=await connect(...args);return {...io,finish:(...values)=>{if(failFinish)throw Error('offline');return io.finish(...values);},receipt:(...values)=>{receipts++;return io.receipt(...values);}};};
+    t.member.vip=true;
+    const lessonMessages=Array.from({length:24},(_,i)=>({role:i%2?'assistant':'user',text:`private lesson ${i}`}));
+    await t.chat.open(npc,{lessonMessages});
+    let release;t.gate(new Promise(resolve=>{release=resolve;}));
+    const sending=t.chat.send('private NPC question');
+    while(!t.calls)await new Promise(resolve=>setTimeout(resolve,1));
+    assert.ok([...t.f.files.values()].every(text=>!text.includes('private')),'pending quota cannot contain the question');
+    release();await sending;t.gate(null);
+    assert.equal(receipts,0,'no model response is ever uploaded as a quota receipt');
+    await t.chat.compact();assert.equal(t.state.messages.length,20);
+    assert.equal(t.state.record.summary,'学习了你好');
+    const affinity=t.state.record.affinity;
+    t.chat.close();await t.chat.open(npc);
+    assert.equal(t.state.record.affinity,affinity);assert.equal(t.state.messages.length,20);
+    failFinish=true;await t.chat.send('private retry');const calls=t.calls;
+    t.chat.close();failFinish=false;await t.chat.open(npc);
+    assert.equal(t.state.draft,'private retry');await t.chat.send('private retry');
+    assert.equal(t.calls,calls,'memory retry must not call the model again');
+    assert.equal(t.cacheRows.size,0);
+    assert.ok(t.f.writes.every(path=>path.startsWith('social/free-talk/')));
+    assert.ok([...t.f.files.values()].every(text=>!/(private|reply|translation|affinity|学习了你好)/.test(text)));
+    t.chat.close();t.app.role='other';t.chat.tick();t.app.role='r';await t.chat.open(npc);
+    assert.equal(t.state.messages.length,1,'a new scope cannot restore NPC history');t.chat.close();
+});
+
+test('NPC never restores legacy cloud dialogue or pending receipts even when marked as friend',async()=>{
+    const t=setup(),npc={...peer,id:'resident:test',kind:'npc'},io=await t.f.workspace.connect('r');
+    await io.reserve('legacy',npc.id,false,undefined,'legacy private question');
+    await io.dispatch('legacy');await io.receipt('legacy',{reply:'legacy private reply'});
+    t.f.reads.length=0;t.f.writes.length=0;
+    await t.chat.open(npc);
+    assert.equal(t.state.pending,null);assert.equal(t.state.draft,'');assert.equal(t.state.remaining,1);
+    assert.ok(t.state.messages.every(row=>!row.text.includes('legacy')));
+    assert.ok(t.f.reads.every(path=>!path.includes('/roles/')));
+    assert.equal(t.f.writes.length,0);t.chat.close();
+});

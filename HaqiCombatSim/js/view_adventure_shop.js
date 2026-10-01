@@ -110,9 +110,6 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
         heart.setAttribute('d','M16 17.2c-2.4-1.6-4-2.8-4-4.3a1.8 1.8 0 0 1 3.2-1.2L16 12.6l.8-.9a1.8 1.8 0 0 1 3.2 1.2c0 1.5-1.6 2.7-4 4.3z');
         svg.append(badge,bubble,heart);return svg;
     }
-    function offerLanguageTest(item) {
-        cb.languageTest({kind:'shop',productId:item.id,name:item.name,price:productPrice(item,c)});
-    }
     function openPurchase(item,trigger) {
         const dialog=el('dialog','pet-buy-dialog');
         dialog.dataset.zh='确认购买';

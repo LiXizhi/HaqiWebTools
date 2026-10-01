@@ -1,6 +1,6 @@
 // Kids quest_list progress for every non-obsolete quest outside the 14 chapter lessons.
 // QuestProvider.lua TryAccept/CanFinished and QuestHelp.lua Table_Add / Table_Add_Item.
-// Story dialog scripts and transform rewards are not executed.
+// Story text is projected without executing source scripts or transform rewards.
 import {createRng} from './rng_core.js';
 
 const assert = (ok, message) => { if (!ok) throw new Error(message); };
@@ -21,6 +21,20 @@ const BLOCKED = {
     79102: '赛场徽章需要原服竞技',
     79104: '英雄谷徽章需要原服竞技'
 };
+
+// The kids archive uses linear dialogue only. Fail export on new control flow
+// instead of silently discarding choices or executing Lua actions.
+function projectDialog(node, terminal, questId, names) {
+    const rows = children(child(node, 'dialog') || node, 'item');
+    // Original 62759 ends with two empty editor placeholders after its terminal action.
+    while (rows.length && !text(rows.at(-1), 'content') && !children(child(rows.at(-1), 'buttons'), 'button').length) rows.pop();
+    return rows.map((row, index) => {
+        const buttons = children(child(row, 'buttons'), 'button').map(b => ({...b.attributes}));
+        assert(buttons.length <= 1, `任务 ${questId} 的对白分支需要适配`);
+        if (buttons.length) assert(buttons[0].action === (index === rows.length - 1 ? terminal : 'gotonext'), `任务 ${questId} 的对白动作需要适配`);
+        return {npcId: num(text(row, 'id')), speakerName: names[num(text(row, 'id'))] || '', text: text(row, 'content'), buttons};
+    });
+}
 
 export function projectQuestRuntime(catalog, chapterIds = []) {
     assert(catalog?.version === 1 && Array.isArray(catalog.quests), '任务目录无效');
@@ -52,6 +66,9 @@ export function projectQuestRuntime(catalog, chapterIds = []) {
         push('CustomGoal', 'custom', i => ({ id: num(i.attributes.id), name: names.CustomGoal[i.attributes.id] || `目标 ${i.attributes.id}`, count: num(i.attributes.value, 1), destroy: i.attributes.need_destroy === '1' }));
         return {
             id: q.id, title: q.title, region: q.island || q.group[1], startNpc: num(q.startNpc), endNpc: num(q.endNpc), repeat: text(q.data, 'QuestRepeat') === '1',
+            startDialog: projectDialog(child(q.data, 'StartDialog'), 'doaccept', q.id, npc),
+            endDialog: projectDialog(child(q.data, 'EndDialog'), 'dofinished', q.id, npc),
+            talks: children(child(q.data, 'ClientDialogNPC'), 'item').map(n => ({npcId: num(n.attributes.id), label: n.attributes.label || '', dialog: projectDialog(n, 'donpcdialoged', q.id, npc)})),
             prerequisites: q.requires.map(r => ({ id: num(r.id), value: num(r.value, 1) })).filter(r => !obsolete.has(r.id)),
             requirements: children(child(q.data, 'RequestAttr'), 'item').map(i => ({ id: num(i.attributes.id), name: i.attributes.id, min: num(i.attributes.value, 0), max: i.attributes.topvalue === undefined || i.attributes.topvalue === '' ? null : num(i.attributes.topvalue) })),
             groups,
@@ -143,6 +160,15 @@ export function catalogQuestsForNpc(save, content, npcId, stats = {}) {
         accept: quests.filter(q => q.startNpc === npcId && !catalogAcceptBlock(save, content, q, stats)).slice(0, 4),
         claim: quests.filter(q => q.endNpc === npcId && catalogQuestReady(save, content, q, stats))
     };
+}
+
+export function catalogTalksForNpc(save, content, npcId, stats = {}) {
+    return (content.catalogQuests?.quests || []).flatMap(quest => {
+        const state = questRecord(save, quest.id);
+        if (!state.accepted || state.claimed) return [];
+        if (!catalogGoalRows(save, content, quest, stats).some(g => g.kind === 'talk' && g.id === npcId && g.value < g.count)) return [];
+        return (quest.talks || []).filter(t => t.npcId === npcId).map(talk => ({quest, talk}));
+    });
 }
 // QuestTrackerPage.lua max_size: the kids tracker keeps at most three quests.
 export const MAX_TRACKED_QUESTS = 3;

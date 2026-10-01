@@ -228,6 +228,9 @@ extras={'townMap':asset('texture/aries/worldmaps/townmap/haqitownmap_bg.png'),
  'campMap':asset('worlds/myworlds/newuserisland/minimap.png'),
  'music':asset('audio/haqi/ariesregionbgmusics/haqitownbg.ogg',True)}
 previous_content=json.loads((OUT/'chapter.json').read_text(encoding='utf8')) if (OUT/'chapter.json').exists() else {}
+voice_profiles=json.loads((OUT/'npc-voice-profiles.json').read_text(encoding='utf-8'))['characters']
+for npc in npcs.values():
+    npc.update(voice_profiles[npc['name']])
 strengthening_catalog={str(gsid):dict(all_items[str(gsid)]) for group in upgrade_groups for gsid in group['gsids'] if str(gsid) in all_items}
 for gsid,item in strengthening_catalog.items():
     old=previous_content.get('strengtheningCatalog',{}).get(gsid,{})

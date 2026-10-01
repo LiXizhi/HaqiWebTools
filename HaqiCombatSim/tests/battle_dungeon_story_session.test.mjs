@@ -72,3 +72,16 @@ test('offline story blocks microphone and TTS but keeps reading and login availa
  let calls=0;const h=harness({start:async()=>calls++,speak:async()=>calls++},null);
  try{assert.equal(h.updates.at(-1).loginRequired,true);await h.actions.start();await h.actions.read();assert.equal(calls,0);assert.equal(h.awards.length,0);h.actions.next();assert.equal(h.controller.active,true);}finally{h.controller.close();}
 });
+
+test('dungeon read-aloud follows hero gender for player lines and age/sex for NPC lines',async()=>{
+ const speakers=[],h=harness({speak:async(text,locale,signal,speaker)=>speakers.push(speaker)});
+ try{h.save.appearance='girl';await h.actions.read();assert.equal(speakers.at(-1).appearance,'girl');h.save.appearance='boy';await h.actions.read();assert.equal(speakers.at(-1).appearance,'boy');h.actions.next();await h.actions.read();assert.equal(speakers.at(-1).sex,'male');assert.equal(speakers.at(-1).age,68);}finally{h.controller.close();}
+});
+
+
+test('shared line controls replay earlier narrator and NPC text without advancing or changing voice',async()=>{
+ const calls=[],h=harness({speak:async(text,locale,signal,speaker)=>calls.push({text,locale,speaker})});
+ try{for(const row of d.story.slice(0,2)){await h.actions.read(row);assert.equal(calls.at(-1).text,row.en);assert.equal(calls.at(-1).speaker,row);}
+ assert.equal(h.updates.at(-1).phase,'waiting');assert.equal(h.awards.length,0);assert.equal(h.completed(),0);
+ }finally{h.controller.close();}
+});

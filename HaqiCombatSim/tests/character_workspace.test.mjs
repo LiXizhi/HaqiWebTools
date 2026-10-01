@@ -61,3 +61,32 @@ test('menu affinity reads do not populate persistent local cache or write remote
     const io=await workspace.connect('r',{cacheReads:false});assert.equal(await io.load('stranger'),null);
     assert.equal(localWrites,0);assert.equal(remoteWrites,0);
 });
+
+
+test('quota overwrites one current-day file and ignores late callbacks from yesterday',async()=>{
+    let time=Date.parse('2026-09-27T15:59:00Z');
+    const f=fakeWorkspace({now:()=>time}),io=await f.workspace.connect('r');
+    await io.reserve('old','npc',false);await io.dispatch('old','2026-09-27');
+    time=Date.parse('2026-09-27T16:01:00Z');
+    assert.equal(await io.remaining(),2);
+    await io.reserve('today','npc',false);await io.finish('today','used','2026-09-28');
+    const path='alice/workspace/social/free-talk/current.json',before=f.files.get(path);
+    await io.receipt('old',{reply:'late reply'},'2026-09-27');
+    await io.finish('old','used','2026-09-27');
+    assert.equal(f.files.get(path),before);assert.equal(await io.remaining(),1);
+    assert.deepEqual([...f.files.keys()],[path]);
+    assert.deepEqual(JSON.parse(before),{version:1,day:'2026-09-28',owner:'alice',requests:{today:{role:'r',peer:'npc',vip:false,status:'used'}}});
+    await io.reserve('failed','npc',false);await io.finish('failed','released','2026-09-28');
+    assert.equal((await io.quota()).requests.failed,undefined);assert.equal(await io.remaining(),1);
+});
+
+test('only today legacy quota migrates, retaining counts without completed request details',async()=>{
+    const f=fakeWorkspace(),path='alice/workspace/social/free-talk/2026-09-27.json';
+    f.files.set(path,JSON.stringify({version:1,day:'2026-09-27',owner:'alice',requests:{old:{role:'r',peer:'npc',vip:false,status:'used',at:1,dispatched:true,text:'old text',response:{reply:'old reply'}}}}));
+    const io=await f.workspace.connect('r');assert.equal(await io.remaining(),1);
+    await io.reserve('new','npc',false);assert.equal(await io.remaining(),0);
+    const current=f.files.get('alice/workspace/social/free-talk/current.json');
+    assert.ok(!/old text|old reply|dispatched|revision|limit/.test(current));
+    assert.ok(f.writes.every(path=>path==='social/free-talk/current.json'));
+    assert.ok(f.reads.every(path=>!path.includes('2026-09-26')));
+});

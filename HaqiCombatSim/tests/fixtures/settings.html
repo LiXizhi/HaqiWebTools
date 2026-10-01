@@ -16,18 +16,19 @@ const save=params.has('soundQA')?{music:false,locale:'zh-CN'}:createAdventure(as
 save.languageLearning={enabled:true,target:'en',native:'zh-CN',autoSpeak:true};
 if(params.get('tab'))settingsView.tab=params.get('tab');
 if(params.has('noatlas'))document.body.classList.remove('storybook-ui');
-const sound=createSpellSound({defaultEnabled:true});
+const sound=createSpellSound({defaultEnabled:true,persistPreferences:false});
 document.addEventListener('pointerdown',()=>sound.unlock());
 document.addEventListener('keydown',()=>sound.unlock());
 document.addEventListener('visibilitychange',()=>sound.stop());
 window.addEventListener('pagehide',()=>sound.dispose());
-const model={assets,save,soundEnabled:sound.enabled,soundVolume:sound.volume};
+const model={assets,save,gameSettings:{music:false,particles:'auto',trails:'auto'},effectiveGraphics:{particles:true,trails:true},soundEnabled:sound.enabled,soundVolume:sound.volume};
 const root=document.querySelector('#root');
 const cb={
     close:()=>root.replaceChildren(),
     panel:()=>show(),
     cloud:()=>{},roles:()=>{},title:()=>{},
-    music:()=>{save.music=!save.music;show();},
+    music:()=>{model.gameSettings.music=!model.gameSettings.music;show();},
+    gameSetting:(key,value)=>{model.gameSettings[key]=value;},resetZoom:()=>{},
     sound:async()=>{await sound.setEnabled(!sound.enabled);model.soundEnabled=sound.enabled;show();},
     soundVolume:value=>{sound.setVolume(value);model.soundVolume=sound.volume;},
     soundPreview:async()=>{await sound.unlock();sound.play('heal');},
@@ -35,7 +36,7 @@ const cb={
     setLearning:next=>{Object.assign(save.languageLearning,next);show();},
     refresh:()=>show(),
 };
-function show(){renderPanel(root,'settings',model,cb);}
+function show(){renderPanel(root,'settings',model,cb);document.documentElement.dataset.fixtureReady='1';}
 show();
 if(params.has('soundQA')){
     const controls=document.createElement('section');controls.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#fff3d4;z-index:100;padding:8px;display:flex;gap:6px;flex-wrap:wrap';

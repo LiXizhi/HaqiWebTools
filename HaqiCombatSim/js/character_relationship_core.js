@@ -32,8 +32,8 @@ const clamp=value=>Math.max(-100,Math.min(100,value));
 export function characterProfile(source){
     const kind=source.kind||(source.userId?'account':'npc'),id=kind==='npc'&&!String(source.id).startsWith('resident:')?`resident:${source.instanceId||source.npcId||source.id}`:source.id;
     assert(typeof id==='string'&&id.length>0&&id.length<=160,'角色身份无效');
-    const native=languageId(source.native||'zh'),gender=source.gender||({boy:'male',girl:'female'}[source.appearance])||'unknown';
-    return {id,kind,name:String(source.name||'居民').slice(0,80),native,gender,
+    const native=languageId(source.native||'zh'),gender=source.sex||source.gender||({boy:'male',girl:'female'}[source.appearance])||'unknown';
+    return {id,kind,name:String(source.name||'居民').slice(0,80),native,gender,sex:gender==='female'?'female':'male',age:Number.isInteger(source.age)&&source.age>=1&&source.age<=80?source.age:25,
         culture:String(source.culture||(kind==='account'?'公开资料未提供':({en:'纽约','zh-CN':'中国',ja:'日本',ko:'韩国'}[native]))),
         interest:String(source.interest||source.role||'岛屿生活').slice(0,300),
         languages:{en:'beginner',[native]:'native'},memoryKey:source.memoryKey||null};
@@ -93,8 +93,10 @@ export function reserveQuota(row,id,context,vip,now,params){
 export function finishQuota(row,id,status){
     assert(['used','released'].includes(status)&&row.requests[id],'发送额度记录不存在');
     if(row.requests[id].status==='used')return row;
-    const next={...row.requests[id],status};delete next.response;delete next.text;
-    return {...row,requests:{...row.requests,[id]:next}};
+    const requests={...row.requests};
+    if(status==='released')delete requests[id];
+    else{const {role,peer,vip}=requests[id];requests[id]={role,peer,vip,status};}
+    return {...row,requests};
 }
 
 // Original kids ItemManager.lua GetAllCanGiftItemGUIDs L5460-5492.

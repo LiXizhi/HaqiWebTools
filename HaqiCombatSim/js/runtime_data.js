@@ -1,8 +1,12 @@
 // Browser IO only. Source mode reads individual files; Vite releases read packs.
 const productionPacks = typeof __HAQI_PACKED_DATA__ !== 'undefined' && __HAQI_PACKED_DATA__;
 
-export function createJsonReader({ packed = productionPacks, request = (...args) => fetch(...args), onProgress } = {}) {
+const defaultRequest=(...args)=>fetch(...args),sharedPacks=new WeakMap();
+export function createJsonReader({ packed = productionPacks, request = defaultRequest, onProgress } = {}) {
     const pending = new Map();
+    const transport=request===defaultRequest?globalThis.fetch:request;
+    if(!sharedPacks.has(transport))sharedPacks.set(transport,new Map());
+    const packPending=sharedPacks.get(transport);
     async function download(url) {
         const response = await request(url, packed ? undefined : { cache: 'no-cache' });
         if (!response.ok) throw new Error(`无法读取 ${url}（${response.status}）`);
@@ -38,19 +42,22 @@ export function createJsonReader({ packed = productionPacks, request = (...args)
         return response.json();
     }
     return async function readJson(url) {
-        if (!packed) return download(url);
+        if (!packed) {
+            if(!pending.has(url))pending.set(url,download(url).finally(()=>pending.delete(url)));
+            return structuredClone(await pending.get(url));
+        }
         const key = String(url).replace(/^\.\//, '');
         const match = /^data\/(adventure|kids|teen|sample)\/((?:maps\/)?[a-zA-Z0-9_-]+\.json)$/.exec(key);
         if (!match) throw new Error(`未知的数据路径：${url}`);
         const group = match[2] === 'manifest.json' && match[1] !== 'adventure' ? 'datasets' : match[1];
         const packUrl = `data/${group}.json`;
-        if (!pending.has(packUrl)) {
-            pending.set(packUrl, download(packUrl).then(pack => {
+        if (!packPending.has(packUrl)) {
+            packPending.set(packUrl, download(packUrl).then(pack => {
                 if (pack?.schemaVersion !== 1 || !pack.files) throw new Error(`数据包格式无效：${packUrl}`);
                 return pack;
-            }).catch(error => { pending.delete(packUrl); throw error; }));
+            }).catch(error => { packPending.delete(packUrl); throw error; }));
         }
-        const pack = await pending.get(packUrl);
+        const pack = await packPending.get(packUrl);
         if (!Object.hasOwn(pack.files, key)) throw new Error(`数据包缺少：${key}`);
         // Dataset normalization / adventure expansion mutate returned objects.
         // Each read must remain isolated, just like a fresh response.json().

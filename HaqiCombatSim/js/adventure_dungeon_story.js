@@ -1,3 +1,4 @@
+import {compareDungeonSpeech} from './dungeon_speech_core.js';
 import {createDialogueVoiceSession} from './dialogue_voice_session.js';
 import {dailyBuffs,previewDailySpeech,localBuffDay} from './language_daily_buff_core.js';
 import {createDungeonStoryView} from './view_dungeon_story.js';
@@ -27,7 +28,7 @@ export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},vo
         s.target=s.learning?(s.locale==='en'?row.en:row.text):row.text;
         const translation=s.learning&&s.showTranslation?(s.locale==='en'?row.text:row.en):'';
         s.rewardKey=previewDailySpeech(s.save,getState().assets.content);
-        view.line(row,{target:s.target,translation,index:s.index,total:s.d.story.length,learning:s.learning,loginRequired:s.learning&&!s.owner,rewardKey:s.rewardKey,percent:s.params.percentPerLine});
+        view.line(row,{target:s.target,translation,index:s.index,total:s.d.story.length,learning:s.learning,loginRequired:s.learning&&!s.owner,rewardKey:s.rewardKey,percent:s.params.percentPerLine,locale:s.locale});
         if(row.role==='player'&&s.learning){
             s.attempt=createLineAttempt(row,now(),getState().assets.content);s.phase='waiting';
         }
@@ -45,6 +46,7 @@ export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},vo
             onState:phase=>{s.phase=phase;paint(phase==='connecting'?'正在连接麦克风…':phase==='recording'?'请读出你的台词。松开结束，或再次点击结束。':'正在识别配音…');},
             onError:error=>{s.attempt.phase='waiting';s.phase='waiting';paint(`${error.message}；可重新配音或继续剧情。`);},
             onCancel:()=>{s.attempt.phase='waiting';s.phase='waiting';paint('配音已取消，本句未获得奖励。');},
+            onPartial:text=>{s.attempt.feedback=compareDungeonSpeech(text,s.target,s.locale);paint();},
             onText:text=>{
                 const passed=finishLineAttempt(s.attempt,text,s.target,s.locale);
                 if(passed){
@@ -60,10 +62,11 @@ export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},vo
     }
     function finish(){return speech.finish();}
     function cancel(){return speech.cancel();}
-    async function read(){
+    async function read(row=null){
         const s=session;if(!s||!valid(s)||!s.owner||!s.learning||!['ready','waiting','failed','awarded','capped'].includes(s.phase))return;
+        const selected=row&&s.d.story.includes(row)?row:s.row;
         const previous=s.phase;clearTimeout(s.timer);
-        await speech.speak({text:s.target,locale:s.locale,signal:s.abort.signal,valid:()=>valid(s),
+        await speech.speak({speaker:selected.role==='player'?s.save:selected,text:s.locale==='en'?selected.en:selected.text,locale:s.locale,signal:s.abort.signal,valid:()=>valid(s),
             onState:phase=>{s.phase=phase;paint('正在朗读…');},onError:error=>paint(error.message),onDone:()=>{s.phase=previous;paint();}});
     }
     function suspend(){const s=session;if(!s)return;timers(s);s.operation++;if(s.attempt&&['waiting','recording'].includes(s.attempt.phase))s.attempt.phase='waiting';s.phase=s.attempt?.phase==='waiting'?'waiting':'ready';void speech.dispose();paint('剧情已暂停，可继续配音或点击继续。');}

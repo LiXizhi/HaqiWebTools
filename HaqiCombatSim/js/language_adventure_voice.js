@@ -1,3 +1,5 @@
+import {parseDialogueJson,dialogueReplyPreview} from './dialogue_json_core.js';
+import {selectDialogueVoice} from './dialogue_speaker_core.js';
 import {cancelBrowserSpeech} from './browser_speech.js';
 import {acquireAudioActivity} from './audio_activity.js';
 // Keepwork IO only. Microphone audio/transcripts are not persisted; completed TTS may be cached.
@@ -33,28 +35,39 @@ export async function loadLearningOptions(signal=new AbortController().signal) {
     return {models:sdk.aiGenerators?.getModels?.('chat')||[],voices:sdk.speech?.getSupportedVoices?.()||[]};
 }
 export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
-    let current=null,speaker=null,playback=null,epoch=0;
-    async function dispose(old){
+    let current=null,playback=null,epoch=0,cleanup=Promise.resolve(),playbackCleanup=Promise.resolve(),sessionRtc=null,sessionToken=null;
+    const sessions=new Map();
+    function reusableSession(sdk,config){
+        if(sessionRtc!==sdk.speechRTC||sessionToken!==sdk.token){sessions.clear();sessionRtc=sdk.speechRTC;sessionToken=sdk.token;}
+        const key=JSON.stringify(config);
+        if(!sessions.has(key))sessions.set(key,sdk.speechRTC.createSession(config));
+        return sessions.get(key);
+    }
+    function dispose(old){
+        if(!old)return cleanup;
+        if(old.disposal)return old.disposal;
         if(current===old)current=null;
-        old?.releaseAudio?.();
-        old?.unlink?.();
-        old?.abort.abort();
-        old?.media?.getTracks().forEach(t=>t.stop());
-        old?.processor?.disconnect();old?.source?.disconnect();
-        await old?.context?.close().catch(()=>{});
-        await old?.stream?.stop({finish:false}).catch(()=>{});
+        old.releaseAudio?.();old.unlink?.();old.abort.abort();
+        old.media?.getTracks().forEach(t=>t.stop());
+        old.processor?.disconnect();old.source?.disconnect();
+        old.stream?.off?.('asr',old.onAsr);old.stream?.off?.('asrError',old.onError);
+        old.disposal=cleanup=(async()=>{
+            await old.context?.close().catch(()=>{});
+            try{await old.startTask;if(old.started&&!old.finishing)old.finishing=old.stream.finishASR();await old.finishing;}catch{for(const [key,stream] of sessions)if(stream===old.stream)sessions.delete(key);}
+            await old.stream?.stop({finish:false,closeConnection:false}).catch(()=>{});
+        })();
+        return old.disposal;
     }
     async function cancel(){
         epoch++;
-        playback?.stop();playback=null;
-        const old=current,oldSpeaker=speaker;speaker=null;
-        await dispose(old);
-        await oldSpeaker?.stop({finish:false}).catch(()=>{});
+        const playing=playback;playback=null;
+        if(playing)playbackCleanup=Promise.resolve(playing.stop());
+        await dispose(current);await playbackCleanup;
         cancelBrowserSpeech();
     }
     return {
         cancel,
-        async start(signal){
+        async start(signal,{onPartial}={}){
             await cancel();
             const state={abort:new AbortController(),text:'',error:null,releaseAudio:acquireAudioActivity()};current=state;
             const abort=()=>void dispose(state);
@@ -63,13 +76,16 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
             try{
                 if(signal.aborted)throw Error('对话已结束');
                 const sdk=await load(state.abort.signal);
+                if(state.abort.signal.aborted||current!==state)throw Error('对话已结束');
                 const speech=sdk.speechRTC;
                 if(!speech?.createSession)throw Error('当前Keepwork版本尚未提供语音识别');
-                const stream=state.stream=speech.createSession({asrSampleRate:16000});
+                const stream=state.stream=reusableSession(sdk,{asrSampleRate:16000});
                 if(typeof stream.startASR!=='function')throw Error('当前Keepwork版本尚未提供语音识别');
-                stream.on('asr',m=>{if(typeof m.text==='string')state.text=m.text;});
-                stream.on('asrError',()=>{state.error=Error('没有识别成功，请重新录音');});
-                await deadline(stream.startASR(),20000,state.abort.signal);
+                state.onAsr=m=>{if(current===state&&!state.abort.signal.aborted&&typeof m.text==='string'){state.text=m.text;onPartial?.(m.text);}};
+                state.onError=()=>{if(!state.abort.signal.aborted)state.error=Error('没有识别成功，请重新录音');};
+                stream.on('asr',state.onAsr);stream.on('asrError',state.onError);
+                state.startTask=stream.startASR().then(()=>{state.started=true;});
+                await deadline(state.startTask,20000,state.abort.signal);
                 const request=navigator.mediaDevices.getUserMedia({audio:{channelCount:1,echoCancellation:true},video:false});
                 request.then(media=>{if(state.abort.signal.aborted)media.getTracks().forEach(t=>t.stop());}).catch(()=>{});
                 state.media=await deadline(request,20000,state.abort.signal);
@@ -90,13 +106,14 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
             const state=current;if(!state)throw Error('请先录音');
             state.media?.getTracks().forEach(t=>t.stop());state.processor?.disconnect();state.source?.disconnect();
             try{
-                await deadline(state.stream.finishASR(),32000,state.abort.signal);
+                state.finishing=state.stream.finishASR();
+                await deadline(state.finishing,32000,state.abort.signal);
                 if(state.error)throw state.error;
                 if(!state.text.trim())throw Error('没有听清，请重新说一遍');
                 return state.text.trim().slice(0,2000);
             }finally{await dispose(state);}
         },
-        async speak(text,locale,signal){
+        async speak(text,locale,signal,character){
             if(current)throw Error('请先结束录音');
             await cancel();
             const turn=epoch;
@@ -106,26 +123,24 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
             // HelloLearner/js/speech.js: synthesize MP3 without autoPlay, then
             // await actual playback. Finishing synthesis is not finishing speech.
             sdk.speech?.resumeSharedAudioEngine?.();
-            const voiceType=getSettings().voiceType;
+            const voiceType=character?selectDialogueVoice(character,sdk.speech?.getSupportedVoices?.()):getSettings().voiceType;
             const config={audioFormat:'mp3',autoPlay:false,enableSubtitle:false,speechRate:-8,...(voiceType?{voiceType}:{})};
             const key=JSON.stringify([text,locale,config]);
             let stream=null,audio=null,finishPlayback=null,release=null;
             const request=new AbortController(),releaseAudio=acquireAudioActivity();
-            const stop=()=>{releaseAudio();request.abort();audio?.pause();finishPlayback?.();void stream?.stop({finish:false}).catch(()=>{});};
+            let stopTask;
+            const stop=()=>{if(stopTask)return stopTask;releaseAudio();request.abort();audio?.pause();finishPlayback?.();return stopTask=(async()=>{await stream?.cancel?.().catch(()=>{});await stream?.stop({finish:false,closeConnection:false}).catch(()=>{});})();};
             signal.addEventListener('abort',stop,{once:true});
             const active={stop};playback=active;
             try{
                 let result;
-                if(sdk.speechRTC.synthesizeCached){
-                    const pending=sdk.speechRTC.synthesizeCached(text,{...config,signal:request.signal});
-                    pending.then(value=>{if(request.signal.aborted)value.release?.();},()=>{});
-                    result=await deadline(pending,30000,signal);
-                    release=result.release;
-                }else{
+                // The SDK cached helper closes its transport on a cache miss.
+                // Keep our audio cache, and retain SDK sessions so its 60s idle timer owns sockets.
+                {
                     const cached=cachedLearningAudio(key);
                     if(cached){const audioUrl=URL.createObjectURL(cached);result={audioUrl};release=()=>URL.revokeObjectURL(audioUrl);}
                     else{
-                        stream=speaker=sdk.speechRTC.createSession(config);
+                        stream=reusableSession(sdk,config);
                         result=await deadline(stream.synthesize(text,{close:true,closeConnection:false}),30000,signal);
                         if(result?.audioUrl?.startsWith('blob:'))release=()=>URL.revokeObjectURL(result.audioUrl);
                         if(turn===epoch&&!signal.aborted&&result?.audioUrl){
@@ -141,20 +156,20 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
                     audio.onerror=()=>reject(Error('朗读播放失败，请重试'));
                     audio.play().catch(reject);
                 }),60000,signal);
-            }finally{stop();release?.();signal.removeEventListener('abort',stop);if(speaker===stream)speaker=null;if(playback===active)playback=null;}
+            }finally{await stop();release?.();signal.removeEventListener('abort',stop);if(playback===active)playback=null;}
         },
-        async judge(messages,signal,{maxTokens=800,rawText=false}={}){
+        async judge(messages,signal,{maxTokens=800,rawText=false,onReply=null}={}){
             let sdk;try{sdk=await load(signal);if(!sdk.token)throw Error('使用AI服务需要先登录Keepwork');}catch(error){error.requestUncertain=false;throw error;}
             let received=false;
             const abortController=new AbortController(),abort=()=>abortController.abort();
             signal.addEventListener('abort',abort,{once:true});
             try{
                 const model=getSettings().model;
-                const result=await deadline(sdk.aiChat.chat({messages,...(model?{model}:{}),stream:false,tools:[],enableTools:[],needMqttTools:false,needPersonalTools:false,reasoning:false,maxTokens,abortController}),45000,signal);
+                const result=await deadline(sdk.aiChat.chat({messages,...(model?{model}:{}),stream:!!onReply,...(onReply?{onMessage:text=>{if(!signal.aborted&&!abortController.signal.aborted)onReply(dialogueReplyPreview(text));}}:{}),tools:[],enableTools:[],needMqttTools:false,needPersonalTools:false,reasoning:false,maxTokens,abortController}),45000,signal);
                 received=true;
                 const text=typeof result==='string'?result:result?.choices?.[0]?.message?.content||result?.result;
                 if(typeof text!=='string')throw Error('对话服务未返回有效内容');
-                return rawText?text:JSON.parse(text.replace(/^```(?:json)?\s*/,'').replace(/\s*```$/,''));
+                return rawText?text:parseDialogueJson(text);
             }catch(error){error.requestUncertain=!received&&![400,401,403,429].includes(Number(error.status));throw error;}finally{abort();signal.removeEventListener('abort',abort);}
         },
     };

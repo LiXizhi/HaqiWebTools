@@ -29,7 +29,8 @@ export function compareDungeonSpeech(transcript,expected,locale){
     const pattern=locale==='zh-CN'?/[\p{L}\p{N}]/gu:/[\p{L}\p{N}]+(?:['’‘][\p{L}\p{N}]+)*/gu;
     for(const match of String(expected||'').matchAll(pattern)){
         if(match.index>offset)parts.push({text:expected.slice(offset,match.index),missing:false});
-        parts.push({text:match[0],missing:speechTokens(match[0],locale).some(word=>!matched(word))});
+        const missing=speechTokens(match[0],locale).some(word=>!matched(word));
+        parts.push({text:match[0],missing,matched:!missing});
         offset=match.index+match[0].length;
     }
     if(offset<String(expected||'').length)parts.push({text:expected.slice(offset),missing:false});

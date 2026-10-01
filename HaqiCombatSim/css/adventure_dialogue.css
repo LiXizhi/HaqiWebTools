@@ -1,4 +1,10 @@
 /* NPC conversation: a quiet reading area and a separate response rail. */
+.rpg-dialogue .dialogue-chat{position:absolute;z-index:2;left:140px;top:16px;width:48px;height:48px;min-height:48px;padding:5px;border:0;background:transparent;box-shadow:none;cursor:pointer}
+.rpg-dialogue .dialogue-chat svg{display:block;width:100%;height:100%}
+.rpg-dialogue .dialogue-chat:hover{filter:brightness(1.08);transform:scale(1.06)}
+.rpg-dialogue .dialogue-chat:focus-visible{outline:2px solid #52724d;outline-offset:2px;border-radius:8px}
+@media(max-width:650px){.rpg-dialogue .dialogue-chat{left:64px;top:4px}}
+@media(max-height:540px) and (min-width:651px){.rpg-dialogue .dialogue-chat{left:91px;top:8px}}
 .rpg-dialogue .dialogue-read{display:block;width:100%;margin:0;padding:4px 8px 4px 0;border:0;border-radius:6px;background:transparent;box-shadow:none;color:inherit;font:inherit;line-height:1.8;text-align:left;letter-spacing:inherit;white-space:normal;cursor:pointer;overflow-wrap:anywhere;min-height:44px}
 .rpg-dialogue .dialogue-read+ .dialogue-read{font-size:.86em;color:#806b4a;padding-top:5px;border-top:1px solid #ae8b4230}
 .rpg-dialogue .dialogue-read:hover{background:#cbbb8533;color:#275e4d}
@@ -64,4 +70,15 @@
  .storybook-ui .rpg-dialogue .dialogue-portrait.portrait-height { left:75px; height:169px!important; top:auto; bottom:16px; }
 }
 .dialogue-action-icon{display:inline-flex;width:18px;height:18px;margin-left:8px;vertical-align:middle;color:#376957}.dialogue-action-icon svg{width:100%;height:100%}.dialogue-action-caption{font-size:11px;margin-left:4px;color:#376957}.dialogue-read[aria-busy="true"] .dialogue-action-icon{opacity:.45}
-.dialogue-mapped-word{border-radius:2px}.dialogue-mapped-word.is-cjk{margin-inline:.09em}
+.dialogue-mapped-word{border:1px solid currentColor;border-radius:4px;padding:1px 3px;box-decoration-break:clone;-webkit-box-decoration-break:clone;background:#fff8e8}
+.dialogue-mapped-word.is-cjk{margin-inline:.09em}
+.dialogue-text.has-word-mapping{position:relative;isolation:isolate}
+.rpg-dialogue .has-word-mapping .dialogue-read+.dialogue-read{margin-top:28px}
+.dialogue-mapping-links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:-1}
+.dialogue-mapping-links path{fill:none;stroke-width:1.5;opacity:.75}
+
+/* Shared bilingual controls across ordinary NPCs, lessons and dungeon narration. */
+.dialogue-text .dialogue-original{margin:0;font-size:17px}.dialogue-text .dialogue-translation{font-size:13px;margin:12px 0 0;padding-top:8px;border-top:1px solid #52695020}
+.dialogue-text.has-word-mapping .dialogue-translation{margin-top:28px}
+.dungeon-story-bubble.has-word-mapping{position:relative;isolation:isolate}.dungeon-story-bubble.has-word-mapping .story-translation{margin-top:28px}
+.dungeon-story-bubble.narrator .camp-chat-replay{color:#f4dfa2}

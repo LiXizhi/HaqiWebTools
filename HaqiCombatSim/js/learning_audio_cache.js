@@ -1,4 +1,4 @@
-// Compatibility for CDN SDK versions predating synthesizeCached. Completed TTS only.
+// Completed TTS cache; keeps audio reuse independent from SDK transport lifecycle.
 const entries=new Map();
 const MAX_BYTES=20*1024*1024,MAX_ENTRIES=100;
 export function cachedLearningAudio(key){

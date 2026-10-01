@@ -4,33 +4,177 @@
   "chatVerified": false,
   "mailVerified": false,
   "worlds": {
-    "camp": {"enabled": true, "size": "camp", "capacity": 6},
-    "town": {"enabled": true, "size": "large", "capacity": 16},
-    "fire": {"enabled": true, "size": "large", "capacity": 16},
-    "ice": {"enabled": true, "size": "large", "capacity": 16},
-    "desert": {"enabled": true, "size": "large", "capacity": 16},
-    "dark": {"enabled": true, "size": "large", "capacity": 16}
+    "camp": {
+      "enabled": true,
+      "size": "camp",
+      "capacity": 6
+    },
+    "town": {
+      "enabled": true,
+      "size": "large",
+      "capacity": 16
+    },
+    "fire": {
+      "enabled": true,
+      "size": "large",
+      "capacity": 16
+    },
+    "ice": {
+      "enabled": true,
+      "size": "large",
+      "capacity": 16
+    },
+    "desert": {
+      "enabled": true,
+      "size": "large",
+      "capacity": 16
+    },
+    "dark": {
+      "enabled": true,
+      "size": "large",
+      "capacity": 16
+    }
   },
   "personas": [
-    {"name":"小枫","school":"fire","interest":"烹饪与野餐"},
-    {"name":"安娜","school":"ice","interest":"雪地旅行"},
-    {"name":"云舟","school":"storm","interest":"航海与天气"},
-    {"name":"莉莉","school":"life","interest":"花园与宠物"},
-    {"name":"墨星","school":"death","interest":"古堡故事"},
-    {"name":"艾米","school":"fire","interest":"篝火与音乐"},
-    {"name":"雪禾","school":"ice","interest":"阅读与绘画"},
-    {"name":"诺亚","school":"storm","interest":"风筝与运动"},
-    {"name":"青芽","school":"life","interest":"森林与植物"},
-    {"name":"米娅","school":"death","interest":"星空与谜题"},
-    {"name":"赤羽","school":"fire","interest":"陶艺与焰火"},
-    {"name":"露娜","school":"ice","interest":"冰雕与滑雪"},
-    {"name":"海生","school":"storm","interest":"帆船与贝壳"},
-    {"name":"小葵","school":"life","interest":"种子与草药"},
-    {"name":"夜语","school":"death","interest":"传说与考古"},
-    {"name":"晴川","school":"fire","interest":"露营与烤面包"},
-    {"name":"伊芙","school":"ice","interest":"雪花与摄影"},
-    {"name":"远帆","school":"storm","interest":"地图与探险"},
-    {"name":"花音","school":"life","interest":"花茶与蝴蝶"},
-    {"name":"星遥","school":"death","interest":"月亮与诗歌"}
+    {
+      "name": "小枫",
+      "school": "fire",
+      "interest": "烹饪与野餐",
+      "sex": "male",
+      "age": 16
+    },
+    {
+      "name": "安娜",
+      "school": "ice",
+      "interest": "雪地旅行",
+      "sex": "female",
+      "age": 17
+    },
+    {
+      "name": "云舟",
+      "school": "storm",
+      "interest": "航海与天气",
+      "sex": "male",
+      "age": 18
+    },
+    {
+      "name": "莉莉",
+      "school": "life",
+      "interest": "花园与宠物",
+      "sex": "female",
+      "age": 19
+    },
+    {
+      "name": "墨星",
+      "school": "death",
+      "interest": "古堡故事",
+      "sex": "male",
+      "age": 20
+    },
+    {
+      "name": "艾米",
+      "school": "fire",
+      "interest": "篝火与音乐",
+      "sex": "female",
+      "age": 16
+    },
+    {
+      "name": "雪禾",
+      "school": "ice",
+      "interest": "阅读与绘画",
+      "sex": "male",
+      "age": 17
+    },
+    {
+      "name": "诺亚",
+      "school": "storm",
+      "interest": "风筝与运动",
+      "sex": "female",
+      "age": 18
+    },
+    {
+      "name": "青芽",
+      "school": "life",
+      "interest": "森林与植物",
+      "sex": "male",
+      "age": 19
+    },
+    {
+      "name": "米娅",
+      "school": "death",
+      "interest": "星空与谜题",
+      "sex": "female",
+      "age": 20
+    },
+    {
+      "name": "赤羽",
+      "school": "fire",
+      "interest": "陶艺与焰火",
+      "sex": "male",
+      "age": 16
+    },
+    {
+      "name": "露娜",
+      "school": "ice",
+      "interest": "冰雕与滑雪",
+      "sex": "female",
+      "age": 17
+    },
+    {
+      "name": "海生",
+      "school": "storm",
+      "interest": "帆船与贝壳",
+      "sex": "male",
+      "age": 18
+    },
+    {
+      "name": "小葵",
+      "school": "life",
+      "interest": "种子与草药",
+      "sex": "female",
+      "age": 19
+    },
+    {
+      "name": "夜语",
+      "school": "death",
+      "interest": "传说与考古",
+      "sex": "male",
+      "age": 20
+    },
+    {
+      "name": "晴川",
+      "school": "fire",
+      "interest": "露营与烤面包",
+      "sex": "female",
+      "age": 16
+    },
+    {
+      "name": "伊芙",
+      "school": "ice",
+      "interest": "雪花与摄影",
+      "sex": "male",
+      "age": 17
+    },
+    {
+      "name": "远帆",
+      "school": "storm",
+      "interest": "地图与探险",
+      "sex": "female",
+      "age": 18
+    },
+    {
+      "name": "花音",
+      "school": "life",
+      "interest": "花茶与蝴蝶",
+      "sex": "male",
+      "age": 19
+    },
+    {
+      "name": "星遥",
+      "school": "death",
+      "interest": "月亮与诗歌",
+      "sex": "female",
+      "age": 20
+    }
   ]
 }

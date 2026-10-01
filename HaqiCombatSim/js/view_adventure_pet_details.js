@@ -10,7 +10,10 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
     dialog.setAttribute('aria-label',`${def.name} · ${def.staticAppearance?'形象与卡片':'四阶段与卡片'}`);
     const close=()=>dialog.close();
     const exit=createCloseButton(close,'关闭宠物详情');
-    dialog.append(el('header','modal-header',el('div','',el('p','eyebrow','宠物图鉴 · 成长与魔法'),el('h2','',def.name)),exit));
+    const owned=options.save?.pets[id];
+    const title=el('h2','pet-profile-title',def.name);
+    if(owned)title.append(el('span','pet-profile-level',`${owned.level}级`));
+    dialog.append(el('header','modal-header',el('div','',el('p','eyebrow','宠物图鉴 · 成长与魔法'),title),exit));
     dialog.classList.add('pet-profile-modal');
     const body=el('div','modal-body'),tabs=el('nav','pet-profile-tabs'),content=el('div','pet-profile-content');
     const p=petParams(assets.content),pet=options.save?.pets[id];
@@ -25,16 +28,39 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
         content.replaceChildren();
         for(const tab of tabs.children){const selected=tab.dataset.tab===active;tab.setAttribute('aria-pressed',String(selected));}
         if(active==='care'){
-            const stage=petAppearanceStage(pet,assets.content),info=el('div','pet-profile-info');
-            info.append(el('h3','',def.staticAppearance?`${def.traits.elementalAttribute}系 · 原版形象`:`${def.traits.elementalAttribute}系 · ${STAGE_NAMES[stage]}`),el('p','',`等级 ${pet.level} · 经验 ${pet.xp}`));
+            const stage=petAppearanceStage(pet,assets.content),info=el('div','pet-profile-info'),vitals=el('div','pet-profile-vitals');
+            info.append(el('h3','',def.staticAppearance?`${def.traits.elementalAttribute}系 · 原版形象`:`${def.traits.elementalAttribute}系 · ${STAGE_NAMES[stage]}`));
             for(const [label,value,max] of [['生命',pet.hp,petMaxHp(pet,assets.content)],['饱食',pet.hunger,100]]){
                 const meter=el('progress',`pet-meter pet-meter-${label==='饱食'?'hunger':'hp'}`);meter.max=max;meter.value=value;meter.setAttribute('aria-label',label);
-                info.append(el('label','pet-stat',el('span','',`${label} ${Math.floor(value)} / ${max}`),meter));
+                vitals.append(el('label','pet-stat',el('span','',`${label} ${Math.floor(value)} / ${max}`),meter));
             }
-            const feed=button(`分享营养餐 · 消耗 1 份（剩余 ${nutritionStock(options.save)}）`,()=>perform({type:'pet-feed',petId:id}),'primary');feed.disabled=!!options.save.pendingEncounter||!(nutritionStock(options.save)>0);info.append(feed);if(pet.gender)info.append(el('p','muted',`${pet.gender==='male'?'公':'母'} · 记住 ${pet.memories.length} 位伙伴${pet.cooldownUntil>Date.now()?' · 繁育冷却中':''}`));
+            const formation=options.save.formation||[],deployed=formation.includes(id),empty=formation.findIndex(slot=>!slot);
+            const positions=el('div','pet-position-actions');
+            const toggle=button(deployed?'下阵':'上阵',()=>{
+                if(options.save.pendingEncounter||(!deployed&&empty<0))return;
+                const slots=deployed?formation.map(value=>value===id?null:value):[...formation];
+                if(!deployed)slots[empty]=id;
+                perform({type:'formation',slots,heroSlot:options.save.heroSlot});
+            },deployed?'secondary':'primary');
+            toggle.disabled=!!options.save.pendingEncounter||(!deployed&&empty<0);
+            toggle.title=options.save.pendingEncounter?'战斗中无法调整阵容':deployed?'从阵容中休息':empty<0?'阵容已满':'上阵到下一个空位';
+            const feed=button(`分享营养餐 · 消耗 1 份（剩余 ${nutritionStock(options.save)}）`,()=>perform({type:'pet-feed',petId:id}),'primary');
+            feed.disabled=!!options.save.pendingEncounter||!(nutritionStock(options.save)>0);
+            positions.append(toggle,feed);info.append(positions);
+            if(pet.gender)info.append(el('p','muted',`${pet.gender==='male'?'公':'母'} · 记住 ${pet.memories.length} 位伙伴${pet.cooldownUntil>Date.now()?' · 繁育冷却中':''}`));
             if(pet.hunger===0)info.append(el('p','pet-supply-notice','饥饿中 · 已暂停自然回血'));
             if(!(nutritionStock(options.save)>0))info.append(button('购买营养餐',()=>{close();options.shop();},'secondary'));
-            content.append(el('div','pet-profile-overview',el('div','pet-profile-portrait',portrait(assets,speciesId,stage,180*petDisplayScale(pet,assets.content))),info));
+            // Display progress within the current level, using the existing
+            // petXpLevel triangular thresholds (BalanceParams.petXpStep).
+            const capped=pet.level>=p.levelCap,base=p.petXpStep*pet.level*(pet.level-1)/2;
+            const needed=p.petXpStep*pet.level,earned=Math.max(0,Math.min(needed,pet.xp-base));
+            const experience=el('progress','pet-meter pet-meter-xp');
+            experience.max=capped?1:needed;experience.value=capped?1:earned;
+            const xpLabel=capped?'经验 · 已满级':`经验 ${earned} / ${needed}`;
+            experience.setAttribute('aria-label',xpLabel);experience.title=`累计经验 ${pet.xp}`;
+            const xp=el('label','pet-profile-xp',experience,el('span','',xpLabel));
+            const portraitColumn=el('div','pet-profile-visual',vitals,el('div','pet-profile-portrait',portrait(assets,speciesId,stage,180*petDisplayScale(pet,assets.content))),xp);
+            content.append(el('div','pet-profile-overview',portraitColumn,info));
             content.append(el('h3','',def.staticAppearance?'形象':'进化路径'),createPetEvolution(assets,speciesId,pet,portrait,el,selectAppearance));
         }else{
             const stages=createPetEvolution(assets,speciesId,pet,portrait,el,selectAppearance);

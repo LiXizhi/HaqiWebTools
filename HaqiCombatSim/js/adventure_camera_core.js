@@ -11,6 +11,7 @@ export function createCameraZoom(){
     const goal=()=>fishing?FISHING_CAMERA_ZOOM:exploration;
     return {
         get value(){return shown;},
+        reset(){exploration=1;if(!fishing){shown=1;started=null;armed=false;}else to=goal();},
         zoomBy(factor){
             if(!fishing&&Number.isFinite(factor)&&factor>0){
                 exploration=clampZoom(exploration*factor);

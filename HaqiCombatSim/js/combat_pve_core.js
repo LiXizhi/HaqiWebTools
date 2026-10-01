@@ -1,3 +1,4 @@
+import {chatSupportPick,BATTLE_CHAT} from './battle_chat_core.js';
 import {dailyBuffParams} from './language_daily_buff_core.js';
 import {applyDungeonLanguageBuff,dungeonLanguageParams} from './adventure_dungeon_language_core.js';
 import { SimpleBot } from './combat_policy_core.js';
@@ -246,6 +247,7 @@ export function playPveRound(a,decision) {
         decision.aiPicks={...(decision.aiPicks||{})};
     }
     if(a.finished)throw new Error('战斗已经结束');
+    if(decision?.chatRequest!==undefined&&!BATTLE_CHAT.some(row=>row.id===decision.chatRequest&&row.intent))throw Error('战斗对白请求无效');
     if(!decision||typeof decision!=='object'||Array.isArray(decision)||decision.discardSeqs!==undefined&&!Array.isArray(decision.discardSeqs))throw Error('战斗决定无效');
     const u=a.sides.near[0], discarded=decision.discardSeqs || [];
     const rune=decision.runeId===undefined?null:a.runes.find(row=>row.itemId===decision.runeId);
@@ -309,7 +311,7 @@ export function playPveRound(a,decision) {
             if(unit.id===u.id){if(!catchFirst)playerAct();continue;}
             if(!U.isAlive(unit)||!beforeAct(a,unit))continue;
             if(a.replaying&&decision.aiVersion===1&&!decision.aiPicks[unit.id])throw Error('战报缺少伙伴行动');
-            const pick=decision.aiVersion===1?(decision.aiPicks[unit.id]||new ReasoningBot().pick(a,unit,{periodicsApplied:true})):new SimpleBot().pick(a,unit);
+            const pick=decision.aiVersion===1?(decision.aiPicks[unit.id]||chatSupportPick(a,unit,decision.chatRequest)||new ReasoningBot().pick(a,unit,{periodicsApplied:true})):new SimpleBot().pick(a,unit);
             if(decision.aiVersion===1){
                 if(!pick||typeof pick!=='object'||(pick.discardSeqs!==undefined&&(!Array.isArray(pick.discardSeqs)||pick.discardSeqs.some(seq=>!Number.isInteger(seq)||unit.deckMap[seq]!==1||seq===pick.seq))))throw Error('伙伴弃牌无效');
                 if(!pick.pass&&!U.selectableCards(unit).some(h=>h.seq===pick.seq&&h.key===pick.key&&U.canCast(unit,a.resolved.cards[h.key],a.resolved)&&validTargets(a,unit,a.resolved.cards[h.key]).some(t=>t.id===pick.targetId)))throw Error('伙伴 AI 决定无效');

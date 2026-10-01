@@ -63,15 +63,15 @@ test('closing, role changes, language changes and panels cancel greeting; late l
     }
     let finish;const h=controllerHarness(()=>new Promise(r=>{finish=r;}));const pending=h.controller.prepare(h.npc);h.controller.close();finish({profiles,languages:{en:{content:true}}});assert.equal(await pending,null);
 });
-test('basic reward unlocks optional challenge; hints stay optional and challenge credits shared currency',async()=>{
+test('completed story allows optional challenge without repeating rewards',async()=>{
     const state={save:save(),content:{},role:'test',identity:'guest'};let cb,ui,text;
     const chat=createStoryChat({getState:()=>state,voice:{cancel:async()=>{},speak:async()=>{},start:async()=>{},finish:async()=>text},commit:c=>recordLearningCompletion(state.save,{},c,{learningCompletion:c}),viewFactory:actions=>{cb=actions;return{close(){},render:s=>{ui=s;}};}});
     chat.open(profile,profile.stories[0],null);await flush();
     for(const turn of profile.stories[0].turns){text=turn.answer.en;await cb.start();await cb.finish();}
     assert.equal(ui.done,true);assert.equal(ui.received,10);assert.equal(ui.reward.balance,10);
-    cb.challenge();await flush();assert.equal(ui.hintLevel,0);assert.equal(ui.reward.currency,17213);assert.equal(ui.reward.amount,30);
+    cb.challenge();await flush();assert.equal(ui.hintLevel,0);assert.equal(ui.reward.currency,17213);assert.equal(ui.reward.amount,0);
     for(const turn of profile.stories[0].turns){text=turn.answer.en;await cb.start();await cb.finish();}
-    assert.equal(ui.received,30);assert.equal(ui.memento.independent,true);assert.deepEqual(state.save.quests,{});
+    assert.equal(ui.received,0);assert.equal(ui.memento.independent,true);assert.deepEqual(state.save.quests,{});
 });
 
 

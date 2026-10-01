@@ -21,6 +21,7 @@ export function nearbyLearningNpc(npcs,profiles,save,content,preferredId=null) {
 export function storyReward(save,content,story,now,awarded=null) {
     const mode=story.mode||'basic';
     const status=rewardStatus(save,content,{id:story.rewardGroup,tier:'beginner'},mode,now);
+    if(save.languageAdventure?.stories?.[save.languageLearning.target]?.[story.id]?.completed)status.amount=0;
     if(awarded!==null)status.amount=awarded;
     const p=learningParams(content),nominal=mode==='basic'?p.basicReward:p.beginnerReward;
     const reason=status.count>=status.limit?'同组课程今日奖励次数已用完':status.amount<nominal?'今日奖励额度不足':'';

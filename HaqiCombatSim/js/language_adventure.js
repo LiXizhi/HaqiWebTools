@@ -9,6 +9,7 @@ import {createStoryChat} from './language_story.js';
 import {assetMode,assetUrl} from './adventure_media_core.js';
 import {selectCompanionId} from './adventure_companion_core.js';
 
+const companionSpeaker=current=>({...current.save.pets?.[selectCompanionId(current.save,current.content)],age:8});
 const companionName=current=>current.content.pets?.[current.save.pets?.[selectCompanionId(current.save,current.content)]?.speciesId||selectCompanionId(current.save,current.content)]?.name||'抱抱龙';
 
 export async function loadLearningCatalog(read=createJsonReader(),request=(url)=>fetch(url)) {
@@ -36,7 +37,7 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
     const cooldown={sources:{}};
     let chat=null,greeting=null;
     const view=viewFactory({close,course:id=>startCourse(id),listen:()=>void listen(),record:()=>void record(),challenge:()=>challenge(),listening:()=>listening(),choose:id=>chooseMeaning(id),retry:()=>retry(),free:()=>free()});
-    const available=s=>s.save?.zone==='camp'&&s.save.languageLearning?.enabled&&['world','battle'].includes(s.stage);
+    const available=s=>s.save?.zone==='camp'&&s.save.languageLearning?.enabled&&s.stage==='world';
     async function ready(){
         if(catalog)return catalog;
         pendingLoad??=load().then(c=>{catalog=c;return c;}).finally(()=>{pendingLoad=null;});
@@ -86,13 +87,13 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
             const profiles=catalog.profiles||[];
             const profile=profiles.find(p=>p.id===source||String(p.npcId)===String(source));
             if(profile){
-                chat??=createStoryChat({onSpeech,onFreeTalk:profile=>{close();onFreeTalk?.({id:profile.npcId||profile.id,name:profile.name});},getState,commit,saveSettings,openSettings,useReward,voice,...(chatViewFactory?{viewFactory:chatViewFactory}:{})});
+                chat??=createStoryChat({onSpeech,onFreeTalk:(profile,options)=>{close();onFreeTalk?.({...profile,id:profile.npcId||profile.id},options);},getState,commit,saveSettings,openSettings,useReward,voice,...(chatViewFactory?{viewFactory:chatViewFactory}:{})});
                 const story=options.prepared?.story||selectStory(profile,current.save);
                 if(!story||!eligibleStories(profile,current.save).includes(story))return;
                 const portrait=profile.portrait?assetUrl(profile.portrait,assetMode(globalThis.location?.hostname||'',globalThis.location?.search||'')):null;
                 chat.open({...profile,stories:eligibleStories(profile,current.save)},story,portrait,{greeted:options.greeted});return;
             }
-            session={abort:new AbortController(),role,identity:current.identity,locale,native:current.save.languageLearning.native,source,name:npc?.name||`${companionName(current)} · 营地语言冒险`,slots:{},context:invitation?.context||{},status:'',log:[]};
+            session={speaker:npc||companionSpeaker(current),abort:new AbortController(),role,identity:current.identity,locale,native:current.save.languageLearning.native,source,name:npc?.name||`${companionName(current)} · 营地语言冒险`,slots:{},context:invitation?.context||{},status:'',log:[]};
             for(const lang of Object.keys(catalog.languages))session.slots[lang]=learningSlots(current.save,current.content,lang,invitation?.context?.itemId,catalog);
             session.context={...session.context,zone:current.save.zone,selectedItem:session.slots[locale],npcId:npc?.instanceId||null,npcName:npc?.name||null};
             if(!npc&&invitation){
@@ -131,7 +132,7 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
     function retry(){const s=session;if(!s||s.busy||s.recording)return;const mode=s.mode;startCourse(s.course.id);if(mode==='challenge')challenge();else if(mode==='free')free();else if(mode==='listening')listening();}
     async function listen(){
         const s=session;if(!s||s.busy||s.recording)return;if(!catalog.languages[s.locale]?.speech){s.status='该语言暂不支持朗读';paint();return;}s.busy=true;s.status='正在朗读…';paint();
-        try{await voice.speak(s.mode==='listening'?text(s.listenPair.question,s):s.mode==='basic'?`${text(s.pairs[s.index].question,s)} ${text(s.pairs[s.index].answer,s)}`:s.reply||text(s.course.scenario,s),s.locale,s.abort.signal);if(valid(s)){s.status='';if(s.mode==='listening')s.heard=true;}}
+        try{await voice.speak(s.mode==='listening'?text(s.listenPair.question,s):s.mode==='basic'?text(s.pairs[s.index].question,s):s.reply||text(s.course.scenario,s),s.locale,s.abort.signal,s.speaker);if(s.mode==='basic'&&valid(s))await voice.speak(text(s.pairs[s.index].answer,s),s.locale,s.abort.signal,getState().save);if(valid(s)){s.status='';if(s.mode==='listening')s.heard=true;}}
         catch(error){if(valid(s))s.status=error.message;}
         finally{if(valid(s)){s.busy=false;paint();}}
     }
@@ -166,7 +167,7 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
                     s.completed=outcome.completed;s.score=outcome.score;
                     if(s.score===100)complete(s);else if(s.turns>=learningParams(getState().content).maxTurns){s.done=true;s.status='本次挑战结束。可以再练一次。';}else s.status='继续用目标语言完成剩余目标。';
                 }else{s.status='自由交谈不发放奖励。';s.history=s.history.slice(-16);}
-                if(getState().save.languageLearning.autoSpeak)await voice.speak(s.reply,s.locale,s.abort.signal);
+                if(getState().save.languageLearning.autoSpeak)await voice.speak(s.reply,s.locale,s.abort.signal,s.speaker);
             }
         }catch(error){if(valid(s))s.status=error.message;}
         finally{if(valid(s)){s.busy=false;paint();}}
@@ -178,7 +179,7 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
         invitation={event,source,context,target:storyTarget(context,source)};cooldown.lastAt=Date.now();cooldown.sources[source]=cooldown.lastAt;
         if(!invitation.target)invitation=null;
         inviteLabel=bubbleLabel(current);
-        if(invitation&&current.save.languageLearning.autoSpeak&&['en','zh-CN'].includes(current.save.languageLearning.target)){const a=new AbortController();const locale=current.save.languageLearning.target;void voice.speak(locale==='en'?'Shall we talk?':'我们聊聊好吗？',locale,a.signal).catch(()=>{});}
+        if(invitation&&current.save.languageLearning.autoSpeak&&['en','zh-CN'].includes(current.save.languageLearning.target)){const a=new AbortController();const locale=current.save.languageLearning.target;void voice.speak(locale==='en'?'Shall we talk?':'我们聊聊好吗？',locale,a.signal,companionSpeaker(current)).catch(()=>{});}
     }
     async function prepare(npc){
         const ticket=opening,current=getState(),role=current.role,identity=current.identity,locale=current.save?.languageLearning.target;
@@ -195,12 +196,12 @@ export function createLanguageAdventure({onSpeech=()=>{},onFreeTalk=null,getStat
         if(!preparedValid(p))return;
         const current=getState(),abort=new AbortController(),line=p.story.turns[0].question;
         greeting={...p,abort,until:now+learningParams(current.content).greetingMs,text:line[p.locale],translation:current.save.languageLearning.showChinese!==false?line[p.locale==='en'?'zh-CN':'en']:''};
-        {const active=greeting;active.speaking=true;void voice.speak(line[p.locale],p.locale,abort.signal).then(()=>{if(!abort.signal.aborted)active.spoken=true;}).catch(()=>{}).finally(()=>{active.speaking=false;});}
+        {const active=greeting;active.speaking=true;void voice.speak(line[p.locale],p.locale,abort.signal,p.profile).then(()=>{if(!abort.signal.aborted)active.spoken=true;}).catch(()=>{}).finally(()=>{active.speaking=false;});}
         inviteLabel=null;
     }
     function enterGreeting(){const g=greeting;if(!g||!preparedValid(g))return;greeting=null;g.abort.abort();void open(g.npc,{prepared:g,greeted:!!g.spoken});}
     function tick(now){
-        const current=getState();chat?.tick();
+        const current=getState();if(current.stage==='battle'){close();invitation=null;inviteLabel=null;return;}chat?.tick();
         if(greeting){if(!preparedValid(greeting)||current.busy){close();}else if(now>=greeting.until&&!greeting.speaking)enterGreeting();}
         if(session&&!valid(session))close();
         if(!available(current)||current.stage!=='world'||current.busy||session||chat?.active||greeting){invitation=null;inviteLabel=null;return;}

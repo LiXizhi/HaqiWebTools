@@ -29,6 +29,7 @@ export function createMotionTrail(seed = 7319) {
     function reset() { previous = null; remainder = 0; stride = 0; state.particles.length = 0; state.moving = false; }
     function step(position, time, style, { moving = false, reducedMotion = false, scope = null, hidden = false } = {}) {
         state.style = style;
+        if (hidden || reducedMotion) { reset(); return state; }
         state.particles = state.particles.filter(p => time - p.born < p.life && (!p.star || style.vip));
         const next = { ...position, time, scope, mounted: style.mounted };
         const old = previous; previous = next; state.moving = false;

@@ -58,7 +58,7 @@ export function updateBattlePetHint(root,battle,save,content,canvas){
     bubble.style.left=`${left}px`;bubble.style.top=`${Math.max(8,y-height-8)}px`;
     bubble.style.setProperty('--pet-hint-tail',`${Math.max(14,Math.min(width-14,x-left))}px`);
     const obstacles=(canvas.battleStatusRects||[]).map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));
-    for(const node of root.querySelectorAll?.('.actor-speech')||[])if(!node.hidden)obstacles.push({x:parseFloat(node.style.left),y:parseFloat(node.style.top),width:node.offsetWidth,height:node.offsetHeight});
+    // Actor speech is laid out afterwards, above this hint when their columns overlap.
     if(obstacles.length){
         placeActorSpeech(bubble,root,{x:left+width/2,y},obstacles,{x,y});
     }
@@ -92,7 +92,13 @@ export function battleSpeechController(battle){
 }
 export function updateBattleSpeech(root,battle,canvas,now,event=null){
     battleSpeech(battle,now,event);
-    const anchors=Object.fromEntries(Object.entries(canvas.battlePositions||{}).map(([id,at])=>[id,{x:canvas.offsetLeft+at.x,y:canvas.offsetTop+at.y-104*Math.min(1,canvas.clientHeight/270)}]));
+    const heroId=battle.sides.near?.[0]?.id;
+    const anchors=Object.fromEntries(Object.entries(canvas.battlePositions||{}).map(([id,at])=>{
+        const head=canvas.battleSpeechAnchors?.[id]||{x:at.x,y:at.y-104*Math.min(1,canvas.clientHeight/270)};
+        return [id,{x:canvas.offsetLeft+head.x,y:canvas.offsetTop+head.y,aboveOthers:id===heroId}];
+    }));
     const obstacles=(canvas.battleStatusRects||[]).map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));
-    battleSpeechController(battle).render(root,anchors,now,obstacles);
+    const hint=root.battlePetHint;
+    const speechObstacles=hint&&!hint.hidden?[{x:parseFloat(hint.style.left),y:parseFloat(hint.style.top),width:hint.offsetWidth,height:hint.offsetHeight,node:hint}]:[];
+    battleSpeechController(battle).render(root,anchors,now,obstacles,speechObstacles);
 }

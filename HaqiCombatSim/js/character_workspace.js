@@ -78,8 +78,26 @@ export function createCharacterWorkspace({getOwner,loadSDK=loadKeepwork,cache,lo
         async function archive(record,messages){const path=prefix+`history/${uuid()}.json`;await write(path,JSON.stringify({scope,messages,previous:record.history}));return path;}
         async function list(cursor=0){const root=await index(),paths=Object.keys(root.buckets).sort().flatMap(k=>root.buckets[k]);if(cursor>=paths.length)return {rows:[],next:null};const page=await file(paths[cursor]);return {rows:page.rows,next:cursor+1<paths.length?cursor+1:null};}
         async function playerMemory(hero){const path=`roles/${segment(role)}/memory.md`;const old=await read(path,true);if(old!==null)return old;const text=`# ${hero.name||'冒险者'}\n\n母语：${hero.languageLearning?.native||'zh-CN'}\n学习语言：${hero.languageLearning?.target||'en'}\n\n${hero.learnerMemory||''}`;await write(path,text);return text;}
-        async function quota(day=beijingDay(now())){const row=await json(`social/free-talk/${day}.json`,true);check(!row||row.owner===owner,'额度账号不符');return quotaState(row,day);}
-        async function updateQuota(day,change){return serial(`${owner}:quota`,async()=>{valid();const before=await quota(day),after=change(copy(before));if(equal(before,after))return after;check(equal(await quota(day),before),'额度已变化，请重试');const next={...after,owner,revision:uuid()};await write(`social/free-talk/${day}.json`,JSON.stringify(next));return next;});}
+        const quotaPath='social/free-talk/current.json';
+        async function quota(day=beijingDay(now())){
+            valid();if(day!==beijingDay(now()))return quotaState(null,day);
+            let row=await json(quotaPath,true);
+            // Import only today's legacy ledger, once; never scan previous daily files.
+            if(row===null)row=await json(`social/free-talk/${day}.json`,true);
+            check(!row||row.owner===owner,'额度账号不符');
+            return quotaState(row?.day===day?row:null,day);
+        }
+        async function updateQuota(day=beijingDay(now()),change){return serial(`${owner}:quota`,async()=>{
+            valid();const today=beijingDay(now());
+            check(day<=today,'额度日期无效');
+            // A reply arriving after midnight must not recreate yesterday or overwrite today.
+            if(day!==today)return quotaState(null,day);
+            const before=await quota(day),after=change(copy(before));if(equal(before,after))return after;
+            if(day!==beijingDay(now()))return quotaState(null,day);
+            const requests=Object.fromEntries(Object.entries(after.requests).filter(([,r])=>r.status!=='released').map(([id,r])=>[id,r.status==='used'?{role:r.role,peer:r.peer,vip:!!r.vip,status:'used'}:r]));
+            const next={version:1,day,owner,requests};
+            await write(quotaPath,JSON.stringify(next));return next;
+        });}
         return {owner,role,scope,valid,load,save,hasEvent,archive,list,playerMemory,history:file,quota,
             remaining:async()=>quotaRemaining(await quota()),
             reserve:(id,peer,vip,day=beijingDay(now()),text='')=>updateQuota(day,row=>reserveQuota(row,id,{role,peer,text},vip,now())),

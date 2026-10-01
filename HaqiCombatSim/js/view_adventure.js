@@ -2,6 +2,7 @@ import {dailyBuffs,dailyBuffDescription} from './language_daily_buff_core.js';
 import {defeatReviewNotes} from './view_battle_review.js';
 import {createBattlePetHint} from './view_battle_pet_hint.js';
 export {updateBattlePetHint,updateBattleSpeech,battleSpeechController} from './view_battle_pet_hint.js';
+import {createBattleChat} from './view_battle_chat.js';
 import {socialHudButton,teamHudButton,bindDungeonMenu} from './view_adventure_social_hud.js';
 import {dungeonProgress} from './adventure_coop_core.js';
 import {renderLearningMode} from './view_learning_mode.js';
@@ -9,7 +10,7 @@ import {createHeroPicker} from './view_hero_picker.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {heroPortrait} from './hero_renderer.js';
 import {renderNpcServices} from './view_adventure_npc.js';
-import {npcServices} from './adventure_npc_core.js';
+import {npcServices,npcHasActiveQuest} from './adventure_npc_core.js';
 import {renderGems} from './view_adventure_gems.js';
 import {renderRecharge} from './view_adventure_recharge.js';
 import {renderMembership} from './view_adventure_membership.js';
@@ -38,7 +39,7 @@ import { renderPetCollection,starterPicker,petPortrait } from './view_adventure_
 import { renderShop } from './view_adventure_shop.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot,teachingMode } from './adventure_core.js';
-import {catalogGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
+import {catalogGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogTalksForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import * as U from './combat_unit_core.js';
 import { cardTargetKind } from './combat_cards_core.js';
 import { renderEquipment } from './view_adventure_equipment.js';
@@ -512,7 +513,7 @@ export function renderPanel(root,kind,model,cb) {
         renderStrengthening(body,model,cb,{el,button,art});
         return;
     }
-    const titles={'learning-mode':['双语学习','遇见居民 · 开口交流'],'npc-services':['居民商店与课程',''],checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','全岛任务'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
+    const titles={'learning-mode':['双语学习','遇见居民 · 开口交流'],'npc-services':['居民商店与课程',''],checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','全岛任务'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','拖动移动角色'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
     const body=modal(root,...titles[kind],cb,['deck','quests','inventory','equipment','pet','shop','map'].includes(kind)||kind==='debug');
     if(kind==='checkin'){
         body.closest('.modal').classList.add('checkin-modal');
@@ -562,19 +563,28 @@ export function renderPanel(root,kind,model,cb) {
 function ownsEgg(save){return (save.inventory[17307]||0)>0;}
 export function renderDialogue(root,model,dialog,cb) {
     root.disposeDialogue?.();
-    const {assets,save}=model,c=assets.content,npc=(dialog.lines?c.npcs[dialog.lines[dialog.index]?.npcId]:dialog.npc)||c.npcs[dialog.npcId];root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
+    const {assets,save}=model,c=assets.content,npc=(dialog.lines?(c.npcs[dialog.lines[dialog.index]?.npcId]||(dialog.lines[dialog.index]?.speakerName?{id:dialog.lines[dialog.index].npcId,name:dialog.lines[dialog.index].speakerName,zone:save.zone}:null)):dialog.npc)||c.npcs[dialog.npcId];root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
     const box=el('section','dialogue-box rpg-dialogue');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',fill('与{name}交谈',{name:npc.name}).text);
     box.classList.toggle('dialogue-sequence',!!dialog.lines);
     const portrait=art(assets,npc.portrait,150,190,'dialogue-portrait');
     const content=el('div','dialogue-content',el('p','eyebrow',islandName(npc.zone)),el('h2','',npc.name));
     const close=createCloseButton(cb.close);
+    if(cb.chat&&!npcHasActiveQuest(save,c,npc.id)){
+        const chat=button('',()=>cb.chat(npc),'dialogue-chat');
+        chat.title=fill('与{name}交谈',{name:npc.name}).text;chat.setAttribute('aria-label',chat.title);
+        chat.innerHTML='<svg viewBox="0 0 40 36" aria-hidden="true"><path d="M10 3h20a7 7 0 0 1 7 7v10a7 7 0 0 1-7 7h-7l-6 6v-6h-7a7 7 0 0 1-7-7V10a7 7 0 0 1 7-7Z" fill="#fffbe9" stroke="#7a6335" stroke-width="1.8"/><g fill="#7a6335"><circle cx="12" cy="15" r="2"/><circle cx="20" cy="15" r="2"/><circle cx="28" cy="15" r="2"/></g></svg>';
+        box.append(chat);
+    }
     if(dialog.lines){
         const line=dialog.lines[dialog.index],last=dialog.index===dialog.lines.length-1;
         const replyLabel=entry=>entry.buttons?.[0]?.label&&!entry.buttons[0].label.includes('NEXT')?entry.buttons[0].label:'继续';
-        const labels=dialog.lines.map((entry,index)=>index===dialog.lines.length-1?dialog.finishLabel:replyLabel(entry));
+        const finalReply=dialog.lines.at(-1)?.buttons?.[0]?.label;
+        const lastLabel=dialog.preserveReply&&finalReply&&!finalReply.includes('NEXT')?finalReply:dialog.finishLabel;
+        const labels=dialog.lines.map((entry,index)=>index===dialog.lines.length-1?lastLabel:replyLabel(entry));
         // Reserve the same width for every step, including the longest reply.
         box.style.setProperty('--dialogue-action-width',`${Math.max(150,...labels.map(label=>Array.from(label||'继续').length*14+36))}px`);
-        const next=button(last?dialog.finishLabel:replyLabel(line),cb.next,'primary');
+        const next=button(last?lastLabel:replyLabel(line),cb.next,'primary');
+        if(last)next.title=dialog.finishLabel;
         content.append(el('p','dialogue-text',line.text),el('div','dialogue-bottom',el('span','muted',`${dialog.index+1} / ${dialog.lines.length}`),next));
     }
     else {
@@ -587,6 +597,7 @@ export function renderDialogue(root,model,dialog,cb) {
         if(q&&ready&&q.endNpc===npc.id){const claim=button('',()=>cb.finishQuest(q),'primary');setText(claim,'完成任务 · {title}',{title:q.title});choices.append(claim);}
         for(const quest of here.accept){const accept=button('',()=>cb.startCatalog(quest),'primary');setText(accept,'接取任务 · {title}',{title:quest.title});choices.append(accept);}
         for(const quest of here.claim){const claim=button('',()=>cb.finishCatalog(quest),'primary');setText(claim,'完成任务 · {title}',{title:quest.title});choices.append(claim);}
+        for(const {quest,talk} of catalogTalksForNpc(save,c,npc.id,snap))choices.append(button(`${quest.title} · ${talk.label||'交谈'}`,()=>cb.questTalk(quest,talk),'primary'));
         if(dialog.questDialogue){
             dialog.questDialogue=false;
             if(choices.children.length===1){choices.children[0].click();return;}
@@ -597,7 +608,7 @@ export function renderDialogue(root,model,dialog,cb) {
         if(npcServices(c,npc).length)choices.append(button('查看商品与学习魔法',()=>cb.panel('npc-services',{npc}),'primary'));
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
-        if(npc.id===36205)choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
+        if(npc.id===36205||npc.name==='法斯特船长')choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
         choices.append(button('下次再聊',cb.close,'text-button'));content.append(choices);
     }
     const hint=el('p','dialogue-hint');
@@ -605,7 +616,7 @@ export function renderDialogue(root,model,dialog,cb) {
     box.append(portrait,content,close);root.append(box);
     const dialogueText=content.querySelector('.dialogue-text');
     bindDialogue(root,box,dialogueText,hint,content.querySelector('button.primary')||content.querySelector('button'),{
-        lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),readAloud:cb.readDialogue,mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,close:cb.close,
+        lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),readAloud:(text,locale,signal)=>cb.readDialogue(text,locale,signal,npc),mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,close:cb.close,
     });
 }
 // 战斗卡牌说明的展开偏好只存本机（localStorage），默认折叠。
@@ -625,6 +636,7 @@ export function renderBattle(root,model,cb) {
     }
 }
 function renderBattleContent(root,model,cb) {
+    const retainedCanvas=root.handBattle===model.battle?root.querySelector('#battle-canvas'):null;
     root.disposeStatusTooltips?.();
     root.disposeHandGesture?.();
     root.battleLayoutObserver?.disconnect();
@@ -641,9 +653,9 @@ function renderBattleContent(root,model,cb) {
     sound.title=model.soundEnabled?'关闭音效':'开启音效';
     sound.setAttribute('aria-label',sound.title);
     sound.setAttribute('aria-pressed',String(!!model.soundEnabled));
-    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.redMushroom?`红蘑菇赛场 · ${battle.sides.near.length} 对 ${battle.sides.far.length}`:battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,(()=>{const turn=el('span','badge');setText(turn,'第 {turn} 回合',{turn:battle.turn});return turn;})(),model.save.zone==='camp'&&model.save.languageLearning?.enabled?button('对话挑战',cb.battleTalk,'secondary small'):null,button('撤退',cb.retreat,'secondary small')));
+    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.redMushroom?`红蘑菇赛场 · ${battle.sides.near.length} 对 ${battle.sides.far.length}`:battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,(()=>{const turn=el('span','badge');setText(turn,'第 {turn} 回合',{turn:battle.turn});return turn;})(),button('撤退',cb.retreat,'secondary small')));
     if(battle.redMushroom&&!battle.finished){const timer=el('span','badge arena-countdown',animating?'施法中…':`选牌剩余 ${model.arenaCountdown??30} 秒`);timer.dataset.arenaCountdown='';root.append(timer);}
-    const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');bindBattleTargeting(canvas,cb.target);
+    const canvas=retainedCanvas||el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');bindBattleTargeting(canvas,cb.target);
     const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');setText(status,battle.finished?'对决结束':animating?'魔法正在生效…':blockedMessage);
     status.classList.toggle('cast-blocked',!!blockedMessage&&!animating&&!battle.finished);
@@ -722,7 +734,8 @@ function renderBattleContent(root,model,cb) {
     const kind=selected&&cardTargetKind(battle.resolved.cards[selected.key]),canPlay=selected&&!discarded.includes(selected.seq)&&U.isAlive(hero);targetEnemy.hidden=legalTargets.length!==1||kind==='friendly'||kind==='self';targetSelf.hidden=legalTargets.length!==1||kind==='hostile'||kind==='all';targetEnemy.disabled=targetSelf.disabled=animating||battle.finished||!canPlay;
     const deckLeft=el('small','');
     setText(deckLeft,'卡包剩余 {count} 张',{count:U.deckRemaining(hero)-discarded.length});
-    bottom.append(el('div','pip-legend',deckLeft),el('div','battle-actions',targetEnemy,targetSelf,el('div','battle-hand-actions',togglePets,toggleRunes,pass)));
+    const chat=cb.battleChat?createBattleChat({el,button,onSend:cb.battleChat,disabled:animating||battle.finished||hero.hp<=0,tactical:!battle.redMushroom}):null;
+    bottom.append(el('div','pip-legend',deckLeft),el('div','battle-actions',targetEnemy,targetSelf,el('div','battle-hand-actions',chat,togglePets,toggleRunes,pass)));
     const rosterOptions={heroId:hero.id,canTarget:unit=>!animating&&!battle.finished&&canPlay&&legalTargets.includes(unit),target:cb.target,el,button,schoolNames:SCHOOL_NAMES,colors:COLORS};
     const foes=createBattleRoster(battle,'far',rosterOptions),allies=createBattleRoster(battle,'near',rosterOptions);
     root.battleStatusEntries=[...foes.entries,...allies.entries];updateBattleRoster(root.battleStatusEntries,model.presentation);

@@ -8,7 +8,17 @@ import { showPetDetails } from './view_adventure_pet_details.js';
 import { createMountPreview } from './view_adventure_mount_preview.js';
 import { createPetStatus } from './view_adventure_pet_status.js';
 import { ItemDetails } from './view_adventure_item_details.js';
-import { STARTERS,STAGE_NAMES,petAppearanceStage,petParams,FOOD_ID } from './adventure_pets_core.js';
+import { drawSchoolIcon } from './card_renderer.js';
+import { STARTERS,petAppearanceStage,petParams,FOOD_ID } from './adventure_pets_core.js';
+const SCHOOL_NAMES={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡',balance:'平衡'};
+function petSchoolIcon(school,el){
+ const name=SCHOOL_NAMES[school]||'魔法';
+ const canvas=el('canvas','pet-name-school');canvas.width=32;canvas.height=32;
+ canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`${name}系`);
+ const context=canvas.getContext?.('2d');if(typeof context?.save==='function')drawSchoolIcon(context,school||'balance',16,16,30);
+ return canvas;
+}
+function petNameLine(def,el){return el('span','pet-name-line',petSchoolIcon(def.school,el),el('strong','',def.name));}
 export function petPortrait(assets,id,stage=0,size=96){
  const box=document.createElement('div');box.className='pet-sheet';box.style.width=box.style.height=`${size}px`;
  const art=assets.content.pets[id]?.art;if(!art)return box;
@@ -22,13 +32,14 @@ export function starterPicker(assets,onSelect,{el,button}){
 }
 export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon,art}){
  const {save,assets}=model,c=assets.content,p=petParams(c);
- body.closest('.modal').classList.add('pet-collection-modal');
- body.closest('.modal').querySelector('.eyebrow')?.remove();
+ const modal=body.closest('.modal');
+ modal.classList.add('pet-collection-modal');
+ const heading=modal.querySelector('.modal-header h2');
+ if(heading)heading.parentElement.prepend(heading);
  const state=model.petView||(model.petView={}),records=ownedPetRecords(save),ids=Object.keys(records);
  state.tab=state.tab==='mount'?'mount':'follow';
  const mounts=Object.values(c.items).filter(item=>(save.inventory[item.id]||0)>0&&c.mountByItem?.[item.id]);
  const formation=el('div','pet-stage-line'),shelf=el('div','pet-shelf');
- const title=el('div','pet-section-heading pet-drag-help',el('small','muted','拖动角色'));
  const commit=(slots,heroSlot=save.heroSlot)=>cb.action({type:'formation',slots,heroSlot});
  async function place(id,index){
   if(save.pendingEncounter)return;
@@ -115,13 +126,13 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   if(save.pendingEncounter)mountDetails.footer.append(el('span','muted','战斗中无法换坐骑'));
   mountDetails.open(trigger);
  };
- body.append(title,formation);
+ body.append(formation);
  for(let index=0;index<4;index++){
   const id=save.formation[index],pet=save.pets[id],isHero=index===save.heroSlot;
   const slot=el('section',`pet-stage-slot${isHero?' is-hero':''}`);slot.dataset.slot=index;
-  const stageLabel=pet?(c.pets[pet.speciesId]?.staticAppearance?'原版形象':STAGE_NAMES[petAppearanceStage(pet,c)]):'';
-  const stand=button([pet?el('span','pet-standing-art',el('span','pet-status-portrait',createPetStatus(pet,c,el),petPortrait(assets,pet.speciesId,petAppearanceStage(pet,c),120*petDisplayScale(pet,c)))):el('span','pet-empty','+'),...(pet?[el('strong','',c.pets[records[id]?.speciesId||id].name),el('small','pet-stage-level',`等级 ${pet.level} · ${stageLabel}`)]:[])],()=>{if(id)open(id);else{state.targetSlot=index;paintShelf();shelf.querySelector('button')?.focus();}},'pet-stand');
-  stand.setAttribute('aria-label',`卡位 ${index+1}：${pet?c.pets[records[id]?.speciesId||id].name:'空位'}`);
+  const def=pet&&c.pets[records[id]?.speciesId||id];
+  const stand=button([pet?el('span','pet-standing-art',el('span','pet-status-portrait',createPetStatus(pet,c,el),petPortrait(assets,pet.speciesId,petAppearanceStage(pet,c),120*petDisplayScale(pet,c)))):el('span','pet-empty','+'),...(def?[petNameLine(def,el)]:[])],()=>{if(id)open(id);else{state.targetSlot=index;paintShelf();shelf.querySelector('button')?.focus();}},'pet-stand');
+  stand.setAttribute('aria-label',`卡位 ${index+1}：${def?def.name:'空位'}`);
     if(id){bindDrag(stand,id);stand.addEventListener('keydown',event=>{if(event.key==='Delete'||event.key==='Backspace'){event.preventDefault();rest(id);}});}
   slot.ondragover=event=>{event.preventDefault();slot.classList.add('drop-ready');};
   slot.ondragleave=()=>slot.classList.remove('drop-ready');
@@ -176,11 +187,11 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   else setText(status,visible.length===1?'1 位伙伴 · 营养餐 {food}':'{count} 位伙伴 · 营养餐 {food}',{count:visible.length,food:save.inventory[FOOD_ID]||0});
   if(state.targetSlot!=null)status.append(button('取消',()=>{delete state.targetSlot;paintShelf();},'pet-inline-button'));
   for(const id of visible){
-   const pet=records[id],slot=save.formation.indexOf(id);
+   const pet=records[id],slot=save.formation.indexOf(id),def=c.pets[records[id]?.speciesId||id];
    const meta=el('small','');
    if(slot>=0)setText(meta,'等级 {level} · 卡位 {slot}',{level:pet.level,slot:slot+1});
    else setText(meta,'等级 {level} · 休息中',{level:pet.level});
-   const item=button([el('span','pet-card-portrait',createPetStatus(pet,c,el),petPortrait(assets,pet.speciesId,petAppearanceStage(pet,c),96*petDisplayScale(pet.baby?{...pet,birth:{}}:pet,c))),el('strong','',c.pets[records[id]?.speciesId||id].name),meta],()=>{if(state.targetSlot!=null){const index=state.targetSlot;delete state.targetSlot;place(id,index);}else open(id);},'pet-owned');
+   const item=button([el('span','pet-card-portrait',createPetStatus(pet,c,el),petPortrait(assets,pet.speciesId,petAppearanceStage(pet,c),96*petDisplayScale(pet.baby?{...pet,birth:{}}:pet,c))),petNameLine(def,el),meta],()=>{if(state.targetSlot!=null){const index=state.targetSlot;delete state.targetSlot;place(id,index);}else open(id);},'pet-owned');
     item.dataset.petId=id;bindDrag(item,id,true);shelf.append(item);
   }
   if(!visible.length)shelf.append(el('p','muted','没有找到伙伴'));

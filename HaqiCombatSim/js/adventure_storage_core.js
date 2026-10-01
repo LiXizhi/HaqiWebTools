@@ -24,6 +24,7 @@ export function durableSave(save) {
     // A cloud-only restore returns to the island; the full cooperative run stays on this device.
     if(save.coopRun){result.zone=save.coopRun.returnTo.zone;result.dungeonReturn=null;}
     delete result.dailyLanguageBuff;
+    for(const key of ['music','gameSettings','graphicsSettings'])delete result[key];
     for (const key of localFields) delete result[key];
     for (const key of prefFields) delete result[key];
     if(result.checkin?.version===2)delete result.checkin.onlineMs;
@@ -46,6 +47,7 @@ export function restoreRuntime(save, content, runtime) {
     if (result.pets) {result.heroHp = null;result.careAt = 0;result.careLog = [];}
     if (matching) Object.assign(result,copy(runtime.values));
     delete result.dailyLanguageBuff;
+
     if(runtime?.dailyLanguageBuff?.day===localBuffDay())result.dailyLanguageBuff=copy(runtime.dailyLanguageBuff);
     if(matching&&result.coopRun&&runtime.coopZone){result.zone=runtime.coopZone;result.dungeonReturn=copy(runtime.coopReturn);}
     if(result.checkin?.version===2)result.checkin.onlineMs=matching&&runtime.checkinOnline?.day===result.checkin.day?runtime.checkinOnline.onlineMs:0;

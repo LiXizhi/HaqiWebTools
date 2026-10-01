@@ -1,8 +1,17 @@
 import { el, button, createEntryIntro } from './view_adventure.js';
-import { tr, setText } from './locale_runtime.js';
+import { tr, setText, fill } from './locale_runtime.js';
 import { SCHOOL_NAMES } from './adventure_core.js';
 import { MAX_ROLES } from './adventure_roles_core.js';
 import {heroPortrait} from './hero_renderer.js';
+import {drawSchoolIcon} from './card_renderer.js';
+
+function schoolIcon(school){
+    const label=fill('{school}系',{school:SCHOOL_NAMES[school]||school}).text;
+    const canvas=el('canvas','role-school-icon');canvas.width=48;canvas.height=48;
+    canvas.setAttribute('role','img');canvas.setAttribute('aria-label',label);canvas.title=label;
+    const context=canvas.getContext('2d');if(context)drawSchoolIcon(context,school,24,24,40);
+    return canvas;
+}
 
 export function renderRoles(root, assets, model, cb) {
     root.replaceChildren();root.className = 'entry-screen entry-wizard role-screen';
@@ -37,7 +46,8 @@ export function renderRoles(root, assets, model, cb) {
         const s = row.save, portrait = heroPortrait(assets,s,96,100,{lookAround:false});portrait.className='role-portrait';
         portrait.setAttribute('role', 'img');portrait.setAttribute('aria-label', tr(s.appearance === 'girl' ? '魔法少女' : '魔法少年'));
         const recent = row.id === model.catalog.activeId;
-        const meta = el('p', '');setText(meta, '等级 {level} · {school}', { level: s.level, school: SCHOOL_NAMES[s.school] });
+        const level = el('span', '');setText(level, '等级 {level}', { level: s.level });
+        const meta = el('p', 'role-meta', level, schoolIcon(s.school));
         rows.append(el('article', `role-card ${recent ? 'recent' : ''}`, portrait,
             el('div', 'role-description', el('h2', '', s.name), meta, recent && el('small', 'muted', '最近使用')),
             addButton(recent ? '继续旅程' : '进入角色', () => cb.select(row.id), recent ? 'primary' : 'secondary')));

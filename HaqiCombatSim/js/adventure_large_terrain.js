@@ -1,6 +1,6 @@
 import { paintSoftShadow, paintStaticShadows } from './adventure_shadows.js';
-import { paintGroundDetail, paintWaterDetail, paintRoadDetail, paintRiverBank, paintShoreDetail } from './adventure_terrain_detail.js';
-import { groundDecorations } from './adventure_ground_decorations_core.js';
+import { paintGroundDetailSteps, paintWaterDetailSteps, paintRoadDetailSteps, paintRiverBank, paintShoreDetailSteps } from './adventure_terrain_detail.js';
+import { groundDecorationSteps } from './adventure_ground_decorations_core.js';
 import { paintBridges } from './adventure_bridge.js';
 
 function polygon(c,points){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();}
@@ -24,7 +24,8 @@ function bands(stops,overview=false){
 }
 // A deterministic, world-space painter. It paints either one small terrain tile
 // or a low-resolution overview; it never allocates a world-sized bitmap.
-export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},overview=false,decorationArt=null){
+export function paintLargeTerrain(...args){for(const step of paintLargeTerrainSteps(...args)){/* Synchronous overview / compatibility painter. */}}
+export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.h},overview=false,decorationArt=null){
     const {layout}=world,{rules}=layout,{terrain}=rules;
     c.fillStyle=terrain.ocean;c.fillRect(rect.x,rect.y,rect.w,rect.h);
     c.lineJoin='round';c.lineCap='round';
@@ -32,11 +33,11 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         const [width,color]=terrain.coastLayers[i],outer=i?terrain.coastLayers[i-1]:[width+65,terrain.ocean];
         const steps=overview?4:Math.max(8,Math.ceil((outer[0]-width)/2));
         for(let step=1;step<=steps;step++){
-            polygon(c,layout.coast);c.strokeStyle=blend(outer[1],color,step/steps);c.lineWidth=outer[0]+(width-outer[0])*step/steps;c.stroke();
+            polygon(c,layout.coast);c.strokeStyle=blend(outer[1],color,step/steps);c.lineWidth=outer[0]+(width-outer[0])*step/steps;c.stroke();yield;
         }
     }
     if(!overview){
-        paintWaterDetail(c,world,rect,'water',true);
+        yield* paintWaterDetailSteps(c,world,rect,'water',true);
         // Broken crests follow the existing coast, underneath the beach fill.
         c.save();c.setLineDash([26,17,8,31,13,47]);
         // A narrow crest at the waterline, rather than a broad dashed band.
@@ -50,7 +51,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         if(!hits(rect,r.x-r.rx*1.25,r.y-r.ry*1.25,r.x+r.rx*1.25,r.y+r.ry*1.25))continue;
         c.save();c.translate(r.x,r.y);c.scale(r.rx,r.ry);
         const g=c.createRadialGradient(0,0,.2,0,0,1.25);g.addColorStop(0,r.color);g.addColorStop(.65,r.color);g.addColorStop(1,r.color+'00');
-        oval(c,0,0,1.25,1.25,g);c.restore();
+        oval(c,0,0,1.25,1.25,g);c.restore();yield;
     }
     // Feather the sand into the already-painted regional ground. Wide to narrow
     // passes leave a soft inland margin without moving the collision coastline.
@@ -59,7 +60,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         c.strokeStyle=terrain.sand+'24';c.stroke();
     }
     polygon(c,layout.coast);c.lineWidth=terrain.coastWidth-8;c.strokeStyle=terrain.sand;c.stroke();
-    if(!overview){paintGroundDetail(c,world,rect);paintShoreDetail(c,world,rect);}
+    if(!overview){yield* paintGroundDetailSteps(c,world,rect);yield* paintShoreDetailSteps(c,world,rect);}
     // Relief contours and small stone fans suggest altitude without animated geometry.
     for(const mountain of layout.mountains||[]){
         const {x:cx,y:cy,biome,scale=1}=mountain,shape=rules.mountain,palette=rules.biomes[biome].mountain||rules.biomes.gold.mountain;
@@ -71,6 +72,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
             c.strokeStyle=palette.at(-1)+'55';c.lineWidth=3;c.stroke();
         }
     }
+    yield;
     // Patchwork farmland is geometry baked into the ground, not individual sprites.
     for(const farm of layout.farms||[]){
         if(!hits(rect,farm.x,farm.y,farm.x+farm.cols*130,farm.y+farm.rows*90))continue;
@@ -81,6 +83,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         for(let j=1;j<6;j++)line(c,[[x+6,y+j*11],[x+107,y+j*11]],3,'#e0cd8a66');
         }
     }
+    yield;
     // Paint the entire water network one band at a time. Inner water covers all
     // banks at lake/river junctions, including across independently baked tiles.
     for(const material of new Set([...layout.rivers,...(layout.lakes||[])].map(w=>w.material||'water'))){
@@ -107,18 +110,19 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
                 for(const [x,y] of r.points){c.moveTo(x+radius,y);c.arc(x,y,radius,0,Math.PI*2);}
             }
             for(const l of lakes){c.moveTo(l.x+l.rx,l.y);c.ellipse(l.x,l.y,l.rx,l.ry,0,0,Math.PI*2);}
-            c.clip();paintWaterDetail(c,world,rect,material);c.restore();
+            c.clip();yield* paintWaterDetailSteps(c,world,rect,material);c.restore();
             for(const r of rivers)if(!lakes.length)paintRiverBank(c,world,rect,r,palette);
         }
     }
-    if(!overview&&decorationArt)for(const d of groundDecorations(world,rect)){
+    if(!overview&&decorationArt)for(const d of (yield* groundDecorationSteps(world,rect))){
         // Small contact shade stays lighter than trees and buildings. Floating
         // plants and flat sand markings do not cast a ground shadow.
         if(!['lilyPads','waterLily','sandRipples'].includes(d.frame))
             paintSoftShadow(c,d.x-d.size*.03,d.y-d.size*.06,d.size*.36,d.size*.10,.17);
         c.save();c.translate(d.x,d.y);if(d.flip)c.scale(-1,1);
-        decorationArt.draw(c,d.atlas,d.frame,-d.size/2,-d.size,d.size,d.size);c.restore();
+        decorationArt.draw(c,d.atlas,d.frame,-d.size/2,-d.size,d.size,d.size);c.restore();yield;
     }
+    yield;
     // Every road pass is drawn over the full network to avoid crossing seams.
     const layers=rules.roads.layers;
     const shoulder=layers[1]?.[1]||layers[0]?.[1];
@@ -133,10 +137,10 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         for(const p of world.paths){
             const half=(p.width+roadPad)/2,x0=Math.min(p.a.x,p.b.x)-half,y0=Math.min(p.a.y,p.b.y)-half,x1=Math.max(p.a.x,p.b.x)+half,y1=Math.max(p.a.y,p.b.y)+half;
             if(!hits(rect,x0,y0,x1,y1))continue;
-            line(c,[[p.a.x,p.a.y],[p.b.x,p.b.y]],Math.max(4,p.width+extra),color);
+            line(c,[[p.a.x,p.a.y],[p.b.x,p.b.y]],Math.max(4,p.width+extra),color);yield;
         }
     }
-    if(!overview)paintRoadDetail(c,world,rect);
+    if(!overview)yield* paintRoadDetailSteps(c,world,rect);
     const visibleBridges=layout.bridges.filter(b=>{
         const reach=Math.hypot(b.w,b.h)/2+24;
         return hits(rect,b.x-reach,b.y-reach,b.x+reach,b.y+reach);
@@ -164,6 +168,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         c.strokeStyle=plaza.line;c.lineWidth=2;
         for(let i=0;i<3;i++){c.beginPath();c.ellipse(world.center.x,world.center.y,(layout.route?72:145)-i*(layout.route?18:36),(layout.route?40:83)-i*(layout.route?10:20),0,0,Math.PI*2);c.stroke();}
     }
+    yield;
     // Bake after roads and plaza so their surfaces receive shade too.
     paintStaticShadows(c,world,rect);
     c.restore();

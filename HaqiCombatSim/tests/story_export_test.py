@@ -71,16 +71,20 @@ class StoryExportTests(unittest.TestCase):
         e.assign_lines()
         self.assertNotEqual(inserted['id'], old_id)
 
-    def test_sample_slots_and_three_levels(self):
-        variants = module.read('docs/story/sample-variants.json')
+    def test_sample_slots_and_single_simple_text(self):
+        variants = module.read('docs/story/sample-text.json')
         scenes = {s['id']: s for s in self.export.scenes}
         for sample in variants['scenes']:
             self.assertEqual(set(sample['lines']), {l['id'] for l in scenes[sample['id']]['lines']})
-            for texts in sample['lines'].values():
-                self.assertEqual(len(texts), 3)
-                self.assertTrue(all(isinstance(t, str) and t.strip() for t in texts))
+            for text in sample['lines'].values():
+                self.assertIsInstance(text, str)
+                self.assertTrue(text.strip())
 
     def test_noise_and_rewards(self):
+        self.assertFalse(any(s['key'].startswith('course:') for s in self.export.scenes))
+        retired = [s for key, s in self.export.registry['scenes'].items() if key.startswith('course:')]
+        self.assertTrue(retired)
+        self.assertTrue(all(not s['active'] and all(not l['active'] for l in s['lines'].values()) for s in retired))
         self.assertNotIn('script/apps/', self.outputs['story-master.md'])
         s = next(s for s in self.export.scenes if s['key'] == 'chapter:63013')
         self.assertEqual(s['rewards'], self.export.chapter['quests'][-1]['rewards'])

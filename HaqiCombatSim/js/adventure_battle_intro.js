@@ -10,7 +10,7 @@ export function createBattleIntro({root,onDone,viewFactory=createBattleIntroView
     return {
         get active(){return !!session;},
         open(battle,assets){
-            close();const roster=battleIntroRoster(battle);
+            close();void assets.warmBattle?.(battle)?.catch(()=>{});const roster=battleIntroRoster(battle);
             if(!roster.length){onDone(battle);return;}
             session={battle,roster,reduced:reducedMotion(),elapsed:0,last:now()};
             view.open({roster,assets,reduced:session.reduced});

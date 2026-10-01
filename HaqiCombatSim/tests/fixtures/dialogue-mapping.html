@@ -14,7 +14,7 @@ const close=()=>{root.disposeDialogue?.();root.hidden=true;};box.append(createCl
 const button=root.querySelector('.primary');button.onclick=close;
 // Explicit mock mode only verifies rendering; never represents a live model result.
 const mock=new URLSearchParams(location.search).has('mock');
-const sample=JSON.stringify({text:'Let(#A23) me(#246) take(#A50) you(#275) for(#666) a(#666) thrilling(#067) ride(#638)!',translation:'让(#A23)我(#246)带(#A50)你(#275)享受(#666)风驰电掣(#067)的(#666)感觉(#638)吧(#666)！'});
+const sample=JSON.stringify({pairs:[{text:'take',translation:'带'},{text:'thrilling',translation:'风驰电掣'}]});
 if(mock)root.querySelector('.eyebrow').textContent='模拟映射 · 仅排版验收';
 bindDialogue(root,box,root.querySelector('.dialogue-text'),root.querySelector('.dialogue-hint'),button,{
  lines:[{text:'Let me take you for a thrilling ride!',locale:'en'},{text:'让我带你享受风驰电掣的感觉吧！',locale:'zh-CN'}],

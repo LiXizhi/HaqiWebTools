@@ -1,3 +1,4 @@
+import {cardsInHand} from './combat_unit_core.js';
 import {warmSceneActors} from './adventure_actor_assets.js';
 import {createMonsterArtRenderer} from './adventure_monster_art.js';
 import {installModelPets} from './adventure_monster_pets_core.js';
@@ -23,10 +24,10 @@ import { loadUiArt } from './adventure_ui_art.js';
 export const SAVE_KEY = 'haqi.adventure.kids.v1';
 import { createJsonReader } from './runtime_data.js';
 const ESSENTIAL_SHEETS=new Set(['sprites']);
-function loadImage(url) { return new Promise((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>resolve(i);i.onerror=()=>reject(new Error(`无法加载图片 ${url}`));i.src=url;}); }
+function loadImage(url) { return new Promise((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>{if(i.decode)i.decode().then(()=>resolve(i),()=>resolve(i));else resolve(i);};i.onerror=()=>reject(new Error(`无法加载图片 ${url}`));i.src=url;}); }
 export async function loadResources(progress) {
     const downloads = new Map();
-    const json = createJsonReader({ onProgress: event => {
+    const read = createJsonReader({ onProgress: event => {
         downloads.set(event.url, event);
         const rows = [...downloads.values()], active = rows.filter(row => !row.done);
         const loaded = rows.reduce((sum, row) => sum + row.loaded, 0);
@@ -34,6 +35,12 @@ export async function loadResources(progress) {
             ? rows.reduce((sum, row) => sum + (row.done ? row.loaded : row.total), 0) : null;
         progress?.({ label: '正在下载游戏配置', detail: `${(loaded / 1048576).toFixed(2)} MB`, value: active.length && total ? loaded / total : null });
     } });
+    const startupFiles = ["data/adventure/chapter.json", "data/adventure/combat.json", "data/adventure/assets.json", "data/adventure/media.json", "data/adventure/spell-effects.json", "data/adventure/pets.json", "data/adventure/shop-candidates.json", "data/kids/cards.json", "data/kids/charms.json", "data/kids/card_names.json", "data/adventure/island-encounters.json", "data/adventure/dungeon-index.json", "data/adventure/dungeon-journeys.json", "data/adventure/npc-catalog.json", "data/adventure/mount-catalog.json", "data/adventure/npc-art.json", "data/adventure/shop.json", "data/adventure/magic-star.json", "data/adventure/magic-star-art.json", "data/adventure/progression-bonuses.json", "data/adventure/fishing-items.json", "data/adventure/runes.json", "data/adventure/quest-runtime.json", "data/adventure/checkin.json", "data/adventure/gems.json", "data/adventure/currency-icons.json", "data/adventure/shop-icons.json", "data/adventure/monster-art.json"];
+    const prepared=new Map();let startupCursor=0;
+    for(const url of startupFiles){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});promise.catch(()=>{});prepared.set(url,{promise,resolve,reject});}
+    const workerRead=async()=>{while(startupCursor<startupFiles.length){const url=startupFiles[startupCursor++],row=prepared.get(url);try{row.resolve(await read(url));}catch(error){row.reject(error);}}};
+    for(let i=0;i<6;i++)void workerRead();
+    const json=url=>prepared.has(url)?prepared.get(url).promise.then(value=>structuredClone(value)).finally(()=>prepared.delete(url)):read(url);
     progress?.({ label: '正在连接资源服务器', value: null });
     const [content,dataset,manifest,media,effects]=await Promise.all(['chapter','combat','assets','media','spell-effects'].map(n=>json(`data/adventure/${n}.json`)));
     validateAdventureContent(content,dataset,manifest);
@@ -175,7 +182,22 @@ export async function loadResources(progress) {
         return draw(ctx,{id:'sprites',crop:tileRect('sprites',index,media.entries.sprites)},x,y,w,h,true,false);
     }
     const warmActors=(world,save,socialActors=[])=>warmSceneActors({world,save,socialActors,content,monsterArt,hero,ensureImage});
-    return {warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    let warming=false;
+    async function warmNearby(world,save){
+        if(warming)return;warming=true;
+        const near=rows=>[...(rows||[])].filter(row=>Math.hypot(row.x-save.position.x,row.y-save.position.y)<1000).sort((a,b)=>Math.hypot(a.x-save.position.x,a.y-save.position.y)-Math.hypot(b.x-save.position.x,b.y-save.position.y)).slice(0,10);
+        const nearby={...world,npcs:near(world.npcs),encounters:near(world.encounters)};
+        try{await warmActors(nearby,save);for(const npc of nearby.npcs){const ref=npc.portrait,id=typeof ref==='string'?ref:ref?.id;if(id&&images.has(id)){await new Promise(resolve=>setTimeout(resolve,0));getBounds(id,ref?.crop);}}}catch{/* Drawing retains its retry/fallback path. */}finally{warming=false;}
+    }
+    let battleWarmVersion=0;
+    async function warmBattle(battle){
+        const version=++battleWarmVersion,keys=new Set(cardsInHand(battle.sides.near[0]).map(row=>row.key));
+        for(const unit of [...battle.sides.near,...battle.sides.far])for(const entry of unit.deckSpec||[])if(keys.size<24)keys.add(entry.key);
+        const rows=[...keys].map(key=>battle.resolved.cards[key]).filter(Boolean);
+        for(let i=0;i<rows.length&&version===battleWarmVersion;i+=4)await skillArt.preload(rows.slice(i,i+4));
+    }
+
+    return {warmNearby,warmBattle,warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

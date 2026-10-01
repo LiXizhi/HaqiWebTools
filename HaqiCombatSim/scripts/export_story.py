@@ -9,6 +9,7 @@ import hashlib
 import html
 import json
 import re
+import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -41,6 +42,53 @@ def clean(value):
 
 def node_text(node, tag):
     return next((c.get('text', '') for c in node.get('children', []) if c['tag'] == tag), '')
+
+
+def quest_chains(quests):
+    """Connected prerequisite DAGs qualify only with a path of >=4 quests.
+
+    Shared prerequisites/merges belong to one chapter; fan-out alone does not
+    qualify. Missing/obsolete dependencies remain external, not fabricated roots.
+    """
+    parents = {qid: {p for p in q['requires'] if p in quests} for qid, q in quests.items()}
+    adjacent = {qid: set(ps) for qid, ps in parents.items()}
+    for qid, ps in parents.items():
+        for p in ps:
+            adjacent[p].add(qid)
+    seen, chains, side = set(), [], []
+    for qid in sorted(quests):
+        if qid in seen:
+            continue
+        component, pending = set(), [qid]
+        while pending:
+            node = pending.pop()
+            if node in component:
+                continue
+            component.add(node)
+            pending.extend(adjacent[node] - component)
+        seen.update(component)
+        roots = sorted(n for n in component if not parents[n])
+        remaining, order, depth = set(component), [], {}
+        while remaining:
+            ready = sorted(n for n in remaining if parents[n].issubset(depth))
+            if not ready:
+                raise ValueError('任务前置出现环，不能生成主线章节：' + ','.join(map(str, sorted(remaining))))
+            for n in ready:
+                depth[n] = 1 + max((depth[p] for p in parents[n]), default=0)
+                order.append(n)
+                remaining.remove(n)
+        longest = max(depth.values())
+        if longest >= 4:
+            tail = {}
+            for n in reversed(order):
+                tail[n] = 1 + max((tail[c] for c in component if n in parents[c]), default=0)
+            members = [n for n in order if depth[n] + tail[n] - 1 >= 4]
+            main_roots = [n for n in members if not parents[n].intersection(members)]
+            chains.append({'id': f'C{main_roots[0]}', 'roots': main_roots, 'questIds': members, 'longestPath': longest})
+            side.extend(n for n in order if n not in members)
+        else:
+            side.extend(order)
+    return chains, sorted(side)
 
 
 class Exporter:
@@ -149,9 +197,24 @@ class Exporter:
             s['rewards'] = r['rewards']
             s['rewardSource'] = {'file': 'data/adventure/quest-runtime.json', 'questId': q['id'], 'readOnly': True}
             self.line(s, 'description', q['description'], '任务', '任务说明', 'data/adventure/quest-journal.json', f'/quests/{i}/description', {'file': '../../config/Aries/Quests/quest_list.xml', 'selector': f'Quest[Id={q["id"]}]/Detail', 'generator': 'scripts/export_quest_catalog.py → scripts/package_quests.mjs'})
-            s['note'] = f'接取：{q["startNpc"]}；交付：{q["endNpc"]}。当前执行通用任务流程，原版对白见文末同名场景。'
+            ri = next(j for j, row in enumerate(self.runtime['quests']) if row['id'] == q['id'])
+            blocks = [('startDialog', '接取', 'StartDialog/dialog', r.get('startDialog', []))]
+            blocks += [(f'talks/{j}/dialog', '指定交谈', f'ClientDialogNPC/item[@id={t["npcId"]}]', t['dialog']) for j, t in enumerate(r.get('talks', []))]
+            blocks += [('endDialog', '交付', 'EndDialog/dialog', r.get('endDialog', []))]
+            for block, phase, selector, lines in blocks:
+                for j, row in enumerate(lines):
+                    base = f'/quests/{ri}/{block}/{j}'
+                    author = {'file': '../../config/Aries/Quests/quest_list.xml', 'selector': f'Quest[Id={q["id"]}]/{selector}/item[{j + 1}]/content', 'generator': 'scripts/export_quest_catalog.py → scripts/package_quests.mjs'}
+                    self.line(s, f'{block}:{j}:text', row['text'], self.npcs.get(str(row['npcId']), f'居民 {row["npcId"]}'), phase, 'data/adventure/quest-runtime.json', base + '/text', author)
+                    for k, button in enumerate(row['buttons']):
+                        author = {**author, 'selector': f'Quest[Id={q["id"]}]/{selector}/item[{j + 1}]/buttons/button[{k + 1}]/@label'}
+                        self.line(s, f'{block}:{j}:button:{k}', button['label'], '我', phase, 'data/adventure/quest-runtime.json', base + f'/buttons/{k}/label', author, button['action'])
+            s['note'] = f'接取：{q["startNpc"]}；交付：{q["endNpc"]}。原版任务对白已接入；是否可触发仍取决于任务条件与NPC入口。'
         for i, q in enumerate(self.catalog['quests']):
             s = self.scene(f'original:{q["id"]}', q['title'], 'obsolete' if q['obsolete'] else 'original', q.get('island') or 'other', questId=q['id'], requires=[int(r['id']) for r in q['requires'] if str(r['id']).isdigit() and int(r.get('value') or 1) > 0], classification='历史任务' if q['obsolete'] else '原版待恢复', objective=q['description'])
+            if q['id'] in runtime:
+                s['classification'] = '原版来源（任务对白已接入）'
+                s['note'] = '接取、指定交谈和交付对白已进入当前任务配置；此处保留来源版本供核对。'
             s['originalConditions'] = q['requires']
             self.walk_xml(s, q['data'], f'/quests/{i}/data', '原版', str(q['startNpc']))
             phase_order = {'原版': 0, '接取': 1, '进行中': 2, '指定交谈': 3, '交付': 4}
@@ -163,7 +226,7 @@ class Exporter:
             s['rewardNote'] = '原版配置，非网页新增发放承诺。'
         self.conversations()
         self.journeys()
-        self.courses()
+        self.retire_courses()
         self.movies()
         self.residents()
         for file in ['js/language_story.js', 'js/language_encounter_core.js', 'js/adventure_core.js', 'js/adventure_catalog_quests_core.js', 'js/adventure_dungeon_story.js', 'js/combat_params_core.js', 'js/view_red_mushroom.js', 'js/view_adventure.js', 'js/adventure_npc_core.js', 'js/adventure_npc_art_core.js']:
@@ -255,16 +318,13 @@ class Exporter:
                 ptr = f'/entries/{i}/story/{j}/text'
                 self.line(s, row['id'], row['text'], row['speaker'], '入场', file, ptr, {'file': file, 'pointer': ptr}, force=True)
 
-    def courses(self):
+    def retire_courses(self):
+        # Legacy course configuration is retained for existing learning ledgers,
+        # but is no longer a story entry. Never recycle its published IDs.
         file = 'data/adventure/language-courses.json'
-        for i, c in enumerate(self.load(file)['courses']):
-            s = self.scene('course:' + c['id'], c['title'], 'current', classification='可选基础交流／按情境触发', conditions={'events': c['events'], 'requiresItem': c['requiresItem']})
-            author = {'file': 'scripts/prepare_language_adventure.mjs', 'selector': {'courseId': c['id']}, 'generator': 'scripts/prepare_language_adventure.mjs'}
-            self.line(s, 'scenario', c['scenario'], '情境', '挑战', file, f'/courses/{i}/scenario', author)
-            for j, pair in enumerate(c['pairs']):
-                for field, speaker in [('question', '交流对象'), ('answer', '我')]:
-                    self.line(s, pair['id'] + ':' + field, pair[field], speaker, '基础示例', file, f'/courses/{i}/pairs/{j}/{field}', author, force=True)
-            s['rewardNote'] = '基础通常10奇豆；挑战按档位30／50／80仙豆，受角色共享日额度及次数限制；非每条示例独立领奖。'
+        for i, course in enumerate(self.load(file)['courses']):
+            self.filtered.append({'file': file, 'pointer': f'/courses/{i}',
+                                  'courseId': course['id'], 'reason': '用户取消战斗对话挑战；旧基础课程整批退出故事总稿，旧编号停用'})
 
     def movies(self):
         base = ROOT.parent.parent / 'config/Aries/StaticMovies'
@@ -306,11 +366,11 @@ class Exporter:
                 done.add(ready['questId'])
         return result
 
-    def render(self, scenes):
+    def render(self, scenes, regions=True):
         rows = []
         region = None
         for s in scenes:
-            if s['region'] != region:
+            if regions and s['region'] != region:
                 region = s['region']
                 rows += [f'## {NAMES.get(region, "其他地区与独立故事")}', '']
             rows += [f'### [{s["id"]}] {s["title"]}', '', f'> {s["classification"]}' + (' · 可重复' if s.get('repeat') else ''), '']
@@ -413,20 +473,129 @@ class Exporter:
         self.assign_lines()
         current, original = self.ordered('current'), self.ordered('original')
         self.validate()
-        intro = ['# 魔法哈奇故事总稿', '', '> 当前可见故事与原版待恢复故事分开阅读。正文保留来源文字，不添加小说式衔接；顺序是一条符合已知前置的建议路线，不是新增任务限制。', '',
-                 '自由支线可不按此顺序游玩。目标和对白中的动作不自动表示已有机关或交互；等级、物品等条件仍由游戏校验。通用按钮和纯技术信息移至索引。', '',
-                 '配音共用当天临时加成：有效语音按现有入口规则增加属性，生命／攻击／防御各最多10%，之后超级魔力生成率最多10%；本机午夜重置。它不等于任务物品奖励，也不代表语言掌握程度。', '',
-                 '本稿不是一条已经连贯的小说：通用任务之间没有原对白衔接的地方保持原貌。改写及新情节请看 [故事设计](story-design.md) 和 [三档样章](story-samples.md)。', '', '# 第一部：当前可见故事', '']
-        index = {'version': 1, 'sources': dict(sorted(self.sources.items())), 'scenes': self.scenes, 'filtered': self.filtered, 'issues': self.issues}
+        ordered = current + original + self.ordered('obsolete') + self.ordered('inactive')
+        chapters, side_ids, quest_documents, chapter_meta = self.chapter_plan(current)
+        documents = {name: [] for name in ['story-side-quests.md', 'story-npc-dialogues.md', 'story-dungeon-scripts.md', 'story-history.md', *quest_documents.values()]}
+        for scene in ordered:
+            if scene['key'].startswith(('conversation:', 'resident:', 'gossip:')):
+                document = 'story-npc-dialogues.md'
+            elif scene['key'].startswith(('journey:', 'movie:')):
+                document = 'story-dungeon-scripts.md'
+            elif scene['kind'] == 'obsolete':
+                document = 'story-history.md'
+            else:
+                assert 'questId' in scene, f'未分类的非任务场景：{scene["key"]}'
+                document = quest_documents[scene['questId']]
+            scene['document'] = document
+            if 'questId' in scene and scene['kind'] in ('current', 'original'):
+                label = '主线任务' if document.startswith('chapters/') else 'NPC支线任务'
+                scene['classification'] = ('原版待恢复／' if scene['kind'] == 'original' else '') + label
+            documents[document].append(scene)
+        index = {'version': 1, 'sources': dict(sorted(self.sources.items())), 'questChapters': chapters, 'sideQuestIds': side_ids, 'scenes': self.scenes, 'filtered': self.filtered, 'issues': self.issues}
         counts = {k: len([s for s in self.scenes if s['kind'] == k]) for k in ['current', 'original', 'obsolete', 'inactive']}
-        report = ['# 故事导出检查报告', '', f'- 场景分类：{json.dumps(counts, ensure_ascii=False)}', f'- 原任务归属：{len(self.catalog["quests"])} / {len(self.catalog["quests"])}。', f'- 正文条目：{sum(len(s["lines"]) for s in self.scenes)}；过滤记录：{len(self.filtered)}。', '- 全部JSON文字字段精确回读一致；可回写作者源与快照一致；编号唯一。', '- 未执行Lua、未生成运行时数据、未读取玩家存档。', '', '## 实际边界', '', '- 红蘑菇当前入口为模式、备战、匹配和战斗规则，没有固定叙事对白树；不把按钮和数值规则伪装成故事。', '- 通用任务仅展示当前任务说明，原对白另列；不存在的剧情衔接没有补造。', '- 非teen过场保留独立原文，未证明每个文件仍被儿童版入口调用，不能作为已启用剧情。', '- 场景事件脚本的全部叙事字符串与动态拼接未穷举；不执行脚本，未迁移机关与宝箱仍需逐场景审计。', '- 动态AI聊天、原版音频无字幕内容不生成虚构逐字稿。', '- 生成脚本作者源提供语义选择器，未提供安全JSON写入定位的条目标为不可直接回写。', '- 主支线分类不明的任务保留“独立任务”，原等级条件不是网页实际可接取证明。', '- 配置报酬与对白的语义承诺尚需编辑逐章复核；自动检查不判断角色是否在撒谎。', '- 文学吸引力、真实麦克风与不同年龄阅读效果待真实读者验证。', '', '## 排序与来源问题', ''] + (['- ' + x for x in self.issues] or ['- 无前置环或解析错误。'])
-        return {
-            'story-master.md': '\n'.join(intro + self.render(current) + ['# 第二部：原版待恢复故事', '', '下文不代表网页当前可见；原始奖励仅供核对。', ''] + self.render(original)) + '\n',
-            'story-history.md': '\n'.join(['# 废除任务与停用课程档案', '', '保留历史，不恢复开放。', ''] + self.render(self.ordered('obsolete') + self.ordered('inactive'))) + '\n',
+        report = ['# 故事导出检查报告', '', f'- 场景分类：{json.dumps(counts, ensure_ascii=False)}', f'- 原任务归属：{len(self.catalog["quests"])} / {len(self.catalog["quests"])}。', f'- 正文条目：{sum(len(s["lines"]) for s in self.scenes)}；过滤记录：{len(self.filtered)}。', '- 全部JSON文字字段精确回读一致；可回写作者源与快照一致；编号唯一。', '- 未执行Lua、未生成运行时数据、未读取玩家存档。', '', '## 实际边界', '', '- 红蘑菇当前入口为模式、备战、匹配和战斗规则，没有固定叙事对白树；不把按钮和数值规则伪装成故事。', '- 全岛通用任务已接入原版接取、指定交谈及交付对白；未新增场景机关或宝箱事件，不存在的衔接没有补造。', '- 非teen过场保留独立原文，未证明每个文件仍被儿童版入口调用，不能作为已启用剧情。', '- 场景事件脚本的全部叙事字符串与动态拼接未穷举；不执行脚本，未迁移机关与宝箱仍需逐场景审计。', '- 动态AI聊天、原版音频无字幕内容不生成虚构逐字稿。', '- 生成脚本作者源提供语义选择器，未提供安全JSON写入定位的条目标为不可直接回写。', '- 主支线分类不明的任务保留“独立任务”，原等级条件不是网页实际可接取证明。', '- 配置报酬与对白的语义承诺尚需编辑逐章复核；自动检查不判断角色是否在撒谎。', '- 文学吸引力、真实麦克风与不同年龄阅读效果待真实读者验证。', '', '## 排序与来源问题', ''] + (['- ' + x for x in self.issues] or ['- 无前置环或解析错误。'])
+        outputs = {
+            'story-master.md': self.render_chapter_directory(chapters, side_ids),
+            'story-side-quests.md': self.render_side_quests(side_ids, documents['story-side-quests.md'], chapter_meta),
+            'story-npc-dialogues.md': self.render_external('NPC双语交流与居民对白', documents['story-npc-dialogues.md']),
+            'story-dungeon-scripts.md': self.render_external('副本、试炼塔与原版过场剧本', documents['story-dungeon-scripts.md']),
+            'story-history.md': '\n'.join(['# 废除任务档案', '', '保留历史，不恢复开放。停用NPC交流见独立NPC文档。', ''] + self.render(documents['story-history.md'])) + '\n',
             'story-index.json': json.dumps(index, ensure_ascii=False, indent=2) + '\n',
             'story-registry.json': json.dumps(self.registry, ensure_ascii=False, indent=2) + '\n',
             'story-report.md': '\n'.join(report) + '\n',
         }
+        for chapter in chapters:
+            outputs[chapter['document']] = self.render_chapter(chapter, documents[chapter['document']], chapter_meta)
+        outputs['story-report.md'] += f'\n## 任务章节划分\n\n- 主线章节 {len(chapters)} 条，共 {sum(len(c["questIds"]) for c in chapters)} 个任务；孤立或短支线 {len(side_ids)} 个任务。\n- 以连续前置路径至少4个任务判定，不以同一NPC、岛屿或分支总数猜测主线。当前／原版场景同属一个任务文件，不重复计算任务数。\n- 章节入口等级来自首任务的配置条件，未新增解锁限制；后续任务原有等级及其他限制仍有效。\n'
+        return outputs
+
+    def chapter_plan(self, current):
+        quests = {s['questId']: s for s in current if 'questId' in s}
+        chains, side = quest_chains(quests)
+        source = {q['id']: q for q in self.runtime['quests']}
+        source.update({q['id']: {**q, 'requirements': [{'id': int(r['id']), 'min': int(r.get('value') or 0), 'max': int(r['topvalue']) if r.get('topvalue') else None} for r in q['sourceLevel']]} for q in self.chapter['quests']})
+        journal = {q['id']: q for q in self.journal['quests']}
+        meta = {}
+        for qid, q in quests.items():
+            limits = [r for r in source[qid]['requirements'] if r['id'] == 214]
+            lower = max((r['min'] for r in limits), default=None)
+            upper = min((r['max'] for r in limits if r.get('max') is not None), default=None)
+            meta[qid] = {'title': q['title'], 'levelMin': lower, 'levelMax': upper, 'npc': journal[qid]['startNpc'], 'region': q['region'], 'requires': q['requires']}
+        for c in chains:
+            c['document'] = f'chapters/{c["id"]}.md'
+            c['title'] = '／'.join(quests[q]['title'] for q in c['roots'])
+            c['entries'] = [{'questId': q, **meta[q]} for q in c['roots']]
+            c['levelMin'] = min((meta[q]['levelMin'] for q in c['roots'] if meta[q]['levelMin'] is not None), default=None)
+            c['regions'] = list(dict.fromkeys(NAMES.get(meta[q]['region'], '其他地区') for q in c['questIds']))
+        chains.sort(key=lambda c: (c['levelMin'] is None, c['levelMin'] or 0, c['roots'][0]))
+        destinations = {q: c['document'] for c in chains for q in c['questIds']}
+        destinations.update({q: 'story-side-quests.md' for q in side})
+        assert set(destinations) == set(quests)
+        return chains, side, destinations, meta
+
+    @staticmethod
+    def level_label(row):
+        lower, upper = row['levelMin'], row.get('levelMax')
+        if lower is None:
+            return '未配置等级门槛'
+        return f'{lower}级起' + (f'（上限{upper}级）' if upper is not None else '')
+
+    def render_chapter_directory(self, chapters, side):
+        rows = ['# 魔法哈奇主线章节目录', '', '连续前置路径至少包含4个任务（含首任务）即为一条主线。同一前置网络的长分支与汇合保留在同章；不属于任何4步路径的短分支移入支线。不能把“一个任务开放许多独立任务”误算成长链。', '',
+                '各章按首任务配置的最低等级排序，可以平行阅读或扩展；此目录不增加游戏前置关系。表中保留入口等级上限，后续任务仍可能有其他等级、物品或状态条件，达到首任务等级不等于整章立即可完成。', '',
+                '| 入口等级（配置） | 章节 | 地区 | 任务数／最长连续链 |', '| --- | --- | --- | --- |']
+        for c in chapters:
+            level = '；'.join(f'{e["questId"]}：{self.level_label(e)}' for e in c['entries'])
+            rows.append(f'| {level} | [{c["id"]} · {c["title"]}]({c["document"]}) | {"、".join(c["regions"])} | {len(c["questIds"])}／{c["longestPath"]} |')
+        rows += ['', f'共{len(chapters)}条主线，{sum(len(c["questIds"]) for c in chapters)}个任务。每章按任务次序并列当前文字与原版待恢复对白，不将原版对白冒充当前可见。', '', '## 独立资料', '',
+                 f'- [NPC孤立任务与短支线](story-side-quests.md)：{len(side)}个任务，按接取NPC归组。', '- [NPC双语交流与居民对白](story-npc-dialogues.md)', '- [副本、试炼塔与过场剧本](story-dungeon-scripts.md)', '- [废除任务档案](story-history.md)', '- [故事重编与续篇设计](story-design.md)', '- [中文简明样章](story-samples.md)', '',
+                 '## 扩展新章节', '', '新增主线建议以首任务的等级条件作为入口，后续任务通过明确前置依次推进；无需绑定上一章结尾即可形成平行章节。至少4个任务形成连续链后，重新导出即可进入本目录。章号由首任务ID生成，不随等级排序变化；修改游戏配置仍须通过权威作者源及既有生成流程。', '',
+                 '当前短链即使题材像主线也按本次规则归入支线；竞技积分与秘境等长链即使属于挑战玩法，也按同一规则列为章节。没有用文学判断替代前置关系。', '']
+        return '\n'.join(rows) + '\n'
+
+    def task_body(self, qid, scenes):
+        rows = []
+        for kind, label in [('current', '当前任务内容'), ('original', '原版来源参考（是否接入见当前任务内容）')]:
+            matching = [s for s in scenes if s.get('questId') == qid and s['kind'] == kind]
+            if matching:
+                rows += [f'**{label}**', ''] + self.render(matching, regions=False)
+        return rows
+
+    def render_chapter(self, chapter, scenes, meta):
+        rows = [f'# {chapter["id"]} · {chapter["title"]}', '', '[返回主线目录](../story-master.md)', '',
+                f'本章共{len(chapter["questIds"])}个任务，最长连续链{chapter["longestPath"]}个。分支表示不同推进路径，不代表必须把所有分支依次完成。', '', '## 章节入口', '']
+        for entry in chapter['entries']:
+            rows += [f'- {entry["questId"]} · {entry["title"]}：{self.level_label(entry)}；接取：{entry["npc"]}。']
+        rows += ['', '## 任务顺序与条件', '', '| 任务 | 前置任务 | 等级条件（配置） |', '| --- | --- | --- |']
+        for qid in chapter['questIds']:
+            m = meta[qid]
+            rows.append(f'| {qid} · {m["title"]} | {"、".join(map(str,m["requires"])) or "章节入口"} | {self.level_label(m)} |')
+        rows += ['', '下文保持源文字与奖励。原版条件可能与网页教学改编不同，以当前任务配置为执行依据。', '']
+        for qid in chapter['questIds']:
+            rows += self.task_body(qid, scenes)
+        return '\n'.join(rows) + '\n'
+
+    def render_side_quests(self, ids, scenes, meta):
+        rows = ['# NPC孤立任务与短支线', '', '[返回主线目录](story-master.md)。本文件收录不能组成至少4步连续任务链的内容；按接取NPC归组，NPC仅作为查阅分组，不表示这些任务互为前置。', '']
+        grouped = {}
+        for qid in ids:
+            grouped.setdefault(meta[qid]['npc'], []).append(qid)
+        for npc, quests in sorted(grouped.items()):
+            rows += [f'## 接取NPC：{npc}', '']
+            for qid in sorted(quests, key=lambda q: (meta[q]['levelMin'] is None, meta[q]['levelMin'] or 0, q)):
+                m = meta[qid]
+                rows += [f'### 任务 {qid} · {m["title"]}', '', f'> {self.level_label(m)}；前置：{"、".join(map(str,m["requires"])) or "无任务前置"}。', '']
+                rows += self.task_body(qid, scenes)
+        return '\n'.join(rows) + '\n'
+
+    def render_external(self, title, scenes):
+        rows = [f'# {title}', '', '[返回任务故事总稿](story-master.md)。本文件独立收录，不插入任务叙事；编号、来源和奖励规则不变。', '',
+                '配音沿用每日共享临时加成：生命／攻击／防御各最多10%，之后超级魔力生成率最多10%，本机午夜重置。任务与课程奖励仍按各自条件结算。', '']
+        for kind, label in [('current', '当前可见内容'), ('original', '原版待恢复内容'), ('inactive', '停用内容档案')]:
+            subset = [scene for scene in scenes if scene['kind'] == kind]
+            if subset:
+                rows += [f'# {label}', ''] + self.render(subset)
+        return '\n'.join(rows) + '\n'
 
 
 def main():
@@ -442,8 +611,32 @@ def main():
     else:
         OUT.mkdir(parents=True, exist_ok=True)
         for name, body in outputs.items():
-            (OUT / name).write_text(body, encoding='utf-8', newline='\n')
-        print('已写入 docs/story 的五份生成产物；人工稿不会覆盖。')
+            target = OUT / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target.exists() and target.read_text(encoding='utf-8') == body:
+                continue
+            temporary = target.with_suffix(target.suffix + '.tmp')
+            temporary.write_text(body, encoding='utf-8', newline='\n')
+            # Windows file watchers may briefly hold the old document open.
+            for attempt in range(20):
+                try:
+                    temporary.replace(target)
+                    break
+                except PermissionError:
+                    # Some preview handles allow writing but deny replacement.
+                    if target.exists():
+                        try:
+                            with target.open('r+', encoding='utf-8', newline='\n') as stream:
+                                stream.write(body)
+                                stream.truncate()
+                            temporary.unlink()
+                            break
+                        except OSError:
+                            pass
+                    if attempt == 19:
+                        raise
+                    time.sleep(0.2)
+        print(f'已写入 docs/story 的{len(outputs)}份生成产物；人工稿不会覆盖。')
 
 
 if __name__ == '__main__':

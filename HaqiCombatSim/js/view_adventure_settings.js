@@ -7,7 +7,7 @@ export const settingsView = { tab: 'journey' };
 
 const SETTINGS_TABS = [
     ['journey', '🧭', '旅途'],
-    ['sound', '🎵', '声音'],
+    ['game', '🎮', '游戏'],
     ['language', '💬', '语言'],
     ['about', '📜', '关于'],
 ];
@@ -15,6 +15,7 @@ const SETTINGS_TABS = [
 export function renderSettings(body, model, cb, { el, button }) {
     body.closest('.modal')?.classList.add('settings-modal');
     const ui = createSettingsControls({ el, button });
+    const focusAction=(key,fn)=>async()=>{await fn?.();body.ownerDocument.querySelector(`[data-game-control="${key}"]`)?.focus();};
     const tabs = el('div', 'settings-tabs gui-tabs');
     const panes = {}, tabButtons = {};
     function select(id) {
@@ -25,6 +26,7 @@ export function renderSettings(body, model, cb, { el, button }) {
         }
     }
     for (const [id, emoji, label] of SETTINGS_TABS) {
+        if(settingsView.tab==='sound')settingsView.tab='game';
         const selected = settingsView.tab === id;
         const tab = button([el('span', 'settings-tab-icon', emoji), el('span', 'settings-tab-label', label)], () => select(id), 'settings-tab');
         tab.setAttribute('aria-pressed', String(selected));
@@ -43,6 +45,19 @@ export function renderSettings(body, model, cb, { el, button }) {
         ui.section('离开', ui.cell({ icon: '🏠', label: '回到开始画面' }, cb.title)),
     );
 
+    panes.game.append(el('p','muted settings-note','仅保存在此设备，不同步到云端。'));
+    const graphics=ui.section('画面'),graphicUpdates=[];
+    for(const [key,label] of [['particles','场景粒子'],['trails','角色足迹与拖尾']]){
+        const choices=el('div','locale-choices'),status=el('small','muted');
+        let chosen=model.gameSettings?.[key]||'auto';
+        const controls=[];
+        const update=()=>{for(const [value,node] of controls){node.setAttribute('aria-pressed',String(value===chosen));node.className=value===chosen?'primary small':'secondary small';}status.textContent=tr(chosen==='auto'?(model.effectiveGraphics?.[key]===false?'自动：为保持流畅，已关闭':'自动：已开启'):chosen==='on'?'已开启':'已关闭');};
+        for(const [value,text] of [['auto','自动'],['on','开启'],['off','关闭']]){
+            const control=button(text,()=>{chosen=value;const effective=cb.gameSetting?.(key,value);if(effective)model.effectiveGraphics=effective;else if(value==='auto'&&model.effectiveGraphics)model.effectiveGraphics[key]=true;for(const update of graphicUpdates)update();},'secondary small');controls.push([value,control]);choices.append(control);
+        }
+        graphicUpdates.push(update);update();graphics.append(ui.field(label,choices,status));
+    }
+    panes.game.append(graphics);
     const volume=el('input'),volumeLabel=el('output');
     volume.className='settings-sound-volume';volume.type='range';volume.min='0';volume.max='100';volume.step='1';
     volume.value=String(Math.round((model.soundVolume??.3)*100));
@@ -51,11 +66,19 @@ export function renderSettings(body, model, cb, { el, button }) {
     volume.oninput=()=>{volumeLabel.textContent=`${volume.value}%`;cb.soundVolume?.(Number(volume.value)/100);};
     const preview=button('试听音效',cb.soundPreview,'secondary small');
     preview.disabled=!model.soundEnabled;
-    panes.sound.append(ui.section('音效与音乐',
-        ui.toggle({ icon: '🎵', label: '背景音乐', hint: '城镇与场景的背景音乐。' }, !!model.save.music, cb.music),
-        ui.toggle({ icon: '', label: '游戏音效', hint: '战斗、奖励与冒险交互的短音效；朗读和录音时自动静音。' }, !!model.soundEnabled, cb.sound),
+    panes.game.append(ui.section('音效与音乐',
+        ui.toggle({ icon: '🎵', label: '背景音乐', hint: '城镇与场景的背景音乐。' }, !!model.gameSettings?.music, focusAction('music',cb.music)),
+        ui.toggle({ icon: '', label: '游戏音效', hint: '战斗、奖励与冒险交互的短音效；朗读和录音时自动静音。' }, !!model.soundEnabled, focusAction('sound',cb.sound)),
         ui.field('音效音量',volume,volumeLabel,preview),
     ));
+
+    const audioToggles=panes.game.querySelectorAll('.settings-toggle');
+    ['music','sound'].forEach((key,i)=>{if(audioToggles[i])audioToggles[i].dataset.gameControl=key;});
+    panes.game.append(ui.section('操作',
+        el('p','muted','WASD 或方向键移动；点击地面寻路，按住鼠标跟随。'),
+        el('p','muted','触屏轻点寻路，拖动摇杆移动，双指缩放。'),
+        el('p','muted','E 交谈，B / I 背包，C 卡包，J 任务，P 宠物，Esc 关闭或打开设置。'),
+        ui.cell({icon:'',label:'重置场景缩放'},()=>cb.resetZoom?.())));
 
     languageSettings(panes.language, model, cb, { el, button });
 

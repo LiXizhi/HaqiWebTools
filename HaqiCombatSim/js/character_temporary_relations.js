@@ -24,8 +24,9 @@ export function createTemporaryRelations(){
             history:path=>{const persistent=allowed();return String(path).startsWith('memory:')?copy(histories.get(path)):persistent?base.history(path):null;},
             list:cursor=>allowed()?base.list(cursor):{rows:[...records.values()].map(r=>({id:r.peer.id,name:r.peer.name,affinity:r.affinity})),next:null},
             playerMemory:hero=>allowed()?base.playerMemory(hero):String(hero.learnerMemory||''),
-            // Quota remains durable, but its retry receipt must not smuggle affinity to disk.
-            receipt:(id,response,day)=>{if(allowed())return base.receipt(id,response,day);const {affinity,...text}=response;return base.receipt(id,text,day);},
+            // Only quota metadata may leave a temporary conversation. Retries stay in memory.
+            reserve:(id,peer,vip,day,text)=>base.reserve(id,peer,vip,day,allowed()?text:undefined),
+            receipt:(id,response,day)=>allowed()?base.receipt(id,response,day):undefined,
         };
     }
     return {enter,load,save,activity,wrap,pending};

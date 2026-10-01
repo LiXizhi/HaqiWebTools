@@ -153,7 +153,7 @@ test('shared NPC mapping appears only after clicking and draws paired connectors
     let generated=0,peeked=0;const mapWords=async()=>{generated++;return [[{text:'Go',color:'#A23'}],[{text:'走',color:'#A23'}]];};
     mapWords.peek=async()=>{peeked++;};
     const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
-    assert.equal(generated,0);assert.equal(peeked,0);
+    assert.equal(generated,0);assert.equal(peeked,1);
     await ui.text.children[1].children[1].onclick();
     assert.equal(ui.text.children[0].children[0].children[0].children[0].style.color,'#A23');
     assert.equal(ui.text.children[1].children[1].title,'已映射');ui.drawLinks();
@@ -161,4 +161,25 @@ test('shared NPC mapping appears only after clicking and draws paired connectors
     assert.equal(links.children.length,1);assert.equal(links.children[0].attributes.stroke,'#A23');
     assert.match(links.children[0].attributes.d,/^M /);
     await ui.text.children[1].children[1].onclick();assert.equal(generated,1);assert.equal(ui.calls,0);
+});
+
+
+test('cached mappings appear automatically after reveal without a model call',async t=>{
+    let generated=0;const result=[[{text:'Go',color:'#A23'}],[{text:'走',color:'#A23'}]];
+    const mapWords=async()=>{generated++;return result;};mapWords.peek=async()=>result;
+    const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.notEqual(ui.text.children[1].children[1].title,'已映射');
+    ui.key();
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(ui.text.children[1].children[1].title,'已映射');
+    assert.equal(generated,0);ui.root.disposeDialogue();
+});
+
+test('late cached mappings do not update a closed dialogue',async t=>{
+    let resolve;const mapWords=()=>{throw Error('no generation');};mapWords.peek=()=>new Promise(done=>resolve=done);
+    const ui=setup(t,false,{lines:[{text:'Go',locale:'en'},{text:'走',locale:'zh-CN'}],mapWords});
+    ui.root.disposeDialogue();resolve([[{text:'Go',color:'#A23'}],[{text:'走',color:'#A23'}]]);
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.notEqual(ui.text.children[1].children[1].title,'已映射');
 });

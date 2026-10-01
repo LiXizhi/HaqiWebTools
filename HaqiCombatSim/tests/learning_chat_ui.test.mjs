@@ -30,6 +30,7 @@ test('English UI never translates Chinese teaching text; translation toggle work
     assert.ok(nodes().filter(n=>n.className==='camp-chat-original').every(n=>n.textContent==='你好！'));
     assert.ok(nodes().some(n=>n.className==='camp-chat-translation'&&n.textContent==='Hello!'));
     const hintBox=nodes().find(n=>n.className==='camp-chat-hint');
+    assert.ok(!hintBox.querySelectorAll('*').some(n=>n.tag==='strong'),'answer hint title row is removed');
     assert.ok(nodes().find(n=>n.className==='camp-chat-log').querySelectorAll('*').includes(hintBox),'reading prompt belongs to the chat history');
     assert.ok(!nodes().find(n=>n.className==='camp-chat-footer').querySelectorAll('*').includes(hintBox),'footer contains controls, not tips');
     assert.equal(hintBox.querySelectorAll('*').filter(n=>n.className==='camp-chat-original').length,1,'identical pattern and answer appear once');
@@ -60,7 +61,9 @@ test('English UI never translates Chinese teaching text; translation toggle work
     assert.equal(nodes().filter(n=>n.className==='camp-chat-translation').length,0);
     view.render({...state,locale:'en',showChinese:true});
     assert.ok(nodes().some(n=>n.className==='camp-chat-translation'&&n.textContent==='你好！'));
+    const history=nodes().find(n=>n.className==='camp-chat-log');history.scrollHeight=1200;history.clientHeight=100;history.scrollTop=0;
     view.render({...state,reward:{amount:10,currency:100},messages:[...state.messages,{role:'npc',text:'Next question'}]});
+    assert.equal(history.scrollTop,1200,'new question scrolls to the end even from older history');
     assert.equal(nodes().filter(n=>n.className==='camp-chat-reward-preview').length,1);
     assert.ok(nodes().some(n=>n.className==='camp-chat-reward-preview'&&n.textContent==='对话奖励：10 奇豆'));
     view.render({...state,reward:{amount:0,currency:100}});

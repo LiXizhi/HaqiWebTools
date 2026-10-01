@@ -118,3 +118,5 @@
 .dungeon-story-bubble.narrator .dialogue-read-line svg{color:inherit}
 
 .story-speech-matched{background:#c5e6a8;color:#244f3b;border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+
+.camp-chat-prompt[hidden]{display:none}

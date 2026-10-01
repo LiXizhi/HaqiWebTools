@@ -12,6 +12,92 @@
 
 # HaqiCombatSim — 技术架构
 
+## 架构图
+
+以下按当前源码（2026-10-01）展示主要模块与数据流，省略独立预览工具及部分玩法子模块。图中箭头表示启动、调用或数据传递，不是完整的 import 依赖图；GitHub 可直接渲染 Mermaid 图。
+
+### 1. 游戏与实验室的分层
+
+```mermaid
+flowchart TB
+    subgraph Entry[页面入口]
+        Game["Haqi.html"]
+        Lab["HaqiCombatSim.html"]
+    end
+    subgraph Browser[浏览器编排与展示]
+        Boot["adventure_boot.js<br/>语言初始化与启动"]
+        Adventure["adventure_app.js<br/>冒险流程编排"]
+        App["app.js + state.js<br/>实验室控制与状态"]
+        GameView["view_adventure*.js<br/>Canvas 2D 场景与 HTML 菜单"]
+        LabView["view_battle / batch / params / advisor<br/>实验室界面"]
+        IO["浏览器 IO 与服务适配<br/>资源、存档、语言、社交、原服导入"]
+    end
+    subgraph Core[纯规则层：可在 Node 中运行]
+        Rules["adventure*_core.js<br/>探索、任务、装备、宠物、副本"]
+        Combat["combat_*_core.js<br/>战斗、公式、目标与 AI"]
+        Shared["rng_core.js + combat_params_core.js<br/>种子随机数与 BalanceParams"]
+    end
+    Data["运行时 JSON<br/>data/adventure + data/kids<br/>实验室另支持 teen / sample"]
+    Services["Keepwork CDN / SDK<br/>及已配置的在线服务"]
+
+    Game --> Boot --> Adventure
+    Lab --> App
+    GameView -->|玩家意图回调| Adventure
+    Adventure -->|状态与演出| GameView
+    LabView -->|操作回调| App
+    App -->|状态与结果| LabView
+    Adventure --> Rules --> Combat
+    App --> Combat
+    Combat --> Shared
+    Adventure --> IO
+    IO --> Services
+    Data -->|浏览器加载与校验| Adventure
+    Data -->|注入 JSON 读取器| App
+```
+
+**分层边界：** 视图负责绘制和事件绑定，控制器协调玩法与 IO；核心规则不访问 DOM、网络或浏览器存储。冒险与实验室复用战斗规则，新增玩家内容以 kids 为范围。冒险细节见 [冒险系统](adventure.md)。
+
+### 2. 批量模拟与可复现验证
+
+```mermaid
+flowchart LR
+    UI["实验室批量面板<br/>数据集、参数、seed、场数"] --> Pool["sim_pool.js<br/>任务分配与结果汇总"]
+    Pool -->|初始化数据与参数| Worker["sim_worker.js<br/>ES Module Worker"]
+    Pool -->|批次任务| Worker
+    Worker --> Batch["sim_batch_core.js<br/>runJob"]
+    Pool -.->|无 Worker 时本线程回退| Batch
+    Batch --> Engine["战斗核心<br/>公式、AI、种子随机数"]
+    Engine --> Stats["批次统计<br/>胜率、回合、unsupported"]
+    Stats -->|进度与结果| Pool
+    Pool -->|汇总展示| UI
+    CLI["Node CLI / tests<br/>直接导入纯规则模块"] --> Batch
+    CLI --> Engine
+```
+
+相同 seed、数据和参数用于重现模拟结果；BalanceParams 统一提供数值覆盖。Worker 将批量运算移出主线程，未支持卡牌效果必须进入统计，不静默忽略。公式来源见 [Lua 对照表](lua-mapping.md)。
+
+### 3. 本地存档与可选云同步
+
+```mermaid
+flowchart TB
+    State["内存中的角色状态<br/>adventure_app.js"] --> Roles["adventure_roles.js<br/>账号隔离、自动保存、核心变化判定"]
+    Roles --> Split["adventure_storage_core.js<br/>持久数据与临时状态拆分 / 组装"]
+    Split --> Local["localStorage<br/>本地角色核心存档与待同步状态"]
+    Split --> Runtime["adventure_runtime_store.js → IndexedDB<br/>当前生命、饥饿、坐标、计时、未结束战斗"]
+    Settings["game_settings.js<br/>设备级画面与音频设置"] --> SettingsDB["独立 IndexedDB<br/>不触发角色同步"]
+    Roles -->|登录后，仅核心变化置 dirty| Cloud["adventure_cloud.js<br/>分片组织与同客户端顺序写入"]
+    Cloud --> FileIO["keepwork_file_io.js<br/>SDK 能力检测与 Cache 写入"]
+    FileIO --> SDK["按需加载 Keepwork SDK<br/>workspace: HaqiAdventure"]
+    SDK --> Parts["1. 写入变化的分文件<br/>物品、战斗背包、记录、宠物等"]
+    Parts --> History["2. 写入历史入口快照"]
+    History --> Index["3. 发布 roles/index.json<br/>小型状态与文件引用"]
+    Index -->|成功应答后更新内存缓存| Cloud
+    SDK -->|登录、主动刷新、首次读取未加载文件| Read["校验与组装<br/>保护本地未同步进度"]
+    Read --> Roles
+```
+
+**存储边界：** 未变化分片复用已有引用；临时状态及设备设置不上传。云同步采用单客户端写入假设，不是多人实时状态服务器。SDK 支持时直接等待 Cache PUT 成功，否则兼容原 Cache 同步链路；失败、超时或身份变化不清除待同步状态。访客与网络失败时仍保留本地体验，详见 [用户存储](user-storage.md)。
+
 ## 2026-09-25 用户存储分层
 
 当前云端入口为v2小型状态/引用清单；完整物品收藏、战斗背包、历史记录按角色分别保存，只更新变化的分文件。血量、饥饿、坐标、在线时长和未结束战斗仅存本机IndexedDB。`adventure_storage_core.js`负责纯数据拆装，`adventure_runtime_store.js`负责本地IO，`adventure_roles.js`按核心变化判断dirty。详见[用户存储结构](user-storage.md)；下文早期全量存档说明以该文为准。

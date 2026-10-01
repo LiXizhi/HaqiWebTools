@@ -7,7 +7,7 @@ import {bossPortrait} from './view_adventure_dungeons.js';
 import {LANGUAGE_REWARD_NAMES} from './adventure_dungeon_language_core.js';
 
 export function createDungeonStoryView(root,cb){
-    const reveal=createDialogueReveal();
+    const reveal=createDialogueReveal({onUpdate:()=>{if(log)log.scrollTop=log.scrollHeight;}});
     const bilingual=createBilingualDialogue({button,mapWords:cb.mapWords});let lineViews=[],activeLine=null,lastFeedback=null;
     let screen,log,status,mic,next,progress,summary,activeBubble,portraitModel,loginNotice,loginButton,microphone,micProgress,ringFill,ringLabel,feedbackBox,script,rewardSummary,rewardTip;
     return {

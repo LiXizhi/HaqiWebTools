@@ -11,7 +11,7 @@ const el=(tag,cls='',text)=>{const n=document.createElement(tag);n.className=cls
 const button=(text,run,cls='secondary')=>{const n=el('button',cls,text);n.type='button';n.onclick=run;return n;};
 
 export function createLearningChatView(cb){
-    const reveal=createDialogueReveal();const revealedMessages=new Set();let revealedTurn='',npcReveal=null,answerReveal=null;
+    const reveal=createDialogueReveal({onUpdate:()=>{log.scrollTop=log.scrollHeight;}});const revealedMessages=new Set();let revealedTurn='',npcReveal=null,answerReveal=null;
     const bilingual=createBilingualDialogue({button,mapWords:cb.mapWords});let lineViews=[];
     const clearMappings=()=>{reveal.finish();bilingual.clear();lineViews=[];};
     const root=el('div','overlay learning-overlay camp-chat-overlay');root.hidden=true;
@@ -139,10 +139,9 @@ export function createLearningChatView(cb){
             if(free){form.hidden=false;input.placeholder=tr('用彼此理解的语言交流');input.maxLength=2000;if(document.activeElement!==input||s.draft==='')input.value=s.draft||'';}
             progress.textContent=free?(s.loginRequired?'登录后可使用 AI 对话':s.vip?'会员自由对话':s.remaining==null?'正在核验额度':`今日剩余 ${s.remaining}/2 次`):s.done?tr('交流完成'):fill('第 {turn} / {total} 轮',{turn:s.index+1,total:s.story.turns.length}).text;
             chinese.textContent=tr(s.showChinese?'隐藏释义':'显示释义');chinese.setAttribute('aria-pressed',String(!s.showChinese));
-            const followLog=fresh||log.scrollHeight-log.scrollTop-log.clientHeight<70;
             const print=JSON.stringify([s.messages,s.showChinese,s.locale,s.reward?.amount,s.reward?.currency,s.done,s.index,s.hintLevel,s.hintText,s.practice]);
             const logChanged=print!==fingerprint;
-            if(print!==fingerprint){const bottom=log.scrollHeight-log.scrollTop-log.clientHeight<70;fingerprint=print;clearMappings();log.replaceChildren(...s.messages.map(row=>message(row,s)));
+            if(print!==fingerprint){fingerprint=print;clearMappings();log.replaceChildren(...s.messages.map(row=>message(row,s)));
                 if(s.done&&!free){
                     const invitation=message({role:'npc',text:{en:'Would you like to keep chatting?','zh-CN':'还想继续聊聊吗？'}},s);
                     const choices=el('div','camp-chat-continue');
@@ -150,7 +149,7 @@ export function createLearningChatView(cb){
                     yes.textContent='Yes';no.textContent='No';choices.append(yes,no);invitation.append(choices);log.append(invitation);
                 }
                 if(!s.done&&(!free||s.hintLevel)){hintRow.className=`camp-chat-message ${free?'is-npc':'is-player'} camp-chat-prompt`;hintAvatar.textContent=free?s.profile.name.slice(0,1):tr('我');log.append(hintRow);}
-                if(bottom||fresh)log.scrollTop=log.scrollHeight;}
+                log.scrollTop=log.scrollHeight;}
             for(const replay of log.querySelectorAll('button'))if(!replay.className.includes('camp-chat-replay'))replay.disabled=s.busy||s.recording;
             for(const line of lineViews)line.setDisabled(s.busy||s.recording);
             hint.hidden=s.done||(free?!s.hintLevel:!s.story.turns[s.index]?.answer);
@@ -158,7 +157,7 @@ export function createLearningChatView(cb){
             hints.textContent=tr(s.hintLevel?'收起提示':'显示提示');hints.setAttribute('aria-expanded',String(!!s.hintLevel&&!s.done));
             if(!hint.hidden&&free){hint.replaceChildren(el('p','',s.hintText||'正在生成提示…'));}
             if(!hint.hidden&&!free&&(logChanged||fresh)){const turn=s.story.turns[s.index];hint.replaceChildren();
-                if(s.hintLevel)hint.append(el('strong','','回答提示'),el('p','',turn.hint));
+                if(s.hintLevel)hint.append(el('p','',turn.hint));
                 const pattern=s.locale==='en'?turn.pattern.replace(/\{\w+\}/g,'…'):turn.answer['zh-CN'],answer=turn.answer[s.locale];
                 const same=pattern.trim().replace(/\s+/g,' ')===answer.trim().replace(/\s+/g,' ');
                 if(s.hintLevel&&!same)hint.append(el('p','camp-chat-original',pattern));
@@ -167,13 +166,14 @@ export function createLearningChatView(cb){
                     sample.setAttribute('aria-label',fill('朗读示范：{text}',{text:answer}).text);sample.title=tr('听示范');sample.disabled=s.busy||s.recording;
                     const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');icon.setAttribute('viewBox','0 0 24 24');icon.setAttribute('aria-hidden','true');
                     const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d','M4 9h4l5-4v14l-5-4H4z M16 8c2 2 2 6 0 8 M19 5c4 4 4 10 0 14');path.setAttribute('fill','none');path.setAttribute('stroke','currentColor');path.setAttribute('stroke-width','1.8');path.setAttribute('stroke-linecap','round');path.setAttribute('stroke-linejoin','round');icon.append(path);
-                    const answerLine=el('span','camp-chat-original',answer);answerReveal={node:answerLine};
+                    const answerLine=el('span','camp-chat-original',answer);answerReveal={node:answerLine,container:hintRow};
                     if(s.practice?.id===turn.id&&s.practice?.feedback?.parts)renderSpeechWords(answerLine,s.practice.feedback.parts);
                     sample.append(answerLine,icon);hint.append(sample);
                     if(s.practice?.id===turn.id&&s.practice?.feedback)hint.append(el('small','camp-chat-practice',`命中 ${Math.round(s.practice.feedback.accuracy*100)}% · 累计 ${s.practice.qualified}/${s.practice.params.speechPracticeCount}`));
                     if(s.hintLevel&&s.showChinese){
                         const native=s.locale==='en'?'zh-CN':'en',translation=turn.answer[native],gloss=el('p','camp-chat-translation',translation);hint.append(gloss);answerReveal.translation=gloss;
                         const line=bilingual.attach({container:hint,original:answerLine,gloss,text:answer,translation,locale:s.locale,native,showRead:false});
+                        if(s.practice?.id===turn.id&&s.practice?.feedback?.parts)line.feedback(s.practice.feedback.parts);
                         line.setDisabled(s.busy||s.recording);lineViews.push(line);
                     }
                 }
@@ -187,7 +187,7 @@ export function createLearningChatView(cb){
                 else if(last.role!=='user'&&!revealedMessages.has(messageKey)){revealedMessages.add(messageKey);reveal.start([npcReveal]);}
             }
             if(s.recording||s.phase==='connecting')reveal.finish();
-            if(logChanged&&followLog)log.scrollTop=log.scrollHeight;
+            if(logChanged)log.scrollTop=log.scrollHeight;
             const practice=s.practice,percent=s.done?100:practice?.phase==='awarded'?100:Math.round(Math.min(1,(practice?.qualified||0)/(practice?.params.speechPracticeCount||3))*100);
             mic.classList.toggle('story-microphone',!free);micProgress.className=free?'camp-chat-free-mic':'story-mic-progress';ring.style.display=free?'none':'';ringLabel.hidden=free;
             ringFill.style.strokeDashoffset=String(100-percent);ringLabel.textContent=`${percent}%`;ringLabel.setAttribute('aria-valuenow',String(percent));

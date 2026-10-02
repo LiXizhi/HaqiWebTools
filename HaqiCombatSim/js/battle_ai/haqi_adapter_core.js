@@ -151,7 +151,11 @@ export const haqiRulesAdapter={
     prepare:(observation,settings,memory)=>{const context={threats:publicThreats(observation)},a=arenaFrom(observation,nominalRng());context.initialExposure=exposure(a,a.unitsById[observation.unitId].side,{...settings,context});context.tactics=prepareTactics(observation,settings,memory,{arenaFrom,nominalRng,semantics:cardSemantics});return context;},
     summarize:context=>context?.tactics?.goal||null,
     nextMemory:(context,memory)=>({...memory,targetId:context?.tactics?.goal?.targetId||null}),
-    stateId:observation=>String(hashSeed(JSON.stringify(observation))),
+    stateId:observation=>{
+        // Earth geography/visual budgets must never change combat decision seeds.
+        const {earth,...resolved}=observation.resolved;
+        return String(hashSeed(JSON.stringify({...observation,resolved})));
+    },
     coverage:observation=>U.selectableCards(observation.units.find(u=>u.id===observation.unitId)).map(h=>observation.resolved.cards[h.key]).filter(Boolean).filter(c=>!isSupportedType(c.type)).map(c=>({key:c.key,type:c.type,status:'unsupported'})),
     actions(observation,settings={}){
         const a=arenaFrom(observation,null),unit=a.unitsById[observation.unitId],out=[{pass:true}];

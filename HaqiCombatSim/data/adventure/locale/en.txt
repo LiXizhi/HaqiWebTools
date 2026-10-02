@@ -6362,3 +6362,14 @@ WASD 或方向键移动；点击地面寻路，按住鼠标跟随。||Move with 
 E 交谈，B / I 背包，C 卡包，J 任务，P 宠物，Esc 关闭或打开设置。||E: talk, B / I: inventory, C: cards, J: quests, P: pets, Esc: close or open settings.
 
 仅保存在此设备，不同步到云端。||Saved on this device only; never synced to the cloud.
+与宠物相伴，与新朋友相遇。||Bring your pet. Meet new friends.
+宠物相伴||Pet companions
+结识朋友||Meet friends
+双语冒险||Bilingual adventures
+开启旅程||Begin your journey
+重返魔法世界||Return to the magic world
+你的魔法世界，正在等你。||Your magic world awaits.
+登录后，角色与旅途进度可跨设备同步。||Sign in to sync your characters and progress across devices.
+哈奇世界||Haqi World
+现实世界||Earth
+切换世界地图||Switch world map

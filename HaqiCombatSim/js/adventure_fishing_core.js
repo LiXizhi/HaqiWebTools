@@ -20,6 +20,9 @@ export function installFishing(content, catalog) {
 }
 export function isOcean(world, x, y) {
     if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
+    // Earth has streamed land-cover, not the island polygon (its coast list is empty).
+    // Unknown chunks are neither fishable water nor invented land.
+    if(world.isEarth){if(y<0||y>world.h)return false;const type=world.terrainAt(x,y);return type==='ocean'||type==='water';}
     return world.layout ? !onLargeIsland(world, x, y, 0) : !onIsland(x, y, 0);
 }
 export function readStamina(save, content) {

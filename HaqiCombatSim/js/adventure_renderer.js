@@ -70,7 +70,7 @@ function plate(c,label,x,y,style=PLATE.place,school=null) {
     if(!style.bg){c.save();c.shadowColor='#10251f';c.shadowBlur=4;c.shadowOffsetX=0;c.shadowOffsetY=2;text(c,shown,x,y+2,12,style.text);c.restore();return;}
     c.font='600 12px "PingFang SC", sans-serif';
     let width=plateWidths.get(shown);
-    if(width===undefined){width=c.measureText(shown).width+20;plateWidths.set(shown,width);}
+    if(width===undefined){width=c.measureText(shown).width+20;plateWidths.set(shown,width);if(plateWidths.size>256)plateWidths.delete(plateWidths.keys().next().value);}
     c.beginPath();c.roundRect(x-width/2,y-14,width,23,8);c.fillStyle=style.bg;c.fill();
     if(style.stroke){c.strokeStyle=style.stroke;c.lineWidth=1.5;c.stroke();}
     text(c,shown,x,y+2,12,style.text);
@@ -126,7 +126,7 @@ export function createRenderer(canvas,assets) {
     const battleHero=createHeroActor(9271);
     const starFollower=createStarFollower();
     function prepareScene(world,save){
-        const w=canvas.clientWidth,h=canvas.clientHeight;if(!world.layout||!w||!h)return;
+        const w=canvas.clientWidth,h=canvas.clientHeight;if(world.isEarth)return;if(!world.layout||!w||!h)return;
         const zoom=cameraZoom.value,scale=(w<650?.82:1)*zoom;
         terrainTiles.prepare(world,{x:save.position.x-w/(2*scale),y:save.position.y-h/(2*scale)+(w<650?50:25)/zoom,w:w/scale,h:h/scale},scale*Math.min(2,window.devicePixelRatio||1));
     }
@@ -206,7 +206,8 @@ export function createRenderer(canvas,assets) {
         ctx.save();
         try {
         ctx.scale(cam.scale,cam.scale);ctx.translate(-cam.x,-cam.y);
-        const coldTiles=world.layout?terrainTiles.draw(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale},(c,x,y,size)=>{
+        if(world.isEarth)world.terrainPainter(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale});
+        const coldTiles=world.layout&&!world.isEarth?terrainTiles.draw(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale},(c,x,y,size)=>{
             const map=ground(world),dw=Math.min(size,world.w-x),dh=Math.min(size,world.h-y);
             c.drawImage(map,x*map.width/world.w,y*map.height/world.h,dw*map.width/world.w,dh*map.height/world.h,x,y,dw,dh);
         },cam.scale*canvas.width/w,path):0;
@@ -296,9 +297,9 @@ export function createRenderer(canvas,assets) {
             if(o.hidden)continue;
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
             if(o.kind==='pet-social')drawSocialPet(ctx,assets,o.row,petScene.effects,time,reducedMotion.matches,petScene.now);
-            if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const winter=o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
+            if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const winter=(world.isEarth&&world.drawEarthDecoration?.(ctx,o))||o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
             // Stable plant variants add visual detail without changing collision or RNG.
-            if(o.kind==='tree'&&!o.snow&&assets.sceneryTile){
+            if(o.kind==='tree'&&!world.isEarth&&!o.snow&&assets.sceneryTile){
                 const variant=Math.abs(Math.round(o.x*7+o.y*13))%8,size=o.size*.36;
                 assets.sceneryTile(ctx,8+variant,o.x+o.size*.18,o.y-size+14,size,size);
             }
@@ -306,7 +307,7 @@ export function createRenderer(canvas,assets) {
                 ctx.save();
                 if(o.atlas&&Math.abs(save.position.x-o.x)<o.w*.5&&save.position.y<o.y&&save.position.y>o.y-o.h)ctx.globalAlpha=.52;
                 const bob=o.frame==='boat'&&!reducedMotion.matches?Math.sin(t*1.4+o.x)*2:0;
-                const drawn=o.atlas&&assets.buildingArt?.draw(ctx,o.atlas,o.frame,o.x-o.w/2,o.y-o.h+bob,o.w,o.h);
+                const drawn=(world.isEarth&&world.drawEarthBuilding?.(ctx,o))||o.atlas&&assets.buildingArt?.draw(ctx,o.atlas,o.frame,o.x-o.w/2,o.y-o.h+bob,o.w,o.h);
                 if(!drawn&&!o.decorationOnly)assets.tile(ctx,'sprites',o.tile,o.x-o.w/2,o.y-o.h,o.w,o.h);
                 ctx.restore();
             }
@@ -442,6 +443,12 @@ export function createRenderer(canvas,assets) {
     }
     function minimap(target,world,save,{labels=true}={}) {
         const c=target.getContext('2d'),w=target.width,h=target.height;c.clearRect(0,0,w,h);c.fillStyle='#6ba7a2';c.fillRect(0,0,w,h);
+        if(world.isEarth){
+            const size=world.earthRules.chunkSize*2,scale=w/size,rect={x:save.position.x-size/2,y:save.position.y-h/scale/2,w:size,h:h/scale};
+            c.save();c.scale(scale,scale);c.translate(-rect.x,-rect.y);world.terrainPainter(c,world,rect);
+            for(const n of world.npcs)ellipse(c,n.x,n.y,18,18,'#ffe89c');
+            c.restore();ellipse(c,w/2,h/2,4,4,'#fff');ellipse(c,w/2,h/2,2,2,'#205c99');return;
+        }
         const sx=w/world.w,sy=h/world.h;c.save();c.scale(sx,sy);c.drawImage(ground(world),0,0,world.w,world.h);
         for(const b of world.buildings){c.fillStyle='#627b83';c.fillRect(b.x-45,b.y-60,90,65);}
         for(const n of world.npcs)ellipse(c,n.x,n.y,questMarker(save,assets.content,n.id)?22:13,questMarker(save,assets.content,n.id)?22:13,questMarker(save,assets.content,n.id)?'#ffe89c':'#f6f3d9');

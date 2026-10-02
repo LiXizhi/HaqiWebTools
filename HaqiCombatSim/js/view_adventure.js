@@ -15,6 +15,7 @@ import {renderGems} from './view_adventure_gems.js';
 import {renderRecharge} from './view_adventure_recharge.js';
 import {renderMembership} from './view_adventure_membership.js';
 import {createCloseButton} from './view_adventure_controls.js';
+import {createEntryEmblem} from './view_entry_brand.js';
 import {attachStatusTooltips} from './view_adventure_status_tooltip.js';
 
 import {renderQuestJournal,translatedGoal,rewardChip} from './view_adventure_quests.js';
@@ -125,7 +126,7 @@ export function renderEntryLocale(locale, secondLocale, onLocale, onSecond) {
 }
 // 标题页左栏：大标题与语言选择。已有角色时登录留在右侧列表；没有离线角色时，右侧先选择登录或本地访客。
 export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocale,setSecondLocale}={}) {
-    const intro=el('div','entry-intro',el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。'));
+    const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
     const controls=[];
     if(login||cloud){
         const cloudButton=button(owner?'我的云端旅途':'登录 Keepwork',login||cloud,'secondary cloud-entry-button');
@@ -153,8 +154,10 @@ export function renderEntry(root,assets,stored,cb,error='') {
             root.classList.remove('school-step','companion-step');
             const choices=el('div','entry-account-choices',
                 button('登录 Keepwork',()=>cb.login?.(),'primary entry-account-choice'),
-                button('本地访客',()=>{draft.account='guest';paint();root.scrollTop=0;},'secondary entry-account-choice'));
-            form.append(el('h2','','选择进入方式'),choices);
+                el('p','entry-account-hint','登录后，角色与旅途进度可跨设备同步。'),
+                button('本地访客',()=>{draft.account='guest';paint();root.scrollTop=0;},'secondary entry-account-choice'),
+                el('p','entry-account-hint','仅保存在此设备，不同步到云端。'));
+            form.append(el('p','eyebrow','开启旅程'),el('h2','','选择进入方式'),el('p','creation-caption','你的魔法世界，正在等你。'),choices);
             if(cb.busy)for(const node of form.querySelectorAll('button'))node.disabled=true;
             return;
         }
@@ -411,7 +414,10 @@ export function renderHud(root,model,cb) {
     const chapterCount=el('span','chapter-count');setText(chapterCount,catalogClaimed?'{done} / 14 · 全岛 {claimed}':'{done} / 14',{done:chapterDone,claimed:catalogClaimed});
     const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),chapterCount));
     const dungeon=dungeonFor(c,save.zone);
-    if(dungeon){
+    if(save.zone==='earth'){
+        const chapter=model.earthChapter,step=chapter?.steps[save.earthProgress?.step||0];
+        tracker.replaceChildren(el('h3','',chapter?.name||'与世界同行'),el('p','',step?.name||(chapter?'本章完成。和伙伴继续探索吧。':'靠近居民，了解这座城市的故事。')),button('打开现实世界地图',()=>cb.panel('earthmap'),'track-button'));
+    }else if(dungeon){
         const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
         tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
     }else{

@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "source": "AI-generated offline for Haqi Earth; rendering reference: HelloWorld WorldConfig.js and TerrainTileManager.js; not surveyed imagery.",
+  "grid": {
+    "columns": 4,
+    "rows": 4
+  },
+  "terrain": {
+    "local": "assets/adventure/earth/earth-terrain-1bab23557f23.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-terrain-1bab23557f23.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 197206,
+    "sha256": "1bab23557f23994fc8af13c21f3ba983bc0fd4ac96c7b2f766e9961bfacf5018",
+    "sourceSha256": "986e0ab816e751b0ea899ee9dc10b9a5e7086e1c453b318bf7e5a448c7e8dfed",
+    "encoding": {
+      "quality": 88
+    },
+    "frames": [
+      [
+        0,
+        0,
+        160,
+        160
+      ],
+      [
+        160,
+        0,
+        160,
+        160
+      ],
+      [
+        320,
+        0,
+        160,
+        160
+      ],
+      [
+        480,
+        0,
+        160,
+        160
+      ],
+      [
+        0,
+        160,
+        160,
+        160
+      ],
+      [
+        160,
+        160,
+        160,
+        160
+      ],
+      [
+        320,
+        160,
+        160,
+        160
+      ],
+      [
+        480,
+        160,
+        160,
+        160
+      ],
+      [
+        0,
+        320,
+        160,
+        160
+      ],
+      [
+        160,
+        320,
+        160,
+        160
+      ],
+      [
+        320,
+        320,
+        160,
+        160
+      ],
+      [
+        480,
+        320,
+        160,
+        160
+      ],
+      [
+        0,
+        480,
+        160,
+        160
+      ],
+      [
+        160,
+        480,
+        160,
+        160
+      ],
+      [
+        320,
+        480,
+        160,
+        160
+      ],
+      [
+        480,
+        480,
+        160,
+        160
+      ]
+    ]
+  },
+  "decorations": {
+    "local": "assets/adventure/earth/earth-decorations-76c6884d3e97.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-decorations-76c6884d3e97.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 165646,
+    "sha256": "76c6884d3e97dc8b34024ca33a61e0dbfec7f2b67d03b8b625ccd3de9e15be3f",
+    "sourceSha256": "d797ddfe58817c46be1eb50072a4d366636a5da1aa20266e1bbeed3433c01329",
+    "encoding": {
+      "quality": 88
+    },
+    "frames": [
+      [
+        0,
+        0,
+        160,
+        160
+      ],
+      [
+        160,
+        0,
+        160,
+        160
+      ],
+      [
+        320,
+        0,
+        160,
+        160
+      ],
+      [
+        480,
+        0,
+        160,
+        160
+      ],
+      [
+        0,
+        160,
+        160,
+        160
+      ],
+      [
+        160,
+        160,
+        160,
+        160
+      ],
+      [
+        320,
+        160,
+        160,
+        160
+      ],
+      [
+        480,
+        160,
+        160,
+        160
+      ],
+      [
+        0,
+        320,
+        160,
+        160
+      ],
+      [
+        160,
+        320,
+        160,
+        160
+      ],
+      [
+        320,
+        320,
+        160,
+        160
+      ],
+      [
+        480,
+        320,
+        160,
+        160
+      ],
+      [
+        0,
+        480,
+        160,
+        160
+      ],
+      [
+        160,
+        480,
+        160,
+        160
+      ],
+      [
+        320,
+        480,
+        160,
+        160
+      ],
+      [
+        480,
+        480,
+        160,
+        160
+      ]
+    ]
+  }
+}

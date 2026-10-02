@@ -12,7 +12,7 @@ export const ISLANDS = [
     {id:'desert',name:'沙漠岛',source:'AncientEgyptIsland',description:'穿过金色沙丘，在绿洲旁寻找歇脚之处。'},
     {id:'dark',name:'幽暗岛',source:'DarkForestIsland',description:'紫色雾气笼罩古老密林，通往更远的冒险。'},
 ];
-export function islandFor(zone){return ISLANDS.find(row=>row.id===zone);}
+export function islandFor(zone){return zone==='earth'?{id:'earth',name:'现实世界'}:ISLANDS.find(row=>row.id===zone);}
 export function islandName(zone){return islandFor(zone)?.name||'未知岛屿';}
 export function travelStatus(save,content,zone){
     const island=islandFor(zone);

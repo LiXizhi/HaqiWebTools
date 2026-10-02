@@ -30,7 +30,7 @@ flowchart TB
         App["app.js + state.js<br/>实验室控制与状态"]
         GameView["view_adventure*.js<br/>Canvas 2D 场景与 HTML 菜单"]
         LabView["view_battle / batch / params / advisor<br/>实验室界面"]
-        IO["浏览器 IO 与服务适配<br/>资源、存档、语言、社交、原服导入"]
+        IO["浏览器 IO 与服务适配<br/>资源、存档、语言、社交、原服导入<br/>会员身份与官方充值商品价格"]
     end
     subgraph Core[纯规则层：可在 Node 中运行]
         Rules["adventure*_core.js<br/>探索、任务、装备、宠物、副本"]
@@ -56,6 +56,29 @@ flowchart TB
 ```
 
 **分层边界：** 视图负责绘制和事件绑定，控制器协调玩法与 IO；核心规则不访问 DOM、网络或浏览器存储。冒险与实验室复用战斗规则，新增玩家内容以 kids 为范围。冒险细节见 [冒险系统](adventure.md)。
+
+会员充值仅在打开充值页时，由 `adventure_membership.js` 调用 `adventure_recharge_pricing.js` 读取官方公开商品目录（只查询价格，不创建订单），合并并缓存查询；手动刷新可重查。金额、天数、续费日期与魔豆预估由纯 `adventure_recharge_core.js` 计算，再交给视图显示；价格失败时不使用猜测单价，账号身份与付款结果仍以现有 SDK 链路确认。
+
+### 地球世界的按需数据流（2026-10-02）
+
+```mermaid
+flowchart LR
+    MapButton[右上角地图按钮] --> Chooser[世界选择器：零 Earth 请求]
+    Chooser -->|选择地球| Atlas[轻量索引 / 概览 / 城市目录]
+    Atlas -->|可见视野| Cache[EarthCache：合并 / 并发 / 字节预算 / 淘汰]
+    Atlas -->|选择陆地| Prepare[加载到达区并校验安全落点]
+    Prepare -->|成功后切换| Provider[连续地球提供器：局部物件 / 碰撞 / 寻路]
+    Provider -->|步行邻域与前方预取| Cache
+    Cache --> CDN[HelloWorld 地形 PNG / 城市 CSV]
+    Provider -->|接近深圳| Region[独立道路 / 建筑 / NPC / 遭遇 / 美术清单]
+    Region -->|附近交互| Story[独立章节 / 对话 / 学习 JSON]
+    Provider --> Canvas[相机附近 Canvas 2D 渲染]
+    Story --> Existing[现有团队 / 语言学习 / 战斗]
+    Existing --> Records[持久化 records 分片]
+    Provider --> Local[位置及未结束战斗：本机 IndexedDB]
+```
+
+`adventure_earth_core.js` 保持纯规则；浏览器加载由动态导入的 `adventure_earth.js` 负责。打包器明确排除启动包中的 Earth 内容，逐个保留原相对 JSON 路径。图层共享经纬度变换，不建立全球对象列表或位图；城市对话与地理数据独立缓存。详见 [地球世界](earth-world.md)。
 
 ### 2. 批量模拟与可复现验证
 
@@ -377,3 +400,10 @@ config/maps 提供六岛源文件与统一地域规则；adventure_map_generator
 产品规则统一维护于 [语言学习设计](language-learning.md)。各口语控制器通过 `onSpeech`（副本为 `award`）提交有效事件，`adventure_app.js` 的 `awardLanguageSpeech` 调用纯核 `language_daily_buff_core.js` 分配当日奖励；视图不自行增加属性。角色 runtime 保存每日状态，durable/cloud 投影剔除；战斗入口冻结加成供重演。剧情、课程与自由对话判定仍由各自控制器负责。新增学习场景复用该公共奖励路径，数值、日期、存储、UI 和快照变更按该设计中的维护表联动检查。
 
 语音交互复用：`dialogue_voice_session.js` 为自由角色聊天与副本剧情提供无 DOM 的 ASR/TTS 生命周期，`view_dialogue_microphone.js` 提供共享录音按钮和手势。业务判定、额度、buff 与推进留在调用方，详情见语言学习设计的共用组件边界。
+
+地球高清表现层（2026-10-02）：`adventure_earth_surface_core.js` 负责纯地类混合与确定性采样；`adventure_earth_surface.js` 将真实分类和预制 WebP 合成为可见 Canvas 小块，使用单任务分帧队列、64 块 LRU 上限和统一像素边缘。`adventure_earth.js` 仅在实际绘制地球场景后读取 `surface-art.json` 与图集，图册阶段不加载。视觉层不改变地理碰撞、怪物随机流或持久数据。详见 [地球地表与装饰](earth-world.md#高清地表与地理装饰2026-10-02)。
+# 城市地貌生成补充（2026-10-02）
+
+高清地表队列按可见块优先，再预热周边一圈，合计受 64 块缓存预算限制；城市铺装在地表像素生成阶段烘焙，街灯等竖立物件保留 Y 排序。地标等比缩放和避让完整道路集合由纯核心函数负责，不依赖当前视口。
+
+Earth 的 `adventure_earth_city_core.js` 只处理人口等级、稳定地理格点和物件候选；`adventure_earth.js` 提供已加载地表查询与安全空间过滤，并仅在场景有城市物件时读取 `city-art.json` 与两张 WebP。城市装饰与地标共用相机相对绘制和 Y 排序，不进入地图浏览或启动依赖。捕鱼通过 `isOcean` 的 Earth 分支读取真实地表分类，海岛规则保持独立。

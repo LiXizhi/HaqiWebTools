@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "npcs": [
+    {
+      "id": 990001,
+      "name": "林澄",
+      "role": "城市联络员",
+      "lon": 114.0579,
+      "lat": 22.5431,
+      "sourceNpc": 30081,
+      "dialogue": "arrival"
+    },
+    {
+      "id": 990002,
+      "name": "袁庚·历史记忆",
+      "role": "历史记忆向导",
+      "lon": 113.9139,
+      "lat": 22.483,
+      "sourceNpc": 36205,
+      "dialogue": "memory"
+    },
+    {
+      "id": 990003,
+      "name": "阿米娜",
+      "role": "维修师",
+      "lon": 114.0864,
+      "lat": 22.543,
+      "sourceNpc": 30081,
+      "dialogue": "clues"
+    },
+    {
+      "id": 990004,
+      "name": "陈海",
+      "role": "巡路员",
+      "lon": 114.521,
+      "lat": 22.594,
+      "sourceNpc": 36205,
+      "dialogue": "defense"
+    }
+  ]
+}

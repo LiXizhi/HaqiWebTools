@@ -134,7 +134,7 @@ HaqiCombatSim/
 
 ## 文档导航
 
-- **世界与任务：** [冒险说明](docs/adventure.md)、[六岛探索](docs/island-exploration.md)、[任务目录](docs/quest-catalog.md)、[副本目录](docs/dungeon-catalog.md)、[剧情秘境与试炼塔](docs/dungeon-journeys.md)。
+- **世界与任务：** [冒险说明](docs/adventure.md)、[六岛探索](docs/island-exploration.md)、[地球世界与深圳](docs/earth-world.md)、[任务目录](docs/quest-catalog.md)、[副本目录](docs/dungeon-catalog.md)、[剧情秘境与试炼塔](docs/dungeon-journeys.md)。
 - **角色与伙伴：** [宠物与商店](docs/pets-and-shop.md)、[宠物互动与繁育](docs/pet-interactions.md)、[岛屿社交](docs/island-social.md)、[红蘑菇赛场](docs/red-mushroom-arena.md)。
 - **语言与账号：** [语言学习](docs/language-learning.md)、[界面本地化](docs/locale.md)、[原服角色导入](docs/player-import.md)、[用户存储](docs/user-storage.md)。
 - **开发与美术：** [技术架构](docs/architecture.md)、[Lua 公式对照](docs/lua-mapping.md)、[GUI 规范](docs/gui-style-guide.md)、[卡牌美术](docs/card-study.md)、[技能特效](docs/spell-effects.md)。

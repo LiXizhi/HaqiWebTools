@@ -953,16 +953,32 @@
 .pet-food-description{display:flex;flex-direction:column;gap:4px;flex:1;min-width:140px}.pet-food-quantity{display:flex;flex-direction:column;font-size:12px;gap:3px}.pet-food-quantity input{width:66px;min-height:40px}.pet-food-buy{margin-left:auto}
 @media(max-width:600px){.pet-food-station{margin-left:auto}.pet-food-slot{min-width:64px}.pet-food-choice>button{min-height:44px}}
 /* Membership recharge shares the existing modal, paper palette and buttons. */
-.recharge-layout{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.recharge-layout{display:grid;grid-template-columns:minmax(0,.95fr) minmax(0,1.15fr);gap:20px}
 .recharge-summary,.recharge-form,.recharge-rules{padding:18px;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
-.recharge-summary{display:flex;flex-direction:column;gap:12px;overflow-wrap:anywhere}
+.recharge-summary{display:flex;flex-direction:column;gap:16px;overflow-wrap:anywhere;background:radial-gradient(ellipse at 20% 5%,#d8eeec 0%,transparent 55%),linear-gradient(145deg,#fff6d8,#f3e2b8);box-shadow:inset 0 0 0 3px #fff8df80}
 .recharge-summary p{margin:0}.recharge-summary strong{font-size:1.15em}
 .recharge-form label{display:block;margin:12px 0 8px;font-weight:bold}
 .recharge-form input{box-sizing:border-box;width:100%;min-height:48px;font-size:1.4em;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:8px 12px}
-.recharge-amounts,.recharge-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.recharge-amounts button{flex:1;min-height:44px}.recharge-error{color:#9b2828;min-height:1.5em}
+.recharge-amounts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:18px}
+.recharge-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.recharge-amounts button{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:6px;min-height:86px;padding:12px 16px}
+.recharge-tier-name{font-size:.85em}.recharge-tier-price{font-size:1.65em;line-height:1.15}
+.recharge-tier-detail{font-size:.8em;opacity:.85}
+.recharge-quote{display:flex;flex-direction:column;gap:10px;padding:16px;border:1px solid var(--line);border-radius:10px;background:linear-gradient(120deg,#e6efdc,#fff4d4);overflow-wrap:anywhere}
+.recharge-quote>strong{font-size:1.05em}.recharge-quote p{margin:0;line-height:1.65;font-size:.8em}
+.recharge-rounding{color:#8c411b}
+.recharge-error{color:#9b2828;min-height:1.5em;margin:6px 0}
+.recharge-star-identity{display:flex;align-items:center;gap:10px;min-width:0}
+.recharge-star-identity h3{font-size:1.35em;line-height:1.4;margin:6px 0 10px}
+.recharge-star-orbit{flex:0 0 128px;width:128px;height:128px;display:grid;place-items:center;border:1px solid #bca36a;border-radius:50%;background:radial-gradient(circle,#e1f8ff 0%,#c4e6e480 42%,#fff4d480 62%,transparent 70%);box-shadow:0 0 24px #d5ac5840,inset 0 0 0 7px #fff9e680}
+.recharge-eyebrow{font-size:.75em;font-weight:bold;letter-spacing:.12em;color:var(--muted)}
+.recharge-account-scope{padding:14px;border:1px solid var(--line);border-radius:10px;background:#fff9e8b3}
+.recharge-account-scope p{font-size:.85em;line-height:1.7;margin-top:6px}
+.recharge-balance{padding-top:12px;border-top:1px solid var(--line)}
+.recharge-summary>button{align-self:flex-start;margin-top:auto}
+.recharge-form h3{font-size:1.35em;margin:6px 0 10px}
 .recharge-rules{margin:18px 0}.recharge-actions button{min-height:44px}
-@media(max-width:600px){.recharge-layout{grid-template-columns:1fr;gap:12px}.recharge-summary,.recharge-form,.recharge-rules{padding:12px}.recharge-actions button{width:100%}}
+@media(max-width:600px){.recharge-layout{grid-template-columns:1fr;gap:12px}.recharge-summary,.recharge-form,.recharge-rules{padding:14px}.recharge-actions button{width:100%}.recharge-star-orbit{flex-basis:100px;width:100px;height:100px}.recharge-star-identity h3{font-size:1.15em}}
 
 .pet-food-hint{color:#864218;font-weight:600}.pet-food-station.needs-food .pet-food-slot{outline:2px solid #b87524;outline-offset:2px}
 

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><base href="../../"><meta name="viewport" content="width=device-width,initial-scale=1"><title>启动界面隔离预览</title>
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_loading.css"></head>
+<body class="haqi-app"><main id="game"><div id="entry"></div><div id="toast" role="status"></div></main><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {renderEntry} from '../../js/view_adventure.js';
+import {renderRoles} from '../../js/view_adventure_roles.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {createEntryEmblem} from '../../js/view_entry_brand.js';
+import {loadLocaleFiles,configureLocale} from '../../js/locale.js';
+import {setText} from '../../js/locale_runtime.js';
+// Synthetic roles, callbacks and identity; never read/write player saves or call the SDK.
+const params=new URLSearchParams(location.search),root=document.querySelector('#entry'),screen=params.get('screen')||'roles';
+let locale=params.get('lang')||'zh-CN',second=locale==='en'?'zh-CN':'en';
+await loadLocaleFiles([locale]);configureLocale({locale});document.documentElement.lang=locale;
+const notice=message=>{setText(document.querySelector('#toast'),message);document.querySelector('#toast').className='show';};
+if(screen==='loading'){
+    const source=new DOMParser().parseFromString(await (await fetch('Haqi.html')).text(),'text/html');
+    root.append(document.importNode(source.querySelector('#boot-loading'),true));
+    root.querySelector('#boot-loading').hidden=false;
+    root.querySelector('#load-brand').append(createEntryEmblem('boot-emblem'));
+    for(const [id,text] of Object.entries({'load-title':'魔法哈奇','load-chapter':'初心之旅','load-caption':'加载中…','load-status':'正在下载游戏配置','load-detail':'10.05 MB','load-note':'与宠物相伴，与新朋友相遇。'}))setText(root.querySelector('#'+id),text);
+    root.querySelector('progress').value=.42;root.querySelector('progress').setAttribute('aria-label','正在准备游戏资源');
+}else{
+    const assets=await loadResources();
+    if(params.has('noatlas'))document.documentElement.classList.remove('storybook-ui');
+    const names=['小哈奇','星河','小虎队 · 西咪','海风','月光'];
+    const roles=names.map((name,index)=>({id:'preview-'+index,save:createAdventure(assets.content,{name,school:['fire','ice','storm','life','death'][index],appearance:index===4?'girl':'boy'})}));
+    const cb={locale,secondLocale:second,draft:{step:1,name:'',appearance:'boy',school:'fire',starter:'dragon_green'},accountChoice:true,
+        setLocale:async id=>{locale=id;if(second===id)second=id==='en'?'zh-CN':'en';await loadLocaleFiles([id]);configureLocale({locale:id});document.documentElement.lang=id;show();},setSecondLocale:id=>{second=id;show();},
+        login:()=>notice('预览：登录入口已响应，未连接真实账号。'),create:()=>notice('预览：新建角色入口已响应。'),select:()=>notice('预览：进入角色入口已响应。'),sync:()=>notice('预览：保存入口已响应。'),refresh:()=>notice('预览：刷新入口已响应。'),logout:()=>notice('预览：退出入口已响应。')};
+    function show(){cb.locale=locale;cb.secondLocale=second;if(screen==='login')renderEntry(root,assets,null,cb);else renderRoles(root,assets,{locale,owner:params.has('guest')?null:'冒险家',catalog:{roles:params.has('empty')?[]:roles,activeId:'preview-0'},busy:params.has('busy')?'正在恢复账号与角色…':'',error:params.has('error')?'网络连接失败，请重试。':''},cb);}
+    show();
+}
+document.documentElement.dataset.fixtureReady='1';
+</script></body></html>

@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "id": "earth-shenzhen-united",
+  "name": "一起守住回家的路",
+  "steps": [
+    {
+      "id": "arrival",
+      "event": "arrival",
+      "name": "与林澄了解城市的求助",
+      "destination": {
+        "lon": 114.0579,
+        "lat": 22.5431,
+        "name": "林澄"
+      }
+    },
+    {
+      "id": "memory",
+      "event": "memory",
+      "name": "向蛇口的历史记忆寻找线索",
+      "destination": {
+        "lon": 113.9139,
+        "lat": 22.483,
+        "name": "蛇口"
+      }
+    },
+    {
+      "id": "clues",
+      "event": "clues",
+      "name": "和维修师比较消息，确认真正的求助地点",
+      "destination": {
+        "lon": 114.0864,
+        "lat": 22.543,
+        "name": "华强北"
+      }
+    },
+    {
+      "id": "defense",
+      "event": "defense",
+      "name": "前往大鹏，与巡路员确认后击败城外袭击者",
+      "destination": {
+        "lon": 114.521,
+        "lat": 22.594,
+        "name": "大鹏巡路员"
+      }
+    },
+    {
+      "id": "return",
+      "event": "return",
+      "name": "回到林澄身边报告",
+      "destination": {
+        "lon": 114.0579,
+        "lat": 22.5431,
+        "name": "返回林澄身边"
+      }
+    }
+  ],
+  "reward": "战斗复用现有经验与掉落；章节完成只记录进度，不额外发放货币。"
+}

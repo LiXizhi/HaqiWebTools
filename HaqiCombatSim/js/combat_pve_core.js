@@ -1,4 +1,5 @@
 import {chatSupportPick,BATTLE_CHAT} from './battle_chat_core.js';
+import {earthEncounter} from './adventure_earth_core.js';
 import {dailyBuffParams} from './language_daily_buff_core.js';
 import {applyDungeonLanguageBuff,dungeonLanguageParams} from './adventure_dungeon_language_core.js';
 import { SimpleBot } from './combat_policy_core.js';
@@ -335,7 +336,7 @@ export function playPveRound(a,decision) {
     return a;
 }
 export function restorePveBattle(dataset,content,checkpoint) {
-    const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId);
+    const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId)||earthEncounter(content,checkpoint.encounterId);
     if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
     const templates=checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]];
     const a=createPveBattle({dataset,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,specialCardRulesVersion:checkpoint.specialCardRulesVersion,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});

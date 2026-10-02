@@ -126,13 +126,13 @@ npm run check:adventure
 
 ### 会员充值页（2026-09-27）
 
-会员窗口底部“会员充值”进入独立充值面板。支持4/20/50/100元快捷输入及自定义正金额（最多两位小数），使用当前角色所属的已连接账号。SDK `ads.openVipMembership` 购买 `vip_common_1_day`；最低金额、份数及实际扣款由官方收银台确认，不在客户端推算金额对应天数。依据 Maisi `HybridUnlockExpert/SKILL.md` 路径B与SDK `src/ads/AdsService.ts`。
+会员窗口底部“会员充值”进入独立充值面板。默认108元，支持25/108/498/898元快捷输入及自定义正金额（最多两位小数），使用当前角色所属的已连接账号，VIP账号绑定且全角色共享。SDK `ads.openVipMembership` 购买 `vip_common_1_day`。2026-10-02新增官方公开商品价格查询：`POST https://api.keepwork.com/core/v0/pay/systemProducts/search`，仅查询商品、不创建订单，打开充值页时按需读取、手动刷新重查。当前核验价格为200分/天，不写死在源码中。按服务端`getNewClientVipPrice`取完整天数，显示购买天数、预计新增魔豆及付款后北京时间到期日；续期按普通VIP自身有效期与当前时间的较晚者计算，游戏有效期取普通/高级VIP的较晚者，新增魔豆复用账号兑换记录规则。已有尚未兑换部分另列总预计到账；余款不增加天数、低于一天价格禁付。价格失败或有效期未确认时不给出猜测日期。实际扣款、期限仍由收银台与支付后账号状态确认。
 
 线上core SDK目前把Keepwork子域名也当支付域名，CDN部署采用同一已核验的 `https://keepwork.com/p/vb/vipPayOrder` 契约（userId、productCode、from、referralUrl、amount分），避免跳转CDN不存在的收银台路由。其余环境调用SDK支付入口。不使用模拟单品支付Provider。
 
 面板显示北京时间VIP到期日、魔豆余额、已兑日期/待兑换天数。沿用2026-09-23规则：首次从当天计到到期日，每天10魔豆；续期只兑换超过账号兑换记录的新增日期，不缩短会员期限。SDK返回true只代表会员有效，不是订单成功证明；支付返回和发起后10分钟内回焦均强刷会员资料，再由现有账号/角色校验与持久化兑换流程发豆。访客、账号不符、网络失败不发放；战斗中延后。兑换仍属于现有单机存档机制，不新增服务端交易账本。
 
-隔离预览：`tests/fixtures/recharge.html`，支持 `?guest` 与 `?battle`，只用合成内存数据，不调用SDK或创建订单。真实支付、桌面/390px视觉体验待登录人工验收。
+隔离预览：`tests/fixtures/recharge.html`，支持 `?guest`、`?battle` 与 `?priceerror`，只用合成内存身份与存档，读取公开价格，不调用SDK或创建订单。2026-10-02桌面/390px报价联动已验收；真实支付仍待登录人工验收。
 
 
 ## 2026-09-28：伙伴食槽精简与真实任务

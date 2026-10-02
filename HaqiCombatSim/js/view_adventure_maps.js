@@ -1,6 +1,7 @@
 import {renderPanel} from './view_adventure.js';
 import {renderLocalMap} from './view_adventure_local_map.js';
 import {setText} from './locale_runtime.js';
+import {createWorldMapSwitch} from './view_adventure_controls.js';
 
 // One map window; controller determines the initial view for each entry point.
 export function renderMaps(root,world,model,cb,view='local'){
@@ -15,5 +16,6 @@ export function renderMaps(root,world,model,cb,view='local'){
     toggle.setAttribute('aria-label',toggle.textContent);
     toggle.onclick=()=>cb.switchMap(view==='world'?'local':'world');
     const heading=document.createElement('div');heading.className='map-heading';heading.append(title,toggle);
+    if(cb.switchWorld)heading.append(createWorldMapSwitch('haqi',cb.switchWorld));
     header.replaceChildren(heading,header.querySelector('.close-button'));
 }

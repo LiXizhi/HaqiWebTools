@@ -1,8 +1,10 @@
 import {createRng,hashSeed} from './rng_core.js';
 import {defaultParams} from './combat_params_core.js';
+import {earthSafe} from './adventure_earth_core.js';
 
 // Ephemeral scene state. Dungeon gates, map markers and saves keep authored positions.
 const scenes=new WeakMap(),defaults=Object.freeze(defaultParams('kids').monsterScene);
+export function pruneMonsterScene(world){const scene=scenes.get(world);if(!scene)return;const live=new Set(world.encounters.map(e=>e.id));for(const id of scene.keys())if(!live.has(id))scene.delete(id);}
 export const monsterSceneParams=world=>world.monsterSceneParams||defaults;
 export function inMonsterTerritory(world,encounter,hero) {
     return !world.isDungeon&&!encounter.hidden&&!encounter.blocked?.length&&!!hero
@@ -88,7 +90,7 @@ export function stepMonsterWander(world,encounter,dt,view,{enabled=true,ambient=
         if(!p.rng){p.rng=createRng(hashSeed(`${world.zone}:${encounter.id}:${p.index}:wander`));p.spawn={x:p.x,y:p.y};p.wait=rest(p);p.navWait=0;}
         p.moving=false;
         const center=world.isDungeon?p.spawn:encounter;
-        const allowed=(x,y)=>Math.hypot(x-center.x,y-center.y)<=radius+.00001&&canWalk(x,y);
+        const allowed=(x,y)=>Math.hypot(x-center.x,y-center.y)<=radius+.00001&&canWalk(x,y)&&(!world.isEarth||!earthSafe(world,{x,y}));
         const nextMode=alert?(['warning','chase'].includes(p.mode)?p.mode:'warning'):['warning','chase'].includes(p.mode)?'return':p.mode;
         if(nextMode!==p.mode){
             p.mode=nextMode;p.target=null;p.path=null;p.navWait=0;

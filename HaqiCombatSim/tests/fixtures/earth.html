@@ -1,0 +1,35 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>地球世界隔离验收</title><base href="../../">
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_world_map.css"><link rel="stylesheet" href="../../css/adventure_earth.css">
+<body class="haqi-app"><canvas id="world" tabindex="0"></canvas><div id="overlay"></div><div style="position:fixed;top:8px;left:8px;z-index:4;display:flex;gap:6px;flex-wrap:wrap;max-width:95vw" id="tools"></div><output id="result" style="position:fixed;bottom:4px;left:4px;z-index:5;background:#fff8e7;color:#234;padding:8px;max-width:95vw">正在加载隔离场景…</output>
+<script type="module">
+import {restorePveBattle,playPveRound} from '../../js/combat_pve_core.js';
+import {SimpleBot} from '../../js/combat_policy_core.js';
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,beginEncounter,recordDecision,settleEncounter} from '../../js/adventure_core.js';
+import {createWorld,movePosition,invalidateWorldObjects,nearestInteraction} from '../../js/adventure_world_core.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {createEarthService} from '../../js/adventure_earth.js';
+import {earthGeo,earthChapterEvent} from '../../js/adventure_earth_core.js';
+import {renderEarthAtlas,renderEarthLoading,renderEarthStory} from '../../js/view_adventure_earth.js';
+import {renderMaps} from '../../js/view_adventure_maps.js';
+import {createIslandSocial} from '../../js/adventure_social_controller.js';
+import {createRuntimeStore} from '../../js/adventure_runtime_store.js';
+
+const output=document.querySelector('#result'),root=document.querySelector('#overlay'),canvas=document.querySelector('#world'),tools=document.querySelector('#tools');
+let requests=[],panel=false,atlasView=null,keys=new Set(),now=0;
+const assets=await loadResources(p=>output.textContent=p.label),save=createAdventure(assets.content,{name:'地球隔离验收'}),service=createEarthService({content:assets.content,fetcher:(url,options)=>{requests.push(url);return fetch(url,options);}});
+let world=createWorld('camp',assets.content,save);const renderer=createRenderer(canvas,assets);
+const social=createIslandSocial({arenaStore:createRuntimeStore({indexedDB:null}),getState:()=>({save,world,assets,paused:panel,locked:panel}),getOwner:()=>null,onChange:()=>{},onPersist:()=>{},onOpen:()=>{},onClose:()=>{},toast:t=>output.textContent=t});
+function report(text){output.textContent=text+' · 地球请求 '+requests.length+' · 缓存 '+Math.round(service.cache.bytes/1024)+' KB';}
+function close(){panel=false;atlasView?.dispose();atlasView=null;root.replaceChildren();root.className='overlay';canvas.focus();}
+async function travel(geo){try{const p=await service.prepare(geo);world=p.world;save.zone='earth';save.position=p.position;assets.content.earthWorld=world;world.onObjectsChanged=()=>{invalidateWorldObjects(world);void social.refreshEarth();};close();await assets.warmScenery(world);await assets.warmNearby(world,save);await social.enter();report(`抵达 ${geo.lon}, ${geo.lat}；居民 ${world.npcs.length}；建筑 ${world.buildings.length}；怪物 ${world.encounters.length}`);}catch(e){report(e.stack);}}
+async function atlas(){panel=true;renderEarthLoading(root,{close});try{const data=await service.atlas();atlasView=renderEarthAtlas(root,data,{close,switchWorld:id=>id==='earth'?atlas():showMap('world'),viewport:b=>service.viewport(b),travel});report('浏览地图：没有加载城市人物或任务');}catch(e){report(e.stack);}}
+function showMap(view='local'){panel=true;renderMaps(root,world,{assets,save,socialActors:social.actors},{close,draw:(c,o)=>renderer.minimap(c,world,save,o),travel:()=>{},teleport:()=>{},teleportToPosition:()=>{},switchMap:showMap,switchWorld:id=>id==='earth'?atlas():showMap('world')},view);report('当前地图：不加载地球数据');}
+function chooser(){if(world.isEarth)void atlas();else showMap();}
+async function story(){const npc=world.npcs.filter(n=>n.earthNpc).sort((a,b)=>Math.hypot(a.x-save.position.x,a.y-save.position.y)-Math.hypot(b.x-save.position.x,b.y-save.position.y))[0];if(!npc?.earthNpc){report('请靠近城市居民');return;}const data=await service.story(),key=npc.dialogue==='arrival'&&save.earthProgress?.step>=4?'return':npc.dialogue;panel=true;renderEarthStory(root,{...data,npc,story:data.dialogue.stories[key],progress:save.earthProgress},{close,advance:()=>{earthChapterEvent(save,data.quests,data.dialogue.stories[key].event);close();report('章节进度 '+(save.earthProgress?.step||0));},choose:c=>{if(c.correct)earthChapterEvent(save,data.quests,'clues');report(c.reply);if(c.correct)close();},practice:()=>report('学习交互在正式入口复用语音聊天'),go:atlas});}
+async function defense(){await travel({lon:114.55,lat:22.62});const e=world.encounters.find(e=>e.chapterEvent==='defense');if(!e)throw Error('防御目标不可用');beginEncounter(save,assets.content,e.id);const battle=restorePveBattle(assets.dataset,assets.content,save.pendingEncounter),bot=new SimpleBot();while(!battle.finished){const action=bot.pick(battle,battle.sides.near[0]);playPveRound(battle,action);recordDecision(save,action);}settleEncounter(save,assets.content,battle);report('防御演练 '+battle.winner+'；章节进度 '+save.earthProgress?.step);}
+for(const [label,action] of [['打开地图',chooser],['进入深圳',()=>travel({lon:114.0579,lat:22.5431})],['地表状态',()=>report(JSON.stringify(world.surfaceStats||{}))],['深圳湾',()=>travel({lon:113.9904,lat:22.532})],['蛇口',()=>travel({lon:113.9139,lat:22.483})],['华强北',()=>travel({lon:114.0864,lat:22.543})],['大鹏',()=>travel({lon:114.521,lat:22.594})],['防御演练',defense],['纽约',()=>travel({lon:-73.985,lat:40.758})],['交谈',()=>void story()]]){const b=document.createElement('button');b.textContent=label;b.onclick=()=>Promise.resolve(action()).catch(e=>report(e.stack));tools.append(b);}
+addEventListener('keydown',e=>keys.add(e.key));addEventListener('keyup',e=>keys.delete(e.key));
+function frame(t){const dt=Math.min(.05,(t-now)/1000||0);now=t;if(!panel){const dx=Number(keys.has('ArrowRight'))-Number(keys.has('ArrowLeft')),dy=Number(keys.has('ArrowDown'))-Number(keys.has('ArrowUp'));if(dx||dy)save.position=movePosition(world,save.position,dx*210*dt,dy*210*dt);if(world.isEarth)service.update(save.position,t);social.step(dt,{view:renderer.viewRect()});renderer.render(world,save,t,{socialActors:social.actors,moving:!!(dx||dy)});}requestAnimationFrame(frame);}
+await assets.warmScenery(world);report('启动完成：地球请求必须为零');requestAnimationFrame(frame);
+</script></body></html>

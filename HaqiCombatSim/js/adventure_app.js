@@ -1,3 +1,5 @@
+import {renderEarthAtlas,renderEarthLoading,renderEarthStory} from './view_adventure_earth.js';
+import {earthGeo,earthChapterEvent} from './adventure_earth_core.js';
 import {performanceDiagnostics as perf} from './performance_diagnostics.js';
 import {createGameSettings,legacyLocalMusic} from './game_settings.js';
 import {createAdaptiveGraphics} from './game_settings_core.js';
@@ -102,6 +104,52 @@ const battleIntro=createBattleIntro({root:nodes.overlay,onDone:current=>{if(stag
 const dungeonStory=createDungeonStory({root:nodes.overlay,getState:()=>({save,assets,sceneCanvas:nodes.world,owner:roleStore?.owner,role:roleStore?.catalog.activeId}),onLogin:({dungeon,index})=>loginForCharacterChat(null,null,()=>{if(save.zone===dungeon.id){panel='dungeon-story';nodes.hud.hidden=true;dungeonStory.open(dungeon,{index});}else openJourney(dungeon.id);}),award:awardLanguageSpeech,onDone:()=>{if(panel==='dungeon-story')panel=null;nodes.hud.hidden=stage!=='world';if(stage==='world'){persist();paintHud();nodes.world.focus({preventScroll:true});}}});
 function openJourney(id,restart=false){journeyId=id;journeyRestart=restart;openPanel('dungeon-journey');}
 function pickDungeonLobby(id,restart=false){const d=dungeonFor(assets.content,id);if(d?.kind){openJourney(id,restart);return;}islandSocial.pickPartyDungeon(id,{restart});}
+let earthPractice=null,earthService=null,earthServiceTask=null,earthView=null,earthViewTicket=0,earthTraveling=false,earthOwner=null;
+async function getEarth(){
+    if(!earthServiceTask)earthServiceTask=import('./adventure_earth.js').then(({createEarthService})=>earthService=createEarthService({content:assets.content}));
+    return earthServiceTask;
+}
+function switchWorldMap(id){openPanel(id==='earth'?'earthmap':'worldmap');}
+async function openEarthMap(focus=null){
+    const ticket=++earthViewTicket,current=save;
+    renderEarthLoading(nodes.overlay,{close,switchWorld:switchWorldMap});
+    try{const service=await getEarth(),data=await service.atlas();if(ticket!==earthViewTicket||current!==save||panel!=='earthmap')return;
+        earthView=renderEarthAtlas(nodes.overlay,{...data,current:focus||(world.isEarth?earthGeo(save.position,service.rules):null),focus},{close,switchWorld:switchWorldMap,viewport:bounds=>service.viewport(bounds),travel:travelEarth});
+    }catch(e){if(ticket===earthViewTicket&&panel==='earthmap')renderEarthLoading(nodes.overlay,{close,message:e.message,retry:()=>openEarthMap(focus),switchWorld:switchWorldMap});}
+}
+async function travelEarth(geo){
+    if(save.pendingEncounter||save.coopRun||dungeonFor(assets.content,save.zone)){toast('请先完成战斗或退出副本');return;}
+    const current=save,role=roleStore?.catalog.activeId,ticket=earthViewTicket;earthTraveling=true;earthView?.busy('正在准备目的地，关闭地图可取消…');
+    try{const service=await getEarth(),prepared=await service.prepare(geo);if(current!==save||role!==roleStore?.catalog.activeId||ticket!==earthViewTicket)return;
+        if(save.zone!=='earth')save.earthReturn={zone:save.zone,position:{...save.position}};
+        save.zone='earth';save.position=prepared.position;assets.content.earthWorld=prepared.world;earthOwner=current;earthTraveling=false;
+        prepared.world.onObjectsChanged=()=>{W.invalidateWorldObjects(prepared.world);if(world===prepared.world){void assets.warmNearby?.(world,save);void islandSocial.refreshEarth();}};
+        await enterWorld(save);showTeleportEffect();toast('已抵达现实世界。沿陆地探索，或打开地图前往远方。');
+    }catch(e){if(current===save&&ticket===earthViewTicket){earthView?.error(e.message);toast(e.message);}}finally{earthTraveling=false;}
+}
+async function practiceEarth(npc,learning){
+    if(!save.languageLearning.enabled){toast('请先在双语学习中选择目标语言。');return;}
+    if(!['en','zh-CN'].includes(save.languageLearning.target)){toast('这个城市的课程目前支持中文和英语。');return;}
+    const current=save,role=roleStorage;
+    const {createStoryChat}=await import('./language_story.js');if(current!==save||role!==roleStorage)return;
+    close();
+    earthPractice??=createStoryChat({allowedZone:'earth',onClosed:()=>{if(panel==='earthpractice'){panel=null;paintHud();}},onSpeech:awardLanguageSpeech,
+        getState:()=>({save,content:assets.content,role:roleStorage,identity:roleStore?.owner,stage}),voice:createLearningVoice({getSettings:()=>save.languageLearning}),
+        saveSettings:settings=>{Object.assign(save.languageLearning,settings);persist();},openSettings:()=>openPanel('settings'),
+        onFreeTalk:(profile,options)=>{earthPractice.close();void openFreeTalk(profile,options);},
+        commit:completion=>{const committed=persistReward(save,assets.content,{type:'language-complete',completion},{learningCompletion:completion},roleStorage);save=committed.save;storageWarning=false;queueCloudSave();paintHud();return committed.result;}
+    });
+    const story={id:'earth-shenzhen:help-together',title:'一起问清楚',context:'在深圳向伙伴问路，确认消息，然后一起帮助居民。',rewardGroup:'help',opening:{'zh-CN':'我们先问清楚，再一起出发。',en:'Let us ask first, then go together.'},turns:learning.prompts.map((row,i)=>({id:`earth-shenzhen:help:${i}`,pattern:row.en,hint:row.zh,question:{'zh-CN':['你想去城门，可以怎样问？','你没听清，可以怎样说？','你想邀请伙伴帮忙，可以怎样说？'][i],en:['Ask me how to get to the city gate.','Ask me to say it again.','Ask me to help with you.'][i]},answer:{'zh-CN':row.zh,en:row.en},response:{'zh-CN':'谢谢你说清楚。我们一起去吧。',en:'Thank you. Let us go together.'}}))};
+    panel='earthpractice';earthPractice.open({...npc,stories:[story]},story,null);
+}
+async function openEarthNpc(npc){
+    close();panel='earthstory';const current=save,ticket=++earthViewTicket;renderEarthLoading(nodes.overlay,{close,message:'正在读取这段故事…'});
+    try{const data=await earthService.story();if(current!==save||ticket!==earthViewTicket)return;
+        const key=npc.dialogue==='arrival'&&save.earthProgress?.step>=4?'return':npc.dialogue,story=data.dialogue.stories[key];
+        const done=()=>{if(earthChapterEvent(save,data.quests,story.event)){persist();queueCloudSave();paintHud();}close();};
+        renderEarthStory(nodes.overlay,{...data,npc,story,progress:save.earthProgress},{close,advance:done,choose:choice=>{toast(choice.reply);if(choice.correct)done();},practice:()=>void practiceEarth(npc,data.learning),go:()=>{const focus=story.destination||data.quests.steps[save.earthProgress?.step||0]?.destination;close();panel='earthmap';void openEarthMap(focus);}});
+    }catch(e){if(current===save&&ticket===earthViewTicket)renderEarthLoading(nodes.overlay,{close,message:e.message,retry:()=>openEarthNpc(npc)});}
+}
 let teleportEffect=null;
 let path=[],destination=null,moving=false,lastFrame=0,lastSave=0,toastTimer=0;
 let fishingApproach=null,talkApproach=null;
@@ -154,14 +202,17 @@ setInterval(()=>{void autoSave.tick();if(stage==='world')islandSocial.tick();},1
 const membership=createMembershipClient({onChange:()=>{if(!assets||!save)return;if(stage==='world'&&!save.pendingEncounter)maybeExchangeMagicBeans();if(stage==='world'){paintHud();if(['shop','npc-services','membership','recharge','checkin'].includes(panel))paintPanel();}}});
 let buyingVip=false;
 const membershipView={tab:'attributes'};
-const rechargeView={amount:'4'};
+const rechargeView={amount:'108'};
 async function rechargeMembership(amount){
     try{
         await membership.openRecharge(amount,roleStore?.owner);
         toast('已刷新会员状态，魔豆按实际新增到期日兑换。');
     }catch(error){toast(error.message);}
 }
-const refreshMembership=(force=false)=>membership.refresh({force}).catch(error=>toast(error.message));
+const refreshMembership=(force=false)=>{
+    if(panel==='recharge')void membership.refreshRechargePrice({force});
+    return membership.refresh({force}).catch(error=>toast(error.message));
+};
 const keys=new Set();
 const gameSettings=createGameSettings(),adaptiveGraphics=createAdaptiveGraphics();
 const spellSound=createSpellSound({defaultEnabled:false,persistPreferences:false});
@@ -201,7 +252,7 @@ const strengtheningView={guid:null,filter:0,page:0,pending:false,message:''};
 let serviceNpc=null;
 const npcServiceView={query:'',page:0};
 const islandSocial=createIslandSocial({onArenaEnter:enterArenaCombat,onArenaCountdown:seconds=>{const label=nodes.overlay.querySelector('[data-arena-ready]');if(label)label.textContent=`准备好迎战！${seconds} 秒后自动进入战斗法阵。`;},onTalk:p=>void characterChat.open(p,{returnPanel:'social-profile'}),onDetails:p=>void characterChat.open(p,{returnPanel:'social-profile',detailsOnly:true}),onRelationshipActivity:event=>recordRelationshipActivity(event),getAffinity:p=>characterChat.affinity(p),onPetDialogue:(owner,action,settle)=>petScene.dialogue(owner,action,settle),getState:()=>({save,world,assets,roleId:roleStore?.catalog.activeId,loadPet,membership:membership.state,paused:stage!=='world'||document.hidden||!!panel||!!dialog||characterChat.active,locked:!!panel||!!dialog||characterChat.active}),getOwner:()=>roleStore?.owner,onChange:()=>{if(stage==='world'&&save){paintHud();if(['mail','chat','social-party','social-actions','social-profile','social-pvp'].includes(panel))paintPanel();}},onPersist:()=>{persist();queueCloudSave();},onOpen:openPanel,onClose:close,onLogin:()=>void loginRoles(),toast,onDepart:(id,restart)=>void loadAndEnterDungeon(id,!!restart),onTeleport:(x,y)=>teleportToPosition(x,y)});
-const model=()=>({assets,save,gameSettings:gameSettings.value,effectiveGraphics:adaptiveGraphics.effects(gameSettings.value),social:islandSocial.state(),displayLocale:displayLocale(),dungeonLoading,serviceNpc,npcServiceView,membership:membership.state,membershipView,rechargeView,accountOwner:roleStore?.owner,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,arenaCountdown:arenaPickClock.remaining(),battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp,status:animation.status}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled,soundVolume:spellSound.volume,learningProgress:battle?.learningProgress||0,autoWalk:!!destination});
+const model=()=>({assets,save,earthChapter:earthService?.chapter,gameSettings:gameSettings.value,effectiveGraphics:adaptiveGraphics.effects(gameSettings.value),social:islandSocial.state(),displayLocale:displayLocale(),dungeonLoading,serviceNpc,npcServiceView,membership:membership.state,membershipView,rechargeView,accountOwner:roleStore?.owner,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,arenaCountdown:arenaPickClock.remaining(),battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp,status:animation.status}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled,soundVolume:spellSound.volume,learningProgress:battle?.learningProgress||0,autoWalk:!!destination});
 const characterChat=createCharacterConversation({isFriend:p=>islandSocial.isFriend(p),onSpeech:awardLanguageSpeech,
     getState:()=>({save,assets,owner:roleStore?.owner,role:roleStore?.catalog.activeId}),membership,
     getPortrait:source=>{if(source.kind&&source.kind!=='npc')return heroPortrait(assets,source,220,270,{facing:0,lookAround:false});const npc=assets.content.npcs[source.id]||source;return npc.portrait?V.art(assets,npc.portrait,220,270,'camp-chat-character-art'):null;},
@@ -329,11 +380,14 @@ function persist() {
     const indicator=document.querySelector('.save-indicator');if(indicator){setText(indicator,storageWarning?'存档未保存':'');indicator.hidden=!storageWarning;}
     lastSave=performance.now();
 }
-function close({silent=false}={}) {battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
+function close({silent=false}={}) {earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 function paintHud() {resetMovementInput();V.renderHud(nodes.hud,model(),{panel:openPanel,membership:()=>openPanel('membership'),cloud:()=>void loginRoles(),track,untrack,leaveDungeon:exitDungeon,interact:interactNearest,mountToggle:()=>performAction({type:'mount-visibility',hidden:!save?.mountHidden})});}
 function paintPanel() {
+    if(panel==='map')panel=world.isEarth?'earthmap':'localmap';
+    if(panel==='earthmap'){void openEarthMap();return;}
+    if(['earthstory','earthpractice'].includes(panel))return;
     if(['mail','chat','social-party','social-actions','social-profile','social-pvp'].includes(panel)){islandSocial.paint(nodes.overlay,panel);return;}
-    if(['map','worldmap','localmap'].includes(panel)&&world.layout){renderMaps(nodes.overlay,world,{...model(),socialActors:islandSocial.actors},{close,track,travel,draw:(canvas,options)=>renderer.minimap(canvas,world,save,options),teleport:teleportToLandmark,teleportToPosition,switchMap:view=>openPanel(view==='world'?'worldmap':'map')},panel==='worldmap'?'world':'local');return;}
+    if(['map','worldmap','localmap'].includes(panel)&&world.layout){renderMaps(nodes.overlay,world,{...model(),socialActors:islandSocial.actors},{close,track,travel,draw:(canvas,options)=>renderer.minimap(canvas,world,save,options),teleport:teleportToLandmark,teleportToPosition,switchWorld:switchWorldMap,switchMap:view=>openPanel(view==='world'?'worldmap':world.isEarth?'earthmap':'localmap')},panel==='worldmap'?'world':'local');return;}
     if(panel==='cloud'){paintCloud();return;}
     if(panel==='dungeon-story')return;
     if(panel==='dungeon-journey'){renderDungeonJourney(nodes.overlay,{...model(),dungeon:dungeonFor(assets.content,journeyId)},{close,prepare:()=>safely(()=>{void loadAndEnterDungeon(journeyId,journeyRestart);}),claim:floor=>safely(()=>{const next=structuredClone(save),coins=claimTowerReward(next,assets.content,journeyId,floor);saveLocal(next,roleStorage);Object.assign(save,next);queueCloudSave();paintHud();paintPanel();toast(`已领取 ${coins} 奇豆`);})});return;}
@@ -511,7 +565,7 @@ function maybeExchangeMagicBeans({announce=true}={}) {
         if(panel)paintPanel();
     }catch(error){toast(error.message);}finally{exchangingBeans=false;}
 }
-function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
+async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     const resumedWorld=stage==='battle'&&W.canResumeWorld(world,save,newSave,assets.content)?world:null;
     stopBattleChatVoice();
     arenaPickClock.stop();
@@ -522,6 +576,19 @@ function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     creationPreview?.stop();
     if(stage==='battle')perf.start('combat-return');perf.start('world-ready');
     save=newSave;
+    if(save.zone==='earth'){
+        const service=await getEarth();
+        if(earthOwner!==save||!service.world){
+            const ticket=++earthViewTicket;panel='earth-restore';nodes.entry.hidden=true;
+            renderEarthLoading(nodes.overlay,{close:()=>void showTitle(),message:'正在恢复这片地球区域，原存档会保留…'});
+            try{const result=await service.prepare(earthGeo(save.position,service.rules));if(save!==newSave||ticket!==earthViewTicket)return;
+                assets.content.earthWorld=result.world;save.position=result.position;earthOwner=save;
+                result.world.onObjectsChanged=()=>{W.invalidateWorldObjects(result.world);if(world===result.world){void assets.warmNearby?.(world,save);void islandSocial.refreshEarth();}};
+            }catch(e){if(save!==newSave||ticket!==earthViewTicket)return;
+                renderEarthLoading(nodes.overlay,{close:()=>void showTitle(),message:`${e.message}。原存档和未结束的战斗已保留。`,retry:()=>void enterWorld(newSave,restoredBattle,{announceBeans})});return;
+            }
+        }
+    }
     initializePetWorld(save,assets.content);
     const reveal=()=>{
     if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=resumedWorld||W.createWorld(save.zone,assets.content,save);stage='world';path=[];destination=null;animation=null;close();
@@ -540,6 +607,7 @@ function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     return loadLocaleFiles(ids).then(()=>{if(save!==newSave)return;configureLocale({locale:storedLocalePref()||save.locale,languageLearning:save.languageLearning});reveal();});
 }
 async function showTitle() {
+    earthViewTicket++;earthService?.cancel();earthOwner=null;delete assets?.content?.earthWorld;
     spellSound.stop();
     persist();if(storageWarning&&stage!=='title'){toast('当前进度尚未保存，请勿关闭页面。请检查浏览器存储或重试。');return;}close();rewardFeedback.reset();globalReward.reset();stage='title';keys.clear();path=[];destination=null;animation=null;battle=null;
     music?.pause();nodes.hud.hidden=true;nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';
@@ -547,7 +615,7 @@ async function showTitle() {
     await applyLocale();
     if(stage!=='title')return;
     nodes.entry.hidden=false;
-    world=W.createWorld(save.zone,assets.content,save);
+    world=W.createWorld(save.zone==='earth'?'camp':save.zone,assets.content,save.zone==='earth'?null:save);
     void assets.warmScenery?.(world);void assets.warmNearby?.(world,save);renderer?.prepareScene(world,save);
     titleView=roleStore.catalog.roles.length||roleStore.recovering||roles.localOnly?'roles':'create';
     if(titleView==='create')roleDraft=null;paintTitle();
@@ -769,7 +837,7 @@ function travel(zone){safely(()=>{
     const status=travelStatus(save,assets.content,zone);
     if(status.allowed&&status.requiresConfirmation&&!window.confirm(tr('那里很危险，确定还要前往吗？')))return;
     if(dungeonFor(assets.content,save.zone))leaveDungeon(save,assets.content);
-    A.applyAction(save,assets.content,{type:'travel',zone});enterWorld(save);showTeleportEffect();toast('已抵达{name}。',{name:islandName(zone)});
+    A.applyAction(save,assets.content,{type:'travel',zone});earthService?.cancel();earthOwner=null;delete assets.content.earthWorld;enterWorld(save);showTeleportEffect();toast('已抵达{name}。',{name:islandName(zone)});
 });}
 const dialogueVoice=createLearningVoice({getSettings:()=>save?.languageLearning||{}});
 function finishTrackedDialogue() {
@@ -826,6 +894,7 @@ async function nextDialogue() {
 function interact(target) {
     if(stage!=='world'||!target)return;
     path=[];destination=null;keys.clear();persist();
+    if(target.kind==='npc'&&target.earthNpc){void openEarthNpc(target);return;}
     if(target.kind==='npc'){
         if((target.id===36205||target.name==='法斯特船长')&&!target.questDialogue&&!(save.zone==='camp'&&save.languageLearning?.enabled)){
             const here=catalogQuestsForNpc(save,assets.content,target.id,A.catalogStatSnapshot(save,assets.content));
@@ -1160,6 +1229,7 @@ function frame(now) {
     },0);}
     if((stage==='world'||stage==='battle')&&!document.hidden)tickCheckin(save,Date.now(),Math.min(1000,Math.max(0,now-lastFrame)));
     const dt=Math.min(.055,(now-lastFrame)/1000||0);lastFrame=now;const wasMoving=moving;moving=false;
+    if(stage==='world'&&world.isEarth&&!panel&&!dialog){earthService?.update(save.position,now);if(world.error&&world.error!==world.reportedError){world.reportedError=world.error;toast(world.error);}}
     if(stage==='world')V.syncTeachPointer(nodes.hud,!!(destination||dialog||panel));
     if(stage==='world'&&!panel&&!dialog&&!languageAdventure.active&&!characterChat.active) {
         let dx=Number(keys.has('right'))-Number(keys.has('left')),dy=Number(keys.has('down'))-Number(keys.has('up'));
@@ -1218,7 +1288,7 @@ function frame(now) {
             const prepared=talkApproach;talkApproach=null;path=[];moving=false;languageAdventure.greet(prepared,now);
         }else if(!path.length){talkApproach=null;toast('这里暂时走不过去，试试旁边的小路。');}
     }
-    characterChat.tick();
+    characterChat.tick();earthPractice?.tick();
     scenePaused=backgroundScenePaused();
     if(!scenePaused)islandSocial.step(Math.min(.1,(now-(islandSocial.lastFrame||now))/1000),{view:renderer.viewRect?.()});islandSocial.lastFrame=now;
     if(stage==='world'&&!scenePaused)try{petScene.step(Math.min(.055,(now-(petScene.lastFrame||now))/1000));}catch(error){if(petScene.error!==error.message){toast(error.message);petScene.error=error.message;}}petScene.lastFrame=now;

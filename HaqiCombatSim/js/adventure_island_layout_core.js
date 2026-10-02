@@ -1,6 +1,8 @@
 // Pure geometry shared by the offline generator, collision and rendering.
 import { onBridge } from './adventure_bridge_core.js';
+import {earthMapInfo} from './adventure_earth_core.js';
 export function mapInfo(zone,content) {
+    if(zone==='earth')return earthMapInfo(content);
     const info=content?.worldMapIndex?.islands?.[zone];
     if(!info)throw Error('缺少岛屿配置：'+zone+'，请运行 npm run generate:maps');
     return info;

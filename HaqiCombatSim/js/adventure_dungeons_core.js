@@ -6,6 +6,7 @@ import {dressDungeon,dungeonBiome} from './adventure_dungeon_scenery_core.js';
 import {isSupportedType} from './combat_cards_core.js';
 import {dungeonProgress} from './adventure_coop_core.js';
 import {parseArenaStaminaCost} from './adventure_stamina_core.js';
+import {earthMapInfo} from './adventure_earth_core.js';
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 const targets=new Set(['self','max_max_hp','lowest_hp','random_friendly','random_hostile','threat_highest','threat_lowest']);
 export function dungeonFor(content,id){return content.dungeons?.find(d=>d.id===id);}
@@ -139,7 +140,7 @@ export function validateDungeons(save,content){
     validateTowerRecords(save,content);
     save.dungeonRuns??={};save.dungeonReturn??=null;
     assert(save.dungeonRuns&&typeof save.dungeonRuns==='object'&&!Array.isArray(save.dungeonRuns),'副本进度无效');
-    const position=(p,id)=>{const info=content.worldMapIndex.islands[id];return info&&Number.isFinite(p?.x)&&Number.isFinite(p?.y)&&p.x>=0&&p.y>=0&&p.x<=info.w&&p.y<=info.h;};
+    const position=(p,id)=>{const info=id==='earth'?earthMapInfo(content):content.worldMapIndex.islands[id];return info&&Number.isFinite(p?.x)&&Number.isFinite(p?.y)&&p.x>=0&&p.y>=0&&p.x<=info.w&&p.y<=info.h;};
     for(const [id,run]of [...Object.entries(save.dungeonRuns),...Object.entries(save.coopRun?.runs||{})]){
         const d=dungeonFor(content,id);
         assert(d?.playable&&run&&Array.isArray(run.cleared)&&new Set(run.cleared).size===run.cleared.length&&run.cleared.every(e=>d.arenas.some(a=>a.id===e&&!a.blocked.length)),'副本清怪记录无效');

@@ -1,3 +1,4 @@
+import {earthEncounter,earthNearest} from './adventure_earth_core.js';
 import {dailyBuffs,validateDailyBuff} from './language_daily_buff_core.js';
 import {claimSpeechReward,validateSpeechClaims} from './language_speech_rewards_core.js';
 import {dungeonLanguageBuff,dungeonLanguageBaseHp} from './adventure_dungeon_language_core.js';
@@ -316,6 +317,7 @@ function grantQuestRewards(save, content, quest) {
 }
 function retreatLanding(save,content){
     const pending=save.pendingEncounter;
+    if(save.zone==='earth'){const w=content.earthWorld;const position=w?earthNearest(w,save.position.x,save.position.y,{safe:true}):save.position;return {position:position||save.position,message:'你回到了附近的安全地点。'};}
     const safe={position:{...mapInfo(save.zone,content).initialSpawn},message:'你回到了安全地点。已保留物品与任务进度。'};
     if(!pending)return safe;
     const encounter=content.encounters.find(e=>e.id===pending.encounterId);
@@ -603,11 +605,12 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
     const pending = save.pendingEncounter;
     assert(pending && battle.finished && battle.seed === pending.seed,'战斗尚未结束');
     if (save.rewardedEncounters.includes(pending.id)) { save.pendingEncounter = null; return false; }
-    const encounter = content.encounters.find(e => e.id === pending.encounterId), monster = pending.monster || content.monsters[encounter.monsterId];
+    const encounter = content.encounters.find(e => e.id === pending.encounterId)||specialEncounter(save,content,pending.encounterId), monster = pending.monster || content.monsters[encounter.monsterId];
     settleRunes(save,battle);
     if(content.pets)settleParty(save,content,battle);
     let insufficientStamina=false,staminaSpent=0;
     if (battle.winner === 'near') {
+        if(save.zone==='earth'&&content.earthWorld?.encounters.some(e=>e.id===pending.encounterId&&e.chapterEvent==='defense')&&save.earthProgress?.step===3)save.earthProgress={version:1,step:4};
         if(!dungeonFor(content,save.zone))markEncounterDefeated(save,content,pending.encounterId,now);
         const cost=encounterStaminaCost(content,pending.encounterId);
         const gate=applyCombatStamina(save,content,cost);
@@ -742,6 +745,7 @@ export function parseSave(raw,content) {
             assert(Object.keys(saved).every(key=>Object.hasOwn(expected,key))&&Object.entries(expected).every(([key,value])=>!Object.hasOwn(saved,key)?optional.has(key):JSON.stringify(saved[key])===JSON.stringify(value)),'存档养成参数无效');
         }
     }
+    if(s.earthProgress!==undefined)assert(s.earthProgress.version===1&&Number.isInteger(s.earthProgress.step)&&s.earthProgress.step>=0&&s.earthProgress.step<=5,'地球章节记录无效');
     syncProgression(s,content); validDeck(s,content,s.deck);
     if(s.deckLayouts!==undefined)validateDeckLayouts(s,content,s.deckLayouts,s.activeDeckLayout);
     migrateDefaultPocket(s,content);
@@ -753,6 +757,7 @@ export function parseSave(raw,content) {
 }
 
 export function specialEncounter(save,content,id){
+    if(save.zone==='earth'&&String(id).startsWith('earth:'))return earthEncounter(content,id);
     if(!content.pets||typeof id!=='string')return null;
     const wild=id.startsWith('wild:')?content.pets[id.slice(5)]:null;
     const level=wild?Math.max(wild.unlockLevel,save.level):Number(id.slice(6));

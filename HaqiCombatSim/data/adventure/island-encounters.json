@@ -12830,8 +12830,8 @@
       "id": "island:fire:config/Aries/Mob/FireLand/MobTemplate_RedCrabLower.xml",
       "zone": "fire",
       "monsterId": "config/Aries/Mob/FireLand/MobTemplate_RedCrabLower.xml",
-      "x": 3590,
-      "y": 3548,
+      "x": 3562,
+      "y": 3482,
       "legacyOnly": true
     },
     {
@@ -13780,120 +13780,120 @@
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_DeathMonkey03.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_DeathMonkey03.xml",
-      "x": 3170,
-      "y": 3347,
+      "x": 3194,
+      "y": 2863,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_FrostFang.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_FrostFang.xml",
-      "x": 3356,
-      "y": 3245,
+      "x": 3391,
+      "y": 2832,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_GreatIceBear.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_GreatIceBear.xml",
-      "x": 3553,
-      "y": 3213,
+      "x": 3589,
+      "y": 2801,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_GreatStormBearLower.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_GreatStormBearLower.xml",
-      "x": 3968,
-      "y": 2896,
+      "x": 3708,
+      "y": 2669,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_IceFrostFang03.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_IceFrostFang03.xml",
-      "x": 4035,
-      "y": 2707,
+      "x": 3684,
+      "y": 2439,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_IceFrostFang04.xml",
       "zone": "ice",
       "monsterId": "island-monster:config/Aries/Mob/IceLand/MobTemplate_IceFrostFang04.xml",
-      "x": 4095,
-      "y": 2238,
+      "x": 3725,
+      "y": 2276,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_IceShrimpWarrior.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_IceShrimpWarrior.xml",
-      "x": 4022,
-      "y": 2052,
+      "x": 3652,
+      "y": 2090,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_IceWolf.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_IceWolf.xml",
-      "x": 3545,
-      "y": 2013,
+      "x": 3436,
+      "y": 2003,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_LeaderFrostFang.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_LeaderFrostFang.xml",
-      "x": 3371,
-      "y": 1915,
+      "x": 3262,
+      "y": 1905,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_LifeBear.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_LifeBear.xml",
-      "x": 3372,
-      "y": 1505,
+      "x": 3109,
+      "y": 1768,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_LifeStoneMonster02.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_LifeStoneMonster02.xml",
-      "x": 3103,
-      "y": 1430,
+      "x": 3018,
+      "y": 1362,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_LifeStoneMonster03.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_LifeStoneMonster03.xml",
-      "x": 2712,
-      "y": 1729,
+      "x": 2825,
+      "y": 1310,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_SandScorpion.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_SandScorpion.xml",
-      "x": 2527,
-      "y": 1647,
+      "x": 2631,
+      "y": 1258,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_SandScorpion_Boss.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_SandScorpion_Boss.xml",
-      "x": 2257,
-      "y": 1356,
+      "x": 2537,
+      "y": 1748,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_StoneMonster.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_StoneMonster.xml",
-      "x": 2286,
-      "y": 1789,
+      "x": 2022,
+      "y": 1547,
       "legacyOnly": true
     },
     {
@@ -13908,40 +13908,40 @@
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_StormWindEagle02.xml",
       "zone": "ice",
       "monsterId": "island-monster:config/Aries/Mob/IceLand/MobTemplate_StormWindEagle02.xml",
-      "x": 1999,
-      "y": 2273,
+      "x": 1914,
+      "y": 2195,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey.xml",
-      "x": 1904,
-      "y": 2381,
+      "x": 1490,
+      "y": 2265,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey_Boss.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey_Boss.xml",
-      "x": 1781,
-      "y": 2554,
+      "x": 1325,
+      "y": 2427,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey_Fuben.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_UndeadMonkey_Fuben.xml",
-      "x": 1356,
-      "y": 2747,
+      "x": 1385,
+      "y": 2986,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/IceLand/MobTemplate_WindEagle.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/IceLand/MobTemplate_WindEagle.xml",
-      "x": 1479,
-      "y": 3162,
+      "x": 1842,
+      "y": 3081,
       "legacyOnly": true
     },
     {
@@ -13955,24 +13955,24 @@
       "id": "island:ice:config/Aries/Mob/WeeklyBoss/MobTemplate_ChillwindEagle.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/WeeklyBoss/MobTemplate_ChillwindEagle.xml",
-      "x": 2124,
-      "y": 3335,
+      "x": 1900,
+      "y": 3614,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/WeeklyBoss/MobTemplate_DeadTreeMonster.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/WeeklyBoss/MobTemplate_DeadTreeMonster.xml",
-      "x": 1983,
-      "y": 3830,
+      "x": 1872,
+      "y": 2975,
       "legacyOnly": true
     },
     {
       "id": "island:ice:config/Aries/Mob/WeeklyBoss/MobTemplate_FrostFang_Boss.xml",
       "zone": "ice",
       "monsterId": "config/Aries/Mob/WeeklyBoss/MobTemplate_FrostFang_Boss.xml",
-      "x": 2140,
-      "y": 2592,
+      "x": 2175,
+      "y": 2993,
       "legacyOnly": true
     },
     {
@@ -14087,8 +14087,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 2855,
-      "y": 3347
+      "x": 2957,
+      "y": 3308
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:4",
@@ -14137,8 +14137,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 3170,
-      "y": 3347
+      "x": 3194,
+      "y": 2863
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:6",
@@ -14162,8 +14162,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 3299,
-      "y": 2891
+      "x": 3356,
+      "y": 3245
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:7",
@@ -14212,8 +14212,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 3645,
-      "y": 3154
+      "x": 3981,
+      "y": 3012
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:9",
@@ -14237,8 +14237,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 3968,
-      "y": 2896
+      "x": 3708,
+      "y": 2669
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:10",
@@ -14262,8 +14262,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 4035,
-      "y": 2707
+      "x": 3684,
+      "y": 2439
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:11",
@@ -14286,8 +14286,8 @@
         "respawn_interval": "8000",
         "_internal_selected_": "False"
       },
-      "x": 4091,
-      "y": 2348
+      "x": 4095,
+      "y": 2238
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:12",
@@ -14310,8 +14310,8 @@
         "ai_module": "",
         "_internal_selected_": "False"
       },
-      "x": 4018,
-      "y": 2161
+      "x": 3648,
+      "y": 2199
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:13",
@@ -14334,8 +14334,8 @@
         "respawn_interval": "8000",
         "_internal_selected_": "False"
       },
-      "x": 4053,
-      "y": 1933
+      "x": 3786,
+      "y": 1789
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:14",
@@ -14359,8 +14359,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 3720,
-      "y": 1701
+      "x": 3436,
+      "y": 2003
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:15",
@@ -14384,8 +14384,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 3371,
-      "y": 1915
+      "x": 3262,
+      "y": 1905
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:16",
@@ -14409,8 +14409,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 3437,
-      "y": 1593
+      "x": 3372,
+      "y": 1505
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:17",
@@ -14434,8 +14434,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 3263,
-      "y": 1495
+      "x": 3002,
+      "y": 1807
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:18",
@@ -14459,8 +14459,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 2914,
-      "y": 1750
+      "x": 2817,
+      "y": 1724
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:19",
@@ -14483,8 +14483,8 @@
         "uid": "20101123T114058.265625-187",
         "_internal_selected_": "False"
       },
-      "x": 2712,
-      "y": 1729
+      "x": 2825,
+      "y": 1310
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:20",
@@ -14508,8 +14508,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 2527,
-      "y": 1647
+      "x": 2631,
+      "y": 1258
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:21",
@@ -14533,8 +14533,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 2535,
-      "y": 1233
+      "x": 2257,
+      "y": 1356
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:22",
@@ -14558,8 +14558,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 2470,
-      "y": 1822
+      "x": 2122,
+      "y": 1503
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:23",
@@ -14633,8 +14633,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 1717,
-      "y": 1880
+      "x": 1914,
+      "y": 2195
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:26",
@@ -14683,8 +14683,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 1766,
-      "y": 2446
+      "x": 1421,
+      "y": 2350
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:28",
@@ -14708,8 +14708,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 2532,
-      "y": 3732
+      "x": 1824,
+      "y": 2670
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:29",
@@ -14733,8 +14733,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 1356,
-      "y": 2747
+      "x": 1385,
+      "y": 2986
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:30",
@@ -14758,8 +14758,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 1479,
-      "y": 3162
+      "x": 1842,
+      "y": 3081
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:31",
@@ -14783,8 +14783,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 1863,
-      "y": 3181
+      "x": 1639,
+      "y": 3461
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:32",
@@ -14807,8 +14807,8 @@
         "uid": "a9aa4894-742a-4d00-b036-d24f2f67858f",
         "_internal_selected_": "False"
       },
-      "x": 1744,
-      "y": 3489
+      "x": 1795,
+      "y": 3586
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:33",
@@ -14832,8 +14832,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 1900,
-      "y": 3614
+      "x": 2202,
+      "y": 3398
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:34",
@@ -14857,8 +14857,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 1983,
-      "y": 3830
+      "x": 1872,
+      "y": 2975
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:35",
@@ -14882,8 +14882,8 @@
         "_internal_selected_": "True",
         "label": ""
       },
-      "x": 2071,
-      "y": 2957
+      "x": 2140,
+      "y": 2592
     },
     {
       "id": "island:ice:arena:FrostRoarIsland.Arenas_Mobs:36",
@@ -14907,8 +14907,8 @@
         "_internal_selected_": "False",
         "label": ""
       },
-      "x": 2364,
-      "y": 3002
+      "x": 2587,
+      "y": 2635
     },
     {
       "id": "island:desert:config/Aries/Mob/AncientEgyptIsland/MobTemplate_DeathMummy_Boss.xml",
@@ -15759,8 +15759,8 @@
         "uid": "1f6e60b0-c719-4e31-af91-db18db230b55",
         "_internal_selected_": "False"
       },
-      "x": 3496,
-      "y": 3686
+      "x": 3475,
+      "y": 3649
     },
     {
       "id": "island:desert:arena:AncientEgyptIsland.Arenas_Mobs:24",
@@ -15900,8 +15900,8 @@
       "id": "island:dark:config/Aries/Mob/DeathLand/MobTemplate_Ancient_Dragon01_life.xml",
       "zone": "dark",
       "monsterId": "config/Aries/Mob/DeathLand/MobTemplate_Ancient_Dragon01_life.xml",
-      "x": 2121,
-      "y": 3221,
+      "x": 2476,
+      "y": 3274,
       "legacyOnly": true
     },
     {
@@ -15916,8 +15916,8 @@
       "id": "island:dark:config/Aries/Mob/DeathLand/MobTemplate_Cactus01_Life.xml",
       "zone": "dark",
       "monsterId": "config/Aries/Mob/DeathLand/MobTemplate_Cactus01_Life.xml",
-      "x": 1990,
-      "y": 2743,
+      "x": 2138,
+      "y": 2467,
       "legacyOnly": true
     },
     {
@@ -15932,40 +15932,40 @@
       "id": "island:dark:config/Aries/Mob/DeathLand/MobTemplate_CactusBoss_Storm.xml",
       "zone": "dark",
       "monsterId": "island-monster:config/Aries/Mob/DeathLand/MobTemplate_CactusBoss_Storm.xml",
-      "x": 1830,
-      "y": 2069,
+      "x": 1435,
+      "y": 2192,
       "legacyOnly": true
     },
     {
       "id": "island:dark:config/Aries/Mob/DeathLand/MobTemplate_Crocodile01_Life.xml",
       "zone": "dark",
       "monsterId": "config/Aries/Mob/DeathLand/MobTemplate_Crocodile01_Life.xml",
-      "x": 1566,
-      "y": 1594,
+      "x": 1674,
+      "y": 1612,
       "legacyOnly": true
     },
     {
       "id": "island:dark:config/Aries/Mob/DeathLand/MobTemplate_Crocodile02_Life.xml",
       "zone": "dark",
       "monsterId": "config/Aries/Mob/DeathLand/MobTemplate_Crocodile02_Life.xml",
-      "x": 2128,
-      "y": 1768,
+      "x": 1988,
+      "y": 1469,
       "legacyOnly": true
     },
     {
       "id": "island:dark:config/Aries/Mob/DeathLand/MobTemplate_CustodianHell_Ice.xml",
       "zone": "dark",
       "monsterId": "island-monster:config/Aries/Mob/DeathLand/MobTemplate_CustodianHell_Ice.xml",
-      "x": 2427,
-      "y": 1649,
+      "x": 2209,
+      "y": 1266,
       "legacyOnly": true
     },
     {
       "id": "island:dark:config/Aries/Mob/DeathLand/MobTemplate_DevilTree_Fire.xml",
       "zone": "dark",
       "monsterId": "config/Aries/Mob/DeathLand/MobTemplate_DevilTree_Fire.xml",
-      "x": 2728,
-      "y": 981,
+      "x": 2667,
+      "y": 1078,
       "legacyOnly": true
     },
     {
@@ -15996,8 +15996,8 @@
       "id": "island:dark:config/Aries/Mob/DeathLand/MobTemplate_FishManBoss_Ice.xml",
       "zone": "dark",
       "monsterId": "config/Aries/Mob/DeathLand/MobTemplate_FishManBoss_Ice.xml",
-      "x": 3445,
-      "y": 2616,
+      "x": 3617,
+      "y": 2165,
       "legacyOnly": true
     },
     {
@@ -16012,16 +16012,16 @@
       "id": "island:dark:config/Aries/Mob/DeathLand/MobTemplate_HypocriticalMonster_Life.xml",
       "zone": "dark",
       "monsterId": "config/Aries/Mob/DeathLand/MobTemplate_HypocriticalMonster_Life.xml",
-      "x": 3283,
-      "y": 3038,
+      "x": 3179,
+      "y": 3071,
       "legacyOnly": true
     },
     {
       "id": "island:dark:config/Aries/Mob/FrozenPolar/MobTemplate_FrozenPolar05_2.xml",
       "zone": "dark",
       "monsterId": "island-monster:config/Aries/Mob/FrozenPolar/MobTemplate_FrozenPolar05_2.xml",
-      "x": 3037,
-      "y": 2536
+      "x": 2980,
+      "y": 3048
     },
     {
       "id": "island:dark:config/Aries/Mob/HeroStormEye/MobTemplate_IceBonBoss_Special.xml",
@@ -16215,8 +16215,8 @@
         "label": "幽灵船_鱼人护卫_偷袭者",
         "end_motion_id": ""
       },
-      "x": 1934,
-      "y": 2240
+      "x": 1538,
+      "y": 2363
     },
     {
       "id": "island:dark:arena:DarkForestIsland.Arenas_Mobs:17",
@@ -16243,8 +16243,8 @@
         "label": "幽灵船_鱼人护卫x2",
         "end_motion_id": ""
       },
-      "x": 1741,
-      "y": 2007
+      "x": 1420,
+      "y": 2084
     },
     {
       "id": "island:dark:arena:DarkForestIsland.Arenas_Mobs:18",
@@ -16331,8 +16331,8 @@
         "label": "远古森林_巨鳄护法_巨鳄精英",
         "end_motion_id": ""
       },
-      "x": 2422,
-      "y": 1496
+      "x": 2252,
+      "y": 1165
     },
     {
       "id": "island:dark:arena:DarkForestIsland.Arenas_Mobs:21",
@@ -16445,8 +16445,8 @@
         "label": "远古森林_格斗仙人掌x2",
         "end_motion_id": ""
       },
-      "x": 3527,
-      "y": 2245
+      "x": 3202,
+      "y": 2393
     }
   ]
 }

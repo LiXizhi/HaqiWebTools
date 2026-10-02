@@ -1,0 +1,228 @@
+{
+  "version": 1,
+  "source": "Original AI-generated offline city and street scenery; fictional buildings, not surveyed streets.",
+  "grid": {
+    "columns": 4,
+    "rows": 4
+  },
+  "buildings": {
+    "local": "assets/adventure/earth/earth-buildings-f2000a5f78ec.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-buildings-f2000a5f78ec.webp",
+    "width": 768,
+    "height": 768,
+    "bytes": 177864,
+    "sha256": "f2000a5f78ec81dc93450a3e2f0b670c92ad28958e584f078c978fe4e30d73d2",
+    "sourceSha256": "2b1cc716c6298d731f19f48a1c6c060be0f1b374b56ea270d72e75231f7b1816",
+    "encoding": {
+      "quality": 80
+    },
+    "frames": [
+      [
+        0,
+        0,
+        192,
+        192
+      ],
+      [
+        192,
+        0,
+        192,
+        192
+      ],
+      [
+        384,
+        0,
+        192,
+        192
+      ],
+      [
+        576,
+        0,
+        192,
+        192
+      ],
+      [
+        0,
+        192,
+        192,
+        192
+      ],
+      [
+        192,
+        192,
+        192,
+        192
+      ],
+      [
+        384,
+        192,
+        192,
+        192
+      ],
+      [
+        576,
+        192,
+        192,
+        192
+      ],
+      [
+        0,
+        384,
+        192,
+        192
+      ],
+      [
+        192,
+        384,
+        192,
+        192
+      ],
+      [
+        384,
+        384,
+        192,
+        192
+      ],
+      [
+        576,
+        384,
+        192,
+        192
+      ],
+      [
+        0,
+        576,
+        192,
+        192
+      ],
+      [
+        192,
+        576,
+        192,
+        192
+      ],
+      [
+        384,
+        576,
+        192,
+        192
+      ],
+      [
+        576,
+        576,
+        192,
+        192
+      ]
+    ]
+  },
+  "street": {
+    "local": "assets/adventure/earth/earth-street-fffd34acd4c9.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-street-fffd34acd4c9.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 189842,
+    "sha256": "fffd34acd4c932445cf6b4447f77e7ae0fc269e44f4a8ef01afa168e37b382bf",
+    "sourceSha256": "2f1489cfc1f68eebb9f29c36ee9b9c14949a2cef7304df778ed151c38c1b72a0",
+    "encoding": {
+      "quality": 88
+    },
+    "frames": [
+      [
+        0,
+        0,
+        160,
+        160
+      ],
+      [
+        160,
+        0,
+        160,
+        160
+      ],
+      [
+        320,
+        0,
+        160,
+        160
+      ],
+      [
+        480,
+        0,
+        160,
+        160
+      ],
+      [
+        0,
+        160,
+        160,
+        160
+      ],
+      [
+        160,
+        160,
+        160,
+        160
+      ],
+      [
+        320,
+        160,
+        160,
+        160
+      ],
+      [
+        480,
+        160,
+        160,
+        160
+      ],
+      [
+        0,
+        320,
+        160,
+        160
+      ],
+      [
+        160,
+        320,
+        160,
+        160
+      ],
+      [
+        320,
+        320,
+        160,
+        160
+      ],
+      [
+        480,
+        320,
+        160,
+        160
+      ],
+      [
+        0,
+        480,
+        160,
+        160
+      ],
+      [
+        160,
+        480,
+        160,
+        160
+      ],
+      [
+        320,
+        480,
+        160,
+        160
+      ],
+      [
+        480,
+        480,
+        160,
+        160
+      ]
+    ]
+  }
+}

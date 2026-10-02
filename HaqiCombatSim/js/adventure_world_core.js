@@ -1,4 +1,4 @@
-import {monsterInteractionTargets,monsterContactDistance,inMonsterTerritory} from './adventure_monster_motion_core.js';
+import {monsterInteractionTargets,monsterContactDistance,inMonsterTerritory,pruneMonsterScene} from './adventure_monster_motion_core.js';
 import {dungeonProgress} from './adventure_coop_core.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {islandBuildings,harborAccess} from './adventure_buildings_core.js';
@@ -8,6 +8,7 @@ import { onAnyBridge } from './adventure_bridge_core.js';
 import { onLargeIsland, riverBlocks, sceneryCoversActor, separateBuilding } from './adventure_island_layout_core.js';
 import {encounterCoolingDown} from './adventure_encounter_cooldown_core.js';
 import {defaultParams,resolveParams} from './combat_params_core.js';
+import {earthWalkable,earthNearest} from './adventure_earth_core.js';
 const interactionDefaults=defaultParams('kids').adventure;
 export const WALK_SPEED = 210;
 export function updateEncounterVisibility(world,save,now) {
@@ -24,6 +25,7 @@ export function canResumeWorld(world,previousSave,nextSave,content){
     return !!world&&!world.isDungeon&&previousSave===nextSave&&world.zone===nextSave?.zone&&world.layout===content.worldMaps?.[world.zone];
 }
 export function createWorld(zone,content,save=null) {
+    if(zone==='earth'){if(!content.earthWorld)throw Error('地球场景尚未加载');return content.earthWorld;}
     if(!islandFor(zone)&&!dungeonFor(content,zone))throw new Error('目的地不存在');
     const layout=content.worldMaps?.[zone];
     if(!layout)throw Error('缺少岛屿地图：'+zone);
@@ -227,6 +229,7 @@ export function retreatBeside(world,player,target){
     return {...spawn};
 }
 export function walkable(world,x,y) {
+    if(world.isEarth)return earthWalkable(world,x,y);
     if(world.movementExclusions?.some(o=>Math.hypot(x-o.x,y-o.y)<o.radius))return false;
     if(!Number.isFinite(x)||!Number.isFinite(y))return false;
     if(world.layout?.route)return routeLocation(world,{x,y}).distance<=world.paths[0].width/2-8;
@@ -240,6 +243,7 @@ export function walkable(world,x,y) {
 // and near-coast clicks) and only fall back to a whole-island grid scan for
 // points far out in the water.
 export function nearestWalkable(world,x,y) {
+    if(world.isEarth)return earthNearest(world,x,y);
     if(walkable(world,x,y))return{x,y};
     if(world.layout?.route)return {...routeLocation(world,{x,y}).point};
     const tryLocal=(radius,step)=>{
@@ -312,7 +316,7 @@ export function movePosition(world,position,dx,dy) {
     const steps=Math.max(1,Math.ceil(Math.hypot(dx,dy)/8));let {x,y}=position;
     const allowed=(x,y)=>walkable(world,x,y)&&(!world.layout?.route||routeLocation(world,{x,y}).progress<=dungeonLimit(world));
     for(let i=0;i<steps;i++) {if(allowed(x+dx/steps,y))x+=dx/steps;if(allowed(x,y+dy/steps))y+=dy/steps;}
-    return {x,y};
+    return {x:world.isEarth?((x%world.w)+world.w)%world.w:x,y};
 }
 export function clearSegment(world,a,b) {
     const length=distance(a,b),steps=Math.max(1,Math.ceil(length/2));
@@ -368,7 +372,7 @@ function gridPath(world,start,destination,bounds=null){
     if(!goal)return [];
     const open=[from],cost=new Map([[key(from),0]]),parent=new Map(),closed=new Set();
     const dirs=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
-    while(open.length) {
+    while(open.length&&(!world.isEarth||closed.size<world.earthRules.maxPathNodes)) {
         open.sort((a,b)=>(cost.get(key(a))+distance(a,goal))-(cost.get(key(b))+distance(b,goal)));
         const p=open.shift(),k=key(p);if(closed.has(k))continue;closed.add(k);
         if(k===key(goal)) {
@@ -403,6 +407,12 @@ export function followPath(world,position,path,budget) {
     return {position:p,path:remaining,blocked:false};
 }
 export function findPath(world,start,destination) {
+    if(world.isEarth){
+        const radius=world.earthRules.navigationRadius;
+        if(distance(start,destination)>radius)return [];
+        if(clearSegment(world,start,destination))return [{...destination}];
+        return gridPath(world,start,destination,{minX:start.x-radius,minY:start.y-radius,maxX:start.x+radius,maxY:start.y+radius});
+    }
     if(world.layout?.route){
         const from=routeLocation(world,start),to=routeLocation(world,destination),limit=dungeonLimit(world);
         const end=routeLocation(world,routePoint(world,Math.min(to.progress,limit)));
@@ -467,6 +477,7 @@ function roadPath(world,start,destination){
 
 // Immutable world objects are indexed once; collision and drawing query local buckets.
 const objectIndices=new WeakMap();
+export function invalidateWorldObjects(world){objectIndices.delete(world);roadGraphs.delete(world);pruneMonsterScene(world);}
 export function nearbyWorldObjects(world,rect) {
     let buckets=objectIndices.get(world);const cell=256;
     if(!buckets){

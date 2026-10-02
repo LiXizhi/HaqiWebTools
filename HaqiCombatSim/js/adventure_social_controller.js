@@ -99,17 +99,17 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
     function clearJoinTimers(){for(let i=0;i<3;i++){if(joinTimers[i]!=null){cancel(joinTimers[i]);joinTimers[i]=null;}ui.openSlots[i]=false;}}
     function setAllies(list){ui.allies=[list[0]||null,list[1]||null,list[2]||null];}
     async function ready(){if(!loading)loading=fetch(new URL('../data/adventure/social.json',import.meta.url)).then(r=>{if(!r.ok)throw Error('伙伴配置加载失败');return r.json();}).then(c=>{client.configure(c);return config=c;}).catch(e=>{loading=null;throw e;});return loading;}
-    function fillers(){const {save,assets}=getState();return config.personas.flatMap((p,i)=>[0,1,2,3].map(direction=>{const id=`companion:${i}:${direction}`,level=save.level,unit={id,name:p.name,school:p.school,level,isBot:true,deck:presetDeck(assets.dataset,p.school,{maxLevel:level,maxCards:24}),stats:{}},appearance=i%2?'girl':'boy';return {...p,id,kind:'companion',appearance,bodyId:randomHeroBodyId(assets.hero?.manifest,appearance,`${save.seed}:${id}`),isVip:hashSeed(`${id}:vip`)%3===0,native:['en','zh','ja','ko'][direction],target:direction?'en':'zh',culture:['纽约','中国','日本','韩国'][direction],level,seed:hashSeed(id),snapshot:makeSocialSnapshot(unit,assets.dataset)};}));}
+    function fillers(){const {save,assets,world}=getState();return config.personas.flatMap((p,i)=>[0,1,2,3].map(direction=>{const id=world?.isEarth?`companion:earth:${world.earthRules.generationVersion}:${world.earthSocialId}:${i}:${direction}`:`companion:${i}:${direction}`,level=save.level,unit={id,name:p.name,school:p.school,level,isBot:true,deck:presetDeck(assets.dataset,p.school,{maxLevel:level,maxCards:24}),stats:{}},appearance=i%2?'girl':'boy';return {...p,id,kind:'companion',appearance,bodyId:randomHeroBodyId(assets.hero?.manifest,appearance,world?.isEarth?id:`${save.seed}:${id}`),isVip:hashSeed(`${id}:vip`)%3===0,native:['en','zh','ja','ko'][direction],target:direction?'en':'zh',culture:['纽约','中国','日本','韩国'][direction],level,seed:hashSeed(id),snapshot:makeSocialSnapshot(unit,assets.dataset)};}));}
     function installRoster(candidates=cachedCandidates){
         const {save,world,assets}=getState();if(!save||!world)return;
         if(save.coopRun){setAllies(save.coopRun.members.map(m=>m.profile));ui.roster=teamMembers();ui.partyDungeonId=save.coopRun.dungeonId;clearJoinTimers();}
-        else if(!config?.worlds[world.zone]?.enabled){ui.roster=[];}
-        else ui.roster=selectSocialRoster({candidates,friends:client.state.friends.map(f=>f.userId),blocked:client.state.blocked.map(f=>f.userId),interactions:client.state.interactions,challenges:save.socialChallenges||{},selfId:client.state.userId,world:world.zone,native:language(save.languageLearning?.native||'zh'),target:language(save.languageLearning?.target||'en'),level:save.level,now:Date.now(),seed:save.seed,capacity:socialCapacity(world.zone,config.worlds[world.zone]),fillers:fillers()});
+        else if(!world.isEarth&&!config?.worlds[world.zone]?.enabled){ui.roster=[];}
+        else ui.roster=selectSocialRoster({candidates,friends:client.state.friends.map(f=>f.userId),blocked:client.state.blocked.map(f=>f.userId),interactions:client.state.interactions,challenges:save.socialChallenges||{},selfId:client.state.userId,world:world.zone,native:language(save.languageLearning?.native||'zh'),target:language(save.languageLearning?.target||'en'),level:save.level,now:Date.now(),seed:world.isEarth?hashSeed(world.earthSocialId):save.seed,capacity:world.isEarth?(world.paths.length?8:0):socialCapacity(world.zone,config.worlds[world.zone]),fillers:fillers()});
         // An accepted local team is stable until the player removes it.
         for(const p of teamMembers())if(!ui.roster.some(r=>r.id===p.id)){if(ui.roster.length>=socialCapacity(world.zone,config.worlds[world.zone]||{}))ui.roster.pop();ui.roster.unshift(p);}
         const previous=worldRef===world?new Map(actors.map(a=>[a.profile.id,a])):new Map();
-        if(worldRef!==world)placementSeed=visitRng.int(1,0x7fffffff);
-        actors=createSocialActors(world,ui.roster,`${save.seed}:${placementSeed}`).map(a=>previous.has(a.profile.id)?{...previous.get(a.profile.id),profile:a.profile}:a);worldRef=world;onChange();
+        if(world.isEarth)placementSeed=hashSeed(`earth:${world.earthRules.generationVersion}:${world.earthSocialId}`);else if(worldRef!==world)placementSeed=visitRng.int(1,0x7fffffff);
+        actors=createSocialActors(world,ui.roster,world.isEarth?`earth:${placementSeed}`:`${save.seed}:${placementSeed}`).map(a=>previous.has(a.profile.id)?{...previous.get(a.profile.id),profile:a.profile}:a);worldRef=world;onChange();
     }
     async function run(fn){if(ui.busy)return;const token=epoch;ui.busy=true;ui.error='';onChange();try{await fn();}catch(e){if(token===epoch)ui.error=e.message;}finally{if(token===epoch){ui.busy=false;onChange();}}}
     async function refresh(){
@@ -216,7 +216,8 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         const token=epoch;await client.applyFriend(p.userId);if(token!==epoch)return;
         onPetDialogue(p.id,'heart');toast('好友申请已发送');
     }
-    const api={state,ready,client,
+    const api={
+        async refreshEarth(){const {world}=getState();if(!world?.isEarth||getState().locked)return;await ready();actors=actors.filter(a=>a.inParty||Math.hypot(a.position.x-world.center.x,a.position.y-world.center.y)<world.earthRules.chunkSize*2);installRoster();},state,ready,client,
         isFriend(peer){
             const id=typeof peer==='string'?peer:peer?.id;
             const userId=typeof peer==='object'&&peer?.kind==='account'?String(peer.userId||String(id).replace(/^user:/,'')):String(id||'').startsWith('user:')?String(id).slice(5):null;

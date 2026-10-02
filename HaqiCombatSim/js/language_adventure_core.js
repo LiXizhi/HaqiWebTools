@@ -107,7 +107,7 @@ export function rewardStatus(save, content, course, mode, now) {
 export function recordLearningCompletion(save, content, completion, access) {
     assert(access?.learningCompletion===completion,'缺少当次学习完成记录');
     const {course,mode,locale,attemptId,now,score,spoken}=completion;
-    assert(save.zone==='camp'&&save.languageLearning?.enabled&&save.languageLearning.target===locale,'学习场景已变化');
+    assert((save.zone==='camp'||save.zone==='earth'&&completion.story?.id?.startsWith('earth-shenzhen:'))&&save.languageLearning?.enabled&&save.languageLearning.target===locale,'学习场景已变化');
     assert((mode==='listening'?completion.heard===true:(spoken===true||completion.answered===true&&!!completion.story))&&score===100&&/^[\w-]{1,80}$/.test(attemptId),'学习任务尚未完成');
     if(completion.story){
         const s=completion.story;

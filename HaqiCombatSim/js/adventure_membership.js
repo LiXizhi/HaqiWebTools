@@ -1,13 +1,15 @@
 import {loadKeepwork} from './adventure_cloud.js';
 import {rechargeAmount,membershipCheckoutUrl} from './adventure_recharge_core.js';
+import {loadRechargePrice} from './adventure_recharge_pricing.js';
 
 // Keepwork core SDK: getUserProfile; VIP = commonVip || vip.
 // Account entitlement is transient browser state, never character/save data.
-export function createMembershipClient({loadSDK=loadKeepwork,onChange=()=>{},now=Date.now,timeoutMs=15000,eventTarget=globalThis.window,visibility=globalThis.document}={}) {
+export function createMembershipClient({loadSDK=loadKeepwork,loadPrice=loadRechargePrice,onChange=()=>{},now=Date.now,timeoutMs=15000,eventTarget=globalThis.window,visibility=globalThis.document}={}) {
     let sdk,version=0,request=0,subscribed=false,profilePending=false,pending=null,memberToken=null;
     let rechargePending=false,watchUntil=0,watching=false,returnPending=false;
     let state={status:'unknown',isVip:false,username:null};
-    const snapshot=()=>({...state,rechargePending});
+    let pricing={status:'unknown'},pricePending=null;
+    const snapshot=()=>({...state,rechargePending,rechargePricing:pricing});
     const publish=next=>{state=next;onChange(snapshot());return snapshot();};
     const deadlineValid=value=>!value||Number.isFinite(Date.parse(value))&&Date.parse(value)>now();
     const enabled=value=>value===true||value===1;
@@ -38,7 +40,7 @@ export function createMembershipClient({loadSDK=loadKeepwork,onChange=()=>{},now
                 const isVip=enabled(profile.commonVip)&&deadlineValid(profile.commonVipDeadline)||enabled(profile.vip)&&deadlineValid(profile.vipDeadline);
                 const deadlines=[[profile.commonVip,profile.commonVipDeadline],[profile.vip,profile.vipDeadline]].filter(([flag,date])=>enabled(flag)&&deadlineValid(date)&&Number.isFinite(Date.parse(date))).map(([,date])=>Date.parse(date));
                 const expiresAt=deadlines.length?new Date(Math.max(...deadlines)).toISOString():null;
-                return {status:'ready',isVip,username:profile.username,userId:profile.id,expiresAt};
+                return {status:'ready',isVip,username:profile.username,userId:profile.id,expiresAt,commonExpiresAt:profile.commonVipDeadline||null};
             })(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('timeout')),timeoutMs);})]);
             if(id!==request)throw Error('stale request');
             memberToken=sdk.token;return publish(next);
@@ -87,5 +89,15 @@ export function createMembershipClient({loadSDK=loadKeepwork,onChange=()=>{},now
             return await refresh({force:true});
         }finally{rechargePending=false;publish(state);}
     }
-    return {get state(){return snapshot();},refresh,openProfile,openRecharge};
+    function refreshRechargePrice({force=false}={}) {
+        if(pricePending)return pricePending;
+        if(!force&&pricing.status==='ready')return Promise.resolve(pricing);
+        pricing={status:'loading'};publish(state);
+        pricePending=Promise.resolve().then(()=>loadPrice()).then(priceCents=>{
+            if(!Number.isSafeInteger(priceCents)||priceCents<=0)throw Error('价格无效');
+            pricing={status:'ready',priceCents};
+        }).catch(()=>{pricing={status:'error'};}).finally(()=>{pricePending=null;publish(state);});
+        return pricePending;
+    }
+    return {get state(){return snapshot();},refresh,refreshRechargePrice,openProfile,openRecharge};
 }

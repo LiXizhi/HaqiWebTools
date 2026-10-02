@@ -523,6 +523,8 @@
 .membership-emblem { position:relative; display:inline-grid; place-items:center; width:88px; height:88px; flex:none; filter:drop-shadow(0 3px 2px #70471940); }
 .membership-emblem canvas { display:block; width:100%; height:100%; }
 .membership-emblem.inactive canvas { filter:grayscale(1); opacity:.6; }
+.recharge-star-orbit .membership-emblem { width:112px; height:112px; }
+@media(max-width:600px){.recharge-star-orbit .membership-emblem { width:90px; height:90px; }}
 .membership-card { display:grid; grid-template-columns:180px minmax(0,1fr); border:1px solid #c7a35d; border-radius:8px; overflow:hidden; background:#fff9e8; }
 .membership-identity { display:flex; flex-direction:column; align-items:center; padding:24px 14px; text-align:center; background:linear-gradient(#eae3d1,#f6edda); border-right:1px solid #d3b779; }
 .is-vip .membership-identity { background:radial-gradient(ellipse at top,#fff6c6,#edcb83); }

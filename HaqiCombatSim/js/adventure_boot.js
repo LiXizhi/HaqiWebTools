@@ -1,6 +1,7 @@
 import { configureLocale, loadLocaleFiles } from './locale.js';
 import { localeIdsToLoad, normalizeLocaleSave, isLocaleId } from './locale_core.js';
 import { setText, tr } from './locale_runtime.js';
+import { createEntryEmblem } from './view_entry_brand.js';
 
 // Read only language preferences; full save validation remains in the app.
 // The local display-language choice (homepage or settings) outranks the role save,
@@ -26,7 +27,10 @@ export async function bootAdventure() {
     document.documentElement.lang = preferences.locale;
     document.title = tr('魔法哈奇 · 初心之旅');
     const card = document.getElementById('boot-loading');
+    document.getElementById('load-brand').replaceChildren(createEntryEmblem('boot-emblem'));
     setText(document.getElementById('load-title'), '魔法哈奇');
+    setText(document.getElementById('load-chapter'), '初心之旅');
+    setText(document.getElementById('load-note'), '与宠物相伴，与新朋友相遇。');
     setText(document.getElementById('load-caption'), '加载中…');
     setText(document.getElementById('load-status'), '正在准备你的魔法之旅…');
     document.getElementById('load-progress').setAttribute('aria-label', tr('正在准备游戏资源'));

@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "terrainBase": "https://cdn.keepwork.com/worldmap/",
+  "cityBase": "https://cdn.keepwork.com/helloworld/stationdata_v1/",
+  "cityVersion": 4,
+  "cityLanguage": "zhCN",
+  "overview": {
+    "url": "https://cdn.keepwork.com/worldmap/terrain_-180_180_-60_85.png",
+    "bounds": {
+      "west": -180,
+      "east": 180,
+      "south": -60,
+      "north": 85
+    }
+  },
+  "attribution": "HelloWorld：真实地表分类与城市位置；道路和建筑为游戏改编，不作为导航地图。",
+  "source": "apps/official/apps/helloworld/WorldConfig.js",
+  "palette": [
+    {
+      "rgb": "000000",
+      "type": "ocean",
+      "color": "#438b9b"
+    },
+    {
+      "rgb": "1A5BAB",
+      "type": "water",
+      "color": "#589eae"
+    },
+    {
+      "rgb": "358221",
+      "type": "forest",
+      "color": "#64845b"
+    },
+    {
+      "rgb": "A7D282",
+      "type": "grass",
+      "color": "#a9b57b"
+    },
+    {
+      "rgb": "90C090",
+      "type": "urban",
+      "color": "#b8bd99"
+    },
+    {
+      "rgb": "FFDB5C",
+      "type": "crops",
+      "color": "#c3b777"
+    },
+    {
+      "rgb": "EECFA8",
+      "type": "scrub",
+      "color": "#b6ac80"
+    },
+    {
+      "rgb": "EDE9E4",
+      "type": "barren",
+      "color": "#cfbea0"
+    },
+    {
+      "rgb": "F2F2F2",
+      "type": "snow",
+      "color": "#e3e8df"
+    },
+    {
+      "rgb": "419BDF",
+      "type": "wetland",
+      "color": "#86a896"
+    }
+  ],
+  "coordinates": {
+    "projection": "equirectangular",
+    "longitude": "[-180,180), wrap",
+    "latitude": "[-90,90], clamp",
+    "scaleParameter": "BalanceParams.earth.unitsPerDegree",
+    "terrainDegrees": 2,
+    "cityDegrees": 20,
+    "sourceMeaning": "land-cover, not surveyed elevation or street network"
+  },
+  "catalog": "https://cdn.keepwork.com/helloworld/topcities/world_traveler_globalmap.zhCN.csv?ver=4"
+}

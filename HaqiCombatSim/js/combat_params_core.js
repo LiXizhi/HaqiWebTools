@@ -36,6 +36,8 @@ export function defaultParams(version = 'teen') {
     const teen = version === 'teen';
     return {
         version,
+        // Web Earth exploration budgets; independent of combat RNG and formulas.
+        earth: {unitsPerDegree:24000,generationVersion:1,chunkSize:1000,activeRadius:2,prefetchRadius:3,maxConcurrent:4,maxTiles:12,maxCityTiles:4,maxChunks:64,maxSceneCities:24,maxQueuedRequests:48,maxDecodedBytes:33554432,requestTimeoutMs:20000,cityRadius:480,roadWidth:70,roadSampleStep:24,roadSafeMargin:65,buildingSafeMargin:100,buildingsPerCity:12,buildingSpacing:150,buildingOffset:170,treesPerChunk:12,monstersPerChunk:1,monsterClearance:350,arrivalRadius:1500,arrivalStep:48,navigationRadius:1200,maxPathNodes:2500,streamIntervalMs:350,surfaceChunkSize:512,surfaceResolution:256,surfaceMaxChunks:64,surfacePrefetchRing:1,landmarkRoadClearance:20,landmarkPlacementStep:60,landmarkPlacementRadius:900,surfaceFrameBudgetMs:4,surfaceTexturePeriod:192,decorationsPerChunk:80,forestDecorationsPerChunk:100,cityPopulationLarge:1000000,cityPopulationMedium:100000,cityDensities:[.45,.7,.94],cityInfluenceRadius:12000,cityCellsPerChunk:6,cityStreetFraction:.28,maxUrbanObjects:1800},
         // Web cross-cultural relationships; not original combat formula values.
         characterRelations: {initialMin:0,initialMax:60,maxAiDelta:5,giftGain:3,dungeonGain:3,matchGain:2,dailyFreeMessages:2,recentMessages:20,compactAt:40,indexPageSize:100},
         // Web island unlock levels; original world configuration is unavailable.
@@ -291,6 +293,7 @@ export function resolveParams(dataset, params) {
         dungeonJourney: { ...defaultParams(version).dungeonJourney, ...params.dungeonJourney },
         dailyLanguage: { ...defaultParams(version).dailyLanguage, ...params.dailyLanguage },
         dungeonLanguage: { ...defaultParams(version).dungeonLanguage, ...params.dungeonLanguage },
+        earth: { ...defaultParams(version).earth, ...params.earth },
         worldTravel: { ...defaultParams(version).worldTravel, ...params.worldTravel },
         petInteractions: { ...defaultParams(version).petInteractions, ...params.petInteractions },
         checkin: { ...defaultParams(version).checkin, ...params.checkin },

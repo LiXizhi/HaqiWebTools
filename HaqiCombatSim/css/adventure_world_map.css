@@ -51,3 +51,10 @@
 .haqi-app .island-map-companion:focus-visible{outline:2px solid #7c3f9b;outline-offset:1px}
 .haqi-app .island-map-companion:active:not(:disabled){transform:translate(-50%,-50%)}
 @media(max-width:650px){.island-guide-chart{margin:12px 0}.haqi-app .island-map-label{font-size:9px;padding:3px}}
+
+/* The map remains visible beneath its two parallel-world selectors. */
+.parallel-world-tabs{display:flex;gap:6px;flex-shrink:0}
+.parallel-world-tabs button{white-space:nowrap;min-height:36px;padding:7px 12px;font-size:13px}
+.haqi-app .compact-map-modal .map-heading,.earth-modal .map-heading{flex-wrap:wrap;gap:10px}
+.earth-modal .map-heading h2{margin:0}
+@media(max-width:600px){.parallel-world-tabs{flex-basis:100%}.parallel-world-tabs button{flex:1}.haqi-app .compact-map-modal .map-heading{flex-wrap:wrap;gap:8px}.earth-modal .map-heading{flex-wrap:wrap}.haqi-app .compact-map-modal .map-heading h2{font-size:20px}}

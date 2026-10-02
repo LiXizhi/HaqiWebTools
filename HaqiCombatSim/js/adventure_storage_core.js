@@ -5,13 +5,13 @@ import { petMaxHp } from './adventure_pets_core.js';
 import { mapInfo } from './adventure_island_layout_core.js';
 
 const copy = value => JSON.parse(JSON.stringify(value));
-const localFields = ['heroHp','careAt','careLog','position','facing','pendingEncounter','encounterRespawns','stamina','staminaRefillDay','coopRun','dungeonExploration','dungeonMode','dungeonLanguageBuff'];
+const localFields = ['earthReturn','heroHp','careAt','careLog','position','facing','pendingEncounter','encounterRespawns','stamina','staminaRefillDay','coopRun','dungeonExploration','dungeonMode','dungeonLanguageBuff'];
 // Cosmetic preferences stay on this device only: stripped from durable/cloud saves,
 // kept in the role's IndexedDB runtime record and restored regardless of revision.
 const prefFields = ['magicStarFollow','mountHidden'];
 const itemFields = ['petPages','petFileRefs','petWorld','pets','equipmentInstances','nextEquipmentGuid','upgrades','cards','pet'];
 const battleFields = ['inventory','petFoodSlots','equipment','equipmentGuids','mountId','formation','heroSlot','deck'];
-const recordFields = ['transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
+const recordFields = ['earthProgress','transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
 export const storageParts = ['items','battle','records','towers'];
 
 export function stableJson(value) {
@@ -23,6 +23,8 @@ export function durableSave(save) {
     if(result.towerRecords&&Object.keys(result.towerRecords).length===0)delete result.towerRecords;
     // A cloud-only restore returns to the island; the full cooperative run stays on this device.
     if(save.coopRun){result.zone=save.coopRun.returnTo.zone;result.dungeonReturn=null;}
+    if(save.dungeonReturn?.zone==='earth'){result.zone='camp';result.dungeonReturn=null;}
+    if(result.zone==='earth')result.zone='camp';
     delete result.dailyLanguageBuff;
     for(const key of ['music','gameSettings','graphicsSettings'])delete result[key];
     for (const key of localFields) delete result[key];
@@ -33,7 +35,7 @@ export function durableSave(save) {
     return result;
 }
 export function runtimeValues(save) {
-    return { dailyLanguageBuff:save.dailyLanguageBuff?copy(save.dailyLanguageBuff):null, zone:save.coopRun?.returnTo.zone||save.zone, revision:save.revision, coopZone:save.coopRun?save.zone:null, coopReturn:save.coopRun?copy(save.dungeonReturn):null, checkinOnline:save.checkin?.version===2?{day:save.checkin.day,onlineMs:save.checkin.onlineMs}:null, values:Object.fromEntries(localFields.filter(key => save[key] !== undefined).map(key => [key,copy(save[key])])),
+    return { dailyLanguageBuff:save.dailyLanguageBuff?copy(save.dailyLanguageBuff):null, zone:save.dungeonReturn?.zone==='earth'||(save.coopRun?.returnTo.zone||save.zone)==='earth'?'camp':save.coopRun?.returnTo.zone||save.zone, earthZone:save.zone==='earth',earthDungeonZone:save.dungeonReturn?.zone==='earth'?save.zone:null,earthDungeonReturn:save.dungeonReturn?.zone==='earth'?copy(save.dungeonReturn):null, revision:save.revision, coopZone:save.coopRun?save.zone:null, coopReturn:save.coopRun?copy(save.dungeonReturn):null, checkinOnline:save.checkin?.version===2?{day:save.checkin.day,onlineMs:save.checkin.onlineMs}:null, values:Object.fromEntries(localFields.filter(key => save[key] !== undefined).map(key => [key,copy(save[key])])),
         prefs:Object.fromEntries(prefFields.filter(key => save[key] !== undefined).map(key => [key,copy(save[key])])),
         pets:Object.fromEntries(Object.entries(save.pets || {}).map(([id,pet]) => [id,{id:pet.id,hp:pet.hp,hunger:pet.hunger}])) };
 }
@@ -46,6 +48,8 @@ export function restoreRuntime(save, content, runtime) {
     delete result.petMeetings; // Legacy device meetings are deliberately discarded.
     if (result.pets) {result.heroHp = null;result.careAt = 0;result.careLog = [];}
     if (matching) Object.assign(result,copy(runtime.values));
+    if(matching&&runtime.earthZone)result.zone='earth';
+    if(matching&&runtime.earthDungeonZone){result.zone=runtime.earthDungeonZone;result.dungeonReturn=copy(runtime.earthDungeonReturn);}
     delete result.dailyLanguageBuff;
 
     if(runtime?.dailyLanguageBuff?.day===localBuffDay())result.dailyLanguageBuff=copy(runtime.dailyLanguageBuff);

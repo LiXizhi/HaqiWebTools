@@ -77,7 +77,7 @@ function roadsideCandidates(world,hub,params=SOCIAL_DEFAULTS){
         for(let n=0;n<16;n++){
             const angle=n/16*Math.PI*2,r=params.hotspotRadius+((n%4)/4)*params.hotspotSpread;
             const p=nearestWalkable(world,hub.x+Math.cos(angle)*r,hub.y+Math.sin(angle)*r);
-            if(walkable(world,p.x,p.y))out.push(p);
+            if(p&&walkable(world,p.x,p.y))out.push(p);
         }
         return out;
     }
@@ -90,13 +90,13 @@ function roadsideCandidates(world,hub,params=SOCIAL_DEFAULTS){
             const nx=-dy/length,ny=dx/length,half=(path.width||60)*.28;
             for(const side of [0,-1,1]){
                 const p=nearestWalkable(world,cx+nx*half*side,cy+ny*half*side);
-                if(walkable(world,p.x,p.y)&&onActivityRoad(world,p,params)&&Math.hypot(p.x-hub.x,p.y-hub.y)<=reach)out.push(p);
+                if(p&&walkable(world,p.x,p.y)&&onActivityRoad(world,p,params)&&Math.hypot(p.x-hub.x,p.y-hub.y)<=reach)out.push(p);
             }
         }
     }
     if(!out.length){
         const p=nearestWalkable(world,hub.x,hub.y);
-        if(walkable(world,p.x,p.y))out.push(p);
+        if(p&&walkable(world,p.x,p.y))out.push(p);
     }
     return out;
 }
@@ -107,6 +107,7 @@ export function socialMonsterGap(encounter,params=SOCIAL_DEFAULTS){
     return (params.monsterClearance??96)+spread;
 }
 function clearsMonsters(world,p,params=SOCIAL_DEFAULTS){
+    if(!p)return false;
     return (world.encounters||[]).every(e=>Math.hypot(e.x-p.x,e.y-p.y)>socialMonsterGap(e,params));
 }
 function actorGap(params=SOCIAL_DEFAULTS){return params.actorSeparation??120;}
@@ -158,6 +159,7 @@ function separateVisibleActors(actors,world,{locked=null,view=null}={}){
 }
 // Keep the companion on the road, but far enough along it that sprites do not stack.
 function standClearOfMonsters(world,origin,params=SOCIAL_DEFAULTS){
+    origin ||= world.center;
     if(clearsMonsters(world,origin,params)&&walkable(world,origin.x,origin.y))return origin;
     const paths=world.paths||[];
     let best=null,bestDist=Infinity;

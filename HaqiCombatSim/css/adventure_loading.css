@@ -1,11 +1,16 @@
-/* Startup only: keep the page free of text until the dictionary is ready. */
-#entry:has(.boot-loading){position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#426c62 0%,#224a4b 48%,#142e3b 100%)}
-.boot-loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,calc(100% - 40px));padding:36px 28px;text-align:center;color:#fff4d8}
-.boot-emblem{display:block;width:76px;height:76px;margin:0 auto 18px;color:#e4c784;filter:drop-shadow(0 0 20px #dfc87844)}
-.boot-loading h1{font-size:clamp(30px,7vw,42px);letter-spacing:.08em;line-height:1.3;text-shadow:0 4px 18px #071f3155}
-.boot-loading h1::after{content:"";display:block;width:100px;height:1px;margin:24px auto;background:linear-gradient(90deg,transparent,#d8bf7f,transparent)}
+/* Startup surfaces only; no artwork request is needed for the first frame. */
+#entry:has(.boot-loading),.entry-screen.entry-wizard{background:radial-gradient(ellipse at 27% 32%,#51756188,transparent 48%),radial-gradient(ellipse at 82% 12%,#416d6555,transparent 45%),linear-gradient(145deg,#183d45,#214c49 58%,#102f3b);isolation:isolate}
+#entry:has(.boot-loading){position:absolute;inset:0;overflow:hidden}
+#entry:has(.boot-loading)::before,.entry-screen.entry-wizard::before{content:"";position:absolute;inset:18px;z-index:-1;pointer-events:none;border:1px solid #d9c48d26;border-radius:24px;background:radial-gradient(circle at 13% 24%,#f5db9480 0 1px,transparent 2px),radial-gradient(circle at 43% 14%,#f5db9460 0 1px,transparent 2px),radial-gradient(circle at 87% 72%,#f5db9470 0 1px,transparent 2px),radial-gradient(circle at 71% 36%,#f5db9450 0 1px,transparent 2px)}
+#entry:has(.boot-loading)::after,.entry-screen.entry-wizard::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse 85% 45% at 30% 108%,#092f3633 0 97%,#c7d29c20 97.2% 97.4%,transparent 97.6%),radial-gradient(ellipse 100% 50% at 70% 115%,#87aa9120 0 99%,transparent 99.5%)}
+.entry-emblem{display:block;width:72px;height:72px;color:#e4c784;filter:drop-shadow(0 0 20px #dfc87830)}
+.boot-loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,calc(100% - 48px));padding:24px 16px;text-align:center;color:#fff4d8}
+.boot-emblem{width:88px;height:88px;margin:0 auto 18px}
+.boot-loading h1{font-size:clamp(32px,7vw,46px);letter-spacing:.12em;line-height:1.4;text-shadow:0 4px 18px #071f3155}
+.boot-chapter{margin-top:8px;font-family:"Songti SC","STSong",serif;font-size:16px;letter-spacing:.4em;color:#e9d6a4}
+.boot-transfer{margin-top:36px;padding:22px 24px 12px;border:1px solid #d7c68e33;border-radius:14px;background:#0d313e35;box-shadow:inset 0 1px #e2daa00c}
 .boot-caption{font-size:13px;letter-spacing:.14em;color:#edd9a5}
-.boot-status{min-height:3.6em;margin-top:18px;font-size:13px;color:#d2e0d5;overflow-wrap:anywhere}
+.boot-status{min-height:3em;margin-top:10px;font-size:13px;color:#d2e0d5;overflow-wrap:anywhere}
 .boot-loading progress{display:block;appearance:none;width:100%;height:7px;margin:8px auto 12px;overflow:hidden;border:1px solid #d8c28a40;border-radius:99px;background:#102f3c80;accent-color:#d9be7c}
 .boot-loading progress::-webkit-progress-bar{background:#102f3c80;border-radius:99px}
 .boot-loading progress::-webkit-progress-value{background:linear-gradient(90deg,#739e85,#ead39a);border-radius:99px;transition:width .25s ease}
@@ -13,5 +18,90 @@
 .boot-loading progress:indeterminate{background:linear-gradient(90deg,transparent,#e4c784,transparent) 0 0/40% 100% no-repeat,#102f3c80;animation:boot-progress 1.8s ease-in-out infinite alternate}
 .boot-loading progress:indeterminate::-webkit-progress-bar{background:transparent}
 .boot-detail{min-height:1.8em;font-size:11px;color:#acc5bb;font-variant-numeric:tabular-nums}
+.boot-note{margin-top:24px;font-size:12px;color:#bdcfc1;letter-spacing:.06em}
+.boot-loading>.primary{margin-top:16px;min-height:44px}
+
+/* One visual identity across loading, account selection and character creation. */
+.entry-screen.entry-wizard{padding:clamp(28px,5vh,56px) 6vw}
+.entry-wizard .entry-layout{position:relative;gap:clamp(32px,6vw,84px)}
+.entry-intro>.entry-emblem{margin-bottom:22px}
+.entry-wizard .game-title{font-size:clamp(48px,6vw,80px);letter-spacing:.1em;line-height:1.3}
+.entry-wizard .entry-intro>.eyebrow{font-size:10px;letter-spacing:.3em;margin-bottom:14px;color:#d6c797}
+.entry-wizard .chapter-title{font-size:27px;letter-spacing:.3em;color:#eadbb2}
+.entry-wizard .title-rule{width:140px;margin:22px 0}
+.entry-wizard .entry-description{font-size:13px;line-height:2;color:#c6d8ce;margin-top:22px;max-width:350px}
+.entry-wizard .entry-tags{margin-top:18px;gap:8px}
+.entry-wizard .entry-tags .badge{font-size:11px;letter-spacing:.06em;border-radius:20px;padding:5px 12px;background:#0a2e3533}
+.entry-wizard .entry-locale-stack{margin-top:28px;padding-top:20px;border-top:1px solid #d9c48d33;width:fit-content;row-gap:10px}
+.entry-wizard .entry-locale-label{color:#b8cdc2;letter-spacing:0}
+.entry-wizard .entry-second-locale{min-height:40px;background:#f4f0e2}
+.entry-wizard .locale-choices{display:flex;flex-wrap:wrap;gap:6px}
+.entry-wizard .locale-choices button{min-height:44px;padding:8px 12px}
+.entry-wizard .character-form{border-radius:20px;border-color:#e2ca8c;background:linear-gradient(145deg,#fffaf0,#f5efdc);box-shadow:0 24px 64px #051f3555,inset 0 0 0 5px #f9f3e3}
+.entry-wizard .creation-form{padding:30px}
+.entry-wizard .character-form>.eyebrow{color:#82704b;margin-bottom:8px}
+.entry-account-choices{gap:8px;margin-top:24px}
+.entry-account-hint{font-size:12px;line-height:1.7;color:var(--muted);padding:0 4px;margin-bottom:14px}
+.entry-account-hint:last-child{margin-bottom:0}
+.entry-account-choices .entry-account-choice{min-height:52px;font-size:14px}
+
+/* Keep the account header and primary actions visible around a compact list. */
+.role-screen.entry-wizard .role-manager{padding:24px;max-height:min(700px,100%)}
+.role-head{padding-bottom:16px;border-bottom:1px solid #d6bf8366;margin-bottom:14px}
+.role-head>.eyebrow{color:#8c754b;letter-spacing:.14em;margin-bottom:5px}
+.role-head h2{margin:0 0 8px;letter-spacing:.06em;font-size:28px}
+.role-head .role-account{font-size:12px;line-height:1.7;margin:0}
+.role-manager .role-guest-note{font-size:12px;font-weight:400;color:#886745}
+.role-screen .role-list{align-content:start;gap:9px;padding:2px 5px 4px 2px;scrollbar-gutter:stable}
+.role-manager .role-card{position:relative;flex:none;display:grid;grid-template-columns:68px minmax(0,1fr) auto;gap:12px;min-height:94px;padding:8px 12px;border-color:#d7d5bc;border-radius:12px;background:#fffaf080;transition:border-color .2s,background .2s}
+.role-manager .role-card.recent{background:linear-gradient(110deg,#dfebda,#f0f3e7);border-color:#7e9e76;box-shadow:inset 3px 0 #688b5c}
+.role-manager .role-description h2{font-size:17px;letter-spacing:.03em;margin:0;line-height:1.5}
+.role-manager .role-description p{font-size:12px;margin:4px 0}
+.role-manager .role-description small{display:block;font-size:10px;color:#698061}
+.role-manager .role-card button{min-height:44px;padding:9px 14px;font-size:12px;white-space:nowrap;margin:0}
+.role-manager .role-foot{padding-top:14px;margin-top:12px;border-top:1px solid #d6bf8366}
+.role-manager .role-count{font-size:11px}
+.role-manager .role-create{margin:10px 0 0;gap:8px}
+.role-manager .role-create>button{min-height:44px}
+.role-manager .role-actions{gap:6px 16px;margin:10px 0 0}
+.role-manager .role-actions>button{min-height:44px;padding:8px 2px;font-size:11px}
+@media(hover:hover){.role-manager .role-card:hover{border-color:#91a486;background-color:#fffdf4}}
+@media(max-width:720px){
+    #entry:has(.boot-loading)::before,.entry-screen.entry-wizard::before{inset:9px;border-radius:18px}
+    .entry-screen.entry-wizard{padding:24px 20px max(24px,env(safe-area-inset-bottom))}
+    .entry-screen.role-screen.entry-wizard{display:block;overflow-y:auto;overflow-x:hidden}
+    .entry-screen.role-screen.entry-wizard .entry-layout{display:flex;min-height:100%;max-height:none;gap:24px}
+    .entry-wizard .entry-layout{gap:24px}
+    .entry-wizard .entry-intro{width:100%}
+    .entry-intro>.entry-emblem{width:48px;height:48px;margin:0 auto 10px}
+    .entry-wizard .game-title{font-size:36px;letter-spacing:.12em}
+    .entry-wizard .chapter-title{font-size:15px;letter-spacing:.3em;margin:6px 0 0}
+    .entry-wizard .entry-tags{justify-content:center;margin-top:14px}
+    .entry-wizard .entry-tags .badge{font-size:10px;padding:4px 10px}
+    .entry-wizard .entry-locale-stack{margin:18px auto 0;padding-top:16px;width:100%;grid-template-columns:max-content minmax(0,1fr);text-align:left}
+    .entry-wizard .locale-choices button{flex:1;min-width:0;padding:8px 7px;font-size:11px}
+    .entry-wizard .entry-second-locale{width:100%}
+    .entry-wizard .creation-form{padding:24px;max-width:480px}
+    .role-screen.entry-wizard .role-manager{flex:none;max-width:480px;max-height:none;padding:20px}
+    .role-screen .role-list{overflow:visible;scrollbar-gutter:auto;padding-right:0}
+    .role-manager .role-card{grid-template-columns:68px minmax(0,1fr);gap:4px 12px;padding:10px 12px}
+    .role-card .role-portrait{grid-row:1/3;align-self:center}
+    .role-manager .role-card button{grid-column:2;justify-self:start;min-height:44px}
+    .role-manager .role-description h2{font-size:16px}
+    .role-manager .role-actions{gap:4px 12px}
+    .role-manager .role-create>button{flex:1}
+}
+@media(max-height:560px) and (min-width:721px){
+    .entry-intro>.entry-emblem{width:48px;height:48px;margin-bottom:12px}
+    .entry-wizard .entry-intro>.eyebrow,.entry-wizard .entry-tags{display:none}
+    .entry-wizard .title-rule{margin:12px 0}
+    .entry-wizard .entry-description{margin-top:12px}
+    .entry-wizard .entry-locale-stack{margin-top:14px;padding-top:12px}
+    .role-screen.entry-wizard .role-manager{padding:18px}
+    .role-manager .role-head{padding-bottom:10px;margin-bottom:8px}
+    .role-manager .role-foot{padding-top:8px;margin-top:8px}
+    .boot-loading{padding:12px}.boot-emblem{width:52px;height:52px;margin-bottom:8px}
+    .boot-transfer{margin-top:18px;padding-top:12px}.boot-note{margin-top:12px}
+}
 @keyframes boot-progress{to{background-position:100% 0}}
-@media(prefers-reduced-motion:reduce){.boot-loading progress:indeterminate{animation:none;background-position:50% 0}.boot-loading progress::-webkit-progress-value{transition:none}}
+@media(prefers-reduced-motion:reduce){.boot-loading progress:indeterminate{animation:none;background-position:50% 0}.boot-loading progress::-webkit-progress-value,.role-manager .role-card{transition:none}}

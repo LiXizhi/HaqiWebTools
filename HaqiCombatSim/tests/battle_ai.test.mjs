@@ -134,3 +134,11 @@ test('designer runner works without a page, save or account and preserves its sp
  const before=JSON.stringify(scenario),result=runHaqiEncounter(dataset,scenario,37,{policy:'reasoning_easy',review:false});
  assert.ok(['near','far','draw'].includes(result.winner));assert.ok(result.turns>0);assert.equal(JSON.stringify(scenario),before);
 });
+
+test('Earth visual budgets do not change combat observation identity or AI choice',()=>{
+ const a=arena(),id=a.sides.near[0].id,first=observeBattle(a,id);
+ const identity=haqiRulesAdapter.stateId(first),pick=new ReasoningBot({difficulty:'easy'}).pick(a,a.unitsById[id]);
+ a.resolved.earth={...a.resolved.earth,surfaceTexturePeriod:999,surfaceMaxChunks:2,decorationsPerChunk:100};
+ assert.equal(haqiRulesAdapter.stateId(observeBattle(a,id)),identity);
+ assert.deepEqual(new ReasoningBot({difficulty:'easy'}).pick(a,a.unitsById[id]),pick);
+});

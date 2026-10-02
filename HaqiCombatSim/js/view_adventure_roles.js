@@ -20,7 +20,7 @@ export function renderRoles(root, assets, model, cb) {
     });
     const controls = [...intro.controls];
     const addButton = (label, fn, cls = 'secondary') => { const b = button(label, fn, cls);controls.push(b);return b; };
-    const head = el('div', 'role-head', el('h1', '', '选择角色'));
+    const head = el('div', 'role-head', el('p', 'eyebrow', '重返魔法世界'), el('h2', '', '选择角色'));
     if (model.owner) {
         const subtitle = el('p', 'muted role-account');
         const status = model.message || (!model.recovering && (model.dirty
@@ -43,7 +43,7 @@ export function renderRoles(root, assets, model, cb) {
     const rows = el('div', 'role-list');
     const ordered = [...model.catalog.roles].sort((a, b) => (b.id === model.catalog.activeId) - (a.id === model.catalog.activeId));
     for (const row of ordered) {
-        const s = row.save, portrait = heroPortrait(assets,s,96,100,{lookAround:false});portrait.className='role-portrait';
+        const s = row.save, portrait = heroPortrait(assets,s,68,76,{lookAround:false});portrait.className='role-portrait';
         portrait.setAttribute('role', 'img');portrait.setAttribute('aria-label', tr(s.appearance === 'girl' ? '魔法少女' : '魔法少年'));
         const recent = row.id === model.catalog.activeId;
         const level = el('span', '');setText(level, '等级 {level}', { level: s.level });
@@ -54,14 +54,14 @@ export function renderRoles(root, assets, model, cb) {
     }
     if (!model.catalog.roles.length) rows.append(el('p', 'muted', '还没有主角，创建你的第一段旅程。'));
     const foot = el('div', 'role-foot');
-    const countLine = el('p', 'muted');setText(countLine, '已有 {count} / {total} 个主角', { count: model.catalog.roles.length, total: MAX_ROLES });
+    const countLine = el('p', 'muted role-count');setText(countLine, '已有 {count} / {total} 个主角', { count: model.catalog.roles.length, total: MAX_ROLES });
     const create = addButton('新建角色', cb.create, 'primary');create.disabled = model.catalog.roles.length >= MAX_ROLES;
     const createRow = el('div', 'role-create', create);
     if (!model.owner) createRow.append(addButton('登录 Keepwork 云端账号', cb.login, 'primary role-cloud-login'));
     foot.append(countLine, createRow);
     if (model.owner) {
-        const sync=addButton('保存角色到云端', cb.sync);sync.disabled=!!model.recovering;
-        foot.append(el('div', 'role-actions', sync, addButton('刷新云端角色', cb.refresh), addButton('退出 Keepwork', cb.logout)));
+        const sync=addButton('保存角色到云端', cb.sync, 'text-button');sync.disabled=!!model.recovering;
+        foot.append(el('div', 'role-actions', sync, addButton('刷新云端角色', cb.refresh, 'text-button'), addButton('退出 Keepwork', cb.logout, 'text-button')));
         if (model.conflict) foot.append(el('div', 'role-conflict', el('p', '', '云端已有不同的角色进度。加载前会在浏览器自动保留本地副本。'),
             ...model.conflict.catalog.roles.map(row => { const line = el('p', 'muted');setText(line, '{name} · 等级 {level} · {school}', { name: row.save.name, level: row.save.level, school: SCHOOL_NAMES[row.save.school] });return line; }),
             addButton('备份本地并加载云端', cb.useRemote)));

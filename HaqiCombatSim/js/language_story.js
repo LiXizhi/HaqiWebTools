@@ -4,12 +4,12 @@ import {selectStory,storyReward} from './language_encounter_core.js';
 import {createLearningChatView} from './view_learning_chat.js';
 import {createLineAttempt,startLineAttempt,finishLineAttempt} from './adventure_dungeon_language_core.js';
 
-export function createStoryChat({onSpeech=()=>{},onFreeTalk=()=>{},getState,commit,saveSettings=()=>{},openSettings=()=>{},voice,useReward=()=>{},viewFactory=createLearningChatView}){
+export function createStoryChat({allowedZone='camp',onClosed=()=>{},onSpeech=()=>{},onFreeTalk=()=>{},getState,commit,saveSettings=()=>{},openSettings=()=>{},voice,useReward=()=>{},viewFactory=createLearningChatView}){
     let session=null,recordTask=null;
     const view=viewFactory({free:()=>continueFree(),close,start,finish,cancel,hint,chinese,next,help,speak,useReward:()=>{const reward=session?.reward;close();if(reward?.action)useReward(reward.action,reward.guid);},challenge:()=>challenge(),settings:()=>{close();openSettings();}});
-    const valid=s=>session===s&&!s.abort.signal.aborted&&getState().stage!=='battle'&&getState().role===s.role&&getState().identity===s.identity&&getState().save.zone==='camp'&&getState().save.languageLearning.enabled&&getState().save.languageLearning.target===s.locale;
+    const valid=s=>session===s&&!s.abort.signal.aborted&&getState().stage!=='battle'&&getState().role===s.role&&getState().identity===s.identity&&getState().save.zone===allowedZone&&getState().save.languageLearning.enabled&&getState().save.languageLearning.target===s.locale;
     const paint=()=>{if(session)view.render(session);};
-    function close(){const old=session;session=null;clearTimeout(old?.timer);old?.abort.abort();recordTask=null;void voice.cancel();view.close();}
+    function close(){const old=session;session=null;clearTimeout(old?.timer);old?.abort.abort();recordTask=null;void voice.cancel();view.close();if(old)onClosed();}
     function open(profile,story,portrait,options={}){
         close();const current=getState();if(current.stage==='battle')return;
         if(story.mode!=='challenge'&&current.save.languageAdventure?.stories?.[current.save.languageLearning.target]?.[story.id]?.completed){

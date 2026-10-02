@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "monsterIds": [
+    "water-bubble",
+    "fire-scout",
+    "ice-scout"
+  ],
+  "buildingAtlas": "town",
+  "buildingFrame": "house",
+  "note": "仅生成探索场景；复用现有怪物与伙伴，不生成任务或新奖励。"
+}

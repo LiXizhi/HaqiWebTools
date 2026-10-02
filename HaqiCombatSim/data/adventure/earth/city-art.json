@@ -224,5 +224,68 @@
         160
       ]
     ]
+  },
+  "transport": {
+    "local": "assets/adventure/earth/earth-transport-c6eab573845f.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-transport-c6eab573845f.webp",
+    "width": 1024,
+    "height": 512,
+    "bytes": 114914,
+    "sha256": "c6eab573845f72c12adff19b0693695553aaecafec7035ffafa2f7f6f8a747ad",
+    "sourceSha256": "1b5d61dfdb061824a87192e29e2a2976fa78debefd3ce0f7e75174da130cac35",
+    "source": "Original AI-generated offline rail stations, commuter and high-speed trains; fictional transit scenery.",
+    "encoding": {
+      "quality": 88
+    },
+    "frames": [
+      [
+        0,
+        0,
+        256,
+        256
+      ],
+      [
+        256,
+        0,
+        256,
+        256
+      ],
+      [
+        512,
+        0,
+        256,
+        256
+      ],
+      [
+        768,
+        0,
+        256,
+        256
+      ],
+      [
+        0,
+        256,
+        256,
+        256
+      ],
+      [
+        256,
+        256,
+        256,
+        256
+      ],
+      [
+        512,
+        256,
+        256,
+        256
+      ],
+      [
+        768,
+        256,
+        256,
+        256
+      ]
+    ]
   }
 }

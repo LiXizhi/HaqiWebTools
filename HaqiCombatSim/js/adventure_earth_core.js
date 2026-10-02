@@ -5,6 +5,11 @@ import {defaultParams} from './combat_params_core.js';
 export const EARTH_ZONE='earth';
 export const earthRules=content=>({...defaultParams('kids').earth,...content?.balanceParams?.earth});
 export const wrapLongitude=lon=>((lon+180)%360+360)%360-180;
+// The local map covers the loaded neighbourhood, not the entire globe.
+export function earthLocalMapBounds(position,rules=earthRules()){
+    const size=rules.chunkSize*(rules.activeRadius+1)*2;
+    return {x:position.x-size/2,y:position.y-size/2,w:size,h:size};
+}
 export function earthPoint(lon,lat,rules=earthRules()){
     return {x:(wrapLongitude(lon)+180)*rules.unitsPerDegree,y:(90-Math.max(-90,Math.min(90,lat)))*rules.unitsPerDegree};
 }

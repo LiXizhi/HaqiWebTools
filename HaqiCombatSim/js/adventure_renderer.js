@@ -20,7 +20,7 @@ import { createStarFollower } from './adventure_star_motion_core.js';
 import { drawMagicStar, starCompanionVisible } from './adventure_star.js';
 import { magicStarStatus } from './adventure_magic_star_core.js';
 import { drawIslandWeather, stepWeatherFade } from './adventure_weather.js';
-import { createCameraZoom } from './adventure_camera_core.js';
+import { alignCameraOrigin, createCameraZoom } from './adventure_camera_core.js';
 import { regionAt } from './adventure_island_layout_core.js';
 import { drawRewardEffect } from './view_adventure_rewards.js';
 import { drawOverheadStatus,drawStatusFeedback,drawSpellMiss } from './view_adventure_overhead_status.js';
@@ -136,7 +136,7 @@ export function createRenderer(canvas,assets) {
     function size() {
         const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(2,window.devicePixelRatio||1);
         if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}
-        ctx.setTransform(dpr,0,0,dpr,0,0);cam.w=w;cam.h=h;return {w,h};
+        ctx.setTransform(dpr,0,0,dpr,0,0);cam.w=w;cam.h=h;return {w,h,dpr};
     }
     function ground(world) {
         if(world.layout){
@@ -198,11 +198,12 @@ export function createRenderer(canvas,assets) {
     }
     function render(world,save,time,{graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
         let markerStats;const stats=()=>markerStats??=(catalogStatSnapshot(save,assets.content));
-        const {w,h}=size(),t=time/1000,gestureAt=Date.now();bubbleTarget=null;greetingTarget=null;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
+        const {w,h,dpr}=size(),t=time/1000,gestureAt=Date.now();bubbleTarget=null;greetingTarget=null;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         cameraZoom.tick(time,reducedMotion.matches);
         const baseScale=w<650?.82:1,sceneZoom=title?1:cameraZoom.value;
         cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:save.position;
-        cam.x=center.x-w/(2*cam.scale);cam.y=center.y-h/(2*cam.scale)+(w<650?50:25)/sceneZoom;
+        const origin=alignCameraOrigin(center.x-w/(2*cam.scale),center.y-h/(2*cam.scale)+(w<650?50:25)/sceneZoom,cam.scale,dpr);
+        cam.x=origin.x;cam.y=origin.y;
         ctx.save();
         try {
         ctx.scale(cam.scale,cam.scale);ctx.translate(-cam.x,-cam.y);
@@ -297,7 +298,7 @@ export function createRenderer(canvas,assets) {
             if(o.hidden)continue;
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
             if(o.kind==='pet-social')drawSocialPet(ctx,assets,o.row,petScene.effects,time,reducedMotion.matches,petScene.now);
-            if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const winter=(world.isEarth&&world.drawEarthDecoration?.(ctx,o))||o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
+            if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const winter=(world.isEarth&&world.drawEarthDecoration?.(ctx,o))||o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter&&!world.isEarth)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
             // Stable plant variants add visual detail without changing collision or RNG.
             if(o.kind==='tree'&&!world.isEarth&&!o.snow&&assets.sceneryTile){
                 const variant=Math.abs(Math.round(o.x*7+o.y*13))%8,size=o.size*.36;
@@ -307,12 +308,12 @@ export function createRenderer(canvas,assets) {
                 ctx.save();
                 if(o.atlas&&Math.abs(save.position.x-o.x)<o.w*.5&&save.position.y<o.y&&save.position.y>o.y-o.h)ctx.globalAlpha=.52;
                 const bob=o.frame==='boat'&&!reducedMotion.matches?Math.sin(t*1.4+o.x)*2:0;
-                const drawn=(world.isEarth&&world.drawEarthBuilding?.(ctx,o))||o.atlas&&assets.buildingArt?.draw(ctx,o.atlas,o.frame,o.x-o.w/2,o.y-o.h+bob,o.w,o.h);
-                if(!drawn&&!o.decorationOnly)assets.tile(ctx,'sprites',o.tile,o.x-o.w/2,o.y-o.h,o.w,o.h);
+                const drawn=world.isEarth?world.drawEarthBuilding?.(ctx,o):o.atlas&&assets.buildingArt?.draw(ctx,o.atlas,o.frame,o.x-o.w/2,o.y-o.h+bob,o.w,o.h);
+                if(!drawn&&!o.decorationOnly&&!world.isEarth)assets.tile(ctx,'sprites',o.tile,o.x-o.w/2,o.y-o.h,o.w,o.h);
                 ctx.restore();
             }
             if(o.kind==='landmark'){
-                if(o.dungeonId)drawDungeonEntrance(ctx,o,t,reducedMotion.matches,assets.entranceArt);else drawSignpost(ctx,o.name,o.x,o.y);
+                if(o.dungeonId)drawDungeonEntrance(ctx,o,t,reducedMotion.matches,assets.entranceArt);else if(!world.isEarth)drawSignpost(ctx,o.name,o.x,o.y);
             }
             if(o.kind==='npc') {
                 shadow(ctx,o.x,o.y,25);const dragon=[36211,30112].includes(o.id),sw=dragon?100:64,sh=dragon?104:86;
@@ -440,10 +441,39 @@ export function createRenderer(canvas,assets) {
             vignette.addColorStop(0,'transparent');vignette.addColorStop(1,'#113b4b66');g.fillStyle=vignette;g.fillRect(0,0,w,h);
         }
         ctx.drawImage(vignetteCanvas,0,0,w,h);
+        if(world.isEarth&&!title){
+            // Screen-size labels stay readable at every scene zoom, above scenery.
+            const seen=new Set(),placed=[];
+            const actors=[save.position,...socialActors.map(a=>a.position),...world.npcs.filter(n=>!n.hidden)].map(p=>({x:(p.x-cam.x)*cam.scale,y:(p.y-cam.y)*cam.scale}));
+            ctx.save();ctx.font='600 12px "PingFang SC", sans-serif';
+            for(const place of [...(world.mapCities||[]),...(world.landmarks||[])]){
+                const key=`${place.name}:${Math.round(place.x)}:${Math.round(place.y)}`;if(seen.has(key))continue;seen.add(key);
+                const x=(place.x-cam.x)*cam.scale,y=(place.y-cam.y)*cam.scale;
+                if(x<12||x>w-12||y<20||y>h-20)continue;
+                const width=ctx.measureText(tr(place.name)).width+20;
+                const left=Math.max(width/2+8,Math.min(w-width/2-8,x));
+                for(const offset of [-28,32,-100,64]){
+                    const top=y+offset,box={x:left-width/2,y:top-14,w:width,h:23};
+                    if(box.y<8||box.y+box.h>h-8||placed.some(b=>box.x<b.x+b.w+6&&box.x+box.w+6>b.x&&box.y<b.y+b.h+6&&box.y+box.h+6>b.y)||actors.some(a=>box.x<a.x+30&&box.x+box.w>a.x-30&&box.y<a.y+24&&box.y+box.h>a.y-90*cam.scale))continue;
+                    plate(ctx,place.name,left,top);placed.push(box);break;
+                }
+            }
+            ctx.restore();
+        }
     }
-    function minimap(target,world,save,{labels=true}={}) {
+    function minimap(target,world,save,{labels=true,bounds=null,simple=false,mapData=null}={}) {
         const c=target.getContext('2d'),w=target.width,h=target.height;c.clearRect(0,0,w,h);c.fillStyle='#6ba7a2';c.fillRect(0,0,w,h);
         if(world.isEarth){
+            if(simple&&bounds){
+                const colors={ocean:'#438b9b',water:'#72acb7',forest:'#7c9d69',grass:'#b4c68a',urban:'#d6c59d',desert:'#d9c68e',snow:'#e5e8db',mountain:'#a49d85'},cells=64;
+                for(let row=0;row<cells;row++)for(let col=0;col<cells;col++){
+                    c.fillStyle=colors[(mapData?.terrainAt||world.terrainAt)(bounds.x+(col+.5)/cells*bounds.w,bounds.y+(row+.5)/cells*bounds.h)]||'#a4aaa0';
+                    c.fillRect(col*w/cells,row*h/cells,Math.ceil(w/cells),Math.ceil(h/cells));
+                }
+                c.save();c.beginPath();c.rect(0,0,w,h);c.clip();c.lineCap='round';c.lineJoin='round';
+                for(const [color,width] of [['#9a8d6d',5],['#f4e8bf',3]]){c.strokeStyle=color;c.lineWidth=width;c.beginPath();for(const road of mapData?.paths||world.paths){c.moveTo((road.a.x-bounds.x)/bounds.w*w,(road.a.y-bounds.y)/bounds.h*h);c.lineTo((road.b.x-bounds.x)/bounds.w*w,(road.b.y-bounds.y)/bounds.h*h);}c.stroke();}
+                c.restore();const x=(save.position.x-bounds.x)/bounds.w*w,y=(save.position.y-bounds.y)/bounds.h*h;ellipse(c,x,y,5,5,'#fff');ellipse(c,x,y,3,3,'#205c99');return;
+            }
             const size=world.earthRules.chunkSize*2,scale=w/size,rect={x:save.position.x-size/2,y:save.position.y-h/scale/2,w:size,h:h/scale};
             c.save();c.scale(scale,scale);c.translate(-rect.x,-rect.y);world.terrainPainter(c,world,rect);
             for(const n of world.npcs)ellipse(c,n.x,n.y,18,18,'#ffe89c');

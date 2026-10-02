@@ -224,5 +224,67 @@
         160
       ]
     ]
+  },
+  "cityGround": {
+    "width": 1254,
+    "height": 1254,
+    "tiles": [
+      {
+        "local": "assets/adventure/earth/earth-city-detail-0-0-24d59e78e1c8.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-city-detail-0-0-24d59e78e1c8.webp",
+        "width": 627,
+        "height": 627,
+        "x": 0,
+        "y": 0,
+        "bytes": 182224,
+        "sha256": "24d59e78e1c85f16f8edda0846b369227440d5e6aa9f9a716b8654bba40fbed4",
+        "encoding": {
+          "quality": 88
+        }
+      },
+      {
+        "local": "assets/adventure/earth/earth-city-detail-1-0-44d7b1691fd8.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-city-detail-1-0-44d7b1691fd8.webp",
+        "width": 627,
+        "height": 627,
+        "x": 627,
+        "y": 0,
+        "bytes": 181864,
+        "sha256": "44d7b1691fd88e2a2aaa9321d3f3c5aae8e80149733f32504171e33bd539ee69",
+        "encoding": {
+          "quality": 88
+        }
+      },
+      {
+        "local": "assets/adventure/earth/earth-city-detail-0-1-2b8debde2fea.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-city-detail-0-1-2b8debde2fea.webp",
+        "width": 627,
+        "height": 627,
+        "x": 0,
+        "y": 627,
+        "bytes": 186424,
+        "sha256": "2b8debde2feababb5f33db27edbe13e874110638a0d2a98cc37f47532fdb68ac",
+        "encoding": {
+          "quality": 88
+        }
+      },
+      {
+        "local": "assets/adventure/earth/earth-city-detail-1-1-91b144df0056.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-city-detail-1-1-91b144df0056.webp",
+        "width": 627,
+        "height": 627,
+        "x": 627,
+        "y": 627,
+        "bytes": 177566,
+        "sha256": "91b144df005634cae7dfde768ce0a7bce483189c7e87ba2ec922d06f27b58802",
+        "encoding": {
+          "quality": 88
+        }
+      }
+    ],
+    "source": "AI-generated independent continuous city painting, inspired by HelloWorld city02.png; fictional neighbourhoods",
+    "sourceSha256": "7c68e9a4e30b9729d14e572827fc8fc660c885e5747df1fc6bbac1eb7c2f920b",
+    "referenceSource": "https://cdn.keepwork.com/helloworld/tileset/city02.png",
+    "referenceSha256": "3aee5b6dd8f5c06412b03b879e0da08bb88d038cf020db55e09be1c01a274c87"
   }
 }

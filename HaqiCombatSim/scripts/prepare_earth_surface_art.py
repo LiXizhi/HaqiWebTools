@@ -4,7 +4,8 @@ from pathlib import Path
 from PIL import Image
 parser=argparse.ArgumentParser();parser.add_argument('terrain');parser.add_argument('decorations');args=parser.parse_args()
 root=Path(__file__).resolve().parents[1];out=root/'assets/adventure/earth';out.mkdir(exist_ok=True)
-manifest={'version':1,'source':'AI-generated offline for Haqi Earth; rendering reference: HelloWorld WorldConfig.js and TerrainTileManager.js; not surveyed imagery.','grid':{'columns':4,'rows':4}}
+previous=root/'data/adventure/earth/surface-art.json'
+manifest={**(json.loads(previous.read_text(encoding='utf8')) if previous.exists() else {}),'version':1,'source':'AI-generated offline for Haqi Earth; rendering reference: HelloWorld WorldConfig.js and TerrainTileManager.js; not surveyed imagery.','grid':{'columns':4,'rows':4}}
 for kind in ['terrain','decorations']:
  source=Path(getattr(args,kind));im=Image.open(source).convert('RGBA')
  if kind=='decorations':

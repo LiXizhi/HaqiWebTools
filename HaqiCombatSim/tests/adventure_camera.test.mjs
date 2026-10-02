@@ -1,6 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createCameraZoom,FISHING_CAMERA_MS,FISHING_CAMERA_ZOOM} from '../js/adventure_camera_core.js';
+import {alignCameraOrigin,createCameraZoom,FISHING_CAMERA_MS,FISHING_CAMERA_ZOOM} from '../js/adventure_camera_core.js';
+
+test('camera panning preserves static sprite sampling phase at desktop and mobile scales',()=>{
+    for(const scale of [.82,.82*.93,1,1.4])for(const dpr of [1,1.25,1.5,2]){
+        const pixels=scale*dpr,object={x:7057400.37,y:1619080.19};let previous=null;
+        for(let frame=0;frame<120;frame++){
+            const desired={x:7057200.13+frame*.17,y:1619000.23-frame*.13};
+            const camera=alignCameraOrigin(desired.x,desired.y,scale,dpr);
+            for(const axis of ['x','y'])assert.ok(Math.abs((camera[axis]-desired[axis])*pixels)<=.500001);
+            const screen={x:(object.x-camera.x)*pixels,y:(object.y-camera.y)*pixels};
+            if(previous)for(const axis of ['x','y']){
+                const delta=screen[axis]-previous[axis];
+                assert.ok(Math.abs(delta-Math.round(delta))<1e-7,'fixed scenery moves by whole physical pixels');
+            }
+            previous=screen;
+        }
+    }
+});
 
 test('fishing zoom eases in and restores the exact exploration setting',()=>{
     for(const factor of [.1,.93,1.12,2]){

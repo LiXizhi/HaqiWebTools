@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import {createHash} from 'node:crypto';
 import {isOcean} from '../js/adventure_fishing_core.js';
 import {earthRules,earthGeo,earthLandmarkSize,placeEarthLandmark,distanceToRoad} from '../js/adventure_earth_core.js';
-import {earthCityProfile,generateEarthUrbanChunk} from '../js/adventure_earth_city_core.js';
+import {earthCityProfile,generateEarthUrbanChunk,generateEarthUrbanRoads} from '../js/adventure_earth_city_core.js';
 const rules=earthRules();
 test('landmarks preserve source aspect ratio and move completely clear of roads',()=>{
     const size=earthLandmarkSize({w:300,h:350},[530,0,238,275]);assert.equal(size.w/size.h,238/275);
@@ -26,7 +26,8 @@ test('population increases city density and unlocks high-rise families',()=>{
     const city={id:'test',...earthGeo({x:1500,y:1500},rules)};
     const small=generateEarthUrbanChunk(1,1,[{...city,population:1000}],rules,()=> 'urban');
     const large=generateEarthUrbanChunk(1,1,[{...city,population:12000000}],rules,()=> 'urban');
-    assert.ok(large.length>small.length);assert.ok(large.some(b=>b.earthCityAtlas==='buildings'&&b.earthCityFrame<4));
+    assert.ok(large.length>small.length);assert.ok(earthCityProfile(12000000,rules).frames.includes(0));
+    const districtObjects=Array.from({length:9},(_,x)=>generateEarthUrbanChunk(x,1,[{...city,population:12000000}],rules,()=> 'urban')).flat();assert.ok(districtObjects.some(b=>b.district==='commercial'&&b.earthCityFrame<4));
     assert.ok(!earthCityProfile(0,rules).frames.includes(0));assert.ok(large.length<=2*rules.cityCellsPerChunk**2);
 });
 test('urban generation is deterministic, wraps the date line and respects terrain and exclusions',()=>{
@@ -37,4 +38,13 @@ test('urban generation is deterministic, wraps the date line and respects terrai
     const a=generate(0),b=generate(360*rules.unitsPerDegree/rules.chunkSize);
     assert.deepEqual(a.map(o=>o.id),b.map(o=>o.id));
     assert.deepEqual(a.map(o=>o.earthCityFrame),b.map(o=>o.earthCityFrame));
+});
+
+test('district roads align with block boundaries and never cross unavailable terrain',()=>{
+    const roads=generateEarthUrbanRoads(1,1,rules,()=> 'urban');assert.equal(roads.length,4);
+    assert.ok(roads.every(r=>r.urban&&(r.a.x%rules.cityBlockSize===0||r.a.y%rules.cityBlockSize===0)));
+    assert.deepEqual(generateEarthUrbanRoads(1,1,rules,()=>null),[]);
+    assert.deepEqual(generateEarthUrbanRoads(1,1,rules,()=> 'urban',()=>true),[]);
+    const objects=Array.from({length:12},(_,x)=>generateEarthUrbanChunk(x,1,[],rules,()=> 'urban')).flat();
+    assert.ok(objects.some(b=>b.district==='park'));assert.ok(objects.some(b=>b.district==='residential'));assert.ok(objects.filter(b=>b.district==='park').every(b=>b.earthCityAtlas==='street'));
 });

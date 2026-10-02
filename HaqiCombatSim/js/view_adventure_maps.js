@@ -10,12 +10,13 @@ export function renderMaps(root,world,model,cb,view='local'){
     const modal=root.querySelector('.modal'),header=modal.querySelector('.modal-header');
     modal.classList.add('compact-map-modal');
     header.querySelector('.eyebrow')?.remove();
-    const title=header.querySelector('h2');setText(title,view==='world'?'世界地图':world.layout.name);
+    modal.setAttribute('aria-label',view==='world'?'哈奇世界地图':world.layout.name);
     const toggle=document.createElement('button');toggle.className='secondary map-view-toggle';
-    setText(toggle,view==='world'?'返回当前岛屿地图':'打开世界地图');
+    setText(toggle,view==='world'?(world.isEarth?'返回当前城市地图':'返回当前岛屿地图'):'打开世界地图');
     toggle.setAttribute('aria-label',toggle.textContent);
     toggle.onclick=()=>cb.switchMap(view==='world'?'local':'world');
-    const heading=document.createElement('div');heading.className='map-heading';heading.append(title,toggle);
-    if(cb.switchWorld)heading.append(createWorldMapSwitch('haqi',cb.switchWorld));
+    const heading=document.createElement('div');heading.className='map-heading';
+    if(view==='world'||!cb.switchWorld)heading.append(toggle);
+    if(cb.switchWorld)heading.append(createWorldMapSwitch('haqi',cb.switchWorld,view==='local'?'返回哈奇世界地图':'哈奇世界'));
     header.replaceChildren(heading,header.querySelector('.close-button'));
 }

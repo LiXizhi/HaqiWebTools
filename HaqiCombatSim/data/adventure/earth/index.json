@@ -7,6 +7,7 @@
     {
       "id": "shenzhen",
       "name": "深圳",
+      "country": "中国",
       "bounds": {
         "west": 113.85,
         "east": 114.58,

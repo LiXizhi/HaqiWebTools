@@ -1,6 +1,7 @@
+import {createEarthSettlementSampler,generateEarthCityConnections} from './adventure_earth_transport_core.js';
 import {generateEarthUrbanChunk} from './adventure_earth_city_core.js';
 // Browser IO boundary. Constructing this service performs no requests.
-import {earthLandmarkSize,placeEarthLandmark,earthRules,earthMapInfo,earthPoint,earthGeo,terrainKey,terrainBounds,terrainUrl,cityKey,parseEarthCities,parseEarthCatalog,inGeoBounds,generateEarthCity,earthSafe,earthNearest,clipEarthRoad,landRoadSegments} from './adventure_earth_core.js';
+import {earthLandmarkSize,placeEarthLandmark,earthRules,earthMapInfo,earthPoint,earthGeo,terrainKey,terrainBounds,terrainUrl,cityKey,parseEarthCities,parseEarthCatalog,inGeoBounds,earthSafe,earthNearest} from './adventure_earth_core.js';
 import {earthDecorationFrames,seamlessEarthAtlas} from './adventure_earth_surface_core.js';
 import {createEarthSurfacePainter} from './adventure_earth_surface.js';
 import {createRng,hashSeed} from './rng_core.js';
@@ -49,24 +50,35 @@ export function createEarthService({content,fetcher=globalThis.fetch,decode=deco
         const text=await request(`${geography.cityBase}${geography.cityLanguage}/world_cities_${key}.${geography.cityLanguage}.csv?ver=${geography.cityVersion}`,'text');
         return {rows:parseEarthCities(text),bytes:text.length*4};
     });}
-    function typeAt(x,y){const geo=earthGeo({x,y},rules),key=terrainKey(geo.lon,geo.lat),data=cache.peek(`terrain:${key}`);if(!data)return null;return sampleTerrain(data,geo);}
+    function typeAt(x,y){const geo=earthGeo({x,y},rules),key=terrainKey(geo.lon,geo.lat),data=cache.entries.get(`terrain:${key}`)?.value;if(!data)return null;return sampleTerrain(data,geo);}
     async function authored(geo){
         const row=index.regions.find(r=>inGeoBounds(geo,{west:r.bounds.west-.1,east:r.bounds.east+.1,south:r.bounds.south-.1,north:r.bounds.north+.1}));
         if(!row)return null;
         const base=`data/adventure/earth/${row.manifest.slice(0,row.manifest.lastIndexOf('/')+1)}`,manifest=await json(`data/adventure/earth/${row.manifest}`);
-        const files=Object.fromEntries(await Promise.all(Object.entries(manifest.files).map(async([key,path])=>[key,await json(base+path)])));
+        // Legacy authored streets stay archived; only city connections enter the scene.
+        const files=Object.fromEntries(await Promise.all(Object.entries(manifest.files).filter(([key])=>key!=='roads').map(async([key,path])=>[key,await json(base+path)])));
         validateRegion(files,content);
         return {row,base,manifest,...files};
     }
     async function loadSurfaceArt(){
         const token=epoch,manifest=await json('data/adventure/earth/surface-art.json');
-        const entries=await Promise.all(['terrain','decorations'].map(async kind=>{
+        const entries=await Promise.all(['terrain','decorations','cityGround'].map(async kind=>{
+            const localMode=new URLSearchParams(globalThis.location?.search||'').get('assets')==='local';
+            if(kind==='cityGround'&&manifest[kind].tiles){
+                const row=manifest[kind],key=`city-ground:${row.sourceSha256}`;
+                const result=await cache.get(key,async()=>{
+                    const canvas=document.createElement('canvas');canvas.width=row.width;canvas.height=row.height;const c=canvas.getContext('2d',{willReadFrequently:true});
+                    for(const tile of row.tiles){const image=await createImageBitmap(await request(localMode?tile.local:tile.cdn,'blob'));try{if(image.width!==tile.width||image.height!==tile.height)throw Error('城市背景尺寸不匹配');c.drawImage(image,tile.x,tile.y);}finally{image.close();}}
+                    const data=c.getImageData(0,0,row.width,row.height).data;canvas.width=canvas.height=0;return {data,width:row.width,height:row.height,bytes:data.byteLength};
+                });
+                return [kind,result,key];
+            }
             const row=manifest[kind],url=new URLSearchParams(globalThis.location?.search||'').get('assets')==='local'?row.local:row.cdn;
             const result=await cache.get(url,async()=>{
                 const image=await createImageBitmap(await request(url,'blob'));
                 if(image.width!==row.width||image.height!==row.height){image.close();throw Error('地表图集尺寸不匹配');}
                 if(kind==='decorations')return {image,width:image.width,height:image.height,bytes:image.width*image.height*4,dispose(){image.close();}};
-                const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(image,0,0);image.close();const data=seamlessEarthAtlas(c.getImageData(0,0,canvas.width,canvas.height).data,canvas.width);canvas.width=canvas.height=0;
+                const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(image,0,0);image.close();const raw=c.getImageData(0,0,canvas.width,canvas.height).data,data=kind==='terrain'?seamlessEarthAtlas(raw,canvas.width):raw;canvas.width=canvas.height=0;
                 return {data,width:row.width,height:row.height,bytes:data.byteLength};
             });
             return [kind,result,url];
@@ -84,32 +96,39 @@ export function createEarthService({content,fetcher=globalThis.fetch,decode=deco
             layout:{name:'现实世界',earth:true,w:info.w,h:info.h,spawn:{...p},regions:[],bridges:[],rivers:[],lakes:[],rules:{terrain:{ocean:'#438b9b'}},coast:[]},
             terrainPainter:paint,drawEarthDecoration:(ctx,o)=>surface?.decoration(ctx,o),get surfaceStats(){return surface?.stats;},error:'',revision:0};
     }
-    function build(target,p,cityRows,auth){
+    async function build(target,p,cityRows,auth,token){
+        let work=0;const yieldWork=()=>typeof window==='undefined'?Promise.resolve():new Promise(resolve=>setTimeout(resolve,0));
         const radius=rules.chunkSize*(rules.activeRadius+1),local=q=>({...q,x:p.x+((q.x-p.x+target.w*1.5)%target.w)-target.w/2}),near=q=>Math.abs(local(q).x-p.x)<=radius&&Math.abs(q.y-p.y)<=radius;
-        target.safeAreas=[];target.paths=[];target.buildings=[];target.npcs=[];target.landmarks=[];target.trees=[];target.encounters=[];
+        target.safeAreas=[];target.railways=[];target.paths=[];target.buildings=[];target.npcs=[];target.landmarks=[];target.trees=[];target.encounters=[];
+        const localCities=cityRows.filter(c=>near(earthPoint(c.lon,c.lat,rules))),settlementAt=createEarthSettlementSampler(typeAt,localCities,rules);
+        const nearestCity=localCities.reduce((best,city)=>{const at=local(earthPoint(city.lon,city.lat,rules)),distance=Math.hypot(at.x-p.x,at.y-p.y);return distance<best.distance?{city,distance}:best;},{city:null,distance:rules.cityInfluenceRadius}).city;
+        const place=auth?.row||nearestCity,geo=earthGeo(p,rules);
+        target.layout.name=place?[place.country,place.name].filter(Boolean).join('.'):`${geo.lat.toFixed(3)}, ${geo.lon.toFixed(3)}`;
+        target.mapCities=localCities.map(city=>({...city,...local(earthPoint(city.lon,city.lat,rules))}));
         const curated=q=>auth&&inGeoBounds(earthGeo(q,rules),auth.row.bounds);
         for(const city of cityRows.filter(c=>near(earthPoint(c.lon,c.lat,rules))).sort((a,b)=>Math.hypot(earthPoint(a.lon,a.lat,rules).x-p.x,earthPoint(a.lon,a.lat,rules).y-p.y)-Math.hypot(earthPoint(b.lon,b.lat,rules).x-p.x,earthPoint(b.lon,b.lat,rules).y-p.y)).slice(0,rules.maxSceneCities)){const at=local(earthPoint(city.lon,city.lat,rules));if(!near(at)||curated(at))continue;
-            const generated=generateEarthCity(city,rules);generated.paths=generated.paths.map(r=>({...r,a:local(r.a),b:local(r.b)}));generated.buildings=generated.buildings.map(local);
-            target.paths.push(...generated.paths.filter(r=>!curated(r.a)&&!curated(r.b)).flatMap(r=>landRoadSegments(r,typeAt,rules.roadSampleStep)));target.buildings.push(...generated.buildings.filter(b=>!curated(b)&&typeAt(b.x,b.y)&&!['ocean','water','urban','forest'].includes(typeAt(b.x,b.y))));
             target.landmarks.push({...at,id:`city:${city.id}`,name:city.name,description:'来自真实城市位置的探索区。建筑和道路为游戏改编。'});
         }
         if(auth){
             target.safeAreas=(auth.encounters.safeAreas||[]).map(a=>({...a,...earthPoint(a.lon,a.lat,rules)})).filter(near);
-            for(const road of auth.roads.roads)for(let i=1;i<road.points.length;i++){const a=earthPoint(...road.points[i-1],rules),b=earthPoint(...road.points[i],rules);const local=clipEarthRoad({id:`${road.id}:${i}`,a,b,width:road.width},p,radius);if(local)target.paths.push(local);}
-            const authoredRoads=auth.roads.roads.flatMap(road=>road.points.slice(1).map((point,i)=>({a:earthPoint(...road.points[i],rules),b:earthPoint(...point,rules),width:road.width})));
+            const authoredRoads=generateEarthCityConnections(cityRows,p,radius,rules,typeAt);
             for(const b of auth.buildings.buildings){const origin=earthPoint(b.lon,b.lat,rules);if(!near(origin))continue;const placed=placeEarthLandmark({...b,...origin,...earthLandmarkSize(b,auth.art.frames[b.frame])},authoredRoads,typeAt,rules);if(!placed)continue;const at=placed;target.buildings.push({...placed,tile:2,earthFrame:b.frame});target.landmarks.push({...at,y:at.y+65,id:b.id,name:b.name,description:'深圳地标，建筑与景观为游戏美术改编。'});}
             for(const n of auth.npcs.npcs){const at=earthPoint(n.lon,n.lat,rules);if(!near(at))continue;const source=content.npcs[n.sourceNpc];if(!source)throw Error('城市居民美术引用无效');const npc={portrait:source.portrait,...n,...at,description:n.role,hidden:false,artVisible:true,zone:'earth',earthNpc:true};target.npcs.push(npc);}
             for(const e of auth.encounters.encounters){const at=earthPoint(e.lon,e.lat,rules);if(near(at)&&typeAt(at.x,at.y)&&!['water','ocean'].includes(typeAt(at.x,at.y))&&!earthSafe(target,at,rules.monsterClearance))target.encounters.push({...e,...at,zone:'earth'});}
         }
         const gx=Math.floor(p.x/rules.chunkSize),gy=Math.floor(p.y/rules.chunkSize),activeRadius=Math.min(rules.activeRadius,Math.floor((Math.sqrt(rules.maxChunks)-1)/2));
-        const protectedWorld={...target,buildings:[...target.buildings]};
+        const protectedWorld={...target,paths:[...target.paths],buildings:[...target.buildings]};
+        target.paths.push(...generateEarthCityConnections(cityRows,p,radius,rules,typeAt,(at,padding)=>protectedWorld.buildings.some(b=>Math.abs(at.x-b.x)<b.w/2+padding&&Math.abs(at.y-b.y)<b.h+padding)));
+        protectedWorld.paths=[...target.paths];
         let urbanCount=0;
         for(let cy=gy-activeRadius;cy<=gy+activeRadius;cy++)for(let cx=gx-activeRadius;cx<=gx+activeRadius;cx++){
+            if(++work%3===0){await yieldWork();if(token!==epoch)return false;}
             if(cy<0||cy>=target.h/rules.chunkSize)continue;
-            const objects=generateEarthUrbanChunk(cx,cy,cityRows,rules,typeAt,(at,padding)=>earthSafe(protectedWorld,at,padding));
+            const objects=generateEarthUrbanChunk(cx,cy,cityRows,rules,settlementAt,(at,padding)=>earthSafe(protectedWorld,at,padding));
             const selected=objects.slice(0,Math.max(0,rules.maxUrbanObjects-urbanCount));target.buildings.push(...selected);urbanCount+=selected.length;
         }
         for(let cy=gy-activeRadius;cy<=gy+activeRadius;cy++)for(let cx=gx-activeRadius;cx<=gx+activeRadius;cx++){
+            if(++work%3===0){await yieldWork();if(token!==epoch)return false;}
             if(cy<0||cy>=Math.ceil(target.h/rules.chunkSize))continue;const nx=((cx%(target.w/rules.chunkSize))+target.w/rules.chunkSize)%(target.w/rules.chunkSize);
             const rng=createRng(hashSeed(`earth:${rules.generationVersion}:${nx}:${cy}`));
             for(let i=0;i<rules.treesPerChunk+rules.monstersPerChunk;i++){
@@ -120,6 +139,7 @@ export function createEarthService({content,fetcher=globalThis.fetch,decode=deco
         }
         // A separate stream keeps visual additions from altering encounter identities.
         for(let cy=gy-activeRadius;cy<=gy+activeRadius;cy++)for(let cx=gx-activeRadius;cx<=gx+activeRadius;cx++){
+            if(++work%3===0){await yieldWork();if(token!==epoch)return false;}
             const nx=((cx%(target.w/rules.chunkSize))+target.w/rules.chunkSize)%(target.w/rules.chunkSize),decoRng=createRng(hashSeed(`earth-deco:1:${nx}:${cy}`));
             for(let i=0;i<rules.decorationsPerChunk+rules.forestDecorationsPerChunk;i++){
                 const at={x:(cx+decoRng.float())*rules.chunkSize,y:(cy+decoRng.float())*rules.chunkSize},type=typeAt(at.x,at.y);
@@ -131,7 +151,7 @@ export function createEarthService({content,fetcher=globalThis.fetch,decode=deco
         }
         target.center={...p};target.portal={...target.portal,...p};target.layout.spawn={...p};target.layout.regions=[{...p,rx:radius,ry:radius,name:auth?'深圳 · 与世界同行':target.landmarks[0]?.name||'地球旷野'}];
         target.layout.paths=target.paths;target.layout.buildings=target.buildings;target.layout.trees=target.trees;target.layout.landmarks=target.landmarks;
-        target.earthSocialId=auth?.row.id||target.landmarks[0]?.id||`${gx}:${gy}`;target.art=auth?.art||null;target.earthRegion=auth?.row.id||null;target.revision++;target.onObjectsChanged?.();
+        target.earthSocialId=auth?.row.id||target.landmarks[0]?.id||`${gx}:${gy}`;target.art=auth?.art||null;target.earthRegion=auth?.row.id||null;target.revision++;return true;
     }
     async function loadAround(p,target,token,direction=null){
         await ready();generation??=await json(`data/adventure/earth/${index.generation}`);if(token!==epoch)return false;const geo=earthGeo(p,rules),delta=rules.chunkSize*rules.prefetchRadius/rules.unitsPerDegree;
@@ -144,30 +164,42 @@ export function createEarthService({content,fetcher=globalThis.fetch,decode=deco
         if(!cache.peek(`terrain:${terrainKey(geo.lon,geo.lat)}`))throw Error('当前位置的地形未能读取，请重试');
         const rows=await Promise.allSettled([...cityKeys.values()].map(([lon,lat])=>cities(lon,lat)));
         if(token!==epoch)return false;
-        const auth=await authored(geo);if(token!==epoch)return false;let artError=false;
+        const auth=await authored(geo);if(token!==epoch)return false;let artError=false,nextDraw=null;
         if(auth?.art.atlas){
             const url=new URLSearchParams(globalThis.location?.search||'').get('assets')==='local'?auth.art.local:auth.art.atlas;target.cacheKeys.push(url);
             try{await cache.get(url,async()=>{const image=await createImageBitmap(await request(url,'blob'));return {image,bytes:image.width*image.height*4,dispose(){image.close();}};});}catch{artError=true;}
             if(token!==epoch)return false;
-            target.drawEarthBuilding=(ctx,b)=>{const image=cache.peek(url)?.image,frame=auth.art.frames?.[b.earthFrame];if(!image||!frame)return false;ctx.drawImage(image,...frame,b.x-b.w/2,b.y-b.h,b.w,b.h);return true;};
-        }else target.drawEarthBuilding=null;
-        target.authored=auth;build(target,p,[...new Map(rows.flatMap(r=>r.status==='fulfilled'?r.value.rows:[]).map(c=>[c.id,c])).values()],auth);
-        const landmarkDraw=target.drawEarthBuilding;
-        if(target.buildings.some(b=>b.earthCityAtlas)){
+            nextDraw=(ctx,b)=>{const image=cache.peek(url)?.image,frame=auth.art.frames?.[b.earthFrame];if(!image||!frame)return false;ctx.drawImage(image,...frame,b.x-b.w/2,b.y-b.h,b.w,b.h);return true;};
+        }
+        const staged={...target,layout:{...target.layout},authored:auth};
+        if(!await build(staged,p,[...new Map(rows.flatMap(r=>r.status==='fulfilled'?r.value.rows:[]).map(c=>[c.id,c])).values()],auth,token)||token!==epoch)return false;
+        const landmarkDraw=nextDraw;
+        if(staged.buildings.some(b=>b.earthCityAtlas)){
             try{
                 const manifest=await json('data/adventure/earth/city-art.json');
-                const entries=await Promise.all(['buildings','street'].map(async kind=>{
-                    const row=manifest[kind],url=new URLSearchParams(globalThis.location?.search||'').get('assets')==='local'?row.local:row.cdn;
+                const entries=await Promise.all([...new Set(staged.buildings.map(b=>b.earthCityAtlas).filter(Boolean))].map(async kind=>{
+                    const localMode=new URLSearchParams(globalThis.location?.search||'').get('assets')==='local';
+            if(kind==='cityGround'&&manifest[kind].tiles){
+                const row=manifest[kind],key=`city-ground:${row.sourceSha256}`;
+                const result=await cache.get(key,async()=>{
+                    const canvas=document.createElement('canvas');canvas.width=row.width;canvas.height=row.height;const c=canvas.getContext('2d',{willReadFrequently:true});
+                    for(const tile of row.tiles){const image=await createImageBitmap(await request(localMode?tile.local:tile.cdn,'blob'));try{if(image.width!==tile.width||image.height!==tile.height)throw Error('城市背景尺寸不匹配');c.drawImage(image,tile.x,tile.y);}finally{image.close();}}
+                    const data=c.getImageData(0,0,row.width,row.height).data;canvas.width=canvas.height=0;return {data,width:row.width,height:row.height,bytes:data.byteLength};
+                });
+                return [kind,result,key];
+            }
+            const row=manifest[kind],url=new URLSearchParams(globalThis.location?.search||'').get('assets')==='local'?row.local:row.cdn;
                     target.cacheKeys.push(url);
                     await cache.get(url,async()=>{const image=await createImageBitmap(await request(url,'blob'));if(image.width!==row.width||image.height!==row.height){image.close();throw Error('City atlas dimensions mismatch');}return {image,bytes:image.width*image.height*4,dispose(){image.close();}};});
                     return [kind,{row,url}];
                 }));
                 if(token!==epoch)return false;
                 const atlases=Object.fromEntries(entries);
-                target.drawEarthBuilding=(ctx,b)=>{if(!b.earthCityAtlas)return landmarkDraw?.(ctx,b)||false;const art=atlases[b.earthCityAtlas],image=cache.peek(art.url)?.image,frame=art.row.frames[b.earthCityFrame];if(!image||!frame)return false;ctx.drawImage(image,...frame,b.x-b.w/2,b.y-b.h*.9375,b.w,b.h);return true;};
+                nextDraw=(ctx,b)=>{if(!b.earthCityAtlas)return landmarkDraw?.(ctx,b)||false;const art=atlases[b.earthCityAtlas],image=cache.peek(art.url)?.image,frame=art.row.frames[b.earthCityFrame];if(!image||!frame)return false;ctx.drawImage(image,...frame,b.x-b.w/2,b.y-b.h*.9375,b.w,b.h);return true;};
             }catch{artError=true;}
         }
         if(token!==epoch)return false;
+        for(const key of ['safeAreas','railways','paths','buildings','npcs','landmarks','trees','encounters','center','portal','layout','earthSocialId','art','earthRegion','mapCities','revision','authored'])target[key]=staged[key];target.drawEarthBuilding=nextDraw;target.onObjectsChanged?.();
         target.error=[...terrain,...rows].some(r=>r.status==='rejected')?'部分地图数据未加载，靠近时将重试。':artError?'部分城市美术未加载，正在等待重试。':'';
         return true;
     }
@@ -196,9 +228,19 @@ export function createEarthService({content,fetcher=globalThis.fetch,decode=deco
         }
         surface??=createEarthSurfacePainter({rules,sample:typeAt,loadArt:loadSurfaceArt});surface.draw(ctx,target,rect);
         ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
-        for(const [color,extra] of [['#586a3944',12],['#9b986a',4],['#d1c496',-3]]){ctx.strokeStyle=color;for(const road of target.paths){ctx.lineWidth=road.width+extra;ctx.beginPath();ctx.moveTo(road.a.x,road.a.y);ctx.lineTo(road.b.x,road.b.y);ctx.stroke();}}
-        const roadTexture=surface.road(ctx);if(roadTexture){ctx.strokeStyle=roadTexture;ctx.globalAlpha=.5;for(const road of target.paths){ctx.lineWidth=Math.max(1,road.width-8);ctx.beginPath();ctx.moveTo(road.a.x,road.a.y);ctx.lineTo(road.b.x,road.b.y);ctx.stroke();}ctx.globalAlpha=1;}
-        ctx.strokeStyle='#f0dfaf55';ctx.lineWidth=2;ctx.setLineDash([3,17]);for(const road of target.paths){ctx.beginPath();ctx.moveTo(road.a.x,road.a.y);ctx.lineTo(road.b.x,road.b.y);ctx.stroke();}ctx.restore();
+        // Trace connected segments together: bends and crossings have no round-cap seams.
+        const traceRoads=()=>{ctx.beginPath();let previous=null;for(const road of target.paths){
+            if(!previous||Math.hypot(road.a.x-previous.x,road.a.y-previous.y)>.01)ctx.moveTo(road.a.x,road.a.y);
+            ctx.lineTo(road.b.x,road.b.y);previous=road.b;
+        }};
+        for(const [color,extra] of [
+            ['#d9d5bf22',2*(rules.cityConnectionShoulderWidth+rules.cityConnectionBlendWidth)],
+            ['#d9d5bf44',2*rules.cityConnectionShoulderWidth+rules.cityConnectionBlendWidth],
+            ['#dbd6be',2*rules.cityConnectionShoulderWidth],
+            ['#c5c5b5',2],['#cacbc0',0]
+        ]){ctx.strokeStyle=color;ctx.lineWidth=rules.cityConnectionWidth+extra;traceRoads();ctx.stroke();}
+        const roadTexture=surface.road(ctx);if(roadTexture){ctx.strokeStyle=roadTexture;ctx.globalAlpha=rules.cityConnectionTextureOpacity;ctx.lineWidth=rules.cityConnectionWidth-4;traceRoads();ctx.stroke();ctx.globalAlpha=1;}
+        ctx.strokeStyle='#f8f3db88';ctx.lineWidth=2;ctx.setLineDash([12,24]);traceRoads();ctx.stroke();ctx.restore();
     }
     function setRegion(next){if(region?.row.id!==next?.row.id)chapter=null;region=next;}
     async function story(){
@@ -220,8 +262,18 @@ export function createEarthService({content,fetcher=globalThis.fetch,decode=deco
         return {tiles:tileResults.flatMap(r=>r.status==='fulfilled'?[r.value]:[]),cities:cityResults.flatMap(r=>r.status==='fulfilled'?r.value.rows:[]).filter(c=>Math.abs(c.lat-center.lat)<=height/2&&Math.abs(((c.lon-center.lon+540)%360)-180)<=span/2).slice(0,120),error:[...tileResults,...cityResults].some(r=>r.status==='rejected')?'部分数据暂不可用，可点击重试。':''};
     }
     function cancelPending(){epoch++;cache.cancelPending();controllers.forEach(c=>c.abort());controllers.clear();}
+    async function localViewport(bounds){
+        const centerPoint={x:bounds.x+bounds.w/2,y:bounds.y+bounds.h/2},center=earthGeo(centerPoint,rules);
+        const data=await viewport({center,span:bounds.w/rules.unitsPerDegree,height:bounds.h/rules.unitsPerDegree});
+        const cityRows=[...new Map(data.cities.map(city=>[city.id,city])).values()];
+        const tiles=new Map(data.tiles.map(tile=>[tile.key,tile]));
+        const sample=(x,y)=>{const geo=earthGeo({x,y},rules),tile=tiles.get(terrainKey(geo.lon,geo.lat));return tile?sampleTerrain(tile,geo):typeAt(x,y);};
+        const worldWidth=360*rules.unitsPerDegree;
+        return {cities:cityRows.map(city=>{const point=earthPoint(city.lon,city.lat,rules);return {...city,x:centerPoint.x+((point.x-centerPoint.x+worldWidth*1.5)%worldWidth)-worldWidth/2,y:point.y};}),
+            paths:generateEarthCityConnections(cityRows,centerPoint,Math.hypot(bounds.w,bounds.h)/2,rules,sample),terrainAt:sample,error:data.error};
+    }
     function cancel(){surface?.dispose();surface=null;surfaceArtKeys.clear();epoch++;controllers.forEach(c=>c.abort());controllers.clear();cache.clear();world=null;region=null;chapter=null;index=null;geography=null;generation=null;lastStreamKey='';streamTask=null;}
-    return {ready,tile,cities,prepare,update,story,atlas,viewport,cancel,cancelPending,cache,get world(){return world;},get chapter(){return chapter;},get rules(){return rules;}};
+    return {ready,tile,cities,prepare,update,story,atlas,viewport,localViewport,cancel,cancelPending,cache,get world(){return world;},get chapter(){return chapter;},get rules(){return rules;}};
 }
 
 export function sampleTerrain(data,geo){const b=terrainBounds(data.key),x=Math.max(0,Math.min(data.width-1,Math.floor((geo.lon-b.west)/2*data.width))),y=Math.max(0,Math.min(data.height-1,Math.floor((b.north-geo.lat)/2*data.height)));return data.types[data.indices[y*data.width+x]];}
@@ -229,7 +281,13 @@ export async function decodeTerrain(blob,palette,key){
     const bitmap=await createImageBitmap(blob),canvas=document.createElement('canvas');canvas.width=bitmap.width;canvas.height=bitmap.height;
     const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(bitmap,0,0);bitmap.close();
     const pixels=c.getImageData(0,0,canvas.width,canvas.height),indices=new Uint8Array(canvas.width*canvas.height),colors=palette.map(row=>({raw:[0,2,4].map(i=>parseInt(row.rgb.slice(i,i+2),16)),out:[1,3,5].map(i=>parseInt(row.color.slice(i,i+2),16))}));
-    for(let i=0;i<indices.length;i++){if(!pixels.data[i*4+3]){indices[i]=255;pixels.data.set([111,119,117,255],i*4);continue;}let best=0,min=Infinity;for(let n=0;n<colors.length;n++){const d=colors[n].raw.reduce((sum,v,k)=>sum+(v-pixels.data[i*4+k])**2,0);if(d<min){best=n;min=d;}}indices[i]=best;colors[best].out.forEach((v,k)=>pixels.data[i*4+k]=v);pixels.data[i*4+3]=255;}
+    for(let i=0;i<indices.length;i++){
+        if(i&&i%32768===0)await new Promise(resolve=>setTimeout(resolve,0));
+        const offset=i*4;if(!pixels.data[offset+3]){indices[i]=255;pixels.data.set([111,119,117,255],offset);continue;}
+        let best=0,min=Infinity;const r=pixels.data[offset],g=pixels.data[offset+1],b=pixels.data[offset+2];
+        for(let n=0;n<colors.length;n++){const raw=colors[n].raw,d=(raw[0]-r)**2+(raw[1]-g)**2+(raw[2]-b)**2;if(d<min){best=n;min=d;}}
+        indices[i]=best;pixels.data[offset]=colors[best].out[0];pixels.data[offset+1]=colors[best].out[1];pixels.data[offset+2]=colors[best].out[2];pixels.data[offset+3]=255;
+    }
     c.putImageData(pixels,0,0);return {key,image:canvas,indices,types:palette.map(p=>p.type),width:canvas.width,height:canvas.height,bytes:canvas.width*canvas.height*5,dispose(){canvas.width=canvas.height=0;}};
 }
 export function validateRegion(files,content){

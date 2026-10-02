@@ -70,7 +70,7 @@ flowchart LR
     Prepare -->|成功后切换| Provider[连续地球提供器：局部物件 / 碰撞 / 寻路]
     Provider -->|步行邻域与前方预取| Cache
     Cache --> CDN[HelloWorld 地形 PNG / 城市 CSV]
-    Provider -->|接近深圳| Region[独立道路 / 建筑 / NPC / 遭遇 / 美术清单]
+    Provider -->|接近深圳| Region[建筑 / NPC / 遭遇 / 美术清单]
     Region -->|附近交互| Story[独立章节 / 对话 / 学习 JSON]
     Provider --> Canvas[相机附近 Canvas 2D 渲染]
     Story --> Existing[现有团队 / 语言学习 / 战斗]
@@ -404,6 +404,33 @@ config/maps 提供六岛源文件与统一地域规则；adventure_map_generator
 地球高清表现层（2026-10-02）：`adventure_earth_surface_core.js` 负责纯地类混合与确定性采样；`adventure_earth_surface.js` 将真实分类和预制 WebP 合成为可见 Canvas 小块，使用单任务分帧队列、64 块 LRU 上限和统一像素边缘。`adventure_earth.js` 仅在实际绘制地球场景后读取 `surface-art.json` 与图集，图册阶段不加载。视觉层不改变地理碰撞、怪物随机流或持久数据。详见 [地球地表与装饰](earth-world.md#高清地表与地理装饰2026-10-02)。
 # 城市地貌生成补充（2026-10-02）
 
+`adventure_earth_transport_core.js` 复用已加载城市坐标，为通用城市生成有限聚落布局覆盖、铁路与站前设施；不依赖 authored region。铁路走廊先预留，再放置普通街区建筑。`city-art.json` 的交通图集按实际出现的物件类型加载，地理碰撞仍使用原始地类；列车只作为环境物件。
+
+地表像素生成现在经单个原生 module Worker 执行，主线程只收集块内地类、接收转移的像素缓冲并提交 Canvas；失败使用分帧回退。`adventure_earth_city_layout_core.js` 为地表和物件共享街区分区。场景流送分批构建临时数据，校验 epoch 后一次替换，不在异步处理中暴露半完成数组。
+
 高清地表队列按可见块优先，再预热周边一圈，合计受 64 块缓存预算限制；城市铺装在地表像素生成阶段烘焙，街灯等竖立物件保留 Y 排序。地标等比缩放和避让完整道路集合由纯核心函数负责，不依赖当前视口。
 
 Earth 的 `adventure_earth_city_core.js` 只处理人口等级、稳定地理格点和物件候选；`adventure_earth.js` 提供已加载地表查询与安全空间过滤，并仅在场景有城市物件时读取 `city-art.json` 与两张 WebP。城市装饰与地标共用相机相对绘制和 Y 排序，不进入地图浏览或启动依赖。捕鱼通过 `isOcean` 的 Earth 分支读取真实地表分类，海岛规则保持独立。
+
+城市底图补充（2026-10-02）：`surface-art.json.cityGround` 独立引用 HelloWorld `city02.png` 的无损 WebP；仅实际地球场景加载，整幅像素传入单个 Worker 与主线程回退，城市地类按地理坐标混合采样。场景流送提交单元包含对象数组和 `drawEarthBuilding`，避免图片异步加载时数组与绘制器版本错配；Earth 不使用海岛精灵作为建筑缺图回退。城市底图保留细街巷纹理；场景道路统一为城市之间的连接，旧深圳作者道路不再加载，安全导航保留。
+
+
+2026-10-02 地球渲染更新：城市道路连接由adventure_earth_transport_core.js按经纬度生成并裁剪，仍为纯核心层；浏览器IO层按需加载四张独立城市WebP，合成一张连续纹理后交给原生Worker。高清资源不进入网站发布包，永久CDN与明确离线模式继续使用同一清单。
+
+2026-10-02 公路视觉调整：城际路面默认52单位，浅灰米色、浅路肩及渐淡外缘，弯道连续描边；地标避让使用当前城际道路。深圳roads.json仅来源归档，不请求、不参与场景物件与寻路；程序城市支路不再放入world.paths。
+
+城际连接在纯核心层精简可经更近城市到达的冗余三角长边；adventure_renderer在场景绘制完成后以屏幕坐标显示mapCities和landmarks名称，保持字号稳定并避让人物与其他地名。
+
+### 当前城市地图视野
+
+view_adventure_earth_local_map 将拖动视野通过 adventure_app 回调交给 adventure_earth.localViewport，按需请求既有地形切片与城市 CSV，并返回独立的地形采样、城市坐标与道路。此路径不执行 prepare/update，不改变游戏世界、玩家位置或存档。adventure_renderer.minimap 使用返回数据绘制；earth_map_labels_core 只计算屏幕空间名称避让，视图绘制连接真实坐标的连线。定位按钮只重置视野；窗口 dispose 与视野版本丢弃过期结果。
+
+```mermaid
+flowchart LR
+    CityView[当前城市地图视图] -->|拖动视野| Controller[adventure_app]
+    Controller --> MapIO[adventure_earth.localViewport]
+    MapIO --> Data[地形切片与城市 CSV]
+    MapIO -->|独立视野数据| CityView
+    CityView --> Renderer[adventure_renderer.minimap]
+    CityView --> Labels[earth_map_labels_core]
+```

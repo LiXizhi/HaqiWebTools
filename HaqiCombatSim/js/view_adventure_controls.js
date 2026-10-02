@@ -1,10 +1,11 @@
 // Shared GUI controls. Views supply intent callbacks; no gameplay state here.
 // Tests inject a shared document on globalThis; browsers use the real one.
 const doc=()=>globalThis.document;
-export function createWorldMapSwitch(active,onSelect){
-    const group=doc().createElement('div');group.className='gui-tabs parallel-world-tabs';group.setAttribute('role','group');group.setAttribute('aria-label','切换世界地图');
-    for(const [id,label] of [['haqi','哈奇世界'],['earth','现实世界']]){
+export function createWorldMapSwitch(active,onSelect,haqiLabel='哈奇世界'){
+    const group=doc().createElement('div');group.className='parallel-world-buttons';group.setAttribute('role','group');group.setAttribute('aria-label','切换世界地图');
+    for(const [id,label] of [['haqi',haqiLabel],['earth','现实世界']]){
         const button=doc().createElement('button');button.type='button';button.textContent=label;
+        button.className='primary';
         button.setAttribute('aria-pressed',String(id===active));button.onclick=()=>onSelect(id);group.append(button);
     }
     return group;

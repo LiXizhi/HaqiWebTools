@@ -3,7 +3,8 @@ import hashlib, io, json, sys
 from pathlib import Path
 from PIL import Image
 root=Path(__file__).resolve().parents[1]
-manifest={'version':1,'source':'Original AI-generated offline city and street scenery; fictional buildings, not surveyed streets.','grid':{'columns':4,'rows':4}}
+previous=root/'data/adventure/earth/city-art.json'
+manifest={**(json.loads(previous.read_text(encoding='utf8')) if previous.exists() else {}),'version':1,'source':'Original AI-generated offline city and street scenery; fictional buildings, not surveyed streets.','grid':{'columns':4,'rows':4}}
 for kind,source,bands in [('buildings',sys.argv[1],[0,345,635,922,1254]),('street',sys.argv[2],[0,320,610,930,1254])]:
  source=Path(source);im=Image.open(source).convert('RGBA');packed=Image.new('RGBA',(1024,1024))
  for r in range(4):

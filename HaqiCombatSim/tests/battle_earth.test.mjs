@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {earthPoint,earthGeo,earthRules,terrainKey,cityKey,parseEarthCities,generateEarthCity,earthSafe,earthChapterEvent,earthEncounter,landRoadSegments} from '../js/adventure_earth_core.js';
+import {earthPoint,earthGeo,earthRules,earthLocalMapBounds,terrainKey,cityKey,parseEarthCities,generateEarthCity,earthSafe,earthChapterEvent,earthEncounter,landRoadSegments} from '../js/adventure_earth_core.js';
 import {createEarthService,EarthCache} from '../js/adventure_earth.js';
 import {walkable,movePosition,findPath} from '../js/adventure_world_core.js';
 import {createAdventure,parseSave,beginEncounter,recordDecision,settleEncounter} from '../js/adventure_core.js';
@@ -10,19 +10,99 @@ import {SimpleBot} from '../js/combat_policy_core.js';
 import {installDungeons,enterDungeon,leaveDungeon} from '../js/adventure_dungeons_core.js';
 import {packageRuntimeData} from '../scripts/package_runtime_data.mjs';
 import {createWorldMapSwitch} from '../js/view_adventure_controls.js';
+import {renderEarthLocalMap} from '../js/view_adventure_earth_local_map.js';
+import {layoutEarthMapLabels} from '../js/earth_map_labels_core.js';
 import {recordLearningCompletion} from '../js/language_adventure_core.js';
 import os from 'node:os';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
+
+test('city map covers the loaded neighbourhood with the player at its centre',()=>{
+    const rules=earthRules(),position=earthPoint(114.0579,22.5431,rules),bounds=earthLocalMapBounds(position,rules);
+    assert.equal(bounds.w,rules.chunkSize*(rules.activeRadius+1)*2);
+    assert.equal(bounds.w,bounds.h);
+    assert.equal(bounds.x+bounds.w/2,position.x);
+    assert.equal(bounds.y+bounds.h/2,position.y);
+    assert.ok(bounds.w<360*rules.unitsPerDegree/100);
+});
+
+test('city map dragging moves terrain and city nodes together without triggering travel',()=>{
+    const previousDocument=globalThis.document,draws=[],trips=[];
+    class Element {
+        constructor(){this.children=[];this.style={};this.dataset={};this.className='';this.classList={add:()=>{},remove:()=>{}};}
+        append(...nodes){this.children.push(...nodes);}
+        replaceChildren(...nodes){this.children=nodes;}
+        setAttribute(){} focus(){} setPointerCapture(){}
+        getBoundingClientRect(){return this.className==='earth-local-city'?{width:100,height:30}:{width:560,height:560};}
+        querySelector(selector){return this.children.find(node=>node.className?.split(' ').includes(selector.slice(1)))||this.children.map(node=>node.querySelector?.(selector)).find(Boolean);}
+    }
+    globalThis.document={createElement:()=>new Element(),createElementNS:()=>new Element()};
+    try{
+        const root=new Element(),position=earthPoint(114.0579,22.5431),size=earthLocalMapBounds(position).w;
+        const city={...position,name:'深圳',lon:114.0579,lat:22.5431},offscreen={...city,x:position.x+size*.6,name:'附近城市'};
+        renderEarthLocalMap(root,{layout:{name:'中国.深圳'},earthRules:earthRules(),mapCities:[city,offscreen]},{position},{close(){},switchWorld(){},travel:city=>trips.push(city),draw:(canvas,options)=>draws.push(options.bounds)});
+        const map=root.querySelector('.earth-local-map'),node=map.querySelector('.earth-local-city'),dot=map.querySelector('.earth-local-dot'),canvas=map.querySelector('.earth-atlas'),other=map.querySelector('.earth-local-cities').children.at(-1);
+        assert.equal(dot.style.left,'50%');assert.equal(other.hidden,true);
+        map.onpointerdown({button:0,pointerId:1,clientX:280,clientY:280,target:node});
+        map.onpointermove({pointerId:1,clientX:168,clientY:336});
+        map.onpointerup({pointerId:1});node.onclick({detail:1});
+        assert.equal(trips.length,0);assert.equal(draws.at(-1).x,draws[0].x+size*.2);assert.equal(draws.at(-1).y,draws[0].y-size*.1);
+        assert.equal(dot.style.left,'30%');assert.equal(other.hidden,false);
+        map.onpointerdown({button:0,pointerId:2,clientX:168,clientY:336,target:node});map.onpointerup({pointerId:2});node.onclick({detail:1});
+        assert.deepEqual(trips,[city]);
+        const before=draws.at(-1).x;canvas.onkeydown({key:'ArrowLeft',preventDefault(){}});assert.equal(draws.at(-1).x,before-size/8);
+        map.querySelector('.earth-local-locate').onclick();assert.deepEqual(draws.at(-1),draws[0]);assert.equal(dot.style.left,'50%');
+    }finally{globalThis.document=previousDocument;}
+});
+
+test('crowded city names have separate label boxes connected to unchanged real anchors',()=>{
+    const points=Array.from({length:10},(_,i)=>({id:String(i),x:260+i%3,y:280+i%2,w:90,h:28}));
+    for(const width of [560,330]){
+        const result=layoutEarthMapLabels(points,width,width,[{x:0,y:0,w:220,h:52}]);
+        assert.equal(result.filter(point=>point.box).length,points.length);
+        for(const [i,item] of result.entries()){
+            assert.equal(item.x,points[i].x);assert.equal(item.y,points[i].y);
+            assert.ok(item.box.x>=0&&item.box.x+item.box.w<=width);
+            assert.ok(item.box.y>=0&&item.box.y+item.box.h<=width);
+            for(const other of result.slice(i+1)){const a=item.box,b=other.box;assert.ok(a.x+a.w<=b.x||b.x+b.w<=a.x||a.y+a.h<=b.y||b.y+b.h<=a.y);}
+        }
+    }
+});
+
+test('city map ignores obsolete viewport results and stops applying updates after closing',async()=>{
+    const previousDocument=globalThis.document,pending=[],draws=[];
+    class Element {
+        constructor(){this.children=[];this.style={};this.dataset={};this.className='';this.classList={add(){},remove(){}};}
+        append(...nodes){this.children.push(...nodes);}replaceChildren(...nodes){this.children=nodes;}
+        setAttribute(){}focus(){}setPointerCapture(){}
+        getBoundingClientRect(){return this.className==='earth-local-city'?{width:100,height:30}:{width:560,height:560};}
+        querySelector(selector){return this.children.find(node=>node.className?.split(' ').includes(selector.slice(1)))||this.children.map(node=>node.querySelector?.(selector)).find(Boolean);}
+    }
+    globalThis.document={createElement:()=>new Element(),createElementNS:()=>new Element()};
+    let view;
+    try{
+        const root=new Element(),position=earthPoint(114.0579,22.5431),world={layout:{name:'中国.深圳'},earthRules:earthRules(),mapCities:[]};
+        view=renderEarthLocalMap(root,world,{position},{close(){},switchWorld(){},travel(){},draw:(canvas,data)=>draws.push(data),viewport:bounds=>new Promise(resolve=>pending.push({bounds,resolve}))});
+        const map=root.querySelector('.earth-local-map'),canvas=map.querySelector('.earth-atlas');
+        map.onpointerdown({button:0,pointerId:1,clientX:0,clientY:0,target:canvas});map.onpointermove({pointerId:1,clientX:80,clientY:0});map.onpointerup({pointerId:1});
+        assert.equal(pending.length,2);
+        pending[0].resolve({cities:[{name:'过期城市',x:position.x,y:position.y}],paths:[]});await Promise.resolve();
+        assert.equal(map.querySelector('.earth-local-city'),undefined);
+        pending[1].resolve({cities:[{name:'当前视野城市',x:position.x,y:position.y}],paths:[]});await Promise.resolve();
+        assert.equal(map.querySelector('.earth-local-city').textContent,'当前视野城市');
+        map.querySelector('.earth-local-status').onclick();assert.equal(pending.length,3);view.dispose();
+        const count=draws.length;pending[2].resolve({cities:[],paths:[]});await Promise.resolve();assert.equal(draws.length,count);
+    }finally{view?.dispose();globalThis.document=previousDocument;}
+});
 import {durableSave,runtimeValues,restoreRuntime} from '../js/adventure_storage_core.js';
 const read=file=>JSON.parse(fs.readFileSync(new URL('../'+file,import.meta.url)));
 const content=read('data/adventure/chapter.json');
 content.worldMaps=Object.fromEntries(Object.entries(content.worldMapIndex.islands).map(([id,info])=>[id,read(info.file)]));
-function serviceHarness(){
+function serviceHarness({beforeFetch=async()=>{},cityCsv=null}={}){
     const requests=[],source=structuredClone(content);
-    const fetcher=async url=>{requests.push(url);if(url.startsWith('data/')){const data=read(url);if(url.endsWith('/art.json'))data.atlas=null;return {ok:true,json:async()=>data};}
+    const fetcher=async url=>{await beforeFetch(url);requests.push(url);if(url.startsWith('data/')){const data=read(url);if(url.endsWith('/art.json'))data.atlas=null;return {ok:true,json:async()=>data};}
         if(url.endsWith('.png'))return {ok:true,blob:async()=>({})};
-        if(url.includes('.csv'))return {ok:true,text:async()=> 'wikiDataId,name,country_name,lat,lon,native_name\nQ60,纽约,美国,40.758,-73.985,New York\nQ15174,深圳,中国,22.5431,114.0579,深圳'};
+        if(url.includes('.csv'))return {ok:true,text:async()=> cityCsv??'wikiDataId,name,country_name,lat,lon,native_name\nQ60,纽约,美国,40.758,-73.985,New York\nQ15174,深圳,中国,22.5431,114.0579,深圳'};
         throw Error('Unexpected request '+url);
     };
     const service=createEarthService({content:source,fetcher,decode:async(blob,palette,key)=>({key,width:2,height:2,indices:new Uint8Array([0,0,0,0]),types:['grass'],bytes:20})});
@@ -31,6 +111,16 @@ function serviceHarness(){
 test('Earth service construction and importing scene rules perform zero network requests',()=>{
     const {requests,service}=serviceHarness();assert.deepEqual(requests,[]);assert.equal(service.world,undefined);
     const boot=fs.readFileSync(new URL('../js/adventure_assets.js',import.meta.url),'utf8');assert.ok(!boot.includes('data/adventure/earth/'));
+});
+
+test('panning city map loads new terrain and cities without changing the gameplay world',async()=>{
+    const {service,requests}=serviceHarness();const {world}=await service.prepare({lon:114.0579,lat:22.5431}),before={...world.center};
+    const bounds=earthLocalMapBounds(earthPoint(111.99,22.5431),service.rules),view=await service.localViewport(bounds);
+    assert.ok(requests.some(url=>url.includes('terrain_110_112_22_24.png')));
+    assert.ok(requests.some(url=>url.includes('terrain_112_114_22_24.png')));
+    assert.equal(view.terrainAt(bounds.x,bounds.y),'grass');
+    assert.equal(service.world,world);assert.deepEqual(world.center,before);
+    assert.ok(!requests.some(url=>url.endsWith('dialogue.json')||url.endsWith('quests.json')));
 });
 
 test('map header selectors do not load Earth until explicitly selected',()=>{
@@ -67,10 +157,19 @@ test('atlas loads overview and visible tiles without authored NPCs, quests or ar
     const {service,requests}=serviceHarness();await service.atlas();assert.ok(!requests.some(url=>url.includes('shenzhen/')));await service.viewport({center:{lon:114,lat:22},span:2,height:1});assert.ok(!requests.some(url=>/npcs|quests|dialogue|art.json/.test(url)));assert.ok(requests.filter(url=>url.includes('terrain_')).length<=6);
 });
 test('arrival loads Shenzhen pieces separately; dialogue/quests wait for interaction',async()=>{
-    const {service,requests}=serviceHarness();const result=await service.prepare({lon:114.0579,lat:22.5431});assert.equal(result.world.zone,'earth');assert.ok(result.world.npcs.length);assert.ok(requests.some(url=>url.endsWith('roads.json')));assert.ok(!requests.some(url=>url.endsWith('quests.json')));await service.story();assert.ok(requests.some(url=>url.endsWith('quests.json')));assert.ok(requests.some(url=>url.endsWith('dialogue.json')));
+    const {service,requests}=serviceHarness();const result=await service.prepare({lon:114.0579,lat:22.5431});assert.equal(result.world.zone,'earth');assert.ok(result.world.npcs.length);assert.ok(!requests.some(url=>url.endsWith('roads.json')));assert.equal(result.world.layout.name,'中国.深圳');assert.ok(result.world.paths.every(road=>road.connection));assert.ok(!requests.some(url=>url.endsWith('quests.json')));await service.story();assert.ok(requests.some(url=>url.endsWith('quests.json')));assert.ok(requests.some(url=>url.endsWith('dialogue.json')));
 });
 test('unpolished cities use real city positions and never request Shenzhen content',async()=>{
-    const {service,requests}=serviceHarness();const {world}=await service.prepare({lon:-73.985,lat:40.758});assert.ok(world.buildings.length>0);assert.equal(world.npcs.length,0);assert.ok(!requests.some(url=>url.includes('shenzhen/')));assert.equal(world.earthRegion,null);
+    const {service,requests}=serviceHarness();const {world}=await service.prepare({lon:-73.985,lat:40.758});assert.ok(world.buildings.length>0);assert.equal(world.npcs.length,0);assert.ok(!requests.some(url=>url.includes('shenzhen/')));assert.equal(world.earthRegion,null);assert.equal(world.layout.name,'美国.纽约');
+});
+test('Shenzhen uses wide city connections without loading or retaining legacy streets',async()=>{
+    const {service,requests}=serviceHarness({cityCsv:'wikiDataId,name,country_name,lat,lon,native_name\nQ15174,深圳,中国,22.5431,114.0579,深圳\nneighbour,邻城,中国,22.57,114.15,邻城'});
+    const {world}=await service.prepare({lon:114.0579,lat:22.5431});
+    assert.ok(world.paths.length>0);
+    assert.ok(world.paths.every(road=>road.connection&&road.width===52));
+    assert.ok(!requests.some(url=>url.endsWith('roads.json')));
+    assert.ok(world.buildings.some(b=>b.earthFrame!==undefined));
+    assert.ok(world.npcs.length>0);
 });
 test('navigation is local and missing terrain is blocked, never fabricated',async()=>{
     const {service}=serviceHarness();const {world,position}=await service.prepare({lon:0,lat:0});assert.equal(walkable(world,position.x,position.y),true);assert.equal(walkable(world,earthPoint(100,30).x,earthPoint(100,30).y),false);assert.deepEqual(findPath(world,position,{x:position.x+50000,y:position.y}),[]);assert.notDeepEqual(movePosition(world,position,20,0),position);
@@ -138,9 +237,9 @@ test('procedural chunks regenerate consistently across the date line',async()=>{
 });
 
 test('walking into and out of the Shenzhen footprint updates the same world and keeps story files lazy',async()=>{
-    const {service,requests}=serviceHarness();const {world}=await service.prepare({lon:113.70,lat:22.54});assert.equal(world.earthRegion,null);assert.ok(!requests.some(url=>url.includes('shenzhen/')));
+    const {service,requests}=serviceHarness();const {world}=await service.prepare({lon:113.70,lat:22.54});assert.equal(world.earthRegion,null);assert.equal(world.layout.name,'22.540, 113.700');assert.ok(!requests.some(url=>url.includes('shenzhen/')));
     await service.update(earthPoint(113.9,22.54),1000);assert.equal(service.world,world);assert.equal(world.earthRegion,'shenzhen');assert.ok(world.npcs.length);assert.ok(!requests.some(url=>url.endsWith('dialogue.json')));
-    await service.update(earthPoint(113.7,22.54),2000);assert.equal(service.world,world);assert.equal(world.earthRegion,null);assert.equal(world.npcs.length,0);
+    await service.update(earthPoint(113.7,22.54),2000);assert.equal(service.world,world);assert.equal(world.earthRegion,null);assert.equal(world.layout.name,'22.540, 113.700');assert.equal(world.npcs.length,0);
 });
 
 test('procedural roads stop at water and unavailable terrain',()=>{
@@ -191,4 +290,15 @@ test('a dungeon trip from Earth restores its local return point without sending 
     enterDungeon(save,source,'dungeon:HaqiTown_FireCavern');const cloud=durableSave(save);assert.equal(cloud.zone,'camp');assert.equal(cloud.dungeonReturn,null);
     const local=parseSave(JSON.stringify(restoreRuntime(cloud,source,runtimeValues(save))),source);leaveDungeon(local,source);assert.equal(local.zone,'earth');assert.deepEqual(local.position,position);
     assert.equal(parseSave(JSON.stringify(restoreRuntime(cloud,source)),source).zone,'camp');
+});
+
+test('streaming preserves the current buildings and painter until replacement art is ready',async()=>{
+    let blocked=false,release,entered;const hold=new Promise(r=>release=r),reached=new Promise(r=>entered=r);
+    const {service}=serviceHarness({beforeFetch:async url=>{if(blocked&&url.endsWith('/city-art.json')){entered();await hold;}}});
+    const {world,position}=await service.prepare({lon:-73.985,lat:40.758});
+    const buildings=world.buildings,draw=()=>true;world.drawEarthBuilding=draw;
+    service.cache.entries.delete('data/adventure/earth/city-art.json');blocked=true;
+    const task=service.update({...position,x:position.x+1000},10000);await reached;
+    assert.equal(world.buildings,buildings);assert.equal(world.drawEarthBuilding,draw);
+    release();await task;assert.notEqual(world.buildings,buildings);service.cancel();
 });

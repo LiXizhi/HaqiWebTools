@@ -2,6 +2,13 @@
 export const FISHING_CAMERA_ZOOM=1.4;
 export const FISHING_CAMERA_MS=620;
 
+// Keep the sampling phase of static scenery constant while the camera pans.
+// Only the rendered origin is snapped; gameplay positions retain full precision.
+export function alignCameraOrigin(x,y,scale,pixelRatio){
+    const pixelsPerUnit=scale*pixelRatio;
+    return {x:Math.round(x*pixelsPerUnit)/pixelsPerUnit,y:Math.round(y*pixelsPerUnit)/pixelsPerUnit};
+}
+
 function clampZoom(value){return Math.max(.75,Math.min(FISHING_CAMERA_ZOOM,value));}
 function easeInOut(t){return t<.5?4*t*t*t:1-((-2*t+2)**3)/2;}
 

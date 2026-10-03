@@ -1,3 +1,4 @@
+import {monsterGearScore} from './combat_power_core.js';
 import {drawSchoolIcon} from './card_renderer.js';
 import {tr,fill} from './locale_runtime.js';
 
@@ -21,7 +22,7 @@ export function createBattleIntroView(root,{skip}){
                 const portrait=element('canvas','battle-intro-portrait');portrait.width=512;portrait.height=512;portrait.setAttribute('aria-hidden','true');
                 const banner=element('div','battle-intro-banner');
                 const icon=element('canvas','battle-intro-school');icon.width=64;icon.height=64;icon.setAttribute('aria-hidden','true');drawSchoolIcon(icon.getContext('2d'),row.school,32,32,48);
-                const labels=element('div','battle-intro-labels');labels.append(element('h3','',row.name),element('p','',fill('等级 {level} · {school}',{level:row.level,school:tr(school)}).text));
+                const labels=element('div','battle-intro-labels');labels.append(element('h3','',row.name),element('p','',`${tr('战力')} ${monsterGearScore(row.template)}`),element('p','',fill('等级 {level} · {school}',{level:row.level,school:tr(school)}).text));
                 banner.append(icon,labels);panel.append(ordinal,portrait,banner);lineup.append(panel);rows.push({panel,portrait,row,loaded:false});
             }
             const footer=element('footer','battle-intro-footer');footer.append(element('span','','准备迎战'));

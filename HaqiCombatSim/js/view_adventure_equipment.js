@@ -1,3 +1,4 @@
+import {magicStarCombatLevel} from './adventure_magic_star_core.js';
 import {heroPortrait} from './hero_renderer.js';
 import { setText, fill, tr } from './locale_runtime.js';
 import {DetailDialog} from './view_detail_dialog.js';
@@ -92,8 +93,8 @@ export function renderEquipment(body,model,cb,ui) {
         statDetails.open=state.statsOpen??false;
         statDetails.ontoggle=()=>{state.statsOpen=statDetails.open;};
         const stats=el('dl','equipment-summary');
-        for(const row of visibleEquipmentSummary(save,c))stats.append(el('dt','',row.label),el('dd','',`${row.value}${row.unit}`));
-        statDetails.append(stats,el('p','muted','属性加成包含装备、强化、宝石和骑乘中的坐骑；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。'));
+        for(const row of visibleEquipmentSummary(save,c,magicStarCombatLevel(c,{keepworkVip:model.membership?.isVip,expiresAt:model.membership?.expiresAt,now:model.now})))stats.append(el('dt','',row.label),el('dd','',`${row.value}${row.unit}`));
+        statDetails.append(stats,el('p','muted','属性加成包含装备、强化、宝石和骑乘中的坐骑；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。战力按原版公式综合超级魔力率、五系最高攻击和平均防御，不计卡组、生命、暴击或临时状态。装备附加牌不占普通卡包容量。'));
         character.append(statDetails);
         if(c.progressionBonuses){
             const current=DRAGON_TOTEMS.find(row=>(save.inventory[row.id]||0)>0);

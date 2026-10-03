@@ -15,6 +15,8 @@ export function statIdToEntry(id) {
     if (id >= 103 && id <= 110) return { stat: 'accuracyPct', school: STAT_ID_SCHOOL[id - 103] };
     if (id >= 111 && id <= 118) return { stat: 'damagePct', school: STAT_ID_SCHOOL[id - 111] };
     if (id >= 119 && id <= 126) return { stat: 'resistPct', school: STAT_ID_SCHOOL[id - 119] };
+    if (id >= 151 && id <= 158) return { stat: 'damageAbs', school: STAT_ID_SCHOOL[id - 151] };
+    if (id >= 159 && id <= 166) return { stat: 'resistAbs', school: STAT_ID_SCHOOL[id - 159] };
     if (id >= 196 && id <= 203) return { stat: 'critPct', school: STAT_ID_SCHOOL[id - 196] };
     if (id >= 204 && id <= 211) return { stat: 'resiliencePct', school: STAT_ID_SCHOOL[id - 204] };
     if (id >= 212 && id <= 219) return { stat: 'penetration', school: STAT_ID_SCHOOL[id - 212] };

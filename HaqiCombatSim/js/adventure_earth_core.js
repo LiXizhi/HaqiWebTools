@@ -1,8 +1,21 @@
 // Geographic identity and deterministic world generation. No browser or network IO.
 import {createRng,hashSeed} from './rng_core.js';
 import {defaultParams} from './combat_params_core.js';
+import {advanceEarthCityChapter} from './adventure_earth_city_config_core.js';
+import {earthBridgeContains} from './adventure_earth_bridge_core.js';
+import {restoreEarthWildEncounter} from './adventure_earth_wild_core.js';
 
 export const EARTH_ZONE='earth';
+// Reuse unchanged overlap objects during streaming, including their live state.
+export function reuseEarthObjects(previous,next){
+    const key=row=>row.id??`${row.x}:${row.y}`;
+    const old=new Map(previous.map(row=>[key(row),row]));
+    const merged=next.map(row=>{
+        const current=old.get(key(row));
+        return current&&Object.keys(row).every(k=>Object.is(current[k],row[k])||JSON.stringify(current[k])===JSON.stringify(row[k]))?current:row;
+    });
+    return previous.length===merged.length&&merged.every((row,i)=>row===previous[i])?previous:merged;
+}
 export const earthRules=content=>({...defaultParams('kids').earth,...content?.balanceParams?.earth});
 export const wrapLongitude=lon=>((lon+180)%360+360)%360-180;
 // The local map covers the loaded neighbourhood, not the entire globe.
@@ -66,11 +79,32 @@ export function earthSafe(world,p,padding=0){
         ||world.buildings.some(b=>Math.abs(p.x-b.x)<b.w/2+r.buildingSafeMargin+padding&&Math.abs(p.y-b.y)<b.h/2+r.buildingSafeMargin+padding)
         ||world.npcs.some(n=>Math.hypot(p.x-n.x,p.y-n.y)<r.buildingSafeMargin+padding);
 }
+const earthCollisionIndices=new WeakMap();
+function earthCollisionNear(world,x,y){
+    let index=earthCollisionIndices.get(world);
+    if(!index||index.paths!==world.paths||index.buildings!==world.buildings||index.roadCount!==world.paths.length||index.buildingCount!==world.buildings.length||index.revision!==world.revision){
+        const size=world.earthRules?.collisionCellSize??defaultParams('kids').earth.collisionCellSize,bins=new Map();
+        const add=(object,kind,left,top,right,bottom)=>{
+            for(let by=Math.floor(top/size);by<=Math.floor(bottom/size);by++)for(let bx=Math.floor(left/size);bx<=Math.floor(right/size);bx++){
+                const key=`${bx}:${by}`,row=bins.get(key)||{paths:[],buildings:[]};row[kind].push(object);bins.set(key,row);
+            }
+        };
+        for(const road of world.paths){const pad=road.width/2;add(road,'paths',Math.min(road.a.x,road.b.x)-pad,Math.min(road.a.y,road.b.y)-pad,Math.max(road.a.x,road.b.x)+pad,Math.max(road.a.y,road.b.y)+pad);}
+        for(const b of world.buildings)if(!b.decorationOnly)add(b,'buildings',b.x-b.w*.3-10,b.y-b.h*.42-10,b.x+b.w*.3+10,b.y+12);
+        index={paths:world.paths,buildings:world.buildings,roadCount:world.paths.length,buildingCount:world.buildings.length,revision:world.revision,size,bins};earthCollisionIndices.set(world,index);
+    }
+    return index.bins.get(`${Math.floor(x/index.size)}:${Math.floor(y/index.size)}`);
+}
 export function earthWalkable(world,x,y){
     if(!Number.isFinite(x)||!Number.isFinite(y)||y<0||y>world.h)return false;
-    const type=world.terrainAt(x,y);if(type==null||type==='ocean'||type==='water')return false;
-    if(world.paths.some(road=>distanceToRoad({x,y},road)<=road.width/2))return true;
-    return !world.buildings.some(b=>!b.decorationOnly&&x>b.x-b.w*.3-10&&x<b.x+b.w*.3+10&&y>b.y-b.h*.42-10&&y<b.y+12);
+    if(world.movementExclusions?.some(o=>Math.hypot(x-o.x,y-o.y)<o.radius))return false;
+    const type=world.terrainAt(x,y);if(type==null)return false;
+    if(world.earthBoating&&(type==='water'||type==='ocean'))return true;
+    if(type==='ocean')return false;
+    const nearby=earthCollisionNear(world,x,y);
+    if(type==='water')return !!nearby?.paths.some(road=>earthBridgeContains(road,x,y));
+    if(nearby?.paths.some(road=>distanceToRoad({x,y},road)<=road.width/2))return true;
+    return !nearby?.buildings.some(b=>x>b.x-b.w*.3-10&&x<b.x+b.w*.3+10&&y>b.y-b.h*.42-10&&y<b.y+12);
 }
 // Fit source pixels uniformly; never squeeze a tall landmark into an unrelated box.
 export function earthLandmarkSize(building,frame){
@@ -89,7 +123,8 @@ export function placeEarthLandmark(building,roads,sample,rules){
     }
     return null; // Unavailable placement must not obstruct a road or invent land.
 }
-export function earthNearest(world,x,y,{safe=false}={}){
+export function earthNearest(world,x,y,{safe=false,landOnly=false}={}){
+    if(landOnly)world={...world,earthBoating:false};
     const good=p=>earthWalkable(world,p.x,p.y)&&(!safe||world.encounters.every(e=>Math.hypot(p.x-e.x,p.y-e.y)>world.earthRules.monsterClearance));
     const norm=p=>({x:((p.x%world.w)+world.w)%world.w,y:p.y});
     if(good(norm({x,y})))return norm({x,y});
@@ -107,13 +142,12 @@ export function generateEarthCity(city,rules){
 }
 export function earthEncounter(content,id){
     if(typeof id!=='string'||!id.startsWith('earth:'))return null;
+    if(id.startsWith('earth:wild:')||id.startsWith('earth:wild2:'))return restoreEarthWildEncounter(content,id);
     const match=/^earth:([\w-]+):(-?\d+):(-?\d+):(\d+)$/.exec(id);if(!match)return null;
     const monster=content.monsters?.[match[1]],rules=earthRules(content);
     if(!monster||Math.abs(Number(match[2]))>Math.ceil(360*rules.unitsPerDegree/rules.chunkSize)||Math.abs(Number(match[3]))>Math.ceil(180*rules.unitsPerDegree/rules.chunkSize)||Number(match[4])>rules.monstersPerChunk)return null;
     return {id,zone:EARTH_ZONE,monsterId:monster.id,monster};
 }
 export function earthChapterEvent(save,quests,event){
-    const progress=save.earthProgress||{version:1,step:0};
-    const step=quests.steps[progress.step];if(!step||step.event!==event)return false;
-    save.earthProgress={version:1,step:progress.step+1};save.revision++;return true;
+    return advanceEarthCityChapter(save,quests,event);
 }

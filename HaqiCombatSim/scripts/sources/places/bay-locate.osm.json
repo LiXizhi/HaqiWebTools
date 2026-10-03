@@ -1,0 +1,433 @@
+{
+  "version": 0.6,
+  "generator": "Overpass API 0.7.62.11 87bfad18",
+  "osm3s": {
+    "timestamp_osm_base": "2026-10-03T02:20:29Z",
+    "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL."
+  },
+  "elements": [
+    {
+      "type": "node",
+      "id": 3433943197,
+      "lat": 22.524592,
+      "lon": 113.9879591,
+      "tags": {
+        "name": "深圳湾公园",
+        "name:en": "Shenzhen Bay Park",
+        "name:zh": "深圳湾公园",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes",
+        "wikidata": "Q21245996"
+      }
+    },
+    {
+      "type": "node",
+      "id": 8219895276,
+      "lat": 22.5249531,
+      "lon": 113.9884102,
+      "tags": {
+        "bus": "yes",
+        "highway": "bus_stop",
+        "name": "深圳湾公园地铁站 ①",
+        "name:en": "Shenzhen Bay Park Metro Station 1",
+        "name:zh": "深圳湾公园地铁站 ①",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 8219895277,
+      "lat": 22.5242112,
+      "lon": 113.9861312,
+      "tags": {
+        "bus": "yes",
+        "highway": "bus_stop",
+        "name": "深圳湾公园地铁站 ②",
+        "name:en": "Shenzhen Bay Park Metro Station 2",
+        "name:zh": "深圳湾公园地铁站 ②",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    },
+    {
+      "type": "node",
+      "id": 8219895278,
+      "lat": 22.5250326,
+      "lon": 113.9908378,
+      "tags": {
+        "bus": "yes",
+        "highway": "bus_stop",
+        "name": "深圳湾公园地铁站",
+        "name:en": "Shenzhen Bay Park Metro Station",
+        "name:zh": "深圳湾公园地铁站",
+        "public_transport": "platform"
+      }
+    },
+    {
+      "type": "node",
+      "id": 9062301243,
+      "lat": 22.5244887,
+      "lon": 113.9879978,
+      "tags": {
+        "name": "深圳湾公园",
+        "name:en": "Shenzhen Bay Park",
+        "name:zh": "深圳湾公园",
+        "operator": "深圳地铁运营集团有限公司",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "wikidata": "Q21245996"
+      }
+    },
+    {
+      "type": "node",
+      "id": 9062301290,
+      "lat": 22.5244174,
+      "lon": 113.9880274,
+      "tags": {
+        "name": "深圳湾公园",
+        "name:en": "Shenzhen Bay Park",
+        "name:zh": "深圳湾公园",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes",
+        "wikidata": "Q21245996"
+      }
+    },
+    {
+      "type": "node",
+      "id": 11091086550,
+      "lat": 22.524511,
+      "lon": 113.9879908,
+      "tags": {
+        "name": "深圳湾公园",
+        "name:en": "Shenzhen Bay Park",
+        "name:zh": "深圳湾公园",
+        "public_transport": "stop_position",
+        "railway": "stop",
+        "subway": "yes",
+        "wikidata": "Q21245996"
+      }
+    },
+    {
+      "type": "node",
+      "id": 13017636342,
+      "lat": 22.5246303,
+      "lon": 113.9875341,
+      "tags": {
+        "bus": "yes",
+        "highway": "bus_stop",
+        "name": "欢乐海岸（深圳湾公园地铁站E出口）",
+        "name:en": "OCT Harbour (Exit E of Shenzhen Bay Park Metro Station)",
+        "name:zh": "欢乐海岸（深圳湾公园地铁站E出口）",
+        "public_transport": "platform",
+        "shelter": "no"
+      }
+    },
+    {
+      "type": "way",
+      "id": 208124060,
+      "center": {
+        "lat": 22.5279017,
+        "lon": 113.996236
+      },
+      "tags": {
+        "amenity": "parking",
+        "name": "深圳湾公园1号停车场",
+        "parking": "surface"
+      }
+    },
+    {
+      "type": "way",
+      "id": 227699537,
+      "center": {
+        "lat": 22.5291443,
+        "lon": 113.9887229
+      },
+      "tags": {
+        "highway": "tertiary",
+        "name": "海园一路",
+        "name:en": "Haiyuan 1st Road",
+        "name:zh": "海园一路",
+        "oneway": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 227699545,
+      "center": {
+        "lat": 22.5273538,
+        "lon": 113.9878385
+      },
+      "tags": {
+        "highway": "tertiary",
+        "name": "海园二路",
+        "name:en": "Haiyuan 2nd Road",
+        "name:zh": "海园二路",
+        "oneway": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 357479528,
+      "center": {
+        "lat": 22.5266535,
+        "lon": 113.9892402
+      },
+      "tags": {
+        "highway": "tertiary",
+        "name": "海园一路",
+        "name:en": "Haiyuan 1st Road",
+        "name:zh": "海园一路",
+        "oneway": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 357479532,
+      "center": {
+        "lat": 22.5282426,
+        "lon": 113.9888659
+      },
+      "tags": {
+        "highway": "tertiary",
+        "name": "海园一路",
+        "name:en": "Haiyuan 1st Road",
+        "name:zh": "海园一路",
+        "oneway": "yes",
+        "tunnel": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 357765497,
+      "center": {
+        "lat": 22.5214787,
+        "lon": 113.9788562
+      },
+      "tags": {
+        "bicycle": "designated",
+        "bridge": "yes",
+        "foot": "designated",
+        "highway": "path",
+        "layer": "1",
+        "lit": "yes",
+        "name": "海韵桥",
+        "segregated": "no",
+        "smoothness": "intermediate",
+        "source": "GPS",
+        "surface": "sett"
+      }
+    },
+    {
+      "type": "way",
+      "id": 535463140,
+      "center": {
+        "lat": 22.502291,
+        "lon": 113.9470414
+      },
+      "tags": {
+        "amenity": "parking",
+        "name": "深圳湾公园5号停车场(日出剧场停车场)"
+      }
+    },
+    {
+      "type": "way",
+      "id": 555611444,
+      "center": {
+        "lat": 22.4913696,
+        "lon": 113.9471932
+      },
+      "tags": {
+        "access": "yes",
+        "amenity": "parking",
+        "fee": "yes",
+        "name": "深圳湾公园7号地面停车场"
+      }
+    },
+    {
+      "type": "way",
+      "id": 571629092,
+      "center": {
+        "lat": 22.5218013,
+        "lon": 113.9671618
+      },
+      "tags": {
+        "leisure": "park",
+        "local_ref": "A4",
+        "name": "白鹭坡",
+        "name:en": "Egret Hill",
+        "name:zh": "白鹭坡",
+        "name:zh-Hans": "白鹭坡",
+        "operator": "深圳市公园管理中心",
+        "operator:en": "Shenzhen Park Management Center",
+        "operator:type": "government",
+        "operator:wikidata": "Q113625158",
+        "operator:zh": "深圳市公园管理中心"
+      }
+    },
+    {
+      "type": "way",
+      "id": 571629093,
+      "center": {
+        "lat": 22.5216558,
+        "lon": 113.9766062
+      },
+      "tags": {
+        "leisure": "park",
+        "local_ref": "A3",
+        "name": "海韵公园",
+        "name:en": "Sound of the Sea Park",
+        "name:zh": "海韵公园",
+        "name:zh-Hans": "海韵公园",
+        "operator": "深圳市公园管理中心",
+        "operator:en": "Shenzhen Park Management Center",
+        "operator:type": "government",
+        "operator:wikidata": "Q113625158",
+        "operator:zh": "深圳市公园管理中心"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1194924337,
+      "center": {
+        "lat": 22.5247563,
+        "lon": 113.9889296
+      },
+      "tags": {
+        "building": "train_station",
+        "building:levels": "0",
+        "building:levels:underground": "2",
+        "layer": "-1",
+        "location": "underground",
+        "name": "深圳湾公园站",
+        "name:en": "Shenzhen Bay Park Station",
+        "name:zh": "深圳湾公园站"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1194924351,
+      "center": {
+        "lat": 22.5237599,
+        "lon": 113.9877825
+      },
+      "tags": {
+        "amenity": "parking",
+        "name": "深圳湾公园3号停车场",
+        "parking": "surface"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1194924352,
+      "center": {
+        "lat": 22.5228734,
+        "lon": 113.9842725
+      },
+      "tags": {
+        "amenity": "parking",
+        "name": "深圳湾公园3号停车场",
+        "parking": "surface"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1332832715,
+      "center": {
+        "lat": 22.5299377,
+        "lon": 113.9885823
+      },
+      "tags": {
+        "highway": "tertiary",
+        "name": "海园一路",
+        "name:en": "Haiyuan 1st Road",
+        "name:zh": "海园一路",
+        "oneway": "yes"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1347452984,
+      "center": {
+        "lat": 22.5248227,
+        "lon": 113.9910938
+      },
+      "tags": {
+        "amenity": "parking",
+        "name": "深圳湾公园2号停车场",
+        "parking": "surface"
+      }
+    },
+    {
+      "type": "way",
+      "id": 1426517019,
+      "center": {
+        "lat": 22.5387926,
+        "lon": 113.9840858
+      },
+      "tags": {
+        "addr:housename": "海景花园",
+        "addr:housename:zh": "海景花园",
+        "building": "apartments",
+        "building:levels": "33",
+        "name": "海韵阁",
+        "name:zh": "海韵阁"
+      }
+    },
+    {
+      "type": "relation",
+      "id": 8061060,
+      "center": {
+        "lat": 22.5245822,
+        "lon": 113.9881656
+      },
+      "tags": {
+        "name": "深圳湾公园",
+        "name:en": "Shenzhen Bay Park",
+        "public_transport": "stop_area",
+        "public_transport:version": "2",
+        "type": "public_transport"
+      }
+    },
+    {
+      "type": "relation",
+      "id": 8133384,
+      "center": {
+        "lat": 22.5007317,
+        "lon": 113.9537956
+      },
+      "tags": {
+        "alt_name": "深圳湾滨海休闲带",
+        "leisure": "park",
+        "name": "深圳湾公园",
+        "name:en": "Shenzhen Bay Park",
+        "name:zh": "深圳湾公园",
+        "operator": "深圳市公园管理中心",
+        "operator:en": "Shenzhen Park Management Center",
+        "operator:type": "government",
+        "operator:wikidata": "Q113625158",
+        "operator:zh": "深圳市公园管理中心",
+        "type": "site"
+      }
+    },
+    {
+      "type": "relation",
+      "id": 18220656,
+      "center": {
+        "lat": 22.5042884,
+        "lon": 113.9553497
+      },
+      "tags": {
+        "name": "深圳湾公园绿道（步行）",
+        "network": "lwn",
+        "ref": "深圳湾",
+        "route": "hiking",
+        "type": "route"
+      }
+    }
+  ]
+}

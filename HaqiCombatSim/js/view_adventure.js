@@ -1,4 +1,5 @@
 import {dailyBuffs,dailyBuffDescription} from './language_daily_buff_core.js';
+import {earthCityChapterProgress,earthCityQuestTarget} from './adventure_earth_city_config_core.js';
 import {defeatReviewNotes} from './view_battle_review.js';
 import {createBattlePetHint} from './view_battle_pet_hint.js';
 export {updateBattlePetHint,updateBattleSpeech,battleSpeechController} from './view_battle_pet_hint.js';
@@ -415,8 +416,8 @@ export function renderHud(root,model,cb) {
     const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),chapterCount));
     const dungeon=dungeonFor(c,save.zone);
     if(save.zone==='earth'){
-        const chapter=model.earthChapter,step=chapter?.steps[save.earthProgress?.step||0];
-        tracker.replaceChildren(el('h3','',chapter?.name||'与世界同行'),el('p','',step?.name||(chapter?'本章完成。和伙伴继续探索吧。':'靠近居民，了解这座城市的故事。')),button('打开现实世界地图',()=>cb.panel('earthmap'),'track-button'));
+        const chapter=model.earthChapter,city=c.earthWorld?.city,step=chapter?.steps[earthCityChapterProgress(save,chapter).step],side=earthCityQuestTarget(save,city);
+        tracker.replaceChildren(el('h3','',side?.name||chapter?.name||'与世界同行'),el('p','',side?.description||step?.name||(chapter?'本章完成。和伙伴继续探索吧。':'靠近居民，了解这座城市的故事。')));
     }else if(dungeon){
         const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
         tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));

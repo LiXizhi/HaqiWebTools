@@ -11,7 +11,7 @@ import {walkable,distance,followPath,WALK_SPEED} from './adventure_world_core.js
 export function petSceneProfiles(state){
     const owners=new Map();
     for(const n of state.world.npcs)if(n.petCompanion===true){const id=`resident:${n.id}`;owners.set(id,{id,name:n.name,school:n.school,position:n});}
-    for(const a of state.socialActors||[])owners.set(a.profile.id,{...a.profile,position:a.position});
+    for(const a of state.socialActors||[])owners.set(a.profile.id,{...a.profile,position:a.position,sceneOpacity:a.sceneOpacity??1});
     return [...owners.values()];
 }
 export function createPetScene({isFriend=()=>false,getState,commit,toast,sound=()=>{},now=()=>Date.now()}){
@@ -84,7 +84,7 @@ export function createPetScene({isFriend=()=>false,getState,commit,toast,sound=(
             }
             const stale=[...Object.keys(save.petWorld||{}),...Object.keys(save.petFileRefs||{})].some(id=>String(id).startsWith('npc-pet:'));
             if(stale)run({type:'residents',residents});
-            const current=getState().save,leader=selectCompanionId(current,content),entries=[...(current.pets[leader]?[{id:leader,position:current.position}]:[]),...residents.map(r=>({id:npcPetId(r.id),position:r.position}))];
+            const current=getState().save,leader=selectCompanionId(current,content),entries=[...(current.pets[leader]?[{id:leader,position:current.position}]:[]),...residents.map(r=>({id:npcPetId(r.id),position:r.position,sceneOpacity:r.sceneOpacity??1}))];
             const heroMoved=!!heroWakeAnchor&&distance(current.position,heroWakeAnchor)>p.idleMoveDistance;
             if(!heroWakeAnchor||heroMoved)heroWakeAnchor={...current.position};
             const live=new Set(entries.map(e=>e.id));for(const id of actors.keys())if(!live.has(id))actors.delete(id);
@@ -93,6 +93,7 @@ export function createPetScene({isFriend=()=>false,getState,commit,toast,sound=(
             if(meeting&&!petMeetingTargets(meeting.anchor,content).every(t=>petMeetingClear(t,owners,content))){meeting=null;food=null;}
             for(const row of entries){
                 let actor=actors.get(row.id);if(!actor){actor={id:row.id,...createCompanion(world,row.position,`${save.seed}:${row.id}`)};actors.set(row.id,actor);}
+                actor.sceneOpacity=row.sceneOpacity??1;
                 const ownerId=residents.find(r=>npcPetId(r.id)===row.id)?.id;
                 const queued=inParty&&!['dialogue','gesture'].includes(meeting?.type)&&!effects.some(e=>['dialogue','gesture'].includes(e.kind)&&e.until>now()&&e.ids.includes(row.id))&&(row.id===leader||state.team?.includes(ownerId)||state.socialActors?.some(a=>a.profile.id===ownerId&&a.inParty)||!!save.coopRun?.members?.some(m=>m.profile.id===ownerId));
                 if(queued){updatePetIdle(actor,row.position,now(),content,{wake:true});stepCompanion(actor,world,row.position,dt,{inParty:true});continue;}

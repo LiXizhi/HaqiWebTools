@@ -310,3 +310,17 @@ export function absorbDamage(absorbs, damage, onLayer = null) {
 export function ratingToPercent(rating, level, flatPercent = 0) {
     return (rating || 0) / (level * 50 + 50) + (flatPercent || 0);
 }
+
+/** Combat/main.lua GetGearScoreV2 L581–611, GetPowerPipChance L1410–1440.
+ * Five schools only, highest attack, average resistance, ceil once at the end.
+ * Monster callers supply their explicit power-pip chance, without player level bonus.
+ */
+export function gearScoreV2(spec,version='kids',powerPipChance=null){
+    const stats=spec.stats||{},schools=['fire','ice','storm','life','death'];
+    const value=(name,school)=>typeof stats[name]==='number'?stats[name]:(stats[name]?.all||0)+(stats[name]?.[school]||0);
+    const pip=powerPipChance??(powerPipChanceByLevel(spec.level||1,version)+(stats.powerPipPct||0));
+    const attack=Math.max(...schools.map(s=>(100+value('damagePct',s))*(1+value('damageAbs',s)/100)));
+    const resist=schools.reduce((sum,s)=>sum+value('resistPct',s),0)/5;
+    const absolute=schools.reduce((sum,s)=>sum+value('resistAbs',s),0)/5;
+    return Math.ceil(pip+attack+100/(1-resist/100)*(1+absolute/100));
+}

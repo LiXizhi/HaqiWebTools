@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>现代居民头身拼接预览</title>
+<style>body{margin:0;background:#eef1eb;color:#26352d;font:15px system-ui,sans-serif}main{max-width:1280px;margin:auto;padding:18px}h1{font-size:24px}h2{font-size:18px}label{display:inline-flex;align-items:center;gap:6px;margin:6px 12px 6px 0}select{font:inherit;padding:6px;max-width:220px}p{line-height:1.6}.stage{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}article{background:white;border:1px solid #cbd4c5;border-radius:8px;overflow:hidden}article h2{font-size:14px;padding:0 10px}canvas{display:block;width:100%;height:auto;background:repeating-conic-gradient(#e0e7dc 0% 25%,#f2f5ee 0% 50%) 0 0/20px 20px}.frames{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.frames small{display:block;text-align:center;padding:4px}#status{background:white;padding:12px}#error{color:#a42c22}#head-atlas{width:min(100%,576px);background:#dfe8d9}#body-atlas{width:100%;background:#dfe8d9}@media(max-width:650px){main{padding:10px}.stage{grid-template-columns:repeat(2,minmax(0,1fr))}.frames{grid-template-columns:repeat(7,minmax(0,1fr))}}</style></head>
+<body><main><h1>现代居民头身拼接预览</h1><p>头部与身体可独立更换。检查头颈、衣领、左右转头及四方向六帧步行；仅查看美术，不读写玩家存档。</p>
+<label>推荐搭配<select id="resident"></select></label><label>头部<select id="head"></select></label><label>身体<select id="body"></select></label>
+<label>转头<select id="turn"><option value="0">跟随身体</option><option value="1">左转22.5°</option><option value="2">左转45°</option><option value="-1">右转22.5°</option><option value="-2">右转45°</option></select></label>
+<label><input id="debug" type="checkbox">显示连接点</label><label><input id="animate" type="checkbox" checked>播放步行</label>
+<p id="status" role="status">正在加载…</p><p id="error" role="alert"></p><div class="stage" id="stage"></div>
+<h2>四方向：六帧步行＋静止</h2><div class="frames" id="frames"></div>
+<h2>16方向头部原图</h2><img id="head-atlas" alt="当前独立头部16方向图集">
+<h2>身体原图</h2><img id="body-atlas" alt="当前独立身体四向步行与静止图集">
+</main><script type="module" src="urban-residents.js"></script></body></html>

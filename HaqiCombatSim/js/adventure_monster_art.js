@@ -6,7 +6,7 @@ export function createMonsterArtRenderer(art,content,draw,drawPet){
     return (ctx,monster,x,y,w,h)=>{
         const binding=monsterArtBinding(monster,art);
         if(binding?.kind==='portrait')return draw(ctx,{id:'monster:'+binding.id},x,y,w,h,true,false);
-        if(binding?.kind==='pet')return drawPet(ctx,binding.petId,petStage(monster.level||1,content),x,y,w,h);
+        if(binding?.kind==='pet')return drawPet(ctx,binding.petId,monster.appearanceStage??petStage(monster.level||1,content),x,y,w,h);
         return false;
     };
 }

@@ -7,7 +7,7 @@ import {setText} from './locale_runtime.js';
 export function renderEarthLocalMap(root,world,save,cb){
     const el=(tag,className)=>{const node=document.createElement(tag);node.className=className;return node;};
     root.replaceChildren();root.className='overlay visible';
-    const modal=el('section','modal earth-modal'),header=el('header','modal-header'),heading=el('div','map-heading'),body=el('div','modal-body');
+    const modal=el('section','modal earth-modal atlas-map-modal'),header=el('header','modal-header'),heading=el('div','map-heading'),body=el('div','modal-body');
     modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label',world.layout.name);
     heading.append(createWorldMapSwitch('earth',cb.switchWorld));header.append(heading,createCloseButton(cb.close));
     const map=el('div','earth-map-stage earth-local-map'),canvas=el('canvas','earth-atlas'),name=el('h2','island-map-name');

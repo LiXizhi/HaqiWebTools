@@ -5,15 +5,33 @@
   "cityVersion": 4,
   "cityLanguage": "zhCN",
   "overview": {
-    "url": "https://cdn.keepwork.com/worldmap/terrain_-180_180_-60_85.png",
+    "local": "assets/adventure/earth/world-political-e52411ba9fcc.webp",
+    "width": 2048,
+    "height": 844,
+    "bytes": 33550,
+    "sha256": "e52411ba9fcc60d354433eb7cbf94086bb3f5f1fce485919d16ae34dfeca2024",
     "bounds": {
       "west": -180,
       "east": 180,
       "south": -60,
       "north": 85
-    }
+    },
+    "projection": "equirectangular",
+    "style": "political",
+    "maxBytes": 500000,
+    "ocean": "#75b6cf",
+    "source": {
+      "page": "https://commons.wikimedia.org/wiki/File:BlankMap-Equirectangular.svg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/5/51/BlankMap-Equirectangular.svg",
+      "local": "assets/adventure/earth/source/BlankMap-Equirectangular.svg",
+      "sha256": "06711d2687e24b8af73ab8a2c27d4f709eed4c9a498480766937d5c2125bede1",
+      "license": "CC0-1.0",
+      "author": "Natural Earth; Bjørn Sandvik",
+      "modifications": "Country colors, one-pixel borders, crop to original overview bounds; no geometry changes"
+    },
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/world-political-e52411ba9fcc.webp"
   },
-  "attribution": "HelloWorld：真实地表分类与城市位置；道路和建筑为游戏改编，不作为导航地图。",
+  "attribution": "世界国界底图：Natural Earth / Wikimedia Commons（CC0）；国家配色为游戏改编。城市位置与地表来自 HelloWorld；不作为导航地图。",
   "source": "apps/official/apps/helloworld/WorldConfig.js",
   "palette": [
     {

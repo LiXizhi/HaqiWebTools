@@ -10,7 +10,7 @@ test('adaptive quality needs two sustained windows, excludes paused/scene grace 
  const q=createAdaptiveGraphics(),scene={};
  for(let t=0;t<13000;t+=50)q.sample(t,{scene});
  assert.equal(q.reduced,false);q.sample(13000,{scene});assert.equal(q.reduced,true);
- assert.deepEqual(q.effects({particles:'on',trails:'auto'}),{particles:true,trails:false});
+ assert.deepEqual(q.effects({particles:'on',trails:'auto'}),{particles:true,trails:false,earthLight:'day',earthWeather:'clear',low:true});
  for(let t=13016;t<20000;t+=16)q.sample(t,{scene});assert.equal(q.reduced,true);
  q.reset(20000);for(let t=20000;t<40000;t+=50)q.sample(t,{active:false,scene});assert.equal(q.reduced,false);
  for(let t=40000;t<50000;t+=50)q.sample(t,{scene});assert.equal(q.reduced,false);
@@ -18,11 +18,11 @@ test('adaptive quality needs two sustained windows, excludes paused/scene grace 
 });
 test('local fallback migrates sound once and never replaces explicit device preferences',async()=>{
  const settings=createGameSettings({indexedDB:null,legacyStorage:()=>({getItem:key=>key.includes('volume')?'.8':'off'})});
- await settings.open({music:true});assert.deepEqual(settings.value,{version:1,particles:'auto',trails:'auto',music:true,sound:false,volume:.8});
+ await settings.open({music:true});assert.deepEqual(settings.value,{version:1,environmentVersion:2,particles:'auto',trails:'auto',earthLight:'day',earthWeather:'clear',music:true,sound:false,volume:.8});
  settings.set({music:false,particles:'off',volume:2});await settings.flush();await settings.open({music:true});assert.equal(settings.value.music,false);assert.equal(settings.value.volume,1);
  assert.equal(normalizeGameSettings({volume:NaN,trails:'bogus'}).trails,'auto');
 });
-function fakeIDB(){let saved;const writes=[];return {writes,open(){const req={};queueMicrotask(()=>{req.result={createObjectStore(){},close(){},transaction(){const tx={objectStore:()=>({get(){const r={};queueMicrotask(()=>{r.result=saved; r.onsuccess();});return r;},put(value){saved=structuredClone(value);writes.push(saved);queueMicrotask(()=>tx.oncomplete());}})};return tx;}};req.onupgradeneeded();req.onsuccess();});return req;}};}
+function fakeIDB(saved){const writes=[];return {writes,open(){const req={};queueMicrotask(()=>{req.result={createObjectStore(){},close(){},transaction(){const tx={objectStore:()=>({get(){const r={};queueMicrotask(()=>{r.result=saved; r.onsuccess();});return r;},put(value){saved=structuredClone(value);writes.push(saved);queueMicrotask(()=>tx.oncomplete());}})};return tx;}};req.onupgradeneeded();req.onsuccess();});return req;}};}
 test('IndexedDB serializes writes and restores settings in a new session without legacy override',async()=>{
  const indexedDB=fakeIDB(),first=createGameSettings({indexedDB,legacyStorage:emptyStorage});await first.open();
  first.set({particles:'off'});first.set({trails:'on',volume:.7});await first.flush();
@@ -54,3 +54,7 @@ test('migration reads the last account local cache only and safely handles corru
 test('failed IndexedDB opens keep the same usable session preferences',async()=>{
  const settings=createGameSettings({indexedDB:{open(){throw Error('blocked');}},legacyStorage:emptyStorage});await settings.open();settings.set({trails:'off',sound:false});await settings.flush();assert.equal(settings.value.trails,'off');assert.equal(settings.value.sound,false);
 });
+
+test('explicit automatic weather survives a device settings reopen',async()=>{const indexedDB=fakeIDB(),first=createGameSettings({indexedDB,legacyStorage:emptyStorage});await first.open();assert.equal(first.value.earthLight,'day');assert.equal(first.value.earthWeather,'clear');first.set({earthLight:'auto',earthWeather:'auto'});await first.flush();const second=createGameSettings({indexedDB,legacyStorage:emptyStorage});await second.open();assert.equal(second.value.earthWeather,'auto');assert.equal(second.value.earthLight,'auto');});
+
+test('legacy default automatic environment migrates to daylight and clear sky',async()=>{const indexedDB=fakeIDB({version:1,earthLight:'auto',earthWeather:'auto',particles:'off'}),settings=createGameSettings({indexedDB,legacyStorage:emptyStorage});await settings.open();assert.equal(settings.value.earthLight,'day');assert.equal(settings.value.earthWeather,'clear');assert.equal(settings.value.particles,'off');assert.equal(indexedDB.writes.at(-1).environmentVersion,2);});

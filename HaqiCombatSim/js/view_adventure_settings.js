@@ -58,6 +58,18 @@ export function renderSettings(body, model, cb, { el, button }) {
         graphicUpdates.push(update);update();graphics.append(ui.field(label,choices,status));
     }
     panes.game.append(graphics);
+    const environment=ui.section('现实世界光照与天气');
+    for(const [key,label,options] of [
+        ['earthLight','昼夜',[['auto','当地日照'],['day','白昼'],['dusk','黄昏'],['night','夜晚']]],
+        ['earthWeather','天气',[['auto','模拟天气'],['clear','晴朗'],['rain','下雨'],['snow','下雪'],['fog','薄雾'],['sand','风沙'],['off','关闭']]],
+    ]){
+        const choices=el('div','locale-choices'),controls=[];let chosen=model.gameSettings?.[key]||(key==='earthLight'?'day':'clear');
+        const update=()=>{for(const [value,node] of controls){node.setAttribute('aria-pressed',String(value===chosen));node.className=value===chosen?'primary small':'secondary small';}};
+        for(const [value,text] of options){const control=button(text,()=>{chosen=value;cb.gameSetting?.(key,value);update();},'secondary small');controls.push([value,control]);choices.append(control);}
+        update();environment.append(ui.field(label,choices));
+    }
+    environment.append(el('p','muted settings-note','仅作用于现实世界和城市街景。当地日照按经纬度估算；模拟天气并非实时预报。关闭场景粒子可同时停用动态天气与水面微光。'));
+    panes.game.append(environment);
     const volume=el('input'),volumeLabel=el('output');
     volume.className='settings-sound-volume';volume.type='range';volume.min='0';volume.max='100';volume.step='1';
     volume.value=String(Math.round((model.soundVolume??.3)*100));

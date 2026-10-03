@@ -286,5 +286,206 @@
     "sourceSha256": "7c68e9a4e30b9729d14e572827fc8fc660c885e5747df1fc6bbac1eb7c2f920b",
     "referenceSource": "https://cdn.keepwork.com/helloworld/tileset/city02.png",
     "referenceSha256": "3aee5b6dd8f5c06412b03b879e0da08bb88d038cf020db55e09be1c01a274c87"
+  },
+  "biomeDecorations": {
+    "local": "assets/adventure/earth/earth-biomes-6145ae506a88.webp",
+    "width": 1024,
+    "height": 512,
+    "bytes": 197850,
+    "sha256": "6145ae506a88a3acceede3fbef2a47518eee9143b8f8a0329cd88b6a3c2ae6d9",
+    "sourceSha256": "50f5e142f73146300259c8ada479f8d95394d63067f931851246a25bdc1906dd",
+    "source": "Built-in imagegen; original fantasy Earth biome details; existing decoration atlas used as style reference only.",
+    "promptFile": "assets/adventure/earth/source/earth-biomes-spec.json",
+    "encoding": {
+      "quality": 90
+    },
+    "frameOffset": 16,
+    "grid": {
+      "columns": 4,
+      "rows": 2
+    },
+    "frameNames": [
+      "snowSpruce",
+      "snowFir",
+      "snowBush",
+      "snowMound",
+      "wheat",
+      "cactus",
+      "willow",
+      "mangrove"
+    ],
+    "sourceBounds": [
+      {
+        "name": "snowSpruce",
+        "sourceCell": [
+          0,
+          0,
+          444,
+          444
+        ],
+        "sourceAlphaBounds": [
+          0,
+          4,
+          444,
+          444
+        ]
+      },
+      {
+        "name": "snowFir",
+        "sourceCell": [
+          444,
+          0,
+          887,
+          444
+        ],
+        "sourceAlphaBounds": [
+          0,
+          15,
+          443,
+          444
+        ]
+      },
+      {
+        "name": "snowBush",
+        "sourceCell": [
+          887,
+          0,
+          1330,
+          444
+        ],
+        "sourceAlphaBounds": [
+          1,
+          0,
+          443,
+          444
+        ]
+      },
+      {
+        "name": "snowMound",
+        "sourceCell": [
+          1330,
+          0,
+          1774,
+          444
+        ],
+        "sourceAlphaBounds": [
+          0,
+          23,
+          430,
+          440
+        ]
+      },
+      {
+        "name": "wheat",
+        "sourceCell": [
+          0,
+          444,
+          444,
+          887
+        ],
+        "sourceAlphaBounds": [
+          0,
+          0,
+          444,
+          443
+        ]
+      },
+      {
+        "name": "cactus",
+        "sourceCell": [
+          444,
+          444,
+          887,
+          887
+        ],
+        "sourceAlphaBounds": [
+          0,
+          0,
+          443,
+          431
+        ]
+      },
+      {
+        "name": "willow",
+        "sourceCell": [
+          887,
+          444,
+          1330,
+          887
+        ],
+        "sourceAlphaBounds": [
+          15,
+          0,
+          443,
+          433
+        ]
+      },
+      {
+        "name": "mangrove",
+        "sourceCell": [
+          1330,
+          444,
+          1774,
+          887
+        ],
+        "sourceAlphaBounds": [
+          0,
+          8,
+          431,
+          425
+        ]
+      }
+    ],
+    "frames": [
+      [
+        0,
+        0,
+        256,
+        256
+      ],
+      [
+        256,
+        0,
+        256,
+        256
+      ],
+      [
+        512,
+        0,
+        256,
+        256
+      ],
+      [
+        768,
+        0,
+        256,
+        256
+      ],
+      [
+        0,
+        256,
+        256,
+        256
+      ],
+      [
+        256,
+        256,
+        256,
+        256
+      ],
+      [
+        512,
+        256,
+        256,
+        256
+      ],
+      [
+        768,
+        256,
+        256,
+        256
+      ]
+    ],
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-biomes-6145ae506a88.webp"
   }
 }

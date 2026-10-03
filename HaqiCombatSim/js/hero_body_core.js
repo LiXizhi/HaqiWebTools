@@ -1,6 +1,6 @@
 import {createRng,hashSeed} from './rng_core.js';
 // Stable cosmetic identifiers; old saves resolve to their original body.
-export function validHeroBodyId(id,appearance){return typeof id==='string'&&new RegExp(`^${appearance==='girl'?'female':'male'}(?:[2-9]|1[0-3]|-ref)?$`).test(id);}
+export function validHeroBodyId(id,appearance){return typeof id==='string'&&id.length<=64&&new RegExp(`^${appearance==='girl'?'female':'male'}(?:[2-9]|1[0-3]|-ref|-urban-[a-z0-9]+(?:-[a-z0-9]+)*)?$`).test(id);}
 export function resolvedBodyId(save){return validHeroBodyId(save.bodyId,save.appearance)?save.bodyId:save.appearance==='girl'?'female':'male';}
 
 // Separate cosmetic stream: refreshes keep outfits stable without consuming gameplay RNG.
@@ -28,7 +28,14 @@ export function createHeroDraft(manifest,seed=Date.now()){
  const headChoices={},bodyChoices={};
  for(const value of ['boy','girl']){
   headChoices[value]=randomHeroHeadId(manifest,value,`${seed}:${value}`);
-  bodyChoices[value]=randomHeroBodyId(manifest,value,`${seed}:${value}`);
+  const recommended=manifest?.heads?.[headChoices[value]]?.recommendedBodyId;
+  // Generated urban bodies include their own exposed skin. Keep the first
+  // draft anatomically matched; the picker still allows independent changes.
+  if(recommended&&manifest?.bodyVariants?.[recommended]?.gender===(value==='girl'?'female':'male')&&validHeroBodyId(recommended,value))bodyChoices[value]=recommended;
+  else{
+   const classicVariants=Object.fromEntries(Object.entries(manifest?.bodyVariants||{}).filter(([,body])=>!body.recommendedHeadId));
+   bodyChoices[value]=randomHeroBodyId({...manifest,bodyVariants:classicVariants},value,`${seed}:${value}`);
+  }
  }
  return {name:'',school:'fire',appearance,starter:'dragon_green',step:1,
   headId:headChoices[appearance],bodyId:bodyChoices[appearance],headChoices,bodyChoices};

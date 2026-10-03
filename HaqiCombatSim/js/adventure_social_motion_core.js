@@ -20,14 +20,16 @@ function spawnMinActors(params=SOCIAL_DEFAULTS){return Math.max(0,Math.floor(par
 
 // Only social actors use this navigation view. Player entrance interactions stay reachable.
 const socialWorlds=new WeakMap();
-function socialNavigationWorld(world){
-    if(world.movementExclusions)return world;
-    const entrances=(world.landmarks||[]).filter(p=>p.dungeonId);
-    if(!entrances.length)return world;
-    if(!socialWorlds.has(world))socialWorlds.set(world,{...world,movementExclusions:entrances.map(p=>({
+export function socialNavigationWorld(world){
+    if(world.movementExclusions)return world.earthBoating?{...world,earthBoating:false}:world;
+    const entrances=(world.landmarks||[]).filter(p=>p.dungeonId&&!p.hidden);
+    if(!entrances.length&&!world.isEarth)return world;
+    const cached=socialWorlds.get(world);
+    if(!cached||cached.landmarks!==world.landmarks||cached.revision!==world.revision) socialWorlds.set(world,{...world,movementExclusions:entrances.map(p=>({
         x:p.x,y:p.y-(p.entranceKind==='tower'?25:0),radius:SOCIAL_DEFAULTS.entranceClearance,
     }))});
-    return socialWorlds.get(world);
+    // Refresh streamed terrain and objects while retaining the actor-only exclusions.
+    return Object.assign(socialWorlds.get(world),world,{earthBoating:false});
 }
 
 export function roadClearance(world,p){

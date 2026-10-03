@@ -20,9 +20,8 @@ export function installFishing(content, catalog) {
 }
 export function isOcean(world, x, y) {
     if (!Number.isFinite(x) || !Number.isFinite(y)) return false;
-    // Earth has streamed land-cover, not the island polygon (its coast list is empty).
-    // Unknown chunks are neither fishable water nor invented land.
-    if(world.isEarth){if(y<0||y>world.h)return false;const type=world.terrainAt(x,y);return type==='ocean'||type==='water';}
+    // This predicate identifies fishing water: the activity is exclusive to Haqi.
+    if (world.isEarth || world.zone === 'earth') return false;
     return world.layout ? !onLargeIsland(world, x, y, 0) : !onIsland(x, y, 0);
 }
 export function readStamina(save, content) {
@@ -69,6 +68,7 @@ function grantBranch(save, content, branch, rng) {
     return { items, staminaDelta, missed };
 }
 export function castFishing(save, content, action, rng) {
+    if (save.zone === 'earth') throw Error('现实世界不能钓鱼，请前往哈奇世界的水域。');
     const net = netById(content, action.netId);
     if (!net) throw Error('没有这种渔网');
     const quality=fishingQuality(action.fishingPerformance);

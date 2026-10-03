@@ -40,7 +40,7 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null,social=null
     function draw(){
         list.replaceChildren();footer.replaceChildren();body.scrollTop=0;
         for(const b of tabs.children)b.setAttribute('aria-pressed',String(b.dataset.filter===filter));
-        const rows=content.dungeons.filter(d=>d.playable&&!/Instance_Test/i.test(d.id))
+        const rows=content.dungeons.filter(d=>d.kind!=='city'&&d.playable&&!/Instance_Test/i.test(d.id))
             .filter(d=>!(social?.team?.length||social?.pickingDungeon)||d.arenas.every(a=>!a.blocked?.length))
             .filter(d=>filter==='island'?d.island===(save.dungeonReturn?.zone||save.zone):filter==='tower'?d.kind==='tower':filter==='elite'?d.kind==='elite':true)
             .filter(d=>filter==='recommended'?d.recommendedLevel<=(save.level||1)+5:filter==='progress'?!!dungeonProgress(save)?.[d.id]&&((dungeonProgress(save)[d.id].cleared?.length||0)<d.arenas.length):true)

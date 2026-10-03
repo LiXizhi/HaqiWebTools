@@ -19,7 +19,11 @@ export function createGameSettings({indexedDB=globalThis.indexedDB,legacyStorage
                     req.onsuccess=()=>{if(finished){req.result.close();return;}db=req.result;db.onversionchange=()=>{db.close();db=null;};const read=db.transaction('preferences','readonly').objectStore('preferences').get('game');read.onsuccess=()=>finish(read.result);read.onerror=()=>finish(null);};
                 }catch{finish(null);}
             });
-            if(stored?.version===1)value=normalizeGameSettings(stored);
+            if(stored?.version===1){
+                const migrated={...stored};
+                if(stored.environmentVersion!==2){if(migrated.earthLight==='auto')migrated.earthLight='day';if(migrated.earthWeather==='auto')migrated.earthWeather='clear';}
+                value=normalizeGameSettings(migrated);if(stored.environmentVersion!==2)await write();
+            }
             else{const migrated={music};try{const storage=legacyStorage(),sound=storage?.getItem('haqi.spell-sound.v1'),volume=storage?.getItem('haqi.game-sound.volume.v1');if(sound!==null&&sound!==undefined)migrated.sound=sound==='on';if(volume!==null&&volume!==undefined)migrated.volume=Number(volume);}catch{}value=normalizeGameSettings(migrated);await write();}
             return {...value};
         })();},

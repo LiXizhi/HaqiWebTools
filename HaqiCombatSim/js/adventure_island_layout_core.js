@@ -32,7 +32,7 @@ export function riverBlocks(world,x,y) {
     return world.layout.rivers.some(r=>r.points.slice(1).some(([bx,by],i)=>segmentDistance({x,y},{x:r.points[i][0],y:r.points[i][1]},{x:bx,y:by})<r.width/2+12));
 }
 export function regionAt(world,p) {
-    return world.layout?.regions.reduce((best,r)=>{
+    return world.layout?.regions?.reduce((best,r)=>{
         const d=((p.x-r.x)/r.rx)**2+((p.y-r.y)/r.ry)**2;
         return d<(best?.d??Infinity)?{...r,d}:best;
     },null)||null;

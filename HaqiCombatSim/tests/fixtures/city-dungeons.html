@@ -1,0 +1,56 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>城市节点副本隔离验收</title><base href="../../">
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_earth.css">
+<style>#tools{position:fixed;top:8px;left:8px;z-index:5;display:flex;gap:6px;flex-wrap:wrap;max-width:95vw;background:#fff5dcdd;padding:8px;border-radius:8px}#result{position:fixed;bottom:4px;left:4px;z-index:5;background:#fff8e7;color:#234;padding:8px;max-width:95vw}.city-action-row{margin:16px 0}.city-action-row p{font-size:13px;line-height:1.6}.city-interaction .modal-header h2{font-size:20px}.city-interaction button{margin:4px}#targets{max-width:95vw}</style>
+<body class="haqi-app"><canvas id="world" tabindex="0"></canvas><div id="overlay"></div><div id="tools"></div><output id="result">正在加载内存验收角色…</output>
+<script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,beginEncounter,recordDecision,settleEncounter,syncProgression,recommendedDeck} from '../../js/adventure_core.js';
+import {createWorld,nearestInteraction,nearestWalkable,movePosition,findPath,followPath} from '../../js/adventure_world_core.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {enterCityDungeon,leaveCityDungeon,cityDungeonState,cityActionStatus,applyCityInteraction} from '../../js/adventure_city_dungeons_core.js';
+import {generatedCityRoute} from '../../js/adventure_city_generated_core.js';
+import {createEarthService} from '../../js/adventure_earth.js';
+import {renderCityInteraction} from '../../js/view_city_dungeon.js';
+import {restorePveBattle,playPveRound} from '../../js/combat_pve_core.js';
+import {SimpleBot} from '../../js/combat_policy_core.js';
+import {durableSave,runtimeValues,restoreRuntime} from '../../js/adventure_storage_core.js';
+const output=document.querySelector('#result'),root=document.querySelector('#overlay'),canvas=document.querySelector('#world'),tools=document.querySelector('#tools');
+const params=new URLSearchParams(location.search),cityId=params.get('city')||'shenzhen';
+const assets=await loadResources(p=>output.textContent=p.label),save=createAdventure(assets.content,{seed:42,name:'城市隔离验收'});save.xp=4654;syncProgression(save,assets.content);save.deck=recommendedDeck(save,assets.content);
+const renderer=createRenderer(canvas,assets),earth=createEarthService({content:assets.content,registerImage:assets.registerImage,releaseImage:assets.releaseImage});
+let environmentGraphics={particles:true,trails:true,earthLight:'day',earthWeather:'clear'},walkPath=[],walkTarget=null,sampleFrames=0,frameSamples=[];
+let world=createWorld('camp',assets.content,save),paused=false,last=0;const keys=new Set();
+const report=t=>output.textContent=t+' · '+save.zone+' · 仅内存角色';
+function close(){paused=false;root.replaceChildren();root.className='overlay';}
+const button=(label,fn,parent=tools)=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.onclick=()=>Promise.resolve().then(fn).catch(e=>report(e.stack));parent.append(b);return b;};
+async function earthEntry(){const route=await fetch('data/adventure/earth/index.json').then(r=>r.json()),region=route.regions.find(r=>r.id===cityId);if(!region)throw Error('城市不存在');const city=await fetch('data/adventure/earth/'+region.manifest).then(r=>r.json());const prepared=await earth.prepare(city.entrance);save.zone='earth';save.position=prepared.position;save.dungeonReturn=null;delete save.cityReturnStack;assets.content.earthWorld=prepared.world;world=prepared.world;close();refresh();report('真实地面入口 '+world.landmarks.filter(l=>l.cityDungeon).map(l=>l.name).join('、'));}
+async function enter(id,city=null){const fallback=city?generatedCityRoute(city,save):null;await assets.dungeons.load(id,{cityFallback:fallback});enterCityDungeon(save,assets.content,id);if(fallback)save.cityFallback=fallback;else delete save.cityFallback;world=createWorld(save.zone,assets.content,save);await assets.warmNearby(world,save);close();refresh();report('已进入 '+world.layout.name);}
+function leave(){leaveCityDungeon(save,assets.content);world=createWorld(save.zone,assets.content,save);close();refresh();report('已返回 '+save.zone);}
+function open(target){
+ if(target.cityDungeon){void enter(target.dungeonId,target.cityFallback).catch(e=>report(e.stack));return;}
+ if(target.kind==='portal'){leave();return;}
+ if(target.kind==='encounter'){fight(target);return;}
+ const dungeon=world.dungeon,hotspot=dungeon?.scene.hotspots.find(h=>h.id===target.cityHotspot);if(!hotspot)return;
+ paused=true;const state=cityDungeonState(save,dungeon.cityId,dungeon.id),actions=dungeon.scene.actions.filter(a=>a.hotspot===hotspot.id).map(action=>({action,status:cityActionStatus(state,action),hint:'请先完成相关生活互动或关键战斗。'}));
+ renderCityInteraction(root,{dungeon,hotspot,state,actions,showChinese:save.languageLearning.showChinese!==false},{close,apply:id=>{const result=applyCityInteraction(save,dungeon,id);world=createWorld(save.zone,assets.content,save);report(result.message);open(target);},toggleChinese:()=>{save.languageLearning.showChinese=save.languageLearning.showChinese===false;open(target);},read:()=>report('真实语音服务由正式入口提供，本预览未调用'),practice:l=>report('可选练习：'+l.prompts.map(p=>p.en).join('；'))});
+}
+function refresh(){targets.replaceChildren();const objects=[...world.npcs.map(n=>({...n,kind:'npc'})),...world.landmarks.map(n=>({...n,kind:'landmark'})),...world.encounters.map(n=>({...n,name:assets.content.monsters[n.monsterId]?.name||n.id,kind:'encounter'}))];for(const target of objects)button(target.name,()=>{save.position={x:target.x,y:target.y+60};open(target);},targets);}
+function fight(target=null){const e=target?.id?world.encounters.find(e=>e.id===target.id):world.encounters.find(e=>!e.hidden);if(!e){report('没有已触发的关键战斗');return;}beginEncounter(save,assets.content,e.id);const battle=restorePveBattle(assets.dataset,assets.content,save.pendingEncounter),bot=new SimpleBot();let rounds=0;while(!battle.finished&&rounds++<200){const decision=bot.pick(battle,battle.sides.near[0]);playPveRound(battle,decision);recordDecision(save,decision,battle);}if(!battle.finished)throw Error('战斗未在200回合结束');settleEncounter(save,assets.content,battle);world=createWorld(save.zone,assets.content,save);refresh();report('真实战斗结算：'+battle.winner);}
+for(const [key,label,options] of [['earthLight','光照',['auto','day','dusk','night']],['earthWeather','天气',['auto','clear','rain','snow','fog','sand','off']]]){const select=document.createElement('select');select.setAttribute('aria-label',label);for(const value of options){const option=document.createElement('option');option.value=value;option.textContent=({auto:'自动',day:'白昼',dusk:'黄昏',night:'夜晚',clear:'晴朗',rain:'下雨',snow:'下雪',fog:'薄雾',sand:'风沙',off:'关闭'})[value];select.append(option);}select.value=environmentGraphics[key];select.onchange=()=>{environmentGraphics[key]=select.value;};tools.append(select);}
+button('现实城市地面',earthEntry);button('城市总入口',async()=>{if(save.zone!=='earth')await earthEntry();await enter(`city:${cityId}:overview`);});
+button('查看地面入口',async()=>{await earthEntry();const marker=world.landmarks.find(m=>m.cityDungeon&&!m.cityFallback&&!m.hidden);if(marker)save.position=movePosition(world,{x:marker.x,y:marker.y},100,140);report('小型WebP法阵与城市名称');});
+button('直接进入节点',async()=>{if(save.zone!=='earth')await earthEntry();const id=params.get('node')||'shekou';await enter(`city:${cityId}:${id}`);});button('退出副本',leave);button('关键战斗演练',fight);
+button('未配置城市',async()=>{if(save.zone!=='earth')await earthEntry();const marker=world.landmarks.find(m=>m.cityFallback&&!m.hidden);if(!marker)throw Error('附近没有未配置的城市');await enter(marker.dungeonId,marker.cityFallback);});
+button('本机恢复演练',()=>{const restored=restoreRuntime(durableSave(save),assets.content,runtimeValues(save));Object.assign(save,restored);world=createWorld(save.zone,assets.content,save);refresh();report('返回链及场景进度已恢复');});
+button('步行到居民',()=>{const target=world.npcs[1]||world.npcs[0];if(!target)return;walkTarget={...target,kind:'npc'};walkPath=findPath(world,save.position,{x:target.x,y:target.y+24});report('正在沿街步行，使用正式寻路与碰撞');});
+button('性能采样',()=>{sampleFrames=120;frameSamples=[];report('正在采样120帧');});
+let personPreview=0;
+button('查看行人',()=>{const rows=renderer.streetPeople(),p=rows[personPreview++%rows.length];if(!p)return;close();walkPath=[];walkTarget=null;save.position=nearestWalkable(world,p.x+35,p.y+70)||save.position;report('可换装行人 '+p.profile.headId+' / '+p.profile.bodyId);});
+button('保存场景截图',async()=>{const name=(world.dungeon?.nodeId||'city')+'-'+innerWidth+'-streetscape',data=canvas.toDataURL('image/png');if(params.has('qaCapture')){const response=await fetch('/__qa/snapshot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,data})});if(!response.ok)throw Error('截图保存失败');report('场景截图已保存 '+name);return;}const a=document.createElement('a');a.href=data;a.download=name+'.png';a.click();});
+button('显示地图范围',()=>{const preview=document.createElement('canvas');preview.width=720;preview.height=720;renderer.minimap(preview,world,save);const a=document.createElement('a');a.href=preview.toDataURL('image/png');a.download=(world.dungeon?.nodeId||'city')+'-layout.png';a.click();});
+const targets=document.createElement('div');targets.id='targets';tools.append(targets);
+canvas.onclick=e=>{if(paused)return;const p=renderer.screenToWorld(e.clientX,e.clientY);walkPath=findPath(world,save.position,p);walkTarget=null;};
+addEventListener('keydown',e=>{keys.add(e.key);if(e.key==='Escape')close();if(e.key==='e'){const t=nearestInteraction(world,save.position);if(t)open(t);}});addEventListener('keyup',e=>keys.delete(e.key));
+function frame(t){const dt=Math.min(.05,(t-last)/1000||0);last=t;if(!paused){if(walkPath.length){const result=followPath(world,save.position,walkPath,210*dt);save.position=result.position;walkPath=result.path;if(!walkPath.length&&walkTarget){const target=walkTarget;walkTarget=null;report('步行抵达居民');open(target);}}const dx=Number(keys.has('ArrowRight'))-Number(keys.has('ArrowLeft')),dy=Number(keys.has('ArrowDown'))-Number(keys.has('ArrowUp'));if(dx||dy)save.position=movePosition(world,save.position,dx*210*dt,dy*210*dt);const renderStart=performance.now();renderer.render(world,save,t,{graphics:environmentGraphics,moving:!!(dx||dy)||!!walkPath.length,path:walkPath});if(sampleFrames){frameSamples.push(performance.now()-renderStart);if(--sampleFrames===0){frameSamples.sort((a,b)=>a-b);report('绘制P95 '+frameSamples[113].toFixed(2)+'ms；街景缓存 '+JSON.stringify(renderer.streetStats())+'；已解码图片 '+assets.images.size);}}}requestAnimationFrame(frame);}
+report('加载完成，普通启动未请求任何城市副本');requestAnimationFrame(frame);
+</script></body></html>

@@ -40,3 +40,43 @@ test('dense city triangles retain short links instead of overlapping redundant r
     assert.deepEqual([...links].sort(),['a|b','b|c']);
     assert.deepEqual(roads,generateEarthCityConnections([...cities].reverse(),{x:1000,y:700},3000,rules,()=> 'grass'));
 });
+
+const roadLinks=roads=>[...new Set(roads.map(r=>r.id.split(':')[1]))].sort();
+function positionedCities(rows){return rows.map(([id,x,y])=>({id,...earthGeo({x:10000+x,y:10000+y},rules)}));}
+
+test('nearby tight city clusters join with one short connector, not isolated nearest-neighbour networks',()=>{
+    const cities=positionedCities([['a',0,0],['b',200,0],['c',400,0],['d',2000,0],['e',2200,0],['f',2400,0]]);
+    const center={x:11200,y:10000};
+    const roads=generateEarthCityConnections(cities,center,5000,rules,()=> 'grass');
+    assert.deepEqual(roadLinks(roads),['a|b','b|c','c|d','d|e','e|f']);
+    assert.deepEqual(roads,generateEarthCityConnections([...cities].reverse(),center,5000,rules,()=> 'grass'));
+});
+
+test('a chain connects farther cities through intermediate cities without long shortcuts',()=>{
+    const cities=positionedCities([['a',0,0],['b',2000,0],['c',4000,0],['d',8000,0]]);
+    const roads=generateEarthCityConnections(cities,{x:14000,y:10000},6000,{...rules,cityConnectionDistance:2500},()=> 'grass');
+    assert.deepEqual(roadLinks(roads),['a|b','b|c']);
+});
+
+test('equal-distance city grid stays sparse and connected without depending on input order',()=>{
+    const cities=positionedCities(Array.from({length:25},(_,i)=>[String(i),i%5*400,Math.floor(i/5)*400]));
+    const center={x:10800,y:10800},roads=generateEarthCityConnections(cities,center,4000,rules,()=> 'grass'),links=roadLinks(roads);
+    assert.ok(links.length<=40,'no diagonal shortcuts or all-pairs mesh');
+    const seen=new Set(['0']);
+    for(let i=0;i<cities.length;i++)for(const link of links){const [a,b]=link.split('|');if(seen.has(a)||seen.has(b)){seen.add(a);seen.add(b);}}
+    assert.equal(seen.size,cities.length);
+    assert.deepEqual(roads,generateEarthCityConnections([...cities].reverse(),center,4000,rules,()=> 'grass'));
+});
+
+test('joining clusters keeps short bridges but does not invent crossings over oceans or wide rivers',()=>{
+    const cities=positionedCities([['a',0,0],['b',200,0],['c',400,0],['d',2000,0],['e',2200,0],['f',2400,0]]);
+    const center={x:11200,y:10000},straight={...rules,cityConnectionBend:0};
+    const narrow=x=>x>11000&&x<11200?'water':'grass';
+    const bridged=generateEarthCityConnections(cities,center,5000,straight,narrow);
+    assert.ok(bridged.some(r=>r.bridge&&r.id.includes('c|d')));
+    for(const sample of [x=>x>10800&&x<11600?'water':'grass',x=>x>11000&&x<11200?'ocean':'grass',x=>x>11000&&x<11200?null:'grass']){
+        const roads=generateEarthCityConnections(cities,center,5000,straight,sample);
+        assert.ok(!roads.some(r=>r.bridge));
+        assert.ok(!roads.some(r=>Math.min(r.a.x,r.b.x)<11100&&Math.max(r.a.x,r.b.x)>11100));
+    }
+});

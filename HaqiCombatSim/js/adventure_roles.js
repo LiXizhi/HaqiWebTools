@@ -55,7 +55,7 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
                 for(const row of rows){
                     try{
                         const runtime=runtimeStore.get(runtimeKey(storageKey,row.id));
-                        await prepareSaves([row.save,...(runtime?.values?.coopRun&&runtime.revision===row.save?.revision?[{...row.save,zone:runtime.coopZone}]:[])]);
+                        await prepareSaves([row.save,...(runtime?.values?.coopRun&&runtime.revision===row.save?.revision?[{...row.save,zone:runtime.coopZone,cityFallback:runtime.values?.cityFallback}]:[]),...(runtime?.earthDungeonZone&&runtime.revision===row.save?.revision?[{...row.save,zone:runtime.earthDungeonZone,dungeonRuns:runtime.cityDungeonRuns,cityReturnStack:runtime.values?.cityReturnStack,cityFallback:runtime.values?.cityFallback}]:[])]);
                     }catch(error){preparationErrors.set(`${storageKey}.${row?.id}`,error);}
                 }
                 if(storage.getItem(storageKey)!==captured||legacy!==null&&storage.getItem(SAVE_KEY)!==legacy)throw Error('角色进度已变化，请重新读取。');
@@ -64,7 +64,8 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
             if(captured)await runtimeStore.prepare((JSON.parse(captured).catalog?.roles||[]).map(row=>runtimeKey(storageKey,row.id)));
             const saves=captured?(JSON.parse(captured).catalog?.roles||[]).map(row=>row.save):legacy?[JSON.parse(legacy)]:[];
             await prepareSaves(saves);
-            if(captured){const records=JSON.parse(captured).catalog?.roles||[];const cooperative=records.flatMap(row=>{const r=runtimeStore.get(runtimeKey(storageKey,row.id));return r?.values?.coopRun&&r.revision===row.save.revision?[{...row.save,zone:r.coopZone}]:[];});if(cooperative.length)await prepareSaves(cooperative);}
+            if(captured){const rows=JSON.parse(captured).catalog?.roles||[];for(const row of rows){const r=runtimeStore.get(runtimeKey(storageKey,row.id));if(r?.earthDungeonZone&&r.revision===row.save.revision)await prepareSaves([{...row.save,zone:r.earthDungeonZone,dungeonRuns:r.cityDungeonRuns,cityReturnStack:r.values?.cityReturnStack,cityFallback:r.values?.cityFallback}]);}}
+            if(captured){const records=JSON.parse(captured).catalog?.roles||[];const cooperative=records.flatMap(row=>{const r=runtimeStore.get(runtimeKey(storageKey,row.id));return r?.values?.coopRun&&r.revision===row.save.revision?[{...row.save,zone:r.coopZone,cityFallback:r.values?.cityFallback}]:[];});if(cooperative.length)await prepareSaves(cooperative);}
             if(storage.getItem(storageKey)!==captured||legacy!==null&&storage.getItem(SAVE_KEY)!==legacy)throw Error('角色进度已变化，请重新读取。');
         },
         open(account = null, {recover = false} = {}) {

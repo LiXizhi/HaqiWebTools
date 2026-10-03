@@ -162,3 +162,7 @@ HaqiHeroPreview.html?body=male2 默认展示赤曜战法师；身体试装选择
 新增 `male7`–`male11`、`female7`–`female11`。男款为霓虹叛客、午夜礼宾、街头晴空、齿轮工匠、赤练武者；女款为樱桃舞会、珍珠花嫁、牛仔日记、薄荷竞速、紫电摇滚。原款保留，男女各有经典款加十套变体。
 
 新提示词记录在 `art-references/body-variants/no-cape-prompts.json`。这些条目标记 `registrationMode: neck-anchored`：保留 AI 生成的新透明轮廓，根据原身体高度和颈部锚点配准，并在原渲染裁剪范围内适配衣宽。不能恢复原 alpha，否则会把披风轮廓重新补回。原 frame/crop/neck 配置不变，衣服形状可以不同。`verify_hero_body_variants.py` 校验 280 帧、透明背景、颈部存在、尺寸、哈希与体积预算。
+
+## 现代城市居民（2026-10-03）
+
+新增20个独立头部与20套步行服装，复用既有男女身体模板与headId/bodyId存档结构，正式和预览清单同步登记永久CDN。现有换装列表直接枚举新增部件；初始草稿优先采用头部的recommendedBodyId，避免不同肤色的短脖子与脸部误配。手动切换仍独立。完整描述、打包与连接点验收见[现代城市居民](urban-residents.md)。

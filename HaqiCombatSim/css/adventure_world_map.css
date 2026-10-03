@@ -53,9 +53,23 @@
 .haqi-app .island-map-companion:active:not(:disabled){transform:translate(-50%,-50%)}
 @media(max-width:650px){.island-guide-chart{margin:12px 0}.haqi-app .island-map-label{font-size:9px;padding:3px}}
 
-/* The map remains visible beneath its two parallel-world selectors. */
-.parallel-world-buttons{display:flex;gap:6px;flex-shrink:0}
-.parallel-world-buttons button{white-space:nowrap;min-height:36px;padding:7px 12px;font-size:13px}
+/* Map layout; world emblem appearance lives in the shared storybook skin. */
+.parallel-world-buttons{flex-shrink:0}
 .haqi-app .compact-map-modal .map-heading,.earth-modal .map-heading{flex-wrap:wrap;gap:10px}
 .earth-modal .map-heading h2{margin:0}
 @media(max-width:600px){.parallel-world-buttons{flex-basis:100%}.parallel-world-buttons button{flex:1}.haqi-app .compact-map-modal .map-heading{flex-wrap:wrap;gap:8px}.earth-modal .map-heading{flex-wrap:wrap}.haqi-app .compact-map-modal .map-heading h2{font-size:20px}}
+
+/* Gilded atlas frame shared by the two worlds and their local maps. */
+.haqi-app .atlas-map-modal{border:1px solid #bd9145;border-radius:19px;background:linear-gradient(135deg,#fff1cd,#eddaaa);box-shadow:0 0 0 3px #523b2266,0 14px 45px #15251b66;overflow:hidden}
+.haqi-app .atlas-map-modal .modal-header{align-items:center;gap:12px;padding:12px 18px 9px;border-bottom:1px solid #bb914c;background:radial-gradient(ellipse at 20% 0,#fff6dba6,transparent 70%),linear-gradient(180deg,#ead19b77,#ca9e4d22);box-shadow:0 2px 0 #fff4d1a8}
+.haqi-app .atlas-map-modal .map-heading{flex:1;min-width:0;gap:12px}
+.haqi-app .atlas-map-modal .modal-body{padding:16px 18px 18px}
+.atlas-map-modal :is(.earth-map-stage,.world-chart-viewport,.island-guide-chart){border:3px solid #a87c38;border-radius:13px;background:#367a8a;box-shadow:0 0 0 1px #f6dc99,inset 0 0 0 1px #553d28,0 3px 9px #70502833;overflow:hidden}
+.atlas-map-modal .world-chart-viewport{overflow-x:auto;overflow-y:hidden}
+.atlas-map-modal .earth-atlas{border:0;border-radius:9px;cursor:grab}
+.atlas-map-modal .earth-map-zoom{top:10px;right:10px;gap:5px;padding:5px;border:1px solid #f2d597;border-radius:32px;background:#234e51db;box-shadow:0 2px 7px #153c4b55}
+.haqi-app .atlas-map-modal .earth-map-zoom-button{width:44px;height:44px;min-height:44px;border:2px solid #d6af61;background:linear-gradient(#49765c,#264d40);box-shadow:inset 0 0 0 1px #ffe0a255,0 2px 3px #102a2b66;color:#fff4cb}
+.atlas-map-modal .earth-map-place{padding:13px 17px;border:2px solid #b88a3b;border-radius:12px;background:linear-gradient(#fff7dd,#f0ddb0);box-shadow:inset 0 0 0 1px #fff6dd,0 5px 15px #183c4855}
+.atlas-map-modal .earth-map-place strong{color:#68471f}
+.atlas-map-modal .earth-map-status{border:1px solid #c6a05c;background:#fff2d8f2;box-shadow:0 2px 6px #50361f22}
+@media(max-width:600px){.haqi-app .atlas-map-modal .modal-header{gap:8px;padding:10px 10px 7px}.haqi-app .atlas-map-modal .map-heading{gap:8px}.haqi-app .atlas-map-modal .modal-body{padding:11px 10px 13px}.atlas-map-modal .parallel-world-buttons{width:100%;flex-basis:auto}.atlas-map-modal :is(.earth-map-stage,.world-chart-viewport,.island-guide-chart){border-width:2px;border-radius:10px}}

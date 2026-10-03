@@ -18,9 +18,8 @@ test('city atlases contain sixteen valid crops each and meet WebP budget',()=>{
     const manifest=JSON.parse(fs.readFileSync(new URL('../data/adventure/earth/city-art.json',import.meta.url)));
     for(const key of ['buildings','street']){const art=manifest[key],bytes=fs.readFileSync(new URL('../'+art.local,import.meta.url));assert.ok(bytes.length<=200000);assert.equal(bytes.length,art.bytes);assert.equal(createHash('sha256').update(bytes).digest('hex'),art.sha256);assert.equal(art.frames.length,16);for(const [x,y,w,h]of art.frames){assert.ok(x>=0&&y>=0&&x+w<=art.width&&y+h<=art.height);}assert.match(art.cdn,/^https:\/\/cdn.keepwork.com\//);}
 });
-test('Earth land clicks do not start fishing; unknown chunks are not water',()=>{
-    for(const type of ['grass','urban','forest','crops','barren',null])assert.equal(isOcean({isEarth:true,h:1000,layout:{coast:[]},terrainAt:()=>type},100,100),false,type);
-    for(const type of ['ocean','water'])assert.equal(isOcean({isEarth:true,h:1000,terrainAt:()=>type},100,100),true);
+test('Earth land, water and unknown chunks never start fishing',()=>{
+    for(const type of ['grass','urban','forest','crops','barren','ocean','water',null])assert.equal(isOcean({isEarth:true,h:1000,layout:{coast:[]},terrainAt:()=>type},100,100),false,type);
 });
 test('population increases city density and unlocks high-rise families',()=>{
     const city={id:'test',...earthGeo({x:1500,y:1500},rules)};

@@ -3,7 +3,7 @@ import {progressionStatEntry,equipmentSetStats} from './adventure_progression_bo
 // Equipment presentation data. All values come from the chapter and existing combat rules.
 import { playerSpec, applyAction, SCHOOL_NAMES,canEquip } from './adventure_core.js';
 import { statIdToEntry } from './combat_unit_core.js';
-import { baseMaxHp, applyHpStats, powerPipChanceByLevel } from './combat_formulas_core.js';
+import { baseMaxHp, applyHpStats, powerPipChanceByLevel, gearScoreV2 } from './combat_formulas_core.js';
 import { upgradeAt, upgradeAttributes } from './adventure_upgrade_core.js';
 
 export const EQUIPMENT_SLOTS = [{id:2,name:'帽子'},{id:5,name:'法袍'},{id:7,name:'靴子'},{id:11,name:'法杖'},{id:24,name:'卡包'},{id:4,name:'眼饰'},{id:6,name:'裤子'},{id:8,name:'背部'},{id:9,name:'手套'},{id:10,name:'左手'},{id:15,name:'手镯'},{id:16,name:'戒指'},{id:17,name:'项链'},{id:18,name:'炫彩头饰'},{id:19,name:'炫彩服装'},{id:70,name:'炫彩背饰'},{id:71,name:'炫彩鞋子'},{id:'mount',name:'坐骑'}];
@@ -27,9 +27,9 @@ export function equipmentSetDetails(save,content,itemId) {
     const count=equipmentSetStats(equipped,config).counts[setId]||0;
     return {setId,count,groups:(config.sets[setId]||[]).map(group=>({items:group.items,active:count>=group.items,attributes:progressionAttributes(group.stats)}))};
 }
-export function visibleEquipmentSummary(save,content) {
-    const primary=new Set(['hp','damagePct','resistPct','accuracyPct','critPct','pip','normal','power','capacity','eachCapacity','fixed']);
-    return equipmentSummary(save,content).filter(row=>primary.has(row.key)||row.value!==0);
+export function visibleEquipmentSummary(save,content,starLevel) {
+    const primary=new Set(['gearScore','hp','damagePct','resistPct','accuracyPct','critPct','pip','normal','power','capacity','eachCapacity','fixed']);
+    return equipmentSummary(save,content,starLevel).filter(row=>primary.has(row.key)||row.value!==0);
 }
 export function unsupportedEquipmentStats(item) {
     const metadata=new Set([36,41,134,135,136,137,138,139,140,141,167,168,169,170,180]);
@@ -58,11 +58,12 @@ const SCHOOL_STATS=new Set(['damagePct','resistPct','accuracyPct','critPct','res
 export function equipmentCards(item,content) {
     return [139,140,141].map(id=>content.cardItems[item?.stats[id]]).filter(Boolean);
 }
-export function equipmentSummary(save,content) {
-    const spec=playerSpec(save,content),s=spec.stats;
+export function equipmentSummary(save,content,starLevel) {
+    const spec=playerSpec(save,content,starLevel),s=spec.stats;
     const school=stat=>(s[stat].all||0)+(s[stat][save.school]||0);
     // Reuse player_server.lua HP / power-pip ports; no separate UI formula.
     return [
+        {key:'gearScore',label:'战力',value:gearScoreV2(spec),unit:''},
         {key:'hp',label:'最大生命',value:applyHpStats(baseMaxHp(save.school,save.level,'kids'),s.hpPct,s.hpFlat,'kids'),unit:''},
         ...[['damagePct','本系攻击'],['resistPct','本系防御'],['accuracyPct','本系命中'],['critPct','本系暴击']].map(([key,label])=>({key,label,value:school(key),unit:'%'})),
         ...[['resiliencePct','本系韧性'],['penetration','本系穿透'],['damageAbs','本系固定攻击'],['resistAbs','本系固定防御']].map(([key,label])=>({key,label,value:school(key),unit:percent(key)?'%':''})),

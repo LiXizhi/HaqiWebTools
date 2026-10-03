@@ -6373,3 +6373,12 @@ E 交谈，B / I 背包，C 卡包，J 任务，P 宠物，Esc 关闭或打开�
 哈奇世界||Haqi World
 现实世界||Earth
 切换世界地图||Switch world map
+隐藏中文释义||Hide Chinese meaning
+显示中文释义||Show Chinese meaning
+随身场景道具：||Scene items:
+练习这句话（可跳过）||Practice this phrase (optional)
+你完成了这个地点的故事，可以继续探索或返回。||You have finished this place's story. Keep exploring or return.
+返回来时地点||Return to where you came from
+返回现实世界||Return to Earth
+正在准备城市地点…||Preparing the city location…
+请先退出城市副本||Please leave the city adventure first

@@ -1,3 +1,4 @@
+import {socialSpawnDescriptors,streamSocialActors} from './adventure_social_stream_core.js';
 import {socialActionOptions,socialActionParams} from './adventure_social_actions_core.js';
 import {createArenaClock,createArenaArrivals} from './adventure_arena_clock.js';
 import {languageId} from './character_relationship_core.js';
@@ -19,7 +20,7 @@ import {heroPortrait} from './hero_renderer.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {renderSocial} from './view_adventure_social.js';
 export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDetails=()=>{},onRelationshipActivity=()=>{},onPetDialogue=()=>{},getState,getOwner,onChange,onPersist,onOpen,onClose,onLogin,toast,onDepart,onTeleport=null,schedule=setTimeout,cancel=clearTimeout,arenaStore=null,onArenaEnter=()=>{},onArenaCountdown=null}){
-    let config=null,loading=null,actors=[],worldRef=null,context=null,epoch=0,lastRefresh=0,dialogueAbort=null,cachedCandidates=[],publishPending=false;
+    let config=null,loading=null,actors=[],earthSpawns=[],worldRef=null,context=null,epoch=0,lastRefresh=0,dialogueAbort=null,cachedCandidates=[],publishPending=false;
     const readyClock=createArenaClock({schedule,cancel,onSecond:seconds=>{ui.arenaReadySeconds=seconds;if(onArenaCountdown)onArenaCountdown(seconds);else onChange();},onExpire:()=>enterReadyArena()});
     const arenaArrivals=createArenaArrivals({schedule,cancel,onJoin:count=>{ui.arenaJoined=count;ui.arenaJoinedAt[count-1]=Date.now();onChange();},onReady:()=>{ui.arenaMatching=false;readyClock.start(arenaRules().readyMs);onChange();}});
     function enterReadyArena(){
@@ -109,7 +110,9 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         for(const p of teamMembers())if(!ui.roster.some(r=>r.id===p.id)){if(ui.roster.length>=socialCapacity(world.zone,config.worlds[world.zone]||{}))ui.roster.pop();ui.roster.unshift(p);}
         const previous=worldRef===world?new Map(actors.map(a=>[a.profile.id,a])):new Map();
         if(world.isEarth)placementSeed=hashSeed(`earth:${world.earthRules.generationVersion}:${world.earthSocialId}`);else if(worldRef!==world)placementSeed=visitRng.int(1,0x7fffffff);
-        actors=createSocialActors(world,ui.roster,world.isEarth?`earth:${placementSeed}`:`${save.seed}:${placementSeed}`).map(a=>previous.has(a.profile.id)?{...previous.get(a.profile.id),profile:a.profile}:a);worldRef=world;onChange();
+        const spawned=createSocialActors(world,ui.roster,world.isEarth?`earth:${placementSeed}`:`${save.seed}:${placementSeed}`).map(a=>previous.has(a.profile.id)?{...previous.get(a.profile.id),profile:a.profile}:a);
+        earthSpawns=world.isEarth?socialSpawnDescriptors(spawned):[];
+        actors=world.isEarth?(worldRef===world?actors:[]):spawned;worldRef=world;onChange();
     }
     async function run(fn){if(ui.busy)return;const token=epoch;ui.busy=true;ui.error='';onChange();try{await fn();}catch(e){if(token===epoch)ui.error=e.message;}finally{if(token===epoch){ui.busy=false;onChange();}}}
     async function refresh(){
@@ -217,7 +220,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         onPetDialogue(p.id,'heart');toast('好友申请已发送');
     }
     const api={
-        async refreshEarth(){const {world}=getState();if(!world?.isEarth||getState().locked)return;await ready();actors=actors.filter(a=>a.inParty||Math.hypot(a.position.x-world.center.x,a.position.y-world.center.y)<world.earthRules.chunkSize*2);installRoster();},state,ready,client,
+        async refreshEarth(){const {world}=getState();if(!world?.isEarth||getState().locked)return;await ready();installRoster();},state,ready,client,
         isFriend(peer){
             const id=typeof peer==='string'?peer:peer?.id;
             const userId=typeof peer==='object'&&peer?.kind==='account'?String(peer.userId||String(id).replace(/^user:/,'')):String(id||'').startsWith('user:')?String(id).slice(5):null;
@@ -232,7 +235,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         get actors(){return worldRef===getState().world?actors:[];},get team(){return teamMembers();},
         preparedTeam(){const fresh=fillers();ui.allies=ui.allies.map(p=>p?.kind==='companion'?fresh.find(f=>f.id===p.id)||p:p);return teamMembers();},
         pickPartyDungeon,fillOpenSlot,depart,cancelDungeonPick(){if(ui.pickingDungeon){ui.pickingDungeon=false;onChange();}},
-        step(dt,options={}){const s=getState();if(worldRef!==s.world)return;stepSocialActors(actors,s.world,dt,{paused:s.paused,locked:s.locked?ui.selected?.id:null,team:teamMembers().map(p=>p.id),leader:s.save?.position,view:options.view});},
+        step(dt,options={}){const s=getState();if(worldRef!==s.world)return;const team=teamMembers().map(p=>p.id);if(s.world.isEarth&&!s.paused)actors=streamSocialActors(actors,earthSpawns,dt,{leader:s.save?.position,view:options.view,team,seed:placementSeed,params:{...SOCIAL_DEFAULTS,...s.assets.content.balanceParams?.islandSocial}});stepSocialActors(actors,s.world,dt,{paused:s.paused,locked:s.locked?ui.selected?.id:null,team:teamMembers().map(p=>p.id),leader:s.save?.position,view:options.view});},
         pick(p){return pickSocialBubble(actors,getState().save?.position,p,{gesture:api.gesture,at:Date.now(),inParty:teamMembers().length>0||!!getState().save?.coopRun});},
         select(p,kind='social-profile'){const a=actors.find(a=>a.profile.id===p.id),leader=getState().save.position;if(a){a.path=[];a.moving=false;const dx=leader.x-a.position.x,dy=leader.y-a.position.y;a.facing=socialFacing(dx,dy);}ui.selected=p;ui.dialogue=null;ui.dialogueDraft='';ui.actionAffinity=null;onOpen(kind);const ticket=++actionTicket,token=epoch;
             if(kind==='social-actions')void (async()=>{

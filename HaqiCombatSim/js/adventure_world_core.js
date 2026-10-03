@@ -1,3 +1,6 @@
+import {createPathQueue} from './path_queue_core.js';
+import {streetWalkable} from './adventure_city_street_core.js';
+import {streetFindPath} from './adventure_city_navigation_core.js';
 import {monsterInteractionTargets,monsterContactDistance,inMonsterTerritory,pruneMonsterScene} from './adventure_monster_motion_core.js';
 import {dungeonProgress} from './adventure_coop_core.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
@@ -9,6 +12,7 @@ import { onLargeIsland, riverBlocks, sceneryCoversActor, separateBuilding } from
 import {encounterCoolingDown} from './adventure_encounter_cooldown_core.js';
 import {defaultParams,resolveParams} from './combat_params_core.js';
 import {earthWalkable,earthNearest} from './adventure_earth_core.js';
+import {createCityDungeonWorld} from './adventure_city_dungeons_core.js';
 const interactionDefaults=defaultParams('kids').adventure;
 export const WALK_SPEED = 210;
 export function updateEncounterVisibility(world,save,now) {
@@ -26,6 +30,7 @@ export function canResumeWorld(world,previousSave,nextSave,content){
 }
 export function createWorld(zone,content,save=null) {
     if(zone==='earth'){if(!content.earthWorld)throw Error('地球场景尚未加载');return content.earthWorld;}
+    if(dungeonFor(content,zone)?.kind==='city')return createCityDungeonWorld(content,save,dungeonFor(content,zone));
     if(!islandFor(zone)&&!dungeonFor(content,zone))throw new Error('目的地不存在');
     const layout=content.worldMaps?.[zone];
     if(!layout)throw Error('缺少岛屿地图：'+zone);
@@ -130,7 +135,7 @@ export function sceneActors(world,content) {
     const actors=(world.npcs||[]).map(n=>({...n,label:n.name||''}));
     for(const e of world.encounters||[]){
         const ids=e.monsterIds?.length?e.monsterIds:(e.monsterId?[e.monsterId]:[]);
-        const name=content?.monsters?.[ids[0]]?.name||e.name||'';
+        const name=e.monster?.name||content?.monsters?.[ids[0]]?.name||e.name||'';
         let label=name;
         if(ids.length>1)label+=` · ${ids.length}只`;
         if(e.blocked?.length)label+=' · 待迁移';
@@ -230,6 +235,8 @@ export function retreatBeside(world,player,target){
 }
 export function walkable(world,x,y) {
     if(world.isEarth)return earthWalkable(world,x,y);
+    if(world.isCityDungeon&&world.dungeon.scene.streetscape)return streetWalkable(world.dungeon.scene,x,y);
+    if(world.isCityDungeon)return Number.isFinite(x)&&Number.isFinite(y)&&x>=40&&y>=40&&x<=world.w-40&&y<=world.h-40&&!(world.dungeon.scene.map.obstacles||[]).some(r=>x>=r.x&&x<=r.x+r.w&&y>=r.y&&y<=r.y+r.h);
     if(world.movementExclusions?.some(o=>Math.hypot(x-o.x,y-o.y)<o.radius))return false;
     if(!Number.isFinite(x)||!Number.isFinite(y))return false;
     if(world.layout?.route)return routeLocation(world,{x,y}).distance<=world.paths[0].width/2-8;
@@ -370,10 +377,10 @@ function gridPath(world,start,destination,bounds=null){
         options.sort((a,b)=>distance(point(a),destination)-distance(point(b),destination));goal=options[0];
     }
     if(!goal)return [];
-    const open=[from],cost=new Map([[key(from),0]]),parent=new Map(),closed=new Set();
+    const open=createPathQueue(),cost=new Map([[key(from),0]]),parent=new Map(),closed=new Set();
+    open.push(from,key(from),distance(from,goal));
     const dirs=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
     while(open.length&&(!world.isEarth||closed.size<world.earthRules.maxPathNodes)) {
-        open.sort((a,b)=>(cost.get(key(a))+distance(a,goal))-(cost.get(key(b))+distance(b,goal)));
         const p=open.shift(),k=key(p);if(closed.has(k))continue;closed.add(k);
         if(k===key(goal)) {
             const out=[];let n=p;
@@ -390,7 +397,7 @@ function gridPath(world,start,destination,bounds=null){
             if(!inside(v)||n.x<0||n.y<0||n.x>=cols||n.y>=rows||closed.has(nk)||!walkable(world,v.x,v.y)||!clearSegment(world,point(p),v))continue;
             if(dx&&dy&&(!walkable(world,point({x:p.x+dx,y:p.y}).x,point({x:p.x+dx,y:p.y}).y)||!walkable(world,point({x:p.x,y:p.y+dy}).x,point({x:p.x,y:p.y+dy}).y)))continue;
             const score=cost.get(k)+Math.hypot(dx,dy);
-            if(score<(cost.get(nk)??Infinity)) {cost.set(nk,score);parent.set(nk,p);open.push(n);}
+            if(score<(cost.get(nk)??Infinity)) {cost.set(nk,score);parent.set(nk,p);open.push(n,nk,score+distance(n,goal));}
         }
     }
     return [];
@@ -407,6 +414,7 @@ export function followPath(world,position,path,budget) {
     return {position:p,path:remaining,blocked:false};
 }
 export function findPath(world,start,destination) {
+    if(world.isCityDungeon&&world.dungeon.scene.streetscape)return streetFindPath(world.dungeon.scene,start,destination);
     if(world.isEarth){
         const radius=world.earthRules.navigationRadius;
         if(distance(start,destination)>radius)return [];
@@ -478,7 +486,7 @@ function roadPath(world,start,destination){
 // Immutable world objects are indexed once; collision and drawing query local buckets.
 const objectIndices=new WeakMap();
 export function invalidateWorldObjects(world){objectIndices.delete(world);roadGraphs.delete(world);pruneMonsterScene(world);}
-export function nearbyWorldObjects(world,rect) {
+function worldObjectIndex(world){
     let buckets=objectIndices.get(world);const cell=256;
     if(!buckets){
         buckets=new Map();
@@ -487,9 +495,27 @@ export function nearbyWorldObjects(world,rect) {
         }
         objectIndices.set(world,buckets);
     }
+    return buckets;
+}
+export function nearbyWorldObjects(world,rect) {
+    const buckets=worldObjectIndex(world),cell=256;
     const out=[];
     for(let y=Math.floor(rect.y/cell);y<=Math.floor((rect.y+rect.h)/cell);y++)for(let x=Math.floor(rect.x/cell);x<=Math.floor((rect.x+rect.w)/cell);x++){
         for(const o of buckets.get(`${x},${y}`)||[])if(o.x>=rect.x&&o.x<=rect.x+rect.w&&o.y>=rect.y&&o.y<=rect.y+rect.h)out.push(o);
     }
     return out;
+}
+
+// Presentation query: keep a small overscan working set while the camera moves.
+// Collision queries remain exact; explicit invalidation refreshes this set too.
+export function createWorldViewQuery(){
+    let scope=null,index=null,bounds=null,rows=[];
+    return {query(world,rect){
+        const next=worldObjectIndex(world);
+        if(scope!==world||index!==next||!bounds||rect.x<bounds.x||rect.y<bounds.y||rect.x+rect.w>bounds.x+bounds.w||rect.y+rect.h>bounds.y+bounds.h){
+            scope=world;index=next;bounds={x:rect.x-128,y:rect.y-128,w:rect.w+256,h:rect.h+256};
+            rows=nearbyWorldObjects(world,bounds).sort((a,b)=>(a.sortY??a.y)-(b.sortY??b.y));
+        }
+        return rows;
+    },clear(){if(scope){scope=null;index=null;bounds=null;rows=[];}}};
 }

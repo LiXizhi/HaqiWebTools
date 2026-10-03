@@ -1,4 +1,5 @@
 import {entranceAppearance} from './adventure_entrances_core.js';
+import {cityEntranceAppearance} from './adventure_city_dungeons_core.js';
 // Bake once (64 KiB RGBA), then share across all entrances and islands.
 // No particle updates, filters, extra animation loop or per-frame gradients.
 let blueGlow=null;
@@ -16,6 +17,14 @@ function entranceGlow(){
 }
 // Every island shares one cached WebP and one small glow bitmap.
 export function drawDungeonEntrance(c,o,time=0,reduced=false,entranceArt=null){
+    if(o.cityDungeon){
+        const {w,h}=cityEntranceAppearance(o.cityLevel,o.cityNodeEntrance);
+        // Shared generated WebP, fixed to the ground without pulsing or vector rings.
+        if(!entranceArt?.draw(c,'shared','elite',o.x-w/2,o.y-h/2,w,h)){
+            c.save();c.fillStyle='#658d98';c.beginPath();c.ellipse(o.x,o.y,w/2,h/2,0,0,Math.PI*2);c.fill();c.restore();
+        }
+        return;
+    }
     const tower=o.entranceKind==='tower',{frame,w,h}=entranceAppearance(o);
     c.save();c.translate(o.x,o.y);
     const pulse=reduced?0:Math.sin(time*1.7);

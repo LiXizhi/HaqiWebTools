@@ -14,7 +14,14 @@
         "south": 22.45,
         "north": 22.72
       },
-      "manifest": "shenzhen/index.json"
+      "manifest": "cities/shenzhen.json",
+      "dungeonIds": [
+        "city:shenzhen:overview",
+        "city:shenzhen:shekou",
+        "city:shenzhen:huaqiangbei",
+        "city:shenzhen:bay",
+        "city:shenzhen:nantou"
+      ]
     }
   ],
   "hotspots": [

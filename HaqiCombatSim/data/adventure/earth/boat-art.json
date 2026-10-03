@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "local": "assets/adventure/environment/earth-boats-57ab16b5d714.webp",
+  "cdn": "https://cdn.keepwork.com/keepwork/haqi/earth/earth-boats-57ab16b5d714.webp",
+  "width": 768,
+  "height": 384,
+  "size": 94318,
+  "sha256": "57ab16b5d714bb47e4c29157f967c5e38a86094556388558c6f1fcf83bccc720",
+  "source": {
+    "generator": "image_gen",
+    "sha256": "b2a26a919ed371c4a976dba18f33c74f72fcf4c5ad8f5c9927fb5989409f054d",
+    "width": 1774,
+    "height": 887,
+    "description": "image_gen原生透明4列2行：上排四向无人木船，下排四向木码头；俯视手绘RPG风格。",
+    "prompt": "Four columns by two rows, transparent atlas. Top: same small open wooden rowboat, cream rim, turquoise hull, brass details, empty central seat; bow down, left, right, up. Bottom: narrow weathered wooden docks, posts and rope, projecting down, left, right, up. Elevated RPG camera, hand-painted, isolated sprites, no people, land, water, shadows or text."
+  },
+  "encoding": {
+    "lossless": false,
+    "quality": 94
+  },
+  "frames": {
+    "boatDown": {
+      "rect": [
+        40,
+        8,
+        111,
+        176
+      ],
+      "sourceRect": [
+        98,
+        24,
+        246,
+        391
+      ]
+    },
+    "boatLeft": {
+      "rect": [
+        200,
+        105,
+        176,
+        79
+      ],
+      "sourceRect": [
+        461,
+        149,
+        396,
+        177
+      ]
+    },
+    "boatRight": {
+      "rect": [
+        392,
+        105,
+        176,
+        79
+      ],
+      "sourceRect": [
+        918,
+        149,
+        394,
+        177
+      ]
+    },
+    "boatUp": {
+      "rect": [
+        611,
+        8,
+        121,
+        176
+      ],
+      "sourceRect": [
+        1428,
+        35,
+        249,
+        363
+      ]
+    },
+    "dockDown": {
+      "rect": [
+        46,
+        200,
+        100,
+        176
+      ],
+      "sourceRect": [
+        110,
+        461,
+        223,
+        394
+      ]
+    },
+    "dockLeft": {
+      "rect": [
+        200,
+        259,
+        176,
+        117
+      ],
+      "sourceRect": [
+        466,
+        512,
+        391,
+        259
+      ]
+    },
+    "dockRight": {
+      "rect": [
+        392,
+        259,
+        176,
+        117
+      ],
+      "sourceRect": [
+        917,
+        510,
+        391,
+        261
+      ]
+    },
+    "dockUp": {
+      "rect": [
+        622,
+        200,
+        100,
+        176
+      ],
+      "sourceRect": [
+        1441,
+        461,
+        223,
+        394
+      ]
+    }
+  }
+}

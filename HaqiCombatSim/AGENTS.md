@@ -31,12 +31,14 @@
 
 ### 可复用技能与源码
 
-先定位 `lxzsrc/maisi/`（本机 `/Users/mac/lxzsrc/maisi`），读取适用技能再执行。下面路径相对于该仓库；其他机器按实际 checkout 位置解析，不把绝对路径写进游戏运行时代码。
+先定位 `lxzsrc/apps/`（本机 `C:\lxzsrc\apps`），读取该仓库及目标项目的 `AGENTS.md` 和适用技能再执行。下面路径相对于 apps 仓库；其他机器按实际 checkout 位置解析，不把绝对路径写进游戏运行时代码。
+
+AIChat 及其 `school-teacher` 技能的唯一维护源位于 apps 仓库的 `official/apps/tools/AIChat/`；RSI/RRSI 工作流使用该仓库的 `.github/skills/ris/SKILL.md` 和目标注册表。不要到 `maisi` 或 `maisiDev` 查找、修改或同步 AIChat 的旧副本。
 
 | 用途 | 技能路径 |
 |---|---|
 | 角色图集、场景、道具生成，WebP 转换、CDN 上传与预览报告 | `.github/skills/art-asset-generator/SKILL.md` |
-| Keepwork SDK 的登录、PersonalPageStore 存储、资源上传及现有 CDN 库目录 | `maisi/maisi/webgames/tools/AIChat/skills/keepwork-web-dev/SKILL.md` |
+| Keepwork SDK 的登录、PersonalPageStore 存储、资源上传及现有 CDN 库目录 | `official/apps/tools/AIChat/skills/keepwork-web-dev/SKILL.md` |
 | 通过 Keepwork SDK CLI 压缩 WebP、上传用户 CDN、预览实际发布 URL | `.github/skills/keepwork-copilot/SKILL.md` |
 | 使用现有七牛配置上传文件到 Keepwork CDN | `.github/skills/upload-deploy-cdn-files/SKILL.md` |
 
@@ -66,9 +68,9 @@ SDK 源码可在 `lxzsrc/keepworkSDK/`（本机 `/Users/mac/lxzsrc/keepworkSDK`�
 
 - **只允许使用已经托管在 Keepwork CDN 的第三方库。** 所有第三方 JS、CSS、ES module、Worker/WASM 配套依赖均须使用已存在且核验过的 Keepwork CDN 地址；禁止从 unpkg、jsDelivr、cdnjs、esm.sh 等其他 CDN 导入，也不以 npm 打包或本地复制绕过此规则。
 - 缺少 Keepwork CDN 版本时，选择已有库或用原生实现；不猜 URL、不引入外部 CDN 兜底。自己编写的项目模块仍可以使用相对路径。
-- 以 Maisi `keepwork-web-dev` 技能的 CDN 库目录为准，保持已有完整版本号；实际引入前验证地址与配套版本。不要因为库可用就额外引入，继续保持无构建的 ES modules / Vanilla JS 架构。
+- 以 apps 仓库中 AIChat 的 `keepwork-web-dev` 技能的 CDN 库目录为准，保持已有完整版本号；实际引入前验证地址与配套版本。不要因为库可用就额外引入，继续保持无构建的 ES modules / Vanilla JS 架构。
 
-Maisi 技能中已登记的相关地址（按需要选择，不要求全部加载）：
+该技能中已登记的相关地址（按需要选择，不要求全部加载）：
 
 | 库 | Keepwork CDN 地址 |
 |---|---|
@@ -99,4 +101,10 @@ Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 
 
 ## 故事创作技能
 
+按坐标复刻真实地点的道路、建筑、水岸和街景WebP，使用 [.github/skills/haqi-recreate-place/SKILL.md](.github/skills/haqi-recreate-place/SKILL.md)。保持真实底图与艺术补全的来源区分，复用既有城市副本身份和存档。
+
+大城市内部地点和明确绑定的地图命名节点副本使用 [.github/skills/haqi-generate-city-dungeons/SKILL.md](.github/skills/haqi-generate-city-dungeons/SKILL.md)。城市大地标管理节点配置，城市总入口与各节点入口共享副本身份及进度，不按距离接管周边全部节点。
+
 阅读、整理、创作或更新主线章节、NPC支线、双语对话与副本剧本时，使用项目技能 [.github/skills/haqi-story/SKILL.md](.github/skills/haqi-story/SKILL.md)。遵循其中的简明语言、稳定编号、作者源定位与章节拆分约定。
+
+现实世界城市的语言、文化素材、NPC图集与任务内容使用 [.github/skills/haqi-populate-city/SKILL.md](.github/skills/haqi-populate-city/SKILL.md)。每城保存为独立的 `data/adventure/earth/cities/<id>.json`，世界索引只保留范围与引用，进入城市后加载；外观生成权重为创作配置，不冒充人口统计。

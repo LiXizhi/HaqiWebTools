@@ -1,0 +1,426 @@
+{
+  "version": 1,
+  "entries": {
+    "shophouse": {
+      "id": "city-street:shophouse:79a831c55766",
+      "local": "assets/adventure/earth/streets/shophouse-79a831c55766.webp",
+      "width": 313,
+      "height": 306,
+      "bytes": 128628,
+      "sha256": "79a831c5576691267fd1bf8c7cfb95d85653d45731d099f261f24453fbc93d2e",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/shophouse-79a831c55766.webp"
+    },
+    "corner-shop": {
+      "id": "city-street:corner-shop:100ea66bf16c",
+      "local": "assets/adventure/earth/streets/corner-shop-100ea66bf16c.webp",
+      "width": 316,
+      "height": 313,
+      "bytes": 116566,
+      "sha256": "100ea66bf16c6c6ab2fb69ac06ff4d5f1364c4bb1b86fb4d98ac7715c28f8a4f",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/corner-shop-100ea66bf16c.webp"
+    },
+    "apartment": {
+      "id": "city-street:apartment:3e32b266f05e",
+      "local": "assets/adventure/earth/streets/apartment-3e32b266f05e.webp",
+      "width": 316,
+      "height": 314,
+      "bytes": 127966,
+      "sha256": "3e32b266f05e19e31a81042b4db4086996349efdafbafd638e65cac0ad8a7f17",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/apartment-3e32b266f05e.webp"
+    },
+    "nantou-gate": {
+      "id": "city-street:nantou-gate:1eef2da4fd0e",
+      "local": "assets/adventure/earth/streets/nantou-gate-1eef2da4fd0e.webp",
+      "width": 316,
+      "height": 311,
+      "bytes": 120234,
+      "sha256": "1eef2da4fd0e98421b193a530c1ea979f9ae9002cfcb9145e0720f3c2e38853d",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/nantou-gate-1eef2da4fd0e.webp"
+    },
+    "banyan": {
+      "id": "city-street:banyan:8aefbc661b86",
+      "local": "assets/adventure/earth/streets/banyan-8aefbc661b86.webp",
+      "width": 316,
+      "height": 311,
+      "bytes": 164082,
+      "sha256": "8aefbc661b860522aa2f534ac1b35340f0416dd5f72f22f48df288adf774982c",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/banyan-8aefbc661b86.webp"
+    },
+    "palm": {
+      "id": "city-street:palm:80c9606444d6",
+      "local": "assets/adventure/earth/streets/palm-80c9606444d6.webp",
+      "width": 316,
+      "height": 311,
+      "bytes": 72326,
+      "sha256": "80c9606444d6722a479a1f750c7ad5cbbc66769e0fe07d0b0676ccd689cd3f4b",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/palm-80c9606444d6.webp"
+    },
+    "flowers": {
+      "id": "city-street:flowers:e2d500595c16",
+      "local": "assets/adventure/earth/streets/flowers-e2d500595c16.webp",
+      "width": 316,
+      "height": 311,
+      "bytes": 128700,
+      "sha256": "e2d500595c162d8125906c29d9de31557a0fb0a22a0f393eb1bcb15bec87464a",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/flowers-e2d500595c16.webp"
+    },
+    "shelter": {
+      "id": "city-street:shelter:2dd5be559a2e",
+      "local": "assets/adventure/earth/streets/shelter-2dd5be559a2e.webp",
+      "width": 316,
+      "height": 311,
+      "bytes": 101114,
+      "sha256": "2dd5be559a2e7264239bdad35b25cdc0c388b371e9e43ddd4a7d36a5bd8f5062",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/shelter-2dd5be559a2e.webp"
+    },
+    "food-stall": {
+      "id": "city-street:food-stall:51a720392d08",
+      "local": "assets/adventure/earth/streets/food-stall-51a720392d08.webp",
+      "width": 316,
+      "height": 258,
+      "bytes": 76708,
+      "sha256": "51a720392d088caac0a3e5cdb4a4141abdf9f2337a2c1cbc77f349d665fd5933",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/food-stall-51a720392d08.webp"
+    },
+    "fruit-stall": {
+      "id": "city-street:fruit-stall:6e211f209cbc",
+      "local": "assets/adventure/earth/streets/fruit-stall-6e211f209cbc.webp",
+      "width": 316,
+      "height": 258,
+      "bytes": 96220,
+      "sha256": "6e211f209cbcaec1bd8d15d9e31e8d54dcd820e658342ac082c4efea734f1439",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/fruit-stall-6e211f209cbc.webp"
+    },
+    "bench": {
+      "id": "city-street:bench:3c437ae462f4",
+      "local": "assets/adventure/earth/streets/bench-3c437ae462f4.webp",
+      "width": 316,
+      "height": 258,
+      "bytes": 66798,
+      "sha256": "3c437ae462f4fd31b880f820d4fb3eea555ba4599402e7f853dcc8c689cc1a2b",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/bench-3c437ae462f4.webp"
+    },
+    "bicycles": {
+      "id": "city-street:bicycles:11b6fd03334f",
+      "local": "assets/adventure/earth/streets/bicycles-11b6fd03334f.webp",
+      "width": 316,
+      "height": 258,
+      "bytes": 91052,
+      "sha256": "11b6fd03334f6d8cd0eea56a9e330289ef147f9ebac2ad97903750e04b6839ce",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/bicycles-11b6fd03334f.webp"
+    },
+    "car": {
+      "id": "city-street:car:319429b6b8aa",
+      "local": "assets/adventure/earth/streets/car-319429b6b8aa.webp",
+      "width": 313,
+      "height": 262,
+      "bytes": 60792,
+      "sha256": "319429b6b8aa5ae3bc4aa2fb071efa82f9ac0ba7ad26a7924e75b1f5f33873d5",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/car-319429b6b8aa.webp"
+    },
+    "minibus": {
+      "id": "city-street:minibus:a88b55264ea0",
+      "local": "assets/adventure/earth/streets/minibus-a88b55264ea0.webp",
+      "width": 316,
+      "height": 257,
+      "bytes": 82680,
+      "sha256": "a88b55264ea06c1a7eaa521e7b0ec780d3cfcc559d1636890b164e7d97712d4f",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/minibus-a88b55264ea0.webp"
+    },
+    "lingnan-house": {
+      "id": "city-street:lingnan-house:be914d1dade7",
+      "local": "assets/adventure/earth/streets/lingnan-house-be914d1dade7.webp",
+      "width": 316,
+      "height": 268,
+      "bytes": 113458,
+      "sha256": "be914d1dade7209fc5f51a0fe5c94a9815db34259077dce86c0065e38820fb6f",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/lingnan-house-be914d1dade7.webp"
+    },
+    "cafe": {
+      "id": "city-street:cafe:e082ff696d76",
+      "local": "assets/adventure/earth/streets/cafe-e082ff696d76.webp",
+      "width": 316,
+      "height": 262,
+      "bytes": 109560,
+      "sha256": "e082ff696d76f24c8b29b7bf42b526c1eccc3d17cdf7816fde354c01f5601dfa",
+      "sourceSha256": "49c49793442600b542b8520484cb5ae7b3b7fabde39ff3d2330a6a982340ab21",
+      "source": "Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture",
+      "encoding": {
+        "lossless": true
+      },
+      "anchor": [
+        0.5,
+        1
+      ],
+      "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/cafe-e082ff696d76.webp"
+    }
+  },
+  "npcAtlas": {
+    "id": "earth-npcs:shenzhen:14e5813289e8",
+    "local": "assets/adventure/earth/shenzhen-npcs-14e5813289e8.webp",
+    "width": 1024,
+    "height": 640,
+    "bytes": 139356,
+    "sha256": "14e5813289e8ad5af3e9f2129b728d29c48bccc01120b097ca3f82e46d88a3fc",
+    "sourceSha256": "5a739d99008bf0b32857fe707d68d7aa9aaa1eadd9f3820ac81fd13fd71c34ff",
+    "frames": [
+      [
+        0,
+        0,
+        256,
+        320
+      ],
+      [
+        256,
+        0,
+        256,
+        320
+      ],
+      [
+        512,
+        0,
+        256,
+        320
+      ],
+      [
+        768,
+        0,
+        256,
+        320
+      ],
+      [
+        0,
+        320,
+        256,
+        320
+      ],
+      [
+        256,
+        320,
+        256,
+        320
+      ],
+      [
+        512,
+        320,
+        256,
+        320
+      ],
+      [
+        768,
+        320,
+        256,
+        320
+      ]
+    ],
+    "source": "AI-generated offline fictional city residents; transparent shared atlas",
+    "encoding": {
+      "quality": 92
+    },
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/shenzhen-npcs-14e5813289e8.webp",
+    "status": "verified-cdn"
+  },
+  "residents": [
+    {
+      "portrait": {
+        "id": "earth-npcs:shenzhen:14e5813289e8",
+        "crop": [
+          0,
+          0,
+          256,
+          320
+        ]
+      }
+    },
+    {
+      "portrait": {
+        "id": "earth-npcs:shenzhen:14e5813289e8",
+        "crop": [
+          512,
+          0,
+          256,
+          320
+        ]
+      }
+    },
+    {
+      "portrait": {
+        "id": "earth-npcs:shenzhen:14e5813289e8",
+        "crop": [
+          768,
+          0,
+          256,
+          320
+        ]
+      }
+    },
+    {
+      "portrait": {
+        "id": "earth-npcs:shenzhen:14e5813289e8",
+        "crop": [
+          0,
+          320,
+          256,
+          320
+        ]
+      }
+    },
+    {
+      "portrait": {
+        "id": "earth-npcs:shenzhen:14e5813289e8",
+        "crop": [
+          256,
+          320,
+          256,
+          320
+        ]
+      }
+    },
+    {
+      "portrait": {
+        "id": "earth-npcs:shenzhen:14e5813289e8",
+        "crop": [
+          512,
+          320,
+          256,
+          320
+        ]
+      }
+    }
+  ]
+}

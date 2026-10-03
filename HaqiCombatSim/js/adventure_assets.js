@@ -7,6 +7,7 @@ import {createQuestJournalLoader} from './adventure_quest_journal.js';
 import {installDungeonIndex} from './adventure_dungeons_core.js';
 import {installIslandEncounters} from './adventure_island_encounters_core.js';
 import {createDungeonLoader} from './adventure_dungeons.js';
+import {createCityDungeonLoader} from './adventure_city_dungeons.js';
 import {installNpcCatalog} from './adventure_npc_core.js';
 import {createFishingLoader} from './adventure_fishing_loader.js';
 import {installRuneCatalog} from './adventure_runes_core.js';
@@ -25,6 +26,15 @@ export const SAVE_KEY = 'haqi.adventure.kids.v1';
 import { createJsonReader } from './runtime_data.js';
 const ESSENTIAL_SHEETS=new Set(['sprites']);
 function loadImage(url) { return new Promise((resolve,reject)=>{const i=new Image();i.crossOrigin='anonymous';i.onload=()=>{if(i.decode)i.decode().then(()=>resolve(i),()=>resolve(i));else resolve(i);};i.onerror=()=>reject(new Error(`无法加载图片 ${url}`));i.src=url;}); }
+export function registerLazyImage(lazyImages,id,entry,releaseImage){
+    if(!id||!entry?.local?.endsWith('.webp')||!entry.cdn||new URL(entry.cdn).hostname!=='cdn.keepwork.com')throw Error('城市角色图集无效');
+    const previous=lazyImages.get(id);
+    // Earth and street manifests share resident atlases. Preserve the entry
+    // identity checked by in-flight loads when both register the same image.
+    if(previous&&previous.cdn===entry.cdn&&previous.local===entry.local&&previous.sha256===entry.sha256)return;
+    if(previous)releaseImage(id);
+    lazyImages.set(id,entry);
+}
 export async function loadResources(progress) {
     const downloads = new Map();
     const read = createJsonReader({ onProgress: event => {
@@ -73,13 +83,20 @@ export async function loadResources(progress) {
         const value=left>right?[sx,sy,sw,sh]:[sx+left,sy+top,right-left+1,bottom-top+1];bounds.set(cacheKey,value);return value;
     }
     // Shared by lazy drawing and explicit scene preparation. Failed loads may be retried.
+    function registerImage(id,entry){
+        registerLazyImage(lazyImages,id,entry,releaseImage);
+    }
+    function releaseImage(id){
+        lazyImages.delete(id);images.delete(id);imageLoading.delete(id);
+        for(const key of bounds.keys())if(key.startsWith(id+'[')||key===id+'null')bounds.delete(key);
+    }
     function ensureImage(id) {
         if(images.has(id))return Promise.resolve(images.get(id));
         if(!lazyImages.has(id))return Promise.reject(new Error(`角色图片未登记：${id}`));
         if(!imageLoading.has(id)){
-            const loading=loadImage(assetUrl(lazyImages.get(id),mode)).then(image=>{images.set(id,image);return image;});
+            const entry=lazyImages.get(id),loading=loadImage(assetUrl(entry,mode)).then(image=>{if(lazyImages.get(id)===entry)images.set(id,image);return image;});
             imageLoading.set(id,loading);
-            loading.catch(()=>imageLoading.delete(id));
+            loading.catch(()=>{if(imageLoading.get(id)===loading)imageLoading.delete(id);});
         }
         return imageLoading.get(id);
     }
@@ -123,7 +140,9 @@ export async function loadResources(progress) {
     const dungeonJson=createJsonReader({packed:false});
     const [dungeonIndex,dungeonJourneys]=await Promise.all([json('data/adventure/dungeon-index.json'),json('data/adventure/dungeon-journeys.json')]);
     content.dungeonJourneys=dungeonJourneys;installDungeonIndex(content,dungeonIndex);
-    const dungeons=createDungeonLoader({content,dataset,cards:kidsCards,names:cardNames,readJson:dungeonJson});
+    const regularDungeons=createDungeonLoader({content,dataset,cards:kidsCards,names:cardNames,readJson:dungeonJson});
+    const cityDungeons=createCityDungeonLoader({content,readJson:dungeonJson,registerImage});
+    const dungeons={...regularDungeons,load:(id,options)=>id?.startsWith('city:')?cityDungeons.load(id,options):regularDungeons.load(id),prepareSaves:async saves=>{await cityDungeons.prepareSaves(saves);await regularDungeons.prepareSaves(saves);}};
     installNpcCatalog(content,await json('data/adventure/npc-catalog.json'));
     installMountCatalog(content,await json('data/adventure/mount-catalog.json'));
     for(const mount of content.mountCatalog.mounts)if(mount.art?.cdn)lazyImages.set(`mount:${mount.id}`,mount.art);
@@ -197,7 +216,7 @@ export async function loadResources(progress) {
         for(let i=0;i<rows.length&&version===battleWarmVersion;i+=4)await skillArt.preload(rows.slice(i,i+4));
     }
 
-    return {warmNearby,warmBattle,warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    return {registerImage,releaseImage,warmNearby,warmBattle,warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

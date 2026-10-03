@@ -7,12 +7,12 @@ const scenes=new WeakMap(),defaults=Object.freeze(defaultParams('kids').monsterS
 export function pruneMonsterScene(world){const scene=scenes.get(world);if(!scene)return;const live=new Set(world.encounters.map(e=>e.id));for(const id of scene.keys())if(!live.has(id))scene.delete(id);}
 export const monsterSceneParams=world=>world.monsterSceneParams||defaults;
 export function inMonsterTerritory(world,encounter,hero) {
-    return !world.isDungeon&&!encounter.hidden&&!encounter.blocked?.length&&!!hero
+    return !world.isDungeon&&!encounter.hidden&&!encounter.sceneState?.retiring&&(encounter.sceneState?.opacity??1)>.2&&!encounter.blocked?.length&&!!hero
         &&Math.hypot(hero.x-encounter.x,hero.y-encounter.y)<monsterSceneParams(world).territoryRadius;
 }
 // Reveal the actual activity boundary in the outer perception band; it does not aggro.
 export function monsterTerritoryWarning(world,encounter,hero) {
-    if(world.isDungeon||encounter.hidden||encounter.blocked?.length||!hero)return null;
+    if(world.isDungeon||encounter.hidden||encounter.sceneState?.retiring||(encounter.sceneState?.opacity??1)<=.2||encounter.blocked?.length||!hero)return null;
     const params=monsterSceneParams(world),distance=Math.hypot(hero.x-encounter.x,hero.y-encounter.y);
     return distance<params.territoryRadius?'danger':distance<params.territoryRadius*params.perceptionMultiplier?'nearby':null;
 }
@@ -132,6 +132,7 @@ export function stepMonsterWander(world,encounter,dt,view,{enabled=true,ambient=
 }
 // A group's individual sprites all select the same encounter.
 export function monsterInteractionTargets(world,encounter) {
+    if(encounter.sceneState?.retiring||(encounter.sceneState?.opacity??1)<=.2)return [];
     return monsterScenePositions(world,encounter).map(p=>({...encounter,x:p.x,y:p.y,kind:'encounter'}));
 }
 export function monsterContactDistance(world,encounter,point) {

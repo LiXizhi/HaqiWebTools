@@ -1,4 +1,6 @@
-import {earthEncounter,earthNearest} from './adventure_earth_core.js';
+import {earthEncounter,earthNearest,earthChapterEvent} from './adventure_earth_core.js';
+import {cityBattleReady,recordCityBattleWin} from './adventure_city_dungeons_core.js';
+import {validateEarthCityProgress} from './adventure_earth_city_config_core.js';
 import {dailyBuffs,validateDailyBuff} from './language_daily_buff_core.js';
 import {claimSpeechReward,validateSpeechClaims} from './language_speech_rewards_core.js';
 import {dungeonLanguageBuff,dungeonLanguageBaseHp} from './adventure_dungeon_language_core.js';
@@ -219,7 +221,8 @@ export function playerSpec(save, content, starLevel=save.pendingEncounter?.magic
         const instance=findEquipmentInstance(save,content,iid);
         const sources=[item,...(instance?.serverdata.gem?.ins||[]).map(id=>content.items[id]).filter(Boolean)];
         for (const [id,value] of sources.flatMap(source=>Object.entries(source.stats))) {
-            if(save.pendingEncounter&&save.pendingEncounter.equipmentStatsVersion!==1&&[182,183].includes(Number(id)))continue;
+            if(save.pendingEncounter&&![1,2].includes(save.pendingEncounter.equipmentStatsVersion)&&[182,183].includes(Number(id)))continue;
+            if(save.pendingEncounter&&save.pendingEncounter.equipmentStatsVersion!==2&&Number(id)>=151&&Number(id)<=166)continue;
             const entry = statIdToEntry(id); if (!entry) continue;
             if (typeof stats[entry.stat] === 'object') stats[entry.stat][entry.school] = (stats[entry.stat][entry.school] || 0) + Number(value);
             else stats[entry.stat] += Number(value);
@@ -540,7 +543,8 @@ export function beginEncounter(save,content,encounterId,access={}) {
     assert(!dungeonProgress(save)?.[save.zone]?.cleared.includes(encounterId),'这组怪物已经击败，请重新开启副本后挑战');
     assert(!encounterCoolingDown(save,encounterId,access.now??0),'怪物尚未刷新，请稍后再挑战');
     const dungeon=dungeonFor(content,save.zone);
-    if(dungeon)assert(dungeon.arenas.find(a=>!dungeonProgress(save)[save.zone].cleared.includes(a.id))?.id===encounterId,'请先击败挡路的怪物');
+    if(dungeon?.kind==='city')assert(cityBattleReady(save,dungeon,encounterId),'请先完成这个地点的生活互动');
+    if(dungeon&&dungeon.kind!=='city')assert(dungeon.arenas.find(a=>!dungeonProgress(save)[save.zone].cleared.includes(a.id))?.id===encounterId,'请先击败挡路的怪物');
     const monster = encounter.monster || content.monsters[encounter.monsterId];
     assert(encounterId !== 'death-scout' || (save.quests[63012]?.claimed), '请先完成考核前的准备');
     validDeck(save,content,save.deck);
@@ -549,7 +553,7 @@ export function beginEncounter(save,content,encounterId,access={}) {
     if(initialParty)assert(initialParty.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
-        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1 };
+        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 2, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1 };
     if(encounter.monsterIds){const formation=journeyEnemyFormation(encounter,dungeon,initialParty);save.pendingEncounter.dungeonMonsterIds=[...formation.ids];save.pendingEncounter.dungeonMonsterSlots=[...formation.slots];}
     const languageBuff=save.dailyLanguageBuff?dailyBuffs(save):dungeonLanguageBuff(save,content);
     if(save.dailyLanguageBuff)save.pendingEncounter.dailyLanguageVersion=1;
@@ -610,7 +614,13 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
     if(content.pets)settleParty(save,content,battle);
     let insufficientStamina=false,staminaSpent=0;
     if (battle.winner === 'near') {
-        if(save.zone==='earth'&&content.earthWorld?.encounters.some(e=>e.id===pending.encounterId&&e.chapterEvent==='defense')&&save.earthProgress?.step===3)save.earthProgress={version:1,step:4};
+        const cityDungeon=dungeonFor(content,save.zone);
+        if(cityDungeon?.kind==='city')recordCityBattleWin(save,cityDungeon,encounter.id);
+        if(save.zone==='earth'){
+            const event=content.earthWorld?.encounters.find(e=>e.id===pending.encounterId)?.chapterEvent;
+            const chapter=content.earthWorld?.city?.quests;
+            if(event&&chapter)earthChapterEvent(save,chapter,event);
+        }
         if(!dungeonFor(content,save.zone))markEncounterDefeated(save,content,pending.encounterId,now);
         const cost=encounterStaminaCost(content,pending.encounterId);
         const gate=applyCombatStamina(save,content,cost);
@@ -699,7 +709,7 @@ export function parseSave(raw,content) {
         assert(s.pendingEncounter.dailyLanguageVersion===undefined||s.pendingEncounter.dailyLanguageVersion===1,'语言加成版本无效');
         if(s.pendingEncounter.dailyLanguageVersion===1)validateDailyBuff(s.pendingEncounter.languageBuff);
         if(s.pendingEncounter.languageBuff!==undefined&&!s.pendingEncounter.dailyLanguageVersion)assert(JSON.stringify(s.pendingEncounter.languageBuff)===JSON.stringify(dungeonLanguageBuff(s,content)),'副本语言加成检查点无效');
-        assert(s.pendingEncounter.equipmentStatsVersion===undefined||s.pendingEncounter.equipmentStatsVersion===1,'装备属性规则版本无效');
+        assert(s.pendingEncounter.equipmentStatsVersion===undefined||[1,2].includes(s.pendingEncounter.equipmentStatsVersion),'装备属性规则版本无效');
         assert(s.pendingEncounter.reflectionRulesVersion===undefined||s.pendingEncounter.reflectionRulesVersion===1,'反射规则版本无效');
         assert(s.pendingEncounter.specialCardRulesVersion===undefined||s.pendingEncounter.specialCardRulesVersion===1,'特殊卡牌规则版本无效');
         assert(s.pendingEncounter.dispelRulesVersion===undefined||s.pendingEncounter.dispelRulesVersion===1,'之敌规则版本无效');
@@ -746,6 +756,7 @@ export function parseSave(raw,content) {
         }
     }
     if(s.earthProgress!==undefined)assert(s.earthProgress.version===1&&Number.isInteger(s.earthProgress.step)&&s.earthProgress.step>=0&&s.earthProgress.step<=5,'地球章节记录无效');
+    validateEarthCityProgress(s.earthCityProgress);
     syncProgression(s,content); validDeck(s,content,s.deck);
     if(s.deckLayouts!==undefined)validateDeckLayouts(s,content,s.deckLayouts,s.activeDeckLayout);
     migrateDefaultPocket(s,content);

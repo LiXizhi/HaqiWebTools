@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>现实世界地形美术预览</title>
+<style>body{margin:20px;background:#eee5d2;color:#3b3328;font:16px sans-serif}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}figure{margin:0;background:#fff5df;padding:12px;border:1px solid #ae9566}canvas{width:100%;aspect-ratio:1;display:block;background:repeating-conic-gradient(#ccc 0% 25%,#eee 0% 50%) 0/20px 20px}figcaption{padding-top:8px}p{max-width:850px}</style>
+<h1>现实世界地形与植被</h1><p id="status">正在加载 WebP 并检查透明通道与裁剪。</p><main></main>
+<script type="module">
+import {createEarthSurfaceRaster,earthDecorationFrames,earthDecorationIsTree} from '../../js/adventure_earth_surface_core.js';
+import {earthRules} from '../../js/adventure_earth_core.js';
+const rules=earthRules(),detail={detailStrength:rules.surfaceDetailStrength,detailSpacing:rules.surfaceDetailSpacing,detailDensity:rules.surfaceDetailDensity};
+const manifest=await fetch('../../data/adventure/earth/surface-art.json').then(r=>r.json());
+const local=new URLSearchParams(location.search).get('assets')==='local';
+const atlases={};
+try{
+for(const kind of ['terrain','decorations','biomeDecorations']){
+    const row=manifest[kind],image=new Image();image.crossOrigin='anonymous';image.src=local?'../../'+row.local:row.cdn;await image.decode();
+    const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const ctx=canvas.getContext('2d');ctx.drawImage(image,0,0);const pixels=ctx.getImageData(0,0,image.width,image.height).data;
+    if(kind!=='terrain'&&!pixels.some((v,i)=>i%4===3&&v===0))throw Error('图集缺少透明像素：'+kind);
+    atlases[kind]={...row,image,data:pixels};
+}
+const biomes=[['snow','雪地',60],['crops','耕地',40],['barren','荒漠',25],['wetland','湿地（低纬）',20],['wetland','湿地（温带）',40],['forest','森林（低纬）',20],['forest','森林（温带）',40],['forest','森林（高纬）',60],['grass','草地',40],['scrub','灌木',25],['urban','城市绿化',40],['water','水域',40],['ocean','海洋',40]];
+for(const [type,name,lat] of biomes){
+    const figure=document.createElement('figure'),canvas=document.createElement('canvas');canvas.width=canvas.height=320;const ctx=canvas.getContext('2d');
+    const job=createEarthSurfaceRaster({x:0,y:0,size:320,resolution:320,cellSize:32,sample:()=>type,atlas:atlases.terrain,...detail});job.rows(320);const pixels=ctx.createImageData(320,320);pixels.data.set(job.pixels);ctx.putImageData(pixels,0,0);
+    const pool=[...new Set(earthDecorationFrames(type,lat))];
+    pool.forEach((frame,i)=>{const atlas=frame>=16?atlases.biomeDecorations:atlases.decorations,index=frame>=16?frame-16:frame,rect=atlas.frames[index],size=earthDecorationIsTree(frame)?128:80,x=40+i%3*105,y=130+Math.floor(i/3)*95;ctx.drawImage(atlas.image,...rect,x-size/2,y-size*.88,size,size);});
+    const caption=document.createElement('figcaption');caption.textContent=name;figure.append(canvas,caption);document.querySelector('main').append(figure);
+}
+const roadFigure=document.createElement('figure'),roadCanvas=document.createElement('canvas');roadFigure.style.gridColumn='1 / -1';roadFigure.style.maxWidth='800px';roadCanvas.width=roadCanvas.height=640;
+const roadJob=createEarthSurfaceRaster({x:0,y:0,size:640,resolution:640,cellSize:64,sample:(x,y)=>x+y<450?'forest':x-y>210?'barren':'grass',atlas:atlases.terrain,...detail,
+    roads:[{a:{x:-100,y:90},b:{x:740,y:570},width:rules.cityConnectionWidth}],roadStyle:{blendWidth:rules.cityConnectionBlendWidth,shoulderWidth:rules.cityConnectionShoulderWidth,textureOpacity:rules.cityConnectionTextureOpacity}});
+roadJob.rows(640);const roadContext=roadCanvas.getContext('2d'),roadPixels=roadContext.createImageData(640,640);roadPixels.data.set(roadJob.pixels);roadContext.putImageData(roadPixels,0,0);
+const roadLabel=document.createElement('figcaption');roadLabel.textContent='外景地面：林地、草地与戈壁小细节；磨损公路与渐隐路肩（同一烘焙核心）';roadFigure.append(roadCanvas,roadLabel);document.querySelector('main').prepend(roadFigure);
+const extra=document.createElement('figure'),sheet=document.createElement('canvas');sheet.width=atlases.biomeDecorations.width;sheet.height=atlases.biomeDecorations.height;sheet.style.aspectRatio='2';sheet.getContext('2d').drawImage(atlases.biomeDecorations.image,0,0);const label=document.createElement('figcaption');label.textContent='补充图集：积雪树木、灌木、雪堆、麦穗、仙人掌、柳树、红树林';extra.append(sheet,label);document.querySelector('main').append(extra);
+document.querySelector('#status').textContent='WebP 解码、CORS 像素读取、透明通道与逐格裁剪通过。资源模式：'+(local?'本地归档':'Keepwork CDN')+'；此页面不读取或写入玩家存档。';
+}catch(error){document.querySelector('#status').textContent='美术检查失败：'+error.message;throw error;}
+</script></html>

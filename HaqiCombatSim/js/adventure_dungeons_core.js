@@ -7,6 +7,8 @@ import {isSupportedType} from './combat_cards_core.js';
 import {dungeonProgress} from './adventure_coop_core.js';
 import {parseArenaStaminaCost} from './adventure_stamina_core.js';
 import {earthMapInfo} from './adventure_earth_core.js';
+import {cityDungeonState} from './adventure_city_dungeons_core.js';
+import {validateGeneratedCityRoute,generatedCityDungeonId} from './adventure_city_generated_core.js';
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 const targets=new Set(['self','max_max_hp','lowest_hp','random_friendly','random_hostile','threat_highest','threat_lowest']);
 export function dungeonFor(content,id){return content.dungeons?.find(d=>d.id===id);}
@@ -137,6 +139,7 @@ export function leaveDungeon(save,content){
     save.zone=target.zone;save.position={...target.position};save.dungeonReturn=null;delete save.coopRun;save.revision++;
 }
 export function validateDungeons(save,content){
+    if(save.cityFallback!==undefined){validateGeneratedCityRoute(save.cityFallback);assert(save.zone===generatedCityDungeonId(save.cityFallback),'自动城市返回记录无效');}
     validateTowerRecords(save,content);
     save.dungeonRuns??={};save.dungeonReturn??=null;
     assert(save.dungeonRuns&&typeof save.dungeonRuns==='object'&&!Array.isArray(save.dungeonRuns),'副本进度无效');
@@ -148,4 +151,10 @@ export function validateDungeons(save,content){
     }
     if(save.dungeonReturn)assert(!dungeonFor(content,save.dungeonReturn.zone)&&position(save.dungeonReturn.position,save.dungeonReturn.zone),'副本出口无效');
     if(dungeonFor(content,save.zone))assert(dungeonProgress(save)[save.zone]&&save.dungeonReturn,'副本记录不完整');
+    if(save.cityReturnStack!==undefined){
+        const active=dungeonFor(content,save.zone);
+        assert(active?.kind==='city'&&Array.isArray(save.cityReturnStack)&&save.cityReturnStack.length<=1,'城市返回记录无效');
+        for(const row of save.cityReturnStack){const parent=dungeonFor(content,row.zone);assert(active.nodeId&&parent?.kind==='city'&&!parent.nodeId&&parent.cityId===active.cityId&&position(row.position,row.zone),'城市返回地点无效');}
+    }
+    for(const [id,run]of Object.entries(save.dungeonRuns))if(dungeonFor(content,id)?.kind==='city'){const d=dungeonFor(content,id);assert(JSON.stringify(run.cleared)===JSON.stringify(cityDungeonState(save,d.cityId,id).cleared),'城市战斗进度不一致');}
 }

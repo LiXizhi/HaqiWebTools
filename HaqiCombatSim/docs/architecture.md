@@ -61,24 +61,108 @@ flowchart TB
 
 ### 地球世界的按需数据流（2026-10-02）
 
+### 城市节点副本（2026-10-03）
+
+街景 1.0 在既有节点契约上增加可选 `streetscape`；详情见 [城市街景](city-streets.md)。所有原始地理资料保留在制作侧，不进入玩家存档。
+
+```mermaid
+flowchart LR
+    Source[坐标 / OSM / GeoJSON] --> Import[place_import_core：米制转换 / 裁剪 / 来源]
+    Import --> Archive[制作快照与缺口报告]
+    Import --> City[单城 JSON streetscape]
+    Art[透明 WebP / CDN 清单] --> City
+    Generated[种子街道生成版本 2] --> City
+    City --> Collision[street_core / navigation_core：碰撞与寻路]
+    City --> Painter[view_city_street：分块缓存 / 视野索引 / 遮挡]
+    City --> Motion[street_core：行人与车辆]
+    HeroManifest[hero-art：20组现代男女老少] --> People[city_people_core：稳定配对 / 年龄混合 / 指定换装]
+    People --> Motion
+    Motion --> HeroDraw[hero_renderer：主角同款四向步行与转头]
+    City --> Existing[既有节点互动 / 战斗 / 进度 / 返回链]
+```
+
+```mermaid
+flowchart LR
+    CityLandmark[世界地图城市大地标] --> CityConfig[按需单城JSON：明确节点绑定]
+    CityConfig --> RootEntrance[现实地面城市总入口]
+    CityConfig --> NodeEntrance[现实地面命名节点入口]
+    RootEntrance --> Overview[城市总览：导航引用]
+    Overview --> Node[同一节点副本ID]
+    NodeEntrance --> Node
+    Unconfigured[未配置的命名城市节点] --> Default[city_generated_core：种子街区 / 玩家队伍等级]
+    Default --> Node
+    Node --> Rules[纯规则：道具 / 条件 / 事件]
+    Node --> View[俯视Canvas布景 / 已有NPC与宠物]
+    Rules --> Battle[既有kids战斗与真实结算]
+    Node --> Learning[既有可选语言交流]
+    Rules --> Records[城市 / 副本动作与胜利：records]
+    Node --> Local[返回链 / 坐标 / 未结束战斗：本机]
+    Local --> Loader[轻量路由恢复活动副本]
+    Loader --> CityConfig
+    Loader -->|本机默认城市路由| Default
+```
+
+`adventure_city_dungeons_core.js` 管理节点契约、明确归属、道具和故事进度；城市加载器负责按需读取与过期请求检查。未配置城市使用 `adventure_city_generated_core.js` 的确定性街区，沿用试炼生命、儿童版技能与奖励，根据当前玩家及准备队伍的最高等级安排挑战。默认城市的来源、布局种子、挑战等级与队伍人数仅存本机以恢复活动场景。副本保留原有战斗结算接口，城市地图构造独立于线性清怪地图。生成技能只在开发期更新单城作者源与轻量路由，不调用运行时内容生成服务。
+
+### 连续地球场景
+
+2026-10-03：地球玩家导航允许已加载水域，`adventure_earth_boat_core.js` 根据地形和桥面推导临时船状态，`view_earth_boat.js` 叠放四向WebP与人物；不写入坐骑装备或云存档。道路采样在宽水域的已知岸端提供码头元数据，地球服务随局部场景更新并按需登记/释放船图集。普通地图抵达保持陆地校验，本机恢复可保留水上坐标。
+
+```mermaid
+flowchart LR
+    RoadSample[城际道路完整采样] --> ShortBridge[短河桥面]
+    RoadSample --> Dock[宽水域已知岸端码头]
+    Terrain[已加载地形] --> Navigation[玩家与队伍水陆导航]
+    Navigation --> Mode[按位置推导船状态]
+    ShortBridge --> Mode
+    Mode --> BoatView[四向船WebP与人物叠放]
+    Dock --> BoatView
+    LocalRestore[本机位置恢复] --> Navigation
+```
+
 ```mermaid
 flowchart LR
     MapButton[右上角地图按钮] --> Chooser[世界选择器：零 Earth 请求]
     Chooser -->|选择地球| Atlas[轻量索引 / 概览 / 城市目录]
+    Atlas --> AtlasLayout[earth_atlas_layout_core：按屏幕疏密筛选 / 名称避让 / 点击命中]
+    AtlasLayout --> AtlasView[全球图册：固定屏幕尺寸圆点 / 名称与周边点击 / 轻触抖动容错]
     Atlas -->|可见视野| Cache[EarthCache：合并 / 并发 / 字节预算 / 淘汰]
-    Atlas -->|选择陆地| Prepare[加载到达区并校验安全落点]
+    AtlasView -->|选择城市| Prepare[加载到达区并校验安全落点]
     Prepare -->|成功后切换| Provider[连续地球提供器：局部物件 / 碰撞 / 寻路]
     Provider -->|步行邻域与前方预取| Cache
     Cache --> CDN[HelloWorld 地形 PNG / 城市 CSV]
-    Provider -->|接近深圳| Region[建筑 / NPC / 遭遇 / 美术清单]
-    Region -->|附近交互| Story[独立章节 / 对话 / 学习 JSON]
-    Provider --> Canvas[相机附近 Canvas 2D 渲染]
+    Provider -->|进入作者城市| Region[单城 JSON：居民 / 地标 / 故事 / 文化 / 美术引用]
+    Region -->|附近交互| Story[内存故事 / 支线 / 语言学习]
+    Region --> Portrait[按需 NPC WebP：进入登记 / 离开释放]
+    Provider --> SocialStream[社交候选落点 → 视野与距离筛选：最多6位AI]
+    SocialStream --> SocialScene[活动角色 / 随行宠物：同步淡入淡出与卸载]
+    SocialScene --> Canvas[相机附近 Canvas 2D 渲染]
+    Provider --> Wild[轻量出生点：359种四阶段目录 / 原始urban地类距离 / 玩家等级与装备战力]
+    Wild --> WildStream[复用AI流送生命周期：视野附近最多6只 / 按需创建虚拟装备遭遇 / 淡入淡出卸载]
+    WildStream --> Canvas
+    Wild --> Existing
+    Provider --> Canvas
+    Provider -->|局部道路、真实地类与小装饰| SurfaceBake[单Worker地表烘焙：小物件与投影 / 磨损公路 / 渐隐路肩]
+    SurfaceBake -->|OffscreenCanvas成品ImageBitmap / 分帧Canvas回退| SurfaceCache[有限地表分块缓存：边界变化才重排队列]
+    SurfaceCache --> Canvas
+    Provider --> SceneViewCache[静态视野列表：128单位余量 / 索引失效刷新 / 活动角色Y合并]
+    SceneViewCache --> Canvas
+    Canvas --> FrameMeter[固定计数器：左下角FPS / 500ms更新 / 暂停重置]
+    DeviceSettings[本机画质 / 昼夜 / 模拟天气偏好] --> Atmosphere[environment_core：日照 / 独立种子天气]
+    Atmosphere --> AtmosphereView[environment painter：48粒子 / 12暖光 / 水体网格 / 颜色覆盖]
+    Provider --> AtmosphereView
+    AtmosphereView --> Canvas
+    Provider --> Crossings[纯规则：短河段桥梁 / 宽水面截断]
+    Provider --> CollisionIndex[纯规则局部碰撞索引：流送对象版本变化时刷新]
+    CollisionIndex --> Walking[走路 / 寻路：仅查询附近道路和建筑]
+    Crossings --> Canvas
+    Crossings --> BridgeCollision[桥面通行：原始水体分类保持不变]
     Story --> Existing[现有团队 / 语言学习 / 战斗]
     Existing --> Records[持久化 records 分片]
     Provider --> Local[位置及未结束战斗：本机 IndexedDB]
 ```
 
-`adventure_earth_core.js` 保持纯规则；浏览器加载由动态导入的 `adventure_earth.js` 负责。打包器明确排除启动包中的 Earth 内容，逐个保留原相对 JSON 路径。图层共享经纬度变换，不建立全球对象列表或位图；城市对话与地理数据独立缓存。详见 [地球世界](earth-world.md)。
+`adventure_earth_core.js` 保持纯规则；浏览器加载由动态导入的 `adventure_earth.js` 负责。打包器明确排除启动包中的 Earth 内容，逐个保留原相对 JSON 路径。图层共享经纬度变换，不建立全球对象列表或位图；完整单城 JSON 与地理数据独立缓存。详见 [地球世界](earth-world.md)。
 
 ### 2. 批量模拟与可复现验证
 
@@ -412,12 +496,12 @@ config/maps 提供六岛源文件与统一地域规则；adventure_map_generator
 
 Earth 的 `adventure_earth_city_core.js` 只处理人口等级、稳定地理格点和物件候选；`adventure_earth.js` 提供已加载地表查询与安全空间过滤，并仅在场景有城市物件时读取 `city-art.json` 与两张 WebP。城市装饰与地标共用相机相对绘制和 Y 排序，不进入地图浏览或启动依赖。捕鱼通过 `isOcean` 的 Earth 分支读取真实地表分类，海岛规则保持独立。
 
-城市底图补充（2026-10-02）：`surface-art.json.cityGround` 独立引用 HelloWorld `city02.png` 的无损 WebP；仅实际地球场景加载，整幅像素传入单个 Worker 与主线程回退，城市地类按地理坐标混合采样。场景流送提交单元包含对象数组和 `drawEarthBuilding`，避免图片异步加载时数组与绘制器版本错配；Earth 不使用海岛精灵作为建筑缺图回退。城市底图保留细街巷纹理；场景道路统一为城市之间的连接，旧深圳作者道路不再加载，安全导航保留。
+城市底图补充（2026-10-02）：`surface-art.json.cityGround` 引用独立AI绘制连续街区的四张WebP，HelloWorld city02.png只保留为来源参考；仅实际地球场景加载，整幅像素传入单个 Worker 与主线程回退，城市地类按地理坐标混合采样。场景流送提交单元包含对象数组和 `drawEarthBuilding`，避免图片异步加载时数组与绘制器版本错配；Earth 不使用海岛精灵作为建筑缺图回退。城市底图保留细街巷纹理；场景道路统一为城市之间的连接，旧深圳作者道路不再加载，安全导航保留。
 
 
 2026-10-02 地球渲染更新：城市道路连接由adventure_earth_transport_core.js按经纬度生成并裁剪，仍为纯核心层；浏览器IO层按需加载四张独立城市WebP，合成一张连续纹理后交给原生Worker。高清资源不进入网站发布包，永久CDN与明确离线模式继续使用同一清单。
 
-2026-10-02 公路视觉调整：城际路面默认52单位，浅灰米色、浅路肩及渐淡外缘，弯道连续描边；地标避让使用当前城际道路。深圳roads.json仅来源归档，不请求、不参与场景物件与寻路；程序城市支路不再放入world.paths。
+2026-10-02 公路视觉调整：城际路面默认52单位，浅灰米色、浅路肩及渐淡外缘，弯道连续描边；地标避让使用当前城际道路。旧深圳道路 JSON 与离线生成脚本已删除，城市组件清单只引用当前使用的数据；程序城市支路不再放入world.paths。
 
 城际连接在纯核心层精简可经更近城市到达的冗余三角长边；adventure_renderer在场景绘制完成后以屏幕坐标显示mapCities和landmarks名称，保持字号稳定并避让人物与其他地名。
 
@@ -434,3 +518,11 @@ flowchart LR
     CityView --> Renderer[adventure_renderer.minimap]
     CityView --> Labels[earth_map_labels_core]
 ```
+
+2026-10-02 地球流送稳定性：进入场景记录已经生成的逻辑块，避免下一帧重复构建。IO层生成下一邻域后，reuseEarthObjects按稳定编号/坐标复用重叠区域未变物件，并在物件变化时才通知空间索引与社交层。地表缓存以固定地理块为键，新源瓦片只标记采样范围相交的块（包括日期线回绕）；旧画布在替代块完成前继续绘制，过期Worker结果拒绝提交，内存块数仍受原预算限制。
+
+
+2026-10-02 单城居民与任务：世界索引只保存城市范围与 cities/<id>.json；进入覆盖区加载完整单城配置，交谈复用内存。adventure_earth_city_config_core.js 负责纯配置与进度规则；earthCityProgress 按城市/章节/支线隔离并进入 records 分片，旧深圳进度兼容。NPC图片通过 adventure_assets 的动态登记与释放复用既有角色绘制，离开城市释放，共享图集不进入启动包或dist。交谈复用岛屿样式与共享关闭按钮，意图回调交给 app，战斗事件仍在真实结算推进。
+
+
+2026-10-03 地球小物件烘焙补充：`adventure_earth_surface_objects.js` 为主线程与 Worker 共享小装饰绘制和投影。草丛、岩石、花草、麦穗、雪堆等按实际精灵及投影范围索引到相交分块，流送时只更新变化的块；高树继续 Y 排序及遮挡淡化。支持 OffscreenCanvas 时 Worker 合成地表、道路与装饰后转移 ImageBitmap，主线程直接纳入有界缓存；不支持合成时仍转移像素并在主线程分帧回退。缓存记录绘制身份，兼容空间索引浅复制，部分缓存期间逐块裁剪临时装饰，避免跨块重复绘制。过期、淘汰和退出的 ImageBitmap 显式 close；完整覆盖后跳过底层源地形与临时道路重画。

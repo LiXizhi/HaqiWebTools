@@ -7,9 +7,9 @@ import {BODY_TO_HEAD,clampHead,direction16,createHeroActor,updateHeroActor,headB
 import {resolveMountDrawPose} from '../js/adventure_mounts_core.js';
 const read=p=>JSON.parse(readFileSync(new URL(p,import.meta.url),'utf8'));
 const manifest=read('../data/hero-preview.json'),catalog=read('../data/adventure/mount-catalog.json');
-test('thirteen costumes per gender share geometry and select independent cached textures',async()=>{
+test('classic and urban costumes share geometry and select independent cached textures',async()=>{
  for(const gender of ['male','female']){
-  const variants=Object.values(manifest.bodyVariants).filter(v=>v.gender===gender);assert.equal(variants.length,13);
+  const variants=Object.values(manifest.bodyVariants).filter(v=>v.gender===gender);assert.equal(variants.length,23);
   const r=prepared(),requested=[];r.image=async(id,art)=>{requested.push(art.local);r.images.set(id,{id});return {id};};
   for(const v of variants){
    const bytes=readFileSync(new URL('../'+v.local,import.meta.url));assert.ok(bytes.length<=200000);assert.equal(createHash('sha256').update(bytes).digest('hex'),v.sha256);

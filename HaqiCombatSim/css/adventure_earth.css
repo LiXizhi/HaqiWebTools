@@ -6,6 +6,7 @@
 .earth-local-map.dragging,.earth-local-map.dragging button{cursor:grabbing}
 .earth-local-cities button[hidden]{display:none}
 .earth-local-map .earth-atlas{aspect-ratio:1}
+.earth-map-stage:not(.earth-local-map) .earth-atlas{image-rendering:pixelated}
 .earth-local-map .island-map-name{position:absolute;top:14px;left:16px;margin:0;color:#fff8df;font-size:22px;text-shadow:0 1px 3px #163a48;pointer-events:none}
 .earth-local-cities,.earth-local-connectors{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .earth-local-connectors line{stroke:#725e36;stroke-width:1.5;opacity:.85}
@@ -24,3 +25,7 @@
 .earth-map-place strong{font-size:16px;text-align:center;overflow-wrap:anywhere}
 .earth-map-place button{white-space:nowrap}
 .earth-map-status{position:absolute;bottom:12px;left:12px;right:12px;margin:0;padding:8px 12px;border-radius:8px;background:#f4ebd5ed;color:var(--ink,#253d32);font-size:12px;cursor:pointer}
+.city-action-row{margin:16px 0}
+.city-action-row p{font-size:13px;line-height:1.6}
+.city-interaction .modal-header h2{font-size:20px}
+.city-interaction .modal-body button{margin:4px;max-width:100%;white-space:normal}

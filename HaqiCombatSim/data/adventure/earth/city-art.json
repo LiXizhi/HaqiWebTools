@@ -6,15 +6,16 @@
     "rows": 4
   },
   "buildings": {
-    "local": "assets/adventure/earth/earth-buildings-f2000a5f78ec.webp",
-    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-buildings-f2000a5f78ec.webp",
+    "local": "assets/adventure/earth/earth-buildings-f2000a5f78ec-natural-v2.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-buildings-f2000a5f78ec-natural-v2.webp",
     "width": 768,
     "height": 768,
-    "bytes": 177864,
-    "sha256": "f2000a5f78ec81dc93450a3e2f0b670c92ad28958e584f078c978fe4e30d73d2",
-    "sourceSha256": "2b1cc716c6298d731f19f48a1c6c060be0f1b374b56ea270d72e75231f7b1816",
+    "bytes": 176594,
+    "sha256": "3a993432cc7599d939c62bea91e207bf0bf7c2ea4ce9e2a0159416b33e985fd6",
+    "sourceSha256": "a9b24fc5e5f1334080e07d63131c92e4afdd28bcce9c84740c42ce0e6221a4d2",
     "encoding": {
-      "quality": 80
+      "quality": 79,
+      "method": 6
     },
     "frames": [
       [
@@ -113,18 +114,22 @@
         192,
         192
       ]
-    ]
+    ],
+    "previousSha256": "f2000a5f78ec81dc93450a3e2f0b670c92ad28958e584f078c978fe4e30d73d2",
+    "previousSourceSha256": "2b1cc716c6298d731f19f48a1c6c060be0f1b374b56ea270d72e75231f7b1816",
+    "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
   },
   "street": {
-    "local": "assets/adventure/earth/earth-street-fffd34acd4c9.webp",
-    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-street-fffd34acd4c9.webp",
+    "local": "assets/adventure/earth/earth-street-fffd34acd4c9-natural-v2.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-street-fffd34acd4c9-natural-v2.webp",
     "width": 640,
     "height": 640,
-    "bytes": 189842,
-    "sha256": "fffd34acd4c932445cf6b4447f77e7ae0fc269e44f4a8ef01afa168e37b382bf",
-    "sourceSha256": "2f1489cfc1f68eebb9f29c36ee9b9c14949a2cef7304df778ed151c38c1b72a0",
+    "bytes": 187212,
+    "sha256": "d7d38a2fff20eab9354b0af33165c038086a865e965c3020297af2d929464d67",
+    "sourceSha256": "22c3637647312a48e579c4e95051b3178552ef1f9969aec28779feda00465dae",
     "encoding": {
-      "quality": 88
+      "quality": 87,
+      "method": 6
     },
     "frames": [
       [
@@ -223,19 +228,23 @@
         160,
         160
       ]
-    ]
+    ],
+    "previousSha256": "fffd34acd4c932445cf6b4447f77e7ae0fc269e44f4a8ef01afa168e37b382bf",
+    "previousSourceSha256": "2f1489cfc1f68eebb9f29c36ee9b9c14949a2cef7304df778ed151c38c1b72a0",
+    "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
   },
   "transport": {
-    "local": "assets/adventure/earth/earth-transport-c6eab573845f.webp",
-    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-transport-c6eab573845f.webp",
+    "local": "assets/adventure/earth/earth-transport-c6eab573845f-natural-v2.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-transport-c6eab573845f-natural-v2.webp",
     "width": 1024,
     "height": 512,
-    "bytes": 114914,
-    "sha256": "c6eab573845f72c12adff19b0693695553aaecafec7035ffafa2f7f6f8a747ad",
-    "sourceSha256": "1b5d61dfdb061824a87192e29e2a2976fa78debefd3ce0f7e75174da130cac35",
-    "source": "Original AI-generated offline rail stations, commuter and high-speed trains; fictional transit scenery.",
+    "bytes": 113366,
+    "sha256": "ceef6a90d3e030b0c4cbe6306a3d04b351c06d9f9c054bd7e156e2c261d2f85c",
+    "sourceSha256": "2c60a1593f2719f9605cc4d061f84de7c0377f242659e2952767a01c95dbf54f",
+    "source": "zhangleio AI-generated natural-v2; original atlas layout retained.",
     "encoding": {
-      "quality": 88
+      "quality": 81,
+      "method": 6
     },
     "frames": [
       [
@@ -286,6 +295,8 @@
         256,
         256
       ]
-    ]
+    ],
+    "previousSha256": "c6eab573845f72c12adff19b0693695553aaecafec7035ffafa2f7f6f8a747ad",
+    "previousSourceSha256": "1b5d61dfdb061824a87192e29e2a2976fa78debefd3ce0f7e75174da130cac35"
   }
 }

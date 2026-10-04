@@ -24,5 +24,10 @@ for i,name in enumerate(names):
     sha=hashlib.sha256(data).hexdigest();local=f'assets/adventure/earth/streets/{name}-{sha[:12]}.webp'
     dest=root/local;dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(data)
     entries[name]={'id':'city-street:'+name+':'+sha[:12],'local':local,'width':cell.width,'height':cell.height,'bytes':len(data),'sha256':sha,'sourceSha256':hashlib.sha256(source.read_bytes()).hexdigest(),'source':'Offline imagegen original Shenzhen-inspired sprite; not surveyed architecture','encoding':options,'anchor':[0.5,1]}
-out=root/'data/adventure/earth/street-art.json';out.write_text(json.dumps({'version':1,'entries':entries},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+out=root/'data/adventure/earth/street-art.json'
+previous=json.loads(out.read_text(encoding='utf8')) if out.exists() else {}
+for key,entry in entries.items():
+    old=previous.get('entries',{}).get(key,{})
+    if old.get('sha256')==entry['sha256'] and old.get('cdn'):entry['cdn']=old['cdn']
+out.write_text(json.dumps({**previous,'version':1,'entries':{**previous.get('entries',{}),**entries}},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
 print(json.dumps({'manifest':str(out),'files':len(entries),'bytes':sum(x['bytes'] for x in entries.values())}))

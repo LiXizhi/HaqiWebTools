@@ -1,3 +1,4 @@
+import {npcCharacter} from './adventure_city_people_core.js';
 import {dailyBuffs,dailyBuffDescription} from './language_daily_buff_core.js';
 import {earthCityChapterProgress,earthCityQuestTarget} from './adventure_earth_city_config_core.js';
 import {defeatReviewNotes} from './view_battle_review.js';
@@ -573,7 +574,8 @@ export function renderDialogue(root,model,dialog,cb) {
     const {assets,save}=model,c=assets.content,npc=(dialog.lines?(c.npcs[dialog.lines[dialog.index]?.npcId]||(dialog.lines[dialog.index]?.speakerName?{id:dialog.lines[dialog.index].npcId,name:dialog.lines[dialog.index].speakerName,zone:save.zone}:null)):dialog.npc)||c.npcs[dialog.npcId];root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
     const box=el('section','dialogue-box rpg-dialogue');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',fill('与{name}交谈',{name:npc.name}).text);
     box.classList.toggle('dialogue-sequence',!!dialog.lines);
-    const portrait=art(assets,npc.portrait,150,190,'dialogue-portrait');
+    const character=npcCharacter(npc,assets.hero?.manifest);
+    const portrait=character?heroPortrait(assets,character,150,190):art(assets,npc.portrait,150,190,'dialogue-portrait');portrait.classList.add('dialogue-portrait');
     const content=el('div','dialogue-content',el('p','eyebrow',islandName(npc.zone)),el('h2','',npc.name));
     const close=createCloseButton(cb.close);
     if(cb.chat&&!npcHasActiveQuest(save,c,npc.id)){

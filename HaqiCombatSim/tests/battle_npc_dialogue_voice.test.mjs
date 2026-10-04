@@ -1,3 +1,4 @@
+import {npcCharacter} from '../js/adventure_city_people_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -17,9 +18,10 @@ test('task dialogue forwards Azure Dragon and each subsequent speaker to SDK syn
  const calls=[],oldAudio=globalThis.Audio;
  globalThis.Audio=class{play(){queueMicrotask(()=>this.onended());return Promise.resolve();}pause(){}};
  const voice=createLearningVoice({getSettings:()=>({voiceType:'zh_female_tianmeiyueyue_moon_bigtts'}),load:async()=>({speechRTC:{createSession(config){return {synthesize:async text=>{calls.push({text,config});return {audioUrl:'blob:dialogue-test'};},stop:async()=>{}};}}})});
- const element=()=>({children:[],dataset:{},textContent:'I am Azure Dragon.',classList:{toggle(){}},style:{setProperty(){}},setAttribute(){},append(...items){this.children.push(...items);},replaceChildren(){},querySelector(){return element();}});
+ const element=()=>({children:[],dataset:{},textContent:'I am Azure Dragon.',classList:{toggle(){},add(){}},style:{setProperty(){}},setAttribute(){},append(...items){this.children.push(...items);},replaceChildren(){},querySelector(){return element();}});
  let readAloud;
- const view=vm.createContext({npcHasActiveQuest,el:element,art:element,fill:()=>({text:'NPC'}),islandName:()=>'',createCloseButton:element,button:element,
+ const portraitCalls=[],heroCalls=[];
+ const view=vm.createContext({npcCharacter,heroPortrait:(...args)=>{heroCalls.push(args);return element();},npcHasActiveQuest,el:element,art:(...args)=>{portraitCalls.push(args);return element();},fill:()=>({text:'NPC'}),islandName:()=>'',createCloseButton:element,button:element,
   currentQuest:()=>null,catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:[],claim:[]}),catalogTalksForNpc:()=>[],pendingQuestTalk:()=>null,npcServices:()=>[],
   dialogueLearningLines:()=>[{text:'I am Azure Dragon.',locale:'en'}],bindDialogue:(_root,_box,_text,_hint,_button,options)=>{readAloud=options.readAloud;}});
  vm.runInContext(renderSource,view);
@@ -34,5 +36,6 @@ test('task dialogue forwards Azure Dragon and each subsequent speaker to SDK syn
    const npc=chapter.npcs[dialog.lines?.[dialog.index]?.npcId||dialog.npcId];assert.equal(calls.at(-1).config.voiceType,selectDialogueVoice(npc));
   }
   assert.match(calls[0].config.voiceType,/_male_/);assert.match(calls[1].config.voiceType,/_male_/);assert.match(calls[2].config.voiceType,/_female_/);
+  assert.equal(heroCalls.length,0);assert.equal(portraitCalls.length,3);assert.deepEqual(portraitCalls[0][1],chapter.npcs[36211].portrait);
  }finally{await voice.cancel();globalThis.Audio=oldAudio;}
 });

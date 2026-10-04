@@ -378,3 +378,26 @@ npm run build
 - 普通地图传送继续选择安全陆地；本机恢复和从副本返回调用prepare的restore模式，允许恢复水中坐标。地形未加载仍阻挡，继续沿用局部寻路距离与前方预取。
 - boat-art.json登记8帧透明WebP（4船向/4码头向），94318字节，生成提示词、裁剪、源哈希和WebP哈希齐全；默认永久Keepwork CDN，?assets=local读取归档副本。资源仅在进入地球后登记，退出释放，不打入启动资源或dist静态图片。
 - 美术由内置image_gen生成，scripts/prepare_earth_boat_art.py保留alpha并先尝试无损，最终quality94。CDN文件哈希与CORS=*已核验。隔离预览tests/fixtures/earth-boats.html使用真实人物渲染与寻路，只保留内存角色。
+
+## 2026-10-03：连续行走的后台准备与增量切换
+
+`adventure_earth_stream_worker.js` 按首次需要启动，承担真实地形 OffscreenCanvas 解码、像素分类、城市 CSV 解析和局部场景候选生成。`adventure_earth_scene_core.js` 复用原有生成规则、地理编号和 RNG 顺序；Worker 与无 Worker 回退运行同一生成器。回退在城市网格、道路采样、植被候选和最后整理阶段均可暂停，不再只在完整逻辑块之后让出主线程。
+
+地形输入仅传送新分类；场景每包默认64行，收到主线程预算队列的应答才发下一包。稳定生成签名在 Worker 内比较，重复物件只发送编号，主线程保留原对象及其实时状态。主线程还复用静态绘制描述符，避免每次跨块重新分配整片重叠对象。分类、城市配置和规则版本决定静态缓存失效；玩家等级和装备战力仍刷新野怪数值，景物和遭遇身份保持原规则。
+
+服务按移动方向提前准备邻块；当前区域、待切换区域和地表美术同时受缓存保护。数据请求、候选准备和活动区域提交分开，旧场景持续可见。暂存区按预算完成增量合并、碰撞和静态视野索引，帧边界只交换准备完成的引用。静态变化通知带 `prepared/staticChanged/collisionChanged/socialChanged`，兼容 `wildOnly`；野怪进出不会清空静态索引。地表仅使变化物件/道路覆盖的小块失效，旧位图显示到替换完成。社交落点及 Earth 宠物绕障搜索也使用同一准备预算，保留确定性路径算法。
+
+消息含世界代次、请求编号与输入版本。快速转向、传送或离场使旧结果失效；离场终止 Worker、拒绝任务并释放位图。`createEarthService` 原有准备、更新、绘制及释放接口保持，新增 `workerFactory/scheduler/prepareAssets` 注入用于回归和故障回退；`streamStats` 提供本机诊断。请求并发、解码字节预算及美术质量保持现有值，没有修改存档格式、云同步或战斗公式。
+
+新增参数均在 `BalanceParams.earth`：`streamBuildBudgetMs=2`、`streamPrefetchDistance=450`、`streamTurnCancelDistance=8`、`streamPacketRows=64`、`streamCacheChunks=192`、`streamRouteCacheEntries=64`、`streamUrbanSampleEntries=8192`。地表64块预算、纹理分辨率和景物密度不变。2ms是每帧准备目标；浏览器垃圾回收和单个原生调用仍计入实测，不把该参数当作通过保证。
+
+运行时CPU采样另定位到宠物状态与绘制反复解析完整参数的分配开销。`resolveParams` 保留原接口与结果，完整解析每次只构造一份默认值；新增可选 `groups` 仅解析所需 BalanceParams 分组，缓存默认键表，避免每次生成大量键值数组。宠物热点沿用该入口，覆盖值原地变化立即可见，返回的默认数组保持独立，不改变战斗或宠物数值。碰撞准备同时生成安全区空间索引，避免怪物每次局部移动扫描整个邻域。
+
+透明图集边界预热通过同一流送Worker的 `bounds` 消息完成 OffscreenCanvas 像素读回与分类；不可用时逐行加入2ms预算，取消释放临时Canvas。共用 `image_bounds_core.js` 的原透明阈值与裁剪坐标，绘制同步接口保持。社交候选外观与宠物在启用新名单前预热，保留活动名单直至准备完成；`hero_renderer.js` 在图片异步解码完成后才登记为可绘制，避免新人物首次绘制触发同步解码。暂存场景通过 `prepareAssets` 等待新增居民图集、透明裁剪和人物各方向源边界准备完成后才发布；城市图集按编号登记一次，离场释放。新图片不改变清晰度、裁剪或动画。
+
+`?profile=1` 启用有界本机采样：帧 P95/P99/最大值、超过33/50ms次数、请求/解码/生成/应用/索引/地表/预热阶段及尖峰附近事件；主应用另记录宠物、社交、绘制和定时照料耗时。`haqiPerformance.summary()`、`.timeline()`、`.reset()` 用于检查，数据不写入角色存档或上传。
+
+`scripts/check_earth_walking.mjs` 使用隔离浏览器角色、真实 CDN 数据与碰撞感知实际行走；默认城市和旷野各180秒、重复3轮，再往返600秒；长测路线跨度50000单位，以覆盖未到过的真实地形文件。记录实际距离、逻辑边界、地理文件边界、缓存数量和堆内存，走到障碍停住不能通过。`--main` 在隔离浏览器的路由响应中注入测试入口，使用实际 `Haqi.html` 控制器、社交、宠物和本地存档；生产源码没有自动行走钩子。`--headed` 使用可见浏览器，`--trace` 保存超过33ms的浏览器阶段记录。Playwright 路径通过 `--playwright` 或 `HAQI_PLAYWRIGHT_PACKAGE` 指定，不增加游戏运行时依赖。每轮原始报告保存在被忽略的 `.cache/`；最终验收与剩余限制见 [QA记录](qa-report.md)，不能仅凭平均FPS或短采样宣称通过。
+
+
+2026-10-04 用户要求先保留修改并停止测试，同时将角色/怪物等优化用于哈奇岛屿。透明图集准备现统一由独立 `image_bounds_worker.js` / `image_bounds_preparation.js` 承接，不依赖地球候选生成；地球和岛屿共享附近居民/怪物的资源预热与新社交名单外观准备。图片Worker按需启动，空闲后释放，失败使用分片回退。角色异步解码、宠物按需解析参数与社交模板复用也适用于岛屿。最后扩展未测试，完整长时间性能验收未完成，具体中间采样及限制见QA记录。

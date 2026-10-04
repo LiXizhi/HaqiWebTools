@@ -16,7 +16,9 @@ import {isSupportedType,useCard} from '../js/combat_cards_core.js';
 import {createPveBattle,playPveRound,restorePveBattle} from '../js/combat_pve_core.js';
 import {playerSpec,createAdventure} from '../js/adventure_core.js';
 const dataset=await loadDataset('data/kids',p=>JSON.parse(fs.readFileSync(p)));
-function arena(){const a=createArena({resolved:resolveParams(dataset,defaultParams('kids')),near:[unitSpec(dataset,'fire',{level:20})],far:[unitSpec(dataset,'ice',{level:20})],seed:17,firstSide:'near'});startCombat(a);return a;}
+// Synthetic hit/heal/ward probes must not alter the shared production catalog
+// subsequently used by the standalone encounter runner.
+function arena(){const a=createArena({resolved:resolveParams(structuredClone(dataset),defaultParams('kids')),near:[unitSpec(dataset,'fire',{level:20})],far:[unitSpec(dataset,'ice',{level:20})],seed:17,firstSide:'near'});startCombat(a);return a;}
 test('analysis is deterministic, side effect free and cannot observe enemy cards',()=>{
  const a=arena(),id=a.sides.near[0].id,state=a.rng.state(),before=JSON.stringify(a.sides);
  const observation=observeBattle(a,id),first=analyzeDecision(observation,{rulesAdapter:haqiRulesAdapter});

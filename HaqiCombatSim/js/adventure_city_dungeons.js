@@ -2,20 +2,21 @@
 import {validateEarthCity} from './adventure_earth_city_config_core.js';
 import {installCityDungeons,isCityDungeonId} from './adventure_city_dungeons_core.js';
 import {generateCityDungeon,generatedCityDungeonId} from './adventure_city_generated_core.js';
+import {validateStreetArtFrames} from './adventure_city_art_core.js';
 export function createCityDungeonLoader({content,readJson,registerImage=()=>{}}){
     let indexTask=null,artTask=null;const pending=new Map();
     async function streetArt(isCurrent){
         if(!isCurrent())throw Error('已取消城市副本加载');
         const art=await (artTask??=Promise.resolve().then(()=>readJson('data/adventure/earth/street-art.json')).catch(()=>{artTask=null;return null;}));
         if(!isCurrent())throw Error('已取消城市副本加载');
-        if(art?.version===1&&art.entries){content.cityStreetArt=art;for(const entry of Object.values(art.entries))registerImage(entry.id,entry);if(art.npcAtlas)registerImage(art.npcAtlas.id,art.npcAtlas);}
+        if(art?.version===1&&art.entries){validateStreetArtFrames(art);content.cityStreetArt=art;}
     }
     const index=()=>indexTask??=(readJson('data/adventure/earth/index.json').catch(e=>{indexTask=null;throw e;}));
     async function load(id,{isCurrent=()=>true,cityFallback=null}={}){
         if(!isCityDungeonId(id))throw Error('城市副本编号无效');
         if(id.startsWith('city:generated-')){
             if(!cityFallback||id!==generatedCityDungeonId(cityFallback))throw Error('自动城市场景缺少入口记录');
-            if(cityFallback.generationVersion===2)await streetArt(isCurrent);
+            if(cityFallback.generationVersion>=2)await streetArt(isCurrent);
             const generated=generateCityDungeon(content,cityFallback);
             if(!isCurrent())throw Error('已取消城市副本加载');
             installCityDungeons(content,generated.city);Object.assign(content.monsters,generated.monsters);
@@ -35,7 +36,7 @@ export function createCityDungeonLoader({content,readJson,registerImage=()=>{}})
         if(!isCurrent())throw Error('已取消城市副本加载');
         if(content.earthCities?.[cityId]!==city)installCityDungeons(content,city);
         const dungeon=content.dungeons.find(d=>d.id===id);if(!dungeon)throw Error('城市副本不存在');
-        registerImage(city.art.npcs.id,city.art.npcs);return dungeon;
+        return dungeon;
     }
     async function prepareSaves(saves){
         const ids=new Set(saves.flatMap(s=>[s.zone,...Object.keys(s.dungeonRuns||{}),...(s.cityReturnStack||[]).map(r=>r.zone)]).filter(isCityDungeonId));

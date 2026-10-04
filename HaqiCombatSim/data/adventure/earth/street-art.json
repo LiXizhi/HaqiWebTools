@@ -288,6 +288,3686 @@
         1
       ],
       "cdn": "https://cdn.keepwork.com/haqi/adventure/earth/streets/streets/cafe-e082ff696d76.webp"
+    },
+    "living:cream-balcony": {
+      "id": "city-street:living-buildings-0:cfe4a69c9985",
+      "atlas": "living-buildings-0",
+      "crop": [
+        4,
+        4,
+        244,
+        376
+      ],
+      "width": 244,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        0,
+        0,
+        306,
+        458
+      ],
+      "sourceAlphaBounds": [
+        28,
+        26,
+        303,
+        449
+      ],
+      "view": "front-slight-down"
+    },
+    "living:brick-home": {
+      "id": "city-street:living-buildings-0:cfe4a69c9985",
+      "atlas": "living-buildings-0",
+      "crop": [
+        388,
+        4,
+        246,
+        376
+      ],
+      "width": 246,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        306,
+        0,
+        611,
+        458
+      ],
+      "sourceAlphaBounds": [
+        28,
+        45,
+        292,
+        448
+      ],
+      "view": "front-slight-down"
+    },
+    "living:blue-walkup": {
+      "id": "city-street:living-buildings-1:106c0cb4ec80",
+      "atlas": "living-buildings-1",
+      "crop": [
+        4,
+        4,
+        240,
+        376
+      ],
+      "width": 240,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        611,
+        0,
+        916,
+        458
+      ],
+      "sourceAlphaBounds": [
+        13,
+        37,
+        275,
+        448
+      ],
+      "view": "front-slight-down"
+    },
+    "living:stair-apartment": {
+      "id": "city-street:living-buildings-1:106c0cb4ec80",
+      "atlas": "living-buildings-1",
+      "crop": [
+        388,
+        4,
+        242,
+        376
+      ],
+      "width": 242,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        916,
+        0,
+        1222,
+        458
+      ],
+      "sourceAlphaBounds": [
+        7,
+        31,
+        276,
+        449
+      ],
+      "view": "front-slight-down"
+    },
+    "living:laundry-home": {
+      "id": "city-street:living-buildings-2:2ffe744900cc",
+      "atlas": "living-buildings-2",
+      "crop": [
+        4,
+        4,
+        240,
+        376
+      ],
+      "width": 240,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        0,
+        458,
+        306,
+        878
+      ],
+      "sourceAlphaBounds": [
+        36,
+        4,
+        302,
+        420
+      ],
+      "view": "front-slight-down"
+    },
+    "living:tank-apartment": {
+      "id": "city-street:living-buildings-2:2ffe744900cc",
+      "atlas": "living-buildings-2",
+      "crop": [
+        388,
+        4,
+        235,
+        376
+      ],
+      "width": 235,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        306,
+        458,
+        611,
+        878
+      ],
+      "sourceAlphaBounds": [
+        30,
+        8,
+        288,
+        420
+      ],
+      "view": "front-slight-down"
+    },
+    "living:peach-home": {
+      "id": "city-street:living-buildings-3:3b96902be040",
+      "atlas": "living-buildings-3",
+      "crop": [
+        4,
+        4,
+        239,
+        376
+      ],
+      "width": 239,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        611,
+        458,
+        916,
+        878
+      ],
+      "sourceAlphaBounds": [
+        13,
+        8,
+        275,
+        420
+      ],
+      "view": "front-slight-down"
+    },
+    "living:corner-home": {
+      "id": "city-street:living-buildings-3:3b96902be040",
+      "atlas": "living-buildings-3",
+      "crop": [
+        388,
+        4,
+        252,
+        376
+      ],
+      "width": 252,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        916,
+        458,
+        1222,
+        878
+      ],
+      "sourceAlphaBounds": [
+        8,
+        8,
+        274,
+        405
+      ],
+      "view": "front-slight-down"
+    },
+    "living:green-shophouse": {
+      "id": "city-street:living-buildings-4:9853027857f1",
+      "atlas": "living-buildings-4",
+      "crop": [
+        4,
+        4,
+        266,
+        376
+      ],
+      "width": 266,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        0,
+        878,
+        306,
+        1280
+      ],
+      "sourceAlphaBounds": [
+        36,
+        0,
+        303,
+        377
+      ],
+      "view": "front-slight-down"
+    },
+    "living:tile-home": {
+      "id": "city-street:living-buildings-4:9853027857f1",
+      "atlas": "living-buildings-4",
+      "crop": [
+        388,
+        4,
+        258,
+        376
+      ],
+      "width": 258,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        306,
+        878,
+        611,
+        1280
+      ],
+      "sourceAlphaBounds": [
+        29,
+        0,
+        288,
+        377
+      ],
+      "view": "front-slight-down"
+    },
+    "living:white-walkup": {
+      "id": "city-street:living-buildings-5:84cd58045346",
+      "atlas": "living-buildings-5",
+      "crop": [
+        4,
+        4,
+        258,
+        376
+      ],
+      "width": 258,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        611,
+        878,
+        916,
+        1280
+      ],
+      "sourceAlphaBounds": [
+        15,
+        0,
+        274,
+        377
+      ],
+      "view": "front-slight-down"
+    },
+    "living:brick-corner": {
+      "id": "city-street:living-buildings-5:84cd58045346",
+      "atlas": "living-buildings-5",
+      "crop": [
+        388,
+        4,
+        268,
+        375
+      ],
+      "width": 268,
+      "height": 375,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "buildings",
+      "sourceCrop": [
+        916,
+        878,
+        1222,
+        1280
+      ],
+      "sourceAlphaBounds": [
+        8,
+        2,
+        276,
+        377
+      ],
+      "view": "front-slight-down"
+    },
+    "living:breakfast": {
+      "id": "city-street:living-shops-0:5641f79166cd",
+      "atlas": "living-shops-0",
+      "crop": [
+        4,
+        4,
+        337,
+        319
+      ],
+      "width": 337,
+      "height": 319,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        0,
+        0,
+        362,
+        370
+      ],
+      "sourceAlphaBounds": [
+        21,
+        34,
+        358,
+        353
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:noodles": {
+      "id": "city-street:living-shops-0:5641f79166cd",
+      "atlas": "living-shops-0",
+      "crop": [
+        388,
+        4,
+        328,
+        328
+      ],
+      "width": 328,
+      "height": 328,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        362,
+        0,
+        724,
+        370
+      ],
+      "sourceAlphaBounds": [
+        20,
+        25,
+        348,
+        353
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:grocery": {
+      "id": "city-street:living-shops-1:0abe098c0944",
+      "atlas": "living-shops-1",
+      "crop": [
+        4,
+        4,
+        332,
+        319
+      ],
+      "width": 332,
+      "height": 319,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        724,
+        0,
+        1086,
+        370
+      ],
+      "sourceAlphaBounds": [
+        15,
+        34,
+        347,
+        353
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:fruit": {
+      "id": "city-street:living-shops-1:0abe098c0944",
+      "atlas": "living-shops-1",
+      "crop": [
+        388,
+        4,
+        331,
+        320
+      ],
+      "width": 331,
+      "height": 320,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        1086,
+        0,
+        1448,
+        370
+      ],
+      "sourceAlphaBounds": [
+        8,
+        33,
+        339,
+        353
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:repair": {
+      "id": "city-street:living-shops-2:a58a9bd57360",
+      "atlas": "living-shops-2",
+      "crop": [
+        4,
+        4,
+        340,
+        309
+      ],
+      "width": 340,
+      "height": 309,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        0,
+        370,
+        362,
+        710
+      ],
+      "sourceAlphaBounds": [
+        11,
+        17,
+        351,
+        326
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:tea": {
+      "id": "city-street:living-shops-2:a58a9bd57360",
+      "atlas": "living-shops-2",
+      "crop": [
+        388,
+        4,
+        339,
+        309
+      ],
+      "width": 339,
+      "height": 309,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        362,
+        370,
+        724,
+        710
+      ],
+      "sourceAlphaBounds": [
+        8,
+        17,
+        347,
+        326
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:florist": {
+      "id": "city-street:living-shops-3:c2f2d6219efc",
+      "atlas": "living-shops-3",
+      "crop": [
+        4,
+        4,
+        341,
+        320
+      ],
+      "width": 341,
+      "height": 320,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        724,
+        370,
+        1086,
+        710
+      ],
+      "sourceAlphaBounds": [
+        9,
+        6,
+        350,
+        326
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:restaurant": {
+      "id": "city-street:living-shops-3:c2f2d6219efc",
+      "atlas": "living-shops-3",
+      "crop": [
+        388,
+        4,
+        342,
+        309
+      ],
+      "width": 342,
+      "height": 309,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        1086,
+        370,
+        1448,
+        710
+      ],
+      "sourceAlphaBounds": [
+        6,
+        17,
+        348,
+        326
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:bakery": {
+      "id": "city-street:living-shops-4:b4f12313bc46",
+      "atlas": "living-shops-4",
+      "crop": [
+        4,
+        4,
+        338,
+        314
+      ],
+      "width": 338,
+      "height": 314,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        0,
+        710,
+        362,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        14,
+        16,
+        352,
+        330
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:hardware": {
+      "id": "city-street:living-shops-4:b4f12313bc46",
+      "atlas": "living-shops-4",
+      "crop": [
+        388,
+        4,
+        336,
+        322
+      ],
+      "width": 336,
+      "height": 322,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        362,
+        710,
+        724,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        14,
+        8,
+        350,
+        330
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:books": {
+      "id": "city-street:living-shops-5:c6408cc97c2f",
+      "atlas": "living-shops-5",
+      "crop": [
+        4,
+        4,
+        332,
+        312
+      ],
+      "width": 332,
+      "height": 312,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        724,
+        710,
+        1086,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        13,
+        18,
+        345,
+        330
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:tailor": {
+      "id": "city-street:living-shops-5:c6408cc97c2f",
+      "atlas": "living-shops-5",
+      "crop": [
+        388,
+        4,
+        332,
+        317
+      ],
+      "width": 332,
+      "height": 317,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "shops",
+      "sourceCrop": [
+        1086,
+        710,
+        1448,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        9,
+        13,
+        341,
+        330
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.14,
+          "w": 0.73,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:wood-bench": {
+      "id": "city-street:living-facilities-0:c99ffea52721",
+      "atlas": "living-facilities-0",
+      "crop": [
+        4,
+        4,
+        253,
+        158
+      ],
+      "width": 253,
+      "height": 158,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        0,
+        0,
+        286,
+        365
+      ],
+      "sourceAlphaBounds": [
+        27,
+        183,
+        280,
+        341
+      ]
+    },
+    "living:stone-bench": {
+      "id": "city-street:living-facilities-0:c99ffea52721",
+      "atlas": "living-facilities-0",
+      "crop": [
+        388,
+        4,
+        250,
+        99
+      ],
+      "width": 250,
+      "height": 99,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        290,
+        0,
+        575,
+        365
+      ],
+      "sourceAlphaBounds": [
+        26,
+        241,
+        276,
+        340
+      ]
+    },
+    "living:green-lamp": {
+      "id": "city-street:living-facilities-1:8a4984ef15f1",
+      "atlas": "living-facilities-1",
+      "crop": [
+        4,
+        4,
+        56,
+        337
+      ],
+      "width": 56,
+      "height": 337,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        640,
+        0,
+        800,
+        365
+      ],
+      "sourceAlphaBounds": [
+        34,
+        9,
+        90,
+        346
+      ]
+    },
+    "living:gray-lamp": {
+      "id": "city-street:living-facilities-1:8a4984ef15f1",
+      "atlas": "living-facilities-1",
+      "crop": [
+        388,
+        4,
+        137,
+        324
+      ],
+      "width": 137,
+      "height": 324,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        865,
+        0,
+        1095,
+        365
+      ],
+      "sourceAlphaBounds": [
+        37,
+        18,
+        174,
+        342
+      ]
+    },
+    "living:sorting-bin": {
+      "id": "city-street:living-facilities-2:34a1eb1c43ac",
+      "atlas": "living-facilities-2",
+      "crop": [
+        4,
+        4,
+        272,
+        170
+      ],
+      "width": 272,
+      "height": 170,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        1100,
+        0,
+        1402,
+        365
+      ],
+      "sourceAlphaBounds": [
+        8,
+        170,
+        280,
+        340
+      ]
+    },
+    "living:manhole": {
+      "id": "city-street:living-facilities-2:34a1eb1c43ac",
+      "atlas": "living-facilities-2",
+      "crop": [
+        388,
+        4,
+        231,
+        154
+      ],
+      "width": 231,
+      "height": 154,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        0,
+        365,
+        280,
+        566
+      ],
+      "sourceAlphaBounds": [
+        38,
+        37,
+        269,
+        191
+      ]
+    },
+    "living:drain": {
+      "id": "city-street:living-facilities-3:4a282b64fc2a",
+      "atlas": "living-facilities-3",
+      "crop": [
+        4,
+        4,
+        236,
+        115
+      ],
+      "width": 236,
+      "height": 115,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        280,
+        365,
+        561,
+        566
+      ],
+      "sourceAlphaBounds": [
+        33,
+        65,
+        269,
+        180
+      ]
+    },
+    "living:steps": {
+      "id": "city-street:living-facilities-3:4a282b64fc2a",
+      "atlas": "living-facilities-3",
+      "crop": [
+        388,
+        4,
+        252,
+        116
+      ],
+      "width": 252,
+      "height": 116,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        561,
+        365,
+        841,
+        566
+      ],
+      "sourceAlphaBounds": [
+        14,
+        65,
+        266,
+        181
+      ]
+    },
+    "living:fence": {
+      "id": "city-street:living-facilities-4:5ef7653a8e3d",
+      "atlas": "living-facilities-4",
+      "crop": [
+        4,
+        4,
+        229,
+        143
+      ],
+      "width": 229,
+      "height": 143,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        840,
+        365,
+        1100,
+        566
+      ],
+      "sourceAlphaBounds": [
+        11,
+        38,
+        240,
+        181
+      ]
+    },
+    "living:bollards": {
+      "id": "city-street:living-facilities-4:5ef7653a8e3d",
+      "atlas": "living-facilities-4",
+      "crop": [
+        388,
+        4,
+        248,
+        126
+      ],
+      "width": 248,
+      "height": 126,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        1100,
+        365,
+        1402,
+        566
+      ],
+      "sourceAlphaBounds": [
+        20,
+        58,
+        268,
+        184
+      ]
+    },
+    "living:direction-sign": {
+      "id": "city-street:living-facilities-5:84fbbce85853",
+      "atlas": "living-facilities-5",
+      "crop": [
+        4,
+        4,
+        212,
+        265
+      ],
+      "width": 212,
+      "height": 265,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        0,
+        566,
+        280,
+        850
+      ],
+      "sourceAlphaBounds": [
+        42,
+        6,
+        254,
+        271
+      ],
+      "signSlots": [
+        {
+          "x": 0.68,
+          "y": 0.22,
+          "w": 0.43,
+          "h": 0.09,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ]
+    },
+    "living:menu-board": {
+      "id": "city-street:living-facilities-5:84fbbce85853",
+      "atlas": "living-facilities-5",
+      "crop": [
+        388,
+        4,
+        158,
+        221
+      ],
+      "width": 158,
+      "height": 221,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        280,
+        566,
+        550,
+        850
+      ],
+      "sourceAlphaBounds": [
+        64,
+        42,
+        222,
+        263
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.44,
+          "w": 0.6,
+          "h": 0.49,
+          "angle": 0,
+          "color": "#f5ecd8"
+        }
+      ]
+    },
+    "living:notice-board": {
+      "id": "city-street:living-facilities-6:0f3ff959ffb2",
+      "atlas": "living-facilities-6",
+      "crop": [
+        4,
+        4,
+        269,
+        246
+      ],
+      "width": 269,
+      "height": 246,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        550,
+        566,
+        835,
+        850
+      ],
+      "sourceAlphaBounds": [
+        4,
+        16,
+        273,
+        262
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.49,
+          "w": 0.6,
+          "h": 0.35,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ]
+    },
+    "living:advert-board": {
+      "id": "city-street:living-facilities-6:0f3ff959ffb2",
+      "atlas": "living-facilities-6",
+      "crop": [
+        388,
+        4,
+        147,
+        255
+      ],
+      "width": 147,
+      "height": 255,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        835,
+        566,
+        1028,
+        850
+      ],
+      "sourceAlphaBounds": [
+        22,
+        14,
+        169,
+        269
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.4,
+          "w": 0.64,
+          "h": 0.46,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ]
+    },
+    "living:bus-shelter": {
+      "id": "city-street:living-facilities-7:ac82c991c04e",
+      "atlas": "living-facilities-7",
+      "crop": [
+        4,
+        4,
+        365,
+        213
+      ],
+      "width": 365,
+      "height": 213,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        1028,
+        566,
+        1402,
+        850
+      ],
+      "sourceAlphaBounds": [
+        2,
+        47,
+        367,
+        260
+      ]
+    },
+    "living:bike-rack": {
+      "id": "city-street:living-facilities-7:ac82c991c04e",
+      "atlas": "living-facilities-7",
+      "crop": [
+        388,
+        4,
+        254,
+        213
+      ],
+      "width": 254,
+      "height": 213,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        0,
+        850,
+        300,
+        1122
+      ],
+      "sourceAlphaBounds": [
+        33,
+        19,
+        287,
+        232
+      ]
+    },
+    "living:scooter": {
+      "id": "city-street:living-facilities-8:f105bc99ba0d",
+      "atlas": "living-facilities-8",
+      "crop": [
+        4,
+        4,
+        153,
+        224
+      ],
+      "width": 153,
+      "height": 224,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        310,
+        850,
+        560,
+        1122
+      ],
+      "sourceAlphaBounds": [
+        48,
+        14,
+        201,
+        238
+      ]
+    },
+    "living:hydrant": {
+      "id": "city-street:living-facilities-8:f105bc99ba0d",
+      "atlas": "living-facilities-8",
+      "crop": [
+        388,
+        4,
+        119,
+        209
+      ],
+      "width": 119,
+      "height": 209,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        580,
+        850,
+        810,
+        1122
+      ],
+      "sourceAlphaBounds": [
+        37,
+        27,
+        156,
+        236
+      ]
+    },
+    "living:utility-box": {
+      "id": "city-street:living-facilities-9:8c4da79bc4e3",
+      "atlas": "living-facilities-9",
+      "crop": [
+        4,
+        4,
+        194,
+        223
+      ],
+      "width": 194,
+      "height": 223,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        840,
+        850,
+        1070,
+        1122
+      ],
+      "sourceAlphaBounds": [
+        14,
+        14,
+        208,
+        237
+      ]
+    },
+    "living:cones": {
+      "id": "city-street:living-facilities-9:8c4da79bc4e3",
+      "atlas": "living-facilities-9",
+      "crop": [
+        388,
+        4,
+        262,
+        155
+      ],
+      "width": 262,
+      "height": 155,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "facilities",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        1090,
+        850,
+        1402,
+        1122
+      ],
+      "sourceAlphaBounds": [
+        17,
+        63,
+        279,
+        218
+      ]
+    },
+    "living:steamers": {
+      "id": "city-street:living-life-0:800afc3e60ba",
+      "atlas": "living-life-0",
+      "crop": [
+        4,
+        4,
+        291,
+        279
+      ],
+      "width": 291,
+      "height": 279,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        0,
+        0,
+        362,
+        303
+      ],
+      "sourceAlphaBounds": [
+        53,
+        14,
+        344,
+        293
+      ],
+      "view": "front-slight-down"
+    },
+    "living:fruit-crates": {
+      "id": "city-street:living-life-0:800afc3e60ba",
+      "atlas": "living-life-0",
+      "crop": [
+        388,
+        4,
+        314,
+        234
+      ],
+      "width": 314,
+      "height": 234,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        362,
+        0,
+        724,
+        303
+      ],
+      "sourceAlphaBounds": [
+        40,
+        49,
+        354,
+        283
+      ],
+      "view": "front-slight-down"
+    },
+    "living:vegetables": {
+      "id": "city-street:living-life-1:eca8d7591441",
+      "atlas": "living-life-1",
+      "crop": [
+        4,
+        4,
+        327,
+        265
+      ],
+      "width": 327,
+      "height": 265,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        724,
+        0,
+        1086,
+        303
+      ],
+      "sourceAlphaBounds": [
+        35,
+        23,
+        362,
+        288
+      ],
+      "view": "front-slight-down"
+    },
+    "living:drink-crates": {
+      "id": "city-street:living-life-1:eca8d7591441",
+      "atlas": "living-life-1",
+      "crop": [
+        388,
+        4,
+        360,
+        254
+      ],
+      "width": 360,
+      "height": 254,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        1086,
+        0,
+        1448,
+        303
+      ],
+      "sourceAlphaBounds": [
+        0,
+        34,
+        360,
+        288
+      ],
+      "view": "front-slight-down"
+    },
+    "living:cafe-table": {
+      "id": "city-street:living-life-2:242ff4d0a0cd",
+      "atlas": "living-life-2",
+      "crop": [
+        4,
+        4,
+        286,
+        218
+      ],
+      "width": 286,
+      "height": 218,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        0,
+        303,
+        362,
+        566
+      ],
+      "sourceAlphaBounds": [
+        48,
+        33,
+        334,
+        251
+      ],
+      "view": "front-slight-down"
+    },
+    "living:dining-table": {
+      "id": "city-street:living-life-2:242ff4d0a0cd",
+      "atlas": "living-life-2",
+      "crop": [
+        388,
+        4,
+        339,
+        205
+      ],
+      "width": 339,
+      "height": 205,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        362,
+        303,
+        724,
+        566
+      ],
+      "sourceAlphaBounds": [
+        23,
+        44,
+        362,
+        249
+      ],
+      "view": "front-slight-down"
+    },
+    "living:handcart": {
+      "id": "city-street:living-life-3:98671f7cbf11",
+      "atlas": "living-life-3",
+      "crop": [
+        4,
+        4,
+        323,
+        237
+      ],
+      "width": 323,
+      "height": 237,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        724,
+        303,
+        1086,
+        566
+      ],
+      "sourceAlphaBounds": [
+        0,
+        13,
+        323,
+        250
+      ],
+      "view": "front-slight-down"
+    },
+    "living:baskets": {
+      "id": "city-street:living-life-3:98671f7cbf11",
+      "atlas": "living-life-3",
+      "crop": [
+        388,
+        4,
+        297,
+        215
+      ],
+      "width": 297,
+      "height": 215,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        1086,
+        303,
+        1448,
+        566
+      ],
+      "sourceAlphaBounds": [
+        65,
+        37,
+        362,
+        252
+      ],
+      "view": "front-slight-down"
+    },
+    "living:aircon": {
+      "id": "city-street:living-life-4:dbc308ccca3e",
+      "atlas": "living-life-4",
+      "crop": [
+        4,
+        4,
+        318,
+        126
+      ],
+      "width": 318,
+      "height": 126,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        0,
+        566,
+        362,
+        775
+      ],
+      "sourceAlphaBounds": [
+        36,
+        48,
+        354,
+        174
+      ],
+      "view": "front-slight-down"
+    },
+    "living:laundry": {
+      "id": "city-street:living-life-4:dbc308ccca3e",
+      "atlas": "living-life-4",
+      "crop": [
+        388,
+        4,
+        311,
+        187
+      ],
+      "width": 311,
+      "height": 187,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        362,
+        566,
+        724,
+        775
+      ],
+      "sourceAlphaBounds": [
+        40,
+        12,
+        351,
+        199
+      ],
+      "view": "front-slight-down"
+    },
+    "living:awning": {
+      "id": "city-street:living-life-5:7c686859c221",
+      "atlas": "living-life-5",
+      "crop": [
+        4,
+        4,
+        336,
+        144
+      ],
+      "width": 336,
+      "height": 144,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        724,
+        566,
+        1086,
+        775
+      ],
+      "sourceAlphaBounds": [
+        26,
+        33,
+        362,
+        177
+      ],
+      "view": "front-slight-down"
+    },
+    "living:banner": {
+      "id": "city-street:living-life-5:7c686859c221",
+      "atlas": "living-life-5",
+      "crop": [
+        388,
+        4,
+        358,
+        150
+      ],
+      "width": 358,
+      "height": 150,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        1086,
+        566,
+        1448,
+        775
+      ],
+      "sourceAlphaBounds": [
+        0,
+        28,
+        358,
+        178
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.53,
+          "w": 0.72,
+          "h": 0.38,
+          "angle": 0,
+          "color": "#f5ecd8"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:door-canopy": {
+      "id": "city-street:living-life-6:4ab6e38b2a89",
+      "atlas": "living-life-6",
+      "crop": [
+        4,
+        4,
+        340,
+        186
+      ],
+      "width": 340,
+      "height": 186,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        0,
+        775,
+        362,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        22,
+        42,
+        362,
+        228
+      ],
+      "view": "front-slight-down"
+    },
+    "living:shutter": {
+      "id": "city-street:living-life-6:4ab6e38b2a89",
+      "atlas": "living-life-6",
+      "crop": [
+        388,
+        4,
+        352,
+        277
+      ],
+      "width": 352,
+      "height": 277,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        362,
+        775,
+        724,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        0,
+        4,
+        352,
+        281
+      ],
+      "view": "front-slight-down"
+    },
+    "living:shelf": {
+      "id": "city-street:living-life-7:3ac7e59d1ede",
+      "atlas": "living-life-7",
+      "crop": [
+        4,
+        4,
+        283,
+        283
+      ],
+      "width": 283,
+      "height": 283,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        724,
+        775,
+        1086,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        57,
+        1,
+        340,
+        284
+      ],
+      "view": "front-slight-down"
+    },
+    "living:wall-sign": {
+      "id": "city-street:living-life-7:3ac7e59d1ede",
+      "atlas": "living-life-7",
+      "crop": [
+        388,
+        4,
+        301,
+        189
+      ],
+      "width": 301,
+      "height": 189,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "life",
+      "sourceCrop": [
+        1086,
+        775,
+        1448,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        38,
+        43,
+        339,
+        232
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.53,
+          "w": 0.69,
+          "h": 0.44,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ],
+      "view": "front-slight-down"
+    },
+    "living:banyan-pit": {
+      "id": "city-street:living-plants-0:4e182b7a83f6",
+      "atlas": "living-plants-0",
+      "crop": [
+        4,
+        4,
+        324,
+        376
+      ],
+      "width": 324,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        0,
+        0,
+        401,
+        478
+      ],
+      "sourceAlphaBounds": [
+        13,
+        18,
+        401,
+        468
+      ],
+      "view": "front-slight-down"
+    },
+    "living:shade-pit": {
+      "id": "city-street:living-plants-0:4e182b7a83f6",
+      "atlas": "living-plants-0",
+      "crop": [
+        388,
+        4,
+        277,
+        376
+      ],
+      "width": 277,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        402,
+        0,
+        740,
+        478
+      ],
+      "sourceAlphaBounds": [
+        6,
+        23,
+        327,
+        459
+      ],
+      "view": "front-slight-down"
+    },
+    "living:palm-pit": {
+      "id": "city-street:living-plants-1:d4655f9604b9",
+      "atlas": "living-plants-1",
+      "crop": [
+        4,
+        4,
+        228,
+        376
+      ],
+      "width": 228,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        740,
+        0,
+        1057,
+        478
+      ],
+      "sourceAlphaBounds": [
+        12,
+        7,
+        298,
+        478
+      ],
+      "view": "front-slight-down"
+    },
+    "living:bauhinia-pit": {
+      "id": "city-street:living-plants-1:d4655f9604b9",
+      "atlas": "living-plants-1",
+      "crop": [
+        388,
+        4,
+        304,
+        376
+      ],
+      "width": 304,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        1058,
+        0,
+        1448,
+        478
+      ],
+      "sourceAlphaBounds": [
+        9,
+        22,
+        373,
+        472
+      ],
+      "view": "front-slight-down"
+    },
+    "living:flowerbed": {
+      "id": "city-street:living-plants-2:07119a9adae8",
+      "atlas": "living-plants-2",
+      "crop": [
+        4,
+        4,
+        334,
+        169
+      ],
+      "width": 334,
+      "height": 169,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        0,
+        506,
+        397,
+        717
+      ],
+      "sourceAlphaBounds": [
+        32,
+        26,
+        366,
+        195
+      ],
+      "view": "front-slight-down"
+    },
+    "living:hedge": {
+      "id": "city-street:living-plants-2:07119a9adae8",
+      "atlas": "living-plants-2",
+      "crop": [
+        388,
+        4,
+        316,
+        163
+      ],
+      "width": 316,
+      "height": 163,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        399,
+        515,
+        743,
+        717
+      ],
+      "sourceAlphaBounds": [
+        24,
+        24,
+        340,
+        187
+      ],
+      "view": "front-slight-down"
+    },
+    "living:bougainvillea": {
+      "id": "city-street:living-plants-3:73ba6f04e284",
+      "atlas": "living-plants-3",
+      "crop": [
+        4,
+        4,
+        245,
+        264
+      ],
+      "width": 245,
+      "height": 264,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        745,
+        478,
+        1057,
+        755
+      ],
+      "sourceAlphaBounds": [
+        48,
+        0,
+        293,
+        264
+      ],
+      "view": "front-slight-down"
+    },
+    "living:home-pots": {
+      "id": "city-street:living-plants-3:73ba6f04e284",
+      "atlas": "living-plants-3",
+      "crop": [
+        388,
+        4,
+        365,
+        232
+      ],
+      "width": 365,
+      "height": 232,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        1058,
+        482,
+        1448,
+        753
+      ],
+      "sourceAlphaBounds": [
+        10,
+        21,
+        375,
+        253
+      ],
+      "view": "front-slight-down"
+    },
+    "living:banana-planter": {
+      "id": "city-street:living-plants-4:d744e3b64f46",
+      "atlas": "living-plants-4",
+      "crop": [
+        4,
+        4,
+        347,
+        328
+      ],
+      "width": 347,
+      "height": 328,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        0,
+        717,
+        397,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        26,
+        2,
+        373,
+        330
+      ],
+      "view": "front-slight-down"
+    },
+    "living:fern-pot": {
+      "id": "city-street:living-plants-4:d744e3b64f46",
+      "atlas": "living-plants-4",
+      "crop": [
+        388,
+        4,
+        294,
+        285
+      ],
+      "width": 294,
+      "height": 285,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        399,
+        753,
+        743,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        24,
+        11,
+        318,
+        296
+      ],
+      "view": "front-slight-down"
+    },
+    "living:shrub-pot": {
+      "id": "city-street:living-plants-5:d05cebbca3a4",
+      "atlas": "living-plants-5",
+      "crop": [
+        4,
+        4,
+        260,
+        289
+      ],
+      "width": 260,
+      "height": 289,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        745,
+        755,
+        1057,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        23,
+        6,
+        283,
+        295
+      ],
+      "view": "front-slight-down"
+    },
+    "living:grass-planter": {
+      "id": "city-street:living-plants-5:d05cebbca3a4",
+      "atlas": "living-plants-5",
+      "crop": [
+        388,
+        4,
+        358,
+        203
+      ],
+      "width": 358,
+      "height": 203,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "plants",
+      "sourceCrop": [
+        1058,
+        775,
+        1448,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        14,
+        49,
+        372,
+        252
+      ],
+      "view": "front-slight-down"
+    },
+    "living:asphalt": {
+      "id": "city-street:living-ground-0:c615f4772f00",
+      "atlas": "living-ground-0",
+      "crop": [
+        4,
+        4,
+        256,
+        256
+      ],
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "ground",
+      "sourceCrop": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "sourceAlphaBounds": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "view": "ground-plane"
+    },
+    "living:sidewalk": {
+      "id": "city-street:living-ground-0:c615f4772f00",
+      "atlas": "living-ground-0",
+      "crop": [
+        268,
+        4,
+        256,
+        256
+      ],
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "ground",
+      "sourceCrop": [
+        384,
+        0,
+        768,
+        512
+      ],
+      "sourceAlphaBounds": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "view": "ground-plane"
+    },
+    "living:pavers": {
+      "id": "city-street:living-ground-1:4add3eb6b8d0",
+      "atlas": "living-ground-1",
+      "crop": [
+        4,
+        4,
+        256,
+        256
+      ],
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "ground",
+      "sourceCrop": [
+        768,
+        0,
+        1152,
+        512
+      ],
+      "sourceAlphaBounds": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "view": "ground-plane"
+    },
+    "living:brick-paving": {
+      "id": "city-street:living-ground-1:4add3eb6b8d0",
+      "atlas": "living-ground-1",
+      "crop": [
+        268,
+        4,
+        256,
+        256
+      ],
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "ground",
+      "sourceCrop": [
+        1152,
+        0,
+        1536,
+        512
+      ],
+      "sourceAlphaBounds": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "view": "ground-plane"
+    },
+    "living:concrete": {
+      "id": "city-street:living-ground-2:ec3c84e0bd82",
+      "atlas": "living-ground-2",
+      "crop": [
+        4,
+        4,
+        256,
+        256
+      ],
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "ground",
+      "sourceCrop": [
+        0,
+        512,
+        384,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "view": "ground-plane"
+    },
+    "living:lawn": {
+      "id": "city-street:living-ground-2:ec3c84e0bd82",
+      "atlas": "living-ground-2",
+      "crop": [
+        268,
+        4,
+        256,
+        256
+      ],
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "ground",
+      "sourceCrop": [
+        384,
+        512,
+        768,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "view": "ground-plane"
+    },
+    "living:gravel": {
+      "id": "city-street:living-ground-3:68eb1ebcbf5f",
+      "atlas": "living-ground-3",
+      "crop": [
+        4,
+        4,
+        256,
+        256
+      ],
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "ground",
+      "sourceCrop": [
+        768,
+        512,
+        1152,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "view": "ground-plane"
+    },
+    "living:cobbles": {
+      "id": "city-street:living-ground-3:68eb1ebcbf5f",
+      "atlas": "living-ground-3",
+      "crop": [
+        268,
+        4,
+        256,
+        256
+      ],
+      "width": 256,
+      "height": 256,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "ground",
+      "sourceCrop": [
+        1152,
+        512,
+        1536,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "view": "ground-plane"
+    },
+    "living:courtyard-gate": {
+      "id": "city-street:living-connectors-0:a5ed97662a15",
+      "atlas": "living-connectors-0",
+      "crop": [
+        4,
+        4,
+        333,
+        325
+      ],
+      "width": 333,
+      "height": 325,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        0,
+        0,
+        362,
+        353
+      ],
+      "sourceAlphaBounds": [
+        7,
+        11,
+        340,
+        336
+      ],
+      "view": "front-slight-down"
+    },
+    "living:garden-gate": {
+      "id": "city-street:living-connectors-0:a5ed97662a15",
+      "atlas": "living-connectors-0",
+      "crop": [
+        388,
+        4,
+        344,
+        325
+      ],
+      "width": 344,
+      "height": 325,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        362,
+        0,
+        724,
+        353
+      ],
+      "sourceAlphaBounds": [
+        18,
+        10,
+        362,
+        335
+      ],
+      "view": "front-slight-down"
+    },
+    "living:service-gate": {
+      "id": "city-street:living-connectors-1:ed0937f9003a",
+      "atlas": "living-connectors-1",
+      "crop": [
+        4,
+        4,
+        322,
+        319
+      ],
+      "width": 322,
+      "height": 319,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        724,
+        0,
+        1086,
+        353
+      ],
+      "sourceAlphaBounds": [
+        0,
+        19,
+        322,
+        338
+      ],
+      "view": "front-slight-down"
+    },
+    "living:brick-wall": {
+      "id": "city-street:living-connectors-1:ed0937f9003a",
+      "atlas": "living-connectors-1",
+      "crop": [
+        388,
+        4,
+        334,
+        237
+      ],
+      "width": 334,
+      "height": 237,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        1086,
+        0,
+        1448,
+        353
+      ],
+      "sourceAlphaBounds": [
+        20,
+        100,
+        354,
+        337
+      ],
+      "view": "front-slight-down"
+    },
+    "living:alley-roof": {
+      "id": "city-street:living-connectors-2:6e68696fa74c",
+      "atlas": "living-connectors-2",
+      "crop": [
+        4,
+        4,
+        352,
+        284
+      ],
+      "width": 352,
+      "height": 284,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        0,
+        353,
+        362,
+        700
+      ],
+      "sourceAlphaBounds": [
+        10,
+        37,
+        362,
+        321
+      ],
+      "view": "front-slight-down"
+    },
+    "living:meter-wall": {
+      "id": "city-street:living-connectors-2:6e68696fa74c",
+      "atlas": "living-connectors-2",
+      "crop": [
+        388,
+        4,
+        362,
+        280
+      ],
+      "width": 362,
+      "height": 280,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        362,
+        353,
+        724,
+        700
+      ],
+      "sourceAlphaBounds": [
+        0,
+        43,
+        362,
+        323
+      ],
+      "view": "front-slight-down"
+    },
+    "living:side-door": {
+      "id": "city-street:living-connectors-3:77e6cac6a75d",
+      "atlas": "living-connectors-3",
+      "crop": [
+        4,
+        4,
+        317,
+        308
+      ],
+      "width": 317,
+      "height": 308,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        724,
+        353,
+        1086,
+        700
+      ],
+      "sourceAlphaBounds": [
+        0,
+        16,
+        317,
+        324
+      ],
+      "view": "front-slight-down"
+    },
+    "living:vine-fence": {
+      "id": "city-street:living-connectors-3:77e6cac6a75d",
+      "atlas": "living-connectors-3",
+      "crop": [
+        388,
+        4,
+        346,
+        257
+      ],
+      "width": 346,
+      "height": 257,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        1086,
+        353,
+        1448,
+        700
+      ],
+      "sourceAlphaBounds": [
+        0,
+        65,
+        346,
+        322
+      ],
+      "view": "front-slight-down"
+    },
+    "living:water-meters": {
+      "id": "city-street:living-connectors-4:f8e433b6c22c",
+      "atlas": "living-connectors-4",
+      "crop": [
+        4,
+        4,
+        271,
+        340
+      ],
+      "width": 271,
+      "height": 340,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        0,
+        700,
+        362,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        45,
+        7,
+        316,
+        347
+      ],
+      "view": "front-slight-down"
+    },
+    "living:store-shutter": {
+      "id": "city-street:living-connectors-4:f8e433b6c22c",
+      "atlas": "living-connectors-4",
+      "crop": [
+        388,
+        4,
+        347,
+        333
+      ],
+      "width": 347,
+      "height": 333,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        362,
+        700,
+        724,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        15,
+        11,
+        362,
+        344
+      ],
+      "view": "front-slight-down"
+    },
+    "living:fern-wall": {
+      "id": "city-street:living-connectors-5:f9d03268a6e7",
+      "atlas": "living-connectors-5",
+      "crop": [
+        4,
+        4,
+        362,
+        314
+      ],
+      "width": 362,
+      "height": 314,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        724,
+        700,
+        1086,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        0,
+        33,
+        362,
+        347
+      ],
+      "view": "front-slight-down"
+    },
+    "living:alley-arch": {
+      "id": "city-street:living-connectors-5:f9d03268a6e7",
+      "atlas": "living-connectors-5",
+      "crop": [
+        388,
+        4,
+        341,
+        338
+      ],
+      "width": 341,
+      "height": 338,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "connectors",
+      "sourceCrop": [
+        1086,
+        700,
+        1448,
+        1086
+      ],
+      "sourceAlphaBounds": [
+        0,
+        8,
+        341,
+        346
+      ],
+      "view": "front-slight-down"
+    },
+    "living:red-stools": {
+      "id": "city-street:living-details-0:2fd4a52234c0",
+      "atlas": "living-details-0",
+      "crop": [
+        4,
+        4,
+        186,
+        251
+      ],
+      "width": 186,
+      "height": 251,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        0,
+        0,
+        305,
+        309
+      ],
+      "sourceAlphaBounds": [
+        53,
+        46,
+        239,
+        297
+      ]
+    },
+    "living:newspaper-rack": {
+      "id": "city-street:living-details-0:2fd4a52234c0",
+      "atlas": "living-details-0",
+      "crop": [
+        388,
+        4,
+        188,
+        292
+      ],
+      "width": 188,
+      "height": 292,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        305,
+        0,
+        610,
+        315
+      ],
+      "sourceAlphaBounds": [
+        40,
+        18,
+        228,
+        310
+      ]
+    },
+    "living:delivery-boxes": {
+      "id": "city-street:living-details-1:5c7c822d3085",
+      "atlas": "living-details-1",
+      "crop": [
+        4,
+        4,
+        234,
+        277
+      ],
+      "width": 234,
+      "height": 277,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        610,
+        0,
+        916,
+        310
+      ],
+      "sourceAlphaBounds": [
+        21,
+        33,
+        255,
+        310
+      ]
+    },
+    "living:wash-basin": {
+      "id": "city-street:living-details-1:5c7c822d3085",
+      "atlas": "living-details-1",
+      "crop": [
+        388,
+        4,
+        242,
+        189
+      ],
+      "width": 242,
+      "height": 189,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        916,
+        0,
+        1222,
+        310
+      ],
+      "sourceAlphaBounds": [
+        32,
+        110,
+        274,
+        299
+      ]
+    },
+    "living:mop-bucket": {
+      "id": "city-street:living-details-2:0217d358cd4a",
+      "atlas": "living-details-2",
+      "crop": [
+        4,
+        4,
+        146,
+        332
+      ],
+      "width": 146,
+      "height": 332,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        0,
+        309,
+        305,
+        650
+      ],
+      "sourceAlphaBounds": [
+        77,
+        5,
+        223,
+        337
+      ]
+    },
+    "living:umbrella-holder": {
+      "id": "city-street:living-details-2:0217d358cd4a",
+      "atlas": "living-details-2",
+      "crop": [
+        388,
+        4,
+        131,
+        316
+      ],
+      "width": 131,
+      "height": 316,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        305,
+        315,
+        610,
+        650
+      ],
+      "sourceAlphaBounds": [
+        76,
+        10,
+        207,
+        326
+      ]
+    },
+    "living:watering-can": {
+      "id": "city-street:living-details-3:c99b15eec9fa",
+      "atlas": "living-details-3",
+      "crop": [
+        4,
+        4,
+        218,
+        211
+      ],
+      "width": 218,
+      "height": 211,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        610,
+        310,
+        916,
+        650
+      ],
+      "sourceAlphaBounds": [
+        45,
+        107,
+        263,
+        318
+      ]
+    },
+    "living:wall-fan": {
+      "id": "city-street:living-details-3:c99b15eec9fa",
+      "atlas": "living-details-3",
+      "crop": [
+        388,
+        4,
+        245,
+        298
+      ],
+      "width": 245,
+      "height": 298,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        916,
+        310,
+        1222,
+        650
+      ],
+      "sourceAlphaBounds": [
+        29,
+        25,
+        274,
+        323
+      ]
+    },
+    "living:broom-rack": {
+      "id": "city-street:living-details-4:39d3056230b3",
+      "atlas": "living-details-4",
+      "crop": [
+        4,
+        4,
+        218,
+        285
+      ],
+      "width": 218,
+      "height": 285,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        0,
+        650,
+        305,
+        949
+      ],
+      "sourceAlphaBounds": [
+        39,
+        8,
+        257,
+        293
+      ]
+    },
+    "living:shopping-bags": {
+      "id": "city-street:living-details-4:39d3056230b3",
+      "atlas": "living-details-4",
+      "crop": [
+        388,
+        4,
+        250,
+        229
+      ],
+      "width": 250,
+      "height": 229,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        305,
+        650,
+        610,
+        949
+      ],
+      "sourceAlphaBounds": [
+        22,
+        47,
+        272,
+        276
+      ]
+    },
+    "living:wall-hose": {
+      "id": "city-street:living-details-5:7cff5dce69f6",
+      "atlas": "living-details-5",
+      "crop": [
+        4,
+        4,
+        211,
+        246
+      ],
+      "width": 211,
+      "height": 246,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        610,
+        650,
+        916,
+        943
+      ],
+      "sourceAlphaBounds": [
+        41,
+        25,
+        252,
+        271
+      ]
+    },
+    "living:service-sign": {
+      "id": "city-street:living-details-5:7cff5dce69f6",
+      "atlas": "living-details-5",
+      "crop": [
+        388,
+        4,
+        231,
+        267
+      ],
+      "width": 231,
+      "height": 267,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        916,
+        650,
+        1222,
+        950
+      ],
+      "sourceAlphaBounds": [
+        37,
+        8,
+        268,
+        275
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.26,
+          "w": 0.68,
+          "h": 0.26,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ]
+    },
+    "living:paint-cans": {
+      "id": "city-street:living-details-6:b44ed01358f8",
+      "atlas": "living-details-6",
+      "crop": [
+        4,
+        4,
+        224,
+        200
+      ],
+      "width": 224,
+      "height": 200,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        0,
+        949,
+        305,
+        1287
+      ],
+      "sourceAlphaBounds": [
+        48,
+        56,
+        272,
+        256
+      ]
+    },
+    "living:mailbox": {
+      "id": "city-street:living-details-6:b44ed01358f8",
+      "atlas": "living-details-6",
+      "crop": [
+        388,
+        4,
+        172,
+        230
+      ],
+      "width": 172,
+      "height": 230,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        305,
+        949,
+        610,
+        1287
+      ],
+      "sourceAlphaBounds": [
+        59,
+        26,
+        231,
+        256
+      ],
+      "signSlots": [
+        {
+          "x": 0.5,
+          "y": 0.37,
+          "w": 0.5,
+          "h": 0.12,
+          "angle": 0,
+          "color": "#39463a"
+        }
+      ]
+    },
+    "living:folded-cart": {
+      "id": "city-street:living-details-7:123c0263b12c",
+      "atlas": "living-details-7",
+      "crop": [
+        4,
+        4,
+        204,
+        280
+      ],
+      "width": 204,
+      "height": 280,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        610,
+        943,
+        916,
+        1287
+      ],
+      "sourceAlphaBounds": [
+        39,
+        3,
+        243,
+        283
+      ]
+    },
+    "living:shoe-rack": {
+      "id": "city-street:living-details-7:123c0263b12c",
+      "atlas": "living-details-7",
+      "crop": [
+        388,
+        4,
+        252,
+        188
+      ],
+      "width": 252,
+      "height": 188,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        916,
+        950,
+        1222,
+        1287
+      ],
+      "sourceAlphaBounds": [
+        21,
+        60,
+        273,
+        248
+      ]
+    },
+    "living:laundry-basket": {
+      "id": "city-street:living-home-details-0:1d44b5478e0b",
+      "atlas": "living-home-details-0",
+      "crop": [
+        4,
+        4,
+        346,
+        266
+      ],
+      "width": 346,
+      "height": 266,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "home-details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        0,
+        0,
+        400,
+        512
+      ],
+      "sourceAlphaBounds": [
+        41,
+        203,
+        387,
+        469
+      ]
+    },
+    "living:courtyard-sink": {
+      "id": "city-street:living-home-details-0:1d44b5478e0b",
+      "atlas": "living-home-details-0",
+      "crop": [
+        388,
+        4,
+        294,
+        376
+      ],
+      "width": 294,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "home-details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        400,
+        0,
+        820,
+        512
+      ],
+      "sourceAlphaBounds": [
+        35,
+        47,
+        370,
+        475
+      ]
+    },
+    "living:reed-mat": {
+      "id": "city-street:living-home-details-1:ebb2daa0f841",
+      "atlas": "living-home-details-1",
+      "crop": [
+        4,
+        4,
+        97,
+        376
+      ],
+      "width": 97,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "home-details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        820,
+        0,
+        1090,
+        512
+      ],
+      "sourceAlphaBounds": [
+        87,
+        48,
+        197,
+        475
+      ]
+    },
+    "living:hanging-fern": {
+      "id": "city-street:living-home-details-1:ebb2daa0f841",
+      "atlas": "living-home-details-1",
+      "crop": [
+        388,
+        4,
+        345,
+        376
+      ],
+      "width": 345,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "home-details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        1090,
+        0,
+        1536,
+        512
+      ],
+      "sourceAlphaBounds": [
+        52,
+        86,
+        418,
+        485
+      ]
+    },
+    "living:water-barrel": {
+      "id": "city-street:living-home-details-2:b511788b7d7f",
+      "atlas": "living-home-details-2",
+      "crop": [
+        4,
+        4,
+        328,
+        376
+      ],
+      "width": 328,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "home-details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        0,
+        512,
+        400,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        45,
+        76,
+        379,
+        459
+      ]
+    },
+    "living:citrus-pot": {
+      "id": "city-street:living-home-details-2:b511788b7d7f",
+      "atlas": "living-home-details-2",
+      "crop": [
+        388,
+        4,
+        271,
+        376
+      ],
+      "width": 271,
+      "height": 376,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "home-details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        400,
+        512,
+        810,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        26,
+        0,
+        359,
+        462
+      ]
+    },
+    "living:porch-lamp": {
+      "id": "city-street:living-home-details-3:a2e080f94884",
+      "atlas": "living-home-details-3",
+      "crop": [
+        4,
+        4,
+        196,
+        352
+      ],
+      "width": 196,
+      "height": 352,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "home-details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        810,
+        512,
+        1090,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        50,
+        80,
+        246,
+        432
+      ]
+    },
+    "living:delivery-cooler": {
+      "id": "city-street:living-home-details-3:a2e080f94884",
+      "atlas": "living-home-details-3",
+      "crop": [
+        388,
+        4,
+        367,
+        295
+      ],
+      "width": 367,
+      "height": 295,
+      "anchor": [
+        0.5,
+        1
+      ],
+      "group": "home-details",
+      "view": "front-slight-down",
+      "sourceCrop": [
+        1090,
+        512,
+        1536,
+        1024
+      ],
+      "sourceAlphaBounds": [
+        50,
+        156,
+        417,
+        451
+      ]
     }
   },
   "npcAtlas": {
@@ -422,5 +4102,1008 @@
         ]
       }
     }
-  ]
+  ],
+  "atlases": {
+    "living-buildings-0": {
+      "id": "city-street:living-buildings-0:cfe4a69c9985",
+      "local": "assets/adventure/earth/streets/living-buildings-0-cfe4a69c9985.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 95060,
+      "sha256": "cfe4a69c9985f61842f22f9fb071ac878efe3d3db85b62e5a8777cb554d2b41d",
+      "sourceSha256": "ad58c46ed3f06eaa4ec0fe503ab8f6a067e5bae437f30d3f7cce4665a9c96714",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-6d9e85d7-d35f-468c-b487-f8724482c289.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-buildings-0-cfe4a69c9985.webp"
+    },
+    "living-buildings-1": {
+      "id": "city-street:living-buildings-1:106c0cb4ec80",
+      "local": "assets/adventure/earth/streets/living-buildings-1-106c0cb4ec80.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 94066,
+      "sha256": "106c0cb4ec80b1a2cb7e56e4c7fa8bde3211b11e4c5625ecb132e2315f4b08bc",
+      "sourceSha256": "ad58c46ed3f06eaa4ec0fe503ab8f6a067e5bae437f30d3f7cce4665a9c96714",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-6d9e85d7-d35f-468c-b487-f8724482c289.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-buildings-1-106c0cb4ec80.webp"
+    },
+    "living-buildings-2": {
+      "id": "city-street:living-buildings-2:2ffe744900cc",
+      "local": "assets/adventure/earth/streets/living-buildings-2-2ffe744900cc.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 96556,
+      "sha256": "2ffe744900ccd0f6da1984cf9994bd74cfdf24fd28ae8b193f5c017fe9b18808",
+      "sourceSha256": "ad58c46ed3f06eaa4ec0fe503ab8f6a067e5bae437f30d3f7cce4665a9c96714",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-6d9e85d7-d35f-468c-b487-f8724482c289.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-buildings-2-2ffe744900cc.webp"
+    },
+    "living-buildings-3": {
+      "id": "city-street:living-buildings-3:3b96902be040",
+      "local": "assets/adventure/earth/streets/living-buildings-3-3b96902be040.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 95516,
+      "sha256": "3b96902be040e4783b3e3d7c271180b83972b75974d39847ac20874d60ca3ae0",
+      "sourceSha256": "ad58c46ed3f06eaa4ec0fe503ab8f6a067e5bae437f30d3f7cce4665a9c96714",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-6d9e85d7-d35f-468c-b487-f8724482c289.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-buildings-3-3b96902be040.webp"
+    },
+    "living-buildings-4": {
+      "id": "city-street:living-buildings-4:9853027857f1",
+      "local": "assets/adventure/earth/streets/living-buildings-4-9853027857f1.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 99924,
+      "sha256": "9853027857f170d5582cef9e5abe85270e2571ed0ed180094f43fe367478dd17",
+      "sourceSha256": "ad58c46ed3f06eaa4ec0fe503ab8f6a067e5bae437f30d3f7cce4665a9c96714",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-6d9e85d7-d35f-468c-b487-f8724482c289.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-buildings-4-9853027857f1.webp"
+    },
+    "living-buildings-5": {
+      "id": "city-street:living-buildings-5:84cd58045346",
+      "local": "assets/adventure/earth/streets/living-buildings-5-84cd58045346.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 99336,
+      "sha256": "84cd58045346239a4aa411c93b365cf585d0d2ac6810ca9a0db602e11db73778",
+      "sourceSha256": "ad58c46ed3f06eaa4ec0fe503ab8f6a067e5bae437f30d3f7cce4665a9c96714",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-6d9e85d7-d35f-468c-b487-f8724482c289.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-buildings-5-84cd58045346.webp"
+    },
+    "living-shops-0": {
+      "id": "city-street:living-shops-0:5641f79166cd",
+      "local": "assets/adventure/earth/streets/living-shops-0-5641f79166cd.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 105490,
+      "sha256": "5641f79166cd59578ca7734bb64d9daa5cfd883965d23e4209e63d4b87434b72",
+      "sourceSha256": "4df59a3c889c7510e449ac2b9e9e1115958a70ae341060cd71ed097c079e92a9",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-285f7cf4-cc6e-4176-8100-e3dbad01d2fb.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-shops-0-5641f79166cd.webp"
+    },
+    "living-shops-1": {
+      "id": "city-street:living-shops-1:0abe098c0944",
+      "local": "assets/adventure/earth/streets/living-shops-1-0abe098c0944.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 106690,
+      "sha256": "0abe098c09447d0b5272480280001213edaba1cb81fc845e54f3580b63b393a1",
+      "sourceSha256": "4df59a3c889c7510e449ac2b9e9e1115958a70ae341060cd71ed097c079e92a9",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-285f7cf4-cc6e-4176-8100-e3dbad01d2fb.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-shops-1-0abe098c0944.webp"
+    },
+    "living-shops-2": {
+      "id": "city-street:living-shops-2:a58a9bd57360",
+      "local": "assets/adventure/earth/streets/living-shops-2-a58a9bd57360.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 105364,
+      "sha256": "a58a9bd5736071ad2ecf6c345687e293693b35cb618b5d4d1b11c5b21511ac15",
+      "sourceSha256": "4df59a3c889c7510e449ac2b9e9e1115958a70ae341060cd71ed097c079e92a9",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-285f7cf4-cc6e-4176-8100-e3dbad01d2fb.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-shops-2-a58a9bd57360.webp"
+    },
+    "living-shops-3": {
+      "id": "city-street:living-shops-3:c2f2d6219efc",
+      "local": "assets/adventure/earth/streets/living-shops-3-c2f2d6219efc.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 112834,
+      "sha256": "c2f2d6219efcca4a01d3492991a09625eb2059b526916eb6e0c684db920ab5a9",
+      "sourceSha256": "4df59a3c889c7510e449ac2b9e9e1115958a70ae341060cd71ed097c079e92a9",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-285f7cf4-cc6e-4176-8100-e3dbad01d2fb.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-shops-3-c2f2d6219efc.webp"
+    },
+    "living-shops-4": {
+      "id": "city-street:living-shops-4:b4f12313bc46",
+      "local": "assets/adventure/earth/streets/living-shops-4-b4f12313bc46.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 111324,
+      "sha256": "b4f12313bc46a9c1bd852b21f6ff50ffb0091c7daf3117ebdd96cb135a2b54b5",
+      "sourceSha256": "4df59a3c889c7510e449ac2b9e9e1115958a70ae341060cd71ed097c079e92a9",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-285f7cf4-cc6e-4176-8100-e3dbad01d2fb.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-shops-4-b4f12313bc46.webp"
+    },
+    "living-shops-5": {
+      "id": "city-street:living-shops-5:c6408cc97c2f",
+      "local": "assets/adventure/earth/streets/living-shops-5-c6408cc97c2f.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 100304,
+      "sha256": "c6408cc97c2f2e30d5d7fe8e0fc5b8de590228c32b1003cd1f6bf932f2027e42",
+      "sourceSha256": "4df59a3c889c7510e449ac2b9e9e1115958a70ae341060cd71ed097c079e92a9",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-285f7cf4-cc6e-4176-8100-e3dbad01d2fb.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-shops-5-c6408cc97c2f.webp"
+    },
+    "living-facilities-0": {
+      "id": "city-street:living-facilities-0:c99ffea52721",
+      "local": "assets/adventure/earth/streets/living-facilities-0-c99ffea52721.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 76574,
+      "sha256": "c99ffea5272134d90a4ab7788efe57242968dbb668273db4e89b56f82a69f1fe",
+      "sourceSha256": "80d09cef8bc2bcb5c6bc118fb7a67236205b58a7c818bdce5410869221b9e804",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-facilities-0-c99ffea52721.webp"
+    },
+    "living-facilities-1": {
+      "id": "city-street:living-facilities-1:8a4984ef15f1",
+      "local": "assets/adventure/earth/streets/living-facilities-1-8a4984ef15f1.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 35594,
+      "sha256": "8a4984ef15f1e3a9dd353f732a3593c33eba9f96494137f312dced2f31bae2bb",
+      "sourceSha256": "80d09cef8bc2bcb5c6bc118fb7a67236205b58a7c818bdce5410869221b9e804",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-facilities-1-8a4984ef15f1.webp"
+    },
+    "living-facilities-2": {
+      "id": "city-street:living-facilities-2:34a1eb1c43ac",
+      "local": "assets/adventure/earth/streets/living-facilities-2-34a1eb1c43ac.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 126388,
+      "sha256": "34a1eb1c43acb823b24f65b36974b6ee6bb114df13c1033fe82b3af90a449e5b",
+      "sourceSha256": "80d09cef8bc2bcb5c6bc118fb7a67236205b58a7c818bdce5410869221b9e804",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-facilities-2-34a1eb1c43ac.webp"
+    },
+    "living-facilities-3": {
+      "id": "city-street:living-facilities-3:4a282b64fc2a",
+      "local": "assets/adventure/earth/streets/living-facilities-3-4a282b64fc2a.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 85422,
+      "sha256": "4a282b64fc2aeccbf7d1bbed772b4ffe3e35f829eac069388f296d50a18be46f",
+      "sourceSha256": "80d09cef8bc2bcb5c6bc118fb7a67236205b58a7c818bdce5410869221b9e804",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-facilities-3-4a282b64fc2a.webp"
+    },
+    "living-facilities-4": {
+      "id": "city-street:living-facilities-4:5ef7653a8e3d",
+      "local": "assets/adventure/earth/streets/living-facilities-4-5ef7653a8e3d.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 80100,
+      "sha256": "5ef7653a8e3dbcac606af55d18983c2fa98a6c6bcb08c09bfcffabc895c75f85",
+      "sourceSha256": "80d09cef8bc2bcb5c6bc118fb7a67236205b58a7c818bdce5410869221b9e804",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-facilities-4-5ef7653a8e3d.webp"
+    },
+    "living-facilities-5": {
+      "id": "city-street:living-facilities-5:84fbbce85853",
+      "local": "assets/adventure/earth/streets/living-facilities-5-84fbbce85853.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 68824,
+      "sha256": "84fbbce8585314abf8f993fcb277f8614c24e9fdc66a1ab764bddca5f8167942",
+      "sourceSha256": "80d09cef8bc2bcb5c6bc118fb7a67236205b58a7c818bdce5410869221b9e804",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-facilities-5-84fbbce85853.webp"
+    },
+    "living-facilities-6": {
+      "id": "city-street:living-facilities-6:0f3ff959ffb2",
+      "local": "assets/adventure/earth/streets/living-facilities-6-0f3ff959ffb2.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 117364,
+      "sha256": "0f3ff959ffb27cb075683865e75d05b3d19ca50c1a571d317483f88a1abcd4bd",
+      "sourceSha256": "80d09cef8bc2bcb5c6bc118fb7a67236205b58a7c818bdce5410869221b9e804",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-facilities-6-0f3ff959ffb2.webp"
+    },
+    "living-facilities-7": {
+      "id": "city-street:living-facilities-7:ac82c991c04e",
+      "local": "assets/adventure/earth/streets/living-facilities-7-ac82c991c04e.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 156060,
+      "sha256": "ac82c991c04e61f3bd4694ef0fc49b8954eae0e26fa933e59d30a16de9cbd025",
+      "sourceSha256": "80d09cef8bc2bcb5c6bc118fb7a67236205b58a7c818bdce5410869221b9e804",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-facilities-7-ac82c991c04e.webp"
+    },
+    "living-facilities-8": {
+      "id": "city-street:living-facilities-8:f105bc99ba0d",
+      "local": "assets/adventure/earth/streets/living-facilities-8-f105bc99ba0d.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 69368,
+      "sha256": "f105bc99ba0d81217254db51a5a0258839f54afd5522f6ed7cb7629928df0195",
+      "sourceSha256": "80d09cef8bc2bcb5c6bc118fb7a67236205b58a7c818bdce5410869221b9e804",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-facilities-8-f105bc99ba0d.webp"
+    },
+    "living-facilities-9": {
+      "id": "city-street:living-facilities-9:8c4da79bc4e3",
+      "local": "assets/adventure/earth/streets/living-facilities-9-8c4da79bc4e3.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 106896,
+      "sha256": "8c4da79bc4e3b63ecee12ec52ba13730722474d1b48430a9444be081d84ac20d",
+      "sourceSha256": "80d09cef8bc2bcb5c6bc118fb7a67236205b58a7c818bdce5410869221b9e804",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-facilities-9-8c4da79bc4e3.webp"
+    },
+    "living-life-0": {
+      "id": "city-street:living-life-0:800afc3e60ba",
+      "local": "assets/adventure/earth/streets/living-life-0-800afc3e60ba.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 69842,
+      "sha256": "800afc3e60bac4081fc126f77d0be5125cbe02b7f1f94e40c9e726b26c0fa51c",
+      "sourceSha256": "69d4a883b685981197ab8ec5a1f9bbff55ebb9232b4bb034e54f651c884a0450",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-fc1c0a16-c0d9-4d59-b393-b1462be63eee.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-life-0-800afc3e60ba.webp"
+    },
+    "living-life-1": {
+      "id": "city-street:living-life-1:eca8d7591441",
+      "local": "assets/adventure/earth/streets/living-life-1-eca8d7591441.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 85922,
+      "sha256": "eca8d759144148503cde2db73c174985055dbe0a4784a88b53e174c62b7fe719",
+      "sourceSha256": "69d4a883b685981197ab8ec5a1f9bbff55ebb9232b4bb034e54f651c884a0450",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-fc1c0a16-c0d9-4d59-b393-b1462be63eee.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-life-1-eca8d7591441.webp"
+    },
+    "living-life-2": {
+      "id": "city-street:living-life-2:242ff4d0a0cd",
+      "local": "assets/adventure/earth/streets/living-life-2-242ff4d0a0cd.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 143734,
+      "sha256": "242ff4d0a0cdd2ca3c2429fbaffce4906a4990d7ee2bdfbd94f390c71834a434",
+      "sourceSha256": "69d4a883b685981197ab8ec5a1f9bbff55ebb9232b4bb034e54f651c884a0450",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-fc1c0a16-c0d9-4d59-b393-b1462be63eee.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-life-2-242ff4d0a0cd.webp"
+    },
+    "living-life-3": {
+      "id": "city-street:living-life-3:98671f7cbf11",
+      "local": "assets/adventure/earth/streets/living-life-3-98671f7cbf11.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 151180,
+      "sha256": "98671f7cbf11abd07dbc95118b9e1fe7a3aa9acd112e7d0821ca09cd6e282d57",
+      "sourceSha256": "69d4a883b685981197ab8ec5a1f9bbff55ebb9232b4bb034e54f651c884a0450",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-fc1c0a16-c0d9-4d59-b393-b1462be63eee.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-life-3-98671f7cbf11.webp"
+    },
+    "living-life-4": {
+      "id": "city-street:living-life-4:dbc308ccca3e",
+      "local": "assets/adventure/earth/streets/living-life-4-dbc308ccca3e.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 108852,
+      "sha256": "dbc308ccca3e7376ad8b848c7286d6324997e107028aa3bd80b6560e7de954f1",
+      "sourceSha256": "69d4a883b685981197ab8ec5a1f9bbff55ebb9232b4bb034e54f651c884a0450",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-fc1c0a16-c0d9-4d59-b393-b1462be63eee.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-life-4-dbc308ccca3e.webp"
+    },
+    "living-life-5": {
+      "id": "city-street:living-life-5:7c686859c221",
+      "local": "assets/adventure/earth/streets/living-life-5-7c686859c221.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 113260,
+      "sha256": "7c686859c221934f0913a09cb371f074186a55f55c7bc1b672f28b958fba43e0",
+      "sourceSha256": "69d4a883b685981197ab8ec5a1f9bbff55ebb9232b4bb034e54f651c884a0450",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-fc1c0a16-c0d9-4d59-b393-b1462be63eee.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-life-5-7c686859c221.webp"
+    },
+    "living-life-6": {
+      "id": "city-street:living-life-6:4ab6e38b2a89",
+      "local": "assets/adventure/earth/streets/living-life-6-4ab6e38b2a89.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 171246,
+      "sha256": "4ab6e38b2a89c3eb009f038c923a60bad1d4469ee3f8879871e69b7ccabe9740",
+      "sourceSha256": "69d4a883b685981197ab8ec5a1f9bbff55ebb9232b4bb034e54f651c884a0450",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-fc1c0a16-c0d9-4d59-b393-b1462be63eee.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-life-6-4ab6e38b2a89.webp"
+    },
+    "living-life-7": {
+      "id": "city-street:living-life-7:3ac7e59d1ede",
+      "local": "assets/adventure/earth/streets/living-life-7-3ac7e59d1ede.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 181700,
+      "sha256": "3ac7e59d1ede837bec34d58b224480cbb969771d7700ab4d8e465f179b3675ee",
+      "sourceSha256": "69d4a883b685981197ab8ec5a1f9bbff55ebb9232b4bb034e54f651c884a0450",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-fc1c0a16-c0d9-4d59-b393-b1462be63eee.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-life-7-3ac7e59d1ede.webp"
+    },
+    "living-plants-0": {
+      "id": "city-street:living-plants-0:4e182b7a83f6",
+      "local": "assets/adventure/earth/streets/living-plants-0-4e182b7a83f6.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 151750,
+      "sha256": "4e182b7a83f6e746bc80137bb47fb1abe5f56eb9c01ead206f5ccf3828803a76",
+      "sourceSha256": "321774521f077387988361cc791bd86e9ab824c528144468d0561f6913ad0116",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-6a2e1e6b-2e9f-47dc-8ab3-33f0baf0b348.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-plants-0-4e182b7a83f6.webp"
+    },
+    "living-plants-1": {
+      "id": "city-street:living-plants-1:d4655f9604b9",
+      "local": "assets/adventure/earth/streets/living-plants-1-d4655f9604b9.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 129210,
+      "sha256": "d4655f9604b928325d1ac7aeeec418d98bc986b81806dbd80bcf14a6d939fec3",
+      "sourceSha256": "321774521f077387988361cc791bd86e9ab824c528144468d0561f6913ad0116",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-6a2e1e6b-2e9f-47dc-8ab3-33f0baf0b348.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-plants-1-d4655f9604b9.webp"
+    },
+    "living-plants-2": {
+      "id": "city-street:living-plants-2:07119a9adae8",
+      "local": "assets/adventure/earth/streets/living-plants-2-07119a9adae8.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 81170,
+      "sha256": "07119a9adae81fbcf2468f2a85cae836237213cc706556ddf012d345ff1a6bcd",
+      "sourceSha256": "321774521f077387988361cc791bd86e9ab824c528144468d0561f6913ad0116",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-6a2e1e6b-2e9f-47dc-8ab3-33f0baf0b348.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-plants-2-07119a9adae8.webp"
+    },
+    "living-plants-3": {
+      "id": "city-street:living-plants-3:73ba6f04e284",
+      "local": "assets/adventure/earth/streets/living-plants-3-73ba6f04e284.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 102010,
+      "sha256": "73ba6f04e2847afdd104fb7bf5fb73b2284501c5eb19538210ba7e659923c9fb",
+      "sourceSha256": "321774521f077387988361cc791bd86e9ab824c528144468d0561f6913ad0116",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-6a2e1e6b-2e9f-47dc-8ab3-33f0baf0b348.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-plants-3-73ba6f04e284.webp"
+    },
+    "living-plants-4": {
+      "id": "city-street:living-plants-4:d744e3b64f46",
+      "local": "assets/adventure/earth/streets/living-plants-4-d744e3b64f46.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 130934,
+      "sha256": "d744e3b64f4602279c366da262ee812685b476d5dc60b22fde222b903e1432b4",
+      "sourceSha256": "321774521f077387988361cc791bd86e9ab824c528144468d0561f6913ad0116",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-6a2e1e6b-2e9f-47dc-8ab3-33f0baf0b348.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-plants-4-d744e3b64f46.webp"
+    },
+    "living-plants-5": {
+      "id": "city-street:living-plants-5:d05cebbca3a4",
+      "local": "assets/adventure/earth/streets/living-plants-5-d05cebbca3a4.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 104438,
+      "sha256": "d05cebbca3a4f8120c75ea41cba534a5bdc0ae44fa0e9e8054a9ed5907bd448b",
+      "sourceSha256": "321774521f077387988361cc791bd86e9ab824c528144468d0561f6913ad0116",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-6a2e1e6b-2e9f-47dc-8ab3-33f0baf0b348.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-plants-5-d05cebbca3a4.webp"
+    },
+    "living-ground-0": {
+      "id": "city-street:living-ground-0:c615f4772f00",
+      "local": "assets/adventure/earth/streets/living-ground-0-c615f4772f00.webp",
+      "width": 528,
+      "height": 264,
+      "bytes": 184042,
+      "sha256": "c615f4772f003237f8fc2a02e1a6a6f13c5e0e319669f84d7d4bd6e629b11b86",
+      "sourceSha256": "1d4b352f5cacf2415ce510c2902905194fddbb9bb384f0d836a110843514f8e5",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen original South China neighborhood illustration; artistic, not surveyed",
+      "sourceFile": "exec-c337d133-cc18-493e-a8ce-ae258f7ccaa2.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-ground-0-c615f4772f00.webp"
+    },
+    "living-ground-1": {
+      "id": "city-street:living-ground-1:4add3eb6b8d0",
+      "local": "assets/adventure/earth/streets/living-ground-1-4add3eb6b8d0.webp",
+      "width": 528,
+      "height": 264,
+      "bytes": 168338,
+      "sha256": "4add3eb6b8d0d8e69651d3dc602348e542052553bd67bbc9b8d4a57078328b8f",
+      "sourceSha256": "1d4b352f5cacf2415ce510c2902905194fddbb9bb384f0d836a110843514f8e5",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen original South China neighborhood illustration; artistic, not surveyed",
+      "sourceFile": "exec-c337d133-cc18-493e-a8ce-ae258f7ccaa2.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-ground-1-4add3eb6b8d0.webp"
+    },
+    "living-ground-2": {
+      "id": "city-street:living-ground-2:ec3c84e0bd82",
+      "local": "assets/adventure/earth/streets/living-ground-2-ec3c84e0bd82.webp",
+      "width": 528,
+      "height": 264,
+      "bytes": 73802,
+      "sha256": "ec3c84e0bd82bee82a8f8de328dd71a8be1273ea63fc6e98e1d5ff09665aa473",
+      "sourceSha256": "1d4b352f5cacf2415ce510c2902905194fddbb9bb384f0d836a110843514f8e5",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen original South China neighborhood illustration; artistic, not surveyed",
+      "sourceFile": "exec-c337d133-cc18-493e-a8ce-ae258f7ccaa2.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-ground-2-ec3c84e0bd82.webp"
+    },
+    "living-ground-3": {
+      "id": "city-street:living-ground-3:68eb1ebcbf5f",
+      "local": "assets/adventure/earth/streets/living-ground-3-68eb1ebcbf5f.webp",
+      "width": 528,
+      "height": 264,
+      "bytes": 70914,
+      "sha256": "68eb1ebcbf5f4c5449209c0d74c05dec8f789b0b2f8d9a873abbaba0ed34db04",
+      "sourceSha256": "1d4b352f5cacf2415ce510c2902905194fddbb9bb384f0d836a110843514f8e5",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen original South China neighborhood illustration; artistic, not surveyed",
+      "sourceFile": "exec-c337d133-cc18-493e-a8ce-ae258f7ccaa2.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-ground-3-68eb1ebcbf5f.webp"
+    },
+    "living-connectors-0": {
+      "id": "city-street:living-connectors-0:a5ed97662a15",
+      "local": "assets/adventure/earth/streets/living-connectors-0-a5ed97662a15.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 156302,
+      "sha256": "a5ed97662a1559cba2c48f9e10a66c9d61ce41df0bb7e0b8327b1cdc1c133e21",
+      "sourceSha256": "71606789aa0a0c74843d53c7f9508a9f9973bb95f8b21d832e2557d7c39e6866",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-121c8cd5-e81f-4ca1-9f87-e3e783911e5f.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-connectors-0-a5ed97662a15.webp"
+    },
+    "living-connectors-1": {
+      "id": "city-street:living-connectors-1:ed0937f9003a",
+      "local": "assets/adventure/earth/streets/living-connectors-1-ed0937f9003a.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 111756,
+      "sha256": "ed0937f9003ad9398a93e056bd1d5e92bcf66a643cd54efb189b54115f96d7f3",
+      "sourceSha256": "71606789aa0a0c74843d53c7f9508a9f9973bb95f8b21d832e2557d7c39e6866",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-121c8cd5-e81f-4ca1-9f87-e3e783911e5f.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-connectors-1-ed0937f9003a.webp"
+    },
+    "living-connectors-2": {
+      "id": "city-street:living-connectors-2:6e68696fa74c",
+      "local": "assets/adventure/earth/streets/living-connectors-2-6e68696fa74c.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 76038,
+      "sha256": "6e68696fa74cdb9c1e6d9b0982189cb0d8515569a127262ebb12a1cd695e982b",
+      "sourceSha256": "71606789aa0a0c74843d53c7f9508a9f9973bb95f8b21d832e2557d7c39e6866",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-121c8cd5-e81f-4ca1-9f87-e3e783911e5f.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-connectors-2-6e68696fa74c.webp"
+    },
+    "living-connectors-3": {
+      "id": "city-street:living-connectors-3:77e6cac6a75d",
+      "local": "assets/adventure/earth/streets/living-connectors-3-77e6cac6a75d.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 136816,
+      "sha256": "77e6cac6a75d92df8bfd65ebedde675e3f262fbe3e3fe09086cb53167523413d",
+      "sourceSha256": "71606789aa0a0c74843d53c7f9508a9f9973bb95f8b21d832e2557d7c39e6866",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-121c8cd5-e81f-4ca1-9f87-e3e783911e5f.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-connectors-3-77e6cac6a75d.webp"
+    },
+    "living-connectors-4": {
+      "id": "city-street:living-connectors-4:f8e433b6c22c",
+      "local": "assets/adventure/earth/streets/living-connectors-4-f8e433b6c22c.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 112110,
+      "sha256": "f8e433b6c22ca2c41da9f6a081b191901ea67ab364d16ea666c1304e7d51bd95",
+      "sourceSha256": "71606789aa0a0c74843d53c7f9508a9f9973bb95f8b21d832e2557d7c39e6866",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-121c8cd5-e81f-4ca1-9f87-e3e783911e5f.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-connectors-4-f8e433b6c22c.webp"
+    },
+    "living-connectors-5": {
+      "id": "city-street:living-connectors-5:f9d03268a6e7",
+      "local": "assets/adventure/earth/streets/living-connectors-5-f9d03268a6e7.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 120448,
+      "sha256": "f9d03268a6e79875a737854df20b3d45e4b2561c4d687399e12d3e2a20422527",
+      "sourceSha256": "71606789aa0a0c74843d53c7f9508a9f9973bb95f8b21d832e2557d7c39e6866",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal elevation for buildings/shops/connectors; artistic, not surveyed",
+      "sourceFile": "exec-121c8cd5-e81f-4ca1-9f87-e3e783911e5f.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-connectors-5-f9d03268a6e7.webp"
+    },
+    "living-details-0": {
+      "id": "city-street:living-details-0:2fd4a52234c0",
+      "local": "assets/adventure/earth/streets/living-details-0-2fd4a52234c0.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 140438,
+      "sha256": "2fd4a52234c05a973bee5663383bb6c19fdca3a6e2463a0b406d75f497ae7844",
+      "sourceSha256": "590a1475c8eae0cb31c4709914d535de6998827b2ff8ebefd888e5f459bea94a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-3f68ffe0-5566-4c68-8f21-4ebb848d3aca.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-details-0-2fd4a52234c0.webp"
+    },
+    "living-details-1": {
+      "id": "city-street:living-details-1:5c7c822d3085",
+      "local": "assets/adventure/earth/streets/living-details-1-5c7c822d3085.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 135876,
+      "sha256": "5c7c822d30853f09a915c2077f8591efc9fc33c3c36a654ee2ad10e077c4cd3b",
+      "sourceSha256": "590a1475c8eae0cb31c4709914d535de6998827b2ff8ebefd888e5f459bea94a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-3f68ffe0-5566-4c68-8f21-4ebb848d3aca.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-details-1-5c7c822d3085.webp"
+    },
+    "living-details-2": {
+      "id": "city-street:living-details-2:0217d358cd4a",
+      "local": "assets/adventure/earth/streets/living-details-2-0217d358cd4a.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 95728,
+      "sha256": "0217d358cd4a622f817c59b153178db39a451ed71961ac9650167f21857e56af",
+      "sourceSha256": "590a1475c8eae0cb31c4709914d535de6998827b2ff8ebefd888e5f459bea94a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-3f68ffe0-5566-4c68-8f21-4ebb848d3aca.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-details-2-0217d358cd4a.webp"
+    },
+    "living-details-3": {
+      "id": "city-street:living-details-3:c99b15eec9fa",
+      "local": "assets/adventure/earth/streets/living-details-3-c99b15eec9fa.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 166748,
+      "sha256": "c99b15eec9fa97f9fbbd9777ce252aacaa28c5b5d9542a396e8b36a071122a88",
+      "sourceSha256": "590a1475c8eae0cb31c4709914d535de6998827b2ff8ebefd888e5f459bea94a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-3f68ffe0-5566-4c68-8f21-4ebb848d3aca.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-details-3-c99b15eec9fa.webp"
+    },
+    "living-details-4": {
+      "id": "city-street:living-details-4:39d3056230b3",
+      "local": "assets/adventure/earth/streets/living-details-4-39d3056230b3.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 133792,
+      "sha256": "39d3056230b3190399fcb6e8208aa67640ed9d91797ac4e0dd6ad9ed39806b5e",
+      "sourceSha256": "590a1475c8eae0cb31c4709914d535de6998827b2ff8ebefd888e5f459bea94a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-3f68ffe0-5566-4c68-8f21-4ebb848d3aca.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-details-4-39d3056230b3.webp"
+    },
+    "living-details-5": {
+      "id": "city-street:living-details-5:7cff5dce69f6",
+      "local": "assets/adventure/earth/streets/living-details-5-7cff5dce69f6.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 114022,
+      "sha256": "7cff5dce69f6ac904c9ddc9209ebe78f639c06a9736cf2adfd3e19ba44c8fa01",
+      "sourceSha256": "590a1475c8eae0cb31c4709914d535de6998827b2ff8ebefd888e5f459bea94a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-3f68ffe0-5566-4c68-8f21-4ebb848d3aca.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-details-5-7cff5dce69f6.webp"
+    },
+    "living-details-6": {
+      "id": "city-street:living-details-6:b44ed01358f8",
+      "local": "assets/adventure/earth/streets/living-details-6-b44ed01358f8.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 133596,
+      "sha256": "b44ed01358f80703ec19c7fe37a047c68ec24da28e2bbdfde8d48851acbf37e6",
+      "sourceSha256": "590a1475c8eae0cb31c4709914d535de6998827b2ff8ebefd888e5f459bea94a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-3f68ffe0-5566-4c68-8f21-4ebb848d3aca.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-details-6-b44ed01358f8.webp"
+    },
+    "living-details-7": {
+      "id": "city-street:living-details-7:123c0263b12c",
+      "local": "assets/adventure/earth/streets/living-details-7-123c0263b12c.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 112892,
+      "sha256": "123c0263b12c2a088ace71e638d3da636ec83f7838c4adaaec91e138a954550b",
+      "sourceSha256": "590a1475c8eae0cb31c4709914d535de6998827b2ff8ebefd888e5f459bea94a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-3f68ffe0-5566-4c68-8f21-4ebb848d3aca.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-details-7-123c0263b12c.webp"
+    },
+    "living-home-details-0": {
+      "id": "city-street:living-home-details-0:1d44b5478e0b",
+      "local": "assets/adventure/earth/streets/living-home-details-0-1d44b5478e0b.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 90098,
+      "sha256": "1d44b5478e0b63096f63c7dd5b85992ea301295ea8fb144622e5c5a8bc3ed111",
+      "sourceSha256": "094978768c9b273c605a2b2b4d353ee218eef666274c20343bc91fc55c7e7b97",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-35fda412-e63b-42fd-973e-52848bdeef46.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-home-details-0-1d44b5478e0b.webp"
+    },
+    "living-home-details-1": {
+      "id": "city-street:living-home-details-1:ebb2daa0f841",
+      "local": "assets/adventure/earth/streets/living-home-details-1-ebb2daa0f841.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 112318,
+      "sha256": "ebb2daa0f841e5761af966ec8b279d1d959f99ae4fcb3263ca8c03324d358a37",
+      "sourceSha256": "094978768c9b273c605a2b2b4d353ee218eef666274c20343bc91fc55c7e7b97",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-35fda412-e63b-42fd-973e-52848bdeef46.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-home-details-1-ebb2daa0f841.webp"
+    },
+    "living-home-details-2": {
+      "id": "city-street:living-home-details-2:b511788b7d7f",
+      "local": "assets/adventure/earth/streets/living-home-details-2-b511788b7d7f.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 124028,
+      "sha256": "b511788b7d7fdb26f06f9a69c432090d9153d4040077b59cd5e10d9ed6354cdf",
+      "sourceSha256": "094978768c9b273c605a2b2b4d353ee218eef666274c20343bc91fc55c7e7b97",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-35fda412-e63b-42fd-973e-52848bdeef46.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-home-details-2-b511788b7d7f.webp"
+    },
+    "living-home-details-3": {
+      "id": "city-street:living-home-details-3:a2e080f94884",
+      "local": "assets/adventure/earth/streets/living-home-details-3-a2e080f94884.webp",
+      "width": 768,
+      "height": 384,
+      "bytes": 80106,
+      "sha256": "a2e080f948846cd8fce40782c9b2cfcb7a507f66c1fa115041903bd8480ab21d",
+      "sourceSha256": "094978768c9b273c605a2b2b4d353ee218eef666274c20343bc91fc55c7e7b97",
+      "encoding": {
+        "quality": 94
+      },
+      "source": "imagegen South China neighborhood illustration; frontal camera slightly elevated about 12 degrees, upper-left light; artistic, not surveyed",
+      "sourceFile": "exec-35fda412-e63b-42fd-973e-52848bdeef46.png",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/city-living/living-home-details-3-a2e080f94884.webp"
+    }
+  },
+  "themes": {
+    "south-china": {
+      "name": "华南生活街区",
+      "kind": "artistic",
+      "frames": [
+        "living:cream-balcony",
+        "living:brick-home",
+        "living:blue-walkup",
+        "living:stair-apartment",
+        "living:laundry-home",
+        "living:tank-apartment",
+        "living:peach-home",
+        "living:corner-home",
+        "living:green-shophouse",
+        "living:tile-home",
+        "living:white-walkup",
+        "living:brick-corner",
+        "living:breakfast",
+        "living:noodles",
+        "living:grocery",
+        "living:fruit",
+        "living:repair",
+        "living:tea",
+        "living:florist",
+        "living:restaurant",
+        "living:bakery",
+        "living:hardware",
+        "living:books",
+        "living:tailor",
+        "living:wood-bench",
+        "living:stone-bench",
+        "living:green-lamp",
+        "living:gray-lamp",
+        "living:sorting-bin",
+        "living:manhole",
+        "living:drain",
+        "living:steps",
+        "living:fence",
+        "living:bollards",
+        "living:direction-sign",
+        "living:menu-board",
+        "living:notice-board",
+        "living:advert-board",
+        "living:bus-shelter",
+        "living:bike-rack",
+        "living:scooter",
+        "living:hydrant",
+        "living:utility-box",
+        "living:cones",
+        "living:steamers",
+        "living:fruit-crates",
+        "living:vegetables",
+        "living:drink-crates",
+        "living:cafe-table",
+        "living:dining-table",
+        "living:handcart",
+        "living:baskets",
+        "living:aircon",
+        "living:laundry",
+        "living:awning",
+        "living:banner",
+        "living:door-canopy",
+        "living:shutter",
+        "living:shelf",
+        "living:wall-sign",
+        "living:banyan-pit",
+        "living:shade-pit",
+        "living:palm-pit",
+        "living:bauhinia-pit",
+        "living:flowerbed",
+        "living:hedge",
+        "living:bougainvillea",
+        "living:home-pots",
+        "living:banana-planter",
+        "living:fern-pot",
+        "living:shrub-pot",
+        "living:grass-planter",
+        "living:asphalt",
+        "living:sidewalk",
+        "living:pavers",
+        "living:brick-paving",
+        "living:concrete",
+        "living:lawn",
+        "living:gravel",
+        "living:cobbles",
+        "living:courtyard-gate",
+        "living:garden-gate",
+        "living:service-gate",
+        "living:brick-wall",
+        "living:alley-roof",
+        "living:meter-wall",
+        "living:side-door",
+        "living:vine-fence",
+        "living:water-meters",
+        "living:store-shutter",
+        "living:fern-wall",
+        "living:alley-arch",
+        "living:red-stools",
+        "living:newspaper-rack",
+        "living:delivery-boxes",
+        "living:wash-basin",
+        "living:mop-bucket",
+        "living:umbrella-holder",
+        "living:watering-can",
+        "living:wall-fan",
+        "living:broom-rack",
+        "living:shopping-bags",
+        "living:wall-hose",
+        "living:service-sign",
+        "living:paint-cans",
+        "living:mailbox",
+        "living:folded-cart",
+        "living:shoe-rack",
+        "living:laundry-basket",
+        "living:courtyard-sink",
+        "living:reed-mat",
+        "living:hanging-fern",
+        "living:water-barrel",
+        "living:citrus-pot",
+        "living:porch-lamp",
+        "living:delivery-cooler"
+      ],
+      "camera": {
+        "view": "front-slight-down",
+        "pitchDegrees": 12,
+        "facadeYawDegrees": 0,
+        "light": "upper-left"
+      },
+      "artRevision": 4
+    }
+  }
 }

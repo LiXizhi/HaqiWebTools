@@ -14,10 +14,11 @@ function scheduleView(view){views.add(view);if(!viewFrame)viewFrame=requestAnima
  * Hosts own placement, time, scene ordering and animation. UI and world use draw().
  */
 export class HeroRenderer {
-    constructor(manifest, catalog, { local = false, baseURL = new URL('../', String(import.meta.url)) } = {}) {
+    constructor(manifest, catalog, { local = false, baseURL = new URL('../', String(import.meta.url)),prepareBounds=null } = {}) {
         this.manifest = manifest; this.catalog = catalog; this.local = local; this.baseURL = baseURL;
         this.images = new Map(); this.pending = new Map(); this.sourceBounds = new Map();
         this.prepared=new Map();
+        this.prepareBounds=prepareBounds;
     }
     createActor(seed) { return createHeroActor(seed); }
     headId(gender,id){return this.manifest.heads[id]?.gender===gender?id:gender==='female'?'elf-girl':'elf-boy';}
@@ -34,8 +35,10 @@ export class HeroRenderer {
                 if(localURL&&art.sha256)localURL.searchParams.set('v',art.sha256);
                 const url = this.local ? localURL.href : art.cdn;
                 if (!url) { reject(new Error(`资源尚未登记 CDN：${id}`)); return; }
-                image.onload = () => {
+                image.onload = async () => {
                     if (art.width && (image.width !== art.width || image.height !== art.height)) { reject(new Error(`资源尺寸不符：${id}`)); return; }
+                    // Decode before publishing to world/UI drawing, including newly streamed peers.
+                    if(image.decode)try{await image.decode();}catch{/* Preserve the original drawing fallback. */}
                     this.images.set(id,image); resolve(image);
                 };
                 image.onerror = () => reject(new Error(`资源加载失败：${id}`)); image.src = url;
@@ -63,6 +66,12 @@ export class HeroRenderer {
         const originals = keys.filter(key=>!this.manifest.bodies[key].selfContained).map(key => this.image('original:'+key,this.manifest.bodies[key].source));
         if (mount) originals.push(this.image('mount:'+mount.id,mount.art,true));
         await Promise.all(originals);
+        if(this.prepareBounds)for(const key of keys){const body=this.manifest.bodies[key];if(body.selfContained)continue;
+            for(const [cell,frame] of body.frames.entries()){const id=key+':'+cell;if(this.sourceBounds.has(id))continue;
+                const prepared=await this.prepareBounds(this.images.get('original:'+key),frame.crop);
+                if(prepared)this.sourceBounds.set(id,prepared);else this.originalBounds(key,cell);
+            }
+        }
         const results = await Promise.allSettled(keys.map(async key => {
             const body=this.manifest.bodies[key];
             if(this.manifest.heads[headId])await Promise.all([
@@ -217,7 +226,7 @@ export function heroPortrait(assets,save,w=90,h=95,{facing=0,mounted=false,...op
     view.node.className='art';view.node.style.width=w+'px';view.node.style.height=h+'px';view.ready.catch(()=>{});return view.node;
 }
 
-export async function loadHeroLibrary(readJson,catalog,{local=false,sprites,sourceImages,getBounds}={}){
+export async function loadHeroLibrary(readJson,catalog,{local=false,sprites,sourceImages,getBounds,prepareBounds=null}={}){
     let manifest;
     try{manifest=await readJson('data/adventure/hero-art.json');}
     catch{
@@ -226,7 +235,7 @@ export async function loadHeroLibrary(readJson,catalog,{local=false,sprites,sour
         for(const [key,source] of Object.entries(catalog.sheets))manifest.bodies[key]={source:{...source,local:source.local.startsWith('assets/')?'demos/mount-lab/'+source.local:source.local},frames:Array.from({length:4},(_,i)=>({crop:[i%2*source.width/2,Math.floor(i/2)*source.height/2,source.width/2,source.height/2],neck:[0,0]}))};
         for(const [gender,row] of [['male',2],['female',3]]){const cuts=[0,323,650,929,1254].map(v=>v*sprites.height/1254);manifest.bodies[gender+'-walk']={source:sprites,trimOriginal:true,frames:Array.from({length:4},(_,i)=>({crop:[i*sprites.width/4,cuts[row],sprites.width/4,cuts[row+1]-cuts[row]],neck:[0,0]}))};}
     }
-    const hero=new HeroRenderer(manifest,catalog,{local});
+    const hero=new HeroRenderer(manifest,catalog,{local,prepareBounds});
     hero.getWalkingBounds=getBounds;
     if(sourceImages?.has('sprites'))for(const gender of ['male','female']){
         const key=gender+'-walk';if(!manifest.bodies[key].selfContained)hero.images.set('original:'+key,sourceImages.get('sprites'));

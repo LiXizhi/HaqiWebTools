@@ -3,8 +3,10 @@ import {SOCIAL_DEFAULTS} from './adventure_social_core.js';
 import {createEarthWildEncounter,earthWildSpecies} from './adventure_earth_wild_core.js';
 
 // Only descriptors live outside the camera. Reuse the AI character fade lifecycle.
+const spawnIndices=new WeakMap();
 export function streamEarthWild(world,content,leader,view,dt=0){
-    const rules=world.earthRules,spawns=world.wildSpawns||[],byId=new Map(spawns.map(s=>[s.profile.id,s]));
+    const rules=world.earthRules,spawns=world.wildSpawns||[];let byId=spawnIndices.get(spawns);
+    if(!byId){byId=new Map(spawns.map(s=>[s.profile.id,s]));spawnIndices.set(spawns,byId);}
     const params={...SOCIAL_DEFAULTS,...content.balanceParams?.islandSocial,sceneMaxActors:rules.wildMaxActors};
     const actors=streamSocialActors(world.wildActors||[],spawns,dt,{leader,view,params});
     const species=world.wildSpecies||earthWildSpecies(content);

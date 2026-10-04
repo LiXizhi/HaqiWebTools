@@ -37,8 +37,8 @@ export function defaultParams(version = 'teen') {
     return {
         version,
         // Web Earth exploration budgets; independent of combat RNG and formulas.
-        cityDungeons: {gridSize:9,tileSize:140,encounters:3,levelStep:1,monsterIds:['fire-scout','ice-scout','storm-scout','life-scout','water-bubble']},
-        earth: {unitsPerDegree:24000,mapCityPickRadius:48,atlasMarkerSpacing:42,atlasMarkerRadius:6,atlasStoryMarkerRadius:8,mapDragThreshold:8,generationVersion:1,chunkSize:1000,activeRadius:2,prefetchRadius:3,maxConcurrent:4,maxTiles:12,maxCityTiles:4,maxChunks:64,maxSceneCities:24,maxQueuedRequests:48,maxDecodedBytes:33554432,requestTimeoutMs:20000,cityRadius:480,roadWidth:70,roadSampleStep:24,roadSafeMargin:65,buildingSafeMargin:100,buildingsPerCity:12,buildingSpacing:150,buildingOffset:170,treesPerChunk:12,monstersPerChunk:9,wildMaxActors:6,wildSpawnClearance:40,wildUrbanSampleStep:500,wildNearDistance:1500,wildFarDistance:12000,wildNearLevelOffset:-3,wildFarLevelOffset:5,wildNearPowerRatio:.85,wildFarPowerRatio:1.3,wildMaxPower:10000,wildPipBudgetShare:.12,wildResistBudgetShare:.3,wildMaxPip:80,wildMaxResist:60,wildHpBudgetShare:.15,wildMaxHpBonus:1,monsterClearance:350,arrivalRadius:1500,arrivalStep:48,navigationRadius:1200,maxPathNodes:2500,streamIntervalMs:350,surfaceChunkSize:256,surfaceResolution:256,surfaceMaxChunks:64,surfacePrefetchRing:1,landmarkRoadClearance:20,landmarkPlacementStep:60,landmarkPlacementRadius:900,surfaceFrameBudgetMs:4,surfaceFallbackBudgetMs:2,surfaceMobileResolution:192,surfaceTexturePeriod:192,decorationsPerChunk:80,forestDecorationsPerChunk:100,cityPopulationLarge:1000000,cityPopulationMedium:100000,cityDensities:[.7,.88,.98],cityInfluenceRadius:12000,settlementRadiusSmall:550,settlementRadiusMedium:900,settlementRadiusLarge:1400,transitRailOffset:250,transitCorridorWidth:35,transitMinimumLength:240,transitStationOffset:180,transitStationSize:250,transitTrainSize:270,transitHighSpeedPopulation:1000000,cityDrawSceneRoads:false,cityGroundPeriod:768,cityConnectionDistance:24000,cityConnectionBend:.12,cityConnectionSegment:120,cityConnectionWidth:52,cityBridgeMaxSpan:480,boatSize:100,dockSize:112,cityConnectionShoulderWidth:4,cityConnectionBlendWidth:20,cityConnectionTextureOpacity:.26,surfaceDetailStrength:.5,surfaceDetailSpacing:18,surfaceDetailDensity:.38,streamBuildBudgetMs:2,collisionCellSize:256, surfaceVegetationTint:.62,cityBlockSize:500,cityBlockInset:110,cityLaneWidth:48,citySidewalkWidth:28,cityBuildingClearance:12,cityBuildingSetback:60,cityCellsPerChunk:6,cityStreetFraction:.28,maxUrbanObjects:1800},
+        cityDungeons: {gridSize:9,tileSize:140,encounters:3,levelStep:1,monsterIds:['fire-scout','ice-scout','storm-scout','life-scout','water-bubble'],streetSize:2400,streetRoadWidth:150,streetWalkWidth:120,streetBuildingHeight:370,streetBuildingMaxWidth:220,streetShopWidth:280,streetPropDepth:22,streetHeroRadius:18,streetMovementStep:2,streetEdgeMargin:24},
+        earth: {unitsPerDegree:24000,mapCityPickRadius:48,atlasMarkerSpacing:42,atlasMarkerRadius:6,atlasStoryMarkerRadius:8,mapDragThreshold:8,generationVersion:1,chunkSize:1000,activeRadius:2,prefetchRadius:3,maxConcurrent:4,maxTiles:12,maxCityTiles:4,maxChunks:64,maxSceneCities:24,maxQueuedRequests:48,maxDecodedBytes:33554432,requestTimeoutMs:20000,cityRadius:480,roadWidth:70,roadSampleStep:24,roadSafeMargin:65,buildingSafeMargin:100,buildingsPerCity:12,buildingSpacing:150,buildingOffset:170,treesPerChunk:12,monstersPerChunk:9,wildMaxActors:6,wildSpawnClearance:40,wildUrbanSampleStep:500,wildNearDistance:1500,wildFarDistance:12000,wildNearLevelOffset:-3,wildFarLevelOffset:5,wildNearPowerRatio:.85,wildFarPowerRatio:1.3,wildMaxPower:10000,wildPipBudgetShare:.12,wildResistBudgetShare:.3,wildMaxPip:80,wildMaxResist:60,wildHpBudgetShare:.15,wildMaxHpBonus:1,monsterClearance:350,arrivalRadius:1500,arrivalStep:48,navigationRadius:1200,maxPathNodes:2500,streamIntervalMs:350,surfaceChunkSize:256,surfaceResolution:256,surfaceMaxChunks:64,surfacePrefetchRing:1,landmarkRoadClearance:20,landmarkPlacementStep:60,landmarkPlacementRadius:900,surfaceFrameBudgetMs:4,surfaceFallbackBudgetMs:2,surfaceMobileResolution:192,surfaceTexturePeriod:192,decorationsPerChunk:80,forestDecorationsPerChunk:100,cityPopulationLarge:1000000,cityPopulationMedium:100000,cityDensities:[.7,.88,.98],cityInfluenceRadius:12000,settlementRadiusSmall:550,settlementRadiusMedium:900,settlementRadiusLarge:1400,transitRailOffset:250,transitCorridorWidth:35,transitMinimumLength:240,transitStationOffset:180,transitStationSize:250,transitTrainSize:270,transitHighSpeedPopulation:1000000,cityDrawSceneRoads:false,cityGroundPeriod:768,cityConnectionDistance:24000,cityConnectionBend:.12,cityConnectionSegment:120,cityConnectionWidth:52,cityBridgeMaxSpan:480,boatSize:100,dockSize:112,cityConnectionShoulderWidth:4,cityConnectionBlendWidth:20,cityConnectionTextureOpacity:.26,surfaceDetailStrength:.5,surfaceDetailSpacing:18,surfaceDetailDensity:.38,streamBuildBudgetMs:2,streamPrefetchDistance:450,streamTurnCancelDistance:8,streamCacheChunks:192,streamRouteCacheEntries:64,streamUrbanSampleEntries:8192,streamPacketRows:64,collisionCellSize:256, surfaceVegetationTint:.62,cityBlockSize:500,cityBlockInset:110,cityLaneWidth:48,citySidewalkWidth:28,cityBuildingClearance:12,cityBuildingSetback:60,cityCellsPerChunk:6,cityStreetFraction:.28,maxUrbanObjects:1800},
         // Web cross-cultural relationships; not original combat formula values.
         characterRelations: {initialMin:0,initialMax:60,maxAiDelta:5,giftGain:3,dungeonGain:3,matchGain:2,dailyFreeMessages:2,recentMessages:20,compactAt:40,indexPageSize:100},
         // Web island unlock levels; original world configuration is unavailable.
@@ -220,6 +220,19 @@ export function parseParams(text, fallbackVersion = 'teen') {
     return mergeParams(defaultParams(version), obj);
 }
 
+const parameterGroupDefaults=new Map();
+const parameterGroupEntries=new Map();
+function copyParamDefault(value){return Array.isArray(value)?value.map(copyParamDefault):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([key,item])=>[key,copyParamDefault(item)])):value;}
+// Read only the requested BalanceParams section in per-frame adventure code.
+// Preserve fresh defaults (including nested arrays), live overrides and in-place edits.
+export function resolveParamGroup(params,group,fallbackVersion='teen'){
+    const version=params?.version||fallbackVersion;let defaults=parameterGroupDefaults.get(version);
+    if(!defaults){defaults=defaultParams(version);parameterGroupDefaults.set(version,defaults);}
+    let entries=parameterGroupEntries.get(version);if(!entries){entries=new Map();parameterGroupEntries.set(version,entries);}if(!entries.has(group))entries.set(group,Object.entries(defaults[group]||{}));
+    const overrides=params?.[group],result={};for(const [key,value] of entries.get(group))if(!overrides||!Object.hasOwn(overrides,key))result[key]=copyParamDefault(value);
+    return Object.assign(result,overrides);
+}
+
 /** 读取 school 的系数条目（未知系回退到 balance 的空系数） */
 export function schoolFactor(params, school) {
     return params.perSchool[school] || { hp: 1, damage: 1, heal: 1, accuracy: 0, powerPip: 0, resist: 0, crit: 0 };
@@ -255,8 +268,10 @@ export function inferTargetKind(card, charmsRoot) {
  * { version, global, perSchool, cards, charms, wards, miniauras, globalauras, aiDecks, statsByGear, manifest }
  * 单卡覆盖：cardOverrides[key] = { pipcost?, accuracy?, params?: {damage_min?...} }
  */
-export function resolveParams(dataset, params) {
+export function resolveParams(dataset, params, {groups=null}={}) {
     const version = params.version || dataset.version || 'teen';
+    if(groups){const resolved={version};for(const group of groups)resolved[group]=resolveParamGroup(params,group,version);return resolved;}
+    const defaults=defaultParams(version);
     const cards = {};
     for (const key of Object.keys(dataset.cards || {})) {
         const src = dataset.cards[key];
@@ -289,21 +304,21 @@ export function resolveParams(dataset, params) {
         version,
         global: { ...params.global },
         enrage: dataset.pve?.enrage,
-        battleAI: { ...defaultParams(version).battleAI, ...params.battleAI },
+        battleAI: { ...defaults.battleAI, ...params.battleAI },
         // Web island unlock levels; original world configuration is unavailable.
-        dungeonJourney: { ...defaultParams(version).dungeonJourney, ...params.dungeonJourney },
-        dailyLanguage: { ...defaultParams(version).dailyLanguage, ...params.dailyLanguage },
-        dungeonLanguage: { ...defaultParams(version).dungeonLanguage, ...params.dungeonLanguage },
-        earth: { ...defaultParams(version).earth, ...params.earth },
-        cityDungeons: { ...defaultParams(version).cityDungeons, ...params.cityDungeons },
-        worldTravel: { ...defaultParams(version).worldTravel, ...params.worldTravel },
-        petInteractions: { ...defaultParams(version).petInteractions, ...params.petInteractions },
-        checkin: { ...defaultParams(version).checkin, ...params.checkin },
-        languageAdventure: { ...defaultParams(version).languageAdventure, ...params.languageAdventure },
-        fishing: { ...defaultParams(version).fishing, ...params.fishing },
-        adventure: { ...defaultParams(version).adventure, ...params.adventure },
-        monsterScene: { ...defaultParams(version).monsterScene, ...params.monsterScene },
-        redMushroom: { ...defaultParams(version).redMushroom, ...params.redMushroom },
+        dungeonJourney: { ...defaults.dungeonJourney, ...params.dungeonJourney },
+        dailyLanguage: { ...defaults.dailyLanguage, ...params.dailyLanguage },
+        dungeonLanguage: { ...defaults.dungeonLanguage, ...params.dungeonLanguage },
+        earth: { ...defaults.earth, ...params.earth },
+        cityDungeons: { ...defaults.cityDungeons, ...params.cityDungeons },
+        worldTravel: { ...defaults.worldTravel, ...params.worldTravel },
+        petInteractions: { ...defaults.petInteractions, ...params.petInteractions },
+        checkin: { ...defaults.checkin, ...params.checkin },
+        languageAdventure: { ...defaults.languageAdventure, ...params.languageAdventure },
+        fishing: { ...defaults.fishing, ...params.fishing },
+        adventure: { ...defaults.adventure, ...params.adventure },
+        monsterScene: { ...defaults.monsterScene, ...params.monsterScene },
+        redMushroom: { ...defaults.redMushroom, ...params.redMushroom },
         perSchool: params.perSchool,
         fairPlay: params.fairPlay || null,
         cards,

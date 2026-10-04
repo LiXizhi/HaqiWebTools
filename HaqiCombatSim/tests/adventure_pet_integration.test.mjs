@@ -23,6 +23,7 @@ import {petSceneProfiles,createPetScene} from '../js/adventure_pet_scene.js';
 import {petFilePath,petContentKey} from '../js/adventure_pet_files_core.js';
 import {durableSave} from '../js/adventure_storage_core.js';
 import {ISLANDS,islandSpawn} from '../js/adventure_world_map_core.js';
+import {earthRules} from '../js/adventure_earth_core.js';
 import {createWorld,walkable} from '../js/adventure_world_core.js';
 import {projectDungeon} from '../js/adventure_dungeons_core.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../data/'+p,import.meta.url)));
@@ -60,6 +61,18 @@ function sceneHarness(isFriend=()=>true){
     const scene=createPetScene({isFriend,getState:()=>({...state,save}),commit:next=>{save=next;},toast:message=>notices.push(message),now:()=>at});
     return {scene,state,notices,meetings,get save(){return save;},advance:ms=>{at+=ms;}};
 }
+
+test('Earth pet obstacle searches yield to the scene budget and an old world cannot apply a finished route',async()=>{
+    const h=sceneHarness(),jobs=[];
+    h.state.socialActors=[];h.save.position={x:350,y:500};
+    const scheduler={run(steps,options){return new Promise(resolve=>jobs.push({steps,options,resolve}));}};
+    h.state.world={zone:'earth',isEarth:true,w:2000,h:2000,earthRules:earthRules(),terrainAt:()=> 'grass',paths:[],buildings:[{x:450,y:500,w:200,h:200}],trees:[],npcs:[],earthScheduler:scheduler};
+    h.scene.step(0);h.save.position={x:550,y:500};h.scene.step(1/60);
+    assert.equal(jobs.length,1);assert.equal(jobs[0].options.name,'earth-pet-path');assert.deepEqual(h.scene.pets[0].path,[]);
+    h.state.world={...h.state.world,buildings:[]};h.scene.step(0);const current=h.scene.pets[0];assert.equal(jobs[0].options.valid(),false);
+    let result;do{result=jobs[0].steps.next();}while(!result.done);jobs[0].resolve(result.value);await Promise.resolve();
+    assert.deepEqual(h.scene.pets[0].position,current.position);assert.deepEqual(h.scene.pets[0].path,[]);
+});
 
 test('real dungeon edge keeps both the hero pet and party member pet continuous through scene updates',()=>{
     const h=sceneHarness(),d=read('adventure/dungeons.json').worlds.find(d=>d.id==='dungeon:Global_FrostRoarIsland_TreasureHouse');

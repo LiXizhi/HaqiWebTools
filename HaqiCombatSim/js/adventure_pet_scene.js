@@ -5,7 +5,7 @@ import {findPetMeeting,petMeetingClear,petMeetingTargets,petMeetingPath} from '.
 import {createCompanion,stepCompanion,selectCompanionId} from './adventure_companion_core.js';
 import {petWorldAction,npcPetId,createNpcPet} from './adventure_pet_world_core.js';
 import {petInteractionParams,petDisplayScale,recordPetMeeting} from './adventure_pet_interactions_core.js';
-import {walkable,distance,followPath,WALK_SPEED} from './adventure_world_core.js';
+import {walkable,distance,followPath,clearSegment,findPathSteps,WALK_SPEED} from './adventure_world_core.js';
 // Story residents include creatures and props; do not give every map NPC a pet.
 // Only roaming characters (or explicitly configured pet owners) participate.
 export function petSceneProfiles(state){
@@ -17,6 +17,20 @@ export function petSceneProfiles(state){
 export function createPetScene({isFriend=()=>false,getState,commit,toast,sound=()=>{},now=()=>Date.now()}){
     let context=null,contextWorld=null,actors=new Map(),visitors=new Map(),effects=[],meeting=null,lastPlay=0,lastPrune=0,food=null,loadRetryAt=0,loadEpoch=0,loading=new Set(),heroWakeAnchor=null;
     let meetings={},temporaryPairs={},ownerActions=new Map();
+    const pendingPaths=new WeakMap();
+    function motionOptions(actor,world){
+        if(!world.isEarth||!world.earthScheduler)return {};
+        return {requestPath(from,to){
+            if(clearSegment(world,from,to)){pendingPaths.delete(actor);return [{...to}];}
+            const pending=pendingPaths.get(actor);if(pending&&distance(pending.destination,to)<24)return null;
+            const snapshot={...world},origin={...from},destination={...to},token={destination};pendingPaths.set(actor,token);
+            const valid=()=>pendingPaths.get(actor)===token&&getState().world===world&&actors.get(actor.id)===actor&&world.paths===snapshot.paths&&world.buildings===snapshot.buildings;
+            world.earthScheduler.run(findPathSteps(snapshot,origin,destination),{valid,name:'earth-pet-path'}).then(path=>{
+                if(valid()&&distance(actor.position,origin)<24){actor.path=path;actor.repath=.45;}
+            },()=>{}).finally(()=>{if(pendingPaths.get(actor)===token)pendingPaths.delete(actor);});
+            return null;
+        }};
+    }
     const run=action=>{const {save,content}=getState(),result=petWorldAction(save,content,{...action,visitors:[...visitors.values()],temporaryPairs,friendPetIds:petSceneProfiles(getState()).filter(p=>isFriend(p.id)).map(p=>npcPetId(p.id)),now:now()});temporaryPairs=result.temporaryPairs||temporaryPairs;if(result.changed){commit(result.save);if(action.type==='adopt')sound('adopt');else if(action.type==='feed')sound('feed');else if(result.effects?.some(effect=>effect.markAdded))sound('friendship');}for(const effect of result.effects||[])if(effect.play&&!effect.markAdded){const petId=effect.ids.find(id=>save.pets[id]),otherId=effect.ids.find(id=>id!==petId);if(petId&&otherId)meetings=recordPetMeeting(meetings,{petId,otherId,at:now()},content);}return result;};
     const grouped=()=>{const s=getState();return !!s.team?.length||!!s.save?.coopRun||!!s.socialActors?.some(a=>a.inParty);};
     const profiles=petSceneProfiles;
@@ -109,7 +123,7 @@ export function createPetScene({isFriend=()=>false,getState,commit,toast,sound=(
                     actor.repath-=dt;
                     if(actor.repath<=0||!actor.path.length){actor.path=petMeetingPath(world,actor.position,goal);actor.repath=.5;}
                     const previous=actor.position,next=followPath(world,previous,actor.path,WALK_SPEED*Math.min(.055,dt));actor.position=next.position;actor.path=next.path;actor.moving=distance(previous,actor.position)>.01;actor.phase+=distance(previous,actor.position)*.1;actor.facing=side<0?1:-1;
-                }else stepCompanion(actor,world,row.position,dt);
+                }else stepCompanion(actor,world,row.position,dt,motionOptions(actor,world));
             }
             const at=now();if(food&&at>=food.until)food=null;effects=effects.filter(e=>e.until>at&&e.ids.every(id=>actors.has(id))&&distance(actors.get(e.ids[0]).position,actors.get(e.ids[1]).position)<=p.interactionDistance);
             if(meeting){

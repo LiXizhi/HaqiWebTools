@@ -1,6 +1,6 @@
-import {streetWalkable} from './adventure_city_street_core.js';
+import {streetWalkable,streetSegmentWalkable} from './adventure_city_street_core.js';
 const length=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
-export function clearStreetSegment(scene,a,b){const n=Math.max(1,Math.ceil(length(a,b)/2));for(let i=0;i<=n;i++)if(!streetWalkable(scene,a.x+(b.x-a.x)*i/n,a.y+(b.y-a.y)*i/n))return false;return true;}
+export function clearStreetSegment(scene,a,b){if(scene.streetscape?.movementStep!=null)return streetSegmentWalkable(scene,a,b);const n=Math.max(1,Math.ceil(length(a,b)/2));for(let i=0;i<=n;i++)if(!streetWalkable(scene,a.x+(b.x-a.x)*i/n,a.y+(b.y-a.y)*i/n))return false;return true;}
 // 12-unit grid resolves narrow alleys; heap A* avoids repeatedly sorting a city-wide queue.
 export function streetFindPath(scene,start,target){
     if(!streetWalkable(scene,start.x,start.y)||!streetWalkable(scene,target.x,target.y))return [];

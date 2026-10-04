@@ -9,6 +9,14 @@ export function alignCameraOrigin(x,y,scale,pixelRatio){
     return {x:Math.round(x*pixelsPerUnit)/pixelsPerUnit,y:Math.round(y*pixelsPerUnit)/pixelsPerUnit};
 }
 
+// Bounded city scenes keep the viewport inside their finite map. Preserve the
+// pixel sampling lattice when clamping, including fractional zoom and DPR.
+export function clampCameraToWorld(origin,world,viewport,scale,pixelRatio){
+    const pixelsPerUnit=scale*pixelRatio;
+    const axis=(value,size,view)=>{const maximum=size-view;if(maximum<0)return Math.round(maximum*.5*pixelsPerUnit)/pixelsPerUnit;return Math.max(0,Math.min(Math.floor(maximum*pixelsPerUnit)/pixelsPerUnit,value));};
+    return{x:axis(origin.x,world.w,viewport.w),y:axis(origin.y,world.h,viewport.h)};
+}
+
 function clampZoom(value){return Math.max(.75,Math.min(FISHING_CAMERA_ZOOM,value));}
 function easeInOut(t){return t<.5?4*t*t*t:1-((-2*t+2)**3)/2;}
 

@@ -1,3 +1,5 @@
+import {heroPortrait} from './hero_renderer.js';
+import {npcCharacter} from './adventure_city_people_core.js';
 import {createCloseButton,createWorldMapSwitch} from './view_adventure_controls.js';
 import {earthRules,wrapLongitude} from './adventure_earth_core.js';
 import {layoutEarthAtlasMarkers,layoutEarthAtlasNames,pickEarthAtlasMarker} from './earth_atlas_layout_core.js';
@@ -51,8 +53,9 @@ export function renderEarthLoading(root,{close,retry,switchWorld,localMap,messag
 export function renderEarthStory(root,{assets,city,npc,story,quests,progress,learning,questOffers=[]},{close,choose,advance,practice,go,quest,service,chat}){
     root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
     const box=el('section',null,'dialogue-box rpg-dialogue');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',`与${npc.name}交谈`);
-    const portrait=el('canvas',null,'art dialogue-portrait');portrait.width=150;portrait.height=190;
-    if(assets&&npc.portrait)assets.draw(portrait.getContext('2d'),npc.portrait,0,0,150,190);
+    const character=npcCharacter(npc,assets?.hero?.manifest);
+    const portrait=assets&&character?heroPortrait(assets,character,150,190):el('canvas',null,'art');portrait.classList.add('dialogue-portrait');
+    if(!character){portrait.width=150;portrait.height=190;if(assets&&npc.portrait)assets.draw(portrait.getContext('2d'),npc.portrait,0,0,150,190);}
     const body=el('div',null,'dialogue-content');body.append(el('p',city?.name||'现实世界','eyebrow'),el('h2',npc.name),el('p',npc.role,'muted'),el('p',story.text,'dialogue-text'));
     const languageNames={'zh-CN':'普通话',en:'英语',yue:'粤语',hak:'客家话'};
     if(npc.languages)body.append(el('p',`常用语言：${npc.languages.map(code=>languageNames[code]||code).join('、')}`,'muted'));

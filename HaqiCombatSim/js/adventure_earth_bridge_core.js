@@ -10,12 +10,16 @@ export function earthBridgeContains(road,x,y){
 // Inspect the complete city route before viewport clipping: a short wet run
 // may cross several curve segments. Both full-width banks must be loaded land.
 export function earthRoadCrossings(roads,sample,rules){
+    const steps=earthRoadCrossingSteps(roads,sample,rules);let result;do{result=steps.next();}while(!result.done);return result.value;
+}
+export function* earthRoadCrossingSteps(roads,sample,rules){
     const points=[];
     for(const road of roads){
         const length=Math.hypot(road.b.x-road.a.x,road.b.y-road.a.y),count=Math.max(1,Math.ceil(length/rules.roadSampleStep));
         if(!length)continue;
         const nx=-(road.b.y-road.a.y)/length,ny=(road.b.x-road.a.x)/length;
         for(let i=0;i<=count;i++){
+            yield;
             if(i===0&&points.length)continue;
             const p={x:road.a.x+(road.b.x-road.a.x)*i/count,y:road.a.y+(road.b.y-road.a.y)*i/count};
             const types=[-1,0,1].map(side=>sample(p.x+nx*side*road.width/2,p.y+ny*side*road.width/2));
@@ -25,6 +29,7 @@ export function earthRoadCrossings(roads,sample,rules){
     }
     const bridge=new Set();
     for(let i=0;i<points.length;i++){
+        yield;
         if(points[i].kind!=='water')continue;
         const start=i;while(i+1<points.length&&points[i+1].kind==='water')i++;
         const end=i;
@@ -34,6 +39,7 @@ export function earthRoadCrossings(roads,sample,rules){
     }
     const docks=[];
     for(let i=0;i<points.length;i++){
+        yield;
         if(!['water','sea'].includes(points[i].kind))continue;
         const start=i;while(i+1<points.length&&['water','sea'].includes(points[i+1].kind))i++;
         const end=i;
@@ -47,6 +53,7 @@ export function earthRoadCrossings(roads,sample,rules){
     }
     const out=[];
     for(let i=1;i<points.length;i++){
+        yield;
         const a=points[i-1],b=points[i],isBridge=bridge.has(i-1)&&bridge.has(i);
         if(isBridge||a.kind==='land'&&b.kind==='land'){
             const last=out.at(-1);
@@ -55,6 +62,7 @@ export function earthRoadCrossings(roads,sample,rules){
         }
     }
     for(const dock of docks){
+        yield;
         const road=out.find(r=>Math.hypot(r.a.x-dock.x,r.a.y-dock.y)<.01||Math.hypot(r.b.x-dock.x,r.b.y-dock.y)<.01);
         if(road)(road.docks??=[]).push(dock);
     }

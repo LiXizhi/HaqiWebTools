@@ -1,4 +1,8 @@
 import {cardsInHand} from './combat_unit_core.js';
+import {performanceDiagnostics as perf} from './performance_diagnostics.js';
+import {imageAlphaBoundsSteps} from './image_bounds_core.js';
+import {createImageBoundsPreparation} from './image_bounds_preparation.js';
+import {earthRules} from './adventure_earth_core.js';
 import {warmSceneActors} from './adventure_actor_assets.js';
 import {createMonsterArtRenderer} from './adventure_monster_art.js';
 import {installModelPets} from './adventure_monster_pets_core.js';
@@ -54,6 +58,8 @@ export async function loadResources(progress) {
     progress?.({ label: '正在连接资源服务器', value: null });
     const [content,dataset,manifest,media,effects]=await Promise.all(['chapter','combat','assets','media','spell-effects'].map(n=>json(`data/adventure/${n}.json`)));
     validateAdventureContent(content,dataset,manifest);
+    const preparationRules=earthRules(content),imagePreparation=createImageBoundsPreparation({budgetMs:preparationRules.streamBuildBudgetMs,timeoutMs:preparationRules.requestTimeoutMs});
+    const prepareBounds=(image,rect)=>imagePreparation.prepare(image,rect);
     content.worldMaps=Object.fromEntries(await Promise.all(Object.entries(content.worldMapIndex.islands).map(async([id,info])=>[id,await json(info.file)])));
     validateSpellEffects(effects,dataset.cards);
     const mode=assetMode(location.hostname,location.search);
@@ -74,13 +80,17 @@ export async function loadResources(progress) {
     await Promise.all(Array.from({length:8},worker));
     if(failures.length)throw new Error(`冒险资源缺失，请重新准备资源后重试。${failures[0]}`);
     function getBounds(id,rect) {
-        const img=images.get(id);if(!img)return null;
+        const steps=getBoundsSteps(id,rect);let result;do{result=steps.next();}while(!result.done);return result.value;
+    }
+    function* getBoundsSteps(id,rect,img=images.get(id)) {
+        if(!img)return null;
         const cacheKey=id+JSON.stringify(rect||null);if(bounds.has(cacheKey))return bounds.get(cacheKey);
         const [sx,sy,sw,sh]=rect||[0,0,img.width,img.height];
         const c=document.createElement('canvas');c.width=Math.ceil(sw);c.height=Math.ceil(sh);const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,sx,sy,sw,sh,0,0,c.width,c.height);
-        const data=ctx.getImageData(0,0,c.width,c.height).data;let left=c.width,top=c.height,right=0,bottom=0;
-        for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++)if(data[(y*c.width+x)*4+3]>20){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y);}
-        const value=left>right?[sx,sy,sw,sh]:[sx+left,sy+top,right-left+1,bottom-top+1];bounds.set(cacheKey,value);return value;
+        try{
+            const started=performance.now(),data=ctx.getImageData(0,0,c.width,c.height).data;perf.record('earth-atlas-readback',performance.now()-started);yield;
+            const value=yield* imageAlphaBoundsSteps(data,c.width,c.height,[sx,sy,sw,sh]);if(images.get(id)===img)bounds.set(cacheKey,value);return value;
+        }finally{c.width=c.height=0;}
     }
     // Shared by lazy drawing and explicit scene preparation. Failed loads may be retried.
     function registerImage(id,entry){
@@ -94,7 +104,11 @@ export async function loadResources(progress) {
         if(images.has(id))return Promise.resolve(images.get(id));
         if(!lazyImages.has(id))return Promise.reject(new Error(`角色图片未登记：${id}`));
         if(!imageLoading.has(id)){
-            const entry=lazyImages.get(id),loading=loadImage(assetUrl(entry,mode)).then(image=>{if(lazyImages.get(id)===entry)images.set(id,image);return image;});
+            const entry=lazyImages.get(id),loading=loadImage(assetUrl(entry,mode)).then(async image=>{
+                const world=content.earthWorld;
+                await warmImageBounds(world||{},id,image);
+                if(lazyImages.get(id)===entry)images.set(id,image);return image;
+            });
             imageLoading.set(id,loading);
             loading.catch(()=>{if(imageLoading.get(id)===loading)imageLoading.delete(id);});
         }
@@ -196,17 +210,44 @@ export async function loadResources(progress) {
             terrainDecorationArt?.warm(needed.terrain),
         ]);
     }
-    hero=await loadHeroLibrary(json,content.mountCatalog,{local:mode==='local',sprites:media.entries.sprites.legacyCharacterSource||media.entries.sprites});
+    hero=await loadHeroLibrary(json,content.mountCatalog,{local:mode==='local',sprites:media.entries.sprites.legacyCharacterSource||media.entries.sprites,prepareBounds});
     function sceneryTile(ctx,index,x,y,w,h){
         return draw(ctx,{id:'sprites',crop:tileRect('sprites',index,media.entries.sprites)},x,y,w,h,true,false);
     }
-    const warmActors=(world,save,socialActors=[])=>warmSceneActors({world,save,socialActors,content,monsterArt,hero,ensureImage});
+    async function warmImageBounds(world,id,image){
+        if(id.startsWith('pet:'))return; // Pet animation uses fixed cells and never trims alpha.
+        const entry=lazyImages.get(id);
+        const rects=id==='creatures'?Array.from({length:8},(_,i)=>tileRect(id,i,image)):[null];
+        for(const rect of rects){const key=id+JSON.stringify(rect);if(bounds.has(key))continue;
+            let value=await prepareBounds(image,rect);
+            if(!value)value=await (world.earthScheduler||imagePreparation.scheduler).run(getBoundsSteps(id,rect,image),{valid:()=>lazyImages.get(id)===entry,name:'image-atlas-bounds'});
+            if(value&&lazyImages.get(id)===entry)bounds.set(key,value);
+        }
+    }
+    async function warmActors(world,save,socialActors=[]){
+        const ids=await warmSceneActors({world,save,socialActors,content,monsterArt,hero,ensureImage});
+        for(const id of ids){const image=images.get(id);if(image)await warmImageBounds(world,id,image);}
+        return ids;
+    }
+    async function warmPortraitBounds(world,npcs){
+        for(const npc of npcs){const ref=npc.portrait,id=typeof ref==='string'?ref:ref?.id,image=images.get(id);if(!image)continue;
+            const key=id+JSON.stringify(ref?.crop||null);if(bounds.has(key))continue;
+            const value=await prepareBounds(image,ref?.crop);if(images.get(id)!==image)continue;
+            if(value)bounds.set(key,value);else await (world.earthScheduler||imagePreparation.scheduler).run(getBoundsSteps(id,ref?.crop),{valid:()=>images.get(id)===image,name:'image-atlas-bounds'});
+        }
+    }
+    async function prepareEarthScene(world,save){
+        const nearby={...world,npcs:(world.npcs||[]).filter(n=>Math.hypot(n.x-world.center.x,n.y-world.center.y)<1400),encounters:[]};
+        try{await warmActors(nearby,save);await warmPortraitBounds(world,nearby.npcs);}catch{/* Failed art retains existing drawing fallbacks. */}
+    }
     let warming=false;
     async function warmNearby(world,save){
-        if(warming)return;warming=true;
+        if(warming)return;warming=true;const warmStarted=performance.now();if(world.isEarth)perf.event('earth-warm-start');
         const near=rows=>[...(rows||[])].filter(row=>Math.hypot(row.x-save.position.x,row.y-save.position.y)<1000).sort((a,b)=>Math.hypot(a.x-save.position.x,a.y-save.position.y)-Math.hypot(b.x-save.position.x,b.y-save.position.y)).slice(0,10);
         const nearby={...world,npcs:near(world.npcs),encounters:near(world.encounters)};
-        try{await warmActors(nearby,save);for(const npc of nearby.npcs){const ref=npc.portrait,id=typeof ref==='string'?ref:ref?.id;if(id&&images.has(id)){await new Promise(resolve=>setTimeout(resolve,0));getBounds(id,ref?.crop);}}}catch{/* Drawing retains its retry/fallback path. */}finally{warming=false;}
+        try{await warmActors(nearby,save);for(const npc of nearby.npcs){const ref=npc.portrait,id=typeof ref==='string'?ref:ref?.id;if(id&&images.has(id)){
+            await warmPortraitBounds(world,[npc]);
+        }}}catch{/* Drawing retains its retry/fallback path. */}finally{warming=false;if(world.isEarth)perf.event('earth-warm-end',{elapsed:performance.now()-warmStarted});}
     }
     let battleWarmVersion=0;
     async function warmBattle(battle){
@@ -216,7 +257,7 @@ export async function loadResources(progress) {
         for(let i=0;i<rows.length&&version===battleWarmVersion;i+=4)await skillArt.preload(rows.slice(i,i+4));
     }
 
-    return {registerImage,releaseImage,warmNearby,warmBattle,warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    return {registerImage,releaseImage,ensureImage,prepareEarthScene,warmNearby,warmBattle,warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

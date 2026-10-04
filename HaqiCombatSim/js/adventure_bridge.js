@@ -88,7 +88,12 @@ export function paintBridge(c, bridge, palette, overview=false, pass='all') {
     c.restore();
 }
 
-export function paintBridges(c,bridges,palette,overview=false){
+export function paintBridges(c,bridges,palette,overview=false,rect=null){
+    if(rect)bridges=bridges.filter(bridge=>{
+        const angle=bridge.angle??Math.PI/2,length=bridge.angle==null?bridge.h:bridge.w,width=bridge.angle==null?bridge.w:bridge.h;
+        const dx=(Math.abs(Math.cos(angle))*length+Math.abs(Math.sin(angle))*width)/2+24,dy=(Math.abs(Math.sin(angle))*length+Math.abs(Math.cos(angle))*width)/2+24;
+        return bridge.x+dx>=rect.x&&bridge.x-dx<=rect.x+rect.w&&bridge.y+dy>=rect.y&&bridge.y-dy<=rect.y+rect.h;
+    });
     // Shade first, all decks next, exposed edges last: connected branches
     // cannot cast shadows or run their edge beams across another walkway.
     for(const b of bridges)paintBridge(c,b,palette,overview,'shadow');

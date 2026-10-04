@@ -1,4 +1,4 @@
-import {monsterGearScore} from './combat_power_core.js';
+import {npcCharacter} from './adventure_city_people_core.js';
 import {performanceDiagnostics as perf} from './performance_diagnostics.js';
 import {createFrameMeter} from './frame_meter_core.js';
 import {mergeSceneObjects} from './scene_order_core.js';
@@ -30,7 +30,7 @@ import { drawMagicStar, starCompanionVisible } from './adventure_star.js';
 import { magicStarStatus } from './adventure_magic_star_core.js';
 import { drawIslandWeather, stepWeatherFade } from './adventure_weather.js';
 import {createEarthEnvironmentPainter} from './adventure_earth_environment.js';
-import { alignCameraOrigin, createCameraZoom } from './adventure_camera_core.js';
+import { alignCameraOrigin, clampCameraToWorld, createCameraZoom } from './adventure_camera_core.js';
 import { regionAt } from './adventure_island_layout_core.js';
 import { drawRewardEffect } from './view_adventure_rewards.js';
 import { drawOverheadStatus,drawStatusFeedback,drawSpellMiss } from './view_adventure_overhead_status.js';
@@ -211,6 +211,8 @@ export function createRenderer(canvas,assets) {
         c.restore();
     }
     function render(world,save,time,{graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
+        let phaseTime=perf.enabled&&world.isEarth?performance.now():0;
+        const mark=name=>{if(phaseTime){const now=performance.now();perf.record(name,now-phaseTime);phaseTime=now;}};
         let markerStats;const stats=()=>markerStats??=(catalogStatSnapshot(save,assets.content));
         streetCredit.style.display=world.dungeon?.scene.streetscape?.provenance?.kind==='osm-derived'?'block':'none';
         if(!world.isEarth)worldView.clear();
@@ -218,14 +220,17 @@ export function createRenderer(canvas,assets) {
         cameraZoom.tick(time,reducedMotion.matches);
         const baseScale=w<650?.82:1,sceneZoom=title?1:cameraZoom.value;
         cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:save.position;
-        const origin=alignCameraOrigin(center.x-w/(2*cam.scale),center.y-h/(2*cam.scale)+(w<650?50:25)/sceneZoom,cam.scale,dpr);
+        const aligned=alignCameraOrigin(center.x-w/(2*cam.scale),center.y-h/(2*cam.scale)+(w<650?50:25)/sceneZoom,cam.scale,dpr);
+        const origin=!title&&world.dungeon?.scene.streetscape?.theme==='south-china'?clampCameraToWorld(aligned,world,{w:w/cam.scale,h:h/cam.scale},cam.scale,dpr):aligned;
         cam.x=origin.x;cam.y=origin.y;
         earthEnvironment.update(world,save.position,time,{light:graphics.earthLight,weather:graphics.earthWeather,at:gestureAt,reducedMotion:reducedMotion.matches});
         ctx.save();
         try {
         ctx.scale(cam.scale,cam.scale);ctx.translate(-cam.x,-cam.y);
+        mark('earth-render-setup');
         if(world.isEarth)world.terrainPainter(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale});
         if(world.isEarth)drawEarthDocks(ctx,assets,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale});
+        mark('earth-render-terrain');
         if(world.dungeon?.scene.streetscape)streetPainter.ground(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale});
         else {streetPainter.reset();if(world.isCityDungeon)drawCityScene(ctx,world);}
         for(const mark of world.landmarks||[])if(mark.cityDungeon&&!mark.hidden&&Math.abs(mark.x-(cam.x+w/cam.scale/2))<w/cam.scale/2+70&&Math.abs(mark.y-(cam.y+h/cam.scale/2))<h/cam.scale/2+70)drawDungeonEntrance(ctx,mark,0,true,assets.entranceArt);
@@ -323,6 +328,7 @@ export function createRenderer(canvas,assets) {
         if(world.isEarth)objects=mergeSceneObjects(scenery,objects);
         else objects.sort((a,b)=>(a.sortY??a.y)-(b.sortY??b.y));
         const streetFocus=world.dungeon?.scene.streetscape?[...world.npcs,...streetPainter.people()].filter(n=>Math.hypot(n.x-save.position.x,n.y-save.position.y)<120):[];
+        mark('earth-render-actors');
         for(const o of objects) {
             if(o.hidden)continue;
             if(o.kind.startsWith('street')){streetPainter.draw(ctx,o,save.position,streetFocus);continue;}
@@ -343,14 +349,14 @@ export function createRenderer(canvas,assets) {
                 ctx.restore();
             }
             if(o.kind==='landmark'){
-                if(o.dungeonId&&!o.cityDungeon)drawDungeonEntrance(ctx,o,t,reducedMotion.matches,assets.entranceArt);else if(o.cityHotspot&&!o.streetArt)drawCityHotspot(ctx,o);else if(!world.isEarth&&!o.cityDungeon)drawSignpost(ctx,o.name,o.x,o.y);
+                if(o.dungeonId&&!o.cityDungeon)drawDungeonEntrance(ctx,o,t,reducedMotion.matches,assets.entranceArt);else if(o.cityHotspot&&!o.streetArt)drawCityHotspot(ctx,o);else if(!world.isEarth&&!o.cityDungeon&&!o.streetArt)drawSignpost(ctx,o.name,o.x,o.y);
                 if(o.cityDungeon&&!world.isEarth){const art=cityEntranceAppearance(o.cityLevel,o.cityNodeEntrance);plate(ctx,o.name,o.x,o.y-art.h/2-17,{...PLATE.place,text:art.color});}
                 else if(!world.isEarth&&o.cityHotspot)plate(ctx,o.name,o.x,o.y+32);
             }
             if(o.kind==='npc') {
                 shadow(ctx,o.x,o.y,25);const dragon=[36211,30112].includes(o.id),sw=dragon?100:64,sh=dragon?104:86;
-                // The world redraws every frame; a late image callback must not erase a moved camera's scene.
-                if(o.character)avatar(ctx,{...o.character,mountId:null,facing:o.facing||0},o.x,o.y,t,false,1,false);
+                const character=npcCharacter(o,assets.hero?.manifest,world.isCityDungeon===true);
+                if(character)avatar(ctx,{...character,facing:o.facing||0},o.x,o.y,t,false,1,false);
                 else if(!assets.draw(ctx,o.portrait,o.x-sw/2,o.y-sh+Math.sin(t*1.6+o.id)*1.5,sw,sh,true,false)){
                     ellipse(ctx,o.x,o.y-27,19,28,'#668b76');ellipse(ctx,o.x,o.y-65,14,16,'#efd6ad');
                 }
@@ -362,7 +368,7 @@ export function createRenderer(canvas,assets) {
                 ctx.save();ctx.globalAlpha*=o.sceneState?.opacity??1;
                 const m=o.monster||assets.content.monsters[o.monsterId]||{name:'缺失怪物'};
                 monster(ctx,m,o.x,o.y,t,o.scale,o);
-                if(o.index===0)plate(ctx,tr(m.name)+(o.monster?` · ${m.level}级`:'')+` · ${tr('战力')} ${monsterGearScore(m)}`+(o.groupSize>1?` · ${tr(`${o.groupSize}只`)}`:'')+(o.blocked?.length?` · ${tr('待迁移')}`:''),o.x,o.y+18,PLATE.mob);
+                if(o.index===0)plate(ctx,tr(m.name)+(o.monster?` · ${m.level}级`:'')+(o.groupSize>1?` · ${tr(`${o.groupSize}只`)}`:'')+(o.blocked?.length?` · ${tr('待迁移')}`:''),o.x,o.y+18,PLATE.mob);
                 const q=currentQuest(save,assets.content),goal=q&&questProgress(save,q).find(g=>g.kind==='defeat'&&g.id===m.goalId&&g.value<g.count);
                 const trackedMob=(o.monsterIds||[o.monsterId]).some(id=>catalogTracksMonster(save,assets.content,assets.content.monsters[id]));
                 if(o.mode==='warning'){
@@ -429,6 +435,7 @@ export function createRenderer(canvas,assets) {
                 ctx.restore();
             }
         }
+        mark('earth-render-objects');
         if(petScene&&!title)drawPetSocialEffects(ctx,assets,objects.filter(o=>o.kind==='pet-social'&&o.x>=cam.x-80&&o.x<=cam.x+w/cam.scale+80&&o.y>=cam.y&&o.y<=cam.y+h/cam.scale+80).map(o=>o.row),petScene.effects,time,reducedMotion.matches,petScene.now);
         if(petScene?.food&&!title){const f=petScene.food;ctx.fillStyle='#b58a55';ctx.beginPath();ctx.ellipse(f.x,f.y,16,7,0,0,Math.PI*2);ctx.fill();ctx.fillStyle='#efcc80';for(let i=0;i<5;i++){ctx.beginPath();ctx.arc(f.x-8+i*4,f.y-2-(i%2)*3,3,0,Math.PI*2);ctx.fill();}}
         if(learningGreeting&&!title){
@@ -482,6 +489,7 @@ export function createRenderer(canvas,assets) {
             vignette.addColorStop(0,'transparent');vignette.addColorStop(1,'#113b4b66');g.fillStyle=vignette;g.fillRect(0,0,w,h);
         }
         ctx.drawImage(vignetteCanvas,0,0,w,h);
+        mark('earth-render-overlay');
         if(world.isEarth&&!title){
             // Screen-size labels stay readable at every scene zoom, above scenery.
             const seen=new Set(),placed=[];
@@ -506,8 +514,8 @@ export function createRenderer(canvas,assets) {
             }
             ctx.restore();
         }
-        const meter=frameMeter.sample(time,(world.isEarth||world.isCityDungeon)&&!title&&!motionHidden);
-        if((world.isEarth||world.isCityDungeon)&&!title&&!motionHidden){
+        const meter=frameMeter.sample(time,!title&&!motionHidden);
+        if(!title&&!motionHidden){
             ctx.save();ctx.font='600 12px monospace';ctx.textAlign='left';ctx.fillStyle='#17332ddd';
             ctx.fillRect(8,h-30,156,22);ctx.fillStyle='#e7f3dd';
             ctx.fillText(meter?`FPS ${meter.fps} · ${meter.ms.toFixed(1)} ms`:'FPS —',14,h-15);ctx.restore();

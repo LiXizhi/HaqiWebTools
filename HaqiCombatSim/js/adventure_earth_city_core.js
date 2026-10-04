@@ -8,12 +8,16 @@ export function earthCityProfile(population,rules){
 }
 // Fixed geographic cells make placement independent of camera/chunk visitation order.
 export function generateEarthUrbanChunk(cx,cy,cities,rules,terrainAt,blocked=()=>false){
+    const steps=generateEarthUrbanChunkSteps(cx,cy,cities,rules,terrainAt,blocked);let result;do{result=steps.next();}while(!result.done);return result.value;
+}
+export function* generateEarthUrbanChunkSteps(cx,cy,cities,rules,terrainAt,blocked=()=>false){
     const width=360*rules.unitsPerDegree,nx=((cx%(width/rules.chunkSize))+width/rules.chunkSize)%(width/rules.chunkSize);
     const center={x:(cx+.5)*rules.chunkSize,y:(cy+.5)*rules.chunkSize};
     let nearest=null,distance=rules.cityInfluenceRadius;
-    for(const city of cities){const q=earthPoint(city.lon,city.lat,rules),dx=((q.x-center.x+width*1.5)%width)-width/2,d=Math.hypot(dx,q.y-center.y);if(d<distance||(d===distance&&String(city.id)<String(nearest?.id))){distance=d;nearest=city;}}
+    for(const city of cities){yield;const q=earthPoint(city.lon,city.lat,rules),dx=((q.x-center.x+width*1.5)%width)-width/2,d=Math.hypot(dx,q.y-center.y);if(d<distance||(d===distance&&String(city.id)<String(nearest?.id))){distance=d;nearest=city;}}
     const profile=earthCityProfile(nearest?.population||0,rules),out=[],cells=rules.cityCellsPerChunk,step=rules.chunkSize/cells;
     for(let row=0;row<cells;row++)for(let col=0;col<cells;col++){
+        yield;
         const rng=createRng(hashSeed(`earth-city:${rules.generationVersion}:${nx}:${cy}:${row}:${col}`));
         const axis=n=>Math.floor(n/3)*rules.cityBlockSize+rules.cityBlockInset+(n%3)*(rules.cityBlockSize-2*rules.cityBlockInset)/2;
         const at={x:cx*rules.chunkSize+axis(col),y:cy*rules.chunkSize+axis(row)+rules.cityBuildingSetback},block=earthCityBlock(at.x,at.y,rules.cityBlockSize,width);

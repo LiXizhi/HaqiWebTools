@@ -1,7 +1,7 @@
 import {recordPetMeal} from './adventure_pet_quests_core.js';
 import {ownedPetRecords} from './adventure_pet_files_core.js';
 // Adventure adaptation; original combat formulae remain in combat_formulas_core.
-import { defaultParams, resolveParams } from './combat_params_core.js';
+import { resolveParams } from './combat_params_core.js';
 import { baseMaxHp, applyHpStats } from './combat_formulas_core.js';
 import { normalizeStats } from './combat_unit_core.js';
 import { dungeonFor } from './adventure_dungeons_core.js';
@@ -10,7 +10,7 @@ export const STARTERS=['dragon_green','dragon_purple','dragon_orange'];
 export const STAGE_NAMES=['幼年','青年','成年','隐藏形态'];
 export const FOOD_ID=990001, CAPTURE_ID=990002, GENERAL_CATCH_RUNE=23439;
 const check=(ok,message)=>{if(!ok)throw Error(message);};
-export const petParams=content=>resolveParams({cards:{}},content.balanceParams||defaultParams('kids')).adventure;
+export const petParams=content=>resolveParams({cards:{}},content.balanceParams||{version:'kids'},{groups:['adventure']}).adventure;
 export function foodInfo(content,id){
  const p=petParams(content);
  if(Number(id)===FOOD_ID)return {restore:p.foodRestore,xp:0,price:p.foodPrice};

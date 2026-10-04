@@ -19,13 +19,16 @@ test('re-registering the shared resident atlas keeps pending loads valid; change
 test('street cache is bounded, reuses baked tiles and releases art on leaving',()=>{
     let canvases=0,released=0;const context=new Proxy({},{get:()=>()=>{},set:()=>true});
     const art={entries:{test:{id:'street:test'}}},painter=createStreetPainter({content:{cityStreetArt:art},registerImage:()=>{},releaseImage:()=>released++},{makeCanvas:()=>{canvases++;return{getContext:()=>context};}});
-    const scene={streetscape:emptyStreet()},world={w:8192,h:8192,dungeon:{scene}};
+    const street=emptyStreet();street.objects.push({id:'test',art:'test',x:100,y:100,w:40,h:40});const scene={streetscape:street},world={w:8192,h:8192,dungeon:{scene}};
     painter.ground(context,world,{x:0,y:0,w:500,h:500});assert.equal(canvases,1);painter.ground(context,world,{x:0,y:0,w:500,h:500});assert.equal(canvases,1);
     painter.ground(context,world,{x:0,y:0,w:8192,h:8192});assert.ok(painter.stats().tiles<=48);
     painter.reset();assert.equal(painter.stats().tiles,0);assert.equal(released,1);painter.reset();assert.equal(released,1);
 });
 test('shared street WebP files match their manifest and budget',()=>{
     const art=JSON.parse(fs.readFileSync(new URL('../data/adventure/earth/street-art.json',import.meta.url),'utf8'));
-    assert.equal(Object.keys(art.entries).length,16);
-    for(const entry of Object.values(art.entries)){const data=fs.readFileSync(new URL('../'+entry.local,import.meta.url));assert.ok(data.length<=200000);assert.equal(data.length,entry.bytes);assert.equal(data.toString('ascii',8,12),'WEBP');assert.equal(createHash('sha256').update(data).digest('hex'),entry.sha256);assert.equal(new URL(entry.cdn).hostname,'cdn.keepwork.com');}
+    assert.equal(Object.keys(art.entries).filter(k=>k.startsWith('living:')).length,116);
+    assert.equal(art.themes['south-china'].camera.view,'front-slight-down');
+    for(const entry of Object.values(art.entries).filter(e=>e.atlas))assert.equal(entry.view,entry.group==='ground'?'ground-plane':'front-slight-down');
+    for(const entry of [...Object.values(art.entries).filter(e=>!e.atlas),...Object.values(art.atlases)]){const data=fs.readFileSync(new URL('../'+entry.local,import.meta.url));assert.ok(data.length<=200000);assert.equal(data.length,entry.bytes);assert.equal(data.toString('ascii',8,12),'WEBP');assert.equal(createHash('sha256').update(data).digest('hex'),entry.sha256);assert.equal(new URL(entry.cdn).hostname,'cdn.keepwork.com');}
+    for(const entry of Object.values(art.entries).filter(e=>e.atlas)){const atlas=art.atlases[entry.atlas],[x,y,w,h]=entry.crop;assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=atlas.width&&y+h<=atlas.height);assert.equal(w,entry.width);assert.equal(h,entry.height);}
 });

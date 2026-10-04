@@ -32,3 +32,13 @@ export function streetPeopleProfiles(street,manifest,seed='street'){
     }
     return profiles;
 }
+
+// Only Earth city dungeons replace portrait NPCs with wardrobe characters.
+// Island NPCs and Earth surface NPCs retain their original portraits/explicit characters.
+export function npcCharacter(npc,manifest,cityDungeon=false){
+    if(!cityDungeon&&!npc?.cityDungeonNpc&&!npc?.zone?.startsWith('city:'))return npc?.character?{...npc.character,mountId:null}:null;
+    if(checkedCharacter(npc?.character,manifest))return{...npc.character,mountId:null};
+    const pool=urbanResidentProfiles(manifest),identity=String(npc?.id??npc?.name??'resident');
+    const selected=pool[hashSeed('npc-character:'+identity)%pool.length];
+    return{...(selected||{appearance:hashSeed(identity)%2?'girl':'boy'}),mountId:null};
+}

@@ -1,7 +1,8 @@
 // Browser-only, bounded high-detail Canvas chunks. No global bitmap or IO here.
 import {createEarthSurfaceRaster} from './adventure_earth_surface_core.js';
 import {earthGroundDecoration,earthGroundBounds,earthSurfaceObjectKey,drawEarthSurfaceObject,bakeEarthSurfaceObjects} from './adventure_earth_surface_objects.js';
-export function createEarthSurfacePainter({rules,sample,loadArt,canvasFactory=()=>document.createElement('canvas'),clock=()=>performance.now(),workerFactory=()=>typeof Worker!=='undefined'?new Worker(new URL('./adventure_earth_surface_worker.js',import.meta.url),{type:'module'}):null}){
+import {performanceDiagnostics as perf} from './performance_diagnostics.js';
+export function createEarthSurfacePainter({rules,sample,loadArt,scheduler=null,canvasFactory=()=>document.createElement('canvas'),clock=()=>performance.now(),workerFactory=()=>typeof Worker!=='undefined'?new Worker(new URL('./adventure_earth_surface_worker.js',import.meta.url),{type:'module'}):null}){
     const emptyObjects=[],objectKeyCache=new WeakMap();let visibleKeys=new Set();
     let worker=null,workerBusy=null,workerSequence=0,workerFailed=false;
     let currentRoads=[],currentObjects=[],objectBuckets=new Map(),scheduleKey=null,visibleTiles=[],wantedTiles=new Set(),scheduledTiles=[],queueDirty=true,queueBuilds=0;
@@ -35,12 +36,12 @@ export function createEarthSurfacePainter({rules,sample,loadArt,canvasFactory=()
             worker.onmessage=({data})=>{const job=workerBusy;workerBusy=null;if(disposed||!job){data.bitmap?.close();return;}if(data.error){failWorker();return;}
                 if(active?.id===data.id){finish(active,data.pixels,data.bitmap,data.baked);active=null;}
                 else data.bitmap?.close();
-                if(!frame&&(active||pending.length))frame=requestAnimationFrame(pump);
+                if(!frame&&(active||pending.length))requestPump();
             };
             worker.onerror=()=>failWorker();worker.postMessage({type:'atlas',atlas:art.terrain,cityGround:art.cityGround,art:workerArt,composite:typeof OffscreenCanvas!=='undefined'&&typeof createImageBitmap==='function'},Object.values(workerArt).map(a=>a.image));transferred=true;
         }catch{if(!transferred)Object.values(workerArt).forEach(a=>a.image.close());failWorker();}
     }
-    function failWorker(){worker?.terminate();worker=null;workerBusy=null;workerFailed=true;if(active)active.job=createEarthSurfaceRaster({...active.options,sample,atlas:art?.terrain,cityGround:art?.cityGround});if(!disposed&&!frame)frame=requestAnimationFrame(pump);}
+    function failWorker(){worker?.terminate();worker=null;workerBusy=null;workerFailed=true;if(active)active.job=createEarthSurfaceRaster({...active.options,sample,atlas:art?.terrain,cityGround:art?.cityGround});if(!disposed&&!frame)requestPump();}
     function finish(job,data,bitmap=null,baked=null){
         let canvas=bitmap,objects;
         if(!canvas){
@@ -70,23 +71,55 @@ export function createEarthSurfacePainter({rules,sample,loadArt,canvasFactory=()
             if(active?.key===key)active=null;
         }
     }
+    // Prepare changed buckets outside the render loop; adoption only swaps references.
+    function* prepare(target){
+        if(target.trees===currentObjects&&target.paths===currentRoads)return {roads:currentRoads,objects:currentObjects,buckets:objectBuckets,invalid:new Set()};
+        const objects=target.trees||emptyObjects,roads=target.paths||emptyObjects,buckets=new Map(),invalid=new Set(),oldObjects=new Set(),nextObjects=new Set();
+        for(const o of currentObjects){if(earthGroundDecoration(o))oldObjects.add(o);yield;}
+        for(const o of objects){
+            if(earthGroundDecoration(o)){nextObjects.add(o);for(const key of objectKeys(o)){if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(o);if(!oldObjects.has(o))invalid.add(key);}}yield;
+        }
+        for(const o of oldObjects){if(!nextObjects.has(o))for(const key of objectKeys(o))invalid.add(key);yield;}
+        const oldRoads=new Set(currentRoads),newRoads=new Set(roads);
+        for(const road of [...currentRoads.filter(r=>!newRoads.has(r)),...roads.filter(r=>!oldRoads.has(r))]){
+            const pad=(road.width??rules.cityConnectionWidth)/2+rules.cityConnectionShoulderWidth+rules.cityConnectionBlendWidth;
+            for(const [key,tile] of tiles){if(tile.x+size+gutter>=Math.min(road.a.x,road.b.x)-pad&&tile.x-gutter<=Math.max(road.a.x,road.b.x)+pad&&tile.y+size+gutter>=Math.min(road.a.y,road.b.y)-pad&&tile.y-gutter<=Math.max(road.a.y,road.b.y)+pad)invalid.add(key);yield;}
+        }
+        return {roads,objects,buckets,invalid};
+    }
+    function adopt(target,prepared){
+        if(lastTarget!==target)return;
+        currentRoads=prepared.roads;currentObjects=prepared.objects;objectBuckets=prepared.buckets;
+        for(const key of prepared.invalid){if(tiles.has(key))tiles.get(key).stale=true;if(active?.key===key)active=null;}
+        queueDirty=true;
+    }
     function dispatch(job){
         const o=job.options,west=Math.floor(o.x/o.cellSize)-2,north=Math.floor(o.y/o.cellSize)-2,count=Math.ceil(o.size/o.cellSize)+6,grid={};
         for(let gy=0;gy<count;gy++)for(let gx=0;gx<count;gx++){const x=(((west+gx+.5)*o.cellSize)%o.worldWidth+o.worldWidth)%o.worldWidth,y=(north+gy+.5)*o.cellSize;grid[`${Math.floor(x/o.cellSize)}:${Math.floor(y/o.cellSize)}`]=sample(x,y);}
         workerBusy=job;try{worker.postMessage({id:job.id,options:o,grid,objects:job.objects});}catch{failWorker();}
     }
-    function pump(){frame=0;if(disposed||workerBusy)return;const started=clock(),deadline=started+Math.min(rules.surfaceFrameBudgetMs,rules.surfaceFallbackBudgetMs);
-        do{
+    function* pumpSteps(){
+        while(!disposed&&!workerBusy&&(active||pending.length)){
             if(!active){const next=pending.shift();if(!next)break;const [key,x,y]=next;
                 const options={x:x-gutter,y:y-gutter,size:size+gutter*2,resolution:padded,cellSize:rules.unitsPerDegree*2/512,period:rules.surfaceTexturePeriod,cityBlockSize:rules.cityBlockSize,cityGroundPeriod:rules.cityGroundPeriod,vegetationTint:rules.surfaceVegetationTint,detailStrength:rules.surfaceDetailStrength,detailSpacing:rules.surfaceDetailSpacing,detailDensity:rules.surfaceDetailDensity,roads:currentRoads.filter(road=>Math.max(road.a.x,road.b.x)>=x-size/2&&Math.min(road.a.x,road.b.x)<=x+size*1.5&&Math.max(road.a.y,road.b.y)>=y-size/2&&Math.min(road.a.y,road.b.y)<=y+size*1.5),roadStyle:{width:rules.cityConnectionWidth,blendWidth:rules.cityConnectionBlendWidth,shoulderWidth:rules.cityConnectionShoulderWidth,textureOpacity:rules.cityConnectionTextureOpacity},worldWidth:rules.unitsPerDegree*360};
                 active={id:++workerSequence,key,x,y,options,objects:[...(objectBuckets.get(key)||[])].sort((a,b)=>a.y-b.y)};
-                if(worker){dispatch(active);break;}
+                if(worker){dispatch(active);return;}
                 active.job=createEarthSurfaceRaster({...options,sample,atlas:art?.terrain,cityGround:art?.cityGround});
             }
             if(active.job.rows(1)){finish(active,active.job.pixels);active=null;}
-        }while(clock()<deadline);
+            yield;
+        }
+    }
+    function requestPump(){
+        if(frame||disposed||workerBusy)return;
+        if(scheduler){frame=1;scheduler.run(pumpSteps(),{valid:()=>!disposed,name:'earth-surface'}).catch(()=>{}).finally(()=>{frame=0;if(!disposed&&!workerBusy&&(active||pending.length))requestPump();});}
+        else frame=requestAnimationFrame(pump);
+    }
+    function pump(){frame=0;if(disposed||workerBusy)return;const started=clock(),deadline=started+Math.min(rules.surfaceFrameBudgetMs,rules.surfaceFallbackBudgetMs),steps=pumpSteps();
+        let result;do{result=steps.next();}while(!result.done&&clock()<deadline);
         maxSliceMs=Math.max(maxSliceMs,clock()-started);
-        if(!workerBusy&&(active||pending.length))frame=requestAnimationFrame(pump);
+        perf.record('earth-surface-slice',clock()-started);
+        if(!workerBusy&&(active||pending.length))requestPump();
     }
     function draw(ctx,target,rect){
         if(disposed)return;if(lastTarget!==target){lastTarget=target;currentRoads=target.paths||[];currentObjects=[];clearTiles();}
@@ -119,7 +152,7 @@ export function createEarthSurfacePainter({rules,sample,loadArt,canvasFactory=()
         }
         for(const row of visibleTiles){const tile=tiles.get(row.key);if(tile)ctx.drawImage(tile.canvas,row.x-gutter,row.y-gutter,size+gutter*2,size+gutter*2);}
         if(queueDirty){pending=scheduledTiles.filter(row=>row.key!==active?.key&&(!tiles.has(row.key)||tiles.get(row.key).stale)).map(row=>[row.key,row.x,row.y]);queueDirty=false;queueBuilds++;}
-        if(!frame&&!workerBusy&&(active||pending.length))frame=requestAnimationFrame(pump);
+        if(!frame&&!workerBusy&&(active||pending.length))requestPump();
     }
     function covers(target,rect){
         if(target!==lastTarget)return false;
@@ -142,5 +175,5 @@ export function createEarthSurfacePainter({rules,sample,loadArt,canvasFactory=()
         ctx.save();ctx.beginPath();for(const key of missing){const [x,y]=key.split(':').map(Number);ctx.rect(x*size,y*size,size,size);}ctx.clip();
         const drawn=drawEarthSurfaceObject(ctx,o,art);ctx.restore();return drawn;
     }
-    return {draw,covers,decoration,isBaked,invalidate,dispose(){disposed=true;worker?.terminate();worker=null;workerBusy=null;if(frame)cancelAnimationFrame(frame);frame=0;clearTiles();objectBuckets.clear();currentObjects=[];visibleTiles=[];art=null;},get stats(){return {worker:!!worker,resolution,chunks:tiles.size,queued:pending.length,active:!!active,bytes:tiles.size*padded*padded*4,artReady:!!art,built,queueBuilds,maxSliceMs:Math.round(maxSliceMs*10)/10};}};
+    return {draw,covers,decoration,isBaked,invalidate,prepare,adopt,dispose(){disposed=true;worker?.terminate();worker=null;workerBusy=null;if(frame&&!scheduler)cancelAnimationFrame(frame);frame=0;clearTiles();objectBuckets.clear();currentObjects=[];visibleTiles=[];art=null;},get stats(){return {worker:!!worker,resolution,chunks:tiles.size,queued:pending.length,active:!!active,bytes:tiles.size*padded*padded*4,artReady:!!art,built,queueBuilds,maxSliceMs:Math.round((scheduler?.stats.maxSliceMs??maxSliceMs)*10)/10};}};
 }

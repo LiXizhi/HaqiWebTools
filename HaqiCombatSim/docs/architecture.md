@@ -71,7 +71,10 @@ flowchart LR
     Import --> Archive[制作快照与缺口报告]
     Import --> City[单城 JSON streetscape]
     Art[透明 WebP / CDN 清单] --> City
-    Generated[种子街道生成版本 2] --> City
+    Generated[种子街道生成版本 1 / 2 / 3] --> City
+    Living[版本3：华南组合街区 / 固定比例 / 生活设施] --> Generated
+    Atlas[分组WebP Atlas / 裁剪帧 / 可替换招牌挂点] --> Painter
+    Atlas --> City
     City --> Collision[street_core / navigation_core：碰撞与寻路]
     City --> Painter[view_city_street：分块缓存 / 视野索引 / 遮挡]
     City --> Motion[street_core：行人与车辆]
@@ -131,6 +134,17 @@ flowchart LR
     Prepare -->|成功后切换| Provider[连续地球提供器：局部物件 / 碰撞 / 寻路]
     Provider -->|步行邻域与前方预取| Cache
     Cache --> CDN[HelloWorld 地形 PNG / 城市 CSV]
+    Cache --> StreamWorker[按需流送Worker：Offscreen地形与图集分类 / CSV / 道路与物件候选]
+    StreamWorker --> StableCache[有界分类 / 道路拓扑 / 逻辑块缓存：输入版本失效]
+    StableCache --> Packets[64行背压分包：重叠物件引用 / 仅新增地形分类]
+    Packets --> Staging[暂存场景：增量复用 / 碰撞与静态索引 / 地表失效范围]
+    Staging --> FrameCommit[帧边界交换引用：epoch与请求版本校验]
+    FrameCommit --> Provider
+    SharedBudget[earth_work_scheduler：共享2ms准备预算 / 无Worker同规则可暂停回退] --> Staging
+    SharedBudget --> SocialStream
+    ImageWorker[image_bounds_worker：岛屿与地球共用 / 按需启动 / 空闲释放] --> ResourceWarm[图集透明边界 / 新名单外观与宠物预热 / 异步解码]
+    SharedBudget --> ResourceWarm
+    ResourceWarm --> Canvas
     Provider -->|进入作者城市| Region[单城 JSON：居民 / 地标 / 故事 / 文化 / 美术引用]
     Region -->|附近交互| Story[内存故事 / 支线 / 语言学习]
     Region --> Portrait[按需 NPC WebP：进入登记 / 离开释放]
@@ -144,6 +158,7 @@ flowchart LR
     Provider --> Canvas
     Provider -->|局部道路、真实地类与小装饰| SurfaceBake[单Worker地表烘焙：小物件与投影 / 磨损公路 / 渐隐路肩]
     SurfaceBake -->|OffscreenCanvas成品ImageBitmap / 分帧Canvas回退| SurfaceCache[有限地表分块缓存：边界变化才重排队列]
+    SharedBudget --> SurfaceBake
     SurfaceCache --> Canvas
     Provider --> SceneViewCache[静态视野列表：128单位余量 / 索引失效刷新 / 活动角色Y合并]
     SceneViewCache --> Canvas
@@ -526,3 +541,17 @@ flowchart LR
 
 
 2026-10-03 地球小物件烘焙补充：`adventure_earth_surface_objects.js` 为主线程与 Worker 共享小装饰绘制和投影。草丛、岩石、花草、麦穗、雪堆等按实际精灵及投影范围索引到相交分块，流送时只更新变化的块；高树继续 Y 排序及遮挡淡化。支持 OffscreenCanvas 时 Worker 合成地表、道路与装饰后转移 ImageBitmap，主线程直接纳入有界缓存；不支持合成时仍转移像素并在主线程分帧回退。缓存记录绘制身份，兼容空间索引浅复制，部分缓存期间逐块裁剪临时装饰，避免跨块重复绘制。过期、淘汰和退出的 ImageBitmap 显式 close；完整覆盖后跳过底层源地形与临时道路重画。
+
+固定NPC外观通过 `adventure_city_people_core.js` 的 `npcCharacter` 解析，由 `hero_renderer.js` 统一绘制场景、剧情对话及自由聊天；`adventure_actor_assets.js` 按同一结果预加载头部/服装。旧人物portrait仅保留来源与配置兼容，不参与人物显示。
+
+华南版本3 `frontageRevision:2` 街景通过纯布局核心生成门前路径、楼间连通巷和院墙。物件imageOffsetY只调整楼体图像与门脸接合，不改变脚底、排序和碰撞坐标；视野包围盒与地表烘焙轮廓须包含该偏移。图集中的view及主题camera用于制作/QA契约，运行时不旋转或拉伸纠正不合格透视。
+
+静态生活细节沿用同一Atlas/组件协议；壁挂风扇、信箱与水管属于建筑组件，独立家具按真实底座碰撞。布局核心用独立ground-wear种子生成局部使用痕迹，街景核心校验wear多边形与markings折线，view_city_street按tile裁剪并进入24MiB地表缓存；不增加运行时网络或战斗随机调用。华南主题镜头由纯adventure_camera_core的clampCameraToWorld收边，渲染与screenToWorld复用最终原点，其他主题保持原逻辑。
+
+版本3的圆形脚底、步长与边界留白从BalanceParams进入streetscape元数据；纯adventure_city_street_core提供点位及连续线段碰撞，adventure_world_core移动与adventure_city_navigation_core捷径共用。旧场景没有字段时保持旧算法。设施occludes只影响view_city_street整组透明度，不参与碰撞或存档进度。
+
+
+2026-10-04街区步行落脚点补充：v3纯布局登记门前/设施/长椅目的地，几何校验限制地图内坐标，生成测试验证实际寻路。过街齐平入口与提示铺装进入现有地表缓存；候车挂牌仍使用同一建筑附属组件与文字缓存。没有新增IO层、玩法状态或战斗随机流。
+
+
+街区静态渲染优化仍在view_city_street：场景选择建立地面精灵/投影阴影索引和静态资源ID表，tile烘焙按范围跳过无关几何并复用CanvasPattern。迟到Atlas使纹理/pattern/tile一起失效，离场统一释放；不改变核心碰撞、随机数或存档结构。招牌的测量排版与最近使用缓存也在渲染层。

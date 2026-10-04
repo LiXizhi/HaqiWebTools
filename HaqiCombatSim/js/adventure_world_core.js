@@ -1,5 +1,5 @@
 import {createPathQueue} from './path_queue_core.js';
-import {streetWalkable} from './adventure_city_street_core.js';
+import {streetWalkable,streetSegmentWalkable} from './adventure_city_street_core.js';
 import {streetFindPath} from './adventure_city_navigation_core.js';
 import {monsterInteractionTargets,monsterContactDistance,inMonsterTerritory,pruneMonsterScene} from './adventure_monster_motion_core.js';
 import {dungeonProgress} from './adventure_coop_core.js';
@@ -320,8 +320,9 @@ export function clearTeleportSpot(world,x,y,extras=[],clearance=50){
 }
 export function movePosition(world,position,dx,dy) {
     // Sweep small steps to prevent tunneling through trees during a delayed frame.
-    const steps=Math.max(1,Math.ceil(Math.hypot(dx,dy)/8));let {x,y}=position;
-    const allowed=(x,y)=>walkable(world,x,y)&&(!world.layout?.route||routeLocation(world,{x,y}).progress<=dungeonLimit(world));
+    const street=world.isCityDungeon?world.dungeon.scene.streetscape:null,quantum=street?.movementStep??8;
+    const steps=Math.max(1,Math.ceil(Math.hypot(dx,dy)/quantum));let {x,y}=position;
+    const allowed=(nx,ny)=>walkable(world,nx,ny)&&(street?.movementStep==null||streetSegmentWalkable(world.dungeon.scene,{x,y},{x:nx,y:ny}))&&(!world.layout?.route||routeLocation(world,{x:nx,y:ny}).progress<=dungeonLimit(world));
     for(let i=0;i<steps;i++) {if(allowed(x+dx/steps,y))x+=dx/steps;if(allowed(x,y+dy/steps))y+=dy/steps;}
     return {x:world.isEarth?((x%world.w)+world.w)%world.w:x,y};
 }
@@ -358,6 +359,9 @@ function pathLength(origin,points){
     return total;
 }
 function gridPath(world,start,destination,bounds=null){
+    const steps=gridPathSteps(world,start,destination,bounds);let result;do{result=steps.next();}while(!result.done);return result.value;
+}
+function* gridPathSteps(world,start,destination,bounds=null){
     const size=24,cols=Math.ceil(world.w/size),rows=Math.ceil(world.h/size);
     const cell=p=>({x:Math.floor(p.x/size),y:Math.floor(p.y/size)}),point=p=>({x:p.x*size+size/2,y:p.y*size+size/2});
     const inside=p=>!bounds||(p.x>=bounds.minX&&p.y>=bounds.minY&&p.x<=bounds.maxX&&p.y<=bounds.maxY);
@@ -381,10 +385,11 @@ function gridPath(world,start,destination,bounds=null){
     open.push(from,key(from),distance(from,goal));
     const dirs=[[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
     while(open.length&&(!world.isEarth||closed.size<world.earthRules.maxPathNodes)) {
+        yield;
         const p=open.shift(),k=key(p);if(closed.has(k))continue;closed.add(k);
         if(k===key(goal)) {
             const out=[];let n=p;
-            while(key(n)!==key(from)) {out.push(point(n));n=parent.get(key(n));if(!n)return [];}
+            while(key(n)!==key(from)) {out.push(point(n));n=parent.get(key(n));if(!n)return [];yield;}
             out.push(point(from));out.reverse();
             if(walkable(world,destination.x,destination.y)&&inside(destination)){
                 const last=out.at(-1);
@@ -460,7 +465,7 @@ function roadPath(world,start,destination){
         for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
             const d=distance(nodes[i],nodes[j]);if(d<420&&clearSegment(world,nodes[i],nodes[j])){links[i].push([j,d]);links[j].push([i,d]);}
         }
-        graph={nodes,links};roadGraphs.set(world,graph);
+        graph={nodes,links,paths:world.paths,buildings:world.buildings};roadGraphs.set(world,graph);
     }
     // Keep the nearest vertices, and also any vertex close enough to cut the corner.
     // A hard cap of 10 misses a visible junction when a plaza has many nearer nodes.
@@ -485,15 +490,29 @@ function roadPath(world,start,destination){
 
 // Immutable world objects are indexed once; collision and drawing query local buckets.
 const objectIndices=new WeakMap();
-export function invalidateWorldObjects(world){objectIndices.delete(world);roadGraphs.delete(world);pruneMonsterScene(world);}
+const earthObjectDescriptors=new WeakMap();
+export function invalidateWorldObjects(world,change={}){if(!change.wildOnly&&!change.prepared){objectIndices.delete(world);roadGraphs.delete(world);}pruneMonsterScene(world);}
+export function* prepareWorldObjectIndex(world,previous=null){
+    if(previous&&['trees','buildings','npcs','landmarks',...(world.isEarth?[]:['encounters'])].every(key=>world[key]===previous[key])&&objectIndices.has(previous)){const index=objectIndices.get(previous);objectIndices.set(world,index);return index;}
+    const buckets=new Map(),cell=256;
+    for(const [group,kind] of [['trees','tree'],['buildings','building'],['npcs','npc'],['encounters','mob'],['landmarks','landmark']]){
+        if(world.isEarth&&group==='encounters')continue;
+        for(const row of world[group]||[]){let o=world.isEarth&&earthObjectDescriptors.get(row);if(!o){o={...row,kind};if(world.isEarth)earthObjectDescriptors.set(row,o);}const key=`${Math.floor(o.x/cell)},${Math.floor(o.y/cell)}`;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(o);yield;}
+    }
+    objectIndices.set(world,buckets);return buckets;
+}
+// Same route and tie order as the synchronous API, with resumable Earth searches.
+export function* findPathSteps(world,start,destination){
+    if(!world.isEarth)return findPath(world,start,destination);
+    const radius=world.earthRules.navigationRadius;if(distance(start,destination)>radius)return [];
+    if(clearSegment(world,start,destination))return [{...destination}];
+    return yield* gridPathSteps(world,start,destination,{minX:start.x-radius,minY:start.y-radius,maxX:start.x+radius,maxY:start.y+radius});
+}
+export function adoptWorldObjectIndex(world,prepared){const index=objectIndices.get(prepared);if(index)objectIndices.set(world,index);const graph=roadGraphs.get(world);if(graph&&(graph.paths!==world.paths||graph.buildings!==world.buildings))roadGraphs.delete(world);}
 function worldObjectIndex(world){
     let buckets=objectIndices.get(world);const cell=256;
     if(!buckets){
-        buckets=new Map();
-        for(const [group,kind] of [['trees','tree'],['buildings','building'],['npcs','npc'],['encounters','mob'],['landmarks','landmark']]){
-            for(const row of world[group]||[]){const o={...row,kind},key=`${Math.floor(o.x/cell)},${Math.floor(o.y/cell)}`;if(!buckets.has(key))buckets.set(key,[]);buckets.get(key).push(o);}
-        }
-        objectIndices.set(world,buckets);
+        const steps=prepareWorldObjectIndex(world);let result;do{result=steps.next();}while(!result.done);buckets=result.value;
     }
     return buckets;
 }
@@ -503,19 +522,21 @@ export function nearbyWorldObjects(world,rect) {
     for(let y=Math.floor(rect.y/cell);y<=Math.floor((rect.y+rect.h)/cell);y++)for(let x=Math.floor(rect.x/cell);x<=Math.floor((rect.x+rect.w)/cell);x++){
         for(const o of buckets.get(`${x},${y}`)||[])if(o.x>=rect.x&&o.x<=rect.x+rect.w&&o.y>=rect.y&&o.y<=rect.y+rect.h)out.push(o);
     }
+    if(world.isEarth)for(const row of world.encounters||[])if(row.x>=rect.x&&row.x<=rect.x+rect.w&&row.y>=rect.y&&row.y<=rect.y+rect.h)out.push({...row,kind:'mob'});
     return out;
 }
 
 // Presentation query: keep a small overscan working set while the camera moves.
 // Collision queries remain exact; explicit invalidation refreshes this set too.
 export function createWorldViewQuery(){
-    let scope=null,index=null,bounds=null,rows=[];
+    let scope=null,index=null,bounds=null,rows=[],scenery=[],encounters=null;
     return {query(world,rect){
         const next=worldObjectIndex(world);
         if(scope!==world||index!==next||!bounds||rect.x<bounds.x||rect.y<bounds.y||rect.x+rect.w>bounds.x+bounds.w||rect.y+rect.h>bounds.y+bounds.h){
             scope=world;index=next;bounds={x:rect.x-128,y:rect.y-128,w:rect.w+256,h:rect.h+256};
-            rows=nearbyWorldObjects(world,bounds).sort((a,b)=>(a.sortY??a.y)-(b.sortY??b.y));
+            rows=nearbyWorldObjects(world,bounds).sort((a,b)=>(a.sortY??a.y)-(b.sortY??b.y));scenery=world.isEarth?rows.filter(o=>o.kind!=='mob'):rows;encounters=world.encounters;
         }
+        if(world.isEarth&&encounters!==world.encounters){encounters=world.encounters;rows=[...scenery,...(encounters||[]).filter(o=>o.x>=bounds.x&&o.x<=bounds.x+bounds.w&&o.y>=bounds.y&&o.y<=bounds.y+bounds.h).map(o=>({...o,kind:'mob'}))].sort((a,b)=>(a.sortY??a.y)-(b.sortY??b.y));}
         return rows;
     },clear(){if(scope){scope=null;index=null;bounds=null;rows=[];}}};
 }

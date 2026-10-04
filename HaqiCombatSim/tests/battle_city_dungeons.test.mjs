@@ -99,7 +99,7 @@ test('a cancelled city load cannot install late content or register art, and the
     const {content}=setup();content.dungeons=[];delete content.earthCities;let active=false,registered=0;
     const loader=createCityDungeonLoader({content,readJson:async path=>read(path),registerImage:()=>registered++});
     await assert.rejects(loader.load(market,{isCurrent:()=>active}),/取消/);assert.equal(content.dungeons.length,0);assert.equal(registered,0);
-    active=true;await loader.load(market,{isCurrent:()=>active});assert.ok(dFor(content,market));assert.equal(registered,1);
+    active=true;await loader.load(market,{isCurrent:()=>active});assert.ok(dFor(content,market));assert.equal(registered,0); // NPCs use the hero library, never the legacy city portrait atlas.
 });
 test('cold role preparation loads the local city route before hydration and keeps account state isolated',async()=>{
     const {content,save}=setup();enterCityDungeon(save,content,overview);enterCityDungeon(save,content,shekou);applyCityInteraction(save,dFor(content,shekou),shekou+':ask');

@@ -20,9 +20,12 @@ export function selectCompanionId(save, content) {
 }
 
 // Presentation-only species for AI island residents; never writes saves or combat state.
+const socialPetPools=new WeakMap();
 export function selectSocialPetId(profile, content) {
     const school=profile?.school||'fire';
-    const pets=Object.entries(content?.pets||{}).filter(([,row])=>row?.art&&!row.staticAppearance&&row.school===school).map(([id])=>id);
+    const catalog=content?.pets;let pools=catalog&&socialPetPools.get(catalog);
+    if(catalog&&!pools){pools=new Map();for(const [id,row] of Object.entries(catalog)){if(!row?.art||row.staticAppearance)continue;if(!pools.has(row.school))pools.set(row.school,[]);pools.get(row.school).push(id);}socialPetPools.set(catalog,pools);}
+    const pets=pools?.get(school)||[];
     if(!pets.length)return STARTERS.find(id=>content?.pets?.[id]?.art)||STARTERS[0];
     return pets[Math.abs(hashSeed(String(profile.id||profile.name||school)))%pets.length];
 }
@@ -91,6 +94,7 @@ export function stepCompanion(pet,world,hero,dt,options={}) {
     pet.partyIdle=0;pet.partyWorld=null;
     const deferSearch=!!options.deferSearch;
     function route(from,to){
+        if(options.requestPath)return options.requestPath(from,to);
         if(deferSearch&&!clearSegment(world,from,to))return null;
         return findPath(world,from,to);
     }
@@ -119,9 +123,9 @@ export function stepCompanion(pet,world,hero,dt,options={}) {
                 const target={x:hero.x+Math.cos(angle)*radius,y:hero.y+Math.sin(angle)*radius};
                 if(!walkable(world,target.x,target.y)||distance(target,pet.position)<18)continue;
                 if(deferSearch&&!clearSegment(world,pet.position,target))continue;
-                const next=findPath(world,pet.position,target);
+                const next=route(pet.position,target);
                 searched=true;
-                if(next.length){pet.path=next;break;}
+                if(next?.length){pet.path=next;break;}
             }
         }
     }

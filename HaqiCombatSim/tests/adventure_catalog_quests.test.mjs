@@ -1,10 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {projectQuestRuntime,installCatalogQuests,catalogQuestStatus,catalogQuestReady,noteCatalogKills,catalogGoalRows,trackedQuestIds,catalogTracksMonster} from '../js/adventure_catalog_quests_core.js';
+import {projectQuestRuntime,installCatalogQuests,catalogQuestStatus,catalogQuestReady,catalogAcceptBlock,noteCatalogKills,catalogGoalRows,trackedQuestIds,catalogTracksMonster} from '../js/adventure_catalog_quests_core.js';
 import {createRng} from '../js/rng_core.js';
 import * as A from '../js/adventure_core.js';
 import {installFishing} from '../js/adventure_fishing_core.js';
+import {installExpansion} from '../js/adventure_expansion_core.js';
 
 const read = name => JSON.parse(fs.readFileSync(new URL(`../data/adventure/${name}.json`, import.meta.url)));
 const catalog = read('quest-catalog');
@@ -20,6 +21,11 @@ function raise(save, content, level) {
     const caps = content.progression.xpThresholds;
     save.xp = caps[Math.min(caps.length, level) - 1] ?? caps.at(-1);
     A.syncProgression(save, content);
+}
+function expandedContent() {
+    const {content} = installExpansion(structuredClone(chapter), read('combat'), read('pets'), read('shop-candidates'), read('../kids/cards'), read('../kids/charms'));
+    installCatalogQuests(content, runtime);
+    return content;
 }
 
 test('runtime keeps every active quest except the chapter lessons and omits story scripts', () => {
@@ -99,7 +105,8 @@ test('tracks up to three quests and can abandon an accepted quest', () => {
     const save = A.createAdventure(content, {name: '多任务追踪'});
     raise(save, content, content.progression.levelCap);
     const chapter = A.currentQuest(save, content);
-    const picks = runtime.quests.filter(q => q.requirements.every(r => r.id === 214) && q.prerequisites.length === 0).slice(0, 4);
+    const available = runtime.quests.filter(q => q.requirements.every(r => r.id === 214) && q.prerequisites.length === 0);
+    const picks = [...available.filter(q => q.region === 'camp'), available.find(q => q.region !== 'camp')].slice(0, 4);
     assert.equal(picks.length, 4);
     const first = A.applyAction(save, content, {type: 'track-catalog', questId: picks[0].id});
     assert.equal(first.changed, true);
@@ -137,10 +144,11 @@ test('tracks up to three quests and can abandon an accepted quest', () => {
     save.quests[monsterQuest.id] = {accepted: true, claimed: false, progress: {}};
     save.trackedQuestIds = [monsterQuest.id];
     assert.equal(catalogTracksMonster(save, content, {source: path}), true);
-    assert.equal(catalogTracksMonster({...save, trackedQuestIds: [chapter.id]}, content, {source: path}), false);
+    // The most recently accepted active quest remains visible even without a manual pin.
+    assert.equal(catalogTracksMonster({...save, trackedQuestIds: [chapter.id]}, content, {source: path}), true);
 });
 
-test('changing islands adds one untracked quest from that island when fewer than three are tracked', () => {
+test('changing islands removes old island pins and keeps the latest accepted quest', () => {
     const content = playableContent();
     const save = A.createAdventure(content, {name: '换岛追踪'});
     raise(save, content, content.progression.levelCap);
@@ -164,7 +172,63 @@ test('changing islands adds one untracked quest from that island when fewer than
         const extra = town.find(q => !trackedQuestIds(save).includes(q.id));
         A.applyAction(save, content, {type: 'track-catalog', questId: extra.id});
     }
-    const full = [...trackedQuestIds(save)];
     A.applyAction(save, content, {type: 'travel', zone: 'town'});
-    assert.deepEqual(trackedQuestIds(save), full);
+    const visible = trackedQuestIds(save, content);
+    assert.ok(visible.includes(active.id));
+    assert.ok(visible.some(id => content.catalogQuests.byId[id]?.region === 'town'));
+    assert.ok(visible.every(id => id === active.id || content.catalogQuests.byId[id]?.region === 'town'));
+    assert.equal(visible.includes(A.currentQuest(save, content).id), false);
+});
+
+test('level 50 can accept the original 21–29 quest without changing its configuration', () => {
+    const content = expandedContent(), save = A.createAdventure(content);
+    const quest = runtime.quests.find(q => q.title === '虾米粒被欺负');
+    assert.ok(quest);
+    const level = quest.requirements.find(r => r.id === 214);
+    assert.deepEqual([level.min, level.max], [21, 29]);
+    raise(save, content, 20);
+    assert.equal(save.level,20);
+    assert.equal(catalogAcceptBlock(save, content, quest, A.catalogStatSnapshot(save, content)), '需要等级 21');
+    raise(save, content, 21);
+    assert.equal(catalogAcceptBlock(save, content, quest, A.catalogStatSnapshot(save, content)), '');
+    raise(save, content, 50);
+    assert.equal(save.level,50);
+    assert.equal(catalogQuestStatus(save, content, quest, A.catalogStatSnapshot(save, content)), '可接取');
+    A.applyAction(save, content, {type:'accept-catalog', questId:quest.id, npcId:quest.startNpc});
+    assert.equal(save.quests[quest.id].accepted, true);
+    assert.deepEqual([level.min, level.max], [21, 29]);
+    const alternate = {...quest, id:999999, prerequisites:[], requirements:[{id:79031,min:21,max:29}]};
+    assert.equal(catalogAcceptBlock(save, content, alternate), '');
+    assert.equal(catalogAcceptBlock(save, content, {...alternate, requirements:[{id:965,min:21,max:29}]}, {965:50}), '条件不足：965');
+    assert.equal(catalogAcceptBlock(save, content, {...alternate, prerequisites:[{id:999998,value:1}]}), '请先完成前置任务');
+});
+
+test('a full tracker reserves the latest acceptance across islands, save reload, delivery and abandonment', () => {
+    const content = expandedContent(), save = A.createAdventure(content);
+    raise(save, content, 50);
+    const open = region => runtime.quests.filter(q => q.region === region && !q.prerequisites.length && q.requirements.every(r => r.id === 214));
+    const ice = open('ice'), fire = open('fire');
+    assert.ok(ice.length >= 3 && fire.length >= 2);
+    A.applyAction(save, content, {type:'travel',zone:'ice'});
+    for (const q of ice.slice(0,3)) A.applyAction(save,content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});
+    assert.equal(trackedQuestIds(save,content).length,3);
+    // Accept a higher ID first, then a lower ID: chronology must win over quest numbering.
+    const [first,last] = fire.slice(0,2).sort((a,b)=>b.id-a.id);
+    for (const q of [first,last]) A.applyAction(save,content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});
+    let visible = trackedQuestIds(save,content);
+    assert.equal(visible.length,3);
+    assert.ok(visible.includes(last.id));
+    assert.equal(visible.includes(first.id),false);
+    assert.ok(visible.every(id=>id===last.id||content.catalogQuests.byId[id].region==='ice'));
+    const loaded = A.parseSave(save,content);
+    assert.deepEqual(trackedQuestIds(loaded,content),visible);
+    // Ready quests remain tracked until delivered; a delivered quest no longer occupies the extra slot.
+    loaded.quests[last.id].claimed = true;
+    visible = trackedQuestIds(loaded,content);
+    assert.ok(visible.includes(first.id));
+    assert.equal(visible.includes(last.id),false);
+    A.applyAction(loaded,content,{type:'abandon-quest',questId:first.id});
+    assert.ok(trackedQuestIds(loaded,content).every(id=>content.catalogQuests.byId[id].region==='ice'));
+    loaded.zone='dungeon:test';loaded.dungeonReturn={zone:'ice'};
+    assert.ok(trackedQuestIds(loaded,content).every(id=>content.catalogQuests.byId[id].region==='ice'));
 });

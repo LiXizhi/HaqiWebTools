@@ -107,6 +107,7 @@ export function normalizeLocaleSave(save) {
     let target = IDS.has(learning.target) ? learning.target : 'en';
     if (native === target) target = native === 'en' ? 'zh-CN' : 'en';
     save.languageLearning = { enabled: learning.enabled === true, native, target, autoSpeak: learning.autoSpeak === true,
+        autoReadDialogue:learning.autoReadDialogue!==false,
         selectionConfirmed:learning.selectionConfirmed===true||(learning.selectionConfirmed===undefined&&IDS.has(learning.target)),
         showChinese:learning.showChinese!==false,
         model:typeof learning.model==='string'?learning.model.slice(0,160):'',

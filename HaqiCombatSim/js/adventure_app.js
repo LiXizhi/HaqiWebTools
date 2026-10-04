@@ -897,8 +897,7 @@ function finishTrackedDialogue() {
     close();
     if(rewardFeedback.hasPendingItems)return true;
     const content=assets.content;
-    const ids=trackedQuestIds(save).filter(id=>content.quests.some(quest=>quest.id===id)||content.catalogQuests?.byId[id]);
-    if(!ids.length){const quest=A.currentQuest(save,content);if(quest)ids.push(quest.id);}
+    const ids=trackedQuestIds(save,content).filter(id=>content.quests.some(quest=>quest.id===id)||content.catalogQuests?.byId[id]);
     if(ids.length===1)track(ids[0],{pin:false});
     return true;
 }

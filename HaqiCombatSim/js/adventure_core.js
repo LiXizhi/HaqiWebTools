@@ -38,7 +38,7 @@ import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
 import { resolvePetReward, migrateQuestPetRewards } from './adventure_rewards_core.js';
 import { applyMountStats } from './adventure_mounts_core.js';
 import {syncTrainingPoints,validateTrainingPoints,skillLearningStatus} from './adventure_learning_core.js';
-import {acceptCatalogQuest,claimCatalogQuest,noteCatalogKills,noteCatalogSignal,validateCatalogQuests,pinTrackedQuest,unpinTrackedQuest,showCurrentChapter,trackedQuestIds,supplementIslandTrack} from './adventure_catalog_quests_core.js';
+import {acceptCatalogQuest,claimCatalogQuest,noteCatalogKills,noteCatalogSignal,validateCatalogQuests,pinTrackedQuest,unpinTrackedQuest,showCurrentChapter,trackedQuestIds,supplementIslandTrack,noteQuestAccepted} from './adventure_catalog_quests_core.js';
 export { rewardLabel } from './adventure_rewards_core.js';
 export { readStamina, ensureDailyStamina, dungeonStaminaHint, parseArenaStaminaCost } from './adventure_stamina_core.js';
 
@@ -80,7 +80,7 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
         pet: null, zone: 'camp', position: {...mapInfo('camp',content).initialSpawn}, facing: 3,
         dungeonRuns: {}, dungeonReturn: null, encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
         visitedTown: false, tips: {}, revision: 0, bagRulesVersion: 1, defaultPocketVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion,
-        locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
+        locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,autoReadDialogue:true,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
     if(typeof headId==='string'&&/^[a-z0-9-]{1,64}$/.test(headId))save.headId=headId;
     if(validHeroBodyId(bodyId,appearance))save.bodyId=bodyId;
     syncProgression(save, content);
@@ -377,8 +377,12 @@ function applyAdventureAction(save, content, action, access={}) {
     case 'speech-reward': claimSpeechReward(save,content,action.index,action.now);notice='领取成功，奖励已放入背包！';break;
     case 'accept': {
         assert(q && q.id === Number(action.questId) && q.startNpc === Number(action.npcId), '当前没有可接取的任务');
-        if (!save.quests[q.id]) save.quests[q.id] = { accepted: true, claimed: false, progress: {} };
-        if (trackedQuestIds(save).length && !trackedQuestIds(save).includes(q.id)) trackFull = pinTrackedQuest(save, content, q.id).full === true;
+        if (!save.quests[q.id]) {
+            save.quests[q.id] = { accepted: true, claimed: false, progress: {} };
+            noteQuestAccepted(save, q.id);
+        }
+        save.trackedQuestIds = trackedQuestIds(save, content);
+        delete save.trackedQuestId;
         syncGoals(save,content); break;
     }
     case 'talk':

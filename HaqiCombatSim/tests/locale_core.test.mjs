@@ -58,9 +58,16 @@ test('catalog speech codes and language pairs', () => {
 test('save locale defaults without a Chinese dictionary', () => {
     const save = normalizeLocaleSave({});
     assert.equal(save.locale, 'zh-CN');
-    assert.deepEqual(save.languageLearning, { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' });
+    assert.deepEqual(save.languageLearning, { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,autoReadDialogue:true,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' });
     const same = normalizeLocaleSave({ locale: 'ja', languageLearning: { enabled: true, native: 'ko', target: 'ko' } });
     assert.equal(same.locale, 'ja');
     assert.equal(same.languageLearning.target, 'en');
     assert.equal(same.languageLearning.native, 'ko');
+});
+
+test('auto read dialogue defaults on for legacy saves and preserves an explicit opt out', () => {
+    const legacy=normalizeLocaleSave({languageLearning:{enabled:true,autoSpeak:false}});
+    assert.equal(legacy.languageLearning.autoReadDialogue,true);
+    const optedOut=normalizeLocaleSave({languageLearning:{enabled:true,autoReadDialogue:false}});
+    assert.equal(normalizeLocaleSave(JSON.parse(JSON.stringify(optedOut))).languageLearning.autoReadDialogue,false);
 });

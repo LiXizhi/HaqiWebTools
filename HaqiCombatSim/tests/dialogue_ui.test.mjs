@@ -9,7 +9,7 @@ test('tracked NPC dialogue executes only one available quest choice and consumes
     const renderSource=source.slice(source.indexOf('export function renderDialogue('),source.indexOf('// 战斗卡牌说明')).replace('export function','function');
     const quest={id:1,title:'Quest',startNpc:10,endNpc:10};
     const npc={id:10,name:'NPC',zone:'camp',description:'Default greeting'};
-    const element=(tag,cls,...children)=>({tag,children,dataset:{},textContent:'text',classList:{toggle(){}},style:{setProperty(){}},setAttribute(){},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},querySelector(){return element('button');}});
+    const element=(tag,cls,...children)=>({tag,children,dataset:{},textContent:'text',classList:{toggle(){},add(){}},style:{setProperty(){}},setAttribute(){},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},querySelector(){return element('button');}});
     for(const scenario of [
         {name:'tracked accept',tracked:true,chapter:quest,accepted:false,expected:'startQuest'},
         {name:'tracked claim',tracked:true,chapter:quest,accepted:true,ready:true,expected:'finishQuest'},
@@ -23,7 +23,7 @@ test('tracked NPC dialogue executes only one available quest choice and consumes
         const callbacks=Object.fromEntries(['startQuest','finishQuest','startCatalog','finishCatalog'].map(name=>[name,value=>calls.push([name,value.id])]));
         let bound=0;
         const context=vm.createContext({
-            el:element,art:()=>element('canvas'),fill:()=>({text:'NPC'}),islandName:()=>'',createCloseButton:()=>element('button'),
+            el:element,art:()=>element('canvas'),npcCharacter:()=>null,npcHasActiveQuest:()=>false,fill:()=>({text:'NPC'}),islandName:()=>'',createCloseButton:()=>element('button'),
             currentQuest:()=>scenario.chapter,questState:()=>({accepted:!!scenario.accepted}),questReady:()=>!!scenario.ready,
             catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:scenario.accept||[],claim:scenario.claim||[]}),
             rewardsFor:()=>[],pendingQuestTalk:()=>null,catalogTalksForNpc:()=>[],npcServices:()=>['shop'],setText(){},
@@ -140,6 +140,31 @@ test('learning dialogue displays both languages; reading does not trigger quest 
     await ui.text.children[0].children[0].onclick();await ui.text.children[0].children[0].onclick();
     assert.equal(ui.text.children.length,2,'actions do not add another text row');assert.equal(ui.text.children[0].children[0].children.length,2,'clickable sentence contains text and speaker SVG');assert.equal(calls[0].signal.aborted,true);assert.equal(calls[1].locale,'en');assert.equal(ui.calls,0);
     ui.root.disposeDialogue();assert.equal(calls[1].signal.aborted,true);
+});
+
+for(const locale of ['en','zh-CN'])test(`auto read opens in the target language ${locale} and replay cancels previous audio`,async t=>{
+    const calls=[],lines=locale==='en'?[{text:'Hello!',locale:'en'},{text:'你好！',locale:'zh-CN'}]:[{text:'你好！',locale:'zh-CN'},{text:'Hello!',locale:'en'}];
+    const ui=setup(t,false,{lines,targetLocale:locale,autoReadDialogue:true,readAloud:async(text,language,signal)=>calls.push({text,language,signal})});
+    assert.equal(calls.length,1);assert.equal(calls[0].language,locale);assert.equal(calls[0].text,lines[0].text);assert.equal(ui.calls,0);
+    await ui.text.children[0].children[0].onclick();
+    assert.equal(calls.length,2);assert.equal(calls[0].signal.aborted,true);
+    ui.root.disposeDialogue();assert.equal(calls[1].signal.aborted,true);
+});
+
+test('auto read respects opt out and skips ordinary or untranslated dialogue',t=>{
+    let spoken=0;const readAloud=()=>{spoken++;};
+    setup(t,false,{lines:[{text:'Hello!',locale:'en'}],autoReadDialogue:false,readAloud});
+    setup(t,false,{autoReadDialogue:true,readAloud});
+    setup(t,false,{lines:[{text:'未翻译',locale:'zh-CN'}],targetLocale:'en',autoReadDialogue:true,readAloud});
+    assert.equal(spoken,0);
+});
+
+test('automatic reading failure keeps manual retry available and late failures cannot update a closed dialogue',async t=>{
+    let reject;let attempts=0;
+    const ui=setup(t,false,{lines:[{text:'Hello!',locale:'en'}],autoReadDialogue:true,readAloud:()=>{attempts++;return attempts===1?Promise.reject(Error('请重试')):new Promise((_,fail)=>{reject=fail;});}});
+    await new Promise(resolve=>setImmediate(resolve));assert.equal(ui.hint.textContent,'请重试');
+    const pending=ui.text.children[0].children[0].onclick();assert.equal(attempts,2);
+    ui.root.disposeDialogue();const hint=ui.hint.textContent;reject(Error('迟到的错误'));await pending;assert.equal(ui.hint.textContent,hint);
 });
 
 test('translation maps once without speaking or advancing and ignores late result after closing',async t=>{

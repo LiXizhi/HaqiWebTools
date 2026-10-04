@@ -2,7 +2,7 @@ import {createDialogueReveal} from './dialogue_reveal.js';
 // Dialogue presentation only; quest actions remain in the controller.
 import { fill, setText } from './locale_runtime.js';
 import {createBilingualDialogue} from './view_bilingual_dialogue.js';
-export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],readAloud,mapWords,targetLocale=lines[0]?.locale,close}={}) {
+export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],autoReadDialogue=false,readAloud,mapWords,targetLocale=lines[0]?.locale,close}={}) {
     const reveal=createDialogueReveal();
     const full=text.textContent,chars=Array.from(full);
     const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -62,13 +62,22 @@ export function bindDialogue(root,box,text,hint,defaultButton,{lines=[],readAlou
         const idleHint='点击喇叭朗读，点击译文查看最多5组关键词；同色框和连线表示对应。';
         const makeButton=(label,run,cls)=>{const node=document.createElement('button');node.type='button';node.className=cls;node.textContent=label;node.onclick=run;return node;};
         const bilingual=createBilingualDialogue({button:makeButton,mapWords});
+        const read=async()=>{
+            playback?.abort();const current=new AbortController();playback=current;setText(hint,'正在朗读…');
+            try{
+                if(!readAloud)throw Error('朗读暂时不可用，请稍后重试。');
+                await readAloud(lines[0].text,lines[0].locale,current.signal);
+                if(!disposed&&!current.signal.aborted)setText(hint,idleHint);
+            }catch(error){if(!disposed&&!current.signal.aborted)hint.textContent=error.message;}
+        };
         const labels=lines.map(row=>{const label=document.createElement('p');label.className=row.locale===targetLocale?'dialogue-original':'dialogue-translation';label.lang=row.locale;label.textContent=row.text;text.append(label);return label;});
         const line=bilingual.attach({container:text,original:labels[0],gloss:labels[1],text:lines[0].text,translation:lines[1]?.text,locale:lines[0].locale,native:lines[1]?.locale,
-            onRead:async()=>{playback?.abort();const current=new AbortController();playback=current;setText(hint,'正在朗读…');if(!readAloud)throw Error('朗读暂时不可用，请稍后重试。');await readAloud(lines[0].text,lines[0].locale,current.signal);if(!disposed&&!current.signal.aborted)setText(hint,idleHint);},
+            onRead:read,
             onError:error=>{if(!disposed)hint.textContent=error.message;}});
         reveal.start([{node:line.textNode,translation:line.translationNode}]);
         disposeLinks=()=>{reveal.finish();line.dispose();bilingual.close();};
         setText(hint,'点击“再听一次”朗读，点击“词义映射”查看中英文对应词。');
+        if(autoReadDialogue&&lines[0].locale===targetLocale&&lines[0].text.trim())void read();
 
     }else if(reduced||!chars.length)finish();else tick();
     root.disposeDialogue=()=>{

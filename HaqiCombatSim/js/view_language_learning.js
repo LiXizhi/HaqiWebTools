@@ -18,6 +18,7 @@ export function languageSettings(body, model, cb, { el, button }) {
             ui.field('目标语言', pairRow('target', learning, cb, { el, button })),
             el('p', 'muted settings-note', '营地课程支持中文和英语。其他语言课程尚未提供。录音只在点击后开启。'),
             ui.toggle({ icon: '🔉', label: '语音陪伴', hint: '朗读对话与示范回答。' }, !!learning.autoSpeak, () => cb.setLearning({ ...learning, autoSpeak: !learning.autoSpeak })),
+            ui.toggle({ icon: '', label: '自动朗读对话', hint: '打开对话或切换下一句时，自动朗读第二语言。' }, learning.autoReadDialogue !== false, () => cb.setLearning({ ...learning, autoReadDialogue: learning.autoReadDialogue === false })),
             ui.toggle({ icon: '📖', label: '双语释义', hint: '对话中同时显示另一种语言的意思。' }, learning.showChinese !== false, () => cb.setLearning({ ...learning, showChinese: learning.showChinese === false })),
         );
         const settings=document.createElement('div');settings.className='learning-settings';

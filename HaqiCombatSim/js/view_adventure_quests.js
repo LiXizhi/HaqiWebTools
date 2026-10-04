@@ -33,7 +33,7 @@ export function renderQuestJournal(body,model,cb,ui) {
         if(!globalThis.confirm(fill('确定放弃「{title}」吗？进度会清除，之后可以重新接取。',{title:quest.title}).text))return;
         cb.action({type:'abandon-quest',questId:quest.id});
     },'secondary');
-    const untrackButton=quest=>trackedQuestIds(save).includes(quest.id)?button('取消追踪',()=>cb.action({type:'track-catalog',questId:quest.id,remove:true}),'secondary'):null;
+    const untrackButton=quest=>trackedQuestIds(save,c).includes(quest.id)?button('取消追踪',()=>cb.action({type:'track-catalog',questId:quest.id,remove:true}),'secondary'):null;
     const {save,assets}=model,c=assets.content,current=currentQuest(save,c);
     const requestedId=model.pinJournalQuest?Number(model.selectedQuestId)||null:null;
     const inspector=new ItemDetails(body,model,ui);

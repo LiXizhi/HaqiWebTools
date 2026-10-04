@@ -104,7 +104,7 @@ function drawSpeechBubble(c,at,t,reduced) {
     return {x:x-w/2-4,y:y-h-4,w:w+8,h:h+13};
 }
 export function questMarker(save,content,npcId,stats=()=>catalogStatSnapshot(save,content)) {
-    const involved=trackedQuestIds(save).some(id=>{
+    const involved=trackedQuestIds(save,content).some(id=>{
         const tracked=content.catalogQuests?.byId[id];
         return tracked&&(tracked.startNpc===npcId||tracked.endNpc===npcId||tracked.groups.some(g=>g.kind==='talk'&&g.items.some(i=>i.id===npcId)));
     });
@@ -112,7 +112,7 @@ export function questMarker(save,content,npcId,stats=()=>catalogStatSnapshot(sav
         const mark=catalogNpcMarker(save,content,npcId,stats());
         if(mark)return mark;
     }
-    const q=currentQuest(save,content);if(!q)return null;
+    const q=currentQuest(save,content);if(!q||!trackedQuestIds(save,content).includes(q.id))return null;
     if(!questState(save,q.id).accepted&&q.startNpc===npcId)return '!';
     if(questReady(save,q)&&q.endNpc===npcId)return '?';
     if(questState(save,q.id).accepted&&questProgress(save,q).some(g=>g.kind==='talk'&&g.id===npcId&&g.value<g.count))return '…';

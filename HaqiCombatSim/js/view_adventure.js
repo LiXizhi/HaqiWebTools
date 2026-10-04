@@ -303,10 +303,9 @@ export function updateCheckin(root,model) {
 
 }
 function trackerEntries(save,c) {
-    const ids=trackedQuestIds(save).filter(id=>c.quests.some(quest=>quest.id===id)||c.catalogQuests?.byId[id]);
+    const ids=trackedQuestIds(save,c).filter(id=>c.quests.some(quest=>quest.id===id)||c.catalogQuests?.byId[id]);
     if(ids.length)return ids.map(id=>({id,pinned:true}));
-    const quest=currentQuest(save,c);
-    return quest?[{id:quest.id,pinned:false}]:[];
+    return [];
 }
 function chapterTrackLines(save,c,quest) {
     const state=questState(save,quest.id);
@@ -625,7 +624,7 @@ export function renderDialogue(root,model,dialog,cb) {
     box.append(portrait,content,close);root.append(box);
     const dialogueText=content.querySelector('.dialogue-text');
     bindDialogue(root,box,dialogueText,hint,content.querySelector('button.primary')||content.querySelector('button'),{
-        lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),readAloud:(text,locale,signal)=>cb.readDialogue(text,locale,signal,npc),mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,close:cb.close,
+        lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),autoReadDialogue:save.languageLearning.enabled&&save.languageLearning.autoReadDialogue!==false,readAloud:(text,locale,signal)=>cb.readDialogue(text,locale,signal,npc),mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,close:cb.close,
     });
 }
 // 战斗卡牌说明的展开偏好只存本机（localStorage），默认折叠。

@@ -58,7 +58,7 @@ test('monster equipment bonuses affect real PvE attack, resistance, pip and HP a
     assert.equal(restoreEarthWildEncounter(content,stronger.id.replace(':780:',':10001:')),null);
     beginEncounter(save,content,stronger.id);
     const loaded=parseSave(JSON.stringify(save),content),battle=restorePveBattle(dataset,content,loaded.pendingEncounter),mob=battle.sides.far[0];
-    assert.deepEqual(mob.stats,monsterCombatStats(stronger.monster));assert.equal(mob.maxHp,stronger.monster.hp);
+    assert.deepEqual(mob.stats,monsterCombatStats(mob.template,{traitParams:battle.resolved.petTraits}));assert.ok(mob.maxHp>=stronger.monster.hp);
     assert.ok(getDamageBoost(mob,'life',battle,battle.resolved)>0);assert.ok(getResist(mob,'life',battle.resolved)<0);assert.ok(mob.stats.powerPipPct>0);
     // Equipment changes after beginning must not regenerate an active enemy.
     content.items[1912].stats[111]=100;

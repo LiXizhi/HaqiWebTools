@@ -24,9 +24,17 @@ export function locateShot(film, time) {
     return {index, shot: film.shots[index], elapsed: clamped - film.shots[index].start, time: clamped};
 }
 export function filmText(values, language) { return values?.[language] || values?.['zh-CN'] || ''; }
+export function captionAt(shot,elapsed,language){
+    const cue=shot.cues.findLast(c=>c.caption&&c.time<=elapsed);
+    return filmText(cue?.caption||shot.subtitle,language);
+}
 // A RAF timestamp can predate the completion of an asynchronous scene load.
 export function frameDelta(now, previous, speed=1) { return Math.max(0, Math.min(.1, (now-previous)/1000))*speed; }
 export function srtFor(film, language) {
     const stamp = seconds => new Date(Math.round(seconds * 1000)).toISOString().slice(11, 23).replace('.', ',');
-    return film.shots.map((shot, i) => `${i + 1}\n${stamp(shot.start)} --> ${stamp(shot.start + shot.duration)}\n${filmText(shot.subtitle, language)}\n`).join('\n');
+    const rows=film.shots.flatMap(shot=>{
+        const beats=[{time:0,caption:shot.subtitle},...shot.cues.filter(c=>c.caption)];
+        return beats.map((beat,i)=>({start:shot.start+beat.time,end:shot.start+(beats[i+1]?.time??shot.duration),text:filmText(beat.caption,language)})).filter(row=>row.end>row.start);
+    });
+    return rows.map((row,i)=>`${i+1}\n${stamp(row.start)} --> ${stamp(row.end)}\n${row.text}\n`).join('\n');
 }

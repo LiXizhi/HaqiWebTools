@@ -5,7 +5,7 @@
 
 所有游戏文件写入集中于 `keepwork_file_io.js`，继续使用 `personalPageStore.withWorkspace('HaqiAdventure')` 的 Cache 接口：`savePageData(path,'content',text,true,true,{directWrite:true})`。新增 SDK option 默认关闭，仅游戏调用启用；跳过 SDK 文件预读和合并，不安排后台同步，等待 pageCache PUT 明确成功，不再写后 GET。支持 `.json` 与 `.md` 完整内容，不改变原文件格式或其他 SDK 用户的默认行为。SDK 能力标志未就绪时沿用旧 Cache 暂存/同步接口，不绕开 SDK；旧 CDN 包仍可能有 SDK 内部预读，新选项上线后才消除这部分请求。
 
-成功后更新内存入口和文件缓存；失败、超时或身份变化不标记角色已同步。写入顺序仍是分文件、历史、入口；同客户端角色保存和 SDK 同路径直接写入串行。不可变分片成功后可复用，重试不重复上传已经确认的文件。关系正文、历史及每日额度首次读取后复用内存；SDK 没有新增远端 CAS。
+成功后更新内存入口和文件缓存；失败、超时或身份变化不标记角色已同步。写入顺序是分文件、当前入口；2026-10-05 已移除角色目录历史快照和父版本链。同客户端角色保存和 SDK 同路径直接写入串行。不可变分片成功后可复用，重试不重复上传已经确认的文件。关系正文、历史及每日额度首次读取后复用内存；SDK 没有新增远端 CAS。
 
 社交关闭后台轮询，岛屿入口读取名单，邮件在打开时读取，公开名片复用内存并在主动刷新时失效；内容未变化不重复发布。会员普通查询合并请求并复用账号内存，手动刷新、充值和账号事件更新状态。角色目录按角色进一步拆分加载尚未在本轮实现；当前登录仍加载既有角色必要分片。
 
@@ -18,6 +18,32 @@
 
 ### 1. 游戏与实验室的分层
 
+哈奇岛屿的静态渲染（2026-10-05）：视野物件集合跨帧复用，静态Y顺序与动态角色合并。树木仅将连续且不遮挡玩家的片段合成有界缓存，固定深度区间分组并保护当前视野批次，避免内存满后反复重绘；NPC、怪物、建筑与淡化树冠仍按原深度顺序绘制。地表在独立原生模块Worker中使用同一地形画笔，传回ImageBitmap；不可用或失败时恢复原分帧准备。
+
+```mermaid
+flowchart LR
+    Island[六岛既有JSON与场景] --> ViewSet[带预留边界的视野物件集合]
+    ViewSet --> Order[静态Y顺序与移动角色合并]
+    Order --> Trees[连续树木片段缓存：最多24MiB]
+    Order --> Actors[原角色与遮挡淡化绘制]
+    Island --> Tiles[地表调度：视野与前方邻块 / 最多64MiB]
+    Tiles --> Worker[island_terrain_worker：同一地形画笔]
+    Worker --> Bitmap[可释放ImageBitmap / 过期应答关闭]
+    Tiles --> Fallback[Worker失败：原分帧画笔回退]
+    Bitmap --> Canvas[冒险Canvas]
+    Fallback --> Canvas
+    Trees --> Canvas
+    Actors --> Canvas
+    Actors --> PetPaths[宠物绕障与自动聚会选址：共享按需路径Worker]
+    PetPaths --> OriginalPath[原findPath与聚会算法 / 几何版本及离场检查]
+    OriginalPath --> Actors
+    QuestInputs[任务与装备相关状态：每帧轻量比对] --> MarkerCache[任务标记缓存：状态变化才重新检查]
+    MarkerCache --> Actors
+    MarkerCache --> Minimap[小地图与交谈邀请复用]
+```
+
+任务标记缓存由renderer实例持有，`adventure_quest_marker_cache_core.js`每帧比较任务/库存/装备等相关字段的序列化快照，以覆盖原地修改；坐标、血量、计时和通用revision不参与。状态不变时每个NPC（含无标记）只求值一次，全部NPC共享一次按需属性快照；换角色、场景或内容配置引用时失效。缓存仅用于显示，实际接取/交付仍即时校验原规则。
+
 ```mermaid
 flowchart TB
     subgraph Entry[页面入口]
@@ -29,10 +55,12 @@ flowchart TB
         Adventure["adventure_app.js<br/>冒险流程编排"]
         App["app.js + state.js<br/>实验室控制与状态"]
         GameView["view_adventure*.js<br/>Canvas 2D 场景与 HTML 菜单"]
+        AtlasView["view_haqi_atlas / view_adventure_earth<br/>连续群岛地图 / 配对漩涡导航"]
         LabView["view_battle / batch / params / advisor<br/>实验室界面"]
         IO["浏览器 IO 与服务适配<br/>资源、存档、语言、社交、原服导入<br/>会员身份与官方充值商品价格"]
     end
     subgraph Core[纯规则层：可在 Node 中运行]
+        AtlasGeometry["haqi_atlas_core.js<br/>相机 / 局部坐标转换 / 细节层级"]
         Rules["adventure*_core.js<br/>探索、任务、装备、宠物、副本"]
         Combat["combat_*_core.js<br/>战斗、公式、目标与 AI"]
         Shared["rng_core.js + combat_params_core.js<br/>种子随机数与 BalanceParams"]
@@ -44,6 +72,10 @@ flowchart TB
     Lab --> App
     GameView -->|玩家意图回调| Adventure
     Adventure -->|状态与演出| GameView
+    Adventure -->|只读地图模型| AtlasView
+    AtlasView -->|选择目的地 / 浏览配对世界| Adventure
+    AtlasView --> AtlasGeometry
+    IO -->|按需地图清单与透明 WebP| AtlasView
     LabView -->|操作回调| App
     App -->|状态与结果| LabView
     Adventure --> Rules --> Combat
@@ -211,8 +243,7 @@ flowchart TB
     Cloud --> FileIO["keepwork_file_io.js<br/>SDK 能力检测与 Cache 写入"]
     FileIO --> SDK["按需加载 Keepwork SDK<br/>workspace: HaqiAdventure"]
     SDK --> Parts["1. 写入变化的分文件<br/>物品、战斗背包、记录、宠物等"]
-    Parts --> History["2. 写入历史入口快照"]
-    History --> Index["3. 发布 roles/index.json<br/>小型状态与文件引用"]
+    Parts --> Index["2. 发布 roles/index.json<br/>仅保存当前小型状态与文件引用"]
     Index -->|成功应答后更新内存缓存| Cloud
     SDK -->|登录、主动刷新、首次读取未加载文件| Read["校验与组装<br/>保护本地未同步进度"]
     Read --> Roles
@@ -493,6 +524,20 @@ config/maps 提供六岛源文件与统一地域规则；adventure_map_generator
 
 `HaqiPromo.html` + `promo_app.js` 管理独立 JSON 剧本和时间轴，通过同源 iframe 调用 `promo_stage.js`。舞台复用正式游戏视图和 core 模块，只维护内存角色，不导入主应用或账号/存储客户端。`promo_timeline_core.js` 为纯时间轴与字幕模块。剧本单独打包为 `data/promo/film.json`，不进入游戏启动包；详见 [promo.md](promo.md)。
 
+```mermaid
+flowchart LR
+    Film[film.json：镜头与操作解说] --> Player[promo_app：播放 / 暂停 / 跳转 / SRT]
+    Player --> Stage[promo_stage：同源隔离舞台]
+    Stage --> Features[promo_features：地图 / 城市 / 养成 / 生活控制器]
+    Stage --> Replay[PvE及红蘑菇真实事件重演]
+    Features --> Views[正式游戏界面]
+    Features --> Rules[正式core规则]
+    Features --> ReadOnly[CDN与静态地图数据只读加载]
+    Rules --> Memory[每镜头独立内存角色]
+    Replay --> Memory
+```
+
+
 
 ## 全局语言学习规则入口
 
@@ -555,3 +600,50 @@ flowchart LR
 
 
 街区静态渲染优化仍在view_city_street：场景选择建立地面精灵/投影阴影索引和静态资源ID表，tile烘焙按范围跳过无关几何并复用CanvasPattern。迟到Atlas使纹理/pattern/tile一起失效，离场统一释放；不改变核心碰撞、随机数或存档结构。招牌的测量排版与最近使用缓存也在渲染层。
+
+### 宠物标签数据流（2026-10-05）
+
+```mermaid
+flowchart LR
+    Summary[逐宠物文件摘要：标签与次数] --> Begin[首次进入战斗：比较同种宠物]
+    Params[BalanceParams.petTraits] --> Begin
+    Begin --> Snapshot[检查点：版本 / 参数 / 怪物标签]
+    Begin --> Local[本机遭遇缓存：撤退保持 / 刷新清除]
+    Snapshot --> Battle[纯战斗引擎：实际属性与捕获]
+    Snapshot --> View[登场标签 / 传奇光圈 / 目标提示]
+    Battle --> Merge[捕获结算：加载同种正文 / 最高等级合并 / 次数累计]
+    Merge --> Files[逐宠物核心文件与摘要]
+    Files --> Summary
+```
+
+世界加载不生成野怪标签。新检查点锁定参数与标签用于重演，旧检查点保持旧规则。已收服宠物死亡不重抽。旧同种重复实例在正文就绪且无未结束战斗时归并，来源归档与移除引用分开保存。详情见[宠物标签](pet-traits.md)。
+
+## 2026-10-05 连续哈奇地图
+
+`renderMaps`将群岛与六岛局部入口交给统一视图，保留副本局部地图。`haqi_atlas_core.js`提供纯几何与取景计算，`haqi_atlas_data.js`在打开地图后才读取并缓存version2清单。视图维护单个相机与最多6张静态局部预览，`drawIsland`回调由控制器创建只读场景并调用renderer.minimap的`atlasPreview/showPlayer`选项；预览不接受可写存档。当前人物/伙伴单独绘制，浏览不推进游戏状态。漩涡回调只改变panel与焦点，实际角色传送仍通过travel/travelEarth/teleportToPosition；关闭统一释放地图observer、绘制任务和过期加载应答。
+
+
+### 2026-10-06 可配置岛屿续篇
+
+潮汐、浮岸、风帆扩展沿用上图的游戏/实验室与IO/规则边界；[配置说明](island-expansion.md)记录作者源、生成流程与存档编号约定。
+
+```mermaid
+flowchart LR
+    Packs[island-packs/index与每岛JSON] --> Registry[prepare_island_packs：纯登记表与伙伴配置]
+    Registry --> MapBuild[generate_island_maps]
+    Maps[config/maps/islands：海岸与布局] --> MapBuild
+    MapBuild --> RuntimeMaps[运行时地图与出生点索引]
+    Packs --> StoryExport[export_story：稳定S/L编号和作者源]
+    StoryExport --> Chapters[60/70/80章节与独立副本剧本]
+    Packs --> IO[adventure_assets：JSON读取与按需美术]
+    RuntimeMaps --> IO
+    IO --> Install[adventure_island_packs_core：校验与安装]
+    Install --> Existing[现有NPC/目录任务/野外战斗/副本规则]
+    Existing --> Save[现有本地与云端存档]
+    Art[建筑与群岛清单：本地归档及永久CDN] --> IO
+```
+
+包内主线按本岛等级并行解锁。核心安装器无DOM/网络，目录任务与副本仍使用既有动作和保存结构；发布读取器增加island-packs目录，配置进入现有adventure数据包，美术不进入dist。局部地图预览槽数量随已登记岛屿变化，避免九岛互相淘汰。
+
+
+宣传片补充（2026-10-06）：`promo_stage.js → promo_learning.js → createLearningVoice / createDialogueMapper → Keepwork AI`，仅固定演示句出站，结果缓存在舞台内存。词义映射复用正式解析与双语组件；证据通过后 `awardDailySpeech → arenaSeats → startRedMushroom`，语言加成进入正式赛场快照。宠物展示通过 `createPetScene` 运行内存角色互动；不接角色持久化与真人通信。

@@ -29,8 +29,8 @@ class StoryExportTests(unittest.TestCase):
         original = [s for s in scenes if s['key'].startswith('original:')]
         self.assertEqual(len(original), len(self.export.catalog['quests']))
         self.assertEqual(sum(s['kind'] == 'obsolete' for s in original), 257)
-        self.assertEqual(sum(s['kind'] == 'current' and 'questId' in s for s in scenes), 427)
-        self.assertEqual(sum(s['key'].startswith('journey:') for s in scenes), 18)
+        self.assertEqual(sum(s['kind'] == 'current' and 'questId' in s for s in scenes), 427 + len(self.export.pack_quest_ids))
+        self.assertEqual(sum(s['key'].startswith('journey:') for s in scenes), 18 + sum(len(p['journeys']) for _,p in self.export.packs))
         self.assertEqual(sum(s['key'].startswith('conversation:') and s['kind'] == 'current' for s in scenes), 66)
 
     def test_source_and_author_validation(self):

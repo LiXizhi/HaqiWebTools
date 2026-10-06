@@ -52,15 +52,27 @@ for(const island of ISLANDS)test(`${island.name}: dialogue, food, birth and retu
     save.zone=island.id;save.position=islandSpawn(save.zone,islandContent);world=createWorld(save.zone,islandContent,save);scene.step(0);assert.equal(scene.babies[0].id,baby.id);
     scene.adopt(baby.id);assert.equal(scene.babies.length,0);assert.ok(save.pets[baby.id]);assert.deepEqual(save.formation,[host,null,null,null]);
 });
-function sceneHarness(isFriend=()=>true){
+function sceneHarness(isFriend=()=>true,navigation){
     let save=hero(),at=T;save.position={x:900,y:800};
     const world={zone:save.zone,w:1800,h:1600,buildings:[],trees:[],npcs:[{id:36215,name:'草莓姑娘'}]};
     const actor=id=>({profile:{id,school:'fire'},position:{x:925,y:800}});
     const state={world,content,scope:'test',socialActors:[actor('first'),actor('second')],locked:false,loadPet:async()=>{throw Error('读取失败');}};
     const notices=[],meetings=[];
-    const scene=createPetScene({isFriend,getState:()=>({...state,save}),commit:next=>{save=next;},toast:message=>notices.push(message),now:()=>at});
+    const scene=createPetScene({isFriend,navigation,getState:()=>({...state,save}),commit:next=>{save=next;},toast:message=>notices.push(message),now:()=>at});
     return {scene,state,notices,meetings,get save(){return save;},advance:ms=>{at+=ms;}};
 }
+
+test('asynchronous proximity meetings preserve arrivals and discard leaving, moved and locked actors',async()=>{
+    for(const action of ['arrive','leave','move','lock','dialogue']){
+        const jobs=[],navigation={options:()=>({}),findMeeting(world,participants,owners,content,valid){return new Promise(resolve=>jobs.push({world,participants,owners,content,valid,resolve}));}};
+        const h=sceneHarness(()=>true,navigation);h.state.socialActors=h.state.socialActors.slice(0,1);h.state.socialActors[0].position={x:1070,y:800};const p=petInteractionParams(content);
+        h.scene.step(0);h.advance(p.playIntervalMs+1);h.scene.step(0);assert.equal(jobs.length,1);assert.equal(jobs[0].valid(),true);h.scene.step(0);assert.equal(jobs.length,1);
+        const anchor=findPetMeeting(jobs[0].world,jobs[0].participants,jobs[0].owners,content);assert.ok(anchor);
+        if(action==='leave'){h.state.world={...h.state.world};h.scene.step(0);}if(action==='move'){h.save.position.x+=500;h.scene.step(0);}if(action==='lock'){h.state.locked=true;h.scene.step(0);}if(action==='dialogue')h.scene.dialogue('first');
+        assert.equal(jobs[0].valid(),action==='arrive');jobs[0].resolve(anchor);await Promise.resolve();await Promise.resolve();
+        if(action==='arrive'){for(let i=0;i<180&&!h.scene.effects.length;i++){h.advance(50);h.scene.step(.05);}assert.equal(h.scene.effects[0]?.kind,'proximity');}else assert.equal(h.scene.effects.some(e=>e.kind==='proximity'),false);
+    }
+});
 
 test('Earth pet obstacle searches yield to the scene budget and an old world cannot apply a finished route',async()=>{
     const h=sceneHarness(),jobs=[];
@@ -214,11 +226,11 @@ test('nearby pets with affinity show a pink mark above both heads',()=>{
 test('local role root contains only pet pages; reload fetches active bodies only',()=>{
     const data=new Map(),reads=[],storage={getItem:k=>{reads.push(k);return data.get(k)??null;},setItem:(k,v)=>data.set(k,v)};let serial=0;
     const make=()=>createRoleStore({content,dataset,storage,runtimeStore:createRuntimeStore({indexedDB:null}),uuid:()=>`12345678-1234-1234-1234-${String(++serial).padStart(12,'0')}`});
-    const store=make();store.open();const save=hero();for(let i=0;i<150;i++){const p=createPetInstance(content,{id:`extra${i}`,speciesId:'dragon_green',ownerId:save.petOwnerId});save.pets[p.id]={...p,hp:100,hunger:100};}
+    const store=make();store.open();const save=hero();for(let i=0;i<150;i++){const p=createPetInstance(content,{id:`extra${i}`,speciesId:Object.keys(content.pets).filter(id=>id!=='dragon_green'&&!content.pets[id].legacy)[i],ownerId:save.petOwnerId});save.pets[p.id]={...p,hp:100,hunger:100};}
     store.create(save);const root=JSON.parse(data.get('haqi.roles.v1.guest'));assert.deepEqual(root.catalog.roles[0].save.pets,{});assert.equal(root.catalog.roles[0].save.petPages.length,2);
     reads.length=0;const restored=make();restored.open();const s=restored.catalog.roles[0].save;assert.equal(Object.keys(s.pets).length,1);assert.equal(Object.keys(s.petFileRefs).length,151);assert.equal(reads.filter(p=>p.includes('.pet-file.pets/')).length,1);
     assert.equal(coreCatalogKey(catalog(store.catalog.roles[0].save)),coreCatalogKey(catalog(s)));
-    const loaded=restored.loadPet(s,'extra42');assert.equal(loaded.pets.extra42.speciesId,'dragon_green');saveLocal(loaded,restored.scoped());assert.equal(Object.keys(restored.catalog.roles[0].save.petFileRefs).length,151);
+    const loaded=restored.loadPet(s,'extra42');assert.equal(loaded.pets.extra42.speciesId,Object.keys(content.pets).filter(id=>id!=='dragon_green'&&!content.pets[id].legacy)[42]);saveLocal(loaded,restored.scoped());assert.equal(Object.keys(restored.catalog.roles[0].save.petFileRefs).length,151);
 });
 test('failed individual file write never publishes parent cooldown, food debit or baby',()=>{
     let fail=false,serial=0;const data=new Map(),storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>{if(fail&&k.includes('.pet-file.'))throw Error('disk full');data.set(k,v);}};
@@ -261,7 +273,7 @@ function cloudMock() {
 }
 
 test('Keepwork writes separate pet files, lazy restores and reuses unchanged files',async()=>{
-    const m=cloudMock(),c=m.client();await c.connect();const save=hero();for(let i=0;i<12;i++){const p=createPetInstance(content,{id:`reserve${i}`,speciesId:'dragon_green',ownerId:save.petOwnerId});save.pets[p.id]={...p,hp:100,hunger:100};}
+    const m=cloudMock(),c=m.client();await c.connect();const save=hero();for(let i=0;i<12;i++){const p=createPetInstance(content,{id:`reserve${i}`,speciesId:Object.keys(content.pets).filter(id=>id!=='dragon_green'&&!content.pets[id].legacy)[i],ownerId:save.petOwnerId});save.pets[p.id]={...p,hp:100,hunger:100};}
     const catalog={schemaVersion:1,activeId:id(1),roles:[{id:id(1),lastPlayedAt:1,save}]};
     const revision=await c.saveRoles(catalog,null);const manifest=JSON.parse(m.remote.get(m.store.getRemotePagePath('roles/index.json')));assert.equal(manifest.catalog.roles[0].state.petWorld,undefined);
     const items=JSON.parse(m.remote.get(m.store.getRemotePagePath(manifest.catalog.roles[0].files.items))).data;assert.deepEqual(items.pets,{});assert.equal(items.petPages.length,1);
@@ -274,7 +286,7 @@ test('Keepwork writes separate pet files, lazy restores and reuses unchanged fil
 test('first cloud sync uploads unloaded local pets; another device can open just one later',async()=>{
     const data=new Map();let serial=1000;const storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
     const make=()=>createRoleStore({content,dataset,storage,runtimeStore:createRuntimeStore({indexedDB:null}),uuid:()=>id(++serial)});
-    const local=make();local.open('alice');const save=hero();for(let i=0;i<4;i++){const p=createPetInstance(content,{id:`local${i}`,speciesId:'dragon_green',ownerId:save.petOwnerId});save.pets[p.id]={...p,hp:100,hunger:100};}local.create(save);
+    const local=make();local.open('alice');const save=hero();for(let i=0;i<4;i++){const p=createPetInstance(content,{id:`local${i}`,speciesId:Object.keys(content.pets).filter(id=>id!=='dragon_green'&&!content.pets[id].legacy)[i],ownerId:save.petOwnerId});save.pets[p.id]={...p,hp:100,hunger:100};}local.create(save);
     const reopened=make();reopened.open('alice');assert.equal(Object.keys(reopened.catalog.roles[0].save.pets).length,1);
     const m=cloudMock(),c=m.client({petFileStore:id=>reopened.petFileIO(id)});await c.connect();await c.saveRoles(reopened.catalog,null);
     const other=m.client();await other.connect();const cloud=await other.roles(),row=cloud.catalog.roles[0],ref=row.save.petFileRefs.local3;
@@ -286,7 +298,7 @@ test('first cloud sync uploads unloaded local pets; another device can open just
 test('failed index publish does not upload the same pet files again',async()=>{
     const data=new Map();let serial=3000;const storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
     const local=createRoleStore({content,dataset,storage,runtimeStore:createRuntimeStore({indexedDB:null}),uuid:()=>id(++serial)});
-    local.open('alice');const save=hero();for(let i=0;i<4;i++){const p=createPetInstance(content,{id:`retry${i}`,speciesId:'dragon_green',ownerId:save.petOwnerId});save.pets[p.id]={...p,hp:100,hunger:100};}local.create(save);
+    local.open('alice');const save=hero();for(let i=0;i<4;i++){const p=createPetInstance(content,{id:`retry${i}`,speciesId:Object.keys(content.pets).filter(id=>id!=='dragon_green'&&!content.pets[id].legacy)[i],ownerId:save.petOwnerId});save.pets[p.id]={...p,hp:100,hunger:100};}local.create(save);
     const reopened=createRoleStore({content,dataset,storage,runtimeStore:createRuntimeStore({indexedDB:null}),uuid:()=>id(++serial)});reopened.open('alice');
     const m=cloudMock();let failIndex=true;const sync=m.sdk.editFileByFullPath.bind(m.sdk);
     m.sdk.editFileByFullPath=async(path,...args)=>{if(failIndex&&path.endsWith('/roles/index.json'))return {success:false};return sync(path,...args);};
@@ -303,7 +315,7 @@ test('a later save does not redownload pet files already stored on this device',
     const data=new Map();let serial=4000;const storage={getItem:k=>data.get(k)??null,setItem:(k,v)=>data.set(k,v)};
     const make=()=>createRoleStore({content,dataset,storage,runtimeStore:createRuntimeStore({indexedDB:null}),uuid:()=>id(++serial)});
     const local=make();local.open('alice');const save=hero();
-    for(let i=0;i<6;i++){const p=createPetInstance(content,{id:`loaded${i}`,speciesId:'dragon_green',ownerId:save.petOwnerId});save.pets[p.id]={...p,hp:100,hunger:100};}
+    for(let i=0;i<6;i++){const p=createPetInstance(content,{id:`loaded${i}`,speciesId:Object.keys(content.pets).filter(id=>id!=='dragon_green'&&!content.pets[id].legacy)[i],ownerId:save.petOwnerId});save.pets[p.id]={...p,hp:100,hunger:100};}
     local.create(save);
     const reopened=make();reopened.open('alice');
     const m=cloudMock(),first=m.client({petFileStore:id=>reopened.petFileIO(id)});await first.connect();
@@ -333,7 +345,7 @@ test('login downloads pet files into the account scope while the store is still 
 });
 
 test('manual snapshots keep individual files and restore a complete portable collection',async()=>{
-    const m=cloudMock(),client=m.client();await client.connect();const s=hero();const p=createPetInstance(content,{id:'same-species-baby',speciesId:'dragon_green',ownerId:s.petOwnerId});s.pets[p.id]={...p,hp:100,hunger:100};
+    const m=cloudMock(),client=m.client();await client.connect();const s=hero();const p=createPetInstance(content,{id:'snapshot-pet',speciesId:'dragon_purple',ownerId:s.petOwnerId});s.pets[p.id]={...p,hp:100,hunger:100};
     const uploaded=await client.upload(s,{roleId:id(7)});assert.equal(uploaded.snapshot.storageVersion,3);assert.deepEqual(uploaded.snapshot.save.pets,{});
     const restored=await client.read(uploaded.path);assert.equal(Object.keys(restored.save.pets).length,2);assert.equal(restored.save.petFileRefs,undefined);assert.equal(restored.save.petPages,undefined);parseSave(restored.save,content);
 });
@@ -357,7 +369,7 @@ test('no open meeting space never falls back to owners feet',()=>{
 test('guest-to-account transfer hydrates lazy pets and rewrites files under the account scope',()=>{
     const rows=new Map(),storage={getItem:k=>rows.get(k)??null,setItem:(k,v)=>rows.set(k,v)};let n=0;
     const store=createRoleStore({content,dataset,storage,runtimeStore:createRuntimeStore({indexedDB:null}),uuid:()=>`12345678-1234-1234-1234-${String(++n).padStart(12,'0')}`});
-    store.open();const save=hero();save.pets['extra-pet']=createPetInstance(content,{id:'extra-pet',ownerId:save.petOwnerId,speciesId:'dragon_green',xp:9000});
+    store.open();const save=hero();save.pets['extra-pet']=createPetInstance(content,{id:'extra-pet',ownerId:save.petOwnerId,speciesId:'dragon_purple',xp:9000});
     const id=store.create(save);store.open();assert.equal(store.catalog.roles[0].save.pets['extra-pet'],undefined);
     const transfer=store.guestTransfer();assert.equal(transfer.save.pets['extra-pet'].xp,9000);assert.equal(transfer.save.petPages,undefined);
     store.open('alice');store.adoptGuest(transfer);store.open('alice');store.select(id);

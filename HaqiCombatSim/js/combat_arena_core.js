@@ -119,7 +119,9 @@ export function validTargets(arena, unit, card) {
     if (kind === 'all') return [...enemiesOf(arena, unit).filter(available), ...alliesOf(arena, unit).filter(available)];
     const enemies = enemiesOf(arena, unit).filter(available);
     if (card.type === 'Enrage' && specialCardsEnabled(arena)) return enemies.filter(target=>canEnrageTarget(arena,unit,card,target));
-    if (card.type === 'CatchPet') return enemies.filter(target => !target.enragedBy && target.template?.speciesId && !arena.ownedPets?.includes(target.template.speciesId) && !arena.captured?.includes(target.template.speciesId));
+    if (card.type === 'CatchPet') return arena.captureRulesVersion===1
+        ? enemiesOf(arena,unit).filter(target=>target.isMob&&U.isAlive(target)&&target.template?.speciesId)
+        : enemies.filter(target => !target.enragedBy && target.template?.speciesId && !arena.ownedPets?.includes(target.template.speciesId) && !arena.captured?.includes(target.template.speciesId));
     return enemies;
 }
 

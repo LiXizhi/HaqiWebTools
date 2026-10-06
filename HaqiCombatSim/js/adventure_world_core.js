@@ -202,6 +202,12 @@ export function takeAutoInteraction(world,p){
     world.autoContact=target.id;
     return target;
 }
+// Field monsters enter combat through takeAutoInteraction after their warning
+// and physical contact, including when a quest or click supplied the path.
+export function destinationInteraction(world,p,target,radius){
+    if(!target||target.kind==='encounter'&&!world.isDungeon)return null;
+    return distance(p,target)<radius?target:null;
+}
 // Stand just outside touch and dungeon aggro, on the side the player approached from.
 export function retreatBeside(world,player,target){
     const origin={x:target.x,y:target.y};

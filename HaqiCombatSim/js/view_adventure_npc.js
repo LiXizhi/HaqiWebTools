@@ -103,7 +103,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
     };
     const offerName=row=>{
         const item=content.items[row.itemId],card=offerCard(row);
-        return item?.name||row.name||card?.name||`物品 ${row.itemId}`;
+        return item?.name||row.name||card?.name||fill(`物品 {v0}`,{v0:String(row.itemId)}).text;
     };
     const schoolOf=row=>{
         const card=offerCard(row);
@@ -127,7 +127,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
             const status=offerStatus(row);
             inspector.show(content.items[row.itemId],{trigger:thumb,source:npc.name,requirements:[status.price,!status.allowed?status.reason:''].filter(Boolean).join(' · '),requirementsLabel:'兑换条件'});
         },painted||icon?'npc-thumb':'npc-thumb npc-thumb-fallback');
-        thumb.setAttribute('aria-label',row.kind==='shop'?`查看${name}详情`:card?`查看${name}卡面`:name);
+        thumb.setAttribute('aria-label',row.kind==='shop'?fill('查看{name}详情',{name}).text:card?fill('查看{name}卡面',{name}).text:name);
         if(row.kind==='shop')thumb.setAttribute('aria-haspopup','dialog');
         else bindPreview(thumb,card,name);
         return thumb;
@@ -238,7 +238,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
             }else{
                 const meta=el('div','npc-good-meta');
                 if(status.price)meta.append(moneyLine(el,'p','',status.price));
-                if(!status.allowed&&status.reason&&status.reason!==status.price&&status.reason!==`需要${status.price}`)meta.append(moneyLine(el,'p','npc-blocked',status.reason));
+                if(!status.allowed&&status.reason&&status.reason!==status.price&&status.reason!==fill(`需要{v0}`,{v0:String(status.price)}).text)meta.append(moneyLine(el,'p','npc-blocked',status.reason));
                 const owned=el('p','muted');setText(owned,'已拥有 {count}',{count:model.save.inventory[row.itemId]||0});
                 meta.append(owned);
                 list.append(el('article','npc-good',el('h3','',name),el('div','npc-good-row',thumbnail(row,name),meta,actionButton(row,status,name))));

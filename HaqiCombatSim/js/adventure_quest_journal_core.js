@@ -1,8 +1,8 @@
 // Journal rows stay a display projection. Progress lives in adventure_catalog_quests_core.js.
-import {islandFor} from './adventure_world_map_core.js';
+import {islandFor,ISLANDS} from './adventure_world_map_core.js';
 import {currentQuest,questState,questReady} from './adventure_core.js';
 import {catalogQuestStatus} from './adventure_catalog_quests_core.js';
-export const QUEST_REGIONS={camp:'魔法营地',town:'哈奇岛',fire:'火鸟岛',ice:'寒冰岛',desert:'沙漠岛',dark:'幽暗岛','21':'魔法师之路','22':'试炼秘境'};
+export const QUEST_REGIONS={...Object.fromEntries(ISLANDS.map(i=>[i.id,i.name])),'21':'魔法师之路','22':'试炼秘境'};
 export function defaultJournalRegion(save){
     return islandFor(save.zone)?.id||islandFor(save.dungeonReturn?.zone)?.id||'town';
 }

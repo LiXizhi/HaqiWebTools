@@ -1,3 +1,4 @@
+import {createPetTraitBadges,drawPetTraitHalo} from './view_pet_traits.js';
 import {monsterGearScore} from './combat_power_core.js';
 import {drawSchoolIcon} from './card_renderer.js';
 import {tr,fill} from './locale_runtime.js';
@@ -23,6 +24,7 @@ export function createBattleIntroView(root,{skip}){
                 const banner=element('div','battle-intro-banner');
                 const icon=element('canvas','battle-intro-school');icon.width=64;icon.height=64;icon.setAttribute('aria-hidden','true');drawSchoolIcon(icon.getContext('2d'),row.school,32,32,48);
                 const labels=element('div','battle-intro-labels');labels.append(element('h3','',row.name),element('p','',`${tr('战力')} ${monsterGearScore(row.template)}`),element('p','',fill('等级 {level} · {school}',{level:row.level,school:tr(school)}).text));
+                labels.append(createPetTraitBadges(row.template.passiveTraits,assets.content,element,{compact:true}));
                 banner.append(icon,labels);panel.append(ordinal,portrait,banner);lineup.append(panel);rows.push({panel,portrait,row,loaded:false});
             }
             const footer=element('footer','battle-intro-footer');footer.append(element('span','','准备迎战'));
@@ -43,7 +45,7 @@ export function createBattleIntroView(root,{skip}){
             for(const [i,item]of rows.entries()){
                 item.panel.style.setProperty('--entry',frame.rows[i].entry);item.panel.style.setProperty('--banner',frame.rows[i].banner);
                 if(item.loaded)continue;
-                const c=item.portrait.getContext('2d');c.clearRect(0,0,512,512);
+                const c=item.portrait.getContext('2d');c.clearRect(0,0,512,512);drawPetTraitHalo(c,item.row.template.passiveTraits,256,463,172);
                 item.loaded=!!assets.drawMonster?.(c,item.row.template,12,12,488,488);
                 // Slow or failed CDN loads never block entry; keep an elemental seal visible.
                 if(!item.loaded)drawSchoolIcon(c,item.row.school,256,256,160);

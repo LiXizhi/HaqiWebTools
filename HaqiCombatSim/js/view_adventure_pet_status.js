@@ -1,3 +1,4 @@
+import {fill,tr} from './locale_runtime.js';
 import {petMaxHp, petParams, petAppearanceStage, STAGE_NAMES} from './adventure_pets_core.js';
 
 function fillStatus(node,pet,content) {
@@ -6,7 +7,7 @@ function fillStatus(node,pet,content) {
   const hunger=meter.dataset.petMeter==='hunger';
   const value=hunger?(pet.hunger??100):(pet.hp??max),limit=hunger?100:max;
   meter.max=limit;meter.value=Math.max(0,Math.min(limit,value));
-  const label=`${hunger?'饱食':'生命'} ${Math.floor(value)} / ${limit}`;
+  const label=fill('{label} {value} / {max}',{label:hunger?'饱食':'生命',value:Math.floor(value),max:limit}).text;
   meter.title=label;meter.setAttribute('aria-label',label);
  }
 }
@@ -30,18 +31,18 @@ export function createPetEvolution(assets,id,pet,portrait,el,onSelect) {
  const def=assets.content.pets[id];
  if(def?.staticAppearance){
   const path=el('div','pet-growth-stages pet-growth-static');
-  path.setAttribute('aria-label','原版形象');
+  path.setAttribute('aria-label',tr('原版形象'));
   path.append(el('section','pet-growth-stage is-current',portrait(assets,id,0,96),el('h3','','原版形象'),el('p','muted','外观不随等级变化'),el('small','pet-growth-state','没有四套动作')));
   return path;
  }
  const p=petParams(assets.content),current=pet?petAppearanceStage(pet,assets.content):-1;
- const path=el('div','pet-growth-stages');path.setAttribute('aria-label','四阶段进化路径');
+ const path=el('div','pet-growth-stages');path.setAttribute('aria-label',tr('四阶段进化路径'));
  for(let index=0;index<4;index++){
   const locked=!!pet&&pet.level<p.stageLevels[index];
   const selectable=!!pet&&!!onSelect;
   const stage=el(selectable?'button':'section',`pet-growth-stage${locked?' is-locked':''}${current===index?' is-current':''}`,
    portrait(assets,id,index,96),el('h3','',STAGE_NAMES[index]),
-   el('p','muted',`${p.stageLevels[index]}级${locked?'解锁':''} · 卡包 ${p.petCapacities[index]} 张`),
+   el('p','muted',fill(`{v0}级{v1} · 卡包 {v2} 张`,{v0:String(p.stageLevels[index]),v1:String(locked?'解锁':''),v2:String(p.petCapacities[index])}).text),
    el('small','pet-growth-state',current===index?'当前形态':locked?'未解锁':pet?'已解锁':'进化形态'));
   if(current===index)stage.setAttribute('aria-current','step');
   if(selectable){

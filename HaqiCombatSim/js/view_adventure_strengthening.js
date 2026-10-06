@@ -1,3 +1,4 @@
+import {fill} from './locale_runtime.js';
 import {STRENGTHENING_FILTERS,affordableUnstrengthenedGear,strengtheningItems,strengtheningPreview} from './adventure_strengthening_core.js';
 import {teachPointer} from './view_teaching.js';
 // Kids MCML window: selected equipment → target properties / material; 4 × 3 paged inventory.
@@ -45,7 +46,7 @@ export function renderStrengthening(body,model,cb,{el,button,art}) {
         try {
             const result=cb.action({type:'upgrade',itemId:p.item.id,guid:p.instance.guid});
             if(result===false){state.message='强化未成功，请检查材料后重试。';return;}
-            state.message=`强化成功！${p.item.name} +${p.level+1}`;
+            state.message=fill(`强化成功！{v0} +{v1}`,{v0:String(p.item.name),v1:String(p.level+1)}).text;
         }finally{state.pending=false;cb.refresh?.();paint();}
     },'primary strengthening-submit');
     left.append(heading,slot,arrow,preview,el('h3','strengthening-material-title','强化材料'),material,submit,status);
@@ -79,7 +80,7 @@ export function renderStrengthening(body,model,cb,{el,button,art}) {
         slot.disabled=!p.item;
         if(p.item){
             slot.append(art(assets,p.item.art,64,64),el('span','strengthening-level',`+${p.level}`));
-            slot.title=`${p.item.name} +${p.level}，点击取出`;
+            slot.title=fill(`{v0} +{v1}，点击取出`,{v0:String(p.item.name),v1:String(p.level)}).text;
             preview.append(el('strong','',`${p.item.name}：+${p.next?p.level+1:p.level}`));
             // GetProps L92–118: preserve the original labels (including its fixed-defence % suffix).
             if(p.next){
@@ -91,7 +92,7 @@ export function renderStrengthening(body,model,cb,{el,button,art}) {
                 const icon=el('div','strengthening-material-icon');
                 icon.style.backgroundImage=`var(--strength-${p.next.cost[0]===17213?'beans':'pearl'})`;
                 icon.setAttribute('role','img');icon.setAttribute('aria-label',p.material?.name||'强化材料');
-                material.append(icon,el('div','',el('strong','',p.material?.name||`材料 ${p.next.cost[0]}`),el('div','',`需要 ${p.next.cost[1]}`),el('div',p.held<p.next.cost[1]?'strengthening-shortage':'',`拥有 ${p.held}`)));
+                material.append(icon,el('div','',el('strong','',p.material?.name||fill(`材料 {v0}`,{v0:String(p.next.cost[0])}).text),el('div','',fill(`需要 {v0}`,{v0:String(p.next.cost[1])}).text),el('div',p.held<p.next.cost[1]?'strengthening-shortage':'',fill(`拥有 {v0}`,{v0:String(p.held)}).text)));
                 const source=String(p.material?.description||'').replaceAll('#','；');if(source)material.title=source;
             }
         }else preview.append(el('p','','放入装备后查看强化属性'));
@@ -101,7 +102,7 @@ export function renderStrengthening(body,model,cb,{el,button,art}) {
             const item=c.items[instance.gsid],equipped=save.equipmentGuids?.[item.slot]===instance.guid;
             const b=button([art(assets,item.art,64,64),el('span','strengthening-level',`+${instance.serverdata.addlel}`),equipped?el('small','strengthening-equipped','已装备'):null],()=>{state.guid=instance.guid;state.message='';paint();},'strengthening-grid-slot');
             b.setAttribute('data-guid',instance.guid);
-            b.setAttribute('aria-label',`${item.name} +${instance.serverdata.addlel}${equipped?' 已装备':''}，放入强化栏`);
+            b.setAttribute('aria-label',fill(`{v0} +{v1}{v2}，放入强化栏`,{v0:String(item.name),v1:String(instance.serverdata.addlel),v2:String(equipped?' 已装备':'')}).text);
             b.setAttribute('aria-pressed',String(instance.guid===state.guid));b.title=`${item.name} +${instance.serverdata.addlel}\n${String(item.description||'').replaceAll('#','\n')}`;grid.append(b);
         }
         if(!rows.length)grid.append(el('p','strengthening-empty','没有可强化的装备'));

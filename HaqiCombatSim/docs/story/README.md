@@ -75,3 +75,8 @@ python -X utf8 -m unittest discover -s tests -p "story_*test.py"
 413个非教学任务的接取、指定NPC交谈与交付原文已投影到独立的`data/adventure/quest-runtime.json`，共2135段非空对白，保留玩家回答。包括火鸟33、寒冰48、沙漠43、幽暗12、哈奇岛4个明确归岛任务，其余为营地非教学及成长／挑战组任务。原任务等级、目标、前置和奖励不变，是否能进入对白仍取决于现有NPC入口及任务支持范围。原版62759末尾两条无文字无按钮的占位不播放。
 
 作者源为儿童版`config/Aries/Quests/quest_list.xml`，经`export_quest_catalog.py`归档、`package_quests.mjs`生成；不要直接修改生成快照。主支线文档的“当前任务内容”现在包含导入对白与来源定位，原版来源参考保留旧编号。NPC学习交流和副本故事仍独立。该接入不包含Lua机关、宝箱事件和过场播放，也不自动将全部原文简化或新增翻译。
+
+
+## 2026-10-06新增等级章节
+
+[潮汐岛·灯还亮着](chapters/C870000.md)、[浮岸岛·两张图都是真的](chapters/C870100.md)、[风帆岛·庆典前的求救](chapters/C870200.md)已进入游戏，分别为60/70/80级的12步任务链。作者源为data/adventure/island-packs各岛JSON；新副本与居民对白保持独立导出。配置与打磨说明见[岛屿续篇](../island-expansion.md)。

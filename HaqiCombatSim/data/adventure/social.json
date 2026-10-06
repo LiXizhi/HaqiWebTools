@@ -33,6 +33,24 @@
       "enabled": true,
       "size": "large",
       "capacity": 16
+    },
+    "tide": {
+      "enabled": true,
+      "size": "large",
+      "capacity": 16,
+      "islandPack": true
+    },
+    "float": {
+      "enabled": true,
+      "size": "large",
+      "capacity": 16,
+      "islandPack": true
+    },
+    "sail": {
+      "enabled": true,
+      "size": "large",
+      "capacity": 16,
+      "islandPack": true
     }
   },
   "personas": [

@@ -19,6 +19,7 @@ import {installNpcArt} from './adventure_npc_art_core.js';
 import {loadEnvironmentArt} from './adventure_environment_art.js';
 import { sceneryAtlases } from './adventure_scenery_core.js';
 import { installExpansion } from './adventure_expansion_core.js';
+import {validateIslandPacks,installIslandPackActors,installIslandPackEncounters,installIslandPackQuests,islandPackJournal} from './adventure_island_packs_core.js';
 import { installMountCatalog } from './adventure_mounts_core.js';
 // Browser IO for the self-contained adventure package.
 import { validateSpellEffects } from './spell_effects_core.js';
@@ -58,6 +59,9 @@ export async function loadResources(progress) {
     progress?.({ label: '正在连接资源服务器', value: null });
     const [content,dataset,manifest,media,effects]=await Promise.all(['chapter','combat','assets','media','spell-effects'].map(n=>json(`data/adventure/${n}.json`)));
     validateAdventureContent(content,dataset,manifest);
+    const packIndex=await json('data/adventure/island-packs/index.json');
+    if(packIndex.version!==1)throw Error('岛屿扩展索引无效');
+    const islandPacks=await Promise.all(packIndex.packs.filter(p=>p.enabled).map(p=>json(p.file)));
     const preparationRules=earthRules(content),imagePreparation=createImageBoundsPreparation({budgetMs:preparationRules.streamBuildBudgetMs,timeoutMs:preparationRules.requestTimeoutMs});
     const prepareBounds=(image,rect)=>imagePreparation.prepare(image,rect);
     content.worldMaps=Object.fromEntries(await Promise.all(Object.entries(content.worldMapIndex.islands).map(async([id,info])=>[id,await json(info.file)])));
@@ -150,10 +154,12 @@ export async function loadResources(progress) {
     }
     const [catalog,candidates,kidsCards,kidsCharms,cardNames]=await Promise.all([json('data/adventure/pets.json'),json('data/adventure/shop-candidates.json'),json('data/kids/cards.json'),json('data/kids/charms.json'),json('data/kids/card_names.json')]);
     installExpansion(content,dataset,catalog,candidates,kidsCards,kidsCharms,cardNames);
-    installIslandEncounters(content,dataset,await json('data/adventure/island-encounters.json'),kidsCards,cardNames);
+    const islandEncounters=await json('data/adventure/island-encounters.json');
+    installIslandEncounters(content,dataset,islandEncounters,kidsCards,cardNames);
+    installIslandPackEncounters(content,dataset,islandPacks,islandEncounters.monsters,kidsCards,cardNames);
     const dungeonJson=createJsonReader({packed:false});
     const [dungeonIndex,dungeonJourneys]=await Promise.all([json('data/adventure/dungeon-index.json'),json('data/adventure/dungeon-journeys.json')]);
-    content.dungeonJourneys=dungeonJourneys;installDungeonIndex(content,dungeonIndex);
+    content.dungeonJourneys={...dungeonJourneys,entries:[...dungeonJourneys.entries,...islandPacks.flatMap(p=>p.journeys)]};installDungeonIndex(content,dungeonIndex);
     const regularDungeons=createDungeonLoader({content,dataset,cards:kidsCards,names:cardNames,readJson:dungeonJson});
     const cityDungeons=createCityDungeonLoader({content,readJson:dungeonJson,registerImage});
     const dungeons={...regularDungeons,load:(id,options)=>id?.startsWith('city:')?cityDungeons.load(id,options):regularDungeons.load(id),prepareSaves:async saves=>{await cityDungeons.prepareSaves(saves);await regularDungeons.prepareSaves(saves);}};
@@ -163,6 +169,7 @@ export async function loadResources(progress) {
     for(const [id,art] of Object.entries(content.mountCatalog.sheets||{}))if(art?.cdn)lazyImages.set(`mount-sheet:${id}`,art);
     const npcArt=await json('data/adventure/npc-art.json');
     installNpcArt(content,npcArt);
+    installIslandPackActors(content,islandPacks);
     for(const [id,entry] of Object.entries(npcArt.entries))lazyImages.set(id,entry);
     content.shopConfig=await json('data/adventure/shop.json');
     content.magicStar=await json('data/adventure/magic-star.json');
@@ -175,6 +182,9 @@ export async function loadResources(progress) {
     installRuneCatalog(content,await json('data/adventure/runes.json'));
     const {installCatalogQuests}=await import('./adventure_catalog_quests_core.js');
     installCatalogQuests(content,await json('data/adventure/quest-runtime.json'));
+    // Validate against the legacy content, before the new quest IDs are installed.
+    validateIslandPacks(islandPacks,{...content,npcs:Object.fromEntries(Object.entries(content.npcs).filter(([,n])=>!n.instanceId?.startsWith('island-pack:'))),encounters:content.encounters.filter(e=>!e.id.startsWith('pack:'))});
+    installIslandPackQuests(content,islandPacks);
     content.checkinConfig=await json('data/adventure/checkin.json');
     for(const [id,item] of Object.entries(content.checkinConfig.items))content.items[id]??=item;
     for(const [id,item] of Object.entries(content.progressionBonuses.giftItems||{}))content.items[id]??=item;
@@ -257,7 +267,9 @@ export async function loadResources(progress) {
         for(let i=0;i<rows.length&&version===battleWarmVersion;i+=4)await skillArt.preload(rows.slice(i,i+4));
     }
 
-    return {registerImage,releaseImage,ensureImage,prepareEarthScene,warmNearby,warmBattle,warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal:createQuestJournalLoader(json),dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
+    const loadLegacyJournal=createQuestJournalLoader(json);
+    const loadQuestJournal=async()=>{const journal=await loadLegacyJournal();return {...journal,quests:[...journal.quests,...islandPackJournal(islandPacks)]};};
+    return {registerImage,releaseImage,ensureImage,prepareEarthScene,warmNearby,warmBattle,warmActors,hero,sceneryTile,loadFishing,drawMonster,monsterArt,loadQuestJournal,dungeons,environmentArt,buildingArt,entranceArt,terrainDecorationArt,warmScenery,drawPet,content,dataset,previewCards:kidsCards,manifest,effects,images,draw,tile,getBounds,mode,media,skillArt,urlFor:id=>assetUrl(media.entries[id],mode)};
 }
 export const BACKUP_KEY = `${SAVE_KEY}.before-cloud`;
 export function saveLocal(save, storage = localStorage) {

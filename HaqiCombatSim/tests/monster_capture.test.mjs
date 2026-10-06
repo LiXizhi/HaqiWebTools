@@ -74,3 +74,12 @@ test('both art sources can be captured with a catch rune', () => {
     dad.memories = [{otherId: 'mom', ownerId: 'owner:mom', level: 25, lastAt: 1, epoch: 'pair', total: 3, available: 3, lastMarkDay: 0}];
     assert.throws(() => breedPets(mom, dad, {now: 1, scene: {zone: 'camp', distance: 20, anchor: {x: 1, y: 1}, walkable: true}, babyId: 'baby-1'}, onlyModels), /没有可用宝宝/);
 });
+
+
+test('every shipped island and dungeon monster resolves to a collectible pet',()=>{
+    const all={...content,monsters:{...content.monsters,...read('adventure/dungeons.json').monsters},pets:{...content.pets}};
+    const monsters=Object.values(all.monsters);
+    const stamped=stampBattleMonsters(monsters,all,{cards:read('kids/cards.json')});
+    assert.ok(stamped.length>400);
+    for(const m of stamped)assert.ok(all.pets[m.speciesId],m.name+' '+m.id);
+});

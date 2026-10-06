@@ -2,6 +2,7 @@
 // 数据集（cards/charms/...）只读；所有可调数值集中在这里，引擎只读取 resolveParams() 的结果。
 // 常量来源见 docs/lua-mapping.md §1。
 
+import {PACK_ISLANDS} from './island_pack_registry_core.js';
 export const SCHOOLS = ['fire', 'ice', 'storm', 'life', 'death'];
 export const ALL_SCHOOLS = ['fire', 'ice', 'storm', 'myth', 'life', 'death', 'balance'];
 export const VERSIONS = ['kids', 'teen'];
@@ -43,7 +44,7 @@ export function defaultParams(version = 'teen') {
         characterRelations: {initialMin:0,initialMax:60,maxAiDelta:5,giftGain:3,dungeonGain:3,matchGain:2,dailyFreeMessages:2,recentMessages:20,compactAt:40,indexPageSize:100},
         // Web island unlock levels; original world configuration is unavailable.
         dungeonJourney: { hpGrowth:.055, rewardPerFloor:30, summitMultiplier:5 },
-        worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40 },
+        worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40, ...Object.fromEntries(PACK_ISLANDS.map(i=>[i.id,i.recommendedLevel])) },
         petInteractions: {
             memoryCapacity:10, memoryProtectionMs:7*86400000, marksRequired:3,
             cooldownMs:3*86400000, babyScale:.5, interactionDistance:100,
@@ -81,6 +82,15 @@ export function defaultParams(version = 'teen') {
         redMushroom: { arrivalMinMs:3000, arrivalMaxMs:5000, readyMs:15000, pickMs:30000, firstMin:.55, firstMax:.7, min:.5, max:1.6, jitter:.08, feedback:1.2, window:20, winPoints:25, drawPoints:10 },
         // Scene motion stays outside adventureParams saved in battle checkpoints.
         monsterScene: { territoryRadius:84, perceptionMultiplier:2, alertDelay:1.5, dungeonWanderRadius:22, wanderSpeed:15, chaseSpeed:115, returnSpeed:45, restMin:2.5, restMax:6.5 },
+        petTraits: {
+            countWeights:[65,28,7], rankWeights:[5000,2500,1250,650,350,170],
+            rareChance:.05, rareRankWeights:[80,17,3],
+            values:{attack:[3,6,10,15,21,28,36,47,60],defense:[2,4,6,9,12,16,20,25,30],
+                vitality:[4,8,12,18,25,33,42,51,60],critical:[1,2,4,6,9,12,16,20,24],
+                accuracy:[1,2,3,4,6,8,10,12,15],mana:[1,2,3,5,7,9,12,15,18],
+                healing:[3,5,8,12,17,23,30,37,45],frugal:[3,6,10,15,20,26,32,38,45]},
+            encounterCacheSize:128,
+        },
         adventure: {
             monsterRespawnMs:30000,
             fieldEncounterRadius:24,
@@ -111,9 +121,10 @@ export function defaultParams(version = 'teen') {
             effectThreatAreaCleanse:100,
             defensiveThreatWeight:3,
             tauntThreatWeight:5,
-            levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [2,4,6,8],
+            levelCap: Math.max(50,...PACK_ISLANDS.map(i=>i.recommendedLevel)), stageLevels: [1,10,25,40], petCapacities: [2,4,6,8],
             petCopies: 3, heroRegenPerSecond: .02, regenPerMinute: .05, hungerPerMinute: 1, restingHungerPerMinute: .5, feedThreshold: 30,
             foodRestore: 40, petFoodRules: {'17172':{restore:40,price:30},'17185':{restore:70,price:120},'17211':{restore:100,price:240}}, defeatHp: .1, captureBase: .2, captureWounded: .65,
+            catchMinChance: .01, catchMaxChance: .95, catchEnragedDifficulty: 2,
             foodPrice: 10, capturePrice: 25, petPriceBase: 100, petPriceLevel: 40,
             gearPriceBase: 30, gearPriceLevel: 15, duplicateXp: 50, mountSpeed: 1.35,
             // Permanent mounts with 0/0 globalstore prices (e.g. zodiac transform pills) list in the mall at this 魔豆 price.
@@ -230,7 +241,9 @@ export function resolveParamGroup(params,group,fallbackVersion='teen'){
     if(!defaults){defaults=defaultParams(version);parameterGroupDefaults.set(version,defaults);}
     let entries=parameterGroupEntries.get(version);if(!entries){entries=new Map();parameterGroupEntries.set(version,entries);}if(!entries.has(group))entries.set(group,Object.entries(defaults[group]||{}));
     const overrides=params?.[group],result={};for(const [key,value] of entries.get(group))if(!overrides||!Object.hasOwn(overrides,key))result[key]=copyParamDefault(value);
-    return Object.assign(result,overrides);
+    Object.assign(result,overrides);
+    if(group==='petTraits')result.values={...copyParamDefault(defaults.petTraits.values),...overrides?.values};
+    return result;
 }
 
 /** 读取 school 的系数条目（未知系回退到 balance 的空系数） */
@@ -313,6 +326,7 @@ export function resolveParams(dataset, params, {groups=null}={}) {
         cityDungeons: { ...defaults.cityDungeons, ...params.cityDungeons },
         worldTravel: { ...defaults.worldTravel, ...params.worldTravel },
         petInteractions: { ...defaults.petInteractions, ...params.petInteractions },
+        petTraits: { ...defaults.petTraits, ...params.petTraits, values:{...defaults.petTraits.values,...params.petTraits?.values} },
         checkin: { ...defaults.checkin, ...params.checkin },
         languageAdventure: { ...defaults.languageAdventure, ...params.languageAdventure },
         fishing: { ...defaults.fishing, ...params.fishing },

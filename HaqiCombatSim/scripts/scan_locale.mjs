@@ -166,10 +166,11 @@ export function filesFromManifest(manifest, baseDir = root) {
         const include = dir.include?.length ? dir.include : ['*'];
         for (const name of readdirSync(absDir)) {
             if (!include.some(pattern => matchName(name, pattern))) continue;
+            if ((dir.exclude || []).some(pattern => matchName(name, pattern))) continue;
             const rel = path.posix.join(dir.path.split(path.sep).join('/'), name);
             const abs = path.join(absDir, name);
             if (!statSync(abs).isFile()) continue;
-            add(rel, dir.kind || kindOf(name), dir.fields || null);
+            add(rel, dir.kind || kindOf(name), dir.fields || null, dir.under || null);
         }
     }
     for (const entry of manifest.json || []) {
@@ -191,22 +192,27 @@ function kindOf(rel) {
 
 export function scanSources(files) {
     const staticHits = new Map();
+    const staticOccurrences = [];
     const dynamicHits = [];
     for (const file of files) {
         const source = readFileSync(file.abs, 'utf8');
         if (file.kind === 'json') {
             const values = extractJsonStrings(JSON.parse(source), file.fields, file.under);
             values.forEach((text, index) => {
+                staticOccurrences.push({text,file:file.rel,line:index+1});
                 if (!staticHits.has(text)) staticHits.set(text, { file: file.rel, line: index + 1 });
             });
             continue;
         }
         for (const hit of extractJsStrings(source)) {
             if (hit.dynamic) dynamicHits.push({ ...hit, file: file.rel });
-            else if (!staticHits.has(hit.text)) staticHits.set(hit.text, { file: file.rel, line: hit.line });
+            else {
+                staticOccurrences.push({...hit,file:file.rel});
+                if (!staticHits.has(hit.text)) staticHits.set(hit.text, { file: file.rel, line: hit.line });
+            }
         }
     }
-    return { staticHits, dynamicHits };
+    return { staticHits, staticOccurrences, dynamicHits };
 }
 
 export function compareToLocale(staticHits, dynamicHits, localeText) {
@@ -232,19 +238,19 @@ export function runScan({ manifestPath, baseDir = root } = {}) {
     const manifest = loadManifest(manifestPath);
     const files = filesFromManifest(manifest, baseDir).filter(file => existsSync(file.abs));
     const missingFiles = filesFromManifest(manifest, baseDir).filter(file => !existsSync(file.abs));
-    const { staticHits, dynamicHits } = scanSources(files);
+    const { staticHits, staticOccurrences, dynamicHits } = scanSources(files);
     const localeDir = path.resolve(baseDir, manifest.localeDir || 'data/adventure/locale');
     const baseName = manifest.base || 'en.txt';
     const basePath = path.join(localeDir, baseName);
     const compared = compareToLocale(staticHits, dynamicHits, readFileSync(basePath, 'utf8'));
     const others = existsSync(localeDir)
-        ? readdirSync(localeDir).filter(name => name.endsWith('.txt') && name !== baseName).sort()
+        ? readdirSync(localeDir).filter(name => name.endsWith('.txt') && !name.startsWith('learning.') && name !== baseName).sort()
         : [];
     const localeDiffs = others.map(name => {
         const diff = diffLocaleLines(readFileSync(basePath, 'utf8'), readFileSync(path.join(localeDir, name), 'utf8'));
         return { name, ...diff };
     });
-    return { files, missingFiles, staticHits, dynamicHits, ...compared, baseName, localeDiffs };
+    return { files, missingFiles, staticHits, staticOccurrences, dynamicHits, ...compared, baseName, localeDiffs };
 }
 
 function printReport(report) {

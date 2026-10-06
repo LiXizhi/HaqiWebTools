@@ -47,7 +47,7 @@ export function createJsonReader({ packed = productionPacks, request = defaultRe
             return structuredClone(await pending.get(url));
         }
         const key = String(url).replace(/^\.\//, '');
-        const match = /^data\/(adventure|kids|teen|sample)\/((?:maps\/)?[a-zA-Z0-9_-]+\.json)$/.exec(key);
+        const match = /^data\/(adventure|kids|teen|sample)\/((?:(?:maps|island-packs)\/)?[a-zA-Z0-9_-]+\.json)$/.exec(key);
         if (!match) throw new Error(`未知的数据路径：${url}`);
         const group = match[2] === 'manifest.json' && match[1] !== 'adventure' ? 'datasets' : match[1];
         const packUrl = `data/${group}.json`;

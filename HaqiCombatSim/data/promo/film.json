@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "title": "魔法哈奇 · 从一次相遇开始",
+  "title": "魔法哈奇 · 两个世界，一场冒险",
   "seed": 530,
   "shots": [
     {
@@ -14,8 +14,8 @@
         "en": "A new adventure"
       },
       "subtitle": {
-        "zh-CN": "带上好奇心，和宠物一起冒险，在故事里练习另一种语言。",
-        "en": "Adventure with pets, explore new places, and practise a language through stories."
+        "zh-CN": "从魔法群岛，到真实城市。带上伙伴，让好奇心决定下一站。",
+        "en": "From magical islands to real cities. Bring a companion and follow your curiosity."
       },
       "duration": {
         "long": 8,
@@ -154,39 +154,467 @@
     },
     {
       "id": "skills",
-      "scene": "skills",
+      "scene": "skills-battle",
       "title": {
-        "zh-CN": "五系魔法，各有所长",
-        "en": "Five schools of magic"
+        "zh-CN": "2对2 · 魔法与伙伴的配合",
+        "en": "2v2 · Magic and companions"
       },
       "subtitle": {
-        "zh-CN": "烈火、寒冰、风暴、生命、死亡。选一门魔法，发现你的战斗风格。",
-        "en": "Fire, Ice, Storm, Life and Death. Find the magic that suits your style."
+        "zh-CN": "2对2教学：先看护盾，再看陷阱与破盾，最后由伙伴回血。",
+        "en": "A 2v2 lesson: shields, traps, shield removal and healing."
       },
       "duration": {
-        "long": 18,
-        "short": 10
+        "long": 36,
+        "short": 36
+      },
+      "cues": [
+        {
+          "at": 0.1388888888888889,
+          "action": "skill-turn",
+          "group": 1,
+          "caption": {
+            "zh-CN": "对手挂上烈火陷阱，并为队友加上护盾。",
+            "en": "The enemy applies a Fire trap and shields a teammate."
+          }
+        },
+        {
+          "at": 0.3333333333333333,
+          "action": "skill-turn",
+          "group": 2,
+          "caption": {
+            "zh-CN": "寒冰夺盾：移除对手的护盾，转移给自己。",
+            "en": "Steal the enemy shield and turn defense to your advantage."
+          }
+        },
+        {
+          "at": 0.4722222222222222,
+          "action": "skill-turn",
+          "group": 3,
+          "caption": {
+            "zh-CN": "攻击到来：护盾抵消部分伤害，陷阱也会参与结算。",
+            "en": "The incoming hit consumes wards and resolves the trap."
+          }
+        },
+        {
+          "at": 0.6111111111111112,
+          "action": "skill-turn",
+          "group": 4,
+          "caption": {
+            "zh-CN": "生命伙伴为受伤主角回血；同时给对手挂上烈火陷阱。",
+            "en": "Your Life partner heals you while you prepare a Fire trap."
+          }
+        },
+        {
+          "at": 0.8333333333333334,
+          "action": "skill-turn",
+          "group": 5,
+          "caption": {
+            "zh-CN": "再用烈火攻击触发陷阱：先准备，再配合出手。",
+            "en": "Trigger the Fire trap with an attack."
+          }
+        }
+      ],
+      "battleSeed": 531
+    },
+    {
+      "id": "atlas",
+      "scene": "atlas",
+      "title": {
+        "zh-CN": "世界，比想象更大",
+        "en": "A wider world"
+      },
+      "subtitle": {
+        "zh-CN": "打开地图，九座岛屿连成一片海。缩放寻找地标，选择下一站。",
+        "en": "Open the atlas. Explore nine islands and choose your next destination."
+      },
+      "duration": {
+        "long": 16,
+        "short": 7
+      },
+      "cues": [
+        {
+          "at": 0.45,
+          "action": "ui-click",
+          "selector": ".map-vortex:not([hidden])",
+          "expect": ".earth-atlas",
+          "caption": {
+            "zh-CN": "点击海上的漩涡，进入现实世界地图。",
+            "en": "Enter the real world through the ocean vortex."
+          }
+        }
+      ]
+    },
+    {
+      "id": "earth",
+      "scene": "earth",
+      "title": {
+        "zh-CN": "深圳 · 沿路走进城市",
+        "en": "Shenzhen · Follow the road into the city"
+      },
+      "subtitle": {
+        "zh-CN": "直接点击深圳，进入现实世界。",
+        "en": "Select Shenzhen to enter the real world."
+      },
+      "duration": {
+        "long": 26,
+        "short": 26
+      },
+      "cues": [
+        {
+          "at": 0.038461538461538464,
+          "action": "feature",
+          "name": "earth-select"
+        },
+        {
+          "at": 0.07692307692307693,
+          "action": "ui-click",
+          "selector": ".earth-map-place button",
+          "caption": {
+            "zh-CN": "先加载深圳周边道路和城市资源，停下来看看。加载完成后再等3秒出发。",
+            "en": "Preload the roads and city, then pause for three seconds before departing."
+          }
+        },
+        {
+          "at": 0.23076923076923078,
+          "action": "feature",
+          "name": "earth-walk",
+          "caption": {
+            "zh-CN": "沿着道路前往深圳城市入口，看看一路的街区。",
+            "en": "Follow the road toward the Shenzhen city entrance."
+          }
+        },
+        {
+          "at": 0.5384615384615384,
+          "action": "feature",
+          "name": "earth-enter",
+          "caption": {
+            "zh-CN": "抵达深圳入口，直接进入城市总览。",
+            "en": "Arrive at Shenzhen and enter the city overview."
+          }
+        },
+        {
+          "at": 0.8076923076923077,
+          "action": "feature",
+          "name": "earth-exit",
+          "caption": {
+            "zh-CN": "进入城里走几步，再返回现实世界，继续下一段旅程。",
+            "en": "Walk a few steps inside, then return to the real world."
+          }
+        }
+      ]
+    },
+    {
+      "id": "quests",
+      "scene": "quests",
+      "title": {
+        "zh-CN": "总有一件事，等你完成",
+        "en": "A reason to keep exploring"
+      },
+      "subtitle": {
+        "zh-CN": "打开冒险手记，目标、进度、奖励和接取地点一目了然。",
+        "en": "Your journal brings together objectives, progress, rewards and quest givers."
+      },
+      "duration": {
+        "long": 12,
+        "short": 0
+      },
+      "cues": [
+        {
+          "at": 0.5,
+          "action": "ui-click",
+          "selector": ".journal-directory button",
+          "caption": {
+            "zh-CN": "选择另一条任务，查看目标与前置条件，再决定下一步。",
+            "en": "Inspect another quest and its requirements before choosing your next step."
+          },
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "pets",
+      "scene": "pet",
+      "title": {
+        "zh-CN": "一路相伴的小伙伴",
+        "en": "Companions for the journey"
+      },
+      "subtitle": {
+        "zh-CN": "认识你的宠物，照顾它们的成长，搭配自己的冒险小队。",
+        "en": "Meet your pets, care for them, and build your own adventuring team."
+      },
+      "duration": {
+        "long": 20,
+        "short": 20
+      },
+      "cues": [
+        {
+          "at": 0.08,
+          "action": "ui-click",
+          "selector": ".pet-stand:has(.pet-sheet)",
+          "caption": {
+            "zh-CN": "点开伙伴，查看标签、饱食与成长。每只宠物都有自己的长处。",
+            "en": "Open a companion to see traits, hunger and growth."
+          },
+          "expect": "dialog.pet-profile-modal"
+        },
+        {
+          "at": 0.22,
+          "action": "ui-click",
+          "selector": ".pet-position-actions button:last-child",
+          "dialog": true,
+          "caption": {
+            "zh-CN": "分享一份营养餐，照顾伙伴的饱食和成长。",
+            "en": "Share a meal to care for your companion."
+          }
+        },
+        {
+          "at": 0.3,
+          "action": "feature",
+          "name": "hide-panel",
+          "caption": {
+            "zh-CN": "回到场景，附近的宠物会靠近分享营养餐，演示伙伴间的互动。",
+            "en": "Return to the world and watch nearby pets gather to share the meal."
+          }
+        }
+      ]
+    },
+    {
+      "id": "capture",
+      "scene": "capture",
+      "title": {
+        "zh-CN": "把对手，变成伙伴",
+        "en": "An opponent becomes a companion"
+      },
+      "subtitle": {
+        "zh-CN": "选择捕宠符文，查看目标与捕获概率。削弱敌人后，机会会更好。",
+        "en": "Select a capture rune and inspect its target and chance. Weaken the opponent to improve your odds."
+      },
+      "duration": {
+        "long": 12,
+        "short": 0
+      },
+      "cues": []
+    },
+    {
+      "id": "food",
+      "scene": "food",
+      "title": {
+        "zh-CN": "照顾伙伴，也是冒险",
+        "en": "Care for your companions"
+      },
+      "subtitle": {
+        "zh-CN": "把口粮放进共享食槽，照顾随行伙伴的饱食与成长。",
+        "en": "Stock the shared feeders to care for your companions."
+      },
+      "duration": {
+        "long": 14,
+        "short": 0
       },
       "cues": [
         {
           "at": 0.2,
-          "action": "school",
-          "school": "ice"
+          "action": "ui-click",
+          "selector": "[data-food-slot=\"0\"]",
+          "caption": {
+            "zh-CN": "点击空槽，选择口粮和数量。",
+            "en": "Open an empty feeder and choose a food and quantity."
+          },
+          "expect": "dialog[open]"
         },
         {
-          "at": 0.4,
-          "action": "school",
-          "school": "storm"
+          "at": 0.45,
+          "action": "ui-click",
+          "selector": ".pet-food-choice button.primary",
+          "caption": {
+            "zh-CN": "放入十份口粮，库存与食槽按真实规则变化。",
+            "en": "Add ten portions. Inventory and feeder quantities update together."
+          },
+          "dialog": true,
+          "mutates": true
+        },
+        {
+          "at": 0.65,
+          "action": "ui-click",
+          "selector": "[data-food-slot=\"0\"]",
+          "caption": {
+            "zh-CN": "伙伴会自动进食。再次点开食槽，可查看余量或取回背包。",
+            "en": "Companions eat automatically. Reopen the feeder to inspect or retrieve the remaining food."
+          }
+        },
+        {
+          "at": 0.82,
+          "action": "ui-click",
+          "selector": ".equipment-detail-footer button.secondary",
+          "caption": {
+            "zh-CN": "把剩余口粮取回背包，补给由你安排。",
+            "en": "Return the remaining food to your backpack."
+          },
+          "dialog": true,
+          "mutates": true
+        }
+      ]
+    },
+    {
+      "id": "mount",
+      "scene": "mount",
+      "title": {
+        "zh-CN": "换一种方式，奔向远方",
+        "en": "Ride toward the horizon"
+      },
+      "subtitle": {
+        "zh-CN": "从宠物窗口切换到坐骑，查看形象，再骑上它去探索。",
+        "en": "Switch to mounts, inspect one and ride into the world."
+      },
+      "duration": {
+        "long": 12,
+        "short": 0
+      },
+      "cues": [
+        {
+          "at": 0.2,
+          "action": "ui-click",
+          "selector": ".pet-shelf button",
+          "expect": "dialog[open]",
+          "caption": {
+            "zh-CN": "打开坐骑详情，看看与你一起旅行的新模样。",
+            "en": "Open the mount details to preview your new travelling companion."
+          }
+        },
+        {
+          "at": 0.45,
+          "action": "ui-click",
+          "selector": ".equipment-detail-footer button",
+          "dialog": true,
+          "mutates": true,
+          "caption": {
+            "zh-CN": "骑上坐骑，行走与外观会随之变化。",
+            "en": "Mount up to change your appearance and travel speed."
+          }
         },
         {
           "at": 0.6,
-          "action": "school",
-          "school": "life"
+          "action": "feature",
+          "name": "close-panel"
+        }
+      ]
+    },
+    {
+      "id": "equipment",
+      "scene": "equipment",
+      "title": {
+        "zh-CN": "为下一程做好准备",
+        "en": "Prepare for the road ahead"
+      },
+      "subtitle": {
+        "zh-CN": "整理装备和行囊，带着新的目标继续出发。",
+        "en": "Check your equipment and pack for the next adventure."
+      },
+      "duration": {
+        "long": 10,
+        "short": 0
+      },
+      "cues": [
+        {
+          "at": 0.45,
+          "action": "ui-click",
+          "selector": ".equipment-tabs button",
+          "caption": {
+            "zh-CN": "装备与旅行物品分开整理，出发前先检查行囊。",
+            "en": "Keep equipment and travel supplies ready for the road."
+          },
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "upgrade",
+      "scene": "upgrade",
+      "title": {
+        "zh-CN": "让熟悉的装备，更强一点",
+        "en": "Make your equipment stronger"
+      },
+      "subtitle": {
+        "zh-CN": "选中装备，查看下一等级的属性和材料，再动手强化。",
+        "en": "Choose equipment, inspect its next level and material cost, then upgrade."
+      },
+      "duration": {
+        "long": 13,
+        "short": 5
+      },
+      "cues": [
+        {
+          "at": 0.23,
+          "action": "ui-click",
+          "selector": ".strengthening-grid button",
+          "caption": {
+            "zh-CN": "放入装备，先看清属性提升与材料需求。",
+            "en": "Select the equipment to preview its improvement and cost."
+          }
+        },
+        {
+          "at": 0.62,
+          "action": "ui-click",
+          "selector": ".strengthening-submit",
+          "caption": {
+            "zh-CN": "一次强化，一级成长。材料扣除与属性提升都来自正式规则。",
+            "en": "Upgrade one level using the actual game rules and materials."
+          },
+          "mutates": true
+        }
+      ]
+    },
+    {
+      "id": "gems",
+      "scene": "gems",
+      "title": {
+        "zh-CN": "用宝石，补上你的优势",
+        "en": "Shape your strengths"
+      },
+      "subtitle": {
+        "zh-CN": "装备、宝石、镶嵌符：三步准备，成功率在确认前看清楚。",
+        "en": "Equipment, gems and socketing runes. Review the odds before confirming."
+      },
+      "duration": {
+        "long": 14,
+        "short": 0
+      },
+      "cues": [
+        {
+          "at": 0.18,
+          "action": "ui-click",
+          "selector": ".gem-grid button",
+          "caption": {
+            "zh-CN": "先放入一件可以镶嵌的装备。",
+            "en": "Choose equipment with a socket."
+          }
+        },
+        {
+          "at": 0.38,
+          "action": "ui-click",
+          "selector": ".gem-grid button",
+          "caption": {
+            "zh-CN": "选择兼容的宝石，查看属性和成功率。",
+            "en": "Choose a compatible gem and review the stats and odds."
+          }
+        },
+        {
+          "at": 0.6,
+          "action": "ui-click",
+          "selector": ".gem-submit",
+          "caption": {
+            "zh-CN": "确认之前，再核对一次材料与成功率。",
+            "en": "Review the material and chance of success once more."
+          }
         },
         {
           "at": 0.8,
-          "action": "school",
-          "school": "death"
+          "action": "ui-click",
+          "selector": ".gem-confirm button.primary",
+          "caption": {
+            "zh-CN": "确认镶嵌，结果由固定种子的正式规则决定。",
+            "en": "Confirm socketing. The seeded game rules determine the result."
+          },
+          "mutates": true
         }
       ]
     },
@@ -280,61 +708,48 @@
       "cues": []
     },
     {
-      "id": "pets",
-      "scene": "pet",
+      "id": "arena",
+      "scene": "arena",
       "title": {
-        "zh-CN": "一路相伴的小伙伴",
-        "en": "Companions for the journey"
+        "zh-CN": "一个人出发，一整队迎战",
+        "en": "Build a team, face a challenge"
       },
       "subtitle": {
-        "zh-CN": "认识你的宠物，照顾它们的成长，搭配自己的冒险小队。",
-        "en": "Meet your pets, care for them, and build your own adventuring team."
+        "zh-CN": "红蘑菇赛场，从1对1到4对4。先选赛制，再看出战阵容。",
+        "en": "Red Mushroom Arena offers 1v1 through 4v4. Choose a mode and prepare your team."
       },
       "duration": {
-        "long": 12,
-        "short": 6
-      },
-      "cues": []
-    },
-    {
-      "id": "equipment",
-      "scene": "equipment",
-      "title": {
-        "zh-CN": "为下一程做好准备",
-        "en": "Prepare for the road ahead"
-      },
-      "subtitle": {
-        "zh-CN": "整理装备和行囊，带着新的目标继续出发。",
-        "en": "Check your equipment and pack for the next adventure."
-      },
-      "duration": {
-        "long": 8,
-        "short": 0
-      },
-      "cues": []
-    },
-    {
-      "id": "friends",
-      "scene": "friends",
-      "title": {
-        "zh-CN": "把相遇变成朋友",
-        "en": "Turn encounters into friendships"
-      },
-      "subtitle": {
-        "zh-CN": "在岛上认识伙伴，通过好友申请建立联系，再相约下一段旅程。",
-        "en": "Meet fellow adventurers, connect through friend requests, and plan your next journey."
-      },
-      "duration": {
-        "long": 12,
-        "short": 5
+        "long": 20,
+        "short": 8
       },
       "cues": [
         {
-          "at": 0.55,
-          "action": "friend-accept"
+          "at": 0.25,
+          "action": "ui-click",
+          "selector": ".arena-mode",
+          "caption": {
+            "zh-CN": "选择4对4，让宠物与主角一起站上出战席。",
+            "en": "Choose 4v4 to bring your hero and companions together."
+          },
+          "index": 3,
+          "expect": ".arena-seats"
+        },
+        {
+          "at": 0.5,
+          "action": "feature",
+          "name": "arena-start-time"
+        },
+        {
+          "at": 0.5,
+          "action": "ui-click",
+          "selector": ".party-room-footer button.primary",
+          "expect": "#battle-canvas",
+          "caption": {
+            "zh-CN": "小队入场！主角选牌，伙伴与对手由 AI 操控，配合决定胜负。",
+            "en": "Enter as a team! Choose your hero’s cards while AI controls companions and opponents."
+          }
         }
-      ],
-      "fixture": true
+      ]
     },
     {
       "id": "dungeons",
@@ -363,6 +778,256 @@
       ]
     },
     {
+      "id": "friends",
+      "scene": "friends",
+      "title": {
+        "zh-CN": "把相遇变成朋友",
+        "en": "Turn encounters into friendships"
+      },
+      "subtitle": {
+        "zh-CN": "在岛上认识伙伴，通过好友申请建立联系，再相约下一段旅程。",
+        "en": "Meet fellow adventurers, connect through friend requests, and plan your next journey."
+      },
+      "duration": {
+        "long": 14,
+        "short": 10
+      },
+      "cues": [
+        {
+          "at": 0.55,
+          "action": "friend-accept"
+        },
+        {
+          "at": 0.65,
+          "action": "ui-click",
+          "selector": ".social-row button",
+          "text": "邀请组队",
+          "expect": ".party-seats",
+          "caption": {
+            "zh-CN": "邀请好友加入队伍，一起准备下一场冒险（演示角色）。",
+            "en": "Invite a demo friend to prepare for the next adventure."
+          }
+        }
+      ],
+      "fixture": true
+    },
+    {
+      "id": "party",
+      "scene": "party",
+      "title": {
+        "zh-CN": "多人组队 · 留一个位置给朋友",
+        "en": "Form a party with friends"
+      },
+      "subtitle": {
+        "zh-CN": "选择副本、开放席位，再邀请两位伙伴。这里使用隔离演示角色展示组队界面。",
+        "en": "Choose a dungeon, open a seat and invite two demo companions."
+      },
+      "duration": {
+        "long": 15,
+        "short": 12
+      },
+      "fixture": true,
+      "cues": [
+        {
+          "at": 0.15,
+          "action": "ui-click",
+          "selector": ".party-seat.empty button"
+        },
+        {
+          "at": 0.35,
+          "action": "ui-click",
+          "selector": ".social-person button.primary",
+          "index": 0
+        },
+        {
+          "at": 0.6,
+          "action": "ui-click",
+          "selector": ".social-person button.primary",
+          "index": 1
+        }
+      ]
+    },
+    {
+      "id": "learning",
+      "scene": "learning",
+      "title": {
+        "zh-CN": "聊几句，打开新世界",
+        "en": "A conversation opens a world"
+      },
+      "subtitle": {
+        "zh-CN": "真实AI提前生成词义映射与对话评价。看同色词语的对应关系，再用英语回答。",
+        "en": "Real AI prepares word mappings and learning feedback ahead of the scene."
+      },
+      "duration": {
+        "long": 22,
+        "short": 20
+      },
+      "cues": [
+        {
+          "at": 0.4,
+          "action": "learning-reply",
+          "caption": {
+            "zh-CN": "用英语表达想去海边，并向伙伴求助。",
+            "en": "Say you would like to visit the beach and ask for help."
+          }
+        },
+        {
+          "at": 0.63,
+          "action": "learning-next",
+          "caption": {
+            "zh-CN": "真实评价通过后，按游戏规则获得今日战斗属性加成。",
+            "en": "A qualifying AI evaluation grants the daily battle bonus."
+          }
+        },
+        {
+          "at": 0.88,
+          "action": "learning-battle",
+          "caption": {
+            "zh-CN": "带着今日语言加成进入2对2：加成写入这一场战斗。",
+            "en": "Enter a 2v2 match with the earned daily language bonus."
+          }
+        }
+      ],
+      "fixture": true
+    },
+    {
+      "id": "learning-rewards",
+      "scene": "learning-mode",
+      "title": {
+        "zh-CN": "每一次开口，都算成长",
+        "en": "Every conversation counts"
+      },
+      "subtitle": {
+        "zh-CN": "选择母语与第二语言，查看今日开口进度和奖励。",
+        "en": "Choose your languages and see your daily speaking progress and rewards."
+      },
+      "duration": {
+        "long": 10,
+        "short": 0
+      },
+      "cues": [
+        {
+          "at": 0.5,
+          "action": "ui-click",
+          "selector": ".speech-rules summary",
+          "caption": {
+            "zh-CN": "正式冒险中，口语或剧情跟读通过后累计；示例问答不会代领奖励。",
+            "en": "In the game, successful speaking or story reading counts. This demo claims no rewards."
+          }
+        }
+      ]
+    },
+    {
+      "id": "shop",
+      "scene": "shop",
+      "title": {
+        "zh-CN": "下一程的补给，在这里",
+        "en": "Supplies for the next journey"
+      },
+      "subtitle": {
+        "zh-CN": "宠物、装备、坐骑与口粮，都能在商城按分类浏览。",
+        "en": "Browse companions, equipment, mounts and supplies in the shop."
+      },
+      "duration": {
+        "long": 12,
+        "short": 0
+      },
+      "cues": [
+        {
+          "at": 0.35,
+          "action": "ui-click",
+          "selector": ".shop-tabs button",
+          "caption": {
+            "zh-CN": "切换商品分类，先看预览和价格，再决定购买。",
+            "en": "Switch categories and inspect the preview and price before buying."
+          },
+          "index": 1
+        },
+        {
+          "at": 0.7,
+          "action": "ui-click",
+          "selector": ".shop-goods .shop-buy",
+          "caption": {
+            "zh-CN": "打开购买详情，数量与花费在确认前展示。",
+            "en": "Open the purchase details to review quantity and cost."
+          },
+          "expect": "dialog[open]"
+        }
+      ]
+    },
+    {
+      "id": "checkin",
+      "scene": "checkin",
+      "title": {
+        "zh-CN": "歇一会儿，也有收获",
+        "en": "A little reward for staying"
+      },
+      "subtitle": {
+        "zh-CN": "米酒葫芦记录每日在线时长，解锁后可领取相应奖励。",
+        "en": "The daily gourds unlock rewards as you spend time in the world."
+      },
+      "duration": {
+        "long": 8,
+        "short": 0
+      },
+      "cues": []
+    },
+    {
+      "id": "fishing",
+      "scene": "fishing",
+      "title": {
+        "zh-CN": "在水边，慢下来",
+        "en": "Slow down by the water"
+      },
+      "subtitle": {
+        "zh-CN": "抛竿，等待金色方向亮起，再按方向提竿。松线时耐心等一等。",
+        "en": "Cast, wait for the golden direction, then pull. Let the line rest between bites."
+      },
+      "duration": {
+        "long": 18,
+        "short": 0
+      },
+      "cues": []
+    },
+    {
+      "id": "settings",
+      "scene": "settings",
+      "title": {
+        "zh-CN": "让旅途，适合你",
+        "en": "Make the journey yours"
+      },
+      "subtitle": {
+        "zh-CN": "旅途设置把角色、画面、声音和语言集中在一起。",
+        "en": "Journey settings bring together your characters, visuals, sound and language."
+      },
+      "duration": {
+        "long": 10,
+        "short": 0
+      },
+      "cues": [
+        {
+          "at": 0.35,
+          "action": "ui-click",
+          "selector": ".settings-tab",
+          "caption": {
+            "zh-CN": "查看画面、音效，以及现实世界的昼夜与模拟天气设置。",
+            "en": "Explore visual, sound, day/night and simulated weather settings."
+          },
+          "index": 1
+        },
+        {
+          "at": 0.72,
+          "action": "ui-click",
+          "selector": ".settings-tab",
+          "caption": {
+            "zh-CN": "母语与第二语言可以分别设置，按自己的节奏练习。",
+            "en": "Set your native and learning languages independently."
+          },
+          "index": 2
+        }
+      ]
+    },
+    {
       "id": "town",
       "scene": "island",
       "title": {
@@ -374,8 +1039,8 @@
         "en": "Return to the sunshine of Haqi Island and greet its residents."
       },
       "duration": {
-        "long": 9,
-        "short": 3
+        "long": 4,
+        "short": 0
       },
       "cues": [],
       "zone": "town"
@@ -392,8 +1057,8 @@
         "en": "Follow volcanic shores into Firebird Island."
       },
       "duration": {
-        "long": 9,
-        "short": 3
+        "long": 4,
+        "short": 0
       },
       "cues": [],
       "zone": "fire"
@@ -413,8 +1078,8 @@
         "en": "Travel through icy peaks and discover your next challenge."
       },
       "duration": {
-        "long": 9,
-        "short": 3
+        "long": 4,
+        "short": 0
       },
       "cues": [],
       "zone": "ice"
@@ -431,8 +1096,8 @@
         "en": "Beyond the golden dunes, an oasis and new stories await."
       },
       "duration": {
-        "long": 9,
-        "short": 3
+        "long": 4,
+        "short": 0
       },
       "cues": [],
       "zone": "desert"
@@ -449,8 +1114,8 @@
         "en": "Step into the dark forest and let curiosity guide you onward."
       },
       "duration": {
-        "long": 9,
-        "short": 3
+        "long": 4,
+        "short": 0
       },
       "cues": [],
       "zone": "dark"
@@ -470,38 +1135,65 @@
         "en": "Back at Magic Camp, take time for stories beyond the battles."
       },
       "duration": {
-        "long": 8,
+        "long": 4,
         "short": 0
       },
       "cues": [],
       "zone": "camp"
     },
     {
-      "id": "learning",
-      "scene": "learning",
+      "id": "sail",
+      "scene": "island",
       "title": {
-        "zh-CN": "聊几句，打开新世界",
-        "en": "A conversation opens a world"
+        "zh-CN": "风帆岛 · 新的远方",
+        "en": "Sail Island"
       },
       "subtitle": {
-        "zh-CN": "从问候和求助开始，在营地的中英短故事里练习表达。",
-        "en": "Start with greetings and requests, and practise Chinese and English through short camp stories."
+        "zh-CN": "新的岛屿，新的居民。地图上的下一站，正等你亲自探索。",
+        "en": "New islands and new residents. Your next destination awaits."
       },
       "duration": {
-        "long": 16,
-        "short": 7
+        "long": 5,
+        "short": 0
       },
-      "cues": [
-        {
-          "at": 0.35,
-          "action": "learning-reply"
-        },
-        {
-          "at": 0.7,
-          "action": "learning-next"
-        }
-      ],
-      "fixture": true
+      "cues": [],
+      "zone": "sail"
+    },
+    {
+      "id": "tide",
+      "scene": "island",
+      "title": {
+        "zh-CN": "潮汐岛 · 新的远方",
+        "en": "Tide Island"
+      },
+      "subtitle": {
+        "zh-CN": "新的岛屿，新的居民。地图上的下一站，正等你亲自探索。",
+        "en": "New islands and new residents. Your next destination awaits."
+      },
+      "duration": {
+        "long": 5,
+        "short": 0
+      },
+      "cues": [],
+      "zone": "tide"
+    },
+    {
+      "id": "float",
+      "scene": "island",
+      "title": {
+        "zh-CN": "浮空岛 · 新的远方",
+        "en": "Floating Island"
+      },
+      "subtitle": {
+        "zh-CN": "新的岛屿，新的居民。地图上的下一站，正等你亲自探索。",
+        "en": "New islands and new residents. Your next destination awaits."
+      },
+      "duration": {
+        "long": 5,
+        "short": 0
+      },
+      "cues": [],
+      "zone": "float"
     },
     {
       "id": "ending",

@@ -12,11 +12,15 @@ function el(tag,cls,...children){
 const unit=(id,side)=>({id,side,name:id,school:'ice',level:5,hp:100,maxHp:200,pips:{normal:2,power:1},standingWards:[],charms:[],wards:[],dots:[],hots:[]});
 test('four combatants per side retain separate status, targeting, mana and self treatment',()=>{
     const battle={sides:{near:Array.from({length:4},(_,i)=>unit(`hero${i}`,'near')),far:Array.from({length:4},(_,i)=>unit(`mob${i}`,'far'))},resolved:{global:{stormChargingWardIds:[]},charms:{},wards:{}}};
+    battle.sides.near[0].supportPetTraits={attack:3};
+    battle.sides.near[1].passiveTraits={frugal:1};
+    battle.sides.far[0].passiveTraits={vitality:2,frugal:1};
     const calls=[],options={heroId:'hero0',canTarget:u=>u.side==='far',target:id=>calls.push(id),el,button:(children,fn,cls)=>Object.assign(el('button',cls,children),{click:fn}),schoolNames:{ice:'寒冰'},colors:{ice:'#6ecbdc'}};
     const near=createBattleRoster(battle,'near',options),far=createBattleRoster(battle,'far',options);
     assert.equal(near.entries.length,4);assert.equal(far.entries.length,4);
     assert.ok(near.roster.cls.includes('roster-crowded'));assert.ok(far.roster.cls.includes('roster-crowded'));
     for(const row of [...near.entries,...far.entries]){
+        assert.ok(!row.node.children.some(child=>child.cls?.includes('pet-trait-badges')));
         const heading=row.node.firstChild;
         assert.equal(heading.firstChild.cls,'combatant-school');
         assert.equal(heading.firstChild.attrs['aria-label'],'寒冰');
@@ -61,4 +65,14 @@ test('variant qualities use a thick bottom strip without a whole-card outline',(
         assert.equal(strokes.length,0);
         assert.equal(rects.some(r=>r.color===color&&r.args.join(',')==='7,441,288,15'),!!color);
     }
+});
+
+
+test('capture chance remains visible and accessible after roster updates',()=>{
+ const battle={sides:{near:[unit('hero','near')],far:[unit('mob','far')]},resolved:{}};
+ const rows=createBattleRoster(battle,'far',{heroId:'hero',canTarget:()=>true,target:()=>{},targetHint:()=> '捕捉成功率 23.5%',el,button:(kids,fn,cls)=>el('button',cls,kids),schoolNames:{ice:'寒冰'}});
+ updateBattleRoster(rows.entries);const row=rows.entries[0];
+ assert.equal(row.node.lastChild.hidden,false);assert.equal(row.node.lastChild.children[0],'捕捉成功率 23.5%');
+ assert.match(row.node.attrs['aria-label'],/捕捉成功率 23.5%/);assert.match(row.node.title,/捕捉成功率 23.5%/);
+ updateBattleRoster(rows.entries,{hp:{mob:80}});assert.match(row.node.attrs['aria-label'],/捕捉成功率 23.5%/);
 });

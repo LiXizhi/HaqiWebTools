@@ -1,10 +1,10 @@
 import {capturePromoChrome,promoText} from './promo_locale.js';
-import {compileFilm,locateShot,filmText,srtFor,frameDelta} from './promo_timeline_core.js';
+import {compileFilm,locateShot,filmText,srtFor,frameDelta,captionAt} from './promo_timeline_core.js';
 const $=id=>document.getElementById(id),query=new URLSearchParams(location.search);
 let loaded=false,uiLocale='zh-CN',statusSource='准备中';
 const paintChrome=capturePromoChrome(),t=text=>promoText(text,uiLocale);
 let script,film,stage,time=0,index=-1,cueIndex=0,playing=false,busy=true,checking=false,last=0;
-let report={version:1,status:'未运行',results:[],excluded:['真实账号登录注册','云端存储','真实好友请求与通信','AI 与语音服务','支付','剧本外游戏功能']};
+let report={version:1,status:'未运行',results:[],excluded:['真实账号登录注册','云端存储','真实好友请求与通信','麦克风与语音识别服务','支付','剧本外游戏功能']};
 // Balanced logical viewports: readable landscape UI and a compact portrait layout.
 const formats={wide:{width:1280,height:720},classic:{width:1120,height:840},phone:{width:540,height:960}};
 function resizeScreen(){
@@ -14,7 +14,7 @@ function resizeScreen(){
     if(!scale)return;
     screen.dataset.format=$('format').value;
     screen.style.width=`${width*scale}px`;screen.style.height=`${height*scale}px`;
-    frame.style.width=`${width}px`;frame.style.height=`${height}px`;frame.style.transform=`scale(${scale})`;
+    frame.style.width=`${width}px`;frame.style.height=`${height-(height>width?142:100)}px`;frame.style.transform=`scale(${scale})`;
     if(loaded&&!busy)stage.tick(locateShot(film,time).elapsed);
 }
 new ResizeObserver(resizeScreen).observe($('cinema'));
@@ -24,10 +24,10 @@ function download(name,text,type){const url=URL.createObjectURL(new Blob([text],
 function controls(){for(const id of ['play','restart','check','seek','edition','language','chapters']){const node=$(id);if(id==='chapters')for(const b of node.children)b.disabled=!loaded||busy||checking;else node.disabled=!loaded||busy||checking;}$('play').textContent=t(playing?'暂停':'播放');stage?.setPaused(!playing||busy);}
 function status(text){statusSource=text;$('status').textContent=t(text);}
 function fail(error){console.error(error);playing=false;busy=false;checking=false;$('loading').hidden=false;$('loading').textContent=`${uiLocale==='en'?'Playback paused':'播放暂停'}: ${error.message}`;status(`${uiLocale==='en'?'Failed':'失败'}: ${error.message}`);controls();}
-function labels(){if(!film)return;const at=locateShot(film,time),s=at.shot,l=language();$('chapter-title').textContent=filmText(s.title,uiLocale);$('chapter-number').textContent=`${String(at.index+1).padStart(2,'0')} / ${String(film.shots.length).padStart(2,'0')}`;$('subtitle').textContent=l==='off'?'':filmText(s.subtitle,l);$('clock').textContent=`${clock(time)} / ${clock(film.duration)}`;$('seek').value=time;const opacity=Math.min(1,at.index===0?1:at.elapsed/.7,at.index===film.shots.length-1?1:(s.duration-at.elapsed)/.7);$('shade').style.opacity=1-Math.max(0,opacity);$('subtitle').style.opacity=Math.max(0,opacity);for(const [i,b]of [...$('chapters').children].entries())b.setAttribute('aria-current',String(i===at.index));}
-function chapters(){film=compileFilm(script,$('edition').value);$('seek').max=film.duration;$('chapters').replaceChildren(...film.shots.map((s,i)=>{const b=document.createElement('button');b.textContent=`${String(i+1).padStart(2,'0')} ${filmText(s.title,uiLocale)}`;b.onclick=()=>void seek(s.start).catch(fail);return b;}));}
+function labels(){if(!film)return;const at=locateShot(film,time),s=at.shot,l=language();$('chapter-title').textContent=filmText(s.title,uiLocale);$('scene-label').textContent=l==='off'?'':`${String(at.index+1).padStart(2,'0')} / ${filmText(s.title,uiLocale)}`;$('chapter-number').textContent=`${String(at.index+1).padStart(2,'0')} / ${String(film.shots.length).padStart(2,'0')}`;$('subtitle').textContent=l==='off'?'':captionAt(s,at.elapsed,l);$('clock').textContent=`${clock(time)} / ${clock(film.duration)}`;$('seek').value=time;const opacity=!playing?1:Math.min(1,at.index===0?1:at.elapsed/.7,at.index===film.shots.length-1?1:(s.duration-at.elapsed)/.7);$('shade').style.opacity=1-Math.max(0,opacity);$('subtitle').style.opacity=Math.max(0,opacity);for(const [i,b]of [...$('chapters').children].entries())b.setAttribute('aria-current',String(i===at.index));}
+function chapters(){film=compileFilm(script,$('edition').value);$('seek').max=film.duration;$('chapters').replaceChildren(...film.shots.map((s,i)=>{const b=document.createElement('button');b.textContent=`${String(i+1).padStart(2,'0')} ${filmText(s.title,uiLocale)}`;b.onclick=()=>{void seek(s.start).catch(fail);$('cinema').scrollIntoView({block:'start'});};return b;}));}
 async function loadShot(i){index=i;cueIndex=0;await stage.prepare(film.shots[i],script.seed);}
-async function applyCues(elapsed){const s=film.shots[index];while(cueIndex<s.cues.length&&s.cues[cueIndex].time<=elapsed){await stage.action(s.cues[cueIndex]);cueIndex++;}}
+async function applyCues(elapsed){const s=film.shots[index];while(cueIndex<s.cues.length&&s.cues[cueIndex].time<=elapsed){labels();await stage.action(s.cues[cueIndex]);cueIndex++;}}
 async function seek(target){if(busy||checking)return;busy=true;controls();$('loading').hidden=false;$('loading').textContent=t('正在准备镜头…');try{const at=locateShot(film,target);time=at.time;await loadShot(at.index);await applyCues(at.elapsed);stage.tick(at.elapsed);labels();$('loading').hidden=true;}finally{busy=false;last=performance.now();controls();}}
 async function advance(delta){let waited=false;busy=true;controls();try{time=Math.min(film.duration,time+delta);const at=locateShot(film,time);if(at.index!==index){waited=true;await loadShot(at.index);}if(film.shots[index].cues[cueIndex]?.time<=at.elapsed)waited=true;await applyCues(at.elapsed);stage.tick(at.elapsed);labels();if(time>=film.duration){playing=false;status('播放结束 · 可以从头播放或选择章节');}}finally{busy=false;if(waited)last=performance.now();controls();}}
 function frame(now){requestAnimationFrame(frame);const delta=frameDelta(now,last,Number($('speed').value));last=now;if(playing&&!busy&&!checking&&!document.hidden)void advance(delta).catch(fail);}
@@ -35,10 +35,10 @@ async function runCheck(){
     if(busy||checking)return;playing=false;checking=true;$('loading').hidden=true;controls();report={...report,status:'运行中',edition:film.edition,startedAt:new Date().toISOString(),results:[]};
     try{for(let i=0;i<film.shots.length;i++){
         const s=film.shots[i];status(`${uiLocale==='en'?'Checking':'检查'} ${i+1}/${film.shots.length}: ${filmText(s.title,uiLocale)}`);
-        try{await loadShot(i);for(const cue of s.cues)await stage.action(cue);stage.tick(s.duration-.05);time=s.start+s.duration-.05;labels();const result=stage.validateFrames();report.results.push({...result,status:'通过'});}
+        try{await loadShot(i);for(const cue of s.cues){stage.tick(cue.time);await stage.action(cue);}stage.tick(s.duration-.05);time=s.start+s.duration-.05;labels();const result=stage.validateFrames();report.results.push({...result,status:'通过'});}
         catch(error){report.results.push({shot:s.id,status:'失败',error:error.message});throw error;}
         await new Promise(resolve=>requestAnimationFrame(resolve));
-    }report.status='通过';status(uiLocale==='en'?`All ${report.results.length} scenes passed; live services are excluded`:`剧本检查通过：${report.results.length} 个镜头；联网服务不在本次检查范围`);}
+    }report.status='通过';status(uiLocale==='en'?`All ${report.results.length} scenes passed; AI demo verified; account and voice services excluded`:`剧本检查通过：${report.results.length} 个镜头；已验证AI示例，账号与语音服务除外`);}
     catch(error){report.status='失败';fail(error);}
     finally{report.completedAt=new Date().toISOString();checking=false;controls();}
 }

@@ -6,6 +6,7 @@ import vm from 'node:vm';
 import {createLearningVoice} from '../js/language_adventure_voice.js';
 import {selectDialogueVoice} from '../js/dialogue_speaker_core.js';
 import {npcHasActiveQuest} from '../js/adventure_npc_core.js';
+import {tr} from '../js/locale_runtime.js';
 
 // Exercise the actual task-dialogue renderer and app callback, not just the
 // separate course/free-chat controllers. This is the NPC speech-button path.
@@ -21,7 +22,7 @@ test('task dialogue forwards Azure Dragon and each subsequent speaker to SDK syn
  const element=()=>({children:[],dataset:{},textContent:'I am Azure Dragon.',classList:{toggle(){},add(){}},style:{setProperty(){}},setAttribute(){},append(...items){this.children.push(...items);},replaceChildren(){},querySelector(){return element();}});
  let readAloud;
  const portraitCalls=[],heroCalls=[];
- const view=vm.createContext({npcCharacter,heroPortrait:(...args)=>{heroCalls.push(args);return element();},npcHasActiveQuest,el:element,art:(...args)=>{portraitCalls.push(args);return element();},fill:()=>({text:'NPC'}),islandName:()=>'',createCloseButton:element,button:element,
+ const view=vm.createContext({tr,npcCharacter,heroPortrait:(...args)=>{heroCalls.push(args);return element();},npcHasActiveQuest,el:element,art:(...args)=>{portraitCalls.push(args);return element();},fill:()=>({text:'NPC'}),islandName:()=>'',createCloseButton:element,button:element,
   currentQuest:()=>null,catalogStatSnapshot:()=>({}),catalogQuestsForNpc:()=>({accept:[],claim:[]}),catalogTalksForNpc:()=>[],pendingQuestTalk:()=>null,npcServices:()=>[],
   dialogueLearningLines:()=>[{text:'I am Azure Dragon.',locale:'en'}],bindDialogue:(_root,_box,_text,_hint,_button,options)=>{readAloud=options.readAloud;}});
  vm.runInContext(renderSource,view);

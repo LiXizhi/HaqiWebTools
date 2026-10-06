@@ -1,28 +1,38 @@
 // Browser-side cooperative raster work; no drawing or image callbacks touch the live canvas.
 function scheduleSlice(fn){const task={frame:null,timer:null};task.frame=requestAnimationFrame(()=>{task.timer=setTimeout(fn,0);});return task;}
 function cancelSlice(task){cancelAnimationFrame(task.frame);if(task.timer!==null)clearTimeout(task.timer);}
-export function createScheduledTerrainCache({paint,createCanvas,schedule=scheduleSlice,cancel=cancelSlice,now=()=>performance.now(),budget=4,limit=24,onMetric=()=>{}}){
+export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,schedule=scheduleSlice,cancel=cancelSlice,now=()=>performance.now(),budget=4,limit=24,onMetric=()=>{}}){
     const tiles=new Map(),keys=new WeakMap();let scope=null,density=0,queue=[],active=null,timer=null,previous=null,protectedKeys=new Set(),capacity=limit;
     function identity(world){if(!keys.has(world))keys.set(world,{layout:world.layout||world,geometry:JSON.stringify([world.npcs?.map(n=>[n.id,n.x,n.y]),world.encounters?.map(e=>[e.id,e.x,e.y])])});return keys.get(world);}
     function same(a,b){return a?.layout===b?.layout&&a?.geometry===b?.geometry;}
-    function stop(){if(timer!==null)cancel(timer);timer=null;queue=[];if(active){active.tile.width=active.tile.height=0;active=null;}}
-    function evict(reserve=0){while(tiles.size+reserve>capacity){const key=[...tiles.keys()].find(k=>!protectedKeys.has(k));if(key===undefined)return false;const row=tiles.get(key);row.tile.width=row.tile.height=0;tiles.delete(key);}return true;}
+    function stop(){if(timer!==null)cancel(timer);timer=null;queue=[];if(active){if(active.tile)active.tile.width=active.tile.height=0;active=null;}}
+    function discard(row){if(row.tile.close)row.tile.close();else row.tile.width=row.tile.height=0;}
+    function evict(reserve=0){while(tiles.size+reserve>capacity){const key=[...tiles.keys()].find(k=>!protectedKeys.has(k));if(key===undefined)return false;const row=tiles.get(key);discard(row);tiles.delete(key);}return true;}
     function work(){timer=null;const started=now();
         do{
             if(!active){const task=queue.shift();if(!task)break;if(tiles.has(task.key))continue;if(!evict(1))continue;
-                const tile=createCanvas(),pixels=512*density;tile.width=tile.height=pixels+4;const c=tile.getContext('2d'),scale=pixels/task.size,margin=2/scale;
+                const pixels=512*density,scale=pixels/task.size,margin=2/scale,rect={x:task.x*task.size-margin,y:task.y*task.size-margin,w:task.size+margin*2,h:task.size+margin*2};
+                if(rasterize){const row={...task,waiting:true,started:now()};active=row;
+                    Promise.resolve().then(()=>rasterize(task.world,rect,pixels+4,scale)).then(result=>{if(active!==row){result.bitmap.close();return;}row.tile=result.bitmap;row.atlases=new Set(result.atlases);active=null;tiles.set(row.key,row);onMetric('tile-worker',now()-row.started);if(timer===null&&queue.length)timer=schedule(work);},error=>{if(active!==row)return;active=null;rasterize=null;queue.unshift(task);onMetric('tile-worker-error',String(error));if(timer===null)timer=schedule(work);});
+                    break;
+                }
+                const tile=createCanvas();tile.width=tile.height=pixels+4;const c=tile.getContext('2d',{willReadFrequently:true});
                 c.translate(2,2);c.scale(scale,scale);c.translate(-task.x*task.size,-task.y*task.size);
-                const atlases=new Set(),rect={x:task.x*task.size-margin,y:task.y*task.size-margin,w:task.size+margin*2,h:task.size+margin*2};
+                const atlases=new Set();
                 active={...task,tile,atlases,iterator:paint(c,task.world,rect,atlases),started:now()};
             }
-            try{if(active.iterator.next().done){const row=active;active=null;tiles.set(row.key,row);onMetric('tile',now()-row.started);}}
+            if(active.waiting)break;
+            try{if(active.iterator.next().done){const row=active;active=null;tiles.set(row.key,row);onMetric('tile',now()-row.started);
+                // Immutable bitmaps avoid re-uploading a software canvas while panning.
+                if(typeof createImageBitmap==='function')createImageBitmap(row.tile).then(bitmap=>{if(tiles.get(row.key)!==row){bitmap.close();return;}row.tile.width=row.tile.height=0;row.tile=bitmap;}).catch(()=>{});
+            }}
             catch(error){active.tile.width=active.tile.height=0;active=null;onMetric('tile-error',String(error));}
         }while(now()-started<budget);
-        onMetric('tile-slice',now()-started);if(active||queue.length)timer=schedule(work);
+        onMetric('tile-slice',now()-started);if(!active?.waiting&&(active||queue.length))timer=schedule(work);
     }
     function prepare(world,rect,pixelRatio=1,path=[]){
         const next=identity(world),d=pixelRatio>1?2:1;
-        if(!same(scope,next)||density!==d){stop();for(const row of tiles.values())row.tile.width=row.tile.height=0;tiles.clear();scope=next;density=d;previous=null;}
+        if(!same(scope,next)||density!==d){stop();for(const row of tiles.values())discard(row);tiles.clear();scope=next;density=d;previous=null;}
         capacity=Math.max(1,Math.min(limit,Math.floor(64*1024*1024/((512*d+4)**2*4))));
         let size=512;while((Math.ceil(rect.w/size)+1)*(Math.ceil(rect.h/size)+1)>capacity)size*=2;
         const x0=Math.max(0,Math.floor(rect.x/size)),y0=Math.max(0,Math.floor(rect.y/size)),x1=Math.min(Math.ceil(world.w/size)-1,Math.floor((rect.x+rect.w)/size)),y1=Math.min(Math.ceil(world.h/size)-1,Math.floor((rect.y+rect.h)/size));
@@ -35,11 +45,11 @@ export function createScheduledTerrainCache({paint,createCanvas,schedule=schedul
         const ring=[];for(let y=y0-1;y<=y1+1;y++)for(let x=x0-1;x<=x1+1;x++)if(x<x0||x>x1||y<y0||y>y1)ring.push({x,y});
         ring.sort((a,b)=>(b.x-a.x)*dx+(b.y-a.y)*dy);for(const p of ring)add(p.x,p.y);
         for(const p of path.slice(0,4))add(Math.floor(p.x/size),Math.floor(p.y/size));
-        if(active&&!seen.has(active.key)){active.tile.width=active.tile.height=0;active=null;}
+        if(active&&!seen.has(active.key)){if(active.tile)active.tile.width=active.tile.height=0;active=null;}
         // Do not cycle speculative tiles through a full visible cache.
         const extra=Math.max(0,Math.min(4,capacity-protectedKeys.size));let extras=0;
         queue=tasks.filter(t=>protectedKeys.has(t.key)||extras++<extra).filter(t=>!tiles.has(t.key)&&t.key!==active?.key);
-        previous={x:rect.x,y:rect.y};if(timer===null&&(queue.length||active))timer=schedule(work);
+        previous={x:rect.x,y:rect.y};if(timer===null&&!active?.waiting&&(queue.length||active))timer=schedule(work);
         return {tasks:tasks.filter(t=>protectedKeys.has(t.key)),size};
     }
     return {
@@ -48,8 +58,8 @@ export function createScheduledTerrainCache({paint,createCanvas,schedule=schedul
             for(const task of tasks){const row=tiles.get(task.key);if(!row){missing++;fallback?.(c,task.x*size,task.y*size,size);continue;}tiles.delete(task.key);tiles.set(task.key,row);const pixels=512*density,overlap=size/pixels;c.drawImage(row.tile,1,1,pixels+2,pixels+2,task.x*size-overlap,task.y*size-overlap,size+overlap*2,size+overlap*2);}
             return missing;
         },
-        invalidateAtlas(atlas){for(const [key,row] of tiles)if(row.atlases.has(atlas)){row.tile.width=row.tile.height=0;tiles.delete(key);}if(active?.atlases.has(atlas)){active.tile.width=active.tile.height=0;active=null;}},
-        clear(){stop();for(const row of tiles.values())row.tile.width=row.tile.height=0;tiles.clear();scope=null;previous=null;},
+        invalidateAtlas(atlas){for(const [key,row] of tiles)if(row.atlases.has(atlas)){discard(row);tiles.delete(key);}if(active&&(active.waiting||active.atlases.has(atlas))){if(active.tile)active.tile.width=active.tile.height=0;active=null;}},
+        clear(){stop();for(const row of tiles.values())discard(row);tiles.clear();scope=null;previous=null;},
         get size(){return tiles.size;},get pending(){return queue.length+(active?1:0);}
     };
 }

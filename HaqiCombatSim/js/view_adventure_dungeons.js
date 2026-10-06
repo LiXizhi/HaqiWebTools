@@ -56,7 +56,7 @@ export function renderDungeons(root,{assets,save,dungeonLoading=null,social=null
             if(rewardNames.length){const sep=tr('、'),joined=rewardNames.join(sep);const reward=el('span','dungeon-rewards',joined);reward.title=fill('战斗奖励：{rewards}',{rewards:joined}).text;picture.append(reward);}
             if(cleared)picture.append(el('span','dungeon-status',complete?'已通关':'探索中'));
             const info=el('div','dungeon-card-info',el('h3','',d.name));
-            info.append(el('p','dungeon-boss-name',d.kind==='tower'?`${d.floors}层 · 已通过 ${save.towerRecords?.[d.id]?.floor||0}层`:d.kind==='elite'?`剧情精英 · ${d.partySize}v${d.partySize}`:d.boss?.name||'秘境探索'));
+            info.append(el('p','dungeon-boss-name',d.kind==='tower'?fill('{floors}层 · 已通过 {floor}层',{floors:d.floors,floor:save.towerRecords?.[d.id]?.floor||0}).text:d.kind==='elite'?fill('剧情精英 · {size}v{size}',{size:d.partySize}).text:d.boss?.name||'秘境探索'));
             const hint=dungeonStaminaHint(d);
             if(hint){
                 const line=el('p','dungeon-stamina');

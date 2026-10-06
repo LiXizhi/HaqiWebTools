@@ -205,19 +205,6 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         get owner() { return owner; },
         petFile:(roleId,path)=>guarded(async()=>petIO(roleId,await session()).read(path)),
         roles: ({refresh=false}={}) => guarded(async () => {const current=await session();return queueSave(async()=>{check(current);if(refresh)clearReads();return readRoles(current);});}),
-        roleAncestor: (base, head) => guarded(async () => {
-            const current = await session();let revision = head;
-            // A clean cache can still belong to a concurrently overwritten branch.
-            // Require ancestry before replacing it; large gaps fail closed to UI backup.
-            for (let i = 0; i < 64; i++) {
-                if (revision === base) return true;
-                if (!roleIdValid(revision)) return false;
-                const row = JSON.parse(await remoteText(`roles/history/${revision}.json`, current));
-                if (row.owner !== current.owner || row.revision !== revision) throw new CloudError('角色历史记录无效');
-                revision = row.parentRevision;
-            }
-            return false;
-        }),
         saveRoles: (catalog, expectedRevision, options) => guarded(async () => {
             const clean = validateRoles(catalog, content, dataset), current = await session();
             return queueSave(async()=>{check(current);
@@ -262,10 +249,9 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
                 rows.push({id:row.id,lastPlayedAt:row.lastPlayedAt,state:split.state,files});
             }
             const manifestCatalog={...clean,roles:rows};
-            const text=JSON.stringify({schemaVersion:2,owner:current.owner,revision,parentRevision:expectedRevision,catalog:manifestCatalog});
-            // Immutable parts are acknowledged first. Index/history contain only small
-            // state and references, so failed writes cannot publish a mixed version.
-            await writeAcknowledged(`roles/history/${revision}.json`,text,current);
+            const text=JSON.stringify({schemaVersion:2,owner:current.owner,revision,catalog:manifestCatalog});
+            // Acknowledge immutable parts before publishing the current index.
+            // Failed part writes leave the previous index intact; no history copy is needed.
             await writeAcknowledged(rolesPath,text,current);
             envelopeValue=JSON.parse(text);
             return revision;

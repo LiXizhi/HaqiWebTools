@@ -28,3 +28,17 @@ test('world resume is restricted to the same island character and layout',async(
  assert.equal(canResumeWorld(world,save,save,{worldMaps:{camp:{}}}),false);
  assert.equal(canResumeWorld(world,save,{zone:'town'},content),false);
 });
+
+test('worker terrain never paints on the main thread and closes stale replies',async()=>{
+ const callbacks=[],requests=[],closed=[];let painted=0;
+ const cache=createScheduledTerrainCache({paint:function*(){painted++;},createCanvas:()=>{throw Error('main allocation');},schedule:fn=>{callbacks.push(fn);return fn;},cancel:fn=>{const i=callbacks.indexOf(fn);if(i>=0)callbacks.splice(i,1);},rasterize:(world,rect,pixels)=>new Promise(resolve=>requests.push({resolve,rect,pixels}))});
+ const world={w:4096,h:4096,layout:{}},rect={x:0,y:0,w:400,h:400};cache.prepare(world,rect,2);callbacks.shift()();await Promise.resolve();assert.equal(requests.length,1);assert.equal(requests[0].pixels,1028);assert.equal(painted,0);
+ cache.clear();requests[0].resolve({bitmap:{close(){closed.push('stale');}},atlases:[]});await new Promise(setImmediate);assert.deepEqual(closed,['stale']);assert.equal(cache.size,0);
+ cache.prepare(world,rect,2);callbacks.shift()();await Promise.resolve();requests[1].resolve({bitmap:{close(){closed.push('live');}},atlases:['meadow']});await new Promise(setImmediate);assert.equal(cache.size,1);cache.invalidateAtlas('meadow');assert.equal(cache.size,0);assert.deepEqual(closed,['stale','live']);cache.clear();
+});
+
+test('worker failure resumes the bounded cooperative painter',async()=>{
+ const callbacks=[];let painted=0,allocated=0;
+ const cache=createScheduledTerrainCache({paint:function*(){painted++;},createCanvas:()=>{allocated++;return{getContext:()=>({translate(){},scale(){}})};},schedule:fn=>{callbacks.push(fn);return fn;},cancel:fn=>{const i=callbacks.indexOf(fn);if(i>=0)callbacks.splice(i,1);},rasterize:()=>Promise.reject(Error('worker unavailable'))});
+ cache.prepare({w:512,h:512,layout:{}},{x:0,y:0,w:400,h:400});callbacks.shift()();for(let i=0;i<5;i++)await Promise.resolve();assert.equal(allocated,0);assert.equal(callbacks.length,1);callbacks.shift()();assert.equal(painted,1);assert.equal(cache.size,1);cache.clear();
+});

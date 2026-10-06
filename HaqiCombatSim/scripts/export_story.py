@@ -104,6 +104,17 @@ class Exporter:
         self.chapter = self.load('data/adventure/chapter.json')
         self.journal = self.load('data/adventure/quest-journal.json')
         self.runtime = self.load('data/adventure/quest-runtime.json')
+        self.packs=[]
+        for row in self.load('data/adventure/island-packs/index.json')['packs']:
+            if not row['enabled']:
+                continue
+            pack=self.load(row['file'])
+            self.packs.append((row['file'],pack))
+            NAMES[pack['island']['id']]=pack['island']['name']
+            self.runtime['quests'].extend(pack['quests'])
+            for q in pack['quests']:
+                self.journal['quests'].append({**q,'startNpc':next(n['name'] for n in pack['npcs'] if n['id']==q['startNpc']),'requirements':[{'min':r['min']} for r in q['requirements']]})
+        self.pack_quest_ids={q['id'] for _,pack in self.packs for q in pack['quests']}
         self.names = {113: '经验', 100: '奇豆', 17213: '仙豆', 984: '魔豆'}
         for item in self.catalog['tables']['reward_list.xml']['data'].get('children', []):
             ident = node_text(item, 'id')
@@ -117,6 +128,8 @@ class Exporter:
         for k, item in self.chapter['items'].items():
             self.names.setdefault(int(k), item.get('name', f'物品 {k}'))
         self.npcs = {str(k): v['name'] for k, v in self.chapter['npcs'].items()}
+        for _,pack in self.packs:
+            self.npcs.update({str(n['id']):n['name'] for n in pack['npcs']})
         for n in self.catalog['worldNpcs']:
             name = n.get('data', {}).get('attributes', {}).get('name')
             if name:
@@ -189,7 +202,10 @@ class Exporter:
                             continue
                         self.line(s, f'{block}:{j}:button:{b}', button['label'], '我', phase, chapter_file, f'{base}/{j}/buttons/{b}/label', {'file': opening_file, 'pointer': f'{authorbase}/{j}/reply', 'generator': 'scripts/export_adventure.py'}, button['action'])
         runtime = {q['id']: q for q in self.runtime['quests']}
+        self.island_packs()
         for i, q in enumerate(self.journal['quests']):
+            if q['id'] in self.pack_quest_ids:
+                continue
             if q['id'] in chapter_ids:
                 continue
             r = runtime[q['id']]
@@ -265,6 +281,8 @@ class Exporter:
             'course:': ('data/adventure/language-courses.json', 'courses', read('data/adventure/language-courses.json')['courses'], 'title'),
         }
         for s in self.scenes:
+            if s.get('titleSource'):
+                continue
             for prefix, (file, collection, items, field) in collections.items():
                 if not s['key'].startswith(prefix):
                     continue
@@ -317,6 +335,41 @@ class Exporter:
             for j, row in enumerate(d['story']):
                 ptr = f'/entries/{i}/story/{j}/text'
                 self.line(s, row['id'], row['text'], row['speaker'], '入场', file, ptr, {'file': file, 'pointer': ptr}, force=True)
+
+    def island_packs(self):
+        for file,pack in self.packs:
+            zone=pack['island']['id']
+            for i,q in enumerate(pack['quests']):
+                s=self.scene(f'journal:{q["id"]}',q['title'],'current',zone,questId=q['id'],requires=[p['id'] for p in q['prerequisites']],classification='网页原创主线',level=pack['island']['recommendedLevel'],conditions=q['requirements'],repeat=False,objective=q['description'])
+                s['rewards']=q['rewards']
+                s['titleSource']={'file':file,'pointer':f'/quests/{i}/title','sha256':digest(q['title']),'writable':True,'author':{'file':file,'pointer':f'/quests/{i}/title'}}
+                s['rewardSource']={'file':file,'pointer':f'/quests/{i}/rewards','readOnly':True}
+                ptr=f'/quests/{i}/description'
+                self.line(s,'description',q['description'],'任务','目标',file,ptr,{'file':file,'pointer':ptr})
+                blocks=[('startDialog','接取',q['startDialog']),('endDialog','交付',q['endDialog'])]+[(f'talks/{j}/dialog','指定交谈',t['dialog']) for j,t in enumerate(q['talks'])]
+                for block,phase,rows in blocks:
+                    for j,row in enumerate(rows):
+                        base=f'/quests/{i}/{block}/{j}'
+                        ptr=base+'/text'
+                        self.line(s,f'{block}:{j}:text',row['text'],self.npcs[str(row['npcId'])],phase,file,ptr,{'file':file,'pointer':ptr})
+                        for k,b in enumerate(row['buttons']):
+                            ptr=base+f'/buttons/{k}/label'
+                            self.line(s,f'{block}:{j}:button:{k}',b['label'],'我',phase,file,ptr,{'file':file,'pointer':ptr},b['action'])
+                s['note']='网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。'
+            for i,d in enumerate(pack['journeys']):
+                s=self.scene('journey:'+d['id'],d['name'],'current',zone,classification='网页原创副本入场',level=d['recommendedLevel'])
+                s['titleSource']={'file':file,'pointer':f'/journeys/{i}/name','sha256':digest(d['name']),'writable':True,'author':{'file':file,'pointer':f'/journeys/{i}/name'}}
+                s['note']='仅入场剧情；试炼塔与奖励沿用现有规则，不在入场宣告通关。'
+                for j,row in enumerate(d['story']):
+                    ptr=f'/journeys/{i}/story/{j}/text'
+                    self.line(s,row['id'],row['text'],row['speaker'],'入场',file,ptr,{'file':file,'pointer':ptr},force=True)
+            for i,n in enumerate(pack['npcs']):
+                s=self.scene('resident:island-pack:'+str(n['id']),n['name']+'：日常交谈','current',zone,classification='网页原创居民')
+                ptr=f'/npcs/{i}/description'
+                self.line(s,'description',n['description'],n['name'],'日常',file,ptr,{'file':file,'pointer':ptr},force=True)
+                if n.get('worldObservation'):
+                    ptr=f'/npcs/{i}/worldObservation/prompt'
+                    self.line(s,'worldObservation',n['worldObservation']['prompt'],n['name'],'可选现实地图观察',file,ptr,{'file':file,'pointer':ptr},force=True)
 
     def retire_courses(self):
         # Legacy course configuration is retained for existing learning ledgers,

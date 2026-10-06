@@ -3,7 +3,7 @@ import {recommendAdventureDeck} from './battle_ai/adventure_adapter_core.js';
 import {teachPointer} from './view_teaching.js';
 import {deckLimits,deckCardCopies,syncDeckLayouts,equipmentBlockReason,playerSpec,availableCardLessons,SCHOOL_NAMES} from './adventure_core.js';
 import {skillLearningStatus,trainingPoints} from './adventure_learning_core.js';
-import { setText, tr } from './locale_runtime.js';
+import {setText, tr,fill} from './locale_runtime.js';
 const SCHOOL_LABELS={...SCHOOL_NAMES,balance:'平衡'};
 const PAGE_SIZE=36;
 const HOVER_DELAY=350;
@@ -77,7 +77,7 @@ export function renderDeckEditor(body,{assets,save,shopView,deckAnimationClock='
         if(removable)detail.append(button('移出一张',()=>remove(key),'secondary'));
         else if(lesson){
             const learning=skillLearningStatus(draftSave(),content,lesson);
-            const action=button(owned[key]?'放入一张':learning.allowed?`学习并放入（${learning.reason}）`:learning.reason,()=>add(key),'primary');
+            const action=button(owned[key]?'放入一张':learning.allowed?fill(`学习并放入（{v0}）`,{v0:String(learning.reason)}).text:learning.reason,()=>add(key),'primary');
             action.disabled=!learning.allowed;detail.append(action);
         }
         detail.hidden=false;
@@ -238,7 +238,7 @@ export function renderDeckEditor(body,{assets,save,shopView,deckAnimationClock='
             const n=layouts[active].deck.find(row=>row.key===lesson.key)?.count||0;
             const learning=skillLearningStatus(draftSave(),content,lesson),available=learning.allowed;
             const badge=n>0?el('span','bag-card-count',String(n)):null;
-            if(badge)badge.setAttribute('aria-label',`已放入 ${n} 张`);
+            if(badge)badge.setAttribute('aria-label',fill(`已放入 {v0} 张`,{v0:String(n)}).text);
             const note=owned[lesson.key]?null:el('small','muted');
             if(note)showLearning(note,learning);
             const entry=button([el('span','bag-library-icon',subject(card)),el('span','bag-card-name',card.name),badge,note],()=>{},`bag-library-card ${available?'':'locked'}`);
@@ -264,7 +264,7 @@ export function renderDeckEditor(body,{assets,save,shopView,deckAnimationClock='
         for(const row of layouts[active].deck)for(let i=0;i<row.count;i++){
             const card=cards[row.key],slot=button(subject(card),()=>{},'bag-slot');
             slot.dataset.cardKey=row.key;
-            slot.setAttribute('aria-label',`${card.name}，第 ${i+1} 张，拖出移除，长按或右键查看详情`);previewEvents(slot,row.key,true);bindCardGesture(slot,row.key,true);slots.append(slot);
+            slot.setAttribute('aria-label',fill(`{v0}，第 {v1} 张，拖出移除，长按或右键查看详情`,{v0:String(card.name),v1:String(i+1)}).text);previewEvents(slot,row.key,true);bindCardGesture(slot,row.key,true);slots.append(slot);
         }
         for(let i=total();i<limits.capacity;i++){const slot=el('span','bag-slot empty');slot.setAttribute('aria-hidden','true');slots.append(slot);}
         paintLibrary();

@@ -137,7 +137,7 @@ export function createLearningChatView(cb){
             change.hidden=free;freeTalk.hidden=free||s.done||!cb.free;freeTalk.disabled=s.busy||s.recording;details.hidden=!free;gift.hidden=!free||!s.canGift;upgrade.hidden=!free||s.vip;
             details.disabled=gift.disabled=s.busy||s.recording||!s.ready;
             if(free){form.hidden=false;input.placeholder=tr('用彼此理解的语言交流');input.maxLength=2000;if(document.activeElement!==input||s.draft==='')input.value=s.draft||'';}
-            progress.textContent=free?(s.loginRequired?'登录后可使用 AI 对话':s.vip?'会员自由对话':s.remaining==null?'正在核验额度':`今日剩余 ${s.remaining}/2 次`):s.done?tr('交流完成'):fill('第 {turn} / {total} 轮',{turn:s.index+1,total:s.story.turns.length}).text;
+            progress.textContent=free?(s.loginRequired?'登录后可使用 AI 对话':s.vip?'会员自由对话':s.remaining==null?'正在核验额度':fill(`今日剩余 {v0}/2 次`,{v0:String(s.remaining)}).text):s.done?tr('交流完成'):fill('第 {turn} / {total} 轮',{turn:s.index+1,total:s.story.turns.length}).text;
             chinese.textContent=tr(s.showChinese?'隐藏释义':'显示释义');chinese.setAttribute('aria-pressed',String(!s.showChinese));
             const print=JSON.stringify([s.messages,s.showChinese,s.locale,s.reward?.amount,s.reward?.currency,s.done,s.index,s.hintLevel,s.hintText,s.practice]);
             const logChanged=print!==fingerprint;
@@ -169,7 +169,7 @@ export function createLearningChatView(cb){
                     const answerLine=el('span','camp-chat-original',answer);answerReveal={node:answerLine,container:hintRow};
                     if(s.practice?.id===turn.id&&s.practice?.feedback?.parts)renderSpeechWords(answerLine,s.practice.feedback.parts);
                     sample.append(answerLine,icon);hint.append(sample);
-                    if(s.practice?.id===turn.id&&s.practice?.feedback)hint.append(el('small','camp-chat-practice',`命中 ${Math.round(s.practice.feedback.accuracy*100)}% · 累计 ${s.practice.qualified}/${s.practice.params.speechPracticeCount}`));
+                    if(s.practice?.id===turn.id&&s.practice?.feedback)hint.append(el('small','camp-chat-practice',fill(`命中 {v0}% · 累计 {v1}/{v2}`,{v0:String(Math.round(s.practice.feedback.accuracy*100)),v1:String(s.practice.qualified),v2:String(s.practice.params.speechPracticeCount)}).text));
                     if(s.hintLevel&&s.showChinese){
                         const native=s.locale==='en'?'zh-CN':'en',translation=turn.answer[native],gloss=el('p','camp-chat-translation',translation);hint.append(gloss);answerReveal.translation=gloss;
                         const line=bilingual.attach({container:hint,original:answerLine,gloss,text:answer,translation,locale:s.locale,native,showRead:false});

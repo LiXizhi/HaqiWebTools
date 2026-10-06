@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><base href="../../"><meta name="viewport" content="width=device-width,initial-scale=1"><title>宠物标签与捕获成长验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_battle_intro.css">
+<style>body{overflow:auto;background:#153c40;padding:16px;box-sizing:border-box;color:#fff;font-family:sans-serif}main{max-width:940px;margin:auto}.preview-panel{background:#fff2d2;color:#463420;padding:16px;margin:12px 0;border-radius:10px}.preview-roster{display:flex;flex-wrap:wrap;gap:12px}.preview-halos{width:100%;height:170px}.pet-profile-modal{color:#463420}#intro{position:fixed;inset:0;pointer-events:none}#intro.visible{pointer-events:auto}button{cursor:pointer}</style>
+<main><h1>宠物标签与捕获成长</h1><p>隔离内存角色：不读取或保存玩家进度。</p><button id="details">查看宠物详情</button> <button id="show-intro">查看登场标签</button><section class="preview-panel"><h2>普通与传奇标签</h2><div id="tags"></div><canvas class="preview-halos" width="900" height="170"></canvas></section><section class="preview-panel"><h2>捕获目标</h2><div class="preview-roster" id="roster"></div></section></main><div id="intro"></div>
+<script type="module">
+import {createPetTraitBadges,drawPetTraitHalo} from '../../js/view_pet_traits.js';
+import {showPetDetails} from '../../js/view_adventure_pet_details.js';
+import {createBattleRoster,updateBattleRoster} from '../../js/view_adventure_battle_status.js';
+import {createBattleIntroView} from '../../js/view_battle_intro.js?pet-traits-preview=2';
+import {installExpansion} from '../../js/adventure_expansion_core.js';
+import {createAdventure,playerSpec} from '../../js/adventure_core.js';
+import {initializePetWorld} from '../../js/adventure_pet_world_core.js';
+import {petMaxHp} from '../../js/adventure_pets_core.js';
+import {petPortrait} from '../../js/view_adventure_pets.js';
+const read=async p=>(await fetch('../../data/'+p)).json();
+const input=await Promise.all(['adventure/chapter.json','adventure/combat.json','adventure/pets.json','adventure/shop-candidates.json','kids/cards.json','kids/charms.json'].map(read));
+const {content,dataset}=installExpansion(...input),save=createAdventure(content,{seed:2,starter:'dragon_green'});initializePetWorld(save,content);
+const pet=save.pets[save.formation[0]];pet.passiveTraits={attack:9,defense:8,vitality:7,critical:6,accuracy:4,mana:3,healing:2,frugal:5};pet.captureCount=27;pet.obtainedCount=28;pet.hp=petMaxHp(pet,content);
+const assets={content,dataset,mode:'cdn',drawMonster:(ctx,m,x,y,w,h)=>{ctx.fillStyle='#6c9676';ctx.beginPath();ctx.ellipse(x+w/2,y+h*.55,w*.18,h*.33,0,0,Math.PI*2);ctx.fill();return true;}};
+const el=(tag,cls,...kids)=>{const n=document.createElement(tag);n.className=cls;n.append(...kids.flat().filter(k=>k!=null));return n;};const button=(text,fn,cls)=>{const n=el('button',cls,...(Array.isArray(text)?text:[text]));n.onclick=fn;return n;};
+document.querySelector('#tags').append(createPetTraitBadges(pet.passiveTraits,content,el));
+const ctx=document.querySelector('canvas').getContext('2d');[6,7,8,9].forEach((rank,i)=>{drawPetTraitHalo(ctx,{attack:rank},110+i*220,100,78);ctx.fillStyle='#443620';ctx.textAlign='center';ctx.font='18px sans-serif';ctx.fillText(rank>6?'传奇'+(rank-6)+'级':'普通6级',110+i*220,50);});
+const monster=i=>({id:'mob'+i,name:['草地伙伴','紫光伙伴','金光伙伴','虹光伙伴'][i],side:'far',school:'life',level:12,hp:200,maxHp:500,pips:{normal:2,power:0},standingWards:[],charms:[],wards:[],dots:[],hots:[],passiveTraits:{attack:[6,7,8,9][i],frugal:2},template:{level:12,attributes:{},passiveTraits:{attack:[6,7,8,9][i],frugal:2}}});
+const mobs=[0,1,2,3].map(monster),battle={sides:{near:[],far:mobs},resolved:{}};
+const roster=createBattleRoster(battle,'far',{traitContent:content,heroId:'hero',canTarget:()=>true,target:()=>{},targetHint:()=> '捕捉成功率 35.0%',el,button,schoolNames:{life:'生命'}});updateBattleRoster(roster.entries);document.querySelector('#roster').append(...roster.roster.children);
+document.querySelector('#details').onclick=()=>showPetDetails(assets,pet.id,petPortrait,{el,button,spellFace:()=>el('span','','卡牌')},{save,action:()=>{},shop:()=>{}});
+const intro=createBattleIntroView(document.querySelector('#intro'),{skip:()=>intro.close()});document.querySelector('#show-intro').onclick=()=>{intro.open({assets,roster:mobs.map(m=>({...m,template:{...m.template,school:'life'}}))});intro.update({curtain:1,rows:mobs.map(()=>({entry:1,banner:1})),exit:0,progress:.5});};
+document.documentElement.dataset.ready='true';
+</script></html>

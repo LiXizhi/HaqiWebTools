@@ -1,3 +1,4 @@
+import {fill} from './locale_runtime.js';
 import {languageName} from './character_relationship_core.js';
 import {el,button} from './view_adventure.js';
 import {drawSchoolIcon} from './card_renderer.js';
@@ -24,10 +25,10 @@ export function renderPartnerProfile(body,state,cb){
     const layout=el('div','partner-profile');layout.dataset.school=p.school;
     const portrait=el('div','partner-portrait',cb.portrait(p));
     const pet=partnerPet(cb.assets?.()||state.assets,p);if(pet)portrait.append(pet);
-    const identity=el('aside','partner-identity',portrait,el('h3','partner-name',p.name),el('div','partner-school',schoolIcon(p.school),el('span','',`${school}系`)));
+    const identity=el('aside','partner-identity',portrait,el('h3','partner-name',p.name),el('div','partner-school',schoolIcon(p.school),el('span','',fill(`{v0}系`,{v0:String(school)}).text)));
     const validDate=typeof p.registeredAt==='string'&&Number.isFinite(Date.parse(p.registeredAt));
-    identity.append(el('div','partner-foot',el('span','partner-level',`等级 ${p.level}`),el('div','partner-registration',el('span','','注册日期'),el('span','',validDate?p.registeredAt.slice(0,10).replaceAll('-','.'):'暂无资料'))));
-    const content=el('div','partner-content',el('div','partner-language',el('span','',`母语 · ${languageName(p.native)}`),el('span','',`在学 · ${languageName(p.target)}`)),el('p','partner-interest',p.interest||'在旅途中相遇，一起开启新的冒险。'));
+    identity.append(el('div','partner-foot',el('span','partner-level',fill(`等级 {v0}`,{v0:String(p.level)}).text),el('div','partner-registration',el('span','','注册日期'),el('span','',validDate?p.registeredAt.slice(0,10).replaceAll('-','.'):'暂无资料'))));
+    const content=el('div','partner-content',el('div','partner-language',el('span','',fill(`母语 · {v0}`,{v0:String(languageName(p.native))}).text),el('span','',fill(`在学 · {v0}`,{v0:String(languageName(p.target))}).text)),el('p','partner-interest',p.interest||'在旅途中相遇，一起开启新的冒险。'));
     const actions=el('div','partner-actions');
     actions.append(action('直接聊天','聊聊冒险，也练练语言','chat',()=>cb.talk(p),{primary:true}),
         action(joined?'组队出发':'组队下副本',state.coopActive?'正在组队挑战':full?'队伍已满':'一起挑战 PvE 副本','dungeon',()=>cb.teamDungeon(p),{disabled:state.coopActive||full}),
@@ -35,7 +36,7 @@ export function renderPartnerProfile(body,state,cb){
         ...(real?[action(friend?'已是好友':'加好友',!real?'此伙伴暂无通信账号':friend?'打开好友列表':'认识彼此，保持联系','friend',()=>friend?cb.friends():state.owner?cb.friend(p):cb.login(),{disabled:state.busy})]:[]),
         action('写信',!real?'此伙伴暂无通信账号':!friend?'成为好友后可写信':state.mailAvailable?'给朋友留一封信':'邮件暂未开放','mail',()=>state.owner?cb.compose(friend):cb.login(),{disabled:!real||!friend}));
     content.append(actions);
-    const footer=el('div','partner-footer',el('span','',joined?'已在你的队伍中':`队伍 ${state.team.length+1} / 4 人`),button('管理队伍',()=>cb.open('social-party'),'text-button'));
+    const footer=el('div','partner-footer',el('span','',joined?'已在你的队伍中':fill(`队伍 {v0} / 4 人`,{v0:String(state.team.length+1)}).text),button('管理队伍',()=>cb.open('social-party'),'text-button'));
     if(joined&&!state.coopActive)footer.append(button('移出队伍',()=>cb.team(p,false),'text-button'));
     if(friend)footer.append(button('好友私聊',()=>cb.privateChat(friend),'text-button'));
     footer.append(button('关系详情',()=>cb.details(p),'text-button'));content.append(footer);layout.append(identity,content);body.append(layout);

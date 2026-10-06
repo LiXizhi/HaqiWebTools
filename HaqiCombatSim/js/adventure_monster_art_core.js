@@ -2,7 +2,7 @@
 const normalize=v=>String(v||'').replaceAll('\\','/').toLowerCase();
 export function monsterArtBinding(monster,art){
     if(!monster)return null;
-    const source=normalize(monster.source||monster.id),model=normalize(monster.attributes?.asset||monster.model);
+    const source=normalize(monster.appearanceSource||monster.source||monster.id),model=normalize(monster.attributes?.asset||monster.model);
     return art?.bindings?.[source+'|'+model]||art?.models?.[model]||(monster.speciesId?{kind:'pet',petId:monster.speciesId}:null);
 }
 export function validateMonsterArt(art,pets){

@@ -20,6 +20,9 @@ test('map generation updates a non-final chapter index and is repeatable',()=>{
         fs.mkdirSync(path.join(root,'scripts'),{recursive:true});
         fs.mkdirSync(path.join(root,'data/adventure'),{recursive:true});
         fs.copyFileSync(new URL('../scripts/generate_island_maps.mjs',import.meta.url),path.join(root,'scripts/generate_island_maps.mjs'));
+        fs.copyFileSync(new URL('../scripts/prepare_island_packs.mjs',import.meta.url),path.join(root,'scripts/prepare_island_packs.mjs'));
+        fs.cpSync(new URL('../data/adventure/island-packs',import.meta.url),path.join(root,'data/adventure/island-packs'),{recursive:true});
+        fs.copyFileSync(new URL('../data/adventure/social.json',import.meta.url),path.join(root,'data/adventure/social.json'));
         fs.writeFileSync(path.join(root,'package.json'),JSON.stringify({type:'module'}));
         const chapter=read('data/adventure/chapter.json');
         chapter.worldMapIndex.islands.camp.w=1;
@@ -70,7 +73,7 @@ test('all compiled islands preserve reachable interactions and distinct large re
             assert.ok(!result.blocked&&distance(result.position,target)<1,`${id}:${target.id}`);
         }
     }
-    assert.equal(signatures.size,6);
+    assert.equal(signatures.size,ids.length);
 });
 
 test('version one external islands migrate to their new arrival points while town positions survive',()=>{

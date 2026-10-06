@@ -118,14 +118,14 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
         const exit=createCloseButton(close,'关闭购买');
         const food=foodInfo(c,item.itemId),quantity=el('input','');quantity.type='number';quantity.min='1';quantity.max='999';quantity.step='1';quantity.value='1';quantity.setAttribute('aria-label','购买数量');
         const confirm=button('确认',()=>{if(food&&!quantity.reportValidity())return;close();cb.action({type:'buy',productId:item.id,...(food?{count:Number(quantity.value)}:{})});},'primary');
-        confirm.setAttribute('aria-label',`${item.name}：确认`);
+        confirm.setAttribute('aria-label',fill(`{v0}：确认`,{v0:String(item.name)}).text);
         const body=el('div','modal-body pet-buy-body',el('div','shop-preview-art',picture(item,112)),el('h3','',item.name),el('p','shop-preview-price',priceLabel(item,' / 件')),confirm);
         if(food){
             const total=el('p','shop-preview-price');
-            const update=()=>{const count=Number(quantity.value),cost=productPrice(item,c)*count;total.textContent=`合计 ${Number.isSafeInteger(cost)&&cost>=0?cost:'—'} 奇豆`;confirm.disabled=!Number.isInteger(count)||count<1||count>999||cost>(save.inventory[100]||0);};
+            const update=()=>{const count=Number(quantity.value),cost=productPrice(item,c)*count;total.textContent=fill(`合计 {v0} 奇豆`,{v0:String(Number.isSafeInteger(cost)&&cost>=0?cost:'—')}).text;confirm.disabled=!Number.isInteger(count)||count<1||count>999||cost>(save.inventory[100]||0);};
             quantity.addEventListener('input',update);update();
             body.insertBefore(el('label','pet-food-quantity',el('span','','购买数量'),quantity),confirm);body.insertBefore(total,confirm);
-            body.insertBefore(el('p','muted',`每份饱食 +${food.restore}${food.xp?`，经验 +${food.xp}`:''}。购买后到宠物页面放入食槽。`),confirm);
+            body.insertBefore(el('p','muted',fill(`每份饱食 +{v0}{v1}。购买后到宠物页面放入食槽。`,{v0:String(food.restore),v1:String(food.xp?fill(`，经验 +{v0}`,{v0:String(food.xp)}).text:'')}).text),confirm);
         }
         const nodes=[el('header','modal-header',el('h2','','确认购买'),exit),body];
 
@@ -144,12 +144,12 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
         const note=el('span','muted','');
         setText(note,'仍要购买将花费 {cost} 魔豆',{cost:productPrice(item,c).toLocaleString('zh-CN')});
         const confirm=button('确认',()=>{inspector.close();cb.action({type:'buy',productId:item.id});},'primary');
-        confirm.setAttribute('aria-label',`${item.name}：确认`);
+        confirm.setAttribute('aria-label',fill(`{v0}：确认`,{v0:String(item.name)}).text);
         inspector.footer.replaceChildren(el('strong','shop-not-for-sale','非卖品'),note,confirm);
     }
     function buyButton(item) {
         const buy=button('购买',()=>notForSale(item)?openNotForSale(item,buy):openPurchase(item,buy),'primary shop-buy');
-        buy.setAttribute('aria-label',`${item.name}：购买`);
+        buy.setAttribute('aria-label',fill(`{v0}：购买`,{v0:String(item.name)}).text);
         return buy;
     }
     function paintPreview(item) {
@@ -176,7 +176,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
     function remember(){Object.assign(state,{category:category.id,subcategory:sub,subcategoryCategory:category.id,page,query:query.value,ownership:ownership.value,level:level.value,school:school.value,slot:''});}
     function itemMeta(item,withSchool){
         const food=foodInfo(c,item.itemId);
-        if(food)return `饱食 +${food.restore}${food.xp?` · 经验 +${food.xp}`:''} · 背包 ${save.inventory[item.itemId]||0}`;
+        if(food)return fill(`饱食 +{v0}{v1} · 背包 {v2}`,{v0:String(food.restore),v1:String(food.xp?fill(` · 经验 +{v0}`,{v0:String(food.xp)}).text:''),v2:String(save.inventory[item.itemId]||0)}).text;
         const parts=[];
         if(item.vipOnly)parts.push(tr('会员专属'));
         parts.push(fill('{level}级',{level:item.level}).text);
@@ -207,7 +207,7 @@ export function renderShop(body,model,cb,{el,button,art,tile,spellFace}) {
                 image.setAttribute('aria-haspopup','dialog');
                 image.addEventListener('click',()=>inspector.show(c.items[item.itemId],{trigger:image,source:config.title,requirements:requirementText(item),requirementsLabel:'购买条件'}));
             }
-            image.setAttribute('aria-label',`查看${item.name}`);image.setAttribute('aria-pressed',String(state.selected===item.id));
+            image.setAttribute('aria-label',fill(`查看{v0}`,{v0:String(item.name)}).text);image.setAttribute('aria-pressed',String(state.selected===item.id));
             const name=el('strong','shop-good-name',item.name);name.title=tr(item.name);
             card.append(name,image,el('span','shop-good-price',priceLabel(item)),el('small','shop-good-level',itemMeta(item,false)),buyButton(item));
             grid.append(card);

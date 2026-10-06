@@ -2,7 +2,7 @@ import {DetailDialog} from './view_detail_dialog.js';
 import {petDisplayScale} from './adventure_pet_interactions_core.js';
 import {renderPetFood} from './view_adventure_pet_food.js';
 import {ownedPetRecords} from './adventure_pet_files_core.js';
-import { setText, tr } from './locale_runtime.js';
+import {setText, tr,fill} from './locale_runtime.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import { showPetDetails } from './view_adventure_pet_details.js';
 import { createMountPreview } from './view_adventure_mount_preview.js';
@@ -14,7 +14,7 @@ const SCHOOL_NAMES={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',deat
 function petSchoolIcon(school,el){
  const name=SCHOOL_NAMES[school]||'魔法';
  const canvas=el('canvas','pet-name-school');canvas.width=32;canvas.height=32;
- canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`${name}系`);
+ canvas.setAttribute('role','img');canvas.setAttribute('aria-label',fill(`{v0}系`,{v0:String(name)}).text);
  const context=canvas.getContext?.('2d');if(typeof context?.save==='function')drawSchoolIcon(context,school||'balance',16,16,30);
  return canvas;
 }
@@ -132,7 +132,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   const slot=el('section',`pet-stage-slot${isHero?' is-hero':''}`);slot.dataset.slot=index;
   const def=pet&&c.pets[records[id]?.speciesId||id];
   const stand=button([pet?el('span','pet-standing-art',el('span','pet-status-portrait',createPetStatus(pet,c,el),petPortrait(assets,pet.speciesId,petAppearanceStage(pet,c),120*petDisplayScale(pet,c)))):el('span','pet-empty','+'),...(def?[petNameLine(def,el)]:[])],()=>{if(id)open(id);else{state.targetSlot=index;paintShelf();shelf.querySelector('button')?.focus();}},'pet-stand');
-  stand.setAttribute('aria-label',`卡位 ${index+1}：${def?def.name:'空位'}`);
+  stand.setAttribute('aria-label',fill(`卡位 {v0}：{v1}`,{v0:String(index+1),v1:String(def?def.name:'空位')}).text);
     if(id){bindDrag(stand,id);stand.addEventListener('keydown',event=>{if(event.key==='Delete'||event.key==='Backspace'){event.preventDefault();rest(id);}});}
   slot.ondragover=event=>{event.preventDefault();slot.classList.add('drop-ready');};
   slot.ondragleave=()=>slot.classList.remove('drop-ready');
@@ -143,7 +143,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
   // to the hero slot or shrinking the art to that slot's width.
   formation.style.paddingTop=`max(26px, calc(8px + var(--pet-preview-height, 120px) * ${preview.dataset.overhang||0}))`;
   const hero=button(preview,()=>{},'pet-hero-figure');
-   hero.setAttribute('aria-label',`主角，卡位 ${index+1}`);hero.title='拖动主角换位';bindDrag(hero,'hero');
+   hero.setAttribute('aria-label',fill(`主角，卡位 {v0}`,{v0:String(index+1)}).text);hero.title='拖动主角换位';bindDrag(hero,'hero');
    hero.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();place('hero',(index+(event.key==='ArrowLeft'?3:1))%4);}});
    slot.append(hero);
   }
@@ -203,7 +203,7 @@ export function renderPetCollection(body,model,cb,{el,button,spellFace,tile,icon
  const notes=button('说明',()=>{
   const dialog=careDialog??=new DetailDialog(body,{el,title:'照料与自动进食'});
   dialog.body.replaceChildren();
-  dialog.body.append(el('p','muted',`新获得的口粮会自动放入空食槽，可点击食槽取回。岛屿上非战斗时角色每秒恢复 ${p.heroRegenPerSecond*100}% 生命，宠物每分钟恢复 ${p.regenPerMinute*100}%。副本中不会自动回血。携带伙伴每分钟减少 ${p.hungerPerMinute} 饱食，低于 ${p.feedThreshold} 时按左、右食槽顺序自动进食，不会消耗背包中未放入的口粮。未上阵的收藏宠物不消耗饱食和口粮，每分钟恢复 ${p.restingHungerPerMinute} 饱食（离线也恢复，最多24小时）。离线生命恢复仅限岛屿。`),...save.careLog.slice(-3).map(text=>el('p','muted',text)));
+  dialog.body.append(el('p','muted',fill(`新获得的口粮会自动放入空食槽，可点击食槽取回。岛屿上非战斗时角色每秒恢复 {v0}% 生命，宠物每分钟恢复 {v1}%。副本中不会自动回血。携带伙伴每分钟减少 {v2} 饱食，低于 {v3} 时按左、右食槽顺序自动进食，不会消耗背包中未放入的口粮。未上阵的收藏宠物不消耗饱食和口粮，每分钟恢复 {v4} 饱食（离线也恢复，最多24小时）。离线生命恢复仅限岛屿。`,{v0:String(p.heroRegenPerSecond*100),v1:String(p.regenPerMinute*100),v2:String(p.hungerPerMinute),v3:String(p.feedThreshold),v4:String(p.restingHungerPerMinute)}).text),...save.careLog.slice(-3).map(text=>el('p','muted',text)));
   dialog.open(notes);
  },'secondary');
  const footer=el('footer','pet-collection-footer',button('图鉴与商店',()=>cb.panel('shop',{category:state.tab==='mount'?'mount':'pet'}),'secondary'),notes);

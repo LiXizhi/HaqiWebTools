@@ -1,3 +1,4 @@
+import {validatePetGrowth} from './adventure_pet_traits_core.js';
 // Web adventure rules, not an original Lua combat formula. Clock and scene truth are injected.
 import {createRng,hashSeed} from './rng_core.js';
 import {defaultParams,resolveParams} from './combat_params_core.js';
@@ -21,17 +22,21 @@ export function petFriendDay(now){
     check(integer(now),'宠物互动时间无效');
     return Math.floor((now+8*3600000)/86400000);
 }
-export function createPetInstance(content,{id,speciesId,ownerId,xp=0,gender,deck,appearanceStage}={}){
+export function createPetInstance(content,{id,speciesId,ownerId,xp=0,gender,deck,appearanceStage,passiveTraits,captureCount,obtainedCount}={}){
     check(identifier(id)&&identifier(ownerId)&&Object.hasOwn(content.pets,speciesId),'宠物实例身份无效');
     check(integer(xp),'宠物经验无效');
     const pet={version:PET_INSTANCE_VERSION,id,ownerId,speciesId,xp,level:petXpLevel(xp,content),
         gender:gender??createRng(hashSeed(`pet-gender:${id}`)).pick(['male','female']),
         cooldownUntil:0,birthSerial:0,memorySerial:0,memoryClock:0,memories:[],deck:[]};
+    if(passiveTraits!==undefined)pet.passiveTraits=copy(passiveTraits);
+    if(captureCount!==undefined)pet.captureCount=captureCount;
+    if(obtainedCount!==undefined)pet.obtainedCount=obtainedCount;
     pet.deck=deck?copy(deck):recommendedPetDeck(pet,content);
     if(appearanceStage!==undefined)pet.appearanceStage=appearanceStage;
     validatePetInstance(pet,content);return pet;
 }
 export function validatePetInstance(pet,content){
+    validatePetGrowth(pet);
     check(pet?.version===PET_INSTANCE_VERSION&&identifier(pet.id)&&Object.hasOwn(content.pets,pet.speciesId),'宠物实例身份无效');
     check(pet.ownerId===null||identifier(pet.ownerId),'宠物主人无效');
     check(['male','female'].includes(pet.gender),'宠物性别无效');

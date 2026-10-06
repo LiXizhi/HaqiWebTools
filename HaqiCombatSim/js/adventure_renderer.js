@@ -1,7 +1,12 @@
+import {drawPetTraitHalo} from './view_pet_traits.js';
 import {npcCharacter} from './adventure_city_people_core.js';
 import {performanceDiagnostics as perf} from './performance_diagnostics.js';
+import {createQuestMarkerCache} from './adventure_quest_marker_cache_core.js';
 import {createFrameMeter} from './frame_meter_core.js';
 import {mergeSceneObjects} from './scene_order_core.js';
+import {createIslandSceneryCache} from './island_scenery_cache.js';
+import {createIslandTerrainRasterizer} from './island_terrain_rasterizer.js';
+import {islandCompanionNavigation} from './island_companion_navigation.js';
 import {createScheduledTerrainCache} from './terrain_tile_scheduler.js';
 import {socialGesturePose,socialHeadAnchor} from './adventure_social_actions_core.js';
 import {npcHasActiveQuest} from './adventure_npc_core.js';
@@ -48,7 +53,7 @@ import {drawBattlePips} from './view_battle_pips.js';
 import { nextBattlePointer } from './battle_pointer_core.js';
 import { currentQuest,questReady,questState,questProgress,SCHOOL_NAMES,catalogStatSnapshot } from './adventure_core.js';
 import {catalogNpcMarker,catalogTracksMonster,trackedQuestIds} from './adventure_catalog_quests_core.js';
-import { onIsland,distance,nearbyWorldObjects,createWorldViewQuery,walkable } from './adventure_world_core.js';
+import { onIsland,distance,createWorldViewQuery,walkable } from './adventure_world_core.js';
 import { OCEAN_COLOR, paintTerrain } from './adventure_terrain.js';
 import { tr } from './locale_runtime.js';
 import { createSignpostPainter } from './adventure_signposts.js';
@@ -119,11 +124,12 @@ export function questMarker(save,content,npcId,stats=()=>catalogStatSnapshot(sav
     return null;
 }
 export function createRenderer(canvas,assets) {
+    const markerCache=createQuestMarkerCache(questMarker,catalogStatSnapshot);
     const drawSignpost=createSignpostPainter();
     const dungeonFog=createDungeonFog(),mapFog=createDungeonFog();
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
-    const ctx=canvas.getContext('2d'),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
-    const terrainTiles=createScheduledTerrainCache({onMetric:(name,value)=>perf.record(name,value),paint:(c,world,rect,atlases)=>paintLargeTerrainSteps(c,world,rect,false,assets.terrainDecorationArt?{draw(...args){atlases.add(args[1]);return assets.terrainDecorationArt.draw(...args);}}:null),createCanvas:()=>document.createElement('canvas')});
+    const ctx=canvas.getContext('2d',{alpha:false}),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
+    const terrainTiles=createScheduledTerrainCache({rasterize:createIslandTerrainRasterizer(assets.terrainDecorationArt),onMetric:(name,value)=>perf.record(name,value),paint:(c,world,rect,atlases)=>paintLargeTerrainSteps(c,world,rect,false,assets.terrainDecorationArt?{draw(...args){atlases.add(args[1]);return assets.terrainDecorationArt.draw(...args);}}:null),createCanvas:()=>document.createElement('canvas')});
     if(assets.terrainDecorationArt)assets.terrainDecorationArt.onAtlas=atlas=>terrainTiles.invalidateAtlas(atlas);
     let vignetteCanvas=null,vignetteW=0,vignetteH=0;
     let overviewWorld=null,overview=null;
@@ -132,6 +138,12 @@ export function createRenderer(canvas,assets) {
     const earthEnvironment=createEarthEnvironmentPainter();
     const frameMeter=createFrameMeter(),worldView=createWorldViewQuery();
     const streetPainter=createStreetPainter(assets);
+    function paintTree(c,o,world){
+        const winter=o.snow&&assets.environmentArt?.draw(c,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);
+        if(!winter)assets.tile(c,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);
+        if(!o.snow&&assets.sceneryTile){const variant=Math.abs(Math.round(o.x*7+o.y*13))%8,size=o.size*.36;assets.sceneryTile(c,8+variant,o.x+o.size*.18,o.y-size+14,size,size);}
+    }
+    const islandScenery=createIslandSceneryCache({paint:paintTree});
     const streetCredit=typeof document==='undefined'?{style:{}}:document.createElement('a');streetCredit.textContent='© OpenStreetMap contributors';streetCredit.href='https://www.openstreetmap.org/copyright';streetCredit.target='_blank';streetCredit.rel='noopener noreferrer';streetCredit.style.cssText='position:absolute;left:10px;bottom:5px;font:11px sans-serif;color:#e8ecdd;background:#203a39bb;padding:2px 5px;z-index:2;display:none';if(typeof document!=='undefined')canvas.parentElement?.append(streetCredit);
     const motionTrail=createMotionTrail();
     const socialFx=new Map();
@@ -211,11 +223,10 @@ export function createRenderer(canvas,assets) {
         c.restore();
     }
     function render(world,save,time,{graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
-        let phaseTime=perf.enabled&&world.isEarth?performance.now():0;
-        const mark=name=>{if(phaseTime){const now=performance.now();perf.record(name,now-phaseTime);phaseTime=now;}};
-        let markerStats;const stats=()=>markerStats??=(catalogStatSnapshot(save,assets.content));
+        let phaseTime=perf.enabled?performance.now():0;
+        const mark=name=>{if(phaseTime){const now=performance.now();perf.record(world.isEarth?name:name.replace('earth-','island-'),now-phaseTime);phaseTime=now;}};
+        const markerFor=markerCache.forState(save,assets.content,world);
         streetCredit.style.display=world.dungeon?.scene.streetscape?.provenance?.kind==='osm-derived'?'block':'none';
-        if(!world.isEarth)worldView.clear();
         const {w,h,dpr}=size(graphics.low),t=time/1000,gestureAt=Date.now();bubbleTarget=null;greetingTarget=null;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         cameraZoom.tick(time,reducedMotion.matches);
         const baseScale=w<650?.82:1,sceneZoom=title?1:cameraZoom.value;
@@ -265,7 +276,7 @@ export function createRenderer(canvas,assets) {
         // Query by fixed spawns, expanded to include sprites that wandered into view.
         const monsterRadius=monsterSceneParams(world).territoryRadius,padding=Math.max(320,monsterRadius+110);
         const queryRect={x:cam.x-padding,y:cam.y-padding,w:w/cam.scale+padding*2,h:h/cam.scale+padding*2};
-        const nearby=world.isEarth?worldView.query(world,queryRect):nearbyWorldObjects(world,queryRect);
+        const nearby=worldView.query(world,queryRect);
         const monsterDt=lastMonsterTime!==null&&time-lastMonsterTime<250?(time-lastMonsterTime)/1000:0;
         lastMonsterTime=time;
         const viewport={x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale};
@@ -274,7 +285,7 @@ export function createRenderer(canvas,assets) {
         for(const o of nearby){
             if(world.isEarth&&(o.x<queryRect.x||o.x>queryRect.x+queryRect.w||o.y<queryRect.y||o.y>queryRect.y+queryRect.h))continue;
             if(o.kind==='tree'&&world.isEarth&&world.earthDecorationBaked?.(o))continue;
-            if(o.kind!=='mob'){(world.isEarth?scenery:objects).push(o);continue;}
+            if(o.kind!=='mob'){scenery.push(o);continue;}
             stepMonsterWander(world,o,monsterDt,viewport,{enabled:!title&&!motionHidden,ambient:!reducedMotion.matches,hero:save.position,canWalk:(x,y)=>walkable(monsterWorld,x,y)});
             const warning=!title&&!motionHidden&&monsterTerritoryWarning(world,o,save.position);
             if(warning){
@@ -289,7 +300,7 @@ export function createRenderer(canvas,assets) {
                 companion=createCompanion(world,save.position,`${save.seed}:${world.zone}:${petId}`);
                 companionId=petId;companionWorld=world;companionSave=save;lastPetTime=time;
             }
-            stepCompanion(companion,world,save.position,(time-lastPetTime)/1000,{deferSearch:coldTiles>0,inParty});
+            stepCompanion(companion,world,save.position,(time-lastPetTime)/1000,{deferSearch:coldTiles>0,inParty,...islandCompanionNavigation.options(companion,world,()=>companionWorld===world&&companionSave===save)});
             objects.push({...companion.position,kind:'pet'});
         }else companion=petScene?.pets.find(row=>row.pet.id===petId)||null;
         lastPetTime=time;
@@ -314,7 +325,7 @@ export function createRenderer(canvas,assets) {
             socialStyle.pose={...socialStyle.pose,facing:socialPose.facing,visualHead:socialPose.head,visualBreath:{...socialPose.breath}};
             const hidden=title||motionHidden||!onScreen;
             if(onScreen&&!title&&!petScene){
-                stepCompanion(fx.companion,world,actor.position,(time-fx.lastTime)/1000,{deferSearch:coldTiles>0,inParty:!!actor.inParty});
+                stepCompanion(fx.companion,world,actor.position,(time-fx.lastTime)/1000,{deferSearch:coldTiles>0,inParty:!!actor.inParty,...islandCompanionNavigation.options(fx.companion,world,()=>socialFx.get(actor.profile.id)===fx)});
                 objects.push({...fx.companion.position,kind:'social-pet',fx,actor});
             }
             const socialMotion=fx.trail.step(actor.position,time,socialStyle,{moving:!!actor.moving&&onScreen,scope:world,reducedMotion:reducedMotion.matches,hidden:hidden||!graphics.trails});
@@ -325,14 +336,18 @@ export function createRenderer(canvas,assets) {
         for(const id of socialFx.keys())if(!liveSocial.has(id))socialFx.delete(id);
         if(petScene&&!title){for(const row of petScene.pets)objects.push({...row.position,kind:'pet-social',row});for(const pet of petScene.babies)objects.push({...pet.birth.anchor,kind:'pet-social',row:{pet,position:pet.birth.anchor,scale:petDisplayScale(pet,assets.content)}});}
         if(world.dungeon?.scene.streetscape)objects.push(...streetPainter.objects(world,viewport,time,save.position,reducedMotion.matches));
-        if(world.isEarth)objects=mergeSceneObjects(scenery,objects);
-        else objects.sort((a,b)=>(a.sortY??a.y)-(b.sortY??b.y));
+        objects=mergeSceneObjects(scenery,objects);
         const streetFocus=world.dungeon?.scene.streetscape?[...world.npcs,...streetPainter.people()].filter(n=>Math.hypot(n.x-save.position.x,n.y-save.position.y)<120):[];
         mark('earth-render-actors');
-        for(const o of objects) {
+        const islandCache=!world.isEarth&&!world.isCityDungeon;
+        if(islandCache)islandScenery.begin(world,assets.environmentArt?.images?.trees||assets.images?.get('sprites'),cam.scale*dpr);
+        else islandScenery.clear();
+        for(let objectIndex=0;objectIndex<objects.length;objectIndex++) {
+            const o=objects[objectIndex];
             if(o.hidden)continue;
             if(o.kind.startsWith('street')){streetPainter.draw(ctx,o,save.position,streetFocus);continue;}
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
+            if(islandCache&&o.kind==='tree'){const end=islandScenery.draw(ctx,objects,objectIndex,save.position,viewport);if(end>objectIndex){objectIndex=end-1;continue;}}
             if(o.kind==='pet-social'){ctx.save();ctx.globalAlpha*=o.row.sceneOpacity??1;drawSocialPet(ctx,assets,o.row,petScene.effects,time,reducedMotion.matches,petScene.now);ctx.restore();}
             if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const winter=(world.isEarth&&world.drawEarthDecoration?.(ctx,o))||o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter&&!world.isEarth)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
             // Stable plant variants add visual detail without changing collision or RNG.
@@ -361,7 +376,7 @@ export function createRenderer(canvas,assets) {
                     ellipse(ctx,o.x,o.y-27,19,28,'#668b76');ellipse(ctx,o.x,o.y-65,14,16,'#efd6ad');
                 }
                 plate(ctx,o.name,o.x,o.y+19,PLATE.npc);
-                const marker=o.earthNpc?earthCityNpcMarker(save,world.city,o.id):questMarker(save,assets.content,o.id,stats);
+                const marker=o.earthNpc?earthCityNpcMarker(save,world.city,o.id):markerFor(o.id);
                 if(marker){text(ctx,marker,o.x,o.y-sh-8+Math.sin(t*3)*3,29,'#fff1a3');}
             }
             if(o.kind==='mob') {
@@ -464,7 +479,7 @@ export function createRenderer(canvas,assets) {
         // Resolve the invited resident, never the player's follower, including duplicate NPC instances.
         const invitedNpc=companionBubble&&world.npcs.find(n=>!n.hidden&&(companionBubble.instanceId?n.instanceId===companionBubble.instanceId:String(n.id)===String(companionBubble.npcId)));
         if(invitedNpc&&!title&&!motionHidden&&!nearbyPartnerBubble&&!socialGesturePose(socialGesture,'hero',gestureAt)
-            &&!questMarker(save,assets.content,invitedNpc.id)&&!npcHasActiveQuest(save,assets.content,invitedNpc.id)){
+            &&!markerFor(invitedNpc.id)&&!npcHasActiveQuest(save,assets.content,invitedNpc.id)){
             const height=[36211,30112].includes(invitedNpc.id)?104:86;
             bubbleTarget=drawSpeechBubble(ctx,{x:invitedNpc.x,y:invitedNpc.y-height+56},t,reducedMotion.matches);
         }
@@ -521,8 +536,9 @@ export function createRenderer(canvas,assets) {
             ctx.fillText(meter?`FPS ${meter.fps} · ${meter.ms.toFixed(1)} ms`:'FPS —',14,h-15);ctx.restore();
         }
     }
-    function minimap(target,world,save,{labels=true,bounds=null,simple=false,mapData=null}={}) {
-        const c=target.getContext('2d'),w=target.width,h=target.height;c.clearRect(0,0,w,h);c.fillStyle='#6ba7a2';c.fillRect(0,0,w,h);
+    function minimap(target,world,save,{labels=true,bounds=null,simple=false,mapData=null,showPlayer=true,atlasPreview=false}={}) {
+        const markerFor=markerCache.forState(save,assets.content,world);
+        const c=target.getContext('2d'),w=target.width,h=target.height;c.clearRect(0,0,w,h);c.fillStyle='#6ba7a2';if(!atlasPreview)c.fillRect(0,0,w,h);
         if(world.isEarth){
             if(simple&&bounds){
                 const colors={ocean:'#438b9b',water:'#72acb7',forest:'#7c9d69',grass:'#b4c68a',urban:'#d6c59d',desert:'#d9c68e',snow:'#e5e8db',mountain:'#a49d85'},cells=64;
@@ -539,15 +555,15 @@ export function createRenderer(canvas,assets) {
             for(const n of world.npcs)ellipse(c,n.x,n.y,18,18,'#ffe89c');
             c.restore();ellipse(c,w/2,h/2,4,4,'#fff');ellipse(c,w/2,h/2,2,2,'#205c99');return;
         }
-        const sx=w/world.w,sy=h/world.h;c.save();c.scale(sx,sy);if(world.dungeon?.scene.streetscape)paintStreetGround(c,world.dungeon.scene.streetscape,{x:0,y:0,w:world.w,h:world.h});else if(world.isCityDungeon)drawCityScene(c,world);else c.drawImage(ground(world),0,0,world.w,world.h);
+        const sx=w/world.w,sy=h/world.h;c.save();c.scale(sx,sy);if(atlasPreview&&world.layout?.coast?.length){c.beginPath();for(const [i,p]of world.layout.coast.entries()){if(i===0)c.moveTo(p[0],p[1]);else c.lineTo(p[0],p[1]);}c.closePath();c.clip();}if(world.dungeon?.scene.streetscape)paintStreetGround(c,world.dungeon.scene.streetscape,{x:0,y:0,w:world.w,h:world.h});else if(world.isCityDungeon)drawCityScene(c,world);else c.drawImage(ground(world),0,0,world.w,world.h);
         for(const b of world.buildings){c.fillStyle='#627b83';c.fillRect(b.x-45,b.y-60,90,65);}
-        for(const n of world.npcs)ellipse(c,n.x,n.y,questMarker(save,assets.content,n.id)?22:13,questMarker(save,assets.content,n.id)?22:13,questMarker(save,assets.content,n.id)?'#ffe89c':'#f6f3d9');
+        for(const n of world.npcs)ellipse(c,n.x,n.y,markerFor(n.id)?22:13,markerFor(n.id)?22:13,markerFor(n.id)?'#ffe89c':'#f6f3d9');
         for(const e of world.landmarks||[])if(e.dungeonId){ellipse(c,e.x,e.y,30,30,e.entranceKind==='tower'?'#f8dc80':'#67dfff');}
-        mapFog(c,world,save.position,{x:0,y:0,w:world.w,h:world.h},Math.max(sx,sy),save.dungeonExploration?.[world.zone]);
-        ellipse(c,save.position.x,save.position.y,25,25,'#184f73');ellipse(c,save.position.x,save.position.y,13,13,'#fff');c.restore();
+        if(!atlasPreview)mapFog(c,world,save.position,{x:0,y:0,w:world.w,h:world.h},Math.max(sx,sy),save.dungeonExploration?.[world.zone]);
+        if(showPlayer){ellipse(c,save.position.x,save.position.y,25,25,'#184f73');ellipse(c,save.position.x,save.position.y,13,13,'#fff');}c.restore();
         if(world.layout){
             if(labels&&!world.layout.route)for(const r of world.layout.regions){ellipse(c,r.x*sx,r.y*sy,3,3,'#fff3c3');text(c,r.name,r.x*sx,r.y*sy-9,11,'#25483b');}
-            ellipse(c,save.position.x*sx,save.position.y*sy,5,5,'#fff');ellipse(c,save.position.x*sx,save.position.y*sy,3,3,'#205c99');
+            if(showPlayer){ellipse(c,save.position.x*sx,save.position.y*sy,5,5,'#fff');ellipse(c,save.position.x*sx,save.position.y*sy,3,3,'#205c99');}
         }
     }
     function screenToWorld(x,y){return{x:x/cam.scale+cam.x,y:y/cam.scale+cam.y};}
@@ -577,6 +593,7 @@ export function createRenderer(canvas,assets) {
             const hit=presentation?.reactions?.find(reaction=>reaction.target===id);
             const unit=battle.unitsById[id],petUnit=id!=='hero'&&!unit.arenaProfile&&!unit.isMob&&!save.coopRun?.members.some(m=>m.unit.id===id);
             const pose=petUnit&&hp<=0?{action:'idle',progress:0}:hp>0&&hit?{action:'hit',progress:hit.progress}:battleActorAction(id,hp,ev,p);
+            if(hp>0)drawPetTraitHalo(c,unit.passiveTraits,positions[id].x,positions[id].y,38);
             drawAnimatedActor(c,positions[id],pose.action,pose.progress,id==='hero'?1:-1,reducedMotion.matches,()=>{
                 if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,BATTLE_HERO_SCALE,false,updateHeroActor(battleHero,{time:t,facing:2,reducedMotion:reducedMotion.matches}),bounds);const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if(!battle.redMushroom&&support&&assets.content.pets[support.speciesId]?.art)(()=>{c.save();c.translate(36,0);drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,48,column=>assets.drawPet(c,support.speciesId,petAppearanceStage(support,assets.content),-24,-48,48,48,column));c.restore();})();}
                 else if(unit.arenaProfile){avatar(c,{...unit.arenaProfile,facing:unit.side==='far'?1:2},0,0,t,false,BATTLE_HERO_SCALE,false,null,bounds);}
@@ -611,5 +628,5 @@ export function createRenderer(canvas,assets) {
         target.updateStatusTargets?.(target.battleStatusRects);
         return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:at.x*scale,y:at.y*scale}]));
     }
-    return {prepareScene,frameStats:()=>frameMeter.value,pauseFrameMeter:()=>frameMeter.sample(0,false),environmentStats:()=>earthEnvironment.stats,streetStats:streetPainter.stats,streetPeople:streetPainter.people,terrainStats:()=>({tiles:terrainTiles.size,pending:terrainTiles.pending}),resetZoom:()=>cameraZoom.reset(),render,minimap,worldToScreen:point=>({x:(point.x-cam.x)*cam.scale,y:(point.y-cam.y)*cam.scale}),screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
+    return {prepareScene,frameStats:()=>frameMeter.value,pauseFrameMeter:()=>frameMeter.sample(0,false),environmentStats:()=>earthEnvironment.stats,streetStats:streetPainter.stats,streetPeople:streetPainter.people,terrainStats:()=>({tiles:terrainTiles.size,pending:terrainTiles.pending,scenery:islandScenery.stats()}),resetZoom:()=>cameraZoom.reset(),render,minimap,worldToScreen:point=>({x:(point.x-cam.x)*cam.scale,y:(point.y-cam.y)*cam.scale}),screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
 }

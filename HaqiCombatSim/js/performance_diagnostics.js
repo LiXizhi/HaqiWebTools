@@ -7,7 +7,7 @@ export function createPerformanceDiagnostics(enabled=false,{clock=()=>performanc
     }
     function record(name,value,time=clock()){
         if(!enabled||!Number.isFinite(value))return;
-        if(value>8&&name.startsWith('earth-')&&!name.startsWith('earth-worker-'))event(name,{duration:value},time);
+        if(value>8&&(name.startsWith('earth-')||name.startsWith('island-'))&&!name.startsWith('earth-worker-'))event(name,{duration:value},time);
         let row=rows.get(name);if(!row){row={values:[],cursor:0,count:0,total:0,max:0,over33:0,over50:0};rows.set(name,row);}
         const limit=name==='frame'?frameLimit:sampleLimit;
         if(row.values.length<limit)row.values.push(value);else{row.values[row.cursor]=value;row.cursor=(row.cursor+1)%limit;}

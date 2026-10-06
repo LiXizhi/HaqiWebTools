@@ -35,11 +35,18 @@ export function equipmentInstances(save,content) {
     }
     return {rows,serial};
 }
-export function findEquipmentInstance(save,content,itemId,guid) {
+// A lookup is a read-only projection for one calculation, never a cross-frame cache.
+// Legacy counts/GUIDs are reconciled once; callers create a fresh lookup after edits.
+export function createEquipmentInstanceLookup(save,content) {
     const rows=equipmentInstances(save,content).rows;
-    if(guid)return rows.find(row=>row.guid===guid&&(!itemId||row.gsid===Number(itemId)));
-    const selected=save.equipmentGuids?.[content.items[itemId]?.slot];
-    return rows.find(row=>row.gsid===Number(itemId)&&row.guid===selected)||rows.find(row=>row.gsid===Number(itemId));
+    return (itemId,guid)=>{
+        if(guid)return rows.find(row=>row.guid===guid&&(!itemId||row.gsid===Number(itemId)));
+        const selected=save.equipmentGuids?.[content.items[itemId]?.slot];
+        return rows.find(row=>row.gsid===Number(itemId)&&row.guid===selected)||rows.find(row=>row.gsid===Number(itemId));
+    };
+}
+export function findEquipmentInstance(save,content,itemId,guid) {
+    return createEquipmentInstanceLookup(save,content)(itemId,guid);
 }
 export function syncEquipmentInstances(save,content) {
     mergeUniqueEquipment(save,content);

@@ -40,7 +40,7 @@ export class ItemDetails extends DetailDialog {
         const rune=runeStatus(item,c,assets.dataset);
         if(item.description&&!rune)this.body.append(el('p','',String(item.description).replace(/[|#]/g,' ').replace(/\s+/g,' ').trim()));
         if(rune){
-            this.body.append(el('p',rune.available?'muted':'equipment-warning',rune.catch?'抓宠符文 · 对野生宠物施放。血量越低越容易成功，成功或失败都消耗一张':rune.available?'战斗符文 · 成功施法消耗一张，失误不消耗':rune.reason));
+            this.body.append(el('p',rune.available?'muted':'equipment-warning',rune.catch?'抓宠符文 · 所有存活怪物均可捕捉，难度各异。血量越低越容易成功，成功或失败都消耗一张':rune.available?'战斗符文 · 成功施法消耗一张，失误不消耗':rune.reason));
             const obtain=runeObtainLines(c,item.id);
             if(obtain.length){const line=el('p','equipment-source');setText(line,'获取途径：{source}',{source:obtain.join('；')});this.body.append(line);}
             if(rune.card&&spellFace)this.body.append(el('div','equipment-cards',spellFace(assets,rune.card)));

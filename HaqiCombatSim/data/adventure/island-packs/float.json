@@ -1,0 +1,1446 @@
+{
+  "version": 1,
+  "island": {
+    "id": "float",
+    "name": "浮岸岛",
+    "source": "web-authored:float",
+    "description": "这里有两张不同的地图。它们画的是同一座岛，为什么名字和道路都不同？",
+    "recommendedLevel": 70
+  },
+  "authorNotes": {
+    "origin": "网页原创续篇；非原版事实",
+    "themes": "对照不同的记录",
+    "optionalReality": "现实地图观察和自由交谈均可跳过，不作为主线条件",
+    "art": "专属岛图与建筑；居民和生物复用已核验儿童版外观"
+  },
+  "npcs": [
+    {
+      "id": 860100,
+      "name": "芦笙",
+      "zone": "float",
+      "appearanceSourceId": 36200,
+      "x": 2400,
+      "y": 3764,
+      "sex": "female",
+      "age": 28,
+      "description": "我带着两张地图来到这里。它们没有一张说谎，却都只画了一半。",
+      "storyIdentity": "float-0"
+    },
+    {
+      "id": 860101,
+      "name": "米拉",
+      "zone": "float",
+      "appearanceSourceId": 30081,
+      "x": 1855,
+      "y": 2891,
+      "sex": "female",
+      "age": 64,
+      "description": "我住在旧港。别急着替我选路，先问问我每天要去哪里。",
+      "storyIdentity": "float-1"
+    },
+    {
+      "id": 860102,
+      "name": "禾舟",
+      "zone": "float",
+      "appearanceSourceId": 30525,
+      "x": 3382,
+      "y": 2673,
+      "sex": "male",
+      "age": 19,
+      "description": "账本是父亲留给我的。救船的一页和收钱的一页，我都想留下。",
+      "storyIdentity": "float-2",
+      "worldObservation": {
+        "label": "查看现实世界地图",
+        "prompt": "打开现实世界地图，放大一座城市。看看同一条河的两岸怎样相连。你可以描述一条自己熟悉的路，不需要说家庭地址。"
+      }
+    },
+    {
+      "id": 860103,
+      "name": "修桥师",
+      "zone": "float",
+      "appearanceSourceId": 36205,
+      "x": 2509,
+      "y": 1473,
+      "sex": "male",
+      "age": 30,
+      "description": "你赢了战斗，我修桥。桥脚还没修好，就先让大家绕路吧。",
+      "storyIdentity": "float-3"
+    }
+  ],
+  "monsters": [
+    {
+      "id": "pack:float:guardian-1",
+      "name": "石甲兽",
+      "templateId": "config/Aries/Mob/IceLand/MobTemplate_DeadTreeMonster.xml",
+      "stats": {
+        "level": 70,
+        "hp": 5600,
+        "xp": 8000,
+        "coins": 320
+      }
+    },
+    {
+      "id": "pack:float:guardian-2",
+      "name": "铜翼兽",
+      "templateId": "config/Aries/Mob/MobTemplate_ShadowOfPhoenix.xml",
+      "stats": {
+        "level": 70,
+        "hp": 6250,
+        "xp": 8000,
+        "coins": 320
+      }
+    },
+    {
+      "id": "pack:float:guardian-3",
+      "name": "岩藤兽",
+      "templateId": "config/Aries/Mob/IceLand/MobTemplate_FrostFang.xml",
+      "stats": {
+        "level": 71,
+        "hp": 6900,
+        "xp": 8000,
+        "coins": 320
+      }
+    },
+    {
+      "id": "pack:float:guardian-4",
+      "name": "守图机",
+      "templateId": "config/Aries/Mob/WeeklyBoss/MobTemplate_GhostOctopus_Boss.xml",
+      "stats": {
+        "level": 71,
+        "hp": 7550,
+        "xp": 8000,
+        "coins": 320
+      }
+    }
+  ],
+  "encounters": [
+    {
+      "id": "pack:float:field-1",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-1",
+      "x": 1375,
+      "y": 2356
+    },
+    {
+      "id": "pack:float:field-2",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-2",
+      "x": 3644,
+      "y": 2138
+    },
+    {
+      "id": "pack:float:field-3",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-3",
+      "x": 2356,
+      "y": 2084
+    },
+    {
+      "id": "pack:float:field-4",
+      "zone": "float",
+      "monsterId": "pack:float:guardian-4",
+      "x": 2618,
+      "y": 895
+    }
+  ],
+  "goalPaths": {
+    "pack:float:guardian-1": 880100,
+    "pack:float:guardian-2": 880101,
+    "pack:float:guardian-3": 880102,
+    "pack:float:guardian-4": 880103
+  },
+  "quests": [
+    {
+      "id": 870100,
+      "title": "两张图都是真的",
+      "description": "在浮岸岛与米拉交谈，再回去确认线索。",
+      "region": "float",
+      "startNpc": 860100,
+      "endNpc": 860100,
+      "repeat": false,
+      "prerequisites": [],
+      "requirements": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 70,
+          "max": null
+        }
+      ],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860101,
+              "name": "米拉",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860100,
+          "text": "欢迎来到浮岸岛。蓝湾人说我们的地图是假的。请先问问米拉，她亲手画过那张图。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "先找两张图相同的地方。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860101,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860101,
+              "text": "蓝湾是我们家门口的海岸。涨水时，我们走高桥。旧地图只画低路，所以看起来像两座岛。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860100,
+          "text": "芦笙把两张图叠在灯下。瀑布和水井重合了，路却不同。谁只保存了一种走法？",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "我们去问问旧路。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870101,
+      "title": "一口井两个名字",
+      "description": "在浮岸岛与禾舟交谈，再回去确认线索。",
+      "region": "float",
+      "startNpc": 860101,
+      "endNpc": 860101,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870100,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860102,
+              "name": "禾舟",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860101,
+          "text": "我叫那口井“回家井”。旧档里叫“北井”。名字不同，就不能是同一口井吗？",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "旧名字也值得留下。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860102,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860102,
+              "text": "这是同一口井。我父亲按方向记路，米拉的奶奶按生活记路。两个人都没有说谎。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860101,
+          "text": "旧档员禾舟找到一张更老的图。两种名字本来并排写着，后来一边被涂白。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "名字是怎么被擦掉的？"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870102,
+      "title": "高桥的碎片",
+      "description": "在浮岸岛清开石甲兽挡住的道路，再回去交谈。",
+      "region": "float",
+      "startNpc": 860100,
+      "endNpc": 860100,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870101,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880100,
+              "name": "石甲兽",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860100,
+          "text": "高桥上有失控的石甲兽。它们背上的铜片，来自旧测量器。先让道路安全。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来清开高桥。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860100,
+          "text": "修桥师收好了松动的铜片。铜片上刻着“只准走一条路”。这不像一张普通地图。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "这句话是谁刻下的？"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870103,
+      "title": "被删掉的港口",
+      "description": "在浮岸岛与修桥师交谈，再回去确认线索。",
+      "region": "float",
+      "startNpc": 860102,
+      "endNpc": 860102,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870102,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860103,
+              "name": "修桥师",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860102,
+          "text": "旧地图的涂白处留着收据。请问修桥师，为什么蓝湾港不见了。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我想听旧港的人说。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860103,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860103,
+              "text": "港口没沉。商队改走新桥，旧港收不到修桥的钱。有人说，删掉名字，大家就不会再问。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860102,
+          "text": "删去一个名字，也删去了住在那里的人的路。修桥师仍每天替旧港检查桥脚。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "他们的路也在这里。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870104,
+      "title": "谁收了两次钱",
+      "description": "在浮岸岛与米拉交谈，再回去确认线索。",
+      "region": "float",
+      "startNpc": 860103,
+      "endNpc": 860103,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870103,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860101,
+              "name": "米拉",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860103,
+          "text": "新桥登记叫浮岸，旧港登记叫蓝湾。两处都付了桥费。米拉有当年的回执。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "把两笔账放在一起。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860101,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860101,
+              "text": "这两张回执的日期和人数一样。我们为同一座桥交了两次钱，却只修了一半。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860103,
+          "text": "芦笙不再争哪张图最好。她想查清，谁知道这两个名字指同一个地方。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "该查账，别只争图。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870105,
+      "title": "测量台的看守",
+      "description": "在浮岸岛清开铜翼兽挡住的道路，再回去交谈。",
+      "region": "float",
+      "startNpc": 860100,
+      "endNpc": 860100,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870104,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880101,
+              "name": "铜翼兽",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860100,
+          "text": "测量台被铜翼兽守着。旧账在台下。请清开道路，禾舟会取回账本。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来取回账本。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860100,
+          "text": "禾舟取到了账本。两笔钱都交给了同一个守图人。他也正是禾舟的父亲。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "这件事也和他有关。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870106,
+      "title": "父亲留下的空格",
+      "description": "在浮岸岛与芦笙交谈，再回去确认线索。",
+      "region": "float",
+      "startNpc": 860102,
+      "endNpc": 860102,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870105,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860100,
+              "name": "芦笙",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860102,
+          "text": "账本是父亲写的。我怕说出真相，大家就只记得他做错的事。芦笙愿意看完吗？",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "救人和还钱都要做。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860100,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860100,
+              "text": "最后一页写着“钱用来救船，桥费以后补”。船救回来了，桥却没有补。他一直没敢承认。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860102,
+          "text": "禾舟合上账本：救船是真的，欠下的钱也是真的。不能用一件好事擦掉另一件错事。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "两件事分开说清楚。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870107,
+      "title": "地图外的人",
+      "description": "在浮岸岛与修桥师交谈，再回去确认线索。",
+      "region": "float",
+      "startNpc": 860101,
+      "endNpc": 860101,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870106,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860103,
+              "name": "修桥师",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860101,
+          "text": "我们可以把两张图合起来。但修桥师说，只画线还不够。去听听他的理由。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我们先问问居民。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860103,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860103,
+              "text": "雨天我走高桥，推车的人要走坡道。地图上也要写清，什么天气、谁能走。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860101,
+          "text": "芦笙给地图留出空白。她第一次问居民：你平常怎么走？没有替他们填答案。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "地图上留些空白吧。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870108,
+      "title": "瀑布后的旧路",
+      "description": "在浮岸岛清开岩藤兽挡住的道路，再回去交谈。",
+      "region": "float",
+      "startNpc": 860103,
+      "endNpc": 860103,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870107,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880102,
+              "name": "岩藤兽",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860103,
+          "text": "旧路还有岩藤兽。把路清开后，我会检查桥脚。检查前别让商队上桥。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "先挡住危险的桥。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860103,
+          "text": "道路安全了，桥脚仍有裂缝。修桥师立起围栏。赢了战斗，也不能让坏桥变成好桥。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "桥修好之前别走。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870109,
+      "title": "先把欠的还回来",
+      "description": "在浮岸岛与米拉交谈，再回去确认线索。",
+      "region": "float",
+      "startNpc": 860102,
+      "endNpc": 860102,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870108,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860101,
+              "name": "米拉",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860102,
+          "text": "我把账本公开了。米拉愿意谈怎么补回桥费，但她不想只听道歉。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我们把账单公开。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860101,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860101,
+              "text": "先修通我们用的路。每一笔钱都记下来，让两边都能看见。父亲的故事，我们以后再谈。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860102,
+          "text": "禾舟接受了。第一张公开账单钉在井边，两个港口的名字都在上面。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "以后大家都能看到账。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870110,
+      "title": "不再只有一条路",
+      "description": "在浮岸岛清开守图机挡住的道路，再回去交谈。",
+      "region": "float",
+      "startNpc": 860100,
+      "endNpc": 860100,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870109,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880103,
+              "name": "守图机",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860100,
+          "text": "旧守图机还在封锁第二条路。它把不同名字当成错误。让它停下，我们才能改正记录。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "让每条路都有名字。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860100,
+          "text": "守图机停下后，居民共同写下路名和用途。新图没有把旧图烧掉，旁边注明了旧路的变化。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "旧图也留在旁边。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870111,
+      "title": "没有写进图的风",
+      "description": "在浮岸岛与禾舟交谈，再回去确认线索。",
+      "region": "float",
+      "startNpc": 860101,
+      "endNpc": 860101,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870110,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860102,
+              "name": "禾舟",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860101,
+          "text": "现实世界的城市也有旧名和新名。你可以从世界地图去看看河岸和桥，再回来聊。",
+          "buttons": [
+            {
+              "action": "gotonext",
+              "label": "接着说吧。"
+            }
+          ]
+        },
+        {
+          "npcId": 860101,
+          "text": "也可以先听禾舟。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "求救声也应该留下。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860102,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860102,
+              "text": "我看过风帆岛的旧记录。那里的塔只保存“成功的声音”。最后一次求救，被写成了欢呼。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860101,
+          "text": "两种名字的谜团解开了，求救声却仍没有答案。",
+          "buttons": [
+            {
+              "action": "gotonext",
+              "label": "接着说吧。"
+            }
+          ]
+        },
+        {
+          "npcId": 860101,
+          "text": "芦笙给风帆岛写信：请把失败的一页也留下。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "还有一句话没有听完。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 14000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 400
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "journey:float:elite-1",
+      "kind": "elite",
+      "island": "float",
+      "name": "两岸的旧测量台",
+      "recommendedLevel": 70,
+      "sourceId": "dungeon:HaqiTown_YYsDream_S1",
+      "partySize": 1,
+      "floors": null,
+      "enemyTemplateIds": [
+        "pack:float:guardian-1",
+        "pack:float:guardian-2",
+        "pack:float:guardian-3",
+        "pack:float:guardian-4"
+      ],
+      "story": [
+        {
+          "id": "journey:float:elite-1:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "测量台的一面画着高桥，另一面画着低桥。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:elite-1:line-2",
+          "role": "npc",
+          "speaker": "芦笙",
+          "text": "两岸都说自己的图是真的。先看看它们在什么天气使用。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:elite-1:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "晴天和雨天的路一样吗？",
+          "reward": "hp",
+          "sex": "female"
+        },
+        {
+          "id": "journey:float:elite-1:line-4",
+          "role": "npc",
+          "speaker": "芦笙",
+          "text": "守图机正封住另一条桥。它不问谁要从那里过。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:elite-1:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我来保护这条路。",
+          "reward": "attack",
+          "sex": "female"
+        },
+        {
+          "id": "journey:float:elite-1:line-6",
+          "role": "npc",
+          "speaker": "芦笙",
+          "text": "清开守卫后，还要检查桥脚。战斗不能修好裂缝。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:elite-1:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "坏桥要先围起来。",
+          "reward": "defense",
+          "sex": "female"
+        },
+        {
+          "id": "journey:float:elite-1:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "测量尺慢慢转动。两条路线在尺上碰到同一个点。",
+          "sex": "female",
+          "age": 28
+        }
+      ],
+      "sceneBiome": "forest",
+      "arenaCount": 3
+    },
+    {
+      "id": "journey:float:elite-2",
+      "kind": "elite",
+      "island": "float",
+      "name": "瀑布下的空白图",
+      "recommendedLevel": 70,
+      "sourceId": "dungeon:HaqiTown_YYsDream_S1",
+      "partySize": 2,
+      "floors": null,
+      "enemyTemplateIds": [
+        "pack:float:guardian-1",
+        "pack:float:guardian-2",
+        "pack:float:guardian-3",
+        "pack:float:guardian-4"
+      ],
+      "story": [
+        {
+          "id": "journey:float:elite-2:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "瀑布后的墙上，有一块没有名字的港口。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:elite-2:line-2",
+          "role": "npc",
+          "speaker": "芦笙",
+          "text": "那里一直有人住。名字被擦掉了，他们仍得找路回家。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:elite-2:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我想听听他们怎么走。",
+          "reward": "hp",
+          "sex": "female"
+        },
+        {
+          "id": "journey:float:elite-2:line-4",
+          "role": "npc",
+          "speaker": "芦笙",
+          "text": "岩藤兽占住了旧路。居民只能从湿滑的石边绕行。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:elite-2:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们先清开旧路。",
+          "reward": "attack",
+          "sex": "female"
+        },
+        {
+          "id": "journey:float:elite-2:line-6",
+          "role": "npc",
+          "speaker": "芦笙",
+          "text": "别替居民选路。修好之后，问他们需要什么。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:elite-2:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "新图上也留一块空白。",
+          "reward": "defense",
+          "sex": "female"
+        },
+        {
+          "id": "journey:float:elite-2:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "水声稍稍变小。你看见墙底还留着一个旧名字。",
+          "sex": "female",
+          "age": 28
+        }
+      ],
+      "sceneBiome": "forest",
+      "arenaCount": 5
+    },
+    {
+      "id": "journey:float:tower",
+      "kind": "tower",
+      "island": "float",
+      "name": "浮岸岛回声试炼塔",
+      "recommendedLevel": 70,
+      "sourceId": "dungeon:HaqiTown_LightHouse_S1",
+      "partySize": 3,
+      "floors": 80,
+      "enemyTemplateIds": [
+        "pack:float:guardian-1",
+        "pack:float:guardian-2",
+        "pack:float:guardian-3",
+        "pack:float:guardian-4"
+      ],
+      "story": [
+        {
+          "id": "journey:float:tower:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "塔门旁放着两张地图，边角都已经磨破。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:tower:line-2",
+          "role": "npc",
+          "speaker": "芦笙",
+          "text": "八十层测量记录，没有一张能替所有人选路。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:tower:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们一层一层看。",
+          "reward": "hp",
+          "sex": "female"
+        },
+        {
+          "id": "journey:float:tower:line-4",
+          "role": "npc",
+          "speaker": "芦笙",
+          "text": "守卫仍把不同的路线当作错误。先让它们停下来。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:tower:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "不同也可以是真的。",
+          "reward": "attack",
+          "sex": "female"
+        },
+        {
+          "id": "journey:float:tower:line-6",
+          "role": "npc",
+          "speaker": "芦笙",
+          "text": "每十层可以休息。带回一条线索，比硬撑更有用。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:float:tower:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "累了就先回去。",
+          "reward": "defense",
+          "sex": "female"
+        },
+        {
+          "id": "journey:float:tower:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "门后是一把长尺。尺上有两种颜色的刻度。",
+          "sex": "female",
+          "age": 28
+        }
+      ],
+      "sceneBiome": "forest"
+    }
+  ],
+  "social": {
+    "enabled": true,
+    "size": "large",
+    "capacity": 16
+  }
+}

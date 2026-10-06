@@ -68,7 +68,7 @@ export function renderMembership(body,model,cb,ui) {
         if(item?.art)assets.draw(picture.getContext('2d'),item.art,0,0,80,80);
         const claim=button(owned?'已领取':eligible?'领取':'未解锁',()=>cb.action({type:'magic-star-claim',rewardId:reward.id}),'primary');claim.disabled=owned||!eligible;claim.setAttribute('aria-label',`${reward.name}：${claim.textContent}`);
         const inspect=button([picture,el('strong','',reward.name)],()=>inspector.show(item,{trigger:inspect,source:'魔法星专属左手法杖',requirements:fill('魔法星 {star} 级 · 角色 {level} 级',{star:reward.starLevel,level:reward.heroLevel}).text}), 'item-inspect-button');
-        inspect.setAttribute('aria-label',`查看${reward.name}详情`);inspect.setAttribute('aria-haspopup','dialog');
+        inspect.setAttribute('aria-label',fill(`查看{v0}详情`,{v0:String(reward.name)}).text);inspect.setAttribute('aria-haspopup','dialog');
         const requirement=el('small','');
         if(reward.heroLevel>1)setText(requirement,'魔法星 {star} 级 · 角色 {level} 级',{star:reward.starLevel,level:reward.heroLevel});
         else setText(requirement,'魔法星 {level} 级',{level:reward.starLevel});
@@ -93,14 +93,14 @@ export function renderMembership(body,model,cb,ui) {
             detail.append(el('h3','','魔法星独有功能'),el('p','','已开放：战斗属性加成、商城会员专属商品、专属左手法杖、每周仙豆和魔法口袋礼物。'),el('p','','法杖需同时达到魔法星和角色等级要求，每个角色每件领取一次。已有同款法杖不重复发放。'),el('p','muted','魔法星环绕表现暂未开放。'),button('前往商城',()=>cb.panel('shop'),'primary'));
         }else{
             const amount=config.levels[star.level].weekly_money;
-            detail.append(el('h3','','魔法储物罐'),el('p','',`当前等级每周可领取 ${amount} 仙豆`),el('p','muted','每个角色每周领取一次，每周一 00:00（北京时间）重置。'));
+            detail.append(el('h3','','魔法储物罐'),el('p','',fill(`当前等级每周可领取 {v0} 仙豆`,{v0:String(amount)}).text),el('p','muted','每个角色每周领取一次，每周一 00:00（北京时间）重置。'));
             const claimed=record.week!==null&&record.week>=magicStarWeek(now);
             const claim=button(claimed?'本周已领取':star.level?'领取仙豆':'会员可领取',()=>cb.action({type:'magic-star-claim',rewardId:'weekly'}),'primary');claim.disabled=claimed||star.level===0;detail.append(claim);
             const remaining=magicPocketRemaining(record.pocket,star.level,now);
             const pocket=button('领取神秘礼物',()=>cb.action({type:'magic-star-claim',rewardId:'pocket'}),'primary');
             pocket.disabled=member.status!=='ready'||remaining===0;
-            detail.append(el('h3','','魔法口袋'),el('p','',`本周剩余 ${remaining} 次`),pocket,el('p','muted','每周次数为魔法星等级加一。礼物存入背包，道具使用玩法暂未开放。'));
-            const list=el('div','magic-star-weekly-list');for(const row of config.levels)list.append(el('div',star.level===row.level?'current':'',`${row.level} 级`,el('strong','',`${row.weekly_money} 仙豆`)));detail.append(list);
+            detail.append(el('h3','','魔法口袋'),el('p','',fill(`本周剩余 {v0} 次`,{v0:String(remaining)}).text),pocket,el('p','muted','每周次数为魔法星等级加一。礼物存入背包，道具使用玩法暂未开放。'));
+            const list=el('div','magic-star-weekly-list');for(const row of config.levels)list.append(el('div',star.level===row.level?'current':'',fill(`{v0} 级`,{v0:String(row.level)}).text,el('strong','',fill(`{v0} 仙豆`,{v0:String(row.weekly_money)}).text)));detail.append(list);
         }
     }
     for(const [key,title] of [['attributes','属性加成'],['growth','成长秘籍'],['features','独有功能'],['gifts','免费领取']]){const tab=button(title,()=>{model.membershipView.tab=key;select(key);});tab.dataset.key=key;tabs.append(tab);}

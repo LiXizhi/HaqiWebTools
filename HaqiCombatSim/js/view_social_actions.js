@@ -1,11 +1,12 @@
+import {tr,fill} from './locale_runtime.js';
 import {el,button} from './view_adventure.js';
 import {socialActionOptions} from './adventure_social_actions_core.js';
 
 export function socialActionsHeading(state){
     const p=state.selected;if(!p)return '伙伴互动';
     const friend=p.kind==='account'&&state.friends.some(f=>f.userId===String(p.userId));
-    const affinity=state.actionAffinity==null?'':` · ${friend?'好感度':'临时好感'} ${state.actionAffinity}`;
-    return `${p.name} · ${friend?'好友':'陌生人'}${affinity}`;
+    const affinity=state.actionAffinity==null?'':fill(' · {kind} {value}',{kind:friend?'好感度':'临时好感',value:state.actionAffinity}).text;
+    return fill('{name} · {relation}{affinity}',{name:p.name,relation:friend?'好友':'陌生人',affinity}).text;
 }
 export function renderSocialActions(box,body,state,cb){
     box.classList.add('social-actions-modal');
@@ -15,7 +16,7 @@ export function renderSocialActions(box,body,state,cb){
     box.setAttribute?.('aria-label',heading);
     if(p.kind==='account')body.append(el('small','muted social-actions-note','当前互动由公开角色的 AI 代理回应'));
     const list=el('div','social-action-list');
-    const add=(label,icon,detail,fn,disabled=false)=>{const b=button('',fn,'social-action-item');b.disabled=disabled||state.busy;b.setAttribute('aria-label',label);const i=el('span','social-action-icon',icon);i.setAttribute('aria-hidden','true');b.append(i,el('span','social-action-copy',el('strong','',label),el('small','',detail)));list.append(b);};
+    const add=(label,icon,detail,fn,disabled=false)=>{const b=button('',fn,'social-action-item');b.disabled=disabled||state.busy;b.setAttribute('aria-label',tr(label));const i=el('span','social-action-icon',icon);i.setAttribute('aria-hidden','true');b.append(i,el('span','social-action-copy',el('strong','',label),el('small','',detail)));list.append(b);};
     const actions=socialActionOptions({profile:p,friend,affinity:state.actionAffinity,content:cb.assets().content});
     const greet=actions.shift();
     const joined=state.team.some(t=>t.id===p.id);

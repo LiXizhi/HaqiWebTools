@@ -48,7 +48,7 @@ export function renderFriendChat(box,body,state,cb){
     const friend=state.friends?.find(f=>String(f.userId)===String(state.chatPeer));
     const avatar=f=>el('span','friend-chat-avatar',(f.name||'好友').slice(0,1));
     if(friend){
-        box.classList.add('is-conversation');box.querySelector('h2').textContent=friend.name;box.setAttribute('aria-label',`与${friend.name}私聊`);
+        box.classList.add('is-conversation');box.querySelector('h2').textContent=friend.name;box.setAttribute('aria-label',fill(`与{v0}私聊`,{v0:String(friend.name)}).text);
         const header=el('div','friend-chat-peer',button('返回好友',cb.chatBack,'secondary'),avatar(friend),el('span','',friend.name));body.append(header);
         const log=el('div','friend-chat-messages');log.setAttribute('role','log');log.setAttribute('aria-label','聊天记录');
         for(const m of state.messages||[]){const mine=String(m.senderId)===String(state.userId);log.append(el('article',`friend-chat-message${mine?' is-player':''}`,el('span','friend-chat-avatar',mine?'我':friend.name.slice(0,1)),el('p','friend-chat-bubble',m.text)));}
@@ -104,7 +104,7 @@ function renderFriendList(body,state,cb,avatar){
         body.append(el('p','','登录后可以与好友私聊。'),button('登录 Keepwork',cb.login,'primary'));
         return;
     }
-    const tools=el('div','friend-chat-tools',el('span','muted',`全部好友 · ${state.friends.length}`),button('刷新',cb.refresh,'secondary'),button('管理好友',cb.friends,'secondary'));
+    const tools=el('div','friend-chat-tools',el('span','muted',fill(`全部好友 · {v0}`,{v0:String(state.friends.length)}).text),button('刷新',cb.refresh,'secondary'),button('管理好友',cb.friends,'secondary'));
     tools.querySelectorAll('button').forEach(b=>b.disabled=!!state.busy);body.append(tools);
     const search=el('input','social-compose');search.placeholder='搜索好友';search.setAttribute('aria-label','搜索好友');
     const list=el('div','friend-chat-list');list.setAttribute('aria-label','所有好友');

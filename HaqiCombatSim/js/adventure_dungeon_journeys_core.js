@@ -12,13 +12,14 @@ export function journeyDungeons(worlds,config,monsters=null,params={}){
         if(!supported.length)throw Error('副本没有可用关卡：'+entry.name);
         const tower=entry.kind==='tower';
         if(tower&&monsters)supported.sort((a,b)=>monsters[a.monsterIds[0]].hp-monsters[b.monsterIds[0]].hp);
-        const count=tower?entry.floors:supported.length;
+        const count=tower?entry.floors:(entry.arenaCount||supported.length);
         const arenas=Array.from({length:count},(_,i)=>{
-            const arena=structuredClone(supported[tower?Math.min(supported.length-1,Math.floor(i*supported.length/count)):i]);
+            const arena=structuredClone(supported[Math.min(supported.length-1,Math.floor(i*supported.length/count))]);
             arena.id=`${entry.id}:floor-${i+1}`;
             arena.blocked=[];
             if(monsters){
-                let ids=arena.monsterIds||arena.slots.filter(Boolean);
+                let ids=entry.enemyTemplateIds?.length?[entry.enemyTemplateIds[Math.min(entry.enemyTemplateIds.length-1,Math.floor(i*entry.enemyTemplateIds.length/count))]]:arena.monsterIds||arena.slots.filter(Boolean);
+                if(ids.some(id=>!monsters[id]))throw Error('岛屿副本怪物来源缺失：'+entry.id);
                 if(tower){
                     const original=monsters[ids[0]],id=`${entry.id}:guardian-${i+1}`;
                     monsters[id]={...structuredClone(original),id,name:`${original.name}·第${i+1}层`,hp:Math.ceil(original.hp*(1+i*balance.hpGrowth)),goalId:null};

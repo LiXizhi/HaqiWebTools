@@ -1,8 +1,10 @@
+import {rollPetTraits,petTraitParams} from './adventure_pet_traits_core.js';
+import {ownedPetRecords} from './adventure_pet_files_core.js';
 import {recordPetMeal} from './adventure_pet_quests_core.js';
 import {validPetFileRef} from './adventure_pet_files_core.js';
 // Whole-game transaction rules. Persist the returned save before replacing live state.
 import {createPetInstance,migratePetInstances,validatePetInstance,interactPets,breedPets,adoptPet,prunePetMemories,petInteractionParams,petPairStatus} from './adventure_pet_interactions_core.js';
-import {petMaxHp,petParams,nutritionStock,consumeNutrition} from './adventure_pets_core.js';
+import {addPet,mergeOwnedPetSpecies,petMaxHp,petParams,nutritionStock,consumeNutrition} from './adventure_pets_core.js';
 import {selectSocialPetId} from './adventure_companion_core.js';
 import {hashSeed} from './rng_core.js';
 const copy=x=>JSON.parse(JSON.stringify(x));
@@ -41,10 +43,18 @@ export function petWorldAction(source,content,action){
     const set=p=>{if(!own(p))return;if(p.ownerId===save.petOwnerId)save.pets[p.id]={...p,hp:save.pets[p.id]?.hp??petMaxHp(p,content),hunger:save.pets[p.id]?.hunger??100};else save.petWorld[p.id]=p;};
     const lookup=id=>save.pets[id]||save.petWorld[id]||visitors.get(id);
     if(action.type==='adopt'){
+        if(save.petMergedIds?.includes(action.id))return {save:source,effects,babies,changed:false};
         const baby=save.petWorld[action.id]||save.pets[action.id];if(!baby&&save.petFileRefs?.[action.id]?.group==='pets')return {save:source,effects,babies,changed:false};check(baby,'宝宝已不在场景');
         const result=adoptPet(baby,{ownerId:save.petOwnerId,now:action.now,zone:save.zone},content);
         if(!result.adopted)return {save:source,effects,babies,changed:false};
-        delete save.petWorld[action.id];set(result.pet);
+        const existing=Object.values(ownedPetRecords(save)).find(p=>p.speciesId===result.pet.speciesId);
+        const traits=result.pet.passiveTraits??rollPetTraits(result.pet.id,petTraitParams(content),existing?.passiveTraits);
+        if(existing){
+            addPet(save,content,result.pet.speciesId,result.pet.xp,{traits});
+            save.petMergedIds??=[];if(!save.petMergedIds.includes(action.id))save.petMergedIds.push(action.id);
+            if(save.petFileRefs)delete save.petFileRefs[action.id];
+        }else set({...result.pet,passiveTraits:traits,captureCount:0,obtainedCount:1});
+        delete save.petWorld[action.id];
     }else{
         const now=action.now;
         if(action.type==='feed'){
@@ -76,6 +86,7 @@ export function petWorldAction(source,content,action){
         }
         if(action.type==='prune')for(const id of action.ids||[]){const p=lookup(id);if(p?.ownerId===save.petOwnerId)set(prunePetMemories(p,now,content));}
     }
+    mergeOwnedPetSpecies(save,content);
     const changed=!['proximity','gesture'].includes(action.type)&&JSON.stringify(save)!==JSON.stringify(source);
     if(changed)save.revision++;
     return {save:changed?save:source,effects,babies,changed,temporaryPairs};

@@ -8,7 +8,7 @@ const renderer=fs.readFileSync(new URL('../js/adventure_renderer.js',import.meta
 const start=renderer.indexOf('        const invitedNpc=');
 const invitation=renderer.slice(start,renderer.indexOf('        if(!world.portal.hidden)',start));
 test('NPC invitation follows the selected instance with no follower pet and stays above its portrait',()=>{
-    const context=vm.createContext({world:{npcs:[{id:1,instanceId:'other',x:5,y:5},{id:1,instanceId:'wanted',x:200,y:300}]},companionBubble:{npcId:1,instanceId:'wanted'},title:false,motionHidden:false,nearbyPartnerBubble:null,socialGesture:null,gestureAt:0,socialGesturePose:()=>null,questMarker:()=>null,npcHasActiveQuest,save:{},assets:{content:{}},ctx:{},t:0,reducedMotion:{matches:true},bubbleTarget:null,drawSpeechBubble:(_ctx,at)=>({x:at.x,y:at.y-82,w:32,h:29})});
+    const context=vm.createContext({world:{npcs:[{id:1,instanceId:'other',x:5,y:5},{id:1,instanceId:'wanted',x:200,y:300}]},companionBubble:{npcId:1,instanceId:'wanted'},title:false,motionHidden:false,nearbyPartnerBubble:null,socialGesture:null,gestureAt:0,socialGesturePose:()=>null,markerFor:()=>null,npcHasActiveQuest,save:{},assets:{content:{}},ctx:{},t:0,reducedMotion:{matches:true},bubbleTarget:null,drawSpeechBubble:(_ctx,at)=>({x:at.x,y:at.y-82,w:32,h:29})});
     vm.runInContext(invitation,context);
     assert.equal(context.bubbleTarget.x,200);
     assert.ok(context.bubbleTarget.y<300-86);
@@ -23,7 +23,7 @@ test('NPC invitation follows the selected instance with no follower pet and stay
     context.save.quests[10].claimed=true;
     vm.runInContext(`{${invitation}}`,context);
     assert.equal(context.bubbleTarget.x,240,'chat returns after quest reward is claimed');
-    context.questMarker=()=>'?';context.bubbleTarget=null;
+    context.markerFor=()=>'?';context.bubbleTarget=null;
     vm.runInContext(`{${invitation}}`,context);
     assert.equal(context.bubbleTarget,null,'quest marker takes priority');
     context.bubbleTarget=null;context.motionHidden=true;

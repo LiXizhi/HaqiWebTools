@@ -69,7 +69,7 @@ export function generateIsland(spec,shared,content){
     const visiting=(spec.visitingNpcs||[]).map(n=>{assert(content.npcs[n.sourceId],`居民来源 ${n.sourceId}`);return point(n.position);});
     const clearings=[...npcs,...visiting,...encounters,...layout.landmarks,spec.portal,spec.spawn,spec.initialSpawn||spec.spawn,spec.center||spec.spawn];
     layout.paths=[...roads];
-    for(const p of [...npcs,...visiting,...encounters,...layout.landmarks,spec.portal]){
+    for(const p of [...npcs,...visiting,...(spec.encounterSpurs===false?[]:encounters),...layout.landmarks,spec.portal]){
         let nearest=null,best=Infinity;
         for(const road of roads){
             const dx=road.b.x-road.a.x,dy=road.b.y-road.a.y,t=Math.max(0,Math.min(1,((p.x-road.a.x)*dx+(p.y-road.a.y)*dy)/(dx*dx+dy*dy||1)));

@@ -1,0 +1,22 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>哈奇岛屿性能验收</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden}canvas{width:100%;height:100%;display:block}</style><canvas></canvas>
+<script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {createWorld,movePosition} from '../../js/adventure_world_core.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'性能验收'});
+save.xp=assets.content.progression.xpThresholds[49];save.level=50;save.zone=new URLSearchParams(location.search).get('zone')||'ice';
+const world=createWorld(save.zone,assets.content,save),region=world.layout.regions.find(r=>r.name==='西部松林');
+save.position=region?{x:region.x,y:region.y}:{...world.center};
+await assets.warmScenery(world);await assets.warmNearby(world,save);
+const renderer=createRenderer(document.querySelector('canvas'),assets);renderer.prepareScene(world,save);
+let previous=null,moving=false,direction=1,elapsed=0,travelled=0;
+const frames=[],draws=[];let measuring=false;
+function frame(t){const dt=previous===null?0:Math.min(.05,(t-previous)/1000);if(measuring&&previous!==null)frames.push(t-previous);previous=t;
+ if(moving){elapsed+=dt;if(elapsed>2){direction=-direction;elapsed=0;}const prior=save.position;save.position=movePosition(world,save.position,210*dt*direction,105*dt*direction);travelled+=Math.hypot(save.position.x-prior.x,save.position.y-prior.y);save.facing=direction>0?2:1;}
+ const start=performance.now();renderer.render(world,save,t,{moving});if(measuring)draws.push(performance.now()-start);requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
+const metric=rows=>{const s=[...rows].sort((a,b)=>a-b);return{count:s.length,mean:s.reduce((n,v)=>n+v,0)/s.length,p95:s[Math.floor(s.length*.95)],p99:s[Math.floor(s.length*.99)],max:s.at(-1),over25:s.filter(v=>v>25).length};};
+window.islandQA={assets,save,world,renderer,async sample(seconds,walk=false){moving=walk;travelled=0;frames.length=draws.length=0;measuring=true;const start={...save.position};await new Promise(r=>setTimeout(r,seconds*1000));measuring=false;moving=false;return{frame:metric(frames),draw:metric(draws),start,end:{...save.position},travelled,trees:world.trees.length,cache:renderer.terrainStats()};}};
+</script></html>

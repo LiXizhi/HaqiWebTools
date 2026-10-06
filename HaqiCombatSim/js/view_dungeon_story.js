@@ -5,6 +5,7 @@ import {bindChatMicrophone,createDialogueMicrophone} from './view_dialogue_micro
 import {heroHeadPortrait} from './hero_renderer.js';
 import {bossPortrait} from './view_adventure_dungeons.js';
 import {LANGUAGE_REWARD_NAMES} from './adventure_dungeon_language_core.js';
+import {tr,fill,setText} from './locale_runtime.js';
 
 export function createDungeonStoryView(root,cb){
     const reveal=createDialogueReveal({onUpdate:()=>{if(log)log.scrollTop=log.scrollHeight;}});
@@ -14,7 +15,7 @@ export function createDungeonStoryView(root,cb){
         open({assets,save,dungeon,learning,sceneCanvas}){
             reveal.finish();bilingual.close();lineViews=[];activeLine=null;lastFeedback=null;portraitModel={assets,save,dungeon};
             root.replaceChildren();root.className='overlay visible dungeon-story-overlay';
-            screen=el('section',`dungeon-story-screen story-island-${dungeon.island}`);screen.setAttribute('role','dialog');screen.setAttribute('aria-modal','true');screen.setAttribute('aria-label',dungeon.name);screen.tabIndex=-1;
+            screen=el('section',`dungeon-story-screen story-island-${dungeon.island}`);screen.setAttribute('role','dialog');screen.setAttribute('aria-modal','true');screen.setAttribute('aria-label',tr(dungeon.name));screen.tabIndex=-1;
             screen.addEventListener('pointerdown',()=>reveal.finish(),true);screen.addEventListener('keydown',()=>reveal.finish(),true);
             const stage=el('div','dungeon-story-stage'),landmark=el('canvas','story-landmark');landmark.width=180;landmark.height=210;
             if(sceneCanvas?.width&&sceneCanvas?.height){
@@ -40,7 +41,7 @@ export function createDungeonStoryView(root,cb){
             micProgress=el('div','story-mic-progress');
             const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 100 100');svg.setAttribute('aria-hidden','true');
             for(const cls of ['story-ring-track','story-ring-fill']){const circle=document.createElementNS(svg.namespaceURI,'circle');for(const [key,value] of Object.entries({cx:50,cy:50,r:44,pathLength:100,class:cls}))circle.setAttribute(key,value);svg.append(circle);if(cls==='story-ring-fill')ringFill=circle;}
-            ringLabel=el('span','story-ring-label','0%');ringLabel.setAttribute('role','progressbar');ringLabel.setAttribute('aria-label','朗读通过进度');ringLabel.setAttribute('aria-valuemin','0');ringLabel.setAttribute('aria-valuemax','100');
+            ringLabel=el('span','story-ring-label','0%');ringLabel.setAttribute('role','progressbar');ringLabel.setAttribute('aria-label',tr('朗读通过进度'));ringLabel.setAttribute('aria-valuemin','0');ringLabel.setAttribute('aria-valuemax','100');
             micProgress.append(svg,mic,ringLabel);
             loginNotice=el('section','camp-chat-login',el('h3','','登录 KeepWork，开启剧情配音'),el('p','','离线角色暂时无法使用语音功能。登录后会自动将当前本地角色转为云端角色，保留冒险进度。'));
             loginButton=button('登录并转为云端角色',()=>cb.login?.(),'primary');loginNotice.append(loginButton);loginNotice.hidden=true;
@@ -50,7 +51,7 @@ export function createDungeonStoryView(root,cb){
             root.append(screen);paint();void assets.entranceArt?.warm(['shared']).then(paint);screen.focus();
             screen.addEventListener('keydown',e=>{e.stopPropagation();if(e.key==='Escape'){e.preventDefault();cb.skip();}if(e.key==='Tab'){const controls=[...screen.querySelectorAll('button:not([hidden]):not(:disabled),[tabindex="0"]:not([aria-disabled="true"])')];const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
         },
-        line(line,{target,translation,index,total,learning,loginRequired,rewardKey,percent,locale}){
+        line(line,{target,translation,index,total,learning,loginRequired,rewardKey,percent,locale,native}){
             reveal.finish();
             if(activeBubble){activeBubble.disabled=true;activeBubble.tabIndex=-1;activeBubble.setAttribute('aria-disabled','true');}
             progress.textContent=`${index+1} / ${total}`;
@@ -59,20 +60,20 @@ export function createDungeonStoryView(root,cb){
             const row=el('div',`story-message ${line.role}`),content=el('div','story-message-content');
             if(line.role!=='narrator'){const avatar=el('div','story-avatar',player?heroHeadPortrait(portraitModel.assets,portraitModel.save):bossPortrait(portraitModel.assets,portraitModel.dungeon));avatar.setAttribute('aria-label',name);row.append(avatar);}
             content.append(el('strong','story-speaker',name),bubble);row.append(content);
-            script=el('p','story-script',target);bubble.append(script);
-            const gloss=translation&&translation!==target?el('p','story-translation',translation):null;if(gloss)bubble.append(gloss);
-            activeLine=learning?bilingual.attach({container:bubble,original:script,gloss,text:target,translation,locale,native:locale==='en'?'zh-CN':'en',onRead:()=>cb.read(line),onError:error=>{status.textContent=error.message;}}):null;lastFeedback=null;
+            script=el('p','story-script');script.textContent=target;script.lang=locale;bubble.append(script);
+            const gloss=translation&&translation!==target?el('p','story-translation'):null;if(gloss){gloss.textContent=translation;gloss.lang=native;bubble.append(gloss);}
+            activeLine=learning?bilingual.attach({container:bubble,original:script,gloss,text:target,translation,locale,native,onRead:()=>cb.read(line),onError:error=>{setText(status,error.message);}}):null;lastFeedback=null;
             if(activeLine){activeLine.setDisabled(loginRequired);lineViews.push({row,view:activeLine});}
             if(learning&&line.role==='player'){
-                bubble.append(el('small','story-line-reward',`本句配音奖励：${rewardKey?LANGUAGE_REWARD_NAMES[rewardKey]+' +'+percent+'%':'今日加成已满'} · 通过后自动继续`));
+                bubble.append(el('small','story-line-reward',fill('本句配音奖励：{reward} · 通过后自动继续',{reward:rewardKey?`${tr(LANGUAGE_REWARD_NAMES[rewardKey])} +${percent}%`:tr('今日加成已满')}).text));
                 feedbackBox=el('div','story-speech-feedback');bubble.append(feedbackBox);
-                activeBubble=bubble;bubble.tabIndex=0;bubble.setAttribute('role','button');bubble.setAttribute('aria-label','按住这句台词配音');
+                activeBubble=bubble;bubble.tabIndex=0;bubble.setAttribute('role','button');bubble.setAttribute('aria-label',tr('按住这句台词配音'));
                 bindChatMicrophone(bubble,{start:cb.start,finish:cb.finish,cancel:cb.cancel,isRecording:cb.isRecording});
                 bubble.addEventListener('keydown',e=>{if(!bubble.disabled&&['Enter',' '].includes(e.key)){e.preventDefault();e.stopPropagation();void(cb.isRecording()?cb.finish():cb.start());}});
             }else{activeBubble=null;feedbackBox=null;}
             ringFill.style.transition='none';ringFill.style.strokeDashoffset='100';ringFill.getBoundingClientRect();ringFill.style.transition='';
             log.append(row);while(log.children.length>4){const oldest=log.firstElementChild;lineViews.find(item=>item.row===oldest)?.view.dispose();lineViews=lineViews.filter(item=>item.row!==oldest);oldest.remove();}log.scrollTop=log.scrollHeight;reveal.start([{node:activeLine?.textNode||script,translation:gloss}]);
-            mic.hidden=!(learning&&line.role==='player');next.textContent=index===total-1?'开始探索':'继续';
+            mic.hidden=!(learning&&line.role==='player');setText(next,index===total-1?'开始探索':'继续');
         },
         update({message,phase,loginRequired,rewardKey,buffs,claimed=false,feedback,practiceCount=0,practiceTarget=3,practiceProgress=0,minSpeechAccuracy=0.3}){
             loginNotice.hidden=!loginRequired;mic.hidden=loginRequired||!activeBubble;
@@ -82,22 +83,22 @@ export function createDungeonStoryView(root,cb){
             micProgress.classList.toggle('is-active',['connecting','recording','judging'].includes(phase));
             micProgress.classList.toggle('is-complete',percent===100);
             if(feedbackBox){
-                const rule=`读对即过 · 命中${Math.round(minSpeechAccuracy*100)}%累计 ${Math.min(practiceCount,practiceTarget)}/${practiceTarget}`;
-                feedbackBox.replaceChildren(el('p','',feedback?`命中 ${Math.round(feedback.accuracy*100)}% · ${rule}`:rule));
+                const rule=fill('读对即过 · 命中{accuracy}%累计 {count}/{total}',{accuracy:Math.round(minSpeechAccuracy*100),count:Math.min(practiceCount,practiceTarget),total:practiceTarget}).text;
+                feedbackBox.replaceChildren(el('p','',feedback?fill('命中 {accuracy}% · {rule}',{accuracy:Math.round(feedback.accuracy*100),rule}).text:rule));
                 if(feedback?.parts&&feedback!==lastFeedback){reveal.finish();activeLine?.feedback(feedback.parts);lastFeedback=feedback;}
             }
-            status.textContent=loginRequired?'登录后可配音，也可点击继续阅读剧情。':message||(phase==='waiting'?'按住对话，松开发送 · 点击录制，再点结束 · 滑出取消':'');
+            setText(status,loginRequired?'登录后可配音，也可点击继续阅读剧情。':message||(phase==='waiting'?'按住对话，松开发送 · 点击录制，再点结束 · 滑出取消':''));
             mic.disabled=loginRequired||!['waiting','connecting','recording'].includes(phase);microphone.update({phase,disabled:mic.disabled});
-            if(phase==='recording')status.textContent='正在录音 · 松开发送，滑出取消';
+            if(phase==='recording')setText(status,'正在录音 · 松开发送，滑出取消');
             if(activeBubble){activeBubble.disabled=mic.disabled;activeBubble.setAttribute('aria-disabled',String(mic.disabled));}
             const reward=activeBubble?.querySelector('.story-line-reward');
-            if(reward&&phase==='awarded'&&!reward.dataset.received){reward.dataset.received='true';reward.textContent=`本句配音奖励：${LANGUAGE_REWARD_NAMES[rewardKey]} +1% · 已获得`;}
-            if(reward&&phase==='capped')reward.textContent='今日语言加成已满，仍可继续练习';
-            if(reward&&claimed){reward.dataset.received='true';reward.textContent='本词条今天已经拿过奖励了';}
-            if(reward&&['expired','failed'].includes(phase)&&!reward.dataset.received)reward.textContent='本句未获得奖励';
+            if(reward&&phase==='awarded'&&!reward.dataset.received){reward.dataset.received='true';setText(reward,'本句配音奖励：{reward} +1% · 已获得',{reward:LANGUAGE_REWARD_NAMES[rewardKey]});}
+            if(reward&&phase==='capped')setText(reward,'今日语言加成已满，仍可继续练习');
+            if(reward&&claimed){reward.dataset.received='true';setText(reward,'本词条今天已经拿过奖励了');}
+            if(reward&&['expired','failed'].includes(phase)&&!reward.dataset.received)setText(reward,'本句未获得奖励');
             next.disabled=['connecting','recording','judging','speaking'].includes(phase);for(const item of lineViews)item.view.setDisabled(loginRequired||next.disabled);
             if(buffs){
-                summary.textContent=Object.entries(buffs).filter(([,v])=>v>0).map(([k,v])=>`${LANGUAGE_REWARD_NAMES[k]} +${v}%`).join(' · ');
+                summary.textContent=Object.entries(buffs).filter(([,v])=>v>0).map(([k,v])=>`${tr(LANGUAGE_REWARD_NAMES[k])} +${v}%`).join(' · ');
                 rewardSummary.hidden=!summary.textContent;if(rewardSummary.hidden)rewardTip.hidden=true;
             }
             if(feedback||phase==='awarded')log.scrollTop=log.scrollHeight;

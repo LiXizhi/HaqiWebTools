@@ -1,5 +1,6 @@
 import { resolveParams } from './combat_params_core.js';
 import { mapInfo } from './adventure_island_layout_core.js';
+import {PACK_ISLANDS} from './island_pack_registry_core.js';
 
 // Original world identities: Scene/WorldManager.lua L1160–1165.
 // Recommended levels use the web adaptation in BalanceParams. Below-level
@@ -11,6 +12,7 @@ export const ISLANDS = [
     {id:'ice',name:'寒冰岛',source:'FrostRoarIsland',description:'冰蓝山峰矗立海上，踏上覆雪的旅途。'},
     {id:'desert',name:'沙漠岛',source:'AncientEgyptIsland',description:'穿过金色沙丘，在绿洲旁寻找歇脚之处。'},
     {id:'dark',name:'幽暗岛',source:'DarkForestIsland',description:'紫色雾气笼罩古老密林，通往更远的冒险。'},
+    ...PACK_ISLANDS,
 ];
 export function islandFor(zone){return zone==='earth'?{id:'earth',name:'现实世界'}:ISLANDS.find(row=>row.id===zone);}
 export function islandName(zone){return islandFor(zone)?.name||'未知岛屿';}

@@ -79,9 +79,36 @@ Canvas 上的地名、卡名和卡面说明在绘制前调用 `tr`（`adventure_
 node scripts/scan_locale.mjs
 ```
 
-报告三类：源码里有、`en.txt` 没有的静态句子；词典里有、源码里已找不到的键；带 `${}` 的动态句子。动态句子的运行时键是填好变量之后的整句，不要把模板写进词典。居民名来自 `npc-catalog.json` 和 `chapter.json` 的 `npcs[].name`。任务标题、说明、对白和按钮来自 `chapter.json` 的 `quests`，全岛任务标题、说明和目标名来自 `quest-journal.json`。追踪句里的居民名单独查表，例如 `去找{name}，接取新的任务。`。
+报告三类：源码里有、`en.txt` 没有的静态句子；词典里有、源码里已找不到的键；带 `${}` 的动态句子。未接入模板查表的动态句子不能原样写入词典，应先用 `fill('完整句子 {count}', {count})` 翻译模板再填变量。居民名来自 `npc-catalog.json` 和 `chapter.json` 的 `npcs[].name`。当前任务对白包含 `quest-runtime.json`，副本剧情包含 `dungeon-journeys.json`；任务日志包含接取、交付 NPC 与目标名。世界地图仅扫描通用 UI，不扫描当地城市文化与地点内容；不扫描 teen 和历史待恢复剧本。
 
 用法见技能 `locale-scan`。
+
+### 增量补译
+
+以后新增内容后统一翻译时，执行以下流程。先补英文，再以英文词典为基准补其他已支持的界面语言，保留旧译文；旧的全量覆盖式合并不用于增量补录：
+
+```text
+npm run locale:audit
+npm run locale:prepare -- tmp/my-en-batches en
+npm run locale:translate -- tmp/my-en-batches
+npm run locale:merge -- tmp/my-en-batches
+npm run locale:prepare -- tmp/my-other-batches others
+npm run locale:translate -- tmp/my-other-batches
+npm run locale:merge -- tmp/my-other-batches
+npm run locale:check
+```
+
+批次目录每轮换新名称。`others` 读取扫描配置的 `languages`（目前 ja、ko）；原 `ja-ko` 参数兼容保留。英文未补齐时禁止准备其他语言。新增 `js/view_*.js` 自动扫描，实验室及调试视图排除；现有任务/剧情 JSON 新增数组内容自动纳入，新 JSON 文件需在 `.cursor/skills/locale-scan/scan-paths.json` 登记可见字段和祖先范围。不要扫描整个数据目录。例外按文件限定并记录原因。
+
+自动翻译通过调用者环境设置 `HAQI_TRANSLATION_ENDPOINT`（现有提供方的完整 HTTPS chat-completions 地址）、`HAQI_TRANSLATION_API_KEY`、`HAQI_TRANSLATION_MODEL`；可选 `HAQI_TRANSLATION_WORKERS=1..4`，默认 2。复用本地提供方配置注入环境，不把凭据写入源码、命令示例或报告。脚本使用项目现有名字作为术语参考，支持流式响应。请求/校验失败不会合并词典，重跑同一批次会检查并保留已完成输出；连续失败则停下，修复配置或输出后再重跑。也可以沿用人工/既有 LLM 工具按 manifest 输出 JSON，再执行 merge。
+
+`prepare` 生成待翻译输入及 manifest，须使用新目录。沿用已有 LLM 翻译流程将结果写入 manifest 对应输出；`merge` 对全部批次验证后才追加缺失条目，保留旧译文。校验包含逐行键名、非空译文、重复占位符数量和英文无汉字。独立的 `learning.*.txt` 课程模板不参与 UI 词典对齐。
+
+统一报告写入 `tmp/locale-audit/latest.json`。`locale:check` 检查当前扫描范围缺译、全部语言对齐、占位符、空值和英文汉字；动态拼句和旧键是人工复查项，不自动删除旧译文。新增 UI 应使用 `tr`／`setText`／`fill`，扫描发现字符串不代表显示调用已接入翻译。多语言对话和 Canvas 仍需按改动做运行时检查。
+
+世界地图常用城市名称单独登记在 `data/adventure/earth/common-names.json`（当前100个，上限100个），来源为游戏现用城市目录。全局扫描仅收录此名单的名称，不扩大到城市剧情、街道或整个城市数据目录。增减名单仍按先英文、再其他语言处理；上限和三语言覆盖由 `tests/locale_world_names.test.mjs` 检查。Canvas 标签及其碰撞测量使用相同译名，选中与传送保留原始城市对象、编号及坐标；未补译名称查表回退到原名称。
+
+副本学习剧情按 `languageLearning.target` 显示和配音，按 `native` 显示释义；关闭学习时采用界面语言。缺少目标译文时仍可继续阅读，但不允许用回退中文进行错误语言的配音奖励。
 
 ## 测试
 

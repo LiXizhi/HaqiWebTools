@@ -20,73 +20,361 @@
     "js/adventure_expansion_core.js",
     "js/language_learning.js",
     "js/language_learning_core.js",
-    "js/view_battle_intro.js"
+    "js/view_battle_intro.js",
+    "js/view_dungeon_journey.js",
+    "js/view_bilingual_dialogue.js",
+    "js/adventure_catalog_quests_core.js",
+    "js/adventure_quest_journal_core.js",
+    "js/view_dungeon_story.js",
+    "js/adventure_dungeon_story.js",
+    "js/view_actor_speech.js",
+    "js/view_character_details.js",
+    "js/view_city_dungeon.js",
+    "js/view_city_street.js",
+    "js/view_dialogue_mapping.js",
+    "js/view_dialogue_microphone.js",
+    "js/view_dungeon_entrance.js",
+    "js/view_earth_boat.js",
+    "js/view_entry_brand.js",
+    "js/view_friend_chat.js",
+    "js/view_global_reward.js",
+    "js/view_hero_picker.js",
+    "js/view_language_adventure.js",
+    "js/view_learning_chat.js",
+    "js/view_learning_mode.js",
+    "js/view_monster_territory.js",
+    "js/view_party_companion_pet.js",
+    "js/view_red_mushroom.js",
+    "js/view_settings_controls.js",
+    "js/view_social_actions.js",
+    "js/view_teaching.js",
+    "js/adventure_pets_core.js"
   ],
   "dirs": [
     {
       "path": "js",
-      "include": ["view_adventure_*.js"]
+      "include": [
+        "view_*.js"
+      ],
+      "exclude": [
+        "view_battle.js",
+        "view_advisor.js",
+        "view_batch.js",
+        "view_params.js",
+        "view_adventure_debug.js"
+      ]
     }
   ],
   "json": [
     {
-      "path": "data/adventure/npc-catalog.json",
-      "fields": ["name", "description", "subtitle"],
-      "under": ["npcs"]
+      "path": "data/adventure/quest-runtime.json",
+      "fields": [
+        "title",
+        "text",
+        "label",
+        "speakerName",
+        "name"
+      ],
+      "under": [
+        "quests"
+      ]
+    },
+    {
+      "path": "data/adventure/dungeon-journeys.json",
+      "fields": [
+        "title",
+        "text",
+        "speaker",
+        "name"
+      ],
+      "under": [
+        "entries"
+      ]
     },
     {
       "path": "data/adventure/npc-catalog.json",
-      "fields": ["categoryName"],
-      "under": ["shops"]
+      "fields": [
+        "name",
+        "description",
+        "subtitle"
+      ],
+      "under": [
+        "npcs"
+      ]
+    },
+    {
+      "path": "data/adventure/npc-catalog.json",
+      "fields": [
+        "categoryName"
+      ],
+      "under": [
+        "shops"
+      ]
     },
     {
       "path": "data/adventure/chapter.json",
-      "fields": ["name", "description"],
-      "under": ["npcs"]
+      "fields": [
+        "name",
+        "description"
+      ],
+      "under": [
+        "npcs"
+      ]
     },
     {
       "path": "data/adventure/chapter.json",
-      "fields": ["title", "description", "text", "label"],
-      "under": ["quests"]
+      "fields": [
+        "title",
+        "description",
+        "text",
+        "label"
+      ],
+      "under": [
+        "quests"
+      ]
     },
     {
       "path": "data/adventure/quest-journal.json",
-      "fields": ["title", "description"],
-      "under": ["quests"]
+      "fields": [
+        "title",
+        "description",
+        "startNpc",
+        "endNpc",
+        "name"
+      ],
+      "under": [
+        "quests"
+      ]
     },
     {
       "path": "data/adventure/quest-journal.json",
-      "fields": ["name"],
-      "under": ["objectives"]
+      "fields": [
+        "name"
+      ],
+      "under": [
+        "objectives"
+      ]
     },
     {
       "path": "data/adventure/maps/camp.json",
-      "fields": ["name", "description"]
+      "fields": [
+        "name",
+        "description"
+      ]
     },
     {
       "path": "data/adventure/maps/town.json",
-      "fields": ["name", "description"]
+      "fields": [
+        "name",
+        "description"
+      ]
     },
     {
       "path": "data/adventure/maps/fire.json",
-      "fields": ["name", "description"]
+      "fields": [
+        "name",
+        "description"
+      ]
     },
     {
       "path": "data/adventure/maps/ice.json",
-      "fields": ["name", "description"]
+      "fields": [
+        "name",
+        "description"
+      ]
     },
     {
       "path": "data/adventure/maps/desert.json",
-      "fields": ["name", "description"]
+      "fields": [
+        "name",
+        "description"
+      ]
     },
     {
       "path": "data/adventure/maps/dark.json",
-      "fields": ["name", "description"]
+      "fields": [
+        "name",
+        "description"
+      ]
     },
     {
       "path": "data/adventure/island-encounters.json",
-      "fields": ["name"],
-      "under": ["monsters"]
+      "fields": [
+        "name"
+      ],
+      "under": [
+        "monsters"
+      ]
+    },
+    {
+      "path": "data/adventure/pets.json",
+      "fields": [
+        "elementalAttribute"
+      ],
+      "under": [
+        "pets"
+      ]
+    },
+    {
+      "path": "data/adventure/earth/common-names.json",
+      "fields": [
+        "name"
+      ],
+      "under": [
+        "names"
+      ]
+    }
+  ],
+  "languages": [
+    "en",
+    "ja",
+    "ko"
+  ],
+  "ignore": [
+    {
+      "file": "data/adventure/npc-catalog.json",
+      "pattern": "^[(（].*[)）]$",
+      "reason": "NPC 副标题在显示前剥离括号，使用无括号键"
+    },
+    {
+      "file": "js/adventure_app.js",
+      "text": "出战单位",
+      "reason": "错误分类匹配片段"
+    },
+    {
+      "file": "js/adventure_expansion_core.js",
+      "text": "。网页版：放入宠物食槽，饥饿时自动食用。",
+      "reason": "内部拼接片段，不是独立查表键"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "坐骑",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "红蘑菇",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "霸王虎",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "白狼",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "熊",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "狮",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "虎",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "狼",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "马",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "鹿",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "猪",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "龙",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "凤",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "雀",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "鹰",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "鸟",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "龟",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "兔",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "狗",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "羊",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "牛",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "鼠",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "蛇",
+      "reason": "坐骑图标匹配关键字，不显示"
+    },
+    {
+      "file": "js/view_adventure.js",
+      "text": "猴",
+      "reason": "坐骑图标匹配关键字，不显示"
+    }
+  ],
+  "allowedEmpty": [
+    {
+      "key": "Pair corresponding words between the two lines. Return JSON only: {\"groups\":[{\"color\":0,\"top\":\"Back\",\"bottom\":\"回到\"}]}. Use the same color number for a matching pair. Keep each fragment exactly as it appears. Do not translate or explain.",
+      "reason": "历史内部 SVG/提示词，不作为可见文本"
+    },
+    {
+      "key": "<svg viewBox=\"0 0 80 112\" aria-hidden=\"true\"><ellipse cx=\"40\" cy=\"104\" rx=\"25\" ry=\"5\" fill=\"#685225\" opacity=\".15\"/><path d=\"M35 8h10l-2 12c17 4 21 23 9 34 26 13 23 47-12 47S2 67 28 54C16 43 20 24 37 20z\" fill=\"currentColor\" stroke=\"#8f621f\" stroke-width=\"2.5\"/><path d=\"M29 33c-6 8-3 14 0 17M23 71c-6 11-1 19 5 22\" fill=\"none\" stroke=\"#fff4b6\" stroke-width=\"5\" stroke-linecap=\"round\" opacity=\".7\"/><path d=\"M27 54q13 6 26 0l-1 7q-12 5-24 0z\" fill=\"#af4e32\"/><path d=\"m46 60 12 19-9-3-3 8-7-23\" fill=\"#af4e32\"/><path d=\"M33 8h14v7H33z\" fill=\"#826035\"/><circle cx=\"38\" cy=\"79\" r=\"10\" fill=\"#fff0b5\" opacity=\".85\"/><text x=\"38\" y=\"83\" text-anchor=\"middle\" font-size=\"12\" fill=\"#8f621f\">福</text></svg>",
+      "reason": "历史内部 SVG/提示词，不作为可见文本"
     }
   ]
 }

@@ -44,8 +44,8 @@ class ChapterTests(unittest.TestCase):
         index = module.read('docs/story/story-index.json')
         chapters = index['questChapters']
         ids = [q for c in chapters for q in c['questIds']] + index['sideQuestIds']
-        self.assertEqual(len(ids), 427)
-        self.assertEqual(len(set(ids)), 427)
+        self.assertEqual(len(ids), 427 + len(exporter.pack_quest_ids))
+        self.assertEqual(len(set(ids)), 427 + len(exporter.pack_quest_ids))
         levels = [(c['levelMin'] is None, c['levelMin'] or 0, c['roots'][0]) for c in chapters]
         self.assertEqual(levels, sorted(levels))
         self.assertNotRegex(outputs['story-master.md'], r'\[S\d+-L\d+\]')

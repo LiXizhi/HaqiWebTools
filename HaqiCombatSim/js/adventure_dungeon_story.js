@@ -4,6 +4,14 @@ import {dailyBuffs,previewDailySpeech,localBuffDay} from './language_daily_buff_
 import {createDungeonStoryView} from './view_dungeon_story.js';
 import {createLearningVoice} from './language_adventure_voice.js';
 import {createLineAttempt,startLineAttempt,finishLineAttempt,dungeonLanguageParams} from './adventure_dungeon_language_core.js';
+import {textFor,displayLocale} from './locale.js';
+import {isLocaleId} from './locale_core.js';
+
+function storyText(row,locale){
+    if(locale==='zh-CN')return row.text;
+    if(locale==='en'&&row.en)return row.en;
+    return textFor(row.text,locale);
+}
 
 // One disposable session owns every timer and microphone request. No raw audio or transcript is saved.
 export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},voice=createLearningVoice({getSettings:()=>getState().save?.languageLearning||{}}),viewFactory=createDungeonStoryView,now=()=>performance.now(),dateNow=()=>Date.now()}){
@@ -19,25 +27,28 @@ export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},vo
     function complete(){const s=session;if(!s)return;close();onDone(s.d);}
     function paint(message=''){
         const s=session;if(!s)return;
-        view.update({message,phase:s.phase,loginRequired:s.learning&&!s.owner,rewardKey:s.rewardKey,buffs:dailyBuffs(s.save),claimed:claimed.has(claimKey(s)),feedback:s.attempt?.feedback,practiceCount:s.attempt?.qualified||0,practiceTarget:s.params.speechPracticeCount,minSpeechAccuracy:s.params.minSpeechAccuracy,practiceProgress:s.phase==='awarded'||s.phase==='capped'||claimed.has(claimKey(s))?1:Math.min(1,(s.attempt?.qualified||0)/s.params.speechPracticeCount)});
+        view.update({message,phase:s.phase,loginRequired:s.practice&&!s.owner,rewardKey:s.rewardKey,buffs:dailyBuffs(s.save),claimed:claimed.has(claimKey(s)),feedback:s.attempt?.feedback,practiceCount:s.attempt?.qualified||0,practiceTarget:s.params.speechPracticeCount,minSpeechAccuracy:s.params.minSpeechAccuracy,practiceProgress:s.phase==='awarded'||s.phase==='capped'||claimed.has(claimKey(s))?1:Math.min(1,(s.attempt?.qualified||0)/s.params.speechPracticeCount)});
     }
     function next(){const s=session;if(!s||['connecting','recording','judging','speaking'].includes(s.phase))return;timers(s);void speech.dispose();s.operation++;s.index++;if(s.index>=s.d.story.length){complete();return;}line();}
     function line(){
         const s=session;if(!s)return;if(!valid(s)){complete();return;}
         const row=s.d.story[s.index];s.row=row;s.phase='ready';s.attempt=null;s.release=false;
-        s.target=s.learning?(s.locale==='en'?row.en:row.text):row.text;
-        const translation=s.learning&&s.showTranslation?(s.locale==='en'?row.text:row.en):'';
+        s.target=storyText(row,s.locale);
+        s.practice=s.learning&&(s.locale==='zh-CN'||s.target!==row.text);
+        const translation=s.learning&&s.showTranslation?storyText(row,s.native):'';
         s.rewardKey=previewDailySpeech(s.save,getState().assets.content);
-        view.line(row,{target:s.target,translation,index:s.index,total:s.d.story.length,learning:s.learning,loginRequired:s.learning&&!s.owner,rewardKey:s.rewardKey,percent:s.params.percentPerLine,locale:s.locale});
-        if(row.role==='player'&&s.learning){
+        view.line(row,{target:s.target,translation,index:s.index,total:s.d.story.length,learning:s.practice,loginRequired:s.practice&&!s.owner,rewardKey:s.rewardKey,percent:s.params.percentPerLine,locale:s.locale,native:s.native});
+        if(row.role==='player'&&s.practice){
             s.attempt=createLineAttempt(row,now(),getState().assets.content);s.phase='waiting';
         }
         paint();
-        if(s.learning&&s.row.role!=='player'&&s.save.languageLearning.autoSpeak)void read();
+        if(s.practice&&s.row.role!=='player'&&s.save.languageLearning.autoSpeak)void read();
     }
     function open(d,{index=0}={}){
         close();const {save,assets,sceneCanvas,owner,role}=getState(),settings=save.languageLearning||{};
-        session={save,d,owner,role,rewardId:globalThis.crypto.randomUUID(),index,operation:0,phase:'ready',abort:new AbortController(),params:dungeonLanguageParams(assets.content),learning:settings.enabled&&['en','zh-CN'].includes(settings.target),locale:settings.target||'en',showTranslation:settings.showChinese!==false};
+        const learning=settings.enabled&&isLocaleId(settings.target),locale=learning?settings.target:displayLocale();
+        const native=isLocaleId(settings.native)&&settings.native!==locale?settings.native:locale==='zh-CN'?'en':'zh-CN';
+        session={save,d,owner,role,rewardId:globalThis.crypto.randomUUID(),index,operation:0,phase:'ready',abort:new AbortController(),params:dungeonLanguageParams(assets.content),learning,locale,native,showTranslation:settings.showChinese!==false};
         view.open({assets,save,dungeon:d,learning:session.learning,sceneCanvas});line();
     }
     async function start(){
@@ -63,10 +74,11 @@ export function createDungeonStory({root,getState,award,onDone,onLogin=()=>{},vo
     function finish(){return speech.finish();}
     function cancel(){return speech.cancel();}
     async function read(row=null){
-        const s=session;if(!s||!valid(s)||!s.owner||!s.learning||!['ready','waiting','failed','awarded','capped'].includes(s.phase))return;
+        const s=session;if(!s||!valid(s)||!s.owner||!s.practice||!['ready','waiting','failed','awarded','capped'].includes(s.phase))return;
         const selected=row&&s.d.story.includes(row)?row:s.row;
         const previous=s.phase;clearTimeout(s.timer);
-        await speech.speak({speaker:selected.role==='player'?s.save:selected,text:s.locale==='en'?selected.en:selected.text,locale:s.locale,signal:s.abort.signal,valid:()=>valid(s),
+        const text=storyText(selected,s.locale);if(s.locale!=='zh-CN'&&text===selected.text)return;
+        await speech.speak({speaker:selected.role==='player'?s.save:selected,text,locale:s.locale,signal:s.abort.signal,valid:()=>valid(s),
             onState:phase=>{s.phase=phase;paint('正在朗读…');},onError:error=>paint(error.message),onDone:()=>{s.phase=previous;paint();}});
     }
     function suspend(){const s=session;if(!s)return;timers(s);s.operation++;if(s.attempt&&['waiting','recording'].includes(s.attempt.phase))s.attempt.phase='waiting';s.phase=s.attempt?.phase==='waiting'?'waiting':'ready';void speech.dispose();paint('剧情已暂停，可继续配音或点击继续。');}

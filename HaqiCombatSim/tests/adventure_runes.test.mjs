@@ -76,10 +76,11 @@ test('a full-health general rune is still consumed when the pet escapes', () => 
     assert.equal(forced.events.some(event => event.type === 'capture' && event.success === false && event.runeId === 23439), true);
 });
 
-test('an owned pet or a normal monster rejects the catch rune before it is consumed', () => {
+test('legacy checkpoints: an owned pet or a normal monster rejects the catch rune before it is consumed', () => {
     const owned = createAdventure(content, { seed: 22 });
     owned.inventory[23439] = 1;
     beginEncounter(owned, content, 'wild:dragon_green');
+    delete owned.pendingEncounter.captureRulesVersion;
     const ownedBattle = restorePveBattle(dataset, content, owned.pendingEncounter);
     const ownedRune = runeCardsInHand(ownedBattle).find(row => row.runeId === 23439);
     assert.throws(() => playPveRound(ownedBattle, { ...ownedRune, targetId: 'mob0' }), /目标/);

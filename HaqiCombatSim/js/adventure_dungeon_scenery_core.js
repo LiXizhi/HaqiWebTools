@@ -3,6 +3,7 @@ import {segmentDistance} from './adventure_island_layout_core.js';
 
 // Web exploration art, derived only from dungeon identity; never from a visit or battle seed.
 export function dungeonBiome(d){
+    if(['forest','lake','park'].includes(d.sceneBiome))return d.sceneBiome;
     if(d.island)return {camp:'forest',town:'forest',fire:'volcanic',ice:'snow',desert:'desert',dark:'dark'}[d.island]||'forest';
     const name=`${d.name} ${d.id}`;
     if(/神木|万象|GreatTree/.test(name))return 'forest';

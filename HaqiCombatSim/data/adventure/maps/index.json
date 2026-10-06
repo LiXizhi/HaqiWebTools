@@ -91,6 +91,51 @@
       },
       "retainPreviousPosition": false,
       "file": "data/adventure/maps/dark.json"
+    },
+    "tide": {
+      "name": "潮汐岛",
+      "w": 4800,
+      "h": 4800,
+      "spawn": {
+        "x": 2400,
+        "y": 3927
+      },
+      "initialSpawn": {
+        "x": 2400,
+        "y": 3927
+      },
+      "retainPreviousPosition": false,
+      "file": "data/adventure/maps/tide.json"
+    },
+    "float": {
+      "name": "浮岸岛",
+      "w": 4800,
+      "h": 4800,
+      "spawn": {
+        "x": 2400,
+        "y": 3927
+      },
+      "initialSpawn": {
+        "x": 2400,
+        "y": 3927
+      },
+      "retainPreviousPosition": false,
+      "file": "data/adventure/maps/float.json"
+    },
+    "sail": {
+      "name": "风帆岛",
+      "w": 4800,
+      "h": 4800,
+      "spawn": {
+        "x": 2400,
+        "y": 3927
+      },
+      "initialSpawn": {
+        "x": 2400,
+        "y": 3927
+      },
+      "retainPreviousPosition": false,
+      "file": "data/adventure/maps/sail.json"
     }
   }
 }

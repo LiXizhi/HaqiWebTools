@@ -1,8 +1,9 @@
 import { createCloseButton } from './view_adventure_controls.js';
+import {setText,fill} from './locale_runtime.js';
 
 export function renderOriginalImport(root, state, callbacks) {
     const el = (tag, text, cls = '') => {
-        const node = document.createElement(tag);node.textContent = text;node.className = cls;return node;
+        const node = document.createElement(tag);setText(node,text);node.className = cls;return node;
     };
     const button = (text, action) => { const node = el('button', text, 'secondary');node.type = 'button';node.onclick = action;return node; };
     root.replaceChildren();root.className = 'entry-screen entry-wizard original-import';
@@ -19,7 +20,7 @@ export function renderOriginalImport(root, state, callbacks) {
         panel.append(el('h3', '选择哈奇账号'));
         const roles = el('div', '', 'import-roles');
         for (const id of state.roleIds) {
-            const choice = button(`哈奇号 ${id}`, () => callbacks.selectRole(id));
+            const choice = button(fill(`哈奇号 {v0}`,{v0:String(id)}).text, () => callbacks.selectRole(id));
             choice.className = 'secondary import-role';roles.append(choice);
         }
         panel.append(roles);
@@ -33,16 +34,16 @@ export function renderOriginalImport(root, state, callbacks) {
         const previews = el('div', '', 'import-previews');
         for (const [kind, label, iconName] of [['inventory', '背包', 'bag'], ['deck', '卡包', 'cards']]) {
             const entry = button('', () => callbacks.preview(kind));entry.className = 'secondary import-preview';
-            entry.disabled = Boolean(state.busy);entry.setAttribute('aria-label', `预览${label}`);
+            entry.disabled = Boolean(state.busy);entry.setAttribute('aria-label', fill(`预览{v0}`,{v0:String(label)}).text);
             const icon = el('span', '', 'icon');icon.dataset.uiIcon = iconName;icon.setAttribute('aria-hidden', 'true');
             entry.append(icon, el('strong', label));
-            if (summary && typeof summary !== 'string') entry.append(el('span', kind === 'inventory' ? `${summary.equipment} 件装备` : `${summary.cards} 种卡牌`, 'import-count'));
+            if (summary && typeof summary !== 'string') entry.append(el('span', kind === 'inventory' ? fill(`{v0} 件装备`,{v0:String(summary.equipment)}).text : fill(`{v0} 种卡牌`,{v0:String(summary.cards)}).text, 'import-count'));
             if (state.reviewed?.[kind]) entry.append(el('span', '已查看', 'import-reviewed'));
             previews.append(entry);
         }
         panel.append(previews);
         const details = el('details', '', 'import-details');
-        details.append(el('summary', `导入说明${state.preview.warnings.length ? ` · ${state.preview.warnings.length} 项差异` : ''}`));
+        details.append(el('summary', fill(`导入说明{v0}`,{v0:String(state.preview.warnings.length ? fill(` · {v0} 项差异`,{v0:String(state.preview.warnings.length)}).text : '')}).text));
         details.append(el('p', '创建独立新角色，不覆盖已有角色；剧情重新开始。'));
         const list = el('ul', '');list.setAttribute('aria-label','导入差异明细');
         for (const warning of state.preview.warnings) list.append(el('li', warning));

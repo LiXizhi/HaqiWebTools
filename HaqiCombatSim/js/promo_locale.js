@@ -1,4 +1,7 @@
 const english={
+  "两个世界，一场属于你的冒险。": "Two worlds. One adventure of your own.",
+  "完整篇 · 全功能导览": "Full film · Feature tour",
+  "精华篇 · 冒险预告": "Highlights · Adventure trailer",
   "魔法哈奇 · 宣传片放映室": "Magic Haqi · Screening Room",
   "魔法哈奇": "Magic Haqi",
   "放映室": "Screening Room",
@@ -40,7 +43,7 @@ const english={
   "真实游戏渲染与规则，独立内存角色。不演示云端登录。好友与语言对话使用注明的演示数据，不访问账号、不发送消息、不保存进度。检查通过代表剧本覆盖流程可运行，不替代线上登录、真实好友、语音与支付验收。": "Uses real game rendering and rules with isolated characters. Social and language scenes use scripted demo data without accounts, messages or saved progress. Checks cover the film, not live login, friends, voice or payments.",
   "编辑 data/promo/film.json 调整镜头、字幕与动作。空格播放或暂停，左右键跳镜头，Esc 退出录屏模式。录屏模式将隐藏控制台；重新按 Esc 恢复。加载与检查报错时暂停，不跳过失败步骤。": "Edit data/promo/film.json to adjust scenes, subtitles and actions. Space plays or pauses; arrow keys change scenes; Esc exits recording mode. Loading or check errors pause playback."
 };
-export function promoText(text,locale){if(locale!=='en')return text;return english[text]||text.replace(/^剧本检查通过：(\d+) 个镜头；联网服务不在本次检查范围$/, 'All $1 scenes passed; live services are excluded');}
+export function promoText(text,locale){if(locale!=='en')return text;return english[text]||text.replace(/^剧本检查通过：(\d+) 个镜头；已验证AI示例，账号与语音服务除外$/, 'All $1 scenes passed; AI demo verified; account and voice services excluded');}
 // Remember source nodes once so changing language preserves controls and listeners.
 export function capturePromoChrome(root=document){
  const texts=[],attrs=[];const walker=document.createTreeWalker(root.documentElement,NodeFilter.SHOW_TEXT);

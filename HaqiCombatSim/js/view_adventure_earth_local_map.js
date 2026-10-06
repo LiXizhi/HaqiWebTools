@@ -1,7 +1,7 @@
 import {createCloseButton,createWorldMapSwitch} from './view_adventure_controls.js';
 import {earthLocalMapBounds} from './adventure_earth_core.js';
 import {layoutEarthMapLabels} from './earth_map_labels_core.js';
-import {setText} from './locale_runtime.js';
+import {setText,tr} from './locale_runtime.js';
 
 // The same loaded neighbourhood supplies terrain, roads and city nodes.
 export function renderEarthLocalMap(root,world,save,cb){
@@ -11,10 +11,10 @@ export function renderEarthLocalMap(root,world,save,cb){
     modal.setAttribute('role','dialog');modal.setAttribute('aria-modal','true');modal.setAttribute('aria-label',world.layout.name);
     heading.append(createWorldMapSwitch('earth',cb.switchWorld));header.append(heading,createCloseButton(cb.close));
     const map=el('div','earth-map-stage earth-local-map'),canvas=el('canvas','earth-atlas'),name=el('h2','island-map-name');
-    canvas.width=560;canvas.height=560;canvas.tabIndex=0;canvas.setAttribute('aria-label','当前城市周边地图，可拖动或使用方向键浏览');setText(name,world.layout.name);
+    canvas.width=560;canvas.height=560;canvas.tabIndex=0;canvas.setAttribute('aria-label',tr('当前城市周边地图，可拖动或使用方向键浏览'));setText(name,world.layout.name);
     const ns='http://www.w3.org/2000/svg',lines=document.createElementNS(ns,'svg'),cityLayer=el('div','earth-local-cities'),locate=el('button','earth-local-locate'),status=el('button','earth-local-status');
     lines.setAttribute('class','earth-local-connectors');lines.setAttribute('aria-hidden','true');
-    locate.type=status.type='button';setText(locate,'定位');locate.title='回到当前角色位置';locate.setAttribute('aria-label','定位到当前角色位置');status.hidden=true;
+    locate.type=status.type='button';setText(locate,'定位');locate.title=tr('回到当前角色位置');locate.setAttribute('aria-label',tr('定位到当前角色位置'));status.hidden=true;
     map.append(canvas,lines,cityLayer,name,status,locate);
     const bounds=earthLocalMapBounds(save.position,world.earthRules);
     let nodes=[],drag=null,suppressClick=false,mapData=null,disposed=false,revision=0,timer=null,travelBusy=false;

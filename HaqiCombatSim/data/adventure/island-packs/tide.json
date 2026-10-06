@@ -1,0 +1,1426 @@
+{
+  "version": 1,
+  "island": {
+    "id": "tide",
+    "name": "潮汐岛",
+    "source": "web-authored:tide",
+    "description": "灯塔仍亮着，可旧信袋里藏着一个谁也不敢说的回答。来和我一起找出它。",
+    "recommendedLevel": 60
+  },
+  "authorNotes": {
+    "origin": "网页原创续篇；非原版事实",
+    "themes": "亲口回答",
+    "optionalReality": "现实地图观察和自由交谈均可跳过，不作为主线条件",
+    "art": "专属岛图与建筑；居民和生物复用已核验儿童版外观"
+  },
+  "npcs": [
+    {
+      "id": 860000,
+      "name": "阿澜",
+      "zone": "tide",
+      "appearanceSourceId": 36205,
+      "x": 2400,
+      "y": 3764,
+      "sex": "male",
+      "age": 28,
+      "description": "我守着灯塔，也守着没有送出的信。现在我想把它们送到该去的人手里。",
+      "storyIdentity": "tide-0"
+    },
+    {
+      "id": 860001,
+      "name": "岑伯",
+      "zone": "tide",
+      "appearanceSourceId": 30525,
+      "x": 1855,
+      "y": 2891,
+      "sex": "male",
+      "age": 64,
+      "description": "我每天擦两只杯子。女儿如果回来，就不用等我再去拿。",
+      "storyIdentity": "tide-1"
+    },
+    {
+      "id": 860002,
+      "name": "小禾",
+      "zone": "tide",
+      "appearanceSourceId": 36200,
+      "x": 3382,
+      "y": 2673,
+      "sex": "female",
+      "age": 19,
+      "description": "我替人抄过信，也替人说过不该由我说的话。我想当面道歉。",
+      "storyIdentity": "tide-2",
+      "worldObservation": {
+        "label": "查看现实世界地图",
+        "prompt": "打开现实世界地图，找一座靠水的城市。看看桥和河岸。你也可以观察窗外的天色，再回来和伙伴说一句看到的事。"
+      }
+    },
+    {
+      "id": 860003,
+      "name": "岑宁",
+      "zone": "tide",
+      "appearanceSourceId": 30081,
+      "x": 2509,
+      "y": 1473,
+      "sex": "female",
+      "age": 30,
+      "description": "我很想爸爸，也还有生气的话要说。这两件事可以一起存在。",
+      "storyIdentity": "cen-ning"
+    }
+  ],
+  "monsters": [
+    {
+      "id": "pack:tide:guardian-1",
+      "name": "潮壳兽",
+      "templateId": "config/Aries/Mob/WeeklyBoss/MobTemplate_GhostOctopus_Boss.xml",
+      "stats": {
+        "level": 60,
+        "hp": 4200,
+        "xp": 6000,
+        "coins": 220
+      }
+    },
+    {
+      "id": "pack:tide:guardian-2",
+      "name": "浪影兽",
+      "templateId": "config/Aries/Mob/IceLand/MobTemplate_DeadTreeMonster.xml",
+      "stats": {
+        "level": 60,
+        "hp": 4850,
+        "xp": 6000,
+        "coins": 220
+      }
+    },
+    {
+      "id": "pack:tide:guardian-3",
+      "name": "雾翼兽",
+      "templateId": "config/Aries/Mob/MobTemplate_ShadowOfPhoenix.xml",
+      "stats": {
+        "level": 61,
+        "hp": 5500,
+        "xp": 6000,
+        "coins": 220
+      }
+    },
+    {
+      "id": "pack:tide:guardian-4",
+      "name": "海灯守卫",
+      "templateId": "config/Aries/Mob/IceLand/MobTemplate_FrostFang.xml",
+      "stats": {
+        "level": 61,
+        "hp": 6150,
+        "xp": 6000,
+        "coins": 220
+      }
+    }
+  ],
+  "encounters": [
+    {
+      "id": "pack:tide:field-1",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-1",
+      "x": 1375,
+      "y": 2356
+    },
+    {
+      "id": "pack:tide:field-2",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-2",
+      "x": 3644,
+      "y": 2138
+    },
+    {
+      "id": "pack:tide:field-3",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-3",
+      "x": 2356,
+      "y": 2084
+    },
+    {
+      "id": "pack:tide:field-4",
+      "zone": "tide",
+      "monsterId": "pack:tide:guardian-4",
+      "x": 2618,
+      "y": 895
+    }
+  ],
+  "goalPaths": {
+    "pack:tide:guardian-1": 880000,
+    "pack:tide:guardian-2": 880001,
+    "pack:tide:guardian-3": 880002,
+    "pack:tide:guardian-4": 880003
+  },
+  "quests": [
+    {
+      "id": 870000,
+      "title": "灯还亮着",
+      "description": "在潮汐岛与岑伯交谈，再回去确认线索。",
+      "region": "tide",
+      "startNpc": 860000,
+      "endNpc": 860000,
+      "repeat": false,
+      "prerequisites": [],
+      "requirements": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 60,
+          "max": null
+        }
+      ],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860001,
+              "name": "岑伯",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860000,
+          "text": "灯塔每晚都亮，船却三年没来。岑伯说，是我把船赶走了。你能先听听他吗？",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我先听听岑伯怎么说。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860001,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860001,
+              "text": "我没有赶船。我只说，别走旧海路。可女儿再也没有回信。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860000,
+          "text": "岑伯桌上放着两只杯子。他每天都把另一只擦干净。我们先别判断他。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "他还在等她。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870001,
+      "title": "同一个小名",
+      "description": "在潮汐岛与小禾交谈，再回去确认线索。",
+      "region": "tide",
+      "startNpc": 860001,
+      "endNpc": 860001,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870000,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860002,
+              "name": "小禾",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860001,
+          "text": "信封写着“小禾”。岑伯以为是女儿。去问问抄信员吧。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我去确认收信的人。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860002,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860002,
+              "text": "小禾是我，也是岑伯给女儿起的小名。这封信写给我，不是给她。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860001,
+          "text": "名字相同，收信的人却不同。信里提到一盏灯，灯罩上有三道裂纹。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "我们去找那盏裂灯。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870002,
+      "title": "裂灯下的袋子",
+      "description": "在潮汐岛清开潮壳兽挡住的道路，再回去交谈。",
+      "region": "tide",
+      "startNpc": 860000,
+      "endNpc": 860000,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870001,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880000,
+              "name": "潮壳兽",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860000,
+          "text": "三道裂纹的灯在潮桥边。潮壳兽挡住了去路。请清开道路，我会去检查旧信袋。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来清开灯下的路。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860000,
+          "text": "你清开道路后，阿澜找到了旧袋子。里边有岑宁的信，封口还没有打开。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "信还没有被打开。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870003,
+      "title": "不要告诉他",
+      "description": "在潮汐岛与阿澜交谈，再回去确认线索。",
+      "region": "tide",
+      "startNpc": 860002,
+      "endNpc": 860002,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870002,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860000,
+              "name": "阿澜",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860002,
+          "text": "信上有我的笔迹：先不要告诉他。你是不是觉得，我藏了坏消息？去问阿澜。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "他有权看到这封信。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860000,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860000,
+              "text": "是我让小禾等一等。岑宁的船坏了。我怕岑伯担心，却一直没敢告诉他。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860002,
+          "text": "阿澜没有撕信，却让等待变得更长。小禾问：怕他伤心，就能替他决定吗？",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "等待也会让人伤心。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870004,
+      "title": "退潮的记号",
+      "description": "在潮汐岛与岑宁交谈，再回去确认线索。",
+      "region": "tide",
+      "startNpc": 860000,
+      "endNpc": 860000,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870003,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860003,
+              "name": "岑宁",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860000,
+          "text": "我收到一张新的海路图。画图的人在月潮亭。她说认识岑宁。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我们一起核对日期。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860003,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860003,
+              "text": "我是岑宁。风暴后，我住在另一片海岸。回程日期写的是第三次大潮，不是第三个月。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860000,
+          "text": "岑宁带回两套日期。我们误读了信，也错过了船。她还不知道父亲在等她。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "日期不同，心意没有变。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870005,
+      "title": "桥下的暗流",
+      "description": "在潮汐岛清开浪影兽挡住的道路，再回去交谈。",
+      "region": "tide",
+      "startNpc": 860003,
+      "endNpc": 860003,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870004,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880001,
+              "name": "浪影兽",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860003,
+          "text": "我要去见爸爸。桥边的浪影兽被坏掉的灯惊醒了。帮我清开路，别追进海里。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来保护桥头的路。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860003,
+          "text": "岑宁走到了安全的桥头。她停下了：我写过回信，他为什么一次也不回？",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "我们先听听她的疑问。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870006,
+      "title": "没有寄出的回答",
+      "description": "在潮汐岛与小禾交谈，再回去确认线索。",
+      "region": "tide",
+      "startNpc": 860001,
+      "endNpc": 860001,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870005,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860002,
+              "name": "小禾",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860001,
+          "text": "我想写很多话，可字总是写歪。小禾替我写过一次。我想知道，她写了什么。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "这次让他亲口回答。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860002,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860002,
+              "text": "我写了“别再回来”。我怕他失望，想让他先忘记等待。岑伯没有让我这样写。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860001,
+          "text": "小禾把抄信本交给岑伯。她说：我会道歉，但原谅不该由我来要。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "道歉之后，等她回答。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870007,
+      "title": "两只杯子",
+      "description": "在潮汐岛与岑宁交谈，再回去确认线索。",
+      "region": "tide",
+      "startNpc": 860002,
+      "endNpc": 860002,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870006,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860003,
+              "name": "岑宁",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860002,
+          "text": "我做错了。请告诉岑宁，爸爸没有拒绝她。她可以先不原谅我。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "她可以慢慢决定。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860003,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860003,
+              "text": "我很生气。但我想听爸爸亲口说。我不想再让别人替他回答。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860002,
+          "text": "岑宁没有立刻说没关系。她只拿起第二只杯子，向船坞走去。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "不用急着说没关系。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870008,
+      "title": "灯道最后一段",
+      "description": "在潮汐岛清开雾翼兽挡住的道路，再回去交谈。",
+      "region": "tide",
+      "startNpc": 860000,
+      "endNpc": 860000,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870007,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880002,
+              "name": "雾翼兽",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860000,
+          "text": "灯道被雾翼兽占住了。今晚的船要带走病人。先清开这段路，我们一起修灯。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来清开最后一段。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860000,
+          "text": "你清开了灯道。阿澜把停信记录贴在灯塔门上，连自己的名字也留在上面。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "记录也留下了他的名字。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870009,
+      "title": "最短的回信",
+      "description": "在潮汐岛与岑伯交谈，再回去确认线索。",
+      "region": "tide",
+      "startNpc": 860003,
+      "endNpc": 860003,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870008,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860001,
+              "name": "岑伯",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860003,
+          "text": "我站在爸爸门外，却不知道第一句话怎么说。你愿意先陪他说句话吗？",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "把这句话当面说吧。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860001,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860001,
+              "text": "我不会写长信。我要说的是：我想见你。桌上的杯子，一直是你的。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860003,
+          "text": "父女终于在船坞见面。岑宁说：我也想你。过去的三年没有回来，但今晚可以一起吃饭。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "今晚就一起吃饭。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870010,
+      "title": "灯不会替人回答",
+      "description": "在潮汐岛清开海灯守卫挡住的道路，再回去交谈。",
+      "region": "tide",
+      "startNpc": 860001,
+      "endNpc": 860001,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870009,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880003,
+              "name": "海灯守卫",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860001,
+          "text": "海灯守卫仍在攻击靠岸的人。它只记得“不要回来”。请让它停下，我们会修正旧口令。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "灯只需要指路。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860001,
+          "text": "守卫停下后，阿澜和岑宁改正了旧记录。现在灯只指路，不替人决定谁能回家。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "回家由他们自己决定。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870011,
+      "title": "地图上缺了一座岛",
+      "description": "在潮汐岛与岑宁交谈，再回去确认线索。",
+      "region": "tide",
+      "startNpc": 860000,
+      "endNpc": 860000,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870010,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860003,
+              "name": "岑宁",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860000,
+          "text": "旧航海簿有一页空白。有人把一个名字划掉了。岑宁知道那片海岸。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我们去找另一张图。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860003,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860003,
+              "text": "我住的地方叫蓝湾。旧簿上却叫浮岸。两个地方有同一口井、同一道瀑布。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860000,
+          "text": "阿澜把两张图放在一起。为什么同一座岛，要藏起另一个名字？到浮岸岛，问当地人。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "两座岛的故事接上了。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 10000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 300
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "journey:tide:elite-1",
+      "kind": "elite",
+      "island": "tide",
+      "name": "失声的潮灯",
+      "recommendedLevel": 60,
+      "sourceId": "dungeon:HaqiTown_YYsDream_S1",
+      "partySize": 1,
+      "floors": null,
+      "enemyTemplateIds": [
+        "pack:tide:guardian-1",
+        "pack:tide:guardian-2",
+        "pack:tide:guardian-3",
+        "pack:tide:guardian-4"
+      ],
+      "story": [
+        {
+          "id": "journey:tide:elite-1:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "潮灯洞的水面上，灯影一亮一暗。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:elite-1:line-2",
+          "role": "npc",
+          "speaker": "阿澜",
+          "text": "旧灯还在重复“不要回来”。听完下一句，才知道这是谁说的。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:elite-1:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我想听见整句话。",
+          "reward": "hp",
+          "sex": "male"
+        },
+        {
+          "id": "journey:tide:elite-1:line-4",
+          "role": "npc",
+          "speaker": "阿澜",
+          "text": "潮壳兽挡住了石阶。它们只认旧灯的命令。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:elite-1:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们一起清开石阶。",
+          "reward": "attack",
+          "sex": "male"
+        },
+        {
+          "id": "journey:tide:elite-1:line-6",
+          "role": "npc",
+          "speaker": "阿澜",
+          "text": "洞口的灯还亮着。累了，我们就沿灯道回去。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:elite-1:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会留意回去的路。",
+          "reward": "defense",
+          "sex": "male"
+        },
+        {
+          "id": "journey:tide:elite-1:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "水声盖住了半句回答。你向灯光走去。",
+          "sex": "male",
+          "age": 28
+        }
+      ],
+      "sceneBiome": "lake",
+      "arenaCount": 3
+    },
+    {
+      "id": "journey:tide:elite-2",
+      "kind": "elite",
+      "island": "tide",
+      "name": "被风吹散的回信",
+      "recommendedLevel": 60,
+      "sourceId": "dungeon:HaqiTown_YYsDream_S1",
+      "partySize": 2,
+      "floors": null,
+      "enemyTemplateIds": [
+        "pack:tide:guardian-1",
+        "pack:tide:guardian-2",
+        "pack:tide:guardian-3",
+        "pack:tide:guardian-4"
+      ],
+      "story": [
+        {
+          "id": "journey:tide:elite-2:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "几封信卡在潮洞的石缝里。封口还完好。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:elite-2:line-2",
+          "role": "npc",
+          "speaker": "阿澜",
+          "text": "阿澜曾守着这些信。他怕坏消息，也怕自己判断错了。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:elite-2:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "先看看信写给谁。",
+          "reward": "hp",
+          "sex": "male"
+        },
+        {
+          "id": "journey:tide:elite-2:line-4",
+          "role": "npc",
+          "speaker": "阿澜",
+          "text": "浪影兽在信袋旁打转。先别让伙伴碰到暗流。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:elite-2:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我来守住安全的路。",
+          "reward": "attack",
+          "sex": "male"
+        },
+        {
+          "id": "journey:tide:elite-2:line-6",
+          "role": "npc",
+          "speaker": "阿澜",
+          "text": "信上的日期，有人按涨潮记，有人按退潮记。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:elite-2:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们一起核对日期。",
+          "reward": "defense",
+          "sex": "male"
+        },
+        {
+          "id": "journey:tide:elite-2:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "洞壁留下两排刻痕。它们都指向同一个夜晚。",
+          "sex": "male",
+          "age": 28
+        }
+      ],
+      "sceneBiome": "lake",
+      "arenaCount": 5
+    },
+    {
+      "id": "journey:tide:tower",
+      "kind": "tower",
+      "island": "tide",
+      "name": "潮汐岛回声试炼塔",
+      "recommendedLevel": 60,
+      "sourceId": "dungeon:HaqiTown_LightHouse_S1",
+      "partySize": 3,
+      "floors": 60,
+      "enemyTemplateIds": [
+        "pack:tide:guardian-1",
+        "pack:tide:guardian-2",
+        "pack:tide:guardian-3",
+        "pack:tide:guardian-4"
+      ],
+      "story": [
+        {
+          "id": "journey:tide:tower:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "塔门上挂着一盏旧灯，灯罩有三道裂纹。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:tower:line-2",
+          "role": "npc",
+          "speaker": "阿澜",
+          "text": "这里有六十层旧记录。每十层都能回来休息和领取奖励。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:tower:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "今天先走好第一层。",
+          "reward": "hp",
+          "sex": "male"
+        },
+        {
+          "id": "journey:tide:tower:line-4",
+          "role": "npc",
+          "speaker": "阿澜",
+          "text": "塔里的守卫不分谁在等谁，只照着旧记录行动。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:tower:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我会看清再出手。",
+          "reward": "attack",
+          "sex": "male"
+        },
+        {
+          "id": "journey:tide:tower:line-6",
+          "role": "npc",
+          "speaker": "阿澜",
+          "text": "记录可能写错。看到熟悉的名字，也别急着下结论。",
+          "sex": "male",
+          "age": 28
+        },
+        {
+          "id": "journey:tide:tower:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们把话听完整。",
+          "reward": "defense",
+          "sex": "male"
+        },
+        {
+          "id": "journey:tide:tower:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "第一层的门打开了。灯影落在两只空杯子上。",
+          "sex": "male",
+          "age": 28
+        }
+      ],
+      "sceneBiome": "lake"
+    }
+  ],
+  "social": {
+    "enabled": true,
+    "size": "large",
+    "capacity": 16
+  }
+}

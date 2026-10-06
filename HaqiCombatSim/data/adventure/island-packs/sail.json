@@ -1,0 +1,1476 @@
+{
+  "version": 1,
+  "island": {
+    "id": "sail",
+    "name": "风帆岛",
+    "source": "web-authored:sail",
+    "description": "庆典前夜，塔里传出了求救声。我们要先听完整，再决定怎样讲这段过去。",
+    "recommendedLevel": 80
+  },
+  "authorNotes": {
+    "origin": "网页原创续篇；非原版事实",
+    "themes": "留下失败与求救",
+    "optionalReality": "现实地图观察和自由交谈均可跳过，不作为主线条件",
+    "art": "专属岛图与建筑；居民和生物复用已核验儿童版外观"
+  },
+  "npcs": [
+    {
+      "id": 860200,
+      "name": "莉风",
+      "zone": "sail",
+      "appearanceSourceId": 30081,
+      "x": 2400,
+      "y": 3764,
+      "sex": "female",
+      "age": 28,
+      "description": "我负责写庆典稿。这次我想先听完，再决定写什么。",
+      "storyIdentity": "sail-0"
+    },
+    {
+      "id": 860201,
+      "name": "守环人",
+      "zone": "sail",
+      "appearanceSourceId": 30525,
+      "x": 1855,
+      "y": 2891,
+      "sex": "male",
+      "age": 64,
+      "description": "我剪掉过求救声。我会把原记录交出来，接受大家的追问。",
+      "storyIdentity": "sail-1"
+    },
+    {
+      "id": 860202,
+      "name": "小舟",
+      "zone": "sail",
+      "appearanceSourceId": 36200,
+      "x": 3382,
+      "y": 2673,
+      "sex": "female",
+      "age": 19,
+      "description": "我在归帆厅整理名单。找不到名字时，先试试港口的旧称。",
+      "storyIdentity": "sail-2",
+      "worldObservation": {
+        "label": "查看现实世界地图",
+        "prompt": "打开现实世界地图，找一片水岸。想一想，哪一扇窗会让远行的人安心。你可以只谈游戏里的景色。"
+      }
+    },
+    {
+      "id": 860203,
+      "name": "岑宁",
+      "zone": "sail",
+      "appearanceSourceId": 30081,
+      "x": 2509,
+      "y": 1473,
+      "sex": "female",
+      "age": 30,
+      "description": "我从潮汐岛带来一张新信纸。这次，我想亲口问妈妈。",
+      "storyIdentity": "cen-ning"
+    }
+  ],
+  "monsters": [
+    {
+      "id": "pack:sail:guardian-1",
+      "name": "风车守卫",
+      "templateId": "config/Aries/Mob/MobTemplate_ShadowOfPhoenix.xml",
+      "stats": {
+        "level": 80,
+        "hp": 7200,
+        "xp": 10000,
+        "coins": 420
+      }
+    },
+    {
+      "id": "pack:sail:guardian-2",
+      "name": "纸翼兽",
+      "templateId": "config/Aries/Mob/IceLand/MobTemplate_FrostFang.xml",
+      "stats": {
+        "level": 80,
+        "hp": 7850,
+        "xp": 10000,
+        "coins": 420
+      }
+    },
+    {
+      "id": "pack:sail:guardian-3",
+      "name": "风帆守卫",
+      "templateId": "config/Aries/Mob/WeeklyBoss/MobTemplate_GhostOctopus_Boss.xml",
+      "stats": {
+        "level": 81,
+        "hp": 8500,
+        "xp": 10000,
+        "coins": 420
+      }
+    },
+    {
+      "id": "pack:sail:guardian-4",
+      "name": "归帆塔守卫",
+      "templateId": "config/Aries/Mob/IceLand/MobTemplate_DeadTreeMonster.xml",
+      "stats": {
+        "level": 81,
+        "hp": 9150,
+        "xp": 10000,
+        "coins": 420
+      }
+    }
+  ],
+  "encounters": [
+    {
+      "id": "pack:sail:field-1",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-1",
+      "x": 1375,
+      "y": 2444
+    },
+    {
+      "id": "pack:sail:field-2",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-2",
+      "x": 3644,
+      "y": 2138
+    },
+    {
+      "id": "pack:sail:field-3",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-3",
+      "x": 2356,
+      "y": 2084
+    },
+    {
+      "id": "pack:sail:field-4",
+      "zone": "sail",
+      "monsterId": "pack:sail:guardian-4",
+      "x": 2618,
+      "y": 895
+    }
+  ],
+  "goalPaths": {
+    "pack:sail:guardian-1": 880200,
+    "pack:sail:guardian-2": 880201,
+    "pack:sail:guardian-3": 880202,
+    "pack:sail:guardian-4": 880203
+  },
+  "quests": [
+    {
+      "id": 870200,
+      "title": "庆典前的求救",
+      "description": "在风帆岛与守环人交谈，再回去确认线索。",
+      "region": "sail",
+      "startNpc": 860200,
+      "endNpc": 860200,
+      "repeat": false,
+      "prerequisites": [],
+      "requirements": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 80,
+          "max": null
+        }
+      ],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860201,
+              "name": "守环人",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860200,
+          "text": "明天是回航庆典。塔里却传出“别开门”。守环人说那是旧欢呼，你愿意听另一种说法吗？",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "先把求救声听完。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860201,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860201,
+              "text": "我守了三十年。那段声音不是欢呼。我认得岑宁的母亲，她当时在求救。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860200,
+          "text": "莉风拿下庆典横幅。她没有宣布答案，只请织帆人岑宁一起来听。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "她也需要听见这段声音。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870201,
+      "title": "一面反着挂的帆",
+      "description": "在风帆岛与小舟交谈，再回去确认线索。",
+      "region": "sail",
+      "startNpc": 860203,
+      "endNpc": 860203,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870200,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860202,
+              "name": "小舟",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860203,
+          "text": "妈妈的红帆总有一块白补丁。塔里那面帆反着挂，补丁藏在后面。小舟看见过吗？",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我们看看帆的另一面。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860202,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860202,
+              "text": "我搬庆典箱时看见了。帆后写着“先救岸上的人”。这是她自己的字，不是传说里的口号。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860203,
+          "text": "岑宁认出了字。她从没被告知，母亲当时为什么没有跟船回家。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "我们再找一段录音。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870202,
+      "title": "风车下的噪声",
+      "description": "在风帆岛清开风车守卫挡住的道路，再回去交谈。",
+      "region": "sail",
+      "startNpc": 860200,
+      "endNpc": 860200,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870201,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880200,
+              "name": "风车守卫",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860200,
+          "text": "风车守卫被旧警报惊醒了。请清开风车道，守环人会检查线路。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来保护风车的路。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860200,
+          "text": "守环人接好了断线。塔里出现第二段声音：岸上还有人，别只看船。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "还有人留在岸上。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870203,
+      "title": "被剪掉的那一句",
+      "description": "在风帆岛与莉风交谈，再回去确认线索。",
+      "region": "sail",
+      "startNpc": 860201,
+      "endNpc": 860201,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870202,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860200,
+              "name": "莉风",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860201,
+          "text": "庆典只播船回来的那段。我当年把前一句剪掉了。你愿意让莉风看见完整记录吗？",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我们先找岸上的人。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860200,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860200,
+              "text": "当时大家太需要一个胜利故事。我也一直用它安慰岑宁。原来这份安慰，让她找不到母亲。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860201,
+          "text": "莉风把自己的庆典稿放下。她决定先找人，不先找一句好听的话。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "先找人，再写庆典稿。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870204,
+      "title": "别替我原谅",
+      "description": "在风帆岛与守环人交谈，再回去确认线索。",
+      "region": "sail",
+      "startNpc": 860203,
+      "endNpc": 860203,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870203,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860201,
+              "name": "守环人",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860203,
+          "text": "我以为妈妈不要我们。现在我知道，有人替我藏起了她的声音。我想问守环人。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "今天可以先停下来。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860201,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860201,
+              "text": "我不能要求你原谅。我会交出完整记录。你想听还是暂时不听，都由你决定。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860203,
+          "text": "岑宁听了一小段就停下。她说：今天先到这里。大家陪她坐在风车下，没有催她。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "我们陪她坐一会儿。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870205,
+      "title": "岸上的名单",
+      "description": "在风帆岛清开纸翼兽挡住的道路，再回去交谈。",
+      "region": "sail",
+      "startNpc": 860202,
+      "endNpc": 860202,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870204,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880201,
+              "name": "纸翼兽",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860202,
+          "text": "名单室被纸翼兽占住了。请清开门口，我会取回那晚的名字。不要把旧纸当成废物。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来取回岸上的名单。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860202,
+          "text": "小舟取回名单。岑宁的母亲最后一次登记在岸上，去向写着“现实世界的港口”。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "她去了另一边。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870206,
+      "title": "另一边的窗",
+      "description": "在风帆岛与岑宁交谈，再回去确认线索。",
+      "region": "sail",
+      "startNpc": 860200,
+      "endNpc": 860200,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870205,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860203,
+              "name": "岑宁",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860200,
+          "text": "神秘漩涡通向现实世界地图。我们不能隔着地图确认一个人在哪里。先把地址交给岑宁吧。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我想看看另一边的地图。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860203,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860203,
+              "text": "这是妈妈写的城市名。她说，如果灯坏了，就去看河边的桥。",
+              "buttons": [
+                {
+                  "action": "gotonext",
+                  "label": "接着说吧。"
+                }
+              ]
+            },
+            {
+              "npcId": 860203,
+              "text": "我会先读完记录，再决定是否去。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860200,
+          "text": "岑宁收好地址。现实世界可以探索，也可以留到以后。下一条线索就在岛上的归帆厅。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "先回归帆厅找线索。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870207,
+      "title": "没有失踪的名字",
+      "description": "在风帆岛与小舟交谈，再回去确认线索。",
+      "region": "sail",
+      "startNpc": 860201,
+      "endNpc": 860201,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870206,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860202,
+              "name": "小舟",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860201,
+          "text": "归帆厅的转运单从来没上过庆典墙。小舟找到了最后一份记录。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "这次把两个名字都写上。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860202,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860202,
+              "text": "岑宁的母亲救出岸上的人后，留在现实世界养伤。",
+              "buttons": [
+                {
+                  "action": "gotonext",
+                  "label": "接着说吧。"
+                }
+              ]
+            },
+            {
+              "npcId": 860202,
+              "text": "她托人报平安，回信却被送回了旧名港口。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860201,
+          "text": "不是无人回来，是回答一直走错了路。潮汐岛的信袋、浮岸岛的两种名字，终于连在一起。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "原来信一直走错了路。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870208,
+      "title": "塔不肯停下来",
+      "description": "在风帆岛清开风帆守卫挡住的道路，再回去交谈。",
+      "region": "sail",
+      "startNpc": 860200,
+      "endNpc": 860200,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870207,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880202,
+              "name": "风帆守卫",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860200,
+          "text": "塔把求救当成失败，把失败当成该删掉的噪声。风帆守卫正在封门。先让大家安全出去。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "先让守卫停下来。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860200,
+          "text": "守卫停下，塔仍自动重播欢呼。莉风承认：我们一直没有给别的声音留位置。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "给求救声也留个位置。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870209,
+      "title": "不完美的回航",
+      "description": "在风帆岛与莉风交谈，再回去确认线索。",
+      "region": "sail",
+      "startNpc": 860203,
+      "endNpc": 860203,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870208,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860200,
+              "name": "莉风",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860203,
+          "text": "我不想烧掉庆典。那些获救的人也是真的。但我的妈妈，不能只剩一面帆。请告诉莉风。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "白补丁也可以露出来。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860200,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860200,
+              "text": "我们保留庆典，也加上没有回来的人的名字。明天可以高兴，也可以难过。",
+              "buttons": [
+                {
+                  "action": "gotonext",
+                  "label": "接着说吧。"
+                }
+              ]
+            },
+            {
+              "npcId": 860200,
+              "text": "每个人都能说自己的话。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860203,
+          "text": "岑宁把母亲的帆正过来，白补丁露在外面。莉风不再让所有人说同一句话。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "这面帆终于挂正了。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870210,
+      "title": "把最后的门打开",
+      "description": "在风帆岛清开归帆塔守卫挡住的道路，再回去交谈。",
+      "region": "sail",
+      "startNpc": 860201,
+      "endNpc": 860201,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870209,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 880203,
+              "name": "归帆塔守卫",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860201,
+          "text": "归帆塔最后的守卫只接受一个版本。让它停下，我和居民会把完整记录放回档案。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "把每一种声音都留下。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 860201,
+          "text": "你让守卫停下后，居民打开档案室。小舟把求救、欢呼和沉默分开保存，谁也没有被删掉。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "档案室留下每个人。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 870211,
+      "title": "风停以后",
+      "description": "在风帆岛与岑宁交谈，再回去确认线索。",
+      "region": "sail",
+      "startNpc": 860200,
+      "endNpc": 860200,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 870210,
+          "value": 1
+        }
+      ],
+      "requirements": [],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 860203,
+              "name": "岑宁",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 860200,
+          "text": "庆典结束了。岑宁收到潮汐岛送来的新信。这一次，两种港名都写在信封上。去陪她读吧。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "去见她，也记得回来。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 860203,
+          "label": "我想问问这条线索。",
+          "dialog": [
+            {
+              "npcId": 860203,
+              "text": "信是妈妈写的：我在另一边修窗，能看见河。爸爸画了两只杯子。",
+              "buttons": [
+                {
+                  "action": "gotonext",
+                  "label": "接着说吧。"
+                }
+              ]
+            },
+            {
+              "npcId": 860203,
+              "text": "我想回家，先学会走远一点。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我明白这条线索了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 860200,
+          "text": "岑宁读完信，没有再等别人决定。她要去见妈妈，也约好回来。",
+          "buttons": [
+            {
+              "action": "gotonext",
+              "label": "接着说吧。"
+            }
+          ]
+        },
+        {
+          "npcId": 860200,
+          "text": "你救下的不是完美的故事，是人们亲口回答的机会。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "这一次，由她自己决定。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 18000
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 500
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "journey:sail:elite-1",
+      "kind": "elite",
+      "island": "sail",
+      "name": "只准欢呼的档案室",
+      "recommendedLevel": 80,
+      "sourceId": "dungeon:HaqiTown_YYsDream_S1",
+      "partySize": 1,
+      "floors": null,
+      "enemyTemplateIds": [
+        "pack:sail:guardian-1",
+        "pack:sail:guardian-2",
+        "pack:sail:guardian-3",
+        "pack:sail:guardian-4"
+      ],
+      "story": [
+        {
+          "id": "journey:sail:elite-1:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "档案室里传来欢呼声，句尾却突然断了。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:elite-1:line-2",
+          "role": "npc",
+          "speaker": "莉风",
+          "text": "它只保存了胜利。我要知道，被剪掉的那句是什么。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:elite-1:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "先别替它补一个好结局。",
+          "reward": "hp",
+          "sex": "female"
+        },
+        {
+          "id": "journey:sail:elite-1:line-4",
+          "role": "npc",
+          "speaker": "莉风",
+          "text": "纸翼兽守着旧门。它们不让别的声音进来。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:elite-1:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我来清开档案室的路。",
+          "reward": "attack",
+          "sex": "female"
+        },
+        {
+          "id": "journey:sail:elite-1:line-6",
+          "role": "npc",
+          "speaker": "莉风",
+          "text": "听到求救时，我们可以停下来。不需要马上说出答案。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:elite-1:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "听不清，我会再问一次。",
+          "reward": "defense",
+          "sex": "female"
+        },
+        {
+          "id": "journey:sail:elite-1:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "你推开外门。欢呼声后，隐约响起一个人的名字。",
+          "sex": "female",
+          "age": 28
+        }
+      ],
+      "sceneBiome": "park",
+      "arenaCount": 3
+    },
+    {
+      "id": "journey:sail:elite-2",
+      "kind": "elite",
+      "island": "sail",
+      "name": "白帆最后的守夜",
+      "recommendedLevel": 80,
+      "sourceId": "dungeon:HaqiTown_YYsDream_S1",
+      "partySize": 2,
+      "floors": null,
+      "enemyTemplateIds": [
+        "pack:sail:guardian-1",
+        "pack:sail:guardian-2",
+        "pack:sail:guardian-3",
+        "pack:sail:guardian-4"
+      ],
+      "story": [
+        {
+          "id": "journey:sail:elite-2:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "一面红帆挂在墙上，白补丁被折到背后。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:elite-2:line-2",
+          "role": "npc",
+          "speaker": "莉风",
+          "text": "有人说，把补丁藏好，庆典就会更好看。可这是她妈妈缝的。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:elite-2:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "先让补丁露出来。",
+          "reward": "hp",
+          "sex": "female"
+        },
+        {
+          "id": "journey:sail:elite-2:line-4",
+          "role": "npc",
+          "speaker": "莉风",
+          "text": "风帆守卫仍在收走旧布。我们先保护进入帆厅的路。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:elite-2:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "这块布也值得留下。",
+          "reward": "attack",
+          "sex": "female"
+        },
+        {
+          "id": "journey:sail:elite-2:line-6",
+          "role": "npc",
+          "speaker": "莉风",
+          "text": "帆上的字不多。读不下去时，我们可以坐下来等。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:elite-2:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "今天不必一次读完。",
+          "reward": "defense",
+          "sex": "female"
+        },
+        {
+          "id": "journey:sail:elite-2:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "帆角轻轻动了。白色的线头留在灯下。",
+          "sex": "female",
+          "age": 28
+        }
+      ],
+      "sceneBiome": "park",
+      "arenaCount": 5
+    },
+    {
+      "id": "journey:sail:tower",
+      "kind": "tower",
+      "island": "sail",
+      "name": "风帆岛回声试炼塔",
+      "recommendedLevel": 80,
+      "sourceId": "dungeon:HaqiTown_LightHouse_S1",
+      "partySize": 3,
+      "floors": 100,
+      "enemyTemplateIds": [
+        "pack:sail:guardian-1",
+        "pack:sail:guardian-2",
+        "pack:sail:guardian-3",
+        "pack:sail:guardian-4"
+      ],
+      "story": [
+        {
+          "id": "journey:sail:tower:line-1",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "塔上的风铃响了，塔内却仍在播放旧欢呼。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:tower:line-2",
+          "role": "npc",
+          "speaker": "莉风",
+          "text": "一百层回声都由旧记录留下。我们从第一层开始听。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:tower:line-3",
+          "role": "player",
+          "speaker": "我",
+          "text": "我想知道谁没有被听见。",
+          "reward": "hp",
+          "sex": "female"
+        },
+        {
+          "id": "journey:sail:tower:line-4",
+          "role": "npc",
+          "speaker": "莉风",
+          "text": "守卫只允许一种声音。先让道路安全，再看记录。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:tower:line-5",
+          "role": "player",
+          "speaker": "我",
+          "text": "我们一起保护伙伴。",
+          "reward": "attack",
+          "sex": "female"
+        },
+        {
+          "id": "journey:sail:tower:line-6",
+          "role": "npc",
+          "speaker": "莉风",
+          "text": "每十层可以回来休息。你不用独自走到塔顶。",
+          "sex": "female",
+          "age": 28
+        },
+        {
+          "id": "journey:sail:tower:line-7",
+          "role": "player",
+          "speaker": "我",
+          "text": "下一段也一起走。",
+          "reward": "defense",
+          "sex": "female"
+        },
+        {
+          "id": "journey:sail:tower:line-8",
+          "role": "narrator",
+          "speaker": "旁白",
+          "text": "塔门打开。风铃声和欢呼声，第一次同时传进来。",
+          "sex": "female",
+          "age": 28
+        }
+      ],
+      "sceneBiome": "park"
+    }
+  ],
+  "social": {
+    "enabled": true,
+    "size": "large",
+    "capacity": 16
+  }
+}

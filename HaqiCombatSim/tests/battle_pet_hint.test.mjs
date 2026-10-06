@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {parseLocaleFile} from '../js/locale_core.js';
+import {setTranslator,fill} from '../js/locale_runtime.js';
 import {nearestBattlePet} from '../js/view_battle_pet_hint.js';
 import {battleSpeech,updateBattleSpeech} from '../js/view_battle_pet_hint.js';
 test('NPC speech follows its head on desktop and mobile and survives UI reconstruction',()=>{
@@ -46,8 +49,32 @@ test('visible hero support pet can speak, but a missing pet or fallen hero canno
  battle.sides.near[0].hp=0;assert.equal(nearestBattlePet(battle,save,content,positions),null);
 });
 import {createBattlePetHint} from '../js/view_battle_pet_hint.js';
+test('battle advice translates full sentences, card and target names in all UI languages',()=>{
+ const el=(tag,className,...children)=>({tag,className,children,dataset:{},attributes:{},style:{setProperty(){}},setAttribute(key,value){this.attributes[key]=value;},get textContent(){return this.children.join('');},set textContent(value){this.children=[value];}});
+ const hero={id:'hero',side:'near',hp:100,school:'fire',pips:{normal:1,power:0},cooldowns:{},deckSeq:['trap'],deckMap:[1],petDeckSeq:['trap'],petDeckMap:[1]},enemy={id:'enemy',side:'far',hp:100,name:'小米粒'};
+ const model={assets:{dataset:{cards:{trap:{name:'烈火陷阱'}}}},battle:{resolved:{version:'kids',cards:{trap:{type:'SingleAttack',spellSchool:'fire',pipcost:0,spellName:'trap'}}},unitsById:{hero,enemy},sides:{near:[hero],far:[enemy]}},aiHint:{action:{seq:0,key:'trap',targetId:'enemy'}}};
+ try{
+  for(const language of ['en','ja','ko']){
+   const table=parseLocaleFile(fs.readFileSync(new URL(`../data/adventure/locale/${language}.txt`,import.meta.url),'utf8'));
+   setTranslator(text=>table[text]||text);
+   for(const [seq,petCardsOpen,pattern]of [[0,false,'可以试试「{card}」，目标选{target}。'],[10000,false,'打开“使用宠物卡”，试试「{card}」，目标选{target}。'],[10000,true,'可以试试宠物卡「{card}」，目标选{target}。']]){
+    const bubble=createBattlePetHint({...model,petCardsOpen,aiHint:{action:{seq,key:'trap',targetId:'enemy'}}},{el});
+    const text=bubble.children[0].textContent;
+    assert.equal(text,fill(pattern,{card:'烈火陷阱',target:'小米粒'}).text);
+    assert.ok(text.includes(table['烈火陷阱']));assert.ok(text.includes(table['小米粒']));
+    assert.equal(bubble.children[0].dataset.zh,fill(pattern,{card:'烈火陷阱',target:'小米粒'}).zh);
+    assert.equal(bubble.attributes['aria-label'],fill('{message} 点击收起提示',{message:text}).text);
+    if(language==='en')assert.doesNotMatch(text,/[\u3400-\u9fff]/u);
+   }
+   const pass=createBattlePetHint({...model,aiHint:{action:{pass:true}}},{el});
+   assert.equal(pass.children[0].textContent,table['先攒点魔力，等机会再出手。']);
+   const discard=createBattlePetHint({...model,aiHint:{action:{pass:true,discardSeqs:[0]}}},{el});
+   assert.equal(discard.children[0].textContent,fill('可以弃掉「{card}」，找找需要的牌。',{card:'烈火陷阱'}).text);
+  }
+ }finally{setTranslator(null);}
+});
 test('pet speech is passive plain text, suppressed while choosing or muted',()=>{
- const el=(tag,className,...children)=>({tag,className,children,style:{setProperty(name,value){this[name]=value;}},setAttribute(){}});
+ const el=(tag,className,...children)=>({tag,className,children,style:{setProperty(name,value){this[name]=value;}},setAttribute(){},get textContent(){return this.children.join('');},set textContent(value){this.children=[value];}});
  const hero={id:'hero',side:'near',hp:100,school:'fire',pips:{normal:1,power:0},cooldowns:{},deckSeq:['hit'],deckMap:[1]},enemy={id:'enemy',side:'far',hp:100,name:'侦察兵'};
  const model={assets:{dataset:{cards:{hit:{name:'烈火魔光'}}}},battle:{resolved:{version:'kids',cards:{hit:{type:'SingleAttack',spellSchool:'fire',pipcost:0,spellName:'hit'}}},unitsById:{hero,enemy},sides:{near:[hero],far:[enemy]}},aiHint:{action:{seq:0,key:'hit',targetId:'enemy'}}};
  let dismissed=0;const bubble=createBattlePetHint(model,{el,onDismiss:()=>dismissed++});

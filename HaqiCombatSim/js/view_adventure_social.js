@@ -7,7 +7,7 @@ import {renderPartnerProfile} from './view_adventure_social_profile.js';
 import {el,button} from './view_adventure.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import {dungeonStaminaHint} from './adventure_stamina_core.js';
-import {tr} from './locale_runtime.js';
+import {tr,fill} from './locale_runtime.js';
 import {drawSchoolIcon} from './card_renderer.js';
 const schoolNames={fire:'烈火',ice:'寒冰',storm:'风暴',life:'生命',death:'死亡'};
 export function renderSocial(root,state,kind,cb){
@@ -17,7 +17,7 @@ export function renderSocial(root,state,kind,cb){
     root.dataset.arenaMatch=kind==='social-pvp'?state.pvp?.matchId||'':'';
     root.replaceChildren();root.className='overlay visible'+(kind==='social-actions'?' social-actions-overlay':'');
     root.onclick=kind==='social-actions'?event=>{if(event.target===root)cb.close();}:null;
-    const title=kind==='social-actions'&&state.selected?socialActionsHeading(state):{mail:'邮件与好友',chat:'玩家与好友','social-party':state.partyDungeon?`组队 · ${state.partyDungeon.name}`:'副本组队','social-profile':'伙伴名片','social-pvp':'红蘑菇赛场'}[kind]||'冒险伙伴';
+    const title=kind==='social-actions'&&state.selected?socialActionsHeading(state):{mail:'邮件与好友',chat:'玩家与好友','social-party':state.partyDungeon?fill(`组队 · {v0}`,{v0:String(state.partyDungeon.name)}).text:'副本组队','social-profile':'伙伴名片','social-pvp':'红蘑菇赛场'}[kind]||'冒险伙伴';
     const box=el('section','modal social-modal');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',title);
     const body=el('div','modal-body');box.append(el('header','modal-header',el('h2','',title),createCloseButton(cb.close)),body);root.append(box);
     if(state.busy)body.append(el('p','muted',kind==='social-pvp'?'正在准备赛场…':'正在连接…'));
@@ -56,13 +56,13 @@ export function renderSocial(root,state,kind,cb){
         const dungeon=state.partyDungeon,frozen=state.coopActive,canCoop=state.coopCapable!==false&&!!dungeon;
         const heading=el('div','party-room-heading'),tip=el('div','party-room-hint');tip.id='party-room-hint';
         const hintLines=[];
-        if(dungeon?.kind==='tower')hintLines.push(`本次 ${state.lineupCount||1}v${state.lineupCount||1} · 层数跨模式共享`);
-        else if(dungeon?.kind)hintLines.push(`固定 ${dungeon.partySize}v${dungeon.partySize} · 可使用宠物或组队`);
+        if(dungeon?.kind==='tower')hintLines.push(fill(`本次 {v0}v{v1} · 层数跨模式共享`,{v0:String(state.lineupCount||1),v1:String(state.lineupCount||1)}).text);
+        else if(dungeon?.kind)hintLines.push(fill(`固定 {v0}v{v1} · 可使用宠物或组队`,{v0:String(dungeon.partySize),v1:String(dungeon.partySize)}).text);
         if(dungeon?.kind)hintLines.push('按阵位顺序选取出战单位，多余伙伴作为候补；没有组队伙伴时使用当前宠物阵容。');
         if(dungeon){
-            hintLines.push(`首领：${dungeon.boss?.name||'未知'} · 建议 ${dungeon.recommendedLevel||1} 级`);
+            hintLines.push(fill(`首领：{v0} · 建议 {v1} 级`,{v0:String(dungeon.boss?.name||'未知'),v1:String(dungeon.recommendedLevel||1)}).text);
             const stamina=dungeonStaminaHint(dungeon);
-            if(stamina)hintLines.push(stamina.min===stamina.max?`战斗消耗精力 ${stamina.max}`:`战斗消耗精力 ${stamina.min}–${stamina.max}`);
+            if(stamina)hintLines.push(stamina.min===stamina.max?fill(`战斗消耗精力 {v0}`,{v0:String(stamina.max)}).text:fill(`战斗消耗精力 {v0}–{v1}`,{v0:String(stamina.min),v1:String(stamina.max)}).text);
             hintLines.push(canCoop?'开放空位后，伙伴会自动加入；也可在下方主动邀请。':'此副本暂仅支持单人出发。');
         }else hintLines.push('尚未选择副本');
         if(frozen)hintLines.push('队伍已冻结。退出当前副本后才能更换伙伴。');
@@ -79,15 +79,15 @@ export function renderSocial(root,state,kind,cb){
         const schoolLabel=p=>schoolNames[p.school]||p.school||'魔法';
         const schoolIcon=school=>{
             const name=schoolNames[school]||'魔法';
-            const canvas=el('canvas','party-seat-school');canvas.width=32;canvas.height=32;canvas.setAttribute('role','img');canvas.setAttribute('aria-label',`${name}系`);
+            const canvas=el('canvas','party-seat-school');canvas.width=32;canvas.height=32;canvas.setAttribute('role','img');canvas.setAttribute('aria-label',fill(`{v0}系`,{v0:String(name)}).text);
             const context=canvas.getContext('2d');if(context)drawSchoolIcon(context,school||'balance',16,16,24);return canvas;
         };
         const self=state.hero||{name:'你',school:'',level:1,kind:'self'};
         const seatPortrait=p=>el('div','party-seat-portrait',cb.portrait(p,62,72),companionPet(p,state,cb));
         const identity=(card,p)=>{
             const name=p.name||'你',school=schoolLabel(p),level=p.level||1;
-            card.append(seatPortrait(p),el('h3','',name),el('p','party-seat-meta',schoolIcon(p.school),el('span','',`${level} 级`)));
-            card.title=`${name} · ${school} · ${level} 级`;
+            card.append(seatPortrait(p),el('h3','',name),el('p','party-seat-meta',schoolIcon(p.school),el('span','',fill(`{v0} 级`,{v0:String(level)}).text)));
+            card.title=fill(`{v0} · {v1} · {v2} 级`,{v0:String(name),v1:String(school),v2:String(level)}).text;
         };
         const selfCard=el('article','party-seat filled captain',el('span','party-seat-tag','队长'));
         identity(selfCard,self);seats.append(selfCard);
@@ -104,7 +104,7 @@ export function renderSocial(root,state,kind,cb){
                 if(!frozen)card.append(el('div','party-seat-actions',button('取消开放',()=>cb.openSlot(i),'secondary')));
             }else{
                 const why=dungeon?(canCoop?'点击开放，等候加入':'单人副本无需组队'):'请先选择副本';
-                card.append(el('span','party-seat-tag',`空位 ${i+2}`),el('div','party-seat-portrait party-seat-empty'),el('h3','','空位'));
+                card.append(el('span','party-seat-tag',fill(`空位 {v0}`,{v0:String(i+2)}).text),el('div','party-seat-portrait party-seat-empty'),el('h3','','空位'));
                 card.title=tr(why);
                 const openBtn=button('开放',()=>cb.openSlot(i),'primary');openBtn.disabled=frozen||!dungeon||!canCoop;openBtn.title=tr(why);
                 card.append(el('div','party-seat-actions',openBtn));
@@ -122,14 +122,14 @@ export function renderSocial(root,state,kind,cb){
                 if(dungeon.kind&&!state.allies.some(Boolean))footer.append(button('调整宠物阵容',()=>cb.open('pet'),'secondary'));
             }
         }
-        if(state.coopReport?.length){body.append(el('h3','','队伍战报'));for(const [i,r]of state.coopReport.entries())body.append(el('p','',`第 ${i+1} 场 · ${r.winner==='near'?'获胜':'未获胜'} · ${r.turns} 回合`));}
+        if(state.coopReport?.length){body.append(el('h3','','队伍战报'));for(const [i,r]of state.coopReport.entries())body.append(el('p','',fill(`第 {v0} 场 · {v1} · {v2} 回合`,{v0:String(i+1),v1:String(r.winner==='near'?'获胜':'未获胜'),v2:String(r.turns)}).text));}
         if(state.owner)footer.append(button(state.publicVisible===false?'开启公开展示':'关闭公开展示',cb.togglePublic,'secondary'));
         body.append(footer);
         if(!frozen&&dungeon){
             body.append(el('h3','','主动邀请'));
             if(!canCoop)body.append(el('p','muted','当前副本不支持组队邀请。'));
             for(const p of state.roster){
-                const joined=state.team.some(t=>t.id===p.id),card=el('article','social-person',el('h3','',p.name),el('p','',`${schoolNames[p.school]||p.school} · 母语${languageName(p.native)} · 正在学${languageName(p.target)}`),el('p','muted',p.interest||''));
+                const joined=state.team.some(t=>t.id===p.id),card=el('article','social-person',el('h3','',p.name),el('p','',fill(`{v0} · 母语{v1} · 正在学{v2}`,{v0:String(schoolNames[p.school]||p.school),v1:String(languageName(p.native)),v2:String(languageName(p.target))}).text),el('p','muted',p.interest||''));
                 const join=button(joined?'移出队伍':'邀请组队',()=>cb.team(p,!joined),'primary');join.disabled=!canCoop||(!joined&&state.team.length>=3);
                 card.append(button('查看名片',()=>cb.profile(p),'secondary'),join,button('交谈',()=>cb.talk(p),'secondary'));
                 if(p.kind==='account'){const friend=state.friends.find(f=>f.userId===String(p.userId));card.append(button(friend?'写信':'添加好友',()=>friend?cb.compose(friend):cb.friend(p),'secondary'));if(friend)card.append(button('私聊',()=>cb.privateChat(friend),'secondary'));}
@@ -141,7 +141,7 @@ export function renderSocial(root,state,kind,cb){
     }
     const rows=kind==='social-profile'&&state.selected?[state.selected]:state.roster;
     for(const p of rows){
-        const card=el('article','social-person',el('h3','',p.name),el('p','',`${schoolNames[p.school]||p.school} · 母语${languageName(p.native)} · 正在学${languageName(p.target)}`),el('p','muted',p.interest||''));
+        const card=el('article','social-person',el('h3','',p.name),el('p','',fill(`{v0} · 母语{v1} · 正在学{v2}`,{v0:String(schoolNames[p.school]||p.school),v1:String(languageName(p.native)),v2:String(languageName(p.target))}).text),el('p','muted',p.interest||''));
         if(kind==='social-pvp')card.append(button('开始切磋',()=>cb.challenge(p),'primary'));
         else{const joined=state.team.some(t=>t.id===p.id),join=button(joined?'移出队伍':'邀请组队',()=>cb.team(p,!joined),'primary');join.disabled=state.coopActive||!joined&&state.team.length>=3;card.append(button('查看名片',()=>cb.profile(p),'secondary'),join,button('交谈',()=>cb.talk(p),'secondary'));
             if(p.kind==='account'){const friend=state.friends.find(f=>f.userId===String(p.userId));card.append(button(friend?'写信':'添加好友',()=>friend?cb.compose(friend):cb.friend(p),'secondary'));if(friend)card.append(button('私聊',()=>cb.privateChat(friend),'secondary'));}}

@@ -13,3 +13,5 @@
 .screen[data-format=phone] .narration{height:14.792%;padding:8px 5%}
 .screen[data-format=phone] #scene-label{font-size:clamp(10px,2.7cqw,16px)}
 .screen[data-format=phone] .narration #subtitle{font-size:clamp(12px,3.4cqw,20px);width:100%;line-height:1.5}
+
+#narration-voice{max-width:240px}#read-subtitles{accent-color:var(--accent,#b8d18b)}#narration-status{font-size:12px;color:#d9c995}

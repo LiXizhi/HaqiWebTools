@@ -160,16 +160,16 @@
         "en": "2v2 · Magic and companions"
       },
       "subtitle": {
-        "zh-CN": "2对2教学：先看护盾，再看陷阱与破盾，最后由伙伴回血。",
-        "en": "A 2v2 lesson: shields, traps, shield removal and healing."
+        "zh-CN": "八张手牌，多种选择。先选术盾，再选目标，为自己挡下伤害。",
+        "en": "Eight cards, many choices. Choose a shield and its target to soften the next hit."
       },
       "duration": {
-        "long": 36,
-        "short": 36
+        "long": 52,
+        "short": 52
       },
       "cues": [
         {
-          "at": 0.1388888888888889,
+          "at": 0.17307692307692307,
           "action": "skill-turn",
           "group": 1,
           "caption": {
@@ -178,7 +178,7 @@
           }
         },
         {
-          "at": 0.3333333333333333,
+          "at": 0.3076923076923077,
           "action": "skill-turn",
           "group": 2,
           "caption": {
@@ -187,25 +187,25 @@
           }
         },
         {
-          "at": 0.4722222222222222,
+          "at": 0.4807692307692308,
           "action": "skill-turn",
           "group": 3,
           "caption": {
-            "zh-CN": "攻击到来：护盾抵消部分伤害，陷阱也会参与结算。",
-            "en": "The incoming hit consumes wards and resolves the trap."
+            "zh-CN": "护盾减轻伤害，陷阱放大攻势。出手之前，先看清局面。",
+            "en": "Shields soften hits; traps strengthen attacks. Read the field before you act."
           }
         },
         {
-          "at": 0.6111111111111112,
+          "at": 0.5769230769230769,
           "action": "skill-turn",
           "group": 4,
           "caption": {
-            "zh-CN": "生命伙伴为受伤主角回血；同时给对手挂上烈火陷阱。",
-            "en": "Your Life partner heals you while you prepare a Fire trap."
+            "zh-CN": "伙伴为你恢复生命，你为下一击布下陷阱。",
+            "en": "Your partner restores your health while you set a trap for the next attack."
           }
         },
         {
-          "at": 0.8333333333333334,
+          "at": 0.8076923076923077,
           "action": "skill-turn",
           "group": 5,
           "caption": {
@@ -224,8 +224,8 @@
         "en": "A wider world"
       },
       "subtitle": {
-        "zh-CN": "打开地图，九座岛屿连成一片海。缩放寻找地标，选择下一站。",
-        "en": "Open the atlas. Explore nine islands and choose your next destination."
+        "zh-CN": "九座魔法岛屿，各有风景。海上的漩涡，还通向更大的世界。",
+        "en": "Nine magical islands, each with its own sights. An ocean vortex leads farther still."
       },
       "duration": {
         "long": 16,
@@ -238,8 +238,8 @@
           "selector": ".map-vortex:not([hidden])",
           "expect": ".earth-atlas",
           "caption": {
-            "zh-CN": "点击海上的漩涡，进入现实世界地图。",
-            "en": "Enter the real world through the ocean vortex."
+            "zh-CN": "穿过漩涡，从魔法群岛走向现实世界。",
+            "en": "Cross the vortex from magical islands into the real world."
           }
         }
       ]
@@ -252,8 +252,8 @@
         "en": "Shenzhen · Follow the road into the city"
       },
       "subtitle": {
-        "zh-CN": "直接点击深圳，进入现实世界。",
-        "en": "Select Shenzhen to enter the real world."
+        "zh-CN": "这一站，深圳。从世界地图出发，探索城市之间的道路。",
+        "en": "Next stop: Shenzhen. Set out from the world map and explore the roads between places."
       },
       "duration": {
         "long": 26,
@@ -270,8 +270,8 @@
           "action": "ui-click",
           "selector": ".earth-map-place button",
           "caption": {
-            "zh-CN": "先加载深圳周边道路和城市资源，停下来看看。加载完成后再等3秒出发。",
-            "en": "Preload the roads and city, then pause for three seconds before departing."
+            "zh-CN": "深圳就在脚下。沿着道路，去发现熟悉地名里的新故事。",
+            "en": "Welcome to Shenzhen. Follow its roads and find new stories in familiar places."
           }
         },
         {
@@ -279,8 +279,17 @@
           "action": "feature",
           "name": "earth-walk",
           "caption": {
-            "zh-CN": "沿着道路前往深圳城市入口，看看一路的街区。",
-            "en": "Follow the road toward the Shenzhen city entrance."
+            "zh-CN": "从深圳出发，沿道路前往皇岗口岸。",
+            "en": "Leave Shenzhen and follow the road to Huanggang Port."
+          }
+        },
+        {
+          "at": 0.4230769230769231,
+          "action": "feature",
+          "name": "earth-waypoint",
+          "caption": {
+            "zh-CN": "经过皇岗口岸，继续沿路前往福田口岸。",
+            "en": "Pass Huanggang Port and continue along the road to Futian Port."
           }
         },
         {
@@ -288,8 +297,8 @@
           "action": "feature",
           "name": "earth-enter",
           "caption": {
-            "zh-CN": "抵达深圳入口，直接进入城市总览。",
-            "en": "Arrive at Shenzhen and enter the city overview."
+            "zh-CN": "走进福田口岸的游戏街区，遇见居民和街边小店。",
+            "en": "Step into Futian Port’s in-game neighborhood, with residents and local shops."
           }
         },
         {
@@ -297,8 +306,8 @@
           "action": "feature",
           "name": "earth-exit",
           "caption": {
-            "zh-CN": "进入城里走几步，再返回现实世界，继续下一段旅程。",
-            "en": "Walk a few steps inside, then return to the real world."
+            "zh-CN": "告别这条街，下一段旅程仍在地图上等你。",
+            "en": "Leave this street behind. Your next journey awaits on the map."
           }
         }
       ]
@@ -311,8 +320,8 @@
         "en": "A reason to keep exploring"
       },
       "subtitle": {
-        "zh-CN": "打开冒险手记，目标、进度、奖励和接取地点一目了然。",
-        "en": "Your journal brings together objectives, progress, rewards and quest givers."
+        "zh-CN": "冒险手记记下目标、进度和奖励，让每次出发都有方向。",
+        "en": "Your journal tracks goals, progress and rewards, giving each journey a direction."
       },
       "duration": {
         "long": 12,
@@ -324,8 +333,8 @@
           "action": "ui-click",
           "selector": ".journal-directory button",
           "caption": {
-            "zh-CN": "选择另一条任务，查看目标与前置条件，再决定下一步。",
-            "en": "Inspect another quest and its requirements before choosing your next step."
+            "zh-CN": "看看任务需要什么，再挑一条感兴趣的线索。",
+            "en": "Check the requirements, then follow a quest that catches your interest."
           },
           "index": 1
         }
@@ -339,8 +348,8 @@
         "en": "Companions for the journey"
       },
       "subtitle": {
-        "zh-CN": "认识你的宠物，照顾它们的成长，搭配自己的冒险小队。",
-        "en": "Meet your pets, care for them, and build your own adventuring team."
+        "zh-CN": "从幼小到长大，五位伙伴各有模样。选好阵容，一起出发。",
+        "en": "Five companions, each with a different look and stage of growth. Choose your team and set out."
       },
       "duration": {
         "long": 20,
@@ -348,17 +357,17 @@
       },
       "cues": [
         {
-          "at": 0.08,
+          "at": 0.25,
           "action": "ui-click",
           "selector": ".pet-stand:has(.pet-sheet)",
           "caption": {
-            "zh-CN": "点开伙伴，查看标签、饱食与成长。每只宠物都有自己的长处。",
-            "en": "Open a companion to see traits, hunger and growth."
+            "zh-CN": "每只宠物都有自己的长处，也需要你的照顾。",
+            "en": "Every pet has its own strengths and needs your care."
           },
           "expect": "dialog.pet-profile-modal"
         },
         {
-          "at": 0.22,
+          "at": 0.5,
           "action": "ui-click",
           "selector": ".pet-position-actions button:last-child",
           "dialog": true,
@@ -368,12 +377,12 @@
           }
         },
         {
-          "at": 0.3,
+          "at": 0.7,
           "action": "feature",
           "name": "hide-panel",
           "caption": {
-            "zh-CN": "回到场景，附近的宠物会靠近分享营养餐，演示伙伴间的互动。",
-            "en": "Return to the world and watch nearby pets gather to share the meal."
+            "zh-CN": "一份营养餐，把附近的小伙伴也聚到了一起。",
+            "en": "A shared meal brings nearby companions together."
           }
         }
       ]
@@ -416,8 +425,8 @@
           "action": "ui-click",
           "selector": "[data-food-slot=\"0\"]",
           "caption": {
-            "zh-CN": "点击空槽，选择口粮和数量。",
-            "en": "Open an empty feeder and choose a food and quantity."
+            "zh-CN": "选好口粮和份数，为伙伴备足补给。",
+            "en": "Choose food and portions to keep your companions supplied."
           },
           "expect": "dialog[open]"
         },
@@ -426,8 +435,8 @@
           "action": "ui-click",
           "selector": ".pet-food-choice button.primary",
           "caption": {
-            "zh-CN": "放入十份口粮，库存与食槽按真实规则变化。",
-            "en": "Add ten portions. Inventory and feeder quantities update together."
+            "zh-CN": "十份口粮入槽，伙伴饿了就能吃上一口。",
+            "en": "Ten portions in the feeder, ready for hungry companions."
           },
           "dialog": true,
           "mutates": true
@@ -437,8 +446,8 @@
           "action": "ui-click",
           "selector": "[data-food-slot=\"0\"]",
           "caption": {
-            "zh-CN": "伙伴会自动进食。再次点开食槽，可查看余量或取回背包。",
-            "en": "Companions eat automatically. Reopen the feeder to inspect or retrieve the remaining food."
+            "zh-CN": "伙伴会自动进食，剩余口粮随时可查。",
+            "en": "Companions eat automatically, and you can check what remains."
           }
         },
         {
@@ -462,8 +471,8 @@
         "en": "Ride toward the horizon"
       },
       "subtitle": {
-        "zh-CN": "从宠物窗口切换到坐骑，查看形象，再骑上它去探索。",
-        "en": "Switch to mounts, inspect one and ride into the world."
+        "zh-CN": "选一只喜欢的坐骑，换个模样去旅行。",
+        "en": "Choose a mount you love and set out in a new style."
       },
       "duration": {
         "long": 12,
@@ -487,8 +496,8 @@
           "dialog": true,
           "mutates": true,
           "caption": {
-            "zh-CN": "骑上坐骑，行走与外观会随之变化。",
-            "en": "Mount up to change your appearance and travel speed."
+            "zh-CN": "骑上伙伴，向更远的地方出发。",
+            "en": "Climb aboard and head farther afield."
           }
         },
         {
@@ -534,8 +543,8 @@
         "en": "Make your equipment stronger"
       },
       "subtitle": {
-        "zh-CN": "选中装备，查看下一等级的属性和材料，再动手强化。",
-        "en": "Choose equipment, inspect its next level and material cost, then upgrade."
+        "zh-CN": "让熟悉的装备继续成长，为下一次挑战做好准备。",
+        "en": "Help familiar equipment grow stronger for the next challenge."
       },
       "duration": {
         "long": 13,
@@ -547,8 +556,8 @@
           "action": "ui-click",
           "selector": ".strengthening-grid button",
           "caption": {
-            "zh-CN": "放入装备，先看清属性提升与材料需求。",
-            "en": "Select the equipment to preview its improvement and cost."
+            "zh-CN": "强化之前，看看属性能提升多少、需要哪些材料。",
+            "en": "Before upgrading, review the gains and materials you need."
           }
         },
         {
@@ -556,8 +565,8 @@
           "action": "ui-click",
           "selector": ".strengthening-submit",
           "caption": {
-            "zh-CN": "一次强化，一级成长。材料扣除与属性提升都来自正式规则。",
-            "en": "Upgrade one level using the actual game rules and materials."
+            "zh-CN": "一次强化，让装备多一份力量。",
+            "en": "One upgrade gives your equipment a little more power."
           },
           "mutates": true
         }
@@ -571,8 +580,8 @@
         "en": "Shape your strengths"
       },
       "subtitle": {
-        "zh-CN": "装备、宝石、镶嵌符：三步准备，成功率在确认前看清楚。",
-        "en": "Equipment, gems and socketing runes. Review the odds before confirming."
+        "zh-CN": "为装备搭配宝石，让成长更合心意。",
+        "en": "Match gems to your equipment and shape its growth."
       },
       "duration": {
         "long": 14,
@@ -611,8 +620,8 @@
           "action": "ui-click",
           "selector": ".gem-confirm button.primary",
           "caption": {
-            "zh-CN": "确认镶嵌，结果由固定种子的正式规则决定。",
-            "en": "Confirm socketing. The seeded game rules determine the result."
+            "zh-CN": "材料准备齐全，试试这次镶嵌能否成功。",
+            "en": "With the materials ready, see whether this socketing attempt succeeds."
           },
           "mutates": true
         }
@@ -626,8 +635,8 @@
         "en": "Build your strategy"
       },
       "subtitle": {
-        "zh-CN": "超强策略性：术、陷阱、反射、增益与减益——亲手配出你的制胜卡组。",
-        "en": "Deep strategy: spells, traps, reflection, buffs and debuffs. Build your winning deck."
+        "zh-CN": "护盾、陷阱、反射与增益，各有用处。把你的战术装进卡包。",
+        "en": "Shields, traps, reflection and buffs each have a role. Build your tactics into your deck."
       },
       "duration": {
         "long": 12,
@@ -804,8 +813,8 @@
           "text": "邀请组队",
           "expect": ".party-seats",
           "caption": {
-            "zh-CN": "邀请好友加入队伍，一起准备下一场冒险（演示角色）。",
-            "en": "Invite a demo friend to prepare for the next adventure."
+            "zh-CN": "留一个位置给好友，准备结伴出发。（组队演示）",
+            "en": "Save a seat for a friend and prepare to set out together. (Party demo.)"
           }
         }
       ],
@@ -819,8 +828,8 @@
         "en": "Form a party with friends"
       },
       "subtitle": {
-        "zh-CN": "选择副本、开放席位，再邀请两位伙伴。这里使用隔离演示角色展示组队界面。",
-        "en": "Choose a dungeon, open a seat and invite two demo companions."
+        "zh-CN": "选好副本，邀请伙伴入队。冒险路上，多一份照应。（组队演示）",
+        "en": "Choose a dungeon and invite companions to share the journey. (Party demo.)"
       },
       "duration": {
         "long": 15,
@@ -855,8 +864,8 @@
         "en": "A conversation opens a world"
       },
       "subtitle": {
-        "zh-CN": "真实AI提前生成词义映射与对话评价。看同色词语的对应关系，再用英语回答。",
-        "en": "Real AI prepares word mappings and learning feedback ahead of the scene."
+        "zh-CN": "同色词语连起中英含义，让你读懂对话，也敢用英语回应。",
+        "en": "Matching colors connect Chinese and English words, helping you understand and reply."
       },
       "duration": {
         "long": 22,
@@ -875,16 +884,16 @@
           "at": 0.63,
           "action": "learning-next",
           "caption": {
-            "zh-CN": "真实评价通过后，按游戏规则获得今日战斗属性加成。",
-            "en": "A qualifying AI evaluation grants the daily battle bonus."
+            "zh-CN": "有效的英语交流，还能带来今日战斗加成。",
+            "en": "Qualifying English conversations can also earn a daily battle bonus."
           }
         },
         {
           "at": 0.88,
           "action": "learning-battle",
           "caption": {
-            "zh-CN": "带着今日语言加成进入2对2：加成写入这一场战斗。",
-            "en": "Enter a 2v2 match with the earned daily language bonus."
+            "zh-CN": "把学习收获带进战斗，和伙伴一起迎接挑战。",
+            "en": "Bring what you earned through learning into battle with your companion."
           }
         }
       ],
@@ -911,8 +920,8 @@
           "action": "ui-click",
           "selector": ".speech-rules summary",
           "caption": {
-            "zh-CN": "正式冒险中，口语或剧情跟读通过后累计；示例问答不会代领奖励。",
-            "en": "In the game, successful speaking or story reading counts. This demo claims no rewards."
+            "zh-CN": "完成符合条件的口语或剧情跟读，积累今日进度。",
+            "en": "Complete qualifying speaking or story-reading activities to build daily progress."
           }
         }
       ]
@@ -1149,8 +1158,8 @@
         "en": "Sail Island"
       },
       "subtitle": {
-        "zh-CN": "新的岛屿，新的居民。地图上的下一站，正等你亲自探索。",
-        "en": "New islands and new residents. Your next destination awaits."
+        "zh-CN": "风帆岛就在前方，新的相遇从这里开始。",
+        "en": "Sail Island lies ahead, with new encounters waiting."
       },
       "duration": {
         "long": 5,
@@ -1167,8 +1176,8 @@
         "en": "Tide Island"
       },
       "subtitle": {
-        "zh-CN": "新的岛屿，新的居民。地图上的下一站，正等你亲自探索。",
-        "en": "New islands and new residents. Your next destination awaits."
+        "zh-CN": "走向潮汐岛，继续寻找海上的故事。",
+        "en": "Head to Tide Island and discover more stories at sea."
       },
       "duration": {
         "long": 5,
@@ -1185,8 +1194,8 @@
         "en": "Floating Island"
       },
       "subtitle": {
-        "zh-CN": "新的岛屿，新的居民。地图上的下一站，正等你亲自探索。",
-        "en": "New islands and new residents. Your next destination awaits."
+        "zh-CN": "把下一站留给浮空岛，让旅程继续。",
+        "en": "Make Floating Island your next stop and keep exploring."
       },
       "duration": {
         "long": 5,

@@ -37,7 +37,7 @@ function setup(t){
  function el(tag,cls='',...children){
   return {tagName:tag,className:cls,children:children.flat(),dataset:{},style:{},attributes:{},listeners:{},scrollLeft:0,clientWidth:500,scrollWidth:500,
    classList:{add(){},remove(){},toggle(){}},setAttribute(k,v){this.attributes[k]=v;},append(...items){this.children.push(...items);},replaceChildren(...items){this.children=items;},
-   querySelector(){return null;},closest(){return this;},addEventListener(type,fn){(this.listeners[type]||=[]).push(fn);},focus(){},showModal(){this.open=true;},close(){this.open=false;},getContext(){return {};},get childNodes(){return this.children;},contains(node){return this.children.includes(node);},get textContent(){return this.text||this.children.map(child=>typeof child==='string'?child:child.textContent).join('');},set textContent(value){this.text=value;this.children=[];}};
+   querySelector(){return null;},closest(selector){return selector==='.local-personal'?null:this;},addEventListener(type,fn){(this.listeners[type]||=[]).push(fn);},focus(){},showModal(){this.open=true;},close(){this.open=false;},getContext(){return {};},get childNodes(){return this.children;},contains(node){return this.children.includes(node);},get textContent(){return this.text||this.children.map(child=>typeof child==='string'?child:child.textContent).join('');},set textContent(value){this.text=value;this.children=[];}};
  }
  function button(children,onclick,cls){const node=el('button',cls,...[children].flat());node.onclick=onclick;node.click=()=>{if(!node.disabled)onclick();};return node;}
  globalThis.document={createElement:el,createElementNS:(_ns,tag)=>el(tag)};globalThis.requestAnimationFrame=fn=>fn();

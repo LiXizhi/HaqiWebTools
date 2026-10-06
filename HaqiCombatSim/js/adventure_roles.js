@@ -38,7 +38,7 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         // Cloud downloads can arrive before this store switches off the guest account.
         petFileIOFor(account,roleId){return fileIO(scope(accountKey(account),roleId));},
         petScope(roleId){return scope(key(),roleId);},
-        loadPet(save,id){const next=JSON.parse(JSON.stringify(save));hydratePetFile(next,id,scope(key(),state.catalog.activeId),fileIO(scope(key(),state.catalog.activeId)).read,content);return restoreRuntime(durableSave(next),content,runtimeValues(next));},
+        loadPet(save,id,roleId=state.catalog.activeId){const next=JSON.parse(JSON.stringify(save));hydratePetFile(next,id,scope(key(),roleId),fileIO(scope(key(),roleId)).read,content);return restoreRuntime(durableSave(next),content,runtimeValues(next));},
         get owner() { return owner; },
         get catalog() { return state.catalog; },
         get base() { return state.base; },
@@ -155,10 +155,17 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         },
         checkpoint() { return JSON.stringify(state.catalog); },
         markSynced(base, captured) { write({ ...state, base, dirty: coreCatalogKey(state.catalog) !== coreCatalogKey(JSON.parse(captured)) }); },
-        scoped() {
-            const capturedOwner = owner, id = state.catalog.activeId, accountKey = key();
+        commitRoles(updates) {
+            const ids=Object.keys(updates);
+            if(!ids.length||ids.some(id=>!state.catalog.roles.some(row=>row.id===id)))throw Error('角色不存在');
+            const catalog={...state.catalog,roles:state.catalog.roles.map(row=>updates[row.id]?{...row,save:structuredClone(updates[row.id])}:row)};
+            write({...state,catalog,dirty:changed(catalog)});
+            return ids.map(id=>state.catalog.roles.find(row=>row.id===id).save);
+        },
+        scoped(roleId=null) {
+            const capturedOwner = owner, id = roleId||state.catalog.activeId, accountKey = key();
             if (!id) throw Error('请先选择角色');
-            const assertCurrent = () => { if (capturedOwner !== owner || id !== state.catalog.activeId) throw Error('角色已切换，请重新操作。'); };
+            const assertCurrent = () => { if (capturedOwner !== owner || (!roleId&&id !== state.catalog.activeId)||!state.catalog.roles.some(row=>row.id===id)) throw Error('角色已切换，请重新操作。'); };
             return {
                 getItem(k) { assertCurrent();return k === SAVE_KEY ? JSON.stringify(state.catalog.roles.find(row => row.id === id).save) : storage.getItem(`${accountKey}.${id}.${k}`); },
                 setItem(k, text) {

@@ -1,4 +1,13 @@
 const english={
+  "正在合成字幕…": "Synthesizing narration…",
+  "正在朗读字幕": "Reading subtitles aloud",
+  "正在加载Keepwork音色…": "Loading Keepwork voices…",
+  "Keepwork音色加载失败，播放时重试": "Keepwork voices unavailable; retry on playback",
+  "朗读字幕": "Read subtitles aloud",
+  "音色": "Voice",
+  "自动匹配字幕语言": "Match subtitle language automatically",
+  "朗读暂不可用，可切换音色重试": "Speech unavailable; try another voice",
+  "当前浏览器不支持字幕朗读": "Subtitle speech is not supported in this browser",
   "两个世界，一场属于你的冒险。": "Two worlds. One adventure of your own.",
   "完整篇 · 全功能导览": "Full film · Feature tour",
   "精华篇 · 冒险预告": "Highlights · Adventure trailer",

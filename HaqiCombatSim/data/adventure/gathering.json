@@ -1,0 +1,72 @@
+{
+  "version": 2,
+  "items": [
+    {
+      "id": "flower",
+      "name": "花朵",
+      "terrain": "green",
+      "color": "#e89fbb",
+      "frames": [
+        "daisies",
+        "buttercups",
+        "blueFlowers",
+        "pinkFlowers",
+        "mixedMeadow",
+        "waterLily"
+      ]
+    },
+    {
+      "id": "herb",
+      "name": "草药",
+      "terrain": "green",
+      "color": "#80aa51",
+      "frames": [
+        "grass",
+        "wildGrass",
+        "clover",
+        "fern",
+        "moss",
+        "greenLeaves",
+        "redMushrooms",
+        "paleMushrooms",
+        "dryGrass",
+        "coastalGrass",
+        "reeds",
+        "cattails",
+        "bankGrass",
+        "algae",
+        "rushes",
+        "lilyPads"
+      ]
+    },
+    {
+      "id": "stone",
+      "name": "石头",
+      "terrain": "all",
+      "color": "#abb2b3",
+      "frames": [
+        "grassStone",
+        "mossRocks",
+        "sandPebbles",
+        "sandstone",
+        "beachRocks",
+        "wetPebbles",
+        "bankStone",
+        "snowRocks",
+        "volcanicGravel",
+        "lavaSlab",
+        "greyPebbles",
+        "lichenStone"
+      ]
+    },
+    {
+      "id": "ore",
+      "name": "金属矿",
+      "terrain": "rock",
+      "color": "#9eb8cc",
+      "frames": [
+        "iceCrystals"
+      ]
+    }
+  ]
+}

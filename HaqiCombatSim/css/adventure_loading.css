@@ -50,14 +50,22 @@
 .role-head{padding-bottom:16px;border-bottom:1px solid #d6bf8366;margin-bottom:14px}
 .role-head>.eyebrow{color:#8c754b;letter-spacing:.14em;margin-bottom:5px}
 .role-head h2{margin:0 0 8px;letter-spacing:.06em;font-size:28px}
+.role-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.role-heading>button{font-size:12px;min-height:40px;padding:8px 14px;margin-bottom:8px}
+.role-duo-status{font-size:12px;line-height:1.5;color:var(--muted);margin:0 0 8px}
+.role-player-tag{display:inline-block;font-size:11px;font-weight:700;line-height:1.6;padding:1px 7px;border-radius:5px;background:#244f3b;color:#fff8df}
+.role-player-tag.player-2{background:#34566c}
+.role-manager .role-card.duo-confirmed{border-color:#688b5c;background:#e7efe4}
 .role-head .role-account{font-size:12px;line-height:1.7;margin:0}
 .role-manager .role-guest-note{font-size:12px;font-weight:400;color:#886745}
-.role-screen .role-list{align-content:start;gap:9px;padding:2px 5px 4px 2px;scrollbar-gutter:stable}
+.role-screen .role-list{align-content:start;grid-auto-rows:max-content;gap:9px;padding:2px 5px 4px 2px;scrollbar-gutter:stable}
 .role-manager .role-card{position:relative;flex:none;display:grid;grid-template-columns:68px minmax(0,1fr) auto;gap:12px;min-height:94px;padding:8px 12px;border-color:#d7d5bc;border-radius:12px;background:#fffaf080;transition:border-color .2s,background .2s}
 .role-manager .role-card.recent{background:linear-gradient(110deg,#dfebda,#f0f3e7);border-color:#7e9e76;box-shadow:inset 3px 0 #688b5c}
+.role-manager .role-description{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
+.role-manager .role-description>.role-player-tag{max-width:100%;box-sizing:border-box;line-height:1.6}
 .role-manager .role-description h2{font-size:17px;letter-spacing:.03em;margin:0;line-height:1.5}
-.role-manager .role-description p{font-size:12px;margin:4px 0}
-.role-manager .role-description small{display:block;font-size:10px;color:#698061}
+.role-manager .role-description p{font-size:12px;margin:0;line-height:1.5}
+.role-manager .role-description small{display:block;font-size:10px;line-height:1.4;color:#698061}
 .role-manager .role-card button{min-height:44px;padding:9px 14px;font-size:12px;white-space:nowrap;margin:0}
 .role-manager .role-foot{padding-top:14px;margin-top:12px;border-top:1px solid #d6bf8366}
 .role-manager .role-count{font-size:11px}

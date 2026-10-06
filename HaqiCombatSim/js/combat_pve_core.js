@@ -22,10 +22,11 @@ function runeCardReady(battle, row) {
     const card = battle.resolved.cards[row.key];
     return isSupportedType(card?.type) || isCatchRuneCard(card);
 }
-export function runeCardsInHand(battle) {
+export function runeCardsInHand(battle,unitId=null) {
+    if(unitId&&battle.localHumans?.[unitId])return runeCardsInHand({...battle,...battle.localHumans[unitId],localHumans:null});
     return (battle.runes||[]).filter(row=>row.count>(battle.runeUsed[row.itemId]||0)&&runeCardReady(battle,row)).map(row=>({key:row.key,runeId:row.itemId,seq:-row.itemId,count:row.count-(battle.runeUsed[row.itemId]||0)}));
 }
-export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0, specialCardRulesVersion = 0, captureRulesVersion = 0, petTraitRulesVersion = 0, monsterTraits = [], petTraitParams = null, monsterStatsVersion = 1, languageBuff = null, languageBuffLimits = null }) {
+export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0, specialCardRulesVersion = 0, captureRulesVersion = 0, petTraitRulesVersion = 0, monsterTraits = [], petTraitParams = null, monsterStatsVersion = 1, languageBuff = null, languageBuffLimits = null, localHumans = null }) {
     if(![0,1].includes(petTraitRulesVersion))throw Error('宠物标签规则版本无效');
     if(petTraitRulesVersion===1){
         if(monsterTraits.length!==monsters.length)throw Error('怪物标签记录无效');
@@ -99,6 +100,15 @@ export function createPveBattle({ dataset, player, monsters, monsterSlots = null
         const base=Math.ceil(Math.ceil(damage*arena.resolved.adventure.damageThreatRatio)*ratio);
         for(const mob of arena.sides.far)if(U.isAlive(mob)&&(!area||mob===target))appendThreat(mob,caster,mob===target?base:Math.ceil(base*arena.resolved.adventure.splashDamageThreatRatio),[],threatWeight(caster));
     };
+    if(localHumans){
+        const ids=Object.keys(localHumans);
+        if(ids.length!==2||ids.some(id=>!arena.sides.near.some(u=>u.id===id)))throw Error('双人操控位无效');
+        for(const id of ids){
+            const r=localHumans[id];
+            if(!r||!Number.isInteger(r.heroLevel)||r.heroLevel<1||!Number.isSafeInteger(r.captureStock)||r.captureStock<0||!Array.isArray(r.ownedPets)||r.ownedPets.some(p=>typeof p!=='string')||!Array.isArray(r.runes)||r.runes.some(row=>!row||!Number.isSafeInteger(row.itemId)||row.itemId<=0||!Number.isSafeInteger(row.count)||row.count<=0||typeof row.key!=='string'||!row.key)||new Set(r.runes.map(row=>row.itemId)).size!==r.runes.length)throw Error('双人资源检查点无效');
+        }
+        arena.localHumans=Object.fromEntries(ids.map(id=>[id,{...structuredClone(localHumans[id]),runeUsed:{},captureUsed:0,captured:[],capturedTraits:[]}]));
+    }
     arena.runes=structuredClone(runes);arena.runeUsed={};arena.completedDecisions=0;
     if(threatRulesVersion>=2)arena.onSingleHealThreat=(caster,heal)=>{
         if(caster.isMob)return;
@@ -106,7 +116,7 @@ export function createPveBattle({ dataset, player, monsters, monsterSlots = null
         for(const mob of arena.sides.far)if(U.isAlive(mob))appendThreat(mob,caster,amount,[],threatWeight(caster));
     };
     arena.monsterTemplates = monsters;arena.captureStock=captureStock;arena.captureUsed=0;arena.captured=[];arena.ownedPets=[...ownedPets];arena.heroLevel=heroLevel;
-    for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];unit.slot=spec.slot??i;unit.speciesId=spec.speciesId;if(spec.passiveTraits)unit.passiveTraits={...spec.passiveTraits};if(spec.supportPetTraits)unit.supportPetTraits={...spec.supportPetTraits};if(Number.isFinite(spec.hp))unit.hp=Math.max(0,Math.min(unit.maxHp,Math.floor(spec.hp)));}
+    for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];unit.slot=spec.slot??i;unit.speciesId=spec.speciesId;if(localHumans?.[spec.id])unit.arenaProfile={name:spec.name,appearance:spec.appearance,bodyId:spec.bodyId,headId:spec.headId,school:spec.school,mountId:spec.mountId};if(spec.passiveTraits)unit.passiveTraits={...spec.passiveTraits};if(spec.supportPetTraits)unit.supportPetTraits={...spec.supportPetTraits};if(Number.isFinite(spec.hp))unit.hp=Math.max(0,Math.min(unit.maxHp,Math.floor(spec.hp)));}
     applyDungeonLanguageBuff(arena.sides.near[0],languageBuff,languageBuffLimits||resolved.dungeonLanguage);
     monsters.forEach((m,i) => {
         const u = arena.sides.far[i]; if(monsterSlots)u.slot=monsterSlots[i]; u.isMob = true; u.maxHp = Number(m.maxHp||m.hp); u.hp = Math.min(u.maxHp, Number(m.hp));
@@ -250,20 +260,25 @@ export function playPveRound(a,decision) {
     decision=structuredClone(decision);
     if(decision?.aiVersion!==undefined&&decision.aiVersion!==1)throw Error('战斗 AI 版本不兼容');
     if(decision?.aiVersion===1){
-        if(decision.aiPicks!==undefined&&(!decision.aiPicks||typeof decision.aiPicks!=='object'||Array.isArray(decision.aiPicks)||Object.keys(decision.aiPicks).some(id=>!a.sides.near.some(u=>u.id===id&&u!==a.sides.near[0]))))throw Error('伙伴 AI 记录无效');
+        if(decision.aiPicks!==undefined&&(!decision.aiPicks||typeof decision.aiPicks!=='object'||Array.isArray(decision.aiPicks)||Object.keys(decision.aiPicks).some(id=>!a.sides.near.some(u=>u.id===id&&(a.localHumans?!a.localHumans[id]:u!==a.sides.near[0])))))throw Error('伙伴 AI 记录无效');
         decision.aiPicks={...(decision.aiPicks||{})};
     }
     if(a.finished)throw new Error('战斗已经结束');
     if(decision?.chatRequest!==undefined&&!BATTLE_CHAT.some(row=>row.id===decision.chatRequest&&row.intent))throw Error('战斗对白请求无效');
     if(!decision||typeof decision!=='object'||Array.isArray(decision)||decision.discardSeqs!==undefined&&!Array.isArray(decision.discardSeqs))throw Error('战斗决定无效');
-    const u=a.sides.near[0], discarded=decision.discardSeqs || [];
-    const rune=decision.runeId===undefined?null:a.runes.find(row=>row.itemId===decision.runeId);
+    const ids=a.localHumans?Object.keys(a.localHumans):[a.sides.near[0].id];
+    if(a.localHumans&&(!decision.humanDecisions||Object.keys(decision.humanDecisions).length!==ids.length||ids.some(id=>!decision.humanDecisions[id])))throw Error('请等待两位玩家选择完毕');
+    const actions=new Map(),picks=new Map();
+    function prepareHuman(u,decision,resources){
+    const discarded=decision.discardSeqs || [];
+    if(!decision||typeof decision!=='object'||Array.isArray(decision)||!Array.isArray(discarded))throw Error('战斗决定无效');
+    const rune=decision.runeId===undefined?null:resources.runes.find(row=>row.itemId===decision.runeId);
     const runeCard=rune?a.resolved.cards[rune.key]:null;
-    if(decision.runeId!==undefined&&(!rune||rune.key!==decision.key||decision.pass||decision.capture||!U.isAlive(u)||(a.runeUsed[rune.itemId]||0)>=rune.count||!(isSupportedType(runeCard?.type)||isCatchRuneCard(runeCard))))throw Error('符文不可用或数量不足');
+    if(decision.runeId!==undefined&&(!rune||rune.key!==decision.key||decision.pass||decision.capture||!U.isAlive(u)||(resources.runeUsed[rune.itemId]||0)>=rune.count||!(isSupportedType(runeCard?.type)||isCatchRuneCard(runeCard))))throw Error('符文不可用或数量不足');
     for(const seq of discarded) if(!Number.isInteger(seq)||u.deckMap[seq]!==1)throw new Error('无法弃掉这张牌');
     if(decision.capture){
         const target=a.unitsById[decision.targetId];
-        if(!U.isAlive(u)||!target?.isMob||!U.isAlive(target)||!target.template.speciesId||target.template.unlockLevel>a.heroLevel||a.captureUsed>=a.captureStock)throw Error('无法捕获：需要晶球、存活的野生宠物和解锁等级');
+        if(!U.isAlive(u)||!target?.isMob||!U.isAlive(target)||!target.template.speciesId||target.template.unlockLevel>resources.heroLevel||resources.captureUsed>=resources.captureStock)throw Error('无法捕获：需要晶球、存活的野生宠物和解锁等级');
     }
     if(!decision.pass&&!decision.capture&&U.isAlive(u)) {
         if(!rune&&(!Number.isInteger(decision.seq)||!U.selectableCards(u).some(h=>h.seq===decision.seq&&h.key===decision.key)||discarded.includes(decision.seq)))throw new Error('请选择手中的卡牌');
@@ -271,16 +286,13 @@ export function playPveRound(a,decision) {
         if(!U.canCast(u,card,a.resolved))throw new Error('魔力不足或技能尚在冷却');
         if(!validTargets(a,u,card).some(t=>t.id===decision.targetId))throw new Error('请选择有效目标');
     }
-    a.phase='play';
-    for(const seq of discarded)U.discardCard(u,seq);
-    monstersAct(a,'before');
-    const playerAct=()=>{
+    return ()=>{
         if(finished(a)||!U.isAlive(u)||!beforeAct(a,u))return;
         u.turnsPlayed++;
         if(decision.capture){
-            a.captureUsed++;const target=a.unitsById[decision.targetId],p=a.resolved.adventure;
+            resources.captureUsed++;const target=a.unitsById[decision.targetId],p=a.resolved.adventure;
             const success=U.isAlive(target)&&a.rng.float()<p.captureBase+p.captureWounded*(1-target.hp/target.maxHp);
-            if(success){a.captured.push(target.template.speciesId);a.capturedTraits.push({...target.passiveTraits});target.hp=0;}
+            if(success){resources.captured.push(target.template.speciesId);resources.capturedTraits.push({...target.passiveTraits});target.hp=0;}
             emit(a,{type:'capture',caster:u.id,target:target.id,success});
         }
         else if(decision.pass)emit(a,{type:'pass',caster:u.id,reason:'pass'});
@@ -291,11 +303,11 @@ export function playPveRound(a,decision) {
             else {
                 const card=a.resolved.cards[decision.key];
                 const force=target.template.attributes?.catch_pet_force_chance_percent;
-                const milli=catchChanceMilli(card.params.base_weight,target.hp,target.maxHp,a.heroLevel,target.level,force??null);
+                const milli=catchChanceMilli(card.params.base_weight,target.hp,target.maxHp,resources.heroLevel,target.level,force??null);
                 // player_server.lua L1125: math.random(0,1000) <= chance_multi_1000. Both results still cast.
-                const success=a.captureRulesVersion===1?a.rng.float()<catchProbability(a,card,target):a.rng.int(0,1000)<=milli;
-                a.runeUsed[rune.itemId]=(a.runeUsed[rune.itemId]||0)+1;
-                if(success){a.captured.push(target.template.speciesId);a.capturedTraits.push({...target.passiveTraits});target.hp=0;}
+                const success=a.captureRulesVersion===1?a.rng.float()<catchProbability({...a,heroLevel:resources.heroLevel,ownedPets:resources.ownedPets},card,target):a.rng.int(0,1000)<=milli;
+                resources.runeUsed[rune.itemId]=(resources.runeUsed[rune.itemId]||0)+1;
+                if(success){resources.captured.push(target.template.speciesId);resources.capturedTraits.push({...target.passiveTraits});target.hp=0;}
                 emit(a,{type:'capture',caster:u.id,target:target.id,success,runeId:rune.itemId});
             }
         }
@@ -308,18 +320,28 @@ export function playPveRound(a,decision) {
                     if(decision.seq>=U.PET_CARD_SEQ_BASE&&u.supportPetTraits)u.stats=applyPetTraitStats(u.stats,Object.fromEntries(Object.entries(u.supportPetTraits).filter(([key])=>['attack','critical','accuracy','healing'].includes(key))),a.resolved.petTraits);
                     useCard(a,u,card,target,rune?undefined:decision.seq);
                 }finally{u.stats=originalStats;}
-                if(rune&&a.events.slice(start).some(event=>event.type==='cast'&&event.caster===u.id&&event.card===rune.key))a.runeUsed[rune.itemId]=(a.runeUsed[rune.itemId]||0)+1;
+                if(rune&&a.events.slice(start).some(event=>event.type==='cast'&&event.caster===u.id&&event.card===rune.key))resources.runeUsed[rune.itemId]=(resources.runeUsed[rune.itemId]||0)+1;
             }
         }
         finished(a);
     };
+    }
+    for(const id of ids){
+        const pick=a.localHumans?decision.humanDecisions[id]:decision;
+        picks.set(id,pick);actions.set(id,prepareHuman(a.unitsById[id],pick,a.localHumans?.[id]||a));
+    }
+    a.phase='play';
+    for(const [id,pick] of picks)for(const seq of pick.discardSeqs||[])U.discardCard(a.unitsById[id],seq);
+    monstersAct(a,'before');
     const partyAct=()=>{
-        // Catching goes before automatic companions so they do not defeat the pet first.
-        const catchFirst=decision.capture||!!(rune&&isCatchRuneCard(runeCard));
-        if(catchFirst)playerAct();
+        const caught=new Set();
+        for(const unit of [...a.sides.near].sort((x,y)=>(x.slot??0)-(y.slot??0))){
+            const pick=picks.get(unit.id);
+            if(pick&&(pick.capture||pick.runeId!==undefined&&isCatchRuneCard(a.resolved.cards[pick.key]))){actions.get(unit.id)();caught.add(unit.id);}
+        }
         for(const unit of [...a.sides.near].sort((x,y)=>(x.slot??0)-(y.slot??0))){
             if(finished(a))return;
-            if(unit.id===u.id){if(!catchFirst)playerAct();continue;}
+            if(actions.has(unit.id)){if(!caught.has(unit.id))actions.get(unit.id)();continue;}
             if(!U.isAlive(unit)||!beforeAct(a,unit))continue;
             if(a.replaying&&decision.aiVersion===1&&!decision.aiPicks[unit.id])throw Error('战报缺少伙伴行动');
             const pick=decision.aiVersion===1?(decision.aiPicks[unit.id]||chatSupportPick(a,unit,decision.chatRequest)||new ReasoningBot().pick(a,unit,{periodicsApplied:true})):new SimpleBot().pick(a,unit);
@@ -349,7 +371,7 @@ export function restorePveBattle(dataset,content,checkpoint) {
     const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId)||earthEncounter(content,checkpoint.encounterId);
     if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
     const templates=checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]];
-    const a=createPveBattle({dataset,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,specialCardRulesVersion:checkpoint.specialCardRulesVersion,captureRulesVersion:checkpoint.captureRulesVersion,petTraitRulesVersion:checkpoint.petTraitRulesVersion,monsterTraits:checkpoint.monsterTraits,petTraitParams:checkpoint.petTraitParams,monsterStatsVersion:checkpoint.equipmentStatsVersion>=2?1:0,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});
+    const a=createPveBattle({dataset,localHumans:checkpoint.localHumans,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,specialCardRulesVersion:checkpoint.specialCardRulesVersion,captureRulesVersion:checkpoint.captureRulesVersion,petTraitRulesVersion:checkpoint.petTraitRulesVersion,monsterTraits:checkpoint.monsterTraits,petTraitParams:checkpoint.petTraitParams,monsterStatsVersion:checkpoint.equipmentStatsVersion>=2?1:0,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});
     a.replaying=true;for(const decision of checkpoint.decisions)playPveRound(a,decision);a.replaying=false;
     return a;
 }

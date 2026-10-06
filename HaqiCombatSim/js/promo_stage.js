@@ -1,3 +1,4 @@
+import {cardsInHand} from './combat_unit_core.js';
 import {createPromoTactics} from './promo_tactics_core.js';
 import {createPetScene} from './adventure_pet_scene.js';
 import {initializePetWorld} from './adventure_pet_world_core.js';
@@ -89,7 +90,7 @@ function paintSpeech(elapsed){
 function check(ok,message){if(!ok)throw Error(message);checks.push(message);}
 function model(battle=null){return {assets,save,battle,selected:null,discarded:[],animating:false,membership:{},...viewState,displayLocale:locale,social:null,deckAnimationClock:'manual'};}
 function clear(){nodes.overlay.deckPreview?.clearAddition();speech.clear();speechRoot.replaceChildren();speechSlot=-1;arrivalAt=null;$('hud').replaceChildren();preview.stop();previewPaused=false;learning.close();for(const node of Object.values(nodes)){node.disposeDialogue?.();node.disposeHandGesture?.();node.disposeStatusTooltips?.();node.battleLayoutObserver?.disconnect();node.replaceChildren();node.className='';}nodes.entry.hidden=true;}
-async function scene(){world=W.createWorld(save.zone,assets.content,save);if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};save.position=W.clearTeleportSpot(world,save.position.x,save.position.y,world.encounters,120)||save.position;origin={...save.position};await assets.warmScenery(world);path=['world','island','mount'].includes(shot.scene)?planPromoPath(world,origin):[];actorTime=0;actorProfiles=[{id:'promo-anna',name:locale==='en'?'Anna':'安娜',native:'en',target:'zh',school:'ice',appearance:'girl',level:3},{id:'promo-maple',name:locale==='en'?'Maple':'小枫',native:'zh',target:'en',school:'fire',appearance:'boy',level:3},{id:'promo-lily',name:locale==='en'?'Lily':'莉莉',native:'en',target:'zh',school:'life',appearance:'girl',level:4},{id:'promo-noah',name:locale==='en'?'Noah':'诺亚',native:'zh',target:'en',school:'storm',appearance:'boy',level:4}];resetActors();await assets.warmActors(world,save,actors);check(true,'场景角色图片已就绪');if(!['create','skills'].includes(shot.scene))V.renderHud($('hud'),model(),callbacks);check(!!world.layout,`地图可渲染：${save.zone}`);}
+async function scene(){world=W.createWorld(save.zone,assets.content,save);if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};save.position=W.clearTeleportSpot(world,save.position.x,save.position.y,world.encounters,120)||save.position;origin={...save.position};await assets.warmScenery(world);path=['world','island','mount'].includes(shot.scene)?planPromoPath(world,origin):[];actorTime=0;actorProfiles=[{id:'promo-anna',name:locale==='en'?'Anna':'安娜',native:'en',target:'zh',school:'ice',appearance:'girl',level:3},{id:'promo-maple',name:locale==='en'?'Maple':'小枫',native:'zh',target:'en',school:'fire',appearance:'boy',level:3},{id:'promo-lily',name:locale==='en'?'Lily':'莉莉',native:'en',target:'zh',school:'life',appearance:'girl',level:4},{id:'promo-noah',name:locale==='en'?'Noah':'诺亚',native:'zh',target:'en',school:'storm',appearance:'boy',level:4}];if(world.isEarth||world.isCityDungeon)actorProfiles=[];resetActors();await assets.warmActors(world,save,actors);check(true,'场景角色图片已就绪');if(!['create','skills'].includes(shot.scene))V.renderHud($('hud'),model(),callbacks);check(!!world.layout,`地图可渲染：${save.zone}`);}
 function creation(step=1,school='fire',changes={}){
     preview.stop();previewPaused=false;nodes.entry.hidden=false;draft={name:locale==='en'?'Star':'小星',appearance:'girl',starter:'dragon_green',...draft,...changes,step,school};
     V.renderEntry(nodes.entry,assets,null,{...callbacks,login:null,cloud:null,locale,secondLocale:targetLocale,setLocale:noop,setSecondLocale:noop,draft,previewChoices:s=>tutorialCards(assets,s),preview:(...args)=>preview.play(...args),stopPreview:()=>preview.stop(),pausePreview:()=>preview.togglePause()});
@@ -142,8 +143,14 @@ function filmArena(seats,mode,start){
 }
 function filmSkills(groupIndex,start){
     tactics??=createPromoTactics(assets.dataset,assets.content.balanceParams,shot.battleSeed??531);
+    const hero=tactics.arena.unitsById.hero.arenaProfile;
+    Object.assign(save,{appearance:hero.appearance,bodyId:hero.bodyId,headId:hero.headId,school:hero.school});
+    save.heroSlot=0;save.formation[0]=Object.keys(save.pets)[0];
     const group=tactics.groups[groupIndex];check(!!group,'教学战斗阶段存在');
-    frames=[{arena:group.before,event:null,duration:500},...group.snapshots.map(f=>({...f,duration:presentationEventDurationMs(f.event,{effects:assets.effects,card:f.arena.resolved.cards[f.event.card],hp:f.arena.unitsById[f.event.target]?.hp})||300})),{arena:group.after,event:null,duration:500}];
+    const choice=group.picks.hero;
+    const choices=choice?['deal','browse','select','target'].map(phase=>({arena:group.before,event:null,phase,choice,duration:1000,selected:['select','target'].includes(phase)?choice:null})):[];
+    if(choice)check(cardsInHand(group.before.unitsById.hero).length===8,'我方每轮按正式规则补齐8张手牌');
+    frames=[...choices,{arena:group.before,event:null,selected:choice||null,duration:500},...group.snapshots.map(f=>({...f,duration:presentationEventDurationMs(f.event,{effects:assets.effects,card:f.arena.resolved.cards[f.event.card],hp:f.arena.unitsById[f.event.target]?.hp})||300})),{arena:group.after,event:null,duration:500}];
     battleStart=start;lastBattleFrame=-1;check(true,'2对2正式卡牌教学：护盾、陷阱、夺盾、受伤、治疗与触发');
 }
 async function prepare(next,seed){
@@ -171,7 +178,7 @@ async function prepare(next,seed){
         if(candidates.length){save.position={...candidates[0]};origin={...save.position};}
         actors=actors.slice(0,2);
         actors.forEach((actor,i)=>{const p={x:origin.x+(i?-100:100),y:origin.y+65};if(W.walkable(world,p.x,p.y))actor.position=p;});
-        petInteraction=createPetScene({now:()=>1791244800000+petClock*1000,getState:()=>({save,world,content:assets.content,socialActors:actors,team:[],scope:'promo-pets',locked:false}),commit:next=>{save=next;},toast:()=>{},isFriend:()=>true});
+        petInteraction=createPetScene({now:()=>1791244800000+Math.round(petClock*1000),getState:()=>({save,world,content:assets.content,socialActors:actors,team:[],scope:'promo-pets',locked:false}),commit:next=>{save=next;},toast:()=>{},isFriend:()=>true});
         petInteraction.step(0);
     }
     if(shot.scene==='create')await Promise.all(shot.cues.flatMap(cue=>['boy','girl'].flatMap(appearance=>{
@@ -246,7 +253,9 @@ async function action(cue){
     await warmArt();return result();
 }
 async function warmArt(){
-    const keys=frames.map(f=>f.event?.card).filter(Boolean);
+    if(tactics)await Promise.all(Object.values(tactics.arena.unitsById).map(unit=>unit.speciesId?assets.ensureImage('pet:'+unit.speciesId):assets.hero.ensure(assets.hero.appearance(unit.arenaProfile))));
+    const keys=[...frames,...(tactics?.groups.flatMap(g=>g.snapshots)||[])].map(f=>f.event?.card).filter(Boolean);
+    if(tactics)for(const group of tactics.groups)keys.push(...cardsInHand(group.before.unitsById.hero).map(c=>c.key));
     if(deckShowcase)keys.push(...deckShowcase.keys,...Object.keys(save.cards));
     if(draft&&!nodes.entry.hidden&&draft.step===3)keys.push(...tutorialCards(assets,draft.school).map(c=>c.key));
     await Promise.all([...new Set(keys.map(key=>assets.effects.cards[key]?.base).filter(Boolean))].map(base=>assets.skillArt.ensure(base)));
@@ -270,11 +279,33 @@ function tick(elapsed){
     if(arrivalAt!==null)for(const animation of nodes.entry.getAnimations({subtree:true})){if(['companion-arrive','companion-bound'].includes(animation.animationName)){animation.pause();animation.currentTime=Math.max(0,(elapsed-arrivalAt)*1000);}}
     if(frames.length){
         const played=samplePresentationClock(frames,elapsed-battleStart),f=frames[played.index];
-        if(played.index!==lastBattleFrame){V.renderBattle(nodes.battle,{...model(f.arena),selected:f.selected||null},callbacks);lastBattleFrame=played.index;check(!!$('battle-canvas')||f.arena.finished,'战斗界面可渲染');}
-        const canvas=$('battle-canvas');if(canvas)renderer.renderBattle(canvas,f.arena,save,elapsed*1000,{event:f.event,progress:played.progress,hp:f.hp});
+        const changed=played.index!==lastBattleFrame;
+        const cb=f.choice?{...callbacks,select:card=>{check(card.seq===f.choice.seq&&card.key===f.choice.key,'通过正式手牌按钮选中教学卡牌');V.renderBattle(nodes.battle,{...model(f.arena),selected:card},cb);},target:id=>check(id===f.choice.targetId,'通过正式战场点击选择施法目标')}:callbacks;
+        if(changed){V.renderBattle(nodes.battle,{...model(f.arena),selected:f.phase==='select'?null:f.selected||null,animating:!!tactics&&!!f.event},cb);if(f.phase==='select')nodes.battle.querySelector(`.hand-card[data-seq="${f.choice.seq}"] .card-select`)?.click();lastBattleFrame=played.index;check(!!$('battle-canvas')||f.arena.finished,'战斗界面可渲染');}
+        const canvas=$('battle-canvas');if(canvas)renderer.renderBattle(canvas,f.arena,save,elapsed*1000,{event:f.event,progress:played.progress,hp:f.hp,showSupportPet:!!tactics});
+        if(f.phase){
+            const hand=[...nodes.battle.querySelectorAll('.hand-card')],chosen=hand.find(n=>Number(n.dataset.seq)===f.choice.seq);
+            for(const [i,node]of hand.entries()){
+                for(const animation of node.getAnimations())animation.cancel();
+                node.style.transform='';node.style.opacity='';
+                if(f.phase==='deal'){const progress=Math.max(0,Math.min(1,played.progress*2-i*.12));node.style.transform=`translateX(${(1-progress)*90}px)`;node.style.opacity=String(progress);}
+            }
+            if(f.phase==='browse'){
+                const node=hand[Math.min(hand.length-1,Math.floor(played.progress*hand.length))];
+                if(node){node.style.transform='translateY(-18px) scale(1.05)';node.style.zIndex=40;aimPointer(node,elapsed-.18);}
+            }else if(f.phase==='select'&&chosen){aimPointer(chosen,elapsed-.18);deckClickAt=elapsed-played.progress;}
+            else if(f.phase==='target'&&canvas){
+                const target=canvas.battleTargetRects?.find(r=>r.id===f.choice.targetId);check(!!target,'目标在正式战场中可点击');
+                const rect=canvas.getBoundingClientRect(),x=rect.left+(target.x+target.width/2)*rect.width/canvas.clientWidth,y=rect.top+(target.y+target.height/2)*rect.height/canvas.clientHeight;
+                aimPointer({closest:()=>null,getBoundingClientRect:()=>({left:x,top:y,width:0,height:0})},changed?elapsed:elapsed-.18);deckClickAt=elapsed-played.progress;
+                if(changed)canvas.dispatchEvent(new MouseEvent('click',{clientX:x,clientY:y,bubbles:true}));
+            }else{deckPointer.hidden=true;deckRing.hidden=true;}
+            sampleDeckPointer(elapsed);
+        }else if(tactics){deckPointer.hidden=true;deckRing.hidden=true;}
+
     }
 }
-function validateFrames(){features?.validate();if(petInteraction)check(petShared,'宠物共享营养餐触发正式互动效果');for(const fraction of [0,.2,.5,.8,1])tick(battleStart+(shot.duration-battleStart-.01)*fraction);return result();}
+function validateFrames(){if(tactics){let cursor=0;for(const f of frames){if(f.phase)tick(battleStart+cursor/1000+f.duration/2000);cursor+=f.duration;}}features?.validate();if(petInteraction)check(petShared,'宠物共享营养餐触发正式互动效果');for(const fraction of [0,.2,.5,.8,1])tick(battleStart+(shot.duration-battleStart-.01)*fraction);return result();}
 function translateAttributes(){
     for(const node of document.querySelectorAll('[title],[aria-label]'))for(const key of ['title','aria-label']){const value=node.getAttribute(key);if(value){const translated=textFor(value,locale);if(translated!==value)node.setAttribute(key,translated);}}
     document.title=textFor('魔法哈奇 · 初心之旅',locale);

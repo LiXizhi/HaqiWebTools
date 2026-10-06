@@ -1,8 +1,12 @@
 // Device preferences only. Never attach this object to a character save.
 import {EARTH_LIGHT_MODES,EARTH_WEATHER_MODES} from './adventure_earth_environment_core.js';
+import {normalizeLocalKeys} from './local_controls_core.js';
+import {normalizePlayerInputs} from './player_input_core.js';
 export const defaultGameSettings = Object.freeze({version:1,environmentVersion:2,particles:'auto',trails:'auto',earthLight:'day',earthWeather:'clear',music:false,sound:true,volume:.3});
 export function normalizeGameSettings(value={}) {
     const result={...defaultGameSettings};
+    result.localKeys=normalizeLocalKeys(value.localKeys);
+    result.playerInputs=normalizePlayerInputs(value.playerInputs);
     for(const key of ['particles','trails'])if(['auto','on','off'].includes(value[key]))result[key]=value[key];
     if(EARTH_LIGHT_MODES.includes(value.earthLight))result.earthLight=value.earthLight;
     if(EARTH_WEATHER_MODES.includes(value.earthWeather))result.earthWeather=value.earthWeather;

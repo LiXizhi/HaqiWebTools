@@ -1,6 +1,9 @@
-import {planPromoCityApproach,samplePromoRoad} from './promo_city_route_core.js';
+import {planPromoRoadLeg,samplePromoRoad} from './promo_city_route_core.js';
+import {preparePromoPets} from './promo_pet_roster_core.js';
 // Trailer-only controller. Production views and rules, with a disposable in-memory role.
 import * as A from './adventure_core.js';
+import {generatedCityRoute} from './adventure_city_generated_core.js';
+import {streetArtResources} from './adventure_city_art_core.js';
 import {addPet,FOOD_ID} from './adventure_pets_core.js';
 import {syncEquipmentInstances} from './adventure_equipment_instances_core.js';
 import {upgradeLevels} from './adventure_upgrade_core.js';
@@ -44,6 +47,11 @@ export function createPromoFeatures({assets,getSave,model,panel,root,check,scene
             // Explicit demo preset, not a fabricated capture reward.
             pet.passiveTraits={attack:3,frugal:2};
             if(shot.scene==='arena')for(const id of ['dragon_purple','dragon_orange'])addPet(s,c,id);
+            if(shot.scene==='pet'){
+                const pets=preparePromoPets(s,c);
+                await Promise.all(pets.map(pet=>assets.ensureImage('pet:'+pet.speciesId)));
+                check(pets.length===5&&s.formation.every(Boolean),'五种伙伴与四个成长阶段已准备，出战一排完整展示');
+            }
         }
         if(['upgrade','gems'].includes(shot.scene)){
             const gear=Object.values(c.items).find(i=>i.kind===1&&A.canEquip({...save(),inventory:{...save().inventory,[i.id]:1}},i,c)&&upgradeLevels(c,i.id).length&&i.stats[36]>0);
@@ -81,23 +89,32 @@ export function createPromoFeatures({assets,getSave,model,panel,root,check,scene
         close();earth??=createEarthService({content:c,getPlayerLevel:()=>save().level,registerImage:assets.registerImage,releaseImage:assets.releaseImage,prepareAssets:w=>assets.prepareEarthScene(w,save())});
         const data=await earth.atlas();data.current={lon:114.0579,lat:22.5431};data.focus={...data.current,portalFocus:true};
         mapView=renderEarthAtlas(root,{...data,assetMode:assets.mode},{close,switchWorld:()=>queue(atlas),viewport:bounds=>earth.viewport(bounds),travel:geo=>queue(async()=>{const prepared=await earth.prepare(geo);save().zone='earth';save().position=prepared.position;c.earthWorld=prepared.world;close();await scene();await prepareCityArrival();})});
-        await mapView.focus({lon:114.0579,lat:22.5431},1);
+        check(mapView.getState().span===360,'现实图册保持全世界视图，不缩放');
         await waitFor(()=>root.querySelector('.earth-map-status')?.hidden,'现实世界地图读取超时');
         check(!!root.querySelector('.earth-atlas'),'现实世界国界、城市与缩放界面已显示');
     }
     async function prepareCityArrival(){
-        const city=await createJsonReader()('data/adventure/earth/cities/shenzhen.json');installCityDungeons(c,city);
-        cityDungeon=c.dungeons.find(d=>d.id===city.entrance.dungeonId);
-        const entrance=world().landmarks.find(p=>p.dungeonId===cityDungeon.id);
-        check(!!entrance&&!cityDungeon.nodeId,'选择深圳城市总入口，不进入蛇口等地点节点');
-        world().earthBoating=true;const route=planPromoCityApproach(world(),entrance);
-        walking={...route,entrance,start:Infinity};save().position={...route.start};
-        // Warm both ends before starting the on-screen three-second hold.
-        await earth.update(save().position,0);await assets.prepareEarthScene(world(),save());await scene();
-        const next=structuredClone(save());enterCityDungeon(next,c,cityDungeon.id);
-        const inside=createWorld(next.zone,c,next);await assets.warmScenery(inside);await assets.warmActors(inside,next,[]);
-        check(true,'道路周边与城市副本已预加载，开始前保留至少3秒静止字幕');
+        const huanggang=world().landmarks.find(p=>p.cityFallback?.id==='5925913');
+        const futian=world().landmarks.find(p=>p.cityFallback?.id==='5510519');
+        check(!!huanggang&&!!futian,'加载真实皇岗口岸与福田口岸入口');
+        world().earthBoating=true;
+        const first=planPromoRoadLeg(world(),save().position,huanggang),second=planPromoRoadLeg(world(),huanggang,futian);
+        walking={first,second,entrance:futian,waypoint:huanggang,startTime:Infinity};
+        const fallback=generatedCityRoute(futian.cityFallback,save());
+        await assets.dungeons.load(futian.dungeonId,{cityFallback:fallback});
+        cityDungeon=c.dungeons.find(d=>d.id===futian.dungeonId);walking.fallback=fallback;
+        check(!!cityDungeon.scene.streetscape,'通过正式加载器进入福田口岸街景');
+        await assets.prepareEarthScene(world(),save());await scene();renderer().render(world(),save(),0,{moving:false});
+        const next=structuredClone(save());enterCityDungeon(next,c,cityDungeon.id);next.cityFallback=fallback;
+        const inside=createWorld(next.zone,c,next);
+        const art=streetArtResources(c.cityStreetArt,cityDungeon.scene.streetscape);
+        for(const entry of art)assets.registerImage(entry.id,entry);
+        await Promise.all(art.map(entry=>assets.ensureImage(entry.id)));
+        check(art.length>0&&art.every(entry=>assets.images.has(entry.id)),'城市街景道路、店铺、树木和车辆图片已预加载');
+        await assets.warmScenery(inside);await assets.warmActors(inside,next,[]);
+        check(true,'深圳—皇岗口岸—福田口岸道路与街景已预加载');
     }
+
     function arenaView(){
         renderSocial(root,arena,'social-pvp',{close,assets:()=>assets,portrait:(p,w,h)=>heroPortrait(assets,p,w,h),arenaMode:n=>{arena.arenaMode=n;arena.arenaStep='team';arena.arenaSeats=arenaSeats(save(),c,assets.dataset,[],n);arena.arenaBench=arenaBenchPets(save(),c,arena.arenaSeats);arenaView();},arenaBack:()=>{arena.arenaStep='mode';arenaView();},arenaRecruit:()=>{},arenaStart:()=>filmArena(arena.arenaSeats,arena.arenaMode,arenaStartTime)});
     }
@@ -140,16 +157,17 @@ export function createPromoFeatures({assets,getSave,model,panel,root,check,scene
         switch(cue.name){
             case 'earth-focus':await mapView.focus({lon:114.0579,lat:22.5431},cue.span);break;
             case 'earth-select':{
-                const marker=mapView.getState().markers.find(p=>p.city.id==='shenzhen'||p.city.name==='深圳');check(!!marker,'缩放后深圳城市标记可见');
+                const marker=mapView.getState().markers.find(p=>p.city.id==='shenzhen'||p.city.name==='深圳');check(!!marker,'深圳城市标记直接可见');
                 const canvas=root.querySelector('.earth-atlas'),r=canvas.getBoundingClientRect(),point={clientX:r.left+marker.x,clientY:r.top+marker.y,pointerId:1};
                 // Select a visible production marker through the same city-selection path as pointer input.
                 aimPointer({getBoundingClientRect:()=>({left:point.clientX,top:point.clientY,width:0,height:0}),closest:()=>null},cue.time);
                 mapView.selectCity(marker.city.id||marker.city.name);check(!root.querySelector('.earth-map-place').hidden,'深圳城市入口已选中');break;
             }
-            case 'earth-walk':check(!!walking,'城市路线已完成预加载');walking.start=cue.time;break;
+            case 'earth-walk':check(!!walking,'城市路线已完成预加载');walking.startTime=cue.time;break;
+            case 'earth-waypoint':check(distance(save().position,walking.waypoint)<3,'沿道路经过皇岗口岸');break;
             case 'earth-enter':{
                 check(!!walking&&distance(save().position,walking.entrance)<3,'沿道路到达真实城市入口');
-                enterCityDungeon(save(),c,cityDungeon.id);walking=null;enteredCity=true;await scene();
+                enterCityDungeon(save(),c,cityDungeon.id);save().cityFallback=walking.fallback;walking=null;enteredCity=true;await scene();
                 const start={...save().position},path=findPath(world(),start,{x:start.x,y:start.y-160});
                 check(path.length>0,'城市入口内可以行走');cityWalk={start,path,seconds:160/WALK_SPEED,time:cue.time+1};break;
             }
@@ -166,8 +184,9 @@ export function createPromoFeatures({assets,getSave,model,panel,root,check,scene
         }
     }
     function tick(elapsed){
-        if(walking&&Number.isFinite(walking.start)){
-            const moved=samplePromoRoad(world(),walking,Math.min(8,Math.max(0,elapsed-walking.start))*walking.seconds/8);
+        if(walking&&Number.isFinite(walking.startTime)){
+            const progress=Math.max(0,elapsed-walking.startTime),leg=progress<=5?walking.first:walking.second;
+            const moved=samplePromoRoad(world(),leg,Math.min(1,progress<=5?progress/5:(progress-5)/3)*leg.seconds);
             save().position=moved.position;save().facing=moved.facing;earth.updateVisible(save().position,null,0);
         }
         if(cityWalk){const moved=samplePromoRoad(world(),cityWalk,Math.max(0,Math.min(2,elapsed-cityWalk.time))*cityWalk.seconds/2);save().position=moved.position;save().facing=moved.facing;}
@@ -179,5 +198,5 @@ export function createPromoFeatures({assets,getSave,model,panel,root,check,scene
             if(direction&&!fishCaught)direction.click();
         }
     }
-    return {setup,prepare,action,tick,moving:elapsed=>!!walking&&elapsed>=walking.start&&elapsed<walking.start+8,validate(){if(enteredCity)check(exitedCity,'城市段已完成进入、短走和退出');if(fishing)check(fishCaught,'钓鱼镜头包含完整渔获结算');},settled:()=>task,dispose(){close();earth?.cancel();fishing?.stop(false);document.querySelector('.scene-fishing')?.remove();}};
+    return {setup,prepare,action,tick,moving:elapsed=>(!!walking&&elapsed>=walking.startTime&&elapsed<walking.startTime+8)||(!!cityWalk&&elapsed>=cityWalk.time&&elapsed<cityWalk.time+2),validate(){if(enteredCity)check(exitedCity,'城市段已完成进入、短走和退出');if(fishing)check(fishCaught,'钓鱼镜头包含完整渔获结算');},settled:()=>task,dispose(){close();earth?.cancel();fishing?.stop(false);document.querySelector('.scene-fishing')?.remove();}};
 }

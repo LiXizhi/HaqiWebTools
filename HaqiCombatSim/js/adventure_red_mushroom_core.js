@@ -61,7 +61,8 @@ export function arenaBenchPets(save,content,seats=[]){
 export function startRedMushroom(dataset,seats,mode,seed,difficulty,params=defaultParams('kids')){
     check(ARENA_MODES.includes(mode)&&seats.slice(0,mode).filter(Boolean).length===mode,'请先补齐出战席位');
     const resolved=resolveParams(dataset,params),rng=createRng(seed);
-    const near=seats.slice(0,mode).map((p,i)=>({...structuredClone(p),id:i?`ally${i}`:'hero',isBot:i>0}));
+    const local=seats.some(p=>p?.localOwner===1&&!p.speciesId);
+    const near=seats.slice(0,mode).map((p,i)=>({...structuredClone(p),id:local?p.id:i?`ally${i}`:'hero',isBot:local?!!p.speciesId:i>0}));
     const names=rng.shuffle(['赤枫','绯羽','焰铃','丹露']);
     const far=near.map((p,i)=>{
         const u=createUnit(p,resolved),stats=structuredClone(p.stats||{});
@@ -75,15 +76,17 @@ export function startRedMushroom(dataset,seats,mode,seed,difficulty,params=defau
         delete opponent.profileId;delete opponent.opponentMountId;delete opponent.dailyLanguageBuff;
         return opponent;
     });
-    const replay={version:3,specialCardRulesVersion:1,dataHash:socialDataHash(dataset),mode,seed,params:structuredClone(params),difficulty:structuredClone(difficulty),near,far,actions:[]};
+    const replay={version:local?4:3,...(local?{localHumanIds:near.filter(u=>!u.speciesId).sort((a,b)=>a.localOwner-b.localOwner).map(u=>u.id)}:{}),specialCardRulesVersion:1,dataHash:socialDataHash(dataset),mode,seed,params:structuredClone(params),difficulty:structuredClone(difficulty),near,far,actions:[]};
     return createMatch(dataset,replay);
 }
 function createMatch(dataset,replay){
     const arena=createArena({resolved:resolveParams(dataset,replay.params),near:replay.near,far:replay.far,seed:replay.seed,firstSide:'near',specialCardRulesVersion:replay.specialCardRulesVersion??0,applyTempAntiFreezeForPartners:replay.specialCardRulesVersion===1});
+    if(replay.localHumanIds)arena.localHumanIds=[...replay.localHumanIds];
     if(replay.near[0].dailyLanguageBuff)applyDungeonLanguageBuff(arena.unitsById.hero,validateDailyBuff(replay.near[0].dailyLanguageBuff),arena.resolved.dailyLanguage);
     arena.redMushroom=true;
     for(const spec of [...replay.near,...replay.far]){
         const unit=arena.unitsById[spec.id];unit.speciesId=spec.speciesId;unit.appearanceStage=spec.appearanceStage;
+        if(replay.localHumanIds)unit.slot=spec.slot;
         if(!spec.speciesId)unit.arenaProfile={name:spec.name,school:spec.school,level:spec.level,appearance:spec.appearance,bodyId:spec.bodyId,mountId:spec.mountId};
     }
     const policies=Object.fromEntries([...arena.sides.near,...arena.sides.far].map(u=>[u.id,new ReasoningBot()]));
@@ -92,12 +95,14 @@ function createMatch(dataset,replay){
 function legal(a,u,pick){return pick&&((pick.pass===true)||u.hp>0&&castableCards(a,u).some(c=>c.seq===pick.seq&&c.key===pick.key&&validTargets(a,u,c.card).some(t=>t.id===pick.targetId)));}
 export function playRedMushroom(state,decision,{recorded=null}={}){
     const a=state.arena;check(!a.finished&&a.currentSide==='near','当前不能出牌');
-    check(legal(a,a.unitsById.hero,decision),'请选择有效卡牌与目标');
+    if(a.localHumanIds){check(decision.humanDecisions&&Object.keys(decision.humanDecisions).length===2&&a.localHumanIds.every(id=>legal(a,a.unitsById[id],decision.humanDecisions[id])),'请等待两位玩家选择有效卡牌与目标');}
+    else check(legal(a,a.unitsById.hero,decision),'请选择有效卡牌与目标');
     const entry={decision:structuredClone(decision),turns:[]};
     // Bots are evaluated even when replaying to advance the exact same RNG stream.
     // Recorded actions remain authoritative, and malformed/extra actions are rejected.
     const turn=(side,heroDecision)=>{
-        const generated=coordinateTeam(a,state.policies,side==='near'&&a.unitsById.hero.hp>0?{hero:heroDecision}:{});
+        const submitted=side==='near'?(a.localHumanIds?heroDecision.humanDecisions:a.unitsById.hero.hp>0?{hero:heroDecision}:{}):{};
+        const generated=coordinateTeam(a,state.policies,submitted);
         const saved=recorded?.turns?.[entry.turns.length];
         if(recorded){check(saved&&JSON.stringify(saved)===JSON.stringify(generated),'战报行动无效');}
         entry.turns.push(structuredClone(generated));playTurn(a,generated);
@@ -117,7 +122,8 @@ export function playRedMushroom(state,decision,{recorded=null}={}){
     state.replay.actions.push(entry);return state;
 }
 export function restoreRedMushroom(dataset,replay){
-    check(replay?.version===3&&replay.dataHash===socialDataHash(dataset)&&ARENA_MODES.includes(replay.mode)&&replay.near?.length===replay.mode&&replay.far?.length===replay.mode&&Array.isArray(replay.actions)&&replay.actions.length<=200,'赛场战报版本不兼容');
+    check([3,4].includes(replay?.version)&&replay.dataHash===socialDataHash(dataset)&&ARENA_MODES.includes(replay.mode)&&replay.near?.length===replay.mode&&replay.far?.length===replay.mode&&Array.isArray(replay.actions)&&replay.actions.length<=200,'赛场战报版本不兼容');
+    if(replay.version===4)check(replay.localHumanIds?.length===2&&new Set(replay.localHumanIds).size===2&&replay.localHumanIds.every(id=>replay.near.some(u=>u.id===id&&!u.speciesId)),'双人战报操控位无效');
     const state=createMatch(dataset,{...structuredClone(replay),actions:[]});
     for(const entry of replay.actions)playRedMushroom(state,entry.decision,{recorded:entry});
     return state;

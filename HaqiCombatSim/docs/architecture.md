@@ -647,3 +647,79 @@ flowchart LR
 
 
 宣传片补充（2026-10-06）：`promo_stage.js → promo_learning.js → createLearningVoice / createDialogueMapper → Keepwork AI`，仅固定演示句出站，结果缓存在舞台内存。词义映射复用正式解析与双语组件；证据通过后 `awardDailySpeech → arenaSeats → startRedMushroom`，语言加成进入正式赛场快照。宠物展示通过 `createPetScene` 运行内存角色互动；不接角色持久化与真人通信。
+
+宣传片教学与进城适配：`promo_stage.js → promo_tactics_core.js → combat_arena_core.js` 使用正式卡牌预置教学出牌；`promo_features.js → promo_city_route_core.js → adventure_world_core.js` 规划并采样道路路线，城市资源仍由既有 Earth service 与 City dungeon 控制器加载。两条链路均只操作隔离演示角色。
+
+```mermaid
+flowchart LR
+  PromoStage[promo_stage.js] --> Tactics[promo_tactics_core.js]
+  Tactics --> Arena[combat_arena_core.js]
+  PromoFeatures[promo_features.js] --> Route[promo_city_route_core.js]
+  Route --> World[adventure_world_core.js]
+  PromoFeatures --> Earth[adventure_earth.js]
+  PromoFeatures --> City[adventure_city_dungeons_core.js]
+```
+
+宣传片口岸路线复用 `adventure_city_generated_core.generatedCityRoute` 与 `assets.dungeons.load` 的正式城市加载链路，使用地图CSV的原始入口身份；街景资源通过 `streetArtResources` 注册并等待 `ensureImage`，NPC/行人仍使用生产外观选择。道路图采样只作用于宣传片，不修改世界寻路规则。
+
+## 2026-10-06：本机双人同屏
+
+```mermaid
+flowchart LR
+  Entry[角色入口：单人 / 双人] --> Local[adventure_local_play：两路输入与两份个人界面]
+  Local --> Rules[adventure_local_coop_core：四席阵容 / 同屏相机 / 双方准备 / 结算]
+  Rules --> Battle[combat_pve_core / adventure_red_mushroom_core：联合回合]
+  Local --> Record[adventure_local_store：按账号隔离的 IndexedDB]
+  Record --> Checkpoint[共享阵容 / 联合战斗检查点 / 采集袋 / 冶炼事务]
+  Local --> Roles[adventure_roles.commitRoles：一次写入两个角色]
+  Roles --> Existing[既有本地分片与 Keepwork 云同步]
+```
+
+主界面继续显示玩家1，两名玩家共用一个场景与四个战斗法阵。两份法阵窗口都是同一阵容的编辑器；两份背包、卡包、任务与对话使用各自角色。核心规则保持纯 ES Module；键位独立存于既有游戏设置。联合作战先校验两份选择，在重演副本上执行，IndexedDB 保存成功后才发布新回合。结算先原子更新角色目录，再清除联合检查点，以双方领取标记防止重试重复奖励。
+
+字幕朗读：`promo_app.js → promo_narration.js → loadKeepwork/loadAIChat → speech.getSupportedVoices + speechRTC.createSession/synthesize → Audio`。Keepwork IO与时间轴分离，代次校验隔离迟到请求，暂停与换句interrupt会话并释放音频URL，不回退浏览器系统TTS。
+
+### 双角色标题与设备输入（2026-10-06）
+
+```mermaid
+flowchart LR
+  Devices[浏览器Gamepad快照] --> IO[player_input.js：轮询已连接设备]
+  Settings[本机game_settings：playerInputs / 左右按键组] --> IO
+  IO --> Core[player_input_core：分配互斥 / 标准映射 / 死区 / 边沿与连选]
+  Core --> Local[adventure_local_play：带玩家归属的control意图]
+  Local --> Scene[移动 / 各自菜单 / 联合战斗选择]
+  Local --> Solo[adventure_app：单人意图与全局设置导航]
+  Roles[两个角色状态] --> Title[复用renderHeroTitle：两张标题与独立生命]
+```
+
+硬件API只在浏览器层访问；映射及按键状态迁移可在Node验证。设备偏好在本机全局设置中，不进入角色或云端存档。原“主界面继续显示玩家1”现更新为双人模式显示两个角色标题，任务追踪仍归玩家1。
+
+## 地面装饰自动采集（2026-10-06）
+
+```mermaid
+flowchart LR
+    Map[岛屿地图与固定装饰种子] --> Deco[groundDecorationSteps：共享坐标与稳定网格ID]
+    Deco --> Bake[地表Worker与背景烘焙]
+    Deco --> Gather[adventure_gathering_core：图格映射与剩余数量]
+    Gather --> Dwell[localPlay：静止1秒与逐单位计时]
+    Dwell --> Overlay[圆形进度与短暂碎片叠加]
+    Dwell --> Local[本机IndexedDB：共享采集进度与个人采集袋]
+```
+
+背景图不因采集失效或重绘。部分已采数量替代单次布尔耗尽值，兼容旧true标记；双方共用一个点的数量，次日刷新沿用原规则。移动、暂停、弹窗和场景切换重置计时，长帧不补发奖励。
+
+
+### 场景冶炼与领取（2026-10-06）
+
+```mermaid
+flowchart LR
+    Gather[玩家/携带宠物逐单位采集] --> Credit[本机采集价值与余量]
+    Credit --> Still[累计60且静止2秒：场景冶炼]
+    Still --> Drop[本机地面掉落：可达坐标/货币/金额/唯一凭证]
+    Drop --> Claim[玩家走近：持久化领取事务]
+    Claim --> Roles[角色库存与去重凭证一起保存]
+    Roles --> Clear[移除本机掉落与事务]
+    PetTrait[采集小能手标签] --> Gather
+```
+
+金币先落地再领取，场景不提供归自己/平分的选择。账号本机命名空间隔离掉落ID，重载后按领取凭证恢复，宠物移动由localPlay提供临时位置给渲染器，同一个宠物不重复绘制。

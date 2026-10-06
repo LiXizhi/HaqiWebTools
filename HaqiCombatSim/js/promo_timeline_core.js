@@ -30,6 +30,15 @@ export function captionAt(shot,elapsed,language){
 }
 // A RAF timestamp can predate the completion of an asynchronous scene load.
 export function frameDelta(now, previous, speed=1) { return Math.max(0, Math.min(.1, (now-previous)/1000))*speed; }
+// Let the current action animate, but hold before the next action/caption or shot
+// until both synthesis and audio playback have finished. No wall time catch-up.
+export function narrationLimitedTime(film,time,delta,cueIndex,pending){
+    const target=Math.min(film.duration,time+delta);
+    if(!pending)return target;
+    const {shot}=locateShot(film,time);
+    const boundary=shot.start+(shot.cues[cueIndex]?.time??shot.duration);
+    return Math.min(target,Math.max(time,boundary-.001));
+}
 export function srtFor(film, language) {
     const stamp = seconds => new Date(Math.round(seconds * 1000)).toISOString().slice(11, 23).replace('.', ',');
     const rows=film.shots.flatMap(shot=>{

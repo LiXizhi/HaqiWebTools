@@ -83,3 +83,14 @@ test('only legendary labels draw a halo, using distinct colors and no RNG',()=>{
  const colors=[],ctx=new Proxy({globalAlpha:1},{get:(o,k)=>k in o?o[k]:()=>{},set:(o,k,v)=>{o[k]=v;if(k==='strokeStyle')colors.push(v);return true;}});
  drawPetTraitHalo(ctx,{attack:6});assert.equal(colors.length,0);for(const rank of [7,8,9])drawPetTraitHalo(ctx,{attack:rank});assert.equal(new Set(colors).size,3);
 });
+
+test('gathering tag does not change the original combat trait roll or legendary probability',()=>{
+ const params=petTraitParams(content);
+ for(let seed=0;seed<300;seed++){
+  const original=rollPetTraits(seed,{...params,gatheringChance:0});
+  const added=rollPetTraits(seed,{...params,gatheringChance:1});
+  const {gathering,...combat}=added;
+  assert.deepEqual(combat,original);
+  assert.equal(Math.max(...Object.values(added)),Math.max(...Object.values(original)));
+ }
+});

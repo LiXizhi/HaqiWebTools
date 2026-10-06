@@ -116,9 +116,11 @@ export function showPetDetails(assets,id,portrait,{el,button,spellFace},options=
     }
     tabs.setAttribute('aria-label','宠物详情分类');
     for(const [key,label] of [...(pet?[['care','养成']]:[]),[ 'growth', def.staticAppearance?'卡牌':'形态与卡牌']]){const tab=button(label,()=>{active=key;paint();},'secondary');tab.dataset.tab=key;tabs.append(tab);}
-    if(pet)body.append(tabs);body.append(content);dialog.append(body);document.body.append(dialog);paint();
-    dialog.addEventListener('keydown',event=>{event.stopPropagation();if(event.key==='Escape'){event.preventDefault();close();}});
+    const localRoot=options.localRoot||trigger?.closest?.('.local-personal');
+    if(pet)body.append(tabs);body.append(content);dialog.append(body);(localRoot||document.body).append(dialog);paint();
+    if(localRoot)dialog.classList.add('local-detail');
+    dialog.addEventListener('keydown',event=>{if(!localRoot)event.stopPropagation();if(event.key==='Escape'){event.preventDefault();close();}});
     dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)close();}});
     dialog.addEventListener('close',()=>{dialog.remove();if(trigger?.isConnected)trigger.focus({preventScroll:true});},{once:true});
-    dialog.showModal();exit.focus();
+    if(localRoot)dialog.show();else dialog.showModal();exit.focus();
 }

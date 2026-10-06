@@ -1,3 +1,4 @@
+import {fitLocalCamera} from './adventure_local_coop_core.js';
 import {drawPetTraitHalo} from './view_pet_traits.js';
 import {npcCharacter} from './adventure_city_people_core.js';
 import {performanceDiagnostics as perf} from './performance_diagnostics.js';
@@ -222,7 +223,7 @@ export function createRenderer(canvas,assets) {
         if(!assets.drawMonster?.(c,m,-52*scale,-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',0,bob,t,scale,false);
         c.restore();
     }
-    function render(world,save,time,{graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
+    function render(world,save,time,{localSecond=null,localSecondMoving=false,gatheringPets=[],graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
         let phaseTime=perf.enabled?performance.now():0;
         const mark=name=>{if(phaseTime){const now=performance.now();perf.record(world.isEarth?name:name.replace('earth-','island-'),now-phaseTime);phaseTime=now;}};
         const markerFor=markerCache.forState(save,assets.content,world);
@@ -230,7 +231,9 @@ export function createRenderer(canvas,assets) {
         const {w,h,dpr}=size(graphics.low),t=time/1000,gestureAt=Date.now();bubbleTarget=null;greetingTarget=null;ctx.fillStyle=world.layout?.rules.terrain.ocean||OCEAN_COLOR;ctx.fillRect(0,0,w,h);
         cameraZoom.tick(time,reducedMotion.matches);
         const baseScale=w<650?.82:1,sceneZoom=title?1:cameraZoom.value;
-        cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:save.position;
+        cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:{...save.position};
+        const localCamera=!title&&localSecond?fitLocalCamera([save.position,localSecond.position],w,h,cam.scale):null;
+        if(localCamera){cam.scale=localCamera.scale;Object.assign(center,localCamera.center);}
         const aligned=alignCameraOrigin(center.x-w/(2*cam.scale),center.y-h/(2*cam.scale)+(w<650?50:25)/sceneZoom,cam.scale,dpr);
         const origin=!title&&world.dungeon?.scene.streetscape?.theme==='south-china'?clampCameraToWorld(aligned,world,{w:w/cam.scale,h:h/cam.scale},cam.scale,dpr):aligned;
         cam.x=origin.x;cam.y=origin.y;
@@ -294,6 +297,7 @@ export function createRenderer(canvas,assets) {
             if(!o.hidden)for(const pose of monsterScenePositions(world,o))objects.push({...o,...pose,monsterIds:null,groupSize:o.monsterIds?.length||1});
         }
         objects.push({...save.position,kind:'hero'});
+        if(localSecond&&!title)objects.push({...localSecond.position,kind:'local-player',save:localSecond});
         const petId=selectCompanionId(save,assets.content);
         if(petId&&!petScene){
             if(!companion||companionId!==petId||companionWorld!==world||companionSave!==save){
@@ -301,7 +305,7 @@ export function createRenderer(canvas,assets) {
                 companionId=petId;companionWorld=world;companionSave=save;lastPetTime=time;
             }
             stepCompanion(companion,world,save.position,(time-lastPetTime)/1000,{deferSearch:coldTiles>0,inParty,...islandCompanionNavigation.options(companion,world,()=>companionWorld===world&&companionSave===save)});
-            objects.push({...companion.position,kind:'pet'});
+            if(!gatheringPets.some(row=>row.pet.id===petId))objects.push({...companion.position,kind:'pet'});
         }else companion=petScene?.pets.find(row=>row.pet.id===petId)||null;
         lastPetTime=time;
         const liveSocial=new Set();
@@ -334,8 +338,9 @@ export function createRenderer(canvas,assets) {
             objects.push({...actor.position,kind:'social',actor,fx,onScreen});
         }
         for(const id of socialFx.keys())if(!liveSocial.has(id))socialFx.delete(id);
-        if(petScene&&!title){for(const row of petScene.pets)objects.push({...row.position,kind:'pet-social',row});for(const pet of petScene.babies)objects.push({...pet.birth.anchor,kind:'pet-social',row:{pet,position:pet.birth.anchor,scale:petDisplayScale(pet,assets.content)}});}
+        if(petScene&&!title){for(const row of petScene.pets)if(!gatheringPets.some(job=>job.pet.id===row.pet.id))objects.push({...row.position,kind:'pet-social',row});for(const pet of petScene.babies)objects.push({...pet.birth.anchor,kind:'pet-social',row:{pet,position:pet.birth.anchor,scale:petDisplayScale(pet,assets.content)}});}
         if(world.dungeon?.scene.streetscape)objects.push(...streetPainter.objects(world,viewport,time,save.position,reducedMotion.matches));
+        if(!title&&!motionHidden)for(const row of gatheringPets)objects.push({...row.position,kind:'pet-social',row:{...row,scale:petDisplayScale(row.pet,assets.content)}});
         objects=mergeSceneObjects(scenery,objects);
         const streetFocus=world.dungeon?.scene.streetscape?[...world.npcs,...streetPainter.people()].filter(n=>Math.hypot(n.x-save.position.x,n.y-save.position.y)<120):[];
         mark('earth-render-actors');
@@ -348,7 +353,7 @@ export function createRenderer(canvas,assets) {
             if(o.kind.startsWith('street')){streetPainter.draw(ctx,o,save.position,streetFocus);continue;}
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
             if(islandCache&&o.kind==='tree'){const end=islandScenery.draw(ctx,objects,objectIndex,save.position,viewport);if(end>objectIndex){objectIndex=end-1;continue;}}
-            if(o.kind==='pet-social'){ctx.save();ctx.globalAlpha*=o.row.sceneOpacity??1;drawSocialPet(ctx,assets,o.row,petScene.effects,time,reducedMotion.matches,petScene.now);ctx.restore();}
+            if(o.kind==='pet-social'){ctx.save();ctx.globalAlpha*=o.row.sceneOpacity??1;drawSocialPet(ctx,assets,o.row,petScene?.effects||[],time,reducedMotion.matches,petScene?.now);ctx.restore();}
             if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const winter=(world.isEarth&&world.drawEarthDecoration?.(ctx,o))||o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter&&!world.isEarth)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
             // Stable plant variants add visual detail without changing collision or RNG.
             if(o.kind==='tree'&&!world.isEarth&&!o.snow&&assets.sceneryTile){
@@ -416,6 +421,7 @@ export function createRenderer(canvas,assets) {
                 if(!drawn)creature(ctx,'pet',0,-hop,t,.36,false);
                 ctx.restore();
             }
+            if(o.kind==='local-player'){avatar(ctx,o.save,o.x,o.y,t,localSecondMoving,1,true);plate(ctx,o.save.name+' · 玩家2',o.x,o.y+20,PLATE.hero);}
             if(o.kind==='hero'){
                 const gesturePose=socialGesturePose(socialGesture,'hero',gestureAt,reducedMotion.matches);
                 ctx.save();ctx.translate(0,-(gesturePose?.hop||0));
@@ -595,7 +601,7 @@ export function createRenderer(canvas,assets) {
             const pose=petUnit&&hp<=0?{action:'idle',progress:0}:hp>0&&hit?{action:'hit',progress:hit.progress}:battleActorAction(id,hp,ev,p);
             if(hp>0)drawPetTraitHalo(c,unit.passiveTraits,positions[id].x,positions[id].y,38);
             drawAnimatedActor(c,positions[id],pose.action,pose.progress,id==='hero'?1:-1,reducedMotion.matches,()=>{
-                if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,BATTLE_HERO_SCALE,false,updateHeroActor(battleHero,{time:t,facing:2,reducedMotion:reducedMotion.matches}),bounds);const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if(!battle.redMushroom&&support&&assets.content.pets[support.speciesId]?.art)(()=>{c.save();c.translate(36,0);drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,48,column=>assets.drawPet(c,support.speciesId,petAppearanceStage(support,assets.content),-24,-48,48,48,column));c.restore();})();}
+                if(id==='hero'){avatar(c,{...save,facing:2},0,0,t,false,BATTLE_HERO_SCALE,false,updateHeroActor(battleHero,{time:t,facing:2,reducedMotion:reducedMotion.matches}),bounds);const supportId=save.formation?.[save.heroSlot],support=save.pets?.[supportId];if((!battle.redMushroom||presentation?.showSupportPet)&&support&&assets.content.pets[support.speciesId]?.art)(()=>{c.save();c.translate(36,0);drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,48,column=>assets.drawPet(c,support.speciesId,petAppearanceStage(support,assets.content),-24,-48,48,48,column));c.restore();})();}
                 else if(unit.arenaProfile){avatar(c,{...unit.arenaProfile,facing:unit.side==='far'?1:2},0,0,t,false,BATTLE_HERO_SCALE,false,null,bounds);}
                 else if(save.coopRun?.members.some(m=>m.unit.id===id)){const p=save.coopRun.members.find(m=>m.unit.id===id).profile;avatar(c,{...p,mountId:null,facing:2},0,0,t,false,BATTLE_HERO_SCALE,false,null,bounds);}
                 else {const unit=battle.unitsById[id],species=unit.speciesId||unit.template?.speciesId;if(unit.isMob)monster(c,unit.template,0,0,t,.95);else if(species&&assets.content.pets[species]?.art)drawPetMood(c,petBattleMood(hp,unit.maxHp,assets.content),time,reducedMotion.matches,84,column=>assets.drawPet(c,species,petAppearanceStage(save.pets?.[unit.id]||save.pets?.[species]||unit,assets.content),-42,-84,84,84,column));else creature(c,unit.isMob?unit.template.id:'pet',0,0,t,.85);}

@@ -11,6 +11,7 @@ export const PET_TRAITS={
     accuracy:{name:'百发百中手',stat:'accuracyPct',effect:'命中'},
     mana:{name:'魔力充电宝',stat:'powerPipPct',effect:'超级魔力'},
     healing:{name:'暖心小医师',stat:'outputHealPct',effect:'治疗'},
+    gathering:{name:'采集小能手',effect:'采集效率'},
     frugal:{name:'节食主义者',effect:'食量'},
 };
 export function petTraitParams(content={}){return resolveParams({cards:{}},content.balanceParams||{version:'kids',petTraits:content.petTraits},{groups:['petTraits']}).petTraits;}
@@ -29,7 +30,7 @@ export function mergePetTraits(current={},incoming={}){
 function weighted(rng,weights){let value=rng.float()*weights.reduce((a,b)=>a+b,0);for(let i=0;i<weights.length;i++){value-=weights[i];if(value<0)return i;}return weights.length-1;}
 export function rollPetTraits(seed,params=petTraitParams(),owned={}){
     validatePetTraits(owned);
-    const rng=createRng(hashSeed('pet-traits:v1:'+seed)),keys=rng.shuffle(Object.keys(PET_TRAITS));
+    const rng=createRng(hashSeed('pet-traits:v1:'+seed)),keys=rng.shuffle(Object.keys(PET_TRAITS).filter(key=>key!=='gathering'));
     const count=weighted(rng,params.countWeights)+1,out={};
     for(const key of keys.slice(0,count))out[key]=weighted(rng,params.rankWeights)+1;
     const rare=rng.float()<params.rareChance;
@@ -39,6 +40,8 @@ export function rollPetTraits(seed,params=petTraitParams(),owned={}){
         :candidates.length?Math.max(out[key]||1,(owned[key]||0)+1):Math.max(1,Math.min(6,(owned[key]||6)-1));
     if(!out[key]&&Object.keys(out).length>=count)delete out[Object.keys(out).at(-1)];
     out[key]=rank;
+    // Preserve the original eight-trait RNG stream and combat stats for saved replays.
+    if(Object.keys(out).length<3&&createRng(hashSeed('pet-gathering:v1:'+seed)).float()<params.gatheringChance)out.gathering=Math.max(...Object.values(out));
     return mergePetTraits({},out);
 }
 export function petTraitRows(traits={},params=petTraitParams()){

@@ -83,15 +83,21 @@ export function defaultParams(version = 'teen') {
         // Scene motion stays outside adventureParams saved in battle checkpoints.
         monsterScene: { territoryRadius:84, perceptionMultiplier:2, alertDelay:1.5, dungeonWanderRadius:22, wanderSpeed:15, chaseSpeed:115, returnSpeed:45, restMin:2.5, restMax:6.5 },
         petTraits: {
+            gatheringChance:.2,
             countWeights:[65,28,7], rankWeights:[5000,2500,1250,650,350,170],
             rareChance:.05, rareRankWeights:[80,17,3],
             values:{attack:[3,6,10,15,21,28,36,47,60],defense:[2,4,6,9,12,16,20,25,30],
                 vitality:[4,8,12,18,25,33,42,51,60],critical:[1,2,4,6,9,12,16,20,24],
                 accuracy:[1,2,3,4,6,8,10,12,15],mana:[1,2,3,5,7,9,12,15,18],
-                healing:[3,5,8,12,17,23,30,37,45],frugal:[3,6,10,15,20,26,32,38,45]},
+                gathering:[10,20,35,50,70,95,125,160,200],healing:[3,5,8,12,17,23,30,37,45],frugal:[3,6,10,15,20,26,32,38,45]},
             encounterCacheSize:128,
         },
         adventure: {
+            gatherValue_flower:5,gatherValue_herb:5,gatherValue_stone:10,gatherValue_ore:20,
+            gatherThreshold:50,gatherCellSize:260,gatherDensity:.65,gatherDistance:82,
+            gatherUnits:3,gatherDwellSeconds:1,gatherUnitSeconds:1.5,
+            gatherSmeltValue:60,gatherSmeltSeconds:2,gatherDropDistance:65,gatherPickupDistance:23,
+            gatherFairyChance:.2,gatherFairyAmount:5,gatherBeanAmount:60,gatherPetCooldown:12,gatherPetRange:160,
             monsterRespawnMs:30000,
             fieldEncounterRadius:24,
             dungeonEncounterRadius:84,

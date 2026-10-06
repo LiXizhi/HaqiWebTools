@@ -765,7 +765,7 @@ export function parseSave(raw,content) {
                 ...(threatVersion<1?['damageThreatRatio','splashDamageThreatRatio']:[]),
                 ...(threatVersion<2?['singleHealThreatRatio']:[]),
                 ...(threatVersion<3?['areaHealThreatRatio','effectThreatGlobal','effectThreatMiniAura','effectThreatRemovePositiveCharm','effectThreatRemoveNegativeCharm','effectThreatStealCharm','effectThreatCharms','effectThreatWards','effectThreatAreaCharm','effectThreatAreaWard','effectThreatAbsorb']:[]),
-                'mountSpeed',
+                'mountSpeed','gatherValue_flower','gatherValue_herb','gatherValue_stone','gatherValue_ore','gatherThreshold','gatherCellSize','gatherDensity','gatherDistance',
                 // Added exploration-only defaults do not affect an already-started battle.
                 // Older checkpoints may omit them; present values still require validation.
                 'monsterRespawnMs','fieldEncounterRadius','dungeonEncounterRadius',

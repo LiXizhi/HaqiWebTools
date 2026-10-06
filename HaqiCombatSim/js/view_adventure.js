@@ -357,8 +357,8 @@ function appendTrackerQuest(tracker,entry,save,c,cb,teach) {
     });
     tracker.append(card);
 }
-export function renderHud(root,model,cb) {
-    const {assets,save}=model,c=assets.content;root.replaceChildren();
+export function renderHeroTitle(model,cb) {
+    const {assets,save}=model,c=assets.content;
     // EXPArea.lua EXPArea.UpdateUI L86-94: cur_value is the experience inside the current level,
     // max_value is nextlevelexp, and the fill is min(cur,max)/max against the grey track. Keeping the
     // current level's band at the level cap keeps the bar two-coloured (progress + remaining track).
@@ -402,6 +402,18 @@ export function renderHud(root,model,cb) {
     const warning=el('span','save-indicator',model.storageWarning?'存档未保存':'');warning.hidden=!model.storageWarning;
     status.querySelector('.hero-text').append(el('div','hero-health',el('i'),el('span','hero-health-label')),warning);
     updateHeroHealth(status,save,c);
+    return status;
+}
+export function renderHud(root,model,cb) {
+    const {assets,save}=model,c=assets.content;root.replaceChildren();
+    const status=renderHeroTitle(model,cb);
+    if(model.localSecond){
+        status.dataset.player='1';
+        const second=renderHeroTitle({...model,save:model.localSecond},{...cb,panel:kind=>cb.playerPanel(1,kind)});
+        second.classList.add('local-secondary-title');second.dataset.player='2';
+        second.setAttribute('aria-label','玩家2角色信息');status.setAttribute('aria-label','玩家1角色信息');
+        root.append(second);
+    }
     root.append(status,el('div','location-label',el('span','',model.locationName||c.worldMaps?.[save.zone]?.name||islandName(save.zone)),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
     syncLocaleChrome();
     const utilities=el('nav','utility-nav');utilities.setAttribute('aria-label','其他功能');
@@ -475,7 +487,8 @@ export function renderHud(root,model,cb) {
     const localeControl=document.querySelector('.locale-launch');
     learn.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)+(save.mountId?44:0)}px`;
     learn.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
-    const socialBar=el('div','hero-social-toolbar');socialBar.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)}px`;socialBar.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
+    const toolbarAnchor=model.localSecond?root.querySelector('.local-secondary-title'):status;
+    const socialBar=el('div','hero-social-toolbar');socialBar.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)}px`;socialBar.style.top=`${toolbarAnchor.offsetTop+toolbarAnchor.offsetHeight+8}px`;
     for(const control of [...root.querySelectorAll('.mount-toggle')]){control.style.left='';control.style.top='';socialBar.append(control);}
     // Mail HUD entry stays hidden until dual-account mailVerified is shipped.
     socialBar.append(socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));
@@ -485,7 +498,8 @@ export function renderHud(root,model,cb) {
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
 }
 function modal(root,title,subtitle,cb,wide=false) {
-    root.replaceChildren();root.className='overlay visible';
+    const localClasses=[...root.classList].filter(name=>name.startsWith('local-'));
+    root.replaceChildren();root.className='overlay visible';root.classList.add(...localClasses);
     const box=el('section',`modal ${wide?'wide':''}`);box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',tr(title));
     const close=createCloseButton(cb.close);
     box.append(el('header','modal-header',el('div','',el('p','eyebrow',subtitle),el('h2','',title)),close));const body=el('div','modal-body');box.append(body);root.append(box);
@@ -661,7 +675,7 @@ function renderBattleContent(root,model,cb) {
     // Capture the current visual positions, including any unfinished shuffle, before rebuilding.
     const oldHand=switching?new Map([...root.querySelectorAll('.hand-card')].map(node=>[node.dataset.seq,node.getBoundingClientRect()])):null;
     const previous=root.handBattle===model.battle?root.handSeqs||new Set():new Set();
-    const {assets,save,battle,selected,discarded=[],animating}=model,hero=battle.sides.near[0];root.replaceChildren();root.className=`battle-layer visible${animating?' battle-playing':''}`;
+    const {assets,save,battle,selected,discarded=[],animating}=model,hero=battle.unitsById[model.controlledUnitId]||battle.sides.near[0];root.replaceChildren();root.className=`battle-layer visible${animating?' battle-playing':''}`;
     const soundIcon=icon('sound');
     // The storybook atlas has no sound frame; keep the small speaker SVG.
     delete soundIcon.dataset.uiIcon;
@@ -670,7 +684,7 @@ function renderBattleContent(root,model,cb) {
     sound.setAttribute('aria-label',sound.title);
     sound.setAttribute('aria-pressed',String(!!model.soundEnabled));
     const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.redMushroom?fill('红蘑菇赛场 · {near} 对 {far}',{near:battle.sides.near.length,far:battle.sides.far.length}).text:battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,(()=>{const turn=el('span','badge');setText(turn,'第 {turn} 回合',{turn:battle.turn});return turn;})(),button('撤退',cb.retreat,'secondary small')));
-    if(battle.redMushroom&&!battle.finished){const timer=el('span','badge arena-countdown',animating?'施法中…':fill('选牌剩余 {seconds} 秒',{seconds:model.arenaCountdown??30}).text);timer.dataset.arenaCountdown='';root.append(timer);}
+    if(battle.redMushroom&&!model.localDuo&&!battle.finished){const timer=el('span','badge arena-countdown',animating?'施法中…':fill('选牌剩余 {seconds} 秒',{seconds:model.arenaCountdown??30}).text);timer.dataset.arenaCountdown='';root.append(timer);}
     const canvas=retainedCanvas||el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');bindBattleTargeting(canvas,cb.target);
     const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');setText(status,battle.finished?'对决结束':animating?'魔法正在生效…':blockedMessage);

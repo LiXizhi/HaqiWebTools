@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createAdaptiveGraphics,normalizeGameSettings} from '../js/game_settings_core.js';
 import {createGameSettings,legacyLocalMusic} from '../js/game_settings.js';
+import {DEFAULT_LOCAL_KEYS} from '../js/local_controls_core.js';
 import {durableSave,coreCatalogKey} from '../js/adventure_storage_core.js';
 import {createMotionTrail,motionStyle} from '../js/adventure_motion_effects.js';
 import {createJsonReader} from '../js/runtime_data.js';
@@ -18,7 +19,7 @@ test('adaptive quality needs two sustained windows, excludes paused/scene grace 
 });
 test('local fallback migrates sound once and never replaces explicit device preferences',async()=>{
  const settings=createGameSettings({indexedDB:null,legacyStorage:()=>({getItem:key=>key.includes('volume')?'.8':'off'})});
- await settings.open({music:true});assert.deepEqual(settings.value,{version:1,environmentVersion:2,particles:'auto',trails:'auto',earthLight:'day',earthWeather:'clear',music:true,sound:false,volume:.8});
+ await settings.open({music:true});assert.deepEqual(settings.value,{version:1,environmentVersion:2,particles:'auto',trails:'auto',earthLight:'day',earthWeather:'clear',music:true,sound:false,volume:.8,localKeys:DEFAULT_LOCAL_KEYS,playerInputs:[{type:'keyboard-left'},{type:'keyboard-right'}]});
  settings.set({music:false,particles:'off',volume:2});await settings.flush();await settings.open({music:true});assert.equal(settings.value.music,false);assert.equal(settings.value.volume,1);
  assert.equal(normalizeGameSettings({volume:NaN,trails:'bogus'}).trails,'auto');
 });

@@ -1,6 +1,8 @@
 import { languageSettings } from './view_language_learning.js';
 import { createSettingsControls } from './view_settings_controls.js';
 import { tr } from './locale_runtime.js';
+import {assignPlayerInput,normalizePlayerInputs} from './player_input_core.js';
+import {connectedPads} from './player_input.js';
 
 // 设置窗页签为纯界面状态：切换时原地显隐内容区，重渲染（如开关音效）后保持当前页签。
 export const settingsView = { tab: 'journey' };
@@ -46,6 +48,32 @@ export function renderSettings(body, model, cb, { el, button }) {
     );
 
     panes.game.append(el('p','muted settings-note','仅保存在此设备，不同步到云端。'));
+    const devices=ui.section('每位玩家的控制器'),deviceMessage=el('p','muted');
+    let assignments=normalizePlayerInputs(model.gameSettings?.playerInputs),deviceSignature='';
+    const deviceSelects=[0,1].map(owner=>{
+        const select=el('select','');select.setAttribute('aria-label',`玩家${owner+1}控制器`);
+        select.onchange=()=>{try{
+            const pad=connectedPads().find(p=>`gamepad:${p.index}`===select.value);
+            if(select.value.startsWith('gamepad:')&&!pad)throw Error('手柄已经断开，请刷新设备列表');
+            const device=pad?{type:'gamepad',index:pad.index,id:pad.id}:{type:select.value};
+            assignments=assignPlayerInput(assignments,owner,device);cb.gameSetting?.('playerInputs',assignments);deviceMessage.textContent=assignments[1-owner].type==='none'?'控制器分配已保存；另一位玩家暂不分配设备':'控制器分配已保存';
+        }catch(error){deviceMessage.textContent=error.message;}refreshDevices(true);};
+        devices.append(ui.field(`玩家${owner+1}`,select));return select;
+    });
+    function refreshDevices(force=false){
+        const pads=connectedPads(),signature=JSON.stringify(pads.map(p=>[p.index,p.id,p.mapping]));if(!force&&signature===deviceSignature)return;deviceSignature=signature;
+        deviceSelects.forEach((select,owner)=>{
+            select.replaceChildren();
+            const options=[['none','暂不分配'],['keyboard-mouse','完整鼠标＋键盘'],['keyboard-left','键盘左侧（WASD）'],['keyboard-right','键盘右侧（方向键）'],...pads.map(p=>[`gamepad:${p.index}`,`手柄 ${p.index+1}：${p.id}${p.mapping==='standard'?'':'（暂不支持此映射）'}`])];
+            const current=assignments[owner],value=current.type==='gamepad'?`gamepad:${current.index}`:current.type;
+            if(current.type==='gamepad'&&!pads.some(p=>p.index===current.index&&p.id===current.id))options.push([`missing:${owner}`,`已断开：${current.id}（重新连接或更换设备）`]);
+            for(const [id,label] of options){const option=el('option','',label);option.value=id;const pad=pads.find(p=>`gamepad:${p.index}`===id);option.disabled=id.startsWith('missing:')||id.startsWith('gamepad:')&&pad?.mapping!=='standard';select.append(option);}
+            select.value=current.type==='gamepad'&&!pads.some(p=>p.index===current.index&&p.id===current.id)?`missing:${owner}`:value;
+        });
+    }
+    devices.append(deviceMessage,el('p','muted','连接手柄后按一次按钮，再选择设备。Xbox标准布局：左摇杆／十字键移动或选择，A确认，B返回，X弃牌，Y宠物，LB卡包，RB跳过，RT跟随，View背包，Menu设置。断开时角色停止；重新连接后先松开按键。'),button('刷新已连接手柄',()=>refreshDevices(true),'secondary'));
+    panes.game.append(devices);refreshDevices(true);
+    const deviceTimer=setInterval(()=>{if(!body.isConnected){clearInterval(deviceTimer);return;}refreshDevices();},1000);
     const graphics=ui.section('画面'),graphicUpdates=[];
     for(const [key,label] of [['particles','场景粒子'],['trails','角色足迹与拖尾']]){
         const choices=el('div','locale-choices'),status=el('small','muted');

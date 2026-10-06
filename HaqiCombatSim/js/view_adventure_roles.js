@@ -20,7 +20,21 @@ export function renderRoles(root, assets, model, cb) {
     });
     const controls = [...intro.controls];
     const addButton = (label, fn, cls = 'secondary') => { const b = button(label, fn, cls);controls.push(b);return b; };
-    const head = el('div', 'role-head', el('p', 'eyebrow', '重返魔法世界'), el('h2', '', '选择角色'));
+    const duo = model.duoSelection;
+    const heading = el('div', 'role-heading', el('h2', '', '选择角色'));
+    if (cb.toggleDuo) {
+        const toggle = addButton(duo ? '单人模式' : '双人模式', cb.toggleDuo);
+        if (!duo) toggle.title = tr('双人模式至少需要两个不同角色。');
+        heading.append(toggle);
+    }
+    const head = el('div', 'role-head', el('p', 'eyebrow', '重返魔法世界'), heading);
+    if (cb.toggleDuo && model.catalog.roles.length < 2) head.append(el('p', 'role-duo-status', '双人模式至少需要两个不同角色，请先点击“新建角色”创建第二个角色。'));
+    if (duo) {
+        const status = el('p', 'role-duo-status');status.setAttribute('aria-live', 'polite');
+        setText(status, '已确认 {count} / 2 · 两个角色确认后进入游戏', {count: duo.filter(Boolean).length});
+        head.append(status);
+        if (duo.every(Boolean)) head.append(addButton('进入双人冒险', cb.retryDuo, 'primary'));
+    }
     if (model.owner) {
         const subtitle = el('p', 'muted role-account');
         const status = model.message || (!model.recovering && (model.dirty
@@ -48,9 +62,22 @@ export function renderRoles(root, assets, model, cb) {
         const recent = row.id === model.catalog.activeId;
         const level = el('span', '');setText(level, '等级 {level}', { level: s.level });
         const meta = el('p', 'role-meta', level, schoolIcon(s.school));
-        rows.append(el('article', `role-card ${recent ? 'recent' : ''}`, portrait,
-            el('div', 'role-description', el('h2', '', s.name), meta, recent && el('small', 'muted', '最近使用')),
-            addButton(recent ? '继续旅程' : '进入角色', () => cb.select(row.id), recent ? 'primary' : 'secondary')));
+        const description = el('div', 'role-description', el('h2', '', s.name), meta, recent && el('small', 'muted', '最近使用'));
+        let action;
+        const slot = duo ? duo.indexOf(row.id) : -1;
+        if (duo) {
+            if (slot >= 0) {
+                const badge = el('span', `role-player-tag player-${slot + 1}`);
+                setText(badge, '角色{number} · 已确认', {number: slot + 1});description.prepend(badge);
+            }
+            action = addButton(slot >= 0 ? '取消确认' : '确认角色', () => cb.confirmDuo(row.id), slot >= 0 ? 'secondary' : 'primary');
+            if (slot < 0) {
+                setText(action, '确认角色{number}', {number: duo.indexOf(null) + 1});
+                action.disabled = duo.every(Boolean);
+                if (action.disabled) setText(action, '等待进入');
+            }
+        } else action = addButton(recent ? '继续旅程' : '进入角色', () => cb.select(row.id), recent ? 'primary' : 'secondary');
+        rows.append(el('article', `role-card ${recent ? 'recent' : ''} ${slot >= 0 ? 'duo-confirmed' : ''}`, portrait, description, action));
     }
     if (!model.catalog.roles.length) rows.append(el('p', 'muted', '还没有主角，创建你的第一段旅程。'));
     const foot = el('div', 'role-foot');

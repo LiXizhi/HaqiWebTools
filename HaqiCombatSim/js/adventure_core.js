@@ -19,6 +19,7 @@ import {purchaseNpcOffer} from './adventure_npc_core.js';
 import {claimMagicStar,validateMagicStarClaims,magicStarCombatLevel,applyMagicStarCombat} from './adventure_magic_star_core.js';
 import {equipmentSetStats,dragonTotemStage,progressionStatEntry,chooseDragonTotem,useDragonTotemItem} from './adventure_progression_bonuses_core.js';
 import {customizeHero} from './adventure_hero_customize_core.js';
+import {publicPhotoHead} from './photo_head_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { worldDimensions, mapInfo } from './adventure_island_layout_core.js';
@@ -74,7 +75,7 @@ export function pendingQuestTalk(save, quest, npcId) {
 export function questReady(save, quest) {
     return !!quest && questState(save, quest.id).accepted && questProgress(save, quest).every(g => g.value >= g.count);
 }
-export function createAdventure(content, { name = '小哈奇', school = 'fire', appearance = 'boy', headId, bodyId, seed = 530, starter = 'dragon_green' } = {}) {
+export function createAdventure(content, { name = '小哈奇', school = 'fire', appearance = 'boy', headId, bodyId, customHead, seed = 530, starter = 'dragon_green' } = {}) {
     assert(SCHOOLS.includes(school), '请选择魔法学系');
     const save = { schemaVersion: SAVE_VERSION, contentVersion: content.contentVersion, seed: hashSeed(String(seed)),
         name: String(name).trim().slice(0, 16) || '小哈奇', school, appearance: appearance === 'girl' ? 'girl' : 'boy',
@@ -84,6 +85,7 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
         visitedTown: false, tips: {}, revision: 0, bagRulesVersion: 1, defaultPocketVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion,
         locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,autoReadDialogue:true,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
     if(typeof headId==='string'&&/^[a-z0-9-]{1,64}$/.test(headId))save.headId=headId;
+    if(customHead)save.customHead=publicPhotoHead(customHead,{id:headId,appearance});
     if(validHeroBodyId(bodyId,appearance))save.bodyId=bodyId;
     syncProgression(save, content);
     save.deck = recommendedDeck(save, content);
@@ -683,6 +685,7 @@ export function parseSave(raw,content) {
     assert(typeof s.name === 'string' && s.name.length <= 16 && ['boy','girl'].includes(s.appearance),'存档外观无效');
     assert(s.bodyId===undefined||validHeroBodyId(s.bodyId,s.appearance),'存档身体形象无效');
     assert(s.headId===undefined||(typeof s.headId==='string'&&/^[a-z0-9-]{1,64}$/.test(s.headId)),'存档头部形象无效');
+    if(s.customHead)s.customHead=publicPhotoHead(s.customHead,{id:s.headId,appearance:s.appearance});
     assert(Number.isSafeInteger(s.xp) && s.xp >= 0 && Number.isInteger(s.seed),'存档经验无效');
     validateTrainingPoints(s,content);
     assert(s.gemSerial===undefined||(Number.isSafeInteger(s.gemSerial)&&s.gemSerial>=0),'存档宝石操作记录无效');

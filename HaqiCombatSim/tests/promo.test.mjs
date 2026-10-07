@@ -85,10 +85,20 @@ test('异步镜头准备之后旧动画时间戳不能倒退播放时间',()=>{
 });
 test('宣传片两个版本时长、语言和主要功能覆盖完整',()=>{
     const long=compileFilm(script),short=compileFilm(script,'short');
-    assert.equal(long.shots.length,35);assert.equal(long.duration,432);assert.equal(long.shots.some(s=>s.scene==='account'),false);
-    assert.equal(short.shots.length,15);assert.equal(short.duration,202);
+    assert.equal(long.shots.length,36);assert.equal(long.duration,472);assert.equal(long.shots.some(s=>s.scene==='account'),false);
+    assert.equal(short.shots.length,16);assert.equal(short.duration,242);
     for(const film of [long,short])for(const shot of film.shots){assert.ok(shot.subtitle.en);assert.ok(shot.title.en);for(const cue of shot.cues)assert.ok(cue.time<shot.duration);}
     assert.deepEqual(script.shots.filter(s=>s.zone).map(s=>s.zone).sort(),['camp','dark','desert','fire','float','ice','sail','tide','town']);
+});
+test('两个版本均介绍双人同行、AI接管和恢复人类操作',()=>{
+ for(const edition of ['long','short']){
+  const shot=compileFilm(script,edition).shots.find(s=>s.id==='duo');
+  assert.equal(shot.scene,'duo');assert.equal(shot.duration,40);
+  assert.deepEqual(shot.cues.filter(c=>c.step==='controller').map(c=>c.ai),[true,false]);
+  assert.deepEqual(shot.cues.filter(c=>c.step==='select').map(c=>c.owner),[0,1]);
+  assert.ok(shot.cues.find(c=>c.step==='select'&&c.owner===1).time<shot.cues.find(c=>c.step==='target').time);
+  assert.match(shot.subtitle['zh-CN'],/登录选角/);assert.ok(shot.cues.filter(c=>c.caption).every(c=>c.caption.en));
+ }
 });
 test('时间轴精确边界与拖动越界不遗漏最后镜头',()=>{
     const film=compileFilm(script);assert.equal(locateShot(film,-3).index,0);
@@ -97,7 +107,7 @@ test('时间轴精确边界与拖动越界不遗漏最后镜头',()=>{
 });
 test('未知语言回退中文，SRT 使用各版本连续时间码',()=>{
     assert.equal(filmText({en:'Hello','zh-CN':'你好'},'fr'),'你好');
-    const film=compileFilm(script,'short'),srt=srtFor(film,'en');assert.match(srt,/00:00:00,000 --> 00:00:07,000/);assert.match(srt,/00:03:22,000/);assert.ok(srt.includes(script.shots[0].subtitle.en));
+    const film=compileFilm(script,'short'),srt=srtFor(film,'en');assert.match(srt,/00:00:00,000 --> 00:00:07,000/);assert.match(srt,/00:04:02,000/);assert.ok(srt.includes(script.shots[0].subtitle.en));
 });
 test('不接受重名、无时长、缺字幕和镜头外动作',()=>{
     const change=fn=>{const copy=structuredClone(script);fn(copy);assert.throws(()=>compileFilm(copy));};

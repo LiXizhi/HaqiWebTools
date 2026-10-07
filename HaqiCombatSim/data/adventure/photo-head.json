@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "enabled": true,
+  "model": "keepwork-image-pro",
+  "disabledReason": "照片形象生成暂未开放。已有形象仍可使用。"
+}

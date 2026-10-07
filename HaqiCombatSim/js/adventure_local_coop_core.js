@@ -2,9 +2,14 @@
 import {partySpecs} from './adventure_pets_core.js';
 import {playerSpec,runeInventory,settleParty,settleEncounter,applyAction} from './adventure_core.js';
 import {settleArenaQuests} from './adventure_red_mushroom_core.js';
+import {defaultParams} from './combat_params_core.js';
 
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 export function wideEnough(width,height){return width>=1280&&height>=720&&width/height>=1.6;}
+export function localFollowWithinRange(position,leader,content){
+    const limit=content?.balanceParams?.islandSocial?.approachReleaseRadius??defaultParams('kids').islandSocial.approachReleaseRadius;
+    return Math.hypot(position.x-leader.x,position.y-leader.y)<=limit;
+}
 export function createLocalFormation(roleIds,saves){
     check(roleIds.length===2&&new Set(roleIds).size===2,'请选择两个不同角色');
     return {version:1,roleIds:[...roleIds],slots:[{owner:0,kind:'hero'},{owner:1,kind:'hero'},...saves.map((s,owner)=>{
@@ -44,7 +49,7 @@ export function localParty(formation,saves,content){
         const specs=partySpecs(temporary,content,hero);
         const unit=seat.kind==='hero'?specs[0]:specs.find(u=>u.id===seat.id||u.speciesId===s.pets[seat.id]?.speciesId);
         check(unit,'请先加载出战宠物');
-        return [{...unit,id:seat.kind==='hero'?hero.id:`local-pet-${seat.owner}`,slot,localOwner:seat.owner,sourcePetId:seat.id,isBot:seat.kind!=='hero',appearance:s.appearance,bodyId:s.bodyId,headId:s.headId,mountId:s.mountId}];
+        return [{...unit,id:seat.kind==='hero'?hero.id:`local-pet-${seat.owner}`,slot,localOwner:seat.owner,sourcePetId:seat.id,isBot:seat.kind!=='hero',appearance:s.appearance,bodyId:s.bodyId,headId:s.headId,customHead:s.customHead,mountId:s.mountId}];
     });
     // Existing adventure presentation and checkpoint validation keep leader first.
     return units.sort((a,b)=>(a.id==='hero'?-1:b.id==='hero'?1:a.slot-b.slot));

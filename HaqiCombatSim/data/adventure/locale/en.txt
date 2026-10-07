@@ -919,6 +919,8 @@ Boss 已击败，可以退出副本。||Boss defeated. You can exit the dungeon.
 等级 {level} · {school}||Level {level} · {school}
 等级 {level}||Level {level}
 最近使用||Recently used
+删除角色 {name}||Delete character {name}
+确定删除角色 {name} 吗？||Delete character {name}?
 继续旅程||Continue journey
 进入角色||Enter character
 还没有主角，创建你的第一段旅程。||No hero yet; create your first journey.
@@ -5392,6 +5394,11 @@ S4死亡装供货商||S4 Death gear supplier
 最后一关：击败死亡侦察兵！带上准备好的卡牌，去证明你已经能独当一面吧。||Your final challenge: defeat the Death Scout! Take your prepared deck and show that you can stand on your own.
 恭喜你，通过考核！带上伙伴和勇气出发吧，营地之外，还有更多奇妙的相遇等着你。||Congratulations, you passed! Set out with your companion and your courage. More wonderful encounters await beyond the camp!
 # js/adventure_app.js
+等级 {from} → {to}||Level {from} → {to}
+{name} +{count}||{name} +{count}
+{name} +1%||{name} +1%
+今日累计 {total} 层||Today: {total} stacks
+{label} +{delta}{unit}||{label} +{delta}{unit}
 已经骑上坐骑。属性将在下一场战斗中生效。||Mounted. The stat bonuses will take effect in your next battle.
 已经下来了。||Dismounted.
 这张卡牌已弃掉||This card has been discarded.
@@ -8844,3 +8851,231 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 部分地图图片暂不可用，仍可选择目的地。||Some map images are unavailable. You can still select a destination.
 地图暂不可用，请从列表选择目的地。||The map is unavailable. Select a destination from the list.
 当前位置||Current location
+
+# AI companion
+两位真人||Two human players
+真人和 AI||Human and AI
+交给 AI||Let AI play
+接管第二角色||Take control of player 2
+第二角色交给 AI||Let AI control player 2
+和队友说话||Talk to your companion
+同行伙伴||Travel companion
+收起陪伴聊天||Close companion chat
+和队友说点什么||Say something to your companion
+给 AI 队友的消息||Message to your AI companion
+关闭朗读||Mute voice
+开启朗读||Enable voice
+再次朗读||Read again
+清除本机记忆||Clear local memory
+安静陪伴||Quiet company
+恢复主动交流||Resume conversation
+跟着我||Follow me
+本机共同记忆||Shared memories on this device
+查看释义||Show translation
+{name} · AI 陪伴||{name} · AI companion
+收起队友提示||Dismiss companion advice
+开启本场队友提示||Enable companion advice for this battle
+关闭本场队友提示||Mute companion advice for this battle
+本机记忆已清除||Local memories cleared
+这场战斗已结束。||This battle has ended.
+队友已准备好。||Your companion is ready.
+队友正在选择行动。||Your companion is choosing an action.
+今日陪伴对话额度已用完，伙伴仍会陪你探索。||Today’s companion chat budget is used up. Your companion will keep exploring with you.
+登录后可以和队友自由交流；当前使用本地陪伴。||Sign in for open conversation. Your companion is currently using local behavior.
+请先登录 Keepwork 再使用录音。||Sign in to Keepwork to use recording.
+当前语言暂无离线台词，伙伴仍会陪你探索。||Offline dialogue is unavailable in this language. Your companion will keep exploring with you.
+查看地图，决定去哪里||Open the map and choose where to go
+
+同屏队友互动||Interact with your local teammate
+跟随玩家1||Follow Player 1
+不跟随玩家1||Stop following Player 1
+
+选择坐骑||Choose a mount
+第二角色跟随玩家1||Player 2 follows Player 1
+{name} · 同屏队友||{name} · Local teammate
+
+跟随{name}||Follow {name}
+不跟随{name}||Stop following {name}
+{follower}跟随{leader}||{follower} follows {leader}
+
+
+用我的照片生成||Create from my photo
+照片生成形象||Create a photo avatar
+关闭照片生成形象||Close photo avatar creation
+照片将发送给 AI 服务生成形象，不会公开为游戏照片；生成的卡通形象用于游戏展示。||Your photo will be sent to the AI service to create an avatar, not published as a game photo. The cartoon avatar will be visible in the game.
+拖动调整照片位置||Drag to position your photo
+生成我的形象||Create my avatar
+再生成一张||Generate another
+上传照片||Upload a photo
+拍摄照片||Take a photo
+拍下照片||Capture photo
+无法打开摄像头，请允许相机权限或上传照片。||Cannot open the camera. Allow camera access or upload a photo.
+旋转90°||Rotate 90 degrees
+重置||Reset
+继续处理和保存||Continue processing and saving
+放弃上次任务||Discard the previous task
+我的形象||My avatars
+转头预览||Head turn preview
+四向行走||Walk in four directions
+完整16方向图集||Full 16-direction atlas
+查看完整图集||View the full atlas
+调整衔接||Adjust head alignment
+方向||Direction
+连接点横坐标||Attachment point X
+连接点纵坐标||Attachment point Y
+头部尺寸||Head size
+保存衔接调整||Save alignment
+恢复模板位置||Restore template alignment
+重新去背景||Remove background again
+使用这个形象||Use this avatar
+预览动作||Preview animation
+去底强度（0为保留透明原图）||Background removal strength (0 preserves the source alpha)
+暂不使用||Use later
+正面、光线清楚、保留完整头发和下巴、只包含自己。||Use a well-lit front view of yourself, keeping all of your hair and chin in the frame.
+登录后可获得一次免费生成机会。||Sign in for one free avatar generation.
+请选择不超过10MB的JPEG、PNG或WebP照片||Choose a JPEG, PNG or WebP photo under 10 MB
+操作未完成，请重试||The operation did not finish. Please try again.
+会员不限生成次数，已生成形象可免费切换。||Members can generate unlimited avatars and switch between saved avatars for free.
+免费生成机会剩余1次，所有角色共享。||One free generation remains, shared by all your characters.
+免费生成机会已用完，会员可不限次数生成。||Your free generation has been used. Members can generate unlimited avatars.
+还没有自己的照片形象。||You have no photo avatars yet.
+形象窗口打开失败，请重试||Could not open the avatar window. Please try again.
+免费使用这个形象||Use this avatar for free
+自定义头像免费切换；改名字和身体仍按原规则收费。||Switching custom heads is free. Name and body changes retain their usual prices.
+照片形象生成正在验证中，暂未开放。已有形象仍可使用。||Photo generation is being verified and is not available yet. Saved avatars can still be used.
+已有一个形象任务正在运行||An avatar task is already running
+上次生成中断，尚未收到图片；可放弃后重新生成。||The previous generation was interrupted before an image was received. Discard it to try again.
+已有生成结果，可继续处理和保存。||A generated image is available. Continue processing and saving it.
+形象已保存，可以预览和使用。||Your avatar is saved and ready to preview and use.
+正在去背景并压缩图集…||Removing the background and compressing the atlas…
+正在上传卡通形象…||Uploading the cartoon avatar…
+正在核验并保存形象…||Verifying and saving your avatar…
+正在读取生成结果…||Loading the generated image…
+正在核验布局参考…||Checking the layout reference…
+正在生成16方向形象…||Generating the 16-direction avatar…
+生成未完成，未扣次数。请检查网络后手动重试。||Generation did not finish and no allowance was used. Check your connection and retry manually.
+可以重新选择照片。||You can choose a new photo.
+连接位置已保存。||Alignment saved.
+账号已切换，请重新打开形象窗口||The account changed. Reopen the avatar window.
+当前浏览器不支持图片编码||This browser does not support the required image encoding
+图片读取失败||Could not read the image
+照片压缩后仍过大，请重新裁剪或选择照片||The compressed photo is still too large. Crop it again or choose another photo.
+当前浏览器不支持图集处理，请更换浏览器||This browser does not support atlas processing. Please use another browser.
+图集处理超时，请重试||Atlas processing timed out. Please try again.
+图集去背景失败，请检查背景、方向和完整性后重试。||Background removal failed. Check the background, directions and image completeness before retrying.
+图集压缩后仍超过200KB，请重试||The compressed atlas still exceeds 200 KB. Please try again.
+无法确认当前账号会员状态||Could not verify this account's membership
+布局参考未准备好，暂不能生成||The layout reference is not ready. Generation is unavailable.
+布局参考哈希不符||The layout reference checksum did not match
+布局参考尺寸不符||The layout reference dimensions did not match
+照片直传与双参考图尚未验证，暂未开放生成||Direct photo input and dual references have not been verified. Generation is not available yet.
+请先裁剪压缩照片||Crop and compress the photo first
+图片生成接口不可用||The image generation service is unavailable
+免费生成机会已用完，会员可不限次数生成||Your free generation has been used. Members can generate unlimited avatars.
+尚未收到生成图片，请重新选择照片||No generated image has been received. Choose a photo again.
+此设备没有生成原图，不能重新去背景||The generated source image is not on this device. Background removal cannot be repeated.
+请等待当前形象任务完成||Wait for the current avatar task to finish
+请先完成四向校准||Finish the four-direction alignment first
+请先选择形象||Choose an avatar first
+我的照片形象||My photo avatar
+
+正在打开形象窗口…||Opening avatar window…
+照片交给 AI 变身，仅卡通形象公开。||AI transforms your photo. Only your cartoon is public.
+选照片||Photo
+变身||Transform
+去冒险||Play
+把你变成小英雄||Become a little hero
+一张正面照，开启冒险||One photo. Your own little hero.
+形象保存进度||Saving your avatar
+新形象已保存||Your hero is ready
+再选照片||Choose another photo
+调整背景||Adjust background
+拖动、缩放，保留头发和下巴||Drag and zoom. Keep your hair and chin in frame.
+使用说明||How it works
+每账号免费生成一次，会员不限次数；成功保存后计次。照片仅用于 AI 生成，原照不会上传公开 CDN。||One free avatar per account; unlimited for members. Counted only after saving. Your photo goes to the AI service, never to the public CDN.
+免费体验1次||Members only
+会员无限次||Unlimited · Member
+免费次数已用完||Membership required
+照片形象生成暂未开放。已有形象仍可使用。||Generation is unavailable. You can still use saved avatars.
+当前SDK不支持形象上传，请刷新后重试||Please refresh to enable avatar uploads.
+上传图片必须是200KB以内的WebP||The avatar must be a WebP under 200KB.
+上传图片哈希不符||The avatar file could not be verified.
+上传未返回永久Keepwork CDN地址||Upload did not return a permanent Keepwork CDN address.
+缩放||Zoom
+下一步：变身||Next: transform
+返回选照片||Back to photo
+校准||Align
+走路||Walk
+站立||Stand
+朝前||Front
+朝左||Left
+朝后||Back
+朝右||Right
+头向左转||Turn head left
+头部回正||Reset head turn
+头向右转||Turn head right
+头部上移||Move head up
+头部下移||Move head down
+头部左移||Move head left
+头部右移||Move head right
+保存校准||Save alignment
+恢复默认位置||Reset alignment
+拖动头部，调整与身体的位置||Drag the head to fit the body
+图集行校正无效||The alignment could not be applied
+校准已保存||Alignment saved
+
+校准，下一个||Confirm and next
+完成四向校准||Finish alignment
+四个方向已校准||All four directions ready
+逐帧精调||Fine-tune frames
+返回四向校准||Back to four directions
+
+水平镜像||Mirror head
+已校准||Aligned
+
+点击头像继续编辑，或直接使用已保存的位置。=Click a portrait to open alignment. Confirm all four directions, then use it.
+继续编辑这个形象=Continue editing this appearance
+校准这个形象||Align this avatar
+正面头像=Front portrait
+预览不可用=Preview unavailable
+选择后查看=Select to preview
+形象已满，请先删除=Appearance library full; delete one first
+最多保留10个形象，请先删除不需要的形象=Keep up to 10 appearances; delete an unwanted one first
+形象已从历史记录中删除。=Appearance removed from the library.
+形象预览图无效=Invalid appearance preview
+形象预览图过大=Appearance preview is too large
+每账号免费生成一次，会员不限次数；最多保留10个形象，成功保存后计次。照片仅用于 AI 生成，原照不会上传公开 CDN。||Photo avatars are members only. Unlimited generations for members; keep up to 10. Photos are only used for AI generation and are not uploaded to the public CDN.
+
+点击头像使用，右上角删除。||Click an avatar to align it. Remove with the corner button.
+删除这个形象||Delete this avatar
+正在加载头像…||Loading avatar…
+
+服装||Outfit
+
+上一套服装||Previous outfit
+下一套服装||Next outfit
+切换预览动作||Switch preview animation
+
+先选男生或女生||Choose a boy or girl first
+
+小英雄正在变身…||Your little hero is taking shape…
+
+最多可创建20个主角，当前名额已满。||You can create up to 20 characters. All slots are full.
+最多可创建5个主角，当前名额已满。开通会员可创建20个。||You can create up to 5 characters. All slots are full. Members can create up to 20.
+开通会员可将主角名额提升到 20 个。||Upgrade to membership to raise the character limit to 20.
+照片生成形象为会员专属功能，请开通会员后使用。||Photo avatars are a member-only feature. Please upgrade to continue.
+照片生成形象为会员专属；会员不限次数，最多保留10个形象。照片仅用于 AI 生成，原照不会上传公开 CDN。||Photo avatars are members only. Unlimited generations for members; keep up to 10. Photos are only used for AI generation and are not uploaded to the public CDN.
+需要开通会员||Membership required
+连接正常||Connection active
+已接收 {size} · 已等待 {seconds} 秒 · {live}||Received {size} · waited {seconds}s · {live}
+等待服务器返回… · 已等待 {seconds} 秒||Waiting for the server… · waited {seconds}s
+超过 {seconds} 秒没有新数据，请检查网络||No new data for {seconds}s. Check your connection.
+上传进度 {progress}% · 已等待 {seconds} 秒||Upload {progress}% · waited {seconds}s
+正在上传… · 已等待 {seconds} 秒||Uploading… · waited {seconds}s
+向左看||Look left
+向右看||Look right
+
+生成通常需要90–120秒，进度为预计进度。||Generation usually takes 90–120 seconds. Progress is estimated.
+形象生成预计进度||Estimated avatar generation progress
+上传进度 {progress}%||Upload progress {progress}%
+正在上传…||Uploading…

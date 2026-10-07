@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import { createAdventure, beginEncounter, recordDecision } from '../js/adventure_core.js';
 import { restorePveBattle, playPveRound } from '../js/combat_pve_core.js';
 import { createRoleStore } from '../js/adventure_roles.js';
-import { validateRoles, emptyRoles, addRole, directSignInRequested, startupRoleId } from '../js/adventure_roles_core.js';
+import { validateRoles, emptyRoles, addRole, roleLimit, MAX_ROLES_VIP, directSignInRequested, startupRoleId } from '../js/adventure_roles_core.js';
 import { SAVE_KEY, saveLocal, readLocal, replaceLocalWithBackup, readBackup } from '../js/adventure_assets.js';
 import { storeDebugEdit, restoreDebugBackup, hasDebugBackup } from '../js/adventure_debug.js';
 import { createCloudClient } from '../js/adventure_cloud.js';
@@ -34,6 +34,16 @@ test('five role limit does not replace existing progress and recent role survive
     const before = store.checkpoint();assert.throws(() => store.create(hero('第六个')), /5/);assert.equal(store.checkpoint(), before);
     store.select(ids[1]);const loaded = l.make();loaded.open('alice');assert.equal(loaded.catalog.activeId, ids[1]);
     assert.equal(loaded.catalog.roles.length, 5);
+});
+test('VIP accounts can create up to 20 roles while free accounts stay at 5', () => {
+    assert.equal(roleLimit(false), 5);assert.equal(roleLimit(true), MAX_ROLES_VIP);
+    const l = local(), store = l.make();store.open('alice');
+    for (let i = 0; i < 5; i++) store.create(hero(`免费${i}`));
+    assert.throws(() => store.create(hero('超限'), { isVip: false }), /5/);
+    for (let i = 5; i < 20; i++) store.create(hero(`会员${i}`), { isVip: true });
+    assert.equal(store.catalog.roles.length, 20);
+    assert.throws(() => store.create(hero('第二十一'), { isVip: true }), /20/);
+    assert.equal(validateRoles(store.catalog, content, dataset).roles.length, 20);
 });
 test('role saves and both kinds of backup remain isolated across roles and accounts', () => {
     const l = local(), store = l.make();store.open('alice');const a = store.create(hero('一号')), scopeA = store.scoped();

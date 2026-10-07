@@ -1,4 +1,15 @@
 .local-personal:empty{display:none}
+.companion-controls{position:fixed;left:250px;top:18px;z-index:85;display:flex;gap:6px;max-width:430px;color:var(--ink)}
+.companion-controls[hidden],.companion-chat[hidden],.companion-speech-layer[hidden]{display:none}
+.companion-chat{position:absolute;left:0;top:48px;width:390px;max-height:calc(100dvh - 130px);overflow:auto;background:var(--paper,#fff3d4);border:2px solid var(--gold,#b99142);border-radius:14px;padding:12px;box-shadow:0 6px 24px #0004}
+.companion-chat header{display:flex;align-items:center;justify-content:space-between}.companion-chat-log{max-height:190px;overflow:auto}.companion-line{padding:8px;margin:4px 0;border-radius:8px;background:#fff8}.companion-line.user{background:#cde5ca}.companion-line p{margin:4px 0}
+.companion-chat-form{display:flex;gap:5px;align-items:center}.companion-chat-form input{width:0;flex:1;min-width:70px}.companion-chat-tools,.companion-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}.companion-chat-tools button{font-size:12px}.companion-chat details p{white-space:pre-wrap}
+.companion-speech-layer{position:fixed;inset:0;z-index:74;pointer-events:none}.companion-speech-layer .actor-speech{position:absolute}
+.local-ai-status{padding:12px;color:var(--ink)}
+body:has(.local-battle.visible) .companion-controls{left:auto;right:18px}
+body:has(.local-battle.visible) .companion-chat{left:auto;right:0}
+.local-battle-half .local-ai-status{position:absolute;right:18px;bottom:130px;pointer-events:auto;max-width:260px;border:2px solid var(--gold);border-radius:12px;background:var(--paper);font-size:14px}
+.local-battle-half .local-ai-status h2{font-size:18px;margin:0 0 8px}
 .local-personal{position:fixed;top:110px;bottom:24px;width:calc(50% - 24px);z-index:72;pointer-events:none;display:flex;align-items:center;justify-content:center}
 .local-personal.local-left{left:12px;right:auto}.local-personal.local-right{right:12px;left:auto}
 .local-personal.overlay{background:transparent;backdrop-filter:none;padding:0}
@@ -19,34 +30,36 @@
 .local-wide-warning[hidden]{display:none}
 .local-focus{outline:3px solid #efb94b!important;outline-offset:2px}
 .local-gather-layer{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:2}
-.local-battle-panels{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr}
-.local-battle .local-battle-half{display:block;position:relative;inset:auto;min-width:0;width:100%;height:100%;background:transparent;backdrop-filter:none;overflow:visible}
-.local-battle-half:first-child{border-right:1px solid #cbb36a}
-.local-battle-half .battle-heading{left:12px;right:12px;top:12px;display:flex;flex-wrap:wrap;font-size:12px}.local-battle-half .battle-heading h2{font-size:15px}
-.local-battle-half:first-child .battle-canvas{position:absolute;left:0;top:100px;width:200%;height:calc(100% - 380px);bottom:auto;max-width:none}
-.local-battle-half .battle-hand{bottom:125px;left:8px;right:8px;width:calc(100% - 16px);max-width:none;transform:none;--hand-width:80px;gap:0}
-.local-battle-half .hand-card{width:80px;max-width:80px}.local-battle-half .card-select canvas{width:100%;height:auto}
-.local-battle-half .battle-controls{bottom:8px;left:8px;right:8px;flex-wrap:wrap;gap:3px;font-size:12px}
-.local-battle-half .battle-controls button{font-size:12px;padding:5px;min-height:30px}
-.local-battle-half .cast-announcement{top:85px;left:8px;right:8px;font-size:13px}
-.local-battle-half .battle-roster{max-width:100%}.local-battle-half .result-card{width:calc(100% - 24px);max-width:100%}
-.local-ready .battle-hand,.local-ready .battle-controls{pointer-events:none;opacity:.65}
+.local-battle-panels{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;pointer-events:none;z-index:6}
+.local-battle .local-battle-shared{display:block;z-index:auto;background:transparent;backdrop-filter:none}
+/* The shared footer has no action column, so the friendly roster must stay in the bottom-right corner like solo. */
+.local-battle-shared .battle-roster-controls{grid-template-columns:minmax(90px,1fr) max-content}
+.local-battle-shared .battle-party-controls{justify-self:end;width:max-content;max-width:min(100%,760px)}
+.local-battle .local-battle-half{display:block;position:relative;inset:auto;min-width:0;width:100%;height:100%;background:transparent;backdrop-filter:none;overflow:visible;pointer-events:none;z-index:auto}
+.local-battle-half .battle-hand{--hand-width:clamp(106px,10.5vw,142px);display:grid;left:18px;right:18px;width:calc(100% - 36px);max-width:none;transform:none;gap:0;padding:18px 0 5px;pointer-events:auto}
+.local-battle-half .hand-card{width:var(--hand-width);min-width:0}
+.local-battle-half .battle-controls{left:18px;right:18px;display:flex;flex-direction:column;align-items:center;gap:6px;pointer-events:none}
+.local-battle-half .battle-actions{display:flex;flex-direction:row;justify-content:center;flex-wrap:wrap}
+.local-battle-owner{display:flex;align-items:center;gap:8px;color:#f7efcf;font-size:12px}
+/* Once a player commits, only cancellation remains; the other hand uses the full arena width. */
+.local-battle-panels:has(.local-ready){display:block}
+.local-battle-panels:has(.local-ready) .local-battle-half{position:absolute;inset:0;width:100%}
+.local-battle-panels:has(.local-ready) .local-battle-half.local-ready{width:50%}
+.local-battle-panels:has(.local-ready) .local-battle-half.local-ready:last-child{left:auto;right:0}
+.local-battle-half.local-ready:first-child .battle-controls{align-items:flex-start}
+.local-battle-half.local-ready:last-child .battle-controls{align-items:flex-end}
 body:not(.local-duo) .local-personal{width:min(640px,calc(100% - 32px));left:50%;right:auto;transform:translateX(-50%)}
 .local-personal .shop-layout{grid-template-columns:minmax(0,1fr)}
-.local-battle-half .battle-roster-controls{display:flex;flex-direction:column;align-items:stretch}
-.local-battle-half .battle-roster-controls>.pip-legend{display:none}
-.local-battle-half .battle-party-controls .battle-roster{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px}
-.local-battle-half .battle-roster-controls .battle-actions{flex-direction:row;justify-content:center}
-.local-battle-half .combatant-status{min-width:0;max-width:100%}
-.local-battle .battle-hand.hand-focused{left:50%;top:52%;bottom:auto;width:min(300px,90%);transform:translate(-50%,-50%)}
-.local-battle .battle-hand.hand-focused .hand-card.selected{max-width:none;width:100%;gap:4px}
-.local-battle .battle-hand.hand-focused .card-select{width:90px}
-.local-battle-half .battle-card-detail-body{max-height:130px;overflow:auto}
+.local-battle .battle-hand.hand-focused{left:50%;right:auto;top:50%;bottom:auto;width:min(440px,calc(100% - 32px));transform:translate(-50%,-50%);pointer-events:none}
+.local-battle .battle-hand.hand-focused .hand-card.selected{width:100%;pointer-events:none}
+.local-battle .battle-hand.hand-focused .card-select{width:clamp(100px,13vw,160px)}
+@media(max-width:1350px){.local-battle-half .battle-hand{--hand-width:clamp(96px,23vw,128px)}}
+@media(max-height:600px){.local-battle-half .battle-hand{--hand-width:78px}.local-battle .battle-hand.hand-focused .card-select{width:78px}}
 .local-personal>.local-detail[open]{position:absolute;inset:0;margin:auto;width:100%;max-width:100%;max-height:100%;box-sizing:border-box;z-index:4;pointer-events:auto;overflow:auto}
 
 .local-duo .hero-status[data-player]{width:222px;box-sizing:border-box}
 .local-duo .hero-status[data-player="1"]{top:14px}
-.local-duo .hero-status.local-secondary-title{top:112px}
+.local-duo .hero-status.local-secondary-title{top:158px}
 
 .local-peer-bubble{position:fixed;z-index:65;transform:translate(-50%,-100%);width:44px;height:36px;min-height:36px;padding:0;border:1.5px solid #7a6335;border-radius:10px;background:#fffbe9;color:#7a6335;font:bold 24px/24px sans-serif;box-shadow:0 2px 6px #173b3655;cursor:pointer}
 .local-peer-bubble[hidden]{display:none}
@@ -54,3 +67,25 @@ body:not(.local-duo) .local-personal{width:min(640px,calc(100% - 32px));left:50%
 .local-peer-bubble::after{content:'';position:absolute;bottom:-6px;left:16px;width:9px;height:9px;background:#fffbe9;border-right:1px solid #7a6335;border-bottom:1px solid #7a6335;transform:rotate(45deg)}
 .local-peer-bubble:focus-visible{outline:3px solid #efb94b;outline-offset:3px}
 .local-personal>.social-actions-modal{width:min(330px,100%);margin:auto 0 0 auto}
+
+.companion-controller-toggle svg{width:28px;height:28px}
+.companion-controller-toggle[aria-pressed="true"]{color:#244f3b;background:#dceacb}
+
+.companion-controls>.companion-controller-toggle{position:relative;left:auto;top:auto;width:40px;height:40px;min-height:40px}
+
+
+#hud .local-peer-toolbar-button{position:relative;transform:none;left:auto;top:auto;flex:0 0 40px;width:40px;height:40px;min-height:40px;margin:0}
+#hud .local-peer-toolbar-button::after{display:none}
+
+#hud .local-peer-toolbar-button{border-radius:50%;background:rgba(249,245,233,.92);border:1px solid #d7ceaa;box-shadow:0 4px 14px rgba(24,62,60,.16);color:#5a3e18}
+.local-personal>.social-modal{width:min(360px,100%);margin:auto 0 auto auto;pointer-events:auto}
+
+.local-character-conversation[data-player="1"]{right:50%;width:50%;padding:12px;box-sizing:border-box}
+.local-character-conversation[data-player="2"]{left:50%;width:50%;padding:12px;box-sizing:border-box}
+.local-character-conversation .camp-chat{width:100%;max-width:100%}
+
+#hud .local-secondary-toolbar .local-peer-toolbar-button{margin-left:44px}
+
+.local-personal .social-actions-modal .modal-header{display:flex;flex-wrap:nowrap;align-items:center}
+.local-personal .social-actions-modal .modal-header h2{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.local-personal .social-actions-modal .modal-header .close-button{flex:0 0 auto;margin-left:auto}

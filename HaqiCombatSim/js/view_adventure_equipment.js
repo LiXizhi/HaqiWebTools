@@ -42,7 +42,7 @@ export function renderEquipment(body,model,cb,ui) {
     if(save.pendingEncounter)edit.title=tr('战斗中无法修改名字和形象');
     const identity=el('div','equipment-identity',el('div','equipment-name-row',el('h3','',save.name),edit),el('p','muted',fill(`{v0}学徒 · 等级 {v1}`,{v0:String(SCHOOL_NAMES[save.school]),v1:String(save.level)}).text));
     function openCustomize(trigger){
-        const draft={name:save.name,appearance:save.appearance==='girl'?'girl':'boy',headId:resolvedHeadId(save),bodyId:save.bodyId};
+        const draft={name:save.name,appearance:save.appearance==='girl'?'girl':'boy',headId:resolvedHeadId(save),bodyId:save.bodyId,customHead:save.customHead};
         const dialog=new DetailDialog(body,{el,title:'修改名字和形象',className:'equipment-item-dialog hero-customize-dialog'});
         dialog.closeButton.setAttribute('aria-label',tr('关闭修改名字和形象'));
         dialog.closeButton.title=dialog.closeButton.getAttribute('aria-label');
@@ -60,19 +60,19 @@ export function renderEquipment(body,model,cb,ui) {
             const balance=save.inventory[984]||0;
             setText(hint,'改名字每次 {nameCost} 魔豆，改形象每次 {lookCost} 魔豆。只收取有改动的部分。当前 {count} 魔豆。',{nameCost:HERO_NAME_BEANS,lookCost:HERO_LOOK_BEANS,count:balance});
             if(invalid){setText(confirm,'名字需要一至十六个字');confirm.disabled=true;}
-            else if(!quote.total){setText(confirm,'名字和形象都没有变化');confirm.disabled=true;}
+            else if(!quote.nameChanged&&!quote.lookChanged){setText(confirm,'名字和形象都没有变化');confirm.disabled=true;}
             else if(balance<quote.total){setText(confirm,quote.nameChanged&&quote.lookChanged?'改名字和形象需要100魔豆':quote.nameChanged?'改名字需要50魔豆':'改形象需要50魔豆');confirm.disabled=true;}
-            else{setText(confirm,'花费 {count} 魔豆确认',{count:quote.total});confirm.disabled=false;}
+            else{if(quote.total)setText(confirm,'花费 {count} 魔豆确认',{count:quote.total});else setText(confirm,'免费使用这个形象');confirm.disabled=false;}
         }
         name.oninput=refresh;
         picker.addEventListener('change',()=>refresh());
         confirm.onclick=()=>{
-            const quote=heroCustomizeQuote(save,{name:name.value,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId});
-            if(confirm.disabled||!quote.total)return;
+            const quote=heroCustomizeQuote(save,{...draft,name:name.value});
+            if(confirm.disabled||!quote.nameChanged&&!quote.lookChanged)return;
             dialog.close();
-            cb.action({type:'customize-hero',name:name.value,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId});
+            cb.action({type:'customize-hero',name:name.value,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,customHead:draft.customHead});
         };
-        dialog.body.append(picker,label,name,hint);
+        dialog.body.append(picker,label,name,hint,el('p','muted','自定义头像免费切换；改名字和身体仍按原规则收费。'));
         dialog.footer.append(confirm);
         refresh();
         dialog.open(trigger);

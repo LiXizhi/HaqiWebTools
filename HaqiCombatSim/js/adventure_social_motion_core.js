@@ -313,6 +313,19 @@ export function socialBubble(actors,leader,{gesture=null,at=0}={}){
 }
 export function pickSocialBubble(actors,leader,point,options){const b=socialBubble(actors,leader,options);return b&&point.x>=b.x&&point.x<=b.x+b.w&&point.y>=b.y&&point.y<=b.y+b.h?b.profile:null;}
 
+export function localSocialBubbles(actors,leaders,{gesture=null,at=0}={}){
+    const selected=new Map();
+    leaders.forEach((leader,owner)=>{
+        if(!leader||socialGesturePose(gesture,owner?'local-hero-1':'hero',at))return;
+        const bubble=socialBubble(actors.filter(a=>!socialGesturePose(gesture,a.profile.id,at)),leader);
+        if(!bubble)return;
+        const actor=actors.find(a=>a.profile.id===bubble.profile.id);
+        const distance=Math.hypot(actor.position.x-leader.x,actor.position.y-leader.y),previous=selected.get(bubble.profile.id);
+        if(!previous||distance<previous.distance)selected.set(bubble.profile.id,{...bubble,owner,distance});
+    });
+    return [...selected.values()];
+}
+
 // The captain keeps the travel facing instead of looking back at following peers.
 export function heroSocialLookPeers(actors,{inParty=false}={}){
     if(inParty||actors.some(actor=>actor.inParty))return [];

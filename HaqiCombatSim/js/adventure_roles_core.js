@@ -2,8 +2,15 @@
 import { checkedProgress } from './adventure_cloud_core.js';
 import { validateMagicBeanExchange } from './adventure_magic_bean_exchange_core.js';
 
-export const MAX_ROLES = 5;
+export const MAX_ROLES_FREE = 5;
+export const MAX_ROLES_VIP = 20;
+/** Absolute catalog capacity used when loading or recovering roles. */
+export const MAX_ROLES = MAX_ROLES_VIP;
 export const roleIdValid = id => typeof id === 'string' && /^[a-f0-9-]{16,64}$/.test(id);
+export function roleLimit(isVip) { return isVip === true ? MAX_ROLES_VIP : MAX_ROLES_FREE; }
+export function roleLimitReachedMessage(isVip) {
+    return isVip === true ? '最多可创建20个主角，当前名额已满。' : '最多可创建5个主角，当前名额已满。开通会员可创建20个。';
+}
 export function emptyRoles() { return { schemaVersion: 1, activeId: null, roles: [] }; }
 export function validateRoles(value, content, dataset) {
     if (!value || value.schemaVersion !== 1 || !Array.isArray(value.roles) || value.roles.length > MAX_ROLES) throw Error('角色列表版本或数量无效');
@@ -28,8 +35,8 @@ export function grantMagicBeans(catalog, roleId, nextSave, exchangedUntil) {
         roles: catalog.roles.map(row => row.id === roleId ? { ...row, save: nextSave } : row),
     };
 }
-export function addRole(catalog, id, save, now) {
-    if (catalog.roles.length >= MAX_ROLES) throw Error('最多可创建5个主角，当前名额已满。');
+export function addRole(catalog, id, save, now, { isVip = false } = {}) {
+    if (catalog.roles.length >= roleLimit(isVip)) throw Error(roleLimitReachedMessage(isVip));
     if (!roleIdValid(id) || catalog.roles.some(row => row.id === id)) throw Error('角色编号无效或重复');
     return { ...catalog, activeId: id, roles: [...catalog.roles, { id, save, lastPlayedAt: now }] };
 }

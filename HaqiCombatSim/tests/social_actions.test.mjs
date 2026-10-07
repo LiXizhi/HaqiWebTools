@@ -33,6 +33,17 @@ class Element{
     setAttribute(key,value){this.attributes[key]=value;}
 }
 const nodes=root=>[root,...root.children.flatMap(nodes)];
+test('local teammate uses the shared expressions menu and replaces invitation with follow',t=>{
+    const old={document:globalThis.document,Node:globalThis.Node,requestAnimationFrame:globalThis.requestAnimationFrame};
+    Object.assign(globalThis,{Node:Element,document:{createElement:tag=>new Element(tag),createTextNode:text=>new Element('text',text)},requestAnimationFrame:()=>{}});
+    t.after(()=>Object.assign(globalThis,old));
+    const body=new Element('div'),box=new Element('section');let followed=0;
+    renderSocialActions(box,body,{selected:{id:'local-hero-1',kind:'companion',name:'玩家2'},friends:[],team:[],localPeer:true,following:false,followTargetName:'deluca',actionAffinity:null},{assets:()=>({content:{}}),follow:()=>followed++});
+    const buttons=nodes(body).filter(n=>n.tag==='button'),labels=buttons.map(b=>b.attributes['aria-label']);
+    assert.equal(labels[0],'跟随deluca');assert.equal(labels.includes('邀请组队'),false);
+    for(const label of ['打招呼','相视一笑','为你鼓掌','一起跳一跳','欢乐双人舞','友谊比心','聊一聊','查看信息'])assert.ok(labels.includes(label));
+    buttons[0].onclick();assert.equal(followed,1);
+});
 test('heading names the person and relation, dock invites before greeting',t=>{
     const old={document:globalThis.document,Node:globalThis.Node,requestAnimationFrame:globalThis.requestAnimationFrame};
     Object.assign(globalThis,{Node:Element,document:{createElement:tag=>new Element(tag),createTextNode:text=>new Element('text',text)},requestAnimationFrame:()=>{}});

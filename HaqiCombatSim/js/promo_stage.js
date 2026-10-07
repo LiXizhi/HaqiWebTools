@@ -1,3 +1,4 @@
+import {createPromoDuo} from './promo_duo.js';
 import {cardsInHand} from './combat_unit_core.js';
 import {createPromoTactics} from './promo_tactics_core.js';
 import {createPetScene} from './adventure_pet_scene.js';
@@ -34,7 +35,7 @@ const $=id=>document.getElementById(id), noop=()=>{};
 const nodes={entry:$('entry'),overlay:$('overlay'),battle:$('battle-layer')};
 const callbacks=new Proxy({close:noop},{get:(target,key)=>target[key]||noop});
 let assets,renderer,preview,save,world,shot,draft,learning,chatState,social,dungeon;
-let tactics=null;
+let tactics=null,duo=null;
 let frames=[],battleStart=0,lastBattleFrame=-1,path=[],origin,paused=true,previewPaused=false;
 let deckClickAt=null,deckShowcase=null,checks=[],shownZoom=1,sceneSeed=530,locale='zh-CN',targetLocale='en',actors=[],actorProfiles=[],actorTime=0,speechSlot=-1,arrivalAt=null;
 const speech=createActorSpeech();
@@ -89,7 +90,7 @@ function paintSpeech(elapsed){
 }
 function check(ok,message){if(!ok)throw Error(message);checks.push(message);}
 function model(battle=null){return {assets,save,battle,selected:null,discarded:[],animating:false,membership:{},...viewState,displayLocale:locale,social:null,deckAnimationClock:'manual'};}
-function clear(){nodes.overlay.deckPreview?.clearAddition();speech.clear();speechRoot.replaceChildren();speechSlot=-1;arrivalAt=null;$('hud').replaceChildren();preview.stop();previewPaused=false;learning.close();for(const node of Object.values(nodes)){node.disposeDialogue?.();node.disposeHandGesture?.();node.disposeStatusTooltips?.();node.battleLayoutObserver?.disconnect();node.replaceChildren();node.className='';}nodes.entry.hidden=true;}
+function clear(){duo?.dispose();duo=null;nodes.overlay.deckPreview?.clearAddition();speech.clear();speechRoot.replaceChildren();speechSlot=-1;arrivalAt=null;$('hud').replaceChildren();preview.stop();previewPaused=false;learning.close();for(const node of Object.values(nodes)){node.disposeDialogue?.();node.disposeHandGesture?.();node.disposeStatusTooltips?.();node.battleLayoutObserver?.disconnect();node.replaceChildren();node.className='';}nodes.entry.hidden=true;}
 async function scene(){world=W.createWorld(save.zone,assets.content,save);if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};save.position=W.clearTeleportSpot(world,save.position.x,save.position.y,world.encounters,120)||save.position;origin={...save.position};await assets.warmScenery(world);path=['world','island','mount'].includes(shot.scene)?planPromoPath(world,origin):[];actorTime=0;actorProfiles=[{id:'promo-anna',name:locale==='en'?'Anna':'安娜',native:'en',target:'zh',school:'ice',appearance:'girl',level:3},{id:'promo-maple',name:locale==='en'?'Maple':'小枫',native:'zh',target:'en',school:'fire',appearance:'boy',level:3},{id:'promo-lily',name:locale==='en'?'Lily':'莉莉',native:'en',target:'zh',school:'life',appearance:'girl',level:4},{id:'promo-noah',name:locale==='en'?'Noah':'诺亚',native:'zh',target:'en',school:'storm',appearance:'boy',level:4}];if(world.isEarth||world.isCityDungeon)actorProfiles=[];resetActors();await assets.warmActors(world,save,actors);check(true,'场景角色图片已就绪');if(!['create','skills'].includes(shot.scene))V.renderHud($('hud'),model(),callbacks);check(!!world.layout,`地图可渲染：${save.zone}`);}
 function creation(step=1,school='fire',changes={}){
     preview.stop();previewPaused=false;nodes.entry.hidden=false;draft={name:locale==='en'?'Star':'小星',appearance:'girl',starter:'dragon_green',...draft,...changes,step,school};
@@ -187,6 +188,20 @@ async function prepare(next,seed){
     })));
     switch(shot.scene){
         case 'world':case 'island':break;
+        case 'duo':{
+            const candidates=[];
+            for(let x=-800;x<=800;x+=100)for(let y=-800;y<=800;y+=100){const p={x:origin.x+x,y:origin.y+y};
+                if(W.walkable(world,p.x,p.y)&&[...(world.trees||[]),...(world.npcs||[]),...(world.buildings||[])].every(o=>W.distance(p,o)>150))candidates.push(p);
+            }
+            candidates.sort((a,b)=>W.distance(a,origin)-W.distance(b,origin));
+            let duoPath=null;
+            outer:for(const point of candidates)for(const [dx,dy] of [[300,0],[-300,0],[0,300],[0,-300]]){const target={x:point.x+dx,y:point.y+dy};if(W.clearSegment(world,point,target)&&Array.from({length:11},(_,i)=>({x:point.x+dx*i/10,y:point.y+dy*i/10})).every(p=>[...(world.trees||[]),...(world.npcs||[])].every(o=>W.distance(p,o)>110))){origin={...point};save.position={...origin};duoPath=[target];break outer;}}
+            const second=A.createAdventure(assets.content,{name:locale==='en'?'Luna':'小月',appearance:'boy',seed:seed+1});
+            Object.assign(second,{zone:save.zone,position:{...origin},bodyId:'male2',headId:'jade-boy'});
+            actors=[];path=duoPath||planPromoPath(world,origin);
+            check(path.length>0,'双人同行路线可行走');
+            duo=await createPromoDuo({assets,save,second,world,origin,path,nodes,renderer,model,callbacks,locale,check,aimPointer});break;
+        }
         case 'create':creation();break;
         case 'skills':creation(3);break;
         case 'account':renderCloud(nodes.overlay,{local:save,owner:null,paths:[],message:'演示镜头：登录与注册在 Keepwork 安全窗口完成。'},callbacks);check(!!nodes.overlay.querySelector('.cloud-actions'),'登录入口可渲染（未连接账号服务）');break;
@@ -219,6 +234,7 @@ async function action(cue){
             if(cue.expect)check(!!document.querySelector(cue.expect),`操作结果可见：${cue.expect}`);
             break;
         }
+        case 'duo-ui':duo.action(cue);deckClickAt=cue.time;break;
         case 'skill-turn':filmSkills(cue.group,cue.time);break;
         case 'feature':await features.action(cue);if(['earth-walk','hide-panel'].includes(cue.name)){pointerMotion=null;deckPointer.hidden=true;deckRing.hidden=true;}break;
         case 'creation':
@@ -268,7 +284,8 @@ function tick(elapsed){
     sampleDeckPointer(elapsed);
     const zoom=samplePromoZoom(elapsed,shot.duration,shot.camera?.zoomIn||0,matchMedia('(prefers-reduced-motion: reduce)').matches);
     shownZoom=renderer.zoomBy(zoom/shownZoom);
-    if(path.length&&!frames.length&&['world','island','mount'].includes(shot.scene)){
+    if(duo){duo.tick(elapsed);}
+    else if(path.length&&!frames.length&&['world','island','mount'].includes(shot.scene)){
         const moved=samplePromoMotion(world,origin,path,Math.max(0,elapsed-4),{mountId:save.mountId,balanceParams:assets.content.balanceParams});
         save.position=moved.position;save.facing=moved.facing;
         sampleActors(elapsed);renderer.render(world,save,elapsed*1000,{moving:moved.moving,socialActors:actors});

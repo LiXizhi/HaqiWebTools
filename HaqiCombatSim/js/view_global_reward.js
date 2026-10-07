@@ -1,6 +1,7 @@
-import {tr} from './locale_runtime.js';
+import {setText} from './locale_runtime.js';
 
 // Presentation only. Call after a successful mutation; never grants rewards.
+// Each line is a Chinese key string, or [pattern, vars] for fill() templates.
 export class GlobalRewardNotice {
     constructor({document:doc=globalThis.document,duration=3000}={}) {
         this.doc=doc;this.duration=duration;this.queue=[];this.timer=null;
@@ -27,8 +28,13 @@ export class GlobalRewardNotice {
     next(){
         const notice=this.queue.shift();if(!notice){this.reset();return;}
         this.root.replaceChildren();
-        const title=this.doc.createElement('span');title.className='global-reward-title';title.textContent=tr(notice.title);this.root.append(title);
-        for(const text of notice.lines){const row=this.doc.createElement('strong');row.textContent=tr(text);this.root.append(row);}
+        const title=this.doc.createElement('span');title.className='global-reward-title';setText(title,notice.title);this.root.append(title);
+        for(const line of notice.lines){
+            const row=this.doc.createElement('strong');
+            if(Array.isArray(line))setText(row,line[0],line[1]);
+            else setText(row,line);
+            this.root.append(row);
+        }
         this.root.hidden=false;this.raise();
         this.timer=setTimeout(()=>{this.timer=null;this.next();},this.duration);
     }

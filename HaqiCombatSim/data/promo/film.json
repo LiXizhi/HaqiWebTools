@@ -857,6 +857,107 @@
       ]
     },
     {
+      "id": "duo",
+      "scene": "duo",
+      "fixture": true,
+      "title": {
+        "zh-CN": "双人冒险 · 一起走更远",
+        "en": "Adventure together"
+      },
+      "subtitle": {
+        "en": "Choose two-player mode on the character selection screen.",
+        "zh-CN": "在登录选角界面开启双人模式，选择你们的冒险伙伴。"
+      },
+      "duration": {
+        "long": 40,
+        "short": 40
+      },
+      "cues": [
+        {
+          "at": 0.05,
+          "action": "duo-ui",
+          "step": "mode"
+        },
+        {
+          "at": 0.125,
+          "action": "duo-ui",
+          "step": "controller",
+          "ai": true,
+          "caption": {
+            "en": "Play with a friend, or choose a human and AI.",
+            "zh-CN": "可以两位真人一起玩，也可以选择真人和AI。"
+          }
+        },
+        {
+          "at": 0.2,
+          "action": "duo-ui",
+          "step": "controller",
+          "ai": false
+        },
+        {
+          "at": 0.25,
+          "action": "duo-ui",
+          "step": "confirm",
+          "owner": 0,
+          "caption": {
+            "en": "Each player confirms a character to enter the world together.",
+            "zh-CN": "两人各确认一个角色，就能一起进入世界。"
+          }
+        },
+        {
+          "at": 0.3,
+          "action": "duo-ui",
+          "step": "confirm",
+          "owner": 1
+        },
+        {
+          "at": 0.45,
+          "action": "duo-ui",
+          "step": "battle",
+          "caption": {
+            "en": "Meet an enemy together. Each player has their own hand.",
+            "zh-CN": "遭遇敌人时，两人一起参战，各自拥有独立的手牌。"
+          }
+        },
+        {
+          "at": 0.525,
+          "action": "duo-ui",
+          "step": "select",
+          "owner": 0,
+          "caption": {
+            "en": "Both players can choose their cards and targets at the same time.",
+            "zh-CN": "两边可以同时选牌，各自决定技能和目标。"
+          }
+        },
+        {
+          "at": 0.6,
+          "action": "duo-ui",
+          "step": "select",
+          "owner": 1
+        },
+        {
+          "at": 0.675,
+          "action": "duo-ui",
+          "step": "target",
+          "owner": 0,
+          "caption": {
+            "en": "The first player readies their action while their partner finishes choosing.",
+            "zh-CN": "先选好的玩家进入准备状态，等待伙伴完成选择。"
+          }
+        },
+        {
+          "at": 0.75,
+          "action": "duo-ui",
+          "step": "target",
+          "owner": 1,
+          "caption": {
+            "en": "When both players are ready, their actions resolve together.",
+            "zh-CN": "双方准备好后，一起出招，让配合成为胜利的关键。"
+          }
+        }
+      ]
+    },
+    {
       "id": "learning",
       "scene": "learning",
       "title": {

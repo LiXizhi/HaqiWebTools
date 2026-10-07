@@ -176,8 +176,9 @@ export function renderEntry(root,assets,stored,cb,error='') {
             if(draft.step===index+1)item.setAttribute('aria-current','step');steps.append(item);
         }
         const titles=['你的冒险，从名字开始','选择你的抱抱龙','找到属于你的魔法'];
-        const captions=['先选一个模样，再告诉我们你的名字。','选一位伙伴，陪你踏上魔法旅程。','点击系别，看看它的代表技能。喜欢的话，就选它吧。'];
-        form.append(steps,el('h2','',titles[draft.step-1]),el('p','creation-caption',captions[draft.step-1]));
+        const captions=[null,'选一位伙伴，陪你踏上魔法旅程。','点击系别，看看它的代表技能。喜欢的话，就选它吧。'];
+        form.append(steps,el('h2','',titles[draft.step-1]));
+        if(captions[draft.step-1]) form.append(el('p','creation-caption',captions[draft.step-1]));
         if(draft.step===1) {
             const preview=createHeroPicker(assets,draft);
             const name=el('input','name-input');name.id='hero-name';name.name='name';name.value=draft.name;name.maxLength=16;name.autocomplete='off';name.required=true;name.placeholder='';name.oninput=()=>{draft.name=name.value;};
@@ -210,7 +211,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
             const choices=cb.previewChoices(draft.school),cards=el('div','creation-skill-choices');
             if(!choices.some(c=>c.key===draft.previewKey))draft.previewKey=choices[0]?.key;
             let pause;
-            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}setText(pause,'暂停');if(!cb.busy)cb.preview(canvas,key,{appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId},text=>{setText(status,text);},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
+            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}setText(pause,'暂停');if(!cb.busy)cb.preview(canvas,key,{appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,customHead:draft.customHead},text=>{setText(status,text);},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
             for(const choice of choices){
                 const face=el('canvas','creation-skill-card');face.width=112;face.height=112;face.setAttribute('aria-hidden','true');
                 const base=assets.effects.cards[choice.key]?.base;
@@ -240,7 +241,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
         e.preventDefault();if(cb.busy)return;
         if(draft.step===1){draft.name=draft.name.trim();if(!draft.name){paint();root.querySelector('#hero-name')?.focus();return;}}
         if(draft.step<3){draft.step++;paint();root.scrollTop=0;}
-        else cb.create({name:draft.name.trim(),school:draft.school,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,starter:draft.starter});
+        else cb.create({name:draft.name.trim(),school:draft.school,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,customHead:draft.customHead,starter:draft.starter});
     };
     paint();
 }
@@ -450,18 +451,18 @@ export function renderHud(root,model,cb) {
     for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['shop','商店','shop']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
     root.append(nav);
     // 坐骑显隐开关：仅漫游场景生效，战斗中恒显示；没有坐骑时不渲染按钮。
-    if(save.mountId){
+    if(save.mountId||model.localSecond){
         // 图标用当前坐骑的形象图（c.items 的图集裁剪，同装备栏/宠物栏做法）；无形象数据时回落名称 emoji。
         // 隐藏时叠半透明灰色 SVG 禁止标志（圆圈+斜杠与按钮外圈重合）。
         const mountItem=c.items[save.mountId];
         const mountMark=el('span','mount-mark');
         mountMark.setAttribute('aria-hidden','true');
-        mountMark.append(mountItem?.art?art(assets,mountItem.art,34,34):el('span','mount-emoji',mountEmoji(c.mountByItem?.[save.mountId]?.name)));
+        mountMark.append(!save.mountId?icon('pet'):mountItem?.art?art(assets,mountItem.art,34,34):el('span','mount-emoji',mountEmoji(c.mountByItem?.[save.mountId]?.name)));
         if(save.mountHidden){
             mountMark.append(disabledModeMark());
         }
-        const mountToggle=button([mountMark],()=>cb.mountToggle(),'mount-toggle');
-        mountToggle.title=tr(save.mountHidden?'在场景中显示坐骑':'在场景中隐藏坐骑');
+        const mountToggle=button([mountMark],()=>save.mountId?cb.mountToggle():cb.panel('pet'),'mount-toggle');
+        mountToggle.title=tr(!save.mountId?'选择坐骑':save.mountHidden?'在场景中显示坐骑':'在场景中隐藏坐骑');
         mountToggle.setAttribute('aria-label',mountToggle.title);
         mountToggle.setAttribute('aria-pressed',String(!save.mountHidden));
         root.append(mountToggle);
@@ -487,7 +488,7 @@ export function renderHud(root,model,cb) {
     const localeControl=document.querySelector('.locale-launch');
     learn.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)+(save.mountId?44:0)}px`;
     learn.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
-    const toolbarAnchor=model.localSecond?root.querySelector('.local-secondary-title'):status;
+    const toolbarAnchor=status;
     const socialBar=el('div','hero-social-toolbar');socialBar.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)}px`;socialBar.style.top=`${toolbarAnchor.offsetTop+toolbarAnchor.offsetHeight+8}px`;
     for(const control of [...root.querySelectorAll('.mount-toggle')]){control.style.left='';control.style.top='';socialBar.append(control);}
     // Mail HUD entry stays hidden until dual-account mailVerified is shipped.
@@ -495,6 +496,20 @@ export function renderHud(root,model,cb) {
     const teamControl=teamHudButton(model.social?.team,save.coopRun,cb.panel);
     if(teamControl)socialBar.append(teamControl);
     root.append(socialBar);
+    if(model.localSecond){
+        socialBar.dataset.player='1';
+        const second=root.querySelector('.local-secondary-title'),peer=model.localSecond;
+        const peerBar=el('div','hero-social-toolbar local-secondary-toolbar');peerBar.dataset.player='2';
+        peerBar.style.left=`${second.offsetLeft}px`;peerBar.style.top=`${second.offsetTop+second.offsetHeight+8}px`;
+        {
+            const mark=el('span','mount-mark'),item=c.items[peer.mountId];mark.setAttribute('aria-hidden','true');
+            mark.append(!peer.mountId?icon('pet'):item?.art?art(assets,item.art,34,34):el('span','mount-emoji',mountEmoji(c.mountByItem?.[peer.mountId]?.name)));
+            if(peer.mountHidden)mark.append(disabledModeMark());
+            const toggle=button([mark],()=>peer.mountId?cb.playerMountToggle(1):cb.playerPanel(1,'pet'),'mount-toggle');
+            toggle.title=tr(!peer.mountId?'选择坐骑':peer.mountHidden?'在场景中显示坐骑':'在场景中隐藏坐骑');toggle.setAttribute('aria-label',toggle.title);toggle.setAttribute('aria-pressed',String(!peer.mountHidden));peerBar.append(toggle);
+        }
+        root.append(peerBar);
+    }
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
 }
 function modal(root,title,subtitle,cb,wide=false) {
@@ -735,7 +750,7 @@ function renderBattleContent(root,model,cb) {
         if(isSelected){
             // 上下结构：说明框折叠在卡面上方，点击"查看详情"展开，状态记在本地。
             const detailBody=el('div','battle-card-detail-body',el('h3','',artCard.name),el('p','card-detail-meta',description.meta),...description.lines.map(line=>el('p','',line)),el('small','',description.note));
-            detailBody.id='selected-card-detail';detailBody.tabIndex=0;detailBody.setAttribute('aria-label',tr('卡牌效果说明'));detailBody.setAttribute('aria-live','polite');
+            detailBody.id=model.localDuo?`selected-card-detail-${hero.id}`:'selected-card-detail';detailBody.tabIndex=0;detailBody.setAttribute('aria-label',tr('卡牌效果说明'));detailBody.setAttribute('aria-live','polite');
             select.setAttribute('aria-describedby',detailBody.id);
             const toggleLabel=el('span','card-detail-toggle-label');
             const summary=el('summary','card-detail-toggle',toggleLabel);
@@ -783,7 +798,33 @@ function renderBattleContent(root,model,cb) {
         targets.append(capture);
     }
     bottom.append(targets,runePager);
-    root.append(top,canvas,status,hand,bottom);
+    if(model.localBattlePane){
+        // Only selection is duplicated. The arena and both rosters belong to the shared view.
+        root.battleStatusEntries=[];
+        const owner=el('strong','local-battle-owner',`玩家${model.localBattleOwner+1} · ${hero.name}`);
+        if(model.localBattleWaiting){
+            bottom.replaceChildren(owner,button('已准备 · 取消',cb.cancelReady,'primary'));
+            root.append(bottom);
+        }else{
+            bottom.replaceChildren(owner,bottom.querySelector('.battle-actions'),runePager);
+            root.append(hand,bottom);
+        }
+        const layout=()=>{
+            const shared=model.localBattleFooter?.querySelector('.battle-controls');
+            const footer=shared?shared.offsetHeight+(parseFloat(getComputedStyle(shared).bottom)||0)+12:24;
+            bottom.style.bottom=`${footer}px`;
+            if(!selected)hand.style.bottom=`${footer+bottom.offsetHeight+12}px`;
+        };
+        root.battleLayoutObserver=new ResizeObserver(layout);
+        for(const node of [root,bottom,model.localBattleFooter].filter(Boolean))root.battleLayoutObserver.observe(node);
+        layout();
+        root.disposeHandGesture=selected||model.localBattleShared||model.localBattleWaiting?null:bindHandGesture(hand,{select:seq=>cb.select(visibleHand.find(h=>h.seq===seq)),play:seq=>cb.swipePlay(visibleHand.find(h=>h.seq===seq)),discard:petCardsOpen||runeCardsOpen||animating||battle.finished?null:cb.discard});
+        root.oncontextmenu=e=>{const node=e.target.closest('.hand-card');if(!node||petCardsOpen||runeCardsOpen||animating||battle.finished)return;e.preventDefault();cb.discard(Number(node.dataset.seq));};
+        if(oldHand)animateHandSelection(hand,oldHand,oldSelected,String(selected.seq));
+        return;
+    }
+    if(model.localBattleShared){bottom.querySelector('.battle-actions')?.remove();runePager.remove();hand.hidden=true;}
+    root.append(top,canvas,status,...(model.localBattleShared?[]:[hand]),bottom);
     attachStatusTooltips(root,canvas);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
     root.oncontextmenu=e=>{
@@ -794,7 +835,7 @@ function renderBattleContent(root,model,cb) {
         if(e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom)return;
         e.preventDefault();e.stopPropagation();cb.discard(Number(node.dataset.seq));
     };
-    root.disposeHandGesture=selected?null:bindHandGesture(hand,{
+    root.disposeHandGesture=selected||model.localBattleShared||model.localBattleWaiting?null:bindHandGesture(hand,{
         select:seq=>cb.select(visibleHand.find(h=>h.seq===seq)),
         play:seq=>cb.swipePlay(visibleHand.find(h=>h.seq===seq)),
         discard:petCardsOpen||runeCardsOpen||animating||battle.finished?null:cb.discard,

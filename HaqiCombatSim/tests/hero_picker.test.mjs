@@ -5,7 +5,7 @@ import {createHeroPicker} from '../js/view_hero_picker.js';
 import {createAdventure,parseSave} from '../js/adventure_core.js';
 import {durableSave,splitRoleSave,joinRoleSave} from '../js/adventure_storage_core.js';
 import {installExpansion} from '../js/adventure_expansion_core.js';
-import {validHeroBodyId,randomHeroBodyId,DEFAULT_HEAD_EXCLUDE,createHeroDraft} from '../js/hero_body_core.js';
+import {validHeroBodyId,randomHeroBodyId,DEFAULT_HEAD_EXCLUDE,PICKER_HEAD_EXCLUDE,createHeroDraft} from '../js/hero_body_core.js';
 const read=p=>JSON.parse(readFileSync(new URL('../data/'+p,import.meta.url)));
 test('new body identifiers include both digits and reject unknown or wrong-gender values',()=>{
  for(const [gender,appearance] of [['male','boy'],['female','girl']]){
@@ -54,12 +54,12 @@ test('AI costume selection is stable, gender-safe and reaches reference costumes
    assert.ok(validHeroBodyId(id,appearance));seen.add(id);
   }
   assert.ok(seen.has(appearance==='girl'?'female-ref':'male-ref'));
-  assert.equal(seen.size,24);
+  assert.equal(seen.size,48); // Eight era and sixteen seasonal child costumes per gender.
  }
  assert.equal(randomHeroBodyId({},'girl',1),'female');
 });
 
-test('new character draft randomises head and outfit for both genders without a dark default',()=>{
+test('new character draft randomises head and outfit for both genders without a dark or urban default',()=>{
  const manifest=read('adventure/hero-art.json');
  const heads=new Set(),bodies=new Set();
  for(let i=0;i<200;i++){
@@ -72,13 +72,73 @@ test('new character draft randomises head and outfit for both genders without a 
   assert.equal(manifest.heads[draft.headChoices.boy].gender,'male');
   assert.equal(manifest.heads[draft.headChoices.girl].gender,'female');
   assert.equal(DEFAULT_HEAD_EXCLUDE.test(draft.headId),false);
+  assert.equal(DEFAULT_HEAD_EXCLUDE.test(draft.headChoices.boy),false);
+  assert.equal(DEFAULT_HEAD_EXCLUDE.test(draft.headChoices.girl),false);
+  assert.equal(draft.headChoices.boy.startsWith('urban-'),false);
+  assert.equal(draft.headChoices.girl.startsWith('urban-'),false);
+  assert.equal(String(draft.bodyChoices.boy).includes('urban'),false);
+  assert.equal(String(draft.bodyChoices.girl).includes('urban'),false);
   assert.equal(validHeroBodyId(draft.bodyId,draft.appearance),true);
   heads.add(draft.headId);bodies.add(draft.bodyId);
  }
  assert.equal([...heads].some(id=>DEFAULT_HEAD_EXCLUDE.test(id)),false);
  assert.ok(heads.size>=4,'default heads should vary');
  assert.ok(bodies.size>=8,'default outfits should vary across both genders');
- // Missing manifest still yields a valid, non-African default.
+ // Missing manifest still yields a valid classic default.
  const fallback=createHeroDraft(undefined,7);
  assert.equal(fallback.headId,'elf-boy');assert.equal(fallback.bodyId,'male');
+});
+
+test('hero picker drops urban looks and rewrites stale urban draft to classic gender defaults',t=>{
+ const previous=globalThis.document;
+ function node(){return {children:[],style:{},dataset:{},attributes:{},classList:{toggle(){}},setAttribute(k,v){this.attributes[k]=v;},append(...n){this.children.push(...n);},replaceChildren(...n){this.children=n;},setPointerCapture(){},dispatchEvent(){},getBoundingClientRect(){return {top:0,left:0,width:100,height:100};}};}
+ globalThis.document={createElement:node};t.after(()=>{globalThis.document=previous;});
+ const manifest=read('adventure/hero-art.json');
+ const assets={hero:{manifest,appearance:s=>s,createView:()=>({node:node(),ready:Promise.resolve()})}};
+ const draft={appearance:'girl',headId:'urban-architect-girl',bodyId:'female7',
+  headChoices:{boy:'urban-software-engineer-boy',girl:'urban-architect-girl'},
+  bodyChoices:{boy:'male-urban-software-engineer',girl:'female7'}};
+ createHeroPicker(assets,draft);
+ assert.equal(PICKER_HEAD_EXCLUDE.test(draft.headChoices.girl),false);
+ assert.equal(PICKER_HEAD_EXCLUDE.test(draft.headChoices.boy),false);
+ assert.equal(draft.headChoices.girl,'elf-girl');
+ assert.equal(draft.headChoices.boy,'elf-boy');
+ assert.equal(String(draft.bodyChoices.girl).includes('urban'),false);
+ assert.equal(String(draft.bodyChoices.boy).includes('urban'),false);
+ assert.equal(draft.headId,'elf-girl');
+ assert.equal(draft.bodyId,'female');
+ // Cycling never lands on urban ids.
+ const live={appearance:'girl',headChoices:{girl:'elf-girl',boy:'elf-boy'},bodyChoices:{girl:'female',boy:'male'}};
+ const picker=createHeroPicker(assets,live);
+ const girl=picker.children[1];
+ for(let i=0;i<40;i++)girl.children[2].onclick();
+ assert.equal(PICKER_HEAD_EXCLUDE.test(live.headId),false);
+ assert.equal(live.headId.startsWith('urban-'),false);
+ assert.equal(String(live.bodyId).includes('urban'),false);
+});
+
+test('photo avatar applies to the matching live gender card after the opening picker is replaced',t=>{
+ const previous=globalThis.document;
+ function node(){return {children:[],style:{},dataset:{},attributes:{},isConnected:true,events:[],classList:{toggle(){}},setAttribute(k,v){this.attributes[k]=v;},append(...n){this.children.push(...n);},replaceChildren(...n){this.children=n;},dispatchEvent(e){this.events.push(e.type);}};}
+ globalThis.document={createElement:node};t.after(()=>{globalThis.document=previous;});
+ for(const [appearance,gender,other] of [['boy','male','girl'],['girl','female','boy']]){
+  let apply;const registered=[];
+  const assets={hero:{manifest:{heads:{'elf-boy':{gender:'male',name:'男'},'elf-girl':{gender:'female',name:'女'}},bodyVariants:{male2:{gender:'male',name:'男装'},female2:{gender:'female',name:'女装'}}},registerHead:h=>registered.push(h),appearance:s=>({...s}),createView:a=>{const n=node();n.selection=a;return {node:n,ready:Promise.resolve()};}},photoHeads:{open(draft,callback){apply=callback;}}};
+  const draft={appearance:other},old=createHeroPicker(assets,draft);
+  old.children.at(-1).children[0].onclick();
+  old.isConnected=false;
+  const live=createHeroPicker(assets,draft),before=live.children[appearance==='boy'?0:1];
+  const otherHead=draft.headChoices[other],otherBody=draft.bodyChoices[other];
+  const head={id:'photo-regression-'+appearance,gender};
+  apply(head,{appearance,bodyId:gender+'2'});
+  assert.equal(draft.appearance,appearance);assert.equal(draft.headId,head.id);assert.equal(draft.bodyId,gender+'2');assert.equal(draft.customHead,head);
+  assert.equal(draft.headChoices[other],otherHead);assert.equal(draft.bodyChoices[other],otherBody);
+  const card=live.children[appearance==='boy'?0:1];assert.notEqual(card,before);
+  const portrait=card.children[0].children[1].children[0].selection;
+  assert.equal(portrait.customHead,head);assert.equal(portrait.headId,head.id);assert.equal(portrait.bodyId,gender+'2');assert.ok(registered.includes(head));
+  live.children[other==='boy'?0:1].children[0].onclick();card.children[0].onclick();assert.equal(draft.customHead,head);
+  // Applying again through the current picker refreshes it without replacing its root.
+  live.children.at(-1).children[0].onclick();apply({...head,revision:2},{appearance,bodyId:gender});
+  assert.equal(draft.customHead.revision,2);assert.equal(draft.bodyId,gender);assert.equal(live.children[appearance==='boy'?0:1].children[0].children[1].children[0].selection.customHead.revision,2);
+ }
 });

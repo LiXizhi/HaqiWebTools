@@ -23095,6 +23095,1750 @@
         }
       ],
       "cdn": "https://cdn.keepwork.com/keepwork/haqi/urban-residents/20261003/490dc34ffc64/female-urban-florist.webp"
+    },
+    "era-1950-male": {
+      "id": "era-1950-male",
+      "name": "1950年代 · 中山装",
+      "gender": "male",
+      "year": 1950,
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-1950-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 131782,
+      "sha256": "e9587a0c306b4100e5a932dd1733e7875a9886af1df417a76fc37def6022631c",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "1df5e13f3c8b16989acdef0bfd4578cb2b0e69510451de81eb4576bad08834b6",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1950-male.webp"
+    },
+    "era-1950-female": {
+      "id": "era-1950-female",
+      "name": "1950年代 · 翻领布衫",
+      "gender": "female",
+      "year": 1950,
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-1950-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 140336,
+      "sha256": "00694fbc0dcf6587338263c396bb539bd556e63779b7426c291c473482dfbb57",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "f18f8ff31012d83ff681845440e520d22df45dbfd220f6af85d5bf70eaa3a653",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1950-female.webp"
+    },
+    "era-1960-male": {
+      "id": "era-1960-male",
+      "name": "1960年代 · 蓝布工装",
+      "gender": "male",
+      "year": 1960,
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-1960-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 138722,
+      "sha256": "4972ef3e078cdff057cf1f2192206f5796bbbd200056e012f31a9ca3420f62b1",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "bc8a9b1e6021cd21ccd0a2c76b2cc03820aa241366a4af1b9546e54e9e36ba5d",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1960-male.webp"
+    },
+    "era-1960-female": {
+      "id": "era-1960-female",
+      "name": "1960年代 · 朴素棉布装",
+      "gender": "female",
+      "year": 1960,
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-1960-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 136182,
+      "sha256": "ef402e7d31549e0242f7f0045208903bb756628b8ff11e4b6106067febe3d537",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "31cf8d010b1baf5f94b923ae6b7a70ab07cba9a23a53c803aafd3019ee410d3f",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1960-female.webp"
+    },
+    "era-1970-male": {
+      "id": "era-1970-male",
+      "name": "1970年代 · 劳动布装",
+      "gender": "male",
+      "year": 1970,
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-1970-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 141638,
+      "sha256": "b669142838f35e07dda1df18fef35f1303a3fd7ab1e0acb99cef0a1dc6ecb53e",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "0247a10269b15cbf72fc49e4587d2d41a81d6124164c9bec174af89fc513e493",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1970-male.webp"
+    },
+    "era-1970-female": {
+      "id": "era-1970-female",
+      "name": "1970年代 · 格纹衬衫",
+      "gender": "female",
+      "year": 1970,
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-1970-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 151454,
+      "sha256": "8c008d8d01e3fb6789f51f5019437d49472d57fab5500ed385add26ee9012849",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "1aeb146938d45f999dc011709cce2c2ce6fafe731ec27c9eb77536f04cf3b268",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1970-female.webp"
+    },
+    "era-1980-male": {
+      "id": "era-1980-male",
+      "name": "1980年代 · 衬衫喇叭裤",
+      "gender": "male",
+      "year": 1980,
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-1980-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 151406,
+      "sha256": "6a69a3c1218c728622f39fed7a1199d0d625eb63f2db677d5c2e4e7c41e9c863",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "279a46d472b86c9324f56db0485a93c598c2ae36c484a2a3122b3e3c530407d9",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1980-male.webp"
+    },
+    "era-1980-female": {
+      "id": "era-1980-female",
+      "name": "1980年代 · 碎花连衣裙",
+      "gender": "female",
+      "year": 1980,
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-1980-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 164592,
+      "sha256": "8c038ac1aef95f723a2d2a60fef19b38c947d112f3d9fad8b64e618200bb991e",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "89c3b11513123edfad045a8630d23fcb52a9e8dd93bc136a3db23382e7eff1a7",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1980-female.webp"
+    },
+    "era-1990-male": {
+      "id": "era-1990-male",
+      "name": "1990年代 · 夹克牛仔裤",
+      "gender": "male",
+      "year": 1990,
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-1990-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 157318,
+      "sha256": "a027b0d6a2fadf05b1149311bd07ace9339129b22af78e913b198b8a3cca230f",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "bea03f0019f7b88ef267afa548e35a9822cb5369bc8c4445bfcbd6c45287b9f0",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1990-male.webp"
+    },
+    "era-1990-female": {
+      "id": "era-1990-female",
+      "name": "1990年代 · 针织开衫",
+      "gender": "female",
+      "year": 1990,
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-1990-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 162330,
+      "sha256": "e908603051efd4e7c3812ad185222aacb79e5a371fc63cd1335362d2c6b2e4c0",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "e081c8f5a1d2ac8e41e55579efb628111cfe1ac435d7173e2c221aaa6366e72c",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1990-female.webp"
+    },
+    "era-2000-male": {
+      "id": "era-2000-male",
+      "name": "2000年代 · 运动休闲装",
+      "gender": "male",
+      "year": 2000,
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-2000-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 144574,
+      "sha256": "a64609cfc7aff0321cd1a3d69783fe870682a2152334ebaf2976052b379bdfb2",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "e0e9b22e37a5baa7b9215c4e5410e5851bb9b0f578610109ce850eb7edce4de6",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2000-male.webp"
+    },
+    "era-2000-female": {
+      "id": "era-2000-female",
+      "name": "2000年代 · 牛仔休闲装",
+      "gender": "female",
+      "year": 2000,
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-2000-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 166326,
+      "sha256": "d3c886b2e6040d5f7b8f7cfd055123163f8b30c29bbc15d756bc0a85747cf1c0",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "520db0e8f65d7bea2daff19c12769c158ecca496db122946fa0e82435939f7d5",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2000-female.webp"
+    },
+    "era-2010-male": {
+      "id": "era-2010-male",
+      "name": "2010年代 · 连帽卫衣",
+      "gender": "male",
+      "year": 2010,
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-2010-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 139852,
+      "sha256": "26c9bec919cc4c47a206b46e492b51ab46c086d9d10430017258c9e1c25c7fbc",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "0491a006aa8cd009156a4ee4be3d2e07f2bfa0be407e88a92a5e9e5ec8331c55",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2010-male.webp"
+    },
+    "era-2010-female": {
+      "id": "era-2010-female",
+      "name": "2010年代 · 都市通勤装",
+      "gender": "female",
+      "year": 2010,
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-2010-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 161184,
+      "sha256": "9b93e02dcb3d255ba939a9d9b91cb975e7cfb1ce29fd776bc9095022add572e4",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "1b35e97728da8e7f8306210011ccb4a9c5fefe5831d0d8ad9110ff9a0155e965",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2010-female.webp"
+    },
+    "era-2020-male": {
+      "id": "era-2020-male",
+      "name": "2020年代 · 轻户外装",
+      "gender": "male",
+      "year": 2020,
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-2020-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 141232,
+      "sha256": "7526855f512fad7832016c61ebef89430eb7fc4104c42a479a3ccf548518e5d6",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "7191345cfe334124434fc7208bbec43b00fe58031a4bbfd6d1422bef580b3530",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2020-male.webp"
+    },
+    "era-2020-female": {
+      "id": "era-2020-female",
+      "name": "2020年代 · 舒适休闲装",
+      "gender": "female",
+      "year": 2020,
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-2020-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 169716,
+      "sha256": "207d7ceb1e752686db7f8b78a7c4d37164fcef9985a95d6f3ef00bb78acc35a4",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "bf097fb35018dc8dac02ddfc846d75016ad465c015e7e30ee4ef8677c25d2262",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2020-female.webp"
+    },
+    "child-1950-spring-male": {
+      "id": "child-1950-spring-male",
+      "name": "1950年代童装·春·斜襟布衫",
+      "gender": "male",
+      "year": 1950,
+      "season": "spring",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1950-spring-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 152086,
+      "sha256": "2e0a34e5559c9da01ce54736a59bfbeb1debfeec79b62a3c707f7875e75f6389",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "3f0d720e2da8560688a14e447d4247ae9567e8397183cef546133433186f43db",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1950-spring-male.webp"
+    },
+    "child-1950-spring-female": {
+      "id": "child-1950-spring-female",
+      "name": "1950年代童装·春·小花布衫",
+      "gender": "female",
+      "year": 1950,
+      "season": "spring",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1950-spring-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 165992,
+      "sha256": "90491b4de03dc427d2dee0a21d4644c70fbe019f0a9b70dda705316b552ff5d6",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "13d566f8ebd60b0e6cd4dbce9e74f076d1a11e3ad61c1cf23a0a2a89abac443b",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1950-spring-female.webp"
+    },
+    "child-1950-summer-male": {
+      "id": "child-1950-summer-male",
+      "name": "1950年代童装·夏·白布衫短裤",
+      "gender": "male",
+      "year": 1950,
+      "season": "summer",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1950-summer-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 164256,
+      "sha256": "1894f5763630d6ca91a599d4f8279e127fd20671211115d1165ff23580598117",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "2078ac08fd22126cb597fea74a12e18e2bee2e5a6e721ba2b1805854f0a39682",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1950-summer-male.webp"
+    },
+    "child-1950-summer-female": {
+      "id": "child-1950-summer-female",
+      "name": "1950年代童装·夏·素花短袖裙",
+      "gender": "female",
+      "year": 1950,
+      "season": "summer",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1950-summer-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 183412,
+      "sha256": "88706e18020aeb16860df2acd8e7624703e91d39542b8363f4f36bf633123d48",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "36e0497118c2906e0c53f64d45b2534e12566238f9de5df8b7bbc38ac4a73dbd",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1950-summer-female.webp"
+    },
+    "child-1950-autumn-male": {
+      "id": "child-1950-autumn-male",
+      "name": "1950年代童装·秋·手织毛背心",
+      "gender": "male",
+      "year": 1950,
+      "season": "autumn",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1950-autumn-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 157900,
+      "sha256": "c12f4798e841426686fe6e026602a2e85ff4511689b9ca403286839fd83bf3e1",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "73b4a25a7b89bf35d92502c7b4d9f31a6c97b5287186fd6c50d7d6e5465d522f",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1950-autumn-male.webp"
+    },
+    "child-1950-autumn-female": {
+      "id": "child-1950-autumn-female",
+      "name": "1950年代童装·秋·针织小开衫",
+      "gender": "female",
+      "year": 1950,
+      "season": "autumn",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1950-autumn-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 160942,
+      "sha256": "1ea99b6f4b03ad1fefe10c937c0cfc4a89639c724b95214cdfef13dc132bc04a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "61b1687fdde54da1e0d75e0e4cdd97101ecdd64334d0c5d4234455f931f3ddfc",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1950-autumn-female.webp"
+    },
+    "child-1950-winter-male": {
+      "id": "child-1950-winter-male",
+      "name": "1950年代童装·冬·蓝棉袄棉裤",
+      "gender": "male",
+      "year": 1950,
+      "season": "winter",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1950-winter-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 143040,
+      "sha256": "f3b2becdf33874c779f05a2802a6ab94cb29f1d60b806bd7ef9c65163a5537af",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "c26c470de96972df6352f153079599f9bd66c37b1db6b778d3f28195f024c6ea",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1950-winter-male.webp"
+    },
+    "child-1950-winter-female": {
+      "id": "child-1950-winter-female",
+      "name": "1950年代童装·冬·小花棉袄",
+      "gender": "female",
+      "year": 1950,
+      "season": "winter",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1950-winter-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 181080,
+      "sha256": "13f1da5647b98f685f00afeb708315efbfa339ca18a66c23b6a8e7bb79969745",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "ccebddf64c8f1e4a735a6c925d2fe6b502d5294721f934deef86a1fad87e5aba",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1950-winter-female.webp"
+    },
+    "child-1960-spring-male": {
+      "id": "child-1960-spring-male",
+      "name": "1960年代童装·春·蓝布小外套",
+      "gender": "male",
+      "year": 1960,
+      "season": "spring",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1960-spring-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 139172,
+      "sha256": "6f81a149278ce13e6274386528282b2cffaf719396bd1b87b455be07b72a9aa6",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "4185074afe81ba51f13f0a9387fd4c62935ccec00bbf82023054c85dcc153807",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1960-spring-male.webp"
+    },
+    "child-1960-spring-female": {
+      "id": "child-1960-spring-female",
+      "name": "1960年代童装·春·方格布上衣",
+      "gender": "female",
+      "year": 1960,
+      "season": "spring",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1960-spring-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 163944,
+      "sha256": "277f4cb1da50f553e62d5cd141db64c75a0fc8d20e051d540426261e8ea92b1a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "3b1f94d871fad650c7b6802018973566b7513aafbc2d377af0d4da7dfe5b6d76",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1960-spring-female.webp"
+    },
+    "child-1960-summer-male": {
+      "id": "child-1960-summer-male",
+      "name": "1960年代童装·夏·条纹汗衫",
+      "gender": "male",
+      "year": 1960,
+      "season": "summer",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1960-summer-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 155852,
+      "sha256": "5583a50a13c864b48bc56034e10e0246a80aa798fcd1827aba4efd8cfe873799",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "4bdd081c440cdd45c436b83285abdfced14266b5d9aae8b638917819508d7d09",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1960-summer-male.webp"
+    },
+    "child-1960-summer-female": {
+      "id": "child-1960-summer-female",
+      "name": "1960年代童装·夏·浅蓝背带裙",
+      "gender": "female",
+      "year": 1960,
+      "season": "summer",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1960-summer-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 179822,
+      "sha256": "9c3a4f06d16405a2a732e958ecb232c2ace3354258b786a01015a56914aaf143",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "1aed213fe77268c1c3aaf47738d981bebfd36c7a37f01a826f7667808f98e924",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1960-summer-female.webp"
+    },
+    "child-1960-autumn-male": {
+      "id": "child-1960-autumn-male",
+      "name": "1960年代童装·秋·拼色毛衣",
+      "gender": "male",
+      "year": 1960,
+      "season": "autumn",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1960-autumn-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 144034,
+      "sha256": "d22d2906da40ef295c3bf23def7276c32da1a63676e8596248caeb0435115d8a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "2e7343b81c2a2b3886b3df17f5b6b89c80c0bbec3f5390493c8a382a0a406871",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1960-autumn-male.webp"
+    },
+    "child-1960-autumn-female": {
+      "id": "child-1960-autumn-female",
+      "name": "1960年代童装·秋·灰蓝毛背心",
+      "gender": "female",
+      "year": 1960,
+      "season": "autumn",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1960-autumn-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 162346,
+      "sha256": "52a65bdd77498c19f9fda4d796ecd3b0c38e0fefe0d2d952e04287440798bdfe",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "a0f428d18d086910d26bec35f323f73aa729678aef630019745a119f74e4a234",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1960-autumn-female.webp"
+    },
+    "child-1960-winter-male": {
+      "id": "child-1960-winter-male",
+      "name": "1960年代童装·冬·灰棉袄",
+      "gender": "male",
+      "year": 1960,
+      "season": "winter",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1960-winter-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 137952,
+      "sha256": "84a9da6169bc0064996de3d1cf10dc6be8a724d82684dbb29f5b7ef590cb6425",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "d783613d3926c205dc6b1357b3c9ab8d7d5401f02154182ef752d72740243c91",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1960-winter-male.webp"
+    },
+    "child-1960-winter-female": {
+      "id": "child-1960-winter-female",
+      "name": "1960年代童装·冬·碎花棉袄棉裤",
+      "gender": "female",
+      "year": 1960,
+      "season": "winter",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1960-winter-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 166430,
+      "sha256": "efc322f861ed6e90b7643213b5808b2132a1e71f326b83d9c850165a36d0ca69",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "6a255470f8c9995376ebbe9d81d86570c78fcc7e5ba3d744b09a75617ed70cfb",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1960-winter-female.webp"
+    },
+    "child-1970-spring-male": {
+      "id": "child-1970-spring-male",
+      "name": "1970年代童装·春·春日布夹衣",
+      "gender": "male",
+      "year": 1970,
+      "season": "spring",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1970-spring-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 139918,
+      "sha256": "2b87053b3174128749ee2f699a712b70e4261fc200e01ec732769a4e058c44ac",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "211eea2d271f6d59117285ebadf7086935eeafc33df912f1170f22d8d96074c4",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1970-spring-male.webp"
+    },
+    "child-1970-spring-female": {
+      "id": "child-1970-spring-female",
+      "name": "1970年代童装·春·花领小罩衫",
+      "gender": "female",
+      "year": 1970,
+      "season": "spring",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1970-spring-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 166920,
+      "sha256": "a78fc0d336185807aea25499885c29a6be8451bd5f2bc71686fb30e86ed0730a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "60443082adacae2698c857d58ce74024f008ea2dceebecaff1a9ef0299ca84ad",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1970-spring-female.webp"
+    },
+    "child-1970-summer-male": {
+      "id": "child-1970-summer-male",
+      "name": "1970年代童装·夏·白衬衫蓝短裤",
+      "gender": "male",
+      "year": 1970,
+      "season": "summer",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1970-summer-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 161466,
+      "sha256": "c33779b9a0c1358a29fdd4e2bd074a106fdafe2c6a2b0fb6136de74f3a7aa6fb",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "b44931b3decf3054a5a718da064929a7edb939ef1ca65ee295526b6bb828b55a",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1970-summer-male.webp"
+    },
+    "child-1970-summer-female": {
+      "id": "child-1970-summer-female",
+      "name": "1970年代童装·夏·格子连衣裙",
+      "gender": "female",
+      "year": 1970,
+      "season": "summer",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1970-summer-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 189136,
+      "sha256": "b493b3e739d3b20c3d57790ce0f62decb354eba3e615a3d332cbe5f6b1fd254c",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "20d4dde5e450e0e3009a94baabda10639ca653fc5847ca9f6cca9913cc8ce8e9",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1970-summer-female.webp"
+    },
+    "child-1970-autumn-male": {
+      "id": "child-1970-autumn-male",
+      "name": "1970年代童装·秋·菱格毛背心",
+      "gender": "male",
+      "year": 1970,
+      "season": "autumn",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1970-autumn-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 145868,
+      "sha256": "39acf59a77ec76bb3b7dd05eb78ddcc394fa800749988b266beddd7a1962da1e",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "71723687c0b9b17b4d2c5ced8bde3d9a47d2b8013f813d684a85163cf76872ec",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1970-autumn-male.webp"
+    },
+    "child-1970-autumn-female": {
+      "id": "child-1970-autumn-female",
+      "name": "1970年代童装·秋·红毛衣",
+      "gender": "female",
+      "year": 1970,
+      "season": "autumn",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1970-autumn-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 150506,
+      "sha256": "d160e575559dffef6f6c4d8451aa0e71355ecd4caadfcf41e032e5ae9160ea91",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "a39634e863c3fa20b1b6a14c2925aff295a45effade6f5a04e0d0484151a2596",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1970-autumn-female.webp"
+    },
+    "child-1970-winter-male": {
+      "id": "child-1970-winter-male",
+      "name": "1970年代童装·冬·厚棉布外衣",
+      "gender": "male",
+      "year": 1970,
+      "season": "winter",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1970-winter-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 145004,
+      "sha256": "72c914e31792e7042b35e1d996f95eafe273646e937b9cd524cad22bc8eae4d8",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "38a3b5bc12051e1f3a61460258cdf59d97e6666b4c1d15064df996d0fcf2ba82",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1970-winter-male.webp"
+    },
+    "child-1970-winter-female": {
+      "id": "child-1970-winter-female",
+      "name": "1970年代童装·冬·灯芯绒棉袄",
+      "gender": "female",
+      "year": 1970,
+      "season": "winter",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1970-winter-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 163890,
+      "sha256": "e5bea4202e0306005e55b8c8e097626b995745ef636e060a69be91880e325564",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "16f545987c092b2b10a793b2df8eca90299f378ee797534deb033474025b471c",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1970-winter-female.webp"
+    },
+    "child-1980-spring-male": {
+      "id": "child-1980-spring-male",
+      "name": "1980年代童装·春·蓝白运动衣",
+      "gender": "male",
+      "year": 1980,
+      "season": "spring",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1980-spring-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 162962,
+      "sha256": "bee4bbe1e36c0894e7e94e85d49a46e8d70db89daf0b1f9fa8b73fd5d76a5b4a",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "1bf2a5552d7fe2745992b58825246c1604217e3cf33e2bf689daf34c66ecdacb",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1980-spring-male.webp"
+    },
+    "child-1980-spring-female": {
+      "id": "child-1980-spring-female",
+      "name": "1980年代童装·春·粉色针织开衫",
+      "gender": "female",
+      "year": 1980,
+      "season": "spring",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1980-spring-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 163744,
+      "sha256": "85669b2eec4ec8dc3d6d3928fc1de7f8694b470e7df261fa4240a85357faa9b4",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "b9e48664bcbd9f217cedf7a22156ab8ada5dc15726ed7da949358e9799c6cae2",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1980-spring-female.webp"
+    },
+    "child-1980-summer-male": {
+      "id": "child-1980-summer-male",
+      "name": "1980年代童装·夏·海魂衫短裤",
+      "gender": "male",
+      "year": 1980,
+      "season": "summer",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1980-summer-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 168778,
+      "sha256": "31cacf9b2e645183cabfb2c5a968c9295e7ca30c8df2582cf4a505281154dc29",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "b3c46689928831cfaa6a68d932314e4d677bbac77082cf16298474e4ff1c55b0",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1980-summer-male.webp"
+    },
+    "child-1980-summer-female": {
+      "id": "child-1980-summer-female",
+      "name": "1980年代童装·夏·红色背带裙",
+      "gender": "female",
+      "year": 1980,
+      "season": "summer",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1980-summer-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 176788,
+      "sha256": "8050ec5dd10965df2bf7db8202cf4e5bb3aab5b9993b19c00648e5c0f32f0522",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "b6f8c2e5e12bcc440b656eddd7cd02dec909dfe1366866487712e8c2c2230b38",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1980-summer-female.webp"
+    },
+    "child-1980-autumn-male": {
+      "id": "child-1980-autumn-male",
+      "name": "1980年代童装·秋·灯芯绒夹克",
+      "gender": "male",
+      "year": 1980,
+      "season": "autumn",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1980-autumn-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 149980,
+      "sha256": "44ec2b02288652a671f07cc1a3508c0dc24e6233a70319d6e40e97f5ce0270cc",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "2fae24e0a49efdbeb2420e07426d447ae8a3037d46c970514bb398fabeaf93f7",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1980-autumn-male.webp"
+    },
+    "child-1980-autumn-female": {
+      "id": "child-1980-autumn-female",
+      "name": "1980年代童装·秋·菱格毛衣",
+      "gender": "female",
+      "year": 1980,
+      "season": "autumn",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1980-autumn-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 166960,
+      "sha256": "0e0ea3de346d1d3bf6e5074f39528b42595d514edcdbcd137d238786daf63f3b",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "afff17665e19a430834102c36fbc2d9645a5b0e87797a30b0ce551a2705ac776",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1980-autumn-female.webp"
+    },
+    "child-1980-winter-male": {
+      "id": "child-1980-winter-male",
+      "name": "1980年代童装·冬·绗缝防寒服",
+      "gender": "male",
+      "year": 1980,
+      "season": "winter",
+      "ageGroup": "child",
+      "baseBody": "male-walk",
+      "local": "assets/child-clothes/child-1980-winter-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 159450,
+      "sha256": "1621d46f1059858f63cc88cd4c63929ebc69a6da5d8c9acdb9f10918bf8b7a41",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "e2faa71aa2c2a1aa43a95c75632290ec7d3e2d6e156f7f92ce14041c4f5056b1",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1980-winter-male.webp"
+    },
+    "child-1980-winter-female": {
+      "id": "child-1980-winter-female",
+      "name": "1980年代童装·冬·红色棉服",
+      "gender": "female",
+      "year": 1980,
+      "season": "winter",
+      "ageGroup": "child",
+      "baseBody": "female-walk",
+      "local": "assets/child-clothes/child-1980-winter-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 163500,
+      "sha256": "55d42eb3f7f86669292b63b2acd2bec7223d0539349655010a5f985048dfa9e7",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "035bfdfac61c04446698f9a173677e7b926140f6d908d343ba36611fb26034db",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/child-clothes/b99847dcafe32891/child-1980-winter-female.webp"
     }
   },
   "headTurnDrop": [

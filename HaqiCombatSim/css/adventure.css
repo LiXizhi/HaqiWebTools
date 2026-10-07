@@ -930,11 +930,11 @@
 .learning-chat-mark{color:#315c43}.learning-mouth{display:flex;align-items:center;justify-content:center;width:24px;height:24px}.learning-mouth svg{width:100%;height:100%}.learning-chat-mark .mount-emoji-stop svg{stroke:currentColor}
 /* Head/body switch: the portrait fills the card; arrows sit at the card edges at head and body height, no text labels. */
 .avatar-choice{justify-content:center}
-.avatar-choice .avatar-parts{position:relative;display:flex;justify-content:center;padding:6px 0;min-width:0;max-width:190px;touch-action:pan-y}
+.avatar-choice .avatar-parts{position:relative;display:flex;justify-content:center;padding:30px 0 6px;min-width:0;max-width:190px;touch-action:pan-y}
 .avatar-parts .avatar-select{display:flex;justify-content:center;width:100%;min-width:0;background:none;border:0;padding:0;color:inherit}
 .avatar-parts .avatar-page{position:absolute;width:28px;min-height:34px;min-width:0;padding:0;background:#f6f2e2cc;border:0;border-radius:8px;color:var(--green);font-size:28px;line-height:1}
-.avatar-parts .avatar-page[data-part=head]{top:calc(30% - 17px)}
-.avatar-parts .avatar-page[data-part=body]{top:calc(72% - 17px)}
+.avatar-parts .avatar-page[data-part=head]{top:38px}
+.avatar-parts .avatar-page[data-part=body]{bottom:12px}
 .avatar-parts .avatar-page.page-prev{left:0}
 .avatar-parts .avatar-page.page-next{right:0}
 
@@ -1112,3 +1112,11 @@
 .pet-trait-badge.trait-rank-9{background:linear-gradient(120deg,#f8d6e8,#fff0c0,#dce9fb);border-color:#a24d7d;color:#6e234c;font-weight:bold}
 .is-compact .pet-trait-badge{font-size:10px;padding:2px 4px}
 .capture-growth-result{padding:8px;margin:8px 0;border:1px solid var(--gold);border-radius:6px;background:var(--paper)}
+
+/* Photo creation opens a separate window; its entry never occupies an avatar card. */
+.avatar-choice{flex-wrap:wrap}
+.avatar-photo-actions{flex:0 0 100%;display:flex;justify-content:center}
+.avatar-photo-actions .avatar-photo-entry{width:auto;min-height:40px;margin:0;padding:8px 16px}
+
+.avatar-gender-hint{order:-1;flex:0 0 100%;margin:0;font-size:12px;color:var(--muted,#7d6b49)}
+.avatar-gender-icon{position:absolute;top:4px;left:7px;font:22px/1 sans-serif;color:var(--green,#406c43);pointer-events:none}

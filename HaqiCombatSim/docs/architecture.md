@@ -530,6 +530,10 @@ flowchart LR
     Player --> Stage[promo_stage：同源隔离舞台]
     Stage --> Features[promo_features：地图 / 城市 / 养成 / 生活控制器]
     Stage --> Replay[PvE及红蘑菇真实事件重演]
+    Stage --> Duo[promo_duo：正式选角 / 双角色HUD / 共享战场与双手牌]
+    Duo --> Views
+    Duo --> DuoCore[promo_duo_core：正式双人阵容 / 准备门闩 / 联合PvE]
+    DuoCore --> Rules
     Features --> Views[正式游戏界面]
     Features --> Rules[正式core规则]
     Features --> ReadOnly[CDN与静态地图数据只读加载]
@@ -723,3 +727,77 @@ flowchart LR
 ```
 
 金币先落地再领取，场景不提供归自己/平分的选择。账号本机命名空间隔离掉落ID，重载后按领取凭证恢复，宠物移动由localPlay提供临时位置给渲染器，同一个宠物不重复绘制。
+
+
+### 同屏 AI 陪伴（2026-10-06）
+
+```mermaid
+flowchart LR
+    Duo[双人入口 / 场外托管] --> Local[adventure_local_play]
+    Local --> Planner[companion_ai_core：目标优先级 / 持续采集 / 指令 / 校验]
+    Planner --> Movement[原寻路 / 碰撞 / 采集]
+    Local --> BattleAI[原BattleAIClient：公开观察]
+    BattleAI --> Picks[双人humanDecisions / 检查点 / 独立结算]
+    Local --> Companion[companion_ai：浏览器会话与取消]
+    Skill[companion-ai.json：长篇skill与基础台词] --> Companion
+    Companion --> Voice[既有Keepwork模型 / ASR / TTS]
+    Companion --> UI[轻量聊天 / 公共角色气泡 / 麦克风]
+    Companion --> LocalDB[独立IndexedDB：角色组合记忆 / 账号额度]
+```
+
+行为和出牌不依赖模型响应；本地指令优先处理跟随/等待/采集，目标优先级与路径冷却控制行动，无事停留。模型接收真实资源与活动快照，主动交流不改目标，仅直接请求可建议本地提供的候选，不能执行游戏工具。记忆和额度不进入云端角色核心状态。未来CLI/MCP适配在浏览器服务层替换模型调用，当前未接入。细节见[AI陪伴](companion-ai.md)。
+
+## 2026-10-07：双人共用战斗展示
+
+```mermaid
+flowchart LR
+    Local[adventure_local_play 两份选牌状态] --> Shared[单人同款共用战场 / 顶部敌方 / 底部友方 / 日志与结算]
+    Local --> Hands[左右两份原尺寸重叠手牌与选牌按钮]
+    Hands --> Owner[当前选牌玩家]
+    Owner --> Shared
+    Shared --> Target[目标选择回调交给当前玩家]
+    Target --> Ready[两人准备门闩与原战斗引擎]
+```
+
+`view_adventure.renderBattle` 的双人选牌视图只挂载手牌与操作，共用视图复用单人顶部、底部、Canvas 和状态提示。键盘选目标时切换当前玩家；卡牌尺寸沿用单人对应窗口档位，半屏空间不足通过网格列重叠。
+
+双人提交行动后，该玩家视图只保留身份和取消按钮；另一份手牌通过布局扩展到全宽。取消准备仍沿用准备门闩，不清除原选中卡。
+
+## 2026-10-07：双人互动与NPC气泡归属
+
+```mermaid
+flowchart LR
+    Positions[两名玩家位置 / 社交NPC] --> Bubbles[localSocialBubbles：各自附近候选 / 同NPC取较近玩家]
+    Bubbles --> Canvas[adventure_renderer 绘制NPC头顶气泡]
+    Bubbles --> Local[adventure_local_play 点击归属 / 左右窗口]
+    Local --> Menu[view_social_actions 共用互动列表 / 队友邀请替换为跟随]
+    Menu --> Gesture[本地双角色表情 / 跳跃 / 冷却]
+    Menu --> Chats[character_conversation 按角色独立实例]
+    Chats --> Roles[对应角色存档 / 关系会话 / 语音学习奖励]
+```
+
+同屏队友的圆形互动入口属于玩家2工具栏；没有装备坐骑时，两名玩家也保留坐骑选择入口。NPC沿用原社交对话距离，单人气泡规则保持原入口，双人渲染与点击共同调用纯核心归属算法。第二角色对话实例按需创建，使用自身角色ID、存档与语言设置，避免写入玩家1的关系或奖励。
+
+## 2026-10-07：照片头部生成
+
+已接入，照片弹窗按“选照片 / 变身 / 校准”推进，最终 WebP 通过 SDK 自动上传永久 CDN，再核验保存；已开放本地源码入口，线上真人质量验证边界见[照片形象](photo-head.md)。
+
+```mermaid
+flowchart LR
+    Picker[创建角色 / 修改形象] --> PhotoView[共用照片窗口：拍摄 / 裁剪]
+    PhotoView --> Service[photo_head_service：身份 / 任务编排]
+    Service --> SDK[Keepwork SDK：Image Pro双参考图生成 / CDN上传]
+    Service --> Worker[photo_head_worker：逐格去白底，不居中]
+    Worker --> WebP[WebP预算 / 逐帧连接点同步缩放]
+    WebP --> Service
+    Service --> PPS[HaqiAdventure：10条正面小图index / 额度]
+    PPS -->|点选才读取| HeadFile[一个形象一个当前JSON / 16方向图集]
+    PhotoView -->|仅DIY读取| PPS
+    Service --> Local[账号隔离IndexedDB：仅AI输出与任务]
+    HeadFile --> Ref[角色与公开名片：headId + customHead]
+    Ref --> Renderer[HeroRenderer自定义目录 / 版本隔离 / 预设回退]
+```
+
+真人输入只留内存直接提交生成服务，不进入CDN或存档。纯规则和像素模块不依赖DOM/SDK；Worker与存储在浏览器IO层。正式资源目录与自定义目录隔离，NPC随机选择不读取用户形象。
+
+照片DIY补充：`view_photo_head`仅在窗口打开后通过`service.preview`补齐历史缩略图，不触发选择或写入。应用回调传`head + {appearance,bodyId}`给`view_hero_picker`，再走既有角色创建/换装提交；窗口内服装选择不直接改玩家存档。世界启动仍仅创建惰性photoHeads入口，使用角色携带的当前customHead描述，不枚举账号形象库。

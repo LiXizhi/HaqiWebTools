@@ -132,15 +132,15 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
             delete save.petFileRefs;delete save.petPages;
             return {id:row.id,save:restoreRuntime(durableSave(save),content,runtimeValues(row.save))};
         },
-        adoptGuest(row) {
+        adoptGuest(row, options = {}) {
             if(!owner)throw Error('请先登录 KeepWork。');
             // Stable role IDs make retries idempotent; never overwrite an existing cloud role.
             if(state.catalog.roles.some(r=>r.id===row.id))return row.id;
-            const next=addRole(state.catalog,row.id,row.save,now());
+            const next=addRole(state.catalog,row.id,row.save,now(),options);
             write({...state,catalog:validateRoles(next,content,dataset),dirty:true});
             return row.id;
         },
-        create(save) { const next = addRole(state.catalog, uuid(), save, now());write({ ...state, catalog: next, dirty: true });return next.activeId; },
+        create(save, options = {}) { const next = addRole(state.catalog, uuid(), save, now(), options);write({ ...state, catalog: next, dirty: true });return next.activeId; },
         select(id) { const catalog=selectRole(state.catalog,id,now());write({...state,catalog,dirty:changed(catalog)}); },
         remove(id) {
             if (!state.catalog.roles.some(row => row.id === id)) throw Error('角色不存在');

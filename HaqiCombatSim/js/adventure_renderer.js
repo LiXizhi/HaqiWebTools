@@ -27,7 +27,7 @@ import {drawSocialPet,drawPetSocialEffects} from './view_adventure_pet_social.js
 import {drawPetMood} from './view_adventure_pet_mood.js';
 import {petBattleMood} from './adventure_pet_mood_core.js';
 import {petDisplayScale} from './adventure_pet_interactions_core.js';
-import {socialBubble,heroSocialLookPeers} from './adventure_social_motion_core.js';
+import {socialBubble,localSocialBubbles,heroSocialLookPeers} from './adventure_social_motion_core.js';
 import { createHeroActor, updateHeroActor } from './hero_pose_core.js';
 import { paintSoftShadow, paintStaticShadows } from './adventure_shadows.js';
 import { createMotionTrail, motionStyle, drawMotionTrail, drawMotionAccessory } from './adventure_motion_effects.js';
@@ -150,6 +150,7 @@ export function createRenderer(canvas,assets) {
     const socialFx=new Map();
     let viewRect=null,lastMonsterTime=null;
     let heroActor=null,heroPrevious=null,heroScope=null,heroIdentity=null;
+    let localActor=null,localPrevious=null,localScope=null,localIdentity=null;
     const battleHero=createHeroActor(9271);
     const starFollower=createStarFollower();
     function prepareScene(world,save){
@@ -223,7 +224,7 @@ export function createRenderer(canvas,assets) {
         if(!assets.drawMonster?.(c,m,-52*scale,-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',0,bob,t,scale,false);
         c.restore();
     }
-    function render(world,save,time,{localSecond=null,localSecondMoving=false,gatheringPets=[],graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
+    function render(world,save,time,{localSecond=null,localSecondMoving=false,localFollowing=false,gatheringPets=[],graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
         let phaseTime=perf.enabled?performance.now():0;
         const mark=name=>{if(phaseTime){const now=performance.now();perf.record(world.isEarth?name:name.replace('earth-','island-'),now-phaseTime);phaseTime=now;}};
         const markerFor=markerCache.forState(save,assets.content,world);
@@ -266,8 +267,20 @@ export function createRenderer(canvas,assets) {
         }
         // Head-turnable peers: hero + idle social AI. Static world NPCs cannot turn and stay one-way fallbacks.
         const turnableSocial=heroSocialLookPeers(socialActors,{inParty:inParty||!!save.coopRun});
+        if(localSecond&&!title&&!localFollowing&&!localSecondMoving)turnableSocial.push({id:'local-hero-1',...localSecond.position});
         const heroPose=updateHeroActor(heroActor,{id:'hero',dx:save.position.x-heroPrevious.x,dy:save.position.y-heroPrevious.y,x:save.position.x,y:save.position.y,time:t,facing:save.facing||0,lookPeers:turnableSocial,npcs:world.npcs,reducedMotion:reducedMotion.matches});
         heroPrevious={...save.position,time};
+        let localPose=null;
+        if(localSecond&&!title){
+            const identity=localSecond.name+':'+localSecond.appearance+':'+localSecond.seed;
+            if(!localActor||localScope!==world||localIdentity!==identity||!localPrevious||time-localPrevious.time>1000||Math.hypot(localSecond.position.x-localPrevious.x,localSecond.position.y-localPrevious.y)>100){
+                localActor=createHeroActor(Number(localSecond.seed)||7419);localActor.facing=localSecond.facing||0;localActor.head=[0,4,12,8][localActor.facing];localPrevious={...localSecond.position,time};localScope=world;localIdentity=identity;
+            }
+            const peers=heroSocialLookPeers(socialActors,{inParty:inParty||!!save.coopRun});
+            if(!localFollowing&&!moving)peers.push({id:'hero',...save.position});
+            localPose=updateHeroActor(localActor,{id:'local-hero-1',dx:localSecond.position.x-localPrevious.x,dy:localSecond.position.y-localPrevious.y,...localSecond.position,time:t,facing:localSecond.facing||0,lookPeers:peers,npcs:world.npcs,reducedMotion:reducedMotion.matches});
+            localPrevious={...localSecond.position,time};
+        }else{localActor=null;localPrevious=null;}
         // 坐骑显隐只影响漫游场景；renderBattle 直接用原 save，战斗中坐骑恒显示。
         const visualSave=sceneMountSave(earthBoatAt(world,save.position.x,save.position.y)?{...save,mountId:null}:save,{inParty:inParty||socialActors.some(actor=>actor.inParty)});
         const style=motionStyle(visualSave,membership);style.pose={...style.pose,facing:heroPose.facing,visualHead:heroPose.head,visualBreath:{...heroPose.breath}};
@@ -309,7 +322,7 @@ export function createRenderer(canvas,assets) {
         }else companion=petScene?.pets.find(row=>row.pet.id===petId)||null;
         lastPetTime=time;
         const liveSocial=new Set();
-        const lookables=[{id:'hero',x:save.position.x,y:save.position.y,moving},...socialActors.map(a=>({id:a.profile.id,x:a.position.x,y:a.position.y,moving:!!a.moving}))];
+        const lookables=[{id:'hero',x:save.position.x,y:save.position.y,moving},...(localSecond&&!title?[{id:'local-hero-1',...localSecond.position,moving:localSecondMoving}]:[]),...socialActors.map(a=>({id:a.profile.id,x:a.position.x,y:a.position.y,moving:!!a.moving}))];
         for(const actor of socialActors){
             liveSocial.add(actor.profile.id);
             const onScreen=actor.position.x>=viewRect.x&&actor.position.x<=viewRect.x+viewRect.w&&actor.position.y>=viewRect.y&&actor.position.y<=viewRect.y+viewRect.h;
@@ -421,7 +434,12 @@ export function createRenderer(canvas,assets) {
                 if(!drawn)creature(ctx,'pet',0,-hop,t,.36,false);
                 ctx.restore();
             }
-            if(o.kind==='local-player'){avatar(ctx,o.save,o.x,o.y,t,localSecondMoving,1,true);plate(ctx,o.save.name+' · 玩家2',o.x,o.y+20,PLATE.hero);}
+            if(o.kind==='local-player'){
+                const pose=socialGesturePose(socialGesture,'local-hero-1',gestureAt,reducedMotion.matches);ctx.save();ctx.translate(0,-(pose?.hop||0));
+                const peerVisualSave=sceneMountSave(earthBoatAt(world,o.x,o.y)?{...o.save,mountId:null}:o.save,{inParty:inParty||socialActors.some(actor=>actor.inParty)});
+                avatar(ctx,{...peerVisualSave,facing:localPose.facing},o.x,o.y,t,localSecondMoving,1,true,localPose);plate(ctx,o.save.name,o.x,o.y+20,PLATE.hero);
+                if(pose){const head=socialHeadAnchor(o);text(ctx,pose.icon,head.x,head.y+9,27,'#fff');}ctx.restore();
+            }
             if(o.kind==='hero'){
                 const gesturePose=socialGesturePose(socialGesture,'hero',gestureAt,reducedMotion.matches);
                 ctx.save();ctx.translate(0,-(gesturePose?.hop||0));
@@ -475,8 +493,9 @@ export function createRenderer(canvas,assets) {
             const head=starAnchor(visualSave,t,false);
             drawSpeechBubble(ctx,{x:head.x,y:head.y+50},t,true);
         }
-        const nearbyPartnerBubble=socialBubble(socialActors,save.position,{gesture:socialGesture,at:gestureAt,inParty:inParty||!!save.coopRun});
-        if(!title&&!motionHidden){const b=nearbyPartnerBubble;if(b){
+        const partnerBubbles=localSecond?localSocialBubbles(socialActors,[save.position,localSecond.position],{gesture:socialGesture,at:gestureAt}):[socialBubble(socialActors,save.position,{gesture:socialGesture,at:gestureAt,inParty:inParty||!!save.coopRun})].filter(Boolean);
+        const nearbyPartnerBubble=partnerBubbles[0];
+        if(!title&&!motionHidden){for(const b of partnerBubbles){
             ctx.save();ctx.fillStyle='#fffbe9';ctx.strokeStyle='#7a6335';ctx.lineWidth=1.5;
             ctx.shadowColor='#173b3655';ctx.shadowBlur=4;ctx.beginPath();ctx.roundRect(b.x,b.y,b.w,b.h,10);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
             ctx.beginPath();ctx.moveTo(b.x+15,b.y+b.h-1);ctx.lineTo(b.x+20,b.y+b.h+6);ctx.lineTo(b.x+25,b.y+b.h-1);ctx.fill();ctx.stroke();

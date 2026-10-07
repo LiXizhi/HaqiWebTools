@@ -11,8 +11,8 @@ export function socialActionsHeading(state){
 export function renderSocialActions(box,body,state,cb){
     box.classList.add('social-actions-modal');
     const p=state.selected,friend=p.kind==='account'&&state.friends.some(f=>f.userId===String(p.userId));
-    const heading=socialActionsHeading(state),title=box.querySelector?.('.modal-header h2');
-    if(title)title.textContent=heading;
+    const heading=state.localPeer?fill('{name} · 同屏队友',{name:p.name}).text:socialActionsHeading(state),title=box.querySelector?.('.modal-header h2');
+    if(title){title.textContent=heading;title.title=heading;}
     box.setAttribute?.('aria-label',heading);
     if(p.kind==='account')body.append(el('small','muted social-actions-note','当前互动由公开角色的 AI 代理回应'));
     const list=el('div','social-action-list');
@@ -20,7 +20,11 @@ export function renderSocialActions(box,body,state,cb){
     const actions=socialActionOptions({profile:p,friend,affinity:state.actionAffinity,content:cb.assets().content});
     const greet=actions.shift();
     const joined=state.team.some(t=>t.id===p.id);
-    add(joined?'管理队伍':'邀请组队','⚑',joined?'一起出发冒险':'加入当前冒险队伍',()=>joined?cb.open('social-party'):cb.invite(p),state.coopActive||!joined&&state.team.length>=3);
+    if(state.localPeer){
+        const leader=state.followTargetName||tr('队友');
+        add(fill(state.following?'不跟随{name}':'跟随{name}',{name:leader}).text,'⚑',fill('{follower}跟随{leader}',{follower:p.name,leader}).text,cb.follow);
+    }
+    else add(joined?'管理队伍':'邀请组队','⚑',joined?'一起出发冒险':'加入当前冒险队伍',()=>joined?cb.open('social-party'):cb.invite(p),state.coopActive||!joined&&state.team.length>=3);
     add(greet.label,greet.icon,greet.detail,()=>cb.gesture(greet.id));
     if(p.kind==='account')add(friend?'好友列表':'加好友','＋',friend?'查看已有好友':'发送好友申请',()=>friend?cb.friends():state.owner?cb.friend(p):cb.login());
     for(const a of actions)add(a.label,a.icon,a.detail,()=>cb.gesture(a.id),a.disabled);

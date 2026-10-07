@@ -161,7 +161,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         const {save,assets,world}=getState();if(!getOwner()||save.pendingEncounter)return;
         const token=epoch,s=await client.session();if(token!==epoch)return;
         const member=getState().membership,isVip=member?.status==='ready'&&member?.isVip===true;
-        const profile={version:1,userId:s.userId,username:s.owner,name:save.name,school:save.school,level:save.level,appearance:save.appearance,headId:save.headId,bodyId:save.bodyId,isVip,registeredAt:s.registeredAt,native:language(save.languageLearning?.native||'zh'),target:language(save.languageLearning?.target||'en'),visible:ui.publicVisible,activity:save.socialActivity||{},snapshot:makeSocialSnapshot(playerSpec(save,assets.content),assets.dataset)};
+        const profile={version:1,userId:s.userId,username:s.owner,name:save.name,school:save.school,level:save.level,appearance:save.appearance,headId:save.headId,bodyId:save.bodyId,customHead:save.customHead,isVip,registeredAt:s.registeredAt,native:language(save.languageLearning?.native||'zh'),target:language(save.languageLearning?.target||'en'),visible:ui.publicVisible,activity:save.socialActivity||{},snapshot:makeSocialSnapshot(playerSpec(save,assets.content),assets.dataset)};
         const zone=save.coopRun?.returnTo.zone||world.zone;
         await client.publish(profile);if(token!==epoch||!ui.publicVisible||!config.gameId||!config.worlds[zone]?.enabled||!(save.socialActivity?.[zone]||[]).includes(utcDay(Date.now())))return;
         for(const type of ['daily','weekly'])await client.rank(config,{world:zone,native:profile.native,target:profile.target,now:Date.now(),type},type==='daily'?1:weeklyActivity(save.socialActivity,zone,Date.now()));

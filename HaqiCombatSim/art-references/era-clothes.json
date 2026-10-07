@@ -1,0 +1,7333 @@
+{
+  "version": 1,
+  "variants": {
+    "era-1950-male": {
+      "id": "era-1950-male",
+      "name": "1950年代 · 中山装",
+      "gender": "male",
+      "year": 1950,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 1950s Chinese man's everyday outfit: charcoal blue cotton Zhongshan suit with four plain patch pockets, matching straight trousers and black cloth shoes. No military insignia. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-1950-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 131782,
+      "sha256": "e9587a0c306b4100e5a932dd1733e7875a9886af1df417a76fc37def6022631c",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "1df5e13f3c8b16989acdef0bfd4578cb2b0e69510451de81eb4576bad08834b6",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            88,
+            96,
+            151,
+            208
+          ],
+          "targetBounds": [
+            77,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            91,
+            96,
+            155,
+            203
+          ],
+          "targetBounds": [
+            76,
+            81,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            94,
+            96,
+            157,
+            208
+          ],
+          "targetBounds": [
+            77,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            98,
+            96,
+            161,
+            207
+          ],
+          "targetBounds": [
+            77,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            101,
+            96,
+            165,
+            207
+          ],
+          "targetBounds": [
+            76,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            102,
+            96,
+            166,
+            207
+          ],
+          "targetBounds": [
+            77,
+            81,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            103,
+            96,
+            171,
+            207
+          ],
+          "targetBounds": [
+            76,
+            84,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            77,
+            97,
+            162,
+            206
+          ],
+          "targetBounds": [
+            69,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            97,
+            97,
+            148,
+            207
+          ],
+          "targetBounds": [
+            84,
+            81,
+            117,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            82,
+            97,
+            169,
+            206
+          ],
+          "targetBounds": [
+            69,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            86,
+            97,
+            172,
+            206
+          ],
+          "targetBounds": [
+            70,
+            81,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            101,
+            97,
+            161,
+            206
+          ],
+          "targetBounds": [
+            76,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            89,
+            97,
+            175,
+            206
+          ],
+          "targetBounds": [
+            69,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            116,
+            97,
+            164,
+            207
+          ],
+          "targetBounds": [
+            88,
+            80,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            77,
+            98,
+            163,
+            207
+          ],
+          "targetBounds": [
+            68,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            96,
+            98,
+            146,
+            208
+          ],
+          "targetBounds": [
+            78,
+            81,
+            110,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            79,
+            98,
+            170,
+            208
+          ],
+          "targetBounds": [
+            65,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            86,
+            98,
+            174,
+            207
+          ],
+          "targetBounds": [
+            67,
+            81,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            104,
+            98,
+            164,
+            208
+          ],
+          "targetBounds": [
+            77,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            89,
+            98,
+            177,
+            207
+          ],
+          "targetBounds": [
+            67,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            110,
+            98,
+            158,
+            209
+          ],
+          "targetBounds": [
+            76,
+            80,
+            107,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            86,
+            73,
+            154,
+            186
+          ],
+          "targetBounds": [
+            75,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            89,
+            73,
+            157,
+            182
+          ],
+          "targetBounds": [
+            74,
+            79,
+            118,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            92,
+            73,
+            160,
+            186
+          ],
+          "targetBounds": [
+            75,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            96,
+            73,
+            164,
+            186
+          ],
+          "targetBounds": [
+            75,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            99,
+            73,
+            167,
+            186
+          ],
+          "targetBounds": [
+            75,
+            79,
+            117,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            99,
+            73,
+            167,
+            186
+          ],
+          "targetBounds": [
+            75,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            103,
+            73,
+            171,
+            186
+          ],
+          "targetBounds": [
+            75,
+            83,
+            116,
+            151
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1950-male.webp"
+    },
+    "era-1950-female": {
+      "id": "era-1950-female",
+      "name": "1950年代 · 翻领布衫",
+      "gender": "female",
+      "year": 1950,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 1950s Chinese woman's everyday outfit: light beige small rounded collar cotton blouse, muted navy straight trousers, black cloth strap shoes. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-1950-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 140336,
+      "sha256": "00694fbc0dcf6587338263c396bb539bd556e63779b7426c291c473482dfbb57",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "f18f8ff31012d83ff681845440e520d22df45dbfd220f6af85d5bf70eaa3a653",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            83,
+            74,
+            150,
+            214
+          ],
+          "targetBounds": [
+            78,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            79,
+            74,
+            145,
+            214
+          ],
+          "targetBounds": [
+            78,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            81,
+            74,
+            148,
+            214
+          ],
+          "targetBounds": [
+            78,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            85,
+            74,
+            151,
+            214
+          ],
+          "targetBounds": [
+            78,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            89,
+            74,
+            157,
+            214
+          ],
+          "targetBounds": [
+            77,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            91,
+            74,
+            157,
+            214
+          ],
+          "targetBounds": [
+            78,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            94,
+            74,
+            158,
+            214
+          ],
+          "targetBounds": [
+            79,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            69,
+            67,
+            158,
+            203
+          ],
+          "targetBounds": [
+            70,
+            73,
+            120,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            86,
+            67,
+            146,
+            202
+          ],
+          "targetBounds": [
+            80,
+            71,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            65,
+            67,
+            160,
+            202
+          ],
+          "targetBounds": [
+            68,
+            73,
+            123,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            69,
+            67,
+            163,
+            202
+          ],
+          "targetBounds": [
+            68,
+            72,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            101,
+            67,
+            143,
+            202
+          ],
+          "targetBounds": [
+            84,
+            72,
+            109,
+            151
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            78,
+            67,
+            166,
+            202
+          ],
+          "targetBounds": [
+            70,
+            73,
+            120,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            108,
+            61,
+            153,
+            203
+          ],
+          "targetBounds": [
+            88,
+            62,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            77,
+            55,
+            167,
+            190
+          ],
+          "targetBounds": [
+            72,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            82,
+            55,
+            142,
+            190
+          ],
+          "targetBounds": [
+            77,
+            71,
+            112,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            71,
+            55,
+            167,
+            191
+          ],
+          "targetBounds": [
+            69,
+            73,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            73,
+            56,
+            168,
+            191
+          ],
+          "targetBounds": [
+            69,
+            72,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            105,
+            56,
+            148,
+            191
+          ],
+          "targetBounds": [
+            84,
+            72,
+            109,
+            151
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            82,
+            56,
+            175,
+            191
+          ],
+          "targetBounds": [
+            70,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            105,
+            49,
+            149,
+            191
+          ],
+          "targetBounds": [
+            79,
+            63,
+            106,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            82,
+            35,
+            154,
+            176
+          ],
+          "targetBounds": [
+            75,
+            69,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            80,
+            34,
+            154,
+            177
+          ],
+          "targetBounds": [
+            75,
+            68,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            77,
+            34,
+            151,
+            177
+          ],
+          "targetBounds": [
+            75,
+            68,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            83,
+            34,
+            156,
+            177
+          ],
+          "targetBounds": [
+            76,
+            68,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            87,
+            35,
+            160,
+            177
+          ],
+          "targetBounds": [
+            76,
+            68,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            85,
+            34,
+            159,
+            176
+          ],
+          "targetBounds": [
+            75,
+            68,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            90,
+            35,
+            162,
+            177
+          ],
+          "targetBounds": [
+            75,
+            69,
+            116,
+            150
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1950-female.webp"
+    },
+    "era-1960-male": {
+      "id": "era-1960-male",
+      "name": "1960年代 · 蓝布工装",
+      "gender": "male",
+      "year": 1960,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 1960s Chinese man's everyday outfit: faded indigo cotton work jacket with simple patch pockets, matching loose work trousers and black cloth shoes. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-1960-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 138722,
+      "sha256": "4972ef3e078cdff057cf1f2192206f5796bbbd200056e012f31a9ca3420f62b1",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "bc8a9b1e6021cd21ccd0a2c76b2cc03820aa241366a4af1b9546e54e9e36ba5d",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            85,
+            90,
+            150,
+            208
+          ],
+          "targetBounds": [
+            77,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            91,
+            91,
+            154,
+            207
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            93,
+            91,
+            155,
+            208
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            96,
+            91,
+            158,
+            208
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            99,
+            91,
+            163,
+            206
+          ],
+          "targetBounds": [
+            78,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            98,
+            91,
+            161,
+            208
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            88,
+            90,
+            162,
+            208
+          ],
+          "targetBounds": [
+            76,
+            84,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            71,
+            81,
+            165,
+            199
+          ],
+          "targetBounds": [
+            68,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            97,
+            81,
+            155,
+            200
+          ],
+          "targetBounds": [
+            82,
+            81,
+            117,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            75,
+            81,
+            170,
+            199
+          ],
+          "targetBounds": [
+            68,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            77,
+            81,
+            172,
+            200
+          ],
+          "targetBounds": [
+            68,
+            81,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            98,
+            81,
+            161,
+            200
+          ],
+          "targetBounds": [
+            78,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            79,
+            81,
+            171,
+            199
+          ],
+          "targetBounds": [
+            68,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            104,
+            81,
+            152,
+            200
+          ],
+          "targetBounds": [
+            89,
+            80,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            74,
+            73,
+            168,
+            192
+          ],
+          "targetBounds": [
+            69,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            90,
+            73,
+            147,
+            195
+          ],
+          "targetBounds": [
+            76,
+            81,
+            109,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            78,
+            73,
+            171,
+            194
+          ],
+          "targetBounds": [
+            69,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            83,
+            73,
+            177,
+            194
+          ],
+          "targetBounds": [
+            69,
+            81,
+            123,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            101,
+            73,
+            165,
+            195
+          ],
+          "targetBounds": [
+            78,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            83,
+            73,
+            177,
+            192
+          ],
+          "targetBounds": [
+            70,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            103,
+            74,
+            150,
+            193
+          ],
+          "targetBounds": [
+            78,
+            80,
+            106,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            82,
+            44,
+            155,
+            170
+          ],
+          "targetBounds": [
+            75,
+            79,
+            117,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            87,
+            44,
+            158,
+            167
+          ],
+          "targetBounds": [
+            76,
+            79,
+            116,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            89,
+            44,
+            163,
+            171
+          ],
+          "targetBounds": [
+            76,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            93,
+            44,
+            167,
+            171
+          ],
+          "targetBounds": [
+            77,
+            79,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            95,
+            44,
+            165,
+            168
+          ],
+          "targetBounds": [
+            76,
+            79,
+            116,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            89,
+            44,
+            163,
+            171
+          ],
+          "targetBounds": [
+            75,
+            79,
+            117,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            88,
+            45,
+            162,
+            171
+          ],
+          "targetBounds": [
+            76,
+            83,
+            116,
+            151
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1960-male.webp"
+    },
+    "era-1960-female": {
+      "id": "era-1960-female",
+      "name": "1960年代 · 朴素棉布装",
+      "gender": "female",
+      "year": 1960,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 1960s Chinese woman's everyday outfit: muted grey blue button-front cotton jacket, dark navy straight trousers, black cloth shoes. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-1960-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 136182,
+      "sha256": "ef402e7d31549e0242f7f0045208903bb756628b8ff11e4b6106067febe3d537",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "31cf8d010b1baf5f94b923ae6b7a70ab07cba9a23a53c803aafd3019ee410d3f",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            87,
+            54,
+            164,
+            207
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            86,
+            53,
+            164,
+            207
+          ],
+          "targetBounds": [
+            77,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            88,
+            53,
+            164,
+            207
+          ],
+          "targetBounds": [
+            78,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            83,
+            53,
+            161,
+            207
+          ],
+          "targetBounds": [
+            77,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            83,
+            54,
+            161,
+            207
+          ],
+          "targetBounds": [
+            76,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            82,
+            53,
+            159,
+            207
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            76,
+            53,
+            152,
+            207
+          ],
+          "targetBounds": [
+            77,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            76,
+            46,
+            171,
+            195
+          ],
+          "targetBounds": [
+            72,
+            73,
+            121,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            95,
+            45,
+            157,
+            194
+          ],
+          "targetBounds": [
+            83,
+            71,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            69,
+            46,
+            170,
+            194
+          ],
+          "targetBounds": [
+            69,
+            73,
+            122,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            68,
+            46,
+            168,
+            193
+          ],
+          "targetBounds": [
+            69,
+            72,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            95,
+            46,
+            144,
+            196
+          ],
+          "targetBounds": [
+            83,
+            72,
+            109,
+            151
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            69,
+            46,
+            163,
+            194
+          ],
+          "targetBounds": [
+            72,
+            73,
+            121,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            90,
+            43,
+            140,
+            196
+          ],
+          "targetBounds": [
+            88,
+            62,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            81,
+            40,
+            175,
+            188
+          ],
+          "targetBounds": [
+            70,
+            73,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            88,
+            40,
+            153,
+            188
+          ],
+          "targetBounds": [
+            76,
+            71,
+            111,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            80,
+            40,
+            180,
+            187
+          ],
+          "targetBounds": [
+            70,
+            73,
+            123,
+            151
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            78,
+            40,
+            178,
+            187
+          ],
+          "targetBounds": [
+            70,
+            72,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            100,
+            40,
+            148,
+            190
+          ],
+          "targetBounds": [
+            84,
+            72,
+            109,
+            151
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            74,
+            40,
+            170,
+            187
+          ],
+          "targetBounds": [
+            70,
+            73,
+            120,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            97,
+            40,
+            146,
+            190
+          ],
+          "targetBounds": [
+            78,
+            63,
+            107,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            84,
+            26,
+            166,
+            180
+          ],
+          "targetBounds": [
+            75,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            83,
+            26,
+            164,
+            182
+          ],
+          "targetBounds": [
+            75,
+            68,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            83,
+            26,
+            167,
+            180
+          ],
+          "targetBounds": [
+            74,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            80,
+            26,
+            161,
+            180
+          ],
+          "targetBounds": [
+            75,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            80,
+            26,
+            162,
+            182
+          ],
+          "targetBounds": [
+            75,
+            68,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            78,
+            26,
+            160,
+            180
+          ],
+          "targetBounds": [
+            74,
+            68,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            74,
+            26,
+            153,
+            180
+          ],
+          "targetBounds": [
+            74,
+            69,
+            116,
+            150
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1960-female.webp"
+    },
+    "era-1970-male": {
+      "id": "era-1970-male",
+      "name": "1970年代 · 劳动布装",
+      "gender": "male",
+      "year": 1970,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 1970s Chinese man's everyday outfit: olive grey plain unbadged cotton work jacket, charcoal straight trousers, worn dark canvas shoes. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-1970-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 141638,
+      "sha256": "b669142838f35e07dda1df18fef35f1303a3fd7ab1e0acb99cef0a1dc6ecb53e",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "0247a10269b15cbf72fc49e4587d2d41a81d6124164c9bec174af89fc513e493",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            88,
+            91,
+            151,
+            200
+          ],
+          "targetBounds": [
+            76,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            88,
+            92,
+            150,
+            199
+          ],
+          "targetBounds": [
+            76,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            89,
+            92,
+            151,
+            199
+          ],
+          "targetBounds": [
+            76,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            89,
+            92,
+            151,
+            200
+          ],
+          "targetBounds": [
+            76,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            91,
+            91,
+            152,
+            199
+          ],
+          "targetBounds": [
+            77,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            91,
+            91,
+            154,
+            199
+          ],
+          "targetBounds": [
+            76,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            90,
+            92,
+            158,
+            198
+          ],
+          "targetBounds": [
+            75,
+            84,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            78,
+            90,
+            162,
+            199
+          ],
+          "targetBounds": [
+            69,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            98,
+            90,
+            152,
+            199
+          ],
+          "targetBounds": [
+            81,
+            81,
+            116,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            79,
+            90,
+            167,
+            198
+          ],
+          "targetBounds": [
+            68,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            79,
+            90,
+            166,
+            199
+          ],
+          "targetBounds": [
+            68,
+            81,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            95,
+            90,
+            153,
+            199
+          ],
+          "targetBounds": [
+            78,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            78,
+            90,
+            164,
+            197
+          ],
+          "targetBounds": [
+            68,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            108,
+            90,
+            153,
+            197
+          ],
+          "targetBounds": [
+            89,
+            80,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            78,
+            89,
+            166,
+            197
+          ],
+          "targetBounds": [
+            68,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            91,
+            89,
+            143,
+            198
+          ],
+          "targetBounds": [
+            76,
+            81,
+            110,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            77,
+            89,
+            166,
+            197
+          ],
+          "targetBounds": [
+            67,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            79,
+            89,
+            167,
+            198
+          ],
+          "targetBounds": [
+            68,
+            81,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            92,
+            89,
+            153,
+            198
+          ],
+          "targetBounds": [
+            76,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            81,
+            89,
+            169,
+            197
+          ],
+          "targetBounds": [
+            69,
+            80,
+            126,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            101,
+            89,
+            145,
+            196
+          ],
+          "targetBounds": [
+            77,
+            80,
+            106,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            86,
+            76,
+            156,
+            189
+          ],
+          "targetBounds": [
+            74,
+            79,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            87,
+            76,
+            152,
+            187
+          ],
+          "targetBounds": [
+            76,
+            79,
+            117,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            87,
+            76,
+            157,
+            189
+          ],
+          "targetBounds": [
+            74,
+            79,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            86,
+            77,
+            157,
+            189
+          ],
+          "targetBounds": [
+            74,
+            79,
+            120,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            88,
+            76,
+            153,
+            187
+          ],
+          "targetBounds": [
+            76,
+            79,
+            117,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            88,
+            77,
+            156,
+            189
+          ],
+          "targetBounds": [
+            74,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            88,
+            78,
+            162,
+            189
+          ],
+          "targetBounds": [
+            73,
+            83,
+            118,
+            151
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1970-male.webp"
+    },
+    "era-1970-female": {
+      "id": "era-1970-female",
+      "name": "1970年代 · 格纹衬衫",
+      "gender": "female",
+      "year": 1970,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 1970s Chinese woman's everyday outfit: small red brown checked long-sleeved shirt, navy straight trousers, plain dark cloth shoes. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-1970-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 151454,
+      "sha256": "8c008d8d01e3fb6789f51f5019437d49472d57fab5500ed385add26ee9012849",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "1aeb146938d45f999dc011709cce2c2ce6fafe731ec27c9eb77536f04cf3b268",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            90,
+            80,
+            151,
+            203
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            93,
+            82,
+            154,
+            203
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            94,
+            80,
+            155,
+            203
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            93,
+            81,
+            154,
+            203
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            95,
+            82,
+            156,
+            203
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            93,
+            80,
+            155,
+            203
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            94,
+            80,
+            156,
+            203
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            75,
+            72,
+            161,
+            198
+          ],
+          "targetBounds": [
+            69,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            94,
+            72,
+            151,
+            198
+          ],
+          "targetBounds": [
+            81,
+            71,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            76,
+            72,
+            164,
+            198
+          ],
+          "targetBounds": [
+            68,
+            73,
+            122,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            75,
+            73,
+            164,
+            198
+          ],
+          "targetBounds": [
+            67,
+            72,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            104,
+            72,
+            145,
+            198
+          ],
+          "targetBounds": [
+            84,
+            72,
+            110,
+            151
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            78,
+            73,
+            165,
+            198
+          ],
+          "targetBounds": [
+            69,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            106,
+            68,
+            148,
+            198
+          ],
+          "targetBounds": [
+            90,
+            62,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            79,
+            68,
+            169,
+            194
+          ],
+          "targetBounds": [
+            69,
+            73,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            93,
+            68,
+            150,
+            195
+          ],
+          "targetBounds": [
+            76,
+            71,
+            111,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            85,
+            69,
+            174,
+            195
+          ],
+          "targetBounds": [
+            69,
+            73,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            83,
+            69,
+            174,
+            195
+          ],
+          "targetBounds": [
+            69,
+            72,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            105,
+            68,
+            147,
+            196
+          ],
+          "targetBounds": [
+            83,
+            72,
+            109,
+            151
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            84,
+            68,
+            175,
+            195
+          ],
+          "targetBounds": [
+            69,
+            73,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            104,
+            67,
+            146,
+            196
+          ],
+          "targetBounds": [
+            77,
+            63,
+            106,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            86,
+            50,
+            154,
+            179
+          ],
+          "targetBounds": [
+            75,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            87,
+            51,
+            156,
+            179
+          ],
+          "targetBounds": [
+            73,
+            68,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            89,
+            50,
+            160,
+            179
+          ],
+          "targetBounds": [
+            74,
+            68,
+            120,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            91,
+            51,
+            159,
+            179
+          ],
+          "targetBounds": [
+            75,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            90,
+            50,
+            159,
+            179
+          ],
+          "targetBounds": [
+            75,
+            68,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            89,
+            50,
+            159,
+            179
+          ],
+          "targetBounds": [
+            74,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            91,
+            51,
+            159,
+            180
+          ],
+          "targetBounds": [
+            74,
+            69,
+            117,
+            150
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1970-female.webp"
+    },
+    "era-1980-male": {
+      "id": "era-1980-male",
+      "name": "1980年代 · 衬衫喇叭裤",
+      "gender": "male",
+      "year": 1980,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 1980s Chinese man's everyday outfit: cream short-sleeve collared shirt tucked into dark brown slightly flared trousers, dark leather shoes. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-1980-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 151406,
+      "sha256": "6a69a3c1218c728622f39fed7a1199d0d625eb63f2db677d5c2e4e7c41e9c863",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "279a46d472b86c9324f56db0485a93c598c2ae36c484a2a3122b3e3c530407d9",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            93,
+            99,
+            145,
+            194
+          ],
+          "targetBounds": [
+            77,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            95,
+            99,
+            148,
+            192
+          ],
+          "targetBounds": [
+            77,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            97,
+            99,
+            150,
+            194
+          ],
+          "targetBounds": [
+            78,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            100,
+            99,
+            153,
+            194
+          ],
+          "targetBounds": [
+            78,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            105,
+            99,
+            157,
+            192
+          ],
+          "targetBounds": [
+            77,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            105,
+            99,
+            158,
+            194
+          ],
+          "targetBounds": [
+            77,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            109,
+            99,
+            167,
+            194
+          ],
+          "targetBounds": [
+            76,
+            84,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            84,
+            94,
+            158,
+            185
+          ],
+          "targetBounds": [
+            69,
+            80,
+            126,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            102,
+            94,
+            148,
+            187
+          ],
+          "targetBounds": [
+            82,
+            81,
+            117,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            88,
+            94,
+            162,
+            185
+          ],
+          "targetBounds": [
+            70,
+            80,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            90,
+            94,
+            164,
+            187
+          ],
+          "targetBounds": [
+            70,
+            81,
+            126,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            108,
+            93,
+            152,
+            187
+          ],
+          "targetBounds": [
+            80,
+            80,
+            113,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            96,
+            94,
+            170,
+            186
+          ],
+          "targetBounds": [
+            70,
+            80,
+            126,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            122,
+            89,
+            162,
+            187
+          ],
+          "targetBounds": [
+            88,
+            80,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            84,
+            93,
+            158,
+            187
+          ],
+          "targetBounds": [
+            68,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            96,
+            94,
+            143,
+            187
+          ],
+          "targetBounds": [
+            75,
+            81,
+            111,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            87,
+            94,
+            161,
+            186
+          ],
+          "targetBounds": [
+            66,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            89,
+            94,
+            164,
+            187
+          ],
+          "targetBounds": [
+            66,
+            81,
+            122,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            112,
+            93,
+            157,
+            187
+          ],
+          "targetBounds": [
+            79,
+            80,
+            113,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            96,
+            94,
+            170,
+            187
+          ],
+          "targetBounds": [
+            66,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            118,
+            89,
+            158,
+            187
+          ],
+          "targetBounds": [
+            78,
+            80,
+            107,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            92,
+            90,
+            146,
+            186
+          ],
+          "targetBounds": [
+            76,
+            79,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            95,
+            88,
+            148,
+            186
+          ],
+          "targetBounds": [
+            77,
+            79,
+            115,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            98,
+            88,
+            152,
+            186
+          ],
+          "targetBounds": [
+            77,
+            79,
+            117,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            100,
+            88,
+            155,
+            186
+          ],
+          "targetBounds": [
+            77,
+            79,
+            117,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            105,
+            88,
+            158,
+            184
+          ],
+          "targetBounds": [
+            77,
+            79,
+            116,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            105,
+            88,
+            160,
+            186
+          ],
+          "targetBounds": [
+            77,
+            79,
+            117,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            109,
+            91,
+            167,
+            186
+          ],
+          "targetBounds": [
+            75,
+            83,
+            117,
+            151
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1980-male.webp"
+    },
+    "era-1980-female": {
+      "id": "era-1980-female",
+      "name": "1980年代 · 碎花连衣裙",
+      "gender": "female",
+      "year": 1980,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 1980s Chinese woman's everyday outfit: dusty rose tiny floral-print short-sleeve knee-length dress with modest collar and waist, bare lower legs, plain brown low heel shoes. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-1980-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 164592,
+      "sha256": "8c038ac1aef95f723a2d2a60fef19b38c947d112f3d9fad8b64e618200bb991e",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "89c3b11513123edfad045a8630d23fcb52a9e8dd93bc136a3db23382e7eff1a7",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            85,
+            67,
+            158,
+            205
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            82,
+            67,
+            154,
+            205
+          ],
+          "targetBounds": [
+            75,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            90,
+            68,
+            164,
+            204
+          ],
+          "targetBounds": [
+            75,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            93,
+            67,
+            163,
+            204
+          ],
+          "targetBounds": [
+            76,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            97,
+            68,
+            169,
+            204
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            101,
+            68,
+            173,
+            204
+          ],
+          "targetBounds": [
+            75,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            108,
+            67,
+            174,
+            205
+          ],
+          "targetBounds": [
+            78,
+            72,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            75,
+            54,
+            161,
+            192
+          ],
+          "targetBounds": [
+            72,
+            73,
+            120,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            86,
+            54,
+            144,
+            192
+          ],
+          "targetBounds": [
+            79,
+            71,
+            112,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            74,
+            54,
+            163,
+            192
+          ],
+          "targetBounds": [
+            70,
+            73,
+            120,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            79,
+            54,
+            170,
+            192
+          ],
+          "targetBounds": [
+            70,
+            72,
+            121,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            104,
+            54,
+            151,
+            192
+          ],
+          "targetBounds": [
+            80,
+            72,
+            107,
+            151
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            88,
+            54,
+            178,
+            192
+          ],
+          "targetBounds": [
+            70,
+            73,
+            120,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            116,
+            51,
+            161,
+            192
+          ],
+          "targetBounds": [
+            87,
+            62,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            77,
+            46,
+            168,
+            190
+          ],
+          "targetBounds": [
+            70,
+            73,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            89,
+            45,
+            150,
+            190
+          ],
+          "targetBounds": [
+            79,
+            71,
+            112,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            83,
+            44,
+            178,
+            190
+          ],
+          "targetBounds": [
+            72,
+            73,
+            123,
+            151
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            88,
+            44,
+            182,
+            190
+          ],
+          "targetBounds": [
+            72,
+            72,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            108,
+            43,
+            163,
+            190
+          ],
+          "targetBounds": [
+            84,
+            72,
+            114,
+            151
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            98,
+            44,
+            192,
+            190
+          ],
+          "targetBounds": [
+            72,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            114,
+            41,
+            160,
+            190
+          ],
+          "targetBounds": [
+            78,
+            63,
+            105,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            82,
+            29,
+            160,
+            177
+          ],
+          "targetBounds": [
+            75,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            79,
+            29,
+            158,
+            177
+          ],
+          "targetBounds": [
+            75,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            87,
+            29,
+            166,
+            177
+          ],
+          "targetBounds": [
+            74,
+            68,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            92,
+            29,
+            171,
+            177
+          ],
+          "targetBounds": [
+            74,
+            68,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            94,
+            29,
+            172,
+            177
+          ],
+          "targetBounds": [
+            75,
+            68,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            100,
+            29,
+            178,
+            177
+          ],
+          "targetBounds": [
+            74,
+            68,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            105,
+            29,
+            177,
+            177
+          ],
+          "targetBounds": [
+            76,
+            69,
+            115,
+            150
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1980-female.webp"
+    },
+    "era-1990-male": {
+      "id": "era-1990-male",
+      "name": "1990年代 · 夹克牛仔裤",
+      "gender": "male",
+      "year": 1990,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 1990s Chinese man's everyday outfit: tan zip-up bomber jacket over ivory T-shirt, medium blue straight jeans, white canvas sneakers. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-1990-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 157318,
+      "sha256": "a027b0d6a2fadf05b1149311bd07ace9339129b22af78e913b198b8a3cca230f",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "bea03f0019f7b88ef267afa548e35a9822cb5369bc8c4445bfcbd6c45287b9f0",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            87,
+            91,
+            152,
+            200
+          ],
+          "targetBounds": [
+            75,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            91,
+            91,
+            154,
+            197
+          ],
+          "targetBounds": [
+            76,
+            81,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            91,
+            91,
+            155,
+            200
+          ],
+          "targetBounds": [
+            76,
+            81,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            95,
+            91,
+            157,
+            200
+          ],
+          "targetBounds": [
+            77,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            99,
+            91,
+            163,
+            198
+          ],
+          "targetBounds": [
+            76,
+            81,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            98,
+            91,
+            162,
+            200
+          ],
+          "targetBounds": [
+            76,
+            81,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            96,
+            91,
+            168,
+            200
+          ],
+          "targetBounds": [
+            74,
+            84,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            78,
+            93,
+            157,
+            195
+          ],
+          "targetBounds": [
+            69,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            100,
+            93,
+            149,
+            197
+          ],
+          "targetBounds": [
+            84,
+            81,
+            117,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            82,
+            93,
+            164,
+            195
+          ],
+          "targetBounds": [
+            69,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            85,
+            92,
+            167,
+            196
+          ],
+          "targetBounds": [
+            70,
+            81,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            100,
+            93,
+            155,
+            196
+          ],
+          "targetBounds": [
+            78,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            87,
+            93,
+            167,
+            195
+          ],
+          "targetBounds": [
+            69,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            114,
+            90,
+            158,
+            197
+          ],
+          "targetBounds": [
+            90,
+            80,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            81,
+            88,
+            162,
+            191
+          ],
+          "targetBounds": [
+            68,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            96,
+            88,
+            150,
+            194
+          ],
+          "targetBounds": [
+            76,
+            81,
+            112,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            83,
+            88,
+            165,
+            191
+          ],
+          "targetBounds": [
+            67,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            89,
+            89,
+            169,
+            191
+          ],
+          "targetBounds": [
+            67,
+            81,
+            122,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            98,
+            88,
+            156,
+            194
+          ],
+          "targetBounds": [
+            76,
+            80,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            91,
+            88,
+            172,
+            191
+          ],
+          "targetBounds": [
+            69,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            109,
+            88,
+            152,
+            194
+          ],
+          "targetBounds": [
+            77,
+            80,
+            106,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            86,
+            79,
+            154,
+            188
+          ],
+          "targetBounds": [
+            74,
+            79,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            90,
+            79,
+            156,
+            188
+          ],
+          "targetBounds": [
+            76,
+            79,
+            118,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            91,
+            79,
+            158,
+            188
+          ],
+          "targetBounds": [
+            75,
+            79,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            93,
+            79,
+            160,
+            188
+          ],
+          "targetBounds": [
+            75,
+            79,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            97,
+            79,
+            162,
+            188
+          ],
+          "targetBounds": [
+            76,
+            79,
+            118,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            94,
+            79,
+            162,
+            188
+          ],
+          "targetBounds": [
+            74,
+            79,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            96,
+            79,
+            169,
+            188
+          ],
+          "targetBounds": [
+            72,
+            83,
+            118,
+            151
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1990-male.webp"
+    },
+    "era-1990-female": {
+      "id": "era-1990-female",
+      "name": "1990年代 · 针织开衫",
+      "gender": "female",
+      "year": 1990,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 1990s Chinese woman's everyday outfit: muted burgundy buttoned knit cardigan over ivory blouse, blue high-waisted straight jeans and simple white sneakers. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-1990-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 162330,
+      "sha256": "e908603051efd4e7c3812ad185222aacb79e5a371fc63cd1335362d2c6b2e4c0",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "e081c8f5a1d2ac8e41e55579efb628111cfe1ac435d7173e2c221aaa6366e72c",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            88,
+            80,
+            150,
+            204
+          ],
+          "targetBounds": [
+            77,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            88,
+            80,
+            152,
+            203
+          ],
+          "targetBounds": [
+            75,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            91,
+            80,
+            155,
+            203
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            89,
+            80,
+            153,
+            204
+          ],
+          "targetBounds": [
+            76,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            91,
+            80,
+            154,
+            203
+          ],
+          "targetBounds": [
+            76,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            91,
+            80,
+            154,
+            203
+          ],
+          "targetBounds": [
+            76,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            93,
+            80,
+            156,
+            204
+          ],
+          "targetBounds": [
+            76,
+            72,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            72,
+            77,
+            154,
+            193
+          ],
+          "targetBounds": [
+            69,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            94,
+            76,
+            150,
+            193
+          ],
+          "targetBounds": [
+            80,
+            71,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            70,
+            77,
+            155,
+            193
+          ],
+          "targetBounds": [
+            65,
+            73,
+            122,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            73,
+            76,
+            160,
+            193
+          ],
+          "targetBounds": [
+            65,
+            72,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            101,
+            76,
+            140,
+            193
+          ],
+          "targetBounds": [
+            83,
+            72,
+            109,
+            151
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            74,
+            77,
+            154,
+            193
+          ],
+          "targetBounds": [
+            68,
+            73,
+            121,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            106,
+            73,
+            143,
+            193
+          ],
+          "targetBounds": [
+            88,
+            62,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            82,
+            76,
+            164,
+            189
+          ],
+          "targetBounds": [
+            70,
+            73,
+            126,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            90,
+            75,
+            144,
+            190
+          ],
+          "targetBounds": [
+            75,
+            71,
+            112,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            82,
+            76,
+            168,
+            190
+          ],
+          "targetBounds": [
+            69,
+            73,
+            128,
+            151
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            82,
+            75,
+            168,
+            190
+          ],
+          "targetBounds": [
+            69,
+            72,
+            127,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            102,
+            75,
+            143,
+            190
+          ],
+          "targetBounds": [
+            82,
+            72,
+            110,
+            151
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            88,
+            76,
+            168,
+            190
+          ],
+          "targetBounds": [
+            70,
+            73,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            105,
+            74,
+            143,
+            190
+          ],
+          "targetBounds": [
+            79,
+            63,
+            108,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            85,
+            62,
+            152,
+            189
+          ],
+          "targetBounds": [
+            75,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            85,
+            60,
+            155,
+            189
+          ],
+          "targetBounds": [
+            74,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            83,
+            60,
+            154,
+            189
+          ],
+          "targetBounds": [
+            73,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            86,
+            60,
+            155,
+            189
+          ],
+          "targetBounds": [
+            75,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            85,
+            60,
+            156,
+            189
+          ],
+          "targetBounds": [
+            74,
+            68,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            84,
+            60,
+            155,
+            189
+          ],
+          "targetBounds": [
+            73,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            90,
+            62,
+            156,
+            189
+          ],
+          "targetBounds": [
+            74,
+            69,
+            116,
+            150
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-1990-female.webp"
+    },
+    "era-2000-male": {
+      "id": "era-2000-male",
+      "name": "2000年代 · 运动休闲装",
+      "gender": "male",
+      "year": 2000,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 2000s Chinese man's everyday outfit: navy and cream zip-up track jacket, dark track trousers with one subtle white side stripe, grey running shoes. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-2000-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 144574,
+      "sha256": "a64609cfc7aff0321cd1a3d69783fe870682a2152334ebaf2976052b379bdfb2",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "e0e9b22e37a5baa7b9215c4e5410e5851bb9b0f578610109ce850eb7edce4de6",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            91,
+            95,
+            147,
+            198
+          ],
+          "targetBounds": [
+            77,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            97,
+            95,
+            151,
+            195
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            99,
+            96,
+            154,
+            198
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            102,
+            95,
+            158,
+            198
+          ],
+          "targetBounds": [
+            78,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            107,
+            96,
+            162,
+            197
+          ],
+          "targetBounds": [
+            77,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            111,
+            96,
+            166,
+            198
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            111,
+            99,
+            173,
+            196
+          ],
+          "targetBounds": [
+            76,
+            84,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            84,
+            96,
+            154,
+            190
+          ],
+          "targetBounds": [
+            71,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            106,
+            96,
+            151,
+            193
+          ],
+          "targetBounds": [
+            84,
+            81,
+            117,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            91,
+            96,
+            165,
+            190
+          ],
+          "targetBounds": [
+            71,
+            80,
+            126,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            94,
+            96,
+            167,
+            192
+          ],
+          "targetBounds": [
+            72,
+            81,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            110,
+            96,
+            160,
+            191
+          ],
+          "targetBounds": [
+            79,
+            80,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            102,
+            96,
+            173,
+            190
+          ],
+          "targetBounds": [
+            71,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            127,
+            95,
+            167,
+            194
+          ],
+          "targetBounds": [
+            89,
+            80,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            85,
+            98,
+            155,
+            193
+          ],
+          "targetBounds": [
+            70,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            100,
+            98,
+            144,
+            195
+          ],
+          "targetBounds": [
+            77,
+            81,
+            109,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            91,
+            98,
+            163,
+            192
+          ],
+          "targetBounds": [
+            68,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            94,
+            99,
+            166,
+            193
+          ],
+          "targetBounds": [
+            68,
+            81,
+            122,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            110,
+            98,
+            158,
+            193
+          ],
+          "targetBounds": [
+            77,
+            80,
+            112,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            103,
+            99,
+            174,
+            193
+          ],
+          "targetBounds": [
+            69,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            121,
+            98,
+            160,
+            196
+          ],
+          "targetBounds": [
+            78,
+            80,
+            106,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            90,
+            96,
+            147,
+            197
+          ],
+          "targetBounds": [
+            75,
+            79,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            97,
+            95,
+            151,
+            194
+          ],
+          "targetBounds": [
+            77,
+            79,
+            115,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            99,
+            95,
+            155,
+            197
+          ],
+          "targetBounds": [
+            76,
+            79,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            102,
+            95,
+            159,
+            197
+          ],
+          "targetBounds": [
+            77,
+            79,
+            117,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            107,
+            96,
+            162,
+            194
+          ],
+          "targetBounds": [
+            77,
+            79,
+            116,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            109,
+            95,
+            166,
+            198
+          ],
+          "targetBounds": [
+            76,
+            79,
+            116,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            111,
+            97,
+            173,
+            196
+          ],
+          "targetBounds": [
+            74,
+            83,
+            117,
+            151
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2000-male.webp"
+    },
+    "era-2000-female": {
+      "id": "era-2000-female",
+      "name": "2000年代 · 牛仔休闲装",
+      "gender": "female",
+      "year": 2000,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 2000s Chinese woman's everyday outfit: light blue denim jacket over pastel pink T-shirt, beige casual straight trousers and white sneakers. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-2000-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 166326,
+      "sha256": "d3c886b2e6040d5f7b8f7cfd055123163f8b30c29bbc15d756bc0a85747cf1c0",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "520db0e8f65d7bea2daff19c12769c158ecca496db122946fa0e82435939f7d5",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            87,
+            81,
+            148,
+            196
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            91,
+            80,
+            153,
+            196
+          ],
+          "targetBounds": [
+            75,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            88,
+            81,
+            150,
+            196
+          ],
+          "targetBounds": [
+            76,
+            72,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            87,
+            80,
+            150,
+            196
+          ],
+          "targetBounds": [
+            75,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            89,
+            81,
+            150,
+            196
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            87,
+            81,
+            149,
+            196
+          ],
+          "targetBounds": [
+            76,
+            72,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            91,
+            81,
+            150,
+            196
+          ],
+          "targetBounds": [
+            77,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            74,
+            68,
+            154,
+            188
+          ],
+          "targetBounds": [
+            70,
+            73,
+            121,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            97,
+            67,
+            150,
+            188
+          ],
+          "targetBounds": [
+            82,
+            71,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            74,
+            67,
+            159,
+            188
+          ],
+          "targetBounds": [
+            68,
+            73,
+            123,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            75,
+            68,
+            160,
+            188
+          ],
+          "targetBounds": [
+            68,
+            72,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            100,
+            67,
+            138,
+            188
+          ],
+          "targetBounds": [
+            83,
+            72,
+            108,
+            151
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            74,
+            68,
+            156,
+            188
+          ],
+          "targetBounds": [
+            69,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            104,
+            60,
+            142,
+            188
+          ],
+          "targetBounds": [
+            89,
+            62,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            83,
+            54,
+            166,
+            175
+          ],
+          "targetBounds": [
+            71,
+            73,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            93,
+            54,
+            144,
+            176
+          ],
+          "targetBounds": [
+            78,
+            71,
+            111,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            80,
+            54,
+            167,
+            175
+          ],
+          "targetBounds": [
+            69,
+            73,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            78,
+            54,
+            165,
+            175
+          ],
+          "targetBounds": [
+            69,
+            72,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            102,
+            54,
+            140,
+            175
+          ],
+          "targetBounds": [
+            85,
+            72,
+            110,
+            151
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            81,
+            54,
+            165,
+            175
+          ],
+          "targetBounds": [
+            70,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            100,
+            44,
+            138,
+            175
+          ],
+          "targetBounds": [
+            80,
+            63,
+            106,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            84,
+            43,
+            155,
+            171
+          ],
+          "targetBounds": [
+            74,
+            69,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            86,
+            39,
+            158,
+            171
+          ],
+          "targetBounds": [
+            74,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            84,
+            39,
+            155,
+            171
+          ],
+          "targetBounds": [
+            74,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            82,
+            39,
+            155,
+            171
+          ],
+          "targetBounds": [
+            74,
+            68,
+            120,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            81,
+            40,
+            153,
+            171
+          ],
+          "targetBounds": [
+            74,
+            68,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            81,
+            39,
+            153,
+            171
+          ],
+          "targetBounds": [
+            74,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            84,
+            43,
+            154,
+            171
+          ],
+          "targetBounds": [
+            74,
+            69,
+            118,
+            150
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2000-female.webp"
+    },
+    "era-2010-male": {
+      "id": "era-2010-male",
+      "name": "2010年代 · 连帽卫衣",
+      "gender": "male",
+      "year": 2010,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 2010s Chinese man's everyday outfit: muted teal hoodie with hood resting behind neck, charcoal slim straight trousers, white sneakers. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-2010-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 139852,
+      "sha256": "26c9bec919cc4c47a206b46e492b51ab46c086d9d10430017258c9e1c25c7fbc",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "0491a006aa8cd009156a4ee4be3d2e07f2bfa0be407e88a92a5e9e5ec8331c55",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            86,
+            92,
+            149,
+            210
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            85,
+            92,
+            148,
+            209
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            82,
+            91,
+            146,
+            210
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            87,
+            91,
+            150,
+            210
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            92,
+            91,
+            157,
+            210
+          ],
+          "targetBounds": [
+            78,
+            81,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            91,
+            92,
+            154,
+            210
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            89,
+            91,
+            159,
+            209
+          ],
+          "targetBounds": [
+            77,
+            84,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            74,
+            86,
+            163,
+            203
+          ],
+          "targetBounds": [
+            69,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            95,
+            86,
+            150,
+            203
+          ],
+          "targetBounds": [
+            81,
+            81,
+            114,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            70,
+            86,
+            164,
+            203
+          ],
+          "targetBounds": [
+            68,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            74,
+            86,
+            168,
+            203
+          ],
+          "targetBounds": [
+            68,
+            81,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            93,
+            86,
+            158,
+            203
+          ],
+          "targetBounds": [
+            76,
+            80,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            77,
+            86,
+            167,
+            202
+          ],
+          "targetBounds": [
+            68,
+            80,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            102,
+            83,
+            151,
+            203
+          ],
+          "targetBounds": [
+            87,
+            80,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            77,
+            76,
+            168,
+            193
+          ],
+          "targetBounds": [
+            69,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            89,
+            76,
+            143,
+            193
+          ],
+          "targetBounds": [
+            80,
+            81,
+            113,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            68,
+            75,
+            164,
+            193
+          ],
+          "targetBounds": [
+            69,
+            80,
+            126,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            73,
+            75,
+            168,
+            193
+          ],
+          "targetBounds": [
+            70,
+            81,
+            126,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            93,
+            75,
+            159,
+            193
+          ],
+          "targetBounds": [
+            78,
+            80,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            78,
+            75,
+            170,
+            193
+          ],
+          "targetBounds": [
+            70,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            102,
+            73,
+            149,
+            193
+          ],
+          "targetBounds": [
+            79,
+            80,
+            107,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            83,
+            58,
+            153,
+            178
+          ],
+          "targetBounds": [
+            75,
+            79,
+            117,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            85,
+            57,
+            152,
+            173
+          ],
+          "targetBounds": [
+            77,
+            79,
+            117,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            82,
+            55,
+            156,
+            178
+          ],
+          "targetBounds": [
+            76,
+            79,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            84,
+            55,
+            158,
+            178
+          ],
+          "targetBounds": [
+            76,
+            79,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            89,
+            55,
+            158,
+            173
+          ],
+          "targetBounds": [
+            76,
+            79,
+            117,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            85,
+            55,
+            157,
+            179
+          ],
+          "targetBounds": [
+            76,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            87,
+            55,
+            162,
+            176
+          ],
+          "targetBounds": [
+            74,
+            83,
+            116,
+            151
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2010-male.webp"
+    },
+    "era-2010-female": {
+      "id": "era-2010-female",
+      "name": "2010年代 · 都市通勤装",
+      "gender": "female",
+      "year": 2010,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 2010s Chinese woman's everyday outfit: soft beige short casual blazer over ivory T-shirt, navy ankle-length straight trousers, low white sneakers. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-2010-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 161184,
+      "sha256": "9b93e02dcb3d255ba939a9d9b91cb975e7cfb1ce29fd776bc9095022add572e4",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "1b35e97728da8e7f8306210011ccb4a9c5fefe5831d0d8ad9110ff9a0155e965",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            94,
+            88,
+            147,
+            190
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            97,
+            88,
+            151,
+            190
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            99,
+            88,
+            152,
+            190
+          ],
+          "targetBounds": [
+            77,
+            72,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            100,
+            88,
+            154,
+            190
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            104,
+            89,
+            158,
+            190
+          ],
+          "targetBounds": [
+            76,
+            72,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            105,
+            88,
+            160,
+            190
+          ],
+          "targetBounds": [
+            75,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            107,
+            87,
+            163,
+            190
+          ],
+          "targetBounds": [
+            75,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            85,
+            87,
+            152,
+            187
+          ],
+          "targetBounds": [
+            70,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            103,
+            86,
+            148,
+            188
+          ],
+          "targetBounds": [
+            82,
+            71,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            86,
+            87,
+            157,
+            188
+          ],
+          "targetBounds": [
+            69,
+            73,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            91,
+            87,
+            160,
+            187
+          ],
+          "targetBounds": [
+            70,
+            72,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            112,
+            86,
+            148,
+            188
+          ],
+          "targetBounds": [
+            83,
+            72,
+            111,
+            151
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            98,
+            87,
+            165,
+            188
+          ],
+          "targetBounds": [
+            72,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            120,
+            74,
+            159,
+            188
+          ],
+          "targetBounds": [
+            87,
+            62,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            90,
+            86,
+            157,
+            187
+          ],
+          "targetBounds": [
+            71,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            100,
+            84,
+            144,
+            187
+          ],
+          "targetBounds": [
+            78,
+            71,
+            112,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            94,
+            86,
+            163,
+            186
+          ],
+          "targetBounds": [
+            70,
+            73,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            95,
+            85,
+            164,
+            187
+          ],
+          "targetBounds": [
+            70,
+            72,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            114,
+            85,
+            149,
+            187
+          ],
+          "targetBounds": [
+            83,
+            72,
+            110,
+            151
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            101,
+            86,
+            169,
+            187
+          ],
+          "targetBounds": [
+            70,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            115,
+            75,
+            152,
+            187
+          ],
+          "targetBounds": [
+            78,
+            63,
+            107,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            92,
+            81,
+            149,
+            185
+          ],
+          "targetBounds": [
+            74,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            93,
+            80,
+            152,
+            186
+          ],
+          "targetBounds": [
+            73,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            94,
+            80,
+            154,
+            186
+          ],
+          "targetBounds": [
+            73,
+            68,
+            120,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            98,
+            80,
+            158,
+            186
+          ],
+          "targetBounds": [
+            74,
+            68,
+            121,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            100,
+            80,
+            159,
+            186
+          ],
+          "targetBounds": [
+            74,
+            68,
+            120,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            102,
+            80,
+            162,
+            185
+          ],
+          "targetBounds": [
+            73,
+            68,
+            120,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            106,
+            80,
+            164,
+            185
+          ],
+          "targetBounds": [
+            73,
+            69,
+            118,
+            150
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2010-female.webp"
+    },
+    "era-2020-male": {
+      "id": "era-2020-male",
+      "name": "2020年代 · 轻户外装",
+      "gender": "male",
+      "year": 2020,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 2020s Chinese man's everyday outfit: sage green lightweight outdoor zip jacket, stone grey relaxed trousers and grey walking sneakers. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "male-walk",
+      "local": "assets/era-clothes/era-2020-male.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 141232,
+      "sha256": "7526855f512fad7832016c61ebef89430eb7fc4104c42a479a3ccf548518e5d6",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "7191345cfe334124434fc7208bbec43b00fe58031a4bbfd6d1422bef580b3530",
+        "reference": "male-walk-ref.webp",
+        "referenceSha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            91,
+            93,
+            149,
+            202
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            91,
+            93,
+            148,
+            199
+          ],
+          "targetBounds": [
+            77,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            91,
+            93,
+            149,
+            202
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            92,
+            93,
+            149,
+            202
+          ],
+          "targetBounds": [
+            78,
+            81,
+            114,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            93,
+            93,
+            151,
+            202
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            92,
+            93,
+            151,
+            202
+          ],
+          "targetBounds": [
+            78,
+            81,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            88,
+            93,
+            147,
+            199
+          ],
+          "targetBounds": [
+            78,
+            84,
+            115,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            79,
+            83,
+            159,
+            190
+          ],
+          "targetBounds": [
+            71,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            96,
+            83,
+            149,
+            191
+          ],
+          "targetBounds": [
+            82,
+            81,
+            117,
+            152
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            78,
+            83,
+            163,
+            189
+          ],
+          "targetBounds": [
+            69,
+            80,
+            125,
+            150
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            79,
+            83,
+            162,
+            189
+          ],
+          "targetBounds": [
+            70,
+            81,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            94,
+            83,
+            150,
+            191
+          ],
+          "targetBounds": [
+            80,
+            80,
+            116,
+            150
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            80,
+            84,
+            161,
+            188
+          ],
+          "targetBounds": [
+            69,
+            80,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            99,
+            83,
+            143,
+            191
+          ],
+          "targetBounds": [
+            89,
+            80,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            80,
+            75,
+            162,
+            179
+          ],
+          "targetBounds": [
+            68,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            92,
+            75,
+            144,
+            182
+          ],
+          "targetBounds": [
+            75,
+            81,
+            110,
+            152
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            79,
+            75,
+            162,
+            178
+          ],
+          "targetBounds": [
+            67,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            80,
+            75,
+            164,
+            180
+          ],
+          "targetBounds": [
+            68,
+            81,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            94,
+            74,
+            149,
+            181
+          ],
+          "targetBounds": [
+            77,
+            80,
+            113,
+            150
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            82,
+            74,
+            165,
+            179
+          ],
+          "targetBounds": [
+            68,
+            80,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            96,
+            73,
+            140,
+            181
+          ],
+          "targetBounds": [
+            76,
+            80,
+            105,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            88,
+            55,
+            152,
+            167
+          ],
+          "targetBounds": [
+            76,
+            79,
+            117,
+            151
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            89,
+            55,
+            151,
+            163
+          ],
+          "targetBounds": [
+            76,
+            79,
+            116,
+            149
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            89,
+            55,
+            153,
+            166
+          ],
+          "targetBounds": [
+            76,
+            79,
+            118,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            89,
+            55,
+            153,
+            167
+          ],
+          "targetBounds": [
+            76,
+            79,
+            117,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            90,
+            55,
+            153,
+            163
+          ],
+          "targetBounds": [
+            76,
+            79,
+            117,
+            149
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            87,
+            55,
+            152,
+            167
+          ],
+          "targetBounds": [
+            75,
+            79,
+            117,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            84,
+            55,
+            151,
+            163
+          ],
+          "targetBounds": [
+            75,
+            83,
+            117,
+            151
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2020-male.webp"
+    },
+    "era-2020-female": {
+      "id": "era-2020-female",
+      "name": "2020年代 · 舒适休闲装",
+      "gender": "female",
+      "year": 2020,
+      "prompt": "Use case: historical-scene. Edit the reference sprite atlas into a 2020s Chinese woman's everyday outfit: oatmeal loose knit cardigan over muted coral shirt, sage green wide straight trousers and cream walking sneakers. Replace clothing only. Preserve all 28 headless body sprites, EXACT 7 columns by 4 rows, six walking phases and seventh idle pose. Row order front toward viewer, facing LEFT, facing RIGHT, back away viewer. Preserve each neck anchor, hand and foot pose, original sprite scale and empty spacing. No heads, hats, capes, armor, magic, weapons, insignia, accessories, labels or borders. Gentle painted game art, subdued fabric. Transparent background. Output the same landscape aspect ratio as reference.",
+      "baseBody": "female-walk",
+      "local": "assets/era-clothes/era-2020-female.webp",
+      "width": 1344,
+      "height": 768,
+      "bytes": 169716,
+      "sha256": "207d7ceb1e752686db7f8b78a7c4d37164fcef9985a95d6f3ef00bb78acc35a4",
+      "encoding": {
+        "lossless": true
+      },
+      "source": {
+        "method": "built-in image_gen reference edit",
+        "sha256": "bf097fb35018dc8dac02ddfc846d75016ad465c015e7e30ee4ef8677c25d2262",
+        "reference": "female-walk-ref.webp",
+        "referenceSha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "registration": [
+        {
+          "cell": 0,
+          "sourceBounds": [
+            88,
+            85,
+            146,
+            195
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 1,
+          "sourceBounds": [
+            91,
+            84,
+            149,
+            195
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 2,
+          "sourceBounds": [
+            92,
+            85,
+            151,
+            195
+          ],
+          "targetBounds": [
+            76,
+            72,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 3,
+          "sourceBounds": [
+            94,
+            85,
+            153,
+            195
+          ],
+          "targetBounds": [
+            75,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 4,
+          "sourceBounds": [
+            96,
+            85,
+            154,
+            195
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 5,
+          "sourceBounds": [
+            96,
+            85,
+            155,
+            195
+          ],
+          "targetBounds": [
+            75,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 6,
+          "sourceBounds": [
+            98,
+            84,
+            156,
+            195
+          ],
+          "targetBounds": [
+            76,
+            72,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 7,
+          "sourceBounds": [
+            78,
+            82,
+            153,
+            192
+          ],
+          "targetBounds": [
+            70,
+            73,
+            122,
+            150
+          ]
+        },
+        {
+          "cell": 8,
+          "sourceBounds": [
+            97,
+            79,
+            148,
+            192
+          ],
+          "targetBounds": [
+            81,
+            71,
+            117,
+            150
+          ]
+        },
+        {
+          "cell": 9,
+          "sourceBounds": [
+            79,
+            81,
+            159,
+            191
+          ],
+          "targetBounds": [
+            67,
+            73,
+            124,
+            151
+          ]
+        },
+        {
+          "cell": 10,
+          "sourceBounds": [
+            81,
+            82,
+            161,
+            191
+          ],
+          "targetBounds": [
+            67,
+            72,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 11,
+          "sourceBounds": [
+            103,
+            80,
+            143,
+            192
+          ],
+          "targetBounds": [
+            83,
+            72,
+            111,
+            151
+          ]
+        },
+        {
+          "cell": 12,
+          "sourceBounds": [
+            84,
+            82,
+            161,
+            191
+          ],
+          "targetBounds": [
+            70,
+            73,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 13,
+          "sourceBounds": [
+            108,
+            74,
+            151,
+            193
+          ],
+          "targetBounds": [
+            87,
+            62,
+            119,
+            150
+          ]
+        },
+        {
+          "cell": 14,
+          "sourceBounds": [
+            84,
+            74,
+            161,
+            184
+          ],
+          "targetBounds": [
+            69,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 15,
+          "sourceBounds": [
+            91,
+            72,
+            148,
+            184
+          ],
+          "targetBounds": [
+            73,
+            71,
+            113,
+            150
+          ]
+        },
+        {
+          "cell": 16,
+          "sourceBounds": [
+            85,
+            73,
+            164,
+            184
+          ],
+          "targetBounds": [
+            69,
+            73,
+            125,
+            151
+          ]
+        },
+        {
+          "cell": 17,
+          "sourceBounds": [
+            86,
+            73,
+            165,
+            185
+          ],
+          "targetBounds": [
+            69,
+            72,
+            124,
+            150
+          ]
+        },
+        {
+          "cell": 18,
+          "sourceBounds": [
+            104,
+            72,
+            145,
+            186
+          ],
+          "targetBounds": [
+            82,
+            72,
+            110,
+            151
+          ]
+        },
+        {
+          "cell": 19,
+          "sourceBounds": [
+            89,
+            74,
+            167,
+            185
+          ],
+          "targetBounds": [
+            69,
+            73,
+            123,
+            150
+          ]
+        },
+        {
+          "cell": 20,
+          "sourceBounds": [
+            106,
+            68,
+            149,
+            186
+          ],
+          "targetBounds": [
+            75,
+            63,
+            107,
+            151
+          ]
+        },
+        {
+          "cell": 21,
+          "sourceBounds": [
+            86,
+            69,
+            149,
+            185
+          ],
+          "targetBounds": [
+            74,
+            69,
+            118,
+            150
+          ]
+        },
+        {
+          "cell": 22,
+          "sourceBounds": [
+            87,
+            69,
+            154,
+            187
+          ],
+          "targetBounds": [
+            73,
+            68,
+            120,
+            151
+          ]
+        },
+        {
+          "cell": 23,
+          "sourceBounds": [
+            86,
+            68,
+            154,
+            186
+          ],
+          "targetBounds": [
+            72,
+            68,
+            120,
+            151
+          ]
+        },
+        {
+          "cell": 24,
+          "sourceBounds": [
+            90,
+            69,
+            156,
+            187
+          ],
+          "targetBounds": [
+            74,
+            68,
+            120,
+            151
+          ]
+        },
+        {
+          "cell": 25,
+          "sourceBounds": [
+            89,
+            69,
+            156,
+            187
+          ],
+          "targetBounds": [
+            73,
+            68,
+            120,
+            150
+          ]
+        },
+        {
+          "cell": 26,
+          "sourceBounds": [
+            91,
+            69,
+            157,
+            186
+          ],
+          "targetBounds": [
+            72,
+            68,
+            119,
+            151
+          ]
+        },
+        {
+          "cell": 27,
+          "sourceBounds": [
+            94,
+            69,
+            158,
+            186
+          ],
+          "targetBounds": [
+            74,
+            69,
+            118,
+            150
+          ]
+        }
+      ],
+      "validation": {
+        "registrationMode": "neck-anchored",
+        "directions": [
+          "down",
+          "left",
+          "right",
+          "up"
+        ],
+        "framesPerDirection": 6,
+        "idleColumn": 6,
+        "alpha": true
+      },
+      "historicalStatus": "年代意境插画，不是个人经历或精确历史复原",
+      "cdn": "https://cdn.keepwork.com/keepwork/shared/era-clothes/ebfcb47e7e97b6c2/era-2020-female.webp"
+    }
+  }
+}

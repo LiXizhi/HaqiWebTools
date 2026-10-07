@@ -1,7 +1,7 @@
 import { el, button, createEntryIntro } from './view_adventure.js';
 import { tr, setText, fill } from './locale_runtime.js';
 import { SCHOOL_NAMES } from './adventure_core.js';
-import { MAX_ROLES } from './adventure_roles_core.js';
+import { MAX_ROLES_FREE, roleLimit } from './adventure_roles_core.js';
 import {heroPortrait} from './hero_renderer.js';
 import {drawSchoolIcon} from './card_renderer.js';
 
@@ -30,6 +30,11 @@ export function renderRoles(root, assets, model, cb) {
     const head = el('div', 'role-head', el('p', 'eyebrow', '重返魔法世界'), heading);
     if (cb.toggleDuo && model.catalog.roles.length < 2) head.append(el('p', 'role-duo-status', '双人模式至少需要两个不同角色，请先点击“新建角色”创建第二个角色。'));
     if (duo) {
+        const choices=el('div','gui-tabs');
+        for(const [value,label] of [['human','两位真人'],['ai','真人和 AI']]){
+            const choice=addButton(label,()=>cb.setDuoController?.(value));choice.setAttribute('aria-pressed',String((model.duoController||'human')===value));choices.append(choice);
+        }
+        head.append(choices);
         const status = el('p', 'role-duo-status');status.setAttribute('aria-live', 'polite');
         setText(status, '已确认 {count} / 2 · 两个角色确认后进入游戏', {count: duo.filter(Boolean).length});
         head.append(status);
@@ -62,7 +67,20 @@ export function renderRoles(root, assets, model, cb) {
         const recent = row.id === model.catalog.activeId;
         const level = el('span', '');setText(level, '等级 {level}', { level: s.level });
         const meta = el('p', 'role-meta', level, schoolIcon(s.school));
-        const description = el('div', 'role-description', el('h2', '', s.name), meta, recent && el('small', 'muted', '最近使用'));
+        const removeLabel = fill('删除角色 {name}', { name: s.name || '' }).text;
+        const remove = el('button', 'role-delete');
+        remove.type = 'button';
+        remove.setAttribute('aria-label', removeLabel);
+        remove.title = removeLabel;
+        remove.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M9 7V5h6v2"/><path d="M7 7l1 13h8l1-13"/></svg>';
+        remove.onclick = event => {
+            event.preventDefault();
+            event.stopPropagation();
+            const prompt = fill('确定删除角色 {name} 吗？', { name: s.name || '' }).text;
+            if (window.confirm(`${prompt}\n${tr('删除后无法撤销；云端角色的删除也会同步到账号。')}`)) cb.remove?.(row.id);
+        };
+        controls.push(remove);
+        const description = el('div', 'role-description', el('div', 'role-name-line', el('h2', '', s.name), remove), meta, recent && el('small', 'muted', '最近使用'));
         let action;
         const slot = duo ? duo.indexOf(row.id) : -1;
         if (duo) {
@@ -81,11 +99,16 @@ export function renderRoles(root, assets, model, cb) {
     }
     if (!model.catalog.roles.length) rows.append(el('p', 'muted', '还没有主角，创建你的第一段旅程。'));
     const foot = el('div', 'role-foot');
-    const countLine = el('p', 'muted role-count');setText(countLine, '已有 {count} / {total} 个主角', { count: model.catalog.roles.length, total: MAX_ROLES });
-    const create = addButton('新建角色', cb.create, 'primary');create.disabled = model.catalog.roles.length >= MAX_ROLES;
+    const limit = Number.isFinite(model.roleLimit) ? model.roleLimit : roleLimit(model.isVip === true);
+    const countLine = el('p', 'muted role-count');setText(countLine, '已有 {count} / {total} 个主角', { count: model.catalog.roles.length, total: limit });
+    const create = addButton('新建角色', cb.create, 'primary');create.disabled = model.catalog.roles.length >= limit;
     const createRow = el('div', 'role-create', create);
     if (!model.owner) createRow.append(addButton('登录 Keepwork 云端账号', cb.login, 'primary role-cloud-login'));
-    foot.append(countLine, createRow);
+    foot.append(countLine);
+    if (model.owner && limit <= MAX_ROLES_FREE && model.catalog.roles.length >= MAX_ROLES_FREE) {
+        foot.append(el('p', 'muted role-vip-hint', '开通会员可将主角名额提升到 20 个。'));
+    }
+    foot.append(createRow);
     if (model.owner) {
         const sync=addButton('保存角色到云端', cb.sync, 'text-button');sync.disabled=!!model.recovering;
         foot.append(el('div', 'role-actions', sync, addButton('刷新云端角色', cb.refresh, 'text-button'), addButton('退出 Keepwork', cb.logout, 'text-button')));

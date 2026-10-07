@@ -49,10 +49,12 @@
 .role-screen.entry-wizard .role-manager{padding:24px;max-height:min(700px,100%)}
 .role-head{padding-bottom:16px;border-bottom:1px solid #d6bf8366;margin-bottom:14px}
 .role-head>.eyebrow{color:#8c754b;letter-spacing:.14em;margin-bottom:5px}
-.role-head h2{margin:0 0 8px;letter-spacing:.06em;font-size:28px}
+.role-head h2{margin:0 0 14px;letter-spacing:.06em;font-size:28px}
 .role-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .role-heading>button{font-size:12px;min-height:40px;padding:8px 14px;margin-bottom:8px}
-.role-duo-status{font-size:12px;line-height:1.5;color:var(--muted);margin:0 0 8px}
+.role-head .gui-tabs{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+.role-head .gui-tabs>button{margin:0}
+.role-duo-status{font-size:12px;line-height:1.5;color:var(--muted);margin:0 0 10px}
 .role-player-tag{display:inline-block;font-size:11px;font-weight:700;line-height:1.6;padding:1px 7px;border-radius:5px;background:#244f3b;color:#fff8df}
 .role-player-tag.player-2{background:#34566c}
 .role-manager .role-card.duo-confirmed{border-color:#688b5c;background:#e7efe4}
@@ -63,7 +65,11 @@
 .role-manager .role-card.recent{background:linear-gradient(110deg,#dfebda,#f0f3e7);border-color:#7e9e76;box-shadow:inset 3px 0 #688b5c}
 .role-manager .role-description{display:flex;flex-direction:column;align-items:flex-start;gap:3px;min-width:0}
 .role-manager .role-description>.role-player-tag{max-width:100%;box-sizing:border-box;line-height:1.6}
-.role-manager .role-description h2{font-size:17px;letter-spacing:.03em;margin:0;line-height:1.5}
+.role-manager .role-name-line{display:flex;align-items:center;gap:8px;width:100%;min-width:0}
+.role-manager .role-description h2{font-size:17px;letter-spacing:.03em;margin:0;line-height:1.5;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.role-manager .role-card .role-delete{flex:none;width:18px;height:18px;min-height:18px;margin:0 0 0 auto;padding:0;background:transparent;color:#9a917c;opacity:.42}
+.role-manager .role-card .role-delete svg{display:block;width:13px;height:13px;margin:2px auto 0}
+@media(hover:hover){.role-manager .role-card .role-delete:hover,.role-manager .role-card .role-delete:focus-visible{opacity:1;color:#7a5648}}
 .role-manager .role-description p{font-size:12px;margin:0;line-height:1.5}
 .role-manager .role-description small{display:block;font-size:10px;line-height:1.4;color:#698061}
 .role-manager .role-card button{min-height:44px;padding:9px 14px;font-size:12px;white-space:nowrap;margin:0}

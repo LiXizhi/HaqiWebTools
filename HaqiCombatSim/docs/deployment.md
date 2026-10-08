@@ -50,7 +50,11 @@ npm run verify:release # 对当前dist重新核验，不上传
 
 ## 同步到 apps 和本机 Maisi
 
+2026-10-08 更新：正式托管入口只发布 `Haqi_v1.html`、官网（`HaqiOfficialWebsite_v1.html` 及兼容别名 `HaqiOfficialWebsite.html`）和 `HaqiPromo_v1.html`。下文旧版固定页数说明以此为准。同步与 Git 暂存均使用明确入口白名单，不枚举 `release/` 中的其他 HTML；旧模拟器、卡牌、特效和预览文件保留但不更新、不发布。宣传页依赖的 `HaqiPromoStage.html` 仍随构建进入 CDN，不另生成托管入口。CDN 代码与配置依赖仍完整上传并核验。
+
 同步工具为 `scripts/sync_keepwork_apps_release.mjs`。执行顺序为：CDN 核验通过 → apps 入口复制、提交及双远端推送 → Maisi 本地入口复制。apps 步骤失败时不会继续复制到 Maisi。
+
+2026-10-08 发布顺序补充：授权源码须先提交本地 HaqiWebTools 并推送、核验其 origin；生成入口须提交本地 apps/master 并推送、核验 origin/master，之后才发布 Keepwork 当前文件树快照。Keepwork 不需要主仓库完整历史，最终验证树相同而非提交哈希相同。`--isolated` 保留为兼容参数，不再创建镜像单边临时 worktree 或绕过 origin。未完成本地提交及 origin 推送时不得宣称完整发布。
 
 `upload`或`verify:release`远端核验成功并生成正式入口后，自动查找祖先目录下的 `maisi` checkout（例如 `lxzsrc/maisi`），优先使用 `MAISI_ROOT`。确认仓库Git标记及MagicHaqi入口存在后，将本次四个 `release/Haqi*_v1.html` 复制到 `<maisi>/maisi/maisi/webgames/MagicHaqi/release/`，更新同名文件并逐字节核验。其他文件保持原样；不复制美术、预览HTML或manifest，不替Maisi执行Git提交/推送。
 

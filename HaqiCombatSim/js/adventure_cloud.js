@@ -9,7 +9,7 @@ import { splitRoleSave, joinRoleSave, storageParts, stableJson, coreCatalogKey, 
 
 export const SDK_URL = typeof __HAQI_SDK_URL__ !== 'undefined'
     ? __HAQI_SDK_URL__
-    : 'https://cdn.keepwork.com/sdk/keepworkSDK.core.iife.js?v=6524b8f78261';
+    : 'https://cdn.keepwork.com/sdk/keepworkSDK.core.iife.js?v=75e8ab429ea1';
 let sdkLoading;
 class CloudError extends Error {}
 function timeout(promise, ms = 25000) {

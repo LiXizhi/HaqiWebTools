@@ -1,0 +1,26 @@
+{
+  "name": "淡紫团子",
+  "scope": "独立 Three.js 角色演示；单图风格化重建，不推断原游戏物种或骨骼",
+  "reference": {"size": [134, 129], "bodyBounds": [30, 34, 116, 119], "eyes": [[45, 74], [84, 79]], "mouth": [62, 88], "antennaTips": [[53, 24], [88, 11], [109, 37]], "hiddenSideConfidence": 0.3},
+  "coordinates": "Y up, face +Z; dimensions in arbitrary units",
+  "qualityContract": {
+    "requiredFeatures": ["连续梨形淡紫身体", "三根弯曲且不等长的触角", "深紫椭圆眼睛", "双层眼睛高光", "细线微笑", "贴合身体的浅色肚皮", "左右不规则浅色斑点", "连续圆润背面", "可选择及拆解部件"],
+    "views": ["front", "right", "rear", "left", "three-quarter"],
+    "blockers": ["触角数量错误", "眼睛脱离表面", "肚皮穿插", "背面空洞", "加载异常"],
+    "targetTriangles": 45000
+  },
+  "hierarchy": [
+    {"id": "body", "topologyClass": "continuous-sculpt", "geometry": "deformed sphere; rx .96, ry 1.0, rz .78; crown taper .13", "material": "lavender dielectric; roughness .52", "localFeatures": ["pear silhouette", "flattened lower pole"]},
+    {"id": "antenna-left", "topologyClass": "continuous-sculpt", "geometry": "variable-radius curve sweep; embedded root", "localFeatures": ["short outward leaf", "pointed tip"]},
+    {"id": "antenna-center", "topologyClass": "continuous-sculpt", "geometry": "variable-radius curve sweep; embedded root", "localFeatures": ["tall tilted stalk", "rounded bulb"]},
+    {"id": "antenna-right", "topologyClass": "continuous-sculpt", "geometry": "variable-radius curve sweep; embedded root", "localFeatures": ["sideways leaf"]},
+    {"id": "eye-left", "topologyClass": "assembled-solid", "geometry": "surface-normal oriented flattened ellipsoid", "localFeatures": ["plum outline", "violet lower crescent", "two white catchlights"]},
+    {"id": "eye-right", "topologyClass": "assembled-solid", "geometry": "surface-normal oriented flattened ellipsoid", "localFeatures": ["plum outline", "violet lower crescent", "two white catchlights"]},
+    {"id": "mouth", "topologyClass": "fiber-strand", "geometry": "smile curve sampled onto body surface", "localFeatures": ["upturned ends"]},
+    {"id": "belly", "topologyClass": "conforming-shell", "geometry": "radially tessellated ellipse on exact body surface", "localFeatures": ["pale lavender boundary"]},
+    {"id": "cheek-left", "topologyClass": "conforming-shell", "geometry": "small elliptical surface patches", "localFeatures": ["two irregular dots"]},
+    {"id": "cheek-right", "topologyClass": "conforming-shell", "geometry": "small elliptical surface patches", "localFeatures": ["two irregular dots"]}
+  ],
+  "projection": "Not applicable: small flat-color illustration; no photographic texture, pattern, or baked lighting is projected. Surface marks use conforming geometry.",
+  "limitations": ["背面和厚度为推断", "无原游戏骨骼、蒙皮或生产资源导出", "属于手工程序模型；不宣称通过 img2threejs 全套自动评分"]
+}

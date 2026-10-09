@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#f5f3ee"><title>淡紫团子 · 三维角色演示</title><link rel="icon" href="data:,"><link rel="stylesheet" href="./style.css"></head>
+<body>
+  <header><a href="../">角色实验室 <span>/ 三维演示</span></a><span class="badge">形态研究 001</span></header>
+  <main>
+    <section class="intro"><p class="eyebrow">一只小小的奇想</p><h1>淡紫团子<span>圆一点，再可爱一点。</span></h1><p class="description">把画里的小伙伴，放进可以转动的世界。</p></section>
+    <section class="viewer" aria-label="宠物三维预览">
+      <canvas id="scene" tabindex="0" aria-label="宠物三维模型，拖动或使用方向键旋转，滚轮或加减键缩放"></canvas>
+      <div id="loading" role="status">正在唤醒小团子…</div>
+      <div class="view-label"><span class="dot"></span><span id="view-name">正面 · 观察模式</span></div>
+      <div class="toolbar" aria-label="视角选择"><button data-view="front" class="active">正面</button><button data-view="side">侧面</button><button data-view="back">背面</button><button id="reset" aria-label="重置视角及显示设置">重置</button></div>
+      <div class="hint">拖动旋转 <span>·</span> 滚轮缩放 <span>·</span> 点击部件</div>
+    </section>
+    <aside>
+      <div class="card identity"><p class="eyebrow">关于这只小家伙</p><h2>软乎乎的淡紫色</h2><p>三根不对称的小触角，<br>藏着星光的深紫色眼睛，<br>还有一块奶白色的小肚皮。</p><div class="swatches" aria-label="角色配色"><i style="--swatch:#b5a0df"></i><i style="--swatch:#32123f"></i><i style="--swatch:#eee7fc"></i><span>参考图配色</span></div></div>
+      <div class="card controls"><p class="eyebrow">换个方式看一看</p><label><span>自动旋转</span><input id="rotate" type="checkbox" role="switch"></label><label><span>查看线框</span><input id="wireframe" type="checkbox" role="switch"></label><label class="slider-label" for="explode">部件拆解 <output id="explode-value">0%</output></label><input id="explode" type="range" min="0" max="100" value="0" aria-label="部件拆解程度"><p id="selection" aria-live="polite">点击模型，认识它的每个部件。</p></div>
+      <p class="note">根据单张参考图制作的风格化三维习作。背面与厚度为补全设计。</p>
+    </aside>
+  </main>
+  <footer><span>三维角色演示 / 仅供实验</span><span id="stats">程序化几何 · 实时光照</span></footer>
+  <script type="module">import('./demo.js').catch(error => { document.querySelector('#loading').textContent = '模型加载失败，请检查网络与 WebGL 支持后刷新。'; console.error(error); });</script>
+</body></html>

@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>哈奇岛 · 三维世界实验室</title><link rel="stylesheet" href="../css/world_lab.css"></head>
+<body>
+<canvas id="world" tabindex="0" aria-label="三维海岛：拖动旋转，滚轮缩放，方向键环绕，WASD 平移"></canvas>
+<div id="landmarks" aria-label="岛屿地标"></div>
+<header><a href="./HaqiCharacterLab.html">哈奇实验室</a><span class="separator">/</span><span>世界构建 · 002</span><span class="live">实时三维</span></header>
+<section class="title"><p>一座可以走近的幻想海岛</p><h1>哈奇岛</h1><div class="title-rule"></div><p class="subtitle">蓝顶城堡、森林与潮汐之间。</p></section>
+<aside class="panel">
+<div class="panel-heading"><span>探索视角</span><span class="small">岛屿研究</span></div>
+<nav aria-label="观察位置"><button data-view="overview" aria-pressed="true"><b>01</b> 全岛鸟瞰</button><button data-view="castle" aria-pressed="false"><b>02</b> 蓝顶城堡</button><button data-view="falls" aria-pressed="false"><b>03</b> 翡翠瀑布</button><button data-view="village" aria-pressed="false"><b>04</b> 暖阳村庄</button><button data-view="harbor" aria-pressed="false"><b>05</b> 风帆港湾</button></nav>
+<div class="divider"></div>
+<div class="row"><label for="light">光照</label><select id="light"><option value="day">晴日</option><option value="sunset">日落</option></select></div>
+<label class="row">水面与旗帜动画<input id="motion" type="checkbox" checked></label>
+<label class="row">地标标记<input id="labels" type="checkbox" checked></label>
+<label class="row">查看线框<input id="wire" type="checkbox"></label>
+<button id="tour" class="primary" aria-pressed="false">开始环岛巡游</button>
+<details><summary>技术信息</summary><p>Blender MCP 建模，自有网格导出，Three.js 实时渲染。风格化技术原型；无碰撞与任务系统。</p><p id="model-info">正在读取模型…</p><a href="../assets/world-lab/haqi-island.blend" download>下载 Blender 场景</a></details>
+</aside>
+<div id="loading" role="status"><span class="loading-dot"></span><strong>正在唤醒海岛</strong><span id="progress">连接三维渲染器…</span><button id="retry" hidden>重新加载</button></div>
+<footer><span class="controls">拖动旋转 · 滚轮缩放 · Shift 拖动平移</span><span id="status">模型准备中</span><button id="home">重置视角</button></footer>
+<script type="module" src="../js/world_lab.js"></script>
+</body></html>

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>哈奇 · 3D 角色工坊</title><link rel="stylesheet" href="../css/character_lab.css"></head>
+<body>
+<header><a href="../Haqi.html">魔法哈奇</a><span>角色研究室 / 001</span><span class="badge">3D 可换装原型</span></header>
+<main>
+<section class="stage" aria-label="三维角色预览">
+<div class="heading"><p>从绘本走进三维</p><h1>小小冒险家</h1><span>棕色碎发 · 蓝金制服 · 水晶护肩</span></div>
+<canvas id="viewport" aria-label="拖动旋转角色，滚轮缩放" tabindex="0"></canvas>
+<div id="loading" role="status">正在准备角色与灯光…</div>
+<div class="stage-bottom"><span>拖动旋转 · 滚轮缩放</span><div><button id="front">正面</button><button id="side">侧面</button><button id="back">背面</button></div></div>
+</section>
+<aside>
+<div class="intro"><span class="eyebrow">角色工坊</span><h2>让角色动起来</h2><p>同一个模型，自由换色与组合。旋转看看发型、服装和配饰的立体细节。</p></div>
+<fieldset><legend>01 / 动作</legend><div class="segmented"><button data-motion="idle" aria-pressed="true">待机</button><button data-motion="walk" aria-pressed="false">行走</button><button data-motion="pause" aria-pressed="false">暂停</button></div><label class="range">播放速度 <output id="speed-value">1.0×</output><input id="speed" type="range" min="0.25" max="2" step="0.05" value="1"></label></fieldset>
+<fieldset><legend>02 / 配色</legend><div class="colors"><label>发色<input type="color" id="hair-color" value="#573121"></label><label>制服<input type="color" id="coat-color" value="#205d82"></label><label>镶边<input type="color" id="gold-color" value="#c79648"></label></div><div class="presets"><button data-preset="classic">经典蓝金</button><button data-preset="forest">森林旅人</button><button data-preset="rose">蔷薇法师</button></div></fieldset>
+<fieldset><legend>03 / 部件与比例</legend><label class="toggle">旅行披风<input id="cape" type="checkbox" checked></label><label class="toggle">水晶护肩<input id="crystal" type="checkbox" checked></label><label class="range">头部比例 <output id="head-value">100%</output><input id="head-size" type="range" min="0.85" max="1.15" step="0.01" value="1"></label></fieldset>
+<fieldset><legend>04 / 观察</legend><label class="toggle">自动旋转<input id="rotate" type="checkbox"></label><label class="toggle">查看线框<input id="wire" type="checkbox"></label><button id="reset" class="reset">恢复初始角色</button></fieldset>
+<details><summary>原型说明与模型信息</summary><p>Blender 程序建模，关节层级动画。用于验证立体比例、材质换色与部件组合；尚非最终美术，也未使用蒙皮骨骼或布料模拟。</p><p id="stats"></p><a href="../assets/character-lab/hero.blend" download>下载 Blender 源文件</a></details>
+</aside>
+</main><footer>哈奇角色实验 · 独立预览，不修改冒险存档</footer>
+<script type="module" src="../js/character_lab.js"></script>
+</body></html>

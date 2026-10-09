@@ -8,7 +8,8 @@ import { prepareDebugEdit } from '../js/adventure_debug_core.js';
 const content=JSON.parse(fs.readFileSync(new URL('../data/adventure/chapter.json',import.meta.url)));
 content.worldMaps=Object.fromEntries(Object.entries(content.worldMapIndex.islands).map(([id,row])=>[id,JSON.parse(fs.readFileSync(new URL('../'+row.file,import.meta.url)))]));
 // Extended thresholds exercise all island recommendations without importing the pet catalogue.
-const c={...content,progression:{...content.progression,levelCap:50,xpThresholds:Array.from({length:50},(_,i)=>i*1000)}};
+const cap=Math.max(50,...ISLANDS.map(i=>i.recommendedLevel||0));
+const c={...content,progression:{...content.progression,levelCap:cap,xpThresholds:Array.from({length:cap},(_,i)=>i*1000)}};
 function hero(level){const s=createAdventure(c,{school:'fire',seed:530});s.xp=(level-1)*1000;syncProgression(s,c);return s;}
 test('each island permits low-level travel and saves, requesting confirmation only below its recommended level',()=>{
     for(const island of ISLANDS){

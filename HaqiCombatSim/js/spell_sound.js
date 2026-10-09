@@ -3,9 +3,9 @@ import {spellSoundCues,crossedSoundCues} from './spell_sound_core.js';
 import {gameSoundRecipe} from './game_sound_core.js';
 import {audioActivityActive,subscribeAudioActivity} from './audio_activity.js';
 const KEY='haqi.spell-sound.v1',VOLUME_KEY='haqi.game-sound.volume.v1';
-export function createSpellSound({defaultEnabled=false,contextFactory=()=>new (globalThis.AudioContext||globalThis.webkitAudioContext)(),now=()=>globalThis.performance.now()}={}) {
+export function createSpellSound({defaultEnabled=false,persistPreferences=true,contextFactory=()=>new (globalThis.AudioContext||globalThis.webkitAudioContext)(),now=()=>globalThis.performance.now()}={}) {
     let enabled=defaultEnabled,volume=.3,context,master,noise,previous=null,lastKey='',unlocked=false,disposed=false;
-    try{const stored=localStorage.getItem(KEY);if(stored!==null)enabled=stored==='on';const value=localStorage.getItem(VOLUME_KEY);if(value!==null&&Number.isFinite(Number(value)))volume=Math.max(0,Math.min(1,Number(value)));}catch{}
+    try{const stored=persistPreferences?localStorage.getItem(KEY):null;if(stored!==null)enabled=stored==='on';const value=persistPreferences?localStorage.getItem(VOLUME_KEY):null;if(value!==null&&Number.isFinite(Number(value)))volume=Math.max(0,Math.min(1,Number(value)));}catch{}
     const groups=new Set(),lastPlayed=new Map(),tokens=new Set();
     const muted=()=>tokens.size>0||audioActivityActive();
     function remove(group){for(const voice of [...group.voices]){try{voice.source.stop();}catch{}voice.cleanup();}groups.delete(group);}
@@ -57,9 +57,10 @@ export function createSpellSound({defaultEnabled=false,contextFactory=()=>new (g
         previous=progress;
     }
     return {get enabled(){return enabled;},get volume(){return volume;},unlock,track,play,stop,stopCast,
-        setVolume(value){if(!Number.isFinite(Number(value)))return;volume=Math.max(0,Math.min(1,Number(value)));if(master){if(master.gain.setTargetAtTime)master.gain.setTargetAtTime(volume,context.currentTime,.015);else master.gain.setValueAtTime(volume,context.currentTime);}if(!volume)stop();try{localStorage.setItem(VOLUME_KEY,String(volume));}catch{}},
+        configure(settings){enabled=!!settings.sound;this.setVolume(settings.volume);if(!enabled)stop();},
+        setVolume(value){if(!Number.isFinite(Number(value)))return;volume=Math.max(0,Math.min(1,Number(value)));if(master){if(master.gain.setTargetAtTime)master.gain.setTargetAtTime(volume,context.currentTime,.015);else master.gain.setValueAtTime(volume,context.currentTime);}if(!volume)stop();try{if(persistPreferences)localStorage.setItem(VOLUME_KEY,String(volume));}catch{}},
         acquireMute(){const token={};tokens.add(token);stop();return ()=>tokens.delete(token);},
-        async setEnabled(value){enabled=!!value;try{localStorage.setItem(KEY,enabled?'on':'off');}catch{}if(!enabled){stop();return false;}return unlock();},
+        async setEnabled(value){enabled=!!value;try{if(persistPreferences)localStorage.setItem(KEY,enabled?'on':'off');}catch{}if(!enabled){stop();return false;}return unlock();},
         async dispose(){disposed=true;unsubscribe();stop();await context?.close();context=null;unlocked=false;}
     };
 }

@@ -1,10 +1,11 @@
+import {fill} from './locale_runtime.js';
 import {createCloseButton} from './view_adventure_controls.js';
 import { islandName } from './adventure_world_map_core.js';
 import { el, button } from './view_adventure.js';
 import { SCHOOL_NAMES } from './adventure_core.js';
 function progressCard(save, label) {
     return el('article', 'cloud-progress', el('p', 'eyebrow', label), save
-        ? el('div', '', el('h3', '', save.name), el('p', '', `${SCHOOL_NAMES[save.school]} · 等级 ${save.level} · 已完成 ${Object.values(save.quests).filter(q => q.claimed).length} 个任务`), el('small', 'muted', `${islandName(save.zone)}${save.pendingEncounter ? ' · 战斗中（恢复已保存的回合）' : ''}`))
+        ? el('div', '', el('h3', '', save.name), el('p', '', fill(`{v0} · 等级 {v1} · 已完成 {v2} 个任务`,{v0:String(SCHOOL_NAMES[save.school]),v1:String(save.level),v2:String(Object.values(save.quests).filter(q => q.claimed).length)}).text), el('small', 'muted', `${islandName(save.zone)}${save.pendingEncounter ? ' · 战斗中（恢复已保存的回合）' : ''}`))
         : el('p', 'muted', '还没有本地冒险记录'));
 }
 function readableDate(value) { const date = new Date(value);return Number.isFinite(+date) ? date.toLocaleString('zh-CN', { hour12: false }) : '未知时间'; }
@@ -15,7 +16,7 @@ export function renderCloud(root, state, callbacks) {
     const body = el('div', 'modal-body');
     box.append(el('header', 'modal-header', el('div', '', el('p', 'eyebrow', '在另一台设备，接着冒险'), el('h2', '', '云端旅途')), close), body);root.append(box);
     body.append(el('p', 'muted', '本地进度照常自动保存。手动保存到 Keepwork 后，可在其他设备登录同一账号、选择记录继续。每次保存都会新增一条记录。'), progressCard(state.local, '当前本地进度'));
-    if (state.localUpdatedAt) body.append(el('p', 'muted cloud-time', `本地保存：${readableDate(state.localUpdatedAt)}`));
+    if (state.localUpdatedAt) body.append(el('p', 'muted cloud-time', fill(`本地保存：{v0}`,{v0:String(readableDate(state.localUpdatedAt))}).text));
     const account = el('div', 'cloud-actions', el('span', '', state.owner ? `Keepwork · ${state.owner}` : '尚未登录 Keepwork'), button(state.owner ? '重新读取角色' : '登录 Keepwork', callbacks.connect, 'secondary'));
     account.append(button('切换账号', callbacks.switchAccount, 'secondary'), button('退出登录', callbacks.logout, 'secondary'));
     body.append(account);
@@ -25,7 +26,7 @@ export function renderCloud(root, state, callbacks) {
     }
     const status = el('p', state.error ? 'error-text cloud-status' : 'muted cloud-status', state.busy || state.error || state.message || '连接后可查看云端记录。');status.setAttribute('role', state.error ? 'alert' : 'status');body.append(status);
     if (state.preview) {
-        const preview = el('section', 'cloud-preview', progressCard(state.preview.save, '即将恢复的云端进度'), el('p', 'muted', `保存时间：${readableDate(state.preview.snapshot.updatedAt)}`), el('p', '', '恢复会替换当前旅程。替换前会在此浏览器保留一份本地备份，可在这里恢复。'), el('div', 'cloud-actions', button('确认恢复这份进度', callbacks.restore, 'primary'), button('取消恢复', callbacks.cancelPreview, 'secondary')));
+        const preview = el('section', 'cloud-preview', progressCard(state.preview.save, '即将恢复的云端进度'), el('p', 'muted', fill(`保存时间：{v0}`,{v0:String(readableDate(state.preview.snapshot.updatedAt))}).text), el('p', '', '恢复会替换当前旅程。替换前会在此浏览器保留一份本地备份，可在这里恢复。'), el('div', 'cloud-actions', button('确认恢复这份进度', callbacks.restore, 'primary'), button('取消恢复', callbacks.cancelPreview, 'secondary')));
         body.append(preview);
     }
     if (state.paths.length) {

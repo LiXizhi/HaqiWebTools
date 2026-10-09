@@ -19,7 +19,7 @@ function absorbReward(target,event){
         else target.items.push({...item});
     }
 }
-export function createRewardFeedback(root,{describe,activate}) {
+export function createRewardFeedback(root,{describe,activate,showBanner=true}) {
     const queue=[];let active=null,shown=null,started=0,lastTick=null;
     const banner=document.createElement('div');banner.className='reward-banner';banner.setAttribute('role','status');
     const popup=document.createElement('section');popup.className='reward-popup';popup.hidden=true;popup.setAttribute('aria-label',tr('新获得的物品'));
@@ -84,7 +84,7 @@ export function createRewardFeedback(root,{describe,activate}) {
                 banner.classList.remove('reward-enter');void banner.offsetWidth;banner.classList.add('reward-enter');paint();
             }
             const elapsed=now-started;
-            banner.hidden=!active||elapsed>HOLD_MS;
+            banner.hidden=!showBanner||!active||elapsed>HOLD_MS;
             if(!active)return null;
             const effect=elapsed<HOLD_MS?{...active,elapsed}:null;
             if(!active.items.length&&elapsed>HOLD_MS)dismiss();

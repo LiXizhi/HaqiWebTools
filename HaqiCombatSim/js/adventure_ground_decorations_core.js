@@ -1,7 +1,7 @@
 import { createRng, hashSeed } from './rng_core.js';
 import { onLargeIsland, regionAt, segmentDistance } from './adventure_island_layout_core.js';
 
-// Visual placement only; independent of gameplay RNG, collision and saved data.
+// Deterministic baked-art placement, also read by gathering; independent of gameplay RNG.
 const meadow=['meadow/grass','meadow/wildGrass','meadow/clover','meadow/daisies','meadow/buttercups','meadow/blueFlowers','meadow/pinkFlowers','meadow/mixedMeadow','meadow/grassStone'];
 const woodland=['meadow/fern','meadow/moss','meadow/greenLeaves','meadow/redMushrooms','meadow/paleMushrooms','stones/branch','stones/log','stones/roots','stones/pinecones','stones/mossRocks'];
 const dry=['stones/sandPebbles','stones/sandstone','stones/dryGrass','stones/sandRipples','meadow/amberLeaves','stones/leafPile'];
@@ -13,12 +13,14 @@ const pools={grass:meadow,town:meadow,park:meadow,farm:meadow,lake:meadow,oasis:
     dark:['stones/greyPebbles','stones/branch','stones/lichenStone','meadow/paleMushrooms'],marsh:bank};
 const cell=112,padding=80;
 
-export function groundDecorations(world,rect){
+export function groundDecorations(world,rect){const iterator=groundDecorationSteps(world,rect);let step;do{step=iterator.next();}while(!step.done);return step.value;}
+export function* groundDecorationSteps(world,rect){
     const l=world.layout;
-    if(!l||l.route)return [];
+    if(!l)return [];
     const result=[];
     for(let gy=Math.floor((rect.y-padding)/cell);gy<=Math.floor((rect.y+rect.h+padding)/cell);gy++){
         for(let gx=Math.floor((rect.x-padding)/cell);gx<=Math.floor((rect.x+rect.w+padding)/cell);gx++){
+            yield;
             const rng=createRng(hashSeed(`${world.zone}:${gx}:${gy}:ground-deco-v1`));
             if(rng.float()>.72)continue;
             const p={x:gx*cell+16+rng.float()*(cell-32),y:gy*cell+16+rng.float()*(cell-32)};
@@ -58,7 +60,7 @@ export function groundDecorations(world,rect){
             }
             if(blocked)continue;
             const [atlas,frame]=rng.pick(pool).split('/');
-            result.push({...p,size,atlas,frame,flip:rng.int(0,1)===1});
+            result.push({...p,id:`${world.zone}:ground:${gx}:${gy}`,size,atlas,frame,flip:rng.int(0,1)===1});
         }
     }
     return result.sort((a,b)=>a.y-b.y||a.x-b.x);

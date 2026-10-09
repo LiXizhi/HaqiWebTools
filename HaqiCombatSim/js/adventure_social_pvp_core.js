@@ -1,12 +1,13 @@
+import {restoreRedMushroom} from './adventure_red_mushroom_core.js';
 import {createArena,startCombat,playTurn,castableCards,validTargets} from './combat_arena_core.js';
 import {defaultParams,resolveParams} from './combat_params_core.js';
 import {SimpleBot} from './combat_policy_core.js';
 import {ReasoningBot} from './battle_ai/policy_core.js';
 import {BattleReviewSession} from './battle_ai/session_core.js';
 import {socialDataHash,snapshotUnit,utcDay,utcWeek} from './adventure_social_core.js';
-export function startSocialPvp(dataset,player,opponent,seed,{version=2}={}){
-    const replay={version,dataHash:socialDataHash(dataset),seed,player:structuredClone(player),opponent:structuredClone(opponent),actions:[]};
-    const arena=createArena({resolved:resolveParams(dataset,defaultParams('kids')),near:[{...player,id:'hero'}],far:[snapshotUnit(opponent,dataset,'rival',0)],seed,firstSide:'near'});startCombat(arena);return {arena,replay,reviewSession:new BattleReviewSession()};
+export function startSocialPvp(dataset,player,opponent,seed,{version=2,specialCardRulesVersion=1}={}){
+    const replay={version,specialCardRulesVersion,dataHash:socialDataHash(dataset),seed,player:structuredClone(player),opponent:structuredClone(opponent),actions:[]};
+    const arena=createArena({resolved:resolveParams(dataset,defaultParams('kids')),near:[{...player,id:'hero'}],far:[snapshotUnit(opponent,dataset,'rival',0)],seed,firstSide:'near',specialCardRulesVersion});startCombat(arena);return {arena,replay,reviewSession:new BattleReviewSession()};
 }
 export function playSocialPvp(state,decision){
     const a=state.arena;if(a.finished||a.currentSide!=='near')throw Error('当前不能出牌');
@@ -24,8 +25,9 @@ export function playSocialPvp(state,decision){
     return state;
 }
 export function restoreSocialPvp(dataset,replay){
+    if(replay?.version===3)return restoreRedMushroom(dataset,replay);
     if(![1,2].includes(replay?.version)||replay.dataHash!==socialDataHash(dataset)||!Array.isArray(replay.actions)||replay.actions.length>200)throw Error('赛场战报版本不兼容');
-    const state=startSocialPvp(dataset,replay.player,replay.opponent,replay.seed,{version:replay.version});state.restoring=true;for(const action of replay.actions)playSocialPvp(state,action);state.restoring=false;return state;
+    const state=startSocialPvp(dataset,replay.player,replay.opponent,replay.seed,{version:replay.version,specialCardRulesVersion:replay.specialCardRulesVersion??0});state.restoring=true;for(const action of replay.actions)playSocialPvp(state,action);state.restoring=false;return state;
 }
 export function recordPvpWin(records,state,now){
     if(!state.arena.finished||state.arena.winner!=='near'||state.replay.opponent.kind!=='account')return records;

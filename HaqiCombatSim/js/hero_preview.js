@@ -87,7 +87,7 @@ try{
  bodyVariants=manifest.bodyVariants||{};
  renderer=new HeroRenderer(manifest,catalog,{local});
  function bodyStyles(){const gender=$('gender').value;$('body-style').replaceChildren();for(const variant of [{id:gender,name:'经典蓝金'},...Object.values(bodyVariants).filter(v=>v.gender===gender)]){const o=document.createElement('option');o.value=variant.id;o.textContent=variant.name;$('body-style').append(o);}}
- const selected=new URLSearchParams(location.search).get('body')||'male2';if(selected.startsWith('female'))$('gender').value='female';bodyStyles();$('body-style').value=bodyVariants[selected]?selected:$('gender').value;
+ const selected=new URLSearchParams(location.search).get('body')||'male2';if(bodyVariants[selected]?.gender==='female'||selected==='female')$('gender').value='female';bodyStyles();$('body-style').value=bodyVariants[selected]?selected:$('gender').value;
  function styles(){const select=$('head-style');select.replaceChildren();for(const [id,h] of Object.entries(manifest.heads).filter(([,h])=>h.gender===$('gender').value)){const o=document.createElement('option');o.value=id;o.textContent=h.name;select.append(o);}}
  styles();$('gender').onchange=()=>{styles();bodyStyles();select();};$('head-style').onchange=select;
  for(const mount of catalog.mounts.filter(m=>m.rideable)){const option=document.createElement('option');option.value=mount.id;option.textContent=mount.name;$('mount').append(option);}

@@ -36,6 +36,7 @@ for line in decode('Database/extendedcost.db.mem').splitlines():
 
 islands = dict(camp='NewUserIsland', town='61HaqiTown', fire='FlamingPhoenixIsland',
                ice='FrostRoarIsland', desert='AncientEgyptIsland', dark='DarkForestIsland')
+voice_profiles = json.loads((APP / 'data/adventure/npc-voice-profiles.json').read_text(encoding='utf-8'))['characters']
 npcs = []
 for zone, name in islands.items():
     source = f'config/Aries/WorldData/{name}.NPC.xml'
@@ -50,6 +51,9 @@ for zone, name in islands.items():
             attributes=dict(e.attrib), enabled=(e.findtext('item_ex/enabled') or '').strip(),
             buttons=buttons, gossip=[dict(w.attrib) for w in e.findall('gossip/hello/word')],
             sourceXml=ET.tostring(e, encoding='unicode')))
+
+for npc in npcs:
+    npc.update(voice_profiles[npc['name']])
 
 ns = {'s':'urn:schemas-microsoft-com:office:spreadsheet'}
 shops = []

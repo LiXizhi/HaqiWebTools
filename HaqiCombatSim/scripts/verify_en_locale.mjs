@@ -37,7 +37,7 @@ async function clickButton(page, name) {
     await button.click();
 }
 
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({ headless: true, ...(process.env.HAQI_BROWSER_CHANNEL ? {channel:process.env.HAQI_BROWSER_CHANNEL} : {}) });
 const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
 const errors = [];
 page.on('pageerror', error => errors.push(error.message));

@@ -5,18 +5,19 @@ import {createHash} from 'node:crypto';
 import {createWorld,sceneActors,walkable,clearSegment,findPath,nearestInteraction} from '../js/adventure_world_core.js';
 import {installNpcCatalog} from '../js/adventure_npc_core.js';
 import {onLargeIsland,sceneryCoversActor,segmentDistance,separateBuilding} from '../js/adventure_island_layout_core.js';
+import {PACK_ISLANDS} from '../js/island_pack_registry_core.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url)));
 const content=read('data/adventure/chapter.json');content.worldMaps={};
 for(const z of ['camp','town','fire','ice','desert','dark'])content.worldMaps[z]=read('data/adventure/maps/'+z+'.json');
-test('五岛建筑图集大小、来源、哈希与裁剪范围有效',()=>{
+test('既有岛屿与扩展建筑图集大小、来源、哈希与裁剪范围有效',()=>{
     const manifest=read('data/adventure/building-art.json');
-    assert.equal(Object.keys(manifest.atlases).length,5);
-    for(const row of Object.values(manifest.atlases)){
+    assert.equal(Object.keys(manifest.atlases).length,5+PACK_ISLANDS.length);
+    for(const [id,row] of Object.entries(manifest.atlases)){
         const bytes=fs.readFileSync(new URL('../'+row.local,import.meta.url));
         assert.equal(bytes.length,row.size);assert.ok(row.size<=200000);
         assert.equal(createHash('sha256').update(bytes).digest('hex'),row.sha256);
         assert.ok(row.cdn.startsWith('https://cdn.keepwork.com/'));
-        assert.equal(Object.keys(row.frames).length,4);
+        assert.equal(Object.keys(row.frames).length,PACK_ISLANDS.some(i=>i.id===id)?3:4);
         for(const {rect:[x,y,w,h]} of Object.values(row.frames))assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=row.width&&y+h<=row.height);
     }
 });

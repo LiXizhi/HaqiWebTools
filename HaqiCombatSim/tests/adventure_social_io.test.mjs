@@ -1,3 +1,4 @@
+import {directCacheStore} from './helpers/direct_cache_store.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createSocialClient} from '../js/adventure_social.js';
@@ -54,4 +55,25 @@ test('unverified mail never calls service; negative acknowledgements never clear
     await assert.rejects(h.client.sendMail({userId:'2'},'问候','你好'),/未发送成功/);assert.deepEqual(h.client.state.interactions,{});
     await h.client.refresh({friends:true});h.sdk.socialFriends.setMailRead=async()=>({success:false});
     await assert.rejects(h.client.readMail(10),/未确认/);assert.equal(h.client.state.mailUnread,3);
+});
+
+
+test('public profile PUT waits for acknowledgement without a readback',async()=>{
+    const h=harness(),calls=[];
+    const store=directCacheStore({getRemotePagePath:path=>`alice/workspace/${path}`},h.sdk);h.sdk.personalPageStore={withWorkspace:()=>store};
+    h.sdk.getFileByFullPath=async()=>{throw Error('unexpected readback');};
+    h.sdk.editFileByFullPath=async(...args)=>{calls.push(args);return {success:true};};
+    const profile={username:'alice',userId:'1',name:'玩家'};
+    assert.deepEqual(await h.client.publish(profile),profile);
+    assert.deepEqual(calls,[['alice/workspace/social/public.json',JSON.stringify(profile),undefined,true]]);
+    h.sdk.editFileByFullPath=async()=>({success:false});await assert.rejects(h.client.publish({...profile,name:'改名'}),/确认写入/);
+});
+
+
+test('public profiles share inflight reads and reuse memory until explicitly refreshed',async()=>{
+    const h=harness();let reads=0;
+    h.sdk.personalPageStore={withWorkspace:()=>({getRemotePagePath:p=>`alice/workspace/${p}`})};
+    h.sdk.getFileByFullPath=async()=>{reads++;return JSON.stringify({version:1,userId:2,username:'bob',name:'小波',school:'fire',level:1,appearance:'boy',native:'en',target:'zh',visible:true});};
+    const [a,b]=await Promise.all([h.client.publicRead('bob'),h.client.publicRead('bob')]);assert.equal(reads,1);assert.deepEqual(a,b);
+    await h.client.publicRead('bob');assert.equal(reads,1);h.client.clearProfiles();await h.client.publicRead('bob');assert.equal(reads,2);
 });

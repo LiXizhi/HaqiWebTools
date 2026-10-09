@@ -25,7 +25,21 @@ export function translatedGoal(goal) {
     const name = tr(goal.name || '');
     const pattern = goal.kind === 'kill' ? '击败{name}' : goal.kind === 'loot' ? '收集{name}' : goal.kind === 'talk' ? '与{name}交谈' : '{name}';
     const text = tr(pattern).replaceAll('{name}', name);
-    return goal.blocked ? `${text}（${tr(goal.blockReason || '')}）` : text;
+    return goal.blocked ? fill('{goal}（{reason}）',{goal:text,reason:translatedQuestMessage(goal.blockReason || '')}).text : text;
+}
+// Core messages remain Chinese; translate their structured numeric/name parts at display time.
+export function translatedQuestMessage(source) {
+    for(const [expression,pattern,slot] of [
+        [/^需要等级 (\d+)$/,'需要等级 {level}','level'],
+        [/^需要魔法战斗力 (\d+)$/,'需要魔法战斗力 {power}','power'],
+        [/^条件 (\d+) 尚未接入$/,'条件 {id} 尚未接入','id'],
+        [/^条件不足：(\d+)$/,'条件不足：{id}','id'],
+        [/^(.+)需要原服功能，单人冒险无法推进$/,'{name}需要原服功能，单人冒险无法推进','name']
+    ]){
+        const match=String(source).match(expression);
+        if(match)return fill(pattern,{[slot]:match[1]}).text;
+    }
+    return tr(source);
 }
 export function renderQuestJournal(body,model,cb,ui) {
     const {el,button,objectiveLabel}=ui;
@@ -33,7 +47,7 @@ export function renderQuestJournal(body,model,cb,ui) {
         if(!globalThis.confirm(fill('确定放弃「{title}」吗？进度会清除，之后可以重新接取。',{title:quest.title}).text))return;
         cb.action({type:'abandon-quest',questId:quest.id});
     },'secondary');
-    const untrackButton=quest=>trackedQuestIds(save).includes(quest.id)?button('取消追踪',()=>cb.action({type:'track-catalog',questId:quest.id,remove:true}),'secondary'):null;
+    const untrackButton=quest=>trackedQuestIds(save,c).includes(quest.id)?button('取消追踪',()=>cb.action({type:'track-catalog',questId:quest.id,remove:true}),'secondary'):null;
     const {save,assets}=model,c=assets.content,current=currentQuest(save,c);
     const requestedId=model.pinJournalQuest?Number(model.selectedQuestId)||null:null;
     const inspector=new ItemDetails(body,model,ui);
@@ -44,14 +58,22 @@ export function renderQuestJournal(body,model,cb,ui) {
     let rows=c.quests.map(q=>({...q,region:'camp'})),selectedId=model.selectedQuestId||current?.id||rows[0]?.id,page=0;
     const pageSize=20,filters={region:defaultJournalRegion(save),status:''};
     let locate=true;
-    const list=el('nav','journal-directory');list.setAttribute('aria-label','全岛任务');
+    const list=el('nav','journal-directory');list.setAttribute('aria-label',tr('全岛任务'));
     const detail=el('article','journal-detail');detail.id='journal-detail';
+    function pinFooter(){
+        const footer=[...detail.children].find(node=>node.classList.contains('journal-footer'));
+        const body=el('div','journal-detail-body');
+        for(const node of [...detail.childNodes]) if(node!==footer) body.append(node);
+        detail.replaceChildren(body);
+        if(footer) detail.append(footer);
+        body.scrollTop=0;
+    }
     const counter=el('span','');
     const pager=el('div','journal-pagination');
     const sidebar=el('aside','journal-sidebar',el('div','journal-chapter',el('strong','','任务清单'),counter),list,pager);
     const toolbar=el('div','journal-filters');
-    function dropdown(name,values,onchange){const control=el('select','');control.setAttribute('aria-label',name);for(const [value,label] of values){const option=el('option','',label);option.value=value;control.append(option);}control.addEventListener('change',()=>onchange(control.value));return control;}
-    const region=dropdown('任务所在岛屿',[['','全部地区'],...['camp','town','fire','ice','desert','dark','21','22'].map(key=>[key,QUEST_REGIONS[key]])],value=>{filters.region=value;page=0;locate=false;renderList();});
+    function dropdown(name,values,onchange){const control=el('select','');control.setAttribute('aria-label',tr(name));for(const [value,label] of values){const option=el('option','',label);option.value=value;control.append(option);}control.addEventListener('change',()=>onchange(control.value));return control;}
+    const region=dropdown('任务所在岛屿',[['','全部地区'],...Object.entries(QUEST_REGIONS)],value=>{filters.region=value;page=0;locate=false;renderList();});
     const status=dropdown('任务状态',[['','全部状态'],...['可接取','进行中','可交付','已完成','未开启','无法推进','尚未开放'].map(v=>[v,v])],value=>{filters.status=value;page=0;locate=false;renderList();});
     region.value=filters.region;
     toolbar.append(region,status);
@@ -89,7 +111,7 @@ export function renderQuestJournal(body,model,cb,ui) {
             if(state.accepted)footer.append(abandonQuestButton(q));
         }
         else footer.append(el('p','',state.claimed?'任务已完成，奖励已领取。':'完成前置任务后开启。'));
-        detail.append(footer);detail.scrollTop=0;
+        detail.append(footer);pinFooter();
     }
     function highlight(id){for(const [qid,b] of entries){b.classList.toggle('selected',qid===id);if(qid===id)b.setAttribute('aria-current','true');else b.removeAttribute('aria-current');}}
     function selectCatalog(q){
@@ -101,7 +123,8 @@ export function renderQuestJournal(body,model,cb,ui) {
         if(!runtime)detail.append(el('p','journal-unavailable','全岛任务数据还没有载入，目前可以查看任务内容。'));
         else {
             const rowsNow=catalogGoalRows(save,c,runtime,stats());
-            const block=catalogAcceptBlock(save,c,runtime,stats());
+            const block=translatedQuestMessage(catalogAcceptBlock(save,c,runtime,stats()));
+            if(rowsNow.some(g=>g.kind==='custom'&&[20046,20048,52212].includes(g.id)))detail.append(button('前往红蘑菇赛场',()=>cb.panel('social-pvp'),'primary'),el('p','muted','网页赛场任务积分：胜利 +25，平局 +10；完成2对2计一次参赛。'));
             detail.append(section('任务目标',...(rowsNow.length?rowsNow.map(g=>el('div',`journal-objective ${g.value>=g.count?'complete':''}`,el('span','',translatedGoal(g)),el('strong','',`${g.value} / ${g.count}`))):[el('p','','与任务居民交谈后即可交付。')])));
             detail.append(el('div','journal-contacts',el('p','',el('span','','任务接取'),q.startNpc),el('p','',el('span','','任务交付'),q.endNpc)));
             if(q.prerequisites.length)detail.append(section('前置任务',...q.prerequisites.map(p=>{
@@ -123,17 +146,17 @@ export function renderQuestJournal(body,model,cb,ui) {
             if(accepted)footer.append(abandonQuestButton(q));
             else if(state==='已完成')footer.append(el('p','','任务已完成，奖励已领取。'));
             else if(!footer.childElementCount)footer.append(el('p','',block||'这个目标依赖尚未接入的原服功能。'));
-            detail.append(footer);detail.scrollTop=0;return;
+            detail.append(footer);pinFooter();return;
         }
-        detail.append(section('任务目标',...(q.objectives.length?q.objectives.map(g=>el('div','journal-objective',el('span','',`${g.type==='ClientDialogNPC'?'交谈：':''}${g.name}`),el('strong','',`× ${g.count}`))):[el('p','','与任务居民交谈。')])));
+        detail.append(section('任务目标',...(q.objectives.length?q.objectives.map(g=>el('div','journal-objective',el('span','',g.type==='ClientDialogNPC'?fill('交谈：{name}',{name:g.name}).text:tr(g.name)),el('strong','',`× ${g.count}`))):[el('p','','与任务居民交谈。')])));
         detail.append(el('div','journal-contacts',el('p','',el('span','','任务接取'),q.startNpc),el('p','',el('span','','任务交付'),q.endNpc)));
         if(q.prerequisites.length)detail.append(section('前置任务',...q.prerequisites.map(p=>{
             const target=rows.find(r=>r.id===p.id);if(!target)return el('p','',p.title);
             return button(p.title,()=>{filters.region=target.region;filters.status='';region.value=target.region;status.value='';selectedId=target.id;page=Math.floor(filterJournalQuests(rows,filters,save,c).findIndex(q=>q.id===target.id)/pageSize);renderList();},'journal-prerequisite');
         })));
-        if(q.requirements.length||q.validDate)detail.append(section('原版接取条件',...q.requirements.map(r=>el('p','',`${r.name}：${r.min||'0'}${r.max&&r.max!=='-1'?` ～ ${r.max}`:''}`)),...(q.validDate?[el('p','',q.validDate)]:[])));
+        if(q.requirements.length||q.validDate)detail.append(section('原版接取条件',...q.requirements.map(r=>el('p','',fill(r.max&&r.max!=='-1'?'{name}：{min} ～ {max}':'{name}：{min}',{name:r.name,min:r.min||'0',max:r.max}).text)),...(q.validDate?[el('p','',q.validDate)]:[])));
         detail.append(section('任务奖励',...(q.rewards.length?q.rewards.map(group=>el('div','journal-reward-group',rewardGroupCaption(group,el),el('div','journal-rewards',...group.items.map(r=>{const item=c.items[r.id];if(!item||r.id===113)return rewardChip(c,r,{el,className:'journal-reward'});const inspect=rewardChip(c,r,{el,button,onClick:()=>inspector.show(item,{trigger:inspect,source:q.title}),className:'journal-reward item-inspect-button'});inspect.setAttribute('aria-haspopup','dialog');inspect.setAttribute('aria-label',fill('查看{name}详情',{name:item.name}).text);return inspect;})))):[el('p','','无物品奖励')])));
-        detail.append(el('footer','journal-footer',el('p','',`任务编号 ${q.id} · 开放后可接取`)));detail.scrollTop=0;
+        detail.append(el('footer','journal-footer',el('p','',fill('任务编号 {id} · 开放后可接取',{id:q.id}).text)));pinFooter();
     }
     function renderList(){
         if(locate){

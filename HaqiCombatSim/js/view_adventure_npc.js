@@ -1,4 +1,4 @@
-import {npcOffers,npcOfferStatus} from './adventure_npc_core.js';
+import {formatNpcCosts,npcOffers,npcOfferStatus,npcPurchaseBounds} from './adventure_npc_core.js';
 import {trainingPoints} from './adventure_learning_core.js';
 import {drawSchoolIcon} from './card_renderer.js';
 import {ItemDetails} from './view_adventure_item_details.js';
@@ -37,7 +37,8 @@ function moneyLine(el,tag,cls,text){
 export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
     const {content,dataset}=model.assets,npc=model.serviceNpc;
     if(!npc)return;
-    const offerStatus=row=>npcOfferStatus(model.save,content,row,{keepworkVip:model.membership?.isVip,expiresAt:model.membership?.expiresAt,now:model.now});
+    const access={keepworkVip:model.membership?.isVip,expiresAt:model.membership?.expiresAt,now:model.now};
+    const offerStatus=row=>npcOfferStatus(model.save,content,row,access);
     const inspector=new ItemDetails(body,model,{el,spellFace});
     const modal=body.closest('.modal'),header=modal.querySelector('.modal-header');
     modal.classList.add('npc-services-modal');
@@ -102,7 +103,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
     };
     const offerName=row=>{
         const item=content.items[row.itemId],card=offerCard(row);
-        return item?.name||row.name||card?.name||`物品 ${row.itemId}`;
+        return item?.name||row.name||card?.name||fill(`物品 {v0}`,{v0:String(row.itemId)}).text;
     };
     const schoolOf=row=>{
         const card=offerCard(row);
@@ -126,7 +127,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
             const status=offerStatus(row);
             inspector.show(content.items[row.itemId],{trigger:thumb,source:npc.name,requirements:[status.price,!status.allowed?status.reason:''].filter(Boolean).join(' · '),requirementsLabel:'兑换条件'});
         },painted||icon?'npc-thumb':'npc-thumb npc-thumb-fallback');
-        thumb.setAttribute('aria-label',row.kind==='shop'?`查看${name}详情`:card?`查看${name}卡面`:name);
+        thumb.setAttribute('aria-label',row.kind==='shop'?fill('查看{name}详情',{name}).text:card?fill('查看{name}卡面',{name}).text:name);
         if(row.kind==='shop')thumb.setAttribute('aria-haspopup','dialog');
         else bindPreview(thumb,card,name);
         return thumb;
@@ -134,29 +135,56 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
     const actionButton=(row,status,name)=>{
         const learned=row.kind==='mentor'&&status.reason==='已学会';
         const label=row.kind==='mentor'?(learned?'已学会':'学习'):'购买';
-        const purchase=()=>cb.action({type:'npc-purchase',npcInstanceId:npc.instanceId,offerId:row.id});
+        const purchase=count=>cb.action({type:'npc-purchase',npcInstanceId:npc.instanceId,offerId:row.id,...(count>1?{count}:{})});
         const control=button(label,()=>{
-            if(row.kind!=='shop'){purchase();return;}
+            if(row.kind!=='shop'){purchase(1);return;}
             hidePreview();
-            const current=offerStatus(row);
+            const current=npcPurchaseBounds(model.save,content,row,access);
             const item=content.items[row.itemId]||{id:row.itemId,name};
             inspector.render(item,{source:npc.name});
-            const quantity=el('p','');
-            setText(quantity,'购买数量：{count}',{count:current.reward?.cnt||1});
-            inspector.body.append(quantity,moneyLine(el,'p','',current.price||current.reason));
+            const quantity=el('p','npc-buy-count');
+            const priceSlot=el('div','npc-buy-price');
+            let count=1;
+            const paintQuantity=()=>{
+                setText(quantity,'购买数量：{count}',{count});
+                priceSlot.replaceChildren(moneyLine(el,'p','',current.allowed?formatNpcCosts(content,current.costs,count):current.price||current.reason));
+                for(const chip of chips)chip.setAttribute('aria-pressed',String(chip.dataset.qty==='max'?count===current.maxCount:Number(chip.dataset.qty)===count));
+            };
+            const chips=[];
+            inspector.body.append(quantity,priceSlot);
+            if(current.allowed&&current.maxCount>1){
+                const cap=el('p','muted');
+                setText(cap,'最多可买 {count} 件',{count:current.maxCount});
+                inspector.body.append(cap);
+                const steps=el('div','npc-buy-qty');
+                const choose=next=>{count=next;if(slider)slider.value=String(count);paintQuantity();};
+                for(const step of [1,10,100].filter(step=>step<=current.maxCount)){
+                    const chip=button(String(step),()=>choose(step),'secondary');
+                    chip.dataset.qty=String(step);
+                    chips.push(chip);steps.append(chip);
+                }
+                const max=button('最大',()=>choose(current.maxCount),'secondary');
+                max.dataset.qty='max';chips.push(max);steps.append(max);
+                const slider=el('input','npc-buy-slider');
+                slider.type='range';slider.min='1';slider.max=String(current.maxCount);slider.step='1';slider.value='1';
+                slider.setAttribute('aria-label','购买数量');
+                slider.addEventListener('input',()=>{const next=Number(slider.value);if(Number.isInteger(next))choose(next);});
+                inspector.body.append(steps,slider);
+            }
+            paintQuantity();
             if(!current.allowed)inspector.body.append(moneyLine(el,'p','npc-blocked',current.reason));
             let submitted=false;
             const confirm=button('确认购买',()=>{
                 if(submitted)return;
-                const latest=offerStatus(row);
-                if(!latest.allowed){
+                const latest=npcPurchaseBounds(model.save,content,row,access);
+                if(!latest.allowed||count>latest.maxCount){
                     confirm.disabled=true;
-                    inspector.body.append(moneyLine(el,'p','npc-blocked',latest.reason));
+                    inspector.body.append(moneyLine(el,'p','npc-blocked',latest.allowed?'购买数量无效':latest.reason));
                     return;
                 }
                 submitted=true;confirm.disabled=true;
                 inspector.close();
-                purchase();
+                purchase(count);
             },'primary');
             confirm.disabled=!current.allowed;
             inspector.footer.append(button('取消',()=>inspector.close(),'secondary'),confirm);
@@ -210,7 +238,7 @@ export function renderNpcServices(body,model,cb,{el,button,spellFace,art}) {
             }else{
                 const meta=el('div','npc-good-meta');
                 if(status.price)meta.append(moneyLine(el,'p','',status.price));
-                if(!status.allowed&&status.reason&&status.reason!==status.price&&status.reason!==`需要${status.price}`)meta.append(moneyLine(el,'p','npc-blocked',status.reason));
+                if(!status.allowed&&status.reason&&status.reason!==status.price&&status.reason!==fill(`需要{v0}`,{v0:String(status.price)}).text)meta.append(moneyLine(el,'p','npc-blocked',status.reason));
                 const owned=el('p','muted');setText(owned,'已拥有 {count}',{count:model.save.inventory[row.itemId]||0});
                 meta.append(owned);
                 list.append(el('article','npc-good',el('h3','',name),el('div','npc-good-row',thumbnail(row,name),meta,actionButton(row,status,name))));

@@ -42,7 +42,7 @@ export function projectRuntimeData(relativePath, value) {
         case 'quest-runtime.json': return {
             version: value.version, paths: value.paths,
             quests: value.quests.map(row => ({
-                ...pick(row, ['id', 'title', 'region', 'startNpc', 'endNpc', 'repeat']),
+                ...pick(row, ['id', 'title', 'region', 'startNpc', 'endNpc', 'repeat', 'startDialog', 'endDialog', 'talks']),
                 prerequisites: row.prerequisites.map(quest => pick(quest, ['id', 'value'])),
                 requirements: row.requirements.map(requirement => pick(requirement, ['id', 'min', 'max'])),
                 groups: row.groups.map(group => ({...pick(group, ['kind', 'condition', 'mode']), items: group.items.map(item => pick(item, ['id', 'name', 'count', 'producers', 'odds', 'unit', 'amount', 'destroy']))})),
@@ -53,7 +53,7 @@ export function projectRuntimeData(relativePath, value) {
         case 'npc-catalog.json': return {
             version: value.version,
             npcs: value.npcs.map(row => ({
-                ...pick(row, ['id', 'instanceId', 'zone', 'name', 'description', 'place', 'enabled', 'hidden', 'x', 'y']),
+                ...pick(row, ['id', 'instanceId', 'zone', 'name', 'description', 'place', 'enabled', 'hidden', 'x', 'y', 'sex', 'age']),
                 buttons: row.buttons.map(button => pick(button, ['label', 'dofunction', 'param1', 'param2', 'canshow'])),
             })),
             shops: value.shops.map(row => pick(row, ['id', 'npcId', 'menu', 'categoryName', 'itemId', 'exchangeId', 'dailyLimit', 'name', 'platform', 'timeRange'])),
@@ -135,6 +135,8 @@ export function packageRuntimeData(source, destination) {
     delete files[fishingKey];
     const packs = Object.fromEntries(['datasets', 'adventure', 'kids', 'teen', 'sample'].map(group => [group, { schemaVersion: 1, files: {} }]));
     for (const [key, value] of Object.entries(files)) {
+        // Earth is never bundled into the startup adventure pack. Keep each JSON independently fetchable.
+        if(key.startsWith('data/adventure/earth/')){const target=path.join(destination,key.slice(5));fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,JSON.stringify(value));continue;}
         const [, directory, name] = key.split('/');
         const group = name === 'manifest.json' && directory !== 'adventure' ? 'datasets' : directory;
         if (!packs[group]) throw new Error(`未配置的数据包：${key}`);

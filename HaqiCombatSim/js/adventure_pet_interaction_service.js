@@ -1,9 +1,9 @@
 // Application-facing transaction boundary. It operates only on explicitly loaded
 // scene pets; callers inject verified dialogue/arrival events and a walkable anchor.
-import {interactPets,breedPets,adoptPet,prunePetMemories} from './adventure_pet_interactions_core.js';
+import {interactPets,breedPets,adoptPet,prunePetMemories,petPairStatus} from './adventure_pet_interactions_core.js';
 
 export function createPetInteractionService({repository,content,newId=()=>globalThis.crypto.randomUUID()}){
-    let running=false;
+    let running=false;const temporary=new Map();
     async function exclusive(fn){
         if(running)throw Error('宠物正在互动，请稍候');running=true;
         try{return await fn();}finally{running=false;}
@@ -26,17 +26,20 @@ export function createPetInteractionService({repository,content,newId=()=>global
             const effects=[],babies=[];
             for(const pair of [first,...others]){
                 let a=staged.get(pair.ids[0]),b=staged.get(pair.ids[1]);
-                const interaction=interactPets(a,b,{...event,scene:pair.scene},content);
+                const key=JSON.stringify([...pair.ids].sort()),persistent=pair.ids.some(id=>event.friendPetIds?.includes(id));
+                if(!persistent)[a,b]=[a,b].map(p=>{const old=temporary.get(key)?.find(row=>row.id===p.id);return {...p,memories:structuredClone(old?.memories||[]),memoryClock:old?.memoryClock||0,memorySerial:old?.memorySerial||0};});
+                const confirmed=event.completed&&(event.kind==='owner-dialogue'||event.kind==='manual-feed'&&pair.ids.some(id=>event.confirmedOwners?.includes(id)));
+                const interaction=interactPets(a,b,{...event,completed:!!confirmed,scene:pair.scene},content);
                 [a,b]=interaction.pets;
-                // A proximity event can give birth after cooldown, but never grants a mark.
-                const born=breedPets(a,b,{now:event.now,scene:pair.scene,babyId:newId()},content);
-                [a,b]=born.pets;staged.set(a.id,a);staged.set(b.id,b);
+                // Ambient play is memory-only, even when a pair already has enough marks.
+                const born=confirmed&&persistent?breedPets(a,b,{now:event.now,scene:pair.scene,babyId:newId()},content):{pets:[a,b],baby:null,status:petPairStatus(a,b,{now:event.now,scene:pair.scene},content)};
+                [a,b]=born.pets;if(persistent){staged.set(a.id,a);staged.set(b.id,b);}else if(confirmed)temporary.set(key,structuredClone([a,b]));
                 if(born.baby)babies.push(born.baby);
-                effects.push({ids:pair.ids,play:interaction.play,markAdded:interaction.markAdded,status:born.status,babyId:born.baby?.id??null});
+                effects.push({temporary:!persistent,ids:pair.ids,play:interaction.play,markAdded:interaction.markAdded,status:born.status,babyId:born.baby?.id??null});
             }
-            const changes=[...staged.values()].map(pet=>({pet,expectedPath:rows.get(pet.id).path}));
+            const changes=[...staged.values()].filter(pet=>JSON.stringify(pet)!==JSON.stringify(rows.get(pet.id).pet)).map(pet=>({pet,expectedPath:rows.get(pet.id).path}));
             changes.push(...babies.map(pet=>({pet,expectedPath:null})));
-            await repository.commit(changes);
+            if(changes.length)await repository.commit(changes);
             return {effects,babies};
         });},
         adopt(id,options){return exclusive(async()=>{

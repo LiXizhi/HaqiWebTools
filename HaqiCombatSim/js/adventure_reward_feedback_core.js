@@ -11,3 +11,13 @@ export function rewardChanges(before,save,content) {
     const pets=Object.keys(save.pets||{}).filter(id=>!before.pets.includes(id)).map(id=>({kind:'pet',id,count:1,name:content.pets?.[save.pets[id].speciesId]?.name||save.pets[id].name||'新伙伴'}));
     return {xp:Math.max(0,save.xp-before.xp),fromLevel:before.level,level:save.level>before.level?save.level:null,items:[...items,...cards,...pets]};
 }
+
+// Compare the existing equipment panel values, without introducing stat formulas.
+// Returns {label,delta,unit} rows for the UI to format with fill('{label} +{delta}{unit}', row).
+export function equipmentGainLines(before,after){
+    const previous=new Map(before.map(row=>[row.key,row.value]));
+    return after.flatMap(row=>{
+        const delta=Math.round((row.value-(previous.get(row.key)??row.value))*100)/100;
+        return row.key!=='penetrationReceive'&&Number.isFinite(delta)&&delta>0?[{label:row.label,delta,unit:row.unit||''}]:[];
+    });
+}

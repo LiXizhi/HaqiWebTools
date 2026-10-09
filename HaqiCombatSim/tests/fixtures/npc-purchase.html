@@ -1,0 +1,22 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>居民购买数量验收</title><base href="../../">
+<link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"></head>
+<body class="haqi-app"><div id="root"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,applyAction} from '../../js/adventure_core.js';
+import {renderPanel} from '../../js/view_adventure.js';
+// In-memory character only: never read or write player saves.
+try {
+ const assets=await loadResources(),save=createAdventure(assets.content,{name:'购买验收',starter:'dragon_green'});
+ const merchant=assets.content.npcCatalog.npcs.find(npc=>npc.id===30429);
+ save.zone=merchant.zone;save.inventory[17213]=1000;
+ const model={assets,save,serviceNpc:merchant};
+ const root=document.querySelector('#root');
+ const cb={close:()=>{},panel:()=>{},action:value=>{applyAction(save,assets.content,value);}};
+ renderPanel(root,'npc-services',model,cb);
+ [...document.querySelectorAll('button')].find(node=>node.textContent==='抓宠符文')?.click();
+ [...document.querySelectorAll('button')].find(node=>node.getAttribute('aria-label')==='普通抓宠符文：购买')?.click();
+ window.npcPurchaseFixture={save};
+ document.documentElement.dataset.fixtureReady='1';
+}catch(error){document.documentElement.dataset.fixtureError=error.stack||error.message;throw error;}
+</script></body></html>

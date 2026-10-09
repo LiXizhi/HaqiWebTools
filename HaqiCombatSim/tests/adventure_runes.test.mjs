@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import { installExpansion } from '../js/adventure_expansion_core.js';
-import { installNpcCatalog, npcOffers, npcOfferStatus } from '../js/adventure_npc_core.js';
+import { installNpcCatalog, npcOffers, npcOfferStatus, npcPurchaseBounds } from '../js/adventure_npc_core.js';
 import { installRuneCatalog, catchChanceMilli, runeObtainLines, runeStatus } from '../js/adventure_runes_core.js';
 import { createAdventure, applyAction, beginEncounter, parseSave, recordDecision, settleParty } from '../js/adventure_core.js';
 import { addPet, CAPTURE_ID } from '../js/adventure_pets_core.js';
@@ -76,10 +76,11 @@ test('a full-health general rune is still consumed when the pet escapes', () => 
     assert.equal(forced.events.some(event => event.type === 'capture' && event.success === false && event.runeId === 23439), true);
 });
 
-test('an owned pet or a normal monster rejects the catch rune before it is consumed', () => {
+test('legacy checkpoints: an owned pet or a normal monster rejects the catch rune before it is consumed', () => {
     const owned = createAdventure(content, { seed: 22 });
     owned.inventory[23439] = 1;
     beginEncounter(owned, content, 'wild:dragon_green');
+    delete owned.pendingEncounter.captureRulesVersion;
     const ownedBattle = restorePveBattle(dataset, content, owned.pendingEncounter);
     const ownedRune = runeCardsInHand(ownedBattle).find(row => row.runeId === 23439);
     assert.throws(() => playPveRound(ownedBattle, { ...ownedRune, targetId: 'mob0' }), /目标/);
@@ -106,6 +107,26 @@ test('安卓婆婆 sells the priced catch runes and leaves the unpriced top rune
     assert.equal(save.inventory[17213], 0);
     assert.equal(save.inventory[23439], 1);
     assert.equal(parseSave(JSON.stringify(save), content).inventory[23439], 1);
+});
+
+test('stackable rune purchases stop at the tighter of wallet and hold cap', () => {
+    const save = createAdventure(content, { seed: 22 });
+    save.zone = merchant.zone;
+    save.inventory[17213] = 1000;
+    const general = npcOffers(content, merchant).find(row => row.itemId === 23439);
+    const bounds = npcPurchaseBounds(save, content, general);
+    assert.equal(bounds.maxCount, 99);
+    const before = JSON.stringify(save);
+    assert.throws(() => applyAction(save, content, { type: 'npc-purchase', npcInstanceId: merchant.instanceId, offerId: general.id, count: 100 }), /购买数量无效/);
+    assert.equal(JSON.stringify(save), before);
+    applyAction(save, content, { type: 'npc-purchase', npcInstanceId: merchant.instanceId, offerId: general.id, count: 50 });
+    assert.equal(save.inventory[23439], 50);
+    assert.equal(save.inventory[17213], 500);
+    assert.equal(npcPurchaseBounds(save, content, general).maxCount, 49);
+    applyAction(save, content, { type: 'npc-purchase', npcInstanceId: merchant.instanceId, offerId: general.id, count: 49 });
+    assert.equal(save.inventory[23439], 99);
+    assert.equal(save.inventory[17213], 10);
+    assert.match(npcOfferStatus(save, content, general).reason, /最多持有/);
 });
 
 test('unused capture crystals become general catch runes and the shop stops selling them', () => {

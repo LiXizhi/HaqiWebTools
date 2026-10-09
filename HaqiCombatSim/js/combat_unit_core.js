@@ -15,6 +15,8 @@ export function statIdToEntry(id) {
     if (id >= 103 && id <= 110) return { stat: 'accuracyPct', school: STAT_ID_SCHOOL[id - 103] };
     if (id >= 111 && id <= 118) return { stat: 'damagePct', school: STAT_ID_SCHOOL[id - 111] };
     if (id >= 119 && id <= 126) return { stat: 'resistPct', school: STAT_ID_SCHOOL[id - 119] };
+    if (id >= 151 && id <= 158) return { stat: 'damageAbs', school: STAT_ID_SCHOOL[id - 151] };
+    if (id >= 159 && id <= 166) return { stat: 'resistAbs', school: STAT_ID_SCHOOL[id - 159] };
     if (id >= 196 && id <= 203) return { stat: 'critPct', school: STAT_ID_SCHOOL[id - 196] };
     if (id >= 204 && id <= 211) return { stat: 'resiliencePct', school: STAT_ID_SCHOOL[id - 204] };
     if (id >= 212 && id <= 219) return { stat: 'penetration', school: STAT_ID_SCHOOL[id - 212] };
@@ -269,7 +271,9 @@ export function getResist(unit, school, resolved) {
     if (resolved.fairPlay && resolved.fairPlay.forceResist !== undefined && resolved.fairPlay.forceResist !== null) {
         return -resolved.fairPlay.forceResist;
     }
-    const stat = schoolStat(unit, 'resistPct', school) + (schoolFactor(resolved, unit.school).resist || 0);
+    let stat = schoolStat(unit, 'resistPct', school) + (schoolFactor(resolved, unit.school).resist || 0);
+    // player_server.lua L2465–2468; mob_server.lua L2081–2085.
+    if (unit.freezeRounds > 0) stat = 100 - (100 - stat) * (100 - resolved.global.freezeResistPercent) / 100;
     return -stat;
 }
 
@@ -418,6 +422,10 @@ export function takeDamage(unit, points) {
         unit.miniaura = null;
         unit.stance = null;
         unit.stunned = false;
+        if (unit.freezeRounds !== undefined) {
+            unit.freezeRounds = 0; unit.antiFreezeRounds = 0; unit.antiFreezeSiblingRounds = 0;
+        }
+        // bWithGuardian survives death until Card.CheckGuardian revives the unit.
         if(unit.reflectAmount!==undefined)unit.reflectAmount=0;
         if(unit.stealth!==undefined){unit.stealth=false;unit.stealthRounds=null;}
         unit.pips.normal = 0;
@@ -865,6 +873,7 @@ export function validateCooldown(unit) {
 
 /** ValidateMiniAura / ValidateStandingEffects / ValidateStance / ValidateProtectRounds */
 export function validateRounds(unit) {
+    for (const key of ['freezeRounds', 'antiFreezeRounds', 'antiFreezeSiblingRounds']) if (unit[key] > 0) unit[key]--;
     if(unit.stealthRounds>0&&--unit.stealthRounds===0){unit.stealth=false;unit.stealthRounds=null;}
     if (unit.miniaura) {
         unit.miniaura.rounds -= 1;
@@ -885,6 +894,7 @@ export function summarizeUnit(unit, resolved) {
     return {
         id: unit.id, name: unit.name, side: unit.side, slot: unit.slot, school: unit.school, level: unit.level,
         hp: unit.hp, maxHp: unit.maxHp, pips: { ...unit.pips }, stunned: unit.stunned,
+        ...Object.fromEntries(['freezeRounds','antiFreezeRounds','antiFreezeSiblingRounds','guardian','enragedBy'].filter(key=>unit[key]!==undefined).map(key=>[key,unit[key]])),
         charms: unit.charms.filter(id => id > 0).map(id => ({ id, ...(resolved.charms[id] || {}) })),
         wards: unit.wards.filter(w => w.id > 0).map(w => ({ id: w.id, pts: w.pts, ...(resolved.wards[w.id] || {}) })),
         standingWards: unit.standingWards.filter(s => s.rounds > 0).map(s => ({ ...s })),

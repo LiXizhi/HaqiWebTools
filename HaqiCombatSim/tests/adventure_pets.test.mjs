@@ -12,6 +12,25 @@ const read=path=>JSON.parse(fs.readFileSync(new URL('../data/'+path,import.meta.
 const catalog=read('adventure/pets.json');
 const {content:c,dataset:d}=installExpansion(read('adventure/chapter.json'),read('adventure/combat.json'),catalog,read('adventure/shop-candidates.json'),read('kids/cards.json'),read('kids/charms.json'));
 const fresh=starter=>A.createAdventure(c,{starter,seed:812});
+test('active saves predating exploration defaults reload and replay without losing progress',()=>{
+ const save=fresh('dragon_green');A.beginEncounter(save,c,'trial:1');
+ const original=B.restorePveBattle(d,c,save.pendingEncounter);
+ const decision={pass:true};B.playPveRound(original,decision);A.recordDecision(save,decision);
+ for(const key of ['monsterRespawnMs','fieldEncounterRadius','dungeonEncounterRadius'])delete save.pendingEncounter.adventureParams[key];
+ const before=structuredClone(save);
+ const restored=checkedProgress(JSON.stringify(save),c,d);
+ assert.deepEqual(save,before);
+ assert.deepEqual(restored.save.pendingEncounter,before.pendingEncounter);
+ assert.deepEqual(restored.save.inventory,before.inventory);
+ assert.deepEqual(restored.battle.events,original.events);
+ assert.equal(restored.battle.rng.state(),original.rng.state());
+ for(const key of ['monsterRespawnMs','fieldEncounterRadius','dungeonEncounterRadius','captureBase']){
+  const bad=structuredClone(save);bad.pendingEncounter.adventureParams[key]=-1;
+  assert.throws(()=>A.parseSave(bad,c),/养成参数/);
+ }
+ const unknown=structuredClone(save);unknown.pendingEncounter.adventureParams.unknownParameter=1;
+ assert.throws(()=>A.parseSave(unknown,c),/养成参数/);
+});
 test('version two cloud battles survive added threat defaults without accepting altered parameters',()=>{
  const save=fresh('dragon_green');A.beginEncounter(save,c,'trial:1');
  save.pendingEncounter.threatRulesVersion=2;
@@ -96,7 +115,7 @@ test('purchases fail atomically and preserve original equipment restrictions',()
  assert.throws(()=>A.applyAction(s,c,{type:'buy',productId:c.shop.find(x=>x.level>1).id}),/等级/);
 });
 test('online auto-feed, offline regeneration, hunger zero and clock rollback',()=>{
- const s=fresh(),pet=s.pets[s.formation[0]],hero=A.playerSpec(s,c);pet.hunger=29;pet.hp=10;s.heroHp=10;s.inventory[P.FOOD_ID]=2;s.petFoodSlots=[{itemId:P.FOOD_ID,count:2},null];
+ const s=fresh(),pet=s.pets[s.formation[0]],hero=A.playerSpec(s,c);pet.passiveTraits={};pet.hunger=29;pet.hp=10;s.heroHp=10;s.inventory[P.FOOD_ID]=2;s.petFoodSlots=[{itemId:P.FOOD_ID,count:2},null];
  P.tickCare(s,c,hero,1000,false);P.tickCare(s,c,hero,61000,true);assert.equal(s.inventory[P.FOOD_ID],2);assert.equal(s.petFoodSlots[0].count,1);assert.equal(pet.hunger,68);assert.ok(s.heroHp>10);
  const hunger=pet.hunger;P.tickCare(s,c,hero,121000,false);assert.equal(pet.hunger,hunger);assert.equal(s.inventory[P.FOOD_ID],2);
  pet.hunger=0;const hp=pet.hp;P.tickCare(s,c,hero,181000,false);assert.equal(pet.hp,hp);P.tickCare(s,c,hero,1000,true);assert.equal(s.careAt,181000);
@@ -105,7 +124,7 @@ test('online auto-feed, offline regeneration, hunger zero and clock rollback',()
 test('stored pets recover satiety without eating; formation changes switch care and battles pause it',()=>{
  const s=fresh(),hero=A.playerSpec(s,c),active=s.pets[s.formation[0]];
  const resting=P.addPet(s,c,'dragon_purple');
- active.hunger=50;resting.hunger=10;s.inventory[P.FOOD_ID]=3;
+ active.passiveTraits={};resting.passiveTraits={};active.hunger=50;resting.hunger=10;s.inventory[P.FOOD_ID]=3;
  P.tickCare(s,c,hero,1000,true);P.tickCare(s,c,hero,61000,true);
  assert.equal(active.hunger,49);assert.equal(resting.hunger,10.5);assert.equal(s.inventory[P.FOOD_ID],3);
  P.tickCare(s,c,hero,121000,false);
@@ -142,7 +161,7 @@ test('hero regenerates 2% maximum HP per second and fills within 50 seconds outs
 test('dungeon worlds keep current hero and pet HP instead of regenerating',()=>{
  const zone='dungeon:HaqiTown_FireCavern',content={...c,dungeons:[{id:zone}]};
  const s=fresh(),pet=s.pets[s.formation[0]],hero=A.playerSpec(s,content);
- pet.hunger=40;pet.hp=10;s.heroHp=10;s.zone=zone;
+ pet.passiveTraits={};pet.hunger=40;pet.hp=10;s.heroHp=10;s.zone=zone;
  P.tickCare(s,content,hero,1000,true);P.tickCare(s,content,hero,121000,true);
  assert.equal(s.heroHp,10);assert.equal(pet.hp,10);assert.equal(pet.hunger,38);
  P.tickCare(s,content,hero,181000,false);assert.equal(s.heroHp,10);assert.equal(pet.hp,10);assert.equal(pet.hunger,38);

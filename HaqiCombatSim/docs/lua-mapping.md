@@ -1,3 +1,7 @@
+## 2026-10-05：网页宠物标签覆盖层
+
+新增 adventure_pet_traits_core.js 与 BalanceParams.petTraits；这是网页养成规则，不是 Lua 公式移植。八种标签通过现有 stats 字段进入原伤害、治疗、命中、生命与超级魔力公式，未改 combat_formulas_core.js。狂暴重置属性后补回对应标签，不重复累加保留字段；旧战斗检查点不启用标签规则。具体收益见[数值表](pet-traits.md)。
+
 # 公式与常量 ↔ Lua 源码对照表
 
 2026-09-25坐骑：paraworld.globalstore.lua 字段序中 `o[3]` 为 count（魔豆，物品984），`o[8]` 为 ebuyprice（奇豆，物品100）。NPCShopProvider.lua 在 exid==0 时按这两项直购。ItemsFilter.lua 代码91为 class 2 / subclass 6 坐骑；subclass 8 是别名。ItemManager.lua 将 stats[180]==1 标为会员物品。变身药丸的 28/46/51 只记录外形，网页不把它们当成战斗属性；可骑乘条目在 mount-catalog.json 里另有 stats，骑乘时按 combat_unit_core.js 的 statIdToEntry 加到英雄。这是网页补充，不是原药丸的战斗公式。移动加速使用 BalanceParams.adventure.mountSpeed，kids 坐骑没有单独移速属性。
@@ -343,3 +347,46 @@ HP、魔力和卡牌效果继续复用现有Lua移植函数；独立宠物用同
 `ItemManager.lua` GetAllCanGiftItemGUIDs L5460–5492按cangift、包范围、强化和镶嵌筛选；`paraworld.globalstore.lua` L535–554定义t[24]类、t[34]可交易、t[38]堆叠、t[40]可赠送；`GenericTooltip.lua` L505–522定义stats[223]与实例绑定。新增export_gift_rules.py保留DB哈希，仅开放class18、可堆叠、cangift=true、绑定类型0的物品；实例装备/坐骑等未完整核验类型明确禁用。好感度、异性随机偏移和活动加成为网页改编，不宣称原版公式。
 
 2026-09-27儿童版口粮：CombatPetFoodsPage.lua L138、L193列出17172/17185/17211；L272–293明确kids经验300/1200/2400，源数据库globalstore.db.mem stats[60]一致。导出器保留原始记录，自动食槽读取该值；饱食40/70/100和售价30/120/240奇豆是明确的Web改编，集中在BalanceParams.adventure.petFoodRules。无需移植teen分支高级口粮900经验。
+
+## 2026-09-30：副本序章语言奖励（网页覆盖层）
+
+本次语言buff并非原版Lua公式：BalanceParams.dungeonLanguage定义5秒开始窗口、20秒录音上限、每句1%、单项最高3%。当前18个故事各有三句，生命/攻击/防御各一句。createPveBattle创建完成英雄后增加生命上限并保持生命比例，向damagePct.all/resistPct.all各加奖励百分点，沿用原版伤害/抗性公式；怪物、宠物、其他伙伴与PvP均不加。战后按基础生命上限折算，退出副本删除记录。检查点冻结数值，重演核验；不修改combat_formulas_core.js。
+
+
+## 2026-09-30：每日全局语言加成
+
+更新此前副本序章奖励规则：BalanceParams.dailyLanguage每句1%、单项10%；dungeonLanguage仅保留5秒窗口、录音时限及旧检查点兼容。每日奖励是Web覆盖层，沿用原damagePct.all/resistPct.all/powerPipPct公式，生命保持比例，结算折回基础上限；不改原Lua公式。覆盖冒险PvE及红蘑菇赛场本方英雄，伙伴/对手与公开角色快照不含此加成。
+
+
+## 2026-10-01：儿童版特殊卡牌效果
+
+本节覆盖旧记录中冰封、替身守护、护盾转换及激怒“未支持”的状态，范围为当前kids导出的4类18张卡，不扩展teen内容。
+
+- 冰封：`card_server.lua L5932–6041`。检查怪物 `is_immune_to_freeze`、自身/同伴防冰封回合；通常设置 `rounds+1` 与9回合防冰封，PvE玩家先手为 `rounds` 与8回合。附加27号全系盾。`player_server.lua L2465–2468`、`mob_server.lua L2081–2085`将抗性增加为 `100-(100-resist)*0.2`；不是直接从最终伤害减80个百分点。`card_server.lua L1915/L2082/L3467/L4621`受攻击或非零DOT段破冰，即使伤害被吸收也解除，防连续冰封不解除。`ValidateFreezeRounds`在行动轮开始递减。红蘑菇按原 `HaqiTown_RedMushroomArena_4v4.Arenas_Mobs.xml` 等配置启用同伴3回合临时保护。
+- 守护：`card_server.lua L3916–4040`。自伤消耗死亡系护符和盾、计算绝对攻防及最终权重，忽略人物百分比攻防，无暴击/闪避；普通吸收盾可吸收，不触发反射。目标保留一个布尔守护标志，不叠层。`L6833–6857`在施法处理后检查倒下单位；`player_server.lua L187/L3760–3763`及`mob_server.lua L98/L2379–2383`规定kids复活2000生命，封顶最大生命，清除守护。它与2000/2100/2200/2300的自伤量分别计算。`arena_server.lua L8867–8878`拒绝宠物随从目标。DOT致死后受守护复活，当前被打断行动仍跳过。
+- 转换：`card_server.lua L2355–2365`前检普通护盾及四档品质；没有对应盾时不掷命中、不扣魔力、不进冷却。`L6247–6266`的普通盾转换代码被原版注释，实际只依次尝试 `fromward+1000/+2000/+3000/+4000`，首个成功后追加基础 `toward`。因此只有基础盾时会施法/扣费但不转换，本地明确保留并在说明中解释，未擅自修正规则。
+- 仇恨：`CombatThreatConfig.xml`的`singlefreeze=200`（抵抗也产生）、`conversepositiveward=200`，目标/其他怪物按既有20%溅射；守护使用`areaward=60`全体仇恨。新增数值、冰封保护/抗性及守护复活量集中在BalanceParams。
+- 激怒：`card_server.lua L2442–2511`及`player_server.lua L1142–1149`要求同场存活怪物、允许激怒、等级区间、首领许可和难度条件，只允许一次。`mob_server.lua L1250–1279/L3923–3937/L4750–4755/L5231–5380`切换激怒属性/AI，重置AI轮数和上次血量，保留既有序列编号及kids身上状态。若新AI没有旧编号，对照`L4797/L4883`跳过序列进入后续AI，不能重新随机或崩溃。激怒切换与回满生命发生在命中判定之前，保留原时序；`CanCatchPet L1345+`拒绝已激怒怪物。
+- `scripts/export_special_cards.py`解析原kids `EnrageStats.xml`（按组顺序覆盖）和`EnrageAICards.xml`，通过原物品缓存映射卡牌；输出在`data/adventure/combat.json`的`pve.enrage`，保留三个源文件SHA-256、21组属性、31套AI和79张引用卡。只在新版PvE构造时合并激怒牌库，不扩充开篇45张展示牌，重新导出应逐字节一致。
+
+新PvE检查点和社交/红蘑菇战报记录 `specialCardRulesVersion=1`；缺失字段按0保留旧卡型行为，非法版本拒绝。该标志不替代原有数据哈希校验，旧PvP战报仍须匹配原数据集。运行中的冰封、守护、激怒状态通过种子与决定重演，不向云端增加临时战斗状态。复活沿用治疗事件播放，冰封抵抗、无法行动和激怒有中文反馈，状态可由AI观察。
+
+覆盖审计：当前kids无Random、AreaControl、独立Revive卡模板，不从teen补造；Dead/Fizzle/PickPet是系统/客户端流程，CatchPet已有专属符文捕获结算。激怒的原服掉落和服务器奖励不在本次效果处理中新增。
+
+## 2026-10-03：原版战力与怪物装备加成
+
+- `Combat/main.lua GetGearScoreV2 L581–611`：战力=超级魔力率+五系最高 `(100+百分比攻击)*(1+固定攻击/100)` + `100/(1-五系平均百分比防御/100)*(1+五系平均固定防御/100)`，最后向上取整；五系仅fire/ice/storm/life/death。`Player/main.lua L4315–4325`默认使用V2。等级仅通过`Combat/main.lua GetPowerPipChance L1410–1440`提供超级魔力基础值，不另加等级分，不把生命/命中/暴击/卡组或临时光环加入公式。移植入口为`combat_formulas_core.js gearScoreV2`。
+- 玩家输入复用`playerSpec`的已穿戴装备、强化、宝石、坐骑、套装、图腾及已验证魔法星加成。固定攻防151–166按`Combat/main.lua GetStats L1490–1515`映射；战斗装备规则升为`equipmentStatsVersion=2`，旧1/未标版仍忽略新增固定装备字段以保留校验和重演。
+- 怪物评分用显式`power_pip_percent`，不加玩家等级魔力基础；属性转换和PvE统一使用`combat_power_core.js`，固定攻防沿用`mob_server.lua L1994–2005、L2096–2134`。旧检查点继续按原有怪物属性转换重演，新版接入固定攻防及平衡系属性。
+- 野怪虚拟装备预算及距城市类地形85%–130%的目标比例是网页新增玩法，不冒充原版掉落装备或GSID。距离依据原始urban地类采样，不使用城市中心或聚落装饰。将预算转换为实际百分比攻击、防御、超级魔力率及生命加成，所有预算参数在BalanceParams.earth；原版裸属性基线战力200，近城市类地面目标不低于此值，默认目标最高10000。生命仍走原版基础公式，额外生命来自虚拟装备，战力评分本身不计生命。
+
+## 2026-10-05：所有怪物开放符文捕捉
+
+用户要求所有怪物都能捕捉，只区分难易。新战斗记录 `captureRulesVersion=1`：保留 `player_server.lua TryCatchPet L1081–1107` 的基础函数不变，网页覆盖层把基础概率除以 `max(1,目标最大生命/同系同等级kids基础生命)`，激怒目标再除以2，最终限制1%–95%。上下限和激怒倍率来自 `BalanceParams.adventure`。新规则使用种子 RNG.float 与最终概率比较；界面复用同一个函数显示百分比。原版强制概率仍参与基础计算，但不再允许把怪物锁成绝对不可抓。
+
+新规则取消已拥有、同场已捕获、激怒和隐身的捕捉目标禁用，死亡目标仍不可抓。使用现有美术映射确认岛屿及副本怪物均能落到宠物收藏；重复捕捉仍转为已有宠物经验。没有版本号的旧战斗保留Lua整数抽样与原有目标限制，不改其随机数序列。
+
+
+## 2026-10-06：网页原创60/70/80级岛屿
+
+本次没有修改Lua移植公式。新增岛屿、居民、目录任务与12个怪物变体属于网页原创配置，非原版事实；怪物外观、法术池与AI模板来自既有儿童版岛屿数据。各变体的等级、生命、经验、奇豆由island-packs JSON明确覆盖，战斗仍走原引擎和BalanceParams。默认成长上限随内容包最高推荐等级扩展到80，新增经验门槛沿用既有adventure.xpGrowth累加；保留原50级门槛及Lua角色基础数值规则，未创设60/70/80级原版装备或卡牌。

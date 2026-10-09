@@ -1,0 +1,23 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import * as A from '../js/adventure_core.js';
+import {installExpansion} from '../js/adventure_expansion_core.js';
+import {preparePromoDeck,PROMO_STRATEGY_KEYS} from '../js/promo_deck_core.js';
+const read=n=>JSON.parse(fs.readFileSync(new URL('../data/'+n+'.json',import.meta.url)));
+test('promo equips a legal larger deck and shows real strategy cards across schools without mutating the original',()=>{
+ const content=read('adventure/chapter'),dataset=read('adventure/combat');
+ installExpansion(content,dataset,read('adventure/pets'),read('adventure/shop-candidates'),read('kids/cards'),read('kids/charms'),read('kids/card_names'));
+ const original=A.createAdventure(content);original.xp=content.progression.xpThresholds[14];A.syncProgression(original,content);
+ const before=structuredClone(original),result=preparePromoDeck(original,content,dataset);
+ assert.deepEqual(original,before);assert.equal(A.deckLimits(result.save,content).capacity,20);
+ assert.equal(result.save.deck.reduce((sum,row)=>sum+row.count,0),15);
+ assert.doesNotThrow(()=>A.validDeck(result.save,content,result.save.deck));
+ assert.doesNotThrow(()=>A.parseSave(result.save,content));
+ const clicked=result.save.deck.map(row=>({...row,count:row.count+(PROMO_STRATEGY_KEYS.includes(row.key)?1:0)}));
+ A.applyAction(result.save,content,{type:'deck',deck:clicked});
+ assert.equal(result.save.deck.reduce((n,row)=>n+row.count,0),20);
+ for(const key of PROMO_STRATEGY_KEYS)assert.ok(result.save.deck.some(row=>row.key===key));
+ assert.deepEqual(PROMO_STRATEGY_KEYS.map(key=>dataset.cards[key].type),['Charms','Wards','ReflectionShield','AreaCharm','SingleAttackWithDOT']);
+ assert.equal(result.keys.length,24);assert.equal(new Set(result.keys.map(key=>dataset.cards[key].spellSchool)).size,5);
+});

@@ -1,3 +1,4 @@
+import {fill,tr} from './locale_runtime.js';
 import { battleGoal, testDurationMs } from './language_learning_core.js';
 import { textFor, speakText, localeChoices } from './locale.js';
 import { recognitionLanguage } from './language_learning.js';
@@ -18,6 +19,7 @@ export function languageSettings(body, model, cb, { el, button }) {
             ui.field('目标语言', pairRow('target', learning, cb, { el, button })),
             el('p', 'muted settings-note', '营地课程支持中文和英语。其他语言课程尚未提供。录音只在点击后开启。'),
             ui.toggle({ icon: '🔉', label: '语音陪伴', hint: '朗读对话与示范回答。' }, !!learning.autoSpeak, () => cb.setLearning({ ...learning, autoSpeak: !learning.autoSpeak })),
+            ui.toggle({ icon: '', label: '自动朗读对话', hint: '打开对话或切换下一句时，自动朗读第二语言。' }, learning.autoReadDialogue !== false, () => cb.setLearning({ ...learning, autoReadDialogue: learning.autoReadDialogue === false })),
             ui.toggle({ icon: '📖', label: '双语释义', hint: '对话中同时显示另一种语言的意思。' }, learning.showChinese !== false, () => cb.setLearning({ ...learning, showChinese: learning.showChinese === false })),
         );
         const settings=document.createElement('div');settings.className='learning-settings';
@@ -26,25 +28,25 @@ export function languageSettings(body, model, cb, { el, button }) {
         function populate(select,rows,value,label){
             select.replaceChildren(new Option(label,''));
             for(const row of rows)select.add(new Option(row.name,row.id));
-            if(value&&!rows.some(row=>row.id===value))select.add(new Option(select===voiceSelect?'已保存的音色（加载列表查看名称）':`${value}（已选）`,value));
+            if(value&&!rows.some(row=>row.id===value))select.add(new Option(select===voiceSelect?'已保存的音色（加载列表查看名称）':fill(`{v0}（已选）`,{v0:String(value)}).text,value));
             select.value=value||'';
         }
-        populate(modelSelect,learningOptions.models.map(id=>({id,name:id})),learning.model,'默认对话模型');populate(voiceSelect,learningOptions.voices,learning.voiceType,'默认音色');
-        for(const [name,select] of [['对话评判模型',modelSelect],['朗读音色',voiceSelect]]){
+        populate(modelSelect,learningOptions.models.map(id=>({id,name:id})),learning.model,'默认对话模型');populate(voiceSelect,learningOptions.voices,learning.voiceType,'自动选择角色音色');
+        for(const [name,select] of [['对话评判模型',modelSelect],['试听音色（对话按角色自动选择）',voiceSelect]]){
             const label=document.createElement('label');label.textContent=name;label.append(select);settings.append(label);
         }
         const refresh=button('加载可用模型和音色',async()=>{
-            refresh.disabled=true;status.textContent='正在加载…';
+            refresh.disabled=true;status.textContent=tr('正在加载…');
             try{const options=await loadLearningOptions();learningOptions=options;if(!settings.isConnected)return;
                 populate(modelSelect,options.models.map(id=>({id,name:id})),modelSelect.value,'默认对话模型');
-                populate(voiceSelect,options.voices,voiceSelect.value,'默认音色');status.textContent='选择后点击保存；下次对话判断和朗读时生效。';
+                populate(voiceSelect,options.voices,voiceSelect.value,'自动选择角色音色');status.textContent=tr('选择后点击保存；对话始终按说话人的性别和年龄自动选声。');
             }catch(error){status.textContent=error.message;}finally{refresh.disabled=false;}
         },'secondary');
         const preview=button('试听音色',async()=>{
             preview.disabled=true;const voice=createLearningVoice({getSettings:()=>({voiceType:voiceSelect.value})}),abort=new AbortController();
             const observer=new MutationObserver(()=>{if(!settings.isConnected){abort.abort();void voice.cancel();observer.disconnect();}});
             observer.observe(document.body,{childList:true,subtree:true});
-            try{await voice.speak(learning.target==='en'?'Hello! Welcome to the Magic Camp.':'你好！欢迎来到魔法营地。',learning.target,abort.signal);}
+            try{await voice.speak(learning.target==='en'?'Hello! Welcome to the Magic Camp.':'你好！欢迎来到魔法营地。',learning.target,abort.signal,voiceSelect.value?undefined:model.save);}
             catch(error){if(settings.isConnected)status.textContent=error.message;}finally{observer.disconnect();await voice.cancel();preview.disabled=false;}
         },'secondary');
         settings.append(refresh,preview,button('保存模型和音色',()=>cb.setLearning({...learning,model:modelSelect.value,voiceType:voiceSelect.value}),'primary'),status);
@@ -118,13 +120,13 @@ export function renderFreeTalk(root, model, npc, cb, { el, button }) {
             const reply = await cb.reply(npc, answer);
             add('npc', reply);
             speakText(reply);
-            status.textContent = '自由交谈';
+            status.textContent = tr('自由交谈');
         } catch (error) {
-            status.textContent = error.message || '语言老师还没有准备好';
+            status.textContent = tr(error.message || '语言老师还没有准备好');
         }
     }
     input.addEventListener('keydown', event => { if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); submit(input.value); } });
-    cb.greet(npc).then(text => { if (text) { add('npc', text); speakText(text); } }).catch(() => { status.textContent = '语言老师还没有准备好'; });
+    cb.greet(npc).then(text => { if (text) { add('npc', text); speakText(text); } }).catch(() => { status.textContent = tr('语言老师还没有准备好'); });
 }
 
 export function renderLanguageTest(root, model, task, cb, { el, button }) {

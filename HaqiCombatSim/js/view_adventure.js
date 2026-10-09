@@ -1,23 +1,33 @@
+import {createPetTraitBadges,traitUpgradeText} from './view_pet_traits.js';
+import {petTraitImprovements,mergePetTraits} from './adventure_pet_traits_core.js';
+import {ownedPetRecords} from './adventure_pet_files_core.js';
+import {catchProbability} from './adventure_runes_core.js';
+import {npcCharacter} from './adventure_city_people_core.js';
+import {dailyBuffs,dailyBuffDescription} from './language_daily_buff_core.js';
+import {earthCityChapterProgress,earthCityQuestTarget} from './adventure_earth_city_config_core.js';
 import {defeatReviewNotes} from './view_battle_review.js';
 import {createBattlePetHint} from './view_battle_pet_hint.js';
 export {updateBattlePetHint,updateBattleSpeech,battleSpeechController} from './view_battle_pet_hint.js';
-import {socialHudButton,bindDungeonMenu} from './view_adventure_social_hud.js';
+import {createBattleChat} from './view_battle_chat.js';
+import {socialHudButton,teamHudButton,bindDungeonMenu} from './view_adventure_social_hud.js';
 import {dungeonProgress} from './adventure_coop_core.js';
 import {renderLearningMode} from './view_learning_mode.js';
 import {createHeroPicker} from './view_hero_picker.js';
 import {dungeonFor} from './adventure_dungeons_core.js';
 import {heroPortrait} from './hero_renderer.js';
 import {renderNpcServices} from './view_adventure_npc.js';
-import {npcServices} from './adventure_npc_core.js';
+import {npcServices,npcHasActiveQuest} from './adventure_npc_core.js';
 import {renderGems} from './view_adventure_gems.js';
 import {renderRecharge} from './view_adventure_recharge.js';
 import {renderMembership} from './view_adventure_membership.js';
 import {createCloseButton} from './view_adventure_controls.js';
+import {createEntryEmblem} from './view_entry_brand.js';
 import {attachStatusTooltips} from './view_adventure_status_tooltip.js';
 
 import {renderQuestJournal,translatedGoal,rewardChip} from './view_adventure_quests.js';
 import { islandName } from './adventure_world_map_core.js';
 import { drawSchoolIcon } from './card_renderer.js';
+import {bindBattleTargeting} from './view_battle_targeting.js';
 import { renderWorldMap } from './view_adventure_world_map.js';
 import { castBlockedMessage } from './adventure_cast_feedback_core.js';
 import { createCardFace } from './view_adventure_card.js';
@@ -36,7 +46,7 @@ import { renderPetCollection,starterPicker,petPortrait } from './view_adventure_
 import { renderShop } from './view_adventure_shop.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
 import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot,teachingMode } from './adventure_core.js';
-import {catalogGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
+import {catalogGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogTalksForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import * as U from './combat_unit_core.js';
 import { cardTargetKind } from './combat_cards_core.js';
 import { renderEquipment } from './view_adventure_equipment.js';
@@ -122,7 +132,7 @@ export function renderEntryLocale(locale, secondLocale, onLocale, onSecond) {
 }
 // 标题页左栏：大标题与语言选择。已有角色时登录留在右侧列表；没有离线角色时，右侧先选择登录或本地访客。
 export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocale,setSecondLocale}={}) {
-    const intro=el('div','entry-intro',el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。'));
+    const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
     const controls=[];
     if(login||cloud){
         const cloudButton=button(owner?'我的云端旅途':'登录 Keepwork',login||cloud,'secondary cloud-entry-button');
@@ -150,8 +160,10 @@ export function renderEntry(root,assets,stored,cb,error='') {
             root.classList.remove('school-step','companion-step');
             const choices=el('div','entry-account-choices',
                 button('登录 Keepwork',()=>cb.login?.(),'primary entry-account-choice'),
-                button('本地访客',()=>{draft.account='guest';paint();root.scrollTop=0;},'secondary entry-account-choice'));
-            form.append(el('h2','','选择进入方式'),choices);
+                el('p','entry-account-hint','登录后，角色与旅途进度可跨设备同步。'),
+                button('本地访客',()=>{draft.account='guest';paint();root.scrollTop=0;},'secondary entry-account-choice'),
+                el('p','entry-account-hint','仅保存在此设备，不同步到云端。'));
+            form.append(el('p','eyebrow','开启旅程'),el('h2','','选择进入方式'),el('p','creation-caption','你的魔法世界，正在等你。'),choices);
             if(cb.busy)for(const node of form.querySelectorAll('button'))node.disabled=true;
             return;
         }
@@ -164,8 +176,9 @@ export function renderEntry(root,assets,stored,cb,error='') {
             if(draft.step===index+1)item.setAttribute('aria-current','step');steps.append(item);
         }
         const titles=['你的冒险，从名字开始','选择你的抱抱龙','找到属于你的魔法'];
-        const captions=['先选一个模样，再告诉我们你的名字。','选一位伙伴，陪你踏上魔法旅程。','点击系别，看看它的代表技能。喜欢的话，就选它吧。'];
-        form.append(steps,el('h2','',titles[draft.step-1]),el('p','creation-caption',captions[draft.step-1]));
+        const captions=[null,'选一位伙伴，陪你踏上魔法旅程。','点击系别，看看它的代表技能。喜欢的话，就选它吧。'];
+        form.append(steps,el('h2','',titles[draft.step-1]));
+        if(captions[draft.step-1]) form.append(el('p','creation-caption',captions[draft.step-1]));
         if(draft.step===1) {
             const preview=createHeroPicker(assets,draft);
             const name=el('input','name-input');name.id='hero-name';name.name='name';name.value=draft.name;name.maxLength=16;name.autocomplete='off';name.required=true;name.placeholder='';name.oninput=()=>{draft.name=name.value;};
@@ -198,7 +211,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
             const choices=cb.previewChoices(draft.school),cards=el('div','creation-skill-choices');
             if(!choices.some(c=>c.key===draft.previewKey))draft.previewKey=choices[0]?.key;
             let pause;
-            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}setText(pause,'暂停');if(!cb.busy)cb.preview(canvas,key,{appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId},text=>{setText(status,text);},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
+            const play=(key,automatic=false)=>{draft.previewKey=key;for(const b of cards.children){const on=b.dataset.key===key;b.classList.toggle('selected',on);b.setAttribute('aria-pressed',String(on));}setText(pause,'暂停');if(!cb.busy)cb.preview(canvas,key,{appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,customHead:draft.customHead},text=>{setText(status,text);},automatic?()=>{const index=choices.findIndex(c=>c.key===key);play(choices[(index+1)%choices.length].key,true);}:undefined);};
             for(const choice of choices){
                 const face=el('canvas','creation-skill-card');face.width=112;face.height=112;face.setAttribute('aria-hidden','true');
                 const base=assets.effects.cards[choice.key]?.base;
@@ -228,7 +241,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
         e.preventDefault();if(cb.busy)return;
         if(draft.step===1){draft.name=draft.name.trim();if(!draft.name){paint();root.querySelector('#hero-name')?.focus();return;}}
         if(draft.step<3){draft.step++;paint();root.scrollTop=0;}
-        else cb.create({name:draft.name.trim(),school:draft.school,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,starter:draft.starter});
+        else cb.create({name:draft.name.trim(),school:draft.school,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,customHead:draft.customHead,starter:draft.starter});
     };
     paint();
 }
@@ -295,10 +308,9 @@ export function updateCheckin(root,model) {
 
 }
 function trackerEntries(save,c) {
-    const ids=trackedQuestIds(save).filter(id=>c.quests.some(quest=>quest.id===id)||c.catalogQuests?.byId[id]);
+    const ids=trackedQuestIds(save,c).filter(id=>c.quests.some(quest=>quest.id===id)||c.catalogQuests?.byId[id]);
     if(ids.length)return ids.map(id=>({id,pinned:true}));
-    const quest=currentQuest(save,c);
-    return quest?[{id:quest.id,pinned:false}]:[];
+    return [];
 }
 function chapterTrackLines(save,c,quest) {
     const state=questState(save,quest.id);
@@ -346,8 +358,8 @@ function appendTrackerQuest(tracker,entry,save,c,cb,teach) {
     });
     tracker.append(card);
 }
-export function renderHud(root,model,cb) {
-    const {assets,save}=model,c=assets.content;root.replaceChildren();
+export function renderHeroTitle(model,cb) {
+    const {assets,save}=model,c=assets.content;
     // EXPArea.lua EXPArea.UpdateUI L86-94: cur_value is the experience inside the current level,
     // max_value is nextlevelexp, and the fill is min(cur,max)/max against the grey track. Keeping the
     // current level's band at the level cap keeps the bar two-coloured (progress + remaining track).
@@ -391,7 +403,19 @@ export function renderHud(root,model,cb) {
     const warning=el('span','save-indicator',model.storageWarning?'存档未保存':'');warning.hidden=!model.storageWarning;
     status.querySelector('.hero-text').append(el('div','hero-health',el('i'),el('span','hero-health-label')),warning);
     updateHeroHealth(status,save,c);
-    root.append(status,el('div','location-label',el('span','',c.worldMaps?.[save.zone]?.name||islandName(save.zone)),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
+    return status;
+}
+export function renderHud(root,model,cb) {
+    const {assets,save}=model,c=assets.content;root.replaceChildren();
+    const status=renderHeroTitle(model,cb);
+    if(model.localSecond){
+        status.dataset.player='1';
+        const second=renderHeroTitle({...model,save:model.localSecond},{...cb,panel:kind=>cb.playerPanel(1,kind)});
+        second.classList.add('local-secondary-title');second.dataset.player='2';
+        second.setAttribute('aria-label','玩家2角色信息');status.setAttribute('aria-label','玩家1角色信息');
+        root.append(second);
+    }
+    root.append(status,el('div','location-label',el('span','',model.locationName||c.worldMaps?.[save.zone]?.name||islandName(save.zone)),el('small','',save.zone==='camp'?'在晨光中，发现魔法':'新的故事，在这里继续')));
     syncLocaleChrome();
     const utilities=el('nav','utility-nav');utilities.setAttribute('aria-label','其他功能');
     const checkin=button([icon('gourd'),el('span','utility-label','签到'),el('small','','')],()=>cb.panel('checkin'),'utility-button checkin-button');
@@ -408,9 +432,12 @@ export function renderHud(root,model,cb) {
     const chapterCount=el('span','chapter-count');setText(chapterCount,catalogClaimed?'{done} / 14 · 全岛 {claimed}':'{done} / 14',{done:chapterDone,claimed:catalogClaimed});
     const tracker=el('section','quest-tracker',el('div','tracker-top',el('span','eyebrow','冒险手记'),chapterCount));
     const dungeon=dungeonFor(c,save.zone);
-    if(dungeon){
+    if(save.zone==='earth'){
+        const chapter=model.earthChapter,city=c.earthWorld?.city,step=chapter?.steps[earthCityChapterProgress(save,chapter).step],side=earthCityQuestTarget(save,city);
+        tracker.replaceChildren(el('h3','',side?.name||chapter?.name||'与世界同行'),el('p','',side?.description||step?.name||(chapter?'本章完成。和伙伴继续探索吧。':'靠近居民，了解这座城市的故事。')));
+    }else if(dungeon){
         const cleared=dungeonProgress(save)?.[save.zone]?.cleared.length||0,remaining=dungeon.arenas.filter(a=>!a.blocked.length&&!dungeonProgress(save)?.[save.zone]?.cleared.includes(a.id)).length;
-        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，沿路走向出口即可离开。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可在副本菜单暂离。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button(remaining?'寻找下一组':'返回出口',cb.track,'track-button'));
+        tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
     }else{
         const entries=trackerEntries(save,c);
         // 教学模式统一走 adventure_core 的 teachingMode（营地 + 营地任务链未全部交付）；
@@ -424,18 +451,18 @@ export function renderHud(root,model,cb) {
     for(const [id,label,key]of [['quests','任务','book'],['deck','卡包','cards'],['inventory','背包','bag'],['pet','宠物','pet'],['shop','商店','shop']])nav.append(button([icon(key),el('span','',label)],()=>cb.panel(id),'nav-button'));
     root.append(nav);
     // 坐骑显隐开关：仅漫游场景生效，战斗中恒显示；没有坐骑时不渲染按钮。
-    if(save.mountId){
+    if(save.mountId||model.localSecond){
         // 图标用当前坐骑的形象图（c.items 的图集裁剪，同装备栏/宠物栏做法）；无形象数据时回落名称 emoji。
         // 隐藏时叠半透明灰色 SVG 禁止标志（圆圈+斜杠与按钮外圈重合）。
         const mountItem=c.items[save.mountId];
         const mountMark=el('span','mount-mark');
         mountMark.setAttribute('aria-hidden','true');
-        mountMark.append(mountItem?.art?art(assets,mountItem.art,34,34):el('span','mount-emoji',mountEmoji(c.mountByItem?.[save.mountId]?.name)));
+        mountMark.append(!save.mountId?icon('pet'):mountItem?.art?art(assets,mountItem.art,34,34):el('span','mount-emoji',mountEmoji(c.mountByItem?.[save.mountId]?.name)));
         if(save.mountHidden){
             mountMark.append(disabledModeMark());
         }
-        const mountToggle=button([mountMark],()=>cb.mountToggle(),'mount-toggle');
-        mountToggle.title=tr(save.mountHidden?'在场景中显示坐骑':'在场景中隐藏坐骑');
+        const mountToggle=button([mountMark],()=>save.mountId?cb.mountToggle():cb.panel('pet'),'mount-toggle');
+        mountToggle.title=tr(!save.mountId?'选择坐骑':save.mountHidden?'在场景中显示坐骑':'在场景中隐藏坐骑');
         mountToggle.setAttribute('aria-label',mountToggle.title);
         mountToggle.setAttribute('aria-pressed',String(!save.mountHidden));
         root.append(mountToggle);
@@ -448,24 +475,47 @@ export function renderHud(root,model,cb) {
     const learningEnabled=save.languageLearning?.enabled===true;
     const learningMark=el('span','mount-mark learning-chat-mark');
     learningMark.setAttribute('aria-hidden','true');
-    learningMark.append(el('span','learning-chat-emoji','💬'));
+    const mouth=el('span','learning-mouth');
+    mouth.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 11c3-1 5-5 8-3l2 1 2-1c3-2 5 2 8 3-4 9-16 9-20 0Z M2 11q10 4 20 0"/></svg>';
+    learningMark.append(mouth);
     if(!learningEnabled)learningMark.append(disabledModeMark());
     const learn=button([learningMark],()=>cb.panel('learning-mode'),'mount-toggle learning-mode-launch');
-    learn.title=tr(learningEnabled?'双语学习 · 已开启':'双语学习 · 已关闭');
+    const layers=Object.values(dailyBuffs(save)).reduce((a,b)=>a+b,0);
+    learningMark.append(el('span','language-buff-count',`+${layers}`));
+    learn.title=tr(learningEnabled?'双语学习 · 已开启':'双语学习 · 已关闭')+'\n'+dailyBuffDescription(save);
     learn.setAttribute('aria-label',learn.title);
     learn.setAttribute('aria-pressed',String(learningEnabled));root.append(learn);
     const localeControl=document.querySelector('.locale-launch');
     learn.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)+(save.mountId?44:0)}px`;
     learn.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
-    const socialBar=el('div','hero-social-toolbar');socialBar.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)}px`;socialBar.style.top=`${status.offsetTop+status.offsetHeight+8}px`;
+    const toolbarAnchor=status;
+    const socialBar=el('div','hero-social-toolbar');socialBar.style.left=`${status.offsetLeft+(localeControl&&!localeControl.hidden?44:0)}px`;socialBar.style.top=`${toolbarAnchor.offsetTop+toolbarAnchor.offsetHeight+8}px`;
     for(const control of [...root.querySelectorAll('.mount-toggle')]){control.style.left='';control.style.top='';socialBar.append(control);}
     // Mail HUD entry stays hidden until dual-account mailVerified is shipped.
-    socialBar.append(socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));root.append(socialBar);
+    socialBar.append(socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));
+    const teamControl=teamHudButton(model.social?.team,save.coopRun,cb.panel);
+    if(teamControl)socialBar.append(teamControl);
+    root.append(socialBar);
+    if(model.localSecond){
+        socialBar.dataset.player='1';
+        const second=root.querySelector('.local-secondary-title'),peer=model.localSecond;
+        const peerBar=el('div','hero-social-toolbar local-secondary-toolbar');peerBar.dataset.player='2';
+        peerBar.style.left=`${second.offsetLeft}px`;peerBar.style.top=`${second.offsetTop+second.offsetHeight+8}px`;
+        {
+            const mark=el('span','mount-mark'),item=c.items[peer.mountId];mark.setAttribute('aria-hidden','true');
+            mark.append(!peer.mountId?icon('pet'):item?.art?art(assets,item.art,34,34):el('span','mount-emoji',mountEmoji(c.mountByItem?.[peer.mountId]?.name)));
+            if(peer.mountHidden)mark.append(disabledModeMark());
+            const toggle=button([mark],()=>peer.mountId?cb.playerMountToggle(1):cb.playerPanel(1,'pet'),'mount-toggle');
+            toggle.title=tr(!peer.mountId?'选择坐骑':peer.mountHidden?'在场景中显示坐骑':'在场景中隐藏坐骑');toggle.setAttribute('aria-label',toggle.title);toggle.setAttribute('aria-pressed',String(!peer.mountHidden));peerBar.append(toggle);
+        }
+        root.append(peerBar);
+    }
     const interaction=button('交谈',cb.interact,'interact-button');interaction.id='interact';interaction.hidden=true;root.append(interaction);
 }
 function modal(root,title,subtitle,cb,wide=false) {
-    root.replaceChildren();root.className='overlay visible';
-    const box=el('section',`modal ${wide?'wide':''}`);box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',title);
+    const localClasses=[...root.classList].filter(name=>name.startsWith('local-'));
+    root.replaceChildren();root.className='overlay visible';root.classList.add(...localClasses);
+    const box=el('section',`modal ${wide?'wide':''}`);box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',tr(title));
     const close=createCloseButton(cb.close);
     box.append(el('header','modal-header',el('div','',el('p','eyebrow',subtitle),el('h2','',title)),close));const body=el('div','modal-body');box.append(body);root.append(box);
     return body;
@@ -503,7 +553,7 @@ export function renderPanel(root,kind,model,cb) {
         renderStrengthening(body,model,cb,{el,button,art});
         return;
     }
-    const titles={'learning-mode':['双语学习','遇见居民 · 开口交流'],'npc-services':['居民商店与课程',''],checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','全岛任务'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','一路相伴的小伙伴'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
+    const titles={'learning-mode':['双语学习','遇见居民 · 开口交流'],'npc-services':['居民商店与课程',''],checkin:['米酒葫芦','在线相伴 · 每日好礼'],debug:['属性编辑器','调试工具 · 修改当前存档'],shop:['哈奇商城',''],equipment:['我的背包',''],quests:['冒险手记','全岛任务'],inventory:['我的背包',''],deck:['我的魔法卡包','准备你的魔法'],pet:['我的小伙伴','拖动移动角色'],settings:['旅途设置','你的冒险旅程'],map:['世界地图','魔法哈奇']};
     const body=modal(root,...titles[kind],cb,['deck','quests','inventory','equipment','pet','shop','map'].includes(kind)||kind==='debug');
     if(kind==='checkin'){
         body.closest('.modal').classList.add('checkin-modal');
@@ -534,15 +584,15 @@ export function renderPanel(root,kind,model,cb) {
             else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
         });
     }
-    if(kind==='deck') renderDeckEditor(body,model,cb,{el,button,spellFace});
+    if(kind==='deck') root.deckPreview=renderDeckEditor(body,model,cb,{el,button,spellFace});
     if(kind==='pet'&&!c.pets){
         body.append(el('h3','','初心之旅 · 咕噜噜教学'));
         body.append(el('div','pet-portrait',tile(assets,'creatures',save.pet?6:7,170,180)));
-        if(save.pet)body.append(el('h3','center',save.pet.name),el('p','center muted',`等级 ${save.pet.level} · 经验 ${save.pet.xp} · 教学伙伴`),el('p','center','小小的咕噜噜，已经认定你是它最好的朋友。'),el('p','center muted',`战宠口粮 ${save.inventory[17172]||0} 包 · 每包增加 ${c.pet.foodXp} 经验`),button('喂养一包战宠口粮',()=>cb.action({type:'feed'}),'primary centered'));
+        if(save.pet)body.append(el('h3','center',save.pet.name),el('p','center muted',fill('等级 {level} · 经验 {xp} · 教学伙伴',{level:save.pet.level,xp:save.pet.xp}).text),el('p','center','小小的咕噜噜，已经认定你是它最好的朋友。'),el('p','center muted',fill('战宠口粮 {count} 包 · 每包增加 {xp} 经验',{count:save.inventory[17172]||0,xp:c.pet.foodXp}).text),button('喂养一包战宠口粮',()=>cb.action({type:'feed'}),'primary centered'));
         else body.append(el('h3','center','等待与你相遇'),el('p','center muted','完成青龙的强化指导，即可获得一枚出奇蛋。'),ownsEgg(save)?button('打开出奇蛋',()=>cb.action({type:'hatch'}),'primary centered'):el('p','center','继续你的冒险吧。'));
     }
     if(kind==='debug'){body.closest('.modal').classList.add('debug-modal');renderDebugEditor(body,model,cb,{el,button});}
-    if(kind==='learning-mode')renderLearningMode(body,model,cb,{el,button});
+    if(kind==='learning-mode'){body.closest('.modal').classList.add('learning-mode-modal');renderLearningMode(body,model,cb,{el,button});}
     if(kind==='settings') {
         renderSettings(body,model,cb,{el,button});
     }
@@ -553,31 +603,43 @@ export function renderPanel(root,kind,model,cb) {
 function ownsEgg(save){return (save.inventory[17307]||0)>0;}
 export function renderDialogue(root,model,dialog,cb) {
     root.disposeDialogue?.();
-    const {assets,save}=model,c=assets.content,npc=(dialog.lines?c.npcs[dialog.lines[dialog.index]?.npcId]:dialog.npc)||c.npcs[dialog.npcId];root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
+    const {assets,save}=model,c=assets.content,npc=(dialog.lines?(c.npcs[dialog.lines[dialog.index]?.npcId]||(dialog.lines[dialog.index]?.speakerName?{id:dialog.lines[dialog.index].npcId,name:dialog.lines[dialog.index].speakerName,zone:save.zone}:null)):dialog.npc)||c.npcs[dialog.npcId];root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
     const box=el('section','dialogue-box rpg-dialogue');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',fill('与{name}交谈',{name:npc.name}).text);
     box.classList.toggle('dialogue-sequence',!!dialog.lines);
-    const portrait=art(assets,npc.portrait,150,190,'dialogue-portrait');
+    const character=npcCharacter(npc,assets.hero?.manifest);
+    const portrait=character?heroPortrait(assets,character,150,190):art(assets,npc.portrait,150,190,'dialogue-portrait');portrait.classList.add('dialogue-portrait');
     const content=el('div','dialogue-content',el('p','eyebrow',islandName(npc.zone)),el('h2','',npc.name));
     const close=createCloseButton(cb.close);
+    if(cb.chat&&!npcHasActiveQuest(save,c,npc.id)){
+        const chat=button('',()=>cb.chat(npc),'dialogue-chat');
+        chat.title=fill('与{name}交谈',{name:npc.name}).text;chat.setAttribute('aria-label',chat.title);
+        chat.innerHTML='<svg viewBox="0 0 40 36" aria-hidden="true"><path d="M10 3h20a7 7 0 0 1 7 7v10a7 7 0 0 1-7 7h-7l-6 6v-6h-7a7 7 0 0 1-7-7V10a7 7 0 0 1 7-7Z" fill="#fffbe9" stroke="#7a6335" stroke-width="1.8"/><g fill="#7a6335"><circle cx="12" cy="15" r="2"/><circle cx="20" cy="15" r="2"/><circle cx="28" cy="15" r="2"/></g></svg>';
+        box.append(chat);
+    }
     if(dialog.lines){
         const line=dialog.lines[dialog.index],last=dialog.index===dialog.lines.length-1;
         const replyLabel=entry=>entry.buttons?.[0]?.label&&!entry.buttons[0].label.includes('NEXT')?entry.buttons[0].label:'继续';
-        const labels=dialog.lines.map((entry,index)=>index===dialog.lines.length-1?dialog.finishLabel:replyLabel(entry));
+        const finalReply=dialog.lines.at(-1)?.buttons?.[0]?.label;
+        const lastLabel=dialog.preserveReply&&finalReply&&!finalReply.includes('NEXT')?finalReply:dialog.finishLabel;
+        const labels=dialog.lines.map((entry,index)=>index===dialog.lines.length-1?lastLabel:replyLabel(entry));
         // Reserve the same width for every step, including the longest reply.
         box.style.setProperty('--dialogue-action-width',`${Math.max(150,...labels.map(label=>Array.from(label||'继续').length*14+36))}px`);
-        const next=button(last?dialog.finishLabel:replyLabel(line),cb.next,'primary');
+        const next=button(last?lastLabel:replyLabel(line),cb.next,'primary');
+        if(last)next.title=tr(dialog.finishLabel);
         content.append(el('p','dialogue-text',line.text),el('div','dialogue-bottom',el('span','muted',`${dialog.index+1} / ${dialog.lines.length}`),next));
     }
     else {
         const q=currentQuest(save,c),state=q&&questState(save,q.id),ready=q&&questReady(save,q);
         const snap=catalogStatSnapshot(save,c),here=catalogQuestsForNpc(save,c,npc.id,snap);
-        content.append(el('p','dialogue-text',npc.description||'欢迎来到这里，年轻的魔法师。愿你的旅程充满惊喜。'));
+        const greeting=npc.description||'欢迎来到这里，年轻的魔法师。愿你的旅程充满惊喜。';
+        content.append(el('p','dialogue-text',npc.worldObservation?`${greeting}\n\n${npc.worldObservation.prompt}`:greeting));
         const choices=el('div','dialogue-choices');
         if(q&&(q.startNpc===npc.id||q.endNpc===npc.id))content.append(el('div','dialogue-rewards',el('span','dialogue-reward-label','任务奖励'),...rewardsFor(save,c,q).map(r=>rewardChip(c,r,{el}))));
         if(q&&!state.accepted&&q.startNpc===npc.id){const accept=button('',()=>cb.startQuest(q),'primary');setText(accept,'接取任务 · {title}',{title:q.title});choices.append(accept);}
         if(q&&ready&&q.endNpc===npc.id){const claim=button('',()=>cb.finishQuest(q),'primary');setText(claim,'完成任务 · {title}',{title:q.title});choices.append(claim);}
         for(const quest of here.accept){const accept=button('',()=>cb.startCatalog(quest),'primary');setText(accept,'接取任务 · {title}',{title:quest.title});choices.append(accept);}
         for(const quest of here.claim){const claim=button('',()=>cb.finishCatalog(quest),'primary');setText(claim,'完成任务 · {title}',{title:quest.title});choices.append(claim);}
+        for(const {quest,talk} of catalogTalksForNpc(save,c,npc.id,snap))choices.append(button(fill('{title} · {label}',{title:quest.title,label:talk.label||'交谈'}).text,()=>cb.questTalk(quest,talk),'primary'));
         if(dialog.questDialogue){
             dialog.questDialogue=false;
             if(choices.children.length===1){choices.children[0].click();return;}
@@ -588,7 +650,10 @@ export function renderDialogue(root,model,dialog,cb) {
         if(npcServices(c,npc).length)choices.append(button('查看商品与学习魔法',()=>cb.panel('npc-services',{npc}),'primary'));
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
-        if(npc.id===36205)choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
+        if(npc.id===36205||npc.name==='法斯特船长')choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
+        if(npc.worldObservation){
+            choices.append(button(npc.worldObservation.label,()=>cb.panel('earthmap'),'secondary'));
+        }
         choices.append(button('下次再聊',cb.close,'text-button'));content.append(choices);
     }
     const hint=el('p','dialogue-hint');
@@ -596,7 +661,7 @@ export function renderDialogue(root,model,dialog,cb) {
     box.append(portrait,content,close);root.append(box);
     const dialogueText=content.querySelector('.dialogue-text');
     bindDialogue(root,box,dialogueText,hint,content.querySelector('button.primary')||content.querySelector('button'),{
-        lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),readAloud:cb.readDialogue,mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,close:cb.close,
+        lines:dialogueLearningLines(dialogueText.dataset.zh||dialogueText.textContent,save.languageLearning),autoReadDialogue:save.languageLearning.enabled&&save.languageLearning.autoReadDialogue!==false,readAloud:(text,locale,signal)=>cb.readDialogue(text,locale,signal,npc),mapWords:cb.mapDialogue,targetLocale:save.languageLearning.target,close:cb.close,
     });
 }
 // 战斗卡牌说明的展开偏好只存本机（localStorage），默认折叠。
@@ -616,6 +681,7 @@ export function renderBattle(root,model,cb) {
     }
 }
 function renderBattleContent(root,model,cb) {
+    const retainedCanvas=root.handBattle===model.battle?root.querySelector('#battle-canvas'):null;
     root.disposeStatusTooltips?.();
     root.disposeHandGesture?.();
     root.battleLayoutObserver?.disconnect();
@@ -624,7 +690,7 @@ function renderBattleContent(root,model,cb) {
     // Capture the current visual positions, including any unfinished shuffle, before rebuilding.
     const oldHand=switching?new Map([...root.querySelectorAll('.hand-card')].map(node=>[node.dataset.seq,node.getBoundingClientRect()])):null;
     const previous=root.handBattle===model.battle?root.handSeqs||new Set():new Set();
-    const {assets,save,battle,selected,discarded=[],animating}=model,hero=battle.sides.near[0];root.replaceChildren();root.className=`battle-layer visible${animating?' battle-playing':''}`;
+    const {assets,save,battle,selected,discarded=[],animating}=model,hero=battle.unitsById[model.controlledUnitId]||battle.sides.near[0];root.replaceChildren();root.className=`battle-layer visible${animating?' battle-playing':''}`;
     const soundIcon=icon('sound');
     // The storybook atlas has no sound frame; keep the small speaker SVG.
     delete soundIcon.dataset.uiIcon;
@@ -632,8 +698,9 @@ function renderBattleContent(root,model,cb) {
     sound.title=model.soundEnabled?'关闭音效':'开启音效';
     sound.setAttribute('aria-label',sound.title);
     sound.setAttribute('aria-pressed',String(!!model.soundEnabled));
-    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,(()=>{const turn=el('span','badge');setText(turn,'第 {turn} 回合',{turn:battle.turn});return turn;})(),model.save.zone==='camp'&&model.save.languageLearning?.enabled?button('对话挑战',cb.battleTalk,'secondary small'):null,button('撤退',cb.retreat,'secondary small')));
-    const canvas=el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');canvas.onclick=e=>{const point=Object.entries(canvas.battlePositions||{}).sort((a,b)=>Math.hypot(a[1].x-e.offsetX,a[1].y-e.offsetY)-Math.hypot(b[1].x-e.offsetX,b[1].y-e.offsetY))[0];if(point)cb.target(point[0]);};
+    const top=el('div','battle-heading',el('div','',el('p','eyebrow','魔法对决'),el('h2','',battle.redMushroom?fill('红蘑菇赛场 · {near} 对 {far}',{near:battle.sides.near.length,far:battle.sides.far.length}).text:battle.monsterTemplates[0].name)),el('div','battle-heading-actions',sound,(()=>{const turn=el('span','badge');setText(turn,'第 {turn} 回合',{turn:battle.turn});return turn;})(),button('撤退',cb.retreat,'secondary small')));
+    if(battle.redMushroom&&!model.localDuo&&!battle.finished){const timer=el('span','badge arena-countdown',animating?'施法中…':fill('选牌剩余 {seconds} 秒',{seconds:model.arenaCountdown??30}).text);timer.dataset.arenaCountdown='';root.append(timer);}
+    const canvas=retainedCanvas||el('canvas','battle-canvas');canvas.id='battle-canvas';canvas.setAttribute('aria-label','战斗法阵，点击敌人或自己选择目标');bindBattleTargeting(canvas,cb.target);
     const blockedMessage=selected?castBlockedMessage(hero,battle.resolved.cards[selected.key],battle.resolved):'';
     const status=el('div','cast-announcement');status.id='cast-announcement';status.setAttribute('aria-live','polite');setText(status,battle.finished?'对决结束':animating?'魔法正在生效…':blockedMessage);
     status.classList.toggle('cast-blocked',!!blockedMessage&&!animating&&!battle.finished);
@@ -648,13 +715,13 @@ function renderBattleContent(root,model,cb) {
     const playerHand=(model.hand||U.cardsInHand(hero)).filter(h=>!discarded.includes(h.seq));
     const visibleHand=runeCardsOpen?runeHand.slice(root.runePage*runePageSize,root.runePage*runePageSize+runePageSize):petCardsOpen?petHand:playerHand;
     hand.setAttribute('aria-label',petCardsOpen?'宠物卡牌':'玩家手牌');
-    const togglePets=button(petCardsOpen?`返回玩家卡（${playerHand.length}张）`:`使用宠物卡（${petHand.length}张）`,cb.togglePetCards,'secondary');
+    const togglePets=button(petCardsOpen?fill('返回玩家卡（{count}张）',{count:playerHand.length}).text:fill('使用宠物卡（{count}张）',{count:petHand.length}).text,cb.togglePetCards,'secondary');
     togglePets.setAttribute('aria-pressed',String(petCardsOpen));
     togglePets.disabled=!petCardsOpen&&!petHand.length;
     togglePets.hidden=animating||battle.finished||!hero.petDeckSeq?.length;
-    const toggleRunes=button(runeCardsOpen?'返回玩家卡':`符文卡（${(model.runeHand||[]).reduce((total,row)=>total+row.count,0)}）`,cb.toggleRunes,'secondary');
+    const toggleRunes=button(runeCardsOpen?'返回玩家卡':fill('符文卡（{count}）',{count:(model.runeHand||[]).reduce((total,row)=>total+row.count,0)}).text,cb.toggleRunes,'secondary');
     toggleRunes.setAttribute('aria-pressed',String(runeCardsOpen));
-    toggleRunes.hidden=animating||battle.finished;
+    toggleRunes.hidden=animating||battle.finished||battle.redMushroom;
     toggleRunes.disabled=!runeCardsOpen&&!model.runeHand?.length;
     const runePager=el('div','battle-hand-actions');
     runePager.hidden=!runeCardsOpen||runePages===1||animating||battle.finished;
@@ -679,11 +746,11 @@ function renderBattleContent(root,model,cb) {
         const description=describeCard(card,{dataset:battle.resolved,translate:tr});
         node.title=fill('{name} · {target} · {description}',{name:artCard.name,target:description.target,description:description.summary}).text;
         node.title+=' · '+(runeCardsOpen?fill('符文剩余 {count}',{count:h.count}).text:tr(petCardsOpen?'宠物卡':'向下拖动或右键弃牌'));
-        if(h.runeId)node.append(badge(`剩余 ${h.count}`));
+        if(h.runeId)node.append(badge(fill('剩余 {count}',{count:h.count}).text));
         if(isSelected){
             // 上下结构：说明框折叠在卡面上方，点击"查看详情"展开，状态记在本地。
             const detailBody=el('div','battle-card-detail-body',el('h3','',artCard.name),el('p','card-detail-meta',description.meta),...description.lines.map(line=>el('p','',line)),el('small','',description.note));
-            detailBody.id='selected-card-detail';detailBody.tabIndex=0;detailBody.setAttribute('aria-label',tr('卡牌效果说明'));detailBody.setAttribute('aria-live','polite');
+            detailBody.id=model.localDuo?`selected-card-detail-${hero.id}`:'selected-card-detail';detailBody.tabIndex=0;detailBody.setAttribute('aria-label',tr('卡牌效果说明'));detailBody.setAttribute('aria-live','polite');
             select.setAttribute('aria-describedby',detailBody.id);
             const toggleLabel=el('span','card-detail-toggle-label');
             const summary=el('summary','card-detail-toggle',toggleLabel);
@@ -698,7 +765,7 @@ function renderBattleContent(root,model,cb) {
         hand.append(node);
     }
     const pass=button('跳过本回合',cb.pass,'secondary');pass.disabled=animating||battle.finished;
-    if(cb.aiHintsToggle){
+    if(cb.aiHintsToggle&&!battle.redMushroom){
         const hintIcon=icon('pet');delete hintIcon.dataset.uiIcon;
         const toggle=button(hintIcon,cb.aiHintsToggle,'battle-sound battle-pet-hint-toggle');
         toggle.title=model.aiHintsMuted?'开启本场宠物提示':'关闭本场宠物提示';
@@ -712,22 +779,52 @@ function renderBattleContent(root,model,cb) {
     const kind=selected&&cardTargetKind(battle.resolved.cards[selected.key]),canPlay=selected&&!discarded.includes(selected.seq)&&U.isAlive(hero);targetEnemy.hidden=legalTargets.length!==1||kind==='friendly'||kind==='self';targetSelf.hidden=legalTargets.length!==1||kind==='hostile'||kind==='all';targetEnemy.disabled=targetSelf.disabled=animating||battle.finished||!canPlay;
     const deckLeft=el('small','');
     setText(deckLeft,'卡包剩余 {count} 张',{count:U.deckRemaining(hero)-discarded.length});
-    bottom.append(el('div','pip-legend',deckLeft),el('div','battle-actions',targetEnemy,targetSelf,el('div','battle-hand-actions',togglePets,toggleRunes,pass)));
-    const rosterOptions={heroId:hero.id,canTarget:unit=>!animating&&!battle.finished&&canPlay&&legalTargets.includes(unit),target:cb.target,el,button,schoolNames:SCHOOL_NAMES,colors:COLORS};
+    const chat=cb.battleChat?createBattleChat({el,button,onSend:cb.battleChat,disabled:animating||battle.finished||hero.hp<=0,tactical:!battle.redMushroom}):null;
+    bottom.append(el('div','pip-legend',deckLeft),el('div','battle-actions',targetEnemy,targetSelf,el('div','battle-hand-actions',chat,togglePets,toggleRunes,pass)));
+    const catchCard=selected&&battle.resolved.cards[selected.key]?.type==='CatchPet'?battle.resolved.cards[selected.key]:null;
+    const targetHint=unit=>catchCard&&legalTargets.includes(unit)?fill('捕捉成功率 {chance}%',{chance:(catchProbability(battle,catchCard,unit)*100).toFixed(1)}).text:'';
+    if(catchCard){setText(targetEnemy,'捕捉怪物');bottom.append(el('small','',tr('所有存活怪物均可捕捉；降低血量或使用更高级符文可提高成功率。')));}
+    const rosterOptions={targetHint,heroId:hero.id,canTarget:unit=>!animating&&!battle.finished&&canPlay&&legalTargets.includes(unit),target:cb.target,el,button,schoolNames:SCHOOL_NAMES,colors:COLORS};
     const foes=createBattleRoster(battle,'far',rosterOptions),allies=createBattleRoster(battle,'near',rosterOptions);
     root.battleStatusEntries=[...foes.entries,...allies.entries];updateBattleRoster(root.battleStatusEntries,model.presentation);
     top.firstChild.replaceChildren(foes.roster);
     top.classList.add('battle-roster-heading');bottom.classList.add('battle-roster-controls');
     const targets=el('div','battle-party-controls',allies.roster);
-    if(battle.monsterTemplates.some(row=>row.speciesId)){
+    if(!battle.redMushroom&&battle.monsterTemplates.some(row=>row.speciesId)){
         const catchStock=(model.runeHand||[]).filter(row=>battle.resolved.cards[row.key]?.type==='CatchPet').reduce((sum,row)=>sum+row.count,0);
-        const capture=button(catchStock?`抓宠符文（${catchStock}）`:'没有抓宠符文',()=>cb.openRunes?.(),'secondary');
+        const capture=button(catchStock?fill('抓宠符文（{count}）',{count:catchStock}).text:'没有抓宠符文',()=>cb.openRunes?.(),'secondary');
         capture.disabled=animating||battle.finished||hero.hp<=0||!catchStock;
         if(!catchStock)capture.title='向哈奇岛的安卓婆婆购买普通或高级抓宠符文';
         targets.append(capture);
     }
     bottom.append(targets,runePager);
-    root.append(top,canvas,status,hand,bottom);
+    if(model.localBattlePane){
+        // Only selection is duplicated. The arena and both rosters belong to the shared view.
+        root.battleStatusEntries=[];
+        const owner=el('strong','local-battle-owner',`玩家${model.localBattleOwner+1} · ${hero.name}`);
+        if(model.localBattleWaiting){
+            bottom.replaceChildren(owner,button('已准备 · 取消',cb.cancelReady,'primary'));
+            root.append(bottom);
+        }else{
+            bottom.replaceChildren(owner,bottom.querySelector('.battle-actions'),runePager);
+            root.append(hand,bottom);
+        }
+        const layout=()=>{
+            const shared=model.localBattleFooter?.querySelector('.battle-controls');
+            const footer=shared?shared.offsetHeight+(parseFloat(getComputedStyle(shared).bottom)||0)+12:24;
+            bottom.style.bottom=`${footer}px`;
+            if(!selected)hand.style.bottom=`${footer+bottom.offsetHeight+12}px`;
+        };
+        root.battleLayoutObserver=new ResizeObserver(layout);
+        for(const node of [root,bottom,model.localBattleFooter].filter(Boolean))root.battleLayoutObserver.observe(node);
+        layout();
+        root.disposeHandGesture=selected||model.localBattleShared||model.localBattleWaiting?null:bindHandGesture(hand,{select:seq=>cb.select(visibleHand.find(h=>h.seq===seq)),play:seq=>cb.swipePlay(visibleHand.find(h=>h.seq===seq)),discard:petCardsOpen||runeCardsOpen||animating||battle.finished?null:cb.discard});
+        root.oncontextmenu=e=>{const node=e.target.closest('.hand-card');if(!node||petCardsOpen||runeCardsOpen||animating||battle.finished)return;e.preventDefault();cb.discard(Number(node.dataset.seq));};
+        if(oldHand)animateHandSelection(hand,oldHand,oldSelected,String(selected.seq));
+        return;
+    }
+    if(model.localBattleShared){bottom.querySelector('.battle-actions')?.remove();runePager.remove();hand.hidden=true;}
+    root.append(top,canvas,status,...(model.localBattleShared?[]:[hand]),bottom);
     attachStatusTooltips(root,canvas);
     // The centred face passes left clicks to the arena; resolve its right click by bounds.
     root.oncontextmenu=e=>{
@@ -738,7 +835,7 @@ function renderBattleContent(root,model,cb) {
         if(e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom)return;
         e.preventDefault();e.stopPropagation();cb.discard(Number(node.dataset.seq));
     };
-    root.disposeHandGesture=selected?null:bindHandGesture(hand,{
+    root.disposeHandGesture=selected||model.localBattleShared||model.localBattleWaiting?null:bindHandGesture(hand,{
         select:seq=>cb.select(visibleHand.find(h=>h.seq===seq)),
         play:seq=>cb.swipePlay(visibleHand.find(h=>h.seq===seq)),
         discard:petCardsOpen||runeCardsOpen||animating||battle.finished?null:cb.discard,
@@ -758,12 +855,13 @@ function renderBattleContent(root,model,cb) {
     if(battle.finished&&!animating){
         const won=battle.winner==='near';
         const rewardLine=el('p','');
-        if(won){
+        if(battle.redMushroom){setText(rewardLine,battle.winner==null?'本场平局，战绩已更新。':'比赛结束，战绩已更新。');}
+        else if(won){
             const xp=battle.monsterTemplates.reduce((sum,m)=>sum+Math.ceil(m.xp*(save.pendingEncounter?.magicStarExperiencePercent??100)/100),0);
             const coins=battle.monsterTemplates.reduce((sum,m)=>sum+m.coins,0);
             setText(rewardLine,'获得 {xp} 经验 · {coins} 奇豆',{xp,coins});
         }else setText(rewardLine,'已保留你的物品与任务进度。');
-        const result=el('div','result-card',el('p','eyebrow',won?'对决胜利':'继续加油'),el('h2','',won?'魔法的力量，属于你！':'休息一下，再来挑战'),rewardLine,button(won?'收下奖励，继续冒险':'回到安全地点',cb.finish,'primary'));root.append(result);
+        const result=el('div','result-card',el('p','eyebrow',won?'对决胜利':'继续加油'),el('h2','',won?'魔法的力量，属于你！':'休息一下，再来挑战'),rewardLine,button(battle.redMushroom?'返回红蘑菇赛场':won?'收下奖励，继续冒险':'回到安全地点',cb.finish,'primary'));root.append(result);
         if(model.aiReview){
             const review=model.aiReview,p=review.presentation;
             result.querySelector('h2').textContent=p.headline;
@@ -774,7 +872,16 @@ function renderBattleContent(root,model,cb) {
                 for(const route of model.aiGrowth||[])result.insertBefore(button(route.title,()=>cb.aiNavigate(route.entry),'secondary'),result.lastChild);
             }
         }
-        if(battle.captured?.length)result.insertBefore(el('p','',`捕获伙伴：${battle.captured.map(id=>assets.content.pets[id]?.name||id).join('、')}（已拥有的伙伴转为经验）`),result.lastChild);
+        if(battle.captured?.length){
+            const owned=new Map(Object.values(ownedPetRecords(model.save)).map(p=>[p.speciesId,p]));
+            for(const [index,id] of battle.captured.entries()){
+                const before=owned.get(id),traits=battle.capturedTraits?.[index]||{},upgrades=petTraitImprovements(before?.passiveTraits,traits);
+                const card=el('section','capture-growth-result',el('strong','',assets.content.pets[id]?.name||id),createPetTraitBadges(traits,assets.content,el));
+                card.append(el('p','',fill('累计成功捕获 {count} 次',{count:(before?.captureCount||0)+1}).text),el('p','',upgrades.length?traitUpgradeText(upgrades):tr('标签已保留最优等级，本次增加获得次数和经验。')));
+                result.insertBefore(card,result.lastChild);
+                owned.set(id,{...before,passiveTraits:mergePetTraits(before?.passiveTraits,traits),captureCount:(before?.captureCount||0)+1});
+            }
+        }
     }
 }
 function animateHandSelection(hand,previous,oldSelected,selected) {
@@ -818,6 +925,11 @@ export function animatePlayedCard(root,card,duration) {
 }
 export function eventLabel(e,battle,assets) {
     const caster=battle.unitsById[e.caster]?.name||'',target=battle.unitsById[e.target]?.name||'',card=assets.dataset.cards[e.card]?.name||'';
+    if(e.type==='freeze')return fill(e.success?'{target} 被冰封了':'{target} 抵抗了冰封',{target}).text;
+    if(e.type==='guardian')return fill('{target} 获得一次替身守护',{target}).text;
+    if(e.type==='enrage')return fill('{target} 被激怒了',{target}).text;
+    if(e.revived)return fill('{target} 受到守护，复活并恢复 {amount} 点生命',{target,amount:e.amount}).text;
+    if(e.type==='pass'&&e.reason==='frozen')return fill('{caster} 被冰封，无法行动',{caster}).text;
     if(e.label==='reflection'&&['cast','damage'].includes(e.type))return fill(e.type==='cast'?'{caster} 的魔镜反弹 {card} → {target}':'{target} 受到魔镜反弹的 {amount} 点伤害',{caster,target,card,amount:e.amount}).text;
     if(e.type==='cast')return fill('{caster} → {target} · {card}',{caster,target,card}).text;
     if(e.type==='damage'||e.type==='dot')return fill('{target} 受到 {amount} 点伤害',{target,amount:e.amount}).text;

@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {socialCapacity,recordInteraction,selectSocialRoster,boardGroup,markSocialActivity,makeSocialSnapshot,validatePublicProfile,DAY_MS,pickAutoJoinPartner,autoJoinDelayMs} from '../js/adventure_social_core.js';
 import {startCoopRun,dungeonProgress} from '../js/adventure_coop_core.js';
-import {createSocialActors,stepSocialActors,socialBubble,pickSocialBubble,socialActivityHubs,onActivityRoad} from '../js/adventure_social_motion_core.js';
+import {createSocialActors,stepSocialActors,socialBubble,pickSocialBubble,socialActivityHubs,onActivityRoad,socialMonsterGap,actorsApart} from '../js/adventure_social_motion_core.js';
 import {SOCIAL_DEFAULTS} from '../js/adventure_social_core.js';
 import {startSocialPvp,playSocialPvp,restoreSocialPvp,recordPvpWin} from '../js/adventure_social_pvp_core.js';
 import {durableSave,runtimeValues,restoreRuntime} from '../js/adventure_storage_core.js';
@@ -91,25 +91,26 @@ test('PvP replay deterministic and filler opponents never score',()=>{
 });
 
 for(const count of [2,3,4])test(`${count} player complete dungeon uses real rounds and replay checkpoints`,()=>{
-    const save=setup(count,50),bot=new SimpleBot();
+    const save=setup(count,50),bot=new SimpleBot(),relationshipEvents=[];
     for(const encounter of dungeon.arenas){
         A.beginEncounter(save,content,encounter.id);const battle=P.restorePveBattle(dataset,content,save.pendingEncounter);
         for(let i=0;i<200&&!battle.finished;i++){const decision=bot.pick(battle,battle.unitsById.hero);P.playPveRound(battle,decision);A.recordDecision(save,decision,battle);}
         assert.equal(battle.finished,true);assert.equal(battle.winner,'near');
         const restored=checkedProgress(restoreRuntime(durableSave(save),content,runtimeValues(save)),content,dataset);
-        assert.deepEqual(restored.battle.events,battle.events);A.settleEncounter(save,content,battle,{now});
+        assert.deepEqual(restored.battle.events,battle.events);relationshipEvents.push(...A.settleEncounter(save,content,battle,{now}).relationshipEvents);
     }
     assert.equal(dungeonProgress(save)[dungeon.id].cleared.length,dungeon.arenas.length);
     assert.equal(save.coopRun.battles.length,dungeon.arenas.length);
-    assert.equal(save.relationshipEvents.length,count-1);assert.ok(save.relationshipEvents.every(e=>e.kind==='dungeon'&&e.at===now));
+    assert.equal(relationshipEvents.length,count-1);assert.ok(relationshipEvents.every(e=>e.kind==='dungeon'&&e.at===now));
+    assert.equal(save.relationshipEvents,undefined,'core settlement does not persist unverified friendships');
     assert.deepEqual(checkedProgress(save,content,dataset).save.relationshipEvents,save.relationshipEvents);
 });
 
 
-for(const count of [5,6,8])test(`camp ${count} residents avoid NPCs and cap simultaneous motion`,()=>{
+for(const count of [5,6,8])test(`camp ${count} residents avoid NPCs and cap non-party simultaneous motion`,()=>{
     const save=A.createAdventure(content),world=createWorld('camp',content,save),people=Array.from({length:count},(_,i)=>({...profile(i),id:`p${i}`})),actors=createSocialActors(world,people,19);
     assert.ok(actors.every(a=>world.npcs.every(n=>Math.hypot(n.x-a.position.x,n.y-a.position.y)>65)));
-    for(let i=0;i<1000;i++){stepSocialActors(actors,world,.1,{team:people.slice(0,3).map(p=>p.id),leader:save.position});assert.ok(actors.filter(a=>a.moving).length<=Math.ceil(count/4));}
+    for(let i=0;i<1000;i++){stepSocialActors(actors,world,.1,{team:people.slice(0,3).map(p=>p.id),leader:save.position});assert.ok(actors.filter(a=>!a.inParty&&a.moving).length<=Math.ceil(count/4));}
 });
 test('off-camera social actors stay put while on-camera peers may walk',()=>{
     const save=A.createAdventure(content),world=createWorld('camp',content,save),people=Array.from({length:4},(_,i)=>({...profile(i),id:`vis${i}`}));
@@ -195,7 +196,35 @@ test('every non-camp island fills sixteen unique companions and keeps them on wa
         assert.ok(spawnNear>=Math.min(SOCIAL_DEFAULTS.spawnMinActors,roster.length),`${zone} spawn cluster`);
         for(let i=0;i<1200;i++)stepSocialActors(actors,world,.1);
         assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)),`${zone} movement`);
+        assert.ok(actors.every((a,i)=>actors.every((b,j)=>i===j||actorsApart(a.position,b.position))),`${zone} companions overlap`);
         const idle=actors.filter(a=>!a.moving&&!a.path.length);
         assert.ok(idle.every(a=>onActivityRoad(world,a.position)),`${zone} idle on road`);
     }
+});
+
+test('companions stay off monster sprites while standing on the road',()=>{
+    const world=createWorld('fire',content);
+    const road=world.paths[0],mid={x:(road.a.x+road.b.x)/2,y:(road.a.y+road.b.y)/2};
+    world.encounters=[{id:'stack',x:mid.x,y:mid.y,monsterId:'mob',monsterIds:['mob','mob','mob']}];
+    const people=Array.from({length:8},(_,i)=>({...profile(i),id:`gap${i}`}));
+    const clear=a=>world.encounters.every(e=>Math.hypot(a.position.x-e.x,a.position.y-e.y)>socialMonsterGap(e));
+    const actors=createSocialActors(world,people,'stack');
+    assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)&&onActivityRoad(world,a.position)&&clear(a)));
+    for(let i=0;i<600;i++)stepSocialActors(actors,world,.1);
+    assert.ok(actors.filter(a=>!a.path.length).every(a=>clear(a)&&onActivityRoad(world,a.position)));
+    assert.ok(actors.every((a,i)=>actors.every((b,j)=>i===j||actorsApart(a.position,b.position))));
+});
+
+test('stacked AI companions step out of each others sprite box and stay on the road',()=>{
+    const world=createWorld('ice',content),people=Array.from({length:2},(_,i)=>({...profile(i),id:`stack${i}`}));
+    const actors=createSocialActors(world,people,'overlap');
+    assert.ok(actorsApart(actors[0].position,actors[1].position));
+    actors[1].position={...actors[0].position};actors[0].path=[];actors[1].path=[];actors[0].wait=500;actors[1].wait=500;
+    const open={x:0,y:0,w:world.w,h:world.h};
+    stepSocialActors(actors,world,.1,{view:open});
+    assert.ok(actorsApart(actors[0].position,actors[1].position));
+    assert.ok(actors.every(a=>walkable(world,a.position.x,a.position.y)&&onActivityRoad(world,a.position)));
+    const frozen=actors.map(a=>({...a.position}));
+    stepSocialActors(actors,world,.1,{view:{x:-10000,y:-10000,w:1,h:1}});
+    assert.deepEqual(actors.map(a=>({...a.position})),frozen);
 });

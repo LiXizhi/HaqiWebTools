@@ -39,7 +39,7 @@ if(params.has('phone')){
             else if(path.length){const next=followPath(world,save.position,path,WALK_SPEED*dt);save.position=next.position;path=next.path;}
             else{status.textContent='路径不可达，请重新选择附近居民。';pending=null;}
         }
-        renderer.render(world,save,now,{path,moving:!!path.length,companionBubble:app.bubble,learningGreeting:app.greeting});requestAnimationFrame(frame);
+        renderer.render(world,save,now,{path,moving:!!path.length,companionBubble:app.bubble&&app.invitation,learningGreeting:app.greeting});requestAnimationFrame(frame);
     }
     status.textContent='选择靠近一个居民；画布上的点点点邀请出现后，点击画布走近并开始交流。';requestAnimationFrame(frame);
 }

@@ -1,3 +1,4 @@
+import {magicStarCombatLevel} from './adventure_magic_star_core.js';
 import {heroPortrait} from './hero_renderer.js';
 import { setText, fill, tr } from './locale_runtime.js';
 import {DetailDialog} from './view_detail_dialog.js';
@@ -39,9 +40,9 @@ export function renderEquipment(body,model,cb,ui) {
     edit.title=edit.getAttribute('aria-label');
     edit.disabled=!!save.pendingEncounter;
     if(save.pendingEncounter)edit.title=tr('战斗中无法修改名字和形象');
-    const identity=el('div','equipment-identity',el('div','equipment-name-row',el('h3','',save.name),edit),el('p','muted',`${SCHOOL_NAMES[save.school]}学徒 · 等级 ${save.level}`));
+    const identity=el('div','equipment-identity',el('div','equipment-name-row',el('h3','',save.name),edit),el('p','muted',fill(`{v0}学徒 · 等级 {v1}`,{v0:String(SCHOOL_NAMES[save.school]),v1:String(save.level)}).text));
     function openCustomize(trigger){
-        const draft={name:save.name,appearance:save.appearance==='girl'?'girl':'boy',headId:resolvedHeadId(save),bodyId:save.bodyId};
+        const draft={name:save.name,appearance:save.appearance==='girl'?'girl':'boy',headId:resolvedHeadId(save),bodyId:save.bodyId,customHead:save.customHead};
         const dialog=new DetailDialog(body,{el,title:'修改名字和形象',className:'equipment-item-dialog hero-customize-dialog'});
         dialog.closeButton.setAttribute('aria-label',tr('关闭修改名字和形象'));
         dialog.closeButton.title=dialog.closeButton.getAttribute('aria-label');
@@ -59,19 +60,19 @@ export function renderEquipment(body,model,cb,ui) {
             const balance=save.inventory[984]||0;
             setText(hint,'改名字每次 {nameCost} 魔豆，改形象每次 {lookCost} 魔豆。只收取有改动的部分。当前 {count} 魔豆。',{nameCost:HERO_NAME_BEANS,lookCost:HERO_LOOK_BEANS,count:balance});
             if(invalid){setText(confirm,'名字需要一至十六个字');confirm.disabled=true;}
-            else if(!quote.total){setText(confirm,'名字和形象都没有变化');confirm.disabled=true;}
+            else if(!quote.nameChanged&&!quote.lookChanged){setText(confirm,'名字和形象都没有变化');confirm.disabled=true;}
             else if(balance<quote.total){setText(confirm,quote.nameChanged&&quote.lookChanged?'改名字和形象需要100魔豆':quote.nameChanged?'改名字需要50魔豆':'改形象需要50魔豆');confirm.disabled=true;}
-            else{setText(confirm,'花费 {count} 魔豆确认',{count:quote.total});confirm.disabled=false;}
+            else{if(quote.total)setText(confirm,'花费 {count} 魔豆确认',{count:quote.total});else setText(confirm,'免费使用这个形象');confirm.disabled=false;}
         }
         name.oninput=refresh;
         picker.addEventListener('change',()=>refresh());
         confirm.onclick=()=>{
-            const quote=heroCustomizeQuote(save,{name:name.value,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId});
-            if(confirm.disabled||!quote.total)return;
+            const quote=heroCustomizeQuote(save,{...draft,name:name.value});
+            if(confirm.disabled||!quote.nameChanged&&!quote.lookChanged)return;
             dialog.close();
-            cb.action({type:'customize-hero',name:name.value,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId});
+            cb.action({type:'customize-hero',name:name.value,appearance:draft.appearance,headId:draft.headId,bodyId:draft.bodyId,customHead:draft.customHead});
         };
-        dialog.body.append(picker,label,name,hint);
+        dialog.body.append(picker,label,name,hint,el('p','muted','自定义头像免费切换；改名字和身体仍按原规则收费。'));
         dialog.footer.append(confirm);
         refresh();
         dialog.open(trigger);
@@ -85,29 +86,29 @@ export function renderEquipment(body,model,cb,ui) {
             const item=slot.id==='mount'?c.items[save.mountId]:c.items[save.equipment[slot.id]];
             // An equipped slot shows only the item art; the slot name is kept for empty slots.
             const b=button([item?null:el('span','equipment-slot-name',slot.name),item?art(assets,item.art,42,42):el('span','equipment-empty','＋'),el('span','equipment-slot-title',item?.name||'未装备')],()=>{state.tab='gear';state.slot=slot.id==='mount'?'mounts':slot.id;state.page=0;state.item=item?.id||null;state.guid=slot.id==='mount'?null:save.equipmentGuids?.[slot.id]||null;const next=render();if(item)next.openDetail(item);},`equipment-slot ${state.slot===slot.id||(slot.id==='mount'&&state.slot==='mounts')?'selected':''}`);
-            b.setAttribute('aria-label',`${slot.name}：${item?.name||'未装备'}，查看该部位`);slots.append(b);
+            b.setAttribute('aria-label',fill(`{v0}：{v1}，查看该部位`,{v0:String(slot.name),v1:String(item?.name||'未装备')}).text);slots.append(b);
         }
         character.append(slots);
         const statDetails=el('details','equipment-stat-details',el('summary','','当前属性'));
         statDetails.open=state.statsOpen??false;
         statDetails.ontoggle=()=>{state.statsOpen=statDetails.open;};
         const stats=el('dl','equipment-summary');
-        for(const row of visibleEquipmentSummary(save,c))stats.append(el('dt','',row.label),el('dd','',`${row.value}${row.unit}`));
-        statDetails.append(stats,el('p','muted','属性加成包含装备、强化、宝石和骑乘中的坐骑；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。装备附加牌不占普通卡包容量。'));
+        for(const row of visibleEquipmentSummary(save,c,magicStarCombatLevel(c,{keepworkVip:model.membership?.isVip,expiresAt:model.membership?.expiresAt,now:model.now})))stats.append(el('dt','',row.label),el('dd','',`${row.value}${row.unit}`));
+        statDetails.append(stats,el('p','muted','属性加成包含装备、强化、宝石和骑乘中的坐骑；其他学系与扩展属性仅显示非零项。最大生命与超级魔力率包含等级基础值。战力按原版公式综合超级魔力率、五系最高攻击和平均防御，不计卡组、生命、暴击或临时状态。装备附加牌不占普通卡包容量。'));
         character.append(statDetails);
         if(c.progressionBonuses){
             const current=DRAGON_TOTEMS.find(row=>(save.inventory[row.id]||0)>0);
             const experience=save.inventory[50359]||0;
             const stage=current?dragonTotemStage(c.progressionBonuses,current.id,50359,experience):null;
             const totems=el('details','equipment-stat-details',el('summary','','龙图腾'));
-            totems.append(el('p','',current?`${current.name} · ${stage?.level??0}级 · 经验 ${experience}`:'尚未学习图腾信仰'));
+            totems.append(el('p','',current?fill(`{v0} · {v1}级 · 经验 {v2}`,{v0:String(current.name),v1:String(stage?.level??0),v2:String(experience)}).text:'尚未学习图腾信仰'));
             for(const attribute of progressionAttributes(stage?.stats))totems.append(el('p','',attributeSpan(el,attribute)));
-            totems.append(el('p','muted',`魔豆 ${save.inventory[984]||0} · ${current?'转换信仰50魔豆，保留经验':'首次学习免费'}`));
+            totems.append(el('p','muted',fill(`魔豆 {v0} · {v1}`,{v0:String(save.inventory[984]||0),v1:String(current?'转换信仰50魔豆，保留经验':'首次学习免费')}).text));
             const choices=el('div','equipment-attributes');
             for(const row of DRAGON_TOTEMS){
                 const selected=current?.id===row.id;
-                const choose=button(selected?`${row.name} · 已学习`:`${current?'转换为':'学习'}${row.name}`,()=>{
-                    if(!globalThis.confirm(current?`花费50魔豆，将信仰转换为${row.name}？图腾经验保留。`:`免费学习${row.name}？`))return;
+                const choose=button(selected?fill(`{v0} · 已学习`,{v0:String(row.name)}).text:`${current?'转换为':'学习'}${row.name}`,()=>{
+                    if(!globalThis.confirm(current?fill(`花费50魔豆，将信仰转换为{v0}？图腾经验保留。`,{v0:String(row.name)}).text:fill(`免费学习{v0}？`,{v0:String(row.name)}).text))return;
                     cb.action({type:'choose-totem',professionId:row.id});
                 },'secondary');
                 choose.disabled=selected||!!save.pendingEncounter||!!current&&(save.inventory[984]||0)<50||!c.progressionBonuses.professions?.[row.id]?.length;
@@ -118,7 +119,7 @@ export function renderEquipment(body,model,cb,ui) {
     }else{
         character.append(el('h3','equipment-section-title','旅行物品'));
         const summary=el('dl','equipment-summary');
-        for(const [id,label] of TRAVEL_FILTERS.slice(1))summary.append(el('dt','',label),el('dd','',`${owned.filter(item=>!isGear(item)&&travelCategory(item)===id).length} 种`));
+        for(const [id,label] of TRAVEL_FILTERS.slice(1))summary.append(el('dt','',label),el('dd','',fill(`{v0} 种`,{v0:String(owned.filter(item=>!isGear(item)&&travelCategory(item)===id).length)}).text));
         character.append(summary,el('p','muted','消耗品、卡牌与收藏物品收纳在这里。点击右侧物品查看详情。'));
     }
     shell.append(character,wardrobe);
@@ -171,7 +172,7 @@ export function renderEquipment(body,model,cb,ui) {
             const quantity=save.inventory[item.id];
             if(!isGear(item)||quantity>1)b.append(el('span','equipment-quantity',String(quantity)));
             if(equipped)b.append(el('small','equipment-equipped-label','已装备'));
-            b.setAttribute('aria-label',`${item.name}${!isGear(item)||quantity>1?`，数量 ${quantity}`:''}${equipped?'，已装备':''}，查看详情`);
+            b.setAttribute('aria-label',fill(`{v0}{v1}{v2}，查看详情`,{v0:String(item.name),v1:String(!isGear(item)||quantity>1?fill(`，数量 {v0}`,{v0:String(quantity)}).text:''),v2:String(equipped?'，已装备':'')}).text);
             b.title=item.name;b.setAttribute('aria-haspopup','dialog');b.setAttribute('aria-pressed',String(state.item===item.id));grid.append(b);
             if(canTeach&&!teachButton&&!equipped&&isGear(item)&&!equipmentBlockReason(save,item,c)){
                 const instance=findEquipmentInstance(save,c,item.id,state.guid)||findEquipmentInstance(save,c,item.id);
@@ -192,10 +193,10 @@ export function renderEquipment(body,model,cb,ui) {
         const instance=mount?null:findEquipmentInstance(save,c,item.id,state.guid)||findEquipmentInstance(save,c,item.id);
         const equipped=mount?save.mountId===item.id:Number(save.equipment[item.slot])===item.id&&(!save.equipmentGuids?.[item.slot]||save.equipmentGuids[item.slot]===instance?.guid),gear=isGear(item),level=instance?.serverdata.addlel||0;
         inspector.render(item,{owned:true,instanceGuid:instance?.guid});
-        if(level)detail.append(el('p','muted',`强化 +${level}`));
+        if(level)detail.append(el('p','muted',fill(`强化 +{v0}`,{v0:String(level)}).text));
         if(gear){
             const copies=equipmentInstances(save,c).rows.filter(row=>row.gsid===item.id);
-            if(copies.length>1){const select=el('select','equipment-instance-select');select.setAttribute('aria-label','选择装备实例');copies.forEach((row,i)=>{const option=el('option','',`第 ${i+1} 件 · 强化 +${row.serverdata.addlel}${row.guid===save.equipmentGuids?.[item.slot]?' · 已装备':''}`);option.value=row.guid;select.append(option);});select.value=instance.guid;select.onchange=()=>{state.guid=select.value;paintDetail(item);};detail.append(select);}
+            if(copies.length>1){const select=el('select','equipment-instance-select');select.setAttribute('aria-label','选择装备实例');copies.forEach((row,i)=>{const option=el('option','',fill(`第 {v0} 件 · 强化 +{v1}{v2}`,{v0:String(i+1),v1:String(row.serverdata.addlel),v2:String(row.guid===save.equipmentGuids?.[item.slot]?' · 已装备':'')}).text);option.value=row.guid;select.append(option);});select.value=instance.guid;select.onchange=()=>{state.guid=select.value;paintDetail(item);};detail.append(select);}
         }
         if(mount){
             const riding=save.mountId===item.id;
@@ -230,14 +231,14 @@ export function renderEquipment(body,model,cb,ui) {
             if(!reason){
                 const preview=previewEquipment(save,c,action),changes=preview.rows.filter(row=>row.delta);
                 const previous=c.items[save.equipment[item.slot]];
-                detail.append(el('p','equipment-compare-title',equipped?'卸下后变化':previous?`替换「${previous.name}」后变化`:'穿戴后变化'));
+                detail.append(el('p','equipment-compare-title',equipped?'卸下后变化':previous?fill(`替换「{v0}」后变化`,{v0:String(previous.name)}).text:'穿戴后变化'));
                 const table=el('table','equipment-comparison');
                 table.append(el('thead','',el('tr','',...['属性','当前',equipped?'卸下后':'换装后','变化'].map(label=>el('th','',label)))));
                 const rows=el('tbody','');
                 for(const row of changes)rows.append(el('tr','',el('th','',row.label),el('td','',`${row.before}${row.unit}`),el('td','',`${row.value}${row.unit}`),el('td',row.delta>0?'equipment-gain':'equipment-loss',`${row.delta>0?'+':''}${row.delta}${row.unit}`)));
                 table.append(rows);if(changes.length)detail.append(table);
                 if(!changes.length)detail.append(el('p','muted','基础属性不变，请查看附加法术。'));
-                if(preview.trimmed)detail.append(el('p','equipment-warning',`卡包容量降低，将按现有顺序移出 ${preview.trimmed} 张配卡。拥有的卡牌不会丢失，可在卡包中重新配置。`));
+                if(preview.trimmed)detail.append(el('p','equipment-warning',fill(`卡包容量降低，将按现有顺序移出 {v0} 张配卡。拥有的卡牌不会丢失，可在卡包中重新配置。`,{v0:String(preview.trimmed)}).text));
                 const b=button(equipped?'卸下':'穿上',()=>{dialog.close();cb.action(action);},equipped?'secondary':'primary');
                 b.disabled=!!save.pendingEncounter;footer.prepend(b);if(save.pendingEncounter)footer.append(el('span','muted','战斗中无法换装'));
             }else {detail.append(el('p','equipment-warning',reason));const b=button('穿上',()=>{},'primary');b.disabled=true;footer.prepend(b);}
@@ -250,8 +251,8 @@ export function renderEquipment(body,model,cb,ui) {
             else if(item.id===17172){const b=button(save.pet?'喂养宠物':'先孵化一只宠物',()=>{dialog.close();cb.action({type:'feed'});},'primary');b.disabled=!save.pet||save.pet.xp>=c.pet.levels.max_exp;footer.append(b);}
             else if(item.stats?.[70]!==undefined&&item.stats?.[71]!==undefined){
                 const gain=dragonTotemItemExperience(save,c,item.id);
-                const use=button(gain?`使用 · 图腾经验 +${gain}`:'图腾道具暂不可用',()=>{
-                    if(!globalThis.confirm(`使用1个${item.name}，增加${gain}点图腾经验？`))return;
+                const use=button(gain?fill(`使用 · 图腾经验 +{v0}`,{v0:String(gain)}).text:'图腾道具暂不可用',()=>{
+                    if(!globalThis.confirm(fill(`使用1个{v0}，增加{v1}点图腾经验？`,{v0:String(item.name),v1:String(gain)}).text))return;
                     dialog.close();cb.action({type:'use-totem-item',itemId:item.id});
                 },'primary');
                 use.disabled=!gain||!!save.pendingEncounter;footer.append(use);
@@ -259,7 +260,7 @@ export function renderEquipment(body,model,cb,ui) {
             else if(!rune)detail.append(el('p','muted','旅途收藏 · 本章暂无主动使用功能'));
         }
         const quests=c.quests.filter(q=>q.rewards.some(group=>group.items.some(row=>row.id===item.id)));
-        if(quests.length)detail.append(el('p','equipment-source',`获取途径：${quests.map(q=>q.title).join('、')}`));
+        if(quests.length)detail.append(el('p','equipment-source',fill(`获取途径：{v0}`,{v0:String(quests.map(q=>q.title).join('、'))}).text));
     }
     paintList();
     return {openDetail};

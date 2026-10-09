@@ -3,25 +3,48 @@ import assert from 'node:assert/strict';
 import {dialogueMappingPrompt,parseDialogueMapping,mappingColor} from '../js/dialogue_mapping_core.js';
 import {createDialogueMapper,createMappingStore} from '../js/dialogue_mapping.js';
 const lines=[{text:'Hello, world!',locale:'en'},{text:'你好，世界！',locale:'zh-CN'}];
-const output=JSON.stringify({text:'Hello,(#B24)world!(#267)',translation:'你好，(#B24)世界！(#267)'});
-test('JSON color format preserves spacing and punctuation and rejects changed text/unsafe colors',()=>{
+const output=JSON.stringify({pairs:[{text:'Hello',translation:'你好'},{text:'world',translation:'世界'}]});
+test('keyword pairs preserve original text, punctuation and spacing',()=>{
  const parsed=parseDialogueMapping(output,lines);
  assert.equal(parsed[0].map(p=>p.text).join(''),'Hello, world!');
  assert.equal(mappingColor(parsed[0][0]),mappingColor(parsed[1][0]));
+ assert.equal(parsed[0][1].color,null);
  assert.throws(()=>parseDialogueMapping(output.replace('Hello','Hi'),lines));
- assert.throws(()=>parseDialogueMapping(output.replaceAll('#B24','url(evil)'),lines));
 });
-test('prompt defines role priority, fixed palette, two examples and translated text/translation fields',()=>{
+test('prompt requests sparse keywords and parser enforces five pairs, complete words and no overlaps',()=>{
  const messages=dialogueMappingPrompt(lines);
  assert.deepEqual(JSON.parse(messages[1].content),{text:lines[0].text,translation:lines[1].text});
- for(const color of ['#246','#A23','#275','#638','#A50','#067','#666'])assert.ok(messages[0].content.includes(color));
- assert.ok(messages[0].content.includes('句法角色优先于词性'));
- const input={text:'Tom gives Mary a red apple.',translation:'汤姆给玛丽一个红苹果。'};
- const result={text:'Tom(#246) gives(#A23) Mary(#275) a(#666) red(#067) apple(#396).',translation:'汤姆(#246)给(#A23)玛丽(#275)一个(#666)红(#067)苹果(#396)。'};
- const parsed=parseDialogueMapping(JSON.stringify(result),[{text:input.text},{text:input.translation}]);
- assert.equal(parsed[0].map(p=>p.text).join(''),input.text);
- assert.equal(parsed[1].map(p=>p.text).join(''),input.translation);
- assert.throws(()=>parseDialogueMapping(JSON.stringify({text:result.text}),lines));
+ assert.ok(messages[0].content.includes('最多 5 组'));
+ const parse=pairs=>parseDialogueMapping(JSON.stringify({pairs}),lines);
+ assert.throws(()=>parse(Array(6).fill({text:'Hello',translation:'你好'})));
+ assert.throws(()=>parse([{text:'world',translation:'世界'},{text:'world',translation:'世界'}]));
+ assert.throws(()=>parse([{text:'ell',translation:'你好'}]));
+ assert.throws(()=>parse([{text:'world'}]));
+ assert.deepEqual(parse([]),lines.map(line=>[{text:line.text,color:null}]));
+});
+test('prompt examples map single words without names and preserve the screenshot sentence',()=>{
+ const prompt=dialogueMappingPrompt(lines)[0].content;
+ const examples=[...prompt.matchAll(/示例输入：([^\n]+)\n示例输出：([^\n]+)/g)];
+ assert.equal(examples.length,2);
+ for(const [,input,output] of examples){
+  const source=JSON.parse(input),pairs=JSON.parse(output).pairs;
+  const result=parseDialogueMapping(output,[{text:source.text},{text:source.translation}]);
+  assert.ok(pairs.length<=5);
+  assert.ok(pairs.every(pair=>/^[A-Za-z]+$/.test(pair.text)));
+  assert.ok(pairs.every(pair=>!['Miss','Jessica','Tom'].includes(pair.text)));
+  assert.equal(result[0].map(part=>part.text).join(''),source.text);
+  assert.equal(result[1].map(part=>part.text).join(''),source.translation);
+ }
+ assert.deepEqual(JSON.parse(examples[0][2]).pairs.map(pair=>pair.text),['follow','Finish','quest']);
+});
+
+test('selected single words and repeated words can select an occurrence',()=>{
+ const source=[{text:'I sell fine equipment. Collect a full set to unlock powerful stats!'},{text:'我卖的都是精良的装备，攒齐一套可以触发强大的属性哦！'}];
+ const pairs=[{text:'sell',translation:'卖'},{text:'equipment',translation:'装备'},{text:'set',translation:'套'},{text:'unlock',translation:'触发'},{text:'powerful',translation:'强大'}];
+ const result=parseDialogueMapping(JSON.stringify({pairs}),source);
+ result.forEach((row,i)=>{assert.equal(row.map(p=>p.text).join(''),source[i].text);assert.equal(row.filter(p=>p.color).length,5);});
+ const repeat=parseDialogueMapping(JSON.stringify({pairs:[{text:'go',translation:'走',textOccurrence:1,translationOccurrence:1}]}),[{text:'go go'},{text:'走走'}]);
+ assert.equal(repeat[0][0].text,'go ');assert.equal(repeat[1][0].color,null);
 });
 test('same requests share work; caller cancellation does not cancel others; saved result avoids generation',async()=>{
  const records=new Map();let calls=0,finish;

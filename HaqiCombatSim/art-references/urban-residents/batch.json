@@ -1,0 +1,925 @@
+{
+  "version": 1,
+  "designSource": "art-references/urban-residents/designs.json",
+  "status": "planned",
+  "generator": "built-in image_gen",
+  "references": {
+    "male": {
+      "head": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "walk": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "walkReview": "user-approved"
+    },
+    "female": {
+      "head": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "walk": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "walkReview": "left-approved-right-mirrored"
+    }
+  },
+  "budgetBytes": 200000,
+  "requests": [
+    {
+      "number": 1,
+      "name": "小学生男孩",
+      "gender": "male",
+      "headId": "urban-schoolboy-boy",
+      "bodyId": "male-urban-schoolboy",
+      "pilot": true,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-schoolboy",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。8–10岁，浅暖肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：东亚外貌；黑色柔软短发，略不整齐的刘海，圆脸和饱满脸颊，神情好奇。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-schoolboy.webp"
+    },
+    {
+      "number": 1,
+      "name": "小学生男孩",
+      "gender": "male",
+      "headId": "urban-schoolboy-boy",
+      "bodyId": "male-urban-schoolboy",
+      "pilot": true,
+      "status": "planned",
+      "kind": "walk",
+      "id": "male-urban-schoolboy",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。8–10岁，浅暖肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：姜黄色拉链卫衣、靛蓝长裤、白蓝运动鞋；小型双肩书包贴合背部，整体活泼日常。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/male-urban-schoolboy.webp"
+    },
+    {
+      "number": 2,
+      "name": "小学生女孩",
+      "gender": "female",
+      "headId": "urban-schoolgirl-girl",
+      "bodyId": "female-urban-schoolgirl",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-schoolgirl",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。10–12岁，深棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：非洲裔外貌；细辫收成两个紧凑发髻，圆润面颊，明亮棕眼，小号浅色发圈。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-schoolgirl.webp"
+    },
+    {
+      "number": 2,
+      "name": "小学生女孩",
+      "gender": "female",
+      "headId": "urban-schoolgirl-girl",
+      "bodyId": "female-urban-schoolgirl",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "female-urban-schoolgirl",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。10–12岁，深棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：湖绿色针织开衫、米白上衣、深蓝长裤、帆布鞋；浅灰小书包，轮廓清爽。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/female-urban-schoolgirl.webp"
+    },
+    {
+      "number": 3,
+      "name": "中学生男孩",
+      "gender": "male",
+      "headId": "urban-teen-boy-boy",
+      "bodyId": "male-urban-teen-boy",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-teen-boy",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。15–17岁，浅肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：欧洲外貌和淡雀斑；赤棕色短卷发，脸型开始拉长，眉毛自然，略带腼腆。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-teen-boy.webp"
+    },
+    {
+      "number": 3,
+      "name": "中学生男孩",
+      "gender": "male",
+      "headId": "urban-teen-boy-boy",
+      "bodyId": "male-urban-teen-boy",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "male-urban-teen-boy",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。15–17岁，浅肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：酒红与米白拼色棒球夹克、浅灰内搭、深色牛仔裤、高帮运动鞋；无校徽。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/male-urban-teen-boy.webp"
+    },
+    {
+      "number": 4,
+      "name": "中学生女孩",
+      "gender": "female",
+      "headId": "urban-teen-girl-girl",
+      "bodyId": "female-urban-teen-girl",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-teen-girl",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。15–17岁，暖棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：南亚外貌；浓密黑发扎成单条紧凑辫子，深棕眼，柔和浓眉，年轻圆脸。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-teen-girl.webp"
+    },
+    {
+      "number": 4,
+      "name": "中学生女孩",
+      "gender": "female",
+      "headId": "urban-teen-girl-girl",
+      "bodyId": "female-urban-teen-girl",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "female-urban-teen-girl",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。15–17岁，暖棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：灰蓝连帽运动外套、奶白内搭、炭灰直筒裤、白色跑鞋；适合校园与图书馆。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/female-urban-teen-girl.webp"
+    },
+    {
+      "number": 5,
+      "name": "软件工程师",
+      "gender": "male",
+      "headId": "urban-software-engineer-boy",
+      "bodyId": "male-urban-software-engineer",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-software-engineer",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。25–30岁，中浅肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：东亚外貌；黑色微乱侧分短发，细框方眼镜，脸颊较瘦，无胡须。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-software-engineer.webp"
+    },
+    {
+      "number": 5,
+      "name": "软件工程师",
+      "gender": "male",
+      "headId": "urban-software-engineer-boy",
+      "bodyId": "male-urban-software-engineer",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "male-urban-software-engineer",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。25–30岁，中浅肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：雾蓝衬衫敞穿、浅灰T恤、深蓝休闲裤、灰白运动鞋；袖口和口袋有简洁层次。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/male-urban-software-engineer.webp"
+    },
+    {
+      "number": 6,
+      "name": "建筑师",
+      "gender": "female",
+      "headId": "urban-architect-girl",
+      "bodyId": "female-urban-architect",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-architect",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。30–35岁，深棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：非洲裔外貌；轮廓整齐的短自然卷，椭圆脸，细长眉，神情沉稳专注。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-architect.webp"
+    },
+    {
+      "number": 6,
+      "name": "建筑师",
+      "gender": "female",
+      "headId": "urban-architect-girl",
+      "bodyId": "female-urban-architect",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "female-urban-architect",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。30–35岁，深棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：沙色短外套、黑色高领内搭、石墨灰长裤、棕色短靴；侧袋露出少量卷尺轮廓。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/female-urban-architect.webp"
+    },
+    {
+      "number": 7,
+      "name": "医生",
+      "gender": "female",
+      "headId": "urban-doctor-girl",
+      "bodyId": "female-urban-doctor",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-doctor",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。40–45岁，浅米色肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：东亚外貌；深棕短波波头，耳侧少量灰发，眼角轻微细纹，表情亲切。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-doctor.webp"
+    },
+    {
+      "number": 7,
+      "name": "医生",
+      "gender": "female",
+      "headId": "urban-doctor-girl",
+      "bodyId": "female-urban-doctor",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "female-urban-doctor",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。40–45岁，浅米色肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：及大腿中段的白大褂、蓝绿色工作服、深色平底鞋；小型胸牌和贴身听诊器，无可读文字。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/female-urban-doctor.webp"
+    },
+    {
+      "number": 8,
+      "name": "护士",
+      "gender": "male",
+      "headId": "urban-nurse-boy",
+      "bodyId": "male-urban-nurse",
+      "pilot": true,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-nurse",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。25–30岁，深褐肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：非洲裔外貌；贴头短卷发，宽缓额头，圆润下巴，无胡须，神情温和。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-nurse.webp"
+    },
+    {
+      "number": 8,
+      "name": "护士",
+      "gender": "male",
+      "headId": "urban-nurse-boy",
+      "bodyId": "male-urban-nurse",
+      "pilot": true,
+      "status": "planned",
+      "kind": "walk",
+      "id": "male-urban-nurse",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。25–30岁，深褐肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：天蓝色护理服、深蓝侧袋、白灰工作鞋；整洁实用，裤型宽松但不改变身体比例。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/male-urban-nurse.webp"
+    },
+    {
+      "number": 9,
+      "name": "消防员",
+      "gender": "female",
+      "headId": "urban-firefighter-girl",
+      "bodyId": "female-urban-firefighter",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-firefighter",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。30–40岁，浅肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：欧洲外貌；红棕头发收成紧凑低髻，少量雀斑，眉眼坚定，发型不遮脸。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-firefighter.webp"
+    },
+    {
+      "number": 9,
+      "name": "消防员",
+      "gender": "female",
+      "headId": "urban-firefighter-girl",
+      "bodyId": "female-urban-firefighter",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "female-urban-firefighter",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。30–40岁，浅肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：深赭黄色消防防护服，胸部和小腿有银黄反光条，厚实黑靴和防护手套；脱帽状态。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/female-urban-firefighter.webp"
+    },
+    {
+      "number": 10,
+      "name": "社区警员",
+      "gender": "male",
+      "headId": "urban-community-officer-boy",
+      "bodyId": "male-urban-community-officer",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-community-officer",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。40–45岁，橄榄肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：西亚外貌；黑色短发，鬓角泛灰，修剪整齐的短胡须，表情平和。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-community-officer.webp"
+    },
+    {
+      "number": 10,
+      "name": "社区警员",
+      "gender": "male",
+      "headId": "urban-community-officer-boy",
+      "bodyId": "male-urban-community-officer",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "male-urban-community-officer",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。40–45岁，橄榄肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：深藏蓝执勤衬衫与长裤、黑色腰带和鞋、肩部对讲机；通用制服，不带国家徽章或武器。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/male-urban-community-officer.webp"
+    },
+    {
+      "number": 11,
+      "name": "厨师",
+      "gender": "male",
+      "headId": "urban-chef-boy",
+      "bodyId": "male-urban-chef",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-chef",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。50–55岁，浅暖肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：欧洲外貌；灰棕色短发，稍后退的发际线，短灰胡须，饱满脸颊和笑纹。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-chef.webp"
+    },
+    {
+      "number": 11,
+      "name": "厨师",
+      "gender": "male",
+      "headId": "urban-chef-boy",
+      "bodyId": "male-urban-chef",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "male-urban-chef",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。50–55岁，浅暖肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：米白双排扣厨师服、深蓝腰围裙、炭灰长裤、防滑黑鞋；布料厚实，围裙收在膝上。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/male-urban-chef.webp"
+    },
+    {
+      "number": 12,
+      "name": "咖啡师／店员",
+      "gender": "female",
+      "headId": "urban-barista-girl",
+      "bodyId": "female-urban-barista",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-barista",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。20–25岁，暖褐肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：拉丁美洲混合祖源外貌；深棕卷发束成高髻，棕眼，脸型柔和，无夸张饰品。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-barista.webp"
+    },
+    {
+      "number": 12,
+      "name": "咖啡师／店员",
+      "gender": "female",
+      "headId": "urban-barista-girl",
+      "bodyId": "female-urban-barista",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "female-urban-barista",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。20–25岁，暖褐肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：奶油色衬衫、咖啡棕背带围裙、墨绿长裤、棕色平底鞋；围裙有清晰的大口袋。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/female-urban-barista.webp"
+    },
+    {
+      "number": 13,
+      "name": "维修电工",
+      "gender": "female",
+      "headId": "urban-electrician-girl",
+      "bodyId": "female-urban-electrician",
+      "pilot": true,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-electrician",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。35–45岁，中等金棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：东南亚外貌；黑色利落短发，侧边掖耳，略方下巴，眉形清晰。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-electrician.webp"
+    },
+    {
+      "number": 13,
+      "name": "维修电工",
+      "gender": "female",
+      "headId": "urban-electrician-girl",
+      "bodyId": "female-urban-electrician",
+      "pilot": true,
+      "status": "planned",
+      "kind": "walk",
+      "id": "female-urban-electrician",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。35–45岁，中等金棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：靛蓝工装连体服、灰色补强膝片、紧贴腰部的小工具袋、深色劳保鞋和工作手套。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/female-urban-electrician.webp"
+    },
+    {
+      "number": 14,
+      "name": "建筑工人",
+      "gender": "male",
+      "headId": "urban-construction-worker-boy",
+      "bodyId": "male-urban-construction-worker",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-construction-worker",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。35–45岁，深棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：南亚外貌；浓密短黑发，短胡茬，宽额头和较方脸型，神情朴实。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-construction-worker.webp"
+    },
+    {
+      "number": 14,
+      "name": "建筑工人",
+      "gender": "male",
+      "headId": "urban-construction-worker-boy",
+      "bodyId": "male-urban-construction-worker",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "male-urban-construction-worker",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。35–45岁，深棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：橙色反光背心、灰色长袖衫、土棕工装裤、厚底工作靴和手套；休息时脱帽状态。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/male-urban-construction-worker.webp"
+    },
+    {
+      "number": 15,
+      "name": "公交司机",
+      "gender": "female",
+      "headId": "urban-bus-driver-girl",
+      "bodyId": "female-urban-bus-driver",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-bus-driver",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。45–55岁，浅橄榄肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：西亚外貌；深棕短发夹少量银丝，饱满面颊，眼角细纹，神情从容。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-bus-driver.webp"
+    },
+    {
+      "number": 15,
+      "name": "公交司机",
+      "gender": "female",
+      "headId": "urban-bus-driver-girl",
+      "bodyId": "female-urban-bus-driver",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "female-urban-bus-driver",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。45–55岁，浅橄榄肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：浅蓝制服衬衫、深蓝针织背心、藏蓝长裤、黑色便鞋；小胸牌和整齐口袋强化职业感。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/female-urban-bus-driver.webp"
+    },
+    {
+      "number": 16,
+      "name": "快递员",
+      "gender": "male",
+      "headId": "urban-courier-boy",
+      "bodyId": "male-urban-courier",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-courier",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。20–30岁，古铜肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：拉丁美洲混合祖源外貌；黑色短卷发，较窄脸型，浓眉，无胡须。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-courier.webp"
+    },
+    {
+      "number": 16,
+      "name": "快递员",
+      "gender": "male",
+      "headId": "urban-courier-boy",
+      "bodyId": "male-urban-courier",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "male-urban-courier",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。20–30岁，古铜肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：青蓝与深灰拼色物流夹克、深灰工装裤、运动鞋；小型斜挎包贴身固定，无企业标识。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/male-urban-courier.webp"
+    },
+    {
+      "number": 17,
+      "name": "园艺师",
+      "gender": "male",
+      "headId": "urban-gardener-boy",
+      "bodyId": "male-urban-gardener",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-gardener",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。60–65岁，暖褐肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：东亚外貌；盐灰短发，略后退的发际线，明显笑纹与短灰胡须，精神充足。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-gardener.webp"
+    },
+    {
+      "number": 17,
+      "name": "园艺师",
+      "gender": "male",
+      "headId": "urban-gardener-boy",
+      "bodyId": "male-urban-gardener",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "male-urban-gardener",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。60–65岁，暖褐肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：橄榄绿工作衬衫、土黄园艺围裙、棕色长裤、深绿工作靴和手套；口袋露出种子袋边缘。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/male-urban-gardener.webp"
+    },
+    {
+      "number": 18,
+      "name": "教师",
+      "gender": "female",
+      "headId": "urban-teacher-girl",
+      "bodyId": "female-urban-teacher",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-teacher",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。55–65岁，深棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：非洲裔外貌；盐灰细辫盘成紧凑发髻，圆框眼镜，柔和额纹，神情耐心。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-teacher.webp"
+    },
+    {
+      "number": 18,
+      "name": "教师",
+      "gender": "female",
+      "headId": "urban-teacher-girl",
+      "bodyId": "female-urban-teacher",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "female-urban-teacher",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。55–65岁，深棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：梅紫色针织开衫、米白衬衫、深灰长裤、酒红平底鞋；衣服柔软整洁，适合学校与社区。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/female-urban-teacher.webp"
+    },
+    {
+      "number": 19,
+      "name": "退休居民",
+      "gender": "male",
+      "headId": "urban-retired-resident-boy",
+      "bodyId": "male-urban-retired-resident",
+      "pilot": true,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-retired-resident",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。70–80岁，浅肤色带少量老年斑。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：欧洲外貌；稀疏银白短发，白色短胡须，明显额纹，眉眼舒展。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-retired-resident.webp"
+    },
+    {
+      "number": 19,
+      "name": "退休居民",
+      "gender": "male",
+      "headId": "urban-retired-resident-boy",
+      "bodyId": "male-urban-retired-resident",
+      "pilot": true,
+      "status": "planned",
+      "kind": "walk",
+      "id": "male-urban-retired-resident",
+      "reference": {
+        "local": "assets/hero-preview/male-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "521e7d8e16696ffe35d0775d258cc3d970c61286dcea2f0a6043fecd3005a659"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。70–80岁，浅肤色带少量老年斑。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：驼色针织开衫、格纹衬衫、深棕休闲裤、棕色便鞋；保持现有站姿，年龄由脸部和衣着体现。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/male-urban-retired-resident.webp"
+    },
+    {
+      "number": 20,
+      "name": "花店店主",
+      "gender": "female",
+      "headId": "urban-florist-girl",
+      "bodyId": "female-urban-florist",
+      "pilot": false,
+      "status": "planned",
+      "kind": "head",
+      "id": "urban-florist",
+      "reference": {
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "role": "只参考头部比例、镜头和16方向排列；更换五官、发型和耳形",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3"
+      },
+      "grid": {
+        "columns": 4,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。65–75岁，中等暖棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。头部设计：东南亚外貌；银灰头发盘成低髻，圆脸，眼角和嘴角细纹，神情开朗。同一人物的16方向独立头部，不含脖子、肩膀或身体。4列4行，行优先从正面开始向画面左侧每格旋转22.5度：0正面、4左侧、8背面、12右侧；背面不露五官。各格颅骨尺寸一致，完整留白，头发不可跨格。",
+      "output": "assets/hero-preview/urban/urban-florist.webp"
+    },
+    {
+      "number": 20,
+      "name": "花店店主",
+      "gender": "female",
+      "headId": "urban-florist-girl",
+      "bodyId": "female-urban-florist",
+      "pilot": false,
+      "status": "planned",
+      "kind": "walk",
+      "id": "female-urban-florist",
+      "reference": {
+        "local": "assets/hero-preview/female-walk-ref.webp",
+        "role": "固定步行动作、比例和脖子定位",
+        "sha256": "e02bc0b297ab16f072746115e2b21642c198c2566265e48432588261eb0b8011"
+      },
+      "grid": {
+        "columns": 7,
+        "rows": 4
+      },
+      "prompt": "现代城市游戏美术，半写实绘制与自然柔和光照；保持参考的大头小身体比例及俯视镜头，不改成人体写实比例。65–75岁，中等暖棕肤色。普通人耳朵，无魔法、精灵耳、武器、文字或品牌。真正透明背景，无地面、阴影、格线。仅替换参考中全部28格人物的服装和露出皮肤颜色：淡鼠尾草绿上衣、陶土红围裙、深蓝长裤、舒适布鞋；围裙口袋有小块花布装饰。无头，保留短脖子。每格保持原位置、肢体姿势、步态、身体尺寸、颈部连接点和脚底基线。7列4行；各行正面、左侧、右侧、背面；前6列走路，最后一列静止。手中不持物，配件贴身。",
+      "output": "assets/hero-preview/urban/female-urban-florist.webp"
+    }
+  ],
+  "rules": [
+    "先检查01、08、13、19四组风格与连接；所有服装独立引用固定同性别参考。",
+    "头部和身体分离，儿童及老人沿用既有几何；同性别模板混搭，跨肤色需对应皮肤变体。",
+    "保存实际生成参考哈希、完整提示词、源图哈希及原始输出；planned不表示生成或验收通过。",
+    "不使用现有恢复基础脖子肤色的打包逻辑覆盖新肤色；保留新服装透明轮廓。",
+    "逐款逐方向校准下颌/耳下颈部，不用长发最低点当连接点。",
+    "上线前每张WebP不超过200000字节，登记永久Keepwork CDN并核验远端SHA-256、alpha及CORS。"
+  ]
+}

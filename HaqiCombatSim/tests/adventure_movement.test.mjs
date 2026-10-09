@@ -92,7 +92,7 @@ test('scene zoom clamps, keeps hero anchored and updates world picking without r
     const ctx=new Proxy({measureText:()=>({width:20}),createRadialGradient:()=>({addColorStop(){}})},
         {get:(o,k)=>k in o?o[k]:()=>{}});
     globalThis.matchMedia=()=>({matches:true});globalThis.window={devicePixelRatio:1};
-    globalThis.document={createElement:()=>{created++;return {getContext:()=>ctx};}};
+    globalThis.document={createElement:()=>{created++;return {style:{},getContext:()=>ctx};}};
     try {
         for(const width of [1280,390]){
             const canvas={clientWidth:width,clientHeight:720,getContext:()=>ctx};
@@ -104,9 +104,12 @@ test('scene zoom clamps, keeps hero anchored and updates world picking without r
             for(const [factor,expected] of [[100,1.4],[NaN,1.4],[-1,1.4],[.001,.75],[Infinity,.75]]){
                 assert.equal(renderer.zoomBy(factor),expected);renderer.render(world,save,1000);
                 const hero=renderer.screenToWorld(width/2,heroY);
-                assert.ok(Math.abs(hero.x-900)<1e-8&&Math.abs(hero.y-800)<1e-8);
+                // Camera origin is snapped to a device pixel; picking may differ
+                // from the unsnapped hero position by at most half a pixel.
+                const tolerance=.5/(base*expected)+1e-8;
+                assert.ok(Math.abs(hero.x-900)<=tolerance&&Math.abs(hero.y-800)<=tolerance);
                 const target=renderer.screenToWorld(width/2+100,heroY);
-                assert.ok(Math.abs(target.x-900-100/(base*expected))<1e-8);
+                assert.ok(Math.abs(target.x-hero.x-100/(base*expected))<1e-8);
                 assert.equal(created,initial);
             }
         }

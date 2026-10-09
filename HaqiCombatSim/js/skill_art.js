@@ -16,7 +16,7 @@ export async function loadSkillArt(effects, mode, read=fetchJson) {
             const image=new Image();image.crossOrigin='anonymous';
             const fail=()=>{clearTimeout(timer);image.onload=image.onerror=null;pending.delete(id);reject(new Error('技能图集加载失败：'+id));};
             const timer=setTimeout(fail,12000);
-            image.onload=()=>{clearTimeout(timer);image.onload=image.onerror=null;images.set(id,image);resolve(image);};
+            image.onload=async()=>{clearTimeout(timer);image.onload=image.onerror=null;if(image.decode)await image.decode().catch(()=>{});images.set(id,image);resolve(image);};
             image.onerror=fail;
             image.src=assetUrl(row,mode);
         }));

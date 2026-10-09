@@ -1,0 +1,31 @@
+.earth-modal{width:min(960px,96vw);max-height:94dvh}.earth-modal .modal-body{overflow:auto}.earth-world-choices{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0}.earth-world-choices button{min-height:120px;font-size:22px}.earth-map-tools{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.earth-map-tools input{width:120px;min-width:0;background:var(--paper,#f4ebd5);color:var(--ink,#253d32);border:1px solid var(--gold,#ad8d50);padding:8px}.earth-atlas{display:block;width:100%;aspect-ratio:90/47;touch-action:none;border:2px solid var(--gold,#ad8d50);border-radius:12px}.earth-story-text{white-space:pre-wrap;line-height:1.9}.earth-modal .modal-body>button{margin:6px}.earth-modal details{margin-top:20px}.earth-modal details button{display:block;margin:8px 0}@media(max-width:500px){.earth-world-choices{gap:8px}.earth-world-choices button{font-size:17px}.earth-modal .modal-body{padding:12px}.earth-atlas{min-height:220px}.earth-map-tools button{padding:8px}}
+
+.earth-modal .modal-body>small{display:block;margin-top:12px;font-size:11px;line-height:1.6;color:#63705a}
+.earth-map-stage{position:relative;overflow:hidden;border-radius:12px}
+.earth-local-map{width:min(560px,100%);margin:auto;touch-action:none;user-select:none;cursor:grab}
+.earth-local-map.dragging,.earth-local-map.dragging button{cursor:grabbing}
+.earth-local-cities button[hidden]{display:none}
+.earth-local-map .earth-atlas{aspect-ratio:1}
+.earth-map-stage:not(.earth-local-map) .earth-atlas{image-rendering:pixelated}
+.earth-local-map .island-map-name{position:absolute;top:14px;left:16px;margin:0;color:#fff8df;font-size:22px;text-shadow:0 1px 3px #163a48;pointer-events:none}
+.earth-local-cities,.earth-local-connectors{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.earth-local-connectors line{stroke:#725e36;stroke-width:1.5;opacity:.85}
+.haqi-app .earth-local-city{position:absolute;transform:none;padding:5px 10px;border:1px solid var(--gold,#ad8d50);border-radius:8px;background:#fff3d4ed;color:var(--ink,#253d32);font-size:13px;white-space:nowrap;pointer-events:auto;max-width:calc(100% - 16px);overflow:hidden;text-overflow:ellipsis}
+.haqi-app .earth-local-city:active:not(:disabled){transform:none}
+.haqi-app .earth-local-dot{position:absolute;transform:translate(-50%,-50%);width:20px;height:20px;min-height:0;padding:0;border:0;background:transparent;box-shadow:none;pointer-events:auto}
+.earth-local-dot::before{content:'';display:block;margin:auto;width:8px;height:8px;border:2px solid #fff8df;border-radius:50%;background:#315d42}
+.haqi-app .earth-local-dot:active:not(:disabled){transform:translate(-50%,-50%)}
+.haqi-app .earth-local-locate{position:absolute;right:12px;bottom:12px;padding:9px 12px;border:1px solid var(--gold,#ad8d50);border-radius:50%;background:var(--green,#315d42);color:#fff8df;font-size:13px;min-height:44px}
+.haqi-app .earth-local-status{position:absolute;left:12px;bottom:12px;max-width:calc(100% - 100px);padding:6px 10px;border:1px solid var(--gold,#ad8d50);border-radius:8px;background:#fff3d4ed;color:var(--ink,#253d32);font-size:12px}
+.earth-local-status[hidden]{display:none}
+.earth-map-zoom{position:absolute;top:12px;right:12px;display:flex;gap:8px}
+.haqi-app .earth-map-zoom-button{display:grid;place-items:center;width:40px;height:40px;min-height:40px;padding:0;border:2px solid var(--gold,#ad8d50);border-radius:50%;background:var(--green,#315d42);color:#fff5d6;font-size:25px;line-height:1;box-shadow:0 2px 6px #163a4844}
+.earth-map-place{position:absolute;transform:translate(-50%,calc(-100% - 18px));display:flex;flex-direction:column;align-items:center;gap:8px;max-width:80%;padding:12px 16px;border:1px solid var(--gold,#ad8d50);border-radius:10px;background:var(--paper,#f4ebd5);color:var(--ink,#253d32);box-shadow:0 3px 12px #163a4844}
+.earth-map-place[hidden],.earth-map-status[hidden]{display:none}
+.earth-map-place strong{font-size:16px;text-align:center;overflow-wrap:anywhere}
+.earth-map-place button{white-space:nowrap}
+.earth-map-status{position:absolute;bottom:12px;left:12px;right:12px;margin:0;padding:8px 12px;border-radius:8px;background:#f4ebd5ed;color:var(--ink,#253d32);font-size:12px;cursor:pointer}
+.city-action-row{margin:16px 0}
+.city-action-row p{font-size:13px;line-height:1.6}
+.city-interaction .modal-header h2{font-size:20px}
+.city-interaction .modal-body button{margin:4px;max-width:100%;white-space:normal}

@@ -313,30 +313,31 @@ export function describeCard(card,{dataset={},cooldown,translate=value=>value}={
         lines.push(t('持续伤害只消耗魔镜容量，不会反弹。重复施放会叠加剩余容量。'));
         complete=true;
     }
-    if(type==='CatchPet'){summary.push(t('捕捉野生宠物'));lines.push(t('尝试捕捉选中的野生宠物；成功率受符文、目标剩余生命和等级差影响，成功或失败均消耗一张符文。'));complete=true;}
+    if(type==='CatchPet'){summary.push(t('捕捉怪物'));lines.push(t('所有存活怪物均可捕捉；成功率受符文、血量、等级和怪物强度影响，成功或失败均消耗一张符文。'));complete=true;}
 
-    // 引擎未实现的卡（combat_cards_core.js UNSUPPORTED_TYPES）：描述原版效果并明确标注
-    const unimplementedNote=()=>lines.push(t('当前模拟器未实现此卡，施放时不产生任何效果。'));
+    // 儿童版特殊效果：按原 Lua 规则展示。
     if(type==='SingleFreeze'){
         summary.push(t('冰封{target}',{target}));
+        lines.push(t('冰封期间额外减伤{percent}%，并附加全系护盾；受攻击解除冰封后，防连续冰封保护仍保留。',{percent:dataset.global?.freezeResistPercent??80}));
         lines.push(t('冰封{target}，使其无法行动，直到其受到伤害或 {rounds} 回合后解除。',{target,rounds:p.rounds||2}));
-        unimplementedNote();complete=true;
+        complete=true;
     }
     if(type==='ConversePositiveWard'){
         const from=wards[p.fromward],to=wards[p.toward];
         summary.push(t('护盾转换为诅咒'));
+        lines.push(t('仅转换带品质的对应护盾，按绿、蓝、紫、橙顺序转换一层；基础护盾按原版规则不转换。'));
         if(from&&to)lines.push(t('将{target}身上的「{from}」护盾转换为「{to}」诅咒。',{target,from:t(from.desc||'护盾'),to:t(to.desc||'诅咒')}));
-        unimplementedNote();complete=true;
+        complete=true;
     }
     if(type==='SingleGuardianWithImmolate'){
         summary.push(t('替身守护'));
-        lines.push(t('对自己造成 {amount} 点死亡伤害，并为一名队友创造替身：其死亡后立即复活并恢复 {amount} 点生命。',{amount:range(p.immolate_damage_min,p.immolate_damage_max)}));
-        unimplementedNote();complete=true;
+        lines.push(t('对自己造成 {amount} 点死亡伤害，为自己或一名非宠物队友附加一次替身守护；倒下后恢复 {hp} 点生命，不超过生命上限。',{amount:range(p.immolate_damage_min,p.immolate_damage_max),hp:dataset.global?.guardianReviveHp??2000}));
+        complete=true;
     }
     if(type==='Enrage'){
         summary.push(t('激怒怪物'));
-        lines.push(t('激怒 {min}~{max} 级的野生怪物，使其立即加入战斗。',{min:p.can_enrage_minlevel||1,max:p.can_enrage_maxlevel||1}));
-        unimplementedNote();complete=true;
+        lines.push(t('激怒 {min}~{max} 级且允许激怒的战斗中怪物，切换原版激怒属性与技能并回满生命；每只限一次，激怒后捕捉更难。',{min:p.can_enrage_minlevel||1,max:p.can_enrage_maxlevel||1}));
+        complete=true;
     }
     // 系统 / 过程卡：不出现在玩家卡组
     if(['Dead','PickPet','Fizzle','HoT','DoT'].includes(type)){
@@ -354,6 +355,9 @@ export function describeCard(card,{dataset={},cooldown,translate=value=>value}={
     const variable=card.pipcost==='X'||Number(card.pipcost)<0||Number(card.pipcost)===114;
     if(variable||Object.values(p).some(v=>/\dp(?:,|$)/.test(String(v))))lines.push(t('“×魔力”按本次施法实际计入的魔力点计算，不是固定总量；本系超级魔力每个抵 2 点，其他系抵 1 点。'));
     const fallback=/Ward|Shield|Absorb|Guardian/.test(type)?'护盾效果':/Charm/.test(type)?'增益 / 减益':/Stun|Freeze/.test(type)?'控制行动':/Pip/.test(type)?'改变魔力':/Global|Aura|Stance/.test(type)?'场地 / 姿态':'特殊魔法';
+    if(type==='CatchPet')return {summary:summary.join(t('；')),lines,target,
+        meta:t('抓宠符文 · 消耗一张 · 成功率随目标变化'),
+        note:t('选中符文后查看目标的捕捉成功率；卡牌命中率不代表捕捉成功率。')};
     return {summary:summary.join(t('；'))||t(fallback),lines,target,
         meta:t('{school}系 · {target} · 消耗 {cost} 点魔力 · 冷却 {rounds} 回合 · 基础命中 {accuracy}%',{school:schoolName(card.spellSchool),target,cost:variable?'X':card.pipcost??0,rounds:cooldown??p.cooldown??0,accuracy:Math.min(100,Number(card.accuracy)||0)}),
         note:t('以上为基础效果；实际伤害、治疗与命中受角色属性、目标防御及战斗状态影响。')};

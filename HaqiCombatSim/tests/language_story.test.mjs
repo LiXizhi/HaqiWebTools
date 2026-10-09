@@ -22,13 +22,13 @@ test('authored catalog traces 900 templates to 150 constructions and covers each
     }
     assert.equal(signatures.size,27);
 });
-function harness(){
+function harness(awardResult=null){
     const state={save:{zone:'camp',inventory:{},languageLearning:{enabled:true,target:'en',native:'zh-CN'},languageAdventure:{version:1,progress:{}}},content:{},role:'test',identity:'test'};
-    let cb,ui,transcript='',claims=0;
+    let cb,ui,transcript='',claims=0;const speech=[],free=[];
     const voice={start:async()=>{},finish:async()=>transcript,cancel:async()=>{},speak:async()=>{},judge:async()=>({correct:false,patternMet:false,quote:'',branch:'retry',feedback:'请再说一次。'})};
-    const chat=createStoryChat({getState:()=>state,voice,saveSettings:next=>Object.assign(state.save.languageLearning,next),commit:completion=>{claims++;return recordLearningCompletion(state.save,{},completion,{learningCompletion:completion});},viewFactory:callbacks=>{cb=callbacks;return {render:s=>{ui=s;},close:()=>{}};}});
+    const chat=createStoryChat({onFreeTalk:(profile,options)=>free.push({profile,options}),onSpeech:id=>{speech.push(id);return awardResult;},getState:()=>state,voice,saveSettings:next=>Object.assign(state.save.languageLearning,next),commit:completion=>{claims++;return recordLearningCompletion(state.save,{},completion,{learningCompletion:completion});},viewFactory:callbacks=>{cb=callbacks;return {render:s=>{ui=s;},close:()=>{}};}});
     chat.open(profile,story,null);
-    return {chat,state,voice,get cb(){return cb;},get ui(){return ui;},get claims(){return claims;},async say(text){transcript=text;await cb.start();await cb.finish();}};
+    return {chat,state,voice,speech,free,get cb(){return cb;},get ui(){return ui;},get claims(){return claims;},async say(text){transcript=text;await cb.start();await cb.finish();}};
 }
 test('wrong typed answers never advance; three voice results complete with shared reward group and story progress',async()=>{
     const h=harness();await flush();assert.equal(h.ui.showChinese,true);h.cb.chinese();assert.equal(h.state.save.languageLearning.showChinese,false);
@@ -53,8 +53,8 @@ test('AI accepts correct meaning without prescribed construction, but requires r
 test('hold release while microphone connects finishes once; cancellation and late judging cannot complete',async()=>{
     const h=harness();await flush();let connect;h.voice.start=()=>new Promise(r=>{connect=r;});
     const start=h.cb.start();await h.cb.finish();assert.equal(h.ui.phase,'connecting');connect();await start;assert.equal(h.ui.phase,'ready');
-    let resolve;h.voice.start=async()=>{};h.voice.judge=()=>new Promise(r=>{resolve=r;});
-    const pending=h.say('I would like a different map.');await new Promise(r=>setImmediate(r));h.chat.close();resolve({correct:true,patternMet:true,quote:'I would like a different map.',branch:'pass',feedback:''});await pending;assert.equal(h.claims,0);
+    let resolve;h.voice.start=async()=>{};h.voice.finish=()=>new Promise(r=>{resolve=r;});
+    const pending=h.say('I would like a different map.');await new Promise(r=>setImmediate(r));h.chat.close();resolve('I would like a different map.');await pending;assert.equal(h.claims,0);
 });
 test('microphone gestures support click toggle, hold release, slide cancel and keyboard click',()=>{
     const node=new EventTarget();node.disabled=false;node.setPointerCapture=()=>{};node.getBoundingClientRect=()=>({left:0,right:80,top:0,bottom:80});let recording=false;const calls=[];
@@ -82,11 +82,11 @@ test('legacy SDK repeats reuse completed audio and voice changes require synthes
     try{const signal=new AbortController().signal;await voice.speak('Cache example','en',signal);await voice.speak('Cache example','en',signal);assert.equal(calls,1);selected='cache-test-two';await voice.speak('Cache example','en',signal);assert.equal(calls,2);}finally{globalThis.Audio=oldAudio;await voice.cancel();}
 });
 
-test('new SDK cached synthesis is preferred and releases playback URL',async()=>{
-    let released=0,options;const oldAudio=globalThis.Audio;
+test('TTS bypasses SDK cached helper that force-closes sockets and keeps connection on cleanup',async()=>{
+    let options,stopped;const oldAudio=globalThis.Audio;
     globalThis.Audio=class{play(){queueMicrotask(()=>this.onended());return Promise.resolve();}pause(){}};
-    const voice=createLearningVoice({load:async()=>({speechRTC:{createSession:()=>{throw Error('legacy path');},synthesizeCached:async(text,config)=>{options=config;return {audioUrl:'blob:test',release:()=>released++};}}})});
-    try{await voice.speak('Cached SDK example','en',new AbortController().signal);assert.equal(options.speechRate,-8);assert.equal(released,1);}finally{globalThis.Audio=oldAudio;await voice.cancel();}
+    const voice=createLearningVoice({load:async()=>({speechRTC:{createSession:config=>{options=config;return {synthesize:async()=>({audioUrl:'data:audio/mpeg;base64,YQ=='}),stop:async o=>{stopped=o;}};},synthesizeCached:async()=>{throw Error('force-closing cache helper must not run');}}})});
+    try{await voice.speak('Cached SDK example','en',new AbortController().signal);assert.equal(options.speechRate,-8);assert.equal(stopped.closeConnection,false);}finally{globalThis.Audio=oldAudio;await voice.cancel();}
 });
 
 
@@ -134,12 +134,95 @@ test('typed and mixed answers complete the same story, reward once, and preserve
     }
 });
 
-test('typed semantic answers use the same evidence judge and double submit cannot skip a turn',async()=>{
+test('typed script answers use local matching and double submit cannot skip a turn',async()=>{
     const h=harness();await flush();let resolve;
-    const text='Please lend me a hand.';
-    h.voice.judge=async messages=>{assert.match(messages[0].content,/typed answer/);return new Promise(r=>{resolve=r;});};
-    const pending=h.cb.help(text);await flush();
-    await h.cb.help(story.turns[0].answer.en);assert.equal(h.ui.index,0);
-    resolve({correct:true,patternMet:false,quote:text,branch:'pass',feedback:''});await pending;
+    h.voice.judge=()=>{throw Error('unexpected LLM');};
+    h.voice.speak=()=>new Promise(r=>{resolve=r;});
+    const pending=h.cb.help(story.turns[0].answer.en);await flush();
+    await h.cb.help(story.turns[1].answer.en);assert.equal(h.ui.index,1);
+    resolve();await pending;
     assert.equal(h.ui.index,1);assert.equal(h.ui.proof.length,1);assert.equal(h.ui.proof[0].input,'text');h.chat.close();
+});
+
+test('daily reward hook counts only passed spoken turns, never text, listening or late callbacks',async()=>{
+ const h=harness();await flush();
+ await h.cb.help(story.turns[0].answer.en);assert.equal(h.speech.length,0);
+ await h.say('irrelevant');assert.equal(h.speech.length,0);
+ await h.say(story.turns[1].answer.en);assert.equal(h.speech.length,1);
+ await h.cb.finish();assert.equal(h.speech.length,1);h.chat.close();
+});
+
+test('story question and own answer demonstration carry different speakers',async()=>{
+ const h=harness();await flush();const speakers=[];h.voice.speak=async(text,locale,signal,speaker)=>speakers.push(speaker);
+ try{h.state.save.appearance='girl';await h.cb.speak('My answer','user');assert.equal(speakers.at(-1).appearance,'girl');await h.cb.speak('NPC question');assert.equal(speakers.at(-1).sex,profile.sex);assert.equal(speakers.at(-1).age,profile.age);}finally{h.chat.close();}
+});
+
+
+test('completed stories skip to the next eligible group, then free talk; completion stays open',async()=>{
+    const h=harness();await flush();
+    for(const turn of story.turns)await h.cb.help(turn.answer.en);
+    h.chat.tick();assert.equal(h.chat.active,true);assert.equal(h.ui.done,true);
+    await h.cb.help('I love magic.');assert.equal(h.free.length,1);assert.equal(h.free[0].options.initialText,'I love magic.');assert.equal(h.free[0].options.lessonMessages.length,7);assert.equal(h.claims,1);
+    const next={...profile.stories[1],requiresQuest:null,requiresPet:false,requiresStory:null};
+    h.chat.open({...profile,stories:[story,next]},story,null);await flush();assert.equal(h.ui.story.id,next.id);
+    for(const turn of next.turns)await h.cb.help(turn.answer.en);
+    h.chat.open({...profile,stories:[story,next]},story,null);assert.equal(h.free.length,2);assert.equal(h.free[1].options.learningContinuation,true);h.chat.close();
+});
+
+test('replaying a completed story on another day never awards currency or speech twice',async()=>{
+    const h=harness();await flush();for(const turn of story.turns)await h.say(turn.answer.en);
+    h.state.save.languageAdventure.ledger=undefined;
+    h.cb.challenge();await flush();for(const turn of story.turns)await h.say(turn.answer.en);
+    assert.equal(h.ui.received,0);assert.equal(h.state.save.inventory[100],10);assert.equal(h.speech.length,3);h.chat.close();
+});
+
+
+test('each accepted speech retains its actual reward on the answer through completion and free-talk handoff',async()=>{
+    const h=harness({key:'attack',percent:1,total:1});await flush();
+    for(const turn of story.turns)await h.say(turn.answer.en);
+    const answers=h.ui.messages.filter(row=>row.role==='user');
+    assert.ok(answers.every(row=>row.learningReward.key==='attack'));
+    assert.match(answers.at(-1).feedback,/10 奇豆/);
+    h.cb.free();assert.equal(h.free[0].options.lessonMessages.find(row=>row.role==='user').learningReward.key,'attack');h.chat.close();
+});
+
+
+test('fixed scripts use dungeon local word feedback and three qualified readings without LLM',async()=>{
+ const h=harness();await flush();h.voice.judge=()=>{throw Error('fixed scripts must never call LLM');};
+ const line='I would like to visit the academy square today';
+ h.ui.story={...story,turns:story.turns.map((t,i)=>i?t:{...t,answer:{...t.answer,en:line}})};
+ for(let i=1;i<=3;i++){await h.say('I would like to visit');if(i<3){assert.equal(h.ui.index,0);assert.equal(h.ui.practice.qualified,i);assert.ok(h.ui.practice.feedback.parts.some(p=>p.missing));}}
+ assert.equal(h.ui.index,1);assert.equal(h.speech.length,1);
+ await h.say('');assert.equal(h.ui.index,1);assert.equal(h.ui.practice.qualified,0);h.chat.close();
+});
+
+
+test('repeated imperfect readings update one prompt without adding transcript bubbles',async()=>{
+ const h=harness();await flush();
+ const turn={...story.turns[0],answer:{en:'I can see a pear picture.','zh-CN':'我能看到一张梨的图片。'}};
+ h.ui.story={...story,turns:[turn,...story.turns.slice(1)]};
+ const original=[...h.ui.messages];
+ await h.say('I can see your pair picture.');
+ assert.deepEqual(h.ui.messages,original);assert.equal(h.ui.practice.qualified,1);
+ assert.ok(h.ui.practice.feedback.parts.some(p=>p.text==='a'&&p.missing));
+ await h.say('I can see your hair picture.');
+ assert.deepEqual(h.ui.messages,original);assert.equal(h.ui.practice.qualified,2);
+ assert.equal(h.ui.practice.feedback.transcript,'I can see your hair picture.');
+ await h.say('I can see a pear picture.');
+ assert.equal(h.ui.index,1);assert.equal(h.ui.messages.filter(row=>row.role==='user').length,1);
+ assert.equal(h.ui.messages.find(row=>row.role==='user').text,'I can see a pear picture.');
+ h.chat.close();
+});
+
+
+test('partial ASR highlights matched words without advancing or awarding, stale partials are ignored',async()=>{
+ const h=harness();await flush();let partial;
+ h.voice.start=async(_signal,options)=>{partial=options.onPartial;};
+ await h.cb.start();const before=h.ui.messages.length;
+ partial(story.turns[0].answer.en);
+ assert.equal(h.ui.index,0);assert.equal(h.ui.practice.qualified,0);assert.equal(h.speech.length,0);
+ assert.ok(h.ui.practice.feedback.parts.some(p=>p.matched));assert.equal(h.ui.messages.length,before);
+ partial('unrelated');assert.equal(h.ui.practice.feedback.accuracy,0);
+ await h.cb.cancel();const previous=h.ui.practice.feedback;partial(story.turns[0].answer.en);assert.equal(h.ui.practice.feedback,previous);
+ h.chat.close();
 });

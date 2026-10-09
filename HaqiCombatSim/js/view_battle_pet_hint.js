@@ -1,6 +1,7 @@
 import {selectableCards,canCast,PET_CARD_SEQ_BASE} from './combat_unit_core.js';
 import {validTargets} from './combat_arena_core.js';
 import {createActorSpeech,placeActorSpeech} from './view_actor_speech.js';
+import {fill,setText} from './locale_runtime.js';
 // DOM speech balloon anchored to the same screen positions as battle actors.
 export function nearestBattlePet(battle,save,content,positions,scale=1){
     const hero=battle.sides.near[0],origin=positions[hero.id];
@@ -28,15 +29,22 @@ export function createBattlePetHint(model,{el,onDismiss}){
     const cardName=model.assets.dataset.cards[action.key]?.name;
     const target=model.battle.unitsById[action.targetId]?.name;
     const dropped=(action.discardSeqs||[]).map(seq=>model.assets.dataset.cards[model.battle.sides.near[0].deckSeq[seq]]?.name).filter(Boolean);
-    const message=action.pass
-        ?(dropped.length?`可以弃掉「${dropped[0]}」，找找需要的牌。`:'先攒点魔力，等机会再出手。')
-        :cardName?`${petCard?(model.petCardsOpen?'可以试试宠物卡':'打开“使用宠物卡”，试试'):'可以试试'}「${cardName}」${target?`，目标选${target}`:''}。`:null;
-    if(!message)return null;
-    const bubble=el('aside','battle-pet-hint',el('p','',message));
+    const pattern=action.pass
+        ?(dropped.length?'可以弃掉「{card}」，找找需要的牌。':'先攒点魔力，等机会再出手。')
+        :!cardName?null:petCard
+            ?model.petCardsOpen
+                ?(target?'可以试试宠物卡「{card}」，目标选{target}。':'可以试试宠物卡「{card}」。')
+                :(target?'打开“使用宠物卡”，试试「{card}」，目标选{target}。':'打开“使用宠物卡”，试试「{card}」。')
+            :(target?'可以试试「{card}」，目标选{target}。':'可以试试「{card}」。');
+    if(!pattern)return null;
+    const vars={card:action.pass?dropped[0]:cardName,target};
+    const text=el('p','');setText(text,pattern,vars);
+    const message=text.textContent;
+    const bubble=el('aside','battle-pet-hint',text);
     bubble.style.setProperty('--pet-hint-tail','14px');
     bubble.setAttribute('aria-live','polite');bubble.hidden=true;
     bubble.setAttribute('role','button');bubble.setAttribute('tabindex','0');
-    bubble.setAttribute('aria-label',`${message} 点击收起提示`);
+    bubble.setAttribute('aria-label',fill('{message} 点击收起提示',{message}).text);
     const dismiss=event=>{event.stopPropagation();bubble.hintDismissed=true;bubble.hidden=true;onDismiss?.();};
     bubble.onclick=dismiss;
     bubble.onkeydown=event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();dismiss(event);}};
@@ -58,7 +66,7 @@ export function updateBattlePetHint(root,battle,save,content,canvas){
     bubble.style.left=`${left}px`;bubble.style.top=`${Math.max(8,y-height-8)}px`;
     bubble.style.setProperty('--pet-hint-tail',`${Math.max(14,Math.min(width-14,x-left))}px`);
     const obstacles=(canvas.battleStatusRects||[]).map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));
-    for(const node of root.querySelectorAll?.('.actor-speech')||[])if(!node.hidden)obstacles.push({x:parseFloat(node.style.left),y:parseFloat(node.style.top),width:node.offsetWidth,height:node.offsetHeight});
+    // Actor speech is laid out afterwards, above this hint when their columns overlap.
     if(obstacles.length){
         placeActorSpeech(bubble,root,{x:left+width/2,y},obstacles,{x,y});
     }
@@ -92,7 +100,13 @@ export function battleSpeechController(battle){
 }
 export function updateBattleSpeech(root,battle,canvas,now,event=null){
     battleSpeech(battle,now,event);
-    const anchors=Object.fromEntries(Object.entries(canvas.battlePositions||{}).map(([id,at])=>[id,{x:canvas.offsetLeft+at.x,y:canvas.offsetTop+at.y-104*Math.min(1,canvas.clientHeight/270)}]));
+    const heroId=battle.sides.near?.[0]?.id;
+    const anchors=Object.fromEntries(Object.entries(canvas.battlePositions||{}).map(([id,at])=>{
+        const head=canvas.battleSpeechAnchors?.[id]||{x:at.x,y:at.y-104*Math.min(1,canvas.clientHeight/270)};
+        return [id,{x:canvas.offsetLeft+head.x,y:canvas.offsetTop+head.y,aboveOthers:id===heroId}];
+    }));
     const obstacles=(canvas.battleStatusRects||[]).map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));
-    battleSpeechController(battle).render(root,anchors,now,obstacles);
+    const hint=root.battlePetHint;
+    const speechObstacles=hint&&!hint.hidden?[{x:parseFloat(hint.style.left),y:parseFloat(hint.style.top),width:hint.offsetWidth,height:hint.offsetHeight,node:hint}]:[];
+    battleSpeechController(battle).render(root,anchors,now,obstacles,speechObstacles);
 }

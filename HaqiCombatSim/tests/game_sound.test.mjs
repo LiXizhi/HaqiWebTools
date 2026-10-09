@@ -70,7 +70,7 @@ test('failed recording releases its audio token',async()=>{
     assert.equal(audioActivityActive(),false);await voice.cancel();
 });
 test('failed speech synthesis releases its audio token',async()=>{
-    const voice=createLearningVoice({load:async()=>({speechRTC:{createSession(){},async synthesizeCached(){assert.equal(audioActivityActive(),true);throw Error('offline');}}})});
+    const voice=createLearningVoice({load:async()=>({speechRTC:{createSession(){return {async synthesize(){assert.equal(audioActivityActive(),true);throw Error('offline');},stop:async()=>{}};}}})});
     await assert.rejects(voice.speak('你好','zh',new AbortController().signal),/offline/);
     assert.equal(audioActivityActive(),false);await voice.cancel();
 });

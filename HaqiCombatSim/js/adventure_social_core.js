@@ -3,6 +3,7 @@ import {createRng,hashSeed} from './rng_core.js';
 import {createUnit} from './combat_unit_core.js';
 import {defaultParams,resolveParams} from './combat_params_core.js';
 import {isSupportedType} from './combat_cards_core.js';
+import {publicPhotoHead} from './photo_head_core.js';
 export const SOCIAL_VERSION=1;
 export const DAY_MS=86400000;
 export const SOCIAL_DEFAULTS=Object.freeze(defaultParams('kids').islandSocial);
@@ -32,9 +33,10 @@ export function markSocialActivity(activity,world,kind,now) {
 }
 export function weeklyActivity(activity,world,now){return (activity?.[world]||[]).filter(d=>d>=utcWeek(now)&&d<=utcDay(now)).length;}
 export function validatePublicProfile(row,username=null) {
+    let customHead;try{if(row?.customHead)customHead=publicPhotoHead(row.customHead,{id:row.headId,appearance:row.appearance,owner:row.username});}catch{/* Discard invalid optional art, retain the social profile. */}
     if(row?.version!==SOCIAL_VERSION||!safeName(row.username)||username&&row.username!==username||!/^\d{1,20}$/.test(String(row.userId))||typeof row.name!=='string'||row.name.length>40||!schools.includes(row.school)||!['boy','girl'].includes(row.appearance)||!Number.isInteger(row.level)||row.level<1||row.level>100)return null;
     if(!['zh','en','ja','ko'].includes(row.native)||!['zh','en','ja','ko'].includes(row.target)||row.native===row.target||row.visible!==true)return null;
-    return {version:row.version,userId:String(row.userId),username:row.username,name:row.name,school:row.school,level:row.level,appearance:row.appearance,headId:row.headId,bodyId:row.bodyId,isVip:row.isVip===true,registeredAt:typeof row.registeredAt==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(row.registeredAt)&&Number.isFinite(Date.parse(row.registeredAt))?row.registeredAt:undefined,native:row.native,target:row.target,visible:true,activity:row.activity||{},snapshot:row.snapshot,id:`user:${row.userId}`,kind:'account'};
+    return {version:row.version,userId:String(row.userId),username:row.username,name:row.name,school:row.school,level:row.level,appearance:row.appearance,headId:row.headId,bodyId:row.bodyId,...(customHead?{customHead}:{}),isVip:row.isVip===true,registeredAt:typeof row.registeredAt==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(row.registeredAt)&&Number.isFinite(Date.parse(row.registeredAt))?row.registeredAt:undefined,native:row.native,target:row.target,visible:true,activity:row.activity||{},snapshot:row.snapshot,id:`user:${row.userId}`,kind:'account'};
 }
 export function selectSocialRoster({candidates=[],friends=[],blocked=[],interactions={},challenges={},selfId,world='camp',native='zh',target='en',level=1,now,seed=1,capacity=6,fillers=[]}) {
     const friendIds=new Set(friends.map(String)),blockedIds=new Set(blocked.map(String)),seen=new Set(),rng=createRng(hashSeed(`${seed}:${world}:${utcDay(now)}`));

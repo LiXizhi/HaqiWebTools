@@ -414,6 +414,195 @@
           "cell": 3
         }
       }
+    },
+    "tide": {
+      "local": "assets/adventure/environment/buildings-tide-10bc74633736.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/buildings-tide-10bc74633736.webp",
+      "width": 960,
+      "height": 320,
+      "size": 117132,
+      "sha256": "10bc746337369e8aa2345fcef3ebd7d810c093190023ac952668e2a067cfdaa4",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "dbaeb30f3cf3ab3f62091b9351a5f1700b9aba8e3c65b3e8a6fb03fc4bc5be92",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "docs/island-expansion.md#美术提示词"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "tower": {
+          "rect": [
+            52,
+            8,
+            216,
+            304
+          ],
+          "sourceRect": [
+            129,
+            6,
+            235,
+            331
+          ]
+        },
+        "village": {
+          "rect": [
+            328,
+            78,
+            304,
+            234
+          ],
+          "sourceRect": [
+            564,
+            34,
+            382,
+            294
+          ]
+        },
+        "harbor": {
+          "rect": [
+            648,
+            31,
+            304,
+            281
+          ],
+          "sourceRect": [
+            1125,
+            24,
+            333,
+            308
+          ]
+        }
+      }
+    },
+    "float": {
+      "local": "assets/adventure/environment/buildings-float-c496b14bcaf6.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/buildings-float-c496b14bcaf6.webp",
+      "width": 960,
+      "height": 320,
+      "size": 139708,
+      "sha256": "c496b14bcaf63a850d60b50825a2493997ab43021a4408567a7b931df39edabb",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "dbaeb30f3cf3ab3f62091b9351a5f1700b9aba8e3c65b3e8a6fb03fc4bc5be92",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "docs/island-expansion.md#美术提示词"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "tower": {
+          "rect": [
+            22,
+            8,
+            275,
+            304
+          ],
+          "sourceRect": [
+            99,
+            355,
+            297,
+            328
+          ]
+        },
+        "village": {
+          "rect": [
+            328,
+            92,
+            304,
+            220
+          ],
+          "sourceRect": [
+            553,
+            369,
+            433,
+            314
+          ]
+        },
+        "garden": {
+          "rect": [
+            648,
+            8,
+            304,
+            304
+          ],
+          "sourceRect": [
+            1123,
+            349,
+            334,
+            334
+          ]
+        }
+      }
+    },
+    "sail": {
+      "local": "assets/adventure/environment/buildings-sail-ae204647c46b.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/buildings-sail-ae204647c46b.webp",
+      "width": 960,
+      "height": 320,
+      "size": 141658,
+      "sha256": "ae204647c46b1b5b22dd8d54c26c924a5d872ba73cb5fa1f276583cdfd90040b",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "dbaeb30f3cf3ab3f62091b9351a5f1700b9aba8e3c65b3e8a6fb03fc4bc5be92",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "docs/island-expansion.md#美术提示词"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "tower": {
+          "rect": [
+            33,
+            8,
+            254,
+            304
+          ],
+          "sourceRect": [
+            120,
+            683,
+            267,
+            320
+          ]
+        },
+        "village": {
+          "rect": [
+            328,
+            95,
+            304,
+            217
+          ],
+          "sourceRect": [
+            551,
+            683,
+            424,
+            302
+          ]
+        },
+        "garden": {
+          "rect": [
+            648,
+            38,
+            304,
+            274
+          ],
+          "sourceRect": [
+            1117,
+            683,
+            352,
+            317
+          ]
+        }
+      }
     }
   }
 }

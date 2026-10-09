@@ -228,6 +228,9 @@ extras={'townMap':asset('texture/aries/worldmaps/townmap/haqitownmap_bg.png'),
  'campMap':asset('worlds/myworlds/newuserisland/minimap.png'),
  'music':asset('audio/haqi/ariesregionbgmusics/haqitownbg.ogg',True)}
 previous_content=json.loads((OUT/'chapter.json').read_text(encoding='utf8')) if (OUT/'chapter.json').exists() else {}
+voice_profiles=json.loads((OUT/'npc-voice-profiles.json').read_text(encoding='utf-8'))['characters']
+for npc in npcs.values():
+    npc.update(voice_profiles[npc['name']])
 strengthening_catalog={str(gsid):dict(all_items[str(gsid)]) for group in upgrade_groups for gsid in group['gsids'] if str(gsid) in all_items}
 for gsid,item in strengthening_catalog.items():
     old=previous_content.get('strengtheningCatalog',{}).get(gsid,{})
@@ -262,6 +265,7 @@ for name,obj in [('chapter.json',content),('combat.json',dataset),('assets.json'
 print(f'Exported {len(quests)} quests, {len(npcs)} NPCs, {len(monsters)} monsters, {len(used_cards)} cards, {len(assets)} assets.')
 # Refresh learning rules after the chapter/card-item mapping has been exported.
 import subprocess, sys
+subprocess.run([sys.executable, str(APP/'scripts/export_special_cards.py'), '--root', str(ROOT)], check=True)
 subprocess.run([sys.executable, str(APP/'scripts/prepare_pet_food.py')], check=True)
 subprocess.run([sys.executable, str(APP/'scripts/export_skill_learning.py'), '--root', str(ROOT)], check=True)
 subprocess.run([sys.executable, str(APP/'scripts/export_npc_catalog.py'), '--root', str(ROOT)], check=True)

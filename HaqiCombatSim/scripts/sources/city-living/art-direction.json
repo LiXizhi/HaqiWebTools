@@ -1,0 +1,138 @@
+{
+  "version": 2,
+  "generator": "built-in imagegen",
+  "theme": "south-china",
+  "provenance": "Original artistic neighborhood, not surveyed architecture or real merchants",
+  "sharedPrompt": "Front-facing centered, very slightly looking down about12degrees. Thin roof top surfaces visible, no diagonally turned three-quarter isometric views or large side walls. Refined realistic hand-painted South China daily street, upper-left diffuse light, muted weathered materials, transparent isolated whole cutouts, no outside cast shadows, no readable baked text. Complete reusable prompts: .github/skills/haqi-generate-city-dungeons/references/street-art-direction.md",
+  "sets": [
+    {
+      "id": "home-details",
+      "sourceFile": "exec-35fda412-e63b-42fd-973e-52848bdeef46.png",
+      "grid": [
+        4,
+        2
+      ],
+      "transparent": true,
+      "prompt": "ONE production game sprite ATLAS on genuine transparent RGBA background. Exactly FOUR columns by TWO rows, eight separate complete object cutouts, wide clean transparent gutters, consistent individual scale. Refined realistic hand-painted South China daily neighborhood illustration, softly weathered wood, ceramic, wicker and foliage. STRICT FRONT view, centered, looking down only 12 degrees, horizontal front edges, thin tops visible. Upper-left diffuse light, muted natural colors. No diagonal three-quarter/isometric view, no big side panels, no people, no readable text, digits, brands, watermarks, painted checkerboard, ground islands, or outside cast shadows. Row1 left to right: (1) squat woven wicker laundry basket with a few folded pale towels, front basket rim horizontal; (2) compact rectangular cream ceramic courtyard utility sink on straight black metal legs with small central back faucet, front facing symmetric, thin basin top visible; (3) tightly ROLLED weathered reed sleeping mat leaning upright against an invisible wall, tied with simple string, front centered, no floor; (4) wall-mounted plain terracotta pot with hanging fern foliage, straight front flat mount behind, no wall background. Row2 left to right: (5) squat teal rainwater barrel with CLOSED lid and small low tap facing viewer, cylindrical top very shallow ellipse, no ground; (6) small leafy citrus tree with a few orange fruits in a simple round terracotta pot, front centered, shallow ellipse pot rim; (7) small bronze outdoor porch wall lamp, front rectangular cage and pale frosted glass, flat rear mounting plate, no glow halo, no wall; (8) compact closed blue insulated delivery cooler crate with neutral blank lid and front latch, front rectangular panel, thin top surface, NO wheels, NO labels. All silhouettes fully contained in their cells, every handle, pipe, leaf and foot intact. Same cohesive refined GAME PAINTING style as weathered neighborhood storefront atlases, no glossy 3D render sheen.",
+      "promptReference": ".github/skills/haqi-generate-city-dungeons/references/street-art-direction.md",
+      "sourceCropPolicy": "Explicit inspected eight rectangles, retain alpha, ignore alpha<16 for bounds only"
+    },
+    {
+      "id": "details",
+      "sourceFile": "exec-3f68ffe0-5566-4c68-8f21-4ebb848d3aca.png",
+      "grid": [
+        4,
+        4
+      ],
+      "transparent": true,
+      "prompt": "ONE production transparent sprite ATLAS, exactly 4 columns by 4 rows, one complete object/group per cell. Refined realistic hand-painted South China daily neighborhood, FRONT-FACING centered, very slightly looking down 12 degrees, fronts horizontal, thin tops visible, no three-quarter isometric views or large side walls, upper-left diffuse light, muted weathered material detail. Genuine transparent RGBA gutters, no people, readable text, digits, brands, watermarks, painted checkerboard, ground islands or outside cast shadows. Row1: stacked red plastic restaurant stools; narrow wooden newspaper/book display rack with indistinct blank covers; three taped delivery cartons with blank labels; blue washing basin on low metal stand. Row2: mop bucket with upright mop; holder with two CLOSED umbrellas; green watering can front facing, handle behind; straight-front circular caged wall fan. Row3: narrow wall broom rack and dustpan; two canvas shopping bags; coiled rubber hose on wall bracket; freestanding work notice with BLANK pale sign. Row4: sealed weathered paint cans and brush; blue-green residential wall mailbox with blank name panel; folded hand truck STRICT FRONT, symmetrical wheels, horizontal platform; low narrow wooden shoe rack with simple sandals. Everyday believable scale, refined textured game painting, no glossy 3D sheen.",
+      "promptReference": ".github/skills/haqi-generate-city-dungeons/references/street-art-direction.md",
+      "notes": "All 16 complete cells inspected. Explicit source rectangles preserve long mop and hand-truck handles; alpha preserved, local WebP and actual permanent CDN URL recorded in street-art.json."
+    },
+    {
+      "id": "buildings",
+      "sourceFile": "exec-6d9e85d7-d35f-468c-b487-f8724482c289.png",
+      "grid": [
+        4,
+        3
+      ],
+      "transparent": true,
+      "prompt": "Exactly 12 everyday residential building shells, visible roof and foundation, adaptable blank ground floor facade and entrance. Row1: cream 3-floor apartment with balconies and green awnings; weathered red brick 3-floor home with tiled roof; narrow pale blue 4-floor walkup; gray tiled 3-floor apartment with external stair. Row2: beige 3-floor apartment with laundry balconies; offwhite 4-floor apartment with rooftop water tank; peach 3-floor home with grilles; ochre 2-floor corner house with broad front entrance. Row3: pale green 3-floor old shophouse with flat roof; narrow cream 3-floor home with red tile roof; white 4-floor walkup with blue railings; gray brick 2-floor corner shop shell. Buildings fill about 80 percent of cell height. No surrounding ground patches.",
+      "previousSourceFile": "exec-e1d760b4-6e2c-4e4d-b284-1d653a967220.png",
+      "promptReference": ".github/skills/haqi-generate-city-dungeons/references/street-art-direction.md"
+    },
+    {
+      "id": "shops",
+      "sourceFile": "exec-285f7cf4-cc6e-4176-8100-e3dbad01d2fb.png",
+      "grid": [
+        4,
+        3
+      ],
+      "transparent": true,
+      "prompt": "Exactly 12 low one-story shop facade modules, no upper building. Solid broad blank front-facing signboard above entrance, attached awning, door, display window or open serving counter and threshold. Row1: steamed bun breakfast shop, bamboo steamers, green awning; noodle kitchen with cream awning and stools; grocery shelves and red awning; fruit shop crates and orange awning. Row2: bicycle repair shop, blue canopy and tools; tea drink shop, green canopy and counter; flower shop, lavender awning and pots; home cooking restaurant, red awning and menu board. Row3: bakery, ochre awning and glass bread cabinet; hardware shop, partial steel shutter and blue sign; reading shop with green sign and books; tailor, cream sign and sewing machine window. Whole facades have similar sizes.",
+      "previousSourceFile": "exec-3c6603a5-29bf-4739-9651-974ae073f077.png",
+      "promptReference": ".github/skills/haqi-generate-city-dungeons/references/street-art-direction.md"
+    },
+    {
+      "id": "facilities",
+      "sourceFile": "exec-4d45b875-b090-4391-994f-22da20e69c49.png",
+      "grid": [
+        5,
+        4
+      ],
+      "transparent": true,
+      "prompt": "Exactly 20 public facilities. Row1: wood bench; weathered concrete bench; traditional green streetlamp; modern gray streetlamp; double sorting bin. Row2: flat round iron manhole; flat rectangular drain; three stone steps; short green railing; concrete bollard trio. Row3: direction sign pole with two blank cream horizontal boards; restaurant menu board with blank dark face; wood-framed notice board with blank cream face; advertising lightbox with blank cream face; bus shelter with glass and blank route panel. Row4: parking rack and two bicycles; parked electric scooter; red hydrant; utility cabinet; red-white traffic cone pair. Whole objects including feet visible.",
+      "previousSourceFile": "exec-b7164281-4024-4faa-a6d3-03b3b08c2895.png",
+      "promptReference": ".github/skills/haqi-generate-city-dungeons/references/street-art-direction.md"
+    },
+    {
+      "id": "life",
+      "sourceFile": "exec-fc1c0a16-c0d9-4d59-b393-b1462be63eee.png",
+      "grid": [
+        4,
+        4
+      ],
+      "transparent": true,
+      "prompt": "Exactly 16 street life objects or small coherent clusters. Row1: bamboo steamers on food trolley; stacked orange crates; baskets of leafy vegetables; blue beverage crates with bottles. Row2: round cafe table and two stools; folding table with bowls; handcart with cartons; empty woven baskets. Row3: wall air conditioner and pipes; laundry rail and everyday clothes; cream-green fabric awning and mounting frame; blank red horizontal banner on brackets. Row4: red tiled doorstep canopy; partially open steel shutter frame; wooden grocery shelf; blank cream wood-framed wall shop sign.",
+      "previousSourceFile": "exec-20ef1347-b646-460a-81c1-3993a3ccb94f.png",
+      "promptReference": ".github/skills/haqi-generate-city-dungeons/references/street-art-direction.md"
+    },
+    {
+      "id": "plants",
+      "sourceFile": "exec-6a2e1e6b-2e9f-47dc-8ab3-33f0baf0b348.png",
+      "grid": [
+        4,
+        3
+      ],
+      "transparent": true,
+      "prompt": "Exactly 12 trees and planting furniture. Row1: dense mature banyan in circular concrete tree pit; broadleaf shade tree in square brick pit; slender palm in square pit; pink bauhinia in circular stone planter. Row2: long raised brick flowerbed with pink-white flowers; low hedge in concrete planter; flowering bougainvillea in terracotta pot; three different home potted plants. Row3: banana foliage in rectangular planter; fern and broad leaves in ceramic pot; ornamental shrub in concrete pot; low mixed flowers and ornamental grasses in long wood planter. Whole canopies, trunks and planters visible.",
+      "previousSourceFile": "exec-d2909337-2ea7-4985-8609-c1da7e9a4917.png",
+      "promptReference": ".github/skills/haqi-generate-city-dungeons/references/street-art-direction.md"
+    },
+    {
+      "id": "ground",
+      "sourceFile": "exec-c337d133-cc18-493e-a8ce-ae258f7ccaa2.png",
+      "grid": [
+        4,
+        2
+      ],
+      "transparent": false,
+      "prompt": "Exactly 8 equal edge-to-edge top-down orthographic flat material samples, no perspective or shadows or borders or objects. Fine hand-painted realistic surface wear in muted natural colors, repeatable without large landmarks. Row1: warm gray weathered asphalt and aggregate; pale beige square sidewalk tiles; gray staggered rectangular pavers; muted red brick paving. Row2: mottled concrete lane; short muted green lawn; tan gravel and compacted earth; gray cobblestone alley. No text."
+    },
+    {
+      "id": "connectors",
+      "sourceFile": "exec-121c8cd5-e81f-4ca1-9f87-e3e783911e5f.png",
+      "grid": [
+        4,
+        3
+      ],
+      "transparent": true,
+      "promptReference": ".github/skills/haqi-generate-city-dungeons/references/street-art-direction.md"
+    }
+  ],
+  "packing": {
+    "script": "scripts/prepare_city_living_art.py",
+    "cellsPerAtlas": 2,
+    "spriteCellSize": 384,
+    "groundCellSize": 264,
+    "maxBytes": 200000,
+    "alphaBoundsThreshold": 16,
+    "sourceAlphaPreserved": true,
+    "notes": "Inspected row and plant crop rectangles are explicit in the packer. Runtime atlas and crop dimensions plus source/conversion hashes are in street-art.json. Try lossless before quality encoding."
+  },
+  "previousRevision": 1,
+  "camera": {
+    "pitchDegrees": 12,
+    "view": "front-slight-down"
+  },
+  "rejected": [
+    {
+      "file": "exec-b4d95e5e-61fa-4251-a4e6-03cf20ea6669.png",
+      "reason": "Incorrect cell count and colored background; not used"
+    },
+    {
+      "file": "exec-5f0ed81a-3230-4d45-8bd8-2b6773b34e30.png",
+      "reason": "Handcart still diagonal; corrected by tool edit"
+    }
+  ]
+}

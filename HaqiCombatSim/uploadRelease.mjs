@@ -9,9 +9,9 @@ import { maisiCandidates, syncMaisiRelease, syncAppsRelease } from './scripts/sy
 const root = path.dirname(fileURLToPath(import.meta.url));
 const dist = path.join(root, 'dist');
 const release = path.join(root, 'release');
-const pages = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite'];
+const pages = ['Haqi', 'HaqiOfficialWebsite', 'HaqiPromo'];
 const args = new Set(process.argv.slice(2));
-for (const arg of args) if (!['--dry-run', '--verify-only'].includes(arg)) throw new Error(`未知参数：${arg}`);
+for (const arg of args) if (!['--dry-run', '--verify-only', '--isolated'].includes(arg)) throw new Error(`未知参数：${arg}`);
 const sha256 = bytes => createHash('sha256').update(bytes).digest('hex');
 
 function collect(directory, prefix = '') {
@@ -90,17 +90,20 @@ if (manifest.verified || args.has('--dry-run')) {
         // A CDN base also changes fragment-only anchors. Resolve them against the
         // actual host document so simulator tabs stay on their release HTML.
         const fragmentRouting = `<script>for(const type of ['click','auxclick'])document.addEventListener(type,event=>{const anchor=event.target.closest?.('a[href^="#"]');if(anchor)anchor.href=new URL(anchor.getAttribute('href'),location.href).href;});</script>`;
-        const output = html.replace(/<head>/i, `<head>\n  <base href="${base}">\n  ${fragmentRouting}`);
+        const promoRouting = page === 'HaqiPromo' ? `<script>location.replace(new URL('HaqiPromo.html'+location.search+location.hash,${JSON.stringify(base)}).href);</script>` : '';
+        const output = html.replace(/<head>/i, `<head>\n  <base href="${base}">\n  ${promoRouting}\n  ${fragmentRouting}`);
         const suffix = manifest.verified ? '_v1' : '_preview';
         fs.writeFileSync(path.join(release, `${page}${suffix}.html`), output);
+        const preview = path.join(release, `${page}_preview.html`);
+        if (manifest.verified && fs.existsSync(preview)) fs.writeFileSync(preview, output);
         if (manifest.verified && page === 'HaqiOfficialWebsite') fs.writeFileSync(path.join(release, `${page}.html`), output);
         console.log(`${manifest.verified ? '已验证' : '仅预览，尚未上传'}：${base}${page}.html`);
     }
 }
 
 if (manifest.verified) {
-    const appsDestination = await syncAppsRelease({ projectRoot: root, releaseDir: release, pages, verified: true, publish: true });
-    console.log(`已同步发布入口到：${appsDestination}，并推送 apps origin/master 与 keepwork/master。`);
+    const appsDestination = await syncAppsRelease({ projectRoot: root, releaseDir: release, pages, verified: true, publish: true, isolated: args.has('--isolated') });
+    console.log(`已同步发布入口到：${appsDestination}；先提交本地 apps/master 并推送 origin/master，再发布 keepwork/master 快照。`);
     const destination = syncMaisiRelease({ projectRoot: root, releaseDir: release, pages, verified: true });
     console.log(destination ? `已同步发布入口到：${destination}` : '未找到本机Maisi仓库，跳过发布入口复制。');
     console.log('\nHaqi 最终发布入口（Maisi 托管页仍需另行发布；apps 已推送）：');

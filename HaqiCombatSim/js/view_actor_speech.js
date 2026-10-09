@@ -10,6 +10,7 @@ export function speechPlacement(anchor,size,bounds,obstacles=[]){
         {x:preferred.x,y:rect.y+rect.height+gap});
     for(const candidate of candidates){
         const rect={x:clamp(candidate.x,8,bounds.width-size.width-8),y:clamp(candidate.y,8,bounds.height-size.height-8),...size};
+        if(Number.isFinite(anchor.maxBottom)&&rect.y+rect.height>anchor.maxBottom)continue;
         if(obstacles.every(other=>rect.x+rect.width+gap<=other.x||rect.x>=other.x+other.width+gap||rect.y+rect.height+gap<=other.y||rect.y>=other.y+other.height+gap))return rect;
     }
     return null;
@@ -41,16 +42,29 @@ export function createActorSpeech(){
             }
             return messages;
         },
-        render(root,anchors,now,obstacles=[]){
-            const occupied=[...obstacles],messages=this.messages(now);
+        render(root,anchors,now,obstacles=[],speechObstacles=[]){
+            const occupied=[...obstacles,...speechObstacles],speechRects=[...speechObstacles],messages=this.messages(now);
             for(const bubble of root.querySelectorAll('.actor-speech'))bubble.hidden=true;
-            for(const message of messages){
+            // Place lower bubbles first; the hero reserves space above them regardless of arrival order.
+            for(const message of [...messages].sort((a,b)=>Number(!!anchors[a.actorId]?.aboveOthers)-Number(!!anchors[b.actorId]?.aboveOthers))){
                 const anchor=anchors[message.actorId];if(!anchor)continue;
                 let bubble=[...root.querySelectorAll('.actor-speech')].find(node=>node.dataset.caster===message.actorId);
                 if(!bubble){bubble=document.createElement('aside');bubble.className='battle-pet-hint actor-speech';bubble.dataset.caster=message.actorId;bubble.setAttribute('aria-live','polite');bubble.style.pointerEvents='none';root.append(bubble);}
                 bubble.textContent=message.text;bubble.hidden=false;
                 bubble.style.maxWidth=`${Math.max(1,Math.min(root.clientWidth-16,root.clientWidth<=650?230:280))}px`;
-                const rect=placeActorSpeech(bubble,root,anchor,occupied);if(rect)occupied.push(rect);
+                let placement=anchor,overlapping=[];
+                if(anchor.aboveOthers){
+                    const left=Math.max(8,Math.min(root.clientWidth-bubble.offsetWidth-8,anchor.x-bubble.offsetWidth/2));
+                    overlapping=speechRects.filter(rect=>left<rect.x+rect.width+10&&left+bubble.offsetWidth+10>rect.x);
+                    if(overlapping.length){const maxBottom=Math.min(...overlapping.map(rect=>rect.y))-10;placement={...anchor,y:Math.min(anchor.y,maxBottom+10),maxBottom};}
+                }
+                let rect=placeActorSpeech(bubble,root,placement,occupied,anchor);
+                if(!rect&&overlapping.length){
+                    // A short viewport must not sacrifice the player's line for passive pet advice.
+                    rect=placeActorSpeech(bubble,root,anchor,occupied.filter(row=>!overlapping.includes(row)));
+                    if(rect)for(const row of overlapping)if(row.node)row.node.hidden=true;
+                }
+                if(rect){rect.node=bubble;occupied.push(rect);speechRects.push(rect);}
             }
             for(const bubble of root.querySelectorAll('.actor-speech'))if(!messages.some(message=>message.actorId===bubble.dataset.caster))bubble.remove();
         },

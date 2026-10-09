@@ -1,12 +1,12 @@
 import {prepareTactics,scoreTactic} from './haqi_tactics_core.js';
 import * as U from '../combat_unit_core.js';
 import {validTargets} from '../combat_arena_core.js';
-import {useCard,tickDots,tickHots,isSupportedType,isAttackCard,expectedBaseDamage} from '../combat_cards_core.js';
+import {useCard,tickDots,tickHots,isSupportedType,isAttackCard,expectedBaseDamage,reviveGuardians} from '../combat_cards_core.js';
 import {hashSeed} from '../rng_core.js';
 import {describeCard} from '../card_description_core.js';
 import {integrateOutcomes} from './inference_core.js';
 
-const publicFields=['id','name','side','slot','school','level','isMob','stats','maxHp','hp','pips','charms','wards','standingWards','dots','hots','miniaura','stance','stunned','cooldowns','remedy','hasStartupPips','turnsPlayed','totals','reflectAmount','stealth','stealthRounds','combatActive'];
+const publicFields=['id','name','side','slot','school','level','isMob','stats','maxHp','hp','pips','charms','wards','standingWards','dots','hots','miniaura','stance','stunned','cooldowns','remedy','hasStartupPips','turnsPlayed','totals','reflectAmount','stealth','stealthRounds','combatActive','freezeRounds','antiFreezeRounds','antiFreezeSiblingRounds','guardian','speciesId','enragedBy'];
 const copy=value=>value===undefined?undefined:structuredClone(value);
 export function observeBattle(arena,unitId,{periodicsApplied=false}={}) {
     const actor=arena.unitsById[unitId];if(!actor)throw Error('战斗位置不存在');
@@ -18,7 +18,7 @@ export function observeBattle(arena,unitId,{periodicsApplied=false}={}) {
         if(unit.id===unitId){for(const hand of U.cardsInHand(unit)){out.deckSeq[hand.seq]=hand.key;out.deckMap[hand.seq]=1;}
             out.petDeckSeq=copy(unit.petDeckSeq||[]);out.petDeckMap=copy(unit.petDeckMap||[]);
         }
-        if(unit.isMob)out.template={attributes:{is_immune_to_dispel:unit.template?.attributes?.is_immune_to_dispel}};
+        if(unit.isMob){const attrs=unit.template?.attributes||{};out.template={hp:unit.maxHp,difficulty:unit.template?.difficulty,attributes:Object.fromEntries(['is_immune_to_dispel','is_immune_to_freeze','enrage_enable','enrage_stats_key','enrage_ai_cards_key','rarity','cannot_enrage_easy','cannot_enrage_normal','cannot_enrage_hard'].filter(key=>attrs[key]!==undefined).map(key=>[key,attrs[key]]))};}
         return out;
     });
     const remainingCounts={};for(let i=0;i<actor.deckSeq.length;i++)if(actor.deckMap[i]===0)remainingCounts[actor.deckSeq[i]]=(remainingCounts[actor.deckSeq[i]]||0)+1;
@@ -26,7 +26,7 @@ export function observeBattle(arena,unitId,{periodicsApplied=false}={}) {
         remainingRounds:arena.remainingRounds,aura:copy(arena.aura),aura2:copy(arena.aura2),periodicsApplied,
         publicHistory:(arena.events||[]).filter(e=>e.type==='cast').slice(-32).map(e=>({caster:e.caster,key:e.card,turn:e.turn})),
         reflectionRulesVersion:arena.reflectionRulesVersion,stealthRulesVersion:arena.stealthRulesVersion,
-        dispelRulesVersion:arena.dispelRulesVersion,threatRulesVersion:arena.threatRulesVersion};
+        applyTempAntiFreezeForPartners:arena.applyTempAntiFreezeForPartners,specialCardRulesVersion:arena.specialCardRulesVersion,dispelRulesVersion:arena.dispelRulesVersion,threatRulesVersion:arena.threatRulesVersion};
 }
 function arenaFrom(observation,rng) {
     const units=copy(observation.units),a={...observation,rng,events:[],unsupported:{},cardStats:{},onEvent:null,
@@ -77,6 +77,7 @@ function potential(unit,a,settings){
         if(effect&&matches(effect,foes)&&Number(effect.boost_damage)<0)value-=scale*Number(effect.boost_damage)/100;
     }
     value+=Math.min(unit.reflectAmount||0,scale);
+    if(unit.guardian)value+=Math.min(R.global.guardianReviveHp,unit.maxHp)*settings.reserveValue;
     if(unit.stunned)value-=scale;
     return value;
 }
@@ -129,11 +130,13 @@ function simulate(observation,action,rng,settings){
     const initialExposure=settings.initialExposure||0;
     const pipBefore=U.pipValue(unit);
     for(const seq of action.discardSeqs||[])U.discardCard(unit,seq);
-    if(!observation.periodicsApplied){tickDots(a,unit);if(U.isAlive(unit))tickHots(a,unit);}
-    if(U.isAlive(unit)&&!unit.stunned&&!action.pass){const card=a.resolved.cards[action.key],target=a.unitsById[action.targetId];useCard(a,unit,card,target,action.seq);}
+    let diedFromDot=false;
+    if(!observation.periodicsApplied){tickDots(a,unit);diedFromDot=!U.isAlive(unit);reviveGuardians(a);if(!diedFromDot)tickHots(a,unit);}
+    if(!diedFromDot&&U.isAlive(unit)&&!unit.stunned&&!action.pass){const card=a.resolved.cards[action.key],target=a.unitsById[action.targetId];useCard(a,unit,card,target,action.seq);}
     // Materialize one tick of known periodic effects to value DOT/HOT through the
     // real engine. Longer survival/hidden enemy responses remain approximate.
     for(const enemy of Object.values(a.unitsById))if(enemy.id!==unit.id&&U.isAlive(enemy)){tickDots(a,enemy);if(U.isAlive(enemy))tickHots(a,enemy);}
+    reviveGuardians(a);
     const riskReduction=settings.difficulty==='easy'?0:initialExposure-exposure(a,unit.side,settings);
     const immediate=boardValue(a,unit.side,settings)-before-(pipBefore-U.pipValue(unit))*settings.pipValue+riskReduction;
     const tactic=settings.difficulty==='easy'?{score:0,goal:null}:scoreTactic(observation,a,action,settings,{arenaFrom,nominalRng,semantics:cardSemantics});
@@ -148,7 +151,11 @@ export const haqiRulesAdapter={
     prepare:(observation,settings,memory)=>{const context={threats:publicThreats(observation)},a=arenaFrom(observation,nominalRng());context.initialExposure=exposure(a,a.unitsById[observation.unitId].side,{...settings,context});context.tactics=prepareTactics(observation,settings,memory,{arenaFrom,nominalRng,semantics:cardSemantics});return context;},
     summarize:context=>context?.tactics?.goal||null,
     nextMemory:(context,memory)=>({...memory,targetId:context?.tactics?.goal?.targetId||null}),
-    stateId:observation=>String(hashSeed(JSON.stringify(observation))),
+    stateId:observation=>{
+        // Earth geography/visual budgets must never change combat decision seeds.
+        const {earth,...resolved}=observation.resolved;
+        return String(hashSeed(JSON.stringify({...observation,resolved})));
+    },
     coverage:observation=>U.selectableCards(observation.units.find(u=>u.id===observation.unitId)).map(h=>observation.resolved.cards[h.key]).filter(Boolean).filter(c=>!isSupportedType(c.type)).map(c=>({key:c.key,type:c.type,status:'unsupported'})),
     actions(observation,settings={}){
         const a=arenaFrom(observation,null),unit=a.unitsById[observation.unitId],out=[{pass:true}];

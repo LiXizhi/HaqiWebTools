@@ -16,7 +16,9 @@ import {isSupportedType,useCard} from '../js/combat_cards_core.js';
 import {createPveBattle,playPveRound,restorePveBattle} from '../js/combat_pve_core.js';
 import {playerSpec,createAdventure} from '../js/adventure_core.js';
 const dataset=await loadDataset('data/kids',p=>JSON.parse(fs.readFileSync(p)));
-function arena(){const a=createArena({resolved:resolveParams(dataset,defaultParams('kids')),near:[unitSpec(dataset,'fire',{level:20})],far:[unitSpec(dataset,'ice',{level:20})],seed:17,firstSide:'near'});startCombat(a);return a;}
+// Synthetic hit/heal/ward probes must not alter the shared production catalog
+// subsequently used by the standalone encounter runner.
+function arena(){const a=createArena({resolved:resolveParams(structuredClone(dataset),defaultParams('kids')),near:[unitSpec(dataset,'fire',{level:20})],far:[unitSpec(dataset,'ice',{level:20})],seed:17,firstSide:'near'});startCombat(a);return a;}
 test('analysis is deterministic, side effect free and cannot observe enemy cards',()=>{
  const a=arena(),id=a.sides.near[0].id,state=a.rng.state(),before=JSON.stringify(a.sides);
  const observation=observeBattle(a,id),first=analyzeDecision(observation,{rulesAdapter:haqiRulesAdapter});
@@ -133,4 +135,12 @@ test('designer runner works without a page, save or account and preserves its sp
  const scenario={id:'standalone',near:[unitSpec(dataset,'fire',{level:1})],far:[unitSpec(dataset,'ice',{level:1})]};
  const before=JSON.stringify(scenario),result=runHaqiEncounter(dataset,scenario,37,{policy:'reasoning_easy',review:false});
  assert.ok(['near','far','draw'].includes(result.winner));assert.ok(result.turns>0);assert.equal(JSON.stringify(scenario),before);
+});
+
+test('Earth visual budgets do not change combat observation identity or AI choice',()=>{
+ const a=arena(),id=a.sides.near[0].id,first=observeBattle(a,id);
+ const identity=haqiRulesAdapter.stateId(first),pick=new ReasoningBot({difficulty:'easy'}).pick(a,a.unitsById[id]);
+ a.resolved.earth={...a.resolved.earth,surfaceTexturePeriod:999,surfaceMaxChunks:2,decorationsPerChunk:100};
+ assert.equal(haqiRulesAdapter.stateId(observeBattle(a,id)),identity);
+ assert.deepEqual(new ReasoningBot({difficulty:'easy'}).pick(a,a.unitsById[id]),pick);
 });

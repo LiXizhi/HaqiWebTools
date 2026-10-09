@@ -32,15 +32,15 @@
 .is-player .camp-chat-avatar{background:#e3d7ba}.camp-chat-bubble{max-width:85%;min-width:0;background:#eaf0dc;border-radius:3px 17px 17px 17px;padding:13px 16px;line-height:1.65;overflow-wrap:anywhere}
 .is-player .camp-chat-bubble{background:#d9e9d8;border-radius:17px 3px 17px 17px}.camp-chat-original{font-size:17px;margin:0}.camp-chat-translation{font-size:13px;color:#627161;margin:8px 0 0;padding-top:8px;border-top:1px solid #52695020}
 .camp-chat-message-label{display:block;font-size:12px;color:#6c715b;margin-top:6px}.camp-chat-replay{background:transparent;border:0;color:#315d45;font-size:12px;padding:7px 0 0;cursor:pointer;text-decoration:underline;text-underline-offset:2px}
-.camp-chat-footer{padding:12px 22px 15px;background:#fffdf6;border-top:1px solid #244f3b16;flex-shrink:0}.camp-chat-actions{display:flex;align-items:center;justify-content:center;gap:40px}.camp-chat-actions>.secondary{min-width:58px;min-height:44px;font-size:13px}
+.camp-chat-footer{padding:8px 22px 10px;background:#fffdf6;border-top:1px solid #244f3b16;flex-shrink:0}.camp-chat-actions{display:flex;align-items:center;justify-content:center;gap:40px}.camp-chat-actions>.secondary{min-width:58px;min-height:44px;font-size:13px}
 .camp-chat-mic{padding:0;white-space:nowrap;display:grid;place-items:center;width:64px;height:64px;border:7px solid #e7edce;border-radius:50%;background:#c8df77;color:#244f3b;font-weight:700;font-size:15px;cursor:pointer;touch-action:none;user-select:none;flex-shrink:0;box-shadow:0 0 0 1px #9cae6d}
 .camp-chat-mic.is-recording{background:#d47754;color:white;border-color:#f1d1bb;box-shadow:0 0 0 3px #d4775440}.camp-chat-mic:disabled{opacity:.55;cursor:wait}.camp-chat button:focus-visible,.camp-chat input:focus-visible{outline:3px solid #b08a31;outline-offset:3px}
-.camp-chat-caption{font-size:12px;text-align:center;color:#748069;margin:9px 0 0}.camp-chat-status{font-size:12px;text-align:center;min-height:18px;line-height:1.5;margin:7px 0 0;color:#66715e}
+.camp-chat-status{font-size:12px;text-align:center;min-height:18px;line-height:1.5;margin:7px 0 0;color:#66715e}
 .camp-chat-input{display:flex;gap:8px;margin-bottom:12px}.camp-chat-input input{min-width:0;width:100%;padding:10px;border:1px solid #ccd5bc;border-radius:12px;font-size:14px;background:#f6f7f0;color:#283d32}
-.camp-chat-hint{max-height:170px;overflow-y:auto;background:#fff3d4;border:1px solid #dbbf7c;border-radius:12px;padding:12px;margin-bottom:10px;font-size:13px}.camp-chat-hint p{margin:5px 0;overflow-wrap:anywhere}
+.camp-chat-hint{overflow:visible;background:#fff3d4;border:1px solid #dbbf7c;border-radius:12px;padding:12px;margin-bottom:10px;font-size:13px}.camp-chat-hint p{margin:5px 0;overflow-wrap:anywhere}
 .camp-chat [hidden],.camp-chat-overlay[hidden]{display:none!important}.learning-settings{display:grid;gap:12px;padding:16px 0}.learning-settings label{display:grid;gap:7px}.learning-settings select{width:100%;min-height:44px;max-width:100%;padding:8px;background:var(--paper,#fff8df);color:var(--ink,#392719);border:1px solid var(--gold,#b78636);border-radius:8px}
-@media(max-width:700px){.camp-chat-overlay{padding:6px}.camp-chat{height:97dvh;border-radius:16px;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}.camp-chat-character{padding:10px 64px 10px 16px;flex-direction:row;justify-content:flex-start;gap:10px}.camp-chat-character::before,.camp-chat-context{display:none}.camp-chat-character h2{font-size:17px;margin:0}.camp-chat-role{font-size:11px;max-width:120px;flex-shrink:1}.camp-chat-character h2{flex-shrink:0}.camp-chat-portrait{flex-shrink:0}.camp-chat-portrait{order:-1;width:48px;height:48px;margin:0}.camp-chat-header{padding:10px 14px;gap:6px}.camp-chat-header h3{font-size:16px;padding-right:0;min-height:0}.camp-chat-header .small{padding:6px;font-size:11px}.camp-chat-log{padding:14px}.camp-chat-bubble{padding:10px 12px}.camp-chat-original{font-size:16px}.camp-chat-message{gap:7px;margin-bottom:15px}.camp-chat-footer{padding:10px 12px}.camp-chat-actions{gap:36px}.camp-chat-hint{max-height:135px}.camp-chat-caption,.camp-chat-status{font-size:11px}}
-@media(max-height:550px){.camp-chat-character{display:none}.camp-chat{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr)}.camp-chat-header{padding:6px 12px;gap:3px}.camp-chat-header h3{grid-column:1/-1;grid-row:1;padding-right:52px;min-height:44px}.camp-chat>.close-button{top:4px;right:8px}.camp-chat-footer{padding:6px 12px}.camp-chat-mic{width:48px;height:48px}.camp-chat-hint{max-height:80px}}
+@media(max-width:700px){.camp-chat-overlay{padding:6px}.camp-chat{height:97dvh;border-radius:16px;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}.camp-chat-character{padding:10px 64px 10px 16px;flex-direction:row;justify-content:flex-start;gap:10px}.camp-chat-character::before,.camp-chat-context{display:none}.camp-chat-character h2{font-size:17px;margin:0}.camp-chat-role{font-size:11px;max-width:120px;flex-shrink:1}.camp-chat-character h2{flex-shrink:0}.camp-chat-portrait{flex-shrink:0}.camp-chat-portrait{order:-1;width:48px;height:48px;margin:0}.camp-chat-header{padding:10px 14px;gap:6px}.camp-chat-header h3{font-size:16px;padding-right:0;min-height:0}.camp-chat-header .small{padding:6px;font-size:11px}.camp-chat-log{padding:14px}.camp-chat-bubble{padding:10px 12px}.camp-chat-original{font-size:16px}.camp-chat-message{gap:7px;margin-bottom:15px}.camp-chat-footer{padding:10px 12px}.camp-chat-actions{gap:36px}.camp-chat-status{font-size:11px}}
+@media(max-height:550px){.camp-chat-character{display:none}.camp-chat{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr)}.camp-chat-header{padding:6px 12px;gap:3px}.camp-chat-header h3{grid-column:1/-1;grid-row:1;padding-right:52px;min-height:44px}.camp-chat>.close-button{top:4px;right:8px}.camp-chat-footer{padding:6px 12px}.camp-chat-mic{width:48px;height:48px}}
 
 .camp-chat-answer-feedback{display:block;margin-top:6px;color:#32612d;font-size:13px;font-weight:700}
 .camp-chat-completed-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:8px}
@@ -80,3 +80,43 @@
 .camp-chat-login{margin:24px;padding:24px;border:2px solid #b78636;border-radius:16px;background:#fff2cd;color:#283d32;overflow:auto;line-height:1.7}
 .camp-chat-login[hidden]{display:none!important}.camp-chat-login h3{margin:0 0 12px;font-size:22px}.camp-chat-login p{margin:0 0 20px}.camp-chat-login button{min-height:48px;max-width:100%;white-space:normal}
 @media(max-width:480px){.camp-chat-login{margin:12px;padding:16px}.camp-chat-login h3{font-size:19px}}
+
+
+.camp-chat-continue{display:flex;gap:10px;align-self:center;flex-wrap:wrap}.camp-chat-continue button{min-width:56px;min-height:40px}
+@media(max-width:700px){.camp-chat-message:has(.camp-chat-continue){flex-wrap:wrap}.camp-chat-continue{margin-left:38px}}
+
+.camp-chat-sample{display:inline-flex;align-items:center;gap:8px;max-width:100%;min-height:40px;padding:2px 0;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;font:inherit;box-shadow:none}
+.camp-chat-sample .camp-chat-original{min-width:0;overflow-wrap:anywhere}.camp-chat-sample svg{width:22px;height:22px;flex-shrink:0;color:var(--green,#315d45)}
+.camp-chat-sample:hover .camp-chat-original{text-decoration:underline}.camp-chat-sample:focus-visible{outline:2px solid var(--gold,#b78636);outline-offset:3px;border-radius:4px}.camp-chat-sample:disabled{cursor:default;opacity:.6}
+@media(max-height:550px){.camp-chat-panel{overflow-y:auto}.camp-chat-log{flex:none;overflow:visible}}
+
+.camp-chat-hint.is-compact{padding:4px 12px}.camp-chat-hint.is-compact .camp-chat-sample{margin:0}
+
+.camp-chat-hint .story-speech-missing{color:#9c351e;text-decoration:underline wavy;text-underline-offset:4px}.camp-chat-practice{display:block;color:var(--muted)}
+
+/* The reading prompt belongs to the conversation, like the dungeon player line. */
+.camp-chat-prompt .camp-chat-hint{max-width:85%;min-width:0;margin:0;padding:13px 16px;border:0;border-radius:17px 3px 17px 17px;background:#d9e9d8;line-height:1.65;overflow-wrap:anywhere}
+.camp-chat-prompt.is-npc .camp-chat-hint{background:#eaf0dc;border-radius:3px 17px 17px 17px}
+.camp-chat-prompt .camp-chat-hint.is-compact{padding:8px 16px}
+
+.camp-chat-actions .story-mic-progress{width:84px;height:84px;flex-basis:84px;margin:2px 0 12px}
+.camp-chat-actions .camp-chat-mic{width:56px;height:56px;font-size:14px;border-width:6px}
+
+.camp-chat-bubble.has-word-mapping{position:relative;isolation:isolate}.camp-chat-bubble.has-word-mapping .camp-chat-translation{margin-top:28px}.camp-chat-map{margin-left:12px}
+
+.camp-chat-hint.has-word-mapping{position:relative;isolation:isolate}.camp-chat-hint.has-word-mapping .camp-chat-translation{margin-top:28px}
+
+/* Inline bilingual actions: the target sentence itself is the replay button. */
+.camp-chat-replay.dialogue-read-line{display:block;width:100%;padding:0;margin:0;border:0;background:transparent;box-shadow:none;color:inherit;font:inherit;line-height:inherit;text-align:left;text-decoration:none;white-space:normal;overflow-wrap:anywhere}
+.dialogue-read-line svg,.camp-chat-map svg{display:inline-block;width:19px;height:19px;vertical-align:-3px;flex-shrink:0}
+.dialogue-read-line svg{margin-left:7px;color:var(--green,#315d45)}
+.camp-chat-replay.camp-chat-map{display:inline-flex;align-items:center;justify-content:center;margin:0 0 0 7px;padding:3px;min-width:25px;min-height:25px;border:0;background:transparent;box-shadow:none;vertical-align:middle;text-decoration:none}
+.dialogue-read-line:hover>span{text-decoration:underline;text-underline-offset:3px}
+.dialogue-read-line:focus-visible,.camp-chat-map:focus-visible{outline:2px solid var(--gold,#b78636);outline-offset:3px;border-radius:4px}
+.dialogue-read-line:disabled,.camp-chat-map:disabled{cursor:default;opacity:.65}
+.camp-chat-map[aria-busy="true"] svg{opacity:.45}
+.dungeon-story-bubble.narrator .dialogue-read-line svg{color:inherit}
+
+.story-speech-matched{background:#c5e6a8;color:#244f3b;border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+
+.camp-chat-prompt[hidden]{display:none}

@@ -1,4 +1,4 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><base href="../../"><meta name="viewport" content="width=device-width,initial-scale=1"><title>标题页角色列表预览</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><style>html,body{margin:0;height:100%;background:#244b42}#entry{position:relative;height:100%}</style></head><body class="haqi-app"><div id="entry"></div><script type="module">
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><base href="../../"><meta name="viewport" content="width=device-width,initial-scale=1"><title>标题页角色列表预览</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css"><link rel="stylesheet" href="css/adventure_loading.css"><style>html,body{margin:0;height:100%;background:#244b42}#entry{position:relative;height:100%}</style></head><body class="haqi-app"><div id="entry"></div><script type="module">
 import {loadResources} from '../../js/adventure_assets.js';
 import {renderRoles} from '../../js/view_adventure_roles.js';
 import {loadLocaleFiles,configureLocale} from '../../js/locale.js';
@@ -16,8 +16,9 @@ try{
   {id:'e',save:{name:'deluca',level:50,school:'fire',appearance:'boy'}},
  ];
  const root=document.querySelector('#entry');
- renderRoles(root,assets,{owner:'',catalog:{roles,activeId:'e'},dirty:false,locale,busy:'',error:'',message:''},{
+ renderRoles(root,assets,{owner:params.get('owner')||'',catalog:{roles,activeId:'e'},dirty:params.get('dirty')==='1',locale,busy:'',error:'',message:params.get('message')||''},{
   secondLocale:locale==='en'?'zh-CN':'en',setLocale(){},setSecondLocale(){},select(){},create(){},login(){},
+  remove(id){root.dataset.removed=id;},
  });
  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
  document.documentElement.dataset.fixtureReady='1';

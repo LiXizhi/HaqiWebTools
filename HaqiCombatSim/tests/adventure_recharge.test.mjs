@@ -1,8 +1,60 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {rechargeAmount,membershipCheckoutUrl} from '../js/adventure_recharge_core.js';
+import {rechargeAmount,membershipCheckoutUrl,rechargeQuote} from '../js/adventure_recharge_core.js';
+import {loadRechargePrice} from '../js/adventure_recharge_pricing.js';
 import {createMembershipClient} from '../js/adventure_membership.js';
 import {magicBeanExchangeQuote} from '../js/adventure_magic_bean_exchange_core.js';
+
+test('live day-card price quotes paid duration, renewal expiry and incremental beans',()=>{
+    const now=Date.parse('2026-10-02T00:00:00Z');
+    const member={status:'ready',isVip:true,expiresAt:'2026-11-09T00:00:00Z',commonExpiresAt:'2026-11-09T00:00:00Z'};
+    const q=rechargeQuote('108',200,member,{exchangedUntil:'2026-11-09'},now);
+    assert.equal(q.days,54);assert.equal(q.beans,540);assert.equal(q.until,'2027-01-02');assert.equal(q.totalBeans,540);
+    const pending=rechargeQuote('108',200,member,{exchangedUntil:'2026-11-04'},now);
+    assert.equal(pending.beans,540);assert.equal(pending.totalBeans,590);
+    assert.equal(rechargeQuote('108',400,member,null,now).days,27);
+});
+test('expired and first-time accounts start today; guests cannot promise an account expiry',()=>{
+    const now=Date.parse('2026-10-02T16:30:00Z');
+    const q=rechargeQuote(108,200,{status:'ready',isVip:false,expiresAt:null,commonExpiresAt:'2026-09-01'},null,now);
+    assert.equal(q.until,'2026-11-26');assert.equal(q.beans,540);
+    const guest=rechargeQuote(108,200,{status:'guest'},null,now);
+    assert.equal(guest.beans,540);assert.equal(guest.expiresAt,null);
+    assert.throws(()=>rechargeQuote(108,200,{status:'ready',isVip:true,expiresAt:null},null,now),/待确认/);
+});
+test('rounding matches checkout and sub-day amounts or invalid catalog prices are rejected',()=>{
+    const q=rechargeQuote('25',200,null,null,Date.now());
+    assert.equal(q.days,12);assert.equal(q.beans,120);assert.equal(q.remainderCents,100);
+    assert.equal(rechargeQuote('108.50',200,null,null,Date.now()).remainderCents,50);
+    assert.throws(()=>rechargeQuote('1.99',200,null,null,Date.now()),/至少/);
+    for(const price of [0,-1,null,NaN,200.5])assert.throws(()=>rechargeQuote(108,price,null,null,Date.now()));
+});
+test('ordinary VIP cannot add beans while a longer super VIP or exchange baseline covers the new expiry',()=>{
+    const now=Date.parse('2026-10-02T00:00:00Z');
+    const member={status:'ready',isVip:true,expiresAt:'2027-09-01T00:00:00Z',commonExpiresAt:'2026-10-10T00:00:00Z'};
+    const q=rechargeQuote(108,200,member,{exchangedUntil:'2027-09-01'},now);
+    assert.equal(q.beans,0);assert.equal(q.until,'2027-09-01');assert.equal(q.days,54);
+});
+test('pricing uses public catalog without credentials, rejects missing/unavailable products and aborts',async()=>{
+    let request;
+    const price=await loadRechargePrice({fetchImpl:async(url,options)=>{request={url,options};return {ok:true,json:async()=>({products:[{code:'vip_common_1_day',price:200,canPurchase:true}]})};}});
+    assert.equal(price,200);assert.equal(request.options.credentials,'omit');assert.deepEqual(JSON.parse(request.options.body),{codes:['vip_common_1_day']});
+    for(const product of [null,{code:'vip_common_1_day',price:0},{code:'vip_common_1_day',price:200,canPurchase:false}]){
+        await assert.rejects(loadRechargePrice({fetchImpl:async()=>({ok:true,json:async()=>({products:product?[product]:[]})})}));
+    }
+    await assert.rejects(loadRechargePrice({timeoutMs:5,fetchImpl:async(_url,{signal})=>new Promise((_,reject)=>signal.addEventListener('abort',()=>reject(Error('aborted'))))}),/aborted/);
+});
+test('pricing requests coalesce, cache and retry without starting payment or guessing a price',async()=>{
+    let calls=0,finish;
+    const client=createMembershipClient({loadPrice:()=>{calls++;return new Promise(resolve=>finish=resolve);}});
+    const first=client.refreshRechargePrice();assert.equal(first,client.refreshRechargePrice());
+    await Promise.resolve();finish(200);await first;
+    await client.refreshRechargePrice();assert.equal(calls,1);assert.equal(client.state.rechargePricing.priceCents,200);
+    const next=client.refreshRechargePrice({force:true});await Promise.resolve();finish(400);await next;
+    assert.equal(calls,2);assert.equal(client.state.rechargePricing.priceCents,400);
+    const broken=createMembershipClient({loadPrice:async()=>{throw Error('offline');}});
+    await broken.refreshRechargePrice();assert.equal(broken.state.rechargePricing.status,'error');assert.equal(broken.state.rechargePricing.priceCents,undefined);
+});
 
 test('custom amount preserves cents and rejects malformed or unsafe amounts',()=>{
     for(const [input,expected] of [['4',4],['20.10',20.1],['0.01',0.01],[' 50 ',50]])assert.equal(rechargeAmount(input),expected);

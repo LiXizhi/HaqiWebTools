@@ -80,6 +80,10 @@ function describeEvent(arena, ev) {
     const n = (id) => unitName(arena, id);
     const card = (k) => shortCardName(k);
     switch (ev.type) {
+        case 'freeze': return {cls:'info',text:`${n(ev.target)} ${ev.success?'被冰封了':'抵抗了冰封'}`};
+        case 'freeze_break': return {cls:'info',text:`${n(ev.target)} 的冰封解除`};
+        case 'guardian': return {cls:'info',text:`${n(ev.target)} 获得一次替身守护`};
+        case 'enrage': return {cls:'info',text:`${n(ev.target)} 被激怒了`};
         case 'combat_start': return { cls: 'turn', text: `战斗开始（${ev.firstSide === 'near' ? '我方' : '敌方'}先手）` };
         case 'turn_begin': return { cls: 'turn', text: `—— 第 ${Math.ceil(ev.turn / 2)} 回合 · ${ev.side === 'near' ? '我方' : '敌方'}行动（剩余 ${ev.remainingRounds}）——` };
         case 'pip': return { cls: 'info', text: `${n(ev.unit)} 获得${ev.kind === 'power' ? (R.version === 'teen' ? '强力判定（+2 魔力点）' : '超级魔力点') : '魔力点'} → 魔力 ${ev.pips.normal}${R.version === 'teen' ? '' : ` · 超级 ${ev.pips.power}`}（可用 ${ev.pips.normal + ev.pips.power * 2}）` };
@@ -104,7 +108,7 @@ function describeEvent(arena, ev) {
         case 'pips': return { cls: 'info', text: `  ${n(ev.target)} 能量 +${ev.amount}` };
         case 'cleanse': return { cls: 'info', text: `  ${n(ev.target)} 净化` };
         case 'remove_charm': case 'remove_ward': case 'steal_charm': case 'steal_ward': return { cls: 'info', text: `  ${n(ev.caster)} ${ev.type.startsWith('steal') ? '偷取' : '移除'} ${n(ev.target)} 的 #${ev.id}` };
-        case 'pass': return { cls: 'info', text: `${n(ev.caster)} 跳过${{ stunned: '（眩晕）', invalid_pick: '（无效出牌）', deck_empty: '（卡包已打空）', no_cards: '（无手牌）', no_target: '（无目标）' }[ev.reason] || ''}` };
+        case 'pass': return { cls: 'info', text: `${n(ev.caster)} 跳过${{ stunned: '（眩晕）', frozen: '（冰封）', invalid_pick: '（无效出牌）', deck_empty: '（卡包已打空）', no_cards: '（无手牌）', no_target: '（无目标）' }[ev.reason] || ''}` };
         case 'unsupported': return { cls: 'info', text: `${n(ev.caster)} 的 ${card(ev.card)}（${ev.cardType}）未支持，按跳过处理` };
         case 'turn_end': return null;
         case 'combat_end': return { cls: 'end', text: ev.decksExhausted ? '双方卡包全部打空，判平局' : ev.timeout ? '回合耗尽，平局' : ev.winner ? `${ev.winner === 'near' ? '我方' : '敌方'}胜利！` : '同归于尽，平局' };

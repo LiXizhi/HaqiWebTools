@@ -1,3 +1,4 @@
+import {dungeonLanguageBaseHp} from './adventure_dungeon_language_core.js';
 import {snapshotUnit,socialDataHash} from './adventure_social_core.js';
 export function dungeonProgress(save){return save?.coopRun?.runs||save?.dungeonRuns||{};}
 export function startCoopRun(save,profiles,dataset,dungeon,hero=null){
@@ -14,7 +15,7 @@ export function coopParty(save,player){
 }
 export function settleCoopHealth(save,battle){
     if(!save.coopRun)return;
-    save.heroHp=battle.sides.near[0].hp;
+    save.heroHp=dungeonLanguageBaseHp(battle.sides.near[0]);
     for(const m of save.coopRun.members){const unit=battle.unitsById[m.unit.id];if(unit)m.unit.hp=unit.hp;}
 }
 export function validateCoopRun(save){

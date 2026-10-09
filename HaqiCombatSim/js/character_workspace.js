@@ -1,4 +1,5 @@
 import {loadKeepwork} from './adventure_cloud.js';
+import {saveWorkspaceFile} from './keepwork_file_io.js';
 import {hashSeed} from './rng_core.js';
 import {relationshipParams,validateRelationship,quotaState,beijingDay,reserveQuota,finishQuota,quotaRemaining} from './character_relationship_core.js';
 
@@ -8,20 +9,30 @@ const segment=value=>encodeURIComponent(value).replaceAll('.', '%2E');
 const check=(ok,message)=>{if(!ok)throw Error(message);};
 const deadline=async promise=>{let timer;try{return await Promise.race([promise,new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('关系档案连接超时，请重试')),25000);})]);}finally{clearTimeout(timer);}};
 
-// No CAS exists in the inspected PersonalPageStore API. Read/check/write/readback
-// detects witnessed conflicts, but does not promise atomic cross-device quota.
+// Single-client ownership: first-use reads populate account memory; acknowledged
+// writes update it. Quota/relationship operations serialize locally, not across devices.
 export function createCharacterWorkspace({getOwner,loadSDK=loadKeepwork,cache,locks=globalThis.navigator?.locks,uuid=()=>crypto.randomUUID(),now=Date.now}={}){
-    const chains=new Map();
+    const chains=new Map(),files=new Map(),subscribed=new WeakSet();let cacheIdentity=null,generation=0;
     function serial(key,fn){const previous=chains.get(key)||Promise.resolve();const task=previous.catch(()=>{}).then(()=>locks?locks.request(`haqi-character:${key}`,fn):fn());chains.set(key,task);return task.finally(()=>{if(chains.get(key)===task)chains.delete(key);});}
-    async function connect(role){
+    async function connect(role,{cacheReads=true}={}){
         const owner=getOwner();check(owner,'请先登录并选择账号角色');
         const sdk=await loadSDK(),token=sdk.token;check(token,'请先登录');
+        if(!subscribed.has(sdk)){sdk.onAuthStateChange?.(()=>{generation++;files.clear();cacheIdentity=null;});subscribed.add(sdk);}
+        const epoch=generation;
+        const identity=`${owner}:${token}`;if(cacheIdentity!==identity){files.clear();cacheIdentity=identity;}
         const profile=await deadline(sdk.getUserProfile({useCache:true}));
         check(profile?.username===owner&&getOwner()===owner,'登录账号已变化');
         const store=sdk.personalPageStore.withWorkspace('HaqiAdventure');
-        const valid=()=>check(getOwner()===owner&&sdk.token===token,'登录账号已变化，操作已取消');
+        const valid=()=>check(epoch===generation&&getOwner()===owner&&sdk.token===token,'登录账号已变化，操作已取消');
         const prefix=`roles/${segment(role)}/relationships/`,scope=`${owner}:${role}`;
         async function read(path,optional=false){
+            valid();const key=`${owner}:${path}`;
+            if(!files.has(key)){
+                const task=fetchFile(path,optional).catch(error=>{if(files.get(key)===task)files.delete(key);throw error;});files.set(key,task);
+            }
+            const raw=await files.get(key);valid();if(raw===null&&!optional)throw Error('关系档案尚未加载，请重试');return raw;
+        }
+        async function fetchFile(path,optional=false){
             valid();const full=store.getRemotePagePath(path);check(full.startsWith(owner+'/'),'关系文件账号不一致');
             let raw;
             if(optional){
@@ -33,12 +44,11 @@ export function createCharacterWorkspace({getOwner,loadSDK=loadKeepwork,cache,lo
                 check(result?.success===true&&result.fromServerCache===true&&typeof result?.content==='string','无法核验关系目录');raw=result.content;
             }else raw=await deadline(sdk.getFileByFullPath(full,undefined,true));valid();
             check(typeof raw==='string'&&raw.length>0,'无法核验关系档案，请重试');
-            cache?.set(`${owner}:${path}`,raw);return raw;
+            if(cacheReads)cache?.set(`${owner}:${path}`,raw);return raw;
         }
         async function write(path,raw){
-            valid();await deadline(store.savePageData(path,'content',raw,false,true));valid();
-            check(await deadline(store.syncToGit(path,true)),'关系档案尚未同步');valid();
-            check(await read(path)===raw,'关系档案写入核验失败，请重新加载');
+            await deadline(saveWorkspaceFile({store,owner,path,text:raw,check:valid}));
+            files.set(`${owner}:${path}`,Promise.resolve(raw));cache?.set(`${owner}:${path}`,raw);
         }
         async function json(path,optional=false){const raw=await read(path,optional);return raw===null?null:JSON.parse(raw);}
         async function index(){const row=await json(prefix+'index.json',true);check(!row||row.version===1&&row.scope===scope&&row.buckets,'关系目录账号或格式无效');return row||{version:1,scope,revision:null,buckets:{}};}
@@ -68,8 +78,26 @@ export function createCharacterWorkspace({getOwner,loadSDK=loadKeepwork,cache,lo
         async function archive(record,messages){const path=prefix+`history/${uuid()}.json`;await write(path,JSON.stringify({scope,messages,previous:record.history}));return path;}
         async function list(cursor=0){const root=await index(),paths=Object.keys(root.buckets).sort().flatMap(k=>root.buckets[k]);if(cursor>=paths.length)return {rows:[],next:null};const page=await file(paths[cursor]);return {rows:page.rows,next:cursor+1<paths.length?cursor+1:null};}
         async function playerMemory(hero){const path=`roles/${segment(role)}/memory.md`;const old=await read(path,true);if(old!==null)return old;const text=`# ${hero.name||'冒险者'}\n\n母语：${hero.languageLearning?.native||'zh-CN'}\n学习语言：${hero.languageLearning?.target||'en'}\n\n${hero.learnerMemory||''}`;await write(path,text);return text;}
-        async function quota(day=beijingDay(now())){const row=await json(`social/free-talk/${day}.json`,true);check(!row||row.owner===owner,'额度账号不符');return quotaState(row,day);}
-        async function updateQuota(day,change){return serial(`${owner}:quota`,async()=>{valid();const before=await quota(day),after=change(copy(before));if(equal(before,after))return after;check(equal(await quota(day),before),'额度已变化，请重试');const next={...after,owner,revision:uuid()};await write(`social/free-talk/${day}.json`,JSON.stringify(next));return next;});}
+        const quotaPath='social/free-talk/current.json';
+        async function quota(day=beijingDay(now())){
+            valid();if(day!==beijingDay(now()))return quotaState(null,day);
+            let row=await json(quotaPath,true);
+            // Import only today's legacy ledger, once; never scan previous daily files.
+            if(row===null)row=await json(`social/free-talk/${day}.json`,true);
+            check(!row||row.owner===owner,'额度账号不符');
+            return quotaState(row?.day===day?row:null,day);
+        }
+        async function updateQuota(day=beijingDay(now()),change){return serial(`${owner}:quota`,async()=>{
+            valid();const today=beijingDay(now());
+            check(day<=today,'额度日期无效');
+            // A reply arriving after midnight must not recreate yesterday or overwrite today.
+            if(day!==today)return quotaState(null,day);
+            const before=await quota(day),after=change(copy(before));if(equal(before,after))return after;
+            if(day!==beijingDay(now()))return quotaState(null,day);
+            const requests=Object.fromEntries(Object.entries(after.requests).filter(([,r])=>r.status!=='released').map(([id,r])=>[id,r.status==='used'?{role:r.role,peer:r.peer,vip:!!r.vip,status:'used'}:r]));
+            const next={version:1,day,owner,requests};
+            await write(quotaPath,JSON.stringify(next));return next;
+        });}
         return {owner,role,scope,valid,load,save,hasEvent,archive,list,playerMemory,history:file,quota,
             remaining:async()=>quotaRemaining(await quota()),
             reserve:(id,peer,vip,day=beijingDay(now()),text='')=>updateQuota(day,row=>reserveQuota(row,id,{role,peer,text},vip,now())),

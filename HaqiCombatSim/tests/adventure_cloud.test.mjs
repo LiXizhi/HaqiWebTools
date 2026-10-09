@@ -1,7 +1,8 @@
+import {directCacheStore} from './helpers/direct_cache_store.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { createCloudClient } from '../js/adventure_cloud.js';
+import { createCloudClient,loadKeepwork,SDK_URL } from '../js/adventure_cloud.js';
 import { makeCloudSnapshot,parseCloudSnapshot,snapshotPath,checkpointPaths } from '../js/adventure_cloud_core.js';
 import { SAVE_KEY,BACKUP_KEY,saveLocal,replaceLocalWithBackup } from '../js/adventure_assets.js';
 import * as A from '../js/adventure_core.js';
@@ -17,10 +18,10 @@ function mockSDK(options={}) {
         changeAccount(name){sdk.username=name;for(const cb of listeners)cb();},
     };
     const store={getUsername:()=>sdk.username,isUseLocal:()=>!sdk.token,getRemotePagePath:path=>`${sdk.username}/edunotes/store/HaqiAdventure/${path}`,
-        savePageData:async(path,key,text,flush,useCache)=>{assert.equal(key,'content');assert.equal(flush,false);assert.equal(useCache,true);cache.set(path,text);},
-        syncToGit:async(path,useCache)=>{assert.equal(useCache,true);if(options.syncFail)return false;if(!options.cacheOnly)remote.set(store.getRemotePagePath(path),JSON.stringify(JSON.parse(cache.get(path)),null,2));return true;},
         listDir:async(dir,recursive,opts)=>{assert.equal(dir,'checkpoints');assert.equal(opts.remoteOnly,true);return [...remote.keys()].map(x=>x.split('/').at(-1)).join('\n');},
     };
+    sdk.editFileByFullPath=async(path,text,_,useCache)=>{assert.equal(useCache,true);if(options.syncFail)return {success:false};remote.set(path,text);return {success:true};};
+    directCacheStore(store,sdk);
     sdk.personalPageStore={withWorkspace:name=>{assert.equal(name,'HaqiAdventure');return store;}};
     return {sdk,store,remote,cache};
 }
@@ -43,14 +44,17 @@ test('each cloud write preserves earlier device snapshots instead of overwriting
     const save=A.createAdventure(content);const first=await c.upload(save);save.name='第二台设备';const second=await c.upload(save);
     assert.notEqual(first.path,second.path);assert.equal(mock.remote.size,2);assert.equal((await c.read(first.path)).save.name,'小哈奇');
 });
-test('cloud refuses successful local writes with failed sync or unavailable remote verification',async()=>{
-    for(const options of [{syncFail:true},{cacheOnly:true},{readFail:true}]){
-        const mock=mockSDK(options),c=client(mock);await c.connect();await assert.rejects(c.upload(A.createAdventure(content)),/云端/);assert.equal(mock.cache.size,1);
-    }
+test('cloud rejects a failed PUT acknowledgement',async()=>{
+    const mock=mockSDK({syncFail:true}),c=client(mock);await c.connect();
+    await assert.rejects(c.upload(A.createAdventure(content)),/云端/);assert.equal(mock.remote.size,0);
 });
-test('cloud rejects mismatched remote content even after sync reports success',async()=>{
-    const mock=mockSDK(),c=client(mock);mock.sdk.getFileByFullPath=async()=>'{"unexpected":true}';await c.connect();await assert.rejects(c.upload(A.createAdventure(content)),/核验/);
+test('successful PUT does not read back; explicit load still reads and validates',async()=>{
+    const mock=mockSDK(),c=client(mock);let reads=0;
+    mock.sdk.getFileByFullPath=async()=>{reads++;return '{"unexpected":true}';};
+    await c.connect();const saved=await c.upload(A.createAdventure(content));assert.equal(reads,0);
+    await assert.rejects(c.read(saved.path));assert.equal(reads,1);
 });
+
 test('login cancellation and SDK failure preserve local-only operation',async()=>{
     const mock=mockSDK();mock.sdk.token=null;const c=client(mock);await assert.rejects(c.connect(),/取消登录/);assert.equal(c.owner,null);
     mock.sdk.showLoginWindow=async()=>{throw Error('Login cancelled');};await assert.rejects(c.connect(),/取消登录/);
@@ -60,9 +64,9 @@ test('account changes invalidate previews and in-flight writes',async()=>{
     const mock=mockSDK();let changed=0;const c=client(mock,{onAccountChange:()=>changed++});await c.connect();
     const uploaded=await c.upload(A.createAdventure(content)),preview=await c.read(uploaded.path);
     mock.sdk.changeAccount('another-user');assert.equal(c.owner,null);assert.equal(changed,1);assert.throws(()=>c.assertPreview(preview),/登录/);
-    await c.connect();mock.store.savePageData=async()=>mock.sdk.changeAccount('third-user');await assert.rejects(c.upload(A.createAdventure(content)),/登录/);
+    await c.connect();mock.sdk.editFileByFullPath=async()=>mock.sdk.changeAccount('third-user');await assert.rejects(c.upload(A.createAdventure(content)),/登录/);
 });
-test('cloud awaits cache sync and verifies it without a background flush race',async()=>{
+test('cloud awaits server PUT without using background store sync',async()=>{
     const mock=mockSDK();
     mock.store.createFile=async(path,text)=>{mock.cache.set(path,text);throw Error('createFile only writes server cache');};
     const c=client(mock);await c.connect();const result=await c.upload(A.createAdventure(content));
@@ -88,4 +92,25 @@ test('cloud restore backs up local progress before replacement; quota failure pr
     const quota={...storage,setItem:(k,v)=>{if(k===BACKUP_KEY)throw Error('quota');storage.setItem(k,v);}};
     assert.throws(()=>replaceLocalWithBackup(previous,quota));assert.deepEqual(JSON.parse(map.get(SAVE_KEY)),next);
     assert.throws(()=>replaceLocalWithBackup(previous,storage,JSON.stringify(previous)),/其他页面/);assert.deepEqual(JSON.parse(map.get(SAVE_KEY)),next);
+});
+
+
+test('SDK loader sets the shared legacy opt-out before any consumer receives an existing instance',async()=>{
+    const original=globalThis.keepwork;
+    try{
+        const sdk={personalPageStore:{disableLegacyFileFallback:false}};globalThis.keepwork=sdk;
+        assert.equal(await loadKeepwork(),sdk);assert.equal(sdk.personalPageStore.disableLegacyFileFallback,true);
+        const replacement={personalPageStore:{disableLegacyFileFallback:false}};globalThis.keepwork=replacement;
+        assert.equal(await loadKeepwork(),replacement);assert.equal(replacement.personalPageStore.disableLegacyFileFallback,true);
+    }finally{if(original===undefined)delete globalThis.keepwork;else globalThis.keepwork=original;}
+});
+
+test('new SDK script is versioned and configured before resolving the shared loader',async()=>{
+    const original=globalThis.keepwork,document=globalThis.document,sdk={personalPageStore:{disableLegacyFileFallback:false}};let src;
+    try{
+        delete globalThis.keepwork;
+        globalThis.document={createElement:()=>({}),head:{append:script=>{src=script.src;globalThis.keepwork=sdk;script.onload();}}};
+        assert.equal(await loadKeepwork(),sdk);assert.equal(sdk.personalPageStore.disableLegacyFileFallback,true);
+        assert.equal(src,SDK_URL);assert.equal(new URL(src).hostname,'cdn.keepwork.com');assert.ok(new URL(src).searchParams.has('haqi-storage'));
+    }finally{if(original===undefined)delete globalThis.keepwork;else globalThis.keepwork=original;if(document===undefined)delete globalThis.document;else globalThis.document=document;}
 });

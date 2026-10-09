@@ -6,7 +6,7 @@ import {giftEligibility} from './character_relationship_core.js';
 export function createCharacterDetails(parent,{getModel,onGift,onHistory,onList,onSelect}){
     const dialog=new DetailDialog(parent,{el,title:'关系详情'});let itemDetails;
     function relation(record){
-        dialog.body.replaceChildren(el('h3','',record.peer.name),el('p','',`好感度 ${record.affinity} / 100 · 初次相遇 ${record.initialAffinity}`),el('p','',record.summary||'你们的故事刚刚开始。'));
+        dialog.body.replaceChildren(el('h3','',record.peer.name),el('p','',`好感度 ${record.affinity} / 100${record.temporary?' · 临时':''} · 初次相遇 ${record.initialAffinity}`),el('p','',record.summary||'你们的故事刚刚开始。'));
         for(const event of record.events.slice(-10).reverse())dialog.body.append(el('p','',`${event.before} → ${event.after} · ${event.reason}`));
         const history=el('div','relationship-history');dialog.body.append(history);
         const append=messages=>{for(const row of messages)history.append(el('p','',`${row.role==='user'?'我':record.peer.name}：${row.text}`));};

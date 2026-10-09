@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "packs": [
+    {"id":"tide","enabled":true,"file":"data/adventure/island-packs/tide.json","mapSource":"config/maps/islands/tide.json"},
+    {"id":"float","enabled":true,"file":"data/adventure/island-packs/float.json","mapSource":"config/maps/islands/float.json"},
+    {"id":"sail","enabled":true,"file":"data/adventure/island-packs/sail.json","mapSource":"config/maps/islands/sail.json"}
+  ]
+}

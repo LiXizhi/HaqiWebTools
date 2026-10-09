@@ -3,10 +3,10 @@ import { regionAt, segmentDistance, onLargeIsland } from './adventure_island_lay
 
 // Presentation-only texture. Cells include their neighbours so every brush mark
 // is reproduced on both sides of a cache boundary, including its soft fringe.
-function cells(world,rect,cell,tag,paint){
+function* cells(world,rect,cell,tag,paint){
     for(let gy=Math.floor((rect.y-cell)/cell);gy<=Math.floor((rect.y+rect.h+cell)/cell);gy++){
         for(let gx=Math.floor((rect.x-cell)/cell);gx<=Math.floor((rect.x+rect.w+cell)/cell);gx++){
-            paint(gx*cell,gy*cell,createRng(hashSeed(`${world.zone}:${tag}:${gx}:${gy}`)));
+            paint(gx*cell,gy*cell,createRng(hashSeed(`${world.zone}:${tag}:${gx}:${gy}`)));yield;
         }
     }
 }
@@ -21,8 +21,9 @@ function wash(c,x,y,rx,ry,color){
     ellipse(c,0,0,1,1,g);c.restore();
 }
 
-export function paintGroundDetail(c,world,rect){
-    cells(world,rect,96,'soil',(cx,cy,rng)=>{
+export function paintGroundDetail(...args){for(const step of paintGroundDetailSteps(...args)) {}}
+export function* paintGroundDetailSteps(c,world,rect){
+    yield* cells(world,rect,96,'soil',(cx,cy,rng)=>{
         const x=cx+rng.float()*96,y=cy+rng.float()*96;
         const biome=regionAt(world,{x,y})?.biome||'grass';
         const snow=['snow','ice'].includes(biome),sand=['beach','desert','gold'].includes(biome)||!onLargeIsland(world,x,y,world.layout.rules.terrain.coastWidth/2+20);
@@ -52,10 +53,11 @@ export function paintGroundDetail(c,world,rect){
     });
 }
 
-export function paintWaterDetail(c,world,rect,material='water',ocean=false){
+export function paintWaterDetail(...args){for(const step of paintWaterDetailSteps(...args)) {}}
+export function* paintWaterDetailSteps(c,world,rect,material='water',ocean=false){
     const ice=material==='ice',lava=material==='lava',dark=material==='dark';
     const shine=ice?'#efffff75':lava?'#ffe59b83':dark?'#bed8ed32':'#d8fff14d';
-    cells(world,rect,128,`water-${material}`,(cx,cy,rng)=>{
+    yield* cells(world,rect,128,`water-${material}`,(cx,cy,rng)=>{
         const x=cx+rng.float()*128,y=cy+rng.float()*128;
         wash(c,x,y,70,36,lava?'#d3432636':dark?'#202d4d30':ice?'#388cb421':'#096d9230');
         wash(c,x+22,y-10,48,19,lava?'#ffe99332':'#74edd32b');
@@ -71,10 +73,11 @@ export function paintWaterDetail(c,world,rect,material='water',ocean=false){
     });
 }
 
-export function paintRoadDetail(c,world,rect){
+export function paintRoadDetail(...args){for(const step of paintRoadDetailSteps(...args)) {}}
+export function* paintRoadDetailSteps(c,world,rect){
     // Sparse irregular shoulders break up ruler-straight edges. World-space
     // sampling and nearest-network distance also keep crossroads free of seams.
-    cells(world,rect,64,'road-verge',(cx,cy,rng)=>{
+    yield* cells(world,rect,64,'road-verge',(cx,cy,rng)=>{
         const nearby=world.paths.filter(p=>segmentDistance({x:cx+32,y:cy+32},p.a,p.b)<p.width/2+64);
         if(!nearby.length)return;
         for(let i=0;i<18;i++){
@@ -96,7 +99,7 @@ export function paintRoadDetail(c,world,rect){
         c.moveTo(p.b.x+r,p.b.y);c.arc(p.b.x,p.b.y,r,0,Math.PI*2);
     }
     c.clip();
-    cells(world,rect,96,'path',(cx,cy,rng)=>{
+    yield* cells(world,rect,96,'path',(cx,cy,rng)=>{
         if(!world.paths.some(p=>segmentDistance({x:cx+48,y:cy+48},p.a,p.b)<p.width/2+100))return;
         wash(c,cx+48,cy+48,65,35,'#b2925b20');
         for(let i=0;i<35;i++){
@@ -107,9 +110,10 @@ export function paintRoadDetail(c,world,rect){
     c.restore();
 }
 
-export function paintShoreDetail(c,world,rect){
+export function paintShoreDetail(...args){for(const step of paintShoreDetailSteps(...args)) {}}
+export function* paintShoreDetailSteps(c,world,rect){
     const {coast,rules}=world.layout,half=rules.terrain.coastWidth/2;
-    cells(world,rect,64,'shore-verge',(cx,cy,rng)=>{
+    yield* cells(world,rect,64,'shore-verge',(cx,cy,rng)=>{
         const nearby=[];
         coast.forEach(([x,y],i)=>{
             const next=coast[(i+1)%coast.length],a={x,y},b={x:next[0],y:next[1]};

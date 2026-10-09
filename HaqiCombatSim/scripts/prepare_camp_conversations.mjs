@@ -79,7 +79,7 @@ const profiles=catalog.npcs.filter(n=>n.zone==='camp').map(n=>{
         return {id:`${n.instanceId}.story${i+1}`,title:[title,`${n.name}：一起商量目的地`,`${n.name}：开口请求帮助`][i],context:opening['zh-CN'],rewardGroup:['preference','location','help'][i],opening,turns,ending:bilingual(`Thank you! I enjoyed our talk about ${ge}.`,`谢谢！和你聊${gz}很开心。`)};
     });
     const entry=art.entries[art.instances[n.instanceId]?.portrait?.id];
-    return {id:n.instanceId,npcId:n.id,name:n.name,role:n.subtitle.replace(/[()]/g,'')||n.name,source:{file:n.source,description:n.description,active:!!placed,position:point.every(Number.isFinite)?point:null,nearby:nearby?{id:nearby.id,name:nearby.name,distance:nearby.distance}:null},portrait:entry?{cdn:entry.cdn,local:entry.local}:null,stories};
+    return {id:n.instanceId,npcId:n.id,name:n.name,sex:n.sex,age:n.age,role:n.subtitle.replace(/[()]/g,'')||n.name,source:{file:n.source,description:n.description,active:!!placed,position:point.every(Number.isFinite)?point:null,nearby:nearby?{id:nearby.id,name:nearby.name,distance:nearby.distance}:null},portrait:entry?{cdn:entry.cdn,local:entry.local}:null,stories};
 });
 for(const profile of profiles){const beginner=beginnerStories(profile);if(beginner)profile.stories=beginner;}
 const hash=createHash('sha256').update(fs.readFileSync('data/adventure/maps/camp.json')).update(fs.readFileSync('data/adventure/npc-catalog.json')).digest('hex');

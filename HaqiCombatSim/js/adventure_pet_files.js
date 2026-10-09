@@ -8,7 +8,7 @@ export function unpackPetPages(save,scope,read){
     if(!save.petPages)return save;
     const refs={};
     for(const path of save.petPages){check(/^pet-pages\/[a-zA-Z0-9_-]+\.json$/.test(path),'宠物分页路径无效');const file=read(path);check(file?.version===1&&file.scope===scope&&file.kind==='page'&&Array.isArray(file.data),'宠物目录缺失或账号不符');for(const [id,row]of file.data){check(!Object.hasOwn(refs,id)&&validPetFileRef(id,row),'宠物目录无效');refs[id]=row;}}
-    return {...save,petFileRefs:refs};
+    return {...save,petFileRefs:Object.fromEntries(Object.entries(refs).filter(([id])=>!save.petMergedIds?.includes(id)))};
 }
 export function hydratePetFile(save,id,scope,read,content){
     const ref=save.petFileRefs?.[id];if(!ref)return;
@@ -22,7 +22,9 @@ export function hydratePetFile(save,id,scope,read,content){
 export function* packPetFiles(source,scope,content,uuid){
     if(source.petInstanceVersion!==1)return clone(source);
     const save=clone(source),refs=clone(save.petFileRefs||{});
+    for(const id of Object.keys(refs))if(String(id).startsWith('npc-pet:')||save.petMergedIds?.includes(id))delete refs[id];
     for(const group of ['pets','petWorld'])for(const [id,pet]of Object.entries(save[group]||{})){
+        if(String(id).startsWith('npc-pet:')){delete save[group][id];continue;}
         delete pet.hp;delete pet.hunger;
         validatePetInstance(pet,content);
         const old=refs[id],file=old?yield {read:old.path}:null;

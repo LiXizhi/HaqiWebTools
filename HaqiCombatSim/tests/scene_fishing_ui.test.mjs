@@ -2,9 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createSceneFishing} from '../js/view_adventure_scene_fishing.js';
 
-function setup(t,{reduced=false,fail=false,sure=false,empty=false}={}){
+function setup(t,{reduced=false,fail=false,sure=false,empty=false,filmClock=false}={}){
     let now=0;
-    t.mock.method(performance,'now',()=>now);
+    t.mock.method(performance,'now',()=>filmClock?now+100000:now);
     const oldDocument=globalThis.document,oldMedia=globalThis.matchMedia;
     const nodes=[],context=new Proxy({}, {get:(target,key)=>target[key]||(()=>{}),set:(target,key,value)=>(target[key]=value,true)});
     function el(tag,cls='',...children){
@@ -19,7 +19,7 @@ function setup(t,{reduced=false,fail=false,sure=false,empty=false}={}){
     const sounds=[],cameraStates=[],vibrations=[],calls=[],root=el('main');root.clientWidth=800;root.clientHeight=800;
     const save={position:{x:400,y:400},inventory:{1:empty||sure?0:3,2:empty?0:2},stamina:100};
     const model={save,assets:{draw:()=>false,content:{items:{1:{name:'普通网'},2:{name:'必中网'},3:{name:'小鱼'}},fishing:{staminaMax:100,potions:[],nets:[{id:1,staminaRequired:10},{id:2,staminaRequired:10,absolutelyHit:true}]}}}};
-    const scene=createSceneFishing(root,{sound:name=>sounds.push(name),activeChanged:value=>cameraStates.push(value),vibrate:p=>vibrations.push(p),isWater:p=>p.x>=0,action:value=>{calls.push(value);if(fail)return false;if(value.hit){save.inventory[value.netId]--;save.stamina-=5;return {caught:true,items:[{id:3,count:1,name:'小鱼'}],message:'捕到了小鱼'};}return {caught:false,message:'鱼影躲开了'};}},{el,button:(text,fn,cls)=>{const n=el('button',cls,text);n.onclick=fn;return n;}});
+    const scene=createSceneFishing(root,{clock:filmClock?()=>now:undefined,sound:name=>sounds.push(name),activeChanged:value=>cameraStates.push(value),vibrate:p=>vibrations.push(p),isWater:p=>p.x>=0,action:value=>{calls.push(value);if(fail)return false;if(value.hit){save.inventory[value.netId]--;save.stamina-=5;return {caught:true,items:[{id:3,count:1,name:'小鱼'}],message:'捕到了小鱼'};}return {caught:false,message:'鱼影躲开了'};}},{el,button:(text,fn,cls)=>{const n=el('button',cls,text);n.onclick=fn;return n;}});
     const find=cls=>nodes.find(n=>n.className===cls);
     function tick(time){now=time;scene.update(model,now,p=>p);}
     scene.start({x:270,y:400},model);tick(0);
@@ -113,4 +113,11 @@ for(const [direction,x,y] of [['left',-1,0],['right',1,0],['up',0,-1],['down',0,
     const pose=ui.scene.pose(2076);assert.equal(Math.sign(pose.pullX),x);assert.equal(Math.sign(pose.pullY),y);
     const end=ui.scene.pose(2400);assert.equal(end.pullX,0);assert.equal(end.pullY,0);
     ui.scene.stop();assert.equal(ui.scene.pose(2410),null);
+});
+
+test('film clock advances casting and input independently of wall time',t=>{
+ const ui=setup(t,{filmClock:true});
+ ui.tick(600);assert.equal(ui.find('scene-fishing').dataset.phase,'wait');
+ const landed=ui.land();assert.equal(ui.calls.length,1);assert.equal(ui.calls[0].hit,true);
+ ui.tick(landed.time+1200);assert.equal(ui.find('scene-fishing').dataset.phase,'show');
 });

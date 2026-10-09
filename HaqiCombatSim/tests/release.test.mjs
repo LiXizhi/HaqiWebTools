@@ -52,8 +52,32 @@ test('apps release preparation fast-forwards behind origin and preserves safety 
     } finally { fs.rmSync(root, { recursive: true, force: true }); }
 });
 
-test('CDN release inlines both Workers including Windows path casing variants', () => {
-    const plugin = viteConfig({ command: 'build' }).plugins.find(plugin => plugin.name === 'inline-cdn-worker');
+test('apps publication requires committed source verified on origin even in isolated compatibility mode', async () => {
+    const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-source-gate-'));
+    const root = path.join(fixture, 'source');
+    fs.mkdirSync(root);
+    const git = (...args) => execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
+    try {
+        git('init', '-b', 'master');
+        git('config', 'user.name', 'Release Test');
+        git('config', 'user.email', 'release@example.invalid');
+        git('config', 'commit.gpgsign', 'false');
+        fs.writeFileSync(path.join(root, 'source.txt'), 'base');
+        git('add', 'source.txt'); git('commit', '-m', 'base');
+        const remote = path.join(fixture, 'origin.git');
+        git('init', '--bare', remote); git('remote', 'add', 'origin', remote); git('push', 'origin', 'master');
+        const options = { projectRoot: root, releaseDir: root, pages: [], verified: true, publish: true, configuredRoot: path.join(root, 'missing-apps') };
+        fs.writeFileSync(path.join(root, 'source.txt'), 'release');
+        for (const isolated of [false, true]) await assert.rejects(syncAppsRelease({ ...options, isolated }), /未提交修改/);
+        git('add', 'source.txt'); git('commit', '-m', 'release');
+        for (const isolated of [false, true]) await assert.rejects(syncAppsRelease({ ...options, isolated }), /尚未在 origin 核验/);
+        git('push', 'origin', 'master');
+        await assert.rejects(syncAppsRelease(options), /找不到本机 apps/);
+    } finally { fs.rmSync(fixture, { recursive: true, force: true }); }
+});
+
+test('CDN release inlines both Workers including Windows path casing variants', async () => {
+    const plugin = (await viteConfig({ command: 'build' })).plugins.find(plugin => plugin.name === 'inline-cdn-worker');
     for (const file of ['js/sim_pool.js', 'js/battle_ai/client.js']) {
         const url = new URL(`../${file}`, import.meta.url);
         const source = fs.readFileSync(url, 'utf8');
@@ -78,7 +102,7 @@ test('verified release awaits apps publication before Maisi and stops if apps fa
     for (const failApps of [false, true]) {
         const calls = [];
         const result = vm.runInNewContext(`(async () => {${block}})()`, {
-            manifest: { verified: true }, root: '', release: '', pages: [],
+            manifest: { verified: true }, root: '', release: '', pages: [], args: new Set(),
             console: { log() {} },
             syncAppsRelease: async () => {
                 calls.push('apps-start');
@@ -106,7 +130,7 @@ test('release hashes all runtime data, is repeatable, and distinguishes previews
         fs.mkdirSync(path.join(root, 'scripts'));
         fs.copyFileSync(new URL('../scripts/sync_keepwork_apps_release.mjs', import.meta.url), path.join(root, 'scripts/sync_keepwork_apps_release.mjs'));
         fs.mkdirSync(path.join(root, 'dist/data'), { recursive: true });
-        for (const page of ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite']) {
+        for (const page of ['Haqi', 'HaqiOfficialWebsite', 'HaqiPromo']) {
             fs.writeFileSync(path.join(root, `dist/${page}.html`), '<html><head></head><body></body></html>');
         }
         const data = path.join(root, 'dist/data/cards.json');
@@ -123,6 +147,10 @@ test('release hashes all runtime data, is repeatable, and distinguishes previews
         const first = read();
         assert.equal(first.verified, false);
         assert.ok(fs.readFileSync(path.join(root, 'release/HaqiOfficialWebsite_preview.html'), 'utf8').includes(`<base href="${first.base}">`));
+        assert.ok(fs.readFileSync(path.join(root, 'release/HaqiPromo_preview.html'), 'utf8').includes(`<base href="${first.base}">`));
+        assert.match(fs.readFileSync(path.join(root, 'release/HaqiPromo_preview.html'), 'utf8'), /location\.replace\(new URL\('HaqiPromo\.html'\+location\.search\+location\.hash/);
+        assert.doesNotMatch(fs.readFileSync(path.join(root, 'release/Haqi_preview.html'), 'utf8'), /location\.replace/);
+        assert.equal(fs.existsSync(path.join(root, 'release/HaqiCombatSim_preview.html')), false);
         assert.equal(fs.existsSync(path.join(root, 'release/Haqi_v1.html')), false);
         assert.ok(fs.readFileSync(path.join(root, 'release/Haqi_preview.html'), 'utf8').includes(`<base href="${first.base}">`));
         assert.equal(await run(), 0);
@@ -158,7 +186,7 @@ test('verified release copies only its entry wrappers into sibling Maisi and app
         const releaseDir = path.join(projectRoot, 'release');
         const repo = path.join(root, 'maisi');
         const game = path.join(repo, 'maisi/maisi/webgames/MagicHaqi');
-        const pages = ['Haqi', 'HaqiCombatSim', 'HaqiCards', 'HaqiEffects', 'HaqiOfficialWebsite'];
+        const pages = ['Haqi', 'HaqiOfficialWebsite', 'HaqiPromo'];
         const options = { projectRoot, releaseDir, pages, verified: true, configuredRoot: '' };
         fs.mkdirSync(releaseDir, { recursive: true });
         assert.equal(syncMaisiRelease(options), null);
@@ -167,7 +195,9 @@ test('verified release copies only its entry wrappers into sibling Maisi and app
         fs.writeFileSync(path.join(game, 'MagicHaqi.html'), '<html></html>');
         fs.writeFileSync(path.join(game, 'release/MagicHaqi_v1.html'), 'existing game');
         for (const page of pages) fs.writeFileSync(path.join(releaseDir, `${page}_v1.html`), `new ${page} release`);
-        fs.writeFileSync(path.join(releaseDir, 'Haqi_preview.html'), 'do not copy');
+        fs.writeFileSync(path.join(releaseDir, 'Haqi_preview.html'), 'verified preview');
+        fs.writeFileSync(path.join(releaseDir, 'HaqiCombatSim_v1.html'), 'excluded simulator');
+        fs.writeFileSync(path.join(releaseDir, 'manifest.json'), '{}');
         assert.equal(syncMaisiRelease({ ...options, verified: false }), null);
         assert.equal(fs.existsSync(path.join(game, 'release/Haqi_v1.html')), false);
         fs.writeFileSync(path.join(game, 'release/Haqi_v1.html'), 'old version');
@@ -176,6 +206,8 @@ test('verified release copies only its entry wrappers into sibling Maisi and app
         assert.equal(fs.readFileSync(path.join(destination, 'HaqiOfficialWebsite.html'), 'utf8'), 'new HaqiOfficialWebsite release');
         for (const page of pages) assert.equal(fs.readFileSync(path.join(destination, `${page}_v1.html`), 'utf8'), `new ${page} release`);
         assert.equal(fs.existsSync(path.join(destination, 'Haqi_preview.html')), false);
+        assert.equal(fs.existsSync(path.join(destination, 'HaqiCombatSim_v1.html')), false);
+        assert.equal(fs.existsSync(path.join(destination, 'manifest.json')), false);
         assert.equal(fs.readFileSync(path.join(destination, 'MagicHaqi_v1.html'), 'utf8'), 'existing game');
         assert.equal(syncMaisiRelease({ ...options, projectRoot: path.join(root, 'unrelated/deep/project'), configuredRoot: repo }), destination);
         assert.equal(await syncAppsRelease(options), null);
@@ -189,6 +221,8 @@ test('verified release copies only its entry wrappers into sibling Maisi and app
         assert.equal(fs.readFileSync(path.join(appsGame, 'release/HaqiOfficialWebsite.html'), 'utf8'), 'new HaqiOfficialWebsite release');
         for (const page of pages) assert.equal(fs.readFileSync(path.join(appsGame, `release/${page}_v1.html`), 'utf8'), `new ${page} release`);
         assert.equal(fs.existsSync(path.join(appsGame, 'release/Haqi_preview.html')), false);
+        assert.equal(fs.existsSync(path.join(appsGame, 'release/HaqiCombatSim_v1.html')), false);
+        assert.equal(fs.existsSync(path.join(appsGame, 'release/manifest.json')), false);
         assert.equal(await syncAppsRelease({ ...options, projectRoot: path.join(root, 'unrelated/deep/project'), configuredRoot: apps }), path.join(appsGame, 'release'));
     } finally {
         assert.ok(path.resolve(root).startsWith(path.resolve(os.tmpdir()) + path.sep));

@@ -24,32 +24,36 @@ function statusTemplateDesc(template,role,fallback) {
 // occupy separate attachment slots. The 2D view uses compact badges instead of 3D models.
 export function battleStatusEffects(unit,battle) {
     const out=[],r=battle.resolved;
-    const add=(kind,label,desc,template={},extra={})=>out.push({kind,label,desc,school:template.school,negative:template.positive===false,...extra});
+    const add=(kind,label,desc,template={},extra={})=>out.push({kind,label:tr(label),desc:tr(desc),school:template.school,negative:template.positive===false,...extra});
     for(const w of unit.standingWards||[])if(w.rounds>0){
         const rank=(r.global?.stormChargingWardIds||[]).indexOf(w.id)+1;
         const base=rank?fill('狂风印记 {rank}阶',{rank}).text:statusTemplateDesc(r.wards?.[w.id],'ward','持续护盾');
-        add('ward','印',`${base} · ${w.rounds}回合`,r.wards?.[w.id],{stackKey:`standing:${w.id}:${w.rounds}`});
+        add('ward','印',fill('{effect} · {rounds}回合',{effect:base,rounds:w.rounds}).text,r.wards?.[w.id],{stackKey:`standing:${w.id}:${w.rounds}`});
     }
     for(const id of unit.charms||[])if(id>0){
         const effect=r.charms?.[id];
-        add('charm',effect?.dispel_school?'敌':'术',statusTemplateDesc(effect,'charm',`术 ${id}`),effect,{effectId:id,dispelSchool:effect?.dispel_school,school:effect?.dispel_school||effect?.school});
+        add('charm',effect?.dispel_school?'敌':'术',statusTemplateDesc(effect,'charm',fill('术 {id}',{id}).text),effect,{effectId:id,dispelSchool:effect?.dispel_school,school:effect?.dispel_school||effect?.school});
     }
     for(const w of unit.wards||[])if(w.absorb?w.pts>0:w.id>0){
         const tpl=r.wards?.[w.id];
         const label=w.absorb?'吸':tpl?.prism_from?'棱':tpl?.positive===false?'陷':'盾';
-        const desc=w.absorb?fill('吸收盾 {pts}',{pts:w.pts}).text:statusTemplateDesc(tpl,'ward',`护盾 ${w.id}`);
+        const desc=w.absorb?fill('吸收盾 {pts}',{pts:w.pts}).text:statusTemplateDesc(tpl,'ward',fill('护盾 {id}',{id:w.id}).text);
         add('ward',label,desc,tpl,{stackKey:`ward:${w.id}:${!!w.absorb}`,prism:!!tpl?.prism_from});
     }
     // Match combat_unit_core.js dotRoundsRemaining / hotRoundsRemaining:
     // remaining ticks are the remaining duration, independently for each sequence.
     for(const kind of ['dots','hots'])for(const sequence of unit[kind]||[]){
         const rounds=sequence.ticks?.length||0;
-        if(rounds>0)add(kind,kind==='dots'?'伤':'疗',`${kind==='dots'?'持续伤害':'持续治疗'} · 剩余${rounds}回合`,{}, {negative:kind==='dots',rounds,effectId:`${sequence.cardKey||''}:${sequence.casterId||''}`});
+        if(rounds>0)add(kind,kind==='dots'?'伤':'疗',fill('{effect} · 剩余{rounds}回合',{effect:kind==='dots'?'持续伤害':'持续治疗',rounds}).text,{}, {negative:kind==='dots',rounds,effectId:`${sequence.cardKey||''}:${sequence.casterId||''}`});
     }
+    if(unit.freezeRounds>0)add('freeze','冻',fill('冰封 · {rounds}回合',{rounds:unit.freezeRounds}).text,{school:'ice'},{negative:true});
+    if(unit.antiFreezeRounds>0)add('antifreeze','抗',fill('防冰封 · {rounds}回合',{rounds:unit.antiFreezeRounds}).text,{school:'ice'});
+    if(unit.enragedBy)add('enrage','怒',tr('激怒：已切换激怒属性与技能'),{}, {negative:true});
+    if(unit.guardian)add('guardian','护',tr('替身守护：倒下后复活一次'));
     if(unit.stunned)add('stun','晕','眩晕',{}, {negative:true});
-    if(unit.reflectAmount>0)add('reflect','镜',`反射盾 ${unit.reflectAmount}`,{school:'ice'});
-    if(unit.stealth)add('stealth','隐',`隐身${unit.stealthRounds>0?` · ${unit.stealthRounds}回合`:''}`);
-    if(unit.miniaura?.rounds>0)add('aura','环',`${r.miniauras?.[unit.miniaura.id]?.desc||'光环'} · ${unit.miniaura.rounds}回合`,r.miniauras?.[unit.miniaura.id]);
+    if(unit.reflectAmount>0)add('reflect','镜',fill('反射盾 {amount}',{amount:unit.reflectAmount}).text,{school:'ice'});
+    if(unit.stealth)add('stealth','隐',unit.stealthRounds>0?fill('隐身 · {rounds}回合',{rounds:unit.stealthRounds}).text:tr('隐身'));
+    if(unit.miniaura?.rounds>0)add('aura','环',fill('{effect} · {rounds}回合',{effect:r.miniauras?.[unit.miniaura.id]?.desc||'光环',rounds:unit.miniaura.rounds}).text,r.miniauras?.[unit.miniaura.id]);
     return out;
 }
 
@@ -133,7 +137,7 @@ function drawStatusIcon(c,effect,x,y,size) {
 
 function statusPosition(at,width,total,index) {
     const size=28,gap=4,columns=4,rows=Math.ceil(total/columns);
-    const bottom=Math.max(rows*(size+gap)+4,at.y-110);
+    const bottom=Math.max(rows*(size+gap)+4,Math.min(at.y-110,at.statusBottom??Infinity));
     const row=Math.floor(index/columns),n=Math.min(columns,total-row*columns),span=n*(size+gap)-gap;
     const left=Math.max(4,Math.min(width-span-4,at.x-span/2));
     return {x:left+(index%columns)*(size+gap),y:bottom-(rows-row)*(size+gap)};
@@ -149,7 +153,7 @@ export function drawOverheadStatus(c,unit,battle,at,width,hp=unit.hp,presentedEf
         const {x,y}=statusPosition(at,width,effects.length,i);
         drawStatusIcon(c,effect,x,y,size);
         targets.push({key:`${unit.id}:${effect.stackKey||`${effect.kind}:${i}`}`,x,y,width:size,height:size,
-            description:[unit.name,effect.count>1?`数量：${effect.count}`:'',...new Set(effect.descriptions)].filter(Boolean).join('\n')});
+            description:[unit.name,effect.count>1?fill(`数量：{v0}`,{v0:String(effect.count)}).text:'',...new Set(effect.descriptions)].filter(Boolean).join('\n')});
     });
     c.restore();
     return targets;

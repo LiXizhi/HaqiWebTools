@@ -1,6 +1,7 @@
 import { paintSoftShadow, paintStaticShadows } from './adventure_shadows.js';
-import { paintGroundDetail, paintWaterDetail, paintRoadDetail, paintRiverBank, paintShoreDetail } from './adventure_terrain_detail.js';
-import { groundDecorations } from './adventure_ground_decorations_core.js';
+import { paintGroundDetailSteps, paintWaterDetailSteps, paintRoadDetailSteps, paintRiverBank, paintShoreDetailSteps } from './adventure_terrain_detail.js';
+import { groundDecorationSteps } from './adventure_ground_decorations_core.js';
+import { paintBridges } from './adventure_bridge.js';
 
 function polygon(c,points){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();}
 function line(c,points,width,color){c.strokeStyle=color;c.lineWidth=width;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();}
@@ -21,20 +22,10 @@ function bands(stops,overview=false){
     }
     return result;
 }
-function riverClip(c,points,radius){
-    c.beginPath();
-    for(let i=1;i<points.length;i++){
-        const [ax,ay]=points[i-1],[bx,by]=points[i],length=Math.hypot(bx-ax,by-ay)||1;
-        const nx=-(by-ay)/length*radius,ny=(bx-ax)/length*radius;
-        c.moveTo(ax-nx,ay-ny);c.lineTo(bx-nx,by-ny);c.lineTo(bx+nx,by+ny);c.lineTo(ax+nx,ay+ny);c.closePath();
-    }
-    for(const [x,y] of points){c.moveTo(x+radius,y);c.arc(x,y,radius,0,Math.PI*2);}
-    c.clip();
-}
-
 // A deterministic, world-space painter. It paints either one small terrain tile
 // or a low-resolution overview; it never allocates a world-sized bitmap.
-export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},overview=false,decorationArt=null){
+export function paintLargeTerrain(...args){for(const step of paintLargeTerrainSteps(...args)){/* Synchronous overview / compatibility painter. */}}
+export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.h},overview=false,decorationArt=null){
     const {layout}=world,{rules}=layout,{terrain}=rules;
     c.fillStyle=terrain.ocean;c.fillRect(rect.x,rect.y,rect.w,rect.h);
     c.lineJoin='round';c.lineCap='round';
@@ -42,11 +33,11 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         const [width,color]=terrain.coastLayers[i],outer=i?terrain.coastLayers[i-1]:[width+65,terrain.ocean];
         const steps=overview?4:Math.max(8,Math.ceil((outer[0]-width)/2));
         for(let step=1;step<=steps;step++){
-            polygon(c,layout.coast);c.strokeStyle=blend(outer[1],color,step/steps);c.lineWidth=outer[0]+(width-outer[0])*step/steps;c.stroke();
+            polygon(c,layout.coast);c.strokeStyle=blend(outer[1],color,step/steps);c.lineWidth=outer[0]+(width-outer[0])*step/steps;c.stroke();yield;
         }
     }
     if(!overview){
-        paintWaterDetail(c,world,rect,'water',true);
+        yield* paintWaterDetailSteps(c,world,rect,'water',true);
         // Broken crests follow the existing coast, underneath the beach fill.
         c.save();c.setLineDash([26,17,8,31,13,47]);
         // A narrow crest at the waterline, rather than a broad dashed band.
@@ -60,7 +51,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         if(!hits(rect,r.x-r.rx*1.25,r.y-r.ry*1.25,r.x+r.rx*1.25,r.y+r.ry*1.25))continue;
         c.save();c.translate(r.x,r.y);c.scale(r.rx,r.ry);
         const g=c.createRadialGradient(0,0,.2,0,0,1.25);g.addColorStop(0,r.color);g.addColorStop(.65,r.color);g.addColorStop(1,r.color+'00');
-        oval(c,0,0,1.25,1.25,g);c.restore();
+        oval(c,0,0,1.25,1.25,g);c.restore();yield;
     }
     // Feather the sand into the already-painted regional ground. Wide to narrow
     // passes leave a soft inland margin without moving the collision coastline.
@@ -69,7 +60,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         c.strokeStyle=terrain.sand+'24';c.stroke();
     }
     polygon(c,layout.coast);c.lineWidth=terrain.coastWidth-8;c.strokeStyle=terrain.sand;c.stroke();
-    if(!overview){paintGroundDetail(c,world,rect);paintShoreDetail(c,world,rect);}
+    if(!overview){yield* paintGroundDetailSteps(c,world,rect);yield* paintShoreDetailSteps(c,world,rect);}
     // Relief contours and small stone fans suggest altitude without animated geometry.
     for(const mountain of layout.mountains||[]){
         const {x:cx,y:cy,biome,scale=1}=mountain,shape=rules.mountain,palette=rules.biomes[biome].mountain||rules.biomes.gold.mountain;
@@ -81,6 +72,7 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
             c.strokeStyle=palette.at(-1)+'55';c.lineWidth=3;c.stroke();
         }
     }
+    yield;
     // Patchwork farmland is geometry baked into the ground, not individual sprites.
     for(const farm of layout.farms||[]){
         if(!hits(rect,farm.x,farm.y,farm.x+farm.cols*130,farm.y+farm.rows*90))continue;
@@ -91,43 +83,46 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         for(let j=1;j<6;j++)line(c,[[x+6,y+j*11],[x+107,y+j*11]],3,'#e0cd8a66');
         }
     }
-    for(const river of layout.rivers){
-        const pad=(river.width+48)/2;let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
-        for(const [x,y] of river.points){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x);y1=Math.max(y1,y);}
-        if(!hits(rect,x0-pad,y0-pad,x1+pad,y1+pad))continue;
-        const palette=rules.water[river.material||'water'];
-        for(let fringe=48;fringe>24;fringe-=4)line(c,river.points,river.width+fringe,palette.bank+'24');
-        for(const [width,color] of bands([
-            [river.width+24,palette.bank],
-            [river.width+8,blend(palette.bank,palette.edge,.6)],
-            [river.width-6,palette.fill],
-            [river.width*.55,blend(palette.fill,palette.center,.6)],
-            [river.width*.18,blend(palette.fill,palette.center,.75)],
-        ],overview))line(c,river.points,width,color);
+    yield;
+    // Paint the entire water network one band at a time. Inner water covers all
+    // banks at lake/river junctions, including across independently baked tiles.
+    for(const material of new Set([...layout.rivers,...(layout.lakes||[])].map(w=>w.material||'water'))){
+        const palette=rules.water[material];
+        const rivers=layout.rivers.filter(r=>{if((r.material||'water')!==material)return false;const pad=r.width/2+24,xs=r.points.map(p=>p[0]),ys=r.points.map(p=>p[1]);return hits(rect,Math.min(...xs)-pad,Math.min(...ys)-pad,Math.max(...xs)+pad,Math.max(...ys)+pad);});
+        const lakes=(layout.lakes||[]).filter(l=>(l.material||'water')===material);
+        const waterBands=[...Array.from({length:6},(_,i)=>[24-i*2,palette.bank+'24']),
+            ...bands([[12,palette.bank],[4,blend(palette.bank,palette.edge,.6)],[-3,palette.fill],[-12,blend(palette.fill,palette.center,.6)]],overview)];
+        for(const [inset,color] of waterBands){
+            for(const r of rivers)line(c,r.points,Math.max(4,r.width+inset*2),color);
+            for(const l of lakes)if(hits(rect,l.x-l.rx-24,l.y-l.ry-24,l.x+l.rx+24,l.y+l.ry+24))
+                oval(c,l.x,l.y,Math.max(2,l.rx+inset),Math.max(2,l.ry+inset),color);
+        }
         if(!overview){
-            c.save();riverClip(c,river.points,river.width/2);
-            paintWaterDetail(c,world,rect,river.material||'water');c.restore();
-            paintRiverBank(c,world,rect,river,palette);
+            // One union clip gives continuous ripples, with no doubled detail at joins.
+            c.save();c.beginPath();
+            for(const r of rivers){
+                const radius=Math.max(2,r.width/2-3);
+                for(let i=1;i<r.points.length;i++){
+                    const [ax,ay]=r.points[i-1],[bx,by]=r.points[i],length=Math.hypot(bx-ax,by-ay)||1;
+                    const nx=-(by-ay)/length*radius,ny=(bx-ax)/length*radius;
+                    c.moveTo(ax+nx,ay+ny);c.lineTo(ax-nx,ay-ny);c.lineTo(bx-nx,by-ny);c.lineTo(bx+nx,by+ny);c.closePath();
+                }
+                for(const [x,y] of r.points){c.moveTo(x+radius,y);c.arc(x,y,radius,0,Math.PI*2);}
+            }
+            for(const l of lakes){c.moveTo(l.x+l.rx,l.y);c.ellipse(l.x,l.y,l.rx,l.ry,0,0,Math.PI*2);}
+            c.clip();yield* paintWaterDetailSteps(c,world,rect,material);c.restore();
+            for(const r of rivers)if(!lakes.length)paintRiverBank(c,world,rect,r,palette);
         }
     }
-    for(const l of layout.lakes||[]){
-        if(!hits(rect,l.x-l.rx-18,l.y-l.ry-18,l.x+l.rx+18,l.y+l.ry+18))continue;
-        const palette=rules.water[l.material||'water'];
-        oval(c,l.x,l.y,l.rx+18,l.ry+18,palette.bank);oval(c,l.x,l.y,l.rx+6,l.ry+6,palette.edge);
-        oval(c,l.x,l.y,l.rx,l.ry,palette.fill);
-        c.save();c.translate(l.x,l.y);c.scale(l.rx,l.ry);
-        const depth=c.createRadialGradient(-.15,-.2,0,0,0,1);depth.addColorStop(0,palette.center);depth.addColorStop(1,palette.fill);
-        oval(c,0,0,1,1,depth);c.restore();
-        if(!overview){c.save();c.beginPath();c.ellipse(l.x,l.y,l.rx,l.ry,0,0,Math.PI*2);c.clip();paintWaterDetail(c,world,rect,l.material||'water');c.restore();}
-    }
-    if(!overview&&decorationArt)for(const d of groundDecorations(world,rect)){
+    if(!overview&&decorationArt)for(const d of (yield* groundDecorationSteps(world,rect))){
         // Small contact shade stays lighter than trees and buildings. Floating
         // plants and flat sand markings do not cast a ground shadow.
         if(!['lilyPads','waterLily','sandRipples'].includes(d.frame))
             paintSoftShadow(c,d.x-d.size*.03,d.y-d.size*.06,d.size*.36,d.size*.10,.17);
         c.save();c.translate(d.x,d.y);if(d.flip)c.scale(-1,1);
-        decorationArt.draw(c,d.atlas,d.frame,-d.size/2,-d.size,d.size,d.size);c.restore();
+        decorationArt.draw(c,d.atlas,d.frame,-d.size/2,-d.size,d.size,d.size);c.restore();yield;
     }
+    yield;
     // Every road pass is drawn over the full network to avoid crossing seams.
     const layers=rules.roads.layers;
     const shoulder=layers[1]?.[1]||layers[0]?.[1];
@@ -142,19 +137,15 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
         for(const p of world.paths){
             const half=(p.width+roadPad)/2,x0=Math.min(p.a.x,p.b.x)-half,y0=Math.min(p.a.y,p.b.y)-half,x1=Math.max(p.a.x,p.b.x)+half,y1=Math.max(p.a.y,p.b.y)+half;
             if(!hits(rect,x0,y0,x1,y1))continue;
-            line(c,[[p.a.x,p.a.y],[p.b.x,p.b.y]],Math.max(4,p.width+extra),color);
+            line(c,[[p.a.x,p.a.y],[p.b.x,p.b.y]],Math.max(4,p.width+extra),color);yield;
         }
     }
-    if(!overview)paintRoadDetail(c,world,rect);
-    for(const b of layout.bridges){
-        const reach=Math.hypot(b.w,b.h)/2;
-        if(!hits(rect,b.x-reach,b.y-reach,b.x+reach,b.y+reach))continue;
-        c.save();c.translate(b.x,b.y);c.rotate(b.angle||0);
-        c.fillStyle=rules.bridge.edge;c.fillRect(-b.w/2,-b.h/2,b.w,b.h);
-        c.fillStyle=rules.bridge.fill;c.fillRect(-b.w/2+7,-b.h/2+7,b.w-14,b.h-14);
-        for(let x=-b.w/2+15;x<b.w/2;x+=17)line(c,[[x,-b.h/2+8],[x,b.h/2-8]],2,rules.bridge.seam);
-        c.restore();
-    }
+    if(!overview)yield* paintRoadDetailSteps(c,world,rect);
+    const visibleBridges=layout.bridges.filter(b=>{
+        const reach=Math.hypot(b.w,b.h)/2+24;
+        return hits(rect,b.x-reach,b.y-reach,b.x+reach,b.y+reach);
+    });
+    paintBridges(c,visibleBridges,rules.bridge,overview);
     for(const d of layout.details||[]){
         if(d.x<rect.x-20||d.x>rect.x+rect.w+20||d.y<rect.y-20||d.y>rect.y+rect.h+20)continue;
         oval(c,d.x,d.y,d.size,d.size*.5,rules.biomes[d.biome].color);oval(c,d.x-1,d.y-2,d.size*.7,d.size*.25,'#fff2ce30');
@@ -175,8 +166,9 @@ export function paintLargeTerrain(c,world,rect={x:0,y:0,w:world.w,h:world.h},ove
     if(hits(rect,world.center.x-plaza.radiusX,world.center.y-plaza.radiusY,world.center.x+plaza.radiusX,world.center.y+plaza.radiusY)){
         oval(c,world.center.x,world.center.y,plaza.radiusX,plaza.radiusY,plaza.edge);oval(c,world.center.x,world.center.y,plaza.radiusX-11,plaza.radiusY-9,plaza.fill);
         c.strokeStyle=plaza.line;c.lineWidth=2;
-        for(let i=0;i<3;i++){c.beginPath();c.ellipse(world.center.x,world.center.y,145-i*36,83-i*20,0,0,Math.PI*2);c.stroke();}
+        for(let i=0;i<3;i++){c.beginPath();c.ellipse(world.center.x,world.center.y,(layout.route?72:145)-i*(layout.route?18:36),(layout.route?40:83)-i*(layout.route?10:20),0,0,Math.PI*2);c.stroke();}
     }
+    yield;
     // Bake after roads and plaza so their surfaces receive shade too.
     paintStaticShadows(c,world,rect);
     c.restore();

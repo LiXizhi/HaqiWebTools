@@ -2,6 +2,7 @@
 // 数据集（cards/charms/...）只读；所有可调数值集中在这里，引擎只读取 resolveParams() 的结果。
 // 常量来源见 docs/lua-mapping.md §1。
 
+import {PACK_ISLANDS} from './island_pack_registry_core.js';
 export const SCHOOLS = ['fire', 'ice', 'storm', 'life', 'death'];
 export const ALL_SCHOOLS = ['fire', 'ice', 'storm', 'myth', 'life', 'death', 'balance'];
 export const VERSIONS = ['kids', 'teen'];
@@ -36,12 +37,18 @@ export function defaultParams(version = 'teen') {
     const teen = version === 'teen';
     return {
         version,
+        // Local companion behavior and service budgets, independent of combat formulas.
+        companionAI: {thinkMs:1000,followDistance:220,comfortDistance:110,followSpacing:65,blockedRetryMs:30000,arrivalDistance:18,exploreRadius:180,goalMs:18000,gatherMs:9000,enemyClearance:150,speechMinMs:45000,speechMaxMs:90000,quietMinMs:120000,quietMaxMs:180000,dailyRequests:120,dailyProactive:40,recentMessages:24,recentEvents:20,summaryChars:2000,replyChars:500,inputChars:2000,recordMaxMs:20000,modelTokens:1600,battleTimeoutMs:5000},
+        // Web Earth exploration budgets; independent of combat RNG and formulas.
+        cityDungeons: {gridSize:9,tileSize:140,encounters:3,levelStep:1,monsterIds:['fire-scout','ice-scout','storm-scout','life-scout','water-bubble'],streetSize:2400,streetRoadWidth:150,streetWalkWidth:120,streetBuildingHeight:370,streetBuildingMaxWidth:220,streetShopWidth:280,streetPropDepth:22,streetHeroRadius:18,streetMovementStep:2,streetEdgeMargin:24},
+        earth: {unitsPerDegree:24000,mapCityPickRadius:48,atlasMarkerSpacing:42,atlasMarkerRadius:6,atlasStoryMarkerRadius:8,mapDragThreshold:8,generationVersion:1,chunkSize:1000,activeRadius:2,prefetchRadius:3,maxConcurrent:4,maxTiles:12,maxCityTiles:4,maxChunks:64,maxSceneCities:24,maxQueuedRequests:48,maxDecodedBytes:33554432,requestTimeoutMs:20000,cityRadius:480,roadWidth:70,roadSampleStep:24,roadSafeMargin:65,buildingSafeMargin:100,buildingsPerCity:12,buildingSpacing:150,buildingOffset:170,treesPerChunk:12,monstersPerChunk:9,wildMaxActors:6,wildSpawnClearance:40,wildUrbanSampleStep:500,wildNearDistance:1500,wildFarDistance:12000,wildNearLevelOffset:-3,wildFarLevelOffset:5,wildNearPowerRatio:.85,wildFarPowerRatio:1.3,wildMaxPower:10000,wildPipBudgetShare:.12,wildResistBudgetShare:.3,wildMaxPip:80,wildMaxResist:60,wildHpBudgetShare:.15,wildMaxHpBonus:1,monsterClearance:350,arrivalRadius:1500,arrivalStep:48,navigationRadius:1200,maxPathNodes:2500,streamIntervalMs:350,surfaceChunkSize:256,surfaceResolution:256,surfaceMaxChunks:64,surfacePrefetchRing:1,landmarkRoadClearance:20,landmarkPlacementStep:60,landmarkPlacementRadius:900,surfaceFrameBudgetMs:4,surfaceFallbackBudgetMs:2,surfaceMobileResolution:192,surfaceTexturePeriod:192,decorationsPerChunk:80,forestDecorationsPerChunk:100,cityPopulationLarge:1000000,cityPopulationMedium:100000,cityDensities:[.7,.88,.98],cityInfluenceRadius:12000,settlementRadiusSmall:550,settlementRadiusMedium:900,settlementRadiusLarge:1400,transitRailOffset:250,transitCorridorWidth:35,transitMinimumLength:240,transitStationOffset:180,transitStationSize:250,transitTrainSize:270,transitHighSpeedPopulation:1000000,cityDrawSceneRoads:false,cityGroundPeriod:768,cityConnectionDistance:24000,cityConnectionBend:.12,cityConnectionSegment:120,cityConnectionWidth:52,cityBridgeMaxSpan:480,boatSize:100,dockSize:112,cityConnectionShoulderWidth:4,cityConnectionBlendWidth:20,cityConnectionTextureOpacity:.26,surfaceDetailStrength:.5,surfaceDetailSpacing:18,surfaceDetailDensity:.38,streamBuildBudgetMs:2,streamPrefetchDistance:450,streamTurnCancelDistance:8,streamCacheChunks:192,streamRouteCacheEntries:64,streamUrbanSampleEntries:8192,streamPacketRows:64,collisionCellSize:256, surfaceVegetationTint:.62,cityBlockSize:500,cityBlockInset:110,cityLaneWidth:48,citySidewalkWidth:28,cityBuildingClearance:12,cityBuildingSetback:60,cityCellsPerChunk:6,cityStreetFraction:.28,maxUrbanObjects:1800},
         // Web cross-cultural relationships; not original combat formula values.
         characterRelations: {initialMin:0,initialMax:60,maxAiDelta:5,giftGain:3,dungeonGain:3,matchGain:2,dailyFreeMessages:2,recentMessages:20,compactAt:40,indexPageSize:100},
         // Web island unlock levels; original world configuration is unavailable.
-        worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40 },
+        dungeonJourney: { hpGrowth:.055, rewardPerFloor:30, summitMultiplier:5 },
+        worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40, ...Object.fromEntries(PACK_ISLANDS.map(i=>[i.id,i.recommendedLevel])) },
         petInteractions: {
-            memoryCapacity:50, memoryProtectionMs:7*86400000, marksRequired:3,
+            memoryCapacity:10, memoryProtectionMs:7*86400000, marksRequired:3,
             cooldownMs:3*86400000, babyScale:.5, interactionDistance:100,
             feedingDistance:180, effectMs:4500, playIntervalMs:12000,
             encounterDistanceMultiplier:2, meetingSpacing:48, meetingArrivalDistance:64,
@@ -51,8 +58,12 @@ export function defaultParams(version = 'teen') {
         },
         // autoJoin* mirrors kids CombatRoom empty-seat open → delayed AI fill (RoomDetailPage 4 slots).
         // roadSlack / spawnMinActors: wander along roads near quest hubs; keep a few residents by the world spawn/plaza.
-        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, spawnMinActors:2, separation:50, npcClearance:65, followDistance:110, followSpacing:55, followWait:2, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
+        // actorSeparation is the standing hero box (78) plus a visible gap, so two AI sprites do not touch.
+        socialActions: { durationMs:3600, cooldownMs:4000, danceAffinity:30, heartAffinity:60 },
+        islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, spawnMinActors:2, separation:50, actorSeparation:120, npcClearance:65, monsterClearance:96, entranceClearance:115, followDistance:110, followSpacing:42, partyIdleDelay:1.2, partyIdleRadius:5, partyPetOffsetX:32, partyPetOffsetY:18, followWait:2, dungeonFollowSpeed:262.5, dungeonRegroupDistance:280, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, sceneMaxActors:6, sceneLoadDistance:1000, sceneUnloadDistance:1200, sceneUnloadDelay:1.5, sceneFadeIn:.8, sceneFadeOut:.5, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
+        dailyLanguage: {percentPerLine:1,maxPercent:10,rewardSteps:[5,10,20,30,40],rewardItems:[100,100,100,17213,17213],rewardAmounts:[10,20,30,5,10]},
+        dungeonLanguage: {recordMaxMs:20000,percentPerLine:1,maxPercent:3,minSpeechAccuracy:0.3,speechPracticeCount:3},
         languageAdventure: { inviteRange:150, interactionRange:85, greetingMs:2500, basicReward:10, beginnerReward:30, intermediateReward:50, advancedReward:80, basicDailyCap:100, challengeDailyCap:200, basicCourseLimit:2, challengeCourseLimit:1, promptCooldownMs:90000, sourceCooldownMs:300000, maxTurns:8 },
         // Web progression schedule; original server training-point grant table is unavailable.
         skillLearning: { pointLevels: [4,8,12,16,20,25,30,35,40,45,50] },
@@ -68,7 +79,30 @@ export function defaultParams(version = 'teen') {
             fishingPerfectWeightFloor:.25, fishingLargeGrams:6000, fishingHugeGrams:12000,
             fishingAutoEscapeChance:.01,
         },
+        // Web red-mushroom matchmaking, not original server ranking rules.
+        // arena_server.lua L69–73: PvP pickcard_timeout_time_pvp = 30000; readyMs is the web match confirmation.
+        redMushroom: { arrivalMinMs:3000, arrivalMaxMs:5000, readyMs:15000, pickMs:30000, firstMin:.55, firstMax:.7, min:.5, max:1.6, jitter:.08, feedback:1.2, window:20, winPoints:25, drawPoints:10 },
+        // Scene motion stays outside adventureParams saved in battle checkpoints.
+        monsterScene: { territoryRadius:84, perceptionMultiplier:2, alertDelay:1.5, dungeonWanderRadius:22, wanderSpeed:15, chaseSpeed:115, returnSpeed:45, restMin:2.5, restMax:6.5 },
+        petTraits: {
+            gatheringChance:.2,
+            countWeights:[65,28,7], rankWeights:[5000,2500,1250,650,350,170],
+            rareChance:.05, rareRankWeights:[80,17,3],
+            values:{attack:[3,6,10,15,21,28,36,47,60],defense:[2,4,6,9,12,16,20,25,30],
+                vitality:[4,8,12,18,25,33,42,51,60],critical:[1,2,4,6,9,12,16,20,24],
+                accuracy:[1,2,3,4,6,8,10,12,15],mana:[1,2,3,5,7,9,12,15,18],
+                gathering:[10,20,35,50,70,95,125,160,200],healing:[3,5,8,12,17,23,30,37,45],frugal:[3,6,10,15,20,26,32,38,45]},
+            encounterCacheSize:128,
+        },
         adventure: {
+            gatherValue_flower:5,gatherValue_herb:5,gatherValue_stone:10,gatherValue_ore:20,
+            gatherThreshold:50,gatherCellSize:260,gatherDensity:.65,gatherDistance:82,
+            gatherUnits:3,gatherDwellSeconds:1,gatherUnitSeconds:1.5,
+            gatherSmeltValue:60,gatherSmeltSeconds:2,gatherDropDistance:65,gatherPickupDistance:23,
+            gatherFairyChance:.2,gatherFairyAmount:5,gatherBeanAmount:60,gatherPetCooldown:12,gatherPetRange:160,
+            monsterRespawnMs:30000,
+            fieldEncounterRadius:24,
+            dungeonEncounterRadius:84,
             iceAreaAttackThreatRatio:2,
             damageThreatRatio:1, splashDamageThreatRatio:0.05,
             singleHealThreatRatio:0.3,
@@ -85,6 +119,8 @@ export function defaultParams(version = 'teen') {
             effectThreatAreaWard:60,
             effectThreatAbsorb:400,
             effectThreatStun:500,
+            effectThreatSingleFreeze:200,
+            effectThreatConversePositiveWard:200,
             effectThreatRemovePositiveWard:100,
             effectThreatStealWard:100,
             effectThreatSymmetryWards:200,
@@ -93,9 +129,10 @@ export function defaultParams(version = 'teen') {
             effectThreatAreaCleanse:100,
             defensiveThreatWeight:3,
             tauntThreatWeight:5,
-            levelCap: 50, stageLevels: [1,10,25,40], petCapacities: [2,4,6,8],
+            levelCap: Math.max(50,...PACK_ISLANDS.map(i=>i.recommendedLevel)), stageLevels: [1,10,25,40], petCapacities: [2,4,6,8],
             petCopies: 3, heroRegenPerSecond: .02, regenPerMinute: .05, hungerPerMinute: 1, restingHungerPerMinute: .5, feedThreshold: 30,
             foodRestore: 40, petFoodRules: {'17172':{restore:40,price:30},'17185':{restore:70,price:120},'17211':{restore:100,price:240}}, defeatHp: .1, captureBase: .2, captureWounded: .65,
+            catchMinChance: .01, catchMaxChance: .95, catchEnragedDifficulty: 2,
             foodPrice: 10, capturePrice: 25, petPriceBase: 100, petPriceLevel: 40,
             gearPriceBase: 30, gearPriceLevel: 15, duplicateXp: 50, mountSpeed: 1.35,
             // Permanent mounts with 0/0 globalstore prices (e.g. zodiac transform pills) list in the mall at this 魔豆 price.
@@ -104,6 +141,12 @@ export function defaultParams(version = 'teen') {
             xpGrowth: 300, petXpStep: 30,
         },
         global: {
+            // kids card_server.lua L5967–5993; player_server.lua L187, L2465.
+            freezeProtectionRounds: 8,
+            freezeSiblingProtectionRounds: 3,
+            freezeResistPercent: 80,
+            freezeWardId: 27,
+            guardianReviveHp: 2000,
             maxReflectDamage: teen ? 5000 : 4500,
             maxPips: teen ? 14 : 7,
             maxRounds: teen ? 80 : 100,
@@ -196,6 +239,21 @@ export function parseParams(text, fallbackVersion = 'teen') {
     return mergeParams(defaultParams(version), obj);
 }
 
+const parameterGroupDefaults=new Map();
+const parameterGroupEntries=new Map();
+function copyParamDefault(value){return Array.isArray(value)?value.map(copyParamDefault):value&&typeof value==='object'?Object.fromEntries(Object.entries(value).map(([key,item])=>[key,copyParamDefault(item)])):value;}
+// Read only the requested BalanceParams section in per-frame adventure code.
+// Preserve fresh defaults (including nested arrays), live overrides and in-place edits.
+export function resolveParamGroup(params,group,fallbackVersion='teen'){
+    const version=params?.version||fallbackVersion;let defaults=parameterGroupDefaults.get(version);
+    if(!defaults){defaults=defaultParams(version);parameterGroupDefaults.set(version,defaults);}
+    let entries=parameterGroupEntries.get(version);if(!entries){entries=new Map();parameterGroupEntries.set(version,entries);}if(!entries.has(group))entries.set(group,Object.entries(defaults[group]||{}));
+    const overrides=params?.[group],result={};for(const [key,value] of entries.get(group))if(!overrides||!Object.hasOwn(overrides,key))result[key]=copyParamDefault(value);
+    Object.assign(result,overrides);
+    if(group==='petTraits')result.values={...copyParamDefault(defaults.petTraits.values),...overrides?.values};
+    return result;
+}
+
 /** 读取 school 的系数条目（未知系回退到 balance 的空系数） */
 export function schoolFactor(params, school) {
     return params.perSchool[school] || { hp: 1, damage: 1, heal: 1, accuracy: 0, powerPip: 0, resist: 0, crit: 0 };
@@ -231,8 +289,10 @@ export function inferTargetKind(card, charmsRoot) {
  * { version, global, perSchool, cards, charms, wards, miniauras, globalauras, aiDecks, statsByGear, manifest }
  * 单卡覆盖：cardOverrides[key] = { pipcost?, accuracy?, params?: {damage_min?...} }
  */
-export function resolveParams(dataset, params) {
+export function resolveParams(dataset, params, {groups=null}={}) {
     const version = params.version || dataset.version || 'teen';
+    if(groups){const resolved={version};for(const group of groups)resolved[group]=resolveParamGroup(params,group,version);return resolved;}
+    const defaults=defaultParams(version);
     const cards = {};
     for (const key of Object.keys(dataset.cards || {})) {
         const src = dataset.cards[key];
@@ -264,14 +324,23 @@ export function resolveParams(dataset, params) {
     return {
         version,
         global: { ...params.global },
-        battleAI: { ...defaultParams(version).battleAI, ...params.battleAI },
+        enrage: dataset.pve?.enrage,
+        battleAI: { ...defaults.battleAI, ...params.battleAI },
         // Web island unlock levels; original world configuration is unavailable.
-        worldTravel: { ...defaultParams(version).worldTravel, ...params.worldTravel },
-        petInteractions: { ...defaultParams(version).petInteractions, ...params.petInteractions },
-        checkin: { ...defaultParams(version).checkin, ...params.checkin },
-        languageAdventure: { ...defaultParams(version).languageAdventure, ...params.languageAdventure },
-        fishing: { ...defaultParams(version).fishing, ...params.fishing },
-        adventure: { ...defaultParams(version).adventure, ...params.adventure },
+        dungeonJourney: { ...defaults.dungeonJourney, ...params.dungeonJourney },
+        dailyLanguage: { ...defaults.dailyLanguage, ...params.dailyLanguage },
+        dungeonLanguage: { ...defaults.dungeonLanguage, ...params.dungeonLanguage },
+        earth: { ...defaults.earth, ...params.earth },
+        cityDungeons: { ...defaults.cityDungeons, ...params.cityDungeons },
+        worldTravel: { ...defaults.worldTravel, ...params.worldTravel },
+        petInteractions: { ...defaults.petInteractions, ...params.petInteractions },
+        petTraits: { ...defaults.petTraits, ...params.petTraits, values:{...defaults.petTraits.values,...params.petTraits?.values} },
+        checkin: { ...defaults.checkin, ...params.checkin },
+        languageAdventure: { ...defaults.languageAdventure, ...params.languageAdventure },
+        fishing: { ...defaults.fishing, ...params.fishing },
+        adventure: { ...defaults.adventure, ...params.adventure },
+        monsterScene: { ...defaults.monsterScene, ...params.monsterScene },
+        redMushroom: { ...defaults.redMushroom, ...params.redMushroom },
         perSchool: params.perSchool,
         fairPlay: params.fairPlay || null,
         cards,

@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>双人隔离验收数据</title><body><p>为此浏览器准备双人测试角色…</p><script type="module">
+import {installExpansion} from '../../js/adventure_expansion_core.js';
+import {createAdventure,beginEncounter} from '../../js/adventure_core.js';
+import {createLocalFormation,localParty,localHumanResources} from '../../js/adventure_local_coop_core.js';
+import {createLocalStore} from '../../js/adventure_local_store.js';
+import {initializePetWorld} from '../../js/adventure_pet_world_core.js';
+import {createWorld} from '../../js/adventure_world_core.js';
+import {groundDecorations} from '../../js/adventure_ground_decorations_core.js';
+import {addPet} from '../../js/adventure_pets_core.js';
+const read=path=>fetch('../../data/'+path).then(r=>r.json());
+if(!['localhost','127.0.0.1'].includes(location.hostname)||localStorage.getItem('haqi.roles.v1.guest'))throw Error('测试入口只允许空白本机测试浏览器，已有角色不会覆盖');
+const args=await Promise.all(['adventure/chapter.json','adventure/combat.json','adventure/pets.json','adventure/shop-candidates.json','kids/cards.json','kids/charms.json'].map(read));
+const {content}=installExpansion(...args);
+const roleNames=new URLSearchParams(location.search).has('roleLayout')?['deluca','Little Haqi','小虎队 - 西峡','A character with a very long name','测试第五个角色']:['测试甲','测试乙'];
+const roles=roleNames.map((name,i)=>{const save=createAdventure(content,{name,school:i?'ice':'fire',seed:31+i,starter:'dragon_green'});initializePetWorld(save,content);const pet=addPet(save,content,'dragon_orange');save.formation[1]=pet.id;save.inventory[100]=100;return {id:`12345678-1234-1234-1234-00000000000${i+1}`,lastPlayedAt:100+i,save};});
+if(new URLSearchParams(location.search).has('gather')){
+    content.worldMaps={ice:await read('adventure/maps/ice.json')};
+    const world=createWorld('ice',content),layout=world.layout;
+    const node=groundDecorations(world,{x:0,y:0,w:layout.w,h:layout.h}).find(d=>d.frame==='iceCrystals'&&world.npcs.every(n=>Math.hypot(n.x-d.x,n.y-d.y)>200)&&world.encounters.every(n=>Math.hypot(n.x-d.x,n.y-d.y)>250));
+    if(!node)throw Error('找不到测试水晶');
+    for(const role of roles){role.save.zone='ice';role.save.position={x:node.x-30,y:node.y};}
+}
+if(new URLSearchParams(location.search).has('aiBattle')){
+    const saves=roles.map(r=>r.save),ids=roles.map(r=>r.id),formation=createLocalFormation(ids,saves),party=localParty(formation,saves,content);
+    saves[0].languageLearning={...saves[0].languageLearning,enabled:true,target:'en',native:'zh-CN'};
+    beginEncounter(saves[0],content,'fire-scout');const base=structuredClone(saves[0].pendingEncounter);
+    const checkpoint={...base,party,player:party[0],localHumans:localHumanResources(saves,content)};
+    await createLocalStore().write('account:guest',{version:1,bags:{},depleted:{},day:'2026-10-06',formations:{[ids.join(':')]:formation},pending:{kind:'pve',controller:'ai',ids,checkpoint,base,second:structuredClone(saves[1])},smelt:null});
+}
+localStorage.setItem('haqi.roles.v1.guest',JSON.stringify({catalog:{schemaVersion:1,activeId:roles[0].id,roles},base:null,dirty:false}));
+localStorage.removeItem('haqi.roles.last-account.v1');localStorage.setItem('haqi.locale.v1','zh-CN');
+location.href='../../Haqi.html?assets=local';
+</script></body></html>

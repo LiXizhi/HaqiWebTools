@@ -10,7 +10,7 @@ export function runHaqiEncounter(dataset,scenario,seed,{policy='reasoning_advanc
     const pve=scenario.mode==='pve';
     const resolved=resolveParams(dataset,mergeParams(defaultParams('kids'),scenario.params||{}));
     const arena=pve?createPveBattle({dataset,player:scenario.player,party:scenario.party,monsters:scenario.monsters,seed,
-        adventureParams:resolved.adventure,threatRulesVersion:5,reflectionRulesVersion:1,stealthRulesVersion:1,dispelRulesVersion:1}):
+        adventureParams:resolved.adventure,threatRulesVersion:5,reflectionRulesVersion:1,stealthRulesVersion:1,dispelRulesVersion:1,specialCardRulesVersion:1}):
         createArena({resolved,near:scenario.near,far:scenario.far,seed,firstSide:scenario.firstSide||(seed%2?'near':'far')});
     if(!pve)startCombat(arena);
     const policies=Object.fromEntries(Object.values(arena.unitsById).map(u=>[u.id,createPolicy(u.side==='near'?policy:opponentPolicy)]));

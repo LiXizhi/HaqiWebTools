@@ -6,6 +6,7 @@ import {
 } from './combat_formulas_core.js';
 import * as U from './combat_unit_core.js';
 import {tauntThreat} from './combat_threat_core.js';
+import {canEnrageTarget, enrageTarget} from './combat_enrage_core.js';
 
 /** card_server.lua L1246-1263 GetNumericalValueFromSection：数字或 "600p"（每费） */
 export function numericFromSection(section, realcost) {
@@ -42,7 +43,7 @@ export function cardTargetKind(card) {
         return 'friendly';
     }
     // CatchPet targets the mob (card_server.lua L2388). It is resolved by the PvE catch rune, not a generic handler.
-    if (/^(Global|Stance|MiniAura|Pass|Enrage|Fizzle|PickPet)$/.test(t)) return 'self';
+    if (/^(Global|Stance|MiniAura|Pass|Fizzle|PickPet)$/.test(t)) return 'self';
     if (t === 'ArenaAttack') return 'all';
     return 'hostile';
 }
@@ -153,6 +154,7 @@ function applyDamage(arena, caster, target, card, opts) {
     const reflected = target.reflectAmount > 0 && damage > 0 ? damage : 0;
     if(reflected){const absorbed=Math.min(target.reflectAmount,damage);target.reflectAmount-=absorbed;damage-=absorbed;}
     U.takeDamage(target, damage);
+    breakFreeze(arena, target, card.key);
     caster.totals.damageDealt += damage;
     emit(arena, { type: 'damage', caster: caster.id, target: target.id, card: card.key, school, amount: damage, mark, label: opts.label || '' });
     if(reflected){
@@ -238,6 +240,7 @@ export function tickDots(arena, unit) {
         dmg = U.absorbUnitDamage(victim, dmg);
         if(victim.reflectAmount>0&&dmg>0){const absorbed=Math.min(victim.reflectAmount,dmg);victim.reflectAmount-=absorbed;dmg-=absorbed;}
         U.takeDamage(victim, dmg);
+        breakFreeze(arena, victim, dot.cardKey);
         const caster = arena.unitsById[dot.casterId];
         if (caster) caster.totals.damageDealt += dmg;
         emit(arena, { type: 'dot', caster: dot.casterId, target: victim.id, card: dot.cardKey, school, amount: dmg, mark: dot.critical ? 'c' : '', label });
@@ -726,10 +729,95 @@ handlers.SingleStealth = (arena,caster,card,target) => {
     emit(arena,{type:'stealth',caster:caster.id,target:target.id,card:card.key,rounds:target.stealthRounds});
 };
 
+const SPECIAL_TYPES = new Set(['SingleFreeze', 'SingleGuardianWithImmolate', 'ConversePositiveWard', 'Enrage']);
+export function specialCardsEnabled(arena) {
+    return arena.resolved.version === 'kids' && arena.specialCardRulesVersion === 1;
+}
+
+/** card_server.lua L2355, L6235–6266: precheck includes base quality;
+ * conversion itself only pops +1000/+2000/+3000/+4000, in that order. */
+export function hasConvertibleWard(target, card) {
+    const from = Number(card.params.fromward);
+    return !!target?.wards?.some(w => !w.absorb && [0,1000,2000,3000,4000].some(offset => w.id === from + offset));
+}
+
+/** card_server.lua L1915, L2082, L3467, L4621: attack contact breaks freeze,
+ * including a hit fully absorbed by shields; protection rounds remain. */
+function breakFreeze(arena, target, card) {
+    if (!(target.freezeRounds > 0)) return;
+    target.freezeRounds = 0;
+    emit(arena, {type:'freeze_break', target:target.id, card});
+}
+
+/** card_server.lua L5932–6041, kids branch. */
+handlers.SingleFreeze = (arena, caster, card, target) => {
+    const g = arena.resolved.global;
+    const immune = target.isMob && [true,'true'].includes(target.template?.attributes?.is_immune_to_freeze);
+    const success = !immune && !(target.antiFreezeRounds > 0) && !(target.antiFreezeSiblingRounds > 0);
+    if (success) {
+        if (arena.applyTempAntiFreezeForPartners) {
+            for (const unit of arena.sides[target.side]) if (U.isAlive(unit) && unit.combatActive !== false) unit.antiFreezeSiblingRounds = g.freezeSiblingProtectionRounds;
+        }
+        const offset = arena.mode === 'pve' && arena.firstActingSide === 'near' ? 0 : 1;
+        target.freezeRounds = Number(card.params.rounds) + offset;
+        target.antiFreezeRounds = g.freezeProtectionRounds + offset;
+        target.antiFreezeSiblingRounds = 0;
+        U.appendWard(target, g.freezeWardId);
+    }
+    // Lua applies this threat even when freeze is resisted.
+    arena.onEffectThreat?.(caster, target, 'SingleFreeze');
+    emit(arena, {type:'freeze', caster:caster.id, target:target.id, card:card.key, success, rounds:target.freezeRounds||0});
+};
+
+/** card_server.lua L3916–4040: self damage consumes charms/wards, includes
+ * absolute stats and final weights, excludes percentage stats and crit/dodge. */
+handlers.SingleGuardianWithImmolate = (arena, caster, card, target) => {
+    const R = arena.resolved, p = card.params, buffs = {list:[]};
+    let school = p.immolate_damage_school;
+    U.processStatAgainstCharms(caster, R, buffs.list, 'boost_damage', school);
+    school = U.processDamageAgainstWards(caster, R, buffs.list, school);
+    if (arena.aura?.boostSchool === school && arena.aura.boostDamage) buffs.list.push(arena.aura.boostDamage);
+    let amount = damageExpression(arena.rng.int(Number(p.immolate_damage_min), Number(p.immolate_damage_max)), U.getDamageBoostAbs(caster, school) + U.getResistAbs(caster, school), buffs, R.version, R.global.maxSpellPenetration);
+    amount = Math.ceil(amount * U.getOutputDamageFinalWeight(caster, arena, R));
+    amount = Math.ceil(amount * U.getReceiveDamageFinalWeight(caster, school, R));
+    amount = U.absorbUnitDamage(caster, amount);
+    U.takeDamage(caster, amount);
+    emit(arena, {type:'damage', caster:caster.id, target:caster.id, card:card.key, school, amount, mark:'', label:'immolate'});
+    target.guardian = true;
+    arena.onEffectThreat?.(caster, target, 'AreaWard', true);
+    emit(arena, {type:'guardian', caster:caster.id, target:target.id, card:card.key});
+};
+
+handlers.ConversePositiveWard = (arena, caster, card, target) => {
+    for (const offset of [1000,2000,3000,4000]) {
+        const id = Number(card.params.fromward) + offset;
+        if (!U.popWard(target, id)) continue;
+        U.appendWard(target, Number(card.params.toward));
+        emit(arena, {type:'remove_ward', caster:caster.id, target:target.id, card:card.key, id});
+        emit(arena, {type:'ward', caster:caster.id, target:target.id, card:card.key, id:Number(card.params.toward)});
+        break;
+    }
+    arena.onEffectThreat?.(caster, target, 'ConversePositiveWard');
+};
+
+// Enrage changes the mob before accuracy/payment (Lua's precheck pass 10).
+handlers.Enrage = () => {};
+
+/** card_server.lua L6833–6857 CheckGuardian; player/mob Revive clears death
+ * state and restores kids REVIVE_BASE_HP=2000, capped at the unit's max HP. */
+export function reviveGuardians(arena) {
+    if (!specialCardsEnabled(arena)) return;
+    for (const unit of [...arena.sides.near, ...arena.sides.far]) {
+        if (U.isAlive(unit) || !unit.guardian || unit.combatActive === false) continue;
+        unit.guardian = false;
+        const amount = U.takeHeal(unit, arena.resolved.global.guardianReviveHp);
+        emit(arena, {type:'heal', caster:unit.id, target:unit.id, amount, label:'guardian', revived:true});
+    }
+}
+
 /** 未实现列表（透明记录） */
 export const UNSUPPORTED_TYPES = [
-    'Random', 'Enrage', 'Fizzle', 'PickPet', 'CatchPet', 'SingleFreeze', 'SingleGuardianWithImmolate',
-    'ConversePositiveWard', 'Revive', 'Dead', 'AreaControl',
+    'Random', 'Fizzle', 'PickPet', 'CatchPet', 'Revive', 'Dead', 'AreaControl',
 ];
 
 export function isSupportedType(type) {
@@ -758,10 +846,18 @@ function registerUnsupported(arena, card) {
 export function useCard(arena, caster, card, target, seq) {
     const R = arena.resolved;
     arena.advanceCasterThreat?.(caster);
-    if (!handlers[card.type]||(card.type==='SingleStealth'&&arena.stealthRulesVersion!==1)) {
+    if (!handlers[card.type] || (SPECIAL_TYPES.has(card.type) && !specialCardsEnabled(arena)) || (card.type==='SingleStealth'&&arena.stealthRulesVersion!==1)) {
         registerUnsupported(arena, card);
         emit(arena, { type: 'unsupported', caster: caster.id, card: card.key, cardType: card.type });
         return { ok: false, unsupported: true };
+    }
+    if (specialCardsEnabled(arena) && (caster.freezeRounds > 0 ||
+        (SPECIAL_TYPES.has(card.type) && (!target || !U.isAlive(target))) ||
+        (card.type === 'Enrage' && !canEnrageTarget(arena, caster, card, target)) ||
+        (card.type === 'ConversePositiveWard' && !hasConvertibleWard(target, card)) ||
+        (card.type === 'SingleGuardianWithImmolate' && target?.speciesId && !target.isMob))) {
+        emit(arena, {type:'pass', caster:caster.id, reason:caster.freezeRounds > 0 ? 'frozen' : 'invalid_target'});
+        return {ok:false};
     }
     // Stance 校验（card_server.lua L1812-1823）
     if(arena.stealthRulesVersion===1&&target&&!canTargetStealth(card,target)){
@@ -771,6 +867,12 @@ export function useCard(arena, caster, card, target, seq) {
     if (card.type === 'Stance' && card.spellSchool !== caster.school && card.spellSchool !== 'balance') {
         emit(arena, { type: 'pass', caster: caster.id, reason: 'stance_school' });
         return { ok: false };
+    }
+    if (card.type === 'Enrage') {
+        const previousHp = target.hp;
+        enrageTarget(arena, caster, target);
+        emit(arena, {type:'enrage', caster:caster.id, target:target.id, card:card.key, maxHp:target.maxHp});
+        emit(arena, {type:'heal', caster:caster.id, target:target.id, card:card.key, amount:Math.max(0,target.hp-previousHp), label:'enrage', hp:target.hp, maxHp:target.maxHp});
     }
     // 命中（card_server.lua L2514-2560）：accuracy + accuracy charms + caster boost
     const accBuffs = [];
@@ -819,6 +921,7 @@ export function useCard(arena, caster, card, target, seq) {
         AreaPowerPipBoost:['AreaPowerPipBoost',true],AreaCleanse:['AreaCleanse',true],
     }[card.type];
     if(effectThreat)arena.onEffectThreat?.(caster,target||caster,...effectThreat);
+    reviveGuardians(arena);
     // Optional presentation observer also sees silent secondary effects (e.g. an
     // attack attaching a trap). It is not part of the deterministic event log.
     arena.onStatusEffect?.({type:'effects_settled',caster:caster.id,card:card.key});

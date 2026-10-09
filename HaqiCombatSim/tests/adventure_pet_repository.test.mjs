@@ -64,7 +64,7 @@ test('feeding group grants only host-to-arrival marks and repeated pairs do not 
     const s=setup(),r=s.repo(),service=createPetInteractionService({repository:r,content,newId:()=> 'unused-baby'});
     await r.commit([make('hero'),make('npc-a','npc-a','male'),make('npc-b','npc-b','female')].map(pet=>({pet,expectedPath:null})));
     const scene={zone:'camp',distance:20,anchor:{x:0,y:0},walkable:true};
-    const result=await service.interact({pairs:[{ids:['hero','npc-a'],scene},{ids:['hero','npc-b'],scene},{ids:['npc-a','hero'],scene}],event:{kind:'manual-feed',completed:true,now:Date.UTC(2026,8,27)}});
+    const result=await service.interact({pairs:[{ids:['hero','npc-a'],scene},{ids:['hero','npc-b'],scene},{ids:['npc-a','hero'],scene}],event:{friendPetIds:['npc-a','npc-b'],kind:'manual-feed',completed:true,confirmedOwners:['npc-a','npc-b'],now:Date.UTC(2026,8,27)}});
     assert.equal(result.effects.length,2);assert.equal((await r.get('hero')).pet.memories.length,2);
     assert.deepEqual((await r.get('npc-a')).pet.memories.map(row=>row.otherId),['hero']);
     assert.deepEqual((await r.get('npc-b')).pet.memories.map(row=>row.otherId),['hero']);
@@ -78,7 +78,7 @@ test('two eligible partners in one transaction produce only one baby; map refere
     }
     await r.commit([hero,a,b].map(pet=>({pet,expectedPath:null})));
     let serial=0;const service=createPetInteractionService({repository:r,content,newId:()=>`baby-${++serial}`});
-    const result=await service.interact({pairs:[{ids:['hero','npc-b'],scene},{ids:['hero','npc-a'],scene}],event:{kind:'proximity',completed:false,now:now+2*86400000}});
+    const result=await service.interact({pairs:[{ids:['hero','npc-b'],scene},{ids:['hero','npc-a'],scene}],event:{friendPetIds:['npc-a','npc-b','b'],kind:'owner-dialogue',completed:true,now:now+2*86400000}});
     assert.equal(result.babies.length,1);assert(result.babies[0].birth.parents.includes('npc-b'));
     assert.equal((await r.babies('camp')).rows.length,1);assert.equal((await r.babies('town')).rows.length,0);
     const baby=result.babies[0];await service.adopt(baby.id,{ownerId:'hero',now:now+2*86400000,zone:'camp'});
@@ -88,7 +88,7 @@ test('two eligible partners in one transaction produce only one baby; map refere
 test('failed service batch emits no successful result and cannot advance one parent alone',async()=>{
     const s=setup(),r=s.repo();await r.commit([make('a'),make('b','npc','male')].map(pet=>({pet,expectedPath:null})));
     const service=createPetInteractionService({repository:r,content}),scene={zone:'camp',distance:10};
-    s.fail(path=>path==='head');await assert.rejects(service.interact({pairs:[{ids:['a','b'],scene}],event:{kind:'owner-dialogue',completed:true,now:Date.UTC(2026,8,27)}}),/head failed/);
+    s.fail(path=>path==='head');await assert.rejects(service.interact({pairs:[{ids:['a','b'],scene}],event:{friendPetIds:['npc-a','npc-b','b'],kind:'owner-dialogue',completed:true,now:Date.UTC(2026,8,27)}}),/head failed/);
     assert.equal(service.busy,false);assert.equal((await r.get('a')).pet.memories.length,0);assert.equal((await r.get('b')).pet.memories.length,0);
 });
 test('missing or corrupted pet file is not treated as an empty collection',async()=>{

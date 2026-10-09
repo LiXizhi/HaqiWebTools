@@ -5,6 +5,10 @@ import { statIdToEntry } from './combat_unit_core.js';
 import { mountLayout } from './mount_layout_core.js';
 
 export const MOUNT_DIRECTIONS = ['down', 'left', 'right', 'up'];
+// Scene-only projection: retain equipped stats and the user's visibility preference.
+export function sceneMountSave(save,{inParty=false}={}) {
+    return save.mountHidden||inParty||save.coopRun ? {...save,mountId:null} : save;
+}
 const FACING = ['down', 'left', 'right', 'up'];
 // Timed SKUs use names like “霸王虎(7天)” / “圣诞大麋鹿(31天)”; do not match 天 inside 霸天龙.
 const TIMED_MOUNT_NAME = /[（(]\d+天[）)]/;

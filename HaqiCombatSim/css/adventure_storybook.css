@@ -24,6 +24,26 @@
     .import-previews { gap:12px; }
 }
 
+/* World navigation: two illustrated emblems, shared by every map window. */
+.haqi-app .parallel-world-buttons{display:flex;align-items:stretch;gap:12px;min-width:0;padding:3px 0 7px}
+.haqi-app .parallel-world-buttons .world-switch-button{position:relative;isolation:isolate;display:flex;align-items:center;justify-content:center;gap:11px;min-width:156px;min-height:60px;padding:8px 19px 8px 11px;border:2px solid #b88738;border-radius:12px;background:linear-gradient(180deg,#fff6db,#e7cd91);color:#644521;text-shadow:0 1px #fff8dd;font-size:16px;font-weight:750;line-height:1.2;box-shadow:inset 0 0 0 1px #fff0be,inset 0 -3px 0 #af853d33,0 3px 0 #86602e,0 5px 9px #50361f26;transition:filter .15s,transform .15s}
+.haqi-app .parallel-world-buttons .world-switch-button::before{display:none}
+.haqi-app .parallel-world-buttons .world-switch-button::after{content:'';position:absolute;bottom:-7px;left:calc(50% - 5px);width:9px;height:9px;transform:rotate(45deg);border:1px solid #8f6428;background:#f5cf6b;box-shadow:1px 1px 3px #62431c55;opacity:0;pointer-events:none}
+.haqi-app .parallel-world-buttons .world-switch-button[aria-pressed=true]{border-color:#edc46d;background:linear-gradient(180deg,#427e5b,#254b39);color:#fff5d3;text-shadow:0 1px 2px #102b24;box-shadow:inset 0 0 0 1px #fff0be77,inset 0 -3px 0 #102c2a44,0 3px 0 #805a26,0 0 0 1px #986e33,0 5px 12px #50361f33}
+.haqi-app .parallel-world-buttons .world-switch-button[data-world=earth][aria-pressed=true]{background:linear-gradient(180deg,#3d8392,#214e66)}
+.haqi-app .parallel-world-buttons .world-switch-button[aria-pressed=true]::after{opacity:1}
+.haqi-app .parallel-world-buttons .world-switch-button:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}
+.haqi-app .parallel-world-buttons .world-switch-button:active:not(:disabled){transform:translateY(2px);filter:brightness(.96)}
+.haqi-app .parallel-world-buttons .world-switch-button:focus-visible{outline:3px solid #39778e;outline-offset:4px}
+.world-switch-emblem{display:grid;place-items:center;flex:none;width:38px;height:38px;border:1px solid #ae8035;border-radius:50%;background:radial-gradient(circle at 35% 25%,#fff6d5,#ddba67);color:#375841;box-shadow:inset 0 0 0 2px #fff2c780,0 1px 3px #50361f33}
+.world-switch-emblem svg{display:block;width:30px;height:30px}
+.world-switch-button[data-world=earth] .world-switch-emblem{color:#286579}
+.world-switch-button[aria-pressed=true] .world-switch-emblem{border-color:#f4d582;background:radial-gradient(circle at 35% 25%,#fff3c6,#e3b44f);box-shadow:inset 0 0 0 2px #fff4d388,0 0 8px #f6d68944}
+.world-switch-label{min-width:0;white-space:nowrap}
+@media(max-width:600px){.haqi-app .parallel-world-buttons{gap:8px;padding-bottom:7px}.haqi-app .parallel-world-buttons .world-switch-button{min-width:0;min-height:54px;gap:6px;padding:7px 9px;font-size:14px;flex:1}.world-switch-emblem{width:30px;height:30px}.world-switch-emblem svg{width:25px;height:25px}.world-switch-label{white-space:normal;overflow-wrap:break-word}}
+@media(prefers-reduced-motion:reduce){.haqi-app .parallel-world-buttons .world-switch-button{transition:none}}
+@media(forced-colors:active){.haqi-app .parallel-world-buttons .world-switch-button[aria-pressed=true]{outline:2px solid Highlight;outline-offset:-5px}.haqi-app .parallel-world-buttons .world-switch-button[aria-pressed=true] .world-switch-label{text-decoration:underline}.world-switch-emblem{border-color:ButtonText}}
+
 /* Classic storybook skin. All illustrated surfaces share ui-art.json's single
    alpha atlas. The four border-image crops keep their corners at every size. */
 .storybook-ui {
@@ -523,6 +543,8 @@
 .membership-emblem { position:relative; display:inline-grid; place-items:center; width:88px; height:88px; flex:none; filter:drop-shadow(0 3px 2px #70471940); }
 .membership-emblem canvas { display:block; width:100%; height:100%; }
 .membership-emblem.inactive canvas { filter:grayscale(1); opacity:.6; }
+.recharge-star-orbit .membership-emblem { width:112px; height:112px; }
+@media(max-width:600px){.recharge-star-orbit .membership-emblem { width:90px; height:90px; }}
 .membership-card { display:grid; grid-template-columns:180px minmax(0,1fr); border:1px solid #c7a35d; border-radius:8px; overflow:hidden; background:#fff9e8; }
 .membership-identity { display:flex; flex-direction:column; align-items:center; padding:24px 14px; text-align:center; background:linear-gradient(#eae3d1,#f6edda); border-right:1px solid #d3b779; }
 .is-vip .membership-identity { background:radial-gradient(ellipse at top,#fff6c6,#edcb83); }

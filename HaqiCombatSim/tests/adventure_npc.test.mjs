@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
 import {installNpcCatalog,npcOffers,npcOfferStatus} from '../js/adventure_npc_core.js';
 import {createWorld,walkable,nearestInteraction,nearbyWorldObjects,distance} from '../js/adventure_world_core.js';
+import {onAnyBridge} from '../js/adventure_bridge_core.js';
 import {projectRuntimeData} from '../scripts/package_runtime_data.mjs';
 import {createAdventure,applyAction,parseSave} from '../js/adventure_core.js';
 import {persistReward} from '../js/adventure_reward_persistence.js';
@@ -137,6 +138,12 @@ test('six original island catalogues retain all instances and place residents de
         assert.deepEqual(world.npcs,again.npcs);
         assert.equal(world.npcs.filter(n=>!n.worldMapGuide).length,c.npcCatalog.npcs.filter(n=>n.zone===z&&n.hidden!==true).length);
         for(const n of world.npcs){assert.ok(Number.isFinite(n.x)&&Number.isFinite(n.y));if(!world.layout.npcPositions[n.id])assert.ok(walkable(world,n.x,n.y),`${z} ${n.id}`);}
+    }
+});
+test('residents stand beside roads and leave bridge decks empty',()=>{
+    for(const z of Object.keys(c.worldMaps)){
+        const world=createWorld(z,c);
+        for(const n of world.npcs)assert.equal(onAnyBridge(world,n.x,n.y,64),false,`${z} ${n.name} 站在桥上`);
     }
 });
 test('harbors receive authored captains and restore missing visiting guides with their art',()=>{

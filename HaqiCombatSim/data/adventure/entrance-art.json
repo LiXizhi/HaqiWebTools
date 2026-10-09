@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "atlases": {
+    "shared": {
+      "local": "assets/adventure/environment/dungeon-entrances-979931b604b7.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/dungeon-entrances-979931b604b7.webp",
+      "width": 512,
+      "height": 512,
+      "size": 163980,
+      "sha256": "979931b604b7791167c2e6b2addb451682518a3b72126700f46ab60880d56390",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "7108ea9c4cbd8ec1b85befb1c41c5762707cf4c1045980cceb2a675035c821fc",
+        "width": 1254,
+        "height": 1254,
+        "prompt": "Shared transparent 2x2 isometric fantasy atlas: low raised grey stone blue-glowing ritual platform; compact basic, intermediate and advanced stone towers with blue roofs. No scenery, characters or labels. Generated with built-in image_gen, then cropped and encoded using prepare_environment_art.py."
+      },
+      "encoding": {
+        "lossless": true,
+        "quality": null
+      },
+      "frames": {
+        "elite": {
+          "rect": [
+            8,
+            110,
+            240,
+            138
+          ],
+          "sourceRect": [
+            93,
+            175,
+            533,
+            306
+          ],
+          "cell": 0
+        },
+        "towerBasic": {
+          "rect": [
+            329,
+            8,
+            109,
+            240
+          ],
+          "sourceRect": [
+            813,
+            5,
+            255,
+            559
+          ],
+          "cell": 1
+        },
+        "towerIntermediate": {
+          "rect": [
+            77,
+            264,
+            101,
+            240
+          ],
+          "sourceRect": [
+            215,
+            587,
+            272,
+            647
+          ],
+          "cell": 2
+        },
+        "towerAdvanced": {
+          "rect": [
+            336,
+            264,
+            95,
+            240
+          ],
+          "sourceRect": [
+            817,
+            564,
+            268,
+            679
+          ],
+          "cell": 3
+        }
+      }
+    }
+  }
+}

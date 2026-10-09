@@ -1,4 +1,5 @@
 import { isSupportedType } from './combat_cards_core.js';
+import {baseMaxHp} from './combat_formulas_core.js';
 
 // Kids catch chance: player_server.lua TryCatchPet L1081-1107.
 // chance = base_weight * (1 - hp / maxHp) + (playerLevel - mobLevel) / 80
@@ -10,6 +11,16 @@ export function catchChanceMilli(baseWeight, currentHp, maxHp, playerLevel, mobL
     let milli = (Number(baseWeight) * (1 - currentHp / maxHp) + (playerLevel - mobLevel) / 80) * 1000;
     if (forcePercent !== null && forcePercent !== undefined && forcePercent !== '') milli = Number(forcePercent) * 10;
     return milli;
+}
+// Web capture rules v1 (2026-10-05): retain the Lua base, but every living
+// monster has a chance. Durability and enrage increase difficulty.
+export function catchProbability(battle, card, target) {
+    const milli=catchChanceMilli(card.params.base_weight,target.hp,target.maxHp,battle.heroLevel,target.level,target.template?.attributes?.catch_pet_force_chance_percent??null);
+    if(battle.captureRulesVersion!==1)return Math.max(0,Math.min(1001,Math.floor(milli)+1))/1001;
+    const p=battle.resolved.adventure;
+    const durability=Math.max(1,target.maxHp/baseMaxHp(target.school,target.level,'kids'));
+    const difficulty=durability*(target.enragedBy?p.catchEnragedDifficulty:1);
+    return Math.max(p.catchMinChance,Math.min(p.catchMaxChance,milli/1000/difficulty));
 }
 export function runeCardKey(content, itemId) {
     const id = Number(itemId);

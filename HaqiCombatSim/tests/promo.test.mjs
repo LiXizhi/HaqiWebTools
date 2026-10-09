@@ -1,13 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {compileFilm,locateShot,filmText,srtFor,frameDelta} from '../js/promo_timeline_core.js';
+import {compileFilm,locateShot,filmText,srtFor,frameDelta,captionAt,narrationLimitedTime} from '../js/promo_timeline_core.js';
 import {samplePromoMotion,planPromoPath,samplePromoZoom} from '../js/promo_motion_core.js';
 import {presentationEventDurationMs,samplePresentationClock} from '../js/battle_presentation_core.js';
 import {WALK_SPEED} from '../js/adventure_world_core.js';
 const effects={cards:{bolt:{base:'bolt',name:'火弹',variant:{rank:'normal',level:0}}},bases:{bolt:{duration:1800,scale:1,kind:'bolt',count:8}},palettes:{fire:['#f00','#faa','#800']},variantAuras:{normal:{color:null,rings:0}},summons:{}};
 const spell={key:'bolt',spellSchool:'fire',pipcost:1,type:'SingleAttack'},quick={...spell,pipcost:0};
 const script=JSON.parse(fs.readFileSync(new URL('../data/promo/film.json',import.meta.url)));
+test('朗读等待覆盖下一动作、字幕、镜头和片尾，结束后正常继续',()=>{
+ const film=compileFilm(script),shot=film.shots.find(s=>s.cues.length>0&&s.cues[0].time>0);
+ const edge=shot.start+shot.cues[0].time;
+ const held=narrationLimitedTime(film,edge-.05,.1,0,true);
+ assert.ok(held<edge);assert.equal(narrationLimitedTime(film,held,.1,0,true),held);
+ assert.ok(narrationLimitedTime(film,held,.1,0,false)>edge);
+ const end=shot.start+shot.duration;
+ assert.ok(narrationLimitedTime(film,end-.05,.1,shot.cues.length,true)<end);
+ const last=film.shots.at(-1);
+ assert.ok(narrationLimitedTime(film,film.duration-.05,.1,last.cues.length,true)<film.duration);
+ assert.equal(narrationLimitedTime(film,film.duration-.05,.1,last.cues.length,false),film.duration);
+ assert.equal(narrationLimitedTime(film,shot.start,.01,0,true),shot.start+.01);
+});
 const motionWorld={layout:{route:[{x:0,y:0},{x:10000,y:0}]},paths:[{a:{x:0,y:0},b:{x:10000,y:0},width:20000}],encounters:[]};
 test('宣传片路线途中和停步都与居民保持距离',()=>{
     const world={...motionWorld,npcs:[{x:500,y:0}],center:{x:1000,y:0}},origin={x:0,y:0};
@@ -39,7 +52,7 @@ test('宣传片移动使用正式步行速度、坐骑倍率与四方向',()=>{
     }
 });
 test('宣传片转弯、停止和倒退跳转的朝向保持确定性',()=>{
-    const world=motionWorld,origin={x:1000,y:1000};
+    const world={...motionWorld,paths:[{a:{x:1000,y:1000},b:{x:1100,y:1000},width:40},{a:{x:1100,y:1000},b:{x:1100,y:2000},width:40}],layout:{route:[{x:1000,y:1000},{x:1100,y:1000},{x:1100,y:2000}]}},origin={x:1000,y:1000};
     const path=[{x:1100,y:1000},{x:1100,y:2000}];
     const early=samplePromoMotion(world,origin,path,50/WALK_SPEED);
     assert.equal(early.facing,2);
@@ -70,12 +83,22 @@ test('宣传片战斗特效使用游戏事件时长，不按镜头均分',()=>{
 test('异步镜头准备之后旧动画时间戳不能倒退播放时间',()=>{
     assert.equal(frameDelta(100,130,8),0);assert.equal(frameDelta(116,100,1),.016);assert.equal(frameDelta(10000,100,8),.8);
 });
-test('宣传片两个版本时长、语言和六岛覆盖完整',()=>{
+test('宣传片两个版本时长、语言和主要功能覆盖完整',()=>{
     const long=compileFilm(script),short=compileFilm(script,'short');
-    assert.equal(long.shots.length,17);assert.equal(long.duration,179);assert.equal(long.shots.some(s=>s.scene==='account'),false);
-    assert.equal(short.shots.length,15);assert.equal(short.duration,80);
+    assert.equal(long.shots.length,36);assert.equal(long.duration,472);assert.equal(long.shots.some(s=>s.scene==='account'),false);
+    assert.equal(short.shots.length,16);assert.equal(short.duration,242);
     for(const film of [long,short])for(const shot of film.shots){assert.ok(shot.subtitle.en);assert.ok(shot.title.en);for(const cue of shot.cues)assert.ok(cue.time<shot.duration);}
-    assert.deepEqual(script.shots.filter(s=>s.zone).map(s=>s.zone).sort(),['camp','dark','desert','fire','ice','town']);
+    assert.deepEqual(script.shots.filter(s=>s.zone).map(s=>s.zone).sort(),['camp','dark','desert','fire','float','ice','sail','tide','town']);
+});
+test('两个版本均介绍双人同行、AI接管和恢复人类操作',()=>{
+ for(const edition of ['long','short']){
+  const shot=compileFilm(script,edition).shots.find(s=>s.id==='duo');
+  assert.equal(shot.scene,'duo');assert.equal(shot.duration,40);
+  assert.deepEqual(shot.cues.filter(c=>c.step==='controller').map(c=>c.ai),[true,false]);
+  assert.deepEqual(shot.cues.filter(c=>c.step==='select').map(c=>c.owner),[0,1]);
+  assert.ok(shot.cues.find(c=>c.step==='select'&&c.owner===1).time<shot.cues.find(c=>c.step==='target').time);
+  assert.match(shot.subtitle['zh-CN'],/登录选角/);assert.ok(shot.cues.filter(c=>c.caption).every(c=>c.caption.en));
+ }
 });
 test('时间轴精确边界与拖动越界不遗漏最后镜头',()=>{
     const film=compileFilm(script);assert.equal(locateShot(film,-3).index,0);
@@ -84,9 +107,39 @@ test('时间轴精确边界与拖动越界不遗漏最后镜头',()=>{
 });
 test('未知语言回退中文，SRT 使用各版本连续时间码',()=>{
     assert.equal(filmText({en:'Hello','zh-CN':'你好'},'fr'),'你好');
-    const film=compileFilm(script,'short'),srt=srtFor(film,'en');assert.match(srt,/00:00:00,000 --> 00:00:07,000/);assert.match(srt,/00:01:20,000/);assert.ok(srt.includes(script.shots[0].subtitle.en));
+    const film=compileFilm(script,'short'),srt=srtFor(film,'en');assert.match(srt,/00:00:00,000 --> 00:00:07,000/);assert.match(srt,/00:04:02,000/);assert.ok(srt.includes(script.shots[0].subtitle.en));
 });
 test('不接受重名、无时长、缺字幕和镜头外动作',()=>{
     const change=fn=>{const copy=structuredClone(script);fn(copy);assert.throws(()=>compileFilm(copy));};
     change(s=>s.shots[1].id=s.shots[0].id);change(s=>s.shots[0].duration.long=NaN);change(s=>delete s.shots[0].subtitle['zh-CN']);change(s=>s.shots[0].cues=[{at:1,action:'bad'}]);
+});
+
+test('操作解说在暂停、回跳和SRT中保持一致',()=>{
+ const film=compileFilm(script),s=film.shots.find(s=>s.id==='food'),cue=s.cues[0];
+ assert.equal(captionAt(s,0,'zh-CN'),s.subtitle['zh-CN']);
+ assert.equal(captionAt(s,cue.time,'en'),cue.caption.en);
+ assert.equal(captionAt(s,s.duration,'en'),s.cues.at(-1).caption.en);
+ assert.equal(captionAt(s,0,'en'),s.subtitle.en);
+ assert.ok(srtFor(film,'en').includes(cue.caption.en));
+ const entries=srtFor(film,'zh-CN').trim().split('\n\n');
+ assert.equal(entries.length,film.shots.reduce((n,s)=>n+1+s.cues.filter(c=>c.caption&&c.time>0).length,0));
+});
+test('完整导览包含双世界、养成、生活、战斗与交流操作',()=>{
+ const film=compileFilm(script);
+ for(const id of ['atlas','earth','quests','pets','food','equipment','upgrade','gems','deck','battle','arena','dungeons','friends','learning','learning-rewards','shop','checkin','fishing','settings'])assert.ok(film.shots.some(s=>s.id===id),id);
+ for(const id of ['atlas','pets','food','upgrade','gems','arena'])assert.ok(film.shots.find(s=>s.id===id).cues.some(c=>c.action==='ui-click'),id);
+ for(const s of film.shots)for(const c of s.cues)if(c.caption)assert.ok(c.caption.en&&c.caption['zh-CN']);
+});
+
+test('精华保留社交、2对2、漩涡深圳沿路进城与真实学习奖励',()=>{
+ const short=compileFilm(script,'short'),by=id=>short.shots.find(s=>s.id===id);
+ for(const id of ['party','friends','pets','learning'])assert.ok(by(id));
+ assert.equal(by('skills').scene,'skills-battle');
+ assert.match(by('atlas').cues[0].selector,/map-vortex/);
+ const earth=by('earth'),walk=earth.cues.find(c=>c.name==='earth-walk'),enter=earth.cues.find(c=>c.name==='earth-enter'),exit=earth.cues.find(c=>c.name==='earth-exit');
+ assert.ok(walk.time-earth.cues.find(c=>c.action==='ui-click').time>=3);
+ assert.ok(enter.time-walk.time>=5&&enter.time-walk.time<=10);assert.ok(exit.time-enter.time>=3);
+ assert.equal(earth.cues.some(c=>c.name==='earth-focus'),false);assert.equal(by('city'),undefined);
+ assert.deepEqual(by('skills').cues.map(c=>c.group),[1,2,3,4,5]);
+ assert.ok(by('learning').cues.some(c=>c.action==='learning-battle'));
 });

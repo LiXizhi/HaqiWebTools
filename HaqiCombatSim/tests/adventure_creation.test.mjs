@@ -42,6 +42,35 @@ test('switching steps or skills cancels a pending image load without reviving an
     preview.stop();assert.equal(queued.size, 0);
 });
 
+test('friendly previews land on the caster while the opposite figure stays a monster', async t => {
+    const keys=['matchMedia','requestAnimationFrame','cancelAnimationFrame','document','devicePixelRatio'];
+    const originals=Object.fromEntries(keys.map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));
+    const queued=new Map();let serial=0;
+    Object.assign(globalThis,{matchMedia:()=>({matches:false}),document:{hidden:false},devicePixelRatio:1,requestAnimationFrame:fn=>{queued.set(++serial,fn);return serial;},cancelAnimationFrame:id=>queued.delete(id)});
+    t.after(()=>{for(const [key,descriptor]of Object.entries(originals)){if(descriptor)Object.defineProperty(globalThis,key,descriptor);else delete globalThis[key];}});
+    let cursor=0;const draws=[];
+    const ctx=new Proxy({},{get:(_,key)=>{
+        if(key==='createLinearGradient'||key==='createRadialGradient')return()=>({addColorStop(){}});
+        if(key==='translate')return x=>{cursor=x;};
+        return()=>{};
+    },set:()=>true});
+    const preview=createCreationPreview({...assets,tile(_c,sheet){draws.push({sheet,x:cursor});},skillArt:{...assets.skillArt,ensure:async()=>{}}});
+    const canvas={isConnected:true,clientWidth:400,clientHeight:200,getContext:()=>ctx};
+    const frame=async key=>{
+        draws.length=0;await preview.play(canvas,key,'boy',()=>{});
+        const [id,fn]=[...queued.entries()].at(-1);queued.delete(id);fn(0);preview.stop();
+    };
+    const side=row=>row.x<160?'self':'foe';
+    await frame(tutorialCards(assets,'life')[0].key);
+    assert.deepEqual(draws.filter(row=>side(row)==='foe').map(row=>row.sheet),['creatures']);
+    assert.ok(draws.some(row=>row.sheet==='sprites'&&side(row)==='self'));
+    await frame(tutorialCards(assets,'ice')[1].key);
+    assert.deepEqual(draws.filter(row=>side(row)==='foe').map(row=>row.sheet),['creatures']);
+    assert.equal(draws.filter(row=>row.sheet==='sprites'&&side(row)==='foe').length,0);
+    await frame(tutorialCards(assets,'fire')[0].key);
+    assert.equal(draws.filter(row=>row.sheet==='creatures'&&side(row)==='foe').length,3);
+});
+
 test('autoplay waits after completion, pauses its gap, and stop cancels advancement', async t => {
     const keys=['matchMedia','requestAnimationFrame','cancelAnimationFrame','document','devicePixelRatio'];
     const originals=Object.fromEntries(keys.map(k=>[k,Object.getOwnPropertyDescriptor(globalThis,k)]));

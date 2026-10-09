@@ -1,0 +1,34 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>AI 陪伴隔离验收</title>
+<link rel="stylesheet" href="../../css/adventure_local_play.css"><body><h1>AI 陪伴隔离验收</h1><p>仅模拟模型与语音，不调用账号或在线服务。</p><pre id="results">正在检查…</pre>
+<script type="module">
+import {createCompanionAI} from '../../js/adventure_companion_ai.js';
+import {createLocalStore} from '../../js/adventure_local_store.js';
+import {reserveCompanionQuota} from '../../js/adventure_companion_ai_core.js';
+const results=document.querySelector('#results'),lines=[];
+const assert=(ok,message)=>{if(!ok)throw Error(message);};
+const wait=async predicate=>{for(let i=0;i<100;i++){if(predicate())return;await new Promise(r=>setTimeout(r,10));}throw Error('等待断言超时');};
+const rows=new Map(),store={async read(k){return structuredClone(rows.get(k));},async update(k,fn){const value=fn(structuredClone(rows.get(k)));rows.set(k,structuredClone(value));return value;}};
+let settings={enabled:true,target:'en',native:'zh-CN'},ai=true,reply,requests=0,spoken=0,scene='world',awards=0;
+const voice={cancel:async()=>{},speak:async()=>{spoken++;},judge:()=>{requests++;return new Promise(resolve=>reply=resolve);}};
+const api={owner:()=> 'fixture',settings:()=>settings,content:()=>({}),isAI:()=>ai,switching:()=>false,name:()=> '伙伴',toggle:()=>{},paused:()=>false,scene:()=>scene,speechDelay:()=>90000,follow:()=>{},prefer:()=>{},suggest:()=>{},onSpeech:()=>awards++,snapshot:()=>({language:settings.target,native:'zh-CN',candidates:[]})};
+const controller=createCompanionAI(api,{store,voice});
+const root=document.querySelector('.companion-controls'),submit=text=>{root.querySelector('input').value=text;root.querySelector('form').requestSubmit();};
+const good={reply:'Let us look around.',translation:'我们看看周围。',summary:'我们一起探索。'};
+try{
+    await controller.start({owner:'fixture',memoryKey:'pair',quotaKey:'quota'});
+    submit('Hello');await wait(()=>requests===1);reply(good);await wait(()=>rows.get('pair')?.messages.length===2);
+    assert(spoken===1,'正常回复应朗读');assert(awards===0,'文字聊天不能增加语音奖励');lines.push('通过：文字回复、释义、朗读和本机保存');
+    submit('Remember this');await wait(()=>requests===2);root.querySelectorAll('button').forEach(b=>{if(b.textContent==='清除本机记忆')b.click();});await wait(()=>rows.get('pair')?.generation===1);reply(good);await new Promise(r=>setTimeout(r,30));
+    assert(rows.get('pair').messages.length===0,'清除后迟到回复不能复活记忆');lines.push('通过：清除记忆使旧响应失效');
+    submit('Another question');await wait(()=>requests===3);ai=false;controller.modeChanged();reply(good);await new Promise(r=>setTimeout(r,30));
+    assert(rows.get('pair').messages.length===0,'真人接管后旧响应不能写入');lines.push('通过：真人接管取消旧对话');
+    ai=true;controller.modeChanged();submit('Change language');await wait(()=>requests===4);settings={...settings,target:'zh-CN'};controller.tick(performance.now(),{x:600,y:300});reply(good);await new Promise(r=>setTimeout(r,30));
+    assert(rows.get('pair').messages.length===0,'语言切换必须丢弃旧回复');lines.push('通过：语言切换取消旧语言响应');
+    const db=createLocalStore({name:'haqi-companion-fixture-'+crypto.randomUUID()}),now=Date.now();
+    const outcomes=await Promise.allSettled(Array.from({length:130},(_,i)=>db.update('quota',row=>reserveCompanionQuota(row,{now,id:String(i)}))));
+    assert(outcomes.filter(r=>r.status==='fulfilled').length===120,'事务必须只允许120次');lines.push('通过：130个并发预留中仅120个成功');
+    controller.stop();await controller.start({owner:'fixture',memoryKey:'another-pair',quotaKey:'quota'});assert(!root.querySelector('.companion-chat-log').textContent,'角色组合之间隔离记忆');lines.push('通过：不同角色组合隔离');
+    results.textContent=lines.join('\n')+'\n全部 6 项通过';document.title='通过：AI 陪伴隔离验收';
+}catch(e){results.textContent=lines.join('\n')+'\n失败：'+e.stack;document.title='失败：AI 陪伴隔离验收';}
+finally{controller.stop();}
+</script></body></html>

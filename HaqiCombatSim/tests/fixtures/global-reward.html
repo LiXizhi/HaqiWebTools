@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../">
+<title>全局奖励隔离验收</title><link rel="stylesheet" href="css/adventure.css"><link rel="stylesheet" href="css/adventure_storybook.css">
+<body class="haqi-app"><button id="open">打开上层窗口并显示奖励</button><dialog><p>原生模态窗口仍可操作；奖励不抢焦点。</p><button id="reward">获得加成</button><button id="equip">换装提升</button><button id="close">关闭窗口</button></dialog>
+<script type="module">
+import {GlobalRewardNotice} from './js/view_global_reward.js';
+const notice=new GlobalRewardNotice(),dialog=document.querySelector('dialog');
+document.querySelector('#open').onclick=()=>{dialog.showModal();notice.show({title:'学习加成已生效',lines:['攻击 +1%','今日累计 7 层']});};
+document.querySelector('#reward').onclick=()=>notice.show({title:'学习加成已生效',lines:['防御 +1%','今日累计 8 层']});
+document.querySelector('#equip').onclick=()=>notice.show({title:'装备属性提升',lines:['最大生命 +120','本系攻击 +3%']});
+document.querySelector('#close').onclick=()=>dialog.close();
+</script></body></html>

@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "name": "现实世界",
+  "geography": "geography.json",
+  "generation": "generation.json",
+  "regions": [
+    {
+      "id": "shenzhen",
+      "name": "深圳",
+      "country": "中国",
+      "bounds": {
+        "west": 113.85,
+        "east": 114.58,
+        "south": 22.45,
+        "north": 22.72
+      },
+      "manifest": "cities/shenzhen.json",
+      "dungeonIds": [
+        "city:shenzhen:overview",
+        "city:shenzhen:shekou",
+        "city:shenzhen:huaqiangbei",
+        "city:shenzhen:bay",
+        "city:shenzhen:nantou"
+      ]
+    }
+  ],
+  "hotspots": [
+    {
+      "id": "shenzhen",
+      "name": "深圳",
+      "lon": 114.0579,
+      "lat": 22.5431
+    }
+  ]
+}

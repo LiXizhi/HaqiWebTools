@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "buildingAtlas": "town",
+  "buildingFrame": "house",
+  "note": "非城市陆地怪物使用 pets.json 全部四阶段图集目录，等级与装备战力以玩家为基准随最近城市类地形距离增加，阶段独立随机；视野附近按需生成并复用AI角色淡入淡出，沿用现有试炼技能与奖励。"
+}

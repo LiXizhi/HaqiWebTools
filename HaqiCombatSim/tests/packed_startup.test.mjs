@@ -8,7 +8,7 @@ import { packageRuntimeData } from '../scripts/package_runtime_data.mjs';
 
 test('adventure startup loads two published packs with CDN images and no loose JSON requests', async () => {
     const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-pack-startup-'));
-    const globals = ['fetch', 'Image', 'location', '__HAQI_PACKED_DATA__'];
+    const globals = ['fetch', 'Image', 'location', '__HAQI_PACKED_DATA__','document'];
     const previous = globals.map(key => Object.getOwnPropertyDescriptor(globalThis, key));
     const requests = [], images = [];
     try {
@@ -21,6 +21,7 @@ test('adventure startup loads two published packs with CDN images and no loose J
             return { ok: true, json: async () => JSON.parse(fs.readFileSync(path.join(temporary, url.slice(5)))) };
         };
         globalThis.Image = class {
+            width=1;height=1;
             set src(url) {
                 assert.match(url, /^https:\/\/cdn\.keepwork\.com\//);
                 assert.equal(this.crossOrigin, 'anonymous');
@@ -28,6 +29,7 @@ test('adventure startup loads two published packs with CDN images and no loose J
                 queueMicrotask(() => this.onload());
             }
         };
+        globalThis.document={createElement(tag){assert.equal(tag,'canvas');return {width:1,height:1,getContext:()=>({drawImage(){},getImageData:(_x,_y,w,h)=>({data:new Uint8ClampedArray(w*h*4).fill(255)})})};}};
         const { loadResources } = await import('../js/adventure_assets.js');
         const resources = await loadResources();
         const journal = await resources.loadQuestJournal();
@@ -39,10 +41,11 @@ test('adventure startup loads two published packs with CDN images and no loose J
         assert.ok(!images.includes(resources.media.entries.summons.cdn));
         const portrait={canvas:{isConnected:false}};
         resources.tile(portrait,'creatures',7,0,0,120,128);
-        await new Promise(resolve=>setTimeout(resolve,0));
+        await resources.ensureImage('creatures');
         assert.equal(images.filter(url=>url===resources.media.entries.creatures.cdn).length,1);
         assert.ok(resources.images.has('creatures'));
-        assert.equal(Object.keys(resources.content.pets).length, 360);
+        assert.equal(Object.values(resources.content.pets).filter(pet => !pet.staticAppearance).length, 360);
+        assert.ok(Object.values(resources.content.pets).some(pet => pet.staticAppearance));
         assert.ok(resources.content.shop.length > 1000);
         // Startup keeps only essential sheets + school frames; cards and other-island scenery stay lazy.
         assert.ok(images.length >= 3 && images.length < 40);

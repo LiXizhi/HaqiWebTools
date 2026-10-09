@@ -1,3 +1,4 @@
+import {fill} from './locale_runtime.js';
 import {GEM_FILTERS,gemEquipment,isGem,gemCompatibility,gemPreview} from './adventure_gems_core.js';
 import {equipmentAttributes} from './adventure_equipment_core.js';
 
@@ -16,7 +17,7 @@ export function renderGems(body,model,cb,{el,button,art}){
     layout.append(left,right);body.append(layout);
     const picture=item=>item?.art?art(assets,item.art,48,48):el('span',`gem-symbol ${isGem(item)?'gem-crystal':'gem-rune'}`,isGem(item)?String(item.stats[41]):item?.id===17179?'调羹':'符');
     const label=(item,guid)=>item?equipmentAttributes(item,save,c,guid).map(x=>`${x.label} +${x.value}${x.unit}`).join('、'):'';
-    function slot(item,text,fn){const b=button(item?[picture(item),el('small','',item.name)]:text,fn,'gem-slot');b.title=item?`${item.name}\n${label(item,item.kind===1?s.guid:undefined)}\n点击取出或重新选择`:text;return b;}
+    function slot(item,text,fn){const b=button(item?[picture(item),el('small','',item.name)]:text,fn,'gem-slot');b.title=item?fill(`{v0}\n{v1}\n点击取出或重新选择`,{v0:String(item.name),v1:String(label(item,item.kind===1?s.guid:undefined))}).text:text;return b;}
     function change(step){s.step=step;s.filter=0;s.page=0;s.confirm=false;s.message='';paint();}
     function submit(){
         const value=s.mode==='remove'?{type:'remove-gems',guid:s.guid,gemIds:s.removeIds}:{type:'mount-gem',guid:s.guid,gemId:s.gemId,runes:s.runes.filter(Boolean),confirmReplace:true};
@@ -30,12 +31,12 @@ export function renderGems(body,model,cb,{el,button,art}){
         const p=gemPreview(save,c,{...s,runes:s.runes.filter(Boolean)}),removing=s.mode==='remove';
         left.append(el('p','gem-intro',removing?'选择装备和需要剥离的宝石，剥离后可重新镶嵌。':'镶嵌宝石可以提高装备属性。镶嵌失败会让宝石降级或消失，请按步骤操作。'));
         left.append(el('h3','','1. 放入装备'),slot(p.item,'放入装备',()=>{s.guid=null;s.gemId=null;s.removeIds=[];change('equipment');}));
-        if(p.item)left.append(el('p','gem-caption',`${p.item.name} · 宝石 ${p.ins.length}/${p.item.stats[36]}`));
+        if(p.item)left.append(el('p','gem-caption',fill(`{v0} · 宝石 {v1}/{v2}`,{v0:String(p.item.name),v1:String(p.ins.length),v2:String(p.item.stats[36])}).text));
         if(removing){
             left.append(el('h3','','2. 选择要剥离的宝石'));
             const gems=el('div','gem-sockets');
             for(const id of p.ins){const b=slot(c.items[id],String(id),()=>{s.removeIds=s.removeIds.includes(id)?s.removeIds.filter(x=>x!==id):[...s.removeIds,id];s.confirm=false;paint();});b.setAttribute('aria-pressed',String(s.removeIds.includes(id)));gems.append(b);}
-            left.append(gems,el('p','',`宝石调羹：需要 ${s.removeIds.length} / 拥有 ${save.inventory[17179]||0}`),el('p','gem-caption','每颗消耗一个宝石调羹；成功率100%。'));
+            left.append(gems,el('p','',fill(`宝石调羹：需要 {v0} / 拥有 {v1}`,{v0:String(s.removeIds.length),v1:String(save.inventory[17179]||0)}).text),el('p','gem-caption','每颗消耗一个宝石调羹；成功率100%。'));
         }else{
             left.append(el('h3','','2. 放入宝石'),slot(p.gem,'放入宝石',()=>{s.gemId=null;change('gems');}));
             if(p.gem)left.append(el('p','gem-caption',label(p.gem)));
@@ -43,14 +44,14 @@ export function renderGems(body,model,cb,{el,button,art}){
             const runes=el('div','gem-runes');
             for(let i=0;i<3;i++)runes.append(slot(c.items[s.runes[i]],'增加成功率',()=>{s.runes[i]=null;s.runeIndex=i;change('runes');}));
             left.append(runes);
-            if(p.ins.length)left.append(el('p','gem-caption',`已镶嵌：${p.ins.map(id=>c.items[id]?.name||id).join('、')}`));
+            if(p.ins.length)left.append(el('p','gem-caption',fill(`已镶嵌：{v0}`,{v0:String(p.ins.map(id=>c.items[id]?.name||id).join('、'))}).text));
         }
         left.append(button(removing?'返回宝石镶嵌':'宝石剥离',()=>{s.mode=removing?'mount':'remove';s.removeIds=[];change('equipment');},'secondary'));
         const error=removing?(!p.instance?'请先放入装备。':!s.removeIds.length?'请选择要剥离的宝石。':s.removeIds.length>(save.inventory[17179]||0)?'宝石调羹不足。':save.pendingEncounter?'请先完成当前战斗。':null):p.error;
-        const status=el('p','gem-status',s.message||error|| (removing?'选中的宝石将返回背包。':`当前镶嵌成功率：${p.odds}%`));status.setAttribute('role','status');status.setAttribute('aria-live','polite');left.append(status);
-        if(!removing&&error)left.append(el('p','gem-caption',`当前镶嵌成功率：${p.odds}%`));
+        const status=el('p','gem-status',s.message||error|| (removing?'选中的宝石将返回背包。':fill(`当前镶嵌成功率：{v0}%`,{v0:String(p.odds)}).text));status.setAttribute('role','status');status.setAttribute('aria-live','polite');left.append(status);
+        if(!removing&&error)left.append(el('p','gem-caption',fill(`当前镶嵌成功率：{v0}%`,{v0:String(p.odds)}).text));
         if(s.confirm&&!error){
-            const confirm=el('div','gem-confirm',el('p','',removing?`消耗${s.removeIds.length}个宝石调羹，剥离选中的宝石？`:`成功率${p.odds}%，消耗1颗宝石及${s.runes.filter(Boolean).length}张镶嵌符。${p.replacement?'成功后原同类宝石会消失。':''}${p.odds<100?'失败时宝石会降级或消失。':''}`));
+            const confirm=el('div','gem-confirm',el('p','',removing?fill(`消耗{v0}个宝石调羹，剥离选中的宝石？`,{v0:String(s.removeIds.length)}).text:fill(`成功率{v0}%，消耗1颗宝石及{v1}张镶嵌符。{v2}{v3}`,{v0:String(p.odds),v1:String(s.runes.filter(Boolean).length),v2:String(p.replacement?'成功后原同类宝石会消失。':''),v3:String(p.odds<100?'失败时宝石会降级或消失。':'')}).text));
             confirm.append(button('确认'+(removing?'剥离':'镶嵌'),submit,'primary'),button('取消',()=>{s.confirm=false;paint();},'secondary'));left.append(confirm);
         }else{const go=button(removing?'开始剥离':'开始镶嵌',()=>{s.confirm=true;paint();},'primary gem-submit');go.disabled=!!error;left.append(go);}
         const nav=el('div','gem-tabs');
@@ -63,7 +64,7 @@ export function renderGems(body,model,cb,{el,button,art}){
         const grid=el('div','gem-grid');
         for(const {item,instance} of rows.slice(s.page*9,s.page*9+9)){
             const incompat=s.step==='gems'?gemCompatibility(p.item,item):null;
-            const b=button([picture(item),el('span','',item.name),el('small','',instance?`+${instance.serverdata.addlel}${save.equipmentGuids?.[item.slot]===instance.guid?' · 已装备':''}`:`拥有 ${save.inventory[item.id]}`)],()=>{
+            const b=button([picture(item),el('span','',item.name),el('small','',instance?`+${instance.serverdata.addlel}${save.equipmentGuids?.[item.slot]===instance.guid?' · 已装备':''}`:fill(`拥有 {v0}`,{v0:String(save.inventory[item.id])}).text)],()=>{
                 s.confirm=false;s.message='';
                 if(instance){s.guid=instance.guid;s.gemId=null;s.removeIds=[];if(!removing){s.step='gems';s.filter=0;s.page=0;}}
                 else if(s.step==='gems'){if(incompat){s.message=incompat;paint();return;}s.gemId=item.id;}

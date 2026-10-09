@@ -1,0 +1,532 @@
+{
+  "version": 1,
+  "source": "AI-generated offline for Haqi Earth; rendering reference: HelloWorld WorldConfig.js and TerrainTileManager.js; not surveyed imagery.",
+  "grid": {
+    "columns": 4,
+    "rows": 4
+  },
+  "terrain": {
+    "local": "assets/adventure/earth/earth-terrain-1bab23557f23-natural-v2.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-terrain-1bab23557f23-natural-v2.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 194104,
+    "sha256": "cd9bd167a7e594d861f69f74e56878166f929bae9c086f050a5737162bf895f1",
+    "sourceSha256": "5fafba7d878e9a2d52792bd7d4590afcfb5a73b13f94e350e4079046fd4a0987",
+    "encoding": {
+      "quality": 88,
+      "method": 6
+    },
+    "frames": [
+      [
+        0,
+        0,
+        160,
+        160
+      ],
+      [
+        160,
+        0,
+        160,
+        160
+      ],
+      [
+        320,
+        0,
+        160,
+        160
+      ],
+      [
+        480,
+        0,
+        160,
+        160
+      ],
+      [
+        0,
+        160,
+        160,
+        160
+      ],
+      [
+        160,
+        160,
+        160,
+        160
+      ],
+      [
+        320,
+        160,
+        160,
+        160
+      ],
+      [
+        480,
+        160,
+        160,
+        160
+      ],
+      [
+        0,
+        320,
+        160,
+        160
+      ],
+      [
+        160,
+        320,
+        160,
+        160
+      ],
+      [
+        320,
+        320,
+        160,
+        160
+      ],
+      [
+        480,
+        320,
+        160,
+        160
+      ],
+      [
+        0,
+        480,
+        160,
+        160
+      ],
+      [
+        160,
+        480,
+        160,
+        160
+      ],
+      [
+        320,
+        480,
+        160,
+        160
+      ],
+      [
+        480,
+        480,
+        160,
+        160
+      ]
+    ],
+    "previousSha256": "1bab23557f23994fc8af13c21f3ba983bc0fd4ac96c7b2f766e9961bfacf5018",
+    "previousSourceSha256": "986e0ab816e751b0ea899ee9dc10b9a5e7086e1c453b318bf7e5a448c7e8dfed",
+    "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
+  },
+  "decorations": {
+    "local": "assets/adventure/earth/earth-decorations-76c6884d3e97-natural-v2.webp",
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-decorations-76c6884d3e97-natural-v2.webp",
+    "width": 640,
+    "height": 640,
+    "bytes": 164750,
+    "sha256": "6e4e4e5762bf8aee205741dbc065949f2367121254cb4e3c45ed82c0fa37fd08",
+    "sourceSha256": "3da46036e3f01b72cb80ebbfc3aca0eb54c3591ce836b5b3a3814a98679e65b0",
+    "encoding": {
+      "quality": 71,
+      "method": 6
+    },
+    "frames": [
+      [
+        0,
+        0,
+        160,
+        160
+      ],
+      [
+        160,
+        0,
+        160,
+        160
+      ],
+      [
+        320,
+        0,
+        160,
+        160
+      ],
+      [
+        480,
+        0,
+        160,
+        160
+      ],
+      [
+        0,
+        160,
+        160,
+        160
+      ],
+      [
+        160,
+        160,
+        160,
+        160
+      ],
+      [
+        320,
+        160,
+        160,
+        160
+      ],
+      [
+        480,
+        160,
+        160,
+        160
+      ],
+      [
+        0,
+        320,
+        160,
+        160
+      ],
+      [
+        160,
+        320,
+        160,
+        160
+      ],
+      [
+        320,
+        320,
+        160,
+        160
+      ],
+      [
+        480,
+        320,
+        160,
+        160
+      ],
+      [
+        0,
+        480,
+        160,
+        160
+      ],
+      [
+        160,
+        480,
+        160,
+        160
+      ],
+      [
+        320,
+        480,
+        160,
+        160
+      ],
+      [
+        480,
+        480,
+        160,
+        160
+      ]
+    ],
+    "previousSha256": "76c6884d3e97dc8b34024ca33a61e0dbfec7f2b67d03b8b625ccd3de9e15be3f",
+    "previousSourceSha256": "d797ddfe58817c46be1eb50072a4d366636a5da1aa20266e1bbeed3433c01329",
+    "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
+  },
+  "cityGround": {
+    "width": 1254,
+    "height": 1254,
+    "tiles": [
+      {
+        "local": "assets/adventure/earth/earth-city-detail-0-0-24d59e78e1c8-natural-v2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-city-detail-0-0-24d59e78e1c8-natural-v2.webp",
+        "width": 627,
+        "height": 627,
+        "x": 0,
+        "y": 0,
+        "bytes": 179000,
+        "sha256": "b6afcdb665477e48cb393fcbd13af5e2d4bd0e2ebb81081b2e64197061f83bfb",
+        "encoding": {
+          "quality": 88,
+          "method": 6
+        },
+        "previousSha256": "24d59e78e1c85f16f8edda0846b369227440d5e6aa9f9a716b8654bba40fbed4",
+        "sourceSha256": "9c90c4183354673a40a4155e62a51a10e698cd0652263bee9227ff0a4a85cfc0",
+        "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
+      },
+      {
+        "local": "assets/adventure/earth/earth-city-detail-1-0-44d7b1691fd8-natural-v2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-city-detail-1-0-44d7b1691fd8-natural-v2.webp",
+        "width": 627,
+        "height": 627,
+        "x": 627,
+        "y": 0,
+        "bytes": 178838,
+        "sha256": "a7265a3d02ec70c463e2bbb8a0f28dbf7682bd0d0c3e1ec0bd14688d9b5233a9",
+        "encoding": {
+          "quality": 87,
+          "method": 6
+        },
+        "previousSha256": "44d7b1691fd88e2a2aaa9321d3f3c5aae8e80149733f32504171e33bd539ee69",
+        "sourceSha256": "fdd133c6f55c00f2baadd53b06b9df9d30a9aeb258340c44c96aef4f92a4e249",
+        "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
+      },
+      {
+        "local": "assets/adventure/earth/earth-city-detail-0-1-2b8debde2fea-natural-v2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-city-detail-0-1-2b8debde2fea-natural-v2.webp",
+        "width": 627,
+        "height": 627,
+        "x": 0,
+        "y": 627,
+        "bytes": 182658,
+        "sha256": "c7871454503821395a1cf178eea5e8d226cb40c28af7f12238e125b0f820db4b",
+        "encoding": {
+          "quality": 88,
+          "method": 6
+        },
+        "previousSha256": "2b8debde2feababb5f33db27edbe13e874110638a0d2a98cc37f47532fdb68ac",
+        "sourceSha256": "53c06e73b08c8bf85afade659ba922fa9556b12b903b4a72046a3c5a8a2c40fc",
+        "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
+      },
+      {
+        "local": "assets/adventure/earth/earth-city-detail-1-1-91b144df0056-natural-v2.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-city-detail-1-1-91b144df0056-natural-v2.webp",
+        "width": 627,
+        "height": 627,
+        "x": 627,
+        "y": 627,
+        "bytes": 170556,
+        "sha256": "9479a0c3743282e993413a67acd337c50f4422de3004feb133052b5e3e79e2cf",
+        "encoding": {
+          "quality": 87,
+          "method": 6
+        },
+        "previousSha256": "91b144df005634cae7dfde768ce0a7bce483189c7e87ba2ec922d06f27b58802",
+        "sourceSha256": "574cc9b5b68144fec375f89e4a00927c74b9b5822ed8385e668420d122f51eed",
+        "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
+      }
+    ],
+    "source": "AI-generated independent continuous city painting, inspired by HelloWorld city02.png; fictional neighbourhoods",
+    "sourceSha256": "fac63fdf080766c8084f912b8a00df069c0fe9edf98184949587d21afb5af8c5",
+    "referenceSource": "https://cdn.keepwork.com/helloworld/tileset/city02.png",
+    "referenceSha256": "3aee5b6dd8f5c06412b03b879e0da08bb88d038cf020db55e09be1c01a274c87",
+    "previousSourceSha256": "7c68e9a4e30b9729d14e572827fc8fc660c885e5747df1fc6bbac1eb7c2f920b",
+    "sourceHashFormat": "Decoded RGB pixels, row-major; stitched natural-v2 tiles",
+    "referenceArt": {
+      "width": 512,
+      "height": 512,
+      "previousSha256": "3aee5b6dd8f5c06412b03b879e0da08bb88d038cf020db55e09be1c01a274c87",
+      "local": "assets/adventure/earth/earth-city-ground-3aee5b6dd8f5-natural-v2.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-city-ground-3aee5b6dd8f5-natural-v2.webp",
+      "bytes": 118000,
+      "sha256": "079a15ab69d25d725b3a469b091695d389cf84f48b9ffdb3bd55136eda2567be",
+      "sourceSha256": "d618b4874728b0391687f842b49cdb75249b01b054088fcecea3f9b07cdec18b",
+      "encoding": {
+        "quality": 91,
+        "method": 6
+      },
+      "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
+    }
+  },
+  "biomeDecorations": {
+    "local": "assets/adventure/earth/earth-biomes-6145ae506a88.webp",
+    "width": 1024,
+    "height": 512,
+    "bytes": 197850,
+    "sha256": "6145ae506a88a3acceede3fbef2a47518eee9143b8f8a0329cd88b6a3c2ae6d9",
+    "sourceSha256": "50f5e142f73146300259c8ada479f8d95394d63067f931851246a25bdc1906dd",
+    "source": "Built-in imagegen; original fantasy Earth biome details; existing decoration atlas used as style reference only.",
+    "promptFile": "assets/adventure/earth/source/earth-biomes-spec.json",
+    "encoding": {
+      "quality": 90
+    },
+    "frameOffset": 16,
+    "grid": {
+      "columns": 4,
+      "rows": 2
+    },
+    "frameNames": [
+      "snowSpruce",
+      "snowFir",
+      "snowBush",
+      "snowMound",
+      "wheat",
+      "cactus",
+      "willow",
+      "mangrove"
+    ],
+    "sourceBounds": [
+      {
+        "name": "snowSpruce",
+        "sourceCell": [
+          0,
+          0,
+          444,
+          444
+        ],
+        "sourceAlphaBounds": [
+          0,
+          4,
+          444,
+          444
+        ]
+      },
+      {
+        "name": "snowFir",
+        "sourceCell": [
+          444,
+          0,
+          887,
+          444
+        ],
+        "sourceAlphaBounds": [
+          0,
+          15,
+          443,
+          444
+        ]
+      },
+      {
+        "name": "snowBush",
+        "sourceCell": [
+          887,
+          0,
+          1330,
+          444
+        ],
+        "sourceAlphaBounds": [
+          1,
+          0,
+          443,
+          444
+        ]
+      },
+      {
+        "name": "snowMound",
+        "sourceCell": [
+          1330,
+          0,
+          1774,
+          444
+        ],
+        "sourceAlphaBounds": [
+          0,
+          23,
+          430,
+          440
+        ]
+      },
+      {
+        "name": "wheat",
+        "sourceCell": [
+          0,
+          444,
+          444,
+          887
+        ],
+        "sourceAlphaBounds": [
+          0,
+          0,
+          444,
+          443
+        ]
+      },
+      {
+        "name": "cactus",
+        "sourceCell": [
+          444,
+          444,
+          887,
+          887
+        ],
+        "sourceAlphaBounds": [
+          0,
+          0,
+          443,
+          431
+        ]
+      },
+      {
+        "name": "willow",
+        "sourceCell": [
+          887,
+          444,
+          1330,
+          887
+        ],
+        "sourceAlphaBounds": [
+          15,
+          0,
+          443,
+          433
+        ]
+      },
+      {
+        "name": "mangrove",
+        "sourceCell": [
+          1330,
+          444,
+          1774,
+          887
+        ],
+        "sourceAlphaBounds": [
+          0,
+          8,
+          431,
+          425
+        ]
+      }
+    ],
+    "frames": [
+      [
+        0,
+        0,
+        256,
+        256
+      ],
+      [
+        256,
+        0,
+        256,
+        256
+      ],
+      [
+        512,
+        0,
+        256,
+        256
+      ],
+      [
+        768,
+        0,
+        256,
+        256
+      ],
+      [
+        0,
+        256,
+        256,
+        256
+      ],
+      [
+        256,
+        256,
+        256,
+        256
+      ],
+      [
+        512,
+        256,
+        256,
+        256
+      ],
+      [
+        768,
+        256,
+        256,
+        256
+      ]
+    ],
+    "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/earth/earth-biomes-6145ae506a88.webp"
+  }
+}

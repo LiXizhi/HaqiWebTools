@@ -18,6 +18,7 @@ export function renderLocalMap(root,world,save,callbacks,socialActors=[]){
     });
     const list=document.createElement('div');list.className='island-guide-destinations';
     const map=document.createElement('div');map.className='island-guide-chart';map.append(canvas);
+    const mapName=document.createElement('h2');mapName.className='island-map-name';setText(mapName,name);map.append(mapName);
     for(const mark of world.landmarks){
         const button=document.createElement('button');setText(button,mark.name);button.title=tr(mark.description||'');
         button.onclick=()=>callbacks.teleport(mark.id);list.append(button);

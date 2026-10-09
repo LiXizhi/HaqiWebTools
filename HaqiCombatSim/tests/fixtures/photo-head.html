@@ -1,0 +1,38 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>照片形象隔离验收</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"></head><body class="haqi-app" style="padding:20px;background:#244b42"><p style="color:white">隔离测试：合成参考照片、模拟生成与账号。真实裁剪、去底、WebP压缩和预览；不读写玩家存档、不调用在线生图。</p><button id="open" class="primary">打开照片形象</button><p id="result"></p><div id="picker"></div><script type="module">
+import {HeroRenderer} from '../../js/hero_renderer.js';
+import {createPhotoHeadWorkspace} from '../../js/photo_head_workspace.js';
+import {createPhotoHeadService} from '../../js/photo_head_service.js';
+import {openPhotoHeadView} from '../../js/view_photo_head.js';
+import {createHeroPicker} from '../../js/view_hero_picker.js';
+import {blobDataURL} from '../../js/photo_head_images.js';
+import {setTranslator} from '../../js/locale_runtime.js';
+import {parseLocaleFile} from '../../js/locale_core.js';
+const root=document.querySelector('#result'),params=new URLSearchParams(location.search),files=new Map(),cacheMap=new Map();
+try{
+ if(params.has('en')){const dictionary=parseLocaleFile(await fetch('../../data/adventure/locale/en.txt').then(r=>r.text()));setTranslator(text=>dictionary[text]||text);}
+ const manifest=await fetch('../../data/adventure/hero-art.json').then(r=>r.json()),catalog=await fetch('../../data/adventure/mount-catalog.json').then(r=>r.json());
+ const assets={hero:new HeroRenderer(manifest,catalog,{local:true})},draft={appearance:'boy',headId:'elf-boy',bodyId:'male'};
+ const source=await fetch('../../assets/hero-preview/head-elf-boy.webp').then(r=>r.blob()),bitmap=await createImageBitmap(source),canvas=document.createElement('canvas');canvas.width=canvas.height=576;
+ const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,576,576);ctx.drawImage(bitmap,0,0);bitmap.close();const generated=canvas.toDataURL('image/png');
+ const qa=window.photoQA={uploads:{},generationCalls:0,applied:null,assets,draft,files,cameraStops:0};
+ // Keep mock uploads readable when this fixture is opened without the CLI route harness.
+ const fixtureFetch=window.fetch.bind(window);window.fetch=(url,options)=>fixtureFetch(qa.uploads[String(url)]||url,options);
+ const fixtureImage=assets.hero.image.bind(assets.hero);assets.hero.image=async(id,art,...rest)=>{
+  if(!qa.uploads[art.cdn])return fixtureImage(id,art,...rest);
+  if(assets.hero.images.has(id))return assets.hero.images.get(id);
+  const image=new Image();image.src=qa.uploads[art.cdn];await image.decode();assets.hero.images.set(id,image);return image;
+ };
+ const store={supportsDirectCacheWrite:true,getRemotePagePath:p=>'photoqa/edunotes/store/HaqiAdventure/'+p,async savePageData(path,key,text){files.set(path,JSON.parse(text));}};
+ const sdk={token:'fixture-only',getUserProfile:async()=>({username:'photoqa'}),onAuthStateChange(){},personalPageStore:{withWorkspace:()=>store},loadPage:async({pagePath})=>{const path=pagePath.replace('store/HaqiAdventure/','');return files.has(path)?{success:true,fromServerCache:true,content:JSON.stringify(files.get(path))}:{success:false,fromServerCache:true,content:''};},aiGenerators:{async genImage(prompt,options){if(options.images.length!==2||!options.images.every(r=>r.url.startsWith('data:image/')))throw Error('Missing direct references');qa.generationCalls++;return generated;}},cloudDrive:{async uploadUserCDNFile(file){const url='https://cdn.keepwork.com/users/photoqa/'+file.name;qa.uploads[url]=await blobDataURL(file);return {url};}}};
+ const uploadFile=sdk.cloudDrive.uploadUserCDNFile;
+ sdk.cloudDrive.uploadUserCDNFile=async(file,opts)=>{if(file.type!=='image/webp'||file.size>200000||!opts.key.endsWith('.webp'))throw Error('Invalid final upload');opts.onProgress?.({percent:50});if(params.has('holdUpload'))await new Promise(resolve=>qa.releaseUpload=resolve);const result=await uploadFile(file);opts.onProgress?.({percent:100});return result;};
+ const workspace=createPhotoHeadWorkspace({getOwner:()=> 'photoqa',loadSDK:async()=>sdk});
+ const membership={refresh:async()=>({status:'ready',username:'photoqa',isVip:params.has('vip')})};
+ const service=createPhotoHeadService({assets,getOwner:()=> 'photoqa',membership,workspace,cache:{async prepare(){},get:k=>cacheMap.get(k),set:(k,v)=>cacheMap.set(k,structuredClone(v)),async flush(){}},readConfig:async()=>({enabled:!params.has('disabled'),verification:{directPhoto:true,dualReference:true,atlasQuality:true}})});
+ qa.service=service;qa.open=()=>openPhotoHeadView({service,assets,draft,getOwner:()=> 'photoqa',onLogin:()=>{},onApply:head=>{qa.applied=head;root.textContent='已应用：'+head.id;}});
+ document.querySelector('#open').onclick=qa.open;
+ assets.photoHeads={open:async(d,apply)=>openPhotoHeadView({service,assets,draft:d,onApply:apply,getOwner:()=> 'photoqa',onLogin:()=>{}})};
+ document.querySelector('#picker').append(createHeroPicker(assets,draft));
+ document.documentElement.dataset.fixtureReady='1';
+}catch(e){root.textContent=e.stack;document.documentElement.dataset.fixtureError=e.message;}
+</script></body></html>

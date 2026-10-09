@@ -8,6 +8,8 @@ import * as A from '../js/adventure_core.js';
 import * as P from '../js/combat_pve_core.js';
 import {SimpleBot} from '../js/combat_policy_core.js';
 import {createWorld,walkable,findPath,followPath,distance} from '../js/adventure_world_core.js';
+import {segmentDistance} from '../js/adventure_island_layout_core.js';
+import {onAnyBridge} from '../js/adventure_bridge_core.js';
 import {installNpcCatalog} from '../js/adventure_npc_core.js';
 import {replaceMonsterCards} from '../js/adventure_monster_cards_core.js';
 import {validateSpellEffects} from '../js/spell_effects_core.js';
@@ -70,11 +72,27 @@ test('four islands have reachable original monsters with existing WebP appearanc
             assert.ok(walkable(world,e.x,e.y));
             assert.ok(world.npcs.every(n=>distance(n,e)>100));
             const end=followPath(world,world.layout.spawn,findPath(world,world.layout.spawn,e),100000);
-            assert.ok(!end.blocked&&distance(end.position,e)<1);
+            assert.ok(!end.blocked&&distance(end.position,e)<1,`${zone}/${e.id} (${e.x},${e.y}) unreachable`);
         }
         for(const q of content.catalogQuests.quests.filter(q=>q.region===zone))for(const g of q.groups)for(const i of g.items){
             const ids=g.kind==='kill'?[i.id]:g.kind==='loot'?i.producers:[];
             for(const id of ids)assert.ok(rows.some(e=>(e.monsterIds||[e.monsterId]).some(mid=>content.catalogQuests.paths[content.monsters[mid].source.toLowerCase()]===id)),`${zone}/${q.id}/${id}`);
+        }
+    }
+});
+test('island monsters stand on open ground beside roads',()=>{
+    const {content}=setup();
+    installNpcCatalog(content,read('adventure/npc-catalog'));
+    for(const zone of zones){
+        const world=createWorld(zone,content);
+        assert.ok(world.encounters.length>10,zone);
+        for(const e of world.encounters){
+            const clearance=Math.min(...world.paths.map(p=>segmentDistance(e,p.a,p.b)-(p.width||60)/2));
+            assert.ok(clearance>=world.monsterSceneParams.territoryRadius+16,`${zone}/${e.id} 领地覆盖道路：${clearance.toFixed(1)}`);
+            for(const spawn of [world.layout.spawn,world.layout.initialSpawn||world.layout.spawn])
+                assert.ok(distance(e,spawn)>=world.monsterSceneParams.territoryRadius+48,`${zone}/${e.id} 领地覆盖落点`);
+            assert.ok(clearance<=280,`${zone}/${e.id} 离路过远：${clearance.toFixed(1)}`);
+            assert.equal(onAnyBridge(world,e.x,e.y,64),false,`${zone}/${e.id} 站在桥上`);
         }
     }
 });
@@ -112,7 +130,8 @@ test('island battle replay, victory quest credit and repeated encounters do not 
         A.settleEncounter(save,content,battle);
         for(const q of quests)for(const row of catalogGoalRows(save,content,q))if(row.kind==='kill'&&row.id===goal)assert.equal(row.value,1);
         assert.equal(save.dungeonRuns?.[zone],undefined);
-        assert.doesNotThrow(()=>A.beginEncounter(save,content,e.id));
+        assert.throws(()=>A.beginEncounter(save,content,e.id,{now:29999}),/尚未刷新/);
+        assert.doesNotThrow(()=>A.beginEncounter(save,content,e.id,{now:30000}));
     }
 });
 
@@ -151,7 +170,8 @@ test('mixed field battles replay and settle every monster without creating dunge
         assert.equal(save.xp-xp,e.monsterIds.reduce((n,id)=>n+content.monsters[id].xp,0));
         assert.equal(save.inventory[100]-coins,e.monsterIds.reduce((n,id)=>n+content.monsters[id].coins,0));
         assert.equal(save.dungeonRuns?.[e.zone],undefined);
-        assert.doesNotThrow(()=>A.beginEncounter(save,content,e.id));
+        assert.throws(()=>A.beginEncounter(save,content,e.id,{now:29999}),/尚未刷新/);
+        assert.doesNotThrow(()=>A.beginEncounter(save,content,e.id,{now:30000}));
     }
 });
 

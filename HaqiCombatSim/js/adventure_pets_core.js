@@ -1,7 +1,8 @@
+import {applyPetTraitStats,petTraitParams,petHungerMultiplier,mergePetTraits,rollPetTraits,validatePetGrowth} from './adventure_pet_traits_core.js';
 import {recordPetMeal} from './adventure_pet_quests_core.js';
 import {ownedPetRecords} from './adventure_pet_files_core.js';
 // Adventure adaptation; original combat formulae remain in combat_formulas_core.
-import { defaultParams, resolveParams } from './combat_params_core.js';
+import { resolveParams } from './combat_params_core.js';
 import { baseMaxHp, applyHpStats } from './combat_formulas_core.js';
 import { normalizeStats } from './combat_unit_core.js';
 import { dungeonFor } from './adventure_dungeons_core.js';
@@ -10,7 +11,7 @@ export const STARTERS=['dragon_green','dragon_purple','dragon_orange'];
 export const STAGE_NAMES=['幼年','青年','成年','隐藏形态'];
 export const FOOD_ID=990001, CAPTURE_ID=990002, GENERAL_CATCH_RUNE=23439;
 const check=(ok,message)=>{if(!ok)throw Error(message);};
-export const petParams=content=>resolveParams({cards:{}},content.balanceParams||defaultParams('kids')).adventure;
+export const petParams=content=>resolveParams({cards:{}},content.balanceParams||{version:'kids'},{groups:['adventure']}).adventure;
 export function foodInfo(content,id){
  const p=petParams(content);
  if(Number(id)===FOOD_ID)return {restore:p.foodRestore,xp:0,price:p.foodPrice};
@@ -66,12 +67,13 @@ export function feedFromSlots(save,content){
 export function petStage(level,content){return petParams(content).stageLevels.filter(n=>level>=n).length-1;}
 // Appearance is cosmetic; growth, cards and combat always use the actual level.
 export function petAppearanceStage(pet,content){
+ if(content.pets[pet.speciesId]?.staticAppearance)return 0;
  const unlocked=petStage(pet.level,content);
  return Number.isInteger(pet.appearanceStage)&&pet.appearanceStage>=0&&pet.appearanceStage<=unlocked?pet.appearanceStage:unlocked;
 }
 export function petCapacity(pet,content){return petParams(content).petCapacities[petStage(pet.level,content)];}
 export function petXpLevel(xp,content){const p=petParams(content);return Math.min(p.levelCap,Math.floor((1+Math.sqrt(1+8*xp/p.petXpStep))/2));}
-export function petMaxHp(pet,content){return baseMaxHp(content.pets[pet.speciesId].school,pet.level,'kids');}
+export function petMaxHp(pet,content){return applyHpStats(baseMaxHp(content.pets[pet.speciesId].school,pet.level,'kids'),applyPetTraitStats({},pet.passiveTraits,petTraitParams(content)).hpPct,0,'kids');}
 export function specMaxHp(spec){return applyHpStats(baseMaxHp(spec.school,spec.level,'kids'),spec.stats.hpPct||0,spec.stats.hpFlat||0,'kids');}
 export function petLessons(pet,content){return content.pets[pet.speciesId].lessons;}
 export function recommendedPetDeck(pet,content){
@@ -84,14 +86,40 @@ export function validatePetDeck(pet,content,deck){
  for(const row of deck){check(!seen.has(row.key)&&Number.isInteger(row.count)&&row.count>0&&row.count<=petParams(content).petCopies&&petLessons(pet,content).some(x=>x.key===row.key&&x.level<=pet.level),'宠物卡牌尚未解锁或份数无效');seen.add(row.key);count+=row.count;}
  check(count<=petCapacity(pet,content),'宠物卡包容量不足');
 }
-export function addPet(save,content,id,xp=0){
+export function addPet(save,content,id,xp=0,{traits,captured=false}={}){
  check(Object.hasOwn(content.pets,id),'未知宠物');
  const existing=Object.values(ownedPetRecords(save)).find(p=>p.speciesId===id);
- if(existing){check(save.pets[save.petInstanceVersion===1?existing.id:existing.speciesId],`请先查看${content.pets[id].name}的详情，再领取重复宠物奖励`);const pet=existing;pet.xp+=petParams(content).duplicateXp;pet.level=petXpLevel(pet.xp,content);return pet;}
- const pet={id:`${save.seed}:${id}`,speciesId:id,xp,level:petXpLevel(xp,content),hunger:100,hp:0,deck:[]};
+ if(existing)check(save.pets[save.petInstanceVersion===1?existing.id:existing.speciesId],`请先查看${content.pets[id].name}的详情，再领取重复宠物奖励`);
+ const incoming=traits??rollPetTraits(`${save.seed}:${id}:obtain:${existing?.obtainedCount??(existing?1:0)}`,petTraitParams(content),existing?.passiveTraits);
+ const passiveTraits=mergePetTraits(existing?.passiveTraits,incoming);
+ if(existing){const pet=save.pets[save.petInstanceVersion===1?existing.id:existing.speciesId];pet.passiveTraits=passiveTraits;pet.captureCount=(pet.captureCount||0)+(captured?1:0);pet.obtainedCount=(pet.obtainedCount??1)+1;pet.xp+=petParams(content).duplicateXp;pet.level=petXpLevel(pet.xp,content);return pet;}
+ const pet={id:`${save.seed}:${id}`,speciesId:id,xp,level:petXpLevel(xp,content),hunger:100,hp:0,deck:[],passiveTraits,captureCount:captured?1:0,obtainedCount:1};
  pet.hp=petMaxHp(pet,content);pet.deck=recommendedPetDeck(pet,content);
  if(save.petInstanceVersion===1)Object.assign(pet,createPetInstance(content,{...pet,ownerId:save.petOwnerId}));
  save.pets[save.petInstanceVersion===1?pet.id:id]=pet;return pet;
+}
+// Legacy duplicate individuals are consolidated once their files are hydrated.
+// Keep original individual records inside the surviving pet file for provenance.
+export function mergeOwnedPetSpecies(save,content){
+ if(save.pendingEncounter||save.petInstanceVersion!==1)return false;
+ const groups=new Map();for(const pet of Object.values(ownedPetRecords(save))){const rows=groups.get(pet.speciesId)||[];rows.push(pet);groups.set(pet.speciesId,rows);}
+ let changed=false;
+ for(const rows of groups.values())if(rows.length>1){
+  if(rows.some(p=>!save.pets[p.id]))continue;
+  rows.sort((a,b)=>{const ai=save.formation.indexOf(a.id),bi=save.formation.indexOf(b.id);return (ai<0?4:ai)-(bi<0?4:bi)||a.id.localeCompare(b.id);});
+  const keeper=save.pets[rows[0].id];
+  for(const row of rows.slice(1)){
+   const pet=save.pets[row.id];keeper.legacyMergedPets??=[];const {hp,hunger,...historical}=pet;keeper.legacyMergedPets.push(JSON.parse(JSON.stringify(historical)));
+   keeper.passiveTraits=mergePetTraits(keeper.passiveTraits,pet.passiveTraits);
+   keeper.captureCount=(keeper.captureCount||0)+(pet.captureCount||0);keeper.obtainedCount=(keeper.obtainedCount??1)+(pet.obtainedCount??1);
+   keeper.xp=Math.max(keeper.xp,pet.xp);keeper.level=petXpLevel(keeper.xp,content);keeper.cooldownUntil=Math.max(keeper.cooldownUntil,pet.cooldownUntil);
+   save.petMergedIds??=[];if(!save.petMergedIds.includes(pet.id))save.petMergedIds.push(pet.id);
+   delete save.pets[pet.id];if(save.petFileRefs)delete save.petFileRefs[pet.id];
+   save.formation=save.formation.map(id=>id===pet.id?null:id);changed=true;
+  }
+ }
+ if(changed)save.revision++;
+ return changed;
 }
 export function initializePets(save,content,starter=null){
  save.petDeckRulesVersion=1;
@@ -125,7 +153,7 @@ export function petAction(save,content,action,access={}){
   check(Number.isSafeInteger((save.inventory[row.itemId]||0)+row.count),'口粮数量无效');
   save.inventory[row.itemId]=(save.inventory[row.itemId]||0)+row.count;save.petFoodSlots[action.slot]=null;break;
  }
- case 'pet-appearance':check(pet,'尚未拥有宠物');check(Number.isInteger(action.stage)&&action.stage>=0&&action.stage<=petStage(pet.level,content),'宠物形态尚未解锁');pet.appearanceStage=action.stage;break;
+ case 'pet-appearance':check(pet,'尚未拥有宠物');check(!content.pets[pet.speciesId]?.staticAppearance,'这只宠物的外观不随等级变化');check(Number.isInteger(action.stage)&&action.stage>=0&&action.stage<=petStage(pet.level,content),'宠物形态尚未解锁');pet.appearanceStage=action.stage;break;
  case 'starter':{check(!save.starterChosen&&STARTERS.includes(action.petId),'已领取初始伙伴');const added=addPet(save,content,action.petId);save.formation[save.heroSlot]=save.petInstanceVersion===1?added.id:action.petId;save.starterChosen=true;break;}
  case 'formation':{
   check(Array.isArray(action.slots)&&action.slots.length===4&&action.slots.every(id=>id===null||Object.hasOwn(save.pets,id)),'阵容无效');
@@ -160,13 +188,13 @@ export function retireCaptureCrystals(save,content,{keepActiveBattle=true}={}){
  if(save.pendingEncounter&&Object.hasOwn(save.pendingEncounter,'captureStock'))save.pendingEncounter.captureStock=0;
  return true;
 }
-export function partySpecs(save,content,hero){
+export function partySpecs(save,content,hero,{traits=true}={}){
  hero={...hero,slot:save.heroSlot,hp:save.heroHp??specMaxHp(hero)};
  const support=save.pets[save.formation[save.heroSlot]];
- if(support)hero.petCards=support.deck.map(x=>({...x}));
+ if(support){hero.petCards=support.deck.map(x=>({...x}));if(traits&&support.passiveTraits)hero.supportPetTraits={...support.passiveTraits};}
  return [hero,...save.formation.flatMap((id,slot)=>{
   if(!id||slot===save.heroSlot)return [];const pet=save.pets[id],definition=content.pets[pet.speciesId];
-  return [{id:pet.id,name:definition.name,school:definition.school,level:pet.level,slot,speciesId:pet.speciesId,hp:pet.hp,stats:normalizeStats(),deck:pet.deck.map(x=>({...x})),deckCapacity:petCapacity(pet,content),deckEachCapacity:petParams(content).petCopies,isBot:true}];
+  return [{id:pet.id,name:definition.name,school:definition.school,level:pet.level,slot,speciesId:pet.speciesId,hp:pet.hp,stats:traits?applyPetTraitStats({},pet.passiveTraits,petTraitParams(content)):normalizeStats(),...(traits&&pet.passiveTraits?{passiveTraits:{...pet.passiveTraits}}:{}),deck:pet.deck.map(x=>({...x})),deckCapacity:petCapacity(pet,content),deckEachCapacity:petParams(content).petCopies,isBot:true}];
  })];
 }
 // Wall clock is injected by browser IO; never read during combat replay.
@@ -179,7 +207,7 @@ export function tickCare(save,content,hero,now,online=false){
  const inDungeon=!!dungeonFor(content,save.zone);
  if(!inDungeon)save.heroHp=Math.min(maxHp,(save.heroHp??maxHp)+maxHp*p.heroRegenPerSecond*minutes*60);
  for(const id of save.formation.filter(Boolean)){
-  const pet=save.pets[id];if(online){pet.hunger=Math.max(0,pet.hunger-minutes*p.hungerPerMinute);
+  const pet=save.pets[id];if(online){pet.hunger=Math.max(0,pet.hunger-minutes*p.hungerPerMinute*petHungerMultiplier(pet,content));
   }
  }
  if(online)feedFromSlots(save,content);
@@ -207,10 +235,11 @@ export function validatePets(save,content){
  validateFoodSlots(save,content);
  check(save.pets&&typeof save.pets==='object'&&!Array.isArray(save.pets),'宠物收藏无效');
  for(const [id,pet] of Object.entries(save.pets)){
+  validatePetGrowth(pet);
   if(save.petInstanceVersion===1){check(pet.id===id&&pet.ownerId===save.petOwnerId,'宠物身份无效');validatePetInstance(pet,content);}
   else check(Object.hasOwn(content.pets,id)&&pet.speciesId===id&&pet.id===`${save.seed}:${id}`,'宠物身份无效');
   check(Number.isSafeInteger(pet.xp)&&pet.xp>=0&&pet.level===petXpLevel(pet.xp,content),'宠物等级无效');
-  check(pet.appearanceStage===undefined||Number.isInteger(pet.appearanceStage)&&pet.appearanceStage>=0&&pet.appearanceStage<=petStage(pet.level,content),'宠物外观无效');
+  check(content.pets[pet.speciesId]?.staticAppearance?pet.appearanceStage===undefined||pet.appearanceStage===0:pet.appearanceStage===undefined||Number.isInteger(pet.appearanceStage)&&pet.appearanceStage>=0&&pet.appearanceStage<=petStage(pet.level,content),'宠物外观无效');
   check(Number.isFinite(pet.hp)&&pet.hp>=0&&pet.hp<=petMaxHp(pet,content)&&Number.isFinite(pet.hunger)&&pet.hunger>=0&&pet.hunger<=100,'宠物状态无效');validatePetDeck(pet,content,pet.deck);
  }
  check(Number.isFinite(save.careAt)&&save.careAt>=0&&typeof save.starterChosen==='boolean'&&Array.isArray(save.careLog)&&save.careLog.every(x=>typeof x==='string')&&Array.isArray(save.transactions),'养成记录无效');

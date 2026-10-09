@@ -1,0 +1,30 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>地球船与码头验收</title><base href="../../">
+<style>body{margin:0;background:#203c44;color:#fff;font:16px sans-serif}canvas{width:100vw;height:85vh;display:block}nav{padding:8px;display:flex;gap:8px;flex-wrap:wrap}button{padding:8px}output{padding:10px}</style>
+<nav><button id="land">岸上</button><button id="water">水上</button><button id="cross">自动过河</button><button id="turn">转向</button><button id="local">切换本地图集</button></nav><canvas id="scene"></canvas><output id="status">加载资源…</output>
+<script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure} from '../../js/adventure_core.js';
+import {createWorld,findPath,followPath} from '../../js/adventure_world_core.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {earthRules} from '../../js/adventure_earth_core.js';
+import {earthBoatAt,earthRoadDocks} from '../../js/adventure_earth_boat_core.js';
+import {earthRoadCrossings} from '../../js/adventure_earth_bridge_core.js';
+const status=document.querySelector('#status'),assets=await loadResources(p=>status.textContent=p.label);
+const boatArt=await fetch('../../data/adventure/earth/boat-art.json').then(r=>r.json());assets.registerImage('earth-boat',boatArt);
+const save=createAdventure(assets.content,{name:'乘船验收'}),rules=earthRules(),terrainAt=x=>x>=900&&x<=1500?'water':'grass';
+const paths=earthRoadCrossings([{id:'river-road',a:{x:300,y:900},b:{x:2100,y:900},width:52}],terrainAt,rules);
+const world={...createWorld('camp',assets.content,save),isEarth:true,earthBoating:true,earthRules:rules,terrainAt,zone:'earth',w:8640000,h:4320000,paths,
+    buildings:[],trees:[],npcs:[],encounters:[],landmarks:[],decorations:[],mapCities:[],safeAreas:[],docks:earthRoadDocks(paths),boatArt,
+    portal:{hidden:true},center:{x:1200,y:900},layout:{name:'乘船验收',earth:true,rules:{terrain:{ocean:'#438797'}},coast:[],rivers:[],lakes:[],regions:[],bridges:[],paths,buildings:[],trees:[],landmarks:[]},
+    terrainPainter(c,w,r){c.fillStyle='#82a56d';c.fillRect(r.x,r.y,r.w,r.h);c.fillStyle='#438797';c.fillRect(900,r.y,600,r.h);c.strokeStyle='#c7c6b1';c.lineWidth=52;for(const p of paths){c.beginPath();c.moveTo(p.a.x,p.a.y);c.lineTo(p.b.x,p.b.y);c.stroke();}}};
+save.zone='earth';save.position={x:1200,y:900};save.facing=2;
+const renderer=createRenderer(document.querySelector('#scene'),assets);let path=[],last=0;
+document.querySelector('#land').onclick=()=>{save.position={x:780,y:900};path=[];};
+document.querySelector('#water').onclick=()=>{save.position={x:1200,y:900};path=[];};
+document.querySelector('#turn').onclick=()=>save.facing=(save.facing+1)%4;
+document.querySelector('#cross').onclick=()=>{save.position={x:780,y:900};save.facing=2;path=findPath(world,save.position,{x:1620,y:900});};
+document.querySelector('#local').onclick=()=>location.href=location.pathname+'?assets=local';
+function frame(t){const dt=Math.min(.05,(t-last)/1000||0);last=t;const moving=!!path.length;if(moving){const next=followPath(world,save.position,path,210*dt);save.position=next.position;path=next.path;}
+renderer.render(world,save,t,{moving});status.textContent=`${earthBoatAt(world,save.position.x,save.position.y)?'乘船':'陆地步行'} · 码头 ${world.docks.length} · ${Math.round(save.position.x)} · 原坐骑 ${save.mountId??'无'}`;requestAnimationFrame(frame);}
+requestAnimationFrame(frame);
+</script></html>

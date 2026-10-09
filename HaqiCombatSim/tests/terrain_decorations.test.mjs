@@ -47,5 +47,7 @@ test('NPC interaction areas and dungeon corridors are kept clear',()=>{
     const existing=groundDecorations(world,rect),spot=existing[0];
     assert.ok(spot);world.npcs=[{x:spot.x,y:spot.y}];
     assert.ok(groundDecorations(world,rect).every(d=>Math.hypot(d.x-spot.x,d.y-spot.y)>=d.size*.65+34));
-    world.layout.route=[{x:0,y:0}];assert.deepEqual(groundDecorations(world,rect),[]);
+    world.layout.route=[{x:0,y:0}];
+    const dungeonRows=groundDecorations(world,rect);assert.ok(dungeonRows.length);
+    assert.ok(dungeonRows.every(d=>world.paths.every(p=>segmentDistance(d,p.a,p.b)>=p.width/2+d.size*.65+10)));
 });

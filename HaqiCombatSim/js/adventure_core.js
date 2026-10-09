@@ -1,13 +1,25 @@
-import {validateRelationshipEvents,recordRelationshipActivity} from './character_relationship_core.js';
-import {ownedPetSpecies} from './adventure_pet_files_core.js';
+import {encounterPetTraitSeed,petTraitParams,monsterPetTraits} from './adventure_pet_traits_core.js';
+import {monsterCaptureSpecies} from './adventure_monster_pets_core.js';
+import {earthEncounter,earthNearest,earthChapterEvent} from './adventure_earth_core.js';
+import {cityBattleReady,recordCityBattleWin} from './adventure_city_dungeons_core.js';
+import {validateEarthCityProgress} from './adventure_earth_city_config_core.js';
+import {dailyBuffs,validateDailyBuff} from './language_daily_buff_core.js';
+import {claimSpeechReward,validateSpeechClaims} from './language_speech_rewards_core.js';
+import {dungeonLanguageBuff,dungeonLanguageBaseHp} from './adventure_dungeon_language_core.js';
+import {encounterCoolingDown,markEncounterDefeated} from './adventure_encounter_cooldown_core.js';
+import {validateRelationshipEvents} from './character_relationship_core.js';
+import {ownedPetRecords,ownedPetSpecies} from './adventure_pet_files_core.js';
 import {validatePetWorld} from './adventure_pet_world_core.js';
+import {validatePetMeetings} from './adventure_pet_interactions_core.js';
 import {validHeroBodyId} from './hero_body_core.js';
+import {journeyParty,journeyEnemyFormation,recordTowerWin,journeyRewardPets} from './adventure_dungeon_journeys_core.js';
 import {dungeonProgress,coopParty,settleCoopHealth,validateCoopRun} from './adventure_coop_core.js';
 import {dungeonFor,validateDungeons} from './adventure_dungeons_core.js';
 import {purchaseNpcOffer} from './adventure_npc_core.js';
 import {claimMagicStar,validateMagicStarClaims,magicStarCombatLevel,applyMagicStarCombat} from './adventure_magic_star_core.js';
 import {equipmentSetStats,dragonTotemStage,progressionStatEntry,chooseDragonTotem,useDragonTotemItem} from './adventure_progression_bonuses_core.js';
 import {customizeHero} from './adventure_hero_customize_core.js';
+import {publicPhotoHead} from './photo_head_core.js';
 // AdventureContent / AdventureSave v1. Pure chapter rules; no browser or storage APIs.
 import { islandFor, islandSpawn, travelStatus } from './adventure_world_map_core.js';
 import { worldDimensions, mapInfo } from './adventure_island_layout_core.js';
@@ -24,12 +36,12 @@ import { validateFishingRecords } from './adventure_fishing_records_core.js';
 import {mountGem,removeGems} from './adventure_gems_core.js';
 import { equipmentRequirements } from './adventure_item_rules_core.js';
 import { upgradeAt, upgradeLevels, applyUpgradeStats } from './adventure_upgrade_core.js';
-import { findEquipmentInstance, syncEquipmentInstances, validateEquipmentInstances } from './adventure_equipment_instances_core.js';
+import { createEquipmentInstanceLookup, findEquipmentInstance, syncEquipmentInstances, validateEquipmentInstances } from './adventure_equipment_instances_core.js';
 import { claimCheckin, validateCheckin } from './adventure_checkin_core.js';
 import { resolvePetReward, migrateQuestPetRewards } from './adventure_rewards_core.js';
 import { applyMountStats } from './adventure_mounts_core.js';
 import {syncTrainingPoints,validateTrainingPoints,skillLearningStatus} from './adventure_learning_core.js';
-import {acceptCatalogQuest,claimCatalogQuest,noteCatalogKills,noteCatalogSignal,validateCatalogQuests,pinTrackedQuest,unpinTrackedQuest,showCurrentChapter,trackedQuestIds,supplementIslandTrack} from './adventure_catalog_quests_core.js';
+import {acceptCatalogQuest,claimCatalogQuest,noteCatalogKills,noteCatalogSignal,validateCatalogQuests,pinTrackedQuest,unpinTrackedQuest,showCurrentChapter,trackedQuestIds,supplementIslandTrack,noteQuestAccepted} from './adventure_catalog_quests_core.js';
 export { rewardLabel } from './adventure_rewards_core.js';
 export { readStamina, ensureDailyStamina, dungeonStaminaHint, parseArenaStaminaCost } from './adventure_stamina_core.js';
 
@@ -63,16 +75,17 @@ export function pendingQuestTalk(save, quest, npcId) {
 export function questReady(save, quest) {
     return !!quest && questState(save, quest.id).accepted && questProgress(save, quest).every(g => g.value >= g.count);
 }
-export function createAdventure(content, { name = '小哈奇', school = 'fire', appearance = 'boy', headId, bodyId, seed = 530, starter = 'dragon_green' } = {}) {
+export function createAdventure(content, { name = '小哈奇', school = 'fire', appearance = 'boy', headId, bodyId, customHead, seed = 530, starter = 'dragon_green' } = {}) {
     assert(SCHOOLS.includes(school), '请选择魔法学系');
     const save = { schemaVersion: SAVE_VERSION, contentVersion: content.contentVersion, seed: hashSeed(String(seed)),
         name: String(name).trim().slice(0, 16) || '小哈奇', school, appearance: appearance === 'girl' ? 'girl' : 'boy',
         xp: 0, level: 1, inventory: {}, equipment: {}, mountId: null, upgrades: {}, equipmentInstances: [], equipmentGuids: {}, nextEquipmentGuid: 1, cards: {}, deck: [], quests: {},
         pet: null, zone: 'camp', position: {...mapInfo('camp',content).initialSpawn}, facing: 3,
         dungeonRuns: {}, dungeonReturn: null, encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
-        visitedTown: false, music: false, tips: {}, revision: 0, bagRulesVersion: 1, defaultPocketVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion,
-        locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
+        visitedTown: false, tips: {}, revision: 0, bagRulesVersion: 1, defaultPocketVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion,
+        locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,autoReadDialogue:true,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
     if(typeof headId==='string'&&/^[a-z0-9-]{1,64}$/.test(headId))save.headId=headId;
+    if(customHead)save.customHead=publicPhotoHead(customHead,{id:headId,appearance});
     if(validHeroBodyId(bodyId,appearance))save.bodyId=bodyId;
     syncProgression(save, content);
     save.deck = recommendedDeck(save, content);
@@ -205,19 +218,21 @@ function migrateBagRules(save,content) {
 }
 export function playerSpec(save, content, starLevel=save.pendingEncounter?.magicStarLevel||0) {
     const stats = normalizeStats(), fixed = [];
+    let equipmentLookup;
     for (const iid of Object.values(save.equipment)) {
         const item = content.items[iid];
         if (!canEquip(save,item,content)) continue;
         // player_server.lua L3476–3488: socketed gem stats add to equipped item stats.
-        const instance=findEquipmentInstance(save,content,iid);
+        const instance=(equipmentLookup??=createEquipmentInstanceLookup(save,content))(iid);
         const sources=[item,...(instance?.serverdata.gem?.ins||[]).map(id=>content.items[id]).filter(Boolean)];
         for (const [id,value] of sources.flatMap(source=>Object.entries(source.stats))) {
-            if(save.pendingEncounter&&save.pendingEncounter.equipmentStatsVersion!==1&&[182,183].includes(Number(id)))continue;
+            if(save.pendingEncounter&&![1,2].includes(save.pendingEncounter.equipmentStatsVersion)&&[182,183].includes(Number(id)))continue;
+            if(save.pendingEncounter&&save.pendingEncounter.equipmentStatsVersion!==2&&Number(id)>=151&&Number(id)<=166)continue;
             const entry = statIdToEntry(id); if (!entry) continue;
             if (typeof stats[entry.stat] === 'object') stats[entry.stat][entry.school] = (stats[entry.stat][entry.school] || 0) + Number(value);
             else stats[entry.stat] += Number(value);
         }
-        applyUpgradeStats(stats,upgradeAt(content,iid,findEquipmentInstance(save,content,iid)?.serverdata.addlel||0));
+        applyUpgradeStats(stats,upgradeAt(content,iid,instance?.serverdata.addlel||0));
         for (const id of [139,140,141]) {
             const key = content.cardItems[item.stats[id]];
             if (key) fixed.push({ key, count: 1 });
@@ -310,6 +325,7 @@ function grantQuestRewards(save, content, quest) {
 }
 function retreatLanding(save,content){
     const pending=save.pendingEncounter;
+    if(save.zone==='earth'){const w=content.earthWorld;const position=w?earthNearest(w,save.position.x,save.position.y,{safe:true}):save.position;return {position:position||save.position,message:'你回到了附近的安全地点。'};}
     const safe={position:{...mapInfo(save.zone,content).initialSpawn},message:'你回到了安全地点。已保留物品与任务进度。'};
     if(!pending)return safe;
     const encounter=content.encounters.find(e=>e.id===pending.encounterId);
@@ -363,10 +379,15 @@ function applyAdventureAction(save, content, action, access={}) {
     }
     case 'use-totem-item': useDragonTotemItem(save,content,action.itemId);break;
     case 'checkin': claimCheckin(save, content, action.now, action.index, access, action.bonus===true); break;
+    case 'speech-reward': claimSpeechReward(save,content,action.index,action.now);notice='领取成功，奖励已放入背包！';break;
     case 'accept': {
         assert(q && q.id === Number(action.questId) && q.startNpc === Number(action.npcId), '当前没有可接取的任务');
-        if (!save.quests[q.id]) save.quests[q.id] = { accepted: true, claimed: false, progress: {} };
-        if (trackedQuestIds(save).length && !trackedQuestIds(save).includes(q.id)) trackFull = pinTrackedQuest(save, content, q.id).full === true;
+        if (!save.quests[q.id]) {
+            save.quests[q.id] = { accepted: true, claimed: false, progress: {} };
+            noteQuestAccepted(save, q.id);
+        }
+        save.trackedQuestIds = trackedQuestIds(save, content);
+        delete save.trackedQuestId;
         syncGoals(save,content); break;
     }
     case 'talk':
@@ -529,25 +550,40 @@ export function beginEncounter(save,content,encounterId,access={}) {
     assert(encounter && encounter.zone === save.zone, '这里没有这个敌人');
     assert(!encounter.blocked?.length,encounter.blocked?.join('；'));
     assert(!dungeonProgress(save)?.[save.zone]?.cleared.includes(encounterId),'这组怪物已经击败，请重新开启副本后挑战');
+    assert(!encounterCoolingDown(save,encounterId,access.now??0),'怪物尚未刷新，请稍后再挑战');
     const dungeon=dungeonFor(content,save.zone);
-    if(dungeon)assert(dungeon.arenas.find(a=>!dungeonProgress(save)[save.zone].cleared.includes(a.id))?.id===encounterId,'请先击败挡路的怪物');
+    if(dungeon?.kind==='city')assert(cityBattleReady(save,dungeon,encounterId),'请先完成这个地点的生活互动');
+    if(dungeon&&dungeon.kind!=='city')assert(dungeon.arenas.find(a=>!dungeonProgress(save)[save.zone].cleared.includes(a.id))?.id===encounterId,'请先击败挡路的怪物');
     const monster = encounter.monster || content.monsters[encounter.monsterId];
     assert(encounterId !== 'death-scout' || (save.quests[63012]?.claimed), '请先完成考核前的准备');
     validDeck(save,content,save.deck);
     const magicStarLevel=magicStarCombatLevel(content,access),player=save.coopRun?.hero||playerSpec(save,content,magicStarLevel);
-    const initialParty=coopParty(save,player)||(content.pets?Pets.partySpecs(save,content,player):null);
+    const initialParty=journeyParty(save,dungeon,coopParty(save,player)||(content.pets?Pets.partySpecs(save,content,player):null));
     if(initialParty)assert(initialParty.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
     const serial = ++save.encounterSerial;
     save.pendingEncounter = { id: `${save.seed}:${serial}`, encounterId,
-        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 1, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1 };
-    if(encounter.monsterIds){save.pendingEncounter.dungeonMonsterIds=[...encounter.monsterIds];save.pendingEncounter.dungeonMonsterSlots=[...encounter.monsterSlots];}
+        seed: hashSeed(`${save.seed}:encounter:${serial}`), player, decisions: [], equipmentStatsVersion: 2, magicStarLevel, magicStarExperiencePercent:magicStarLevel?content.magicStar.levels[magicStarLevel].exp:100, progressionRulesVersion:3, threatRulesVersion:5, reflectionRulesVersion:1, stealthRulesVersion:1, dispelRulesVersion:1, specialCardRulesVersion:1, captureRulesVersion:1 };
+    if(encounter.monsterIds){const formation=journeyEnemyFormation(encounter,dungeon,initialParty);save.pendingEncounter.dungeonMonsterIds=[...formation.ids];save.pendingEncounter.dungeonMonsterSlots=[...formation.slots];}
+    if(content.pets){
+        const checkpoint=save.pendingEncounter,params=petTraitParams(content);
+        const templates=checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[monster];
+        const stamped=templates.map(m=>({...m,speciesId:m.speciesId||monsterCaptureSpecies(m,content.monsterArt)?.id}));
+        const seed=encounterPetTraitSeed(save,encounterId,params),owned=Object.values(ownedPetRecords(save));
+        checkpoint.petTraitRulesVersion=1;checkpoint.petTraitParams=clone(params);
+        const byMonster=save.petTraitEncounters[encounterId]?.byMonster||{};
+        checkpoint.monsterTraits=stamped.map((mob,index)=>byMonster[`${mob.id}:${index}`]??=monsterPetTraits(seed,mob,index,params,owned.find(p=>p.speciesId===mob.speciesId)?.passiveTraits));
+        save.petTraitEncounters[encounterId]={seed,byMonster:clone(byMonster)};
+    }
+    const languageBuff=save.dailyLanguageBuff?dailyBuffs(save):dungeonLanguageBuff(save,content);
+    if(save.dailyLanguageBuff)save.pendingEncounter.dailyLanguageVersion=1;
+    if(languageBuff)save.pendingEncounter.languageBuff=languageBuff;
     save.pendingEncounter.runes = runeInventory(save,content);
     save.pendingEncounter.deferredRuneSettlement = true;
     save.pendingEncounter.runeUsed = {};
     if(content.pets){
         const party=initialParty;
         assert(party.some(u=>u.hp>0),'伙伴们需要休息恢复生命');
-        Object.assign(save.pendingEncounter,{party,monster,petIds:save.coopRun?[]:save.formation.filter(Boolean),captureStock:save.inventory[Pets.CAPTURE_ID]||0,heroLevel:save.level,ownedPets:ownedPetSpecies(save),adventureParams:clone(Pets.petParams(content))});
+        Object.assign(save.pendingEncounter,{party,monster,petIds:journeyRewardPets(save,dungeon,party),captureStock:save.inventory[Pets.CAPTURE_ID]||0,heroLevel:save.level,ownedPets:ownedPetSpecies(save),adventureParams:clone(Pets.petParams(content))});
     }
     save.revision++; return { encounter, monster, checkpoint: save.pendingEncounter };
 }
@@ -592,11 +628,20 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
     const pending = save.pendingEncounter;
     assert(pending && battle.finished && battle.seed === pending.seed,'战斗尚未结束');
     if (save.rewardedEncounters.includes(pending.id)) { save.pendingEncounter = null; return false; }
-    const encounter = content.encounters.find(e => e.id === pending.encounterId), monster = pending.monster || content.monsters[encounter.monsterId];
+    const encounter = content.encounters.find(e => e.id === pending.encounterId)||specialEncounter(save,content,pending.encounterId), monster = pending.monster || content.monsters[encounter.monsterId];
     settleRunes(save,battle);
     if(content.pets)settleParty(save,content,battle);
     let insufficientStamina=false,staminaSpent=0;
     if (battle.winner === 'near') {
+        if(save.petTraitEncounters)delete save.petTraitEncounters[pending.encounterId];
+        const cityDungeon=dungeonFor(content,save.zone);
+        if(cityDungeon?.kind==='city')recordCityBattleWin(save,cityDungeon,encounter.id);
+        if(save.zone==='earth'){
+            const event=content.earthWorld?.encounters.find(e=>e.id===pending.encounterId)?.chapterEvent;
+            const chapter=content.earthWorld?.city?.quests;
+            if(event&&chapter)earthChapterEvent(save,chapter,event);
+        }
+        if(!dungeonFor(content,save.zone))markEncounterDefeated(save,content,pending.encounterId,now);
         const cost=encounterStaminaCost(content,pending.encounterId);
         const gate=applyCombatStamina(save,content,cost);
         insufficientStamina=gate.insufficient;
@@ -609,31 +654,38 @@ export function settleEncounter(save,content,battle,{now=0}={}) {
             if (monster.id === 'water-bubble' && battle.rng.int(1,100) <= 20) save.inventory[17114] = (save.inventory[17114] || 0) + 1;
         }
         if(pending.dungeonMonsterIds && dungeonFor(content,save.zone))dungeonProgress(save)[save.zone].cleared.push(encounter.id);
+        recordTowerWin(save,dungeonFor(content,save.zone),encounter?.id);
         if (monster.goalId) signal(save,content,'defeat',monster.goalId);
         noteCatalogKills(save,content,pending.dungeonMonsterIds?pending.dungeonMonsterIds.map(id=>content.monsters[id]):[monster],createRng(hashSeed(`${save.seed}:quest:${pending.id}`)));
         syncProgression(save,content);
-    } else save.position = {...mapInfo(save.zone,content).initialSpawn};
+    }
+    // Both outcomes leave the hero beside this encounter, outside contact range.
+    save.position=retreatLanding(save,content).position;
+    const relationshipEvents=[];
     if(save.coopRun&&battle.winner==='near'&&dungeonProgress(save)[save.zone]?.cleared.length===dungeonFor(content,save.zone)?.arenas.length){
-        for(const member of save.coopRun.members)recordRelationshipActivity(save,{id:`dungeon:${save.coopRun.relationshipRunId||pending.id}:${member.profile.id}`,peer:member.profile,kind:'dungeon',at:now,reason:'共同通关副本'});
+        for(const member of save.coopRun.members)relationshipEvents.push({id:`dungeon:${save.coopRun.relationshipRunId||pending.id}:${member.profile.id}`,peer:member.profile,kind:'dungeon',at:now,reason:'共同通关副本'});
     }
     if(save.coopRun){save.coopRun.battles??=[];save.coopRun.battles.push({checkpoint:clone(pending),winner:battle.winner,turns:battle.turn});}
     save.rewardedEncounters.push(pending.id); save.pendingEncounter = null; if(content.pets)Pets.migratePetDeckRules(save,content); migrateBagRules(save,content); migrateDefaultPocket(save,content); syncEquipmentInstances(save,content); save.revision++;
-    return {settled:true,insufficientStamina,staminaSpent};
+    return {settled:true,insufficientStamina,staminaSpent,relationshipEvents};
 }
 export function parseSave(raw,content) {
     const s = typeof raw === 'string' ? JSON.parse(raw) : clone(raw);
     if(s?.schemaVersion===1){s.schemaVersion=SAVE_VERSION;if(content.pets){Pets.initializePets(s,content);if(s.pet&&content.pets.legacy_gululu)Pets.addPet(s,content,'legacy_gululu',s.pet.xp);}}
     assert(s && s.schemaVersion === SAVE_VERSION && s.contentVersion === content.contentVersion,'存档版本不兼容');
     normalizeLocaleSave(s);
+    assert(s.encounterRespawns===undefined||(s.encounterRespawns&&typeof s.encounterRespawns==='object'&&!Array.isArray(s.encounterRespawns)&&Object.values(s.encounterRespawns).every(n=>Number.isSafeInteger(n)&&n>=0)),'怪物刷新记录无效');
     validateLearningSave(s);validateCoopRun(s);validateRelationshipEvents(s);
     assert(s.defaultPocketVersion===undefined||s.defaultPocketVersion===1,'默认口袋规则版本无效');
     validateCheckin(s);
+    validateSpeechClaims(s);
     validateFishingRecords(s);
     validateMagicStarClaims(s,content);
     assert(SCHOOLS.includes(s.school) && (islandFor(s.zone)||dungeonFor(content,s.zone)?.playable),'存档角色无效');
     assert(typeof s.name === 'string' && s.name.length <= 16 && ['boy','girl'].includes(s.appearance),'存档外观无效');
     assert(s.bodyId===undefined||validHeroBodyId(s.bodyId,s.appearance),'存档身体形象无效');
     assert(s.headId===undefined||(typeof s.headId==='string'&&/^[a-z0-9-]{1,64}$/.test(s.headId)),'存档头部形象无效');
+    if(s.customHead)s.customHead=publicPhotoHead(s.customHead,{id:s.headId,appearance:s.appearance});
     assert(Number.isSafeInteger(s.xp) && s.xp >= 0 && Number.isInteger(s.seed),'存档经验无效');
     validateTrainingPoints(s,content);
     assert(s.gemSerial===undefined||(Number.isSafeInteger(s.gemSerial)&&s.gemSerial>=0),'存档宝石操作记录无效');
@@ -673,9 +725,14 @@ export function parseSave(raw,content) {
     validateCatalogQuests(s,content);
     validateDungeons(s,content);
     assert(dungeonFor(content,s.zone)?.playable||travelStatus({...s,pendingEncounter:null},content,s.zone).allowed,'存档目的地无效');
+    dungeonLanguageBuff(s,content);
     if (s.pendingEncounter) {
-        assert(s.pendingEncounter.equipmentStatsVersion===undefined||s.pendingEncounter.equipmentStatsVersion===1,'装备属性规则版本无效');
+        assert(s.pendingEncounter.dailyLanguageVersion===undefined||s.pendingEncounter.dailyLanguageVersion===1,'语言加成版本无效');
+        if(s.pendingEncounter.dailyLanguageVersion===1)validateDailyBuff(s.pendingEncounter.languageBuff);
+        if(s.pendingEncounter.languageBuff!==undefined&&!s.pendingEncounter.dailyLanguageVersion)assert(JSON.stringify(s.pendingEncounter.languageBuff)===JSON.stringify(dungeonLanguageBuff(s,content)),'副本语言加成检查点无效');
+        assert(s.pendingEncounter.equipmentStatsVersion===undefined||[1,2].includes(s.pendingEncounter.equipmentStatsVersion),'装备属性规则版本无效');
         assert(s.pendingEncounter.reflectionRulesVersion===undefined||s.pendingEncounter.reflectionRulesVersion===1,'反射规则版本无效');
+        assert(s.pendingEncounter.specialCardRulesVersion===undefined||s.pendingEncounter.specialCardRulesVersion===1,'特殊卡牌规则版本无效');
         assert(s.pendingEncounter.dispelRulesVersion===undefined||s.pendingEncounter.dispelRulesVersion===1,'之敌规则版本无效');
         assert(s.pendingEncounter.stealthRulesVersion===undefined||s.pendingEncounter.stealthRulesVersion===1,'隐身规则版本无效');
         assert(s.pendingEncounter.progressionRulesVersion===undefined||[1,2,3].includes(s.pendingEncounter.progressionRulesVersion),'成长属性规则版本无效');
@@ -695,26 +752,33 @@ export function parseSave(raw,content) {
     const petContent=content.pets?Pets.migratePetDeckRules(s,content):content;
     if(s.pendingEncounter){
         const encounter=content.encounters.find(e=>e.id===s.pendingEncounter.encounterId);
-        assert(JSON.stringify(s.pendingEncounter.dungeonMonsterIds)===JSON.stringify(encounter?.monsterIds)&&JSON.stringify(s.pendingEncounter.dungeonMonsterSlots)===JSON.stringify(encounter?.monsterSlots),'副本阵容记录无效');
+        assert(JSON.stringify(s.pendingEncounter.dungeonMonsterIds)===JSON.stringify(journeyEnemyFormation(encounter,dungeonFor(content,s.zone),s.pendingEncounter.party).ids)&&JSON.stringify(s.pendingEncounter.dungeonMonsterSlots)===JSON.stringify(journeyEnemyFormation(encounter,dungeonFor(content,s.zone),s.pendingEncounter.party).slots),'副本阵容记录无效');
         assert(!encounter?.blocked?.length&&!dungeonProgress(s)?.[s.zone]?.cleared.includes(encounter?.id),'副本战斗记录无效');
     }
-    if(content.pets){validatePetWorld(s,content);Pets.validatePets(s,petContent);if(s.pendingEncounter?.party){assert(JSON.stringify(s.pendingEncounter.party)===JSON.stringify(coopParty(s,playerSpec(s,content))||Pets.partySpecs(s,petContent,playerSpec(s,content))),'存档阵容无效');const encounter=content.encounters.find(e=>e.id===s.pendingEncounter.encounterId)||specialEncounter(s,content,s.pendingEncounter.encounterId);assert(JSON.stringify(s.pendingEncounter.monster)===JSON.stringify(encounter.monster||content.monsters[encounter.monsterId]),'存档敌人无效');assert(s.pendingEncounter.captureStock===(s.inventory[Pets.CAPTURE_ID]||0)&&s.pendingEncounter.heroLevel===s.level,'存档捕获记录无效');const ownedPets=ownedPetSpecies(s);if(s.pendingEncounter.ownedPets!==undefined)assert(JSON.stringify(s.pendingEncounter.ownedPets)===JSON.stringify(ownedPets),'存档捕获记录无效');else if((s.pendingEncounter.runes||[]).some(rune=>String(rune.key).includes('CatchPet')))assert(false,'存档捕获记录无效');}}
+    if(content.pets){validatePetMeetings(s);validatePetWorld(s,content);Pets.validatePets(s,petContent);if(s.pendingEncounter?.party){assert(JSON.stringify(s.pendingEncounter.party)===JSON.stringify(journeyParty(s,dungeonFor(content,s.zone),coopParty(s,playerSpec(s,content))||Pets.partySpecs(s,petContent,playerSpec(s,content),{traits:s.pendingEncounter.petTraitRulesVersion===1}))),'存档阵容无效');const encounter=content.encounters.find(e=>e.id===s.pendingEncounter.encounterId)||specialEncounter(s,content,s.pendingEncounter.encounterId);assert(JSON.stringify(s.pendingEncounter.monster)===JSON.stringify(encounter.monster||content.monsters[encounter.monsterId]),'存档敌人无效');assert(s.pendingEncounter.captureStock===(s.inventory[Pets.CAPTURE_ID]||0)&&s.pendingEncounter.heroLevel===s.level,'存档捕获记录无效');const ownedPets=ownedPetSpecies(s);if(s.pendingEncounter.ownedPets!==undefined)assert(JSON.stringify(s.pendingEncounter.ownedPets)===JSON.stringify(ownedPets),'存档捕获记录无效');else if((s.pendingEncounter.runes||[]).some(rune=>String(rune.key).includes('CatchPet')))assert(false,'存档捕获记录无效');}}
     if(s.pendingEncounter?.party){
-        assert(JSON.stringify(s.pendingEncounter.petIds)===JSON.stringify(s.coopRun?[]:s.formation.filter(Boolean)),'存档宠物奖励阵容无效');
+        assert(JSON.stringify(s.pendingEncounter.petIds)===JSON.stringify(journeyRewardPets(s,dungeonFor(content,s.zone),s.pendingEncounter.party)),'存档宠物奖励阵容无效');
         if(s.pendingEncounter.adventureParams){
             const expected=Pets.petParams(petContent),saved=s.pendingEncounter.adventureParams;
             const threatVersion=s.pendingEncounter.threatRulesVersion||0;
             const optional=new Set([
+                ...(s.pendingEncounter.captureRulesVersion!==1?['catchMinChance','catchMaxChance','catchEnragedDifficulty']:[]),
+                ...(s.pendingEncounter.specialCardRulesVersion!==1||threatVersion<3?['effectThreatSingleFreeze','effectThreatConversePositiveWard']:[]),
                 ...(threatVersion<5?['iceAreaAttackThreatRatio']:[]),
                 ...(threatVersion<1?['damageThreatRatio','splashDamageThreatRatio']:[]),
                 ...(threatVersion<2?['singleHealThreatRatio']:[]),
                 ...(threatVersion<3?['areaHealThreatRatio','effectThreatGlobal','effectThreatMiniAura','effectThreatRemovePositiveCharm','effectThreatRemoveNegativeCharm','effectThreatStealCharm','effectThreatCharms','effectThreatWards','effectThreatAreaCharm','effectThreatAreaWard','effectThreatAbsorb']:[]),
-                'mountSpeed',
+                'mountSpeed','gatherValue_flower','gatherValue_herb','gatherValue_stone','gatherValue_ore','gatherThreshold','gatherCellSize','gatherDensity','gatherDistance',
+                // Added exploration-only defaults do not affect an already-started battle.
+                // Older checkpoints may omit them; present values still require validation.
+                'monsterRespawnMs','fieldEncounterRadius','dungeonEncounterRadius',
                 ...(threatVersion<4?['splashManipulationThreatRatio','effectThreatStun','effectThreatRemovePositiveWard','effectThreatStealWard','effectThreatSymmetryWards','effectThreatReflectionShield','effectThreatAreaPowerPipBoost','effectThreatAreaCleanse','defensiveThreatWeight','tauntThreatWeight']:[]),
             ]);
             assert(Object.keys(saved).every(key=>Object.hasOwn(expected,key))&&Object.entries(expected).every(([key,value])=>!Object.hasOwn(saved,key)?optional.has(key):JSON.stringify(saved[key])===JSON.stringify(value)),'存档养成参数无效');
         }
     }
+    if(s.earthProgress!==undefined)assert(s.earthProgress.version===1&&Number.isInteger(s.earthProgress.step)&&s.earthProgress.step>=0&&s.earthProgress.step<=5,'地球章节记录无效');
+    validateEarthCityProgress(s.earthCityProgress);
     syncProgression(s,content); validDeck(s,content,s.deck);
     if(s.deckLayouts!==undefined)validateDeckLayouts(s,content,s.deckLayouts,s.activeDeckLayout);
     migrateDefaultPocket(s,content);
@@ -722,10 +786,12 @@ export function parseSave(raw,content) {
     migrateQuestPetRewards(s,content,rewardsFor);
     grantEggCompanion(s,content);
     syncEquipmentInstances(s,content);
+    if(content.pets)Pets.mergeOwnedPetSpecies(s,content);
     return s;
 }
 
 export function specialEncounter(save,content,id){
+    if(save.zone==='earth'&&String(id).startsWith('earth:'))return earthEncounter(content,id);
     if(!content.pets||typeof id!=='string')return null;
     const wild=id.startsWith('wild:')?content.pets[id.slice(5)]:null;
     const level=wild?Math.max(wild.unlockLevel,save.level):Number(id.slice(6));
@@ -738,17 +804,29 @@ export function specialEncounter(save,content,id){
     if(wild)Object.assign(monster,{speciesId:wild.id,unlockLevel:wild.unlockLevel});
     return {id,zone:save.zone,monster};
 }
+function settleCapturedPets(save,content,battle){
+    const pending=save.pendingEncounter;if(!pending||pending.petCapturesSettled)return;
+    const records=Object.values(ownedPetRecords(save));
+    for(const id of battle.captured||[]){
+        assert(content.pets[id],'未知宠物');
+        const existing=records.find(p=>p.speciesId===id);
+        assert(!existing||save.pets[save.petInstanceVersion===1?existing.id:existing.speciesId],'请先加载已拥有宠物的详情');
+    }
+    for(const [index,id] of (battle.captured||[]).entries())Pets.addPet(save,content,id,0,{traits:battle.capturedTraits?.[index]||{},captured:true});
+    pending.petCapturesSettled=true;
+}
 export function settleParty(save,content,battle,{retreat=false}={}){
     settleRunes(save,battle);
     const pending=save.pendingEncounter,p=Pets.petParams(content);
-    if(save.coopRun){settleCoopHealth(save,battle);return;}
-    save.heroHp=battle.unitsById.hero.hp;
-    if(battle.winner!=='near'||retreat)save.heroHp=Math.max(save.heroHp,Math.ceil(battle.unitsById.hero.maxHp*p.defeatHp));
+    if(save.petTraitEncounters&&battle.sides.far.some(u=>u.hp<=0))delete save.petTraitEncounters[pending.encounterId];
+    if(save.coopRun){settleCoopHealth(save,battle);if(!retreat)settleCapturedPets(save,content,battle);return;}
+    save.heroHp=dungeonLanguageBaseHp(battle.unitsById.hero);
+    if(battle.winner!=='near'||retreat)save.heroHp=Math.max(save.heroHp,Math.ceil((battle.unitsById.hero.languageBaseMaxHp||battle.unitsById.hero.maxHp)*p.defeatHp));
     for(const u of battle.sides.near)if(u.speciesId){const pet=save.pets[save.petInstanceVersion===1?u.id:u.speciesId];if(pet)pet.hp=u.hp;}
     save.inventory[Pets.CAPTURE_ID]=Math.max(0,(save.inventory[Pets.CAPTURE_ID]||0)-(battle.captureUsed||0));
     Pets.retireCaptureCrystals(save,content,{keepActiveBattle:false});
     if(!retreat){
-        for(const id of battle.captured||[])Pets.addPet(save,content,id);
+        settleCapturedPets(save,content,battle);
         if(battle.winner==='near')for(const id of pending.petIds||[]){const pet=save.pets[id];pet.xp+=pending.dungeonMonsterIds?battle.monsterTemplates.reduce((sum,m)=>sum+m.xp,0):battle.monsterTemplates[0].xp;pet.level=Pets.petXpLevel(pet.xp,content);}
     }
 }

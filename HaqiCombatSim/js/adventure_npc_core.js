@@ -2,6 +2,18 @@ import {trainingPoints} from './adventure_learning_core.js';
 import {mountDirectSale} from './adventure_mounts_core.js';
 
 const schools={fire:986,ice:987,storm:988,life:990,death:991};
+// Accepted quests take priority over optional chat, even when not tracked.
+export function npcHasActiveQuest(save,content,npcId) {
+    const matches=id=>id!=null&&String(id)===String(npcId);
+    return [...(content.quests||[]),...(content.catalogQuests?.quests||[])].some(quest=>{
+        const state=save.quests?.[quest.id];
+        if(!state?.accepted||state.claimed)return false;
+        return matches(quest.startNpc)||matches(quest.endNpc)
+            ||quest.goals?.some(goal=>goal.kind==='talk'&&matches(goal.id))
+            ||quest.groups?.some(group=>group.kind==='talk'&&group.items.some(item=>matches(item.id)))
+            ||quest.talks?.some(talk=>matches(talk.npcId));
+    });
+}
 export function npcItemLimits(item) {
     if(item?.exchangeLimits)return item.exchangeLimits;
     const row=item?.sourceRecord,template=row?.[18];
@@ -15,7 +27,7 @@ export function installNpcCatalog(content,catalog) {
     for(const npc of catalog.npcs){
         npc.hidden??=npc.zone==='town'&&!chapterNpcIds.has(npc.id)&&!npcServices(content,npc).length;
         content.npcs[npc.id]??=structuredClone(npc);
-        if(content.npcs[npc.id].zone===npc.zone)Object.assign(content.npcs[npc.id],{buttons:npc.buttons,instanceId:npc.instanceId});
+        if(content.npcs[npc.id].zone===npc.zone)Object.assign(content.npcs[npc.id],{buttons:npc.buttons,instanceId:npc.instanceId,sex:npc.sex,age:npc.age});
     }
 }
 export function npcServices(content,npc) {
@@ -116,22 +128,45 @@ function checkNpcOffer(save,content,offer,access) {
         if(offer.kind==='shop'&&id===22000)return deny('特殊兑换费用尚未接入');
         costs.set(id,(costs.get(id)||0)+count);
     }
-    const price=[...costs].map(([id,count])=>`${count}${id===22000?'训练点':content.items[id]?.name||'货币'}`).join('、')||'免费';
+    const price=formatNpcCosts(content,[...costs]);
     for(const [id,count] of costs)if((id===22000?trainingPoints(save,content):save.inventory[id]||0)<count)return {...deny(`需要${price}`),price,costs:[...costs],reward,key};
     return {allowed:true,reason:price,price,costs:[...costs],reward,key};
+}
+export function formatNpcCosts(content,costs,times=1) {
+    return (costs||[]).map(([id,count])=>`${count*times}${id===22000?'训练点':content.items[id]?.name||'货币'}`).join('、')||'免费';
+}
+// How many times this exchange can be repeated: the tighter of the wallet and the remaining hold cap.
+export function npcPurchaseBounds(save,content,offer,access={}) {
+    const status=npcOfferStatus(save,content,offer,access);
+    if(!status.allowed||offer.kind!=='shop')return {...status,maxCount:status.allowed?1:0};
+    const unit=status.reward.cnt;
+    let max=Number.MAX_SAFE_INTEGER;
+    for(const [id,count] of status.costs){
+        const held=id===22000?trainingPoints(save,content):(save.inventory[id]||0);
+        max=Math.min(max,Math.floor(held/count));
+        max=Math.min(max,Math.floor(Number.MAX_SAFE_INTEGER/count));
+    }
+    const limits=npcItemLimits(content.npcCatalog.items[offer.itemId]);
+    max=Math.min(max,Math.floor((limits.maxCount-(save.inventory[offer.itemId]||0))/unit));
+    max=Math.min(max,Math.floor(Number.MAX_SAFE_INTEGER/unit));
+    if(!Number.isSafeInteger(max)||max<1)max=1;
+    return {...status,maxCount:max};
 }
 export function purchaseNpcOffer(save,content,action,access={}) {
     const npc=content.npcCatalog?.npcs.find(n=>n.instanceId===action.npcInstanceId&&n.zone===save.zone);
     if(!npc)throw Error('请前往这位居民所在的岛屿');
     const offer=npcOffers(content,npc).find(r=>r.id===action.offerId);
     if(!offer)throw Error('商品或课程不存在');
-    const status=npcOfferStatus(save,content,offer,access);
+    const status=npcPurchaseBounds(save,content,offer,access);
     if(action.paidByTest)throw Error('语言课程仅发放限额奖励，请使用货币购买');
     if(!status.allowed)throw Error(status.reason);
-    for(const [id,count] of status.costs){
-        if(id===22000)save.trainingPointsSpent=(save.trainingPointsSpent||0)+count;
-        else save.inventory[id]-=count;
+    const count=action.count??1;
+    if(!Number.isSafeInteger(count)||count<1||count>status.maxCount)throw Error('购买数量无效');
+    for(const [id,unitCost] of status.costs){
+        const total=unitCost*count;
+        if(id===22000)save.trainingPointsSpent=(save.trainingPointsSpent||0)+total;
+        else save.inventory[id]-=total;
     }
     if(offer.kind==='mentor')save.cards[status.key]=content.cardLibrary.find(r=>r.key===status.key).copies;
-    else save.inventory[offer.itemId]=(save.inventory[offer.itemId]||0)+status.reward.cnt;
+    else save.inventory[offer.itemId]=(save.inventory[offer.itemId]||0)+status.reward.cnt*count;
 }

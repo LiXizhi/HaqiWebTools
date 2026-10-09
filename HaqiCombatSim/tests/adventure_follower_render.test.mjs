@@ -8,7 +8,7 @@ test('follower stays visible while its sheet is unavailable, independently of ri
     const originals=keys.map(key=>Object.getOwnPropertyDescriptor(globalThis,key));
     const ctx=new Proxy({measureText:()=>({width:20}),createRadialGradient:()=>({addColorStop(){}})},
         {get:(object,key)=>key in object?object[key]:()=>{}});
-    Object.assign(globalThis,{matchMedia:()=>({matches:true}),window:{devicePixelRatio:1},document:{createElement:()=>({getContext:()=>ctx})}});
+    Object.assign(globalThis,{matchMedia:()=>({matches:true}),window:{devicePixelRatio:1},document:{createElement:()=>({style:{},getContext:()=>ctx})}});
     try {
         const catalog=JSON.parse(fs.readFileSync(new URL('../data/adventure/mount-catalog.json',import.meta.url)));
         const mount=catalog.mounts.find(row=>row.rideable);

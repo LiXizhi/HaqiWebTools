@@ -1,5 +1,7 @@
 import { resolveMountDrawPose, MOUNT_DIRECTIONS } from './adventure_mounts_core.js';
 import { createHeroActor, updateHeroActor, BODY_TO_HEAD, headBreath, walkFrameIndex } from './hero_pose_core.js';
+import {publicPhotoHead} from './photo_head_core.js';
+import {verifyHeadAsset} from './photo_head_images.js';
 
 // One UI scheduler; detached portraits release their actor state automatically.
 const views=new Set();let viewFrame=0;
@@ -14,41 +16,69 @@ function scheduleView(view){views.add(view);if(!viewFrame)viewFrame=requestAnima
  * Hosts own placement, time, scene ordering and animation. UI and world use draw().
  */
 export class HeroRenderer {
-    constructor(manifest, catalog, { local = false, baseURL = new URL('../', String(import.meta.url)) } = {}) {
+    constructor(manifest, catalog, { local = false, baseURL = new URL('../', String(import.meta.url)),prepareBounds=null } = {}) {
         this.manifest = manifest; this.catalog = catalog; this.local = local; this.baseURL = baseURL;
         this.images = new Map(); this.pending = new Map(); this.sourceBounds = new Map();
         this.prepared=new Map();
+        this.prepareBounds=prepareBounds;
+        this.customHeads=new Map();this.failedHeads=new Set();this.customVersions=new Map();this.headReferences=new WeakMap();
+    }
+    headArt(id){return this.customHeads.get(id)||this.manifest.heads[id];}
+    registerHead(value,alias=true){
+        if(!alias&&this.headReferences.has(value))return this.headReferences.get(value);
+        const head=publicPhotoHead(value),previous=this.customHeads.get(head.id);
+        const signature=JSON.stringify(head);let key=this.customVersions.get(signature);
+        if(!key){key=head.id+'@'+this.customVersions.size;this.customVersions.set(signature,key);this.customHeads.set(key,head);}
+        this.headReferences.set(value,key);
+        if(alias&&this.failedHeads.delete(key))this.prepared.clear();
+        // A role's immutable descriptor selects its own renderer key: tuning one
+        // head must not overwrite another role's previously saved connection points.
+        if(alias||!previous){
+            this.customHeads.set(head.id,head);
+            if(previous?.sha256!==head.sha256){this.failedHeads.delete(head.id);this.images.delete('head:'+head.id);this.pending.delete('head:'+head.id);}
+            if(JSON.stringify(previous)!==signature)this.prepared.clear();
+        }
+        return key;
     }
     createActor(seed) { return createHeroActor(seed); }
-    headId(gender,id){return this.manifest.heads[id]?.gender===gender?id:gender==='female'?'elf-girl':'elf-boy';}
+    headId(gender,id){return !this.failedHeads.has(id)&&this.headArt(id)?.gender===gender?id:gender==='female'?'elf-girl':'elf-boy';}
     bodyVariant(gender,id){const variant=this.manifest.bodyVariants?.[id];return variant?.gender===gender?variant:null;}
     walkKey(gender,id){return 'walk:'+(this.bodyVariant(gender,id)?.id||gender);}
     updateActor(actor, input) { return updateHeroActor(actor, input); }
     async image(id, art, mountAsset = false) {
         if (this.images.has(id)) return this.images.get(id);
         if (!this.pending.has(id)) {
-            const promise = new Promise((resolve, reject) => {
+            const promise = (async()=>{
+              // Personal art uses its validated CDN even in the explicit offline-art mode.
+              if(this.customHeads.has(art.id))await verifyHeadAsset(art);
+              return new Promise((resolve, reject) => {
                 const image = new Image(); image.crossOrigin = 'anonymous';
                 const local = mountAsset && art.local?.startsWith('assets/') ? 'demos/mount-lab/'+art.local : art.local;
-                const localURL=this.local?new URL(local,this.baseURL):null;
+                const useLocal=this.local&&!this.customHeads.has(art.id);
+                const localURL=useLocal?new URL(local,this.baseURL):null;
                 if(localURL&&art.sha256)localURL.searchParams.set('v',art.sha256);
-                const url = this.local ? localURL.href : art.cdn;
+                const url = useLocal ? localURL.href : art.cdn;
                 if (!url) { reject(new Error(`资源尚未登记 CDN：${id}`)); return; }
-                image.onload = () => {
+                image.onload = async () => {
                     if (art.width && (image.width !== art.width || image.height !== art.height)) { reject(new Error(`资源尺寸不符：${id}`)); return; }
+                    // Decode before publishing to world/UI drawing, including newly streamed peers.
+                    if(image.decode)try{await image.decode();}catch{/* Preserve the original drawing fallback. */}
                     this.images.set(id,image); resolve(image);
                 };
                 image.onerror = () => reject(new Error(`资源加载失败：${id}`)); image.src = url;
-            });
+              });
+            })();
             this.pending.set(id,promise);
             promise.catch(() => this.pending.delete(id));
         }
         return this.pending.get(id);
     }
     appearance(save,{mounted=true}={}) {
+        let resolvedHead=save.headId;
+        if(save.customHead)try{if(save.customHead.id===save.headId&&save.customHead.gender===(save.appearance==='girl'?'female':'male'))resolvedHead=this.registerHead(save.customHead,false);}catch{/* Invalid cosmetics never prevent play. */}
         const mountId=this.catalog.mountByItem?.[save.mountId]?.mountId;
         const mount=mounted&&save.mountId?this.catalog.mounts.find(m=>m.id===mountId||Object.hasOwn(m.commerce||{},save.mountId)):null;
-        return {gender:save.appearance==='girl'?'female':'male',mount:mount||null,headId:save.headId,bodyId:save.bodyId};
+        return {gender:save.appearance==='girl'?'female':'male',mount:mount||null,headId:resolvedHead,bodyId:save.bodyId};
     }
     ensure(appearance){
         appearance={...appearance,headId:this.headId(appearance.gender||'male',appearance.headId)};
@@ -63,11 +93,21 @@ export class HeroRenderer {
         const originals = keys.filter(key=>!this.manifest.bodies[key].selfContained).map(key => this.image('original:'+key,this.manifest.bodies[key].source));
         if (mount) originals.push(this.image('mount:'+mount.id,mount.art,true));
         await Promise.all(originals);
+        if(this.prepareBounds)for(const key of keys){const body=this.manifest.bodies[key];if(body.selfContained)continue;
+            for(const [cell,frame] of body.frames.entries()){const id=key+':'+cell;if(this.sourceBounds.has(id))continue;
+                const prepared=await this.prepareBounds(this.images.get('original:'+key),frame.crop);
+                if(prepared)this.sourceBounds.set(id,prepared);else this.originalBounds(key,cell);
+            }
+        }
         const results = await Promise.allSettled(keys.map(async key => {
             const body=this.manifest.bodies[key];
-            if(this.manifest.heads[headId])await Promise.all([
+            if(this.headArt(headId))await Promise.all([
                 body.walk?.idleFrames ? this.image(this.walkKey(gender,bodyId),this.bodyVariant(gender,bodyId)||body.walk) : this.image('body:'+(body.atlas||key),body),
-                this.image('head:'+headId,this.manifest.heads[headId])]);
+                this.image('head:'+headId,this.headArt(headId)).catch(async error=>{
+                    if(!this.customHeads.has(headId))throw error;
+                    this.failedHeads.add(headId);const fallback=gender==='female'?'elf-girl':'elf-boy';
+                    await this.image('head:'+fallback,this.manifest.heads[fallback]);
+                })]);
         }));
         const walk=this.manifest.bodies[gender+'-walk'].walk;
         if(walk&&!walk.idleFrames)await this.image('walk:'+gender,walk).catch(()=>null);
@@ -108,7 +148,7 @@ export class HeroRenderer {
         const source=this.images.get('original:'+pose.key);
         if(!body.selfContained&&!source)return {ready:false};
         const headId=this.headId(appearance.gender||'male',appearance.headId||body.defaultHead);
-        const heads=this.manifest.heads[headId],headImage=this.images.get('head:'+headId);
+        const heads=this.headArt(headId),headImage=this.images.get('head:'+headId);
         const combined=!!body.walk?.idleFrames;
         const walkKey=this.walkKey(appearance.gender||'male',appearance.bodyId);
         let bodyImage=this.images.get(combined?walkKey:'body:'+(body.atlas||pose.key));
@@ -150,7 +190,9 @@ export class HeroRenderer {
             const breath=options.breath||headBreath(options.time||0,options.phase||0,options.reducedMotion||original);
             // Pivot at the attachment point; sub-pixel breathing stays inside neck overlap.
             ctx.save();ctx.translate(neck[0]+breath.x*r.w/78,neck[1]+breath.y*r.w/78);if(breath.angle)ctx.rotate(breath.angle);
-            sheet(headImage,h.crop,{...headRect,x:headRect.x-neck[0],y:headRect.y-neck[1]});ctx.restore();
+            const headDest={...headRect,x:headRect.x-neck[0],y:headRect.y-neck[1]};
+            if(h.mirrorX){ctx.translate(2*headDest.x+headDest.w,0);ctx.scale(-1,1);}
+            sheet(headImage,h.crop,headDest);ctx.restore();
         }
         if(pose.mount&&mountImage&&pose.foreground.length){
             ctx.save();ctx.beginPath();
@@ -209,13 +251,15 @@ export class HeroRenderer {
     }
 }
 
-export function heroPortrait(assets,save,w=90,h=95,{facing=0,...options}={}){
+export function heroPortrait(assets,save,w=90,h=95,{facing=0,mounted=false,...options}={}){
     if(!assets.hero){const canvas=document.createElement('canvas');canvas.width=w*2;canvas.height=h*2;assets.tile?.(canvas.getContext('2d'),'sprites',(save.appearance==='girl'?12:8)+facing,0,0,w*2,h*2);return canvas;}
-    const view=assets.hero.createView(assets.hero.appearance(save,{mounted:false}),{width:w*2,height:h*2,x:0,y:0,bodyRect:{x:0,y:0,w:w*2,h:h*2},facing,animate:true,...options});
+    const appearance=assets.hero.appearance(save,{mounted});
+    const framing=appearance.mount?{x:w,y:h*1.65,size:w}:{x:0,y:0,bodyRect:{x:0,y:0,w:w*2,h:h*2}};
+    const view=assets.hero.createView(appearance,{width:w*2,height:h*2,...framing,facing,animate:true,...options});
     view.node.className='art';view.node.style.width=w+'px';view.node.style.height=h+'px';view.ready.catch(()=>{});return view.node;
 }
 
-export async function loadHeroLibrary(readJson,catalog,{local=false,sprites,sourceImages,getBounds}={}){
+export async function loadHeroLibrary(readJson,catalog,{local=false,sprites,sourceImages,getBounds,prepareBounds=null}={}){
     let manifest;
     try{manifest=await readJson('data/adventure/hero-art.json');}
     catch{
@@ -224,11 +268,30 @@ export async function loadHeroLibrary(readJson,catalog,{local=false,sprites,sour
         for(const [key,source] of Object.entries(catalog.sheets))manifest.bodies[key]={source:{...source,local:source.local.startsWith('assets/')?'demos/mount-lab/'+source.local:source.local},frames:Array.from({length:4},(_,i)=>({crop:[i%2*source.width/2,Math.floor(i/2)*source.height/2,source.width/2,source.height/2],neck:[0,0]}))};
         for(const [gender,row] of [['male',2],['female',3]]){const cuts=[0,323,650,929,1254].map(v=>v*sprites.height/1254);manifest.bodies[gender+'-walk']={source:sprites,trimOriginal:true,frames:Array.from({length:4},(_,i)=>({crop:[i*sprites.width/4,cuts[row],sprites.width/4,cuts[row+1]-cuts[row]],neck:[0,0]}))};}
     }
-    const hero=new HeroRenderer(manifest,catalog,{local});
+    const hero=new HeroRenderer(manifest,catalog,{local,prepareBounds});
     hero.getWalkingBounds=getBounds;
     if(sourceImages?.has('sprites'))for(const gender of ['male','female']){
         const key=gender+'-walk';if(!manifest.bodies[key].selfContained)hero.images.set('original:'+key,sourceImages.get('sprites'));
     }
     await Promise.allSettled(['male','female'].map(gender=>hero.ensure({gender})));
     return hero;
+}
+
+// Static UI avatar: draw the selected head atlas directly, without body or animation.
+export function heroHeadPortrait(assets,save,size=52){
+    const canvas=document.createElement('canvas');canvas.width=canvas.height=size*2;
+    canvas.style.width=canvas.style.height=size+'px';canvas.setAttribute('role','img');canvas.setAttribute('aria-label',save.name||'我');
+    const hero=assets.hero;if(!hero)return canvas;
+    const appearance=hero.appearance(save,{mounted:false}),id=hero.headId(appearance.gender,appearance.headId),sheet=hero.headArt(id);
+    if(!sheet)return canvas;
+    const paint=(image,art)=>{
+        const frame=art.frames[BODY_TO_HEAD[0]],crop=frame.crop,scale=Math.min(canvas.width/crop[2],canvas.height/crop[3]);
+        const ctx=canvas.getContext('2d');ctx.save();if(frame.mirrorX){ctx.translate(canvas.width,0);ctx.scale(-1,1);}ctx.drawImage(image,...crop,(canvas.width-crop[2]*scale)/2,(canvas.height-crop[3]*scale)/2,crop[2]*scale,crop[3]*scale);ctx.restore();
+    };
+    void hero.image('head:'+id,sheet).then(image=>paint(image,sheet)).catch(async()=>{
+        if(!hero.customHeads.has(id))return;hero.failedHeads.add(id);
+        const fallback=appearance.gender==='female'?'elf-girl':'elf-boy',art=hero.headArt(fallback);
+        if(art)await hero.image('head:'+fallback,art).then(image=>paint(image,art)).catch(()=>{});
+    });
+    return canvas;
 }

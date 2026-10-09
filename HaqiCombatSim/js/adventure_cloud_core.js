@@ -10,11 +10,12 @@ export function checkedProgress(raw, content, dataset) {
     // Only the game's known fields travel to the cloud; SDK state never enters a save.
     // These optional fields are validated by parseSave but do not exist until
     // the first online tick/claim. Keep them across role reloads and cloud sync.
-    // 'magicStarFollow' and 'mountHidden' are cosmetic preferences kept in the device's
-    // IndexedDB runtime record. They are listed here only so role reloads keep them;
+    // 'magicStarFollow', 'mountHidden' and 'petMeetings' stay in the device's IndexedDB
+    // runtime record. They are listed here only so role reloads keep them;
     // durableSave() removes them before every durable or cloud write, so they never
-    // leave the device.
-    const keys=[...Object.keys(createAdventure(content)),'petFoodSlots','headId','bodyId','magicStarClaims','checkin','fishingRecords','magicStarFollow','mountHidden','coopRun','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents','petInstanceVersion','petOwnerId','petWorld','petFileRefs','petPages'];
+    // leave the device. Ordinary pet meetings are not long-term memories.
+    const keys=[...Object.keys(createAdventure(content)),'towerRecords','dungeonMode','petFoodSlots','headId','bodyId','customHead','magicStarClaims','languageSpeechClaims','checkin','fishingRecords','magicStarFollow','mountHidden','petMeetings','dungeonExploration','coopRun','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents','petInstanceVersion','petOwnerId','petWorld','petFileRefs','petPages'];
+    keys.push('earthProgress','earthCityProgress','earthReturn','cityReturnStack','cityFallback');
     const save = Object.fromEntries(keys.filter(key=>parsed[key]!==undefined).map(key => [key, parsed[key]]));
     const battle = save.pendingEncounter ? restorePveBattle(dataset, content, save.pendingEncounter) : null;
     for(const rune of save.pendingEncounter?.runes||[]){

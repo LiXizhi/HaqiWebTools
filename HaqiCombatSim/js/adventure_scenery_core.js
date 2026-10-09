@@ -13,6 +13,8 @@ export function sceneryAtlases(world){
     if(!world?.layout)return {building,environment,terrain:[]};
     const zone=world.zone==='camp'?'town':world.zone;
     if(BUILDING_ZONES.has(zone))building.push(zone);
+    for(const row of world.buildings||[])if(row.atlas&&!building.includes(row.atlas))building.push(row.atlas);
+    if(world.isCityDungeon&&world.dungeon?.scene.generated)building.push('town');
     if(world.trees?.some(tree=>tree.snow))environment.push('trees');
     const kinds=new Set();
     for(const region of world.layout.regions||[]){

@@ -2,7 +2,7 @@ import {fishingTuning as tuning,fishWeight,fishingSpecies,fishSize} from './adve
 import {createRng,hashSeed} from './rng_core.js';
 import { readStamina } from './adventure_fishing_core.js';
 import { createCloseButton } from './view_adventure_controls.js';
-import { setText } from './locale_runtime.js';
+import {setText,fill} from './locale_runtime.js';
 import { drawFishingScene, fishingCatchLayout } from './view_adventure_fishing_art.js';
 import {fishingPullMotion,FISHING_PULL_MS} from './view_adventure_fishing_motion.js';
 
@@ -11,6 +11,8 @@ const KEY_DIRECTION={ArrowUp:'up',ArrowRight:'right',ArrowDown:'down',ArrowLeft:
 const CAST_MS=600, REEL_MS=1100, SHOW_MS=4200;
 // Transient scene state; the callback remains the only inventory/persistence boundary.
 export function createSceneFishing(root, cb, { el, button }) {
+    // Optional presentation clock for deterministic replay; normal play uses real time.
+    const clock=cb.clock||(()=>performance.now());
     const layer=el('div','scene-fishing');layer.hidden=true;
     const canvas=el('canvas','fishing-effects');canvas.setAttribute('aria-hidden','true');
     const context=canvas.getContext('2d');
@@ -19,7 +21,7 @@ export function createSceneFishing(root, cb, { el, button }) {
     const directions=DIRECTIONS.map(d=>{
         const node=button('',()=>act(d.id),'fishing-direction');
         node.append(el('span','fishing-direction-glyph',`${d.symbol} ${d.label}`));
-        node.dataset.direction=d.id;node.setAttribute('aria-label',`向${d.label}提竿`);
+        node.dataset.direction=d.id;node.setAttribute('aria-label',fill(`向{v0}提竿`,{v0:String(d.label)}).text);
         node.setAttribute('aria-keyshortcuts',`Arrow${d.id[0].toUpperCase()}${d.id.slice(1)}`);
         return node;
     });
@@ -49,7 +51,7 @@ export function createSceneFishing(root, cb, { el, button }) {
         const id=Number(species.value)||fishingSpecies[0],rows=model.save.fishingRecords?.byFish[id]||[];
         recordList.replaceChildren();
         if(!rows.length)recordList.append(el('p','','还没有这条鱼的纪录，去试试吧。'));
-        rows.forEach((row,i)=>recordList.append(el('div','fishing-record-row',el('span','',`第 ${i+1} 名`),el('strong','',fishWeight(row.grams)))));
+        rows.forEach((row,i)=>recordList.append(el('div','fishing-record-row',el('span','',fill(`第 {v0} 名`,{v0:String(i+1)}).text),el('strong','',fishWeight(row.grams)))));
     }
     function say(text){setText(status,text);}
     function net(){return model.assets.content.fishing.nets.find(row=>row.id===netId);}
@@ -67,18 +69,18 @@ export function createSceneFishing(root, cb, { el, button }) {
             const option=el('option','',`${content.items[item.id].name} ×${quantity}`);
             option.value=String(item.id);option.disabled=!quantity;option.selected=item.id===netId;select.append(option);
         }
-        setText(stamina,`精力 ${readStamina(save,content)} · 渔获 ${count}`);
+        setText(stamina,fill(`精力 {v0} · 渔获 {v1}`,{v0:String(readStamina(save,content)),v1:String(count)}).text);
         potions.replaceChildren();
         for(const item of catalog.potions){
             if(item.blocked||!(save.inventory[item.id]>0))continue;
-            potions.append(button(`使用${content.items[item.id].name} ×${save.inventory[item.id]}`,()=>{
+            potions.append(button(fill(`使用{v0} ×{v1}`,{v0:String(content.items[item.id].name),v1:String(save.inventory[item.id])}).text,()=>{
                 if(busy())return;
                 const answer=cb.action({type:'stamina-potion',itemId:item.id});say(answer?.message||'药剂使用失败，请重试。');lastInventory='';
             },'secondary'));
         }
     }
     select.addEventListener('change',()=>{if(busy())return;netId=Number(select.value);say(net()?.absolutelyHit?'必中道具会自动提竿':'咬钩后，按金色方向提竿；方向键或 WASD 也可以');});
-    function state(next,time=performance.now()){
+    function state(next,time=clock()){
         phase=next;at=time;layer.dataset.phase=next;
         layer.dataset.direction=next==='bite'?expectedDirection||'':'';
         for(const node of directions){node.dataset.active=String(next==='bite'&&node.dataset.direction===expectedDirection);}
@@ -102,7 +104,7 @@ export function createSceneFishing(root, cb, { el, button }) {
     }
     function act(direction){
         if(!active)return;
-        const now=performance.now();
+        const now=clock();
         advance(now);
         // Water taps and Space only cast; they cannot substitute for a direction.
         if(busy()&&!direction)return;
@@ -133,7 +135,7 @@ export function createSceneFishing(root, cb, { el, button }) {
         lastPull=time;restPenalized=false;
         if(rounds>=pullGoal){finish(pulls>0,time,pulls?'稳稳收鱼！':'这次没有按中，再试一次吧');return;}
         nextBite=time+fightRng.int(tuning.fishingRestMinMs,tuning.fishingRestMaxMs);
-        state('rest',time);say(`${correct?'拉住了！':pulls?'鱼还在！这次会小一点':'没关系，下次按中就有收获'} ${rounds}/${pullGoal} · 松线稍等`);
+        state('rest',time);say(fill(`{v0} {v1}/{v2} · 松线稍等`,{v0:String(correct?'拉住了！':pulls?'鱼还在！这次会小一点':'没关系，下次按中就有收获'),v1:String(rounds),v2:String(pullGoal)}).text);
     }
     function finish(hit,time,message){
         if(!pending)return;
@@ -162,7 +164,7 @@ export function createSceneFishing(root, cb, { el, button }) {
             const start=phase==='wait'?biteAt:nextBite;
             const choices=DIRECTIONS.filter(d=>d.id!==expectedDirection);
             const chosen=choices[fightRng.int(0,choices.length-1)];expectedDirection=chosen.id;
-            state('bite',start);say(`向${chosen.label}提竿！ ${rounds+1}/${pullGoal}`);pulse(25);
+            state('bite',start);say(fill(`向{v0}提竿！ {v1}/{v2}`,{v0:String(chosen.label),v1:String(rounds+1),v2:String(pullGoal)}).text);pulse(25);
         }
         if(phase==='bite'){
             if(pending?.automatic)finish(true,time);

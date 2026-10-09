@@ -7,18 +7,20 @@ export function snapshotBattleStatus(battle) {
 
 // Observe the existing event boundary while the round resolves. These snapshots
 // belong only to playback: never append them to combat events or saved decisions.
+const snapshotPips=battle=>Object.fromEntries(Object.values(battle.unitsById).map(u=>[u.id,{...u.pips}]));
+
 export function captureBattlePresentation(battle,resolve) {
-    const initial=snapshotBattleStatus(battle),timeline=[];let cursor=battle.events.length;
+    const initial=snapshotBattleStatus(battle),initialPips=snapshotPips(battle),timeline=[];let cursor=battle.events.length;
     const previous=battle.onEvent,owned=Object.hasOwn(battle,'onEvent');
     const previousStatus=battle.onStatusEffect,ownedStatus=Object.hasOwn(battle,'onStatusEffect');
-    const flush=()=>{while(cursor<battle.events.length)timeline.push({event:battle.events[cursor++],status:snapshotBattleStatus(battle)});};
+    const flush=()=>{while(cursor<battle.events.length)timeline.push({event:battle.events[cursor++],status:snapshotBattleStatus(battle),pips:snapshotPips(battle)});};
     battle.onEvent=event=>{
         previous?.call(battle,event);
         flush();
     };
     battle.onStatusEffect=event=>{
         previousStatus?.call(battle,event);flush();
-        timeline.push({event,status:snapshotBattleStatus(battle)});
+        timeline.push({event,status:snapshotBattleStatus(battle),pips:snapshotPips(battle)});
     };
     try { resolve(); }
     finally {
@@ -26,9 +28,9 @@ export function captureBattlePresentation(battle,resolve) {
         if(ownedStatus)battle.onStatusEffect=previousStatus;else delete battle.onStatusEffect;
     }
     flush();
-    const visible=new Set(['cast','damage','heal','dot','hot','speak','fizzle','pass','capture','aura']);
+    const visible=new Set(['cast','damage','heal','dot','hot','speak','fizzle','pass','capture','aura','freeze','guardian','enrage']);
     const events=[];let status=initial;
-    for(const {event,status:next} of timeline){
+    for(const {event,status:next,pips} of timeline){
         const changed=JSON.stringify(next)!==JSON.stringify(status);
         // Replay the incoming spell from the mirror owner toward its attacker.
         // This is visual only: no extra cast, costs, secondary effects or RNG.
@@ -36,12 +38,12 @@ export function captureBattlePresentation(battle,resolve) {
             type:'cast',sourceType:'reflection',label:'reflection',card:event.card,
             caster:event.caster,target:event.target,round:event.round,status,
         });
-        if(visible.has(event.type)||changed)events.push({...event,sourceType:event.type,type:visible.has(event.type)?event.type:'status',status:next});
+        if(visible.has(event.type)||changed)events.push({...event,sourceType:event.type,type:visible.has(event.type)?event.type:'status',status:next,pips});
         status=next;
     }
     const final=snapshotBattleStatus(battle);
     if(JSON.stringify(final)!==JSON.stringify(status))events.push({type:'status',status:final});
-    return {initial,events};
+    return {initial,initialPips,events};
 }
 
 const identity=effect=>`${effect.kind}:${effect.effectId??effect.stackKey??''}:${effect.school}:${effect.negative}:${effect.label}`;

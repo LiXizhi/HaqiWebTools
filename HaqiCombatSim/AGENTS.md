@@ -5,7 +5,7 @@
 ## 先读什么
 
 1. [docs/plan.md](docs/plan.md) — 阶段任务与当前进度
-2. [docs/architecture.md](docs/architecture.md) — 模块分层与数据流
+2. [docs/architecture.md](docs/architecture.md#架构图) — 先读架构图：游戏与实验室分层、批量模拟、本地存档与云同步；调整模块边界或数据流时同步更新此处图示，README 只保留入口链接
 3. [docs/lua-mapping.md](docs/lua-mapping.md) — 任何数值公式改动前必须对照的 Lua 源码表
 4. [docs/adventure.md](docs/adventure.md) — `Haqi.html` 的内容、存档、资源与已实施范围
 5. [docs/player-import.md](docs/player-import.md)、[docs/async-pvp.md](docs/async-pvp.md)、[docs/pets-vip-innovation.md](docs/pets-vip-innovation.md)、[docs/card-i18n.md](docs/card-i18n.md) — 2026-09-18 计划需求（真实用户数据、异步 PVP、帕鲁式宠物/VIP 口粮、卡牌多语言）；实现前先读，不要编造生产接口、VIP 网关、翻译服务或凭据
@@ -31,12 +31,14 @@
 
 ### 可复用技能与源码
 
-先定位 `lxzsrc/maisi/`（本机 `/Users/mac/lxzsrc/maisi`），读取适用技能再执行。下面路径相对于该仓库；其他机器按实际 checkout 位置解析，不把绝对路径写进游戏运行时代码。
+先定位 `lxzsrc/apps/`（本机 `C:\lxzsrc\apps`），读取该仓库及目标项目的 `AGENTS.md` 和适用技能再执行。下面路径相对于 apps 仓库；其他机器按实际 checkout 位置解析，不把绝对路径写进游戏运行时代码。
+
+AIChat 及其 `school-teacher` 技能的唯一维护源位于 apps 仓库的 `official/apps/tools/AIChat/`；RSI/RRSI 工作流使用该仓库的 `.github/skills/ris/SKILL.md` 和目标注册表。不要到 `maisi` 或 `maisiDev` 查找、修改或同步 AIChat 的旧副本。
 
 | 用途 | 技能路径 |
 |---|---|
 | 角色图集、场景、道具生成，WebP 转换、CDN 上传与预览报告 | `.github/skills/art-asset-generator/SKILL.md` |
-| Keepwork SDK 的登录、PersonalPageStore 存储、资源上传及现有 CDN 库目录 | `maisi/maisi/webgames/tools/AIChat/skills/keepwork-web-dev/SKILL.md` |
+| Keepwork SDK 的登录、PersonalPageStore 存储、资源上传及现有 CDN 库目录 | `official/apps/tools/AIChat/skills/keepwork-web-dev/SKILL.md` |
 | 通过 Keepwork SDK CLI 压缩 WebP、上传用户 CDN、预览实际发布 URL | `.github/skills/keepwork-copilot/SKILL.md` |
 | 使用现有七牛配置上传文件到 Keepwork CDN | `.github/skills/upload-deploy-cdn-files/SKILL.md` |
 
@@ -54,9 +56,9 @@ SDK 源码可在 `lxzsrc/keepworkSDK/`（本机 `/Users/mac/lxzsrc/keepworkSDK`�
 
 ### Keepwork SDK 存储
 
-- 需要登录或跨设备存储时，优先使用 **Keepwork SDK**，不另造后端。云端进度使用 `sdk.personalPageStore.withWorkspace('HaqiAdventure')` 的作用域实例，保存和读取版本化 JSON。通用接口为 `createFile` / `readFile`；本游戏使用下述服务器 cache API 写入及缓存核验路径（2026-09-25 用户更新）。
+- 需要登录或跨设备存储时，优先使用 **Keepwork SDK**，不另造后端。云端进度使用 `sdk.personalPageStore.withWorkspace('HaqiAdventure')` 的作用域实例，保存和读取版本化 JSON。通用接口为 `createFile` / `readFile`；本游戏使用下述服务器 cache API 写入及成功应答路径（2026-09-30 用户更新）。
 - Keepwork 适配器放在浏览器 IO 层，保持 `*_core.js` 纯净。保留当前本地自动存档、JSON 导入/导出和访客体验；登录取消、网络失败不能阻断游戏。
-- personal workspace 的读写统一开启 cache API：`savePageData(path, 'content', text, false, true)` 暂存、`syncToGit(path, true)` 等待服务器缓存写入，再用 `getFileByFullPath(fullPath, undefined, true)` 核验；角色目录使用 `loadPage({useCache:true,useServerCache:true,...})`。保留版本冲突和账号校验，不再强制绕过缓存读取 Git。非启动必需数据首次使用时加载；钓鱼镜像仅在纪录变化时同步。
+- personal workspace 使用 Cache 接口（2026-09-30 用户更新）：游戏采用单客户端写入假设，登录读取服务器最新状态，后续读取以内存为主；未加载文件首次使用才读，主动刷新/重新登录才重新读取。整文件保存通过作用域 store 的 `savePageData(path, 'content', text, true, true, {directWrite:true})`，此 SDK option 默认关闭，仅本游戏启用；直接等待 pageCache PUT 成功，不做写前 GET 合并或写后 GET 核验，不再在每次保存时检查远端版本。能力标志 `supportsDirectCacheWrite` 缺失时兼容原 `savePageData(...,false,true)` + `syncToGit(path,true)` Cache 链路，待新版 SDK 发布后自动启用减请求路径。失败/超时/身份变化不清除本地待同步状态；保留账号隔离、同客户端写入顺序及本地未同步进度保护。
 - 同步记录存档版本与更新时间；加载云端存档仍走现有校验和战斗重演，处理本地/云端冲突后再替换进度，不能悄悄覆盖较新的进度。SDK token、密码和密钥不得进入游戏存档。
 - 按需加载 SDK，不为只使用本地存档的启动流程增加必需网络依赖。引入前核对登录和存储接口；实际账号的远端读写仍需按 QA 记录验证。
 
@@ -66,9 +68,9 @@ SDK 源码可在 `lxzsrc/keepworkSDK/`（本机 `/Users/mac/lxzsrc/keepworkSDK`�
 
 - **只允许使用已经托管在 Keepwork CDN 的第三方库。** 所有第三方 JS、CSS、ES module、Worker/WASM 配套依赖均须使用已存在且核验过的 Keepwork CDN 地址；禁止从 unpkg、jsDelivr、cdnjs、esm.sh 等其他 CDN 导入，也不以 npm 打包或本地复制绕过此规则。
 - 缺少 Keepwork CDN 版本时，选择已有库或用原生实现；不猜 URL、不引入外部 CDN 兜底。自己编写的项目模块仍可以使用相对路径。
-- 以 Maisi `keepwork-web-dev` 技能的 CDN 库目录为准，保持已有完整版本号；实际引入前验证地址与配套版本。不要因为库可用就额外引入，继续保持无构建的 ES modules / Vanilla JS 架构。
+- 以 apps 仓库中 AIChat 的 `keepwork-web-dev` 技能的 CDN 库目录为准，保持已有完整版本号；实际引入前验证地址与配套版本。不要因为库可用就额外引入，继续保持无构建的 ES modules / Vanilla JS 架构。
 
-Maisi 技能中已登记的相关地址（按需要选择，不要求全部加载）：
+该技能中已登记的相关地址（按需要选择，不要求全部加载）：
 
 | 库 | Keepwork CDN 地址 |
 |---|---|
@@ -82,6 +84,9 @@ Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 
 
 ## 验证
 
+- **战斗修改必跑快速回归（用户约定，2026-09-30）：** 每次修改战斗引擎、目标选择、卡牌交互、AI、宠物/坐骑、状态图标、倒计时、结算，或影响战斗的共享 UI/CSS 后，运行 `npm run test:battle`。新增战斗用例使用 `battle_*.test.mjs` 或更新脚本的收录规则；修复回归应补充可复现的行为测试。失败不得跳过或称作通过。
+- **日常和发布前分层：** 日常先跑上述 Node 脚本，不默认启动浏览器或构建。发布前使用整体产品黑盒技能 `haqi-release-qa`（旧名 `haqi-battle-release-qa` 保留兼容入口），启动时选择简单（10 分钟内）、核心（约 30 分钟）或全部（约 90 分钟）；用户已指定范围则直接采用。档位范围见 [docs/product-release-qa.md](docs/product-release-qa.md)，日常战斗覆盖见 [docs/battle-regression.md](docs/battle-regression.md)。此分层覆盖下面日常浏览器检查的默认时机；简单冒烟不代替完整发布验收。
+
 - 卡牌美术约定（2026-09-18）：新技能主体和专属动作图集以100KB为预算，当前打包器严格限制为100,000字节；卡牌背景仍严格小于24,000字节。其他资源保持原200,000字节上限。使用 `scripts/prepare_skill_art.py` 准备共享格图，并核验 `data/adventure/skill-art.json` 的来源、哈希、格号和CDN。
 
 - `npm test`（`node --test tests/`）：公式回归、确定性、冒烟。
@@ -92,3 +97,14 @@ Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 
 
 - personal workspace入口只存小型当前状态和分文件引用；完整物品收藏、战斗背包和历史记录分开，未变化的文件复用。禁止恢复为每次同步全量收藏/流水。
 - 当前血量、宠物饥饿/血量、坐标、计时及未结束战斗只存本机IndexedDB，缺失时生命/饥饿默认满格。领取标记、物品数量、成长和阵容等核心数据仍持久化云端。仅核心变化才置dirty；详情见`docs/user-storage.md`。
+
+
+## 故事创作技能
+
+按坐标复刻真实地点的道路、建筑、水岸和街景WebP，使用 [.github/skills/haqi-recreate-place/SKILL.md](.github/skills/haqi-recreate-place/SKILL.md)。保持真实底图与艺术补全的来源区分，复用既有城市副本身份和存档。
+
+大城市内部地点和明确绑定的地图命名节点副本使用 [.github/skills/haqi-generate-city-dungeons/SKILL.md](.github/skills/haqi-generate-city-dungeons/SKILL.md)。城市大地标管理节点配置，城市总入口与各节点入口共享副本身份及进度，不按距离接管周边全部节点。
+
+阅读、整理、创作或更新主线章节、NPC支线、双语对话与副本剧本时，使用项目技能 [.github/skills/haqi-story/SKILL.md](.github/skills/haqi-story/SKILL.md)。遵循其中的简明语言、稳定编号、作者源定位与章节拆分约定。
+
+现实世界城市的语言、文化素材、NPC图集与任务内容使用 [.github/skills/haqi-populate-city/SKILL.md](.github/skills/haqi-populate-city/SKILL.md)。每城保存为独立的 `data/adventure/earth/cities/<id>.json`，世界索引只保留范围与引用，进入城市后加载；外观生成权重为创作配置，不冒充人口统计。

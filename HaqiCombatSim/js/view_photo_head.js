@@ -1,7 +1,7 @@
 import {createCloseButton} from './view_adventure_controls.js';
 import {tr, fill} from './locale_runtime.js';
 import {imageBitmap,compressPhoto} from './photo_head_images.js';
-import {BODY_TO_HEAD,clampHead} from './hero_pose_core.js';
+import {BODY_TO_HEAD,clampHead,headFrameIndex} from './hero_pose_core.js';
 import {heroPortrait} from './hero_renderer.js';
 import {randomHeroHeadId} from './hero_body_core.js';
 import {offsetPhotoHeadPose,validatePhotoHeadPreview,publicPhotoHead,photoHeadOutfitPreference} from './photo_head_core.js';
@@ -106,13 +106,15 @@ export function openPhotoHeadView({service,assets,draft,onApply,onLogin,getOwner
     refreshOutfit();
     const stage=node('canvas','','photo-head-preview');stage.width=300;stage.height=300;
     let previewFacing=0,previewHead=0,lastDraw=null,headDrag=null,lastPreviewTime=0,calibrationStep=0;
-    const confirmed=new Set(),calibrationOrder=[0,1,3,2],directionNames=['朝前','朝左','朝后','朝右'];
+    const confirmed=new Set();
+    let calibrationOrder=[0,1,3,2],directionNames=['朝前','朝左','朝后','朝右'];
+    const previewFrame=()=>headFrameIndex(current?.directionCount??16,previewFacing,previewHead);
     const motion=button('',()=>{motion.value=motion.value==='walk'?'idle':'walk';paintMotion();},'photo-head-motion');
     motion.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="14" cy="4" r="2"/><path d="m7 21 3-6-1-4m7 10-2-7-3-3 1-4m-6 6 3-5 3-1 3 5 4 1"/></svg>';
     function paintMotion(){const walking=motion.value==='walk';motion.setAttribute('aria-pressed',String(walking));motion.setAttribute('aria-label',tr('走路'));motion.title=tr(walking?'站立':'走路');}
     motion.value='walk';paintMotion();
     const facingControls=node('div','','photo-head-actions'),facingButtons=[],lookButtons=[];
-    function paintLook(){for(const {delta,b} of lookButtons)b.disabled=service.state.busy||clampHead(previewHead+delta,previewFacing)===previewHead;}
+    function paintLook(){for(const {delta,b} of lookButtons){b.hidden=current?.directionCount===4;b.disabled=b.hidden||service.state.busy||clampHead(previewHead+delta,previewFacing)===previewHead;}}
     function setHead(index){previewHead=(index+16)%16;paintLook();}
     function setFacing(facing){previewFacing=facing;setHead(BODY_TO_HEAD[facing]);facingButtons.forEach(({value,b})=>b.setAttribute('aria-pressed',String(value===facing)));}
     for(const [value,label] of [[0,'朝前'],[1,'朝左'],[3,'朝后'],[2,'朝右']]){const b=button(label,()=>{if(service.state.busy)return;const target=calibrationOrder.indexOf(value);if(target!==calibrationStep&&(!confirmed.has(calibrationStep)||target>confirmed.size))return;calibrationStep=target;setFacing(value);paintCalibration();});b.setAttribute('aria-pressed',String(value===0));facingButtons.push({value,b});facingControls.append(b);}
@@ -122,7 +124,7 @@ export function openPhotoHeadView({service,assets,draft,onApply,onLogin,getOwner
     function moveHead(x,y){
         if(!current||service.state.busy)return;
         // Display translation and attachment-coordinate offsets have opposite signs.
-        frames=offsetPhotoHeadPose(frames,previewHead,BODY_TO_HEAD[previewFacing],-x,-y,current.width/4);
+        frames=offsetPhotoHeadPose(frames,previewFrame(),BODY_TO_HEAD[previewFacing],-x,-y,current.width/(current.directionCount===4?2:4));
         confirmed.delete(calibrationStep);
         updatePreview();paintCalibration();
     }
@@ -156,7 +158,7 @@ export function openPhotoHeadView({service,assets,draft,onApply,onLogin,getOwner
         if(e.button!==0||headDrag||service.state.busy||!lastDraw?.ready||!lastDraw.headRect)return;
         const p=stagePoint(e),r=lastDraw.headRect;
         if(p.x<150+r.x||p.x>150+r.x+r.w||p.y<275+r.y||p.y>275+r.y+r.h)return;
-        e.preventDefault();headDrag={...p,id:e.pointerId,time:lastPreviewTime,scale:r.w/frames[previewHead].crop[2]};stage.setPointerCapture(e.pointerId);
+        e.preventDefault();headDrag={...p,id:e.pointerId,time:lastPreviewTime,scale:r.w/frames[previewFrame()].crop[2]};stage.setPointerCapture(e.pointerId);
     };
     stage.onpointermove=e=>{if(headDrag?.id!==e.pointerId)return;e.preventDefault();const p=stagePoint(e);moveHead((p.x-headDrag.x)/headDrag.scale,(p.y-headDrag.y)/headDrag.scale);headDrag.x=p.x;headDrag.y=p.y;};
     const endDrag=e=>{if(headDrag?.id===e.pointerId)headDrag=null;};stage.onpointerup=stage.onpointercancel=stage.onlostpointercapture=endDrag;
@@ -272,7 +274,12 @@ export function openPhotoHeadView({service,assets,draft,onApply,onLogin,getOwner
     }
     function showHead(value,{activate=true,calibrated=false,outfit}={}){
         if(disposed||!value)return;const changed=current?.id!==value.id;if(activate)viewStep=2;
-        current=value;frames=structuredClone(value.frames);syncOutfit(value,outfit);updatePreview();sheet.src=value.cdn;
+        current=value;
+        calibrationOrder=value.directionCount===4?[0,3,1,2]:[0,1,3,2];
+        directionNames=value.directionCount===4?['朝前','朝后','朝左','朝右']:['朝前','朝左','朝后','朝右'];
+        for(const facing of calibrationOrder)facingControls.append(facingButtons.find(entry=>entry.value===facing).b);
+        sheet.alt=tr(value.directionCount===4?'完整4方向图集':'完整16方向图集');
+        frames=structuredClone(value.frames);syncOutfit(value,outfit);updatePreview();sheet.src=value.cdn;
         if(preview)void assets.hero?.ensure?.({gender:preview.gender,headId:preview.id,bodyId:draft.bodyId});
         if(changed){confirmed.clear();calibrationStep=0;setFacing(0);motion.value='walk';paintMotion();}
         if(calibrated){for(let i=0;i<4;i++)confirmed.add(i);}paint();

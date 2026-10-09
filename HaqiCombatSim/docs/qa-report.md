@@ -2391,3 +2391,12 @@ Node专项24/24，完整npm run test:battle 854/854通过（64.424秒），零�
 ## 2026-10-07：四季童装
 
 32套1950—1980年代四季男女童装：角色专项30/30，原生预览32件实际CDN加载与选择通过；896图格alpha/尺寸/边距与远端哈希/CORS通过。完整战斗973/974，既存都市默认头像数量断言仍失败（battle_urban_residents.test.mjs:59）。来源art-references/child-clothes.json，日志.asset-cache/child-battle-tests.txt。只上传素材，未发布应用。
+
+
+## 2026-10-09：四方向照片头部
+
+- 两张预制2×2参考WebP（88,898 / 79,470字节）已上传永久Keepwork CDN；远端SHA-256、288×288尺寸、alpha范围0–255及CORS `*`均核验通过。资源链接与来源见`docs/photo-head.md`。
+- 照片专项29/29：四方向布局、单帧校准、存档/公开名片、骑乘/NPC共享选帧及新旧任务恢复；角色专项27/27：旧渲染、动作、衣橱与选择器。
+- 隔离浏览器8组通过：1280px/390px × 男女 × 四/十六方向，逐向真实拖动、保存、应用和旧转头入口验证；四方向真实Worker去底、WebP压缩、模拟CDN核验与重新处理通过。结果`.cache/simple-head-qa/report.json`，截图同目录。未使用真人照片、生产账号写入或真实AI生成。
+- `npm run test:battle`：979/982，3失败、0跳过。失败为`adventure_runes.test.mjs:32`缺少本机RuneList.xml、`battle_earth.test.mjs:150`政治地图WebP哈希不符、`battle_urban_residents.test.mjs:50`旧都市外观随机覆盖断言0对20。将本次修改的运行时模块通过只读Node loader替换为HEAD版本后，这三项仍全部同样失败；没有修改无关数据或跳过用例。日志`.cache/simple-head-battle.log`和`.cache/simple-head-baseline.log`。
+- 未构建、提交、推送或发布游戏；用户选择仅上传CDN，不复制额外Git镜像。

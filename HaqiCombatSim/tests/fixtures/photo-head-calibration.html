@@ -10,16 +10,19 @@ import {headPreview} from '../../js/photo_head_images.js';
 import {publicPhotoHead} from '../../js/photo_head_core.js';
 if(new URLSearchParams(location.search).has('en')){const dictionary=parseLocaleFile(await fetch('../../data/adventure/locale/en.txt').then(r=>r.text()));setTranslator(text=>dictionary[text]||text);}
 const manifest=await fetch('../../data/adventure/hero-art.json').then(r=>r.json()),catalog=await fetch('../../data/adventure/mount-catalog.json').then(r=>r.json());
-const girl=new URLSearchParams(location.search).has('girl'),gender=girl?'female':'male',appearance=girl?'girl':'boy',template=manifest.heads[girl?'elf-girl':'elf-boy'];
+const girl=new URLSearchParams(location.search).has('girl'),gender=girl?'female':'male',appearance=girl?'girl':'boy',legacy=new URLSearchParams(location.search).has('legacy'),template=legacy?manifest.heads[girl?'elf-girl':'elf-boy']:(await fetch('../../data/adventure/photo-head.json').then(r=>r.json())).references[appearance];
+const indices=legacy?[0,4,8,12]:[0,1,2,3];
 const hero=new HeroRenderer(manifest,catalog,{local:true}),image=new Image();image.src='../../'+template.local;await image.decode();
 const blob=await fetch(image.src).then(r=>r.blob());
-let head=publicPhotoHead({...template,version:1,id:`photo-calibration-${appearance}`,owner:'photoqa',gender,bytes:blob.size,directionCount:16}),saves=0;
+let head=publicPhotoHead({...template,version:1,id:`photo-calibration-${appearance}`,owner:'photoqa',gender,bytes:blob.size,directionCount:template.directionCount}),saves=0;
 hero.registerHead(head);hero.images.set('head:'+head.id,image);
 await hero.ensure({gender,headId:head.id,bodyId:gender});
 const thumbnail=await headPreview(blob,head.frames[0]),libraryRows=new URLSearchParams(location.search).has('library')?[{id:head.id,path:'one',gender},{id:head.id,path:'two',gender,preview:thumbnail}]:[];
 const listeners=new Set(),report=document.querySelector('#report');
-const service={get state(){return {head,busy:false,enabled:true,status:'',stage:'',job:null};},subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn);},async open(){},async entitlement(){return {vip:true,allowed:true};},async list(){return {rows:libraryRows,next:null};},async preview(){return thumbnail;},async select(){return head;},async remove(row){libraryRows.splice(libraryRows.indexOf(row),1);},templateFrames(){return structuredClone(template.frames);},async adjust(frames){head=publicPhotoHead({...head,frames});hero.registerHead(head);hero.images.set('head:'+head.id,image);saves++;report.textContent=JSON.stringify({saves,anchors:[0,4,8,12].map(i=>head.frames[i].neck)});listeners.forEach(fn=>fn());return head;}};
-document.querySelector('#open').onclick=()=>openPhotoHeadView({service,assets:{hero},draft:{appearance,bodyId:gender},getOwner:()=> 'photoqa',onApply:(value,outfit)=>report.textContent='已应用 '+JSON.stringify({outfit,headId:value.id,saves,anchors:[0,4,8,12].map(i=>value.frames[i].neck)}),onLogin(){}});
+const service={get state(){return {head,busy:false,enabled:true,status:'',stage:'',job:null};},subscribe(fn){listeners.add(fn);return()=>listeners.delete(fn);},async open(){},async entitlement(){return {vip:true,allowed:true};},async list(){return {rows:libraryRows,next:null};},async preview(){return thumbnail;},async select(){return head;},async remove(row){libraryRows.splice(libraryRows.indexOf(row),1);},templateFrames(){return structuredClone(template.frames);},async adjust(frames){head=publicPhotoHead({...head,frames});hero.registerHead(head);hero.images.set('head:'+head.id,image);saves++;report.textContent=JSON.stringify({saves,anchors:indices.map(i=>head.frames[i].neck)});listeners.forEach(fn=>fn());return head;}};
+document.querySelector('#open').onclick=()=>openPhotoHeadView({service,assets:{hero},draft:{appearance,bodyId:gender},getOwner:()=> 'photoqa',onApply:(value,outfit)=>report.textContent='已应用 '+JSON.stringify({outfit,headId:value.id,saves,anchors:indices.map(i=>value.frames[i].neck)}),onLogin(){}});
 document.querySelector('#open').disabled=false;
+const qa=window.photoCalibrationQA={get head(){return head;},get saves(){return saves;},draw:null};
+const originalDraw=hero.draw.bind(hero);hero.draw=(ctx,appearance,options)=>{const result=originalDraw(ctx,appearance,options);if(options?.size===180)qa.draw=result;return result;};
 </script></body></html>
 

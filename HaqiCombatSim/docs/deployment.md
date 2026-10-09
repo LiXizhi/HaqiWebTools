@@ -54,7 +54,7 @@ npm run verify:release # 对当前dist重新核验，不上传
 
 同步工具为 `scripts/sync_keepwork_apps_release.mjs`。执行顺序为：CDN 核验通过 → apps 入口复制、提交及双远端推送 → Maisi 本地入口复制。apps 步骤失败时不会继续复制到 Maisi。
 
-2026-10-08 发布顺序补充：授权源码须先提交本地 HaqiWebTools 并推送、核验其 origin；生成入口须提交本地 apps/master 并推送、核验 origin/master，之后才发布 Keepwork 当前文件树快照。Keepwork 不需要主仓库完整历史，最终验证树相同而非提交哈希相同。`--isolated` 保留为兼容参数，不再创建镜像单边临时 worktree 或绕过 origin。未完成本地提交及 origin 推送时不得宣称完整发布。
+2026-10-09 发布顺序补充：发布只使用当前 `dist/` 生成并已核验的 `release/` 正式入口，不要求 HaqiWebTools 工作区干净或源码 HEAD 已推送 origin；源码中的其他未提交修改不会被同步器触碰。生成入口仍须提交本地 apps/master 并推送、核验 origin/master，之后才发布 Keepwork 当前文件树快照。apps 工作区允许存在其他未提交修改，提交仅限本次入口路径；若其修改与入口路径冲突，需先人工处理。Keepwork 不需要主仓库完整历史，最终验证树相同而非提交哈希相同。`--isolated` 保留为兼容参数；apps 分支、远端及分叉检查仍生效。
 
 `upload`或`verify:release`远端核验成功并生成正式入口后，自动查找祖先目录下的 `maisi` checkout（例如 `lxzsrc/maisi`），优先使用 `MAISI_ROOT`。确认仓库Git标记及MagicHaqi入口存在后，将本次四个 `release/Haqi*_v1.html` 复制到 `<maisi>/maisi/maisi/webgames/MagicHaqi/release/`，更新同名文件并逐字节核验。其他文件保持原样；不复制美术、预览HTML或manifest，不替Maisi执行Git提交/推送。
 
@@ -65,7 +65,7 @@ npm run verify:release # 对当前dist重新核验，不上传
 - Maisi: https://keepwork.com/maisi/maisi/webgames/MagicHaqi/release/Haqi_v1.html
 - Official apps: https://keepwork.com/api/raw/official/apps/MagicHaqi/release/Haqi_v1.html
 
-核验完成后首先查找同级 `apps` 仓库（可通过 `APPS_ROOT` 指定），将五个正式入口复制到 `official/apps/MagicHaqi/release/`。apps 必须在 `master` 且工作区干净；发布前检查两个远端及快进关系，仅提交本次入口文件，再复用 apps 的批量发布器依次推送 `origin/master`（开发服务器）与 `keepwork/master` 并核对远端提交。不会推送其他兼容目录或替 Maisi 提交、推送。未找到 apps 或安全检查失败时命令报错，不宣称发布完成；已经完成的 CDN 上传不回滚。
+核验完成后首先查找同级 `apps` 仓库（可通过 `APPS_ROOT` 指定），将五个正式入口复制到 `official/apps/MagicHaqi/release/`。apps 必须在 `master`；发布前检查两个远端及快进关系，允许其他路径未提交修改，仅提交本次入口文件，再复用 apps 发布器的入口白名单模式：先推送 `origin/master`，随后以当前 `keepwork/master` 为父提交，仅将上述四个入口更新到 Keepwork，保留镜像上其他文件的原状；核验四个入口的 blob 与 origin 一致，不要求两个仓库全树相同。不会推送其他兼容目录或替 Maisi 提交、推送。apps 全站发布器未指定入口白名单时仍使用完整快照模式。未找到 apps 或安全检查失败时命令报错，不宣称发布完成；已经完成的 CDN 上传不回滚。
 
 `upload` 和 `verify:release` 都会执行上述 apps 发布步骤。Maisi 托管页仍需另行发布；apps 网站可能有刷新延迟。CDN 本次版本地址在前面的核验输出中显示。
 

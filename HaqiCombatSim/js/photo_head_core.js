@@ -10,6 +10,11 @@ export function validatePhotoHeadPreview(value) {
 export const PHOTO_HEAD_ID = /^photo-[a-z0-9-]{1,48}-(boy|girl)$/;
 const finite = v => typeof v === 'number' && Number.isFinite(v);
 const require = (ok, message) => { if (!ok) throw Error(message); };
+// Four-frame atlas order: front, back, left, right. Legacy atlases rotate in 22.5° steps.
+export function headAtlasColumns(directionCount=16) {
+    require(directionCount===4||directionCount===16,'头部方向数无效');
+    return directionCount===4?2:4;
+}
 export function validatePhotoHead(head, {id=head?.id, appearance, owner} = {}) {
     require(head?.version===1 && PHOTO_HEAD_ID.test(head.id) && head.id===id, '自定义头部编号无效');
     require(['male','female'].includes(head.gender) && head.id.endsWith(head.gender==='female'?'-girl':'-boy'), '自定义头部类型无效');
@@ -17,13 +22,14 @@ export function validatePhotoHead(head, {id=head?.id, appearance, owner} = {}) {
     require(typeof head.owner==='string' && /^[\w-]{1,80}$/.test(head.owner) && (!owner || head.owner===owner), '自定义头部账号不符');
     require(/^https:\/\/cdn\.keepwork\.com\/[^\s?#]+\.webp$/.test(head.cdn||''), '自定义头部资源地址无效');
     require(/^[a-f0-9]{64}$/.test(head.sha256||'') && Number.isInteger(head.bytes) && head.bytes>0 && head.bytes<=PHOTO_HEAD_BYTES, '自定义头部资源大小或哈希无效');
-    require(Number.isInteger(head.width) && head.width>=256 && head.width<=2048 && head.width%4===0 && head.height===head.width, '自定义头部尺寸无效');
-    require(head.directionCount===16 && Array.isArray(head.frames) && head.frames.length===16, '自定义头部需要16个方向');
-    const cell=head.width/4;
+    const columns=headAtlasColumns(head.directionCount);
+    require(Number.isInteger(head.width) && head.width>=256 && head.width<=2048 && head.width%columns===0 && head.height===head.width, '自定义头部尺寸无效');
+    require(Array.isArray(head.frames) && head.frames.length===head.directionCount, '自定义头部方向帧数不符');
+    const cell=head.width/columns;
     for (const [i,f] of head.frames.entries()) {
         require(f.mirrorX===undefined || typeof f.mirrorX==='boolean','自定义头部镜像无效');
         require(f.offsetAdjusted===undefined || typeof f.offsetAdjusted==='boolean','自定义头部校准标记无效');
-        require(Array.isArray(f.crop) && f.crop.length===4 && f.crop.every(finite) && f.crop.every((v,k)=>v===[i%4*cell,Math.floor(i/4)*cell,cell,cell][k]), '自定义头部裁剪无效');
+        require(Array.isArray(f.crop) && f.crop.length===4 && f.crop.every(finite) && f.crop.every((v,k)=>v===[i%columns*cell,Math.floor(i/columns)*cell,cell,cell][k]), '自定义头部裁剪无效');
         require(Array.isArray(f.neck) && f.neck.length===2 && f.neck.every(v=>finite(v)&&v>=0&&v<=cell) && finite(f.height)&&f.height>=cell*.2&&f.height<=cell, '自定义头部连接点无效');
     }
     return head;
@@ -31,16 +37,25 @@ export function validatePhotoHead(head, {id=head?.id, appearance, owner} = {}) {
 export function publicPhotoHead(head, options={}) {
     validatePhotoHead(head,options);
     // Explicit allow-list: never copy input photos, generated source data or task state.
-    return {version:1,id:head.id,owner:head.owner,gender:head.gender,name:'我的照片形象',cdn:head.cdn,sha256:head.sha256,bytes:head.bytes,width:head.width,height:head.height,directionCount:16,
+    return {version:1,id:head.id,owner:head.owner,gender:head.gender,name:'我的照片形象',cdn:head.cdn,sha256:head.sha256,bytes:head.bytes,width:head.width,height:head.height,directionCount:head.directionCount,
         frames:head.frames.map(f=>({crop:[...f.crop],neck:[...f.neck],height:f.height,...(f.mirrorX?{mirrorX:true}:{}),...(f.offsetAdjusted?{offsetAdjusted:true}:{})}))};
 }
 export function scaleHeadFrames(template,width,height=width) {
-    require(template?.frames?.length===16 && template.width===template.height && width===height && width%4===0, '头部布局参考无效');
+    const count=template?.directionCount??16,columns=headAtlasColumns(count);
+    require(template?.frames?.length===count && template.width>0 && template.width===template.height && width>0 && width===height && width%columns===0, '头部布局参考无效');
     const scale=width/template.width;
     return template.frames.map(f=>({crop:f.crop.map(n=>n*scale),neck:f.neck.map(n=>n*scale),height:f.height*scale,...(f.mirrorX?{mirrorX:true}:{}),...(f.offsetAdjusted?{offsetAdjusted:true}:{})}));
 }
 export function photoHeadPrompt(template) {
     scaleHeadFrames(template,template.width);
+    if(template.directionCount===4)return `为现有2D卡通游戏绘制同一人物的2列2行、4方向独立头部图集，每格是一枚完整的头部贴纸。
+第一张图仅提供人物外貌：脸型、肤色、发色、刘海、分缝、发辫/马尾、眼镜和发饰。第二张图提供美术风格、比例、转向和布局。
+【布局】严格按行排列：左上正面、右上背面、左下面朝画面左侧、右下面朝画面右侧。只有这四个方向，不画斜侧脸、不增加格子。
+【逐格对齐第二张参考图】逐格保持下颌位置和头部比例，不居中或重新构图；脸型可按照片轻微调整，不能因头发宽度、长度而移动或缩放脸。普通人耳朵代替参考中的精灵耳。
+【画风】Q版2D手绘卡通，圆润简化五官、清亮大眼睛、成组发束、柔和明暗；四格为同一人物与发型，不画写实皮肤、摄影发丝或写实3D。
+【完整独立头部】仅头发、脸、耳朵、眼镜和发饰；面部皮肤止于下巴与下颌线，背面仅后脑与头发。不要脖子、颈根、后颈、肩膀、衣领或身体。长发自然弯曲收拢，保留完整头顶、耳朵、下巴和发尾，四周留白，不沿格边截断。
+【输出】纯白背景，已有透明背景可保留；无格线、文字、水印和投影。只输出完成的2×2图集。
+DO NOT INCLUDE NECK in all 4 character head directions.`;
     // Same head/body split as scripts/plan_urban_residents.mjs and docs/hero-preview.md:
     // the body supplies the neck; head-frame `neck` is an attachment anchor only.
     return `为现有2D卡通游戏绘制同一人物的4列4行、16方向独立头部图集，每格是一枚完整的头部贴纸。
@@ -83,11 +98,16 @@ export function offsetPhotoHeadRow(frames,row,dx,dy,cell,{preserveAdjusted=false
     return next;
 }
 export function offsetPhotoHeadFrame(frames,index,dx,dy,cell) {
-    require(Number.isInteger(index)&&index>=0&&index<16&&finite(dx)&&finite(dy)&&finite(cell)&&cell>0&&frames?.length===16,'图集方向校正无效');
+    require(Number.isInteger(index)&&index>=0&&index<frames?.length&&finite(dx)&&finite(dy)&&finite(cell)&&cell>0&&[4,16].includes(frames?.length),'图集方向校正无效');
     return frames.map((f,i)=>({...f,crop:[...f.crop],neck:i===index?[Math.max(0,Math.min(cell,f.neck[0]+dx)),Math.max(0,Math.min(cell,f.neck[1]+dy))]:[...f.neck]}));
 }
 // Default poses move only untouched peers; direct edits remain independent after saving.
 export function offsetPhotoHeadPose(frames,index,baseIndex,dx,dy,cell) {
+    if(frames?.length===4){
+        const next=offsetPhotoHeadFrame(frames,index,dx,dy,cell);
+        if(next[index].neck.some((v,axis)=>v!==frames[index].neck[axis]))next[index].offsetAdjusted=true;
+        return next;
+    }
     require([0,4,8,12].includes(baseIndex),'图集基础方向无效');
     const next=index===baseIndex
         ?offsetPhotoHeadRow(frames,baseIndex/4,dx,dy,cell,{preserveAdjusted:true})

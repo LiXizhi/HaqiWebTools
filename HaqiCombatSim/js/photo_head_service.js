@@ -30,7 +30,8 @@ export function createPhotoHeadService({assets,getOwner,membership,workspace=cre
         stage='';progress=null;clearTransfer();head=null;notify();return root;
     }
     async function reference(appearance){
-        const templateId=appearance==='girl'?'elf-girl':'elf-boy',template=assets.hero?.manifest.heads[templateId];
+        const template=config?.references?.[appearance==='girl'?'girl':'boy'];
+        assert(template?.directionCount===4,'四方向布局参考未准备好，暂不能生成');
         assert(template?.cdn&&template.sha256,'布局参考未准备好，暂不能生成');
         const blob=await images.fetchImage(template.cdn);session.check();
         assert(await images.sha256(blob)===template.sha256,'布局参考哈希不符');
@@ -59,7 +60,7 @@ export function createPhotoHeadService({assets,getOwner,membership,workspace=cre
             assert(/^https:\/\/cdn\.keepwork\.com\/users\/[^\s?#]+\.webp$/.test(result?.url||''),'上传未返回永久Keepwork CDN地址');
             job.uploaded=result.url;await remember();}
         phase('正在核验并保存形象…','saving');
-        const next=publicPhotoHead({version:1,id:job.id,owner:session.owner,gender:job.appearance==='girl'?'female':'male',directionCount:16,cdn:job.uploaded,...job.packed,frames:job.frames||job.packed.frames});
+        const next=publicPhotoHead({version:1,id:job.id,owner:session.owner,gender:job.appearance==='girl'?'female':'male',cdn:job.uploaded,...job.packed,directionCount:job.template.directionCount??16,frames:job.frames||job.packed.frames});
         await images.verifyHeadAsset(next);session.check();
         job.preview??=await images.headPreview(await images.fetchImage(job.packed.data),next.frames[0]);session.check();
         head=await session.save(job,next,{edit:job.saved===true,preview:job.preview});session.check();job.saved=true;job.head=head;await remember();
@@ -98,7 +99,7 @@ export function createPhotoHeadService({assets,getOwner,membership,workspace=cre
             job={id:`photo-${uuid()}-${photo.appearance==='girl'?'girl':'boy'}`,owner:session.owner,appearance:photo.appearance,vip:member.isVip===true,template:ref.template,strength:1,createdAt:new Date().toISOString()};head=null;
             await session.reserve(job);await remember();
             const started=Date.now();receivedBytes=0;transferStartedAt=started;lastProgressAt=started;progress=null;
-            status='正在生成16方向形象…';stage='generating';error='';notify();
+            status='正在生成4方向形象…';stage='generating';error='';notify();
             const abortController=new AbortController(),timer=setTimeout(()=>abortController.abort(),240000);
             try{
                 const source=await session.sdk.aiGenerators.genImage(photoHeadPrompt(ref.template),{
@@ -108,7 +109,7 @@ export function createPhotoHeadService({assets,getOwner,membership,workspace=cre
                     onProgress:bytes=>{
                         try{session.check();}catch{return;}
                         receivedBytes=Math.max(0,Number(bytes)||0);lastProgressAt=Date.now();
-                        status=receivedBytes>0?`正在生成16方向形象… 已接收 ${formatTransferBytes(receivedBytes)}`:'正在生成16方向形象…';
+                        status=receivedBytes>0?`正在生成4方向形象… 已接收 ${formatTransferBytes(receivedBytes)}`:'正在生成4方向形象…';
                         notify();
                     },
                 });session.check();
@@ -127,6 +128,6 @@ export function createPhotoHeadService({assets,getOwner,membership,workspace=cre
         adjust:(frames,source)=>run(async()=>{previews.clear();session.check();
             if(source)head=publicPhotoHead(source,{owner:session.owner,id:source.id});
             assert(head,'请先选择形象');const next=publicPhotoHead({...head,frames});const preview=await images.headPreview(await images.fetchImage(next.cdn),next.frames[0]);session.check();head=await session.save({id:head.id},next,{edit:true,preview});assets.hero.registerHead(head);if(job?.id===head.id){job.frames=frames;job.head=head;job.preview=preview;await remember();}phase('连接位置已保存。');return head;}),
-        templateFrames(){const template=assets.hero.manifest.heads[head?.gender==='female'?'elf-girl':'elf-boy'];return scaleHeadFrames(template,head.width);},
+        templateFrames(){const template=head?.directionCount===4?config?.references?.[head.gender==='female'?'girl':'boy']:assets.hero.manifest.heads[head?.gender==='female'?'elf-girl':'elf-boy'];return scaleHeadFrames(template,head.width);},
     };
 }

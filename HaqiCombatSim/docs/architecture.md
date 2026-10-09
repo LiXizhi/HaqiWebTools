@@ -786,16 +786,19 @@ flowchart LR
 flowchart LR
     Picker[创建角色 / 修改形象] --> PhotoView[共用照片窗口：拍摄 / 裁剪]
     PhotoView --> Service[photo_head_service：身份 / 任务编排]
-    Service --> SDK[Keepwork SDK：Image Pro双参考图生成 / CDN上传]
+    Templates[预制男女2×2 WebP / 永久CDN / photo-head配置] -->|哈希与尺寸核验| Service
+    Service --> SDK[Keepwork SDK：Image Pro四方向双参考图生成 / CDN上传]
     Service --> Worker[photo_head_worker：逐格去白底，不居中]
     Worker --> WebP[WebP预算 / 逐帧连接点同步缩放]
     WebP --> Service
     Service --> PPS[HaqiAdventure：10条正面小图index / 额度]
-    PPS -->|点选才读取| HeadFile[一个形象一个当前JSON / 16方向图集]
+    PPS -->|点选才读取| HeadFile[一个形象一个当前JSON / 4或16方向图集]
     PhotoView -->|仅DIY读取| PPS
     Service --> Local[账号隔离IndexedDB：仅AI输出与任务]
     HeadFile --> Ref[角色与公开名片：headId + customHead]
     Ref --> Renderer[HeroRenderer自定义目录 / 版本隔离 / 预设回退]
+    NPC[未来NPC四方向资源条目] --> Renderer
+    Renderer --> Poses[四方向随身体 / 十六方向保留独立转头]
 ```
 
 真人输入只留内存直接提交生成服务，不进入CDN或存档。纯规则和像素模块不依赖DOM/SDK；Worker与存储在浏览器IO层。正式资源目录与自定义目录隔离，NPC随机选择不读取用户形象。

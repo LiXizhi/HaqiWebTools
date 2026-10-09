@@ -2,5 +2,159 @@
   "version": 1,
   "enabled": true,
   "model": "keepwork-image-pro",
-  "disabledReason": "照片形象生成暂未开放。已有形象仍可使用。"
+  "disabledReason": "照片形象生成暂未开放。已有形象仍可使用。",
+  "references": {
+    "boy": {
+      "directionCount": 4,
+      "gender": "male",
+      "local": "assets/hero-preview/head-reference-4-boy.webp",
+      "width": 288,
+      "height": 288,
+      "bytes": 88898,
+      "sha256": "667f3ec851e43decef1261cd39229de3b7a7aca236ab5507673f4aa05a7e5c0d",
+      "frames": [
+        {
+          "crop": [
+            0,
+            0,
+            144,
+            144
+          ],
+          "neck": [
+            72,
+            134
+          ],
+          "height": 117
+        },
+        {
+          "crop": [
+            144,
+            0,
+            144,
+            144
+          ],
+          "neck": [
+            72,
+            134
+          ],
+          "height": 113
+        },
+        {
+          "crop": [
+            0,
+            144,
+            144,
+            144
+          ],
+          "neck": [
+            64,
+            132
+          ],
+          "height": 118
+        },
+        {
+          "crop": [
+            144,
+            144,
+            144,
+            144
+          ],
+          "neck": [
+            80,
+            132
+          ],
+          "height": 116
+        }
+      ],
+      "source": {
+        "id": "elf-boy",
+        "local": "assets/hero-preview/head-elf-boy.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/20260926/cb13100ea5e8/head-elf-boy.webp",
+        "sha256": "dbf123d19d996abfa9ef222f9ba1f1ecb3ff7734a09aa33a953c1b1921e35e3f",
+        "frameIndices": [
+          0,
+          8,
+          4,
+          12
+        ]
+      },
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/photo-head/667f3ec851e43/head-reference-4-boy.webp"
+    },
+    "girl": {
+      "directionCount": 4,
+      "gender": "female",
+      "local": "assets/hero-preview/head-reference-4-girl.webp",
+      "width": 288,
+      "height": 288,
+      "bytes": 79470,
+      "sha256": "6f8af3564f449369a58998f35685b5913675a296d02eecaacd4639fbe19930ac",
+      "frames": [
+        {
+          "crop": [
+            0,
+            0,
+            144,
+            144
+          ],
+          "neck": [
+            72,
+            131
+          ],
+          "height": 92
+        },
+        {
+          "crop": [
+            144,
+            0,
+            144,
+            144
+          ],
+          "neck": [
+            72,
+            132
+          ],
+          "height": 92
+        },
+        {
+          "crop": [
+            0,
+            144,
+            144,
+            144
+          ],
+          "neck": [
+            60,
+            129
+          ],
+          "height": 103
+        },
+        {
+          "crop": [
+            144,
+            144,
+            144,
+            144
+          ],
+          "neck": [
+            84,
+            129
+          ],
+          "height": 100
+        }
+      ],
+      "source": {
+        "id": "elf-girl",
+        "local": "assets/hero-preview/head-elf-girl.webp",
+        "cdn": "https://cdn.keepwork.com/keepwork/haqi/hero-preview/20260926/cb13100ea5e8/head-elf-girl.webp",
+        "sha256": "e36f63f8a7426331574ae9cb6707b79ba4bede3111e632ffa923c8d2266989b3",
+        "frameIndices": [
+          0,
+          8,
+          4,
+          12
+        ]
+      },
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/photo-head/6f8af3564f44/head-reference-4-girl.webp"
+    }
+  }
 }

@@ -48,7 +48,6 @@ function copyRelease(releaseDir, destination, pages) {
 export function prepareAppsRelease(repo, { localTest = false } = {}) {
     const git = args => execFileSync('git', args, { cwd: repo, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
     if (git(['branch', '--show-current']) !== 'master') throw new Error('apps 必须在 master 分支发布。');
-    if (git(['status', '--porcelain'])) throw new Error('apps 存在未提交修改，请先处理后再发布。');
     const expected = { origin: 'https://code.kp-para.cn/paracraft/apps', keepwork: 'https://git.keepwork.com/official/apps' };
     for (const [remote, url] of Object.entries(expected)) {
         for (const flags of [[], ['--push']]) {
@@ -76,17 +75,6 @@ export function prepareAppsRelease(repo, { localTest = false } = {}) {
 
 export async function syncAppsRelease({ projectRoot, releaseDir, pages, verified, configuredRoot = process.env.APPS_ROOT, publish = false, isolated = false }) {
     if (!verified) return null;
-    if (publish) {
-        const sourceGit = args => execFileSync('git', args, { cwd: projectRoot, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
-        if (sourceGit(['status', '--porcelain'])) throw new Error('Haqi 源码存在未提交修改；请先提交授权变更并推送 origin。');
-        const branch = sourceGit(['branch', '--show-current']);
-        if (!branch) throw new Error('Haqi 源码必须在正式分支发布。');
-        const head = sourceGit(['rev-parse', 'HEAD']);
-        for (const remote of ['origin', sourceGit(['remote', 'get-url', '--push', 'origin'])]) {
-            const tip = sourceGit(['ls-remote', remote, `refs/heads/${branch}`]).split(/\s/)[0];
-            if (tip !== head) throw new Error('Haqi 源码 HEAD 尚未在 origin 核验；请先推送或处理分叉。');
-        }
-    }
     const candidates = maisiCandidates(projectRoot, '').map(candidate => path.join(path.dirname(candidate), 'apps'));
     if (configuredRoot) candidates.unshift(path.resolve(configuredRoot));
     const repo = candidates.find(candidate => fs.existsSync(path.join(candidate, '.git')) &&
@@ -100,18 +88,19 @@ export async function syncAppsRelease({ projectRoot, releaseDir, pages, verified
     if (publish && isolated) {
         console.log('--isolated 保留为兼容参数；入口先提交到 apps/master 并推送 origin，再发布 Keepwork 快照。');
     }
+    const relative = 'official/apps/MagicHaqi/release';
+    const paths = releaseNames(pages).map(name => `${relative}/${name}`);
     if (publish) {
+        if (paths.length && git(['status', '--porcelain', '--', ...paths])) throw new Error('apps 发布入口存在未提交修改，请先处理入口冲突。');
         prepareAppsRelease(repo);
         publisher = await import(pathToFileURL(path.join(repo, '.github/skills/publish-repo/scripts/publish-repo.mjs')).href);
-        publisher.publishRepo(repo, { publish: false, compatibility: { files: [] } });
+        publisher.publishRepo(repo, { publish: false, compatibility: { files: [] }, entryPaths: paths });
     }
-    const relative = 'official/apps/MagicHaqi/release';
     const destination = copyRelease(releaseDir, path.join(repo, relative), pages);
     if (publish) {
-        const paths = releaseNames(pages).map(name => `${relative}/${name}`);
         git(['add', '--', ...paths]);
         if (git(['diff', '--cached', '--name-only'])) git(['commit', '-m', 'release: update Haqi entry wrappers', '--', ...paths]);
-        publisher.publishRepo(repo, { compatibility: { files: [] } });
+        publisher.publishRepo(repo, { compatibility: { files: [] }, entryPaths: paths });
     }
     return destination;
 }

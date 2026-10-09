@@ -3,6 +3,10 @@ import { WALK_SPEED } from './adventure_world_core.js';
 
 export const HEAD_DIRECTIONS = Array.from({length:16},(_,i)=>i*22.5);
 export const BODY_TO_HEAD = [0, 4, 12, 8];
+export const BODY_TO_SIMPLE_HEAD = [0, 2, 3, 1];
+export function headFrameIndex(directionCount, facing, head=BODY_TO_HEAD[facing]) {
+    return directionCount===4?BODY_TO_SIMPLE_HEAD[facing]??0:((head%16)+16)%16;
+}
 // One walkTime second per WALK_SPEED world units so on-foot playback matches wall-clock AI actors.
 export const WALK_CYCLE_DISTANCE = WALK_SPEED;
 export const GAZE_RADIUS = 90;

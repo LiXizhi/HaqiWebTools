@@ -9079,3 +9079,11 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 形象生成预计进度||Estimated avatar generation progress
 上传进度 {progress}%||Upload progress {progress}%
 正在上传…||Uploading…
+
+完整4方向图集||Full 4-direction atlas
+正在生成4方向形象…||Generating the 4-direction avatar…
+头部方向数无效||Invalid head direction count
+自定义头部方向帧数不符||The custom head frame count does not match its directions
+四方向布局参考未准备好，暂不能生成||The four-direction reference is not ready. Generation is unavailable.
+头部图集必须为方形等格||The head atlas must be square with equal cells
+生成图不是方形等格图集||The generated image is not a square atlas with equal cells

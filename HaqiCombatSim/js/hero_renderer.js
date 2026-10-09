@@ -1,5 +1,5 @@
 import { resolveMountDrawPose, MOUNT_DIRECTIONS } from './adventure_mounts_core.js';
-import { createHeroActor, updateHeroActor, BODY_TO_HEAD, headBreath, walkFrameIndex } from './hero_pose_core.js';
+import { createHeroActor, updateHeroActor, BODY_TO_HEAD, headBreath, walkFrameIndex, headFrameIndex } from './hero_pose_core.js';
 import {publicPhotoHead} from './photo_head_core.js';
 import {verifyHeadAsset} from './photo_head_images.js';
 
@@ -179,13 +179,13 @@ export class HeroRenderer {
         sheet(split?bodyImage:source,crop,bodyRect);
         let headRect=null;
         if(split&&!options.bodyOnly){
-            const h=heads.frames[(head+heads.directionCount)%heads.directionCount],s=frame.headHeight*ratio/h.height;
+            const h=heads.frames[headFrameIndex(heads.directionCount,pose.rider.cell,head)],s=frame.headHeight*ratio/h.height;
             // Side-facing profiles can refine the shared relative-turn compensation.
             // Values are body-atlas pixels, scaled with the body rather than the head art.
-            const turn=Math.abs(((head-BODY_TO_HEAD[pose.rider.cell])%16+24)%16-8);
+            const turn=heads.directionCount===4?0:Math.abs(((head-BODY_TO_HEAD[pose.rider.cell])%16+24)%16-8);
             const side=pose.rider.cell===1||pose.rider.cell===2;
             const drop=(side&&this.manifest.sideHeadTurnDrop?.[appearance.gender])||this.manifest.headTurnDrop||[0,0,0];
-            const turnDrop=drop[Math.min(turn,drop.length-1)]||0;
+            const turnDrop=heads.directionCount===4?0:drop[Math.min(turn,drop.length-1)]||0;
             headRect={x:neck[0]-h.neck[0]*s,y:neck[1]-h.neck[1]*s+turnDrop*ratio,w:h.crop[2]*s,h:h.crop[3]*s};
             const breath=options.breath||headBreath(options.time||0,options.phase||0,options.reducedMotion||original);
             // Pivot at the attachment point; sub-pixel breathing stays inside neck overlap.

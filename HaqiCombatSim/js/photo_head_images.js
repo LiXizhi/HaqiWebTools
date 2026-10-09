@@ -45,18 +45,18 @@ export async function verifyHeadAsset(head) {
     try{if(bitmap.width!==head.width||bitmap.height!==head.height)throw Error('云端头部图片尺寸不符');}finally{bitmap.close();}
     return blob;
 }
-export function removeBackground(blob,strength=1) {
+export function removeBackground(blob,strength=1,directionCount=16) {
     if(typeof Worker!=='function'||typeof OffscreenCanvas!=='function')return Promise.reject(Error('当前浏览器不支持图集处理，请更换浏览器')); 
     return new Promise((resolve,reject)=>{
         const worker=new Worker(new URL('./photo_head_worker.js',import.meta.url),{type:'module'});
         const finish=(error,result)=>{clearTimeout(timer);worker.terminate();error?reject(Error(error)):resolve(result);};
         const timer=setTimeout(()=>finish('图集处理超时，请重试'),45000);
         worker.onmessage=({data})=>finish(data.error,data);worker.onerror=()=>finish('图集处理不可用，请重试');
-        worker.postMessage({id:1,blob,strength});
+        worker.postMessage({id:1,blob,strength,directionCount});
     });
 }
 export async function packHead(blob,template,{strength=1}={}) {
-    const processed=await removeBackground(blob,strength),bitmap=await imageBitmap(processed.blob);
+    const processed=await removeBackground(blob,strength,template.directionCount??16),bitmap=await imageBitmap(processed.blob);
     try{
         const initial=Math.min(1024,bitmap.width);
         for(const size of [...new Set([initial,768,576,512].filter(n=>n<=initial))]){

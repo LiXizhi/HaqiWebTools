@@ -12,8 +12,9 @@ try{
  if(params.has('en')){const dictionary=parseLocaleFile(await fetch('../../data/adventure/locale/en.txt').then(r=>r.text()));setTranslator(text=>dictionary[text]||text);}
  const manifest=await fetch('../../data/adventure/hero-art.json').then(r=>r.json()),catalog=await fetch('../../data/adventure/mount-catalog.json').then(r=>r.json());
  const assets={hero:new HeroRenderer(manifest,catalog,{local:true})},draft={appearance:'boy',headId:'elf-boy',bodyId:'male'};
- const source=await fetch('../../assets/hero-preview/head-elf-boy.webp').then(r=>r.blob()),bitmap=await createImageBitmap(source),canvas=document.createElement('canvas');canvas.width=canvas.height=576;
- const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,576,576);ctx.drawImage(bitmap,0,0);bitmap.close();const generated=canvas.toDataURL('image/png');
+ const photoConfig=await fetch('../../data/adventure/photo-head.json').then(r=>r.json());
+ const source=await fetch('../../'+photoConfig.references.boy.local).then(r=>r.blob()),bitmap=await createImageBitmap(source),canvas=document.createElement('canvas');canvas.width=bitmap.width;canvas.height=bitmap.height;
+ const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(bitmap,0,0);bitmap.close();const generated=canvas.toDataURL('image/png');
  const qa=window.photoQA={uploads:{},generationCalls:0,applied:null,assets,draft,files,cameraStops:0};
  // Keep mock uploads readable when this fixture is opened without the CLI route harness.
  const fixtureFetch=window.fetch.bind(window);window.fetch=(url,options)=>fixtureFetch(qa.uploads[String(url)]||url,options);
@@ -28,7 +29,7 @@ try{
  sdk.cloudDrive.uploadUserCDNFile=async(file,opts)=>{if(file.type!=='image/webp'||file.size>200000||!opts.key.endsWith('.webp'))throw Error('Invalid final upload');opts.onProgress?.({percent:50});if(params.has('holdUpload'))await new Promise(resolve=>qa.releaseUpload=resolve);const result=await uploadFile(file);opts.onProgress?.({percent:100});return result;};
  const workspace=createPhotoHeadWorkspace({getOwner:()=> 'photoqa',loadSDK:async()=>sdk});
  const membership={refresh:async()=>({status:'ready',username:'photoqa',isVip:params.has('vip')})};
- const service=createPhotoHeadService({assets,getOwner:()=> 'photoqa',membership,workspace,cache:{async prepare(){},get:k=>cacheMap.get(k),set:(k,v)=>cacheMap.set(k,structuredClone(v)),async flush(){}},readConfig:async()=>({enabled:!params.has('disabled'),verification:{directPhoto:true,dualReference:true,atlasQuality:true}})});
+ const service=createPhotoHeadService({assets,getOwner:()=> 'photoqa',membership,workspace,cache:{async prepare(){},get:k=>cacheMap.get(k),set:(k,v)=>cacheMap.set(k,structuredClone(v)),async flush(){}},readConfig:async()=>({...photoConfig,enabled:!params.has('disabled'),verification:{directPhoto:true,dualReference:true,atlasQuality:true}})});
  qa.service=service;qa.open=()=>openPhotoHeadView({service,assets,draft,getOwner:()=> 'photoqa',onLogin:()=>{},onApply:head=>{qa.applied=head;root.textContent='已应用：'+head.id;}});
  document.querySelector('#open').onclick=qa.open;
  assets.photoHeads={open:async(d,apply)=>openPhotoHeadView({service,assets,draft:d,onApply:apply,getOwner:()=> 'photoqa',onLogin:()=>{}})};

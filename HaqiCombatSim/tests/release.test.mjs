@@ -36,7 +36,7 @@ test('apps release preparation fast-forwards behind origin and preserves safety 
         prepare();
         assert.equal(git('rev-parse', 'HEAD'), upstream);
         fs.writeFileSync(path.join(repo, 'page.txt'), 'local edit');
-        assert.throws(prepare, /未提交修改/);
+        prepare();
         assert.equal(fs.readFileSync(path.join(repo, 'page.txt'), 'utf8'), 'local edit');
         git('add', '.'); git('commit', '-m', 'local release');
         const local = git('rev-parse', 'HEAD');
@@ -52,7 +52,7 @@ test('apps release preparation fast-forwards behind origin and preserves safety 
     } finally { fs.rmSync(root, { recursive: true, force: true }); }
 });
 
-test('apps publication requires committed source verified on origin even in isolated compatibility mode', async () => {
+test('apps publication does not gate on unrelated source edits or unpublished commits', async () => {
     const fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'haqi-source-gate-'));
     const root = path.join(fixture, 'source');
     fs.mkdirSync(root);
@@ -68,11 +68,11 @@ test('apps publication requires committed source verified on origin even in isol
         git('init', '--bare', remote); git('remote', 'add', 'origin', remote); git('push', 'origin', 'master');
         const options = { projectRoot: root, releaseDir: root, pages: [], verified: true, publish: true, configuredRoot: path.join(root, 'missing-apps') };
         fs.writeFileSync(path.join(root, 'source.txt'), 'release');
-        for (const isolated of [false, true]) await assert.rejects(syncAppsRelease({ ...options, isolated }), /未提交修改/);
+        for (const isolated of [false, true]) await assert.rejects(syncAppsRelease({ ...options, isolated }), /找不到本机 apps/);
         git('add', 'source.txt'); git('commit', '-m', 'release');
-        for (const isolated of [false, true]) await assert.rejects(syncAppsRelease({ ...options, isolated }), /尚未在 origin 核验/);
-        git('push', 'origin', 'master');
-        await assert.rejects(syncAppsRelease(options), /找不到本机 apps/);
+        for (const isolated of [false, true]) await assert.rejects(syncAppsRelease({ ...options, isolated }), /找不到本机 apps/);
+        assert.notEqual(git('rev-parse', 'HEAD'), git('ls-remote', 'origin', 'refs/heads/master').split(/\s/)[0]);
+        assert.equal(fs.readFileSync(path.join(root, 'source.txt'), 'utf8'), 'release');
     } finally { fs.rmSync(fixture, { recursive: true, force: true }); }
 });
 

@@ -5,6 +5,7 @@ import {createPhotoHeadWorkspace} from '../js/photo_head_workspace.js';
 import {createPhotoHeadService} from '../js/photo_head_service.js';
 import {scaleHeadFrames,photoHeadOutfitPreference} from '../js/photo_head_core.js';
 const template=JSON.parse(readFileSync(new URL('../data/hero-preview.json',import.meta.url))).heads['elf-boy'];
+const reference=JSON.parse(readFileSync(new URL('../data/adventure/photo-head.json',import.meta.url))).references.boy;
 const preview='data:image/webp;base64,V0VCUA==';
 const head=id=>({version:1,id,owner:'tester',gender:'male',cdn:`https://cdn.keepwork.com/users/tester/${id}.webp`,sha256:'a'.repeat(64),bytes:123,width:576,height:576,directionCount:16,frames:scaleHeadFrames(template,576)});
 function fixture(){
@@ -57,10 +58,10 @@ function serviceFixture({enabled=true}={}){
     const cacheMap=new Map(),cache={async prepare(){},get:k=>cacheMap.get(k),set:(k,v)=>cacheMap.set(k,structuredClone(v)),async flush(){}};
     f.sdk.loadAIChat=async()=>{};
     f.sdk.aiGenerators={async genImage(prompt,options){generated++;assert.equal(options.images.length,2);assert.equal(options.images[0].url,'data:image/jpeg;base64,PRIVATEPHOTO');assert.equal(options.uploadResultToKeepwork,false);assert.equal(options.model,'keepwork-image-pro');assert.equal(options.stream,true);assert.match(prompt,/逐格保持下颌位置/);options.onProgress?.(1536);return 'https://cdn.keepwork.com/generated.png';}};
-    f.sdk.cloudDrive={async uploadUserCDNFile(file,opts){uploads++;assert.equal(file.type,'image/webp');assert.equal(await file.text(),'webp');assert.equal(file.size,4);assert.equal(opts.key,`haqi/heads/photo-test-boy-${template.sha256}.webp`);opts.onProgress({percent:50});if(uploadFails)throw Error('upload failed');return {url:'https://cdn.keepwork.com/users/tester/photo-test-boy.webp'};}};
-    const images={fetchImage:async url=>url.startsWith('data:image/webp')?new Blob(['webp'],{type:'image/webp'}):new Blob([url.includes('generated')?'GENERATED':'ART'],{type:'image/png'}),blobDataURL:async blob=>blob.type==='image/jpeg'?'data:image/jpeg;base64,PRIVATEPHOTO':blob.type==='image/webp'?'data:image/webp;base64,WEBP':'data:image/png;base64,GENERATED',sha256:async()=>template.sha256,imageBitmap:async()=>({width:576,height:576,close(){}}),packHead:async()=>({...head('photo-test-boy'),bytes:4,sha256:template.sha256,blob:new Blob(['webp'],{type:'image/webp'})}),verifyHeadAsset:async()=>{},headPreview:async()=>preview};
+    f.sdk.cloudDrive={async uploadUserCDNFile(file,opts){uploads++;assert.equal(file.type,'image/webp');assert.equal(await file.text(),'webp');assert.equal(file.size,4);assert.equal(opts.key,`haqi/heads/photo-test-boy-${reference.sha256}.webp`);opts.onProgress({percent:50});if(uploadFails)throw Error('upload failed');return {url:'https://cdn.keepwork.com/users/tester/photo-test-boy.webp'};}};
+    const images={fetchImage:async url=>url.startsWith('data:image/webp')?new Blob(['webp'],{type:'image/webp'}):new Blob([url.includes('generated')?'GENERATED':'ART'],{type:'image/png'}),blobDataURL:async blob=>blob.type==='image/jpeg'?'data:image/jpeg;base64,PRIVATEPHOTO':blob.type==='image/webp'?'data:image/webp;base64,WEBP':'data:image/png;base64,GENERATED',sha256:async()=>reference.sha256,imageBitmap:async()=>({width:reference.width,height:reference.height,close(){}}),packHead:async(blob,t)=>({...head('photo-test-boy'),width:t.width,height:t.height,directionCount:t.directionCount??16,frames:structuredClone(t.frames),bytes:4,sha256:reference.sha256,blob:new Blob(['webp'],{type:'image/webp'})}),verifyHeadAsset:async()=>{},headPreview:async()=>preview};
     const assets={hero:{manifest:{heads:{'elf-boy':template}},registerHead(){}}},membership={refresh:async()=>({status:'ready',username:'tester',isVip:vip})};
-    const options={assets,getOwner:()=> 'tester',membership,workspace:f.workspace,cache,images,uuid:()=> 'test',readConfig:async()=>({enabled,verification:{directPhoto:true,dualReference:true,atlasQuality:true}})};
+    const options={assets,getOwner:()=> 'tester',membership,workspace:f.workspace,cache,images,uuid:()=> 'test',readConfig:async()=>({enabled,references:{boy:reference},verification:{directPhoto:true,dualReference:true,atlasQuality:true}})};
     return {...f,cacheMap,options,service:createPhotoHeadService(options),setUploadFails:v=>uploadFails=v,setVip:v=>vip=v,counts:()=>({generated,uploads})};
 }
 test('generation passes both references; upload retry and refresh reuse AI output without persisting input photo',async()=>{
@@ -74,7 +75,7 @@ test('generation passes both references; upload retry and refresh reuse AI outpu
     assert.equal((await (await f.workspace.connect()).index()).freeUsed,false);
     assert.equal(JSON.stringify([...f.cacheMap.values()]).includes('PRIVATEPHOTO'),false);
     const resumed=createPhotoHeadService(f.options);f.setVip(true);await resumed.open();f.setUploadFails(false);await resumed.retry();
-    assert.equal(f.counts().generated,1);assert.equal(resumed.state.head.id,'photo-test-boy');assert.equal((await resumed.entitlement()).allowed,true);
+    assert.equal(f.counts().generated,1);assert.equal(resumed.state.head.id,'photo-test-boy');assert.equal(resumed.state.head.directionCount,4);assert.equal(resumed.state.head.frames.length,4);assert.equal((await resumed.entitlement()).allowed,true);
     assert.equal(JSON.stringify([...f.files.values()]).includes('GENERATED'),false);
 });
 test('maintenance switch blocks provider invocation and simultaneous clicks cannot generate twice',async()=>{
@@ -177,4 +178,25 @@ test('DIY previews load legacy heads without selecting, writing or starting gene
     const writes=f.writes.length;assert.equal(await service.preview(rows.rows[0]),preview);
     const readCount=reads.length;assert.equal(await service.preview(rows.rows[0]),preview);assert.equal(reads.length,readCount);
     assert.equal(service.state.head,null);assert.equal(f.writes.length,writes);assert.deepEqual(f.counts(),{generated:0,uploads:0});
+});
+
+
+test('legacy interrupted 16-direction jobs resume with their saved template, including absent directionCount',async()=>{
+    for(const missingCount of [false,true]){
+        const f=serviceFixture();f.setVip(true);await f.service.open();
+        await assert.rejects(f.service.generate({blob:new Blob(['face'],{type:'image/jpeg'}),appearance:'boy'}),/upload failed/);
+        const job=f.cacheMap.get('photo-head-pending:tester');job.template=structuredClone(template);
+        if(missingCount)delete job.template.directionCount;
+        delete job.packed;delete job.uploaded;
+        const resumed=createPhotoHeadService(f.options);await resumed.open();f.setUploadFails(false);
+        const saved=await resumed.retry();assert.equal(saved.directionCount,16);assert.equal(saved.frames.length,16);
+        assert.equal(f.counts().generated,1);
+    }
+});
+
+test('missing four-direction reference fails before generation rather than using a legacy atlas',async()=>{
+    const f=serviceFixture();f.setVip(true);f.options.readConfig=async()=>({enabled:true});
+    const service=createPhotoHeadService(f.options);await service.open();
+    await assert.rejects(service.generate({blob:new Blob(['face'],{type:'image/jpeg'}),appearance:'boy'}),/四方向布局参考/);
+    assert.equal(f.counts().generated,0);
 });

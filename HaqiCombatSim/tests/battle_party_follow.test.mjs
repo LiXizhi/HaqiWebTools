@@ -4,9 +4,37 @@ import {stepSocialActors,socialTrailGap} from '../js/adventure_social_motion_cor
 import {createCompanion,stepCompanion} from '../js/adventure_companion_core.js';
 import {SOCIAL_DEFAULTS} from '../js/adventure_social_core.js';
 import {walkable,distance,clearSegment} from '../js/adventure_world_core.js';
-const world=()=>({zone:'test',w:2000,h:2000,buildings:[],trees:[],npcs:[]});
+const world=()=>({zone:'test',w:2000,h:2000,buildings:[],trees:[],npcs:[],paths:[]});
 const party=()=>Array.from({length:3},(_,i)=>({profile:{id:`ally${i}`},position:{x:300,y:300},path:[],facing:0}));
 function sample(points,back){for(let i=points.length-1;i>0;i--){const a=points[i],b=points[i-1],d=Math.hypot(a.x-b.x,a.y-b.y);if(d>=back&&d)return {x:a.x+(b.x-a.x)*back/d,y:a.y+(b.y-a.y)*back/d};back-=d;}return points[0];}
+test('earth streaming retains one train for a local peer plus one or two guests',()=>{
+    for(const count of [1,2]){
+        const w={...world(),isEarth:true,earthBoating:false,terrainAt:()=> 'land'},peer={position:{x:300,y:300},facing:2},key={};
+        let actors=party().slice(0,count);const team=actors.map(a=>a.profile.id),points=[];
+        for(let x=300;x<=600;x+=2){
+            const leader={x,y:300};points.push(leader);actors=[...actors];
+            stepSocialActors(actors,w,.02,{leader,team,localSecond:peer,partyKey:key});
+        }
+        for(let y=302;y<=500;y+=2){
+            const leader={x:600,y};points.push(leader);actors=[...actors];
+            stepSocialActors(actors,w,.02,{leader,team,localSecond:peer,partyKey:key});
+            [peer,...actors].forEach((a,i)=>assert.deepEqual(a.position,sample(points,socialTrailGap()*(i+1))));
+        }
+        const before=structuredClone(peer);stepSocialActors(actors,w,.02,{leader:{x:800,y:500},team:[],localSecond:peer,partyKey:key,paused:true});assert.deepEqual(peer,before);
+        stepSocialActors([],w,.02,{leader:{x:800,y:500},team:[],localSecond:peer,partyKey:key});assert.deepEqual(peer,before);
+    }
+});
+test('boat train uses compact staggered slots without overlap and returns to walking gaps',()=>{
+    const w={...world(),isEarth:true,earthBoating:true,terrainAt:()=> 'ocean'},actors=party(),team=actors.map(a=>a.profile.id),key={};
+    for(let x=300;x<=600;x+=2)stepSocialActors(actors,w,.02,{leader:{x,y:300,facing:2},team,partyKey:key});
+    const positions=[{x:600,y:300},...actors.map(a=>a.position)];
+    for(let i=1;i<positions.length;i++){const gap=distance(positions[i-1],positions[i]);assert.ok(gap>0&&gap<socialTrailGap());}
+    assert.ok(actors[0].position.y!==actors[1].position.y);
+    for(let i=0;i<100;i++)stepSocialActors(actors,w,.05,{leader:{x:600,y:300},team,partyKey:key});
+    assert.deepEqual(actors.map(a=>a.position),positions.slice(1));
+    w.earthBoating=false;stepSocialActors(actors,w,.02,{leader:{x:602,y:300},team,partyKey:key});
+    actors.forEach((a,i)=>assert.deepEqual(a.position,{x:602-socialTrailGap()*(i+1),y:300}));
+});
 test('compact party follows exact turns, loops and reversals outside the viewport',()=>{
     const w=world(),actors=party(),team=actors.map(a=>a.profile.id),points=[{x:300,y:300}];
     const step=p=>{points.push(p);stepSocialActors(actors,w,.02,{leader:p,team,view:{x:0,y:0,w:1,h:1}});actors.forEach((a,i)=>{assert.deepEqual(a.position,sample(points,socialTrailGap()*(i+1)));assert.equal(a.inParty,true);});};

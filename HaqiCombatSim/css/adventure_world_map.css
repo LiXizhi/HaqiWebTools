@@ -12,8 +12,8 @@
 .haqi-app .haqi-atlas-island:active:not(:disabled){transform:translate(-50%,-50%)}
 .haqi-atlas-landmark{pointer-events:auto;max-width:160px;overflow:hidden;text-overflow:ellipsis}
 .haqi-atlas-labels [hidden],.haqi-atlas-selection[hidden]{display:none}
-.haqi-atlas-selection{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid #b88a3b;border-radius:9px;background:#fff3d4;flex-shrink:0}
-.haqi-atlas-selection small{flex:1}.haqi-atlas-selection button{flex-shrink:0;min-height:44px}
+.haqi-atlas-selection{position:absolute;z-index:2;max-width:calc(100% - 16px)}
+.haqi-atlas-selection button{min-height:44px;max-width:100%}
 .haqi-atlas-fallback{display:flex;flex-wrap:wrap;gap:6px;flex-shrink:0}
 .haqi-app .map-vortex{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);width:var(--vortex-target-size,54px);height:var(--vortex-target-size,54px);min-height:48px;padding:0;border:0;background:transparent;box-shadow:none;border-radius:50%}
 .map-vortex::before{content:'';display:block;width:var(--vortex-size,44px);height:var(--vortex-size,44px);margin:auto;border-radius:50%;background:repeating-conic-gradient(from 30deg,#c3f5ff 0deg,#359ecc 28deg,#104687 60deg);box-shadow:0 0 10px #d5faffb0,inset 0 0 8px #102e70;animation:map-vortex-spin 12s linear infinite}
@@ -24,7 +24,7 @@
 .earth-atlas-vortices [hidden]{display:none}
 @keyframes map-vortex-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.map-vortex::before{animation:none}}
-@media(max-width:600px){.haqi-atlas-stage{border-width:2px}.haqi-app .haqi-atlas-island{font-size:12px;padding:3px 5px}.haqi-atlas-selection{flex-wrap:wrap;gap:5px}.haqi-atlas-selection strong{max-width:50%;font-size:14px}.haqi-atlas-selection small{font-size:11px}.haqi-atlas-selection button{font-size:12px;padding:6px 10px}}
+@media(max-width:600px){.haqi-atlas-stage{border-width:2px}.haqi-app .haqi-atlas-island{font-size:12px;padding:3px 5px}.haqi-atlas-selection button{font-size:12px;padding:6px 10px}}
 .world-chart-viewport{max-width:100%;overflow-x:auto;border-radius:18px;overscroll-behavior-x:contain}
 .world-chart-viewport:focus-visible{outline:2px solid #aa7939;outline-offset:2px}
 .world-map-summary{display:flex;justify-content:space-between;gap:12px;margin-bottom:10px;font-weight:700;color:#655338}

@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {createPetInstance} from '../js/adventure_pet_interactions_core.js';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {installExpansion} from '../js/adventure_expansion_core.js';
@@ -21,6 +22,36 @@ test('shared four-seat formation swaps both heroes without changing either solo 
     assert.equal(next.slots[3].owner,0);assert.equal(next.slots[1].owner,1);assert.equal(next.slots.length,4);
     const party=localParty(next,ss,content);assert.equal(party[0].id,'hero');assert.equal(party[0].slot,3);assert.equal(party[1].slot,1);assert.deepEqual(ss,before);
 });
+test('duo guests replace pet seats, keep both human controls and survive PvE/PvP replay',()=>{
+    const empty=saves(),emptyFormation=createLocalFormation(['a','b'],empty);
+    const guest={...localParty(emptyFormation,empty,content)[0],id:'ally1'};delete guest.localOwner;
+    assert.equal(localParty(emptyFormation,empty,content,[guest]).length,3);
+    assert.throws(()=>localParty(emptyFormation,empty,content,[guest,guest,guest]),/最多/);
+    for(const count of [1,2])for(const swapped of [false,true]){
+        const ss=saves();
+        ss.forEach((s,i)=>{const pet=createPetInstance(content,{id:`test-pet-${i}`,ownerId:`owner-${i}`,speciesId:'dragon_purple'});s.pets[pet.id]=pet;s.formation[1]=pet.id;});
+        const base=createLocalFormation(['a','b'],ss),formation=swapped?moveLocalSeat(base,0,3):base;
+        const template=localParty(formation,ss,content)[0],allies=Array.from({length:count},(_,i)=>{
+            const unit={...structuredClone(template),id:`ally${i+1}`,name:`队友${i+1}`};delete unit.localOwner;return unit;
+        });
+        const before=structuredClone(formation),party=localParty(formation,ss,content,allies);
+        assert.deepEqual(formation,before);assert.equal(party.length,4);assert.equal(new Set(party.map(u=>u.slot)).size,4);
+        assert.equal(party.find(u=>u.id==='hero').slot,swapped?3:0);
+        for(const ally of allies)assert.equal(party.find(u=>u.id===ally.id).isBot,true);
+        beginEncounter(ss[0],content,'fire-scout');
+        const cp={...ss[0].pendingEncounter,party,player:party[0],localHumans:localHumanResources(ss,content)},battle=restorePveBattle(dataset,content,cp);
+        assert.deepEqual(Object.keys(battle.localHumans),['hero','local-hero-1']);
+        assert.equal(battle.sides.near.length,4);
+        for(const ally of allies)assert.equal(battle.unitsById[ally.id].arenaProfile.name,ally.name);
+        const decision={humanDecisions:{hero:{pass:true},'local-hero-1':{pass:true}}};
+        playPveRound(battle,decision);cp.decisions.push(structuredClone(battle.lastDecision));
+        assert.deepEqual(restorePveBattle(dataset,content,cp).events,battle.events);
+        const arena=startRedMushroom(dataset,party,4,32,{scale:1});
+        assert.deepEqual(arena.arena.localHumanIds,['hero','local-hero-1']);
+        for(const ally of allies)assert.equal(arena.arena.unitsById[ally.id].isBot,true);
+        playRedMushroom(arena,decision);assert.deepEqual(restoreRedMushroom(dataset,arena.replay).arena.events,arena.arena.events);
+    }
+});
 test('dual ready gate allows cancellation, ignores dead/frozen actors and resets each round',()=>{
     const r=createLocalReady(),ids=['a','b'],units={a:{hp:100},b:{hp:100}};r.reset(1);r.submit('a',{pass:true},ids);assert.equal(r.complete(ids,units),false);
     r.cancel('a');r.submit('b',{pass:true},ids);assert.equal(r.complete(ids,units),false);units.a.freezeRounds=1;assert.equal(r.complete(ids,units),true);assert.deepEqual(r.decisions(ids,units),{a:{pass:true},b:{pass:true}});r.reset(2);assert.deepEqual(r.choices,{});
@@ -40,7 +71,8 @@ test('same-side PvP honors two manual choices and preserves v4 replay',()=>{
     const restored=restoreRedMushroom(dataset,match.replay);assert.deepEqual(restored.arena.events,match.arena.events);assert.equal(restored.arena.rng.state(),match.arena.rng.state());
 });
 test('camera fit and move constraint keep both characters in the padded view',()=>{
-    assert.equal(wideEnough(1280,720),true);assert.equal(wideEnough(1200,720),false);
+    for(const [w,h] of [[800,480],[960,560],[1200,720],[1280,720],[800,900]])assert.equal(wideEnough(w,h),true,`${w}×${h}`);
+    for(const [w,h] of [[799,480],[800,479],[960,440],[760,560]])assert.equal(wideEnough(w,h),false,`${w}×${h}`);
     const positions=[{x:100,y:100},{x:1300,y:500}],c=fitLocalCamera(positions,1280,720);
     for(const p of positions){assert.ok(Math.abs(p.x-c.center.x)*c.scale<=520);assert.ok(Math.abs(p.y-c.center.y)*c.scale<=230);}
     assert.equal(constrainLocalPosition({x:10000,y:100},positions[0],1280,720),false);

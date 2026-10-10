@@ -29,3 +29,15 @@
 .city-action-row p{font-size:13px;line-height:1.6}
 .city-interaction .modal-header h2{font-size:20px}
 .city-interaction .modal-body button{margin:4px;max-width:100%;white-space:normal}
+
+.earth-saved-places{position:absolute;inset:0;pointer-events:none}
+.haqi-app .earth-saved-marker{position:absolute;transform:translate(-50%,-50%);width:36px;height:36px;min-height:36px;padding:5px;border:0;background:transparent;box-shadow:none;pointer-events:auto}
+.haqi-app .earth-saved-marker:active:not(:disabled){transform:translate(-50%,-50%)}
+.earth-saved-marker svg{width:100%;height:100%;fill:#e9f4ec;stroke:#244f3b;stroke-width:1.8;filter:drop-shadow(0 1px 2px #fff)}
+.earth-saved-marker.recent svg{fill:#f4ca69;stroke:#70451b}
+.earth-saved-marker[hidden]{display:none}
+.earth-saved-marker:focus-visible{outline:3px solid #244f3b;border-radius:6px}
+.earth-saved-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;max-height:150px;overflow:auto}
+.earth-saved-row{display:flex;gap:4px;max-width:100%}
+.earth-saved-row button{min-width:0;overflow-wrap:anywhere}
+.earth-map-tools span{align-self:center;font-size:13px}

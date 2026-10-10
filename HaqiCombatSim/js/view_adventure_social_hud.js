@@ -5,10 +5,10 @@ export function socialHudButton(label,kind,unread,onOpen){
     const mark=document.createElementNS('http://www.w3.org/2000/svg','svg');mark.setAttribute('viewBox','0 0 24 24');mark.setAttribute('width','24');mark.setAttribute('height','24');mark.setAttribute('aria-hidden','true');mark.classList.add('social-symbol');const path=document.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',kind==='mail'?'M3 5h18v14H3z M3 6l9 7 9-7':'M4 4h16v12H10l-6 5V4z M8 9h8 M8 12h5');path.setAttribute('fill','none');path.setAttribute('stroke','currentColor');path.setAttribute('stroke-width','1.8');path.setAttribute('stroke-linejoin','round');mark.append(path);b.append(mark);
     const dot=document.createElement('span');dot.className='social-unread';dot.hidden=!unread;dot.setAttribute('aria-hidden','true');b.append(dot);b.onclick=()=>onOpen(kind);return b;
 }
-export function teamHudButton(team,coopRun,onOpen){
+export function teamHudButton(team,coopRun,onOpen,localSecond=null){
     const members=coopRun?.members||team||[];
-    const count=1+members.filter(Boolean).length;
-    if(count===1&&!coopRun)return null;
+    const count=(localSecond?2:1)+members.filter(Boolean).length;
+    if(!members.filter(Boolean).length&&!coopRun)return null;
     const b=socialHudButton('队伍管理','social-party',false,onOpen);
     b.title=fill(`队伍管理（{v0}人）`,{v0:String(count)}).text;b.setAttribute('aria-label',b.title);
     b.classList.add('team-hud-button');

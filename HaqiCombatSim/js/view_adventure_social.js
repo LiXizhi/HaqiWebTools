@@ -91,7 +91,8 @@ export function renderSocial(root,state,kind,cb){
         };
         const selfCard=el('article','party-seat filled captain',el('span','party-seat-tag','队长'));
         identity(selfCard,self);seats.append(selfCard);
-        for(let i=0;i<3;i++){
+        if(state.localSecond){const card=el('article','party-seat filled',el('span','party-seat-tag','队员'));identity(card,state.localSecond);seats.append(card);}
+        for(let i=0;i<(state.teamCapacity??3);i++){
             const ally=state.allies[i],open=state.openSlots[i],card=el('article',`party-seat ${ally?'filled':open?'open':'empty'}`);
             if(ally){
                 card.append(el('span','party-seat-tag','队员'));identity(card,ally);
@@ -130,7 +131,7 @@ export function renderSocial(root,state,kind,cb){
             if(!canCoop)body.append(el('p','muted','当前副本不支持组队邀请。'));
             for(const p of state.roster){
                 const joined=state.team.some(t=>t.id===p.id),card=el('article','social-person',el('h3','',p.name),el('p','',fill(`{v0} · 母语{v1} · 正在学{v2}`,{v0:String(schoolNames[p.school]||p.school),v1:String(languageName(p.native)),v2:String(languageName(p.target))}).text),el('p','muted',p.interest||''));
-                const join=button(joined?'移出队伍':'邀请组队',()=>cb.team(p,!joined),'primary');join.disabled=!canCoop||(!joined&&state.team.length>=3);
+                const join=button(joined?'移出队伍':'邀请组队',()=>cb.team(p,!joined),'primary');join.disabled=!canCoop||(!joined&&state.team.length>=(state.teamCapacity??3));
                 card.append(button('查看名片',()=>cb.profile(p),'secondary'),join,button('交谈',()=>cb.talk(p),'secondary'));
                 if(p.kind==='account'){const friend=state.friends.find(f=>f.userId===String(p.userId));card.append(button(friend?'写信':'添加好友',()=>friend?cb.compose(friend):cb.friend(p),'secondary'));if(friend)card.append(button('私聊',()=>cb.privateChat(friend),'secondary'));}
                 body.append(card);
@@ -143,7 +144,7 @@ export function renderSocial(root,state,kind,cb){
     for(const p of rows){
         const card=el('article','social-person',el('h3','',p.name),el('p','',fill(`{v0} · 母语{v1} · 正在学{v2}`,{v0:String(schoolNames[p.school]||p.school),v1:String(languageName(p.native)),v2:String(languageName(p.target))}).text),el('p','muted',p.interest||''));
         if(kind==='social-pvp')card.append(button('开始切磋',()=>cb.challenge(p),'primary'));
-        else{const joined=state.team.some(t=>t.id===p.id),join=button(joined?'移出队伍':'邀请组队',()=>cb.team(p,!joined),'primary');join.disabled=state.coopActive||!joined&&state.team.length>=3;card.append(button('查看名片',()=>cb.profile(p),'secondary'),join,button('交谈',()=>cb.talk(p),'secondary'));
+        else{const joined=state.team.some(t=>t.id===p.id),join=button(joined?'移出队伍':'邀请组队',()=>cb.team(p,!joined),'primary');join.disabled=state.coopActive||!joined&&state.team.length>=(state.teamCapacity??3);card.append(button('查看名片',()=>cb.profile(p),'secondary'),join,button('交谈',()=>cb.talk(p),'secondary'));
             if(p.kind==='account'){const friend=state.friends.find(f=>f.userId===String(p.userId));card.append(button(friend?'写信':'添加好友',()=>friend?cb.compose(friend):cb.friend(p),'secondary'));if(friend)card.append(button('私聊',()=>cb.privateChat(friend),'secondary'));}}
         body.append(card);
     }

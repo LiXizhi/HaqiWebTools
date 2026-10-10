@@ -28,8 +28,8 @@ import {createLocalPeerControl} from './view_local_peer_controls.js';
 import {renderSocialActions} from './view_social_actions.js';
 import {localSocialBubbles} from './adventure_social_motion_core.js';
 import {socialActionOptions,socialActionParams} from './adventure_social_actions_core.js';
-import {SOCIAL_DEFAULTS} from './adventure_social_core.js';
-import {localFollowWithinRange} from './adventure_local_coop_core.js';
+import {snapshotUnit,SOCIAL_DEFAULTS} from './adventure_social_core.js';
+import {createLocalFollowMotion} from './adventure_local_follow_core.js';
 import {observeBattle,haqiRulesAdapter} from './battle_ai/haqi_adapter_core.js';
 
 const personal=new Set(['inventory','equipment','pet','deck','shop','upgrade','gems','quests','npc-services']);
@@ -43,6 +43,7 @@ export function createLocalPlay(api){
     let pickupPromise=null;
     let planner=null,aiGoal=null,aiCandidates=[],aiThinkAt=0,preferredGoal=null,aiTicket=0,aiBattleTask=null,hintRound=null,hintLanguage=null;
     const aiBattle=new BattleAIClient();
+    const followMotion=createLocalFollowMotion();
     const panels=[null,null],dialogs=[null,null],roots=[el('div','local-personal local-left'),el('div','local-personal local-right')];
     const peerControl=createLocalPeerControl(()=>openPeerActions(1));
     function setFollowing(owner,value){
@@ -83,7 +84,7 @@ export function createLocalPlay(api){
     const mouseOwner=()=>{if(session?.controller==='ai')return 0;const inputs=normalizePlayerInputs(state().settings.playerInputs);const full=inputs.findIndex(d=>d.type==='keyboard-mouse');return full>=0?full:inputs.findIndex(d=>d.type.startsWith('keyboard'));};
     const ui=[{},{}],pressed=[new Set(),new Set()],following=[false,false],paths=[[],[]];
     const battleUi=[{discarded:[]},{discarded:[]}],ready=createLocalReady();let match=null,battleTargetOwner=0;
-    const banner=el('div','local-wide-warning',el('h2','','双人模式需要宽屏'),el('p','','请将窗口调至至少1280×720，宽高比至少16:10。当前进度已保留。'));
+    const banner=el('div','local-wide-warning',el('h2','','双人模式窗口过小'),el('p','','请将游戏显示区域调至至少800×480。当前进度已保留。'));
     banner.hidden=true;document.body.append(...roots,banner);
     const gatherCanvas=el('canvas','local-gather-layer');document.body.append(gatherCanvas);
     const state=()=>api.state(),saves=()=>[state().save,session?.second],ids=()=>session?.ids||[state().store.catalog.activeId];
@@ -124,7 +125,7 @@ export function createLocalPlay(api){
             &&(world.encounters||[]).every(enemy=>W.distance(enemy,point)>p.enemyClearance);
     }
     function planAI(now){
-        if(!session||session.controller!=='ai'||following[1]||aiPaused()||now<aiThinkAt)return;
+        if(!session||teamFollowing()||session.controller!=='ai'||localFollowing()[1]||aiPaused()||now<aiThinkAt)return;
         const s=state(),p=companionParams(s.assets.content);aiThinkAt=now+p.thinkMs;
         const candidates=gatherVisible.filter(n=>gatheringRemaining(record,n,day())>0&&W.distance(n,s.save.position)<p.followDistance).map(n=>({...n,id:`gather:${n.id}`,kind:'gather',remaining:gatheringRemaining(record,n,day())}));
         for(const drop of record.drops||[])if(drop.zone===s.world.zone&&W.distance(drop,s.save.position)<=p.followDistance)candidates.push({...drop,id:`drop:${drop.id}`,kind:'pickup'});
@@ -203,7 +204,7 @@ export function createLocalPlay(api){
     function close(owner){void voices[owner].cancel();roots[owner].disposeDialogue?.();roots[owner].replaceChildren();roots[owner].className=`local-personal local-${owner?'right':'left'}`;panels[owner]=null;dialogs[owner]=null;pressed[owner].clear();paths[owner]=[];if(formationDrag?.owner===owner)formationDrag=null;delete ui[owner].seat;}
     function closeAll(){close(0);close(1);formationDrag=null;}
     async function start(first,second,{controller}={}){
-        if(!wideEnough(innerWidth,innerHeight))throw Error('双人模式需要至少1280×720的宽屏窗口');
+        if(!wideEnough(innerWidth,innerHeight))throw Error('双人模式需要至少800×480的游戏显示区域');
         if(first===second)throw Error('请选择两个不同角色');
         await ensure();const {store}=state();const rows=[first,second].map(id=>store.catalog.roles.find(r=>r.id===id));
         if(rows.some(r=>!r))throw Error('角色不存在');
@@ -212,6 +213,7 @@ export function createLocalPlay(api){
         const pair=[first,second].join(':');
         const formation=record.formations[pair]||createLocalFormation([first,second],rows.map(r=>r.save));
         validateLocalFormation(formation,[first,second],rows.map(r=>r.save));
+        followMotion.reset();
         session={ids:[first,second],second:structuredClone(rows[1].save),formation,returnTo:{zone:rows[1].save.zone,position:{...rows[1].save.position},dungeonReturn:rows[1].save.dungeonReturn},world:null};
         session.controller=(record.pending?.controller??controller??record.controllers?.[pair])==='ai'?'ai':'human';
         planner=createCompanionPlanner(pair,companionParams(state().assets.content));aiThinkAt=0;aiGoal=null;hintRound=null;aiCandidates=[];
@@ -311,10 +313,25 @@ export function createLocalPlay(api){
         roots[owner].classList.add('local-personal',owner?'local-right':'local-left');
         roots[owner].querySelector('[role="dialog"]')?.setAttribute('aria-modal','false');
     }
+    function localFollowing(){return [following[0],following[1]||!following[0]&&session?.controller==='ai'&&planner?.mode==='follow'];}
+    function syncWorld(force=false){
+        if(!session||!state().world||force&&!teamFollowing()&&!localFollowing().some(Boolean))return;
+        const {save,world,assets}=state();
+        if(followMotion.sync(world,saves(),{force,params:{...SOCIAL_DEFAULTS,...assets.content.balanceParams?.islandSocial}})){
+            session.world=world;session.lastLeader={...save.position};paths.forEach(p=>p.length=0);mouseTargets.fill(null);planner?.reset({keepMode:true});aiGoal=null;aiThinkAt=0;
+        }
+    }
+    function teamFollowing(){return !!session&&!!api.socialTeam?.().length;}
+    function battleAllies(save=state().save){
+        const {assets}=state();
+        const members=save.coopRun?.members||(api.prepareSocialTeam?.()||api.socialTeam?.()||[]).map((profile,i)=>({profile,unit:snapshotUnit(profile,assets.dataset,`ally${i+1}`,i+1)}));
+        return members.map(({profile:p,unit})=>({...unit,appearance:p.appearance,bodyId:p.bodyId,headId:p.headId,customHead:p.customHead,mountId:p.mountId}));
+    }
+    function partyFor(save=state().save){return localParty(session.formation,[save,session.second],state().assets.content,battleAllies(save));}
     async function beginBattle(){
         if(!session)return null;
         const {save,assets}=state();closeAll();
-        const checkpoint=structuredClone(save.pendingEncounter),party=localParty(session.formation,saves(),assets.content);
+        const checkpoint=structuredClone(save.pendingEncounter),party=partyFor();
         checkpoint.party=party;checkpoint.player=party[0];checkpoint.localHumans=localHumanResources(saves(),assets.content);
         record.pending={kind:'pve',receipt:`local:${checkpoint.id}`,ids:[...ids()],checkpoint,base:structuredClone(save.pendingEncounter),second:structuredClone(session.second)};
         record.pending.controller=session.controller;companion.clearSpeech();
@@ -383,7 +400,7 @@ export function createLocalPlay(api){
     }
     async function startArena(){
         if(busy)return;await ensure();const {assets}=state();
-        const seats=localParty(session.formation,saves(),assets.content).map(u=>({...u,kind:u.speciesId?'pet':'self'}));
+        const seats=partyFor().map(u=>({...u,kind:u.speciesId?'pet':'self'}));
         match=startRedMushroom(assets.dataset,seats,seats.length,Date.now()>>>0,{scale:1});
         record.pending={kind:'pvp',receipt:`local:${crypto.randomUUID()}`,ids:[...ids()],controller:session.controller,replay:structuredClone(match.replay)};await queueWrite();closeAll();api.enterBattle(match.arena);
     }
@@ -506,7 +523,7 @@ export function createLocalPlay(api){
     function tick(now,dt){
         const {save,world,stage,renderer}=state();
         if(session){
-            if(stage==='world'&&following[1]&&!localFollowWithinRange(session.second.position,save.position,state().assets.content))setFollowing(1,false);
+            if(stage==='world')syncWorld();
             if(session.requestedController&&!busy&&!state().animating)safe(()=>setController(session.requestedController));
             let anchor=null,obstacles=[];
             if(stage==='world')anchor=renderer.worldToScreen({...session.second.position,y:session.second.position.y-100});
@@ -527,19 +544,24 @@ export function createLocalPlay(api){
         if(record.pickup&&!busy){busy=true;safe(()=>finishPickup().finally(()=>{busy=false;}));return;}
         if(session){
             session.moving=[false,false];
-            if(session.world!==world){session.world=world;session.second.zone=save.zone;session.second.position=W.movePosition(world,save.position,65,0);session.lastLeader={...save.position};paths.forEach(p=>p.length=0);planner?.reset({keepMode:true});aiGoal=null;aiThinkAt=0;void companion.remember(`我们来到${world.name||save.zone}。`);}
+            const follow=localFollowing();
             planAI(now);
             const positions=saves();
             for(let owner=0;owner<2;owner++){
                 const s=positions[owner],peer=positions[1-owner];if(panels[owner]||dialogs[owner]||state().globalPaused)continue;
+                if(teamFollowing()||follow[owner]){paths[owner]=[];if(owner===1||follow[owner]){mouseTargets[owner]=null;continue;}}
                 let dx=Number(pressed[owner].has('right'))-Number(pressed[owner].has('left')),dy=Number(pressed[owner].has('down'))-Number(pressed[owner].has('up'));
-                if((following[owner]&&W.distance(s.position,peer.position)>80)||paths[owner].length){if(!paths[owner].length)paths[owner]=W.findPath(world,s.position,peer.position);const next=W.followPath(world,s.position,paths[owner],W.WALK_SPEED*dt);paths[owner]=next.path;dx=next.position.x-s.position.x;dy=next.position.y-s.position.y;}
+                if(paths[owner].length){const next=W.followPath(world,s.position,paths[owner],W.WALK_SPEED*dt);paths[owner]=next.path;dx=next.position.x-s.position.x;dy=next.position.y-s.position.y;}
                 if(dx||dy){const n=Math.hypot(dx,dy),step=Math.min(W.WALK_SPEED*dt,following[owner]||mouseTargets[owner]||owner===1&&session.controller==='ai'?n:Infinity),next=W.movePosition(world,s.position,dx/n*step,dy/n*step);if(constrainLocalPosition(next,peer.position,innerWidth,innerHeight)&&!(owner===1&&session.controller==='ai'&&W.autoInteraction(world,next))){session.moving[owner]=W.distance(s.position,next)>.01;s.position=next;s.facing=Math.abs(dx)>Math.abs(dy)?dx<0?1:2:dy<0?3:0;}}
             }
+            if(!teamFollowing()){
+                const moved=followMotion.step(world,positions,follow,dt,{paused:state().globalPaused||panels.some(Boolean)||dialogs.some(Boolean),params:{...SOCIAL_DEFAULTS,...state().assets.content.balanceParams?.islandSocial}});
+                moved.forEach((value,owner)=>{if(follow[owner])session.moving[owner]=value;});
+            }
             if(mouseTargets[1]&&W.distance(session.second.position,mouseTargets[1])<85){const target=mouseTargets[1];mouseTargets[1]=null;paths[1]=[];if(target.itemId){/* Standing still starts collection on the next tick. */}else if(target.kind==='npc')talk(1,target);else if(target.kind==='encounter')api.interact(target);}
-            if(session.lastLeader&&!constrainLocalPosition(save.position,session.second.position,innerWidth,innerHeight))save.position={...session.lastLeader};
+            if(!teamFollowing()&&!follow.some(Boolean)&&session.lastLeader&&!constrainLocalPosition(save.position,session.second.position,innerWidth,innerHeight))save.position={...session.lastLeader};
             session.lastLeader={...save.position};
-            if(session.controller!=='ai'&&!panels[1]&&!dialogs[1]&&!state().globalPaused){const target=W.autoInteraction(world,session.second.position);if(target?.kind==='encounter'&&target.id!==session.secondContact)api.interact(target);session.secondContact=target?.id??null;}
+            if(!teamFollowing()&&!follow[1]&&session.controller!=='ai'&&!panels[1]&&!dialogs[1]&&!state().globalPaused){const target=W.autoInteraction(world,session.second.position);if(target?.kind==='encounter'&&target.id!==session.secondContact)api.interact(target);session.secondContact=target?.id??null;}
             if(now-careAt>1000){careAt=now;tickCare(session.second,state().assets.content,A.playerSpec(session.second,state().assets.content),Date.now(),true);}
         }
         if(gatherWorld!==world){gatherWorld=world;gatherTick=0;gatherVisible=[];gatherProgress.fill(null);gatherEffects.length=0;smeltProgress.fill(null);petJobs.fill(null);petCooldown.fill(0);}
@@ -614,12 +636,13 @@ export function createLocalPlay(api){
             c.fillStyle='#fff8d0';c.fillText('+1',p.x,p.y-32-t*28);c.globalAlpha=1;
         }
     }
-    return {start:async(...args)=>{try{await start(...args);}catch(error){companion.stop();session=null;closeAll();document.body.classList.remove('local-duo');throw error;}},leave,ensure,beginBattle,paintBattle,storeSaves,tick,key,closeAll,openPersonal,openPanel,arenaLobby,pollInput:now=>input.poll(now),navigateGlobal:(root,action)=>navigate(0,action,root),
+    return {start:async(...args)=>{try{await start(...args);}catch(error){companion.stop();session=null;closeAll();document.body.classList.remove('local-duo');throw error;}},leave,ensure,syncWorld,partyFor,beginBattle,paintBattle,storeSaves,tick,key,closeAll,openPersonal,openPanel,arenaLobby,pollInput:now=>input.poll(now),navigateGlobal:(root,action)=>navigate(0,action,root),
         get gatheringPets(){return petJobs.filter(Boolean).map(job=>({pet:job.pet,position:job.position,moving:!!job.path.length,phase:performance.now()/200,facing:1}));},
         get active(){return !!session;},get paused(){return !!session&&!wideEnough(innerWidth,innerHeight);},get second(){return session?.second;},get busy(){return busy;},
         toggleMount(owner){if(!session||state().battle)return;const save=saves()[owner];save.mountHidden=!save.mountHidden;storeSaves();api.paintHud();},
         get moving(){return session?.moving||[false,false];},get mouseOwner(){return mouseOwner();},
-        get following(){return !!session&&(following.some(Boolean)||session.controller==='ai'&&planner?.mode==='follow');},
+        get secondFollowing(){return !!session&&(teamFollowing()||!!localFollowing()[1]);},
+        get following(){return !!session&&(teamFollowing()||following.some(Boolean)||session.controller==='ai'&&planner?.mode==='follow');},
         routePointer(point,target){if(!session||mouseOwner()===0)return false;if(mouseOwner()!==1)return true;const resource=gatherVisible.find(n=>W.distance(point,n)<24);mouseTargets[1]=resource||target||point;paths[1]=W.findPath(state().world,session.second.position,resource||target||point);following[1]=false;return true;},
         get leaderBlocked(){return !!panels[0]||!!dialogs[0];},clearKeys(){pressed.forEach(p=>p.clear());paths.forEach(p=>p.length=0);mouseTargets.fill(null);},
         get hasPersonal(){return panels.some(Boolean)||dialogs.some(Boolean);},

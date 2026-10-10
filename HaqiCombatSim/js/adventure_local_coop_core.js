@@ -2,14 +2,12 @@
 import {partySpecs} from './adventure_pets_core.js';
 import {playerSpec,runeInventory,settleParty,settleEncounter,applyAction} from './adventure_core.js';
 import {settleArenaQuests} from './adventure_red_mushroom_core.js';
-import {defaultParams} from './combat_params_core.js';
 
 const check=(ok,message)=>{if(!ok)throw Error(message);};
-export function wideEnough(width,height){return width>=1280&&height>=720&&width/height>=1.6;}
-export function localFollowWithinRange(position,leader,content){
-    const limit=content?.balanceParams?.islandSocial?.approachReleaseRadius??defaultParams('kids').islandSocial.approachReleaseRadius;
-    return Math.hypot(position.x-leader.x,position.y-leader.y)<=limit;
-}
+// CSS viewport pixels: two 400px player panes keep the action rows unwrapped.
+// 480px leaves room above the compact hands for the round/retreat controls.
+// Taller windows do not reduce either player's usable area.
+export function wideEnough(width,height){return width>=800&&height>=480;}
 export function createLocalFormation(roleIds,saves){
     check(roleIds.length===2&&new Set(roleIds).size===2,'请选择两个不同角色');
     return {version:1,roleIds:[...roleIds],slots:[{owner:0,kind:'hero'},{owner:1,kind:'hero'},...saves.map((s,owner)=>{
@@ -40,7 +38,7 @@ export function equipLocalPet(formation,owner,id,target,saves){
     if(id)next.slots[target]={owner,kind:'pet',id};
     return validateLocalFormation(next,formation.roleIds,saves);
 }
-export function localParty(formation,saves,content){
+export function localParty(formation,saves,content,allies=[]){
     validateLocalFormation(formation,formation.roleIds,saves);
     const units=formation.slots.flatMap((seat,slot)=>{
         if(!seat)return [];
@@ -51,6 +49,13 @@ export function localParty(formation,saves,content){
         check(unit,'请先加载出战宠物');
         return [{...unit,id:seat.kind==='hero'?hero.id:`local-pet-${seat.owner}`,slot,localOwner:seat.owner,sourcePetId:seat.id,isBot:seat.kind!=='hero',appearance:s.appearance,bodyId:s.bodyId,headId:s.headId,customHead:s.customHead,mountId:s.mountId}];
     });
+    check(allies.length<=2,'双人队伍最多邀请两位伙伴');
+    // Both local heroes keep their seats. Guests take empty seats, then pet seats.
+    for(const ally of allies){
+        let slot=formation.slots.findIndex((_,i)=>!units.some(u=>u.slot===i));
+        if(slot<0){const index=units.findLastIndex(u=>u.speciesId);check(index>=0,'队伍已满');slot=units[index].slot;units.splice(index,1);}
+        units.push({...structuredClone(ally),slot,isBot:true});
+    }
     // Existing adventure presentation and checkpoint validation keep leader first.
     return units.sort((a,b)=>(a.id==='hero'?-1:b.id==='hero'?1:a.slot-b.slot));
 }

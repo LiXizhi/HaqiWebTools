@@ -5,7 +5,9 @@ import fs from 'node:fs';
 import {createCompanionChatView} from '../js/view_companion_chat.js';
 import {createLocalPeerControl} from '../js/view_local_peer_controls.js';
 import {localSocialBubbles} from '../js/adventure_social_motion_core.js';
-import {localFollowWithinRange} from '../js/adventure_local_coop_core.js';
+import {createLocalFollowMotion} from '../js/adventure_local_follow_core.js';
+import {SOCIAL_DEFAULTS} from '../js/adventure_social_core.js';
+import {distance} from '../js/adventure_world_core.js';
 
 class Node {
     children=[];style={};attributes={};dataset={};hidden=false;
@@ -16,13 +18,45 @@ class Node {
     addEventListener(){}
     focus(){}
 }
-test('local following ends beyond the proximity limit and honors balance overrides',()=>{
-    const leader={x:0,y:0};
-    assert.equal(localFollowWithinRange({x:180,y:0},leader),true);
-    assert.equal(localFollowWithinRange({x:180.01,y:0},leader),false);
-    assert.equal(localFollowWithinRange({x:150,y:150},leader),false);
-    assert.equal(localFollowWithinRange({x:180,y:0},leader,{balanceParams:{islandSocial:{approachReleaseRadius:100}}}),false);
+const followWorld=(extra={})=>({zone:'camp',w:10000000,h:10000000,buildings:[],trees:[],npcs:[],paths:[],...extra});
+const followRoles=()=>[{zone:'camp',position:{x:300,y:300},facing:2},{zone:'camp',position:{x:342,y:300},facing:2}];
+test('manual follow survives world transfer and same-world map teleports while paused',()=>{
+    const motion=createLocalFollowMotion(),roles=followRoles(),following=[false,true],camp=followWorld();
+    motion.step(camp,roles,following,.02);
+    const earth=followWorld({zone:'earth',isEarth:true,earthBoating:true,terrainAt:()=> 'ocean'});
+    roles[0].zone='earth';roles[0].position={x:6000000,y:4000000};
+    motion.step(earth,roles,following,.02,{paused:true});
+    assert.equal(roles[1].zone,'earth');assert.ok(distance(roles[0].position,roles[1].position)<100);assert.deepEqual(following,[false,true]);
+    roles[0].position={x:7000000,y:3000000};motion.sync(earth,roles,{force:true});
+    assert.ok(distance(roles[0].position,roles[1].position)<100);motion.step(earth,roles,following,.02);
+    assert.ok(distance(roles[0].position,roles[1].position)<SOCIAL_DEFAULTS.followSpacing);
+    roles[0].zone='camp';roles[0].position={x:300,y:300};motion.step(camp,roles,following,.02);
+    assert.equal(roles[1].zone,'camp');assert.ok(distance(roles[0].position,roles[1].position)<100);assert.deepEqual(following,[false,true]);
 });
+test('manual follow keeps the route through shore, water and boat transitions despite a large initial gap',()=>{
+    const motion=createLocalFollowMotion(),roles=followRoles(),following=[false,true];
+    const world=followWorld({zone:'earth',isEarth:true,earthBoating:true,terrainAt:(x,y)=>x<400?'land':x<600?'water':'ocean'});
+    motion.sync(world,roles);roles[1].position={x:0,y:0};
+    for(let x=300;x<=850;x+=4){
+        roles[0].position={x,y:300};motion.step(world,roles,following,.02);
+        assert.deepEqual(following,[false,true]);assert.ok(distance(roles[0].position,roles[1].position)<100);
+    }
+    const boatingGap=distance(roles[0].position,roles[1].position);
+    assert.ok(boatingGap>0&&boatingGap<SOCIAL_DEFAULTS.followSpacing);
+    assert.notEqual(roles[1].position.y,roles[0].position.y);
+    roles[0].facing=1;
+    for(let x=846;x>=200;x-=4){roles[0].position={x,y:300};motion.step(world,roles,following,.02);assert.deepEqual(following,[false,true]);}
+    assert.equal(distance(roles[0].position,roles[1].position),SOCIAL_DEFAULTS.followSpacing);
+    following[1]=false;const stopped={...roles[1].position};roles[0].position.x-=20;motion.step(world,roles,following,.02);assert.deepEqual(roles[1].position,stopped);
+});
+test('either local player can follow and spacing comes from balance params',()=>{
+    const motion=createLocalFollowMotion(),roles=followRoles(),world=followWorld();motion.sync(world,roles);
+    const following=[true,false],params={...SOCIAL_DEFAULTS,followSpacing:60};
+    for(let x=350;x<=700;x+=5){roles[1].position={x,y:300};motion.step(world,roles,following,.02,{params});}
+    assert.equal(distance(roles[0].position,roles[1].position),60);assert.deepEqual(following,[true,false]);
+    const before=structuredClone(roles);motion.step(world,roles,following,.02,{paused:true,params});assert.deepEqual(roles,before);
+});
+
 test('companion control stays beside player two and disappears throughout combat',()=>{
     const previous=globalThis.document;
     const anchor={getBoundingClientRect:()=>({left:16,right:140,top:260}),querySelector:()=>({getBoundingClientRect:()=>({right:56})})};

@@ -40,6 +40,22 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         petScope(roleId){return scope(key(),roleId);},
         loadPet(save,id,roleId=state.catalog.activeId){const next=JSON.parse(JSON.stringify(save));hydratePetFile(next,id,scope(key(),roleId),fileIO(scope(key(),roleId)).read,content);return restoreRuntime(durableSave(next),content,runtimeValues(next));},
         get owner() { return owner; },
+        // Entry preferences stay local and never mark the role catalog dirty.
+        get duoSelection() {
+            try {
+                const ids = JSON.parse(storage.getItem(`${key()}.duo-selection`));
+                if (!Array.isArray(ids) || ids.length !== 2) return [null, null];
+                return ids.map((id, index) => typeof id === 'string'
+                    && state.catalog.roles.some(row => row.id === id)
+                    && ids.indexOf(id) === index ? id : null);
+            } catch { return [null, null]; }
+        },
+        rememberDuoSelection(ids) {
+            if (!Array.isArray(ids) || ids.length !== 2 || ids[0] === ids[1]
+                || !ids.every(id => state.catalog.roles.some(row => row.id === id))) return;
+            try { storage.setItem(`${key()}.duo-selection`, JSON.stringify(ids)); }
+            catch { /* An optional preference must not prevent entering the game. */ }
+        },
         get catalog() { return state.catalog; },
         get base() { return state.base; },
         get dirty() { return state.dirty; },

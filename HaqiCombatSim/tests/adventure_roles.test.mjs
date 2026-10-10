@@ -21,6 +21,42 @@ function local() {
     const storage = { getItem: k => data.get(k) ?? null, setItem: (k, v) => data.set(k, v) };
     return { data, storage, make: () => createRoleStore({ content, dataset, storage, runtimeStore, uuid: () => id(++n), now: () => 1000 + n }) };
 }
+test('duo selection survives reload in player order, stays local and is account scoped', () => {
+    const l = local(), store = l.make();store.open();
+    const a = store.create(hero('一号')), b = store.create(hero('二号'));
+    store.markSynced(id(9), store.checkpoint());
+    const before = store.checkpoint();
+    store.rememberDuoSelection([b, a]);
+    assert.equal(store.checkpoint(), before);assert.equal(store.dirty, false);
+    const loaded = l.make();loaded.open();assert.deepEqual(loaded.duoSelection, [b, a]);
+    loaded.open('alice');assert.deepEqual(loaded.duoSelection, [null, null]);
+    const c = loaded.create(hero('三号')), d = loaded.create(hero('四号'));
+    loaded.rememberDuoSelection([c, d]);
+    loaded.open();assert.deepEqual(loaded.duoSelection, [b, a]);
+    loaded.open('alice');assert.deepEqual(loaded.duoSelection, [c, d]);
+});
+
+test('duo selection leaves missing roles empty and rejects invalid stored preferences', () => {
+    const l = local(), store = l.make();store.open();
+    const a = store.create(hero('一号')), b = store.create(hero('二号'));
+    store.rememberDuoSelection([b, a]);store.remove(b);
+    assert.deepEqual(store.duoSelection, [null, a]);
+    for (const raw of ['broken', '{}', '[]', JSON.stringify([a, a]), JSON.stringify([42, a])]) {
+        l.storage.setItem('haqi.roles.v1.guest.duo-selection', raw);
+        const selected = store.duoSelection;
+        assert.equal(selected.length, 2);
+        assert.ok(selected.filter(Boolean).length <= 1);
+    }
+});
+
+test('unavailable local preference storage does not block role selection', () => {
+    const l = local(), store = l.make();store.open();
+    const a = store.create(hero('一号')), b = store.create(hero('二号'));
+    l.storage.setItem = () => { throw Error('quota'); };
+    assert.doesNotThrow(() => store.rememberDuoSelection([a, b]));
+    l.storage.getItem = () => { throw Error('blocked'); };
+    assert.deepEqual(store.duoSelection, [null, null]);
+});
 test('legacy save migrates once to guest role without changing source or binding to an account', () => {
     const l = local();saveLocal(hero('旧角色'), l.storage);const original = l.storage.getItem(SAVE_KEY);
     const store = l.make();store.open();assert.equal(store.catalog.roles.length, 1);assert.equal(store.catalog.roles[0].save.name, '旧角色');

@@ -493,7 +493,7 @@ export function renderHud(root,model,cb) {
     for(const control of [...root.querySelectorAll('.mount-toggle')]){control.style.left='';control.style.top='';socialBar.append(control);}
     // Mail HUD entry stays hidden until dual-account mailVerified is shipped.
     socialBar.append(socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));
-    const teamControl=teamHudButton(model.social?.team,save.coopRun,cb.panel);
+    const teamControl=teamHudButton(model.social?.team,save.coopRun,cb.panel,model.localSecond);
     if(teamControl)socialBar.append(teamControl);
     root.append(socialBar);
     if(model.localSecond){

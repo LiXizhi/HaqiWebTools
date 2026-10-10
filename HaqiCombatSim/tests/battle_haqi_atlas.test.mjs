@@ -73,7 +73,7 @@ test('island picking respects a coastal silhouette and ignores empty sea inside 
 async function withMap(run,{initial='world',pendingEncounter=null,loadFail=false,deferred=false,focusPortal=null}={}){
     const previous={document:globalThis.document,requestAnimationFrame:globalThis.requestAnimationFrame,cancelAnimationFrame:globalThis.cancelAnimationFrame};
     class Element{
-        constructor(tag){this.tag=tag;this.children=[];this.className='';this.dataset={};this.style={setProperty(){}};this.attributes={};this.hidden=false;this.events={};this.classList={toggle(){},add(){}};}
+        constructor(tag){this.tag=tag;this.offsetWidth=100;this.offsetHeight=44;this.children=[];this.className='';this.dataset={};this.style={setProperty(){}};this.attributes={};this.hidden=false;this.events={};this.classList={toggle(){},add(){}};}
         append(...nodes){this.children.push(...nodes);}replaceChildren(...nodes){this.children=nodes;}setAttribute(key,value){this.attributes[key]=value;}
         contains(node){return node===this||this.children.some(child=>child.contains?.(node));}setPointerCapture(){}
         addEventListener(name,fn){this.events[name]=fn;}getBoundingClientRect(){return {left:0,top:0,width:900,height:600};}
@@ -89,10 +89,10 @@ async function withMap(run,{initial='world',pendingEncounter=null,loadFail=false
     }finally{view.dispose();Object.assign(globalThis,previous);}
 }
 test('island selection does not travel until the button is pressed, and preserves island IDs',async()=>{
-    await withMap(({labels,card,travels})=>{labels.children.find(n=>n.textContent==='火鸟岛').onclick();assert.equal(travels.length,0);assert.equal(card.hidden,false);card.children[2].onclick();assert.deepEqual(travels,['fire']);});
+    await withMap(({labels,card,travels,view})=>{view.overview();labels.children.find(n=>n.textContent==='火鸟岛').onclick();assert.equal(travels.length,0);assert.equal(card.hidden,false);card.children[0].onclick();assert.deepEqual(travels,['fire']);});
 });
 test('local view draws a preview without a second player marker; position selection uses local coordinates',async()=>{
-    await withMap(({view,drawn,stage,canvas,pointer,card,positions})=>{assert.equal(drawn[0].options.showPlayer,false);const c=view.getState().camera,p=atlasPoint(c,islandAtlasPoint(town,layout,{x:2800,y:2200}),900,600);stage.onpointerdown(pointer(1,p.x,p.y));stage.onpointerup(pointer(1,p.x,p.y));assert.equal(card.children[2].disabled,false);card.children[2].onclick();assert.ok(Math.abs(positions[0].x-2800)<1e-8&&Math.abs(positions[0].y-2200)<1e-8);},{initial:'local'});
+    await withMap(({view,drawn,stage,canvas,pointer,card,positions})=>{assert.equal(drawn[0].options.showPlayer,false);const c=view.getState().camera,p=atlasPoint(c,islandAtlasPoint(town,layout,{x:2800,y:2200}),900,600);stage.onpointerdown(pointer(1,p.x,p.y));stage.onpointerup(pointer(1,p.x,p.y));assert.equal(card.children[0].disabled,false);card.children[0].onclick();assert.ok(Math.abs(positions[0].x-2800)<1e-8&&Math.abs(positions[0].y-2200)<1e-8);},{initial:'local'});
 });
 test('opening the world map from a Haqi island starts in local detail and limits overzoom',async()=>{
     await withMap(({view})=>{
@@ -133,11 +133,11 @@ test('returning through a vortex fits the complete archipelago instead of zoomin
     await withMap(({view,travels})=>{assert.deepEqual(view.getState().camera,fitAtlas(atlasBounds(art.islands,art.portals),900,600));assert.equal(view.getState().selected,null);assert.equal(travels.length,0);},{focusPortal:art.portals[0].id,initial:'local'});
 });
 test('battle disables travel but leaves browsing and vortex map navigation available',async()=>{
-    await withMap(({labels,card,travels,portals})=>{labels.children.find(n=>n.textContent==='火鸟岛').onclick();assert.equal(card.children[2].disabled,true);card.children[2].onclick();assert.equal(travels.length,0);labels.children.find(n=>n.className==='map-vortex').onclick();assert.equal(portals.length,1);},{pendingEncounter:'fight'});
+    await withMap(({labels,card,travels,portals})=>{labels.children.find(n=>n.textContent==='火鸟岛').onclick();assert.equal(card.children[0].disabled,true);card.children[0].onclick();assert.equal(travels.length,0);labels.children.find(n=>n.className==='map-vortex').onclick();assert.equal(portals.length,1);},{pendingEncounter:'fight'});
 });
 test('disposed view ignores a late manifest and does not draw or navigate',async()=>{
     await withMap(async({view,stage,pointer,resolveMap,labels})=>{view.dispose();resolveMap();await new Promise(resolve=>setImmediate(resolve));stage.onpointerdown(pointer(1,100,100));stage.onpointerup(pointer(1,100,100));assert.equal(view.getState().selected,null);assert.equal(labels.children.length,0);},{deferred:true});
 });
 test('failed manifest exposes a destination list with selection before travel',async()=>{
-    await withMap(({root,card,travels})=>{const list=root.querySelector('.haqi-atlas-fallback');assert.equal(list.children.length,ISLANDS.length);list.children.find(n=>n.textContent==='火鸟岛').onclick();assert.equal(travels.length,0);card.children[2].onclick();assert.deepEqual(travels,['fire']);},{loadFail:true});
+    await withMap(({root,card,travels})=>{const list=root.querySelector('.haqi-atlas-fallback');assert.equal(list.children.length,ISLANDS.length);list.children.find(n=>n.textContent==='火鸟岛').onclick();assert.equal(travels.length,0);card.children[0].onclick();assert.deepEqual(travels,['fire']);},{loadFail:true});
 });

@@ -510,6 +510,21 @@ config/maps 提供六岛源文件与统一地域规则；adventure_map_generator
 
 ## 2026-09-26：岛屿伙伴与快照组队
 
+2026-10-10 双人追加组队：两位本地主角加最多两位快照伙伴，共享四个阵位；伙伴优先占空位，再替换出战宠物，保留主角站位与两份手牌。场景先更新本地移动，再由社交控制器将第二位主角和伙伴交给同一条轨迹；地球居民数组流送不重置队伍轨迹，乘船间距与横向错位由 `BalanceParams.islandSocial` 配置。离队后恢复本地自由控制。普通双人显式跟随与AI跟随也通过 `adventure_local_follow_core` 复用队长轨迹；进入场景与地图传送先同步两人位置，不再以距离取消跟随。
+
+```mermaid
+flowchart LR
+    Local[adventure_local_play：本地移动] --> Social[adventure_social_controller：稳定队伍标识]
+    Local --> LocalFollow[adventure_local_follow_core：换图同步 / 显式跟随]
+    LocalFollow --> Trail
+    Guests[最多两位快照伙伴] --> Social
+    Social --> Trail[adventure_social_motion_core：第二主角与伙伴共用轨迹]
+    Trail --> Render[adventure_renderer：步行与乘船]
+    Guests --> Party[adventure_local_coop_core：四阵位合并]
+    Local --> Party
+    Party --> Battle[PvE / 红蘑菇：两人手动，其余AI]
+```
+
 `adventure_social_core` 处理名单、通信摘要和快照校验，`adventure_social_motion_core` 只做种子行为；`adventure_coop_core` 隔离副本进度、冻结阵容并保留血量；`adventure_social_pvp_core` 复用 free_pvp 及决定重演。`adventure_social` 是 SDK IO 边界，`adventure_social_controller` 连接场景和 UI，view 层只提交意图。组队房间对齐原版四人席：先选副本，空席开放后延迟补 AI。组队继续使用现有 PvE 与地图，不另写战斗公式。服务门禁与模块契约见 [岛屿社交](island-social.md)。
 
 ## 独立战斗AI（2026-09-27）
@@ -804,3 +819,17 @@ flowchart LR
 真人输入只留内存直接提交生成服务，不进入CDN或存档。纯规则和像素模块不依赖DOM/SDK；Worker与存储在浏览器IO层。正式资源目录与自定义目录隔离，NPC随机选择不读取用户形象。
 
 照片DIY补充：`view_photo_head`仅在窗口打开后通过`service.preview`补齐历史缩略图，不触发选择或写入。应用回调传`head + {appearance,bodyId}`给`view_hero_picker`，再走既有角色创建/换装提交；窗口内服装选择不直接改玩家存档。世界启动仍仅创建惰性photoHeads入口，使用角色携带的当前customHead描述，不枚举账号形象库。
+
+### 真实世界地图本机收藏（2026-10-10）
+
+```mermaid
+flowchart LR
+    Atlas[真实世界地图：星标 / 收藏落点 / 删除] -->|意图回调| App[adventure_app]
+    App --> Places[adventure_earth_places]
+    Places --> Local[adventure_local_store：IndexedDB haqi-earth-places-v1]
+    Local -->|最近1城及收藏点| Atlas
+    App -->|目的地进入成功后记录城市| Places
+    Atlas -->|一键传送| Travel[既有 travelEarth：战斗与副本限制 / 地形检查]
+```
+
+收藏为设备级偏好，不进入角色核心存档或云端。最近访问城市仅保留最后一次成功进入的具名城市；取消或失败的目的地不会覆盖记录，收藏点传送不替换最近城市。收藏事务成功后才更新图标；视图销毁后忽略异步绘制。地图底部列表支持键盘直达及取消收藏，不在哈奇世界图或当前城市图显示。

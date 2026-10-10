@@ -224,7 +224,7 @@ export function createRenderer(canvas,assets) {
         if(!assets.drawMonster?.(c,m,-52*scale,-104*scale+bob,104*scale,104*scale))creature(c,m?.id||'water-bubble',0,bob,t,scale,false);
         c.restore();
     }
-    function render(world,save,time,{localSecond=null,localSecondMoving=false,localFollowing=false,gatheringPets=[],graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
+    function render(world,save,time,{localSecond=null,localSecondMoving=false,localFollowing=false,localSecondFollowing=false,gatheringPets=[],graphics={particles:true,trails:true},socialGesture=null,petScene=null,socialActors=[],inParty=false,moving=false,path=[],title=false,rewardEffect=null,teleportEffect=null,weatherOverride=null,weatherTime=time,fishingPose=null,membership={},motionHidden=false,companionBubble=null,learningGreeting=null}={}) {
         let phaseTime=perf.enabled?performance.now():0;
         const mark=name=>{if(phaseTime){const now=performance.now();perf.record(world.isEarth?name:name.replace('earth-','island-'),now-phaseTime);phaseTime=now;}};
         const markerFor=markerCache.forState(save,assets.content,world);
@@ -233,7 +233,7 @@ export function createRenderer(canvas,assets) {
         cameraZoom.tick(time,reducedMotion.matches);
         const baseScale=w<650?.82:1,sceneZoom=title?1:cameraZoom.value;
         cam.scale=baseScale*sceneZoom;const center=title?{x:(world.layout?world.center.x:875)+Math.sin(t*.04)*60,y:world.layout?world.center.y:770}:{...save.position};
-        const localCamera=!title&&localSecond?fitLocalCamera([save.position,localSecond.position],w,h,cam.scale):null;
+        const localCamera=!title&&localSecond&&!localSecondFollowing?fitLocalCamera([save.position,localSecond.position],w,h,cam.scale):null;
         if(localCamera){cam.scale=localCamera.scale;Object.assign(center,localCamera.center);}
         const aligned=alignCameraOrigin(center.x-w/(2*cam.scale),center.y-h/(2*cam.scale)+(w<650?50:25)/sceneZoom,cam.scale,dpr);
         const origin=!title&&world.dungeon?.scene.streetscape?.theme==='south-china'?clampCameraToWorld(aligned,world,{w:w/cam.scale,h:h/cam.scale},cam.scale,dpr):aligned;
@@ -437,7 +437,8 @@ export function createRenderer(canvas,assets) {
             if(o.kind==='local-player'){
                 const pose=socialGesturePose(socialGesture,'local-hero-1',gestureAt,reducedMotion.matches);ctx.save();ctx.translate(0,-(pose?.hop||0));
                 const peerVisualSave=sceneMountSave(earthBoatAt(world,o.x,o.y)?{...o.save,mountId:null}:o.save,{inParty:inParty||socialActors.some(actor=>actor.inParty)});
-                avatar(ctx,{...peerVisualSave,facing:localPose.facing},o.x,o.y,t,localSecondMoving,1,true,localPose);plate(ctx,o.save.name,o.x,o.y+20,PLATE.hero);
+                const onBoat=drawEarthBoatRider(ctx,assets,world,o,localPose.facing,(x,y)=>avatar(ctx,{...peerVisualSave,mountId:null,facing:localPose.facing},x,y,0,false,1,true,earthBoatRiderPose(localPose,localPose.facing)));
+                if(!onBoat)avatar(ctx,{...peerVisualSave,facing:localPose.facing},o.x,o.y,t,localSecondMoving||localPose.moving,1,true,localPose);plate(ctx,o.save.name,o.x,o.y+(onBoat?50:20),PLATE.hero);
                 if(pose){const head=socialHeadAnchor(o);text(ctx,pose.icon,head.x,head.y+9,27,'#fff');}ctx.restore();
             }
             if(o.kind==='hero'){

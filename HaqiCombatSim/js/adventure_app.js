@@ -1,3 +1,4 @@
+import {createEarthPlaces} from './adventure_earth_places.js';
 import {createLocalPlay} from './adventure_local_play.js';
 import {createPhotoHeadFeature} from './photo_head_feature.js';
 import {confirmDuoRole} from './role_selection_core.js';
@@ -129,11 +130,12 @@ function browseWorldPortal(portal,target){
     if(target==='earth'){close({silent:true});panel='earthmap';void openEarthMap({...portal.earth,portalFocus:true});}
     else openPanel('worldmap');
 }
+const earthPlaces=createEarthPlaces();
 async function openEarthMap(focus=null){
     const ticket=++earthViewTicket,current=save;
     renderEarthLoading(nodes.overlay,{close,localMap:world.isEarth?()=>openPanel('localmap'):null,switchWorld:switchWorldMap});
-    try{const service=await getEarth(),data=await service.atlas();if(ticket!==earthViewTicket||current!==save||panel!=='earthmap')return;
-        earthView=renderEarthAtlas(nodes.overlay,{...data,assetMode:assets.mode,current:focus||(world.isEarth?earthGeo(save.position,service.rules):null),focus},{close,localMap:()=>openPanel('localmap'),localMapLabel:world.isEarth?'返回当前城市地图':'返回当前岛屿地图',switchWorld:switchWorldMap,portal:browseWorldPortal,viewport:bounds=>service.viewport(bounds),travel:travelEarth});
+    try{const service=await getEarth(),data=await service.atlas();let places;try{places=await earthPlaces.read();}catch(e){toast('本机地图收藏读取失败，可重试打开地图');}if(ticket!==earthViewTicket||current!==save||panel!=='earthmap')return;
+        earthView=renderEarthAtlas(nodes.overlay,{...data,places,assetMode:assets.mode,current:focus||(world.isEarth?earthGeo(save.position,service.rules):null),focus},{close,localMap:()=>openPanel('localmap'),localMapLabel:world.isEarth?'返回当前城市地图':'返回当前岛屿地图',switchWorld:switchWorldMap,portal:browseWorldPortal,viewport:bounds=>service.viewport(bounds),addFavorite:geo=>earthPlaces.add(geo),removeFavorite:id=>earthPlaces.remove(id),travel:travelEarth});
     }catch(e){if(ticket===earthViewTicket&&panel==='earthmap')renderEarthLoading(nodes.overlay,{close,localMap:world.isEarth?()=>openPanel('localmap'):null,message:e.message,retry:()=>openEarthMap(focus),switchWorld:switchWorldMap});}
 }
 async function travelEarth(geo){
@@ -143,7 +145,9 @@ async function travelEarth(geo){
         if(save.zone!=='earth')save.earthReturn={zone:save.zone,position:{...save.position}};
         save.zone='earth';save.position=prepared.position;assets.content.earthWorld=prepared.world;earthOwner=current;earthTraveling=false;
         prepared.world.onObjectsChanged=(change={})=>{W.invalidateWorldObjects(prepared.world,change);if(world===prepared.world){void assets.warmNearby?.(world,save);if(!change.wildOnly&&change.socialChanged!==false)void islandSocial.refreshEarth();}};
-        await enterWorld(save);showTeleportEffect();toast('已抵达现实世界。沿陆地探索，或打开地图前往远方。');
+        await enterWorld(save);if(current!==save)return;
+        if(geo.id&&geo.name&&!geo.favorite)void earthPlaces.visit(geo).catch(()=>toast('最近访问城市保存失败'));
+        showTeleportEffect();toast('已抵达现实世界。沿陆地探索，或打开地图前往远方。');
     }catch(e){if(current===save&&ticket===earthViewTicket){earthView?.error(e.message);toast(e.message);}}finally{earthTraveling=false;}
 }
 async function practiceEarth(npc,learning){
@@ -278,13 +282,13 @@ const gemView={guid:null,gemId:null,runes:[null,null,null],runeIndex:0,step:'equ
 const strengtheningView={guid:null,filter:0,page:0,pending:false,message:''};
 let serviceNpc=null;
 const npcServiceView={query:'',page:0};
-const islandSocial=createIslandSocial({onArenaEnter:enterArenaCombat,onArenaCountdown:seconds=>{const label=nodes.overlay.querySelector('[data-arena-ready]');if(label)setText(label,'准备好迎战！{seconds} 秒后自动进入战斗法阵。',{seconds});},onTalk:p=>void characterChat.open(p,{returnPanel:'social-profile'}),onDetails:p=>void characterChat.open(p,{returnPanel:'social-profile',detailsOnly:true}),onRelationshipActivity:event=>recordRelationshipActivity(event),getAffinity:p=>characterChat.affinity(p),onPetDialogue:(owner,action,settle)=>petScene.dialogue(owner,action,settle),getState:()=>({save,world,assets,roleId:roleStore?.catalog.activeId,loadPet,membership:membership.state,paused:stage!=='world'||document.hidden||!!panel||!!dialog||characterChat.active||!!secondCharacterChat?.active||localPlay.hasPersonal,locked:!!panel||!!dialog||characterChat.active||!!secondCharacterChat?.active||localPlay.hasPersonal}),getOwner:()=>roleStore?.owner,onChange:()=>{if(stage==='world'&&save){paintHud();if(['mail','chat','social-party','social-actions','social-profile','social-pvp'].includes(panel))paintPanel();}},onPersist:()=>{persist();queueCloudSave();},onOpen:openPanel,onClose:close,onLogin:()=>void loginRoles(),toast,onDepart:(id,restart)=>void loadAndEnterDungeon(id,!!restart),onTeleport:(x,y)=>teleportToPosition(x,y)});
+const islandSocial=createIslandSocial({onArenaEnter:enterArenaCombat,onArenaCountdown:seconds=>{const label=nodes.overlay.querySelector('[data-arena-ready]');if(label)setText(label,'准备好迎战！{seconds} 秒后自动进入战斗法阵。',{seconds});},onTalk:p=>void characterChat.open(p,{returnPanel:'social-profile'}),onDetails:p=>void characterChat.open(p,{returnPanel:'social-profile',detailsOnly:true}),onRelationshipActivity:event=>recordRelationshipActivity(event),getAffinity:p=>characterChat.affinity(p),onPetDialogue:(owner,action,settle)=>petScene.dialogue(owner,action,settle),getState:()=>({save,world,assets,localSecond:localPlay.second,roleId:roleStore?.catalog.activeId,loadPet,membership:membership.state,paused:stage!=='world'||document.hidden||!!panel||!!dialog||characterChat.active||!!secondCharacterChat?.active||localPlay.hasPersonal,locked:!!panel||!!dialog||characterChat.active||!!secondCharacterChat?.active||localPlay.hasPersonal}),getOwner:()=>roleStore?.owner,onChange:()=>{if(stage==='world'&&save){paintHud();if(['mail','chat','social-party','social-actions','social-profile','social-pvp'].includes(panel))paintPanel();}},onPersist:()=>{persist();queueCloudSave();},onOpen:openPanel,onClose:close,onLogin:()=>void loginRoles(),toast,onDepart:(id,restart)=>void loadAndEnterDungeon(id,!!restart),onTeleport:(x,y)=>teleportToPosition(x,y)});
 const localPlay=createLocalPlay({
     state:()=>({save,world,battle,stage,assets,store:roleStore,settings:gameSettings.value,renderer,animating:!!animation,battleRoot:nodes.battle,globalPaused:!!panel||!!dialog||document.hidden||characterChat.active||secondCharacterChat?.active||languageAdventure.active}),
     control:controllerAction,model:()=>model(),replaceSave:value=>{save=value;},activate:activateRole,toast,paintHud,track,travel,interact,sound:toggleSound,login:()=>void loginRoles(),mapDialogue,
     loadPetFile:(roleId,path)=>cloudClient.petFile(roleId,path),
     openMap:()=>openPanel('map'),onSpeech:awardLanguageSpeech,
-    socialActors:()=>islandSocial.actors,socialGesture:()=>islandSocial.gesture,socialAccount:(p,kind)=>islandSocial.select(p,kind),
+    socialTeam:()=>islandSocial.team,prepareSocialTeam:()=>islandSocial.preparedTeam(),socialActors:()=>islandSocial.actors,socialGesture:()=>islandSocial.gesture,socialAccount:(p,kind)=>islandSocial.select(p,kind),
     characterAffinity:(owner,p)=>roleConversation(owner).affinity(p),
     characterTalk:(owner,p,options={})=>void roleConversation(owner).open(p,{...options,localSocialProfile:p}),
     readDialogue:(owner,text,locale,signal,speaker)=>dialogueVoice.speak(text,locale,signal,speaker),
@@ -657,6 +661,7 @@ async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     const reveal=()=>{
     if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=resumedWorld||W.createWorld(save.zone,assets.content,save);stage='world';path=[];destination=null;animation=null;close();
     if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};
+    localPlay.syncWorld();
     W.updateEncounterVisibility(world,save,Date.now());
     W.resetAutoInteraction(world,save.position);
     void assets.warmScenery?.(world);void assets.warmNearby?.(world,save);renderer?.prepareScene(world,save);
@@ -714,9 +719,14 @@ function paintRoles() {
     const startDuo=()=>{
         if(!roles.duoSelection?.every(Boolean))return;
         const [first,second]=roles.duoSelection;
-        return roleOperation('正在准备双人冒险…',async()=>{await localPlay.start(first,second,{controller:roles.duoController});await syncRoles();});
+        roleStore.rememberDuoSelection([first,second]);
+        return roleOperation('正在准备双人冒险…',async()=>{
+            try {await localPlay.start(first,second,{controller:roles.duoController});}
+            catch(error){roles.duoSelection=[first,null];throw error;}
+            await syncRoles();
+        });
     };
-    renderRoles(nodes.entry,assets,{...roles,recovering:roleStore.recovering||roles.localOnly,owner:roleStore.owner,catalog:roleStore.catalog,dirty:roleStore.dirty,locale:displayLocale(),roleLimit:currentRoleLimit(),isVip:accountIsVip()},{
+    renderRoles(nodes.entry,assets,{...roles,duoRecent:roleStore.duoSelection,recovering:roleStore.recovering||roles.localOnly,owner:roleStore.owner,catalog:roleStore.catalog,dirty:roleStore.dirty,locale:displayLocale(),roleLimit:currentRoleLimit(),isVip:accountIsVip()},{
         setLocale:setEntryNative,setSecondLocale,secondLocale:secondLocaleFor(displayLocale()),
         select:id=>roleOperation('正在进入角色…',async()=>{await localPlay.guardSolo();await activateRole(id);await syncRoles();}),
         toggleDuo:()=>{if(roles.busy||cloud.busy)return;roles.duoSelection=roles.duoSelection?null:[null,null];roles.error='';paintRoles();},
@@ -726,7 +736,6 @@ function paintRoles() {
             if(roles.duoSelection.every(Boolean))return startDuo();
             paintRoles();
         },
-        retryDuo:startDuo,
         setDuoController:value=>{roles.duoController=value;paintRoles();},
         create:newRoleForm,login:()=>void loginRoles(),logout:()=>roleOperation('正在退出…',async()=>{
             let pending=false;try{await syncRoles();}catch{pending=true;}
@@ -872,6 +881,7 @@ function updateMusic() {
 }
 function toggleMusic(){gameSettings.set({music:!gameSettings.value.music});updateMusic();paintPanel();}
 function showTeleportEffect(){
+    localPlay.syncWorld(true);
     if(!storageWarning)spellSound.play('teleport');
     resetMovementInput();path=[];destination=null;moving=false;
     teleportEffect={...save.position,started:performance.now()};
@@ -952,7 +962,7 @@ async function loadAndEnterDungeon(id,restart=false){
         if(islandSocial.team.length&&!next.coopRun){if(dungeonFor(assets.content,next.zone))leaveDungeon(next,assets.content);startCoopRun(next,islandSocial.preparedTeam(),assets.dataset,dungeonFor(assets.content,id),A.playerSpec(next,assets.content));next.coopRun.relationshipRunId=crypto.randomUUID();}
         if(restart&&next.coopRun){const members=next.coopRun.members.map(m=>m.profile),hero=next.coopRun.hero;leaveDungeon(next,assets.content);startCoopRun(next,members,assets.dataset,dungeonFor(assets.content,id),hero);next.coopRun.relationshipRunId=crypto.randomUUID();}
         const d=dungeonFor(assets.content,id);
-        const party=journeyCoopParty(next,A.playerSpec(next,assets.content))||journeyPetParty(next,assets.content,A.playerSpec(next,assets.content));
+        const party=localPlay.active?localPlay.partyFor(next):journeyCoopParty(next,A.playerSpec(next,assets.content))||journeyPetParty(next,assets.content,A.playerSpec(next,assets.content));
         if(d.kind==='tower')next.dungeonMode=Math.max(1,Math.min(4,party?.length||1));
         journeyParty(next,d,party);
         enterDungeon(next,assets.content,id,{restart});delete save.dungeonLanguageBuff;Object.assign(save,next);await enterWorld(save);queueCloudSave();
@@ -1479,6 +1489,7 @@ function frame(now) {
     scenePaused=backgroundScenePaused();
     let earthPhaseStart=earthFrameStart?performance.now():0;
     if(earthFrameStart)perf.record(phasePrefix+'update',earthPhaseStart-earthFrameStart);
+    localPlay.tick(now,dt);
     if(!scenePaused)islandSocial.step(Math.min(.1,(now-(islandSocial.lastFrame||now))/1000),{view:renderer.viewRect?.()});islandSocial.lastFrame=now;
     if(earthFrameStart){perf.record(phasePrefix+'social-frame',performance.now()-earthPhaseStart);earthPhaseStart=performance.now();}
     if(stage==='world'&&!scenePaused)try{petScene.step(Math.min(.055,(now-(petScene.lastFrame||now))/1000));}catch(error){if(petScene.error!==error.message){toast(error.message);petScene.error=error.message;}}petScene.lastFrame=now;
@@ -1486,8 +1497,7 @@ function frame(now) {
     // One scene gate for battle, cinematic and every blocking UI; retain the last frame.
     adaptiveGraphics.sample(now,{active:stage==='world'&&!scenePaused,scene:world.layout});
     if(scenePaused)renderer.pauseFrameMeter?.();
-    localPlay.tick(now,dt);
-    if(!scenePaused)renderer.render(world,save,now,{localSecond:localPlay.second,localSecondMoving:localPlay.moving[1],localFollowing:localPlay.following,gatheringPets:localPlay.gatheringPets,graphics:adaptiveGraphics.effects(gameSettings.value),petScene:save.petInstanceVersion===1&&stage==='world'?petScene:null,socialGesture:localPlay.gesture||islandSocial.gesture,socialActors:islandSocial.actors,inParty:islandSocial.team.length>0,moving:moving||localPlay.moving[0],path,title:stage==='title',rewardEffect,teleportEffect,fishingPose:sceneFishing.pose(now),membership:membership.state,motionHidden:stage!=='world'||document.hidden,learningGreeting:languageAdventure.greeting,companionBubble:stage==='world'&&!panel&&!dialog&&!languageAdventure.active&&!characterChat.active&&!secondCharacterChat?.active&&!sceneFishing.active?languageAdventure.bubble&&languageAdventure.invitation:null});
+    if(!scenePaused)renderer.render(world,save,now,{localSecond:localPlay.second,localSecondMoving:localPlay.moving[1],localFollowing:localPlay.following,localSecondFollowing:localPlay.secondFollowing,gatheringPets:localPlay.gatheringPets,graphics:adaptiveGraphics.effects(gameSettings.value),petScene:save.petInstanceVersion===1&&stage==='world'?petScene:null,socialGesture:localPlay.gesture||islandSocial.gesture,socialActors:islandSocial.actors,inParty:islandSocial.team.length>0,moving:moving||localPlay.moving[0],path,title:stage==='title',rewardEffect,teleportEffect,fishingPose:sceneFishing.pose(now),membership:membership.state,motionHidden:stage!=='world'||document.hidden,learningGreeting:languageAdventure.greeting,companionBubble:stage==='world'&&!panel&&!dialog&&!languageAdventure.active&&!characterChat.active&&!secondCharacterChat?.active&&!sceneFishing.active?languageAdventure.bubble&&languageAdventure.invitation:null});
     if(earthFrameStart)perf.record(phasePrefix+'draw',performance.now()-earthPhaseStart);
     if(stage==='world'&&!scenePaused){perf.end('startup');perf.end('world-ready');perf.end('combat-return');}
     if(sceneFishing.active){

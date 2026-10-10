@@ -2,7 +2,7 @@ import {loadHaqiAtlas} from './haqi_atlas_data.js';
 import {assetUrl} from './adventure_media_core.js';
 import {ISLANDS,travelStatus} from './adventure_world_map_core.js';
 import {createCloseButton,createWorldMapSwitch} from './view_adventure_controls.js';
-import {setText,tr} from './locale_runtime.js';
+import {setText,tr,fill} from './locale_runtime.js';
 import {atlasBounds,fitAtlas,atlasPoint,atlasInverse,zoomAtlas,constrainAtlas,islandAtlasPoint,islandLocalPoint,islandDetailOpacity,pickAtlasIsland,pickAtlasPortal,atlasOverviewCamera,atlasCoastContains,atlasOceanTiles,atlasSeaDecorations,atlasPortalSize} from './haqi_atlas_core.js';
 
 const el=(tag,className='',text)=>{const node=document.createElement(tag);node.className=className;if(text)setText(node,text);return node;};
@@ -15,8 +15,8 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
     heading.append(locate);if(cb.switchWorld)heading.append(createWorldMapSwitch('haqi',cb.switchWorld));header.append(heading,createCloseButton(cb.close));
     const stage=el('div','haqi-atlas-stage'),canvas=el('canvas','haqi-atlas-canvas'),labels=el('div','haqi-atlas-labels'),controls=el('div','earth-map-zoom'),status=el('p','earth-map-status'),card=el('div','haqi-atlas-selection');
     canvas.width=900;canvas.height=600;canvas.tabIndex=0;canvas.setAttribute('aria-label',tr('哈奇地图，可拖动和缩放，放大查看岛屿地形'));
-    const detail=el('strong'),recommendation=el('small'),enter=button('传送过去',()=>performTravel(),'primary');card.hidden=true;card.append(detail,recommendation,enter);status.setAttribute('role','status');
-    stage.append(canvas,labels,controls,status);body.append(stage,card);modal.append(header,body);root.append(modal);canvas.focus?.({preventScroll:true});
+    const enter=button('传送过去',()=>performTravel(),'primary');card.hidden=true;card.append(enter);status.setAttribute('role','status');
+    stage.append(canvas,labels,controls,status,card);body.append(stage);modal.append(header,body);root.append(modal);canvas.focus?.({preventScroll:true});
     let art=null,islands=[],portals=[],decorations=[],bounds=atlasBounds([]),camera=null,selected=null,disposed=false,pendingFrame=null,gesture=null,initialized=false,width=900,height=600,suppressClick=false,scene=null,dpr=1,gestureRect=null;
     const labelPositions=new WeakMap(),localLabels=new Map(),renderStats={sceneBuilds:0,previewBuilds:0};
     const pointers=new Map(),images=new Map(),masks=new Map(),previews=new Map(),labelNodes=new Map(),portalNodes=new Map(),failed=new Set(),context=canvas.getContext('2d');
@@ -38,9 +38,17 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
     controls.children[0].setAttribute('aria-label',tr('放大'));controls.children[1].setAttribute('aria-label',tr('缩小'));
     function choose(island,local=null,name=island.name){
         if(disposed)return;
-        selected={island,local,name};setText(detail,name);const known=ISLANDS.some(i=>i.id===island.id),state=known?travelStatus(save,assets.content,island.id):{allowed:false};
-        setText(recommendation,state.minLevel?'建议 {level} 级':'此岛尚未开放',{level:state.minLevel});
-        setText(enter,state.current?(local?'传送过去':'当前位置'):'传送到此岛');enter.disabled=!state.allowed||(state.current&&!local);card.hidden=false;draw();
+        selected={island,local,name};const known=ISLANDS.some(i=>i.id===island.id),state=known?travelStatus(save,assets.content,island.id):{allowed:false};
+        enter.title=`${tr(name)} · ${fill(state.minLevel?'建议 {level} 级':'此岛尚未开放',{level:state.minLevel}).text}`;
+        setText(enter,state.current?(local?'传送过去':'当前位置'):'传送到此岛');enter.disabled=!state.allowed||(state.current&&!local);card.hidden=false;positionSelection({x:width/2,y:height/2});draw();
+    }
+    function positionSelection(p){
+        card.hidden=p.x<0||p.y<0||p.x>width||p.y>height;
+        if(card.hidden)return;
+        const w=card.offsetWidth,h=card.offsetHeight,gap=18,margin=8;
+        const x=p.x+gap+w<=width-margin?p.x+gap:p.x-gap-w;
+        card.style.left=`${Math.max(margin,Math.min(width-w-margin,x))}px`;
+        card.style.top=`${Math.max(margin,Math.min(height-h-margin,p.y-h/2))}px`;
     }
     function performTravel(){
         if(disposed||!selected||enter.disabled)return;const {island,local}=selected;
@@ -104,7 +112,7 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
         }
         const portalSize=atlasPortalSize(camera.scale,fitAtlas(bounds,width,height).scale);
         for(const portal of portals){const node=portalNodes.get(portal.id);if(node.dataset.size!==String(portalSize)){node.dataset.size=String(portalSize);node.style.setProperty('--vortex-size',`${portalSize}px`);node.style.setProperty('--vortex-target-size',`${portalSize+10}px`);}positionLabel(node,point(portal.haqi));}
-        if(selected){const layout=assets.content.worldMaps?.[selected.island.id],p=point(selected.local&&layout?islandAtlasPoint(selected.island,layout,selected.local):selected.island);context.beginPath();context.arc(p.x,p.y,13,0,Math.PI*2);context.strokeStyle='#ffe5a2';context.lineWidth=3;context.stroke();}
+        if(selected){const layout=assets.content.worldMaps?.[selected.island.id],p=point(selected.local&&layout?islandAtlasPoint(selected.island,layout,selected.local):selected.island);context.beginPath();context.arc(p.x,p.y,13,0,Math.PI*2);context.strokeStyle='#ffe5a2';context.lineWidth=3;context.stroke();positionSelection(p);}
     }
     function schedule(){if(pendingFrame===null)pendingFrame=requestAnimationFrame(()=>{pendingFrame=null;draw();});}
     function activate(at){
@@ -124,7 +132,7 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
         const a=entries[0],b=entries[1];gesture={camera:{...camera},start:b?{x:(a.x+b.x)/2,y:(a.y+b.y)/2}:{...a},distance:b?Math.hypot(a.x-b.x,a.y-b.y):0,moved:b!=null||gesture?.moved||false,pinch:!!b};
     }
     stage.addEventListener('click',e=>{if(suppressClick&&e.detail!==0){e.preventDefault();e.stopImmediatePropagation();}},true);
-    stage.onpointerdown=e=>{if(disposed||!camera||(e.button!=null&&e.button!==0))return;if(!pointers.size)suppressClick=false;if(controls.contains(e.target)||e.target===status)return;if(!pointers.size)gestureRect=canvas.getBoundingClientRect();e.target.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{...screen(e),target:e.target});rebase();};
+    stage.onpointerdown=e=>{if(disposed||!camera||(e.button!=null&&e.button!==0))return;if(!pointers.size)suppressClick=false;if(controls.contains(e.target)||card.contains(e.target)||e.target===status)return;if(!pointers.size)gestureRect=canvas.getBoundingClientRect();e.target.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{...screen(e),target:e.target});rebase();};
     stage.onpointermove=e=>{
         if(!pointers.has(e.pointerId)||!gesture)return;pointers.set(e.pointerId,{...screen(e),target:pointers.get(e.pointerId).target});const values=[...pointers.values()],a=values[0],b=values[1],at=b?{x:(a.x+b.x)/2,y:(a.y+b.y)/2}:a;
         const dx=at.x-gesture.start.x,dy=at.y-gesture.start.y;if(!gesture.moved&&Math.hypot(dx,dy)<8)return;gesture.moved=true;suppressClick=true;

@@ -1,3 +1,4 @@
+import {earthDecorationIsTree} from './adventure_earth_nature_core.js';
 import {createPathQueue} from './path_queue_core.js';
 import {streetWalkable,streetSegmentWalkable} from './adventure_city_street_core.js';
 import {streetFindPath} from './adventure_city_navigation_core.js';
@@ -540,7 +541,7 @@ export function createWorldViewQuery(){
         const next=worldObjectIndex(world);
         if(scope!==world||index!==next||!bounds||rect.x<bounds.x||rect.y<bounds.y||rect.x+rect.w>bounds.x+bounds.w||rect.y+rect.h>bounds.y+bounds.h){
             scope=world;index=next;bounds={x:rect.x-128,y:rect.y-128,w:rect.w+256,h:rect.h+256};
-            rows=nearbyWorldObjects(world,bounds).sort((a,b)=>(a.sortY??a.y)-(b.sortY??b.y));scenery=world.isEarth?rows.filter(o=>o.kind!=='mob'):rows;encounters=world.encounters;
+            rows=nearbyWorldObjects(world,bounds).filter(o=>!world.bakeNaturalGround||o.kind!=='tree'||!Number.isInteger(o.earthDecoFrame)||earthDecorationIsTree(o.earthDecoFrame)).sort((a,b)=>(a.sortY??a.y)-(b.sortY??b.y));scenery=world.isEarth?rows.filter(o=>o.kind!=='mob'):rows;encounters=world.encounters;
         }
         if(world.isEarth&&encounters!==world.encounters){encounters=world.encounters;rows=[...scenery,...(encounters||[]).filter(o=>o.x>=bounds.x&&o.x<=bounds.x+bounds.w&&o.y>=bounds.y&&o.y<=bounds.y+bounds.h).map(o=>({...o,kind:'mob'}))].sort((a,b)=>(a.sortY??a.y)-(b.sortY??b.y));}
         return rows;

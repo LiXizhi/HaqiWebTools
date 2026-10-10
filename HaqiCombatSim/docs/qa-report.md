@@ -2400,3 +2400,7 @@ Node专项24/24，完整npm run test:battle 854/854通过（64.424秒），零�
 - 隔离浏览器8组通过：1280px/390px × 男女 × 四/十六方向，逐向真实拖动、保存、应用和旧转头入口验证；四方向真实Worker去底、WebP压缩、模拟CDN核验与重新处理通过。结果`.cache/simple-head-qa/report.json`，截图同目录。未使用真人照片、生产账号写入或真实AI生成。
 - `npm run test:battle`：979/982，3失败、0跳过。失败为`adventure_runes.test.mjs:32`缺少本机RuneList.xml、`battle_earth.test.mjs:150`政治地图WebP哈希不符、`battle_urban_residents.test.mjs:50`旧都市外观随机覆盖断言0对20。将本次修改的运行时模块通过只读Node loader替换为HEAD版本后，这三项仍全部同样失败；没有修改无关数据或跳过用例。日志`.cache/simple-head-battle.log`和`.cache/simple-head-baseline.log`。
 - 未构建、提交、推送或发布游戏；用户选择仅上传CDN，不复制额外Git镜像。
+
+2026-10-10 自然deco：同比缩小自然物件，接入现实日期／经纬度／当地季节的图集选择、静止跨月刷新及Worker一致性；现实世界隔离浏览器四季画面检查通过，无页面脚本错误。`npm run test:battle` 985通过、1个既有居民肤色配对断言失败，不能称全通过。详细范围和截图见当日devlog；未发布。
+
+2026-10-10 小型自然物件只走地表背景cell烘焙，视野缓存阶段排除其逐帧渲染；树冠与原碰撞查询保留。地表／流式50/50，快速回归986通过／1个既有肤色配对失败。静止120帧无新烘焙或队列重建、小物件逐帧draw为0；桌面移动整体绘制P95约4.1ms。范围与日志见当日devlog，未发布。

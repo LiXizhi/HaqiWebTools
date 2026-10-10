@@ -1,3 +1,4 @@
+import {earthNatureMonth} from './adventure_earth_nature_core.js';
 import {streamEarthWild} from './adventure_earth_wild_stream_core.js';
 import {generateEarthCityConnections} from './adventure_earth_transport_core.js';
 import {paintBridges} from './adventure_bridge.js';
@@ -40,7 +41,7 @@ export class EarthCache {
     clear(){this.cancelPending();this.pinned.clear();for(const row of this.entries.values())row.value.dispose?.();this.entries.clear();this.bytes=0;}
 }
 
-export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=null,fetcher=globalThis.fetch,decode=decodeTerrain,decodeOverview=decodeMapOverview,registerImage,releaseImage,prepareAssets,workerFactory,scheduler=null}={}){
+export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=null,fetcher=globalThis.fetch,decode=decodeTerrain,decodeOverview=decodeMapOverview,registerImage,releaseImage,prepareAssets,workerFactory,scheduler=null,getNatureTime=()=>Date.now()}={}){
     let surface=null;const registeredCityArt=new Set();
     function registerCityArt(art){if(art&&!registeredCityArt.has(art.id)){registerImage?.(art.id,art);registeredCityArt.add(art.id);}}
     function releaseCityArt(id){if(registeredCityArt.delete(id))releaseImage?.(id);}
@@ -126,14 +127,14 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
     }
     function makeWorld(p){
         const info=earthMapInfo(content),params=content.balanceParams;
-        return {zone:'earth',isEarth:true,earthBoating:true,w:info.w,h:info.h,earthRules:rules,terrainAt:typeAt,interactionParams:params?.adventure,monsterSceneParams:params?.monsterScene,
+        return {zone:'earth',isEarth:true,bakeNaturalGround:true,earthBoating:true,w:info.w,h:info.h,earthRules:rules,terrainAt:typeAt,interactionParams:params?.adventure,monsterSceneParams:params?.monsterScene,
             center:{...p},npcs:[],encounters:[],paths:[],buildings:[],trees:[],landmarks:[],decorations:[],portal:{id:'portal',hidden:true,x:p.x,y:p.y},
             layout:{name:'现实世界',earth:true,w:info.w,h:info.h,spawn:{...p},regions:[],bridges:[],rivers:[],lakes:[],rules:{terrain:{ocean:'#438b9b'}},coast:[]},
             terrainPainter:paint,earthScheduler:work,prepareImageBounds,drawEarthDecoration:(ctx,o)=>surface?.decoration(ctx,o),earthDecorationBaked:o=>surface?.isBaked(o),get surfaceStats(){return surface?.stats;},error:'',revision:0};
     }
     async function build(target,p,cityRows,auth,token){
         const terrain=[...cache.entries.values()].map(row=>row.value).filter(t=>t.indices).map(({key,width,height,indices,types,version})=>({key,width,height,indices,types,version}));
-        const input={target:{isEarth:true,earthBoating:target.earthBoating,w:target.w,h:target.h,earthRules:rules,portal:target.portal,revision:target.revision,layout:{...target.layout,paths:undefined,buildings:undefined,trees:undefined,landmarks:undefined}},p,cityRows,auth,rules,content:{balanceParams:content?.balanceParams},species:earthWildSpecies(content),playerLevel:getPlayerLevel(),playerPower:getPlayerPower?.(),terrain,terrainVersion:terrain.map(t=>`${t.key}:${t.version}`).sort().join('|')};
+        const input={natureAt:getNatureTime(),target:{isEarth:true,earthBoating:target.earthBoating,w:target.w,h:target.h,earthRules:rules,portal:target.portal,revision:target.revision,layout:{...target.layout,paths:undefined,buildings:undefined,trees:undefined,landmarks:undefined}},p,cityRows,auth,rules,content:{balanceParams:content?.balanceParams},species:earthWildSpecies(content),playerLevel:getPlayerLevel(),playerPower:getPlayerPower?.(),terrain,terrainVersion:terrain.map(t=>`${t.key}:${t.version}`).sort().join('|')};
         let result;perf.event('earth-scene-start',{x:Math.floor(p.x/rules.chunkSize),y:Math.floor(p.y/rules.chunkSize)});
         try{result=await background.run('scene',input,{epoch:token,version:input.terrainVersion});}catch(error){if(token!==epoch)throw error;}
         if(!result)result=await work.run(buildEarthScene({...input,target:input.target,typeAt,cache:sceneCache}),{valid:()=>token===epoch,name:'earth-scene'});
@@ -224,7 +225,7 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
         target.boatArt=boatArt;registerImage?.('earth-boat',boatArt);
         if(!await loadAround(p,target,token))throw Error('已取消地图加载');
         const arrival=earthNearest(target,p.x,p.y,{safe:true,landOnly:!restore});if(!arrival)throw Error('附近没有已加载的安全陆地，请选择陆地或城市');
-        target.center={...arrival};target.layout.spawn={...arrival};world=target;updateVisible(arrival,null,0);pendingPins.clear();syncPins();setRegion(target.authored);lastStreamKey=`${Math.floor(p.x/rules.chunkSize)}:${Math.floor(p.y/rules.chunkSize)}:${getPlayerLevel()}:${getPlayerPower?.()??0}`;prefetchedFromKey='';lastStreamPosition={...arrival};return {world:target,position:arrival};
+        target.center={...arrival};target.layout.spawn={...arrival};world=target;updateVisible(arrival,null,0);pendingPins.clear();syncPins();setRegion(target.authored);lastStreamKey=`${Math.floor(p.x/rules.chunkSize)}:${Math.floor(p.y/rules.chunkSize)}:${getPlayerLevel()}:${getPlayerPower?.()??0}:${earthNatureMonth(getNatureTime(),geo.lon)}`;prefetchedFromKey='';lastStreamPosition={...arrival};return {world:target,position:arrival};
     }
     function updateVisible(p,view,dt=0){
         if(!world)return;
@@ -239,8 +240,8 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
             else{lastStreamPosition={...p};nextRetry=now+rules.streamIntervalMs;return;}
         }
         nextRetry=now+rules.streamIntervalMs;
-        const growth=`${getPlayerLevel()}:${getPlayerPower?.()??0}`,keyFor=at=>`${Math.floor(at.x/rules.chunkSize)}:${Math.floor(at.y/rules.chunkSize)}:${growth}`,currentKey=keyFor(p);
-        const token=epoch,target=world,growthChanged=lastStreamKey.split(':').slice(2).join(':')!==growth;nextRetry=now+rules.streamIntervalMs;
+        const growth=`${getPlayerLevel()}:${getPlayerPower?.()??0}`,natureMonth=earthNatureMonth(getNatureTime(),earthGeo(p,rules).lon),keyFor=at=>`${Math.floor(at.x/rules.chunkSize)}:${Math.floor(at.y/rules.chunkSize)}:${growth}:${natureMonth}`,currentKey=keyFor(p);
+        const token=epoch,target=world,growthChanged=lastStreamKey.split(':').slice(2,4).join(':')!==growth;nextRetry=now+rules.streamIntervalMs;
         const dx=lastStreamPosition?((p.x-lastStreamPosition.x+world.w*1.5)%world.w)-world.w/2:0,dy=lastStreamPosition?p.y-lastStreamPosition.y:0,length=Math.hypot(dx,dy),direction=length?{x:dx/length,y:dy/length}:null;lastStreamPosition={...p};
         const ahead={...p};if(direction)for(const axis of ['x','y']){
             const d=direction[axis],cell=Math.floor(p[axis]/rules.chunkSize),edge=(cell+(d>0?1:0))*rules.chunkSize;

@@ -6,7 +6,7 @@ import {classifyEarthTerrain} from '../js/adventure_earth_decode_core.js';
 import {earthRules,earthPoint,parseEarthCities,reuseEarthObjects,prepareEarthCollisionIndex,earthWalkable,earthSafe} from '../js/adventure_earth_core.js';
 import {createEarthWorkScheduler} from '../js/earth_work_scheduler.js';
 import {createEarthStreamWorker} from '../js/adventure_earth_stream.js';
-import {createWorldViewQuery,invalidateWorldObjects,prepareWorldObjectIndex,adoptWorldObjectIndex,findPath,findPathSteps} from '../js/adventure_world_core.js';
+import {nearbyWorldObjects,createWorldViewQuery,invalidateWorldObjects,prepareWorldObjectIndex,adoptWorldObjectIndex,findPath,findPathSteps} from '../js/adventure_world_core.js';
 import {createPerformanceDiagnostics} from '../js/performance_diagnostics.js';
 import {createSocialActors,createSocialActorsSteps} from '../js/adventure_social_motion_core.js';
 import {createEarthService,EarthCache} from '../js/adventure_earth.js';
@@ -134,4 +134,28 @@ test('scene asset readiness precedes publication and a cancelled readiness barri
         await waiting;assert.deepEqual(world.center,center);service.cancel();release();await task;
         assert.deepEqual(world.center,center);assert.equal(service.streamStats.pending,0);
     }finally{service.cancel();}
+});
+
+
+test('season changes refresh stationary scenery in service without moving the traveler',async()=>{
+ let at=Date.UTC(2026,6,15);const {service}=serviceHarness(()=>null,{getNatureTime:()=>at});
+ try{const {world,position}=await service.prepare({lon:117,lat:34}),before=world.trees.map(o=>o.earthDecoFrame),revision=world.revision;
+  at=Date.UTC(2026,9,15);await service.update(position,10000);assert.ok(world.revision>revision);assert.notDeepEqual(world.trees.map(o=>o.earthDecoFrame),before);assert.deepEqual(world.center,position);
+  const unchanged=world.revision;await service.update(position,11000);assert.equal(world.revision,unchanged);
+ }finally{service.cancel();}
+});
+
+test('scene cache refreshes winter frames while worker and fallback keep the same anchors',async()=>{
+ const at=earthPoint(125,46,rules),cache=createEarthSceneCache(),make=natureAt=>({...input(at),natureAt,typeAt:()=> 'forest',cache});
+ const summer=drain(buildEarthScene(make(Date.UTC(2026,6,15)))),winter=drain(buildEarthScene(make(Date.UTC(2026,0,15))));
+ assert.ok(!summer.trees.some(o=>o.earthDecoFrame===16));assert.ok(winter.trees.some(o=>o.earthDecoFrame===16));assert.deepEqual(winter.trees.map(o=>[o.x,o.y]),summer.trees.map(o=>[o.x,o.y]));assert.ok(winter.trees.every(o=>o.size<=90));
+ const worker=createEarthStreamWorker({workerFactory:()=>new BrowserWorker(),scheduler:createEarthWorkScheduler(),timeoutMs:10000});
+ try{const data={...input(at),natureAt:Date.UTC(2026,0,15),terrain:[{key:'124_46',width:2,height:2,indices:new Uint8Array(4),types:['forest']},{key:'124_44',width:2,height:2,indices:new Uint8Array(4),types:['forest']}]};const remote=await worker.run('scene',data,{epoch:1,version:'winter'});assert.deepEqual(remote.trees,winter.trees);}finally{worker.cancel();}
+});
+
+
+test('baked small nature objects never enter the per-frame render set but remain queryable',()=>{
+ const world={isEarth:true,bakeNaturalGround:true,trees:[{x:10,y:10,size:18,earthDecoFrame:7},{x:20,y:20,size:80,earthDecoFrame:2}],buildings:[],npcs:[],landmarks:[],encounters:[]},query=createWorldViewQuery(),rect={x:0,y:0,w:100,h:100};
+ const rows=query.query(world,rect);assert.deepEqual(rows.map(o=>o.earthDecoFrame),[2]);assert.equal(query.query(world,rect),rows);assert.equal(world.trees.length,2);assert.equal(nearbyWorldObjects(world,rect).length,2);
+ world.encounters=[{id:'mob',x:30,y:30}];assert.deepEqual(query.query(world,rect).map(o=>o.kind),['tree','mob']);
 });

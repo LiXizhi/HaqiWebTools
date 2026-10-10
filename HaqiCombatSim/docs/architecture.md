@@ -804,3 +804,17 @@ flowchart LR
 真人输入只留内存直接提交生成服务，不进入CDN或存档。纯规则和像素模块不依赖DOM/SDK；Worker与存储在浏览器IO层。正式资源目录与自定义目录隔离，NPC随机选择不读取用户形象。
 
 照片DIY补充：`view_photo_head`仅在窗口打开后通过`service.preview`补齐历史缩略图，不触发选择或写入。应用回调传`head + {appearance,bodyId}`给`view_hero_picker`，再走既有角色创建/换装提交；窗口内服装选择不直接改玩家存档。世界启动仍仅创建惰性photoHeads入口，使用角色携带的当前customHead描述，不枚举账号形象库。
+
+### 2026-10-10 自然装饰选择的数据流
+
+```mermaid
+flowchart LR
+    Clock[现实日期：EarthService边界] --> Snapshot[同一时间快照与月份缓存键]
+    Terrain[地形与经纬度] --> Nature[earth_nature_core：当地季节／气候美术规则／尺寸]
+    Snapshot --> Nature
+    Nature --> Scene[earth_scene_core：固定种子落点]
+    Scene --> Worker[流式Worker与主线程回退]
+    Worker --> Surface[小物地表烘焙与树木深度绘制]
+```
+
+日期只在浏览器边界读取；季节计算、自然图片选择与尺寸均为纯函数。月份变化更新静止场景，成长属性变化仍独立判断。来源为已有自然WebP图集，未新增运行时生成或网络天气依赖。

@@ -1,9 +1,10 @@
+import {earthDecorationSize,earthSeasonAt,earthNatureMonth} from './adventure_earth_nature_core.js';
 import {createEarthSettlementSampler,generateEarthCityConnectionsSteps} from './adventure_earth_transport_core.js';
 import {earthRoadBridges} from './adventure_earth_bridge_core.js';
 import {earthRoadDocks} from './adventure_earth_boat_core.js';
 import {generateEarthUrbanChunkSteps} from './adventure_earth_city_core.js';
 import {earthLandmarkSize,placeEarthLandmark,earthPoint,earthGeo,earthSafe,earthNearest} from './adventure_earth_core.js';
-import {earthDecorationFrames,earthTreeFrames,earthDecorationIsTree,earthDecorationStyle} from './adventure_earth_surface_core.js';
+import {earthDecorationFrames,earthTreeFrames,earthDecorationStyle} from './adventure_earth_surface_core.js';
 import {createRng,hashSeed} from './rng_core.js';
 import {cityNodeForSource} from './adventure_city_dungeons_core.js';
 import {generatedCityDungeonId} from './adventure_city_generated_core.js';
@@ -20,9 +21,9 @@ function chunkDependency(world,cx,cy,rules,base){
     return base+JSON.stringify([world.paths.filter(r=>Math.max(r.a.x,r.b.x)>=left&&Math.min(r.a.x,r.b.x)<=right&&Math.max(r.a.y,r.b.y)>=top&&Math.min(r.a.y,r.b.y)<=bottom),world.buildings.filter(near),world.npcs.filter(near),(world.safeAreas||[]).filter(near)],(key,value)=>key==='earthSignature'?undefined:value);
 }
 // Shared deterministic scene steps. Browser scheduler and Worker drive the same iterator.
-export function* buildEarthScene({target,p,cityRows,auth,rules,content,typeAt,playerLevel,playerPower,cache=null,terrainVersion='',species=null}){
+export function* buildEarthScene({target,p,cityRows,auth,rules,content,typeAt,playerLevel,playerPower,cache=null,terrainVersion='',species=null,natureAt=Date.UTC(2000,6,1)}){
         target.terrainAt=typeAt;
-        cache?.scope(JSON.stringify([rules,cityRows,terrainVersion]),rules.streamCacheChunks,rules.streamRouteCacheEntries,rules.streamUrbanSampleEntries);const base='';
+        cache?.scope(JSON.stringify([rules,cityRows,terrainVersion,earthNatureMonth(natureAt,earthGeo(p,rules).lon)]),rules.streamCacheChunks,rules.streamRouteCacheEntries,rules.streamUrbanSampleEntries);const base='';
         const radius=rules.chunkSize*(rules.activeRadius+1),local=q=>({...q,x:p.x+((q.x-p.x+target.w*1.5)%target.w)-target.w/2}),near=q=>Math.abs(local(q).x-p.x)<=radius&&Math.abs(q.y-p.y)<=radius;
         target.safeAreas=[];target.railways=[];target.paths=[];target.buildings=[];target.npcs=[];target.landmarks=[];target.trees=[];target.encounters=[];target.wildSpawns=[];
         const localCities=cityRows.filter(c=>near(earthPoint(c.lon,c.lat,rules))),settlementAt=createEarthSettlementSampler(typeAt,localCities,rules);
@@ -75,7 +76,7 @@ export function* buildEarthScene({target,p,cityRows,auth,rules,content,typeAt,pl
                 if(i%8===0)yield;
                 const slot=i-rules.treesPerChunk,grid=Math.ceil(Math.sqrt(rules.monstersPerChunk));
                 const at=i<rules.treesPerChunk?{x:(cx+rng.float())*rules.chunkSize,y:(cy+rng.float())*rules.chunkSize}:{x:(cx+(slot%grid+.2+.6*rng.float())/grid)*rules.chunkSize,y:(cy+(Math.floor(slot/grid)+.2+.6*rng.float())/grid)*rules.chunkSize},type=typeAt(at.x,at.y);if(!type||['water','ocean','urban'].includes(type))continue;
-                if(i<rules.treesPerChunk){if(type==='forest'&&!earthSafe(target,at)){const pool=earthTreeFrames(type,earthGeo(at,rules).lat),size=110+rng.int(0,45),frame=createRng(hashSeed(`earth-tree:${nx}:${cy}:${i}`)).pick(pool);chunkTrees.push({...at,tile:0,earthDecoFrame:frame,size});}}
+                if(i<rules.treesPerChunk){if(type==='forest'&&!earthSafe(target,at)){const geo=earthGeo(at,rules),pool=earthTreeFrames(type,geo.lat,geo.lon,earthSeasonAt(natureAt,geo.lon,geo.lat)),variation=rng.float(),frame=createRng(hashSeed(`earth-tree:${nx}:${cy}:${i}`)).pick(pool),size=earthDecorationSize(frame,variation);chunkTrees.push({...at,tile:0,earthDecoFrame:frame,...earthDecorationStyle(type,frame),size});}}
                 else if(!earthSafe(target,at,rules.wildSpawnClearance)){
                     const id=`earth-spawn:${nx}:${cy}:${slot}`;
                     spawns.push({id,profile:{id},position:at,chunkX:nx,chunkY:cy,slot,version:rules.generationVersion});
@@ -95,8 +96,8 @@ export function* buildEarthScene({target,p,cityRows,auth,rules,content,typeAt,pl
                 if(i%8===0)yield;
                 const at={x:(cx+decoRng.float())*rules.chunkSize,y:(cy+decoRng.float())*rules.chunkSize},type=typeAt(at.x,at.y);
                 if(!type||['water','ocean'].includes(type)||(i>=rules.decorationsPerChunk&&type!=='forest')||earthSafe(target,at,12))continue;
-                const latitude=earthGeo(at,rules).lat,pool=i>=rules.decorationsPerChunk?earthTreeFrames(type,latitude):earthDecorationFrames(type,latitude);if(!pool.length)continue;
-                const frame=decoRng.pick(pool),size=earthDecorationIsTree(frame)?90+decoRng.int(0,60):28+decoRng.int(0,34);
+                const geo=earthGeo(at,rules),season=earthSeasonAt(natureAt,geo.lon,geo.lat),pool=i>=rules.decorationsPerChunk?earthTreeFrames(type,geo.lat,geo.lon,season):earthDecorationFrames(type,geo.lat,geo.lon,season);if(!pool.length)continue;
+                const frame=decoRng.pick(pool),size=earthDecorationSize(frame,decoRng.float());
                 objects.push({...at,tile:0,earthDecoFrame:frame,...earthDecorationStyle(type,frame),size});
             }
             cache?.set(key,dependency,objects);target.trees.push(...objects);

@@ -184,26 +184,5 @@ export function createEarthSurfaceRaster({x,y,size,resolution,cellSize,sample,at
     return {pixels,rows,get progress(){return row/resolution;}};
 }
 
-// Land-cover plus latitude is a game-art proxy, not a botanical/ecological survey.
-export function earthDecorationFrames(type,latitude){
-    const lat=Math.abs(latitude);
-    if(!type||isEarthWater(type))return [];
-    if(type==='snow')return [16,17,18,19,11];
-    if(type==='barren')return lat<35?[9,10,13,21]:[9,10,13];
-    if(type==='scrub')return lat<35?[8,10,13,21]:[8,10,13];
-    if(type==='wetland')return lat<30?[6,7,15,23]:lat<50?[6,7,22]:[6,7];
-    if(type==='crops')return [20,20,20,7,lat>50?2:0];
-    if(type==='urban')return [4,7,12,lat>50?2:0];
-    if(type==='forest')return lat<30?[0,1,4,5,8,14,15]:lat>50?[2,5,8,14]:[0,2,3,4,5,8,14];
-    if(type==='grass')return lat<30?[0,1,4,7,9,12,15]:lat>50?[2,4,7,8,12]:[0,3,4,7,8,12];
-    return [];
-}
-// Dense forest trees use the same climate bands as scattered decorations.
-export function earthTreeFrames(type,latitude){
-    return earthDecorationFrames(type,latitude).filter(earthDecorationIsTree);
-}
-export const earthDecorationIsTree=frame=>frame<4||[16,17,22,23].includes(frame);
-export function earthDecorationStyle(type,frame){
-    return type==='snow'?{snow:true,earthDecoVariant:frame===16||frame===17?'snowTree':frame===18?'snowBush':frame===19?'snowMound':'snowRock'}:
-        type==='crops'&&frame===20?{earthDecoVariant:'wheat'}:{};
-}
+// Shared season/geography selection also drives the dense forest pass.
+export {earthDecorationFrames,earthTreeFrames,earthDecorationIsTree,earthDecorationStyle} from './adventure_earth_nature_core.js';

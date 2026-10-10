@@ -35,18 +35,10 @@ export function renderRoles(root, assets, model, cb) {
             const choice=addButton(label,()=>cb.setDuoController?.(value));choice.setAttribute('aria-pressed',String((model.duoController||'human')===value));choices.append(choice);
         }
         head.append(choices);
-        const status = el('p', 'role-duo-status');status.setAttribute('aria-live', 'polite');
-        setText(status, '已确认 {count} / 2 · 两个角色确认后进入游戏', {count: duo.filter(Boolean).length});
-        head.append(status);
-        if (duo.every(Boolean)) head.append(addButton('进入双人冒险', cb.retryDuo, 'primary'));
     }
     if (model.owner) {
         const subtitle = el('p', 'muted role-account');
-        const status = model.message || (!model.recovering && (model.dirty
-            ? '当前有本地进度待同步。游玩时每分钟自动同步，也可手动保存。'
-            : '角色云端记录已同步。'));
-        if (status) setText(subtitle, '{owner}已登录 · {status}', { owner: model.owner, status });
-        else setText(subtitle, '{owner}已登录', { owner: model.owner });
+        setText(subtitle, '{owner}已登录', { owner: model.owner });
         head.append(subtitle);
     } else {
         head.append(
@@ -57,10 +49,11 @@ export function renderRoles(root, assets, model, cb) {
     if (model.busy) head.append(el('p', 'role-status', model.busy));
     if (model.error) { const error = el('p', 'error-text', model.error);error.setAttribute('role', 'alert');head.append(error); }
     if (model.message && !model.owner) head.append(el('p', 'muted', model.message));
-    if (model.recovering) head.append(el('p', 'role-status', '部分角色暂时无法读取，原存档已保留。可以选择其他角色或新建角色继续游玩。当前进度仅保存在本机，云端同步暂时暂停。'));
     const box = el('section', 'character-form role-manager', head);
     const rows = el('div', 'role-list');
-    const ordered = [...model.catalog.roles].sort((a, b) => (b.id === model.catalog.activeId) - (a.id === model.catalog.activeId));
+    const previous = duo ? (model.duoRecent || []).filter(Boolean) : [];
+    const rank = id => previous.includes(id) ? previous.indexOf(id) : previous.length + (id === model.catalog.activeId ? 0 : 1);
+    const ordered = [...model.catalog.roles].sort((a, b) => rank(a.id) - rank(b.id));
     for (const row of ordered) {
         const s = row.save, portrait = heroPortrait(assets,s,68,76,{lookAround:false});portrait.className='role-portrait';
         portrait.setAttribute('role', 'img');portrait.setAttribute('aria-label', tr(s.appearance === 'girl' ? '魔法少女' : '魔法少年'));
@@ -88,12 +81,8 @@ export function renderRoles(root, assets, model, cb) {
                 const badge = el('span', `role-player-tag player-${slot + 1}`);
                 setText(badge, '角色{number} · 已确认', {number: slot + 1});description.prepend(badge);
             }
-            action = addButton(slot >= 0 ? '取消确认' : '确认角色', () => cb.confirmDuo(row.id), slot >= 0 ? 'secondary' : 'primary');
-            if (slot < 0) {
-                setText(action, '确认角色{number}', {number: duo.indexOf(null) + 1});
-                action.disabled = duo.every(Boolean);
-                if (action.disabled) setText(action, '等待进入');
-            }
+            action = addButton(slot >= 0 ? '取消确认' : '继续旅程', () => cb.confirmDuo(row.id), slot >= 0 ? 'secondary' : 'primary');
+            action.disabled = slot < 0 && duo.every(Boolean);
         } else action = addButton(recent ? '继续旅程' : '进入角色', () => cb.select(row.id), recent ? 'primary' : 'secondary');
         rows.append(el('article', `role-card ${recent ? 'recent' : ''} ${slot >= 0 ? 'duo-confirmed' : ''}`, portrait, description, action));
     }

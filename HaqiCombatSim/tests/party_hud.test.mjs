@@ -37,5 +37,10 @@ test('team HUD counts only occupied members plus hero and opens team management'
         button.onclick();
     }
     assert.deepEqual(calls,['social-party','social-party','social-party']);
+    for(const count of [1,2]){
+        const team=Array.from({length:count},(_,i)=>({id:`guest${i}`}));
+        const button=teamHudButton(team,null,open,{name:'第二位玩家'});
+        assert.equal(button.attributes['aria-label'],`队伍管理（${count+2}人）`);
+    }
     assert.equal(teamHudButton([],null,open),null,'leaving removes the entry');
 });

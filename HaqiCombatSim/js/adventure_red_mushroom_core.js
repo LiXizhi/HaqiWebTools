@@ -62,7 +62,7 @@ export function startRedMushroom(dataset,seats,mode,seed,difficulty,params=defau
     check(ARENA_MODES.includes(mode)&&seats.slice(0,mode).filter(Boolean).length===mode,'请先补齐出战席位');
     const resolved=resolveParams(dataset,params),rng=createRng(seed);
     const local=seats.some(p=>p?.localOwner===1&&!p.speciesId);
-    const near=seats.slice(0,mode).map((p,i)=>({...structuredClone(p),id:local?p.id:i?`ally${i}`:'hero',isBot:local?!!p.speciesId:i>0}));
+    const near=seats.slice(0,mode).map((p,i)=>({...structuredClone(p),id:local?p.id:i?`ally${i}`:'hero',isBot:local?!!p.speciesId||!Number.isInteger(p.localOwner):i>0}));
     const names=rng.shuffle(['赤枫','绯羽','焰铃','丹露']);
     const far=near.map((p,i)=>{
         const u=createUnit(p,resolved),stats=structuredClone(p.stats||{});
@@ -76,7 +76,7 @@ export function startRedMushroom(dataset,seats,mode,seed,difficulty,params=defau
         delete opponent.profileId;delete opponent.opponentMountId;delete opponent.dailyLanguageBuff;
         return opponent;
     });
-    const replay={version:local?4:3,...(local?{localHumanIds:near.filter(u=>!u.speciesId).sort((a,b)=>a.localOwner-b.localOwner).map(u=>u.id)}:{}),specialCardRulesVersion:1,dataHash:socialDataHash(dataset),mode,seed,params:structuredClone(params),difficulty:structuredClone(difficulty),near,far,actions:[]};
+    const replay={version:local?4:3,...(local?{localHumanIds:near.filter(u=>!u.speciesId&&Number.isInteger(u.localOwner)).sort((a,b)=>a.localOwner-b.localOwner).map(u=>u.id)}:{}),specialCardRulesVersion:1,dataHash:socialDataHash(dataset),mode,seed,params:structuredClone(params),difficulty:structuredClone(difficulty),near,far,actions:[]};
     return createMatch(dataset,replay);
 }
 function createMatch(dataset,replay){

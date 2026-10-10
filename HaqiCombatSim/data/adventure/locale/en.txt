@@ -9087,3 +9087,18 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 四方向布局参考未准备好，暂不能生成||The four-direction reference is not ready. Generation is unavailable.
 头部图集必须为方形等格||The head atlas must be square with equal cells
 生成图不是方形等格图集||The generated image is not a square atlas with equal cells
+双人模式窗口过小||Window too small for two-player mode
+请将游戏显示区域调至至少800×480。当前进度已保留。||Resize the game viewport to at least 800×480. Your progress has been preserved.
+双人模式需要至少800×480的游戏显示区域||Two-player mode requires a game viewport of at least 800×480.
+
+收藏地点||Favorite place
+取消收藏||Remove favorite
+点击地图标记收藏地点，拖动可移动地图。||Click the map to save a favorite place. Drag to move the map.
+最近访问：{name}||Last visited: {name}
+收藏：{name}||Favorite: {name}
+取消收藏：{name}||Remove favorite: {name}
+收藏地点 {lon}, {lat}||Favorite place {lon}, {lat}
+本机地图收藏保存失败，请重试||Could not save map favorites on this device. Please retry.
+本机地图收藏读取失败，可重试打开地图||Could not load map favorites on this device. Reopen the map to retry.
+最近访问城市保存失败||Could not save the last visited city.
+收藏地点坐标无效||Invalid favorite coordinates

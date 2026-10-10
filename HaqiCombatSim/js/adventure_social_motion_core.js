@@ -3,6 +3,7 @@ import {createRng,hashSeed} from './rng_core.js';
 import {findPath,followPath,nearestWalkable,walkable,routeLocation,routePoint} from './adventure_world_core.js';
 import {segmentDistance} from './adventure_island_layout_core.js';
 import {SOCIAL_DEFAULTS} from './adventure_social_core.js';
+import {earthBoatAt} from './adventure_earth_boat_core.js';
 // Sprite directions: down/front=0, left=1, right=2, up/back=3.
 // Keep real travel direction, but turn toward the camera or sideways while standing.
 export function socialFacing(dx,dy,moving=false){
@@ -226,15 +227,23 @@ export function* createSocialActorsSteps(world,profiles,seed=1) {
 // Arc-length samples preserve the captain's actual turns, including loops and reversals.
 // Never run shortest-path navigation or resident separation on this ordered train.
 const partyTrails=new WeakMap();
-export function stepDungeonParty(actors,world,leader,dt,{key=actors}={}){
+export function stepDungeonParty(actors,world,leader,dt,{key=actors,params=SOCIAL_DEFAULTS}={}){
     if(!leader||!actors.length)return;
     let trail=partyTrails.get(key);
-    const gap=socialTrailGap(),signature=actors.map(a=>a.profile.id).join('|');
+    const boating=earthBoatAt(world,leader.x,leader.y);
+    const gap=boating?params.boatFollowSpacing:socialTrailGap(params),signature=actors.map(a=>a.profile.id).join('|');
     if(!trail||trail.world!==world||trail.signature!==signature||Math.hypot(leader.x-trail.points[0].x,leader.y-trail.points[0].y)>SOCIAL_DEFAULTS.dungeonRegroupDistance){
         trail={world,signature,points:[{...leader}],idle:0};
         if(world.layout?.route){
             const progress=routeLocation(world,leader).progress;
             for(let back=8;back<=gap*(actors.length+2);back+=8)trail.points.push(routePoint(world,Math.max(0,progress-back)));
+        }else if(world.isEarth||actors.some(a=>a.profile.id==='local-hero-1')){
+            const [dx,dy]=[[0,1],[-1,0],[1,0],[0,-1]][leader.facing||0];
+            for(let back=8;back<=socialTrailGap(params)*(actors.length+2);back+=8){
+                const p={x:leader.x-dx*back,y:leader.y-dy*back};
+                if(!walkable(world,p.x,p.y))break;
+                trail.points.push(p);
+            }
         }
         partyTrails.set(key,trail);
     }
@@ -250,12 +259,17 @@ export function stepDungeonParty(actors,world,leader,dt,{key=actors}={}){
         return {...trail.points.at(-1)};
     }
     let length=0;
-    for(let i=1;i<trail.points.length;i++){length+=Math.hypot(trail.points[i].x-trail.points[i-1].x,trail.points[i].y-trail.points[i-1].y);if(length>gap*(actors.length+3)){trail.points.length=i+1;break;}}
+    for(let i=1;i<trail.points.length;i++){length+=Math.hypot(trail.points[i].x-trail.points[i-1].x,trail.points[i].y-trail.points[i-1].y);if(length>socialTrailGap(params)*(actors.length+3)){trail.points.length=i+1;break;}}
     actors.forEach((a,i)=>{
         const before=a.position,target=behind(gap*(i+1));
         // Small, deterministic movement around each slot only after the captain stops.
         const idle=Math.max(0,trail.idle-SOCIAL_DEFAULTS.partyIdleDelay);
-        if(idle){
+        if(boating){
+            const ahead=behind(Math.max(0,gap*(i+1)-1)),dx=ahead.x-target.x,dy=ahead.y-target.y,n=Math.hypot(dx,dy)||1;
+            const offset=params.boatFollowOffset*(i%2===0?1:-1);
+            const p={x:target.x-dy/n*offset,y:target.y+dx/n*offset};
+            if(earthBoatAt(world,p.x,p.y))Object.assign(target,p);
+        }else if(idle){
             const radius=SOCIAL_DEFAULTS.partyIdleRadius*Math.min(1,idle);
             const p={x:target.x+Math.sin(idle+i)*radius,y:target.y+Math.sin(idle*.7+i)*radius};
             if(walkable(world,p.x,p.y))Object.assign(target,p);
@@ -264,13 +278,17 @@ export function stepDungeonParty(actors,world,leader,dt,{key=actors}={}){
         if(a.moving)a.facing=socialFacing(target.x-before.x,target.y-before.y,true);
     });
 }
-export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=[],leader=null,speed=SOCIAL_DEFAULTS.speed,view=null}={}) {
+export function stepSocialActors(actors,world,dt,{paused=false,locked=null,team=[],leader=null,speed=SOCIAL_DEFAULTS.speed,view=null,localSecond=null,partyKey=actors,params=SOCIAL_DEFAULTS}={}) {
     if(paused)return;
-    if(world.layout?.route){stepDungeonParty(actors,world,leader,dt);return;}
     const members=team.map(id=>actors.find(a=>a.profile.id===id)).filter(Boolean);
+    if(world.layout?.route)for(const actor of actors)if(!members.includes(actor))members.push(actor);
     for(const a of actors)a.inParty=members.includes(a);
-    if(members.length)stepDungeonParty(members,world,leader,dt,{key:actors});
-    else partyTrails.delete(actors);
+    const peer=localSecond&&team.length?{profile:{id:'local-hero-1'},position:localSecond.position,facing:localSecond.facing}:null;
+    if(peer)members.unshift(peer);
+    if(members.length)stepDungeonParty(members,world,leader,dt,{key:partyKey,params});
+    else partyTrails.delete(partyKey);
+    if(peer){localSecond.position=peer.position;localSecond.facing=peer.facing;}
+    if(world.layout?.route)return;
     world=socialNavigationWorld(world);
     dt=Math.max(0,Math.min(dt,.1));let moving=actors.filter(a=>a.path.length).length;const limit=Math.ceil(actors.length/4);
     const hubs=socialActivityHubs(world);

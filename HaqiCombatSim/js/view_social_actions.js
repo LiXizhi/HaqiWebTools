@@ -24,7 +24,7 @@ export function renderSocialActions(box,body,state,cb){
         const leader=state.followTargetName||tr('队友');
         add(fill(state.following?'不跟随{name}':'跟随{name}',{name:leader}).text,'⚑',fill('{follower}跟随{leader}',{follower:p.name,leader}).text,cb.follow);
     }
-    else add(joined?'管理队伍':'邀请组队','⚑',joined?'一起出发冒险':'加入当前冒险队伍',()=>joined?cb.open('social-party'):cb.invite(p),state.coopActive||!joined&&state.team.length>=3);
+    else add(joined?'管理队伍':'邀请组队','⚑',joined?'一起出发冒险':'加入当前冒险队伍',()=>joined?cb.open('social-party'):cb.invite(p),state.coopActive||!joined&&state.team.length>=(state.teamCapacity??3));
     add(greet.label,greet.icon,greet.detail,()=>cb.gesture(greet.id));
     if(p.kind==='account')add(friend?'好友列表':'加好友','＋',friend?'查看已有好友':'发送好友申请',()=>friend?cb.friends():state.owner?cb.friend(p):cb.login());
     for(const a of actions)add(a.label,a.icon,a.detail,()=>cb.gesture(a.id),a.disabled);

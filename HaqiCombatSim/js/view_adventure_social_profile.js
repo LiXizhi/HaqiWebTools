@@ -21,7 +21,7 @@ function partnerPet(assets,profile){
     return el('div','partner-pet',petPortrait(assets,id,2,72));
 }
 export function renderPartnerProfile(body,state,cb){
-    const p=state.selected,school=schools[p.school]||'魔法',friend=state.friends.find(f=>f.userId===String(p.userId)),real=p.kind==='account',joined=state.team.some(t=>t.id===p.id),full=!joined&&state.team.length>=3;
+    const p=state.selected,school=schools[p.school]||'魔法',friend=state.friends.find(f=>f.userId===String(p.userId)),real=p.kind==='account',joined=state.team.some(t=>t.id===p.id),full=!joined&&state.team.length>=(state.teamCapacity??3);
     const layout=el('div','partner-profile');layout.dataset.school=p.school;
     const portrait=el('div','partner-portrait',cb.portrait(p));
     const pet=partnerPet(cb.assets?.()||state.assets,p);if(pet)portrait.append(pet);
@@ -36,7 +36,7 @@ export function renderPartnerProfile(body,state,cb){
         ...(real?[action(friend?'已是好友':'加好友',!real?'此伙伴暂无通信账号':friend?'打开好友列表':'认识彼此，保持联系','friend',()=>friend?cb.friends():state.owner?cb.friend(p):cb.login(),{disabled:state.busy})]:[]),
         action('写信',!real?'此伙伴暂无通信账号':!friend?'成为好友后可写信':state.mailAvailable?'给朋友留一封信':'邮件暂未开放','mail',()=>state.owner?cb.compose(friend):cb.login(),{disabled:!real||!friend}));
     content.append(actions);
-    const footer=el('div','partner-footer',el('span','',joined?'已在你的队伍中':fill(`队伍 {v0} / 4 人`,{v0:String(state.team.length+1)}).text),button('管理队伍',()=>cb.open('social-party'),'text-button'));
+    const footer=el('div','partner-footer',el('span','',joined?'已在你的队伍中':fill(`队伍 {v0} / 4 人`,{v0:String(state.team.length+(state.localSecond?2:1))}).text),button('管理队伍',()=>cb.open('social-party'),'text-button'));
     if(joined&&!state.coopActive)footer.append(button('移出队伍',()=>cb.team(p,false),'text-button'));
     if(friend)footer.append(button('好友私聊',()=>cb.privateChat(friend),'text-button'));
     footer.append(button('关系详情',()=>cb.details(p),'text-button'));content.append(footer);layout.append(identity,content);body.append(layout);

@@ -4,7 +4,7 @@ import {renderEarthAtlas} from '../js/view_adventure_earth.js';
 import {earthRules} from '../js/adventure_earth_core.js';
 import {setTranslator} from '../js/locale_runtime.js';
 
-async function withAtlas(model,run){
+async function withAtlas(model,run,callbacks={}){
     const previous=globalThis.document,requests=[],travels=[],painted=[],measured=[];
     class Element{
         constructor(tag){this.tag=tag;this.children=[];this.style={};this.dataset={};this.className='';this.classList={add(){},remove(){}};}
@@ -18,11 +18,11 @@ async function withAtlas(model,run){
     let view;
     try{
         const root=new Element('div');
-        view=renderEarthAtlas(root,{geography:{overview:{bounds:{south:-60,north:85}}},...model},{close(){},travel:p=>travels.push(p),viewport:async bounds=>{requests.push(structuredClone(bounds));return {cities:[],tiles:[]};}});
+        view=renderEarthAtlas(root,{geography:{overview:{bounds:{south:-60,north:85}}},...model},{close(){},travel:p=>travels.push(p),viewport:async bounds=>{requests.push(structuredClone(bounds));return {cities:[],tiles:[]};},...callbacks});
         await Promise.resolve();
         const canvas=root.querySelector('.earth-atlas'),popup=root.querySelector('.earth-map-place'),status=root.querySelector('.earth-map-status'),zoom=root.querySelector('.earth-map-zoom');
         const click=(x,y)=>{canvas.onpointerdown({clientX:x,clientY:y,pointerId:1});canvas.onpointerup({clientX:x,clientY:y});};
-        await run({view,canvas,popup,status,zoom,requests,travels,click,painted,measured});
+        await run({root,view,canvas,popup,status,zoom,requests,travels,click,painted,measured});
     }finally{view?.dispose();globalThis.document=previous;}
 }
 
@@ -87,4 +87,30 @@ test('导演缩放与城市选择复用图册城市身份，禁止选择不可�
    popup.children[1].onclick();assert.equal(travels[0],city);
    const state=view.getState();state.center.lon=0;assert.equal(view.getState().center.lon,city.lon);
  });
+});
+
+test('recent city star travels directly even without city viewport data',async()=>{
+    const recent={id:'recent',name:'最近城市',lon:0,lat:12.5};
+    await withAtlas({places:{recent,favorites:[]}},async({root,travels,view})=>{
+        const star=root.querySelector('.earth-saved-marker');assert.equal(star.hidden,false);star.onclick();assert.equal(travels[0],recent);
+        await view.focus({lon:90,lat:12.5},1);assert.equal(star.hidden,true);
+    });
+});
+test('favorite mode distinguishes drags from placement, persists coordinates, and removes saved points',async()=>{
+    const added=[],removed=[];
+    await withAtlas({current:{lon:0,lat:12.5}},async({root,canvas,click,travels})=>{
+        const add=root.querySelector('.earth-map-tools').children[0];add.onclick();
+        canvas.onpointerdown({clientX:450,clientY:235,pointerId:1});canvas.onpointermove({clientX:500,clientY:235});canvas.onpointerup({});assert.equal(added.length,0);
+        click(450,235);await Promise.resolve();await Promise.resolve();
+        assert.equal(added.length,1);assert.equal(added[0].lon,-20);assert.equal(added[0].lat,12.5);assert.equal(travels.length,0);
+        root.querySelector('.earth-saved-marker').onclick();assert.equal(travels[0].favorite,true);
+        root.querySelector('.earth-saved-row').children[1].onclick();await Promise.resolve();await Promise.resolve();
+        assert.deepEqual(removed,['saved']);assert.equal(root.querySelector('.earth-saved-places').children.length,0);
+    },{addFavorite:async geo=>{added.push(geo);return {favorites:[{...geo,id:'saved',favorite:true}]};},removeFavorite:async id=>{removed.push(id);return {favorites:[]};}});
+});
+test('failed favorite save stays in placement mode with visible retry feedback',async()=>{
+    await withAtlas({},async({root,click})=>{
+        const tools=root.querySelector('.earth-map-tools');tools.children[0].onclick();click(450,235);await Promise.resolve();await Promise.resolve();
+        assert.match(tools.children[1].textContent,/保存失败/);assert.equal(tools.children[0].disabled,false);assert.equal(root.querySelector('.earth-saved-places').children.length,0);
+    },{addFavorite:async()=>{throw Error('quota');}});
 });

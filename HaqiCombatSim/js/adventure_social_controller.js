@@ -79,11 +79,13 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
     const ui={roster:[],allies:[null,null,null],openSlots:[false,false,false],partyDungeonId:null,partyRestart:false,pickingDungeon:false,selected:null,actionAffinity:null,busy:false,error:'',publicVisible:true,mailTab:'inbox',chatTab:'scene',mailDraft:'',subject:'',recipient:'',pvp:null,arenaStep:'mode',arenaMode:1,arenaAllies:[null,null,null],arenaRecruit:null,arenaRecord:emptyArenaRecord(),arenaStorageWarning:!globalThis.indexedDB};
     const joinTimers=[null,null,null];
     const client=createSocialClient({getOwner,onChange:()=>{if(!client.state.owner){ui.mailDetail=null;ui.messages=[];ui.chatPeer=null;ui.chatDraft='';chatDrafts.clear();}onChange();}}),voice=createLearningVoice({getSettings:()=>getState().save?.languageLearning||{}});
+    const partyKey={};
+    const teamCapacity=()=>getState().localSecond?2:3;
     const teamMembers=()=>ui.allies.filter(Boolean);
     const heroCard=()=>{const {save}=getState();return save?{id:'hero',name:save.name||'你',school:save.school,level:save.level,appearance:save.appearance,kind:'self'}:null;};
     const partyDungeon=()=>{const {assets}=getState();return ui.partyDungeonId&&assets?dungeonFor(assets.content,ui.partyDungeonId)||null:null;};
     const scenePlayers=()=>(worldRef===getState().world?actors:[]).map(a=>({...a.profile,position:{...a.position}}));
-    const lineupCount=()=>{const allies=teamMembers().length;if(allies)return Math.min(4,1+allies);const save=getState().save;if(!save?.formation)return 1;return Math.min(4,1+save.formation.filter((id,i)=>id&&i!==save.heroSlot).length);};
+    const lineupCount=()=>{const allies=teamMembers().length;if(allies)return Math.min(4,(getState().localSecond?2:1)+allies);const save=getState().save;if(!save?.formation)return 1;return Math.min(4,1+save.formation.filter((id,i)=>id&&i!==save.heroSlot).length);};
     function arenaLobby(){
         const {save,assets}=getState();
         if(ui.arenaStep!=='team'||!save||!assets)return {seats:[],bench:[]};
@@ -96,7 +98,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         const speciesId=record.speciesId||key;if(!assets.content.pets[speciesId]?.art)return null;
         return {id:record.id||key,key,speciesId,stage:petAppearanceStage(record,assets.content)};
     }
-    const state=()=>{const lobby=arenaLobby();return {...client.state,...ui,dungeonMode:getState().save?.dungeonMode||1,lineupCount:lineupCount(),arenaSeats:lobby.seats,arenaBench:lobby.bench,followPet:followPetCard(),scenePlayers:scenePlayers(),team:teamMembers(),owner:getOwner(),hero:heroCard(),partyDungeon:partyDungeon(),coopCapable:coopCapable(),coopActive:!!getState().save?.coopRun,coopReport:getState().save?.coopRun?.battles||[],rankReady:!!config?.gameId};};
+    const state=()=>{const lobby=arenaLobby();return {...client.state,...ui,dungeonMode:getState().save?.dungeonMode||1,lineupCount:lineupCount(),arenaSeats:lobby.seats,arenaBench:lobby.bench,followPet:followPetCard(),scenePlayers:scenePlayers(),team:teamMembers(),teamCapacity:teamCapacity(),localSecond:getState().localSecond,owner:getOwner(),hero:heroCard(),partyDungeon:partyDungeon(),coopCapable:coopCapable(),coopActive:!!getState().save?.coopRun,coopReport:getState().save?.coopRun?.battles||[],rankReady:!!config?.gameId};};
     const language=value=>languageId(value)==='zh-CN'?'zh':languageId(value);
     function clearJoinTimers(){for(let i=0;i<3;i++){if(joinTimers[i]!=null){cancel(joinTimers[i]);joinTimers[i]=null;}ui.openSlots[i]=false;}}
     function setAllies(list){ui.allies=[list[0]||null,list[1]||null,list[2]||null];}
@@ -172,6 +174,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
     function teamAdd(p){
         if(getState().save.coopRun)throw Error('请先退出组队副本');
         if(seatOf(p)>=0)return;
+        if(teamMembers().length>=teamCapacity())throw Error('队伍已满');
         // Prefer an opened waiting seat so invites land where the player opened a spot.
         let empty=ui.openSlots.findIndex((open,i)=>open&&!ui.allies[i]);
         if(empty<0)empty=ui.allies.findIndex(a=>!a);
@@ -185,7 +188,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
     }
     function team(p,add){if(add)teamAdd(p);else teamRemove(p);}
     function fillOpenSlot(index){
-        if(getState().save.coopRun||ui.allies[index]||!ui.openSlots[index])return false;
+        if(getState().save.coopRun||ui.allies[index]||!ui.openSlots[index]||teamMembers().length>=teamCapacity())return false;
         const {save}=getState();
         const partner=pickAutoJoinPartner(ui.roster,ui.allies,{seed:save?.seed||1,slotIndex:index,dungeonId:ui.partyDungeonId||''});
         if(!partner){ui.openSlots[index]=false;onChange();toast?.('暂时没有可加入的伙伴');return false;}
@@ -196,7 +199,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         if(getState().save.coopRun)throw Error('请先退出组队副本');
         if(!ui.partyDungeonId)throw Error('请先选择副本');
         if(!coopCapable())throw Error('这个副本暂不支持组队，可单人出发');
-        if(index<0||index>2||ui.allies[index])return;
+        if(index<0||index>=teamCapacity()||ui.allies[index])return;
         if(ui.openSlots[index]){ui.openSlots[index]=false;if(joinTimers[index]!=null){cancel(joinTimers[index]);joinTimers[index]=null;}onChange();toast?.('已取消开放');return;}
         ui.openSlots[index]=true;onChange();toast?.('席位已开放，正在等候伙伴…');
         const {save}=getState(),params=SOCIAL_DEFAULTS;
@@ -267,7 +270,7 @@ export function createIslandSocial({getAffinity=async()=>null,onTalk=()=>{},onDe
         get actors(){return worldRef===getState().world?actors:[];},get team(){return teamMembers();},
         preparedTeam(){const fresh=fillers();ui.allies=ui.allies.map(p=>p?.kind==='companion'?fresh.find(f=>f.id===p.id)||p:p);return teamMembers();},
         pickPartyDungeon,fillOpenSlot,depart,cancelDungeonPick(){if(ui.pickingDungeon){ui.pickingDungeon=false;onChange();}},
-        step(dt,options={}){const s=getState();if(worldRef!==s.world)return;const team=teamMembers().map(p=>p.id);if(s.world.isEarth&&!s.paused)actors=streamSocialActors(actors,earthSpawns,dt,{leader:s.save?.position,view:options.view,team,seed:placementSeed,params:{...SOCIAL_DEFAULTS,...s.assets.content.balanceParams?.islandSocial}});stepSocialActors(actors,s.world,dt,{paused:s.paused,locked:s.locked?ui.selected?.id:null,team:teamMembers().map(p=>p.id),leader:s.save?.position,view:options.view});},
+        step(dt,options={}){const s=getState();if(worldRef!==s.world)return;const team=teamMembers().map(p=>p.id);if(s.world.isEarth&&!s.paused)actors=streamSocialActors(actors,earthSpawns,dt,{leader:s.save?.position,view:options.view,team,seed:placementSeed,params:{...SOCIAL_DEFAULTS,...s.assets.content.balanceParams?.islandSocial}});stepSocialActors(actors,s.world,dt,{paused:s.paused,locked:s.locked?ui.selected?.id:null,team:teamMembers().map(p=>p.id),leader:s.save?{...s.save.position,facing:s.save.facing}:null,view:options.view,localSecond:s.localSecond,partyKey,params:{...SOCIAL_DEFAULTS,...s.assets.content.balanceParams?.islandSocial}});},
         pick(p){return pickSocialBubble(actors,getState().save?.position,p,{gesture:api.gesture,at:Date.now(),inParty:teamMembers().length>0||!!getState().save?.coopRun});},
         select(p,kind='social-profile'){const a=actors.find(a=>a.profile.id===p.id),leader=getState().save.position;if(a){a.path=[];a.moving=false;const dx=leader.x-a.position.x,dy=leader.y-a.position.y;a.facing=socialFacing(dx,dy);}ui.selected=p;ui.dialogue=null;ui.dialogueDraft='';ui.actionAffinity=null;onOpen(kind);const ticket=++actionTicket,token=epoch;
             if(kind==='social-actions')void (async()=>{

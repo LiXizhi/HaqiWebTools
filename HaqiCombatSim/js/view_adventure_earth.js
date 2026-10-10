@@ -15,6 +15,22 @@ export function renderEarthAtlas(root,model,cb){
     const popup=el('div',null,'earth-map-place'),detail=el('strong',''),enter=button('传送过去',()=>selected&&cb.travel(selected));enter.className='primary';enter.disabled=true;popup.hidden=true;popup.append(detail,enter);status.hidden=true;status.setAttribute('role','status');
     if(cb.localMap)root.querySelector('.map-heading').prepend(button(cb.localMapLabel||'返回当前城市地图',cb.localMap));
     let center=model.focus?.portalFocus?{lon:0,lat:12.5}:model.current||{lon:114.0579,lat:22.5431},span=model.focus?.portalFocus?360:model.focus?1:360,selected=model.focus?.portalFocus?null:model.focus||null,layers=[],cities=[],disposed=false,drag=null,revision=0;
+    let places=model.places||{recent:null,favorites:[]},adding=false,saving=false;
+    const savedLayer=el('div',null,'earth-saved-places'),tools=el('div',null,'earth-map-tools'),savedList=el('div',null,'earth-saved-list'),hint=el('span',''),savedMarkers=[];
+    hint.setAttribute('role','status');
+    const add=button('收藏地点',()=>{adding=!adding;selected=null;popup.hidden=true;updateMode();draw();});
+    function updateMode(){setText(add,adding?'取消收藏':'收藏地点');add.setAttribute('aria-pressed',String(adding));setText(hint,adding?'点击地图标记收藏地点，拖动可移动地图。':'');canvas.style.cursor=adding?'crosshair':'grab';}
+    async function changePlace(action){if(saving)return;saving=true;add.disabled=true;try{places=await action();if(disposed)return;adding=false;updateMode();rebuildPlaces();draw();}catch(e){if(!disposed)setText(hint,'本机地图收藏保存失败，请重试');}finally{saving=false;add.disabled=false;}}
+    function rebuildPlaces(){savedLayer.replaceChildren();savedList.replaceChildren();savedMarkers.length=0;
+        for(const [place,recent] of [...(places.recent?[[places.recent,true]]:[]),...(places.favorites||[]).map(p=>[p,false])]){
+            const label=recent?fill('最近访问：{name}',{name:place.name}).text:fill('收藏：{name}',{name:place.name}).text;
+            const node=button('',()=>{if(!adding&&!saving)cb.travel(place);});node.className='earth-saved-marker'+(recent?' recent':'');node.title=label;node.setAttribute('aria-label',label);
+            const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');const star=document.createElementNS('http://www.w3.org/2000/svg','path');star.setAttribute('d','M12 2 15 8.5 22 9.5 17 14.5 18.2 22 12 18.5 5.8 22 7 14.5 2 9.5 9 8.5Z');svg.append(star);node.append(svg);savedLayer.append(node);savedMarkers.push({place,node});
+            const row=el('div',null,'earth-saved-row');row.append(button(label,()=>cb.travel(place)));
+            if(!recent&&cb.removeFavorite){const remove=button('取消收藏',()=>void changePlace(()=>cb.removeFavorite(place.id)));remove.setAttribute('aria-label',fill('取消收藏：{name}',{name:place.name}).text);row.append(remove);}savedList.append(row);
+        }
+    }
+    if(cb.addFavorite){tools.append(add,hint);body.append(tools);}rebuildPlaces();
     const vortexLayer=el('div',null,'earth-atlas-vortices'),vortices=[];
     const c=canvas.getContext('2d'),height=()=>Math.min(180,span*canvas.height/canvas.width);
     c.imageSmoothingEnabled=false;
@@ -35,6 +51,7 @@ export function renderEarthAtlas(root,model,cb){
         for(const p of markers){c.fillStyle=p.story?'#efbd4b':'#fff3d6';c.beginPath();c.ellipse(p.x*sx,p.y*sy,p.radius*sx,p.radius*sy,0,0,Math.PI*2);c.fill();c.strokeStyle='#5c4524';c.lineWidth=1.5*Math.min(sx,sy);c.stroke();
             if(p.label){const name=tr(p.city.name),x=(p.label.x+4)*sx,y=(p.label.y+15)*sy;c.strokeStyle='#fff3d6';c.lineWidth=3*sy;c.strokeText(name,x,y);c.fillStyle='#152c28';c.fillText(name,x,y);}}
         const size=atlasPortalSize(360/span,1),placed=[];for(const {portal,node} of vortices){if(node.dataset.size!==String(size)){node.dataset.size=String(size);node.style.setProperty('--vortex-size',`${size}px`);node.style.setProperty('--vortex-target-size',`${size+10}px`);}const p=point(portal.earth.lon,portal.earth.lat),at={x:p.x/sx,y:p.y/sy};node.hidden=p.x<0||p.y<0||p.x>900||p.y>470||placed.some(q=>Math.hypot(at.x-q.x,at.y-q.y)<size+10);if(!node.hidden)placed.push(at);node.style.left=`${p.x/900*100}%`;node.style.top=`${p.y/470*100}%`;}
+        for(const {place,node} of savedMarkers){const p=point(place.lon,place.lat);node.hidden=p.x<0||p.y<0||p.x>900||p.y>470;node.style.left=`${p.x/900*100}%`;node.style.top=`${p.y/470*100}%`;node.style.pointerEvents=adding?'none':'auto';}
         if(selected){const p=point(selected.lon,selected.lat);c.beginPath();c.ellipse(p.x,p.y,12*sx,12*sy,0,0,Math.PI*2);c.strokeStyle='#5c4524';c.lineWidth=5*Math.min(sx,sy);c.stroke();c.strokeStyle='#fff';c.lineWidth=3*Math.min(sx,sy);c.stroke();popup.hidden=p.x<0||p.y<0||p.x>900||p.y>470;popup.style.left=`${Math.max(22,Math.min(78,p.x/900*100))}%`;popup.style.top=`${Math.max(5,Math.min(95,p.y/470*100))}%`;popup.style.transform=p.y<235?'translate(-50%,18px)':'translate(-50%,calc(-100% - 18px))';}
     }
     function showStatus(text){setText(status,text);status.hidden=!text;}
@@ -44,14 +61,17 @@ export function renderEarthAtlas(root,model,cb){
     for(const [text,label,factor] of [['+','放大',.5],['−','缩小',2]]){const control=el('button',text,'earth-map-zoom-button');control.type='button';control.title=tr(label);control.setAttribute('aria-label',tr(label));control.onclick=()=>zoom(factor);bar.append(control);}
     status.onclick=()=>void refresh();status.title=tr('点击重试');status.tabIndex=0;status.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();void refresh();}};
     canvas.onpointerdown=e=>{canvas.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,center:{...center},moved:false};};
-    canvas.onpointermove=e=>{const r=canvas.getBoundingClientRect();if(!drag){canvas.style.cursor=pickEarthAtlasMarker(markers,e.clientX-r.left,e.clientY-r.top,pickRadius)?'pointer':'grab';return;}const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(!drag.moved&&Math.hypot(dx,dy)<rules.mapDragThreshold)return;drag.moved=true;canvas.style.cursor='grabbing';center={lon:wrapLongitude(drag.center.lon-dx/r.width*span),lat:constrainLatitude(drag.center.lat+dy/r.height*height())};draw();};
+    canvas.onpointermove=e=>{const r=canvas.getBoundingClientRect();if(!drag){if(adding){canvas.style.cursor='crosshair';return;}canvas.style.cursor=pickEarthAtlasMarker(markers,e.clientX-r.left,e.clientY-r.top,pickRadius)?'pointer':'grab';return;}const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(!drag.moved&&Math.hypot(dx,dy)<rules.mapDragThreshold)return;drag.moved=true;canvas.style.cursor='grabbing';center={lon:wrapLongitude(drag.center.lon-dx/r.width*span),lat:constrainLatitude(drag.center.lat+dy/r.height*height())};draw();};
     canvas.onpointerup=e=>{if(!drag)return;const moved=drag.moved;drag=null;canvas.style.cursor='grab';if(moved){void refresh();return;}const r=canvas.getBoundingClientRect();
         const nearest=pickEarthAtlasMarker(markers,e.clientX-r.left,e.clientY-r.top,pickRadius);
+        if(adding&&cb.addFavorite){const lon=wrapLongitude(center.lon+((e.clientX-r.left)/r.width-.5)*span),lat=center.lat+(.5-(e.clientY-r.top)/r.height)*height();if(lat < -90||lat > 90)return;
+            const name=nearest?.name||fill('收藏地点 {lon}, {lat}',{lon:lon.toFixed(3),lat:lat.toFixed(3)}).text;
+            void changePlace(()=>cb.addFavorite({lon,lat,name}));return;}
         if(nearest){showStatus('');choose(nearest);}else{selected=null;popup.hidden=true;enter.disabled=true;showStatus('附近没有可选择的城市，请点击城市附近。');draw();}
     };
     canvas.onpointercancel=()=>{drag=null;};canvas.onwheel=e=>{e.preventDefault();zoom(e.deltaY<0?.7:1.4);};
-    canvas.onkeydown=e=>{if(['+','=','-'].includes(e.key)){e.preventDefault();zoom(e.key==='-'?2:.5);}else if(e.key.startsWith('Arrow')){e.preventDefault();center={lon:wrapLongitude(center.lon+(e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0)*span/8),lat:constrainLatitude(center.lat+(e.key==='ArrowUp'?1:e.key==='ArrowDown'?-1:0)*height()/8)};void refresh();}};
-    map.append(canvas,vortexLayer,bar,popup,status);body.append(map);if(model.focus&&!model.focus.portalFocus)choose(model.focus,model.focus.name);draw();void refresh();
+    canvas.onkeydown=e=>{if(e.key==='Escape'&&adding){e.preventDefault();e.stopPropagation?.();adding=false;updateMode();draw();return;}if(['+','=','-'].includes(e.key)){e.preventDefault();zoom(e.key==='-'?2:.5);}else if(e.key.startsWith('Arrow')){e.preventDefault();center={lon:wrapLongitude(center.lon+(e.key==='ArrowRight'?1:e.key==='ArrowLeft'?-1:0)*span/8),lat:constrainLatitude(center.lat+(e.key==='ArrowUp'?1:e.key==='ArrowDown'?-1:0)*height()/8)};void refresh();}};
+    map.append(canvas,vortexLayer,savedLayer,bar,popup,status);body.append(map,savedList);if(model.focus&&!model.focus.portalFocus)choose(model.focus,model.focus.name);draw();void refresh();
     if(cb.portal)void loadHaqiAtlas().then(art=>{
         if(disposed)return;
         for(const portal of art.portals||[]){const node=button('',()=>cb.portal(portal,'haqi'));node.className='map-vortex';node.setAttribute('aria-label',tr('神秘漩涡，查看哈奇世界地图'));node.title=tr('神秘漩涡，查看哈奇世界地图');vortexLayer.append(node);vortices.push({portal,node});}

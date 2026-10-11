@@ -131,12 +131,18 @@ export function renderEntryLocale(locale, secondLocale, onLocale, onSecond) {
     return {root:el('div','entry-locale-stack',native,second),controls:[...native.querySelectorAll('button'),select]};
 }
 // 标题页左栏：大标题与语言选择。已有角色时登录留在右侧列表；没有离线角色时，右侧先选择登录或本地访客。
+const ONLINE_GAME_LICENSE='文网文[2009]093号';
+function isChineseSystem(){
+    const languages=globalThis.navigator?.languages||[];
+    return [...languages,globalThis.navigator?.language].some(language=>/^zh(?:-|$)/i.test(String(language||'')));
+}
 export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocale,setSecondLocale}={}) {
     const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
     const controls=[];
     if(login||cloud){
         const cloudButton=button(owner?'我的云端旅途':'登录 Keepwork',login||cloud,'secondary cloud-entry-button');
         intro.append(cloudButton);controls.push(cloudButton);
+        if(isChineseSystem())intro.append(el('small','entry-version',`文网文 ${ONLINE_GAME_LICENSE}`));
     }
     if(setLocale&&locale){
         const picker=renderEntryLocale(locale,secondLocale,setLocale,setSecondLocale);

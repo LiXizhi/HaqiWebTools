@@ -4,7 +4,7 @@ import {earthGroundDecoration,earthGroundBounds,earthSurfaceObjectKey,drawEarthS
 import {performanceDiagnostics as perf} from './performance_diagnostics.js';
 export function createEarthSurfacePainter({rules,sample,loadArt,scheduler=null,canvasFactory=()=>document.createElement('canvas'),clock=()=>performance.now(),workerFactory=()=>typeof Worker!=='undefined'?new Worker(new URL('./adventure_earth_surface_worker.js',import.meta.url),{type:'module'}):null}){
     const emptyObjects=[],objectKeyCache=new WeakMap();let visibleKeys=new Set();
-    let worker=null,workerBusy=null,workerSequence=0,workerFailed=false;
+    let warmingWorker=null,worker=null,workerBusy=null,workerSequence=0,workerFailed=false,workerStarting=false;
     let currentRoads=[],currentObjects=[],objectBuckets=new Map(),scheduleKey=null,visibleTiles=[],wantedTiles=new Set(),scheduledTiles=[],queueDirty=true,queueBuilds=0;
     const tiles=new Map();let pending=[],active=null,frame=0,disposed=false,art=null,loading=null,retryAt=0,lastTarget=null,maxSliceMs=0,built=0;
     const mobile=typeof navigator!=='undefined'&&((navigator.hardwareConcurrency||8)<=4||(navigator.deviceMemory||8)<=4),size=rules.surfaceChunkSize,resolution=mobile?Math.min(rules.surfaceResolution,rules.surfaceMobileResolution):rules.surfaceResolution,padded=resolution+2,gutter=size/resolution;
@@ -18,28 +18,37 @@ export function createEarthSurfacePainter({rules,sample,loadArt,scheduler=null,c
         const affected=row=>!bounds||row.y-margin<bounds.y+bounds.h&&row.y+size+margin>bounds.y&&[-worldWidth,0,worldWidth].some(offset=>row.x+offset-margin<bounds.x+bounds.w&&row.x+offset+size+margin>bounds.x);
         for(const row of tiles.values())if(affected(row))row.stale=true;
         if(active&&affected(active))active=null;
-        scheduleKey=null;
         queueDirty=true;
     }
     function startArt(){if(disposed||art||loading||clock()<retryAt)return;
-        loading=loadArt().then(value=>{if(disposed)return;art=value;invalidate();startWorker();}).catch(()=>{retryAt=clock()+5000;}).finally(()=>{loading=null;});
+        loading=loadArt().then(value=>{if(disposed)return;art=value;invalidate();startWorker();}).catch(error=>{retryAt=error?.name==='AbortError'||/取消/.test(error?.message||'')?0:clock()+5000;}).finally(()=>{loading=null;if(active||pending.length)requestPump();});
+    }
+    function warmup(){
+        startArt();
+        if(disposed||worker||warmingWorker||workerFailed||workerStarting)return;
+        try{warmingWorker=workerFactory();if(!warmingWorker){workerFailed=true;return;}
+            warmingWorker.onerror=()=>{warmingWorker?.terminate();warmingWorker=null;workerFailed=true;};
+        }catch{workerFailed=true;}
     }
     async function startWorker(){
-        if(worker||workerFailed||!art)return;
+        if(worker||workerFailed||workerStarting||!art)return;
+        workerStarting=true;
         const workerArt={};let transferred=false;
         try{
             if(typeof OffscreenCanvas!=='undefined'&&typeof createImageBitmap==='function'){
                 for(const name of ['decorations','biomeDecorations'])if(art[name]?.image)workerArt[name]={width:art[name].width,frames:art[name].frames,image:await createImageBitmap(art[name].image)};
             }
             if(disposed){Object.values(workerArt).forEach(a=>a.image.close());return;}
-            worker=workerFactory();if(!worker){Object.values(workerArt).forEach(a=>a.image.close());workerFailed=true;return;}
+            worker=warmingWorker||workerFactory();warmingWorker=null;if(!worker){Object.values(workerArt).forEach(a=>a.image.close());workerFailed=true;return;}
             worker.onmessage=({data})=>{const job=workerBusy;workerBusy=null;if(disposed||!job){data.bitmap?.close();return;}if(data.error){failWorker();return;}
+                perf.record('earth-worker-surface',data.duration||0);
                 if(active?.id===data.id){finish(active,data.pixels,data.bitmap,data.baked);active=null;}
                 else data.bitmap?.close();
                 if(!frame&&(active||pending.length))requestPump();
             };
             worker.onerror=()=>failWorker();worker.postMessage({type:'atlas',atlas:art.terrain,cityGround:art.cityGround,art:workerArt,composite:typeof OffscreenCanvas!=='undefined'&&typeof createImageBitmap==='function'},Object.values(workerArt).map(a=>a.image));transferred=true;
         }catch{if(!transferred)Object.values(workerArt).forEach(a=>a.image.close());failWorker();}
+        finally{workerStarting=false;}
     }
     function failWorker(){worker?.terminate();worker=null;workerBusy=null;workerFailed=true;if(active)active.job=createEarthSurfaceRaster({...active.options,sample,atlas:art?.terrain,cityGround:art?.cityGround});if(!disposed&&!frame)requestPump();}
     function finish(job,data,bitmap=null,baked=null){
@@ -111,7 +120,7 @@ export function createEarthSurfacePainter({rules,sample,loadArt,scheduler=null,c
         }
     }
     function requestPump(){
-        if(frame||disposed||workerBusy)return;
+        if(frame||disposed||workerBusy||(!art&&loading)||workerStarting)return;
         if(scheduler){frame=1;scheduler.run(pumpSteps(),{valid:()=>!disposed,name:'earth-surface'}).catch(()=>{}).finally(()=>{frame=0;if(!disposed&&!workerBusy&&(active||pending.length))requestPump();});}
         else frame=requestAnimationFrame(pump);
     }
@@ -129,7 +138,7 @@ export function createEarthSurfacePainter({rules,sample,loadArt,scheduler=null,c
             for(const r of changed){const pad=(r.width??rules.cityConnectionWidth)/2+rules.cityConnectionShoulderWidth+rules.cityConnectionBlendWidth;
                 invalidate({x:Math.min(r.a.x,r.b.x)-pad,y:Math.min(r.a.y,r.b.y)-pad,w:Math.abs(r.b.x-r.a.x)+pad*2,h:Math.abs(r.b.y-r.a.y)+pad*2});}
         }
-        updateObjects(target);startArt();
+        updateObjects(target);warmup();
         // Low-detail minimaps never enqueue thousands of detailed chunks.
         const west=Math.floor(rect.x/size),east=Math.floor((rect.x+rect.w)/size),north=Math.floor(rect.y/size),south=Math.floor((rect.y+rect.h)/size);
         if((east-west+1)*(south-north+1)>rules.surfaceMaxChunks){visibleTiles=[];visibleKeys.clear();scheduleKey=null;pending=[];active=null;return;}
@@ -175,5 +184,5 @@ export function createEarthSurfacePainter({rules,sample,loadArt,scheduler=null,c
         ctx.save();ctx.beginPath();for(const key of missing){const [x,y]=key.split(':').map(Number);ctx.rect(x*size,y*size,size,size);}ctx.clip();
         const drawn=drawEarthSurfaceObject(ctx,o,art);ctx.restore();return drawn;
     }
-    return {draw,covers,decoration,isBaked,invalidate,prepare,adopt,dispose(){disposed=true;worker?.terminate();worker=null;workerBusy=null;if(frame&&!scheduler)cancelAnimationFrame(frame);frame=0;clearTiles();objectBuckets.clear();currentObjects=[];visibleTiles=[];art=null;},get stats(){return {worker:!!worker,resolution,chunks:tiles.size,queued:pending.length,active:!!active,bytes:tiles.size*padded*padded*4,artReady:!!art,built,queueBuilds,maxSliceMs:Math.round((scheduler?.stats.maxSliceMs??maxSliceMs)*10)/10};}};
+    return {warmup,draw,covers,decoration,isBaked,invalidate,prepare,adopt,dispose(){disposed=true;warmingWorker?.terminate();warmingWorker=null;worker?.terminate();worker=null;workerBusy=null;if(frame&&!scheduler)cancelAnimationFrame(frame);frame=0;clearTiles();objectBuckets.clear();currentObjects=[];visibleTiles=[];art=null;},get stats(){return {visibleTotal:visibleTiles.length,visibleReady:visibleTiles.filter(row=>{const tile=tiles.get(row.key);return tile&&!tile.stale;}).length,artLoading:!!loading,artError:!art&&!loading&&retryAt>0,worker:!!worker,resolution,chunks:tiles.size,queued:pending.length,active:!!active,bytes:tiles.size*padded*padded*4,artReady:!!art,built,queueBuilds,maxSliceMs:Math.round((scheduler?.stats.maxSliceMs??maxSliceMs)*10)/10};}};
 }

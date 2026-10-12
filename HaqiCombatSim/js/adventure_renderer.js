@@ -555,6 +555,17 @@ export function createRenderer(canvas,assets) {
             }
             ctx.restore();
         }
+        if(world.isEarth&&!title&&!motionHidden){
+            const status=world.surfaceStats;
+            if(status&&(!status.artReady||status.visibleReady<status.visibleTotal)){
+                const width=Math.min(280,w-32),left=(w-width)/2,top=Math.max(70,h-155);
+                const label=!status.artReady?(status.artError?'地图图片加载失败，正在重试…':'正在加载地面图片…'):'正在绘制附近地面…';
+                ctx.save();ctx.fillStyle='#fff3d6ee';ctx.fillRect(left,top,width,42);ctx.font='13px "Microsoft YaHei", sans-serif';ctx.textAlign='center';ctx.fillStyle='#493a23';
+                ctx.fillText(tr(label)+(status.artReady?` ${status.visibleReady}/${status.visibleTotal}`:''),w/2,top+18);
+                ctx.fillStyle='#cbbf9f';ctx.fillRect(left+10,top+28,width-20,6);ctx.fillStyle='#668847';
+                if(status.artReady&&status.visibleTotal)ctx.fillRect(left+10,top+28,(width-20)*status.visibleReady/status.visibleTotal,6);ctx.restore();
+            }
+        }
         const meter=frameMeter.sample(time,!title&&!motionHidden);
         if(!title&&!motionHidden){
             ctx.save();ctx.font='600 12px monospace';ctx.textAlign='left';ctx.fillStyle='#17332ddd';

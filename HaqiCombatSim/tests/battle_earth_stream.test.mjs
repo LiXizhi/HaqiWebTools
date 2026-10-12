@@ -159,3 +159,13 @@ test('baked small nature objects never enter the per-frame render set but remain
  const rows=query.query(world,rect);assert.deepEqual(rows.map(o=>o.earthDecoFrame),[2]);assert.equal(query.query(world,rect),rows);assert.equal(world.trees.length,2);assert.equal(nearbyWorldObjects(world,rect).length,2);
  world.encounters=[{id:'mob',x:30,y:30}];assert.deepEqual(query.query(world,rect).map(o=>o.kind),['tree','mob']);
 });
+
+
+test('prewarmed scene worker prepares seamless atlas pixels off-thread and transfers the exact output',async()=>{
+    const scheduler=createEarthWorkScheduler(),worker=createEarthStreamWorker({workerFactory:()=>new BrowserWorker(),scheduler,timeoutMs:10000});
+    const {seamlessEarthAtlas}=await import('../js/adventure_earth_surface_core.js');
+    const width=64,source=Uint8ClampedArray.from({length:width*width*4},(_,i)=>i%251);
+    try{worker.warmup();assert.equal(worker.stats.worker,true);assert.equal(worker.stats.pending,0);
+        assert.deepEqual(await worker.run('seamless-atlas',{source,width}),seamlessEarthAtlas(source,width));assert.equal(source.byteLength,width*width*4);
+    }finally{worker.cancel();scheduler.dispose();}
+});

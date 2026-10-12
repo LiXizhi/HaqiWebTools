@@ -362,3 +362,41 @@ test('worker atlas initialization clones only transferable art metadata, retaini
         assert.equal(cloned,1);assert.equal(messages.length,1);assert.equal(messages[0].message.composite,true);assert.equal(messages[0].transfer[0],messages[0].message.art.decorations.image);assert.equal(closed,0);
     }finally{p.dispose();[globalThis.OffscreenCanvas,globalThis.createImageBitmap,globalThis.requestAnimationFrame,globalThis.cancelAnimationFrame]=before;}
 });
+
+
+test('cold surface waits for images before baking and reports actual visible completion',async()=>{
+    const before=[globalThis.requestAnimationFrame,globalThis.cancelAnimationFrame],frames=new Map();let sequence=0,release,requests=0;
+    globalThis.requestAnimationFrame=fn=>{frames.set(++sequence,fn);return sequence;};globalThis.cancelAnimationFrame=id=>frames.delete(id);
+    const art=new Promise(resolve=>{release=resolve;}),factory=()=>({width:0,height:0,getContext:()=>({createImageData:(w,h)=>({data:new Uint8ClampedArray(w*h*4)}),putImageData(){}})});
+    const painter=createEarthSurfacePainter({rules:{...earthRules(),surfaceChunkSize:64,surfaceResolution:8,surfaceMaxChunks:16},sample:()=> 'urban',loadArt:()=>{requests++;return art;},canvasFactory:factory,workerFactory:()=>null,clock:()=>0});
+    const tick=()=>{const jobs=[...frames.values()];frames.clear();jobs.forEach(fn=>fn());},ctx={drawImage(){}},world={},rect={x:1,y:1,w:30,h:30};
+    try{
+        painter.warmup();painter.warmup();painter.draw(ctx,world,rect);
+        for(let i=0;i<10;i++)tick();
+        assert.equal(requests,1);assert.equal(painter.stats.built,0);assert.equal(painter.stats.artLoading,true);assert.equal(painter.stats.visibleReady,0);
+        release({});await new Promise(resolve=>setImmediate(resolve));tick();painter.draw(ctx,world,rect);
+        assert.equal(painter.stats.visibleReady,painter.stats.visibleTotal);assert.equal(painter.stats.artReady,true);
+        const built=painter.stats.built;for(let i=0;i<10;i++){painter.draw(ctx,world,rect);tick();}assert.equal(painter.stats.built,built);
+    }finally{painter.dispose();[globalThis.requestAnimationFrame,globalThis.cancelAnimationFrame]=before;}
+});
+
+test('city raster optimization preserves the previous road and mixed-terrain pixels exactly',()=>{
+    for(const [type,expected] of [['urban','1fac3a9e2d83c07818fd38e759a62cc415cae8ed4f0b477736086b27788065cc'],['forest','1960e021f7d4a32aee5ddecdb27e2f9fd7042d79d98227662490a975eda5998c'],['mixed','f4fdc59b0c769b597f419842e07e1a64504ddcf1eab2377eecc65f4fbecd8bee']]){
+        const r=createEarthSurfaceRaster({x:15*256,y:256,size:256,resolution:194,cellSize:93.75,sample:x=>type==='mixed'?(x%400<200?'urban':'grass'):type,cityGround:{width:8,height:8,data:new Uint8ClampedArray(256).fill(100)},roads:[{a:{x:0,y:280},b:{x:5000,y:480},width:52}]});r.rows(194);
+        assert.equal(createHash('sha256').update(r.pixels).digest('hex'),expected);
+    }
+});
+
+
+test('precomputed seamless atlas retains every channel of the previous 1024px texture',()=>{
+    const width=1024,source=Uint8ClampedArray.from({length:width*width*4},(_,i)=>(i*37+Math.floor(i/13))%256);
+    const pixels=seamlessEarthAtlas(source,width);
+    assert.equal(createHash('sha256').update(pixels).digest('hex'),'d8f9610115564c08c28851a04ffd722d44e1d09d5203f8d6c8780c94181081c8');
+    assert.equal(source[7],(7*37+Math.floor(7/13))%256);
+});
+
+test('surface preloads its worker before art arrives and releases it if cancelled',()=>{
+    let created=0,closed=0;const worker={terminate(){closed++;}};
+    const painter=createEarthSurfacePainter({rules:earthRules(),sample:()=> 'urban',loadArt:()=>new Promise(()=>{}),workerFactory:()=>{created++;return worker;}});
+    painter.warmup();painter.warmup();assert.equal(created,1);assert.equal(painter.stats.artReady,false);painter.dispose();assert.equal(closed,1);
+});

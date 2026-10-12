@@ -9,9 +9,15 @@ import {assetUrl} from './adventure_media_core.js';
 import {atlasPortalSize} from './haqi_atlas_core.js';
 const el=(tag,text,className)=>{const e=document.createElement(tag);if(text)setText(e,text);if(className)e.className=className;return e;};
 function shell(root,title,close,switchWorld){root.replaceChildren();root.className='overlay visible';const modal=el('section',null,'modal earth-modal atlas-map-modal'),header=el('header',null,'modal-header'),body=el('div',null,'modal-body');modal.setAttribute('role','dialog');modal.setAttribute('aria-label',tr(title));const heading=el('div',null,'map-heading');if(!switchWorld)heading.append(el('h2',title));if(switchWorld)heading.append(createWorldMapSwitch('earth',switchWorld));header.append(heading,createCloseButton(close));modal.append(header,body);root.append(modal);return body;}
+function loadingProgress(parent){
+    const box=el('div',null,'earth-loading-progress'),label=el('span'),bar=el('progress');
+    bar.max=6;bar.setAttribute('aria-label',tr('地图加载进度'));box.append(label,bar);parent.append(box);box.hidden=true;
+    return {hide(){box.hidden=true;},update({message,done,total=6}){box.hidden=false;setText(label,message);bar.max=total;if(Number.isFinite(done))bar.value=done;else bar.removeAttribute('value');}};
+}
 function button(text,fn){const b=el('button',text,'secondary');b.type='button';b.onclick=fn;return b;}
 export function renderEarthAtlas(root,model,cb){
     const body=shell(root,'现实世界地图',cb.close,cb.switchWorld),map=el('div',null,'earth-map-stage'),bar=el('div',null,'earth-map-zoom'),status=el('p',null,'earth-map-status'),canvas=el('canvas',null,'earth-atlas');canvas.width=900;canvas.height=470;canvas.tabIndex=0;canvas.setAttribute('aria-label',tr('地球地图，点击地点查看并传送，使用方向键移动，加减号缩放'));canvas.title=model.geography?.attribution||'';
+    const progress=loadingProgress(body);
     const popup=el('div',null,'earth-map-place'),detail=el('strong',''),enter=button('传送过去',()=>selected&&cb.travel(selected));enter.className='primary';enter.disabled=true;popup.hidden=true;popup.append(detail,enter);status.hidden=true;status.setAttribute('role','status');
     if(cb.localMap)root.querySelector('.map-heading').prepend(button(cb.localMapLabel||'返回当前城市地图',cb.localMap));
     let center=model.focus?.portalFocus?{lon:0,lat:12.5}:model.current||{lon:114.0579,lat:22.5431},span=model.focus?.portalFocus?360:model.focus?1:360,selected=model.focus?.portalFocus?null:model.focus||null,layers=[],cities=[],disposed=false,drag=null,revision=0;
@@ -78,9 +84,9 @@ export function renderEarthAtlas(root,model,cb){
         draw();const resource=art.resources?.vortex;if(resource){const image=new Image();image.crossOrigin='anonymous';image.onload=()=>{if(disposed)return;for(const {node}of vortices){node.style.setProperty('--vortex-image',`url("${image.src}")`);node.classList.add('has-vortex-art');}};image.src=assetUrl(resource,model.assetMode);}
     }).catch(()=>{});
     const resize=typeof ResizeObserver==='function'?new ResizeObserver(draw):null;resize?.observe(canvas);
-    return {selectCity(id){const marker=markers.find(p=>p.city.id===id||p.city.name===id);if(!marker)return false;choose(marker.city);return true;},focus(geo,nextSpan){center={lon:geo.lon,lat:geo.lat};span=Math.max(.1,Math.min(360,nextSpan));return refresh();},getState(){return {center:{...center},span,markers:markers.map(p=>({x:p.x,y:p.y,city:{...p.city}}))};},dispose(){disposed=true;revision++;resize?.disconnect();},busy(text){showStatus(text);enter.disabled=true;},error(text){showStatus(text);enter.disabled=!selected;}};
+    return {selectCity(id){const marker=markers.find(p=>p.city.id===id||p.city.name===id);if(!marker)return false;choose(marker.city);return true;},focus(geo,nextSpan){center={lon:geo.lon,lat:geo.lat};span=Math.max(.1,Math.min(360,nextSpan));return refresh();},getState(){return {center:{...center},span,markers:markers.map(p=>({x:p.x,y:p.y,city:{...p.city}}))};},dispose(){disposed=true;revision++;resize?.disconnect();},progress:progress.update,busy(text){showStatus(text);progress.update({message:text});enter.disabled=true;},error(text){progress.hide();showStatus(text);enter.disabled=!selected;}};
 }
-export function renderEarthLoading(root,{close,retry,switchWorld,localMap,message='正在加载当前地图…'}){const body=shell(root,'现实世界',close,switchWorld);if(localMap)root.querySelector('.map-heading').prepend(button('返回当前城市地图',localMap));body.append(el('p',message));if(retry)body.append(button('重试',retry));}
+export function renderEarthLoading(root,{close,retry,switchWorld,localMap,message='正在加载当前地图…'}){const body=shell(root,'现实世界',close,switchWorld);if(localMap)root.querySelector('.map-heading').prepend(button('返回当前城市地图',localMap));body.append(el('p',message));const progress=loadingProgress(body);if(retry)body.append(button('重试',retry));else progress.update({message});return {progress:progress.update};}
 export function renderEarthStory(root,{assets,city,npc,story,quests,progress,learning,questOffers=[]},{close,choose,advance,practice,go,quest,service,chat}){
     root.replaceChildren();root.className='overlay dialogue-layer rpg-dialogue-layer visible';
     const box=el('section',null,'dialogue-box rpg-dialogue');box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',fill('与{name}交谈',{name:npc.name}).text);

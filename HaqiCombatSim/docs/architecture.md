@@ -847,3 +847,29 @@ flowchart LR
 ```
 
 收藏为设备级偏好，不进入角色核心存档或云端。最近访问城市仅保留最后一次成功进入的具名城市；取消或失败的目的地不会覆盖记录，收藏点传送不替换最近城市。收藏事务成功后才更新图标；视图销毁后忽略异步绘制。地图底部列表支持键盘直达及取消收藏，不在哈奇世界图或当前城市图显示。
+
+### 2026-10-12：地球首屏加载与显示进度
+
+```mermaid
+flowchart LR
+    Travel[传送或恢复地球存档] --> Config[索引 / 地理与生成配置并行]
+    Travel --> WarmWorkers[预启动场景与地表Worker]
+    WarmWorkers --> Scene
+    WarmWorkers --> Surface
+    Travel --> Art[提前预热地表美术 / 拼图有界并发]
+    Config --> Sources[并行读取地形、城市CSV、作者城市]
+    Sources --> Scene[Worker生成道路与场景]
+    Scene --> Assets[并行准备人物与建筑图集]
+    Assets --> Commit[索引准备后切换场景]
+    Art --> AtlasWorker[场景Worker准备无缝图集 / 失败兼容回退]
+    AtlasWorker --> Surface[图片就绪后烘焙地表]
+    Commit --> Surface
+    Sources --> Progress[传送阶段进度]
+    Scene --> Progress
+    Assets --> Progress
+    Surface --> Visible[当前视野完成分块数 / Canvas进度条]
+```
+
+`prepare` 的 `onProgress` 回调只报告当前有效请求的六个准备阶段，不代表下载字节百分比；进入场景后由 `surfaceStats.visibleReady/visibleTotal` 显示真实分块进度。网络失败保留原有重试和取消行为。`?profile=1` 的本机诊断区分网络读取、场景生成、人物/建筑美术准备与Worker地表烘焙，不写入存档或上传。
+
+2026-10-12第二轮Profile：EarthCache加载器可在下载完成后释放并发槽位，解析继续保留在pending中以合并重复请求；释放幂等，取消/缓存预算仍在最终入库前验证。仅地形和CSV使用提前释放，其他加载器维持完成时释放；不会因等待Worker冷启动而阻塞后续地图下载。

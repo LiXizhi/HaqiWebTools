@@ -75,11 +75,19 @@ export function earthCoastCornerDelta(at,gx,gy){
 // Blend two half-period offsets so neither original texture edge remains visible.
 export function seamlessEarthAtlas(source,width){
     const result=new Uint8ClampedArray(source.length),cell=width/4;
-    for(let frame=0;frame<16;frame++)for(let y=0;y<cell;y++)for(let x=0;x<cell;x++){
-        const u=x/(cell-1),v=y/(cell-1),a=Math.sin(Math.PI*u)**2,b=Math.sin(Math.PI*v)**2;
-        const xs=[Math.min(cell-1,Math.floor(u*cell)),Math.floor(((u+.5)%1)*cell)],ys=[Math.min(cell-1,Math.floor(v*cell)),Math.floor(((v+.5)%1)*cell)];
-        const baseX=(frame%4)*cell,baseY=Math.floor(frame/4)*cell,to=((baseY+y)*width+baseX+x)*4;
-        for(let k=0;k<3;k++){let value=0;for(let j=0;j<2;j++)for(let i=0;i<2;i++)value+=source[((baseY+ys[j])*width+baseX+xs[i])*4+k]*(i?1-a:a)*(j?1-b:b);result[to+k]=value;}result[to+3]=255;
+    // Preserve blend arithmetic; share trigonometry and coordinates across all 16 frames.
+    const weights=new Float64Array(cell),first=new Int32Array(cell),second=new Int32Array(cell);
+    for(let i=0;i<cell;i++){const u=i/(cell-1);weights[i]=Math.sin(Math.PI*u)**2;first[i]=Math.min(cell-1,Math.floor(u*cell));second[i]=Math.floor(((u+.5)%1)*cell);}
+    for(let frame=0;frame<16;frame++){
+        const baseX=(frame%4)*cell,baseY=Math.floor(frame/4)*cell;
+        for(let y=0;y<cell;y++){
+            const b=weights[y],row0=((baseY+first[y])*width+baseX)*4,row1=((baseY+second[y])*width+baseX)*4;
+            for(let x=0;x<cell;x++){
+                const a=weights[x],x0=first[x]*4,x1=second[x]*4,to=((baseY+y)*width+baseX+x)*4;
+                for(let k=0;k<3;k++)result[to+k]=source[row0+x0+k]*a*b+source[row0+x1+k]*(1-a)*b+source[row1+x0+k]*a*(1-b)+source[row1+x1+k]*(1-a)*(1-b);
+                result[to+3]=255;
+            }
+        }
     }
     return result;
 }
@@ -118,10 +126,12 @@ export function createEarthSurfaceRaster({x,y,size,resolution,cellSize,sample,at
                 const delta=earthCoastCornerDelta(at,gx,gy);
                 if(delta){const target=Math.max(0,Math.min(1,wet+delta));for(let k=0;k<4;k++)weights[k]*=isEarthWater(near[k])?target/wet:(1-target)/(1-wet);}
             }
-            const tx=wx+(surfaceNoise(wx,wy,83,worldWidth)-.5)*12,ty=wy+(surfaceNoise(wx+123,wy-77,97,worldWidth)-.5)*12;
+            // Warp is only consumed by the terrain atlas, never by the city backdrop.
+            const needsAtlas=atlas&&near.some((type,k)=>weights[k]>0&&(type!=='urban'||!cityGround));
+            const tx=needsAtlas?wx+(surfaceNoise(wx,wy,83,worldWidth)-.5)*12:wx,ty=needsAtlas?wy+(surfaceNoise(wx+123,wy-77,97,worldWidth)-.5)*12:wy;
             let r=0,g=0,b=0,water=0,total=0,vegetation=0,vr=0,vg=0,vb=0,urban=0;
             for(let k=0;k<4;k++){
-                const type=near[k];if(!type)continue;const w=weights[k],base=colors[type]||colors.grass;total+=w;if(isEarthWater(type))water+=w;
+                const type=near[k],w=weights[k];if(!type||!w)continue;const base=colors[type]||colors.grass;total+=w;if(isEarthWater(type))water+=w;
                 if(type==='urban')urban+=w;
                 if(['grass','forest','crops','wetland'].includes(type)){vegetation+=w;vr+=base[0]*w;vg+=base[1]*w;vb+=base[2]*w;}
                 if(type==='urban'&&cityGround){const px=Math.floor(mod(wx/cityGroundPeriod,1)*cityGround.width),py=Math.floor(mod(wy/cityGroundPeriod,1)*cityGround.height),p=(py*cityGround.width+px)*4;r+=cityGround.data[p]*w;g+=cityGround.data[p+1]*w;b+=cityGround.data[p+2]*w;}

@@ -141,7 +141,7 @@ async function openEarthMap(focus=null){
 async function travelEarth(geo){
     if(save.pendingEncounter||save.coopRun||dungeonFor(assets.content,save.zone)){toast('请先完成战斗或退出副本');return;}
     const current=save,role=roleStore?.catalog.activeId,ticket=earthViewTicket;earthTraveling=true;earthView?.busy('正在准备目的地，关闭地图可取消…');
-    try{const service=await getEarth(),prepared=await service.prepare(geo);if(current!==save||role!==roleStore?.catalog.activeId||ticket!==earthViewTicket)return;
+    try{const service=await getEarth(),prepared=await service.prepare(geo,{onProgress:progress=>{if(current===save&&ticket===earthViewTicket)earthView?.progress(progress);}});if(current!==save||role!==roleStore?.catalog.activeId||ticket!==earthViewTicket)return;
         if(save.zone!=='earth')save.earthReturn={zone:save.zone,position:{...save.position}};
         save.zone='earth';save.position=prepared.position;assets.content.earthWorld=prepared.world;earthOwner=current;earthTraveling=false;
         prepared.world.onObjectsChanged=(change={})=>{W.invalidateWorldObjects(prepared.world,change);if(world===prepared.world){void assets.warmNearby?.(world,save);if(!change.wildOnly&&change.socialChanged!==false)void islandSocial.refreshEarth();}};
@@ -647,8 +647,8 @@ async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
         const service=await getEarth();
         if(earthOwner!==save||!service.world){
             const ticket=++earthViewTicket;panel='earth-restore';nodes.entry.hidden=true;
-            renderEarthLoading(nodes.overlay,{close:()=>void showTitle(),message:'正在恢复这片地球区域，原存档会保留…'});
-            try{const result=await service.prepare(earthGeo(save.position,service.rules),{restore:true});if(save!==newSave||ticket!==earthViewTicket)return;
+            const loadingView=renderEarthLoading(nodes.overlay,{close:()=>void showTitle(),message:'正在恢复这片地球区域，原存档会保留…'});
+            try{const result=await service.prepare(earthGeo(save.position,service.rules),{restore:true,onProgress:progress=>{if(save===newSave&&ticket===earthViewTicket)loadingView.progress(progress);}});if(save!==newSave||ticket!==earthViewTicket)return;
                 assets.content.earthWorld=result.world;save.position=result.position;earthOwner=save;
                 result.world.onObjectsChanged=(change={})=>{W.invalidateWorldObjects(result.world,change);if(world===result.world){void assets.warmNearby?.(world,save);if(!change.wildOnly&&change.socialChanged!==false)void islandSocial.refreshEarth();}};
             }catch(e){if(save!==newSave||ticket!==earthViewTicket)return;

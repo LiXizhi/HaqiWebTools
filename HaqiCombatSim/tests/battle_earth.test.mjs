@@ -431,3 +431,36 @@ test('snow and crop scenes generate their actual biome details reproducibly',asy
         service.cancel();
     }
 });
+
+
+test('travel overlaps city downloads with terrain and reports ordered preparation phases',async()=>{
+    let release,cityRequested=false;
+    const gate=new Promise(resolve=>{release=resolve;}),progress=[];
+    const {service}=serviceHarness({beforeFetch:async url=>{if(url.endsWith('.png'))await gate;if(url.includes('.csv'))cityRequested=true;}});
+    const pending=service.prepare({lon:41,lat:11},{onProgress:row=>progress.push(row)});
+    try{
+        for(let i=0;i<100&&!cityRequested;i++)await new Promise(resolve=>setTimeout(resolve,5));
+        assert.ok(cityRequested,'城市数据必须在地形下载尚未结束时开始读取');
+    }finally{release();}
+    try{await pending;assert.deepEqual(progress.map(p=>p.done),[0,1,2,3,4,5,6]);assert.ok(progress.every(p=>p.total===6&&p.elapsedMs>=0));}
+    finally{service.cancel();}
+});
+
+test('cancelled travel never emits completion progress or replaces the current scene',async()=>{
+    const {service}=serviceHarness(),progress=[];
+    const pending=service.prepare({lon:41,lat:11},{onProgress:row=>{progress.push(row);if(row.done===1)service.cancelPending();}});
+    try{await assert.rejects(pending,/取消/);assert.ok(!progress.some(row=>row.done===6));assert.equal(service.world,undefined);}
+    finally{service.cancel();}
+});
+
+
+test('download slots release before delayed decoding without losing deduplication or double releasing',async()=>{
+    const cache=new EarthCache({concurrency:1}),events=[];let finishDecode;
+    const decoding=new Promise(resolve=>{finishDecode=resolve;});
+    const first=cache.get('terrain',async release=>{events.push('download');release();release();await decoding;return {bytes:4,id:1};});
+    const duplicate=cache.get('terrain',()=>{throw Error('重复下载');});
+    const second=cache.get('city',async()=>{events.push('city');return {bytes:4,id:2};});
+    assert.equal((await second).id,2);assert.deepEqual(events,['download','city']);
+    finishDecode();assert.equal(await first,await duplicate);await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(cache.active,0);assert.equal(cache.pending.size,0);assert.equal(cache.bytes,8);cache.clear();
+});

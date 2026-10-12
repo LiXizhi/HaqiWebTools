@@ -1,3 +1,4 @@
+import {seamlessEarthAtlas} from './adventure_earth_surface_core.js';
 import {buildEarthScene,createEarthSceneCache} from './adventure_earth_scene_core.js';
 import {classifyEarthTerrain} from './adventure_earth_decode_core.js';
 import {imageAlphaBoundsSteps} from './image_bounds_core.js';
@@ -24,7 +25,8 @@ self.onmessage=async({data:message})=>{
     const {id,type,payload,epoch,version}=message,start=performance.now();
     try{
         let result,transfer=[];
-        if(type==='terrain'){
+        if(type==='seamless-atlas'){result=seamlessEarthAtlas(payload.source,payload.width);transfer=[result.buffer];}
+        else if(type==='terrain'){
             const bitmap=await createImageBitmap(payload.blob),canvas=new OffscreenCanvas(bitmap.width,bitmap.height),c=canvas.getContext('2d',{willReadFrequently:true});
             try{c.drawImage(bitmap,0,0);}finally{bitmap.close();}
             const pixels=c.getImageData(0,0,canvas.width,canvas.height),indices=drain(classifyEarthTerrain(pixels.data,payload.palette));c.putImageData(pixels,0,0);

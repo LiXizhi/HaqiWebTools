@@ -28,14 +28,16 @@ export class EarthCache {
         this.pending.set(key,task);this.pump();return task;
     }
     pump(){while(this.active<this.concurrency&&this.queue.length){const job=this.queue.shift();this.active++;let inserted=null;
-        Promise.resolve().then(job.load).then(value=>{
+        // Decoding may await worker startup; it must not keep a download slot occupied.
+        let released=false;const release=()=>{if(released)return;released=true;this.active--;this.pump();};
+        Promise.resolve().then(()=>job.load(release)).then(value=>{
             if(job.epoch!==this.epoch){value?.dispose?.();throw Error('已取消地图加载');}
             const bytes=value.bytes||0;if(bytes>this.budget){value.dispose?.();throw Error('地图文件超出内存预算');}
             inserted={value,bytes};this.entries.set(job.key,inserted);this.bytes+=bytes;
             const group=Object.keys(this.groups).find(prefix=>job.key.startsWith(prefix));
             while(this.entries.size>this.limit||this.bytes>this.budget||(group&&[...this.entries.keys()].filter(k=>k.startsWith(group)).length>this.groups[group])){const keys=[...this.entries.keys()],overflow=group&&keys.filter(k=>k.startsWith(group)).length>this.groups[group];const key=keys.find(k=>!this.pinned.has(k)&&(overflow?k.startsWith(group):k!=='overview'))||keys.find(k=>!this.pinned.has(k));if(!key)throw Error('当前场景已占满地图缓存预算');const row=this.entries.get(key);this.entries.delete(key);this.bytes-=row.bytes;row.value.dispose?.();}
             if(!this.entries.has(job.key))throw Error('目的地超出当前可用地图缓存预算');job.resolve(value);
-        }).catch(error=>{if(inserted&&this.entries.get(job.key)===inserted){this.entries.delete(job.key);this.bytes-=inserted.bytes;inserted.value.dispose?.();}job.reject(error);}).finally(()=>{this.active--;if(job.epoch===this.epoch)this.pending.delete(job.key);this.pump();});
+        }).catch(error=>{if(inserted&&this.entries.get(job.key)===inserted){this.entries.delete(job.key);this.bytes-=inserted.bytes;inserted.value.dispose?.();}job.reject(error);}).finally(()=>{if(job.epoch===this.epoch)this.pending.delete(job.key);release();});
     }}
     cancelPending(){this.epoch++;for(const job of this.queue)job.reject(Error('已取消地图加载'));this.queue=[];this.pending.clear();}
     clear(){this.cancelPending();this.pinned.clear();for(const row of this.entries.values())row.value.dispose?.();this.entries.clear();this.bytes=0;}
@@ -51,27 +53,29 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
     function syncPins(){cache.pinned=new Set([...(world?.cacheKeys||[]),...pendingPins,...surfaceArtKeys]);}
     let index,geography,generation,world,region,chapter,epoch=0,controllers=new Set(),lastStreamKey='',lastStreamPosition=null,streamTask=null,streamDirection=null,nextRetry=0;
     async function request(url,kind='json'){
+        const started=performance.now();
         const controller=new AbortController();controllers.add(controller);const timer=setTimeout(()=>controller.abort(),rules.requestTimeoutMs);
-        try{const response=await fetcher(url,{signal:controller.signal});if(!response.ok)throw Error(`地图数据暂不可用（${response.status}）`);const result=await response[kind]();perf.event('earth-request',{kind});return result;}
+        try{const response=await fetcher(url,{signal:controller.signal});if(!response.ok)throw Error(`地图数据暂不可用（${response.status}）`);const result=await response[kind]();perf.record('earth-request-'+kind,performance.now()-started);perf.event('earth-request',{kind,url,duration:performance.now()-started});return result;}
         finally{clearTimeout(timer);controllers.delete(controller);}
     }
     const json=url=>cache.get(url,()=>request(url));
-    async function ready(){
+    async function ready({scene=false}={}){
         const token=epoch,nextIndex=index||await json('data/adventure/earth/index.json');if(token!==epoch)throw Error('已取消地图加载');index=nextIndex;
-        const nextGeography=geography||await json(`data/adventure/earth/${index.geography}`);if(token!==epoch)throw Error('已取消地图加载');geography=nextGeography;
+        const [nextGeography,nextGeneration]=await Promise.all([geography||json(`data/adventure/earth/${index.geography}`),scene?(generation||json(`data/adventure/earth/${index.generation}`)):null]);
+        if(token!==epoch)throw Error('已取消地图加载');geography=nextGeography;if(scene)generation=nextGeneration;
         return {index,geography,generation};
     }
-    async function tile(key){await ready();return cache.get(`terrain:${key}`,async()=>{
-        const token=epoch,blob=await request(terrainUrl(geography.terrainBase,key),'blob');let data;
+    async function tile(key){await ready();return cache.get(`terrain:${key}`,async release=>{
+        const token=epoch,blob=await request(terrainUrl(geography.terrainBase,key),'blob');release();let data;
         if(decode===decodeTerrain&&typeof OffscreenCanvas!=='undefined')try{data=await background.run('terrain',{blob,palette:geography.palette,key},{epoch:token});}catch(error){if(token!==epoch)throw error;}
         if(!data)data=await decode(blob,geography.palette,key,{scheduler:work,valid:()=>token===epoch});
         if(token!==epoch){data.dispose?.();data.image?.close?.();throw Error('已取消地图加载');}
         if(!data.dispose)data.dispose=()=>data.image?.close?.();data.version=++terrainVersion;
         perf.event('earth-terrain-ready',{key});const b=terrainBounds(key);surface?.invalidate({x:(b.west+180)*rules.unitsPerDegree,y:(90-b.north)*rules.unitsPerDegree,w:2*rules.unitsPerDegree,h:2*rules.unitsPerDegree});return data;
     });}
-    async function cities(lon,lat){await ready();const key=cityKey(lon,lat);return cache.get(`cities:${key}`,async()=>{
+    async function cities(lon,lat){await ready();const key=cityKey(lon,lat);return cache.get(`cities:${key}`,async release=>{
         const token=epoch;
-        const text=await request(`${geography.cityBase}${geography.cityLanguage}/world_cities_${key}.${geography.cityLanguage}.csv?ver=${geography.cityVersion}`,'text');
+        const text=await request(`${geography.cityBase}${geography.cityLanguage}/world_cities_${key}.${geography.cityLanguage}.csv?ver=${geography.cityVersion}`,'text');release();
         if(token!==epoch)throw Object.assign(Error('已取消城市数据加载'),{name:'AbortError'});
         let rows;try{rows=await background.run('cities',{text},{epoch:token});}catch(error){if(token!==epoch)throw error;}
         return {rows:rows||await work.run(parseEarthCitiesSteps(text),{valid:()=>token===epoch,name:'earth-cities'}),bytes:text.length*4};
@@ -94,7 +98,13 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
                 const row=manifest[kind],key=`city-ground:${row.sourceSha256}`;
                 const result=await cache.get(key,async()=>{
                     const canvas=document.createElement('canvas');canvas.width=row.width;canvas.height=row.height;const c=canvas.getContext('2d',{willReadFrequently:true});
-                    for(const tile of row.tiles){const image=await createImageBitmap(await request(localMode?tile.local:tile.cdn,'blob'));try{if(image.width!==tile.width||image.height!==tile.height)throw Error('城市背景尺寸不匹配');c.drawImage(image,tile.x,tile.y);}finally{image.close();}}
+                    // Bounded parallel downloads; release each decoded tile immediately after compositing.
+                    let nextTile=0;
+                    const results=await Promise.allSettled(Array.from({length:Math.min(rules.maxConcurrent,row.tiles.length)},async()=>{
+                        while(nextTile<row.tiles.length){const tile=row.tiles[nextTile++],image=await createImageBitmap(await request(localMode?tile.local:tile.cdn,'blob'));
+                            try{if(image.width!==tile.width||image.height!==tile.height)throw Error('城市背景尺寸不匹配');c.drawImage(image,tile.x,tile.y);}finally{image.close();}}
+                    }));
+                    const failed=results.find(r=>r.status==='rejected');if(failed){canvas.width=canvas.height=0;throw failed.reason;}
                     const data=c.getImageData(0,0,row.width,row.height).data;canvas.width=canvas.height=0;return {data,width:row.width,height:row.height,bytes:data.byteLength};
                 });
                 return [kind,result,key];
@@ -104,7 +114,11 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
                 const image=await createImageBitmap(await request(url,'blob'));
                 if(image.width!==row.width||image.height!==row.height){image.close();throw Error('地表图集尺寸不匹配');}
                 if(kind==='decorations'||kind==='biomeDecorations')return {image,frames:row.frames,width:image.width,height:image.height,bytes:image.width*image.height*4,dispose(){image.close();}};
-                const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(image,0,0);image.close();const raw=c.getImageData(0,0,canvas.width,canvas.height).data,data=kind==='terrain'?seamlessEarthAtlas(raw,canvas.width):raw;canvas.width=canvas.height=0;
+                const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;const c=canvas.getContext('2d',{willReadFrequently:true});c.drawImage(image,0,0);image.close();const raw=c.getImageData(0,0,canvas.width,canvas.height).data,width=canvas.width;canvas.width=canvas.height=0;
+                let data=kind==='terrain'?null:raw;if(kind==='terrain'){
+                    try{data=await background.run('seamless-atlas',{source:raw,width},{epoch:token});}catch(error){if(token!==epoch)throw error;}
+                    data??=seamlessEarthAtlas(raw,width);
+                }
                 return {data,width:row.width,height:row.height,bytes:data.byteLength};
             });
             return [kind,result,url];
@@ -142,7 +156,7 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
         for(const key of ['paths','buildings','trees','landmarks'])target.layout[key]=target[key];
         perf.event('earth-scene-ready',result.streamCacheStats);return true;
     }
-    async function loadAround(p,target,token,direction=null){
+    async function loadAround(p,target,token,direction=null,report=()=>{}){
         await ready();generation??=await json(`data/adventure/earth/${index.generation}`);if(token!==epoch)return false;const geo=earthGeo(p,rules),delta=rules.chunkSize*rules.prefetchRadius/rules.unitsPerDegree;
         const keys=new Set(),cityKeys=new Map();
         for(const dx of [-delta,0,delta])for(const dy of [-delta,0,delta]){keys.add(terrainKey(geo.lon+dx,geo.lat+dy));cityKeys.set(cityKey(geo.lon+dx,geo.lat+dy),[geo.lon+dx,geo.lat+dy]);}
@@ -150,23 +164,33 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
         for(const dx of [-terrainDelta,0,terrainDelta])for(const dy of [-terrainDelta,0,terrainDelta])keys.add(terrainKey(geo.lon+dx,geo.lat+dy));
         if(direction){const ahead=earthGeo({x:p.x+direction.x*rules.chunkSize*rules.prefetchRadius,y:p.y+direction.y*rules.chunkSize*rules.prefetchRadius},rules);keys.add(terrainKey(ahead.lon,ahead.lat));cityKeys.set(cityKey(ahead.lon,ahead.lat),[ahead.lon,ahead.lat]);}
         const nextCacheKeys=[...[...keys].map(key=>`terrain:${key}`),...[...cityKeys.keys()].map(key=>`cities:${key}`),...surfaceArtKeys];pendingPins=new Set(nextCacheKeys);syncPins();
-        const terrain=await Promise.allSettled([...keys].map(tile));
+        report('正在下载地形与城市数据…',1);
+        const started=performance.now();
+        // Independent sources share the existing bounded cache queue.
+        const [terrain,rows,auth]=await Promise.all([
+            Promise.allSettled([...keys].map(tile)),
+            Promise.allSettled([...cityKeys.values()].map(([lon,lat])=>cities(lon,lat))),
+            authored(geo)
+        ]);
+        perf.record('earth-load-data',performance.now()-started);
         if(token!==epoch)return false;
         if(!cache.peek(`terrain:${terrainKey(geo.lon,geo.lat)}`))throw Error('当前位置的地形未能读取，请重试');
-        const rows=await Promise.allSettled([...cityKeys.values()].map(([lon,lat])=>cities(lon,lat)));
-        if(token!==epoch)return false;
-        const auth=await authored(geo);if(token!==epoch)return false;let artError=false,nextDraw=null;
+        report('正在准备地标图片…',2);let artError=false,nextDraw=null;
         if(auth?.art.atlas){
             const url=new URLSearchParams(globalThis.location?.search||'').get('assets')==='local'?auth.art.local:auth.art.atlas;nextCacheKeys.push(url);pendingPins.add(url);syncPins();
             try{await cache.get(url,async()=>{const image=await createImageBitmap(await request(url,'blob'));return {image,bytes:image.width*image.height*4,dispose(){image.close();}};});}catch{artError=true;}
             if(token!==epoch)return false;
             nextDraw=(ctx,b)=>{const image=cache.peek(url)?.image,frame=auth.art.frames?.[b.earthFrame];if(!image||!frame)return false;ctx.drawImage(image,...frame,b.x-b.w/2,b.y-b.h,b.w,b.h);return true;};
         }
-        const staged={...target,layout:{...target.layout},authored:auth};
+        report('正在计算道路与场景…',3);
+        const sceneStarted=performance.now(),staged={...target,layout:{...target.layout},authored:auth};
         if(!await build(staged,p,[...new Map(rows.flatMap(r=>r.status==='fulfilled'?r.value.rows:[]).map(c=>[c.id,c])).values()],auth,token)||token!==epoch)return false;
+        perf.record('earth-load-scene',performance.now()-sceneStarted);
+        report('正在准备人物与建筑图片…',4);
+        const assetsStarted=performance.now();
         // Prepare new portraits/crops before making their static objects visible.
         registerCityArt(auth?.city.art.npcs);
-        await prepareAssets?.(staged);if(token!==epoch)return false;
+        const actorsReady=Promise.resolve().then(()=>prepareAssets?.(staged)).then(()=>null,error=>error);if(token!==epoch)return false;
         const landmarkDraw=nextDraw;
         if(staged.buildings.some(b=>b.earthCityAtlas)){
             try{
@@ -177,7 +201,13 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
                 const row=manifest[kind],key=`city-ground:${row.sourceSha256}`;
                 const result=await cache.get(key,async()=>{
                     const canvas=document.createElement('canvas');canvas.width=row.width;canvas.height=row.height;const c=canvas.getContext('2d',{willReadFrequently:true});
-                    for(const tile of row.tiles){const image=await createImageBitmap(await request(localMode?tile.local:tile.cdn,'blob'));try{if(image.width!==tile.width||image.height!==tile.height)throw Error('城市背景尺寸不匹配');c.drawImage(image,tile.x,tile.y);}finally{image.close();}}
+                    // Bounded parallel downloads; release each decoded tile immediately after compositing.
+                    let nextTile=0;
+                    const results=await Promise.allSettled(Array.from({length:Math.min(rules.maxConcurrent,row.tiles.length)},async()=>{
+                        while(nextTile<row.tiles.length){const tile=row.tiles[nextTile++],image=await createImageBitmap(await request(localMode?tile.local:tile.cdn,'blob'));
+                            try{if(image.width!==tile.width||image.height!==tile.height)throw Error('城市背景尺寸不匹配');c.drawImage(image,tile.x,tile.y);}finally{image.close();}}
+                    }));
+                    const failed=results.find(r=>r.status==='rejected');if(failed){canvas.width=canvas.height=0;throw failed.reason;}
                     const data=c.getImageData(0,0,row.width,row.height).data;canvas.width=canvas.height=0;return {data,width:row.width,height:row.height,bytes:data.byteLength};
                 });
                 return [kind,result,key];
@@ -193,6 +223,8 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
             }catch{artError=true;}
         }
         if(token!==epoch)return false;
+        const actorError=await actorsReady;if(token!==epoch)return false;if(actorError)throw actorError;
+        perf.record('earth-load-assets',performance.now()-assetsStarted);report('正在准备地图显示…',5);
         let preparedSurface=null;
         await work.run((function*(){
             staged.wildAuthored=yield* reuseEarthObjectsSteps(target.wildAuthored||[],staged.wildAuthored||[]);
@@ -218,14 +250,22 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
         target.error=[...terrain,...rows].some(r=>r.status==='rejected')?'部分地图数据未加载，靠近时将重试。':artError?'部分城市美术未加载，正在等待重试。':'';
         return true;
     }
-    async function prepare(geo,{restore=false}={}){
+    async function prepare(geo,{restore=false,onProgress=()=>{}}={}){
         if(!Number.isFinite(geo.lon)||!Number.isFinite(geo.lat)||Math.abs(geo.lat)>90)throw Error('请输入有效经纬度');
-        cancelPending();const token=epoch;await ready();const p=earthPoint(geo.lon,geo.lat,rules),target=makeWorld(p);
-        const boatArt=await json('data/adventure/earth/boat-art.json');if(token!==epoch)throw Error('已取消地图加载');
+        cancelPending();const token=epoch,started=performance.now();
+        const report=(message,done)=>{if(token===epoch)onProgress({message,done,total:6,elapsedMs:performance.now()-started});};
+        report('正在读取地图配置…',0);
+        background.warmup();
+        // Reserve metadata slots before the larger surface-art requests.
+        const essentials=Promise.all([ready({scene:true}),json('data/adventure/earth/boat-art.json')]);
+        // Fetch surface art while geographic data and the scene are being prepared.
+        if(typeof document!=='undefined')ensureSurface().warmup();
+        const [,boatArt]=await essentials;if(token!==epoch)throw Error('已取消地图加载');
+        const p=earthPoint(geo.lon,geo.lat,rules),target=makeWorld(p);
         target.boatArt=boatArt;registerImage?.('earth-boat',boatArt);
-        if(!await loadAround(p,target,token))throw Error('已取消地图加载');
+        if(!await loadAround(p,target,token,null,report))throw Error('已取消地图加载');
         const arrival=earthNearest(target,p.x,p.y,{safe:true,landOnly:!restore});if(!arrival)throw Error('附近没有已加载的安全陆地，请选择陆地或城市');
-        target.center={...arrival};target.layout.spawn={...arrival};world=target;updateVisible(arrival,null,0);pendingPins.clear();syncPins();setRegion(target.authored);lastStreamKey=`${Math.floor(p.x/rules.chunkSize)}:${Math.floor(p.y/rules.chunkSize)}:${getPlayerLevel()}:${getPlayerPower?.()??0}:${earthNatureMonth(getNatureTime(),geo.lon)}`;prefetchedFromKey='';lastStreamPosition={...arrival};return {world:target,position:arrival};
+        target.center={...arrival};target.layout.spawn={...arrival};world=target;updateVisible(arrival,null,0);pendingPins.clear();syncPins();setRegion(target.authored);lastStreamKey=`${Math.floor(p.x/rules.chunkSize)}:${Math.floor(p.y/rules.chunkSize)}:${getPlayerLevel()}:${getPlayerPower?.()??0}:${earthNatureMonth(getNatureTime(),geo.lon)}`;prefetchedFromKey='';lastStreamPosition={...arrival};perf.record('earth-load-total',performance.now()-started);report('地图数据已就绪',6);return {world:target,position:arrival};
     }
     function updateVisible(p,view,dt=0){
         if(!world)return;
@@ -254,8 +294,9 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
         const task=loadAround(ahead,target,token,direction).then(ok=>{if(ok&&token===epoch){pendingPins.clear();syncPins();setRegion(target.authored);lastStreamKey=key;prefetchedFromKey=key!==currentKey?currentKey:'';if(growthChanged)updateVisible(p,target.wildView);if(target.error)nextRetry=now+5000;}}).catch(e=>{if(token===epoch){pendingPins.clear();syncPins();target.error=e.message;nextRetry=now+5000;}}).finally(()=>{if(streamTask===task)streamTask=null;});streamTask=task;
         return streamTask;
     }
+    function ensureSurface(){return surface??=createEarthSurfacePainter({rules,sample:typeAt,loadArt:loadSurfaceArt,scheduler:work});}
     function paint(ctx,target,rect){
-        surface??=createEarthSurfacePainter({rules,sample:typeAt,loadArt:loadSurfaceArt,scheduler:work});
+        ensureSurface();
         if(!surface.covers(target,rect)){
         ctx.fillStyle='#6f7775';ctx.fillRect(rect.x,rect.y,rect.w,rect.h);
         const a=earthGeo({x:rect.x,y:rect.y},rules),b=earthGeo({x:rect.x+rect.w,y:rect.y+rect.h},rules);

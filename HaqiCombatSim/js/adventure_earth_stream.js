@@ -26,7 +26,7 @@ export function createEarthStreamWorker({workerFactory=()=>typeof Worker==='unde
             worker.onerror=()=>{failed=true;stop(Error('地球后台准备失败'));};return worker;
         }catch{failed=true;stop(Error('地球后台不可用'));return null;}
     }
-    return {run(type,payload,{epoch=generation,version='',transfer=[]}={}){
+    return {warmup:start,run(type,payload,{epoch=generation,version='',transfer=[]}={}){
         const current=start();if(!current)return null;
         const id=++sequence;return new Promise((resolve,reject)=>{
             const timer=setTimeout(()=>{failed=true;stop(Error('地球后台准备超时'));},timeoutMs);

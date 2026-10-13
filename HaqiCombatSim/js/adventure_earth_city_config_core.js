@@ -1,4 +1,5 @@
 // Independently authored city packages and durable, city-scoped quest progress.
+import {validateTimeScrollReference} from './adventure_time_scroll_core.js';
 import {validateCityDungeons,validateCityDungeonProgress} from './adventure_city_dungeons_core.js';
 const fail=message=>{throw Error(message);};
 const legacyChapter='earth-shenzhen-united';
@@ -75,6 +76,7 @@ export function validateEarthCityProgress(value){
     }
 }
 export function validateEarthCity(city){
+    validateTimeScrollReference(city?.timeScroll);
     validateCityDungeons(city);
     if(city?.version!==2||!/^[a-z0-9][a-z0-9-]*$/.test(city.id)||!city.name||!city.languages?.primary)fail('城市配置无效');
     const npcIds=new Set(),objectIds=new Set(),questIds=new Set();

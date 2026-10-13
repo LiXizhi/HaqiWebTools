@@ -653,6 +653,7 @@ export function createRenderer(canvas,assets) {
         if(ev?.type==='cast'||ev?.type==='fizzle') {
             effects.draw(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],center:{x:cx,y:cy-2},width:w,height:h,seed:`${ev.round}:${ev.caster}:${ev.card}`,reducedMotion:reducedMotion.matches,failed:ev.type==='fizzle',reflection:ev.label==='reflection',environmentManaged:true});
         }
+        if(ev?.type==='cast'&&ev.caster==='hero')assets.hanziPresentation?.spell(c,{card:battle.resolved.cards[ev.card],progress:p,from:positions[ev.caster],to:positions[ev.target]||positions[ev.caster],reducedMotion:reducedMotion.matches});
         if(ev?.type==='damage'||ev?.type==='heal') {
             const at=positions[ev.target];if(at){c.save();c.globalAlpha=1-p*.65;text(c,`${ev.type==='heal'?'+':'−'}${ev.amount}${ev.mark==='c'?' 暴击':''}`,at.x,at.y-100-p*40,26,ev.type==='heal'?'#adf8a0':'#fff0b4');c.restore();}
         }

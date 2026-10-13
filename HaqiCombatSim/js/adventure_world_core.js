@@ -130,6 +130,8 @@ export function createWorld(zone,content,save=null) {
         world.trees=world.trees.filter(t=>entrances.every(e=>distance(t,e)>110&&!sceneryCoversActor(t,{...e,label:e.name})));
     }
     objectIndices.delete(world);
+    // A redesigned island keeps valid local positions; stranded old coordinates return to its pier.
+    if(zone==='hanzi'&&save?.zone===zone&&save?.position&&!walkable(world,save.position.x,save.position.y))save.position={...layout.spawn};
     return world;
 }
 export function sceneActors(world,content) {

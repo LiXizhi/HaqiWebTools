@@ -1,0 +1,234 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "local": "assets/adventure/environment/world-atlas-hanzi-40da48b648c2.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/world-atlas-hanzi-40da48b648c2.webp",
+      "width": 640,
+      "height": 640,
+      "size": 190824,
+      "sha256": "40da48b648c2cec700865009f394400b42b817d7ba6344b6dea42f4eabc0d9f4",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "73678f86b104818ee173df86545992bab79d99b68ca1704b35269c9b71311e29",
+        "width": 1254,
+        "height": 1254,
+        "prompt": "docs/hanzi-island-art.md"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "hanzi": {
+          "rect": [
+            20,
+            8,
+            599,
+            624
+          ],
+          "sourceRect": [
+            40,
+            6,
+            1183,
+            1232
+          ]
+        }
+      }
+    },
+    {
+      "local": "assets/adventure/environment/buildings-hanzi-61e231ca874d.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/buildings-hanzi-61e231ca874d.webp",
+      "width": 816,
+      "height": 544,
+      "size": 195192,
+      "sha256": "61e231ca874d284c7e3b38a4487d2d95c22e5512aef1ce0f078e4b33f89ee2a3",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "e051f0def3f8276ec5f31391387ea5392fede8fb1c0b54e492705047f5c084f1",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "docs/hanzi-island-art.md"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 90
+      },
+      "frames": {
+        "pavilion": {
+          "rect": [
+            8,
+            25,
+            256,
+            239
+          ],
+          "sourceRect": [
+            60,
+            38,
+            437,
+            408
+          ]
+        },
+        "cottage": {
+          "rect": [
+            280,
+            55,
+            256,
+            209
+          ],
+          "sourceRect": [
+            540,
+            55,
+            507,
+            413
+          ]
+        },
+        "tower": {
+          "rect": [
+            599,
+            8,
+            161,
+            256
+          ],
+          "sourceRect": [
+            1138,
+            1,
+            310,
+            494
+          ]
+        },
+        "harbor": {
+          "rect": [
+            9,
+            280,
+            253,
+            256
+          ],
+          "sourceRect": [
+            46,
+            523,
+            454,
+            460
+          ]
+        },
+        "workshop": {
+          "rect": [
+            280,
+            336,
+            256,
+            200
+          ],
+          "sourceRect": [
+            522,
+            538,
+            540,
+            421
+          ]
+        },
+        "goldTree": {
+          "rect": [
+            562,
+            280,
+            235,
+            256
+          ],
+          "sourceRect": [
+            1090,
+            510,
+            430,
+            469
+          ]
+        }
+      }
+    },
+    {
+      "local": "assets/adventure/npcs/hanzi-863000-483f9684b107.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/hanzi-863000-483f9684b107.webp",
+      "sha256": "483f9684b107826713ca85f419b8a28324470937e970fe347ffce71fb2660b78",
+      "size": 40264,
+      "width": 256,
+      "height": 256,
+      "encoding": "lossless",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "2a9731a63b13e336854ed231669e6ac5ae236d5dc179776601b4de7346789aa0",
+        "width": 1246,
+        "height": 1262,
+        "sourceRect": [
+          184,
+          8,
+          370,
+          621
+        ],
+        "prompt": "docs/hanzi-island-art.md"
+      }
+    },
+    {
+      "local": "assets/adventure/npcs/hanzi-863001-2d15dbefe3d2.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/hanzi-863001-2d15dbefe3d2.webp",
+      "sha256": "2d15dbefe3d2c45687c89a8f6f109f510d0dc60a0405d69171ab31c56a485fa0",
+      "size": 34988,
+      "width": 256,
+      "height": 256,
+      "encoding": "lossless",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "2a9731a63b13e336854ed231669e6ac5ae236d5dc179776601b4de7346789aa0",
+        "width": 1246,
+        "height": 1262,
+        "sourceRect": [
+          722,
+          10,
+          319,
+          621
+        ],
+        "prompt": "docs/hanzi-island-art.md"
+      }
+    },
+    {
+      "local": "assets/adventure/npcs/hanzi-863002-a293d5f4df7b.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/hanzi-863002-a293d5f4df7b.webp",
+      "sha256": "a293d5f4df7b074d4ddea07d4e910692dfebc90aeb11358d53ef9e65ec01b30f",
+      "size": 44048,
+      "width": 256,
+      "height": 256,
+      "encoding": "lossless",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "2a9731a63b13e336854ed231669e6ac5ae236d5dc179776601b4de7346789aa0",
+        "width": 1246,
+        "height": 1262,
+        "sourceRect": [
+          150,
+          631,
+          424,
+          612
+        ],
+        "prompt": "docs/hanzi-island-art.md"
+      }
+    },
+    {
+      "local": "assets/adventure/npcs/hanzi-863003-89cdac6bb422.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/hanzi-863003-89cdac6bb422.webp",
+      "sha256": "89cdac6bb422026dc46dfdbb9612403084dee283410d8353e6851c45e36af481",
+      "size": 47740,
+      "width": 256,
+      "height": 256,
+      "encoding": "lossless",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "2a9731a63b13e336854ed231669e6ac5ae236d5dc179776601b4de7346789aa0",
+        "width": 1246,
+        "height": 1262,
+        "sourceRect": [
+          747,
+          662,
+          393,
+          574
+        ],
+        "prompt": "docs/hanzi-island-art.md"
+      }
+    }
+  ],
+  "prompt": "docs/hanzi-island-art.md"
+}

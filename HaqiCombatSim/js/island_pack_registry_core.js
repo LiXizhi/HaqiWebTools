@@ -20,5 +20,12 @@ export const PACK_ISLANDS = [
     "source": "web-authored:sail",
     "description": "庆典前夜，塔里传出了求救声。我们要先听完整，再决定怎样讲这段过去。",
     "recommendedLevel": 80
+  },
+  {
+    "id": "hanzi",
+    "name": "字源岛",
+    "source": "web-authored:hanzi",
+    "description": "适合1–10级自由探索的岛屿。帮助居民，完成独立任务线，把字卡的力量带进冒险。",
+    "recommendedLevel": 1
   }
 ];

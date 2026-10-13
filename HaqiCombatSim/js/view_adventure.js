@@ -136,13 +136,18 @@ function isChineseSystem(){
     const languages=globalThis.navigator?.languages||[];
     return [...languages,globalThis.navigator?.language].some(language=>/^zh(?:-|$)/i.test(String(language||'')));
 }
+export function createEntryFooter(){
+    return isChineseSystem()?el('footer','entry-license',ONLINE_GAME_LICENSE):null;
+}
 export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocale,setSecondLocale}={}) {
     const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
+    if(new URLSearchParams(globalThis.location?.search||'').get('product')==='hanzi'){
+        const en=locale==='en';intro.querySelector('.eyebrow').textContent=en?'HANZI MAGIC · CHAPTER ONE':'字源岛 · 第一章';intro.querySelector('.game-title').textContent=en?'Hanzi Magic':'字有魔法';intro.querySelector('.chapter-title').textContent=en?'Island of living words':'文字会醒来的地方';intro.querySelector('.entry-description').textContent=en?'Speak a character to awaken its magic. Write it to give it shape. Collect your magic in cards.':'说出汉字，唤醒力量。写出汉字，赋予形状。反复练习，把你的魔法珍藏成卡。';intro.querySelector('.entry-tags').replaceChildren(...(en?['Discover','Write & speak','Collect']:['探索字义','说字写字','魔法收藏']).map(label=>el('span','badge',label)));
+    }
     const controls=[];
     if(login||cloud){
         const cloudButton=button(owner?'我的云端旅途':'登录 Keepwork',login||cloud,'secondary cloud-entry-button');
         intro.append(cloudButton);controls.push(cloudButton);
-        if(isChineseSystem())intro.append(el('small','entry-version',`文网文 ${ONLINE_GAME_LICENSE}`));
     }
     if(setLocale&&locale){
         const picker=renderEntryLocale(locale,secondLocale,setLocale,setSecondLocale);
@@ -159,6 +164,7 @@ export function renderEntry(root,assets,stored,cb,error='') {
     const intro=introPane.root;
     const form=el('form','character-form creation-form');
     root.append(el('div','entry-layout',intro,form));
+    const footer=createEntryFooter();if(footer)root.append(footer);
     introPane.fit();
     function paint() {
         cb.stopPreview?.();form.replaceChildren();
@@ -501,7 +507,9 @@ export function renderHud(root,model,cb) {
     socialBar.append(socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));
     const teamControl=teamHudButton(model.social?.team,save.coopRun,cb.panel,model.localSecond);
     if(teamControl)socialBar.append(teamControl);
+    socialBar.append(button('字',()=>cb.panel('hanzi'),'mount-toggle hanzi-launch'));socialBar.lastChild.title=tr('字源岛 · 字有魔法');socialBar.lastChild.setAttribute('aria-label',tr('字源岛 · 字有魔法'));
     root.append(socialBar);
+    if(model.timeCity){const time=button('时光长卷',()=>cb.panel('time-scroll'),'secondary time-scroll-launch');time.style.cssText='position:absolute;right:14px;bottom:100px;pointer-events:auto';root.append(time);}
     if(model.localSecond){
         socialBar.dataset.player='1';
         const second=root.querySelector('.local-secondary-title'),peer=model.localSecond;
@@ -537,7 +545,7 @@ function spellFace(assets,card,artCard=card) {
     const description=spellHint(card,assets.dataset);
     const base=assets.effects.cards[card.key]?.base;
     return createCardFace({el,name:artCard.name,cost,cooldown:rounds,description,
-        draw:context=>assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description}),
+        draw:context=>{assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description});assets.hanziPresentation?.badge(context,card);},
         retry:base?()=>assets.skillArt.ensure(base):undefined});
 }
 export function renderPanel(root,kind,model,cb) {
@@ -657,6 +665,8 @@ export function renderDialogue(root,model,dialog,cb) {
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
         if(npc.id===36205||npc.name==='法斯特船长')choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
+        if(npc.hanziPractice)choices.append(button('看看这个字 · 可选练习',()=>cb.panel('hanzi',{character:npc.hanziPractice}),'secondary'));
+        if(npc.zone==='hanzi')choices.append(button('打开汉字卡册',()=>cb.panel('hanzi'),'secondary'));
         if(npc.worldObservation){
             choices.append(button(npc.worldObservation.label,()=>cb.panel('earthmap'),'secondary'));
         }
@@ -943,6 +953,7 @@ export function eventLabel(e,battle,assets) {
     if(e.type==='speak')return fill('{caster}：{text}',{caster,text:e.text}).text;
     if(e.type==='capture')return fill(e.success?'{target}捕获成功！':e.runeId?'{target}挣脱了抓宠符文':'{target}挣脱了晶球',{target}).text;
     if(e.type==='pass')return fill('{caster} 跳过本回合',{caster}).text;
+    if(e.type==='hanzi_buff')return `${caster} · ${e.description}`;
     if(e.type==='fizzle')return fill('{caster} 的魔法失误了',{caster}).text;
     return '';
 }

@@ -1,0 +1,264 @@
+{
+  "version": 1,
+  "id": "common",
+  "spacing": 640,
+  "stations": [
+    {
+      "id": "map",
+      "yearsAgo": 100,
+      "label": "约100年前",
+      "reading": {
+        "zh-CN": "地图能帮助我们认识地方，但不同年代的地图可能不一样。这里是一幅想象地图，我们不把它当成过去真实的城市。",
+        "en": "Maps help us learn about places. Maps can change over time. This is an imagined map, not a real old city map."
+      },
+      "traveler": {
+        "name": "绘图旅人",
+        "appearance": "girl"
+      },
+      "clue": {
+        "id": "clue",
+        "name": "地图卡片",
+        "text": {
+          "zh-CN": "地图上的符号代表不同的地方。先看图例，再找你要去的地方。",
+          "en": "Symbols on a map stand for places. Read the key, then find your place."
+        }
+      },
+      "story": {
+        "id": "time-scroll:common:map",
+        "title": "地图与地方",
+        "context": "与虚构时光旅人一起探索。有效口语沿用每日学习加成；不发放货币。",
+        "rewardGroup": "help",
+        "opening": {
+          "zh-CN": "地图能帮助我们认识地方，但不同年代的地图可能不一样。这里是一幅想象地图，我们不把它当成过去真实的城市。",
+          "en": "Maps help us learn about places. Maps can change over time. This is an imagined map, not a real old city map."
+        },
+        "turns": [
+          {
+            "id": "map-1",
+            "pattern": "I have a map.",
+            "hint": "我有一张地图。",
+            "question": {
+              "zh-CN": "你手里拿着什么？",
+              "en": "What do you have?"
+            },
+            "answer": {
+              "zh-CN": "我有一张地图。",
+              "en": "I have a map."
+            },
+            "response": {
+              "zh-CN": "谢谢你。我们继续探索吧。",
+              "en": "Thank you. Let us keep exploring."
+            }
+          },
+          {
+            "id": "map-2",
+            "pattern": "We can read the key.",
+            "hint": "我们可以看图例。",
+            "question": {
+              "zh-CN": "地图上的符号是什么意思？",
+              "en": "What do the symbols mean?"
+            },
+            "answer": {
+              "zh-CN": "我们可以看图例。",
+              "en": "We can read the key."
+            },
+            "response": {
+              "zh-CN": "谢谢你。我们继续探索吧。",
+              "en": "Thank you. Let us keep exploring."
+            }
+          },
+          {
+            "id": "map-3",
+            "pattern": "No, this is an imagined map.",
+            "hint": "不，这是一张想象地图。",
+            "question": {
+              "zh-CN": "这是一张真实的旧地图吗？",
+              "en": "Is this a real old map?"
+            },
+            "answer": {
+              "zh-CN": "不，这是一张想象地图。",
+              "en": "No, this is an imagined map."
+            },
+            "response": {
+              "zh-CN": "谢谢你。我们继续探索吧。",
+              "en": "Thank you. Let us keep exploring."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "direction",
+      "yearsAgo": 50,
+      "label": "约50年前",
+      "reading": {
+        "zh-CN": "我在找一块路牌。请和我一起往右走。屏幕的左右不是地图的东西，要先看方向标记。",
+        "en": "I am looking for a sign. Walk to the right with me. Right on the screen does not always mean east on a map. Check the directions first."
+      },
+      "traveler": {
+        "name": "寻路旅人",
+        "appearance": "boy"
+      },
+      "clue": {
+        "id": "clue",
+        "name": "方向路牌",
+        "text": {
+          "zh-CN": "东、西、南、北可以帮助我们描述方向。地图可能旋转，先确认北方在哪里。",
+          "en": "East, west, south and north help us give directions. A map can turn. Check where north is first."
+        }
+      },
+      "story": {
+        "id": "time-scroll:common:direction",
+        "title": "方向与距离",
+        "context": "与虚构时光旅人一起探索。有效口语沿用每日学习加成；不发放货币。",
+        "rewardGroup": "help",
+        "opening": {
+          "zh-CN": "我在找一块路牌。请和我一起往右走。屏幕的左右不是地图的东西，要先看方向标记。",
+          "en": "I am looking for a sign. Walk to the right with me. Right on the screen does not always mean east on a map. Check the directions first."
+        },
+        "turns": [
+          {
+            "id": "direction-1",
+            "pattern": "Let us find it together.",
+            "hint": "我们一起找吧。",
+            "question": {
+              "zh-CN": "我们一起找路牌好吗？",
+              "en": "Shall we find the sign?"
+            },
+            "answer": {
+              "zh-CN": "我们一起找吧。",
+              "en": "Let us find it together."
+            },
+            "response": {
+              "zh-CN": "谢谢你。我们继续探索吧。",
+              "en": "Thank you. Let us keep exploring."
+            }
+          },
+          {
+            "id": "direction-2",
+            "pattern": "Where is north?",
+            "hint": "北方在哪里？",
+            "question": {
+              "zh-CN": "地图上先找哪个方向？",
+              "en": "Which direction shall we check first?"
+            },
+            "answer": {
+              "zh-CN": "北方在哪里？",
+              "en": "Where is north?"
+            },
+            "response": {
+              "zh-CN": "谢谢你。我们继续探索吧。",
+              "en": "Thank you. Let us keep exploring."
+            }
+          },
+          {
+            "id": "direction-3",
+            "pattern": "No, it is nearby.",
+            "hint": "不，它就在附近。",
+            "question": {
+              "zh-CN": "路牌在这里，离我们远吗？",
+              "en": "The sign is here. Is it far away?"
+            },
+            "answer": {
+              "zh-CN": "不，它就在附近。",
+              "en": "No, it is nearby."
+            },
+            "response": {
+              "zh-CN": "谢谢你。我们继续探索吧。",
+              "en": "Thank you. Let us keep exploring."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "change",
+      "yearsAgo": 10,
+      "label": "约10年前",
+      "reading": {
+        "zh-CN": "我在收集过去与现在的词语。向左走，我们想到过去；向右走，我们回到现在。这些故事是想象，不是这座城市的历史记录。",
+        "en": "I collect words about then and now. We walk left to think about the past and right to return to now. These stories are imagined, not records of this city."
+      },
+      "traveler": {
+        "name": "记事旅人",
+        "appearance": "girl"
+      },
+      "clue": {
+        "id": "clue",
+        "name": "时光便笺",
+        "text": {
+          "zh-CN": "过去是已经发生的时间。了解一个地方的过去，要寻找有日期和来源的记录，不能只看想象的画面。",
+          "en": "The past is time that has already happened. To learn about a place, look for dated records and sources, not just imagined pictures."
+        }
+      },
+      "story": {
+        "id": "time-scroll:common:change",
+        "title": "过去与现在",
+        "context": "与虚构时光旅人一起探索。有效口语沿用每日学习加成；不发放货币。",
+        "rewardGroup": "help",
+        "opening": {
+          "zh-CN": "我在收集过去与现在的词语。向左走，我们想到过去；向右走，我们回到现在。这些故事是想象，不是这座城市的历史记录。",
+          "en": "I collect words about then and now. We walk left to think about the past and right to return to now. These stories are imagined, not records of this city."
+        },
+        "turns": [
+          {
+            "id": "change-1",
+            "pattern": "We are thinking about the past.",
+            "hint": "我们正在想到过去。",
+            "question": {
+              "zh-CN": "我们正在想到哪个时间？",
+              "en": "Which time are we thinking about?"
+            },
+            "answer": {
+              "zh-CN": "我们正在想到过去。",
+              "en": "We are thinking about the past."
+            },
+            "response": {
+              "zh-CN": "谢谢你。我们继续探索吧。",
+              "en": "Thank you. Let us keep exploring."
+            }
+          },
+          {
+            "id": "change-2",
+            "pattern": "Some things change.",
+            "hint": "有些事情会改变。",
+            "question": {
+              "zh-CN": "现在和过去一样吗？",
+              "en": "Is now the same as the past?"
+            },
+            "answer": {
+              "zh-CN": "有些事情会改变。",
+              "en": "Some things change."
+            },
+            "response": {
+              "zh-CN": "谢谢你。我们继续探索吧。",
+              "en": "Thank you. Let us keep exploring."
+            }
+          },
+          {
+            "id": "change-3",
+            "pattern": "We can look for old records.",
+            "hint": "我们可以寻找旧记录。",
+            "question": {
+              "zh-CN": "我们怎样了解过去？",
+              "en": "How can we learn about the past?"
+            },
+            "answer": {
+              "zh-CN": "我们可以寻找旧记录。",
+              "en": "We can look for old records."
+            },
+            "response": {
+              "zh-CN": "谢谢你。我们继续探索吧。",
+              "en": "Thank you. Let us keep exploring."
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": "present",
+      "yearsAgo": 0,
+      "label": "现在"
+    }
+  ]
+}

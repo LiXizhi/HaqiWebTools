@@ -7,11 +7,13 @@ import fs from 'node:fs';
 import { createAdventure, beginEncounter, recordDecision } from '../js/adventure_core.js';
 import { restorePveBattle, playPveRound } from '../js/combat_pve_core.js';
 import { createRoleStore } from '../js/adventure_roles.js';
-import { validateRoles, emptyRoles, addRole, roleLimit, MAX_ROLES_VIP, directSignInRequested, startupRoleId } from '../js/adventure_roles_core.js';
+import { checkedRoleProgress, validateRoles, emptyRoles, addRole, roleLimit, MAX_ROLES_VIP, directSignInRequested, startupRoleId } from '../js/adventure_roles_core.js';
 import { SAVE_KEY, saveLocal, readLocal, replaceLocalWithBackup, readBackup } from '../js/adventure_assets.js';
 import { storeDebugEdit, restoreDebugBackup, hasDebugBackup } from '../js/adventure_debug.js';
 import { createCloudClient } from '../js/adventure_cloud.js';
 import {recordFishingCatch} from '../js/adventure_fishing_records_core.js';
+import {awardDailySpeech,dailyBuffs} from '../js/language_daily_buff_core.js';
+import {createDungeonLoader} from '../js/adventure_dungeons.js';
 const load = n => JSON.parse(fs.readFileSync(new URL(`../data/adventure/${n}.json`, import.meta.url)));
 const content = load('chapter'), dataset = load('combat');
 const hero = name => createAdventure(content, { name });
@@ -21,6 +23,15 @@ function local() {
     const storage = { getItem: k => data.get(k) ?? null, setItem: (k, v) => data.set(k, v) };
     return { data, storage, make: () => createRoleStore({ content, dataset, storage, runtimeStore, uuid: () => id(++n), now: () => 1000 + n }) };
 }
+
+test('daily learning awards survive role reloads, remain device-only and keep event deduplication',()=>{
+    const l=local(),store=l.make();store.open();store.create(hero('汉字学习'));
+    const save=JSON.parse(readLocal(store.scoped()));awardDailySpeech(save,content,'hanzi:tu');saveLocal(save,store.scoped());
+    const loaded=l.make();loaded.open();const restored=JSON.parse(readLocal(loaded.scoped()));
+    assert.deepEqual(dailyBuffs(checkedRoleProgress(restored,content,dataset).save),dailyBuffs(save));assert.deepEqual(dailyBuffs(restored),dailyBuffs(save));assert.equal(awardDailySpeech(restored,content,'hanzi:tu'),null);
+    assert.equal(durableSave(restored).dailyLanguageBuff,undefined);
+    loaded.open('other-account');loaded.create(hero('另一个角色'));assert.equal(loaded.catalog.roles[0].save.dailyLanguageBuff,undefined);
+});
 test('duo selection survives reload in player order, stays local and is account scoped', () => {
     const l = local(), store = l.make();store.open();
     const a = store.create(hero('一号')), b = store.create(hero('二号'));
@@ -396,6 +407,58 @@ test('incompatible runtime battles are backed up and failed recovery writes leav
     const backup=JSON.parse(l.storage.getItem(key)).recoveryBackup;
     assert.equal(backup.raw,original);assert.equal(backup.runtime,undefined);
     assert.deepEqual(runtimeStore.get(`${key}.${role}`),runtime);
+});
+test('retry restores unavailable roles from their backup without replacing newer playable progress',async()=>{
+    const l=local(),store=l.make();store.open('alice');
+    const missing=store.create(hero('等待资源')),good=store.create(hero('可玩角色'));
+    const key='haqi.roles.v1.account.alice',original=l.storage.getItem(key);
+    let unavailable=true;
+    const recovered=createRoleStore({content,dataset,storage:l.storage,runtimeStore:createRuntimeStore({indexedDB:null}),
+        prepareSaves:async saves=>{if(unavailable&&saves[0].name==='等待资源')throw Error('地图下载失败');}});
+    await recovered.prepareOpen('alice',{recover:true});recovered.open('alice',{recover:true});
+    assert.deepEqual(recovered.recoveryIssues,[{id:missing,name:'等待资源',reason:'地图下载失败'}]);
+    recovered.select(good);const updated=JSON.parse(readLocal(recovered.scoped()));updated.name='更新后的名字';saveLocal(updated,recovered.scoped());
+    unavailable=false;
+    assert.equal(await recovered.retryRecovery(),1);assert.equal(recovered.recovering,false);
+    assert.deepEqual(recovered.catalog.roles.map(row=>row.save.name),['更新后的名字','等待资源']);
+    assert.equal(recovered.catalog.activeId,good);assert.equal(recovered.dirty,true);
+    assert.equal(JSON.parse(l.storage.getItem(key)).recoveryBackup.raw,original);
+    const reopened=l.make();reopened.open('alice',{recover:true});assert.equal(reopened.recovering,false);
+    assert.equal(reopened.catalog.roles.length,2);assert.deepEqual(reopened.recoveryIssues,[]);
+});
+test('unsuccessful recovery retries retain the rejected source and never cross account scopes',async()=>{
+    const l=local(),store=l.make();store.open('alice');store.create(hero('原角色'));
+    const key='haqi.roles.v1.account.alice',value=JSON.parse(l.storage.getItem(key));value.catalog.roles[0].save.contentVersion='invalid';
+    const original=JSON.stringify(value);l.storage.setItem(key,original);
+    const recovered=l.make();await recovered.prepareOpen('alice',{recover:true});recovered.open('alice',{recover:true});
+    assert.equal(await recovered.retryRecovery(),0);assert.equal(recovered.recovering,true);
+    assert.equal(JSON.parse(l.storage.getItem(key)).recoveryBackup.raw,original);
+    recovered.open('bob');assert.equal(recovered.recovering,false);assert.deepEqual(recovered.recoveryIssues,[]);
+    assert.equal(await recovered.retryRecovery(),undefined);assert.equal(l.storage.getItem('haqi.roles.v1.account.bob'),null);
+});
+test('explicit cloud recovery releases sync protection while retaining original bytes across later writes',()=>{
+    const l=local(),store=l.make();store.open('alice');const role=store.create(hero('原角色'));
+    const cloudCatalog=structuredClone(store.catalog),key='haqi.roles.v1.account.alice',original='{broken JSON';
+    l.storage.setItem(key,original);const recovered=l.make();recovered.open('alice',{recover:true});
+    recovered.replace(cloudCatalog,id(99));assert.equal(recovered.recovering,true,'ordinary replacement must keep protection');
+    recovered.replace(cloudCatalog,id(99),false,{resolveRecovery:true});assert.equal(recovered.recovering,false);
+    recovered.select(role);assert.equal(recovered.recovering,false);assert.equal(recovered.dirty,false);
+    assert.equal(JSON.parse(l.storage.getItem(key)).recoveryBackup.raw,original);
+    const reopened=l.make();reopened.open('alice',{recover:true});assert.equal(reopened.recovering,false);
+    assert.equal(reopened.catalog.roles[0].save.name,'原角色');
+});
+test('VIP cloud reload prepares and loads all 20 roles in both split and legacy catalogues',async()=>{
+    const mock=cloudMock(),localStore=local(),store=localStore.make();store.open('alice');
+    for(let i=0;i<MAX_ROLES_VIP;i++)store.create(hero(`角色${i+1}`),{isVip:true});
+    const loader=createDungeonLoader({content,dataset,readJson:async()=>{throw Error('idle roles must not preload dungeons');}});
+    let serial=900;
+    const client=createCloudClient({content,dataset,loadSDK:async()=>mock.sdk,uuid:()=>id(++serial),prepareSaves:loader.prepareSaves});
+    await client.connect();await client.saveRoles(store.catalog,null);
+    assert.equal((await client.roles({refresh:true})).catalog.roles.length,MAX_ROLES_VIP);
+    const path=mock.store.getRemotePagePath('roles/index.json');
+    mock.remote.set(path,JSON.stringify({owner:'alice',revision:id(999),schemaVersion:1,catalog:store.catalog}));
+    assert.equal((await client.roles({refresh:true})).catalog.roles.length,MAX_ROLES_VIP);
+    await assert.rejects(loader.prepareSaves([...store.catalog.roles.map(row=>row.save),hero('超限')]),/角色列表无效/);
 });
 test('switching and reloading preserves each role combat checkpoint and deterministic replay', () => {
     const l = local(), store = l.make();store.open('alice');

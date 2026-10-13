@@ -328,6 +328,41 @@
           ]
         }
       }
+    },
+    "hanzi": {
+      "local": "assets/adventure/environment/world-atlas-hanzi-40da48b648c2.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/world-atlas-hanzi-40da48b648c2.webp",
+      "width": 640,
+      "height": 640,
+      "size": 190824,
+      "sha256": "40da48b648c2cec700865009f394400b42b817d7ba6344b6dea42f4eabc0d9f4",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "73678f86b104818ee173df86545992bab79d99b68ca1704b35269c9b71311e29",
+        "width": 1254,
+        "height": 1254,
+        "prompt": "docs/hanzi-island-art.md"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "hanzi": {
+          "rect": [
+            20,
+            8,
+            599,
+            624
+          ],
+          "sourceRect": [
+            40,
+            6,
+            1183,
+            1232
+          ]
+        }
+      }
     }
   },
   "islands": [
@@ -468,6 +503,22 @@
       "w": 340,
       "h": 340,
       "minLevel": 80
+    },
+    {
+      "id": "hanzi",
+      "name": "字源岛",
+      "resource": "hanzi",
+      "rect": [
+        20,
+        8,
+        599,
+        624
+      ],
+      "x": -600,
+      "y": 550,
+      "w": 340,
+      "h": 340,
+      "minLevel": 1
     }
   ],
   "portals": [

@@ -1,0 +1,29 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="../../"><title>字源岛美术验收</title><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_world_map.css"><link rel="stylesheet" href="../../css/adventure_earth.css">
+<style>body{margin:0;background:#eff4de;color:#243b34}header{position:relative;z-index:2;padding:8px;background:#fff9e9;display:flex;flex-wrap:wrap;gap:6px;align-items:center}header button{padding:5px 10px}#scene{width:100%;height:calc(100vh - 110px);display:block}#status{margin:5px;font-size:13px}#overlay:empty{display:none}#gallery{display:none;background:repeating-conic-gradient(#e0e6dd 0 25%,#faf7ed 0 50%) 0/24px 24px;padding:15px}#gallery img{max-width:100%;max-height:480px}figure{display:inline-block;margin:10px;text-align:center}</style>
+<body class="haqi-app"><header><strong>字源岛 · 隔离美术验收</strong><button id="map">哈奇世界地图</button><button id="art">查看六张WebP</button><span id="places"></span></header>
+<p id="status">正在加载游戏资源；不读取或保存玩家账号。</p><canvas id="scene"></canvas><div id="gallery"></div><div id="overlay"></div>
+<script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,applyAction} from '../../js/adventure_core.js';
+import {createWorld} from '../../js/adventure_world_core.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {renderHaqiAtlas} from '../../js/view_haqi_atlas.js';
+const status=document.querySelector('#status'),canvas=document.querySelector('#scene'),overlay=document.querySelector('#overlay'),gallery=document.querySelector('#gallery');
+try{
+ const assets=await loadResources(),save=createAdventure(assets.content,{name:'字源岛验收',seed:12012});
+ applyAction(save,assets.content,{type:'travel',zone:'hanzi'});const world=createWorld('hanzi',assets.content,save);
+ await assets.warmScenery(world);await assets.warmNearby(world,save);
+ const renderer=createRenderer(canvas,assets);renderer.prepareScene(world,save);
+ const show=async point=>{gallery.style.display='none';canvas.style.display='block';save.position={x:point.x,y:point.y+130};await assets.warmNearby(world,save);status.textContent=`字源岛 · ${point.name||'初生码头'} · ${world.npcs.length}位居民 · ${world.buildings.length}处建筑`;};
+ for(const p of [...world.npcs,...world.landmarks]){const b=document.createElement('button');b.textContent=p.name;b.onclick=()=>show(p);document.querySelector('#places').append(b);}
+ let atlas;const close=()=>{atlas?.dispose();overlay.replaceChildren();overlay.className='';};
+ document.querySelector('#map').onclick=()=>{atlas=renderHaqiAtlas(overlay,world,{save,assets},{close,travel:id=>{status.textContent='已选目的地：'+id;close();},switchMap:()=>{},drawIsland:(target,id,options)=>renderer.minimap(target,id===world.zone?world:createWorld(id,assets.content),save,options)});};
+ const manifest=await fetch('../../data/adventure/hanzi/island-art.json').then(r=>r.json());
+ const local=new URLSearchParams(location.search).get('assets')==='local';
+ for(const row of manifest.assets){const f=document.createElement('figure'),img=new Image();img.crossOrigin='anonymous';img.src=local?'../../'+row.local:row.cdn;await img.decode();const c=document.createElement('canvas');c.width=img.width;c.height=img.height;const ctx=c.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);const pixels=ctx.getImageData(0,0,c.width,c.height).data;let transparent=0;for(let i=3;i<pixels.length;i+=4)if(!pixels[i])transparent++;if(!transparent)throw Error('图片缺少透明区域');const label=document.createElement('figcaption');label.textContent=`${row.local.split('/').pop()} · ${row.size} 字节 · alpha/CORS可读`;f.append(img,label);gallery.append(f);}
+ document.querySelector('#art').onclick=()=>{canvas.style.display='none';gallery.style.display='block';status.textContent=`6张WebP解码通过，透明通道和Canvas读取通过（${local?'本地':'CDN'}）`;};
+ function frame(t){if(canvas.style.display!=='none')renderer.render(world,save,t,{moving:false});requestAnimationFrame(frame);}requestAnimationFrame(frame);
+ status.textContent=`字源岛已加载 · 六张WebP解码、alpha和Canvas读取通过（${local?'本地':'CDN'}）`;
+}catch(error){status.textContent='验收失败：'+error.message;throw error;}
+</script></html>

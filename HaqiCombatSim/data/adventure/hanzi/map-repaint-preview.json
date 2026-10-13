@@ -1,0 +1,27 @@
+{
+  "previewOnly": true,
+  "local": "assets/adventure/environment/world-atlas-hanzi-layout-66e58c7f8be3.webp",
+  "width": 768,
+  "height": 768,
+  "size": 191372,
+  "sha256": "66e58c7f8be30a2a8b9d35e5a461f6868809edada3e281ca65a203b303282fde",
+  "rect": [
+    0,
+    0,
+    768,
+    768
+  ],
+  "encoding": {
+    "lossless": false,
+    "quality": 82
+  },
+  "source": {
+    "generator": "image_gen",
+    "sha256": "cb41f813518628d5b9279831eada5a7dc3007181d6a261e3c74746c1afcb163a",
+    "width": 1254,
+    "height": 1254,
+    "layout": "data/adventure/maps/hanzi.json",
+    "layoutSha256": "47e11dd6cb5910ca044dc36d287890a6aa41f7dc1b90ba6a08933b68102a7828",
+    "prompt": "docs/hanzi-island-art.md#布局约束重绘预览"
+  }
+}

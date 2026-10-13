@@ -4,7 +4,7 @@ import {saveWorkspaceFile} from './keepwork_file_io.js';
 // whole-file PUT acknowledgements confirm writes without redundant readback.
 import { makeCloudSnapshot, parseCloudSnapshot, snapshotPath, checkpointPaths } from './adventure_cloud_core.js';
 import { tr } from './locale_runtime.js';
-import { validateRoles, emptyRoles, roleIdValid } from './adventure_roles_core.js';
+import { validateRoles, emptyRoles, roleIdValid, MAX_ROLES } from './adventure_roles_core.js';
 import { splitRoleSave, joinRoleSave, storageParts, stableJson, coreCatalogKey, durableSave, restoreRuntime } from './adventure_storage_core.js';
 
 export const SDK_URL = typeof __HAQI_SDK_URL__ !== 'undefined'
@@ -157,7 +157,7 @@ export function createCloudClient({ content, dataset, loadSDK = loadKeepwork, no
         if(value.revision===null)return value;
         let catalog=value.catalog,partsStale=[];
         if(value.schemaVersion===2){
-            if(!Array.isArray(catalog?.roles)||catalog.roles.length>5)throw new CloudError('角色列表格式无效');
+            if(!Array.isArray(catalog?.roles)||catalog.roles.length>MAX_ROLES)throw new CloudError('角色列表格式无效');
             // Storage-format changes make old cloud witnesses mismatch; primary fields still merge.
             // Drifted role IDs are reported so the next saveRoles rewrites their part files.
             const joinRemote=(row,parts)=>{

@@ -23,7 +23,7 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
     function changed(catalog) {return state.dirty || coreCatalogKey(catalog)!==lastCoreKey;}
     function write(next) {
         if (storage.getItem(key()) !== raw) throw Error('角色进度已在其他页面变化，请刷新后继续。');
-        if(state?.recoveryBackup)next={...next,recoveryBackup:state.recoveryBackup};
+        if(state?.recoveryBackup)next={...next,recoveryBackup:state.recoveryBackup,recoveryResolved:next.recoveryResolved??state.recoveryResolved??false};
         const packed=next.catalog.roles.map(row=>{const old=state?.catalog.roles.find(r=>r.id===row.id)?.save;const input={...row.save,...(row.save.petInstanceVersion===1?{petFileRefs:{...old?.petFileRefs,...row.save.petFileRefs},petPages:old?.petPages||row.save.petPages}:{})};if(input.petInstanceVersion===1)for(const id of [...Object.keys(input.pets||{}),...Object.keys(input.petWorld||{})])if(old?.petFileRefs?.[id])input.petFileRefs[id]=old.petFileRefs[id];return {...row,save:packPetFilesSync(durableSave(input),scope(key(),row.id),content,uuid,fileIO(scope(key(),row.id)))};});
         const persisted={...next,localFormat:2,catalog:{...next.catalog,roles:packed}};
         next={...next,catalog:{...next.catalog,roles:next.catalog.roles.map((row,i)=>({...row,save:{...row.save,...(row.save.petInstanceVersion===1?{petFileRefs:unpackPetPages(packed[i].save,scope(key(),row.id),fileIO(scope(key(),row.id)).read).petFileRefs,petPages:packed[i].save.petPages}:{})}}))}};
@@ -59,7 +59,37 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
         get catalog() { return state.catalog; },
         get base() { return state.base; },
         get dirty() { return state.dirty; },
-        get recovering() { return !!state?.recoveryBackup; },
+        get recovering() { return !!state?.recoveryBackup && state.recoveryResolved !== true; },
+        get recoveryIssues() {
+            if(!state?.recoveryBackup || state.recoveryResolved === true)return [];
+            const backup=state.recoveryBackup;
+            try{
+                const rows=backup.raw?JSON.parse(backup.raw).catalog.roles:backup.legacy?[{save:JSON.parse(backup.legacy)}]:[];
+                return rows.filter(row=>!state.catalog.roles.some(current=>current.id===row.id)).map(row=>({
+                    id:row.id,name:String(row.save?.name||'未命名角色'),reason:backup.issues?.find(issue=>issue.id===row.id)?.reason||backup.reason,
+                }));
+            }catch{return [];}
+        },
+        get recoveryReason() { return state?.recoveryResolved===true?'':state?.recoveryBackup?.reason||''; },
+        async retryRecovery() {
+            if(!this.recovering)return;
+            const capturedOwner=owner,capturedRaw=raw,backup=state.recoveryBackup;
+            // Revalidate the original bytes in a read-only overlay. Current roles win
+            // by ID, so retrying never rolls back progress made after isolation.
+            const source=backup.raw||JSON.stringify({catalog:addRole(emptyRoles(),uuid(),JSON.parse(backup.legacy),now())});
+            const sourceKey=key();
+            const candidate=createRoleStore({content,dataset,uuid,now,prepareSaves,runtimeStore,storage:{
+                getItem:k=>k===sourceKey?source:storage.getItem(k),
+                setItem:()=>{throw Error('恢复预览不能修改存档');},
+            }});
+            await candidate.prepareOpen(capturedOwner,{recover:true});candidate.open(capturedOwner,{recover:true});
+            if(owner!==capturedOwner||raw!==capturedRaw)throw Error('角色进度已变化，请重新读取。');
+            const added=candidate.catalog.roles.filter(row=>!state.catalog.roles.some(current=>current.id===row.id));
+            const catalog={...state.catalog,roles:[...state.catalog.roles,...added]};
+            if(!catalog.activeId&&catalog.roles.some(row=>row.id===candidate.catalog.activeId))catalog.activeId=candidate.catalog.activeId;
+            write({...state,catalog:validateRoles(catalog,content,dataset),dirty:state.dirty||added.length>0,recoveryResolved:!candidate.recovering});
+            return added.length;
+        },
         async prepareOpen(account = null, {recover = false} = {}) {
             const storageKey=accountKey(account);
             const captured=storage.getItem(storageKey),legacy=!captured&&account===null?storage.getItem(SAVE_KEY):null;
@@ -100,20 +130,21 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
             }catch(error){
                 if(!recover)throw error;
                 let source;try{source=JSON.parse(nextRaw);}catch{}
-                const recovered=emptyRoles(),seen=new Set();
+                const recovered=emptyRoles(),seen=new Set(),issues=[];
                 // Keep valid roles available independently; never repair or erase a rejected save.
                 try{
                     const header=validateRoles({...source.catalog,roles:[],activeId:null},content,dataset);
                     Object.assign(recovered,header);
                     for(const row of source.catalog.roles){
                         try{
-                            if(seen.has(row.id)||preparationErrors.has(`${nextKey}.${row.id}`))continue;
+                            if(seen.has(row.id))continue;
+                            if(preparationErrors.has(`${nextKey}.${row.id}`))throw preparationErrors.get(`${nextKey}.${row.id}`);
                             const single=validateRoles(hydrate({...header,roles:[row],activeId:row.id},nextKey,source.localFormat),content,dataset);
                             if(recovered.roles.length<MAX_ROLES){recovered.roles.push(single.roles[0]);seen.add(row.id);}
-                        }catch{/* Original bytes and runtime remain in the recovery backup below. */}
+                        }catch(cause){issues.push({id:row.id,reason:cause.message});/* Original bytes and runtime remain in the recovery backup below. */}
                     }
                 }catch{/* A malformed catalog can still open the character creation screen. */}
-                next={catalog:recovered,base:source?.base??null,dirty:source?.dirty===true,recoveryBackup:{raw:nextRaw,legacy,reason:error.message}};
+                next={catalog:recovered,base:source?.base??null,dirty:source?.dirty===true,recoveryBackup:{raw:nextRaw,legacy,reason:error.message,issues}};
             }
             owner = account;raw = nextRaw;state = next;lastCoreKey=coreCatalogKey(next.catalog);
             if (!raw && account === null && !state.recoveryBackup) {
@@ -125,7 +156,7 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
             }
             return state.catalog;
         },
-        replace(catalog, base, dirty = false) {
+        replace(catalog, base, dirty = false, {resolveRecovery = false} = {}) {
             // Preserve this device's runtime only for the same durable role version.
             const hydrated={...catalog,roles:catalog.roles.map(row=>{
                 const previous=state.catalog.roles.find(old=>old.id===row.id);
@@ -134,7 +165,7 @@ export function createRoleStore({ content, dataset, storage = localStorage, uuid
                 if(same)durable.revision=previous.save.revision;
                 return {...row,save:restoreRuntime(durable,content,same?(runtimeStore.get(runtimeKey(key(),row.id))||runtimeValues(previous.save)):row.save.pendingEncounter?runtimeValues(row.save):null)};
             })};
-            write({catalog:validateRoles(hydrated,content,dataset),base,dirty});
+            write({catalog:validateRoles(hydrated,content,dataset),base,dirty,...(resolveRecovery?{recoveryResolved:true}:{})});
         },
         // Fully hydrate lazy pet files before moving a guest save to another scope.
         guestTransfer() {

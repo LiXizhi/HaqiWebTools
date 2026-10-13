@@ -1,3 +1,4 @@
+import {triggerHanziCard} from './hanzi_battle_core.js';
 // combat_cards_core.js — 卡牌效果处理器（对应 card_server.lua Card.UseCard 内各 template.type 分支）。
 // 入口 useCard(arena, caster, card, target)；每个分支的 Lua 行号见 docs/lua-mapping.md。
 // 未实现的 type 通过 registerUnsupported 记录到 arena.unsupported，并按 Pass 处理。
@@ -921,6 +922,7 @@ export function useCard(arena, caster, card, target, seq) {
         AreaPowerPipBoost:['AreaPowerPipBoost',true],AreaCleanse:['AreaCleanse',true],
     }[card.type];
     if(effectThreat)arena.onEffectThreat?.(caster,target||caster,...effectThreat);
+    triggerHanziCard(arena,caster,card);
     reviveGuardians(arena);
     // Optional presentation observer also sees silent secondary effects (e.g. an
     // attack attaching a trap). It is not part of the deterministic event log.

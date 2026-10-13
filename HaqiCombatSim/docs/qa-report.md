@@ -2441,3 +2441,47 @@ Node专项24/24，完整npm run test:battle 854/854通过（64.424秒），零�
 已完成独立浏览器冷进入地球测试，普通档390×844/DPR2/四核/CPU4倍/150ms/10Mbps；蒙特利尔附近各2次平均完整地面7.81→5.88秒。CPU6倍/300ms/1.6Mbps各1次24.64→18.63秒；深圳含居民与地标各1次8.54→6.67秒。两版分辨率、当前视野15块、建筑与道路数量一致；截图核验完成视野，未出现pageerror。测试从本地素材预热游戏后开始，地球使用真实CDN，静态源码受相同网络节流；不包含游戏启动，不是实体手机或线上发行包验收。早期未等待旧岛屿加载完成的样本未纳入最终比较。
 
 最终快速回归1005项1003通过，仍是前述地图来源SVG哈希与角色肤色配对两项原有失败，无新增失败。新增预热取消、槽位释放/去重、Worker图集像素与1024px哈希行为回归通过。报告、截图、CPU profile和复测说明见[开发日志](devlog/devlog_2026-10-12.md#手机浏览器降速-profile-与第二轮优化)。未构建或发布。
+
+### 2026-10-12：字有魔法核心档
+
+[完整报告与证据](qa-reports/qa_2026-10-12_20-14_core.md)。汉字手写成卡/双入口保存/每日奖励去重、PVE、窄屏红蘑菇通过；完整核心验收仍有缺口。全量1748/1761通过，13项基线失败复现；构建成功，未发布。
+
+## 2026-10-12：现实城市时光长卷
+
+- 已实现现实城市/城市内部副本入口、四站分段长卷、左右/地面行走、刻度跳转、三位虚构旅人和三条探索发现；通用内容按需加载，不冒充当地史实。初次从现在进入，本机可恢复上次位置；原城市坐标不变。
+- 时光与语言相关 Node 专项40/40通过；最终时光+分片存储22/22通过，覆盖稳定城市身份、旧档、本机位置与云端发现分离、损坏返回点安全回退、重复发现、跨城学习去重、关闭/换账号后的迟到回调和存储失败回滚。日志 `tmp/time-scroll-focused.txt`、`tmp/time-scroll-storage-split.txt`。
+- `npm run test:battle` 最终1050/1051通过，唯一失败为 `battle_urban_residents.test.mjs:50` 的原有肤色配对断言（0 !== 20），已单独复现；不称全组通过。日志 `tmp/time-scroll-battle-final.txt`、`tmp/time-scroll-existing-failure.txt`。过程中工作区另有岛屿包更改，曾出现3个岛屿包失败，最终复测已消失。
+- 扩展云端/角色存储检查66/67通过；原有 `adventure_cloud.test.mjs:108` 仍期望SDK地址包含 `haqi-storage` 参数，日志 `tmp/time-scroll-storage-final.txt`。本轮没有修改SDK加载地址，不以该失败阻断已通过的时光分片测试。
+- 城市配置检查通过。故事作者源已纳入导出器，新增场景S1488–S1490；来源/稳定编号/重复导出检查和12项故事测试通过。工作区同时存在的汉字岛内容按现有导出器一起更新投影，不将其算作本次功能。
+- Edge隔离内存角色1280×844与390×844实际使用永久CDN角色美术通过：方向键行走、手机刻度点击、三条线索、三轮文字通关、查看每日加成、离开/重入及重复发现不加数，城市坐标保持123/456，文字练习不发货币或口语buff，无页面异常或页面横向溢出；手机使用减少动态效果。日志 `tmp/time-scroll-browser-full.txt`，截图 `tmp/time-scroll-1280-scene.png`、`tmp/time-scroll-390-scene.png`及对应dialogue.png。
+- 没有使用真人存档，没有实际账号云读写或麦克风/在线朗读验收；语音奖励通过真实共享控制器加模拟语音回调测试。未运行构建或发布验收；未提交、推送或发布。
+
+## 2026-10-12：字源岛普通任务与战斗字卡
+
+本地接入0–10级出生岛（沿用初始1级）、任务873000–873005、火/水/土随身字卡。专项 `node --test tests/battle_hanzi.test.mjs tests/hanzi_controller.test.mjs tests/battle_island_packs.test.mjs`：48/48通过，覆盖无额外配装的五系新手实战、奖励幂等、前置、10级成长、旧档位置、往返与字卡分片保存，战斗参数快照重演、触发上限及失误/跳过。
+
+`npm run test:battle`：1051项，1050通过、1失败。失败为已有 `battle_urban_residents.test.mjs:50` 的城市居民肤色配对断言（0 !== 20），没有将其跳过或计为通过。日志 `.cache/hanzi-battle-regression.log`。本轮汉字相关新增用例均在完整回归中通过，最终专项日志 `.cache/hanzi-final-tests.log`。
+
+`node scripts/generate_island_maps.mjs --check` 验证十岛与字源岛出生点、居民、怪物、出口及道路可达性；`python -X utf8 scripts/export_story.py --check`通过，故事单测12/12通过。改动UI模块语法检查和 `git diff --check`通过。本轮未运行浏览器、构建或发布QA；真人学习、真实语音云同步及手机视觉体验仍待验证。
+
+## 2026-10-12：时光长卷小物件复用
+
+- `node --test tests/time_scroll_scenery.test.mjs tests/battle_time_scroll.test.mjs`：11/11；覆盖确定性布局、相邻范围、图集预算/裁剪、道路留空、图片失败不逐帧重试及退出后迟到回调。
+- `tests/time_scroll_browser.test.mjs`：Edge桌面1280×844与触屏390×844通过，验证真实Keepwork CDN街景WebP响应；行走、三线索、双语文字练习、返回和重复访问保持通过。人工查看两张scene截图，树池/长椅/花坛/盆栽透明与裁剪正常，手机人物和线索可见。日志 `tmp/time-scroll-props-browser.txt`，截图 `tmp/time-scroll-1280-scene.png` 与 `tmp/time-scroll-390-scene.png`。
+- `npm run test:battle`：1049/1051，日志 `tmp/time-scroll-props-battle.txt`。失败：`battle_urban_residents.test.mjs:50` 肤色配对0 !== 20；`battle_haqi_atlas.test.mjs:53` 世界地图图集CDN字段为空（该文件单测23/24，日志 `tmp/time-scroll-props-atlas.txt`）。后者来自工作区同时进行的其他美术修改，本次没有改世界地图资源或角色配置，没有计作通过。
+- 本轮仅复用已登记美术，没有新图片上传；保留本地，未提交、推送、构建或发布。
+
+## 2026-10-12：角色列表恢复与备案页尾
+
+- 修复云端目录/资源准备的旧 5 角色读取限制，统一最多20；补足已登录读取错误展示、本地备份重试和明确的云端备份恢复操作。
+- 定向 `node --test tests/adventure_roles.test.mjs tests/adventure_storage_split.test.mjs`：63/63。战斗快速回归1050/1051，保留既有 `battle_urban_residents.test.mjs:59` 肤色配对失败（0 !== 20）。日志：`tmp/role-recovery-tests.log`、`tmp/role-recovery-battle.log`。
+- 隔离预览：1280×720 创建/角色页和390×844恢复页；备案位于独立页尾，可滚动到底，无横向溢出，恢复态不再提示“还没有主角”，重试按钮回调可用。
+- 未验证真实账号重新加载：Chrome扩展连接不可用。未改写真实云端数据；未构建、提交、推送或发布。
+
+### 2026-10-12 字源岛独立美术
+
+六张WebP本地哈希/大小及CDN返回内容、CORS核验通过。浏览器检查透明边缘、建筑裁剪与居民显示；地图生成可达性通过。`npm run test:battle` 1052/1053通过，既有 `battle_urban_residents.test.mjs:50` 失败（0 !== 20），未发布游戏。详情见[美术记录](hanzi-island-art.md)。
+
+### 2026-10-12 魔法营地出生与字源岛独立探索
+
+新角色营地出生、字源岛按需前往和独立任务链用例通过，五系字卡战斗和旧档往返保持通过。`npm run test:battle` 1052/1053；唯一失败为既有 `battle_urban_residents.test.mjs:50` 肤色匹配断言（0 !== 20）。故事导出、岛屿注册表与地图可达性通过，未构建或发布。

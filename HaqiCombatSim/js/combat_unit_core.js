@@ -1,3 +1,4 @@
+import {validateHanziBattleSpec} from './hanzi_battle_core.js';
 // combat_unit_core.js — 战斗单位状态与属性查询（对应 player_server.lua 的 Player 对象）。
 // 单位不持有 DOM / 网络；所有随机经由传入的 rng。
 import {
@@ -165,6 +166,7 @@ export function createUnit(spec, resolved) {
         turnsPlayed: 0,
         totals: { damageDealt: 0, healDone: 0, damageTaken: 0, casts: 0, fizzles: 0, passes: 0, noCardPasses: 0 },
     };
+    if(spec.hanziBattle){validateHanziBattleSpec(spec.hanziBattle);unit.hanziBattle={...structuredClone(spec.hanziBattle),triggers:0};}
     unit.maxHp = computeMaxHp(unit, resolved);
     unit.hp = unit.maxHp;
     unit.deckCapacity = spec.deckCapacity ?? resolved.global.deckCapacity ?? 0;

@@ -1,3 +1,4 @@
+import {HANZI_BATTLE_CARDS} from './hanzi_battle_core.js';
 // Pure installation of authored, replaceable island content. No save format change.
 import {installCatalogQuests} from './adventure_catalog_quests_core.js';
 import {installIslandEncounters} from './adventure_island_encounters_core.js';
@@ -16,6 +17,7 @@ export function validateIslandPacks(packs,content){
     for(const pack of packs)for(const q of pack.quests){
         assert(npcIds.has(q.startNpc)&&npcIds.has(q.endNpc),'任务居民');
         assert(q.region===pack.island.id&&!q.repeat,'任务区域');
+        if(q.hanziCardReward!==undefined)assert(Object.hasOwn(HANZI_BATTLE_CARDS,q.hanziCardReward),'汉字奖励');
         for(const p of q.prerequisites)assert(questIds.has(p.id)&&p.id!==q.id,'任务前置');
         for(const group of q.groups){assert(['talk','kill'].includes(group.kind),'目标类型');for(const g of group.items){assert(Number.isInteger(g.count)&&g.count>0,'目标数量');assert(group.kind==='kill'||npcIds.has(g.id),'交谈目标');}}
         for(const [rows,terminal] of [[q.startDialog,'doaccept'],[q.endDialog,'dofinished'],...q.talks.map(t=>[t.dialog,'donpcdialoged'])]){
@@ -44,7 +46,7 @@ export function validateIslandPacks(packs,content){
 export function installIslandPackActors(content,packs){
     for(const pack of packs)for(const npc of pack.npcs){
         const source=content.npcs[npc.appearanceSourceId];
-        const row={...structuredClone(source),...structuredClone(npc),instanceId:`island-pack:${npc.zone}:${npc.id}`,hidden:false,enabled:'',buttons:[],portrait:structuredClone(source.portrait),source:`data/adventure/island-packs/${pack.island.id}.json`};
+        const row={...structuredClone(source),...structuredClone(npc),instanceId:`island-pack:${npc.zone}:${npc.id}`,hidden:false,enabled:'',buttons:[],portrait:structuredClone(npc.portrait||source.portrait),source:`data/adventure/island-packs/${pack.island.id}.json`};
         // This is a new character using an existing appearance, not the original NPC.
         delete row.character;delete row.originalPosition;
         content.npcs[row.id]=row;

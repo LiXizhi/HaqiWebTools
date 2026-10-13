@@ -427,3 +427,16 @@ npm run build
 第二轮浏览器实测与优化：390×844/DPR2/四核参数，普通档CPU4倍降速、150ms、10Mbps，慢档CPU6倍降速、300ms、1.6Mbps。普通蒙特利尔附近首屏场景6.40→4.30秒、可见地面完成7.81→5.88秒（各2次均值）；慢网可见地面24.64→18.63秒，深圳8.54→6.67秒（各1次）。保持192px地表分块、相同道路和建筑数量；不是实体手机或线上发行包结果。
 
 按采样提前启动两类Worker、并行准备场景元数据；地形/CSV下载后释放下载槽位，不让Worker初始化/解析阻塞后续请求。无缝图集改为预计算重复项并在Worker中生成，保持旧像素输出，Worker不可用时兼容原路径。复测脚本、范围及原始报告位置见[开发日志](devlog/devlog_2026-10-12.md#手机浏览器降速-profile-与第二轮优化)。
+
+## 2026-10-12：现实城市时光长卷
+
+现实世界已识别的城市区域及城市内部副本提供“时光长卷”。通用长卷是想象场景，三位旅人为虚构人物，不代表当地史实。向左走向过去，向右回到现在；四站依次为约100年前、约50年前、约10年前、现在，等距分段而非线性年份比例。支持方向键、点击地面、手机方向按钮和刻度跳转；回到城市保持原坐标。只绘制当前及相邻站点，现代场景沿用共享暂停门。
+
+唯一作者源为 `data/adventure/earth/time-scroll/common.json`，包括三段中英对话、三条发现及稳定故事/台词ID。所有城市默认按需共用该文件；城市可选 `timeScroll` 字段引用 `data/adventure/earth/time-scroll/<id>.json`，由城市校验器和运行时校验，不接受外部地址。没有城市资料不生成当地历史。城市外围与生成街区统一采用 `generated-<原城市ID>`，作者城市及其节点共用作者 cityId。
+
+- `timeScrollProgress = {version:1,cities:{[cityId]:[发现ID]}}` 存入 records 分片；发现ID由内容包、站点及线索编号组成，首次靠近记录，重复不新增。
+- `timeScrollRuntime = {version:1,cityId,contentId,zone,x,active,returnPosition}` 只进入本机 runtime；不改变原 zone/position，不增加核心 revision。刷新可恢复未退出长卷；缺失或损坏本机返回点关闭该可选场景，沿用城市/营地恢复规则，保留发现。
+- 语言练习复用 StoryChat 的 `practiceOnly` 模式和现有朗读、输入、录音与核验。故事完成存入已有 `languageAdventure.stories`，通用故事ID跨城共享；不发课程货币、不另建属性体系。通过的口语按目标语言/故事/台词形成稳定每日事件，领取仍受全局上限约束，已完成故事复习不重复领奖。
+- 阅读、找线索、文字练习支持访客；SDK朗读和录音需在线角色。尚未完成实际账号麦克风/朗读验收。取消、离场、换角色、换账号使旧回调失效；请求失败保留现代城市并可重试。
+
+UI复用已有角色与 `earth/street-art.json` 中的WebP小物件：树池、花坛、长椅、篮筐、手推车、书报架、路牌和盆栽。各站固定布置前后两层，步行道路留空；这些是想象舞台陈设，不表示相应年代的当地器物史实。`adventure_time_scenery_core` 确定当前及相邻站点的布局（最多18件），`view_time_scenery` 按需加载已登记的永久CDN图集，复用透明裁剪，离开相邻范围释放图片，失败不阻断互动。没有新增图片、第三方库或运行时生成服务。行走速度/交互半径由 `BalanceParams.timeScroll` 控制。隔离预览：`tests/fixtures/time-scroll.html`，不读写玩家存档；可选浏览器测试：设置 `HAQI_PLAYWRIGHT` 为包含 Playwright 的 Node 工作目录后运行 `node --test tests/time_scroll_browser.test.mjs`。

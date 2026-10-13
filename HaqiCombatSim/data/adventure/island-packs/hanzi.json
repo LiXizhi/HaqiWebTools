@@ -1,0 +1,701 @@
+{
+  "version": 1,
+  "island": {
+    "id": "hanzi",
+    "name": "字源岛",
+    "source": "web-authored:hanzi",
+    "description": "适合1–10级自由探索的岛屿。帮助居民，完成独立任务线，把字卡的力量带进冒险。",
+    "recommendedLevel": 1
+  },
+  "authorNotes": {
+    "origin": "网页原创独立探索岛屿；2026-10-12",
+    "art": "独立AI生成岛图、建筑与四居民WebP；怪物复用儿童版模板，来源见docs/hanzi-island-art.md",
+    "learning": "普通任务赠送字卡，不代表完成读写练习或掌握汉字"
+  },
+  "npcs": [
+    {
+      "id": 863000,
+      "name": "阿初",
+      "zone": "hanzi",
+      "appearanceSourceId": 36205,
+      "x": 2400,
+      "y": 3764,
+      "sex": "male",
+      "age": 22,
+      "description": "欢迎来到字源岛。先去问问溪禾需要什么帮助吧。",
+      "storyIdentity": "hanzi-0",
+      "hanziPractice": "huo",
+      "portrait": {
+        "id": "npc:hanzi-863000",
+        "crop": [
+          56,
+          8,
+          143,
+          240
+        ]
+      }
+    },
+    {
+      "id": 863001,
+      "name": "溪禾",
+      "zone": "hanzi",
+      "appearanceSourceId": 30525,
+      "x": 1855,
+      "y": 2891,
+      "sex": "female",
+      "age": 20,
+      "description": "水让小苗长大，也让旅人恢复精神。",
+      "storyIdentity": "hanzi-1",
+      "hanziPractice": "shui",
+      "portrait": {
+        "id": "npc:hanzi-863001",
+        "crop": [
+          66,
+          8,
+          123,
+          240
+        ]
+      }
+    },
+    {
+      "id": 863002,
+      "name": "石伯",
+      "zone": "hanzi",
+      "appearanceSourceId": 36200,
+      "x": 3382,
+      "y": 2673,
+      "sex": "male",
+      "age": 68,
+      "description": "土托住我们的脚。路稳了，大家才能放心走。",
+      "storyIdentity": "hanzi-2",
+      "hanziPractice": "tu",
+      "portrait": {
+        "id": "npc:hanzi-863002",
+        "crop": [
+          45,
+          8,
+          166,
+          240
+        ]
+      }
+    },
+    {
+      "id": 863003,
+      "name": "小灯",
+      "zone": "hanzi",
+      "appearanceSourceId": 30081,
+      "x": 2509,
+      "y": 1473,
+      "sex": "female",
+      "age": 12,
+      "description": "灯还亮着。你可以带着学到的字去远方，也可以随时回来。",
+      "storyIdentity": "hanzi-3",
+      "hanziPractice": "ri",
+      "portrait": {
+        "id": "npc:hanzi-863003",
+        "crop": [
+          46,
+          8,
+          164,
+          240
+        ]
+      }
+    }
+  ],
+  "monsters": [
+    {
+      "id": "pack:hanzi:sprout",
+      "name": "迷路的小鼠",
+      "templateId": "config/Aries/Mob/FireLand/MobTemplate_GreenDevouringRat.xml",
+      "stats": {
+        "level": 2,
+        "hp": 120,
+        "xp": 30,
+        "coins": 10
+      }
+    }
+  ],
+  "encounters": [
+    {
+      "id": "pack:hanzi:field-1",
+      "zone": "hanzi",
+      "monsterId": "pack:hanzi:sprout",
+      "x": 1375,
+      "y": 2356
+    }
+  ],
+  "goalPaths": {
+    "pack:hanzi:sprout": 883000
+  },
+  "quests": [
+    {
+      "id": 873000,
+      "title": "早安，字源岛",
+      "description": "溪禾在等水。你能去问问她吗？",
+      "region": "hanzi",
+      "startNpc": 863000,
+      "endNpc": 863000,
+      "repeat": false,
+      "prerequisites": [],
+      "requirements": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 863001,
+              "name": "溪禾",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 863000,
+          "text": "溪禾在等水。你能去问问她吗？",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来帮忙。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 863001,
+          "label": "带来消息",
+          "dialog": [
+            {
+              "npcId": 863001,
+              "text": "欢迎你！灯下这个字是“火”。火能照亮路，也能帮助战斗。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我记住了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 863000,
+          "text": "谢谢你去看她。这张“火”卡送给你，已经放入随身字卡槽。成功施法后，它会慢慢增强攻击。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "谢谢，我们下次见。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 80
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "hanziCardReward": "huo"
+    },
+    {
+      "id": 873001,
+      "title": "一杯水的问候",
+      "description": "请告诉石伯，小苗已经喝到水了。",
+      "region": "hanzi",
+      "startNpc": 863001,
+      "endNpc": 863001,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 873000,
+          "value": 1
+        }
+      ],
+      "requirements": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 863002,
+              "name": "石伯",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 863001,
+          "text": "请告诉石伯，小苗已经喝到水了。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来帮忙。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 863002,
+          "label": "带来消息",
+          "dialog": [
+            {
+              "npcId": 863002,
+              "text": "我听见了。这个字是“水”。水流过这里，小苗才长得好。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我记住了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 863001,
+          "text": "你把好消息带到了。“水”卡能在成功施法后恢复自己的生命。在字卡册里可以换上它。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "谢谢，我们下次见。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 200
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "hanziCardReward": "shui"
+    },
+    {
+      "id": 873002,
+      "title": "脚下的土地",
+      "description": "请告诉阿初，这条路可以走了。",
+      "region": "hanzi",
+      "startNpc": 863002,
+      "endNpc": 863002,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 873001,
+          "value": 1
+        }
+      ],
+      "requirements": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 863000,
+              "name": "阿初",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 863002,
+          "text": "请告诉阿初，这条路可以走了。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来帮忙。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 863000,
+          "label": "带来消息",
+          "dialog": [
+            {
+              "npcId": 863000,
+              "text": "谢谢石伯修路！“土”是我们脚下的土地。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我记住了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 863002,
+          "text": "路修好了。这张“土”卡送给你，它能在成功施法后逐渐增强防御。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "谢谢，我们下次见。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 600
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "hanziCardReward": "tu"
+    },
+    {
+      "id": 873003,
+      "title": "让小鼠回树林",
+      "description": "路边有一只迷路的小鼠。带上字卡，和它进行一次战斗，让道路安全。",
+      "region": "hanzi",
+      "startNpc": 863000,
+      "endNpc": 863000,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 873002,
+          "value": 1
+        }
+      ],
+      "requirements": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "groups": [
+        {
+          "kind": "kill",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 883000,
+              "name": "迷路的小鼠",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 863000,
+          "text": "路边有一只迷路的小鼠。带上字卡，和它进行一次战斗，让道路安全。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来帮忙。"
+            }
+          ]
+        }
+      ],
+      "talks": [],
+      "endDialog": [
+        {
+          "npcId": 863000,
+          "text": "你回来了！字卡的力量会跟着你。战斗后休息一下，再去看看小灯。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "谢谢，我们下次见。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 900
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 873004,
+      "title": "给远方的灯",
+      "description": "请告诉小灯，道路已经安全，大家可以来灯下见面。",
+      "region": "hanzi",
+      "startNpc": 863000,
+      "endNpc": 863000,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 873003,
+          "value": 1
+        }
+      ],
+      "requirements": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 863003,
+              "name": "小灯",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 863000,
+          "text": "请告诉小灯，道路已经安全，大家可以来灯下见面。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来帮忙。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 863003,
+          "label": "带来消息",
+          "dialog": [
+            {
+              "npcId": 863003,
+              "text": "我一直在等这个消息。“日”是白天的太阳。夜里，我们也能为彼此留一盏灯。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我记住了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 863000,
+          "text": "大家终于能见面了。你认识的字，已经帮到了岛上的人。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "谢谢，我们下次见。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 1300
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 873005,
+      "title": "从这里出发",
+      "description": "去向阿初道别吧。你可以去魔法营地找导师，也可以去哈奇岛。",
+      "region": "hanzi",
+      "startNpc": 863003,
+      "endNpc": 863003,
+      "repeat": false,
+      "prerequisites": [
+        {
+          "id": 873004,
+          "value": 1
+        }
+      ],
+      "requirements": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "groups": [
+        {
+          "kind": "talk",
+          "condition": 0,
+          "mode": 0,
+          "items": [
+            {
+              "id": 863000,
+              "name": "阿初",
+              "count": 1
+            }
+          ]
+        }
+      ],
+      "startDialog": [
+        {
+          "npcId": 863003,
+          "text": "去向阿初道别吧。你可以去魔法营地找导师，也可以去哈奇岛。",
+          "buttons": [
+            {
+              "action": "doaccept",
+              "label": "我来帮忙。"
+            }
+          ]
+        }
+      ],
+      "talks": [
+        {
+          "npcId": 863000,
+          "label": "带来消息",
+          "dialog": [
+            {
+              "npcId": 863000,
+              "text": "世界地图在码头，也能从菜单打开。火鸟岛建议10级再去。想家时，随时回字源岛。",
+              "buttons": [
+                {
+                  "action": "donpcdialoged",
+                  "label": "我记住了。"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "endDialog": [
+        {
+          "npcId": 863003,
+          "text": "你的旅途从这里开始。继续冒险吧，不用先收齐所有字卡。",
+          "buttons": [
+            {
+              "action": "dofinished",
+              "label": "谢谢，我们下次见。"
+            }
+          ]
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 1600
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "journeys": [],
+  "social": {
+    "enabled": true,
+    "size": "large",
+    "capacity": 16
+  }
+}

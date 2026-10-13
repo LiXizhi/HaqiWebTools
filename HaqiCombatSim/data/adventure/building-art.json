@@ -603,6 +603,111 @@
           ]
         }
       }
+    },
+    "hanzi": {
+      "local": "assets/adventure/environment/buildings-hanzi-61e231ca874d.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/buildings-hanzi-61e231ca874d.webp",
+      "width": 816,
+      "height": 544,
+      "size": 195192,
+      "sha256": "61e231ca874d284c7e3b38a4487d2d95c22e5512aef1ce0f078e4b33f89ee2a3",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "e051f0def3f8276ec5f31391387ea5392fede8fb1c0b54e492705047f5c084f1",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "docs/hanzi-island-art.md"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 90
+      },
+      "frames": {
+        "pavilion": {
+          "rect": [
+            8,
+            25,
+            256,
+            239
+          ],
+          "sourceRect": [
+            60,
+            38,
+            437,
+            408
+          ]
+        },
+        "cottage": {
+          "rect": [
+            280,
+            55,
+            256,
+            209
+          ],
+          "sourceRect": [
+            540,
+            55,
+            507,
+            413
+          ]
+        },
+        "tower": {
+          "rect": [
+            599,
+            8,
+            161,
+            256
+          ],
+          "sourceRect": [
+            1138,
+            1,
+            310,
+            494
+          ]
+        },
+        "harbor": {
+          "rect": [
+            9,
+            280,
+            253,
+            256
+          ],
+          "sourceRect": [
+            46,
+            523,
+            454,
+            460
+          ]
+        },
+        "workshop": {
+          "rect": [
+            280,
+            336,
+            256,
+            200
+          ],
+          "sourceRect": [
+            522,
+            538,
+            540,
+            421
+          ]
+        },
+        "goldTree": {
+          "rect": [
+            562,
+            280,
+            235,
+            256
+          ],
+          "sourceRect": [
+            1090,
+            510,
+            430,
+            469
+          ]
+        }
+      }
     }
   }
 }

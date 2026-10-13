@@ -2099,6 +2099,94 @@
       "width": 256,
       "height": 256,
       "encoding": "quality-95"
+    },
+    "npc:hanzi-863000": {
+      "local": "assets/adventure/npcs/hanzi-863000-483f9684b107.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/hanzi-863000-483f9684b107.webp",
+      "sha256": "483f9684b107826713ca85f419b8a28324470937e970fe347ffce71fb2660b78",
+      "size": 40264,
+      "width": 256,
+      "height": 256,
+      "encoding": "lossless",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "2a9731a63b13e336854ed231669e6ac5ae236d5dc179776601b4de7346789aa0",
+        "width": 1246,
+        "height": 1262,
+        "sourceRect": [
+          184,
+          8,
+          370,
+          621
+        ],
+        "prompt": "docs/hanzi-island-art.md"
+      }
+    },
+    "npc:hanzi-863001": {
+      "local": "assets/adventure/npcs/hanzi-863001-2d15dbefe3d2.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/hanzi-863001-2d15dbefe3d2.webp",
+      "sha256": "2d15dbefe3d2c45687c89a8f6f109f510d0dc60a0405d69171ab31c56a485fa0",
+      "size": 34988,
+      "width": 256,
+      "height": 256,
+      "encoding": "lossless",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "2a9731a63b13e336854ed231669e6ac5ae236d5dc179776601b4de7346789aa0",
+        "width": 1246,
+        "height": 1262,
+        "sourceRect": [
+          722,
+          10,
+          319,
+          621
+        ],
+        "prompt": "docs/hanzi-island-art.md"
+      }
+    },
+    "npc:hanzi-863002": {
+      "local": "assets/adventure/npcs/hanzi-863002-a293d5f4df7b.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/hanzi-863002-a293d5f4df7b.webp",
+      "sha256": "a293d5f4df7b074d4ddea07d4e910692dfebc90aeb11358d53ef9e65ec01b30f",
+      "size": 44048,
+      "width": 256,
+      "height": 256,
+      "encoding": "lossless",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "2a9731a63b13e336854ed231669e6ac5ae236d5dc179776601b4de7346789aa0",
+        "width": 1246,
+        "height": 1262,
+        "sourceRect": [
+          150,
+          631,
+          424,
+          612
+        ],
+        "prompt": "docs/hanzi-island-art.md"
+      }
+    },
+    "npc:hanzi-863003": {
+      "local": "assets/adventure/npcs/hanzi-863003-89cdac6bb422.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/hanzi-863003-89cdac6bb422.webp",
+      "sha256": "89cdac6bb422026dc46dfdbb9612403084dee283410d8353e6851c45e36af481",
+      "size": 47740,
+      "width": 256,
+      "height": 256,
+      "encoding": "lossless",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "2a9731a63b13e336854ed231669e6ac5ae236d5dc179776601b4de7346789aa0",
+        "width": 1246,
+        "height": 1262,
+        "sourceRect": [
+          747,
+          662,
+          393,
+          574
+        ],
+        "prompt": "docs/hanzi-island-art.md"
+      }
     }
   },
   "instances": {

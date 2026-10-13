@@ -89,6 +89,7 @@ function describeEvent(arena, ev) {
         case 'pip': return { cls: 'info', text: `${n(ev.unit)} 获得${ev.kind === 'power' ? (R.version === 'teen' ? '强力判定（+2 魔力点）' : '超级魔力点') : '魔力点'} → 魔力 ${ev.pips.normal}${R.version === 'teen' ? '' : ` · 超级 ${ev.pips.power}`}（可用 ${ev.pips.normal + ev.pips.power * 2}）` };
         case 'cast': return { cls: '', text: `${n(ev.caster)} 使用 ${card(ev.card)}${ev.target && ev.target !== ev.caster ? ' → ' + n(ev.target) : ''}（${ev.pipcost < 0 ? 'X=' + ev.realcost : ev.pipcost}费）` };
         case 'fizzle': return { cls: 'info', text: `${n(ev.caster)} 施放 ${card(ev.card)} 失误（命中 ${ev.accuracy}%）` };
+        case 'hanzi_buff': return {cls:'buff',text:`${n(ev.caster)} · ${ev.description}`};
         case 'damage': return { cls: 'dmg', text: `  ${n(ev.target)} 受到 ${ev.amount} ${SCHOOL_NAMES[ev.school] || ev.school}伤害${ev.mark === 'c' ? '（暴击）' : ev.mark === 'd' ? '（闪避）' : ''}${ev.label ? ' [' + ev.label + ']' : ''}` };
         case 'dot': return { cls: 'dmg', text: `  ${n(ev.target)} 持续伤害 ${ev.amount}${ev.mark === 'c' ? '（暴击）' : ''}` };
         case 'heal': return { cls: 'heal', text: `  ${n(ev.target)} 恢复 ${ev.amount}${ev.label ? ' [' + ev.label + ']' : ''}` };

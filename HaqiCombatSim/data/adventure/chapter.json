@@ -24868,6 +24868,21 @@
         },
         "retainPreviousPosition": false,
         "file": "data/adventure/maps/sail.json"
+      },
+      "hanzi": {
+        "name": "字源岛",
+        "w": 4800,
+        "h": 4800,
+        "spawn": {
+          "x": 2400,
+          "y": 3927
+        },
+        "initialSpawn": {
+          "x": 2400,
+          "y": 3927
+        },
+        "retainPreviousPosition": false,
+        "file": "data/adventure/maps/hanzi.json"
       }
     }
   },

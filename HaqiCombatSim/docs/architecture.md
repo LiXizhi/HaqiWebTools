@@ -14,6 +14,25 @@
 
 ## 架构图
 
+### 角色读取失败与恢复（2026-10-12）
+
+云端目录与资源预加载共用 `MAX_ROLES=20`；角色创建仍区分免费与会员名额。标题页在已登录时展示读取错误、隔离角色和暂停同步状态。
+
+```mermaid
+flowchart LR
+    Local[账号本机目录与运行状态] --> Validate[资源准备与严格校验]
+    Validate --> Playable[可用角色]
+    Validate -->|失败| Backup[原始字节备份 / 暂停云端同步]
+    Backup -->|手动重新读取| Retry[只读副本准备与校验]
+    Retry -->|通过| Merge[仅补回缺失角色 / 保留当前同ID进度]
+    Retry -->|失败| Backup
+    Cloud[刷新云端角色] --> Preview[云端角色预览]
+    Backup --> Preview
+    Preview -->|用户选择备份并加载| Restore[保留备份 / 替换本机目录]
+    Merge --> Resolved[全部恢复后解除保护 / 原备份继续保留]
+    Restore --> Resolved
+```
+
 以下按当前源码（2026-10-01）展示主要模块与数据流，省略独立预览工具及部分玩法子模块。图中箭头表示启动、调用或数据传递，不是完整的 import 依赖图；GitHub 可直接渲染 Mermaid 图。
 
 ### 1. 游戏与实验室的分层
@@ -873,3 +892,46 @@ flowchart LR
 `prepare` 的 `onProgress` 回调只报告当前有效请求的六个准备阶段，不代表下载字节百分比；进入场景后由 `surfaceStats.visibleReady/visibleTotal` 显示真实分块进度。网络失败保留原有重试和取消行为。`?profile=1` 的本机诊断区分网络读取、场景生成、人物/建筑美术准备与Worker地表烘焙，不写入存档或上传。
 
 2026-10-12第二轮Profile：EarthCache加载器可在下载完成后释放并发槽位，解析继续保留在pending中以合并重复请求；释放幂等，取消/缓存预算仍在最终入库前验证。仅地形和CSV使用提前释放，其他加载器维持完成时释放；不会因等待Worker冷启动而阻塞后续地图下载。
+
+## 2026-10-12：汉字魔法岛
+
+新增懒加载入口、纯规则、程序动画/手写视图及展示层外观；详细模块图、数据边界见 [字有魔法](hanzi-magic.md#模块与数据)。`records.hanzi` 与每日本机 runtime 分开；普通启动不包含汉字资源。
+
+### 2026-10-12：城市时光长卷
+
+```mermaid
+flowchart LR
+    City[现实城市或城市内部副本] --> App[adventure_app：城市身份与进出代次]
+    App --> IO[adventure_time_scroll：按需内容与会话编排]
+    JSON[单城可选引用 / 通用时光JSON] --> IO
+    IO --> Core[adventure_time_scroll_core：时间坐标 / 发现 / 完成校验]
+    IO --> View[view_adventure_time_scroll：Canvas / 原HeroRenderer / DOM刻度]
+    View --> Scenery[view_time_scenery：相邻站点图集加载与前后层绘制]
+    Scenery --> Layout[adventure_time_scenery_core：确定性小物件布局]
+    Scenery --> Art[earth/street-art.json：已有WebP图集 / CDN / 透明裁剪]
+    IO --> Chat[现有StoryChat：practiceOnly无货币练习]
+    Chat --> Award[awardLanguageSpeech：共享每日加成]
+    Core --> Records[records：各城发现]
+    Core --> Stories[已有languageAdventure：跨城故事完成]
+    IO --> Runtime[本机runtime：时光位置 / 返回点]
+    App --> Pause[共享pauseBackgroundScene：暂停现代场景]
+```
+
+不引用LifeStory运行时，借鉴其分段坐标、角色行走与相邻段渲染。角色/账号/场景代次隔离旧请求，离场取消语音及动画。位置不改变核心同步标记；云端缺少本机位置时沿用现有安全恢复。
+
+## 字源岛与汉字战斗卡（2026-10-12）
+
+字源岛通过现有 island-packs、地图生成器与普通任务目录接入。新角色仍在魔法营地出生；字源岛通过世界地图额外探索，进入时推荐岛内独立任务，旧档不迁移位置。普通任务交付写入 records 中的字卡收藏；可选练习和卡册按需打开。完整数据流见[汉字魔法](hanzi-magic.md)。
+
+```mermaid
+flowchart LR
+    Pack[hanzi 岛屿包 / 普通任务] --> Save[save.hanzi 收藏与携带]
+    Book[按需卡册 / 可选练习] --> Save
+    Save --> Spec[playerSpec 字卡与参数快照]
+    Spec --> Unit[combat_unit_core]
+    Cast[combat_cards_core 成功施法] --> Buff[hanzi_battle_core 网页增益]
+    Unit --> Buff
+    Buff --> UI[战斗状态 / 日志]
+```
+
+字卡参数集中在 BalanceParams.hanzi；规则版本1随 playerSpec 进入本机未结束战斗。重演复用快照参数，旧快照不追加效果，核心不依赖浏览器或网络。

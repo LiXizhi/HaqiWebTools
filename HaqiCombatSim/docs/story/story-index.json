@@ -34,27 +34,29 @@
     "../../config/Aries/WorldData/NewUserIsland.NPC.xml": "58a26a06131b1cd15a84cf4f5b7d9ff5b6d6cabb5b27cc71d3630471bd3d6777",
     "config/opening-dialogue.json": "0ca1b08b8b4d54e4e2777156b4899ffc6af7b639d61a37b2a3c8068f4dede9f0",
     "data/adventure/camp-conversations.json": "e1c745bd86af42a1eb0a4a216eec7df63611d54fbccf44334a0b868f7d652658",
-    "data/adventure/chapter.json": "18e7e1dc46de84188b8d6d80a6e9f9803da4bd79fcc7d5c6a1fbabf0e93b4ff7",
+    "data/adventure/chapter.json": "c3cf0e6b917e830514c0fd4a75421113629666bad1e99f288354d1be422ee84f",
     "data/adventure/dungeon-journeys.json": "5bc161e28c518580864c9c33dafc5e9b7667fdbcb3b817a8b66b55acfa7e0662",
+    "data/adventure/earth/time-scroll/common.json": "ac98afb4d910c94fd7b25553e5efb74fddc961c6519bcaffbee220727b59a3cf",
     "data/adventure/island-packs/float.json": "30bcb6b1679a14c2d6c8691c6ce1d8d5422c2d0b5489420c8119a2a82c000919",
-    "data/adventure/island-packs/index.json": "eb78aece542dcd3198c08598eec9ed248f6a14291c9dd234525cbaf2782d7461",
+    "data/adventure/island-packs/hanzi.json": "dea4e7f815b9f57ef9025120a03c36471c94e07c7934d84f7e1ba90d78d90df0",
+    "data/adventure/island-packs/index.json": "743388e06e8da5fa882b582e8d0d2440b537132716175ba0443b6145bfa899de",
     "data/adventure/island-packs/sail.json": "9655b95e4c1bdd5f4c0cd93f040b9d7eac7083a963fa7d15045a5a390e81a195",
     "data/adventure/island-packs/tide.json": "ad47afeb12bb17b5ad455c435ac9642e1f023edbc049655d0e56829a2b8faf19",
     "data/adventure/language-courses.json": "d1604c9cb14355327d81ce48b59ff8e18ca913c568427a2c4bf36dcc676cbde1",
-    "data/adventure/npc-art.json": "6101a42cf3ba5121c685d9b8e066ea5c4390c927869d168310f16c5bbec170b7",
+    "data/adventure/npc-art.json": "cb5eea54e918411dfae536c0a4ac1d758632f1bcff0a148c30a616d3329b3244",
     "data/adventure/npc-catalog.json": "5301f9cc9973203e55735ab851b45d1cc8ecd5e5d0ed0a7947d0e8516b24430a",
     "data/adventure/quest-catalog.json": "784a94f3714961f7dd796312de39e8912775e4226942e37e62b8874f1600bd8b",
     "data/adventure/quest-journal.json": "c02e556424126f11220f1b1ec7ecfbc2365cf65af72ae15946df8a58326ed21e",
     "data/adventure/quest-runtime.json": "44fcf7d152dd63fc54f51887a6e2720e3a76ce6367e371f922241e2dc28db8b8",
     "js/adventure_catalog_quests_core.js": "542e995416658aa3d3978cb21dcf488f22ac395eec7fab12c0f05c3c813fc3bf",
-    "js/adventure_core.js": "a33626f6ab3d02fb90e584f11da403186666c368524ff0b4ae25bceaa9621dd5",
+    "js/adventure_core.js": "e85ead83a7ea26f71a507928c5767ecdb7f607fff309cf2233d5eb58592cb3f8",
     "js/adventure_dungeon_story.js": "4ebb4e3a1ee8ad17a90b1727d9537181b9d6522726d966a9db1fcea5dcdcb15e",
     "js/adventure_npc_art_core.js": "dfb129d3fdfbb10b50138fdf32b2193c48cc7bce877fd2b3c20aead6cf85f35a",
     "js/adventure_npc_core.js": "8ccbd143dd710ceb4be2d1e4e9405e891885045df1e21bd9de89c7e5dca94076",
-    "js/combat_params_core.js": "d01d968cda2f5e8f81142c1560c4c8cdd97b06fd5d664f7f1038294786d0a344",
+    "js/combat_params_core.js": "b71084b5ccf099449c7a7d2654f62f5cddb45605d5a7ef50e2122beaafa0bb08",
     "js/language_encounter_core.js": "949f91d3c584145a8acd3fed64ccb35cab17eb53dc14b0f3a5de7f8214a6909a",
-    "js/language_story.js": "865d41ce2f63871cb78d6b20e84beb128954d0a8e9a2dbb1cf321ea9ba83a810",
-    "js/view_adventure.js": "65db9330304ffead72f127bca9ab64e5338432269f4924afbee299831ccf7899",
+    "js/language_story.js": "45882080081d4ae2e9d14ed40a9b9bc855e0efd9da5c44cceaa7d0020d3ffb0c",
+    "js/view_adventure.js": "7a5e404a31f070b23d2e656f98b8f72cde6ad7a49ef70bb8641c5673bfaa2b0e",
     "js/view_red_mushroom.js": "ec0b55128cda48c66540d74d62a0ef48800649afe606d97158536330cfeacb49",
     "scripts/camp_beginner_stories.mjs": "bb69c7a5621b1f57f307f2536a2f43a5601923194bc47ba8f3a43ed76a7e24b8",
     "scripts/language_patterns.mjs": "05c102c00a47d6dbabe291a4baacb416a92e409aadc2c7d00fdb443b294b5527",
@@ -95,6 +97,38 @@
         "火鸟岛",
         "寒冰岛",
         "哈奇岛"
+      ]
+    },
+    {
+      "id": "C873000",
+      "roots": [
+        873000
+      ],
+      "questIds": [
+        873000,
+        873001,
+        873002,
+        873003,
+        873004,
+        873005
+      ],
+      "longestPath": 6,
+      "document": "chapters/C873000.md",
+      "title": "早安，字源岛",
+      "entries": [
+        {
+          "questId": 873000,
+          "title": "早安，字源岛",
+          "levelMin": 1,
+          "levelMax": null,
+          "npc": "阿初",
+          "region": "hanzi",
+          "requires": []
+        }
+      ],
+      "levelMin": 1,
+      "regions": [
+        "字源岛"
       ]
     },
     {
@@ -11938,6 +11972,1296 @@
           },
           "author": {
             "file": "data/adventure/island-packs/sail.json",
+            "pointer": "/npcs/3/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": null
+        }
+      ],
+      "rewards": [],
+      "classification": "网页原创居民",
+      "document": "story-npc-dialogues.md"
+    },
+    {
+      "id": "S1491",
+      "key": "journal:873000",
+      "title": "早安，字源岛",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [],
+      "lines": [
+        {
+          "id": "S1491-L01",
+          "key": "description",
+          "text": "溪禾在等水。你能去问问她吗？",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/description",
+            "sha256": "74fac45aaeb3b787c44cf476f77e873b5af7972f17765eeaf9adc1ee2dfe9531"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1491-L02"
+        },
+        {
+          "id": "S1491-L02",
+          "key": "startDialog:0:text",
+          "text": "溪禾在等水。你能去问问她吗？",
+          "speaker": "阿初",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/startDialog/0/text",
+            "sha256": "74fac45aaeb3b787c44cf476f77e873b5af7972f17765eeaf9adc1ee2dfe9531"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1491-L01",
+          "next": "S1491-L03"
+        },
+        {
+          "id": "S1491-L03",
+          "key": "startDialog:0:button:0",
+          "text": "我来帮忙。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/startDialog/0/buttons/0/label",
+            "sha256": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1491-L02",
+          "next": "S1491-L04"
+        },
+        {
+          "id": "S1491-L04",
+          "key": "endDialog:0:text",
+          "text": "谢谢你去看她。这张“火”卡送给你，已经放入随身字卡槽。成功施法后，它会慢慢增强攻击。",
+          "speaker": "阿初",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/endDialog/0/text",
+            "sha256": "44608bec10715e61541e824bddb0b5887bb9fe76095b54f74ec4787382413d69"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1491-L03",
+          "next": "S1491-L05"
+        },
+        {
+          "id": "S1491-L05",
+          "key": "endDialog:0:button:0",
+          "text": "谢谢，我们下次见。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/endDialog/0/buttons/0/label",
+            "sha256": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1491-L04",
+          "next": "S1491-L06"
+        },
+        {
+          "id": "S1491-L06",
+          "key": "talks/0/dialog:0:text",
+          "text": "欢迎你！灯下这个字是“火”。火能照亮路，也能帮助战斗。",
+          "speaker": "溪禾",
+          "phase": "指定交谈",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/talks/0/dialog/0/text",
+            "sha256": "bf455113a87c15b95f0e319b55cd085b28838f4a311cc16080b856bbb1d14a22"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/talks/0/dialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1491-L05",
+          "next": "S1491-L07"
+        },
+        {
+          "id": "S1491-L07",
+          "key": "talks/0/dialog:0:button:0",
+          "text": "我记住了。",
+          "speaker": "我",
+          "phase": "指定交谈",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/talks/0/dialog/0/buttons/0/label",
+            "sha256": "8712d864cd4583b0ac2e3a0ce75d7b2401bb0878ba158c9339e212fed14b419b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/0/talks/0/dialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "donpcdialoged",
+          "previous": "S1491-L06",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 80
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873000,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "溪禾在等水。你能去问问她吗？",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/0/title",
+        "sha256": "e65e234706fdbdd1e327e8a03ec3beacd1d5535e85bca7cb651bf44f640bfb8c",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/0/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/0/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873000.md"
+    },
+    {
+      "id": "S1492",
+      "key": "journal:873001",
+      "title": "一杯水的问候",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [
+        873000
+      ],
+      "lines": [
+        {
+          "id": "S1492-L01",
+          "key": "description",
+          "text": "请告诉石伯，小苗已经喝到水了。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/description",
+            "sha256": "aabff82dca58535f257c118721c6f6aacf758d106339991d4aec7f4866e340cc"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1492-L02"
+        },
+        {
+          "id": "S1492-L02",
+          "key": "startDialog:0:text",
+          "text": "请告诉石伯，小苗已经喝到水了。",
+          "speaker": "溪禾",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/startDialog/0/text",
+            "sha256": "aabff82dca58535f257c118721c6f6aacf758d106339991d4aec7f4866e340cc"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1492-L01",
+          "next": "S1492-L03"
+        },
+        {
+          "id": "S1492-L03",
+          "key": "startDialog:0:button:0",
+          "text": "我来帮忙。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/startDialog/0/buttons/0/label",
+            "sha256": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1492-L02",
+          "next": "S1492-L04"
+        },
+        {
+          "id": "S1492-L04",
+          "key": "endDialog:0:text",
+          "text": "你把好消息带到了。“水”卡能在成功施法后恢复自己的生命。在字卡册里可以换上它。",
+          "speaker": "溪禾",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/endDialog/0/text",
+            "sha256": "31419a3bd627b2481af90788df599df59532c23baf8ad6c6b966b94448505b14"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1492-L03",
+          "next": "S1492-L05"
+        },
+        {
+          "id": "S1492-L05",
+          "key": "endDialog:0:button:0",
+          "text": "谢谢，我们下次见。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/endDialog/0/buttons/0/label",
+            "sha256": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1492-L04",
+          "next": "S1492-L06"
+        },
+        {
+          "id": "S1492-L06",
+          "key": "talks/0/dialog:0:text",
+          "text": "我听见了。这个字是“水”。水流过这里，小苗才长得好。",
+          "speaker": "石伯",
+          "phase": "指定交谈",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/talks/0/dialog/0/text",
+            "sha256": "20da5f25272fdff9a7dd05983dc02c96484f51c73a119b4e0a475bf9e25021b4"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/talks/0/dialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1492-L05",
+          "next": "S1492-L07"
+        },
+        {
+          "id": "S1492-L07",
+          "key": "talks/0/dialog:0:button:0",
+          "text": "我记住了。",
+          "speaker": "我",
+          "phase": "指定交谈",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/talks/0/dialog/0/buttons/0/label",
+            "sha256": "8712d864cd4583b0ac2e3a0ce75d7b2401bb0878ba158c9339e212fed14b419b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/1/talks/0/dialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "donpcdialoged",
+          "previous": "S1492-L06",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 200
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873001,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "请告诉石伯，小苗已经喝到水了。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/1/title",
+        "sha256": "70ba57d7f468443e8aa87c15d04843ee9e110c55cb059e84fb7b3634a9b4f91c",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/1/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/1/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873000.md"
+    },
+    {
+      "id": "S1493",
+      "key": "journal:873002",
+      "title": "脚下的土地",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [
+        873001
+      ],
+      "lines": [
+        {
+          "id": "S1493-L01",
+          "key": "description",
+          "text": "请告诉阿初，这条路可以走了。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/description",
+            "sha256": "122b7ae530871230a78c38524a3b78d59c2e904f72f9f277579784f78d45337d"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1493-L02"
+        },
+        {
+          "id": "S1493-L02",
+          "key": "startDialog:0:text",
+          "text": "请告诉阿初，这条路可以走了。",
+          "speaker": "石伯",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/startDialog/0/text",
+            "sha256": "122b7ae530871230a78c38524a3b78d59c2e904f72f9f277579784f78d45337d"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1493-L01",
+          "next": "S1493-L03"
+        },
+        {
+          "id": "S1493-L03",
+          "key": "startDialog:0:button:0",
+          "text": "我来帮忙。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/startDialog/0/buttons/0/label",
+            "sha256": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1493-L02",
+          "next": "S1493-L04"
+        },
+        {
+          "id": "S1493-L04",
+          "key": "endDialog:0:text",
+          "text": "路修好了。这张“土”卡送给你，它能在成功施法后逐渐增强防御。",
+          "speaker": "石伯",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/endDialog/0/text",
+            "sha256": "670664dd97f15d103a8d2045356b06991ef1e4e0e0608168b6115133701581af"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1493-L03",
+          "next": "S1493-L05"
+        },
+        {
+          "id": "S1493-L05",
+          "key": "endDialog:0:button:0",
+          "text": "谢谢，我们下次见。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/endDialog/0/buttons/0/label",
+            "sha256": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1493-L04",
+          "next": "S1493-L06"
+        },
+        {
+          "id": "S1493-L06",
+          "key": "talks/0/dialog:0:text",
+          "text": "谢谢石伯修路！“土”是我们脚下的土地。",
+          "speaker": "阿初",
+          "phase": "指定交谈",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/talks/0/dialog/0/text",
+            "sha256": "8bce929f2a6a4318dae921481c51fd8115e41aee9c3826cde014fed1acb275dd"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/talks/0/dialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1493-L05",
+          "next": "S1493-L07"
+        },
+        {
+          "id": "S1493-L07",
+          "key": "talks/0/dialog:0:button:0",
+          "text": "我记住了。",
+          "speaker": "我",
+          "phase": "指定交谈",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/talks/0/dialog/0/buttons/0/label",
+            "sha256": "8712d864cd4583b0ac2e3a0ce75d7b2401bb0878ba158c9339e212fed14b419b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/2/talks/0/dialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "donpcdialoged",
+          "previous": "S1493-L06",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 600
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873002,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "请告诉阿初，这条路可以走了。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/2/title",
+        "sha256": "727a5dd135480c8d7ed8b874befe80ad6e4543e8b67755c01d0b900f88fd4143",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/2/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/2/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873000.md"
+    },
+    {
+      "id": "S1494",
+      "key": "journal:873003",
+      "title": "让小鼠回树林",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [
+        873002
+      ],
+      "lines": [
+        {
+          "id": "S1494-L01",
+          "key": "description",
+          "text": "路边有一只迷路的小鼠。带上字卡，和它进行一次战斗，让道路安全。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/3/description",
+            "sha256": "13154381da937083ca47a95ed61d4c974f5ef5b35f2d4386d8c086bd8e589ecb"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/3/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1494-L02"
+        },
+        {
+          "id": "S1494-L02",
+          "key": "startDialog:0:text",
+          "text": "路边有一只迷路的小鼠。带上字卡，和它进行一次战斗，让道路安全。",
+          "speaker": "阿初",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/3/startDialog/0/text",
+            "sha256": "13154381da937083ca47a95ed61d4c974f5ef5b35f2d4386d8c086bd8e589ecb"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/3/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1494-L01",
+          "next": "S1494-L03"
+        },
+        {
+          "id": "S1494-L03",
+          "key": "startDialog:0:button:0",
+          "text": "我来帮忙。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/3/startDialog/0/buttons/0/label",
+            "sha256": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/3/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1494-L02",
+          "next": "S1494-L04"
+        },
+        {
+          "id": "S1494-L04",
+          "key": "endDialog:0:text",
+          "text": "你回来了！字卡的力量会跟着你。战斗后休息一下，再去看看小灯。",
+          "speaker": "阿初",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/3/endDialog/0/text",
+            "sha256": "580a9733c37d7cd2907910245df7ecbcdda6fe0b492e83d4da3053c8cb837a25"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/3/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1494-L03",
+          "next": "S1494-L05"
+        },
+        {
+          "id": "S1494-L05",
+          "key": "endDialog:0:button:0",
+          "text": "谢谢，我们下次见。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/3/endDialog/0/buttons/0/label",
+            "sha256": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/3/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1494-L04",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 900
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873003,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "路边有一只迷路的小鼠。带上字卡，和它进行一次战斗，让道路安全。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/3/title",
+        "sha256": "19b3a2ec820b034767bef81972e2be0e86e9b1ff098b0099dd5aea066222e4d5",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/3/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/3/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873000.md"
+    },
+    {
+      "id": "S1495",
+      "key": "journal:873004",
+      "title": "给远方的灯",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [
+        873003
+      ],
+      "lines": [
+        {
+          "id": "S1495-L01",
+          "key": "description",
+          "text": "请告诉小灯，道路已经安全，大家可以来灯下见面。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/description",
+            "sha256": "446b2a83ced4180a22769ce8d22d5834fc3d765fb70492af550ac1d9101d1928"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1495-L02"
+        },
+        {
+          "id": "S1495-L02",
+          "key": "startDialog:0:text",
+          "text": "请告诉小灯，道路已经安全，大家可以来灯下见面。",
+          "speaker": "阿初",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/startDialog/0/text",
+            "sha256": "446b2a83ced4180a22769ce8d22d5834fc3d765fb70492af550ac1d9101d1928"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1495-L01",
+          "next": "S1495-L03"
+        },
+        {
+          "id": "S1495-L03",
+          "key": "startDialog:0:button:0",
+          "text": "我来帮忙。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/startDialog/0/buttons/0/label",
+            "sha256": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1495-L02",
+          "next": "S1495-L04"
+        },
+        {
+          "id": "S1495-L04",
+          "key": "endDialog:0:text",
+          "text": "大家终于能见面了。你认识的字，已经帮到了岛上的人。",
+          "speaker": "阿初",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/endDialog/0/text",
+            "sha256": "302180cb2f3a7e70f90560520f6198a3b241cb224b9b47d31f85208643e47680"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1495-L03",
+          "next": "S1495-L05"
+        },
+        {
+          "id": "S1495-L05",
+          "key": "endDialog:0:button:0",
+          "text": "谢谢，我们下次见。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/endDialog/0/buttons/0/label",
+            "sha256": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1495-L04",
+          "next": "S1495-L06"
+        },
+        {
+          "id": "S1495-L06",
+          "key": "talks/0/dialog:0:text",
+          "text": "我一直在等这个消息。“日”是白天的太阳。夜里，我们也能为彼此留一盏灯。",
+          "speaker": "小灯",
+          "phase": "指定交谈",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/talks/0/dialog/0/text",
+            "sha256": "2fe6c9a19e23ac8d3c73ed446c8d79f393184b6eea08d58cb374f62341127b52"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/talks/0/dialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1495-L05",
+          "next": "S1495-L07"
+        },
+        {
+          "id": "S1495-L07",
+          "key": "talks/0/dialog:0:button:0",
+          "text": "我记住了。",
+          "speaker": "我",
+          "phase": "指定交谈",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/talks/0/dialog/0/buttons/0/label",
+            "sha256": "8712d864cd4583b0ac2e3a0ce75d7b2401bb0878ba158c9339e212fed14b419b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/4/talks/0/dialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "donpcdialoged",
+          "previous": "S1495-L06",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 1300
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873004,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "请告诉小灯，道路已经安全，大家可以来灯下见面。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/4/title",
+        "sha256": "bbc67818ae1bbd578ad8a08eb1c615a8f0e31021d4ffbaf8f37f0f754bdbfc11",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/4/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/4/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873000.md"
+    },
+    {
+      "id": "S1496",
+      "key": "journal:873005",
+      "title": "从这里出发",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [
+        873004
+      ],
+      "lines": [
+        {
+          "id": "S1496-L01",
+          "key": "description",
+          "text": "去向阿初道别吧。你可以去魔法营地找导师，也可以去哈奇岛。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/description",
+            "sha256": "d404dfb766dedba79dc22d78f552382e0b82fd03d3594f0f4e6736deea41ec20"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1496-L02"
+        },
+        {
+          "id": "S1496-L02",
+          "key": "startDialog:0:text",
+          "text": "去向阿初道别吧。你可以去魔法营地找导师，也可以去哈奇岛。",
+          "speaker": "小灯",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/startDialog/0/text",
+            "sha256": "d404dfb766dedba79dc22d78f552382e0b82fd03d3594f0f4e6736deea41ec20"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1496-L01",
+          "next": "S1496-L03"
+        },
+        {
+          "id": "S1496-L03",
+          "key": "startDialog:0:button:0",
+          "text": "我来帮忙。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/startDialog/0/buttons/0/label",
+            "sha256": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1496-L02",
+          "next": "S1496-L04"
+        },
+        {
+          "id": "S1496-L04",
+          "key": "endDialog:0:text",
+          "text": "你的旅途从这里开始。继续冒险吧，不用先收齐所有字卡。",
+          "speaker": "小灯",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/endDialog/0/text",
+            "sha256": "85634828d85765b28bd52f6ca294cad2f7ca3470826e313936ca8d3ed06eed8a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1496-L03",
+          "next": "S1496-L05"
+        },
+        {
+          "id": "S1496-L05",
+          "key": "endDialog:0:button:0",
+          "text": "谢谢，我们下次见。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/endDialog/0/buttons/0/label",
+            "sha256": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1496-L04",
+          "next": "S1496-L06"
+        },
+        {
+          "id": "S1496-L06",
+          "key": "talks/0/dialog:0:text",
+          "text": "世界地图在码头，也能从菜单打开。火鸟岛建议10级再去。想家时，随时回字源岛。",
+          "speaker": "阿初",
+          "phase": "指定交谈",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/talks/0/dialog/0/text",
+            "sha256": "8fe8993ced67a972dec34224392123c37daef55e024d05c6c4e5b1d15de37b61"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/talks/0/dialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1496-L05",
+          "next": "S1496-L07"
+        },
+        {
+          "id": "S1496-L07",
+          "key": "talks/0/dialog:0:button:0",
+          "text": "我记住了。",
+          "speaker": "我",
+          "phase": "指定交谈",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/talks/0/dialog/0/buttons/0/label",
+            "sha256": "8712d864cd4583b0ac2e3a0ce75d7b2401bb0878ba158c9339e212fed14b419b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/5/talks/0/dialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "donpcdialoged",
+          "previous": "S1496-L06",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 1600
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873005,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "去向阿初道别吧。你可以去魔法营地找导师，也可以去哈奇岛。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/5/title",
+        "sha256": "27ca41a74a3779dec699068972f118f303a99af0d1081335b0ea25696d6d1f08",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/5/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/5/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873000.md"
+    },
+    {
+      "id": "S1497",
+      "key": "resident:island-pack:863000",
+      "title": "阿初：日常交谈",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [],
+      "lines": [
+        {
+          "id": "S1497-L01",
+          "key": "description",
+          "text": "欢迎来到字源岛。先去问问溪禾需要什么帮助吧。",
+          "speaker": "阿初",
+          "phase": "日常",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/npcs/0/description",
+            "sha256": "f85ffe8dd7c2e1e63c8b1c95d85c9a5af2619ff9f7555ac5c223fe5f80b3d070"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/npcs/0/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": null
+        }
+      ],
+      "rewards": [],
+      "classification": "网页原创居民",
+      "document": "story-npc-dialogues.md"
+    },
+    {
+      "id": "S1498",
+      "key": "resident:island-pack:863001",
+      "title": "溪禾：日常交谈",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [],
+      "lines": [
+        {
+          "id": "S1498-L01",
+          "key": "description",
+          "text": "水让小苗长大，也让旅人恢复精神。",
+          "speaker": "溪禾",
+          "phase": "日常",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/npcs/1/description",
+            "sha256": "5cf2aba8cd9dd94a3ef121983ad80305fea4100cb57ed7c0c52d2efc3e57e8fa"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/npcs/1/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": null
+        }
+      ],
+      "rewards": [],
+      "classification": "网页原创居民",
+      "document": "story-npc-dialogues.md"
+    },
+    {
+      "id": "S1499",
+      "key": "resident:island-pack:863002",
+      "title": "石伯：日常交谈",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [],
+      "lines": [
+        {
+          "id": "S1499-L01",
+          "key": "description",
+          "text": "土托住我们的脚。路稳了，大家才能放心走。",
+          "speaker": "石伯",
+          "phase": "日常",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/npcs/2/description",
+            "sha256": "2cdaca0dc79ad01858125849d873480442e5f18b0a4c3a9e686052f8441a10ab"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/npcs/2/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": null
+        }
+      ],
+      "rewards": [],
+      "classification": "网页原创居民",
+      "document": "story-npc-dialogues.md"
+    },
+    {
+      "id": "S1500",
+      "key": "resident:island-pack:863003",
+      "title": "小灯：日常交谈",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [],
+      "lines": [
+        {
+          "id": "S1500-L01",
+          "key": "description",
+          "text": "灯还亮着。你可以带着学到的字去远方，也可以随时回来。",
+          "speaker": "小灯",
+          "phase": "日常",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/npcs/3/description",
+            "sha256": "9fb4be2c8df8376d949a50953274005d29b90ee634f408bcce85a50d3f7de36b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/npcs/3/description"
           },
           "writable": true,
@@ -321260,6 +322584,597 @@
       "level": 0,
       "note": "交流中的物品与动作是话题，不代替主线操作；回答是示例，可使用已支持的同义表达。",
       "rewardNote": "完成按课程账本结算；基础通常10奇豆，独立表达挑战通常30仙豆，受共享次数与每日额度限制。配音另走全局临时加成。",
+      "document": "story-npc-dialogues.md"
+    },
+    {
+      "id": "S1488",
+      "key": "conversation:time-scroll:common:map",
+      "title": "绘图旅人：地图与地方",
+      "kind": "current",
+      "region": "earth",
+      "requires": [],
+      "lines": [
+        {
+          "id": "S1488-L01",
+          "key": "reading",
+          "text": "地图能帮助我们认识地方，但不同年代的地图可能不一样。这里是一幅想象地图，我们不把它当成过去真实的城市。",
+          "speaker": "绘图旅人",
+          "phase": "交谈",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/reading/zh-CN",
+            "sha256": "5ec23524ec836f068b84f19ea27281ac33e4f3e289dbad1a66ef3e89f7672c3d"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/reading/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1488-L02"
+        },
+        {
+          "id": "S1488-L02",
+          "key": "clue",
+          "text": "地图上的符号代表不同的地方。先看图例，再找你要去的地方。",
+          "speaker": "线索",
+          "phase": "发现",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/clue/text/zh-CN",
+            "sha256": "da54e6ddf474570b6a20562a7692f4cefbd968feb845b4fe621ccd126989d4a0"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/clue/text/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1488-L01",
+          "next": "S1488-L03"
+        },
+        {
+          "id": "S1488-L03",
+          "key": "map-1:question",
+          "text": "你手里拿着什么？",
+          "speaker": "绘图旅人",
+          "phase": "第1轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/0/question/zh-CN",
+            "sha256": "ab8ee772580ad20bfa89b3d1624e1e6470027238e74d43a189aa47895e77a026"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/0/question/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1488-L02",
+          "next": "S1488-L04"
+        },
+        {
+          "id": "S1488-L04",
+          "key": "map-1:answer",
+          "text": "我有一张地图。",
+          "speaker": "我",
+          "phase": "第1轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/0/answer/zh-CN",
+            "sha256": "f0cea018858303b84e95677efa69d2048c7c67e4a0ae626d18763de976ee2580"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/0/answer/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1488-L03",
+          "next": "S1488-L05"
+        },
+        {
+          "id": "S1488-L05",
+          "key": "map-2:question",
+          "text": "地图上的符号是什么意思？",
+          "speaker": "绘图旅人",
+          "phase": "第2轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/1/question/zh-CN",
+            "sha256": "babc0508ef380c83a78d475fbca92d4a5cadf0bc597f8b17b7ffae4389bea758"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/1/question/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1488-L04",
+          "next": "S1488-L06"
+        },
+        {
+          "id": "S1488-L06",
+          "key": "map-2:answer",
+          "text": "我们可以看图例。",
+          "speaker": "我",
+          "phase": "第2轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/1/answer/zh-CN",
+            "sha256": "dbfdb67a428c3857d7666ab40d0008d8ece963109bda40f596e1fb27c6d50c8f"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/1/answer/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1488-L05",
+          "next": "S1488-L07"
+        },
+        {
+          "id": "S1488-L07",
+          "key": "map-3:question",
+          "text": "这是一张真实的旧地图吗？",
+          "speaker": "绘图旅人",
+          "phase": "第3轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/2/question/zh-CN",
+            "sha256": "a38ed870198aec649318d6f5756ba9ae55f148a9f8f0c2c8835886d96d436819"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/2/question/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1488-L06",
+          "next": "S1488-L08"
+        },
+        {
+          "id": "S1488-L08",
+          "key": "map-3:answer",
+          "text": "不，这是一张想象地图。",
+          "speaker": "我",
+          "phase": "第3轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/2/answer/zh-CN",
+            "sha256": "463344ba3f6db106609235e46dc947115f463ae5ac058f7e727c60514e8ac799"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/2/answer/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1488-L07",
+          "next": "S1488-L09"
+        },
+        {
+          "id": "S1488-L09",
+          "key": "map-3:response",
+          "text": "谢谢你。我们继续探索吧。",
+          "speaker": "绘图旅人",
+          "phase": "第3轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/2/response/zh-CN",
+            "sha256": "2255112d444c1abec1378c856b8919f3617ed8d945701881193293af3a5bfb65"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/0/story/turns/2/response/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1488-L08",
+          "next": null
+        }
+      ],
+      "rewards": [],
+      "storyId": "time-scroll:common:map",
+      "classification": "城市时光长卷／虚构旅人",
+      "level": 0,
+      "note": "通用想象场景，不代表当地历史；点击旅人阅读，走到线索旁才记录发现。",
+      "rewardNote": "发现按城市永久收集；练习跨城市共享完成身份，仅有效口语沿用全局每日加成，不发放货币。",
+      "document": "story-npc-dialogues.md"
+    },
+    {
+      "id": "S1489",
+      "key": "conversation:time-scroll:common:direction",
+      "title": "寻路旅人：方向与距离",
+      "kind": "current",
+      "region": "earth",
+      "requires": [],
+      "lines": [
+        {
+          "id": "S1489-L01",
+          "key": "reading",
+          "text": "我在找一块路牌。请和我一起往右走。屏幕的左右不是地图的东西，要先看方向标记。",
+          "speaker": "寻路旅人",
+          "phase": "交谈",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/reading/zh-CN",
+            "sha256": "6a6fc5b81a889f3d6227665ff2d3024c833a7a0cf6283030f80d29a7ebafd066"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/reading/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1489-L02"
+        },
+        {
+          "id": "S1489-L02",
+          "key": "clue",
+          "text": "东、西、南、北可以帮助我们描述方向。地图可能旋转，先确认北方在哪里。",
+          "speaker": "线索",
+          "phase": "发现",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/clue/text/zh-CN",
+            "sha256": "91d81fb2cf6c3891c9b44fdcf05f5c8876482a1a2438c9406e04ab15ce2d2e2a"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/clue/text/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1489-L01",
+          "next": "S1489-L03"
+        },
+        {
+          "id": "S1489-L03",
+          "key": "direction-1:question",
+          "text": "我们一起找路牌好吗？",
+          "speaker": "寻路旅人",
+          "phase": "第1轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/0/question/zh-CN",
+            "sha256": "2f8e72ebefd2149f911cb9c435adde7830611f0e1732cb3f67258eeb3fc3ac52"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/0/question/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1489-L02",
+          "next": "S1489-L04"
+        },
+        {
+          "id": "S1489-L04",
+          "key": "direction-1:answer",
+          "text": "我们一起找吧。",
+          "speaker": "我",
+          "phase": "第1轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/0/answer/zh-CN",
+            "sha256": "68b6dc3c76896100eadb2143f6305b66333ca90d1952c536193e2baf76a504c3"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/0/answer/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1489-L03",
+          "next": "S1489-L05"
+        },
+        {
+          "id": "S1489-L05",
+          "key": "direction-2:question",
+          "text": "地图上先找哪个方向？",
+          "speaker": "寻路旅人",
+          "phase": "第2轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/1/question/zh-CN",
+            "sha256": "25930945921649fdc8c82dc35abf0d292a3e827fa1adddd66dafd7b74841c749"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/1/question/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1489-L04",
+          "next": "S1489-L06"
+        },
+        {
+          "id": "S1489-L06",
+          "key": "direction-2:answer",
+          "text": "北方在哪里？",
+          "speaker": "我",
+          "phase": "第2轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/1/answer/zh-CN",
+            "sha256": "69dc7b43d722de583f59b4b74f7bc24b5be1fbe40432c71615de97fb87fce075"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/1/answer/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1489-L05",
+          "next": "S1489-L07"
+        },
+        {
+          "id": "S1489-L07",
+          "key": "direction-3:question",
+          "text": "路牌在这里，离我们远吗？",
+          "speaker": "寻路旅人",
+          "phase": "第3轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/2/question/zh-CN",
+            "sha256": "75f7a3f36ea73bef08545a407c366dc41ab2742d2aeacd42d6ac4279014f1d23"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/2/question/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1489-L06",
+          "next": "S1489-L08"
+        },
+        {
+          "id": "S1489-L08",
+          "key": "direction-3:answer",
+          "text": "不，它就在附近。",
+          "speaker": "我",
+          "phase": "第3轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/2/answer/zh-CN",
+            "sha256": "d19604cb6ea0e4d70e4ac2fbf167fb75c47f566df3c2bf99fe61587482ade47f"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/2/answer/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1489-L07",
+          "next": "S1489-L09"
+        },
+        {
+          "id": "S1489-L09",
+          "key": "direction-3:response",
+          "text": "谢谢你。我们继续探索吧。",
+          "speaker": "寻路旅人",
+          "phase": "第3轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/2/response/zh-CN",
+            "sha256": "2255112d444c1abec1378c856b8919f3617ed8d945701881193293af3a5bfb65"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/1/story/turns/2/response/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1489-L08",
+          "next": null
+        }
+      ],
+      "rewards": [],
+      "storyId": "time-scroll:common:direction",
+      "classification": "城市时光长卷／虚构旅人",
+      "level": 0,
+      "note": "通用想象场景，不代表当地历史；点击旅人阅读，走到线索旁才记录发现。",
+      "rewardNote": "发现按城市永久收集；练习跨城市共享完成身份，仅有效口语沿用全局每日加成，不发放货币。",
+      "document": "story-npc-dialogues.md"
+    },
+    {
+      "id": "S1490",
+      "key": "conversation:time-scroll:common:change",
+      "title": "记事旅人：过去与现在",
+      "kind": "current",
+      "region": "earth",
+      "requires": [],
+      "lines": [
+        {
+          "id": "S1490-L01",
+          "key": "reading",
+          "text": "我在收集过去与现在的词语。向左走，我们想到过去；向右走，我们回到现在。这些故事是想象，不是这座城市的历史记录。",
+          "speaker": "记事旅人",
+          "phase": "交谈",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/reading/zh-CN",
+            "sha256": "e113a62988dd2b02081d9ba71f57e57733bc841b974cb6a42d4463853ac8646d"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/reading/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1490-L02"
+        },
+        {
+          "id": "S1490-L02",
+          "key": "clue",
+          "text": "过去是已经发生的时间。了解一个地方的过去，要寻找有日期和来源的记录，不能只看想象的画面。",
+          "speaker": "线索",
+          "phase": "发现",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/clue/text/zh-CN",
+            "sha256": "e1147953ee6f06cbf548b258a526136ca1f3cff0b89142305d7177f3d8d892a8"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/clue/text/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1490-L01",
+          "next": "S1490-L03"
+        },
+        {
+          "id": "S1490-L03",
+          "key": "change-1:question",
+          "text": "我们正在想到哪个时间？",
+          "speaker": "记事旅人",
+          "phase": "第1轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/0/question/zh-CN",
+            "sha256": "726ad02a94394c532a088a2d618d963cf5bfa9532768073050d8fbfe6fa0622e"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/0/question/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1490-L02",
+          "next": "S1490-L04"
+        },
+        {
+          "id": "S1490-L04",
+          "key": "change-1:answer",
+          "text": "我们正在想到过去。",
+          "speaker": "我",
+          "phase": "第1轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/0/answer/zh-CN",
+            "sha256": "422d63ef0bfcf34e002ce6042e028701226c40470caedd673881799af707a6fb"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/0/answer/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1490-L03",
+          "next": "S1490-L05"
+        },
+        {
+          "id": "S1490-L05",
+          "key": "change-2:question",
+          "text": "现在和过去一样吗？",
+          "speaker": "记事旅人",
+          "phase": "第2轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/1/question/zh-CN",
+            "sha256": "d49d61e76c3b57722fa96db7cddbe0a0adc3fecf9cd8bb39de7e3183b1ea2179"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/1/question/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1490-L04",
+          "next": "S1490-L06"
+        },
+        {
+          "id": "S1490-L06",
+          "key": "change-2:answer",
+          "text": "有些事情会改变。",
+          "speaker": "我",
+          "phase": "第2轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/1/answer/zh-CN",
+            "sha256": "a47a01eaa40c1eed7a83605ad79728bb272425fc459f611c2d5ec74726a85ba9"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/1/answer/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1490-L05",
+          "next": "S1490-L07"
+        },
+        {
+          "id": "S1490-L07",
+          "key": "change-3:question",
+          "text": "我们怎样了解过去？",
+          "speaker": "记事旅人",
+          "phase": "第3轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/2/question/zh-CN",
+            "sha256": "cf94ee95fb0211f63d32b2e8fb2b75f0382a302923b16f9f08f30288e1bc4b72"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/2/question/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1490-L06",
+          "next": "S1490-L08"
+        },
+        {
+          "id": "S1490-L08",
+          "key": "change-3:answer",
+          "text": "我们可以寻找旧记录。",
+          "speaker": "我",
+          "phase": "第3轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/2/answer/zh-CN",
+            "sha256": "7089d359a48f0b6c167d65e210bdf31ae4718b4f51817c0f37a1a94d8654aa01"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/2/answer/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1490-L07",
+          "next": "S1490-L09"
+        },
+        {
+          "id": "S1490-L09",
+          "key": "change-3:response",
+          "text": "谢谢你。我们继续探索吧。",
+          "speaker": "记事旅人",
+          "phase": "第3轮",
+          "source": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/2/response/zh-CN",
+            "sha256": "2255112d444c1abec1378c856b8919f3617ed8d945701881193293af3a5bfb65"
+          },
+          "author": {
+            "file": "data/adventure/earth/time-scroll/common.json",
+            "pointer": "/stations/2/story/turns/2/response/zh-CN"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1490-L08",
+          "next": null
+        }
+      ],
+      "rewards": [],
+      "storyId": "time-scroll:common:change",
+      "classification": "城市时光长卷／虚构旅人",
+      "level": 0,
+      "note": "通用想象场景，不代表当地历史；点击旅人阅读，走到线索旁才记录发现。",
+      "rewardNote": "发现按城市永久收集；练习跨城市共享完成身份，仅有效口语沿用全局每日加成，不发放货币。",
       "document": "story-npc-dialogues.md"
     },
     {

@@ -9114,3 +9114,14 @@ VIP 有效期由账号下所有角色共享；魔豆放入当前角色背包，�
 地图图片加载失败，正在重试…||Map images failed to load. Retrying…
 正在加载地面图片…||Loading ground images…
 正在绘制附近地面…||Drawing nearby ground…
+部分角色暂时无法读取，原存档已保留，云端同步已暂停。请重新读取本地角色，或刷新云端角色后选择恢复。||Some characters could not be loaded. Original saves are preserved and cloud sync is paused. Retry local characters, or refresh cloud characters and choose to restore them.
+角色读取尚未完成，原存档已保留，云端同步已暂停。||Character loading is incomplete. Original saves are preserved and cloud sync is paused.
+角色暂时无法读取，原存档已保留。||This character could not be loaded. The original save is preserved.
+角色暂时无法读取，请重试或从云端恢复。||Characters could not be loaded. Retry or restore from the cloud.
+云端角色暂时无法读取，请重试。||Cloud characters could not be loaded. Please retry.
+云端角色暂时无法读取，本地存档已保留，云端同步已暂停。请点击“刷新云端角色”重试。||Cloud characters could not be loaded. Local saves are preserved and cloud sync is paused. Select “Refresh cloud characters” to retry.
+重新读取本地角色||Retry local characters
+正在重新读取本地角色…||Reloading local characters…
+本地角色已恢复。||Local characters have been restored.
+当前可用 {count} 个主角||{count} characters available
+未命名角色||Unnamed character

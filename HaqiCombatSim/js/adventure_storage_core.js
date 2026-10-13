@@ -1,17 +1,18 @@
 import {localBuffDay} from './language_daily_buff_core.js';
+import {validateTimeScrollRuntime} from './adventure_time_scroll_core.js';
 import {petSummary,petContentKey} from './adventure_pet_files_core.js';
 // Persistence projections only; combat rules and live save shape stay unchanged.
 import { petMaxHp } from './adventure_pets_core.js';
 import { mapInfo } from './adventure_island_layout_core.js';
 
 const copy = value => JSON.parse(JSON.stringify(value));
-const localFields = ['cityFallback','cityReturnStack','earthReturn','heroHp','careAt','careLog','position','facing','pendingEncounter','encounterRespawns','petTraitEncounters','stamina','staminaRefillDay','coopRun','dungeonExploration','dungeonMode','dungeonLanguageBuff'];
+const localFields = ['timeScrollRuntime','cityFallback','cityReturnStack','earthReturn','heroHp','careAt','careLog','position','facing','pendingEncounter','encounterRespawns','petTraitEncounters','stamina','staminaRefillDay','coopRun','dungeonExploration','dungeonMode','dungeonLanguageBuff'];
 // Cosmetic preferences stay on this device only: stripped from durable/cloud saves,
 // kept in the role's IndexedDB runtime record and restored regardless of revision.
 const prefFields = ['magicStarFollow','mountHidden'];
 const itemFields = ['petMergedIds','petPages','petFileRefs','petWorld','pets','equipmentInstances','nextEquipmentGuid','upgrades','cards','pet'];
 const battleFields = ['inventory','petFoodSlots','equipment','equipmentGuids','mountId','formation','heroSlot','deck'];
-const recordFields = ['earthProgress','earthCityProgress','transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
+const recordFields = ['timeScrollProgress','hanzi','earthProgress','earthCityProgress','transactions','rewardedEncounters','fishingRecords','learnerMemory','socialActivity','socialPvpRecords','socialChallenges','relationshipEvents'];
 export const storageParts = ['items','battle','records','towers'];
 
 export function stableJson(value) {
@@ -54,6 +55,10 @@ export function restoreRuntime(save, content, runtime) {
     if(matching&&runtime.earthZone)result.zone='earth';
     if(matching&&runtime.earthDungeonZone){result.zone=runtime.earthDungeonZone;result.dungeonReturn=copy(runtime.earthDungeonReturn);}
     if(matching&&runtime.cityDungeonRuns)Object.assign(result.dungeonRuns??={},copy(runtime.cityDungeonRuns));
+    // A missing/evicted device return point closes this optional overlay; never
+    // reject otherwise valid durable progress or fabricate a city destination.
+    try{validateTimeScrollRuntime(result.timeScrollRuntime);if(result.timeScrollRuntime?.zone!==result.zone)delete result.timeScrollRuntime;}
+    catch{delete result.timeScrollRuntime;}
     delete result.dailyLanguageBuff;
 
     if(runtime?.dailyLanguageBuff?.day===localBuffDay())result.dailyLanguageBuff=copy(runtime.dailyLanguageBuff);

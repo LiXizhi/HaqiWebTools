@@ -1,3 +1,7 @@
+import {hanziBattleSpec,validateHanziBattleSpec} from './hanzi_battle_core.js';
+import {grantHanziQuestCard} from './hanzi_core.js';
+import {validateTimeScrollProgress,validateTimeScrollRuntime} from './adventure_time_scroll_core.js';
+import {validateHanziProgress} from './hanzi_core.js';
 import {encounterPetTraitSeed,petTraitParams,monsterPetTraits} from './adventure_pet_traits_core.js';
 import {monsterCaptureSpecies} from './adventure_monster_pets_core.js';
 import {earthEncounter,earthNearest,earthChapterEvent} from './adventure_earth_core.js';
@@ -77,10 +81,11 @@ export function questReady(save, quest) {
 }
 export function createAdventure(content, { name = '小哈奇', school = 'fire', appearance = 'boy', headId, bodyId, customHead, seed = 530, starter = 'dragon_green' } = {}) {
     assert(SCHOOLS.includes(school), '请选择魔法学系');
+    const birthZone='camp';
     const save = { schemaVersion: SAVE_VERSION, contentVersion: content.contentVersion, seed: hashSeed(String(seed)),
         name: String(name).trim().slice(0, 16) || '小哈奇', school, appearance: appearance === 'girl' ? 'girl' : 'boy',
         xp: 0, level: 1, inventory: {}, equipment: {}, mountId: null, upgrades: {}, equipmentInstances: [], equipmentGuids: {}, nextEquipmentGuid: 1, cards: {}, deck: [], quests: {},
-        pet: null, zone: 'camp', position: {...mapInfo('camp',content).initialSpawn}, facing: 3,
+        pet: null, zone: birthZone, position: {...mapInfo(birthZone,content).initialSpawn}, facing: 3,
         dungeonRuns: {}, dungeonReturn: null, encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
         visitedTown: false, tips: {}, revision: 0, bagRulesVersion: 1, defaultPocketVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion,
         locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,autoReadDialogue:true,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
@@ -258,7 +263,7 @@ export function playerSpec(save, content, starLevel=save.pendingEncounter?.magic
         }
     }
     applyMagicStarCombat(stats,content,starLevel);
-    return { id: 'hero', name: save.name, school: save.school, level: save.level, isBot: false, stats,
+    return { ...(hanziBattleSpec(save,content)?{hanziBattle:hanziBattleSpec(save,content)}:{}), id: 'hero', name: save.name, school: save.school, level: save.level, isBot: false, stats,
         deck: clone(save.deck), fixedCards: fixed, deckCapacity: limits.capacity, deckEachCapacity: limits.eachCapacity };
 }
 function signal(save, content, kind, id, count = 1) {
@@ -398,8 +403,10 @@ function applyAdventureAction(save, content, action, access={}) {
         const target = claimCatalogQuest(save,content,action.questId,action.npcId,catalogStatSnapshot(save,content));
         if (!target) return { changed: false };
         grantQuestRewards(save,content,target);
+        if(target.hanziCardReward)grantHanziQuestCard(save,target.hanziCardReward);
         save.quests[target.id].claimed = true;
         unpinTrackedQuest(save, target.id);
+        if(target.region==='hanzi')supplementIslandTrack(save,content,save.zone);
         syncProgression(save,content);
         break;
     }
@@ -674,6 +681,8 @@ export function parseSave(raw,content) {
     if(s?.schemaVersion===1){s.schemaVersion=SAVE_VERSION;if(content.pets){Pets.initializePets(s,content);if(s.pet&&content.pets.legacy_gululu)Pets.addPet(s,content,'legacy_gululu',s.pet.xp);}}
     assert(s && s.schemaVersion === SAVE_VERSION && s.contentVersion === content.contentVersion,'存档版本不兼容');
     normalizeLocaleSave(s);
+    validateHanziProgress(s.hanzi);
+    validateTimeScrollProgress(s.timeScrollProgress);validateTimeScrollRuntime(s.timeScrollRuntime);
     assert(s.encounterRespawns===undefined||(s.encounterRespawns&&typeof s.encounterRespawns==='object'&&!Array.isArray(s.encounterRespawns)&&Object.values(s.encounterRespawns).every(n=>Number.isSafeInteger(n)&&n>=0)),'怪物刷新记录无效');
     validateLearningSave(s);validateCoopRun(s);validateRelationshipEvents(s);
     assert(s.defaultPocketVersion===undefined||s.defaultPocketVersion===1,'默认口袋规则版本无效');
@@ -728,6 +737,8 @@ export function parseSave(raw,content) {
     dungeonLanguageBuff(s,content);
     if (s.pendingEncounter) {
         assert(s.pendingEncounter.dailyLanguageVersion===undefined||s.pendingEncounter.dailyLanguageVersion===1,'语言加成版本无效');
+        if(s.pendingEncounter.player?.hanziBattle)validateHanziBattleSpec(s.pendingEncounter.player.hanziBattle);
+        for(const unit of s.pendingEncounter.party||[])if(unit.hanziBattle)validateHanziBattleSpec(unit.hanziBattle);
         if(s.pendingEncounter.dailyLanguageVersion===1)validateDailyBuff(s.pendingEncounter.languageBuff);
         if(s.pendingEncounter.languageBuff!==undefined&&!s.pendingEncounter.dailyLanguageVersion)assert(JSON.stringify(s.pendingEncounter.languageBuff)===JSON.stringify(dungeonLanguageBuff(s,content)),'副本语言加成检查点无效');
         assert(s.pendingEncounter.equipmentStatsVersion===undefined||[1,2].includes(s.pendingEncounter.equipmentStatsVersion),'装备属性规则版本无效');

@@ -1,0 +1,18 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>时光长卷隔离验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/language_adventure.css"><link rel="stylesheet" href="../../css/time-scroll.css">
+<body class="haqi-app"><div id="tools"><button id="enter">进入示例城市的时光长卷</button><output id="status">正在准备真实角色美术…</output></div><div id="overlay"></div>
+<script type="module">
+import {createTimeScroll,loadTimeScroll} from '../../js/adventure_time_scroll.js';
+import {loadHeroLibrary} from '../../js/hero_renderer.js';
+import {awardDailySpeech} from '../../js/language_daily_buff_core.js';
+const read=path=>fetch('../../'+path).then(r=>r.json());
+const hero=await loadHeroLibrary(read,{mounts:[],sheets:{}});
+const city={id:'fixture-city',name:'示例城',lon:114,lat:22},data=await loadTimeScroll(city);
+const save={zone:'earth',position:{x:123,y:456},appearance:'boy',facing:2,revision:0,seed:42,inventory:{},languageLearning:{enabled:true,target:'en',native:'zh-CN',showChinese:true},languageAdventure:{version:1,progress:{}}};
+const state={save,role:'isolated-role',owner:null,stage:'world',online:false};
+const assets={hero,content:{}};let scroll;
+function enter(){document.querySelector('#tools').hidden=true;scroll=createTimeScroll({root:document.querySelector('#overlay'),data,city,assets,getState:()=>state,persist:()=>{},award:id=>awardDailySpeech(save,assets.content,id),onClose:()=>{scroll?.close();document.querySelector('#tools').hidden=false;document.querySelector('#status').textContent='已回到城市；仅使用内存，没有写入玩家存档。';}});}
+document.querySelector('#status').textContent='已准备好；不使用玩家存档。';document.querySelector('#enter').onclick=enter;
+window.timeScrollQA={state,data,city,enter,get scroll(){return scroll;}};
+enter();
+</script></body></html>

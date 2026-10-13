@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>字源岛 · 布局重绘预览</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#ecdfbf;color:#294838;font:15px system-ui}header{padding:14px 20px;background:#fff5d9;display:flex;align-items:center;gap:16px;flex-wrap:wrap;border-bottom:1px solid #b69c63}h1{font-size:20px;margin:0}label{display:flex;align-items:center;gap:5px}button{padding:7px 12px;background:#315e49;color:#fff4d6;border:1px solid #b49b65;border-radius:6px;cursor:pointer}#status{margin:10px 20px;font-size:13px}#viewport{margin:0 18px 18px;height:calc(100dvh - 125px);min-height:380px;overflow:auto;border:3px solid #aa8542;border-radius:14px;background:#238eac;overscroll-behavior:contain}#map{position:relative;margin:auto;min-width:360px;width:min(100%,820px);aspect-ratio:1;background:#238eac}#painting,svg,#labels{position:absolute;inset:0;width:100%;height:100%}#painting{object-fit:fill}#labels{pointer-events:none}.place{position:absolute;transform:translate(-50%,-100%);white-space:nowrap;font-size:12px;padding:4px 7px;border-radius:6px;border:1px solid #ab914f;background:#fff6ddec;color:#244f3b;box-shadow:0 2px 5px #133d4055}.npc{position:absolute;transform:translate(-50%,-50%);width:11px;height:11px;border:2px solid #fff7df;border-radius:50%;background:#9d4fae;box-shadow:0 1px 4px #283a35}.npc:hover::after{content:attr(title);position:absolute;bottom:13px;left:0;background:#fff6dd;padding:3px 6px;white-space:nowrap}#labels .npc{pointer-events:auto}svg{pointer-events:none}#routes[hidden],#labels[hidden]{display:none}
+</style>
+<header><h1>字源岛 · 布局重绘预览</h1><label><input id="showLabels" type="checkbox" checked>地点与 NPC</label><label><input id="showRoutes" type="checkbox">校验道路与海岸</label><button id="minus" aria-label="缩小">−</button><button id="plus" aria-label="放大">＋</button><button id="reset">适合窗口</button></header>
+<p id="status">正在加载预览。独立本地预览，不读取玩家存档。</p>
+<div id="viewport"><div id="map"><img id="painting" alt="依据实际道路布局重绘的字源岛"><svg id="routes" viewBox="0 0 4800 4800" hidden></svg><div id="labels"></div></div></div>
+<script type="module">
+const q=s=>document.querySelector(s),base='../../';
+try{
+ const [layout,art,pack]=await Promise.all(['data/adventure/maps/hanzi.json','data/adventure/hanzi/map-repaint-preview.json','data/adventure/island-packs/hanzi.json'].map(p=>fetch(base+p).then(r=>{if(!r.ok)throw Error(p);return r.json();})));
+ q('#painting').src=base+art.local;await q('#painting').decode();
+ for(const p of layout.landmarks){const tag=document.createElement('span');tag.className='place';tag.textContent=p.name;tag.style.left=`${p.x/layout.w*100}%`;tag.style.top=`${p.y/layout.h*100}%`;q('#labels').append(tag);}
+ for(const [id,[x,y]] of Object.entries(layout.npcPositions)){const tag=document.createElement('span');tag.className='npc';tag.title=pack.npcs.find(n=>String(n.id)===id)?.name||id;tag.style.left=`${x/layout.w*100}%`;tag.style.top=`${y/layout.h*100}%`;q('#labels').append(tag);}
+ const svg=(name,attrs)=>{const n=document.createElementNS('http://www.w3.org/2000/svg',name);for(const [k,v]of Object.entries(attrs))n.setAttribute(k,v);q('#routes').append(n);};
+ svg('polygon',{points:layout.coast.map(p=>p.join(',')).join(' '),fill:'none',stroke:'#ffed62','stroke-width':10,'stroke-dasharray':'24 16'});
+ for(const p of layout.paths)svg('line',{x1:p.a.x,y1:p.a.y,x2:p.b.x,y2:p.b.y,stroke:'#dd357e','stroke-width':10,'stroke-linecap':'round',opacity:.85});
+ let zoom=1;const resize=()=>{q('#map').style.width=`${Math.max(360,Math.min(q('#viewport').clientWidth,820))*zoom}px`;};
+ q('#plus').onclick=()=>{zoom=Math.min(2.5,zoom*1.25);resize();};q('#minus').onclick=()=>{zoom=Math.max(.5,zoom/1.25);resize();};q('#reset').onclick=()=>{zoom=1;resize();};window.addEventListener('resize',resize);resize();
+ q('#showLabels').onchange=e=>q('#labels').hidden=!e.target.checked;q('#showRoutes').onchange=e=>q('#routes').hidden=!e.target.checked;
+ q('#status').textContent=`新底图 · ${art.width} × ${art.height} · ${(art.size/1000).toFixed(1)} KB。地点与居民使用现有游戏坐标；勾选校验可查看与原道路的偏差。`;
+}catch(e){q('#status').textContent='预览加载失败：'+e.message;throw e;}
+</script>
+</html>

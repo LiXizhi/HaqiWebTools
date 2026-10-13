@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'docs/story'
 REGIONS = ['camp', 'town', 'fire', 'ice', 'desert', 'dark']
 NAMES = dict(zip(REGIONS, ['魔法营地', '哈奇岛', '火鸟岛', '寒冰岛', '沙漠岛', '幽暗岛']))
+NAMES['earth'] = '现实城市'
 GENERIC = {'继续', '下一步', '关闭', '取消', '确定', '接受任务', '完成任务', '返回', '领取奖励'}
 
 
@@ -241,6 +242,7 @@ class Exporter:
                 s['rewards'].append({'choice': int(a.get('choice', -1)), 'schoolFilter': a.get('schoolfilter') == '1', 'items': [{'id': int(x['attributes']['id']), 'count': x['attributes']['value']} for x in g.get('children', [])]})
             s['rewardNote'] = '原版配置，非网页新增发放承诺。'
         self.conversations()
+        self.time_scroll()
         self.journeys()
         self.retire_courses()
         self.movies()
@@ -325,6 +327,26 @@ class Exporter:
                             continue
                         self.line(s, turn['id'] + ':' + field, turn[field]['zh-CN'], speaker, f'第{k+1}轮', file, f'{base}/turns/{k}/{field}/zh-CN', {**author, 'field': field, 'turnId': turn['id']}, force=True)
                 self.filtered.append({'scene': s['id'], 'file': file, 'pointer': base + '/ending', 'reason': '当前控制器结束于末轮response，未呈现ending字段'})
+
+    def time_scroll(self):
+        for path in sorted((ROOT / 'data/adventure/earth/time-scroll').glob('*.json')):
+            file = path.relative_to(ROOT).as_posix()
+            for i, station in enumerate(self.load(file)['stations']):
+                if not station.get('story'):
+                    continue
+                story, npc = station['story'], station['traveler']['name']
+                scene = self.scene('conversation:' + story['id'], npc + '：' + story['title'], 'current', 'earth', storyId=story['id'], classification='城市时光长卷／虚构旅人', level=0)
+                scene['note'] = '通用想象场景，不代表当地历史；点击旅人阅读，走到线索旁才记录发现。'
+                scene['rewardNote'] = '发现按城市永久收集；练习跨城市共享完成身份，仅有效口语沿用全局每日加成，不发放货币。'
+                base = f'/stations/{i}'
+                for key, text, speaker, phase, ptr in [('reading', station['reading']['zh-CN'], npc, '交谈', base + '/reading/zh-CN'), ('clue', station['clue']['text']['zh-CN'], '线索', '发现', base + '/clue/text/zh-CN')]:
+                    self.line(scene, key, text, speaker, phase, file, ptr, {'file': file, 'pointer': ptr}, force=True)
+                for k, turn in enumerate(story['turns']):
+                    for field, speaker in [('question', npc), ('answer', '我'), ('response', npc)]:
+                        if field == 'response' and k != len(story['turns']) - 1:
+                            continue
+                        ptr = f'{base}/story/turns/{k}/{field}/zh-CN'
+                        self.line(scene, turn['id'] + ':' + field, turn[field]['zh-CN'], speaker, f'第{k+1}轮', file, ptr, {'file': file, 'pointer': ptr}, force=True)
 
     def journeys(self):
         file = 'data/adventure/dungeon-journeys.json'

@@ -28,8 +28,8 @@ if(screen==='loading'){
     const roles=names.map((name,index)=>({id:'preview-'+index,save:createAdventure(assets.content,{name,school:['fire','ice','storm','life','death'][index],appearance:index===4?'girl':'boy'})}));
     const cb={locale,secondLocale:second,draft:{step:1,name:'',appearance:'boy',school:'fire',starter:'dragon_green'},accountChoice:true,
         setLocale:async id=>{locale=id;if(second===id)second=id==='en'?'zh-CN':'en';await loadLocaleFiles([id]);configureLocale({locale:id});document.documentElement.lang=id;show();},setSecondLocale:id=>{second=id;show();},
-        login:()=>notice('预览：登录入口已响应，未连接真实账号。'),create:()=>notice('预览：新建角色入口已响应。'),select:()=>notice('预览：进入角色入口已响应。'),sync:()=>notice('预览：保存入口已响应。'),refresh:()=>notice('预览：刷新入口已响应。'),logout:()=>notice('预览：退出入口已响应。')};
-    function show(){cb.locale=locale;cb.secondLocale=second;if(screen==='login')renderEntry(root,assets,null,cb);else renderRoles(root,assets,{locale,owner:params.has('guest')?null:'冒险家',catalog:{roles:params.has('empty')?[]:roles,activeId:'preview-0'},busy:params.has('busy')?'正在恢复账号与角色…':'',error:params.has('error')?'网络连接失败，请重试。':''},cb);}
+        login:()=>notice('预览：登录入口已响应，未连接真实账号。'),create:()=>notice('预览：新建角色入口已响应。'),select:()=>notice('预览：进入角色入口已响应。'),sync:()=>notice('预览：保存入口已响应。'),refresh:()=>notice('预览：刷新入口已响应。'),logout:()=>notice('预览：退出入口已响应。'),retryLocal:params.has('recover')?()=>notice('预览：重新读取已响应。'):null};
+    function show(){cb.locale=locale;cb.secondLocale=second;if(screen==='login')renderEntry(root,assets,null,cb);else renderRoles(root,assets,{locale,owner:params.has('guest')?null:'冒险家',catalog:{roles:params.has('empty')?[]:roles,activeId:'preview-0'},busy:params.has('busy')?'正在恢复账号与角色…':'',error:params.has('error')?'网络连接失败，请重试。':'',recovering:params.has('recover'),recoveryIssues:params.has('recover')?[{id:'unavailable',name:'待恢复角色',reason:'地图资源暂时无法读取'}]:[]},cb);}
     show();
 }
 document.documentElement.dataset.fixtureReady='1';

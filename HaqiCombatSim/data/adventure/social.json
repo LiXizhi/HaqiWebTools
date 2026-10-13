@@ -51,6 +51,12 @@
       "size": "large",
       "capacity": 16,
       "islandPack": true
+    },
+    "hanzi": {
+      "enabled": true,
+      "size": "large",
+      "capacity": 16,
+      "islandPack": true
     }
   },
   "personas": [

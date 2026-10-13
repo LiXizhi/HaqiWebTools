@@ -1,3 +1,4 @@
+import {HANZI_BATTLE_CARDS,hanziBattleDescription} from './hanzi_battle_core.js';
 import {drawSchoolIcon} from './card_renderer.js';
 import {tr,fill} from './locale_runtime.js';
 
@@ -25,6 +26,7 @@ function statusTemplateDesc(template,role,fallback) {
 export function battleStatusEffects(unit,battle) {
     const out=[],r=battle.resolved;
     const add=(kind,label,desc,template={},extra={})=>out.push({kind,label:tr(label),desc:tr(desc),school:template.school,negative:template.positive===false,...extra});
+    if(unit.hanziBattle)add('charm',HANZI_BATTLE_CARDS[unit.hanziBattle.id],hanziBattleDescription(unit.hanziBattle,unit.hanziBattle.triggers),{positive:true},{stackKey:'hanzi:'+unit.hanziBattle.id});
     for(const w of unit.standingWards||[])if(w.rounds>0){
         const rank=(r.global?.stormChargingWardIds||[]).indexOf(w.id)+1;
         const base=rank?fill('狂风印记 {rank}阶',{rank}).text:statusTemplateDesc(r.wards?.[w.id],'ward','持续护盾');

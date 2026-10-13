@@ -31,7 +31,10 @@ class StoryExportTests(unittest.TestCase):
         self.assertEqual(sum(s['kind'] == 'obsolete' for s in original), 257)
         self.assertEqual(sum(s['kind'] == 'current' and 'questId' in s for s in scenes), 427 + len(self.export.pack_quest_ids))
         self.assertEqual(sum(s['key'].startswith('journey:') for s in scenes), 18 + sum(len(p['journeys']) for _,p in self.export.packs))
-        self.assertEqual(sum(s['key'].startswith('conversation:') and s['kind'] == 'current' for s in scenes), 66)
+        self.assertEqual(sum(s['key'].startswith('conversation:') and not s['key'].startswith('conversation:time-scroll:') and s['kind'] == 'current' for s in scenes), 66)
+        time_scenes = [s for s in scenes if s['key'].startswith('conversation:time-scroll:')]
+        self.assertEqual(len(time_scenes), 3)
+        self.assertTrue(all(s['kind'] == 'current' and s['region'] == 'earth' and len(s['lines']) == 9 for s in time_scenes))
 
     def test_source_and_author_validation(self):
         bad = copy.deepcopy(self.export)

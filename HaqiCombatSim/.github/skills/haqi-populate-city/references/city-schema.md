@@ -11,6 +11,7 @@
 | `languages` | primary 使用语言码，primaryName 为中文名，alsoUsed 带 code/name/source；城市交流语言与每个人母语区分 |
 | `demographics` | classification、asOf、source、groups；未知 percentage 或 racePercentages 用 null；保留原统计分类和覆盖范围 |
 | `characterGeneration` | mode=creative-weights；appearanceWeights=[{id,weight}] 合计1；names 保存姓名池、顺序与访客原名；说明为游戏创作权重 |
+| `timeScroll`（可选） | `data/adventure/earth/time-scroll/<id>.json`，缺省复用通用想象长卷；独立按需加载，城市与内部节点共用发现身份；故事ID跨城共享，不在此发放货币。 |
 | `cityView` | 城市独特建筑/风貌的 imagePrompt、source、status；未生成图片时 status=authoring-reference |
 | `culturalElements` | animalsAndPlants、people、agriculture、buildings；元素带稳定 id、name、imagePrompt 和 source；明确哪些仅是准备资料 |
 | `buildings[]` | 稳定 id、name、lon/lat、frame、w/h，引用 art.landmarks.frames |

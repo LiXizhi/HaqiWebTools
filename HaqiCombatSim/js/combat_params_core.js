@@ -46,6 +46,7 @@ export function defaultParams(version = 'teen') {
         characterRelations: {initialMin:0,initialMax:60,maxAiDelta:5,giftGain:3,dungeonGain:3,matchGain:2,dailyFreeMessages:2,recentMessages:20,compactAt:40,indexPageSize:100},
         // Web island unlock levels; original world configuration is unavailable.
         dungeonJourney: { hpGrowth:.055, rewardPerFloor:30, summitMultiplier:5 },
+        hanzi: {attackPercent:3,defensePercent:3,healPercent:3,maxTriggers:3},
         worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40, ...Object.fromEntries(PACK_ISLANDS.map(i=>[i.id,i.recommendedLevel])) },
         petInteractions: {
             memoryCapacity:10, memoryProtectionMs:7*86400000, marksRequired:3,
@@ -62,6 +63,7 @@ export function defaultParams(version = 'teen') {
         socialActions: { durationMs:3600, cooldownMs:4000, danceAffinity:30, heartAffinity:60 },
         islandSocial: { camp:6, medium:12, large:16, interactionDays:30, idleMin:30, idleMax:90, travelMin:120, travelMax:300, speed:90, hotspotRadius:100, hotspotSpread:90, roadSlack:16, spawnMinActors:2, separation:50, actorSeparation:120, npcClearance:65, monsterClearance:96, entranceClearance:115, followDistance:110, followSpacing:42, boatFollowSpacing:28, boatFollowOffset:10, partyIdleDelay:1.2, partyIdleRadius:5, partyPetOffsetX:32, partyPetOffsetY:18, followWait:2, dungeonFollowSpeed:262.5, dungeonRegroupDistance:280, approachRadius:150, approachReleaseRadius:180, converseRadius:95, viewPadding:120, sceneMaxActors:6, sceneLoadDistance:1000, sceneUnloadDistance:1200, sceneUnloadDelay:1.5, sceneFadeIn:.8, sceneFadeOut:.5, autoJoinMinMs:1500, autoJoinMaxMs:3500 },
         checkin: { minutes: [1, 15, 30, 60, 90], coins: 100 },
+        timeScroll: {walkSpeed:260,interactionRange:100},
         dailyLanguage: {percentPerLine:1,maxPercent:10,rewardSteps:[5,10,20,30,40],rewardItems:[100,100,100,17213,17213],rewardAmounts:[10,20,30,5,10]},
         dungeonLanguage: {recordMaxMs:20000,percentPerLine:1,maxPercent:3,minSpeechAccuracy:0.3,speechPracticeCount:3},
         languageAdventure: { inviteRange:150, interactionRange:85, greetingMs:2500, basicReward:10, beginnerReward:30, intermediateReward:50, advancedReward:80, basicDailyCap:100, challengeDailyCap:200, basicCourseLimit:2, challengeCourseLimit:1, promptCooldownMs:90000, sourceCooldownMs:300000, maxTurns:8 },
@@ -328,10 +330,12 @@ export function resolveParams(dataset, params, {groups=null}={}) {
         battleAI: { ...defaults.battleAI, ...params.battleAI },
         // Web island unlock levels; original world configuration is unavailable.
         dungeonJourney: { ...defaults.dungeonJourney, ...params.dungeonJourney },
+        timeScroll: { ...defaults.timeScroll, ...params.timeScroll },
         dailyLanguage: { ...defaults.dailyLanguage, ...params.dailyLanguage },
         dungeonLanguage: { ...defaults.dungeonLanguage, ...params.dungeonLanguage },
         earth: { ...defaults.earth, ...params.earth },
         cityDungeons: { ...defaults.cityDungeons, ...params.cityDungeons },
+        hanzi: { ...defaults.hanzi, ...params.hanzi },
         worldTravel: { ...defaults.worldTravel, ...params.worldTravel },
         petInteractions: { ...defaults.petInteractions, ...params.petInteractions },
         petTraits: { ...defaults.petTraits, ...params.petTraits, values:{...defaults.petTraits.values,...params.petTraits?.values} },

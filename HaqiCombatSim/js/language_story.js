@@ -4,7 +4,7 @@ import {selectStory,storyReward} from './language_encounter_core.js';
 import {createLearningChatView} from './view_learning_chat.js';
 import {createLineAttempt,startLineAttempt,finishLineAttempt} from './adventure_dungeon_language_core.js';
 
-export function createStoryChat({allowedZone='camp',onClosed=()=>{},onSpeech=()=>{},onFreeTalk=()=>{},getState,commit,saveSettings=()=>{},openSettings=()=>{},voice,useReward=()=>{},viewFactory=createLearningChatView}){
+export function createStoryChat({practiceOnly=false,allowedZone='camp',onClosed=()=>{},onSpeech=()=>{},onFreeTalk=()=>{},getState,commit,saveSettings=()=>{},openSettings=()=>{},voice,useReward=()=>{},viewFactory=createLearningChatView}){
     let session=null,recordTask=null;
     const view=viewFactory({free:()=>continueFree(),close,start,finish,cancel,hint,chinese,next,help,speak,useReward:()=>{const reward=session?.reward;close();if(reward?.action)useReward(reward.action,reward.guid);},challenge:()=>challenge(),settings:()=>{close();openSettings();}});
     const valid=s=>session===s&&!s.abort.signal.aborted&&getState().stage!=='battle'&&getState().role===s.role&&getState().identity===s.identity&&getState().save.zone===allowedZone&&getState().save.languageLearning.enabled&&getState().save.languageLearning.target===s.locale;
@@ -12,13 +12,13 @@ export function createStoryChat({allowedZone='camp',onClosed=()=>{},onSpeech=()=
     function close(){const old=session;session=null;clearTimeout(old?.timer);old?.abort.abort();recordTask=null;void voice.cancel();view.close();if(old)onClosed();}
     function open(profile,story,portrait,options={}){
         close();const current=getState();if(current.stage==='battle')return;
-        if(story.mode!=='challenge'&&current.save.languageAdventure?.stories?.[current.save.languageLearning.target]?.[story.id]?.completed){
+        if(!practiceOnly&&story.mode!=='challenge'&&current.save.languageAdventure?.stories?.[current.save.languageLearning.target]?.[story.id]?.completed){
             const next=selectStory(profile,current.save);
             if(next&&!current.save.languageAdventure?.stories?.[current.save.languageLearning.target]?.[next.id]?.completed)story=next;
             else {onFreeTalk(profile,{learningContinuation:true});return;}
         }
-        session={profile,story,portrait,locale:current.save.languageLearning.target,showChinese:current.save.languageLearning.showChinese!==false,role:current.role,identity:current.identity,abort:new AbortController(),operation:0,index:0,messages:[],proof:[],hintLevel:story.mode==='challenge'?0:3,hintsUsed:story.mode!=='challenge',busy:false,recording:false,done:false,phase:'ready',attemptId:crypto.randomUUID(),status:''};
-        session.reward=storyReward(current.save,current.content,story,Date.now());
+        session={practiceOnly,profile,story,portrait,locale:current.save.languageLearning.target,showChinese:current.save.languageLearning.showChinese!==false,role:current.role,identity:current.identity,abort:new AbortController(),operation:0,index:0,messages:[],proof:[],hintLevel:story.mode==='challenge'?0:3,hintsUsed:story.mode!=='challenge',busy:false,recording:false,done:false,phase:'ready',attemptId:crypto.randomUUID(),status:''};
+        session.reward=practiceOnly?null:storyReward(current.save,current.content,story,Date.now());
         session.memento=current.save.languageAdventure?.stories?.[session.locale]?.[story.id]||null;
         session.messages.push({role:'npc',text:story.turns[0].question});
         paint();
@@ -76,13 +76,13 @@ export function createStoryChat({allowedZone='camp',onClosed=()=>{},onSpeech=()=
             const outcome={quote:transcript};
             if(transcript.toLowerCase().replace(/[.,!?]/g,'').trim()===turn.answer[s.locale].toLowerCase().replace(/[.,!?]/g,'').trim())userMessage.translation=turn.answer[s.locale==='en'?'zh-CN':'en'];
             userMessage.feedback='答对了';
-            if(input==='speech'&&!s.memento?.completed){s.learningReward=onSpeech(`${s.attemptId}:${turn.id}`)||null;s.learningRewardMessage=s.learningReward?'':'本次未新增学习加成';if(s.learningReward?.key)userMessage.learningReward={...s.learningReward};}
+            if(input==='speech'&&!s.memento?.completed){s.learningReward=onSpeech(practiceOnly?`${s.locale}:${s.story.id}:${turn.id}`:`${s.attemptId}:${turn.id}`)||null;s.learningRewardMessage=s.learningReward?'':'本次未新增学习加成';if(s.learningReward?.key)userMessage.learningReward={...s.learningReward};}
             s.proof.push({turnId:turn.id,quote:outcome.quote,hinted:s.hintLevel>0,input});
             if(s.index+1<s.story.turns.length){s.index++;s.hintLevel=s.story.mode==='challenge'?0:3;if(s.hintLevel)s.hintsUsed=true;s.messages.push({role:'npc',text:s.story.turns[s.index].question});s.status='';}
             else{
                 // Persist only after all three current-session answers passed.
                 const completion={course:{id:s.story.rewardGroup,tier:'beginner'},mode:s.story.mode||'basic',locale:s.locale,attemptId:s.attemptId,now:Date.now(),score:100,answered:true,spoken:s.proof.every(p=>p.input==='speech'),story:{id:s.story.id,turnIds:s.story.turns.map(t=>t.id),proof:s.proof,hintsUsed:s.hintsUsed}};
-                const result=commit(completion);s.done=true;s.received=result.amount;userMessage.feedback=result.amount?fill('答对了 · +{amount} {currency}',{amount:result.amount,currency:result.currency===100?'奇豆':'仙豆'}).text:(s.memento?.completed?'答对了 · 已完成的故事不重复领奖':'答对了 · 今日奖励已领完，练习已记录');s.reward=storyReward(getState().save,getState().content,s.story,Date.now(),result.amount);s.memento=getState().save.languageAdventure?.stories?.[s.locale]?.[s.story.id];s.messages.push({role:'npc',text:turn.response});s.status='';
+                const result=commit(completion);s.done=true;s.received=result.amount;userMessage.feedback=result.amount?fill('答对了 · +{amount} {currency}',{amount:result.amount,currency:result.currency===100?'奇豆':'仙豆'}).text:(practiceOnly?'答对了 · 时光练习已记录':s.memento?.completed?'答对了 · 已完成的故事不重复领奖':'答对了 · 今日奖励已领完，练习已记录');s.reward=practiceOnly?null:storyReward(getState().save,getState().content,s.story,Date.now(),result.amount);s.memento=getState().save.languageAdventure?.stories?.[s.locale]?.[s.story.id];s.messages.push({role:'npc',text:turn.response});s.status='';
             }
             await readLine(s,s.messages.at(-1).text[s.locale]);
             if(valid(s)&&!s.done)s.practice=null;

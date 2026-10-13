@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
 import {readIslandPacks} from '../scripts/prepare_island_packs.mjs';
 import {validateIslandPacks,installIslandPackActors,installIslandPackEncounters,installIslandPackQuests,islandPackJournal} from '../js/adventure_island_packs_core.js';
 import {installExpansion} from '../js/adventure_expansion_core.js';
@@ -29,6 +30,76 @@ function setup(){
     installIslandPackActors(content,packs);installIslandPackEncounters(content,dataset,packs,legacy.monsters,cards,names);installIslandPackQuests(content,packs);
     return {content,dataset};
 }
+
+test('Camp newcomers can explore Hanzi independently: ordinary quests grant cards once, reach level 10 and allow return travel',()=>{
+    const {content}=setup(),pack=packs.find(p=>p.island.id==='hanzi');
+    const save=A.createAdventure(content,{seed:72});
+    assert.equal(save.zone,'camp');assert.deepEqual(save.position,content.worldMapIndex.islands.camp.initialSpawn);
+    assert.ok(!(save.trackedQuestIds||[]).includes(pack.quests[0].id));
+    const campQuests=structuredClone(save.quests);
+    A.applyAction(save,content,{type:'travel',zone:'hanzi'});
+    assert.equal(save.zone,'hanzi');assert.deepEqual(save.quests,campQuests);assert.ok(save.trackedQuestIds.includes(pack.quests[0].id));
+    assert.equal(catalogAcceptBlock(save,content,pack.quests[1]),'请先完成前置任务');
+    for(const q of pack.quests){
+        A.applyAction(save,content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});
+        for(const group of q.groups)for(const goal of group.items){
+            if(group.kind==='talk')A.applyAction(save,content,{type:'talk',npcId:goal.id});
+            else noteCatalogKills(save,content,[content.monsters[pack.monsters[0].id]]);
+        }
+        A.applyAction(save,content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});
+        const before=JSON.stringify(save);A.applyAction(save,content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});assert.equal(JSON.stringify(save),before);
+    }
+    assert.equal(save.level,10);assert.deepEqual(save.hanzi.questCards,['huo','shui','tu']);assert.equal(save.hanzi.battleCard,'huo');
+    assert.deepEqual(save.hanzi.entries,{});assert.equal(save.dailyLanguageBuff,undefined);
+    A.applyAction(save,content,{type:'travel',zone:'camp'});const old=A.parseSave(save,content);assert.equal(old.zone,'camp');
+    A.applyAction(old,content,{type:'travel',zone:'hanzi'});assert.deepEqual(old.hanzi,save.hanzi);
+});
+
+test('Hanzi island owns its WebP atlas, buildings and four distinct resident portraits',()=>{
+    const {content}=setup(),pack=packs.find(p=>p.island.id==='hanzi');
+    const atlas=read('data/adventure/world-map-art.json'),buildings=read('data/adventure/building-art.json'),art=read('data/adventure/npc-art.json');
+    const island=atlas.islands.find(i=>i.id==='hanzi');assert.equal(island.resource,'hanzi');
+    assert.ok(content.worldMaps.hanzi.buildings.every(b=>b.atlas==='hanzi'));
+    const rows=[atlas.resources.hanzi,buildings.atlases.hanzi];
+    for(const npc of pack.npcs){
+        assert.equal(content.npcs[npc.id].portrait.id,`npc:hanzi-${npc.id}`);
+        const row=art.entries[npc.portrait.id];assert.ok(row.size<48000);rows.push(row);
+        const [x,y,w,h]=npc.portrait.crop;assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=row.width&&y+h<=row.height);
+    }
+    for(const row of rows){const raw=fs.readFileSync(new URL('../'+row.local,import.meta.url));assert.ok(raw.length<=200000);assert.equal(raw.length,row.size);assert.equal(createHash('sha256').update(raw).digest('hex'),row.sha256);assert.match(row.cdn,/^https:\/\/cdn\.keepwork\.com\//);}
+    assert.equal(new Set(rows.map(r=>r.sha256)).size,6);
+});
+
+test('Hanzi redesign preserves a safe old position and rescues only stranded coordinates',()=>{
+    const {content}=setup(),save=A.createAdventure(content);
+    const camp=structuredClone(save);createWorld('hanzi',content,save);assert.deepEqual(save,camp);
+    A.applyAction(save,content,{type:'travel',zone:'hanzi'});const before=structuredClone(save);
+    createWorld('hanzi',content,save);assert.deepEqual(save,before);
+    save.position={x:20,y:20};createWorld('hanzi',content,save);
+    assert.deepEqual(save.position,content.worldMaps.hanzi.spawn);
+    assert.deepEqual(save.quests,before.quests);assert.equal(save.zone,'hanzi');
+});
+
+test('newcomer fights on Hanzi island in every school with a frozen replayable card snapshot',()=>{
+    const {content,dataset}=setup(),pack=packs.find(p=>p.island.id==='hanzi');
+    for(const school of ['fire','ice','storm','life','death']){
+        const save=A.createAdventure(content,{school,seed:73});
+        A.applyAction(save,content,{type:'travel',zone:'hanzi'});
+        for(const q of pack.quests.slice(0,3)){
+            A.applyAction(save,content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});
+            A.applyAction(save,content,{type:'talk',npcId:q.groups[0].items[0].id});
+            A.applyAction(save,content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});
+        }
+        A.beginEncounter(save,content,pack.encounters[0].id);
+        assert.equal(save.pendingEncounter.player.hanziBattle.id,'huo');
+        const battle=B.restorePveBattle(dataset,content,save.pendingEncounter),bot=new SimpleBot();
+        for(let i=0;i<100&&!battle.finished;i++){const decision=bot.pick(battle,battle.sides.near[0]);B.playPveRound(battle,decision);A.recordDecision(save,decision,battle);}
+        assert.equal(battle.winner,'near',school);assert.ok(battle.events.some(e=>e.type==='hanzi_buff'),school);
+        const restored=A.parseSave(save,content);assert.deepEqual(B.restorePveBattle(dataset,content,restored.pendingEncounter).events,battle.events);
+        const altered=structuredClone(content);altered.balanceParams={...(altered.balanceParams||{}),hanzi:{attackPercent:9}};
+        assert.deepEqual(B.restorePveBattle(dataset,altered,A.parseSave(save,altered).pendingEncounter).events,battle.events);
+    }
+});
 test('60/70/80 content plays through existing quest actions, persists and rewards only once',()=>{
     const {content,dataset}=setup();
     for(const pack of packs){
@@ -52,12 +123,12 @@ test('60/70/80 content plays through existing quest actions, persists and reward
 test('new levels are reachable; old 50-level progress survives and no island story requires another island',()=>{
     const {content}=setup();assert.equal(content.progression.levelCap,80);
     const save=A.createAdventure(content);save.xp=content.progression.xpThresholds[49];A.syncProgression(save,content);assert.equal(save.level,50);
-    for(const pack of packs){const q=pack.quests[0];assert.deepEqual(q.prerequisites,[]);assert.match(catalogAcceptBlock(save,content,q),/需要等级/);}
+    for(const pack of packs){const q=pack.quests[0];assert.deepEqual(q.prerequisites,[]);if(pack.island.recommendedLevel>50)assert.match(catalogAcceptBlock(save,content,q),/需要等级/);else assert.equal(catalogAcceptBlock(save,content,q),'');}
     save.xp=content.progression.xpThresholds[79];A.syncProgression(save,content);assert.equal(save.level,80);assert.ok(Number.isFinite(content.progression.xpThresholds[80]));
 });
 test('all new field targets, real-world observation NPCs and nine dungeon entrances are reachable',()=>{
     const {content,dataset}=setup();const source=read('data/adventure/dungeon-journeys.json');content.dungeonJourneys={...source,entries:[...source.entries,...packs.flatMap(p=>p.journeys)]};installDungeons(content,dataset,read('data/adventure/dungeons.json'),cards,names);
-    for(const pack of packs){const world=createWorld(pack.island.id,content),start=world.layout.spawn;assert.equal(world.landmarks.filter(m=>m.dungeonId).length,3);assert.ok(world.npcs.some(n=>n.worldObservation));
+    for(const pack of packs){const world=createWorld(pack.island.id,content),start=world.layout.spawn;assert.equal(world.landmarks.filter(m=>m.dungeonId).length,pack.journeys.length);if(pack.npcs.some(n=>n.worldObservation))assert.ok(world.npcs.some(n=>n.worldObservation));
         for(const e of world.encounters){const clearance=Math.min(...world.paths.map(p=>segmentDistance(e,p.a,p.b)-(p.width||60)/2));assert.ok(clearance>=world.monsterSceneParams.territoryRadius+16,e.id+' overlaps road');assert.ok(clearance<=280);assert.equal(onAnyBridge(world,e.x,e.y,64),false);}
         for(const target of [...world.npcs,...world.encounters,...world.landmarks,world.portal]){assert.ok(walkable(world,target.x,target.y));const end=followPath(world,start,findPath(world,start,target),100000);assert.ok(!end.blocked&&distance(end.position,target)<=1,pack.island.id+':'+target.id);}
     }
@@ -98,7 +169,7 @@ test('all pack dungeons use high-level opponents and enter/leave through unchang
     }
 });
 test('pack projection retains dialogue, reward and map-observation configuration',()=>{
-    for(const pack of packs){assert.deepEqual(projectRuntimeData('adventure/island-packs/'+pack.island.id+'.json',pack),pack);assert.equal(islandPackJournal([pack]).length,12);}
+    for(const pack of packs){assert.deepEqual(projectRuntimeData('adventure/island-packs/'+pack.island.id+'.json',pack),pack);assert.equal(islandPackJournal([pack]).length,pack.quests.length);}
     const {content}=setup();const bad=structuredClone(packs);bad[0].quests[0].id=content.quests[0].id;assert.throws(()=>validateIslandPacks(bad,{...content,npcs:read('data/adventure/chapter.json').npcs}),/编号/);
 });
 test('future pack edits reject dependency loops and missing combat targets before installation',()=>{

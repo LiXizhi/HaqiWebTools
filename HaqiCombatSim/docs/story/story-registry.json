@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "nextScene": 1488,
+  "nextScene": 1501,
   "scenes": {
     "chapter:63000": {
       "id": "S0001",
@@ -121111,6 +121111,665 @@
           "key": "description",
           "hash": "c0c86435e71ed86e21b450e2493d2624eff8fcae87f8e546b5c07d9abb1aa2fe",
           "speaker": "岑宁",
+          "phase": "日常",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "conversation:time-scroll:common:map": {
+      "id": "S1488",
+      "nextLine": 10,
+      "lines": {
+        "S1488-L01": {
+          "id": "S1488-L01",
+          "key": "reading",
+          "hash": "5ec23524ec836f068b84f19ea27281ac33e4f3e289dbad1a66ef3e89f7672c3d",
+          "speaker": "绘图旅人",
+          "phase": "交谈",
+          "active": true
+        },
+        "S1488-L02": {
+          "id": "S1488-L02",
+          "key": "clue",
+          "hash": "da54e6ddf474570b6a20562a7692f4cefbd968feb845b4fe621ccd126989d4a0",
+          "speaker": "线索",
+          "phase": "发现",
+          "active": true
+        },
+        "S1488-L03": {
+          "id": "S1488-L03",
+          "key": "map-1:question",
+          "hash": "ab8ee772580ad20bfa89b3d1624e1e6470027238e74d43a189aa47895e77a026",
+          "speaker": "绘图旅人",
+          "phase": "第1轮",
+          "active": true
+        },
+        "S1488-L04": {
+          "id": "S1488-L04",
+          "key": "map-1:answer",
+          "hash": "f0cea018858303b84e95677efa69d2048c7c67e4a0ae626d18763de976ee2580",
+          "speaker": "我",
+          "phase": "第1轮",
+          "active": true
+        },
+        "S1488-L05": {
+          "id": "S1488-L05",
+          "key": "map-2:question",
+          "hash": "babc0508ef380c83a78d475fbca92d4a5cadf0bc597f8b17b7ffae4389bea758",
+          "speaker": "绘图旅人",
+          "phase": "第2轮",
+          "active": true
+        },
+        "S1488-L06": {
+          "id": "S1488-L06",
+          "key": "map-2:answer",
+          "hash": "dbfdb67a428c3857d7666ab40d0008d8ece963109bda40f596e1fb27c6d50c8f",
+          "speaker": "我",
+          "phase": "第2轮",
+          "active": true
+        },
+        "S1488-L07": {
+          "id": "S1488-L07",
+          "key": "map-3:question",
+          "hash": "a38ed870198aec649318d6f5756ba9ae55f148a9f8f0c2c8835886d96d436819",
+          "speaker": "绘图旅人",
+          "phase": "第3轮",
+          "active": true
+        },
+        "S1488-L08": {
+          "id": "S1488-L08",
+          "key": "map-3:answer",
+          "hash": "463344ba3f6db106609235e46dc947115f463ae5ac058f7e727c60514e8ac799",
+          "speaker": "我",
+          "phase": "第3轮",
+          "active": true
+        },
+        "S1488-L09": {
+          "id": "S1488-L09",
+          "key": "map-3:response",
+          "hash": "2255112d444c1abec1378c856b8919f3617ed8d945701881193293af3a5bfb65",
+          "speaker": "绘图旅人",
+          "phase": "第3轮",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "conversation:time-scroll:common:direction": {
+      "id": "S1489",
+      "nextLine": 10,
+      "lines": {
+        "S1489-L01": {
+          "id": "S1489-L01",
+          "key": "reading",
+          "hash": "6a6fc5b81a889f3d6227665ff2d3024c833a7a0cf6283030f80d29a7ebafd066",
+          "speaker": "寻路旅人",
+          "phase": "交谈",
+          "active": true
+        },
+        "S1489-L02": {
+          "id": "S1489-L02",
+          "key": "clue",
+          "hash": "91d81fb2cf6c3891c9b44fdcf05f5c8876482a1a2438c9406e04ab15ce2d2e2a",
+          "speaker": "线索",
+          "phase": "发现",
+          "active": true
+        },
+        "S1489-L03": {
+          "id": "S1489-L03",
+          "key": "direction-1:question",
+          "hash": "2f8e72ebefd2149f911cb9c435adde7830611f0e1732cb3f67258eeb3fc3ac52",
+          "speaker": "寻路旅人",
+          "phase": "第1轮",
+          "active": true
+        },
+        "S1489-L04": {
+          "id": "S1489-L04",
+          "key": "direction-1:answer",
+          "hash": "68b6dc3c76896100eadb2143f6305b66333ca90d1952c536193e2baf76a504c3",
+          "speaker": "我",
+          "phase": "第1轮",
+          "active": true
+        },
+        "S1489-L05": {
+          "id": "S1489-L05",
+          "key": "direction-2:question",
+          "hash": "25930945921649fdc8c82dc35abf0d292a3e827fa1adddd66dafd7b74841c749",
+          "speaker": "寻路旅人",
+          "phase": "第2轮",
+          "active": true
+        },
+        "S1489-L06": {
+          "id": "S1489-L06",
+          "key": "direction-2:answer",
+          "hash": "69dc7b43d722de583f59b4b74f7bc24b5be1fbe40432c71615de97fb87fce075",
+          "speaker": "我",
+          "phase": "第2轮",
+          "active": true
+        },
+        "S1489-L07": {
+          "id": "S1489-L07",
+          "key": "direction-3:question",
+          "hash": "75f7a3f36ea73bef08545a407c366dc41ab2742d2aeacd42d6ac4279014f1d23",
+          "speaker": "寻路旅人",
+          "phase": "第3轮",
+          "active": true
+        },
+        "S1489-L08": {
+          "id": "S1489-L08",
+          "key": "direction-3:answer",
+          "hash": "d19604cb6ea0e4d70e4ac2fbf167fb75c47f566df3c2bf99fe61587482ade47f",
+          "speaker": "我",
+          "phase": "第3轮",
+          "active": true
+        },
+        "S1489-L09": {
+          "id": "S1489-L09",
+          "key": "direction-3:response",
+          "hash": "2255112d444c1abec1378c856b8919f3617ed8d945701881193293af3a5bfb65",
+          "speaker": "寻路旅人",
+          "phase": "第3轮",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "conversation:time-scroll:common:change": {
+      "id": "S1490",
+      "nextLine": 10,
+      "lines": {
+        "S1490-L01": {
+          "id": "S1490-L01",
+          "key": "reading",
+          "hash": "e113a62988dd2b02081d9ba71f57e57733bc841b974cb6a42d4463853ac8646d",
+          "speaker": "记事旅人",
+          "phase": "交谈",
+          "active": true
+        },
+        "S1490-L02": {
+          "id": "S1490-L02",
+          "key": "clue",
+          "hash": "e1147953ee6f06cbf548b258a526136ca1f3cff0b89142305d7177f3d8d892a8",
+          "speaker": "线索",
+          "phase": "发现",
+          "active": true
+        },
+        "S1490-L03": {
+          "id": "S1490-L03",
+          "key": "change-1:question",
+          "hash": "726ad02a94394c532a088a2d618d963cf5bfa9532768073050d8fbfe6fa0622e",
+          "speaker": "记事旅人",
+          "phase": "第1轮",
+          "active": true
+        },
+        "S1490-L04": {
+          "id": "S1490-L04",
+          "key": "change-1:answer",
+          "hash": "422d63ef0bfcf34e002ce6042e028701226c40470caedd673881799af707a6fb",
+          "speaker": "我",
+          "phase": "第1轮",
+          "active": true
+        },
+        "S1490-L05": {
+          "id": "S1490-L05",
+          "key": "change-2:question",
+          "hash": "d49d61e76c3b57722fa96db7cddbe0a0adc3fecf9cd8bb39de7e3183b1ea2179",
+          "speaker": "记事旅人",
+          "phase": "第2轮",
+          "active": true
+        },
+        "S1490-L06": {
+          "id": "S1490-L06",
+          "key": "change-2:answer",
+          "hash": "a47a01eaa40c1eed7a83605ad79728bb272425fc459f611c2d5ec74726a85ba9",
+          "speaker": "我",
+          "phase": "第2轮",
+          "active": true
+        },
+        "S1490-L07": {
+          "id": "S1490-L07",
+          "key": "change-3:question",
+          "hash": "cf94ee95fb0211f63d32b2e8fb2b75f0382a302923b16f9f08f30288e1bc4b72",
+          "speaker": "记事旅人",
+          "phase": "第3轮",
+          "active": true
+        },
+        "S1490-L08": {
+          "id": "S1490-L08",
+          "key": "change-3:answer",
+          "hash": "7089d359a48f0b6c167d65e210bdf31ae4718b4f51817c0f37a1a94d8654aa01",
+          "speaker": "我",
+          "phase": "第3轮",
+          "active": true
+        },
+        "S1490-L09": {
+          "id": "S1490-L09",
+          "key": "change-3:response",
+          "hash": "2255112d444c1abec1378c856b8919f3617ed8d945701881193293af3a5bfb65",
+          "speaker": "记事旅人",
+          "phase": "第3轮",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "journal:873000": {
+      "id": "S1491",
+      "nextLine": 8,
+      "lines": {
+        "S1491-L01": {
+          "id": "S1491-L01",
+          "key": "description",
+          "hash": "74fac45aaeb3b787c44cf476f77e873b5af7972f17765eeaf9adc1ee2dfe9531",
+          "speaker": "任务",
+          "phase": "目标",
+          "active": true
+        },
+        "S1491-L02": {
+          "id": "S1491-L02",
+          "key": "startDialog:0:text",
+          "hash": "74fac45aaeb3b787c44cf476f77e873b5af7972f17765eeaf9adc1ee2dfe9531",
+          "speaker": "阿初",
+          "phase": "接取",
+          "active": true
+        },
+        "S1491-L03": {
+          "id": "S1491-L03",
+          "key": "startDialog:0:button:0",
+          "hash": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782",
+          "speaker": "我",
+          "phase": "接取",
+          "active": true
+        },
+        "S1491-L04": {
+          "id": "S1491-L04",
+          "key": "endDialog:0:text",
+          "hash": "44608bec10715e61541e824bddb0b5887bb9fe76095b54f74ec4787382413d69",
+          "speaker": "阿初",
+          "phase": "交付",
+          "active": true
+        },
+        "S1491-L05": {
+          "id": "S1491-L05",
+          "key": "endDialog:0:button:0",
+          "hash": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a",
+          "speaker": "我",
+          "phase": "交付",
+          "active": true
+        },
+        "S1491-L06": {
+          "id": "S1491-L06",
+          "key": "talks/0/dialog:0:text",
+          "hash": "bf455113a87c15b95f0e319b55cd085b28838f4a311cc16080b856bbb1d14a22",
+          "speaker": "溪禾",
+          "phase": "指定交谈",
+          "active": true
+        },
+        "S1491-L07": {
+          "id": "S1491-L07",
+          "key": "talks/0/dialog:0:button:0",
+          "hash": "8712d864cd4583b0ac2e3a0ce75d7b2401bb0878ba158c9339e212fed14b419b",
+          "speaker": "我",
+          "phase": "指定交谈",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "journal:873001": {
+      "id": "S1492",
+      "nextLine": 8,
+      "lines": {
+        "S1492-L01": {
+          "id": "S1492-L01",
+          "key": "description",
+          "hash": "aabff82dca58535f257c118721c6f6aacf758d106339991d4aec7f4866e340cc",
+          "speaker": "任务",
+          "phase": "目标",
+          "active": true
+        },
+        "S1492-L02": {
+          "id": "S1492-L02",
+          "key": "startDialog:0:text",
+          "hash": "aabff82dca58535f257c118721c6f6aacf758d106339991d4aec7f4866e340cc",
+          "speaker": "溪禾",
+          "phase": "接取",
+          "active": true
+        },
+        "S1492-L03": {
+          "id": "S1492-L03",
+          "key": "startDialog:0:button:0",
+          "hash": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782",
+          "speaker": "我",
+          "phase": "接取",
+          "active": true
+        },
+        "S1492-L04": {
+          "id": "S1492-L04",
+          "key": "endDialog:0:text",
+          "hash": "31419a3bd627b2481af90788df599df59532c23baf8ad6c6b966b94448505b14",
+          "speaker": "溪禾",
+          "phase": "交付",
+          "active": true
+        },
+        "S1492-L05": {
+          "id": "S1492-L05",
+          "key": "endDialog:0:button:0",
+          "hash": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a",
+          "speaker": "我",
+          "phase": "交付",
+          "active": true
+        },
+        "S1492-L06": {
+          "id": "S1492-L06",
+          "key": "talks/0/dialog:0:text",
+          "hash": "20da5f25272fdff9a7dd05983dc02c96484f51c73a119b4e0a475bf9e25021b4",
+          "speaker": "石伯",
+          "phase": "指定交谈",
+          "active": true
+        },
+        "S1492-L07": {
+          "id": "S1492-L07",
+          "key": "talks/0/dialog:0:button:0",
+          "hash": "8712d864cd4583b0ac2e3a0ce75d7b2401bb0878ba158c9339e212fed14b419b",
+          "speaker": "我",
+          "phase": "指定交谈",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "journal:873002": {
+      "id": "S1493",
+      "nextLine": 8,
+      "lines": {
+        "S1493-L01": {
+          "id": "S1493-L01",
+          "key": "description",
+          "hash": "122b7ae530871230a78c38524a3b78d59c2e904f72f9f277579784f78d45337d",
+          "speaker": "任务",
+          "phase": "目标",
+          "active": true
+        },
+        "S1493-L02": {
+          "id": "S1493-L02",
+          "key": "startDialog:0:text",
+          "hash": "122b7ae530871230a78c38524a3b78d59c2e904f72f9f277579784f78d45337d",
+          "speaker": "石伯",
+          "phase": "接取",
+          "active": true
+        },
+        "S1493-L03": {
+          "id": "S1493-L03",
+          "key": "startDialog:0:button:0",
+          "hash": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782",
+          "speaker": "我",
+          "phase": "接取",
+          "active": true
+        },
+        "S1493-L04": {
+          "id": "S1493-L04",
+          "key": "endDialog:0:text",
+          "hash": "670664dd97f15d103a8d2045356b06991ef1e4e0e0608168b6115133701581af",
+          "speaker": "石伯",
+          "phase": "交付",
+          "active": true
+        },
+        "S1493-L05": {
+          "id": "S1493-L05",
+          "key": "endDialog:0:button:0",
+          "hash": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a",
+          "speaker": "我",
+          "phase": "交付",
+          "active": true
+        },
+        "S1493-L06": {
+          "id": "S1493-L06",
+          "key": "talks/0/dialog:0:text",
+          "hash": "8bce929f2a6a4318dae921481c51fd8115e41aee9c3826cde014fed1acb275dd",
+          "speaker": "阿初",
+          "phase": "指定交谈",
+          "active": true
+        },
+        "S1493-L07": {
+          "id": "S1493-L07",
+          "key": "talks/0/dialog:0:button:0",
+          "hash": "8712d864cd4583b0ac2e3a0ce75d7b2401bb0878ba158c9339e212fed14b419b",
+          "speaker": "我",
+          "phase": "指定交谈",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "journal:873003": {
+      "id": "S1494",
+      "nextLine": 6,
+      "lines": {
+        "S1494-L01": {
+          "id": "S1494-L01",
+          "key": "description",
+          "hash": "13154381da937083ca47a95ed61d4c974f5ef5b35f2d4386d8c086bd8e589ecb",
+          "speaker": "任务",
+          "phase": "目标",
+          "active": true
+        },
+        "S1494-L02": {
+          "id": "S1494-L02",
+          "key": "startDialog:0:text",
+          "hash": "13154381da937083ca47a95ed61d4c974f5ef5b35f2d4386d8c086bd8e589ecb",
+          "speaker": "阿初",
+          "phase": "接取",
+          "active": true
+        },
+        "S1494-L03": {
+          "id": "S1494-L03",
+          "key": "startDialog:0:button:0",
+          "hash": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782",
+          "speaker": "我",
+          "phase": "接取",
+          "active": true
+        },
+        "S1494-L04": {
+          "id": "S1494-L04",
+          "key": "endDialog:0:text",
+          "hash": "580a9733c37d7cd2907910245df7ecbcdda6fe0b492e83d4da3053c8cb837a25",
+          "speaker": "阿初",
+          "phase": "交付",
+          "active": true
+        },
+        "S1494-L05": {
+          "id": "S1494-L05",
+          "key": "endDialog:0:button:0",
+          "hash": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a",
+          "speaker": "我",
+          "phase": "交付",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "journal:873004": {
+      "id": "S1495",
+      "nextLine": 8,
+      "lines": {
+        "S1495-L01": {
+          "id": "S1495-L01",
+          "key": "description",
+          "hash": "446b2a83ced4180a22769ce8d22d5834fc3d765fb70492af550ac1d9101d1928",
+          "speaker": "任务",
+          "phase": "目标",
+          "active": true
+        },
+        "S1495-L02": {
+          "id": "S1495-L02",
+          "key": "startDialog:0:text",
+          "hash": "446b2a83ced4180a22769ce8d22d5834fc3d765fb70492af550ac1d9101d1928",
+          "speaker": "阿初",
+          "phase": "接取",
+          "active": true
+        },
+        "S1495-L03": {
+          "id": "S1495-L03",
+          "key": "startDialog:0:button:0",
+          "hash": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782",
+          "speaker": "我",
+          "phase": "接取",
+          "active": true
+        },
+        "S1495-L04": {
+          "id": "S1495-L04",
+          "key": "endDialog:0:text",
+          "hash": "302180cb2f3a7e70f90560520f6198a3b241cb224b9b47d31f85208643e47680",
+          "speaker": "阿初",
+          "phase": "交付",
+          "active": true
+        },
+        "S1495-L05": {
+          "id": "S1495-L05",
+          "key": "endDialog:0:button:0",
+          "hash": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a",
+          "speaker": "我",
+          "phase": "交付",
+          "active": true
+        },
+        "S1495-L06": {
+          "id": "S1495-L06",
+          "key": "talks/0/dialog:0:text",
+          "hash": "2fe6c9a19e23ac8d3c73ed446c8d79f393184b6eea08d58cb374f62341127b52",
+          "speaker": "小灯",
+          "phase": "指定交谈",
+          "active": true
+        },
+        "S1495-L07": {
+          "id": "S1495-L07",
+          "key": "talks/0/dialog:0:button:0",
+          "hash": "8712d864cd4583b0ac2e3a0ce75d7b2401bb0878ba158c9339e212fed14b419b",
+          "speaker": "我",
+          "phase": "指定交谈",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "journal:873005": {
+      "id": "S1496",
+      "nextLine": 8,
+      "lines": {
+        "S1496-L01": {
+          "id": "S1496-L01",
+          "key": "description",
+          "hash": "d404dfb766dedba79dc22d78f552382e0b82fd03d3594f0f4e6736deea41ec20",
+          "speaker": "任务",
+          "phase": "目标",
+          "active": true
+        },
+        "S1496-L02": {
+          "id": "S1496-L02",
+          "key": "startDialog:0:text",
+          "hash": "d404dfb766dedba79dc22d78f552382e0b82fd03d3594f0f4e6736deea41ec20",
+          "speaker": "小灯",
+          "phase": "接取",
+          "active": true
+        },
+        "S1496-L03": {
+          "id": "S1496-L03",
+          "key": "startDialog:0:button:0",
+          "hash": "6fa38915247b6dd553cd9e6a733df2c202627534653b72617a55839edc3e8782",
+          "speaker": "我",
+          "phase": "接取",
+          "active": true
+        },
+        "S1496-L04": {
+          "id": "S1496-L04",
+          "key": "endDialog:0:text",
+          "hash": "85634828d85765b28bd52f6ca294cad2f7ca3470826e313936ca8d3ed06eed8a",
+          "speaker": "小灯",
+          "phase": "交付",
+          "active": true
+        },
+        "S1496-L05": {
+          "id": "S1496-L05",
+          "key": "endDialog:0:button:0",
+          "hash": "581dda493466264c17801c505f7bec0273b5a2c071cb397e5139114fa3e60c9a",
+          "speaker": "我",
+          "phase": "交付",
+          "active": true
+        },
+        "S1496-L06": {
+          "id": "S1496-L06",
+          "key": "talks/0/dialog:0:text",
+          "hash": "8fe8993ced67a972dec34224392123c37daef55e024d05c6c4e5b1d15de37b61",
+          "speaker": "阿初",
+          "phase": "指定交谈",
+          "active": true
+        },
+        "S1496-L07": {
+          "id": "S1496-L07",
+          "key": "talks/0/dialog:0:button:0",
+          "hash": "8712d864cd4583b0ac2e3a0ce75d7b2401bb0878ba158c9339e212fed14b419b",
+          "speaker": "我",
+          "phase": "指定交谈",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "resident:island-pack:863000": {
+      "id": "S1497",
+      "nextLine": 2,
+      "lines": {
+        "S1497-L01": {
+          "id": "S1497-L01",
+          "key": "description",
+          "hash": "f85ffe8dd7c2e1e63c8b1c95d85c9a5af2619ff9f7555ac5c223fe5f80b3d070",
+          "speaker": "阿初",
+          "phase": "日常",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "resident:island-pack:863001": {
+      "id": "S1498",
+      "nextLine": 2,
+      "lines": {
+        "S1498-L01": {
+          "id": "S1498-L01",
+          "key": "description",
+          "hash": "5cf2aba8cd9dd94a3ef121983ad80305fea4100cb57ed7c0c52d2efc3e57e8fa",
+          "speaker": "溪禾",
+          "phase": "日常",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "resident:island-pack:863002": {
+      "id": "S1499",
+      "nextLine": 2,
+      "lines": {
+        "S1499-L01": {
+          "id": "S1499-L01",
+          "key": "description",
+          "hash": "2cdaca0dc79ad01858125849d873480442e5f18b0a4c3a9e686052f8441a10ab",
+          "speaker": "石伯",
+          "phase": "日常",
+          "active": true
+        }
+      },
+      "active": true
+    },
+    "resident:island-pack:863003": {
+      "id": "S1500",
+      "nextLine": 2,
+      "lines": {
+        "S1500-L01": {
+          "id": "S1500-L01",
+          "key": "description",
+          "hash": "9fb4be2c8df8376d949a50953274005d29b90ee634f408bcce85a50d3f7de36b",
+          "speaker": "小灯",
           "phase": "日常",
           "active": true
         }

@@ -1,6 +1,7 @@
 // One complete dungeon JSON is preloaded on first entry, never split per world.
 import {dungeonFor,installDungeons} from './adventure_dungeons_core.js';
 import {installModelPets} from './adventure_monster_pets_core.js';
+import {MAX_ROLES} from './adventure_roles_core.js';
 export function createDungeonLoader({content,dataset,cards,names,readJson}){
     let pending=null;
     function preload(){
@@ -26,7 +27,7 @@ export function createDungeonLoader({content,dataset,cards,names,readJson}){
         await preload();return dungeonFor(content,id);
     }
     async function prepareSaves(saves){
-        if(!Array.isArray(saves)||saves.length>5)throw Error('角色列表无效');
+        if(!Array.isArray(saves)||saves.length>MAX_ROLES)throw Error('角色列表无效');
         // Past clears validate using the lightweight index. An active dungeon needs the full pack.
         if(saves.some(s=>dungeonFor(content,s?.zone)&&dungeonFor(content,s?.zone).kind!=='city'))await preload();
     }

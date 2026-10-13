@@ -1,4 +1,4 @@
-import { el, button, createEntryIntro } from './view_adventure.js';
+import { el, button, createEntryIntro, createEntryFooter } from './view_adventure.js';
 import { tr, setText, fill } from './locale_runtime.js';
 import { SCHOOL_NAMES } from './adventure_core.js';
 import { MAX_ROLES_FREE, roleLimit } from './adventure_roles_core.js';
@@ -28,7 +28,7 @@ export function renderRoles(root, assets, model, cb) {
         heading.append(toggle);
     }
     const head = el('div', 'role-head', el('p', 'eyebrow', '重返魔法世界'), heading);
-    if (cb.toggleDuo && model.catalog.roles.length < 2) head.append(el('p', 'role-duo-status', '双人模式至少需要两个不同角色，请先点击“新建角色”创建第二个角色。'));
+    if (duo && model.catalog.roles.length < 2) head.append(el('p', 'role-duo-status', '双人模式至少需要两个不同角色，请先点击“新建角色”创建第二个角色。'));
     if (duo) {
         const choices=el('div','gui-tabs');
         for(const [value,label] of [['human','两位真人'],['ai','真人和 AI']]){
@@ -48,7 +48,11 @@ export function renderRoles(root, assets, model, cb) {
     }
     if (model.busy) head.append(el('p', 'role-status', model.busy));
     if (model.error) { const error = el('p', 'error-text', model.error);error.setAttribute('role', 'alert');head.append(error); }
-    if (model.message && !model.owner) head.append(el('p', 'muted', model.message));
+    if (model.message) head.append(el('p', 'muted', model.message));
+    if (model.recovering) {
+        const notice=el('p','role-status','角色读取尚未完成，原存档已保留，云端同步已暂停。');notice.setAttribute('role','status');head.append(notice);
+        if(model.recoveryReason)head.append(el('p','muted',model.recoveryReason));
+    }
     const box = el('section', 'character-form role-manager', head);
     const rows = el('div', 'role-list');
     const previous = duo ? (model.duoRecent || []).filter(Boolean) : [];
@@ -86,10 +90,13 @@ export function renderRoles(root, assets, model, cb) {
         } else action = addButton(recent ? '继续旅程' : '进入角色', () => cb.select(row.id), recent ? 'primary' : 'secondary');
         rows.append(el('article', `role-card ${recent ? 'recent' : ''} ${slot >= 0 ? 'duo-confirmed' : ''}`, portrait, description, action));
     }
-    if (!model.catalog.roles.length) rows.append(el('p', 'muted', '还没有主角，创建你的第一段旅程。'));
+    for(const issue of model.recoveryIssues||[]){
+        rows.append(el('article','role-unavailable',el('strong','',issue.name),el('p','muted','角色暂时无法读取，原存档已保留。'),el('p','muted',issue.reason)));
+    }
+    if (!model.catalog.roles.length && !model.recoveryIssues?.length) rows.append(el('p', 'muted',model.busy?'正在读取角色…':model.recovering?'角色暂时无法读取，请重试或从云端恢复。':'还没有主角，创建你的第一段旅程。'));
     const foot = el('div', 'role-foot');
     const limit = Number.isFinite(model.roleLimit) ? model.roleLimit : roleLimit(model.isVip === true);
-    const countLine = el('p', 'muted role-count');setText(countLine, '已有 {count} / {total} 个主角', { count: model.catalog.roles.length, total: limit });
+    const countLine = el('p', 'muted role-count');setText(countLine, model.recovering?'当前可用 {count} 个主角':'已有 {count} / {total} 个主角', { count: model.catalog.roles.length, total: limit });
     const create = addButton('新建角色', cb.create, 'primary');create.disabled = model.catalog.roles.length >= limit;
     const createRow = el('div', 'role-create', create);
     if (!model.owner) createRow.append(addButton('登录 Keepwork 云端账号', cb.login, 'primary role-cloud-login'));
@@ -98,6 +105,7 @@ export function renderRoles(root, assets, model, cb) {
         foot.append(el('p', 'muted role-vip-hint', '开通会员可将主角名额提升到 20 个。'));
     }
     foot.append(createRow);
+    if(cb.retryLocal)foot.append(addButton('重新读取本地角色',cb.retryLocal,'text-button'));
     if (model.owner) {
         const sync=addButton('保存角色到云端', cb.sync, 'text-button');sync.disabled=!!model.recovering;
         foot.append(el('div', 'role-actions', sync, addButton('刷新云端角色', cb.refresh, 'text-button'), addButton('退出 Keepwork', cb.logout, 'text-button')));
@@ -108,5 +116,6 @@ export function renderRoles(root, assets, model, cb) {
     box.append(rows, foot);
     if (model.busy) for (const control of controls) control.disabled = true;
     root.append(el('div', 'entry-layout', intro.root, box));
+    const footer=createEntryFooter();if(footer)root.append(footer);
     intro.fit();
 }

@@ -134,7 +134,7 @@ export function createLearningChatView(cb){
             }
             const free=s.mode==='free';more.hidden=!free;inputBox.classList.toggle('has-more',free);if(!free)setMore(false);
             room.setAttribute('aria-label',free?'跨文化自由对话':'营地双语对话');
-            change.hidden=free;freeTalk.hidden=free||s.done||!cb.free;freeTalk.disabled=s.busy||s.recording;details.hidden=!free;gift.hidden=!free||!s.canGift;upgrade.hidden=!free||s.vip;
+            change.hidden=free||s.practiceOnly;freeTalk.hidden=free||s.done||!cb.free||s.practiceOnly;freeTalk.disabled=s.busy||s.recording;details.hidden=!free;gift.hidden=!free||!s.canGift;upgrade.hidden=!free||s.vip;
             details.disabled=gift.disabled=s.busy||s.recording||!s.ready;
             if(free){form.hidden=false;input.placeholder=tr('用彼此理解的语言交流');input.maxLength=2000;if(document.activeElement!==input||s.draft==='')input.value=s.draft||'';}
             progress.textContent=free?(s.loginRequired?'登录后可使用 AI 对话':s.vip?'会员自由对话':s.remaining==null?'正在核验额度':fill(`今日剩余 {v0}/2 次`,{v0:String(s.remaining)}).text):s.done?tr('交流完成'):fill('第 {turn} / {total} 轮',{turn:s.index+1,total:s.story.turns.length}).text;
@@ -142,7 +142,7 @@ export function createLearningChatView(cb){
             const print=JSON.stringify([s.messages,s.showChinese,s.locale,s.reward?.amount,s.reward?.currency,s.done,s.index,s.hintLevel,s.hintText,s.practice]);
             const logChanged=print!==fingerprint;
             if(print!==fingerprint){fingerprint=print;clearMappings();log.replaceChildren(...s.messages.map(row=>message(row,s)));
-                if(s.done&&!free){
+                if(s.done&&!free&&!s.practiceOnly){
                     const invitation=message({role:'npc',text:{en:'Would you like to keep chatting?','zh-CN':'还想继续聊聊吗？'}},s);
                     const choices=el('div','camp-chat-continue');
                     const yes=button('Yes',()=>cb.free?.(),'secondary small'),no=button('No',cb.close,'secondary small');
@@ -200,6 +200,7 @@ export function createLearningChatView(cb){
             if(s.loginRequired){form.hidden=true;log.hidden=true;}else log.hidden=false;
             actions.hidden=!!s.loginRequired;hints.hidden=!!s.done;
             if(s.done){form.hidden=false;input.placeholder=tr('想聊些什么？');}
+            if(s.practiceOnly){room.setAttribute('aria-label','时光旅人双语对话');settings.hidden=true;if(s.done){form.hidden=true;actions.hidden=true;}}else settings.hidden=false;
             loginTitle.textContent=tr('登录 KeepWork，开启 AI 对话');loginText.textContent=tr('离线角色暂时无法使用大模型。登录后会自动将当前本地角色转为云端角色，保留冒险进度。');loginButton.textContent=tr('登录并转为云端角色');
             status.textContent=s.loginRequired?'':tr(s.status);
             const moreLabel=tr('更多聊天操作');headerMore.title=moreLabel;headerMore.setAttribute('aria-label',moreLabel);

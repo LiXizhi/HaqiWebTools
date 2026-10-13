@@ -1,6 +1,7 @@
 // Account-owned role catalog; clocks, identifiers and persistence are supplied by IO.
 import { checkedProgress } from './adventure_cloud_core.js';
 import { validateMagicBeanExchange } from './adventure_magic_bean_exchange_core.js';
+import {validateDailyBuff} from './language_daily_buff_core.js';
 
 export const MAX_ROLES_FREE = 5;
 export const MAX_ROLES_VIP = 20;
@@ -12,13 +13,25 @@ export function roleLimitReachedMessage(isVip) {
     return isVip === true ? '最多可创建20个主角，当前名额已满。' : '最多可创建5个主角，当前名额已满。开通会员可创建20个。';
 }
 export function emptyRoles() { return { schemaVersion: 1, activeId: null, roles: [] }; }
+export function checkedRoleProgress(raw,content,dataset){
+    const result=checkedProgress(raw,content,dataset),daily=raw.dailyLanguageBuff;
+    if(daily){
+        validateDailyBuff(daily.counts);
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(daily.day)||!Array.isArray(daily.events)||daily.events.length>40||daily.events.some(id=>typeof id!=='string'||id.length>512))throw Error('每日语言奖励记录无效');
+        result.save.dailyLanguageBuff=structuredClone(daily);
+    }
+    return result;
+}
 export function validateRoles(value, content, dataset) {
     if (!value || value.schemaVersion !== 1 || !Array.isArray(value.roles) || value.roles.length > MAX_ROLES) throw Error('角色列表版本或数量无效');
     const ids = new Set();
     const roles = value.roles.map(row => {
         if (!roleIdValid(row.id) || ids.has(row.id) || !Number.isFinite(row.lastPlayedAt) || row.lastPlayedAt < 0) throw Error('角色记录无效');
         ids.add(row.id);
-        return { id: row.id, lastPlayedAt: row.lastPlayedAt, save: checkedProgress(row.save, content, dataset).save };
+        const save=checkedRoleProgress(row.save, content, dataset).save;
+        // checkedProgress intentionally excludes device-only awards from cloud data.
+        // Local hydration must preserve them before the next runtime write.
+        return { id: row.id, lastPlayedAt: row.lastPlayedAt, save };
     });
     if (value.activeId !== null && !ids.has(value.activeId)) throw Error('最近使用的角色不存在');
     const magicBeanExchange = validateMagicBeanExchange(value.magicBeanExchange);

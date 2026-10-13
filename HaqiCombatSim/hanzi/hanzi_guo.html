@@ -1,0 +1,1301 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f1e9d6">
+<title>国 guó · 汉字演变互动动画</title>
+<style>
+:root{
+  --paper:#f3ecdc;--ink:#1c1a17;--cinnabar:#b8322a;--bronze:#3f6b5c;--jade:#7fb8a4;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC",var(--serif);
+}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background-color:#f1e9d6;background-size:cover,100% 100%;background-repeat:no-repeat;color:var(--ink);font-family:var(--serif);
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+#defsSvg{position:absolute;width:0;height:0;overflow:hidden}
+#mountains,.layer,#stage{position:fixed;inset:0;width:100%;height:100%}
+#mountains,.layer{pointer-events:none}
+#mountains .m{will-change:transform}
+#mountains .m1{animation:drift1 60s ease-in-out infinite alternate}
+#mountains .m2{animation:drift2 44s ease-in-out infinite alternate}
+#mountains .m3{animation:drift3 34s ease-in-out infinite alternate}
+@keyframes drift1{from{transform:translateX(-40px)}to{transform:translateX(40px)}}
+@keyframes drift2{from{transform:translateX(70px)}to{transform:translateX(-70px)}}
+@keyframes drift3{from{transform:translateX(-110px)}to{transform:translateX(110px)}}
+.layer{opacity:0;transform:scale(.94);transition:opacity 1.1s ease,transform 1.4s ease;will-change:opacity,transform}
+.layer.on{opacity:1;transform:none}
+#stage{touch-action:none;z-index:2}
+#stage.trace{cursor:crosshair}
+
+.glyph path{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.halberd .hit{fill:transparent;pointer-events:all;cursor:grab}
+.halberd.held .hit{cursor:grabbing}
+.ghostLine{fill:none;stroke:#b8322a;stroke-width:.5;stroke-dasharray:1.6 1.6;opacity:.55}
+.glow{fill:#e0a24a}
+.guide path{fill:none;stroke:#8f826d;stroke-width:.7;stroke-dasharray:1.8 1.6;transition:stroke .3s,stroke-width .3s}
+.guide path.hit{stroke:#b8322a;stroke-dasharray:none;stroke-width:1.1}
+.guide{animation:guidePulse 1.4s ease-in-out infinite}
+@keyframes guidePulse{50%{opacity:.55}}
+.trail path{fill:none;stroke:#1c1a17;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.cracks path{fill:none;stroke:#5a4128;stroke-width:2.2;stroke-linecap:round;opacity:.8}
+.nums text{font:600 4.4px/1 "PingFang SC","Helvetica Neue",sans-serif;fill:#b8322a}
+.cell{cursor:pointer}
+.cell .nm{font-family:var(--kai);font-size:15px;text-anchor:middle;fill:#1c1a17;letter-spacing:.1em}
+.cell .era{font-family:var(--serif);font-size:9.5px;text-anchor:middle;fill:#b8322a;letter-spacing:.12em}
+.cell .ring{fill:none;stroke:#b8322a;stroke-width:1.2;opacity:0;transition:opacity .3s}
+.cell:hover .ring{opacity:.6}
+.zoom{cursor:pointer}
+.zoom .zbg{fill:#f4eddd;opacity:.985}
+.zoom .zt{font-family:var(--kai);font-size:34px;text-anchor:middle;fill:#1c1a17;letter-spacing:.3em}
+.zoom .zs{font-family:var(--serif);font-size:18px;text-anchor:middle;fill:#8b7f6c;letter-spacing:.2em}
+
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity .9s,transform .9s}
+#intro.off{opacity:0;transform:scale(1.04)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{bottom:calc(100% - var(--gTop,140px) + 14px);gap:6px}
+.introBottom{top:calc(var(--gBottom,560px) + 14px);gap:8px}
+.introTop .tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.3em;color:var(--cinnabar)}
+.introTop .tag i{display:block;width:clamp(24px,5vw,60px);height:1px;background:currentColor;opacity:.6}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5.2vh,46px);line-height:1;color:var(--ink);letter-spacing:.06em}
+.mean{font-family:var(--kai);font-size:clamp(16px,2.4vh,21px);letter-spacing:.2em;color:#3a342c}
+.sub{font-size:clamp(14px,2vh,17px);color:#5a5246;letter-spacing:.08em;margin:2px 0 0;line-height:1.7}
+.btn-main{pointer-events:auto;margin-top:8px;font-family:var(--kai);font-size:clamp(18px,2.6vh,22px);letter-spacing:.4em;padding:10px 24px 10px 32px;
+  color:#f6efde;background:var(--cinnabar);border:none;border-radius:4px;cursor:pointer;box-shadow:0 6px 18px rgba(120,30,20,.25);
+  transition:transform .2s,box-shadow .2s;animation:btnGlow 2.4s ease-in-out infinite}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(120,30,20,.3)}
+@keyframes btnGlow{50%{box-shadow:0 6px 18px rgba(120,30,20,.25),0 0 0 8px rgba(184,50,42,.1)}}
+.meta{font-size:12px;color:#8b8070;letter-spacing:.12em;margin:0}
+.rise{opacity:0;transform:translateY(12px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
+@keyframes rise{to{opacity:1;transform:none}}
+@media (max-height:520px){ .sub,.meta{display:none} .introBottom{gap:4px} }
+
+#progress{position:fixed;top:max(14px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;list-style:none;
+  margin:0;padding:0;gap:clamp(8px,1.8vw,24px);z-index:10;opacity:0;transition:opacity .8s;pointer-events:none}
+#progress::before{content:"";position:absolute;top:2.5px;left:14px;right:14px;height:1px;background:#d4c9b2}
+body.started #progress{opacity:1}
+#progress li{position:relative;font-size:12px;color:#a0957f;letter-spacing:.08em;padding-top:12px;transition:color .5s;white-space:nowrap}
+#progress li::before{content:"";position:absolute;top:0;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#c9bea7;transition:background .5s,transform .5s}
+#progress li.done{color:#5a5246}
+#progress li.done::before{background:#5a5246}
+#progress li.on{color:var(--ink)}
+#progress li.on::before{background:var(--cinnabar);transform:scale(1.6)}
+
+#vtitle{position:fixed;right:9vw;top:20vh;writing-mode:vertical-rl;font-family:var(--kai);font-size:clamp(30px,5.4vh,54px);
+  letter-spacing:.32em;opacity:0;transform:translateY(-10px);transition:opacity .7s,transform .7s;pointer-events:none;z-index:5;
+  display:flex;align-items:center;gap:16px}
+#vtitle.on{opacity:.92;transform:none}
+#vtitle .era{font-family:var(--serif);font-size:.34em;letter-spacing:.2em;text-orientation:upright;color:#f6efde;background:var(--cinnabar);padding:8px 4px;border-radius:2px}
+
+#caption{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(880px,calc(100vw - 340px));min-width:min(560px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
+  transition:opacity .45s,transform .6s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:16px 22px 14px;
+  background:radial-gradient(ellipse at center,rgba(246,240,226,.93) 45%,rgba(246,240,226,0) 74%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{margin:0 0 8px;font-weight:400;display:flex;flex-direction:column;align-items:center;gap:2px}
+#capTitle .zh{font-family:var(--kai);font-size:clamp(21px,3.4vh,32px);letter-spacing:.32em;margin-left:.32em;color:var(--cinnabar)}
+#caption.on #capTitle .zh{animation:sealIn .7s cubic-bezier(.2,.7,.2,1) both}
+#capText{margin:0;font-size:clamp(18px,calc(1vw + 1.5vh),26px);line-height:1.75;color:#2b2722;letter-spacing:.05em}
+#capText .ch{animation:inkIn 1.1s ease-out both;animation-delay:calc(var(--i) * 70ms + 150ms)}
+@keyframes inkIn{from{opacity:0;color:transparent;text-shadow:0 0 12px rgba(28,26,23,.75)}55%{opacity:1}to{color:#2b2722;text-shadow:0 0 0 rgba(28,26,23,0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes sealIn{from{opacity:0;letter-spacing:.9em;filter:blur(4px)}to{opacity:1;letter-spacing:.32em;filter:none}}
+
+#hint{position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;top:max(58px,calc(env(safe-area-inset-top) + 44px));text-align:center;
+  color:var(--cinnabar);opacity:0;transition:opacity .4s;pointer-events:none;z-index:7;box-sizing:border-box;
+  padding:7px 20px 8px;border:1px solid rgba(184,50,42,.4);border-radius:22px;background:rgba(246,240,226,.92)}
+#hint .zh{display:block;font-family:var(--kai);font-size:clamp(16px,2.4vh,21px);letter-spacing:.12em}
+#hint.on{opacity:1;animation:breathe 1.6s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 0 0 6px rgba(184,50,42,.09)}}
+
+#controls{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));display:flex;gap:8px;
+  z-index:12;opacity:0;pointer-events:none;transition:opacity .6s}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{font-family:var(--kai);font-size:14px;letter-spacing:.2em;color:var(--cinnabar);background:rgba(246,240,226,.85);
+  border:1px solid rgba(184,50,42,.5);border-radius:4px;padding:6px 8px 6px 12px;cursor:pointer}
+#controls button:hover{background:#f8eedc}
+#note{position:fixed;left:max(14px,env(safe-area-inset-left));top:max(16px,env(safe-area-inset-top));font-size:11px;color:#9a8f7c;
+  letter-spacing:.12em;z-index:4;pointer-events:none}
+
+body.portrait #vtitle{right:auto;left:5vw;top:64px;font-size:26px;gap:10px}
+body.portrait #controls{top:max(46px,calc(env(safe-area-inset-top) + 34px));bottom:auto}
+body.portrait #hint{top:max(100px,calc(env(safe-area-inset-top) + 88px));left:64px;right:16px;padding:6px 14px 7px}
+body.portrait #hint .zh{font-size:16px;letter-spacing:.06em}
+body.portrait #note{display:none}
+body.portrait #caption{width:calc(100vw - 16px);min-width:0;padding:12px 12px 10px}
+body.portrait #capText{font-size:clamp(17px,4.6vw,21px);line-height:1.65}
+@media (max-height:520px){
+  #capTitle .zh{font-size:18px}
+  #capText{font-size:16px;line-height:1.5}
+  #caption{padding:8px 14px 6px}
+}
+
+@media (prefers-reduced-motion: reduce){
+  #mountains .m{animation:none}
+  .layer,#intro,#caption,#vtitle{transition-duration:.45s}
+  .guide,#hint.on,.btn-main{animation:none}
+  #capText .ch{animation-duration:.25s;animation-delay:0s}
+}
+</style>
+</head>
+<body>
+
+<svg id="defsSvg" aria-hidden="true">
+  <defs>
+    <filter id="brush" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="6" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="8" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -0.2" result="grainA"/>
+      <feComposite in="d" in2="grainA" operator="in" result="dry"/>
+      <feGaussianBlur in="dry" stdDeviation="0.7" result="soft"/>
+      <feMerge><feMergeNode in="soft"/><feMergeNode in="dry"/></feMerge>
+    </filter>
+    <filter id="brushS" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.18" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="8" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -0.1" result="grainA"/>
+      <feComposite in="d" in2="grainA" operator="in"/>
+    </filter>
+    <filter id="carve" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feOffset in="d" dx="1.6" dy="2.2" result="o"/>
+      <feColorMatrix in="o" type="matrix" values="0 0 0 0 1  0 0 0 0 0.97  0 0 0 0 0.88  0 0 0 0.8 0" result="hl"/>
+      <feMerge><feMergeNode in="hl"/><feMergeNode in="d"/></feMerge>
+    </filter>
+    <filter id="carveS" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.28" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="0.7" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feOffset in="d" dx="0.35" dy="0.5" result="o"/>
+      <feColorMatrix in="o" type="matrix" values="0 0 0 0 1  0 0 0 0 0.97  0 0 0 0 0.88  0 0 0 0.8 0" result="hl"/>
+      <feMerge><feMergeNode in="hl"/><feMergeNode in="d"/></feMerge>
+    </filter>
+    <filter id="cast" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feGaussianBlur in="d" stdDeviation="2.5" result="b"/>
+      <feSpecularLighting in="b" surfaceScale="5" specularConstant="1" specularExponent="16" lighting-color="#fff3cf" result="s">
+        <feDistantLight azimuth="225" elevation="40"/>
+      </feSpecularLighting>
+      <feComposite in="s" in2="d" operator="in" result="si"/>
+      <feOffset in="d" dx="2.5" dy="3.5" result="sh"/>
+      <feColorMatrix in="sh" type="matrix" values="0 0 0 0 0.04  0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0.65 0" result="shadow"/>
+      <feComposite in="d" in2="si" operator="arithmetic" k2="1" k3="0.7" result="lit"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="lit"/></feMerge>
+    </filter>
+    <filter id="castS" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.16" numOctaves="2" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feOffset in="d" dx="0.55" dy="0.75" result="sh"/>
+      <feColorMatrix in="sh" type="matrix" values="0 0 0 0 0.04  0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0.65 0" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="d"/></feMerge>
+    </filter>
+    <filter id="jadeGlow" filterUnits="userSpaceOnUse" x="-20" y="-20" width="140" height="140">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="1.8" result="b"/>
+      <feColorMatrix in="b" type="matrix" values="0 0 0 0 0.5  0 0 0 0 0.86  0 0 0 0 0.72  0 0 0 1 0" result="g"/>
+      <feMerge><feMergeNode in="g"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="stamp" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="2" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.45" numOctaves="2" seed="13" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  4 0 0 0 -0.9" result="ga"/>
+      <feComposite in="d" in2="ga" operator="in"/>
+    </filter>
+    <filter id="boneTex" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="4" result="edgeN"/>
+      <feDisplacementMap in="SourceGraphic" in2="edgeN" scale="26" xChannelSelector="R" yChannelSelector="G" result="shape"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.035" numOctaves="4" seed="11" result="n"/>
+      <feDiffuseLighting in="n" surfaceScale="2.5" diffuseConstant="1.05" lighting-color="#fff6e2" result="lit">
+        <feDistantLight azimuth="235" elevation="60"/>
+      </feDiffuseLighting>
+      <feComposite in="lit" in2="shape" operator="arithmetic" k1="1" result="tex"/>
+      <feGaussianBlur in="shape" stdDeviation="10" result="sb"/>
+      <feOffset in="sb" dx="6" dy="12" result="so"/>
+      <feColorMatrix in="so" type="matrix" values="0 0 0 0 0.25  0 0 0 0 0.18  0 0 0 0 0.1  0 0 0 0.35 0" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="tex"/></feMerge>
+    </filter>
+    <filter id="patina" x="-3%" y="-3%" width="106%" height="106%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" seed="21" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.4  0 0 0 0 0.6  0 0 0 0 0.52  0 0 0 2.2 -1.25" result="spots"/>
+      <feComposite in="spots" in2="SourceGraphic" operator="atop" result="p"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="2" result="g"/>
+      <feDiffuseLighting in="g" surfaceScale="1.4" diffuseConstant="1.05" lighting-color="#ffffff" result="gl">
+        <feDistantLight azimuth="225" elevation="62"/>
+      </feDiffuseLighting>
+      <feComposite in="gl" in2="p" operator="arithmetic" k1="1.1"/>
+    </filter>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="softL" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="1.4"/></filter>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#5a4630" flood-opacity=".2"/>
+    </filter>
+
+    <linearGradient id="boneG" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#f0e4c8"/><stop offset="1" stop-color="#d4c098"/>
+    </linearGradient>
+    <radialGradient id="bronzeR" cx="0.42" cy="0.38" r="0.7">
+      <stop offset="0" stop-color="#6c8a72"/><stop offset="0.6" stop-color="#3e5a4c"/><stop offset="1" stop-color="#22322b"/>
+    </radialGradient>
+    <linearGradient id="bronzeG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e4c47c"/><stop offset="0.5" stop-color="#9a7638"/><stop offset="1" stop-color="#c49a52"/>
+    </linearGradient>
+    <linearGradient id="woodG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5a3a22"/><stop offset="0.5" stop-color="#8a5a34"/><stop offset="1" stop-color="#4a2e1a"/>
+    </linearGradient>
+    <linearGradient id="woodGV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5a3a22"/><stop offset="0.5" stop-color="#8a5a34"/><stop offset="1" stop-color="#4a2e1a"/>
+    </linearGradient>
+    <radialGradient id="washG">
+      <stop offset="0" stop-color="#2a2620" stop-opacity=".32"/><stop offset="1" stop-color="#2a2620" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="inkG">
+      <stop offset="0" stop-color="#1c1a17" stop-opacity=".92"/><stop offset=".6" stop-color="#1c1a17" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#1c1a17" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="scorchG">
+      <stop offset="0" stop-color="#3b2614" stop-opacity=".55"/><stop offset="1" stop-color="#3b2614" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
+
+<svg id="mountains" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <defs>
+    <filter id="mBlur1" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="mBlur2" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="3.5"/></filter>
+    <filter id="mBlur3" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="1.6"/></filter>
+    <linearGradient id="mg1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8d897c" stop-opacity=".3"/><stop offset=".55" stop-color="#8d897c" stop-opacity=".06"/><stop offset="1" stop-color="#8d897c" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5f5b52" stop-opacity=".3"/><stop offset=".6" stop-color="#5f5b52" stop-opacity=".05"/><stop offset="1" stop-color="#5f5b52" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mg3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#34312c" stop-opacity=".34"/><stop offset="1" stop-color="#34312c" stop-opacity=".1"/>
+    </linearGradient>
+    <radialGradient id="sunG">
+      <stop offset="0" stop-color="#c8553d" stop-opacity=".2"/><stop offset=".7" stop-color="#c8553d" stop-opacity=".08"/><stop offset="1" stop-color="#c8553d" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="1220" cy="250" r="120" fill="url(#sunG)"/>
+  <g class="m m1"><path filter="url(#mBlur1)" fill="url(#mg1)" d="M-200 640 C-80 560 40 520 160 560 S360 470 480 520 S700 600 820 540 S1020 430 1160 500 S1380 590 1500 530 S1700 480 1800 540 L1800 900 L-200 900 Z"/></g>
+  <g class="m m2"><path filter="url(#mBlur2)" fill="url(#mg2)" d="M-200 720 C-60 640 80 600 200 650 S420 560 560 610 S760 700 900 640 S1120 560 1240 620 S1460 690 1600 640 S1740 600 1800 630 L1800 900 L-200 900 Z"/></g>
+  <g class="m m3"><path filter="url(#mBlur3)" fill="url(#mg3)" d="M-200 820 C-40 760 120 740 260 780 S520 720 640 770 S880 840 1020 790 S1260 730 1400 780 S1640 820 1800 790 L1800 900 L-200 900 Z"/></g>
+</svg>
+
+<svg id="boneSvg" class="layer" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <path filter="url(#boneTex)" fill="url(#boneG)" d="M330 150 Q500 108 670 150 Q768 262 742 424 Q730 566 640 662 Q500 724 360 662 Q268 566 258 424 Q232 262 330 150 Z"/>
+  <path d="M500 150 L500 690 M290 330 Q500 312 712 330 M276 520 Q500 540 726 520" stroke="#8a6f4c" stroke-width="2" fill="none" opacity=".25"/>
+  <g fill="url(#scorchG)">
+    <ellipse cx="300" cy="300" rx="12" ry="16"/><ellipse cx="702" cy="322" rx="12" ry="16"/>
+    <ellipse cx="302" cy="558" rx="12" ry="16"/><ellipse cx="704" cy="550" rx="12" ry="16"/>
+  </g>
+</svg>
+
+<svg id="bronzeSvg" class="layer" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <circle cx="500" cy="410" r="318" fill="url(#bronzeR)" filter="url(#patina)"/>
+  <circle cx="500" cy="410" r="318" fill="none" stroke="#9c8448" stroke-width="10" opacity=".55"/>
+  <circle cx="500" cy="410" r="296" fill="none" stroke="#c9ab62" stroke-width="1.5" opacity=".45"/>
+  <g id="leiwen" fill="none" stroke="#c9ab62" stroke-width="1.3" opacity=".5"></g>
+</svg>
+
+<svg id="stage" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" aria-label="国字演变动画">
+  <g id="lBack"></g>
+  <g id="lGlyph"></g>
+  <g id="lFront"></g>
+  <g id="lFx"></g>
+</svg>
+
+<ol id="progress" aria-hidden="true">
+  <li>象形</li><li>甲骨文</li><li>金文</li><li>小篆</li><li>隶书</li><li>楷书</li><li>简体</li>
+</ol>
+<div id="vtitle" aria-live="polite"></div>
+<div id="hint" role="status"></div>
+<div id="caption" aria-live="polite"><h2 id="capTitle"></h2><p id="capText"></p></div>
+<div id="controls">
+  <button id="replay" type="button">重播</button>
+  <button id="mute" type="button">声音 开</button>
+</div>
+<div id="note">字形为依据通行字形的艺术示意</div>
+
+<div id="intro">
+  <div class="introTop">
+    <div class="tag rise" style="--d:.2s"><i></i>今天认识一个汉字<i></i></div>
+  </div>
+  <div class="introBottom">
+    <div class="pinyin rise" style="--d:2.4s">guó</div>
+    <div class="mean rise" style="--d:2.7s">国 · 国家</div>
+    <p class="sub rise" style="--d:3s">从持戈守城，到囗中藏玉，看「国」字三千年的演变</p>
+    <button id="start" class="btn-main rise" style="--d:3.3s" type="button">开始</button>
+    <p class="meta rise" style="--d:3.5s">约五十秒 · 两次小互动 · 建议开启声音</p>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+const NS = 'http://www.w3.org/2000/svg';
+const INK = '#1c1a17', CINNABAR = '#b8322a', JADE = '#3f8f78', GOLD = '#e2c47f', BONE_INK = '#4a3622', PAPER = '#f6efde';
+const GX = 270, GY = 170, GS = 4.6;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const M = reduceMotion ? 0.55 : 1;
+const $ = s => document.querySelector(s);
+
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const bump = (s, c, w) => Math.exp(-(((s - c) / w) ** 2));
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+  lin: t => t,
+};
+
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+let rand = mulberry32(20261013);
+
+/* ---------- 可取消的时间轴原语 ---------- */
+class Cancelled extends Error {}
+let token = { dead: true };
+let cleanups = [];
+function frame(tk) {
+  return new Promise((res, rej) => requestAnimationFrame(now => tk.dead ? rej(new Cancelled()) : res(now)));
+}
+async function wait(ms, tk) {
+  const t0 = performance.now();
+  for (;;) { const now = await frame(tk); if (now - t0 >= ms) return; }
+}
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  if (ms <= 0) { fn(1); return; }
+  const t0 = performance.now();
+  for (;;) {
+    const now = await frame(tk);
+    const t = clamp((now - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+
+/* ---------- 声音：WebAudio 合成，不加载音频文件 ---------- */
+const NOTE = { D3: 146.83, A3: 220, D4: 293.66, E4: 329.63, G4: 392, A4: 440, B4: 493.88, D5: 587.33, E5: 659.26, G5: 783.99, A5: 880 };
+const Sound = {
+  ctx: null, master: null, noise: null, muted: false, padOn: false,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { this.ctx = new C(); } catch { return; }
+    this.master = this.ctx.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.55;
+    this.master.connect(this.ctx.destination);
+    const len = this.ctx.sampleRate;
+    const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    const r = mulberry32(7);
+    for (let i = 0; i < len; i++) d[i] = r() * 2 - 1;
+    this.noise = buf;
+  },
+  setMuted(m) {
+    this.muted = m;
+    if (this.master) this.master.gain.setTargetAtTime(m ? 0 : 0.55, this.ctx.currentTime, 0.05);
+  },
+  pluck(f, vol = 0.2, dur = 2.4) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    const lp = c.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(f * 6, t);
+    lp.frequency.exponentialRampToValueAtTime(f * 1.3, t + dur * 0.6);
+    lp.connect(g); g.connect(this.master);
+    for (const [m, type, a] of [[1, 'triangle', 1], [2.003, 'sine', 0.35], [3.01, 'sine', 0.1]]) {
+      const o = c.createOscillator();
+      o.type = type;
+      o.frequency.setValueAtTime(f * m * 1.012, t);
+      o.frequency.exponentialRampToValueAtTime(f * m, t + 0.12);
+      const og = c.createGain(); og.gain.value = a;
+      o.connect(og); og.connect(lp);
+      o.start(t); o.stop(t + dur + 0.05);
+    }
+  },
+  drum(vol = 0.5) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    const o = c.createOscillator();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(120, t);
+    o.frequency.exponentialRampToValueAtTime(42, t + 0.35);
+    const g = c.createGain();
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+    o.connect(g); g.connect(this.master);
+    o.start(t); o.stop(t + 1);
+    this.hiss(0.1, 900, vol * 0.25);
+  },
+  hiss(dur, freq, vol) {
+    const c = this.ctx; if (!c || !this.noise) return;
+    const t = c.currentTime;
+    const s = c.createBufferSource(); s.buffer = this.noise;
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = freq; bp.Q.value = 0.8;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + Math.min(0.06, dur * 0.3));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(bp); bp.connect(g); g.connect(this.master);
+    s.start(t, rand() * 0.5); s.stop(t + dur + 0.05);
+  },
+  brush(d) { this.hiss(Math.max(0.15, d), 1600, 0.05); },
+  carve(d) { this.hiss(Math.max(0.12, d * 0.8), 3800, 0.06); },
+  cast(d) { this.hiss(Math.max(0.15, d), 700, 0.06); },
+  pad() {
+    const c = this.ctx; if (!c || this.padOn) return;
+    this.padOn = true;
+    const g = c.createGain(); g.gain.value = 0;
+    g.gain.setTargetAtTime(0.03, c.currentTime, 2);
+    const lfo = c.createOscillator(); lfo.frequency.value = 0.08;
+    const lg = c.createGain(); lg.gain.value = 0.012;
+    lfo.connect(lg); lg.connect(g.gain);
+    for (const f of [NOTE.D3, NOTE.A3]) {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+      o.connect(g); o.start();
+    }
+    lfo.start();
+    g.connect(this.master);
+  },
+};
+
+/* ---------- 笔画引擎：中线采样 + 粗细轮廓 ---------- */
+const sampler = el('path', null, $('#defsSvg'));
+function sample(d, step = 0.6) {
+  sampler.setAttribute('d', d);
+  const len = sampler.getTotalLength();
+  const n = Math.max(2, Math.ceil(len / step));
+  const pts = [];
+  for (let i = 0; i <= n; i++) {
+    const p = sampler.getPointAtLength(len * i / n);
+    pts.push([p.x, p.y]);
+  }
+  return { pts, len };
+}
+
+const PROFILES = {
+  carve: s => 0.3 + 0.7 * Math.pow(Math.sin(Math.PI * s), 0.45),
+  cast: s => 0.8 + 0.35 * Math.sin(Math.PI * s),
+  seal: () => 1,
+  line: s => 0.55 + 0.45 * Math.pow(Math.sin(Math.PI * s), 0.6),
+  h: s => 0.8 + 0.45 * bump(s, 0.03, 0.06) + 0.35 * bump(s, 0.95, 0.05),
+  v: s => 0.92 + 0.3 * bump(s, 0.02, 0.05) + 0.1 * bump(s, 0.97, 0.04),
+  zhe: (s, k) => 0.82 + 0.42 * bump(s, 0.02, 0.05) + 0.5 * bump(s, k, 0.035) + 0.22 * clamp((s - k) / 0.05) + 0.1 * bump(s, 0.98, 0.04),
+  pie: s => (1.15 - 0.95 * s) + 0.25 * bump(s, 0.03, 0.06),
+  na: s => s < 0.8 ? 0.45 + 1.0 * s / 0.8 + 0.3 * bump(s, 0.03, 0.06) : 1.45 - 1.15 * (s - 0.8) / 0.2,
+  dot: s => 0.5 + 0.75 * Math.sin(Math.PI * Math.min(1, 0.15 + s * 0.8)),
+  ti: s => 1.35 - 1.15 * s + 0.2 * bump(s, 0.03, 0.05),
+  gou: s => s < 0.88 ? 0.95 + 0.35 * bump(s, 0.02, 0.05) - 0.1 * Math.sin(Math.PI * s / 0.88) : 1.05 - 0.85 * (s - 0.88) / 0.12,
+};
+
+class Glyph {
+  constructor(parent, def, o = {}) {
+    this.def = def;
+    this.parent = parent;
+    const x = o.x ?? GX, y = o.y ?? GY, s = o.s ?? GS;
+    this.wrap = el('g', { class: 'glyph' }, parent);
+    if (o.filter) this.wrap.setAttribute('filter', `url(#${o.filter})`);
+    this.wrap.style.color = o.color || INK;
+    if (o.opacity != null) this.wrap.style.opacity = o.opacity;
+    this.base = `translate(${x} ${y}) scale(${s})`;
+    this.g = el('g', { transform: this.base }, this.wrap);
+    // 固定包围盒，避免只画出一笔时滤镜区域被裁切
+    el('rect', { x: -6, y: -6, width: 112, height: 112, fill: 'none', stroke: 'none' }, this.g);
+    this.strokes = def.strokes.map(st => {
+      const sg = el('g', null, this.g);
+      if (st.jade && o.jade !== false) {
+        sg.style.color = JADE;
+        if (o.glow !== false) sg.setAttribute('filter', 'url(#jadeGlow)');
+      }
+      const { pts, len } = sample(st.d);
+      const prof = PROFILES[st.p || def.p];
+      const w = st.w || def.w;
+      const n = pts.length - 1;
+      const segs = [];
+      for (let j = 0; j < n; j++) {
+        const a = pts[j], b = pts[j + 1];
+        const ww = w * prof((j + 0.5) / n, st.k || 0.5);
+        const seg = el('path', { d: `M${a[0].toFixed(2)} ${a[1].toFixed(2)}L${b[0].toFixed(2)} ${b[1].toFixed(2)}`, 'stroke-width': ww.toFixed(2) }, sg);
+        seg.style.display = 'none';
+        segs.push(seg);
+      }
+      return { g: sg, segs, pts, len, shown: 0 };
+    });
+  }
+  setP(i, p) {
+    const st = this.strokes[i];
+    const k = Math.round(clamp(p) * st.segs.length);
+    if (k > st.shown) for (let j = st.shown; j < k; j++) st.segs[j].style.display = '';
+    else for (let j = k; j < st.shown; j++) st.segs[j].style.display = 'none';
+    st.shown = k;
+  }
+  show(i) { this.setP(i, 1); }
+  hide(i) { this.setP(i, 0); }
+  showAll() { this.strokes.forEach((_, i) => this.show(i)); return this; }
+  scaleAbout(cx, cy, k) {
+    this.g.setAttribute('transform', `${this.base} translate(${cx} ${cy}) scale(${k}) translate(${-cx} ${-cy})`);
+  }
+  number(i, parent) {
+    if (!this.numG) { this.numG = el('g', { class: 'nums', transform: this.base }, parent); this.numAt = []; }
+    const [sx, sy] = this.strokes[i].pts[0];
+    let x = sx - 4.4, y = sy - 1.4;
+    while (this.numAt.some(([ax, ay]) => Math.hypot(ax - x, ay - y) < 4.5)) x += 5;
+    this.numAt.push([x, y]);
+    const t = el('text', { x: x.toFixed(1), y: y.toFixed(1) }, this.numG);
+    t.textContent = String(i + 1);
+  }
+  async draw(tk, { per = 240, gap = 50, from = 0, to, sound = 'brush', numbers = null } = {}) {
+    const end = to ?? this.strokes.length;
+    for (let i = from; i < end; i++) {
+      const st = this.strokes[i];
+      const ms = per * (0.5 + st.len / 70);
+      if (numbers) this.number(i, numbers);
+      if (sound) Sound[sound](ms / 1000);
+      await tween(ms, p => this.setP(i, p), tk, ease.sine);
+      if (gap) await wait(gap, tk);
+    }
+  }
+  remove() { this.wrap.remove(); if (this.numG) this.numG.remove(); }
+}
+
+/* ---------- 字形数据（局部坐标 0-100，依据通行字形手绘示意） ---------- */
+const KW1 = { d: 'M12 10 L13 93', p: 'v', w: 4.2 };
+const KW2 = { d: 'M12 10 L87 10 L86 93', p: 'zhe', k: 0.475, w: 3.6 };
+const KW3 = { d: 'M13 93 L86 93', w: 3.4 };
+const G = {
+  city: { p: 'line', w: 0.9, strokes: [
+    { d: 'M10 50 L11 86' },
+    { d: 'M10 50 L14 50 L14 46 L19 46 L19 50 L24 50 L24 46 L29 46 L29 50 L34 50 L34 46 L39 46 L39 50 L44 50 L44 46 L48 46 L48 50' },
+    { d: 'M48 50 L47 86' },
+    { d: 'M11 86 L24 86 L24 80 Q29 73 34 80 L34 86 L47 86' },
+    { d: 'M15 64 L20.5 57.5 L26 64', w: 0.8 },
+    { d: 'M16.5 64 L16.5 71 L24.5 71 L24.5 64', w: 0.7 },
+    { d: 'M29 61 L35 54 L41.5 61', w: 0.8 },
+    { d: 'M30.5 61 L30.5 70 L40 70 L40 61', w: 0.7 },
+    { d: 'M19 78 L19.6 79.5', p: 'dot', w: 1.1 },
+    { d: 'M39 77 L39.6 78.5', p: 'dot', w: 1.1 },
+    { d: 'M28.5 66 L29 67.2', p: 'dot', w: 1 },
+  ]},
+  jiagu: { p: 'carve', w: 1.7, strokes: [
+    { d: 'M17 53 L19 79' },
+    { d: 'M17 53 L44 51 L43 78' },
+    { d: 'M19 79 L43 78' },
+    { d: 'M29 31 L81 27' },
+    { d: 'M57 11 Q59.5 52 60 90' },
+    { d: 'M53 86 L67 94' },
+    { d: 'M57 11 L67 5' },
+  ]},
+  jinwen: { p: 'cast', w: 4.2, strokes: [
+    { d: 'M12 37 L44 35.5' },
+    { d: 'M15 45 L16 70' },
+    { d: 'M15 45 L42 43.5 L41 69' },
+    { d: 'M16 70 L41 69' },
+    { d: 'M12 81 L44 79.5' },
+    { d: 'M22 28 Q52 21 85 25.5' },
+    { d: 'M60 9 Q57 50 64 91' },
+    { d: 'M64 91 Q71 92 75 85', w: 3.6 },
+    { d: 'M60 9 L71 4', w: 3.4 },
+  ]},
+  seal: { p: 'seal', w: 2.5, strokes: [
+    { d: 'M14 8 L86 8 Q92 8 92 14 L92 88 Q92 94 86 94 L14 94 Q8 94 8 88 L8 14 Q8 8 14 8' },
+    { d: 'M18 27 L80 27' },
+    { d: 'M25 37 L45 37 L45 55 L25 55 Z' },
+    { d: 'M21 67 L49 67' },
+    { d: 'M55 17 C56 47 62 66 72 76 C78 82 84 82 86 74' },
+    { d: 'M81 50 Q73 64 57 78' },
+    { d: 'M70 15 L76 21' },
+  ]},
+  li: { p: 'h', w: 3.4, strokes: [
+    { d: 'M8 17 L8 89', p: 'v' },
+    { d: 'M8 17 L92 17 L92 89', p: 'zhe', k: 0.54 },
+    { d: 'M18 31 L80 31' },
+    { d: 'M25 41 L25 56', p: 'v', w: 3 },
+    { d: 'M25 41 L45 41 L45 56', p: 'zhe', k: 0.57, w: 3 },
+    { d: 'M25 56 L45 56', w: 2.8 },
+    { d: 'M21 67 L49 65', w: 3 },
+    { d: 'M55 23 Q59 52 71 68 Q78 76 84 78 L90 76', p: 'na', w: 3.8 },
+    { d: 'M82 47 Q74 60 58 72', p: 'pie', w: 3.2 },
+    { d: 'M71 21 L77 26', p: 'dot', w: 3.6 },
+    { d: 'M8 89 L92 89' },
+  ]},
+  kai: { p: 'h', w: 3.1, strokes: [
+    KW1, KW2,
+    { d: 'M24 25 L77 23.5' },
+    { d: 'M28 35 L29 53', p: 'v', w: 3.4 },
+    { d: 'M28 35 L46 34 L45 52', p: 'zhe', k: 0.5, w: 3 },
+    { d: 'M29 52 L45 52', w: 2.6 },
+    { d: 'M25 68 L51 61', p: 'ti', w: 3.4 },
+    { d: 'M55 13 Q58 48 69 65 Q77 76 84 80 L84 71', p: 'gou', w: 3.8 },
+    { d: 'M80 43 Q74 57 60 69', p: 'pie', w: 3.4 },
+    { d: 'M71 14 L77 20', p: 'dot', w: 4.2 },
+    KW3,
+  ]},
+  jian: { p: 'h', w: 3.3, strokes: [
+    KW1, KW2,
+    { d: 'M30 28 L70 27', jade: 1 },
+    { d: 'M33 50 L67 49.5', jade: 1 },
+    { d: 'M50 28 L50 74', p: 'v', w: 4, jade: 1 },
+    { d: 'M27 75 L73 73.5', w: 3.5, jade: 1 },
+    { d: 'M59 58 L66 66', p: 'dot', w: 4.4, jade: 1 },
+    KW3,
+  ]},
+};
+
+/* ---------- 舞台与界面 ---------- */
+const stage = $('#stage');
+const L = { back: $('#lBack'), glyph: $('#lGlyph'), front: $('#lFront'), fx: $('#lFx') };
+const boneSvg = $('#boneSvg'), bronzeSvg = $('#bronzeSvg');
+const ui = {
+  cap: $('#caption'), capT: $('#capTitle'), capP: $('#capText'), hint: $('#hint'), vt: $('#vtitle'),
+  prog: [...document.querySelectorAll('#progress li')],
+};
+const S = {};
+
+function local(parent) { return el('g', { transform: `translate(${GX} ${GY}) scale(${GS})` }, parent); }
+function toStage(e) {
+  const p = stage.createSVGPoint();
+  p.x = e.clientX; p.y = e.clientY;
+  return p.matrixTransform(stage.getScreenCTM().inverse());
+}
+function toLocal(e) { const p = toStage(e); return { x: (p.x - GX) / GS, y: (p.y - GY) / GS }; }
+
+let capTimer, vtTimer;
+function span(cls, text) { const s = document.createElement('span'); s.className = cls; s.textContent = text; return s; }
+// 每条字幕至少停留到逐字显现完成并留出阅读时间，下一条才替换
+const CHAR_MS = 70;
+let capMinEnd = 0;
+async function caption(title, text, tk) {
+  while (performance.now() < capMinEnd) await frame(tk);
+  ui.cap.classList.remove('on');
+  clearTimeout(capTimer);
+  const chars = [...text];
+  capTimer = setTimeout(() => {
+    ui.capT.replaceChildren(span('zh', title));
+    ui.capP.replaceChildren(...chars.map((c, i) => { const s = span('ch', c); s.style.setProperty('--i', i); return s; }));
+    ui.cap.classList.add('on');
+  }, 350);
+  capMinEnd = performance.now() + 350 + Math.max(reduceMotion ? 300 : chars.length * CHAR_MS + 1100, chars.length * 140) + 600;
+}
+function hint(text) {
+  if (text) { ui.hint.replaceChildren(span('zh', text)); ui.hint.classList.add('on'); }
+  else ui.hint.classList.remove('on');
+}
+function vtitle(name, era) {
+  ui.vt.classList.remove('on');
+  clearTimeout(vtTimer);
+  if (!name) return;
+  vtTimer = setTimeout(() => {
+    ui.vt.replaceChildren(span('', name));
+    if (era) ui.vt.appendChild(span('era', era));
+    ui.vt.classList.add('on');
+  }, 320);
+}
+function progress(i) {
+  ui.prog.forEach((li, j) => {
+    li.classList.toggle('on', j === i);
+    li.classList.toggle('done', j < i);
+  });
+}
+
+function layout() {
+  const portrait = innerWidth / innerHeight < 0.85;
+  const vb = portrait ? '160 40 680 900' : '0 0 1000 1000';
+  for (const s of [stage, boneSvg, bronzeSvg]) s.setAttribute('viewBox', vb);
+  document.body.classList.toggle('portrait', portrait);
+  if (S.scroll) layoutScroll();
+}
+
+function paperTexture() {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" preserveAspectRatio="none">' +
+    '<filter id="f" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="5"/>' +
+    '<feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.28  0 0 0 0.12 0"/></filter>' +
+    '<filter id="g" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="3" seed="9"/>' +
+    '<feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.45  0 0 0 0 0.3  0 0 0 0.5 -0.22"/></filter>' +
+    '<rect width="1600" height="1000" filter="url(#f)"/><rect width="1600" height="1000" filter="url(#g)"/></svg>';
+  document.body.style.backgroundImage =
+    `url("data:image/svg+xml,${encodeURIComponent(svg)}"), radial-gradient(ellipse at 50% 40%, #f7f1e3 0%, #efe5cf 60%, #e2d4b6 100%)`;
+}
+
+function buildLeiwen() {
+  const g = $('#leiwen');
+  for (let i = 0; i < 40; i++) {
+    el('path', { d: 'M0 0 H12 V12 H2 V3 H9 V9 H5 V6', transform: `rotate(${i * 9} 500 410) translate(494 91) scale(.9)` }, g);
+  }
+}
+
+function resetStage() {
+  cleanups.forEach(f => f()); cleanups = [];
+  for (const k in L) { L[k].replaceChildren(); L[k].style.opacity = ''; }
+  boneSvg.classList.remove('on'); bronzeSvg.classList.remove('on');
+  stage.classList.remove('trace');
+  S.scroll = null; S.zoomTk = null;
+  hint(null);
+}
+
+async function inkBloom(tk) {
+  const g = el('g', null, L.fx);
+  const blobs = [[500, 420, 1], [440, 380, 0.7], [570, 460, 0.6], [520, 330, 0.5], [430, 500, 0.45]]
+    .map(([x, y, s]) => ({ c: el('circle', { cx: x, cy: y, r: 0, fill: 'url(#inkG)' }, g), s }));
+  Sound.drum(0.3);
+  await tween(1500 * M, t => {
+    blobs.forEach(b => b.c.setAttribute('r', (t * 720 * b.s).toFixed(1)));
+    g.style.opacity = ((1 - t) * 0.95).toFixed(3);
+  }, tk, ease.out);
+  g.remove();
+}
+
+/* ---------- 戈（青铜兵器插画，局部坐标，原点为柄底） ---------- */
+function makeHalberd(parent) {
+  const g = el('g', { class: 'halberd' }, parent);
+  el('ellipse', { cx: 0, cy: 1, rx: 6, ry: 1.3, fill: 'rgba(30,25,20,.22)' }, g);
+  el('path', { d: 'M0 0 L0 -80', stroke: '#6b4a2b', 'stroke-width': 1.9, 'stroke-linecap': 'round', fill: 'none' }, g);
+  el('path', { d: 'M-1.4 0.5 L1.4 0.5 L1.1 -4 L-1.1 -4 Z', fill: 'url(#bronzeG)' }, g);
+  el('path', { d: 'M1.5 -68 L-22 -67 Q-31 -65.5 -33 -62.5 Q-25 -61.2 -18 -60.6 L-2.2 -60 L-2.2 -50 Q-0.8 -47.5 1.5 -49.5 Z',
+    fill: 'url(#bronzeG)', stroke: '#4a3a22', 'stroke-width': 0.35 }, g);
+  el('path', { d: 'M1.5 -67.5 L13 -67 L14 -62.5 L1.5 -62 Z', fill: 'url(#bronzeG)', stroke: '#4a3a22', 'stroke-width': 0.35 }, g);
+  el('path', { d: 'M0 -64.3 L-28 -63', stroke: '#f6e2a8', 'stroke-width': 0.4, opacity: 0.75, fill: 'none' }, g);
+  el('path', { d: 'M13 -64 Q17 -57 14.5 -49 M11.5 -63 Q13.5 -56 10.5 -50', stroke: CINNABAR, 'stroke-width': 0.9, fill: 'none', 'stroke-linecap': 'round' }, g);
+  el('rect', { class: 'hit', x: -36, y: -86, width: 56, height: 94 }, g);
+  return g;
+}
+function setPose(g, p) {
+  g.setAttribute('transform', `translate(${p.x.toFixed(2)} ${p.y.toFixed(2)}) rotate(${p.r.toFixed(2)})`);
+}
+
+/* ---------- 场景 ---------- */
+async function sceneXiang(tk) {
+  await caption('象形 · 城邑', '远古先民筑起一圈城墙，围出一块安身之地。', tk);
+  progress(0);
+  vtitle('象形', '远古');
+  Sound.pluck(NOTE.D4);
+  const lg = local(L.back);
+  const wash = el('ellipse', { cx: 29, cy: 88, rx: 32, ry: 5, fill: 'url(#washG)', opacity: 0 }, lg);
+  bg(tween(1200 * M, t => wash.setAttribute('opacity', (t * 0.9).toFixed(3)), tk));
+  S.city = new Glyph(L.glyph, G.city, { filter: 'brush' });
+  await S.city.draw(tk, { per: 150, gap: 20 });
+  await wait(600, tk);
+  await caption('象形 · 守卫', '有了城，就要有人拿起兵器守护它。', tk);
+  Sound.pluck(NOTE.E4);
+  S.halRoot = local(L.front);
+  S.hal = makeHalberd(S.halRoot);
+  S.halPose = { x: 18, y: 106, r: 90 };
+  setPose(S.hal, S.halPose);
+  S.hal.style.opacity = 0;
+  await tween(600 * M, t => { S.hal.style.opacity = t; }, tk);
+}
+
+async function sceneDrag(tk) {
+  hint('拖动青铜戈，立到城邑右边的光点上');
+  const lg = local(L.back);
+  const ghost = el('path', { d: 'M60 92 L60 12 M61.5 25 L28 27', class: 'ghostLine' }, lg);
+  const glow = el('ellipse', { cx: 60, cy: 92, rx: 7, ry: 2.4, class: 'glow', filter: 'url(#softL)' }, lg);
+  const hal = S.hal, pose = S.halPose, T = { x: 60, y: 92 };
+  const hit = hal.querySelector('.hit');
+  let dragging = false, grab = null, done = null, pid = null, d0 = 1, r0 = 90;
+  const dist = () => Math.hypot(pose.x - T.x, pose.y - T.y);
+  const down = e => {
+    dragging = true; pid = e.pointerId;
+    try { stage.setPointerCapture(pid); } catch {}
+    const p = toLocal(e);
+    grab = { x: p.x - pose.x, y: p.y - pose.y };
+    d0 = Math.max(10, dist()); r0 = pose.r;
+    hal.classList.add('held');
+    Sound.hiss(0.15, 1200, 0.05);
+    e.preventDefault();
+  };
+  const move = e => {
+    if (!dragging || e.pointerId !== pid) return;
+    const p = toLocal(e);
+    pose.x = p.x - grab.x; pose.y = p.y - grab.y;
+    pose.r = r0 * clamp((dist() - 6) / (d0 - 6));
+    setPose(hal, pose);
+  };
+  const up = e => {
+    if (!dragging || e.pointerId !== pid) return;
+    dragging = false; hal.classList.remove('held');
+    if (dist() < 15) done = 'user';
+  };
+  hit.addEventListener('pointerdown', down);
+  stage.addEventListener('pointermove', move);
+  stage.addEventListener('pointerup', up);
+  stage.addEventListener('pointercancel', up);
+  const off = () => {
+    hit.removeEventListener('pointerdown', down);
+    stage.removeEventListener('pointermove', move);
+    stage.removeEventListener('pointerup', up);
+    stage.removeEventListener('pointercancel', up);
+  };
+  cleanups.push(off);
+
+  const t0 = performance.now();
+  let limit = 5000;
+  while (!done) {
+    const now = await frame(tk);
+    if (dragging) limit = Math.max(limit, now - t0 + 2500);
+    else if (now - t0 > limit) done = 'auto';
+    glow.setAttribute('opacity', (0.5 + 0.35 * Math.sin(now / 220)).toFixed(3));
+  }
+  off();
+  hint(null);
+  S.interactions.push(done);
+  const from = { ...pose };
+  if (done === 'user') {
+    await tween(320, t => setPose(hal, { x: lerp(from.x, T.x, t), y: lerp(from.y, T.y, t), r: lerp(from.r, 0, t) }), tk, ease.out);
+  } else {
+    await tween(1300 * M, t => setPose(hal, {
+      x: lerp(from.x, T.x, t), y: lerp(from.y, T.y, t) - 14 * Math.sin(Math.PI * t), r: lerp(from.r, 0, t),
+    }), tk);
+  }
+  Object.assign(pose, T, { r: 0 });
+  Sound.drum(0.55);
+  await caption('象形 · 持戈守城', '戈立城旁，城有了守护。', tk);
+  bg(tween(400, t => { ghost.style.opacity = 1 - t; glow.style.opacity = 1 - t; }, tk));
+  await wait(700, tk);
+}
+
+const CRACKS = ['M300 300 L340 302 L352 286', 'M702 322 L662 326 L652 310', 'M302 558 L344 554 L356 570', 'M704 550 L662 554 L650 540'];
+
+async function sceneJiagu(tk) {
+  await caption('甲骨文 · 商', '以戈守口，合成「或」。刻在龟甲兽骨上的「或」，就是最早的「国」。', tk);
+  progress(1);
+  vtitle('甲骨文', '商');
+  Sound.pluck(NOTE.G4);
+  boneSvg.classList.add('on');
+  const city = S.city, halRoot = S.halRoot;
+  bg(tween(1100 * M, t => {
+    city.scaleAbout(30.5, 65.5, lerp(1, 0.74, t));
+    city.wrap.style.opacity = 1 - t;
+    halRoot.style.opacity = 1 - t;
+    L.back.style.opacity = 1 - t;
+  }, tk));
+  await wait(350 * M, tk);
+  S.jg = new Glyph(L.glyph, G.jiagu, { filter: 'carve', color: BONE_INK });
+  await S.jg.draw(tk, { per: 230, gap: 60, sound: 'carve' });
+  city.remove(); halRoot.remove();
+  L.back.replaceChildren(); L.back.style.opacity = '';
+  const cr = el('g', { class: 'cracks' }, L.back);
+  const paths = CRACKS.map(d => el('path', { d }, cr));
+  const lens = paths.map(p => p.getTotalLength());
+  paths.forEach((p, i) => { p.style.strokeDasharray = lens[i]; p.style.strokeDashoffset = lens[i]; });
+  Sound.hiss(0.5, 2600, 0.07);
+  await tween(800 * M, t => paths.forEach((p, i) => { p.style.strokeDashoffset = lens[i] * (1 - t); }), tk);
+  await wait(1200, tk);
+}
+
+async function sceneJinwen(tk) {
+  await caption('金文 · 西周', '铸在青铜器上，笔画变得丰满。何尊铭文「宅兹中或」，是「中国」一词已知最早的记录。', tk);
+  progress(2);
+  vtitle('金文', '西周');
+  Sound.pluck(NOTE.A4);
+  boneSvg.classList.remove('on');
+  bronzeSvg.classList.add('on');
+  const jg = S.jg;
+  bg(tween(900 * M, t => { jg.wrap.style.opacity = 1 - t; L.back.style.opacity = 1 - t; }, tk));
+  await wait(500 * M, tk);
+  S.jw = new Glyph(L.glyph, G.jinwen, { filter: 'cast', color: GOLD });
+  await S.jw.draw(tk, { per: 200, gap: 45, sound: 'cast' });
+  jg.remove();
+  L.back.replaceChildren(); L.back.style.opacity = '';
+  Sound.drum(0.25);
+  await wait(1600, tk);
+}
+
+async function sceneWall(tk) {
+  await caption('借字 · 加框', '「或」后来被借作「或许」，人们就在外面加一圈大口，表示国界。', tk);
+  Sound.pluck(NOTE.B4);
+  bronzeSvg.classList.remove('on');
+  const jw = S.jw;
+  const ink = new Glyph(L.glyph, G.jinwen, { filter: 'brush', color: INK, opacity: 0 }).showAll();
+  S.jwInk = ink;
+  await tween(1000 * M, t => {
+    const k = lerp(1, 0.68, t);
+    jw.scaleAbout(50, 54, k); ink.scaleAbout(50, 54, k);
+    jw.wrap.style.opacity = 1 - t; ink.wrap.style.opacity = t;
+  }, tk);
+  jw.remove();
+
+  const lg = local(L.front);
+  const guide = el('g', { class: 'guide' }, lg);
+  const bins = [];
+  const sides = [[8, 8, 92, 8], [92, 8, 92, 94], [92, 94, 8, 94], [8, 94, 8, 8]];
+  for (const [x1, y1, x2, y2] of sides) {
+    for (let i = 0; i < 12; i++) {
+      const a = i / 12, b = (i + 1) / 12;
+      bins.push(el('path', { d: `M${lerp(x1, x2, a)} ${lerp(y1, y2, a)}L${lerp(x1, x2, b)} ${lerp(y1, y2, b)}` }, guide));
+    }
+  }
+  const trailG = el('g', { class: 'trail', filter: 'url(#brush)' }, L.front);
+  hint('沿虚线画一圈城墙，把「或」围起来');
+  stage.classList.add('trace');
+
+  const covered = new Set();
+  const NEED = 34;
+  const binIdx = (v, a, b) => clamp(Math.floor((v - a) / (b - a) * 12), 0, 11);
+  const mark = (x, y) => {
+    const tol = 10, hits = [];
+    if (Math.abs(y - 8) < tol && x > 3 && x < 97) hits.push(binIdx(x, 8, 92));
+    if (Math.abs(x - 92) < tol && y > 3 && y < 99) hits.push(12 + binIdx(y, 8, 94));
+    if (Math.abs(y - 94) < tol && x > 3 && x < 97) hits.push(24 + binIdx(92 - x, 0, 84));
+    if (Math.abs(x - 8) < tol && y > 3 && y < 99) hits.push(36 + binIdx(94 - y, 0, 86));
+    for (const i of hits) if (!covered.has(i)) { covered.add(i); bins[i].classList.add('hit'); }
+  };
+  const markSeg = (a, b) => {
+    const n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 2));
+    for (let i = 0; i <= n; i++) mark(lerp(a.x, b.x, i / n), lerp(a.y, b.y, i / n));
+  };
+  let drawing = false, pid = null, last = null, trail = null, lastAct = 0;
+  const down = e => {
+    drawing = true; pid = e.pointerId; lastAct = performance.now();
+    try { stage.setPointerCapture(pid); } catch {}
+    const sp = toStage(e);
+    trail = { el: el('path', null, trailG), d: `M${sp.x.toFixed(1)} ${sp.y.toFixed(1)}` };
+    trail.el.setAttribute('d', trail.d);
+    last = toLocal(e); mark(last.x, last.y);
+    Sound.brush(0.3);
+    e.preventDefault();
+  };
+  const move = e => {
+    if (!drawing || e.pointerId !== pid) return;
+    lastAct = performance.now();
+    const sp = toStage(e);
+    trail.d += `L${sp.x.toFixed(1)} ${sp.y.toFixed(1)}`;
+    trail.el.setAttribute('d', trail.d);
+    const p = toLocal(e);
+    markSeg(last, p); last = p;
+  };
+  const up = e => { if (e.pointerId === pid) drawing = false; };
+  stage.addEventListener('pointerdown', down);
+  stage.addEventListener('pointermove', move);
+  stage.addEventListener('pointerup', up);
+  stage.addEventListener('pointercancel', up);
+  const off = () => {
+    stage.removeEventListener('pointerdown', down);
+    stage.removeEventListener('pointermove', move);
+    stage.removeEventListener('pointerup', up);
+    stage.removeEventListener('pointercancel', up);
+    stage.classList.remove('trace');
+  };
+  cleanups.push(off);
+
+  const t0 = performance.now();
+  let done = null;
+  while (!done) {
+    const now = await frame(tk);
+    if (covered.size >= NEED) done = 'user';
+    else if (now - t0 > 5500 && !drawing && now - lastAct > 1200) done = 'auto';
+    else if (now - t0 > 12000) done = 'auto';
+  }
+  off();
+  hint(null);
+  S.interactions.push(done);
+  S.seal = new Glyph(L.glyph, G.seal, { filter: 'brush', color: INK });
+  Sound.drum(0.35);
+  await S.seal.draw(tk, { to: 1, per: done === 'user' ? 110 : 220 });
+  bg(tween(600 * M, t => { guide.style.opacity = 1 - t; trailG.style.opacity = 1 - t; }, tk)
+    .then(() => { lg.remove(); trailG.remove(); }));
+  await wait(400, tk);
+}
+
+async function sceneZhuan(tk) {
+  await caption('小篆 · 秦', '囗 加 或，成为「國」。秦统一文字，小篆线条匀称圆转，如玉箸。', tk);
+  progress(3);
+  vtitle('小篆', '秦');
+  Sound.pluck(NOTE.D5);
+  const ink = S.jwInk;
+  bg(tween(700 * M, t => { ink.wrap.style.opacity = 1 - t; }, tk));
+  await S.seal.draw(tk, { from: 1, per: 180, gap: 40 });
+  ink.remove();
+  const SX = 770, SY = 600;
+  const st = el('g', { class: 'stamp' }, L.front);
+  st.style.opacity = 0;
+  const inner = el('g', { filter: 'url(#stamp)' }, st);
+  el('rect', { x: -38, y: -38, width: 76, height: 76, rx: 3, fill: CINNABAR }, inner);
+  new Glyph(inner, G.seal, { x: -31, y: -31, s: 0.62, color: PAPER }).showAll();
+  S.stamp = st;
+  await tween(450 * M, t => {
+    st.setAttribute('transform', `translate(${SX} ${SY}) scale(${lerp(1.7, 1, t).toFixed(3)}) rotate(${lerp(-8, -3, t).toFixed(2)})`);
+    st.style.opacity = t;
+  }, tk, ease.out);
+  Sound.drum(0.55);
+  await wait(1100, tk);
+}
+
+async function sceneLi(tk) {
+  await caption('隶书 · 汉', '化圆为方，蚕头燕尾，汉字从线条变成了笔画。', tk);
+  progress(4);
+  vtitle('隶书', '汉');
+  Sound.pluck(NOTE.E5);
+  const seal = S.seal, stamp = S.stamp;
+  bg(tween(700 * M, t => { seal.wrap.style.opacity = 1 - t; stamp.style.opacity = 1 - t; }, tk));
+  S.li = new Glyph(L.glyph, G.li, { filter: 'brush' });
+  await S.li.draw(tk, { per: 150, gap: 30 });
+  seal.remove(); stamp.remove();
+  await wait(1300, tk);
+}
+
+async function sceneKai(tk) {
+  await caption('楷书 · 魏晋以后', '横平竖直，提按分明。「國」的样子，从此定形一千多年。', tk);
+  progress(5);
+  vtitle('楷书', '魏晋以后');
+  Sound.pluck(NOTE.D5);
+  const li = S.li;
+  bg(tween(600 * M, t => { li.wrap.style.opacity = 1 - t; }, tk));
+  S.kai = new Glyph(L.glyph, G.kai, { filter: 'brush' });
+  await S.kai.draw(tk, { per: 160, gap: 35 });
+  li.remove();
+  await wait(1300, tk);
+}
+
+async function sceneJian(tk) {
+  await caption('简体 · 1956', '囗中藏玉，疆域之内以玉为宝。1956 年，「國」简化为「国」。', tk);
+  progress(6);
+  vtitle('简体', '1956');
+  Sound.pluck(NOTE.G5, 0.16, 3);
+  Sound.pluck(NOTE.D5, 0.12, 3);
+  const kai = S.kai;
+  const lg = local(L.front);
+  const parts = [];
+  for (let i = 2; i <= 9; i++) {
+    const st = kai.strokes[i];
+    for (let j = 0; j < st.pts.length; j += 3) {
+      const [x, y] = st.pts[j];
+      parts.push({ c: el('circle', { cx: x, cy: y, r: 1.1, fill: INK }, lg), x, y, vx: (rand() - 0.5) * 26, vy: -6 - rand() * 22, s: rand() });
+    }
+    kai.hide(i);
+  }
+  Sound.hiss(1.0, 2200, 0.05);
+  bg(tween(1300 * M, t => {
+    for (const p of parts) {
+      const tt = clamp((t - p.s * 0.3) / (1 - p.s * 0.3));
+      p.c.setAttribute('cx', (p.x + p.vx * tt).toFixed(2));
+      p.c.setAttribute('cy', (p.y + p.vy * tt).toFixed(2));
+      p.c.setAttribute('r', (1.1 * (1 - tt * 0.7)).toFixed(2));
+      p.c.setAttribute('opacity', (1 - tt).toFixed(3));
+    }
+  }, tk, ease.out).then(() => lg.remove()));
+  await wait(700 * M, tk);
+  await tween(400 * M, t => { kai.wrap.style.opacity = 1 - t * 0.88; }, tk);
+  S.jian = new Glyph(L.glyph, G.jian, { filter: 'brush' });
+  await S.jian.draw(tk, { per: 170, gap: 60, numbers: L.front });
+  kai.remove();
+  await wait(900, tk);
+  const nums = S.jian.numG;
+  bg(tween(600 * M, t => { nums.style.opacity = 1 - t; }, tk));
+  await wait(1000, tk);
+}
+
+const SCROLL = [
+  { key: 'jiagu', name: '甲骨文', era: '商', filterS: 'carveS', filter: 'carve', color: BONE_INK, tile: 'bone' },
+  { key: 'jinwen', name: '金文', era: '西周', filterS: 'castS', filter: 'cast', color: GOLD, tile: 'bronze' },
+  { key: 'seal', name: '小篆', era: '秦', filterS: 'brushS', filter: 'brush' },
+  { key: 'li', name: '隶书', era: '汉', filterS: 'brushS', filter: 'brush' },
+  { key: 'kai', name: '楷书', era: '魏晋以后', filterS: 'brushS', filter: 'brush', numbers: true },
+  { key: 'jian', name: '简体', era: '1956', filterS: 'brushS', filter: 'brush', numbers: true },
+];
+
+function buildScroll() {
+  const g = el('g', { class: 'scroll' }, L.glyph);
+  const strip = el('rect', { fill: '#f8f2e4', stroke: '#d8cbb0', 'stroke-width': 1.5, filter: 'url(#shadow)' }, g);
+  const rollA = el('rect', { rx: 6 }, g), rollB = el('rect', { rx: 6 }, g);
+  const cells = SCROLL.map((info, i) => {
+    const c = el('g', { class: 'cell', role: 'button', 'aria-label': `${info.name}，重看笔画` }, g);
+    c.style.opacity = 0;
+    if (info.tile === 'bone') el('rect', { x: -58, y: -58, width: 116, height: 116, rx: 12, fill: 'url(#boneG)' }, c);
+    else if (info.tile === 'bronze') el('rect', { x: -58, y: -58, width: 116, height: 116, rx: 12, fill: 'url(#bronzeR)' }, c);
+    else el('rect', { x: -58, y: -58, width: 116, height: 116, rx: 12, fill: '#fbf6ea', stroke: '#e3d8c2', 'stroke-width': 1 }, c);
+    el('rect', { class: 'ring', x: -61, y: -61, width: 122, height: 122, rx: 14 }, c);
+    new Glyph(c, G[info.key], { x: -50, y: -50, s: 1, filter: info.filterS, color: info.color || INK, glow: false }).showAll();
+    const nm = el('text', { class: 'nm', x: 0, y: 80 }, c); nm.textContent = info.name;
+    const er = el('text', { class: 'era', x: 0, y: 95 }, c); er.textContent = info.era;
+    c.addEventListener('click', () => zoom(i));
+    return { g: c };
+  });
+  S.scroll = { g, strip, rollA, rollB, cells };
+  layoutScroll();
+}
+
+function layoutScroll() {
+  const sc = S.scroll;
+  const portrait = document.body.classList.contains('portrait');
+  sc.cells.forEach((c, i) => {
+    let cx, cy, k;
+    if (portrait) { cx = 500 + ((i % 3) - 1) * 215; cy = i < 3 ? 225 : 535; k = 1.55; }
+    else { cx = 500 + (i - 2.5) * 150; cy = 380; k = 1.12; }
+    c.g.setAttribute('transform', `translate(${cx} ${cy}) scale(${k})`);
+  });
+  const set = (e, a) => { for (const k in a) e.setAttribute(k, a[k]); };
+  if (portrait) {
+    set(sc.strip, { x: 175, y: 115, width: 650, height: 615 });
+    set(sc.rollA, { x: 160, y: 93, width: 680, height: 22, fill: 'url(#woodGV)' });
+    set(sc.rollB, { x: 160, y: 730, width: 680, height: 22, fill: 'url(#woodGV)' });
+  } else {
+    set(sc.strip, { x: 40, y: 290, width: 920, height: 240 });
+    set(sc.rollA, { x: 22, y: 274, width: 20, height: 272, fill: 'url(#woodG)' });
+    set(sc.rollB, { x: 958, y: 274, width: 20, height: 272, fill: 'url(#woodG)' });
+  }
+}
+
+function zoom(i) {
+  if (S.zoomTk) return;
+  const info = SCROLL[i];
+  const tk = { dead: false };
+  S.zoomTk = tk;
+  hint(null);
+  Sound.pluck([NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.B4, NOTE.D5][i]);
+  const z = el('g', { class: 'zoom' }, L.fx);
+  z.style.opacity = 0;
+  el('rect', { class: 'zbg', x: -1000, y: -1000, width: 3000, height: 3000 }, z);
+  if (info.tile === 'bone') el('ellipse', { cx: 500, cy: 400, rx: 300, ry: 290, fill: 'url(#boneG)' }, z);
+  if (info.tile === 'bronze') el('circle', { cx: 500, cy: 400, r: 310, fill: 'url(#bronzeR)' }, z);
+  const t = el('text', { class: 'zt', x: 500, y: 100 }, z); t.textContent = `${info.name} · ${info.era}`;
+  const s = el('text', { class: 'zs', x: 500, y: 700 }, z); s.textContent = '点击任意处返回';
+  const g = new Glyph(z, G[info.key], { filter: info.filter, color: info.color || INK });
+  const close = () => { tk.dead = true; z.remove(); if (S.zoomTk === tk) S.zoomTk = null; };
+  z.addEventListener('click', close);
+  bg((async () => {
+    await tween(300, v => { z.style.opacity = v; }, tk);
+    await g.draw(tk, { per: 200, gap: 50, numbers: info.numbers ? z : null, sound: info.key === 'jiagu' ? 'carve' : info.key === 'jinwen' ? 'cast' : 'brush' });
+  })());
+}
+
+async function sceneFinale(tk) {
+  await caption('国 · 三千年', '从持戈守城，到囗中藏玉，一个「国」字写了三千多年。', tk);
+  progress(7);
+  vtitle(null);
+  Sound.pluck(NOTE.D4, 0.2, 3);
+  Sound.pluck(NOTE.A4, 0.14, 3);
+  const jian = S.jian;
+  await tween(700 * M, t => { jian.wrap.style.opacity = 1 - t; }, tk);
+  jian.remove();
+  L.front.replaceChildren();
+  buildScroll();
+  const notes = [NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.B4, NOTE.D5];
+  for (let i = 0; i < S.scroll.cells.length; i++) {
+    const c = S.scroll.cells[i].g;
+    Sound.pluck(notes[i], 0.14, 1.6);
+    await tween(300 * M, t => { c.style.opacity = t; }, tk, ease.out);
+  }
+  hint('点击任一字形，重看它的笔画');
+  window.__guo.finishedAt = performance.now();
+  await wait(6000, tk);
+  hint(null);
+}
+
+const Timeline = {
+  scenes: [sceneXiang, sceneDrag, sceneJiagu, sceneJinwen, sceneWall, sceneZhuan, sceneLi, sceneKai, sceneJian, sceneFinale],
+  async play(tk) {
+    for (const scene of this.scenes) {
+      window.__guo.scene = scene.name;
+      await scene(tk);
+    }
+  },
+};
+
+async function begin() {
+  token.dead = true;
+  const tk = token = { dead: false };
+  capMinEnd = 0;
+  resetStage();
+  rand = mulberry32(20261013);
+  S.interactions = [];
+  window.__guo = { startedAt: performance.now(), interactions: S.interactions };
+  try {
+    await inkBloom(tk);
+    await Timeline.play(tk);
+  } catch (e) {
+    if (!(e instanceof Cancelled)) console.error(e);
+  }
+}
+
+/* ---------- 启动 ---------- */
+paperTexture();
+buildLeiwen();
+/* ---------- 首页：大字「国」按笔顺写出，身后浮现历代字形 ---------- */
+const intro = { tk: { dead: false }, g: null };
+function placeIntro() {
+  if (!intro.g || intro.tk.dead) return;
+  const r = intro.g.g.getBoundingClientRect();
+  const box = $('#intro');
+  box.style.setProperty('--gTop', `${r.top}px`);
+  box.style.setProperty('--gBottom', `${r.bottom}px`);
+}
+async function introPlay(tk) {
+  const s = 4, x = 500 - 50 * s, y = 360 - 50 * s;
+  const ghostKeys = [['jiagu', BONE_INK], ['jinwen', '#8a6a33'], ['seal', INK], ['li', INK], ['kai', INK]];
+  const ghosts = ghostKeys.map(([k, color]) => new Glyph(L.back, G[k], { x: 500 - 50 * 5.2, y: 360 - 50 * 5.2, s: 5.2, filter: 'brush', color, opacity: 0 }).showAll());
+  const g = intro.g = new Glyph(L.glyph, G.jian, { x, y, s, filter: 'brush' });
+  placeIntro();
+  await inkBloom(tk);
+  await g.draw(tk, { per: 140, gap: 35, sound: null });
+  const st = el('g', null, L.front);
+  const inner = el('g', { filter: 'url(#stamp)' }, st);
+  el('rect', { x: -28, y: -28, width: 56, height: 56, rx: 3, fill: CINNABAR }, inner);
+  new Glyph(inner, G.jian, { x: -23, y: -23, s: 0.46, color: PAPER, jade: false }).showAll();
+  const SX = x + 100 * s + 34, SY = y + 100 * s - 30;
+  await tween(420 * M, t => {
+    st.setAttribute('transform', `translate(${SX} ${SY}) scale(${lerp(1.8, 1, t).toFixed(3)}) rotate(${lerp(-10, -4, t).toFixed(2)})`);
+    st.style.opacity = t;
+  }, tk, ease.out);
+  const jade = g.strokes.filter((_, i) => G.jian.strokes[i].jade).map(o => o.g);
+  const t0 = performance.now();
+  for (;;) {
+    const now = await frame(tk);
+    const t = (now - t0) / 1000;
+    if (!reduceMotion) {
+      const k = 1 + 0.012 * Math.sin(t * 1.4);
+      g.wrap.setAttribute('transform', `translate(500 360) scale(${k.toFixed(4)}) translate(-500 -360)`);
+    }
+    const jo = (0.78 + 0.22 * Math.sin(t * 2.2)).toFixed(3);
+    for (const j of jade) j.style.opacity = jo;
+    const cyc = 2.4, idx = Math.floor(t / cyc) % ghosts.length, ph = (t % cyc) / cyc;
+    ghosts.forEach((gh, i) => { gh.wrap.style.opacity = i === idx ? (0.1 * Math.sin(Math.PI * ph)).toFixed(3) : 0; });
+  }
+}
+
+layout();
+addEventListener('resize', () => { layout(); placeIntro(); });
+bg(introPlay(intro.tk));
+
+$('#start').addEventListener('click', () => {
+  Sound.init(); Sound.pad();
+  intro.tk.dead = true;
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  begin();
+});
+$('#replay').addEventListener('click', () => { Sound.init(); begin(); });
+$('#mute').addEventListener('click', e => {
+  Sound.setMuted(!Sound.muted);
+  e.currentTarget.textContent = Sound.muted ? '声音 关' : '声音 开';
+});
+})();
+</script>
+</body>
+</html>

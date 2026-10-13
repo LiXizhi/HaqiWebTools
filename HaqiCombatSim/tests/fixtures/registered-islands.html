@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>群岛插画地图验收</title>
+<style>
+body{margin:0;background:#e9debf;color:#284a3a;font:15px system-ui}header{padding:18px 24px;background:#fff5d9;border-bottom:1px solid #c3a25f}h1{margin:0 0 8px;font-size:22px}p{margin:0;line-height:1.7}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;padding:20px}article{background:#fff5d9;border:1px solid #baa062;border-radius:12px;overflow:hidden}h2{font-size:18px;margin:12px 16px 6px}article p{margin:0 16px 12px;font-size:13px}a{color:#275b46}figure{margin:0;position:relative;aspect-ratio:1;background:#2195b0}img{width:100%;height:100%;object-fit:fill}svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}svg[hidden]{display:none}.error{color:#9a2929}
+</style>
+<header><h1>群岛插画地图验收</h1><p>使用主程序的正式清单与 CDN 图片。地点、海岸和道路来自游戏地图；点击岛名进入实际地图渲染器。</p><label><input type="checkbox" id="guides">叠加原道路与海岸</label></header><main></main>
+<script type="module">
+const atlas=await fetch('../../data/adventure/world-map-art.json').then(r=>r.json());
+const local=new URLSearchParams(location.search).get('assets')==='local';
+for(const island of atlas.islands){
+ const art=atlas.resources[island.resource],layout=await fetch(`../../data/adventure/maps/${island.id}.json`).then(r=>r.json()),card=document.createElement('article'),heading=document.createElement('h2'),link=document.createElement('a'),figure=document.createElement('figure'),img=new Image(),info=document.createElement('p');
+ link.textContent=island.name;link.href=`world-atlas.html?island=${island.id}${local?'&assets=local':''}`;heading.append(link);
+ img.crossOrigin='anonymous';img.alt=island.name;img.src=local?'../../'+art.local:art.cdn;figure.append(img);
+ const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox',`0 0 ${layout.w} ${layout.h}`);svg.setAttribute('preserveAspectRatio','none');svg.setAttribute('hidden','');
+ const shape=(name,attrs)=>{const n=document.createElementNS(svg.namespaceURI,name);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);svg.append(n);};
+ shape('polygon',{points:layout.coast.map(p=>p.join(',')).join(' '),fill:'none',stroke:'#ffe057','stroke-width':layout.w/200,'stroke-dasharray':`${layout.w/100} ${layout.w/180}`});
+ for(const p of layout.paths)shape('line',{x1:p.a.x,y1:p.a.y,x2:p.b.x,y2:p.b.y,stroke:'#ee397c','stroke-width':layout.w/220,opacity:.85});
+ for(const p of layout.landmarks)shape('circle',{cx:p.x,cy:p.y,r:layout.w/160,fill:'#fff5d9',stroke:'#254b39','stroke-width':layout.w/700});
+ figure.append(svg);card.append(heading,figure,info);document.querySelector('main').append(card);
+ try{await img.decode();const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;const ctx=c.getContext('2d');ctx.drawImage(img,0,0);const pixels=ctx.getImageData(0,0,c.width,c.height).data;let alpha=false;for(let j=3;j<pixels.length;j+=4)if(pixels[j]===0){alpha=true;break;}if(!alpha)throw Error('缺少透明通道');info.textContent=`${art.width} × ${art.height} · ${(art.size/1000).toFixed(1)} KB · 解码、透明通道、Canvas 读取通过`;}
+ catch(e){info.className='error';info.textContent='资源校验失败：'+e.message;}
+}
+document.querySelector('#guides').onchange=e=>{for(const svg of document.querySelectorAll('svg'))svg.toggleAttribute('hidden',!e.target.checked);};
+</script></html>

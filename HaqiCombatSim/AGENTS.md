@@ -108,3 +108,8 @@ Three.js 两种版本二选一，插件必须匹配所选版本；当前 Canvas 
 阅读、整理、创作或更新主线章节、NPC支线、双语对话与副本剧本时，使用项目技能 [.github/skills/haqi-story/SKILL.md](.github/skills/haqi-story/SKILL.md)。遵循其中的简明语言、稳定编号、作者源定位与章节拆分约定。
 
 现实世界城市的语言、文化素材、NPC图集与任务内容使用 [.github/skills/haqi-populate-city/SKILL.md](.github/skills/haqi-populate-city/SKILL.md)。每城保存为独立的 `data/adventure/earth/cities/<id>.json`，世界索引只保留范围与引用，进入城市后加载；外观生成权重为创作配置，不冒充人口统计。
+
+
+## 新岛屿与导航地图制作
+
+新增或重绘哈奇岛屿时，先读 [新岛屿制作流程](docs/island-expansion.md#新岛屿制作流程2026-10-13) 与 [地图美术](docs/world-map-art.md)。先确定并生成游戏地图，再用真实布局参考与已核验的风格 WebP 生成每岛独立透明插画；保持完整画布坐标，文字和动态角色由程序叠加。正式清单使用 `detailStyle: illustration`，加载中及失败均不生成基础地形。必须核验道路/地标对齐、WebP预算、CDN和正式渲染入口，独立预览不代表已接入。当前准备及安装脚本的岛屿范围有限，扩展前核对实际参数，不能假定支持任意新ID或单岛安装。

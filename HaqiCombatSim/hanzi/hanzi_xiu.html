@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f3ecdc">
+<title>休 xiū · 一个人，一棵树</title>
+<style>
+:root{--paper:#f3ecdc;--ink:#302f28;--red:#a74636;--green:#526e58;--muted:#847e6e;font-family:"Kaiti SC","STKaiti","KaiTi","SimSun",serif;color:var(--ink);background:var(--paper)}
+*{box-sizing:border-box}body{margin:0;min-height:100svh;background:radial-gradient(ellipse at 50% 40%,#fbf7ec 0%,#f3ecdc 70%,#e9dfc9 100%)}
+button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,a:focus-visible{outline:2px solid var(--red);outline-offset:5px}button:disabled{cursor:default;opacity:.45}[hidden]{display:none!important}
+.page{height:100svh;min-height:580px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;max-width:1500px;margin:auto;padding:30px 48px 22px;position:relative}
+header{display:flex;align-items:center;justify-content:space-between;gap:18px;z-index:2}.brand{font-size:17px;letter-spacing:.2em;display:flex;align-items:center;gap:12px}.seal{background:var(--red);color:var(--paper);border-radius:3px;padding:7px 6px;font-size:19px;line-height:1}.edition{font-size:12px;color:var(--muted);letter-spacing:.14em;margin-top:8px}.outline{background:transparent;border:1px solid #baaf97;border-radius:3px;color:var(--ink);padding:9px 16px;font-size:15px}.outline:hover{background:#e8dfca}
+main{position:relative;min-height:0;display:flex;flex-direction:column}.heading{text-align:center;padding-top:22px;z-index:1;pointer-events:none}.eyebrow{color:var(--red);font-size:13px;letter-spacing:.35em;margin:0 0 9px}h1{font-size:clamp(29px,3.4vw,46px);font-weight:400;letter-spacing:.16em;margin:0}.deck{font-size:16px;color:var(--muted);letter-spacing:.18em;margin:10px 0 0}
+.canvas{flex:1;min-height:0;position:relative}#stage{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;overflow:visible}.ink{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-linejoin:round}.land{transition:opacity 1.6s}.leaf{fill:var(--green);opacity:.83}#canopy{transform-origin:610px 345px}.sway{animation:sway 5s ease-in-out infinite alternate}@keyframes sway{from{transform:rotate(-1deg)}to{transform:rotate(1.3deg)}}
+#treeTarget,#personTarget,#shadeTarget{cursor:pointer}#personTarget{cursor:grab}#personTarget:active{cursor:grabbing}.target-ring{fill:none;stroke:var(--red);stroke-width:1.6;stroke-dasharray:4 7;animation:pulse 2s ease-in-out infinite}@keyframes pulse{50%{opacity:.35}}.brush{fill:none;stroke:var(--ink);stroke-width:12;stroke-linecap:round;stroke-linejoin:round}.ghost{fill:none;stroke:#c7beac;stroke-width:12;stroke-linecap:round}.guide{fill:none;stroke:var(--red);stroke-width:3;stroke-dasharray:3 7;stroke-linecap:round}.grid{stroke:#c4b49c;stroke-width:1;stroke-dasharray:6 7;fill:none}#startDot{fill:var(--red)}#pen{fill:var(--red);stroke:var(--paper);stroke-width:3}.svg-label{font-size:16px;fill:var(--red);text-anchor:middle;letter-spacing:2px}
+.caption{text-align:center;min-height:138px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 12px}.chapter{color:var(--red);font-size:13px;letter-spacing:.22em;margin:0 0 9px}#caption{font-size:clamp(21px,2.1vw,28px);font-weight:400;letter-spacing:.08em;line-height:1.5;margin:0}#hint{color:var(--muted);font-size:15px;margin:8px 0 14px;min-height:21px}.actions{display:flex;justify-content:center;gap:12px;min-height:44px;flex-wrap:wrap}.primary{background:var(--red);color:#fff6e5;border:1px solid var(--red);border-radius:3px;font-size:18px;letter-spacing:.15em;padding:10px 24px;box-shadow:0 5px 14px #85463118}.primary:hover{background:#943b2e}.caption.changed #caption{animation:ink-in .8s ease-out}@keyframes ink-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+footer{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid #d8cdb8;padding-top:17px;margin-top:18px;font-size:12px;color:var(--muted)}#progress{display:flex;list-style:none;gap:24px;margin:0;padding:0}#progress li{position:relative;white-space:nowrap}#progress li[aria-current="step"]{color:var(--red)}#progress li[aria-current="step"]:before{content:"";position:absolute;left:-9px;top:5px;width:4px;height:4px;border-radius:50%;background:var(--red)}.colophon{letter-spacing:.12em}#glyphLabel{font-size:24px;text-anchor:middle;fill:var(--red);letter-spacing:8px}
+@media(max-width:600px){.page{padding:20px 16px 18px;min-height:660px}.brand{font-size:14px;gap:8px}.edition{font-size:10px}.heading{padding-top:26px}h1{font-size:30px}.deck{font-size:14px}.caption{min-height:171px;padding:0}#caption{font-size:21px}#hint{font-size:14px;max-width:310px;line-height:1.5}.colophon{display:none}footer{justify-content:center;padding-top:15px;margin-top:12px}#progress{gap:23px;font-size:11px}.outline{padding:8px 12px}.heading .eyebrow{font-size:11px}#stage{overflow:hidden}}
+@media(max-height:620px) and (min-width:601px){.page{min-height:420px;padding:14px 26px}.heading{padding-top:8px}h1{font-size:26px}.deck,.edition{display:none}.caption{min-height:112px}#caption{font-size:20px}#hint{margin:4px 0 8px}footer{margin-top:8px;padding-top:8px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="page">
+ <header><div><div class="brand"><span class="seal">字</span>一字一故事</div><div class="edition">汉字里的小小世界 · 第二篇</div></div><button id="replay" class="outline" hidden>重新开始</button></header>
+ <main>
+  <div class="heading"><p class="eyebrow">休 · XIŪ</p><h1>一个人，一棵树</h1><p class="deck">走进画里，发现一个汉字</p></div>
+  <div class="canvas">
+  <svg id="stage" viewBox="0 0 1000 520" aria-label="一个赶路人与一棵树的互动故事">
+   <defs>
+    <linearGradient id="mountainWash" x2="0" y2="1"><stop stop-color="#8f9c86" stop-opacity=".22"/><stop offset="1" stop-color="#a8ad95" stop-opacity=".02"/></linearGradient>
+    <radialGradient id="shadeWash"><stop stop-color="#647c5c" stop-opacity=".2"/><stop offset="1" stop-color="#647c5c" stop-opacity="0"/></radialGradient>
+    <filter id="paperGrain"><feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="3" seed="17"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".055"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
+   </defs>
+   <g id="landscape" class="land">
+    <circle cx="782" cy="85" r="29" fill="#c4855a" opacity=".38"/>
+    <path d="M-80 343 Q70 170 157 230 Q241 130 353 283 Q430 162 530 274 Q624 206 722 290 Q825 145 1100 339V425H-80Z" fill="url(#mountainWash)"/>
+    <path d="M-20 372 Q120 328 274 370 Q386 386 490 364 M721 361 Q872 334 1030 371" class="ink" stroke-width="1.3" opacity=".23"/>
+    <path d="M-30 460 Q210 390 458 412 Q657 436 1035 384" class="ink" stroke-width="1.2" opacity=".25"/>
+    <path d="M-30 483 Q209 403 448 425 Q633 451 1035 399" class="ink" stroke-width=".7" opacity=".18"/>
+    <g class="ink" stroke-width="1.2" opacity=".35"><path d="M750 395l-4-15m4 15 7-11m-7 11 1-19 M237 405l-6-12m6 12 6-17 M807 396l5-13m-5 13-4-9"/><path d="M348 114q8-9 16 0q8-9 16 0 M386 131q6-7 12 0q6-7 12 0"/></g>
+   </g>
+   <ellipse id="shadow" cx="589" cy="412" rx="145" ry="35" fill="url(#shadeWash)" opacity="0"/>
+   <g id="tree">
+    <g id="treeLines" class="brush"></g>
+    <g id="canopy">
+     <path class="leaf" d="M602 98C558 52 512 76 518 121C470 106 451 157 480 182C433 223 478 250 518 233C510 274 557 280 586 254C608 287 655 268 653 238C697 263 750 218 717 185C762 145 715 104 679 121C675 80 635 68 602 98Z"/>
+     <path fill="#899d75" opacity=".5" d="M596 103Q543 82 534 143Q492 131 489 185Q538 166 558 204Q580 180 605 208Q649 170 681 189Q709 155 673 128Q641 139 632 106Z"/>
+     <g class="ink" stroke-width="1.6" opacity=".25"><path d="M609 256Q568 190 520 162 M611 243Q650 181 688 164 M612 213L598 133"/></g>
+    </g>
+   </g>
+   <g id="person">
+    <g id="personLines" class="brush"></g>
+    <g id="personDetails">
+     <circle cx="433" cy="270" r="16" fill="#ebd9b8" stroke="#302f28" stroke-width="3"/>
+     <path d="M417 269Q416 246 435 253Q452 255 448 269Q435 259 417 269" fill="#302f28"/>
+     <path id="arm" d="M423 308Q450 336 478 311" class="ink" stroke-width="7"/>
+     <path id="leg" d="M413 350Q432 369 448 397" class="ink" stroke-width="8"/>
+     <path d="M438 272h2" class="ink" stroke-width="2"/>
+     <path id="bag" d="M399 294Q378 285 378 313L385 340Q396 349 409 334L409 304Z" fill="#a5754c" stroke="#664a32" stroke-width="2"/>
+    </g>
+   </g>
+   <g id="targets" hidden>
+    <g id="treeTarget"><circle class="target-ring" cx="610" cy="180" r="97"/><rect x="460" y="65" width="285" height="340" fill="transparent"/><text x="610" y="54" class="svg-label">点一点，让树荫展开</text></g>
+    <g id="shadeTarget" hidden><ellipse class="target-ring" cx="479" cy="410" rx="62" ry="21"/><rect x="409" y="285" width="150" height="150" fill="transparent"/><text x="484" y="461" class="svg-label">到树荫里来</text></g>
+    <g id="personTarget" hidden><rect x="180" y="249" width="122" height="174" rx="30" fill="transparent"/><circle class="target-ring" cx="239" cy="326" r="65"/></g>
+   </g>
+   <g id="writing" hidden>
+    <path class="grid" d="M320 80H715V435H320Z M517 80V435 M320 257H715 M320 80L715 435 M715 80L320 435"/>
+    <g id="ghosts"></g><g id="written"></g><path id="guide" class="guide"/><path id="trace" class="brush"/>
+    <circle id="startDot" r="7"/><text id="strokeNumber" class="svg-label"></text><circle id="pen" r="9" hidden/>
+   </g>
+   <text id="glyphLabel" x="515" y="494" hidden>休 xiū · 休息</text>
+  </svg>
+  </div>
+  <section class="caption" aria-live="polite" aria-atomic="true"><p id="chapter" class="chapter">序 · 在路上</p><h2 id="caption">走累了，就歇一会儿。</h2><p id="hint">一个可以看、可以玩、可以写的汉字故事</p><div class="actions"><button id="action" class="primary">走进故事</button><button id="demo" class="outline" hidden>看示范</button></div></section>
+ </main>
+ <footer><ol id="progress" aria-label="故事进度"><li aria-current="step">启程</li><li>遇树</li><li>歇息</li><li>成字</li><li>描字</li><li>再出发</li></ol><span class="colophon">一人一木 · 片刻安然</span></footer>
+</div>
+<script type="module">
+const $ = id => document.getElementById(id);
+const svg = $('stage'), reduced = matchMedia('(prefers-reduced-motion: reduce)');
+const ns = 'http://www.w3.org/2000/svg';
+// Each visual line is one cubic curve, so the figure and tree genuinely morph into strokes.
+// 休: 撇、竖、横、竖、撇、捺（六画）。核对：https://www.hanyuguoxue.com/zidian/zi-20241
+const glyph = [
+ [436,116,421,162,384,204,351,232], [401,189,401,243,401,341,400,405],
+ [475,208,524,206,623,203,675,200], [578,111,577,181,577,332,576,409],
+ [574,210,553,269,503,337,451,371], [584,213,608,271,649,329,700,362]
+];
+const standing = [[429,294,425,309,422,332,413,351],[413,351,404,370,394,390,389,402]];
+const resting = [[467,328,474,344,477,359,478,370],[478,370,461,370,451,388,439,404]];
+const tree = [[539,236,566,264,638,239,687,208],[610,190,605,276,614,362,607,407],[609,297,591,354,570,389,548,412],[610,313,627,353,654,386,682,401]];
+const names = ['撇','竖','横','竖','撇','捺'];
+const pathData = a => `M${a[0]} ${a[1]}C${a.slice(2).join(' ')}`;
+function path(parent, points, cls='brush') { const p=document.createElementNS(ns,'path');p.setAttribute('d',pathData(points));p.setAttribute('class',cls);parent.append(p);return p; }
+const personPaths=standing.map(a=>path($('personLines'),a));
+const treePaths=tree.map(a=>path($('treeLines'),a));
+const ghosts=glyph.map(a=>path($('ghosts'),a,'ghost'));
+const written=glyph.map(a=>path($('written'),a));
+let state='intro', generation=0, controller=new AbortController(), drag=null, stroke=0, samples=[], tracing=false, demoRunning=false, selected=false;
+let personX=-200;
+const ease=t=>t*t*(3-2*t);
+function opacity(id,n){$(id).style.opacity=n;}
+function personPosition(x,y=0){personX=x;$('person').setAttribute('transform',`translate(${x} ${y})`);}
+function caption(chapter,text,hint=''){ $('chapter').textContent=chapter;$('caption').textContent=text;$('hint').textContent=hint;const c=document.querySelector('.caption');c.classList.remove('changed');void c.offsetWidth;c.classList.add('changed'); }
+function scene(next,index){state=next;document.body.dataset.scene=next;document.querySelectorAll('#progress li').forEach((li,i)=>{if(i===index)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');});$('action').hidden=true;$('demo').hidden=true;}
+function action(text){$('action').textContent=text;$('action').hidden=false;}
+function animate(ms,fn,signal=controller.signal){
+ return new Promise(resolve=>{let frame,start;let settled=false;const finish=ok=>{if(settled)return;settled=true;cancelAnimationFrame(frame);signal.removeEventListener('abort',abort);resolve(ok);};const abort=()=>finish(false);if(signal.aborted){finish(false);return;}signal.addEventListener('abort',abort,{once:true});
+ const step=t=>{if(start===undefined)start=t;const p=Math.min(1,(t-start)/ms);fn(ease(p));if(p===1)finish(true);else frame=requestAnimationFrame(step);};frame=requestAnimationFrame(step);});
+}
+const pause=ms=>animate(ms,()=>{});
+const motion=(ms,fn)=>animate(reduced.matches?180:ms,fn);
+function morph(paths,from,to,p){paths.forEach((el,i)=>el.setAttribute('d',pathData(from[i].map((v,j)=>v+(to[i][j]-v)*p))));}
+function reset(){
+ controller.abort();controller=new AbortController();generation++;cancelPointer();stroke=0;selected=false;tracing=false;demoRunning=false;
+ scene('intro',0);personPosition(-200);morph(personPaths,standing,standing,1);morph(treePaths,tree,tree,1);
+ for(const id of ['landscape','person','tree','personDetails','canopy'])opacity(id,1);
+ opacity('shadow',0);$('canopy').setAttribute('transform','translate(305 205) scale(.5)');$('canopy').classList.remove('sway');
+ $('personDetails').removeAttribute('transform');$('arm').setAttribute('d','M423 308Q450 336 478 311');$('leg').setAttribute('d','M413 350Q432 369 448 397');$('bag').removeAttribute('transform');
+ $('targets').hidden=true;$('treeTarget').hidden=false;$('shadeTarget').hidden=true;$('personTarget').hidden=true;
+ $('writing').hidden=true;$('glyphLabel').hidden=true;$('pen').hidden=true;$('startDot').hidden=false;$('replay').hidden=true;$('demo').disabled=false;
+ written.forEach(p=>{p.style.opacity=0;p.style.strokeDasharray='';p.style.strokeDashoffset='';});$('trace').setAttribute('d','');
+ caption('序 · 在路上','走累了，就歇一会儿。','一个可以看、可以玩、可以写的汉字故事');action('走进故事');
+}
+async function begin(){
+ reset();scene('walk',0);$('replay').hidden=false;caption('一 · 启程','走了好久，他有些累了。','跟着他的脚步，慢慢往前走。');
+ personPosition(-330);
+ if(!await motion(6500,p=>personPosition(-330+130*p,reduced.matches?0:Math.sin(p*36)*3*(1-p))))return;
+ if(!await pause(1000))return;
+ scene('tree',1);caption('二 · 遇树','前面有棵树。','点一点小树，让枝叶展开。');$('targets').hidden=false;action('点一点小树');
+}
+async function grow(){
+ if(state!=='tree')return;scene('growing',1);$('targets').hidden=true;
+ if(!await motion(2500,p=>{const s=.5+.5*p;$('canopy').setAttribute('transform',`translate(${610*(1-s)} ${410*(1-s)}) scale(${s})`);opacity('shadow',p);}))return;
+ $('canopy').removeAttribute('transform');$('canopy').classList.add('sway');
+ scene('move',2);caption('三 · 歇息','树下真凉快。','拖动小人到树荫，或先点小人，再点树荫。');
+ $('targets').hidden=false;$('treeTarget').hidden=true;$('shadeTarget').hidden=false;$('personTarget').hidden=false;action('选中小人');
+}
+function selectPerson(){if(state!=='move')return;selected=true;$('hint').textContent='小人准备好了，点一下树荫吧。';action('走到树荫里');}
+async function rest(){
+ if(state!=='move')return;const x=personX;cancelPointer();scene('rest',2);$('targets').hidden=true;caption('三 · 歇息','靠着大树，歇一会儿。','风轻轻吹，树叶沙沙响。');
+ if(!await motion(1700,p=>personPosition(x+(43-x)*p)))return;
+ if(!await motion(1700,p=>{
+ personPosition(43*(1-p));morph(personPaths,standing,resting,p);$('personDetails').setAttribute('transform',`translate(${38*p} ${35*p})`);
+ $('arm').setAttribute('d',`M${423+7*p} ${308+9*p}Q${450-4*p} ${336+9*p} ${478-15*p} ${311+24*p}`);
+ $('leg').setAttribute('d',`M${413+16*p} ${350-15*p}Q${432+10*p} ${369-8*p} ${448+11*p} ${397-28*p}`);
+ $('bag').setAttribute('transform',`translate(${-27*p} ${34*p})`);
+ }))return;
+ if(!await pause(5500))return;
+ scene('morph',3);caption('四 · 成字','一个人，靠着树。','看，画里藏着一个字。');$('canopy').classList.remove('sway');
+ if(!await motion(1800,p=>{morph(personPaths,resting,standing,p);$('personDetails').setAttribute('transform',`translate(${38*(1-p)} ${35*(1-p)})`);opacity('personDetails',1-p);}))return;
+ if(!await motion(4800,p=>{morph(personPaths,standing,glyph.slice(0,2),p);morph(treePaths,tree,glyph.slice(2),p);opacity('canopy',1-p);opacity('landscape',1-p);opacity('shadow',1-p);}))return;
+ $('glyphLabel').hidden=false;caption('四 · 成字','休，休息的休。','左边是单人旁，右边是木。');
+ if(!await pause(5000))return;
+ startWriting();
+}
+function startWriting(){scene('write',4);opacity('person',0);opacity('tree',0);$('writing').hidden=false;$('glyphLabel').hidden=true;$('demo').hidden=false;prepareStroke();}
+function prepareStroke(){
+ const p=ghosts[stroke],length=p.getTotalLength(),count=Math.ceil(length/5)+1;samples=Array.from({length:count},(_,i)=>p.getPointAtLength(length*i/(count-1)));
+ $('guide').setAttribute('d',pathData(glyph[stroke]));$('trace').setAttribute('d','');$('startDot').setAttribute('cx',samples[0].x);$('startDot').setAttribute('cy',samples[0].y);
+ $('strokeNumber').setAttribute('x',samples[0].x-22);$('strokeNumber').setAttribute('y',samples[0].y-15);$('strokeNumber').textContent=stroke+1;
+ caption('五 · 描字',`第 ${stroke+1} 笔 · ${names[stroke]}`,'从红点起笔，顺着虚线慢慢写。');
+}
+async function finishStroke(){
+ written[stroke].style.opacity=1;written[stroke].style.strokeDasharray='';written[stroke].style.strokeDashoffset='';$('trace').setAttribute('d','');stroke++;
+ if(stroke<6){prepareStroke();return;}
+ scene('written',4);$('demo').hidden=true;$('guide').setAttribute('d','');$('startDot').hidden=true;$('strokeNumber').textContent='';$('glyphLabel').hidden=false;
+ caption('五 · 描字','写好了！休，休息的休。','一人一木，把这个字记在心里。');
+ if(!await pause(3300))return;
+ await finale();
+}
+async function demonstrate(){
+ if(state!=='write'||demoRunning)return;cancelPointer();demoRunning=true;$('demo').disabled=true;$('hint').textContent='看红点走过每一笔，你也可以跟着比画。';const token=generation;
+ while(stroke<6&&state==='write'){
+ const p=written[stroke],length=p.getTotalLength();p.style.opacity=1;p.style.strokeDasharray=length;p.style.strokeDashoffset=length;$('pen').hidden=false;
+ if(!await motion(1700,t=>{p.style.strokeDashoffset=length*(1-t);const pt=p.getPointAtLength(t*length);$('pen').setAttribute('cx',pt.x);$('pen').setAttribute('cy',pt.y);}))return;
+ $('pen').hidden=true;await finishStroke();if(token!==generation)return;if(state==='write'&&!await pause(450))return;
+ }
+ if(token===generation){demoRunning=false;$('demo').disabled=false;}
+}
+async function finale(){
+ scene('finale',5);caption('六 · 再出发','休息好了，再出发。','好好休息，也是一件重要的事。');$('writing').hidden=true;opacity('person',1);opacity('tree',1);$('glyphLabel').hidden=true;
+ if(!await motion(3500,p=>{morph(personPaths,glyph.slice(0,2),standing,p);morph(treePaths,glyph.slice(2),tree,p);opacity('canopy',p);opacity('landscape',p);opacity('shadow',p);}))return;
+ $('personDetails').removeAttribute('transform');$('bag').removeAttribute('transform');$('leg').setAttribute('d','M413 350Q432 369 448 397');
+ if(!await motion(1500,p=>{opacity('personDetails',p);$('arm').setAttribute('d',`M423 308Q452 305 ${470+Math.sin(p*12)*7} 278`);}))return;
+ $('canopy').classList.add('sway');
+ if(!await motion(3300,p=>personPosition(370*p,reduced.matches?0:Math.sin(p*30)*3)))return;
+ scene('done',5);action('再看一次');
+}
+function point(e){const ctm=svg.getScreenCTM();return ctm?new DOMPoint(e.clientX,e.clientY).matrixTransform(ctm.inverse()):{x:0,y:0};}
+function cancelPointer(){if(!drag)return;const old=drag;drag=null;tracing=false;if(svg.hasPointerCapture(old.id))svg.releasePointerCapture(old.id);if(old.kind==='trace')$('trace').setAttribute('d','');if(old.kind==='move'&&state==='move')personPosition(-200);}
+function tracePoint(p){
+ if(!drag||drag.kind!=='trace')return;let best=drag.index,distance=Infinity;
+ // Search a short forward window: crossings, reversed strokes and endpoint jumps cannot complete a stroke.
+ for(let i=Math.max(0,drag.index-2);i<Math.min(samples.length,drag.index+9);i++){const d=Math.hypot(p.x-samples[i].x,p.y-samples[i].y);if(d<distance){distance=d;best=i;}}
+ if(distance>24){drag.invalid=true;return;}drag.index=Math.max(drag.index,best);
+ const pts=samples.slice(0,drag.index+1);$('trace').setAttribute('d',pts.map((pt,i)=>`${i?'L':'M'}${pt.x} ${pt.y}`).join(' '));
+}
+svg.addEventListener('pointerdown',e=>{
+ if(drag||!e.isPrimary||e.button!==0)return;const p=point(e);
+ if(state==='move'&&e.target.closest('#personTarget')){e.preventDefault();drag={id:e.pointerId,kind:'move',start:p,origin:personX,moved:false};svg.setPointerCapture(e.pointerId);}
+ else if(state==='write'&&!demoRunning){e.preventDefault();if(Math.hypot(p.x-samples[0].x,p.y-samples[0].y)>28){$('hint').textContent='从这一笔的红点开始哦。';return;}drag={id:e.pointerId,kind:'trace',index:0,invalid:false};tracing=true;svg.setPointerCapture(e.pointerId);tracePoint(p);}
+});
+svg.addEventListener('pointermove',e=>{
+ if(!drag||drag.id!==e.pointerId)return;const p=point(e);
+ if(drag.kind==='move'){const dx=p.x-drag.start.x,dy=p.y-drag.start.y;drag.moved||=Math.hypot(dx,dy)>6;personPosition(drag.origin+dx,dy);}
+ else for(const event of e.getCoalescedEvents?.().length?e.getCoalescedEvents():[e])tracePoint(point(event));
+});
+svg.addEventListener('pointerup',e=>{
+ if(!drag||drag.id!==e.pointerId)return;const p=point(e),old=drag;
+ if(old.kind==='trace')tracePoint(p);
+ drag=null;tracing=false;if(svg.hasPointerCapture(e.pointerId))svg.releasePointerCapture(e.pointerId);
+ if(old.kind==='move'){
+ if(!old.moved){personPosition(-200);selectPerson();}
+ else if(p.x>=409&&p.x<=559&&p.y>=265&&p.y<=445){rest();}
+ else{personPosition(-200);$('hint').textContent='还没到树荫里，再试一次吧。';}
+ }else if(!old.invalid&&old.index>=samples.length-3){finishStroke();}
+ else{$('trace').setAttribute('d','');$('hint').textContent='没关系，从红点开始，把这一笔写完整。';}
+});
+svg.addEventListener('pointercancel',cancelPointer);svg.addEventListener('lostpointercapture',cancelPointer);
+$('treeTarget').addEventListener('click',grow);$('shadeTarget').addEventListener('click',()=>{if(selected)rest();else if(state==='move')$('hint').textContent='先点一下小人，再带他走到树荫。';});
+$('action').addEventListener('click',()=>{if(state==='intro'||state==='done')begin();else if(state==='tree')grow();else if(state==='move'){if(selected)rest();else selectPerson();}});
+$('replay').addEventListener('click',begin);$('demo').addEventListener('click',demonstrate);
+function layout(){cancelPointer();svg.setAttribute('viewBox',innerWidth<=600?'135 40 650 485':'0 0 1000 520');}
+addEventListener('resize',layout);addEventListener('blur',cancelPointer);addEventListener('pagehide',()=>{controller.abort();cancelPointer();});
+addEventListener('pageshow',e=>{if(e.persisted)reset();});
+// SVG elements do not consistently implement HTMLElement.hidden; reflect it explicitly.
+for(const el of svg.querySelectorAll('[hidden],#targets,#treeTarget,#shadeTarget,#personTarget,#writing,#glyphLabel,#pen,#startDot')){
+ Object.defineProperty(el,'hidden',{get(){return this.hasAttribute('hidden');},set(v){this.toggleAttribute('hidden',!!v);}});
+}
+reset();layout();
+</script>
+</body>
+</html>

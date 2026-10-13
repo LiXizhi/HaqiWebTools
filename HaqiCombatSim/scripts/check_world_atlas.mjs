@@ -15,7 +15,7 @@ try{
         try{await page.waitForFunction(count=>window.atlasQA?.view?.getState()?.loadedResources?.length===count,resourceCount,{timeout:60000});}
         catch(error){console.error('Map startup failure',{width,height,island,errors},await page.evaluate(()=>({status:document.getElementById('status').textContent,state:window.atlasQA?.view?.getState?.()})));throw error;}
         const original=await page.evaluate(()=>JSON.stringify(atlasQA.save));
-        await page.waitForFunction(()=>atlasQA.view.getState().previewIds.includes(atlasQA.save.zone));
+        await page.waitForFunction(()=>[...atlasQA.view.getState().previewIds,...atlasQA.view.getState().illustrationIds].includes(atlasQA.save.zone));
         assert.ok(await page.locator('.haqi-atlas-landmark:visible').count()>0,'opening from Haqi starts with island detail');
         const localVortexSize=await page.locator('.map-vortex').first().evaluate(node=>parseFloat(getComputedStyle(node,'::before').width));
         assert.ok(localVortexSize>44&&localVortexSize<=96,'vortices grow in island detail');
@@ -32,7 +32,7 @@ try{
         await page.mouse.move(rect.x+rect.width*.5,rect.y+rect.height*.5);await page.mouse.down();await page.mouse.move(rect.x+rect.width*.5+50,rect.y+rect.height*.5+30,{steps:8});await page.mouse.up();
         assert.equal(await page.evaluate(()=>atlasQA.view.getState().selected),null);
         await page.getByRole('button',{name:'返回当前岛屿地图',exact:true}).click();
-        await page.waitForFunction(()=>atlasQA.view.getState().previewIds.includes(atlasQA.save.zone));
+        await page.waitForFunction(()=>[...atlasQA.view.getState().previewIds,...atlasQA.view.getState().illustrationIds].includes(atlasQA.save.zone));
         const local=await page.evaluate(()=>({state:atlasQA.view.getState(),landmarks:[...document.querySelectorAll('.haqi-atlas-landmark')].filter(n=>!n.hidden).map(n=>n.textContent)}));assert.ok(local.landmarks.length>0);
         await page.screenshot({path:`${directory}/${mode}-${width}-${island}-local.png`});
         // Extreme keyboard panning must not take the viewport past the island group.
@@ -53,7 +53,7 @@ try{
                 const state=await page.evaluate(()=>atlasQA.view.getState()),box=await canvas.boundingBox(),x=box.x+(island.x-state.camera.x)*state.camera.scale+state.width/2,y=box.y+(island.y-state.camera.y)*state.camera.scale+state.height/2;
                 await page.mouse.move(x,y);
                 for(let step=0;step<12;step++)await page.mouse.wheel(0,-30);
-                try{await page.waitForFunction(id=>atlasQA.view.getState().previewIds.includes(id),island.id,{timeout:5000});}
+                try{await page.waitForFunction(id=>[...atlasQA.view.getState().previewIds,...atlasQA.view.getState().illustrationIds].includes(id),island.id,{timeout:5000});}
                 catch(error){console.error('Island preview failure',island.id,await page.evaluate(()=>atlasQA.view.getState()));await page.screenshot({path:`${directory}/failed-preview-${island.id}.png`});throw error;}
             }
             await page.evaluate(()=>atlasQA.view.overview());

@@ -1,5 +1,7 @@
 # 世界地图美术
 
+新增岛屿使用 [新岛屿制作流程](island-expansion.md#新岛屿制作流程2026-10-13)：先生成真实布局，再以布局图加风格图制作独立透明插画。当前所有岛屿保持插画缩放，加载中及失败不绘制基础地形；下方早期共享图集与地形渐变记录仅作历史追溯。
+
 2026-09-20。原版参考来自 `assets_manifest.txt` 中 `texture/aries/worldmaps/worldmap/worldmap_bg.dds.z`，下载后校验MD5，再解压ZIP中的DDS并保存为参考WebP。原版页面入口见 `script/apps/Aries/Map/LocalMap.lua` 的 `ShowWorldMap`。原图与生成图哈希分别记录于 `data/adventure/world-map-art.json`。
 
 使用内置 image_gen，以原版图片作为参考生成新图；没有直接使用原图中的文字。六岛布局为左上幽暗、右上寒冰、中间哈奇、左下沙漠、下中魔法营地、右下火鸟。岛名、等级和传送按钮保持DOM，可独立更新。小屏保持图片比例，横向滚动查看，初始定位当前岛屿。图片按需加载，失败显示文字目的地列表。
@@ -58,6 +60,23 @@ Use case: stylized-concept. Create a production game world-map background illust
 
 隔离性能脚本scripts/check_world_atlas_performance.mjs以桌面与390像素、DPR2、两次90帧拖动记录帧间隔与实际renderer.minimap重建数，--assert-cache守护重复拖动不重建预览。测量受机器与浏览器环境影响，不作为所有设备帧率保证。
 
+## 2026-10-13：所有岛屿使用按布局重绘的独立插画
+
+继字源岛后，魔法营地、哈奇岛、火鸟岛、寒冰岛、沙漠岛、幽暗岛、潮汐岛、浮岸岛、风帆岛各生成独立透明底图。第一参考为实际 `data/adventure/maps/<id>.json` 的海岸、道路、河流、桥梁、建筑及NPC点位，第二参考为原六岛/扩展岛图集的画风。使用内置 `image_gen`，哈奇岛另做一次局部清理以去掉参考圆点；完整提示词及参考路径见 `data/adventure/island-map-repaint-prompts.json`。
+
+运行时 `world-map-art.json` 每岛使用独立资源，统一 `detailStyle: illustration`，缩放继续显示同一张底图；文字、玩家和社交角色仍由原坐标叠加。图像不可用时保留目的地选择与失败提示，不回退程序地形。原插画图集保留为来源，不覆盖旧文件。每张新WebP不超过200000字节，保留全画布 `[0,0,width,height]`，不能裁去透明边缘后沿用原坐标。
+
+AI重绘保留主要路网关系，但仍存在局部几何偏差；这批图片用于地图导航表现，不替换实际行走场景或碰撞数据，不迁移玩家存档。
+
+准备与接入：
+
+1. `python scripts/prepare_registered_island_art.py --references` 从实际JSON生成布局参考和生成计划。
+2. 每岛用内置图像工具生成，再运行 `python scripts/prepare_registered_island_art.py --id <id> --source <PNG>`；先无损，再有损/等比缩小。源图、地图布局和WebP分别记录哈希。
+3. 用既有七牛上传技能上传九张成品，保存真实上传输出；`node scripts/install_registered_island_art.mjs --upload-log <上传日志>` 逐张核验CDN下载哈希、大小、CORS及地图布局未改变，全部通过后更新正式清单。
+4. `tests/fixtures/registered-islands.html` 逐张检查正式CDN资源、透明通道及原道路叠加；点击岛名进入 `world-atlas.html?island=<id>`，调用主程序实际地图渲染器。显式 `?assets=local` 使用归档副本。
+
+旧扩展图集准备脚本现在保留已接入的独立插画配置；地图验收与性能脚本不再把“生成程序地形预览”作为插画加载成功的条件。
+
 ## 2026-10-06：岛屿默认视野与缩放上限
 
 从哈奇岛屿打开世界地图默认定位当前岛地形；现实世界及副本来源仍保留世界视野，漩涡focusPortal优先适配完整群岛。返回按钮保留。当前岛桌面预留64px、小屏32px，显示完整岛轮廓；缩放上限按相机附近岛屿适配倍率的1.15倍和768px地形预览原尺寸共同限制，窗口变化也重新限制，拖动本身不改变缩放。两个哈奇漩涡调整为(-140,-210)与(270,65)，配对现实坐标及入口ID保持一致。
@@ -65,3 +84,8 @@ Use case: stylized-concept. Create a production game world-map background illust
 ## 2026-10-06：漩涡随地图缩放
 
 漩涡以完整世界视野为基准，图标从44px按缩放倍率平方根增长到最多96px，防止局部图入口过小或遮挡地形。哈奇与现实图共用atlasPortalSize；按钮点击范围为图标加10px，哈奇Canvas命中同步，现实图入口避让也使用实际尺寸。尺寸仅变化时更新CSS变量，平移不重复更新。
+
+
+## 2026-10-13：插画岛屿取消基础地形回退
+
+已配置 `detailStyle: illustration` 的岛屿在图片加载中、加载失败及任意缩放下均不生成或绘制程序基础地形，也不显示椭圆占位岛。图片到达后直接绘制插画；等待期间保留海面及原坐标地标，失败时沿用图片不可用提示与目的地选择。此约定替代前文的缺图地形回退；未配置插画模式的地图保留原逻辑。

@@ -10,7 +10,8 @@ try{
         const page=await browser.newPage({viewport:{width,height:850},deviceScaleFactor:2}),errors=[];
         page.on('pageerror',e=>errors.push(e.message));
         await page.goto('http://127.0.0.1:8799/tests/fixtures/world-atlas.html?assets=local&view=local');
-        await page.waitForFunction(()=>window.atlasQA?.view?.getState()?.loadedResources?.length===4,null,{timeout:60000});
+        const resourceCount=Object.keys(JSON.parse(fs.readFileSync('data/adventure/world-map-art.json','utf8')).resources).length;
+        await page.waitForFunction(count=>window.atlasQA?.view?.getState()?.loadedResources?.length===count,resourceCount,{timeout:60000});
         await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
         const result=await page.evaluate(async()=>{
             const view=atlasQA.view,stage=document.querySelector('.haqi-atlas-stage'),canvas=stage.querySelector('canvas'),r=canvas.getBoundingClientRect();

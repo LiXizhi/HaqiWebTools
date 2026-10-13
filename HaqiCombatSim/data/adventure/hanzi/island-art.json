@@ -2,36 +2,38 @@
   "version": 1,
   "assets": [
     {
-      "local": "assets/adventure/environment/world-atlas-hanzi-40da48b648c2.webp",
-      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/world-atlas-hanzi-40da48b648c2.webp",
-      "width": 640,
-      "height": 640,
-      "size": 190824,
-      "sha256": "40da48b648c2cec700865009f394400b42b817d7ba6344b6dea42f4eabc0d9f4",
-      "source": {
-        "generator": "image_gen",
-        "sha256": "73678f86b104818ee173df86545992bab79d99b68ca1704b35269c9b71311e29",
-        "width": 1254,
-        "height": 1254,
-        "prompt": "docs/hanzi-island-art.md"
-      },
+      "local": "assets/adventure/environment/world-atlas-hanzi-layout-66e58c7f8be3.webp",
+      "width": 768,
+      "height": 768,
+      "size": 191372,
+      "sha256": "66e58c7f8be30a2a8b9d35e5a461f6868809edada3e281ca65a203b303282fde",
       "encoding": {
         "lossless": false,
-        "quality": 94
+        "quality": 82
       },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "cb41f813518628d5b9279831eada5a7dc3007181d6a261e3c74746c1afcb163a",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/hanzi.json",
+        "layoutSha256": "47e11dd6cb5910ca044dc36d287890a6aa41f7dc1b90ba6a08933b68102a7828",
+        "prompt": "docs/hanzi-island-art.md#布局约束重绘预览"
+      },
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/world-atlas-hanzi-layout-66e58c7f8be3.webp",
       "frames": {
         "hanzi": {
           "rect": [
-            20,
-            8,
-            599,
-            624
+            0,
+            0,
+            768,
+            768
           ],
           "sourceRect": [
-            40,
-            6,
-            1183,
-            1232
+            0,
+            0,
+            1254,
+            1254
           ]
         }
       }

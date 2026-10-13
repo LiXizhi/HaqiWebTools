@@ -8,7 +8,7 @@ const args=process.argv.slice(2),option=(key,fallback)=>args.includes(key)?args[
 const {chromium}=createRequire(import.meta.url)(option('--playwright',process.env.HAQI_PLAYWRIGHT_PACKAGE||'playwright'));
 const base=option('--url','http://127.0.0.1:8799'),out=path.resolve(option('--output','tmp/island-expansion/review'));fs.mkdirSync(out,{recursive:true});
 const buildings=JSON.parse(fs.readFileSync('data/adventure/building-art.json','utf8')),atlas=JSON.parse(fs.readFileSync('data/adventure/world-map-art.json','utf8'));
-const media=[...readIslandPacks().map(p=>buildings.atlases[p.island.id]),atlas.resources.continuation];
+const media=[...new Set(readIslandPacks().flatMap(p=>[buildings.atlases[p.island.id],atlas.resources[atlas.islands.find(i=>i.id===p.island.id).resource]]))];
 const styles=[...fs.readFileSync('Haqi.html','utf8').matchAll(/href="(css\/[^"\s]+)"/g)].map(m=>m[1]);
 const browser=await chromium.launch({headless:true,channel:option('--channel','msedge')}),report={browser:await browser.version(),media:[],scenes:[],errors:[]};
 try{

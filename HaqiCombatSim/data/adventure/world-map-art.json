@@ -330,36 +330,389 @@
       }
     },
     "hanzi": {
-      "local": "assets/adventure/environment/world-atlas-hanzi-40da48b648c2.webp",
-      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/world-atlas-hanzi-40da48b648c2.webp",
-      "width": 640,
-      "height": 640,
-      "size": 190824,
-      "sha256": "40da48b648c2cec700865009f394400b42b817d7ba6344b6dea42f4eabc0d9f4",
-      "source": {
-        "generator": "image_gen",
-        "sha256": "73678f86b104818ee173df86545992bab79d99b68ca1704b35269c9b71311e29",
-        "width": 1254,
-        "height": 1254,
-        "prompt": "docs/hanzi-island-art.md"
-      },
+      "local": "assets/adventure/environment/world-atlas-hanzi-layout-66e58c7f8be3.webp",
+      "width": 768,
+      "height": 768,
+      "size": 191372,
+      "sha256": "66e58c7f8be30a2a8b9d35e5a461f6868809edada3e281ca65a203b303282fde",
       "encoding": {
         "lossless": false,
-        "quality": 94
+        "quality": 82
       },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "cb41f813518628d5b9279831eada5a7dc3007181d6a261e3c74746c1afcb163a",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/hanzi.json",
+        "layoutSha256": "47e11dd6cb5910ca044dc36d287890a6aa41f7dc1b90ba6a08933b68102a7828",
+        "prompt": "docs/hanzi-island-art.md#布局约束重绘预览"
+      },
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/world-atlas-hanzi-layout-66e58c7f8be3.webp",
       "frames": {
         "hanzi": {
           "rect": [
-            20,
-            8,
-            599,
-            624
+            0,
+            0,
+            768,
+            768
           ],
           "sourceRect": [
-            40,
-            6,
-            1183,
-            1232
+            0,
+            0,
+            1254,
+            1254
+          ]
+        }
+      }
+    },
+    "camp": {
+      "local": "assets/adventure/environment/world-atlas-camp-layout-02d83753bc0b.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/registered-islands/world-atlas-camp-layout-02d83753bc0b.webp",
+      "width": 704,
+      "height": 704,
+      "size": 199716,
+      "sha256": "02d83753bc0b59d0588e50b6499af1f6653557ca494dc21e8a31dd7421c88810",
+      "encoding": {
+        "lossless": false,
+        "quality": 78
+      },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "132b8abd4949730856851f48b40dc923110bd4637d7c106eef6451d1f1e5bbb2",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/camp.json",
+        "layoutSha256": "b3a79b475123ca8e9114fde03db97909b7d421a79f7d235dcc27b831bf9d0fd1",
+        "prompt": "data/adventure/island-map-repaint-prompts.json#camp",
+        "styleReference": "assets/adventure/environment/world-atlas-islands-7ea6b95c97f7.webp",
+        "styleReferenceSha256": "7ea6b95c97f75af4e287f9f5a8101d5d7a18d9d34bc981e8d97f5ed2e44dbf7a"
+      },
+      "frames": {
+        "camp": {
+          "rect": [
+            0,
+            0,
+            704,
+            704
+          ],
+          "sourceRect": [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        }
+      }
+    },
+    "town": {
+      "local": "assets/adventure/environment/world-atlas-town-layout-e44ac206dd2d.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/registered-islands/world-atlas-town-layout-e44ac206dd2d.webp",
+      "width": 832,
+      "height": 832,
+      "size": 198940,
+      "sha256": "e44ac206dd2d344358e467f4244b5aa5631f0d110da0bfbbac7840f7d226ccfb",
+      "encoding": {
+        "lossless": false,
+        "quality": 82
+      },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "33474b72787822dd48db5b59afa7809aa9e058c61eeda0d24072b8019580f8d0",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/town.json",
+        "layoutSha256": "52d49b38ade2ac11faeafbcdb781579e310f62f109a94dd9b1c287cf6aa87941",
+        "prompt": "data/adventure/island-map-repaint-prompts.json#town",
+        "styleReference": "assets/adventure/environment/world-atlas-islands-7ea6b95c97f7.webp",
+        "styleReferenceSha256": "7ea6b95c97f75af4e287f9f5a8101d5d7a18d9d34bc981e8d97f5ed2e44dbf7a"
+      },
+      "frames": {
+        "town": {
+          "rect": [
+            0,
+            0,
+            832,
+            832
+          ],
+          "sourceRect": [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        }
+      }
+    },
+    "fire": {
+      "local": "assets/adventure/environment/world-atlas-fire-layout-08e3bc968a2f.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/registered-islands/world-atlas-fire-layout-08e3bc968a2f.webp",
+      "width": 704,
+      "height": 704,
+      "size": 198592,
+      "sha256": "08e3bc968a2f2ce5ef840dc4c3afa1bac030eb3357a7096415f37d8ed3989272",
+      "encoding": {
+        "lossless": false,
+        "quality": 86
+      },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "26a0bdf7bca020802cba6359d5fd4abf3e46cb6ee0fff5b9041cf6132fd43817",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/fire.json",
+        "layoutSha256": "29629f4bfca1fa89a9927e6bc3a9342d55e3821cce8deb4385ea2cdab6784adc",
+        "prompt": "data/adventure/island-map-repaint-prompts.json#fire",
+        "styleReference": "assets/adventure/environment/world-atlas-islands-7ea6b95c97f7.webp",
+        "styleReferenceSha256": "7ea6b95c97f75af4e287f9f5a8101d5d7a18d9d34bc981e8d97f5ed2e44dbf7a"
+      },
+      "frames": {
+        "fire": {
+          "rect": [
+            0,
+            0,
+            704,
+            704
+          ],
+          "sourceRect": [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        }
+      }
+    },
+    "ice": {
+      "local": "assets/adventure/environment/world-atlas-ice-layout-2e6284567190.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/registered-islands/world-atlas-ice-layout-2e6284567190.webp",
+      "width": 768,
+      "height": 768,
+      "size": 194146,
+      "sha256": "2e6284567190938cfb5c0791c82bd77da6b6d363b0a8c6054a826a67169ab152",
+      "encoding": {
+        "lossless": false,
+        "quality": 78
+      },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "bc356eb464595c0b1487fe73fd748dde46a374151a3ccbbb2f63abdc93fb8dc4",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/ice.json",
+        "layoutSha256": "0c37a8866dc6515ed8f2f8f8172d60acbcb77f299d84ffe5a4d740079710260f",
+        "prompt": "data/adventure/island-map-repaint-prompts.json#ice",
+        "styleReference": "assets/adventure/environment/world-atlas-islands-7ea6b95c97f7.webp",
+        "styleReferenceSha256": "7ea6b95c97f75af4e287f9f5a8101d5d7a18d9d34bc981e8d97f5ed2e44dbf7a"
+      },
+      "frames": {
+        "ice": {
+          "rect": [
+            0,
+            0,
+            768,
+            768
+          ],
+          "sourceRect": [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        }
+      }
+    },
+    "desert": {
+      "local": "assets/adventure/environment/world-atlas-desert-layout-ca8447e2e26a.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/registered-islands/world-atlas-desert-layout-ca8447e2e26a.webp",
+      "width": 768,
+      "height": 768,
+      "size": 189602,
+      "sha256": "ca8447e2e26abbe4beaad3084ff77aa0c26758afa8b04f7672ec475c295d6d7a",
+      "encoding": {
+        "lossless": false,
+        "quality": 82
+      },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "dc6a986e72a412a14c73f9338ba9db70ff65f76dd0c3194deb31cc30888da465",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/desert.json",
+        "layoutSha256": "1e415ca36df0caeb428a45cf4e18c4fe2c64555121bcf6269ccd73b09a7b4959",
+        "prompt": "data/adventure/island-map-repaint-prompts.json#desert",
+        "styleReference": "assets/adventure/environment/world-atlas-islands-7ea6b95c97f7.webp",
+        "styleReferenceSha256": "7ea6b95c97f75af4e287f9f5a8101d5d7a18d9d34bc981e8d97f5ed2e44dbf7a"
+      },
+      "frames": {
+        "desert": {
+          "rect": [
+            0,
+            0,
+            768,
+            768
+          ],
+          "sourceRect": [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        }
+      }
+    },
+    "dark": {
+      "local": "assets/adventure/environment/world-atlas-dark-layout-a251c019817b.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/registered-islands/world-atlas-dark-layout-a251c019817b.webp",
+      "width": 768,
+      "height": 768,
+      "size": 189914,
+      "sha256": "a251c019817bae839850d35127dcac0c415be90d17a6fd9902a804d8b0b11dbf",
+      "encoding": {
+        "lossless": false,
+        "quality": 82
+      },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "440fdd842ab7f5e9c0b4a3435d769fd853bbb01d2dcceb78bbda8c38df94f9f8",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/dark.json",
+        "layoutSha256": "32c3796163447fb6e379f32aa5443bfd3c1f149ad5093ba29928dee091f1919a",
+        "prompt": "data/adventure/island-map-repaint-prompts.json#dark",
+        "styleReference": "assets/adventure/environment/world-atlas-islands-7ea6b95c97f7.webp",
+        "styleReferenceSha256": "7ea6b95c97f75af4e287f9f5a8101d5d7a18d9d34bc981e8d97f5ed2e44dbf7a"
+      },
+      "frames": {
+        "dark": {
+          "rect": [
+            0,
+            0,
+            768,
+            768
+          ],
+          "sourceRect": [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        }
+      }
+    },
+    "tide": {
+      "local": "assets/adventure/environment/world-atlas-tide-layout-2b9c02c5bd65.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/registered-islands/world-atlas-tide-layout-2b9c02c5bd65.webp",
+      "width": 640,
+      "height": 640,
+      "size": 189348,
+      "sha256": "2b9c02c5bd65daf7cf3c6630372e84371ba0782a686e758a700158975e5d0b01",
+      "encoding": {
+        "lossless": false,
+        "quality": 82
+      },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "e487c1abd4a250cb9d430d15874d50e0c50a7df07fbf3daac9f9ea4d91bb7b22",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/tide.json",
+        "layoutSha256": "4f6f850f3960d21be5d1101c9bc2cee117fdd2af391dd931b94beae7d5314394",
+        "prompt": "data/adventure/island-map-repaint-prompts.json#tide",
+        "styleReference": "assets/adventure/environment/world-atlas-continuation-4e93b584fc9a.webp",
+        "styleReferenceSha256": "4e93b584fc9a823a0475906fc02a5e0132d2d3998f8b4535621c5bb1bf0e411e"
+      },
+      "frames": {
+        "tide": {
+          "rect": [
+            0,
+            0,
+            640,
+            640
+          ],
+          "sourceRect": [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        }
+      }
+    },
+    "float": {
+      "local": "assets/adventure/environment/world-atlas-float-layout-07fa7e09040b.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/registered-islands/world-atlas-float-layout-07fa7e09040b.webp",
+      "width": 640,
+      "height": 640,
+      "size": 191528,
+      "sha256": "07fa7e09040bdbf7609d82c108cee6a898cc1c1ef73ad5f031c24938227e6fe5",
+      "encoding": {
+        "lossless": false,
+        "quality": 78
+      },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "532f63ac7acbe0e21a5e0b13a24ea957a85f4220d028fc60b4d7af47d369085b",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/float.json",
+        "layoutSha256": "c054b0d0abdc5b4d331c8fb9692a1d0cfd75a0a3fd6b9f686a10131f81286ea8",
+        "prompt": "data/adventure/island-map-repaint-prompts.json#float",
+        "styleReference": "assets/adventure/environment/world-atlas-continuation-4e93b584fc9a.webp",
+        "styleReferenceSha256": "4e93b584fc9a823a0475906fc02a5e0132d2d3998f8b4535621c5bb1bf0e411e"
+      },
+      "frames": {
+        "float": {
+          "rect": [
+            0,
+            0,
+            640,
+            640
+          ],
+          "sourceRect": [
+            0,
+            0,
+            1254,
+            1254
+          ]
+        }
+      }
+    },
+    "sail": {
+      "local": "assets/adventure/environment/world-atlas-sail-layout-c60cc3747512.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/registered-islands/world-atlas-sail-layout-c60cc3747512.webp",
+      "width": 640,
+      "height": 640,
+      "size": 193032,
+      "sha256": "c60cc374751269c58d6c9837d9d664955a3adad3362bcad394e89baf1745eb00",
+      "encoding": {
+        "lossless": false,
+        "quality": 86
+      },
+      "source": {
+        "generator": "image_gen",
+        "sha256": "d0641735490d721bc5a0f5a891cc587f9c132709ca64595690b930eb5d5130e0",
+        "width": 1254,
+        "height": 1254,
+        "layout": "data/adventure/maps/sail.json",
+        "layoutSha256": "b61507c76b4b73f16a951748c3e9617b9f3e3e6565bb649c612ddd68f53f2a0f",
+        "prompt": "data/adventure/island-map-repaint-prompts.json#sail",
+        "styleReference": "assets/adventure/environment/world-atlas-continuation-4e93b584fc9a.webp",
+        "styleReferenceSha256": "4e93b584fc9a823a0475906fc02a5e0132d2d3998f8b4535621c5bb1bf0e411e"
+      },
+      "frames": {
+        "sail": {
+          "rect": [
+            0,
+            0,
+            640,
+            640
+          ],
+          "sourceRect": [
+            0,
+            0,
+            1254,
+            1254
           ]
         }
       }
@@ -369,156 +722,166 @@
     {
       "id": "camp",
       "name": "魔法营地",
-      "resource": "islands",
+      "resource": "camp",
       "x": 0,
       "y": 310,
       "w": 220,
       "h": 196,
       "rect": [
-        8,
-        54,
-        253,
-        207
-      ]
+        0,
+        0,
+        704,
+        704
+      ],
+      "detailStyle": "illustration"
     },
     {
       "id": "town",
       "name": "哈奇岛",
-      "resource": "islands",
+      "resource": "town",
       "x": 0,
       "y": 0,
       "w": 440,
       "h": 346,
       "rect": [
-        277,
-        32,
-        253,
-        229
-      ]
+        0,
+        0,
+        832,
+        832
+      ],
+      "detailStyle": "illustration"
     },
     {
       "id": "fire",
       "name": "火鸟岛",
-      "resource": "islands",
+      "resource": "fire",
       "x": 390,
       "y": 230,
       "w": 330,
       "h": 279,
       "rect": [
-        546,
-        23,
-        253,
-        238
-      ]
+        0,
+        0,
+        704,
+        704
+      ],
+      "detailStyle": "illustration"
     },
     {
       "id": "ice",
       "name": "寒冰岛",
-      "resource": "islands",
+      "resource": "ice",
       "x": 390,
       "y": -170,
       "w": 330,
       "h": 292,
       "rect": [
-        8,
-        294,
-        253,
-        236
-      ]
+        0,
+        0,
+        768,
+        768
+      ],
+      "detailStyle": "illustration"
     },
     {
       "id": "desert",
       "name": "沙漠岛",
-      "resource": "islands",
+      "resource": "desert",
       "x": -390,
       "y": 230,
       "w": 330,
       "h": 262,
       "rect": [
-        277,
-        317,
-        253,
-        213
-      ]
+        0,
+        0,
+        768,
+        768
+      ],
+      "detailStyle": "illustration"
     },
     {
       "id": "dark",
       "name": "幽暗岛",
-      "resource": "islands",
+      "resource": "dark",
       "x": -390,
       "y": -170,
       "w": 330,
       "h": 292,
       "rect": [
-        546,
-        286,
-        253,
-        244
-      ]
+        0,
+        0,
+        768,
+        768
+      ],
+      "detailStyle": "illustration"
     },
     {
       "id": "tide",
       "name": "潮汐岛",
-      "resource": "continuation",
+      "resource": "tide",
       "rect": [
-        8,
-        18,
-        310,
-        300
+        0,
+        0,
+        640,
+        640
       ],
       "x": 900,
       "y": 50,
       "w": 340,
       "h": 340,
-      "minLevel": 60
+      "minLevel": 60,
+      "detailStyle": "illustration"
     },
     {
       "id": "float",
       "name": "浮岸岛",
-      "resource": "continuation",
+      "resource": "float",
       "rect": [
-        334,
-        27,
-        310,
-        291
+        0,
+        0,
+        640,
+        640
       ],
       "x": 930,
       "y": -440,
       "w": 340,
       "h": 340,
-      "minLevel": 70
+      "minLevel": 70,
+      "detailStyle": "illustration"
     },
     {
       "id": "sail",
       "name": "风帆岛",
-      "resource": "continuation",
+      "resource": "sail",
       "rect": [
-        660,
-        12,
-        310,
-        306
+        0,
+        0,
+        640,
+        640
       ],
       "x": 470,
       "y": -810,
       "w": 340,
       "h": 340,
-      "minLevel": 80
+      "minLevel": 80,
+      "detailStyle": "illustration"
     },
     {
       "id": "hanzi",
       "name": "字源岛",
       "resource": "hanzi",
       "rect": [
-        20,
-        8,
-        599,
-        624
+        0,
+        0,
+        768,
+        768
       ],
       "x": -600,
       "y": 550,
       "w": 340,
       "h": 340,
-      "minLevel": 1
+      "minLevel": 1,
+      "detailStyle": "illustration"
     }
   ],
   "portals": [

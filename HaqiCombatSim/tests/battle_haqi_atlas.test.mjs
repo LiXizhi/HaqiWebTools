@@ -54,6 +54,18 @@ test('runtime atlas resources match their archive hashes, budget and crop bounds
     for(const row of Object.values(art.resources)){const bytes=fs.readFileSync(new URL('../'+row.local,import.meta.url));assert.equal(bytes.length,row.size);assert.ok(bytes.length<=200000);assert.equal(createHash('sha256').update(bytes).digest('hex'),row.sha256);assert.match(row.cdn,/^https:\/\/cdn\.keepwork\.com\//);}
     for(const island of art.islands){const row=art.resources[island.resource],[x,y,w,h]=island.rect;assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=row.width&&y+h<=row.height,island.id);}
 });
+
+test('every island retains its own registered illustration and full-canvas coordinate frame',()=>{
+    const resources=new Set();
+    for(const island of art.islands){
+        const row=art.resources[island.resource];
+        assert.equal(island.detailStyle,'illustration',island.id);
+        assert.deepEqual(island.rect,[0,0,row.width,row.height],island.id);
+        assert.equal(row.source.layout,`data/adventure/maps/${island.id}.json`);
+        assert.ok(!resources.has(island.resource),'each island needs independent layout art');resources.add(island.resource);
+        assert.deepEqual(row.frames[island.id].rect,island.rect);
+    }
+});
 test('vortex picking uses screen pixels at any zoom',()=>{
     for(const scale of [.1,1,5]){const c={...art.portals[0].haqi,scale},p={x:450,y:300};assert.equal(pickAtlasPortal(art.portals,p,c,900,600)?.id,art.portals[0].id);assert.equal(pickAtlasPortal(art.portals,{x:480,y:300},c,900,600),null);}
 });
@@ -70,22 +82,24 @@ test('island picking respects a coastal silhouette and ignores empty sea inside 
     assert.equal(pickAtlasIsland([island],{x:50,y:50},(_,p)=>atlasCoastContains(coast,p)),island);
 });
 
-async function withMap(run,{initial='world',pendingEncounter=null,loadFail=false,deferred=false,focusPortal=null}={}){
-    const previous={document:globalThis.document,requestAnimationFrame:globalThis.requestAnimationFrame,cancelAnimationFrame:globalThis.cancelAnimationFrame};
+async function withMap(run,{initial='world',pendingEncounter=null,loadFail=false,deferred=false,focusPortal=null,illustration=false,imageFailure=false,deferredImage=false}={}){
+    const previous={document:globalThis.document,Image:globalThis.Image,requestAnimationFrame:globalThis.requestAnimationFrame,cancelAnimationFrame:globalThis.cancelAnimationFrame};
+    const paintings=[],pendingImages=[];
     class Element{
         constructor(tag){this.tag=tag;this.offsetWidth=100;this.offsetHeight=44;this.children=[];this.className='';this.dataset={};this.style={setProperty(){}};this.attributes={};this.hidden=false;this.events={};this.classList={toggle(){},add(){}};}
         append(...nodes){this.children.push(...nodes);}replaceChildren(...nodes){this.children=nodes;}setAttribute(key,value){this.attributes[key]=value;}
         contains(node){return node===this||this.children.some(child=>child.contains?.(node));}setPointerCapture(){}
         addEventListener(name,fn){this.events[name]=fn;}getBoundingClientRect(){return {left:0,top:0,width:900,height:600};}
-        getContext(){return new Proxy({},{get:()=>()=>{}});}querySelector(selector){return this.children.find(c=>c.className.split(' ').includes(selector.slice(1)))||this.children.map(c=>c.querySelector?.(selector)).find(Boolean);}
+        getContext(){return new Proxy({},{get:(_,key)=>key==='drawImage'?(...args)=>paintings.push(args):()=>{}});}querySelector(selector){return this.children.find(c=>c.className.split(' ').includes(selector.slice(1)))||this.children.map(c=>c.querySelector?.(selector)).find(Boolean);}
     }
     globalThis.document={createElement:tag=>new Element(tag),createElementNS:(_,tag)=>new Element(tag)};globalThis.requestAnimationFrame=fn=>{fn();return 1;};globalThis.cancelAnimationFrame=()=>{};
     const root=new Element('div'),save={zone:'town',level:1,position:{x:3500,y:3000},pendingEncounter},snapshot=structuredClone(save),travels=[],portals=[],positions=[],drawn=[];
-    let resolveMap;const data={...art,resources:{}};
+    let resolveMap;const data={...art,islands:art.islands.map(i=>({...i,detailStyle:illustration?'illustration':undefined})),resources:illustration?{[town.resource]:art.resources[town.resource]}:{}};
+    globalThis.Image=class {constructor(){this.naturalWidth=art.resources[town.resource].width;this.naturalHeight=art.resources[town.resource].height;}set src(value){this.url=value;if(deferredImage)pendingImages.push(this);else if(imageFailure)this.onerror();else this.onload();}};
     const view=renderHaqiAtlas(root,{zone:'town'}, {save,focusPortal,assets:{mode:'local',content:{worldMaps:{town:layout}}},mapArt:deferred?new Promise(resolve=>resolveMap=()=>resolve(data)):loadFail?Promise.reject(Error('offline')):data},{close(){},switchWorld(){},travel:id=>travels.push(id),portal:(p,target)=>portals.push([p.id,target]),teleportToPosition:(x,y)=>positions.push({x,y}),drawIsland:(_,id,options)=>drawn.push({id,options})},initial);
     try{await new Promise(resolve=>setImmediate(resolve));const stage=root.querySelector('.haqi-atlas-stage'),canvas=root.querySelector('.haqi-atlas-canvas'),card=root.querySelector('.haqi-atlas-selection'),labels=root.querySelector('.haqi-atlas-labels');
         const pointer=(id,x,y,target=canvas)=>({pointerId:id,clientX:x,clientY:y,button:0,target});
-        await run({root,stage,canvas,card,labels,view,save,travels,portals,positions,drawn,pointer,resolveMap});assert.deepEqual(save,snapshot,'map browsing must never mutate a save');
+        await run({root,stage,canvas,card,labels,view,save,travels,portals,positions,drawn,paintings,pointer,resolveMap,loadImages:()=>pendingImages.forEach(image=>image.onload())});assert.deepEqual(save,snapshot,'map browsing must never mutate a save');
     }finally{view.dispose();Object.assign(globalThis,previous);}
 }
 test('island selection does not travel until the button is pressed, and preserves island IDs',async()=>{
@@ -93,6 +107,33 @@ test('island selection does not travel until the button is pressed, and preserve
 });
 test('local view draws a preview without a second player marker; position selection uses local coordinates',async()=>{
     await withMap(({view,drawn,stage,canvas,pointer,card,positions})=>{assert.equal(drawn[0].options.showPlayer,false);const c=view.getState().camera,p=atlasPoint(c,islandAtlasPoint(town,layout,{x:2800,y:2200}),900,600);stage.onpointerdown(pointer(1,p.x,p.y));stage.onpointerup(pointer(1,p.x,p.y));assert.equal(card.children[0].disabled,false);card.children[0].onclick();assert.ok(Math.abs(positions[0].x-2800)<1e-8&&Math.abs(positions[0].y-2200)<1e-8);},{initial:'local'});
+});
+
+test('registered illustration stays visible at detail zoom and landmarks retain game destinations',async()=>{
+    await withMap(({view,paintings,labels,card,positions})=>{
+        for(const factor of [.8,1.25,2]){
+            paintings.length=0;view.zoom(factor);
+            assert.ok(paintings.some(args=>args[0] instanceof Image),'detail must paint the illustration');
+            assert.ok(!paintings.some(args=>args[0]?.tag==='canvas'&&args[0].width===768),'detail must not paint the generated terrain');
+        }
+        const mark=labels.children.find(n=>n.textContent==='集市');assert.equal(mark.hidden,false);mark.onclick();card.children[0].onclick();assert.deepEqual(positions,[{x:3500,y:3000}]);
+    },{illustration:true,initial:'local'});
+});
+
+test('missing registered illustration keeps destinations available without generating terrain',async()=>{
+    await withMap(({view,drawn,labels,card,positions})=>{
+        assert.equal(drawn.length,0);assert.equal(view.getState().renderStats.previewBuilds,0);
+        labels.children.find(n=>n.textContent==='集市').onclick();card.children[0].onclick();assert.deepEqual(positions,[{x:3500,y:3000}]);
+    },{illustration:true,imageFailure:true,initial:'local'});
+});
+
+test('opening and zooming before artwork loads never builds a terrain preview',async()=>{
+    await withMap(({view,drawn,paintings,loadImages})=>{
+        view.zoom(1.2);view.overview();view.locate();
+        assert.equal(drawn.length,0);assert.equal(view.getState().renderStats.previewBuilds,0);
+        loadImages();assert.ok(paintings.some(args=>args[0] instanceof Image));
+        assert.equal(drawn.length,0);assert.deepEqual(view.getState().previewIds,[]);
+    },{illustration:true,deferredImage:true});
 });
 test('opening the world map from a Haqi island starts in local detail and limits overzoom',async()=>{
     await withMap(({view})=>{

@@ -59,6 +59,8 @@ test('Hanzi island owns its WebP atlas, buildings and four distinct resident por
     const {content}=setup(),pack=packs.find(p=>p.island.id==='hanzi');
     const atlas=read('data/adventure/world-map-art.json'),buildings=read('data/adventure/building-art.json'),art=read('data/adventure/npc-art.json');
     const island=atlas.islands.find(i=>i.id==='hanzi');assert.equal(island.resource,'hanzi');
+    assert.equal(island.detailStyle,'illustration');
+    assert.deepEqual(island.rect,[0,0,atlas.resources.hanzi.width,atlas.resources.hanzi.height],'preserve full-canvas registration with game coordinates');
     assert.ok(content.worldMaps.hanzi.buildings.every(b=>b.atlas==='hanzi'));
     const rows=[atlas.resources.hanzi,buildings.atlases.hanzi];
     for(const npc of pack.npcs){

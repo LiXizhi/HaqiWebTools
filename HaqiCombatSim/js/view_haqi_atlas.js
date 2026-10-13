@@ -77,7 +77,14 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
         for(const island of islands){
             const p=project({x:island.x-island.w/2,y:island.y-island.h/2}),w=island.w*at.scale,h=island.h*at.scale;
             if(p.x+w<0||p.y+h<0||p.x>sw||p.y>sh)continue;
-            const image=images.get(island.resource),layout=assets.content.worldMaps?.[island.id],opacity=layout?islandDetailOpacity(island,at.scale,width,height):0,local=opacity>0?preview(island):null;
+            // Registered illustrations use the same full-canvas coordinates as the
+            // layout. Never generate terrain while their artwork loads or fails.
+            const image=images.get(island.resource);
+            if(island.detailStyle==='illustration'){
+                if(image)c.drawImage(image,...(island.rect||[0,0,image.naturalWidth,image.naturalHeight]),p.x,p.y,w,h);
+                continue;
+            }
+            const layout=assets.content.worldMaps?.[island.id],opacity=layout?islandDetailOpacity(island,at.scale,width,height):0,local=opacity>0?preview(island):null;
             if(!local||opacity<1){c.save();c.globalAlpha=local?1-opacity:1;
                 if(image)c.drawImage(image,...(island.rect||[0,0,image.naturalWidth,image.naturalHeight]),p.x,p.y,w,h);
                 else{c.fillStyle=island.id===save.zone?'#95c777':'#80b797';c.beginPath();c.ellipse(p.x+w/2,p.y+h/2,w*.4,h*.4,0,0,Math.PI*2);c.fill();}c.restore();}
@@ -171,5 +178,5 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
                 if(id==='vortex')for(const node of portalNodes.values()){node.style.setProperty('--vortex-image',`url("${image.src}")`);node.classList.add('has-vortex-art');}scene=null;draw();};image.onerror=()=>{if(disposed)return;failed.add(id);showStatus('部分地图图片暂不可用，仍可选择目的地。');};image.src=assetUrl(resource,assets.mode);
         }
     }).catch(()=>{if(disposed)return;showStatus('地图暂不可用，请从列表选择目的地。');const list=el('div','haqi-atlas-fallback');for(const island of ISLANDS){const node=button(island.name,()=>choose(island));list.append(node);}body.append(list);});
-    return {dispose(){disposed=true;observer?.disconnect();if(pendingFrame!==null)cancelAnimationFrame(pendingFrame);pointers.clear();previews.clear();images.clear();masks.clear();if(scene)scene.canvas.width=scene.canvas.height=0;scene=null;},locate:locateCurrent,overview:showAll,zoom,draw,getState:()=>({camera:camera&&{...camera},bounds:{...bounds},decorationCount:decorations.length,renderStats:{...renderStats},selected,previewIds:[...previews.keys()],loadedResources:[...images.keys()],failed:[...failed],width,height})};
+    return {dispose(){disposed=true;observer?.disconnect();if(pendingFrame!==null)cancelAnimationFrame(pendingFrame);pointers.clear();previews.clear();images.clear();masks.clear();if(scene)scene.canvas.width=scene.canvas.height=0;scene=null;},locate:locateCurrent,overview:showAll,zoom,draw,getState:()=>({camera:camera&&{...camera},bounds:{...bounds},decorationCount:decorations.length,renderStats:{...renderStats},selected,previewIds:[...previews.keys()],illustrationIds:islands.filter(i=>i.detailStyle==='illustration'&&images.has(i.resource)).map(i=>i.id),loadedResources:[...images.keys()],failed:[...failed],width,height})};
 }

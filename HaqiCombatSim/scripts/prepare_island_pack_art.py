@@ -18,6 +18,9 @@ if __name__=='__main__':
         for i,zone in enumerate(ids):
             pack=json.loads((ROOT/f'data/adventure/island-packs/{zone}.json').read_text(encoding='utf8'))
             existing=next((r for r in atlas['islands'] if r['id']==zone),None)
+            # Registered full-canvas maps are prepared separately; rebuilding the
+            # legacy decorative sheet must not silently undo their coordinates.
+            if existing and existing.get('detailStyle')=='illustration':continue
             r={'id':zone,'name':pack['island']['name'],'resource':'continuation','rect':row['frames'][zone]['rect'],'x':positions[i][0],'y':positions[i][1],'w':340,'h':340,'minLevel':pack['island']['recommendedLevel']}
             if existing:existing.update(r)
             else:atlas['islands'].append(r)

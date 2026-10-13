@@ -40,7 +40,9 @@
 
 ## 布局约束重绘预览
 
-2026-10-12：按用户要求，使用内置 image_gen，以实际地图 JSON 导出的抽象布局为第一参考、原岛屿 WebP 为第二画风参考，生成一版可供比较的透明底图。预览入口 `tests/fixtures/hanzi-map-repaint.html`，资源及源图哈希登记于 `data/adventure/hanzi/map-repaint-preview.json`。仅独立本地预览，未替换正式世界地图资源、未上传新版 CDN、未改变地理坐标或存档。
+2026-10-12：按用户要求，使用内置 image_gen，以实际地图 JSON 导出的抽象布局为第一参考、原岛屿 WebP 为第二画风参考，生成一版可供比较的透明底图。预览入口 `tests/fixtures/hanzi-map-repaint.html`，资源及源图哈希登记于 `data/adventure/hanzi/map-repaint-preview.json`。当时仅完成独立预览。
+
+2026-10-13：正式接入主程序。`world-map-art.json` 和 `hanzi/island-art.json` 已切换为 `world-atlas-hanzi-layout-66e58c7f8be3.webp`（768×768，191372字节）；新版已上传永久 Keepwork CDN，并核验下载 SHA256 一致和 CORS `*`。字源岛配置 `detailStyle: illustration`，`view_haqi_atlas.js` 在所有缩放级别保留这张底图，缺图时仍回退可选目的地的程序地形。六个地点、玩家及社交角色位置、点击传送继续使用原游戏坐标；完整 `[0,0,768,768]` 裁剪避免内容包围框改变坐标基准。未改变游戏场景的行走地形，未迁移存档，游戏版本未发布。旧准备脚本的自动内容裁剪仅适用于旧版装饰图，新版重建须保留完整画布。
 
 完整画布对应游戏的 0–4800 坐标，编码时不裁剪透明边缘，不使用旧图的内容包围框；地点、NPC、道路和海岸校验层直接从实际地图读取。预览支持缩放、显隐地点/NPC及叠加原道路和海岸。生成图保留道路拓扑，但局部几何属于 AI 近似，不能声称全部通行坐标已经精确对齐；正式接入前需处理校验层暴露的偏差。
 

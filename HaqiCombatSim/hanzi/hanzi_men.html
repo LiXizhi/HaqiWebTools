@@ -325,7 +325,7 @@ body.portrait #capText{font-size:clamp(17px,4.6vw,21px);line-height:1.65}
   <button id="replay" type="button">重播</button>
   <button id="mute" type="button">声音 开</button>
 </div>
-<div id="note">字形为依据通行字形的艺术示意</div>
+<div id="note">楷书、简体字形据 Make Me a Hanzi；古文字为通行字形的艺术示意</div>
 
 <div id="intro">
   <div class="introTop">
@@ -538,6 +538,30 @@ const PROFILES = {
   gou: s => s < 0.88 ? 0.95 + 0.35 * bump(s, 0.02, 0.05) - 0.1 * Math.sin(Math.PI * s / 0.88) : 1.05 - 0.85 * (s - 0.88) / 0.12,
 };
 
+/* ---------- 轮廓笔画：Make Me a Hanzi 字框 1024，y 轴向上，基线 900 ---------- */
+const MMAH_T = 'scale(0.09765625) translate(0 900) scale(1 -1)';
+const mmahPts = m => m.map(([x, y]) => [x / 10.24, (900 - y) / 10.24]);
+let clipSeq = 0;
+function outlineStroke(parent, st) {
+  const sg = el('g', null, parent);
+  const id = `menClip${++clipSeq}`;
+  const cp = el('clipPath', { id }, sg);
+  el('path', { d: st.o, transform: MMAH_T }, cp);
+  const pts = mmahPts(st.m);
+  const ext = (a, b) => {
+    const l = Math.hypot(a[0] - b[0], a[1] - b[1]) || 1;
+    return [a[0] + (a[0] - b[0]) / l * 3, a[1] + (a[1] - b[1]) / l * 3];
+  };
+  const path = [ext(pts[0], pts[1]), ...pts.slice(1, -1), ext(pts[pts.length - 1], pts[pts.length - 2])];
+  const d = 'M' + path.map(p => `${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join('L');
+  const { len } = sample(d, 2);
+  const mask = el('path', { d, 'stroke-width': 15, 'clip-path': `url(#${id})` }, sg);
+  mask.style.strokeDasharray = `${len.toFixed(2)} ${(len + 40).toFixed(2)}`;
+  mask.style.strokeDashoffset = len.toFixed(2);
+  mask.style.display = 'none';
+  return { g: sg, mask, pts, len, shown: 0 };
+}
+
 class Glyph {
   constructor(parent, def, o = {}) {
     this.def = def;
@@ -551,6 +575,7 @@ class Glyph {
     this.g = el('g', { transform: this.base }, this.wrap);
     // 固定包围盒，避免只画出一笔时滤镜区域被裁切
     el('rect', { x: -6, y: -6, width: 112, height: 112, fill: 'none', stroke: 'none' }, this.g);
+    if (def.outline) { this.strokes = def.strokes.map(st => outlineStroke(this.g, st)); return; }
     this.strokes = def.strokes.map(st => {
       const sg = el('g', null, this.g);
       if (st.jade && o.jade !== false) {
@@ -574,6 +599,12 @@ class Glyph {
   }
   setP(i, p) {
     const st = this.strokes[i];
+    if (st.mask) {
+      p = clamp(p);
+      st.mask.style.display = p > 0 ? '' : 'none';
+      st.mask.style.strokeDashoffset = (st.len * (1 - p)).toFixed(2);
+      return;
+    }
     const k = Math.round(clamp(p) * st.segs.length);
     if (k > st.shown) for (let j = st.shown; j < k; j++) st.segs[j].style.display = '';
     else for (let j = k; j < st.shown; j++) st.segs[j].style.display = 'none';
@@ -638,30 +669,44 @@ const G = {
     { d: 'M58 40 L80 40' },
     { d: 'M58 62 L80 62' },
   ]},
+  // 隶书：内侧两竖短，只到上方「日」形框底；外侧长竖落地，横画蚕头燕尾
   li: { p: 'h', w: 3.5, strokes: [
-    { d: 'M12 16 L12 90', p: 'v', w: 4 },
-    { d: 'M12 16 L46 15 L46 90', p: 'zhe', k: 0.31, w: 3.4 },
-    { d: 'M20 38 L40 36', w: 3.2 },
-    { d: 'M20 60 L40 62', p: 'na', w: 3.6 },
-    { d: 'M54 16 L54 90', p: 'v', w: 3.8 },
-    { d: 'M54 16 L90 15 L90 90', p: 'zhe', k: 0.32, w: 3.4 },
-    { d: 'M62 38 L82 36', w: 3.2 },
-    { d: 'M62 60 L84 64', p: 'na', w: 3.6 },
+    { d: 'M14 20 L14 88', p: 'v', w: 4 },
+    { d: 'M14 20 L43 19 L43 47', p: 'zhe', k: 0.5, w: 3.3 },
+    { d: 'M20 33 L38 32.5', w: 3 },
+    { d: 'M18 46.5 L45 46', p: 'na', w: 3.4 },
+    { d: 'M57 20 L57 47', p: 'v', w: 3.4 },
+    { d: 'M57 20 L87 19 L87 88', p: 'zhe', k: 0.3, w: 3.4 },
+    { d: 'M62 33 L81 32.5', w: 3 },
+    { d: 'M55 46.5 L84 46', p: 'na', w: 3.4 },
   ]},
-  kai: { p: 'h', w: 3.3, strokes: [
-    { d: 'M12 14 L12 90', p: 'v', w: 4.2 },
-    { d: 'M12 14 L46 14 L46 90', p: 'zhe', k: 0.31, w: 3.5 },
-    { d: 'M20 36 L40 36', plank: 1 },
-    { d: 'M20 58 L40 58', plank: 1 },
-    { d: 'M54 14 L54 90', p: 'v', w: 4 },
-    { d: 'M54 14 L90 14 L90 90', p: 'zhe', k: 0.32, w: 3.5 },
-    { d: 'M62 36 L82 36', plank: 1 },
-    { d: 'M62 58 L82 58', plank: 1 },
+  // 楷书「門」与简体「门」取自 Make Me a Hanzi（Arphic Public License，见 licenses/hanzi/），原坐标未改；o 为轮廓，m 为笔画中线
+  kai: { outline: true, strokes: [
+    { o: 'M 270 716 Q 246 740 213 748 Q 203 751 196 741 Q 192 735 200 724 Q 260 577 214 260 Q 205 202 186 142 Q 176 114 181 92 Q 191 55 203 41 Q 216 26 226 41 Q 263 80 264 255 Q 264 357 267 461 L 268 494 Q 268 534 271 565 L 272 599 Q 276 663 281 689 C 283 705 283 705 270 716 Z',
+      m: [[207, 736], [243, 696], [252, 611], [251, 453], [239, 243], [215, 101], [215, 46]] },
+    { o: 'M 386 477 Q 387 473 394 464 Q 416 433 436 460 Q 448 476 455 535 Q 458 649 485 690 Q 498 708 484 723 Q 465 738 435 754 Q 419 760 404 753 Q 341 729 270 716 C 241 710 253 680 281 689 Q 378 722 404 708 Q 413 702 412 672 Q 408 587 402 516 Q 401 506 397 499 C 388 473 384 481 386 477 Z',
+      m: [[279, 712], [291, 704], [342, 721], [418, 731], [448, 702], [426, 507], [416, 478], [400, 477]], plank: 1 },
+    { o: 'M 271 565 Q 320 575 357 580 Q 379 586 369 597 Q 359 610 334 613 Q 312 614 274 601 L 272 599 C 248 580 242 559 271 565 Z',
+      m: [[278, 570], [284, 582], [304, 591], [329, 595], [361, 590]], plank: 1 },
+    { o: 'M 267 461 Q 271 461 276 462 Q 310 471 386 477 C 416 479 418 480 397 499 Q 390 506 375 514 Q 360 521 332 513 Q 298 503 268 494 C 239 485 237 459 267 461 Z',
+      m: [[271, 466], [284, 481], [345, 495], [388, 497]], plank: 1 },
+    { o: 'M 631 767 Q 609 786 584 795 Q 578 798 573 794 Q 566 790 573 777 Q 603 714 594 569 Q 591 506 621 481 Q 622 481 624 479 Q 640 472 644 501 Q 644 504 644 506 L 645 540 Q 642 567 642 620 L 642 646 Q 642 695 644 735 C 645 756 645 756 631 767 Z',
+      m: [[579, 786], [610, 752], [616, 729], [618, 559], [629, 490]], plank: 1 },
+    { o: 'M 810 517 Q 816 115 795 78 Q 789 72 770 77 Q 743 83 716 90 Q 695 97 696 87 Q 754 35 785 -3 Q 798 -24 815 -28 Q 825 -32 833 -22 Q 876 27 875 86 Q 862 303 860 655 Q 859 716 873 744 Q 886 763 873 775 Q 851 794 811 810 Q 790 819 734 790 Q 698 778 631 767 C 601 762 615 729 644 735 Q 692 744 764 762 Q 783 766 791 755 Q 804 742 805 696 Q 808 618 809 545 L 810 517 Z',
+      m: [[641, 765], [654, 754], [787, 786], [807, 780], [835, 752], [835, 69], [815, 35], [785, 43], [706, 84]] },
+    { o: 'M 642 620 Q 643 620 648 620 Q 708 627 751 633 Q 773 637 765 649 Q 755 662 731 666 Q 698 670 642 646 C 614 634 612 620 642 620 Z',
+      m: [[645, 627], [658, 637], [714, 647], [755, 643]], plank: 1 },
+    { o: 'M 644 506 Q 651 505 663 506 Q 709 515 810 517 C 840 518 834 528 809 545 Q 803 549 794 556 Q 778 566 747 559 Q 692 546 645 540 C 615 536 614 508 644 506 Z',
+      m: [[648, 512], [660, 523], [760, 539], [792, 535], [800, 524]], plank: 1 },
   ]},
-  jian: { p: 'h', w: 3.6, strokes: [
-    { d: 'M22 14 L34 28', p: 'dot', w: 5.2 },
-    { d: 'M26 24 L88 18 L86 76 L72 86', p: 'zhe', k: 0.45, w: 3.8 },
-    { d: 'M44 50 L74 49', w: 3.4 },
+  // 简体「门」三笔：点、竖、横折钩，框内无横
+  jian: { outline: true, strokes: [
+    { o: 'M 299 746 Q 359 655 388 651 Q 404 647 415 669 Q 419 685 409 711 Q 399 733 371 747 Q 328 774 308 779 Q 296 783 294 768 Q 291 758 299 746 Z',
+      m: [[304, 770], [373, 704], [393, 669]] },
+    { o: 'M 180 682 Q 205 622 204 550 Q 205 277 161 146 Q 139 83 178 38 Q 191 22 203 38 Q 242 80 244 243 Q 250 564 267 644 Q 270 665 251 676 Q 226 698 194 708 Q 184 711 176 701 Q 172 694 180 682 Z',
+      m: [[187, 695], [219, 664], [230, 646], [231, 631], [219, 280], [190, 93], [191, 44]] },
+    { o: 'M 519 749 Q 500 750 505 738 Q 512 725 537 712 Q 553 702 618 719 Q 732 755 754 717 Q 761 698 765 648 Q 783 405 769 128 Q 768 88 753 76 Q 738 66 666 85 Q 650 89 650 79 Q 651 72 664 64 Q 728 16 762 -21 Q 784 -42 797 -39 Q 810 -36 822 -6 Q 838 40 837 110 Q 819 498 822 642 Q 822 685 835 709 Q 848 733 836 745 Q 826 761 775 787 Q 754 797 689 779 Q 598 758 519 749 Z',
+      m: [[514, 741], [543, 732], [570, 732], [685, 757], [739, 761], [769, 753], [793, 731], [796, 721], [801, 86], [780, 33], [725, 47], [658, 79]] },
   ]},
 };
 
@@ -1033,11 +1078,7 @@ async function sceneKai(tk) {
   await wait(900, tk);
 }
 
-const MEN_GUIDE = [
-  [[22, 14], [34, 28]],
-  [[26, 24], [88, 18], [86, 76], [72, 86]],
-  [[44, 50], [74, 49]],
-];
+const MEN_GUIDE = G.jian.strokes.map(st => mmahPts(st.m));
 
 function guideBins(parent, pts) {
   const bins = [];
@@ -1065,7 +1106,7 @@ function segDist(px, py, x1, y1, x2, y2) {
 }
 
 async function sceneJian(tk) {
-  await caption('简体 · 1956', '1956 年，「門」简化为「门」。三笔写成：竖、横折钩、横。', tk);
+  await caption('简体 · 1956', '1956 年，「門」简化为「门」。三笔写成：点、竖、横折钩。', tk);
   progress(6);
   vtitle('简体', '1956');
   Sound.pluck(NOTE.G5, 0.16, 3);
@@ -1330,7 +1371,6 @@ async function introPlay(tk) {
     st.setAttribute('transform', `translate(${SX} ${SY}) scale(${lerp(1.8, 1, t).toFixed(3)}) rotate(${lerp(-10, -4, t).toFixed(2)})`);
     st.style.opacity = t;
   }, tk, ease.out);
-  const bar = g.strokes[2].g;
   const t0 = performance.now();
   for (;;) {
     const now = await frame(tk);
@@ -1339,7 +1379,6 @@ async function introPlay(tk) {
       const k = 1 + 0.012 * Math.sin(t * 1.4);
       g.wrap.setAttribute('transform', `translate(500 360) scale(${k.toFixed(4)}) translate(-500 -360)`);
     }
-    bar.style.opacity = (0.72 + 0.28 * Math.sin(t * 2.2)).toFixed(3);
     const cyc = 2.4, idx = Math.floor(t / cyc) % ghosts.length, ph = (t % cyc) / cyc;
     ghosts.forEach((gh, i) => { gh.wrap.style.opacity = i === idx ? (0.1 * Math.sin(Math.PI * ph)).toFixed(3) : 0; });
   }

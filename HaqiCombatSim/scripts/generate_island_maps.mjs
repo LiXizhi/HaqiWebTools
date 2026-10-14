@@ -18,7 +18,7 @@ for(const id of ids){
     const source=read(packs.find(p=>p.island.id===id)?.mapSource||`config/maps/islands/${id}.json`),input=packs.some(p=>p.island.id===id)?mapContent:chapter,map=generateIsland(source,rules,input);
     map.sourceHash=createHash('sha256').update(JSON.stringify({source,rules,npcs:input.npcs,encounters:input.encounters})).digest('hex');
     maps[id]=map;
-    index.islands[id]={name:map.name,w:map.w,h:map.h,spawn:map.spawn,initialSpawn:map.initialSpawn||map.spawn,retainPreviousPosition:!!map.retainPreviousPosition,file:`data/adventure/maps/${id}.json`};
+    index.islands[id]={name:map.name,w:map.w,h:map.h,spawn:map.spawn,initialSpawn:map.initialSpawn||map.spawn,retainPreviousPosition:!!map.retainPreviousPosition,...(map.coordinateVersion?{coordinateVersion:map.coordinateVersion}:{}),file:`data/adventure/maps/${id}.json`};
 }
 const content={...mapContent,worldMapIndex:index,worldMaps:maps};
 for(const id of ids){
@@ -28,9 +28,8 @@ for(const id of ids){
         const route=findPath(world,start,target),result=followPath(world,start,route,100000);
         if(!route.length||result.blocked||distance(result.position,target)>1)throw Error(`${id} 目标不可达：${target.name||target.id||JSON.stringify(target)}`);
     }
-    // Keep legacy camp roads compatible with its authored buildings; all new
-    // island roads are tested in both directions against actual movement.
-    if(id!=='camp')for(const road of world.paths)for(const [a,b] of [[road.a,road.b],[road.b,road.a]]){
+    // All authored roads, including the expanded camp, must work in both directions.
+    for(const road of world.paths)for(const [a,b] of [[road.a,road.b],[road.b,road.a]]){
         const result=followPath(world,a,[b],100000);
         if(result.blocked||distance(result.position,b)>1)throw Error(`${id} 道路受阻：${JSON.stringify(road)}`);
     }

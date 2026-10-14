@@ -12,7 +12,7 @@ button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visibl
 .page{height:100svh;min-height:580px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;max-width:1500px;margin:auto;padding:30px 48px 22px;position:relative}
 header{display:flex;align-items:center;justify-content:space-between;gap:18px;z-index:2}.brand{font-size:17px;letter-spacing:.2em;display:flex;align-items:center;gap:12px}.seal{background:var(--red);color:var(--paper);border-radius:3px;padding:7px 6px;font-size:19px;line-height:1}.edition{font-size:12px;color:var(--muted);letter-spacing:.14em;margin-top:8px}.outline{background:transparent;border:1px solid #baaf97;border-radius:3px;color:var(--ink);padding:9px 16px;font-size:15px}.outline:hover{background:#e8dfca}
 main{position:relative;min-height:0;display:flex;flex-direction:column}.heading{text-align:center;padding-top:22px;z-index:1;pointer-events:none}.eyebrow{color:var(--red);font-size:13px;letter-spacing:.35em;margin:0 0 9px}h1{font-size:clamp(29px,3.4vw,46px);font-weight:400;letter-spacing:.16em;margin:0}.deck{font-size:16px;color:var(--muted);letter-spacing:.18em;margin:10px 0 0}
-.canvas{flex:1;min-height:0;position:relative}#stage{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;overflow:visible}.ink{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-linejoin:round}.land{transition:opacity 1.6s}.leaf{fill:var(--green);opacity:.83}#canopy{transform-origin:610px 345px}.sway{animation:sway 5s ease-in-out infinite alternate}@keyframes sway{from{transform:rotate(-1deg)}to{transform:rotate(1.3deg)}}
+.canvas{flex:1;min-height:0;position:relative}#stage{width:100%;height:100%;display:block;touch-action:none;user-select:none;-webkit-user-select:none;overflow:visible}.ink{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-linejoin:round}.land{transition:opacity 1.6s}.leaf{fill:var(--green);opacity:.83}.sway{transform-origin:610px 345px;animation:sway 5s ease-in-out infinite alternate}@keyframes sway{from{transform:rotate(-1deg)}to{transform:rotate(1.3deg)}}
 #treeTarget,#personTarget,#shadeTarget{cursor:pointer}#personTarget{cursor:grab}#personTarget:active{cursor:grabbing}.target-ring{fill:none;stroke:var(--red);stroke-width:1.6;stroke-dasharray:4 7;animation:pulse 2s ease-in-out infinite}@keyframes pulse{50%{opacity:.35}}.brush{fill:none;stroke:var(--ink);stroke-width:12;stroke-linecap:round;stroke-linejoin:round}.ghost{fill:none;stroke:#c7beac;stroke-width:12;stroke-linecap:round}.guide{fill:none;stroke:var(--red);stroke-width:3;stroke-dasharray:3 7;stroke-linecap:round}.grid{stroke:#c4b49c;stroke-width:1;stroke-dasharray:6 7;fill:none}#startDot{fill:var(--red)}#pen{fill:var(--red);stroke:var(--paper);stroke-width:3}.svg-label{font-size:16px;fill:var(--red);text-anchor:middle;letter-spacing:2px}
 .caption{text-align:center;min-height:138px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 12px}.chapter{color:var(--red);font-size:13px;letter-spacing:.22em;margin:0 0 9px}#caption{font-size:clamp(21px,2.1vw,28px);font-weight:400;letter-spacing:.08em;line-height:1.5;margin:0}#hint{color:var(--muted);font-size:15px;margin:8px 0 14px;min-height:21px}.actions{display:flex;justify-content:center;gap:12px;min-height:44px;flex-wrap:wrap}.primary{background:var(--red);color:#fff6e5;border:1px solid var(--red);border-radius:3px;font-size:18px;letter-spacing:.15em;padding:10px 24px;box-shadow:0 5px 14px #85463118}.primary:hover{background:#943b2e}.caption.changed #caption{animation:ink-in .8s ease-out}@keyframes ink-in{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 footer{display:flex;justify-content:space-between;align-items:center;gap:16px;border-top:1px solid #d8cdb8;padding-top:17px;margin-top:18px;font-size:12px;color:var(--muted)}#progress{display:flex;list-style:none;gap:24px;margin:0;padding:0}#progress li{position:relative;white-space:nowrap}#progress li[aria-current="step"]{color:var(--red)}#progress li[aria-current="step"]:before{content:"";position:absolute;left:-9px;top:5px;width:4px;height:4px;border-radius:50%;background:var(--red)}.colophon{letter-spacing:.12em}#glyphLabel{font-size:24px;text-anchor:middle;fill:var(--red);letter-spacing:8px}
@@ -90,8 +90,8 @@ const glyph = [
  [574,210,553,269,503,337,451,371], [584,213,608,271,649,329,700,362]
 ];
 const standing = [[429,294,425,309,422,332,413,351],[413,351,404,370,394,390,389,402]];
-const resting = [[467,328,474,344,477,359,478,370],[478,370,461,370,451,388,439,404]];
-const tree = [[539,236,566,264,638,239,687,208],[610,190,605,276,614,362,607,407],[609,297,591,354,570,389,548,412],[610,313,627,353,654,386,682,401]];
+const resting = [[552,328,559,344,562,359,563,370],[563,370,546,370,536,388,524,404]];
+const tree = [[539,236,566,264,638,239,687,208],[610,190,605,276,614,362,607,407],[609,382,591,400,570,404,548,412],[610,382,627,400,654,408,682,411]];
 const names = ['撇','竖','横','竖','撇','捺'];
 const pathData = a => `M${a[0]} ${a[1]}C${a.slice(2).join(' ')}`;
 function path(parent, points, cls='brush') { const p=document.createElementNS(ns,'path');p.setAttribute('d',pathData(points));p.setAttribute('class',cls);parent.append(p);return p; }
@@ -105,7 +105,7 @@ const ease=t=>t*t*(3-2*t);
 function opacity(id,n){$(id).style.opacity=n;}
 function personPosition(x,y=0){personX=x;$('person').setAttribute('transform',`translate(${x} ${y})`);}
 function caption(chapter,text,hint=''){ $('chapter').textContent=chapter;$('caption').textContent=text;$('hint').textContent=hint;const c=document.querySelector('.caption');c.classList.remove('changed');void c.offsetWidth;c.classList.add('changed'); }
-function scene(next,index){state=next;document.body.dataset.scene=next;document.querySelectorAll('#progress li').forEach((li,i)=>{if(i===index)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');});$('action').hidden=true;$('demo').hidden=true;}
+function scene(next,index){state=next;document.body.dataset.scene=next;document.querySelectorAll('#progress li').forEach((li,i)=>{if(i===index)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');});$('action').hidden=true;$('demo').hidden=true;updateViewBox();}
 function action(text){$('action').textContent=text;$('action').hidden=false;}
 function animate(ms,fn,signal=controller.signal){
  return new Promise(resolve=>{let frame,start;let settled=false;const finish=ok=>{if(settled)return;settled=true;cancelAnimationFrame(frame);signal.removeEventListener('abort',abort);resolve(ok);};const abort=()=>finish(false);if(signal.aborted){finish(false);return;}signal.addEventListener('abort',abort,{once:true});
@@ -118,7 +118,7 @@ function reset(){
  controller.abort();controller=new AbortController();generation++;cancelPointer();stroke=0;selected=false;tracing=false;demoRunning=false;
  scene('intro',0);personPosition(-200);morph(personPaths,standing,standing,1);morph(treePaths,tree,tree,1);
  for(const id of ['landscape','person','tree','personDetails','canopy'])opacity(id,1);
- opacity('shadow',0);$('canopy').setAttribute('transform','translate(305 205) scale(.5)');$('canopy').classList.remove('sway');
+ opacity('shadow',0);$('canopy').setAttribute('transform','translate(305 95) scale(.5)');$('canopy').classList.remove('sway');
  $('personDetails').removeAttribute('transform');$('arm').setAttribute('d','M423 308Q450 336 478 311');$('leg').setAttribute('d','M413 350Q432 369 448 397');$('bag').removeAttribute('transform');
  $('targets').hidden=true;$('treeTarget').hidden=false;$('shadeTarget').hidden=true;$('personTarget').hidden=true;
  $('writing').hidden=true;$('glyphLabel').hidden=true;$('pen').hidden=true;$('startDot').hidden=false;$('replay').hidden=true;$('demo').disabled=false;
@@ -134,7 +134,7 @@ async function begin(){
 }
 async function grow(){
  if(state!=='tree')return;scene('growing',1);$('targets').hidden=true;
- if(!await motion(2500,p=>{const s=.5+.5*p;$('canopy').setAttribute('transform',`translate(${610*(1-s)} ${410*(1-s)}) scale(${s})`);opacity('shadow',p);}))return;
+ if(!await motion(2500,p=>{const s=.5+.5*p;$('canopy').setAttribute('transform',`translate(${610*(1-s)} ${190*(1-s)}) scale(${s})`);opacity('shadow',p);}))return;
  $('canopy').removeAttribute('transform');$('canopy').classList.add('sway');
  scene('move',2);caption('三 · 歇息','树下真凉快。','拖动小人到树荫，或先点小人，再点树荫。');
  $('targets').hidden=false;$('treeTarget').hidden=true;$('shadeTarget').hidden=false;$('personTarget').hidden=false;action('选中小人');
@@ -142,16 +142,16 @@ async function grow(){
 function selectPerson(){if(state!=='move')return;selected=true;$('hint').textContent='小人准备好了，点一下树荫吧。';action('走到树荫里');}
 async function rest(){
  if(state!=='move')return;const x=personX;cancelPointer();scene('rest',2);$('targets').hidden=true;caption('三 · 歇息','靠着大树，歇一会儿。','风轻轻吹，树叶沙沙响。');
- if(!await motion(1700,p=>personPosition(x+(43-x)*p)))return;
+ if(!await motion(1700,p=>personPosition(x+(128-x)*p)))return;
  if(!await motion(1700,p=>{
- personPosition(43*(1-p));morph(personPaths,standing,resting,p);$('personDetails').setAttribute('transform',`translate(${38*p} ${35*p})`);
+ personPosition(128*(1-p));morph(personPaths,standing,resting,p);$('personDetails').setAttribute('transform',`translate(${123*p} ${35*p})`);
  $('arm').setAttribute('d',`M${423+7*p} ${308+9*p}Q${450-4*p} ${336+9*p} ${478-15*p} ${311+24*p}`);
  $('leg').setAttribute('d',`M${413+16*p} ${350-15*p}Q${432+10*p} ${369-8*p} ${448+11*p} ${397-28*p}`);
  $('bag').setAttribute('transform',`translate(${-27*p} ${34*p})`);
  }))return;
  if(!await pause(5500))return;
  scene('morph',3);caption('四 · 成字','一个人，靠着树。','看，画里藏着一个字。');$('canopy').classList.remove('sway');
- if(!await motion(1800,p=>{morph(personPaths,resting,standing,p);$('personDetails').setAttribute('transform',`translate(${38*(1-p)} ${35*(1-p)})`);opacity('personDetails',1-p);}))return;
+ if(!await motion(1800,p=>{morph(personPaths,resting,standing,p);$('personDetails').setAttribute('transform',`translate(${123*(1-p)} ${35*(1-p)})`);opacity('personDetails',1-p);}))return;
  if(!await motion(4800,p=>{morph(personPaths,standing,glyph.slice(0,2),p);morph(treePaths,tree,glyph.slice(2),p);opacity('canopy',1-p);opacity('landscape',1-p);opacity('shadow',1-p);}))return;
  $('glyphLabel').hidden=false;caption('四 · 成字','休，休息的休。','左边是单人旁，右边是木。');
  if(!await pause(5000))return;
@@ -224,7 +224,8 @@ svg.addEventListener('pointercancel',cancelPointer);svg.addEventListener('lostpo
 $('treeTarget').addEventListener('click',grow);$('shadeTarget').addEventListener('click',()=>{if(selected)rest();else if(state==='move')$('hint').textContent='先点一下小人，再带他走到树荫。';});
 $('action').addEventListener('click',()=>{if(state==='intro'||state==='done')begin();else if(state==='tree')grow();else if(state==='move'){if(selected)rest();else selectPerson();}});
 $('replay').addEventListener('click',begin);$('demo').addEventListener('click',demonstrate);
-function layout(){cancelPointer();svg.setAttribute('viewBox',innerWidth<=600?'135 40 650 485':'0 0 1000 520');}
+function updateViewBox(){svg.setAttribute('viewBox',innerWidth<=600?(state==='write'||state==='written'?'265 55 500 455':'135 40 650 485'):'0 0 1000 520');}
+function layout(){cancelPointer();updateViewBox();}
 addEventListener('resize',layout);addEventListener('blur',cancelPointer);addEventListener('pagehide',()=>{controller.abort();cancelPointer();});
 addEventListener('pageshow',e=>{if(e.persisted)reset();});
 // SVG elements do not consistently implement HTMLElement.hidden; reflect it explicitly.

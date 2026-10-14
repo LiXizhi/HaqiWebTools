@@ -1,3 +1,4 @@
+import {migratePetCoordinates} from './adventure_coordinates_core.js';
 import {petContentKey,petSummary,petFilePath,validPetFileRef,initialPetIds} from './adventure_pet_files_core.js';
 import {validatePetInstance,petInteractionParams} from './adventure_pet_interactions_core.js';
 const clone=x=>JSON.parse(JSON.stringify(x));
@@ -15,6 +16,7 @@ export function hydratePetFile(save,id,scope,read,content){
     check(validPetFileRef(id,ref),'宠物文件路径无效');
     const file=read(ref.path);check(file?.version===1&&file.scope===scope&&file.kind==='pet','宠物文件缺失或账号不符');
     const pet=clone(file.data);validatePetInstance(pet,content);check(equal(petSummary(pet),ref.summary),'宠物文件与目录不一致');
+    migratePetCoordinates(pet,content);
     if(!save[ref.group][id])save[ref.group][id]=pet;
 }
 // Generator permits the same ordered write-before-publish workflow with synchronous

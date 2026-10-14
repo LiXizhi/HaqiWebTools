@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f3efe5">
+  <title>象形之美 · 一部会生长的汉字长卷</title>
+  <meta name="description" content="以纯 HTML5 程序绘画重绎《象形之美》，从山川草木到人间烟火，看万物走进汉字。">
+  <link rel="stylesheet" href="xiangxing.css">
+</head>
+<body>
+<div class="page">
+  <header><a class="brand" href="hanzi_xiangxing.html"><span class="seal">象</span><span>汉字里的世界<small>观物取象 · 以形生意</small></span></a><button id="chaptersToggle" aria-expanded="false" aria-controls="chapters">全卷目录 <span aria-hidden="true">☰</span></button></header>
+  <main>
+    <div class="heading"><div><p class="eyebrow">一部会生长的汉字长卷</p><h1>象形之美<span>万物有形，文字有生。</span></h1></div><p class="intro">从一轮日出，到万家灯火。<br>沿着一笔一画，走回文字诞生的地方。</p></div>
+    <section class="cinema" id="cinema" aria-label="象形之美动画播放器">
+      <div class="frame">
+        <canvas id="film" aria-label="水墨山水与汉字演化动画"></canvas>
+        <div class="frame-label"><span id="chapterNumber">第一景</span><span id="sceneLabel">天地初开</span></div>
+        <div class="verse" id="verse">日出于山，万物有了模样。</div>
+        <button class="start" id="start"><span class="play-icon" aria-hidden="true"></span>展开长卷<small>全长 5 分 31 秒</small></button>
+        <div class="end" id="end" hidden><span>一字一世界</span><h2>万物入字，山河入梦。</h2><button id="restart">再看一遍</button></div>
+      </div>
+      <div class="transport">
+        <div class="progress-row"><label class="sr-only" for="seek">影片进度</label><input id="seek" type="range" min="0" max="331.2" step="0.1" value="0" aria-valuetext="0分0秒"><span id="time">00:00 / 05:31</span></div>
+        <div class="buttons"><div class="left-controls"><button id="play" aria-label="播放">播放</button><button id="previous" aria-label="上一景">上一景</button><button id="next" aria-label="下一景">下一景</button><span class="now" id="now">日 · 山</span></div><div class="right-controls"><label class="sr-only" for="speed">播放速度</label><select id="speed" aria-label="播放速度"><option value="1">原速</option><option value="1.5">1.5 倍</option><option value="2">2 倍</option></select><button id="sound" aria-pressed="false">声音：关</button><button id="fullscreen">全屏</button></div></div>
+      </div>
+    </section>
+    <div class="under-film"><p><span class="red-dot"></span><span id="phase">观物 · 取象 · 成字</span></p><p>空格 播放 / 暂停 <span>左右方向键 前后 5 秒</span></p></div>
+    <nav id="chapters" aria-label="影片章节" hidden></nav>
+    <footer><p>山川草木，人间烟火。<span>纯程序绘画 · 可交互长卷</span></p><details><summary>关于这部作品</summary><p>根据奇仔的 Paracraft 作品《象形之美》重新演绎，保留从自然到人文的镜头顺序，以 Canvas 2D 绘制山水、草木、动物、舟船与城郭。字形动画为艺术化示意，不作为古文字考据。配乐为实时合成的原创五声音阶，不使用原片《龙文》录音。</p><a href="https://keepwork.com/palaka/paracraft_video/作品类/作品欣赏：象形之美" target="_blank" rel="noopener noreferrer">观看原作</a></details></footer>
+  </main>
+</div>
+<script type="module" src="xiangxing.js"></script>
+</body>
+</html>

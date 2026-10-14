@@ -1,3 +1,4 @@
+import {locationSnapshot} from './adventure_coordinates_core.js';
 import {dungeonLanguageBaseHp} from './adventure_dungeon_language_core.js';
 import {snapshotUnit,socialDataHash} from './adventure_social_core.js';
 export function dungeonProgress(save){return save?.coopRun?.runs||save?.dungeonRuns||{};}
@@ -5,7 +6,7 @@ export function startCoopRun(save,profiles,dataset,dungeon,hero=null){
     if(save.pendingEncounter||save.coopRun)throw Error('请先退出当前组队挑战');
     if(profiles.length<1||profiles.length>3||new Set(profiles.map(p=>p.id)).size!==profiles.length)throw Error('请选择一至三位不同伙伴');
     if(!dungeon?.playable||dungeon.arenas.some(a=>a.blocked?.length))throw Error('这个副本尚不支持完整组队挑战');
-    save.coopRun={version:1,dungeonId:dungeon.id,dataHash:socialDataHash(dataset),hero:hero?structuredClone(hero):null,members:profiles.map((p,i)=>({profile:structuredClone(p),unit:snapshotUnit(p,dataset,`ally${i+1}`,i+1)})),runs:{[dungeon.id]:{cleared:[]}},returnTo:{zone:save.zone,position:{...save.position}}};
+    save.coopRun={version:1,dungeonId:dungeon.id,dataHash:socialDataHash(dataset),hero:hero?structuredClone(hero):null,members:profiles.map((p,i)=>({profile:structuredClone(p),unit:snapshotUnit(p,dataset,`ally${i+1}`,i+1)})),runs:{[dungeon.id]:{cleared:[]}},returnTo:locationSnapshot(save)};
     // Hero HP is local runtime state; the first encounter starts at full health.
     save.heroHp=null;
 }

@@ -17,8 +17,8 @@ function harness(terrain){
     surface.hasPointerCapture=id=>captures.has(id);
     surface.releasePointerCapture=id=>captures.delete(id);
     surface.getBoundingClientRect=()=>({left:0,top:0});
-    let renders=0,layoutReads=0;surface.getBoundingClientRect=()=>{layoutReads++;return {left:0,top:0};};
-    const context=vm.createContext({W,bindTouchMovement,
+    let renders=0,layoutReads=0,cancellations=0;surface.getBoundingClientRect=()=>{layoutReads++;return {left:0,top:0};};
+    const context=vm.createContext({W,bindTouchMovement,heroNavigation:{cancel(){cancellations++;}},
         world:{isEarth:true,earthBoating:true,w:8640000,h:4320000,earthRules:earthRules(),terrainAt:()=>terrain,paths:[],buildings:[],landmarks:[]},
         save:{position:{x:800,y:600}},assets:{content:{}},dt:1/60,now:1000,moving:false,
         keys:new Set(),joystick:{x:0,y:0},heldPointer:null,path:[],destination:null,talkApproach:null,
@@ -28,7 +28,7 @@ function harness(terrain){
     });
     context.renderer={screenToWorld:(x,y)=>({x:context.save.position.x+x-400,y:context.save.position.y+y-300})};
     vm.runInContext([line('const touchMovement='),line('function resetMovementInput()'),line('function paintHud()')].join('\n'),context);
-    return {context,captures,get renders(){return renders;},get layoutReads(){return layoutReads;},pointer(type,x){
+    return {context,captures,get renders(){return renders;},get layoutReads(){return layoutReads;},get cancellations(){return cancellations;},pointer(type,x){
         const event=new Event(type);Object.assign(event,{pointerType:'touch',pointerId:1,button:0,clientX:x,clientY:300});surface.dispatchEvent(event);
     }};
 }
@@ -49,6 +49,7 @@ for(const terrain of ['water','ocean','grass'])for(const input of ['mouse','keyb
         }
         assert.equal(h.renders,120);if(input==='mouse')assert.equal(h.layoutReads,1,'held movement reuses canvas bounds across all 120 frames');
         vm.runInContext('resetMovementInput()',c);
+        assert.equal(h.cancellations,1,'explicit input reset also cancels a pending hero path');
         const stopped=c.save.position.x;c.moving=false;movement.runInContext(c);
         assert.equal(c.save.position.x,stopped);assert.equal(c.moving,false);
         assert.equal(c.keys.size,0);assert.equal(c.heldPointer,null);assert.equal(h.captures.size,0);

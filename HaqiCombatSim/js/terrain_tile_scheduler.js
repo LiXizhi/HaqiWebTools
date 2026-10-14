@@ -60,6 +60,7 @@ export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,s
         },
         invalidateAtlas(atlas){for(const [key,row] of tiles)if(row.atlases.has(atlas)){discard(row);tiles.delete(key);}if(active&&(active.waiting||active.atlases.has(atlas))){if(active.tile)active.tile.width=active.tile.height=0;active=null;}},
         clear(){stop();for(const row of tiles.values())discard(row);tiles.clear();scope=null;previous=null;},
-        get size(){return tiles.size;},get pending(){return queue.length+(active?1:0);}
+        get size(){return tiles.size;},get pending(){return queue.length+(active?1:0);},
+        stats:()=>({bytes:(tiles.size+(active?1:0))*(512*density+4)**2*4,limitBytes:64*1024*1024,mode:rasterize?'worker':'fallback'})
     };
 }

@@ -152,3 +152,13 @@ DIY中的历史头像预览补齐只读各形象文件并缓存于当前服务�
 ## 2026-10-12：时光探索
 
 `timeScrollProgress` 进入 records 分片，按 cityId 存首次发现；通用故事完成继续复用跨城市的 `languageAdventure.stories`。`timeScrollRuntime` 只进入 IndexedDB runtime，保存长卷坐标、原城市位置与是否仍在长卷；durableSave 去除该字段，行走和进出不改变核心 revision。缺失/无效返回点丢弃时光 runtime，保留已有发现和原城市恢复。每日语言加成继续使用既有本机字段，不进云端。
+
+
+## 魔法营地坐标版本（2026-10-14）
+
+- 营地地图与索引 `coordinateVersion:2`；缺省为1，仅对应营地1800×1600到3600×3200，不提升全局地图或存档版本。
+- 当前位置配套 `positionCoordinateVersion`，与 `position` 一同保存在账号/角色隔离的 IndexedDB runtime；`durableSave` 剔除两者。旧本机运行态可以覆盖新版云端核心入口，但使用本机自己的坐标版本再迁移，不能误用云端版本。无匹配本机位置时直接使用新版 `initialSpawn`。
+- `dungeonReturn`、`earthReturn`、`coopRun.returnTo`、同屏第二角色返回快照和相关返回栈中的营地点使用 `coordinateVersion`；新快照带版本，旧快照按营地版本转换一次。其他岛屿坐标不动。
+- 宠物 `birth.anchor` 配套 `birth.coordinateVersion`。旧不可变文件先完成原内容与摘要校验，再只迁移本次按需加载的正文；不读取或重写未加载宠物。迁移后的宠物随正常单宠物变更保存，任务、物品集合和原文件哈希不被重写。
+- 旧营地位置乘二后检查可通行性，受阻就近落地，无可用点才回出生点；地图延迟加载时在进入场景后完成落点检查。重复解析或重载不会二次放大。本机地面掉落也携带版本，不变更唯一领取凭证或数量。
+- 战斗检查点、任务奖励、物品分片及账号隔离沿用现有契约；单纯更新当前位置/版本不改变 `coreCatalogKey`，不触发全量收藏同步。

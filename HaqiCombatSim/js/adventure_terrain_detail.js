@@ -23,16 +23,17 @@ function wash(c,x,y,rx,ry,color){
 
 export function paintGroundDetail(...args){for(const step of paintGroundDetailSteps(...args)) {}}
 export function* paintGroundDetailSteps(c,world,rect){
+    const refined=world.layout.rules.terrain.campRefined===true;
     yield* cells(world,rect,96,'soil',(cx,cy,rng)=>{
         const x=cx+rng.float()*96,y=cy+rng.float()*96;
         const biome=regionAt(world,{x,y})?.biome||'grass';
         const snow=['snow','ice'].includes(biome),sand=['beach','desert','gold'].includes(biome)||!onLargeIsland(world,x,y,world.layout.rules.terrain.coastWidth/2+20);
         const barren=['volcanic','ash','dark'].includes(biome);
-        const shade=snow?'#80acc329':sand?'#96713c26':barren?'#3d34472b':'#386a3438';
-        const light=snow?'#ffffff66':sand?'#ffe2a63b':barren?'#ac939325':'#bcda6c3d';
+        const shade=snow?'#80acc329':sand?'#96713c26':barren?'#3d34472b':refined?'#496d3730':'#386a3438';
+        const light=snow?'#ffffff66':sand?'#ffe2a63b':barren?'#ac939325':refined?'#d7de913d':'#bcda6c3d';
         wash(c,x,y,48+rng.float()*42,22+rng.float()*20,shade);
         wash(c,x-18,y-16,42,24,light);
-        for(let i=0;i<58;i++){
+        for(let i=0;i<(refined?32:58);i++){
             const px=cx+rng.float()*96,py=cy+rng.float()*96;
             ellipse(c,px,py,.5+rng.float()*1.7,.4+rng.float()*.7,i%3?light:shade);
         }
@@ -86,6 +87,9 @@ export function* paintRoadDetailSteps(c,world,rect){
             if(edge<-7||edge>10)continue;
             const color=world.layout.rules.roads.layers[edge>1?1:2][1];
             ellipse(c,x,y,1+rng.float()*3,.6+rng.float()*1.4,color+'65');
+            if(world.layout.rules.terrain.campRefined&&edge>2&&i%4===0){
+                ellipse(c,x+1,y+1,2.8,1.8,'#6b70502e');ellipse(c,x,y,2.4,1.5,'#eee0b77a');
+            }
         }
     });
     // A single union clip keeps intersections clean, including parallel spurs.

@@ -1,6 +1,7 @@
 import {validatePetGrowth} from './adventure_pet_traits_core.js';
 // Web adventure rules, not an original Lua combat formula. Clock and scene truth are injected.
 import {createRng,hashSeed} from './rng_core.js';
+import {mapCoordinateVersion} from './adventure_coordinates_core.js';
 import {defaultParams,resolveParams} from './combat_params_core.js';
 import {petParams,petXpLevel,recommendedPetDeck,validatePetDeck} from './adventure_pets_core.js';
 
@@ -141,7 +142,7 @@ export function breedPets(left,right,{now,scene,babyId},content){
     const ids=[a,b].sort((x,y)=>order(x.id,y.id));
     const seed=hashSeed(JSON.stringify(ids.map(p=>[p.id,p.birthSerial+1]))),rng=createRng(seed);
     const baby=createPetInstance(content,{id:babyId,speciesId:rng.pick(candidates),ownerId:'birth',gender:rng.pick(ids).gender});
-    baby.ownerId=null;baby.birth={parents:ids.map(p=>p.id),at,seed,zone:scene.zone,anchor:{x:scene.anchor.x,y:scene.anchor.y},adoptedAt:null};
+    baby.ownerId=null;baby.birth={parents:ids.map(p=>p.id),at,seed,zone:scene.zone,anchor:{x:scene.anchor.x,y:scene.anchor.y},...(scene.zone==='camp'?{coordinateVersion:mapCoordinateVersion(scene.zone,content)}:{}),adoptedAt:null};
     for(const pet of [a,b]){pet.birthSerial++;pet.cooldownUntil=at+p.cooldownMs;pet.memoryClock=at;}
     for(const row of pairRows(a,b))if(row)row.available-=p.marksRequired;
     validatePetInstance(baby,content);return {pets:[a,b],baby,status};

@@ -24736,17 +24736,18 @@
     "islands": {
       "camp": {
         "name": "魔法营地",
-        "w": 1800,
-        "h": 1600,
+        "w": 3600,
+        "h": 3200,
         "spawn": {
-          "x": 950,
-          "y": 1330
+          "x": 1900,
+          "y": 2660
         },
         "initialSpawn": {
-          "x": 860,
-          "y": 850
+          "x": 1720,
+          "y": 1700
         },
         "retainPreviousPosition": true,
+        "coordinateVersion": 2,
         "file": "data/adventure/maps/camp.json"
       },
       "town": {

@@ -1,3 +1,5 @@
+import {locationSnapshot,mapCoordinateVersion} from './adventure_coordinates_core.js';
+import {createIslandHeroNavigation} from './island_hero_navigation.js';
 import {timeScrollCity} from './adventure_time_scroll_core.js';
 import {checkedRoleProgress} from './adventure_roles_core.js';
 import {createEarthPlaces} from './adventure_earth_places.js';
@@ -144,7 +146,7 @@ async function travelEarth(geo){
     if(save.pendingEncounter||save.coopRun||dungeonFor(assets.content,save.zone)){toast('请先完成战斗或退出副本');return;}
     const current=save,role=roleStore?.catalog.activeId,ticket=earthViewTicket;earthTraveling=true;earthView?.busy('正在准备目的地，关闭地图可取消…');
     try{const service=await getEarth(),prepared=await service.prepare(geo,{onProgress:progress=>{if(current===save&&ticket===earthViewTicket)earthView?.progress(progress);}});if(current!==save||role!==roleStore?.catalog.activeId||ticket!==earthViewTicket)return;
-        if(save.zone!=='earth')save.earthReturn={zone:save.zone,position:{...save.position}};
+        if(save.zone!=='earth')save.earthReturn=locationSnapshot(save,assets.content);
         save.zone='earth';save.position=prepared.position;assets.content.earthWorld=prepared.world;earthOwner=current;earthTraveling=false;
         prepared.world.onObjectsChanged=(change={})=>{W.invalidateWorldObjects(prepared.world,change);if(world===prepared.world){void assets.warmNearby?.(world,save);if(!change.wildOnly&&change.socialChanged!==false)void islandSocial.refreshEarth();}};
         await enterWorld(save);if(current!==save)return;
@@ -266,8 +268,9 @@ document.addEventListener('keydown',()=>spellSound.unlock());
 document.addEventListener('click',event=>{const button=event.target.closest?.('button');if(button&&!button.disabled&&button.getAttribute('aria-disabled')!=='true')spellSound.play('click');});
 async function toggleSound(){const requested=!spellSound.enabled;if(!requested)stopBattleChatVoice();gameSettings.set({sound:requested});const ok=await spellSound.setEnabled(requested);if(requested&&!ok)toast('浏览器暂时无法启用音效，请重试。');paintPanel();if(stage==='battle')paintBattle();}
 let lastCare=0;
+const heroNavigation=createIslandHeroNavigation();
 let joystick={x:0,y:0},heldPointer=null;
-function resetMovementInput(){keys.clear();joystick={x:0,y:0};heldPointer=null;touchMovement.reset();}
+function resetMovementInput(){heroNavigation.cancel();keys.clear();joystick={x:0,y:0};heldPointer=null;touchMovement.reset();}
 const touchIndicator=V.el('div','touch-joystick floating-joystick active',V.el('span','joystick-stick'));
 touchIndicator.hidden=true;touchIndicator.setAttribute('aria-hidden','true');nodes.world.parentElement.append(touchIndicator);
 const sceneFishing=createSceneFishing(nodes.world.parentElement,{
@@ -297,7 +300,7 @@ const localPlay=createLocalPlay({
     enterBattle:value=>{battle=value;stage='battle';animation=null;close();nodes.hud.hidden=true;localPlay.paintBattle();},
     leaveBattle:()=>{battle=null;void enterWorld(save,null,{announceBeans:false});},
     presentLocal:(playback,previous,hp,aura)=>{animation={events:withBattlePointer(playback.events.map(e=>({...e,periodic:e.type==='dot'||e.type==='hot',type:e.type==='dot'?'damage':e.type==='hot'?'heal':e.type})),previous,nextBattlePointer(battle)),pointer:previous,index:0,start:performance.now(),hp,aura,status:playback.initial,pips:playback.initialPips,statusFeedback:[],entered:-1};},
-    walkTo:point=>{path=W.findPath(world,save.position,point);destination=null;},
+    walkTo:point=>{destination=null;requestHeroPath(point);},
 });
 const model=()=>({assets,save,timeCity:timeScrollCity(world,save),localSecond:localPlay.second,locationName:world?.isEarth||world?.isCityDungeon?world.layout.name:null,earthChapter:earthService?.chapter,gameSettings:gameSettings.value,effectiveGraphics:adaptiveGraphics.effects(gameSettings.value),social:islandSocial.state(),displayLocale:displayLocale(),dungeonLoading,serviceNpc,npcServiceView,membership:membership.state,membershipView,rechargeView,accountOwner:roleStore?.owner,magicBeanExchange:roleStore?.catalog?.magicBeanExchange||null,now:Date.now(),storageWarning,arenaCountdown:arenaPickClock.remaining(),battle,selected,discarded,hand:animation?.hand,presentation:animation?{hp:animation.hp,status:animation.status}:null,animating:!!animation,equipmentView,strengtheningView,gemView,shopView,petView,debugBackup:roleStorage&&hasDebugBackup(roleStorage),soundEnabled:spellSound.enabled,soundVolume:spellSound.volume,learningProgress:battle?.learningProgress||0,autoWalk:!!destination});
 let secondCharacterChat=null;
@@ -638,6 +641,7 @@ function maybeExchangeMagicBeans({announce=true}={}) {
     }catch(error){toast(error.message);}finally{exchangingBeans=false;}
 }
 async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
+    heroNavigation.cancel();
     const resumedWorld=stage==='battle'&&W.canResumeWorld(world,save,newSave,assets.content)?world:null;
     stopBattleChatVoice();
     arenaPickClock.stop();
@@ -665,7 +669,9 @@ async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     mergeOwnedPetSpecies(save,assets.content);
     const reveal=()=>{
     if(assets.content.pets)tickCare(save,assets.content,A.playerSpec(save,assets.content),Date.now(),false);world=resumedWorld||W.createWorld(save.zone,assets.content,save);stage='world';path=[];destination=null;animation=null;close();
-    if(!W.walkable(world,save.position.x,save.position.y))save.position={...world.center};
+    if(!W.walkable(world,save.position.x,save.position.y))save.position=world.zone==='camp'?(W.nearestWalkable(world,save.position.x,save.position.y)||{...world.layout.spawn}):{...world.center};
+    save.positionCoordinateVersion=mapCoordinateVersion(save.zone,assets.content);
+    if(world.zone==='camp')for(const pet of Object.values(save.petWorld||{}))if(pet.birth?.zone==='camp'&&!W.walkable(world,pet.birth.anchor.x,pet.birth.anchor.y))pet.birth.anchor=W.nearestWalkable(world,pet.birth.anchor.x,pet.birth.anchor.y)||{...world.layout.spawn};
     localPlay.syncWorld();
     W.updateEncounterVisibility(world,save,Date.now());
     W.resetAutoInteraction(world,save.position);
@@ -1047,6 +1053,7 @@ async function nextDialogue() {
 let encounterStarting=false;
 function interact(target) {
     if(stage!=='world'||!target||localPlay.paused||encounterStarting)return;
+    heroNavigation.cancel();
     path=[];destination=null;keys.clear();persist();
     if(localPlay.interceptNpc(target))return;
     if(world.isCityDungeon&&target.cityHotspot){openCityHotspot(target);return;}
@@ -1075,11 +1082,17 @@ function interact(target) {
     });
 }
 function interactNearest(){if(localPlay.tryGather())return;if(!panel&&!dialog&&!characterChat.active&&!secondCharacterChat?.active)interact(W.nearestInteraction(world,save.position));}
+function requestHeroPath(target,onResult=route=>{path=route;}) {
+    heroNavigation.cancel();path=[];
+    if(world.zone!=='camp'){onResult(W.findPath(world,save.position,target));return;}
+    const currentSave=save,currentWorld=world,role=roleStore?.catalog.activeId,from={...save.position};
+    heroNavigation.request(world,from,target,{roleId:role,isLive:()=>save===currentSave&&world===currentWorld&&roleStore?.catalog.activeId===role&&stage==='world'&&!panel&&!dialog&&!encounterStarting&&!languageAdventure.active&&!characterChat.active&&!secondCharacterChat?.active&&!localPlay.paused&&!document.hidden&&!keys.size&&!joystick.x&&!joystick.y&&!heldPointer?.active&&W.distance(from,save.position)<1,onResult});
+}
 function walkTo(target,autoInteract=false) {
-    close();path=W.findPath(world,save.position,target);destination=autoInteract?target:null;
+    close();destination=autoInteract?target:null;
     const arrival=autoInteract&&W.destinationInteraction(world,save.position,target,85);
     if(arrival){interact(arrival);return;}
-    if(!path.length)toast('这里暂时走不过去，试试旁边的小路。');
+    requestHeroPath(target,route=>{path=route;if(!path.length)toast('这里暂时走不过去，试试旁边的小路。');});
 }
 // Walk to the resident named by the NPC bubble, then enter that conversation.
 function approachInvite() {
@@ -1092,9 +1105,11 @@ function approachInvite() {
     void languageAdventure.prepare(target).then(prepared=>{
         if(!prepared||!languageAdventure.preparedValid(prepared))return;
         if(W.distance(save.position,target)<=learningParams(assets.content).interactionRange){languageAdventure.greet(prepared,performance.now());return;}
-        path=W.findPath(world,save.position,target);
-        if(!path.length){toast('这里暂时走不过去，试试旁边的小路。');return;}
-        talkApproach=prepared;
+        requestHeroPath(target,route=>{
+            if(!languageAdventure.preparedValid(prepared))return;
+            path=route;if(!path.length){toast('这里暂时走不过去，试试旁边的小路。');return;}
+            talkApproach=prepared;
+        });
     }).catch(error=>toast(error.message));
     return true;
 }
@@ -1355,6 +1370,7 @@ async function startFishing(water) {
     } catch(error) {if(epoch===fishingLoadEpoch)toast('钓鱼数据加载失败，请再次点击海面重试。');}
 }
 function clickWorld(clientX,clientY) {
+    heroNavigation.cancel();
     fishingLoadEpoch++;
     if(localPlay.paused)return false;
     const {p,target}=pickWorldTarget(clientX,clientY);
@@ -1377,9 +1393,7 @@ function clickWorld(clientX,clientY) {
             if(!spot){toast('这里离水边太远，换一处海岸试试。');return false;}
             close();path=[];destination=null;
             if(W.distance(save.position,spot.shore)>8){
-                path=W.findPath(world,save.position,spot.shore);
-                if(!path.length){toast('这处岸边暂时走不到，换个位置吧。');return false;}
-                fishingApproach=spot;
+                requestHeroPath(spot.shore,route=>{path=route;if(!path.length){toast('这处岸边暂时走不到，换个位置吧。');return;}fishingApproach=spot;});
             }else startFishing(spot.water);
         }
         return false;
@@ -1415,6 +1429,7 @@ function releaseWorldPointer(e){
 for(const event of ['pointerup','pointercancel','lostpointercapture'])nodes.world.addEventListener(event,releaseWorldPointer);
 function backgroundScenePaused(){return pauseBackgroundScene({stage,hidden:document.hidden,panel,dialog,learning:languageAdventure.active,conversation:characterChat.active||!!secondCharacterChat?.active,fullscreen:!!document.fullscreenElement&&!document.fullscreenElement.contains(nodes.world)});}
 function frame(now) {
+    if(stage!=='world'||document.hidden||panel||dialog||keys.size||joystick.x||joystick.y||heldPointer?.active||localPlay.paused)heroNavigation.cancel();
     hanziIsland?.tick();
     const earthFrameStart=perf.enabled?performance.now():0;
     const phasePrefix=world?.isEarth?'earth-':'island-';
@@ -1452,7 +1467,7 @@ function frame(now) {
             const travel=W.WALK_SPEED*(save.mountId?assets.content.balanceParams?.adventure?.mountSpeed||1.35:1)*dt;
             const previous=save.position,next=W.followPath(world,save.position,path,travel);
             save.position=next.position;path=next.path;dx=save.position.x-previous.x;dy=save.position.y-previous.y;moving=Math.hypot(dx,dy)>.01;
-            if(next.blocked&&destination)path=W.findPath(world,save.position,destination);
+            if(next.blocked&&destination)requestHeroPath(destination);
         }else if(dx||dy){
             const length=Math.max(1,Math.hypot(dx,dy)),previous=save.position;
             const travel=W.WALK_SPEED*(save.mountId?assets.content.balanceParams?.adventure?.mountSpeed||1.35:1)*dt;
@@ -1486,7 +1501,7 @@ function frame(now) {
     const bagButton=nodes.hud.querySelector('[data-ui-icon=bag]')?.closest('button');bagButton?.classList.toggle('reward-glow',!rewardRoot.hidden&&!!rewardRoot.querySelector('.reward-popup:not([hidden]) strong'));
     if(teleportEffect&&(stage!=='world'||now-teleportEffect.started>=TELEPORT_EFFECT_MS))teleportEffect=null;
     if(fishingApproach){
-        if(stage!=='world'||panel||dialog||keys.size||joystick.x||joystick.y||heldPointer||document.hidden)fishingApproach=null;
+        if(stage!=='world'||document.hidden||panel||dialog||keys.size||joystick.x||joystick.y||heldPointer)fishingApproach=null;
         else if(!path.length){
             const spot=fishingApproach;fishingApproach=null;
             if(W.distance(save.position,spot.shore)<24){moving=false;startFishing(spot.water);}

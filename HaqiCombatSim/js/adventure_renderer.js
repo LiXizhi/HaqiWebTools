@@ -130,7 +130,7 @@ export function createRenderer(canvas,assets) {
     const dungeonFog=createDungeonFog(),mapFog=createDungeonFog();
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const ctx=canvas.getContext('2d',{alpha:false}),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
-    const terrainTiles=createScheduledTerrainCache({rasterize:createIslandTerrainRasterizer(assets.terrainDecorationArt),onMetric:(name,value)=>perf.record(name,value),paint:(c,world,rect,atlases)=>paintLargeTerrainSteps(c,world,rect,false,assets.terrainDecorationArt?{draw(...args){atlases.add(args[1]);return assets.terrainDecorationArt.draw(...args);}}:null),createCanvas:()=>document.createElement('canvas')});
+    const terrainTiles=createScheduledTerrainCache({rasterize:createIslandTerrainRasterizer(assets.terrainDecorationArt),onMetric:(name,value)=>typeof value==='number'?perf.record(name,value):perf.event(name,value),paint:(c,world,rect,atlases)=>paintLargeTerrainSteps(c,world,rect,false,assets.terrainDecorationArt?{draw(...args){atlases.add(args[1]);return assets.terrainDecorationArt.draw(...args);}}:null),createCanvas:()=>document.createElement('canvas')});
     if(assets.terrainDecorationArt)assets.terrainDecorationArt.onAtlas=atlas=>terrainTiles.invalidateAtlas(atlas);
     let vignetteCanvas=null,vignetteW=0,vignetteH=0;
     let overviewWorld=null,overview=null;
@@ -666,5 +666,5 @@ export function createRenderer(canvas,assets) {
         target.updateStatusTargets?.(target.battleStatusRects);
         return Object.fromEntries(Object.entries(positions).map(([id,at])=>[id,{x:at.x*scale,y:at.y*scale}]));
     }
-    return {prepareScene,frameStats:()=>frameMeter.value,pauseFrameMeter:()=>frameMeter.sample(0,false),environmentStats:()=>earthEnvironment.stats,streetStats:streetPainter.stats,streetPeople:streetPainter.people,terrainStats:()=>({tiles:terrainTiles.size,pending:terrainTiles.pending,scenery:islandScenery.stats()}),resetZoom:()=>cameraZoom.reset(),render,minimap,worldToScreen:point=>({x:(point.x-cam.x)*cam.scale,y:(point.y-cam.y)*cam.scale}),screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
+    return {prepareScene,frameStats:()=>frameMeter.value,pauseFrameMeter:()=>frameMeter.sample(0,false),environmentStats:()=>earthEnvironment.stats,streetStats:streetPainter.stats,streetPeople:streetPainter.people,terrainStats:()=>({tiles:terrainTiles.size,pending:terrainTiles.pending,...terrainTiles.stats(),scenery:islandScenery.stats()}),resetZoom:()=>cameraZoom.reset(),render,minimap,worldToScreen:point=>({x:(point.x-cam.x)*cam.scale,y:(point.y-cam.y)*cam.scale}),screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
 }

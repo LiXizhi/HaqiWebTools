@@ -634,7 +634,7 @@ const G = {
     { d: 'M16 86 L16 22 Q16 12 26 12 L40 12 Q48 12 48 22 L48 86' },
     { d: 'M24 40 L42 40' },
     { d: 'M24 62 L42 62' },
-    { d: 'M52 22 Q52 12 62 12 L76 12 Q86 12 86 22 L86 86' },
+    { d: 'M52 86 L52 22 Q52 12 62 12 L76 12 Q86 12 86 22 L86 86' },
     { d: 'M58 40 L80 40' },
     { d: 'M58 62 L80 62' },
   ]},
@@ -659,9 +659,9 @@ const G = {
     { d: 'M62 58 L82 58', plank: 1 },
   ]},
   jian: { p: 'h', w: 3.6, strokes: [
-    { d: 'M22 16 L22 90', p: 'v', w: 4.6 },
-    { d: 'M22 16 L86 15 L84 76 Q76 90 66 80', p: 'zhe', k: 0.44, w: 4 },
-    { d: 'M36 50 L72 49.5', w: 3.6 },
+    { d: 'M22 14 L34 28', p: 'dot', w: 5.2 },
+    { d: 'M26 24 L88 18 L86 76 L72 86', p: 'zhe', k: 0.45, w: 3.8 },
+    { d: 'M44 50 L74 49', w: 3.4 },
   ]},
 };
 
@@ -773,22 +773,21 @@ function makeDoor(parent, withHit) {
   const g = el('g', { class: 'door' }, parent);
   const parts = [];
   const add = node => { node.style.opacity = '0'; parts.push(node); return node; };
-  add(el('ellipse', { cx: 0, cy: 40, rx: 16, ry: 2.2, fill: 'rgba(30,25,20,.22)' }, g));
-  add(el('path', { d: 'M-16 -34 L-16 36', stroke: '#5c3b24', 'stroke-width': 3.6, 'stroke-linecap': 'round', fill: 'none' }, g));
-  for (const d of [
-    'M-14 -32 L16 -32 L16 -22 L-14 -22 Z',
-    'M-12 -18 L14 -18 L14 -6 L-12 -6 Z',
-    'M-12 -2 L14 -2 L14 10 L-12 10 Z',
-    'M-12 14 L14 14 L14 26 L-12 26 Z',
-    'M-14 28 L16 28 L16 36 L-14 36 Z',
-  ]) add(el('path', { d, fill: 'url(#woodG)', stroke: '#4a2e1a', 'stroke-width': 0.45 }, g));
-  const studs = el('g', null, g);
-  studs.style.opacity = '0';
-  parts.push(studs);
-  for (const [cx, cy] of [[-6, -12], [8, -12], [-6, 4], [8, 4], [-6, 20], [8, 20]]) {
-    el('circle', { cx, cy, r: 1.45, fill: '#e4c47c', stroke: '#6b4a2b', 'stroke-width': 0.35 }, studs);
+  add(el('ellipse', { cx: 0, cy: 38, rx: 13, ry: 2, fill: 'rgba(30,25,20,.2)' }, g));
+  const hinge = el('g', null, g);
+  hinge.style.opacity = '0';
+  parts.push(hinge);
+  for (const y of [-26, -6, 14, 30]) {
+    el('rect', { x: -15.5, y: y - 2.4, width: 4.6, height: 5, rx: 1.1, fill: '#d4b36a', stroke: '#6b4a2b', 'stroke-width': 0.3 }, hinge);
   }
-  if (withHit) el('rect', { class: 'hit', x: -22, y: -42, width: 44, height: 88 }, g);
+  add(el('path', { d: 'M-11 -34 H13 V34 H-11 Z', fill: 'url(#woodG)', stroke: '#4a2e1a', 'stroke-width': 0.7 }, g));
+  const nails = el('g', null, g);
+  nails.style.opacity = '0';
+  parts.push(nails);
+  for (const y of [-20, -4, 12]) {
+    el('circle', { cx: 2, cy: y, r: 1.25, fill: '#f3d78a', stroke: '#6b4a2b', 'stroke-width': 0.3 }, nails);
+  }
+  if (withHit) el('rect', { class: 'hit', x: -18, y: -40, width: 34, height: 80 }, g);
   g._parts = parts;
   return g;
 }
@@ -804,8 +803,8 @@ async function revealDoor(door, tk) {
   }
 }
 
-const DOOR_L = { x: 33, y: 50, flip: 1 };
-const DOOR_R = { x: 67, y: 50, flip: -1 };
+const DOOR_L = { x: 34, y: 50, flip: 1 };
+const DOOR_R = { x: 68, y: 50, flip: -1 };
 
 /* ---------- 场景 ---------- */
 async function sceneXiang(tk) {
@@ -815,11 +814,11 @@ async function sceneXiang(tk) {
   Sound.pluck(NOTE.D4);
   const lg = local(L.back);
   lg.style.opacity = 0;
-  el('rect', { x: 8, y: 8, width: 84, height: 8, rx: 1, fill: '#4a3424' }, lg);
-  el('rect', { x: 8, y: 8, width: 7, height: 82, fill: '#3d2a1c' }, lg);
-  el('rect', { x: 85, y: 8, width: 7, height: 82, fill: '#3d2a1c' }, lg);
-  el('rect', { x: 15, y: 16, width: 70, height: 72, fill: '#241c16' }, lg);
-  el('rect', { x: 6, y: 88, width: 88, height: 7, rx: 1, fill: '#6b4e32' }, lg);
+  el('rect', { x: 14, y: 12, width: 72, height: 5, fill: '#3a2a1e' }, lg);
+  el('rect', { x: 14, y: 12, width: 4.5, height: 74, fill: '#3a2a1e' }, lg);
+  el('rect', { x: 81.5, y: 12, width: 4.5, height: 74, fill: '#3a2a1e' }, lg);
+  el('rect', { x: 18.5, y: 17, width: 63, height: 67, fill: '#1c1612' }, lg);
+  el('rect', { x: 12, y: 86, width: 76, height: 5, rx: 1, fill: '#6b4e32' }, lg);
   await tween(500 * M, t => { lg.style.opacity = t.toFixed(3); }, tk);
   S.leftRoot = local(L.glyph);
   S.left = makeDoor(S.leftRoot, false);
@@ -832,17 +831,17 @@ async function sceneDrag(tk) {
   S.rightRoot = local(L.front);
   S.right = makeDoor(S.rightRoot, true);
   showDoor(S.right);
-  const pose = { x: 108, y: 62, flip: -1 };
+  const pose = { x: 114, y: 58, flip: -1 };
   setPose(S.right, pose);
   S.right.style.opacity = 0;
   await tween(500 * M, t => { S.right.style.opacity = t.toFixed(3); }, tk);
   hint('拖动右边的门板，合到光点上');
   const lg = local(L.back);
   const ghost = el('path', {
-    d: 'M51 16 H83 V86 H51 Z M55 32 H79 M55 50 H79 M55 68 H79',
+    d: 'M55 16 H81 V84 H55 Z',
     class: 'ghostLine',
   }, lg);
-  const glow = el('ellipse', { cx: 67, cy: 50, rx: 8, ry: 3.2, class: 'glow', filter: 'url(#softL)' }, lg);
+  const glow = el('ellipse', { cx: 68, cy: 50, rx: 7, ry: 3, class: 'glow', filter: 'url(#softL)' }, lg);
   const door = S.right;
   const hit = door.querySelector('.hit');
   const T = DOOR_R;
@@ -905,7 +904,9 @@ async function sceneDrag(tk) {
   }
   setPose(door, T);
   Sound.knock();
-  const slit = el('rect', { x: 48.5, y: 18, width: 3.2, height: 66, fill: 'url(#warmG)', opacity: 0 }, lg);
+  const slitG = local(L.fx);
+  S.slitG = slitG;
+  const slit = el('rect', { x: 48, y: 18, width: 6, height: 64, fill: 'url(#warmG)', opacity: 0 }, slitG);
   bg(tween(420, t => slit.setAttribute('opacity', t.toFixed(3)), tk));
   await caption('象形 · 两扇', '两扇相对，才是一座门。', tk);
   bg(tween(400, t => { ghost.style.opacity = 1 - t; glow.style.opacity = 1 - t; }, tk));
@@ -920,16 +921,18 @@ async function sceneJiagu(tk) {
   vtitle('甲骨文', '商');
   Sound.pluck(NOTE.G4);
   boneSvg.classList.add('on');
-  const leftRoot = S.leftRoot, rightRoot = S.rightRoot;
+  const leftRoot = S.leftRoot, rightRoot = S.rightRoot, slitG = S.slitG;
   bg(tween(1100 * M, t => {
     leftRoot.style.opacity = 1 - t;
     rightRoot.style.opacity = 1 - t;
     L.back.style.opacity = 1 - t;
+    if (slitG) slitG.style.opacity = 1 - t;
   }, tk));
   await wait(350 * M, tk);
   S.jg = new Glyph(L.glyph, G.jiagu, { filter: 'carve', color: BONE_INK });
   await S.jg.draw(tk, { per: 200, gap: 40, sound: 'carve' });
   leftRoot.remove(); rightRoot.remove();
+  if (slitG) slitG.remove();
   L.back.replaceChildren(); L.back.style.opacity = '';
   const cr = el('g', { class: 'cracks' }, L.back);
   const paths = CRACKS.map(d => el('path', { d }, cr));
@@ -1031,9 +1034,9 @@ async function sceneKai(tk) {
 }
 
 const MEN_GUIDE = [
-  [[22, 16], [22, 90]],
-  [[22, 16], [86, 15], [84, 76], [75.5, 84], [66, 80]],
-  [[36, 50], [72, 49.5]],
+  [[22, 14], [34, 28]],
+  [[26, 24], [88, 18], [86, 76], [72, 86]],
+  [[44, 50], [74, 49]],
 ];
 
 function guideBins(parent, pts) {
@@ -1301,7 +1304,7 @@ async function begin() {
 /* ---------- 启动 ---------- */
 paperTexture();
 buildLeiwen();
-/* ---------- 首页：大字「国」按笔顺写出，身后浮现历代字形 ---------- */
+/* ---------- 首页：大字「门」按笔顺写出，身后浮现历代字形 ---------- */
 const intro = { tk: { dead: false }, g: null };
 function placeIntro() {
   if (!intro.g || intro.tk.dead) return;

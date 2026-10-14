@@ -1,3 +1,4 @@
+import {locationSnapshot,mapCoordinateVersion,migrateLocationCoordinates} from './adventure_coordinates_core.js';
 import {journeyDungeons,towerRecord,validateTowerRecords} from './adventure_dungeon_journeys_core.js';
 import {createRng,hashSeed} from './rng_core.js';
 import {dressDungeon,dungeonBiome} from './adventure_dungeon_scenery_core.js';
@@ -113,7 +114,7 @@ export function projectDungeon(d,baseRules){
 export function enterDungeon(save,content,id,{restart=false}={}){
     const d=dungeonFor(content,id);assert(d?.playable,'这个副本尚未开放');assert(d.loaded!==false&&content.worldMaps[id],'副本数据尚未加载');assert(!save.pendingEncounter,'请先完成当前战斗');
     save.dungeonRuns??={};const runs=dungeonProgress(save);
-    if(!dungeonFor(content,save.zone))save.dungeonReturn={zone:save.zone,position:{...save.position}};
+    if(!dungeonFor(content,save.zone))save.dungeonReturn=locationSnapshot(save,content);
     else if(runs[save.zone])runs[save.zone].position={...save.position};
     if(restart||!runs[id])runs[id]={cleared:[]};
     const layout=content.worldMaps[id];
@@ -134,9 +135,10 @@ export function enterDungeon(save,content,id,{restart=false}={}){
 export function leaveDungeon(save,content){
     assert(dungeonFor(content,save.zone),'当前不在副本中');assert(!save.pendingEncounter,'请先完成当前战斗');
     dungeonProgress(save)[save.zone].position={...save.position};
-    const target=save.dungeonReturn||{zone:'camp',position:content.worldMaps.camp.spawn};
+    const target=save.dungeonReturn||{zone:'camp',position:content.worldMaps.camp.spawn,coordinateVersion:mapCoordinateVersion('camp',content)};
+    migrateLocationCoordinates(target,content);
     delete save.dungeonLanguageBuff;
-    save.zone=target.zone;save.position={...target.position};save.dungeonReturn=null;delete save.coopRun;save.revision++;
+    save.zone=target.zone;save.position={...target.position};save.positionCoordinateVersion=mapCoordinateVersion(target.zone,content);save.dungeonReturn=null;delete save.coopRun;save.revision++;
 }
 export function validateDungeons(save,content){
     if(save.cityFallback!==undefined){validateGeneratedCityRoute(save.cityFallback);assert(save.zone===generatedCityDungeonId(save.cityFallback),'自动城市返回记录无效');}

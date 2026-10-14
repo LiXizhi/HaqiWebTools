@@ -1,4 +1,5 @@
 // Authored city nodes, scene interactions and durable progress. No browser IO.
+import {mapCoordinateVersion,migrateLocationCoordinates} from './adventure_coordinates_core.js';
 import {resolveParams} from './combat_params_core.js';
 import {validateStreetscape,safeStreetPosition} from './adventure_city_street_core.js';
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
@@ -131,6 +132,7 @@ export function enterCityDungeon(save,content,id){
 }
 export function leaveCityDungeon(save,content){
     assert(content.dungeons.find(d=>d.id===save.zone)?.kind==='city','当前不在城市副本中');assert(!save.pendingEncounter,'请先结束战斗');
-    const target=save.cityReturnStack?.pop()||save.dungeonReturn||{zone:'camp',position:content.worldMaps.camp.spawn};
-    delete save.coopRun;save.zone=target.zone;save.position={...target.position};if(!isCityDungeonId(target.zone)){save.dungeonReturn=null;delete save.cityReturnStack;delete save.cityFallback;}save.revision++;
+    const target=save.cityReturnStack?.pop()||save.dungeonReturn||{zone:'camp',position:content.worldMaps.camp.spawn,coordinateVersion:mapCoordinateVersion('camp',content)};
+    migrateLocationCoordinates(target,content);
+    delete save.coopRun;save.zone=target.zone;save.position={...target.position};save.positionCoordinateVersion=mapCoordinateVersion(target.zone,content);if(!isCityDungeonId(target.zone)){save.dungeonReturn=null;delete save.cityReturnStack;delete save.cityFallback;}save.revision++;
 }

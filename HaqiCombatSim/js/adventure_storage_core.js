@@ -1,3 +1,4 @@
+import {mapCoordinateVersion,migrateSaveCoordinates} from './adventure_coordinates_core.js';
 import {localBuffDay} from './language_daily_buff_core.js';
 import {validateTimeScrollRuntime} from './adventure_time_scroll_core.js';
 import {petSummary,petContentKey} from './adventure_pet_files_core.js';
@@ -6,7 +7,7 @@ import { petMaxHp } from './adventure_pets_core.js';
 import { mapInfo } from './adventure_island_layout_core.js';
 
 const copy = value => JSON.parse(JSON.stringify(value));
-const localFields = ['timeScrollRuntime','cityFallback','cityReturnStack','earthReturn','heroHp','careAt','careLog','position','facing','pendingEncounter','encounterRespawns','petTraitEncounters','stamina','staminaRefillDay','coopRun','dungeonExploration','dungeonMode','dungeonLanguageBuff'];
+const localFields = ['positionCoordinateVersion','timeScrollRuntime','cityFallback','cityReturnStack','earthReturn','heroHp','careAt','careLog','position','facing','pendingEncounter','encounterRespawns','petTraitEncounters','stamina','staminaRefillDay','coopRun','dungeonExploration','dungeonMode','dungeonLanguageBuff'];
 // Cosmetic preferences stay on this device only: stripped from durable/cloud saves,
 // kept in the role's IndexedDB runtime record and restored regardless of revision.
 const prefFields = ['magicStarFollow','mountHidden'];
@@ -47,11 +48,16 @@ export function restoreRuntime(save, content, runtime) {
     const result = copy(save);
     const matching = runtime?.zone === save.zone && runtime.revision === save.revision;
     result.position = {...mapInfo(save.zone,content).initialSpawn};
+    result.positionCoordinateVersion=mapCoordinateVersion(save.zone,content);
     result.facing = 3;result.pendingEncounter = null;
     for (const key of prefFields) { const value = runtime?.prefs?.[key]; if (value !== undefined) result[key] = copy(value); }
     delete result.petMeetings; // Legacy device meetings are deliberately discarded.
     if (result.pets) {result.heroHp = null;result.careAt = 0;result.careLog = [];}
-    if (matching) Object.assign(result,copy(runtime.values));
+    if (matching) {
+        Object.assign(result,copy(runtime.values));
+        // The durable save can already be new while this device still has old coordinates.
+        if(runtime.values?.position)result.positionCoordinateVersion=runtime.values.positionCoordinateVersion??1;
+    }
     if(matching&&runtime.earthZone)result.zone='earth';
     if(matching&&runtime.earthDungeonZone){result.zone=runtime.earthDungeonZone;result.dungeonReturn=copy(runtime.earthDungeonReturn);}
     if(matching&&runtime.cityDungeonRuns)Object.assign(result.dungeonRuns??={},copy(runtime.cityDungeonRuns));
@@ -71,7 +77,7 @@ export function restoreRuntime(save, content, runtime) {
         pet.hp = Number.isFinite(row?.hp) ? Math.max(0,Math.min(max,row.hp)) : max;
         pet.hunger = Number.isFinite(row?.hunger) ? Math.max(0,Math.min(100,row.hunger)) : 100;
     }
-    return result;
+    return migrateSaveCoordinates(result,content);
 }
 export function coreCatalogKey(catalog) {
     return stableJson({...catalog,roles:catalog.roles.map(row => {

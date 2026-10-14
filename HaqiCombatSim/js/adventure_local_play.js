@@ -1,3 +1,4 @@
+import {migrateCampDrops,locationSnapshot} from './adventure_coordinates_core.js';
 import {selectCompanionId} from './adventure_companion_core.js';
 import {assignedKeyboardAction,normalizePlayerInputs} from './player_input_core.js';
 import {createPlayerInput} from './player_input.js';
@@ -178,6 +179,7 @@ export function createLocalPlay(api){
             const value=await db.read(key);
             if(key!==accountKey())return;
             record=value||{version:1,bags:{},depleted:{},day:day(),formations:{},pending:null,smelt:null};loadedKey=key;
+            migrateCampDrops(record,state().assets.content);
             if(!record.lootNamespace){record.lootNamespace=crypto.randomUUID();await queueWrite();}
             gatherConfig ||= await fetch(new URL('../data/adventure/gathering.json',import.meta.url)).then(r=>{if(!r.ok)throw Error('采集配置加载失败');return r.json();});
             if(record.smelt)await finishSmelt();if(record.pickup)await finishPickup();
@@ -188,8 +190,8 @@ export function createLocalPlay(api){
     function storeSaves(next=saves()){
         const {store}=state(),updates={};
         ids().forEach((id,i)=>{if(next[i])updates[id]=next[i];});
-        const secondRuntime=session&&{zone:next[1].zone,position:next[1].position,dungeonReturn:next[1].dungeonReturn};
-        if(session)updates[ids()[1]]={...next[1],zone:session.returnTo.zone,position:session.returnTo.position,dungeonReturn:session.returnTo.dungeonReturn};
+        const secondRuntime=session&&{zone:next[1].zone,position:next[1].position,positionCoordinateVersion:next[1].positionCoordinateVersion,dungeonReturn:next[1].dungeonReturn};
+        if(session)updates[ids()[1]]={...next[1],zone:session.returnTo.zone,position:session.returnTo.position,positionCoordinateVersion:session.returnTo.coordinateVersion??1,dungeonReturn:session.returnTo.dungeonReturn};
         store.commitRoles(updates);api.replaceSave(store.catalog.roles.find(r=>r.id===ids()[0]).save);
         if(session)session.second={...store.catalog.roles.find(r=>r.id===ids()[1]).save,...secondRuntime};
     }
@@ -214,7 +216,7 @@ export function createLocalPlay(api){
         const formation=record.formations[pair]||createLocalFormation([first,second],rows.map(r=>r.save));
         validateLocalFormation(formation,[first,second],rows.map(r=>r.save));
         followMotion.reset();
-        session={ids:[first,second],second:structuredClone(rows[1].save),formation,returnTo:{zone:rows[1].save.zone,position:{...rows[1].save.position},dungeonReturn:rows[1].save.dungeonReturn},world:null};
+        session={ids:[first,second],second:structuredClone(rows[1].save),formation,returnTo:{...locationSnapshot(rows[1].save,state().assets.content),dungeonReturn:rows[1].save.dungeonReturn},world:null};
         session.controller=(record.pending?.controller??controller??record.controllers?.[pair])==='ai'?'ai':'human';
         planner=createCompanionPlanner(pair,companionParams(state().assets.content));aiThinkAt=0;aiGoal=null;hintRound=null;aiCandidates=[];
         for(const seat of formation.slots)if(seat?.kind==='pet'){
@@ -235,7 +237,7 @@ export function createLocalPlay(api){
         companion.stop();aiTicket++;aiBattle.dispose();aiBattleTask=null;planner=null;
         closeAll();peerControl.node.hidden=true;pressed.forEach(p=>p.clear());following.fill(false);petJobs.fill(null);smeltProgress.fill(null);banner.hidden=true;gatherCanvas.hidden=true;
         document.body.classList.remove('local-duo');
-        if(session){session.second.zone=session.returnTo.zone;session.second.position=session.returnTo.position;session.second.dungeonReturn=session.returnTo.dungeonReturn;storeSaves();}
+        if(session){session.second.zone=session.returnTo.zone;session.second.position=session.returnTo.position;session.second.positionCoordinateVersion=session.returnTo.coordinateVersion??1;session.second.dungeonReturn=session.returnTo.dungeonReturn;storeSaves();}
         session=null;
     }
     function petPanelSave(owner){
@@ -419,7 +421,7 @@ export function createLocalPlay(api){
             if(!s.rewardedEncounters.includes(tx.id)){s.inventory[100]=(s.inventory[100]||0)+coins;s.rewardedEncounters.push(tx.id);s.revision++;}updates[id]=s;
         }
         store.commitRoles(updates);
-        if(session){const runtime={zone:session.second.zone,position:session.second.position,dungeonReturn:session.second.dungeonReturn};api.replaceSave(store.catalog.roles.find(r=>r.id===ids()[0]).save);session.second={...store.catalog.roles.find(r=>r.id===ids()[1]).save,...runtime};}
+        if(session){const runtime={zone:session.second.zone,position:session.second.position,positionCoordinateVersion:session.second.positionCoordinateVersion,dungeonReturn:session.second.dungeonReturn};api.replaceSave(store.catalog.roles.find(r=>r.id===ids()[0]).save);session.second={...store.catalog.roles.find(r=>r.id===ids()[1]).save,...runtime};}
         else if(ids()[0]&&updates[ids()[0]])api.replaceSave(updates[ids()[0]]);
         const cleared=structuredClone(record);cleared.bags[tx.owner]={};cleared.smelt=null;await writeQueue;await db.write(loadedKey,cleared);record=cleared;api.paintHud();
     }
@@ -453,7 +455,7 @@ export function createLocalPlay(api){
             state().store.commitRoles({[tx.roleId]:nextSave});
             const owner=ids().indexOf(tx.roleId);
             if(owner===0)api.replaceSave(nextSave);
-            else if(owner===1&&session){const runtime=session.second;session.second={...nextSave,zone:runtime.zone,position:runtime.position,dungeonReturn:runtime.dungeonReturn};}
+            else if(owner===1&&session){const runtime=session.second;session.second={...nextSave,zone:runtime.zone,position:runtime.position,positionCoordinateVersion:runtime.positionCoordinateVersion,dungeonReturn:runtime.dungeonReturn};}
             const next=structuredClone(record);next.drops=(next.drops||[]).filter(d=>d.id!==tx.drop.id);next.pickup=null;
             await writeQueue;await db.write(key,next);if(key!==loadedKey)return;record=next;api.paintHud();
         })().finally(()=>{pickupPromise=null;});return pickupPromise;

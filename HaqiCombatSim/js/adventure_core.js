@@ -1,3 +1,4 @@
+import {mapCoordinateVersion,migrateSaveCoordinates} from './adventure_coordinates_core.js';
 import {hanziBattleSpec,validateHanziBattleSpec} from './hanzi_battle_core.js';
 import {grantHanziQuestCard} from './hanzi_core.js';
 import {validateTimeScrollProgress,validateTimeScrollRuntime} from './adventure_time_scroll_core.js';
@@ -85,7 +86,7 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
     const save = { schemaVersion: SAVE_VERSION, contentVersion: content.contentVersion, seed: hashSeed(String(seed)),
         name: String(name).trim().slice(0, 16) || '小哈奇', school, appearance: appearance === 'girl' ? 'girl' : 'boy',
         xp: 0, level: 1, inventory: {}, equipment: {}, mountId: null, upgrades: {}, equipmentInstances: [], equipmentGuids: {}, nextEquipmentGuid: 1, cards: {}, deck: [], quests: {},
-        pet: null, zone: birthZone, position: {...mapInfo(birthZone,content).initialSpawn}, facing: 3,
+        pet: null, zone: birthZone, position: {...mapInfo(birthZone,content).initialSpawn}, positionCoordinateVersion:mapCoordinateVersion(birthZone,content), facing: 3,
         dungeonRuns: {}, dungeonReturn: null, encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
         visitedTown: false, tips: {}, revision: 0, bagRulesVersion: 1, defaultPocketVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion,
         locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,autoReadDialogue:true,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
@@ -532,7 +533,7 @@ function applyAdventureAction(save, content, action, access={}) {
     case 'travel': {
         const previous = save.zone;
         assert(travelStatus(save,content,action.zone).allowed, travelStatus(save,content,action.zone).reason);
-        save.zone = action.zone; save.position = islandSpawn(action.zone,content); save.worldLayoutVersion = content.worldMapIndex.layoutVersion;
+        save.zone = action.zone; save.position = islandSpawn(action.zone,content); save.positionCoordinateVersion=mapCoordinateVersion(action.zone,content); save.worldLayoutVersion = content.worldMapIndex.layoutVersion;
         if (action.zone === 'town') save.visitedTown = true;
         if (previous !== action.zone) supplementIslandTrack(save, content, action.zone, catalogStatSnapshot(save, content));
         break;
@@ -700,12 +701,14 @@ export function parseSave(raw,content) {
     assert(s.gemSerial===undefined||(Number.isSafeInteger(s.gemSerial)&&s.gemSerial>=0),'存档宝石操作记录无效');
     const oldLayout=s.worldLayoutVersion??0,currentLayout=content.worldMapIndex.layoutVersion;
     assert(Number.isInteger(oldLayout)&&oldLayout>=0&&oldLayout<=currentLayout,'地图版本不兼容');
+    // Validate legacy global coordinates first, then migrate the independent camp revision.
     const bounds=oldLayout===currentLayout?worldDimensions(s.zone,content):oldLayout===1&&s.zone==='town'?{w:5600,h:4400}:{w:1800,h:1600};
     assert(Number.isFinite(s.position?.x) && Number.isFinite(s.position?.y) && s.position.x >= 0 && s.position.x <= bounds.w && s.position.y >= 0 && s.position.y <= bounds.h,'存档位置无效');
     if(oldLayout<currentLayout){
         if((oldLayout===0&&s.zone==='town')||!mapInfo(s.zone,content).retainPreviousPosition)s.position=islandSpawn(s.zone,content);
         s.worldLayoutVersion=currentLayout;
     }
+    migrateSaveCoordinates(s,content);
     for (const field of ['inventory','equipment','upgrades','cards','quests','tips']) assert(s[field] && typeof s[field] === 'object' && !Array.isArray(s[field]),'存档数据不完整');
     if(content.pets)Pets.retireCaptureCrystals(s,content);
     for (const [id,n] of Object.entries(s.inventory)) assert(content.items[id] && Number.isInteger(n) && n >= 0,'存档物品无效');

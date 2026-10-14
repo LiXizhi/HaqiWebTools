@@ -56,6 +56,13 @@ flowchart LR
     Actors --> PetPaths[宠物绕障与自动聚会选址：共享按需路径Worker]
     PetPaths --> OriginalPath[原findPath与聚会算法 / 几何版本及离场检查]
     OriginalPath --> Actors
+    Click[营地主角点击] --> Direct[原碰撞直线检查]
+    Direct -->|绕障| HeroNav[island_hero_navigation：角色 / 场景 / 请求序号]
+    HeroNav --> HeroWorker[island_path_worker：独立主角实例 / 可取消分片]
+    HeroNav -->|不可用或失败| HeroFallback[同一 findPathSteps：主线程 2ms 分片]
+    HeroWorker --> Valid[新点击 / 手动移动 / 开战 / 离场使旧应答失效]
+    HeroFallback --> Valid
+    Valid --> Actors
     QuestInputs[任务与装备相关状态：每帧轻量比对] --> MarkerCache[任务标记缓存：状态变化才重新检查]
     MarkerCache --> Actors
     MarkerCache --> Minimap[小地图与交谈邀请复用]
@@ -935,3 +942,12 @@ flowchart LR
 ```
 
 字卡参数集中在 BalanceParams.hanzi；规则版本1随 playerSpec 进入本机未结束战斗。重演复用快照参数，旧快照不追加效果，核心不依赖浏览器或网络。
+
+
+## 魔法营地坐标扩容（2026-10-14）
+
+仅营地作者配置扩至 3600×3200；地图和索引使用独立 `coordinateVersion:2`，全局 `layoutVersion` 不变。角色、建筑、树木、默认镜头和步行速度保持原值；主路82、支路46、广场270×165，树木上限180、间隔80、交互留白125。社交角色和宠物容量沿用原值。
+
+`adventure_coordinates_core` 统一迁移当前位置、返回快照与宠物出生点；纯核心负责版本和可通行投影，浏览器IO层在宠物正文按需加载后执行迁移。当前位置版本仍只进账号/角色隔离的本机运行态。存储约定见 [用户存储](user-storage.md#魔法营地坐标版本2026-10-14)。
+
+`adventure_camp_scenery_core` 只生成静态花草印花，不接入采集节点、碰撞或交互；`adventure_camp_terrain` 把树下植物与广场石缝交给既有地表分块。Worker快照包含地标和码头，确保与主线程相同的装饰留白。地表64MiB、树木24MiB预算不变，诊断返回地表模式与占用；无整岛高清画布、逐帧粒子或动态光照。

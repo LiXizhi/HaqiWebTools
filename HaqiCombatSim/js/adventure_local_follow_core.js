@@ -11,6 +11,7 @@ export function createLocalFollowMotion(){
         if(!force&&worldRef===world)return false;
         worldRef=world;keys=[{},{}];
         roles[1].zone=roles[0].zone;
+        roles[1].positionCoordinateVersion=roles[0].positionCoordinateVersion??1;
         roles[1].position=movePosition(world,roles[0].position,params.followSpacing,0);
         roles[1].facing=roles[0].facing||0;
         return true;

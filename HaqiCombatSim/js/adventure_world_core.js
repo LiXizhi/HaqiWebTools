@@ -336,13 +336,19 @@ export function movePosition(world,position,dx,dy) {
     return {x:world.isEarth?((x%world.w)+world.w)%world.w:x,y};
 }
 export function clearSegment(world,a,b) {
+    const steps=clearSegmentSteps(world,a,b);let result;do{result=steps.next();}while(!result.done);return result.value;
+}
+function* clearSegmentSteps(world,a,b) {
     const length=distance(a,b),steps=Math.max(1,Math.ceil(length/2));
-    for(let i=0;i<=steps;i++){const t=i/steps;if(!walkable(world,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t))return false;}
+    for(let i=0;i<=steps;i++){if(i%16===0)yield;const t=i/steps;if(!walkable(world,a.x+(b.x-a.x)*t,a.y+(b.y-a.y)*t))return false;}
     return true;
 }
 // Drop a road or grid waypoint when a later one is already in line of sight.
 // Otherwise the walker goes all the way to the next vertex, then makes a wide turn.
 function shortcutPath(world,origin,points){
+    const steps=shortcutPathSteps(world,origin,points);let result;do{result=steps.next();}while(!result.done);return result.value;
+}
+function* shortcutPathSteps(world,origin,points){
     const raw=[];
     for(const p of points){
         if(!Number.isFinite(p?.x)||!Number.isFinite(p?.y))continue;
@@ -355,7 +361,7 @@ function shortcutPath(world,origin,points){
     let anchor=origin,index=0;
     while(index<raw.length){
         let next=index;
-        for(let j=raw.length-1;j>index;j--)if(clearSegment(world,anchor,raw[j])){next=j;break;}
+        for(let j=raw.length-1;j>index;j--)if(yield* clearSegmentSteps(world,anchor,raw[j])){next=j;break;}
         out.push({x:raw[next].x,y:raw[next].y});
         anchor=raw[next];
         index=next+1;
@@ -404,7 +410,7 @@ function* gridPathSteps(world,start,destination,bounds=null){
                 const last=out.at(-1);
                 if(last&&clearSegment(world,last,destination)&&distance(last,destination)>.5)out.push({x:destination.x,y:destination.y});
             }
-            return shortcutPath(world,start,out);
+            return yield* shortcutPathSteps(world,start,out);
         }
         for(const [dx,dy] of dirs) {
             const n={x:p.x+dx,y:p.y+dy},v=point(n),nk=key(n);
@@ -428,6 +434,9 @@ export function followPath(world,position,path,budget) {
     return {position:p,path:remaining,blocked:false};
 }
 export function findPath(world,start,destination) {
+    const steps=islandPathSteps(world,start,destination);let result;do{result=steps.next();}while(!result.done);return result.value;
+}
+function* islandPathSteps(world,start,destination) {
     if(world.isCityDungeon&&world.dungeon.scene.streetscape)return streetFindPath(world.dungeon.scene,start,destination);
     if(world.isEarth){
         const radius=world.earthRules.navigationRadius;
@@ -443,20 +452,20 @@ export function findPath(world,start,destination) {
         return shortcutPath(world,start,[...points,end.point]);
     }
     // Start from the actual position, without a detour to the current grid center.
-    if(clearSegment(world,start,destination))return [{x:destination.x,y:destination.y}];
+    if(yield* clearSegmentSteps(world,start,destination))return [{x:destination.x,y:destination.y}];
     if(world.layout){
-        const road=shortcutPath(world,start,roadPath(world,start,destination));
+        const road=yield* shortcutPathSteps(world,start,yield* roadPathSteps(world,start,destination));
         if(road.length){
             const straight=distance(start,destination),roadLen=pathLength(start,road);
             // A long trip stays on the road. A short hook yields to a tighter walk around the obstacle.
             if(straight>1400||roadLen<=straight*1.2+48)return road;
             const xs=[start.x,destination.x,...road.map(p=>p.x)],ys=[start.y,destination.y,...road.map(p=>p.y)];
-            const around=gridPath(world,start,destination,{minX:Math.min(...xs)-160,minY:Math.min(...ys)-160,maxX:Math.max(...xs)+160,maxY:Math.max(...ys)+160});
+            const around=yield* gridPathSteps(world,start,destination,{minX:Math.min(...xs)-160,minY:Math.min(...ys)-160,maxX:Math.max(...xs)+160,maxY:Math.max(...ys)+160});
             if(around.length&&pathLength(start,around)+16<roadLen)return around;
             return road;
         }
     }
-    return gridPath(world,start,destination);
+    return yield* gridPathSteps(world,start,destination);
 }
 export function nearestInteraction(world,p) {
     return [...world.npcs.map(n=>({...n,kind:'npc'})),...world.encounters.flatMap(e=>monsterInteractionTargets(world,e)),...(world.landmarks||[]).map(e=>({...e,kind:'landmark'})),...(world.entrancePortal?[{...world.entrancePortal,kind:'portal'}]:[]),{...world.portal,kind:'portal'}]
@@ -464,28 +473,29 @@ export function nearestInteraction(world,p) {
 }
 
 const roadGraphs=new WeakMap();
-function roadPath(world,start,destination){
+function* roadPathSteps(world,start,destination){
     if(!walkable(world,destination.x,destination.y))return [];
     let graph=roadGraphs.get(world);
     if(!graph){
         const nodes=[],links=[],ids=new Map(),add=p=>{const key=`${p.x},${p.y}`;if(!ids.has(key)){ids.set(key,nodes.length);nodes.push(p);links.push([]);}return ids.get(key);};
-        for(const r of world.paths){const a=add(r.a),b=add(r.b);if(clearSegment(world,r.a,r.b)){const d=distance(r.a,r.b);links[a].push([b,d]);links[b].push([a,d]);}}
+        for(const r of world.paths){const a=add(r.a),b=add(r.b);if(yield* clearSegmentSteps(world,r.a,r.b)){const d=distance(r.a,r.b);links[a].push([b,d]);links[b].push([a,d]);}}
         // Spurs may join a road at its midpoint rather than at an existing end.
         for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
-            const d=distance(nodes[i],nodes[j]);if(d<420&&clearSegment(world,nodes[i],nodes[j])){links[i].push([j,d]);links[j].push([i,d]);}
+            yield;const d=distance(nodes[i],nodes[j]);if(d<420&&(yield* clearSegmentSteps(world,nodes[i],nodes[j]))){links[i].push([j,d]);links[j].push([i,d]);}
         }
         graph={nodes,links,paths:world.paths,buildings:world.buildings};roadGraphs.set(world,graph);
     }
     // Keep the nearest vertices, and also any vertex close enough to cut the corner.
     // A hard cap of 10 misses a visible junction when a plaza has many nearer nodes.
-    const {nodes,links}=graph,near=p=>{
+    const {nodes,links}=graph,near=function*(p){
         const ranked=nodes.map((n,i)=>({i,d:distance(n,p)})).sort((a,b)=>a.d-b.d);
-        return ranked.filter((n,index)=>(index<10||n.d<=960)&&clearSegment(world,p,nodes[n.i]));
+        const result=[];for(const [index,n]of ranked.entries())if((index<10||n.d<=960)&&(yield* clearSegmentSteps(world,p,nodes[n.i])))result.push(n);return result;
     };
-    const starts=near(start),goals=new Map(near(destination).map(n=>[n.i,n.d]));
+    const starts=yield* near(start),goals=new Map((yield* near(destination)).map(n=>[n.i,n.d]));
     const costs=new Map(starts.map(n=>[n.i,n.d])),parents=new Map(),open=starts.map(n=>n.i),closed=new Set();
     let goal=null,best=Infinity;
     while(open.length){
+        yield;
         open.sort((a,b)=>costs.get(a)-costs.get(b));const i=open.shift();if(closed.has(i))continue;closed.add(i);
         const cost=costs.get(i);if(cost>=best)continue;
         if(goals.has(i)&&cost+goals.get(i)<best){goal=i;best=cost+goals.get(i);}
@@ -512,7 +522,7 @@ export function* prepareWorldObjectIndex(world,previous=null){
 }
 // Same route and tie order as the synchronous API, with resumable Earth searches.
 export function* findPathSteps(world,start,destination){
-    if(!world.isEarth)return findPath(world,start,destination);
+    if(!world.isEarth)return yield* islandPathSteps(world,start,destination);
     const radius=world.earthRules.navigationRadius;if(distance(start,destination)>radius)return [];
     if(clearSegment(world,start,destination))return [{...destination}];
     return yield* gridPathSteps(world,start,destination,{minX:start.x-radius,minY:start.y-radius,maxX:start.x+radius,maxY:start.y+radius});

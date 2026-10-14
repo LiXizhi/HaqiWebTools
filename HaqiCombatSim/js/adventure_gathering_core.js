@@ -57,7 +57,7 @@ export function smeltGroundDrop(state,roleId,zone,position,params){
     const id=`ground-smelt:${next.lootNamespace||'legacy'}:${roleId}:${next.day}:${next.dropSerial}`;
     const rng=createRng(hashSeed(id)),rare=rng.float()<params.gatherFairyChance;
     const angle=rng.float()*Math.PI*2;
-    const drop={id,zone,x:position.x+Math.cos(angle)*params.gatherDropDistance,y:position.y+Math.sin(angle)*params.gatherDropDistance,
+    const drop={id,zone,...(zone==='camp'?{coordinateVersion:2}:{}),x:position.x+Math.cos(angle)*params.gatherDropDistance,y:position.y+Math.sin(angle)*params.gatherDropDistance,
         currency:rare?17213:100,amount:rare?params.gatherFairyAmount:params.gatherBeanAmount};
     (next.drops??=[]).push(drop);return {state:next,drop};
 }

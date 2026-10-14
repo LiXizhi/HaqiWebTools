@@ -295,7 +295,7 @@ test('completed encounter checkpoints settle only once, including a reload at vi
 });
 test('retreat stands beside the fought monster instead of the birth point',()=>{
     const s=A.createAdventure(content);
-    const scout=content.encounters.find(e=>e.id==='storm-scout');
+    const scout=W.createWorld('camp',content).encounters.find(e=>e.id==='storm-scout');
     const birth={...content.worldMapIndex.islands.camp.initialSpawn};
     s.position={x:scout.x+40,y:scout.y-50};
     A.beginEncounter(s,content,'storm-scout');

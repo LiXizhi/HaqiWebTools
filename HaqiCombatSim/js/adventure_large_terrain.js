@@ -1,4 +1,5 @@
 import { paintSoftShadow, paintStaticShadows } from './adventure_shadows.js';
+import {paintCampFloorSteps,paintCampPlazaSteps} from './adventure_camp_terrain.js';
 import { paintGroundDetailSteps, paintWaterDetailSteps, paintRoadDetailSteps, paintRiverBank, paintShoreDetailSteps } from './adventure_terrain_detail.js';
 import { groundDecorationSteps } from './adventure_ground_decorations_core.js';
 import { paintBridges } from './adventure_bridge.js';
@@ -163,8 +164,10 @@ export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.
         }
     }
     const plaza=rules.plaza;
+    if(!overview&&terrain.campRefined)yield* paintCampFloorSteps(c,world,rect,decorationArt);
     if(hits(rect,world.center.x-plaza.radiusX,world.center.y-plaza.radiusY,world.center.x+plaza.radiusX,world.center.y+plaza.radiusY)){
         oval(c,world.center.x,world.center.y,plaza.radiusX,plaza.radiusY,plaza.edge);oval(c,world.center.x,world.center.y,plaza.radiusX-11,plaza.radiusY-9,plaza.fill);
+        if(!overview&&terrain.campRefined)yield* paintCampPlazaSteps(c,world,rect);
         c.strokeStyle=plaza.line;c.lineWidth=2;
         for(let i=0;i<3;i++){c.beginPath();c.ellipse(world.center.x,world.center.y,(layout.route?72:145)-i*(layout.route?18:36),(layout.route?40:83)-i*(layout.route?10:20),0,0,Math.PI*2);c.stroke();}
     }

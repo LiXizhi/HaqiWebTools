@@ -1,0 +1,1519 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f1e9d6">
+<title>武 wǔ · 止戈为武</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --paper:#f3ecdc;--ink:#1c1a17;--cinnabar:#b8322a;--bronze:#3f6b5c;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC",var(--serif);
+}
+html,body{margin:0;height:100%;overflow:hidden}
+body{background-color:#f1e9d6;background-size:cover,100% 100%;background-repeat:no-repeat;color:var(--ink);font-family:var(--serif);
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;touch-action:manipulation}
+button:focus-visible{outline:2px solid var(--cinnabar);outline-offset:4px}
+#defsSvg{position:absolute;width:0;height:0;overflow:hidden}
+#mountains,.layer,#stage{position:fixed;inset:0;width:100%;height:100%}
+#mountains,.layer{pointer-events:none}
+#mountains .m{will-change:transform}
+#mountains .m1{animation:drift1 60s ease-in-out infinite alternate}
+#mountains .m2{animation:drift2 44s ease-in-out infinite alternate}
+#mountains .m3{animation:drift3 34s ease-in-out infinite alternate}
+@keyframes drift1{from{transform:translateX(-40px)}to{transform:translateX(40px)}}
+@keyframes drift2{from{transform:translateX(70px)}to{transform:translateX(-70px)}}
+@keyframes drift3{from{transform:translateX(-110px)}to{transform:translateX(110px)}}
+.layer{opacity:0;transform:scale(.94);transition:opacity 1.1s ease,transform 1.4s ease;will-change:opacity,transform}
+.layer.on{opacity:1;transform:none}
+#stage{touch-action:none;z-index:2}
+#stage.trace{cursor:crosshair}
+#stage.tap,#stage.hold{cursor:pointer}
+
+.glyph path{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round}
+.ink{fill:none;stroke:#1c1a17;stroke-linecap:round;stroke-linejoin:round}
+.guide path{fill:none;stroke:#8f826d;stroke-width:.7;stroke-dasharray:1.8 1.6;transition:stroke .3s,stroke-width .3s}
+.guide path.hit{stroke:#b8322a;stroke-dasharray:none;stroke-width:1.1}
+.guide{animation:guidePulse 1.4s ease-in-out infinite}
+@keyframes guidePulse{50%{opacity:.55}}
+.trail path{fill:none;stroke:#1c1a17;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.cracks path{fill:none;stroke:#5a4128;stroke-width:2.2;stroke-linecap:round;opacity:.8}
+.nums text{font:600 4.4px/1 "PingFang SC","Helvetica Neue",sans-serif;fill:#b8322a}
+.kai{font-family:var(--kai)}
+.virtue text{font-family:var(--kai);font-size:21px;text-anchor:middle;fill:#f6efde;letter-spacing:2px}
+.cell{cursor:pointer}
+.cell .nm{font-family:var(--kai);font-size:15px;text-anchor:middle;fill:#1c1a17;letter-spacing:.1em}
+.cell .era{font-family:var(--serif);font-size:9.5px;text-anchor:middle;fill:#b8322a;letter-spacing:.12em}
+.cell .ring{fill:none;stroke:#b8322a;stroke-width:1.2;opacity:0;transition:opacity .3s}
+.cell:hover .ring{opacity:.6}
+.zoom{cursor:pointer}
+.zoom .zbg{fill:#f4eddd;opacity:.985}
+.zoom .zt{font-family:var(--kai);font-size:34px;text-anchor:middle;fill:#1c1a17;letter-spacing:.3em}
+.zoom .zs{font-family:var(--serif);font-size:18px;text-anchor:middle;fill:#8b7f6c;letter-spacing:.2em}
+
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity .9s,transform .9s}
+#intro.off{opacity:0;transform:scale(1.04)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{bottom:calc(100% - var(--gTop,140px) + 14px);gap:6px}
+.introBottom{top:calc(var(--gBottom,560px) + 14px);gap:8px}
+.introTop .tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.3em;color:var(--cinnabar)}
+.introTop .tag i{display:block;width:clamp(24px,5vw,60px);height:1px;background:currentColor;opacity:.6}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5.2vh,46px);line-height:1;color:var(--ink);letter-spacing:.06em}
+.mean{font-family:var(--kai);font-size:clamp(16px,2.4vh,21px);letter-spacing:.2em;color:#3a342c}
+.sub{font-size:clamp(14px,2vh,17px);color:#5a5246;letter-spacing:.08em;margin:2px 0 0;line-height:1.7}
+.btn-main{pointer-events:auto;margin-top:8px;font-family:var(--kai);font-size:clamp(18px,2.6vh,22px);letter-spacing:.4em;padding:10px 24px 10px 32px;
+  color:#f6efde;background:var(--cinnabar);border:none;border-radius:4px;cursor:pointer;box-shadow:0 6px 18px rgba(120,30,20,.25);
+  transition:transform .2s,box-shadow .2s;animation:btnGlow 2.4s ease-in-out infinite}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(120,30,20,.3)}
+@keyframes btnGlow{50%{box-shadow:0 6px 18px rgba(120,30,20,.25),0 0 0 8px rgba(184,50,42,.1)}}
+.meta{font-size:12px;color:#8b8070;letter-spacing:.12em;margin:0}
+.rise{opacity:0;transform:translateY(12px);animation:rise .9s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
+@keyframes rise{to{opacity:1;transform:none}}
+@media (max-height:520px){ .sub,.meta{display:none} .introBottom{gap:4px} }
+
+#progress{position:fixed;top:max(14px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;list-style:none;
+  margin:0;padding:0;gap:clamp(6px,1.6vw,22px);z-index:10;opacity:0;transition:opacity .8s;pointer-events:none}
+#progress::before{content:"";position:absolute;top:2.5px;left:14px;right:14px;height:1px;background:#d4c9b2}
+body.started #progress{opacity:1}
+#progress li{position:relative;font-size:12px;color:#a0957f;letter-spacing:.08em;padding-top:12px;transition:color .5s;white-space:nowrap}
+#progress li::before{content:"";position:absolute;top:0;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#c9bea7;transition:background .5s,transform .5s}
+#progress li.done{color:#5a5246}
+#progress li.done::before{background:#5a5246}
+#progress li.on{color:var(--ink)}
+#progress li.on::before{background:var(--cinnabar);transform:scale(1.6)}
+
+#vtitle{position:fixed;right:9vw;top:20vh;writing-mode:vertical-rl;font-family:var(--kai);font-size:clamp(30px,5.4vh,54px);
+  letter-spacing:.32em;opacity:0;transform:translateY(-10px);transition:opacity .7s,transform .7s;pointer-events:none;z-index:5;
+  display:flex;align-items:center;gap:16px}
+#vtitle.on{opacity:.92;transform:none}
+#vtitle .era{font-family:var(--serif);font-size:.34em;letter-spacing:.2em;text-orientation:upright;color:#f6efde;background:var(--cinnabar);padding:8px 4px;border-radius:2px}
+
+#caption{position:fixed;left:50%;bottom:max(16px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(880px,calc(100vw - 340px));min-width:min(560px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
+  transition:opacity .45s,transform .6s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:16px 22px 14px;
+  background:radial-gradient(ellipse at center,rgba(246,240,226,.93) 45%,rgba(246,240,226,0) 74%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{margin:0 0 8px;font-weight:400;display:flex;flex-direction:column;align-items:center;gap:2px}
+#capTitle .zh{font-family:var(--kai);font-size:clamp(21px,3.4vh,32px);letter-spacing:.32em;margin-left:.32em;color:var(--cinnabar)}
+#caption.on #capTitle .zh{animation:sealIn .7s cubic-bezier(.2,.7,.2,1) both}
+#capText{margin:0;font-size:clamp(18px,calc(1vw + 1.5vh),26px);line-height:1.75;color:#2b2722;letter-spacing:.05em}
+#capText .ch{animation:inkIn 1.1s ease-out both;animation-delay:calc(var(--i) * 70ms + 150ms)}
+@keyframes inkIn{from{opacity:0;color:transparent;text-shadow:0 0 12px rgba(28,26,23,.75)}55%{opacity:1}to{color:#2b2722;text-shadow:0 0 0 rgba(28,26,23,0)}}
+@keyframes sealIn{from{opacity:0;letter-spacing:.9em;filter:blur(4px)}to{opacity:1;letter-spacing:.32em;filter:none}}
+
+#actions{position:fixed;left:50%;transform:translateX(-50%);bottom:max(206px,calc(env(safe-area-inset-bottom) + 196px));z-index:8;display:flex;gap:10px}
+#action{font-family:var(--kai);font-size:18px;letter-spacing:.24em;padding:9px 20px 9px 26px;color:#f6efde;border:none;border-radius:4px;
+  background:var(--cinnabar);box-shadow:0 6px 18px rgba(120,30,20,.25);cursor:pointer;position:relative;overflow:hidden}
+#action .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(255,236,200,.28);pointer-events:none}
+#action.holding{transform:scale(.97);box-shadow:0 0 0 8px rgba(184,50,42,.14)}
+
+#hint{position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;top:max(58px,calc(env(safe-area-inset-top) + 44px));text-align:center;
+  color:var(--cinnabar);opacity:0;transition:opacity .4s;pointer-events:none;z-index:7;box-sizing:border-box;
+  padding:7px 20px 8px;border:1px solid rgba(184,50,42,.4);border-radius:22px;background:rgba(246,240,226,.92)}
+#hint .zh{display:block;font-family:var(--kai);font-size:clamp(16px,2.4vh,21px);letter-spacing:.12em}
+#hint.on{opacity:1;animation:breathe 1.6s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 0 0 6px rgba(184,50,42,.09)}}
+
+#controls{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));display:flex;gap:8px;
+  z-index:12;opacity:0;pointer-events:none;transition:opacity .6s}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{font-family:var(--kai);font-size:14px;letter-spacing:.2em;color:var(--cinnabar);background:rgba(246,240,226,.85);
+  border:1px solid rgba(184,50,42,.5);border-radius:4px;padding:6px 8px 6px 12px;cursor:pointer}
+#controls button:hover{background:#f8eedc}
+#note{position:fixed;left:max(14px,env(safe-area-inset-left));top:max(16px,env(safe-area-inset-top));font-size:11px;color:#9a8f7c;
+  letter-spacing:.12em;z-index:4;pointer-events:none;max-width:260px;line-height:1.6}
+[hidden]{display:none!important}
+
+body.portrait #vtitle{right:auto;left:5vw;top:64px;font-size:26px;gap:10px}
+body.portrait #controls{top:max(46px,calc(env(safe-area-inset-top) + 34px));bottom:auto}
+body.portrait #hint{top:max(100px,calc(env(safe-area-inset-top) + 88px));left:64px;right:16px;padding:6px 14px 7px}
+body.portrait #hint .zh{font-size:16px;letter-spacing:.06em}
+body.portrait #note{display:none}
+body.portrait #caption{width:calc(100vw - 16px);min-width:0;padding:12px 12px 10px}
+body.portrait #capText{font-size:clamp(17px,4.6vw,21px);line-height:1.65}
+body.portrait #actions{bottom:max(236px,calc(env(safe-area-inset-bottom) + 226px))}
+body.portrait #progress li{font-size:10.5px}
+@media (max-height:520px){
+  #capTitle .zh{font-size:18px}
+  #capText{font-size:16px;line-height:1.5}
+  #caption{padding:8px 14px 6px}
+  #actions{bottom:96px}
+}
+@media (prefers-reduced-motion: reduce){
+  #mountains .m{animation:none}
+  .layer,#intro,#caption,#vtitle{transition-duration:.45s}
+  .guide,#hint.on,.btn-main{animation:none}
+  #capText .ch{animation-duration:.25s;animation-delay:0s}
+}
+</style>
+</head>
+<body>
+
+<svg id="defsSvg" aria-hidden="true">
+  <defs>
+    <filter id="brush" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="6" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="8" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -0.2" result="grainA"/>
+      <feComposite in="d" in2="grainA" operator="in" result="dry"/>
+      <feGaussianBlur in="dry" stdDeviation="0.7" result="soft"/>
+      <feMerge><feMergeNode in="soft"/><feMergeNode in="dry"/></feMerge>
+    </filter>
+    <filter id="brushS" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.18" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.6" numOctaves="1" seed="8" result="grain"/>
+      <feColorMatrix in="grain" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 0 0 -0.1" result="grainA"/>
+      <feComposite in="d" in2="grainA" operator="in"/>
+    </filter>
+    <filter id="carve" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feOffset in="d" dx="1.6" dy="2.2" result="o"/>
+      <feColorMatrix in="o" type="matrix" values="0 0 0 0 1  0 0 0 0 0.97  0 0 0 0 0.88  0 0 0 0.8 0" result="hl"/>
+      <feMerge><feMergeNode in="hl"/><feMergeNode in="d"/></feMerge>
+    </filter>
+    <filter id="carveS" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.28" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="0.7" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feOffset in="d" dx="0.35" dy="0.5" result="o"/>
+      <feColorMatrix in="o" type="matrix" values="0 0 0 0 1  0 0 0 0 0.97  0 0 0 0 0.88  0 0 0 0.8 0" result="hl"/>
+      <feMerge><feMergeNode in="hl"/><feMergeNode in="d"/></feMerge>
+    </filter>
+    <filter id="cast" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feGaussianBlur in="d" stdDeviation="2.5" result="b"/>
+      <feSpecularLighting in="b" surfaceScale="5" specularConstant="1" specularExponent="16" lighting-color="#fff3cf" result="s">
+        <feDistantLight azimuth="225" elevation="40"/>
+      </feSpecularLighting>
+      <feComposite in="s" in2="d" operator="in" result="si"/>
+      <feOffset in="d" dx="2.5" dy="3.5" result="sh"/>
+      <feColorMatrix in="sh" type="matrix" values="0 0 0 0 0.04  0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0.65 0" result="shadow"/>
+      <feComposite in="d" in2="si" operator="arithmetic" k2="1" k3="0.7" result="lit"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="lit"/></feMerge>
+    </filter>
+    <filter id="castS" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.16" numOctaves="2" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.1" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feOffset in="d" dx="0.55" dy="0.75" result="sh"/>
+      <feColorMatrix in="sh" type="matrix" values="0 0 0 0 0.04  0 0 0 0 0.07  0 0 0 0 0.05  0 0 0 0.65 0" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="d"/></feMerge>
+    </filter>
+    <filter id="stamp" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="2" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.45" numOctaves="2" seed="13" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  4 0 0 0 -0.9" result="ga"/>
+      <feComposite in="d" in2="ga" operator="in"/>
+    </filter>
+    <filter id="boneTex" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="4" result="edgeN"/>
+      <feDisplacementMap in="SourceGraphic" in2="edgeN" scale="26" xChannelSelector="R" yChannelSelector="G" result="shape"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.035" numOctaves="4" seed="11" result="n"/>
+      <feDiffuseLighting in="n" surfaceScale="2.5" diffuseConstant="1.05" lighting-color="#fff6e2" result="lit">
+        <feDistantLight azimuth="235" elevation="60"/>
+      </feDiffuseLighting>
+      <feComposite in="lit" in2="shape" operator="arithmetic" k1="1" result="tex"/>
+      <feGaussianBlur in="shape" stdDeviation="10" result="sb"/>
+      <feOffset in="sb" dx="6" dy="12" result="so"/>
+      <feColorMatrix in="so" type="matrix" values="0 0 0 0 0.25  0 0 0 0 0.18  0 0 0 0 0.1  0 0 0 0.35 0" result="shadow"/>
+      <feMerge><feMergeNode in="shadow"/><feMergeNode in="tex"/></feMerge>
+    </filter>
+    <filter id="patina" x="-3%" y="-3%" width="106%" height="106%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" seed="21" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0.4  0 0 0 0 0.6  0 0 0 0 0.52  0 0 0 2.2 -1.25" result="spots"/>
+      <feComposite in="spots" in2="SourceGraphic" operator="atop" result="p"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="2" result="g"/>
+      <feDiffuseLighting in="g" surfaceScale="1.4" diffuseConstant="1.05" lighting-color="#ffffff" result="gl">
+        <feDistantLight azimuth="225" elevation="62"/>
+      </feDiffuseLighting>
+      <feComposite in="gl" in2="p" operator="arithmetic" k1="1.1"/>
+    </filter>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="smoke" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
+    <filter id="softL" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="1.4"/></filter>
+    <filter id="shadow" x="-10%" y="-20%" width="120%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#5a4630" flood-opacity=".2"/>
+    </filter>
+    <linearGradient id="boneG" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#f0e4c8"/><stop offset="1" stop-color="#d4c098"/>
+    </linearGradient>
+    <radialGradient id="bronzeR" cx="0.42" cy="0.38" r="0.7">
+      <stop offset="0" stop-color="#6c8a72"/><stop offset="0.6" stop-color="#3e5a4c"/><stop offset="1" stop-color="#22322b"/>
+    </radialGradient>
+    <linearGradient id="bronzeG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e4c47c"/><stop offset="0.5" stop-color="#9a7638"/><stop offset="1" stop-color="#c49a52"/>
+    </linearGradient>
+    <linearGradient id="woodG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5a3a22"/><stop offset="0.5" stop-color="#8a5a34"/><stop offset="1" stop-color="#4a2e1a"/>
+    </linearGradient>
+    <linearGradient id="woodGV" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5a3a22"/><stop offset="0.5" stop-color="#8a5a34"/><stop offset="1" stop-color="#4a2e1a"/>
+    </linearGradient>
+    <radialGradient id="inkG">
+      <stop offset="0" stop-color="#1c1a17" stop-opacity=".92"/><stop offset=".6" stop-color="#1c1a17" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#1c1a17" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="scorchG">
+      <stop offset="0" stop-color="#3b2614" stop-opacity=".55"/><stop offset="1" stop-color="#3b2614" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sunWarm">
+      <stop offset="0" stop-color="#f3c66e" stop-opacity=".85"/><stop offset=".55" stop-color="#e8a24f" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#e8a24f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sunRed">
+      <stop offset="0" stop-color="#b8322a" stop-opacity=".7"/><stop offset=".6" stop-color="#b8322a" stop-opacity=".25"/>
+      <stop offset="1" stop-color="#b8322a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="duskG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#6e2a1c" stop-opacity=".28"/><stop offset=".7" stop-color="#8a3a22" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#8a3a22" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<svg id="mountains" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+  <defs>
+    <filter id="mBlur1" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="mBlur2" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="3.5"/></filter>
+    <filter id="mBlur3" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="1.6"/></filter>
+    <linearGradient id="mg1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8d897c" stop-opacity=".3"/><stop offset=".55" stop-color="#8d897c" stop-opacity=".06"/><stop offset="1" stop-color="#8d897c" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mg2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5f5b52" stop-opacity=".3"/><stop offset=".6" stop-color="#5f5b52" stop-opacity=".05"/><stop offset="1" stop-color="#5f5b52" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="mg3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#34312c" stop-opacity=".34"/><stop offset="1" stop-color="#34312c" stop-opacity=".1"/>
+    </linearGradient>
+  </defs>
+  <g class="m m1"><path filter="url(#mBlur1)" fill="url(#mg1)" d="M-200 640 C-80 560 40 520 160 560 S360 470 480 520 S700 600 820 540 S1020 430 1160 500 S1380 590 1500 530 S1700 480 1800 540 L1800 900 L-200 900 Z"/></g>
+  <g class="m m2"><path filter="url(#mBlur2)" fill="url(#mg2)" d="M-200 720 C-60 640 80 600 200 650 S420 560 560 610 S760 700 900 640 S1120 560 1240 620 S1460 690 1600 640 S1740 600 1800 630 L1800 900 L-200 900 Z"/></g>
+  <g class="m m3"><path filter="url(#mBlur3)" fill="url(#mg3)" d="M-200 820 C-40 760 120 740 260 780 S520 720 640 770 S880 840 1020 790 S1260 730 1400 780 S1640 820 1800 790 L1800 900 L-200 900 Z"/></g>
+</svg>
+
+<svg id="boneSvg" class="layer" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <path filter="url(#boneTex)" fill="url(#boneG)" d="M330 150 Q500 108 670 150 Q768 262 742 424 Q730 566 640 662 Q500 724 360 662 Q268 566 258 424 Q232 262 330 150 Z"/>
+  <path d="M500 150 L500 690 M290 330 Q500 312 712 330 M276 520 Q500 540 726 520" stroke="#8a6f4c" stroke-width="2" fill="none" opacity=".25"/>
+  <g fill="url(#scorchG)">
+    <ellipse cx="300" cy="300" rx="12" ry="16"/><ellipse cx="702" cy="322" rx="12" ry="16"/>
+    <ellipse cx="302" cy="558" rx="12" ry="16"/><ellipse cx="704" cy="550" rx="12" ry="16"/>
+  </g>
+</svg>
+
+<svg id="bronzeSvg" class="layer" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+  <circle cx="500" cy="410" r="318" fill="url(#bronzeR)" filter="url(#patina)"/>
+  <circle cx="500" cy="410" r="318" fill="none" stroke="#9c8448" stroke-width="10" opacity=".55"/>
+  <circle cx="500" cy="410" r="296" fill="none" stroke="#c9ab62" stroke-width="1.5" opacity=".45"/>
+  <g id="leiwen" fill="none" stroke="#c9ab62" stroke-width="1.3" opacity=".5"></g>
+</svg>
+
+<svg id="stage" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" role="img" aria-label="武字故事：从持戈出征到止戈为武">
+  <g id="lBack"></g>
+  <g id="lGlyph"></g>
+  <g id="lFront"></g>
+  <g id="lFx"></g>
+</svg>
+
+<ol id="progress" aria-hidden="true">
+  <li>持戈</li><li>甲骨文</li><li>金文</li><li>止戈</li><li>小篆</li><li>隶书</li><li>楷书</li><li>描字</li>
+</ol>
+<div id="vtitle" aria-live="polite"></div>
+<div id="hint" role="status"></div>
+<div id="caption" aria-live="polite"><h2 id="capTitle"></h2><p id="capText"></p></div>
+<div id="actions"><button id="action" type="button" hidden><span class="fill"></span><span class="lbl"></span></button></div>
+<div id="controls">
+  <button id="replay" type="button">重播</button>
+  <button id="mute" type="button">声音 开</button>
+</div>
+<div id="note">楷书字形据 Make Me a Hanzi；古文字为通行字形的艺术示意；「武字不带撇」为书写口诀</div>
+
+<div id="intro">
+  <div class="introTop">
+    <div class="tag rise" style="--d:.2s"><i></i>今天认识一个汉字<i></i></div>
+  </div>
+  <div class="introBottom">
+    <div class="pinyin rise" style="--d:2.4s">wǔ</div>
+    <div class="mean rise" style="--d:2.7s">武 · 止戈为武</div>
+    <p class="sub rise" style="--d:3s">扛起戈是武，放下戈，也是武</p>
+    <button id="start" class="btn-main rise" style="--d:3.3s" type="button">开始</button>
+    <p class="meta rise" style="--d:3.5s">约三分钟 · 三次小互动 · 建议开启声音</p>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+const NS = 'http://www.w3.org/2000/svg';
+const INK = '#1c1a17', CINNABAR = '#b8322a', GOLD = '#e2c47f', BONE_INK = '#4a3622', PAPER = '#f6efde';
+const GX = 270, GY = 170, GS = 4.6;
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const M = reduceMotion ? 0.55 : 1;
+const $ = s => document.querySelector(s);
+
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  if (attrs) for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const bump = (s, c, w) => Math.exp(-(((s - c) / w) ** 2));
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+  lin: t => t,
+};
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+let rand = mulberry32(20261015);
+
+/* ---------- 可取消的时间轴原语 ---------- */
+class Cancelled extends Error {}
+let token = { dead: true };
+let cleanups = [];
+function frame(tk) {
+  return new Promise((res, rej) => requestAnimationFrame(now => tk.dead ? rej(new Cancelled()) : res(now)));
+}
+async function wait(ms, tk) {
+  const t0 = performance.now();
+  for (;;) { const now = await frame(tk); if (now - t0 >= ms) return; }
+}
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  if (ms <= 0) { fn(1); return; }
+  const t0 = performance.now();
+  for (;;) {
+    const now = await frame(tk);
+    const t = clamp((now - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+const fade = (node, from, to, ms, tk) => tween(ms, t => { node.style.opacity = lerp(from, to, t).toFixed(3); }, tk);
+
+/* ---------- 声音：WebAudio 合成，不加载音频文件 ---------- */
+const NOTE = { D3: 146.83, A3: 220, D4: 293.66, E4: 329.63, G4: 392, A4: 440, B4: 493.88, D5: 587.33, E5: 659.26, G5: 783.99, A5: 880 };
+const Sound = {
+  ctx: null, master: null, noise: null, muted: false, padOn: false,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { this.ctx = new C(); } catch { return; }
+    this.master = this.ctx.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.55;
+    this.master.connect(this.ctx.destination);
+    const len = this.ctx.sampleRate;
+    const buf = this.ctx.createBuffer(1, len, this.ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    const r = mulberry32(7);
+    for (let i = 0; i < len; i++) d[i] = r() * 2 - 1;
+    this.noise = buf;
+  },
+  setMuted(m) {
+    this.muted = m;
+    if (this.master) this.master.gain.setTargetAtTime(m ? 0 : 0.55, this.ctx.currentTime, 0.05);
+  },
+  pluck(f, vol = 0.2, dur = 2.4) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    const lp = c.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(f * 6, t);
+    lp.frequency.exponentialRampToValueAtTime(f * 1.3, t + dur * 0.6);
+    lp.connect(g); g.connect(this.master);
+    for (const [m, type, a] of [[1, 'triangle', 1], [2.003, 'sine', 0.35], [3.01, 'sine', 0.1]]) {
+      const o = c.createOscillator();
+      o.type = type;
+      o.frequency.setValueAtTime(f * m * 1.012, t);
+      o.frequency.exponentialRampToValueAtTime(f * m, t + 0.12);
+      const og = c.createGain(); og.gain.value = a;
+      o.connect(og); og.connect(lp);
+      o.start(t); o.stop(t + dur + 0.05);
+    }
+  },
+  drum(vol = 0.5) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    const o = c.createOscillator();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(120, t);
+    o.frequency.exponentialRampToValueAtTime(42, t + 0.35);
+    const g = c.createGain();
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+    o.connect(g); g.connect(this.master);
+    o.start(t); o.stop(t + 1);
+    this.hiss(0.1, 900, vol * 0.25);
+  },
+  // 青铜戈相碰：几个不成谐波的正弦快速衰减
+  clang(vol = 0.12) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    for (const [f, a, d] of [[1180, 1, 1.1], [1733, 0.55, 0.8], [2611, 0.3, 0.5], [3420, 0.15, 0.3]]) {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f * (0.98 + rand() * 0.04);
+      const g = c.createGain();
+      g.gain.setValueAtTime(vol * a, t);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + d);
+      o.connect(g); g.connect(this.master);
+      o.start(t); o.stop(t + d + 0.05);
+    }
+    this.hiss(0.06, 3200, vol * 0.5);
+  },
+  step() {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    const o = c.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(95, t);
+    o.frequency.exponentialRampToValueAtTime(48, t + 0.12);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.32, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+    o.connect(g); g.connect(this.master);
+    o.start(t); o.stop(t + 0.25);
+    this.hiss(0.14, 320, 0.07);
+  },
+  hiss(dur, freq, vol) {
+    const c = this.ctx; if (!c || !this.noise) return;
+    const t = c.currentTime;
+    const s = c.createBufferSource(); s.buffer = this.noise;
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = freq; bp.Q.value = 0.8;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + Math.min(0.06, dur * 0.3));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(bp); bp.connect(g); g.connect(this.master);
+    s.start(t, rand() * 0.5); s.stop(t + dur + 0.05);
+  },
+  brush(d) { this.hiss(Math.max(0.15, d), 1600, 0.05); },
+  carve(d) { this.hiss(Math.max(0.12, d * 0.8), 3800, 0.06); },
+  cast(d) { this.hiss(Math.max(0.15, d), 700, 0.06); },
+  pad() {
+    const c = this.ctx; if (!c || this.padOn) return;
+    this.padOn = true;
+    const g = c.createGain(); g.gain.value = 0;
+    g.gain.setTargetAtTime(0.03, c.currentTime, 2);
+    const lfo = c.createOscillator(); lfo.frequency.value = 0.08;
+    const lg = c.createGain(); lg.gain.value = 0.012;
+    lfo.connect(lg); lg.connect(g.gain);
+    for (const f of [NOTE.D3, NOTE.A3]) {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f;
+      o.connect(g); o.start();
+    }
+    lfo.start();
+    g.connect(this.master);
+  },
+};
+
+/* ---------- 笔画引擎：中线采样 + 粗细轮廓（同「门」页） ---------- */
+const sampler = el('path', null, $('#defsSvg'));
+function sample(d, step = 0.6) {
+  sampler.setAttribute('d', d);
+  const len = sampler.getTotalLength();
+  const n = Math.max(2, Math.ceil(len / step));
+  const pts = [];
+  for (let i = 0; i <= n; i++) {
+    const p = sampler.getPointAtLength(len * i / n);
+    pts.push([p.x, p.y]);
+  }
+  return { pts, len };
+}
+
+const PROFILES = {
+  carve: s => 0.3 + 0.7 * Math.pow(Math.sin(Math.PI * s), 0.45),
+  cast: s => 0.8 + 0.35 * Math.sin(Math.PI * s),
+  seal: () => 1,
+  h: s => 0.8 + 0.45 * bump(s, 0.03, 0.06) + 0.35 * bump(s, 0.95, 0.05),
+  v: s => 0.92 + 0.3 * bump(s, 0.02, 0.05) + 0.1 * bump(s, 0.97, 0.04),
+  na: s => s < 0.8 ? 0.45 + 1.0 * s / 0.8 + 0.3 * bump(s, 0.03, 0.06) : 1.45 - 1.15 * (s - 0.8) / 0.2,
+  dot: s => 0.5 + 0.75 * Math.sin(Math.PI * Math.min(1, 0.15 + s * 0.8)),
+  ti: s => 1.35 - 1.15 * s + 0.2 * bump(s, 0.03, 0.05),
+};
+
+/* ---------- 轮廓笔画：Make Me a Hanzi 字框 1024，y 轴向上，基线 900 ---------- */
+const MMAH_T = 'scale(0.09765625) translate(0 900) scale(1 -1)';
+const mmahPts = m => m.map(([x, y]) => [x / 10.24, (900 - y) / 10.24]);
+let clipSeq = 0;
+function outlineStroke(parent, st) {
+  const sg = el('g', null, parent);
+  const id = `wuClip${++clipSeq}`;
+  const cp = el('clipPath', { id }, sg);
+  el('path', { d: st.o, transform: MMAH_T }, cp);
+  const pts = mmahPts(st.m);
+  const ext = (a, b) => {
+    const l = Math.hypot(a[0] - b[0], a[1] - b[1]) || 1;
+    return [a[0] + (a[0] - b[0]) / l * 3, a[1] + (a[1] - b[1]) / l * 3];
+  };
+  const path = [ext(pts[0], pts[1]), ...pts.slice(1, -1), ext(pts[pts.length - 1], pts[pts.length - 2])];
+  const d = 'M' + path.map(p => `${p[0].toFixed(2)} ${p[1].toFixed(2)}`).join('L');
+  const { len } = sample(d, 2);
+  const mask = el('path', { d, 'stroke-width': 15, 'clip-path': `url(#${id})` }, sg);
+  mask.style.strokeDasharray = `${len.toFixed(2)} ${(len + 40).toFixed(2)}`;
+  mask.style.strokeDashoffset = len.toFixed(2);
+  mask.style.display = 'none';
+  return { g: sg, mask, pts, len, shown: 0 };
+}
+
+class Glyph {
+  constructor(parent, def, o = {}) {
+    this.def = def;
+    const x = o.x ?? GX, y = o.y ?? GY, s = o.s ?? GS;
+    this.wrap = el('g', { class: 'glyph' }, parent);
+    if (o.filter) this.wrap.setAttribute('filter', `url(#${o.filter})`);
+    this.wrap.style.color = o.color || INK;
+    if (o.opacity != null) this.wrap.style.opacity = o.opacity;
+    this.base = `translate(${x} ${y}) scale(${s})`;
+    this.g = el('g', { transform: this.base }, this.wrap);
+    // 固定包围盒，避免只画出一笔时滤镜区域被裁切
+    el('rect', { x: -6, y: -6, width: 112, height: 112, fill: 'none', stroke: 'none' }, this.g);
+    if (def.outline) { this.strokes = def.strokes.map(st => outlineStroke(this.g, st)); return; }
+    this.strokes = def.strokes.map(st => {
+      const sg = el('g', null, this.g);
+      const { pts, len } = sample(st.d);
+      const prof = PROFILES[st.p || def.p];
+      const w = st.w || def.w;
+      const n = pts.length - 1;
+      const segs = [];
+      for (let j = 0; j < n; j++) {
+        const a = pts[j], b = pts[j + 1];
+        const ww = w * prof((j + 0.5) / n);
+        const seg = el('path', { d: `M${a[0].toFixed(2)} ${a[1].toFixed(2)}L${b[0].toFixed(2)} ${b[1].toFixed(2)}`, 'stroke-width': ww.toFixed(2) }, sg);
+        seg.style.display = 'none';
+        segs.push(seg);
+      }
+      return { g: sg, segs, pts, len, shown: 0 };
+    });
+  }
+  setP(i, p) {
+    const st = this.strokes[i];
+    if (st.mask) {
+      p = clamp(p);
+      st.mask.style.display = p > 0 ? '' : 'none';
+      st.mask.style.strokeDashoffset = (st.len * (1 - p)).toFixed(2);
+      return;
+    }
+    const k = Math.round(clamp(p) * st.segs.length);
+    if (k > st.shown) for (let j = st.shown; j < k; j++) st.segs[j].style.display = '';
+    else for (let j = k; j < st.shown; j++) st.segs[j].style.display = 'none';
+    st.shown = k;
+  }
+  show(i) { this.setP(i, 1); }
+  hide(i) { this.setP(i, 0); }
+  showAll() { this.strokes.forEach((_, i) => this.show(i)); return this; }
+  number(i, parent) {
+    if (!this.numG) { this.numG = el('g', { class: 'nums', transform: this.base }, parent); this.numAt = []; }
+    const [sx, sy] = this.strokes[i].pts[0];
+    let x = sx - 4.4, y = sy - 1.4;
+    while (this.numAt.some(([ax, ay]) => Math.hypot(ax - x, ay - y) < 4.5)) x += 5;
+    this.numAt.push([x, y]);
+    const t = el('text', { x: x.toFixed(1), y: y.toFixed(1) }, this.numG);
+    t.textContent = String(i + 1);
+  }
+  async draw(tk, { per = 240, gap = 50, from = 0, to, sound = 'brush', numbers = null } = {}) {
+    const end = to ?? this.strokes.length;
+    for (let i = from; i < end; i++) {
+      const st = this.strokes[i];
+      const ms = per * (0.5 + st.len / 70);
+      if (numbers) this.number(i, numbers);
+      if (sound) Sound[sound](ms / 1000);
+      await tween(ms, p => this.setP(i, p), tk, ease.sine);
+      if (gap) await wait(gap, tk);
+    }
+  }
+  remove() { this.wrap.remove(); if (this.numG) this.numG.remove(); }
+}
+
+/* ---------- 字形数据（局部坐标 0-100） ----------
+   古文字依据通行字形手绘示意：甲骨文、金文「戈」在上、「止」（脚）在下；
+   小篆「止」移到左下，「戈」舒展在右。不声称复原某一片具体甲骨或铭文。 */
+const G = {
+  jiagu: { p: 'carve', w: 1.8, strokes: [
+    { d: 'M26 24 L74 19' },                 // 戈：横刃
+    { d: 'M56 8 Q59 32 53 60' },            // 戈：长柄
+    { d: 'M56 8 Q62 4 67 9' },              // 戈：柄首
+    { d: 'M47 56 L60 59' },                 // 戈：柄尾镦
+    { d: 'M44 92 L44 67' },                 // 止：大趾
+    { d: 'M44 79 L57 69' },                 // 止：小趾
+    { d: 'M31 70 Q29 90 44 92 L64 92' },    // 止：脚掌与跟
+  ]},
+  jinwen: { p: 'cast', w: 3.4, strokes: [
+    { d: 'M23 26 Q48 18 76 20' },
+    { d: 'M57 8 Q62 34 54 62' },
+    { d: 'M57 8 Q66 3 70 10' },
+    { d: 'M49 57 Q56 54 63 60' },
+    { d: 'M46 92 L46 67' },
+    { d: 'M46 81 Q54 73 60 66' },
+    { d: 'M30 68 Q27 90 46 92 Q58 93 69 90' },
+  ]},
+  seal: { p: 'seal', w: 2.4, strokes: [
+    { d: 'M18 34 L66 34' },                         // 戈：横
+    { d: 'M50 12 Q53 52 70 78 Q77 89 86 82' },     // 戈：长弧
+    { d: 'M80 44 Q68 58 52 70' },                   // 戈：交叉一撇
+    { d: 'M67 15 Q73 19 76 26' },                   // 戈：点
+    { d: 'M33 50 L33 88' },                         // 止：中
+    { d: 'M20 60 Q19 88 33 88' },                   // 止：左
+    { d: 'M33 68 Q41 61 47 57' },                   // 止：右
+    { d: 'M13 88 L50 88' },                         // 止：底
+  ]},
+  // 隶书：按楷书结构，长横与末笔带蚕头燕尾，斜钩平出
+  li: { p: 'h', w: 3.4, strokes: [
+    { d: 'M29 29 L50 30', w: 3 },
+    { d: 'M12 42 L85 40', p: 'h', w: 3.6 },
+    { d: 'M37 42 L37 78', p: 'v', w: 3.6 },
+    { d: 'M38 59 L53 59', w: 3 },
+    { d: 'M22 63 L22 80', p: 'v', w: 3.4 },
+    { d: 'M13 83 L55 80', p: 'na', w: 3.4 },
+    { d: 'M48 12 Q56 52 72 74 Q80 84 92 80', p: 'na', w: 3.8 },
+    { d: 'M66 19 L72 25', p: 'dot', w: 3.6 },
+  ]},
+  // 楷书「武」取自 Make Me a Hanzi（经 hanzi-writer-data 2.0.1，Arphic Public License，见 licenses/hanzi/），原坐标未改
+  // 八笔：横、横、竖、横、竖、提、斜钩、点
+  kai: { outline: true, strokes: [
+    { o: 'M 263 591 Q 226 582 254 567 Q 296 545 355 563 Q 407 576 464 592 Q 489 599 493 603 Q 502 612 496 620 Q 489 632 458 637 Q 427 641 397 627 Q 369 615 338 606 Q 304 596 263 591 Z',
+      m: [[255,580],[301,575],[426,609],[486,613]] },
+    { o: 'M 613 499 Q 679 512 755 523 Q 774 526 774 534 Q 775 549 755 559 Q 724 572 699 566 Q 648 554 603 542 L 559 531 Q 270 462 138 448 Q 123 447 120 437 Q 117 425 134 412 Q 179 382 233 400 Q 288 419 341 434 L 382 447 Q 454 469 568 491 L 613 499 Z',
+      m: [[133,433],[185,423],[216,427],[471,492],[683,537],[718,543],[762,538]] },
+    { o: 'M 341 434 Q 359 407 359 384 Q 363 278 370 159 C 372 129 407 141 408 171 Q 409 232 411 288 L 412 319 Q 413 379 420 400 Q 429 416 417 426 Q 398 439 382 447 C 355 461 325 459 341 434 Z',
+      m: [[350,430],[379,418],[389,404],[389,194],[374,167]] },
+    { o: 'M 411 288 Q 432 285 497 301 Q 515 307 535 312 Q 545 315 547 317 Q 554 326 549 333 Q 540 343 511 346 Q 481 347 454 332 Q 444 328 430 324 Q 420 323 412 319 C 384 307 381 291 411 288 Z',
+      m: [[416,296],[429,306],[504,326],[539,326]] },
+    { o: 'M 299 136 Q 296 227 301 263 Q 304 285 290 297 Q 268 313 242 322 Q 229 328 220 322 Q 213 315 219 301 Q 243 262 258 123 C 261 93 300 106 299 136 Z',
+      m: [[228,313],[268,270],[277,152],[262,135]] },
+    { o: 'M 370 159 Q 334 149 299 136 L 258 123 Q 239 119 219 112 Q 197 105 162 105 Q 147 104 145 92 Q 144 76 154 68 Q 179 50 217 30 Q 229 26 242 37 Q 285 70 334 93 Q 409 126 483 161 Q 511 174 532 190 Q 547 199 547 209 Q 540 215 527 212 Q 469 193 408 171 L 370 159 Z',
+      m: [[161,89],[223,72],[541,206]] },
+    { o: 'M 568 491 Q 644 137 830 -11 Q 894 -62 924 -60 Q 946 -56 937 -26 Q 931 23 932 165 Q 932 190 923 191 Q 922 191 882 98 Q 869 59 845 67 Q 833 73 816 85 Q 681 214 613 499 L 603 542 Q 576 671 584 767 Q 594 810 536 829 Q 499 844 479 835 Q 458 826 469 807 Q 518 767 521 732 Q 539 621 559 531 L 568 491 Z',
+      m: [[482,818],[518,804],[546,778],[573,571],[621,377],[670,249],[737,132],[790,68],[824,39],[880,18],[903,71],[924,184]] },
+    { o: 'M 700 669 Q 736 648 774 622 Q 790 612 807 615 Q 817 616 821 632 Q 822 648 808 677 Q 792 710 686 718 Q 670 719 663 715 Q 659 711 663 697 Q 669 687 700 669 Z',
+      m: [[670,709],[768,668],[803,633]] },
+  ]},
+};
+const KAI_NAMES = ['横', '横', '竖', '横', '竖', '提', '斜钩', '点'];
+
+/* ---------- 舞台与界面 ---------- */
+const stage = $('#stage');
+const L = { back: $('#lBack'), glyph: $('#lGlyph'), front: $('#lFront'), fx: $('#lFx') };
+const boneSvg = $('#boneSvg'), bronzeSvg = $('#bronzeSvg');
+const ui = {
+  cap: $('#caption'), capT: $('#capTitle'), capP: $('#capText'), hint: $('#hint'), vt: $('#vtitle'),
+  prog: [...document.querySelectorAll('#progress li')],
+  act: $('#action'), actLbl: $('#action .lbl'), actFill: $('#action .fill'),
+};
+const S = {};
+
+function local(parent) { return el('g', { transform: `translate(${GX} ${GY}) scale(${GS})` }, parent); }
+function toStage(e) {
+  const p = stage.createSVGPoint();
+  p.x = e.clientX; p.y = e.clientY;
+  return p.matrixTransform(stage.getScreenCTM().inverse());
+}
+function toLocal(e) { const p = toStage(e); return { x: (p.x - GX) / GS, y: (p.y - GY) / GS }; }
+
+let capTimer, vtTimer;
+function span(cls, text) { const s = document.createElement('span'); s.className = cls; s.textContent = text; return s; }
+// 每条字幕至少停留到逐字显现完成并留出阅读时间，下一条才替换
+const CHAR_MS = 70;
+let capMinEnd = 0;
+async function caption(title, text, tk) {
+  while (performance.now() < capMinEnd) await frame(tk);
+  ui.cap.classList.remove('on');
+  clearTimeout(capTimer);
+  const chars = [...text];
+  capTimer = setTimeout(() => {
+    ui.capT.replaceChildren(span('zh', title));
+    ui.capP.replaceChildren(...chars.map((c, i) => { const s = span('ch', c); s.style.setProperty('--i', i); return s; }));
+    ui.cap.classList.add('on');
+  }, 350);
+  capMinEnd = performance.now() + 350 + Math.max(reduceMotion ? 300 : chars.length * CHAR_MS + 1100, chars.length * 150) + 600;
+}
+async function captionDone(tk) { while (performance.now() < capMinEnd) await frame(tk); }
+function hint(text) {
+  if (text) { ui.hint.replaceChildren(span('zh', text)); ui.hint.classList.add('on'); }
+  else ui.hint.classList.remove('on');
+}
+function vtitle(name, era) {
+  ui.vt.classList.remove('on');
+  clearTimeout(vtTimer);
+  if (!name) return;
+  vtTimer = setTimeout(() => {
+    ui.vt.replaceChildren(span('', name));
+    if (era) ui.vt.appendChild(span('era', era));
+    ui.vt.classList.add('on');
+  }, 320);
+}
+function progress(i) {
+  ui.prog.forEach((li, j) => {
+    li.classList.toggle('on', j === i);
+    li.classList.toggle('done', j < i);
+  });
+}
+function action(text) {
+  if (!text) { ui.act.hidden = true; ui.act.classList.remove('holding'); ui.actFill.style.width = '0'; return; }
+  ui.actLbl.textContent = text; ui.act.hidden = false;
+}
+
+function layout() {
+  const portrait = innerWidth / innerHeight < 0.85;
+  const vb = portrait ? '160 40 680 900' : '0 0 1000 1000';
+  for (const s of [stage, boneSvg, bronzeSvg]) s.setAttribute('viewBox', vb);
+  document.body.classList.toggle('portrait', portrait);
+  if (S.scroll) layoutScroll();
+}
+
+function paperTexture() {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" preserveAspectRatio="none">' +
+    '<filter id="f" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" seed="5"/>' +
+    '<feColorMatrix values="0 0 0 0 0.45  0 0 0 0 0.38  0 0 0 0 0.28  0 0 0 0.12 0"/></filter>' +
+    '<filter id="g" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="3" seed="9"/>' +
+    '<feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.45  0 0 0 0 0.3  0 0 0 0.5 -0.22"/></filter>' +
+    '<rect width="1600" height="1000" filter="url(#f)"/><rect width="1600" height="1000" filter="url(#g)"/></svg>';
+  document.body.style.backgroundImage =
+    `url("data:image/svg+xml,${encodeURIComponent(svg)}"), radial-gradient(ellipse at 50% 40%, #f7f1e3 0%, #efe5cf 60%, #e2d4b6 100%)`;
+}
+function buildLeiwen() {
+  const g = $('#leiwen');
+  for (let i = 0; i < 40; i++) {
+    el('path', { d: 'M0 0 H12 V12 H2 V3 H9 V9 H5 V6', transform: `rotate(${i * 9} 500 410) translate(494 91) scale(.9)` }, g);
+  }
+}
+
+function resetStage() {
+  cleanups.forEach(f => f()); cleanups = [];
+  for (const k in L) { L[k].replaceChildren(); L[k].style.opacity = ''; }
+  boneSvg.classList.remove('on'); bronzeSvg.classList.remove('on');
+  stage.classList.remove('trace', 'tap', 'hold');
+  S.scroll = null; S.zoomTk = null;
+  hint(null); action(null); vtitle(null);
+}
+
+async function inkBloom(tk) {
+  const g = el('g', null, L.fx);
+  const blobs = [[500, 420, 1], [440, 380, 0.7], [570, 460, 0.6], [520, 330, 0.5], [430, 500, 0.45]]
+    .map(([x, y, s]) => ({ c: el('circle', { cx: x, cy: y, r: 0, fill: 'url(#inkG)' }, g), s }));
+  Sound.drum(0.3);
+  await tween(1500 * M, t => {
+    blobs.forEach(b => b.c.setAttribute('r', (t * 720 * b.s).toFixed(1)));
+    g.style.opacity = ((1 - t) * 0.95).toFixed(3);
+  }, tk, ease.out);
+  g.remove();
+}
+
+/* 互动等待：用户完成返回 'user'，超时无操作自动完成返回 'auto' */
+async function until(tk, isDone, { idle = 6000, busy = () => false, max = 30000 } = {}) {
+  const t0 = performance.now();
+  let last = t0;
+  for (;;) {
+    const now = await frame(tk);
+    if (isDone()) return 'user';
+    if (busy()) last = now;
+    if (now - last > idle || now - t0 > max) return 'auto';
+  }
+}
+
+/* ---------- 画：戈与脚印（局部坐标，与字框一致） ---------- */
+function drawGe(parent) {
+  const g = el('g', null, parent);
+  el('path', { d: 'M54.6 7 L57.4 7 L55.4 72 L52.6 72 Z', fill: 'url(#woodGV)', stroke: '#3a2414', 'stroke-width': 0.3 }, g);
+  el('path', { d: 'M54 5.5 Q58 3.5 60 6 L57.6 8.2 Z', fill: '#4a2e1a' }, g);
+  // 青铜援（刃）向左，内（尾）向右
+  el('path', { d: 'M22 23 Q34 18.5 55 17 L57 17 L57 25.5 L55 25.5 Q36 25 26 25.6 Q22.5 25.4 22 23 Z', fill: 'url(#bronzeG)', stroke: '#6b4f22', 'stroke-width': 0.35 }, g);
+  el('path', { d: 'M27 23.4 Q40 21 54 20.4', fill: 'none', stroke: '#f5e2ac', 'stroke-width': 0.5, opacity: 0.8 }, g);
+  el('path', { d: 'M57 18.4 L69 19.6 Q71 21.4 69 23.6 L57 24 Z', fill: 'url(#bronzeG)', stroke: '#6b4f22', 'stroke-width': 0.35 }, g);
+  el('path', { d: 'M56 26 Q53 32 55.5 38 Q57 32 58 26 Z', fill: CINNABAR, opacity: 0.85 }, g);
+  el('path', { d: 'M52.4 72 L55.6 72 L54.2 78 Z', fill: '#a8843f' }, g);
+  return g;
+}
+function drawFoot(parent, x, y, mirror = 1, rot = 0) {
+  const g = el('g', { transform: `translate(${x} ${y}) rotate(${rot}) scale(${1.25 * mirror} 1.25)` }, parent);
+  el('path', { d: 'M-3 -2 Q-5 6 -2 10 Q1 13 3 9 Q5 4 3.4 -3 Q1.6 -7 -0.8 -6.2 Q-3 -5 -3 -2 Z', fill: INK, opacity: 0.82 }, g);
+  for (const [cx, cy, r] of [[-3.4, -8.8, 1.25], [-1.1, -10.6, 1.3], [1.3, -10.7, 1.15], [3.2, -9.4, 1], [4.4, -7.3, 0.85]]) {
+    el('circle', { cx, cy, r, fill: INK, opacity: 0.82 }, g);
+  }
+  return g;
+}
+
+/* ---------- 第一幕：持戈 ---------- */
+async function sceneGe(tk) {
+  await caption('持戈 · 一把戈', '先看一把戈：长长的木柄，顶端横着一片青铜刃。', tk);
+  progress(0);
+  vtitle('戈', '兵器');
+  Sound.pluck(NOTE.D4);
+  const root = local(L.glyph);
+  S.geRoot = root;
+  const ge = drawGe(root);
+  ge.style.opacity = 0;
+  await tween(900 * M, t => {
+    ge.style.opacity = t.toFixed(3);
+    ge.setAttribute('transform', `translate(0 ${(1 - t) * -6})`);
+  }, tk, ease.out);
+  Sound.clang();
+  await wait(700, tk);
+
+  await caption('止 · 一只脚', '再看一只脚。很早的时候，脚就叫「止」。', tk);
+  vtitle('止', '脚');
+  const feet = el('g', null, local(L.glyph));
+  S.feet = feet;
+  const STEPS = [[38, 150, 1, -6], [54, 118, -1, 5], [44, 81, 1, -3]];
+  let n = 0, user = 0;
+  const step = by => {
+    if (n >= STEPS.length) return;
+    const [x, y, m, r] = STEPS[n++];
+    if (by === 'user') user++;
+    const f = drawFoot(feet, x, y, m, r);
+    f.style.opacity = 0;
+    Sound.step();
+    bg(tween(260, t => { f.style.opacity = t.toFixed(3); }, tk, ease.out));
+    // 旧脚印慢慢淡去，只留最后一步
+    [...feet.children].slice(0, -1).forEach(o => bg(tween(900, t => { o.style.opacity = (0.35 * (1 - t) + 0.0).toFixed(3); }, tk)));
+    hint(n < STEPS.length ? `点一点画面，让脚步向前走（${n}/3）` : null);
+  };
+  await captionDone(tk);
+  hint('点一点画面，让脚步向前走（0/3）');
+  action('迈一步');
+  stage.classList.add('tap');
+  const tap = e => { e.preventDefault(); step('user'); };
+  const btn = () => step('user');
+  stage.addEventListener('pointerdown', tap);
+  ui.act.addEventListener('click', btn);
+  const off = () => { stage.removeEventListener('pointerdown', tap); ui.act.removeEventListener('click', btn); stage.classList.remove('tap'); };
+  cleanups.push(off);
+  // 无操作时每隔几秒代走一步
+  while (n < STEPS.length) {
+    const r = await until(tk, () => n >= STEPS.length, { idle: 4500, max: 4500 });
+    if (r === 'auto' && n < STEPS.length) step('auto');
+  }
+  off(); action(null); hint(null);
+  S.interactions.push(user === STEPS.length ? 'user' : user ? 'mixed' : 'auto');
+  await wait(500, tk);
+  await caption('戈 ＋ 止', '戈在上，脚在下：扛起戈，迈步出发。', tk);
+  Sound.drum(0.3);
+  await wait(900, tk);
+}
+
+/* ---------- 甲骨文、金文 ---------- */
+const CRACKS = ['M300 300 L340 302 L352 286', 'M702 322 L662 326 L652 310', 'M302 558 L344 554 L356 570', 'M704 550 L662 554 L650 540'];
+
+async function sceneJiagu(tk) {
+  await caption('甲骨文 · 商', '刻在龟甲兽骨上的「武」：上面是戈，下面是脚。', tk);
+  progress(1);
+  vtitle('甲骨文', '商');
+  Sound.pluck(NOTE.G4);
+  boneSvg.classList.add('on');
+  const geRoot = S.geRoot, feet = S.feet;
+  bg(tween(1100 * M, t => { geRoot.style.opacity = 1 - t; feet.style.opacity = 1 - t; }, tk));
+  await wait(350 * M, tk);
+  S.jg = new Glyph(L.glyph, G.jiagu, { filter: 'carve', color: BONE_INK });
+  await S.jg.draw(tk, { per: 210, gap: 40, sound: 'carve' });
+  geRoot.remove(); feet.parentNode.remove();
+  const cr = el('g', { class: 'cracks' }, L.back);
+  const paths = CRACKS.map(d => el('path', { d }, cr));
+  const lens = paths.map(p => p.getTotalLength());
+  paths.forEach((p, i) => { p.style.strokeDasharray = lens[i]; p.style.strokeDashoffset = lens[i]; });
+  Sound.hiss(0.5, 2600, 0.07);
+  await tween(800 * M, t => paths.forEach((p, i) => { p.style.strokeDashoffset = lens[i] * (1 - t); }), tk);
+  await caption('甲骨文 · 本义', '很多学者认为：这里的「止」表示行进。扛着戈去远方，是出征，也是显示力量。', tk);
+  await wait(800, tk);
+}
+
+async function sceneJinwen(tk) {
+  await caption('金文 · 西周', '铸在青铜器上，戈更厚重，脚印更饱满。鼓声一响，队伍出发。', tk);
+  progress(2);
+  vtitle('金文', '西周');
+  Sound.pluck(NOTE.A4);
+  boneSvg.classList.remove('on');
+  bronzeSvg.classList.add('on');
+  const jg = S.jg;
+  bg(tween(900 * M, t => { jg.wrap.style.opacity = 1 - t; L.back.style.opacity = 1 - t; }, tk));
+  await wait(500 * M, tk);
+  S.jw = new Glyph(L.glyph, G.jinwen, { filter: 'cast', color: GOLD });
+  await S.jw.draw(tk, { per: 190, gap: 40, sound: 'cast' });
+  jg.remove();
+  L.back.replaceChildren(); L.back.style.opacity = '';
+  for (let i = 0; i < 3; i++) { Sound.drum(0.4); await wait(520, tk); }
+  await wait(900, tk);
+}
+
+/* ---------- 第四幕：止戈（邲之战后，《左传·宣公十二年》） ---------- */
+const SOLDIER_X = [310, 385, 460, 535, 610, 685, 760];
+const GROUND = 700;
+function drawSoldier(parent, x) {
+  const g = el('g', { transform: `translate(${x} ${GROUND})` }, parent);
+  el('ellipse', { cx: 0, cy: 2, rx: 20, ry: 3.5, fill: 'rgba(30,25,20,.18)' }, g);
+  el('circle', { cx: 0, cy: -118, r: 10.5, fill: '#e9d9b8', stroke: INK, 'stroke-width': 2.4 }, g);
+  el('path', { d: 'M-10 -122 Q0 -136 10 -122 Z', fill: INK }, g);
+  el('path', { d: 'M0 -106 L1 -52 M1 -52 L-12 0 M1 -52 L14 0', class: 'ink', 'stroke-width': 5 }, g);
+  el('path', { d: 'M-9 -100 L10 -100 L8 -66 L-7 -66 Z', fill: '#6b4a2b', opacity: 0.85 }, g);
+  const arm = el('path', { d: 'M0 -96 L14 -80', class: 'ink', 'stroke-width': 4.5 }, g);
+  // 戈：围绕手的位置旋转；未旋转时柄竖直、刃朝右
+  const ge = el('g', null, g);
+  el('path', { d: 'M-1.6 60 L1.6 60 L1.2 -110 L-1.2 -110 Z', fill: 'url(#woodGV)' }, ge);
+  el('path', { d: 'M0 -104 L40 -100 L38 -94 L0 -95 Z', fill: 'url(#bronzeG)', stroke: '#6b4f22', 'stroke-width': 0.8 }, ge);
+  el('path', { d: 'M0 -103 L-12 -101 L-12 -97 L0 -96 Z', fill: 'url(#bronzeG)' }, ge);
+  el('path', { d: 'M1 -93 Q5 -82 2 -74 Q-1 -82 -1 -93 Z', fill: CINNABAR }, ge);
+  return { g, arm, ge };
+}
+function poseSoldier(s, p) {
+  // p=0 持戈前指；p=1 放下戈，横卧地上
+  const a = lerp(42, -90, p);
+  const hx = lerp(14, -6, p), hy = lerp(-80, -4, ease.inOut(p));
+  s.ge.setAttribute('transform', `translate(${hx.toFixed(2)} ${hy.toFixed(2)}) rotate(${a.toFixed(2)})`);
+  const ax = lerp(14, 8, p), ay = lerp(-80, -62, p);
+  s.arm.setAttribute('d', `M0 -96 L${ax.toFixed(1)} ${ay.toFixed(1)}`);
+}
+function drawKing(parent) {
+  const g = el('g', { transform: `translate(200 ${GROUND})` }, parent);
+  el('ellipse', { cx: 0, cy: 2, rx: 26, ry: 4, fill: 'rgba(30,25,20,.2)' }, g);
+  el('path', { d: 'M-22 0 Q-18 -60 -12 -104 L12 -104 Q18 -60 22 0 Z', fill: '#7a2a20', stroke: INK, 'stroke-width': 2 }, g);
+  el('path', { d: 'M-12 -104 L0 -70 L12 -104', fill: 'none', stroke: '#e2c47f', 'stroke-width': 2 }, g);
+  el('circle', { cx: 0, cy: -118, r: 12, fill: '#e9d9b8', stroke: INK, 'stroke-width': 2.4 }, g);
+  // 冕：平顶板与垂旒
+  el('rect', { x: -20, y: -138, width: 40, height: 5, fill: INK }, g);
+  el('path', { d: 'M-16 -133 V-124 M-8 -133 V-126 M8 -133 V-126 M16 -133 V-124', stroke: INK, 'stroke-width': 1.2 }, g);
+  const arm = el('path', { d: 'M8 -96 Q22 -90 26 -80', class: 'ink', 'stroke-width': 5 }, g);
+  const palm = el('ellipse', { cx: 26, cy: -78, rx: 5, ry: 6.5, fill: '#e9d9b8', stroke: INK, 'stroke-width': 1.6 }, g);
+  return { g, arm, palm };
+}
+function raiseKing(k, p) {
+  const x = lerp(26, 30, p), y = lerp(-80, -150, p);
+  k.arm.setAttribute('d', `M8 -96 Q${lerp(22, 26, p).toFixed(1)} ${lerp(-90, -120, p).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)}`);
+  k.palm.setAttribute('cx', x.toFixed(1)); k.palm.setAttribute('cy', (y - 4 * p).toFixed(1));
+}
+
+async function sceneZhiGe(tk) {
+  await caption('止戈 · 前597年', '春秋时，楚庄王在邲打了一场大胜仗。', tk);
+  progress(3);
+  vtitle('止戈', '春秋');
+  Sound.pluck(NOTE.D4, 0.18, 3);
+  bronzeSvg.classList.remove('on');
+  const jw = S.jw;
+  bg(tween(800 * M, t => { jw.wrap.style.opacity = 1 - t; }, tk).then(() => jw.remove()));
+
+  const back = el('g', null, L.back);
+  back.style.opacity = 0;
+  const dusk = el('rect', { x: -500, y: -200, width: 2000, height: 1000, fill: 'url(#duskG)' }, back);
+  const sunR = el('circle', { cx: 760, cy: 560, r: 150, fill: 'url(#sunRed)' }, back);
+  const sunW = el('circle', { cx: 760, cy: 400, r: 170, fill: 'url(#sunWarm)', opacity: 0 }, back);
+  el('path', { d: `M-200 ${GROUND} Q250 ${GROUND - 10} 500 ${GROUND} T1200 ${GROUND}`, class: 'ink', 'stroke-width': 1.6, opacity: 0.5 }, back);
+  el('path', { d: `M-200 ${GROUND + 24} Q300 ${GROUND + 14} 600 ${GROUND + 26} T1200 ${GROUND + 20}`, class: 'ink', 'stroke-width': 0.9, opacity: 0.25 }, back);
+  const smoke = el('g', { filter: 'url(#smoke)' }, back);
+  const puffs = [[380, 560, 70], [560, 520, 90], [720, 580, 60], [860, 540, 80], [470, 610, 50]]
+    .map(([x, y, r]) => ({ c: el('ellipse', { cx: x, cy: y, rx: r * 1.6, ry: r, fill: '#5a5148', opacity: 0.22 }, smoke), x, y }));
+  const army = el('g', null, L.glyph);
+  const soldiers = SOLDIER_X.map(x => drawSoldier(army, x));
+  soldiers.forEach(s => poseSoldier(s, 0));
+  const king = drawKing(L.glyph);
+  raiseKing(king, 0);
+  army.style.opacity = 0; king.g.style.opacity = 0;
+  await tween(1100 * M, t => { back.style.opacity = t; army.style.opacity = t; king.g.style.opacity = t; }, tk);
+  // 烟雾缓慢漂移，直到本幕结束
+  const smokeTk = { dead: false };
+  cleanups.push(() => { smokeTk.dead = true; });
+  bg((async () => {
+    const t0 = performance.now();
+    for (;;) {
+      const now = await frame(smokeTk);
+      if (tk.dead) return;
+      const s = (now - t0) / 1000;
+      puffs.forEach((p, i) => p.c.setAttribute('cx', (p.x + Math.sin(s * 0.3 + i) * 30 + s * 6).toFixed(1)));
+    }
+  })());
+  for (let i = 0; i < 2; i++) { Sound.clang(0.08); await wait(380, tk); }
+
+  await caption('止戈 · 潘党', '部将潘党说：把敌兵的尸骨堆成高台吧，让子孙都记住这份武功。', tk);
+  await caption('止戈 · 楚庄王', '庄王摇头：「夫文，止戈为武。」看这个字——止，加上戈，就是武。', tk);
+  bg(tween(900 * M, t => raiseKing(king, t), tk));
+  const eq = el('g', { class: 'kai' }, L.fx);
+  const parts = [['止', 380, INK], ['＋', 450, '#8b7f6c'], ['戈', 520, INK], ['＝', 590, '#8b7f6c'], ['武', 660, CINNABAR]].map(([c, x, fill]) => {
+    const t = el('text', { x, y: 230, 'font-size': 62, 'text-anchor': 'middle', fill, 'font-family': 'Kaiti SC, STKaiti, KaiTi, serif' }, eq);
+    t.textContent = c; t.style.opacity = 0; return t;
+  });
+  for (const t of parts) {
+    Sound.pluck(NOTE.A4, 0.08, 1.2);
+    await tween(320 * M, v => { t.style.opacity = v.toFixed(3); }, tk, ease.out);
+  }
+  await captionDone(tk);
+
+  // 互动：按住，让每一把戈停下、放平
+  let p = 0, holding = false;
+  const setHold = v => { holding = v; ui.act.classList.toggle('holding', v); };
+  const down = e => { if (e.button !== undefined && e.button !== 0) return; e.preventDefault(); setHold(true); };
+  const upAll = () => setHold(false);
+  const key = e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); setHold(e.type === 'keydown'); } };
+  stage.classList.add('hold');
+  stage.addEventListener('pointerdown', down);
+  ui.act.addEventListener('pointerdown', down);
+  addEventListener('pointerup', upAll);
+  addEventListener('pointercancel', upAll);
+  addEventListener('blur', upAll);
+  ui.act.addEventListener('keydown', key);
+  ui.act.addEventListener('keyup', key);
+  const off = () => {
+    stage.removeEventListener('pointerdown', down);
+    ui.act.removeEventListener('pointerdown', down);
+    removeEventListener('pointerup', upAll);
+    removeEventListener('pointercancel', upAll);
+    removeEventListener('blur', upAll);
+    ui.act.removeEventListener('keydown', key);
+    ui.act.removeEventListener('keyup', key);
+    stage.classList.remove('hold');
+  };
+  cleanups.push(off);
+  hint('按住画面，让大家放下戈');
+  action('按住 · 止戈');
+  const HOLD_MS = 2200;
+  const render = () => {
+    soldiers.forEach((s, i) => poseSoldier(s, clamp(p * 1.6 - i * 0.1)));
+    ui.actFill.style.width = `${(p * 100).toFixed(1)}%`;
+    dusk.style.opacity = (1 - p).toFixed(3);
+    smoke.style.opacity = (1 - p).toFixed(3);
+  };
+  let last = performance.now(), t0 = last, lastHold = last, clangAt = 0;
+  let result = null;
+  while (!result) {
+    const now = await frame(tk);
+    const dt = Math.min(64, now - last); last = now;
+    if (holding) {
+      p = clamp(p + dt / HOLD_MS); lastHold = now;
+      if (now - clangAt > 420) { Sound.hiss(0.18, 900, 0.04); clangAt = now; }
+    } else p = clamp(p - dt / 6000);
+    render();
+    if (p >= 1) result = 'user';
+    else if (!holding && now - lastHold > 7000 && now - t0 > 7000) result = 'auto';
+  }
+  off(); action(null); hint(null);
+  S.interactions.push(result);
+  if (result === 'auto') { const from = p; await tween(1600 * M, t => { p = lerp(from, 1, t); render(); }, tk); }
+  p = 1; render();
+  Sound.drum(0.35);
+  Sound.pluck(NOTE.D5, 0.14, 3); Sound.pluck(NOTE.A4, 0.1, 3);
+  // 天色转暖，青草长出来
+  const grass = el('g', null, L.front);
+  const blades = [];
+  for (let i = 0; i < 46; i++) {
+    const x = 120 + i * 17 + rand() * 8, h = 10 + rand() * 18, lean = (rand() - 0.5) * 8;
+    blades.push(el('path', { d: `M${x.toFixed(1)} ${GROUND} q${(lean / 2).toFixed(1)} ${(-h / 2).toFixed(1)} ${lean.toFixed(1)} ${(-h).toFixed(1)}`, fill: 'none', stroke: '#5f7f56', 'stroke-width': 2.2, 'stroke-linecap': 'round', transform: `translate(0 ${GROUND}) scale(1 0) translate(0 ${-GROUND})` }, grass));
+  }
+  await tween(1800 * M, t => {
+    sunR.style.opacity = (1 - t).toFixed(3);
+    sunW.setAttribute('opacity', t.toFixed(3));
+    blades.forEach((b, i) => {
+      const k = clamp(t * 1.5 - (i % 9) * 0.05);
+      b.setAttribute('transform', `translate(0 ${GROUND}) scale(1 ${k.toFixed(3)}) translate(0 ${-GROUND})`);
+    });
+  }, tk, ease.out);
+
+  // 武有七德
+  await caption('武有七德', '庄王说，武有七德：禁暴、戢兵、保大、定功、安民、和众、丰财。', tk);
+  bg(tween(500 * M, t => { eq.style.opacity = (1 - t).toFixed(3); }, tk));
+  const VIRTUES = ['禁暴', '戢兵', '保大', '定功', '安民', '和众', '丰财'];
+  const vg = el('g', { class: 'virtue' }, L.fx);
+  const notes = [NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.B4, NOTE.D5, NOTE.E5];
+  const portrait = document.body.classList.contains('portrait');
+  const rx = portrait ? 268 : 330, ry = portrait ? 310 : 340;
+  for (let i = 0; i < VIRTUES.length; i++) {
+    const a = Math.PI * (1.12 + 0.76 * i / (VIRTUES.length - 1));
+    const x = 500 + Math.cos(a) * rx, y = 560 + Math.sin(a) * ry;
+    const s = el('g', { transform: `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(i - 3) * 2})` }, vg);
+    el('rect', { x: -44, y: -21, width: 88, height: 42, rx: 3, fill: CINNABAR, filter: 'url(#stamp)' }, s);
+    const t = el('text', { x: 0, y: 8 }, s); t.textContent = VIRTUES[i];
+    s.style.opacity = 0;
+    Sound.pluck(notes[i], 0.12, 1.6);
+    await tween(300 * M, v => { s.style.opacity = v.toFixed(3); }, tk, ease.out);
+    await wait(120, tk);
+  }
+  await caption('止戈为武', '打赢一场仗不算难；让仗停下来，大家安心过日子，才是真正的「武」。', tk);
+  await captionDone(tk);
+  await wait(600, tk);
+  S.zhige = { back, army, king, grass, vg, eq };
+}
+
+/* ---------- 小篆、隶书、楷书 ---------- */
+async function sceneZhuan(tk) {
+  await caption('小篆 · 秦', '小篆把「止」安在左下，「戈」在右边舒展开来。', tk);
+  progress(4);
+  vtitle('小篆', '秦');
+  Sound.pluck(NOTE.D5);
+  const z = S.zhige;
+  await tween(900 * M, t => { for (const n of [z.back, z.army, z.king.g, z.grass, z.vg, z.eq]) n.style.opacity = (1 - t).toFixed(3); }, tk);
+  cleanups.forEach(f => f()); cleanups = [];
+  for (const k in L) { L[k].replaceChildren(); L[k].style.opacity = ''; }
+  S.seal = new Glyph(L.glyph, G.seal, { filter: 'brush' });
+  await S.seal.draw(tk, { per: 180, gap: 40 });
+  const SX = 770, SY = 600;
+  const st = el('g', null, L.front);
+  st.style.opacity = 0;
+  const inner = el('g', { filter: 'url(#stamp)' }, st);
+  el('rect', { x: -38, y: -38, width: 76, height: 76, rx: 3, fill: CINNABAR }, inner);
+  new Glyph(inner, G.seal, { x: -31, y: -31, s: 0.62, color: PAPER }).showAll();
+  S.stamp = st;
+  await tween(450 * M, t => {
+    st.setAttribute('transform', `translate(${SX} ${SY}) scale(${lerp(1.7, 1, t).toFixed(3)}) rotate(${lerp(-8, -3, t).toFixed(2)})`);
+    st.style.opacity = t;
+  }, tk, ease.out);
+  Sound.drum(0.55);
+  await caption('《说文解字》 · 东汉', '东汉许慎编《说文解字》，解释「武」时，也引了庄王这句「止戈为武」。', tk);
+  await wait(800, tk);
+}
+
+async function sceneLi(tk) {
+  await caption('隶书 · 汉', '化圆为方，长横蚕头燕尾，汉字从线条变成了笔画。', tk);
+  progress(5);
+  vtitle('隶书', '汉');
+  Sound.pluck(NOTE.E5);
+  const seal = S.seal, stamp = S.stamp;
+  bg(tween(700 * M, t => { seal.wrap.style.opacity = 1 - t; stamp.style.opacity = 1 - t; }, tk));
+  S.li = new Glyph(L.glyph, G.li, { filter: 'brush' });
+  await S.li.draw(tk, { per: 150, gap: 30 });
+  seal.remove(); stamp.remove();
+  await wait(1100, tk);
+}
+
+async function sceneKai(tk) {
+  await caption('楷书 · 魏晋以后', '横平竖直，「武」字从此定形：八笔写成。', tk);
+  progress(6);
+  vtitle('楷书', '魏晋以后');
+  Sound.pluck(NOTE.D5);
+  const li = S.li;
+  bg(tween(600 * M, t => { li.wrap.style.opacity = 1 - t; }, tk));
+  S.kai = new Glyph(L.glyph, G.kai, { filter: 'brush' });
+  await S.kai.draw(tk, { per: 160, gap: 35 });
+  li.remove();
+  await wait(500, tk);
+  await caption('少了一撇', '仔细看：「戈」字本有一撇，到了「武」里却不见了。', tk);
+  // 用虚线示意「戈」原本的那一撇，再让它淡去
+  const lg = local(L.front);
+  const ghost = el('path', { d: 'M80 41 Q70 57 55.5 70', fill: 'none', stroke: CINNABAR, 'stroke-width': 1.6, 'stroke-dasharray': '2.4 2', 'stroke-linecap': 'round', opacity: 0 }, lg);
+  const lab = el('text', { x: 84, y: 60, 'font-size': 5.2, fill: CINNABAR, 'font-family': 'Kaiti SC, STKaiti, KaiTi, serif' }, lg);
+  lab.textContent = '撇'; lab.style.opacity = 0;
+  await tween(700 * M, t => { ghost.setAttribute('opacity', (t * 0.9).toFixed(3)); lab.style.opacity = t; }, tk);
+  for (let i = 0; i < 2; i++) {
+    await tween(500, t => ghost.setAttribute('opacity', (0.9 - 0.6 * Math.sin(Math.PI * t)).toFixed(3)), tk);
+  }
+  await caption('武字不带撇', '写字的人有句口诀：「武」字不带撇。有人笑着说：那是刀已经收起来了。', tk);
+  await tween(1400 * M, t => { ghost.setAttribute('opacity', (0.9 * (1 - t)).toFixed(3)); lab.style.opacity = 1 - t; }, tk);
+  lg.remove();
+  await wait(500, tk);
+}
+
+/* ---------- 描字 ---------- */
+function guideBins(parent, pts) {
+  const bins = [];
+  for (let i = 1; i < pts.length; i++) {
+    const a = pts[i - 1], b = pts[i];
+    const len = Math.hypot(b[0] - a[0], b[1] - a[1]);
+    const n = Math.max(1, Math.round(len / 7));
+    for (let k = 0; k < n; k++) {
+      const t0 = k / n, t1 = (k + 1) / n;
+      const x1 = lerp(a[0], b[0], t0), y1 = lerp(a[1], b[1], t0);
+      const x2 = lerp(a[0], b[0], t1), y2 = lerp(a[1], b[1], t1);
+      bins.push({ x1, y1, x2, y2, el: el('path', { d: `M${x1.toFixed(2)} ${y1.toFixed(2)}L${x2.toFixed(2)} ${y2.toFixed(2)}` }, parent) });
+    }
+  }
+  return bins;
+}
+function segDist(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1, dy = y2 - y1;
+  const l2 = dx * dx + dy * dy || 1;
+  const u = clamp(((px - x1) * dx + (py - y1) * dy) / l2);
+  return Math.hypot(px - (x1 + u * dx), py - (y1 + u * dy));
+}
+
+async function sceneTrace(tk) {
+  await caption('描字 · 八笔', `跟着写一遍：${KAI_NAMES.join('、')}。`, tk);
+  progress(7);
+  vtitle('描字', '八笔');
+  Sound.pluck(NOTE.G5, 0.14, 3);
+  const kai = S.kai;
+  await tween(500 * M, t => { kai.wrap.style.opacity = (1 - t * 0.85).toFixed(3); }, tk);
+  const guideRoot = local(L.front);
+  const guide = el('g', { class: 'guide' }, guideRoot);
+  const bins = G.kai.strokes.flatMap(st => guideBins(guide, mmahPts(st.m)));
+  const need = Math.ceil(bins.length * 0.72);
+  const trailG = el('g', { class: 'trail', filter: 'url(#brush)' }, L.front);
+  hint('沿虚线描出「武」的八笔');
+  stage.classList.add('trace');
+  const covered = new Set();
+  const mark = (x, y) => bins.forEach((bin, i) => {
+    if (!covered.has(i) && segDist(x, y, bin.x1, bin.y1, bin.x2, bin.y2) < 8) { covered.add(i); bin.el.classList.add('hit'); }
+  });
+  const markSeg = (a, b) => {
+    const n = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / 2));
+    for (let i = 0; i <= n; i++) mark(lerp(a.x, b.x, i / n), lerp(a.y, b.y, i / n));
+  };
+  let drawing = false, pid = null, last = null, trail = null;
+  const down = e => {
+    drawing = true; pid = e.pointerId;
+    try { stage.setPointerCapture(pid); } catch {}
+    const sp = toStage(e);
+    trail = { el: el('path', null, trailG), d: `M${sp.x.toFixed(1)} ${sp.y.toFixed(1)}` };
+    trail.el.setAttribute('d', trail.d);
+    last = toLocal(e); mark(last.x, last.y);
+    Sound.brush(0.3);
+    e.preventDefault();
+  };
+  const move = e => {
+    if (!drawing || e.pointerId !== pid) return;
+    const sp = toStage(e);
+    trail.d += `L${sp.x.toFixed(1)} ${sp.y.toFixed(1)}`;
+    trail.el.setAttribute('d', trail.d);
+    const p = toLocal(e);
+    markSeg(last, p); last = p;
+  };
+  const up = e => { if (e.pointerId === pid) drawing = false; };
+  stage.addEventListener('pointerdown', down);
+  stage.addEventListener('pointermove', move);
+  stage.addEventListener('pointerup', up);
+  stage.addEventListener('pointercancel', up);
+  const off = () => {
+    stage.removeEventListener('pointerdown', down);
+    stage.removeEventListener('pointermove', move);
+    stage.removeEventListener('pointerup', up);
+    stage.removeEventListener('pointercancel', up);
+    stage.classList.remove('trace');
+  };
+  cleanups.push(off);
+  let seen = 0;
+  const done = await until(tk, () => covered.size >= need, {
+    idle: 9000, max: 45000,
+    busy: () => { const b = drawing || covered.size !== seen; seen = covered.size; return b; },
+  });
+  off(); hint(null);
+  S.interactions.push(done);
+  Sound.drum(0.35);
+  kai.remove();
+  S.kai = new Glyph(L.glyph, G.kai, { filter: 'brush' });
+  await S.kai.draw(tk, { per: done === 'user' ? 150 : 190, gap: 50, numbers: L.front });
+  bg(tween(500 * M, t => { guide.style.opacity = (1 - t).toFixed(3); trailG.style.opacity = (1 - t).toFixed(3); }, tk)
+    .then(() => { guideRoot.remove(); trailG.remove(); }));
+  await caption('描字 · 写好了', done === 'user' ? '写得好！武，威武的武，也是止戈的武。' : '武，威武的武，也是止戈的武。', tk);
+  await wait(900, tk);
+  const nums = S.kai.numG;
+  bg(tween(600 * M, t => { nums.style.opacity = (1 - t).toFixed(3); }, tk));
+  await wait(600, tk);
+}
+
+/* ---------- 终幕：五体卷轴 ---------- */
+const SCROLL = [
+  { key: 'jiagu', name: '甲骨文', era: '商', filterS: 'carveS', filter: 'carve', color: BONE_INK, tile: 'bone' },
+  { key: 'jinwen', name: '金文', era: '西周', filterS: 'castS', filter: 'cast', color: GOLD, tile: 'bronze' },
+  { key: 'seal', name: '小篆', era: '秦', filterS: 'brushS', filter: 'brush' },
+  { key: 'li', name: '隶书', era: '汉', filterS: 'brushS', filter: 'brush' },
+  { key: 'kai', name: '楷书', era: '魏晋以后', filterS: 'brushS', filter: 'brush', numbers: true },
+];
+
+function buildScroll() {
+  const g = el('g', { class: 'scroll' }, L.glyph);
+  const strip = el('rect', { fill: '#f8f2e4', stroke: '#d8cbb0', 'stroke-width': 1.5, filter: 'url(#shadow)' }, g);
+  const rollA = el('rect', { rx: 6 }, g), rollB = el('rect', { rx: 6 }, g);
+  const cells = SCROLL.map((info, i) => {
+    const c = el('g', { class: 'cell', role: 'button', tabindex: 0, 'aria-label': `${info.name}，重看笔画` }, g);
+    c.style.opacity = 0;
+    if (info.tile === 'bone') el('rect', { x: -58, y: -58, width: 116, height: 116, rx: 12, fill: 'url(#boneG)' }, c);
+    else if (info.tile === 'bronze') el('rect', { x: -58, y: -58, width: 116, height: 116, rx: 12, fill: 'url(#bronzeR)' }, c);
+    else el('rect', { x: -58, y: -58, width: 116, height: 116, rx: 12, fill: '#fbf6ea', stroke: '#e3d8c2', 'stroke-width': 1 }, c);
+    el('rect', { class: 'ring', x: -61, y: -61, width: 122, height: 122, rx: 14 }, c);
+    new Glyph(c, G[info.key], { x: -50, y: -50, s: 1, filter: info.filterS, color: info.color || INK }).showAll();
+    const nm = el('text', { class: 'nm', x: 0, y: 80 }, c); nm.textContent = info.name;
+    const er = el('text', { class: 'era', x: 0, y: 95 }, c); er.textContent = info.era;
+    c.addEventListener('click', () => zoom(i));
+    c.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); zoom(i); } });
+    return { g: c };
+  });
+  const words = el('text', { class: 'kai', 'text-anchor': 'middle', 'font-size': 30, fill: '#5a5246', 'letter-spacing': 6, 'font-family': 'Kaiti SC, STKaiti, KaiTi, serif' }, g);
+  words.textContent = '武术 · 威武 · 文武双全 · 止戈为武';
+  words.style.opacity = 0;
+  S.scroll = { g, strip, rollA, rollB, cells, words };
+  layoutScroll();
+}
+
+function layoutScroll() {
+  const sc = S.scroll;
+  const portrait = document.body.classList.contains('portrait');
+  sc.cells.forEach((c, i) => {
+    let cx, cy, k;
+    if (portrait) { cx = i < 3 ? 500 + (i - 1) * 215 : 500 + (i - 3.5) * 215; cy = i < 3 ? 225 : 535; k = 1.55; }
+    else { cx = 500 + (i - 2) * 175; cy = 380; k = 1.2; }
+    c.g.setAttribute('transform', `translate(${cx} ${cy}) scale(${k})`);
+  });
+  const set = (e, a) => { for (const k in a) e.setAttribute(k, a[k]); };
+  if (portrait) {
+    set(sc.strip, { x: 175, y: 115, width: 650, height: 615 });
+    set(sc.rollA, { x: 160, y: 93, width: 680, height: 22, fill: 'url(#woodGV)' });
+    set(sc.rollB, { x: 160, y: 730, width: 680, height: 22, fill: 'url(#woodGV)' });
+    set(sc.words, { x: 500, y: 790, 'font-size': 26 });
+  } else {
+    set(sc.strip, { x: 70, y: 280, width: 860, height: 250 });
+    set(sc.rollA, { x: 52, y: 264, width: 20, height: 282, fill: 'url(#woodG)' });
+    set(sc.rollB, { x: 928, y: 264, width: 20, height: 282, fill: 'url(#woodG)' });
+    set(sc.words, { x: 500, y: 600, 'font-size': 30 });
+  }
+}
+
+function zoom(i) {
+  if (S.zoomTk) return;
+  const info = SCROLL[i];
+  const tk = { dead: false };
+  S.zoomTk = tk;
+  hint(null);
+  Sound.init();
+  Sound.pluck([NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.D5][i]);
+  const z = el('g', { class: 'zoom' }, L.fx);
+  z.style.opacity = 0;
+  el('rect', { class: 'zbg', x: -1000, y: -1000, width: 3000, height: 3000 }, z);
+  if (info.tile === 'bone') el('ellipse', { cx: 500, cy: 400, rx: 300, ry: 290, fill: 'url(#boneG)' }, z);
+  if (info.tile === 'bronze') el('circle', { cx: 500, cy: 400, r: 310, fill: 'url(#bronzeR)' }, z);
+  const t = el('text', { class: 'zt', x: 500, y: 100 }, z); t.textContent = `${info.name} · ${info.era}`;
+  const s = el('text', { class: 'zs', x: 500, y: 700 }, z); s.textContent = '点击任意处返回';
+  const g = new Glyph(z, G[info.key], { filter: info.filter, color: info.color || INK });
+  const close = () => { tk.dead = true; z.remove(); if (S.zoomTk === tk) S.zoomTk = null; };
+  z.addEventListener('click', close);
+  bg((async () => {
+    await tween(300, v => { z.style.opacity = v; }, tk);
+    await g.draw(tk, { per: 200, gap: 50, numbers: info.numbers ? z : null, sound: info.key === 'jiagu' ? 'carve' : info.key === 'jinwen' ? 'cast' : 'brush' });
+  })());
+}
+
+async function sceneFinale(tk) {
+  await caption('武 · 三千年', '三千年前，「武」是扛着戈出征；两千六百年前，楚庄王从字里读出了「止戈」。', tk);
+  progress(8);
+  vtitle(null);
+  Sound.pluck(NOTE.D4, 0.2, 3);
+  Sound.pluck(NOTE.A4, 0.14, 3);
+  const kai = S.kai;
+  await tween(700 * M, t => { kai.wrap.style.opacity = (1 - t).toFixed(3); }, tk);
+  kai.remove();
+  L.front.replaceChildren();
+  buildScroll();
+  const notes = [NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.D5];
+  for (let i = 0; i < S.scroll.cells.length; i++) {
+    const c = S.scroll.cells[i].g;
+    Sound.pluck(notes[i], 0.14, 1.6);
+    await tween(300 * M, t => { c.style.opacity = t; }, tk, ease.out);
+  }
+  const words = S.scroll.words;
+  await tween(600 * M, t => { words.style.opacity = t; }, tk);
+  await caption('拿得起，放得下', '有力量拿起戈，也有智慧放下戈——这就是「武」。', tk);
+  hint('点击任一字形，重看它的笔画');
+  window.__wu.finishedAt = performance.now();
+  await wait(7000, tk);
+  hint(null);
+}
+
+const Timeline = {
+  scenes: [sceneGe, sceneJiagu, sceneJinwen, sceneZhiGe, sceneZhuan, sceneLi, sceneKai, sceneTrace, sceneFinale],
+  async play(tk) {
+    for (const scene of this.scenes) {
+      window.__wu.scene = scene.name;
+      await scene(tk);
+    }
+  },
+};
+
+async function begin() {
+  token.dead = true;
+  const tk = token = { dead: false };
+  capMinEnd = 0;
+  resetStage();
+  rand = mulberry32(20261015);
+  S.interactions = [];
+  window.__wu = { startedAt: performance.now(), interactions: S.interactions };
+  try {
+    await inkBloom(tk);
+    await Timeline.play(tk);
+  } catch (e) {
+    if (!(e instanceof Cancelled)) console.error(e);
+  }
+}
+
+/* ---------- 启动：首页大字「武」按笔顺写出，身后浮现历代字形 ---------- */
+paperTexture();
+buildLeiwen();
+const intro = { tk: { dead: false }, g: null };
+function placeIntro() {
+  if (!intro.g || intro.tk.dead) return;
+  const r = intro.g.g.getBoundingClientRect();
+  const box = $('#intro');
+  box.style.setProperty('--gTop', `${r.top}px`);
+  box.style.setProperty('--gBottom', `${r.bottom}px`);
+}
+async function introPlay(tk) {
+  const s = 4, x = 500 - 50 * s, y = 360 - 50 * s;
+  const ghostKeys = [['jiagu', BONE_INK], ['jinwen', '#8a6a33'], ['seal', INK], ['li', INK]];
+  const ghosts = ghostKeys.map(([k, color]) => new Glyph(L.back, G[k], { x: 500 - 50 * 5.2, y: 360 - 50 * 5.2, s: 5.2, filter: 'brush', color, opacity: 0 }).showAll());
+  const g = intro.g = new Glyph(L.glyph, G.kai, { x, y, s, filter: 'brush' });
+  placeIntro();
+  await inkBloom(tk);
+  await g.draw(tk, { per: 140, gap: 35, sound: null });
+  const st = el('g', null, L.front);
+  const inner = el('g', { filter: 'url(#stamp)' }, st);
+  el('rect', { x: -28, y: -28, width: 56, height: 56, rx: 3, fill: CINNABAR }, inner);
+  new Glyph(inner, G.seal, { x: -23, y: -23, s: 0.46, color: PAPER }).showAll();
+  const SX = x + 100 * s + 34, SY = y + 100 * s - 30;
+  await tween(420 * M, t => {
+    st.setAttribute('transform', `translate(${SX} ${SY}) scale(${lerp(1.8, 1, t).toFixed(3)}) rotate(${lerp(-10, -4, t).toFixed(2)})`);
+    st.style.opacity = t;
+  }, tk, ease.out);
+  const t0 = performance.now();
+  for (;;) {
+    const now = await frame(tk);
+    const t = (now - t0) / 1000;
+    if (!reduceMotion) {
+      const k = 1 + 0.012 * Math.sin(t * 1.4);
+      g.wrap.setAttribute('transform', `translate(500 360) scale(${k.toFixed(4)}) translate(-500 -360)`);
+    }
+    const cyc = 2.4, idx = Math.floor(t / cyc) % ghosts.length, ph = (t % cyc) / cyc;
+    ghosts.forEach((gh, i) => { gh.wrap.style.opacity = i === idx ? (0.1 * Math.sin(Math.PI * ph)).toFixed(3) : 0; });
+  }
+}
+
+// 浏览器验收脚本使用：楷书中线与局部坐标到屏幕坐标的换算
+window.__wuApi = {
+  medians: G.kai.strokes.map(st => mmahPts(st.m)),
+  localToScreen(x, y) {
+    const p = stage.createSVGPoint();
+    p.x = GX + x * GS; p.y = GY + y * GS;
+    const q = p.matrixTransform(stage.getScreenCTM());
+    return { x: q.x, y: q.y };
+  },
+};
+
+layout();
+addEventListener('resize', () => { layout(); placeIntro(); });
+bg(introPlay(intro.tk));
+
+$('#start').addEventListener('click', () => {
+  Sound.init(); Sound.pad();
+  intro.tk.dead = true;
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  begin();
+});
+$('#replay').addEventListener('click', () => { Sound.init(); begin(); });
+$('#mute').addEventListener('click', e => {
+  Sound.setMuted(!Sound.muted);
+  e.currentTarget.textContent = Sound.muted ? '声音 关' : '声音 开';
+});
+})();
+
+</script>
+</body>
+</html>

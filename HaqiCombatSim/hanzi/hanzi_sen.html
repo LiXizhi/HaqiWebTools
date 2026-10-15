@@ -1,0 +1,1724 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1512">
+<title>森 sēn · 从一棵树到一片海</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --bg:#0b1512;--paper:#f2e8d5;--jade:#76c893;--pine:#2d6a4f;--gold:#e9c46a;--amber:#d48c46;--cinnabar:#bc4739;--muted:#95a39b;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC",var(--serif);
+}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg)}
+body{color:var(--paper);font-family:var(--serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;touch-action:manipulation}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+#sampler{position:absolute;width:0;height:0;overflow:hidden}
+#glView,#inkView{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+#glView{z-index:1}
+#inkView{z-index:3}
+body.hold #inkView{cursor:pointer}
+body.drag #inkView{cursor:grab}
+body.drag.dragging #inkView{cursor:grabbing}
+body.wind #inkView{cursor:ew-resize}
+body.trace #inkView{cursor:crosshair}
+body.orbit #inkView{cursor:grab}
+
+#brand{position:fixed;left:max(16px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;
+  font-family:var(--kai);font-size:14px;letter-spacing:.22em;color:#cbbfa6;z-index:8;pointer-events:none;opacity:.88}
+#brand .seal{background:var(--cinnabar);color:#fbecd0;border-radius:3px;padding:5px 5px 4px;font-size:15px;line-height:1;letter-spacing:0;box-shadow:0 2px 8px rgba(188,71,57,.4)}
+
+#progress{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;list-style:none;
+  margin:0;padding:0;gap:clamp(8px,1.8vw,22px);z-index:10;opacity:0;transition:opacity .8s;pointer-events:none}
+#progress::before{content:"";position:absolute;top:2.5px;left:12px;right:12px;height:1px;background:rgba(242,232,213,.18)}
+body.started #progress{opacity:1}
+#progress li{position:relative;font-family:var(--kai);font-size:13px;color:#6c7d74;letter-spacing:.08em;padding-top:12px;transition:color .6s;white-space:nowrap}
+#progress li::before{content:"";position:absolute;top:0;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#34463d;transition:background .6s,transform .6s,box-shadow .6s}
+#progress li.done{color:#a8b8ae}#progress li.done::before{background:#8ab09a}
+#progress li.on{color:var(--paper)}#progress li.on::before{background:var(--jade);transform:scale(1.65);box-shadow:0 0 10px 2px rgba(118,200,147,.65)}
+
+#controls{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));display:flex;gap:8px;z-index:12;opacity:0;pointer-events:none;transition:opacity .6s}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{font-family:var(--kai);font-size:14px;letter-spacing:.16em;color:#e6dac2;background:rgba(12,24,20,.65);
+  border:1px solid rgba(118,200,147,.38);border-radius:4px;padding:6px 10px 6px 12px;cursor:pointer;backdrop-filter:blur(4px)}
+#controls button:hover{background:rgba(26,48,38,.85)}
+
+#seasonBar{position:fixed;left:50%;top:max(58px,calc(env(safe-area-inset-top) + 44px));transform:translateX(-50%);display:flex;gap:8px;z-index:11;opacity:0;pointer-events:none;transition:opacity .5s}
+#seasonBar.on{opacity:1;pointer-events:auto}
+#seasonBar button{font-family:var(--kai);font-size:13px;letter-spacing:.14em;color:#d8cbb2;background:rgba(12,24,20,.68);
+  border:1px solid rgba(233,196,106,.35);border-radius:16px;padding:4px 12px;cursor:pointer;backdrop-filter:blur(4px)}
+#seasonBar button.active{color:#102019;background:var(--gold);border-color:var(--gold);font-weight:600}
+
+#hint{position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;max-width:calc(100vw - 32px);box-sizing:border-box;
+  top:max(60px,calc(env(safe-area-inset-top) + 46px));text-align:center;color:#d9f5e3;opacity:0;transition:opacity .45s;pointer-events:none;z-index:9;
+  padding:7px 20px 8px;border:1px solid rgba(118,200,147,.48);border-radius:22px;background:rgba(9,20,16,.76);backdrop-filter:blur(4px)}
+#hint span{font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.12em}
+#hint.on{opacity:1;animation:breathe 1.8s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 0 0 6px rgba(118,200,147,.12),0 0 24px rgba(118,200,147,.22)}}
+
+#caption{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(900px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
+  transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:20px 22px 14px;
+  background:radial-gradient(ellipse at center,rgba(7,16,13,.82) 38%,rgba(7,16,13,0) 74%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{margin:0 0 8px;font-weight:400;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.42em;margin-left:.42em;color:var(--jade)}
+#caption.on #capTitle{animation:sealIn .8s cubic-bezier(.2,.7,.2,1) both}
+#capText{margin:0;font-family:var(--kai);font-size:clamp(19px,calc(1vw + 1.6vh),28px);line-height:1.7;color:var(--paper);letter-spacing:.06em;min-height:1.7em;
+  text-shadow:0 1px 12px rgba(0,0,0,.75)}
+#capText .ch{animation:inkIn 1.1s ease-out both;animation-delay:calc(var(--i) * 65ms + 100ms)}
+@keyframes inkIn{from{opacity:0;color:transparent;text-shadow:0 0 14px rgba(118,200,147,.9)}50%{opacity:1}to{color:var(--paper);text-shadow:0 1px 12px rgba(0,0,0,.75)}}
+@keyframes sealIn{from{opacity:0;letter-spacing:.9em;filter:blur(4px)}to{opacity:1;letter-spacing:.42em;filter:none}}
+
+.actions{margin-top:12px;display:flex;justify-content:center;gap:12px;pointer-events:auto;min-height:38px}
+.actions button{font-family:var(--kai);font-size:clamp(15px,2.1vh,18px);letter-spacing:.2em;padding:7px 20px 7px 24px;border-radius:20px;cursor:pointer;
+  color:#081611;background:linear-gradient(135deg,#8ce0a8,#52b788);border:none;box-shadow:0 4px 16px rgba(82,183,136,.35);transition:transform .2s,box-shadow .2s}
+.actions button:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(82,183,136,.5)}
+.actions button.holding{transform:scale(.96);background:linear-gradient(135deg,#e9c46a,#d48c46);color:#1a1208}
+#demo{background:rgba(12,26,21,.78);color:var(--paper);border:1px solid rgba(118,200,147,.45);box-shadow:none}
+#demo:hover{background:rgba(24,48,38,.9)}
+
+#note{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(8px,env(safe-area-inset-bottom));
+  font-size:11px;color:rgba(210,200,180,.42);letter-spacing:.08em;z-index:5;pointer-events:none}
+
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity .9s,transform .9s}
+#intro.off{opacity:0;transform:scale(1.04)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{bottom:calc(100% - var(--gTop,140px) + 12px);gap:6px}
+.introBottom{top:calc(var(--gBottom,540px) + 12px);gap:7px}
+.introTop .tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(14px,2.1vh,18px);letter-spacing:.3em;color:var(--jade)}
+.introTop .tag i{display:block;width:clamp(24px,5vw,60px);height:1px;background:currentColor;opacity:.55}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(28px,4.8vh,44px);line-height:1;color:var(--paper);letter-spacing:.06em}
+.mean{font-family:var(--kai);font-size:clamp(16px,2.4vh,21px);letter-spacing:.22em;color:var(--gold)}
+.sub{font-size:clamp(13px,1.9vh,16px);color:#b7c7be;letter-spacing:.1em;margin:2px 0 0;line-height:1.6}
+.btn-main{pointer-events:auto;margin-top:6px;font-family:var(--kai);font-size:clamp(18px,2.5vh,22px);letter-spacing:.4em;padding:10px 26px 10px 34px;
+  color:#081611;background:linear-gradient(135deg,#8ce0a8,#52b788);border:none;border-radius:24px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(82,183,136,.38);transition:transform .2s,box-shadow .2s;animation:btnGlow 2.4s ease-in-out infinite}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(82,183,136,.5)}
+@keyframes btnGlow{50%{box-shadow:0 6px 20px rgba(82,183,136,.38),0 0 0 8px rgba(118,200,147,.14)}}
+.meta{font-size:12px;color:#83968c;letter-spacing:.12em;margin:0}
+.rise{opacity:0;transform:translateY(12px);animation:rise .85s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
+@keyframes rise{to{opacity:1;transform:none}}
+
+@media (max-width:640px){
+  #brand{font-size:12px;letter-spacing:.14em;gap:7px}
+  #brand .seal{font-size:13px;padding:4px}
+  #progress{top:max(44px,calc(env(safe-area-inset-top) + 34px));gap:10px}
+  #progress li{font-size:11px;padding-top:10px}
+  #hint{top:max(78px,calc(env(safe-area-inset-top) + 66px));padding:6px 14px}
+  #seasonBar{top:max(78px,calc(env(safe-area-inset-top) + 66px))}
+  #controls button{font-size:12px;padding:5px 8px}
+  #note{display:none}
+}
+@media (max-height:560px){
+  .sub,.meta{display:none}
+  .introBottom{gap:4px}
+}
+@media (prefers-reduced-motion:reduce){
+  #hint.on,.btn-main{animation:none}
+  #capText .ch{animation-duration:.25s;animation-delay:0s}
+}
+</style>
+</head>
+<body>
+<svg id="sampler" aria-hidden="true"></svg>
+<canvas id="glView" aria-hidden="true"></canvas>
+<canvas id="inkView" role="img" aria-label="少年在荒原种下一棵木，双木并肩成林挡住风沙，春风吹起三木成森；三维苍松化作甲骨文与楷书「森」"></canvas>
+
+<div id="brand"><span class="seal">字</span>一字一故事 · 三维水墨篇</div>
+<ol id="progress" aria-hidden="true"><li>荒原</li><li>破土·木</li><li>相伴·林</li><li>参天·森</li><li>成字</li><li>写字</li><li>森罗万象</li></ol>
+<div id="controls"><button id="replay" type="button">重播</button><button id="mute" type="button">声音 开</button></div>
+<div id="seasonBar" role="group" aria-label="四时森林意境">
+  <button type="button" data-season="0" class="active">春翠</button>
+  <button type="button" data-season="1">夏萤</button>
+  <button type="button" data-season="2">秋金</button>
+  <button type="button" data-season="3">冬雪</button>
+</div>
+<div id="hint" role="status"></div>
+<section id="caption" aria-live="polite" aria-atomic="true">
+  <h2 id="capTitle"></h2><p id="capText"></p>
+  <div class="actions"><button id="action" type="button" hidden></button><button id="demo" type="button" hidden>看示范</button></div>
+</section>
+<div id="note">古字形为艺术示意 · 基础「木」部首笔顺核对自 Make Me a Hanzi (Arphic PL)</div>
+
+<div id="intro">
+  <div class="introTop"><div class="tag rise" style="--d:.2s"><i></i>今天认识一个汉字<i></i></div></div>
+  <div class="introBottom">
+    <div class="pinyin rise" style="--d:1.8s">sēn</div>
+    <div class="mean rise" style="--d:2.0s">木 · 林 · 森</div>
+    <p class="sub rise" style="--d:2.2s">独木生根，双木相依，三木成海</p>
+    <button id="start" class="btn-main rise" style="--d:2.4s" type="button">开始</button>
+    <p class="meta rise" style="--d:2.6s">3D 水墨立体剧场 · 三次互动与十二笔描字 · 建议开启声音</p>
+  </div>
+</div>
+<script type="module">
+import * as THREE from 'https://cdn.keepwork.com/keepwork/cdn/vendor/three/three.module.js';
+
+const $ = s => document.querySelector(s);
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = t => { t = clamp(t); return t * t * (3 - 2 * t); };
+const bump = (s, c, w) => Math.exp(-(((s - c) / w) ** 2));
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+  lin: t => t,
+};
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const M = reduceMotion ? 0.55 : 1;
+let rand = mulberry32(20261015);
+
+/* ---------- 虚拟时钟：支持页面隐藏暂停与 Playwright 时钟快进 ---------- */
+class Cancelled extends Error {}
+let clock = 0, DT = 16;
+let waiters = [];
+let token = { dead: true };
+function frame(tk) { return new Promise((res, rej) => waiters.push({ tk, res, rej })); }
+async function wait(ms, tk) { const t0 = clock; while (clock - t0 < ms) await frame(tk); }
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  if (ms <= 0) { fn(1); return; }
+  const t0 = clock;
+  for (;;) {
+    await frame(tk);
+    const t = clamp((clock - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+
+/* ---------- WebAudio 实时合成：古琴五声、春水滴落、松涛、竹笛 ---------- */
+const NOTE = { C3: 130.81, G3: 196.00, C4: 261.63, D4: 293.66, E4: 329.63, G4: 392.00, A4: 440.00, C5: 523.25, D5: 587.33, E5: 659.26, G5: 783.99, A5: 880.00, C6: 1046.50 };
+const PENTA = [NOTE.C4, NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.C5, NOTE.D5, NOTE.E5, NOTE.G5, NOTE.A5, NOTE.C6, NOTE.D5];
+const Sound = {
+  ctx: null, master: null, wet: null, noise: null, muted: false, padOn: false, waterG: null, padF: null,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { this.ctx = new C(); } catch { return; }
+    const c = this.ctx;
+    this.master = c.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.58;
+    this.master.connect(c.destination);
+    const d = c.createDelay(1); d.delayTime.value = 0.34;
+    const fb = c.createGain(); fb.gain.value = 0.36;
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2100;
+    this.wet = c.createGain(); this.wet.gain.value = 0.34;
+    this.wet.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(this.master);
+    const len = c.sampleRate * 2;
+    const buf = c.createBuffer(1, len, c.sampleRate);
+    const data = buf.getChannelData(0);
+    const r = mulberry32(19);
+    for (let i = 0; i < len; i++) data[i] = r() * 2 - 1;
+    this.noise = buf;
+  },
+  setMuted(m) {
+    this.muted = m;
+    if (this.master) this.master.gain.setTargetAtTime(m ? 0 : 0.58, this.ctx.currentTime, 0.05);
+  },
+  out(node, wet = true) { node.connect(this.master); if (wet) node.connect(this.wet); },
+  pluck(f, vol = 0.15, dur = 2.5) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.014);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(f * 5.5, t);
+    lp.frequency.exponentialRampToValueAtTime(f * 1.25, t + dur * 0.65);
+    lp.connect(g); this.out(g);
+    for (const [m, type, a] of [[1, 'triangle', 1], [2.002, 'sine', 0.34], [3.01, 'sine', 0.12]]) {
+      const o = c.createOscillator(); o.type = type;
+      o.frequency.setValueAtTime(f * m * 1.01, t);
+      o.frequency.exponentialRampToValueAtTime(f * m, t + 0.1);
+      const og = c.createGain(); og.gain.value = a;
+      o.connect(og); og.connect(lp); o.start(t); o.stop(t + dur + 0.05);
+    }
+  },
+  bell(f, vol = 0.09, dur = 3.2) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    for (const [m, a, dd] of [[1, 1, 1], [2.756, 0.32, 0.5], [5.4, 0.11, 0.25], [0.5, 0.2, 1.2]]) {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f * m;
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol * a, t + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur * dd);
+      o.connect(g); this.out(g); o.start(t); o.stop(t + dur * dd + 0.05);
+    }
+  },
+  breeze(dur = 1.4, freq = 900, vol = 0.08) {
+    const c = this.ctx; if (!c || !this.noise) return;
+    const t = c.currentTime;
+    const s = c.createBufferSource(); s.buffer = this.noise;
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 1.2;
+    bp.frequency.setValueAtTime(freq * 0.5, t);
+    bp.frequency.exponentialRampToValueAtTime(freq * 1.6, t + dur * 0.45);
+    bp.frequency.exponentialRampToValueAtTime(freq * 0.7, t + dur);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + dur * 0.28);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(bp); bp.connect(g); this.out(g, true);
+    s.start(t, rand() * 1.2); s.stop(t + dur + 0.05);
+  },
+  water(on) {
+    const c = this.ctx; if (!c || !this.noise) return;
+    if (!this.waterG) {
+      const s = c.createBufferSource(); s.buffer = this.noise; s.loop = true;
+      const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1150; bp.Q.value = 0.85;
+      this.waterG = c.createGain(); this.waterG.gain.value = 0;
+      s.connect(bp); bp.connect(this.waterG); this.out(this.waterG, true); s.start();
+    }
+    this.waterG.gain.setTargetAtTime(on ? 0.065 : 0, c.currentTime, on ? 0.12 : 0.2);
+  },
+  pad() {
+    const c = this.ctx; if (!c || this.padOn) return;
+    this.padOn = true;
+    const g = c.createGain(); g.gain.value = 0;
+    g.gain.setTargetAtTime(0.042, c.currentTime, 2.2);
+    this.padF = c.createBiquadFilter(); this.padF.type = 'lowpass'; this.padF.frequency.value = 360;
+    for (const [f, type] of [[NOTE.C3 / 2, 'sine'], [NOTE.C3, 'triangle'], [NOTE.G3, 'sine'], [NOTE.E4 * 0.5, 'triangle']]) {
+      const o = c.createOscillator(); o.type = type; o.frequency.value = f;
+      o.connect(this.padF); o.start();
+    }
+    this.padF.connect(g); g.connect(this.master);
+  },
+  warm(k) { if (this.padF && this.ctx) this.padF.frequency.setTargetAtTime(360 + 1100 * k, this.ctx.currentTime, 1.4); },
+};
+
+/* ---------- 画布、2D 视图坐标与 Three.js 3D 舞台 ---------- */
+const glCanvas = $('#glView');
+const cvs = $('#inkView'), ctx = cvs.getContext('2d');
+let SW = 1, SH = 1, DPR = 1, portrait = false;
+const cam2D = { x: 820, y: 520, w: 1500, h: 900, pw: 900, pcy: 0.45 };
+const CV = { x: 0, y: 0, k: 1, cy: 0 };
+
+// 3D 相机预设：x,y,z 为相机位置，tx,ty,tz 为观察目标，fov 为视角
+const CAM3D = {
+  intro:    { x: 0,    y: 4.2, z: 18.5, tx: 0,    ty: 1.8,  tz: 0,    fov: 38, pfov: 52 },
+  barren:   { x: -1.6, y: 3.2, z: 15.2, tx: -0.8, ty: 1.2,  tz: 0.2,  fov: 37, pfov: 50 },
+  seed:     { x: -1.4, y: 1.8, z: 13.8, tx: -1.4, ty: 1.15, tz: 0.5,  fov: 38, pfov: 52 },
+  twin:     { x: 0.1,  y: 2.2, z: 15.0, tx: 0.1,  ty: 1.45, tz: 0.5,  fov: 38, pfov: 52 },
+  wind:     { x: 0.0,  y: 5.2, z: 19.5, tx: 0.0,  ty: 2.4,  tz: -1.5, fov: 40, pfov: 54 },
+  forest:   { x: 0.0,  y: 7.4, z: 23.0, tx: 0.0,  ty: 2.8,  tz: -2.0, fov: 42, pfov: 56 },
+  glyph:    { x: 0.0,  y: 3.4, z: 16.5, tx: 0.0,  ty: 2.5,  tz: -1.0, fov: 36, pfov: 48 },
+  finale:   { x: 0.0,  y: 8.0, z: 24.0, tx: 0.0,  ty: 2.4,  tz: -1.5, fov: 42, pfov: 56 },
+};
+const curCam3D = { ...CAM3D.intro };
+
+let renderer = null, scene = null, camera = null;
+let matGround = null, matUnder = null, matFoliage = null, matTrunk = null, matRoot = null, matRay = null, matMoon = null;
+let ambientL = null, sunL = null, rimL = null, rootLight = null;
+let heroTrees = [], bgTrees = [], godRays = [], birds = [], clouds = [];
+let boyGroup = null, seedMesh = null, waterStream = null, particleSys = null;
+const worldGroup = new THREE.Group();
+
+const SEASONS = [
+  { name: '春翠', skyTop: '#081813', skyBot: '#1c3b2e', groundSand: '#7d6340', groundLush: '#2d5a42', leafA: '#40916c', leafB: '#74c69d', ray: '#e9c46a', fog: '#122820' },
+  { name: '夏萤', skyTop: '#050e18', skyBot: '#102838', groundSand: '#6e583b', groundLush: '#1e4438', leafA: '#2d6a4f', leafB: '#52b788', ray: '#a8f0c6', fog: '#0b1d26' },
+  { name: '秋金', skyTop: '#1a110b', skyBot: '#3b2416', groundSand: '#8a6842', groundLush: '#6b4c2b', leafA: '#d48c46', leafB: '#e9c46a', ray: '#ffd180', fog: '#261810' },
+  { name: '冬雪', skyTop: '#0d1520', skyBot: '#243447', groundSand: '#6e6a64', groundLush: '#5c7382', leafA: '#8fa8b8', leafB: '#dce8f0', ray: '#c8e0f4', fog: '#182432' },
+];
+
+function createTreeUnit(scale = 1, isHero = false) {
+  const g = new THREE.Group();
+  const trunkG = new THREE.Group();
+  const mainGeo = new THREE.CylinderGeometry(0.11 * scale, 0.24 * scale, 2.3 * scale, 10);
+  mainGeo.translate(0, 1.15 * scale, 0);
+  const mainMesh = new THREE.Mesh(mainGeo, matTrunk);
+  mainMesh.castShadow = true;
+  trunkG.add(mainMesh);
+
+  // 左右迎客松侧枝与侧冠（仅主松带精细侧枝，避免背景松林穿出裸枝）
+  const brL = new THREE.Group();
+  const brR = new THREE.Group();
+  if (isHero) {
+    const bGeo = new THREE.CylinderGeometry(0.045 * scale, 0.08 * scale, 0.85 * scale, 8);
+    bGeo.translate(0, 0.42 * scale, 0);
+    const bMeshL = new THREE.Mesh(bGeo, matTrunk);
+    const bCapL = new THREE.Mesh(new THREE.ConeGeometry(0.48 * scale, 0.42 * scale, 8), matFoliage);
+    bCapL.position.set(0, 0.82 * scale, 0);
+    brL.add(bMeshL, bCapL);
+    brL.position.set(0, 1.05 * scale, 0.05 * scale);
+    brL.rotation.z = 0.72;
+    trunkG.add(brL);
+
+    const bMeshR = new THREE.Mesh(bGeo, matTrunk);
+    const bCapR = new THREE.Mesh(new THREE.ConeGeometry(0.5 * scale, 0.44 * scale, 8), matFoliage);
+    bCapR.position.set(0, 0.82 * scale, 0);
+    brR.add(bMeshR, bCapR);
+    brR.position.set(0, 1.02 * scale, 0.05 * scale);
+    brR.rotation.z = -0.72;
+    trunkG.add(brR);
+  }
+  g.add(trunkG);
+
+  // 树冠：三层古典水墨青绿松盖
+  const crownG = new THREE.Group();
+  const layers = [
+    { y: 1.95 * scale, r: 1.22 * scale, h: 1.02 * scale, x: 0 },
+    { y: 2.58 * scale, r: 0.98 * scale, h: 0.92 * scale, x: -0.08 * scale },
+    { y: 3.14 * scale, r: 0.70 * scale, h: 0.80 * scale, x: 0.06 * scale },
+  ];
+  layers.forEach((l, idx) => {
+    const cone = new THREE.ConeGeometry(l.r, l.h, 9);
+    const m = new THREE.Mesh(cone, matFoliage);
+    m.position.set(l.x, l.y, (idx - 1) * 0.06 * scale);
+    m.castShadow = true;
+    m.receiveShadow = true;
+    crownG.add(m);
+  });
+  g.add(crownG);
+
+  // 地下根系（对应甲骨文「木」下半部向大地深扎的树根）
+  const rootG = new THREE.Group();
+  if (isHero) {
+    const dirs = [
+      new THREE.Vector3(-1.25, -1.45, 0.2),
+      new THREE.Vector3(1.28, -1.45, -0.15),
+      new THREE.Vector3(-0.52, -1.65, -0.45),
+      new THREE.Vector3(0.55, -1.62, 0.42),
+    ];
+    dirs.forEach(d => {
+      const curve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, 0.05, 0),
+        new THREE.Vector3(d.x * 0.35 * scale, d.y * 0.42 * scale, d.z * 0.4 * scale),
+        new THREE.Vector3(d.x * 0.78 * scale, d.y * 0.78 * scale, d.z * 0.8 * scale),
+        new THREE.Vector3(d.x * scale, d.y * scale, d.z * scale),
+      ]);
+      const rGeo = new THREE.TubeGeometry(curve, 12, 0.065 * scale, 6, false);
+      const rMesh = new THREE.Mesh(rGeo, matRoot);
+      rootG.add(rMesh);
+    });
+  }
+  g.add(rootG);
+
+  g.userData = { trunkG, crownG, rootG, brL, brR, scale, isHero };
+  return g;
+}
+
+function updateTreeGrowth(tree, growVal, rootVal = growVal, swayAngle = 0, trimRight = 0) {
+  const { trunkG, crownG, rootG, brR, isHero } = tree.userData;
+  const g = clamp(growVal), r = clamp(rootVal);
+  tree.visible = g > 0.005 || r > 0.005;
+  if (!tree.visible) return;
+  const tg = smooth(clamp(g * 1.25));
+  const cg = smooth(clamp((g - 0.22) / 0.78));
+  trunkG.scale.set(Math.max(0.001, tg), Math.max(0.001, tg), Math.max(0.001, tg));
+  crownG.scale.set(Math.max(0.001, cg), Math.max(0.001, cg), Math.max(0.001, cg));
+  rootG.scale.set(Math.max(0.001, r), Math.max(0.001, r), Math.max(0.001, r));
+  trunkG.rotation.z = swayAngle;
+  crownG.rotation.z = swayAngle * 1.22;
+  crownG.position.x = -Math.sin(swayAngle) * 1.3 * tree.userData.scale;
+  if (isHero) {
+    // 左木谦让右木时，右侧迎客枝（对应「捺」）收敛化为短「点」
+    const s = lerp(1, 0.48, trimRight);
+    brR.scale.set(s, s, s);
+    brR.rotation.z = lerp(-0.72, -0.38, trimRight);
+  }
+}
+
+function init3D() {
+  try {
+    renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.15;
+  } catch (err) {
+    console.warn('WebGL fallback to 2D canvas:', err);
+    return;
+  }
+
+  scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2('#122820', 0.022);
+  camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 120);
+  scene.add(worldGroup);
+
+  ambientL = new THREE.HemisphereLight('#e9f5ed', '#1b2a22', 1.7);
+  scene.add(ambientL);
+
+  sunL = new THREE.DirectionalLight('#fff2d6', 2.45);
+  sunL.position.set(8, 16, 10);
+  sunL.castShadow = true;
+  sunL.shadow.mapSize.set(1024, 1024);
+  Object.assign(sunL.shadow.camera, { left: -16, right: 16, top: 16, bottom: -10, near: 1, far: 45 });
+  sunL.shadow.bias = -0.0005;
+  scene.add(sunL);
+
+  rimL = new THREE.DirectionalLight('#74c69d', 1.2);
+  rimL.position.set(-10, 6, -8);
+  scene.add(rimL);
+
+  rootLight = new THREE.PointLight('#f4a261', 0, 8);
+  rootLight.position.set(-1.3, -0.9, 1.4);
+  worldGroup.add(rootLight);
+
+  matGround = new THREE.MeshStandardMaterial({ color: '#7d6340', roughness: 0.88, metalness: 0.05, transparent: true, opacity: 1 });
+  matUnder = new THREE.MeshStandardMaterial({ color: '#2b1e14', roughness: 0.95, transparent: true, opacity: 0.92 });
+  matTrunk = new THREE.MeshStandardMaterial({ color: '#4a3525', roughness: 0.85, metalness: 0.05 });
+  matFoliage = new THREE.MeshStandardMaterial({ color: '#40916c', roughness: 0.66, metalness: 0.06, emissive: '#123524', emissiveIntensity: 0.24 });
+  matRoot = new THREE.MeshStandardMaterial({ color: '#e9c46a', roughness: 0.45, emissive: '#d48c46', emissiveIntensity: 0.7 });
+  matRay = new THREE.MeshBasicMaterial({ color: '#e9c46a', transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending });
+  matMoon = new THREE.MeshBasicMaterial({ color: '#f6ebd1', transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending });
+
+  // 远山背后的东方团扇满月光晕（衬托山巅品字三松剪影）
+  const moonMesh = new THREE.Mesh(new THREE.CircleGeometry(4.6, 48), matMoon);
+  moonMesh.position.set(0, 5.2, -11.5);
+  worldGroup.add(moonMesh);
+
+  // 立体山形地貌与地底剖面层
+  const hillGeo = new THREE.CylinderGeometry(11.5, 13.2, 2.6, 48, 4);
+  const pos = hillGeo.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const vx = pos.getX(i), vy = pos.getY(i), vz = pos.getZ(i);
+    if (vy > 0) {
+      const dist = Math.hypot(vx, vz);
+      const mound = Math.max(0, 1 - dist / 11.5) * 1.45 + (vz < -0.5 ? Math.max(0, 1 - Math.hypot(vx, vz + 2.2) / 5.5) * 1.85 : 0);
+      pos.setY(i, mound + 0.16 * Math.sin(vx * 0.7) * Math.cos(vz * 0.7));
+    } else {
+      pos.setY(i, -2.5);
+    }
+  }
+  hillGeo.computeVertexNormals();
+  const hillMesh = new THREE.Mesh(hillGeo, matGround);
+  hillMesh.receiveShadow = true;
+  worldGroup.add(hillMesh);
+
+  // 前方地底透明琥珀剖面窗，供第一幕清晰看见地下盘根
+  const cutGeo = new THREE.BoxGeometry(8.6, 2.4, 3.2);
+  const cutMesh = new THREE.Mesh(cutGeo, matUnder);
+  cutMesh.position.set(-0.2, -1.22, 1.1);
+  worldGroup.add(cutMesh);
+
+  // 远山层峦剪影（3D 水墨群峰背景）
+  const peakPositions = [
+    [-12, 3.8, -14, 7.5, 9.0], [-4, 5.2, -16, 8.8, 11.5], [6, 4.6, -15, 8.2, 10.2], [13, 3.5, -13, 7.0, 8.4],
+  ];
+  peakPositions.forEach(([px, py, pz, r, h], idx) => {
+    const pMat = new THREE.MeshStandardMaterial({
+      color: idx % 2 ? '#1c3b2e' : '#152c23', roughness: 0.9, transparent: true, opacity: 0.78
+    });
+    const pMesh = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), pMat);
+    pMesh.position.set(px, py - 1.2, pz);
+    pMesh.rotation.y = idx * 0.9;
+    worldGroup.add(pMesh);
+  });
+
+  // 三棵核心主松：0=左木（破土孤木），1=右木（相伴成林），2=山巅主松（三木成森）
+  const t0 = createTreeUnit(1.12, true);
+  t0.position.set(-1.55, 0.95, 0.6);
+  const t1 = createTreeUnit(1.15, true);
+  t1.position.set(4.5, 0.88, 0.55);
+  const t2 = createTreeUnit(1.38, true);
+  t2.position.set(0.0, 2.65, -2.1);
+  heroTrees = [t0, t1, t2];
+  heroTrees.forEach(t => { updateTreeGrowth(t, 0, 0); worldGroup.add(t); });
+
+  // 种子与浇灌水柱
+  seedMesh = new THREE.Mesh(
+    new THREE.OctahedronGeometry(0.24, 1),
+    new THREE.MeshStandardMaterial({ color: '#e9c46a', emissive: '#d48c46', emissiveIntensity: 0.8, roughness: 0.35 })
+  );
+  seedMesh.position.set(-1.55, 0.95, 0.6);
+  worldGroup.add(seedMesh);
+
+  const streamGeo = new THREE.CylinderGeometry(0.03, 0.08, 2.2, 8);
+  waterStream = new THREE.Mesh(
+    streamGeo,
+    new THREE.MeshBasicMaterial({ color: '#90e0ef', transparent: true, opacity: 0 })
+  );
+  waterStream.position.set(-1.55, 2.0, 0.6);
+  worldGroup.add(waterStream);
+
+  // 种树少年阿木（稳稳站在山坡上，带斗笠与手臂）
+  boyGroup = new THREE.Group();
+  const robeMat = new THREE.MeshStandardMaterial({ color: '#3d5a45', roughness: 0.8 });
+  const skinMat = new THREE.MeshStandardMaterial({ color: '#f2d5b8', roughness: 0.7 });
+  const hatMat = new THREE.MeshStandardMaterial({ color: '#c89f65', roughness: 0.85 });
+  const bodyM = new THREE.Mesh(new THREE.ConeGeometry(0.36, 1.05, 10), robeMat);
+  bodyM.position.y = 0.52;
+  const headM = new THREE.Mesh(new THREE.SphereGeometry(0.21, 12, 12), skinMat);
+  headM.position.y = 1.16;
+  const hatM = new THREE.Mesh(new THREE.ConeGeometry(0.52, 0.24, 14), hatMat);
+  hatM.position.y = 1.34;
+  boyGroup.add(bodyM, headM, hatM);
+  boyGroup.position.set(-2.85, 1.12, 0.95);
+  worldGroup.add(boyGroup);
+
+  // 漫山遍野的 76 棵背景松林（第三幕「万木成森」波浪式生长）
+  const r = mulberry32(303);
+  for (let i = 0; i < 76; i++) {
+    const ang = r() * Math.PI * 2;
+    const rad = 2.6 + r() * 8.2;
+    const tx = Math.cos(ang) * rad;
+    const tz = Math.sin(ang) * rad - 1.2;
+    if (Math.abs(tx) < 2.8 && tz > -1.2 && tz < 3.2) continue;
+    const distCenter = Math.hypot(tx, tz);
+    const ty = Math.max(0, 1 - distCenter / 11.5) * 1.35 + (tz < -0.5 ? Math.max(0, 1 - Math.hypot(tx, tz + 2.2) / 5.5) * 1.65 : 0);
+    const sc = 0.52 + r() * 0.68;
+    const bt = createTreeUnit(sc, false);
+    bt.position.set(tx, ty - 0.1, tz);
+    bt.rotation.y = r() * 6.28;
+    bt.userData.delay = clamp((distCenter - 1.8) / 9.5);
+    updateTreeGrowth(bt, 0, 0);
+    worldGroup.add(bt);
+    bgTrees.push(bt);
+  }
+
+  // 丁达尔森林体积光柱（God Rays）
+  const rayPositions = [[-2.4, 5.5, -1.2, 0.26], [0.2, 6.2, -2.2, 0.18], [2.8, 5.4, -0.8, 0.22], [-0.9, 5.8, 1.0, 0.2]];
+  rayPositions.forEach(([rx, ry, rz, rotZ]) => {
+    const rGeo = new THREE.ConeGeometry(1.8, 11, 16, 1, true);
+    const rMesh = new THREE.Mesh(rGeo, matRay);
+    rMesh.position.set(rx, ry, rz);
+    rMesh.rotation.z = rotZ;
+    rMesh.rotation.x = -0.12;
+    worldGroup.add(rMesh);
+    godRays.push(rMesh);
+  });
+
+  // 林间飞鸟
+  const birdMat = new THREE.MeshBasicMaterial({ color: '#f8f9fa', side: THREE.DoubleSide });
+  for (let i = 0; i < 9; i++) {
+    const bg = new THREE.Group();
+    const wGeo = new THREE.PlaneGeometry(0.32, 0.14);
+    const wL = new THREE.Mesh(wGeo, birdMat); wL.position.x = -0.15;
+    const wR = new THREE.Mesh(wGeo, birdMat); wR.position.x = 0.15;
+    bg.add(wL, wR);
+    bg.userData = { wL, wR, phase: i * 0.8, rad: 4.5 + (i % 3) * 1.8, y: 4.2 + (i % 4) * 0.65, speed: 0.45 + (i % 3) * 0.12 };
+    bg.visible = false;
+    worldGroup.add(bg);
+    birds.push(bg);
+  }
+
+  // 3D 悬浮粒子（风沙 / 萤火 / 松针灵气）
+  const pCount = 420;
+  const pPos = new Float32Array(pCount * 3);
+  for (let i = 0; i < pCount; i++) {
+    pPos[i * 3] = (r() - 0.5) * 24;
+    pPos[i * 3 + 1] = r() * 9 - 1;
+    pPos[i * 3 + 2] = (r() - 0.5) * 18;
+  }
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+  const pMat = new THREE.PointsMaterial({ color: '#e9c46a', size: 0.14, transparent: true, opacity: 0.65, blending: THREE.AdditiveBlending });
+  particleSys = new THREE.Points(pGeo, pMat);
+  worldGroup.add(particleSys);
+}
+function frameW(v) { return portrait ? (v.pw ?? v.w * 0.62) : v.w; }
+function updateView() {
+  const usableH = SH * (portrait ? 0.62 : 0.78);
+  CV.k = Math.min(SW / frameW(cam2D), usableH / cam2D.h);
+  CV.cy = SH * (portrait ? cam2D.pcy : 0.46);
+  let dx = 0, dy = 0;
+  if (!reduceMotion && W.drift) { dx = Math.sin(clock * 0.00022) * 5 * W.drift; dy = Math.sin(clock * 0.00017 + 1) * 3.5 * W.drift; }
+  CV.x = cam2D.x + dx; CV.y = cam2D.y + dy;
+}
+function setCam(c) {
+  const k = CV.k;
+  c.setTransform(DPR * k, 0, 0, DPR * k, DPR * (SW / 2 - CV.x * k), DPR * (CV.cy - CV.y * k));
+}
+function toWorld(cx, cy) { return { x: (cx - SW / 2) / CV.k + CV.x, y: (cy - CV.cy) / CV.k + CV.y }; }
+function toScreen(x, y) { return { x: (x - CV.x) * CV.k + SW / 2, y: (y - CV.y) * CV.k + CV.cy }; }
+function world3DToScreen(vx, vy, vz) {
+  if (!camera) return toScreen(820 + vx * 85, 520 - vy * 85);
+  const v = new THREE.Vector3(vx, vy, vz);
+  v.applyMatrix4(worldGroup.matrixWorld);
+  v.project(camera);
+  return { x: (v.x * 0.5 + 0.5) * SW, y: (-v.y * 0.5 + 0.5) * SH };
+}
+async function cam3DTo(preset, ms, tk, ez = ease.inOut) {
+  const from = { ...curCam3D };
+  const to = { ...preset };
+  await tween(ms, t => {
+    for (const k of ['x', 'y', 'z', 'tx', 'ty', 'tz', 'fov', 'pfov']) curCam3D[k] = lerp(from[k], to[k], t);
+  }, tk, ez);
+}
+
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  SW = innerWidth; SH = innerHeight;
+  portrait = SW / SH < 0.85;
+  document.body.classList.toggle('portrait', portrait);
+  cvs.width = Math.round(SW * DPR);
+  cvs.height = Math.round(SH * DPR);
+  if (renderer && camera) {
+    renderer.setSize(SW, SH, false);
+    camera.aspect = SW / Math.max(1, SH);
+    camera.updateProjectionMatrix();
+  }
+}
+
+/* ---------- 字形：甲骨文「森」与楷书「森」12 笔逐点对应与平滑变形 ---------- */
+const NSVG = 'http://www.w3.org/2000/svg';
+const samplerPath = document.createElementNS(NSVG, 'path');
+$('#sampler').appendChild(samplerPath);
+const N = 64;
+function resample(d) {
+  samplerPath.setAttribute('d', d);
+  const len = samplerPath.getTotalLength();
+  const pts = [];
+  for (let i = 0; i <= N; i++) { const p = samplerPath.getPointAtLength(len * i / N); pts.push([p.x, p.y]); }
+  return pts;
+}
+const PROF = {
+  carve: s => 0.38 + 0.62 * Math.pow(Math.sin(Math.PI * s), 0.5),
+  h: s => 0.82 + 0.42 * bump(s, 0.04, 0.06) + 0.36 * bump(s, 0.95, 0.05),
+  v: s => 0.92 + 0.3 * bump(s, 0.03, 0.05) + 0.14 * bump(s, 0.96, 0.04),
+  pie: s => (1.14 - 0.92 * s) + 0.24 * bump(s, 0.03, 0.06),
+  na: s => 0.45 + 0.88 * Math.pow(s, 0.65) - 0.35 * clamp((s - 0.86) / 0.14),
+  dot: s => 0.5 + 0.82 * Math.sin(Math.PI * Math.min(1, 0.15 + s * 0.8)),
+};
+
+// 楷书「森」十二画：上木（1-4）+ 左下木（5-8，末笔捺变点以相让）+ 右下木（9-12）
+// 基础「木」笔顺（横、竖、撇、捺）与 Make Me a Hanzi (data/adventure/hanzi/strokes.json) 完全一致
+const MODERN = [
+  // 上「木」
+  { d: 'M30 22 L70 19', p: 'h', w: 4.1, name: '横（上木）' },
+  { d: 'M50 8 L50 44', p: 'v', w: 4.3, name: '竖（上木）' },
+  { d: 'M48 21 Q36 33 20 42', p: 'pie', w: 4.2, name: '撇（上木）' },
+  { d: 'M52 21 Q64 32 80 41', p: 'na', w: 4.3, name: '捺（上木）' },
+  // 左下「木」（捺变点）
+  { d: 'M14 58 L46 55', p: 'h', w: 3.9, name: '横（左木）' },
+  { d: 'M32 45 L32 90', p: 'v', w: 4.2, name: '竖（左木）' },
+  { d: 'M30 57 Q21 72 10 85', p: 'pie', w: 4.0, name: '撇（左木）' },
+  { d: 'M34 60 Q41 65 45 72', p: 'dot', w: 4.4, name: '点（左木谦让）' },
+  // 右下「木」
+  { d: 'M52 57 L86 54', p: 'h', w: 4.0, name: '横（右木）' },
+  { d: 'M68 44 L68 91', p: 'v', w: 4.3, name: '竖（右木）' },
+  { d: 'M66 56 Q57 72 45 84', p: 'pie', w: 4.0, name: '撇（右木）' },
+  { d: 'M70 56 Q80 72 92 85', p: 'na', w: 4.4, name: '捺（右木）' },
+];
+
+// 甲骨文「森」示意：三株「上枝下根」的古木呈品字排列，与楷书 12 笔逐一对应
+const ORACLE = [
+  // 上古木：上弯枝、主干、左根、右根
+  'M33 15 Q50 25 67 15',
+  'M50 7 L50 43',
+  'M50 28 Q39 36 25 43',
+  'M50 28 Q61 36 75 43',
+  // 左下古木：上弯枝、主干、左根、右短根
+  'M18 52 Q32 61 45 52',
+  'M32 45 L32 89',
+  'M32 69 Q22 79 12 87',
+  'M32 69 Q39 74 44 80',
+  // 右下古木：上弯枝、主干、左根、右根
+  'M54 52 Q68 61 83 52',
+  'M68 45 L68 90',
+  'M68 69 Q58 79 48 87',
+  'M68 69 Q78 79 89 87',
+];
+const OPTS = ORACLE.map(resample), MPTS = MODERN.map(s => resample(s.d));
+const STROKE_COUNT = MODERN.length;
+const GL = { cx: 820, cy: 500, s: 3.5 };
+
+function strokePts(i) {
+  const m = W.glyph.morph, a = OPTS[i], b = MPTS[i];
+  if (m <= 0) return a; if (m >= 1) return b;
+  const e = ease.inOut(m);
+  return a.map((p, j) => [lerp(p[0], b[j][0], e), lerp(p[1], b[j][1], e)]);
+}
+function strokeW(i, s) {
+  const m = ease.inOut(W.glyph.morph);
+  return lerp(2.6 * PROF.carve(s), MODERN[i].w * PROF[MODERN[i].p](s), m);
+}
+function brush(c, i, upto) {
+  if (upto <= 0) return;
+  const pts = strokePts(i);
+  const n = pts.length - 1, m = upto * n, mi = Math.floor(m);
+  const P = pts.slice(0, mi + 1);
+  if (mi < n && m > mi) { const a = pts[mi], b = pts[mi + 1], f = m - mi; P.push([lerp(a[0], b[0], f), lerp(a[1], b[1], f)]); }
+  if (P.length < 2) return;
+  const Lft = [], Rgt = [];
+  for (let j = 0; j < P.length; j++) {
+    const a = P[Math.max(0, j - 1)], b = P[Math.min(P.length - 1, j + 1)];
+    let tx = b[0] - a[0], ty = b[1] - a[1]; const l = Math.hypot(tx, ty) || 1; tx /= l; ty /= l;
+    const s = Math.min(1, (j / (P.length - 1)) * (m / n));
+    const w = strokeW(i, s) / 2;
+    Lft.push([P[j][0] - ty * w, P[j][1] + tx * w]); Rgt.push([P[j][0] + ty * w, P[j][1] - tx * w]);
+  }
+  c.beginPath(); c.moveTo(Lft[0][0], Lft[0][1]);
+  for (const p of Lft) c.lineTo(p[0], p[1]);
+  for (let j = Rgt.length - 1; j >= 0; j--) c.lineTo(Rgt[j][0], Rgt[j][1]);
+  c.closePath(); c.fill();
+  const e0 = P[0], e1 = P[P.length - 1];
+  c.beginPath(); c.arc(e0[0], e0[1], strokeW(i, 0) / 2, 0, 6.283); c.arc(e1[0], e1[1], strokeW(i, Math.min(1, m / n)) / 2, 0, 6.283); c.fill();
+}
+function glyphCam(c) { setCam(c); c.translate(GL.cx - 50 * GL.s, GL.cy - 50 * GL.s); c.scale(GL.s, GL.s); }
+function toLocal(wx, wy) { return { x: (wx - (GL.cx - 50 * GL.s)) / GL.s, y: (wy - (GL.cy - 50 * GL.s)) / GL.s }; }
+function localToScreen(lx, ly) { return toScreen(GL.cx + (lx - 50) * GL.s, GL.cy + (ly - 50) * GL.s); }
+
+/* ---------- 关键交互坐标辅助函数（同时服务用户操作与 Playwright 自动化测试） ---------- */
+function saplingPoint(u = W.twinMove) {
+  const x3d = lerp(4.3, 1.55, clamp(u));
+  return world3DToScreen(x3d, 1.5, 0.55);
+}
+function windPoint(u = 0) {
+  const x3d = lerp(-4.2, 4.2, clamp(u));
+  const y3d = 2.4 + Math.sin(u * Math.PI) * 1.4;
+  return world3DToScreen(x3d, y3d, -0.5);
+}
+function rootPoint() {
+  return world3DToScreen(-1.55, 0.95, 0.6);
+}
+
+const WORDS = [
+  ['森林', '双木成林，万木汇聚，便成苍翠森林。'],
+  ['森郁', '枝叶层层叠叠，林间生机盎然。'],
+  ['森罗万象', '飞鸟、流泉与四季万物，皆藏于林海之中。'],
+];
+
+function drawGlyphOverlay() {
+  const g = W.glyph;
+  if (g.alpha <= 0.001) return;
+  ctx.save();
+  if (g.rays > 0) {
+    setCam(ctx);
+    ctx.globalCompositeOperation = 'lighter';
+    const t = clock / 1000, R = GL.s * 115;
+    for (let i = 0; i < 16; i++) {
+      const a = i / 16 * 6.283 + t * 0.04, w = 0.05 + 0.025 * Math.sin(t * 0.6 + i * 1.5);
+      const gr = ctx.createRadialGradient(GL.cx, GL.cy, GL.s * 18, GL.cx, GL.cy, R);
+      gr.addColorStop(0, `rgba(118,200,147,${(0.08 * g.rays * g.alpha).toFixed(3)})`);
+      gr.addColorStop(1, 'rgba(118,200,147,0)');
+      ctx.fillStyle = gr;
+      ctx.beginPath(); ctx.moveTo(GL.cx, GL.cy); ctx.arc(GL.cx, GL.cy, R, a - w, a + w); ctx.closePath(); ctx.fill();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+
+  glyphCam(ctx);
+  ctx.globalAlpha = g.alpha;
+  // 宣纸米字格底衬（描红阶段显现）
+  if (g.ghost > 0) {
+    ctx.save();
+    ctx.globalAlpha = g.alpha * g.ghost * 0.35;
+    ctx.strokeStyle = '#74c69d';
+    ctx.lineWidth = 0.35;
+    ctx.strokeRect(4, 4, 92, 92);
+    ctx.setLineDash([1.5, 1.5]);
+    ctx.beginPath();
+    ctx.moveTo(50, 4); ctx.lineTo(50, 96);
+    ctx.moveTo(4, 50); ctx.lineTo(96, 50);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalAlpha = g.alpha * g.ghost;
+    ctx.fillStyle = '#22382e';
+    for (let i = 0; i < STROKE_COUNT; i++) brush(ctx, i, 1);
+    ctx.restore();
+  }
+
+  const m = ease.inOut(g.morph);
+  const col = [lerp(233, 242, m) | 0, lerp(196, 234, m) | 0, lerp(106, 213, m) | 0];
+  ctx.fillStyle = `rgb(${col})`;
+  ctx.shadowColor = `rgba(118,200,147,.85)`;
+  ctx.shadowBlur = g.glow * 22 * DPR * Math.min(1.4, CV.k * 1.4);
+
+  for (let i = 0; i < STROKE_COUNT; i++) {
+    if (g.prog[i] <= 0) continue;
+    if (g.split > 0) {
+      // 三木分色展示：上木金翠、左木青碧（第8笔点用朱砂金高亮）、右木苍翠
+      if (i === 7) ctx.fillStyle = '#f4a261';
+      else if (i < 4) ctx.fillStyle = '#e9c46a';
+      else if (i < 8) ctx.fillStyle = '#74c69d';
+      else ctx.fillStyle = '#f2e8d5';
+    } else {
+      ctx.fillStyle = `rgb(${col})`;
+    }
+    brush(ctx, i, g.prog[i]);
+  }
+  ctx.shadowBlur = 0;
+
+  if (g.labels > 0) {
+    ctx.globalAlpha = g.alpha * g.labels;
+    ctx.strokeStyle = 'rgba(233,196,106,.75)';
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    // 右侧大括号标注上「木」与下「林」
+    ctx.moveTo(96, 8); ctx.quadraticCurveTo(99, 8, 99, 13); ctx.lineTo(99, 38); ctx.quadraticCurveTo(99, 43, 96, 43);
+    ctx.moveTo(96, 48); ctx.quadraticCurveTo(99, 48, 99, 53); ctx.lineTo(99, 86); ctx.quadraticCurveTo(99, 91, 96, 91);
+    // 左侧指示线指向左下木第8笔「点」
+    ctx.moveTo(3, 66); ctx.lineTo(36, 66);
+    ctx.stroke();
+    ctx.font = '8px "Kaiti SC","STKaiti","KaiTi",serif';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'start';
+    ctx.fillStyle = '#e9c46a'; ctx.fillText('木（冠顶）', 102, 26);
+    ctx.fillStyle = '#74c69d'; ctx.fillText('林（并立）', 102, 70);
+    ctx.textAlign = 'end';
+    ctx.fillStyle = '#f4a261'; ctx.fillText('捺变点·相让', 1, 66);
+    ctx.textAlign = 'start';
+  }
+  if (g.trace) drawTraceUI(ctx);
+  ctx.restore();
+  if (g.words > 0) drawWords();
+}
+
+function drawTraceUI(c) {
+  const T = W.trace;
+  if (T.stroke >= STROKE_COUNT) return;
+  const pts = MPTS[T.stroke];
+  c.globalAlpha = W.glyph.alpha;
+  c.strokeStyle = 'rgba(138,224,168,.88)';
+  c.lineWidth = 0.65;
+  c.setLineDash([1.6, 1.6]);
+  c.beginPath(); c.moveTo(pts[0][0], pts[0][1]);
+  for (const p of pts) c.lineTo(p[0], p[1]);
+  c.stroke();
+  c.setLineDash([]);
+
+  const a = pts[N - 3], b = pts[N];
+  const ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+  c.fillStyle = 'rgba(138,224,168,.9)';
+  c.beginPath();
+  c.moveTo(b[0] + Math.cos(ang) * 2.3, b[1] + Math.sin(ang) * 2.3);
+  c.lineTo(b[0] + Math.cos(ang + 2.5) * 2.3, b[1] + Math.sin(ang + 2.5) * 2.3);
+  c.lineTo(b[0] + Math.cos(ang - 2.5) * 2.3, b[1] + Math.sin(ang - 2.5) * 2.3);
+  c.fill();
+
+  const [sx, sy] = pts[0];
+  const pulse = 0.5 + 0.5 * Math.sin(clock / 210);
+  c.fillStyle = `rgba(233,196,106,${(0.28 * pulse).toFixed(3)})`;
+  c.beginPath(); c.arc(sx, sy, 3.5 + pulse * 1.6, 0, 6.283); c.fill();
+  c.fillStyle = '#e9c46a';
+  c.beginPath(); c.arc(sx, sy, 2.1, 0, 6.283); c.fill();
+  c.font = '600 4.6px "PingFang SC","Helvetica Neue",sans-serif';
+  c.textAlign = 'center'; c.textBaseline = 'middle';
+  c.fillStyle = '#fff3d1';
+  c.fillText(String(T.stroke + 1), sx - 5.2, sy - 3.5);
+  c.textAlign = 'start';
+
+  if (T.pen) {
+    c.fillStyle = '#fff8e6';
+    c.shadowColor = 'rgba(118,200,147,.95)';
+    c.shadowBlur = 12 * DPR;
+    c.beginPath(); c.arc(T.pen[0], T.pen[1], 2.0, 0, 6.283); c.fill();
+    c.shadowBlur = 0;
+  }
+}
+
+function drawWords() {
+  setCam(ctx);
+  const g = W.glyph;
+  const y = GL.cy + GL.s * 50 + 66, gap = 190;
+  ctx.font = '40px "Kaiti SC","STKaiti","KaiTi",serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  WORDS.forEach(([w], i) => {
+    const a = clamp(g.words - i) * g.alpha;
+    if (a <= 0) return;
+    const on = W.wordOn === i;
+    ctx.globalAlpha = a * (on ? 1 : 0.58);
+    ctx.fillStyle = on ? '#e9c46a' : '#d8e8de';
+    ctx.shadowColor = 'rgba(118,200,147,.8)';
+    ctx.shadowBlur = on ? 16 * DPR : 0;
+    ctx.fillText(w, GL.cx + (i - 1) * gap, y + (1 - clamp(g.words - i)) * 12);
+  });
+  ctx.shadowBlur = 0; ctx.globalAlpha = 1; ctx.textAlign = 'start';
+}
+
+function drawInteractiveGuides() {
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  // 第一幕：浇水光环提示
+  if (W.waterPrompt > 0.01) {
+    const p = rootPoint();
+    const pulse = (clock % 1500) / 1500;
+    ctx.strokeStyle = `rgba(144,224,239,${(0.75 * (1 - pulse) * W.waterPrompt).toFixed(3)})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(p.x, p.y, 26 + pulse * 36, 0, 6.283); ctx.stroke();
+    ctx.strokeStyle = `rgba(233,196,106,${(0.65 * W.waterPrompt).toFixed(3)})`;
+    ctx.setLineDash([5, 6]);
+    ctx.beginPath(); ctx.arc(p.x, p.y, 28, 0, 6.283); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  // 第二幕：拖动第二株树苗到孤木旁的引导虚线
+  if (W.twinTarget > 0.01) {
+    const p0 = saplingPoint(W.twinMove);
+    const p1 = saplingPoint(1);
+    ctx.strokeStyle = `rgba(118,200,147,${(0.55 * W.twinTarget).toFixed(3)})`;
+    ctx.lineWidth = 2; ctx.setLineDash([6, 6]);
+    ctx.beginPath(); ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.stroke();
+    ctx.beginPath(); ctx.arc(p1.x, p1.y, 28, 0, 6.283); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = `rgba(233,196,106,${(0.85 * W.twinTarget).toFixed(3)})`;
+    ctx.beginPath(); ctx.arc(p0.x, p0.y, 8, 0, 6.283); ctx.fill();
+  }
+  // 第三幕：吹拂春风的流光轨迹提示
+  if (W.windTarget > 0.01) {
+    ctx.strokeStyle = `rgba(233,196,106,${(0.55 * W.windTarget).toFixed(3)})`;
+    ctx.lineWidth = 2.2; ctx.setLineDash([7, 7]);
+    ctx.beginPath();
+    for (let i = 0; i <= 20; i++) {
+      const q = windPoint(i / 20);
+      if (i === 0) ctx.moveTo(q.x, q.y); else ctx.lineTo(q.x, q.y);
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+    const head = windPoint((clock % 2200) / 2200);
+    ctx.fillStyle = `rgba(138,224,168,${(0.85 * W.windTarget).toFixed(3)})`;
+    ctx.beginPath(); ctx.arc(head.x, head.y, 7, 0, 6.283); ctx.fill();
+  }
+  // 2D 飘散灵气粒子与汇聚笔画粒子
+  if (W.converge.length) {
+    setCam(ctx);
+    ctx.globalCompositeOperation = 'lighter';
+    for (const p of W.converge) {
+      const t = clamp((clock - p.t0 - p.delay) / p.dur);
+      if (t <= 0 || t >= 1) continue;
+      const e = ease.inOut(t);
+      const x = lerp(p.sx, p.tx, e) + Math.sin(e * Math.PI) * p.curl;
+      const y = lerp(p.sy, p.ty, e) - Math.sin(e * Math.PI) * 35;
+      const a = Math.sin(Math.PI * t);
+      ctx.fillStyle = `rgba(138,224,168,${(a * 0.9).toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(x, y, p.s * (1.2 - e * 0.4), 0, 6.283); ctx.fill();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+  if (W.spirits.length) {
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    ctx.globalCompositeOperation = 'lighter';
+    for (const sp of W.spirits) {
+      const a = clamp(1 - sp.age / 3800);
+      ctx.fillStyle = `rgba(233,196,106,${(a * 0.85).toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(sp.x + Math.sin(sp.age / 320 + sp.p) * 14, sp.y, 4.5, 0, 6.283); ctx.fill();
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
+}
+
+function render3D() {
+  if (!renderer || !scene || !camera) return;
+  const t = clock / 1000;
+  const season = SEASONS[W.season] || SEASONS[0];
+
+  // 更新材质颜色与荒漠->青绿过渡
+  const lushC = new THREE.Color(season.groundSand).lerp(new THREE.Color(season.groundLush), smooth(W.lush));
+  matGround.color.copy(lushC);
+  matGround.opacity = lerp(1.0, 0.36, W.xray);
+  matUnder.opacity = lerp(0.92, 0.55, W.xray);
+  rootLight.intensity = W.xray * 3.5 + W.tree0Root * 1.6;
+
+  const leafTarget = new THREE.Color(season.leafA).lerp(new THREE.Color(season.leafB), 0.35 + 0.25 * Math.sin(t * 0.8));
+  matFoliage.color.copy(leafTarget);
+  matRay.color.set(season.ray);
+  matRay.opacity = W.rays3D * (0.11 + 0.03 * Math.sin(t * 1.4));
+  scene.fog.color.set(season.fog);
+
+  // 更新三棵主松状态
+  const windSway0 = W.storm * (0.28 + 0.12 * Math.sin(t * 7.5)) * (1 - W.twinBond * 0.72) + Math.sin(t * 1.4) * 0.025;
+  const windSway1 = W.storm * (0.14 + 0.06 * Math.sin(t * 7.2 + 1)) * (1 - W.twinBond * 0.55) + Math.sin(t * 1.4 + 1.2) * 0.025;
+  updateTreeGrowth(heroTrees[0], W.tree0Grow, W.tree0Root, windSway0, W.leftTrim);
+
+  heroTrees[1].position.x = lerp(4.3, 1.55, smooth(W.twinMove));
+  updateTreeGrowth(heroTrees[1], W.tree1Grow, W.tree1Grow, windSway1, 0);
+
+  updateTreeGrowth(heroTrees[2], W.tree2Grow, W.tree2Grow, Math.sin(t * 1.2 + 2) * 0.02, 0);
+
+  // 更新漫山遍野背景松林
+  for (const bt of bgTrees) {
+    const localG = clamp((W.forestWave - bt.userData.delay * 0.65) / 0.35);
+    updateTreeGrowth(bt, localG, 0, Math.sin(t * 1.5 + bt.position.x) * 0.02, 0);
+  }
+
+  // 种子与浇灌水柱
+  seedMesh.visible = W.seedAlpha > 0.01;
+  seedMesh.scale.setScalar(Math.max(0.01, W.seedAlpha * (1 + 0.12 * Math.sin(t * 4))));
+  seedMesh.rotation.y = t * 1.5;
+  waterStream.material.opacity = W.watering ? 0.55 + 0.2 * Math.sin(t * 18) : 0;
+
+  // 少年动作
+  boyGroup.position.x = lerp(-2.95, -2.55, W.tree0Grow);
+  boyGroup.rotation.z = W.watering ? -0.14 : (W.storm * 0.12 * (1 - W.twinBond));
+
+  // 飞鸟环绕
+  birds.forEach(b => {
+    b.visible = W.birds > 0.05;
+    if (!b.visible) return;
+    const d = b.userData;
+    const a = t * d.speed + d.phase;
+    b.position.set(Math.cos(a) * d.rad, d.y + Math.sin(t * 2 + d.phase) * 0.25, Math.sin(a) * d.rad - 1.5);
+    b.rotation.y = -a;
+    const flap = Math.sin(t * 9 + d.phase) * 0.45;
+    d.wL.rotation.z = flap;
+    d.wR.rotation.z = -flap;
+  });
+
+  // 粒子飘动（风沙或森林灵气）
+  if (particleSys) {
+    const arr = particleSys.geometry.attributes.position.array;
+    const vx = (W.storm * 0.16 + 0.015) * (DT / 16);
+    const vy = (W.lush > 0.5 ? 0.015 : -0.01) * (DT / 16);
+    for (let i = 0; i < arr.length; i += 3) {
+      arr[i] += vx;
+      arr[i + 1] += vy;
+      if (arr[i] > 12) arr[i] = -12;
+      if (arr[i + 1] > 8) arr[i + 1] = -1;
+      if (arr[i + 1] < -1.5) arr[i + 1] = 7.5;
+    }
+    particleSys.geometry.attributes.position.needsUpdate = true;
+    particleSys.material.color.set(W.lush > 0.4 ? season.ray : '#d4a373');
+  }
+
+  // 相机位置与终幕环绕旋转
+  const yaw = W.orbitYaw + (!reduceMotion && W.drift ? Math.sin(t * 0.25) * 0.04 : 0);
+  worldGroup.rotation.y = yaw;
+  camera.fov = portrait ? curCam3D.pfov : curCam3D.fov;
+  camera.updateProjectionMatrix();
+  camera.position.set(curCam3D.x, curCam3D.y, curCam3D.z);
+  camera.lookAt(curCam3D.tx, curCam3D.ty, curCam3D.tz);
+
+  renderer.render(scene, camera);
+}
+
+function render() {
+  updateView();
+  render3D();
+
+  const w = cvs.width, h = cvs.height;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+
+  // 如果 WebGL 未启用，绘制优雅的保底水墨山林背景
+  if (!renderer) {
+    const g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, '#081813'); g.addColorStop(1, '#1c3b2e');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+  }
+
+  // 成字与描红阶段的半透明水墨夜幕遮罩
+  if (W.veil > 0.001) {
+    ctx.fillStyle = `rgba(6,14,11,${(W.veil * 0.76).toFixed(3)})`;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  drawInteractiveGuides();
+  drawGlyphOverlay();
+}
+
+let last = null;
+function loop(now) {
+  if (last == null) last = now;
+  DT = Math.min(50, Math.max(0, now - last));
+  last = now;
+  clock += DT;
+  for (const sp of W.spirits) { sp.age += DT; sp.y -= DT * 0.032; }
+  W.spirits = W.spirits.filter(sp => sp.age < 3800);
+  render();
+  const list = waiters; waiters = [];
+  for (const wt of list) { if (wt.tk.dead) wt.rej(new Cancelled()); else wt.res(clock); }
+  requestAnimationFrame(loop);
+}
+
+/* ---------- 世界状态与场景编排 ---------- */
+const W = {};
+function resetWorld() {
+  Object.assign(W, {
+    season: 0, drift: 1, lush: 0, xray: 0, storm: 0,
+    seedAlpha: 1, watering: false, holding: false, everHeld: false, waterPrompt: 0,
+    tree0Grow: 0, tree0Root: 0, leftTrim: 0,
+    tree1Grow: 0, twinMove: 0, twinTarget: 0, twinBond: 0,
+    tree2Grow: 0, windProgress: 0, windTarget: 0, forestWave: 0,
+    rays3D: 0, birds: 0, veil: 0, orbitYaw: 0, wordOn: -1,
+    converge: [], spirits: [],
+    glyph: {
+      alpha: 0, morph: 1, prog: new Array(STROKE_COUNT).fill(0),
+      glow: 1, ghost: 0, labels: 0, split: 0, rays: 0, words: 0, trace: false,
+    },
+    trace: { stroke: 0, pen: null },
+  });
+  Object.assign(GL, { cx: 820, cy: 430, s: 2.6 });
+  $('#seasonBar').classList.remove('on');
+}
+
+/* ---------- UI 字幕与输入绑定 ---------- */
+const ui = {
+  cap: $('#caption'), capT: $('#capTitle'), capP: $('#capText'),
+  hint: $('#hint'), action: $('#action'), demo: $('#demo'),
+  prog: [...document.querySelectorAll('#progress li')],
+  seasons: [...document.querySelectorAll('#seasonBar button')],
+};
+const CHAR_MS = 65;
+let capMinEnd = 0;
+function span(cls, text) { const s = document.createElement('span'); if (cls) s.className = cls; s.textContent = text; return s; }
+function showCaption(title, text) {
+  ui.capT.textContent = title;
+  ui.capP.replaceChildren(...[...text].map((c, i) => { const s = span('ch', c); s.style.setProperty('--i', i); return s; }));
+  ui.cap.classList.remove('on'); void ui.cap.offsetWidth; ui.cap.classList.add('on');
+}
+async function caption(title, text, tk, hold = 0) {
+  while (clock < capMinEnd) await frame(tk);
+  ui.cap.classList.remove('on');
+  await wait(340, tk);
+  showCaption(title, text);
+  const n = [...text].length;
+  capMinEnd = clock + Math.max(reduceMotion ? 1200 : n * CHAR_MS + 1100, n * 135) + 500 + hold;
+}
+async function captionDone(tk) { while (clock < capMinEnd) await frame(tk); }
+function hint(text) {
+  if (text) { ui.hint.replaceChildren(span('', text)); ui.hint.classList.add('on'); }
+  else ui.hint.classList.remove('on');
+}
+function progress(i) { ui.prog.forEach((li, j) => { li.classList.toggle('on', j === i); li.classList.toggle('done', j < i); }); }
+function mode(m) {
+  document.body.classList.remove('hold', 'drag', 'dragging', 'wind', 'trace', 'orbit');
+  if (m) document.body.classList.add(m);
+  S.mode = m;
+}
+let actionFn = null;
+function setAction(label, fn) {
+  actionFn = fn;
+  if (label) { ui.action.textContent = label; ui.action.hidden = false; } else ui.action.hidden = true;
+  ui.action.classList.remove('holding');
+}
+
+const S = { handler: null, mode: null, interactions: [] };
+let activePointer = null;
+cvs.addEventListener('pointerdown', e => {
+  if (!e.isPrimary || activePointer != null) return;
+  const h = S.handler; if (!h || !h.down) return;
+  activePointer = e.pointerId;
+  try { cvs.setPointerCapture(e.pointerId); } catch {}
+  e.preventDefault();
+  h.down(toWorld(e.clientX, e.clientY), { x: e.clientX, y: e.clientY }, e);
+});
+cvs.addEventListener('pointermove', e => {
+  if (e.pointerId !== activePointer) return;
+  const h = S.handler; if (!h || !h.move) return;
+  const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+  for (const ev of evs.length ? evs : [e]) h.move(toWorld(ev.clientX, ev.clientY), { x: ev.clientX, y: ev.clientY }, ev);
+});
+function pointerEnd(e, cancel) {
+  if (e.pointerId !== activePointer) return;
+  activePointer = null;
+  const h = S.handler;
+  if (h && h.up) h.up(toWorld(e.clientX, e.clientY), { x: e.clientX, y: e.clientY }, cancel);
+}
+cvs.addEventListener('pointerup', e => pointerEnd(e, false));
+cvs.addEventListener('pointercancel', e => pointerEnd(e, true));
+cvs.addEventListener('lostpointercapture', e => pointerEnd(e, true));
+
+function holdButton(on) {
+  if (S.mode !== 'hold') return;
+  W.holding = on;
+  ui.action.classList.toggle('holding', on);
+  if (on) W.everHeld = true;
+}
+ui.action.addEventListener('pointerdown', e => {
+  if (S.mode === 'hold') { e.preventDefault(); try { ui.action.setPointerCapture(e.pointerId); } catch {} holdButton(true); }
+});
+for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) ui.action.addEventListener(ev, () => holdButton(false));
+ui.action.addEventListener('click', () => { if (S.mode !== 'hold' && actionFn) actionFn(); });
+ui.demo.addEventListener('click', () => { if (S.demo) S.demo(); });
+ui.seasons.forEach(btn => {
+  btn.addEventListener('click', () => {
+    W.season = Number(btn.dataset.season) || 0;
+    ui.seasons.forEach(b => b.classList.toggle('active', b === btn));
+    Sound.bell(PENTA[3 + W.season], 0.08);
+  });
+});
+
+/* ---------- 五幕故事与交互流程 ---------- */
+async function sBarren(tk) {
+  progress(0);
+  bg(tween(1400 * M, t => { W.glyph.alpha = 1 - t; W.storm = 0.35 * t; }, tk));
+  await cam3DTo(CAM3D.barren, 3400 * M, tk);
+  await caption('荒原', '很久以前，这是一座风沙漫天的荒山。', tk);
+  await caption('荒原', '少年阿木走上山坡，埋下了一颗小小的松籽。', tk);
+  await captionDone(tk);
+}
+
+// 互动一：按住浇灌春水，地下生根、地上抽枝，化为「木」
+async function sSprout(tk) {
+  progress(1);
+  bg(tween(1800 * M, t => { W.xray = t; }, tk));
+  await cam3DTo(CAM3D.seed, 2400 * M, tk);
+  await caption('破土 · 木', '种子睡在干涸的泥土里，等待一场春水。', tk);
+  await captionDone(tk);
+
+  W.waterPrompt = 1;
+  hint('按住屏幕，引来泉水浇灌松籽');
+  setAction('按住浇水');
+  mode('hold');
+  W.everHeld = false;
+  S.handler = { down() { W.holding = true; W.everHeld = true; }, up() { W.holding = false; } };
+  const t0 = clock;
+  let auto = false, wasWatering = false;
+  while (W.tree0Grow < 1) {
+    await frame(tk);
+    if (!W.everHeld && clock - t0 > 9000) auto = true;
+    const active = W.holding || auto;
+    if (active !== wasWatering) { Sound.water(active); wasWatering = active; }
+    W.watering = active;
+    const step = active ? DT / 1950 : -DT / 6500;
+    W.tree0Root = clamp(W.tree0Root + step * 1.25);
+    W.tree0Grow = clamp(W.tree0Grow + (W.tree0Root > 0.2 ? step : step * 0.4));
+    W.seedAlpha = clamp(1 - W.tree0Grow * 1.3);
+  }
+  S.handler = null; W.holding = false; W.watering = false; W.waterPrompt = 0;
+  Sound.water(false);
+  mode(null); setAction(null); hint(null);
+  S.interactions.push(auto ? 'auto' : 'user');
+
+  Sound.pluck(NOTE.C4, 0.16, 2.8); Sound.bell(NOTE.G4, 0.09);
+  Sound.warm(0.35);
+  await caption('破土 · 木', '根往泥土深处扎，枝往蓝天高处长。', tk);
+  await caption('说文解字', '《说文》：“木，冒也，冒地而生。”上枝下根，就是「木」。', tk, 500);
+  await captionDone(tk);
+  bg(tween(1500 * M, t => { W.xray = 1 - t * 0.65; }, tk));
+}
+
+// 互动二：狂风袭来，拖动第二株树苗并肩成「林」（左木捺变点相让）
+async function sTwin(tk) {
+  progress(2);
+  await cam3DTo(CAM3D.twin, 2200 * M, tk);
+  Sound.breeze(2.2, 650, 0.11);
+  bg(tween(1400 * M, t => { W.storm = lerp(0.35, 1.0, t); W.tree1Grow = lerp(0, 0.55, t); }, tk));
+  await caption('相伴 · 林', '山风呼啸而来，一棵孤木被吹得弯下了腰。', tk);
+  await caption('相伴 · 林', '独木难支——把右边的新苗移过来，和它并肩吧。', tk);
+  await captionDone(tk);
+
+  W.twinTarget = 1;
+  hint('把右边的小树苗向左拖到孤木身旁');
+  let done = null, drag = null, idle = clock;
+  setAction('并肩成林', () => { done = done || 'user'; });
+  mode('drag');
+  const setU = u => {
+    W.twinMove = clamp(u);
+    W.tree1Grow = lerp(0.55, 1.0, W.twinMove);
+    W.leftTrim = smooth(clamp((W.twinMove - 0.5) / 0.5));
+  };
+  S.handler = {
+    down(wPt, sPt) {
+      drag = { startX: sPt.x, u0: W.twinMove };
+      idle = clock;
+      document.body.classList.add('dragging');
+      Sound.pluck(NOTE.D4, 0.08, 1.2);
+    },
+    move(wPt, sPt) {
+      if (!drag) return;
+      idle = clock;
+      const pStart = saplingPoint(0), pEnd = saplingPoint(1);
+      const spanX = Math.max(36, Math.abs(pStart.x - pEnd.x) * 0.92);
+      const rel = clamp(drag.u0 + (drag.startX - sPt.x) / spanX);
+      const direct = clamp((pStart.x - sPt.x) / spanX);
+      setU(Math.max(rel, direct * 0.85));
+    },
+    up(wPt, sPt, cancel) {
+      drag = null;
+      idle = clock;
+      document.body.classList.remove('dragging');
+      if (!cancel && W.twinMove > 0.78) done = 'user';
+    },
+  };
+  while (!done) {
+    await frame(tk);
+    if (!drag && W.twinMove > 0) setU(W.twinMove - DT / 750);
+    if (!drag && clock - idle > 10000) done = 'auto';
+  }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  S.interactions.push(done);
+  W.twinTarget = 0;
+
+  const u0 = W.twinMove;
+  await tween((done === 'auto' ? 1400 : 480) * M, t => setU(lerp(u0, 1, t)), tk, ease.out);
+  bg(tween(1600 * M, t => { W.twinBond = t; W.storm = 1 - t * 0.85; W.xray = 0.35 * (1 - t); W.lush = 0.35 * t; }, tk));
+  Sound.pluck(NOTE.E4, 0.16, 3.0); Sound.pluck(NOTE.A4, 0.14, 3.0); Sound.bell(NOTE.C5, 0.08);
+  Sound.warm(0.65);
+  await caption('相伴 · 林', '两棵树根脉相连，左边的树收起长枝，礼让身旁的伙伴。', tk);
+  await caption('相伴 · 林', '双木并立，左木「捺」化为「点」——这就是「林」。', tk, 500);
+  await captionDone(tk);
+}
+
+// 互动三：吹拂春风唤醒山巅主松与万顷松海，化为「森」
+async function sForest(tk) {
+  progress(3);
+  await cam3DTo(CAM3D.wind, 2500 * M, tk);
+  await caption('参天 · 森', '一年又一年，两棵树结出无数松果，落在整座山岗。', tk);
+  await captionDone(tk);
+
+  W.windTarget = 1;
+  hint('顺着虚线向右划过山岗，吹起温暖的春风');
+  let done = null, drag = null, idle = clock;
+  setAction('吹拂春风', () => { done = done || 'user'; });
+  mode('wind');
+  const setWind = u => {
+    W.windProgress = clamp(u);
+    W.tree2Grow = smooth(clamp(W.windProgress * 1.15));
+  };
+  S.handler = {
+    down(wPt, sPt) {
+      drag = { startX: sPt.x, u0: W.windProgress };
+      idle = clock;
+      Sound.breeze(0.9, 1100, 0.07);
+    },
+    move(wPt, sPt) {
+      if (!drag) return;
+      idle = clock;
+      const p0 = windPoint(0), p1 = windPoint(1);
+      const spanX = Math.max(40, Math.abs(p1.x - p0.x) * 0.92);
+      const rel = clamp(drag.u0 + (sPt.x - drag.startX) / spanX);
+      setWind(rel);
+    },
+    up(wPt, sPt, cancel) {
+      drag = null;
+      idle = clock;
+      if (!cancel && W.windProgress > 0.78) done = 'user';
+    },
+  };
+  while (!done) {
+    await frame(tk);
+    if (!drag && W.windProgress > 0) setWind(W.windProgress - DT / 900);
+    if (!drag && clock - idle > 10000) done = 'auto';
+  }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  S.interactions.push(done);
+  W.windTarget = 0;
+
+  const w0 = W.windProgress;
+  await tween((done === 'auto' ? 1400 : 500) * M, t => setWind(lerp(w0, 1, t)), tk, ease.out);
+  Sound.breeze(2.4, 1350, 0.09);
+  Sound.pluck(NOTE.G4, 0.18, 3.4); Sound.pluck(NOTE.C5, 0.15, 3.4); Sound.bell(NOTE.E5, 0.1);
+  Sound.warm(1.0);
+
+  bg(cam3DTo(CAM3D.forest, 4400 * M, tk));
+  await tween(3600 * M, t => {
+    W.forestWave = t;
+    W.lush = lerp(0.35, 1.0, t);
+    W.rays3D = smooth(clamp((t - 0.25) / 0.75));
+    W.birds = smooth(clamp((t - 0.4) / 0.6));
+  }, tk, ease.out);
+
+  await caption('参天 · 森', '山巅长出第三棵参天大树，万千苍松随之铺满群山！', tk);
+  await caption('参天 · 森', '《说文》：“森，木多貌。”三木品立，万木成海，便是「森」。', tk, 500);
+  await captionDone(tk);
+}
+
+function spawnConverge() {
+  const list = [];
+  const r = mulberry32(88);
+  const treeScreens = [
+    world3DToScreen(0, 3.6, -2.1),
+    world3DToScreen(-1.55, 2.1, 0.6),
+    world3DToScreen(1.55, 2.1, 0.55),
+  ];
+  for (let i = 0; i < STROKE_COUNT; i++) {
+    const tIdx = Math.floor(i / 4);
+    const src = treeScreens[tIdx];
+    const wSrc = toWorld(src.x, src.y);
+    for (let j = 0; j <= N; j += 4) {
+      const [lx, ly] = OPTS[i][j];
+      list.push({
+        sx: wSrc.x + (r() - 0.5) * 70,
+        sy: wSrc.y + (r() - 0.5) * 70,
+        tx: GL.cx + (lx - 50) * GL.s,
+        ty: GL.cy + (ly - 50) * GL.s,
+        delay: r() * 750 + i * 75,
+        dur: 1200 + r() * 500,
+        s: 1.5 + r() * 2.0,
+        curl: (r() - 0.5) * 95,
+        t0: clock,
+      });
+    }
+  }
+  W.converge = list;
+}
+
+// 第四幕：3D 三松化为甲骨文「森」→ 楷书「森」
+async function sGlyph(tk) {
+  progress(4);
+  bg(cam3DTo(CAM3D.glyph, 2600 * M, tk));
+  await caption('成字', '古人仰望层层叠叠的森林，把三棵树刻在了一起。', tk);
+
+  Object.assign(GL, { cx: 820, cy: 500, s: 3.5 });
+  W.glyph = { ...W.glyph, alpha: 1, morph: 0, prog: new Array(STROKE_COUNT).fill(0), glow: 1, labels: 0, split: 0 };
+  spawnConverge();
+  Sound.breeze(2.2, 1600, 0.05);
+
+  await tween(2800 * M, t => {
+    W.veil = t;
+    for (let i = 0; i < STROKE_COUNT; i++) {
+      W.glyph.prog[i] = smooth((t - 0.28 - i * 0.045) / 0.25);
+    }
+  }, tk, ease.lin);
+  W.glyph.prog.fill(1);
+  W.converge = [];
+  Sound.bell(NOTE.C5, 0.1); Sound.pluck(NOTE.G4, 0.13);
+  await caption('甲骨文', '三株上枝下根的古木品字相叠，就是古文字里的「森」。', tk);
+  await captionDone(tk);
+
+  Sound.breeze(2.0, 1200, 0.04);
+  await tween(3000 * M, t => { W.glyph.morph = t; }, tk, ease.lin);
+  Sound.bell(NOTE.G5, 0.08);
+  bg(tween(800, t => { W.glyph.labels = t; W.glyph.split = t; }, tk));
+  await caption('楷书结构', '一木冠顶，双木并立；左下木的「捺」化作「点」，彼此谦让。', tk, 600);
+  await captionDone(tk);
+  await tween(700, t => { W.glyph.labels = 1 - t; W.glyph.split = 1 - t; }, tk);
+}
+
+// 互动四：楷书「森」12 笔描红（含起笔、走向校验与示范）
+async function sWrite(tk) {
+  progress(5);
+  await caption('写字', '「森」一共十二笔，由三个「木」组成。跟着光点写一写。', tk);
+  await tween(800, t => {
+    W.glyph.prog = W.glyph.prog.map(() => 1 - t);
+    W.glyph.ghost = t;
+  }, tk);
+  W.glyph.prog.fill(0);
+  W.glyph.trace = true;
+  W.trace = { stroke: 0, pen: null };
+  W.drift = 0;
+
+  const names = MODERN.map(s => s.name);
+  const showStroke = () => {
+    capMinEnd = 0;
+    showCaption('写字', `第 ${W.trace.stroke + 1} / ${STROKE_COUNT} 笔 · ${names[W.trace.stroke]}`);
+    hint(W.trace.stroke === 7 ? '注意：左下木第四笔是「点」，把位置让给右边的木' : '从金色光点起笔，顺着虚线写到箭头处');
+  };
+  await captionDone(tk);
+  showStroke();
+
+  let samples = null, drag = null, lastInput = clock, demoing = false, completed = 0, invalidHint = 0;
+  const prepare = () => { samples = MPTS[W.trace.stroke]; };
+  prepare();
+  const finishStroke = () => {
+    const i = W.trace.stroke;
+    W.glyph.prog[i] = 1;
+    Sound.pluck(PENTA[i % PENTA.length], 0.13, 2.0);
+    W.trace.stroke++;
+    completed++;
+    if (W.trace.stroke < STROKE_COUNT) {
+      prepare();
+      showStroke();
+    } else if (!demoing && !S.interactions.includes('demo') && !S.interactions.includes('auto')) {
+      S.interactions.push('user');
+    }
+  };
+  const tolLocal = () => Math.max(7.5, 24 / (CV.k * GL.s));
+  S.handler = {
+    down(p) {
+      if (demoing) return;
+      lastInput = clock;
+      const q = toLocal(p.x, p.y);
+      if (Math.hypot(q.x - samples[0][0], q.y - samples[0][1]) > tolLocal() * 1.35) {
+        hint('从这一笔的金色光点开始写哦');
+        return;
+      }
+      drag = { idx: 0, bad: false };
+    },
+    move(p) {
+      if (!drag) return;
+      lastInput = clock;
+      const q = toLocal(p.x, p.y);
+      let best = drag.idx, bd = Infinity;
+      for (let j = Math.max(0, drag.idx - 3); j < Math.min(samples.length, drag.idx + 16); j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bd) { bd = d; best = j; }
+      }
+      if (bd > tolLocal()) { drag.bad = true; return; }
+      if (drag.bad) return;
+      drag.idx = Math.max(drag.idx, best);
+      W.glyph.prog[W.trace.stroke] = drag.idx / N;
+    },
+    up(p, sPt, cancel) {
+      if (!drag) return;
+      const d = drag; drag = null;
+      if (!cancel && !d.bad && d.idx >= N - 4) { finishStroke(); return; }
+      const i = W.trace.stroke, from = W.glyph.prog[i];
+      bg(tween(240, t => { if (W.trace.stroke === i) W.glyph.prog[i] = from * (1 - t); }, tk));
+      if (clock - invalidHint > 400) {
+        hint(d.bad ? '偏离虚线啦，从金色光点重新写这一笔' : '把这一笔一直写到箭头终点');
+        invalidHint = clock;
+      }
+    },
+  };
+
+  const demo = async () => {
+    if (demoing || W.trace.stroke >= STROKE_COUNT) return;
+    demoing = true; ui.demo.disabled = true; drag = null;
+    hint('看光点示范每一笔的顺序与避让');
+    while (W.trace.stroke < STROKE_COUNT) {
+      const i = W.trace.stroke;
+      W.glyph.prog[i] = 0;
+      await tween(550 * M, t => {
+        W.glyph.prog[i] = t;
+        const pts = MPTS[i];
+        W.trace.pen = pts[Math.round(t * N)];
+      }, tk, ease.sine);
+      W.trace.pen = null;
+      finishStroke();
+      await wait(140, tk);
+    }
+  };
+  S.demo = () => { S.interactions.push('demo'); bg(demo()); };
+  mode('trace');
+  ui.demo.hidden = false;
+  lastInput = clock;
+  let nudged = false;
+  while (W.trace.stroke < STROKE_COUNT) {
+    await frame(tk);
+    if (!demoing && !nudged && clock - lastInput > 14000) { hint('也可以点下方“看示范”跟着写'); nudged = true; }
+    if (!demoing && completed === 0 && clock - lastInput > 26000) { S.interactions.push('auto'); bg(demo()); }
+  }
+  S.handler = null; S.demo = null; mode(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  W.glyph.trace = false;
+  await tween(600, t => { W.glyph.ghost = 1 - t; }, tk);
+  Sound.bell(NOTE.C5, 0.11); Sound.bell(NOTE.G5, 0.08);
+  await caption('写字', '写好了！三木成森，苍翠满山。', tk);
+  await captionDone(tk);
+  W.drift = 1;
+}
+
+async function sWords(tk) {
+  const g0 = { ...GL };
+  await tween(1400 * M, t => { GL.cy = lerp(g0.cy, 455, t); GL.s = lerp(g0.s, 2.9, t); W.glyph.rays = t; }, tk);
+  for (let i = 0; i < WORDS.length; i++) {
+    W.wordOn = i;
+    Sound.pluck(PENTA[4 + i], 0.12);
+    bg(tween(550, t => { W.glyph.words = Math.max(W.glyph.words, i + t); }, tk, ease.out));
+    await caption(WORDS[i][0], WORDS[i][1], tk);
+  }
+  await captionDone(tk);
+  W.wordOn = -1;
+}
+
+async function sFinale(tk) {
+  progress(6);
+  bg(cam3DTo(CAM3D.finale, 3600 * M, tk));
+  await tween(2000 * M, t => {
+    W.glyph.alpha = 1 - t;
+    W.veil = 1 - t;
+  }, tk);
+  W.glyph = { ...W.glyph, alpha: 0, words: 0, rays: 0 };
+  $('#seasonBar').classList.add('on');
+
+  await caption('森罗万象', '每一片浩瀚的森林，都始于泥土里那一颗不肯放弃的种子。', tk);
+  await captionDone(tk);
+  hint('左右拖动旋转 3D 森林山峦 · 点击画面升起森林萤火');
+  mode('orbit');
+  setAction('再看一次', () => { Sound.init(); begin(); });
+
+  let dragOrbit = null;
+  S.handler = {
+    down(wPt, sPt) {
+      dragOrbit = { x0: sPt.x, yaw0: W.orbitYaw, moved: false };
+    },
+    move(wPt, sPt) {
+      if (!dragOrbit) return;
+      const dx = sPt.x - dragOrbit.x0;
+      if (Math.abs(dx) > 4) dragOrbit.moved = true;
+      W.orbitYaw = dragOrbit.yaw0 + dx * 0.008;
+    },
+    up(wPt, sPt) {
+      if (dragOrbit && !dragOrbit.moved) {
+        W.spirits.push({ x: sPt.x, y: sPt.y, age: 0, p: rand() * 6.28 });
+        Sound.pluck(PENTA[(rand() * PENTA.length) | 0], 0.09, 2.2);
+      }
+      dragOrbit = null;
+      hint(null);
+    },
+  };
+  window.__sen.finished = true;
+}
+
+const SCENES = [sBarren, sSprout, sTwin, sForest, sGlyph, sWrite, sWords, sFinale];
+
+async function begin() {
+  token.dead = true;
+  const tk = token = { dead: false };
+  capMinEnd = 0;
+  waiters.forEach(w => w.rej(new Cancelled())); waiters = [];
+  resetWorld();
+  Object.assign(curCam3D, CAM3D.intro);
+  S.handler = null; S.demo = null; mode(null); setAction(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  ui.cap.classList.remove('on');
+  ui.seasons.forEach((b, idx) => b.classList.toggle('active', idx === 0));
+  Sound.water(false);
+  rand = mulberry32(20261015);
+  S.interactions = [];
+  window.__sen = {
+    interactions: S.interactions, scene: null, finished: false,
+    toScreen, localToScreen, strokes: MPTS, saplingPoint, windPoint, rootPoint, state: W,
+  };
+  W.glyph.alpha = 1; W.glyph.prog.fill(1); W.glyph.morph = 1;
+  try {
+    for (const sc of SCENES) { window.__sen.scene = sc.name; await sc(tk); }
+  } catch (e) {
+    if (!(e instanceof Cancelled)) console.error(e);
+  }
+}
+
+/* ---------- 片头：3D 水墨山谷前逐笔写出「森」 ---------- */
+const intro = { tk: { dead: false } };
+function placeIntro() {
+  if (intro.tk.dead) return;
+  const a = localToScreen(50, 2), b = localToScreen(50, 96);
+  const box = $('#intro');
+  box.style.setProperty('--gTop', `${a.y - 12}px`);
+  box.style.setProperty('--gBottom', `${b.y + 8}px`);
+}
+async function introPlay(tk) {
+  W.glyph.alpha = 1; W.glyph.morph = 1; W.glyph.prog.fill(0);
+  W.lush = 0.65; W.tree0Grow = 1; W.tree1Grow = 1; W.twinMove = 1; W.tree2Grow = 1; W.forestWave = 0.7;
+  await wait(450, tk);
+  for (let i = 0; i < STROKE_COUNT; i++) {
+    await tween(190, t => { W.glyph.prog[i] = t; }, tk, ease.sine);
+    await wait(35, tk);
+  }
+  for (;;) {
+    await frame(tk);
+    W.glyph.glow = 1 + 0.25 * Math.sin(clock / 680);
+  }
+}
+
+init3D();
+resetWorld();
+Object.assign(curCam3D, CAM3D.intro);
+window.__sen = {
+  interactions: [], scene: 'intro', finished: false,
+  toScreen, localToScreen, strokes: MPTS, saplingPoint, windPoint, rootPoint, state: W,
+};
+resize();
+updateView();
+addEventListener('resize', () => { resize(); updateView(); placeIntro(); });
+requestAnimationFrame(loop);
+requestAnimationFrame(() => { updateView(); placeIntro(); });
+bg(introPlay(intro.tk));
+
+$('#start').addEventListener('click', () => {
+  Sound.init(); Sound.pad();
+  intro.tk.dead = true;
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  W.glyph.glow = 1;
+  begin();
+});
+$('#replay').addEventListener('click', () => { Sound.init(); begin(); });
+$('#mute').addEventListener('click', e => {
+  Sound.setMuted(!Sound.muted);
+  e.currentTarget.textContent = Sound.muted ? '声音 关' : '声音 开';
+});
+addEventListener('blur', () => { W.holding = false; ui.action.classList.remove('holding'); });
+</script>
+</body>
+</html>

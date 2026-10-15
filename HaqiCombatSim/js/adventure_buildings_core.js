@@ -3,13 +3,26 @@ import {onLargeIsland, riverBlocks, sceneryCoversActor, segmentDistance} from '.
 // Cosmetic island architecture. Fixed geometry, independent of saves and gameplay RNG.
 export function islandBuildings(world) {
     if(!['camp','town','fire','ice','desert','dark'].includes(world.zone)||!world.layout)return [];
-    // 魔法营地 keeps its authored buildings and only gains the pier (2026-09-26);
-    // it also has no dedicated building atlas, so the pier reuses the town art.
-    const scattered=world.zone!=='camp',atlas=world.zone==='camp'?'town':world.zone;
+    const scattered=world.zone!=='camp',atlas=world.zone;
     const result=[],layout=world.layout;
     const occupied=[...world.npcs,...world.encounters,...world.landmarks,...world.buildings,world.portal,layout.spawn];
     const actors=[...world.npcs,...world.encounters];
     const clear=(x,y)=>onLargeIsland(world,x,y,45)&&!riverBlocks(world,x,y);
+    if(world.zone==='camp'){
+        const campStructures=[
+            {x:1430,y:1370,w:185,h:175,frame:'academy',tile:6},
+            {x:1975,y:1355,w:165,h:155,frame:'tent',tile:4},
+            {x:1410,y:1950,w:165,h:155,frame:'tent',tile:4},
+            {x:960,y:1340,w:165,h:155,frame:'tent',tile:4},
+            {x:2510,y:2010,w:165,h:155,frame:'tent',tile:4},
+        ];
+        for(const item of campStructures){
+            const b={...item,atlas:'camp'};
+            const road=Math.min(...world.paths.map(p=>segmentDistance(b,p.a,p.b)-(p.width||60)/2));
+            if(road<135||occupied.some(p=>Math.hypot(b.x-p.x,b.y-p.y)<205)||actors.some(a=>sceneryCoversActor(b,a)))continue;
+            if([-80,0,80].every(dx=>[-75,0,20].every(dy=>clear(b.x+dx,b.y+dy)))){result.push(b);occupied.push(b);}
+        }
+    }
     // Prefer space beside a road; reserve its full width, residents and encounter areas.
     const candidates=[];
     if(scattered)for(let y=300;y<world.h-200;y+=140)for(let x=300;x<world.w-200;x+=140){
@@ -40,11 +53,12 @@ export function islandBuildings(world) {
         result.push({...harbor,y:harbor.y+35,w:240,h:225,atlas,frame:'harbor',decorationOnly:true});
         // The camp island stops just below its beach; clamp the moored boats into
         // the remaining water instead of pushing them past the map edge.
+        const boatAtlas=world.zone==='camp'?'town':atlas;
         const boatDy=Math.min(210,world.h-40-harbor.y-10);
         for(const dx of [-200,200]){
             const x=harbor.x+dx,y=harbor.y+boatDy;
             if(x>130&&x<world.w-130&&y<world.h-40&&y>harbor.y+60&&[-95,0,95].every(ox=>[-55,0,30].every(oy=>!onLargeIsland(world,x+ox,y+oy))))
-                result.push({x,y,w:180,h:200,atlas,frame:'boat',decorationOnly:true});
+                result.push({x,y,w:180,h:200,atlas:boatAtlas,frame:'boat',decorationOnly:true});
         }
     }
     return result;

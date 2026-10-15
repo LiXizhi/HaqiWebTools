@@ -3,6 +3,8 @@ import {paintCampFloorSteps,paintCampPlazaSteps} from './adventure_camp_terrain.
 import { paintGroundDetailSteps, paintWaterDetailSteps, paintRoadDetailSteps, paintRiverBank, paintShoreDetailSteps } from './adventure_terrain_detail.js';
 import { groundDecorationSteps } from './adventure_ground_decorations_core.js';
 import { paintBridges } from './adventure_bridge.js';
+import { mountainSprite } from './island_scene_art_core.js';
+import { paintGroundTexturesSteps, paintRoadTexture, paintWaterTexture } from './island_ground_textures.js';
 
 function polygon(c,points){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();}
 function line(c,points,width,color){c.strokeStyle=color;c.lineWidth=width;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();}
@@ -54,6 +56,8 @@ export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.
         const g=c.createRadialGradient(0,0,.2,0,0,1.25);g.addColorStop(0,r.color);g.addColorStop(.65,r.color);g.addColorStop(1,r.color+'00');
         oval(c,0,0,1.25,1.25,g);c.restore();yield;
     }
+    // Islands with a scene art kit get painted, seamlessly tiled materials.
+    const textured=!overview&&decorationArt?yield* paintGroundTexturesSteps(c,world,rect,decorationArt):false;
     // Feather the sand into the already-painted regional ground. Wide to narrow
     // passes leave a soft inland margin without moving the collision coastline.
     for(let fringe=18;fringe>0;fringe-=3){
@@ -61,16 +65,46 @@ export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.
         c.strokeStyle=terrain.sand+'24';c.stroke();
     }
     polygon(c,layout.coast);c.lineWidth=terrain.coastWidth-8;c.strokeStyle=terrain.sand;c.stroke();
-    if(!overview){yield* paintGroundDetailSteps(c,world,rect);yield* paintShoreDetailSteps(c,world,rect);}
+    if(!overview){if(!textured)yield* paintGroundDetailSteps(c,world,rect);yield* paintShoreDetailSteps(c,world,rect);}
     // Relief contours and small stone fans suggest altitude without animated geometry.
-    for(const mountain of layout.mountains||[]){
+    for(const [index,mountain] of (layout.mountains||[]).entries()){
         const {x:cx,y:cy,biome,scale=1}=mountain,shape=rules.mountain,palette=rules.biomes[biome].mountain||rules.biomes.gold.mountain;
         const reach=(shape.baseRadius+(shape.layers-1)*shape.stepRadius)*scale*1.12,lift=(shape.layers-1)*shape.stepHeight*scale;
+        const sprite=!overview&&decorationArt?mountainSprite(world,mountain,index):null;
+        if(sprite){
+            // Painted hill replaces the stepped polygon once its atlas is ready.
+            const w=reach*2.3,bottom=cy+reach*shape.aspect*1.02;
+            if(!hits(rect,cx-w/2,bottom-w,cx+w/2,bottom+8))continue;
+            paintSoftShadow(c,cx,bottom-reach*shape.aspect*.35,reach*.92,reach*shape.aspect*.6,.22);
+            c.save();c.translate(cx,0);if(sprite.flip)c.scale(-1,1);
+            const drawn=decorationArt.draw(c,sprite.atlas,sprite.frame,-w/2,bottom-w,w,w);
+            c.restore();
+            if(drawn)continue;
+        }
         if(!hits(rect,cx-reach,cy-reach*shape.aspect-lift,cx+reach,cy+reach*shape.aspect))continue;
+        let prevPoints=null;
         for(let j=shape.layers-1;j>=0;j--){
             const points=Array.from({length:12},(_,i)=>{const a=i*Math.PI/6,r=(shape.baseRadius+j*shape.stepRadius)*scale*(1+.12*Math.sin(i*4+cx));return[cx+Math.cos(a)*r,cy+Math.sin(a)*r*shape.aspect-j*shape.stepHeight*scale];});
             polygon(c,points);c.fillStyle=palette[Math.min(j,palette.length-1)];c.fill();
             c.strokeStyle=palette.at(-1)+'55';c.lineWidth=3;c.stroke();
+            if(!overview){
+                line(c,points.slice(6,11),2.4,'#fff8e436');
+                line(c,points.slice(0,6),2.8,'#1b161233');
+                if(prevPoints){
+                    for(let k=0;k<12;k+=2)line(c,[points[k],prevPoints[k]],1.6,k>=6?'#fff6df26':'#221b1628');
+                }
+                prevPoints=points;
+            }
+        }
+        if(!overview&&decorationArt){
+            for(const [dx,dy,sz,flip] of [[-.52,.22,74,false],[.48,.26,68,true]]){
+                const rx=cx+dx*reach,ry=cy+dy*reach*shape.aspect;
+                if(!hits(rect,rx-sz,ry-sz,rx+sz,ry+sz))continue;
+                paintSoftShadow(c,rx,ry-4,sz*.36,sz*.12,.2);
+                c.save();c.translate(rx,ry);if(flip)c.scale(-1,1);
+                decorationArt.draw(c,'islandPlazasProps','biomeCrystalCluster',-sz/2,-sz,sz,sz);
+                c.restore();
+            }
         }
     }
     yield;
@@ -80,8 +114,18 @@ export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.
         for(let row=0;row<farm.rows;row++)for(let col=0;col<farm.cols;col++){
         const x=farm.x+col*130,y=farm.y+row*90;
         if(!hits(rect,x,y,x+115,y+74))continue;
+        if(!overview){
+            c.fillStyle='#6e553688';c.fillRect(x-4,y-4,123,82);
+        }
         c.fillStyle=(row+col)%2?'#c3bc70':'#799853';c.fillRect(x,y,115,74);
         for(let j=1;j<6;j++)line(c,[[x+6,y+j*11],[x+107,y+j*11]],3,'#e0cd8a66');
+        if(!overview){
+            const gold=(row+col)%2;
+            for(let j=1;j<6;j++){
+                line(c,[[x+8,y+j*11+2],[x+105,y+j*11+2]],1.5,gold?'#8d6d2f55':'#4e693155');
+                for(let wx=14;wx<104;wx+=14)oval(c,x+wx+((j%2)*4),y+j*11-1.5,3.2,1.8,gold?'#f5df88cc':'#a8cc6ecc');
+            }
+        }
         }
     }
     yield;
@@ -111,7 +155,7 @@ export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.
                 for(const [x,y] of r.points){c.moveTo(x+radius,y);c.arc(x,y,radius,0,Math.PI*2);}
             }
             for(const l of lakes){c.moveTo(l.x+l.rx,l.y);c.ellipse(l.x,l.y,l.rx,l.ry,0,0,Math.PI*2);}
-            c.clip();yield* paintWaterDetailSteps(c,world,rect,material);c.restore();
+            c.clip();paintWaterTexture(c,world,rect,decorationArt,material);yield* paintWaterDetailSteps(c,world,rect,material);c.restore();
             for(const r of rivers)if(!lakes.length)paintRiverBank(c,world,rect,r,palette);
         }
     }
@@ -141,7 +185,7 @@ export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.
             line(c,[[p.a.x,p.a.y],[p.b.x,p.b.y]],Math.max(4,p.width+extra),color);yield;
         }
     }
-    if(!overview)yield* paintRoadDetailSteps(c,world,rect);
+    if(!overview)yield* paintRoadDetailSteps(c,world,rect,Boolean(decorationArt)&&paintRoadTexture(c,world,rect,decorationArt));
     const visibleBridges=layout.bridges.filter(b=>{
         const reach=Math.hypot(b.w,b.h)/2+24;
         return hits(rect,b.x-reach,b.y-reach,b.x+reach,b.y+reach);
@@ -153,23 +197,34 @@ export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.
     }
     for(const f of layout.features||[]){
         const s=f.size;
-        if(!hits(rect,f.x-s,f.y-s,f.x+s,f.y+s*.2))continue;
+        if(!hits(rect,f.x-s*1.2,f.y-s*2,f.x+s*1.2,f.y+s*.4))continue;
         if(f.kind==='goldTree'){
-            c.fillStyle='#8d7040';c.fillRect(f.x-s*.09,f.y-s*.65,s*.18,s*.65);
-            for(const [dx,dy,k] of [[0,-.8,.45],[-.28,-.65,.32],[.28,-.65,.32],[0,-1,.3]])oval(c,f.x+dx*s,f.y+dy*s,s*k,s*k*.85,'#e4bd55');
-            oval(c,f.x-s*.12,f.y-s*.95,s*.23,s*.17,'#f5db7e');
+            const drawn=!overview&&decorationArt?.draw(c,'islandLandmarks','fireGoldTree',f.x-s*1.18,f.y-s*1.92,s*2.36,s*2.12);
+            if(!drawn){
+                c.fillStyle='#8d7040';c.fillRect(f.x-s*.09,f.y-s*.65,s*.18,s*.65);
+                for(const [dx,dy,k] of [[0,-.8,.45],[-.28,-.65,.32],[.28,-.65,.32],[0,-1,.3]])oval(c,f.x+dx*s,f.y+dy*s,s*k,s*k*.85,'#e4bd55');
+                oval(c,f.x-s*.12,f.y-s*.95,s*.23,s*.17,'#f5db7e');
+            }
         }else if(f.kind==='ruins'){
-            c.fillStyle='#a89b79';c.fillRect(f.x-s*.6,f.y-s*.12,s*1.2,s*.18);
-            for(const dx of [-.45,-.15,.15,.45]){c.fillStyle='#cdbd91';c.fillRect(f.x+dx*s-s*.06,f.y-s*.65,s*.12,s*.55);c.fillStyle='#e0cea4';c.fillRect(f.x+dx*s-s*.09,f.y-s*.7,s*.18,s*.09);}
+            const frame=world.zone==='dark'?'darkCitadelRuins':'desertPyramid';
+            const drawn=!overview&&decorationArt?.draw(c,'islandLandmarks',frame,f.x-s*1.15,f.y-s*1.58,s*2.3,s*1.82);
+            if(!drawn){
+                c.fillStyle='#a89b79';c.fillRect(f.x-s*.6,f.y-s*.12,s*1.2,s*.18);
+                for(const dx of [-.45,-.15,.15,.45]){c.fillStyle='#cdbd91';c.fillRect(f.x+dx*s-s*.06,f.y-s*.65,s*.12,s*.55);c.fillStyle='#e0cea4';c.fillRect(f.x+dx*s-s*.09,f.y-s*.7,s*.18,s*.09);}
+            }
         }
     }
     const plaza=rules.plaza;
-    if(!overview&&terrain.campRefined)yield* paintCampFloorSteps(c,world,rect,decorationArt);
-    if(hits(rect,world.center.x-plaza.radiusX,world.center.y-plaza.radiusY,world.center.x+plaza.radiusX,world.center.y+plaza.radiusY)){
+    const refinedIsland=Boolean(terrain.campRefined||['town','fire','ice','desert','dark'].includes(world.zone));
+    if(!overview&&refinedIsland)yield* paintCampFloorSteps(c,world,rect,decorationArt);
+    if(hits(rect,world.center.x-plaza.radiusX-12,world.center.y-plaza.radiusY-12,world.center.x+plaza.radiusX+12,world.center.y+plaza.radiusY+12)){
         oval(c,world.center.x,world.center.y,plaza.radiusX,plaza.radiusY,plaza.edge);oval(c,world.center.x,world.center.y,plaza.radiusX-11,plaza.radiusY-9,plaza.fill);
-        if(!overview&&terrain.campRefined)yield* paintCampPlazaSteps(c,world,rect);
-        c.strokeStyle=plaza.line;c.lineWidth=2;
-        for(let i=0;i<3;i++){c.beginPath();c.ellipse(world.center.x,world.center.y,(layout.route?72:145)-i*(layout.route?18:36),(layout.route?40:83)-i*(layout.route?10:20),0,0,Math.PI*2);c.stroke();}
+        if(!overview&&refinedIsland){
+            yield* paintCampPlazaSteps(c,world,rect,decorationArt);
+        }else{
+            c.strokeStyle=plaza.line;c.lineWidth=2;
+            for(let i=0;i<3;i++){c.beginPath();c.ellipse(world.center.x,world.center.y,(layout.route?72:145)-i*(layout.route?18:36),(layout.route?40:83)-i*(layout.route?10:20),0,0,Math.PI*2);c.stroke();}
+        }
     }
     yield;
     // Bake after roads and plaza so their surfaces receive shade too.

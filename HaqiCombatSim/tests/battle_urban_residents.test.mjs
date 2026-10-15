@@ -48,11 +48,15 @@ test('urban parts are registered with verified bytes, bounded anchors and shared
 });
 
 test('new drafts pair urban exposed skin with the matching head without changing independent IDs',()=>{
+ const aliasHeads=Object.fromEntries(Object.entries(art.heads).map(([id,h])=>[`pair-${id}`,{...h,id:`pair-${id}`}]));
+ const pairedManifest={...runtime,heads:aliasHeads};
  const seen=new Set();
  for(let seed=0;seed<500;seed++){
-  const draft=createHeroDraft(runtime,seed);
+  const defaultDraft=createHeroDraft(runtime,seed);
+  for(const appearance of ['boy','girl'])assert.equal(defaultDraft.headChoices[appearance].startsWith('urban-'),false);
+  const draft=createHeroDraft(pairedManifest,seed);
   for(const appearance of ['boy','girl']){
-   const head=runtime.heads[draft.headChoices[appearance]];
+   const head=pairedManifest.heads[draft.headChoices[appearance]];
    if(head.recommendedBodyId){assert.equal(draft.bodyChoices[appearance],head.recommendedBodyId);seen.add(head.id);}
   }
  }

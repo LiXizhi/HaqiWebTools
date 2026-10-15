@@ -9,7 +9,7 @@ const node=(tag,text='',className='')=>{const n=document.createElement(tag);if(t
 const button=(text,fn,cls='secondary')=>{const n=node('button',text,cls);n.type='button';n.onclick=fn;return n;};
 const labeled=(text,input)=>{const label=node('label',text);label.append(input);return label;};
 export function openPhotoHeadView({service,assets,draft,onApply,onLogin,getOwner,shell}) {
-    const styleURL=new URL('../css/photo_head.css?v=20261007-look-controls',import.meta.url).href;
+    const styleURL=new URL('../css/photo_head.css',import.meta.url).href;
     let styleLink=document.querySelector('link[data-photo-head-style]');if(!styleLink){styleLink=node('link');styleLink.rel='stylesheet';styleLink.dataset.photoHeadStyle='1';document.head.append(styleLink);}if(styleLink.href!==styleURL)styleLink.href=styleURL;
     draft={...draft,headChoices:{...draft.headChoices},bodyChoices:{...draft.bodyChoices}};
     if(draft.headId)draft.headChoices[draft.appearance]=draft.headId;

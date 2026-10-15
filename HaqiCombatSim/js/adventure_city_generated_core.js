@@ -3,13 +3,8 @@ import {generateLivingStreetLayout} from './adventure_city_living_layout_core.js
 import {createRng,hashSeed} from './rng_core.js';
 import {resolveParams} from './combat_params_core.js';
 import {specMaxHp,petParams} from './adventure_pets_core.js';
-export const generatedCityId=row=>`generated-${String(row.id)}`;
-export const generatedCityDungeonId=row=>`city:${generatedCityId(row)}:default`;
-export function validateGeneratedCityRoute(row){
-    if(row?.generationVersion!=null&&![1,2,3].includes(row.generationVersion))throw Error('自动城市版本无效');
-    if(!row||!/^[-a-zA-Z0-9_]{1,60}$/.test(String(row.id))||typeof row.name!=='string'||!row.name||row.name.length>100||!Number.isFinite(row.lon)||Math.abs(row.lon)>180||!Number.isFinite(row.lat)||Math.abs(row.lat)>90||!Number.isInteger(row.challengeLevel)||row.challengeLevel<1||row.challengeLevel>60||!Number.isInteger(row.partySize)||row.partySize<1||row.partySize>4)throw Error('自动城市入口记录无效');
-    return row;
-}
+import {generatedCityId,generatedCityDungeonId,validateGeneratedCityRoute} from './adventure_city_dungeons_core.js';
+export {generatedCityId,generatedCityDungeonId,validateGeneratedCityRoute};
 export function generatedCityRoute(city,save,profiles=[]){
     const level=Math.max(save.level||1,...profiles.map(p=>p.level||1),...(save.coopRun?.members||[]).map(m=>m.unit.level||1));
     return validateGeneratedCityRoute({...city,generationVersion:3,challengeLevel:Math.min(60,level),partySize:Math.min(4,1+profiles.length),layoutSeed:hashSeed(`city-view:1:${city.id}:${save.seed}`)});

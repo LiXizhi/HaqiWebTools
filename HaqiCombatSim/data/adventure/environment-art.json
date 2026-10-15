@@ -180,6 +180,796 @@
           ]
         }
       }
+    },
+    "campTrees": {
+      "local": "assets/adventure/environment/camp-trees-fd7135a4fe28.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/camp-trees-fd7135a4fe28.webp",
+      "width": 652,
+      "height": 652,
+      "size": 119350,
+      "sha256": "fd7135a4fe28653826527997fccce243b18a469aedc37a033ff4428562e5ff90",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "93351d879290f6b375f75e1dbef8b2a5c7e1569873a79dcf7a1c02fd8c49dc9d",
+        "width": 1024,
+        "height": 1024
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "tallPine": {
+          "rect": [
+            60,
+            8,
+            206,
+            310
+          ],
+          "sourceRect": [
+            102,
+            22,
+            301,
+            452
+          ]
+        },
+        "layeredPine": {
+          "rect": [
+            382,
+            8,
+            214,
+            310
+          ],
+          "sourceRect": [
+            620,
+            40,
+            300,
+            434
+          ]
+        },
+        "cypressPine": {
+          "rect": [
+            52,
+            334,
+            221,
+            310
+          ],
+          "sourceRect": [
+            98,
+            536,
+            321,
+            451
+          ]
+        },
+        "blossomTree": {
+          "rect": [
+            351,
+            334,
+            275,
+            310
+          ],
+          "sourceRect": [
+            588,
+            566,
+            358,
+            404
+          ]
+        }
+      }
+    },
+    "campProps": {
+      "local": "assets/adventure/environment/camp-props-ab652717f6ac.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/camp-props-ab652717f6ac.webp",
+      "width": 816,
+      "height": 544,
+      "size": 153726,
+      "sha256": "ab652717f6aca64b95f486d05d1d001920c3d7cdc5758152467cc0e07f427917",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "1b40842f9fce0e4a92108e4baea2d4a3fd945cc405ede0ec5f8e1c5fcffe3ca1",
+        "width": 1264,
+        "height": 848
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "woodFence": {
+          "rect": [
+            8,
+            34,
+            256,
+            230
+          ],
+          "sourceRect": [
+            46,
+            85,
+            347,
+            312
+          ]
+        },
+        "magicLantern": {
+          "rect": [
+            325,
+            8,
+            166,
+            256
+          ],
+          "sourceRect": [
+            517,
+            34,
+            234,
+            361
+          ]
+        },
+        "lushBush": {
+          "rect": [
+            552,
+            52,
+            256,
+            212
+          ],
+          "sourceRect": [
+            872,
+            91,
+            351,
+            291
+          ]
+        },
+        "flowerBed": {
+          "rect": [
+            8,
+            335,
+            256,
+            201
+          ],
+          "sourceRect": [
+            41,
+            484,
+            351,
+            275
+          ]
+        },
+        "mossBoulder": {
+          "rect": [
+            280,
+            327,
+            256,
+            209
+          ],
+          "sourceRect": [
+            463,
+            478,
+            355,
+            290
+          ]
+        },
+        "coastalRockCluster": {
+          "rect": [
+            552,
+            326,
+            256,
+            210
+          ],
+          "sourceRect": [
+            871,
+            481,
+            350,
+            287
+          ]
+        }
+      }
+    },
+    "islandLandmarks": {
+      "local": "assets/adventure/environment/island-landmarks-269827954af5.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/island-landmarks-269827954af5.webp",
+      "width": 864,
+      "height": 576,
+      "size": 165930,
+      "sha256": "269827954af52885b58280a8c28d6c73ca13e01bf4b952f9f6b1da4ccddb92bf",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "21ef8a789b5d0ddeb1c3bd050e24d5333a039890abbe74f51ec258669d25c7ef",
+        "width": 1264,
+        "height": 848
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "townCastle": {
+          "rect": [
+            30,
+            8,
+            227,
+            272
+          ],
+          "sourceRect": [
+            80,
+            9,
+            341,
+            409
+          ]
+        },
+        "townWindmill": {
+          "rect": [
+            315,
+            8,
+            233,
+            272
+          ],
+          "sourceRect": [
+            491,
+            29,
+            322,
+            376
+          ]
+        },
+        "fireGoldTree": {
+          "rect": [
+            602,
+            8,
+            235,
+            272
+          ],
+          "sourceRect": [
+            886,
+            21,
+            339,
+            392
+          ]
+        },
+        "desertPyramid": {
+          "rect": [
+            8,
+            337,
+            272,
+            231
+          ],
+          "sourceRect": [
+            25,
+            469,
+            396,
+            337
+          ]
+        },
+        "darkCitadelRuins": {
+          "rect": [
+            296,
+            312,
+            272,
+            256
+          ],
+          "sourceRect": [
+            421,
+            440,
+            399,
+            376
+          ]
+        },
+        "iceCrystalSanctum": {
+          "rect": [
+            606,
+            296,
+            228,
+            272
+          ],
+          "sourceRect": [
+            912,
+            446,
+            309,
+            369
+          ]
+        }
+      }
+    },
+    "islandTrees": {
+      "local": "assets/adventure/environment/island-trees-d820d27bf5de.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/island-trees-d820d27bf5de.webp",
+      "width": 864,
+      "height": 576,
+      "size": 197450,
+      "sha256": "d820d27bf5deb7d9308a5692014cb1c0e53c40c0b3e8bf571e146f2fd9a77214",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "2c3895d6cfa6be5109c478d4638a55be266fa0828d11449cbb1af863a6d375ec",
+        "width": 1264,
+        "height": 848
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "autumnGoldTree": {
+          "rect": [
+            20,
+            8,
+            247,
+            272
+          ],
+          "sourceRect": [
+            44,
+            27,
+            332,
+            366
+          ]
+        },
+        "tropicalPalm": {
+          "rect": [
+            296,
+            12,
+            272,
+            268
+          ],
+          "sourceRect": [
+            449,
+            28,
+            373,
+            368
+          ]
+        },
+        "desertCactus": {
+          "rect": [
+            622,
+            8,
+            196,
+            272
+          ],
+          "sourceRect": [
+            936,
+            42,
+            257,
+            356
+          ]
+        },
+        "charredEmberTree": {
+          "rect": [
+            19,
+            296,
+            250,
+            272
+          ],
+          "sourceRect": [
+            42,
+            443,
+            347,
+            378
+          ]
+        },
+        "darkShadowTree": {
+          "rect": [
+            308,
+            296,
+            248,
+            272
+          ],
+          "sourceRect": [
+            460,
+            444,
+            346,
+            379
+          ]
+        },
+        "darkWeepingTree": {
+          "rect": [
+            601,
+            296,
+            238,
+            272
+          ],
+          "sourceRect": [
+            892,
+            448,
+            325,
+            372
+          ]
+        }
+      }
+    },
+    "islandPlazasProps": {
+      "local": "assets/adventure/environment/island-plazas-props-62c60c0145ca.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/island-plazas-props-62c60c0145ca.webp",
+      "width": 816,
+      "height": 544,
+      "size": 155448,
+      "sha256": "62c60c0145ca7e5a67b87de1b40aa94f284660712a8250b0869b95433318287d",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "91fa6b35c09e9aef7d528d4b462376761dfae8927aa4dd752cde3ebd7b533e37",
+        "width": 1264,
+        "height": 848
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "townPlazaMedallion": {
+          "rect": [
+            8,
+            52,
+            256,
+            212
+          ],
+          "sourceRect": [
+            25,
+            64,
+            382,
+            316
+          ]
+        },
+        "firePlazaMedallion": {
+          "rect": [
+            280,
+            52,
+            256,
+            212
+          ],
+          "sourceRect": [
+            448,
+            64,
+            382,
+            317
+          ]
+        },
+        "icePlazaMedallion": {
+          "rect": [
+            552,
+            52,
+            256,
+            212
+          ],
+          "sourceRect": [
+            871,
+            64,
+            382,
+            316
+          ]
+        },
+        "desertPlazaMedallion": {
+          "rect": [
+            8,
+            323,
+            256,
+            213
+          ],
+          "sourceRect": [
+            24,
+            478,
+            383,
+            318
+          ]
+        },
+        "darkPlazaMedallion": {
+          "rect": [
+            280,
+            322,
+            256,
+            214
+          ],
+          "sourceRect": [
+            448,
+            478,
+            382,
+            319
+          ]
+        },
+        "biomeCrystalCluster": {
+          "rect": [
+            552,
+            315,
+            256,
+            221
+          ],
+          "sourceRect": [
+            875,
+            469,
+            375,
+            324
+          ]
+        }
+      }
+    },
+    "desertGround": {
+      "local": "assets/adventure/environment/desert-ground-af11a48afd34.webp",
+      "cdn": "",
+      "width": 768,
+      "height": 768,
+      "size": 99164,
+      "sha256": "af11a48afd34dcc63ec98e5b1dce2357afb0a0422461994419f7496d25da7745",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "0d831c4a35e9a920c33d9f3428aa83a6f4188776b101ac2bdcf5edeec3b4de7f",
+        "width": 1024,
+        "height": 1024,
+        "seamless": "half-offset cross-fade",
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.desert",
+        "reference": "data/adventure/world-map-art.json#desert"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 92
+      },
+      "frames": {
+        "sandDunes": {
+          "rect": [
+            0,
+            0,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            0,
+            0,
+            512,
+            512
+          ]
+        },
+        "hardpan": {
+          "rect": [
+            384,
+            0,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            512,
+            0,
+            512,
+            512
+          ]
+        },
+        "sandstoneRoad": {
+          "rect": [
+            0,
+            384,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            0,
+            512,
+            512,
+            512
+          ]
+        },
+        "oasisWater": {
+          "rect": [
+            384,
+            384,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            512,
+            512,
+            512,
+            512
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "desertProps": {
+      "local": "assets/adventure/environment/desert-props-3847e2f99aec.webp",
+      "cdn": "",
+      "width": 816,
+      "height": 544,
+      "size": 135376,
+      "sha256": "3847e2f99aec1dd4f411fea4ed0f75874f63ac7fc78f3bb9c820a2902e37f945",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "55892368a230e3fc0ec8c6dbf4bd71daf4b4196f8388c6fffb6a03bab1368e67",
+        "width": 1264,
+        "height": 848,
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.desert",
+        "reference": "data/adventure/world-map-art.json#desert"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "sandstoneBoulder": {
+          "rect": [
+            8,
+            70,
+            256,
+            194
+          ],
+          "sourceRect": [
+            34,
+            78,
+            374,
+            284
+          ]
+        },
+        "obelisk": {
+          "rect": [
+            321,
+            8,
+            173,
+            256
+          ],
+          "sourceRect": [
+            538,
+            35,
+            233,
+            344
+          ]
+        },
+        "clayPots": {
+          "rect": [
+            552,
+            37,
+            256,
+            227
+          ],
+          "sourceRect": [
+            890,
+            81,
+            330,
+            293
+          ]
+        },
+        "animalSkull": {
+          "rect": [
+            8,
+            321,
+            256,
+            215
+          ],
+          "sourceRect": [
+            38,
+            505,
+            334,
+            281
+          ]
+        },
+        "shadeCanopy": {
+          "rect": [
+            280,
+            280,
+            255,
+            256
+          ],
+          "sourceRect": [
+            469,
+            459,
+            349,
+            350
+          ]
+        },
+        "dryShrub": {
+          "rect": [
+            552,
+            290,
+            256,
+            246
+          ],
+          "sourceRect": [
+            919,
+            514,
+            281,
+            270
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "desertFeatures": {
+      "local": "assets/adventure/environment/desert-features-11a7dbacd6b7.webp",
+      "cdn": "",
+      "width": 960,
+      "height": 640,
+      "size": 126600,
+      "sha256": "11a7dbacd6b78065c29975a2e2722395624592e509e2bd2f2c621f9d045d0725",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "5bdffd1f0559d64fa84a5fa0042d7506b63561037c31de508dc448d96411b6d9",
+        "width": 1264,
+        "height": 848,
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.desert",
+        "reference": "data/adventure/world-map-art.json#desert"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "mesa": {
+          "rect": [
+            8,
+            91,
+            304,
+            221
+          ],
+          "sourceRect": [
+            20,
+            72,
+            395,
+            287
+          ]
+        },
+        "sandstoneCrag": {
+          "rect": [
+            328,
+            112,
+            304,
+            200
+          ],
+          "sourceRect": [
+            442,
+            85,
+            396,
+            261
+          ]
+        },
+        "oasisPond": {
+          "rect": [
+            648,
+            140,
+            304,
+            172
+          ],
+          "sourceRect": [
+            858,
+            131,
+            395,
+            224
+          ]
+        },
+        "ruinedColumns": {
+          "rect": [
+            8,
+            357,
+            304,
+            275
+          ],
+          "sourceRect": [
+            23,
+            457,
+            384,
+            347
+          ]
+        },
+        "sphinxStatue": {
+          "rect": [
+            331,
+            343,
+            298,
+            289
+          ],
+          "sourceRect": [
+            504,
+            497,
+            298,
+            289
+          ]
+        },
+        "duneRocks": {
+          "rect": [
+            648,
+            461,
+            304,
+            171
+          ],
+          "sourceRect": [
+            859,
+            544,
+            391,
+            220
+          ]
+        }
+      },
+      "layer": "terrain"
     }
   }
 }

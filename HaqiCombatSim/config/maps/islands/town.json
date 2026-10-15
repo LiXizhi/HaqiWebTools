@@ -608,5 +608,93 @@
         3425
       ]
     }
-  ]
+  ],
+  "sceneArt": {
+    "ground": {
+      "atlas": "townGround",
+      "base": "lushGrass",
+      "biomes": {
+        "gold": "autumnGround",
+        "grass": "lushGrass",
+        "park": "lushGrass",
+        "farm": "lushGrass",
+        "forest": "lushGrass",
+        "lake": "lushGrass",
+        "town": "lushGrass",
+        "snow": null,
+        "beach": null
+      },
+      "road": "cobbleRoad",
+      "water": {
+        "water": "riverWater"
+      },
+      "scale": 0.8,
+      "alpha": 0.7
+    },
+    "props": {
+      "atlas": "townProps",
+      "roadside": [
+        "streetLamp",
+        "flowerHedge",
+        "barrelStack",
+        "flowerCart"
+      ],
+      "scatter": {
+        "default": [
+          "flowerHedge",
+          "stoneWell",
+          "flowerCart"
+        ],
+        "farm": [
+          "hayBales",
+          "hayBales",
+          "barrelStack"
+        ],
+        "gold": [
+          "hayBales",
+          "barrelStack"
+        ],
+        "snow": [],
+        "beach": []
+      },
+      "sizes": {
+        "streetLamp": 72,
+        "stoneWell": 66,
+        "flowerCart": 66
+      }
+    },
+    "features": {
+      "atlas": "townFeatures",
+      "mountains": {
+        "snow": [
+          "snowyHill"
+        ],
+        "gold": [
+          "goldenHill"
+        ]
+      },
+      "scatter": {
+        "default": [
+          "flowerPond",
+          "stoneCircle",
+          "gazebo",
+          "fountain"
+        ],
+        "snow": [],
+        "beach": [],
+        "farm": [
+          "flowerPond"
+        ]
+      },
+      "sizes": {
+        "flowerPond": 170,
+        "stoneCircle": 160,
+        "gazebo": 150,
+        "fountain": 130
+      }
+    },
+    "flat": [
+      "flowerPond"
+    ]
+  }
 }

@@ -341,5 +341,78 @@
       ]
     }
   ],
-  "theme": "dark"
+  "theme": "dark",
+  "sceneArt": {
+    "ground": {
+      "atlas": "darkGround",
+      "base": "darkRock",
+      "biomes": {
+        "dark": "darkRock",
+        "marsh": "marshMud",
+        "ash": "darkRock"
+      },
+      "road": "runeRoad",
+      "water": {
+        "dark": "darkWater"
+      },
+      "scale": 0.8,
+      "alpha": 0.85
+    },
+    "props": {
+      "atlas": "darkProps",
+      "roadside": [
+        "spiritLantern",
+        "runeStone",
+        "mossyGravestone"
+      ],
+      "scatter": {
+        "default": [
+          "violetCrystals",
+          "mossyGravestone",
+          "glowMushrooms",
+          "deadStump"
+        ],
+        "marsh": [
+          "glowMushrooms",
+          "deadStump",
+          "glowMushrooms"
+        ]
+      },
+      "sizes": {
+        "spiritLantern": 68,
+        "runeStone": 62
+      }
+    },
+    "features": {
+      "atlas": "darkFeatures",
+      "mountains": {
+        "dark": [
+          "darkPeak",
+          "shadowCrag"
+        ]
+      },
+      "scatter": {
+        "default": [
+          "ruinedArch",
+          "crystalSpire",
+          "brokenTower",
+          "shadowCrag"
+        ],
+        "marsh": [
+          "swampPool",
+          "ruinedArch"
+        ]
+      },
+      "sizes": {
+        "swampPool": 180,
+        "ruinedArch": 160,
+        "crystalSpire": 150,
+        "brokenTower": 160,
+        "shadowCrag": 170
+      }
+    },
+    "flat": [
+      "swampPool"
+    ]
+  }
 }

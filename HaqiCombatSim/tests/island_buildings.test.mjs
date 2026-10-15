@@ -11,27 +11,28 @@ const content=read('data/adventure/chapter.json');content.worldMaps={};
 for(const z of ['camp','town','fire','ice','desert','dark'])content.worldMaps[z]=read('data/adventure/maps/'+z+'.json');
 test('既有岛屿与扩展建筑图集大小、来源、哈希与裁剪范围有效',()=>{
     const manifest=read('data/adventure/building-art.json');
-    assert.equal(Object.keys(manifest.atlases).length,5+PACK_ISLANDS.length);
+    assert.equal(Object.keys(manifest.atlases).length,6+PACK_ISLANDS.length);
     for(const [id,row] of Object.entries(manifest.atlases)){
         const bytes=fs.readFileSync(new URL('../'+row.local,import.meta.url));
         assert.equal(bytes.length,row.size);assert.ok(row.size<=200000);
         assert.equal(createHash('sha256').update(bytes).digest('hex'),row.sha256);
         assert.ok(row.cdn.startsWith('https://cdn.keepwork.com/'));
-        assert.equal(Object.keys(row.frames).length,PACK_ISLANDS.some(i=>i.id===id)?3:4);
+        assert.equal(Object.keys(row.frames).length,['camp','hanzi'].includes(id)?6:PACK_ISLANDS.some(i=>i.id===id)?3:4);
         for(const {rect:[x,y,w,h]} of Object.values(row.frames))assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=row.width&&y+h<=row.height);
     }
 });
-test('各岛摆放可复现，避开道路和居民，船只在海上，营地仅新增码头',()=>{
+test('各岛摆放可复现，避开道路和居民，船只在海上，营地使用专属建筑与帐篷图集',()=>{
     for(const zone of ['camp','town','fire','ice','desert','dark']){
         const before=JSON.stringify(content.worldMaps[zone]),world=createWorld(zone,content);
         const buildings=world.buildings.filter(b=>b.atlas);
         assert.deepEqual(world.buildings,createWorld(zone,content).buildings);
         assert.equal(JSON.stringify(content.worldMaps[zone]),before);
         if(zone==='camp'){
-            // 营地保留自带建筑，不散布村庄；码头与小船复用小镇图集（2026-09-26）。
-            assert.ok(buildings.some(b=>b.frame==='harbor'&&b.atlas==='town'&&b.decorationOnly));
+            assert.ok(buildings.some(b=>b.frame==='harbor'&&b.atlas==='camp'&&b.decorationOnly));
+            assert.ok(buildings.some(b=>b.frame==='tent'&&b.atlas==='camp'));
+            assert.ok(buildings.some(b=>b.frame==='academy'&&b.atlas==='camp'));
             assert.ok(!buildings.some(b=>b.frame==='village'||b.frame==='tower'));
-            for(const b of buildings)assert.equal(onLargeIsland(world,b.x,b.y),false);
+            for(const b of buildings.filter(b=>b.frame==='boat'||b.frame==='harbor'))assert.equal(onLargeIsland(world,b.x,b.y),false);
             continue;
         }
         assert.equal(buildings.length,13);

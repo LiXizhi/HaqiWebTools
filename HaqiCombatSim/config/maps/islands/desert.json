@@ -342,5 +342,78 @@
       ]
     }
   ],
-  "theme": "desert"
+  "theme": "desert",
+  "sceneArt": {
+    "ground": {
+      "atlas": "desertGround",
+      "base": "sandDunes",
+      "biomes": {
+        "desert": "sandDunes",
+        "gold": "hardpan",
+        "oasis": null
+      },
+      "road": "sandstoneRoad",
+      "water": {
+        "water": "oasisWater"
+      },
+      "scale": 0.8,
+      "alpha": 0.8
+    },
+    "props": {
+      "atlas": "desertProps",
+      "roadside": [
+        "obelisk",
+        "clayPots",
+        "shadeCanopy",
+        "sandstoneBoulder"
+      ],
+      "scatter": {
+        "default": [
+          "sandstoneBoulder",
+          "animalSkull",
+          "dryShrub",
+          "dryShrub"
+        ],
+        "oasis": [
+          "clayPots",
+          "dryShrub",
+          "sandstoneBoulder"
+        ]
+      },
+      "sizes": {
+        "shadeCanopy": 76,
+        "obelisk": 70
+      }
+    },
+    "features": {
+      "atlas": "desertFeatures",
+      "mountains": {
+        "desert": [
+          "mesa",
+          "sandstoneCrag"
+        ]
+      },
+      "scatter": {
+        "default": [
+          "ruinedColumns",
+          "duneRocks",
+          "duneRocks",
+          "sphinxStatue"
+        ],
+        "oasis": [
+          "oasisPond",
+          "ruinedColumns"
+        ]
+      },
+      "sizes": {
+        "oasisPond": 190,
+        "ruinedColumns": 170,
+        "duneRocks": 150,
+        "sphinxStatue": 150
+      }
+    },
+    "flat": [
+      "oasisPond"
+    ]
+  }
 }

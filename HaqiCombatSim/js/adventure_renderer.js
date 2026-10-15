@@ -130,7 +130,7 @@ export function createRenderer(canvas,assets) {
     const dungeonFog=createDungeonFog(),mapFog=createDungeonFog();
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const ctx=canvas.getContext('2d',{alpha:false}),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
-    const terrainTiles=createScheduledTerrainCache({rasterize:createIslandTerrainRasterizer(assets.terrainDecorationArt),onMetric:(name,value)=>typeof value==='number'?perf.record(name,value):perf.event(name,value),paint:(c,world,rect,atlases)=>paintLargeTerrainSteps(c,world,rect,false,assets.terrainDecorationArt?{draw(...args){atlases.add(args[1]);return assets.terrainDecorationArt.draw(...args);}}:null),createCanvas:()=>document.createElement('canvas')});
+    const terrainTiles=createScheduledTerrainCache({rasterize:createIslandTerrainRasterizer(assets.terrainDecorationArt),onMetric:(name,value)=>typeof value==='number'?perf.record(name,value):perf.event(name,value),paint:(c,world,rect,atlases)=>paintLargeTerrainSteps(c,world,rect,false,assets.terrainDecorationArt?{draw(...args){atlases.add(args[1]);return assets.terrainDecorationArt.draw(...args);},pattern(...args){atlases.add(args[1]);return assets.terrainDecorationArt.pattern?.(...args)||null;}}:null),createCanvas:()=>document.createElement('canvas')});
     if(assets.terrainDecorationArt)assets.terrainDecorationArt.onAtlas=atlas=>terrainTiles.invalidateAtlas(atlas);
     let vignetteCanvas=null,vignetteW=0,vignetteH=0;
     let overviewWorld=null,overview=null;
@@ -139,10 +139,36 @@ export function createRenderer(canvas,assets) {
     const earthEnvironment=createEarthEnvironmentPainter();
     const frameMeter=createFrameMeter(),worldView=createWorldViewQuery();
     const streetPainter=createStreetPainter(assets);
+    function campTreeFrame(o){
+        return ['tallPine','layeredPine','cypressPine','tallPine','blossomTree'][Math.abs(Math.round(o.x*3+o.y*5))%5];
+    }
+    function drawCustomTree(c,o,world){
+        if(o.snow||world?.zone==='ice')return assets.environmentArt?.draw(c,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);
+        const zone=world?.zone;
+        const bx=o.x-o.size*.56,by=o.y-o.size*1.06+10,bw=o.size*1.12,bh=o.size*1.08;
+        if(zone==='camp')return assets.environmentArt?.draw(c,'campTrees',campTreeFrame(o),bx,by,bw,bh);
+        if(zone==='fire')return assets.environmentArt?.draw(c,'islandTrees','charredEmberTree',bx,by,bw,bh);
+        if(zone==='dark'){
+            const frame=Math.abs(Math.round(o.x*3+o.y*7))%2===0?'darkShadowTree':'darkWeepingTree';
+            return assets.environmentArt?.draw(c,'islandTrees',frame,bx,by,bw,bh);
+        }
+        if(zone==='desert'){
+            const biome=o.biome||regionAt(world,o)?.biome;
+            const frame=biome==='oasis'||Math.abs(Math.round(o.x*5+o.y*7))%4===0?'tropicalPalm':'desertCactus';
+            return assets.environmentArt?.draw(c,'islandTrees',frame,bx,by,bw,bh);
+        }
+        if(zone==='town'){
+            const biome=o.biome||regionAt(world,o)?.biome;
+            if(biome==='gold')return assets.environmentArt?.draw(c,'islandTrees','autumnGoldTree',bx,by,bw,bh);
+            if(biome==='beach'||o.y>4820)return assets.environmentArt?.draw(c,'islandTrees','tropicalPalm',bx,by,bw,bh);
+            return assets.environmentArt?.draw(c,'campTrees',campTreeFrame(o),bx,by,bw,bh);
+        }
+        return false;
+    }
     function paintTree(c,o,world){
-        const winter=o.snow&&assets.environmentArt?.draw(c,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);
-        if(!winter)assets.tile(c,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);
-        if(!o.snow&&assets.sceneryTile){const variant=Math.abs(Math.round(o.x*7+o.y*13))%8,size=o.size*.36;assets.sceneryTile(c,8+variant,o.x+o.size*.18,o.y-size+14,size,size);}
+        const custom=drawCustomTree(c,o,world);
+        if(!custom)assets.tile(c,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);
+        if(!o.snow&&world?.zone!=='ice'&&assets.sceneryTile){const variant=Math.abs(Math.round(o.x*7+o.y*13))%8,size=o.size*.36;assets.sceneryTile(c,8+variant,o.x+o.size*.18,o.y-size+14,size,size);}
     }
     const islandScenery=createIslandSceneryCache({paint:paintTree});
     const streetCredit=typeof document==='undefined'?{style:{}}:document.createElement('a');streetCredit.textContent='© OpenStreetMap contributors';streetCredit.href='https://www.openstreetmap.org/copyright';streetCredit.target='_blank';streetCredit.rel='noopener noreferrer';streetCredit.style.cssText='position:absolute;left:10px;bottom:5px;font:11px sans-serif;color:#e8ecdd;background:#203a39bb;padding:2px 5px;z-index:2;display:none';if(typeof document!=='undefined')canvas.parentElement?.append(streetCredit);
@@ -358,7 +384,10 @@ export function createRenderer(canvas,assets) {
         const streetFocus=world.dungeon?.scene.streetscape?[...world.npcs,...streetPainter.people()].filter(n=>Math.hypot(n.x-save.position.x,n.y-save.position.y)<120):[];
         mark('earth-render-actors');
         const islandCache=!world.isEarth&&!world.isCityDungeon;
-        if(islandCache)islandScenery.begin(world,assets.environmentArt?.images?.trees||assets.images?.get('sprites'),cam.scale*dpr);
+        const treeSource=world.zone==='camp'?assets.environmentArt?.images?.campTrees
+            :['town','fire','desert','dark'].includes(world.zone)?(assets.environmentArt?.images?.islandTrees||assets.environmentArt?.images?.campTrees)
+            :assets.environmentArt?.images?.trees;
+        if(islandCache)islandScenery.begin(world,treeSource||assets.images?.get('sprites'),cam.scale*dpr);
         else islandScenery.clear();
         for(let objectIndex=0;objectIndex<objects.length;objectIndex++) {
             const o=objects[objectIndex];
@@ -367,7 +396,7 @@ export function createRenderer(canvas,assets) {
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
             if(islandCache&&o.kind==='tree'){const end=islandScenery.draw(ctx,objects,objectIndex,save.position,viewport);if(end>objectIndex){objectIndex=end-1;continue;}}
             if(o.kind==='pet-social'){ctx.save();ctx.globalAlpha*=o.row.sceneOpacity??1;drawSocialPet(ctx,assets,o.row,petScene?.effects||[],time,reducedMotion.matches,petScene?.now);ctx.restore();}
-            if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const winter=(world.isEarth&&world.drawEarthDecoration?.(ctx,o))||o.snow&&assets.environmentArt?.draw(ctx,'trees',['spruce','pine','fir','oldPine'][(Math.round(o.x)+Math.round(o.y))%4],o.x-o.size/2,o.y-o.size+10,o.size,o.size);if(!winter&&!world.isEarth)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
+            if(o.kind==='tree'){ctx.save();if(Math.abs(save.position.x-o.x)<o.size*.4&&save.position.y<o.y&&save.position.y>o.y-o.size*.85)ctx.globalAlpha=.52;const custom=(world.isEarth&&world.drawEarthDecoration?.(ctx,o))||drawCustomTree(ctx,o,world);if(!custom&&!world.isEarth)assets.tile(ctx,'sprites',o.tile,o.x-o.size/2,o.y-o.size+10,o.size,o.size);ctx.restore();}
             // Stable plant variants add visual detail without changing collision or RNG.
             if(o.kind==='tree'&&!world.isEarth&&!o.snow&&assets.sceneryTile){
                 const variant=Math.abs(Math.round(o.x*7+o.y*13))%8,size=o.size*.36;
@@ -375,9 +404,15 @@ export function createRenderer(canvas,assets) {
             }
             if(o.kind==='building'){
                 ctx.save();
-                if(o.atlas&&Math.abs(save.position.x-o.x)<o.w*.5&&save.position.y<o.y&&save.position.y>o.y-o.h)ctx.globalAlpha=.52;
+                if((o.atlas||world.zone==='town')&&Math.abs(save.position.x-o.x)<o.w*.5&&save.position.y<o.y&&save.position.y>o.y-o.h)ctx.globalAlpha=.52;
                 const bob=o.frame==='boat'&&!reducedMotion.matches?Math.sin(t*1.4+o.x)*2:0;
-                const drawn=world.isEarth?world.drawEarthBuilding?.(ctx,o):o.atlas&&assets.buildingArt?.draw(ctx,o.atlas,o.frame,o.x-o.w/2,o.y-o.h+bob,o.w,o.h);
+                const scale=o.atlas==='camp'&&o.frame!=='harbor'?1.22:1,dw=o.w*scale,dh=o.h*scale;
+                let drawn=world.isEarth?world.drawEarthBuilding?.(ctx,o):o.atlas&&assets.buildingArt?.draw(ctx,o.atlas,o.frame,o.x-dw/2,o.y-dh+bob,dw,dh);
+                if(!drawn&&!o.atlas&&world.zone==='town'){
+                    if(Math.hypot(o.x-3500,o.y-2710)<120)drawn=assets.environmentArt?.draw(ctx,'islandLandmarks','townCastle',o.x-o.w*.74,o.y-o.h*1.42,o.w*1.48,o.h*1.45);
+                    else if(Math.hypot(o.x-1540,o.y-2780)<120)drawn=assets.environmentArt?.draw(ctx,'islandLandmarks','townWindmill',o.x-o.w*.7,o.y-o.h*1.36,o.w*1.4,o.h*1.4);
+                    else drawn=assets.buildingArt?.draw(ctx,'town',o.tile===6?'tower':'village',o.x-o.w*.62,o.y-o.h*1.18,o.w*1.24,o.h*1.2);
+                }
                 if(!drawn&&!o.decorationOnly&&!world.isEarth)assets.tile(ctx,'sprites',o.tile,o.x-o.w/2,o.y-o.h,o.w,o.h);
                 ctx.restore();
             }

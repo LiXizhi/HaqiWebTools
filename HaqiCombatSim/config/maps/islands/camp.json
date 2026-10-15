@@ -426,21 +426,27 @@
       "y": 1170,
       "tile": 5,
       "w": 190,
-      "h": 180
+      "h": 180,
+      "atlas": "camp",
+      "frame": "observatory"
     },
     {
       "x": 2260,
       "y": 1700,
       "tile": 4,
       "w": 175,
-      "h": 165
+      "h": 165,
+      "atlas": "camp",
+      "frame": "cabin"
     },
     {
       "x": 1290,
       "y": 1100,
       "tile": 6,
       "w": 175,
-      "h": 170
+      "h": 170,
+      "atlas": "camp",
+      "frame": "academy"
     }
   ],
   "npcPositions": {

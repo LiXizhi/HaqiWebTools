@@ -11,11 +11,18 @@ test('environment atlases retain alpha, provenance and bounded nonoverlapping cr
         const bytes=fs.readFileSync(new URL(row.local,root));
         assert.ok(bytes.length<=200000);assert.equal(bytes.length,row.size);
         assert.equal(createHash('sha256').update(bytes).digest('hex'),row.sha256);
-        assert.equal(bytes.toString('ascii',8,12),'WEBP');assert.equal(bytes.toString('ascii',12,16),'VP8X');
-        assert.ok(bytes[20]&0x10);assert.equal(bytes.readUIntLE(24,3)+1,row.width);assert.equal(bytes.readUIntLE(27,3)+1,row.height);
+        const tiled=Object.values(row.frames).every(f=>f.tile);
+        assert.equal(bytes.toString('ascii',8,12),'WEBP');
+        if(tiled){
+            // Seamless ground materials are opaque by design; 2x2 equal square tiles.
+            assert.equal(row.layer,'terrain');assert.equal(row.width,row.height);
+        }else{
+            assert.equal(bytes.toString('ascii',12,16),'VP8X');
+            assert.ok(bytes[20]&0x10);assert.equal(bytes.readUIntLE(24,3)+1,row.width);assert.equal(bytes.readUIntLE(27,3)+1,row.height);
+        }
         assert.ok(row.cdn.startsWith('https://cdn.keepwork.com/'));assert.match(row.source.sha256,/^[a-f0-9]{64}$/);
         const frames=Object.values(row.frames);
-        assert.equal(frames.length,id==='trees'?4:6);
+        assert.equal(frames.length,['trees','campTrees'].includes(id)||tiled?4:6);
         for(const [i,f] of frames.entries()){
             const [x,y,w,h]=f.rect;assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=row.width&&y+h<=row.height);
             for(const next of frames.slice(i+1)){const [nx,ny,nw,nh]=next.rect;assert.ok(x+w<=nx||nx+nw<=x||y+h<=ny||ny+nh<=y);}

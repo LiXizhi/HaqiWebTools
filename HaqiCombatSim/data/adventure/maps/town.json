@@ -1380,6 +1380,94 @@
       ]
     }
   ],
+  "sceneArt": {
+    "ground": {
+      "atlas": "townGround",
+      "base": "lushGrass",
+      "biomes": {
+        "gold": "autumnGround",
+        "grass": "lushGrass",
+        "park": "lushGrass",
+        "farm": "lushGrass",
+        "forest": "lushGrass",
+        "lake": "lushGrass",
+        "town": "lushGrass",
+        "snow": null,
+        "beach": null
+      },
+      "road": "cobbleRoad",
+      "water": {
+        "water": "riverWater"
+      },
+      "scale": 0.8,
+      "alpha": 0.7
+    },
+    "props": {
+      "atlas": "townProps",
+      "roadside": [
+        "streetLamp",
+        "flowerHedge",
+        "barrelStack",
+        "flowerCart"
+      ],
+      "scatter": {
+        "default": [
+          "flowerHedge",
+          "stoneWell",
+          "flowerCart"
+        ],
+        "farm": [
+          "hayBales",
+          "hayBales",
+          "barrelStack"
+        ],
+        "gold": [
+          "hayBales",
+          "barrelStack"
+        ],
+        "snow": [],
+        "beach": []
+      },
+      "sizes": {
+        "streetLamp": 72,
+        "stoneWell": 66,
+        "flowerCart": 66
+      }
+    },
+    "features": {
+      "atlas": "townFeatures",
+      "mountains": {
+        "snow": [
+          "snowyHill"
+        ],
+        "gold": [
+          "goldenHill"
+        ]
+      },
+      "scatter": {
+        "default": [
+          "flowerPond",
+          "stoneCircle",
+          "gazebo",
+          "fountain"
+        ],
+        "snow": [],
+        "beach": [],
+        "farm": [
+          "flowerPond"
+        ]
+      },
+      "sizes": {
+        "flowerPond": 170,
+        "stoneCircle": 160,
+        "gazebo": 150,
+        "fountain": 130
+      }
+    },
+    "flat": [
+      "flowerPond"
+    ]
+  },
   "layoutVersion": 2,
   "rules": {
     "schemaVersion": 1,
@@ -6185,5 +6273,5 @@
       "size": 7
     }
   ],
-  "sourceHash": "fc08991f083ab5eaca05cda7f862e4c9efa88a21c08644be443f9e37ddefa662"
+  "sourceHash": "2210cf359b4d7414079bec87eb270be6b942e288bea30038bc53ec8b8db9d877"
 }

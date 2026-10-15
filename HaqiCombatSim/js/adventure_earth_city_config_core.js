@@ -1,12 +1,9 @@
 // Independently authored city packages and durable, city-scoped quest progress.
 import {validateTimeScrollReference} from './adventure_time_scroll_core.js';
 import {validateCityDungeons,validateCityDungeonProgress} from './adventure_city_dungeons_core.js';
+import {earthCityChapterProgress,advanceEarthCityChapter} from './adventure_earth_core.js';
+export {earthCityChapterProgress,advanceEarthCityChapter};
 const fail=message=>{throw Error(message);};
-const legacyChapter='earth-shenzhen-united';
-export function earthCityChapterProgress(save,chapter){
-    const stored=save.earthCityProgress?.cities?.[chapter?.cityId]?.chapters?.[chapter?.id];
-    return stored||((chapter?.id===legacyChapter||!chapter?.cityId)?save.earthProgress:null)||{version:1,step:0};
-}
 export function earthCityStory(save,city,npc){
     const step=earthCityChapterProgress(save,city.quests).step;
     const override=(npc.dialogueOverrides||[]).filter(row=>step>=row.minStep).sort((a,b)=>b.minStep-a.minStep)[0];
@@ -15,14 +12,6 @@ export function earthCityStory(save,city,npc){
 function cityState(save,id){
     save.earthCityProgress??={version:1,cities:{}};
     return save.earthCityProgress.cities[id]??={chapters:{},quests:{}};
-}
-export function advanceEarthCityChapter(save,chapter,event){
-    const progress=earthCityChapterProgress(save,chapter),step=chapter.steps[progress.step];
-    if(!event||!step||step.event!==event)return false;
-    const next={version:1,step:progress.step+1};
-    if(chapter.cityId)cityState(save,chapter.cityId).chapters[chapter.id]=next;
-    if(chapter.id===legacyChapter||!chapter.cityId)save.earthProgress=next;
-    save.revision++;return true;
 }
 export function earthCityQuestState(save,city,id){
     return save.earthCityProgress?.cities?.[city.id]?.quests?.[id]||{accepted:false,stage:0,complete:false};

@@ -708,6 +708,118 @@
           ]
         }
       }
+    },
+    "camp": {
+      "local": "assets/adventure/environment/buildings-camp-aefacb4a9a3b.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/environment/buildings-camp-aefacb4a9a3b.webp",
+      "width": 912,
+      "height": 608,
+      "size": 168864,
+      "sha256": "aefacb4a9a3bddfb9cfba5c61bc6d10daad1ff92998eccd7bc46d806f021dc7d",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "588081bc135a9e376bf004189e0f203c0c7a2c4c9a1e39ad5f45bf6a46160f97",
+        "width": 1264,
+        "height": 848,
+        "prompt": "data/adventure/building-art-plan.json#camp",
+        "reference": "data/adventure/world-map-art.json"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "academy": {
+          "rect": [
+            34,
+            8,
+            235,
+            288
+          ],
+          "sourceRect": [
+            69,
+            11,
+            324,
+            397
+          ],
+          "cell": 0
+        },
+        "observatory": {
+          "rect": [
+            312,
+            29,
+            288,
+            267
+          ],
+          "sourceRect": [
+            448,
+            46,
+            383,
+            355
+          ],
+          "cell": 1
+        },
+        "cabin": {
+          "rect": [
+            616,
+            15,
+            288,
+            281
+          ],
+          "sourceRect": [
+            884,
+            53,
+            348,
+            340
+          ],
+          "cell": 2
+        },
+        "tent": {
+          "rect": [
+            8,
+            327,
+            288,
+            273
+          ],
+          "sourceRect": [
+            25,
+            448,
+            385,
+            365
+          ],
+          "cell": 3
+        },
+        "harbor": {
+          "rect": [
+            312,
+            370,
+            288,
+            230
+          ],
+          "sourceRect": [
+            450,
+            474,
+            381,
+            304
+          ],
+          "cell": 4
+        },
+        "plazaMedallion": {
+          "rect": [
+            616,
+            417,
+            288,
+            183
+          ],
+          "sourceRect": [
+            883,
+            527,
+            361,
+            229
+          ],
+          "cell": 5
+        }
+      }
     }
   }
 }

@@ -1,0 +1,1579 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e1120">
+<title>明 míng · 日月同辉</title>
+<link rel="icon" href="data:,">
+<style>
+:root{
+  --night:#0e1120;--cream:#f4efe2;--gold:#f2c063;--silver:#a9c6f2;--muted:#8f98ab;
+  --serif:"Songti SC","STSong","Noto Serif CJK SC","Source Han Serif SC","SimSun",serif;
+  --kai:"Kaiti SC","STKaiti","KaiTi","BiauKai","Kaiti TC",var(--serif);
+}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--night)}
+body{color:var(--cream);font-family:var(--serif);-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+button{font:inherit;touch-action:manipulation}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+#sampler{position:absolute;width:0;height:0;overflow:hidden}
+#view{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none}
+body.tap #view{cursor:pointer}body.grab #view{cursor:grab}body.trace #view{cursor:crosshair}
+
+#brand{position:fixed;left:max(16px,env(safe-area-inset-left));top:max(14px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;
+  font-family:var(--kai);font-size:14px;letter-spacing:.22em;color:#d8cba8;z-index:8;pointer-events:none;opacity:.85}
+#brand .seal{background:#b8432c;color:#fbecd0;border-radius:3px;padding:5px 5px 4px;font-size:15px;line-height:1;letter-spacing:0}
+
+#progress{position:fixed;top:max(16px,env(safe-area-inset-top));left:50%;transform:translateX(-50%);display:flex;list-style:none;
+  margin:0;padding:0;gap:clamp(5px,1.2vw,18px);z-index:10;opacity:0;transition:opacity .8s;pointer-events:none}
+#progress::before{content:"";position:absolute;top:2.5px;left:12px;right:12px;height:1px;background:rgba(244,239,226,.16)}
+body.started #progress{opacity:1}
+#progress li{position:relative;font-family:var(--kai);font-size:13px;color:#7c859a;letter-spacing:.06em;padding-top:12px;transition:color .6s;white-space:nowrap}
+#progress li::before{content:"";position:absolute;top:0;left:50%;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#39405a;transition:background .6s,transform .6s,box-shadow .6s}
+#progress li.done{color:#c9c2ae}#progress li.done::before{background:#c9c2ae}
+#progress li.on{color:var(--cream)}#progress li.on::before{background:var(--gold);transform:scale(1.6);box-shadow:0 0 10px 2px rgba(242,192,99,.65)}
+
+#controls{position:fixed;right:max(14px,env(safe-area-inset-right));top:max(12px,env(safe-area-inset-top));display:flex;gap:8px;z-index:12;opacity:0;pointer-events:none;transition:opacity .6s}
+body.started #controls{opacity:1;pointer-events:auto}
+#controls button{font-family:var(--kai);font-size:14px;letter-spacing:.18em;color:#e9dcc0;background:rgba(14,18,32,.62);
+  border:1px solid rgba(242,192,99,.34);border-radius:4px;padding:6px 8px 6px 12px;cursor:pointer;backdrop-filter:blur(4px)}
+#controls button:hover{background:rgba(38,44,68,.9)}
+
+#hint{position:fixed;left:16px;right:16px;margin:0 auto;width:fit-content;max-width:calc(100vw - 32px);box-sizing:border-box;
+  top:max(60px,calc(env(safe-area-inset-top) + 46px));text-align:center;color:#ffe2ab;opacity:0;transition:opacity .45s;pointer-events:none;z-index:9;
+  padding:7px 20px 8px;border:1px solid rgba(242,192,99,.5);border-radius:22px;background:rgba(14,18,32,.74);backdrop-filter:blur(4px)}
+#hint span{font-family:var(--kai);font-size:clamp(16px,2.3vh,20px);letter-spacing:.12em}
+#hint.on{opacity:1;animation:breathe 1.8s ease-in-out infinite}
+@keyframes breathe{50%{box-shadow:0 0 0 6px rgba(242,192,99,.13),0 0 24px rgba(242,192,99,.22)}}
+
+#caption{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translate(-50%,10px);
+  width:min(900px,calc(100vw - 24px));box-sizing:border-box;text-align:center;opacity:0;
+  transition:opacity .5s,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none;z-index:6;padding:20px 22px 14px;
+  background:radial-gradient(ellipse at center,rgba(8,10,20,.82) 38%,rgba(8,10,20,0) 72%)}
+#caption.on{opacity:1;transform:translate(-50%,0)}
+#capTitle{margin:0 0 8px;font-weight:400;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.42em;margin-left:.42em;color:var(--gold)}
+#caption.on #capTitle{animation:sealIn .8s cubic-bezier(.2,.7,.2,1) both}
+#capText{margin:0;font-family:var(--kai);font-size:clamp(19px,calc(1vw + 1.6vh),28px);line-height:1.7;color:var(--cream);letter-spacing:.06em;min-height:1.7em;
+  text-shadow:0 1px 12px rgba(0,0,0,.7)}
+#capText .ch{animation:inkIn 1.2s ease-out both;animation-delay:calc(var(--i) * 70ms + 120ms)}
+@keyframes inkIn{from{opacity:0;color:transparent;text-shadow:0 0 14px rgba(242,192,99,.95)}50%{opacity:1}to{color:var(--cream);text-shadow:0 1px 12px rgba(0,0,0,.7)}}
+@keyframes sealIn{from{opacity:0;letter-spacing:.9em;filter:blur(4px)}to{opacity:1;letter-spacing:.42em;filter:none}}
+.actions{display:flex;justify-content:center;gap:10px;margin-top:12px;min-height:0}
+.actions button{pointer-events:auto;cursor:pointer;font-family:var(--kai);letter-spacing:.24em;border-radius:4px}
+#action{font-size:18px;padding:9px 20px 9px 26px;color:#2a1c05;border:1px solid #ffdda0;background:linear-gradient(#ffe6b6,#f0b955);
+  box-shadow:0 6px 20px rgba(240,185,85,.32),inset 0 1px 0 rgba(255,255,255,.55)}
+#action:hover{filter:brightness(1.06)}
+#demo{font-size:16px;padding:8px 14px 8px 20px;color:#e8eefc;background:rgba(14,18,32,.55);border:1px solid rgba(169,198,242,.45)}
+[hidden]{display:none!important}
+
+#intro{position:fixed;inset:0;z-index:20;pointer-events:none;transition:opacity 1s,transform 1s}
+#intro.off{opacity:0;transform:scale(1.03)}
+#intro.off *{pointer-events:none!important}
+.introTop,.introBottom{position:absolute;left:0;right:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 20px}
+.introTop{bottom:calc(100% - var(--gTop,140px) + 18px)}
+.introBottom{top:calc(var(--gBottom,560px) + 18px);gap:8px}
+.tag{display:flex;align-items:center;gap:10px;font-family:var(--kai);font-size:clamp(15px,2.2vh,19px);letter-spacing:.3em;color:var(--gold)}
+.tag i{display:block;width:clamp(24px,5vw,60px);height:1px;background:currentColor;opacity:.6}
+.pinyin{font-family:Georgia,"Times New Roman",serif;font-style:italic;font-size:clamp(30px,5.2vh,46px);line-height:1;color:var(--cream);letter-spacing:.06em}
+.mean{font-family:var(--kai);font-size:clamp(17px,2.5vh,22px);letter-spacing:.2em;color:#e6d9b8}
+.sub{font-family:var(--kai);font-size:clamp(15px,2.1vh,18px);color:#9fa9bc;letter-spacing:.14em;margin:2px 0 0;line-height:1.7}
+.btn-main{pointer-events:auto;margin-top:8px;font-family:var(--kai);font-size:clamp(18px,2.6vh,22px);letter-spacing:.4em;padding:10px 24px 10px 32px;
+  color:#2a1c05;background:linear-gradient(#ffe6b6,#f0b955);border:1px solid #ffdda0;border-radius:4px;cursor:pointer;
+  box-shadow:0 6px 22px rgba(240,185,85,.35);transition:transform .2s;animation:btnGlow 2.6s ease-in-out infinite}
+.btn-main:hover{transform:translateY(-2px)}
+@keyframes btnGlow{50%{box-shadow:0 6px 22px rgba(240,185,85,.35),0 0 0 9px rgba(242,192,99,.13),0 0 44px rgba(242,192,99,.3)}}
+.meta{font-size:12px;color:#7c859a;letter-spacing:.14em;margin:0}
+.rise{opacity:0;transform:translateY(12px);animation:rise 1s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:var(--d,0s)}
+@keyframes rise{to{opacity:1;transform:none}}
+@media (max-height:540px){.sub,.meta{display:none}.introBottom{gap:4px}}
+
+#note{position:fixed;left:max(16px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));font-size:11px;color:#6f7889;letter-spacing:.12em;z-index:4;pointer-events:none}
+body.portrait #brand{display:none}
+body.portrait #controls{top:max(44px,calc(env(safe-area-inset-top) + 34px))}
+body.portrait #hint{top:max(92px,calc(env(safe-area-inset-top) + 82px))}
+body.portrait #note{display:none}
+body.portrait #capText{font-size:clamp(18px,4.8vw,22px);line-height:1.62}
+body.portrait #progress li{font-size:11px}
+@media (max-height:540px){#capText{font-size:17px;line-height:1.5}#caption{padding:8px 14px 6px}.actions{margin-top:6px}}
+@media (prefers-reduced-motion: reduce){
+  #intro,#caption{transition-duration:.4s}
+  #hint.on,.btn-main{animation:none}
+  #capText .ch{animation-duration:.25s;animation-delay:0s}
+}
+</style>
+</head>
+<body>
+<svg id="sampler" aria-hidden="true"></svg>
+<canvas id="view" role="img" aria-label="灰暗的山谷里，太阳从东边升起，月亮从西边升起；两团光在天空相会，照得山水通明，画面化作甲骨文与楷书的明"></canvas>
+
+<div id="brand"><span class="seal">字</span>一字一故事</div>
+<ol id="progress" aria-hidden="true"><li>未明</li><li>日出</li><li>月出</li><li>同辉</li><li>成字</li><li>写字</li><li>余韵</li></ol>
+<div id="controls"><button id="replay" type="button">重播</button><button id="mute" type="button">声音 开</button></div>
+<div id="hint" role="status"></div>
+<section id="caption" aria-live="polite" aria-atomic="true">
+  <h2 id="capTitle"></h2><p id="capText"></p>
+  <div class="actions"><button id="action" type="button" hidden></button><button id="demo" type="button" hidden>看示范</button></div>
+</section>
+<div id="note">古字形为依据通行字形的艺术示意</div>
+
+<div id="intro">
+  <div class="introTop"><div class="tag rise" style="--d:.3s"><i></i>今天认识一个汉字<i></i></div></div>
+  <div class="introBottom">
+    <div class="pinyin rise" style="--d:2.9s">míng</div>
+    <div class="mean rise" style="--d:3.2s">明 · 太阳和月亮，都亮</div>
+    <p class="sub rise" style="--d:3.5s">日发光，月也发光，两个合起来就是明</p>
+    <button id="start" class="btn-main rise" style="--d:3.8s" type="button">开始</button>
+    <p class="meta rise" style="--d:4s">约三分钟 · 两次拖动、一次点击与描字 · 建议开启声音</p>
+  </div>
+</div>
+
+<script>
+(() => {
+'use strict';
+
+const $ = s => document.querySelector(s);
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = t => { t = clamp(t); return t * t * (3 - 2 * t); };
+const ease = {
+  inOut: t => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
+  out: t => 1 - Math.pow(1 - t, 3),
+  sine: t => -(Math.cos(Math.PI * t) - 1) / 2,
+  lin: t => t,
+};
+function mulberry32(a) {
+  return () => {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const M = reduceMotion ? 0.6 : 1;
+let rand = mulberry32(20261015);
+
+/* ---------- 虚拟时钟：页面隐藏时暂停，回来不跳帧 ---------- */
+class Cancelled extends Error {}
+let clock = 0, DT = 16;
+let waiters = [];
+let token = { dead: true };
+function frame(tk) { return new Promise((res, rej) => waiters.push({ tk, res, rej })); }
+async function wait(ms, tk) { const t0 = clock; while (clock - t0 < ms) await frame(tk); }
+async function tween(ms, fn, tk, ez = ease.inOut) {
+  if (ms <= 0) { fn(1); return; }
+  const t0 = clock;
+  for (;;) {
+    await frame(tk);
+    const t = clamp((clock - t0) / ms);
+    fn(ez(t));
+    if (t >= 1) return;
+  }
+}
+const bg = p => p.catch(e => { if (!(e instanceof Cancelled)) console.error(e); });
+
+/* ---------- 声音：WebAudio 实时合成，不加载音频文件 ----------
+   日与月各有一组持续音：太阳是 C 大三和弦（暖），月亮是 A 小三和弦（凉）。
+   两盏都亮时五音齐鸣，合成明亮的 C6 和弦——声音和画面一起变亮。 */
+const NOTE = { C3: 130.81, G3: 196.00, A3: 220.00, C4: 261.63, D4: 293.66, E4: 329.63, G4: 392.00, A4: 440.00, C5: 523.25, D5: 587.33, E5: 659.26, G5: 783.99, A5: 880.00, C6: 1046.50 };
+const PENTA = [NOTE.C4, NOTE.D4, NOTE.E4, NOTE.G4, NOTE.A4, NOTE.C5, NOTE.D5, NOTE.E5, NOTE.G5, NOTE.A5];
+const Sound = {
+  ctx: null, master: null, wet: null, noise: null, muted: false,
+  sunBus: null, moonBus: null, padOn: false,
+  init() {
+    if (this.ctx) { if (this.ctx.state === 'suspended') this.ctx.resume(); return; }
+    const C = window.AudioContext || window.webkitAudioContext;
+    if (!C) return;
+    try { this.ctx = new C(); } catch { return; }
+    const c = this.ctx;
+    this.master = c.createGain();
+    this.master.gain.value = this.muted ? 0 : 0.6;
+    this.master.connect(c.destination);
+    const d = c.createDelay(1); d.delayTime.value = 0.29;
+    const fb = c.createGain(); fb.gain.value = 0.34;
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600;
+    this.wet = c.createGain(); this.wet.gain.value = 0.3;
+    this.wet.connect(d); d.connect(lp); lp.connect(fb); fb.connect(d); lp.connect(this.master);
+    const len = c.sampleRate * 2;
+    const buf = c.createBuffer(1, len, c.sampleRate);
+    const data = buf.getChannelData(0);
+    const r = mulberry32(7);
+    for (let i = 0; i < len; i++) data[i] = r() * 2 - 1;
+    this.noise = buf;
+  },
+  setMuted(m) {
+    this.muted = m;
+    if (this.master) this.master.gain.setTargetAtTime(m ? 0 : 0.6, this.ctx.currentTime, 0.05);
+  },
+  out(node, wet = true) { node.connect(this.master); if (wet) node.connect(this.wet); },
+  pluck(f, vol = 0.16, dur = 2.6) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    const lp = c.createBiquadFilter(); lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(f * 6, t);
+    lp.frequency.exponentialRampToValueAtTime(f * 1.4, t + dur * 0.6);
+    lp.connect(g); this.out(g);
+    for (const [m, type, a] of [[1, 'triangle', 1], [2.003, 'sine', 0.3], [3.01, 'sine', 0.09]]) {
+      const o = c.createOscillator(); o.type = type;
+      o.frequency.setValueAtTime(f * m * 1.012, t);
+      o.frequency.exponentialRampToValueAtTime(f * m, t + 0.12);
+      const og = c.createGain(); og.gain.value = a;
+      o.connect(og); og.connect(lp); o.start(t); o.stop(t + dur + 0.05);
+    }
+  },
+  bell(f, vol = 0.1, dur = 3.6) {
+    const c = this.ctx; if (!c) return;
+    const t = c.currentTime;
+    for (const [m, a, dd] of [[1, 1, 1], [2.76, 0.32, 0.5], [5.4, 0.1, 0.24], [0.5, 0.18, 1.2]]) {
+      const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = f * m;
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(vol * a, t + 0.006);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur * dd);
+      o.connect(g); this.out(g); o.start(t); o.stop(t + dur * dd + 0.05);
+    }
+  },
+  hiss(dur, freq, vol, q = 0.8, wet = false) {
+    const c = this.ctx; if (!c || !this.noise) return;
+    const t = c.currentTime;
+    const s = c.createBufferSource(); s.buffer = this.noise;
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = freq; bp.Q.value = q;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + Math.min(0.06, dur * 0.3));
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(bp); bp.connect(g); this.out(g, wet);
+    s.start(t, rand() * 1.5); s.stop(t + dur + 0.05);
+  },
+  // 日出：向上滑行的气流
+  rise(vol = 0.1) {
+    const c = this.ctx; if (!c || !this.noise) return;
+    const t = c.currentTime;
+    const s = c.createBufferSource(); s.buffer = this.noise;
+    const bp = c.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 1.4;
+    bp.frequency.setValueAtTime(240, t);
+    bp.frequency.exponentialRampToValueAtTime(2600, t + 2.2);
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(vol, t + 0.9);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 2.4);
+    s.connect(bp); bp.connect(g); this.out(g, true);
+    s.start(t, rand()); s.stop(t + 2.5);
+  },
+  // 月出：清亮的琶音
+  moonRise() {
+    const seq = [NOTE.A4, NOTE.C5, NOTE.E5, NOTE.A5];
+    seq.forEach((f, i) => setTimeout(() => this.bell(f, 0.075, 4), reduceMotion ? 0 : i * 140));
+  },
+  // 日月两盏持续音
+  pad() {
+    const c = this.ctx; if (!c || this.padOn) return;
+    this.padOn = true;
+    const mk = (notes, cutoff, gain) => {
+      const g = c.createGain(); g.gain.value = 0;
+      const lp = c.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = cutoff;
+      const lfo = c.createOscillator(); lfo.frequency.value = 0.07;
+      const lg = c.createGain(); lg.gain.value = 0.008;
+      lfo.connect(lg); lg.connect(g.gain); lfo.start();
+      for (const [f, type, a] of notes) {
+        const o = c.createOscillator(); o.type = type; o.frequency.value = f;
+        const og = c.createGain(); og.gain.value = a;
+        o.connect(og); og.connect(lp); o.start();
+      }
+      lp.connect(g); g.connect(this.master);
+      g.__peak = gain;
+      return g;
+    };
+    this.sunBus = mk([[NOTE.C3, 'sine', 0.6], [NOTE.G3, 'triangle', 0.34], [NOTE.E4, 'sine', 0.22]], 780, 0.055);
+    this.moonBus = mk([[NOTE.A3, 'sine', 0.5], [NOTE.E4, 'sine', 0.26], [NOTE.C5, 'sine', 0.16]], 1500, 0.045);
+  },
+  padLevels(s, m) {
+    const c = this.ctx; if (!c) return;
+    if (this.sunBus) this.sunBus.gain.setTargetAtTime(this.sunBus.__peak * clamp(s), c.currentTime, 0.45);
+    if (this.moonBus) this.moonBus.gain.setTargetAtTime(this.moonBus.__peak * clamp(m), c.currentTime, 0.45);
+  },
+};
+
+/* ---------- 画布与镜头 ---------- */
+const cvs = $('#view'), ctx = cvs.getContext('2d');
+let SW = 1, SH = 1, DPR = 1, portrait = false;
+const cam = { x: 900, y: 460, w: 1900, h: 1020, pw: 1000, pcy: 0.46 };
+const CV = { x: 0, y: 0, k: 1, cy: 0 };
+const VIEW = {
+  intro:  { x: 900, y: 430, w: 1500, h: 880, pw: 760,  pcy: 0.40 },
+  dim:    { x: 900, y: 470, w: 1950, h: 1060, pw: 1010, pcy: 0.48 },
+  sun:    { x: 560, y: 420, w: 1520, h: 860, pw: 880,  pcy: 0.45 },
+  moon:   { x: 1220, y: 420, w: 1620, h: 880, pw: 900,  pcy: 0.45 },
+  wide:   { x: 900, y: 430, w: 2100, h: 1100, pw: 1120, pcy: 0.46 },
+  glyph:  { x: 900, y: 415, w: 720,  h: 720,  pw: 540,  pcy: 0.42 },
+  finale: { x: 900, y: 460, w: 2050, h: 1090, pw: 1140, pcy: 0.48 },
+};
+function frameW(v) { return portrait ? (v.pw ?? v.w * 0.62) : v.w; }
+function updateView() {
+  const usableH = SH * (portrait ? 0.62 : 0.78);
+  CV.k = Math.min(SW / frameW(cam), usableH / cam.h);
+  CV.cy = SH * (portrait ? cam.pcy : 0.45);
+  let dx = 0, dy = 0;
+  if (!reduceMotion && W.drift) { dx = Math.sin(clock * 0.00019) * 8 * W.drift; dy = Math.sin(clock * 0.00014 + 1) * 5 * W.drift; }
+  CV.x = cam.x + dx; CV.y = cam.y + dy;
+}
+function setCam(c, px = 1) {
+  const k = CV.k;
+  c.setTransform(DPR * k, 0, 0, DPR * k, DPR * (SW / 2 - CV.x * px * k), DPR * (CV.cy - CV.y * k));
+}
+function resetTf() { ctx.setTransform(DPR, 0, 0, DPR, 0, 0); }
+function toWorld(cx, cy) { return { x: (cx - SW / 2) / CV.k + CV.x, y: (cy - CV.cy) / CV.k + CV.y }; }
+function toScreen(x, y) { return { x: (x - CV.x) * CV.k + SW / 2, y: (y - CV.y) * CV.k + CV.cy }; }
+async function camTo(v, ms, tk, ez = ease.inOut) {
+  const from = { x: cam.x, y: cam.y, w: cam.w, h: cam.h, pw: cam.pw ?? cam.w * 0.62, pcy: cam.pcy };
+  const to = { x: v.x, y: v.y, w: v.w, h: v.h, pw: v.pw ?? v.w * 0.62, pcy: v.pcy ?? 0.5 };
+  await tween(ms, t => { for (const k in to) cam[k] = lerp(from[k], to[k], t); }, tk, ez);
+}
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  SW = innerWidth; SH = innerHeight;
+  portrait = SW / SH < 0.85;
+  document.body.classList.toggle('portrait', portrait);
+  cvs.width = Math.round(SW * DPR); cvs.height = Math.round(SH * DPR);
+}
+
+/* ---------- 世界 ---------- */
+const WATER_TOP = 618, WATER_BOT = 856, BANK_Y = 866;
+const SUN_R = 46, MOON_R = 40;
+const SUN0 = { x: 158, y: 706 }, SUN1 = { x: 470, y: 178 };
+const MOON0 = { x: 1646, y: 706 }, MOON1 = { x: 1330, y: 206 };
+const SUN_MEET = { x: 742, y: 292 }, MOON_MEET = { x: 1058, y: 292 };
+const SUN_POOL = [255, 203, 126], MOON_POOL = [176, 208, 255];
+// 三层山各自的夜色；山越远越淡。光池随后叠上去，暖光落在太阳下方，冷光落在月亮下方。
+const RIDGES = [
+  { seed: 11, base: 486, amp: 268, scale: 0.75, night: [46, 55, 78],  fog: 0.16, step: 15 },
+  { seed: 23, base: 556, amp: 186, scale: 1.05, night: [27, 33, 47],  fog: 0.07, step: 12 },
+  { seed: 37, base: 622, amp: 92,  scale: 1.5,  night: [13, 16, 24],  fog: 0.02, step: 10 },
+];
+const SHORE_NIGHT = [9, 11, 16];
+const W = {};
+function ridgeFn(seed, base, amp, scale) {
+  const r = mulberry32(seed);
+  const wv = [];
+  let tot = 0;
+  for (let i = 0; i < 4; i++) { const a = 0.35 + r() * 0.65; tot += a; wv.push({ f: (0.00055 + r() * 0.0014) * scale, a, p: r() * 6.283, k: 1 + r() * 0.9 }); }
+  return x => {
+    let y = base;
+    for (const q of wv) y -= (q.a / tot) * amp * Math.pow(0.5 + 0.5 * Math.sin(x * q.f + q.p), q.k);
+    return y;
+  };
+}
+for (const R of RIDGES) R.fn = ridgeFn(R.seed, R.base, R.amp, R.scale);
+const STARS = (() => {
+  const r = mulberry32(91), out = [];
+  for (let i = 0; i < 130; i++) out.push({ x: -400 + r() * 2600, y: 20 + r() * 420, s: 0.7 + r() * 1.5, p: r() * 6.283 });
+  return out;
+})();
+const CLOUDS = (() => {
+  const r = mulberry32(53), out = [];
+  for (let i = 0; i < 4; i++) {
+    const puffs = [];
+    for (let j = 0; j < 9; j++) puffs.push({ x: (r() - 0.5) * 300, y: (r() - 0.5) * 26, rx: 52 + r() * 74, ry: 15 + r() * 13 });
+    out.push({ x: 260 + i * 500 + r() * 140, y: 96 + r() * 132, s: 0.72 + r() * 0.36, puffs, drift: 0.7 + r() * 0.6 });
+  }
+  return out;
+})();
+const BIRDS = [
+  { x: 520, y: 250, s: 1, ph: 0 }, { x: 620, y: 216, s: 0.8, ph: 1.1 }, { x: 700, y: 268, s: 0.9, ph: 2.2 },
+];
+function resetWorld() {
+  Object.assign(W, {
+    drift: 1, meet: 0, bloom: 0, birdsOn: 0,
+    sun: { up: 0, dx: 0, dy: 0, disc: 1, prog: [0, 0, 0, 0], glow: 1 },
+    moon: { up: 0, dx: 0, dy: 0, disc: 1, prog: [0, 0, 0, 0], glow: 1 },
+    glyph: { alpha: 0, merge: 0, morph: 0, morphFrom: false, prog: [0, 0, 0, 0, 0, 0, 0, 0], glow: 1, labels: 0, trace: false, ghost: 0, words: 0, rays: 0, frameA: null, frameB: null },
+    trace: { stroke: 0, pen: null },
+    wordOn: -1,
+  });
+  rand = mulberry32(20261015);
+}
+function sunPos() {
+  const e = smooth(W.sun.up);
+  return { x: lerp(SUN0.x, SUN1.x, e) + W.sun.dx, y: lerp(SUN0.y, SUN1.y, Math.pow(e, 0.76)) + W.sun.dy };
+}
+function moonPos() {
+  const e = smooth(W.moon.up);
+  return { x: lerp(MOON0.x, MOON1.x, e) + W.moon.dx, y: lerp(MOON0.y, MOON1.y, Math.pow(e, 0.76)) + W.moon.dy };
+}
+const sunK = () => smooth(W.sun.up) * W.sun.disc;
+const moonK = () => smooth(W.moon.up) * W.moon.disc;
+
+/* ---------- 光照：两盏灯在屏幕空间投出光池，相加叠加 ----------
+   每帧只做两次全屏叠加：暖色一团在太阳下方，冷色一团在月亮下方；
+   两团重叠的地方最亮——这正是「日月同辉」。 */
+function paintPools() {
+  const s = sunPos(), m = moonPos();
+  const peak = Math.max(smooth(W.sun.up), smooth(W.moon.up));
+  const R = (430 + 400 * peak) * CV.k;
+  if (R <= 1) return;
+  ctx.globalCompositeOperation = 'lighter';
+  const sp = toScreen(s.x, s.y), mp = toScreen(m.x, m.y);
+  paintPool(sp.x, sp.y, R, SUN_POOL, sunK());
+  paintPool(mp.x, mp.y, R * 0.94, MOON_POOL, moonK());
+  ctx.globalCompositeOperation = 'source-over';
+}
+function paintPool(px, py, R, rgb, k) {
+  if (k <= 0.006) return;
+  const a = k * 0.46;
+  const g = ctx.createRadialGradient(px, py, 0, px, py, R);
+  g.addColorStop(0, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${a.toFixed(3)})`);
+  g.addColorStop(0.5, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${(a * 0.36).toFixed(3)})`);
+  g.addColorStop(1, `rgba(${rgb[0]},${rgb[1]},${rgb[2]},0)`);
+  ctx.fillStyle = g; ctx.fillRect(0, 0, SW, SH);
+}
+// 受光的一线亮边：横向渐变，暖色落在太阳的方位，冷色落在月亮的方位
+function rimGradient(alpha) {
+  const s = sunPos(), m = moonPos();
+  const sx = clamp(toScreen(s.x, 0).x / SW), mx = clamp(toScreen(m.x, 0).x / SW);
+  const stops = [[0, [120, 132, 156, 0.05 * alpha]], [1, [120, 132, 156, 0.05 * alpha]],
+    [sx, [255, 210, 140, 0.9 * sunK() * alpha]], [mx, [196, 220, 255, 0.78 * moonK() * alpha]]];
+  stops.sort((a, b) => a[0] - b[0]);
+  const g = ctx.createLinearGradient(0, 0, SW, 0);
+  for (const [p, c] of stops) g.addColorStop(p, `rgba(${c[0]},${c[1]},${c[2]},${c[3].toFixed(3)})`);
+  return g;
+}
+function skyColors() {
+  const s = smooth(W.sun.up), m = smooth(W.moon.up);
+  const mix = (a, b, t) => [lerp(a[0], b[0], t) | 0, lerp(a[1], b[1], t) | 0, lerp(a[2], b[2], t) | 0];
+  const night = { top: [16, 21, 40], mid: [33, 42, 68], bot: [58, 69, 98] };
+  const dawn = { top: [58, 104, 176], mid: [148, 166, 200], bot: [250, 198, 132] };
+  const moonS = { top: [15, 23, 54], mid: [36, 52, 92], bot: [92, 118, 162] };
+  const a = { top: mix(night.top, dawn.top, s), mid: mix(night.mid, dawn.mid, s), bot: mix(night.bot, dawn.bot, s) };
+  return { top: mix(a.top, moonS.top, m * 0.6), mid: mix(a.mid, moonS.mid, m * 0.6), bot: mix(a.bot, moonS.bot, m * 0.6) };
+}
+const rgbOf = c => `rgb(${clamp(c[0], 0, 255) | 0},${clamp(c[1], 0, 255) | 0},${clamp(c[2], 0, 255) | 0})`;
+const scaleC = (c, k) => rgbOf([c[0] * k, c[1] * k, c[2] * k]);
+function ridgeColor(L) {
+  const sky = skyColors().bot;
+  return [lerp(L.night[0], sky[0], L.fog), lerp(L.night[1], sky[1], L.fog), lerp(L.night[2], sky[2], L.fog)];
+}
+
+/* ---------- 绘制 ---------- */
+function drawSky() {
+  resetTf();
+  const c = skyColors();
+  const g = ctx.createLinearGradient(0, 0, 0, SH);
+  g.addColorStop(0, rgbOf(c.top));
+  g.addColorStop(0.52, rgbOf(c.mid));
+  g.addColorStop(1, rgbOf(c.bot));
+  ctx.fillStyle = g; ctx.fillRect(0, 0, SW, SH);
+}
+function drawStars() {
+  const k = clamp(1 - 2.05 * (smooth(W.sun.up) + smooth(W.moon.up)));
+  if (k <= 0.02) return;
+  const t = clock / 1000;
+  resetTf();
+  ctx.save();
+  ctx.fillStyle = '#eef3ff';
+  for (const st of STARS) {
+    const p = toScreen(st.x, st.y);
+    if (p.x < -20 || p.x > SW + 20 || p.y < -20 || p.y > SH * 0.74) continue;
+    const tw = reduceMotion ? 1 : 0.6 + 0.4 * Math.sin(t * 1.6 + st.p);
+    ctx.globalAlpha = k * tw * 0.9;
+    ctx.beginPath(); ctx.arc(p.x, p.y, st.s * Math.min(1.6, CV.k * 1.5), 0, 6.283); ctx.fill();
+  }
+  ctx.restore();
+}
+function drawClouds() {
+  const c = skyColors(), s = sunPos(), m = moonPos();
+  const t = clock / 1000;
+  resetTf();
+  ctx.save();
+  for (const cl of CLOUDS) {
+    const wx = cl.x + (reduceMotion ? 0 : Math.sin(t * 0.06 * cl.drift) * 26);
+    const wy = cl.y + (reduceMotion ? 0 : Math.sin(t * 0.11 + cl.drift) * 4);
+    const warm = clamp(1 - Math.abs(wx - s.x) / 900) * sunK();
+    const cool = clamp(1 - Math.abs(wx - m.x) / 900) * moonK();
+    const top = [Math.min(226, c.mid[0] + warm * 82 + cool * 52), Math.min(230, c.mid[1] + warm * 66 + cool * 64), Math.min(240, c.mid[2] + warm * 40 + cool * 88)];
+    const bot = [Math.min(196, c.bot[0] * 0.72 + warm * 34 + cool * 20), Math.min(202, c.bot[1] * 0.72 + warm * 24 + cool * 26), Math.min(216, c.bot[2] * 0.72 + warm * 12 + cool * 42)];
+    for (const p of cl.puffs) {
+      const x = wx + p.x * cl.s, y = wy + p.y * cl.s, rx = p.rx * cl.s, ry = p.ry * cl.s;
+      const p0 = toScreen(x, y - ry * 0.6), p1 = toScreen(x, y + ry * 0.6), sp = toScreen(x, y);
+      const g = ctx.createLinearGradient(p0.x, p0.y, p1.x, p1.y);
+      g.addColorStop(0, `rgba(${rgbOf(top).slice(4, -1)},0.32)`);
+      g.addColorStop(1, `rgba(${rgbOf(bot).slice(4, -1)},0.1)`);
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.ellipse(sp.x, sp.y, rx * CV.k, ry * CV.k, 0, 0, 6.283); ctx.fill();
+    }
+  }
+  ctx.restore();
+}
+// 山：先铺夜色（远处掺入雾），全屏光池随后统一照亮。山脚止于水面线，不盖住湖。
+function drawRidges() {
+  const x0 = CV.x - SW / 2 / CV.k - 320, x1 = CV.x + SW / 2 / CV.k + 320;
+  for (let li = 0; li < RIDGES.length; li++) {
+    const L = RIDGES[li];
+    const pts = [];
+    for (let x = x0; x <= x1 + L.step; x += L.step) pts.push([x, L.fn(x)]);
+    ctx.save();
+    setCam(ctx);
+    ctx.beginPath();
+    ctx.moveTo(pts[0][0], pts[0][1]);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+    ctx.lineTo(pts[pts.length - 1][0], WATER_TOP); ctx.lineTo(pts[0][0], WATER_TOP); ctx.closePath();
+    ctx.clip();
+    resetTf();
+    ctx.fillStyle = rgbOf(ridgeColor(L));
+    ctx.fillRect(0, 0, SW, SH);
+    ctx.restore();
+    if (li < RIDGES.length - 1) drawMist(L.base - 74 - li * 26, 1 - li * 0.4);
+    L.pts = pts;
+  }
+}
+function drawRims() {
+  for (const L of RIDGES) {
+    if (!L.pts) continue;
+    const li = RIDGES.indexOf(L);
+    ctx.save();
+    setCam(ctx);
+    ctx.beginPath();
+    ctx.moveTo(L.pts[0][0], L.pts[0][1]);
+    for (let i = 1; i < L.pts.length; i++) ctx.lineTo(L.pts[i][0], L.pts[i][1]);
+    ctx.strokeStyle = rimGradient(1 - (li / (RIDGES.length - 1)) * 0.55);
+    ctx.lineWidth = Math.max(1, (2.6 - li) * CV.k);
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+function drawMist(y, k) {
+  resetTf();
+  const dim = 1 - Math.max(smooth(W.sun.up), smooth(W.moon.up));
+  const a = clamp(k) * (0.05 + 0.1 * dim);
+  const p = toScreen(CV.x, y);
+  const half = 40 * CV.k;
+  const g = ctx.createLinearGradient(0, p.y - half, 0, p.y + half);
+  g.addColorStop(0, 'rgba(186,204,232,0)');
+  g.addColorStop(0.5, `rgba(186,204,232,${a.toFixed(3)})`);
+  g.addColorStop(1, 'rgba(186,204,232,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, p.y - half, SW, half * 2);
+}
+let glitterSun = null, glitterMoon = null;
+function makeGlitter(rgb) {
+  const c = document.createElement('canvas'); c.width = 180; c.height = 440;
+  const g = c.getContext('2d'), r = mulberry32(31);
+  for (let y = 0; y < 440; y += 3) {
+    const t = y / 440;
+    const w = lerp(7, 62, Math.pow(t, 0.75)) * (0.65 + r() * 0.7);
+    const a = lerp(0.5, 0.06, t) * (0.3 + r() * 0.95);
+    const cx = 90 + (r() - 0.5) * 46 * (0.4 + t);
+    const grd = g.createLinearGradient(cx - w, 0, cx + w, 0);
+    grd.addColorStop(0, `rgba(${rgb},0)`);
+    grd.addColorStop(0.5, `rgba(${rgb},${a.toFixed(3)})`);
+    grd.addColorStop(1, `rgba(${rgb},0)`);
+    g.fillStyle = grd;
+    g.fillRect(cx - w, y, w * 2, 3);
+  }
+  return c;
+}
+function drawWater() {
+  const sky = skyColors();
+  const a = toScreen(0, WATER_TOP), b = toScreen(0, WATER_BOT);
+  const l = toScreen(CV.x - SW / 2 / CV.k - 200, 0).x, rgt = toScreen(CV.x + SW / 2 / CV.k + 200, 0).x;
+  resetTf();
+  ctx.save();
+  ctx.beginPath(); ctx.rect(l, a.y, rgt - l, b.y - a.y); ctx.clip();
+  const g = ctx.createLinearGradient(0, a.y, 0, b.y);
+  g.addColorStop(0, scaleC(sky.bot, 0.62));
+  g.addColorStop(0.26, scaleC(sky.mid, 0.52));
+  g.addColorStop(1, '#07090f');
+  ctx.fillStyle = g; ctx.fillRect(l, a.y, rgt - l, b.y - a.y);
+  // 远山的倒影：把山脊翻到水面线以下，淡淡的
+  setCam(ctx);
+  ctx.globalAlpha = 0.22;
+  for (let li = 0; li < 2; li++) {
+    const L = RIDGES[li];
+    if (!L.pts) continue;
+    ctx.beginPath();
+    ctx.moveTo(L.pts[0][0], 2 * WATER_TOP - L.pts[0][1]);
+    for (let i = 1; i < L.pts.length; i++) ctx.lineTo(L.pts[i][0], 2 * WATER_TOP - L.pts[i][1]);
+    ctx.lineTo(L.pts[L.pts.length - 1][0], 3600); ctx.lineTo(L.pts[0][0], 3600); ctx.closePath();
+    ctx.fillStyle = rgbOf(L.night);
+    ctx.globalAlpha = li === 0 ? 0.26 : 0.34;
+    ctx.fill();
+  }
+  ctx.globalAlpha = 1;
+  resetTf();
+  ctx.restore();
+  // 水面细纹：没有光时也有一点，光来了就亮起来
+  const tot = Math.max(sunK(), moonK());
+  const rr = mulberry32(17);
+  ctx.save();
+  ctx.strokeStyle = `rgba(206,224,246,${(0.05 + 0.2 * tot).toFixed(3)})`;
+  ctx.lineWidth = Math.max(1, 1.3 * CV.k);
+  ctx.lineCap = 'round';
+  for (let i = 0; i < 30; i++) {
+    const wy = WATER_TOP + 16 + i * ((WATER_BOT - WATER_TOP - 30) / 30) + rr() * 7;
+    const w = 50 + rr() * 210, wx = CV.x + (rr() - 0.5) * SW / CV.k * 0.92;
+    const p0 = toScreen(wx - w / 2, wy), p1 = toScreen(wx + w / 2, wy);
+    ctx.globalAlpha = (0.5 + 0.5 * rr()) * (0.35 + 0.65 * tot);
+    ctx.beginPath(); ctx.moveTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+  ctx.restore();
+  if (!glitterSun) { glitterSun = makeGlitter('255,208,136'); glitterMoon = makeGlitter('186,216,255'); }
+  drawGlitter(sunPos(), glitterSun, sunK());
+  drawGlitter(moonPos(), glitterMoon, moonK());
+  drawBoat();
+}
+// 湖心一叶小船，给山水一个尺度
+function drawBoat() {
+  const bx = 1000, by = 726;
+  resetTf();
+  const p = toScreen(bx, by), k = CV.k;
+  const lit = Math.max(sunK(), moonK());
+  ctx.save();
+  ctx.translate(p.x, p.y);
+  ctx.scale(k, k);
+  const warm = clamp(1 - Math.abs(sunPos().x - bx) / 900) * sunK();
+  const cool = clamp(1 - Math.abs(moonPos().x - bx) / 900) * moonK();
+  const hull = [Math.min(255, 26 + warm * 120 + cool * 70), Math.min(255, 24 + warm * 96 + cool * 86), Math.min(255, 22 + warm * 58 + cool * 120)];
+  ctx.fillStyle = rgbOf(hull);
+  ctx.beginPath();
+  ctx.moveTo(-52, 0); ctx.quadraticCurveTo(0, 20, 52, 0);
+  ctx.quadraticCurveTo(0, 9, -52, 0); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = rgbOf(hull); ctx.lineWidth = 3.4; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(6, 0); ctx.lineTo(6, -46); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(2, -42); ctx.quadraticCurveTo(26, -34, 44, -30); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(2, -22); ctx.quadraticCurveTo(22, -18, 34, -14); ctx.stroke();
+  ctx.restore();
+  if (lit > 0.05) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalAlpha = 0.35 * lit;
+    ctx.fillStyle = '#ffe6b0';
+    ctx.beginPath(); ctx.arc(p.x + 8 * k, p.y - 50 * k, 3.4 * k, 0, 6.283); ctx.fill();
+    ctx.restore();
+  }
+}
+function drawGlitter(lum, tex, k) {
+  if (k <= 0.012) return;
+  const a = toScreen(lum.x, WATER_TOP), b = toScreen(lum.x, WATER_BOT);
+  const h = b.y - a.y, w = h * 0.72;
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const sway = reduceMotion ? 0 : Math.sin(clock * 0.0007) * 9;
+  ctx.globalAlpha = clamp(k * 1.05);
+  ctx.drawImage(tex, a.x - w / 2 + sway, a.y, w, h);
+  ctx.globalAlpha = clamp(k * 0.45);
+  ctx.drawImage(tex, a.x - w * 0.95 + sway * 1.5, a.y + h * 0.12, w * 1.6, h * 0.86);
+  ctx.restore();
+}
+function pinePath(x, baseY, h, seed) {
+  const r = mulberry32(seed);
+  ctx.moveTo(x - 4, baseY);
+  ctx.lineTo(x - 1.6, baseY - h * 0.62);
+  ctx.lineTo(x + 1.6, baseY - h * 0.62);
+  ctx.lineTo(x + 4, baseY);
+  ctx.closePath();
+  for (let i = 0; i < 4; i++) {
+    const cy = baseY - h * (0.42 + i * 0.17), cw = h * (0.3 - i * 0.045) * (0.8 + r() * 0.4);
+    ctx.moveTo(x - cw, cy + h * 0.1);
+    ctx.lineTo(x + cw, cy + h * 0.1);
+    ctx.lineTo(x + (r() - 0.5) * 6, cy - h * 0.16);
+    ctx.closePath();
+  }
+}
+// 对岸的小树与芦苇，站在水面线上，给远山一点尺度
+const PINES_FAR = [[430, 622, 96, 5], [478, 624, 70, 9], [1520, 620, 108, 13], [1452, 624, 74, 21], [1160, 618, 62, 27], [700, 621, 58, 33]];
+// 近岸的大树，构成前景
+const PINES_NEAR = [[286, 892, 268, 3], [372, 900, 186, 11], [1602, 888, 292, 17], [1516, 902, 198, 23], [1012, 908, 150, 31]];
+function reeds(rr, count, x0, span, baseFn, minH, maxH) {
+  for (let i = 0; i < count; i++) {
+    const rx = x0 + rr() * span, ry = baseFn(rx);
+    const hgt = minH + rr() * (maxH - minH), bend = (rr() - 0.5) * 30;
+    ctx.moveTo(rx, ry);
+    ctx.quadraticCurveTo(rx + bend * 0.4, ry - hgt * 0.6, rx + bend, ry - hgt);
+    ctx.lineTo(rx + bend + 3.4, ry - hgt + 3.4);
+    ctx.quadraticCurveTo(rx + bend * 0.4 + 3.4, ry - hgt * 0.6, rx + 3.4, ry);
+    ctx.closePath();
+  }
+}
+function drawFarShore() {
+  const x0 = CV.x - SW / 2 / CV.k - 300, x1 = CV.x + SW / 2 / CV.k + 300;
+  ctx.save();
+  setCam(ctx);
+  ctx.beginPath();
+  for (const [px, py, ph, ps] of PINES_FAR) pinePath(px, py, ph, ps);
+  const rr = mulberry32(41);
+  reeds(rr, 54, x0, x1 - x0, x => WATER_TOP - 1 + Math.sin(x * 0.02) * 2, 16, 40);
+  ctx.fillStyle = rgbOf(SHORE_NIGHT);
+  ctx.fill();
+  ctx.restore();
+}
+function drawBank() {
+  const x0 = CV.x - SW / 2 / CV.k - 300, x1 = CV.x + SW / 2 / CV.k + 300;
+  const pts = [];
+  for (let x = x0; x <= x1 + 12; x += 12) pts.push([x, BANK_Y + Math.sin(x * 0.006) * 12 + Math.sin(x * 0.017 + 1) * 6]);
+  ctx.save();
+  setCam(ctx);
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  ctx.lineTo(pts[pts.length - 1][0], 3600); ctx.lineTo(pts[0][0], 3600); ctx.closePath();
+  for (const [px, py, ph, ps] of PINES_NEAR) pinePath(px, py, ph, ps);
+  const rr = mulberry32(73);
+  reeds(rr, 44, x0, x1 - x0, x => BANK_Y + Math.sin(x * 0.006) * 12 + Math.sin(x * 0.017 + 1) * 6 + 8, 30, 64);
+  ctx.clip();
+  resetTf();
+  ctx.fillStyle = rgbOf(SHORE_NIGHT);
+  ctx.fillRect(0, 0, SW, SH);
+  ctx.restore();
+  // 岸边受光的一线
+  ctx.save();
+  setCam(ctx);
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  ctx.strokeStyle = rimGradient(0.95);
+  ctx.lineWidth = Math.max(1, 2.4 * CV.k);
+  ctx.stroke();
+  ctx.restore();
+}
+function drawBirds() {
+  if (W.birdsOn <= 0.02) return;
+  resetTf();
+  const t = clock / 1000;
+  ctx.save();
+  ctx.strokeStyle = `rgba(30,34,48,${(0.7 * W.birdsOn).toFixed(3)})`;
+  ctx.lineWidth = Math.max(1.2, 2 * CV.k);
+  ctx.lineCap = 'round';
+  for (const b of BIRDS) {
+    const x = b.x + t * 26, y = b.y + (reduceMotion ? 0 : Math.sin(t * 1.4 + b.ph) * 6);
+    const p = toScreen(x, y), w = 13 * b.s * CV.k;
+    const flap = reduceMotion ? 0.5 : 0.25 + 0.75 * Math.abs(Math.sin(t * 3.2 + b.ph));
+    ctx.beginPath();
+    ctx.moveTo(p.x - w, p.y + w * 0.5 * flap);
+    ctx.quadraticCurveTo(p.x - w * 0.4, p.y - w * 0.42 * flap, p.x, p.y);
+    ctx.quadraticCurveTo(p.x + w * 0.4, p.y - w * 0.42 * flap, p.x + w, p.y + w * 0.5 * flap);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+function drawSunDisc() {
+  const k = W.sun.disc;
+  if (k <= 0.012) return;
+  const s = sunPos(), p = toScreen(s.x, s.y), r = SUN_R * CV.k;
+  resetTf();
+  ctx.save();
+  ctx.globalAlpha = clamp(k);
+  const d = ctx.createRadialGradient(p.x - r * 0.26, p.y - r * 0.26, r * 0.08, p.x, p.y, r);
+  d.addColorStop(0, '#fffaea'); d.addColorStop(0.55, '#ffdb95'); d.addColorStop(1, '#f0a94e');
+  ctx.fillStyle = d; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 6.283); ctx.fill();
+  ctx.restore();
+}
+let moonSprite = null;
+function drawMoonDisc() {
+  const k = W.moon.disc;
+  if (k <= 0.012) return;
+  const m = moonPos(), p = toScreen(m.x, m.y), r = MOON_R * CV.k;
+  resetTf();
+  if (!moonSprite) {
+    const c = document.createElement('canvas'); c.width = c.height = 256;
+    const g = c.getContext('2d');
+    const grd = g.createRadialGradient(104, 100, 8, 128, 128, 104);
+    grd.addColorStop(0, '#ffffff'); grd.addColorStop(0.5, '#eaf0ff'); grd.addColorStop(1, '#b6c8ee');
+    g.fillStyle = grd; g.beginPath(); g.arc(128, 128, 104, 0, 6.283); g.fill();
+    g.globalCompositeOperation = 'destination-out';
+    g.beginPath(); g.arc(182, 106, 96, 0, 6.283); g.fill();
+    moonSprite = c;
+  }
+  ctx.save();
+  ctx.globalAlpha = clamp(k);
+  ctx.drawImage(moonSprite, p.x - r * 1.24, p.y - r * 1.24, r * 2.48, r * 2.48);
+  ctx.restore();
+}
+function drawHalos() {
+  resetTf();
+  const s = sunPos(), m = moonPos();
+  const sp = toScreen(s.x, s.y), mp = toScreen(m.x, m.y);
+  const sr = SUN_R * CV.k * 5.2, mr = MOON_R * CV.k * 5;
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  if (W.sun.disc > 0.012) {
+    const g = ctx.createRadialGradient(sp.x, sp.y, 0, sp.x, sp.y, sr);
+    g.addColorStop(0, `rgba(255,238,190,${(0.32 * W.sun.disc).toFixed(3)})`);
+    g.addColorStop(0.3, `rgba(255,206,128,${(0.13 * W.sun.disc).toFixed(3)})`);
+    g.addColorStop(1, 'rgba(255,190,110,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sp.x, sp.y, sr, 0, 6.283); ctx.fill();
+  }
+  if (W.moon.disc > 0.012) {
+    const g = ctx.createRadialGradient(mp.x, mp.y, 0, mp.x, mp.y, mr);
+    g.addColorStop(0, `rgba(230,240,255,${(0.26 * W.moon.disc).toFixed(3)})`);
+    g.addColorStop(0.32, `rgba(176,206,255,${(0.11 * W.moon.disc).toFixed(3)})`);
+    g.addColorStop(1, 'rgba(150,190,255,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(mp.x, mp.y, mr, 0, 6.283); ctx.fill();
+  }
+  ctx.restore();
+}
+function drawRays() {
+  if (Math.max(sunK(), moonK()) <= 0.06) return;
+  resetTf();
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const t = clock / 1000;
+  const cast = (lum, rgb, k) => {
+    if (k <= 0.05) return;
+    const p = toScreen(lum.x, lum.y);
+    const n = reduceMotion ? 4 : 7;
+    for (let i = 0; i < n; i++) {
+      const a = -Math.PI / 2 + (i - (n - 1) / 2) * 0.22 + (reduceMotion ? 0 : Math.sin(t * 0.24 + i) * 0.05);
+      const len = Math.max(SW, SH) * (0.5 + 0.34 * k);
+      const wdt = 20 + 13 * Math.sin(i * 2.1);
+      const g = ctx.createLinearGradient(p.x, p.y, p.x + Math.cos(a) * len, p.y + Math.sin(a) * len);
+      g.addColorStop(0, `rgba(${rgb},${(0.1 * k).toFixed(3)})`);
+      g.addColorStop(1, `rgba(${rgb},0)`);
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(p.x, p.y);
+      ctx.lineTo(p.x + Math.cos(a - 0.035) * len - Math.sin(a) * wdt, p.y + Math.sin(a - 0.035) * len + Math.cos(a) * wdt);
+      ctx.lineTo(p.x + Math.cos(a + 0.035) * len + Math.sin(a) * wdt, p.y + Math.sin(a + 0.035) * len - Math.cos(a) * wdt);
+      ctx.closePath(); ctx.fill();
+    }
+  };
+  cast(sunPos(), '255,214,150', sunK());
+  cast(moonPos(), '190,216,255', moonK());
+  ctx.restore();
+}
+function drawBloom() {
+  const tot = clamp(sunK() * 0.5 + moonK() * 0.5 + W.bloom);
+  if (tot <= 0.1) return;
+  resetTf();
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const g = ctx.createRadialGradient(SW / 2, SH * 0.42, 0, SW / 2, SH * 0.42, Math.hypot(SW, SH) * 0.56);
+  g.addColorStop(0, `rgba(255,236,200,${(0.09 * tot).toFixed(3)})`);
+  g.addColorStop(0.55, `rgba(220,214,238,${(0.045 * tot).toFixed(3)})`);
+  g.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, SW, SH);
+  ctx.restore();
+}
+let vignette = null;
+function drawVignette() {
+  resetTf();
+  const w = cvs.width, h = cvs.height;
+  if (!vignette || vignette.w !== w || vignette.h !== h) {
+    const g = ctx.createRadialGradient(w / 2, h * 0.45, Math.min(w, h) * 0.36, w / 2, h * 0.45, Math.hypot(w, h) * 0.62);
+    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.52)');
+    vignette = { w, h, g };
+  }
+  ctx.fillStyle = vignette.g; ctx.fillRect(0, 0, w, h);
+}
+
+/* ---------- 字形：明、日、月的中线，用 Catmull-Rom 拟成平滑笔迹 ---------- */
+const NSVG = 'http://www.w3.org/2000/svg';
+const samplerPath = document.createElementNS(NSVG, 'path');
+$('#sampler').appendChild(samplerPath);
+const N = 64;
+function smoothD(p) {
+  if (p.length < 2) return '';
+  let d = `M${p[0][0]} ${p[0][1]}`;
+  for (let i = 0; i < p.length - 1; i++) {
+    const p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p[i + 1];
+    d += ` C${(p1[0] + (p2[0] - p0[0]) / 6).toFixed(2)} ${(p1[1] + (p2[1] - p0[1]) / 6).toFixed(2)} ` +
+      `${(p2[0] - (p3[0] - p1[0]) / 6).toFixed(2)} ${(p2[1] - (p3[1] - p1[1]) / 6).toFixed(2)} ${p2[0]} ${p2[1]}`;
+  }
+  return d;
+}
+function resample(p) {
+  samplerPath.setAttribute('d', smoothD(p));
+  const len = samplerPath.getTotalLength(), out = [];
+  for (let i = 0; i <= N; i++) { const q = samplerPath.getPointAtLength(len * i / N); out.push([q.x, q.y]); }
+  return out;
+}
+// 骨架取自 Make Me a Hanzi「明」「日」「月」medians（Arphic Public License），
+// 局部坐标 x/9、(900-y)/9。明八笔＝日四笔＋月四笔，逐笔一一对应，所以「日+月」可以真的合成「明」。
+const RAW_MING = [
+  [[16.9, 21.8], [18.9, 23.6], [20.6, 26.9], [20.9, 40.2], [19.6, 60.8], [20.1, 70.0]],
+  [[22.3, 22.4], [24.4, 23.6], [38.9, 20.2], [41.8, 21.8], [43.3, 23.7], [43.4, 59.1], [42.1, 63.7], [42.3, 69.3]],
+  [[23.9, 44.3], [25.0, 42.9], [30.0, 41.7], [35.1, 42.0]],
+  [[23.6, 63.4], [25.4, 61.7], [38.4, 60.1]],
+  [[59.6, 14.2], [64.0, 18.3], [64.6, 26.0], [63.6, 48.0], [60.8, 64.7], [55.9, 77.2], [51.1, 85.2], [43.1, 94.3], [37.2, 99.2], [34.8, 100.3]],
+  [[68.7, 18.9], [69.3, 17.4], [84.4, 13.4], [88.0, 15.1], [89.6, 17.6], [91.1, 76.7], [90.9, 90.2], [89.6, 93.3], [88.2, 94.2], [85.2, 93.4], [74.9, 88.0]],
+  [[67.3, 38.0], [72.4, 36.3], [82.7, 35.4]],
+  [[65.1, 58.3], [66.6, 57.6], [78.7, 55.7], [83.1, 55.9]],
+];
+const RAW_RI = [
+  [[31.6, 24.0], [35.7, 28.2], [36.4, 31.4], [36.9, 42.7], [35.9, 71.0], [33.6, 84.9], [33.6, 92.2]],
+  [[39.9, 26.7], [41.6, 28.0], [43.1, 27.8], [70.6, 21.9], [74.2, 23.7], [76.7, 26.1], [77.7, 50.0], [77.7, 82.3], [76.1, 88.3], [76.4, 95.9]],
+  [[39.7, 54.1], [41.0, 55.1], [44.2, 55.1], [59.3, 52.0], [64.6, 52.1]],
+  [[37.8, 88.2], [39.4, 86.8], [48.0, 85.6], [65.0, 83.7], [70.2, 84.1]],
+];
+const RAW_YUE = [
+  [[37.7, 14.1], [42.1, 17.6], [43.0, 23.9], [42.8, 44.0], [40.7, 62.0], [37.9, 71.2], [32.9, 81.2], [26.2, 89.7], [20.4, 95.2], [16.1, 98.1]],
+  [[46.1, 15.1], [47.7, 16.4], [55.9, 15.3], [70.4, 11.6], [74.0, 13.3], [75.7, 15.8], [76.3, 67.7], [75.9, 89.7], [73.8, 93.8], [70.2, 93.0], [59.8, 88.4]],
+  [[46.3, 39.8], [47.8, 38.9], [59.4, 37.1], [65.3, 37.3]],
+  [[44.3, 59.1], [45.9, 58.3], [59.4, 56.2], [65.3, 56.4]],
+];
+const MING = RAW_MING.map(resample), RI = RAW_RI.map(resample), YUE = RAW_YUE.map(resample);
+const NAMES = ['竖', '横折', '横', '横', '撇', '横折钩', '横', '横'];
+const PROFS = ['v', 'zhe', 'h', 'h', 'pie', 'gou', 'h', 'h'];
+const WIDTH = [4.5, 4.6, 4.0, 4.0, 4.6, 4.6, 3.9, 3.9];
+const PROF = {
+  h: s => 0.62 + 0.5 * Math.sin(Math.PI * clamp(0.1 + s * 0.8)) - 0.14 * s,
+  v: s => 0.72 + 0.44 * Math.sin(Math.PI * clamp(0.06 + s * 0.86)),
+  zhe: s => s < 0.33 ? PROF.h(s / 0.33 * 0.5) : PROF.v((s - 0.33) / 0.67),
+  gou: s => {
+    if (s < 0.3) return PROF.h(s / 0.3 * 0.46);
+    const b = PROF.v((s - 0.3) / 0.58);
+    return s > 0.88 ? b * lerp(1, 0.4, (s - 0.88) / 0.12) : b;
+  },
+  pie: s => 1.06 - 0.82 * Math.pow(clamp(s), 0.85),
+};
+function bboxOf(sets) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const pts of sets) for (const p of pts) { x0 = Math.min(x0, p[0]); y0 = Math.min(y0, p[1]); x1 = Math.max(x1, p[0]); y1 = Math.max(y1, p[1]); }
+  return { x0, y0, x1, y1, cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, w: x1 - x0, h: y1 - y0 };
+}
+const B_MING = bboxOf(MING), B_RI = bboxOf(RI), B_YUE = bboxOf(YUE);
+function makeFrame(bbox, cx, cy, span) { return { bbox, cx, cy, s: span / Math.max(bbox.w, bbox.h) }; }
+function fwd(F, lx, ly) { return [F.cx + (lx - F.bbox.cx) * F.s, F.cy + (ly - F.bbox.cy) * F.s]; }
+function inv(F, wx, wy) { return [(wx - F.cx) / F.s + F.bbox.cx, (wy - F.cy) / F.s + F.bbox.cy]; }
+let G = makeFrame(B_MING, 900, 415, 460);   // 当前字形所在的框架；写字阶段就是「明」的框架
+function toLocal(wx, wy) { const q = inv(G, wx, wy); return { x: q[0], y: q[1] }; }
+function localToScreen(lx, ly) { const w = fwd(G, lx, ly); return toScreen(w[0], w[1]); }
+function strokeWorld(pts, F) { return pts.map(p => fwd(F, p[0], p[1])); }
+
+function brush(c, pts, baseW, profFn, upto) {
+  if (upto <= 0) return;
+  const n = pts.length - 1, m = upto * n, mi = Math.floor(m);
+  const P = pts.slice(0, mi + 1);
+  if (mi < n && m > mi) { const a = pts[mi], b = pts[mi + 1], f = m - mi; P.push([lerp(a[0], b[0], f), lerp(a[1], b[1], f)]); }
+  if (P.length < 2) return;
+  const L = [], R = [];
+  for (let j = 0; j < P.length; j++) {
+    const a = P[Math.max(0, j - 1)], b = P[Math.min(P.length - 1, j + 1)];
+    let tx = b[0] - a[0], ty = b[1] - a[1];
+    const l = Math.hypot(tx, ty) || 1; tx /= l; ty /= l;
+    const s = Math.min(1, (j / (P.length - 1)) * (m / n));
+    const hw = baseW * profFn(s) / 2;
+    L.push([P[j][0] - ty * hw, P[j][1] + tx * hw]);
+    R.push([P[j][0] + ty * hw, P[j][1] - tx * hw]);
+  }
+  c.beginPath(); c.moveTo(L[0][0], L[0][1]);
+  for (const p of L) c.lineTo(p[0], p[1]);
+  for (let j = R.length - 1; j >= 0; j--) c.lineTo(R[j][0], R[j][1]);
+  c.closePath(); c.fill();
+  const e0 = P[0], e1 = P[P.length - 1];
+  c.beginPath(); c.arc(e0[0], e0[1], baseW * profFn(0) / 2, 0, 6.283); c.fill();
+  c.beginPath(); c.arc(e1[0], e1[1], baseW * profFn(Math.min(1, m / n)) / 2, 0, 6.283); c.fill();
+}
+
+/* ---------- 合成 ---------- */
+function render() {
+  updateView();
+  drawSky();
+  drawStars();
+  drawClouds();
+  drawSunDisc();          // 天体在山后，低的时候会被山挡住
+  drawMoonDisc();
+  drawRidges();
+  drawFarShore();
+  drawWater();
+  drawBank();
+  paintPools();           // 两团光统一照亮整幅画
+  drawRims();
+  drawBirds();
+  drawHalos();            // 光晕与光芒在最前，像空气里的散射
+  drawRays();
+  drawGlyph();
+  drawBloom();
+  drawVignette();
+}
+function drawGlyph() {
+  const g = W.glyph;
+  if (g.alpha <= 0.001) return;
+  const F = G;
+  resetTf();
+  if (g.rays > 0) {
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    const p = toScreen(F.cx, F.cy), R = F.s * 100 * CV.k;
+    const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, R);
+    grd.addColorStop(0, `rgba(255,222,160,${(0.2 * g.rays * g.alpha).toFixed(3)})`);
+    grd.addColorStop(1, 'rgba(255,222,160,0)');
+    ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(p.x, p.y, R, 0, 6.283); ctx.fill();
+    ctx.restore();
+  }
+  setCam(ctx);
+  ctx.save();
+  ctx.globalAlpha = g.alpha;
+  const merge = ease.inOut(clamp(g.merge));
+  const col = [lerp(198, 255, merge) | 0, lerp(216, 238, merge) | 0, lerp(246, 208, merge) | 0];
+  if (g.ghost > 0) {
+    ctx.save();
+    ctx.globalAlpha = g.alpha * g.ghost;
+    ctx.fillStyle = '#2c3549';
+    for (let i = 0; i < 8; i++) brush(ctx, strokeWorld(MING[i], F), WIDTH[i], PROF[PROFS[i]], 1);
+    ctx.restore();
+  }
+  ctx.fillStyle = `rgb(${col})`;
+  ctx.shadowColor = 'rgba(255,214,140,.85)';
+  ctx.shadowBlur = g.glow * 22 * DPR * Math.min(1.5, CV.k * 1.6);
+  // 日、月先各自成形
+  if (g.frameA) {
+    ctx.fillStyle = 'rgb(255,224,160)';
+    for (let i = 0; i < 4; i++) if (W.sun.prog[i] > 0) brush(ctx, strokeWorld(RI[i], g.frameA), WIDTH[i], PROF[PROFS[i]], W.sun.prog[i]);
+  }
+  if (g.frameB) {
+    ctx.fillStyle = 'rgb(200,222,255)';
+    for (let i = 0; i < 4; i++) if (W.moon.prog[i] > 0) brush(ctx, strokeWorld(YUE[i], g.frameB), WIDTH[i + 4], PROF[PROFS[i + 4]], W.moon.prog[i]);
+  }
+  // 明：八个笔画；合字时逐点从「日」「月」的位置过渡过来
+  const mf = g.morphFrom ? ease.inOut(g.morph) : 1;
+  for (let i = 0; i < 8; i++) {
+    if (g.prog[i] <= 0) continue;
+    ctx.fillStyle = `rgb(${col})`;
+    let pts;
+    if (mf < 1) {
+      const src = i < 4 ? RI[i] : YUE[i - 4];
+      const Fs = i < 4 ? g.frameA : g.frameB;
+      const a = strokeWorld(src, Fs), b = strokeWorld(MING[i], F);
+      pts = a.map((p, j) => [lerp(p[0], b[j][0], mf), lerp(p[1], b[j][1], mf)]);
+    } else {
+      pts = strokeWorld(MING[i], F);
+    }
+    brush(ctx, pts, WIDTH[i], PROF[PROFS[i]], g.prog[i]);
+  }
+  ctx.shadowBlur = 0;
+  if (g.labels > 0) {
+    ctx.globalAlpha = g.alpha * g.labels;
+    ctx.strokeStyle = 'rgba(255,205,130,.85)'; ctx.lineWidth = 0.55;
+    const seg = (y0, y1) => {
+      const a = fwd(F, 92, y0), b = fwd(F, 98, y0), c1 = fwd(F, 98, y1), d1 = fwd(F, 92, y1);
+      ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.lineTo(c1[0], c1[1]); ctx.lineTo(d1[0], d1[1]);
+    };
+    ctx.beginPath(); seg(20, 46); seg(54, 80); ctx.stroke();
+    ctx.font = '13px "Kaiti SC","STKaiti","KaiTi",serif'; ctx.textBaseline = 'middle';
+    const t1 = fwd(F, 101, 33), t2 = fwd(F, 101, 67);
+    ctx.fillStyle = '#ffcd82'; ctx.fillText('日', t1[0], t1[1]);
+    ctx.fillStyle = '#bcd8ff'; ctx.fillText('月', t2[0], t2[1]);
+  }
+  if (g.trace) drawTraceUI(ctx, F);
+  ctx.restore();
+  if (g.words > 0) drawWords();
+}
+function drawTraceUI(c, F) {
+  const T = W.trace;
+  if (T.stroke >= 8) return;
+  const pts = MING[T.stroke].map(p => fwd(F, p[0], p[1]));
+  c.globalAlpha = W.glyph.alpha;
+  c.strokeStyle = 'rgba(255,206,132,.92)'; c.lineWidth = 0.65; c.setLineDash([1.7, 1.8]);
+  c.beginPath(); c.moveTo(pts[0][0], pts[0][1]);
+  for (const p of pts) c.lineTo(p[0], p[1]);
+  c.stroke(); c.setLineDash([]);
+  const a = pts[N - 3], b = pts[N];
+  const ang = Math.atan2(b[1] - a[1], b[0] - a[0]);
+  c.fillStyle = 'rgba(255,206,132,.92)';
+  c.beginPath();
+  c.moveTo(b[0] + Math.cos(ang) * 2.5, b[1] + Math.sin(ang) * 2.5);
+  c.lineTo(b[0] + Math.cos(ang + 2.5) * 2.5, b[1] + Math.sin(ang + 2.5) * 2.5);
+  c.lineTo(b[0] + Math.cos(ang - 2.5) * 2.5, b[1] + Math.sin(ang - 2.5) * 2.5);
+  c.fill();
+  const [sx, sy] = pts[0];
+  const pulse = 0.5 + 0.5 * Math.sin(clock / 220);
+  c.fillStyle = `rgba(255,206,132,${(0.24 * pulse).toFixed(3)})`;
+  c.beginPath(); c.arc(sx, sy, 3.8 + pulse * 1.7, 0, 6.283); c.fill();
+  c.fillStyle = '#ffcd82'; c.beginPath(); c.arc(sx, sy, 2.3, 0, 6.283); c.fill();
+  c.font = '600 5px "PingFang SC","Helvetica Neue",sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
+  c.fillStyle = '#fff0cf'; c.fillText(String(T.stroke + 1), sx - 6.5, sy - 3.6);
+  c.textAlign = 'start';
+  if (T.pen) {
+    c.fillStyle = '#fff6e2'; c.shadowColor = 'rgba(255,206,132,.95)'; c.shadowBlur = 14 * DPR;
+    c.beginPath(); c.arc(T.pen[0], T.pen[1], 2.1, 0, 6.283); c.fill(); c.shadowBlur = 0;
+  }
+}
+const WORDS = [['明亮', '日也亮，月也亮，合起来最亮。'], ['光明', '有光的地方，路就看得清。'], ['明天', '今天的太阳落下，明天还会升起来。']];
+function drawWords() {
+  resetTf();
+  const g = W.glyph;
+  const bottom = G.cy + G.s * G.bbox.h * 0.5;
+  const p = toScreen(G.cx, bottom + 90 / CV.k);
+  const fs = clamp(SW * 0.055, 22, 46), gap = Math.min(SW * 0.29, 260);
+  ctx.font = `${Math.round(fs)}px "Kaiti SC","STKaiti","KaiTi",serif`;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  WORDS.forEach(([w], i) => {
+    const a = clamp(g.words - i) * g.alpha;
+    if (a <= 0) return;
+    const on = W.wordOn === i;
+    ctx.globalAlpha = a * (on ? 1 : 0.5);
+    ctx.fillStyle = on ? '#fff2d8' : '#d9d2bd';
+    ctx.shadowColor = 'rgba(255,206,132,.85)'; ctx.shadowBlur = on ? 18 * DPR : 0;
+    ctx.fillText(w, p.x + (i - 1) * gap, p.y + (1 - clamp(g.words - i)) * 16);
+  });
+  ctx.shadowBlur = 0; ctx.globalAlpha = 1; ctx.textAlign = 'start';
+}
+
+/* ---------- 主循环 ---------- */
+let last = null;
+function loop(now) {
+  if (last == null) last = now;
+  DT = Math.min(50, Math.max(0, now - last));
+  last = now;
+  clock += DT;
+  render();
+  const list = waiters; waiters = [];
+  for (const wt of list) { if (wt.tk.dead) wt.rej(new Cancelled()); else wt.res(clock); }
+  requestAnimationFrame(loop);
+}
+
+/* ---------- 界面 ---------- */
+const ui = { cap: $('#caption'), capT: $('#capTitle'), capP: $('#capText'), hint: $('#hint'), action: $('#action'), demo: $('#demo'), prog: [...document.querySelectorAll('#progress li')] };
+const CHAR_MS = 70;
+let capMinEnd = 0;
+function span(cls, text) { const s = document.createElement('span'); if (cls) s.className = cls; s.textContent = text; return s; }
+function showCaption(title, text) {
+  ui.capT.textContent = title;
+  ui.capP.replaceChildren(...[...text].map((c, i) => { const s = span('ch', c); s.style.setProperty('--i', i); return s; }));
+  ui.cap.classList.remove('on'); void ui.cap.offsetWidth; ui.cap.classList.add('on');
+}
+async function caption(title, text, tk, hold = 0) {
+  while (clock < capMinEnd) await frame(tk);
+  ui.cap.classList.remove('on');
+  await wait(380, tk);
+  showCaption(title, text);
+  const n = [...text].length;
+  capMinEnd = clock + Math.max(reduceMotion ? 1400 : n * CHAR_MS + 1300, n * 150) + 600 + hold;
+}
+async function captionDone(tk) { while (clock < capMinEnd) await frame(tk); }
+function hint(text) {
+  if (text) { ui.hint.replaceChildren(span('', text)); ui.hint.classList.add('on'); }
+  else ui.hint.classList.remove('on');
+}
+function progress(i) { ui.prog.forEach((li, j) => { li.classList.toggle('on', j === i); li.classList.toggle('done', j < i); }); }
+function mode(m) { document.body.classList.remove('tap', 'trace', 'grab'); if (m) document.body.classList.add(m); }
+let actionFn = null;
+function setAction(label, fn) {
+  actionFn = fn;
+  if (label) { ui.action.textContent = label; ui.action.hidden = false; } else ui.action.hidden = true;
+}
+
+/* ---------- 输入 ---------- */
+const S = { handler: null, demo: null, interactions: [] };
+let activePointer = null;
+cvs.addEventListener('pointerdown', e => {
+  if (!e.isPrimary || activePointer != null) return;
+  const h = S.handler; if (!h || !h.down) return;
+  activePointer = e.pointerId;
+  try { cvs.setPointerCapture(e.pointerId); } catch {}
+  e.preventDefault();
+  h.down(toWorld(e.clientX, e.clientY), e);
+});
+cvs.addEventListener('pointermove', e => {
+  if (e.pointerId !== activePointer) return;
+  const h = S.handler; if (!h || !h.move) return;
+  const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [];
+  for (const ev of evs.length ? evs : [e]) h.move(toWorld(ev.clientX, ev.clientY), ev);
+});
+function pointerEnd(e, cancel) {
+  if (e.pointerId !== activePointer) return;
+  activePointer = null;
+  const h = S.handler;
+  if (h && h.up) h.up(toWorld(e.clientX, e.clientY), cancel);
+}
+cvs.addEventListener('pointerup', e => pointerEnd(e, false));
+cvs.addEventListener('pointercancel', e => pointerEnd(e, true));
+cvs.addEventListener('lostpointercapture', e => pointerEnd(e, true));
+ui.action.addEventListener('click', () => { if (actionFn) actionFn(); });
+ui.demo.addEventListener('click', () => { if (S.demo) S.demo(); });
+
+/* ---------- 分镜 ---------- */
+async function sDim(tk) {
+  progress(0);
+  W.glyph.prog = [1, 1, 1, 1, 1, 1, 1, 1];
+  W.glyph.morph = 1; W.glyph.morphFrom = false; W.glyph.alpha = 1;
+  bg(camTo(VIEW.dim, 3600 * M, tk));
+  bg(tween(1600 * M, t => { W.glyph.alpha = 1 - t; }, tk));
+  await wait(900, tk);
+  await caption('未明', '天还没有亮，山和水都是灰的。', tk);
+  await caption('未明', '这里缺两样东西：太阳，和月亮。', tk);
+  await captionDone(tk);
+}
+
+async function sSun(tk) {
+  progress(1);
+  W.sun.up = 0.13;
+  bg(camTo(VIEW.sun, 3000 * M, tk));
+  await caption('日出', '太阳从东山后面探出头来。', tk);
+  await captionDone(tk);
+  hint('按住太阳，把它拖上天空');
+  let drag = null, done = null;
+  const grabTol = () => Math.max(170, 100 / CV.k);
+  const project = p => clamp((SUN0.y - p.y) / (SUN0.y - SUN1.y));
+  S.handler = {
+    down(p) {
+      const s = sunPos();
+      if (Math.hypot(p.x - s.x, p.y - s.y) < grabTol()) { drag = { from: W.sun.up }; hint(null); }
+      else hint('先按住那个发光的圆点');
+    },
+    move(p) {
+      if (!drag) return;
+      W.sun.up = clamp(Math.max(drag.from * 0.6, project(p)));
+    },
+    up(p, cancel) {
+      if (!drag) return;
+      const d = drag; drag = null;
+      const t = cancel ? d.from : project(p);
+      if (!cancel && t >= 0.82) { W.sun.up = clamp(t); done = 'user'; return; }
+      W.sun.up = clamp(Math.max(0.13, t));
+      hint('再往上一点点，太阳就到天上啦');
+      bg(tween(600 * M, x => { W.sun.up = lerp(W.sun.up, 0.14, x); }, tk));
+    },
+  };
+  setAction('请出太阳', () => { done = 'user'; });
+  mode('grab');
+  const t0 = clock;
+  while (!done) { await frame(tk); if (clock - t0 > 13000) done = 'auto'; }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  S.interactions.push('sun:' + done);
+  bg(tween((done === 'auto' ? 2400 : 1100) * M, t => { W.sun.up = lerp(W.sun.up, 1, t); }, tk, ease.out));
+  Sound.rise(0.1); Sound.bell(NOTE.C5, 0.07, 3.2); Sound.pluck(NOTE.E4, 0.1, 3);
+  Sound.padLevels(1, 0);
+  await caption('日出', '太阳一出来，山就暖了，水也亮了。', tk);
+  await captionDone(tk);
+}
+
+async function sMoon(tk) {
+  progress(2);
+  W.moon.up = 0.12;
+  bg(camTo(VIEW.moon, 3000 * M, tk));
+  await caption('月出', '太阳慢慢往西走，天又暗下来。', tk);
+  await captionDone(tk);
+  hint('按住月亮，把它也拖上天空');
+  let drag = null, done = null;
+  const grabTol = () => Math.max(170, 100 / CV.k);
+  const project = p => clamp((MOON0.y - p.y) / (MOON0.y - MOON1.y));
+  S.handler = {
+    down(p) {
+      const m = moonPos();
+      if (Math.hypot(p.x - m.x, p.y - m.y) < grabTol()) { drag = { from: W.moon.up }; hint(null); }
+      else hint('先按住那个弯弯的月亮');
+    },
+    move(p) { if (!drag) return; W.moon.up = clamp(Math.max(drag.from * 0.6, project(p))); },
+    up(p, cancel) {
+      if (!drag) return;
+      const d = drag; drag = null;
+      const t = cancel ? d.from : project(p);
+      if (!cancel && t >= 0.82) { W.moon.up = clamp(t); done = 'user'; return; }
+      W.moon.up = clamp(Math.max(0.12, t));
+      hint('再往上一点点，月亮就到天上啦');
+      bg(tween(600 * M, x => { W.moon.up = lerp(W.moon.up, 0.13, x); }, tk));
+    },
+  };
+  setAction('请出月亮', () => { done = 'user'; });
+  mode('grab');
+  const t0 = clock;
+  while (!done) { await frame(tk); if (clock - t0 > 13000) done = 'auto'; }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  S.interactions.push('moon:' + done);
+  bg(tween((done === 'auto' ? 2400 : 1100) * M, t => { W.moon.up = lerp(W.moon.up, 1, t); }, tk, ease.out));
+  Sound.moonRise(); Sound.hiss(1.6, 3200, 0.035, 0.6, true);
+  Sound.padLevels(1, 1);
+  await caption('月出', '月亮升起来了，银色的光落在水面上。', tk);
+  await captionDone(tk);
+  await caption('月出', '可是太阳和月亮各在一头，中间还是暗暗的。', tk);
+  await captionDone(tk);
+}
+
+async function sMeet(tk) {
+  progress(3);
+  bg(camTo(VIEW.wide, 3400 * M, tk));
+  await caption('同辉', '让太阳和月亮，走到一起。', tk);
+  await captionDone(tk);
+  hint('点一点天空，把日月请到一处');
+  let done = null;
+  const step = () => {
+    if (done) return;
+    W.meet = clamp(W.meet + 0.34);
+    Sound.pluck(PENTA[Math.min(9, 2 + Math.round(W.meet * 6))], 0.11);
+    Sound.hiss(0.6, 1800, 0.03, 0.7, true);
+    if (W.meet >= 0.99) done = 'user';
+  };
+  S.handler = { down() { step(); } };
+  setAction('让日月同辉', step);
+  mode('tap');
+  const t0 = clock;
+  while (!done) { await frame(tk); if (clock - t0 > 15000) done = 'auto'; }
+  S.handler = null; mode(null); setAction(null); hint(null);
+  S.interactions.push('meet:' + done);
+  const s0 = sunPos(), p0 = moonPos();
+  const sdx = SUN_MEET.x - s0.x, sdy = SUN_MEET.y - s0.y;
+  const mdx = MOON_MEET.x - p0.x, mdy = MOON_MEET.y - p0.y;
+  const from = W.meet;
+  bg(tween(2600 * M, t => {
+    W.meet = lerp(from, 1, t);
+    W.sun.dx = sdx * t; W.sun.dy = sdy * t;
+    W.moon.dx = mdx * t; W.moon.dy = mdy * t;
+  }, tk, ease.inOut));
+  Sound.bell(NOTE.C5, 0.09, 4); Sound.bell(NOTE.A5, 0.06, 4);
+  bg(tween(2400 * M, t => { W.birdsOn = t; W.bloom = t * 0.5; }, tk));
+  await caption('同辉', '太阳的光和月亮的光，碰到了一起。', tk);
+  await caption('同辉', '暖的加冷的，整个山谷一下子亮了。', tk, 400);
+  await captionDone(tk);
+}
+
+async function sGlyph(tk) {
+  progress(4);
+  bg(camTo(VIEW.glyph, 3000 * M, tk));
+  const s = sunPos(), m = moonPos();
+  G = makeFrame(B_MING, 900, 415, 460);
+  W.glyph.frameA = makeFrame(B_RI, s.x, s.y, 330);
+  W.glyph.frameB = makeFrame(B_YUE, m.x, m.y, 330);
+  W.glyph.alpha = 1; W.glyph.morph = 0; W.glyph.morphFrom = false;
+  W.glyph.prog = [0, 0, 0, 0, 0, 0, 0, 0];
+  W.sun.prog = [0, 0, 0, 0]; W.moon.prog = [0, 0, 0, 0];
+  await caption('成字', '古人抬头看见这两个光点，就画下了「日」和「月」。', tk);
+  await captionDone(tk);
+  // 光点化作笔画：日的四笔、月的四笔
+  bg(tween(1500 * M, t => { W.sun.disc = 1 - t; W.moon.disc = 1 - t; W.glyph.rays = t; }, tk, ease.out));
+  Sound.hiss(2.2, 2400, 0.04, 0.55, true);
+  await tween(3000 * M, t => {
+    for (let i = 0; i < 4; i++) {
+      const v = smooth((t - 0.06 - i * 0.13) / 0.36);
+      W.sun.prog[i] = v; W.moon.prog[i] = v;
+    }
+  }, tk, ease.lin);
+  W.sun.prog = [1, 1, 1, 1]; W.moon.prog = [1, 1, 1, 1];
+  Sound.bell(NOTE.C5, 0.08, 3.4); Sound.bell(NOTE.E5, 0.06, 3.4);
+  await caption('日 · 月', '左边是「日」，右边是「月」。', tk);
+  await captionDone(tk);
+  // 两个字走到一起：笔画一一对应地合成「明」
+  await tween(900 * M, t => {
+    W.sun.prog = W.sun.prog.map(() => 1 - t);
+    W.moon.prog = W.moon.prog.map(() => 1 - t);
+  }, tk);
+  W.sun.prog = [0, 0, 0, 0]; W.moon.prog = [0, 0, 0, 0];
+  W.glyph.prog = [1, 1, 1, 1, 1, 1, 1, 1];
+  W.glyph.morphFrom = true;
+  Sound.pluck(NOTE.G4, 0.12, 3);
+  await tween(3000 * M, t => { W.glyph.morph = t; }, tk, ease.inOut);
+  W.glyph.morph = 1;
+  Sound.bell(NOTE.C5, 0.1, 4); Sound.pluck(NOTE.C5, 0.12, 3.4);
+  bg(tween(800, t => { W.glyph.labels = t; }, tk));
+  await caption('明', '日和月在一起，就是「明」。', tk);
+  await caption('说文解字', '《说文解字》：“明，照也。” 光照过来，就看得见。', tk, 500);
+  await captionDone(tk);
+  await caption('字源', '甲骨文里「明」有「日+月」和「囧+月」两种写法，后来「日+月」成了通行字形。', tk, 500);
+  await captionDone(tk);
+  await tween(700, t => { W.glyph.labels = 1 - t; }, tk);
+  W.glyph.labels = 0;
+}
+
+async function sWrite(tk) {
+  progress(5);
+  G = makeFrame(B_MING, 900, 415, 460);
+  W.glyph.frameA = null; W.glyph.frameB = null;
+  W.glyph.morphFrom = false; W.glyph.morph = 1;
+  await caption('写字', '「明」一共八笔：日四笔，月四笔。', tk);
+  await tween(900, t => { W.glyph.prog = W.glyph.prog.map(() => 1 - t); W.glyph.ghost = t; }, tk);
+  W.glyph.prog = [0, 0, 0, 0, 0, 0, 0, 0];
+  W.glyph.trace = true; W.trace = { stroke: 0, pen: null };
+  W.drift = 0;
+  const showStroke = () => {
+    capMinEnd = 0;
+    showCaption('写字', `第 ${W.trace.stroke + 1} 笔 · ${NAMES[W.trace.stroke]}`);
+    hint(W.trace.stroke < 4 ? '从金色光点起笔，这是「日」的一笔' : '从金色光点起笔，这是「月」的一笔');
+  };
+  await captionDone(tk);
+  showStroke();
+  let samples = null, drag = null, lastInput = clock, demoing = false, completed = 0, invalidHint = 0;
+  const prepare = () => { samples = MING[W.trace.stroke]; };
+  prepare();
+  const finishStroke = () => {
+    const i = W.trace.stroke;
+    W.glyph.prog[i] = 1;
+    Sound.pluck(PENTA[Math.min(9, i + 2)], 0.13, 2);
+    W.trace.stroke++;
+    completed++;
+    if (W.trace.stroke < 8) { prepare(); showStroke(); }
+  };
+  const tolLocal = () => Math.max(6.5, 21 / (CV.k * G.s));
+  S.handler = {
+    down(p) {
+      if (demoing) return;
+      lastInput = clock;
+      const q = toLocal(p.x, p.y);
+      if (Math.hypot(q.x - samples[0][0], q.y - samples[0][1]) > tolLocal() * 1.35) { hint('从这一笔的金色光点开始哦'); return; }
+      drag = { idx: 0, bad: false };
+    },
+    move(p) {
+      if (!drag) return;
+      lastInput = clock;
+      const q = toLocal(p.x, p.y);
+      let best = drag.idx, bd = Infinity;
+      for (let j = Math.max(0, drag.idx - 3); j < Math.min(samples.length, drag.idx + 16); j++) {
+        const d = Math.hypot(q.x - samples[j][0], q.y - samples[j][1]);
+        if (d < bd) { bd = d; best = j; }
+      }
+      if (bd > tolLocal()) { drag.bad = true; return; }
+      if (drag.bad) return;
+      drag.idx = Math.max(drag.idx, best);
+      W.glyph.prog[W.trace.stroke] = drag.idx / N;
+    },
+    up(p, cancel) {
+      if (!drag) return;
+      const d = drag; drag = null;
+      if (!cancel && !d.bad && d.idx >= N - 4) { finishStroke(); return; }
+      const i = W.trace.stroke, from = W.glyph.prog[i];
+      bg(tween(260, t => { if (W.trace.stroke === i) W.glyph.prog[i] = from * (1 - t); }, tk));
+      if (clock - invalidHint > 400) { hint(d.bad ? '离虚线有点远了，从光点重新写这一笔' : '把这一笔写到箭头那里'); invalidHint = clock; }
+    },
+  };
+  const demo = async () => {
+    if (demoing || W.trace.stroke >= 8) return;
+    demoing = true; ui.demo.disabled = true; drag = null;
+    hint('看光点走过每一笔，你也可以跟着比画');
+    while (W.trace.stroke < 8) {
+      const i = W.trace.stroke;
+      W.glyph.prog[i] = 0;
+      await tween(820 * M, t => { W.glyph.prog[i] = t; const pts = MING[i].map(q => fwd(G, q[0], q[1])); W.trace.pen = pts[Math.round(t * N)]; }, tk, ease.sine);
+      W.trace.pen = null;
+      finishStroke();
+      await wait(240, tk);
+    }
+  };
+  S.demo = () => { S.interactions.push('demo'); bg(demo()); };
+  mode('trace');
+  ui.demo.hidden = false;
+  lastInput = clock;
+  let nudged = false;
+  while (W.trace.stroke < 8) {
+    await frame(tk);
+    if (!demoing && !nudged && clock - lastInput > 14000) { hint('写不出来也没关系，点“看示范”'); nudged = true; }
+    if (!demoing && completed === 0 && clock - lastInput > 26000) { S.interactions.push('auto'); bg(demo()); }
+  }
+  S.handler = null; S.demo = null; mode(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  W.glyph.trace = false;
+  if (!S.interactions.includes('demo') && !S.interactions.includes('auto')) S.interactions.push('user');
+  await tween(600, t => { W.glyph.ghost = 1 - t; }, tk);
+  W.glyph.ghost = 0;
+  Sound.bell(NOTE.C5, 0.1, 3.6); Sound.bell(NOTE.A5, 0.06, 3.6);
+  await caption('写字', '写好了！明，明亮的明。', tk);
+  await captionDone(tk);
+  W.drift = 1;
+}
+
+async function sWords(tk) {
+  progress(6);
+  const cy0 = G.cy, s0 = G.s;
+  await tween(1500 * M, t => {
+    G = makeFrame(B_MING, 900, lerp(cy0, 400, t), lerp(s0, 2.9, t));
+    W.glyph.rays = t;
+  }, tk);
+  for (let i = 0; i < 3; i++) {
+    W.wordOn = i;
+    Sound.pluck(PENTA[3 + i], 0.12);
+    bg(tween(600, t => { W.glyph.words = Math.max(W.glyph.words, i + t); }, tk, ease.out));
+    await caption(WORDS[i][0], WORDS[i][1], tk);
+  }
+  await captionDone(tk);
+  W.wordOn = -1;
+}
+
+async function sFinale(tk) {
+  bg(camTo(VIEW.finale, 4000 * M, tk));
+  await tween(2000 * M, t => { W.glyph.alpha = 1 - t; }, tk);
+  W.glyph.alpha = 0; W.glyph.words = 0; W.glyph.rays = 0;
+  Sound.bell(NOTE.C5, 0.09, 4); Sound.pluck(NOTE.G4, 0.1, 3);
+  await caption('尾声', '日给了白天光，月给了夜晚光。', tk);
+  await caption('尾声', '两个都亮，就是「明」。', tk, 700);
+  await captionDone(tk);
+  hint('点一点天空，看看天亮起来的样子');
+  mode('tap');
+  setAction('再看一次', () => { Sound.init(); begin(); });
+  S.handler = {
+    down() {
+      W.bloom = 1;
+      Sound.pluck(NOTE.C5, 0.1, 3); Sound.hiss(0.9, 2200, 0.045, 0.6, true);
+      hint(null);
+    },
+  };
+  window.__ming.finished = true;
+}
+
+const SCENES = [sDim, sSun, sMoon, sMeet, sGlyph, sWrite, sWords, sFinale];
+
+async function begin() {
+  token.dead = true;
+  const tk = token = { dead: false };
+  capMinEnd = 0;
+  waiters.forEach(w => w.rej(new Cancelled())); waiters = [];
+  resetWorld();
+  Object.assign(cam, VIEW.dim);
+  S.handler = null; S.demo = null; mode(null); setAction(null); hint(null);
+  ui.demo.hidden = true; ui.demo.disabled = false;
+  ui.cap.classList.remove('on');
+  Sound.padLevels(0, 0);
+  S.interactions = [];
+  G = makeFrame(B_MING, 900, 415, 460);
+  window.__ming = { interactions: S.interactions, scene: null, finished: false, toScreen, localToScreen, strokes: MING, state: W, sunScreen: () => toScreen(sunPos().x, sunPos().y), moonScreen: () => toScreen(moonPos().x, moonPos().y), now: () => clock };
+  try {
+    for (const sc of SCENES) { window.__ming.scene = sc.name; await sc(tk); }
+  } catch (e) {
+    if (!(e instanceof Cancelled)) console.error(e);
+  }
+}
+
+/* ---------- 片头：灰暗的山谷里写出「明」 ---------- */
+const intro = { tk: { dead: false } };
+function placeIntro() {
+  if (intro.tk.dead) return;
+  const a = localToScreen(G.bbox.cx, G.bbox.y0 - 6), b = localToScreen(G.bbox.cx, G.bbox.y1 + 6);
+  const box = $('#intro');
+  box.style.setProperty('--gTop', `${a.y}px`);
+  box.style.setProperty('--gBottom', `${b.y}px`);
+}
+async function introPlay(tk) {
+  W.sun.up = 0; W.moon.up = 0;
+  W.glyph.alpha = 1; W.glyph.morph = 1; W.glyph.morphFrom = false;
+  W.glyph.prog = [0, 0, 0, 0, 0, 0, 0, 0];
+  W.glyph.frameA = null; W.glyph.frameB = null;
+  await wait(600, tk);
+  for (let i = 0; i < 8; i++) {
+    await tween(320 + RAW_MING[i].length * 8, t => { W.glyph.prog[i] = t; }, tk, ease.sine);
+    await wait(70, tk);
+  }
+  for (;;) {
+    await frame(tk);
+    W.glyph.glow = 1 + 0.25 * Math.sin(clock / 700);
+  }
+}
+
+resetWorld();
+Object.assign(cam, VIEW.dim);
+G = makeFrame(B_MING, 900, 415, 460);
+window.__ming = { interactions: [], scene: 'intro', finished: false, toScreen, localToScreen, strokes: MING, state: W, sunScreen: () => toScreen(sunPos().x, sunPos().y), moonScreen: () => toScreen(moonPos().x, moonPos().y), now: () => clock };
+resize();
+updateView();
+addEventListener('resize', () => { resize(); updateView(); placeIntro(); });
+document.addEventListener('visibilitychange', () => { last = null; });
+requestAnimationFrame(loop);
+requestAnimationFrame(() => { updateView(); placeIntro(); });
+bg(introPlay(intro.tk));
+
+$('#start').addEventListener('click', () => {
+  Sound.init(); Sound.pad();
+  intro.tk.dead = true;
+  $('#intro').classList.add('off');
+  document.body.classList.add('started');
+  W.glyph.glow = 1;
+  begin();
+});
+$('#replay').addEventListener('click', () => { Sound.init(); begin(); });
+$('#mute').addEventListener('click', e => {
+  Sound.setMuted(!Sound.muted);
+  e.currentTarget.textContent = Sound.muted ? '声音 关' : '声音 开';
+});
+})();
+</script>
+</body>
+</html>

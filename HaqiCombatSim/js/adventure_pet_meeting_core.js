@@ -1,5 +1,14 @@
 import {walkable,findPath,distance,clearSegment} from './adventure_world_core.js';
-import {petInteractionParams} from './adventure_pet_interactions_core.js';
+import {defaultParams,resolveParams} from './combat_params_core.js';
+const check=(ok,message)=>{if(!ok)throw Error(message);};
+const encounterBaseRadius=defaultParams('kids').islandSocial.converseRadius;
+export function petInteractionParams(content){
+    const params=resolveParams({cards:{}},content.balanceParams||{version:'kids'},{groups:['petInteractions']}).petInteractions;
+    params.encounterDistance=encounterBaseRadius*params.encounterDistanceMultiplier;
+    check(['memoryCapacity','memoryProtectionMs','marksRequired','cooldownMs','indexPageSize'].every(key=>Number.isSafeInteger(params[key])&&params[key]>0),'宠物互动参数无效');
+    check(['babyScale','interactionDistance','feedingDistance','effectMs','playIntervalMs','encounterDistance','meetingSpacing','meetingArrivalDistance'].every(key=>Number.isFinite(params[key])&&params[key]>0),'宠物互动参数无效');
+    return params;
+}
 export function petMeetingClear(point,owners,content){
     const p=petInteractionParams(content);
     return owners.filter(o=>Number.isFinite(o.x)&&Number.isFinite(o.y)).every(o=>Math.abs(point.x-o.x)>=p.meetingOwnerClearanceX||Math.abs(point.y-o.y)>=p.meetingOwnerClearanceY);

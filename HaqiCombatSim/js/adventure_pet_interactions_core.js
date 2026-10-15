@@ -4,6 +4,8 @@ import {createRng,hashSeed} from './rng_core.js';
 import {mapCoordinateVersion} from './adventure_coordinates_core.js';
 import {defaultParams,resolveParams} from './combat_params_core.js';
 import {petParams,petXpLevel,recommendedPetDeck,validatePetDeck} from './adventure_pets_core.js';
+import {petInteractionParams} from './adventure_pet_meeting_core.js';
+export {petInteractionParams};
 
 export const PET_INSTANCE_VERSION=1;
 const copy=value=>JSON.parse(JSON.stringify(value));
@@ -11,14 +13,6 @@ const check=(ok,message)=>{if(!ok)throw Error(message);};
 const integer=n=>Number.isSafeInteger(n)&&n>=0;
 const identifier=id=>typeof id==='string'&&id.length>0&&id.length<=240&&!/[\u0000-\u001f]/.test(id);
 const order=(a,b)=>a<b?-1:a>b?1:0;
-const encounterBaseRadius=defaultParams('kids').islandSocial.converseRadius;
-export function petInteractionParams(content){
-    const params=resolveParams({cards:{}},content.balanceParams||{version:'kids'},{groups:['petInteractions']}).petInteractions;
-    params.encounterDistance=encounterBaseRadius*params.encounterDistanceMultiplier;
-    check(['memoryCapacity','memoryProtectionMs','marksRequired','cooldownMs','indexPageSize'].every(key=>Number.isSafeInteger(params[key])&&params[key]>0),'宠物互动参数无效');
-    check(['babyScale','interactionDistance','feedingDistance','effectMs','playIntervalMs','encounterDistance','meetingSpacing','meetingArrivalDistance'].every(key=>Number.isFinite(params[key])&&params[key]>0),'宠物互动参数无效');
-    return params;
-}
 export function petFriendDay(now){
     check(integer(now),'宠物互动时间无效');
     return Math.floor((now+8*3600000)/86400000);

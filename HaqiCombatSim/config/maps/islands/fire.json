@@ -331,5 +331,71 @@
       ]
     }
   ],
-  "theme": "fire"
+  "theme": "fire",
+  "sceneArt": {
+    "ground": {
+      "atlas": "fireGround",
+      "base": "volcanicRock",
+      "biomes": {
+        "volcanic": "volcanicRock",
+        "ash": "ashGround",
+        "gold": "ashGround"
+      },
+      "road": "basaltRoad",
+      "water": {
+        "lava": "lavaFlow"
+      },
+      "scale": 0.8,
+      "alpha": 0.85
+    },
+    "props": {
+      "atlas": "fireProps",
+      "roadside": [
+        "emberBrazier",
+        "charredFence",
+        "obsidianRocks"
+      ],
+      "scatter": {
+        "default": [
+          "obsidianRocks",
+          "lavaVent",
+          "magmaCrystal",
+          "bonePile"
+        ]
+      },
+      "sizes": {
+        "emberBrazier": 62,
+        "charredFence": 66
+      }
+    },
+    "features": {
+      "atlas": "fireFeatures",
+      "mountains": {
+        "volcanic": [
+          "volcano"
+        ],
+        "ash": [
+          "basaltCrag"
+        ]
+      },
+      "scatter": {
+        "default": [
+          "lavaPool",
+          "basaltColumns",
+          "fireShrine",
+          "ashRockArch"
+        ]
+      },
+      "sizes": {
+        "lavaPool": 180,
+        "basaltColumns": 150,
+        "fireShrine": 140,
+        "ashRockArch": 170
+      }
+    },
+    "flat": [
+      "lavaPool",
+      "lavaVent"
+    ]
+  }
 }

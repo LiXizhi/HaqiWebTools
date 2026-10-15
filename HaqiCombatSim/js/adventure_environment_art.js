@@ -28,11 +28,25 @@ export async function loadEnvironmentArt(mode,read=fetchJson,path='data/adventur
         const results=await Promise.allSettled(list.map(ensure));
         for(const result of results)if(result.status==='rejected')console.warn('场景图集暂不可用：',result.reason);
     }
+    const patternSources=new Map();
     return {manifest,images,ensure,warm,set onAtlas(fn){onAtlas=fn;},draw(c,atlas,name,x,y,w,h){
         const rect=manifest.atlases[atlas]?.frames[name]?.rect;
         if(!rect)return false;
         if(!images[atlas]){ensure(atlas).catch(()=>{});return false;}
         const ratio=Math.min(w/rect[2],h/rect[3]),dw=rect[2]*ratio,dh=rect[3]*ratio;
         c.drawImage(images[atlas],...rect,x+(w-dw)/2,y+h-dh,dw,dh);return true;
+    },
+    // Repeating world-space pattern for frames marked tile:true (seamless ground).
+    pattern(c,atlas,name){
+        const frame=manifest.atlases[atlas]?.frames[name];
+        if(!frame?.tile)return null;
+        if(!images[atlas]){ensure(atlas).catch(()=>{});return null;}
+        const key=atlas+'/'+name;let source=patternSources.get(key);
+        if(!source){
+            const [x,y,w,h]=frame.rect;
+            source=typeof OffscreenCanvas!=='undefined'?new OffscreenCanvas(w,h):Object.assign(document.createElement('canvas'),{width:w,height:h});
+            source.getContext('2d').drawImage(images[atlas],x,y,w,h,0,0,w,h);patternSources.set(key,source);
+        }
+        return c.createPattern(source,'repeat');
     }};
 }

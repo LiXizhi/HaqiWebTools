@@ -20,6 +20,7 @@ try{
     function go(p){path=[];destination=null;keys.clear();save.position={x:p.x,y:p.y};}
     function chooseScene(zone){
         applyAction(save,assets.content,{type:'travel',zone});world=createWorld(zone,assets.content);scene.value=zone;
+        void assets.warmScenery?.(world);
         close();go(save.position);regions.replaceChildren(option('arrival','旅行入口'));
         for(const p of world.landmarks)regions.append(option(p.id,p.name));
         const url=new URL(location.href);url.searchParams.set('island',zone);history.replaceState(null,'',url);

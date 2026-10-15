@@ -311,5 +311,73 @@
       ]
     }
   ],
-  "theme": "ice"
+  "theme": "ice",
+  "sceneArt": {
+    "ground": {
+      "atlas": "iceGround",
+      "base": "snowField",
+      "biomes": {
+        "snow": "snowField",
+        "ice": "frozenTundra",
+        "forest": "frozenTundra"
+      },
+      "road": "snowRoad",
+      "water": {
+        "ice": "iceSheet"
+      },
+      "scale": 0.8,
+      "alpha": 0.85
+    },
+    "props": {
+      "atlas": "iceProps",
+      "roadside": [
+        "iceLantern",
+        "snowFence",
+        "snowBoulder"
+      ],
+      "scatter": {
+        "default": [
+          "iceCrystals",
+          "snowman",
+          "snowBoulder",
+          "frostBush"
+        ],
+        "forest": [
+          "frostBush",
+          "snowBoulder",
+          "frostBush"
+        ]
+      },
+      "sizes": {
+        "iceLantern": 66,
+        "snowman": 60
+      }
+    },
+    "features": {
+      "atlas": "iceFeatures",
+      "mountains": {
+        "snow": [
+          "snowPeak",
+          "iceCrag"
+        ]
+      },
+      "scatter": {
+        "default": [
+          "frozenPond",
+          "iceSpires",
+          "frozenShrine",
+          "glacierBoulders"
+        ]
+      },
+      "sizes": {
+        "frozenPond": 180,
+        "iceSpires": 150,
+        "frozenShrine": 140,
+        "glacierBoulders": 150
+      }
+    },
+    "flat": [
+      "frozenPond"
+    ]
+  }
 }

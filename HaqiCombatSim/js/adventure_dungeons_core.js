@@ -5,14 +5,12 @@ import {dressDungeon,dungeonBiome} from './adventure_dungeon_scenery_core.js';
 // Original identities, formations and positions are exported by export_dungeons.py.
 // Ordered roads and persistent solo clear progress are explicit Web adaptations.
 import {isSupportedType} from './combat_cards_core.js';
-import {dungeonProgress} from './adventure_coop_core.js';
 import {parseArenaStaminaCost} from './adventure_stamina_core.js';
 import {earthMapInfo} from './adventure_earth_core.js';
-import {cityDungeonState} from './adventure_city_dungeons_core.js';
-import {validateGeneratedCityRoute,generatedCityDungeonId} from './adventure_city_generated_core.js';
+import {cityDungeonState,dungeonFor,dungeonProgress,validateGeneratedCityRoute,generatedCityDungeonId} from './adventure_city_dungeons_core.js';
+export {dungeonFor};
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 const targets=new Set(['self','max_max_hp','lowest_hp','random_friendly','random_hostile','threat_highest','threat_lowest']);
-export function dungeonFor(content,id){return content.dungeons?.find(d=>d.id===id);}
 export function monsterBlockReasons(m,cards){
     if(!m)return ['缺少原版怪物模板'];
     const reasons=[];

@@ -80,7 +80,7 @@ export async function loadResources(progress) {
     progress?.({ label: '正在加载场景基础图', value: null });
     const skillArt=await loadSkillArt(effects,mode,json);
     let cursor=0,done=0;
-    const worker=async()=>{while(cursor<rows.length){const[id,a]=rows[cursor++];try{images.set(id,await loadImage(assetUrl(a,mode)+(mode==='local'?`?v=${a.sha256}`:'')));}catch(e){if(!a.optional)failures.push(e.message);}done++;progress?.({label:'正在加载场景图片',detail:`${done} / ${rows.length}`,value:done/rows.length});}};
+    const worker=async()=>{while(cursor<rows.length){const[id,a]=rows[cursor++];try{images.set(id,await loadImage(assetUrl(a,mode)));}catch(e){if(!a.optional)failures.push(e.message);}done++;progress?.({label:'正在加载场景图片',detail:`${done} / ${rows.length}`,value:done/rows.length});}};
     await Promise.all(Array.from({length:8},worker));
     if(failures.length)throw new Error(`冒险资源缺失，请重新准备资源后重试。${failures[0]}`);
     function getBounds(id,rect) {
@@ -211,6 +211,17 @@ export async function loadResources(progress) {
     const buildingArt=await buildingArtReady;
     const entranceArt=await entranceArtReady;
     const terrainDecorationArt=await terrainDecorationsReady;
+    if(terrainDecorationArt?.manifest?.atlases){
+        for(const k of ['campProps','islandPlazasProps','islandLandmarks'])
+            if(environmentArt?.manifest?.atlases?.[k])terrainDecorationArt.manifest.atlases[k]=environmentArt.manifest.atlases[k];
+        // Per-island scene art kits (ground textures, props, features) bake into terrain tiles.
+        for(const [k,row] of Object.entries(environmentArt?.manifest?.atlases||{}))
+            if(row.layer==='terrain')terrainDecorationArt.manifest.atlases[k]=row;
+        if(buildingArt?.manifest?.atlases?.camp)terrainDecorationArt.manifest.atlases.camp=buildingArt.manifest.atlases.camp;
+    }
+    if(buildingArt?.manifest?.atlases&&environmentArt?.manifest?.atlases?.islandLandmarks){
+        buildingArt.manifest.atlases.islandLandmarks=environmentArt.manifest.atlases.islandLandmarks;
+    }
     async function warmScenery(world){
         const needed=sceneryAtlases(world);
         await Promise.all([

@@ -1,4 +1,4 @@
-import { HeroRenderer } from './hero_renderer.js?v=female-side-turn-v2';
+import { HeroRenderer } from './hero_renderer.js';
 import { BODY_TO_HEAD, clampHead } from './hero_pose_core.js';
 
 const $=id=>document.getElementById(id),local=new URLSearchParams(location.search).get('assets')==='local';
@@ -32,7 +32,7 @@ async function select(){
   if(variant)status.textContent+=` · 试装：${variant.name}`;
   if(variant?.id?.endsWith('-ref'))status.textContent+=' · 独立动作参考';
   const body=variant||renderer.manifest.bodies[gender+'-walk'];
-  $('body-atlas').src=local?`${body.local}?v=${body.sha256}`:body.cdn;
+  $('body-atlas').src=local?body.local:body.cdn;
   $('body-atlas-label').textContent=variant?variant.name+' · 复用原连接点':'原配色';
   const art=renderer.manifest.heads[state.appearance.headId];
   $('atlas').src=local?art.local:art.cdn;$('asset-info').textContent=`${art.name} · ${(art.bytes/1000).toFixed(1)} KB · 16 个方向 · 步行与骑乘共用`;

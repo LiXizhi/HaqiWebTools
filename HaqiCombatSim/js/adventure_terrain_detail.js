@@ -29,21 +29,28 @@ export function* paintGroundDetailSteps(c,world,rect){
         const biome=regionAt(world,{x,y})?.biome||'grass';
         const snow=['snow','ice'].includes(biome),sand=['beach','desert','gold'].includes(biome)||!onLargeIsland(world,x,y,world.layout.rules.terrain.coastWidth/2+20);
         const barren=['volcanic','ash','dark'].includes(biome);
-        const shade=snow?'#80acc329':sand?'#96713c26':barren?'#3d34472b':refined?'#496d3730':'#386a3438';
-        const light=snow?'#ffffff66':sand?'#ffe2a63b':barren?'#ac939325':refined?'#d7de913d':'#bcda6c3d';
+        const shade=snow?'#80acc329':sand?'#96713c26':barren?'#3d34472b':refined?'#3e662e34':'#386a3438';
+        const light=snow?'#ffffff66':sand?'#ffe2a63b':barren?'#ac939325':refined?'#dce88c44':'#bcda6c3d';
         wash(c,x,y,48+rng.float()*42,22+rng.float()*20,shade);
         wash(c,x-18,y-16,42,24,light);
-        for(let i=0;i<(refined?32:58);i++){
+        for(let i=0;i<(refined?36:58);i++){
             const px=cx+rng.float()*96,py=cy+rng.float()*96;
             ellipse(c,px,py,.5+rng.float()*1.7,.4+rng.float()*.7,i%3?light:shade);
         }
         if(snow||sand){
             for(let i=0;i<4;i++)stroke(c,x-25+i*6,y+i*5,20+rng.float()*22,-3,light,1);
         }else if(!barren){
-            for(let i=0;i<9;i++){
-                const px=cx+rng.float()*96,py=cy+rng.float()*96,h=3+rng.float()*5;
-                c.strokeStyle=i%2?'#355f3b55':'#e0eaa359';c.lineWidth=.9;
+            for(let i=0;i<(refined?12:9);i++){
+                const px=cx+rng.float()*96,py=cy+rng.float()*96,h=3.5+rng.float()*5.5;
+                c.strokeStyle=i%2?'#315b3662':'#e4eea668';c.lineWidth=1;
                 c.beginPath();c.moveTo(px-3,py-h*.7);c.lineTo(px,py);c.lineTo(px+2,py-h);c.stroke();
+            }
+            if(refined){
+                for(let i=0;i<3;i++){
+                    const fx=cx+rng.float()*96,fy=cy+rng.float()*96;
+                    const petal=rng.pick(['#fff5c0cc','#a8dcffcc','#ffd1dccc']);
+                    ellipse(c,fx,fy,1.8,1.3,petal);ellipse(c,fx,fy,.8,.6,'#f6b83b');
+                }
             }
         }
         for(let i=0;i<2;i++){
@@ -75,20 +82,24 @@ export function* paintWaterDetailSteps(c,world,rect,material='water',ocean=false
 }
 
 export function paintRoadDetail(...args){for(const step of paintRoadDetailSteps(...args)) {}}
-export function* paintRoadDetailSteps(c,world,rect){
+export function* paintRoadDetailSteps(c,world,rect,textured=false){
+    const refined=world.layout.rules.terrain.campRefined===true;
     // Sparse irregular shoulders break up ruler-straight edges. World-space
     // sampling and nearest-network distance also keep crossroads free of seams.
     yield* cells(world,rect,64,'road-verge',(cx,cy,rng)=>{
         const nearby=world.paths.filter(p=>segmentDistance({x:cx+32,y:cy+32},p.a,p.b)<p.width/2+64);
         if(!nearby.length)return;
-        for(let i=0;i<18;i++){
+        for(let i=0;i<22;i++){
             const x=cx+rng.float()*64,y=cy+rng.float()*64;
             const edge=Math.min(...nearby.map(p=>segmentDistance({x,y},p.a,p.b)-p.width/2));
-            if(edge<-7||edge>10)continue;
+            if(edge<-8||edge>11)continue;
             const color=world.layout.rules.roads.layers[edge>1?1:2][1];
-            ellipse(c,x,y,1+rng.float()*3,.6+rng.float()*1.4,color+'65');
-            if(world.layout.rules.terrain.campRefined&&edge>2&&i%4===0){
-                ellipse(c,x+1,y+1,2.8,1.8,'#6b70502e');ellipse(c,x,y,2.4,1.5,'#eee0b77a');
+            ellipse(c,x,y,1.2+rng.float()*3.2,.7+rng.float()*1.5,color+'70');
+            if(edge>-2&&edge<7&&i%3===0){
+                const rx=2.6+rng.float()*2.6,ry=1.6+rng.float()*1.4;
+                ellipse(c,x+1,y+1.2,rx+.8,ry+.6,'#5c523836');
+                ellipse(c,x,y,rx,ry,refined?'#efe2bc96':'#e5d6ae80');
+                ellipse(c,x-.6,y-.5,rx*.55,ry*.5,'#fff9e670');
             }
         }
     });
@@ -103,9 +114,18 @@ export function* paintRoadDetailSteps(c,world,rect){
         c.moveTo(p.b.x+r,p.b.y);c.arc(p.b.x,p.b.y,r,0,Math.PI*2);
     }
     c.clip();
+    // A painted road material already carries its own slabs and grit.
+    if(textured){c.restore();return;}
     yield* cells(world,rect,96,'path',(cx,cy,rng)=>{
         if(!world.paths.some(p=>segmentDistance({x:cx+48,y:cy+48},p.a,p.b)<p.width/2+100))return;
-        wash(c,cx+48,cy+48,65,35,'#b2925b20');
+        wash(c,cx+48,cy+48,65,35,'#b2925b24');
+        // Subtle hand-laid flagstone / cobblestone slabs along the road surface.
+        for(let i=0;i<10;i++){
+            const sx=cx+8+rng.float()*80,sy=cy+8+rng.float()*80,srx=6+rng.float()*5,sry=3.6+rng.float()*2.8;
+            ellipse(c,sx+1,sy+1,srx+.8,sry+.5,'#7d653e24');
+            ellipse(c,sx,sy,srx,sry,i%2?'#f7ebd038':'#d7be8e30');
+            ellipse(c,sx-1.5,sy-1,srx*.55,sry*.45,'#fff9e636');
+        }
         for(let i=0;i<35;i++){
             const x=cx+rng.float()*96,y=cy+rng.float()*96,r=.6+rng.float()*2;
             ellipse(c,x,y,r,r*.55,i%3?'#94794e29':'#fff4ce78');

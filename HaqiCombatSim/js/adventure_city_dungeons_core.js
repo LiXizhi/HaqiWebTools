@@ -4,6 +4,15 @@ import {resolveParams} from './combat_params_core.js';
 import {validateStreetscape,safeStreetPosition} from './adventure_city_street_core.js';
 const assert=(ok,message)=>{if(!ok)throw Error(message);};
 export const isCityDungeonId=id=>typeof id==='string'&&id.startsWith('city:');
+export const generatedCityId=row=>`generated-${String(row.id)}`;
+export const generatedCityDungeonId=row=>`city:${generatedCityId(row)}:default`;
+export function validateGeneratedCityRoute(row){
+    if(row?.generationVersion!=null&&![1,2,3].includes(row.generationVersion))throw Error('自动城市版本无效');
+    if(!row||!/^[-a-zA-Z0-9_]{1,60}$/.test(String(row.id))||typeof row.name!=='string'||!row.name||row.name.length>100||!Number.isFinite(row.lon)||Math.abs(row.lon)>180||!Number.isFinite(row.lat)||Math.abs(row.lat)>90||!Number.isInteger(row.challengeLevel)||row.challengeLevel<1||row.challengeLevel>60||!Number.isInteger(row.partySize)||row.partySize<1||row.partySize>4)throw Error('自动城市入口记录无效');
+    return row;
+}
+export function dungeonFor(content,id){return content.dungeons?.find(d=>d.id===id);}
+export function dungeonProgress(save){return save?.coopRun?.runs||save?.dungeonRuns||{};}
 export function cityEntranceAppearance(level,node=false){
     const known=Number.isInteger(level)&&level>=1&&level<=5,tier=known?level:5;
     const colors=['#efc45a','#bb8aeb','#62bde9','#70bc81','#94b4b0'];

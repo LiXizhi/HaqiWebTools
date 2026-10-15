@@ -3,12 +3,10 @@ import {createEarthSettlementSampler,generateEarthCityConnectionsSteps} from './
 import {earthRoadBridges} from './adventure_earth_bridge_core.js';
 import {earthRoadDocks} from './adventure_earth_boat_core.js';
 import {generateEarthUrbanChunkSteps} from './adventure_earth_city_core.js';
-import {earthLandmarkSize,placeEarthLandmark,earthPoint,earthGeo,earthSafe,earthNearest} from './adventure_earth_core.js';
+import {earthLandmarkSize,placeEarthLandmark,earthPoint,earthGeo,earthSafe,earthNearest,socialNavigationWorld} from './adventure_earth_core.js';
 import {earthDecorationFrames,earthTreeFrames,earthDecorationStyle} from './adventure_earth_surface_core.js';
 import {createRng,hashSeed} from './rng_core.js';
-import {cityNodeForSource} from './adventure_city_dungeons_core.js';
-import {generatedCityDungeonId} from './adventure_city_generated_core.js';
-import {socialNavigationWorld} from './adventure_social_motion_core.js';
+import {cityNodeForSource,generatedCityDungeonId} from './adventure_city_dungeons_core.js';
 import {earthWildSpecies,earthWildLevel,earthWildTargetPower} from './adventure_earth_wild_core.js';
 // Bounded cache of immutable generation inputs/results. Player growth is applied afterwards.
 export function createEarthSceneCache(limit=192){

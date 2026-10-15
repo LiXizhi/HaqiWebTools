@@ -19,6 +19,20 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;bo
 @media(max-width:600px){.page{padding:20px 16px 18px;min-height:660px}.brand{font-size:14px;gap:8px}.edition{font-size:10px}.heading{padding-top:26px}h1{font-size:30px}.deck{font-size:14px}.caption{min-height:171px;padding:0}#caption{font-size:21px}#hint{font-size:14px;max-width:310px;line-height:1.5}.colophon{display:none}footer{justify-content:center;padding-top:15px;margin-top:12px}#progress{gap:23px;font-size:11px}.outline{padding:8px 12px}.heading .eyebrow{font-size:11px}#stage{overflow:hidden}}
 @media(max-height:620px) and (min-width:601px){.page{min-height:420px;padding:14px 26px}.heading{padding-top:8px}h1{font-size:26px}.deck,.edition{display:none}.caption{min-height:112px}#caption{font-size:20px}#hint{margin:4px 0 8px}footer{margin-top:8px;padding-top:8px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+/* 休 shares the immersive ink-theatre language of 光 and 森 while keeping its
+   original SVG interaction model and stroke tests intact. */
+:root{--paper:#081612;--ink:#e9ead8;--red:#e8b866;--green:#79c99a;--muted:#9caf9e;font-family:"Kaiti SC","STKaiti","KaiTi","Songti SC",serif}
+html,body{background:#081612;color:var(--ink);overflow:hidden}
+body{background:radial-gradient(ellipse at 50% 34%,#26345c 0%,#111b38 38%,#070b1b 82%)}
+.page{max-width:none;height:100svh;min-height:580px;padding:20px 30px 16px;position:relative}
+.page:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.26;background:radial-gradient(circle at 12% 18%,#f5d58d 0 1px,transparent 2px),radial-gradient(circle at 78% 16%,#b6d8f2 0 1px,transparent 2px),radial-gradient(circle at 68% 42%,#e8b866 0 1px,transparent 2px),radial-gradient(circle at 35% 30%,#d8e8ff 0 1px,transparent 2px);background-size:180px 140px,230px 190px,310px 260px,270px 220px;mix-blend-mode:screen}
+header{position:relative}.brand{color:#cfdbc9}.seal{background:#bc4739;color:#f7e9c9;box-shadow:0 2px 12px #bc473966}.edition{color:#9caf9e}.outline{color:#e4ead9;border-color:#76c89366;background:#0c231b99;backdrop-filter:blur(5px)}.outline:hover{background:#1b4936}
+main{position:relative;z-index:1}.heading{padding-top:12px;filter:drop-shadow(0 3px 14px #0008)}.eyebrow{color:#e8b866}.deck{color:#a9c4b0}h1{color:#f2ead4;text-shadow:0 2px 20px #0008}
+.canvas{margin:-6px auto 0;width:min(1280px,100%);filter:drop-shadow(0 18px 36px #0009)}#stage{height:100%;overflow:visible}
+.ink{stroke:#e9ead8}.land{opacity:.96}.leaf{fill:#5a9f88}.brush{stroke:#f0ead9}.ghost{filter:drop-shadow(0 0 5px #e8b86655)}.ghost{stroke:#789988}.guide{stroke:#e8b866}.grid{stroke:#9bb7a3}.target-ring{stroke:#e8b866}.svg-label{fill:#e8b866}
+.caption{min-height:116px;position:relative;z-index:2}.chapter{color:#76c893}#caption{color:#f2ead4;text-shadow:0 2px 14px #000}#hint{color:#cce8d2} .primary{color:#081612;background:linear-gradient(135deg,#8ce0a8,#52b788);border-color:#8ce0a8;box-shadow:0 6px 22px #52b78855}.primary:hover{background:#9ce8b5}
+footer{border-top-color:#76c89333;color:#8fa99a}.colophon{color:#789786}#progress li[aria-current=step]{color:#e8b866}#progress li[aria-current=step]:before{background:#e8b866}
+@media(max-width:600px){.page{padding:16px 12px 12px}.heading{padding-top:18px}.canvas{margin-top:0}.caption{min-height:152px}}
 </style>
 </head>
 <body>
@@ -31,18 +45,36 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;bo
    <defs>
     <linearGradient id="mountainWash" x2="0" y2="1"><stop stop-color="#8f9c86" stop-opacity=".22"/><stop offset="1" stop-color="#a8ad95" stop-opacity=".02"/></linearGradient>
     <radialGradient id="shadeWash"><stop stop-color="#647c5c" stop-opacity=".2"/><stop offset="1" stop-color="#647c5c" stop-opacity="0"/></radialGradient>
+    <linearGradient id="nightWash" x2="0" y2="1"><stop stop-color="#26345c"/><stop offset=".42" stop-color="#111b38"/><stop offset="1" stop-color="#070b1b"/></linearGradient>
+    <radialGradient id="moonWash"><stop stop-color="#fff4cb" stop-opacity=".62"/><stop offset=".28" stop-color="#f2d79b" stop-opacity=".22"/><stop offset="1" stop-color="#d8b777" stop-opacity="0"/></radialGradient>
+    <filter id="softGlow"><feGaussianBlur stdDeviation="10"/></filter>
     <filter id="paperGrain"><feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="3" seed="17"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="linear" slope=".055"/></feComponentTransfer><feBlend in="SourceGraphic" mode="multiply"/></filter>
    </defs>
+   <rect x="-80" y="0" width="1160" height="520" fill="url(#nightWash)"/>
+   <circle cx="782" cy="86" r="115" fill="url(#moonWash)" filter="url(#softGlow)"/>
+   <circle cx="782" cy="86" r="29" fill="#f2d79b" opacity=".5"/>
+   <g fill="#e8b866" opacity=".7">
+    <circle cx="145" cy="112" r="2"/><circle cx="220" cy="178" r="1.5"/><circle cx="318" cy="92" r="1.6"/><circle cx="858" cy="157" r="1.5"/><circle cx="919" cy="242" r="2"/><circle cx="708" cy="118" r="1.2"/>
+   </g>
    <g id="landscape" class="land">
-    <circle cx="782" cy="85" r="29" fill="#c4855a" opacity=".38"/>
+    <circle cx="782" cy="85" r="29" fill="#f2d79b" opacity=".18"/>
     <path d="M-80 343 Q70 170 157 230 Q241 130 353 283 Q430 162 530 274 Q624 206 722 290 Q825 145 1100 339V425H-80Z" fill="url(#mountainWash)"/>
+    <path d="M-70 385 Q74 276 194 344 Q315 258 447 369 Q550 290 676 359 Q804 240 1090 369V438H-70Z" fill="#0b1429" opacity=".86"/>
     <path d="M-20 372 Q120 328 274 370 Q386 386 490 364 M721 361 Q872 334 1030 371" class="ink" stroke-width="1.3" opacity=".23"/>
+    <path d="M20 408 Q188 355 354 398 T704 396 T1050 379" fill="none" stroke="#9eb7c4" stroke-width="1.4" opacity=".18"/>
     <path d="M-30 460 Q210 390 458 412 Q657 436 1035 384" class="ink" stroke-width="1.2" opacity=".25"/>
     <path d="M-30 483 Q209 403 448 425 Q633 451 1035 399" class="ink" stroke-width=".7" opacity=".18"/>
     <g class="ink" stroke-width="1.2" opacity=".35"><path d="M750 395l-4-15m4 15 7-11m-7 11 1-19 M237 405l-6-12m6 12 6-17 M807 396l5-13m-5 13-4-9"/><path d="M348 114q8-9 16 0q8-9 16 0 M386 131q6-7 12 0q6-7 12 0"/></g>
    </g>
    <ellipse id="shadow" cx="589" cy="412" rx="145" ry="35" fill="url(#shadeWash)" opacity="0"/>
    <g id="tree">
+    <g id="treeVisual" opacity=".98">
+     <path d="M596 392C601 330 597 274 606 207L623 207C627 276 621 334 628 394Z" fill="#513d32" opacity=".96"/>
+     <path d="M606 274Q565 230 533 203M615 263Q661 218 689 191M609 235Q586 187 579 151M620 232Q646 181 652 144" fill="none" stroke="#765543" stroke-width="9" stroke-linecap="round" opacity=".9"/>
+     <path d="M602 112C569 72 520 89 521 128C478 118 454 159 482 185C448 214 481 245 520 236C513 274 558 283 585 256C606 280 649 273 656 242C700 259 735 216 709 184C748 150 712 108 678 124C676 84 631 70 602 112Z" fill="#4f9879" opacity=".92"/>
+     <path d="M601 119C570 93 536 109 535 141C505 137 490 164 505 183C534 172 555 192 573 207C594 188 617 184 638 207C655 190 679 176 706 184C718 160 692 138 669 143C665 111 629 101 601 119Z" fill="#79ba95" opacity=".64"/>
+     <path d="M543 151Q574 126 604 148T671 145" fill="none" stroke="#b7dfbd" stroke-width="5" stroke-linecap="round" opacity=".22"/>
+    </g>
     <g id="treeLines" class="brush"></g>
     <g id="canopy">
      <path class="leaf" d="M602 98C558 52 512 76 518 121C470 106 451 157 480 182C433 223 478 250 518 233C510 274 557 280 586 254C608 287 655 268 653 238C697 263 750 218 717 185C762 145 715 104 679 121C675 80 635 68 602 98Z"/>
@@ -53,7 +85,7 @@ footer{display:flex;justify-content:space-between;align-items:center;gap:16px;bo
    <g id="person">
     <g id="personLines" class="brush"></g>
     <g id="personDetails">
-     <circle cx="433" cy="270" r="16" fill="#ebd9b8" stroke="#302f28" stroke-width="3"/>
+     <circle cx="433" cy="270" r="16" fill="#ebd9b8" stroke="#e9ead8" stroke-width="2"/>
      <path d="M417 269Q416 246 435 253Q452 255 448 269Q435 259 417 269" fill="#302f28"/>
      <path id="arm" d="M423 308Q450 336 478 311" class="ink" stroke-width="7"/>
      <path id="leg" d="M413 350Q432 369 448 397" class="ink" stroke-width="8"/>
@@ -117,7 +149,7 @@ function morph(paths,from,to,p){paths.forEach((el,i)=>el.setAttribute('d',pathDa
 function reset(){
  controller.abort();controller=new AbortController();generation++;cancelPointer();stroke=0;selected=false;tracing=false;demoRunning=false;
  scene('intro',0);personPosition(-200);morph(personPaths,standing,standing,1);morph(treePaths,tree,tree,1);
- for(const id of ['landscape','person','tree','personDetails','canopy'])opacity(id,1);
+ for(const id of ['landscape','person','tree','treeVisual','personDetails','canopy'])opacity(id,1);
  opacity('shadow',0);$('canopy').setAttribute('transform','translate(305 95) scale(.5)');$('canopy').classList.remove('sway');
  $('personDetails').removeAttribute('transform');$('arm').setAttribute('d','M423 308Q450 336 478 311');$('leg').setAttribute('d','M413 350Q432 369 448 397');$('bag').removeAttribute('transform');
  $('targets').hidden=true;$('treeTarget').hidden=false;$('shadeTarget').hidden=true;$('personTarget').hidden=true;
@@ -152,7 +184,7 @@ async function rest(){
  if(!await pause(5500))return;
  scene('morph',3);caption('四 · 成字','一个人，靠着树。','看，画里藏着一个字。');$('canopy').classList.remove('sway');
  if(!await motion(1800,p=>{morph(personPaths,resting,standing,p);$('personDetails').setAttribute('transform',`translate(${123*(1-p)} ${35*(1-p)})`);opacity('personDetails',1-p);}))return;
- if(!await motion(4800,p=>{morph(personPaths,standing,glyph.slice(0,2),p);morph(treePaths,tree,glyph.slice(2),p);opacity('canopy',1-p);opacity('landscape',1-p);opacity('shadow',1-p);}))return;
+ if(!await motion(4800,p=>{morph(personPaths,standing,glyph.slice(0,2),p);morph(treePaths,tree,glyph.slice(2),p);opacity('canopy',1-p);opacity('treeVisual',1-p);opacity('landscape',1-p);opacity('shadow',1-p);}))return;
  $('glyphLabel').hidden=false;caption('四 · 成字','休，休息的休。','左边是单人旁，右边是木。');
  if(!await pause(5000))return;
  startWriting();
@@ -185,7 +217,7 @@ async function finale(){
  scene('finale',5);caption('六 · 再出发','休息好了，再出发。','好好休息，也是一件重要的事。');$('writing').hidden=true;opacity('person',1);opacity('tree',1);$('glyphLabel').hidden=true;
  if(!await motion(3500,p=>{morph(personPaths,glyph.slice(0,2),standing,p);morph(treePaths,glyph.slice(2),tree,p);opacity('canopy',p);opacity('landscape',p);opacity('shadow',p);}))return;
  $('personDetails').removeAttribute('transform');$('bag').removeAttribute('transform');$('leg').setAttribute('d','M413 350Q432 369 448 397');
- if(!await motion(1500,p=>{opacity('personDetails',p);$('arm').setAttribute('d',`M423 308Q452 305 ${470+Math.sin(p*12)*7} 278`);}))return;
+ if(!await motion(1500,p=>{opacity('personDetails',p);opacity('treeVisual',p);$('arm').setAttribute('d',`M423 308Q452 305 ${470+Math.sin(p*12)*7} 278`);}))return;
  $('canopy').classList.add('sway');
  if(!await motion(3300,p=>personPosition(370*p,reduced.matches?0:Math.sin(p*30)*3)))return;
  scene('done',5);action('再看一次');

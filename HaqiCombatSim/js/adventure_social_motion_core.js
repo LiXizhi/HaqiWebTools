@@ -4,6 +4,8 @@ import {findPath,followPath,nearestWalkable,walkable,routeLocation,routePoint} f
 import {segmentDistance} from './adventure_island_layout_core.js';
 import {SOCIAL_DEFAULTS} from './adventure_social_core.js';
 import {earthBoatAt} from './adventure_earth_boat_core.js';
+import {socialNavigationWorld} from './adventure_earth_core.js';
+export {socialNavigationWorld};
 // Sprite directions: down/front=0, left=1, right=2, up/back=3.
 // Keep real travel direction, but turn toward the camera or sideways while standing.
 export function socialFacing(dx,dy,moving=false){
@@ -18,20 +20,6 @@ export function socialInView(position,view){
 function hubReach(params=SOCIAL_DEFAULTS){return params.hotspotRadius+params.hotspotSpread;}
 function roadSlack(params=SOCIAL_DEFAULTS){return params.roadSlack??16;}
 function spawnMinActors(params=SOCIAL_DEFAULTS){return Math.max(0,Math.floor(params.spawnMinActors??2));}
-
-// Only social actors use this navigation view. Player entrance interactions stay reachable.
-const socialWorlds=new WeakMap();
-export function socialNavigationWorld(world){
-    if(world.movementExclusions)return world.earthBoating?{...world,earthBoating:false}:world;
-    const entrances=(world.landmarks||[]).filter(p=>p.dungeonId&&!p.hidden);
-    if(!entrances.length&&!world.isEarth)return world;
-    const cached=socialWorlds.get(world);
-    if(!cached||cached.landmarks!==world.landmarks||cached.revision!==world.revision) socialWorlds.set(world,{...world,movementExclusions:entrances.map(p=>({
-        x:p.x,y:p.y-(p.entranceKind==='tower'?25:0),radius:SOCIAL_DEFAULTS.entranceClearance,
-    }))});
-    // Refresh streamed terrain and objects while retaining the actor-only exclusions.
-    return Object.assign(socialWorlds.get(world),world,{earthBoating:false});
-}
 
 export function roadClearance(world,p){
     if(!world.paths?.length)return 0;

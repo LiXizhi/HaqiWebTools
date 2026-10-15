@@ -1,7 +1,6 @@
 // Geographic identity and deterministic world generation. No browser or network IO.
 import {createRng,hashSeed} from './rng_core.js';
 import {defaultParams} from './combat_params_core.js';
-import {advanceEarthCityChapter} from './adventure_earth_city_config_core.js';
 import {earthBridgeContains} from './adventure_earth_bridge_core.js';
 import {restoreEarthWildEncounter} from './adventure_earth_wild_core.js';
 
@@ -177,6 +176,35 @@ export function earthEncounter(content,id){
     if(!monster||Math.abs(Number(match[2]))>Math.ceil(360*rules.unitsPerDegree/rules.chunkSize)||Math.abs(Number(match[3]))>Math.ceil(180*rules.unitsPerDegree/rules.chunkSize)||Number(match[4])>rules.monstersPerChunk)return null;
     return {id,zone:EARTH_ZONE,monsterId:monster.id,monster};
 }
+const legacyChapter='earth-shenzhen-united';
+export function earthCityChapterProgress(save,chapter){
+    const stored=save.earthCityProgress?.cities?.[chapter?.cityId]?.chapters?.[chapter?.id];
+    return stored||((chapter?.id===legacyChapter||!chapter?.cityId)?save.earthProgress:null)||{version:1,step:0};
+}
+export function advanceEarthCityChapter(save,chapter,event){
+    const progress=earthCityChapterProgress(save,chapter),step=chapter.steps[progress.step];
+    if(!event||!step||step.event!==event)return false;
+    const next={version:1,step:progress.step+1};
+    if(chapter.cityId){
+        save.earthCityProgress??={version:1,cities:{}};
+        const city=save.earthCityProgress.cities[chapter.cityId]??={chapters:{},quests:{}};
+        city.chapters[chapter.id]=next;
+    }
+    if(chapter.id===legacyChapter||!chapter.cityId)save.earthProgress=next;
+    save.revision++;return true;
+}
 export function earthChapterEvent(save,quests,event){
     return advanceEarthCityChapter(save,quests,event);
+}
+const socialWorlds=new WeakMap();
+const entranceClearance=defaultParams('kids').islandSocial.entranceClearance;
+export function socialNavigationWorld(world){
+    if(world.movementExclusions)return world.earthBoating?{...world,earthBoating:false}:world;
+    const entrances=(world.landmarks||[]).filter(p=>p.dungeonId&&!p.hidden);
+    if(!entrances.length&&!world.isEarth)return world;
+    const cached=socialWorlds.get(world);
+    if(!cached||cached.landmarks!==world.landmarks||cached.revision!==world.revision) socialWorlds.set(world,{...world,movementExclusions:entrances.map(p=>({
+        x:p.x,y:p.y-(p.entranceKind==='tower'?25:0),radius:entranceClearance,
+    }))});
+    return Object.assign(socialWorlds.get(world),world,{earthBoating:false});
 }

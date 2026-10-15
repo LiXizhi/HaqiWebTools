@@ -1,7 +1,8 @@
 import {locationSnapshot} from './adventure_coordinates_core.js';
 import {dungeonLanguageBaseHp} from './adventure_dungeon_language_core.js';
 import {snapshotUnit,socialDataHash} from './adventure_social_core.js';
-export function dungeonProgress(save){return save?.coopRun?.runs||save?.dungeonRuns||{};}
+import {dungeonProgress} from './adventure_city_dungeons_core.js';
+export {dungeonProgress};
 export function startCoopRun(save,profiles,dataset,dungeon,hero=null){
     if(save.pendingEncounter||save.coopRun)throw Error('请先退出当前组队挑战');
     if(profiles.length<1||profiles.length>3||new Set(profiles.map(p=>p.id)).size!==profiles.length)throw Error('请选择一至三位不同伙伴');

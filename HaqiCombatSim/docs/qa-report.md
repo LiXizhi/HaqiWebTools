@@ -1,3 +1,17 @@
+# 2026-10-15 五大岛场景美术包（沙漠岛样板）
+
+- 新增 `sceneArt` 岛屿美术包，覆盖地表/道路/水体可平铺材质、山体贴图、路边与散布道具；五岛配置均已就绪，目前只有沙漠岛生成了图集（3 张 WebP，均 ≤200KB）。其余四岛生图返回 429 配额错误，暂时保持原画面。
+- `npm run test:battle` **1075/1075 通过**；`island_scene_art`、`island_buildings` 专项全部通过；`npm run check:maps` 通过。
+- `environment_art.test.mjs` **1 项失败**：沙漠三张新图集尚未上传 Keepwork CDN（`cdn` 为空）。上传前不算通过；CDN 模式下会回退旧画面，不阻断游戏。
+- 无头 Chrome 1280×800 本地素材核验沙漠岛 7 个观察点，材质无接缝，山体、道具正常显示，无控制台错误，60 帧。未提交、未推送。
+
+# 2026-10-15 魔法营地与大岛屿实际场景美术表现升级
+
+- 新增 3 张魔法营地专属透明 WebP 图集并上传 Keepwork CDN：`buildings-camp-aefacb4a9a3b.webp`（912×608，168,864B，6 帧：`academy`/`observatory`/`cabin`/`tent`/`harbor`/`plazaMedallion`）、`camp-trees-fd7135a4fe28.webp`（652×652，119,350B，4 帧：`tallPine`/`layeredPine`/`cypressPine`/`blossomTree`）、`camp-props-ab652717f6ac.webp`（816×544，153,726B，6 帧：`woodFence`/`magicLantern`/`lushBush`/`flowerBed`/`mossBoulder`/`coastalRockCluster`）。全部严格小于 200KB，CDN GET 校验 HTTP 200、SHA-256、WebP VP8X alpha 位及 `Access-Control-Allow-Origin: *` 均通过。
+- 导师广场重绘为 36 段雕花石栏外圈、暖色错缝石砖、放射石缝、鎏金星芒内环与中央 `plazaMedallion` 符文蓝晶圆盘；营地草坪与海岸新增深蓝星纹帐篷、蓝顶观星塔楼、木石训练屋、木栈桥码头、石砌花坛、魔法路灯、木栅栏与青苔晶石；共享道路补充不规则路缘石与石板肌理。
+- `npm run check:maps` 通过；场景与图集专项测试 28/28 通过；`npm run test:battle` **1075/1075 通过**（0 失败）。
+- 本机 Chrome 无头窗口 1280×900 与 390×844 核验导师广场、训练林地观星台、营地南岸码头三处观察点，建筑/树木/地表图集全部正常加载，角色与 NPC 名字清晰无遮挡，无页面报错。未提交、未推送。
+
 # 2026-10-04 华南生活街区样板与随机城市版本3
 
 2026-10-04 NPC范围回滚：自动换装仅现实世界城市副本，魔法哈奇岛屿及现实地表恢复原NPC图片、对话/自由聊天头像与图片预加载。专项15/15、完整战斗回归831/831（63.78秒），零失败/跳过；实际Edge隔离预览确认城市换装保留，camp茜茜/青龙恢复原样、茜茜对话原头像绘制正常，无浏览器错误。截图和报告`.cache/npc-scope/`。没有修改存档、提交、推送或发布。

@@ -48,28 +48,40 @@ export class HeroRenderer {
     async image(id, art, mountAsset = false) {
         if (this.images.has(id)) return this.images.get(id);
         if (!this.pending.has(id)) {
-            const promise = (async()=>{
-              // Personal art uses its validated CDN even in the explicit offline-art mode.
-              if(this.customHeads.has(art.id))await verifyHeadAsset(art);
-              return new Promise((resolve, reject) => {
-                const image = new Image(); image.crossOrigin = 'anonymous';
-                const local = mountAsset && art.local?.startsWith('assets/') ? 'demos/mount-lab/'+art.local : art.local;
-                const useLocal=this.local&&!this.customHeads.has(art.id);
-                const localURL=useLocal?new URL(local,this.baseURL):null;
-                if(localURL&&art.sha256)localURL.searchParams.set('v',art.sha256);
-                const url = useLocal ? localURL.href : art.cdn;
-                if (!url) { reject(new Error(`资源尚未登记 CDN：${id}`)); return; }
-                image.onload = async () => {
-                    if (art.width && (image.width !== art.width || image.height !== art.height)) { reject(new Error(`资源尺寸不符：${id}`)); return; }
-                    // Decode before publishing to world/UI drawing, including newly streamed peers.
-                    if(image.decode)try{await image.decode();}catch{/* Preserve the original drawing fallback. */}
-                    this.images.set(id,image); resolve(image);
-                };
-                image.onerror = () => reject(new Error(`资源加载失败：${id}`)); image.src = url;
-              });
-            })();
-            this.pending.set(id,promise);
-            promise.catch(() => this.pending.delete(id));
+            const local = mountAsset && art.local?.startsWith('assets/') ? 'demos/mount-lab/'+art.local : art.local;
+            const useLocal=this.local&&!this.customHeads.has(art.id);
+            const localURL=useLocal?new URL(local,this.baseURL):null;
+            const targetUrl = useLocal ? localURL.href : art.cdn;
+            const assetKey = targetUrl ? `${targetUrl}#${art.sha256||''}` : null;
+            this.assetPending ??= new Map();
+            let promise = assetKey ? this.assetPending.get(assetKey) : null;
+            if (!promise) {
+                promise = (async()=>{
+                    // Personal art uses its validated CDN even in the explicit offline-art mode.
+                    const verified = this.customHeads.has(art.id) ? await verifyHeadAsset(art) : null;
+                    const blobUrl = verified instanceof Blob && typeof URL?.createObjectURL === 'function' ? URL.createObjectURL(verified) : null;
+                    return new Promise((resolve, reject) => {
+                        const image = new Image(); image.crossOrigin = 'anonymous';
+                        const url = blobUrl || targetUrl;
+                        if (!url) { if (blobUrl) URL.revokeObjectURL(blobUrl); reject(new Error(`资源尚未登记 CDN：${id}`)); return; }
+                        image.onload = async () => {
+                            if (blobUrl) URL.revokeObjectURL(blobUrl);
+                            if (art.width && (image.width !== art.width || image.height !== art.height)) { reject(new Error(`资源尺寸不符：${id}`)); return; }
+                            // Decode before publishing to world/UI drawing, including newly streamed peers.
+                            if(image.decode)try{await image.decode();}catch{/* Preserve the original drawing fallback. */}
+                            resolve(image);
+                        };
+                        image.onerror = () => { if (blobUrl) URL.revokeObjectURL(blobUrl); reject(new Error(`资源加载失败：${id}`)); }; image.src = url;
+                    });
+                })();
+                if (assetKey) {
+                    this.assetPending.set(assetKey, promise);
+                    promise.catch(() => { if (this.assetPending.get(assetKey) === promise) this.assetPending.delete(assetKey); });
+                }
+            }
+            const tracked = promise.then(image => { this.images.set(id, image); return image; });
+            this.pending.set(id, tracked);
+            tracked.catch(() => this.pending.delete(id));
         }
         return this.pending.get(id);
     }

@@ -675,7 +675,7 @@
     },
     "desertGround": {
       "local": "assets/adventure/environment/desert-ground-af11a48afd34.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/desert-ground-af11a48afd34.webp",
       "width": 768,
       "height": 768,
       "size": 99164,
@@ -759,7 +759,7 @@
     },
     "desertProps": {
       "local": "assets/adventure/environment/desert-props-3847e2f99aec.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/desert-props-3847e2f99aec.webp",
       "width": 816,
       "height": 544,
       "size": 135376,
@@ -866,7 +866,7 @@
     },
     "desertFeatures": {
       "local": "assets/adventure/environment/desert-features-11a7dbacd6b7.webp",
-      "cdn": "",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/desert-features-11a7dbacd6b7.webp",
       "width": 960,
       "height": 640,
       "size": 126600,
@@ -966,6 +966,1198 @@
             544,
             391,
             220
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "fireGround": {
+      "local": "assets/adventure/environment/fire-ground-c838aeceb419.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/fire-ground-c838aeceb419.webp",
+      "width": 768,
+      "height": 768,
+      "size": 194480,
+      "sha256": "c838aeceb41999e2d464edc04f41cfd5b9bae2e6d3aab7fe1b8a85c962a5e180",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "2ff346535b1f83ebfe112357b2f19fee0891e4574a76054ef0ec3f2c31a01195",
+        "width": 1254,
+        "height": 1254,
+        "seamless": "half-offset cross-fade",
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.fire",
+        "reference": "data/adventure/world-map-art.json#fire"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 92
+      },
+      "frames": {
+        "volcanicRock": {
+          "rect": [
+            0,
+            0,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        "ashGround": {
+          "rect": [
+            384,
+            0,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        "basaltRoad": {
+          "rect": [
+            0,
+            384,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        "lavaFlow": {
+          "rect": [
+            384,
+            384,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "fireProps": {
+      "local": "assets/adventure/environment/fire-props-ae8d4fdfd8be.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/fire-props-ae8d4fdfd8be.webp",
+      "width": 816,
+      "height": 544,
+      "size": 143942,
+      "sha256": "ae8d4fdfd8bea54924b9585fa4be5a3a4f527d201918d91e61f0010cefa9bb71",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "620f2c45f6cc06e4320a86935257375afcb29455873e0d1473db8935f3d66757",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.fire",
+        "reference": "data/adventure/world-map-art.json#fire"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "obsidianRocks": {
+          "rect": [
+            8,
+            63,
+            256,
+            201
+          ],
+          "sourceRect": [
+            37,
+            100,
+            457,
+            358
+          ]
+        },
+        "lavaVent": {
+          "rect": [
+            280,
+            13,
+            256,
+            251
+          ],
+          "sourceRect": [
+            553,
+            55,
+            430,
+            421
+          ]
+        },
+        "emberBrazier": {
+          "rect": [
+            552,
+            23,
+            256,
+            241
+          ],
+          "sourceRect": [
+            1081,
+            109,
+            378,
+            356
+          ]
+        },
+        "charredFence": {
+          "rect": [
+            8,
+            338,
+            256,
+            198
+          ],
+          "sourceRect": [
+            44,
+            582,
+            442,
+            341
+          ]
+        },
+        "bonePile": {
+          "rect": [
+            280,
+            360,
+            256,
+            176
+          ],
+          "sourceRect": [
+            545,
+            611,
+            446,
+            306
+          ]
+        },
+        "magmaCrystal": {
+          "rect": [
+            552,
+            289,
+            256,
+            247
+          ],
+          "sourceRect": [
+            1085,
+            561,
+            401,
+            387
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "fireFeatures": {
+      "local": "assets/adventure/environment/fire-features-7e9ee92065d8.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/fire-features-7e9ee92065d8.webp",
+      "width": 960,
+      "height": 640,
+      "size": 181818,
+      "sha256": "7e9ee92065d8b837dd5a562e9d808455a38f52c96cdc6d0256dd5e32fa8086df",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "45701f31f3558ab16924a66426c0b5aeb4859de5fab2d9be48fe447293851954",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.fire",
+        "reference": "data/adventure/world-map-art.json#fire"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 90
+      },
+      "frames": {
+        "volcano": {
+          "rect": [
+            10,
+            8,
+            299,
+            304
+          ],
+          "sourceRect": [
+            13,
+            5,
+            499,
+            507
+          ]
+        },
+        "basaltCrag": {
+          "rect": [
+            328,
+            31,
+            304,
+            281
+          ],
+          "sourceRect": [
+            512,
+            23,
+            510,
+            471
+          ]
+        },
+        "lavaPool": {
+          "rect": [
+            648,
+            148,
+            304,
+            164
+          ],
+          "sourceRect": [
+            1045,
+            199,
+            470,
+            253
+          ]
+        },
+        "basaltColumns": {
+          "rect": [
+            8,
+            352,
+            304,
+            280
+          ],
+          "sourceRect": [
+            12,
+            512,
+            500,
+            460
+          ]
+        },
+        "fireShrine": {
+          "rect": [
+            328,
+            356,
+            304,
+            276
+          ],
+          "sourceRect": [
+            512,
+            514,
+            512,
+            464
+          ]
+        },
+        "ashRockArch": {
+          "rect": [
+            648,
+            369,
+            304,
+            263
+          ],
+          "sourceRect": [
+            1024,
+            529,
+            502,
+            435
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "iceGround": {
+      "local": "assets/adventure/environment/ice-ground-2fb016b28095.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/ice-ground-2fb016b28095.webp",
+      "width": 768,
+      "height": 768,
+      "size": 168466,
+      "sha256": "2fb016b2809548038b2540f54d8f73821ae1d81ad9dedbf49f9de2e44a43c414",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "4d22684e1feece554fc4d83a0d401582f36b2a17e845e329577c2a71b5afe395",
+        "width": 1254,
+        "height": 1254,
+        "seamless": "half-offset cross-fade",
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.ice",
+        "reference": "data/adventure/world-map-art.json#ice"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 92
+      },
+      "frames": {
+        "snowField": {
+          "rect": [
+            0,
+            0,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        "frozenTundra": {
+          "rect": [
+            384,
+            0,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        "snowRoad": {
+          "rect": [
+            0,
+            384,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        "iceSheet": {
+          "rect": [
+            384,
+            384,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "iceProps": {
+      "local": "assets/adventure/environment/ice-props-13e4ded9ad3c.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/ice-props-13e4ded9ad3c.webp",
+      "width": 816,
+      "height": 544,
+      "size": 143424,
+      "sha256": "13e4ded9ad3cebc0e2031337ae560f9714ff60186273d45327110015ea0e7256",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "e17bfd1c8b067c77952d431872b59a381d96321fc84132dcb86e9a52e872d926",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.ice",
+        "reference": "data/adventure/world-map-art.json#ice"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "iceCrystals": {
+          "rect": [
+            16,
+            8,
+            240,
+            256
+          ],
+          "sourceRect": [
+            58,
+            56,
+            378,
+            403
+          ]
+        },
+        "snowman": {
+          "rect": [
+            287,
+            8,
+            241,
+            256
+          ],
+          "sourceRect": [
+            587,
+            97,
+            336,
+            357
+          ]
+        },
+        "snowBoulder": {
+          "rect": [
+            552,
+            79,
+            256,
+            185
+          ],
+          "sourceRect": [
+            1034,
+            126,
+            452,
+            326
+          ]
+        },
+        "iceLantern": {
+          "rect": [
+            48,
+            280,
+            175,
+            256
+          ],
+          "sourceRect": [
+            95,
+            514,
+            298,
+            436
+          ]
+        },
+        "snowFence": {
+          "rect": [
+            280,
+            363,
+            256,
+            173
+          ],
+          "sourceRect": [
+            534,
+            610,
+            454,
+            307
+          ]
+        },
+        "frostBush": {
+          "rect": [
+            552,
+            296,
+            256,
+            240
+          ],
+          "sourceRect": [
+            1079,
+            578,
+            381,
+            357
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "iceFeatures": {
+      "local": "assets/adventure/environment/ice-features-f51455d13c6c.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/ice-features-f51455d13c6c.webp",
+      "width": 960,
+      "height": 640,
+      "size": 199912,
+      "sha256": "f51455d13c6cc3c9a55396d10a69d6b9ae8797d61024c8fb52ca71f80548ca0f",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "c1dd835f4518f6d5a5e995f10d32be071764ebeacdda4ed10a3296975a173951",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.ice",
+        "reference": "data/adventure/world-map-art.json#ice"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "snowPeak": {
+          "rect": [
+            8,
+            20,
+            304,
+            292
+          ],
+          "sourceRect": [
+            28,
+            47,
+            484,
+            465
+          ]
+        },
+        "iceCrag": {
+          "rect": [
+            328,
+            30,
+            304,
+            282
+          ],
+          "sourceRect": [
+            512,
+            63,
+            484,
+            449
+          ]
+        },
+        "frozenPond": {
+          "rect": [
+            648,
+            134,
+            304,
+            178
+          ],
+          "sourceRect": [
+            1036,
+            175,
+            476,
+            279
+          ]
+        },
+        "iceSpires": {
+          "rect": [
+            8,
+            335,
+            304,
+            297
+          ],
+          "sourceRect": [
+            32,
+            512,
+            453,
+            443
+          ]
+        },
+        "frozenShrine": {
+          "rect": [
+            328,
+            331,
+            304,
+            301
+          ],
+          "sourceRect": [
+            550,
+            512,
+            448,
+            443
+          ]
+        },
+        "glacierBoulders": {
+          "rect": [
+            648,
+            386,
+            304,
+            246
+          ],
+          "sourceRect": [
+            1047,
+            572,
+            458,
+            370
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "darkGround": {
+      "local": "assets/adventure/environment/dark-ground-a3ab79cfede2.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/dark-ground-a3ab79cfede2.webp",
+      "width": 768,
+      "height": 768,
+      "size": 173622,
+      "sha256": "a3ab79cfede26c28768fb50f93683b996f040aeb21c13bc77668bc30fad6cd67",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "865551ca33945cc604368db245bef75abe2210599e31d175c52057855fde429c",
+        "width": 1254,
+        "height": 1254,
+        "seamless": "half-offset cross-fade",
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.dark",
+        "reference": "data/adventure/world-map-art.json#dark"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 92
+      },
+      "frames": {
+        "darkRock": {
+          "rect": [
+            0,
+            0,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        "marshMud": {
+          "rect": [
+            384,
+            0,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        "runeRoad": {
+          "rect": [
+            0,
+            384,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        "darkWater": {
+          "rect": [
+            384,
+            384,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "darkProps": {
+      "local": "assets/adventure/environment/dark-props-0fd0dcb1164f.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/dark-props-0fd0dcb1164f.webp",
+      "width": 816,
+      "height": 544,
+      "size": 178664,
+      "sha256": "0fd0dcb1164f623453023959e54bed24ee3c6e84415b430ea81d4da1590786f7",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "42bd15627f72d47a2b36e743ce7944405a26c4f92f5f682d9143600ea3320190",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.dark",
+        "reference": "data/adventure/world-map-art.json#dark"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 90
+      },
+      "frames": {
+        "violetCrystals": {
+          "rect": [
+            20,
+            8,
+            232,
+            256
+          ],
+          "sourceRect": [
+            71,
+            47,
+            362,
+            400
+          ]
+        },
+        "mossyGravestone": {
+          "rect": [
+            285,
+            8,
+            246,
+            256
+          ],
+          "sourceRect": [
+            569,
+            59,
+            381,
+            396
+          ]
+        },
+        "glowMushrooms": {
+          "rect": [
+            552,
+            13,
+            256,
+            251
+          ],
+          "sourceRect": [
+            1095,
+            81,
+            373,
+            366
+          ]
+        },
+        "spiritLantern": {
+          "rect": [
+            36,
+            280,
+            199,
+            256
+          ],
+          "sourceRect": [
+            73,
+            527,
+            330,
+            425
+          ]
+        },
+        "deadStump": {
+          "rect": [
+            280,
+            292,
+            256,
+            244
+          ],
+          "sourceRect": [
+            551,
+            539,
+            432,
+            412
+          ]
+        },
+        "runeStone": {
+          "rect": [
+            572,
+            280,
+            215,
+            256
+          ],
+          "sourceRect": [
+            1102,
+            521,
+            366,
+            436
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "darkFeatures": {
+      "local": "assets/adventure/environment/dark-features-ee30a6672c11.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/dark-features-ee30a6672c11.webp",
+      "width": 960,
+      "height": 640,
+      "size": 195020,
+      "sha256": "ee30a6672c112a06a5fd5f40ed27bc85d15acb5f3741514b1a0cb3a65a0f5b09",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "4b5cc654e041dc72b060616b5a71729491ab0aa54e2bb975996105fe53f0d3c7",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.dark",
+        "reference": "data/adventure/world-map-art.json#dark"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 86
+      },
+      "frames": {
+        "darkPeak": {
+          "rect": [
+            8,
+            8,
+            303,
+            304
+          ],
+          "sourceRect": [
+            13,
+            11,
+            499,
+            501
+          ]
+        },
+        "shadowCrag": {
+          "rect": [
+            328,
+            25,
+            304,
+            287
+          ],
+          "sourceRect": [
+            512,
+            29,
+            512,
+            483
+          ]
+        },
+        "swampPool": {
+          "rect": [
+            648,
+            89,
+            304,
+            223
+          ],
+          "sourceRect": [
+            1024,
+            154,
+            488,
+            358
+          ]
+        },
+        "ruinedArch": {
+          "rect": [
+            8,
+            340,
+            304,
+            292
+          ],
+          "sourceRect": [
+            24,
+            512,
+            488,
+            468
+          ]
+        },
+        "crystalSpire": {
+          "rect": [
+            328,
+            353,
+            304,
+            279
+          ],
+          "sourceRect": [
+            512,
+            512,
+            512,
+            470
+          ]
+        },
+        "brokenTower": {
+          "rect": [
+            648,
+            339,
+            304,
+            293
+          ],
+          "sourceRect": [
+            1024,
+            512,
+            487,
+            470
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "townGround": {
+      "local": "assets/adventure/environment/town-ground-fb4618d72a71.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/town-ground-fb4618d72a71.webp",
+      "width": 768,
+      "height": 768,
+      "size": 180106,
+      "sha256": "fb4618d72a71f918d2cdd81be0079275d6e439a5bbbd491b489bf16dc779bc8a",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "3dd45aa894643158762cf293d872b62e15011ded95dfc2dee5ede00e5cee5b60",
+        "width": 1254,
+        "height": 1254,
+        "seamless": "half-offset cross-fade",
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.town",
+        "reference": "data/adventure/world-map-art.json#town"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 88
+      },
+      "frames": {
+        "lushGrass": {
+          "rect": [
+            0,
+            0,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            0,
+            0,
+            627,
+            627
+          ]
+        },
+        "autumnGround": {
+          "rect": [
+            384,
+            0,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            627,
+            0,
+            627,
+            627
+          ]
+        },
+        "cobbleRoad": {
+          "rect": [
+            0,
+            384,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            0,
+            627,
+            627,
+            627
+          ]
+        },
+        "riverWater": {
+          "rect": [
+            384,
+            384,
+            384,
+            384
+          ],
+          "tile": true,
+          "sourceRect": [
+            627,
+            627,
+            627,
+            627
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "townProps": {
+      "local": "assets/adventure/environment/town-props-24a846b5a1f2.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/town-props-24a846b5a1f2.webp",
+      "width": 816,
+      "height": 544,
+      "size": 160874,
+      "sha256": "24a846b5a1f2159f9901c5c2c847f3dcac9f94d1adfd76f340f431bce0e6c5ff",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "41aa3bd37a78a3225b896c373b866702758c4ce7bee73f17078a635242340729",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.town",
+        "reference": "data/adventure/world-map-art.json#town"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 94
+      },
+      "frames": {
+        "flowerCart": {
+          "rect": [
+            8,
+            21,
+            256,
+            243
+          ],
+          "sourceRect": [
+            60,
+            54,
+            452,
+            429
+          ]
+        },
+        "streetLamp": {
+          "rect": [
+            338,
+            8,
+            140,
+            256
+          ],
+          "sourceRect": [
+            652,
+            24,
+            251,
+            460
+          ]
+        },
+        "stoneWell": {
+          "rect": [
+            583,
+            8,
+            194,
+            256
+          ],
+          "sourceRect": [
+            1107,
+            30,
+            345,
+            455
+          ]
+        },
+        "hayBales": {
+          "rect": [
+            8,
+            341,
+            256,
+            195
+          ],
+          "sourceRect": [
+            45,
+            592,
+            455,
+            347
+          ]
+        },
+        "barrelStack": {
+          "rect": [
+            280,
+            348,
+            256,
+            188
+          ],
+          "sourceRect": [
+            560,
+            593,
+            439,
+            323
+          ]
+        },
+        "flowerHedge": {
+          "rect": [
+            552,
+            364,
+            256,
+            172
+          ],
+          "sourceRect": [
+            1046,
+            607,
+            472,
+            317
+          ]
+        }
+      },
+      "layer": "terrain"
+    },
+    "townFeatures": {
+      "local": "assets/adventure/environment/town-features-c14b79871370.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/cdn/island-scene-art/town-features-c14b79871370.webp",
+      "width": 960,
+      "height": 640,
+      "size": 198862,
+      "sha256": "c14b79871370687edb427a832b98d07168e133196547bb1f58df8d2c84938ec1",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "c68d1e1d308608c39658da527c9c21e8e1c2ec9b3141c371ed851fff8605f06a",
+        "width": 1536,
+        "height": 1024,
+        "prompt": "assets/adventure/environment/prompts.json#islandSceneArt.town",
+        "reference": "data/adventure/world-map-art.json#town"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 82
+      },
+      "frames": {
+        "snowyHill": {
+          "rect": [
+            8,
+            51,
+            304,
+            261
+          ],
+          "sourceRect": [
+            15,
+            48,
+            483,
+            415
+          ]
+        },
+        "goldenHill": {
+          "rect": [
+            328,
+            24,
+            304,
+            288
+          ],
+          "sourceRect": [
+            523,
+            53,
+            484,
+            459
+          ]
+        },
+        "flowerPond": {
+          "rect": [
+            648,
+            106,
+            304,
+            206
+          ],
+          "sourceRect": [
+            1027,
+            110,
+            496,
+            336
+          ]
+        },
+        "stoneCircle": {
+          "rect": [
+            8,
+            389,
+            304,
+            243
+          ],
+          "sourceRect": [
+            12,
+            555,
+            500,
+            399
+          ]
+        },
+        "gazebo": {
+          "rect": [
+            328,
+            336,
+            304,
+            296
+          ],
+          "sourceRect": [
+            541,
+            512,
+            450,
+            438
+          ]
+        },
+        "fountain": {
+          "rect": [
+            648,
+            380,
+            304,
+            252
+          ],
+          "sourceRect": [
+            1044,
+            546,
+            473,
+            392
           ]
         }
       },

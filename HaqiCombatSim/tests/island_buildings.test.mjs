@@ -11,13 +11,13 @@ const content=read('data/adventure/chapter.json');content.worldMaps={};
 for(const z of ['camp','town','fire','ice','desert','dark'])content.worldMaps[z]=read('data/adventure/maps/'+z+'.json');
 test('既有岛屿与扩展建筑图集大小、来源、哈希与裁剪范围有效',()=>{
     const manifest=read('data/adventure/building-art.json');
-    assert.equal(Object.keys(manifest.atlases).length,6+PACK_ISLANDS.length);
+    assert.equal(Object.keys(manifest.atlases).length,7+PACK_ISLANDS.length);
     for(const [id,row] of Object.entries(manifest.atlases)){
         const bytes=fs.readFileSync(new URL('../'+row.local,import.meta.url));
         assert.equal(bytes.length,row.size);assert.ok(row.size<=200000);
         assert.equal(createHash('sha256').update(bytes).digest('hex'),row.sha256);
         assert.ok(row.cdn.startsWith('https://cdn.keepwork.com/'));
-        assert.equal(Object.keys(row.frames).length,['camp','hanzi'].includes(id)?6:PACK_ISLANDS.some(i=>i.id===id)?3:4);
+        assert.equal(Object.keys(row.frames).length,id==='hanziHarbor'?1:['camp','hanzi'].includes(id)?6:PACK_ISLANDS.some(i=>i.id===id)?3:4);
         for(const {rect:[x,y,w,h]} of Object.values(row.frames))assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=row.width&&y+h<=row.height);
     }
 });

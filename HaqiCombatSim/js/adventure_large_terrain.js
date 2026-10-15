@@ -6,6 +6,12 @@ import { paintBridges } from './adventure_bridge.js';
 import { mountainSprite } from './island_scene_art_core.js';
 import { paintGroundTexturesSteps, paintRoadTexture, paintWaterTexture } from './island_ground_textures.js';
 
+// The original procedural ground and road treatment is the approved island
+// look. Keep the generated atlases available for props, features and water,
+// but do not replace these two established layers with tiled materials.
+const USE_SCENE_GROUND_TEXTURES=false;
+const USE_SCENE_ROAD_TEXTURES=false;
+
 function polygon(c,points){c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.closePath();}
 function line(c,points,width,color){c.strokeStyle=color;c.lineWidth=width;c.beginPath();points.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.stroke();}
 function oval(c,x,y,rx,ry,color){c.fillStyle=color;c.beginPath();c.ellipse(x,y,rx,ry,0,0,Math.PI*2);c.fill();}
@@ -57,7 +63,7 @@ export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.
         oval(c,0,0,1.25,1.25,g);c.restore();yield;
     }
     // Islands with a scene art kit get painted, seamlessly tiled materials.
-    const textured=!overview&&decorationArt?yield* paintGroundTexturesSteps(c,world,rect,decorationArt):false;
+    const textured=!overview&&USE_SCENE_GROUND_TEXTURES&&decorationArt?yield* paintGroundTexturesSteps(c,world,rect,decorationArt):false;
     // Feather the sand into the already-painted regional ground. Wide to narrow
     // passes leave a soft inland margin without moving the collision coastline.
     for(let fringe=18;fringe>0;fringe-=3){
@@ -185,7 +191,7 @@ export function* paintLargeTerrainSteps(c,world,rect={x:0,y:0,w:world.w,h:world.
             line(c,[[p.a.x,p.a.y],[p.b.x,p.b.y]],Math.max(4,p.width+extra),color);yield;
         }
     }
-    if(!overview)yield* paintRoadDetailSteps(c,world,rect,Boolean(decorationArt)&&paintRoadTexture(c,world,rect,decorationArt));
+    if(!overview)yield* paintRoadDetailSteps(c,world,rect,USE_SCENE_ROAD_TEXTURES&&Boolean(decorationArt)&&paintRoadTexture(c,world,rect,decorationArt));
     const visibleBridges=layout.bridges.filter(b=>{
         const reach=Math.hypot(b.w,b.h)/2+24;
         return hits(rect,b.x-reach,b.y-reach,b.x+reach,b.y+reach);

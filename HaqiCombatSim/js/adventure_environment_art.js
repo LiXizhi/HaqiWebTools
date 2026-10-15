@@ -30,11 +30,12 @@ export async function loadEnvironmentArt(mode,read=fetchJson,path='data/adventur
     }
     const patternSources=new Map();
     return {manifest,images,ensure,warm,set onAtlas(fn){onAtlas=fn;},draw(c,atlas,name,x,y,w,h){
-        const rect=manifest.atlases[atlas]?.frames[name]?.rect;
+        const frame=manifest.atlases[atlas]?.frames[name],rect=frame?.rect;
         if(!rect)return false;
         if(!images[atlas]){ensure(atlas).catch(()=>{});return false;}
         const ratio=Math.min(w/rect[2],h/rect[3]),dw=rect[2]*ratio,dh=rect[3]*ratio;
-        c.drawImage(images[atlas],...rect,x+(w-dw)/2,y+h-dh,dw,dh);return true;
+        const offset=frame.offset||[0,0];
+        c.drawImage(images[atlas],...rect,x+(w-dw)/2+offset[0],y+h-dh+offset[1],dw,dh);return true;
     },
     // Repeating world-space pattern for frames marked tile:true (seamless ground).
     pattern(c,atlas,name){

@@ -1,0 +1,29 @@
+{
+  "height": 768,
+  "encoding": {
+    "quality": 78,
+    "lossless": false
+  },
+  "local": "assets/adventure/environment/world-atlas-hanzi-layout-0eb913503eb2.webp",
+  "sha256": "0eb913503eb226ffc6c1908c18e9d4450a162626b71f1522d7c2bac20d384e11",
+  "rect": [
+    0,
+    0,
+    768,
+    768
+  ],
+  "size": 194758,
+  "width": 768,
+  "source": {
+    "height": 1254,
+    "prompt": "data/adventure/island-map-repaint-prompts.json#hanzi",
+    "styleReference": "assets/adventure/environment/world-atlas-hanzi-40da48b648c2.webp",
+    "layoutSha256": "47e11dd6cb5910ca044dc36d287890a6aa41f7dc1b90ba6a08933b68102a7828",
+    "layout": "data/adventure/maps/hanzi.json",
+    "sha256": "67de811428e453c908321041fbc733ec653c5908a2da2562ad7da18e161ac666",
+    "width": 1254,
+    "generator": "image_gen"
+  },
+  "previewOnly": false,
+  "version": 1
+}

@@ -2546,3 +2546,25 @@ Node专项24/24，完整npm run test:battle 854/854通过（64.424秒），零�
 - 原始JSON：[基线](../.cache/camp-expansion/before-final/report.json)、[修改后](../.cache/camp-expansion/after-final/report.json)、[主角Worker禁用](../.cache/camp-expansion/fallback-final/report.json)。这些为本地验收产物，未发布。
 - `scripts/check_camp_expansion.mjs --playwright <外部已安装的Playwright包>`；先启动普通HTTP服务在8797端口。`--baseline <提交>`使用原始源码/地图；`--path-fallback`只禁用主角寻路Worker；`--assets local`可明确选择本地素材；`--output`分别保存结果。未增加npm依赖。
 - 架构图、存储说明、冒险内容、地图美术说明和当天开发日志已同步。未构建、提交、推送或发布；工作区原有其他修改保留。
+
+### 2026-10-15 火鸟岛场景美术包
+
+使用内置 `image_gen` 生成火鸟岛 `ground/props/features` 三张图，运行 `python scripts/prepare_island_scene_art.py fire` 打包为 `fire-ground-c838aeceb419.webp`（194,480 bytes）、`fire-props-ae8d4fdfd8be.webp`（143,942 bytes）和 `fire-features-7e9ee92065d8.webp`（181,818 bytes）。本地视觉检查确认四块材质、六个道具和六个地貌顺序正确；`node --test tests/island_scene_art.test.mjs tests/environment_art.test.mjs tests/island_buildings.test.mjs` 通过 10/11，唯一失败是预期的 CDN 地址断言（资源尚未上传）。`npm run test:battle` 通过 1075/1075。未上传 CDN、未提交、未推送。
+
+### 2026-10-15 寒冰、幽暗、哈奇岛场景美术包
+
+使用内置 `image_gen` 完成三岛各 `ground/props/features` 三张图，并运行 `python scripts/prepare_island_scene_art.py ice|dark|town` 打包。寒冰图集为 `ice-ground-2fb016b28095.webp`（168,466 bytes）、`ice-props-13e4ded9ad3c.webp`（143,424 bytes）、`ice-features-f51455d13c6c.webp`（199,912 bytes）；幽暗图集为 `dark-ground-a3ab79cfede2.webp`（173,622 bytes）、`dark-props-0fd0dcb1164f.webp`（178,664 bytes）、`dark-features-ee30a6672c11.webp`（195,020 bytes）；哈奇图集为 `town-ground-fb4618d72a71.webp`（180,106 bytes）、`town-props-24a846b5a1f2.webp`（160,874 bytes）、`town-features-c14b79871370.webp`（198,862 bytes）。所有文件低于 200,000 bytes，清单、提示词和计划已同步，随后补齐 CDN 地址并完成线上核验。
+
+随后按确认的目标地址上传寒冰、幽暗、哈奇、火鸟和沙漠共 15 张图集。15/15 返回 HTTP 200，下载字节数与清单一致，SHA-256 全部匹配，`Access-Control-Allow-Origin: *` 全部存在；`node --test tests/island_scene_art.test.mjs tests/environment_art.test.mjs tests/island_buildings.test.mjs` 通过 11/11。
+
+使用 `tests/fixtures/exploration.html?island=<id>&assets=local` 在本地 HTTP 服务中逐岛检查 desert、fire、ice、dark、town 五个入口。五个页面均显示“新场景素材已加载”、60 FPS；出生点、道路、场景道具、山体贴图、岛屿建筑和海岸边界均可见，未发现空白画布、裁剪越界、白边或缺图。浏览器控制台仅有既有 Statsig 初始化提示，无页面错误。
+
+`npm run check:maps` 通过，五岛地图尺寸、地标、树木、桥梁和可达性均与源配置一致。
+
+### 2026-10-16 缩放纹理缓存修复
+
+修复相机缩放跨过 1.0 时地形缓存因把相机倍率当作栅格密度而整批清空的问题。现在地形栅格密度只取设备 DPR，缩放只改变可见世界矩形；本地探索页连续放大/缩小后仍保持 60 FPS，纹理、道路和道具连续绘制。场景专项 11/11、`npm run test:battle` 1075/1075 通过。
+
+### 2026-10-16 恢复原地表与道路绘制
+
+用户反馈旧版地表与道路观感更好，已关闭 `sceneArt` 对地表和道路的材质替换，恢复原有程序地表、道路边带和石板细节；道具、地貌、山体和水面图集继续保留。新增回归用例确认地表/道路绘制不会调用材质纹理；专项测试 12/12、战斗回归 1075/1075 通过。

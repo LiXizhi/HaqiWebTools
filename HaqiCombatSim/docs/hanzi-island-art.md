@@ -51,3 +51,26 @@
 ```text
 Create a replacement game island map illustration by rendering reference image 1 in the gorgeous painted style of reference image 2. Image 1 is the STRICT spatial layout, image 2 is ONLY an art style and architectural design reference. Output square 1024x1024 RGBA with transparent ocean outside the island. Preserve image 1's full canvas registration: do NOT crop to content, recenter, rotate, change perspective or enlarge the island. Coastline follows precisely the silhouette in image 1, spanning x 13.5%-93.5%, y 8.75%-95.2%, with the protruding northeast arm and southeast notch. The creamy path centerlines, intersections, the turquoise river and wooden bridge crossing locations must stay in EXACTLY the same locations as image 1. Render paths as warm sandy garden paths, keep ALL segments including the triangular loops, central north-south spine, west zigzag, east vertical route and northeast dead end. No obstructing trees on roads; all paths visible from overhead. Low relief, almost orthographic top-down terrain, delicate hand-painted Chinese children's fantasy game art, soft rounded greenery and rocks, warm light, detailed but clean. Replace brown boxes with small buildings matching image 2: book-roof pavilion centered at (55.2%,45%), two tiny blue-tiled white-wall cottages at (31.9%,66.9%) and (28.8%,71.3%), brush-tip lighthouse at (63.3%,23.1%), gold tree at (46.7%,20.6%), stone workshop at (77.1%,60.8%), red-sail wooden harbor at (59.6%,85.8%). Keep buildings modest so they do not cover roads. Morning grove around (74.8%,37.6%). River west of center follows image 1 precisely, several small timber bridges at marked crossings, pond west of village. Violet dots mark required empty walkable ground; remove dots but leave those exact spots clear for NPC overlays: (50%,78.42%), (38.65%,60.23%), (70.46%,55.69%), (52.27%,30.69%). White circles also remain clear walkable ground; do not draw circles. Replace all flat green regions with tasteful grass, shrubs, little patches of flowers, village vegetable plots and gentle rock coast. Do not add detached northern island or change shoreline to match image 2. Tiny shallow turquoise fringe only within 1% of shoreline, then real alpha transparency. NO TEXT, letters, numbers, UI, labels, pins, circles, purple dots, characters or grid. Preserve layout over compositional improvisation. This is an actual game overlay base map, not a decorative poster.
 ```
+
+## 2026-10-16：按注册岛屿新标准重绘候选
+
+依据 `docs/island-expansion.md#新岛屿制作流程2026-10-13`，重新使用实际地图布局参考 `.cache/registered-islands/hanzi-layout.png` 和字源岛画风参考生成了完整透明 RGBA 候选图。新图保留 4800×4800 地图的海岸、路网、河流、桥位、建筑占位和地标/NPC 留白，成品为 `assets/adventure/environment/world-atlas-hanzi-layout-0eb913503eb2.webp`（768×768，194758 字节，SHA-256 `0eb913503eb226ffc6c1908c18e9d4450a162626b71f1522d7c2bac20d384e11`）。生成提示与来源记录在 `data/adventure/island-map-repaint-prompts.json#hanzi` 和 `data/adventure/hanzi/map-repaint-2026-10-16.json`。
+
+已上传至 `https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/world-atlas-hanzi-layout-0eb913503eb2.webp`，并替换正式 `world-map-art.json` / `hanzi/island-art.json` 条目。下载哈希、194758 字节大小、WebP 类型和 `Access-Control-Allow-Origin: *` 均已核验；道路叠加与正式渲染测试随后执行。
+
+
+### 2026-10-16 截图反馈修正
+
+南部红帆码头使用帧级锚点偏移 `[220,420]`，使码头底部落在岸线与水面交界；地图逻辑坐标保持不变。帧偏移由通用场景图集绘制器读取。
+
+
+
+### 2026-10-16 独立码头素材修正
+
+截图复核确认单帧码头无法同时满足“门楼在岸上、船在水上”。新增独立 `hanziHarbor` 透明 WebP：门楼固定在左侧陆地基座，栈桥向右下跨过岸线，红帆船完全位于水面。新资源已上传并核验 CDN：`https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/hanzi-harbor-08f4c9704813.webp`，144880 字节，CORS `*`。
+
+本地验收页点击“初生码头”后实测：门楼落在岸线左侧，栈桥进入水面，船体完全在水中；建筑与场景测试通过。
+
+### 码头尺寸调整
+
+本地浏览器实测后，字源岛独立码头绘制比例从 1.0 调整为 1.45；不改变地图逻辑坐标和独立码头资源，只放大场景显示尺寸。

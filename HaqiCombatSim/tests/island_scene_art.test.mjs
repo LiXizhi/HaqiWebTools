@@ -5,6 +5,7 @@ import {createWorld} from '../js/adventure_world_core.js';
 import {segmentDistance} from '../js/adventure_island_layout_core.js';
 import {islandSceneArtSteps,sceneArtAtlases,groundTexture,mountainSprite} from '../js/island_scene_art_core.js';
 import {sceneryAtlases} from '../js/adventure_scenery_core.js';
+import {paintLargeTerrainSteps} from '../js/adventure_large_terrain.js';
 const read=p=>JSON.parse(fs.readFileSync(new URL('../'+p,import.meta.url)));
 const content=read('data/adventure/chapter.json');content.worldMaps={};
 const ZONES=['town','fire','ice','desert','dark'];
@@ -50,4 +51,15 @@ test('场景道具与地貌可复现、跨切块一致，并避开道路、居�
             assert.ok(points.every(p=>Math.hypot(s.x-p.x,s.y-p.y)>60),`${zone} ${s.frame} covers an actor`);
         }
     }
+});
+
+test('岛屿地表和道路保留原程序绘制，不调用场景材质纹理',()=>{
+    const world=createWorld('desert',content);
+    // Remove water and hills from this focused painter fixture so a throwing
+    // pattern hook can prove that only the ground/road layers are under test.
+    world.layout.rivers=[];world.layout.lakes=[];world.layout.mountains=[];
+    const art={draw(){return true;},pattern(){throw new Error('ground/road texture must stay disabled');}};
+    assert.doesNotThrow(()=>{for(const step of paintLargeTerrainSteps({
+        fillRect(){},save(){},restore(){},beginPath(){},closePath(){},moveTo(){},lineTo(){},quadraticCurveTo(){},stroke(){},fill(){},ellipse(){},arc(){},clip(){},translate(){},scale(){},setLineDash(){},createRadialGradient(){return {addColorStop(){}};},
+    },world,{x:0,y:0,w:world.w,h:world.h},false,art)){};});
 });

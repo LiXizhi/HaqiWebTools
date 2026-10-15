@@ -677,6 +677,10 @@
             523,
             454,
             460
+          ],
+          "offset": [
+            0,
+            0
           ]
         },
         "workshop": {
@@ -818,6 +822,39 @@
             229
           ],
           "cell": 5
+        }
+      }
+    },
+    "hanziHarbor": {
+      "local": "assets/adventure/environment/hanzi-harbor-08f4c9704813.webp",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi/adventure/hanzi-island/hanzi-harbor-08f4c9704813.webp",
+      "width": 768,
+      "height": 768,
+      "size": 144880,
+      "sha256": "08f4c9704813680eca879840b2287be0f515a28a05a460b3056052be92d8d5f4",
+      "source": {
+        "generator": "image_gen",
+        "sha256": "75930f9f711b3bff959984d36aec1e5f0c406cb299be71c271c178565ed4de79",
+        "width": 1254,
+        "height": 1254,
+        "prompt": "screenshot feedback: separate shore gatehouse, pier and boat"
+      },
+      "encoding": {
+        "lossless": false,
+        "quality": 90
+      },
+      "frames": {
+        "harbor": {
+          "rect": [
+            0,
+            0,
+            768,
+            768
+          ],
+          "offset": [
+            140,
+            280
+          ]
         }
       }
     }

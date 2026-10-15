@@ -1,0 +1,367 @@
+{
+  "version": 1,
+  "language": "en",
+  "title": "每天认识一点世界",
+  "entries": [
+    {
+      "id": "hello",
+      "text": "hello",
+      "pronunciation": "/həˈləʊ/",
+      "meaning": "你好",
+      "example": "Hello, my friend.",
+      "translation": "你好，我的朋友。",
+      "context": {
+        "question": "哪句话正确使用了 hello？",
+        "answer": "Hello, my friend."
+      }
+    },
+    {
+      "id": "goodbye",
+      "text": "goodbye",
+      "pronunciation": "/ˌɡʊdˈbaɪ/",
+      "meaning": "再见",
+      "example": "Goodbye, see you tomorrow.",
+      "translation": "再见，明天见。",
+      "context": {
+        "question": "哪句话正确使用了 goodbye？",
+        "answer": "Goodbye, see you tomorrow."
+      }
+    },
+    {
+      "id": "please",
+      "text": "please",
+      "pronunciation": "/pliːz/",
+      "meaning": "请",
+      "example": "Please open the door.",
+      "translation": "请打开门。",
+      "context": {
+        "question": "哪句话正确使用了 please？",
+        "answer": "Please open the door."
+      }
+    },
+    {
+      "id": "thanks",
+      "text": "thanks",
+      "pronunciation": "/θæŋks/",
+      "meaning": "谢谢",
+      "example": "Thanks for your help.",
+      "translation": "谢谢你的帮助。",
+      "context": {
+        "question": "哪句话正确使用了 thanks？",
+        "answer": "Thanks for your help."
+      }
+    },
+    {
+      "id": "yes",
+      "text": "yes",
+      "pronunciation": "/jes/",
+      "meaning": "是的",
+      "example": "Yes, I can help.",
+      "translation": "是的，我可以帮忙。",
+      "context": {
+        "question": "哪句话正确使用了 yes？",
+        "answer": "Yes, I can help."
+      }
+    },
+    {
+      "id": "no",
+      "text": "no",
+      "pronunciation": "/nəʊ/",
+      "meaning": "不；不是",
+      "example": "No, this is not my bag.",
+      "translation": "不，这不是我的包。",
+      "context": {
+        "question": "哪句话正确使用了 no？",
+        "answer": "No, this is not my bag."
+      }
+    },
+    {
+      "id": "friend",
+      "text": "friend",
+      "pronunciation": "/frend/",
+      "meaning": "朋友",
+      "example": "You are my friend.",
+      "translation": "你是我的朋友。",
+      "context": {
+        "question": "哪句话正确使用了 friend？",
+        "answer": "You are my friend."
+      }
+    },
+    {
+      "id": "family",
+      "text": "family",
+      "pronunciation": "/ˈfæməli/",
+      "meaning": "家人；家庭",
+      "example": "I love my family.",
+      "translation": "我爱我的家人。",
+      "context": {
+        "question": "哪句话正确使用了 family？",
+        "answer": "I love my family."
+      }
+    },
+    {
+      "id": "mother",
+      "text": "mother",
+      "pronunciation": "/ˈmʌðə/",
+      "meaning": "妈妈",
+      "example": "My mother is at home.",
+      "translation": "我的妈妈在家。",
+      "context": {
+        "question": "哪句话正确使用了 mother？",
+        "answer": "My mother is at home."
+      }
+    },
+    {
+      "id": "father",
+      "text": "father",
+      "pronunciation": "/ˈfɑːðə/",
+      "meaning": "爸爸",
+      "example": "My father likes trees.",
+      "translation": "我的爸爸喜欢树。",
+      "context": {
+        "question": "哪句话正确使用了 father？",
+        "answer": "My father likes trees."
+      }
+    },
+    {
+      "id": "child",
+      "text": "child",
+      "pronunciation": "/tʃaɪld/",
+      "meaning": "孩子",
+      "example": "The child is happy.",
+      "translation": "这个孩子很开心。",
+      "context": {
+        "question": "哪句话正确使用了 child？",
+        "answer": "The child is happy."
+      }
+    },
+    {
+      "id": "teacher",
+      "text": "teacher",
+      "pronunciation": "/ˈtiːtʃə/",
+      "meaning": "老师",
+      "example": "The teacher reads a book.",
+      "translation": "老师在读书。",
+      "context": {
+        "question": "哪句话正确使用了 teacher？",
+        "answer": "The teacher reads a book."
+      }
+    },
+    {
+      "id": "sun",
+      "text": "sun",
+      "pronunciation": "/sʌn/",
+      "meaning": "太阳",
+      "example": "The sun is bright.",
+      "translation": "太阳很明亮。",
+      "context": {
+        "question": "哪句话正确使用了 sun？",
+        "answer": "The sun is bright."
+      }
+    },
+    {
+      "id": "moon",
+      "text": "moon",
+      "pronunciation": "/muːn/",
+      "meaning": "月亮",
+      "example": "I can see the moon.",
+      "translation": "我能看见月亮。",
+      "context": {
+        "question": "哪句话正确使用了 moon？",
+        "answer": "I can see the moon."
+      }
+    },
+    {
+      "id": "water",
+      "text": "water",
+      "pronunciation": "/ˈwɔːtə/",
+      "meaning": "水",
+      "example": "I drink water.",
+      "translation": "我喝水。",
+      "context": {
+        "question": "哪句话正确使用了 water？",
+        "answer": "I drink water."
+      }
+    },
+    {
+      "id": "tree",
+      "text": "tree",
+      "pronunciation": "/triː/",
+      "meaning": "树",
+      "example": "A bird is in the tree.",
+      "translation": "一只鸟在树上。",
+      "context": {
+        "question": "哪句话正确使用了 tree？",
+        "answer": "A bird is in the tree."
+      }
+    },
+    {
+      "id": "rain",
+      "text": "rain",
+      "pronunciation": "/reɪn/",
+      "meaning": "雨",
+      "example": "The rain helps trees grow.",
+      "translation": "雨帮助树木生长。",
+      "context": {
+        "question": "哪句话正确使用了 rain？",
+        "answer": "The rain helps trees grow."
+      }
+    },
+    {
+      "id": "flower",
+      "text": "flower",
+      "pronunciation": "/ˈflaʊə/",
+      "meaning": "花",
+      "example": "This flower is yellow.",
+      "translation": "这朵花是黄色的。",
+      "context": {
+        "question": "哪句话正确使用了 flower？",
+        "answer": "This flower is yellow."
+      }
+    },
+    {
+      "id": "book",
+      "text": "book",
+      "pronunciation": "/bʊk/",
+      "meaning": "书",
+      "example": "I read a book.",
+      "translation": "我读一本书。",
+      "context": {
+        "question": "哪句话正确使用了 book？",
+        "answer": "I read a book."
+      }
+    },
+    {
+      "id": "door",
+      "text": "door",
+      "pronunciation": "/dɔː/",
+      "meaning": "门",
+      "example": "The door is open.",
+      "translation": "门开着。",
+      "context": {
+        "question": "哪句话正确使用了 door？",
+        "answer": "The door is open."
+      }
+    },
+    {
+      "id": "home",
+      "text": "home",
+      "pronunciation": "/həʊm/",
+      "meaning": "家",
+      "example": "Let us go home.",
+      "translation": "我们回家吧。",
+      "context": {
+        "question": "哪句话正确使用了 home？",
+        "answer": "Let us go home."
+      }
+    },
+    {
+      "id": "help",
+      "text": "help",
+      "pronunciation": "/help/",
+      "meaning": "帮助",
+      "example": "Can you help me, please?",
+      "translation": "你可以帮帮我吗？",
+      "context": {
+        "question": "哪句话正确使用了 help？",
+        "answer": "Can you help me, please?"
+      }
+    },
+    {
+      "id": "open",
+      "text": "open",
+      "pronunciation": "/ˈəʊpən/",
+      "meaning": "打开",
+      "example": "Please open the window.",
+      "translation": "请打开窗户。",
+      "context": {
+        "question": "哪句话正确使用了 open？",
+        "answer": "Please open the window."
+      }
+    },
+    {
+      "id": "look",
+      "text": "look",
+      "pronunciation": "/lʊk/",
+      "meaning": "看",
+      "example": "Look at the sky.",
+      "translation": "看一看天空。",
+      "context": {
+        "question": "哪句话正确使用了 look？",
+        "answer": "Look at the sky."
+      }
+    },
+    {
+      "id": "listen",
+      "text": "listen",
+      "pronunciation": "/ˈlɪsən/",
+      "meaning": "听",
+      "example": "Listen to the birds.",
+      "translation": "听听鸟儿的声音。",
+      "context": {
+        "question": "哪句话正确使用了 listen？",
+        "answer": "Listen to the birds."
+      }
+    },
+    {
+      "id": "walk",
+      "text": "walk",
+      "pronunciation": "/wɔːk/",
+      "meaning": "走路",
+      "example": "We walk to school.",
+      "translation": "我们走路去学校。",
+      "context": {
+        "question": "哪句话正确使用了 walk？",
+        "answer": "We walk to school."
+      }
+    },
+    {
+      "id": "read",
+      "text": "read",
+      "pronunciation": "/riːd/",
+      "meaning": "阅读",
+      "example": "I like to read.",
+      "translation": "我喜欢阅读。",
+      "context": {
+        "question": "哪句话正确使用了 read？",
+        "answer": "I like to read."
+      }
+    },
+    {
+      "id": "write",
+      "text": "write",
+      "pronunciation": "/raɪt/",
+      "meaning": "写",
+      "example": "I write my name.",
+      "translation": "我写下我的名字。",
+      "context": {
+        "question": "哪句话正确使用了 write？",
+        "answer": "I write my name."
+      }
+    },
+    {
+      "id": "rest",
+      "text": "rest",
+      "pronunciation": "/rest/",
+      "meaning": "休息",
+      "example": "Let us rest under the tree.",
+      "translation": "我们在树下休息吧。",
+      "context": {
+        "question": "哪句话正确使用了 rest？",
+        "answer": "Let us rest under the tree."
+      }
+    },
+    {
+      "id": "happy",
+      "text": "happy",
+      "pronunciation": "/ˈhæpi/",
+      "meaning": "开心的",
+      "example": "I am happy today.",
+      "translation": "我今天很开心。",
+      "context": {
+        "question": "哪句话正确使用了 happy？",
+        "answer": "I am happy today."
+      }
+    }
+  ]
+}

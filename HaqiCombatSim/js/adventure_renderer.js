@@ -182,7 +182,12 @@ export function createRenderer(canvas,assets) {
     function prepareScene(world,save){
         const w=canvas.clientWidth,h=canvas.clientHeight;if(world.isEarth||world.isCityDungeon)return;if(!world.layout||!w||!h)return;
         const zoom=cameraZoom.value,scale=(w<650?.82:1)*zoom;
-        terrainTiles.prepare(world,{x:save.position.x-w/(2*scale),y:save.position.y-h/(2*scale)+(w<650?50:25)/zoom,w:w/scale,h:h/scale},scale*Math.min(2,window.devicePixelRatio||1));
+        // Keep terrain raster density tied to the device, not exploration zoom.
+        // A zoom gesture changes the viewport in world units; it must reuse the
+        // existing world-space tiles instead of crossing the scheduler's density
+        // boundary and repainting the whole texture cache.
+        const rasterPixelRatio=Math.min(2,window.devicePixelRatio||1);
+        terrainTiles.prepare(world,{x:save.position.x-w/(2*scale),y:save.position.y-h/(2*scale)+(w<650?50:25)/zoom,w:w/scale,h:h/scale},rasterPixelRatio);
     }
     function zoomBy(factor) {
         return cameraZoom.zoomBy(factor);
@@ -278,7 +283,7 @@ export function createRenderer(canvas,assets) {
         const coldTiles=world.layout&&!world.isEarth&&!world.isCityDungeon?terrainTiles.draw(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale},(c,x,y,size)=>{
             const map=ground(world),dw=Math.min(size,world.w-x),dh=Math.min(size,world.h-y);
             c.drawImage(map,x*map.width/world.w,y*map.height/world.h,dw*map.width/world.w,dh*map.height/world.h,x,y,dw,dh);
-        },cam.scale*canvas.width/w,path):0;
+        },dpr,path):0;
         if(!world.layout)ctx.drawImage(ground(world),0,0);
         earthEnvironment.ground(ctx,world,cam,w,h,time,{enabled:graphics.particles&&!graphics.low,reducedMotion:reducedMotion.matches});
         // Moving water highlights, grounded visual-only ambient animation.
@@ -406,8 +411,8 @@ export function createRenderer(canvas,assets) {
                 ctx.save();
                 if((o.atlas||world.zone==='town')&&Math.abs(save.position.x-o.x)<o.w*.5&&save.position.y<o.y&&save.position.y>o.y-o.h)ctx.globalAlpha=.52;
                 const bob=o.frame==='boat'&&!reducedMotion.matches?Math.sin(t*1.4+o.x)*2:0;
-                const scale=o.atlas==='camp'&&o.frame!=='harbor'?1.22:1,dw=o.w*scale,dh=o.h*scale;
-                let drawn=world.isEarth?world.drawEarthBuilding?.(ctx,o):o.atlas&&assets.buildingArt?.draw(ctx,o.atlas,o.frame,o.x-dw/2,o.y-dh+bob,dw,dh);
+                const scale=o.atlas==='camp'&&o.frame!=='harbor'?1.22:(world.zone==='hanzi'&&o.frame==='harbor'?1.45:1),dw=o.w*scale,dh=o.h*scale;
+                const drawAtlas=world.zone==='hanzi'&&o.frame==='harbor'?'hanziHarbor':o.atlas; let drawn=world.isEarth?world.drawEarthBuilding?.(ctx,o):drawAtlas&&assets.buildingArt?.draw(ctx,drawAtlas,o.frame,o.x-dw/2,o.y-dh+bob,dw,dh);
                 if(!drawn&&!o.atlas&&world.zone==='town'){
                     if(Math.hypot(o.x-3500,o.y-2710)<120)drawn=assets.environmentArt?.draw(ctx,'islandLandmarks','townCastle',o.x-o.w*.74,o.y-o.h*1.42,o.w*1.48,o.h*1.45);
                     else if(Math.hypot(o.x-1540,o.y-2780)<120)drawn=assets.environmentArt?.draw(ctx,'islandLandmarks','townWindmill',o.x-o.w*.7,o.y-o.h*1.36,o.w*1.4,o.h*1.4);
@@ -703,3 +708,4 @@ export function createRenderer(canvas,assets) {
     }
     return {prepareScene,frameStats:()=>frameMeter.value,pauseFrameMeter:()=>frameMeter.sample(0,false),environmentStats:()=>earthEnvironment.stats,streetStats:streetPainter.stats,streetPeople:streetPainter.people,terrainStats:()=>({tiles:terrainTiles.size,pending:terrainTiles.pending,...terrainTiles.stats(),scenery:islandScenery.stats()}),resetZoom:()=>cameraZoom.reset(),render,minimap,worldToScreen:point=>({x:(point.x-cam.x)*cam.scale,y:(point.y-cam.y)*cam.scale}),screenToWorld,renderBattle,zoomBy,setFishingCamera:active=>cameraZoom.setFishing(active),viewRect:()=>viewRect?{...viewRect}:null,bubbleTarget:()=>bubbleTarget,greetingTarget:()=>greetingTarget,companionTarget:()=>companion?{x:companion.position.x,y:companion.position.y}:null};
 }
+

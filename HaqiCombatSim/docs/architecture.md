@@ -951,3 +951,33 @@ flowchart LR
 `adventure_coordinates_core` 统一迁移当前位置、返回快照与宠物出生点；纯核心负责版本和可通行投影，浏览器IO层在宠物正文按需加载后执行迁移。当前位置版本仍只进账号/角色隔离的本机运行态。存储约定见 [用户存储](user-storage.md#魔法营地坐标版本2026-10-14)。
 
 `adventure_camp_scenery_core` 只生成静态花草印花，不接入采集节点、碰撞或交互；`adventure_camp_terrain` 把树下植物与广场石缝交给既有地表分块。Worker快照包含地标和码头，确保与主线程相同的装饰留白。地表64MiB、树木24MiB预算不变，诊断返回地表模式与占用；无整岛高清画布、逐帧粒子或动态光照。
+
+### 语言字典与每日学习（2026-10-16）
+
+```mermaid
+flowchart LR
+    HUD[字典按钮 / 任务字卡] --> Controller[adventure_dictionary 浏览器控制器]
+    Files[中文zh.json / 英文en.json 按需加载] --> Controller
+    Controller --> Core[dictionary_core 选题 / 复习间隔 / 判题 / 奖励资格]
+    Controller --> View[view_dictionary 首页 / 字页 / 词页]
+    View --> Frames[主动打开独立HTML动画]
+    Controller --> AI[既有Keepwork模型和语音适配器]
+    AI --> Check[目标ID和回答证据校验 / 本地题回退]
+    Check --> Core
+    Controller -->|捕获发起时的语言与词典| DB[dictionary_store 独立本机IndexedDB事务]
+    DB -->|按操作序号接收状态| Controller
+    DB --> Buff[既有dailyLanguageBuff及战斗快照]
+    Quest[既有任务奖励与收藏] --> HUD
+```
+
+词条与个人复习索引分离，字典访问不触发云端核心存档变化；当日答题与口语共享既有加成上限和阶段奖励。旧汉字战斗卡及重演继续兼容，原卡册仍可从字典进入。
+
+字典讲解由 `dictionary_tutor_core.js` 组织提示与校验结构，`adventure_dictionary.js` 复用模型 IO 并管理取消，`view_dictionary_tutor.js` 渲染当前词条的短对话。讲解不调用奖励核心，对话不写入存档或复习索引。
+
+`dictionary_search_core.js` 负责纯本地检索与相关性排序，视图负责筛选和结果数量反馈；检索归一化不进入拼写判题或奖励链路。
+
+字典控制器每次本地更新捕获发起时的 `{data, language}`，数据库 reducer 不再读取随后改变的活动语言；回传状态按操作序号接收，旧结果不替换较新界面状态。页面切换使用 generation 检查阻止旧任务继续导航；完成操作仅释放所属 session 的提交锁。词典内容加载完成后再一起切换 data/language。
+
+### 字典教学例句语言（2026-10-16）
+
+教师回复经dictionary_tutor_core校验；中文页仅在当前提问明确涉及英文时允许英文例句及中文译文，并由校验器派生exampleLanguage。tutorReplyExamples把语言随例句交给视图和控制器；控制器从已展示的对话例句选择语音locale，返回时复用会话内记录。词条正文发音、学习索引、云存档和奖励数据流不变。

@@ -1,0 +1,117 @@
+[
+  {
+    "id": "rest-animation-and-source",
+    "language": "zh",
+    "entryId": "xiu",
+    "question": "休的动画里有人靠着树睡觉，古人真的就是这样造字的吗？",
+    "checks": [
+      "区分已提供的从人依木释形与动画创作情节",
+      "不把睡觉的具体故事当作史实",
+      "儿童能理解的简短解释"
+    ]
+  },
+  {
+    "id": "bright-memory-not-history",
+    "language": "zh",
+    "entryId": "ming",
+    "question": "能用一个有趣的小画面帮我记住明吗？这个画面就是它真正的来历吗？",
+    "checks": [
+      "给一个与日月或明亮相关的记忆画面",
+      "明确记忆联想与历史来源的区别",
+      "资料不足不等于断言没有字源依据"
+    ]
+  },
+  {
+    "id": "moon-in-calendar",
+    "language": "zh",
+    "entryId": "yue",
+    "question": "月亮里的月和一月里的月，都是天上的月亮吗？",
+    "checks": [
+      "区分天体和月份用法",
+      "用生活例子简短说明",
+      "不把所有含月的词解释成月亮"
+    ]
+  },
+  {
+    "id": "writing-evidence-limit",
+    "language": "zh",
+    "entryId": "ri",
+    "question": "我刚才哪里写错了？你能看到我写的字吗？",
+    "practice": {
+      "phase": "recall",
+      "lastAttempt": {
+        "kind": "writing",
+        "correct": false,
+        "strokeCount": 3,
+        "totalStrokes": 4
+      },
+      "lastFeedback": "已经写了 3 笔，还差 1 笔。继续写完再检查。"
+    },
+    "checks": [
+      "明确未看到手写轨迹",
+      "依据本地反馈只说明笔数不足",
+      "不编造具体漏了哪一笔或评价书写外形"
+    ]
+  },
+  {
+    "id": "requested-english-in-prose",
+    "language": "zh",
+    "entryId": "yue",
+    "question": "月份用英文怎么说？给我一个最简单的说法。",
+    "checks": [
+      "正文回答month",
+      "不附加不必要课程",
+      "英文例句配中文，或不需要例句时两者留空"
+    ]
+  },
+  {
+    "id": "english-topic-short-followup",
+    "language": "zh",
+    "entryId": "yue",
+    "history": [
+      {
+        "role": "learner",
+        "text": "月份用英文怎么说？"
+      },
+      {
+        "role": "teacher",
+        "text": "月份英文叫month。一个月是one month。"
+      }
+    ],
+    "question": "再简单一点",
+    "checks": [
+      "继续解释month而非重新介绍月字",
+      "用更短表达配中文意思，不引入January等新外语词",
+      "例句若是英文则有中文解释"
+    ]
+  },
+  {
+    "id": "return-to-chinese-after-english",
+    "language": "zh",
+    "entryId": "yue",
+    "history": [
+      {
+        "role": "learner",
+        "text": "月份用英文怎么说？"
+      },
+      {
+        "role": "teacher",
+        "text": "月份英文叫month。一个月是one month。"
+      },
+      {
+        "role": "learner",
+        "text": "再举个例子"
+      },
+      {
+        "role": "teacher",
+        "text": "two months是两个月。"
+      }
+    ],
+    "question": "不用英语，回到中文：一月里的月是什么意思？",
+    "checks": [
+      "解释月份这一时间单位",
+      "不用英文重复解释",
+      "中文例句或无例句，不附英文译文"
+    ]
+  }
+]

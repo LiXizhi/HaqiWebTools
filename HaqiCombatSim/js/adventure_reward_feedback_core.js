@@ -1,6 +1,7 @@
+import {HANZI_BATTLE_CARDS} from './hanzi_battle_core.js';
 // Transient presentation data only: never persisted or used to grant rewards.
 export function rewardSnapshot(save) {
-    return {xp:save.xp,level:save.level,inventory:{...save.inventory},cards:{...save.cards},pets:Object.keys(save.pets||{})};
+    return {hanziCards:[...(save.hanzi?.questCards||[])],xp:save.xp,level:save.level,inventory:{...save.inventory},cards:{...save.cards},pets:Object.keys(save.pets||{})};
 }
 export function rewardChanges(before,save,content) {
     const items=Object.entries(save.inventory).flatMap(([id,count])=>{
@@ -9,7 +10,7 @@ export function rewardChanges(before,save,content) {
     });
     const cards=Object.keys(save.cards).filter(key=>save.cards[key]>0&&!before.cards[key]).map(key=>({kind:'card',key,count:1,name:content.cards?.[key]?.name||content.cardLibrary?.find(row=>row.key===key)?.name||key}));
     const pets=Object.keys(save.pets||{}).filter(id=>!before.pets.includes(id)).map(id=>({kind:'pet',id,count:1,name:content.pets?.[save.pets[id].speciesId]?.name||save.pets[id].name||'新伙伴'}));
-    return {xp:Math.max(0,save.xp-before.xp),fromLevel:before.level,level:save.level>before.level?save.level:null,items:[...items,...cards,...pets]};
+    return {xp:Math.max(0,save.xp-before.xp),fromLevel:before.level,level:save.level>before.level?save.level:null,items:[...items,...cards,...pets,...(save.hanzi?.questCards||[]).filter(id=>!(before.hanziCards||[]).includes(id)).map(id=>({kind:'dictionary',id,count:1,name:'字卡 · '+HANZI_BATTLE_CARDS[id]}))]};
 }
 
 // Compare the existing equipment panel values, without introducing stat formulas.

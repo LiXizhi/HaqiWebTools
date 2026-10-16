@@ -34,3 +34,19 @@ test('consecutive ASR recordings reuse one session, finish each segment, detach 
     await voice.start(new AbortController().signal);assert.equal(await voice.finish(),'Answer 5');assert.equal(sessions.length,1);
     assert.ok(sessions[0].stops.every(o=>o.closeConnection===false));
 });
+
+test('slow listening preserves pitch and reuses synthesized audio without changing legacy playback',async t=>{
+ const oldAudio=globalThis.Audio,played=[];globalThis.Audio=class{play(){played.push({rate:this.playbackRate,pitch:this.preservesPitch});queueMicrotask(()=>this.onended());return Promise.resolve();}pause(){}};t.after(()=>{globalThis.Audio=oldAudio;});
+ const {sdk,sessions}=sdkMock(),voice=createLearningVoice({load:async()=>sdk}),signal=new AbortController().signal;
+ await voice.speak('Slow listening cache test','en',signal,undefined,{playbackRate:0.8});await voice.speak('Slow listening cache test','en',signal);await voice.speak('Slow listening cache test','en',signal,undefined,{playbackRate:NaN});
+ assert.deepEqual(played,[{rate:0.8,pitch:true},{rate:1,pitch:true},{rate:1,pitch:true}]);assert.equal(sessions.length,1);assert.equal(sessions[0].syntheses,1);await voice.cancel();
+});
+
+test('playback notification waits for the media playing event and ignores repeats or late events',async t=>{
+ const original=globalThis.Audio,instances=[];globalThis.Audio=class{constructor(){instances.push(this);}play(){return Promise.resolve();}pause(){}};t.after(()=>{globalThis.Audio=original;});
+ const {sdk}=sdkMock(),voice=createLearningVoice({load:async()=>sdk});let count=0;
+ const pending=voice.speak('Playback notification sample','en',new AbortController().signal,undefined,{onPlaying:()=>count++});
+ while(!instances.length)await new Promise(resolve=>setImmediate(resolve));assert.equal(count,0);const first=instances[0],notify=first.onplaying;notify();notify();assert.equal(count,1);first.onended();await pending;notify();assert.equal(count,1);
+ const stopped=voice.speak('Cancelled playback sample','en',new AbortController().signal,undefined,{onPlaying:()=>count++});while(instances.length<2)await new Promise(resolve=>setImmediate(resolve));const stale=instances[1].onplaying;await voice.cancel();await stopped;stale();assert.equal(count,1);
+ const ended=voice.speak('Ended before event sample','en',new AbortController().signal,undefined,{onPlaying:()=>count++});while(instances.length<3)await new Promise(resolve=>setImmediate(resolve));instances[2].onended();instances[2].onplaying();await ended;assert.equal(count,1);
+});

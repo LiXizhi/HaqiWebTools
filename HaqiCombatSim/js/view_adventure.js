@@ -507,7 +507,7 @@ export function renderHud(root,model,cb) {
     socialBar.append(socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));
     const teamControl=teamHudButton(model.social?.team,save.coopRun,cb.panel,model.localSecond);
     if(teamControl)socialBar.append(teamControl);
-    socialBar.append(button('字',()=>cb.panel('hanzi'),'mount-toggle hanzi-launch'));socialBar.lastChild.title=tr('字源岛 · 字有魔法');socialBar.lastChild.setAttribute('aria-label',tr('字源岛 · 字有魔法'));
+    socialBar.append(button([icon('book')],()=>cb.panel('dictionary'),'mount-toggle dictionary-launch'));socialBar.lastChild.title=tr('字典');socialBar.lastChild.setAttribute('aria-label',tr('字典'));
     root.append(socialBar);
     if(model.timeCity){const time=button('时光长卷',()=>cb.panel('time-scroll'),'secondary time-scroll-launch');time.style.cssText='position:absolute;right:14px;bottom:100px;pointer-events:auto';root.append(time);}
     if(model.localSecond){
@@ -665,8 +665,8 @@ export function renderDialogue(root,model,dialog,cb) {
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
         if(npc.id===36205||npc.name==='法斯特船长')choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
-        if(npc.hanziPractice)choices.append(button('看看这个字 · 可选练习',()=>cb.panel('hanzi',{character:npc.hanziPractice}),'secondary'));
-        if(npc.zone==='hanzi')choices.append(button('打开汉字卡册',()=>cb.panel('hanzi'),'secondary'));
+        if(npc.hanziPractice)choices.append(button('翻开字典 · 看看这个字',()=>cb.panel('hanzi',{character:npc.hanziPractice}),'secondary'));
+        if(npc.zone==='hanzi')choices.append(button('打开字典',()=>cb.panel('hanzi'),'secondary'));
         if(npc.worldObservation){
             choices.append(button(npc.worldObservation.label,()=>cb.panel('earthmap'),'secondary'));
         }

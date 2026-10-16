@@ -2,6 +2,14 @@
 import {tr,setText} from './locale_runtime.js';
 // Tests inject a shared document on globalThis; browsers use the real one.
 const doc=()=>globalThis.document;
+// A modal may remove its opener or repaint its toolbar while it is open.
+export function restoreVisibleFocus(...candidates){
+    for(const node of candidates){
+        if(!node?.isConnected||node.disabled||!node.getClientRects?.().length)continue;
+        node.focus({preventScroll:true});return node;
+    }
+    return null;
+}
 export function createWorldMapSwitch(active,onSelect,haqiLabel='哈奇世界'){
     const group=doc().createElement('div');group.className='parallel-world-buttons';group.setAttribute('role','group');group.setAttribute('aria-label',tr('切换世界地图'));
     for(const [id,label] of [['haqi',haqiLabel],['earth','现实世界']]){

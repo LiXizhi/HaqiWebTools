@@ -1,0 +1,90 @@
+[
+  {
+    "id": "brief-help-after-practice",
+    "language": "en",
+    "entryId": "hello",
+    "question": "不懂",
+    "previousMode": "practice",
+    "history": [
+      {
+        "role": "learner",
+        "text": "陪我练习造句"
+      },
+      {
+        "role": "teacher",
+        "text": "见到新朋友，你会怎么用 hello 打招呼？"
+      }
+    ],
+    "checks": [
+      "先给出简单可用示范和中文意思",
+      "不继续布置问题或要求用户立即作答",
+      "不假称用户已经学会"
+    ]
+  },
+  {
+    "id": "compare-home-family",
+    "language": "en",
+    "entryId": "home",
+    "question": "home 和 family 有什么区别？",
+    "checks": [
+      "说明home侧重家或住处，family指家人或家庭",
+      "给出能区分意义的初级例句并配中文",
+      "不把两个词说成所有场景都可互换"
+    ]
+  },
+  {
+    "id": "compare-wood-eye",
+    "language": "zh",
+    "entryId": "mu",
+    "question": "木和目都读 mu，怎么分清？",
+    "checks": [
+      "承认两字读音同为mù",
+      "用木头和眼睛相关释义及例词区分",
+      "不编造字源或把所有例词解释成同一字义"
+    ]
+  },
+  {
+    "id": "simpler-help-after-grammar",
+    "language": "en",
+    "entryId": "help",
+    "question": "再简单一点",
+    "previousMode": "practice",
+    "history": [
+      {
+        "role": "learner",
+        "text": "help 怎么用？"
+      },
+      {
+        "role": "teacher",
+        "text": "help 可以接人，再接动作，动作前的 to 有时可以省略。你能用这个结构说一句话吗？"
+      }
+    ],
+    "checks": [
+      "换成具体日常场景，不继续解释语法术语",
+      "给一个短英文示范并配中文",
+      "不继续追问或布置练习，不假称已掌握"
+    ]
+  },
+  {
+    "id": "rephrase-rest-character",
+    "language": "zh",
+    "entryId": "xiu",
+    "question": "能不能换个说法？",
+    "previousMode": "practice",
+    "history": [
+      {
+        "role": "learner",
+        "text": "休是什么意思？"
+      },
+      {
+        "role": "teacher",
+        "text": "休可以表示暂时停止活动，以恢复体力。请你说明它与持续活动之间的关系。"
+      }
+    ],
+    "checks": [
+      "用玩累了或走累了等日常场景解释休息",
+      "避免抽象术语或编造字源",
+      "不继续要求用户作答"
+    ]
+  }
+]

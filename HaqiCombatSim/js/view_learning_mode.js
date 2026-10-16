@@ -1,4 +1,4 @@
-import {dailyBuffs,DAILY_BUFF_NAMES} from './language_daily_buff_core.js';
+import {dailyBuffs,DAILY_BUFF_NAMES,localBuffDay} from './language_daily_buff_core.js';
 import {speechRewardStatus} from './language_speech_rewards_core.js';
 import {tr,setText,fill} from './locale_runtime.js';
 import {localeChoices} from './locale.js';
@@ -9,26 +9,28 @@ export function renderLearningMode(body,model,cb,{el,button}) {
     let picked=draft.selectionConfirmed;
     const statusRewards=speechRewardStatus(model.save,model.assets?.content),buffs=dailyBuffs(model.save);
     const count=el('strong','speech-count',String(statusRewards.count));
-    const hero=el('div','speech-hero',el('div','speech-seal',count,el('small','','今日开口')),el('div','speech-heading',el('h3','','开口有礼'),el('p','','说一句，变强一点！'),el('small','','找居民聊聊，或为副本剧情配音。')));
+    const hero=el('div','speech-hero',el('div','speech-seal',count,el('small','','今日语言学习')),el('div','speech-heading',el('h3','','学习有礼'),el('p','','每天学一点，冒险多一点力量。'),el('small','','找居民聊聊，或到字典完成今日任务。')));
+    const events=model.save.dailyLanguageBuff?.day===localBuffDay()?model.save.dailyLanguageBuff.events||[]:[],zh=events.filter(id=>id.startsWith('dictionary:zh:')).length,en=events.filter(id=>id.startsWith('dictionary:en:')).length;
+    hero.append(el('small','',`口语 ${Math.max(0,statusRewards.count-zh-en)} · 中文 ${zh} · 英文 ${en}`));
     const stats=el('div','speech-stats');
     for(const [key,value] of Object.entries(buffs))stats.append(el('div','speech-stat',el('span','',DAILY_BUFF_NAMES[key]),el('strong','',`+${value}%`)));
     const next=statusRewards.rewards.find(r=>!r.claimed),progress=el('progress','speech-progress');
-    progress.max=next?.target||40;progress.value=Math.min(statusRewards.count,progress.max);progress.setAttribute('aria-label',tr('今日开口奖励进度'));
+    progress.max=next?.target||40;progress.value=Math.min(statusRewards.count,progress.max);progress.setAttribute('aria-label',tr('今日语言学习奖励进度'));
     const hint=el('p','speech-next');
-    setText(hint,next?(next.ready?'有奖励可以领取！':'再说 {count} 句，解锁下一份奖励'):'今日奖励已全部领取',next?{count:Math.max(0,next.target-statusRewards.count)}:{});
+    setText(hint,next?(next.ready?'有奖励可以领取！':'再完成 {count} 次，解锁下一份奖励'):'今日奖励已全部领取',next?{count:Math.max(0,next.target-statusRewards.count)}:{});
     const rewards=el('div','speech-rewards');
     for(const row of statusRewards.rewards){
         const currency=row.itemId===100?'奇豆':'仙豆',coin=el('canvas','speech-coin');
         coin.width=80;coin.height=80;coin.setAttribute('aria-hidden','true');
         const ref=model.assets?.content.currencyIcons?.[row.itemId];
         if(ref)model.assets.draw(coin.getContext('2d'),ref,0,0,coin.width,coin.height);
-        const threshold=el('small','speech-threshold');setText(threshold,'{count} 句',{count:row.target});
+        const threshold=el('small','speech-threshold');setText(threshold,'{count} 次',{count:row.target});
         const amount=el('strong','speech-amount');setText(amount,'{amount} '+currency,{amount:row.amount});
         const claim=button(row.claimed?'已领取':row.ready?'领取':'未解锁',()=>cb.action({type:'speech-reward',index:row.index}),'primary speech-claim');
-        claim.disabled=!row.ready;claim.setAttribute('aria-label',fill('{count}句奖励：{amount}{currency}，{state}',{count:row.target,amount:row.amount,currency,state:row.claimed?'已领取':row.ready?'领取':'未解锁'}).text);
+        claim.disabled=!row.ready;claim.setAttribute('aria-label',fill('{count}次奖励：{amount}{currency}，{state}',{count:row.target,amount:row.amount,currency,state:row.claimed?'已领取':row.ready?'领取':'未解锁'}).text);
         rewards.append(el('article',`speech-reward${row.ready?' ready':''}${row.claimed?' claimed':''}`,threshold,coin,amount,claim));
     }
-    const rules=el('details','speech-rules',el('summary','','玩法与奖励规则'),el('p','','每次有效开口随机增加 1% 属性，生命、攻击、防御各最多 +10%；叠满后增加超级魔力生成率，最多 +10%。'),el('p','','口语交流或剧情跟读通过后计数；听示范、文字回答不计数。奇豆可买宠物口粮，仙豆可强化装备。'),el('p','','每天本机时间 00:00 重置，每档奖励限领一次。加成与开口进度仅保存在本机当前角色；换地图仍有效，新战斗生效。领取记录随角色保存。'));
+    const rules=el('details','speech-rules',el('summary','','玩法与奖励规则'),el('p','','每次有效口语或字典答题增加 1% 属性，生命、攻击、防御各最多 +10%；叠满后增加超级魔力生成率，最多 +10%。'),el('p','','口语交流、剧情跟读或字典练习通过后计数；仅浏览、听示范不计数。奇豆可买宠物口粮，仙豆可强化装备。'),el('p','','每天本机时间 00:00 重置，每档奖励限领一次。加成与学习进度仅保存在本机当前角色；换地图仍有效，新战斗生效。领取记录随角色保存。'));
     body.append(el('div','learning-scroll',el('section','speech-adventure',hero,stats,el('div','speech-track',hint,progress),rewards,rules)));
     const display=document.createElement('select'),target=document.createElement('select');
     for(const l of localeChoices()){display.add(new Option(l.name,l.id));target.add(new Option(l.name+(!['en','zh-CN'].includes(l.id)?tr('（营地课程尚未开放）'):''),l.id));}

@@ -1,0 +1,51 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {readFile,mkdir} from 'node:fs/promises';
+import http from 'node:http';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=fileURLToPath(new URL('../',import.meta.url));
+test('dictionary keyboard navigation includes audio and conversation controls',{skip:!process.env.HAQI_PLAYWRIGHT,timeout:30000},async()=>{
+    const {chromium}=createRequire(path.resolve(process.env.HAQI_PLAYWRIGHT,'package.json'))('playwright');
+    const server=http.createServer(async(req,res)=>{try{const target=path.resolve(root,'.'+new URL(req.url,'http://local').pathname);if(!target.startsWith(path.resolve(root)+path.sep)){res.writeHead(403).end();return;}const body=await readFile(target);res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.json':'application/json'})[path.extname(target)]||'application/octet-stream');res.end(body);}catch{res.writeHead(404).end();}});
+    await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}/tests/fixtures/dictionary.html`;
+    const browser=await chromium.launch({headless:true,channel:'msedge'});await mkdir(path.join(root,'tmp'),{recursive:true});
+    try{for(const width of [1280,390]){
+        const page=await browser.newPage({viewport:{width,height:900}});page.setDefaultTimeout(5000);
+        await page.goto(base+'?entry=hello&role=keyboard-loop');
+        const close=page.getByRole('button',{name:'关闭字典',exact:true}),summary=page.getByText('不明白？问问小老师',{exact:true});
+        await summary.waitFor();
+        await page.getByText('读懂这句话',{exact:true}).click();await page.getByRole('button',{name:'请小老师讲讲这句话',exact:true}).click();
+        await page.locator('.dictionary-tutor-turn.teacher').waitFor();assert.match(await page.locator('.dictionary-tutor-turn.teacher').innerText(),/Hello,：你好，/);assert.equal(await page.locator('.dictionary-tutor-question').count(),0);assert.equal(await page.locator('#qa').textContent(),'加成 0');assert.equal(await summary.evaluate(n=>n===document.activeElement),true,'example explanation moves keyboard focus to teacher');
+        const explanationBox=await page.locator('.dictionary-tutor-turn.teacher').boundingBox(),bodyBox=await page.locator('.dictionary-body').boundingBox();assert.ok(explanationBox.y>=bodyBox.y&&explanationBox.y+explanationBox.height<=bodyBox.y+bodyBox.height,'example explanation is visible without another page scroll');
+        await page.screenshot({path:path.join(root,`tmp/dictionary-example-explanation-${width}.png`)});
+        await summary.click();await page.getByText('读懂这句话',{exact:true}).click();await summary.focus();await page.keyboard.press('Tab');
+        assert.equal(await close.evaluate(n=>n===document.activeElement),true,'collapsed teacher summary wraps to close');
+        await page.keyboard.press('Shift+Tab');assert.equal(await summary.evaluate(n=>n===document.activeElement),true,'reverse wrap returns to collapsed summary');
+        await summary.press('Enter');await page.getByRole('button',{name:'帮我记住它',exact:true}).click();await page.locator('.dictionary-tutor-turn.teacher').nth(1).waitFor();
+        await close.focus();const visited=[];
+        for(let i=0;i<40;i++){
+            await page.keyboard.press('Tab');
+            const active=await page.evaluate(()=>({inside:!!document.activeElement.closest('.dictionary-shell'),label:document.activeElement.getAttribute('aria-label'),cls:document.activeElement.className}));
+            assert.equal(active.inside,true,'Tab remains in the dictionary');visited.push(active);
+            if(await close.evaluate(n=>n===document.activeElement))break;
+        }
+        assert.ok(visited.some(n=>n.label==='朗读速度'),'audio speed reachable');assert.ok(visited.some(n=>n.label==='小老师朗读速度'),'local teacher speed reachable');assert.ok(visited.some(n=>n.label==='小老师对话'),'conversation scroll area reachable');
+        await page.keyboard.press('Shift+Tab');assert.equal(await page.getByRole('button',{name:'发送',exact:true}).evaluate(n=>n===document.activeElement),true);
+        const speed=page.getByRole('combobox',{name:'朗读速度',exact:true});await speed.focus();await page.keyboard.press('Home');await page.keyboard.press('ArrowDown');await page.keyboard.press('Enter');assert.equal(await speed.inputValue(),'0.8');
+        await page.screenshot({path:path.join(root,`tmp/dictionary-keyboard-navigation-${width}.png`)});
+        await page.goto(base+'?entry=hello&role=audio-phase&audioPending=1&audioPhase=1');await page.getByRole('button',{name:'听例句',exact:true}).click();await page.getByRole('status').filter({hasText:'正在准备朗读…'}).waitFor();await page.getByRole('status').filter({hasText:'正在朗读…'}).waitFor();await page.screenshot({path:path.join(root,`tmp/dictionary-audio-phase-${width}.png`)});await page.getByRole('button',{name:'停止朗读',exact:true}).click();assert.equal(await page.getByRole('status').filter({hasText:'正在朗读…'}).count(),0);assert.equal(await page.getByRole('button',{name:'听例句',exact:true}).isEnabled(),true);assert.equal(await page.locator('#qa').textContent(),'加成 0');
+        await page.goto(base+'?entry=hello&role=tutor-audio-phase&audioPending=1&audioPhase=1');await summary.click();await page.getByRole('button',{name:'帮我记住它',exact:true}).click();await page.locator('.dictionary-tutor-turn.teacher').waitFor();const localSpeed=page.getByRole('combobox',{name:'小老师朗读速度',exact:true}),pageSpeed=page.getByRole('combobox',{name:'朗读速度',exact:true});await localSpeed.selectOption('0.8');assert.equal(await pageSpeed.inputValue(),'0.8');await page.getByRole('textbox',{name:'向小老师提问'}).fill('我还想问');await page.getByRole('button',{name:'朗读例句：Hello, my friend.',exact:true}).click();const tutorAudio=page.locator('.dictionary-tutor-audio-status');await tutorAudio.filter({hasText:'正在准备朗读…'}).waitFor();await tutorAudio.filter({hasText:'正在朗读…'}).waitFor();assert.equal(await localSpeed.isEnabled(),false);assert.equal(await pageSpeed.isEnabled(),false);assert.equal(await page.locator('#qa').getAttribute('data-playback-rate'),'0.8');await page.screenshot({path:path.join(root,`tmp/dictionary-tutor-audio-phase-${width}.png`)});await page.getByRole('button',{name:'停止朗读：Hello, my friend.',exact:true}).click();assert.equal(await tutorAudio.textContent(),'');assert.equal(await localSpeed.isEnabled(),true);await localSpeed.selectOption('1');assert.equal(await pageSpeed.inputValue(),'1');await pageSpeed.selectOption('0.8');assert.equal(await localSpeed.inputValue(),'0.8');assert.equal(await page.getByRole('textbox',{name:'向小老师提问'}).inputValue(),'我还想问');assert.equal(await page.locator('#qa').textContent(),'加成 0');
+        await page.goto(base+'?entry=hello&role=translation-repair&tutorFormatRepair=1&missingTranslation=1');await summary.click();await page.getByRole('button',{name:'举个生活中的例子',exact:true}).click();await page.getByRole('status').filter({hasText:'小老师正在重新整理'}).waitFor();assert.equal(await page.getByText('Hello, Tom.',{exact:true}).count(),0);await page.getByText('整理好的讲解',{exact:true}).waitFor();assert.equal(await page.locator('.dictionary-tutor-turn.teacher blockquote small').textContent(),'你好！');assert.equal(await page.locator('#qa').getAttribute('data-tutor-calls'),'2');assert.equal(await page.locator('#qa').textContent(),'加成 0');
+        await page.goto(base+'?entry=hello&role=keyboard-pending&pendingTutor=1');await summary.click();await page.getByRole('button',{name:'帮我记住它',exact:true}).click();await page.getByRole('button',{name:'先看简短讲解',exact:true}).waitFor();assert.equal(await page.locator('.dictionary-tutor-log').getAttribute('aria-busy'),'true');
+        const input=page.getByRole('textbox',{name:'向小老师提问'});await input.focus();await page.keyboard.press('Tab');assert.equal(await close.evaluate(n=>n===document.activeElement),true,'disabled send is excluded during generation');await page.keyboard.press('Shift+Tab');assert.equal(await input.evaluate(n=>n===document.activeElement),true);
+        await page.getByRole('button',{name:'先看简短讲解',exact:true}).click();await page.locator('.dictionary-tutor-turn.teacher').waitFor();assert.equal(await page.locator('.dictionary-tutor-log').getAttribute('aria-busy'),'false');
+        await page.goto(base+'?language=zh&entry=ri&role=keyboard-writing');await summary.waitFor();
+        await page.locator('canvas.dictionary-writing').focus();await page.keyboard.press('Tab');assert.equal(await page.getByRole('button',{name:'笔顺示范',exact:true}).evaluate(n=>n===document.activeElement),true);await page.keyboard.press('Shift+Tab');assert.equal(await page.locator('canvas.dictionary-writing').evaluate(n=>n===document.activeElement),true);
+        const pad=page.locator('canvas.dictionary-writing'),nextStroke=page.getByRole('button',{name:'下一笔怎么写',exact:true});await pad.press('Space');await pad.press('ArrowDown');await pad.press('Space');await nextStroke.click();await page.getByRole('status').filter({hasText:'正在示范第 2 / 4 笔'}).waitFor();assert.equal(await page.locator('.dictionary-writing-progress').textContent(),'已写 1 / 4 笔');await page.getByRole('status').filter({hasText:'示范已结束'}).waitFor();assert.equal(await page.locator('.dictionary-writing-progress').textContent(),'已写 1 / 4 笔');assert.equal(await page.locator('#qa').textContent(),'加成 0');
+        for(let n=0;n<3;n++){await pad.focus();await pad.press('Space');await pad.press('ArrowDown');await pad.press('Space');}assert.equal(await nextStroke.isEnabled(),false);await page.getByRole('button',{name:'撤销',exact:true}).click();assert.equal(await nextStroke.isEnabled(),true);await nextStroke.click();await page.getByRole('status').filter({hasText:'正在示范第 4 / 4 笔'}).waitFor();await page.getByRole('button',{name:'停止示范，继续写',exact:true}).click();assert.equal(await pad.evaluate(n=>n===document.activeElement),true);assert.equal(await page.locator('.dictionary-writing-progress').textContent(),'已写 3 / 4 笔');await page.screenshot({path:path.join(root,`tmp/dictionary-next-stroke-${width}.png`)});
+        await summary.focus();await page.keyboard.press('Tab');assert.equal(await close.evaluate(n=>n===document.activeElement),true);await page.close();
+    }
+    }finally{await browser.close();await new Promise(r=>server.close(r));}
+});

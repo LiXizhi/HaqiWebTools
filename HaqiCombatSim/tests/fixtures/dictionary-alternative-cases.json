@@ -1,0 +1,73 @@
+[
+  {
+    "id": "hi-is-not-a-typo",
+    "language": "en",
+    "entryId": "hello",
+    "question": "我写hi也能打招呼，为什么这里还要改？请简单解释。",
+    "practice": {
+      "phase": "recall",
+      "lastAttempt": {
+        "kind": "spelling",
+        "text": "hi",
+        "correct": false
+      }
+    },
+    "checks": [
+      "认可hi可以打招呼",
+      "区分当前词条拼写练习与实际表达",
+      "不说hi是拼错，不自行发奖"
+    ]
+  },
+  {
+    "id": "mom-and-mum",
+    "language": "en",
+    "entryId": "mother",
+    "question": "mom和mum是不是都写错了？我叫妈妈应该怎么说？",
+    "checks": [
+      "认可mom/mum都是日常称呼",
+      "简单说明美式/英式差别，不把区别说成绝对",
+      "英文短例句配中文"
+    ]
+  },
+  {
+    "id": "children-review-form",
+    "language": "en",
+    "entryId": "child",
+    "question": "我写children，为什么还需要改？",
+    "practice": {
+      "phase": "recall",
+      "lastAttempt": {
+        "kind": "spelling",
+        "text": "children",
+        "correct": false
+      }
+    },
+    "checks": [
+      "不把children说成拼错",
+      "解释一个与多个孩子",
+      "说明本题回忆child，不自行判定完成"
+    ]
+  },
+  {
+    "id": "unknown-alternative",
+    "language": "en",
+    "entryId": "hello",
+    "question": "hii是不是标准拼写？",
+    "checks": [
+      "区分聊天拉长写法与标准hi",
+      "不把hii当作hello的标准拼写",
+      "解释短且配中文"
+    ]
+  },
+  {
+    "id": "typo-not-chat-convention",
+    "language": "en",
+    "entryId": "hello",
+    "question": "我把hello写成helol，这也是聊天习惯吗？",
+    "checks": [
+      "不把helol当成约定的聊天写法",
+      "给出hello作为标准拼写",
+      "不扩展为长语法课"
+    ]
+  }
+]

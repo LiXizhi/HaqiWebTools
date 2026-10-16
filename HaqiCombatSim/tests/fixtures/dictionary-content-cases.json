@@ -1,0 +1,38 @@
+[
+  {
+    "id": "teacher-simple-correction",
+    "language": "en",
+    "entryId": "teacher",
+    "question": "我想说老师常常帮助我，My teacher help me. 这样说对吗？我刚开始学英语。",
+    "checks": [
+      "给出 My teacher helps me.",
+      "用普通中文指出 help 后加 s",
+      "不把主谓一致、第三人称等术语当作主要解释",
+      "不把帮助方向说反"
+    ]
+  },
+  {
+    "id": "book-owner",
+    "language": "en",
+    "entryId": "book",
+    "question": "这是我自己的书。我可以说 This is your book. 吗？my 和 your 总是弄混。",
+    "checks": [
+      "先给出 This is my book.",
+      "清楚解释 my 是我的，your 是你的",
+      "不给无关的读书课程",
+      "例句和中文意思对应"
+    ]
+  },
+  {
+    "id": "water-now",
+    "language": "en",
+    "entryId": "water",
+    "question": "我现在正拿着杯子喝水，可以用词典里的 I drink water. 描述现在这个动作吗？",
+    "checks": [
+      "区分日常习惯与此刻动作",
+      "给出 I am drinking water. 及中文",
+      "不把 I drink water. 一概说成错误",
+      "优先直接表达，少用语法术语"
+    ]
+  }
+]

@@ -1,0 +1,57 @@
+[
+  {
+    "id": "children-from-search",
+    "language": "en",
+    "entryId": "child",
+    "question": "我查到“children”，它和“child”有什么关系？请用简单中文和一个短例子讲讲，先不用出题。",
+    "checks": [
+      "区分一个孩子和多个孩子",
+      "不建议childs",
+      "短例句配中文，不追加题目"
+    ]
+  },
+  {
+    "id": "wrote-from-search",
+    "language": "en",
+    "entryId": "write",
+    "question": "我查到“wrote”，它和“write”有什么关系？请用简单中文和一个短例子讲讲，先不用出题。",
+    "checks": [
+      "说明wrote用于过去写的事情",
+      "示例用wrote且配中文",
+      "不扩展成复杂语法课或追加题目"
+    ]
+  },
+  {
+    "id": "explain-after-practice",
+    "language": "en",
+    "entryId": "help",
+    "previousMode": "practice",
+    "history": [
+      {
+        "role": "learner",
+        "text": "陪我练习造句"
+      },
+      {
+        "role": "teacher",
+        "text": "用help请求朋友帮助你，你会怎么说？"
+      }
+    ],
+    "question": "先讲讲怎么用",
+    "checks": [
+      "用简短示范说明请求帮助",
+      "不继续催促作答或出题",
+      "中文说明，英文示范配中文"
+    ]
+  },
+  {
+    "id": "children-correction",
+    "language": "en",
+    "entryId": "child",
+    "question": "我想说两个孩子，可以说two childs吗？",
+    "checks": [
+      "给出two children",
+      "不把加s概括为所有词规律",
+      "示例对应纠正后的表达并配中文"
+    ]
+  }
+]

@@ -11,9 +11,40 @@
       "example": "Hello, my friend.",
       "translation": "你好，我的朋友。",
       "context": {
-        "question": "哪句话正确使用了 hello？",
-        "answer": "Hello, my friend."
-      }
+        "question": "早上见到朋友，你想打招呼。你会说哪一句？",
+        "answer": "Hello, my friend.",
+        "distractors": [
+          {
+            "text": "Goodbye, my friend.",
+            "feedback": "这是告别时说的话。"
+          },
+          {
+            "text": "Thanks, my friend.",
+            "feedback": "这是向朋友道谢。"
+          }
+        ],
+        "explanation": "hello 用来见面打招呼。"
+      },
+      "coaching": {
+        "tip": "见面问好用 hello，分别时用 goodbye。Hello 后面可以接对方的名字。",
+        "prompt": "想向哪位朋友问好？试着说 Hello, 加上对方的名字。"
+      },
+      "exampleChunks": [
+        {
+          "text": "Hello,",
+          "meaning": "你好，"
+        },
+        {
+          "text": "my friend.",
+          "meaning": "我的朋友。"
+        }
+      ],
+      "spellingAlternatives": [
+        {
+          "text": "hi",
+          "explanation": "hi 也可以用来打招呼，通常比较随意。"
+        }
+      ]
     },
     {
       "id": "goodbye",
@@ -23,9 +54,40 @@
       "example": "Goodbye, see you tomorrow.",
       "translation": "再见，明天见。",
       "context": {
-        "question": "哪句话正确使用了 goodbye？",
-        "answer": "Goodbye, see you tomorrow."
-      }
+        "question": "放学要和朋友分别，约好明天见。你会说什么？",
+        "answer": "Goodbye, see you tomorrow.",
+        "distractors": [
+          {
+            "text": "Hello, see you tomorrow.",
+            "feedback": "hello 通常用来见面问好，这里正在告别。"
+          },
+          {
+            "text": "Thanks for your help.",
+            "feedback": "这是感谢帮助，没有表达告别。"
+          }
+        ],
+        "explanation": "goodbye 表示再见；see you tomorrow 是明天见。"
+      },
+      "coaching": {
+        "tip": "goodbye 用于告别。see you tomorrow 表示“明天见”，可以接在后面。",
+        "prompt": "明天还会见到朋友。试着读一遍例句，向朋友告别。"
+      },
+      "exampleChunks": [
+        {
+          "text": "Goodbye,",
+          "meaning": "再见，"
+        },
+        {
+          "text": "see you tomorrow.",
+          "meaning": "明天见。"
+        }
+      ],
+      "spellingAlternatives": [
+        {
+          "text": "bye",
+          "explanation": "bye 也可以用来告别，是日常常用的简短说法。"
+        }
+      ]
     },
     {
       "id": "please",
@@ -35,9 +97,34 @@
       "example": "Please open the door.",
       "translation": "请打开门。",
       "context": {
-        "question": "哪句话正确使用了 please？",
-        "answer": "Please open the door."
-      }
+        "question": "你想礼貌地请朋友打开门。哪句话合适？",
+        "answer": "Please open the door.",
+        "distractors": [
+          {
+            "text": "Please close the door.",
+            "feedback": "close 是关上，和打开相反。"
+          },
+          {
+            "text": "The door is open.",
+            "feedback": "这是描述门开着，没有提出请求。"
+          }
+        ],
+        "explanation": "please 可以放在请求前面，让语气更礼貌；open 是打开。"
+      },
+      "coaching": {
+        "tip": "请求别人做事时可以加 please，让表达更礼貌。它可以放在请求句的开头或末尾。",
+        "prompt": "想请人开门？试着读 Please open the door.（请开门。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "Please",
+          "meaning": "请"
+        },
+        {
+          "text": "open the door.",
+          "meaning": "打开门。"
+        }
+      ]
     },
     {
       "id": "thanks",
@@ -47,8 +134,43 @@
       "example": "Thanks for your help.",
       "translation": "谢谢你的帮助。",
       "context": {
-        "question": "哪句话正确使用了 thanks？",
-        "answer": "Thanks for your help."
+        "question": "朋友帮你找到了书，你想谢谢他。哪句话合适？",
+        "answer": "Thanks for your help.",
+        "distractors": [
+          {
+            "text": "Can you help me?",
+            "feedback": "这是请求帮助，朋友已经帮过你了。"
+          },
+          {
+            "text": "Goodbye, see you tomorrow.",
+            "feedback": "这是告别，还没有道谢。"
+          }
+        ],
+        "explanation": "Thanks for your help. 是谢谢你的帮助。"
+      },
+      "forms": [
+        "thank"
+      ],
+      "coaching": {
+        "tip": "别人帮助你之后可以说 thanks。thanks for 后面说明感谢什么，例如 your help（你的帮助）。",
+        "prompt": "想起一次别人帮助你的时候，试着读 Thanks for your help.（谢谢你的帮助。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "Thanks",
+          "meaning": "谢谢"
+        },
+        {
+          "text": "for your help.",
+          "meaning": "你的帮助。"
+        }
+      ],
+      "formNotes": {
+        "thank": {
+          "explanation": "thank 可以用来表示感谢，常用的 Thanks! 也表示“谢谢”。",
+          "example": "Thank you.",
+          "translation": "谢谢你。"
+        }
       }
     },
     {
@@ -59,9 +181,34 @@
       "example": "Yes, I can help.",
       "translation": "是的，我可以帮忙。",
       "context": {
-        "question": "哪句话正确使用了 yes？",
-        "answer": "Yes, I can help."
-      }
+        "question": "朋友问你能否帮忙，你愿意而且能够帮忙。怎么回答？",
+        "answer": "Yes, I can help.",
+        "distractors": [
+          {
+            "text": "No, I cannot help.",
+            "feedback": "这表示不能帮忙。"
+          },
+          {
+            "text": "Can you help me?",
+            "feedback": "这变成了你向对方求助。"
+          }
+        ],
+        "explanation": "yes 表示肯定；I can help 是我可以帮忙。"
+      },
+      "coaching": {
+        "tip": "yes 常用来表示肯定。回答别人能否帮忙时，还可以接 I can help（我能帮忙）。",
+        "prompt": "朋友问你能否帮忙，你愿意。试着说 Yes, I can help.（可以，我能帮忙。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "Yes,",
+          "meaning": "是的，"
+        },
+        {
+          "text": "I can help.",
+          "meaning": "我能帮忙。"
+        }
+      ]
     },
     {
       "id": "no",
@@ -71,9 +218,38 @@
       "example": "No, this is not my bag.",
       "translation": "不，这不是我的包。",
       "context": {
-        "question": "哪句话正确使用了 no？",
-        "answer": "No, this is not my bag."
-      }
+        "question": "同学指着一个不是你的包，问是不是你的。你怎么回答？",
+        "answer": "No, this is not my bag.",
+        "distractors": [
+          {
+            "text": "Yes, this is my bag.",
+            "feedback": "这会把包说成是你的。"
+          },
+          {
+            "text": "No, this is my book.",
+            "feedback": "对方问的是包，不是书。"
+          }
+        ],
+        "explanation": "no 表示否定；not my bag 表示不是我的包。"
+      },
+      "coaching": {
+        "tip": "no 可以表示否定。例句中的 not my bag 表示“不是我的包”。",
+        "prompt": "有人拿错了包。试着读 No, this is not my bag.（不，这不是我的包。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "No,",
+          "meaning": "不，"
+        },
+        {
+          "text": "this is not",
+          "meaning": "这不是"
+        },
+        {
+          "text": "my bag.",
+          "meaning": "我的包。"
+        }
+      ]
     },
     {
       "id": "friend",
@@ -83,8 +259,43 @@
       "example": "You are my friend.",
       "translation": "你是我的朋友。",
       "context": {
-        "question": "哪句话正确使用了 friend？",
-        "answer": "You are my friend."
+        "question": "你想对一起玩的伙伴说“你是我的朋友”。选哪一句？",
+        "answer": "You are my friend.",
+        "distractors": [
+          {
+            "text": "You are my teacher.",
+            "feedback": "teacher 是老师。"
+          },
+          {
+            "text": "I am your friend.",
+            "feedback": "这句是我是你的朋友；题目想表达你是我的朋友。"
+          }
+        ],
+        "explanation": "You are my friend. 中 you 是你，my friend 是我的朋友。"
+      },
+      "forms": [
+        "friends"
+      ],
+      "coaching": {
+        "tip": "a friend 是“一位朋友”，my friend 是“我的朋友”。一位朋友用 friend，多位朋友用 friends。",
+        "prompt": "想一位朋友，试着对他说 You are my friend.（你是我的朋友。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "You are",
+          "meaning": "你是"
+        },
+        {
+          "text": "my friend.",
+          "meaning": "我的朋友。"
+        }
+      ],
+      "formNotes": {
+        "friends": {
+          "explanation": "friend 可以说一位朋友；friends 可以说不止一位朋友。",
+          "example": "two friends",
+          "translation": "两位朋友。"
+        }
       }
     },
     {
@@ -95,8 +306,43 @@
       "example": "I love my family.",
       "translation": "我爱我的家人。",
       "context": {
-        "question": "哪句话正确使用了 family？",
-        "answer": "I love my family."
+        "question": "你想表达“我爱我的家人”。选哪一句？",
+        "answer": "I love my family.",
+        "distractors": [
+          {
+            "text": "I love my teacher.",
+            "feedback": "teacher 是老师。"
+          },
+          {
+            "text": "My family loves me.",
+            "feedback": "这句是我的家人爱我；题目是我爱家人。"
+          }
+        ],
+        "explanation": "family 可以指家人；I love my family 是我爱我的家人。"
+      },
+      "forms": [
+        "families"
+      ],
+      "coaching": {
+        "tip": "family 指家人或家庭。my family 是“我的家人”；home 更常指回去、居住的家。",
+        "prompt": "试着读 I love my family.（我爱我的家人。）想想你想对谁说这句话。"
+      },
+      "exampleChunks": [
+        {
+          "text": "I love",
+          "meaning": "我爱"
+        },
+        {
+          "text": "my family.",
+          "meaning": "我的家人。"
+        }
+      ],
+      "formNotes": {
+        "families": {
+          "explanation": "family 可以说一个家庭；families 可以说不止一个家庭。",
+          "example": "two families",
+          "translation": "两个家庭。"
+        }
       }
     },
     {
@@ -107,9 +353,54 @@
       "example": "My mother is at home.",
       "translation": "我的妈妈在家。",
       "context": {
-        "question": "哪句话正确使用了 mother？",
-        "answer": "My mother is at home."
-      }
+        "question": "妈妈在家，爸爸在学校。你想告诉朋友妈妈在哪里。选哪一句？",
+        "answer": "My mother is at home.",
+        "distractors": [
+          {
+            "text": "My father is at home.",
+            "feedback": "father 是爸爸。"
+          },
+          {
+            "text": "My mother is at school.",
+            "feedback": "妈妈在家，不是在学校。"
+          }
+        ],
+        "explanation": "mother 是妈妈；at home 表示在家。"
+      },
+      "forms": [
+        "mothers"
+      ],
+      "coaching": {
+        "tip": "my mother 是“我的妈妈”。例句中的 at home 表示“在家”。",
+        "prompt": "想介绍妈妈在哪里？先读 My mother is at home.（我妈妈在家。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "My mother",
+          "meaning": "我的妈妈"
+        },
+        {
+          "text": "is at home.",
+          "meaning": "在家。"
+        }
+      ],
+      "formNotes": {
+        "mothers": {
+          "explanation": "mother 可以说一位妈妈；mothers 可以说不止一位妈妈。",
+          "example": "two mothers",
+          "translation": "两位妈妈。"
+        }
+      },
+      "spellingAlternatives": [
+        {
+          "text": "mom",
+          "explanation": "mom 是“妈妈”的日常称呼，常见于美式英语。"
+        },
+        {
+          "text": "mum",
+          "explanation": "mum 是“妈妈”的日常称呼，常见于英式英语。"
+        }
+      ]
     },
     {
       "id": "father",
@@ -119,9 +410,50 @@
       "example": "My father likes trees.",
       "translation": "我的爸爸喜欢树。",
       "context": {
-        "question": "哪句话正确使用了 father？",
-        "answer": "My father likes trees."
-      }
+        "question": "你想介绍爸爸的爱好：爸爸喜欢树。选哪一句？",
+        "answer": "My father likes trees.",
+        "distractors": [
+          {
+            "text": "My mother likes trees.",
+            "feedback": "mother 是妈妈。"
+          },
+          {
+            "text": "My father likes books.",
+            "feedback": "books 是书，题目说的是树。"
+          }
+        ],
+        "explanation": "father 是爸爸；likes trees 表示喜欢树。"
+      },
+      "forms": [
+        "fathers"
+      ],
+      "coaching": {
+        "tip": "my father 是“我的爸爸”。例句中的 likes trees 表示“喜欢树”。",
+        "prompt": "试着读 My father likes trees.（我爸爸喜欢树。）再想想爸爸喜欢什么。"
+      },
+      "exampleChunks": [
+        {
+          "text": "My father",
+          "meaning": "我的爸爸"
+        },
+        {
+          "text": "likes trees.",
+          "meaning": "喜欢树。"
+        }
+      ],
+      "formNotes": {
+        "fathers": {
+          "explanation": "father 可以说一位爸爸；fathers 可以说不止一位爸爸。",
+          "example": "two fathers",
+          "translation": "两位爸爸。"
+        }
+      },
+      "spellingAlternatives": [
+        {
+          "text": "dad",
+          "explanation": "dad 是“爸爸”的日常称呼。"
+        }
+      ]
     },
     {
       "id": "child",
@@ -131,20 +463,96 @@
       "example": "The child is happy.",
       "translation": "这个孩子很开心。",
       "context": {
-        "question": "哪句话正确使用了 child？",
-        "answer": "The child is happy."
-      }
+        "question": "你看见一个开心的小孩，想描述他。哪句话符合？",
+        "answer": "The child is happy.",
+        "distractors": [
+          {
+            "text": "The teacher is happy.",
+            "feedback": "teacher 是老师，不是小孩。"
+          },
+          {
+            "text": "The child is sad.",
+            "feedback": "sad 是伤心的，和开心不同。"
+          }
+        ],
+        "explanation": "child 是小孩；happy 是开心的。"
+      },
+      "forms": [
+        "children"
+      ],
+      "coaching": {
+        "tip": "child 指一个孩子；多个孩子用 children，不是 childs。先记住 a child（一名孩子）。",
+        "prompt": "试着读 The child is happy.（这个孩子很开心。）想象一个开心的孩子。"
+      },
+      "exampleChunks": [
+        {
+          "text": "The child",
+          "meaning": "这个孩子"
+        },
+        {
+          "text": "is happy.",
+          "meaning": "很开心。"
+        }
+      ],
+      "formNotes": {
+        "children": {
+          "explanation": "child 可以说一个孩子；children 可以说不止一个孩子。",
+          "example": "two children",
+          "translation": "两个孩子。"
+        }
+      },
+      "spellingAlternatives": [
+        {
+          "text": "kid",
+          "explanation": "kid 在日常口语中也可以表示“孩子”。"
+        }
+      ]
     },
     {
       "id": "teacher",
       "text": "teacher",
       "pronunciation": "/ˈtiːtʃə/",
       "meaning": "老师",
-      "example": "The teacher reads a book.",
-      "translation": "老师在读书。",
+      "example": "My teacher helps me.",
+      "translation": "我的老师帮助我。",
       "context": {
-        "question": "哪句话正确使用了 teacher？",
-        "answer": "The teacher reads a book."
+        "question": "老师常常帮助你。你想告诉朋友“我的老师帮助我”。选哪一句？",
+        "answer": "My teacher helps me.",
+        "distractors": [
+          {
+            "text": "My friend helps me.",
+            "feedback": "friend 是朋友，题目要说的是老师。"
+          },
+          {
+            "text": "I help my teacher.",
+            "feedback": "这表示我帮助老师；题目想说老师帮助我。"
+          }
+        ],
+        "explanation": "teacher 是老师；My teacher helps me. 表示我的老师帮助我，帮助的人是老师。"
+      },
+      "forms": [
+        "teachers"
+      ],
+      "coaching": {
+        "tip": "my teacher 是“我的老师”。My teacher helps me. 表示“我的老师帮助我”，me 指得到帮助的我。",
+        "prompt": "老师常常帮助你，试着说 My teacher helps me.（我的老师帮助我。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "My teacher",
+          "meaning": "我的老师"
+        },
+        {
+          "text": "helps me.",
+          "meaning": "帮助我。"
+        }
+      ],
+      "formNotes": {
+        "teachers": {
+          "explanation": "teacher 可以说一位老师；teachers 可以说不止一位老师。",
+          "example": "two teachers",
+          "translation": "两位老师。"
+        }
       }
     },
     {
@@ -155,8 +563,43 @@
       "example": "The sun is bright.",
       "translation": "太阳很明亮。",
       "context": {
-        "question": "哪句话正确使用了 sun？",
-        "answer": "The sun is bright."
+        "question": "白天太阳明亮，你想描述太阳。哪句话符合？",
+        "answer": "The sun is bright.",
+        "distractors": [
+          {
+            "text": "The moon is bright.",
+            "feedback": "moon 是月亮。"
+          },
+          {
+            "text": "The sun is dark.",
+            "feedback": "dark 是暗的，和明亮相反。"
+          }
+        ],
+        "explanation": "sun 是太阳；bright 表示明亮。"
+      },
+      "forms": [
+        "suns"
+      ],
+      "coaching": {
+        "tip": "谈天空中的太阳时，常说 the sun。bright 表示“明亮的”。",
+        "prompt": "想象晴朗的天空，试着读 The sun is bright.（太阳很明亮。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "The sun",
+          "meaning": "太阳"
+        },
+        {
+          "text": "is bright.",
+          "meaning": "很明亮。"
+        }
+      ],
+      "formNotes": {
+        "suns": {
+          "explanation": "sun 可以说一个太阳；suns 可以说不止一个太阳。",
+          "example": "two suns",
+          "translation": "两个太阳。"
+        }
       }
     },
     {
@@ -167,8 +610,43 @@
       "example": "I can see the moon.",
       "translation": "我能看见月亮。",
       "context": {
-        "question": "哪句话正确使用了 moon？",
-        "answer": "I can see the moon."
+        "question": "夜晚你看到了月亮，想告诉朋友。选哪一句？",
+        "answer": "I can see the moon.",
+        "distractors": [
+          {
+            "text": "I can see the sun.",
+            "feedback": "sun 是太阳。"
+          },
+          {
+            "text": "I cannot see the moon.",
+            "feedback": "cannot see 是看不见，而你已经看见了。"
+          }
+        ],
+        "explanation": "moon 是月亮；I can see 是我能看见。"
+      },
+      "forms": [
+        "moons"
+      ],
+      "coaching": {
+        "tip": "谈天空中的月亮时，常说 the moon。I can see 表示“我能看见”。",
+        "prompt": "想象你看见了月亮，试着读 I can see the moon.（我能看见月亮。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "I can see",
+          "meaning": "我能看见"
+        },
+        {
+          "text": "the moon.",
+          "meaning": "月亮。"
+        }
+      ],
+      "formNotes": {
+        "moons": {
+          "explanation": "moon 可以说一个月亮；moons 可以说不止一个月亮。",
+          "example": "two moons",
+          "translation": "两个月亮。"
+        }
       }
     },
     {
@@ -179,9 +657,34 @@
       "example": "I drink water.",
       "translation": "我喝水。",
       "context": {
-        "question": "哪句话正确使用了 water？",
-        "answer": "I drink water."
-      }
+        "question": "朋友问你平时喝什么。你想说“我喝水”。选哪一句？",
+        "answer": "I drink water.",
+        "distractors": [
+          {
+            "text": "I drink milk.",
+            "feedback": "milk 是牛奶。"
+          },
+          {
+            "text": "I see water.",
+            "feedback": "see 是看见，不是喝。"
+          }
+        ],
+        "explanation": "water 是水；drink 是喝。"
+      },
+      "coaching": {
+        "tip": "water 表示水。drink water 是“喝水”；想要一些水可以说 some water。",
+        "prompt": "运动后想喝水，试着读 I want some water.（我想要一些水。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "I",
+          "meaning": "我"
+        },
+        {
+          "text": "drink water.",
+          "meaning": "喝水。"
+        }
+      ]
     },
     {
       "id": "tree",
@@ -191,8 +694,43 @@
       "example": "A bird is in the tree.",
       "translation": "一只鸟在树上。",
       "context": {
-        "question": "哪句话正确使用了 tree？",
-        "answer": "A bird is in the tree."
+        "question": "一只鸟停在树上。你会怎样描述？",
+        "answer": "A bird is in the tree.",
+        "distractors": [
+          {
+            "text": "A bird is in the house.",
+            "feedback": "house 是房子，鸟在树上。"
+          },
+          {
+            "text": "A cat is in the tree.",
+            "feedback": "cat 是猫，这里是一只鸟。"
+          }
+        ],
+        "explanation": "tree 是树；a bird in the tree 是树上的一只鸟。"
+      },
+      "forms": [
+        "trees"
+      ],
+      "coaching": {
+        "tip": "一棵树可以说 a tree。例句中鸟在树上，用 in the tree。",
+        "prompt": "想象树上有只鸟，试着读 A bird is in the tree.（树上有一只鸟。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "A bird",
+          "meaning": "一只鸟"
+        },
+        {
+          "text": "is in the tree.",
+          "meaning": "在树上。"
+        }
+      ],
+      "formNotes": {
+        "trees": {
+          "explanation": "tree 可以说一棵树；trees 可以说不止一棵树。",
+          "example": "two trees",
+          "translation": "两棵树。"
+        }
       }
     },
     {
@@ -203,9 +741,34 @@
       "example": "The rain helps trees grow.",
       "translation": "雨帮助树木生长。",
       "context": {
-        "question": "哪句话正确使用了 rain？",
-        "answer": "The rain helps trees grow."
-      }
+        "question": "雨水让树得到水分、继续生长。哪句话表达这个意思？",
+        "answer": "The rain helps trees grow.",
+        "distractors": [
+          {
+            "text": "The rain stops trees growing.",
+            "feedback": "stops 表示阻止，这里雨水是在帮助生长。"
+          },
+          {
+            "text": "The sun helps trees grow.",
+            "feedback": "sun 是太阳，这里要说的是雨水。"
+          }
+        ],
+        "explanation": "rain 是雨；helps trees grow 表示帮助树生长。"
+      },
+      "coaching": {
+        "tip": "rain 可以表示雨。例句中的 helps trees grow 表示“帮助树木生长”。",
+        "prompt": "想象雨水落在树上，慢慢读一遍例句，留意 rain 这个词。"
+      },
+      "exampleChunks": [
+        {
+          "text": "The rain",
+          "meaning": "雨水"
+        },
+        {
+          "text": "helps trees grow.",
+          "meaning": "帮助树木生长。"
+        }
+      ]
     },
     {
       "id": "flower",
@@ -215,8 +778,43 @@
       "example": "This flower is yellow.",
       "translation": "这朵花是黄色的。",
       "context": {
-        "question": "哪句话正确使用了 flower？",
-        "answer": "This flower is yellow."
+        "question": "你指着一朵黄色的花介绍它。选哪一句？",
+        "answer": "This flower is yellow.",
+        "distractors": [
+          {
+            "text": "This flower is red.",
+            "feedback": "red 是红色，不是黄色。"
+          },
+          {
+            "text": "This tree is yellow.",
+            "feedback": "tree 是树，不是花。"
+          }
+        ],
+        "explanation": "flower 是花；yellow 是黄色。"
+      },
+      "forms": [
+        "flowers"
+      ],
+      "coaching": {
+        "tip": "a flower 是“一朵花”，this flower 是“这朵花”。yellow 表示黄色。",
+        "prompt": "想象一朵黄花，试着读 This flower is yellow.（这朵花是黄色的。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "This flower",
+          "meaning": "这朵花"
+        },
+        {
+          "text": "is yellow.",
+          "meaning": "是黄色的。"
+        }
+      ],
+      "formNotes": {
+        "flowers": {
+          "explanation": "flower 可以说一朵花；flowers 可以说不止一朵花。",
+          "example": "two flowers",
+          "translation": "两朵花。"
+        }
       }
     },
     {
@@ -224,11 +822,46 @@
       "text": "book",
       "pronunciation": "/bʊk/",
       "meaning": "书",
-      "example": "I read a book.",
-      "translation": "我读一本书。",
+      "example": "This is my book.",
+      "translation": "这是我的书。",
       "context": {
-        "question": "哪句话正确使用了 book？",
-        "answer": "I read a book."
+        "question": "你拿着自己的书，想告诉朋友“这是我的书”。选哪一句？",
+        "answer": "This is my book.",
+        "distractors": [
+          {
+            "text": "This is my door.",
+            "feedback": "door 是门，这里要介绍书。"
+          },
+          {
+            "text": "This is your book.",
+            "feedback": "your book 是你的书；介绍自己的书要用 my book。"
+          }
+        ],
+        "explanation": "book 是书，my book 是我的书；This is my book. 表示这是我的书。"
+      },
+      "forms": [
+        "books"
+      ],
+      "coaching": {
+        "tip": "a book 是“一本书”，my book 是“我的书”。介绍自己的书可以说 This is my book.",
+        "prompt": "向朋友介绍你自己的书，试着说 This is my book.（这是我的书。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "This is",
+          "meaning": "这是"
+        },
+        {
+          "text": "my book.",
+          "meaning": "我的书。"
+        }
+      ],
+      "formNotes": {
+        "books": {
+          "explanation": "book 可以说一本书；books 可以说不止一本书。",
+          "example": "two books",
+          "translation": "两本书。"
+        }
       }
     },
     {
@@ -239,8 +872,43 @@
       "example": "The door is open.",
       "translation": "门开着。",
       "context": {
-        "question": "哪句话正确使用了 door？",
-        "answer": "The door is open."
+        "question": "门现在开着，你想告诉同伴这个状态。选哪一句？",
+        "answer": "The door is open.",
+        "distractors": [
+          {
+            "text": "The door is closed.",
+            "feedback": "closed 是关着，和开着相反。"
+          },
+          {
+            "text": "Please open the door.",
+            "feedback": "这是请别人开门，不是描述门已经开着。"
+          }
+        ],
+        "explanation": "The door is open. 描述门开着的状态。"
+      },
+      "forms": [
+        "doors"
+      ],
+      "coaching": {
+        "tip": "door 表示门。The door is open 描述“门开着”；Open the door 是请人开门。",
+        "prompt": "先想象门已经开着，再读 The door is open.（门开着。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "The door",
+          "meaning": "门"
+        },
+        {
+          "text": "is open.",
+          "meaning": "开着。"
+        }
+      ],
+      "formNotes": {
+        "doors": {
+          "explanation": "door 可以说一扇门；doors 可以说不止一扇门。",
+          "example": "two doors",
+          "translation": "两扇门。"
+        }
       }
     },
     {
@@ -251,8 +919,43 @@
       "example": "Let us go home.",
       "translation": "我们回家吧。",
       "context": {
-        "question": "哪句话正确使用了 home？",
-        "answer": "Let us go home."
+        "question": "放学后，你想邀请同伴一起回家。选哪一句？",
+        "answer": "Let us go home.",
+        "distractors": [
+          {
+            "text": "Let us go to school.",
+            "feedback": "school 是学校，这里想回家。"
+          },
+          {
+            "text": "Let us stay here.",
+            "feedback": "stay here 是留在这里。"
+          }
+        ],
+        "explanation": "home 是家；go home 是回家，前面不加 to。"
+      },
+      "forms": [
+        "homes"
+      ],
+      "coaching": {
+        "tip": "go home 表示“回家”，这里 home 前面不用加 to。at home 表示“在家”。",
+        "prompt": "准备一起回家时，试着读 Let us go home.（我们回家吧。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "Let us",
+          "meaning": "我们一起"
+        },
+        {
+          "text": "go home.",
+          "meaning": "回家吧。"
+        }
+      ],
+      "formNotes": {
+        "homes": {
+          "explanation": "home 可以说一个家；homes 可以说不止一个家。",
+          "example": "two homes",
+          "translation": "两个家。"
+        }
       }
     },
     {
@@ -263,8 +966,55 @@
       "example": "Can you help me, please?",
       "translation": "你可以帮帮我吗？",
       "context": {
-        "question": "哪句话正确使用了 help？",
-        "answer": "Can you help me, please?"
+        "question": "你搬不动箱子，想礼貌地向别人求助。选哪一句？",
+        "answer": "Can you help me, please?",
+        "distractors": [
+          {
+            "text": "I can help you.",
+            "feedback": "这表示你可以帮助对方，方向反了。"
+          },
+          {
+            "text": "Thanks for your help.",
+            "feedback": "这是感谢已经得到的帮助，还不是请求。"
+          }
+        ],
+        "explanation": "Can you help me, please? 是请问你能帮我吗。"
+      },
+      "forms": [
+        "helps",
+        "helped",
+        "helping"
+      ],
+      "coaching": {
+        "tip": "help me 表示“帮我”。Can you help me, please? 是礼貌请求帮助。遇到危险求救时也可以直接喊 Help!",
+        "prompt": "需要别人帮忙时，试着读一遍例句。留意 me 表示要帮助的人是“我”。"
+      },
+      "exampleChunks": [
+        {
+          "text": "Can you help me,",
+          "meaning": "你能帮我吗，"
+        },
+        {
+          "text": "please?",
+          "meaning": "请（让请求更礼貌）。"
+        }
+      ],
+      "formNotes": {
+        "helps": {
+          "explanation": "helps 是 help 的一种词形。",
+          "example": "He helps me.",
+          "translation": "他帮助我。"
+        },
+        "helped": {
+          "explanation": "helped 是 help 的一种词形。",
+          "example": "He helped me yesterday.",
+          "translation": "他昨天帮助了我。"
+        },
+        "helping": {
+          "explanation": "helping 是 help 的一种词形。",
+          "example": "He is helping me.",
+          "translation": "他正在帮助我。"
+        }
       }
     },
     {
@@ -275,8 +1025,55 @@
       "example": "Please open the window.",
       "translation": "请打开窗户。",
       "context": {
-        "question": "哪句话正确使用了 open？",
-        "answer": "Please open the window."
+        "question": "屋里闷，你想请朋友打开窗户。选哪一句？",
+        "answer": "Please open the window.",
+        "distractors": [
+          {
+            "text": "Please close the window.",
+            "feedback": "close 是关上。"
+          },
+          {
+            "text": "Please open the door.",
+            "feedback": "door 是门，这里要开窗户。"
+          }
+        ],
+        "explanation": "open 是打开；window 是窗户。"
+      },
+      "forms": [
+        "opens",
+        "opened",
+        "opening"
+      ],
+      "coaching": {
+        "tip": "open 可以表示“打开”这个动作。open the window 是“打开窗户”，open the door 是“打开门”。",
+        "prompt": "请人开窗时，试着读 Please open the window.（请打开窗户。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "Please",
+          "meaning": "请"
+        },
+        {
+          "text": "open the window.",
+          "meaning": "打开窗户。"
+        }
+      ],
+      "formNotes": {
+        "opens": {
+          "explanation": "opens 是 open 的一种词形。",
+          "example": "He opens the door.",
+          "translation": "他开门。"
+        },
+        "opened": {
+          "explanation": "opened 是 open 的一种词形。",
+          "example": "He opened the door yesterday.",
+          "translation": "他昨天开门了。"
+        },
+        "opening": {
+          "explanation": "opening 是 open 的一种词形。",
+          "example": "He is opening the door.",
+          "translation": "他正在开门。"
+        }
       }
     },
     {
@@ -287,8 +1084,55 @@
       "example": "Look at the sky.",
       "translation": "看一看天空。",
       "context": {
-        "question": "哪句话正确使用了 look？",
-        "answer": "Look at the sky."
+        "question": "天空出现彩虹，你想让朋友抬头看。选哪一句？",
+        "answer": "Look at the sky.",
+        "distractors": [
+          {
+            "text": "Listen to the sky.",
+            "feedback": "listen 是用耳朵听，这里想让朋友看。"
+          },
+          {
+            "text": "Look at the book.",
+            "feedback": "book 是书，不是天空。"
+          }
+        ],
+        "explanation": "look at 表示看向；sky 是天空。"
+      },
+      "forms": [
+        "looks",
+        "looked",
+        "looking"
+      ],
+      "coaching": {
+        "tip": "请别人看某个东西，常说 look at。look at the sky 表示“看天空”。",
+        "prompt": "想请朋友看天空，试着说 Look at the sky.（看天空。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "Look at",
+          "meaning": "看"
+        },
+        {
+          "text": "the sky.",
+          "meaning": "天空。"
+        }
+      ],
+      "formNotes": {
+        "looks": {
+          "explanation": "looks 是 look 的一种词形。",
+          "example": "He looks at the tree.",
+          "translation": "他看那棵树。"
+        },
+        "looked": {
+          "explanation": "looked 是 look 的一种词形。",
+          "example": "He looked at the tree yesterday.",
+          "translation": "他昨天看了那棵树。"
+        },
+        "looking": {
+          "explanation": "looking 是 look 的一种词形。",
+          "example": "He is looking at the tree.",
+          "translation": "他正在看那棵树。"
+        }
       }
     },
     {
@@ -299,8 +1143,55 @@
       "example": "Listen to the birds.",
       "translation": "听听鸟儿的声音。",
       "context": {
-        "question": "哪句话正确使用了 listen？",
-        "answer": "Listen to the birds."
+        "question": "树上传来鸟叫，你想让大家仔细听。选哪一句？",
+        "answer": "Listen to the birds.",
+        "distractors": [
+          {
+            "text": "Look at the birds.",
+            "feedback": "look at 是看，这里要用耳朵听。"
+          },
+          {
+            "text": "Listen to the teacher.",
+            "feedback": "teacher 是老师，这里要听鸟叫。"
+          }
+        ],
+        "explanation": "listen to 表示听；birds 是鸟。"
+      },
+      "forms": [
+        "listens",
+        "listened",
+        "listening"
+      ],
+      "coaching": {
+        "tip": "听某个人或声音时，常说 listen to。listen to the birds 表示“听鸟叫”。",
+        "prompt": "闭上眼睛想象鸟叫声，再读 Listen to the birds.（听鸟叫。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "Listen to",
+          "meaning": "听"
+        },
+        {
+          "text": "the birds.",
+          "meaning": "鸟叫。"
+        }
+      ],
+      "formNotes": {
+        "listens": {
+          "explanation": "listens 是 listen 的一种词形。",
+          "example": "He listens to music.",
+          "translation": "他听音乐。"
+        },
+        "listened": {
+          "explanation": "listened 是 listen 的一种词形。",
+          "example": "He listened to music yesterday.",
+          "translation": "他昨天听了音乐。"
+        },
+        "listening": {
+          "explanation": "listening 是 listen 的一种词形。",
+          "example": "He is listening to music.",
+          "translation": "他正在听音乐。"
+        }
       }
     },
     {
@@ -311,8 +1202,55 @@
       "example": "We walk to school.",
       "translation": "我们走路去学校。",
       "context": {
-        "question": "哪句话正确使用了 walk？",
-        "answer": "We walk to school."
+        "question": "你和朋友平时都步行上学。哪句话描述了这个习惯？",
+        "answer": "We walk to school.",
+        "distractors": [
+          {
+            "text": "We run to school.",
+            "feedback": "run 是跑，不是步行。"
+          },
+          {
+            "text": "We walk home.",
+            "feedback": "home 是家；题目想说你们步行去学校。"
+          }
+        ],
+        "explanation": "walk 是步行；to school 表示去学校。"
+      },
+      "forms": [
+        "walks",
+        "walked",
+        "walking"
+      ],
+      "coaching": {
+        "tip": "walk 表示走路。walk to school 是“步行去学校”，不是乘车去。",
+        "prompt": "介绍自己和同学上学的方式，读 We walk to school.（我们步行上学。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "We",
+          "meaning": "我们"
+        },
+        {
+          "text": "walk to school.",
+          "meaning": "步行去学校。"
+        }
+      ],
+      "formNotes": {
+        "walks": {
+          "explanation": "walks 是 walk 的一种词形。",
+          "example": "He walks home.",
+          "translation": "他走回家。"
+        },
+        "walked": {
+          "explanation": "walked 是 walk 的一种词形。",
+          "example": "He walked home yesterday.",
+          "translation": "他昨天走回家了。"
+        },
+        "walking": {
+          "explanation": "walking 是 walk 的一种词形。",
+          "example": "He is walking home.",
+          "translation": "他正在走回家。"
+        }
       }
     },
     {
@@ -323,8 +1261,49 @@
       "example": "I like to read.",
       "translation": "我喜欢阅读。",
       "context": {
-        "question": "哪句话正确使用了 read？",
-        "answer": "I like to read."
+        "question": "你想说自己的爱好是阅读。选哪一句？",
+        "answer": "I like to read.",
+        "distractors": [
+          {
+            "text": "I like to write.",
+            "feedback": "write 是写。"
+          },
+          {
+            "text": "I do not like to read.",
+            "feedback": "do not like 表示不喜欢。"
+          }
+        ],
+        "explanation": "read 是读；I like to read 是我喜欢阅读。"
+      },
+      "forms": [
+        "reads",
+        "reading"
+      ],
+      "coaching": {
+        "tip": "read 表示阅读。read a book 是“读一本书”，I like to read 是“我喜欢阅读”。",
+        "prompt": "试着读 I like to read.（我喜欢阅读。）想想你喜欢读什么。"
+      },
+      "exampleChunks": [
+        {
+          "text": "I like",
+          "meaning": "我喜欢"
+        },
+        {
+          "text": "to read.",
+          "meaning": "阅读。"
+        }
+      ],
+      "formNotes": {
+        "reads": {
+          "explanation": "reads 是 read 的一种词形。",
+          "example": "He reads a book.",
+          "translation": "他读书。"
+        },
+        "reading": {
+          "explanation": "reading 是 read 的一种词形。",
+          "example": "He is reading a book.",
+          "translation": "他正在读书。"
+        }
       }
     },
     {
@@ -335,8 +1314,61 @@
       "example": "I write my name.",
       "translation": "我写下我的名字。",
       "context": {
-        "question": "哪句话正确使用了 write？",
-        "answer": "I write my name."
+        "question": "每次拿到练习本，你都会先写下自己的名字。哪句话描述了这个习惯？",
+        "answer": "I write my name.",
+        "distractors": [
+          {
+            "text": "I read my name.",
+            "feedback": "read 是读，不是写。"
+          },
+          {
+            "text": "I write your name.",
+            "feedback": "your name 是你的名字，这里是写自己的名字。"
+          }
+        ],
+        "explanation": "write 是写；my name 是我的名字。"
+      },
+      "forms": [
+        "writes",
+        "wrote",
+        "written",
+        "writing"
+      ],
+      "coaching": {
+        "tip": "write 表示写。write my name 是“写我的名字”，与 read（阅读）表示不同动作。",
+        "prompt": "介绍自己拿到新练习本后先做什么，试着读 I write my name.（我写下自己的名字。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "I write",
+          "meaning": "我写"
+        },
+        {
+          "text": "my name.",
+          "meaning": "我的名字。"
+        }
+      ],
+      "formNotes": {
+        "writes": {
+          "explanation": "writes 是 write 的一种词形。",
+          "example": "He writes a letter.",
+          "translation": "他写信。"
+        },
+        "wrote": {
+          "explanation": "wrote 用于说过去写了什么，",
+          "example": "I wrote a letter yesterday.",
+          "translation": "我昨天写了一封信。"
+        },
+        "written": {
+          "explanation": "written 常和 have 等词一起用，",
+          "example": "I have written a letter.",
+          "translation": "我已经写好了一封信。"
+        },
+        "writing": {
+          "explanation": "writing 是 write 的一种词形。",
+          "example": "He is writing a letter.",
+          "translation": "他正在写信。"
+        }
       }
     },
     {
@@ -347,8 +1379,55 @@
       "example": "Let us rest under the tree.",
       "translation": "我们在树下休息吧。",
       "context": {
-        "question": "哪句话正确使用了 rest？",
-        "answer": "Let us rest under the tree."
+        "question": "走累了，你想提议大家在树下休息。选哪一句？",
+        "answer": "Let us rest under the tree.",
+        "distractors": [
+          {
+            "text": "Let us walk under the tree.",
+            "feedback": "walk 是走路，还没有停下来休息。"
+          },
+          {
+            "text": "Let us rest in the house.",
+            "feedback": "house 是房子，这里想在树下休息。"
+          }
+        ],
+        "explanation": "rest 是休息；under the tree 是在树下。"
+      },
+      "forms": [
+        "rests",
+        "rested",
+        "resting"
+      ],
+      "coaching": {
+        "tip": "rest 可以表示休息。Let us rest 是邀请大家一起休息，不是让大家跑步。",
+        "prompt": "走累了想一起休息，试着说 Let us rest.（我们休息一下吧。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "Let us rest",
+          "meaning": "我们休息一下吧"
+        },
+        {
+          "text": "under the tree.",
+          "meaning": "在树下。"
+        }
+      ],
+      "formNotes": {
+        "rests": {
+          "explanation": "rests 是 rest 的一种词形。",
+          "example": "He rests.",
+          "translation": "他休息。"
+        },
+        "rested": {
+          "explanation": "rested 是 rest 的一种词形。",
+          "example": "He rested yesterday.",
+          "translation": "他昨天休息了。"
+        },
+        "resting": {
+          "explanation": "resting 是 rest 的一种词形。",
+          "example": "He is resting.",
+          "translation": "他正在休息。"
+        }
       }
     },
     {
@@ -359,8 +1438,49 @@
       "example": "I am happy today.",
       "translation": "我今天很开心。",
       "context": {
-        "question": "哪句话正确使用了 happy？",
-        "answer": "I am happy today."
+        "question": "今天过得开心，你想表达自己的心情。选哪一句？",
+        "answer": "I am happy today.",
+        "distractors": [
+          {
+            "text": "I am sad today.",
+            "feedback": "sad 是伤心的。"
+          },
+          {
+            "text": "You are happy today.",
+            "feedback": "you 是你，题目要表达自己的心情。"
+          }
+        ],
+        "explanation": "happy 是开心的；I am happy today 是我今天很开心。"
+      },
+      "forms": [
+        "happier",
+        "happiest"
+      ],
+      "coaching": {
+        "tip": "happy 描述开心的状态。说“我很开心”用 I am happy，记得中间的 am。",
+        "prompt": "想到一件开心的事，试着说 I am happy today.（我今天很开心。）"
+      },
+      "exampleChunks": [
+        {
+          "text": "I am happy",
+          "meaning": "我很开心"
+        },
+        {
+          "text": "today.",
+          "meaning": "今天。"
+        }
+      ],
+      "formNotes": {
+        "happier": {
+          "explanation": "happier 表示更开心，",
+          "example": "I feel happier today.",
+          "translation": "我今天感觉更开心。"
+        },
+        "happiest": {
+          "explanation": "happiest 表示最开心，",
+          "example": "This is my happiest day.",
+          "translation": "这是我最开心的一天。"
+        }
       }
     }
   ]

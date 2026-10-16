@@ -113,7 +113,7 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
                 return state.text.trim().slice(0,2000);
             }finally{await dispose(state);}
         },
-        async speak(text,locale,signal,character){
+        async speak(text,locale,signal,character,{playbackRate=1,onPlaying=null}={}){
             if(current)throw Error('请先结束录音');
             await cancel();
             const turn=epoch;
@@ -151,8 +151,14 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
                 if(turn!==epoch||signal.aborted)throw Error('对话已结束');
                 if(!result?.audioUrl)throw Error('朗读服务没有返回音频，请重试');
                 audio=new Audio(result.audioUrl);
+                // A listening aid applied to playback, so both speeds reuse the
+                // same synthesized audio and existing callers keep their speed.
+                audio.playbackRate=playbackRate===0.8?0.8:1;
+                audio.preservesPitch=true;
                 await deadline(new Promise((resolve,reject)=>{
-                    finishPlayback=resolve;audio.onended=resolve;
+                    let started=false,ended=false;
+                    finishPlayback=resolve;audio.onended=()=>{ended=true;resolve();};
+                    audio.onplaying=()=>{if(!started&&!ended&&turn===epoch&&!signal.aborted&&!request.signal.aborted){started=true;onPlaying?.();}};
                     audio.onerror=()=>reject(Error('朗读播放失败，请重试'));
                     audio.play().catch(reject);
                 }),60000,signal);

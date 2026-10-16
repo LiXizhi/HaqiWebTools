@@ -1,0 +1,183 @@
+[
+  {
+    "id": "listen-independent",
+    "language": "en",
+    "entryId": "listen",
+    "question": "我想请朋友注意听，只说 Listen! 可以吗？",
+    "checks": [
+      "承认 Listen! 可独立表示听或注意听",
+      "不强制添加 to 或虚构缺失对象",
+      "用简短中文解释适用场景，不额外布置练习"
+    ]
+  },
+  {
+    "id": "home-rule-scope",
+    "language": "en",
+    "entryId": "home",
+    "question": "go home 不加 to，那去学校也说 go school 吗？",
+    "checks": [
+      "给出 go to school 与 go home 的区别",
+      "不把 home 的用法推广到所有地点",
+      "用普通中文和短语解释，不依赖副词或介词等术语"
+    ]
+  },
+  {
+    "id": "happy-missing-am",
+    "language": "en",
+    "entryId": "happy",
+    "question": "我想说我很开心，写成 I happy. 对吗？请只教我改一个地方。",
+    "checks": [
+      "明确指出 I 后面缺少 am",
+      "给出 I am happy. 及中文",
+      "不一次引入多套时态规则"
+    ]
+  },
+  {
+    "id": "home-extra-to",
+    "language": "en",
+    "entryId": "home",
+    "question": "I go to home. 这句自然吗？",
+    "checks": [
+      "纠正为 I go home.",
+      "解释这里 home 前不加 to",
+      "不说所有地点前都不能加 to"
+    ]
+  },
+  {
+    "id": "listen-missing-to",
+    "language": "en",
+    "entryId": "listen",
+    "question": "我写 Listen the birds. 可以吗？",
+    "checks": [
+      "纠正为 Listen to the birds.",
+      "解释 listen to 搭配",
+      "给出简短中文解释"
+    ]
+  },
+  {
+    "id": "help-alone",
+    "language": "en",
+    "entryId": "help",
+    "question": "遇到危险时只喊 Help! 可以吗？",
+    "checks": [
+      "承认 Help! 可以独立用于求救",
+      "与日常礼貌请求区分",
+      "不机械要求所有表达都用 help me"
+    ]
+  },
+  {
+    "id": "child-plural",
+    "language": "en",
+    "entryId": "child",
+    "question": "两个孩子是 two childs 吗？",
+    "checks": [
+      "纠正为 two children",
+      "指出 child 的复数特殊",
+      "不扩展一长串无关不规则词",
+      "如给例句，应使用 children 巩固复数而不是退回单数 child"
+    ]
+  },
+  {
+    "id": "beginner-stuck",
+    "language": "en",
+    "entryId": "water",
+    "question": "我还是不会，别再让我自己造句了，给我一个能照着说的短句吧。",
+    "checks": [
+      "提供含 water 的短句和中文",
+      "提供可模仿的支架",
+      "不再次强迫独立造句",
+      "如引导朗读，指向“听这句”按钮而不是句子文字"
+    ]
+  },
+  {
+    "id": "mu-homophone",
+    "language": "zh",
+    "entryId": "mu",
+    "question": "木和目都读 mu，我怎么分清？",
+    "checks": [
+      "用木头/树木与眼睛/目光区别",
+      "明确读音相同但意义字形不同",
+      "不只重复一个字的释义"
+    ]
+  },
+  {
+    "id": "xiu-mnemonic",
+    "language": "zh",
+    "entryId": "xiu",
+    "question": "人在树边休息一定就是休字的历史来源吗？",
+    "checks": [
+      "依据所提供的教育部字典来源说明《说文》传统释形",
+      "区分传统释形与现代动画的创作情节",
+      "不把资料不足说成该解释没有历史依据"
+    ]
+  },
+  {
+    "id": "kou-strokes",
+    "language": "zh",
+    "entryId": "kou",
+    "question": "口有四条边，所以要写四笔，对吗？",
+    "checks": [
+      "说明三笔",
+      "说明横折是一笔",
+      "如解释横折方向，须说明先向右再向下，不能把右边的竖称为横",
+      "不声称看过用户未提供的书写轨迹"
+    ]
+  },
+  {
+    "id": "ri-sunset",
+    "language": "zh",
+    "entryId": "ri",
+    "question": "早上太阳升起，我说日落对吗？",
+    "checks": [
+      "区分日出和日落",
+      "纠正为日出",
+      "给出可重说的短句"
+    ]
+  },
+  {
+    "id": "spelling-submitted-omission",
+    "language": "en",
+    "entryId": "hello",
+    "question": "我哪里写错了？",
+    "practice": {
+      "phase": "recall",
+      "mode": "spell",
+      "errors": 1,
+      "lastAttempt": {
+        "kind": "spelling",
+        "text": "hllo!",
+        "correct": false
+      },
+      "lastFeedback": "第 2 个位置少了一个字母，其余字母的顺序是对的。",
+      "completed": false
+    },
+    "checks": [
+      "针对 hllo 的实际输入说明少了 e，不猜测其他错误",
+      "可给 hello 作为改法，但不宣称题目已通过或发奖",
+      "不机械追加造句任务"
+    ]
+  },
+  {
+    "id": "spelling-correction-accepted",
+    "language": "en",
+    "entryId": "hello",
+    "question": "现在对了吗？",
+    "practice": {
+      "phase": "recall",
+      "mode": "spell",
+      "errors": 1,
+      "lastAttempt": {
+        "kind": "spelling",
+        "text": "Hello!",
+        "correct": true
+      },
+      "lastFeedback": "",
+      "completed": true
+    },
+    "checks": [
+      "确认这次拼写已正确，不把历史错误次数当成当前仍错误",
+      "不因大小写和句末感叹号再次纠错",
+      "不宣称长期记忆已经掌握或额外发奖"
+    ]
+  }
+]

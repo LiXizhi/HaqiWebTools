@@ -142,8 +142,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“日”？",
-        "answer": "日出的时候，我们出发。"
+        "question": "天刚亮，太阳从远处慢慢升起。你看到了什么？",
+        "answer": "我看到了日出。",
+        "distractors": [
+          {
+            "text": "我看到了日落。",
+            "feedback": "日落是太阳落下去，这里是升起来。"
+          },
+          {
+            "text": "我看到了月亮。",
+            "feedback": "月亮不是这里正在升起的太阳。"
+          }
+        ],
+        "explanation": "“日”可以表示太阳，太阳升起叫日出。"
+      },
+      "coaching": {
+        "tip": "“日”可以表示太阳，也可以表示一天。“日出”是太阳升起，“日落”是太阳落下。看字形时留意里面的一横，和“目”比较。",
+        "prompt": "早上太阳升起来了。试着说一句带“日出”的话。"
       }
     },
     {
@@ -293,8 +308,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“月”？",
-        "answer": "月亮照着小路。"
+        "question": "夜晚，一轮弯弯的月亮挂在空中。哪句话符合？",
+        "answer": "月亮弯弯的。",
+        "distractors": [
+          {
+            "text": "太阳弯弯的。",
+            "feedback": "题目看到的是月亮，不是太阳。"
+          },
+          {
+            "text": "月亮圆圆的。",
+            "feedback": "这里的月亮是弯的，不是圆的。"
+          }
+        ],
+        "explanation": "“月”可以指月亮。月亮看起来有时弯，有时圆。"
+      },
+      "coaching": {
+        "tip": "“月”在“月亮”中指天上的月亮，在“一月、二月”中表示月份。相同的字放进不同词里，用法会变化。",
+        "prompt": "你见过什么样的月亮？试着说“月亮像……”。"
       }
     },
     {
@@ -401,8 +431,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“山”？",
-        "answer": "山在河的另一边。"
+        "question": "河对岸有一座高高的山。怎样告诉朋友它在哪里？",
+        "answer": "山在河的另一边。",
+        "distractors": [
+          {
+            "text": "山在河的这一边。",
+            "feedback": "“这一边”是你所在的河岸。"
+          },
+          {
+            "text": "河在山顶上。",
+            "feedback": "这句话改变了河与山的位置。"
+          }
+        ],
+        "explanation": "“山”指地面隆起的高地；另一边表示对岸。"
+      },
+      "coaching": {
+        "tip": "可以把“山”的字形联想成高低不同的山峰，这是记忆方法。读“大山”时，想想远处山峰的样子。",
+        "prompt": "闭上眼睛想一座山，再用“大山”说一句话。"
       }
     },
     {
@@ -568,8 +613,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“水”？",
-        "answer": "我给小树浇水。"
+        "question": "小花的泥土很干，你想帮它补充水分。该怎么说？",
+        "answer": "我给小花浇水。",
+        "distractors": [
+          {
+            "text": "我给小花遮光。",
+            "feedback": "遮光不等于给干土补水。"
+          },
+          {
+            "text": "我给小花换盆。",
+            "feedback": "换盆没有表达给它补水。"
+          }
+        ],
+        "explanation": "“水”是浇花用的水。浇水能让土壤得到水分。"
+      },
+      "coaching": {
+        "tip": "“河水、雨水、喝水”里都有“水”。认字时可以想流动的水，写字时仍按笔顺逐笔来。",
+        "prompt": "小树渴了，你会做什么？试着用“浇水”说一句话。"
       }
     },
     {
@@ -707,8 +767,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“火”？",
-        "answer": "小心，火很烫。"
+        "question": "炉子里有火，你想提醒同伴别碰。哪句话合适？",
+        "answer": "小心，火很烫。",
+        "distractors": [
+          {
+            "text": "小心，水很冰。",
+            "feedback": "这里要提醒的是火，不是冰水。"
+          },
+          {
+            "text": "火已经灭了。",
+            "feedback": "这里仍有火，不能说已经灭了。"
+          }
+        ],
+        "explanation": "“火”指燃烧时的火焰。看见火要注意保持距离。"
+      },
+      "coaching": {
+        "tip": "“火苗”指小小的火焰。“火”可以让人想到亮光和热，这是一种生活联想。",
+        "prompt": "看见火苗时，怎样提醒身边的人？试着读“小心，火很烫。”"
       }
     },
     {
@@ -834,8 +909,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“木”？",
-        "answer": "这里有一块木头。"
+        "question": "桌上放着一块木头。你想介绍它是什么材料。选哪句？",
+        "answer": "这是一块木头。",
+        "distractors": [
+          {
+            "text": "这是一块石头。",
+            "feedback": "石头和木头是不同材料。"
+          },
+          {
+            "text": "这是一张纸。",
+            "feedback": "题目说的是一块木头，不是一张纸。"
+          }
+        ],
+        "explanation": "“木”可以表示树木，也可以表示木材。"
+      },
+      "coaching": {
+        "tip": "“木”在“树木、木头”里都很常见。它和“目”读音一样，但“目”与眼睛有关；看词语就更容易分清。",
+        "prompt": "桌子是用什么做的？试着说一句带“木头”的话。"
       }
     },
     {
@@ -992,8 +1082,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“石”？",
-        "answer": "这块石头很圆。"
+        "question": "你在路边捡到一颗圆圆的石子。哪句话符合？",
+        "answer": "这块石头很圆。",
+        "distractors": [
+          {
+            "text": "这块木头很圆。",
+            "feedback": "木头是另一种材料。"
+          },
+          {
+            "text": "这块石头很方。",
+            "feedback": "题目说石子是圆的，不是方的。"
+          }
+        ],
+        "explanation": "“石”是石头的石。石头可以有不同形状。"
+      },
+      "coaching": {
+        "tip": "“石头”通常很硬。看看“石”的字形，再观察真实石头的形状，不需要把每块石头都想成同一种样子。",
+        "prompt": "想一块见过的石头，试着说“这块石头很……”。"
       }
     },
     {
@@ -1092,8 +1197,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“土”？",
-        "answer": "种子藏在土里。"
+        "question": "播种时，你把种子放进泥土，再盖好。哪句话符合？",
+        "answer": "种子埋在土里。",
+        "distractors": [
+          {
+            "text": "种子放在桌上。",
+            "feedback": "种子已经埋进泥土，不在桌上。"
+          },
+          {
+            "text": "种子浮在水面。",
+            "feedback": "这里是在土里播种，不是在水面。"
+          }
+        ],
+        "explanation": "“土”可以指泥土。播种时常把种子埋进土里。"
+      },
+      "coaching": {
+        "tip": "“土”在“泥土、土地”里都能看到。种子种在土里，可以用种小树的场景记住它。",
+        "prompt": "试着读“种子藏在土里”，再想想土里还可能有什么。"
       }
     },
     {
@@ -1189,8 +1309,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“人”？",
-        "answer": "那个人在等一封信。"
+        "question": "远处站着一位等信的叔叔。你向朋友描述看到了谁。选哪句？",
+        "answer": "那个人在等一封信。",
+        "distractors": [
+          {
+            "text": "那只鸟在等一封信。",
+            "feedback": "叔叔是人，不是鸟。"
+          },
+          {
+            "text": "那个人在写一封信。",
+            "feedback": "他在等信，不是在写信。"
+          }
+        ],
+        "explanation": "“人”指人类。一个人、两个人都可以这样说。"
+      },
+      "coaching": {
+        "tip": "“人”只有两笔：撇、捺。可以联想一个站立的人帮助记忆；写的时候注意两笔的位置和方向。",
+        "prompt": "想想正在等你的人，试着用“那个人”说一句话。"
       }
     },
     {
@@ -1301,8 +1436,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“口”？",
-        "answer": "请开口说一声你好。"
+        "question": "你想鼓励害羞的伙伴说出“你好”。哪句话合适？",
+        "answer": "请开口说一句你好。",
+        "distractors": [
+          {
+            "text": "请闭上眼睛。",
+            "feedback": "闭眼没有表达说话的意思。"
+          },
+          {
+            "text": "请伸出手。",
+            "feedback": "伸手不是开口说话。"
+          }
+        ],
+        "explanation": "“开口”可以表示开始说话，这里的“口”指嘴。"
+      },
+      "coaching": {
+        "tip": "“口”可以指嘴巴，也出现在“门口、入口”里。它有三笔：第一笔竖，写左边；第二笔横折，先向右写上边的横，再向下写右边的竖，中间不停笔；第三笔横，写底边。四条边不等于四笔。",
+        "prompt": "站在门口等朋友，试着说一句带“门口”的话。"
       }
     },
     {
@@ -1436,8 +1586,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“手”？",
-        "answer": "我用手拿起信。"
+        "question": "你正用手拿着两封信。哪句话符合？",
+        "answer": "我手里拿着两封信。",
+        "distractors": [
+          {
+            "text": "我脚下踩着两封信。",
+            "feedback": "脚下踩着和手里拿着是不同动作。"
+          },
+          {
+            "text": "我手里拿着一本书。",
+            "feedback": "你拿的是两封信，不是书。"
+          }
+        ],
+        "explanation": "“手”可以拿东西。“手里”说明东西在手中。"
+      },
+      "coaching": {
+        "tip": "“手”可以拿东西，也可以挥手、拍手。想一个熟悉的动作，把字和动作一起记。",
+        "prompt": "你会用手做什么？试着说“我用手……”。"
       }
     },
     {
@@ -1445,9 +1610,10 @@
       "text": "目",
       "pronunciation": "mù",
       "meaning": "眼睛",
-      "example": "请看这个字的笔画。",
+      "example": "请把目光转向这幅画。",
       "words": [
-        "目光"
+        "目光",
+        "双目"
       ],
       "strokes": {
         "character": "目",
@@ -1594,8 +1760,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“目”？",
-        "answer": "请看这个字的笔画。"
+        "question": "看展览时，老师说“请把目光转向这幅画”。你该怎么做？",
+        "answer": "用眼睛看这幅画。",
+        "distractors": [
+          {
+            "text": "用耳朵听这幅画。",
+            "feedback": "“目光”与眼睛看东西有关，不是听。"
+          },
+          {
+            "text": "用手摸这幅画。",
+            "feedback": "“目光转向”是看过去，不是触摸。"
+          }
+        ],
+        "explanation": "“目”有眼睛的意思。“目光”指看向某处的视线。"
+      },
+      "coaching": {
+        "tip": "“目”表示眼睛，常出现在“目光、双目”里。留意里面有两横，和里面一横的“日”比较。",
+        "prompt": "把目光转向一件喜欢的东西，试着说“我的目光停在……”。"
       }
     },
     {
@@ -1747,8 +1928,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“耳”？",
-        "answer": "我用耳朵听声音。"
+        "question": "树上传来鸟叫。你用什么来听？",
+        "answer": "我用耳朵听鸟叫。",
+        "distractors": [
+          {
+            "text": "我用眼睛听鸟叫。",
+            "feedback": "眼睛用来看，耳朵用来听。"
+          },
+          {
+            "text": "我用耳朵看小鸟。",
+            "feedback": "耳朵可以听，不能用来看。"
+          }
+        ],
+        "explanation": "“耳”指耳朵。耳朵帮助我们听见声音。"
+      },
+      "coaching": {
+        "tip": "“耳”常出现在“耳朵、双耳”里。把听声音的动作和这个字联系起来，会更容易记住。",
+        "prompt": "现在能听到什么？试着说“我用耳朵听到了……”。"
       }
     },
     {
@@ -1874,8 +2070,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“心”？",
-        "answer": "收到信，她很开心。"
+        "question": "你收到了盼望已久的信，心情很好。哪句话符合？",
+        "answer": "收到信，我很开心。",
+        "distractors": [
+          {
+            "text": "收到信，我很伤心。",
+            "feedback": "伤心与这里的好心情不一致。"
+          },
+          {
+            "text": "我还没有收到信。",
+            "feedback": "信已经收到了。"
+          }
+        ],
+        "explanation": "“心”也用于表达心情，例如开心、伤心。"
+      },
+      "coaching": {
+        "tip": "“心”可以表示心脏，也常用来表达感受，如“开心、伤心”。词语能告诉我们这里是哪一种意思。",
+        "prompt": "想一件开心的事，试着说“我很开心，因为……”。"
       }
     },
     {
@@ -1994,10 +2205,25 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“门”？",
-        "answer": "请打开这扇门。"
+        "question": "你要进一个房间，门正关着。礼貌的第一步是什么？",
+        "answer": "我轻轻敲了敲门。",
+        "distractors": [
+          {
+            "text": "我轻轻敲了敲窗。",
+            "feedback": "你准备从门进去，这里不是敲窗。"
+          },
+          {
+            "text": "我用力踢了踢门。",
+            "feedback": "用力踢门不礼貌，也可能伤到自己或损坏门。"
+          }
+        ],
+        "explanation": "“门”是进出房间的地方。进门前可以先敲门。"
       },
-      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_men.html"
+      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_men.html",
+      "coaching": {
+        "tip": "“门”与进出有关，常见词有“开门、关门、门口”。观察字形可以联想一扇门，这是记忆方法。",
+        "prompt": "想请别人开门时，试着读“请打开这扇门。”"
+      }
     },
     {
       "id": "tian-field",
@@ -2161,8 +2387,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“田”？",
-        "answer": "爷爷正在田里。"
+        "question": "爷爷在种稻谷的地里干活。哪句话描述了他？",
+        "answer": "爷爷在照料田地。",
+        "distractors": [
+          {
+            "text": "爷爷在照料花盆。",
+            "feedback": "题目说的是种稻谷的田地，不是花盆。"
+          },
+          {
+            "text": "爷爷在打扫房间。",
+            "feedback": "田地不是房间，照料庄稼也不是打扫房间。"
+          }
+        ],
+        "explanation": "“田”指种庄稼的地，例如稻田、麦田。"
+      },
+      "coaching": {
+        "tip": "“田”表示种庄稼的田地。可以把内部的线条联想成一块块田地，这是记忆方法；它和“日、目”的内部线条不同。",
+        "prompt": "田里会种什么？试着说“田里种着……”。"
       }
     },
     {
@@ -2257,8 +2498,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“上”？",
-        "answer": "风筝飞到树上了。"
+        "question": "风筝越飞越高。你想说它朝哪个方向飞。选哪句？",
+        "answer": "风筝往上飞了。",
+        "distractors": [
+          {
+            "text": "风筝往下落了。",
+            "feedback": "往下落与越飞越高相反。"
+          },
+          {
+            "text": "风筝落到地上了。",
+            "feedback": "风筝仍在升高，没有落地。"
+          }
+        ],
+        "explanation": "“上”可以表示高处或向高处的方向。"
+      },
+      "coaching": {
+        "tip": "“上”和“下”常用来表示不同位置。“树上”告诉我们东西在树的上方或树上。",
+        "prompt": "看看桌子，试着说“桌子上有……”。"
       }
     },
     {
@@ -2361,8 +2617,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“下”？",
-        "answer": "小船在桥下面。"
+        "question": "小猫躲在桌子的底下。哪句话符合？",
+        "answer": "小猫躲在桌子下面。",
+        "distractors": [
+          {
+            "text": "小猫趴在桌子上面。",
+            "feedback": "上面和下面是相反的位置。"
+          },
+          {
+            "text": "小猫站在门外。",
+            "feedback": "题目说的是桌子底下，不是门外。"
+          }
+        ],
+        "explanation": "“下”可以表示较低的位置，例如桌子下面。"
+      },
+      "coaching": {
+        "tip": "“下”和“上”常常成对出现。“桥下面”指桥的下方，可以用小船从桥下经过的场景记住。",
+        "prompt": "看看桌子下面，试着说“桌子下面有……”。"
       }
     },
     {
@@ -2489,8 +2760,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“大”？",
-        "answer": "这把伞很大。"
+        "question": "两把伞并排放着，你指的这把能遮住更多地方。怎么比较？",
+        "answer": "这把伞比较大。",
+        "distractors": [
+          {
+            "text": "这把伞比较小。",
+            "feedback": "遮住更多地方的是比较大的伞。"
+          },
+          {
+            "text": "两把伞一样大。",
+            "feedback": "题目已经说明它们遮住的范围不同。"
+          }
+        ],
+        "explanation": "“大”可以用来比较大小。比较时要看同样的对象和条件。"
+      },
+      "coaching": {
+        "tip": "“大”和“小”需要比较来看。同一把伞可能比一把伞大，又比另一把伞小。",
+        "prompt": "想一把大伞，试着说“这把伞很大，可以……”。"
       }
     },
     {
@@ -2589,8 +2875,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“小”？",
-        "answer": "这只船很小。"
+        "question": "两只船放在一起，你指的这只能坐更少的人，船身也更短。怎么说？",
+        "answer": "这只船比较小。",
+        "distractors": [
+          {
+            "text": "这只船比较大。",
+            "feedback": "题目说它船身更短，应该是比较小。"
+          },
+          {
+            "text": "两只船一样长。",
+            "feedback": "题目说船身长度不同。"
+          }
+        ],
+        "explanation": "“小”与“大”相对，可以用来比较物体的大小。"
+      },
+      "coaching": {
+        "tip": "“小”和“大”表示大小的区别。“小船、小手”里都有“小”。先看整个词，再想它描述的东西。",
+        "prompt": "想一只小船，试着说“这只小船……”。"
       }
     },
     {
@@ -2712,8 +3013,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“中”？",
-        "answer": "我们在桥中间见面。"
+        "question": "桌子两边坐着人，你把花瓶放在正中间。哪句话符合？",
+        "answer": "花瓶放在桌子中间。",
+        "distractors": [
+          {
+            "text": "花瓶放在桌子左边。",
+            "feedback": "左边不是正中间。"
+          },
+          {
+            "text": "花瓶放在桌子下面。",
+            "feedback": "花瓶在桌面正中，不在下面。"
+          }
+        ],
+        "explanation": "“中”可以表示中间的位置。"
+      },
+      "coaching": {
+        "tip": "“中”在“中间”里表示位置。可以观察竖线穿过中间的字形来帮助记忆，这是一种联想。",
+        "prompt": "把一个东西放在两件东西中间，试着描述它的位置。"
       }
     },
     {
@@ -2867,8 +3183,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“天”？",
-        "answer": "今天的天很蓝。"
+        "question": "抬头看，今天没有云遮住阳光。你想描述天空。选哪句？",
+        "answer": "今天的天空很晴朗。",
+        "distractors": [
+          {
+            "text": "今天的天空阴沉沉的。",
+            "feedback": "阴沉沉与这里的晴朗不同。"
+          },
+          {
+            "text": "今天的地面很干净。",
+            "feedback": "地面不是你正在描述的天空。"
+          }
+        ],
+        "explanation": "“天”可以指天空；晴朗常用来描述明亮、少云的天气。"
+      },
+      "coaching": {
+        "tip": "“天”在“天空”里指头顶的天空，在“今天、明天”里与日子有关。读词语时分清它说的是哪里或哪一天。",
+        "prompt": "看一看天空，试着说“今天的天……”。"
       }
     },
     {
@@ -3002,8 +3333,23 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“云”？",
-        "answer": "一朵云慢慢飘过。"
+        "question": "一团白云正慢慢从头顶飘过。哪句话符合？",
+        "answer": "一朵白云慢慢飘过。",
+        "distractors": [
+          {
+            "text": "一朵白花慢慢开放。",
+            "feedback": "白花不是空中飘过的白云。"
+          },
+          {
+            "text": "一朵乌云遮住了太阳。",
+            "feedback": "题目说的是白云，不是乌云遮日的场景。"
+          }
+        ],
+        "explanation": "“云”指天空中的云，可以说白云、乌云。"
+      },
+      "coaching": {
+        "tip": "“云”常见于“白云、云朵”。云会有不同的形状和颜色，可以用观察天空的场景记住这个字。",
+        "prompt": "想一朵云，试着说“这朵云像……”。"
       }
     },
     {
@@ -3225,10 +3571,25 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“雨”？",
-        "answer": "下雨了，我们带着伞。"
+        "question": "外面开始下雨，你准备出门。怎么描述带伞的原因？",
+        "answer": "下雨了，我带上雨伞。",
+        "distractors": [
+          {
+            "text": "天晴了，我收起雨伞。",
+            "feedback": "这里正在下雨，不是放晴。"
+          },
+          {
+            "text": "下雪了，我戴上手套。",
+            "feedback": "题目说的是下雨，不是下雪。"
+          }
+        ],
+        "explanation": "“雨”是从云中落下的水滴。雨伞可以帮我们挡雨。"
       },
-      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_yu.html"
+      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_yu.html",
+      "coaching": {
+        "tip": "“雨”与落下的水滴有关。可以把字形里面的点联想成雨滴，这是记忆方法；写字时留意每一笔的顺序。",
+        "prompt": "下雨时你会带什么？试着用“下雨”说一句话。"
+      }
     },
     {
       "id": "xiu",
@@ -3422,10 +3783,26 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“休”？",
-        "answer": "走累了，我们休息一下。"
+        "question": "走了很久，大家都累了。你想提议停一会儿。选哪句？",
+        "answer": "走累了，我们休息一下。",
+        "distractors": [
+          {
+            "text": "走累了，我们加快脚步。",
+            "feedback": "加快脚步不是停下来休息。"
+          },
+          {
+            "text": "我们刚出门，一点也不累。",
+            "feedback": "题目已经说明大家走累了。"
+          }
+        ],
+        "explanation": "“休”可以表示休息。累的时候可以停下来恢复体力。"
       },
-      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_xiu.html"
+      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_xiu.html",
+      "coaching": {
+        "tip": "“休”的左边是单人旁，右边是“木”。教育部《異體字字典》所列《说文解字》释形为“从人依木”。学习时可以想象人在树旁休息；动画里的具体情节仍是帮助记忆的创作。",
+        "prompt": "走累了想停下来，试着说“我们休息一下吧。”",
+        "sourceUrl": "https://dict.variants.moe.edu.tw/dictView.jsp?ID=936"
+      }
     },
     {
       "id": "sen",
@@ -3434,7 +3811,7 @@
       "meaning": "树木很多的样子",
       "example": "森林里有许多树。",
       "words": [
-        "树木很多的样子"
+        "森林"
       ],
       "strokes": {
         "strokes": [
@@ -3721,10 +4098,25 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“森”？",
-        "answer": "森林里有许多树。"
+        "question": "你走进一片长着很多树的地方。哪句话符合？",
+        "answer": "森林里有很多树。",
+        "distractors": [
+          {
+            "text": "沙漠里全是高大的树。",
+            "feedback": "这里是一片森林，不是在描述沙漠。"
+          },
+          {
+            "text": "这片森林里一棵树也没有。",
+            "feedback": "森林通常有许多树，题目也说树很多。"
+          }
+        ],
+        "explanation": "“森”常用于“森林”，表示树木很多的地方。"
       },
-      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_sen.html"
+      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_sen.html",
+      "coaching": {
+        "tip": "“森”里有三个“木”。“森林”让人想到许多树，可以观察“木”在上方和下方的位置来记字形。",
+        "prompt": "想象走进森林，试着说“森林里有……”。"
+      }
     },
     {
       "id": "guang",
@@ -3733,7 +4125,8 @@
       "meaning": "照亮物体的光亮",
       "example": "阳光照进窗户。",
       "words": [
-        "照亮物体的光亮"
+        "阳光",
+        "灯光"
       ],
       "strokes": {
         "strokes": [
@@ -3926,10 +4319,25 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“光”？",
-        "answer": "阳光照进窗户。"
+        "question": "早上，太阳的光线从窗户照进屋里。哪句话符合？",
+        "answer": "阳光照进了房间。",
+        "distractors": [
+          {
+            "text": "雨水流进了房间。",
+            "feedback": "这里说的是光线，不是雨水。"
+          },
+          {
+            "text": "房间里一点光也没有。",
+            "feedback": "阳光已经照进房间，不能说一点光也没有。"
+          }
+        ],
+        "explanation": "“光”可以指光线，例如阳光、灯光。"
       },
-      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_guang.html"
+      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_guang.html",
+      "coaching": {
+        "tip": "“光”能让我们看清东西。“阳光”来自太阳，“灯光”来自灯；不同词语说明光的来源。",
+        "prompt": "早上阳光照进哪里？试着说“阳光照进……”。"
+      }
     },
     {
       "id": "guo",
@@ -4157,10 +4565,25 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“国”？",
-        "answer": "我爱我的祖国。"
+        "question": "介绍自己的祖国时，你想表达喜爱。选哪句？",
+        "answer": "我爱我的祖国。",
+        "distractors": [
+          {
+            "text": "我爱我的房间。",
+            "feedback": "房间是居住空间，不是祖国。"
+          },
+          {
+            "text": "我今天去公园玩。",
+            "feedback": "这句话说的是活动，没有表达对祖国的喜爱。"
+          }
+        ],
+        "explanation": "“国”指国家。“祖国”是对自己国家的称呼。"
       },
-      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_guo.html"
+      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_guo.html",
+      "coaching": {
+        "tip": "“国”常见于“国家、祖国”。观察字形：外面是大框，里面是“玉”；不要漏掉里面的点。",
+        "prompt": "先读“国家、祖国”，再用其中一个词说一句话。"
+      }
     },
     {
       "id": "ming",
@@ -4400,10 +4823,25 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“明”？",
-        "answer": "明亮的月光照着小路。"
+        "question": "月光把小路照亮了，你能看清脚下。哪句话符合？",
+        "answer": "明亮的月光照着小路。",
+        "distractors": [
+          {
+            "text": "昏暗的小路看不清楚。",
+            "feedback": "题目说小路被照亮，可以看清。"
+          },
+          {
+            "text": "小路上没有一点光。",
+            "feedback": "月光正在照着小路。"
+          }
+        ],
+        "explanation": "“明”可以表示明亮，与暗相对。"
       },
-      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_ming.html"
+      "animation": "hanzi/hanzi_ming.html",
+      "coaching": {
+        "tip": "“明”的左边是“日”，右边是“月”。可以用日月带来光亮的联想记住“明亮”，这是一种记忆方法。",
+        "prompt": "想一个明亮的地方，试着说“这里很明亮，可以……”。"
+      }
     },
     {
       "id": "wu",
@@ -4757,10 +5195,25 @@
       "source": "https://github.com/skishore/makemeahanzi",
       "license": "Arphic Public License",
       "context": {
-        "question": "哪句话正确使用了“舞”？",
-        "answer": "我们一起跳舞。"
+        "question": "音乐响起，大家跟着节奏跳起舞来。哪句话符合？",
+        "answer": "我们跟着音乐跳舞。",
+        "distractors": [
+          {
+            "text": "我们跟着音乐画画。",
+            "feedback": "画画和跳舞是不同活动。"
+          },
+          {
+            "text": "我们安静地坐着不动。",
+            "feedback": "题目说大家正在跳舞。"
+          }
+        ],
+        "explanation": "“舞”用于跳舞、舞蹈等词，表示随节奏做动作。"
       },
-      "animation": "https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_wu.html"
+      "animation": "hanzi/hanzi_wu.html",
+      "coaching": {
+        "tip": "“舞”常出现在“跳舞、舞蹈”里，和身体动作有关。这个字笔画较多，可以先看示范，再按顺序慢慢写。",
+        "prompt": "想象和朋友一起跳舞，试着读“我们一起跳舞。”"
+      }
     }
   ]
 }

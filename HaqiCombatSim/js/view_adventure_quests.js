@@ -134,7 +134,7 @@ export function renderQuestJournal(body,model,cb,ui) {
             })));
             if(block&&label(q)==='未开启')detail.append(section('接取条件',el('p','',block)));
             const rewardQuest=runtime;
-            if(runtime.hanziCardReward)detail.append(el('p','journal-reward',`汉字卡「${HANZI_BATTLE_CARDS[runtime.hanziCardReward]}」：在汉字卡册携带，成功施法后触发增益。`));
+            if(runtime.hanziCardReward)detail.append(button(`字卡「${HANZI_BATTLE_CARDS[runtime.hanziCardReward]}」· 翻开字典`,()=>cb.panel('dictionary',{character:runtime.hanziCardReward}),'secondary'));
             detail.append(section(questState(save,q.id).claimed?'已获得奖励':'任务奖励',...(rewardQuest.rewards.length?rewardQuest.rewards.map(group=>el('div','journal-reward-group',rewardGroupCaption(group,el),el('div','journal-rewards',...(rewardsForSafe(group)).map(r=>{
                 const item=c.items[r.id];
                 if(!item||r.id===113||r.kind==='pet')return rewardChip(c,r,{el,className:'journal-reward'});

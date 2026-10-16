@@ -2,6 +2,7 @@ import { fill, setText, tr } from './locale_runtime.js';
 // DockTip.lua L630–687: bottom bag notification, equip apparel / inspect cards.
 const HOLD_MS=4800,STACK_LIMIT=8;
 function itemKey(item){
+    if(item.kind==='dictionary')return `dictionary:${item.id}`;
     if(item.kind==='card')return `card:${item.key}`;
     if(item.kind==='pet')return `pet:${item.id}`;
     return `item:${item.id??item.name}`;
@@ -48,9 +49,9 @@ export function createRewardFeedback(root,{describe,activate,showBanner=true}) {
         popup.setAttribute('aria-label',tr('新获得的物品'));
         const reward=active.items[0];if(!reward){popup.hidden=true;return;}popup.hidden=false;
         const info=describe(reward),heading=document.createElement('strong'),name=document.createElement('p'),hint=document.createElement('small');
-        setText(heading,reward.kind==='card'?'获得新卡牌':reward.gear?'获得新装备':'获得新物品');
+        setText(heading,reward.kind==='dictionary'?'获得汉字卡':reward.kind==='card'?'获得新卡牌':reward.gear?'获得新装备':'获得新物品');
         setText(name,'{name} ×{count}',{name:info.name||reward.name,count:reward.count});
-        setText(hint,info.reason||'已放入背包');
+        setText(hint,info.reason||(reward.kind==='dictionary'?'点击翻开这个字的故事':'已放入背包'));
         if(info.art)popup.append(info.art);
         const use=document.createElement('button');use.type='button';use.className='primary';use.disabled=!!info.reason;
         setText(use,info.label);
@@ -62,7 +63,7 @@ export function createRewardFeedback(root,{describe,activate,showBanner=true}) {
         popup.append(heading,name,hint,use,skip);
     }
     function next(){active.items.shift();paint();}
-    function actionable(item){return item.gear||item.kind==='card'||item.kind==='pet';}
+    function actionable(item){return item.kind==='dictionary'||item.gear||item.kind==='card'||item.kind==='pet';}
     return {
         get hasPendingItems(){return !!active?.items.length||queue.some(event=>event.items.some(actionable));},
         push(event){if(event.xp||event.level||event.items.length)queue.push({...event,items:[...event.items]});},

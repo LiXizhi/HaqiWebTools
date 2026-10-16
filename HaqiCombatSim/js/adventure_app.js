@@ -1,3 +1,4 @@
+import {restoreVisibleFocus} from './view_adventure_controls.js';
 import {locationSnapshot,mapCoordinateVersion} from './adventure_coordinates_core.js';
 import {createIslandHeroNavigation} from './island_hero_navigation.js';
 import {timeScrollCity} from './adventure_time_scroll_core.js';
@@ -389,6 +390,7 @@ const globalReward=new GlobalRewardNotice();
 const rewardRoot=V.el('div','reward-feedback');nodes.world.parentElement.append(rewardRoot);
 const rewardFeedback=createRewardFeedback(rewardRoot,{showBanner:false,
     describe:reward=>{
+        if(reward.kind==='dictionary')return {name:reward.name,label:'翻开字典',reason:null};
         const item=assets.content.items[reward.id];
         const info={name:reward.kind==='card'?(assets.dataset.cards[reward.key]?.name||reward.name):reward.name,label:reward.kind==='card'?'立即配卡':reward.gear?'立即穿上':reward.kind==='pet'?'查看伙伴':'查看背包'};
         if(reward.gear)info.reason=A.equipmentBlockReason(save,item,assets.content);
@@ -397,6 +399,7 @@ const rewardFeedback=createRewardFeedback(rewardRoot,{showBanner:false,
     },
     activate:reward=>{
         if(stage!=='world'||panel||dialog)return false;
+        if(reward.kind==='dictionary'){void openDictionary('zh',reward.id);return true;}
         if(reward.gear)return action({type:'equip',itemId:reward.id});
         openPanel(reward.kind==='card'?'deck':reward.kind==='pet'?'pet':'inventory');
     },
@@ -439,12 +442,12 @@ function persist() {
     const indicator=document.querySelector('.save-indicator');if(indicator){setText(indicator,storageWarning?'存档未保存':'');indicator.hidden=!storageWarning;}
     lastSave=performance.now();
 }
-function close({silent=false}={}) {timeScrollTicket++;timeScrollLoad?.abort();timeScrollLoad=null;timeScroll?.close();timeScroll=null;hanziTicket++;hanziIsland?.close();nodes.overlay.disposeMap?.();atlasView?.dispose();atlasView=null;earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();secondCharacterChat?.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
+function close({silent=false}={}) {dictionaryTicket++;dictionary?.close();dictionary=null;timeScrollTicket++;timeScrollLoad?.abort();timeScrollLoad=null;timeScroll?.close();timeScroll=null;hanziTicket++;hanziIsland?.close();nodes.overlay.disposeMap?.();atlasView?.dispose();atlasView=null;earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();secondCharacterChat?.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 // Streaming/social updates repaint the HUD during held movement; only explicit
 // cancellation (panel transitions, blur, pointer release) may clear that input.
 function paintHud() {V.renderHud(nodes.hud,model(),{panel:openPanel,playerPanel:(owner,kind)=>localPlay.openPanel(owner,kind),playerMountToggle:owner=>localPlay.toggleMount(owner),membership:()=>openPanel('membership'),cloud:()=>void loginRoles(),track,untrack,leaveDungeon:exitDungeon,interact:interactNearest,mountToggle:()=>performAction({type:'mount-visibility',hidden:!save?.mountHidden})});}
 function paintPanel() {
-    if(panel==='hanzi'||panel==='time-scroll')return;
+    if(panel==='hanzi'||panel==='dictionary'||panel==='time-scroll')return;
     if(panel==='map')panel='localmap';
     if(panel==='localmap'&&world.isEarth){earthView?.dispose();earthView=renderEarthLocalMap(nodes.overlay,world,save,{close,switchWorld:switchWorldMap,travel:travelEarth,viewport:bounds=>getEarth().then(service=>service.localViewport(bounds)),draw:(canvas,options)=>renderer.minimap(canvas,world,save,options)});return;}
     if(panel==='earthmap'){void openEarthMap();return;}
@@ -478,7 +481,7 @@ function paintPanel() {
 }
 function openPanel(kind,options={}) {
     if(stage!=='world')return;
-    if(kind==='hanzi'){void openHanzi(null,options.character);return;}
+    if(kind==='dictionary'||kind==='hanzi'){void openDictionary(options.character?'zh':null,options.character);return;}
     if(kind==='time-scroll'){void openTimeScroll();return;}
     if(localPlay.active&&kind==='social-pvp'){localPlay.arenaLobby();return;}
     if(localPlay.openPersonal(kind))return;
@@ -1429,7 +1432,7 @@ for(const event of ['pointerup','pointercancel','lostpointercapture'])nodes.worl
 function backgroundScenePaused(){return pauseBackgroundScene({stage,hidden:document.hidden,panel,dialog,learning:languageAdventure.active,conversation:characterChat.active||!!secondCharacterChat?.active,fullscreen:!!document.fullscreenElement&&!document.fullscreenElement.contains(nodes.world)});}
 function frame(now) {
     if(stage!=='world'||document.hidden||panel||dialog||keys.size||joystick.x||joystick.y||heldPointer?.active||localPlay.paused)heroNavigation.cancel();
-    hanziIsland?.tick();
+    hanziIsland?.tick();dictionary?.tick();
     const earthFrameStart=perf.enabled?performance.now():0;
     const phasePrefix=world?.isEarth?'earth-':'island-';
     perf.frame(now,stage==='world'&&!document.hidden&&!panel&&!dialog);
@@ -1571,6 +1574,30 @@ async function openTimeScroll(){
 document.addEventListener('visibilitychange',()=>{if(document.hidden)timeScroll?.suspend();else timeScroll?.resume();});
 window.addEventListener('blur',()=>timeScroll?.suspend());
 window.addEventListener('focus',()=>timeScroll?.resume());
+
+let dictionary=null,dictionaryTicket=0;
+async function openDictionary(language=null,entryId=null,returnTarget=document.activeElement){
+    if(stage!=='world')return;close({silent:true});path=[];destination=null;panel='dictionary';nodes.hud.hidden=true;
+    const ticket=++dictionaryTicket,role=roleStore.catalog.activeId,owner=roleStore.owner;
+    const fromToolbar=!!returnTarget?.closest?.('.dictionary-launch');
+    const returnToScene=()=>{
+        close();
+        if(stage==='world'&&role===roleStore.catalog.activeId&&owner===roleStore.owner)restoreVisibleFocus(returnTarget,fromToolbar?nodes.hud.querySelector('.dictionary-launch'):null,nodes.world);
+    };
+    nodes.overlay.className='overlay visible';nodes.overlay.replaceChildren(V.el('section','loading-card',V.el('p','','正在翻开字典…'),V.button('返回',returnToScene)));
+    try{
+        const module=await import('./adventure_dictionary.js');
+        if(ticket!==dictionaryTicket||role!==roleStore.catalog.activeId||owner!==roleStore.owner)return;
+        if(!document.getElementById('dictionary-style')){const link=document.createElement('link');link.id='dictionary-style';link.rel='stylesheet';link.href=new URL('../css/dictionary.css',import.meta.url).href;document.head.append(link);}
+        dictionary=module.createDictionary({root:nodes.overlay,getState:()=>({save,content:assets.content,stage,owner:roleStore.owner,role:roleStore.catalog.activeId}),onClose:returnToScene,onLegacy:()=>openHanzi(),onRewards:()=>openPanel('learning-mode'),onBuff:(buff,reward)=>{
+            if(role!==roleStore.catalog.activeId||owner!==roleStore.owner)return;
+            save.dailyLanguageBuff=structuredClone(buff);persist();paintHud();
+            if(reward)globalReward.show({title:'学习加成已生效',lines:[['{name} +1%',{name:DAILY_BUFF_NAMES[reward.key]}],['今日累计 {total} 层',{total:reward.total}]]});
+        }});
+        await dictionary.open(language||(save.languageLearning?.target==='en'?'en':'zh'),entryId);
+    }catch(error){if(ticket===dictionaryTicket)nodes.overlay.replaceChildren(V.el('section','loading-card',V.el('p','',error.message),V.button('重试',()=>openDictionary(language,entryId,returnTarget)),V.button('返回',returnToScene)));}
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)dictionary?.suspend();});
 
 let hanziModule=null,hanziData=null,hanziTask=null,hanziIsland=null,hanziTicket=0;
 async function prepareHanzi(){

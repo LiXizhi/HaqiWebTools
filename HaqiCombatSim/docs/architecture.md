@@ -46,7 +46,7 @@ flowchart LR
     Order --> Trees[连续树木片段缓存：最多24MiB]
     Order --> Actors[原角色与遮挡淡化绘制]
     Island --> Tiles[地表调度：视野与前方邻块 / 最多64MiB]
-    Tiles --> Worker[island_terrain_worker：同一地形画笔]
+    Tiles --> Worker[island_terrain_worker：同一地形画笔 / 图集增量传输]
     Worker --> Bitmap[可释放ImageBitmap / 过期应答关闭]
     Tiles --> Fallback[Worker失败：原分帧画笔回退]
     Bitmap --> Canvas[冒险Canvas]
@@ -67,6 +67,8 @@ flowchart LR
     MarkerCache --> Actors
     MarkerCache --> Minimap[小地图与交谈邀请复用]
 ```
+
+2026-10-17：粗指针触屏设备从首帧将场景画布 DPR 上限设为 1.25、地形纹理 DPR 上限设为 1；DOM 文字与交互坐标保持原样。桌面地形支持四分之一档密度，不将 1.25/1.5 一律提升为 2。地形密度独立于自动降画质，准备与绘制共用策略，避免缓存重建。后台地形仅复制新增或替换的图集；切岛复用已有图集，移除或替换时关闭旧位图。资源到达仅使实际使用该图集的地块失效，在途结果返回后核对依赖，无关图集不会取消任务。
 
 任务标记缓存由renderer实例持有，`adventure_quest_marker_cache_core.js`每帧比较任务/库存/装备等相关字段的序列化快照，以覆盖原地修改；坐标、血量、计时和通用revision不参与。状态不变时每个NPC（含无标记）只求值一次，全部NPC共享一次按需属性快照；换角色、场景或内容配置引用时失效。缓存仅用于显示，实际接取/交付仍即时校验原规则。
 

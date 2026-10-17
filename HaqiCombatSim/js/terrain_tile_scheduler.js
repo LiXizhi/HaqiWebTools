@@ -12,8 +12,8 @@ export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,s
         do{
             if(!active){const task=queue.shift();if(!task)break;if(tiles.has(task.key))continue;if(!evict(1))continue;
                 const pixels=512*density,scale=pixels/task.size,margin=2/scale,rect={x:task.x*task.size-margin,y:task.y*task.size-margin,w:task.size+margin*2,h:task.size+margin*2};
-                if(rasterize){const row={...task,waiting:true,started:now()};active=row;
-                    Promise.resolve().then(()=>rasterize(task.world,rect,pixels+4,scale)).then(result=>{if(active!==row){result.bitmap.close();return;}row.tile=result.bitmap;row.atlases=new Set(result.atlases);active=null;tiles.set(row.key,row);onMetric('tile-worker',now()-row.started);if(timer===null&&queue.length)timer=schedule(work);},error=>{if(active!==row)return;active=null;rasterize=null;queue.unshift(task);onMetric('tile-worker-error',String(error));if(timer===null)timer=schedule(work);});
+                if(rasterize){const row={...task,waiting:true,invalidated:new Set(),started:now()};active=row;
+                    Promise.resolve().then(()=>rasterize(task.world,rect,pixels+4,scale)).then(result=>{if(active!==row){result.bitmap.close();return;}active=null;if(result.atlases.some(atlas=>row.invalidated.has(atlas))){result.bitmap.close();queue.unshift(task);}else{row.tile=result.bitmap;row.atlases=new Set(result.atlases);tiles.set(row.key,row);onMetric('tile-worker',now()-row.started);}if(timer===null&&queue.length)timer=schedule(work);},error=>{if(active!==row)return;active=null;rasterize=null;queue.unshift(task);onMetric('tile-worker-error',String(error));if(timer===null)timer=schedule(work);});
                     break;
                 }
                 const tile=createCanvas();tile.width=tile.height=pixels+4;const c=tile.getContext('2d',{willReadFrequently:true});
@@ -31,7 +31,7 @@ export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,s
         onMetric('tile-slice',now()-started);if(!active?.waiting&&(active||queue.length))timer=schedule(work);
     }
     function prepare(world,rect,pixelRatio=1,path=[]){
-        const next=identity(world),d=pixelRatio>1?2:1;
+        const next=identity(world),d=Math.min(2,Math.max(1,Math.ceil(pixelRatio*4)/4));
         if(!same(scope,next)||density!==d){stop();for(const row of tiles.values())discard(row);tiles.clear();scope=next;density=d;previous=null;}
         capacity=Math.max(1,Math.min(limit,Math.floor(64*1024*1024/((512*d+4)**2*4))));
         let size=512;while((Math.ceil(rect.w/size)+1)*(Math.ceil(rect.h/size)+1)>capacity)size*=2;
@@ -58,7 +58,7 @@ export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,s
             for(const task of tasks){const row=tiles.get(task.key);if(!row){missing++;fallback?.(c,task.x*size,task.y*size,size);continue;}tiles.delete(task.key);tiles.set(task.key,row);const pixels=512*density,overlap=size/pixels;c.drawImage(row.tile,1,1,pixels+2,pixels+2,task.x*size-overlap,task.y*size-overlap,size+overlap*2,size+overlap*2);}
             return missing;
         },
-        invalidateAtlas(atlas){for(const [key,row] of tiles)if(row.atlases.has(atlas)){discard(row);tiles.delete(key);}if(active&&(active.waiting||active.atlases.has(atlas))){if(active.tile)active.tile.width=active.tile.height=0;active=null;}},
+        invalidateAtlas(atlas){for(const [key,row] of tiles)if(row.atlases.has(atlas)){discard(row);tiles.delete(key);}if(active?.waiting)active.invalidated.add(atlas);else if(active?.atlases.has(atlas)){if(active.tile)active.tile.width=active.tile.height=0;active=null;}},
         clear(){stop();for(const row of tiles.values())discard(row);tiles.clear();scope=null;previous=null;},
         get size(){return tiles.size;},get pending(){return queue.length+(active?1:0);},
         stats:()=>({bytes:(tiles.size+(active?1:0))*(512*density+4)**2*4,limitBytes:64*1024*1024,mode:rasterize?'worker':'fallback'})

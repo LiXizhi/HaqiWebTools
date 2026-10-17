@@ -4,6 +4,7 @@ import {npcCharacter} from './adventure_city_people_core.js';
 import {performanceDiagnostics as perf} from './performance_diagnostics.js';
 import {createQuestMarkerCache} from './adventure_quest_marker_cache_core.js';
 import {createFrameMeter} from './frame_meter_core.js';
+import {sceneResolution} from './scene_resolution_core.js';
 import {mergeSceneObjects} from './scene_order_core.js';
 import {createIslandSceneryCache} from './island_scenery_cache.js';
 import {createIslandTerrainRasterizer} from './island_terrain_rasterizer.js';
@@ -129,6 +130,8 @@ export function createRenderer(canvas,assets) {
     const drawSignpost=createSignpostPainter();
     const dungeonFog=createDungeonFog(),mapFog=createDungeonFog();
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+    const coarsePointer=matchMedia('(pointer: coarse)');
+    const resolution=(low=false)=>sceneResolution(window.devicePixelRatio||1,{coarse:coarsePointer.matches,low});
     const ctx=canvas.getContext('2d',{alpha:false}),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
     const terrainTiles=createScheduledTerrainCache({rasterize:createIslandTerrainRasterizer(assets.terrainDecorationArt),onMetric:(name,value)=>typeof value==='number'?perf.record(name,value):perf.event(name,value),paint:(c,world,rect,atlases)=>paintLargeTerrainSteps(c,world,rect,false,assets.terrainDecorationArt?{draw(...args){atlases.add(args[1]);return assets.terrainDecorationArt.draw(...args);},pattern(...args){atlases.add(args[1]);return assets.terrainDecorationArt.pattern?.(...args)||null;}}:null),createCanvas:()=>document.createElement('canvas')});
     if(assets.terrainDecorationArt)assets.terrainDecorationArt.onAtlas=atlas=>terrainTiles.invalidateAtlas(atlas);
@@ -186,14 +189,14 @@ export function createRenderer(canvas,assets) {
         // A zoom gesture changes the viewport in world units; it must reuse the
         // existing world-space tiles instead of crossing the scheduler's density
         // boundary and repainting the whole texture cache.
-        const rasterPixelRatio=Math.min(2,window.devicePixelRatio||1);
+        const rasterPixelRatio=resolution().terrain;
         terrainTiles.prepare(world,{x:save.position.x-w/(2*scale),y:save.position.y-h/(2*scale)+(w<650?50:25)/zoom,w:w/scale,h:h/scale},rasterPixelRatio);
     }
     function zoomBy(factor) {
         return cameraZoom.zoomBy(factor);
     }
     function size(low=false) {
-        const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(low?1.25:2,window.devicePixelRatio||1);
+        const w=canvas.clientWidth,h=canvas.clientHeight,dpr=resolution(low).display;
         if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}
         ctx.setTransform(dpr,0,0,dpr,0,0);cam.w=w;cam.h=h;return {w,h,dpr};
     }
@@ -283,7 +286,7 @@ export function createRenderer(canvas,assets) {
         const coldTiles=world.layout&&!world.isEarth&&!world.isCityDungeon?terrainTiles.draw(ctx,world,{x:cam.x,y:cam.y,w:w/cam.scale,h:h/cam.scale},(c,x,y,size)=>{
             const map=ground(world),dw=Math.min(size,world.w-x),dh=Math.min(size,world.h-y);
             c.drawImage(map,x*map.width/world.w,y*map.height/world.h,dw*map.width/world.w,dh*map.height/world.h,x,y,dw,dh);
-        },dpr,path):0;
+        },resolution().terrain,path):0;
         if(!world.layout)ctx.drawImage(ground(world),0,0);
         earthEnvironment.ground(ctx,world,cam,w,h,time,{enabled:graphics.particles&&!graphics.low,reducedMotion:reducedMotion.matches});
         // Moving water highlights, grounded visual-only ambient animation.

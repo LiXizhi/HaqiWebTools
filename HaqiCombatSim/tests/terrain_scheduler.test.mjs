@@ -42,3 +42,22 @@ test('worker failure resumes the bounded cooperative painter',async()=>{
  const cache=createScheduledTerrainCache({paint:function*(){painted++;},createCanvas:()=>{allocated++;return{getContext:()=>({translate(){},scale(){}})};},schedule:fn=>{callbacks.push(fn);return fn;},cancel:fn=>{const i=callbacks.indexOf(fn);if(i>=0)callbacks.splice(i,1);},rasterize:()=>Promise.reject(Error('worker unavailable'))});
  cache.prepare({w:512,h:512,layout:{}},{x:0,y:0,w:400,h:400});callbacks.shift()();for(let i=0;i<5;i++)await Promise.resolve();assert.equal(allocated,0);assert.equal(callbacks.length,1);callbacks.shift()();assert.equal(painted,1);assert.equal(cache.size,1);cache.clear();
 });
+
+test('unrelated atlas arrival preserves in-flight terrain; used atlas retries once',async()=>{
+ for(const atlas of ['unrelated','meadow']){
+    const tasks=[],requests=[],closed=[];
+    const cache=createScheduledTerrainCache({schedule:fn=>{tasks.push(fn);return fn;},cancel:()=>{},rasterize:()=>new Promise(resolve=>requests.push(resolve))});
+    const world={w:512,h:512,layout:{}},rect={x:0,y:0,w:400,h:400};
+    cache.prepare(world,rect,1.25);tasks.shift()();await Promise.resolve();
+    cache.invalidateAtlas(atlas);cache.prepare(world,rect,1.25);
+    assert.equal(tasks.length,0,'no parallel duplicate tile on atlas arrival');
+    requests.shift()({bitmap:{close(){closed.push(true);}},atlases:['meadow']});await new Promise(setImmediate);
+    assert.equal(cache.size,atlas==='meadow'?0:1);
+    assert.equal(closed.length,atlas==='meadow'?1:0);
+    if(atlas==='meadow'){
+        tasks.shift()();await Promise.resolve();requests.shift()({bitmap:{close(){}},atlases:['meadow']});await new Promise(setImmediate);
+        assert.equal(cache.size,1);
+    }
+    assert.equal(cache.stats().bytes,644**2*4,'fractional DPR does not round up to 2x');cache.clear();
+ }
+});

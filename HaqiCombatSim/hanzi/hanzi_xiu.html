@@ -30,10 +30,33 @@ header{position:relative}.brand{color:#cfdbc9}.seal{background:#bc4739;color:#f7
 main{position:relative;z-index:1}.heading{padding-top:12px;filter:drop-shadow(0 3px 14px #0008)}.eyebrow{color:#e8b866}.deck{color:#a9c4b0}h1{color:#f2ead4;text-shadow:0 2px 20px #0008}
 .canvas{margin:-6px auto 0;width:min(1280px,100%);filter:drop-shadow(0 18px 36px #0009)}#stage{height:100%;overflow:visible}
 .ink{stroke:#e9ead8}.land{opacity:.96}.leaf{fill:#5a9f88}.brush{stroke:#f0ead9}.ghost{filter:drop-shadow(0 0 5px #e8b86655)}.ghost{stroke:#789988}.guide{stroke:#e8b866}.grid{stroke:#9bb7a3}.target-ring{stroke:#e8b866}.svg-label{fill:#e8b866}
-.caption{min-height:116px;position:relative;z-index:2}.chapter{color:#76c893}#caption{color:#f2ead4;text-shadow:0 2px 14px #000}#hint{color:#cce8d2} .primary{color:#081612;background:linear-gradient(135deg,#8ce0a8,#52b788);border-color:#8ce0a8;box-shadow:0 6px 22px #52b78855}.primary:hover{background:#9ce8b5}
+.caption{min-height:116px;position:relative;z-index:2}.chapter{color:#76c893}#caption{color:#f2ead4;text-shadow:0 2px 14px #000}.haqi-sub-trans{display:block;margin-top:4px;font-family:Georgia,"Times New Roman",system-ui,sans-serif;font-size:clamp(13px,1.7vh,16px);line-height:1.4;color:#a9c4b0;letter-spacing:.02em;font-weight:400}#hint{color:#cce8d2} .primary{color:#081612;background:linear-gradient(135deg,#8ce0a8,#52b788);border-color:#8ce0a8;box-shadow:0 6px 22px #52b78855}.primary:hover{background:#9ce8b5}
 footer{border-top-color:#76c89333;color:#8fa99a}.colophon{color:#789786}#progress li[aria-current=step]{color:#e8b866}#progress li[aria-current=step]:before{background:#e8b866}
 @media(max-width:600px){.page{padding:16px 12px 12px}.heading{padding-top:18px}.canvas{margin-top:0}.caption{min-height:152px}}
 </style>
+<script>
+// Haqi H5 protocol v1: independent pages remain usable without a parent.
+(()=>{let context=null,written=false,finished=false,serial=0;const callbacks=new Map(),subCache=new Map(),uiCache=new Map(),pending=new Set(),uiNodes=new Map();
+const isZh=loc=>!loc||/^zh\b/i.test(loc);
+const send=data=>{if(context)parent.postMessage({channel:'haqi-hanzi',version:1,entryId:context.entryId,sessionId:context.sessionId,...data},context.origin);};
+const refreshDom=()=>{for(const[el,zh]of uiNodes){if(!el?.isConnected){uiNodes.delete(el);continue;}const tr=!isZh(context?.locale)&&uiCache.get(zh);const next=(tr&&tr!==zh)?tr:zh;if(el.dataset.haqiKind==='seal'){const seal=el.querySelector('.seal');el.textContent=next;if(seal)el.prepend(seal);}else if(el.dataset.haqiKind==='tag'){const i1=document.createElement('i'),i2=document.createElement('i');el.replaceChildren(i1,document.createTextNode(next),i2);}else el.textContent=next;}document.querySelectorAll('[data-haqi-caption]').forEach(el=>renderCaption(el,el.dataset.haqiCaption));};
+const flushPending=()=>{if(!context||!pending.size)return;const texts=[...pending];pending.clear();window.haqiHanziTranslate(texts);};
+const ensureTexts=texts=>{const need=[];for(const t of texts){const s=typeof t==='string'?t.trim():'';if(s&&(!subCache.has(s)||!uiCache.has(s))&&!pending.has(s)){pending.add(s);need.push(s);}}if(need.length&&context)flushPending();};
+const renderCaption=(el,zh)=>{if(!el)return;el.dataset.haqiCaption=zh||'';let sub=el.querySelector('.haqi-sub-trans');if(!zh||isZh(context?.subtitleLocale||context?.locale)){sub?.remove();return;}const tr=subCache.get(zh);if(!tr||tr===zh){sub?.remove();ensureTexts([zh]);return;}if(!sub){sub=document.createElement('span');sub.className='haqi-sub-trans';const host=el.querySelector('#capText')||el;if(host!==el&&host.parentNode===el)host.insertAdjacentElement('afterend',sub);else el.appendChild(sub);}sub.textContent=tr;};
+const trackUi=(el,zh,kind='')=>{if(!el||!zh)return;if(kind)el.dataset.haqiKind=kind;uiNodes.set(el,zh);ensureTexts([zh]);};
+const scanStatic=()=>{if(!document.body)return;document.querySelectorAll('#start,#replay,#mute,#demo,#action,#progress li,#seasonBar button,#note,.introBottom .mean,.introBottom .sub,.introBottom .meta,.heading .eyebrow,.heading h1,.heading .deck,.edition,.colophon,#glyphLabel,#targets .svg-label').forEach(el=>{const zh=(el.textContent||'').trim();if(zh&&!uiNodes.has(el))trackUi(el,zh);});document.querySelectorAll('#brand,.brand').forEach(el=>{if(uiNodes.has(el))return;const clone=el.cloneNode(true);clone.querySelector?.('.seal')?.remove();const zh=(clone.textContent||'').trim();if(zh)trackUi(el,zh,'seal');});document.querySelectorAll('.introTop .tag,.tag').forEach(el=>{if(uiNodes.has(el))return;const zh=(el.textContent||'').trim();if(zh)trackUi(el,zh,'tag');});refreshDom();};
+if(document.readyState==='loading')addEventListener('DOMContentLoaded',scanStatic,{once:true});else scanStatic();
+window.haqiHanziWritten=()=>{written=true;send({type:'written'});};
+window.haqiHanziComplete=()=>{if(!written){written=true;send({type:'written'});}finished=true;send({type:'completed'});};
+window.haqiHanziPrefetch=texts=>ensureTexts(Array.isArray(texts)?texts:[texts]);
+window.haqiHanziUi=(zh,el)=>{const s=typeof zh==='string'?zh.trim():'';if(!s)return zh;if(el)trackUi(el,s);else ensureTexts([s]);const tr=!isZh(context?.locale)&&uiCache.get(s);return(tr&&tr!==s)?tr:zh;};
+window.haqiHanziCaption=(el,zh)=>{const s=typeof zh==='string'?zh.trim():'';if(s)ensureTexts([s]);renderCaption(el,s);};
+window.haqiHanziTranslate=texts=>new Promise(resolve=>{const list=(Array.isArray(texts)?texts:[]).map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!context||!list.length){resolve({});return;}const requestId=String(++serial);const timer=setTimeout(()=>{callbacks.delete(requestId);resolve({});},1500);callbacks.set(requestId,msg=>{clearTimeout(timer);const sub=msg?.translations||{},ui=msg?.uiTranslations||sub;for(const[k,v]of Object.entries(sub))if(typeof v==='string'&&v.trim())subCache.set(k,v.trim());for(const[k,v]of Object.entries(ui))if(typeof v==='string'&&v.trim())uiCache.set(k,v.trim());refreshDom();resolve(sub);});send({type:'translate',requestId,texts:list});});
+addEventListener('message',event=>{const m=event.data;if(event.source!==parent||parent===window||m?.channel!=='haqi-hanzi'||m.version!==1)return;
+if(m.type==='init'&&typeof m.sessionId==='string'&&typeof m.entryId==='string'){if(document.referrer&&event.origin!==new URL(document.referrer).origin)return;context={...m,origin:event.origin};scanStatic();flushPending();refreshDom();if(written)send({type:'written'});if(finished)send({type:'completed'});}
+else if(context&&event.origin===context.origin&&m.sessionId===context.sessionId&&m.type==='translations'){callbacks.get(m.requestId)?.(m);callbacks.delete(m.requestId);}});
+if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'ready'},'*');})();
+</script>
 </head>
 <body>
 <div class="page">
@@ -136,9 +159,10 @@ let personX=-200;
 const ease=t=>t*t*(3-2*t);
 function opacity(id,n){$(id).style.opacity=n;}
 function personPosition(x,y=0){personX=x;$('person').setAttribute('transform',`translate(${x} ${y})`);}
-function caption(chapter,text,hint=''){ $('chapter').textContent=chapter;$('caption').textContent=text;$('hint').textContent=hint;const c=document.querySelector('.caption');c.classList.remove('changed');void c.offsetWidth;c.classList.add('changed'); }
+function hint(text){ const h=$('hint'); h.textContent=text?(window.haqiHanziUi?window.haqiHanziUi(text,h):text):''; }
+function caption(chapter,text,h=''){ const ch=$('chapter'),cap=$('caption'); ch.textContent=window.haqiHanziUi?window.haqiHanziUi(chapter,ch):chapter; cap.textContent=text; window.haqiHanziCaption?.(cap,text); hint(h); const c=document.querySelector('.caption'); c.classList.remove('changed'); void c.offsetWidth; c.classList.add('changed'); }
 function scene(next,index){state=next;document.body.dataset.scene=next;document.querySelectorAll('#progress li').forEach((li,i)=>{if(i===index)li.setAttribute('aria-current','step');else li.removeAttribute('aria-current');});$('action').hidden=true;$('demo').hidden=true;updateViewBox();}
-function action(text){$('action').textContent=text;$('action').hidden=false;}
+function action(text){ const b=$('action'); b.textContent=window.haqiHanziUi?window.haqiHanziUi(text,b):text; b.hidden=false; }
 function animate(ms,fn,signal=controller.signal){
  return new Promise(resolve=>{let frame,start;let settled=false;const finish=ok=>{if(settled)return;settled=true;cancelAnimationFrame(frame);signal.removeEventListener('abort',abort);resolve(ok);};const abort=()=>finish(false);if(signal.aborted){finish(false);return;}signal.addEventListener('abort',abort,{once:true});
  const step=t=>{if(start===undefined)start=t;const p=Math.min(1,(t-start)/ms);fn(ease(p));if(p===1)finish(true);else frame=requestAnimationFrame(step);};frame=requestAnimationFrame(step);});
@@ -171,7 +195,7 @@ async function grow(){
  scene('move',2);caption('三 · 歇息','树下真凉快。','拖动小人到树荫，或先点小人，再点树荫。');
  $('targets').hidden=false;$('treeTarget').hidden=true;$('shadeTarget').hidden=false;$('personTarget').hidden=false;action('选中小人');
 }
-function selectPerson(){if(state!=='move')return;selected=true;$('hint').textContent='小人准备好了，点一下树荫吧。';action('走到树荫里');}
+function selectPerson(){if(state!=='move')return;selected=true;hint('小人准备好了，点一下树荫吧。');action('走到树荫里');}
 async function rest(){
  if(state!=='move')return;const x=personX;cancelPointer();scene('rest',2);$('targets').hidden=true;caption('三 · 歇息','靠着大树，歇一会儿。','风轻轻吹，树叶沙沙响。');
  if(!await motion(1700,p=>personPosition(x+(128-x)*p)))return;
@@ -200,12 +224,13 @@ async function finishStroke(){
  written[stroke].style.opacity=1;written[stroke].style.strokeDasharray='';written[stroke].style.strokeDashoffset='';$('trace').setAttribute('d','');stroke++;
  if(stroke<6){prepareStroke();return;}
  scene('written',4);$('demo').hidden=true;$('guide').setAttribute('d','');$('startDot').hidden=true;$('strokeNumber').textContent='';$('glyphLabel').hidden=false;
+ window.haqiHanziWritten?.();
  caption('五 · 描字','写好了！休，休息的休。','一人一木，把这个字记在心里。');
  if(!await pause(3300))return;
  await finale();
 }
 async function demonstrate(){
- if(state!=='write'||demoRunning)return;cancelPointer();demoRunning=true;$('demo').disabled=true;$('hint').textContent='看红点走过每一笔，你也可以跟着比画。';const token=generation;
+ if(state!=='write'||demoRunning)return;cancelPointer();demoRunning=true;$('demo').disabled=true;hint('看红点走过每一笔，你也可以跟着比画。');const token=generation;
  while(stroke<6&&state==='write'){
  const p=written[stroke],length=p.getTotalLength();p.style.opacity=1;p.style.strokeDasharray=length;p.style.strokeDashoffset=length;$('pen').hidden=false;
  if(!await motion(1700,t=>{p.style.strokeDashoffset=length*(1-t);const pt=p.getPointAtLength(t*length);$('pen').setAttribute('cx',pt.x);$('pen').setAttribute('cy',pt.y);}))return;
@@ -220,7 +245,7 @@ async function finale(){
  if(!await motion(1500,p=>{opacity('personDetails',p);opacity('treeVisual',p);$('arm').setAttribute('d',`M423 308Q452 305 ${470+Math.sin(p*12)*7} 278`);}))return;
  $('canopy').classList.add('sway');
  if(!await motion(3300,p=>personPosition(370*p,reduced.matches?0:Math.sin(p*30)*3)))return;
- scene('done',5);action('再看一次');
+ window.haqiHanziComplete(); scene('done',5);action('再看一次');
 }
 function point(e){const ctm=svg.getScreenCTM();return ctm?new DOMPoint(e.clientX,e.clientY).matrixTransform(ctm.inverse()):{x:0,y:0};}
 function cancelPointer(){if(!drag)return;const old=drag;drag=null;tracing=false;if(svg.hasPointerCapture(old.id))svg.releasePointerCapture(old.id);if(old.kind==='trace')$('trace').setAttribute('d','');if(old.kind==='move'&&state==='move')personPosition(-200);}
@@ -234,7 +259,7 @@ function tracePoint(p){
 svg.addEventListener('pointerdown',e=>{
  if(drag||!e.isPrimary||e.button!==0)return;const p=point(e);
  if(state==='move'&&e.target.closest('#personTarget')){e.preventDefault();drag={id:e.pointerId,kind:'move',start:p,origin:personX,moved:false};svg.setPointerCapture(e.pointerId);}
- else if(state==='write'&&!demoRunning){e.preventDefault();if(Math.hypot(p.x-samples[0].x,p.y-samples[0].y)>28){$('hint').textContent='从这一笔的红点开始哦。';return;}drag={id:e.pointerId,kind:'trace',index:0,invalid:false};tracing=true;svg.setPointerCapture(e.pointerId);tracePoint(p);}
+ else if(state==='write'&&!demoRunning){e.preventDefault();if(Math.hypot(p.x-samples[0].x,p.y-samples[0].y)>28){hint('从这一笔的红点开始哦。');return;}drag={id:e.pointerId,kind:'trace',index:0,invalid:false};tracing=true;svg.setPointerCapture(e.pointerId);tracePoint(p);}
 });
 svg.addEventListener('pointermove',e=>{
  if(!drag||drag.id!==e.pointerId)return;const p=point(e);
@@ -248,12 +273,12 @@ svg.addEventListener('pointerup',e=>{
  if(old.kind==='move'){
  if(!old.moved){personPosition(-200);selectPerson();}
  else if(p.x>=409&&p.x<=559&&p.y>=265&&p.y<=445){rest();}
- else{personPosition(-200);$('hint').textContent='还没到树荫里，再试一次吧。';}
+ else{personPosition(-200);hint('还没到树荫里，再试一次吧。');}
  }else if(!old.invalid&&old.index>=samples.length-3){finishStroke();}
- else{$('trace').setAttribute('d','');$('hint').textContent='没关系，从红点开始，把这一笔写完整。';}
+ else{$('trace').setAttribute('d','');hint('没关系，从红点开始，把这一笔写完整。');}
 });
 svg.addEventListener('pointercancel',cancelPointer);svg.addEventListener('lostpointercapture',cancelPointer);
-$('treeTarget').addEventListener('click',grow);$('shadeTarget').addEventListener('click',()=>{if(selected)rest();else if(state==='move')$('hint').textContent='先点一下小人，再带他走到树荫。';});
+$('treeTarget').addEventListener('click',grow);$('shadeTarget').addEventListener('click',()=>{if(selected)rest();else if(state==='move')hint('先点一下小人，再带他走到树荫。');});
 $('action').addEventListener('click',()=>{if(state==='intro'||state==='done')begin();else if(state==='tree')grow();else if(state==='move'){if(selected)rest();else selectPerson();}});
 $('replay').addEventListener('click',begin);$('demo').addEventListener('click',demonstrate);
 function updateViewBox(){svg.setAttribute('viewBox',innerWidth<=600?(state==='write'||state==='written'?'265 55 500 455':'135 40 650 485'):'0 0 1000 520');}

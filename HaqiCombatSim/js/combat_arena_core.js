@@ -131,7 +131,7 @@ export function castableCards(arena, unit) {
     const out = [];
     for (const { seq, key } of U.selectableCards(unit)) {
         const card = R.cards[key];
-        if (card && U.canCast(unit, card, R)) out.push({ seq, key, card });
+        if (card && (!unit.wordCards?.[seq]||unit.wordCards[seq].activated) && U.canCast(unit, card, R)) out.push({ seq, key, card });
     }
     return out;
 }

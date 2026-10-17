@@ -43,3 +43,13 @@ test('pausing a stroke demonstration keeps its position and draft until resumed'
  writing.demonstrate({strokeIndex:2});writing.pauseDemonstration();assert.equal(events.at(-1).stroke,3);writing.stopDemonstration();const stopped=events.length;writing.resumeDemonstration();t.mock.timers.tick(10000);assert.equal(events.length,stopped);
  writing.demonstrate();writing.pauseDemonstration();writing.dispose();const disposed=events.length;writing.resumeDemonstration();t.mock.timers.tick(10000);assert.equal(events.length,disposed);
 });
+
+
+test('confirmed strokes use glyph outlines without changing submitted ink or emitting another attempt',t=>{
+ const {canvas,glyph}=pad(t),ctx=canvas.getContext(),changes=[],fills=[];ctx.fill=path=>fills.push(path);
+ const writing=createHanziWriting(canvas,glyph,{hint:false,preserveOnDemo:true,onChange:n=>changes.push(n)});
+ const ink=[[[.4,.1],[.45,.8]]];writing.restore(ink);fills.length=0;
+ writing.confirmStroke(0);assert.ok(fills.length>0,'standard SVG outline is painted');assert.deepEqual(writing.strokes,ink);assert.deepEqual(changes,[1]);
+ fills.length=0;writing.undo();assert.equal(fills.length,0);writing.restore(ink);assert.equal(fills.length,0,'undo/restore never retains a confirmation for new ink');
+ writing.confirmStroke(0);writing.clear();fills.length=0;writing.restore(ink);assert.equal(fills.length,0);writing.dispose();
+});

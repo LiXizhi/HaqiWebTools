@@ -48,3 +48,21 @@ test('elemental drawing remains deterministic and reduced motion suppresses movi
  fx.draw(c,options);const normal=commands.length,first=JSON.stringify(commands);commands.length=0;fx.draw(c,options);assert.equal(JSON.stringify(commands),first);
  commands.length=0;fx.draw(c,{...options,reducedMotion:true});assert.ok(commands.length<normal/4);
 });
+test('spell effects reset shadowBlur after ground rune and batch particle fills',()=>{
+ let currentBlur=0,blurredArcs=0,arcs=0,fills=0;
+ const c=new Proxy({}, {
+  get:(_,k)=>(...args)=>{
+   if(k==='arc'){arcs++;if(currentBlur>0)blurredArcs++;}
+   if(k==='fill')fills++;
+   return k==='createRadialGradient'?{addColorStop(){}}:undefined;
+  },
+  set:(_,k,v)=>{if(k==='shadowBlur')currentBlur=v;return true;}
+ });
+ const fx=createSpellEffects({effects,skillArt:{manifest,drawSubject(){return true;}}});
+ const card=Object.values(cards).find(card=>effects.cards[card.key].base==='Fire_SingleAttack_Level6');
+ fx.draw(c,{card,progress:.78,from:{x:130,y:290},to:{x:690,y:290},width:900,height:440,seed:7});
+ assert.equal(blurredArcs,2);
+ assert.ok(arcs>=60);
+ assert.ok(fills<arcs*.65);
+});
+

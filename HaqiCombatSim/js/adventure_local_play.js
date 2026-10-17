@@ -1,3 +1,4 @@
+import {drawGatheringProgress} from './view_gathering_progress.js';
 import {migrateCampDrops,locationSnapshot} from './adventure_coordinates_core.js';
 import {selectCompanionId} from './adventure_companion_core.js';
 import {assignedKeyboardAction,normalizePlayerInputs} from './player_input_core.js';
@@ -622,9 +623,7 @@ export function createLocalPlay(api){
             const enabled=!state().globalPaused&&!panels[owner]&&!dialogs[owner]&&!following[owner];
             const progress=advanceGathering(gatherProgress[owner],{position,node,dt,enabled,params});gatherProgress[owner]=progress;
             if(!enabled||!node||progress.elapsed<params.gatherDwellSeconds)continue;
-            const p=renderer.worldToScreen(node);c.strokeStyle='#173b3680';c.lineWidth=5;c.beginPath();c.arc(p.x,p.y-18,19,0,Math.PI*2);c.stroke();
-            c.strokeStyle=owner?'#91d8ff':'#ffe8a0';c.beginPath();c.arc(p.x,p.y-18,19,-Math.PI/2,-Math.PI/2+Math.PI*2*progress.progress);c.stroke();
-            c.fillStyle='#fff8d0';c.font='12px sans-serif';c.textAlign='center';c.fillText(`${node.name} · ${gatheringRemaining(record,node,day())}`,p.x,p.y-45);
+            drawGatheringProgress(c,renderer.worldToScreen(node),progress.progress,`${node.name} · ${gatheringRemaining(record,node,day())}`,owner);
             if(progress.ready&&!busy){
                 // Reserve this cycle before async IndexedDB IO; both players share remaining stock.
                 progress.elapsed=params.gatherDwellSeconds;progress.progress=0;

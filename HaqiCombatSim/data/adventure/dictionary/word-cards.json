@@ -1,0 +1,605 @@
+{
+  "version": 1,
+  "cards": [
+    {
+      "id": "zh:ri",
+      "language": "zh",
+      "entryId": "ri",
+      "title": "日光",
+      "readText": "温暖的日光，帮助伙伴恢复生命。",
+      "description": "温暖的日光，帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Warm sunlight helps friends heal."
+    },
+    {
+      "id": "zh:yue",
+      "language": "zh",
+      "entryId": "yue",
+      "title": "月光",
+      "readText": "柔和的月光，帮助伙伴恢复生命。",
+      "description": "柔和的月光，帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Soft moonlight helps friends heal."
+    },
+    {
+      "id": "zh:shan",
+      "language": "zh",
+      "entryId": "shan",
+      "title": "大山",
+      "readText": "大山挡在前面，保护伙伴。",
+      "description": "大山挡在前面，保护伙伴。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "A big mountain stands in front to protect friends."
+    },
+    {
+      "id": "zh:shui",
+      "language": "zh",
+      "entryId": "shui",
+      "title": "流水",
+      "readText": "流水冲向对手。",
+      "description": "流水冲向对手。",
+      "baseCardKey": "Ice_SingleAttack_Level1",
+      "readTranslation": "Water flows toward the enemy."
+    },
+    {
+      "id": "zh:huo",
+      "language": "zh",
+      "entryId": "huo",
+      "title": "火花",
+      "readText": "小火花飞向对手。",
+      "description": "小火花飞向对手。",
+      "baseCardKey": "Fire_SingleAttack_Level0_60",
+      "readTranslation": "A little spark flies toward the enemy."
+    },
+    {
+      "id": "zh:mu",
+      "language": "zh",
+      "entryId": "mu",
+      "title": "树木",
+      "readText": "树木的生命力，帮助伙伴恢复。",
+      "description": "树木的生命力，帮助伙伴恢复。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Trees bring life and help friends heal."
+    },
+    {
+      "id": "zh:shi",
+      "language": "zh",
+      "entryId": "shi",
+      "title": "石头",
+      "readText": "坚硬的石头，保护伙伴。",
+      "description": "坚硬的石头，保护伙伴。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "Hard stones protect friends."
+    },
+    {
+      "id": "zh:tu",
+      "language": "zh",
+      "entryId": "tu",
+      "title": "泥土",
+      "readText": "厚厚的泥土，挡住攻击。",
+      "description": "厚厚的泥土，挡住攻击。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "A wall rises from the earth to block attacks."
+    },
+    {
+      "id": "zh:ren",
+      "language": "zh",
+      "entryId": "ren",
+      "title": "助人为乐",
+      "readText": "帮助身边的人恢复生命。",
+      "description": "帮助身边的人恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Help the people nearby heal."
+    },
+    {
+      "id": "zh:kou",
+      "language": "zh",
+      "entryId": "kou",
+      "title": "开口",
+      "readText": "开口呼唤，给伙伴一点力量。",
+      "description": "开口呼唤，给伙伴一点力量。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Open your mouth and call out a bolt of lightning."
+    },
+    {
+      "id": "zh:shou",
+      "language": "zh",
+      "entryId": "shou",
+      "title": "伸手",
+      "readText": "伸手帮助伙伴恢复生命。",
+      "description": "伸手帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Reach out your hand to help a friend heal."
+    },
+    {
+      "id": "zh:mu-eye",
+      "language": "zh",
+      "entryId": "mu-eye",
+      "title": "目光",
+      "readText": "目光坚定，放出一道闪电。",
+      "description": "目光坚定，放出一道闪电。",
+      "baseCardKey": "Storm_SingleAttack_Level1",
+      "readTranslation": "With a steady gaze, send out lightning."
+    },
+    {
+      "id": "zh:er",
+      "language": "zh",
+      "entryId": "er",
+      "title": "耳听八方",
+      "readText": "耳朵仔细听，治好身边的伙伴。",
+      "description": "耳朵仔细听，治好身边的伙伴。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "Listen carefully and heal a friend nearby."
+    },
+    {
+      "id": "zh:xin",
+      "language": "zh",
+      "entryId": "xin",
+      "title": "爱心",
+      "readText": "送出爱心，帮助伙伴恢复生命。",
+      "description": "送出爱心，帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Share your love to help friends heal."
+    },
+    {
+      "id": "zh:men",
+      "language": "zh",
+      "entryId": "men",
+      "title": "大门",
+      "readText": "关上大门，挡住攻击。",
+      "description": "关上大门，挡住攻击。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "Close the big door to block attacks."
+    },
+    {
+      "id": "zh:tian-field",
+      "language": "zh",
+      "entryId": "tian-field",
+      "title": "田野",
+      "readText": "田野带来生机，帮助伙伴恢复。",
+      "description": "田野带来生机，帮助伙伴恢复。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Life in the fields helps friends heal."
+    },
+    {
+      "id": "zh:shang",
+      "language": "zh",
+      "entryId": "shang",
+      "title": "向上",
+      "readText": "向上举起盾牌，保护伙伴。",
+      "description": "向上举起盾牌，保护伙伴。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "Lift your shield up to protect friends."
+    },
+    {
+      "id": "zh:xia",
+      "language": "zh",
+      "entryId": "xia",
+      "title": "落下",
+      "readText": "闪电从天空落下。",
+      "description": "闪电从天空落下。",
+      "baseCardKey": "Storm_SingleAttack_Level1",
+      "readTranslation": "Cold air falls from above."
+    },
+    {
+      "id": "zh:da",
+      "language": "zh",
+      "entryId": "da",
+      "title": "大火",
+      "readText": "大火向对手扑去。",
+      "description": "大火向对手扑去。",
+      "baseCardKey": "Fire_SingleAttack_Level0_60",
+      "readTranslation": "Strike hard."
+    },
+    {
+      "id": "zh:xiao",
+      "language": "zh",
+      "entryId": "xiao",
+      "title": "小火苗",
+      "readText": "小火苗飞向对手。",
+      "description": "小火苗飞向对手。",
+      "baseCardKey": "Fire_SingleAttack_Level0_60",
+      "readTranslation": "A small ice crystal flies toward the enemy."
+    },
+    {
+      "id": "zh:zhong",
+      "language": "zh",
+      "entryId": "zhong",
+      "title": "击中",
+      "readText": "一道闪电击中对手。",
+      "description": "一道闪电击中对手。",
+      "baseCardKey": "Storm_SingleAttack_Level1",
+      "readTranslation": "A bolt of lightning hits the enemy."
+    },
+    {
+      "id": "zh:tian-sky",
+      "language": "zh",
+      "entryId": "tian-sky",
+      "title": "天空",
+      "readText": "天空亮起一道闪电。",
+      "description": "天空亮起一道闪电。",
+      "baseCardKey": "Storm_SingleAttack_Level1",
+      "readTranslation": "Lightning falls from the sky."
+    },
+    {
+      "id": "zh:yun",
+      "language": "zh",
+      "entryId": "yun",
+      "title": "乌云",
+      "readText": "乌云中闪出一道雷光。",
+      "description": "乌云中闪出一道雷光。",
+      "baseCardKey": "Storm_SingleAttack_Level1",
+      "readTranslation": "Lightning flashes from the clouds."
+    },
+    {
+      "id": "zh:yu",
+      "language": "zh",
+      "entryId": "yu",
+      "title": "雨水",
+      "readText": "雨水带来清凉的力量。",
+      "description": "雨水带来清凉的力量。",
+      "baseCardKey": "Ice_SingleAttack_Level1",
+      "readTranslation": "Cold rain weakens the enemy."
+    },
+    {
+      "id": "zh:xiu",
+      "language": "zh",
+      "entryId": "xiu",
+      "title": "休息",
+      "readText": "休息一下，恢复生命。",
+      "description": "休息一下，恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Rest a little to heal."
+    },
+    {
+      "id": "zh:sen",
+      "language": "zh",
+      "entryId": "sen",
+      "title": "森林",
+      "readText": "森林的生机帮助伙伴恢复。",
+      "description": "森林的生机帮助伙伴恢复。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "The forest helps friends heal."
+    },
+    {
+      "id": "zh:guang",
+      "language": "zh",
+      "entryId": "guang",
+      "title": "光芒",
+      "readText": "温暖的光芒帮助伙伴恢复。",
+      "description": "温暖的光芒帮助伙伴恢复。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Warm light helps friends heal."
+    },
+    {
+      "id": "zh:guo",
+      "language": "zh",
+      "entryId": "guo",
+      "title": "保家卫国",
+      "readText": "举起盾牌，守护国家。",
+      "description": "举起盾牌，守护国家。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "Raise your shield to protect the country."
+    },
+    {
+      "id": "zh:ming",
+      "language": "zh",
+      "entryId": "ming",
+      "title": "明亮",
+      "readText": "明亮的光照着伙伴，恢复生命。",
+      "description": "明亮的光照着伙伴，恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "Bright light shines on friends and heals them."
+    },
+    {
+      "id": "zh:wu",
+      "language": "zh",
+      "entryId": "wu",
+      "title": "火舞",
+      "readText": "舞动的火花飞向对手。",
+      "description": "舞动的火花飞向对手。",
+      "baseCardKey": "Fire_SingleAttack_Level0_60",
+      "readTranslation": "Dancing sparks fly toward the enemy."
+    },
+    {
+      "id": "en:hello",
+      "language": "en",
+      "entryId": "hello",
+      "title": "Hello, my friend.",
+      "readText": "Hello, my friend.",
+      "description": "向朋友问好，送去恢复生命的力量。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "你好，我的朋友。"
+    },
+    {
+      "id": "en:goodbye",
+      "language": "en",
+      "entryId": "goodbye",
+      "title": "Goodbye, little spark.",
+      "readText": "Goodbye, little spark.",
+      "description": "送出一团火花，让它飞向对手。",
+      "baseCardKey": "Fire_SingleAttack_Level0_60",
+      "readTranslation": "再见，小火花。"
+    },
+    {
+      "id": "en:please",
+      "language": "en",
+      "entryId": "please",
+      "title": "Please stay safe.",
+      "readText": "Please stay safe.",
+      "description": "请保护好自己，举起护盾。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "请注意安全。"
+    },
+    {
+      "id": "en:thanks",
+      "language": "en",
+      "entryId": "thanks",
+      "title": "Thanks for your help.",
+      "readText": "Thanks for your help.",
+      "description": "感谢伙伴，帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "谢谢你的帮助。"
+    },
+    {
+      "id": "en:yes",
+      "language": "en",
+      "entryId": "yes",
+      "title": "Yes, I can help.",
+      "readText": "Yes, I can help.",
+      "description": "答应帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "是的，我能帮忙。"
+    },
+    {
+      "id": "en:no",
+      "language": "en",
+      "entryId": "no",
+      "title": "No, stay back.",
+      "readText": "No, stay back.",
+      "description": "拒绝攻击，用护盾保护伙伴。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "不，退后。"
+    },
+    {
+      "id": "en:friend",
+      "language": "en",
+      "entryId": "friend",
+      "title": "Help my friend.",
+      "readText": "Help my friend.",
+      "description": "帮助我的朋友恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "帮助我的朋友。"
+    },
+    {
+      "id": "en:family",
+      "language": "en",
+      "entryId": "family",
+      "title": "Keep my family safe.",
+      "readText": "Keep my family safe.",
+      "description": "用护盾保护家人。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "保护我的家人。"
+    },
+    {
+      "id": "en:mother",
+      "language": "en",
+      "entryId": "mother",
+      "title": "Help my mother.",
+      "readText": "Help my mother.",
+      "description": "帮助妈妈恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "帮助我的妈妈。"
+    },
+    {
+      "id": "en:father",
+      "language": "en",
+      "entryId": "father",
+      "title": "Protect my father.",
+      "readText": "Protect my father.",
+      "description": "用护盾保护爸爸。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "保护我的爸爸。"
+    },
+    {
+      "id": "en:child",
+      "language": "en",
+      "entryId": "child",
+      "title": "Keep the child safe.",
+      "readText": "Keep the child safe.",
+      "description": "用护盾保护孩子。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "保护这个孩子。"
+    },
+    {
+      "id": "en:teacher",
+      "language": "en",
+      "entryId": "teacher",
+      "title": "Help my teacher.",
+      "readText": "Help my teacher.",
+      "description": "帮助老师恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "帮助我的老师。"
+    },
+    {
+      "id": "en:sun",
+      "language": "en",
+      "entryId": "sun",
+      "title": "The sun is warm.",
+      "readText": "The sun is warm.",
+      "description": "温暖的阳光帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "太阳很温暖。"
+    },
+    {
+      "id": "en:moon",
+      "language": "en",
+      "entryId": "moon",
+      "title": "The moon is bright.",
+      "readText": "The moon is bright.",
+      "description": "明亮的月光帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "月亮很明亮。"
+    },
+    {
+      "id": "en:water",
+      "language": "en",
+      "entryId": "water",
+      "title": "Water, flow ahead.",
+      "readText": "Water, flow ahead.",
+      "description": "让水流向前，攻击对手。",
+      "baseCardKey": "Ice_SingleAttack_Level1",
+      "readTranslation": "水呀，向前流。"
+    },
+    {
+      "id": "en:tree",
+      "language": "en",
+      "entryId": "tree",
+      "title": "Grow, little tree.",
+      "readText": "Grow, little tree.",
+      "description": "小树的生机帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "长大吧，小树。"
+    },
+    {
+      "id": "en:rain",
+      "language": "en",
+      "entryId": "rain",
+      "title": "Rain, fall down.",
+      "readText": "Rain, fall down.",
+      "description": "雨水落下，带来清凉的攻击。",
+      "baseCardKey": "Ice_SingleAttack_Level1",
+      "readTranslation": "雨呀，落下来。"
+    },
+    {
+      "id": "en:flower",
+      "language": "en",
+      "entryId": "flower",
+      "title": "Bloom, little flower.",
+      "readText": "Bloom, little flower.",
+      "description": "小花开放，帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "开花吧，小花。"
+    },
+    {
+      "id": "en:book",
+      "language": "en",
+      "entryId": "book",
+      "title": "My book has magic.",
+      "readText": "My book has magic.",
+      "description": "书中的魔法化成一道闪电。",
+      "baseCardKey": "Storm_SingleAttack_Level1",
+      "readTranslation": "我的书有魔法。"
+    },
+    {
+      "id": "en:door",
+      "language": "en",
+      "entryId": "door",
+      "title": "Close the door.",
+      "readText": "Close the door.",
+      "description": "关上门，用护盾挡住攻击。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "关上门。"
+    },
+    {
+      "id": "en:home",
+      "language": "en",
+      "entryId": "home",
+      "title": "Keep our home safe.",
+      "readText": "Keep our home safe.",
+      "description": "用护盾守护家园。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "保护我们的家。"
+    },
+    {
+      "id": "en:help",
+      "language": "en",
+      "entryId": "help",
+      "title": "I can help you.",
+      "readText": "I can help you.",
+      "description": "帮助伙伴恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "我能帮助你。"
+    },
+    {
+      "id": "en:open",
+      "language": "en",
+      "entryId": "open",
+      "title": "Open the magic book.",
+      "readText": "Open the magic book.",
+      "description": "打开魔法书，放出一道闪电。",
+      "baseCardKey": "Storm_SingleAttack_Level1",
+      "readTranslation": "打开魔法书。"
+    },
+    {
+      "id": "en:look",
+      "language": "en",
+      "entryId": "look",
+      "title": "Look at the spark.",
+      "readText": "Look at the spark.",
+      "description": "看，小火花飞向对手。",
+      "baseCardKey": "Fire_SingleAttack_Level0_60",
+      "readTranslation": "看看火花。"
+    },
+    {
+      "id": "en:listen",
+      "language": "en",
+      "entryId": "listen",
+      "title": "Listen to the thunder.",
+      "readText": "Listen to the thunder.",
+      "description": "听雷声，放出一道闪电。",
+      "baseCardKey": "Storm_SingleAttack_Level1",
+      "readTranslation": "听听雷声。"
+    },
+    {
+      "id": "en:walk",
+      "language": "en",
+      "entryId": "walk",
+      "title": "Walk with me.",
+      "readText": "Walk with me.",
+      "description": "同行的伙伴受到护盾保护。",
+      "baseCardKey": "Ice_GlobalShield",
+      "readTranslation": "和我一起走。"
+    },
+    {
+      "id": "en:read",
+      "language": "en",
+      "entryId": "read",
+      "title": "Read the magic words.",
+      "readText": "Read the magic words.",
+      "description": "读出魔法文字，放出一道闪电。",
+      "baseCardKey": "Storm_SingleAttack_Level1",
+      "readTranslation": "读出魔法文字。"
+    },
+    {
+      "id": "en:write",
+      "language": "en",
+      "entryId": "write",
+      "title": "Write a magic word.",
+      "readText": "Write a magic word.",
+      "description": "写下魔法文字，放出一道闪电。",
+      "baseCardKey": "Storm_SingleAttack_Level1",
+      "readTranslation": "写一个魔法词。"
+    },
+    {
+      "id": "en:rest",
+      "language": "en",
+      "entryId": "rest",
+      "title": "Rest for a while.",
+      "readText": "Rest for a while.",
+      "description": "休息一下，恢复生命。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "休息一会儿。"
+    },
+    {
+      "id": "en:happy",
+      "language": "en",
+      "entryId": "happy",
+      "title": "I am happy.",
+      "readText": "I am happy.",
+      "description": "快乐的心情带来恢复生命的力量。",
+      "baseCardKey": "Life_SingleHeal_Level0",
+      "readTranslation": "我很开心。"
+    }
+  ]
+}

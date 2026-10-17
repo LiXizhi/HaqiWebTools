@@ -1,0 +1,42 @@
+@import url('./language_adventure.css');
+.word-practice { width:min(740px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;box-sizing:border-box;background:var(--paper,#fff3d4);color:var(--ink,#3f2d1c);border:3px solid var(--gold,#ba8b43);border-radius:18px;padding:16px;box-shadow:0 18px 70px #102c3866; }
+.word-practice::backdrop { background:#14251db3; }
+.word-practice header { position:sticky;top:-16px;z-index:2;background:var(--paper,#fff3d4);display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:8px; }
+.word-practice h2 { margin:0;font-size:19px;line-height:1.5; }
+.word-practice p { overflow-wrap:anywhere; }
+.word-practice button.secondary { min-height:44px;margin:4px; }
+.word-practice-layout { display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:start; }
+.word-practice-showcase { text-align:center;padding:18px 10px;border-radius:80px 80px 16px 16px;background:radial-gradient(ellipse at 50% 35%,#fbe7a2 0, #fbe7a233 55%,transparent 75%); }
+.word-practice-showcase .spell-face { width:210px;max-width:100%;margin:auto;filter:drop-shadow(0 8px 10px #26484a40); }
+.word-practice-reading { font-size:22px;font-weight:bold;margin:12px 0 6px; }
+.word-practice-description { font-size:14px;line-height:1.6;margin:0 0 12px; }
+.word-practice-tools { display:flex;flex-wrap:wrap;justify-content:center; }
+.word-practice-study { min-width:0;text-align:center; }
+.word-practice-glyph { font:64px/1.2 KaiTi,STKaiti,serif;color:#284f45; }
+.word-practice-strokes { display:flex;flex-wrap:wrap;justify-content:center;gap:5px;margin:8px 0 12px; }
+.word-practice-strokes figure { margin:0;width:44px;padding:3px;border:1px solid #ceba85;border-radius:6px;background:#fffbef; }
+.word-practice-strokes canvas { width:44px;height:44px;display:block; }
+.word-practice-strokes figcaption { font-size:11px;color:#8a6035; }
+.word-practice-study p { font-size:13px;line-height:1.5; }
+.word-practice-writing { display:block;width:min(100%,240px);aspect-ratio:1;margin:8px auto;border:1px solid #cbb989;border-radius:8px; }
+.word-practice input { box-sizing:border-box;width:100%;font-size:20px;min-height:44px; }
+.word-practice-showcase[hidden] { display:none; }
+.word-practice-layout.is-spelling { grid-template-columns:1fr; }
+.word-practice [role=status]:empty { display:none; }
+@media(max-width:580px) {
+ .word-practice { padding:12px; }
+ .word-practice header { top:-12px; }
+ .word-practice-layout { grid-template-columns:1fr;gap:12px; }
+ .word-practice-showcase { padding:4px 8px; }
+ .word-practice-showcase .spell-face { width:151px; }
+ .word-practice-reading { margin-top:8px;font-size:20px; }
+ .word-practice-description { margin-bottom:4px; }
+ .word-practice-glyph { font-size:48px; }
+}
+
+.word-practice-mic { touch-action:none;user-select:none; }
+
+.word-card-dialogue { margin-top:18px;text-align:left; }
+.word-card-dialogue [hidden] { display:none!important; }
+.word-card-dialogue .camp-chat-footer { padding:8px 4px; }
+.word-card-dialogue .camp-chat-message { margin-bottom:12px; }

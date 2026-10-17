@@ -2,7 +2,7 @@
 import {resolveParams} from './combat_params_core.js';
 
 export const HANZI_BATTLE_CARDS = {huo:'火',shui:'水',tu:'土'};
-export const ownsHanziCard = (progress,id) => progress?.questCards?.includes(id) || progress?.entries?.[id]?.attempts?.length === 3;
+export const ownsHanziCard = (progress,id) => progress?.memories?.fragments?.[id] >= 3 || progress?.questCards?.includes(id) || progress?.entries?.[id]?.attempts?.length === 3;
 export function hanziBattleSpec(save,content) {
     if(save.pendingEncounter)return save.pendingEncounter.player?.hanziBattle?structuredClone(save.pendingEncounter.player.hanziBattle):null;
     const id=save.hanzi?.battleCard;

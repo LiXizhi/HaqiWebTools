@@ -1,3 +1,4 @@
+import {installWordCards,activateWordCard} from './word_cards_core.js';
 import {applyPetTraitStats,validatePetTraits} from './adventure_pet_traits_core.js';
 import {monsterCombatStats} from './combat_power_core.js';
 import {chatSupportPick,BATTLE_CHAT} from './battle_chat_core.js';
@@ -26,7 +27,7 @@ export function runeCardsInHand(battle,unitId=null) {
     if(unitId&&battle.localHumans?.[unitId])return runeCardsInHand({...battle,...battle.localHumans[unitId],localHumans:null});
     return (battle.runes||[]).filter(row=>row.count>(battle.runeUsed[row.itemId]||0)&&runeCardReady(battle,row)).map(row=>({key:row.key,runeId:row.itemId,seq:-row.itemId,count:row.count-(battle.runeUsed[row.itemId]||0)}));
 }
-export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0, specialCardRulesVersion = 0, captureRulesVersion = 0, petTraitRulesVersion = 0, monsterTraits = [], petTraitParams = null, monsterStatsVersion = 1, languageBuff = null, languageBuffLimits = null, localHumans = null }) {
+export function createPveBattle({ dataset, player, monsters, monsterSlots = null, seed = 1, firstSide = 'near', party = null, captureStock = 0, heroLevel = 1, adventureParams = null, runes = [], ownedPets = [], threatRulesVersion = 0, reflectionRulesVersion = 0, stealthRulesVersion = 0, dispelRulesVersion = 0, specialCardRulesVersion = 0, captureRulesVersion = 0, petTraitRulesVersion = 0, monsterTraits = [], petTraitParams = null, monsterStatsVersion = 1, languageBuff = null, languageBuffLimits = null, localHumans = null, wordCards = null }) {
     if(![0,1].includes(petTraitRulesVersion))throw Error('宠物标签规则版本无效');
     if(petTraitRulesVersion===1){
         if(monsterTraits.length!==monsters.length)throw Error('怪物标签记录无效');
@@ -129,6 +130,7 @@ export function createPveBattle({ dataset, player, monsters, monsterSlots = null
     });
     for(const [i,spec] of (party||[player]).entries()){const unit=arena.sides.near[i];U.shuffleDeck(unit,arena.rng);for(const row of [...(spec.fixedCards||[])].reverse())for(let n=0;n<(row.count||1);n++){unit.deckSeq.unshift(row.key);unit.deckMap.unshift(0);}}
     for(const [i,spec] of (party||[player]).entries())if(spec.petCards)U.preparePetCards(arena.sides.near[i],spec.petCards,arena.rng);
+    if(wordCards){if(localHumans)throw Error('双人战斗暂不支持文字卡');installWordCards(arena.sides.near[0],wordCards,resolved.cards);}
     emit(arena,{type:'combat_start',firstSide,mode:'pve'});
     advancePveRound(arena); return arena;
 }
@@ -282,6 +284,9 @@ export function playPveRound(a,decision) {
     }
     if(!decision.pass&&!decision.capture&&U.isAlive(u)) {
         if(!rune&&(!Number.isInteger(decision.seq)||!U.selectableCards(u).some(h=>h.seq===decision.seq&&h.key===decision.key)||discarded.includes(decision.seq)))throw new Error('请选择手中的卡牌');
+        const word=u.wordCards?.[decision.seq];
+        if(word&&!word.activated){if(a.replaying&&decision.wordCardId===word.id)activateWordCard(u,decision.seq);else throw Error('请先激活文字卡');}
+        if(word)decision.wordCardId=word.id;
         const card=a.resolved.cards[decision.key];
         if(!U.canCast(u,card,a.resolved))throw new Error('魔力不足或技能尚在冷却');
         if(!validTargets(a,u,card).some(t=>t.id===decision.targetId))throw new Error('请选择有效目标');
@@ -318,8 +323,9 @@ export function playPveRound(a,decision) {
                 const originalStats=u.stats;
                 try{
                     if(decision.seq>=U.PET_CARD_SEQ_BASE&&u.supportPetTraits)u.stats=applyPetTraitStats(u.stats,Object.fromEntries(Object.entries(u.supportPetTraits).filter(([key])=>['attack','critical','accuracy','healing'].includes(key))),a.resolved.petTraits);
+                    a.wordCardCast=u.wordCards?.[decision.seq]?{...u.wordCards[decision.seq],seq:decision.seq,caster:u.id}:null;
                     useCard(a,u,card,target,rune?undefined:decision.seq);
-                }finally{u.stats=originalStats;}
+                }finally{u.stats=originalStats;a.wordCardCast=null;}
                 if(rune&&a.events.slice(start).some(event=>event.type==='cast'&&event.caster===u.id&&event.card===rune.key))resources.runeUsed[rune.itemId]=(resources.runeUsed[rune.itemId]||0)+1;
             }
         }
@@ -371,7 +377,8 @@ export function restorePveBattle(dataset,content,checkpoint) {
     const encounter=content.encounters.find(e=>e.id===checkpoint.encounterId)||earthEncounter(content,checkpoint.encounterId);
     if(!encounter&&!checkpoint.monster)throw new Error('存档中的战斗地点不存在');
     const templates=checkpoint.dungeonMonsterIds?checkpoint.dungeonMonsterIds.map(id=>content.monsters[id]):[checkpoint.monster||content.monsters[encounter.monsterId]];
-    const a=createPveBattle({dataset,localHumans:checkpoint.localHumans,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,specialCardRulesVersion:checkpoint.specialCardRulesVersion,captureRulesVersion:checkpoint.captureRulesVersion,petTraitRulesVersion:checkpoint.petTraitRulesVersion,monsterTraits:checkpoint.monsterTraits,petTraitParams:checkpoint.petTraitParams,monsterStatsVersion:checkpoint.equipmentStatsVersion>=2?1:0,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});
+    const a=createPveBattle({dataset,wordCards:checkpoint.wordCards,localHumans:checkpoint.localHumans,player:checkpoint.player,monsters:stampBattleMonsters(templates,content,dataset),monsterSlots:checkpoint.dungeonMonsterSlots,seed:checkpoint.seed,party:checkpoint.party,captureStock:checkpoint.captureStock,heroLevel:checkpoint.heroLevel,adventureParams:checkpoint.adventureParams,runes:checkpoint.runes,ownedPets:checkpoint.ownedPets||[],threatRulesVersion:checkpoint.threatRulesVersion,reflectionRulesVersion:checkpoint.reflectionRulesVersion,stealthRulesVersion:checkpoint.stealthRulesVersion,dispelRulesVersion:checkpoint.dispelRulesVersion,specialCardRulesVersion:checkpoint.specialCardRulesVersion,captureRulesVersion:checkpoint.captureRulesVersion,petTraitRulesVersion:checkpoint.petTraitRulesVersion,monsterTraits:checkpoint.monsterTraits,petTraitParams:checkpoint.petTraitParams,monsterStatsVersion:checkpoint.equipmentStatsVersion>=2?1:0,languageBuff:checkpoint.languageBuff,languageBuffLimits:checkpoint.dailyLanguageVersion===1?dailyBuffParams(content):dungeonLanguageParams(content)});
     a.replaying=true;for(const decision of checkpoint.decisions)playPveRound(a,decision);a.replaying=false;
+    for(const [seq,row] of Object.entries(a.sides.near[0].wordCards||{}))if(a.sides.near[0].deckMap[seq]===1&&checkpoint.wordCards.activated.includes(row.id))activateWordCard(a.sides.near[0],Number(seq));
     return a;
 }

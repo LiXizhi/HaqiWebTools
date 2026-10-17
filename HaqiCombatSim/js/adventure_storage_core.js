@@ -7,7 +7,7 @@ import { petMaxHp } from './adventure_pets_core.js';
 import { mapInfo } from './adventure_island_layout_core.js';
 
 const copy = value => JSON.parse(JSON.stringify(value));
-const localFields = ['positionCoordinateVersion','timeScrollRuntime','cityFallback','cityReturnStack','earthReturn','heroHp','careAt','careLog','position','facing','pendingEncounter','encounterRespawns','petTraitEncounters','stamina','staminaRefillDay','coopRun','dungeonExploration','dungeonMode','dungeonLanguageBuff'];
+const localFields = ['hanziMemoryRuntime','positionCoordinateVersion','timeScrollRuntime','cityFallback','cityReturnStack','earthReturn','heroHp','careAt','careLog','position','facing','pendingEncounter','encounterRespawns','petTraitEncounters','stamina','staminaRefillDay','coopRun','dungeonExploration','dungeonMode','dungeonLanguageBuff'];
 // Cosmetic preferences stay on this device only: stripped from durable/cloud saves,
 // kept in the role's IndexedDB runtime record and restored regardless of revision.
 const prefFields = ['magicStarFollow','mountHidden'];

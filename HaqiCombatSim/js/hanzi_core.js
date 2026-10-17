@@ -1,3 +1,4 @@
+import {validateMemoryProgress} from './hanzi_memory_core.js';
 import {HANZI_BATTLE_CARDS,ownsHanziCard} from './hanzi_battle_core.js';
 // Hanzi activity rules. No browser, microphone, clock or combat RNG dependencies.
 export const HANZI_IDS=['ri','yue','shan','shui','huo','mu','shi','tu','ren','kou','shou','mu-eye','er','xin','men','tian-field','shang','xia','da','xiao','zhong','tian-sky','yun','yu'];
@@ -5,6 +6,7 @@ const DAY=86400000;
 export const createHanziProgress=()=>({version:1,locale:'zh',pinyin:false,entries:{},equipped:{},effectMode:'glyph'});
 export function validateHanziProgress(p){
  if(p===undefined)return;
+ validateMemoryProgress(p?.memories);
  const fail=()=>{throw Error('汉字进度格式无效');};
  if(!p||p.version!==1||!['zh','en'].includes(p.locale)||typeof p.pinyin!=='boolean'||!['glyph','gloss','idiom'].includes(p.effectMode)||!p.entries||!p.equipped||Array.isArray(p.entries)||Array.isArray(p.equipped))fail();
  if(Object.keys(p.entries).length>24||Object.keys(p.equipped).length>100)fail();

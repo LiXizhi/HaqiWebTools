@@ -17,7 +17,9 @@ export function attachStatusTooltips(root,canvas) {
     const show=(key,pin=false)=>{active=key;pinned=pin;place();};
     canvas.updateStatusTargets=targets=>{
         const keys=new Set(targets.map(t=>t.key));
+        let changed=false;
         for(const [key,button] of buttons)if(!keys.has(key)){button.remove();buttons.delete(key);if(active===key)hide();}
+        const offsetLeft=canvas.offsetLeft||0,offsetTop=canvas.offsetTop||0;
         for(const hit of targets){
             let button=buttons.get(hit.key);
             if(!button){
@@ -30,10 +32,14 @@ export function attachStatusTooltips(root,canvas) {
                 button.addEventListener('click',e=>{e.stopPropagation();if(active===hit.key&&pinned)hide();else show(hit.key,true);});
                 buttons.set(hit.key,button);layer.append(button);
             }
-            button.setAttribute('aria-label',hit.description);
-            Object.assign(button.style,{left:`${canvas.offsetLeft+hit.x}px`,top:`${canvas.offsetTop+hit.y}px`,width:`${hit.width}px`,height:`${hit.height}px`});
+            if(button.lastDesc!==hit.description){button.lastDesc=hit.description;button.setAttribute('aria-label',hit.description);if(active===hit.key)changed=true;}
+            const left=`${Math.round((offsetLeft+hit.x)*10)/10}px`,top=`${Math.round((offsetTop+hit.y)*10)/10}px`,width=`${Math.round(hit.width*10)/10}px`,height=`${Math.round(hit.height*10)/10}px`;
+            if(button.style.left!==left)button.style.left=left;
+            if(button.style.top!==top)button.style.top=top;
+            if(button.style.width!==width)button.style.width=width;
+            if(button.style.height!==height)button.style.height=height;
         }
-        if(active)place();
+        if(active&&changed)place();
     };
     root.addEventListener('pointerdown',e=>{if(!layer.contains(e.target)&&!tip.contains(e.target))hide();},{capture:true,signal:controller.signal});
     root.addEventListener('keydown',e=>{if(e.key==='Escape'&&active){hide();e.stopPropagation();}},{signal:controller.signal});

@@ -26,6 +26,7 @@ function splitList(str) {
 
 function emit(arena, ev) {
     ev.turn = arena.turn;
+    if(arena.wordCardCast&&arena.wordCardCast.caster===ev.caster&&arena.wordCardCast.baseCardKey===ev.card){ev.wordCardId=arena.wordCardCast.id;ev.wordCardText=arena.wordCardCast.readText;ev.wordCardSeq=arena.wordCardCast.seq;}
     arena.events.push(ev);
     if (arena.onEvent) arena.onEvent(ev);
 }

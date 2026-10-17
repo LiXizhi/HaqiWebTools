@@ -45,8 +45,8 @@ import { renderDebugEditor } from './view_adventure_debug.js';
 import { renderPetCollection,starterPicker,petPortrait } from './view_adventure_pets.js';
 import { renderShop } from './view_adventure_shop.js';
 // DOM rendering and input bindings. Actions go to the adventure_app controller.
-import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot,teachingMode } from './adventure_core.js';
-import {catalogGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogTalksForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
+import { currentQuest,questState,questReady,questProgress,pendingQuestTalk,SCHOOL_NAMES,rewardsFor,deckLimits,recommendedDeck,catalogStatSnapshot,teachingMode,beginnerTeaching } from './adventure_core.js';
+import {catalogVisibleGoalRows,catalogQuestReady,catalogQuestsForNpc,catalogTalksForNpc,catalogQuestStatus,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import * as U from './combat_unit_core.js';
 import { cardTargetKind } from './combat_cards_core.js';
 import { renderEquipment } from './view_adventure_equipment.js';
@@ -142,7 +142,7 @@ export function createEntryFooter(){
 export function createEntryIntro({owner,login,cloud,locale,secondLocale,setLocale,setSecondLocale}={}) {
     const intro=el('div','entry-intro',createEntryEmblem(),el('p','eyebrow','魔法哈奇 · 第一章'),el('h1','game-title','魔法哈奇'),el('div','title-rule'),el('h2','chapter-title','初心之旅'),el('p','entry-description','带上你的宠物和来自世界各地的用户开启魔法之旅。\n练习你的第二语言。'),el('div','entry-tags',...['宠物相伴','结识朋友','双语冒险'].map(label=>el('span','badge',label))));
     if(new URLSearchParams(globalThis.location?.search||'').get('product')==='hanzi'){
-        const en=locale==='en';intro.querySelector('.eyebrow').textContent=en?'HANZI MAGIC · CHAPTER ONE':'字源岛 · 第一章';intro.querySelector('.game-title').textContent=en?'Hanzi Magic':'字有魔法';intro.querySelector('.chapter-title').textContent=en?'Island of living words':'文字会醒来的地方';intro.querySelector('.entry-description').textContent=en?'Speak a character to awaken its magic. Write it to give it shape. Collect your magic in cards.':'说出汉字，唤醒力量。写出汉字，赋予形状。反复练习，把你的魔法珍藏成卡。';intro.querySelector('.entry-tags').replaceChildren(...(en?['Discover','Write & speak','Collect']:['探索字义','说字写字','魔法收藏']).map(label=>el('span','badge',label)));
+        const en=locale==='en';intro.querySelector('.eyebrow').textContent=en?'HANZI MAGIC · CHAPTER ONE':'字源岛 · 第一章';intro.querySelector('.game-title').textContent=en?'Hanzi Magic':'字有魔法';intro.querySelector('.chapter-title').textContent=en?'Island of living words':'文字会醒来的地方';intro.querySelector('.entry-description').textContent=en?'Speak a character to awaken its magic. Write it to give it shape. Use recently practiced words as battle cards.':'说出汉字，唤醒力量。写出汉字，赋予形状。练习之后，在战斗中读写激活文字卡。';intro.querySelector('.entry-tags').replaceChildren(...(en?['Discover','Write & speak','Battle']:['探索字义','说字写字','文字战斗']).map(label=>el('span','badge',label)));
     }
     const controls=[];
     if(login||cloud){
@@ -334,7 +334,7 @@ function catalogTrackLines(save,c,quest) {
     const snap=catalogStatSnapshot(save,c),state=questState(save,quest.id),ready=catalogQuestReady(save,c,quest,snap);
     if(!state.accepted){const name=c.npcs[quest.startNpc]?.name;return [{text:name?withName('去找{name}，接取新的任务。', name):'接取这个任务。'}];}
     if(ready){const name=c.npcs[quest.endNpc]?.name;return [{text:name?withName('任务已完成，向{name}回报。', name):'任务已完成，可以交付。'}];}
-    const goals=catalogGoalRows(save,c,quest,snap);
+    const goals=catalogVisibleGoalRows(save,c,quest,snap);
     if(!goals.length)return [{text:'与居民交谈后即可交付。'}];
     return goals.map(goal=>({text:translatedGoal(goal),done:goal.value>=goal.count}));
 }
@@ -342,11 +342,11 @@ function appendTrackerQuest(tracker,entry,save,c,cb,teach) {
     const chapter=c.quests.find(quest=>quest.id===entry.id),quest=chapter||c.catalogQuests.byId[entry.id];
     const ready=chapter?questReady(save,quest):catalogQuestReady(save,c,quest,catalogStatSnapshot(save,c));
     const state=questState(save,quest.id);
-    // 魔法营地教学模式（2026-09-26 用户约定）：不看等级，身处营地即开启；新手岛整套任务
-    // （未接取、进行中、可交付）都持续用指针引导点击"追踪"，直到该任务完成交付才消失；
+    // 低于10级时所有岛屿任务均可引导；10级起保留营地教学范围。
+    // 未接取、进行中、可交付都持续引导点击"追踪"，直到该任务完成交付；
     // 点过之后进入自动寻路（model.autoWalk）期间隐藏。
     const campQuest=chapter?c.npcs[quest.startNpc]?.zone==='camp':quest.region==='camp';
-    const teachNow=teach.allow&&campQuest&&!state.claimed;
+    const teachNow=teach.allow&&(beginnerTeaching(save)||campQuest)&&!state.claimed;
     if(teachNow)teach.allow=false;
     const statusLabel=chapter?(ready?'可以交付':state.accepted?'进行中':'可接取'):catalogQuestStatus(save,c,quest,catalogStatSnapshot(save,c));
     const marker=el('span',`quest-state ${ready?'ready':state.accepted?'active':'available'}`,ready?'?':'!');marker.setAttribute('aria-hidden','true');
@@ -418,6 +418,14 @@ export function renderHeroTitle(model,cb) {
     return status;
 }
 export function renderHud(root,model,cb) {
+    // A reward can repaint while the dictionary hides the HUD. display:none
+    // reports zero offsets, so measure invisibly and restore before the frame paints.
+    const hidden=root.hidden,visibility=root.style.getPropertyValue('visibility'),priority=root.style.getPropertyPriority('visibility');
+    if(hidden){root.style.setProperty('visibility','hidden','important');root.hidden=false;}
+    try{return renderHudContents(root,model,cb);}
+    finally{if(hidden){root.hidden=true;if(visibility)root.style.setProperty('visibility',visibility,priority);else root.style.removeProperty('visibility');}}
+}
+function renderHudContents(root,model,cb) {
     const {assets,save}=model,c=assets.content;root.replaceChildren();
     const status=renderHeroTitle(model,cb);
     if(model.localSecond){
@@ -452,8 +460,8 @@ export function renderHud(root,model,cb) {
         tracker.replaceChildren(el('div','tracker-top',el('span','eyebrow','副本探索'),el('span','chapter-count',`${cleared} / ${dungeon.arenas.length}`)),el('h3','',dungeon.name),el('p','',cleared===dungeon.arenas.length?'Boss 已击败，可以退出副本。':remaining?'沿道路前进，遇到怪物自动开始战斗。':'前路暂未开放，可以退出副本。'),el('p','muted','副本中不会自动回血，请用现有生命通关。'),button('退出副本',()=>cb.leaveDungeon?.(),'track-button'));
     }else{
         const entries=trackerEntries(save,c);
-        // 教学模式统一走 adventure_core 的 teachingMode（营地 + 营地任务链未全部交付）；
-        // 指针挂在第一条未交付的营地追踪任务上，自动寻路（model.autoWalk）期间不打扰。
+        // 低于10级跨区域开启；其他等级保留营地任务链规则。
+        // 指针挂在第一条符合条件的未交付追踪任务上，自动寻路期间不打扰。
         const teach={allow:!!teachingMode(save,c)};
         if(entries.length)for(const entry of entries)appendTrackerQuest(tracker,entry,save,c,cb,teach);
         else tracker.append(el('h3','','新的魔法旅程'),el('p','',save.visitedTown?'你已完成第一章。和镇上的居民聊聊，或到郊外练习魔法吧。':'你通过了毕业考核！前往营地南边的传送阵，探索哈奇小镇。'),button('前往传送阵',cb.track,'track-button'));
@@ -507,7 +515,9 @@ export function renderHud(root,model,cb) {
     socialBar.append(socialHudButton('私聊','chat',model.social?.chatUnread,cb.panel));
     const teamControl=teamHudButton(model.social?.team,save.coopRun,cb.panel,model.localSecond);
     if(teamControl)socialBar.append(teamControl);
-    socialBar.append(button([icon('book')],()=>cb.panel('dictionary'),'mount-toggle dictionary-launch'));socialBar.lastChild.title=tr('字典');socialBar.lastChild.setAttribute('aria-label',tr('字典'));
+    const dictionaryMark=el('span','social-symbol');dictionaryMark.setAttribute('aria-hidden','true');
+    dictionaryMark.innerHTML=`<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${paths.book}"/></svg>`;
+    socialBar.append(button([dictionaryMark],()=>cb.panel('dictionary'),'mount-toggle dictionary-launch'));socialBar.lastChild.title=tr('字典');socialBar.lastChild.setAttribute('aria-label',tr('字典'));
     root.append(socialBar);
     if(model.timeCity){const time=button('时光长卷',()=>cb.panel('time-scroll'),'secondary time-scroll-launch');time.style.cssText='position:absolute;right:14px;bottom:100px;pointer-events:auto';root.append(time);}
     if(model.localSecond){
@@ -542,10 +552,10 @@ function spellFace(assets,card,artCard=card) {
     // Shared background + generated subject; title/numbers/description stay dynamic.
     const cost=card.pipcost===114||card.pipcost==='X'||Number(card.pipcost)<0?'X':String(card.pipcost);
     const rounds=card.params.cooldown??0;
-    const description=spellHint(card,assets.dataset);
+    const description=artCard.wordDescription||spellHint(card,assets.dataset);
     const base=assets.effects.cards[card.key]?.base;
     return createCardFace({el,name:artCard.name,cost,cooldown:rounds,description,
-        draw:context=>{assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description});assets.hanziPresentation?.badge(context,card);},
+        draw:context=>{assets.skillArt.drawCard(context,card,{name:artCard.name,cooldown:rounds,description,wordCard:!!artCard.wordDescription});assets.hanziPresentation?.badge(context,card);},
         retry:base?()=>assets.skillArt.ensure(base):undefined});
 }
 export function renderPanel(root,kind,model,cb) {
@@ -665,8 +675,6 @@ export function renderDialogue(root,model,dialog,cb) {
         if(npc.id===36203)choices.append(button('查看装备与法杖',()=>cb.panel('inventory'),'secondary'));
         if(npc.id===36202)choices.append(button('看看我的宠物',()=>cb.panel('pet'),'secondary'));
         if(npc.id===36205||npc.name==='法斯特船长')choices.append(button('打开世界地图',()=>cb.panel('worldmap'),'secondary'));
-        if(npc.hanziPractice)choices.append(button('翻开字典 · 看看这个字',()=>cb.panel('hanzi',{character:npc.hanziPractice}),'secondary'));
-        if(npc.zone==='hanzi')choices.append(button('打开字典',()=>cb.panel('hanzi'),'secondary'));
         if(npc.worldObservation){
             choices.append(button(npc.worldObservation.label,()=>cb.panel('earthmap'),'secondary'));
         }
@@ -751,7 +759,7 @@ function renderBattleContent(root,model,cb) {
     hand.style.justifyContent='center';
     if(runeCardsOpen)hand.style.gridTemplateColumns=visibleHand.map((row,index)=>index===visibleHand.length-1?'var(--hand-width)':'minmax(0,1fr)').join(' ');
     for(const h of hand.hidden?[]:visibleHand) {
-        const card=battle.resolved.cards[h.key],artCard=assets.dataset.cards[h.key],available=U.isAlive(hero)&&U.canCast(hero,card,battle.resolved),isSelected=selected?.seq===h.seq;
+        const card=battle.resolved.cards[h.key],artCard=hero.wordCards?.[h.seq]?{...assets.dataset.cards[h.key],name:hero.wordCards[h.seq].title,wordDescription:hero.wordCards[h.seq].description}:assets.dataset.cards[h.key],available=U.isAlive(hero)&&U.canCast(hero,card,battle.resolved),isSelected=selected?.seq===h.seq;
         const node=el('div',`hand-card ${isSelected?'selected':''} ${available?'':'unavailable'}`);
         node.dataset.seq=h.seq;node.style.zIndex=isSelected?30:hand.children.length+1;
         node.hidden=!!selected&&!isSelected;
@@ -940,7 +948,7 @@ export function animatePlayedCard(root,card,duration) {
     node.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.85)`,opacity:1,offset:.72},{transform:`translate(${dx}px,${dy-20}px) scale(.45)`,opacity:0}],{duration,easing:'ease-in-out',fill:'forwards'}).finished.then(()=>node.remove(),()=>node.remove());
 }
 export function eventLabel(e,battle,assets) {
-    const caster=battle.unitsById[e.caster]?.name||'',target=battle.unitsById[e.target]?.name||'',card=assets.dataset.cards[e.card]?.name||'';
+    const caster=battle.unitsById[e.caster]?.name||'',target=battle.unitsById[e.target]?.name||'',card=e.wordCardText||assets.dataset.cards[e.card]?.name||'';
     if(e.type==='freeze')return fill(e.success?'{target} 被冰封了':'{target} 抵抗了冰封',{target}).text;
     if(e.type==='guardian')return fill('{target} 获得一次替身守护',{target}).text;
     if(e.type==='enrage')return fill('{target} 被激怒了',{target}).text;

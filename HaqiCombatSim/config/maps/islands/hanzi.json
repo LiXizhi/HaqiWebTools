@@ -304,6 +304,82 @@
     "pack:hanzi:field-1": [
       1375,
       2356
+    ],
+    "pack:hanzi:field-2": [
+      4174,
+      1574
+    ],
+    "pack:hanzi:field-3": [
+      2996,
+      2942
+    ],
+    "pack:hanzi:field-4": [
+      2492,
+      1095
+    ],
+    "pack:hanzi:field-5": [
+      1858,
+      3291
+    ],
+    "pack:hanzi:field-6": [
+      3216,
+      1736
+    ],
+    "pack:hanzi:field-7": [
+      2268,
+      1995
+    ],
+    "pack:hanzi:field-8": [
+      3601,
+      2419
+    ],
+    "pack:hanzi:field-9": [
+      2235,
+      2750
+    ],
+    "pack:hanzi:field-10": [
+      2885,
+      2294
+    ],
+    "pack:hanzi:field-11": [
+      2478,
+      3426
+    ],
+    "pack:hanzi:field-12": [
+      3047,
+      1179
+    ],
+    "pack:hanzi:field-13": [
+      1844,
+      1707
+    ],
+    "pack:hanzi:field-14": [
+      2645,
+      1685
+    ],
+    "pack:hanzi:field-15": [
+      1555,
+      2913
+    ],
+    "pack:hanzi:field-16": [
+      3761,
+      1799
+    ],
+    "pack:hanzi:field-17": [
+      1850,
+      2204
+    ],
+    "pack:hanzi:field-18": [
+      2247,
+      1446
+    ],
+    "pack:hanzi:field-19": [
+      3315,
+      2128
+    ],
+    "pack:hanzi:field-20": [
+      2717,
+      2644
     ]
   },
   "buildings": [
@@ -425,7 +501,7 @@
       "x": 4060,
       "y": 1180,
       "biome": "forest",
-      "scale": 1.0
+      "scale": 1
     }
   ],
   "farms": [],

@@ -1,3 +1,4 @@
+import {prepareWordHand} from './word_cards_core.js';
 import {validateHanziBattleSpec} from './hanzi_battle_core.js';
 // combat_unit_core.js — 战斗单位状态与属性查询（对应 player_server.lua 的 Player 对象）。
 // 单位不持有 DOM / 网络；所有随机经由传入的 rng。
@@ -769,6 +770,7 @@ export function shuffleDeck(unit, rng) {
 
 /** 补牌到 handSize（默认 8） */
 export function prepareCard(unit, handSize = 8) {
+    if(unit.wordCards)return prepareWordHand(unit,handSize);
     let inHand = 0;
     for (let i = 0; i < unit.deckMap.length; i++) {
         const st = unit.deckMap[i];
@@ -847,6 +849,7 @@ export function markCardUsed(unit, seq) {
 export function markCardFizzled(unit, seq) {
     // player_server.lua UseCard L5379-5390: only normal cards move to the tail;
     // a fizzled pet card remains available in its separate pile.
+    if(unit.wordCards?.[seq]){markCardUsed(unit,seq);return;}
     if(seq>=PET_CARD_SEQ_BASE)return;
     if (unit.deckMap[seq] === 1) {
         unit.deckMap[seq] = -3;

@@ -12,6 +12,27 @@ const catalog = read('quest-catalog');
 const chapter = read('chapter');
 const runtime = projectQuestRuntime(catalog, chapter.quests.map(q => q.id));
 
+test('default tracker puts a local available or active quest before previous island quests', () => {
+    const quests = [
+        {id:1,region:'fire',prerequisites:[],requirements:[]},
+        {id:2,region:'ice',prerequisites:[],requirements:[]},
+        {id:3,region:'fire',prerequisites:[{id:99,value:1}],requirements:[]}
+    ];
+    const content = {quests:[],catalogQuests:{quests,byId:Object.fromEntries(quests.map(q=>[q.id,q]))}};
+    const save = {zone:'fire',quests:{2:{accepted:true,acceptedOrder:1}},trackedQuestIds:[2]};
+    assert.deepEqual(trackedQuestIds(save,content),[1,2]);
+    assert.deepEqual(save.trackedQuestIds,[2],'default recommendations do not mutate saved pins');
+    save.quests[1]={accepted:true,acceptedOrder:2};
+    save.trackedQuestIds=[1,2];
+    assert.deepEqual(trackedQuestIds(save,content),[1,2],'the latest local acceptance stays first');
+    save.quests[1].claimed=true;
+    assert.deepEqual(trackedQuestIds(save,content),[2],'completed and locked local quests are excluded');
+    save.quests[99]={claimed:true};
+    assert.deepEqual(trackedQuestIds(save,content),[3,2],'the next unlocked local quest replaces it');
+    save.zone='ice';
+    assert.deepEqual(trackedQuestIds(save,content),[2]);
+});
+
 function playableContent() {
     const content = structuredClone(chapter);
     installCatalogQuests(content, runtime);

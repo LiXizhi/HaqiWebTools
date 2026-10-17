@@ -12,7 +12,11 @@ export function createDictionaryStore({indexedDB=globalThis.indexedDB,name='haqi
             r.onerror=r.onblocked=()=>reject(r.error||Error('本地数据库被占用'));
         }).catch(e=>{opening=null;throw e;}));
     }
-    return {async update(key,reduce){
+    return {async read(key){
+        const db=await open();
+        const state=await new Promise((resolve,reject)=>{const tx=db.transaction('learners','readonly'),r=tx.objectStore('learners').get(key);r.onsuccess=()=>resolve(r.result||emptyDictionary());r.onerror=()=>reject(r.error);});
+        memory.set(key,structuredClone(state));return state;
+    },async update(key,reduce){
         let result,state;
         try{
             const db=await open();

@@ -144,3 +144,26 @@ test('spelling clues hide whole target words and authored forms without damaging
     assert.equal(dictionarySpellingClue({text:'read',forms:['reading'],example:'Reading, reading, and bread.'}),'____, ____, and bread.');
     for(const entry of en.entries){assert.ok(dictionarySpellingClue(entry).includes('____'),entry.id);}
 });
+
+test('adventure dictionary resolves all 8 local hanzi animations and animationWrite completes practice',async()=>{
+    const {createDictionary}=await import('../js/adventure_dictionary.js');
+    let homePayload=null,entryPayload=null,successMsg='',viewCallbacks=null;
+    const state={save:{seed:9,hanzi:{}},owner:'u1',role:'r1',stage:'world'};
+    const mem={state:emptyDictionary()};
+    const dict=createDictionary({
+        root:{},getState:()=>state,onClose(){},onBuff(){},onRewards(){},onLegacy(){},
+        storage:{async update(_k,fn){const r=fn(mem.state);return {persisted:true,state:mem.state,result:r};}},
+        voice:{async start(){},async finish(){return '';},async speak(){},async cancel(){}},
+        load:async lang=>{const d=lang==='zh'?structuredClone(zh):structuredClone(en);return {...d,entries:d.entries.map(e=>({...e,animation:e.animation?.replace('https://cdn.keepwork.com/keepwork/cdn/hanzi/','hanzi/')}))};},
+        viewFactory:(_root,cb)=>{viewCallbacks=cb;return {home:p=>{homePayload=p;},entry:p=>{entryPayload=p;},message(){},learningStatus(){},dailyProgress(){},success:m=>{successMsg=m;},close(){},suspend(){}};}
+    });
+    await dict.open('zh','men');
+    assert.equal(entryPayload.entry.id,'men');
+    for(const [id,file] of [['men','hanzi_men.html'],['xiu','hanzi_xiu.html'],['sen','hanzi_sen.html'],['guang','hanzi_guang.html'],['guo','hanzi_guo.html'],['yu','hanzi_yu.html'],['ming','hanzi_ming.html'],['wu','hanzi_wu.html']]){
+        const entry=homePayload.data.entries.find(e=>e.id===id);
+        assert.equal(entry?.animation,`hanzi/${file}`,id);
+    }
+    await viewCallbacks.animationWrite();
+    assert.equal(mem.state.languages.zh.entries.men.learned,true);
+    assert.match(successMsg,/答对了/);
+});

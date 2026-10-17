@@ -1,0 +1,31 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>文字战斗卡验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/word-practice.css">
+<body class="haqi-app storybook-ui"><div id="root"></div><output id="status" style="position:fixed;top:0;z-index:100;background:white"></output><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createAdventure,playerSpec} from '../../js/adventure_core.js';
+import {createPveBattle,playPveRound} from '../../js/combat_pve_core.js';
+import {renderBattle} from '../../js/view_adventure.js';
+import {activateWordCard} from '../../js/word_cards_core.js';
+import {openWordCardForCast} from '../../js/word_card_cast.js';
+import {validTargets} from '../../js/combat_arena_core.js';
+import {createWordCardPractice} from '../../js/word_card_practice.js';
+import {createDictionaryStore} from '../../js/dictionary_store.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),save=createAdventure(assets.content,{name:'文字卡验收'}),rows=(await (await fetch('../../data/adventure/dictionary/word-cards.json')).json()).cards;
+const key=new URLSearchParams(location.search).get('word')||'en:hello',row=rows.find(r=>r.id===key),snapshot={version:1,cards:[row],activated:[]};
+await assets.skillArt.preload({word:assets.dataset.cards[row.baseCardKey]});
+const spec={...playerSpec(save,assets.content),deckCapacity:40,deckEachCapacity:12,deck:[{key:'Fire_SingleAttack_Level0_60',count:12}]};
+const battle=createPveBattle({dataset:assets.dataset,player:spec,monsters:[{id:'dummy',school:'ice',level:1,hp:99999,attributes:{},pool:[],sequences:[],genes:[],cardsets:{}}],seed:9,wordCards:snapshot});
+battle.sides.near[0].pips={normal:7,power:0};
+let spoken=0;
+let selected=null,discarded=[],accepted=0,paused=false,fail=false,transcript='',captured=null,finishGate=null,releaseFinish=null;
+const db=createDictionaryStore({name:'haqi-word-cards-browser'}),store={read:key=>db.read(key),update:async(key,fn)=>{if(fail)return {persisted:false,state:{},result:{}};return db.update(key,fn);}};
+const practice=createWordCardPractice({getState:()=>({save,assets,content:assets.content,owner:'test',role:key}),storage:store,onPause:v=>paused=v,onSaved:()=>{accepted++;},voice:{async cancel(){},async start(signal,options){captured=options.onAudio;},async finish(){if(finishGate)await finishGate;captured?.(new Blob(['test'],{type:'audio/wav'}));return transcript;},async speak(){spoken++;}}});
+const root=document.querySelector('#root'),status=document.querySelector('#status');
+function paint(){renderBattle(root,{assets,save,battle,selected,discarded,animating:false,soundEnabled:false},{sound(){},retreat(){},pass:()=>play({pass:true}),select:h=>{selected=h;paint();},reselect:()=>{selected=null;paint();},target:id=>play({...selected,targetId:id}),discard:seq=>{discarded.push(seq);selected=null;paint();},toggleRunes(){},togglePetCards(){},finish(){}});}
+function play(decision){const hero=battle.sides.near[0],word=hero.wordCards?.[decision.seq];
+if(word&&!word.activated){const turn=battle.turn;return openWordCardForCast({practice,row:word,decision,isCurrent:d=>battle.turn===turn&&!battle.finished&&hero.deckMap[d.seq]===1&&validTargets(battle,hero,battle.resolved.cards[d.key]).some(t=>t.id===d.targetId),onActivated:({audio},d)=>{activateWordCard(hero,d.seq);window.wordTest.audio=audio;},cast:play});}
+try{playPveRound(battle,{...decision,discardSeqs:discarded});discarded=[];selected=null;status.textContent='施法完成';paint();}catch(e){status.textContent=e.message;}}
+window.wordTest={battle,save,rows,practice,store,setTranscript:v=>transcript=v,fail:v=>fail=v,get spoken(){return spoken;},get accepted(){return accepted;},get paused(){return paused;},audio:null,delayFinish:()=>{finishGate=new Promise(r=>releaseFinish=r);},releaseFinish:()=>{releaseFinish?.();finishGate=null;},open:()=>{const seq=Number(Object.keys(battle.sides.near[0].wordCards)[0]);selected={seq,key:row.baseCardKey};paint();root.querySelector('.battle-actions>.primary:not([hidden])').click();}};
+paint();status.textContent='已准备';
+</script></body></html>

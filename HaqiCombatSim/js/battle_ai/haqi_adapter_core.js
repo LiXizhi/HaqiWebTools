@@ -16,7 +16,7 @@ export function observeBattle(arena,unitId,{periodicsApplied=false}={}) {
         // Only the acting unit's visible hand. Neither hidden order nor enemy deck
         // composition can reach the analysis layer, even through a copied arena.
         if(unit.id===unitId){for(const hand of U.cardsInHand(unit)){out.deckSeq[hand.seq]=hand.key;out.deckMap[hand.seq]=1;}
-            out.petDeckSeq=copy(unit.petDeckSeq||[]);out.petDeckMap=copy(unit.petDeckMap||[]);
+            if(unit.wordCards)out.wordCards=copy(Object.fromEntries(Object.entries(unit.wordCards).filter(([seq])=>unit.deckMap[seq]===1)));out.petDeckSeq=copy(unit.petDeckSeq||[]);out.petDeckMap=copy(unit.petDeckMap||[]);
         }
         if(unit.isMob){const attrs=unit.template?.attributes||{};out.template={hp:unit.maxHp,difficulty:unit.template?.difficulty,attributes:Object.fromEntries(['is_immune_to_dispel','is_immune_to_freeze','enrage_enable','enrage_stats_key','enrage_ai_cards_key','rarity','cannot_enrage_easy','cannot_enrage_normal','cannot_enrage_hard'].filter(key=>attrs[key]!==undefined).map(key=>[key,attrs[key]]))};}
         return out;
@@ -160,7 +160,7 @@ export const haqiRulesAdapter={
     actions(observation,settings={}){
         const a=arenaFrom(observation,null),unit=a.unitsById[observation.unitId],out=[{pass:true}];
         if(!U.isAlive(unit)||unit.stunned)return out;
-        for(const h of U.selectableCards(unit)){const card=a.resolved.cards[h.key];if(!card||!isSupportedType(card.type)||!U.canCast(unit,card,a.resolved))continue;
+        for(const h of U.selectableCards(unit)){if(unit.wordCards?.[h.seq]&&!unit.wordCards[h.seq].activated)continue;const card=a.resolved.cards[h.key];if(!card||!isSupportedType(card.type)||!U.canCast(unit,card,a.resolved))continue;
             for(const target of validTargets(a,unit,card))out.push({seq:h.seq,key:h.key,targetId:target.id});
         }
         const base=[...out];

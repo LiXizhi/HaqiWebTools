@@ -362,7 +362,7 @@ class Exporter:
         for file,pack in self.packs:
             zone=pack['island']['id']
             for i,q in enumerate(pack['quests']):
-                s=self.scene(f'journal:{q["id"]}',q['title'],'current',zone,questId=q['id'],requires=[p['id'] for p in q['prerequisites']],classification='网页原创主线',level=pack['island']['recommendedLevel'],conditions=q['requirements'],repeat=False,objective=q['description'])
+                s=self.scene(f'journal:{q["id"]}',q['title'],'inactive' if q.get('retired') else 'current',zone,questId=q['id'],requires=[p['id'] for p in q['prerequisites']],classification='旧版任务（保留存档兼容）' if q.get('retired') else '网页原创主线',level=pack['island']['recommendedLevel'],conditions=q['requirements'],repeat=False,objective=q['description'])
                 s['rewards']=q['rewards']
                 s['titleSource']={'file':file,'pointer':f'/quests/{i}/title','sha256':digest(q['title']),'writable':True,'author':{'file':file,'pointer':f'/quests/{i}/title'}}
                 s['rewardSource']={'file':file,'pointer':f'/quests/{i}/rewards','readOnly':True}
@@ -377,7 +377,17 @@ class Exporter:
                         for k,b in enumerate(row['buttons']):
                             ptr=base+f'/buttons/{k}/label'
                             self.line(s,f'{block}:{j}:button:{k}',b['label'],'我',phase,file,ptr,{'file':file,'pointer':ptr},b['action'])
-                s['note']='网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。'
+                for story_index, story in enumerate(pack.get('memory', {}).get('stories', [])):
+                    if story['questId'] != q['id']:
+                        continue
+                    for word, memory in story['memories'].items():
+                        base = f'/memory/stories/{story_index}/memories/{word}'
+                        for glimpse_index, text in enumerate(memory['glimpses']):
+                            pointer = f'{base}/glimpses/{glimpse_index}'
+                            self.line(s, f'memory:{word}:{glimpse_index}', text, '祖先的记忆', '收集记忆', file, pointer, {'file':file,'pointer':pointer})
+                        pointer = base + '/restored'
+                        self.line(s, f'memory:{word}:restored', memory['restored'], self.npcs[str(story['npcId'])], '字卡完整后的生活变化', file, pointer, {'file':file,'pointer':pointer})
+                s['note']='旧版任务已停止新接取，仅保留存档兼容。' if q.get('retired') else '网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。'
             for i,d in enumerate(pack['journeys']):
                 s=self.scene('journey:'+d['id'],d['name'],'current',zone,classification='网页原创副本入场',level=d['recommendedLevel'])
                 s['titleSource']={'file':file,'pointer':f'/journeys/{i}/name','sha256':digest(d['name']),'writable':True,'author':{'file':file,'pointer':f'/journeys/{i}/name'}}
@@ -556,7 +566,7 @@ class Exporter:
                 document = 'story-npc-dialogues.md'
             elif scene['key'].startswith(('journey:', 'movie:')):
                 document = 'story-dungeon-scripts.md'
-            elif scene['kind'] == 'obsolete':
+            elif scene['kind'] == 'obsolete' or (scene['kind'] == 'inactive' and 'questId' in scene):
                 document = 'story-history.md'
             else:
                 assert 'questId' in scene, f'未分类的非任务场景：{scene["key"]}'
@@ -582,6 +592,10 @@ class Exporter:
         for chapter in chapters:
             outputs[chapter['document']] = self.render_chapter(chapter, documents[chapter['document']], chapter_meta)
         outputs['story-report.md'] += f'\n## 任务章节划分\n\n- 主线章节 {len(chapters)} 条，共 {sum(len(c["questIds"]) for c in chapters)} 个任务；孤立或短支线 {len(side_ids)} 个任务。\n- 以连续前置路径至少4个任务判定，不以同一NPC、岛屿或分支总数猜测主线。当前／原版场景同属一个任务文件，不重复计算任务数。\n- 章节入口等级来自首任务的配置条件，未新增解锁限制；后续任务原有等级及其他限制仍有效。\n'
+        for _, pack in self.packs:
+            for quest in pack['quests']:
+                if quest.get('retired') and not quest['prerequisites']:
+                    outputs[f'chapters/C{quest["id"]}.md'] = '# 旧版任务已归档\n\n本章停止新接取，旧存档记录保留。正文与稳定编号见[历史任务](../story-history.md)。新体验见[主线目录](../story-master.md)。\n'
         return outputs
 
     def chapter_plan(self, current):

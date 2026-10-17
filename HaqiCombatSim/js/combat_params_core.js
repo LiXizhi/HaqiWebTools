@@ -46,6 +46,8 @@ export function defaultParams(version = 'teen') {
         characterRelations: {initialMin:0,initialMax:60,maxAiDelta:5,giftGain:3,dungeonGain:3,matchGain:2,dailyFreeMessages:2,recentMessages:20,compactAt:40,indexPageSize:100},
         // Web island unlock levels; original world configuration is unavailable.
         dungeonJourney: { hpGrowth:.055, rewardPerFloor:30, summitMultiplier:5 },
+        wordCards: {poolSize:10,speechAttempts:3,recordMaxMs:15000},
+        hanziMemory: {chantSeconds:4,guardianLeadSeconds:1,fragmentsRequired:3,nodeCount:12,collectRadius:55,candidateStep:100},
         hanzi: {attackPercent:3,defensePercent:3,healPercent:3,maxTriggers:3},
         worldTravel: { camp:1, town:1, fire:10, ice:20, desert:30, dark:40, ...Object.fromEntries(PACK_ISLANDS.map(i=>[i.id,i.recommendedLevel])) },
         petInteractions: {
@@ -336,6 +338,8 @@ export function resolveParams(dataset, params, {groups=null}={}) {
         earth: { ...defaults.earth, ...params.earth },
         cityDungeons: { ...defaults.cityDungeons, ...params.cityDungeons },
         hanzi: { ...defaults.hanzi, ...params.hanzi },
+        wordCards: {...defaults.wordCards,...params.wordCards},
+        hanziMemory: { ...defaults.hanziMemory, ...params.hanziMemory },
         worldTravel: { ...defaults.worldTravel, ...params.worldTravel },
         petInteractions: { ...defaults.petInteractions, ...params.petInteractions },
         petTraits: { ...defaults.petTraits, ...params.petTraits, values:{...defaults.petTraits.values,...params.petTraits?.values} },

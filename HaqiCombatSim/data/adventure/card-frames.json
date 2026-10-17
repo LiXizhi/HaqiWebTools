@@ -50,6 +50,16 @@
       "height": 348,
       "source": "AI-generated blank frame from original Haqi card reference; no baked text, badges or skill illustration",
       "sourceSha256": "ad4309b47a9e6ecfaa5d8bd4ef4259308219be3a328f098763724b1e684adf87"
+    },
+    "wordInk": {
+      "local": "assets/adventure/card-frames/word-ink-v3.webp",
+      "sha256": "c2832dd76fe9e705042ae1cffa277c62dd873168e042f73750d6cb90f38aba15",
+      "size": 20528,
+      "width": 242,
+      "height": 368,
+      "source": "Built-in imagegen edit: preserve word-ink-v1 artwork and remove opaque exterior outside curved border; transparent corners with antialiased alpha.",
+      "sourceSha256": "4cc887651f624723ed4ea01fd2af6acd30088f41970715dd71d028db8f32465c",
+      "cdn": "https://cdn.keepwork.com/keepwork/haqi-adventure/card-frames/word-ink-v3.webp"
     }
   }
 }

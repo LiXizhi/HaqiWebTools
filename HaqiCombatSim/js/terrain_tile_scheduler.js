@@ -30,7 +30,7 @@ export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,s
         }while(now()-started<budget);
         onMetric('tile-slice',now()-started);if(!active?.waiting&&(active||queue.length))timer=schedule(work);
     }
-    function prepare(world,rect,pixelRatio=1,path=[]){
+    function prepare(world,rect,pixelRatio=1,path=[],{visibleOnly=false}={}){
         const next=identity(world),d=Math.min(2,Math.max(1,Math.ceil(pixelRatio*4)/4));
         if(!same(scope,next)||density!==d){stop();for(const row of tiles.values())discard(row);tiles.clear();scope=next;density=d;previous=null;}
         capacity=Math.max(1,Math.min(limit,Math.floor(64*1024*1024/((512*d+4)**2*4))));
@@ -47,10 +47,11 @@ export function createScheduledTerrainCache({paint,createCanvas,rasterize=null,s
         for(const p of path.slice(0,4))add(Math.floor(p.x/size),Math.floor(p.y/size));
         if(active&&!seen.has(active.key)){if(active.tile)active.tile.width=active.tile.height=0;active=null;}
         // Do not cycle speculative tiles through a full visible cache.
-        const extra=Math.max(0,Math.min(4,capacity-protectedKeys.size));let extras=0;
+        const extra=visibleOnly?0:Math.max(0,Math.min(4,capacity-protectedKeys.size));let extras=0;
         queue=tasks.filter(t=>protectedKeys.has(t.key)||extras++<extra).filter(t=>!tiles.has(t.key)&&t.key!==active?.key);
         previous={x:rect.x,y:rect.y};if(timer===null&&!active?.waiting&&(queue.length||active))timer=schedule(work);
-        return {tasks:tasks.filter(t=>protectedKeys.has(t.key)),size};
+        const visible=tasks.filter(t=>protectedKeys.has(t.key));
+        return {tasks:visible,size,total:visible.length,ready:visible.filter(t=>tiles.has(t.key)).length};
     }
     return {
         prepare,

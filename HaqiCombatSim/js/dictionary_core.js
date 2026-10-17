@@ -86,6 +86,7 @@ export function completeDictionary(state,data,id,{now,hinted=false,errors=0,cont
     if(plan.day!==day)return {blocked:true,reward:null};
     const row=dictionaryLanguage(state,data.language),e=row.entries[id]||={views:0,reviews:0,stage:0};
     let eligible=false;
+    e.lastAttemptAt=now;e.lastPracticeSuccessAt=now;
     if(context){if(id!==plan.target)throw Error('情境题目标不匹配');eligible=!plan.contextDone;plan.contextDone=true;}
     else{
         eligible=e.completedDay!==day;

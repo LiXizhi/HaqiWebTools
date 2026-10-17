@@ -5,6 +5,7 @@ import { createSpellEffects } from './spell_effects.js';
 import { effectDuration, spellEffect } from './spell_effects_core.js';
 import { drawAnimatedActor } from './actor_animation.js';
 import { previewTargetAction } from './actor_animation_core.js';
+import { sceneResolution } from './scene_resolution_core.js';
 
 export const TUTORIAL_SKILLS = {
     fire: [22105, 22113, 22331], ice: [22146, 22150, 22332],
@@ -18,7 +19,7 @@ export function tutorialCards(assets, school) {
     });
 }
 export function createCreationPreview(assets) {
-    const fx = createSpellEffects(assets), reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const fx = createSpellEffects(assets), reduced = matchMedia('(prefers-reduced-motion: reduce)'), coarse = matchMedia('(pointer: coarse)');
     const hero=assets.hero?.createActor(6173);
     let frameId = 0, generation = 0, paused = false;
     function stop() { generation++;cancelAnimationFrame(frameId);frameId = 0; }
@@ -33,17 +34,20 @@ export function createCreationPreview(assets) {
         catch { if (current === generation) status('动画暂时无法加载，可重播重试或继续选择系别。');return; }
         if (current !== generation || !canvas.isConnected) return;
         const duration = effectDuration(assets.effects, card, reduced.matches), ctx = canvas.getContext('2d');
-        let elapsed = 0, last = 0, finished = false;
+        let elapsed = 0, last = 0, finished = false, cachedGradient = null, gradientHeight = 0;
         status(fill('{name} · 演示中',{name:spec.name}).text);
         function draw(now) {
             if (current !== generation || !canvas.isConnected) return;
             const dt = last ? Math.min(60, now - last) : 0;last = now;
             if (!document.hidden && !paused) elapsed += dt;
-            const w = canvas.clientWidth, h = canvas.clientHeight, dpr = Math.min(2, devicePixelRatio || 1);
+            const w = canvas.clientWidth, h = canvas.clientHeight, dpr = sceneResolution(globalThis.devicePixelRatio || 1, { coarse: coarse.matches }).display;
             if (w < 1 || h < 1) { frameId = requestAnimationFrame(draw);return; }
-            if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) { canvas.width = Math.round(w * dpr);canvas.height = Math.round(h * dpr); }
+            if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) { canvas.width = Math.round(w * dpr);canvas.height = Math.round(h * dpr);cachedGradient = null; }
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);ctx.clearRect(0, 0, w, h);
-            const gradient = ctx.createLinearGradient(0, 0, 0, h);gradient.addColorStop(0, '#112e3e');gradient.addColorStop(1, '#345548');ctx.fillStyle = gradient;ctx.fillRect(0, 0, w, h);
+            if (!cachedGradient || gradientHeight !== h) {
+                gradientHeight = h;cachedGradient = ctx.createLinearGradient(0, 0, 0, h);cachedGradient.addColorStop(0, '#112e3e');cachedGradient.addColorStop(1, '#345548');
+            }
+            ctx.fillStyle = cachedGradient;ctx.fillRect(0, 0, w, h);
             const p = Math.min(1, elapsed / duration), from = { x: w * .2, y: h * .73 }, to = { x: w * .8, y: h * .68 }, center = { x: w * .5, y: h * .66 };
             ctx.strokeStyle = '#b1c2a155';ctx.lineWidth = 1.5;
             for (const scale of [1, .8, .5]) { ctx.beginPath();ctx.ellipse(center.x, center.y, w * .43 * scale, h * .24 * scale, 0, 0, Math.PI * 2);ctx.stroke(); }

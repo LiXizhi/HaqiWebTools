@@ -1,0 +1,49 @@
+{
+  "local": "assets/adventure/hanzi/memory-shards-v1.webp",
+  "width": 768,
+  "height": 768,
+  "columns": 3,
+  "rows": 2,
+  "sha256": "2110d337a1396f4536585dc2966bb7c3da6e5b00cbf05472839127bb4b7b8993",
+  "sourceSha256": "7a26842db875db9bceda0c26718c4bb4c8e189146b2f9a286591cb2a7e831555",
+  "source": "Built-in imagegen, 2026-10-17; six transparent oracle-bone fragments, elevated hand-painted RPG view, gold/jade glow, indistinct marks; no labels or UI.",
+  "frames": [
+    [
+      0,
+      0,
+      256,
+      384
+    ],
+    [
+      256,
+      0,
+      256,
+      384
+    ],
+    [
+      512,
+      0,
+      256,
+      384
+    ],
+    [
+      0,
+      384,
+      256,
+      384
+    ],
+    [
+      256,
+      384,
+      256,
+      384
+    ],
+    [
+      512,
+      384,
+      256,
+      384
+    ]
+  ],
+  "cdn": "https://cdn.keepwork.com/keepwork/cdn/haqi/hanzi/memory-shards-v1.webp"
+}

@@ -13,6 +13,20 @@ function sdkMock(){
         },synthesizeCached(){throw Error('must not close cached-helper transport');}}};return {sdk,sessions};
 }
 
+test('optional successful recording returns bounded PCM WAV; cancellation and ordinary callers retain no clip',async t=>{
+    const nav=Object.getOwnPropertyDescriptor(globalThis,'navigator'),context=globalThis.AudioContext;let processor;
+    Object.defineProperty(globalThis,'navigator',{configurable:true,value:{mediaDevices:{getUserMedia:async()=>({getTracks:()=>[{stop(){}}]})}}});
+    globalThis.AudioContext=class{sampleRate=16000;resume=async()=>{};close=async()=>{};createMediaStreamSource(){return {connect(){},disconnect(){}};}createScriptProcessor(){return processor={connect(){},disconnect(){}};}};
+    t.after(()=>{if(nav)Object.defineProperty(globalThis,'navigator',nav);else delete globalThis.navigator;globalThis.AudioContext=context;});
+    const {sdk}=sdkMock(),voice=createLearningVoice({load:async()=>sdk}),clips=[];
+    await voice.start(new AbortController().signal,{onAudio:blob=>clips.push(blob)});
+    processor.onaudioprocess({inputBuffer:{getChannelData:()=>new Float32Array([0,.5,-.5,1])}});await voice.finish();
+    assert.equal(clips.length,1);assert.equal(clips[0].type,'audio/wav');const bytes=await clips[0].arrayBuffer(),view=new DataView(bytes);
+    assert.equal(new TextDecoder().decode(bytes.slice(0,4)),'RIFF');assert.equal(view.getUint32(24,true),16000);assert.equal(view.getUint32(40,true),8);assert.equal(view.getInt16(46,true),16384);
+    await voice.start(new AbortController().signal,{onAudio:blob=>clips.push(blob)});processor.onaudioprocess({inputBuffer:{getChannelData:()=>new Float32Array([1])}});await voice.cancel();assert.equal(clips.length,1);
+    await voice.start(new AbortController().signal);processor.onaudioprocess({inputBuffer:{getChannelData:()=>new Float32Array([1])}});await voice.finish();assert.equal(clips.length,1);
+});
+
 test('alternating speakers reuse per-voice sessions and never explicitly close their connections',async t=>{
     const audio=globalThis.Audio;globalThis.Audio=class{play(){queueMicrotask(()=>this.onended());return Promise.resolve();}pause(){}};t.after(()=>{globalThis.Audio=audio;});
     const {sdk,sessions}=sdkMock();let voiceType='a';const voice=createLearningVoice({load:async()=>sdk,getSettings:()=>({voiceType})});

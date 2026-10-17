@@ -69,6 +69,7 @@ body.started #controls{opacity:1;pointer-events:auto}
 #capText{margin:0;font-family:var(--kai);font-size:clamp(19px,calc(1vw + 1.6vh),28px);line-height:1.7;color:var(--paper);letter-spacing:.06em;min-height:1.7em;
   text-shadow:0 1px 12px rgba(0,0,0,.75)}
 #capText .ch{animation:inkIn 1.1s ease-out both;animation-delay:calc(var(--i) * 65ms + 100ms)}
+.haqi-sub-trans{display:block;margin-top:4px;font-family:Georgia,"Times New Roman",system-ui,sans-serif;font-size:clamp(13px,1.8vh,17px);line-height:1.45;color:#b7c7be;letter-spacing:.02em}
 @keyframes inkIn{from{opacity:0;color:transparent;text-shadow:0 0 14px rgba(118,200,147,.9)}50%{opacity:1}to{color:var(--paper);text-shadow:0 1px 12px rgba(0,0,0,.75)}}
 @keyframes sealIn{from{opacity:0;letter-spacing:.9em;filter:blur(4px)}to{opacity:1;letter-spacing:.42em;filter:none}}
 
@@ -122,6 +123,29 @@ body.started #controls{opacity:1;pointer-events:auto}
   #capText .ch{animation-duration:.25s;animation-delay:0s}
 }
 </style>
+<script>
+// Haqi H5 protocol v1: independent pages remain usable without a parent.
+(()=>{let context=null,written=false,finished=false,serial=0;const callbacks=new Map(),subCache=new Map(),uiCache=new Map(),pending=new Set(),uiNodes=new Map();
+const isZh=loc=>!loc||/^zh\b/i.test(loc);
+const send=data=>{if(context)parent.postMessage({channel:'haqi-hanzi',version:1,entryId:context.entryId,sessionId:context.sessionId,...data},context.origin);};
+const refreshDom=()=>{for(const[el,zh]of uiNodes){if(!el?.isConnected){uiNodes.delete(el);continue;}const tr=!isZh(context?.locale)&&uiCache.get(zh);const next=(tr&&tr!==zh)?tr:zh;if(el.dataset.haqiKind==='seal'){const seal=el.querySelector('.seal');el.textContent=next;if(seal)el.prepend(seal);}else if(el.dataset.haqiKind==='tag'){const i1=document.createElement('i'),i2=document.createElement('i');el.replaceChildren(i1,document.createTextNode(next),i2);}else el.textContent=next;}document.querySelectorAll('[data-haqi-caption]').forEach(el=>renderCaption(el,el.dataset.haqiCaption));};
+const flushPending=()=>{if(!context||!pending.size)return;const texts=[...pending];pending.clear();window.haqiHanziTranslate(texts);};
+const ensureTexts=texts=>{const need=[];for(const t of texts){const s=typeof t==='string'?t.trim():'';if(s&&(!subCache.has(s)||!uiCache.has(s))&&!pending.has(s)){pending.add(s);need.push(s);}}if(need.length&&context)flushPending();};
+const renderCaption=(el,zh)=>{if(!el)return;el.dataset.haqiCaption=zh||'';let sub=el.querySelector('.haqi-sub-trans');if(!zh||isZh(context?.subtitleLocale||context?.locale)){sub?.remove();return;}const tr=subCache.get(zh);if(!tr||tr===zh){sub?.remove();ensureTexts([zh]);return;}if(!sub){sub=document.createElement('span');sub.className='haqi-sub-trans';const host=el.querySelector('#capText')||el;if(host!==el&&host.parentNode===el)host.insertAdjacentElement('afterend',sub);else el.appendChild(sub);}sub.textContent=tr;};
+const trackUi=(el,zh,kind='')=>{if(!el||!zh)return;if(kind)el.dataset.haqiKind=kind;uiNodes.set(el,zh);ensureTexts([zh]);};
+const scanStatic=()=>{if(!document.body)return;document.querySelectorAll('#start,#replay,#mute,#demo,#action,#progress li,#seasonBar button,#note,.introBottom .mean,.introBottom .sub,.introBottom .meta,.heading .eyebrow,.heading h1,.heading .deck,.edition,.colophon,#glyphLabel,#targets .svg-label').forEach(el=>{const zh=(el.textContent||'').trim();if(zh&&!uiNodes.has(el))trackUi(el,zh);});document.querySelectorAll('#brand,.brand').forEach(el=>{if(uiNodes.has(el))return;const clone=el.cloneNode(true);clone.querySelector?.('.seal')?.remove();const zh=(clone.textContent||'').trim();if(zh)trackUi(el,zh,'seal');});document.querySelectorAll('.introTop .tag,.tag').forEach(el=>{if(uiNodes.has(el))return;const zh=(el.textContent||'').trim();if(zh)trackUi(el,zh,'tag');});refreshDom();};
+if(document.readyState==='loading')addEventListener('DOMContentLoaded',scanStatic,{once:true});else scanStatic();
+window.haqiHanziWritten=()=>{written=true;send({type:'written'});};
+window.haqiHanziComplete=()=>{if(!written){written=true;send({type:'written'});}finished=true;send({type:'completed'});};
+window.haqiHanziPrefetch=texts=>ensureTexts(Array.isArray(texts)?texts:[texts]);
+window.haqiHanziUi=(zh,el)=>{const s=typeof zh==='string'?zh.trim():'';if(!s)return zh;if(el)trackUi(el,s);else ensureTexts([s]);const tr=!isZh(context?.locale)&&uiCache.get(s);return(tr&&tr!==s)?tr:zh;};
+window.haqiHanziCaption=(el,zh)=>{const s=typeof zh==='string'?zh.trim():'';if(s)ensureTexts([s]);renderCaption(el,s);};
+window.haqiHanziTranslate=texts=>new Promise(resolve=>{const list=(Array.isArray(texts)?texts:[]).map(t=>typeof t==='string'?t.trim():'').filter(Boolean);if(!context||!list.length){resolve({});return;}const requestId=String(++serial);const timer=setTimeout(()=>{callbacks.delete(requestId);resolve({});},1500);callbacks.set(requestId,msg=>{clearTimeout(timer);const sub=msg?.translations||{},ui=msg?.uiTranslations||sub;for(const[k,v]of Object.entries(sub))if(typeof v==='string'&&v.trim())subCache.set(k,v.trim());for(const[k,v]of Object.entries(ui))if(typeof v==='string'&&v.trim())uiCache.set(k,v.trim());refreshDom();resolve(sub);});send({type:'translate',requestId,texts:list});});
+addEventListener('message',event=>{const m=event.data;if(event.source!==parent||parent===window||m?.channel!=='haqi-hanzi'||m.version!==1)return;
+if(m.type==='init'&&typeof m.sessionId==='string'&&typeof m.entryId==='string'){if(document.referrer&&event.origin!==new URL(document.referrer).origin)return;context={...m,origin:event.origin};scanStatic();flushPending();refreshDom();if(written)send({type:'written'});if(finished)send({type:'completed'});}
+else if(context&&event.origin===context.origin&&m.sessionId===context.sessionId&&m.type==='translations'){callbacks.get(m.requestId)?.(m);callbacks.delete(m.requestId);}});
+if(parent!==window)parent.postMessage({channel:'haqi-hanzi',version:1,type:'ready'},'*');})();
+</script>
 </head>
 <body>
 <svg id="sampler" aria-hidden="true"></svg>
@@ -1160,11 +1184,13 @@ const CHAR_MS = 65;
 let capMinEnd = 0;
 function span(cls, text) { const s = document.createElement('span'); if (cls) s.className = cls; s.textContent = text; return s; }
 function showCaption(title, text) {
-  ui.capT.textContent = title;
+  ui.capT.textContent = window.haqiHanziUi ? window.haqiHanziUi(title, ui.capT) : title;
   ui.capP.replaceChildren(...[...text].map((c, i) => { const s = span('ch', c); s.style.setProperty('--i', i); return s; }));
+  window.haqiHanziCaption?.(ui.cap, text);
   ui.cap.classList.remove('on'); void ui.cap.offsetWidth; ui.cap.classList.add('on');
 }
 async function caption(title, text, tk, hold = 0) {
+  window.haqiHanziPrefetch?.([title, text]);
   while (clock < capMinEnd) await frame(tk);
   ui.cap.classList.remove('on');
   await wait(340, tk);
@@ -1174,7 +1200,7 @@ async function caption(title, text, tk, hold = 0) {
 }
 async function captionDone(tk) { while (clock < capMinEnd) await frame(tk); }
 function hint(text) {
-  if (text) { ui.hint.replaceChildren(span('', text)); ui.hint.classList.add('on'); }
+  if (text) { const s = span('', ''); s.textContent = window.haqiHanziUi ? window.haqiHanziUi(text, s) : text; ui.hint.replaceChildren(s); ui.hint.classList.add('on'); }
   else ui.hint.classList.remove('on');
 }
 function progress(i) { ui.prog.forEach((li, j) => { li.classList.toggle('on', j === i); li.classList.toggle('done', j < i); }); }
@@ -1186,7 +1212,7 @@ function mode(m) {
 let actionFn = null;
 function setAction(label, fn) {
   actionFn = fn;
-  if (label) { ui.action.textContent = label; ui.action.hidden = false; } else ui.action.hidden = true;
+  if (label) { ui.action.textContent = window.haqiHanziUi ? window.haqiHanziUi(label, ui.action) : label; ui.action.hidden = false; } else ui.action.hidden = true;
   ui.action.classList.remove('holding');
 }
 
@@ -1581,6 +1607,7 @@ async function sWrite(tk) {
   S.handler = null; S.demo = null; mode(null); hint(null);
   ui.demo.hidden = true; ui.demo.disabled = false;
   W.glyph.trace = false;
+  window.haqiHanziWritten?.();
   await tween(600, t => { W.glyph.ghost = 1 - t; }, tk);
   Sound.bell(NOTE.C5, 0.11); Sound.bell(NOTE.G5, 0.08);
   await caption('写字', '写好了！三木成森，苍翠满山。', tk);
@@ -1637,7 +1664,7 @@ async function sFinale(tk) {
       hint(null);
     },
   };
-  window.__sen.finished = true;
+  window.__sen.finished = true; window.haqiHanziComplete();
 }
 
 const SCENES = [sBarren, sSprout, sTwin, sForest, sGlyph, sWrite, sWords, sFinale];
@@ -1716,7 +1743,8 @@ $('#start').addEventListener('click', () => {
 $('#replay').addEventListener('click', () => { Sound.init(); begin(); });
 $('#mute').addEventListener('click', e => {
   Sound.setMuted(!Sound.muted);
-  e.currentTarget.textContent = Sound.muted ? '声音 关' : '声音 开';
+  const zh = Sound.muted ? '声音 关' : '声音 开';
+  e.currentTarget.textContent = window.haqiHanziUi ? window.haqiHanziUi(zh, e.currentTarget) : zh;
 });
 addEventListener('blur', () => { W.holding = false; ui.action.classList.remove('holding'); });
 </script>

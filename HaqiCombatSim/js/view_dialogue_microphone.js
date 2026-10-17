@@ -34,3 +34,12 @@ export function createDialogueMicrophone(button,actions){
         node.textContent=tr(phase==='recording'?'结束':phase==='connecting'?'连接中':'录音');
     }};
 }
+
+// Shared by NPC dialogue and word-card practice; keep ring geometry and labels identical.
+export function createDialogueMicProgress(mic){
+ const node=document.createElement('div');node.className='story-mic-progress';
+ const ring=document.createElementNS('http://www.w3.org/2000/svg','svg');ring.setAttribute('viewBox','0 0 100 100');ring.setAttribute('aria-hidden','true');let ringFill;
+ for(const cls of ['story-ring-track','story-ring-fill']){const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');for(const [key,value] of Object.entries({cx:50,cy:50,r:44,pathLength:100,class:cls}))circle.setAttribute(key,value);ring.append(circle);if(cls==='story-ring-fill')ringFill=circle;}
+ const ringLabel=document.createElement('span');ringLabel.className='story-ring-label';ringLabel.textContent='0%';ringLabel.setAttribute('role','progressbar');ringLabel.setAttribute('aria-label','朗读通过进度');ringLabel.setAttribute('aria-valuemin','0');ringLabel.setAttribute('aria-valuemax','100');
+ node.append(ring,mic,ringLabel);return {node,ring,ringFill,ringLabel};
+}

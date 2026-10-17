@@ -123,3 +123,29 @@
 }
 @keyframes boot-progress{to{background-position:100% 0}}
 @media(prefers-reduced-motion:reduce){.boot-loading progress:indeterminate{animation:none;background-position:50% 0}.boot-loading progress::-webkit-progress-value,.role-manager .role-card{transition:none}}
+
+/* Initial island terrain gate: opaque backdrop, no scene animation underneath. */
+.island-scene-loading{position:fixed;margin:0;color:var(--ink);width:420px;max-width:calc(100vw - 30px);padding:28px 28px 24px;border:3px solid #c6a56d;border-radius:28px;background:#fff8e7}
+.island-scene-loading::backdrop{background:#183d45}
+.island-scene-loading>.close-button{position:absolute;right:8px;top:8px}
+.island-scene-loading h2{padding:8px 32px 18px 0;font-size:24px;text-align:left;color:#395b46}
+.island-scene-loading progress{display:block;margin:18px auto;max-width:100%}
+.island-scene-loading [hidden]{display:none}
+.loading-pet-scene{position:relative;height:166px;overflow:hidden;border-radius:20px;background:linear-gradient(#bce8eb,#eaf6da 75%);isolation:isolate}
+.loading-pet-sun{position:absolute;width:32px;height:32px;border-radius:50%;background:#ffe39a;right:36px;top:18px;box-shadow:0 0 0 7px #ffe39a40}
+.loading-pet-cloud{position:absolute;top:25px;left:38px;width:65px;height:17px;border-radius:30px;background:#fffdf3;box-shadow:130px 19px 0 -3px #fffdf3}
+.loading-pet-cloud::before{content:'';position:absolute;left:12px;bottom:0;width:28px;height:29px;border-radius:50%;background:inherit}
+.loading-pet-hills{position:absolute;inset:64px -20px 20px;background:radial-gradient(ellipse at 15% 100%,#9cc98a 0 36%,transparent 37%),radial-gradient(ellipse at 80% 110%,#b7d9a0 0 48%,transparent 49%)}
+.loading-pet-road{position:absolute;bottom:0;left:0;width:100%;height:32px;border-top:5px solid #78ad70;background:#ead3a1}
+.loading-pet-road::after{content:'';position:absolute;left:-50%;top:12px;width:200%;height:4px;background:repeating-linear-gradient(90deg,transparent 0 25px,#c2a16c80 26px 34px,transparent 35px 66px);animation:loading-pet-road .8s linear infinite}
+.loading-pet-runner{position:absolute;bottom:22px;left:50%;width:100px;height:105px;margin-left:-50px;animation:loading-pet-forward 3.4s linear infinite}
+.loading-pet-portrait{position:absolute;bottom:3px;left:0;width:100px;height:100px;transform-origin:50% 90%;animation:loading-pet-run .36s ease-in-out infinite}
+.loading-pet-shadow{position:absolute;bottom:0;left:24px;width:55px;height:10px;border-radius:50%;background:#52673b33}
+.loading-pet-dust{position:absolute;bottom:6px;left:5px;width:9px;height:9px;border-radius:50%;background:#fff2ce;box-shadow:-15px 2px 0 -1px #fff2ce,-26px -3px 0 -2px #fff2ce;animation:loading-pet-dust .36s ease-out infinite}
+.island-scene-loading .loading-pet-note{margin:16px 0 6px;color:#59754a;font-size:14px;font-weight:600}
+.island-scene-loading.is-paused .loading-pet-runner,.island-scene-loading.is-paused .loading-pet-portrait,.island-scene-loading.is-paused .loading-pet-dust,.island-scene-loading.is-paused .loading-pet-road::after{animation-play-state:paused}
+@keyframes loading-pet-run{0%,100%{transform:translateY(0) rotate(5deg) scale(1.03,.97)}50%{transform:translateY(-9px) rotate(-3deg) scale(.97,1.03)}}
+@keyframes loading-pet-forward{0%{transform:translateX(-100px);opacity:0}12%,88%{opacity:1}100%{transform:translateX(100px);opacity:0}}
+@keyframes loading-pet-road{to{transform:translateX(-66px)}}
+@keyframes loading-pet-dust{from{transform:translateX(0) scale(.7);opacity:.8}to{transform:translateX(-12px) scale(1.2);opacity:0}}
+@media(prefers-reduced-motion:reduce){.loading-pet-runner,.loading-pet-portrait,.loading-pet-dust,.loading-pet-road::after{animation:none}.loading-pet-dust{display:none}}

@@ -19,7 +19,7 @@ export function validateIslandPacks(packs,content){
         assert(q.region===pack.island.id&&!q.repeat,'任务区域');
         if(q.hanziCardReward!==undefined)assert(Object.hasOwn(HANZI_BATTLE_CARDS,q.hanziCardReward),'汉字奖励');
         for(const p of q.prerequisites)assert(questIds.has(p.id)&&p.id!==q.id,'任务前置');
-        for(const group of q.groups){assert(['talk','kill'].includes(group.kind),'目标类型');for(const g of group.items){assert(Number.isInteger(g.count)&&g.count>0,'目标数量');assert(group.kind==='kill'||npcIds.has(g.id),'交谈目标');}}
+        for(const group of q.groups){assert(['talk','kill','hanzi'].includes(group.kind),'目标类型');for(const g of group.items){assert(Number.isInteger(g.count)&&g.count>0,'目标数量');assert(group.kind==='kill'||group.kind==='hanzi'||npcIds.has(g.id),'交谈目标');}}
         for(const [rows,terminal] of [[q.startDialog,'doaccept'],[q.endDialog,'dofinished'],...q.talks.map(t=>[t.dialog,'donpcdialoged'])]){
             assert(rows.length,'空对白');rows.forEach((r,i)=>{assert(npcIds.has(r.npcId)&&r.text&&r.buttons.length===1&&r.buttons[0].action===(i===rows.length-1?terminal:'gotonext'),'对白动作');});
         }
@@ -72,5 +72,5 @@ export function installIslandPackQuests(content,packs){
     installCatalogQuests(content,{version:1,paths,quests});
 }
 export function islandPackJournal(packs){
-    return packs.flatMap(pack=>pack.quests.map(q=>({id:q.id,title:q.title,description:q.description,region:q.region,obsolete:false,startNpc:pack.npcs.find(n=>n.id===q.startNpc).name,endNpc:pack.npcs.find(n=>n.id===q.endNpc).name,objectives:q.groups.flatMap(g=>g.items.map(i=>({type:g.kind==='talk'?'ClientDialogNPC':'Goal',id:String(i.id),name:i.name,count:String(i.count)}))),prerequisites:q.prerequisites.map(p=>({...p,title:pack.quests.find(r=>r.id===p.id)?.title||''})),requirements:q.requirements.map(r=>({name:'等级',min:String(r.min)})),rewards:q.rewards,repeat:'0'})));
+    return packs.flatMap(pack=>pack.quests.map(q=>({id:q.id,title:q.title,description:q.description,region:q.region,obsolete:!!q.retired,startNpc:pack.npcs.find(n=>n.id===q.startNpc).name,endNpc:pack.npcs.find(n=>n.id===q.endNpc).name,objectives:q.groups.flatMap(g=>g.items.map(i=>({type:g.kind==='talk'?'ClientDialogNPC':'Goal',id:String(i.id),name:i.name,count:String(i.count)}))),prerequisites:q.prerequisites.map(p=>({...p,title:pack.quests.find(r=>r.id===p.id)?.title||''})),requirements:q.requirements.map(r=>({name:'等级',min:String(r.min)})),rewards:q.rewards,repeat:'0'})));
 }

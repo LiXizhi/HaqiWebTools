@@ -12,7 +12,7 @@ export function languageSettings(body, model, cb, { el, button }) {
     const ui = createSettingsControls({ el, button });
     body.append(ui.section('界面语言', ui.localeSelector(model.save.locale, cb.setLocale)));
     const section = ui.section('语言学习',
-        ui.toggle({ icon: '💬', label: '语言学习', hint: '在对话与任务中练习目标语言。' }, !!learning.enabled, () => cb.setLearning({ ...learning, enabled: !learning.enabled })));
+        ui.toggle({ icon: '💬', label: '语言学习', disabled: !!model.learningForced, hint: model.learningForced ? '当前链接要求开启双语学习，无法关闭。' : '在对话与任务中练习目标语言。' }, !!learning.enabled, () => cb.setLearning({ ...learning, enabled: !learning.enabled })));
     if (learning.enabled) {
         section.append(
             ui.field('母语', pairRow('native', learning, cb, { el, button })),

@@ -1,0 +1,40 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><base href="../../"><title>文字记忆专项验收</title>
+<link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/hanzi-memory.css">
+<link rel="stylesheet" href="../../css/word-practice.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/adventure_social.css">
+<style>body{margin:0;background:#e8e3cf}#scene{width:100vw;height:100dvh;display:block}#status{position:fixed;top:0;left:0;z-index:2;background:#fff8df;padding:6px}</style>
+<body class="haqi-app storybook-ui"><span id="status">正在加载隔离场景</span><div id="hud"></div><canvas id="scene"></canvas><div id="overlay" class="overlay"></div>
+<script type="module">
+import {syncDictionaryQuestProgress} from '../../js/word_cards_core.js';
+import {createWordCardPractice} from '../../js/word_card_practice.js';
+import {loadResources} from '../../js/adventure_assets.js';
+import * as A from '../../js/adventure_core.js';
+import * as W from '../../js/adventure_world_core.js';
+import * as B from '../../js/combat_pve_core.js';
+import {SimpleBot} from '../../js/combat_policy_core.js';
+import {createRenderer} from '../../js/adventure_renderer.js';
+import {createHanziMemory} from '../../js/adventure_hanzi_memory.js';
+import {renderHud} from '../../js/view_adventure.js';
+import {createDictionaryStore} from '../../js/dictionary_store.js';
+const assets=await loadResources(),save=A.createAdventure(assets.content,{seed:73,school:'fire'});
+A.applyAction(save,assets.content,{type:'travel',zone:'hanzi'});A.applyAction(save,assets.content,{type:'accept-catalog',questId:873100,npcId:863002});
+const world=W.createWorld('hanzi',assets.content,save),canvas=document.querySelector('#scene'),root=document.querySelector('#overlay'),renderer=createRenderer(canvas,assets);
+await assets.warmScenery(world);await assets.warmNearby(world,save);renderer.prepareScene(world,save);
+let panel=null,stage='world',battle=null,last=performance.now(),fail=false,paused=false;
+const startEncounter=id=>{A.beginEncounter(save,assets.content,id);battle=B.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';};
+const hud=document.querySelector('#hud'),paintHud=()=>renderHud(hud,{assets,save},{panel(){},interact(){}});paintHud();
+const close=()=>{practice.close();memory.close();hud.hidden=false;panel=null;root.className='overlay';root.replaceChildren();};
+const wordRows=(await (await fetch('../../data/adventure/dictionary/word-cards.json')).json()).cards;
+const practice=createWordCardPractice({getState:()=>({save,assets,content:assets.content,owner:null,role:'isolated-browser'}),storage:createDictionaryStore({name:'haqi-memory-isolated-browser'}),onSaved:state=>{syncDictionaryQuestProgress(save,assets.content,state);paintHud();}});
+const memory=createHanziMemory({root,getState:()=>({save,world,content:assets.content,stage,panel,owner:null,role:'isolated-browser'}),persist(){},commit:p=>{if(fail)throw Error('模拟保存失败');save.hanzi=p;save.revision++;paintHud();},
+practice:(id,done)=>practice.open(wordRows.find(r=>r.language==='zh'&&r.entryId===id),done,close),
+show:()=>{hud.hidden=true;panel='hanzi-memory';void memory.open();},close,track(){},dictionary(){},legacy(){},onBuff(){paintHud();},toast:t=>document.querySelector('#status').textContent=t,
+storage:createDictionaryStore({name:'haqi-memory-isolated-browser'})});
+memory.tick(.01,false);
+window.memoryTest={save,world,assets,memory,renderer,close,get stage(){return stage;},get battle(){return battle;},pause:v=>paused=v,fail:v=>fail=v,
+ gotoNode:()=>{save.position={...memory.target()};},
+ pending:word=>{save.hanziMemoryRuntime.pending={...save.hanziMemoryRuntime.nodes[0],word};hud.hidden=true;panel='hanzi-memory';return memory.open();},
+ fight:()=>{const id=save.pendingEncounter.encounterId,bot=new SimpleBot();for(let i=0;i<100&&!battle.finished;i++){const decision=bot.pick(battle,battle.sides.near[0]);B.playPveRound(battle,decision);A.recordDecision(save,decision,battle);}if(battle.winner!=='near')throw Error('隔离战斗未胜利');A.settleEncounter(save,assets.content,battle);memory.won(id);stage='world';W.updateEncounterVisibility(world,save,Date.now());return battle.winner;},
+};
+function frame(now){const dt=Math.min(.05,(now-last)/1000);last=now;if(stage==='world'&&!panel){const auto=W.takeAutoInteraction(world,save.position);if(auto)startEncounter(auto.id);}memory.tick(dt,!paused&&stage==='world'&&!panel);if(!panel)renderer.render(world,save,now,{});requestAnimationFrame(frame);}requestAnimationFrame(frame);
+document.querySelector('#status').textContent='隔离场景已准备，不读取玩家存档';
+</script></html>

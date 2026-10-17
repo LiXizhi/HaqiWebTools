@@ -34,11 +34,11 @@
     "../../config/Aries/WorldData/NewUserIsland.NPC.xml": "58a26a06131b1cd15a84cf4f5b7d9ff5b6d6cabb5b27cc71d3630471bd3d6777",
     "config/opening-dialogue.json": "0ca1b08b8b4d54e4e2777156b4899ffc6af7b639d61a37b2a3c8068f4dede9f0",
     "data/adventure/camp-conversations.json": "e1c745bd86af42a1eb0a4a216eec7df63611d54fbccf44334a0b868f7d652658",
-    "data/adventure/chapter.json": "c3cf0e6b917e830514c0fd4a75421113629666bad1e99f288354d1be422ee84f",
+    "data/adventure/chapter.json": "f7437300d9098cf081902d0d00f3fa72a8fb60e48061fabbdf21060fdc1031ab",
     "data/adventure/dungeon-journeys.json": "5bc161e28c518580864c9c33dafc5e9b7667fdbcb3b817a8b66b55acfa7e0662",
     "data/adventure/earth/time-scroll/common.json": "ac98afb4d910c94fd7b25553e5efb74fddc961c6519bcaffbee220727b59a3cf",
     "data/adventure/island-packs/float.json": "30bcb6b1679a14c2d6c8691c6ce1d8d5422c2d0b5489420c8119a2a82c000919",
-    "data/adventure/island-packs/hanzi.json": "dea4e7f815b9f57ef9025120a03c36471c94e07c7934d84f7e1ba90d78d90df0",
+    "data/adventure/island-packs/hanzi.json": "fd3650accbee714750ee3d70bd6a1d25c59388b11a21ec27c913073049e64e24",
     "data/adventure/island-packs/index.json": "743388e06e8da5fa882b582e8d0d2440b537132716175ba0443b6145bfa899de",
     "data/adventure/island-packs/sail.json": "9655b95e4c1bdd5f4c0cd93f040b9d7eac7083a963fa7d15045a5a390e81a195",
     "data/adventure/island-packs/tide.json": "ad47afeb12bb17b5ad455c435ac9642e1f023edbc049655d0e56829a2b8faf19",
@@ -48,15 +48,15 @@
     "data/adventure/quest-catalog.json": "784a94f3714961f7dd796312de39e8912775e4226942e37e62b8874f1600bd8b",
     "data/adventure/quest-journal.json": "c02e556424126f11220f1b1ec7ecfbc2365cf65af72ae15946df8a58326ed21e",
     "data/adventure/quest-runtime.json": "44fcf7d152dd63fc54f51887a6e2720e3a76ce6367e371f922241e2dc28db8b8",
-    "js/adventure_catalog_quests_core.js": "542e995416658aa3d3978cb21dcf488f22ac395eec7fab12c0f05c3c813fc3bf",
-    "js/adventure_core.js": "e85ead83a7ea26f71a507928c5767ecdb7f607fff309cf2233d5eb58592cb3f8",
+    "js/adventure_catalog_quests_core.js": "ea0350be0987c16d82bfe322f2e291212cc25099de6ab093451af9577c655565",
+    "js/adventure_core.js": "843c6e659769356e4c24a9d22c2bc567813a1ecb9e290ee92b8b2746397f2b55",
     "js/adventure_dungeon_story.js": "4ebb4e3a1ee8ad17a90b1727d9537181b9d6522726d966a9db1fcea5dcdcb15e",
     "js/adventure_npc_art_core.js": "dfb129d3fdfbb10b50138fdf32b2193c48cc7bce877fd2b3c20aead6cf85f35a",
     "js/adventure_npc_core.js": "8ccbd143dd710ceb4be2d1e4e9405e891885045df1e21bd9de89c7e5dca94076",
-    "js/combat_params_core.js": "b71084b5ccf099449c7a7d2654f62f5cddb45605d5a7ef50e2122beaafa0bb08",
+    "js/combat_params_core.js": "6bda9d09bbc77329067e022f03934c39be7f25fa3602c7d71f06614014a4b9d1",
     "js/language_encounter_core.js": "949f91d3c584145a8acd3fed64ccb35cab17eb53dc14b0f3a5de7f8214a6909a",
     "js/language_story.js": "45882080081d4ae2e9d14ed40a9b9bc855e0efd9da5c44cceaa7d0020d3ffb0c",
-    "js/view_adventure.js": "7a5e404a31f070b23d2e656f98b8f72cde6ad7a49ef70bb8641c5673bfaa2b0e",
+    "js/view_adventure.js": "9a3b0db288b710ffa83f8b578205c9373a11be083eeec89bcdc6d10b3dc60a22",
     "js/view_red_mushroom.js": "ec0b55128cda48c66540d74d62a0ef48800649afe606d97158536330cfeacb49",
     "scripts/camp_beginner_stories.mjs": "bb69c7a5621b1f57f307f2536a2f43a5601923194bc47ba8f3a43ed76a7e24b8",
     "scripts/language_patterns.mjs": "05c102c00a47d6dbabe291a4baacb416a92e409aadc2c7d00fdb443b294b5527",
@@ -100,28 +100,28 @@
       ]
     },
     {
-      "id": "C873000",
+      "id": "C873100",
       "roots": [
-        873000
+        873100
       ],
       "questIds": [
-        873000,
-        873001,
-        873002,
-        873003,
-        873004,
-        873005
+        873100,
+        873101,
+        873102,
+        873103,
+        873104,
+        873105
       ],
       "longestPath": 6,
-      "document": "chapters/C873000.md",
-      "title": "早安，字源岛",
+      "document": "chapters/C873100.md",
+      "title": "找到回村的路",
       "entries": [
         {
-          "questId": 873000,
-          "title": "早安，字源岛",
+          "questId": 873100,
+          "title": "找到回村的路",
           "levelMin": 1,
           "levelMax": null,
-          "npc": "阿初",
+          "npc": "石伯",
           "region": "hanzi",
           "requires": []
         }
@@ -11988,7 +11988,7 @@
       "id": "S1491",
       "key": "journal:873000",
       "title": "早安，字源岛",
-      "kind": "current",
+      "kind": "inactive",
       "region": "hanzi",
       "requires": [],
       "lines": [
@@ -12007,7 +12007,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/0/description"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": null,
           "next": "S1491-L02"
@@ -12027,7 +12027,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/0/startDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1491-L01",
           "next": "S1491-L03"
@@ -12047,7 +12047,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/0/startDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "doaccept",
           "previous": "S1491-L02",
           "next": "S1491-L04"
@@ -12067,7 +12067,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/0/endDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1491-L03",
           "next": "S1491-L05"
@@ -12087,7 +12087,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/0/endDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "dofinished",
           "previous": "S1491-L04",
           "next": "S1491-L06"
@@ -12107,7 +12107,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/0/talks/0/dialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1491-L05",
           "next": "S1491-L07"
@@ -12127,7 +12127,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/0/talks/0/dialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "donpcdialoged",
           "previous": "S1491-L06",
           "next": null
@@ -12152,7 +12152,7 @@
         }
       ],
       "questId": 873000,
-      "classification": "主线任务",
+      "classification": "旧版任务（保留存档兼容）",
       "level": 1,
       "conditions": [
         {
@@ -12179,14 +12179,14 @@
         "pointer": "/quests/0/rewards",
         "readOnly": true
       },
-      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
-      "document": "chapters/C873000.md"
+      "note": "旧版任务已停止新接取，仅保留存档兼容。",
+      "document": "story-history.md"
     },
     {
       "id": "S1492",
       "key": "journal:873001",
       "title": "一杯水的问候",
-      "kind": "current",
+      "kind": "inactive",
       "region": "hanzi",
       "requires": [
         873000
@@ -12207,7 +12207,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/1/description"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": null,
           "next": "S1492-L02"
@@ -12227,7 +12227,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/1/startDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1492-L01",
           "next": "S1492-L03"
@@ -12247,7 +12247,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/1/startDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "doaccept",
           "previous": "S1492-L02",
           "next": "S1492-L04"
@@ -12267,7 +12267,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/1/endDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1492-L03",
           "next": "S1492-L05"
@@ -12287,7 +12287,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/1/endDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "dofinished",
           "previous": "S1492-L04",
           "next": "S1492-L06"
@@ -12307,7 +12307,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/1/talks/0/dialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1492-L05",
           "next": "S1492-L07"
@@ -12327,7 +12327,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/1/talks/0/dialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "donpcdialoged",
           "previous": "S1492-L06",
           "next": null
@@ -12352,7 +12352,7 @@
         }
       ],
       "questId": 873001,
-      "classification": "主线任务",
+      "classification": "旧版任务（保留存档兼容）",
       "level": 1,
       "conditions": [
         {
@@ -12379,14 +12379,14 @@
         "pointer": "/quests/1/rewards",
         "readOnly": true
       },
-      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
-      "document": "chapters/C873000.md"
+      "note": "旧版任务已停止新接取，仅保留存档兼容。",
+      "document": "story-history.md"
     },
     {
       "id": "S1493",
       "key": "journal:873002",
       "title": "脚下的土地",
-      "kind": "current",
+      "kind": "inactive",
       "region": "hanzi",
       "requires": [
         873001
@@ -12407,7 +12407,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/2/description"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": null,
           "next": "S1493-L02"
@@ -12427,7 +12427,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/2/startDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1493-L01",
           "next": "S1493-L03"
@@ -12447,7 +12447,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/2/startDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "doaccept",
           "previous": "S1493-L02",
           "next": "S1493-L04"
@@ -12467,7 +12467,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/2/endDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1493-L03",
           "next": "S1493-L05"
@@ -12487,7 +12487,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/2/endDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "dofinished",
           "previous": "S1493-L04",
           "next": "S1493-L06"
@@ -12507,7 +12507,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/2/talks/0/dialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1493-L05",
           "next": "S1493-L07"
@@ -12527,7 +12527,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/2/talks/0/dialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "donpcdialoged",
           "previous": "S1493-L06",
           "next": null
@@ -12552,7 +12552,7 @@
         }
       ],
       "questId": 873002,
-      "classification": "主线任务",
+      "classification": "旧版任务（保留存档兼容）",
       "level": 1,
       "conditions": [
         {
@@ -12579,14 +12579,14 @@
         "pointer": "/quests/2/rewards",
         "readOnly": true
       },
-      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
-      "document": "chapters/C873000.md"
+      "note": "旧版任务已停止新接取，仅保留存档兼容。",
+      "document": "story-history.md"
     },
     {
       "id": "S1494",
       "key": "journal:873003",
       "title": "让小鼠回树林",
-      "kind": "current",
+      "kind": "inactive",
       "region": "hanzi",
       "requires": [
         873002
@@ -12607,7 +12607,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/3/description"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": null,
           "next": "S1494-L02"
@@ -12627,7 +12627,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/3/startDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1494-L01",
           "next": "S1494-L03"
@@ -12647,7 +12647,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/3/startDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "doaccept",
           "previous": "S1494-L02",
           "next": "S1494-L04"
@@ -12667,7 +12667,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/3/endDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1494-L03",
           "next": "S1494-L05"
@@ -12687,7 +12687,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/3/endDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "dofinished",
           "previous": "S1494-L04",
           "next": null
@@ -12712,7 +12712,7 @@
         }
       ],
       "questId": 873003,
-      "classification": "主线任务",
+      "classification": "旧版任务（保留存档兼容）",
       "level": 1,
       "conditions": [
         {
@@ -12739,14 +12739,14 @@
         "pointer": "/quests/3/rewards",
         "readOnly": true
       },
-      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
-      "document": "chapters/C873000.md"
+      "note": "旧版任务已停止新接取，仅保留存档兼容。",
+      "document": "story-history.md"
     },
     {
       "id": "S1495",
       "key": "journal:873004",
       "title": "给远方的灯",
-      "kind": "current",
+      "kind": "inactive",
       "region": "hanzi",
       "requires": [
         873003
@@ -12767,7 +12767,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/4/description"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": null,
           "next": "S1495-L02"
@@ -12787,7 +12787,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/4/startDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1495-L01",
           "next": "S1495-L03"
@@ -12807,7 +12807,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/4/startDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "doaccept",
           "previous": "S1495-L02",
           "next": "S1495-L04"
@@ -12827,7 +12827,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/4/endDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1495-L03",
           "next": "S1495-L05"
@@ -12847,7 +12847,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/4/endDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "dofinished",
           "previous": "S1495-L04",
           "next": "S1495-L06"
@@ -12867,7 +12867,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/4/talks/0/dialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1495-L05",
           "next": "S1495-L07"
@@ -12887,7 +12887,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/4/talks/0/dialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "donpcdialoged",
           "previous": "S1495-L06",
           "next": null
@@ -12912,7 +12912,7 @@
         }
       ],
       "questId": 873004,
-      "classification": "主线任务",
+      "classification": "旧版任务（保留存档兼容）",
       "level": 1,
       "conditions": [
         {
@@ -12939,14 +12939,14 @@
         "pointer": "/quests/4/rewards",
         "readOnly": true
       },
-      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
-      "document": "chapters/C873000.md"
+      "note": "旧版任务已停止新接取，仅保留存档兼容。",
+      "document": "story-history.md"
     },
     {
       "id": "S1496",
       "key": "journal:873005",
       "title": "从这里出发",
-      "kind": "current",
+      "kind": "inactive",
       "region": "hanzi",
       "requires": [
         873004
@@ -12967,7 +12967,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/5/description"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": null,
           "next": "S1496-L02"
@@ -12987,7 +12987,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/5/startDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1496-L01",
           "next": "S1496-L03"
@@ -13007,7 +13007,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/5/startDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "doaccept",
           "previous": "S1496-L02",
           "next": "S1496-L04"
@@ -13027,7 +13027,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/5/endDialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1496-L03",
           "next": "S1496-L05"
@@ -13047,7 +13047,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/5/endDialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "dofinished",
           "previous": "S1496-L04",
           "next": "S1496-L06"
@@ -13067,7 +13067,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/5/talks/0/dialog/0/text"
           },
-          "writable": true,
+          "writable": false,
           "action": null,
           "previous": "S1496-L05",
           "next": "S1496-L07"
@@ -13087,7 +13087,7 @@
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/quests/5/talks/0/dialog/0/buttons/0/label"
           },
-          "writable": true,
+          "writable": false,
           "action": "donpcdialoged",
           "previous": "S1496-L06",
           "next": null
@@ -13112,7 +13112,7 @@
         }
       ],
       "questId": 873005,
-      "classification": "主线任务",
+      "classification": "旧版任务（保留存档兼容）",
       "level": 1,
       "conditions": [
         {
@@ -13139,8 +13139,3606 @@
         "pointer": "/quests/5/rewards",
         "readOnly": true
       },
+      "note": "旧版任务已停止新接取，仅保留存档兼容。",
+      "document": "story-history.md"
+    },
+    {
+      "id": "S1501",
+      "key": "journal:873100",
+      "title": "找到回村的路",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [],
+      "lines": [
+        {
+          "id": "S1501-L01",
+          "key": "description",
+          "text": "昨天，一个孩子跟着空白的路牌走进了山里。石伯找到了他，可明天还会有人迷路。 祖先曾在石上写下方向。找回这些字，让回村的路重新有名字。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/description",
+            "sha256": "76eee33fd7f9093a5c59638b9e7467e63ca0bec167bd04d951e1a2fe1cfb3a49"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1501-L02"
+        },
+        {
+          "id": "S1501-L02",
+          "key": "startDialog:0:text",
+          "text": "岛上传说，五千年前，祖先把生活记在文字里。后来文字失落，只留下散在岛上的记忆。 昨天，一个孩子跟着空白的路牌走进了山里。石伯找到了他，可明天还会有人迷路。",
+          "speaker": "石伯",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/startDialog/0/text",
+            "sha256": "4261ab742f00c823c21f86dedf8befd7fc3f5293e115eeedc8c5f7e5f49818b1"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L01",
+          "next": "S1501-L03"
+        },
+        {
+          "id": "S1501-L03",
+          "key": "startDialog:0:button:0",
+          "text": "后来呢？",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/startDialog/0/buttons/0/label",
+            "sha256": "fc428f7edc264f3352327354fdcadcdced14f246af686a981f70273b280a28f6"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "gotonext",
+          "previous": "S1501-L02",
+          "next": "S1501-L04"
+        },
+        {
+          "id": "S1501-L04",
+          "key": "startDialog:1:text",
+          "text": "祖先曾在石上写下方向。找回这些字，让回村的路重新有名字。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。",
+          "speaker": "石伯",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/startDialog/1/text",
+            "sha256": "4771e43aa608b6585bc0787b4d5ff18febb1884835570c44b2b76d06d57ade7a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/startDialog/1/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L03",
+          "next": "S1501-L05"
+        },
+        {
+          "id": "S1501-L05",
+          "key": "startDialog:1:button:0",
+          "text": "我去寻找这些记忆。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/startDialog/1/buttons/0/label",
+            "sha256": "2411f53dc383914f92697679448573fae8ba1940e1e220d952fb2a512debb881"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/startDialog/1/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1501-L04",
+          "next": "S1501-L06"
+        },
+        {
+          "id": "S1501-L06",
+          "key": "endDialog:0:text",
+          "text": "石伯把字写回路牌。孩子指着“下”说：“这次我知道怎么回家了。”",
+          "speaker": "石伯",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/endDialog/0/text",
+            "sha256": "d9819d8ffd8054be6e3a078cf81f6b51923749a72489d0d8a4c435c5e9c28316"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L05",
+          "next": "S1501-L07"
+        },
+        {
+          "id": "S1501-L07",
+          "key": "endDialog:0:button:0",
+          "text": "让这些字继续留在生活里。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/endDialog/0/buttons/0/label",
+            "sha256": "affaf2e8bd63a6d6628e8585041539034fa537a4d82340f61671964a99726227"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/6/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1501-L06",
+          "next": "S1501-L08"
+        },
+        {
+          "id": "S1501-L08",
+          "key": "memory:shan:0",
+          "text": "祖先的记忆里：山脚的路通向村子。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shan/glimpses/0",
+            "sha256": "aa6e3a7514c337510019759109f1ea6c24b3b3f65f6424ae367ed6c87bc5adde"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shan/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L07",
+          "next": "S1501-L09"
+        },
+        {
+          "id": "S1501-L09",
+          "key": "memory:shan:1",
+          "text": "有人把“山”写了下来。山脚的路通向村子。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shan/glimpses/1",
+            "sha256": "9480c57a284658f3d4f4c6db712b3fd810c6f1f89a84fc50dc64b176d8597aff"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shan/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L08",
+          "next": "S1501-L10"
+        },
+        {
+          "id": "S1501-L10",
+          "key": "memory:shan:2",
+          "text": "后来的孩子读懂了这个字。山脚的路通向村子。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shan/glimpses/2",
+            "sha256": "629e54f01a54f9cc28d681f4fc26ad1a572824b7c14f87908a2e675a9ace22c4"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shan/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L09",
+          "next": "S1501-L11"
+        },
+        {
+          "id": "S1501-L11",
+          "key": "memory:shan:restored",
+          "text": "山脚的路通向村子。",
+          "speaker": "石伯",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shan/restored",
+            "sha256": "f0268a38ae76e092243798e27eeae125c102ca0355d1867c7d33df3aa681b329"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shan/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L10",
+          "next": "S1501-L12"
+        },
+        {
+          "id": "S1501-L12",
+          "key": "memory:shang:0",
+          "text": "祖先的记忆里：上坡时，沿着石阶走。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shang/glimpses/0",
+            "sha256": "0e6237f208b9a4a80bd8a51da4bb04cd7f6a6f476bdade4a679dcc4aa2dd2c5e"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shang/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L11",
+          "next": "S1501-L13"
+        },
+        {
+          "id": "S1501-L13",
+          "key": "memory:shang:1",
+          "text": "有人把“上”写了下来。上坡时，沿着石阶走。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shang/glimpses/1",
+            "sha256": "7046c432e642a65b1b619e01a28c053ea7920ad7f48a9305aa34f76755b2e323"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shang/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L12",
+          "next": "S1501-L14"
+        },
+        {
+          "id": "S1501-L14",
+          "key": "memory:shang:2",
+          "text": "后来的孩子读懂了这个字。上坡时，沿着石阶走。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shang/glimpses/2",
+            "sha256": "7cc0c14102e6eb5303950d269b5029c3ed6f662c71ffbd4ee4ab01aa0d60fa3b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shang/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L13",
+          "next": "S1501-L15"
+        },
+        {
+          "id": "S1501-L15",
+          "key": "memory:shang:restored",
+          "text": "上坡时，沿着石阶走。",
+          "speaker": "石伯",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shang/restored",
+            "sha256": "81556435425e2d814457f0125caaa56f3fcd6106a24abb502eba0f178917a061"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shang/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L14",
+          "next": "S1501-L16"
+        },
+        {
+          "id": "S1501-L16",
+          "key": "memory:xia:0",
+          "text": "祖先的记忆里：下坡后，就能看见村口。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/xia/glimpses/0",
+            "sha256": "4588f6df48d89ad8ad63001e033ce0d9fa3a9c586bc4f9c1806efbe1d15eaf53"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/xia/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L15",
+          "next": "S1501-L17"
+        },
+        {
+          "id": "S1501-L17",
+          "key": "memory:xia:1",
+          "text": "有人把“下”写了下来。下坡后，就能看见村口。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/xia/glimpses/1",
+            "sha256": "d2261984d45a0e430e78681a3cf5a2bbef05be605f0342f3aa687bca773789c1"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/xia/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L16",
+          "next": "S1501-L18"
+        },
+        {
+          "id": "S1501-L18",
+          "key": "memory:xia:2",
+          "text": "后来的孩子读懂了这个字。下坡后，就能看见村口。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/xia/glimpses/2",
+            "sha256": "2ca74e53a6f7b63e6ca4e8e20d1fa7f49107a29295480a3e03966e17c581e498"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/xia/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L17",
+          "next": "S1501-L19"
+        },
+        {
+          "id": "S1501-L19",
+          "key": "memory:xia:restored",
+          "text": "下坡后，就能看见村口。",
+          "speaker": "石伯",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/xia/restored",
+            "sha256": "9e264a28c3f53d60493ed313aa47b043c2657f13043ec254f0331f2584001a54"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/xia/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L18",
+          "next": "S1501-L20"
+        },
+        {
+          "id": "S1501-L20",
+          "key": "memory:zhong:0",
+          "text": "祖先的记忆里：中间的路通向广场。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/zhong/glimpses/0",
+            "sha256": "c07dad94e975490e48372a1e634f43a44f1c3d7b8012ceaadca9fbd58b8b7b48"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/zhong/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L19",
+          "next": "S1501-L21"
+        },
+        {
+          "id": "S1501-L21",
+          "key": "memory:zhong:1",
+          "text": "有人把“中”写了下来。中间的路通向广场。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/zhong/glimpses/1",
+            "sha256": "d384ec295f5e915d63dfec11471a93325ad950cf43fde381bed67ae094082ab8"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/zhong/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L20",
+          "next": "S1501-L22"
+        },
+        {
+          "id": "S1501-L22",
+          "key": "memory:zhong:2",
+          "text": "后来的孩子读懂了这个字。中间的路通向广场。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/zhong/glimpses/2",
+            "sha256": "b57defb541160d498e58654db9398fd54f52b91be4dd71c9b3e34a9ba86c538b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/zhong/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L21",
+          "next": "S1501-L23"
+        },
+        {
+          "id": "S1501-L23",
+          "key": "memory:zhong:restored",
+          "text": "中间的路通向广场。",
+          "speaker": "石伯",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/zhong/restored",
+            "sha256": "3765f8643c59f6bebd47206e6fb9df0ce40d9767b3a1119d12a9cdb2af95f48a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/zhong/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L22",
+          "next": "S1501-L24"
+        },
+        {
+          "id": "S1501-L24",
+          "key": "memory:shi:0",
+          "text": "祖先的记忆里：石头上的字经得住风雨。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shi/glimpses/0",
+            "sha256": "b82ef468e2886799e896add3f1066072007f115841168f495f4b680157cfefe8"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shi/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L23",
+          "next": "S1501-L25"
+        },
+        {
+          "id": "S1501-L25",
+          "key": "memory:shi:1",
+          "text": "有人把“石”写了下来。石头上的字经得住风雨。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shi/glimpses/1",
+            "sha256": "b5fff031a9ef74166321a89cebdbf2a59b8b8641517ea176299bae50e7fb5b09"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shi/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L24",
+          "next": "S1501-L26"
+        },
+        {
+          "id": "S1501-L26",
+          "key": "memory:shi:2",
+          "text": "后来的孩子读懂了这个字。石头上的字经得住风雨。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shi/glimpses/2",
+            "sha256": "0428d5507e31904a44b0b81680801701ef3aadeefc30c512a06eaf2d5f4a1e53"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shi/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L25",
+          "next": "S1501-L27"
+        },
+        {
+          "id": "S1501-L27",
+          "key": "memory:shi:restored",
+          "text": "石头上的字经得住风雨。",
+          "speaker": "石伯",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shi/restored",
+            "sha256": "af030bc8acd435f3971189a9310ba67cfcf759b5ee1aa371e971c610ebb31222"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/0/memories/shi/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1501-L26",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 80
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873100,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "昨天，一个孩子跟着空白的路牌走进了山里。石伯找到了他，可明天还会有人迷路。 祖先曾在石上写下方向。找回这些字，让回村的路重新有名字。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/6/title",
+        "sha256": "3148f99fade046b022c13c275354a17e425f90d040d16981f9ece7cfa33720e3",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/6/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/6/rewards",
+        "readOnly": true
+      },
       "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
-      "document": "chapters/C873000.md"
+      "document": "chapters/C873100.md"
+    },
+    {
+      "id": "S1502",
+      "key": "journal:873101",
+      "title": "把水送到田里",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [
+        873100
+      ],
+      "lines": [
+        {
+          "id": "S1502-L01",
+          "key": "description",
+          "text": "溪禾的田干了。旧水渠有两个出口，可木牌上的字都不见了。 找回水渠的记录，分清田地、树林和泥土。溪禾才能把水引到需要它的地方。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/description",
+            "sha256": "25f0c8327d333e7f2c4890ae94679862eb45a07df43e050a67392f7ee61c48c4"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1502-L02"
+        },
+        {
+          "id": "S1502-L02",
+          "key": "startDialog:0:text",
+          "text": "溪禾的田干了。旧水渠有两个出口，可木牌上的字都不见了。",
+          "speaker": "溪禾",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/startDialog/0/text",
+            "sha256": "a41c5868739292779ccd59df48119bfb0e0b6c60e117d91956607edaeeb307c1"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L01",
+          "next": "S1502-L03"
+        },
+        {
+          "id": "S1502-L03",
+          "key": "startDialog:0:button:0",
+          "text": "后来呢？",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/startDialog/0/buttons/0/label",
+            "sha256": "fc428f7edc264f3352327354fdcadcdced14f246af686a981f70273b280a28f6"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "gotonext",
+          "previous": "S1502-L02",
+          "next": "S1502-L04"
+        },
+        {
+          "id": "S1502-L04",
+          "key": "startDialog:1:text",
+          "text": "找回水渠的记录，分清田地、树林和泥土。溪禾才能把水引到需要它的地方。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。",
+          "speaker": "溪禾",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/startDialog/1/text",
+            "sha256": "8e48387e0922fc98473d4c3347e9445b603814f2ff6e69f2e5fba177f28e1533"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/startDialog/1/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L03",
+          "next": "S1502-L05"
+        },
+        {
+          "id": "S1502-L05",
+          "key": "startDialog:1:button:0",
+          "text": "我去寻找这些记忆。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/startDialog/1/buttons/0/label",
+            "sha256": "2411f53dc383914f92697679448573fae8ba1940e1e220d952fb2a512debb881"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/startDialog/1/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1502-L04",
+          "next": "S1502-L06"
+        },
+        {
+          "id": "S1502-L06",
+          "key": "endDialog:0:text",
+          "text": "水流进田里。溪禾立起新木牌：“以后大家都能看懂水要去哪里。”",
+          "speaker": "溪禾",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/endDialog/0/text",
+            "sha256": "74a56e3d618a90fd83f8850688fa382de3b53366731dd627bd7bb73e322121fa"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L05",
+          "next": "S1502-L07"
+        },
+        {
+          "id": "S1502-L07",
+          "key": "endDialog:0:button:0",
+          "text": "让这些字继续留在生活里。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/endDialog/0/buttons/0/label",
+            "sha256": "affaf2e8bd63a6d6628e8585041539034fa537a4d82340f61671964a99726227"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/7/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1502-L06",
+          "next": "S1502-L08"
+        },
+        {
+          "id": "S1502-L08",
+          "key": "memory:shui:0",
+          "text": "祖先的记忆里：这条渠把水送进田里。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/shui/glimpses/0",
+            "sha256": "32b38ee22ef3578bc088cdcb65b6ace6eea3f8268b01b51f4c0a01efab7fd716"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/shui/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L07",
+          "next": "S1502-L09"
+        },
+        {
+          "id": "S1502-L09",
+          "key": "memory:shui:1",
+          "text": "有人把“水”写了下来。这条渠把水送进田里。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/shui/glimpses/1",
+            "sha256": "3b45e4a3337291ee19148c833927e2c0def780a244e12403abc477e60d59085f"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/shui/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L08",
+          "next": "S1502-L10"
+        },
+        {
+          "id": "S1502-L10",
+          "key": "memory:shui:2",
+          "text": "后来的孩子读懂了这个字。这条渠把水送进田里。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/shui/glimpses/2",
+            "sha256": "9983fc2f901e7ecac2ac6220a3c506d36e6f87928350e9a993c86e14a89ba559"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/shui/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L09",
+          "next": "S1502-L11"
+        },
+        {
+          "id": "S1502-L11",
+          "key": "memory:shui:restored",
+          "text": "这条渠把水送进田里。",
+          "speaker": "溪禾",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/shui/restored",
+            "sha256": "58b4ad70267e2e857324162ffbfbef3d9bf75387a08c3c35a67e7efe9de18541"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/shui/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L10",
+          "next": "S1502-L12"
+        },
+        {
+          "id": "S1502-L12",
+          "key": "memory:tian-field:0",
+          "text": "祖先的记忆里：田里的苗等着浇水。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tian-field/glimpses/0",
+            "sha256": "125fdc65910370877d45f36780db956dc356ef603d654c2b96ef24b7b3f43a33"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tian-field/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L11",
+          "next": "S1502-L13"
+        },
+        {
+          "id": "S1502-L13",
+          "key": "memory:tian-field:1",
+          "text": "有人把“田”写了下来。田里的苗等着浇水。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tian-field/glimpses/1",
+            "sha256": "95c873b72ccfeeff0473ac843822dcaadc923cdb1a9392af0e3433c6b3a82159"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tian-field/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L12",
+          "next": "S1502-L14"
+        },
+        {
+          "id": "S1502-L14",
+          "key": "memory:tian-field:2",
+          "text": "后来的孩子读懂了这个字。田里的苗等着浇水。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tian-field/glimpses/2",
+            "sha256": "2a0579230f55ccf01d024db5f05dbdc6731bb0fa6de1ad719188f19538aec250"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tian-field/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L13",
+          "next": "S1502-L15"
+        },
+        {
+          "id": "S1502-L15",
+          "key": "memory:tian-field:restored",
+          "text": "田里的苗等着浇水。",
+          "speaker": "溪禾",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tian-field/restored",
+            "sha256": "f287e425694346bd2f83fdab2fd228fa15a7f388d282097e03f217d08209c808"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tian-field/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L14",
+          "next": "S1502-L16"
+        },
+        {
+          "id": "S1502-L16",
+          "key": "memory:tu:0",
+          "text": "祖先的记忆里：松开泥土，水才能慢慢渗进去。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tu/glimpses/0",
+            "sha256": "c79583929d74d42c348109e684b47f48ef220ffc35256c6c49d7d6afe611e3f4"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tu/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L15",
+          "next": "S1502-L17"
+        },
+        {
+          "id": "S1502-L17",
+          "key": "memory:tu:1",
+          "text": "有人把“土”写了下来。松开泥土，水才能慢慢渗进去。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tu/glimpses/1",
+            "sha256": "19f8c6feeed512b6cae82c32393b463b5bfd96a365d5e1e398ebcf617a3961b4"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tu/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L16",
+          "next": "S1502-L18"
+        },
+        {
+          "id": "S1502-L18",
+          "key": "memory:tu:2",
+          "text": "后来的孩子读懂了这个字。松开泥土，水才能慢慢渗进去。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tu/glimpses/2",
+            "sha256": "e4fe5e858b18c0d8bcd796c927023928308792f54d7b4a6d93a3382066ef6bc2"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tu/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L17",
+          "next": "S1502-L19"
+        },
+        {
+          "id": "S1502-L19",
+          "key": "memory:tu:restored",
+          "text": "松开泥土，水才能慢慢渗进去。",
+          "speaker": "溪禾",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tu/restored",
+            "sha256": "017e0a1b1d72895cbc975e0670ccaf26ae6a2b7fc4beefae4c12d61d0ea582a4"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/tu/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L18",
+          "next": "S1502-L20"
+        },
+        {
+          "id": "S1502-L20",
+          "key": "memory:mu:0",
+          "text": "祖先的记忆里：木牌标着水渠的方向。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/mu/glimpses/0",
+            "sha256": "071800a42b163c934ae26aa28ee5d7979afe9354cb61ab5e39babcc26abf5f2a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/mu/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L19",
+          "next": "S1502-L21"
+        },
+        {
+          "id": "S1502-L21",
+          "key": "memory:mu:1",
+          "text": "有人把“木”写了下来。木牌标着水渠的方向。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/mu/glimpses/1",
+            "sha256": "b8c1c57969185914242e7850d22b1bca3fc9b9fe6d42d95338a0a2ca0c6939a7"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/mu/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L20",
+          "next": "S1502-L22"
+        },
+        {
+          "id": "S1502-L22",
+          "key": "memory:mu:2",
+          "text": "后来的孩子读懂了这个字。木牌标着水渠的方向。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/mu/glimpses/2",
+            "sha256": "24e1d48b1c5190f29940ffa09c668ae91e2dee2fadd5a846a00592ec02b037a1"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/mu/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L21",
+          "next": "S1502-L23"
+        },
+        {
+          "id": "S1502-L23",
+          "key": "memory:mu:restored",
+          "text": "木牌标着水渠的方向。",
+          "speaker": "溪禾",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/mu/restored",
+            "sha256": "45260ad20a550866e376b5aa7c9cb72ae9f6c5f113988d37d5875a1b732907ca"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/mu/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L22",
+          "next": "S1502-L24"
+        },
+        {
+          "id": "S1502-L24",
+          "key": "memory:sen:0",
+          "text": "祖先的记忆里：树林里的小路也有了名字。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/sen/glimpses/0",
+            "sha256": "4af25ae88bb97819badbbf7d4dd1e691fe0f9cf7678a859637df9cec51c597be"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/sen/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L23",
+          "next": "S1502-L25"
+        },
+        {
+          "id": "S1502-L25",
+          "key": "memory:sen:1",
+          "text": "有人把“森”写了下来。树林里的小路也有了名字。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/sen/glimpses/1",
+            "sha256": "580c6b28b7b80e955a764a0aec58d6381708b892ace509b634abae183b2f9818"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/sen/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L24",
+          "next": "S1502-L26"
+        },
+        {
+          "id": "S1502-L26",
+          "key": "memory:sen:2",
+          "text": "后来的孩子读懂了这个字。树林里的小路也有了名字。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/sen/glimpses/2",
+            "sha256": "f753fa781a6db0675779d673a74f5b586a30de0f3ca4fb29cce0d0add3f169ca"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/sen/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L25",
+          "next": "S1502-L27"
+        },
+        {
+          "id": "S1502-L27",
+          "key": "memory:sen:restored",
+          "text": "树林里的小路也有了名字。",
+          "speaker": "溪禾",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/sen/restored",
+            "sha256": "99db0cdc2a1e24a7c32b08c6f88e1b2ae645c9ac0ee57d4c95424cfda7569f1c"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/1/memories/sen/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1502-L26",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 200
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873101,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "溪禾的田干了。旧水渠有两个出口，可木牌上的字都不见了。 找回水渠的记录，分清田地、树林和泥土。溪禾才能把水引到需要它的地方。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/7/title",
+        "sha256": "c8b8f5c4be9fd71ff6abb39cefd4256d83eb0be7ba4f69b68aa125d73ce6a01c",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/7/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/7/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873100.md"
+    },
+    {
+      "id": "S1503",
+      "key": "journal:873102",
+      "title": "留下天气记录",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [
+        873101
+      ],
+      "lines": [
+        {
+          "id": "S1503-L01",
+          "key": "description",
+          "text": "大家刚把谷物搬出来，雨就来了。祖先留下的天气册只剩下空格。 找回记时间和天气的字，把每天看到的事情记下来。记录帮助大家安排生活，不会替大家预知天气。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/description",
+            "sha256": "8438630b9cf971c8baaf999651fe526f17ef39cdd3ce8f2dc5fa647d8e415f5b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1503-L02"
+        },
+        {
+          "id": "S1503-L02",
+          "key": "startDialog:0:text",
+          "text": "大家刚把谷物搬出来，雨就来了。祖先留下的天气册只剩下空格。",
+          "speaker": "溪禾",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/startDialog/0/text",
+            "sha256": "9144fce39808d901790ed069f0a979189ff79031905faa8e9c7091cd9adca67d"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L01",
+          "next": "S1503-L03"
+        },
+        {
+          "id": "S1503-L03",
+          "key": "startDialog:0:button:0",
+          "text": "后来呢？",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/startDialog/0/buttons/0/label",
+            "sha256": "fc428f7edc264f3352327354fdcadcdced14f246af686a981f70273b280a28f6"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "gotonext",
+          "previous": "S1503-L02",
+          "next": "S1503-L04"
+        },
+        {
+          "id": "S1503-L04",
+          "key": "startDialog:1:text",
+          "text": "找回记时间和天气的字，把每天看到的事情记下来。记录帮助大家安排生活，不会替大家预知天气。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。",
+          "speaker": "溪禾",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/startDialog/1/text",
+            "sha256": "caaebd6283004be0ec21ab46e88467255b0213a9ee72bd6c3f58ff6fe3296c44"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/startDialog/1/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L03",
+          "next": "S1503-L05"
+        },
+        {
+          "id": "S1503-L05",
+          "key": "startDialog:1:button:0",
+          "text": "我去寻找这些记忆。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/startDialog/1/buttons/0/label",
+            "sha256": "2411f53dc383914f92697679448573fae8ba1940e1e220d952fb2a512debb881"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/startDialog/1/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1503-L04",
+          "next": "S1503-L06"
+        },
+        {
+          "id": "S1503-L06",
+          "key": "endDialog:0:text",
+          "text": "溪禾写下今天的天气。石伯笑了：“明天的人，也能知道我们今天看到了什么。”",
+          "speaker": "溪禾",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/endDialog/0/text",
+            "sha256": "9d305449b637b43798e4391cfdb38a8b010cccc6f6421afc4ad892459e9cdee1"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L05",
+          "next": "S1503-L07"
+        },
+        {
+          "id": "S1503-L07",
+          "key": "endDialog:0:button:0",
+          "text": "让这些字继续留在生活里。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/endDialog/0/buttons/0/label",
+            "sha256": "affaf2e8bd63a6d6628e8585041539034fa537a4d82340f61671964a99726227"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/8/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1503-L06",
+          "next": "S1503-L08"
+        },
+        {
+          "id": "S1503-L08",
+          "key": "memory:ri:0",
+          "text": "祖先的记忆里：日出后，大家开始干活。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/ri/glimpses/0",
+            "sha256": "b6da4853c1e9310609433204c372d5ceb00795c1627ce385bb43ae6b75d27b52"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/ri/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L07",
+          "next": "S1503-L09"
+        },
+        {
+          "id": "S1503-L09",
+          "key": "memory:ri:1",
+          "text": "有人把“日”写了下来。日出后，大家开始干活。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/ri/glimpses/1",
+            "sha256": "aac8277e19b2b80a0a3bc976c6587c004c4008ef6b836eb8174ca0a285c34b57"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/ri/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L08",
+          "next": "S1503-L10"
+        },
+        {
+          "id": "S1503-L10",
+          "key": "memory:ri:2",
+          "text": "后来的孩子读懂了这个字。日出后，大家开始干活。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/ri/glimpses/2",
+            "sha256": "050ac0a262e945c674e34684a90cdc6347a0f42470eb0ac056b2f56d7e4a0d97"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/ri/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L09",
+          "next": "S1503-L11"
+        },
+        {
+          "id": "S1503-L11",
+          "key": "memory:ri:restored",
+          "text": "日出后，大家开始干活。",
+          "speaker": "溪禾",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/ri/restored",
+            "sha256": "744e6e31ebe00abaeae511972d8c61d4181316be00093b185a0b1d46f6e64059"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/ri/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L10",
+          "next": "S1503-L12"
+        },
+        {
+          "id": "S1503-L12",
+          "key": "memory:yue:0",
+          "text": "祖先的记忆里：月亮升起来，人们收好工具。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yue/glimpses/0",
+            "sha256": "0b1247052e2d6de712518764c16bc0a8fd7b0890c30e734db2565f772ac82c3d"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yue/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L11",
+          "next": "S1503-L13"
+        },
+        {
+          "id": "S1503-L13",
+          "key": "memory:yue:1",
+          "text": "有人把“月”写了下来。月亮升起来，人们收好工具。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yue/glimpses/1",
+            "sha256": "0ff2830daa155984533cce08595df74d8472d673df02df58fc804b48965708a2"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yue/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L12",
+          "next": "S1503-L14"
+        },
+        {
+          "id": "S1503-L14",
+          "key": "memory:yue:2",
+          "text": "后来的孩子读懂了这个字。月亮升起来，人们收好工具。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yue/glimpses/2",
+            "sha256": "275d2a53d0ae9042616f604dc4e0f6505667885019b1688ef47088743dec1832"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yue/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L13",
+          "next": "S1503-L15"
+        },
+        {
+          "id": "S1503-L15",
+          "key": "memory:yue:restored",
+          "text": "月亮升起来，人们收好工具。",
+          "speaker": "溪禾",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yue/restored",
+            "sha256": "bf0e030713e30549d9872b2d9666cde89cb0bcbf2749bee133bd0a889a3fd33c"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yue/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L14",
+          "next": "S1503-L16"
+        },
+        {
+          "id": "S1503-L16",
+          "key": "memory:tian-sky:0",
+          "text": "祖先的记忆里：每天留一行记录。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/tian-sky/glimpses/0",
+            "sha256": "81f90a4720605bd73cc80a22fb727321f86a54f8b774ae92890fa8f0f449e0d2"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/tian-sky/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L15",
+          "next": "S1503-L17"
+        },
+        {
+          "id": "S1503-L17",
+          "key": "memory:tian-sky:1",
+          "text": "有人把“天”写了下来。每天留一行记录。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/tian-sky/glimpses/1",
+            "sha256": "5bd3aae2cb4665757c906a84089aea6cb8ccf6c2c589d67a496cc2c9bd9a05e9"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/tian-sky/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L16",
+          "next": "S1503-L18"
+        },
+        {
+          "id": "S1503-L18",
+          "key": "memory:tian-sky:2",
+          "text": "后来的孩子读懂了这个字。每天留一行记录。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/tian-sky/glimpses/2",
+            "sha256": "d1f0f9c3a94bc7f2a035eb29e67c13f3826a2bb45439f731dfcbfe5e0c8531ce"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/tian-sky/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L17",
+          "next": "S1503-L19"
+        },
+        {
+          "id": "S1503-L19",
+          "key": "memory:tian-sky:restored",
+          "text": "每天留一行记录。",
+          "speaker": "溪禾",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/tian-sky/restored",
+            "sha256": "ac9b852fb559ebe51abb1eb0b38797bad168b8d626bb04c1834604f87a821576"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/tian-sky/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L18",
+          "next": "S1503-L20"
+        },
+        {
+          "id": "S1503-L20",
+          "key": "memory:yun:0",
+          "text": "祖先的记忆里：云遮住太阳，大家抬头看看天。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yun/glimpses/0",
+            "sha256": "e890b3a68e31fc73fbff153e9a0ce1dab7a81523a136cfa089d71fce6cf56bc7"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yun/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L19",
+          "next": "S1503-L21"
+        },
+        {
+          "id": "S1503-L21",
+          "key": "memory:yun:1",
+          "text": "有人把“云”写了下来。云遮住太阳，大家抬头看看天。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yun/glimpses/1",
+            "sha256": "7d84647ec5452f1859a091fc32cc5d00a90f48e5b19f8611928ea0f9cb82d3d5"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yun/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L20",
+          "next": "S1503-L22"
+        },
+        {
+          "id": "S1503-L22",
+          "key": "memory:yun:2",
+          "text": "后来的孩子读懂了这个字。云遮住太阳，大家抬头看看天。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yun/glimpses/2",
+            "sha256": "50640390e4acace86c87de8b1044081deeb62f69e28d968a9c8341d54b997bc1"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yun/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L21",
+          "next": "S1503-L23"
+        },
+        {
+          "id": "S1503-L23",
+          "key": "memory:yun:restored",
+          "text": "云遮住太阳，大家抬头看看天。",
+          "speaker": "溪禾",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yun/restored",
+            "sha256": "9afbfb99643f2d0672d0326802919ca0ece02219a3b571ab9f005e146e046ac9"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yun/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L22",
+          "next": "S1503-L24"
+        },
+        {
+          "id": "S1503-L24",
+          "key": "memory:yu:0",
+          "text": "祖先的记忆里：下雨了，把谷物搬回屋。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yu/glimpses/0",
+            "sha256": "cf54c22dfce71e02e44b458b63004b779ca0b94b31309eb9e195985be5ac452b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yu/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L23",
+          "next": "S1503-L25"
+        },
+        {
+          "id": "S1503-L25",
+          "key": "memory:yu:1",
+          "text": "有人把“雨”写了下来。下雨了，把谷物搬回屋。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yu/glimpses/1",
+            "sha256": "5df2e7f195393d2c658ac181215172f2bd9617add2f87d57fba53054043928d8"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yu/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L24",
+          "next": "S1503-L26"
+        },
+        {
+          "id": "S1503-L26",
+          "key": "memory:yu:2",
+          "text": "后来的孩子读懂了这个字。下雨了，把谷物搬回屋。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yu/glimpses/2",
+            "sha256": "8d6729757fa949a5f7df3e952330eee8edc7423cf6708d72a36c0f2148572a9d"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yu/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L25",
+          "next": "S1503-L27"
+        },
+        {
+          "id": "S1503-L27",
+          "key": "memory:yu:restored",
+          "text": "下雨了，把谷物搬回屋。",
+          "speaker": "溪禾",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yu/restored",
+            "sha256": "1911159b8960c18518de9d3cb38c1a43c2446b830a96fe7711d327293f3f217b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/2/memories/yu/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1503-L26",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 600
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873102,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "大家刚把谷物搬出来，雨就来了。祖先留下的天气册只剩下空格。 找回记时间和天气的字，把每天看到的事情记下来。记录帮助大家安排生活，不会替大家预知天气。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/8/title",
+        "sha256": "f3f5254c5ddab48d190f54e88e09cc06543d12953d5de4bbb87b5da606404fa3",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/8/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/8/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873100.md"
+    },
+    {
+      "id": "S1504",
+      "key": "journal:873103",
+      "title": "为夜归的人留灯",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [
+        873102
+      ],
+      "lines": [
+        {
+          "id": "S1504-L01",
+          "key": "description",
+          "text": "小灯每晚都提着灯等旅人。有人看见亮光，却不知道哪扇门可以进去休息。 找回门前告示上的字，把灯的意思留给夜里赶路的人。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/description",
+            "sha256": "00cebd273ef30d9b9c1f5970112809fcb1271504fc04488e8c374ea4f5ac03a9"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1504-L02"
+        },
+        {
+          "id": "S1504-L02",
+          "key": "startDialog:0:text",
+          "text": "小灯每晚都提着灯等旅人。有人看见亮光，却不知道哪扇门可以进去休息。",
+          "speaker": "小灯",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/startDialog/0/text",
+            "sha256": "814b3a4d373decc24656182bafd302d9ab3a7a947ef33ab976ab422d44ff1e10"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L01",
+          "next": "S1504-L03"
+        },
+        {
+          "id": "S1504-L03",
+          "key": "startDialog:0:button:0",
+          "text": "后来呢？",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/startDialog/0/buttons/0/label",
+            "sha256": "fc428f7edc264f3352327354fdcadcdced14f246af686a981f70273b280a28f6"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "gotonext",
+          "previous": "S1504-L02",
+          "next": "S1504-L04"
+        },
+        {
+          "id": "S1504-L04",
+          "key": "startDialog:1:text",
+          "text": "找回门前告示上的字，把灯的意思留给夜里赶路的人。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。",
+          "speaker": "小灯",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/startDialog/1/text",
+            "sha256": "36d4c6528db7b442746879efd076ecedd7a37d1f02b7d2ea538746f7a5a90ddc"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/startDialog/1/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L03",
+          "next": "S1504-L05"
+        },
+        {
+          "id": "S1504-L05",
+          "key": "startDialog:1:button:0",
+          "text": "我去寻找这些记忆。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/startDialog/1/buttons/0/label",
+            "sha256": "2411f53dc383914f92697679448573fae8ba1940e1e220d952fb2a512debb881"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/startDialog/1/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1504-L04",
+          "next": "S1504-L06"
+        },
+        {
+          "id": "S1504-L06",
+          "key": "endDialog:0:text",
+          "text": "门边亮起灯，牌上写着休息的地方。小灯终于可以回屋：“现在，文字会替我告诉他们。”",
+          "speaker": "小灯",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/endDialog/0/text",
+            "sha256": "7e8f162ec6d704b12fc7322bf99dbffb0ac11f66915b2fcf4139f7187933ae89"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L05",
+          "next": "S1504-L07"
+        },
+        {
+          "id": "S1504-L07",
+          "key": "endDialog:0:button:0",
+          "text": "让这些字继续留在生活里。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/endDialog/0/buttons/0/label",
+            "sha256": "affaf2e8bd63a6d6628e8585041539034fa537a4d82340f61671964a99726227"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/9/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1504-L06",
+          "next": "S1504-L08"
+        },
+        {
+          "id": "S1504-L08",
+          "key": "memory:huo:0",
+          "text": "祖先的记忆里：火要有人照看。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/huo/glimpses/0",
+            "sha256": "c456a61a2404a56051d9c4d6acc24daf0a0e1e783bc1868da561306348db4486"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/huo/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L07",
+          "next": "S1504-L09"
+        },
+        {
+          "id": "S1504-L09",
+          "key": "memory:huo:1",
+          "text": "有人把“火”写了下来。火要有人照看。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/huo/glimpses/1",
+            "sha256": "cfd7d8ffbd344592862de0e69db0669a5c6e4b9dc1e1d813b9765c0aa49d4d41"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/huo/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L08",
+          "next": "S1504-L10"
+        },
+        {
+          "id": "S1504-L10",
+          "key": "memory:huo:2",
+          "text": "后来的孩子读懂了这个字。火要有人照看。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/huo/glimpses/2",
+            "sha256": "a78ba37de16aa0fd5b82c1f02a548aec44a848ab0e049f289c23325c22e4748b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/huo/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L09",
+          "next": "S1504-L11"
+        },
+        {
+          "id": "S1504-L11",
+          "key": "memory:huo:restored",
+          "text": "火要有人照看。",
+          "speaker": "小灯",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/huo/restored",
+            "sha256": "3f4d06404a086eea768d4c63548ef8f1f8719d5ceb59e163a749853d83396a0f"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/huo/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L10",
+          "next": "S1504-L12"
+        },
+        {
+          "id": "S1504-L12",
+          "key": "memory:guang:0",
+          "text": "祖先的记忆里：光照着回家的路。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/guang/glimpses/0",
+            "sha256": "e041a58d3eb2d1e892eeec344797624c30ebd71223ee4a29475212cbf880d7be"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/guang/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L11",
+          "next": "S1504-L13"
+        },
+        {
+          "id": "S1504-L13",
+          "key": "memory:guang:1",
+          "text": "有人把“光”写了下来。光照着回家的路。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/guang/glimpses/1",
+            "sha256": "f43fd941d1f744805c0858178e45697f1a0357c071d9c41975240eaba96f2095"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/guang/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L12",
+          "next": "S1504-L14"
+        },
+        {
+          "id": "S1504-L14",
+          "key": "memory:guang:2",
+          "text": "后来的孩子读懂了这个字。光照着回家的路。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/guang/glimpses/2",
+            "sha256": "dfdeccc78883302f4093c167b0de17a7ed506d466b74f24eb62f8242cd3ba286"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/guang/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L13",
+          "next": "S1504-L15"
+        },
+        {
+          "id": "S1504-L15",
+          "key": "memory:guang:restored",
+          "text": "光照着回家的路。",
+          "speaker": "小灯",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/guang/restored",
+            "sha256": "d03dbd1ab5e6dbe77c9a89e15b85a3b9d1cf962e6db5dce5b93dfd727b38c777"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/guang/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L14",
+          "next": "S1504-L16"
+        },
+        {
+          "id": "S1504-L16",
+          "key": "memory:ming:0",
+          "text": "祖先的记忆里：屋里明亮，可以看清门边的告示。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/ming/glimpses/0",
+            "sha256": "b533df2d57cc4db9e504020ea7f1dda47aa2eccde1d9040e8d0e3a75aeead32a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/ming/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L15",
+          "next": "S1504-L17"
+        },
+        {
+          "id": "S1504-L17",
+          "key": "memory:ming:1",
+          "text": "有人把“明”写了下来。屋里明亮，可以看清门边的告示。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/ming/glimpses/1",
+            "sha256": "2764026739771d97c840fc15f7fe177afb69f442dd5962a01ee2ef4058f0cc2d"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/ming/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L16",
+          "next": "S1504-L18"
+        },
+        {
+          "id": "S1504-L18",
+          "key": "memory:ming:2",
+          "text": "后来的孩子读懂了这个字。屋里明亮，可以看清门边的告示。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/ming/glimpses/2",
+            "sha256": "33cdcc6e942f83c9fa0f74f3313bb74e35bf1b3af63514c0552f33e0ddfea3aa"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/ming/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L17",
+          "next": "S1504-L19"
+        },
+        {
+          "id": "S1504-L19",
+          "key": "memory:ming:restored",
+          "text": "屋里明亮，可以看清门边的告示。",
+          "speaker": "小灯",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/ming/restored",
+            "sha256": "621e9057a40a9087b0c9de22aa6febf06b0d8a189c887e9abf64b088e954968d"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/ming/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L18",
+          "next": "S1504-L20"
+        },
+        {
+          "id": "S1504-L20",
+          "key": "memory:men:0",
+          "text": "祖先的记忆里：门上写着欢迎旅人。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/men/glimpses/0",
+            "sha256": "e831c63ef1a06db3897776d83df2b386fd7b2ca1ba246cd5be8ecde3fd3f561b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/men/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L19",
+          "next": "S1504-L21"
+        },
+        {
+          "id": "S1504-L21",
+          "key": "memory:men:1",
+          "text": "有人把“门”写了下来。门上写着欢迎旅人。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/men/glimpses/1",
+            "sha256": "8221c89264251f8c6ae3813527540712e23557af69c61b629826f0ca004aa103"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/men/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L20",
+          "next": "S1504-L22"
+        },
+        {
+          "id": "S1504-L22",
+          "key": "memory:men:2",
+          "text": "后来的孩子读懂了这个字。门上写着欢迎旅人。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/men/glimpses/2",
+            "sha256": "f2cfe25801ad3910a9ee319e095631ee03943b5d553a5174882bf921a3ce922e"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/men/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L21",
+          "next": "S1504-L23"
+        },
+        {
+          "id": "S1504-L23",
+          "key": "memory:men:restored",
+          "text": "门上写着欢迎旅人。",
+          "speaker": "小灯",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/men/restored",
+            "sha256": "1e2220b0ada816028f7e2672508fb681dd231b74009a0d4268201eccf43732a1"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/men/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L22",
+          "next": "S1504-L24"
+        },
+        {
+          "id": "S1504-L24",
+          "key": "memory:xiu:0",
+          "text": "祖先的记忆里：走累了，可以在这里休息。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/xiu/glimpses/0",
+            "sha256": "34c783c50cbac2ca45c5a42539ab5bccd50537bcd0ee11c3c26c107b28305763"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/xiu/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L23",
+          "next": "S1504-L25"
+        },
+        {
+          "id": "S1504-L25",
+          "key": "memory:xiu:1",
+          "text": "有人把“休”写了下来。走累了，可以在这里休息。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/xiu/glimpses/1",
+            "sha256": "4299d71a9a25c80fe523b8632b95438776200c503c29de38947baf9730689b6f"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/xiu/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L24",
+          "next": "S1504-L26"
+        },
+        {
+          "id": "S1504-L26",
+          "key": "memory:xiu:2",
+          "text": "后来的孩子读懂了这个字。走累了，可以在这里休息。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/xiu/glimpses/2",
+            "sha256": "89c3ad5eeeefdb01a004defcb9aa7a1dd7ac70aaf76f0e53cbf770f930f8be28"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/xiu/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L25",
+          "next": "S1504-L27"
+        },
+        {
+          "id": "S1504-L27",
+          "key": "memory:xiu:restored",
+          "text": "走累了，可以在这里休息。",
+          "speaker": "小灯",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/xiu/restored",
+            "sha256": "de4978e9ca5f2f2cccc7e61b6794f57a9f4091405877721e32e440b7f42fcc6e"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/3/memories/xiu/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1504-L26",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 900
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873103,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "小灯每晚都提着灯等旅人。有人看见亮光，却不知道哪扇门可以进去休息。 找回门前告示上的字，把灯的意思留给夜里赶路的人。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/9/title",
+        "sha256": "01808aa4f191e190b68084171b66236f5fcdc735de226fd692531cd5c6df872b",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/9/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/9/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873100.md"
+    },
+    {
+      "id": "S1505",
+      "key": "journal:873104",
+      "title": "把心意留给别人",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [
+        873103
+      ],
+      "lines": [
+        {
+          "id": "S1505-L01",
+          "key": "description",
+          "text": "阿初找到一封旧家书。里面夹着一只小手印，可写信的人想说什么呢？ 找回祖先关于见面、看望和关心的记忆，让这封信重新有人读懂。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/description",
+            "sha256": "eb61dbbb4e336ca69e2950fc24fba372fcc029b8e25bf8c71ff2ee9cca0b717c"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1505-L02"
+        },
+        {
+          "id": "S1505-L02",
+          "key": "startDialog:0:text",
+          "text": "阿初找到一封旧家书。里面夹着一只小手印，可写信的人想说什么呢？",
+          "speaker": "阿初",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/startDialog/0/text",
+            "sha256": "501b2c01097453624eefbc1b87dc769dbb8126f88eefd2cab7154e92846c8c85"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L01",
+          "next": "S1505-L03"
+        },
+        {
+          "id": "S1505-L03",
+          "key": "startDialog:0:button:0",
+          "text": "后来呢？",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/startDialog/0/buttons/0/label",
+            "sha256": "fc428f7edc264f3352327354fdcadcdced14f246af686a981f70273b280a28f6"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "gotonext",
+          "previous": "S1505-L02",
+          "next": "S1505-L04"
+        },
+        {
+          "id": "S1505-L04",
+          "key": "startDialog:1:text",
+          "text": "找回祖先关于见面、看望和关心的记忆，让这封信重新有人读懂。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。",
+          "speaker": "阿初",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/startDialog/1/text",
+            "sha256": "359244676a265168775f60b39203ceb1296942b4aa8a87da80c857cb59984198"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/startDialog/1/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L03",
+          "next": "S1505-L05"
+        },
+        {
+          "id": "S1505-L05",
+          "key": "startDialog:1:button:0",
+          "text": "我去寻找这些记忆。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/startDialog/1/buttons/0/label",
+            "sha256": "2411f53dc383914f92697679448573fae8ba1940e1e220d952fb2a512debb881"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/startDialog/1/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1505-L04",
+          "next": "S1505-L06"
+        },
+        {
+          "id": "S1505-L06",
+          "key": "endDialog:0:text",
+          "text": "阿初把家书读给大家听，又写下一封新信：“我们很好，也想知道你过得好不好。”",
+          "speaker": "阿初",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/endDialog/0/text",
+            "sha256": "69a132a42f1eb337ff7c66938996a724f061fd84423e2bc618231dd43a8715ea"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L05",
+          "next": "S1505-L07"
+        },
+        {
+          "id": "S1505-L07",
+          "key": "endDialog:0:button:0",
+          "text": "让这些字继续留在生活里。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/endDialog/0/buttons/0/label",
+            "sha256": "affaf2e8bd63a6d6628e8585041539034fa537a4d82340f61671964a99726227"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/10/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1505-L06",
+          "next": "S1505-L08"
+        },
+        {
+          "id": "S1505-L08",
+          "key": "memory:ren:0",
+          "text": "祖先的记忆里：信里记着想念的人。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/ren/glimpses/0",
+            "sha256": "9a42e58a0e892697c003b2aa822755f4729cc3a3bc19b8bffaf24faeeb2909a8"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/ren/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L07",
+          "next": "S1505-L09"
+        },
+        {
+          "id": "S1505-L09",
+          "key": "memory:ren:1",
+          "text": "有人把“人”写了下来。信里记着想念的人。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/ren/glimpses/1",
+            "sha256": "46d3ce7fa93a1c585fa663d80eeea3e5bf97be61751dbce4bc92307b7cc6d743"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/ren/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L08",
+          "next": "S1505-L10"
+        },
+        {
+          "id": "S1505-L10",
+          "key": "memory:ren:2",
+          "text": "后来的孩子读懂了这个字。信里记着想念的人。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/ren/glimpses/2",
+            "sha256": "45acbbd2a517b42d6aeb7a159f05754f9a7c62b6eef4c84d357b8825594b236d"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/ren/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L09",
+          "next": "S1505-L11"
+        },
+        {
+          "id": "S1505-L11",
+          "key": "memory:ren:restored",
+          "text": "信里记着想念的人。",
+          "speaker": "阿初",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/ren/restored",
+            "sha256": "9dcf981f1b0a0b6fd8bf183b2ef2857742d6492e57f8b9a37529cabbd4dd832b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/ren/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L10",
+          "next": "S1505-L12"
+        },
+        {
+          "id": "S1505-L12",
+          "key": "memory:kou:0",
+          "text": "祖先的记忆里：口头说过的话，也能写下来。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/kou/glimpses/0",
+            "sha256": "89d566f6871a1b1be02a6f346db5f5563860f62d2ad3dd0d9854c617e5060cb7"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/kou/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L11",
+          "next": "S1505-L13"
+        },
+        {
+          "id": "S1505-L13",
+          "key": "memory:kou:1",
+          "text": "有人把“口”写了下来。口头说过的话，也能写下来。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/kou/glimpses/1",
+            "sha256": "b74489b1ef224639a011cf805afa13bf36c05275b082e6f70b7eba1c2931b660"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/kou/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L12",
+          "next": "S1505-L14"
+        },
+        {
+          "id": "S1505-L14",
+          "key": "memory:kou:2",
+          "text": "后来的孩子读懂了这个字。口头说过的话，也能写下来。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/kou/glimpses/2",
+            "sha256": "048f58b8b121009930d20dd98b01ef3c89b6ffcfe37ed88a4e60ed309d1ab3fb"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/kou/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L13",
+          "next": "S1505-L15"
+        },
+        {
+          "id": "S1505-L15",
+          "key": "memory:kou:restored",
+          "text": "口头说过的话，也能写下来。",
+          "speaker": "阿初",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/kou/restored",
+            "sha256": "9efa852d59cbad313ff27720477a2d3e39265d73e63925d1a093cffc358bd87b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/kou/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L14",
+          "next": "S1505-L16"
+        },
+        {
+          "id": "S1505-L16",
+          "key": "memory:shou:0",
+          "text": "祖先的记忆里：这只手印属于写信的孩子。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/shou/glimpses/0",
+            "sha256": "94a8818d0378ea28f711a73dd8f91a2bfd7193a2e056e0aee95e2fac12d97044"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/shou/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L15",
+          "next": "S1505-L17"
+        },
+        {
+          "id": "S1505-L17",
+          "key": "memory:shou:1",
+          "text": "有人把“手”写了下来。这只手印属于写信的孩子。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/shou/glimpses/1",
+            "sha256": "b1fe6d5ec110fb2e3250f2556777679f3c9524dbfdad1ae02ca608c7a73c070a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/shou/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L16",
+          "next": "S1505-L18"
+        },
+        {
+          "id": "S1505-L18",
+          "key": "memory:shou:2",
+          "text": "后来的孩子读懂了这个字。这只手印属于写信的孩子。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/shou/glimpses/2",
+            "sha256": "d7850597dde8c59f4f89485a097b4d391b17249e316c2ca6539abb2c45ee4bd5"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/shou/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L17",
+          "next": "S1505-L19"
+        },
+        {
+          "id": "S1505-L19",
+          "key": "memory:shou:restored",
+          "text": "这只手印属于写信的孩子。",
+          "speaker": "阿初",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/shou/restored",
+            "sha256": "f883154212db83d4d3ea011de884ef369a8aebf817d8f832e0eef720a596044e"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/shou/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L18",
+          "next": "S1505-L20"
+        },
+        {
+          "id": "S1505-L20",
+          "key": "memory:mu-eye:0",
+          "text": "祖先的记忆里：看望家人时，亲眼看看他们的生活。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/mu-eye/glimpses/0",
+            "sha256": "9595e6434ee3728319da5b18729c9785d1d2e71f48300c5f88d11ba1a53a0f5b"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/mu-eye/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L19",
+          "next": "S1505-L21"
+        },
+        {
+          "id": "S1505-L21",
+          "key": "memory:mu-eye:1",
+          "text": "有人把“目”写了下来。看望家人时，亲眼看看他们的生活。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/mu-eye/glimpses/1",
+            "sha256": "fbe028a4dc1bb4004f9deea02bbfbd0e2b08c151d94c68dc42e70fcae1544d99"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/mu-eye/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L20",
+          "next": "S1505-L22"
+        },
+        {
+          "id": "S1505-L22",
+          "key": "memory:mu-eye:2",
+          "text": "后来的孩子读懂了这个字。看望家人时，亲眼看看他们的生活。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/mu-eye/glimpses/2",
+            "sha256": "a34544436c052169e6c4f3e8aaa2087bb4f3f6d673cb9852a8b96fae9d48db16"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/mu-eye/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L21",
+          "next": "S1505-L23"
+        },
+        {
+          "id": "S1505-L23",
+          "key": "memory:mu-eye:restored",
+          "text": "看望家人时，亲眼看看他们的生活。",
+          "speaker": "阿初",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/mu-eye/restored",
+            "sha256": "ce20cb6b4b17caade83d7921172940bffc59fd25e8b7c11d82355440ee48d6da"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/mu-eye/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L22",
+          "next": "S1505-L24"
+        },
+        {
+          "id": "S1505-L24",
+          "key": "memory:xin:0",
+          "text": "祖先的记忆里：把关心写进信里。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/xin/glimpses/0",
+            "sha256": "52ed886c9517bd1e2c884284b585101ff8104b0d8db70bba14e869ad77084a1e"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/xin/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L23",
+          "next": "S1505-L25"
+        },
+        {
+          "id": "S1505-L25",
+          "key": "memory:xin:1",
+          "text": "有人把“心”写了下来。把关心写进信里。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/xin/glimpses/1",
+            "sha256": "b27da09fe731efc38dd4531c70d626c04ca0e17c8b9a4f12a15ab70ffc887f5d"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/xin/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L24",
+          "next": "S1505-L26"
+        },
+        {
+          "id": "S1505-L26",
+          "key": "memory:xin:2",
+          "text": "后来的孩子读懂了这个字。把关心写进信里。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/xin/glimpses/2",
+            "sha256": "3fb5392fe428cd4b5bf186d2e9d3d43b241b2391b34799769a4a72fb46985116"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/xin/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L25",
+          "next": "S1505-L27"
+        },
+        {
+          "id": "S1505-L27",
+          "key": "memory:xin:restored",
+          "text": "把关心写进信里。",
+          "speaker": "阿初",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/xin/restored",
+            "sha256": "bcd282a95d95481a16955c7507f0f6d88831618d189da0d164131601524c2531"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/4/memories/xin/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1505-L26",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 1300
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873104,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "阿初找到一封旧家书。里面夹着一只小手印，可写信的人想说什么呢？ 找回祖先关于见面、看望和关心的记忆，让这封信重新有人读懂。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/10/title",
+        "sha256": "ef485846bc7c1507476d80900edb4d4c0aa9669b6543b4a908162dd4da28885f",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/10/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/10/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873100.md"
+    },
+    {
+      "id": "S1506",
+      "key": "journal:873105",
+      "title": "大家一起庆祝",
+      "kind": "current",
+      "region": "hanzi",
+      "requires": [
+        873104
+      ],
+      "lines": [
+        {
+          "id": "S1506-L01",
+          "key": "description",
+          "text": "庆典就要开始。谁拿大鼓，谁拿小鼓？旧节目单上的字都丢了。 找回最后一组生活记录。人们用文字安排庆典，也把来自不同地方的朋友介绍给彼此。",
+          "speaker": "任务",
+          "phase": "目标",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/description",
+            "sha256": "cdad91fcb58700785e24130b1e3e7f375e88cbba739883b351896d1e0210fba5"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/description"
+          },
+          "writable": true,
+          "action": null,
+          "previous": null,
+          "next": "S1506-L02"
+        },
+        {
+          "id": "S1506-L02",
+          "key": "startDialog:0:text",
+          "text": "庆典就要开始。谁拿大鼓，谁拿小鼓？旧节目单上的字都丢了。",
+          "speaker": "阿初",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/startDialog/0/text",
+            "sha256": "7bdd64ad6591914d42d59ca159c3ac3255c7634df75d57b64b330154d834b31c"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/startDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L01",
+          "next": "S1506-L03"
+        },
+        {
+          "id": "S1506-L03",
+          "key": "startDialog:0:button:0",
+          "text": "后来呢？",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/startDialog/0/buttons/0/label",
+            "sha256": "fc428f7edc264f3352327354fdcadcdced14f246af686a981f70273b280a28f6"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/startDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "gotonext",
+          "previous": "S1506-L02",
+          "next": "S1506-L04"
+        },
+        {
+          "id": "S1506-L04",
+          "key": "startDialog:1:text",
+          "text": "找回最后一组生活记录。人们用文字安排庆典，也把来自不同地方的朋友介绍给彼此。 每次先练习一两个字。靠近文字线索，完成一次读写练习。最近练习的字会在战斗中化成文字卡，观看动画不算完成练习。",
+          "speaker": "阿初",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/startDialog/1/text",
+            "sha256": "7776b5f035ae47aec0f0db018ecff02308cb00e5b7e3b4f4341907695f638052"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/startDialog/1/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L03",
+          "next": "S1506-L05"
+        },
+        {
+          "id": "S1506-L05",
+          "key": "startDialog:1:button:0",
+          "text": "我去寻找这些记忆。",
+          "speaker": "我",
+          "phase": "接取",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/startDialog/1/buttons/0/label",
+            "sha256": "2411f53dc383914f92697679448573fae8ba1940e1e220d952fb2a512debb881"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/startDialog/1/buttons/0/label"
+          },
+          "writable": true,
+          "action": "doaccept",
+          "previous": "S1506-L04",
+          "next": "S1506-L06"
+        },
+        {
+          "id": "S1506-L06",
+          "key": "endDialog:0:text",
+          "text": "鼓声响起来，大家一起跳舞。阿初说：“祖先留下的字，现在又在我们的生活里了。”",
+          "speaker": "阿初",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/endDialog/0/text",
+            "sha256": "d3ed3085e2de39c0754207d498f8e5b9dd284191e14998edcafc7acbbf163c47"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/endDialog/0/text"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L05",
+          "next": "S1506-L07"
+        },
+        {
+          "id": "S1506-L07",
+          "key": "endDialog:0:button:0",
+          "text": "让这些字继续留在生活里。",
+          "speaker": "我",
+          "phase": "交付",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/endDialog/0/buttons/0/label",
+            "sha256": "affaf2e8bd63a6d6628e8585041539034fa537a4d82340f61671964a99726227"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/quests/11/endDialog/0/buttons/0/label"
+          },
+          "writable": true,
+          "action": "dofinished",
+          "previous": "S1506-L06",
+          "next": "S1506-L08"
+        },
+        {
+          "id": "S1506-L08",
+          "key": "memory:da:0",
+          "text": "祖先的记忆里：大鼓放在广场左边。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/da/glimpses/0",
+            "sha256": "98cb78ef48e8f81c844c1111dbce4d5bf01a681e72e3eebc700844eecdeeddce"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/da/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L07",
+          "next": "S1506-L09"
+        },
+        {
+          "id": "S1506-L09",
+          "key": "memory:da:1",
+          "text": "有人把“大”写了下来。大鼓放在广场左边。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/da/glimpses/1",
+            "sha256": "9d779c45a36e2b3705c28a8da2216252b7f807017b1dba5bd78f279f3c33f80e"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/da/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L08",
+          "next": "S1506-L10"
+        },
+        {
+          "id": "S1506-L10",
+          "key": "memory:da:2",
+          "text": "后来的孩子读懂了这个字。大鼓放在广场左边。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/da/glimpses/2",
+            "sha256": "1295b0b991cb67fb8c39d5eb26158c3b6beb8dad6aeeb6246eafe3bba16c6ee7"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/da/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L09",
+          "next": "S1506-L11"
+        },
+        {
+          "id": "S1506-L11",
+          "key": "memory:da:restored",
+          "text": "大鼓放在广场左边。",
+          "speaker": "阿初",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/da/restored",
+            "sha256": "cc9a2ce2191986ae2eb6aa1360ead28d26be6c0d662cda7bd04b630fd2dd3427"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/da/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L10",
+          "next": "S1506-L12"
+        },
+        {
+          "id": "S1506-L12",
+          "key": "memory:xiao:0",
+          "text": "祖先的记忆里：小鼓交给孩子们。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/xiao/glimpses/0",
+            "sha256": "310f4b59ae0eaf34d44d6cf7e112a3f570966d29d797cc2823568fe9eff23dae"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/xiao/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L11",
+          "next": "S1506-L13"
+        },
+        {
+          "id": "S1506-L13",
+          "key": "memory:xiao:1",
+          "text": "有人把“小”写了下来。小鼓交给孩子们。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/xiao/glimpses/1",
+            "sha256": "2a3a3b18097816d8308c380a7bcbb86b74b533f0178d2e5620e81849c161210d"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/xiao/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L12",
+          "next": "S1506-L14"
+        },
+        {
+          "id": "S1506-L14",
+          "key": "memory:xiao:2",
+          "text": "后来的孩子读懂了这个字。小鼓交给孩子们。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/xiao/glimpses/2",
+            "sha256": "3f0a6b08fbba07577c691e95130b934ca2285d17ac137f3af7466e0261ab99e0"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/xiao/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L13",
+          "next": "S1506-L15"
+        },
+        {
+          "id": "S1506-L15",
+          "key": "memory:xiao:restored",
+          "text": "小鼓交给孩子们。",
+          "speaker": "阿初",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/xiao/restored",
+            "sha256": "04633671cd8617fb093d91954d63c0b58cc3eb7b7f58353a00b14fe335151bc1"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/xiao/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L14",
+          "next": "S1506-L16"
+        },
+        {
+          "id": "S1506-L16",
+          "key": "memory:er:0",
+          "text": "祖先的记忆里：用耳朵听，大家一起跟上鼓点。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/er/glimpses/0",
+            "sha256": "e6e0da3b8e02676a8663c659f0224f55f56b929a3637fb24e432f49d2fb1e5d3"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/er/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L15",
+          "next": "S1506-L17"
+        },
+        {
+          "id": "S1506-L17",
+          "key": "memory:er:1",
+          "text": "有人把“耳”写了下来。用耳朵听，大家一起跟上鼓点。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/er/glimpses/1",
+            "sha256": "8ead6de93330198dfa36dba25b07c61910995a21ce606b2627e1a2279cb9f30c"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/er/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L16",
+          "next": "S1506-L18"
+        },
+        {
+          "id": "S1506-L18",
+          "key": "memory:er:2",
+          "text": "后来的孩子读懂了这个字。用耳朵听，大家一起跟上鼓点。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/er/glimpses/2",
+            "sha256": "1f71d2ff4d41a2c2af44861d30e576854a23316b35b7341f537b27020772d122"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/er/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L17",
+          "next": "S1506-L19"
+        },
+        {
+          "id": "S1506-L19",
+          "key": "memory:er:restored",
+          "text": "用耳朵听，大家一起跟上鼓点。",
+          "speaker": "阿初",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/er/restored",
+            "sha256": "871faf52c6ef4d6d2acbe9b6c4af47e67cf899992b4313ac20de144b1cbaf8bd"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/er/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L18",
+          "next": "S1506-L20"
+        },
+        {
+          "id": "S1506-L20",
+          "key": "memory:guo:0",
+          "text": "祖先的记忆里：朋友在纸上写下自己的国家。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/guo/glimpses/0",
+            "sha256": "7b71f82f08782715beb29fcaf84a108147ac3cb0e4bdaea45e4c8695884f95bd"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/guo/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L19",
+          "next": "S1506-L21"
+        },
+        {
+          "id": "S1506-L21",
+          "key": "memory:guo:1",
+          "text": "有人把“国”写了下来。朋友在纸上写下自己的国家。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/guo/glimpses/1",
+            "sha256": "658e4c9fc1ea00ee55cca29bef6aa86c94d4eceade22fd784e17afd4a7bd9662"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/guo/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L20",
+          "next": "S1506-L22"
+        },
+        {
+          "id": "S1506-L22",
+          "key": "memory:guo:2",
+          "text": "后来的孩子读懂了这个字。朋友在纸上写下自己的国家。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/guo/glimpses/2",
+            "sha256": "aa851731e6e006a7d9a85bad68a0649fa73c5951ff4b8dfeaa4e8400bdacca88"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/guo/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L21",
+          "next": "S1506-L23"
+        },
+        {
+          "id": "S1506-L23",
+          "key": "memory:guo:restored",
+          "text": "朋友在纸上写下自己的国家。",
+          "speaker": "阿初",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/guo/restored",
+            "sha256": "bb2f2558dcae9270b9ff703ccc7af6c58f9209f0aad553f2a664e8648cf968e4"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/guo/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L22",
+          "next": "S1506-L24"
+        },
+        {
+          "id": "S1506-L24",
+          "key": "memory:wu:0",
+          "text": "祖先的记忆里：节目单上的舞，今天又有人跳了。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/wu/glimpses/0",
+            "sha256": "9470fa9b720fc93c2da8c5b301417ef3b1f3604a069dfeaa1ef762d8892b9fd9"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/wu/glimpses/0"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L23",
+          "next": "S1506-L25"
+        },
+        {
+          "id": "S1506-L25",
+          "key": "memory:wu:1",
+          "text": "有人把“舞”写了下来。节目单上的舞，今天又有人跳了。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/wu/glimpses/1",
+            "sha256": "3095350b71fbbd0e68a409de852b166c9b1ae2bfe8551f5174321b9ba2fae55c"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/wu/glimpses/1"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L24",
+          "next": "S1506-L26"
+        },
+        {
+          "id": "S1506-L26",
+          "key": "memory:wu:2",
+          "text": "后来的孩子读懂了这个字。节目单上的舞，今天又有人跳了。",
+          "speaker": "祖先的记忆",
+          "phase": "收集记忆",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/wu/glimpses/2",
+            "sha256": "8922a4613c93b218bc069c84b506aa4824d17d508c25e5881e046418ac1d7e2f"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/wu/glimpses/2"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L25",
+          "next": "S1506-L27"
+        },
+        {
+          "id": "S1506-L27",
+          "key": "memory:wu:restored",
+          "text": "节目单上的舞，今天又有人跳了。",
+          "speaker": "阿初",
+          "phase": "字卡完整后的生活变化",
+          "source": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/wu/restored",
+            "sha256": "01d598611746a4d69f65b99e0bc865539da6a220f408da6670ff4ac272ef378a"
+          },
+          "author": {
+            "file": "data/adventure/island-packs/hanzi.json",
+            "pointer": "/memory/stories/5/memories/wu/restored"
+          },
+          "writable": true,
+          "action": null,
+          "previous": "S1506-L26",
+          "next": null
+        }
+      ],
+      "rewards": [
+        {
+          "choice": -1,
+          "schoolFilter": false,
+          "items": [
+            {
+              "id": 113,
+              "name": "经验",
+              "count": 1600
+            },
+            {
+              "id": 100,
+              "name": "奇豆",
+              "count": 30
+            }
+          ]
+        }
+      ],
+      "questId": 873105,
+      "classification": "主线任务",
+      "level": 1,
+      "conditions": [
+        {
+          "id": 214,
+          "name": "等级",
+          "min": 1,
+          "max": null
+        }
+      ],
+      "repeat": false,
+      "objective": "庆典就要开始。谁拿大鼓，谁拿小鼓？旧节目单上的字都丢了。 找回最后一组生活记录。人们用文字安排庆典，也把来自不同地方的朋友介绍给彼此。",
+      "titleSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/11/title",
+        "sha256": "e7a73e7841be39606b01c8a45c8b191b09d17c4b2c82d302670469b0ffb8be57",
+        "writable": true,
+        "author": {
+          "file": "data/adventure/island-packs/hanzi.json",
+          "pointer": "/quests/11/title"
+        }
+      },
+      "rewardSource": {
+        "file": "data/adventure/island-packs/hanzi.json",
+        "pointer": "/quests/11/rewards",
+        "readOnly": true
+      },
+      "note": "网页原创续篇，已接入NPC任务入口；交付对白在目标完成后播放。",
+      "document": "chapters/C873100.md"
     },
     {
       "id": "S1497",
@@ -13153,13 +16751,13 @@
         {
           "id": "S1497-L01",
           "key": "description",
-          "text": "欢迎来到字源岛。先去问问溪禾需要什么帮助吧。",
+          "text": "阿初找到一封旧家书。里面夹着一只小手印，可写信的人想说什么呢？",
           "speaker": "阿初",
           "phase": "日常",
           "source": {
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/npcs/0/description",
-            "sha256": "f85ffe8dd7c2e1e63c8b1c95d85c9a5af2619ff9f7555ac5c223fe5f80b3d070"
+            "sha256": "501b2c01097453624eefbc1b87dc769dbb8126f88eefd2cab7154e92846c8c85"
           },
           "author": {
             "file": "data/adventure/island-packs/hanzi.json",
@@ -13186,13 +16784,13 @@
         {
           "id": "S1498-L01",
           "key": "description",
-          "text": "水让小苗长大，也让旅人恢复精神。",
+          "text": "溪禾的田干了。旧水渠有两个出口，可木牌上的字都不见了。",
           "speaker": "溪禾",
           "phase": "日常",
           "source": {
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/npcs/1/description",
-            "sha256": "5cf2aba8cd9dd94a3ef121983ad80305fea4100cb57ed7c0c52d2efc3e57e8fa"
+            "sha256": "a41c5868739292779ccd59df48119bfb0e0b6c60e117d91956607edaeeb307c1"
           },
           "author": {
             "file": "data/adventure/island-packs/hanzi.json",
@@ -13219,13 +16817,13 @@
         {
           "id": "S1499-L01",
           "key": "description",
-          "text": "土托住我们的脚。路稳了，大家才能放心走。",
+          "text": "昨天，一个孩子跟着空白的路牌走进了山里。石伯找到了他，可明天还会有人迷路。",
           "speaker": "石伯",
           "phase": "日常",
           "source": {
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/npcs/2/description",
-            "sha256": "2cdaca0dc79ad01858125849d873480442e5f18b0a4c3a9e686052f8441a10ab"
+            "sha256": "53521329a80ded61e367c9583c7029ba9226a7338de5d3a21410ae722e35cb3a"
           },
           "author": {
             "file": "data/adventure/island-packs/hanzi.json",
@@ -13252,13 +16850,13 @@
         {
           "id": "S1500-L01",
           "key": "description",
-          "text": "灯还亮着。你可以带着学到的字去远方，也可以随时回来。",
+          "text": "小灯每晚都提着灯等旅人。有人看见亮光，却不知道哪扇门可以进去休息。",
           "speaker": "小灯",
           "phase": "日常",
           "source": {
             "file": "data/adventure/island-packs/hanzi.json",
             "pointer": "/npcs/3/description",
-            "sha256": "9fb4be2c8df8376d949a50953274005d29b90ee634f408bcce85a50d3f7de36b"
+            "sha256": "814b3a4d373decc24656182bafd302d9ab3a7a947ef33ab976ab422d44ff1e10"
           },
           "author": {
             "file": "data/adventure/island-packs/hanzi.json",

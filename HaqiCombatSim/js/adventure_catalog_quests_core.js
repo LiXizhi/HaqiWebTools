@@ -1,3 +1,4 @@
+import {memoryCount,memoryParams,memoryBatch} from './hanzi_memory_core.js';
 // Kids quest_list progress for every non-obsolete quest outside the 14 chapter lessons.
 // QuestProvider.lua TryAccept/CanFinished and QuestHelp.lua Table_Add / Table_Add_Item.
 // Story text is projected without executing source scripts or transform rewards.
@@ -99,12 +100,19 @@ function customLive(save, content, id, stats) {
 export function catalogGoalRows(save, content, quest, stats = {}) {
     const state = questRecord(save, quest.id);
     return quest.groups.flatMap((group, groupIndex) => group.items.map(item => {
-        const live = group.kind === 'custom' ? customLive(save, content, item.id, stats) : null;
+        const live = group.kind === 'hanzi' ? {support:'practice',value:state.claimed?item.count:state.wordPracticeVersion===1?(state.progress[progressKey(group.kind,item.id)]||0):0} : group.kind === 'custom' ? customLive(save, content, item.id, stats) : null;
         const stored = state.progress[progressKey(group.kind, item.id)] || 0;
         const value = Math.min(item.count, live && live.support !== 'event' ? live.value : stored);
         const blocked = live?.support === 'unsupported';
         return { ...item, kind: group.kind, condition: group.condition, groupIndex, value, blocked, blockReason: blocked ? (BLOCKED[item.id] || `${item.name}需要原服功能，单人冒险无法推进`) : '' };
     }));
+}
+// Presentation only: completion/rewards must still inspect every authored goal.
+export function catalogVisibleGoalRows(save,content,quest,stats={}){
+    const rows=catalogGoalRows(save,content,quest,stats),words=rows.filter(r=>r.kind==='hanzi').map(r=>r.id);
+    if(!words.length)return rows;
+    const active=new Set(rows.filter(row=>row.kind==='hanzi'&&row.value<row.count).slice(0,2).map(row=>row.id));
+    return rows.filter(row=>row.kind!=='hanzi'||active.has(row.id));
 }
 function groupDone(group, rows) {
     const items = rows.filter(row => row.kind === group.kind && group.items.some(item => item.id === row.id));
@@ -125,6 +133,7 @@ export function requirementValue(save, content, id, stats = {}) {
 }
 export function catalogAcceptBlock(save, content, quest, stats = {}) {
     const state = questRecord(save, quest.id);
+    if (quest.retired) return '请寻找新的祖先记忆任务';
     if (state.accepted && !state.claimed) return '已经接取';
     if (state.claimed && !quest.repeat) return '已经完成';
     for (const prerequisite of quest.prerequisites) if (prerequisite.value === 1 && !save.quests[prerequisite.id]?.claimed) return '请先完成前置任务';
@@ -193,9 +202,23 @@ export function trackedQuestIds(save, content) {
         const chapter = content.quests?.find(quest => !save.quests?.[quest.id]?.claimed);
         if (chapter && local(chapter.id)) ids.push(chapter.id);
     }
-    // Reserve a slot for the latest accepted quest, even when three old pins filled the tracker.
-    const result = ids.filter(id => id !== latest).slice(0, MAX_TRACKED_QUESTS - (latest === null ? 0 : 1));
-    if (latest !== null) result.push(latest);
+    if (!ids.length) {
+        const ongoing = active.find(([id]) => local(Number(id)));
+        const available = ongoing ? null : content.catalogQuests?.quests.find(quest => local(quest.id) && !save.quests?.[quest.id]?.claimed && !catalogAcceptBlock(save, content, quest));
+        if (ongoing || available) ids.push(ongoing ? Number(ongoing[0]) : available.id);
+    }
+    // Keep a local quest first; older accepted quests follow without duplicating it.
+    // Reserve a slot for the latest acceptance when manual local pins fill the tracker.
+    const first = ids[0];
+    const remaining = [...ids.slice(1), ...active.map(([id]) => Number(id))];
+    const result = first === undefined ? [] : [first];
+    const reserveLatest = latest !== null && latest !== first;
+    for (const id of remaining) {
+        if (result.includes(id) || (reserveLatest && id === latest)) continue;
+        if (result.length >= MAX_TRACKED_QUESTS - (reserveLatest ? 1 : 0)) break;
+        result.push(id);
+    }
+    if (reserveLatest) result.push(latest);
     return result;
 }
 export function noteQuestAccepted(save, questId) {
@@ -354,7 +377,7 @@ export function claimCatalogQuest(save, content, questId, npcId, stats = {}) {
         save.inventory[goal.id] -= goal.count;
         if (!save.inventory[goal.id]) delete save.inventory[goal.id];
     }
-    return quest;
+    return quest.legacyRewardQuestId && save.quests[quest.legacyRewardQuestId]?.claimed ? {...quest,rewards:[]} : quest;
 }
 export function validateCatalogQuests(save, content) {
     if (!Array.isArray(save.trackedQuestIds) && save.trackedQuestId !== undefined) {

@@ -67,9 +67,9 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
     }
     return {
         cancel,
-        async start(signal,{onPartial}={}){
+        async start(signal,{onPartial,onAudio}={}){
             await cancel();
-            const state={abort:new AbortController(),text:'',error:null,releaseAudio:acquireAudioActivity()};current=state;
+            const state={abort:new AbortController(),text:'',error:null,onAudio,chunks:[],samples:0,releaseAudio:acquireAudioActivity()};current=state;
             const abort=()=>void dispose(state);
             state.unlink=()=>signal.removeEventListener('abort',abort);
             signal.addEventListener('abort',abort,{once:true});
@@ -95,7 +95,7 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
                 state.processor=state.context.createScriptProcessor(4096,1,1);
                 state.processor.onaudioprocess=e=>{
                     if(state.abort.signal.aborted)return;
-                    try{stream.sendAudio(pcm16(e.inputBuffer.getChannelData(0),state.context.sampleRate));}catch{state.error=Error('录音连接中断，请重试');}
+                    try{const chunk=pcm16(e.inputBuffer.getChannelData(0),state.context.sampleRate);stream.sendAudio(chunk);if(state.onAudio&&state.samples<16000*20){state.chunks.push(chunk);state.samples+=chunk.length;}}catch{state.error=Error('录音连接中断，请重试');}
                 };
                 state.source.connect(state.processor);state.processor.connect(state.context.destination);
                 return true;
@@ -110,6 +110,11 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
                 await deadline(state.finishing,32000,state.abort.signal);
                 if(state.error)throw state.error;
                 if(!state.text.trim())throw Error('没有听清，请重新说一遍');
+                if(state.onAudio&&state.samples){
+                    const buffer=new ArrayBuffer(44+state.samples*2),v=new DataView(buffer),ascii=(offset,text)=>{for(let i=0;i<text.length;i++)v.setUint8(offset+i,text.charCodeAt(i));};
+                    ascii(0,'RIFF');v.setUint32(4,36+state.samples*2,true);ascii(8,'WAVE');ascii(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,16000,true);v.setUint32(28,32000,true);v.setUint16(32,2,true);v.setUint16(34,16,true);ascii(36,'data');v.setUint32(40,state.samples*2,true);let offset=44;for(const chunk of state.chunks)for(const sample of chunk){v.setInt16(offset,sample,true);offset+=2;}
+                    state.onAudio(new Blob([buffer],{type:'audio/wav'}));
+                }
                 return state.text.trim().slice(0,2000);
             }finally{await dispose(state);}
         },

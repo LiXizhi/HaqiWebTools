@@ -1,3 +1,6 @@
+import {syncDictionaryQuestProgress} from '../js/word_cards_core.js';
+import {completeMemory,memoryParams} from '../js/hanzi_memory_core.js';
+import {createHanziProgress} from '../js/hanzi_core.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -31,26 +34,29 @@ function setup(){
     return {content,dataset};
 }
 
-test('Camp newcomers can explore Hanzi independently: ordinary quests grant cards once, reach level 10 and allow return travel',()=>{
+function collectWord(save,content,pack,id){syncDictionaryQuestProgress(save,content,{languages:{zh:{entries:{[id]:{learned:true}}}}});}
+
+test('Camp newcomers can explore Hanzi independently: practice quests complete once, reach level 10 and allow return travel',()=>{
     const {content}=setup(),pack=packs.find(p=>p.island.id==='hanzi');
     const save=A.createAdventure(content,{seed:72});
     assert.equal(save.zone,'camp');assert.deepEqual(save.position,content.worldMapIndex.islands.camp.initialSpawn);
-    assert.ok(!(save.trackedQuestIds||[]).includes(pack.quests[0].id));
+    assert.ok(!(save.trackedQuestIds||[]).includes(pack.quests.find(q=>!q.retired).id));
     const campQuests=structuredClone(save.quests);
     A.applyAction(save,content,{type:'travel',zone:'hanzi'});
-    assert.equal(save.zone,'hanzi');assert.deepEqual(save.quests,campQuests);assert.ok(save.trackedQuestIds.includes(pack.quests[0].id));
-    assert.equal(catalogAcceptBlock(save,content,pack.quests[1]),'请先完成前置任务');
-    for(const q of pack.quests){
+    assert.equal(save.zone,'hanzi');assert.deepEqual(save.quests,campQuests);assert.ok(save.trackedQuestIds.includes(pack.quests.find(q=>!q.retired).id));
+    assert.equal(catalogAcceptBlock(save,content,pack.quests.filter(q=>!q.retired)[1]),'请先完成前置任务');
+    for(const q of pack.quests.filter(q=>!q.retired)){
         A.applyAction(save,content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});
         for(const group of q.groups)for(const goal of group.items){
-            if(group.kind==='talk')A.applyAction(save,content,{type:'talk',npcId:goal.id});
+            if(group.kind==='hanzi')collectWord(save,content,pack,goal.id);
+            else if(group.kind==='talk')A.applyAction(save,content,{type:'talk',npcId:goal.id});
             else noteCatalogKills(save,content,[content.monsters[pack.monsters[0].id]]);
         }
         A.applyAction(save,content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});
         const before=JSON.stringify(save);A.applyAction(save,content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});assert.equal(JSON.stringify(save),before);
     }
-    assert.equal(save.level,10);assert.deepEqual(save.hanzi.questCards,['huo','shui','tu']);assert.equal(save.hanzi.battleCard,'huo');
-    assert.deepEqual(save.hanzi.entries,{});assert.equal(save.dailyLanguageBuff,undefined);
+    assert.equal(save.level,10);assert.equal(save.hanzi?.memories,undefined);assert.equal(save.hanzi?.questCards,undefined);
+    assert.deepEqual(save.hanzi?.entries||{},{});assert.equal(save.dailyLanguageBuff,undefined);
     A.applyAction(save,content,{type:'travel',zone:'camp'});const old=A.parseSave(save,content);assert.equal(old.zone,'camp');
     A.applyAction(old,content,{type:'travel',zone:'hanzi'});assert.deepEqual(old.hanzi,save.hanzi);
 });
@@ -87,16 +93,17 @@ test('newcomer fights on Hanzi island in every school with a frozen replayable c
     for(const school of ['fire','ice','storm','life','death']){
         const save=A.createAdventure(content,{school,seed:73});
         A.applyAction(save,content,{type:'travel',zone:'hanzi'});
-        for(const q of pack.quests.slice(0,3)){
+        for(const q of pack.quests.filter(q=>!q.retired).slice(0,4)){
             A.applyAction(save,content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});
-            A.applyAction(save,content,{type:'talk',npcId:q.groups[0].items[0].id});
+            for(const goal of q.groups[0].items)collectWord(save,content,pack,goal.id);
             A.applyAction(save,content,{type:'claim-catalog',questId:q.id,npcId:q.endNpc});
         }
+        save.hanzi=createHanziProgress();save.hanzi.questCards=['huo'];save.hanzi.battleCard='huo';
         A.beginEncounter(save,content,pack.encounters[0].id);
-        assert.equal(save.pendingEncounter.player.hanziBattle.id,'huo');
+        assert.equal(save.pendingEncounter.player.hanziBattle,undefined);
         const battle=B.restorePveBattle(dataset,content,save.pendingEncounter),bot=new SimpleBot();
         for(let i=0;i<100&&!battle.finished;i++){const decision=bot.pick(battle,battle.sides.near[0]);B.playPveRound(battle,decision);A.recordDecision(save,decision,battle);}
-        assert.equal(battle.winner,'near',school);assert.ok(battle.events.some(e=>e.type==='hanzi_buff'),school);
+        assert.equal(battle.winner,'near',school);assert.ok(!battle.events.some(e=>e.type==='hanzi_buff'),school);
         const restored=A.parseSave(save,content);assert.deepEqual(B.restorePveBattle(dataset,content,restored.pendingEncounter).events,battle.events);
         const altered=structuredClone(content);altered.balanceParams={...(altered.balanceParams||{}),hanzi:{attackPercent:9}};
         assert.deepEqual(B.restorePveBattle(dataset,altered,A.parseSave(save,altered).pendingEncounter).events,battle.events);
@@ -107,11 +114,12 @@ test('60/70/80 content plays through existing quest actions, persists and reward
     for(const pack of packs){
         const save=A.createAdventure(content,{seed:91});save.xp=content.progression.xpThresholds[pack.island.recommendedLevel-1];A.syncProgression(save,content);
         A.applyAction(save,content,{type:'travel',zone:pack.island.id});
-        for(const q of pack.quests){
+        for(const q of pack.quests.filter(q=>!q.retired)){
             assert.equal(catalogAcceptBlock(save,content,q),'');A.applyAction(save,content,{type:'accept-catalog',questId:q.id,npcId:q.startNpc});
             assert.equal(catalogQuestReady(save,content,q),false);
             for(const group of q.groups)for(const goal of group.items){
-                if(group.kind==='talk')A.applyAction(save,content,{type:'talk',npcId:goal.id});
+                if(group.kind==='hanzi')collectWord(save,content,pack,goal.id);
+            else if(group.kind==='talk')A.applyAction(save,content,{type:'talk',npcId:goal.id});
                 else noteCatalogKills(save,content,pack.monsters.filter(m=>pack.goalPaths[m.id]===goal.id).map(m=>content.monsters[m.id]),91);
             }
             assert.equal(catalogQuestReady(save,content,q),true);
@@ -125,7 +133,7 @@ test('60/70/80 content plays through existing quest actions, persists and reward
 test('new levels are reachable; old 50-level progress survives and no island story requires another island',()=>{
     const {content}=setup();assert.equal(content.progression.levelCap,80);
     const save=A.createAdventure(content);save.xp=content.progression.xpThresholds[49];A.syncProgression(save,content);assert.equal(save.level,50);
-    for(const pack of packs){const q=pack.quests[0];assert.deepEqual(q.prerequisites,[]);if(pack.island.recommendedLevel>50)assert.match(catalogAcceptBlock(save,content,q),/需要等级/);else assert.equal(catalogAcceptBlock(save,content,q),'');}
+    for(const pack of packs){const q=pack.quests.find(q=>!q.retired);assert.deepEqual(q.prerequisites,[]);if(pack.island.recommendedLevel>50)assert.match(catalogAcceptBlock(save,content,q),/需要等级/);else assert.equal(catalogAcceptBlock(save,content,q),'');}
     save.xp=content.progression.xpThresholds[79];A.syncProgression(save,content);assert.equal(save.level,80);assert.ok(Number.isFinite(content.progression.xpThresholds[80]));
 });
 test('all new field targets, real-world observation NPCs and nine dungeon entrances are reachable',()=>{
@@ -178,4 +186,10 @@ test('future pack edits reject dependency loops and missing combat targets befor
     const {content}=installExpansion(read('data/adventure/chapter.json'),read('data/adventure/combat.json'),read('data/adventure/pets.json'),read('data/adventure/shop-candidates.json'),cards,read('data/kids/charms.json'),names);
     const cycle=structuredClone(packs);cycle[0].quests[0].prerequisites=[{id:cycle[0].quests.at(-1).id,value:1}];assert.throws(()=>validateIslandPacks(cycle,content),/循环/);
     const missing=structuredClone(packs);missing[1].encounters[0].monsterId='missing-template';assert.throws(()=>validateIslandPacks(missing,content),/遭遇怪物/);
+});
+
+test('Hanzi has twenty reachable field encounters distributed away from residents and roads',()=>{
+    const {content}=setup(),pack=packs.find(p=>p.island.id==='hanzi'),world=createWorld('hanzi',content);
+    assert.equal(pack.encounters.length,20);assert.deepEqual(pack.memory.guardianEncounterIds,pack.encounters.map(e=>e.id));
+    for(const e of world.encounters){assert.ok(distance(e,world.layout.spawn)>400);assert.ok(world.npcs.every(n=>distance(e,n)>180));}
 });

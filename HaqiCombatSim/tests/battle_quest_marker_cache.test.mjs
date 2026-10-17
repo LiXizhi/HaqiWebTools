@@ -29,7 +29,7 @@ test('stationary, moving, health and clock frames reuse positive and absent NPC 
 test('in-place level, acceptance, talk progress, claim and tracking edits refresh immediately',()=>{
     const {content,save,cache}=fixture();const read=id=>cache.forState(save,content)(id);
     assert.equal(read(1),'!');save.level=9;assert.equal(read(1),null);
-    save.level=10;assert.equal(read(1),'!');save.trackedQuestIds=[];assert.equal(read(1),null);
+    save.level=10;assert.equal(read(1),'!');save.trackedQuestIds=[];assert.equal(read(1),'!','the local available quest remains the default recommendation');
     save.trackedQuestIds=[61080];assert.equal(read(1),'!');
     save.quests[61080]={accepted:true,claimed:false,progress:{}};assert.equal(read(1),'…');
     save.quests[61080].progress['talk:1']=1;assert.equal(read(1),null);assert.equal(read(2),'?');

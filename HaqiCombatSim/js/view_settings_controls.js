@@ -23,8 +23,9 @@ export function createSettingsControls({ el, button }) {
         return node;
     }
     // 开关行：左侧图标与说明，右侧药丸按钮显示 已开启/已关闭。
-    function toggle({ icon, label, hint }, on, fn) {
-        const pill = button(on ? '已开启' : '已关闭', fn, `settings-toggle${on ? ' on' : ''}`);
+    function toggle({ icon, label, hint, disabled = false }, on, fn) {
+        const pill = button(on ? '已开启' : '已关闭', () => { if (!disabled) fn(); }, `settings-toggle${on ? ' on' : ''}`);
+        pill.disabled = disabled;
         pill.setAttribute('aria-pressed', String(!!on));
         return el('div', 'settings-row', el('span', 'settings-cell-icon', icon), textBlock(label, hint), pill);
     }

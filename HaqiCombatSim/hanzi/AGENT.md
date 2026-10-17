@@ -2,7 +2,9 @@
 
 本目录存放面向儿童的汉字互动故事页。每个故事把字形、字义、声音和动作编成一段可以亲自参与的短动画；它不是把一个汉字贴在普通网页上的装饰。用户可从 [hanzi_index.html](./hanzi_index.html) 进入正式故事，`obsoleted/` 仅保留历史页面，不发布。
 
-当前正式页面：门、休、森、光、国。在线入口：<https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_index.html>。
+当前正式页面：门、休、森、光、国、雨、明、武。在线入口：<https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_index.html>。
+
+> **父页面通信与多语言硬性协议（Haqi H5 Protocol v1）**：所有汉字动画必须同时支持独立运行（外网多产品复用）与通过 `window.parent.postMessage` 嵌入游戏内的字源岛任务和汉字字典（支持 `ready`、`init`、`translate`、`written` 书写完成、`completed` 尾声完成，以及**仅字幕双语同显、常用 UI 按 `displayLanguage` 单语翻译**）。详细协议约束见 [AGENTS.md](./AGENTS.md) 与 [../docs/hanzi-animation-protocol.md](../docs/hanzi-animation-protocol.md)。
 
 ## 先定故事，再定技术
 

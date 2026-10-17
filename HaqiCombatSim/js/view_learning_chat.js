@@ -2,7 +2,7 @@ import {createDialogueReveal} from './dialogue_reveal.js';
 import {createBilingualDialogue,renderSpeechWords} from './view_bilingual_dialogue.js';
 import {DAILY_BUFF_NAMES} from './language_daily_buff_core.js';
 import {playerGloss} from './character_relationship_core.js';
-import {createDialogueMicrophone} from './view_dialogue_microphone.js';
+import {createDialogueMicrophone,createDialogueMicProgress} from './view_dialogue_microphone.js';
 export {bindChatMicrophone} from './view_dialogue_microphone.js';
 import {tr,fill} from './locale_runtime.js';
 import {createCloseButton} from './view_adventure_controls.js';
@@ -72,12 +72,7 @@ export function createLearningChatView(cb){
     const actions=el('div','camp-chat-actions');
     const typing=button('输入',()=>{form.hidden=!form.hidden;if(!form.hidden)input.focus();},'secondary');
     const microphone=createDialogueMicrophone(button,{isRecording:()=>!!state?.recording,start:cb.start,finish:cb.finish,cancel:cb.cancel}),mic=microphone.node;
-    const micProgress=el('div','story-mic-progress');
-    const ring=document.createElementNS('http://www.w3.org/2000/svg','svg');ring.setAttribute('viewBox','0 0 100 100');ring.setAttribute('aria-hidden','true');
-    let ringFill;
-    for(const cls of ['story-ring-track','story-ring-fill']){const circle=document.createElementNS('http://www.w3.org/2000/svg','circle');for(const [key,value] of Object.entries({cx:50,cy:50,r:44,pathLength:100,class:cls}))circle.setAttribute(key,value);ring.append(circle);if(cls==='story-ring-fill')ringFill=circle;}
-    const ringLabel=el('span','story-ring-label','0%');ringLabel.setAttribute('role','progressbar');ringLabel.setAttribute('aria-label','朗读通过进度');ringLabel.setAttribute('aria-valuemin','0');ringLabel.setAttribute('aria-valuemax','100');
-    micProgress.append(ring,mic,ringLabel);
+    const {node:micProgress,ring,ringFill,ringLabel}=createDialogueMicProgress(mic);
     const hints=button('提示',()=>cb.hint(),'secondary');
     const details=button('关系详情',()=>cb.details?.()),gift=button('送礼物',()=>cb.gift?.()),upgrade=button('升级会员',()=>cb.upgrade?.());
     const more=button('+',()=>setMore(menu.hidden),'camp-chat-more');more.title=tr('更多聊天操作');more.setAttribute('aria-label',tr('更多聊天操作'));more.setAttribute('aria-expanded','false');

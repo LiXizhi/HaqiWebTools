@@ -54,10 +54,14 @@ export function updateBattlePetHint(root,battle,save,content,canvas){
     const bubble=root.battlePetHint;if(!bubble)return;
     const scale=Math.min(1,canvas.clientHeight/270),pet=nearestBattlePet(battle,save,content,canvas.battlePositions||{},scale);
     // Hints are passive speech from a visible living pet.
-    if(!pet||bubble.hintDismissed){bubble.hidden=true;return;}
+    if(!pet||bubble.hintDismissed){bubble.hidden=true;bubble.lastLayoutKey='';return;}
     bubble.hidden=false;
     bubble.dataset.petId=pet?.id||'';
     const x=canvas.offsetLeft+pet.x,y=canvas.offsetTop+pet.y-pet.head;
+    const statusRects=canvas.battleStatusRects||[];
+    const layoutKey=`${pet.id}:${Math.round(x)}:${Math.round(y)}:${root.clientWidth}:${statusRects.length}:${statusRects[0]?.x||0}:${statusRects[0]?.y||0}`;
+    if(bubble.lastLayoutKey===layoutKey)return;
+    bubble.lastLayoutKey=layoutKey;
     // Grow rightwards from the pet instead of centering over the hero. On narrow
     // screens wrap the text within the remaining space rather than shifting left.
     const left=Math.max(8,Math.min(root.clientWidth-96,x));
@@ -65,7 +69,7 @@ export function updateBattlePetHint(root,battle,save,content,canvas){
     const width=bubble.offsetWidth,height=bubble.offsetHeight;
     bubble.style.left=`${left}px`;bubble.style.top=`${Math.max(8,y-height-8)}px`;
     bubble.style.setProperty('--pet-hint-tail',`${Math.max(14,Math.min(width-14,x-left))}px`);
-    const obstacles=(canvas.battleStatusRects||[]).map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));
+    const obstacles=statusRects.map(rect=>({...rect,x:rect.x+canvas.offsetLeft,y:rect.y+canvas.offsetTop}));
     // Actor speech is laid out afterwards, above this hint when their columns overlap.
     if(obstacles.length){
         placeActorSpeech(bubble,root,{x:left+width/2,y},obstacles,{x,y});

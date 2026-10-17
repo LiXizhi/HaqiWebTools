@@ -1,3 +1,27 @@
+## 2026-10-17：字典与文字战斗卡
+
+```mermaid
+flowchart LR
+    Dictionary[字典 / 字源岛探索] --> Practice[统一读写练习 word_card_practice]
+    Practice --> Store[IndexedDB 按账号与角色保存复习记录]
+    Store --> Tasks[一次练习推进字源岛任务]
+    Store --> Recent[开战读取最近10个不同字词]
+    Config[60张文字卡 JSON / baseCardKey] --> Recent
+    Recent --> Snapshot[本机战斗快照：冻结卡池与激活身份]
+    Snapshot --> Core[word_cards_core / combat_pve_core]
+    Core --> Hand[原有8格手牌：普通牌优先与文字补位]
+    Hand --> Target[选择合法目标 / word_card_cast 保存本次意图]
+    Target --> Practice
+    Practice --> Activation[本场卡牌激活]
+    Activation --> Resume[关闭练习后校验本场回合与目标]
+    Resume --> Core
+    Core --> Effects[基础卡原效果和特效 / 文字字幕]
+    Practice --> Audio[仅内存的成功录音]
+    Audio --> Effects
+```
+
+引擎只读取冻结的文字卡元数据与动作；IndexedDB、麦克风和音频仅位于浏览器层。`wordCards` 在 `BalanceParams` 定义配额，普通牌随机流保持原样。旧字卡模块仅用于历史存档／战斗兼容，新入口不安装旧魔法外观、不生成旧增益或收藏。
+
 
 ## 2026-09-30：单客户端内存读取与 Cache 直接写入
 
@@ -41,11 +65,18 @@ flowchart LR
 
 ```mermaid
 flowchart LR
+    HanziPlayer[字典 / 文字记忆全屏动画] --> FrameGate[主循环提前返回 / 更新帧时钟]
+    FrameGate --> Frozen[暂停场景 / 宠物 / 双人操作 / 战斗绘制]
+    HanziPlayer -->|关闭 / 跳过 / 完成| Release[释放播放器 / 下一帧恢复]
     Island[六岛既有JSON与场景] --> ViewSet[带预留边界的视野物件集合]
     ViewSet --> Order[静态Y顺序与移动角色合并]
     Order --> Trees[连续树木片段缓存：最多24MiB]
     Order --> Actors[原角色与遮挡淡化绘制]
     Island --> Tiles[地表调度：视野与前方邻块 / 最多64MiB]
+    Island --> Loading[首次进入：Loading / 暂停移动与场景绘制]
+    Loading --> Warm[等待场景图集 / 仅准备当前视野地块]
+    Warm --> Tiles
+    Tiles -->|当前视野全部就绪| Resume[关闭Loading / 恢复模拟与绘制]
     Tiles --> Worker[island_terrain_worker：同一地形画笔 / 图集增量传输]
     Worker --> Bitmap[可释放ImageBitmap / 过期应答关闭]
     Tiles --> Fallback[Worker失败：原分帧画笔回退]
@@ -983,3 +1014,42 @@ flowchart LR
 ### 字典教学例句语言（2026-10-16）
 
 教师回复经dictionary_tutor_core校验；中文页仅在当前提问明确涉及英文时允许英文例句及中文译文，并由校验器派生exampleLanguage。tutorReplyExamples把语言随例句交给视图和控制器；控制器从已展示的对话例句选择语音locale，返回时复用会话内记录。词条正文发音、学习索引、云存档和奖励数据流不变。
+
+
+## 2026-10-17：岛屿文字记忆
+
+```mermaid
+flowchart LR
+    Pack[岛屿memory配置与生活任务] --> Core[hanzi_memory_core：选字、碎片、去重]
+    Review[字典本机复习记录] --> Core
+    World[道路候选点／怪物领地／战后回调] --> Controller[adventure_hanzi_memory]
+    Core --> Controller
+    Controller --> View[字卡／动画／字典笔顺组件]
+    View --> Controller
+    Controller --> Records[save.hanzi.memories：原角色records分片]
+    Controller --> Local[hanziMemoryRuntime：仅本机]
+    Records --> Goals[任务目标／场景文字标识／战斗卡所有权]
+    H5[汉字H5] --> Bridge[校验来源与会话的消息桥]
+    Bridge --> View
+    Locale[现有语言字典] --> Bridge
+```
+
+动画观看与正确书写分开记录；字幕消息不计分。配置可供其他岛屿扩展，本轮只安装字源岛。
+
+文字记忆美术加载与领取反馈（2026-10-17）：
+
+```mermaid
+flowchart LR
+  Manifest[hanzi-memory-art.json / 六格 WebP] --> Loader[hanzi_memory_art.js / CDN 或显式本地模式]
+  Loader --> Scene[world.memoryArt]
+  Scene --> Draw[drawMemoryNode / 固定地面图集裁剪]
+  Chant[文字记忆吟唱] --> GatherUI[view_gathering_progress / 屏幕采集提示]
+  Plants[花草采集] --> GatherUI
+  Core[hanzi_memory_core / 最少碎片任务字] --> Practice[居中字卡与练习]
+  Practice --> Saved[保存成功]
+  Saved --> Flight[view_hanzi_memory / 关闭后飞入字典]
+```
+
+字源岛守护怪物由现有 `stepMonsterWander → takeAutoInteraction → interact` 链路开战；文字记忆控制器只维护较长的采集计时与守护期间的结算阻止，不再拥有独立开战回调。
+
+文字记忆任务由 `memoryBatch` 计算当前两字批次，`chooseMemoryWord` 与 `catalogVisibleGoalRows` 复用此结果；`catalogGoalRows` 仍返回全部目标供任务完成与奖励判定使用。

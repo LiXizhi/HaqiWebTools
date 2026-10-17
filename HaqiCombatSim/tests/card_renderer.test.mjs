@@ -21,6 +21,11 @@ test('shared card renderer draws graphic corners and keeps only values as corner
  assert.ok(!texts.some(([value])=>['烈','攻','愈','辅'].includes(value)));
  assert.ok(commands.some(([name])=>name==='bezierCurveTo'),'fire emblem is a flame path');
  assert.ok(commands.some(([name,x,y])=>name==='translate'&&x===267&&y===276),'type emblem occupies its own badge');
+ const ink={kind:'ink'};renderer.images.set('frame:wordInk',ink);commands.length=0;
+ renderer.draw(ctx,{key:'trap',spellSchool:'fire',type:'Wards',pipcost:114,params:{}},{wordCard:true,cooldown:3});
+ assert.ok(commands.some(([name,image])=>name==='drawImage'&&image===ink));
+ assert.ok(commands.some(([name])=>name==='bezierCurveTo'),'ink cards retain the fire school emblem');
+ assert.ok(texts.some(([value,x,y])=>value==='X'&&x===277&&y===29));
  texts.length=0;circles.length=0;renderer.draw(ctx,{key:'trap',spellSchool:'fire'},{backgroundOnly:true});
  assert.equal(texts.length,0);assert.equal(circles.length,0);assert.equal(depth,0);
 });

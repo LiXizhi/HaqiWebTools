@@ -9,20 +9,35 @@ import {createLearningVoice} from './language_adventure_voice.js';
 import {createDictionaryView} from './view_dictionary.js';
 
 const store=createDictionaryStore(),loads=new Map();
-const localAnimations={'hanzi/hanzi_ming.html':new URL('../hanzi/hanzi_ming.html',import.meta.url).href,'hanzi/hanzi_wu.html':new URL('../hanzi/hanzi_wu.html',import.meta.url).href};
+const localAnimations={
+    'hanzi/hanzi_men.html':new URL('../hanzi/hanzi_men.html',import.meta.url).href,
+    'hanzi/hanzi_yu.html':new URL('../hanzi/hanzi_yu.html',import.meta.url).href,
+    'hanzi/hanzi_xiu.html':new URL('../hanzi/hanzi_xiu.html',import.meta.url).href,
+    'hanzi/hanzi_sen.html':new URL('../hanzi/hanzi_sen.html',import.meta.url).href,
+    'hanzi/hanzi_guang.html':new URL('../hanzi/hanzi_guang.html',import.meta.url).href,
+    'hanzi/hanzi_guo.html':new URL('../hanzi/hanzi_guo.html',import.meta.url).href,
+    'hanzi/hanzi_ming.html':new URL('../hanzi/hanzi_ming.html',import.meta.url).href,
+    'hanzi/hanzi_wu.html':new URL('../hanzi/hanzi_wu.html',import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_men.html':new URL('../hanzi/hanzi_men.html',import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_yu.html':new URL('../hanzi/hanzi_yu.html',import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_xiu.html':new URL('../hanzi/hanzi_xiu.html',import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_sen.html':new URL('../hanzi/hanzi_sen.html',import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_guang.html':new URL('../hanzi/hanzi_guang.html',import.meta.url).href,
+    'https://cdn.keepwork.com/keepwork/cdn/hanzi/hanzi_guo.html':new URL('../hanzi/hanzi_guo.html',import.meta.url).href,
+};
 export async function loadDictionary(language){
     if(!['zh','en'].includes(language))throw Error('暂未收录该语言');
     if(!loads.has(language))loads.set(language,fetch(language==='zh'?new URL('../data/adventure/dictionary/zh.json',import.meta.url):new URL('../data/adventure/dictionary/en.json',import.meta.url)).then(r=>{if(!r.ok)throw Error('字典暂时无法加载');return r.json();}).then(validateDictionary).catch(e=>{loads.delete(language);throw e;}));
     const data=await loads.get(language);return {...data,entries:data.entries.map(e=>({...e,animation:localAnimations[e.animation]||e.animation}))};
 }
-export function createDictionary({root,getState,onClose,onBuff,onRewards,onLegacy,storage=store,load=loadDictionary,now=()=>Date.now(),viewFactory=createDictionaryView,voice=createLearningVoice({getSettings:()=>getState().save.languageLearning})}){
+export function createDictionary({root,getState,onClose,onBuff,onRewards,onLegacy,onPractice=()=>{},storage=store,load=loadDictionary,now=()=>Date.now(),viewFactory=createDictionaryView,voice=createLearningVoice({getSettings:()=>getState().save.languageLearning})}){
     const identity={...getState()},key=JSON.stringify([identity.owner||'guest',identity.role]);
     const tutorConversations=new Map();
     let speechRate=1;
     let active=true,language='zh',data,state,warning='',session=null,generation=0,busy=false,taskKind=null,changingDay=false,updateSequence=0,appliedSequence=0;
     const valid=()=>active&&getState().owner===identity.owner&&getState().role===identity.role&&getState().stage==='world';
     const same=s=>valid()&&session===s&&!s.abort.signal.aborted;
-    const view=viewFactory(root,{close:onClose,retrySave:()=>run(()=>retrySave()),language:lang=>run(()=>home(lang)),home:()=>run(()=>home(language)),entry:id=>run(()=>entry(id)),task:kind=>run(()=>task(kind)),next:()=>run(()=>continueDaily()),hint:()=>run(()=>hint()),explainAttempt:()=>run(()=>explainAttempt()),recall:()=>run(()=>recall()),choice:text=>run(()=>choice(text)),write:points=>run(()=>write(points)),writeDraftChanged:draftChanged,spellDraftChanged:draftChanged,spell:text=>run(()=>spell(text)),speak:()=>run(()=>speak()),speakExample:()=>run(()=>speak(true)),tutorSpeak:text=>run(()=>speak(true,text)),stopSpeech:()=>run(()=>stopSpeech()),speechRate:value=>{if(valid()&&!session?.speaking)speechRate=value===0.8?0.8:1;},contextDraft:text=>{if(session?.context&&same(session))session.draft=String(text).slice(0,500);},contextAnswer:text=>run(()=>judge(text)),contextChoice:text=>run(()=>contextChoice(text)),fallback:()=>run(()=>context(true)),record:accept=>run(()=>record(accept)),finishRecording:()=>run(()=>finishRecording()),cancelRecording:()=>run(()=>cancelRecording()),tutor:(text,mode)=>run(()=>askTutor(text,mode)),tutorFallback:()=>useLocalTutor(),tutorRetry:()=>run(()=>retryTutor()),rewards:onRewards,legacy:onLegacy});
+    const view=viewFactory(root,{close:onClose,retrySave:()=>run(()=>retrySave()),language:lang=>run(()=>home(lang)),home:()=>run(()=>home(language)),entry:id=>run(()=>entry(id)),task:kind=>run(()=>task(kind)),next:()=>run(()=>continueDaily()),hint:()=>run(()=>hint()),explainAttempt:()=>run(()=>explainAttempt()),recall:()=>run(()=>recall()),choice:text=>run(()=>choice(text)),write:points=>run(()=>write(points)),animationWrite:()=>run(()=>animationWrite()),writeDraftChanged:draftChanged,spellDraftChanged:draftChanged,spell:text=>run(()=>spell(text)),speak:()=>run(()=>speak()),speakExample:()=>run(()=>speak(true)),tutorSpeak:text=>run(()=>speak(true,text)),stopSpeech:()=>run(()=>stopSpeech()),speechRate:value=>{if(valid()&&!session?.speaking)speechRate=value===0.8?0.8:1;},contextDraft:text=>{if(session?.context&&same(session))session.draft=String(text).slice(0,500);},contextAnswer:text=>run(()=>judge(text)),contextChoice:text=>run(()=>contextChoice(text)),fallback:()=>run(()=>context(true)),record:accept=>run(()=>record(accept)),finishRecording:()=>run(()=>finishRecording()),cancelRecording:()=>run(()=>cancelRecording()),tutor:(text,mode)=>run(()=>askTutor(text,mode)),tutorFallback:()=>useLocalTutor(),tutorRetry:()=>run(()=>retryTutor()),rewards:onRewards,legacy:onLegacy});
     async function run(fn){try{await fn();}catch(e){if(valid())view.message(e.message);}}
     function cancel(){generation++;session?.questionAbort?.abort();session?.abort.abort();session=null;busy=false;void voice.cancel();}
     async function update(reduce){
@@ -77,7 +92,7 @@ export function createDictionary({root,getState,onClose,onBuff,onRewards,onLegac
         try{
             const r=await update((state,{data})=>{const time=now();if(s.completionDay!==localBuffDay(time))throw Error('日期已变化，请返回今日任务重新练习；不会把上次答案记为今天的奖励。');return completeDictionary(state,data,s.entry.id,{now:time,hinted:s.hinted,errors:s.errors,context:contextTask,save:getState().save,content:getState().content});});
             if(!r||!same(s))return;s.accepted=true;s.pendingSave=!r.persisted;
-            if(r.persisted&&state.buff?.day===localBuffDay(now()))onBuff(state.buff,r.result.reward);
+            if(r.persisted){onPractice(state);if(state.buff?.day===localBuffDay(now()))onBuff(state.buff,r.result.reward);}
             if(!contextTask)view.learningStatus?.(r.persisted?dictionaryEntryStatus(dictionaryLanguage(state,language).entries[s.entry.id],now()):{label:'本次练习尚未保存',detail:'本地存储恢复后可以再试。'});
             view.dailyProgress?.(dictionaryDailyProgress(dictionaryLanguage(state,language).plan));
             view.success(!r.persisted?'答案正确，但本地记录未能保存。可以重试保存，无需重新答题；保存成功前不发放奖励。':r.result.blocked?'设备日期早于已记录日期，今天暂不增加进度。':r.result.reward?'答对了！学习加成 +1%，进度已保存。':r.result.eligible?'答对了！进度已保存，今日加成已达上限。':'答对了！今天已经记录过，不重复领奖。',{saved:r.persisted});
@@ -94,6 +109,7 @@ export function createDictionary({root,getState,onClose,onBuff,onRewards,onLegac
     }
     async function choice(text){const s=session;if(!s||!same(s)||s.accepted||busy||(language==='zh'&&s.meaningOK)||s.phase==='learn')return;view.practiceFeedback?.('');submittedAttempt(s,{kind:'meaning',text:String(text).slice(0,500),correct:text===s.entry.meaning});if(text!==s.entry.meaning){const other=data.entries.find(e=>e.meaning===text);return wrong(s,other?`你选的是“${other.text}”的意思。再看看“${s.entry.text}”，也可以让小老师讲讲它们的区别。`:'这个意思还不太合适，再试一次。');}s.lastFeedback='';s.meaningOK=true;if(language==='zh'){view.meaningAccepted?.();view.message('');return;}await complete(s);}
     async function write(points){const s=session;if(!s||!same(s)||s.accepted||busy)return;if(s.mode==='meaning-write'&&!s.meaningOK){view.message('请先选出正确词义。');return;}if(Array.isArray(points)&&!points.length){const message='先在写字区试着写一笔。需要帮助时，可以看笔顺示范。';if(view.writingFeedback){view.message(warning);view.writingFeedback({message,fromStroke:null});}else view.message(message+warning);return;}const medians=s.entry.strokes.medians.map(row=>row.map(([x,y])=>[x/1024,(900-y)/1024]));const result=compareHanziWriting(points,medians);submittedAttempt(s,{kind:'writing',correct:result.ok,strokeCount:Array.isArray(points)?points.length:0,totalStrokes:medians.length});if(!result.ok){const feedback=writingHint(result,Array.isArray(points)?points.length:0,medians.length);if(await wrong(s,feedback.message))view.writingFeedback?.(feedback);return;}s.lastFeedback='';await complete(s);}
+    async function animationWrite(){const s=session;if(!s||!same(s)||s.accepted||busy||language!=='zh')return;s.meaningOK=true;submittedAttempt(s,{kind:'writing',correct:true,strokeCount:s.entry.strokes.medians.length,totalStrokes:s.entry.strokes.medians.length});s.lastFeedback='';await complete(s);}
     async function spell(text){const s=session;if(!s||!same(s)||s.accepted||busy)return;view.practiceFeedback?.('');if(!normalizeSpelling(text)){view.message('先输入你记得的单词。');return;}submittedAttempt(s,{kind:'spelling',text:String(text).slice(0,80),correct:normalizeSpelling(text)===normalizeSpelling(s.entry.text)});if(!s.lastAttempt.correct)return wrong(s,spellingHint(text,s.entry.text,s.entry));s.lastFeedback='';await complete(s);}
     async function stopSpeech(){const s=session;if(!s||!same(s))return;const revision=s.speechRevision=(s.speechRevision||0)+1;s.speaking=false;await voice.cancel();if(same(s)&&revision===s.speechRevision)view.speechState?.(false);}
     async function speak(example=false,tutorText=null){

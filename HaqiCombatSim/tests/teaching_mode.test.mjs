@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { teachingMode } from '../js/adventure_core.js';
+import { teachingMode, beginnerTeaching } from '../js/adventure_core.js';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
 import { teachPointer } from '../js/view_teaching.js';
 
 const content = {
@@ -12,6 +14,37 @@ const content = {
     catalogQuests: { quests: [{ id: 63000, region: 'camp' }, { id: 63100, region: 'town' }] }
 };
 const base = { zone: 'camp', quests: {} };
+
+test('字源岛追踪指针覆盖接取、进行、交付，且只提示一条任务', () => {
+    const source=readFileSync(new URL('../js/view_adventure.js',import.meta.url),'utf8');
+    const renderer=source.slice(source.indexOf('function appendTrackerQuest('),source.indexOf('export function renderHeroTitle('));
+    for (const state of [{accepted:false},{accepted:true},{accepted:true,ready:true},{claimed:true}]) {
+        for (const level of [9,10]) {
+            const nodes=[];
+            const el=(tag,cls,...children)=>{const n={tag,cls,children,setAttribute(){},append(...items){this.children.push(...items);},classList:{add(){}}};nodes.push(n);return n;};
+            const quest={id:873002,region:'hanzi',title:'脚下的土地'};
+            const context=vm.createContext({beginnerTeaching,el,button:(children,run,cls)=>el('button',cls,children),
+                questState:()=>state,catalogQuestReady:()=>!!state.ready,catalogStatSnapshot:()=>({}),catalogQuestStatus:()=>'',
+                catalogTrackLines:()=>[{text:'去找石伯'}],fill:()=>({text:''}),tr:s=>s});
+            vm.runInContext(renderer,context);
+            const save={zone:'hanzi',level},c={quests:[],catalogQuests:{byId:{873002:quest}}},teach={allow:!!teachingMode(save,c)};
+            for(let i=0;i<2;i++)context.appendTrackerQuest(el('div'),{id:873002},save,c,{},teach);
+            assert.equal(nodes.filter(n=>n.cls==='teach-pointer').length,level<10&&!state.claimed?1:0);
+        }
+    }
+});
+
+test('低于10级在所有区域开启指引，完成营地任务也不关闭', () => {
+    for (const zone of ['camp', 'town', 'hanzi', 'fire', 'earth']) {
+        for (const level of [1, 9]) {
+            assert.ok(teachingMode({zone, level, quests:{100:{claimed:true},63000:{claimed:true}}}, content), `${zone} level ${level}`);
+        }
+    }
+    for (const level of [10, 50]) {
+        assert.equal(teachingMode({zone:'hanzi',level,quests:{}}, content), null);
+        assert.ok(teachingMode({zone:'camp',level,quests:{}}, content), '营地原指引保留');
+    }
+});
 
 test('teachingMode 关闭：不在魔法营地', () => {
     assert.equal(teachingMode({ ...base, zone: 'town' }, content), null);
@@ -76,5 +109,13 @@ test('卡包装配与强化指引点一次后不再出现', () => {
     town.addEventListener = () => townClicks.push(1);
     teachPointer(town, {zone:'town', quests:{}, tips:{}}, content, {key:'teachDeck'});
     assert.equal(townClicks.length, 0);
+    for (const key of ['teachDeck', 'teachUpgrade', undefined]) {
+        const clicks=[];
+        const lowLevelTarget={...town,classList:{add(){},remove(){}},addEventListener:(...args)=>clicks.push(args)};
+        let appended=0;
+        lowLevelTarget.append=()=>appended++;
+        teachPointer(lowLevelTarget,{zone:'hanzi',level:9,quests:{},tips:{}},content,{key});
+        assert.equal(appended,1, `字源岛低等级面板指引：${key||'通用'}`);
+    }
     globalThis.document = previous;
 });

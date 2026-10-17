@@ -1,6 +1,6 @@
 import {HANZI_BATTLE_CARDS} from './hanzi_battle_core.js';
 import {QUEST_REGIONS,defaultJournalRegion,journalQuestStatus,filterJournalQuests,focusJournalQuest} from './adventure_quest_journal_core.js';
-import {catalogAcceptBlock,catalogGoalRows,trackedQuestIds} from './adventure_catalog_quests_core.js';
+import {catalogAcceptBlock,catalogVisibleGoalRows,trackedQuestIds} from './adventure_catalog_quests_core.js';
 import { tr, fill, setText } from './locale_runtime.js';
 import {currentQuest,questState,questReady,questProgress,rewardsFor,catalogStatSnapshot} from './adventure_core.js';
 import {ItemDetails} from './view_adventure_item_details.js';
@@ -123,7 +123,7 @@ export function renderQuestJournal(body,model,cb,ui) {
         const section=(title,...nodes)=>el('section','journal-section',el('h4','',title),...nodes);
         if(!runtime)detail.append(el('p','journal-unavailable','全岛任务数据还没有载入，目前可以查看任务内容。'));
         else {
-            const rowsNow=catalogGoalRows(save,c,runtime,stats());
+            const rowsNow=catalogVisibleGoalRows(save,c,runtime,stats());
             const block=translatedQuestMessage(catalogAcceptBlock(save,c,runtime,stats()));
             if(rowsNow.some(g=>g.kind==='custom'&&[20046,20048,52212].includes(g.id)))detail.append(button('前往红蘑菇赛场',()=>cb.panel('social-pvp'),'primary'),el('p','muted','网页赛场任务积分：胜利 +25，平局 +10；完成2对2计一次参赛。'));
             detail.append(section('任务目标',...(rowsNow.length?rowsNow.map(g=>el('div',`journal-objective ${g.value>=g.count?'complete':''}`,el('span','',translatedGoal(g)),el('strong','',`${g.value} / ${g.count}`))):[el('p','','与任务居民交谈后即可交付。')])));
@@ -134,7 +134,6 @@ export function renderQuestJournal(body,model,cb,ui) {
             })));
             if(block&&label(q)==='未开启')detail.append(section('接取条件',el('p','',block)));
             const rewardQuest=runtime;
-            if(runtime.hanziCardReward)detail.append(button(`字卡「${HANZI_BATTLE_CARDS[runtime.hanziCardReward]}」· 翻开字典`,()=>cb.panel('dictionary',{character:runtime.hanziCardReward}),'secondary'));
             detail.append(section(questState(save,q.id).claimed?'已获得奖励':'任务奖励',...(rewardQuest.rewards.length?rewardQuest.rewards.map(group=>el('div','journal-reward-group',rewardGroupCaption(group,el),el('div','journal-rewards',...(rewardsForSafe(group)).map(r=>{
                 const item=c.items[r.id];
                 if(!item||r.id===113||r.kind==='pet')return rewardChip(c,r,{el,className:'journal-reward'});

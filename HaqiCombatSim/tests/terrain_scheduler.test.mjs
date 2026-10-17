@@ -13,6 +13,14 @@ test('draw only schedules; completed tiles survive reconstructed worlds and targ
  h.cache.invalidateAtlas('unknown');h.cache.draw(h.ctx,world,rect,()=>{});h.drain();assert.equal(h.painted,warm);
  h.cache.invalidateAtlas('meadow');h.cache.draw(h.ctx,world,rect,()=>{});h.drain();assert.ok(h.painted>warm);assert.ok(h.cache.size<=12);
 });
+
+test('entry preparation counts only visible tiles and defers speculative work',()=>{
+ const h=harness(),world={w:2048,h:2048,layout:{}},rect={x:0,y:0,w:500,h:500};
+ const first=h.cache.prepare(world,rect,1,[],{visibleOnly:true});assert.equal(first.total,1);assert.equal(first.ready,0);
+ h.drain();assert.equal(h.painted,1);assert.equal(h.cache.pending,0);
+ const ready=h.cache.prepare(world,rect,1,[],{visibleOnly:true});assert.equal(ready.ready,ready.total);
+ h.cache.draw(h.ctx,world,rect,()=>{});h.drain();assert.ok(h.painted>1,'normal play resumes neighbour prefetch');
+});
 test('teleports cancel obsolete jobs; world/density changes discard incompatible tiles',()=>{
  const h=harness(),world={w:4096,h:4096,layout:{}},rect={x:0,y:0,w:500,h:500};
  h.cache.prepare(world,rect);h.cache.prepare(world,{...rect,x:3000,y:3000});h.drain();assert.ok(h.cache.size<=12);

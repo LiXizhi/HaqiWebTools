@@ -1,3 +1,10 @@
+# 2026-10-17 汉字故事动画协议 v1（字源岛任务、游戏字典、双语字幕与 UI 多语言、书写完成事件）
+
+- 协议与宿主桥接：`js/hanzi_animation_bridge.js` 新增 `onWritten`（`type: 'written'` 临摹完成）与 `subtitleLocale` / `uiTranslations` 拆分支持；字幕与常用 UI 分离渲染——仅字幕（`#capText` / `h2#caption`）双语并排展示，其余按钮、章节标题、季节栏、进度点、开场卡片与提示信息按界面语言 `locale` 单语翻译。
+- 字源岛与汉字字典接入：`js/adventure_hanzi_memory.js` 与 `js/adventure_dictionary.js` / `js/view_dictionary.js` 均接入 `onWritten` 回调，在动画临摹完成瞬间（`type: 'written'`）直接结算书写练习/收集记忆碎片；`localAnimations` 补齐全部 8 个本地汉字动画（`men`/`xiu`/`sen`/`guang`/`guo`/`yu`/`ming`/`wu`）。
+- 8 个汉字动画与多语言词条：`hanzi/hanzi_men.html`、`hanzi_xiu.html`、`hanzi_sen.html`、`hanzi_guang.html`、`hanzi_guo.html`、`hanzi_yu.html`、`hanzi_ming.html`、`hanzi_wu.html` 全部升级兼容 `channel: 'haqi-hanzi'` v1 协议并保持独立运行与外部宿主复用能力；`data/adventure/locale/en.txt`、`ja.txt`、`ko.txt` 补齐 407 条字幕与常用 UI 翻译，`npm run locale:check` 校验通过（`errors: 0, extra: 0`）。
+- 验证：`node --test tests/battle_hanzi_memory.test.mjs tests/hanzi_memory_controller.test.mjs tests/battle_dictionary.test.mjs` **44/44 通过**；`npm run test:battle` **1129/1129 通过**（0 失败）。未提交、未推送。
+
 # 2026-10-15 五大岛场景美术包（沙漠岛样板）
 
 - 新增 `sceneArt` 岛屿美术包，覆盖地表/道路/水体可平铺材质、山体贴图、路边与散布道具；五岛配置均已就绪，目前只有沙漠岛生成了图集（3 张 WebP，均 ≤200KB）。其余四岛生图返回 429 配额错误，暂时保持原画面。
@@ -3636,3 +3643,68 @@ tmp/dictionary-context-retry-feedback-1280.png/390.png已目视检查，反馈�
 ### 2026-10-16 简化讲解与用户要求停止
 
 真实汉字七项批次全部返回，但“再简单一点”引入January，增加认知负担（tmp/dictionary-hanzi-seven-before.txt）。调整教学要求为保留当前词、减少信息、不增加新外语词及知识点，并更新验收检查点。相关148项单元测试通过（tmp/dictionary-simpler-load-unit.log）。复验按用户要求在第六项等待期间停止，已返回五项；不能宣称简化效果已通过真实复验。部分结果保存在tmp/dictionary-simpler-load-stopped.txt。明字回答包含未提供出处的历史写法陈述，尚待核验。工作保留本地，未提交、推送或发布；持续优化暂停。
+
+
+## 2026-10-17：字源岛文字记忆专项
+
+- 最终npm run test:battle：1121/1121通过，无跳过。新增选字、三片成卡、旧档折算、领取去重、吟唱中断、守护圈释放、目标进度与动画消息来源校验。
+- 字典、任务及控制器相关Node检查129/129；故事导出--check通过，Python故事测试12/12。
+- Edge隔离浏览器专项2/2：桌面及390px，地图吟唱、关闭续做、真实笔画、保存失败重试、真实战斗胜利后自动开卡、动画跳过与完成消息、字典视口；追加三片成卡及居民旁文字标识复测1/1。正式Haqi.html入口加载无运行时异常。
+- 旧CDN动画未发布完成协议，保持欣赏/写字兜底；本地明、舞完成通知接通。浏览器通知测试直接触发完成入口，未逐个验收整段动画。
+- 未运行全量npm test、构建、发布黑盒QA、真实手机或真实账号云端读写。改动未提交、推送、发布。
+
+### 2026-10-17 字源岛碎片外观、轮换及字典归档修正
+
+- `npm run test:battle`：1122/1122 通过；文字记忆核心与控制器专项 13/13 通过。
+- `tests/hanzi_memory_browser.test.mjs`：桌面与390px专项通过，验证真实笔画领取、关闭续做、失败重试、守护战斗、战后从山轮换到上、三片成卡、居中布局以及归档动画终点对齐字典按钮。首次终点断言采样在动画已卸载时，调整到结束前采样后通过。
+- 六格图集 768×768，WebP 140,610 字节，alpha 0—255；Keepwork CDN 回读 SHA-256 一致、CORS `*`。已检查场景与移动写字截图。未执行发布QA或网站发布。
+
+2026-10-17 文字碎片采集提示：复用花草采集绘制组件，查看桌面采集中截图；文字记忆核心/控制器13项、桌面与390px浏览器专项、战斗快速回归1122项均通过。
+
+### 2026-10-17 字源岛野外遭遇与守护警戒
+
+野外遭遇增加至20处。岛屿回归验证全部目标可达、路边净空、桥面排除及居民安全距离；修正首次候选点离道路不够远的问题后通过。文字记忆核心/控制器16项通过，包括配置警戒延长时采集仍更长、普通1.5秒警戒结束前不自动开战、守护期间不提前领取。桌面和390px专项浏览器通过正常自动接触进入战斗，并完成战后字卡流程。`npm run test:battle`：1124/1124通过。未提交、推送或发布。
+
+2026-10-17 收卡后HUD错位修复：浏览器专项使用正式renderHud，覆盖隐藏时奖励重绘和关闭后的按钮矩形关系，桌面及390px通过，字卡飞入字典终点通过；战斗快速回归1124/1124通过。
+
+2026-10-17 两字任务批次：文字记忆核心/控制器17项通过；故事导出check及12项故事测试通过；桌面/390px浏览器专项通过，断言右侧任务只显示当前两个字。工作区动画播放器新增独立弹层，浏览器测试限定弹层内的跳过按钮后通过，未改动该播放器实现。战斗快速回归1127/1127通过。
+
+### 2026-10-17 移动端卡牌技能特效与选系动画性能优化
+
+- 修复 `js/spell_effects.js` 中 `shadowBlur` 跨阶段未清零泄露、同色粒子路径合批（`discs`）及全量粒子循环上限收敛；`js/actor_animation.js` 在触屏与 `brightness === 1` 时跳过 `ctx.filter`；`js/adventure_creation_preview.js` 与 `js/adventure_renderer.js` 战斗画布接入 `sceneResolution`（触屏 DPR 上限 1.25）并缓存背景渐变；`js/view_adventure_status_tooltip.js` 与 `js/view_battle_pet_hint.js` 消除每帧强制同步布局，并在 `@media(pointer:coarse)` 下关闭 `.battle-layer` / `.overlay` 的 `backdrop-filter`。
+- 验证：`node --test tests/spell_particle_layers.test.mjs tests/adventure_creation.test.mjs tests/scene_resolution.test.mjs tests/status_tooltip_ui.test.mjs tests/battle_pet_hint.test.mjs` 19/19 通过；`npm run test:battle` 1138/1138 通过，0 失败、0 跳过。修改保留本地，未提交、推送或发布。
+
+## 2026-10-17：文字战斗卡与字典统一
+
+- 最终 `npm run test:battle`：1138/1138 通过，0失败、0跳过；日志 `tmp/word-cards-battle-verified.log`。覆盖有限补牌、激活门禁、耗尽／失误、保存重演、旧战斗兼容及原有战斗功能。
+- 字典／文字卡／语音专项：37/37 通过（`battle_word_cards`、`battle_dictionary`、`battle_speech_connection_reuse`）；探索控制器与其他定向回归另有通过记录。验证可选WAV头部／采样率／样本及取消不返回录音，普通语音调用不保留音频。
+- 浏览器：`word_cards_browser` 与 `hanzi_memory_browser` 两组通过。隔离身份下使用真实卡牌渲染、IndexedDB和鼠标笔顺，在1280px与390px覆盖8格卡面、拼写错误、保存失败重试、全文识别门禁、激活状态、一次写字推进任务及正式 `Haqi.html` 启动。语音识别使用测试替身，不能据此宣称真人发音或麦克风验收通过。
+- 已检查截图：`tmp/word-cards-390-practice.png`、`tmp/word-cards-390-activated.png`；书写及岛屿截图见 `tmp/word-cards-*-writing.png`、`tmp/hanzi-memory/practice-*.png`。弹窗没有遮挡关闭按钮或横向溢出，卡面沿用原渲染。
+- 故事作者源重新导出与 `export_story.py --check` 通过；Python故事测试12/12通过。
+- 期间工作区并行出现特效优化；一次粒子断言失败在其最新文件上单项复测通过，随后完整战斗回归通过。本任务未覆盖该并行改动。
+- 真人麦克风、实际语音服务音质和实体手机仍待验证。未运行发布黑盒QA、构建或上传；本次不提交、不推送、不发布。
+
+### 2026-10-17 文字卡练习卡面与笔顺
+
+复用原卡面绘制，默认展示逐笔笔顺及淡字书写参考。桌面 1280px 与手机 390px 浏览器验证通过（场景一次练习、文字卡激活、存储重试、模拟朗读、书写与英文隐藏答案）；新增 UI 断言通过。`npm run test:battle` 1138/1138。截图：`tmp/word-cards-1280-art.png`、`tmp/word-cards-390-art.png`。真人麦克风未测，语音测试使用模拟服务。
+
+### 2026-10-17 文字卡保底与水墨卡底
+
+新快照 v2 满手保底、连续施放／失误／弃牌直到耗尽、旧 v1 兼容与两版本重演已验证。卡面继承系别、魔力、冷却，水墨 WebP 为 21,248 字节，CDN 哈希及 CORS 已核验。
+验证：文字卡／卡面专项 12/12；`npm run test:battle` 全部通过（计数见 `tmp/word-ink-battle.log`）；1280px 与 390px 浏览器激活、拼写、书写流程通过，已查看实际水墨卡面及手机战斗截图。
+
+### 2026-10-17 完整句朗读与逐笔激活
+
+专项 Node 11/11；浏览器 2/2（1280px / 390px），覆盖完整句识别、错误一笔立即撤回、最后一笔自动完成、三次部分朗读容错、三次无关内容不通过、按住松开发送、关闭后的迟到识别、保存失败重试及字源岛任务推进。真人麦克风未测，录音服务使用 fixture；真实指针操作与 IndexedDB 已验证。RGBA WebP 四角 alpha=0、边缘有半透明像素，大小20,528字节；CDN内容哈希及CORS已核验。截图 `tmp/word-cards-1280-art.png`、`tmp/word-cards-390-art.png`。
+
+最终验证：`npm run test:battle` 1140/1140 通过；专项 11/11，桌面与手机浏览器 2/2。真实麦克风未验证。
+
+### 2026-10-17 文字卡目标驱动施法
+
+移除激活状态按钮，选择目标后自动打开练习，成功保存后自动向冻结目标施法。3项专项覆盖只执行一次、取消、迟到和状态失效。桌面1280px／手机390px浏览器完整流程通过，已确认练习成功后卡牌直接耗尽。`npm run test:battle` 1143/1143通过。真人麦克风未测。
+
+2026-10-17 标准笔画反馈验证：写字组件6/6、战斗回归1143/1143；字源岛流程通过，文字卡桌面1280px／手机390px浏览器流程通过。实际指针绘制验证错笔清除、正确标准笔画、无逐笔提示、完成后直接施法；已核验 `tmp/word-standard-stroke-1280.png`。
+
+### 2026-10-17 文字卡复用NPC对话UI
+
+战斗回归1143/1143、文字卡配置9/9通过；1280px及390px浏览器通过示范播放、词义映射入口、进度环、输入开关、提示收起／展开、录音取消／容错、写字与自动施法流程。实际截图已核验。真人麦克风及在线映射服务未验证，语音使用mock；未提交或发布。

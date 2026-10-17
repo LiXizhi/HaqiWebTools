@@ -58,10 +58,15 @@ const owns = (s, id) => (s.inventory[id] || 0) > 0;
 export function currentQuest(save, content) {
     return content.quests.find(q => !save.quests[q.id]?.claimed) || null;
 }
-// 新手岛教学模式（2026-09-26 用户约定）：不看等级，身处魔法营地且营地任务链
+// 低于10级时所有区域开启新手UI指引；10级起保留原魔法营地教学规则。
+export function beginnerTeaching(save) {
+    return Number.isFinite(save?.level) && save.level >= 1 && save.level < 10;
+}
+// 新手岛教学模式（2026-09-26 用户约定）：身处魔法营地且营地任务链
 // （章节任务按发布 NPC 所在区域、目录任务按 region）尚有未交付的即开启；
-// 全部完成后返回 null，各面板提示与追踪手势据此统一判定。
+// 低等级直接返回 true；其余等级返回未交付营地任务或 null，供面板与追踪统一判定。
 export function teachingMode(save, content) {
+    if (save && content && beginnerTeaching(save)) return true;
     if (!save || save.zone !== 'camp' || !content) return null;
     const chapter = content.quests?.find(q => !save.quests[q.id]?.claimed && content.npcs[q.startNpc]?.zone === 'camp');
     if (chapter) return chapter;
@@ -89,7 +94,7 @@ export function createAdventure(content, { name = '小哈奇', school = 'fire', 
         pet: null, zone: birthZone, position: {...mapInfo(birthZone,content).initialSpawn}, positionCoordinateVersion:mapCoordinateVersion(birthZone,content), facing: 3,
         dungeonRuns: {}, dungeonReturn: null, encounterSerial: 0, pendingEncounter: null, rewardedEncounters: [], graduated: false,
         visitedTown: false, tips: {}, revision: 0, bagRulesVersion: 1, defaultPocketVersion: 1, worldLayoutVersion: content.worldMapIndex.layoutVersion,
-        locale: 'zh-CN', languageLearning: { enabled: false, native: 'zh-CN', target: 'en', autoSpeak:false,autoReadDialogue:true,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
+        locale: 'zh-CN', languageLearning: { enabled: true, native: 'zh-CN', target: 'en', autoSpeak:false,autoReadDialogue:true,selectionConfirmed:false,showChinese:true,model:'',voiceType:'' }, learnerMemory: '', languageAdventure:{version:1,progress:{}} };
     if(typeof headId==='string'&&/^[a-z0-9-]{1,64}$/.test(headId))save.headId=headId;
     if(customHead)save.customHead=publicPhotoHead(customHead,{id:headId,appearance});
     if(validHeroBodyId(bodyId,appearance))save.bodyId=bodyId;
@@ -264,7 +269,7 @@ export function playerSpec(save, content, starLevel=save.pendingEncounter?.magic
         }
     }
     applyMagicStarCombat(stats,content,starLevel);
-    return { ...(hanziBattleSpec(save,content)?{hanziBattle:hanziBattleSpec(save,content)}:{}), id: 'hero', name: save.name, school: save.school, level: save.level, isBot: false, stats,
+    return { ...(save.pendingEncounter?.player?.hanziBattle?{hanziBattle:structuredClone(save.pendingEncounter.player.hanziBattle)}:{}), id: 'hero', name: save.name, school: save.school, level: save.level, isBot: false, stats,
         deck: clone(save.deck), fixedCards: fixed, deckCapacity: limits.capacity, deckEachCapacity: limits.eachCapacity };
 }
 function signal(save, content, kind, id, count = 1) {
@@ -404,7 +409,7 @@ function applyAdventureAction(save, content, action, access={}) {
         const target = claimCatalogQuest(save,content,action.questId,action.npcId,catalogStatSnapshot(save,content));
         if (!target) return { changed: false };
         grantQuestRewards(save,content,target);
-        if(target.hanziCardReward)grantHanziQuestCard(save,target.hanziCardReward);
+        // Legacy card rewards retired; old quest claims remain readable.
         save.quests[target.id].claimed = true;
         unpinTrackedQuest(save, target.id);
         if(target.region==='hanzi')supplementIslandTrack(save,content,save.zone);

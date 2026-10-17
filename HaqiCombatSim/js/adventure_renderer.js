@@ -1,3 +1,5 @@
+import {drawGatheringProgress} from './view_gathering_progress.js';
+import {drawMemoryNode} from './view_hanzi_memory.js';
 import {fitLocalCamera} from './adventure_local_coop_core.js';
 import {drawPetTraitHalo} from './view_pet_traits.js';
 import {npcCharacter} from './adventure_city_people_core.js';
@@ -131,7 +133,7 @@ export function createRenderer(canvas,assets) {
     const dungeonFog=createDungeonFog(),mapFog=createDungeonFog();
     const effects=createSpellEffects(assets), reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
     const coarsePointer=matchMedia('(pointer: coarse)');
-    const resolution=(low=false)=>sceneResolution(window.devicePixelRatio||1,{coarse:coarsePointer.matches,low});
+    const resolution=(low=false)=>sceneResolution(globalThis.devicePixelRatio||1,{coarse:coarsePointer.matches,low});
     const ctx=canvas.getContext('2d',{alpha:false}),cam={x:0,y:0,scale:1,w:0,h:0};let backing=null,backingZone=null;
     const terrainTiles=createScheduledTerrainCache({rasterize:createIslandTerrainRasterizer(assets.terrainDecorationArt),onMetric:(name,value)=>typeof value==='number'?perf.record(name,value):perf.event(name,value),paint:(c,world,rect,atlases)=>paintLargeTerrainSteps(c,world,rect,false,assets.terrainDecorationArt?{draw(...args){atlases.add(args[1]);return assets.terrainDecorationArt.draw(...args);},pattern(...args){atlases.add(args[1]);return assets.terrainDecorationArt.pattern?.(...args)||null;}}:null),createCanvas:()=>document.createElement('canvas')});
     if(assets.terrainDecorationArt)assets.terrainDecorationArt.onAtlas=atlas=>terrainTiles.invalidateAtlas(atlas);
@@ -182,15 +184,20 @@ export function createRenderer(canvas,assets) {
     let localActor=null,localPrevious=null,localScope=null,localIdentity=null;
     const battleHero=createHeroActor(9271);
     const starFollower=createStarFollower();
-    function prepareScene(world,save){
-        const w=canvas.clientWidth,h=canvas.clientHeight;if(world.isEarth||world.isCityDungeon)return;if(!world.layout||!w||!h)return;
+    function prepareScene(world,save,{visibleOnly=false,localSecond=null,localSecondFollowing=false,low=false}={}){
+        const w=canvas.clientWidth,h=canvas.clientHeight;if(world.isEarth||world.isCityDungeon||!world.layout)return {total:0,ready:0};if(!w||!h)return {total:1,ready:0};
         const zoom=cameraZoom.value,scale=(w<650?.82:1)*zoom;
         // Keep terrain raster density tied to the device, not exploration zoom.
         // A zoom gesture changes the viewport in world units; it must reuse the
         // existing world-space tiles instead of crossing the scheduler's density
         // boundary and repainting the whole texture cache.
         const rasterPixelRatio=resolution().terrain;
-        terrainTiles.prepare(world,{x:save.position.x-w/(2*scale),y:save.position.y-h/(2*scale)+(w<650?50:25)/zoom,w:w/scale,h:h/scale},rasterPixelRatio);
+        const local=localSecond&&!localSecondFollowing?fitLocalCamera([save.position,localSecond.position],w,h,scale):null;
+        const actualScale=local?.scale||scale,center=local?.center||save.position;
+        const origin=alignCameraOrigin(center.x-w/(2*actualScale),center.y-h/(2*actualScale)+(w<650?50:25)/zoom,actualScale,resolution(low).display);
+        // Match the live viewport exactly, including split-player camera framing,
+        // so preparation and drawing choose the same tile-size/cache-capacity tier.
+        return terrainTiles.prepare(world,{x:origin.x,y:origin.y,w:w/actualScale,h:h/actualScale},rasterPixelRatio,[],{visibleOnly});
     }
     function zoomBy(factor) {
         return cameraZoom.zoomBy(factor);
@@ -388,6 +395,7 @@ export function createRenderer(canvas,assets) {
         if(petScene&&!title){for(const row of petScene.pets)if(!gatheringPets.some(job=>job.pet.id===row.pet.id))objects.push({...row.position,kind:'pet-social',row});for(const pet of petScene.babies)objects.push({...pet.birth.anchor,kind:'pet-social',row:{pet,position:pet.birth.anchor,scale:petDisplayScale(pet,assets.content)}});}
         if(world.dungeon?.scene.streetscape)objects.push(...streetPainter.objects(world,viewport,time,save.position,reducedMotion.matches));
         if(!title&&!motionHidden)for(const row of gatheringPets)objects.push({...row.position,kind:'pet-social',row:{...row,scale:petDisplayScale(row.pet,assets.content)}});
+        if(!title&&!motionHidden){for(const n of world.memoryNodes||[])objects.push({...n,kind:'hanzi-memory'});for(const n of world.memorySigns||[])objects.push({...n,kind:'hanzi-sign'});}
         objects=mergeSceneObjects(scenery,objects);
         const streetFocus=world.dungeon?.scene.streetscape?[...world.npcs,...streetPainter.people()].filter(n=>Math.hypot(n.x-save.position.x,n.y-save.position.y)<120):[];
         mark('earth-render-actors');
@@ -400,6 +408,8 @@ export function createRenderer(canvas,assets) {
         for(let objectIndex=0;objectIndex<objects.length;objectIndex++) {
             const o=objects[objectIndex];
             if(o.hidden)continue;
+            if(o.kind==='hanzi-memory'){drawMemoryNode(ctx,o,time,world.memoryArt);continue;}
+            if(o.kind==='hanzi-sign'){ctx.save();ctx.fillStyle='#f3dfab';ctx.fillRect(o.x-15,o.y-27,30,32);ctx.fillStyle='#614524';ctx.textAlign='center';ctx.font='22px serif';ctx.fillText(o.glyph,o.x,o.y-3);ctx.restore();continue;}
             if(o.kind.startsWith('street')){streetPainter.draw(ctx,o,save.position,streetFocus);continue;}
             if(o.x<cam.x-200||o.x>cam.x+w/cam.scale+200||o.y<cam.y-50||o.y>cam.y+h/cam.scale+230)continue;
             if(islandCache&&o.kind==='tree'){const end=islandScenery.draw(ctx,objects,objectIndex,save.position,viewport);if(end>objectIndex){objectIndex=end-1;continue;}}
@@ -609,6 +619,7 @@ export function createRenderer(canvas,assets) {
                 if(status.artReady&&status.visibleTotal)ctx.fillRect(left+10,top+28,(width-20)*status.visibleReady/status.visibleTotal,6);ctx.restore();
             }
         }
+        if(!title&&!motionHidden&&world.memoryGathering){const n=world.memoryGathering;drawGatheringProgress(ctx,{x:(n.x-cam.x)*cam.scale,y:(n.y-cam.y)*cam.scale},n.progress,'文字记忆');}
         const meter=frameMeter.sample(time,!title&&!motionHidden);
         if(!title&&!motionHidden){
             ctx.save();ctx.font='600 12px monospace';ctx.textAlign='left';ctx.fillStyle='#17332ddd';
@@ -648,13 +659,17 @@ export function createRenderer(canvas,assets) {
     }
     function screenToWorld(x,y){return{x:x/cam.scale+cam.x,y:y/cam.scale+cam.y};}
     function renderBattle(target,battle,save,time,presentation) {
-        const c=target.getContext('2d'),pixelWidth=target.clientWidth,pixelHeight=target.clientHeight,dpr=Math.min(2,devicePixelRatio||1);
+        const c=target.getContext('2d'),pixelWidth=target.clientWidth,pixelHeight=target.clientHeight,dpr=resolution(false).display;
         if(!pixelWidth||!pixelHeight)return {};
         const scale=Math.min(1,pixelHeight/270),w=pixelWidth/scale,h=pixelHeight/scale;
         if(target.width!==Math.round(pixelWidth*dpr)||target.height!==Math.round(pixelHeight*dpr)){target.width=Math.round(pixelWidth*dpr);target.height=Math.round(pixelHeight*dpr);}
         c.setTransform(dpr*scale,0,0,dpr*scale,0,0);c.clearRect(0,0,w,h);
         const t=time/1000,cx=w/2,cy=h*.52,r=Math.min(w*.46,h*.76);
-        const haze=c.createRadialGradient(cx,cy,20,cx,cy,r*1.5);haze.addColorStop(0,'#527e7166');haze.addColorStop(1,'transparent');c.fillStyle=haze;c.fillRect(0,0,w,h);
+        if(!target.haze||target.hazeW!==w||target.hazeH!==h){
+            const haze=c.createRadialGradient(cx,cy,20,cx,cy,r*1.5);haze.addColorStop(0,'#527e7166');haze.addColorStop(1,'transparent');
+            target.haze=haze;target.hazeW=w;target.hazeH=h;
+        }
+        c.fillStyle=target.haze;c.fillRect(0,0,w,h);
         ellipse(c,cx,cy+18,r+24,r*.56+10,'#112f3c99');ellipse(c,cx,cy,r,r*.54,'#809580');ellipse(c,cx,cy-4,r-9,r*.51,'#c5c4a4');
         circleRune(c,cx,cy-2,r-18,t,'#ebdfaf');circleRune(c,cx,cy-2,r*.62,-t,'#7e9a90');
         // Runes, actor feet and targeting share the same ellipse coordinates.

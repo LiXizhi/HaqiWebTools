@@ -55,7 +55,7 @@ test('real controller delays accept, reward and talk actions until final reply; 
     const app=fs.readFileSync(new URL('../js/adventure_app.js',import.meta.url),'utf8');
     const code=app.slice(app.indexOf('function paintDialogue(){'),app.indexOf('function interact(target)'));
     let callbacks;const actions=[];
-    const context=vm.createContext({dialog:{npcId:30517},dialogDone:null,assets:{content:{}},save:{},nodes:{overlay:{}},model:()=>({}),
+    const context=vm.createContext({refreshWordGoals(){},dialog:{npcId:30517},dialogDone:null,assets:{content:{}},save:{},nodes:{overlay:{}},model:()=>({}),
         V:{renderDialogue:(a,b,c,cb)=>{callbacks=cb;}},close:()=>{context.dialog=null;context.dialogDone=null;},mapDialogue(){},dialogueVoice:{speak(){}},
         A:{applyAction:(s,c,a)=>{actions.push(a);return {};},currentQuest:()=>null},toast(){},paintHud(){},persist(){},queueCloudSave(){},
         finishTrackedDialogue:()=>false,rewardSnapshot:()=>({}),showRewards(){},islandSocial:{activity(){}},petScene:{dialogue(){}},

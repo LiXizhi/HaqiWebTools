@@ -47,6 +47,11 @@ export function drawArenaEnvironment(c,{palette,center,radius,aspect=.54,time=0,
     }
     c.restore();
 }
+function discs(c,color,items){
+    c.fillStyle=color;c.beginPath();
+    for(const [x,y,r] of items){const rr=Math.max(.1,r);c.moveTo(x+rr,y);c.arc(x,y,rr,0,TAU);}
+    c.fill();
+}
 function supportEffect(c,kind,{a,b,to,center,radius,scale,p,palette,particles,assets}) {
     const [primary,light,dark]=palette,r=radius,fade=Math.sin(p*Math.PI),ground=to.y;
     c.save();c.globalAlpha*=fade;
@@ -57,11 +62,11 @@ function supportEffect(c,kind,{a,b,to,center,radius,scale,p,palette,particles,as
         if(kind==='reflect'){const q=(p*2)%1;line(c,[[b.x+r*1.3*(1-q),b.y-r*.8],[b.x+r*.5,b.y],[b.x+r*1.3*q,b.y+r*.8]],light,3*scale);}
     } else if(['aura','enrage'].includes(kind)) {
         const at=kind==='aura'?(center||b):b;rune(c,at.x,at.y,r*1.65,p,primary);rune(c,at.x,at.y,r*1.3,-p,light);
-        for(const v of particles.groups[40]){const q=(v.phase+p)%1,ang=v.angle+p*3;disc(c,at.x+Math.cos(ang)*r*1.45,at.y+Math.sin(ang)*r*.4-q*r*1.6,v.size*scale,primary);}
+        discs(c,primary,particles.groups[40].map(v=>{const q=(v.phase+p)%1,ang=v.angle+p*3;return [at.x+Math.cos(ang)*r*1.45,at.y+Math.sin(ang)*r*.4-q*r*1.6,v.size*scale];}));
     } else if(['cleanse','steal'].includes(kind)) {
         const q=clamp(p*1.3),cx=kind==='steal'?b.x+(a.x-b.x)*q:b.x,cy=kind==='steal'?b.y+(a.y-b.y)*q:b.y;
         for(let i=0;i<3;i++){c.strokeStyle=i%2?light:primary;c.lineWidth=2*scale;c.beginPath();c.arc(cx,cy,r*(.3+p*.8),p*8+i*TAU/3,p*8+i*TAU/3+1.3);c.stroke();}
-        for(const v of particles.groups[24])disc(c,cx+Math.cos(v.angle+p*5)*r*(1-q),cy+Math.sin(v.angle+p*5)*r*(1-q),v.size*scale,light);
+        discs(c,light,particles.groups[24].map(v=>[cx+Math.cos(v.angle+p*5)*r*(1-q),cy+Math.sin(v.angle+p*5)*r*(1-q),v.size*scale]));
     } else if(kind==='stun') {
         for(let i=0;i<5;i++){const ang=i*TAU/5+p*6,x=b.x+Math.cos(ang)*r*.7,y=b.y-r*.75+Math.sin(ang)*r*.22;c.fillStyle=light;c.beginPath();for(let j=0;j<10;j++){const rr=(j%2?3:8)*scale;c.lineTo(x+Math.cos(j*Math.PI/5)*rr,y+Math.sin(j*Math.PI/5)*rr);}c.closePath();c.fill();}
         rune(c,b.x,ground,r*.6,p,primary);
@@ -77,17 +82,17 @@ function supportEffect(c,kind,{a,b,to,center,radius,scale,p,palette,particles,as
         if(kind==='pet')assets.tile?.(c,'creatures',6,b.x-r*.5,ground-r,r,r);
         else {c.strokeStyle=light;c.lineWidth=2*scale;for(let i=0;i<5;i++){c.beginPath();c.ellipse(b.x,b.y,r*(1-p*.4),r*(.4+i*.15),i*.4,0,TAU);c.stroke();}}
     } else if(kind==='dissolve') {
-        for(const v of particles)disc(c,b.x+Math.cos(v.angle)*r*p,b.y+Math.sin(v.angle)*r*p-p*r,v.size*scale*(1-p),primary);
+        discs(c,primary,particles.groups[32].map(v=>[b.x+Math.cos(v.angle)*r*p,b.y+Math.sin(v.angle)*r*p-p*r,v.size*scale*(1-p)]));
     } else if(kind==='pass') {
         c.strokeStyle=primary;c.lineWidth=2*scale;c.beginPath();c.arc(b.x,b.y,r*.4,p*TAU,p*TAU+Math.PI*1.5);c.stroke();
     }
     c.restore();
 }
 // Seeded elemental accents: gathering at the caster, then dispersal at the target.
-function elementalParticles(c,school,{a,b,radius:r,scale,p,flight,hit,particles,palette:[primary,light],friendly}) {
+function elementalParticles(c,school,{a,b,radius:r,scale,p,flight,hit,particles,palette:[primary,light],friendly,echo}) {
     const gather=clamp(p/.3),at=p<.3?a:b;
     c.save();c.globalCompositeOperation='lighter';c.shadowBlur=0;
-    for(const v of particles.groups[48]) {
+    for(const v of particles.groups[echo?24:48]) {
         const q=(v.phase+p*1.3)%1,angle=v.angle+p*(school==='storm'?9:3);
         const spread=r*(p<.3?1.4-gather: .45+q*.9),x=at.x+Math.cos(angle)*spread*v.speed,y=at.y+Math.sin(angle)*spread*.55-q*r*.6;
         c.save();c.globalAlpha*=Math.sin(q*Math.PI)*.7;const size=(v.size+1)*scale;
@@ -128,10 +133,10 @@ export function createSpellEffects(assets) {
         const groundY=centered?origin.y:to.y;
         rune(c,centered?origin.x:b.x,groundY,radius*(.7+hit*.4),p,color);
         if(spec.variantAura.color){c.save();c.globalAlpha*=.5;for(let i=0;i<spec.variantAura.rings;i++)rune(c,x,groundY,radius*(1+i*.15),p,spec.variantAura.color);c.restore();}
-        for(const v of particles.groups[24]){
+        discs(c,color,particles.groups[24].map(v=>{
             const q=(p+v.phase)%1,spread=radius*(.5+q*.8);
-            disc(c,x+Math.cos(v.angle+p)*spread,y+Math.sin(v.angle+p)*spread*.5-q*radius*.4,v.size*scale*(1-q),color);
-        }
+            return [x+Math.cos(v.angle+p)*spread,y+Math.sin(v.angle+p)*spread*.5-q*radius*.4,v.size*scale*(1-q)];
+        }));
         if(hit>0&&!spec.friendly){c.save();c.globalAlpha*=1-hit;c.strokeStyle=spec.palette[1];c.lineWidth=3*scale;c.beginPath();c.ellipse(b.x,to.y,radius*(.5+hit*1.5),radius*(.2+hit*.4),0,0,TAU);c.stroke();c.restore();}
         return true;
     }
@@ -154,7 +159,7 @@ export function createSpellEffects(assets) {
         c.save();c.lineCap='round';
         if(spec.quickAttack){
             const impact=config.timeline.impact,flight=clamp(p/impact),hit=clamp((p-impact)/(1-impact));
-            c.globalAlpha=Math.min(1,p*12,(1-p)*8);c.shadowColor=primary;c.shadowBlur=5*scale;
+            c.globalAlpha=Math.min(1,p*12,(1-p)*8);c.shadowBlur=0;
             for(const particle of particles.groups[20]){
                 let point;
                 if(failed)point={x:caster.x+Math.cos(particle.angle)*18*scale*p,y:caster.y+Math.sin(particle.angle)*18*scale*p};
@@ -175,12 +180,13 @@ export function createSpellEffects(assets) {
         if(!echo){c.fillStyle=`rgba(10,14,35,${Math.sin(p*Math.PI)*.22})`;c.fillRect(0,0,width,height);}
         c.shadowColor=primary;c.shadowBlur=12*scale;c.globalAlpha=Math.min(1,p*8,(1-p)*7);
         if(!echo)rune(c,a.x,origin.y+4,radius*(.65+Math.sin(p*Math.PI)*.15),p,primary);
+        c.shadowBlur=0;
         const summon=spec.kind==='summon',attackStart=summon?config.timeline.summonAttack:config.timeline.attack,impact=summon?config.timeline.summonImpact:config.timeline.impact;
         const flight=clamp((p-attackStart)/(impact-attackStart)),hit=clamp((p-impact)/(1-impact));
-        if(failed){c.globalAlpha*=1-p;for(const v of particles.groups[20])disc(c,a.x+Math.cos(v.angle)*radius*p,a.y-Math.sin(v.angle)*radius*p,2*scale,'#9aa1af');c.restore();return;}
+        if(failed){c.globalAlpha*=1-p;discs(c,'#9aa1af',particles.groups[20].map(v=>[a.x+Math.cos(v.angle)*radius*p,a.y-Math.sin(v.angle)*radius*p,2*scale]));c.restore();return;}
         // The atlas is one layer, never a replacement for semantic spell choreography.
         const hasSubject=atlasEffect(c,spec,{a,b,origin,to,center,radius,scale,p,flight,hit,particles,centered,echo});
-        if(!echo||p>=attackStart)elementalParticles(c,card.spellSchool,{a,b,radius,scale,p,flight,hit,particles,palette:col,friendly:spec.friendly});
+        if(!echo||p>=attackStart)elementalParticles(c,card.spellSchool,{a,b,radius,scale,p,flight,hit,particles,palette:col,friendly:spec.friendly,echo});
         // Original illustration manifests above the arena as a magical projection.
         // It is deliberately a card-art apparition, not a fabricated animated NPC.
         const illustration=assets.images?.get('spell:'+spec.base);
@@ -201,7 +207,7 @@ export function createSpellEffects(assets) {
             const def=spec.summonDef,emerge=clamp(p/.26),fade=clamp((1-p)/.15),dir=b.x>=a.x?1:-1;
             const sx=a.x,sy=origin.y;
             c.save();c.globalAlpha*=emerge*fade;rune(c,sx,sy,radius*1.1,p,light);
-            for(const v of particles.groups[24]){const phase=(p*1.4+v.phase)%1;disc(c,sx+Math.cos(v.angle+p*5)*radius*(1-phase),sy-phase*170*scale,v.size*scale,primary);}
+            discs(c,primary,particles.groups[24].map(v=>{const phase=(p*1.4+v.phase)%1;return [sx+Math.cos(v.angle+p*5)*radius*(1-phase),sy-phase*170*scale,v.size*scale];}));
             c.shadowBlur=0;c.translate(sx,sy);c.scale(dir,1);c.rotate(Math.sin(flight*TAU)*.065);
             const size=def.size*scale*(.75+.25*emerge),tile=flight>.05?(def.attackTile??def.tile):def.tile;
             assets.draw(c,{id:def.asset,crop:config.frames[tile].map((v,i)=>v*(i%2?assets.media.entries[def.asset].height/config.atlasSize[1]:assets.media.entries[def.asset].width/config.atlasSize[0]))},-size/2,-size*emerge,size,size*emerge);c.restore();
@@ -230,7 +236,7 @@ export function createSpellEffects(assets) {
             } else if(kind==='trap') {
                 for(let i=0;i<8;i++){const ang=i*TAU/8;shard(c,b.x+Math.cos(ang)*r,to.y+Math.sin(ang)*r*.4-18*scale,17*scale,0,primary);}
             }
-            for(const v of particles){const q=(v.phase+p*.8)%1;c.globalAlpha= Math.sin(p*Math.PI)*Math.sin(q*Math.PI);const px=b.x+Math.cos(v.angle)*r*v.speed,py=to.y-q*145*scale;if(kind==='heal'){line(c,[[px-3*scale,py],[px+3*scale,py]],light,2);line(c,[[px,py-3*scale],[px,py+3*scale]],light,2);}else disc(c,px,py,v.size*scale,primary);}
+            for(const v of particles.groups[echo?20:32]){const q=(v.phase+p*.8)%1;c.globalAlpha= Math.sin(p*Math.PI)*Math.sin(q*Math.PI);const px=b.x+Math.cos(v.angle)*r*v.speed,py=to.y-q*145*scale;if(kind==='heal'){line(c,[[px-3*scale,py],[px+3*scale,py]],light,2);line(c,[[px,py-3*scale],[px,py+3*scale]],light,2);}else disc(c,px,py,v.size*scale,primary);}
         } else {
             if(p>=attackStart&&flight<1) {
                 if(kind==='burst') {
@@ -250,7 +256,7 @@ export function createSpellEffects(assets) {
                     const head=point(q);
                     // Tapered vapor/embers follow the falling mass rather than a solid beam.
                     for(let i=17;i>=0;i--){const v=Math.max(0,q-i*.014),at=point(v);c.save();c.globalAlpha*=1-i/19;mist(c,at.x,at.y,(24-i*.8)*scale,primary,.42);c.restore();}
-                    for(const v of particles.groups[38]){
+                    for(const v of particles.groups[echo?20:38]){
                         const tail=point(Math.max(0,q-v.phase*.25)),spread=(1+v.phase*22)*scale;
                         c.save();c.globalAlpha*=1-v.phase;
                         const px=tail.x+Math.cos(v.angle)*spread,py=tail.y+Math.sin(v.angle)*spread;
@@ -274,14 +280,14 @@ export function createSpellEffects(assets) {
                         const pts=[];for(let j=0;j<=40;j++){const v=j/40,ang=v*TAU*2.5+p*18+band*TAU/4,rr=radius*(.2+v*.8)*grow;pts.push([b.x+Math.cos(ang)*rr,to.y-v*150*scale+Math.sin(ang)*rr*.28]);}
                         c.save();c.globalAlpha*=.28;line(c,pts,primary,7*scale);c.globalAlpha*=2;line(c,pts,light,1.4*scale);c.restore();
                     }
-                    for(const v of particles.groups[32]){const lift=(p*1.7+v.phase)%1,ang=lift*12+p*15+v.angle,rr=radius*(.2+lift*.85);shard(c,b.x+Math.cos(ang)*rr,to.y-lift*150*scale+Math.sin(ang)*rr*.25,v.size*scale,ang,primary);}
+                    for(const v of particles.groups[echo?20:32]){const lift=(p*1.7+v.phase)%1,ang=lift*12+p*15+v.angle,rr=radius*(.2+lift*.85);shard(c,b.x+Math.cos(ang)*rr,to.y-lift*150*scale+Math.sin(ang)*rr*.25,v.size*scale,ang,primary);}
                 } else {
                     const point=v=>({x:a.x+(b.x-a.x)*v,y:a.y+(b.y-a.y)*v-Math.sin(v*Math.PI)*55*scale});
                     for(let j=16;j>=1;j--){const at=point(Math.max(0,flight-j*.014));c.save();c.globalAlpha*=(1-j/17)*.55;disc(c,at.x,at.y,(10-j*.45)*scale,primary);c.restore();}
                     mist(c,x,y,30*scale,primary,.7);disc(c,x,y,9*scale,primary);disc(c,x,y,4*scale,light);
                 }
                 if(!['meteor','vortex','vines','burst'].includes(kind))
-                for(const v of particles.groups[30]){const q=clamp(flight-v.phase*.2);disc(c,a.x+(b.x-a.x)*q+Math.cos(v.angle)*12*scale,a.y+(b.y-a.y)*q-Math.sin(q*Math.PI)*55*scale+Math.sin(v.angle)*12*scale,v.size*scale,primary);}
+                discs(c,primary,particles.groups[echo?20:30].map(v=>{const q=clamp(flight-v.phase*.2);return [a.x+(b.x-a.x)*q+Math.cos(v.angle)*12*scale,a.y+(b.y-a.y)*q-Math.sin(q*Math.PI)*55*scale+Math.sin(v.angle)*12*scale,v.size*scale];}));
             }
             if(hit>0) {
                 c.globalAlpha=1-hit;c.strokeStyle=light;c.lineWidth=(1-hit)*5*scale;c.beginPath();c.ellipse(b.x,b.y,radius*hit*1.5,radius*hit,0,0,TAU);c.stroke();
@@ -294,10 +300,10 @@ export function createSpellEffects(assets) {
                     }
                     for(let i=0;i<7;i++)mist(c,b.x+Math.cos(i*2.4)*spread*.7,to.y+Math.sin(i*2.4)*spread*.2,25*scale*(1+hit),primary,(1-hit)*.18);
                 }
-                for(const v of particles){const travel=radius*(.2+hit*1.6)*v.speed,px=b.x+Math.cos(v.angle)*travel,py=b.y+Math.sin(v.angle)*travel+hit*hit*35*scale;
+                for(const v of particles.groups[echo?20:32]){const travel=radius*(.2+hit*1.6)*v.speed,px=b.x+Math.cos(v.angle)*travel,py=b.y+Math.sin(v.angle)*travel+hit*hit*35*scale;
                     if(card.spellSchool==='ice')shard(c,px,py,v.size*scale*2,v.spin+hit*2,hit<.3?light:primary);else disc(c,px,py,v.size*scale*(1-hit*.6),v.phase>.5?primary:light);
                 }
-                if(kind==='drain'&&!reflection)for(const v of particles.groups[20]){const q=clamp(hit*1.4-v.phase*.3);disc(c,b.x+(caster.x-b.x)*q,b.y+(caster.y-b.y)*q+Math.sin(q*TAU+v.angle)*20*scale,3*scale,primary);}
+                if(kind==='drain'&&!reflection)discs(c,primary,particles.groups[20].map(v=>{const q=clamp(hit*1.4-v.phase*.3);return [b.x+(caster.x-b.x)*q,b.y+(caster.y-b.y)*q+Math.sin(q*TAU+v.angle)*20*scale,3*scale];}));
             }
         }
         c.restore();

@@ -41,7 +41,12 @@ export function renderLearningMode(body,model,cb,{el,button}) {
     display.onchange=()=>{draft.locale=display.value;if(!draft.selectionConfirmed)draft.native=display.value;if(!picked)target.value=display.value==='en'?'zh-CN':'en';refresh();};
     target.onchange=()=>{picked=true;refresh();};
     const actions=el('div','learning-dock-actions',apply);
-    if(model.save.languageLearning.enabled)actions.append(button('关闭双语学习',cb.disableLearning,'secondary'));
+    if(model.save.languageLearning.enabled){
+        const off=button(model.learningForced?'双语学习已锁定':'关闭双语学习',()=>{if(!model.learningForced)cb.disableLearning();},'secondary');
+        off.disabled=!!model.learningForced;
+        if(model.learningForced)off.title=tr('当前链接要求开启双语学习，无法关闭。');
+        actions.append(off);
+    }
     actions.append(button('更多语言与音色设置',()=>cb.panel('settings'),'secondary'));
     body.append(el('div','learning-dock',el('div','learning-langs',el('label','learning-lang',el('span','learning-lang-name','母语'),display),el('label','learning-lang',el('span','learning-lang-name','第二语言'),target)),status,actions));
     refresh();

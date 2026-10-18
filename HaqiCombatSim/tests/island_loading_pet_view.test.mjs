@@ -12,8 +12,18 @@ function fixture(t,{owned=true}={}){
     const save={pets:owned?{mine:pet}:{},formation:['mine'],heroSlot:0};
     const assets={content:{pets:{dragon:{art:{},staticAppearance:true,name:'我的龙'},other:{art:{},staticAppearance:true,name:'另一只'}}},drawPet:(_ctx,id)=>{drawn.push(id);return ready;},tile(){fallbacks++;},ensureImage(id){requests.push(id);return image;}};
     const view=createIslandSceneLoadingView({retry(){},exit(){}});
-    return {view,save,drawn,show:(next=save,roleId='role')=>view.show({phase:'assets'},{assets,save:next,scope,roleId}),get runner(){return nodes.find(n=>n.className==='loading-pet-runner');},get fallbacks(){return fallbacks;},requests,async loaded(){ready=true;resolve();await new Promise(setImmediate);}};
+    return {view,save,drawn,nodes,show:(next=save,roleId='role')=>view.show({phase:'assets'},{assets,save:next,scope,roleId}),get runner(){return nodes.find(n=>n.className==='loading-pet-runner');},get fallbacks(){return fallbacks;},requests,async loaded(){ready=true;resolve();await new Promise(setImmediate);}};
 }
+
+test('real-world preparation shows actual progress and keeps retry on failure',t=>{
+    const f=fixture(t);f.show();
+    const progress=f.nodes.find(n=>n.tag==='progress'),retry=f.nodes.find(n=>n.className==='primary');
+    f.view.show({phase:'map',message:'正在准备地图显示…',done:5,total:6});
+    assert.equal(progress.max,6);assert.equal(progress.value,5);assert.equal(progress.hidden,false);assert.equal(retry.hidden,true);
+    f.view.show({phase:'error',message:'加载失败'});
+    assert.equal(progress.hidden,true);assert.equal(retry.hidden,false);
+    f.view.hide();assert.equal(f.nodes.find(n=>n.tag==='dialog').open,false);
+});
 test('cold owned-pet atlas never shows another pet before its image arrives',async t=>{
     const f=fixture(t);f.show();assert.equal(f.runner.hidden,true);assert.equal(f.fallbacks,0);
     f.show();assert.deepEqual(f.requests,['pet:dragon']);await f.loaded();

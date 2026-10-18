@@ -1,0 +1,13 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="../../css/adventure.css"><link rel="stylesheet" href="../../css/adventure_storybook.css"><link rel="stylesheet" href="../../css/dictionary.css"><body class="haqi-app storybook-ui"><div id="root" class="overlay visible"></div><script type="module">
+import {loadResources} from '../../js/adventure_assets.js';
+import {createDictionary} from '../../js/adventure_dictionary.js';
+import {createDictionaryStore} from '../../js/dictionary_store.js';
+import {recordDictionaryAttempt} from '../../js/dictionary_core.js';
+const base=document.createElement('base');base.href=new URL('../../',location.href).href;document.head.append(base);
+const assets=await loadResources(),rows=(await(await fetch('data/adventure/dictionary/word-cards.json')).json()).cards;
+const storage=createDictionaryStore({name:'dictionary-battle-shelf'}),role=new URLSearchParams(location.search).get('role')||'cards',key=JSON.stringify(['guest',role]);
+if(role==='cards')await storage.update(key,s=>{for(const [i,row]of [...rows.slice(0,6),...rows.slice(30,36)].entries())recordDictionaryAttempt(s,row.language,row.entryId,{now:Date.now()+i,error:false});});
+await assets.skillArt.preload(Object.fromEntries(rows.map(r=>[r.baseCardKey,assets.dataset.cards[r.baseCardKey]])));
+const state={assets,content:assets.content,save:{seed:3,languageLearning:{}},owner:null,role,stage:'world'};
+const dictionary=createDictionary({root:document.querySelector('#root'),getState:()=>state,storage,loadBattleCards:async()=>rows,onClose(){},onBuff(){},onRewards(){}});await dictionary.open('zh');
+</script></body></html>

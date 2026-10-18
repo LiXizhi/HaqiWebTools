@@ -1,5 +1,5 @@
+import {createCardFace} from './view_adventure_card.js';
 import {showHanziAnimation} from './view_hanzi_animation.js';
-import {DAILY_BUFF_NAMES} from './language_daily_buff_core.js';
 import {dictionaryEntryStatus,dictionaryDailyProgress,dictionarySpellingClue} from './dictionary_core.js';
 import {searchDictionary,suggestDictionaryWords,suggestDictionaryForm,normalizeDictionarySearch} from './dictionary_search_core.js';
 import {createDictionaryTutor} from './view_dictionary_tutor.js';
@@ -20,9 +20,9 @@ export function createDictionaryView(root,cb){
     let shell,body,notice,completionHost,writing,frame,frameTrigger,tutor,revealEntry=()=>{},showMeaningAccepted=()=>{},showPracticeFeedback=()=>{},showWritingFeedback=()=>{},setContextBusy=()=>{},showContextFeedback=()=>{},setSpeechState=()=>{},setSpeechError=()=>false,setLearningStatus=()=>{},setRecordingState=()=>{},cleanup=()=>{};
     function dismissFrame(){dismissPlayer();dismissPlayer=()=>{};disconnectAnimation();disconnectAnimation=()=>{};if(!frame)return;frame.remove();frame=null;for(const child of shell.children){child.inert=false;child.removeAttribute('aria-hidden');}(body?.querySelector('.dictionary-completion button')||frameTrigger)?.focus({preventScroll:true});frameTrigger=null;}
     function clear(){dismissPlayer();dismissPlayer=()=>{};disconnectAnimation();disconnectAnimation=()=>{};tutorEntryButtons=[];attemptHelp=null;savePracticeDraft();savePracticeDraft=()=>{};practiceKey=null;if(tutor&&tutorKey)tutorDrafts.set(tutorKey,tutor.snapshot());tutorKey=null;dailyProgress=null;showMeaningAccepted=()=>{};showPracticeFeedback=()=>{};setRecordingState=()=>{};completionHost=null;setLearningStatus=()=>{};setSpeechState=()=>{};setSpeechError=()=>false;showContextFeedback=()=>{};setContextBusy=()=>{};showWritingFeedback=()=>{};revealEntry=()=>{};tutor=null;writing?.dispose();writing=null;frame?.remove();frame=null;cleanup();cleanup=()=>{};revealFocusedInput=()=>{};}
-    function base(title,headExtra=null){
+    function base(title,headExtra=null,onDismiss=cb.close){
         clear();shell=el('section','modal dictionary-shell');shell.lang='zh-CN';shell.setAttribute('role','dialog');shell.setAttribute('aria-modal','true');shell.setAttribute('aria-label','语言字典');shell.tabIndex=-1;
-        const head=el('header','modal-header');head.append(el('h2','',title));if(headExtra)head.append(headExtra);head.append(createCloseButton(cb.close,'关闭字典'));
+        const head=el('header','modal-header');head.append(el('h2','',title));if(headExtra)head.append(headExtra);head.append(createCloseButton(onDismiss,'关闭字典'));
         notice=el('p','dictionary-notice');notice.setAttribute('role','status');notice.setAttribute('aria-live','polite');
         body=el('div','modal-body dictionary-body');shell.append(head,notice,body);root.replaceChildren(shell);shell.focus();
         let resizeFrame=0;const currentBody=body;
@@ -42,23 +42,20 @@ export function createDictionaryView(root,cb){
         revealFocusedInput=keepInputVisible;
         window.addEventListener('resize',keepInputVisible);window.visualViewport?.addEventListener('resize',keepInputVisible);
         cleanup=()=>{cancelAnimationFrame(resizeFrame);window.removeEventListener('resize',keepInputVisible);window.visualViewport?.removeEventListener('resize',keepInputVisible);};
-        shell.addEventListener('keydown',e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==='Escape'){e.stopPropagation();if(frame)dismissFrame();else cb.close();}if(e.key==='Tab'){const nodes=[...(frame||shell).querySelectorAll('button,input,textarea,select,iframe,summary,a[href],[tabindex]')].filter(n=>{if(n.disabled||n.tabIndex<0||n.closest('[inert]')||!n.getClientRects().length)return false;for(let ancestor=n.parentElement;ancestor;ancestor=ancestor.parentElement){if(ancestor.tagName==='DETAILS'&&!ancestor.open&&!ancestor.querySelector(':scope > summary')?.contains(n))return false;}return true;});const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&(document.activeElement===first||document.activeElement===shell)){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}});
+        shell.addEventListener('keydown',e=>{if(e.isComposing||e.keyCode===229)return;if(e.key==='Escape'){e.stopPropagation();if(frame)dismissFrame();else onDismiss();}if(e.key==='Tab'){const nodes=[...(frame||shell).querySelectorAll('button,input,textarea,select,iframe,summary,a[href],[tabindex]')].filter(n=>{if(n.disabled||n.tabIndex<0||n.closest('[inert]')||!n.getClientRects().length)return false;for(let ancestor=n.parentElement;ancestor;ancestor=ancestor.parentElement){if(ancestor.tagName==='DETAILS'&&!ancestor.open&&!ancestor.querySelector(':scope > summary')?.contains(n))return false;}return true;});const first=nodes[0],last=nodes.at(-1);if(e.shiftKey&&(document.activeElement===first||document.activeElement===shell)){e.preventDefault();last?.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first?.focus();}}});
     }
     function message(text){if(notice)notice.textContent=text;}
     function choices(container,items,answer){const group=el('div','dictionary-choices');for(const text of items)group.append(button(text,()=>answer(text)));container.append(group);}
-    function home({data,row,rewards,bonuses={},rewardStatus,warning,now}){
+    function home({assets,battleCards=[],data,row,warning,now}){
         const saved=browsing.get(data.language)||{query:'',filter:'all',scroll:0,anchor:null};browsing.set(data.language,saved);
         const startTask=kind=>{saved.scroll=0;saved.anchor=null;cb.task(kind);};
-        const tabs=el('nav','gui-tabs dictionary-lang-tabs');for(const [id,name] of [['zh','中文 · 汉字'],['en','英文 · Word']]){const b=button(name,()=>{saved.scroll=body.scrollTop;saved.anchor=null;cb.language(id);});b.setAttribute('aria-pressed',String(id===data.language));tabs.append(b);}
+        let battleOnly=false;
+        const tabs=el('nav','gui-tabs dictionary-lang-tabs');
+        const battleTab=button('战斗文字卡',()=>{battleOnly=true;list();body.scrollTop=0;for(const tab of tabs.children)tab.setAttribute('aria-pressed',String(tab===battleTab));});battleTab.setAttribute('aria-pressed','false');tabs.append(battleTab);
+        for(const [id,name] of [['zh','中文 · 汉字'],['en','英文 · Word']]){const b=button(name,()=>{saved.scroll=battleOnly?0:body.scrollTop;saved.anchor=null;cb.language(id);});b.setAttribute('aria-pressed',String(id===data.language));tabs.append(b);}
         base('字典',tabs);
         const hero=el('section','dictionary-hero'),p=row.plan,progress=dictionaryDailyProgress(p),nextKind=progress.next;
-        hero.append(el('h3','sr-only',data.title),el('p','dictionary-daily-progress',`今日进度 ${progress.completed} / ${progress.total}`),el('p','dictionary-rewards',rewards.split('\n')[0]));
-        const earned=Object.entries(bonuses).filter(([,value])=>value>0).map(([key,value])=>`${DAILY_BUFF_NAMES[key]} +${value}%`).join(' · ');
-        if(earned)hero.append(el('p','dictionary-bonuses',earned));
-        if(rewardStatus){const next=rewardStatus.rewards.find(r=>!r.claimed),ready=rewardStatus.rewards.filter(r=>r.ready).length;
-            hero.append(el('p','dictionary-reward-progress',next?(next.ready?`阶段奖励 ${next.target} / ${next.target} · 已解锁`:`阶段奖励 ${rewardStatus.count} / ${next.target} · 还差 ${Math.max(0,next.target-rewardStatus.count)} 层加成`):'今日阶段奖励已全部领取'));
-            if(ready)hero.append(button(`有 ${ready} 份阶段奖励待领取`,cb.rewards,'secondary dictionary-ready-rewards'));
-        }
+        hero.append(el('h3','sr-only',data.title),el('p','dictionary-daily-progress',`今日进度 ${progress.completed} / ${progress.total}`));
         if(nextKind)hero.append(button(p.completed.length||p.contextDone?'继续今日学习':'开始今日学习',()=>startTask(nextKind),'primary dictionary-start'));
         else hero.append(el('p','dictionary-done','今天的学习完成了。去冒险吧，也可以再翻翻喜欢的字词。'));
         body.append(hero);
@@ -66,15 +63,26 @@ export function createDictionaryView(root,cb){
         for(const [kind,title,ids] of [['review','温故知新',p.review],['fresh','认识新朋友',p.fresh],['context','今天会用了',[p.target]]]){
             const done=kind==='context'?Number(p.contextDone):ids.filter(id=>p.completed.includes(id)).length,card=el('article','dictionary-task');
             card.append(el('h3','',title),el('strong','',`${done} / ${ids.length}`));
-            const go=button(ids.length?(done===ids.length?'今日已完成':'开始学习'):(kind==='review'?'暂无需复习':'已学完'),()=>startTask(kind),'primary');go.disabled=!ids.length||done===ids.length;card.append(go);tasks.append(card);
+            const go=button(ids.length?(done===ids.length?'今日已完成':'开始学习'):(kind==='review'?'暂无需复习':'已学完'),()=>startTask(kind),'dictionary-task-action');go.disabled=!ids.length||done===ids.length;card.append(go);tasks.append(card);
         }
         const more=el('details','dictionary-more');more.append(el('summary','','学习奖励'),button('查看语言加成与阶段奖励',cb.rewards));
         tasks.append(more);body.append(tasks);
+        const battleShelf=el('section','dictionary-battle-shelf');
+        battleShelf.append(el('h3','',`可进入战斗的文字卡 ${battleCards.length} / 10`),el('p','','中英合并的最近练习，最多 10 张。点击卡牌可继续练习。'));
+        const cards=el('div','dictionary-battle-cards');
+        for(const row of battleCards){
+            const card=assets?.dataset.cards[row.baseCardKey];if(!card)continue;
+            const base=assets.effects.cards[card.key]?.base,face=createCardFace({el:(tag,cls,...children)=>{const n=el(tag,cls);n.append(...children);return n;},name:row.title,cost:card.pipcost,cooldown:card.params.cooldown??0,description:row.description,
+                draw:c=>assets.skillArt.drawCard(c,card,{name:row.title,description:row.description,cooldown:card.params.cooldown??0,wordCard:true}),retry:base?()=>assets.skillArt.ensure(base):undefined});
+            const item=button('',()=>cb.wordEntry(row),'dictionary-battle-card');item.setAttribute('aria-label',`练习文字卡：${row.title}`);item.append(face);cards.append(item);
+        }
+        battleShelf.append(cards);if(!battleCards.length)battleShelf.append(el('p','dictionary-battle-empty','练习字词后，文字卡会出现在这里；不足 10 张时不会补入陌生字词。'));
+        body.prepend(battleShelf);
         const search=el('input');search.type='search';search.enterKeyHint='search';search.placeholder=data.language==='zh'?'搜索汉字、拼音（如 shui）或词义':'搜索单词、中文词义或例句';search.setAttribute('aria-label','搜索字典');search.value=saved.query;
         const filters=el('nav','gui-tabs dictionary-filter-tabs'),grid=el('div','dictionary-grid'),results=el('p','dictionary-search-status');results.setAttribute('role','status');const clearSearch=()=>{search.value='';saved.query='';saved.anchor=null;list();search.focus();};const reset=button('清除搜索',clearSearch);let filter=saved.filter,suggestedMatches=false;
         const expandSearch=button('在全部条目中查看',()=>{filter='all';saved.filter='all';saved.anchor=null;for(const n of filters.children)n.setAttribute('aria-pressed',String(n===filters.firstElementChild));list();search.focus();});
-        function list(){grid.replaceChildren();const q=search.value.trim(),searchChanged=hero.hidden!==!!q;for(const section of [hero,tasks,more])section.hidden=!!q;if(searchChanged)revealFocusedInput();let rows=searchDictionary(data,q);const suggested=q&&!rows.length;suggestedMatches=!!suggested;if(suggested)rows=suggestDictionaryWords(data,q);const unfilteredCount=rows.length;if(filter==='due')rows=rows.filter(e=>dictionaryEntryStatus(row.entries[e.id],now).due);if(filter==='animation')rows=rows.filter(e=>e.animation);if(filter==='recent')rows=rows.filter(e=>row.entries[e.id]?.views>0).sort((a,b)=>row.entries[b.id].lastViewedAt-row.entries[a.id].lastViewedAt);
-            const filteredEmpty=!!q&&!rows.length&&unfilteredCount>0&&filter!=='all';expandSearch.hidden=!filteredEmpty;
+        function list(){grid.replaceChildren();const q=search.value.trim(),searchChanged=hero.hidden!==!!q;for(const section of [hero,tasks,more])section.hidden=battleOnly||!!q;battleShelf.hidden=!battleOnly;for(const section of [toolbar,results,grid])section.hidden=battleOnly;if(searchChanged&&!battleOnly)revealFocusedInput();let rows=searchDictionary(data,q);const suggested=q&&!rows.length;suggestedMatches=!!suggested;if(suggested)rows=suggestDictionaryWords(data,q);const unfilteredCount=rows.length;if(filter==='due')rows=rows.filter(e=>dictionaryEntryStatus(row.entries[e.id],now).due);if(filter==='animation')rows=rows.filter(e=>e.animation);if(filter==='recent')rows=rows.filter(e=>row.entries[e.id]?.views>0).sort((a,b)=>row.entries[b.id].lastViewedAt-row.entries[a.id].lastViewedAt);
+            const filteredEmpty=!!q&&!rows.length&&unfilteredCount>0&&filter!=='all';expandSearch.hidden=battleOnly||!filteredEmpty;
             results.textContent=filteredEmpty?`当前筛选下没有结果；全部条目中有 ${unfilteredCount} 个${suggested?'相近词':'匹配'}。`:suggested&&rows.length?'没有精确匹配。你想找的是不是：':q?`找到 ${rows.length} 个条目`:'';reset.hidden=!q;
             for(const e of rows){
                 const entryRow=row.entries[e.id],status=dictionaryEntryStatus(entryRow,now),practiced=!!entryRow?.learned,mastery=practiced?Math.min(3,Math.max(1,(entryRow.stage||0)+1,entryRow.reviews||1)):0;
@@ -98,11 +106,10 @@ export function createDictionaryView(root,cb){
         body.append(toolbar,results,expandSearch,grid);list();message(warning||'');body.scrollTop=saved.scroll;if(saved.anchor){const target=[...grid.children].find(n=>n.dataset.entryId===saved.anchor);target?.focus({preventScroll:true});}
     }
     function entry({data,speechRate=1,entry:e,tutorHistory=[],tutorMode,review,phase,mode,options,warning,views,progress,learning}){
-        base(data.language==='zh'?'汉字 · '+e.text:mode==='spell'?'Word · 回忆拼写':'Word · '+e.text);practiceKey=data.language+':'+e.id+':'+mode;const practiceDraft=practiceDrafts.get(practiceKey);
-        const topbar=el('div','dictionary-entry-bar');topbar.append(button(!progress&&browsing.get(data.language)?.anchor?'返回搜索结果':'返回今日任务',cb.home));
-        if(progress)topbar.append(el('p','dictionary-daily-progress',`今日已完成 ${progress.completed} / ${progress.total} · 还剩 ${progress.remaining} 项`));
-        const learningNote=el('p','dictionary-learning-status');learningNote.setAttribute('role','status');topbar.append(learningNote);setLearningStatus=value=>{learningNote.textContent=value?(['未练习','待初次练习'].includes(value.label)?value.label:value.label+' · '+value.detail):'';learningNote.title=value?.detail||'';};setLearningStatus(learning);
-        body.append(topbar);
+        const learningNote=el('p','dictionary-learning-status');learningNote.setAttribute('role','status');
+        base(data.language==='zh'?'汉字 · '+e.text:mode==='spell'?'Word · 回忆拼写':'Word · '+e.text,learningNote,cb.home);practiceKey=data.language+':'+e.id+':'+mode;const practiceDraft=practiceDrafts.get(practiceKey);
+        if(progress)body.append(el('p','dictionary-daily-progress',`今日已完成 ${progress.completed} / ${progress.total} · 还剩 ${progress.remaining} 项`));
+        setLearningStatus=value=>{learningNote.textContent=value?(['未练习','待初次练习'].includes(value.label)?value.label:value.label+' · '+value.detail):'';learningNote.title=value?.detail||'';};setLearningStatus(learning);
         if(practiceDraft)body.append(el('small','dictionary-draft-note','已恢复本次打开字典时的练习草稿，尚未提交。'));
         const layout=el('div','dictionary-entry'),copy=el('section',`dictionary-page dictionary-card-showcase ${data.language==='zh'?'is-zh':'is-en'}`),practice=el('section','dictionary-page dictionary-practice-panel');completionHost=practice;
         const exampleEl=el('p','dictionary-example',e.example);
@@ -145,7 +152,6 @@ export function createDictionaryView(root,cb){
             const translate=(text,loc)=>loc&&loc!=='zh-CN'?(textFor(text,loc)!==text?textFor(text,loc):loc===uiLocale?tr(text):text):text;
             disconnectAnimation=connectHanziAnimation(iframe,{entryId:e.id,sessionId:`dictionary:${++animationSerial}`,locale:uiLocale,subtitleLocale:subLocale,translate,onWritten:()=>{note.textContent='笔顺完成了。';cb.animationWrite?.();},onComplete:()=>{}});
             iframe.onload=()=>{note.textContent='动画是艺术联想。关闭后可继续练习。';};iframe.onerror=()=>{note.textContent='动画暂不可用，关闭后仍可继续练习。';};holder.append(note);shell.append(holder);frame=holder;for(const child of shell.children)if(child!==holder){child.inert=true;child.setAttribute('aria-hidden','true');}dismissPlayer=showHanziAnimation(iframe,{close:dismissFrame});
-            const backBtn=button('返回字页，继续练习',dismissFrame,'primary');backBtn.style.cssText='position:absolute;left:50%;transform:translateX(-50%);bottom:max(12px,env(safe-area-inset-bottom));z-index:1;';iframe.parentElement?.append(backBtn);
         }));
         practice.append(el('h3','',phase==='learn'?'先认识，再试一试':mode==='write'?'按笔顺写一写':mode==='spell'?'回忆拼写':'选出它的意思'));
         const practiceFeedback=el('p','dictionary-practice-feedback');practiceFeedback.setAttribute('role','status');practiceFeedback.setAttribute('aria-live','polite');attemptHelp=button('请小老师讲讲',()=>{cb.explainAttempt();tutor?.returnAvailable(true);tutor?.open();});attemptHelp.hidden=true;practice.append(practiceFeedback,attemptHelp);showPracticeFeedback=text=>{practiceFeedback.textContent=text;attemptHelp.hidden=!text;if(!text)tutor?.returnAvailable(false);};
@@ -194,7 +200,7 @@ export function createDictionaryView(root,cb){
         layout.append(copy,practice);body.append(layout);tutorKey=data.language+':'+e.id;tutor=createDictionaryTutor(practice,cb.tutor,cb.tutorFallback,{...tutorDrafts.get(tutorKey),...(phase==='recall'&&tutorHistory.length?{open:false}:{}),history:tutorHistory,mode:tutorMode,language:data.language,speechRate,onSpeechRate:value=>{speed.value=String(value);cb.speechRate(value);},onSpeak:cb.tutorSpeak,onStop:cb.stopSpeech,onRetry:cb.tutorRetry,onReturn:()=>{const target=practice.querySelector('.dictionary-spelling input:not(:disabled),.dictionary-choices button:not(:disabled)');if(target){target.scrollIntoView({block:'center'});target.focus({preventScroll:true});}}});message(warning||'');
     }
     function context({entry:e,question,options,online,warning,draft='',progress}){
-        base('今天会用了');if(progress)body.append(el('p','dictionary-daily-progress',`今日已完成 ${progress.completed} / ${progress.total} · 还剩 ${progress.remaining} 项`));body.append(button('返回今日任务',cb.home),el('p','dictionary-context',question),el('p','','目标字词：'+e.text+' · '+e.meaning));
+        base('今天会用了',null,cb.home);if(progress)body.append(el('p','dictionary-daily-progress',`今日已完成 ${progress.completed} / ${progress.total} · 还剩 ${progress.remaining} 项`));body.append(el('p','dictionary-context',question),el('p','','目标字词：'+e.text+' · '+e.meaning));
         const feedback=el('p','dictionary-context-feedback');feedback.setAttribute('role','status');feedback.setAttribute('aria-live','polite');body.append(feedback);let feedbackText='';showContextFeedback=text=>{feedbackText=text||'';feedback.textContent=feedbackText?'小老师：'+feedbackText:'';};
         if(online){const answer=el('textarea');answer.maxLength=500;answer.rows=3;answer.placeholder='写下你的回答';answer.setAttribute('aria-label','情境题回答');answer.value=draft;const edited=()=>{if(feedbackText){feedback.textContent='上次回答的建议：'+feedbackText;revealFocusedInput();}cb.contextDraft(answer.value);};answer.oninput=edited;
             let recording='idle',judging=false,completed=false;

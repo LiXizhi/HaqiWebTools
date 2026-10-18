@@ -130,7 +130,7 @@ export function createEarthSurfacePainter({rules,sample,loadArt,scheduler=null,c
         perf.record('earth-surface-slice',clock()-started);
         if(!workerBusy&&(active||pending.length))requestPump();
     }
-    function draw(ctx,target,rect){
+    function draw(ctx,target,rect,{visibleOnly=false}={}){
         if(disposed)return;if(lastTarget!==target){lastTarget=target;currentRoads=target.paths||[];currentObjects=[];clearTiles();}
         else if(target.paths&&currentRoads!==target.paths){
             const old=new Set(currentRoads),next=new Set(target.paths);
@@ -142,11 +142,11 @@ export function createEarthSurfacePainter({rules,sample,loadArt,scheduler=null,c
         // Low-detail minimaps never enqueue thousands of detailed chunks.
         const west=Math.floor(rect.x/size),east=Math.floor((rect.x+rect.w)/size),north=Math.floor(rect.y/size),south=Math.floor((rect.y+rect.h)/size);
         if((east-west+1)*(south-north+1)>rules.surfaceMaxChunks){visibleTiles=[];visibleKeys.clear();scheduleKey=null;pending=[];active=null;return;}
-        const key=`${west}:${east}:${north}:${south}`;
+        const key=`${west}:${east}:${north}:${south}:${visibleOnly}`;
         if(scheduleKey!==key){
             scheduleKey=key;
             queueDirty=true;
-            const candidates=[],ring=rules.surfacePrefetchRing??1;
+            const candidates=[],ring=visibleOnly?0:(rules.surfacePrefetchRing??1);
             for(let cy=north-ring;cy<=south+ring;cy++)for(let cx=west-ring;cx<=east+ring;cx++){
                 const visible=cx>=west&&cx<=east&&cy>=north&&cy<=south;
                 candidates.push({cx,cy,visible,d:Math.hypot(cx-(west+east)/2,cy-(north+south)/2)});
@@ -159,9 +159,16 @@ export function createEarthSurfacePainter({rules,sample,loadArt,scheduler=null,c
             // frames read cached bitmaps without rewriting the LRU map.
             for(const row of scheduledTiles){const tile=tiles.get(row.key);if(tile){tiles.delete(row.key);tiles.set(row.key,tile);}}
         }
-        for(const row of visibleTiles){const tile=tiles.get(row.key);if(tile)ctx.drawImage(tile.canvas,row.x-gutter,row.y-gutter,size+gutter*2,size+gutter*2);}
+        if(ctx)for(const row of visibleTiles){const tile=tiles.get(row.key);if(tile)ctx.drawImage(tile.canvas,row.x-gutter,row.y-gutter,size+gutter*2,size+gutter*2);}
         if(queueDirty){pending=scheduledTiles.filter(row=>row.key!==active?.key&&(!tiles.has(row.key)||tiles.get(row.key).stale)).map(row=>[row.key,row.x,row.y]);queueDirty=false;queueBuilds++;}
         if(!frame&&!workerBusy&&(active||pending.length))requestPump();
+    }
+    function prepareView(target,rect,options){
+        draw(null,target,rect,options);
+        // Empty/oversized viewports and pending art must never release entry.
+        const total=Math.max(1,visibleTiles.length);
+        const ready=art?visibleTiles.filter(row=>{const tile=tiles.get(row.key);return tile&&!tile.stale;}).length:0;
+        return {total,ready};
     }
     function covers(target,rect){
         if(target!==lastTarget)return false;
@@ -184,5 +191,5 @@ export function createEarthSurfacePainter({rules,sample,loadArt,scheduler=null,c
         ctx.save();ctx.beginPath();for(const key of missing){const [x,y]=key.split(':').map(Number);ctx.rect(x*size,y*size,size,size);}ctx.clip();
         const drawn=drawEarthSurfaceObject(ctx,o,art);ctx.restore();return drawn;
     }
-    return {warmup,draw,covers,decoration,isBaked,invalidate,prepare,adopt,dispose(){disposed=true;warmingWorker?.terminate();warmingWorker=null;worker?.terminate();worker=null;workerBusy=null;if(frame&&!scheduler)cancelAnimationFrame(frame);frame=0;clearTiles();objectBuckets.clear();currentObjects=[];visibleTiles=[];art=null;},get stats(){return {visibleTotal:visibleTiles.length,visibleReady:visibleTiles.filter(row=>{const tile=tiles.get(row.key);return tile&&!tile.stale;}).length,artLoading:!!loading,artError:!art&&!loading&&retryAt>0,worker:!!worker,resolution,chunks:tiles.size,queued:pending.length,active:!!active,bytes:tiles.size*padded*padded*4,artReady:!!art,built,queueBuilds,maxSliceMs:Math.round((scheduler?.stats.maxSliceMs??maxSliceMs)*10)/10};}};
+    return {warmup,draw,prepareView,covers,decoration,isBaked,invalidate,prepare,adopt,dispose(){disposed=true;warmingWorker?.terminate();warmingWorker=null;worker?.terminate();worker=null;workerBusy=null;if(frame&&!scheduler)cancelAnimationFrame(frame);frame=0;clearTiles();objectBuckets.clear();currentObjects=[];visibleTiles=[];art=null;},get stats(){return {visibleTotal:visibleTiles.length,visibleReady:visibleTiles.filter(row=>{const tile=tiles.get(row.key);return tile&&!tile.stale;}).length,artLoading:!!loading,artError:!art&&!loading&&retryAt>0,worker:!!worker,resolution,chunks:tiles.size,queued:pending.length,active:!!active,bytes:tiles.size*padded*padded*4,artReady:!!art,built,queueBuilds,maxSliceMs:Math.round((scheduler?.stats.maxSliceMs??maxSliceMs)*10)/10};}};
 }

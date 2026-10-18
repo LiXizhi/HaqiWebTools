@@ -1,4 +1,6 @@
 import {emptyDictionary} from './dictionary_core.js';
+import {learnedWords,updateLearningReport} from './learning_report_core.js';
+function report(key,state){if(typeof globalThis.dispatchEvent==='function'&&typeof CustomEvent==='function')globalThis.dispatchEvent(new CustomEvent('haqi:learning-progress',{detail:{key,state:structuredClone(state),persisted:true}}));}
 // One read-modify-write transaction per account/role. Cross-tab serialization is
 // provided by IndexedDB, including the reward receipt and its buff snapshot.
 export function createDictionaryStore({indexedDB=globalThis.indexedDB,name='haqi-dictionary-v1'}={}){
@@ -15,17 +17,17 @@ export function createDictionaryStore({indexedDB=globalThis.indexedDB,name='haqi
     return {async read(key){
         const db=await open();
         const state=await new Promise((resolve,reject)=>{const tx=db.transaction('learners','readonly'),r=tx.objectStore('learners').get(key);r.onsuccess=()=>resolve(r.result||emptyDictionary());r.onerror=()=>reject(r.error);});
-        memory.set(key,structuredClone(state));return state;
+        memory.set(key,structuredClone(state));report(key,state);return state;
     },async update(key,reduce){
         let result,state;
         try{
             const db=await open();
             await new Promise((resolve,reject)=>{
                 const tx=db.transaction('learners','readwrite'),store=tx.objectStore('learners'),request=store.get(key);
-                request.onsuccess=()=>{try{state=request.result||emptyDictionary();result=reduce(state);store.put(state,key);}catch(e){tx.abort();reject(e);}};
+                request.onsuccess=()=>{try{state=request.result||emptyDictionary();const before=learnedWords(state);result=reduce(state);updateLearningReport(before,state);store.put(state,key);}catch(e){tx.abort();reject(e);}};
                 tx.oncomplete=resolve;tx.onerror=tx.onabort=()=>reject(tx.error||Error('字典进度保存失败'));
             });
-            memory.set(key,structuredClone(state));return {state,result,persisted:true};
+            memory.set(key,structuredClone(state));report(key,state);return {state,result,persisted:true};
         }catch(error){
             state=structuredClone(memory.get(key)||emptyDictionary());result=reduce(state);memory.set(key,state);
             return {state,result,persisted:false,error};

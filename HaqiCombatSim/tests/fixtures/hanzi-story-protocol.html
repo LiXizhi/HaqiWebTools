@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>汉字动画协议隔离验收</title><style>html,body,iframe{margin:0;width:100%;height:100%;border:0;display:block;overflow:hidden}</style><iframe id="story" title="汉字故事"></iframe><script type="module">
+import {connectHanziAnimation} from '../../js/hanzi_animation_bridge.js';
+import {parseLocaleFile} from '../../js/locale_core.js';
+const q=new URLSearchParams(location.search),locale=q.get('locale')||'en',subtitleLocale=q.get('subtitle')||locale;
+const frame=document.querySelector('iframe'),events=[];window.storyEvents=events;
+const tables={};for(const l of ['en','ja','ko'])tables[l]=parseLocaleFile(await(await fetch(`../../data/adventure/locale/${l}.txt`)).text());
+frame.src=`../../hanzi/hanzi_${q.get('id')||'ri'}.html`;
+const connect=()=>connectHanziAnimation(frame,{entryId:'story-test',sessionId:'isolated-session',locale,subtitleLocale,translate:(text,language)=>tables[language]?.[text]||text,onWritten:()=>events.push('written'),onComplete:()=>events.push('completed')});
+if(!q.has('late'))connect();window.connectStory=connect;
+addEventListener('message',e=>{if(e.source===frame.contentWindow&&e.data?.channel==='haqi-hanzi')events.push({type:e.data.type,entryId:e.data.entryId,sessionId:e.data.sessionId});});
+</script></html>

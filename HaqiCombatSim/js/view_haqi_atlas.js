@@ -32,7 +32,8 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
     }
     function setCamera(next){camera=next;limit();draw();}
     function showAll(){if(!art)return;selected=null;card.hidden=true;setCamera(atlasOverviewCamera(islands,portals,width,height,save.zone));}
-    function locateCurrent(){const island=islands.find(i=>i.id===save.zone);if(!island){showAll();return;}selected=null;card.hidden=true;const next=fitAtlas({x:island.x-island.w/2,y:island.y-island.h/2,w:island.w,h:island.h},width,height,width<600?32:64);next.scale=Math.min(next.scale,768/island.w);setCamera(next);}
+    function focusIslandId(){return [save.zone,world.isDungeon?save.dungeonReturn?.zone:save.earthReturn?.zone,'camp'].find(id=>islands.some(i=>i.id===id));}
+    function locateCurrent(){const island=islands.find(i=>i.id===focusIslandId())||islands.find(i=>i.id==='camp')||islands[0];if(!island)return;selected=null;card.hidden=true;const next=fitAtlas({x:island.x-island.w/2,y:island.y-island.h/2,w:island.w,h:island.h},width,height,width<600?32:64);next.scale=Math.min(next.scale,768/island.w);setCamera(next);}
     function zoom(factor,anchor={x:width/2,y:height/2}){if(!camera)return;const {min,max}=scaleLimits();setCamera(zoomAtlas(camera,factor,anchor,width,height,min,max));}
     controls.append(button('+',()=>zoom(1.4),'earth-map-zoom-button'),button('−',()=>zoom(1/1.4),'earth-map-zoom-button'));
     controls.children[0].setAttribute('aria-label',tr('放大'));controls.children[1].setAttribute('aria-label',tr('缩小'));
@@ -155,7 +156,7 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
         const rect=canvas.getBoundingClientRect(),oldWidth=width,oldHeight=height;width=Math.max(1,rect.width||900);height=Math.max(1,rect.height||600);
         dpr=Math.min(2,globalThis.devicePixelRatio||1);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);context.setTransform(dpr,0,0,dpr,0,0);scene=null;gestureRect=null;
         if(camera&&oldWidth&&oldHeight)camera.scale*=Math.min(width/oldWidth,height/oldHeight);
-        if(art&&!initialized){initialized=true;if(focusPortal)setCamera(fitAtlas(bounds,width,height));else if((initial==='local'||(!world.isEarth&&!world.isDungeon))&&islands.some(i=>i.id===save.zone))locateCurrent();else showAll();}
+        if(art&&!initialized){initialized=true;locateCurrent();}
         if(camera){const {min,max}=scaleLimits();camera.scale=Math.max(min,Math.min(max,camera.scale));limit();}draw();
     }
     const observer=typeof ResizeObserver==='function'?new ResizeObserver(resize):null;observer?.observe(canvas);
@@ -165,7 +166,7 @@ export function renderHaqiAtlas(root,world,{save,assets,socialActors=[],mapArt,f
         decorations=atlasSeaDecorations(islands,portals,data.seaDecor);
         if(!islands.length)throw Error('Missing atlas islands');
         for(const island of islands){
-            const node=button(island.name,()=>choose(island),'haqi-atlas-island');node.classList.toggle('current',island.id===save.zone);if(island.id===save.zone)node.setAttribute('aria-current','location');labels.append(node);labelNodes.set(island.id,node);
+            const node=button(island.name,()=>choose(island),'haqi-atlas-island');node.classList.toggle('current',island.id===focusIslandId());if(island.id===save.zone)node.setAttribute('aria-current','location');labels.append(node);labelNodes.set(island.id,node);
             const tags=[];localLabels.set(island.id,tags);const layout=assets.content.worldMaps?.[island.id];for(const mark of layout?.landmarks||[]){const tag=button(mark.name,()=>choose(island,{x:mark.x,y:mark.y},mark.name),'island-map-label haqi-atlas-landmark');tag.hidden=true;labels.append(tag);labelNodes.set(`${island.id}:${mark.id}`,tag);tags.push(tag);}
         }
         for(const portal of portals){const node=button('',()=>{if(!disposed)cb.portal?.(portal,'earth');},'map-vortex');node.setAttribute('aria-label',tr('神秘漩涡，查看现实世界地图'));node.title=tr('神秘漩涡，查看现实世界地图');labels.append(node);portalNodes.set(portal.id,node);}

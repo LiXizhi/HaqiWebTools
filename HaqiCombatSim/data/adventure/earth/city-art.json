@@ -19,105 +19,106 @@
     },
     "frames": [
       [
-        0,
-        0,
-        192,
-        192
+        29,
+        11,
+        130,
+        193
       ],
       [
-        192,
-        0,
-        192,
-        192
+        223,
+        13,
+        135,
+        191
       ],
       [
-        384,
-        0,
-        192,
-        192
+        407,
+        28,
+        145,
+        176
       ],
       [
-        576,
-        0,
-        192,
-        192
+        599,
+        30,
+        149,
+        174
       ],
       [
-        0,
-        192,
-        192,
-        192
+        18,
+        225,
+        167,
+        177
       ],
       [
-        192,
-        192,
-        192,
-        192
+        198,
+        230,
+        179,
+        174
       ],
       [
-        384,
-        192,
-        192,
-        192
+        392,
+        229,
+        180,
+        174
       ],
       [
-        576,
-        192,
-        192,
-        192
+        580,
+        221,
+        178,
+        182
       ],
       [
-        0,
-        384,
-        192,
-        192
+        17,
+        423,
+        178,
+        151
       ],
       [
-        192,
-        384,
-        192,
-        192
+        204,
+        421,
+        181,
+        155
       ],
       [
-        384,
-        384,
-        192,
-        192
+        391,
+        406,
+        176,
+        174
       ],
       [
-        576,
-        384,
-        192,
-        192
+        587,
+        411,
+        169,
+        163
       ],
       [
-        0,
-        576,
-        192,
-        192
+        14,
+        586,
+        178,
+        150
       ],
       [
-        192,
-        576,
-        192,
-        192
+        203,
+        588,
+        172,
+        152
       ],
       [
-        384,
-        576,
-        192,
-        192
+        388,
+        584,
+        184,
+        152
       ],
       [
-        576,
-        576,
-        192,
-        192
+        583,
+        598,
+        176,
+        153
       ]
     ],
     "previousSha256": "f2000a5f78ec81dc93450a3e2f0b670c92ad28958e584f078c978fe4e30d73d2",
     "previousSourceSha256": "2b1cc716c6298d731f19f48a1c6c060be0f1b374b56ea270d72e75231f7b1816",
-    "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
+    "source": "zhangleio AI-generated natural-v2; original atlas layout retained.",
+    "cropSource": "natural-v2 decoded alpha silhouettes, measured per object with 2px padding; not equal grid cells (2026-10-17)"
   },
   "street": {
     "local": "assets/adventure/earth/earth-street-fffd34acd4c9-natural-v2.webp",
@@ -133,105 +134,106 @@
     },
     "frames": [
       [
-        0,
-        0,
-        160,
-        160
+        41,
+        6,
+        62,
+        147
       ],
       [
-        160,
-        0,
-        160,
-        160
+        171,
+        10,
+        134,
+        139
       ],
       [
-        320,
-        0,
-        160,
-        160
+        329,
+        25,
+        146,
+        131
       ],
       [
-        480,
-        0,
-        160,
-        160
+        496,
+        20,
+        137,
+        135
       ],
       [
-        0,
-        160,
-        160,
-        160
+        6,
+        188,
+        146,
+        118
       ],
       [
-        160,
-        160,
-        160,
-        160
+        163,
+        178,
+        159,
+        135
       ],
       [
-        320,
-        160,
-        160,
-        160
+        326,
+        192,
+        150,
+        117
       ],
       [
-        480,
-        160,
-        160,
-        160
+        483,
+        167,
+        153,
+        152
       ],
       [
-        0,
-        320,
-        160,
-        160
+        13,
+        316,
+        144,
+        156
       ],
       [
-        160,
-        320,
-        160,
-        160
+        164,
+        343,
+        155,
+        123
       ],
       [
-        320,
-        320,
-        160,
-        160
+        322,
+        327,
+        156,
+        153
       ],
       [
-        480,
-        320,
-        160,
-        160
+        483,
+        335,
+        154,
+        136
       ],
       [
-        0,
-        480,
-        160,
-        160
+        10,
+        475,
+        150,
+        147
       ],
       [
-        160,
-        480,
-        160,
-        160
+        168,
+        521,
+        145,
+        98
       ],
       [
-        320,
-        480,
-        160,
-        160
+        324,
+        508,
+        152,
+        104
       ],
       [
-        480,
-        480,
-        160,
-        160
+        484,
+        474,
+        153,
+        155
       ]
     ],
     "previousSha256": "fffd34acd4c932445cf6b4447f77e7ae0fc269e44f4a8ef01afa168e37b382bf",
     "previousSourceSha256": "2f1489cfc1f68eebb9f29c36ee9b9c14949a2cef7304df778ed151c38c1b72a0",
-    "source": "zhangleio AI-generated natural-v2; original atlas layout retained."
+    "source": "zhangleio AI-generated natural-v2; original atlas layout retained.",
+    "cropSource": "natural-v2 decoded alpha silhouettes, measured per object with 2px padding; not equal grid cells (2026-10-17)"
   },
   "transport": {
     "local": "assets/adventure/earth/earth-transport-c6eab573845f-natural-v2.webp",

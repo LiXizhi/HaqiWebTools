@@ -185,7 +185,7 @@ export function createRenderer(canvas,assets) {
     const battleHero=createHeroActor(9271);
     const starFollower=createStarFollower();
     function prepareScene(world,save,{visibleOnly=false,localSecond=null,localSecondFollowing=false,low=false}={}){
-        const w=canvas.clientWidth,h=canvas.clientHeight;if(world.isEarth||world.isCityDungeon||!world.layout)return {total:0,ready:0};if(!w||!h)return {total:1,ready:0};
+        const w=canvas.clientWidth,h=canvas.clientHeight;if(world.isCityDungeon||!world.layout)return {total:0,ready:0};if(!w||!h)return {total:1,ready:0};
         const zoom=cameraZoom.value,scale=(w<650?.82:1)*zoom;
         // Keep terrain raster density tied to the device, not exploration zoom.
         // A zoom gesture changes the viewport in world units; it must reuse the
@@ -197,7 +197,9 @@ export function createRenderer(canvas,assets) {
         const origin=alignCameraOrigin(center.x-w/(2*actualScale),center.y-h/(2*actualScale)+(w<650?50:25)/zoom,actualScale,resolution(low).display);
         // Match the live viewport exactly, including split-player camera framing,
         // so preparation and drawing choose the same tile-size/cache-capacity tier.
-        return terrainTiles.prepare(world,{x:origin.x,y:origin.y,w:w/actualScale,h:h/actualScale},rasterPixelRatio,[],{visibleOnly});
+        const rect={x:origin.x,y:origin.y,w:w/actualScale,h:h/actualScale};
+        if(world.isEarth)return world.prepareSurface(rect,{visibleOnly});
+        return terrainTiles.prepare(world,rect,rasterPixelRatio,[],{visibleOnly});
     }
     function zoomBy(factor) {
         return cameraZoom.zoomBy(factor);
@@ -607,17 +609,6 @@ export function createRenderer(canvas,assets) {
                 }
             }
             ctx.restore();
-        }
-        if(world.isEarth&&!title&&!motionHidden){
-            const status=world.surfaceStats;
-            if(status&&(!status.artReady||status.visibleReady<status.visibleTotal)){
-                const width=Math.min(280,w-32),left=(w-width)/2,top=Math.max(70,h-155);
-                const label=!status.artReady?(status.artError?'地图图片加载失败，正在重试…':'正在加载地面图片…'):'正在绘制附近地面…';
-                ctx.save();ctx.fillStyle='#fff3d6ee';ctx.fillRect(left,top,width,42);ctx.font='13px "Microsoft YaHei", sans-serif';ctx.textAlign='center';ctx.fillStyle='#493a23';
-                ctx.fillText(tr(label)+(status.artReady?` ${status.visibleReady}/${status.visibleTotal}`:''),w/2,top+18);
-                ctx.fillStyle='#cbbf9f';ctx.fillRect(left+10,top+28,width-20,6);ctx.fillStyle='#668847';
-                if(status.artReady&&status.visibleTotal)ctx.fillRect(left+10,top+28,(width-20)*status.visibleReady/status.visibleTotal,6);ctx.restore();
-            }
         }
         if(!title&&!motionHidden&&world.memoryGathering){const n=world.memoryGathering;drawGatheringProgress(ctx,{x:(n.x-cam.x)*cam.scale,y:(n.y-cam.y)*cam.scale},n.progress,'文字记忆');}
         const meter=frameMeter.sample(time,!title&&!motionHidden);

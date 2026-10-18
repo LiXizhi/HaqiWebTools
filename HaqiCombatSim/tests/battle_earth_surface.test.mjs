@@ -400,3 +400,19 @@ test('surface preloads its worker before art arrives and releases it if cancelle
     const painter=createEarthSurfacePainter({rules:earthRules(),sample:()=> 'urban',loadArt:()=>new Promise(()=>{}),workerFactory:()=>{created++;return worker;}});
     painter.warmup();painter.warmup();assert.equal(created,1);assert.equal(painter.stats.artReady,false);painter.dispose();assert.equal(closed,1);
 });
+
+test('entry prepares visible earth tiles without drawing the world or prefetching neighbors',async()=>{
+    const before=[globalThis.requestAnimationFrame,globalThis.cancelAnimationFrame],frames=new Map();let sequence=0,release;
+    globalThis.requestAnimationFrame=fn=>{frames.set(++sequence,fn);return sequence;};globalThis.cancelAnimationFrame=id=>frames.delete(id);
+    const painter=createEarthSurfacePainter({rules:{...earthRules(),surfaceChunkSize:64,surfaceResolution:8,surfaceMaxChunks:16},sample:()=> 'urban',loadArt:()=>new Promise(resolve=>{release=resolve;}),canvasFactory:()=>({getContext:()=>({createImageData:(w,h)=>({data:new Uint8ClampedArray(w*h*4)}),putImageData(){}})}),workerFactory:()=>null,clock:()=>0});
+    const world={},rect={x:1,y:1,w:30,h:30},prepare=()=>painter.prepareView(world,rect,{visibleOnly:true});
+    try{
+        assert.deepEqual(prepare(),{ready:0,total:1});
+        assert.equal(painter.stats.queued,1);
+        release({});await new Promise(setImmediate);
+        for(let i=0;i<10;i++){const jobs=[...frames.values()];frames.clear();jobs.forEach(fn=>fn());}
+        assert.deepEqual(prepare(),{ready:1,total:1});assert.equal(painter.stats.built,1);
+        painter.invalidate();assert.deepEqual(prepare(),{ready:0,total:1});
+        assert.deepEqual(painter.prepareView(world,{x:0,y:0,w:10000,h:10000},{visibleOnly:true}),{ready:0,total:1});
+    }finally{painter.dispose();[globalThis.requestAnimationFrame,globalThis.cancelAnimationFrame]=before;}
+});

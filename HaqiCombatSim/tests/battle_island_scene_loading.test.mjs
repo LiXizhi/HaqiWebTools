@@ -26,6 +26,14 @@ test('a changed viewport is evaluated before release',async()=>{
     f.progress={ready:4,total:6};assert.equal(f.gate.update(f.world,f.save,1),true);
     f.progress={ready:6,total:6};assert.equal(f.gate.update(f.world,f.save,2),false);
 });
+test('earth entry stays blocked until the visible ground has finished baking',async()=>{
+    const f=fixture();f.world.isEarth=true;
+    assert.equal(f.gate.update(f.world,f.save,0),true);await flush();f.requests[0].resolve();await flush();
+    f.progress={ready:4,total:32};assert.equal(f.gate.update(f.world,f.save,1),true);assert.equal(f.ends,0);
+    assert.equal(f.views.at(-1).ready,4);
+    f.progress={ready:32,total:32};assert.equal(f.gate.update(f.world,f.save,2),false);assert.equal(f.ends,1);
+    f.progress={ready:4,total:32};assert.equal(f.gate.update(f.world,f.save,3),false);
+});
 test('timeout keeps movement blocked and retry ignores the old resource response',async()=>{
     const f=fixture();f.gate.update(f.world,f.save,0);await flush();
     assert.equal(f.gate.update(f.world,f.save,101),true);assert.equal(f.views.at(-1).phase,'error');
@@ -43,8 +51,8 @@ test('scene/character changes and cancellation cannot be unlocked by stale work'
     f.gate.cancel();f.requests[1].resolve();await flush();assert.equal(f.gate.active,false);assert.equal(f.ends,0);
     f.gate.update(next,{},3);assert.equal(f.starts,3);
 });
-test('battle, title, earth and city dungeons do not enter the island gate',()=>{
-    const f=fixture();for(const world of [null,{}, {layout:{},isEarth:true},{layout:{},isCityDungeon:true}])assert.equal(f.gate.update(world,f.save,0),false);
+test('battle, title and city dungeons do not enter the island gate',()=>{
+    const f=fixture();for(const world of [null,{}, {layout:{},isCityDungeon:true}])assert.equal(f.gate.update(world,f.save,0),false);
     assert.equal(f.gate.update(f.world,f.save,0,false),false);assert.equal(f.starts,0);
 });
 test('returning from battle to the same warm world does not block again',async()=>{

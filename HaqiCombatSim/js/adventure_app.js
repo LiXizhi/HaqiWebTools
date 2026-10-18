@@ -1,3 +1,4 @@
+import {configureLearningReport} from './learning_report.js';
 import {openWordCardForCast} from './word_card_cast.js';
 import {resolveParams} from './combat_params_core.js';
 import {createWordCardPractice} from './word_card_practice.js';
@@ -134,6 +135,13 @@ const dungeonStory=createDungeonStory({root:nodes.overlay,getState:()=>({save,as
 function openJourney(id,restart=false){journeyId=id;journeyRestart=restart;openPanel('dungeon-journey');}
 function pickDungeonLobby(id,restart=false){const d=dungeonFor(assets.content,id);if(d?.kind){openJourney(id,restart);return;}islandSocial.pickPartyDungeon(id,{restart});}
 let earthPractice=null,earthService=null,earthServiceTask=null,earthView=null,earthViewTicket=0,earthTraveling=false,earthOwner=null;
+let earthLoadingRetry=null,earthLoadingExit=null;
+const earthLoadingView=createIslandSceneLoadingView({retry:()=>earthLoadingRetry?.(),exit:()=>earthLoadingExit?.()});
+function showEarthSceneLoading(state,{retry,exit}={}){
+    if(retry)earthLoadingRetry=retry;
+    if(exit)earthLoadingExit=exit;
+    earthLoadingView.show(state,{assets,save,scope:earthViewTicket,roleId:roleStore?.catalog.activeId});
+}
 async function getEarth(){
     if(!earthServiceTask)earthServiceTask=import('./adventure_earth.js').then(({createEarthService})=>earthService=createEarthService({content:assets.content,getPlayerLevel:()=>save?.level||1,getPlayerPower:()=>gearScoreV2(A.playerSpec(save,assets.content,magicStarCombatLevel(assets.content,{keepworkVip:membership.state.isVip,expiresAt:membership.state.expiresAt,now:Date.now()}))),registerImage:assets.registerImage,releaseImage:assets.releaseImage,prepareAssets:target=>assets.prepareEarthScene(target,save)}));
     return earthServiceTask;
@@ -157,14 +165,16 @@ async function openEarthMap(focus=null){
 async function travelEarth(geo){
     if(save.pendingEncounter||save.coopRun||dungeonFor(assets.content,save.zone)){toast('请先完成战斗或退出副本');return;}
     const current=save,role=roleStore?.catalog.activeId,ticket=earthViewTicket;earthTraveling=true;earthView?.busy('正在准备目的地，关闭地图可取消…');
-    try{const service=await getEarth(),prepared=await service.prepare(geo,{onProgress:progress=>{if(current===save&&ticket===earthViewTicket)earthView?.progress(progress);}});if(current!==save||role!==roleStore?.catalog.activeId||ticket!==earthViewTicket)return;
+    showEarthSceneLoading({phase:'assets'},{retry:()=>void travelEarth(geo),exit:()=>void showTitle()});
+    try{const service=await getEarth();if(current!==save||ticket!==earthViewTicket)return;
+        const prepared=await service.prepare(geo,{onProgress:progress=>{if(current===save&&ticket===earthViewTicket)showEarthSceneLoading({phase:'map',...progress});}});if(current!==save||role!==roleStore?.catalog.activeId||ticket!==earthViewTicket)return;
         if(save.zone!=='earth')save.earthReturn=locationSnapshot(save,assets.content);
         save.zone='earth';save.position=prepared.position;assets.content.earthWorld=prepared.world;earthOwner=current;earthTraveling=false;
         prepared.world.onObjectsChanged=(change={})=>{W.invalidateWorldObjects(prepared.world,change);if(world===prepared.world){void assets.warmNearby?.(world,save);if(!change.wildOnly&&change.socialChanged!==false)void islandSocial.refreshEarth();}};
         await enterWorld(save);if(current!==save)return;
         if(geo.id&&geo.name&&!geo.favorite)void earthPlaces.visit(geo).catch(()=>toast('最近访问城市保存失败'));
         showTeleportEffect();toast('已抵达现实世界。沿陆地探索，或打开地图前往远方。');
-    }catch(e){if(current===save&&ticket===earthViewTicket){earthView?.error(e.message);toast(e.message);}}finally{earthTraveling=false;}
+    }catch(e){if(current===save&&ticket===earthViewTicket){earthView?.error(e.message);showEarthSceneLoading({phase:'error',message:e.message});}}finally{if(ticket===earthViewTicket)earthTraveling=false;}
 }
 async function practiceEarth(npc,learning){
     if(!save.languageLearning.enabled){toast('请先在双语学习中选择目标语言。');return;}
@@ -462,7 +472,7 @@ function persist() {
     const indicator=document.querySelector('.save-indicator');if(indicator){setText(indicator,storageWarning?'存档未保存':'');indicator.hidden=!storageWarning;}
     lastSave=performance.now();
 }
-function close({silent=false}={}) {wordPractice.close();hanziMemory.close();dictionaryTicket++;dictionary?.close();dictionary=null;timeScrollTicket++;timeScrollLoad?.abort();timeScrollLoad=null;timeScroll?.close();timeScroll=null;hanziTicket++;hanziIsland?.close();nodes.overlay.disposeMap?.();atlasView?.dispose();atlasView=null;earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();secondCharacterChat?.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
+function close({silent=false}={}) {earthLoadingView.hide();earthLoadingRetry=null;earthLoadingExit=null;wordPractice.close();hanziMemory.close();dictionaryTicket++;dictionary?.close();dictionary=null;timeScrollTicket++;timeScrollLoad?.abort();timeScrollLoad=null;timeScroll?.close();timeScroll=null;hanziTicket++;hanziIsland?.close();nodes.overlay.disposeMap?.();atlasView?.dispose();atlasView=null;earthPractice?.close();earthViewTicket++;earthView?.dispose();earthView=null;if(earthTraveling){earthService?.cancelPending();earthTraveling=false;}battleIntro.close();dungeonStory.close();if(stage==='world')nodes.hud.hidden=false;if(!silent&&(panel||dialog))spellSound.play('close');characterChat.close();secondCharacterChat?.close();islandSocial.close();fishingLoadEpoch++;languageAdventure.close();fishingApproach=null;talkApproach=null;sceneFishing.stop();nodes.overlay.disposeDialogue?.();panel=null;dialog=null;dialogDone=null;nodes.overlay.replaceChildren();nodes.overlay.className='overlay';resetMovementInput();nodes.world.focus({preventScroll:true});}
 // Streaming/social updates repaint the HUD during held movement; only explicit
 // cancellation (panel transitions, blur, pointer release) may clear that input.
 function paintHud() {V.renderHud(nodes.hud,model(),{panel:openPanel,playerPanel:(owner,kind)=>localPlay.openPanel(owner,kind),playerMountToggle:owner=>localPlay.toggleMount(owner),membership:()=>openPanel('membership'),cloud:()=>void loginRoles(),track,untrack,leaveDungeon:exitDungeon,interact:interactNearest,mountToggle:()=>performAction({type:'mount-visibility',hidden:!save?.mountHidden})});}
@@ -681,12 +691,12 @@ async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
         const service=await getEarth();
         if(earthOwner!==save||!service.world){
             const ticket=++earthViewTicket;panel='earth-restore';nodes.entry.hidden=true;
-            const loadingView=renderEarthLoading(nodes.overlay,{close:()=>void showTitle(),message:'正在恢复这片地球区域，原存档会保留…'});
-            try{const result=await service.prepare(earthGeo(save.position,service.rules),{restore:true,onProgress:progress=>{if(save===newSave&&ticket===earthViewTicket)loadingView.progress(progress);}});if(save!==newSave||ticket!==earthViewTicket)return;
+            showEarthSceneLoading({phase:'assets',message:'正在恢复这片地球区域，原存档会保留…'},{exit:()=>void showTitle(),retry:()=>void enterWorld(newSave,restoredBattle,{announceBeans})});
+            try{const result=await service.prepare(earthGeo(save.position,service.rules),{restore:true,onProgress:progress=>{if(save===newSave&&ticket===earthViewTicket)showEarthSceneLoading({phase:'map',...progress});}});if(save!==newSave||ticket!==earthViewTicket)return;
                 assets.content.earthWorld=result.world;save.position=result.position;earthOwner=save;
                 result.world.onObjectsChanged=(change={})=>{W.invalidateWorldObjects(result.world,change);if(world===result.world){void assets.warmNearby?.(world,save);if(!change.wildOnly&&change.socialChanged!==false)void islandSocial.refreshEarth();}};
             }catch(e){if(save!==newSave||ticket!==earthViewTicket)return;
-                renderEarthLoading(nodes.overlay,{close:()=>void showTitle(),message:`${e.message}。原存档和未结束的战斗已保留。`,retry:()=>void enterWorld(newSave,restoredBattle,{announceBeans})});return;
+                showEarthSceneLoading({phase:'error',message:`${e.message}。原存档和未结束的战斗已保留。`});return;
             }
         }
     }
@@ -700,12 +710,12 @@ async function enterWorld(newSave,restoredBattle=null,{announceBeans=true}={}) {
     localPlay.syncWorld();
     W.updateEncounterVisibility(world,save,Date.now());
     W.resetAutoInteraction(world,save.position);
-    void assets.warmScenery?.(world);void assets.warmNearby?.(world,save);renderer?.prepareScene(world,save);
+    void assets.warmScenery?.(world);void assets.warmNearby?.(world,save);
     nodes.entry.replaceChildren();nodes.entry.className='';nodes.entry.hidden=true;nodes.hud.hidden=false;
     nodes.battle.disposeHandGesture?.();nodes.battle.replaceChildren();nodes.battle.className='battle-layer';battle=null;paintHud();void islandSocial.enter().catch(e=>toast(e.message));
     if(!save.pendingEncounter){wordRecordings.clear();stopWordAudio();const currentSave=save,key=dictionaryCardKey();void dictionaryCardsStore.read(key).then(state=>{if(save===currentSave&&dictionaryCardKey()===key){applyWordLearning(state);paintHud();}}).catch(()=>{});}
     if(save.pendingEncounter){battle=restoredBattle||P.restorePveBattle(assets.dataset,assets.content,save.pendingEncounter);stage='battle';nodes.hud.hidden=true;paintBattle();}
-    else maybeExchangeMagicBeans({announce:announceBeans});
+    else {sceneLoading.update(world,save,performance.now());maybeExchangeMagicBeans({announce:announceBeans});}
     persist();queueCloudSave();updateMusic();
     if(save.timeScrollRuntime?.active&&!save.pendingEncounter&&timeScrollCity(world,save)?.id===save.timeScrollRuntime.cityId)void openTimeScroll();
     };
@@ -1628,6 +1638,7 @@ const dictionaryCardsStore=createDictionaryStore();
 let wordCardRows=null,wordCardLoading=null;
 const wordRecordings=new Map();let wordAudio=null,wordAudioUrl=null;
 const dictionaryCardKey=()=>JSON.stringify([roleStore?.owner||'guest',roleStore?.catalog.activeId]);
+configureLearningReport(()=>roleStore?.catalog.activeId?dictionaryCardKey():null);
 async function loadWordCards(){
     if(wordCardRows)return wordCardRows;
     if(!wordCardLoading)wordCardLoading=fetch(new URL('../data/adventure/dictionary/word-cards.json',import.meta.url)).then(r=>{if(!r.ok)throw Error('文字卡暂时无法加载');return r.json();}).then(data=>wordCardRows=validateWordCards(data.cards,assets.dataset.cards)).finally(()=>{wordCardLoading=null;});
@@ -1684,7 +1695,7 @@ async function openDictionary(language=null,entryId=null,returnTarget=document.a
         const module=await import('./adventure_dictionary.js');
         if(ticket!==dictionaryTicket||role!==roleStore.catalog.activeId||owner!==roleStore.owner)return;
         if(!document.getElementById('dictionary-style')){const link=document.createElement('link');link.id='dictionary-style';link.rel='stylesheet';link.href=new URL('../css/dictionary.css',import.meta.url).href;document.head.append(link);}
-        dictionary=module.createDictionary({root:nodes.overlay,getState:()=>({save,content:assets.content,stage,owner:roleStore.owner,role:roleStore.catalog.activeId}),onClose:returnToScene,onPractice:state=>applyWordLearning(state),onRewards:()=>openPanel('learning-mode'),onBuff:(buff,reward)=>{
+        dictionary=module.createDictionary({root:nodes.overlay,loadBattleCards:loadWordCards,getState:()=>({save,assets,content:assets.content,stage,owner:roleStore.owner,role:roleStore.catalog.activeId}),onClose:returnToScene,onPractice:state=>applyWordLearning(state),onRewards:()=>openPanel('learning-mode'),onBuff:(buff,reward)=>{
             if(role!==roleStore.catalog.activeId||owner!==roleStore.owner)return;
             save.dailyLanguageBuff=structuredClone(buff);persist();paintHud();
             if(reward)globalReward.show({title:'学习加成已生效',lines:[['{name} +1%',{name:DAILY_BUFF_NAMES[reward.key]}],['今日累计 {total} 层',{total:reward.total}]]});

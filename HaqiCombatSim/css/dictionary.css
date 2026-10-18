@@ -14,7 +14,7 @@
 .dictionary-word:hover{transform:translateY(-2px);box-shadow:inset 0 0 0 3px rgba(255,252,240,.85),0 6px 14px rgba(90,64,20,.16)}
 .dictionary-card-ornament{width:100%;display:flex;align-items:center;justify-content:space-between;font-size:10px;line-height:1;color:#b29b6b}.dictionary-card-pips{display:inline-flex;gap:2px;letter-spacing:1px}.dictionary-card-pips i{font-style:normal}.dictionary-card-pips .is-filled{color:#c98a27;text-shadow:0 0 4px rgba(235,178,72,.45)}.dictionary-animation-mark{color:#b8761c;font-size:12px;font-weight:700}
 .dictionary-card-glyph{font:34px 'KaiTi','STKaiti',Georgia,serif;color:#2b3e32;line-height:1.15;margin:2px 0;overflow-wrap:anywhere}.dictionary-word.is-collected .dictionary-card-glyph{color:#4b3211;text-shadow:0 1px 0 rgba(255,255,255,.8)}.dictionary-card-glyph[lang=en]{font:700 22px Georgia,'Times New Roman',serif;letter-spacing:.01em}.dictionary-card-pronunciation{font-size:11px;color:#6c634d;line-height:1.2}.dictionary-card-meaning{font-size:13px;font-weight:600;color:#354c3d;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.dictionary-form-match,.dictionary-alternative-match{font-size:11px;color:#7a5621;background:rgba(218,176,94,.2);padding:1px 6px;border-radius:6px}
-.dictionary-entry-bar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px}.dictionary-entry-bar p{margin:0;font-size:13px}.dictionary-learning-status{margin-left:auto!important;font-size:12px;font-weight:600;color:#6b5327;background:#f5e8c7;padding:3px 10px;border-radius:999px}.dictionary-learning-status:empty{display:none}
+.dictionary-shell .modal-header:has(.dictionary-learning-status) .gui-close-button{margin-left:0;flex-shrink:0}.dictionary-learning-status{margin:0 0 0 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:600;color:#6b5327;background:#f5e8c7;padding:3px 10px;border-radius:999px}.dictionary-learning-status:empty{display:none}
 .dictionary-entry{display:grid;grid-template-columns:minmax(260px,5fr) minmax(300px,7fr);gap:16px;margin-top:6px}.dictionary-page{padding:18px;border:1px solid var(--line,#d3c6a1);border-radius:16px;background:#fff9e9;line-height:1.7;min-width:0}.dictionary-page small{display:block}
 .dictionary-card-showcase{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px 18px;border:1.5px solid #c9a45c;border-radius:18px;background:radial-gradient(circle at 50% 18%,#fffef8 0%,#fbf0d3 65%,#f1dfb4 100%);box-shadow:inset 0 0 0 4px rgba(255,252,240,.75),inset 0 0 0 5px rgba(199,154,75,.3),0 6px 18px rgba(92,66,24,.1)}
 .dictionary-glyph{width:112px;height:112px;display:grid;place-items:center;margin:0 auto 4px;font:80px/1 'KaiTi','STKaiti',serif;color:#3b260e;border:1.5px solid rgba(186,142,71,.55);border-radius:14px;background:linear-gradient(90deg,transparent 49.5%,rgba(186,142,71,.22) 49.5%,rgba(186,142,71,.22) 50.5%,transparent 50.5%),linear-gradient(0deg,transparent 49.5%,rgba(186,142,71,.22) 49.5%,rgba(186,142,71,.22) 50.5%,transparent 50.5%),rgba(255,253,245,.65);box-shadow:inset 0 0 12px rgba(199,154,75,.15)}
@@ -35,3 +35,19 @@
 .dictionary-tutor-example-label{display:block;margin-top:12px}
 @media(max-width:600px){.dictionary-shell .modal-header{padding:8px 12px;gap:6px}.dictionary-shell .modal-header h2{font-size:17px}.dictionary-lang-tabs button{padding:3px 9px;font-size:12px;min-height:28px}.dictionary-body{padding:10px!important}.dictionary-hero{padding:8px 10px;gap:6px}.dictionary-start{width:100%;margin-left:0}.dictionary-tasks{gap:6px}.dictionary-task{flex:1 1 auto;justify-content:space-between}.dictionary-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.dictionary-word{min-height:124px;padding:8px!important}.dictionary-entry{grid-template-columns:1fr;gap:12px}}
 
+
+/* Dictionary navigation and task controls use the plain button treatment. */
+.storybook-ui .dictionary-shell .modal-header,.dictionary-shell .dictionary-lang-tabs{background:none;box-shadow:none;}
+.dictionary-shell .dictionary-lang-tabs{border:0;padding:0;flex-wrap:wrap;min-width:0;}
+.dictionary-task-action{border:1px solid #bda779;background:#fff8e6;color:#63421e;box-shadow:0 1px 2px #503c1414;min-height:32px;cursor:pointer;}
+.dictionary-task-action:disabled{opacity:.55;cursor:default;}
+.dictionary-task-action:hover:not(:disabled){background:#f4e5bc;}
+.dictionary-battle-shelf{margin:12px 0 18px;}
+.dictionary-battle-shelf h3{font-size:16px;margin:0 0 6px;}
+.dictionary-battle-shelf p{font-size:13px;margin:5px 0 10px;color:#62553a;}
+.dictionary-battle-cards{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:8px;}
+.dictionary-battle-card{background:none;border:0;padding:0;min-width:0;cursor:pointer;}
+.dictionary-battle-card:hover{transform:translateY(-3px);}
+.dictionary-battle-card:focus-visible{outline:2px solid #b08a31;outline-offset:3px;border-radius:8px;}
+@media(max-width:700px){.dictionary-battle-cards{grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;}}
+@media(max-width:430px){.dictionary-battle-cards{grid-template-columns:repeat(3,minmax(0,1fr));}}

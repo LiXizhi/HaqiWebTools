@@ -1,4 +1,5 @@
 import {earthNatureMonth} from './adventure_earth_nature_core.js';
+import {earthCitySpriteRect} from './adventure_earth_city_core.js';
 import {streamEarthWild} from './adventure_earth_wild_stream_core.js';
 import {generateEarthCityConnections} from './adventure_earth_transport_core.js';
 import {paintBridges} from './adventure_bridge.js';
@@ -144,7 +145,7 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
         return {zone:'earth',isEarth:true,bakeNaturalGround:true,earthBoating:true,w:info.w,h:info.h,earthRules:rules,terrainAt:typeAt,interactionParams:params?.adventure,monsterSceneParams:params?.monsterScene,
             center:{...p},npcs:[],encounters:[],paths:[],buildings:[],trees:[],landmarks:[],decorations:[],portal:{id:'portal',hidden:true,x:p.x,y:p.y},
             layout:{name:'现实世界',earth:true,w:info.w,h:info.h,spawn:{...p},regions:[],bridges:[],rivers:[],lakes:[],rules:{terrain:{ocean:'#438b9b'}},coast:[]},
-            terrainPainter:paint,earthScheduler:work,prepareImageBounds,drawEarthDecoration:(ctx,o)=>surface?.decoration(ctx,o),earthDecorationBaked:o=>surface?.isBaked(o),get surfaceStats(){return surface?.stats;},error:'',revision:0};
+            terrainPainter:paint,prepareSurface(rect,options){return ensureSurface().prepareView(this,rect,options);},earthScheduler:work,prepareImageBounds,drawEarthDecoration:(ctx,o)=>surface?.decoration(ctx,o),earthDecorationBaked:o=>surface?.isBaked(o),get surfaceStats(){return surface?.stats;},error:'',revision:0};
     }
     async function build(target,p,cityRows,auth,token){
         const terrain=[...cache.entries.values()].map(row=>row.value).filter(t=>t.indices).map(({key,width,height,indices,types,version})=>({key,width,height,indices,types,version}));
@@ -219,7 +220,7 @@ export function createEarthService({content,getPlayerLevel=()=>1,getPlayerPower=
                 }));
                 if(token!==epoch)return false;
                 const atlases=Object.fromEntries(entries);
-                nextDraw=(ctx,b)=>{if(!b.earthCityAtlas)return landmarkDraw?.(ctx,b)||false;const art=atlases[b.earthCityAtlas],image=cache.peek(art.url)?.image,frame=art.row.frames[b.earthCityFrame];if(!image||!frame)return false;ctx.drawImage(image,...frame,b.x-b.w/2,b.y-b.h*.9375,b.w,b.h);return true;};
+                nextDraw=(ctx,b)=>{if(!b.earthCityAtlas)return landmarkDraw?.(ctx,b)||false;const art=atlases[b.earthCityAtlas],image=cache.peek(art.url)?.image,frame=art.row.frames[b.earthCityFrame];if(!image||!frame)return false;ctx.drawImage(image,...frame,...earthCitySpriteRect(b,frame));return true;};
             }catch{artError=true;}
         }
         if(token!==epoch)return false;

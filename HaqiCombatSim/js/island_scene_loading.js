@@ -4,7 +4,7 @@ export function createIslandSceneLoading({warm,prepare,show,hide,onStart=()=>{},
     function cancel(){current=null;hide();}
     function retry(){current=null;}
     function update(world,save,now,enabled=true){
-        if(!enabled||!world?.layout||world.isEarth||world.isCityDungeon){if(current)cancel();return false;}
+        if(!enabled||!world?.layout||world.isCityDungeon){if(current)cancel();return false;}
         if(world===completedWorld&&save===completedSave){if(current)cancel();return false;}
         if(!current||current.world!==world||current.save!==save){
             const row={world,save,started:now,warmed:false,error:null};current=row;

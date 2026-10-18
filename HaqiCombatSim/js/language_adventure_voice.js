@@ -2,6 +2,7 @@ import {parseDialogueJson,dialogueReplyPreview} from './dialogue_json_core.js';
 import {selectDialogueVoice} from './dialogue_speaker_core.js';
 import {cancelBrowserSpeech} from './browser_speech.js';
 import {acquireAudioActivity} from './audio_activity.js';
+import {captureLearningReportKey,reportSpeakingPractice} from './learning_report.js';
 // Keepwork IO only. Microphone audio/transcripts are not persisted; completed TTS may be cached.
 import {loadKeepwork} from './adventure_cloud.js';
 import {cachedLearningAudio,rememberLearningAudio} from './learning_audio_cache.js';
@@ -69,7 +70,7 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
         cancel,
         async start(signal,{onPartial,onAudio}={}){
             await cancel();
-            const state={abort:new AbortController(),text:'',error:null,onAudio,chunks:[],samples:0,releaseAudio:acquireAudioActivity()};current=state;
+            const state={reportKey:captureLearningReportKey(),abort:new AbortController(),text:'',error:null,onAudio,chunks:[],samples:0,releaseAudio:acquireAudioActivity()};current=state;
             const abort=()=>void dispose(state);
             state.unlink=()=>signal.removeEventListener('abort',abort);
             signal.addEventListener('abort',abort,{once:true});
@@ -115,6 +116,7 @@ export function createLearningVoice({load=sdkReady,getSettings=()=>({})}={}) {
                     ascii(0,'RIFF');v.setUint32(4,36+state.samples*2,true);ascii(8,'WAVE');ascii(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,16000,true);v.setUint32(28,32000,true);v.setUint16(32,2,true);v.setUint16(34,16,true);ascii(36,'data');v.setUint32(40,state.samples*2,true);let offset=44;for(const chunk of state.chunks)for(const sample of chunk){v.setInt16(offset,sample,true);offset+=2;}
                     state.onAudio(new Blob([buffer],{type:'audio/wav'}));
                 }
+                if(current===state&&!state.abort.signal.aborted&&!state.reported){state.reported=true;reportSpeakingPractice(state.reportKey);}
                 return state.text.trim().slice(0,2000);
             }finally{await dispose(state);}
         },

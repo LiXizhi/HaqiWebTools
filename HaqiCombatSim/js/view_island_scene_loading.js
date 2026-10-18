@@ -52,8 +52,9 @@ export function createIslandSceneLoadingView({retry,exit}){
             if(!root.open||portraitScope!==scope||portraitRole!==roleId){portraitScope=scope;portraitRole=roleId;paintPet(assets,save);}
             root.classList.toggle('is-paused',state.phase==='error');
             const key=JSON.stringify(state);if(key!==last){last=key;again.hidden=state.phase!=='error';progress.hidden=state.phase==='error';root.setAttribute('aria-busy',String(state.phase!=='error'));
-                if(state.phase==='assets'){setText(caption,'正在准备场景资源…');progress.removeAttribute('value');}
+                if(state.phase==='assets'){setText(caption,state.message||'正在准备场景资源…');progress.removeAttribute('value');}
                 else if(state.phase==='error')setText(caption,state.message);
+                else if(state.phase==='map'){setText(caption,state.message);progress.max=Math.max(1,state.total||6);if(Number.isFinite(state.done))progress.value=state.done;else progress.removeAttribute('value');}
                 else{setText(caption,`正在准备地形 ${state.ready} / ${state.total}…`);progress.max=Math.max(1,state.total);progress.value=state.ready;}
             }
             if(!root.open)root.showModal();

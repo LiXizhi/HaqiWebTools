@@ -82,21 +82,21 @@ test('island picking respects a coastal silhouette and ignores empty sea inside 
     assert.equal(pickAtlasIsland([island],{x:50,y:50},(_,p)=>atlasCoastContains(coast,p)),island);
 });
 
-async function withMap(run,{initial='world',pendingEncounter=null,loadFail=false,deferred=false,focusPortal=null,illustration=false,imageFailure=false,deferredImage=false}={}){
+async function withMap(run,{initial='world',zone='town',earthReturn=null,pendingEncounter=null,loadFail=false,deferred=false,focusPortal=null,illustration=false,imageFailure=false,deferredImage=false}={}){
     const previous={document:globalThis.document,Image:globalThis.Image,requestAnimationFrame:globalThis.requestAnimationFrame,cancelAnimationFrame:globalThis.cancelAnimationFrame};
     const paintings=[],pendingImages=[];
     class Element{
-        constructor(tag){this.tag=tag;this.offsetWidth=100;this.offsetHeight=44;this.children=[];this.className='';this.dataset={};this.style={setProperty(){}};this.attributes={};this.hidden=false;this.events={};this.classList={toggle(){},add(){}};}
+        constructor(tag){this.tag=tag;this.offsetWidth=100;this.offsetHeight=44;this.children=[];this.className='';this.dataset={};this.style={setProperty(){}};this.attributes={};this.hidden=false;this.events={};this.classList={toggle:(name,on)=>{if(on)this.className+=' '+name;},add(){}};}
         append(...nodes){this.children.push(...nodes);}replaceChildren(...nodes){this.children=nodes;}setAttribute(key,value){this.attributes[key]=value;}
         contains(node){return node===this||this.children.some(child=>child.contains?.(node));}setPointerCapture(){}
         addEventListener(name,fn){this.events[name]=fn;}getBoundingClientRect(){return {left:0,top:0,width:900,height:600};}
         getContext(){return new Proxy({},{get:(_,key)=>key==='drawImage'?(...args)=>paintings.push(args):()=>{}});}querySelector(selector){return this.children.find(c=>c.className.split(' ').includes(selector.slice(1)))||this.children.map(c=>c.querySelector?.(selector)).find(Boolean);}
     }
     globalThis.document={createElement:tag=>new Element(tag),createElementNS:(_,tag)=>new Element(tag)};globalThis.requestAnimationFrame=fn=>{fn();return 1;};globalThis.cancelAnimationFrame=()=>{};
-    const root=new Element('div'),save={zone:'town',level:1,position:{x:3500,y:3000},pendingEncounter},snapshot=structuredClone(save),travels=[],portals=[],positions=[],drawn=[];
+    const root=new Element('div'),save={zone,earthReturn,level:1,position:{x:3500,y:3000},pendingEncounter},snapshot=structuredClone(save),travels=[],portals=[],positions=[],drawn=[];
     let resolveMap;const data={...art,islands:art.islands.map(i=>({...i,detailStyle:illustration?'illustration':undefined})),resources:illustration?{[town.resource]:art.resources[town.resource]}:{}};
     globalThis.Image=class {constructor(){this.naturalWidth=art.resources[town.resource].width;this.naturalHeight=art.resources[town.resource].height;}set src(value){this.url=value;if(deferredImage)pendingImages.push(this);else if(imageFailure)this.onerror();else this.onload();}};
-    const view=renderHaqiAtlas(root,{zone:'town'}, {save,focusPortal,assets:{mode:'local',content:{worldMaps:{town:layout}}},mapArt:deferred?new Promise(resolve=>resolveMap=()=>resolve(data)):loadFail?Promise.reject(Error('offline')):data},{close(){},switchWorld(){},travel:id=>travels.push(id),portal:(p,target)=>portals.push([p.id,target]),teleportToPosition:(x,y)=>positions.push({x,y}),drawIsland:(_,id,options)=>drawn.push({id,options})},initial);
+    const view=renderHaqiAtlas(root,{zone,isEarth:zone==='earth'}, {save,focusPortal,assets:{mode:'local',content:{worldMaps:{town:layout}}},mapArt:deferred?new Promise(resolve=>resolveMap=()=>resolve(data)):loadFail?Promise.reject(Error('offline')):data},{close(){},switchWorld(){},travel:id=>travels.push(id),portal:(p,target)=>portals.push([p.id,target]),teleportToPosition:(x,y)=>positions.push({x,y}),drawIsland:(_,id,options)=>drawn.push({id,options})},initial);
     try{await new Promise(resolve=>setImmediate(resolve));const stage=root.querySelector('.haqi-atlas-stage'),canvas=root.querySelector('.haqi-atlas-canvas'),card=root.querySelector('.haqi-atlas-selection'),labels=root.querySelector('.haqi-atlas-labels');
         const pointer=(id,x,y,target=canvas)=>({pointerId:id,clientX:x,clientY:y,button:0,target});
         await run({root,stage,canvas,card,labels,view,save,travels,portals,positions,drawn,paintings,pointer,resolveMap,loadImages:()=>pendingImages.forEach(image=>image.onload())});assert.deepEqual(save,snapshot,'map browsing must never mutate a save');
@@ -170,8 +170,8 @@ test('a fresh control click works after a drag or pinch instead of inheriting cl
 test('vortex switches only the viewed world and does not invoke travel',async()=>{
     await withMap(({labels,portals,travels})=>{labels.children.find(n=>n.className==='map-vortex').onclick();assert.deepEqual(portals,[[art.portals[0].id,'earth']]);assert.equal(travels.length,0);});
 });
-test('returning through a vortex fits the complete archipelago instead of zooming to the portal',async()=>{
-    await withMap(({view,travels})=>{assert.deepEqual(view.getState().camera,fitAtlas(atlasBounds(art.islands,art.portals),900,600));assert.equal(view.getState().selected,null);assert.equal(travels.length,0);},{focusPortal:art.portals[0].id,initial:'local'});
+test('returning through a vortex focuses the current island',async()=>{
+    await withMap(({view,travels})=>{assert.equal(view.getState().camera.x,town.x);assert.equal(view.getState().camera.y,town.y);assert.ok(view.getState().camera.scale>fitAtlas(atlasBounds(art.islands),900,600).scale);assert.equal(view.getState().selected,null);assert.equal(travels.length,0);},{focusPortal:art.portals[0].id,initial:'local'});
 });
 test('battle disables travel but leaves browsing and vortex map navigation available',async()=>{
     await withMap(({labels,card,travels,portals})=>{labels.children.find(n=>n.textContent==='火鸟岛').onclick();assert.equal(card.children[0].disabled,true);card.children[0].onclick();assert.equal(travels.length,0);labels.children.find(n=>n.className==='map-vortex').onclick();assert.equal(portals.length,1);},{pendingEncounter:'fight'});
@@ -181,4 +181,17 @@ test('disposed view ignores a late manifest and does not draw or navigate',async
 });
 test('failed manifest exposes a destination list with selection before travel',async()=>{
     await withMap(({root,card,travels})=>{const list=root.querySelector('.haqi-atlas-fallback');assert.equal(list.children.length,ISLANDS.length);list.children.find(n=>n.textContent==='火鸟岛').onclick();assert.equal(travels.length,0);card.children[0].onclick();assert.deepEqual(travels,['fire']);},{loadFail:true});
+});
+
+for(const previous of ['fire',null,'missing'])test(`earth to Haqi focuses and highlights the previous island (${previous})`,async()=>{
+    const expected=art.islands.find(i=>i.id===(previous==='fire'?'fire':'camp'));
+    await withMap(({view,labels,travels})=>{
+        const camera=view.getState().camera;
+        assert.equal(camera.x,expected.x);assert.equal(camera.y,expected.y);
+        assert.ok(camera.scale>fitAtlas(atlasBounds(art.islands),900,600).scale);
+        const highlighted=labels.children.filter(n=>n.className.split(' ').includes('current'));
+        assert.deepEqual(highlighted.map(n=>n.textContent),[expected.name]);
+        assert.equal(highlighted[0].attributes['aria-current'],undefined,'previous island is not the player location');
+        assert.equal(travels.length,0);
+    },{zone:'earth',earthReturn:previous?{zone:previous,position:{x:1,y:1}}:null});
 });

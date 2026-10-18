@@ -28,9 +28,16 @@ export function* generateEarthUrbanChunkSteps(cx,cy,cities,rules,terrainAt,block
         // Street furniture uses its own cell anchor and remains reproducible across chunks.
         const pole={x:cx*rules.chunkSize+Math.floor(col/3)*rules.cityBlockSize+rules.cityLaneWidth/2+rules.citySidewalkWidth/2,y:at.y};
         if(col%3===0&&terrainAt(pole.x,pole.y)==='urban'&&!blocked(pole,0))out.push({...pole,id:`earth-street:${nx}:${cy}:${row}:${col}`,tile:2,earthCityAtlas:'street',earthCityFrame:(row+col)%4===0?1:0,w:80,h:80,decorationOnly:true});
-        out.push({...at,id:`earth-urban:${nx}:${cy}:${row}:${col}`,tile:2,atlas:'town',frame:'house',earthCityAtlas:street?'street':'buildings',earthCityFrame:frame,w:size,h:size,decorationOnly:street,cityId:nearest?.id||null,populationLevel:profile.level,district:block.zone});
+        // Large buildings belong to explicit city configurations, never the global scatter.
+        if(street)out.push({...at,id:`earth-urban:${nx}:${cy}:${row}:${col}`,tile:2,earthCityAtlas:'street',earthCityFrame:frame,w:size,h:size,decorationOnly:true,cityId:nearest?.id||null,populationLevel:profile.level,district:block.zone});
     }
     return out;
+}
+
+// Crops follow actual silhouettes rather than the old equal-cell atlas grid.
+export function earthCitySpriteRect(building,frame){
+    const scale=Math.min(building.w/frame[2],building.h/frame[3]),w=frame[2]*scale,h=frame[3]*scale;
+    return [building.x-w/2,building.y-h,w,h];
 }
 
 export function generateEarthUrbanRoads(cx,cy,rules,sample,blocked=()=>false){

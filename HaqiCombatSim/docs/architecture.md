@@ -1,3 +1,32 @@
+## 2026-10-18：30字独立动画
+
+```mermaid
+flowchart LR
+    Source[hanzi/source 原生场景与故事] --> Generator[build_hanzi_stories]
+    Glyph[字典现有规范笔画] --> Generator
+    Generator --> HTML[单文件汉字HTML / 内联协议与许可证]
+    Generator --> URLs[显式URL映射]
+    URLs --> Dictionary[原字典与字源岛入口]
+    Dictionary --> Frame[隔离动画iframe]
+    HTML --> Frame
+    Frame --> Bridge[原Haqi H5协议 / 翻译与完成通知]
+```
+
+补齐23个故事，修正舞/武引用；动画不直接读写存档，完成通知继续走现有宿主校验。作者源、生成及验证见[汉字独立动画](hanzi-stories.md)。
+
+## 2026-10-18：本地学习成就摘要
+
+```mermaid
+flowchart LR
+    Words[字典学习完成] --> Store[原字典 IndexedDB 事务 / 账号与角色隔离]
+    Voice[有效录音识别完成 / 不存原音与文本] --> Store
+    Store --> Report[本机累计 / 自然周 / 自然月]
+    Report --> Message[updateDesktopUI / 至多200字]
+    Message --> Parent[家庭平板父窗口 / 来源校验 / 本机摘要]
+```
+
+详见 [学习周报、月报](learning-report.md)。统计不新增 workspace 查询或云端同步。
+
 ## 2026-10-17：字典与文字战斗卡
 
 ```mermaid
@@ -75,6 +104,9 @@ flowchart LR
     Island --> Tiles[地表调度：视野与前方邻块 / 最多64MiB]
     Island --> Loading[首次进入：Loading / 暂停移动与场景绘制]
     Loading --> Warm[等待场景图集 / 仅准备当前视野地块]
+    Earth[现实世界数据与对象准备完成] --> Loading
+    Warm --> EarthSurface[现实世界 prepareSurface / 不绘制场景 / 只烘焙当前视野]
+    EarthSurface -->|图片与全部可见地块就绪| Resume
     Warm --> Tiles
     Tiles -->|当前视野全部就绪| Resume[关闭Loading / 恢复模拟与绘制]
     Tiles --> Worker[island_terrain_worker：同一地形画笔 / 图集增量传输]

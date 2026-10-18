@@ -630,13 +630,13 @@
           0,
           0,
           265,
-          270
+          264
         ],
         [
           265,
           0,
           265,
-          270
+          260
         ],
         [
           530,
@@ -646,20 +646,20 @@
         ],
         [
           0,
-          270,
+          264,
           265,
-          242
+          248
         ],
         [
           265,
-          270,
-          255,
-          242
+          260,
+          252,
+          252
         ],
         [
-          520,
+          517,
           275,
-          248,
+          251,
           237
         ]
       ],
@@ -669,7 +669,8 @@
       "encoding": {
         "quality": 86,
         "method": 6
-      }
+      },
+      "cropSource": "natural-v2 silhouette-separated regions including detached fine details; corrected lower-row starts and gate left edge (2026-10-17)"
     },
     "npcs": {
       "id": "earth-npcs:shenzhen:14e5813289e8",

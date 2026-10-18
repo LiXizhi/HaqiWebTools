@@ -23,7 +23,8 @@ export function validateDictionary(data){
         }
         if(e.exampleChunks!==undefined&&(!Array.isArray(e.exampleChunks)||e.exampleChunks.length<2||e.exampleChunks.length>6||e.exampleChunks.some(c=>typeof c?.text!=='string'||!c.text.trim()||typeof c.meaning!=='string'||!c.meaning.trim()||c.meaning.length>100)||e.exampleChunks.map(c=>c.text).join(' ')!==e.example))throw Error('例句拆解无效：'+e.id);
         if(data.language==='zh'&&(!e.strokes?.medians?.length||e.strokes.medians.length!==e.strokes.strokes?.length))throw Error('汉字缺少笔顺：'+e.text);
-        if(e.animation&&!/^https:\/\/cdn\.keepwork\.com\/keepwork\/cdn\/hanzi\/hanzi_[a-z]+\.html$/.test(e.animation)&&!/^hanzi\/hanzi_(ming|wu)\.html$/.test(e.animation))throw Error('动画地址不在允许范围');
+        // A suffix disambiguates homophones: mu_eye, tian_field, tian_sky and wu_dance.
+        if(e.animation&&!/^https:\/\/cdn\.keepwork\.com\/keepwork\/cdn\/hanzi\/hanzi_[a-z]+(?:_[a-z]+)*\.html$/.test(e.animation)&&!/^hanzi\/hanzi_[a-z]+(?:_[a-z]+)*\.html$/.test(e.animation))throw Error('动画地址不在允许范围');
     }
     return data;
 }
